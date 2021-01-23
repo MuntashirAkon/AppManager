@@ -22,14 +22,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.os.Environment;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
-
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -40,9 +32,16 @@ import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.backup.TarUtils;
 import io.github.muntashirakon.AppManager.details.AppDetailsFragment;
-import io.github.muntashirakon.AppManager.main.MainActivity;
+import io.github.muntashirakon.AppManager.main.ListOptions;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runningapps.RunningAppsActivity;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
 public class AppPref {
     private static final String PREF_NAME = "preferences";
@@ -78,6 +77,7 @@ public class AppPref {
         PREF_LAST_VERSION_CODE_LONG,
         PREF_MAIN_WINDOW_FILTER_FLAGS_INT,
         PREF_MAIN_WINDOW_SORT_ORDER_INT,
+        PREF_MAIN_WINDOW_SORT_REVERSE_BOOL,
         PREF_MODE_OF_OPS_STR,
         PREF_OPEN_PGP_PACKAGE_STR,
         PREF_OPEN_PGP_USER_ID_STR,
@@ -319,6 +319,7 @@ public class AppPref {
             case PREF_INSTALLER_SIGN_APK_BOOL:
             case PREF_BACKUP_ANDROID_KEYSTORE_BOOL:
             case PREF_ENABLE_SCREEN_LOCK_BOOL:
+            case PREF_MAIN_WINDOW_SORT_REVERSE_BOOL:
                 return false;
             case PREF_APP_OP_SHOW_DEFAULT_BOOL:
             case PREF_USAGE_ACCESS_ENABLED_BOOL:
@@ -330,9 +331,9 @@ public class AppPref {
             case PREF_APP_THEME_INT:
                 return AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
             case PREF_MAIN_WINDOW_FILTER_FLAGS_INT:
-                return MainActivity.FILTER_NO_FILTER;
+                return ListOptions.FILTER_NO_FILTER;
             case PREF_MAIN_WINDOW_SORT_ORDER_INT:
-                return MainActivity.SORT_BY_APP_LABEL;
+                return ListOptions.SORT_BY_APP_LABEL;
             case PREF_CUSTOM_LOCALE_STR:
                 return LangUtils.LANG_AUTO;
             case PREF_APP_OP_SORT_ORDER_INT:

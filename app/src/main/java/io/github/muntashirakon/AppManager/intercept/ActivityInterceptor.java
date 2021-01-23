@@ -615,8 +615,7 @@ public class ActivityInterceptor extends AppCompatActivity {
         if (numberOfMatchingActivities < 1) {
             appendHeader(result, R.string.no_content);
         } else {
-            for (int i = 0; i < numberOfMatchingActivities; i++) {
-                ResolveInfo info = resolveInfo.get(i);
+            for (ResolveInfo info : resolveInfo) {
                 ActivityInfo activityinfo = info.activityInfo;
                 result.append("* ").append(activityinfo.loadLabel(pm))
                         .append(" (")

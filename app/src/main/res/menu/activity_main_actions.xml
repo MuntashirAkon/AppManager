@@ -24,102 +24,10 @@
         app:showAsAction="never" />
 
     <item
-        android:icon="@drawable/ic_sort_black_24dp"
-        android:title="@string/sort"
-        app:showAsAction="never">
-        <menu>
-            <group
-                android:checkableBehavior="single"
-                android:menuCategory="container">
-
-                <item
-                    android:id="@+id/action_sort_by_domain"
-                    android:title="@string/sort_by_domain" />
-
-                <item
-                    android:id="@+id/action_sort_by_app_label"
-                    android:title="@string/sort_by_app_label" />
-
-                <item
-                    android:id="@+id/action_sort_by_package_name"
-                    android:title="@string/sort_by_package_name" />
-
-                <item
-                    android:id="@+id/action_sort_by_last_update"
-                    android:title="@string/sort_by_last_update" />
-
-                <item
-                    android:id="@+id/action_sort_by_shared_user_id"
-                    android:title="@string/sort_by_shared_user_id" />
-
-                <item
-                    android:id="@+id/action_sort_by_target_sdk"
-                    android:title="@string/sort_by_target_sdk" />
-
-                <item
-                    android:id="@+id/action_sort_by_sha"
-                    android:title="@string/sort_by_sha" />
-
-                <item
-                    android:id="@+id/action_sort_by_disabled_app"
-                    android:title="@string/sort_by_disabled_app" />
-
-                <item
-                    android:id="@+id/action_sort_by_blocked_components"
-                    android:title="@string/sort_by_blocked_components" />
-
-                <item
-                    android:id="@+id/action_sort_by_backup"
-                    android:title="@string/sort_by_backup" />
-
-            </group>
-        </menu>
-    </item>
-
-    <item
-        android:icon="@drawable/ic_baseline_outlined_flag_24"
-        android:title="@string/filter"
-        app:showAsAction="never">
-        <menu>
-            <group
-                android:checkableBehavior="all"
-                android:menuCategory="container">
-
-                <item
-                    android:id="@+id/action_filter_user_apps"
-                    android:title="@string/filter_user_apps" />
-
-                <item
-                    android:id="@+id/action_filter_system_apps"
-                    android:title="@string/filter_system_apps" />
-
-                <item
-                    android:id="@+id/action_filter_disabled_apps"
-                    android:title="@string/filter_disabled_apps" />
-
-                <item
-                    android:id="@+id/action_filter_apps_with_activities"
-                    android:title="@string/filter_apps_with_activities" />
-
-                <item
-                    android:id="@+id/action_filter_apps_with_rules"
-                    android:title="@string/filter_apps_with_rules" />
-
-                <item
-                    android:id="@+id/action_filter_apps_with_backups"
-                    android:title="@string/filter_apps_with_backups" />
-
-                <item
-                    android:id="@+id/action_filter_apps_with_splits"
-                    android:title="@string/filter_apps_with_splits" />
-
-                <item
-                    android:id="@+id/action_filter_running_apps"
-                    android:title="@string/filter_running_apps" />
-
-            </group>
-        </menu>
-    </item>
+        android:id="@+id/action_list_options"
+        android:icon="@drawable/ic_view_list_black_24dp"
+        android:title="@string/list_options"
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_refresh"

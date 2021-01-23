@@ -891,4 +891,6 @@
     <string name="add_to_profile">Add to profile</string>
     <string name="add">Add</string>
     <string name="os_version">OS version</string>
+    <string name="reverse">Reverse</string>
+    <string name="list_options">List options</string>
 </resources>

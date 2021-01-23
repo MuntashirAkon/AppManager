@@ -34,7 +34,6 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.AnyThread;
-import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.UiThread;
 import androidx.appcompat.app.ActionBar;
@@ -76,8 +75,6 @@ import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuild
 import io.github.muntashirakon.AppManager.usage.AppUsageActivity;
 import io.github.muntashirakon.AppManager.utils.*;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -95,65 +92,6 @@ public class MainActivity extends BaseActivity implements
     private static final String PACKAGE_NAME_TERMUX = "com.termux";
     private static final String ACTIVITY_NAME_TERMUX = "com.termux.app.TermuxActivity";
 
-    private static final int[] sSortMenuItemIdsMap = {R.id.action_sort_by_domain,
-            R.id.action_sort_by_app_label, R.id.action_sort_by_package_name,
-            R.id.action_sort_by_last_update, R.id.action_sort_by_shared_user_id,
-            R.id.action_sort_by_target_sdk, R.id.action_sort_by_sha,
-            R.id.action_sort_by_disabled_app, R.id.action_sort_by_blocked_components,
-            R.id.action_sort_by_backup};
-
-    @IntDef(value = {
-            SORT_BY_DOMAIN,
-            SORT_BY_APP_LABEL,
-            SORT_BY_PACKAGE_NAME,
-            SORT_BY_LAST_UPDATE,
-            SORT_BY_SHARED_ID,
-            SORT_BY_TARGET_SDK,
-            SORT_BY_SHA,
-            SORT_BY_DISABLED_APP,
-            SORT_BY_BLOCKED_COMPONENTS,
-            SORT_BY_BACKUP,
-    })
-    @Retention(RetentionPolicy.SOURCE)
-    public @interface SortOrder {
-    }
-
-    public static final int SORT_BY_DOMAIN = 0;  // User/system app
-    public static final int SORT_BY_APP_LABEL = 1;
-    public static final int SORT_BY_PACKAGE_NAME = 2;
-    public static final int SORT_BY_LAST_UPDATE = 3;
-    public static final int SORT_BY_SHARED_ID = 4;
-    public static final int SORT_BY_TARGET_SDK = 5;
-    public static final int SORT_BY_SHA = 6;  // Signature
-    public static final int SORT_BY_DISABLED_APP = 7;
-    public static final int SORT_BY_BLOCKED_COMPONENTS = 8;
-    public static final int SORT_BY_BACKUP = 9;
-
-    @IntDef(flag = true, value = {
-            FILTER_NO_FILTER,
-            FILTER_USER_APPS,
-            FILTER_SYSTEM_APPS,
-            FILTER_DISABLED_APPS,
-            FILTER_APPS_WITH_RULES,
-            FILTER_APPS_WITH_ACTIVITIES,
-            FILTER_APPS_WITH_BACKUPS,
-            FILTER_RUNNING_APPS,
-            FILTER_APPS_WITH_SPLITS
-    })
-    @Retention(RetentionPolicy.SOURCE)
-    public @interface Filter {
-    }
-
-    public static final int FILTER_NO_FILTER = 0;
-    public static final int FILTER_USER_APPS = 1;
-    public static final int FILTER_SYSTEM_APPS = 1 << 1;
-    public static final int FILTER_DISABLED_APPS = 1 << 2;
-    public static final int FILTER_APPS_WITH_RULES = 1 << 3;
-    public static final int FILTER_APPS_WITH_ACTIVITIES = 1 << 4;
-    public static final int FILTER_APPS_WITH_BACKUPS = 1 << 5;
-    public static final int FILTER_RUNNING_APPS = 1 << 6;
-    public static final int FILTER_APPS_WITH_SPLITS = 1 << 7;
-
     MainViewModel mModel;
 
     private MainRecyclerAdapter mAdapter;
@@ -167,9 +105,6 @@ public class MainActivity extends BaseActivity implements
     private CoordinatorLayout.LayoutParams mLayoutParamsTypical;
     private MenuItem appUsageMenu;
     private MenuItem runningAppsMenu;
-    private MenuItem sortByBlockedComponentMenu;
-    @SortOrder
-    private int mSortBy;
 
     private final StoragePermission storagePermission = StoragePermission.init(this);
 
@@ -295,7 +230,6 @@ public class MainActivity extends BaseActivity implements
         getMenuInflater().inflate(R.menu.activity_main_actions, menu);
         appUsageMenu = menu.findItem(R.id.action_app_usage);
         runningAppsMenu = menu.findItem(R.id.action_running_apps);
-        sortByBlockedComponentMenu = menu.findItem(R.id.action_sort_by_blocked_components);
         MenuItem apkUpdaterMenu = menu.findItem(R.id.action_apk_updater);
         try {
             if (!getPackageManager().getApplicationInfo(PACKAGE_NAME_APK_UPDATER, 0).enabled)
@@ -318,38 +252,6 @@ public class MainActivity extends BaseActivity implements
     @Override
     public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        menu.findItem(sSortMenuItemIdsMap[mSortBy]).setChecked(true);
-        if (mModel != null) {
-            int flags = mModel.getFilterFlags();
-            if ((flags & FILTER_USER_APPS) != 0) {
-                menu.findItem(R.id.action_filter_user_apps).setChecked(true);
-            }
-            if ((flags & FILTER_SYSTEM_APPS) != 0) {
-                menu.findItem(R.id.action_filter_system_apps).setChecked(true);
-            }
-            if ((flags & FILTER_DISABLED_APPS) != 0) {
-                menu.findItem(R.id.action_filter_disabled_apps).setChecked(true);
-            }
-            if ((flags & FILTER_APPS_WITH_RULES) != 0) {
-                menu.findItem(R.id.action_filter_apps_with_rules).setChecked(true);
-            }
-            if ((flags & FILTER_APPS_WITH_ACTIVITIES) != 0) {
-                menu.findItem(R.id.action_filter_apps_with_activities).setChecked(true);
-            }
-            if ((flags & FILTER_APPS_WITH_SPLITS) != 0) {
-                menu.findItem(R.id.action_filter_apps_with_splits).setChecked(true);
-            }
-            if ((flags & FILTER_RUNNING_APPS) != 0) {
-                menu.findItem(R.id.action_filter_running_apps).setChecked(true);
-            }
-        }
-        if (AppPref.isRootOrAdbEnabled()) {
-            runningAppsMenu.setVisible(true);
-            sortByBlockedComponentMenu.setVisible(true);
-        } else {
-            runningAppsMenu.setVisible(false);
-            sortByBlockedComponentMenu.setVisible(false);
-        }
         menu.findItem(R.id.action_sys_config).setVisible(AppPref.isRootEnabled());
         appUsageMenu.setVisible((boolean) AppPref.get(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL));
         return true;
@@ -362,6 +264,9 @@ public class MainActivity extends BaseActivity implements
         if (id == R.id.action_instructions) {
             Intent helpIntent = new Intent(this, HelpActivity.class);
             startActivity(helpIntent);
+        } else if (id == R.id.action_list_options) {
+            ListOptions listOptions = new ListOptions();
+            listOptions.show(getSupportFragmentManager(), ListOptions.TAG);
         } else if (id == R.id.action_refresh) {
             if (mModel != null) {
                 showProgressIndicator(true);
@@ -370,71 +275,6 @@ public class MainActivity extends BaseActivity implements
         } else if (id == R.id.action_settings) {
             Intent settingsIntent = new Intent(this, SettingsActivity.class);
             startActivity(settingsIntent);
-            // Sort
-        } else if (id == R.id.action_sort_by_app_label) {
-            setSortBy(SORT_BY_APP_LABEL);
-            item.setChecked(true);
-        } else if (id == R.id.action_sort_by_package_name) {
-            setSortBy(SORT_BY_PACKAGE_NAME);
-            item.setChecked(true);
-        } else if (id == R.id.action_sort_by_domain) {
-            setSortBy(SORT_BY_DOMAIN);
-            item.setChecked(true);
-        } else if (id == R.id.action_sort_by_last_update) {
-            setSortBy(SORT_BY_LAST_UPDATE);
-            item.setChecked(true);
-        } else if (id == R.id.action_sort_by_shared_user_id) {
-            setSortBy(SORT_BY_SHARED_ID);
-            item.setChecked(true);
-        } else if (id == R.id.action_sort_by_sha) {
-            setSortBy(SORT_BY_SHA);
-            item.setChecked(true);
-        } else if (id == R.id.action_sort_by_target_sdk) {
-            setSortBy(SORT_BY_TARGET_SDK);
-            item.setChecked(true);
-        } else if (id == R.id.action_sort_by_disabled_app) {
-            setSortBy(SORT_BY_DISABLED_APP);
-            item.setChecked(true);
-        } else if (id == R.id.action_sort_by_blocked_components) {
-            setSortBy(SORT_BY_BLOCKED_COMPONENTS);
-            item.setChecked(true);
-        } else if (id == R.id.action_sort_by_backup) {
-            setSortBy(SORT_BY_BACKUP);
-            item.setChecked(true);
-            // Filter
-        } else if (id == R.id.action_filter_user_apps) {
-            if (!item.isChecked()) mModel.addFilterFlag(FILTER_USER_APPS);
-            else mModel.removeFilterFlag(FILTER_USER_APPS);
-            item.setChecked(!item.isChecked());
-        } else if (id == R.id.action_filter_system_apps) {
-            if (!item.isChecked()) mModel.addFilterFlag(FILTER_SYSTEM_APPS);
-            else mModel.removeFilterFlag(FILTER_SYSTEM_APPS);
-            item.setChecked(!item.isChecked());
-        } else if (id == R.id.action_filter_disabled_apps) {
-            if (!item.isChecked()) mModel.addFilterFlag(FILTER_DISABLED_APPS);
-            else mModel.removeFilterFlag(FILTER_DISABLED_APPS);
-            item.setChecked(!item.isChecked());
-        } else if (id == R.id.action_filter_apps_with_rules) {
-            if (!item.isChecked()) mModel.addFilterFlag(FILTER_APPS_WITH_RULES);
-            else mModel.removeFilterFlag(FILTER_APPS_WITH_RULES);
-            item.setChecked(!item.isChecked());
-        } else if (id == R.id.action_filter_apps_with_activities) {
-            if (!item.isChecked()) mModel.addFilterFlag(FILTER_APPS_WITH_ACTIVITIES);
-            else mModel.removeFilterFlag(FILTER_APPS_WITH_ACTIVITIES);
-            item.setChecked(!item.isChecked());
-        } else if (id == R.id.action_filter_apps_with_backups) {
-            if (!item.isChecked()) mModel.addFilterFlag(FILTER_APPS_WITH_BACKUPS);
-            else mModel.removeFilterFlag(FILTER_APPS_WITH_BACKUPS);
-            item.setChecked(!item.isChecked());
-        } else if (id == R.id.action_filter_running_apps) {
-            if (!item.isChecked()) mModel.addFilterFlag(FILTER_RUNNING_APPS);
-            else mModel.removeFilterFlag(FILTER_RUNNING_APPS);
-            item.setChecked(!item.isChecked());
-        } else if (id == R.id.action_filter_apps_with_splits) {
-            if (!item.isChecked()) mModel.addFilterFlag(FILTER_APPS_WITH_SPLITS);
-            else mModel.removeFilterFlag(FILTER_APPS_WITH_SPLITS);
-            item.setChecked(!item.isChecked());
-            // Others
         } else if (id == R.id.action_app_usage) {
             Intent usageIntent = new Intent(this, AppUsageActivity.class);
             startActivity(usageIntent);
@@ -577,14 +417,15 @@ public class MainActivity extends BaseActivity implements
             appUsageMenu.setVisible((Boolean) AppPref.get(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL));
         }
         // Set sort by
-        mSortBy = (int) AppPref.get(AppPref.PrefKey.PREF_MAIN_WINDOW_SORT_ORDER_INT);
-        if (AppPref.isRootOrAdbEnabled()) {
-            if (runningAppsMenu != null) runningAppsMenu.setVisible(true);
-            if (sortByBlockedComponentMenu != null) sortByBlockedComponentMenu.setVisible(true);
-        } else {
-            if (mSortBy == SORT_BY_BLOCKED_COMPONENTS) mSortBy = SORT_BY_APP_LABEL;
-            if (runningAppsMenu != null) runningAppsMenu.setVisible(false);
-            if (sortByBlockedComponentMenu != null) sortByBlockedComponentMenu.setVisible(false);
+        if (mModel != null) {
+            if (AppPref.isRootOrAdbEnabled()) {
+                if (runningAppsMenu != null) runningAppsMenu.setVisible(true);
+            } else {
+                if (mModel.getSortBy() == ListOptions.SORT_BY_BLOCKED_COMPONENTS) {
+                    mModel.setSortBy(ListOptions.SORT_BY_APP_LABEL);
+                }
+                if (runningAppsMenu != null) runningAppsMenu.setVisible(false);
+            }
         }
     }
 
@@ -673,16 +514,6 @@ public class MainActivity extends BaseActivity implements
     private void showProgressIndicator(boolean show) {
         if (show) mProgressIndicator.show();
         else mProgressIndicator.hide();
-    }
-
-    /**
-     * Sort main list if provided value is valid.
-     *
-     * @param sortBy Must be one of SORT_*
-     */
-    private void setSortBy(@SortOrder int sortBy) {
-        mSortBy = sortBy;
-        if (mModel != null) mModel.setSortBy(sortBy);
     }
 
     @Override
