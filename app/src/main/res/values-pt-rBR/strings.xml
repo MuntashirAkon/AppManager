@@ -851,4 +851,24 @@
     <string name="backup_all_apps">Fazer backup de todos os aplicativos</string>
     <string name="backup_all_apps_msg">Fazer backup de todos os aplicativos instalados.</string>
     <string name="back_up">Fazer backup</string>
+    <string name="list_options">Opções de lista</string>
+    <string name="reverse">Inverter</string>
+    <string name="os_version">Versão do SO</string>
+    <string name="add">Adicionar</string>
+    <string name="add_to_profile">Adicionar ao perfil</string>
+    <string name="initializing">Iniciando…</string>
+    <string name="allow_background">Permitir segundo plano</string>
+    <string name="reject_background">Rejeitar segundo plano</string>
+    <string name="net_policy">Política de rede</string>
+    <string name="has_net_policy">Política de rede</string>
+    <string name="choose_what_to_do">Escolha o que fazer.</string>
+    <string name="enable_battery_optimization">Ativar otimização de bateria\?</string>
+    <string name="no_battery_optimization">Nenhuma otimização de bateria</string>
+    <string name="battery_optimization">Otimização de bateria</string>
+    <string name="screen_lock_msg">Bloqueie o App Manager usando o bloqueio de tela do Android</string>
+    <string name="screen_lock">Bloqueio de Tela</string>
+    <string name="unlock_app_manager">Desbloquear App Manager</string>
+    <string name="sd_card">Cartão SD</string>
+    <string name="external_storage">Armazenamento Externo</string>
+    <string name="internal_storage">Armazenamento Interno</string>
 </resources>
