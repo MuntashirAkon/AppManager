@@ -22,15 +22,15 @@ import android.content.pm.PackageItemInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.util.Pair;
-
-import java.io.File;
-import java.util.Objects;
-
 import androidx.annotation.Nullable;
 import aosp.libcore.util.EmptyArray;
 import io.github.muntashirakon.AppManager.backup.BackupManager;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
+import io.github.muntashirakon.io.ProxyFile;
+import io.github.muntashirakon.io.ProxyInputStream;
+
+import java.util.Objects;
 
 /**
  * Stores an application info
@@ -141,11 +141,14 @@ public class ApplicationItem extends PackageItemInfo {
             } catch (Exception ignore) {
             }
         }
-        if (metadata != null) {
-            File iconFile = new File(metadata.backupPath, BackupManager.ICON_FILE);
-            if (iconFile.exists()) {
-                return Drawable.createFromPath(iconFile.getAbsolutePath());
+        try {
+            if (metadata != null) {
+                ProxyFile iconFile = new ProxyFile(metadata.backupPath, BackupManager.ICON_FILE);
+                if (iconFile.exists()) {
+                    return Drawable.createFromStream(new ProxyInputStream(iconFile), label);
+                }
             }
+        } catch (Throwable ignore) {
         }
         return pm.getDefaultActivityIcon();
     }
