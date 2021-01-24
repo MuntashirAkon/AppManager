@@ -53,7 +53,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
-import io.github.muntashirakon.AppManager.misc.Users;
+import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;

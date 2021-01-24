@@ -28,7 +28,7 @@ import android.os.Process;
 
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.BuildConfig;
-import io.github.muntashirakon.AppManager.misc.Users;
+import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 
 public class AppOpsConfigProvider extends ContentProvider {

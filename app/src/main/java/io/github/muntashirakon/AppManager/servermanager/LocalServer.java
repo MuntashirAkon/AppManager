@@ -27,7 +27,7 @@ import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.IAMService;
 import io.github.muntashirakon.AppManager.ipc.IPCUtils;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.misc.Users;
+import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.server.common.Caller;
 import io.github.muntashirakon.AppManager.server.common.CallerResult;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -46,19 +46,21 @@ public class LocalServer {
 
     @GuardedBy("lockObject")
     public static LocalServer getInstance() {
-        if (localServer == null) {
-            synchronized (lockObject) {
-                try {
-                    Log.e("IPC", "Init: Local server");
-                    localServer = new LocalServer();
-                    if (amService == null || !amService.asBinder().pingBinder()) {
-                        amService = IPCUtils.getAmService(AppManager.getContext());
+        synchronized (lockObject) {
+            try {
+                if (localServer == null) {
+                    try {
+                        Log.e("IPC", "Init: Local server");
+                        localServer = new LocalServer();
+                        if (amService == null || !amService.asBinder().pingBinder()) {
+                            amService = IPCUtils.getAmService(AppManager.getContext());
+                        }
+                    } catch (Throwable e) {
+                        e.printStackTrace();
                     }
-                } catch (Throwable e) {
-                    e.printStackTrace();
-                } finally {
-                    lockObject.notifyAll();
                 }
+            } finally {
+                lockObject.notifyAll();
             }
         }
         return localServer;

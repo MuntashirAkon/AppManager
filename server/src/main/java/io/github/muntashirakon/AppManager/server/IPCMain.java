@@ -46,6 +46,9 @@ import static io.github.muntashirakon.AppManager.server.common.ServerUtils.getSy
  * Expected command-line args:
  * args[0]: client service component name
  * args[1]: {@link ServerUtils#CMDLINE_STOP_SERVER} or class name of IPCServer
+ *<p>
+ * <b>Note:</b> This class is hardcoded in {@code IPCClient#IPCMAIN_CLASSNAME}. Don't change the class name or package
+ * path without changing them there.
  */
 public class IPCMain {
     private static void stopRemoteService(ComponentName name) throws Exception {
@@ -62,36 +65,37 @@ public class IPCMain {
                 p.recycle();
             }
         }
-        System.exit(0);
     }
 
     public static void main(String[] args) {
         // Close STDOUT/STDERR since it belongs to the parent shell
         System.out.close();
         System.err.close();
-        if (args.length < 2)
+        if (args.length < 2) {
             System.exit(0);
+            return;
+        }
 
         try {
             ComponentName component = ComponentName.unflattenFromString(args[0]);
 
-            if (args[1].equals(ServerUtils.CMDLINE_STOP_SERVER))
+            if (args[1].equals(ServerUtils.CMDLINE_STOP_SERVER)) {
                 stopRemoteService(component);
+            } else {
+                Context systemContext = getSystemContext();
+                Context context = systemContext.createPackageContext(component.getPackageName(),
+                        Context.CONTEXT_INCLUDE_CODE | Context.CONTEXT_IGNORE_SECURITY);
 
-            Context systemContext = getSystemContext();
-            Context context = systemContext.createPackageContext(component.getPackageName(),
-                    Context.CONTEXT_INCLUDE_CODE | Context.CONTEXT_IGNORE_SECURITY);
-
-            // Use classloader from the package context to run everything
-            ClassLoader cl = context.getClassLoader();
-            Class<?> clz = cl.loadClass(args[1]);
-            Constructor<?> con = clz.getDeclaredConstructor(Context.class, ComponentName.class);
-            con.setAccessible(true);
-            con.newInstance(context, component);
-
+                // Use classloader from the package context to run everything
+                ClassLoader cl = context.getClassLoader();
+                Class<?> clz = cl.loadClass(args[1]);
+                Constructor<?> con = clz.getDeclaredConstructor(Context.class, ComponentName.class);
+                con.setAccessible(true);
+                con.newInstance(context, component);
+            }
             // Shall never return
             System.exit(0);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             Log.e("IPC", "Error in IPCMain", e);
             System.exit(1);
         }

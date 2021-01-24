@@ -27,7 +27,7 @@ import androidx.core.content.pm.PackageInfoCompat;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
-import io.github.muntashirakon.AppManager.misc.Users;
+import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 import java.io.Serializable;

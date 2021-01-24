@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Muntashir Al-Islam
+ * Copyright (c) 2021 Muntashir Al-Islam
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.muntashirakon.AppManager.misc;
+package io.github.muntashirakon.AppManager.users;
 
 import android.content.Context;
 import android.content.pm.UserInfo;
@@ -23,16 +23,15 @@ import android.os.Build;
 import android.os.IUserManager;
 import android.os.RemoteException;
 import android.os.UserHandle;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public final class Users {
     public static final String TAG = "Users";

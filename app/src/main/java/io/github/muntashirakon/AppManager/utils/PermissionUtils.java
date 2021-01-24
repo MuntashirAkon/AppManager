@@ -26,7 +26,7 @@ import android.os.RemoteException;
 
 import androidx.core.content.ContextCompat;
 import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.misc.Users;
+import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 

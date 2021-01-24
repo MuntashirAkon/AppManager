@@ -32,7 +32,7 @@ import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.misc.Users;
+import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
