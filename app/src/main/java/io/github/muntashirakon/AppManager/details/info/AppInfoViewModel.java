@@ -31,6 +31,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
+import com.android.internal.util.TextUtils;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.backup.BackupUtils;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
@@ -141,6 +142,10 @@ public class AppInfoViewModel extends AndroidViewModel {
             tagCloud.netPolicies = NetworkPolicyManagerCompat.getUidPolicy(applicationInfo.uid);
         } else {
             tagCloud.netPolicies = 0;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            tagCloud.ssaid = new SsaidSettings(packageName, applicationInfo.uid).getSsaid();
+            if (TextUtils.isEmpty(tagCloud.ssaid)) tagCloud.ssaid = null;
         }
         this.tagCloud.postValue(tagCloud);
     }
@@ -317,6 +322,8 @@ public class AppInfoViewModel extends AndroidViewModel {
         public String[] readableBackupNames;
         public boolean isBatteryOptimized;
         public int netPolicies;
+        @Nullable
+        public String ssaid;
     }
 
     public static class AppInfo {

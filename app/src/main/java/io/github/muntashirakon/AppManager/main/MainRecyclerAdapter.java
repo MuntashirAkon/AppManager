@@ -36,27 +36,24 @@ import android.widget.ImageView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import androidx.annotation.GuardedBy;
+import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.backup.MetadataManager;
+import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
+import io.github.muntashirakon.AppManager.types.IconLoaderThread;
+import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.AppManager.utils.DateUtils;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-
-import androidx.annotation.GuardedBy;
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
-import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.backup.MetadataManager;
-import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
-import io.github.muntashirakon.AppManager.users.Users;
-import io.github.muntashirakon.AppManager.types.IconLoaderThread;
-import io.github.muntashirakon.AppManager.utils.DateUtils;
-import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapter.ViewHolder>
         implements SectionIndexer {
@@ -166,12 +163,17 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME, item.packageName);
                     if (item.userHandles.length > 0) {
                         if (item.userHandles.length > 1) {
-                            List<UserInfo> users = Objects.requireNonNull(Users.getUsers());
                             String[] userNames = new String[item.userHandles.length];
-                            for (UserInfo info : users) {
-                                for (int i = 0; i < item.userHandles.length; ++i) {
-                                    if (info.id == item.userHandles[i]) {
-                                        userNames[i] = info.name == null ? String.valueOf(info.id) : info.name;
+                            for (int i = 0; i < item.userHandles.length; ++i) {
+                                userNames[i] = mActivity.getString(R.string.user_with_id, item.userHandles[i]);
+                            }
+                            List<UserInfo> users = Users.getUsers();
+                            if (users != null) {
+                                for (UserInfo info : users) {
+                                    for (int i = 0; i < item.userHandles.length; ++i) {
+                                        if (info.id == item.userHandles[i]) {
+                                            userNames[i] = info.name == null ? String.valueOf(info.id) : info.name;
+                                        }
                                     }
                                 }
                             }

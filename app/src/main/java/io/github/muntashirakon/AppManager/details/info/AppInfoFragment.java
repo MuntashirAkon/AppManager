@@ -17,8 +17,7 @@
 
 package io.github.muntashirakon.AppManager.details.info;
 
-import android.content.ComponentName;
-import android.content.Intent;
+import android.content.*;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -57,6 +56,7 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
+import com.google.android.material.textfield.TextInputEditText;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
@@ -147,13 +147,6 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         model = new ViewModelProvider(this).get(AppInfoViewModel.class);
-        mActivity = (AppDetailsActivity) requireActivity();
-        mainModel = mActivity.model;
-        model.setMainModel(mainModel);
-        isRootEnabled = AppPref.isRootEnabled();
-        isAdbEnabled = AppPref.isAdbEnabled();
-        mPackageManager = mActivity.getPackageManager();
-        mAccentColor = UIUtils.getAccentColor(mActivity);
     }
 
     @Nullable
@@ -165,6 +158,13 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mActivity = (AppDetailsActivity) requireActivity();
+        mainModel = mActivity.model;
+        model.setMainModel(mainModel);
+        isRootEnabled = AppPref.isRootEnabled();
+        isAdbEnabled = AppPref.isAdbEnabled();
+        mPackageManager = mActivity.getPackageManager();
+        mAccentColor = UIUtils.getAccentColor(mActivity);
         // Swipe refresh
         mSwipeRefresh = view.findViewById(R.id.swipe_refresh);
         mSwipeRefresh.setColorSchemeColors(mAccentColor);
@@ -623,6 +623,24 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         .setItems(readablePolicies, null)
                         .setNegativeButton(R.string.ok, null)
                         .show());
+            }
+            if (tagCloud.ssaid != null) {
+                addChip(R.string.ssaid, R.color.red_orange).setOnClickListener(v -> {
+                    View view = getLayoutInflater().inflate(R.layout.dialog_ssaid_info, null);
+                    TextInputEditText ssaid = view.findViewById(R.id.ssaid);
+                    ssaid.setText(tagCloud.ssaid);
+                    ssaid.setOnClickListener(v2 -> {
+                        ClipboardManager clipboard = (ClipboardManager) mActivity.getSystemService(Context.CLIPBOARD_SERVICE);
+                        ClipData clip = ClipData.newPlainText("SSAID", tagCloud.ssaid);
+                        clipboard.setPrimaryClip(clip);
+                        Toast.makeText(mActivity, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show();
+                    });
+                    new MaterialAlertDialogBuilder(mActivity)
+                            .setTitle(R.string.ssaid)
+                            .setView(view)
+                            .setNegativeButton(R.string.close, null)
+                            .show();
+                });
             }
         });
     }

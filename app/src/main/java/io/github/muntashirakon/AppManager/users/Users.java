@@ -40,6 +40,8 @@ public final class Users {
     public static final int USER_ALL = -1;
     @UserIdInt
     public static final int USER_NULL = -10000;
+    @UserIdInt
+    public static final int USER_SYSTEM = 0;
 
     public static final boolean MU_ENABLED;
     public static final int PER_USER_RANGE;
@@ -128,8 +130,11 @@ public final class Users {
 
     @UserIdInt
     public static int getUserHandle(int uid) {
-        if (MU_ENABLED && uid >= (PER_USER_RANGE / 10)) return uid / PER_USER_RANGE;
-        return uid;
+        if (MU_ENABLED) {
+            return uid / PER_USER_RANGE;
+        } else {
+            return USER_SYSTEM;
+        }
     }
 
     public static int getAppId(int uid) {

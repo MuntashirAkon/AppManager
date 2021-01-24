@@ -254,6 +254,11 @@ public final class OsEnvironment {
         return new ProxyFile(getDataDirectory(), "data");
     }
 
+    @NonNull
+    public static ProxyFile getUserSystemDirectory(int userId) {
+        return new ProxyFile(new ProxyFile(getDataSystemDirectory(), "users"), Integer.toString(userId));
+    }
+
     /**
      * Returns the path for android-specific data on the SD card.
      */
