@@ -209,7 +209,7 @@ class BackupOp implements Closeable {
     }
 
     private void backupIcon() {
-        final File iconFile = new File(tmpBackupPath, ICON_FILE);
+        final File iconFile = new ProxyFile(tmpBackupPath, ICON_FILE);
         try (OutputStream outputStream = new ProxyOutputStream(iconFile)) {
             Bitmap bitmap = IOUtils.getBitmapFromDrawable(applicationInfo.loadIcon(pm));
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
