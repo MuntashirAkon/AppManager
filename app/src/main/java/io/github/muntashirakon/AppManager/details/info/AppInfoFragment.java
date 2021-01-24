@@ -25,7 +25,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.*;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.net.NetworkPolicyManager;
 import android.net.Uri;
 import android.os.Build;
@@ -51,6 +50,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.core.content.pm.PackageInfoCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -67,8 +67,6 @@ import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
 import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
 import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
-import io.github.muntashirakon.AppManager.backup.BackupUtils;
-import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
@@ -79,17 +77,15 @@ import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.profiles.ProfileManager;
 import io.github.muntashirakon.AppManager.profiles.ProfileMetaManager;
-import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
-import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.scanner.ScannerActivity;
-import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.sharedpref.SharedPrefsActivity;
+import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.types.ScrollableDialogBuilder;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
@@ -135,12 +131,14 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private CharSequence mPackageLabel;
     private LinearProgressIndicator mProgressIndicator;
     private AppDetailsViewModel mainModel;
+    private AppInfoViewModel model;
     private AppInfoRecyclerAdapter adapter;
     // Headers
     private TextView labelView;
     private TextView packageNameView;
-    private ImageView iconView;
     private TextView versionView;
+    private ImageView iconView;
+    private IconLoaderThread iconLoaderThread;
 
     private final ExecutorService executor = Executors.newFixedThreadPool(3);
 
@@ -157,8 +155,10 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        model = new ViewModelProvider(this).get(AppInfoViewModel.class);
         mActivity = (AppDetailsActivity) requireActivity();
         mainModel = mActivity.model;
+        model.setMainModel(mainModel);
         isRootEnabled = AppPref.isRootEnabled();
         isAdbEnabled = AppPref.isAdbEnabled();
         mPackageManager = mActivity.getPackageManager();
@@ -188,33 +188,41 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         // Progress indicator
         mProgressIndicator = view.findViewById(R.id.progress_linear);
         mProgressIndicator.setVisibilityAfterHide(View.GONE);
+        showProgressIndicator(true);
         // Header
         mTagCloud = view.findViewById(R.id.tag_cloud);
         labelView = view.findViewById(R.id.label);
         packageNameView = view.findViewById(R.id.packageName);
+        mPackageName = mainModel.getPackageName();
         iconView = view.findViewById(R.id.icon);
         versionView = view.findViewById(R.id.version);
-        // Set adapter only after package info is loaded
-        executor.submit(() -> {
-            mPackageName = mainModel.getPackageName();
-            if (mPackageName == null) {
-                mainModel.setPackageInfo(false);
-                mPackageName = mainModel.getPackageName();
-            }
-            isExternalApk = mainModel.getIsExternalApk();
-            adapter = new AppInfoRecyclerAdapter(mActivity);
-            recyclerView.setAdapter(adapter);
-        });
+        isExternalApk = mainModel.getIsExternalApk();
+        adapter = new AppInfoRecyclerAdapter(mActivity);
+        recyclerView.setAdapter(adapter);
         // Set observer
         mainModel.get(AppDetailsFragment.APP_INFO).observe(getViewLifecycleOwner(), appDetailsItems -> {
             if (!appDetailsItems.isEmpty() && mainModel.isPackageExist()) {
                 AppDetailsItem appDetailsItem = appDetailsItems.get(0);
                 mPackageInfo = (PackageInfo) appDetailsItem.vanillaItem;
                 mPackageName = appDetailsItem.name;
-                showProgressIndicator(true);
+                // Set package name
+                packageNameView.setText(mPackageName);
+                packageNameView.setOnClickListener(v -> {
+                    // TODO: Copy to clipboard
+                });
+                // Set App Version
+                CharSequence version = getString(R.string.version_name_with_code, mPackageInfo.versionName, PackageInfoCompat.getLongVersionCode(mPackageInfo));
+                versionView.setText(version);
+                // Set others
                 executor.submit(this::getPackageInfo);
             }
         });
+        model.getPackageLabel().observe(getViewLifecycleOwner(), packageLabel -> {
+            mPackageLabel = packageLabel;
+            // Set Application Name, aka Label
+            labelView.setText(mPackageLabel);
+        });
+        setupTagCloud();
     }
 
     @Override
@@ -478,80 +486,18 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         mainModel.setIsPackageChanged();
     }
 
-    /**
-     * Set views up to details_container.
-     */
-    @WorkerThread
-    private void setHeaders() {
-        if (isDetached()) return;
-        // Set Application Name, aka Label
-        runOnUiThread(() -> labelView.setText(mPackageLabel));
-
-        // Set Package Name
-        runOnUiThread(() -> packageNameView.setText(mPackageName));
-
-        // Set App Icon
-        final Drawable appIcon = mApplicationInfo.loadIcon(mPackageManager);
-        runOnUiThread(() -> iconView.setImageDrawable(appIcon));
-
-        // Set App Version
-        CharSequence version = getString(R.string.version_name_with_code, mPackageInfo.versionName, PackageInfoCompat.getLongVersionCode(mPackageInfo));
-        runOnUiThread(() -> versionView.setText(version));
-
-        // Tag cloud //
-        HashMap<String, RulesStorageManager.Type> trackerComponents;
-        trackerComponents = ComponentUtils.getTrackerComponentsForPackageInfo(mPackageInfo);
-        MetadataManager.Metadata[] metadata = MetadataManager.getMetadata(mPackageName);
-        String[] readableBackupNames = new String[metadata.length];
-        for (int i = 0; i < metadata.length; ++i) {
-            String backupName = BackupUtils.getShortBackupName(metadata[i].backupName);
-            int userHandle = metadata[i].userHandle;
-            readableBackupNames[i] = backupName == null ? "Base backup for user " + userHandle : backupName + " for user " + userHandle;
-        }
-        boolean isRunning;
-        if (isExternalApk) isRunning = false;
-        else isRunning = PackageUtils.hasRunningServices(mPackageName);
-        boolean isSystemlessPath;
-        boolean hasMasterkey;
-        boolean hasKeystore;
-        boolean isMagiskHideEnabled;
-        boolean isBatteryOptimized;
-        int netPolicies;
-        if (!isExternalApk && isRootEnabled) {
-            isSystemlessPath = MagiskUtils.isSystemlessPath(PackageUtils
-                    .getHiddenCodePathOrDefault(mPackageName, mApplicationInfo.publicSourceDir));
-            hasMasterkey = KeyStoreUtils.hasMasterKey(mApplicationInfo.uid);
-            hasKeystore = KeyStoreUtils.hasKeyStore(mApplicationInfo.uid);
-            isMagiskHideEnabled = MagiskUtils.isHidden(mPackageName);
-        } else {
-            isSystemlessPath = false;
-            hasMasterkey = false;
-            hasKeystore = false;
-            isMagiskHideEnabled = false;
-        }
-        if (!isExternalApk && LocalServer.isAMServiceAlive()) {
-            netPolicies = NetworkPolicyManagerCompat.getUidPolicy(mApplicationInfo.uid);
-        } else {
-            netPolicies = 0;
-        }
-        if (!isExternalApk && PermissionUtils.hasDumpPermission()) {
-            String targetString = "user," + mPackageName + "," + mApplicationInfo.uid;
-            Runner.Result result = Runner.runCommand(new String[]{"dumpsys", "deviceidle", "whitelist"});
-            isBatteryOptimized = !result.isSuccessful() || !result.getOutput().contains(targetString);
-        } else {
-            isBatteryOptimized = true;
-        }
-        runOnUiThread(() -> {
-            if (isDetached()) return;
+    @UiThread
+    private void setupTagCloud() {
+        model.getTagCloud().observe(getViewLifecycleOwner(), tagCloud -> {
             mTagCloud.removeAllViews();
             // Add tracker chip
-            if (!trackerComponents.isEmpty()) {
-                addChip(getResources().getQuantityString(R.plurals.no_of_trackers,
-                        trackerComponents.size(), trackerComponents.size()), R.color.tracker)
+            if (!tagCloud.trackerComponents.isEmpty()) {
+                addChip(getResources().getQuantityString(R.plurals.no_of_trackers, tagCloud.trackerComponents.size(),
+                        tagCloud.trackerComponents.size()), R.color.tracker)
                         .setOnClickListener(v -> {
                             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(mActivity)
                                     .setTitle(R.string.trackers)
-                                    .setItems(trackerComponents.keySet().toArray(new String[0]), null);
+                                    .setItems(tagCloud.trackerComponents.keySet().toArray(new String[0]), null);
                             if (!isExternalApk && isRootEnabled) {
                                 builder.setPositiveButton(R.string.block, (dialog, which) -> {
                                     Intent intent = new Intent(mActivity, BatchOpsService.class);
@@ -572,24 +518,22 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                             builder.show();
                         });
             }
-            if (isDetached()) return;
-            if ((mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
-                if (isSystemlessPath) {
+            if (tagCloud.isSystemApp) {
+                if (tagCloud.isSystemlessPath) {
                     addChip(R.string.systemless_app);
                 } else addChip(R.string.system_app);
-                if ((mApplicationInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0)
+                if (tagCloud.isUpdatedSystemApp) {
                     addChip(R.string.updated_app);
+                }
             } else if (!mainModel.getIsExternalApk()) addChip(R.string.user_app);
-            if (isDetached()) return;
-            int countSplits = mainModel.getSplitCount();
-            if (countSplits > 0) {
-                addChip(getResources().getQuantityString(R.plurals.no_of_splits, countSplits,
-                        countSplits)).setOnClickListener(v -> {
+            if (tagCloud.splitCount > 0) {
+                addChip(getResources().getQuantityString(R.plurals.no_of_splits, tagCloud.splitCount,
+                        tagCloud.splitCount)).setOnClickListener(v -> {
                     ApkFile apkFile = ApkFile.getInstance(mainModel.getApkFileKey());
                     // Display a list of apks
                     List<ApkFile.Entry> apkEntries = apkFile.getEntries();
-                    String[] entryNames = new String[countSplits];
-                    for (int i = 0; i < countSplits; ++i) {
+                    String[] entryNames = new String[tagCloud.splitCount];
+                    for (int i = 0; i < tagCloud.splitCount; ++i) {
                         entryNames[i] = apkEntries.get(i + 1).toLocalizedString(mActivity);
                     }
                     new MaterialAlertDialogBuilder(mActivity)
@@ -599,30 +543,29 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                             .show();
                 });
             }
-            if (isDetached()) return;
-            if ((mApplicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0)
+            if (tagCloud.isDebuggable) {
                 addChip(R.string.debuggable);
-            if (isDetached()) return;
-            if ((mApplicationInfo.flags & ApplicationInfo.FLAG_TEST_ONLY) != 0)
+            }
+            if (tagCloud.isTestOnly) {
                 addChip(R.string.test_only);
-            if (isDetached()) return;
-            if ((mApplicationInfo.flags & ApplicationInfo.FLAG_HAS_CODE) == 0)
+            }
+            if (!tagCloud.hasCode) {
                 addChip(R.string.no_code);
-            if (isDetached()) return;
-            if ((mApplicationInfo.flags & ApplicationInfo.FLAG_LARGE_HEAP) != 0)
+            }
+            if (tagCloud.hasRequestedLargeHeap) {
                 addChip(R.string.requested_large_heap, R.color.tracker);
-            if (isDetached()) return;
-            if (isRunning) {
+            }
+            if (tagCloud.isRunning) {
                 addChip(R.string.running, R.color.running).setOnClickListener(v ->
                         mActivity.viewPager.setCurrentItem(AppDetailsFragment.SERVICES));
             }
-            if (isDetached()) return;
-            if ((mApplicationInfo.flags & ApplicationInfo.FLAG_STOPPED) != 0)
+            if (tagCloud.isForceStopped) {
                 addChip(R.string.stopped, R.color.stopped);
-            if (isDetached()) return;
-            if (!mApplicationInfo.enabled) addChip(R.string.disabled_app, R.color.disabled_user);
-            if (isDetached()) return;
-            if (isMagiskHideEnabled) {
+            }
+            if (!tagCloud.isAppEnabled) {
+                addChip(R.string.disabled_app, R.color.disabled_user);
+            }
+            if (tagCloud.isMagiskHideEnabled) {
                 addChip(R.string.magisk_hide_enabled).setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
                         .setTitle(R.string.magisk_hide_enabled)
                         .setMessage(R.string.disable_magisk_hide)
@@ -640,11 +583,11 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         .setNegativeButton(R.string.cancel, null)
                         .show());
             }
-            if (isDetached()) return;
-            if (hasKeystore) {
+            if (tagCloud.hasKeyStoreItems) {
                 Chip chip;
-                if (hasMasterkey) chip = addChip(R.string.keystore, R.color.tracker);
-                else chip = addChip(R.string.keystore);
+                if (tagCloud.hasMasterKeyInKeyStore) {
+                    chip = addChip(R.string.keystore, R.color.tracker);
+                } else chip = addChip(R.string.keystore);
                 chip.setOnClickListener(view -> new MaterialAlertDialogBuilder(mActivity)
                         .setTitle(R.string.keystore)
                         .setItems(KeyStoreUtils.getKeyStoreFiles(mApplicationInfo.uid,
@@ -652,16 +595,15 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         .setNegativeButton(R.string.close, null)
                         .show());
             }
-            if (isDetached()) return;
-            if (metadata.length > 0) {
+            if (tagCloud.readableBackupNames.length > 0) {
                 addChip(R.string.backup).setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
                         .setTitle(R.string.backup)
-                        .setItems(readableBackupNames, null)
+                        .setItems(tagCloud.readableBackupNames, null)
                         .setNegativeButton(R.string.close, null)
                         .show());
             }
             if (isDetached()) return;
-            if (!isBatteryOptimized) {
+            if (!tagCloud.isBatteryOptimized) {
                 addChip(R.string.no_battery_optimization, R.color.red_orange).setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
                         .setTitle(R.string.battery_optimization)
                         .setMessage(R.string.enable_battery_optimization)
@@ -672,8 +614,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         })
                         .show());
             }
-            if (netPolicies > 0) {
-                String[] readablePolicies = NetworkPolicyManagerCompat.getReadablePolicies(mActivity, netPolicies)
+            if (tagCloud.netPolicies > 0) {
+                String[] readablePolicies = NetworkPolicyManagerCompat.getReadablePolicies(mActivity, tagCloud.netPolicies)
                         .values().toArray(new String[0]);
                 addChip(R.string.has_net_policy).setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
                         .setTitle(R.string.net_policy)
@@ -1301,21 +1243,18 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         }
     }
 
-    /**
-     * Get package info.
-     */
     @SuppressLint("WrongConstant")
     @WorkerThread
     private void getPackageInfo() {
-        if (mPackageInfo == null) {
-            runOnUiThread(() -> showProgressIndicator(false));
-            return;
-        }
         mInstalledPackageInfo = mainModel.getInstalledPackageInfo();
         mApplicationInfo = mPackageInfo.applicationInfo;
-        mPackageLabel = mApplicationInfo.loadLabel(mPackageManager);
+        // Set App Icon
+        if (iconLoaderThread != null) iconLoaderThread.interrupt();
+        iconLoaderThread = new IconLoaderThread(iconView, mApplicationInfo);
+        iconLoaderThread.start();
         // (Re)load views
-        setHeaders();
+        model.loadPackageLabel();
+        model.loadTagCloud();
         runOnUiThread(this::setHorizontalActions);
         setVerticalView();
         runOnUiThread(() -> showProgressIndicator(false));
