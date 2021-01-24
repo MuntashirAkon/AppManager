@@ -23,6 +23,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.net.NetworkPolicyManager;
 import android.net.Uri;
 import android.os.Build;
@@ -34,13 +35,11 @@ import android.text.SpannableStringBuilder;
 import android.text.format.Formatter;
 import android.view.*;
 import android.webkit.MimeTypeMap;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.*;
+import androidx.appcompat.app.AlertDialog;
 import androidx.collection.ArrayMap;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -57,6 +56,7 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
@@ -97,6 +97,7 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static io.github.muntashirakon.AppManager.details.info.ListItem.LIST_ITEM_FLAG_MONOSPACE;
 import static io.github.muntashirakon.AppManager.utils.PermissionUtils.TERMUX_PERM_RUN_COMMAND;
@@ -627,19 +628,62 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             if (tagCloud.ssaid != null) {
                 addChip(R.string.ssaid, R.color.red_orange).setOnClickListener(v -> {
                     View view = getLayoutInflater().inflate(R.layout.dialog_ssaid_info, null);
-                    TextInputEditText ssaid = view.findViewById(R.id.ssaid);
-                    ssaid.setText(tagCloud.ssaid);
-                    ssaid.setOnClickListener(v2 -> {
+                    AlertDialog alertDialog = new MaterialAlertDialogBuilder(mActivity)
+                            .setTitle(R.string.ssaid)
+                            .setView(view)
+                            .setPositiveButton(R.string.apply, null)
+                            .setNegativeButton(R.string.close, null)
+                            .setNeutralButton(R.string.reset_to_default, null)
+                            .create();
+                    TextInputEditText ssaidHolder = view.findViewById(R.id.ssaid);
+                    TextInputLayout ssaidInputLayout = view.findViewById(android.R.id.text1);
+                    AtomicReference<Button> positiveButton = new AtomicReference<>();
+                    AtomicReference<Button> neutralButton = new AtomicReference<>();
+                    AtomicReference<String> ssaid = new AtomicReference<>(tagCloud.ssaid);
+
+                    alertDialog.setOnShowListener(dialog -> {
+                        positiveButton.set(alertDialog.getButton(AlertDialog.BUTTON_POSITIVE));
+                        neutralButton.set(alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL));
+                        positiveButton.get().setVisibility(View.GONE);
+                        positiveButton.get().setOnClickListener(v2 -> {
+                            SsaidSettings ssaidSettings = new SsaidSettings(mPackageName, mApplicationInfo.uid);
+                            if (ssaidSettings.setSsaid(ssaid.get())) {
+                                model.loadTagCloud();
+                                Toast.makeText(mActivity, R.string.restart_to_reflect_changes, Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(mActivity, R.string.failed_to_change_ssaid, Toast.LENGTH_LONG).show();
+                            }
+                            alertDialog.dismiss();
+                        });
+                        neutralButton.get().setVisibility(View.GONE);
+                        neutralButton.get().setOnClickListener(v2 -> {
+                            ssaid.set(tagCloud.ssaid);
+                            ssaidHolder.setText(ssaid.get());
+                            neutralButton.get().setVisibility(View.GONE);
+                            positiveButton.get().setVisibility(View.GONE);
+                        });
+                    });
+                    ssaidHolder.setText(tagCloud.ssaid);
+                    ssaidHolder.setTypeface(Typeface.MONOSPACE);
+                    ssaidHolder.setOnClickListener(v2 -> {
                         ClipboardManager clipboard = (ClipboardManager) mActivity.getSystemService(Context.CLIPBOARD_SERVICE);
-                        ClipData clip = ClipData.newPlainText("SSAID", tagCloud.ssaid);
+                        ClipData clip = ClipData.newPlainText("SSAID", ssaid.get());
                         clipboard.setPrimaryClip(clip);
                         Toast.makeText(mActivity, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show();
                     });
-                    new MaterialAlertDialogBuilder(mActivity)
-                            .setTitle(R.string.ssaid)
-                            .setView(view)
-                            .setNegativeButton(R.string.close, null)
-                            .show();
+                    ssaidInputLayout.setEndIconOnClickListener(v2 -> {
+                        ssaid.set(SsaidSettings.generateSsaid(mPackageName));
+                        ssaidHolder.setText(ssaid.get());
+                        if (!tagCloud.ssaid.equals(ssaid.get())) {
+                            if (neutralButton.get() != null) {
+                                neutralButton.get().setVisibility(View.VISIBLE);
+                            }
+                            if (positiveButton.get() != null) {
+                                positiveButton.get().setVisibility(View.VISIBLE);
+                            }
+                        }
+                    });
+                    alertDialog.show();
                 });
             }
         });

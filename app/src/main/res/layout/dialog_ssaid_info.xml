@@ -19,6 +19,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingTop="@dimen/padding_small"
     android:paddingBottom="@dimen/padding_small"
     android:paddingStart="@dimen/padding_medium"
@@ -35,21 +36,20 @@
         android:id="@android:id/text1"
         style="@style/AppTheme.TextInputLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:endIconMode="custom"
+        app:endIconDrawable="@drawable/ic_baseline_autorenew_24">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/ssaid"
             style="@style/TextAppearance.MaterialComponents.Subtitle1"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
             android:textSize="25sp"
-            android:gravity="center"
             android:inputType="none"
             android:focusable="false"
             android:cursorVisible="false"
-            android:typeface="monospace"
-            android:fontFamily="monospace"
+            android:textAllCaps="true"
             tools:text="@tools:sample/full_names" />
 
     </com.google.android.material.textfield.TextInputLayout>
