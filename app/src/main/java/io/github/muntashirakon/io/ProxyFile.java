@@ -92,6 +92,14 @@ public class ProxyFile extends File {
         return isDeleted;
     }
 
+    @Nullable
+    @Override
+    public ProxyFile getParentFile() {
+        File parentFile = super.getParentFile();
+        if (parentFile != null) return new ProxyFile(parentFile);
+        else return null;
+    }
+
     @Override
     public boolean exists() {
         if (isRemoteAlive()) {
@@ -232,7 +240,7 @@ public class ProxyFile extends File {
         return files.toArray(new ProxyFile[0]);
     }
 
-    public InputStream getInputStream() throws RemoteException, FileNotFoundException {
+    public FileInputStream getInputStream() throws RemoteException, FileNotFoundException {
         if (isRemoteAlive()) {
             //noinspection ConstantConditions
             ParcelFileDescriptor fd = file.getInputStream();
@@ -250,7 +258,7 @@ public class ProxyFile extends File {
         } return new FileInputStream(this);
     }
 
-    public OutputStream getOutputStream() throws RemoteException, FileNotFoundException {
+    public FileOutputStream getOutputStream() throws RemoteException, FileNotFoundException {
         if (isRemoteAlive()) {
             //noinspection ConstantConditions
             ParcelFileDescriptor fd = file.getOutputStream();

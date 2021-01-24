@@ -131,4 +131,8 @@ public final class Users {
         if (MU_ENABLED && uid >= (PER_USER_RANGE / 10)) return uid / PER_USER_RANGE;
         return uid;
     }
+
+    public static int getAppId(int uid) {
+        return uid % PER_USER_RANGE;
+    }
 }

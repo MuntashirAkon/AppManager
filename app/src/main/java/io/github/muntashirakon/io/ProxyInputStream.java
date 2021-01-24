@@ -19,16 +19,13 @@ package io.github.muntashirakon.io;
 
 import android.os.RemoteException;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.nio.channels.FileChannel;
 
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 
-public class ProxyInputStream extends InputStream {
-    private final InputStream privateInputStream;
+public final class ProxyInputStream extends InputStream {
+    private final FileInputStream privateInputStream;
 
     public ProxyInputStream(File file) throws FileNotFoundException, RemoteException {
         if (file instanceof ProxyFile && LocalServer.isAMServiceAlive()) {
@@ -66,6 +63,14 @@ public class ProxyInputStream extends InputStream {
     @Override
     public void close() throws IOException {
         privateInputStream.close();
+    }
+
+    public final FileDescriptor getFD() throws IOException {
+        return privateInputStream.getFD();
+    }
+
+    public FileChannel getChannel() {
+        return privateInputStream.getChannel();
     }
 
     @Override

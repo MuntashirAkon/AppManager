@@ -54,6 +54,7 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.io.ProxyInputStream;
+import io.github.muntashirakon.io.ProxyOutputStream;
 
 public final class IOUtils {
     private static final byte[] ZIP_FILE_HEADER = new byte[]{0x50, 0x4B, 0x03, 0x04};
@@ -112,6 +113,13 @@ public final class IOUtils {
             pos += cc;
         }
         return output;
+    }
+
+    public static long copy(File from, File to) throws IOException, RemoteException {
+        try (InputStream in = new ProxyInputStream(from);
+             OutputStream out = new ProxyOutputStream(to)) {
+            return copy(in, out);
+        }
     }
 
     public static long copy(InputStream inputStream, OutputStream outputStream) throws IOException {

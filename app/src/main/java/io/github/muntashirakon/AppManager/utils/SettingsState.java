@@ -23,24 +23,31 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.os.*;
-import android.provider.Settings;
-import android.provider.Settings.Global;
 import android.text.TextUtils;
+import android.util.ArrayMap;
 import android.util.Base64;
-import android.util.*;
-import android.util.proto.ProtoOutputStream;
+import android.util.SparseIntArray;
+import android.util.Xml;
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
+import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.io.AtomicProxyFile;
+import io.github.muntashirakon.io.ProxyFile;
+import io.github.muntashirakon.io.ProxyInputStream;
+import io.github.muntashirakon.io.ProxyOutputStream;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
 
 import static android.os.Process.FIRST_APPLICATION_UID;
@@ -154,10 +161,7 @@ final class SettingsState {
     private final int mMaxBytesPerAppPackage;
 
     @GuardedBy("mLock")
-    private final File mStatePersistFile;
-
-    @GuardedBy("mLock")
-    private final String mStatePersistTag;
+    private final ProxyFile mStatePersistFile;
 
     private final Setting mNullSetting = new Setting(null, null, false, null, null) {
         @Override
@@ -242,14 +246,13 @@ final class SettingsState {
     }
 
     public SettingsState(Context context, Object lock, File file, int key,
-            int maxBytesPerAppPackage, Looper looper) {
+                         int maxBytesPerAppPackage, Looper looper) {
         // It is important that we use the same lock as the settings provider
         // to ensure multiple mutations on this state are atomically persisted
         // as the async persistence should be blocked while we make changes.
         mContext = context;
         mLock = lock;
-        mStatePersistFile = file;
-        mStatePersistTag = "settings-" + getTypeFromKey(key) + "-" + getUserIdFromKey(key);
+        mStatePersistFile = new ProxyFile(file);
         mKey = key;
         mHandler = new MyHandler(looper);
         if (maxBytesPerAppPackage == MAX_BYTES_PER_APP_PACKAGE_LIMITED) {
@@ -335,7 +338,7 @@ final class SettingsState {
 
     // The settings provider must hold its lock when calling here.
     public boolean updateSettingLocked(String name, String value, String tag,
-            boolean makeValue, String packageName) {
+                                       boolean makeValue, String packageName) {
         if (!hasSettingLocked(name)) {
             return false;
         }
@@ -363,7 +366,7 @@ final class SettingsState {
     // The settings provider must hold its lock when calling here.
     @GuardedBy("mLock")
     public boolean insertSettingOverrideableByRestoreLocked(String name, String value, String tag,
-            boolean makeDefault, String packageName) {
+                                                            boolean makeDefault, String packageName) {
         return insertSettingLocked(name, value, tag, makeDefault, false, packageName,
                 /* overrideableByRestore */ true);
     }
@@ -371,7 +374,7 @@ final class SettingsState {
     // The settings provider must hold its lock when calling here.
     @GuardedBy("mLock")
     public boolean insertSettingLocked(String name, String value, String tag,
-            boolean makeDefault, String packageName) {
+                                       boolean makeDefault, String packageName) {
         return insertSettingLocked(name, value, tag, makeDefault, false, packageName,
                 /* overrideableByRestore */ false);
     }
@@ -379,8 +382,8 @@ final class SettingsState {
     // The settings provider must hold its lock when calling here.
     @GuardedBy("mLock")
     public boolean insertSettingLocked(String name, String value, String tag,
-            boolean makeDefault, boolean forceNonSystemPackage, String packageName,
-            boolean overrideableByRestore) {
+                                       boolean makeDefault, boolean forceNonSystemPackage, String packageName,
+                                       boolean overrideableByRestore) {
         if (TextUtils.isEmpty(name)) {
             return false;
         }
@@ -461,7 +464,7 @@ final class SettingsState {
     // Returns the list of keys which changed (added, updated, or deleted).
     @GuardedBy("mLock")
     public List<String> setSettingsLocked(String prefix, Map<String, String> keyValues,
-            String packageName) {
+                                          String packageName) {
         List<String> changedKeys = new ArrayList<>();
         // Delete old keys with the prefix that are not part of the new set.
         for (int i = 0; i < mSettings.keySet().size(); ++i) {
@@ -594,7 +597,7 @@ final class SettingsState {
 
     @GuardedBy("mLock")
     private void updateMemoryUsagePerPackageLocked(String packageName, String oldValue,
-            String newValue, String oldDefaultValue, String newDefaultValue) {
+                                                   String newValue, String oldDefaultValue, String newDefaultValue) {
         if (mMaxBytesPerAppPackage == MAX_BYTES_PER_APP_PACKAGE_UNLIMITED) {
             return;
         }
@@ -691,8 +694,8 @@ final class SettingsState {
                 Log.i(LOG_TAG, "[PERSIST START]");
             }
 
-            AtomicFile destination = new AtomicFile(mStatePersistFile, mStatePersistTag);
-            FileOutputStream out = null;
+            AtomicProxyFile destination = new AtomicProxyFile(mStatePersistFile);
+            ProxyOutputStream out = null;
             try {
                 out = destination.startWrite();
 
@@ -755,13 +758,11 @@ final class SettingsState {
                     if (t.getMessage().contains("Couldn't create directory")) {
                         // attempt to create the directory with Files.createDirectories, which
                         // throws more informative errors than File.mkdirs.
-                        Path parentPath = destination.getBaseFile().getParentFile().toPath();
-                        try {
-                            Files.createDirectories(parentPath);
+                        ProxyFile parentPath = destination.getBaseFile().getParentFile();
+                        if (parentPath.mkdirs()) {
                             Log.i(LOG_TAG, "Successfully created " + parentPath);
-                        } catch (Throwable t2) {
-                            Log.e(LOG_TAG, "Failed to write " + parentPath
-                                    + " with Files.writeDirectories", t2);
+                        } else {
+                            Log.e(LOG_TAG, "Failed to write " + parentPath + " with Files.writeDirectories");
                         }
                     }
                 }
@@ -778,11 +779,11 @@ final class SettingsState {
         }
     }
 
-    private static void logSettingsDirectoryInformation(File settingsFile) {
-        File parent = settingsFile.getParentFile();
+    private static void logSettingsDirectoryInformation(ProxyFile settingsFile) {
+        ProxyFile parent = settingsFile.getParentFile();
         Log.i(LOG_TAG, "directory info for directory/file " + settingsFile
                 + " with stacktrace ", new Exception());
-        File ancestorDir = parent;
+        ProxyFile ancestorDir = parent;
         while (ancestorDir != null) {
             if (!ancestorDir.exists()) {
                 Log.i(LOG_TAG, "ancestor directory " + ancestorDir
@@ -794,7 +795,7 @@ final class SettingsState {
                 Log.i(LOG_TAG, "ancestor directory " + ancestorDir
                         + " permissions: r: " + ancestorDir.canRead() + " w: "
                         + ancestorDir.canWrite() + " x: " + ancestorDir.canExecute());
-                File ancestorParent = ancestorDir.getParentFile();
+                ProxyFile ancestorParent = ancestorDir.getParentFile();
                 if (ancestorParent != null) {
                     Log.i(LOG_TAG, "ancestor's parent directory " + ancestorParent
                             + " permissions: r: " + ancestorParent.canRead() + " w: "
@@ -806,8 +807,8 @@ final class SettingsState {
     }
 
     static void writeSingleSetting(int version, XmlSerializer serializer, String id,
-            String name, String value, String defaultValue, String packageName,
-            String tag, boolean defaultSysSet, boolean isValuePreservedInRestore)
+                                   String name, String value, String defaultValue, String packageName,
+                                   String tag, boolean defaultSysSet, boolean isValuePreservedInRestore)
             throws IOException {
         if (id == null || isBinary(id) || name == null || isBinary(name)
                 || packageName == null || isBinary(packageName)) {
@@ -834,7 +835,7 @@ final class SettingsState {
     }
 
     static void setValueAttribute(String attr, String attrBase64, int version,
-            XmlSerializer serializer, String value) throws IOException {
+                                  XmlSerializer serializer, String value) throws IOException {
         if (version >= SETTINGS_VERSION_NEW_ENCODING) {
             if (value == null) {
                 // Null value -> No ATTR_VALUE nor ATTR_VALUE_BASE64.
@@ -854,7 +855,7 @@ final class SettingsState {
     }
 
     private static void writeSingleNamespaceHash(XmlSerializer serializer, String namespace,
-            String bannedHashCode) throws IOException {
+                                                 String bannedHashCode) throws IOException {
         if (namespace == null || bannedHashCode == null) {
             return;
         }
@@ -893,11 +894,11 @@ final class SettingsState {
 
     @GuardedBy("mLock")
     private void readStateSyncLocked() throws IllegalStateException {
-        FileInputStream in;
-        AtomicFile file = new AtomicFile(mStatePersistFile);
+        ProxyInputStream in;
+        AtomicProxyFile file = new AtomicProxyFile(mStatePersistFile);
         try {
             in = file.openRead();
-        } catch (FileNotFoundException fnfe) {
+        } catch (FileNotFoundException | RemoteException fnfe) {
             Log.w(LOG_TAG, "No settings state " + mStatePersistFile);
             logSettingsDirectoryInformation(mStatePersistFile);
             addHistoricalOperationLocked(HISTORICAL_OPERATION_INITIALIZE, null);
@@ -908,33 +909,32 @@ final class SettingsState {
         }
 
         // Settings file exists but is corrupted. Retry with the fallback file
-        final File statePersistFallbackFile = new File(
-                mStatePersistFile.getAbsolutePath() + FALLBACK_FILE_SUFFIX);
+        final ProxyFile statePersistFallbackFile = new ProxyFile(mStatePersistFile.getAbsolutePath() + FALLBACK_FILE_SUFFIX);
         Log.i(LOG_TAG, "Failed parsing settings file: " + mStatePersistFile
                 + ", retrying with fallback file: " + statePersistFallbackFile);
         try {
-            in = new AtomicFile(statePersistFallbackFile).openRead();
-        } catch (FileNotFoundException fnfe) {
+            in = new AtomicProxyFile(statePersistFallbackFile).openRead();
+        } catch (FileNotFoundException | RemoteException fnfe) {
             final String message = "No fallback file found for: " + mStatePersistFile;
-            Log.wtf(LOG_TAG, message);
+            Log.e(LOG_TAG, message);
             throw new IllegalStateException(message);
         }
         if (parseStateFromXmlStreamLocked(in)) {
             // Parsed state from fallback file. Restore original file with fallback file
             try {
-                FileUtils.copy(statePersistFallbackFile, mStatePersistFile);
-            } catch (IOException ignored) {
+                IOUtils.copy(statePersistFallbackFile, mStatePersistFile);
+            } catch (IOException | RemoteException ignored) {
                 // Failed to copy, but it's okay because we already parsed states from fallback file
             }
         } else {
             final String message = "Failed parsing settings file: " + mStatePersistFile;
-            Log.wtf(LOG_TAG, message);
+            Log.e(LOG_TAG, message);
             throw new IllegalStateException(message);
         }
     }
 
     @GuardedBy("mLock")
-    private boolean parseStateFromXmlStreamLocked(FileInputStream in) {
+    private boolean parseStateFromXmlStreamLocked(InputStream in) {
         try {
             XmlPullParser parser = Xml.newPullParser();
             parser.setInput(in, StandardCharsets.UTF_8.name());
@@ -948,16 +948,17 @@ final class SettingsState {
     }
 
     /**
-     * Uses AtomicFile to check if the file or its backup exists.
+     * Uses AtomicProxyFile to check if the file or its backup exists.
+     *
      * @param file The file to check for existence
      * @return whether the original or backup exist
      */
-    public static boolean stateFileExists(File file) {
-        AtomicFile stateFile = new AtomicFile(file);
+    public static boolean stateFileExists(ProxyFile file) {
+        AtomicProxyFile stateFile = new AtomicProxyFile(file);
         return stateFile.exists();
     }
 
-    private void parseStateLocked(XmlPullParser parser)
+    private void parseStateLocked(@NonNull XmlPullParser parser)
             throws IOException, XmlPullParserException {
         final int outerDepth = parser.getDepth();
         int type;
@@ -1072,7 +1073,7 @@ final class SettingsState {
         final Setting mSetting;
 
         public HistoricalOperation(long timestamp,
-                String operation, Setting setting) {
+                                   String operation, Setting setting) {
             mTimestamp = timestamp;
             mOperation = operation;
             mSetting = setting;
@@ -1091,7 +1092,7 @@ final class SettingsState {
         // Whether the value of this setting will be preserved when restore happens.
         private boolean isValuePreservedInRestore;
 
-        public Setting(Setting other) {
+        public Setting(@NonNull Setting other) {
             name = other.name;
             value = other.value;
             defaultValue = other.defaultValue;
@@ -1103,7 +1104,7 @@ final class SettingsState {
         }
 
         public Setting(String name, String value, boolean makeDefault, String packageName,
-                String tag) {
+                       String tag) {
             this(name, value, makeDefault, packageName, tag, false);
         }
 
@@ -1116,7 +1117,7 @@ final class SettingsState {
         }
 
         public Setting(String name, String value, String defaultValue,
-                String packageName, String tag, boolean fromSystem, String id) {
+                       String packageName, String tag, boolean fromSystem, String id) {
             this(name, value, defaultValue, packageName, tag, fromSystem, id,
                     /* isOverrideableByRestore */ false);
         }
@@ -1133,8 +1134,8 @@ final class SettingsState {
         }
 
         private void init(String name, String value, String tag, String defaultValue,
-                String packageName, boolean fromSystem, String id,
-                boolean isValuePreservedInRestore) {
+                          String packageName, boolean fromSystem, String id,
+                          boolean isValuePreservedInRestore) {
             this.name = name;
             this.value = value;
             this.tag = tag;
@@ -1185,7 +1186,9 @@ final class SettingsState {
             return false;
         }
 
-        /** @return whether the value changed */
+        /**
+         * @return whether the value changed
+         */
         public boolean reset() {
             // overrideableByRestore = true as resetting to default value isn't considered a
             // modification.
@@ -1194,21 +1197,21 @@ final class SettingsState {
         }
 
         public boolean isTransient() {
-            if (getTypeFromKey(getKey()) == SETTINGS_TYPE_GLOBAL) {
-                return ArrayUtils.contains(Global.TRANSIENT_SETTINGS, getName());
-            }
+//            if (getTypeFromKey(getKey()) == SETTINGS_TYPE_GLOBAL) {
+//                return ArrayUtils.contains(Global.TRANSIENT_SETTINGS, getName());
+//            }
             return false;
         }
 
         public boolean update(String value, boolean setDefault, String packageName, String tag,
-                boolean forceNonSystemPackage, boolean overrideableByRestore) {
+                              boolean forceNonSystemPackage, boolean overrideableByRestore) {
             return update(value, setDefault, packageName, tag, forceNonSystemPackage,
                     overrideableByRestore, /* resetToDefault */ false);
         }
 
         private boolean update(String value, boolean setDefault, String packageName, String tag,
-                boolean forceNonSystemPackage, boolean overrideableByRestore,
-                boolean resetToDefault) {
+                               boolean forceNonSystemPackage, boolean overrideableByRestore,
+                               boolean resetToDefault) {
             if (NULL_VALUE.equals(value)) {
                 value = null;
             }
@@ -1270,7 +1273,7 @@ final class SettingsState {
         }
 
         private boolean shouldPreserveSetting(boolean overrideableByRestore,
-                boolean resetToDefault, String packageName, String value) {
+                                              boolean resetToDefault, String packageName, String value) {
             if (resetToDefault) {
                 // By default settings are not marked as preserved.
                 return false;
@@ -1309,6 +1312,7 @@ final class SettingsState {
         return Base64.encodeToString(toBytes(s), Base64.NO_WRAP);
     }
 
+    @NonNull
     private static String base64Decode(String s) {
         return fromBytes(Base64.decode(s, Base64.DEFAULT));
     }
@@ -1317,7 +1321,8 @@ final class SettingsState {
     // contents as-is, even if it contains broken surrogate pairs, we do it by ourselves,
     // since I don't know how Charset would treat them.
 
-    private static byte[] toBytes(String s) {
+    @NonNull
+    private static byte[] toBytes(@NonNull String s) {
         final byte[] result = new byte[s.length() * 2];
         int resultIndex = 0;
         for (int i = 0; i < s.length(); ++i) {
@@ -1328,8 +1333,9 @@ final class SettingsState {
         return result;
     }
 
-    private static String fromBytes(byte[] bytes) {
-        final StringBuffer sb = new StringBuffer(bytes.length / 2);
+    @NonNull
+    private static String fromBytes(@NonNull byte[] bytes) {
+        final StringBuilder sb = new StringBuilder(bytes.length / 2);
 
         final int last = bytes.length - 1;
 
@@ -1343,13 +1349,13 @@ final class SettingsState {
     // Check if a specific package belonging to the caller is part of the system package.
     public static boolean isSystemPackage(Context context, String packageName) {
         final int callingUid = Binder.getCallingUid();
-        final int callingUserId = UserHandle.getUserId(callingUid);
+        final int callingUserId = Users.getUserHandle(callingUid);
         return isSystemPackage(context, packageName, callingUid, callingUserId);
     }
 
     // Check if a specific package, uid, and user ID are part of the system package.
     public static boolean isSystemPackage(Context context, String packageName, int uid,
-            int userId) {
+                                          int userId) {
         synchronized (sLock) {
             if (SYSTEM_PACKAGE_NAME.equals(packageName)) {
                 return true;
@@ -1363,7 +1369,7 @@ final class SettingsState {
 
             if (uid != INVALID_UID) {
                 // Native services running as a special UID get a pass
-                final int callingAppId = UserHandle.getAppId(uid);
+                final int callingAppId = Users.getAppId(uid);
                 if (callingAppId < FIRST_APPLICATION_UID) {
                     sSystemUids.put(callingAppId, callingAppId);
                     return true;
@@ -1373,13 +1379,13 @@ final class SettingsState {
             final long identity = Binder.clearCallingIdentity();
             try {
                 try {
-                    uid = context.getPackageManager().getPackageUidAsUser(packageName, 0, userId);
-                } catch (PackageManager.NameNotFoundException e) {
+                    uid = AppManager.getIPackageManager().getApplicationInfo(packageName, 0, userId).uid;
+                } catch (RemoteException e) {
                     return false;
                 }
 
                 // If the system or a special system UID (like telephony), done.
-                if (UserHandle.getAppId(uid) < FIRST_APPLICATION_UID) {
+                if (Users.getAppId(uid) < FIRST_APPLICATION_UID) {
                     sSystemUids.put(uid, uid);
                     return true;
                 }
@@ -1390,35 +1396,37 @@ final class SettingsState {
                 }
 
                 // If SetupWizard, done.
-                String setupWizPackage = context.getPackageManager().getSetupWizardPackageName();
-                if (packageName.equals(setupWizPackage)) {
-                    sSystemUids.put(uid, uid);
-                    return true;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+                    try {
+                        String setupWizPackage = AppManager.getIPackageManager().getSetupWizardPackageName();
+                        if (packageName.equals(setupWizPackage)) {
+                            sSystemUids.put(uid, uid);
+                            return true;
+                        }
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 // If a persistent system app, done.
                 PackageInfo packageInfo;
                 try {
-                    packageInfo = context.getPackageManager().getPackageInfoAsUser(
-                            packageName, PackageManager.GET_SIGNATURES, userId);
-                    if ((packageInfo.applicationInfo.flags
-                            & ApplicationInfo.FLAG_PERSISTENT) != 0
-                            && (packageInfo.applicationInfo.flags
-                            & ApplicationInfo.FLAG_SYSTEM) != 0) {
+                    packageInfo = PackageManagerCompat.getPackageInfo(packageName, PackageManager.GET_SIGNATURES, userId);
+                    if ((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_PERSISTENT) != 0
+                            && (packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
                         sSystemUids.put(uid, uid);
                         return true;
                     }
-                } catch (PackageManager.NameNotFoundException e) {
+                } catch (PackageManager.NameNotFoundException | RemoteException e) {
                     return false;
                 }
 
                 // Last check if system signed.
                 if (sSystemSignature == null) {
                     try {
-                        sSystemSignature = context.getPackageManager().getPackageInfoAsUser(
-                                SYSTEM_PACKAGE_NAME, PackageManager.GET_SIGNATURES,
-                                UserHandle.USER_SYSTEM).signatures[0];
-                    } catch (PackageManager.NameNotFoundException e) {
+                        sSystemSignature = PackageManagerCompat.getPackageInfo(SYSTEM_PACKAGE_NAME,
+                                PackageManager.GET_SIGNATURES, 0).signatures[0];
+                    } catch (PackageManager.NameNotFoundException | RemoteException e) {
                         /* impossible */
                         return false;
                     }
