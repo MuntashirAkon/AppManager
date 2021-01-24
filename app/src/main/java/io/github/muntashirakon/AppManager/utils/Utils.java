@@ -82,7 +82,7 @@ public class Utils {
     public static final String TERMUX_LOGIN_PATH = OsEnvironment.getDataDataDirectory() + "/com.termux/files/usr/bin/login";
 
     @SuppressWarnings({"BooleanMethodIsAlwaysInverted", "deprecation"})
-    public static boolean checkUsageStatsPermission(@NonNull Context context) {
+    public static boolean hasUsageStatsPermission(@NonNull Context context) {
         AppOpsManager appOpsManager = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
         assert appOpsManager != null;
         final int mode;

@@ -18,30 +18,29 @@
 package io.github.muntashirakon.AppManager.details.info;
 
 import android.annotation.SuppressLint;
-import android.app.usage.StorageStats;
-import android.app.usage.StorageStatsManager;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.*;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.net.NetworkPolicyManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Process;
 import android.os.RemoteException;
 import android.provider.Settings;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.format.Formatter;
-import android.util.Pair;
 import android.view.*;
 import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.activity.result.ActivityResult;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.*;
 import androidx.collection.ArrayMap;
@@ -89,16 +88,12 @@ import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.types.ScrollableDialogBuilder;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
-import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
-import io.github.muntashirakon.AppManager.usage.UsageUtils;
 import io.github.muntashirakon.AppManager.utils.*;
 import io.github.muntashirakon.io.ProxyFile;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -111,10 +106,6 @@ import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
 public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
-    private static final String UID_STATS_PATH = "/proc/uid_stat/";
-    private static final String UID_STATS_TX = "tcp_rcv";
-    private static final String UID_STATS_RX = "tcp_snd";
-
     private static final String PACKAGE_NAME_AURORA_STORE = "com.aurora.store";
     private static final String ACTIVITY_NAME_AURORA_STORE = "com.aurora.store.ui.details.DetailsActivity";
 
@@ -150,6 +141,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private final List<ListItem> mListItems = new ArrayList<>();
     private final BetterActivityResult<String, Uri> export = BetterActivityResult.registerForActivityResult(this, new ActivityResultContracts.CreateDocument());
     private final BetterActivityResult<String, Boolean> termux = BetterActivityResult.registerForActivityResult(this, new ActivityResultContracts.RequestPermission());
+    private final BetterActivityResult<Intent, ActivityResult> activityLauncher = BetterActivityResult.registerActivityForResult(this);
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -196,9 +188,17 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         mPackageName = mainModel.getPackageName();
         iconView = view.findViewById(R.id.icon);
         versionView = view.findViewById(R.id.version);
-        isExternalApk = mainModel.getIsExternalApk();
-        adapter = new AppInfoRecyclerAdapter(mActivity);
-        recyclerView.setAdapter(adapter);
+        // Set adapter only after package info is loaded
+        executor.submit(() -> {
+            mPackageName = mainModel.getPackageName();
+            if (mPackageName == null) {
+                mainModel.setPackageInfo(false);
+                mPackageName = mainModel.getPackageName();
+            }
+            isExternalApk = mainModel.getIsExternalApk();
+            adapter = new AppInfoRecyclerAdapter(mActivity);
+            runOnUiThread(() -> recyclerView.setAdapter(adapter));
+        });
         // Set observer
         mainModel.get(AppDetailsFragment.APP_INFO).observe(getViewLifecycleOwner(), appDetailsItems -> {
             if (!appDetailsItems.isEmpty() && mainModel.isPackageExist()) {
@@ -214,7 +214,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 CharSequence version = getString(R.string.version_name_with_code, mPackageInfo.versionName, PackageInfoCompat.getLongVersionCode(mPackageInfo));
                 versionView.setText(version);
                 // Set others
-                executor.submit(this::getPackageInfo);
+                executor.submit(this::loadPackageInfo);
             }
         });
         model.getPackageLabel().observe(getViewLifecycleOwner(), packageLabel -> {
@@ -223,6 +223,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             labelView.setText(mPackageLabel);
         });
         setupTagCloud();
+        setupVerticalView();
     }
 
     @Override
@@ -910,73 +911,54 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     @GuardedBy("mListItems")
-    private void setPathsAndDirectories() {
+    private void setPathsAndDirectories(@NonNull AppInfoViewModel.AppInfo appInfo) {
         synchronized (mListItems) {
-            if (isDetached()) return;
             // Paths and directories
             mListItems.add(ListItem.getGroupHeader(getString(R.string.paths_and_directories)));
             // Source directory (apk path)
-            String sourceDir = new File(mApplicationInfo.publicSourceDir).getParent();
-            mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.source_dir),
-                    mApplicationInfo.publicSourceDir, openAsFolderInFM(sourceDir)));
+            if (appInfo.sourceDir != null) {
+                mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.source_dir), appInfo.sourceDir,
+                        openAsFolderInFM(appInfo.sourceDir)));
+            }
             // Split source directories
-            ApkFile apkFile = ApkFile.getInstance(mainModel.getApkFileKey());
-            int countSplits = apkFile.getEntries().size() - 1;
-            ApkFile.Entry entry;
-            // Base.apk is always on top, so count from 1
-            for (int i = 1; i <= countSplits; ++i) {
-                entry = apkFile.getEntries().get(i);
-                mListItems.add(ListItem.getSelectableRegularItem(entry.toLocalizedString(mActivity),
-                        entry.getApkSource(), openAsFolderInFM(entry.getApkSource())));
+            if (appInfo.splitEntries.size() > 0) {
+                for (ApkFile.Entry entry : appInfo.splitEntries) {
+                    mListItems.add(ListItem.getSelectableRegularItem(entry.toLocalizedString(mActivity),
+                            entry.getApkSource(), openAsFolderInFM(entry.getApkSource())));
+                }
             }
             // Data dir
-            mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.data_dir),
-                    mApplicationInfo.dataDir, openAsFolderInFM(mApplicationInfo.dataDir)));
+            if (appInfo.dataDir != null) {
+                mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.data_dir), appInfo.dataDir,
+                        openAsFolderInFM(appInfo.dataDir)));
+            }
             // Device-protected data dir
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.dev_protected_data_dir),
-                        mApplicationInfo.deviceProtectedDataDir, openAsFolderInFM(mApplicationInfo.deviceProtectedDataDir)));
+            if (appInfo.dataDeDir != null) {
+                mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.dev_protected_data_dir), appInfo.dataDeDir,
+                        openAsFolderInFM(appInfo.dataDeDir)));
             }
             // External data dirs
-            File[] dataDirs = mActivity.getExternalCacheDirs();
-            if (dataDirs != null) {
-                List<String> extDataDirs = new ArrayList<>();
-                String tmpDataDir;
-                for (File dataDir : dataDirs) {
-                    if (dataDir == null) continue;
-                    tmpDataDir = dataDir.getParent();
-                    if (tmpDataDir != null) tmpDataDir = new File(tmpDataDir).getParent();
-                    if (tmpDataDir != null)
-                        extDataDirs.add(tmpDataDir + File.separatorChar + mPackageName);
-                }
-                if (extDataDirs.size() == 1) {
-                    if (new File(extDataDirs.get(0)).exists()) {
-                        mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.external_data_dir),
-                                extDataDirs.get(0), openAsFolderInFM(extDataDirs.get(0))));
-                    }
-                } else {
-                    for (int i = 0; i < extDataDirs.size(); ++i) {
-                        if (new File(extDataDirs.get(i)).exists()) {
-                            mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.external_multiple_data_dir, i),
-                                    extDataDirs.get(i), openAsFolderInFM(extDataDirs.get(i))));
-                        }
-                    }
+            if (appInfo.extDataDirs.size() == 1) {
+                mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.external_data_dir), appInfo.extDataDirs.get(0),
+                        openAsFolderInFM(appInfo.extDataDirs.get(0))));
+            } else {
+                for (int i = 0; i < appInfo.extDataDirs.size(); ++i) {
+                    mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.external_multiple_data_dir, i),
+                            appInfo.extDataDirs.get(i), openAsFolderInFM(appInfo.extDataDirs.get(i))));
                 }
             }
             // Native JNI library dir
-            File nativeLib = new File(mApplicationInfo.nativeLibraryDir);
-            if (nativeLib.exists()) {
-                mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.native_library_dir),
-                        mApplicationInfo.nativeLibraryDir, openAsFolderInFM(mApplicationInfo.nativeLibraryDir)));
+            if (appInfo.jniDir != null) {
+                mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.native_library_dir), appInfo.jniDir,
+                        openAsFolderInFM(appInfo.jniDir)));
             }
             mListItems.add(ListItem.getGroupDivider());
         }
     }
 
     @GuardedBy("mListItems")
-    private void setMoreInfo() {
+    private void setMoreInfo(AppInfoViewModel.AppInfo appInfo) {
         synchronized (mListItems) {
-            if (isDetached()) return;
             // Set more info
             mListItems.add(ListItem.getGroupHeader(getString(R.string.more_info)));
 
@@ -1020,95 +1002,54 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
             mListItems.add(ListItem.getRegularItem(getString(R.string.date_installed), getTime(mPackageInfo.firstInstallTime)));
             mListItems.add(ListItem.getRegularItem(getString(R.string.date_updated), getTime(mPackageInfo.lastUpdateTime)));
-            if (!mPackageName.equals(mApplicationInfo.processName))
+            if (!mPackageName.equals(mApplicationInfo.processName)) {
                 mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.process_name), mApplicationInfo.processName));
-            try {
-                String installerPackageName = mPackageManager.getInstallerPackageName(mPackageName);
-                if (installerPackageName != null) {
-                    String applicationLabel;
-                    try {
-                        applicationLabel = mPackageManager.getApplicationInfo(installerPackageName, 0).loadLabel(mPackageManager).toString();
-                    } catch (PackageManager.NameNotFoundException e) {
-                        e.printStackTrace();
-                        applicationLabel = installerPackageName;
-                    }
-                    mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.installer_app), applicationLabel));
-                }
-            } catch (IllegalArgumentException ignore) {
+            }
+            if (appInfo.installerApp != null) {
+                mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.installer_app), appInfo.installerApp));
             }
             mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.user_id), Integer.toString(mApplicationInfo.uid)));
             if (mPackageInfo.sharedUserId != null)
                 mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.shared_user_id), mPackageInfo.sharedUserId));
             // Main activity
-            final Intent launchIntentForPackage = mPackageManager.getLaunchIntentForPackage(mPackageName);
-            if (launchIntentForPackage != null) {
-                final ComponentName launchComponentName = launchIntentForPackage.getComponent();
+            if (appInfo.mainActivity != null) {
+                final ComponentName launchComponentName = appInfo.mainActivity.getComponent();
                 if (launchComponentName != null) {
-                    final String mainActivity = launchIntentForPackage.getComponent().getClassName();
-                    mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.main_activity),
-                            mainActivity, view -> startActivity(launchIntentForPackage)));
+                    final String mainActivity = launchComponentName.getClassName();
+                    mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.main_activity), mainActivity,
+                            view -> startActivity(appInfo.mainActivity)));
                 }
             }
             mListItems.add(ListItem.getGroupDivider());
         }
     }
 
-    private void setDataUsage() {
-        try {
-            // Net statistics
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if ((Boolean) AppPref.get(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL)) {
-                    try {
-                        final Pair<Pair<Long, Long>, Pair<Long, Long>> dataUsage;
-                        dataUsage = AppUsageStatsManager.getWifiMobileUsageForPackage(mActivity,
-                                mPackageName, UsageUtils.USAGE_LAST_BOOT);
-                        setDataUsageHelper(getReadableSize(dataUsage.first.first +
-                                dataUsage.second.first), getReadableSize(dataUsage
-                                .first.second + dataUsage.second.second));
-                    } catch (SecurityException e) {
-                        runOnUiThread(() -> Toast.makeText(mActivity, R.string.failed_to_get_data_usage_information, Toast.LENGTH_SHORT).show());
-                        e.printStackTrace();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            } else {
-                final Pair<String, String> uidNetStats = getNetStats(mApplicationInfo.uid);
-                setDataUsageHelper(uidNetStats.first, uidNetStats.second);
-            }
-        } catch (Exception e) {
-            runOnUiThread(() -> Toast.makeText(mActivity, R.string.failed_to_get_data_usage_information, Toast.LENGTH_LONG).show());
-            e.printStackTrace();
-        }
-    }
-
-    @WorkerThread
-    @GuardedBy("mListItems")
-    private void setVerticalView() {
-        synchronized (mListItems) {
-            mListItems.clear();
-            if (isDetached()) return;
-            if (!isExternalApk) {
-                setPathsAndDirectories();
-                setDataUsage();
-                // Storage and Cache
-                if ((Boolean) AppPref.get(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL))
-                    setStorageAndCache();
-            }
-            setMoreInfo();
-            runOnUiThread(() -> adapter.setAdapterList(mListItems));
-        }
-    }
-
-    @GuardedBy("mListItems")
-    private void setDataUsageHelper(String txData, String rxData) {
+    private void setDataUsage(@NonNull AppInfoViewModel.AppInfo appInfo) {
         synchronized (mListItems) {
             if (isDetached()) return;
             mListItems.add(ListItem.getGroupHeader(getString(R.string.data_usage_msg)));
-            mListItems.add(ListItem.getInlineItem(getString(R.string.data_transmitted), txData));
-            mListItems.add(ListItem.getInlineItem(getString(R.string.data_received), rxData));
+            mListItems.add(ListItem.getInlineItem(getString(R.string.data_transmitted), getReadableSize(appInfo.dataTx)));
+            mListItems.add(ListItem.getInlineItem(getString(R.string.data_received), getReadableSize(appInfo.dataRx)));
             mListItems.add(ListItem.getGroupDivider());
         }
+    }
+
+    @UiThread
+    @GuardedBy("mListItems")
+    private void setupVerticalView() {
+        model.getAppInfo().observe(getViewLifecycleOwner(), appInfo -> {
+            synchronized (mListItems) {
+                mListItems.clear();
+                setPathsAndDirectories(appInfo);
+                setDataUsage(appInfo);
+                // Storage and Cache
+                if ((boolean) AppPref.get(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL)) {
+                    setStorageAndCache(appInfo);
+                }
+                setMoreInfo(appInfo);
+                adapter.setAdapterList(mListItems);
+            }
+        });
     }
 
     @Nullable
@@ -1181,71 +1122,47 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
      * Load package sizes and update views if success.
      */
     @SuppressWarnings("deprecation")
-    private void setStorageAndCache() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-            try {
-                Method getPackageSizeInfo = mPackageManager.getClass().getMethod(
-                        "getPackageSizeInfo", String.class, IPackageStatsObserver.class);
-
-                getPackageSizeInfo.invoke(mPackageManager, mPackageName, new IPackageStatsObserver.Stub() {
-                    @Override
-                    public void onGetStatsCompleted(final PackageStats pStats, boolean succeeded) {
-                        setStorageInfo(pStats.codeSize + pStats.externalCodeSize,
-                                pStats.dataSize + pStats.externalDataSize,
-                                pStats.cacheSize + pStats.externalCacheSize,
-                                pStats.externalObbSize, pStats.externalMediaSize);
-                    }
-                });
-            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
-            }
-        } else {
-            if (!Utils.checkUsageStatsPermission(mActivity)) {
-                runOnUiThread(() -> new MaterialAlertDialogBuilder(mActivity)
-                        .setTitle(R.string.grant_usage_access)
-                        .setMessage(R.string.grant_usage_acess_message)
-                        .setPositiveButton(R.string.go, (dialog, which) -> startActivityForResult(new Intent(
-                                Settings.ACTION_USAGE_ACCESS_SETTINGS), 0))
-                        .setNegativeButton(R.string.cancel, null)
-                        .setNeutralButton(R.string.never_ask, (dialog, which) ->
-                                AppPref.set(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL, false))
-                        .setCancelable(false)
-                        .show());
-                return;
-            }
-            try {
-                StorageStatsManager storageStatsManager = (StorageStatsManager) mActivity.getSystemService(Context.STORAGE_STATS_SERVICE);
-                StorageStats storageStats = storageStatsManager.queryStatsForPackage(mApplicationInfo.storageUuid, mPackageName, Process.myUserHandle());
-                // TODO: List obb and media size
-                long cacheSize = storageStats.getCacheBytes();
-                setStorageInfo(storageStats.getAppBytes(), storageStats.getDataBytes() - cacheSize, cacheSize, 0, 0);
-            } catch (IOException | PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     @GuardedBy("mListItems")
-    private void setStorageInfo(long codeSize, long dataSize, long cacheSize, long obbSize, long mediaSize) {
+    private void setStorageAndCache(AppInfoViewModel.AppInfo appInfo) {
+        if (!Utils.hasUsageStatsPermission(mActivity)) {
+            runOnUiThread(() -> new MaterialAlertDialogBuilder(mActivity)
+                    .setTitle(R.string.grant_usage_access)
+                    .setMessage(R.string.grant_usage_acess_message)
+                    .setPositiveButton(R.string.go, (dialog, which) -> activityLauncher.launch(new Intent(
+                            Settings.ACTION_USAGE_ACCESS_SETTINGS), result -> {
+                        if (Utils.hasUsageStatsPermission(mActivity)) {
+                            AppPref.set(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL, true);
+                            // Reload app info
+                            model.loadAppInfo();
+                        }
+                    }))
+                    .setNegativeButton(R.string.cancel, null)
+                    .setNeutralButton(R.string.never_ask, (dialog, which) ->
+                            AppPref.set(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL, false))
+                    .setCancelable(false)
+                    .show());
+            return;
+        }
         synchronized (mListItems) {
-            if (isDetached()) return;
             mListItems.add(ListItem.getGroupHeader(getString(R.string.storage_and_cache)));
-            mListItems.add(ListItem.getInlineItem(getString(R.string.app_size), getReadableSize(codeSize)));
-            mListItems.add(ListItem.getInlineItem(getString(R.string.data_size), getReadableSize(dataSize)));
-            mListItems.add(ListItem.getInlineItem(getString(R.string.cache_size), getReadableSize(cacheSize)));
-            if (obbSize != 0)
-                mListItems.add(ListItem.getInlineItem(getString(R.string.obb_size), getReadableSize(obbSize)));
-            if (mediaSize != 0)
-                mListItems.add(ListItem.getInlineItem(getString(R.string.media_size), getReadableSize(mediaSize)));
-            mListItems.add(ListItem.getInlineItem(getString(R.string.total_size), getReadableSize(codeSize
-                    + dataSize + cacheSize + obbSize + mediaSize)));
+            mListItems.add(ListItem.getInlineItem(getString(R.string.app_size), getReadableSize(appInfo.codeSize)));
+            mListItems.add(ListItem.getInlineItem(getString(R.string.data_size), getReadableSize(appInfo.dataSize)));
+            mListItems.add(ListItem.getInlineItem(getString(R.string.cache_size), getReadableSize(appInfo.cacheSize)));
+            if (appInfo.obbSize != 0) {
+                mListItems.add(ListItem.getInlineItem(getString(R.string.obb_size), getReadableSize(appInfo.obbSize)));
+            }
+            if (appInfo.mediaSize != 0) {
+                mListItems.add(ListItem.getInlineItem(getString(R.string.media_size), getReadableSize(appInfo.mediaSize)));
+            }
+            mListItems.add(ListItem.getInlineItem(getString(R.string.total_size), getReadableSize(appInfo.codeSize
+                    + appInfo.dataSize + appInfo.cacheSize + appInfo.obbSize + appInfo.mediaSize)));
             mListItems.add(ListItem.getGroupDivider());
         }
     }
 
     @SuppressLint("WrongConstant")
     @WorkerThread
-    private void getPackageInfo() {
+    private void loadPackageInfo() {
         mInstalledPackageInfo = mainModel.getInstalledPackageInfo();
         mApplicationInfo = mPackageInfo.applicationInfo;
         // Set App Icon
@@ -1255,8 +1172,12 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         // (Re)load views
         model.loadPackageLabel();
         model.loadTagCloud();
-        runOnUiThread(this::setHorizontalActions);
-        setVerticalView();
+        runOnUiThread(() -> {
+            if (isAdded() && !isDetached()) {
+                setHorizontalActions();
+            }
+        });
+        model.loadAppInfo();
         runOnUiThread(() -> showProgressIndicator(false));
     }
 
@@ -1269,28 +1190,6 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @NonNull
     private String getTime(long time) {
         return DateUtils.formatWeekMediumDateTime(time);
-    }
-
-    /**
-     * Get network stats.
-     *
-     * @param uid Application UID
-     * @return A tuple consisting of transmitted and received data
-     */
-    @NonNull
-    private Pair<String, String> getNetStats(int uid) {
-        String tx = getReadableSize(0);
-        String rx = getReadableSize(0);
-        File uidStatsDir = new File(UID_STATS_PATH + uid);
-        if (uidStatsDir.exists() && uidStatsDir.isDirectory()) {
-            for (File child : Objects.requireNonNull(uidStatsDir.listFiles())) {
-                if (child.getName().equals(UID_STATS_TX))
-                    tx = getReadableSize(Long.parseLong(IOUtils.getFileContent(child, "-1").trim()));
-                else if (child.getName().equals(UID_STATS_RX))
-                    rx = getReadableSize(Long.parseLong(IOUtils.getFileContent(child, "-1").trim()));
-            }
-        }
-        return new Pair<>(tx, rx);
     }
 
     /**

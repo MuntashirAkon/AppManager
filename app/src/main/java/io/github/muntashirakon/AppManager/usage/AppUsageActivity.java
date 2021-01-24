@@ -158,7 +158,7 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
     protected void onStart() {
         super.onStart();
         // Check permission
-        if (!Utils.checkUsageStatsPermission(this)) promptForUsageStatsPermission();
+        if (!Utils.hasUsageStatsPermission(this)) promptForUsageStatsPermission();
         else getAppUsage();
     }
 
@@ -172,7 +172,7 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
     public void onRefresh() {
         mSwipeRefresh.setRefreshing(false);
         // Check permission
-        if (!Utils.checkUsageStatsPermission(this)) promptForUsageStatsPermission();
+        if (!Utils.hasUsageStatsPermission(this)) promptForUsageStatsPermission();
         else getAppUsage();
     }
 

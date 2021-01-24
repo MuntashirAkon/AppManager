@@ -18,12 +18,20 @@
 package io.github.muntashirakon.AppManager.details.info;
 
 import android.app.Application;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
+import android.app.usage.StorageStats;
+import android.app.usage.StorageStatsManager;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.*;
+import android.os.Build;
+import android.os.Process;
+import android.util.Pair;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
+import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.backup.BackupUtils;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.details.AppDetailsViewModel;
@@ -32,15 +40,25 @@ import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.NetworkPolicyManagerCompat;
+import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
+import io.github.muntashirakon.AppManager.usage.UsageUtils;
 import io.github.muntashirakon.AppManager.utils.*;
 
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class AppInfoViewModel extends AndroidViewModel {
     private final MutableLiveData<CharSequence> packageLabel = new MutableLiveData<>();
     private final MutableLiveData<TagCloud> tagCloud = new MutableLiveData<>();
+    private final MutableLiveData<AppInfo> appInfo = new MutableLiveData<>();
     private final ExecutorService executor = Executors.newFixedThreadPool(4);
     @Nullable
     private AppDetailsViewModel mainModel;
@@ -67,6 +85,11 @@ public class AppInfoViewModel extends AndroidViewModel {
         return tagCloud;
     }
 
+    public MutableLiveData<AppInfo> getAppInfo() {
+        return appInfo;
+    }
+
+    @WorkerThread
     public void loadPackageLabel() {
         if (mainModel != null) {
             packageLabel.postValue(mainModel.getPackageInfo().applicationInfo.loadLabel(getApplication()
@@ -74,6 +97,7 @@ public class AppInfoViewModel extends AndroidViewModel {
         }
     }
 
+    @WorkerThread
     public void loadTagCloud() {
         if (mainModel == null) return;
         PackageInfo packageInfo = mainModel.getPackageInfo();
@@ -120,6 +144,154 @@ public class AppInfoViewModel extends AndroidViewModel {
         this.tagCloud.postValue(tagCloud);
     }
 
+    @WorkerThread
+    public void loadAppInfo() {
+        if (mainModel == null) return;
+        PackageInfo packageInfo = mainModel.getPackageInfo();
+        String packageName = packageInfo.packageName;
+        ApplicationInfo applicationInfo = packageInfo.applicationInfo;
+        PackageManager pm = getApplication().getPackageManager();
+        AppInfo appInfo = new AppInfo();
+        // Set source dir
+        appInfo.sourceDir = new File(applicationInfo.publicSourceDir).getParent();
+        // Set split entries
+        ApkFile apkFile = ApkFile.getInstance(mainModel.getApkFileKey());
+        int countSplits = apkFile.getEntries().size() - 1;
+        appInfo.splitEntries = new ArrayList<>(countSplits);
+        // Base.apk is always on top, so count from 1
+        for (int i = 1; i <= countSplits; ++i) {
+            appInfo.splitEntries.add(apkFile.getEntries().get(i));
+        }
+        // Set data dirs
+        appInfo.dataDir = applicationInfo.dataDir;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            appInfo.dataDeDir = applicationInfo.deviceProtectedDataDir;
+        }
+        appInfo.extDataDirs = new ArrayList<>();
+        File[] dataDirs = getApplication().getExternalCacheDirs();
+        if (dataDirs != null) {
+            String tmpDataDir;
+            for (File dataDir : dataDirs) {
+                if (dataDir == null) continue;
+                tmpDataDir = dataDir.getParent();
+                if (tmpDataDir != null) {
+                    tmpDataDir = new File(tmpDataDir).getParent();
+                }
+                if (tmpDataDir != null) {
+                    tmpDataDir = tmpDataDir + File.separatorChar + packageName;
+                    if (new File(tmpDataDir).exists()) {
+                        appInfo.extDataDirs.add(tmpDataDir);
+                    }
+                }
+            }
+        }
+        // Set JNI dir
+        if (new File(applicationInfo.nativeLibraryDir).exists()) {
+            appInfo.jniDir = applicationInfo.nativeLibraryDir;
+        }
+        // Net statistics
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if ((Boolean) AppPref.get(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL)) {
+                    try {
+                        final Pair<Pair<Long, Long>, Pair<Long, Long>> dataUsage;
+                        dataUsage = AppUsageStatsManager.getWifiMobileUsageForPackage(getApplication(),
+                                packageName, UsageUtils.USAGE_LAST_BOOT);
+                        appInfo.dataTx = dataUsage.first.first + dataUsage.second.first;
+                        appInfo.dataRx = dataUsage.first.second + dataUsage.second.second;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            } else {
+                final Pair<Long, Long> uidNetStats = getNetStats(applicationInfo.uid);
+                appInfo.dataTx = uidNetStats.first;
+                appInfo.dataRx = uidNetStats.second;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // Set sizes
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            try {
+                Method getPackageSizeInfo = pm.getClass().getMethod("getPackageSizeInfo", String.class,
+                        IPackageStatsObserver.class);
+                getPackageSizeInfo.invoke(pm, packageName, new IPackageStatsObserver.Stub() {
+                    @SuppressWarnings("deprecation")
+                    @Override
+                    public void onGetStatsCompleted(final PackageStats pStats, boolean succeeded) {
+                        appInfo.codeSize = pStats.codeSize + pStats.externalCodeSize;
+                        appInfo.dataSize = pStats.dataSize + pStats.externalDataSize;
+                        appInfo.cacheSize = pStats.cacheSize + pStats.externalCacheSize;
+                        appInfo.obbSize = pStats.externalObbSize;
+                        appInfo.mediaSize = pStats.externalMediaSize;
+                    }
+                });
+            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        } else {
+            if (Utils.hasUsageStatsPermission(getApplication())) {
+                try {
+                    StorageStatsManager storageStatsManager = (StorageStatsManager) getApplication().getSystemService(Context.STORAGE_STATS_SERVICE);
+                    StorageStats storageStats = storageStatsManager.queryStatsForPackage(applicationInfo.storageUuid, packageName, Process.myUserHandle());
+                    appInfo.cacheSize = storageStats.getCacheBytes();
+                    appInfo.codeSize = storageStats.getAppBytes();
+                    appInfo.dataSize = storageStats.getDataBytes() - appInfo.cacheSize;
+                    // TODO(24/1/21): List obb and media size
+                } catch (IOException | PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        // Set installer app
+        try {
+            @SuppressWarnings("deprecation")
+            String installerPackageName = pm.getInstallerPackageName(packageName);
+            if (installerPackageName != null) {
+                String applicationLabel;
+                try {
+                    applicationLabel = pm.getApplicationInfo(installerPackageName, 0).loadLabel(pm).toString();
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                    applicationLabel = installerPackageName;
+                }
+                appInfo.installerApp = applicationLabel;
+            }
+        } catch (IllegalArgumentException ignore) {
+        }
+        // Set main activity
+        appInfo.mainActivity = pm.getLaunchIntentForPackage(packageName);
+        this.appInfo.postValue(appInfo);
+    }
+
+
+    private static final String UID_STATS_PATH = "/proc/uid_stat/";
+    private static final String UID_STATS_TX = "tcp_rcv";
+    private static final String UID_STATS_RX = "tcp_snd";
+
+    /**
+     * Get network stats.
+     *
+     * @param uid Application UID
+     * @return A tuple consisting of transmitted and received data
+     */
+    @NonNull
+    private Pair<Long, Long> getNetStats(int uid) {
+        long tx = 0;
+        long rx = 0;
+        File uidStatsDir = new File(UID_STATS_PATH + uid);
+        if (uidStatsDir.exists() && uidStatsDir.isDirectory()) {
+            for (File child : Objects.requireNonNull(uidStatsDir.listFiles())) {
+                if (child.getName().equals(UID_STATS_TX))
+                    tx = Long.parseLong(IOUtils.getFileContent(child, "-1").trim());
+                else if (child.getName().equals(UID_STATS_RX))
+                    rx = Long.parseLong(IOUtils.getFileContent(child, "-1").trim());
+            }
+        }
+        return new Pair<>(tx, rx);
+    }
+
     public static class TagCloud {
         public HashMap<String, RulesStorageManager.Type> trackerComponents;
         public boolean isSystemApp;
@@ -139,5 +311,33 @@ public class AppInfoViewModel extends AndroidViewModel {
         public String[] readableBackupNames;
         public boolean isBatteryOptimized;
         public int netPolicies;
+    }
+
+    public static class AppInfo {
+        // Paths & dirs
+        @Nullable
+        public String sourceDir;
+        public List<ApkFile.Entry> splitEntries;
+        @Nullable
+        public String dataDir;
+        @Nullable
+        public String dataDeDir;
+        public List<String> extDataDirs;
+        @Nullable
+        public String jniDir;
+        // Data usage
+        public long dataTx;
+        public long dataRx;
+        // Size info
+        public long codeSize;
+        public long dataSize;
+        public long cacheSize;
+        public long obbSize;
+        public long mediaSize;
+        // More info
+        @Nullable
+        public String installerApp;
+        @Nullable
+        public Intent mainActivity;
     }
 }
