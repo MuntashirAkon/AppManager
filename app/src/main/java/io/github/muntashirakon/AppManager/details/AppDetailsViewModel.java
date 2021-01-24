@@ -19,51 +19,20 @@ package io.github.muntashirakon.AppManager.details;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.content.pm.ConfigurationInfo;
-import android.content.pm.FeatureInfo;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PermissionInfo;
-import android.content.pm.ProviderInfo;
-import android.content.pm.ServiceInfo;
+import android.content.pm.*;
 import android.net.Uri;
 import android.os.Build;
 import android.os.DeadSystemException;
 import android.os.RemoteException;
 import android.text.TextUtils;
-
-import com.android.apksig.ApkVerifier;
-import com.android.apksig.apk.ApkFormatException;
-
-import java.io.File;
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import androidx.annotation.AnyThread;
-import androidx.annotation.GuardedBy;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.UiThread;
-import androidx.annotation.WorkerThread;
+import androidx.annotation.*;
 import androidx.core.content.pm.PermissionInfoCompat;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import com.android.apksig.ApkVerifier;
+import com.android.apksig.apk.ApkFormatException;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
@@ -82,6 +51,16 @@ import io.github.muntashirakon.AppManager.types.PackageChangeReceiver;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
+import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static io.github.muntashirakon.AppManager.appops.AppOpsManager.OP_NONE;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
@@ -1319,7 +1298,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
         }
 
         @Override
-        protected void onPackageChanged(Context context, Intent intent, @Nullable Integer uid, @Nullable String[] packages) {
+        @WorkerThread
+        protected void onPackageChanged(Intent intent, @Nullable Integer uid, @Nullable String[] packages) {
             if (uid != null && (model.packageInfo == null || model.packageInfo.applicationInfo.uid == uid)) {
                 Log.d("ADVM", "Package is changed.");
                 model.setIsPackageChanged();

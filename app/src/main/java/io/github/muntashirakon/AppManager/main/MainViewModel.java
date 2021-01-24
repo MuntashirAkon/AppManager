@@ -19,7 +19,6 @@ package io.github.muntashirakon.AppManager.main;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -29,6 +28,7 @@ import android.text.TextUtils;
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
 import androidx.core.content.pm.PackageInfoCompat;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -594,7 +594,8 @@ public class MainViewModel extends AndroidViewModel {
         }
 
         @Override
-        protected void onPackageChanged(Context context, Intent intent, @Nullable Integer uid, @Nullable String[] packages) {
+        @WorkerThread
+        protected void onPackageChanged(Intent intent, @Nullable Integer uid, @Nullable String[] packages) {
             if (uid != null) {
                 mModel.updateInfoForUid(uid, intent.getAction());
             } else if (packages != null) {

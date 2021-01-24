@@ -27,8 +27,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import android.os.*;
+import android.os.Process;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.UiThread;
+import androidx.annotation.WorkerThread;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
@@ -54,46 +58,68 @@ public abstract class PackageChangeReceiver extends BroadcastReceiver {
         context.registerReceiver(this, sdFilter);
     }
 
-    protected abstract void onPackageChanged(Context context, Intent intent, @Nullable Integer uid, @Nullable String[] packages);
+    @WorkerThread
+    protected abstract void onPackageChanged(Intent intent, @Nullable Integer uid, @Nullable String[] packages);
 
     @Override
-    public void onReceive(Context context, @NonNull Intent intent) {
-        switch (Objects.requireNonNull(intent.getAction())) {
-            case Intent.ACTION_PACKAGE_REMOVED:
-                if (intent.getBooleanExtra(Intent.EXTRA_REPLACING, false)) return;
-            case Intent.ACTION_PACKAGE_ADDED:
-            case Intent.ACTION_PACKAGE_CHANGED:
-                int uid = intent.getIntExtra(Intent.EXTRA_UID, -1);
-                if (uid != -1) onPackageChanged(context, intent, uid, null);
-                return;
-            case Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE:
-            case Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE: {
-                String[] packages = intent.getStringArrayExtra(Intent.EXTRA_CHANGED_PACKAGE_LIST);
-                onPackageChanged(context, intent, null, packages);
-                return;
-            }
-            case Intent.ACTION_LOCALE_CHANGED:
-                onPackageChanged(context, intent, null, null);
-                return;
-            case ACTION_BATCH_OPS_COMPLETED:
-                // Trigger for all ops except disable, force-stop and uninstall
-                @BatchOpsManager.OpType int op;
-                op = intent.getIntExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_NONE);
-                if (op != BatchOpsManager.OP_NONE && op != BatchOpsManager.OP_DISABLE &&
-                        op != BatchOpsManager.OP_ENABLE && op != BatchOpsManager.OP_UNINSTALL) {
-                    String[] packages = intent.getStringArrayExtra(BatchOpsService.EXTRA_OP_PKG);
-                    String[] failedPackages = intent.getStringArrayExtra(BatchOpsService.EXTRA_FAILED_PKG);
-                    if (packages != null && failedPackages != null) {
-                        List<String> packageList = new ArrayList<>();
-                        List<String> failedPackageList = Arrays.asList(failedPackages);
-                        for (String packageName : packages) {
-                            if (!failedPackageList.contains(packageName)) packageList.add(packageName);
-                        }
-                        if (packageList.size() > 0) {
-                            onPackageChanged(context, intent, null, packageList.toArray(new String[0]));
+    @UiThread
+    public final void onReceive(Context context, @NonNull Intent intent) {
+        HandlerThread thread = new HandlerThread("PackageChangeReceiver", Process.THREAD_PRIORITY_BACKGROUND);
+        thread.start();
+        ReceiverHandler receiverHandler = new ReceiverHandler(thread.getLooper());
+        Message msg = receiverHandler.obtainMessage();
+        Bundle args = new Bundle();
+        args.putParcelable("intent", intent);
+        msg.setData(args);
+        receiverHandler.sendMessage(msg);
+    }
+
+    // Handler that receives messages from the thread
+    private final class ReceiverHandler extends Handler {
+        public ReceiverHandler(Looper looper) {
+            super(looper);
+        }
+
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            Intent intent = msg.getData().getParcelable("intent");
+            switch (Objects.requireNonNull(intent.getAction())) {
+                case Intent.ACTION_PACKAGE_REMOVED:
+                    if (intent.getBooleanExtra(Intent.EXTRA_REPLACING, false)) return;
+                case Intent.ACTION_PACKAGE_ADDED:
+                case Intent.ACTION_PACKAGE_CHANGED:
+                    int uid = intent.getIntExtra(Intent.EXTRA_UID, -1);
+                    if (uid != -1) onPackageChanged(intent, uid, null);
+                    return;
+                case Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE:
+                case Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE: {
+                    String[] packages = intent.getStringArrayExtra(Intent.EXTRA_CHANGED_PACKAGE_LIST);
+                    onPackageChanged(intent, null, packages);
+                    return;
+                }
+                case Intent.ACTION_LOCALE_CHANGED:
+                    onPackageChanged(intent, null, null);
+                    return;
+                case ACTION_BATCH_OPS_COMPLETED:
+                    // Trigger for all ops except disable, force-stop and uninstall
+                    @BatchOpsManager.OpType int op;
+                    op = intent.getIntExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_NONE);
+                    if (op != BatchOpsManager.OP_NONE && op != BatchOpsManager.OP_DISABLE &&
+                            op != BatchOpsManager.OP_ENABLE && op != BatchOpsManager.OP_UNINSTALL) {
+                        String[] packages = intent.getStringArrayExtra(BatchOpsService.EXTRA_OP_PKG);
+                        String[] failedPackages = intent.getStringArrayExtra(BatchOpsService.EXTRA_FAILED_PKG);
+                        if (packages != null && failedPackages != null) {
+                            List<String> packageList = new ArrayList<>();
+                            List<String> failedPackageList = Arrays.asList(failedPackages);
+                            for (String packageName : packages) {
+                                if (!failedPackageList.contains(packageName)) packageList.add(packageName);
+                            }
+                            if (packageList.size() > 0) {
+                                onPackageChanged(intent, null, packageList.toArray(new String[0]));
+                            }
                         }
                     }
-                }
+            }
         }
     }
 }
