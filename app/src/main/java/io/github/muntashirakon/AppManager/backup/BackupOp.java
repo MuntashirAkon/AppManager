@@ -368,6 +368,11 @@ class BackupOp implements Closeable {
                 rules.setUriGrant(uriGrant);
             }
         }
+        // Backup SSAID
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            String ssaid = new SsaidSettings(packageName, applicationInfo.uid).getSsaid();
+            if (ssaid != null) rules.setSsaid(ssaid);
+        }
         rules.commitExternal(miscFile);
         if (!crypto.encrypt(new File[]{miscFile})) {
             throw new BackupException("Failed to encrypt " + miscFile.getName());

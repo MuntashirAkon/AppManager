@@ -483,6 +483,12 @@ class RestoreOp implements Closeable {
                             uriManager.grantUri(newUriGrant);
                             uriManager.writeGrantedUriPermissions();
                             break;
+                        case SSAID:
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                new SsaidSettings(packageName, packageInfo.applicationInfo.uid)
+                                        .setSsaid((String) entry.extra);
+                            }
+                            break;
                     }
                 } catch (Throwable e) {
                     // There are several reason restoring these things go wrong, especially when

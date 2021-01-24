@@ -23,6 +23,7 @@ import android.os.Build;
 import android.os.HandlerThread;
 import android.os.Process;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.WorkerThread;
 import aosp.libcore.util.HexEncoding;
@@ -63,6 +64,7 @@ public class SsaidSettings {
                 thread.getLooper());
     }
 
+    @Nullable
     public String getSsaid() {
         return settingsState.getSettingLocked(getName()).getValue();
     }

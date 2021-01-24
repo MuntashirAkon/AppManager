@@ -56,6 +56,7 @@ public class RulesStorageManager implements Closeable {
     public static final String COMPONENT_TO_BE_BLOCKED = "false";  // To preserve compatibility
     public static final String COMPONENT_TO_BE_UNBLOCKED = "unblocked";
 
+    // Keep in sync with #getExtra(Type, String)
     public enum Type {
         ACTIVITY,
         PROVIDER,
@@ -68,6 +69,7 @@ public class RulesStorageManager implements Closeable {
         NET_POLICY,  // int (whitelist|blacklist|none)
         NOTIFICATION,  // string (component name)
         URI_GRANT,  // string (flattened by UriGrant)
+        SSAID,  // string
         UNKNOWN;
 
         public static final String[] names = new String[values().length];
@@ -256,6 +258,13 @@ public class RulesStorageManager implements Closeable {
         addEntry(entry);
     }
 
+    public void setSsaid(@NonNull String ssaid) {
+        Entry entry = new Entry();
+        entry.type = Type.SSAID;
+        entry.extra = ssaid;
+        addEntry(entry);
+    }
+
     @GuardedBy("entries")
     public void addEntry(@NonNull Entry entry) {
         synchronized (entries) {
@@ -412,6 +421,7 @@ public class RulesStorageManager implements Closeable {
             case RECEIVER:
             case SERVICE:
             case NOTIFICATION:
+            case SSAID:
                 return strExtra;
             case PERMISSION:
             case MAGISK_HIDE:
