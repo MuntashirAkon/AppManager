@@ -23,10 +23,7 @@ import android.content.pm.UserInfo;
 import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -85,19 +82,8 @@ public class AppDetailsActivity extends BaseActivity {
         // Set search
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            searchView = new SearchView(actionBar.getThemedContext());
             actionBar.setDisplayShowCustomEnabled(true);
-            searchView.setQueryHint(getString(R.string.search));
-
-            ((ImageView) searchView.findViewById(androidx.appcompat.R.id.search_button))
-                    .setColorFilter(UIUtils.getAccentColor(this));
-            ((ImageView) searchView.findViewById(androidx.appcompat.R.id.search_close_btn))
-                    .setColorFilter(UIUtils.getAccentColor(this));
-
-            ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
-            layoutParams.gravity = Gravity.END;
-            actionBar.setCustomView(searchView, layoutParams);
+            searchView = UIUtils.setupSearchView(this, actionBar, null);
         }
         FragmentManager fragmentManager = getSupportFragmentManager();
         viewPager = findViewById(R.id.pager);

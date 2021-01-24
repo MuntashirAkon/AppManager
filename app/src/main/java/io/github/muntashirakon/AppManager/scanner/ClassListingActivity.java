@@ -21,36 +21,23 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Filter;
-import android.widget.Filterable;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import android.view.*;
+import android.widget.*;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.content.ContextCompat;
 import com.android.internal.util.TextUtils;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
+import io.github.muntashirakon.AppManager.BaseActivity;
+import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.scanner.reflector.Reflector;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.SearchView;
-import androidx.core.content.ContextCompat;
-import io.github.muntashirakon.AppManager.BaseActivity;
-import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.scanner.reflector.Reflector;
-import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 public class ClassListingActivity extends BaseActivity implements SearchView.OnQueryTextListener {
     public static final String EXTRA_APP_NAME = "EXTRA_APP_NAME";
@@ -91,20 +78,7 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
         if (mActionBar != null) {
             mActionBar.setTitle(mAppName);
             mActionBar.setDisplayShowCustomEnabled(true);
-
-            SearchView searchView = new SearchView(mActionBar.getThemedContext());
-            searchView.setOnQueryTextListener(this);
-            searchView.setQueryHint(getString(R.string.search));
-
-            ((ImageView) searchView.findViewById(androidx.appcompat.R.id.search_button))
-                    .setColorFilter(UIUtils.getAccentColor(this));
-            ((ImageView) searchView.findViewById(androidx.appcompat.R.id.search_close_btn))
-                    .setColorFilter(UIUtils.getAccentColor(this));
-
-            ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
-            layoutParams.gravity = Gravity.END;
-            mActionBar.setCustomView(searchView, layoutParams);
+            UIUtils.setupSearchView(this, mActionBar, this);
         }
 
         trackerClassesOnly = false;

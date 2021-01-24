@@ -30,9 +30,14 @@ import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.SearchView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.Locale;
@@ -186,6 +191,23 @@ public class UIUtils {
                 .setCancelable(false)
                 .setView(view)
                 .create();
+    }
+
+    @NonNull
+    public static SearchView setupSearchView(@NonNull Context context, @NonNull ActionBar actionBar,
+                                             @Nullable SearchView.OnQueryTextListener queryTextListener) {
+        SearchView searchView = new SearchView(actionBar.getThemedContext());
+        searchView.setOnQueryTextListener(queryTextListener);
+        searchView.setQueryHint(context.getString(R.string.search));
+        // Set images
+        ((ImageView) searchView.findViewById(androidx.appcompat.R.id.search_button)).setColorFilter(getAccentColor(context));
+        ((ImageView) searchView.findViewById(androidx.appcompat.R.id.search_close_btn)).setColorFilter(getAccentColor(context));
+        // Set layout params
+        ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutParams.gravity = Gravity.END;
+        actionBar.setCustomView(searchView, layoutParams);
+        return searchView;
     }
 
     @NonNull

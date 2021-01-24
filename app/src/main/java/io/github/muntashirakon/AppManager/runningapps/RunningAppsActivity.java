@@ -18,20 +18,9 @@
 package io.github.muntashirakon.AppManager.runningapps;
 
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-
-import com.google.android.material.bottomappbar.BottomAppBar;
-import com.google.android.material.progressindicator.LinearProgressIndicator;
-import com.google.android.material.textview.MaterialTextView;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -40,10 +29,16 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import com.google.android.material.bottomappbar.BottomAppBar;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
+import com.google.android.material.textview.MaterialTextView;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 public class RunningAppsActivity extends BaseActivity implements
         SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener {
@@ -98,19 +93,7 @@ public class RunningAppsActivity extends BaseActivity implements
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowCustomEnabled(true);
-            SearchView searchView = new SearchView(actionBar.getThemedContext());
-            searchView.setOnQueryTextListener(this);
-            searchView.setQueryHint(getString(R.string.search));
-
-            ((ImageView) searchView.findViewById(androidx.appcompat.R.id.search_button))
-                    .setColorFilter(UIUtils.getAccentColor(this));
-            ((ImageView) searchView.findViewById(androidx.appcompat.R.id.search_close_btn))
-                    .setColorFilter(UIUtils.getAccentColor(this));
-
-            ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
-            layoutParams.gravity = Gravity.END;
-            actionBar.setCustomView(searchView, layoutParams);
+            UIUtils.setupSearchView(this, actionBar, this);
         }
         mModel = new ViewModelProvider(this).get(RunningAppsViewModel.class);
         mProgressIndicator = findViewById(R.id.progress_linear);

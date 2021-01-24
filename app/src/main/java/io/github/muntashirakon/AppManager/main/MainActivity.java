@@ -28,8 +28,9 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.view.*;
-import android.widget.ImageView;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -80,7 +81,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-import static androidx.appcompat.app.ActionBar.LayoutParams;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
@@ -143,20 +143,7 @@ public class MainActivity extends BaseActivity implements
         if (actionBar != null) {
             actionBar.setDisplayShowCustomEnabled(true);
             actionBar.setTitle(getString(R.string.loading));
-
-            mSearchView = new SearchView(actionBar.getThemedContext());
-            mSearchView.setOnQueryTextListener(this);
-            mSearchView.setQueryHint(getString(R.string.search));
-
-            ((ImageView) mSearchView.findViewById(androidx.appcompat.R.id.search_button))
-                    .setColorFilter(UIUtils.getAccentColor(this));
-            ((ImageView) mSearchView.findViewById(androidx.appcompat.R.id.search_close_btn))
-                    .setColorFilter(UIUtils.getAccentColor(this));
-
-            LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
-            layoutParams.gravity = Gravity.END;
-            actionBar.setCustomView(mSearchView, layoutParams);
+            mSearchView = UIUtils.setupSearchView(this, actionBar, this);
         }
 
         mProgressIndicator = findViewById(R.id.progress_linear);
