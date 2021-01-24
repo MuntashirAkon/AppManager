@@ -51,7 +51,7 @@
     <string name="sort_by_shared_user_id">共有UID</string>
     <string name="shared_user_id">共有UID</string>
     <string name="sort_by_sha">署名</string>
-    <string name="signatures">署名</string>
+    <string name="signatures">シグネチャ</string>
     <string name="no_signatures">有効な署名がありません</string>
     <string name="configurations">構成</string>
     <string name="no_configurations">構成は見つかりませんでした</string>
@@ -96,10 +96,10 @@
     <string name="empty_package_name">空のパッケージ名</string>
     <string name="instructions">ヘルプ</string>
     <string name="error_creating_shortcut">ショートカットの作成中にエラーが発生しました</string>
-    <string name="error_verbose_pin_shortcut">現在のホームアプリはショートカットに対応していません。ショートカットが作成できませんでした</string>
+    <string name="error_verbose_pin_shortcut">現在のホームアプリはショートカットに対応していません。ショートカットが作成できませんでした。</string>
     <string name="starting_activity">次のアクティビティを起動します: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
-    <string name="create_shortcut">ショートカットを作成</string>
-    <string name="edit_shortcut">ショートカットを編集</string>
+    <string name="create_shortcut">ｼｮｰﾄｶｯﾄを作成</string>
+    <string name="edit_shortcut">ｼｮｰﾄｶｯﾄを編集</string>
     <string name="shortcut_name">ショートカート名</string>
     <string name="package_name">パッケージ名</string>
     <string name="class_name">クラス名</string>
@@ -157,7 +157,8 @@
         <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g>個のトラッカーに<xliff:g id="class_no" example="50">%2$d</xliff:g>個のクラス</item>
         <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g>個のトラッカーに<xliff:g id="class_no" example="50">%2$d</xliff:g>個のクラス</item>
     </plurals>
-    <string name="tested_signatures_on_classes_and_time_taken"> <xliff:g id="signature_no" example="342">%1$d</xliff:g>件の定義リストで<xliff:g id="class_no" example="6000">%2$d</xliff:g>個のクラスを検証しました.\n計測時間: <xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> 反復).</string>
+    <string name="tested_signatures_on_classes_and_time_taken">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"signature_no\" example=\"342\"&gt;%1$d&lt;/xliff:g&gt;件の定義リストで&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"6000\"&gt;%2$d&lt;/xliff:g&gt;個のクラスを検証しました.
+\n計測時間: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"time\" example=\"10000\"&gt;%3$d&lt;/xliff:g&gt; ms (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"iteration_no\" example=\"100000\"&gt;%4$d&lt;/xliff:g&gt; 反復).</string>
     <string name="found_trackers">見つかったトラッカー:</string>
     <string name="tracker_details">トラッカーの詳細</string>
     <string name="tracker_classes">トラッカーのクラス</string>
@@ -187,11 +188,11 @@
     <string name="usage_min">%1$d 分</string>
     <string name="usage_less_than_a_minute">１分以下</string>
     <string name="go_back">戻る</string>
-    <string name="go">移動</string>
+    <string name="go">設定画面に移動</string>
     <string name="grant_usage_access">使用状況へのアクセスを許可</string>
     <string name="grant_usage_acess_message">アプリの使用状況を表示するために許可する必要があります。</string>
     <string name="share_apk">APKを共有</string>
-    <string name="failed_to_extract_apk_file">APKファイルを抽出できませんでした。</string>
+    <string name="failed_to_extract_apk_file">APKファイルを抽出できませんでした</string>
     <string name="menu_remove_rules">ルールを除去</string>
     <string name="menu_apply_rules">ルールを反映</string>
     <string name="search">検索</string>
@@ -235,16 +236,16 @@
     <string name="no_content">コンテンツがありません</string>
     <string name="view_in_settings">設定画面で開く</string>
     <string name="uninstall_app_message">このアプリをアンインストールしますか？</string>
-    <string name="failed_to_uninstall"> <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>のアプリをアンストールできませんでした。</string>
+    <string name="failed_to_uninstall">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;のアプリをアンストールできませんでした。</string>
     <string name="uninstalled_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g>はアンインストールされました。</string>
     <string name="uninstall_system_app_message">このアプリはシステムアプリです。本当にアンインストールしますか？</string>
-    <string name="stopped">停止済み</string>
+    <string name="stopped">停止</string>
     <string name="disable">無効にする</string>
     <string name="enable">有効にする</string>
-    <string name="failed_to_disable"> <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>を無効にできませんでした。</string>
-    <string name="failed_to_enable"> <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>を有効にできませんでした</string>
+    <string name="failed_to_disable">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;を無効にできませんでした。</string>
+    <string name="failed_to_enable">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;を有効にできませんでした。</string>
     <string name="force_stop">強制終了</string>
-    <string name="failed_to_stop"> <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>を停止できませんでした</string>
+    <string name="failed_to_stop">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;を停止できませんでした。</string>
     <string name="storage_and_cache">ストレージとキャッシュ</string>
     <string name="total_size">合計</string>
     <string name="app_size">アプリ本体</string>
@@ -261,7 +262,7 @@
     <string name="pref_usage_access_enabled">使用状況アクセス</string>
     <string name="pref_usage_access_enabled_msg">アプリの使用状況とデーター使用量を確認できるようになります。</string>
     <string name="app_settings">設定</string>
-    <string name="only_works_in_root_mode">Rootモードのみの機能です。</string>
+    <string name="only_works_in_root_mode">Rootモードのみの機能です</string>
     <string name="usage_yesterday">昨日</string>
     <string name="exodus_link">\u03b5xodusのリンク</string>
     <string name="sort_by_disabled_app">無効のものを優先</string>
@@ -321,7 +322,7 @@
         <item quantity="one">%1$d 個のアプリを強制終了できませんでした</item>
         <item quantity="other">%1$d 個のアプリを強制終了できませんでした</item>
     </plurals>
-    <string name="toggle_kill_for_system_apps">システムアプリをキルするか切り替え</string>
+    <string name="toggle_kill_for_system_apps">ｼｽﾃﾑｱﾌﾟﾘをｷﾙするか切り替え</string>
     <string name="app_op_cannot_be_disabled">この権限は無効にできません。恐らく他のアプリに依存する読み取り専用のアプリ権限です</string>
     <string name="permission_name">パーミッション名</string>
     <string name="mode">モード</string>
@@ -381,7 +382,7 @@
     <string name="launch_app">起動</string>
     <string name="never_ask">二度と表示しない</string>
     <string name="one_click_ops">ワンタップ一括処理</string>
-    <string name="changelog">変更履歴</string>
+    <string name="changelog">更新履歴</string>
     <string name="external_apk_no_app_op">外部APKにはAppOpsはありません</string>
     <string name="manifest_viewer">マニフェストビューワ</string>
     <plurals name="no_of_trackers">
@@ -432,7 +433,7 @@
     <string name="failed_to_fetch_package_info_possibly_a_split_apk">パッケージ情報を取得できませんでした。恐らく分割APKです。</string>
     <string name="termux">Termux</string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> インストール済み</string>
-    <string name="failed_to_install_package_name"> <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> をインストールできませんでした</string>
+    <string name="failed_to_install_package_name">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; をインストールできませんでした</string>
     <string name="filter">フィルタ</string>
     <string name="filter_user_apps">ユーザーアプリ</string>
     <string name="filter_system_apps">システムアプリ</string>
@@ -497,8 +498,7 @@
         <item quantity="other">%1$d 個のライブラリ</item>
     </plurals>
     <plurals name="missing_signatures">
-        <item quantity="one">%1$d 個のシグネチャが欠損</item>
-        <item quantity="other">%1$d 個のシグネチャが欠損</item>
+        <item quantity="other">%1$d 個のシグネチャが不明</item>
     </plurals>
     <plurals name="signature_schemes_pl">
         <item quantity="one">署名方式</item>
@@ -657,8 +657,8 @@
     <string name="confirm_installation">インストールを確認</string>
     <string name="allow_open_pgp_operation">クリックしてAMにOpenPGPの利用を許可する</string>
     <string name="uninstall_updates">アップデートをアンインストール</string>
-    <string name="update_uninstalled_successfully"> <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> のアップデートは正常に削除されました</string>
-    <string name="failed_to_uninstall_updates"> <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> のアップデートが削除できませんでした</string>
+    <string name="update_uninstalled_successfully">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; のアップデートは正常に削除されました</string>
+    <string name="failed_to_uninstall_updates">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; のアップデートが削除できませんでした</string>
     <string name="sort_by_backup">バックアップ済みを優先</string>
     <string name="filter_apps_with_backups">バックアップ済みアプリ</string>
     <string name="subject">識別子</string>
@@ -714,13 +714,13 @@
     <string name="pref_show_users_in_installer_msg">インストーラーでアプリをインストールするユーザーを選択できるようにします。RootかADBが必要です</string>
     <string name="select_user">ユーザーを選択</string>
     <string name="encryption">暗号化</string>
-    <string name="pref_encryption_msg">バックアップに暗号化を追加</string>
+    <string name="pref_encryption_msg">バックアップに暗号化を行う</string>
     <string name="none">なし</string>
     <string name="aes">AES</string>
     <string name="rsa">RSA</string>
     <string name="ecc">楕円曲線暗号</string>
     <string name="send_selected">選択したものを送信</string>
-    <string name="pref_mode_of_operations">操作モード</string>
+    <string name="pref_mode_of_operations">動作モード</string>
     <string name="adb_over_tcp">ADB over TCP</string>
     <string name="current_mode">現在のモード: %s</string>
     <string name="allow_routine_ops">規則的操作を許可</string>
@@ -844,7 +844,7 @@
     <string name="failed_to_enable_magisk_hide">MagiskHideを有効化できませんでした</string>
     <string name="disable_background_run_description">これは次のAppOpsに <i>ignore</i> モードを設定します: <tt>RUN_IN_BACKGROUND</tt> (Android 7.0〜) and <tt>RUN_ANY_IN_BACKGROUND</tt> (Android 9〜).</string>
     <string name="pref_interceptor_enabled_msg">インテントによるアプリ間の通信を検証します</string>
-    <string name="pref_backup_restore_msg">バックアップ/復元をカスタマイズ</string>
+    <string name="pref_backup_restore_msg">バックアップ/復元に関する設定</string>
     <string name="backup_volume">バックアップするボリューム</string>
     <string name="pref_backup_volume_msg">バックアップを保存するディスクやボリュームを選択します。</string>
     <string name="no_volumes_found">書き込み権限のあるボリュームを見つけることができませんでした</string>
@@ -873,4 +873,24 @@
     <string name="restore_msg">アプリデータを含めて復元する</string>
     <string name="drm_free_apkm_msg">このAPKMファイルはDRMフリーです。APKSに変換する必要はありません。</string>
     <string name="back_up">バックアップ</string>
+    <string name="screen_lock_msg">App Managerの起動時に認証を要求するようにする</string>
+    <string name="net_policy">ネット接続ポリシー</string>
+    <string name="has_net_policy">ネット接続ポリシー</string>
+    <string name="list_options">表示オプション</string>
+    <string name="initializing">読み込み中…</string>
+    <string name="os_version">OSバージョン</string>
+    <string name="add">追加</string>
+    <string name="add_to_profile">プロファイルに追加</string>
+    <string name="reverse">反転</string>
+    <string name="allow_background">バックグラウンドを許可</string>
+    <string name="reject_background">バックグラウンドを拒否</string>
+    <string name="choose_what_to_do">何をするか選択してください。</string>
+    <string name="enable_battery_optimization">電池の最適化を有効にしますか？</string>
+    <string name="battery_optimization">電池の最適化</string>
+    <string name="no_battery_optimization">電池の最適化が無効</string>
+    <string name="unlock_app_manager">App Managerのロック解除</string>
+    <string name="screen_lock">画面ロック</string>
+    <string name="sd_card">SDカード</string>
+    <string name="external_storage">外部ストレージ</string>
+    <string name="internal_storage">内部ストレージ</string>
 </resources>
