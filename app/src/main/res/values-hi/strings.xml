@@ -145,7 +145,7 @@
     <string name="pref_usage_access_enabled">इस्तेमाल का एक्सेस</string>
     <string name="pref_global_blocking_enabled_msg">आप एप्लिकेशन को ब्लॉक किए बिना किसी भी एप्लिकेशन के किसी भी कंपोनेंट को ब्लॉक कर सकते हैं</string>
     <string name="pref_global_blocking_enabled">ग्लोबल कंपोनेंट ब्लॉकिंग</string>
-    <string name="pref_root_mode_enabled_msg">इस ऐप की सभी रूट सुविधाओं को सक्रिय करता है, एडीबी मोड का स्वचालित रूप से पता लगाया जाता है जब यह बंद हो जाता है</string>
+    <string name="pref_root_mode_enabled_msg">इस ऐप के सभी रूट फीचर्स को सक्रिय करता है, जब यह बंद होता है तो ADB मोड अपने आप प्रारंभ हो जाता है।</string>
     <string name="pref_root_mode_enabled">रूट मोड</string>
     <string name="str_logo">लोगो</string>
     <string name="rules_not_applied">रूल्स लागू नहीं हैं</string>
@@ -282,7 +282,7 @@
     <string name="date_updated">अपडेट तिथि</string>
     <string name="more_info">अधिक जानकारी</string>
     <string name="sdk_flags">फ्लैग्स</string>
-    <string name="sdk_max">अधिकतम</string>
+    <string name="sdk_max">लक्ष्य</string>
     <string name="sdk_min">न्यूनतम</string>
     <string name="data_dir">डेटा डायरेक्टरी</string>
     <string name="source_dir">स्रोत डायरेक्टरी</string>
@@ -313,7 +313,7 @@
     <string name="input_features">इनपुट फीचर्स</string>
     <string name="no_configurations">कोई कॉन्फ़िगरेशन नहीं</string>
     <string name="configurations">कॉन्फ़िगरेशन</string>
-    <string name="no_signatures">कोई हस्ताक्षर नहीं</string>
+    <string name="no_signatures">कोई हस्ताक्षर नहीं है</string>
     <string name="signatures">हस्ताक्षर</string>
     <string name="sort_by_sha">हस्ताक्षर</string>
     <string name="shared_user_id">साझा यूजर आईडी</string>
