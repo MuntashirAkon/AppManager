@@ -151,9 +151,12 @@ public class AppInfoViewModel extends AndroidViewModel {
         String packageName = packageInfo.packageName;
         ApplicationInfo applicationInfo = packageInfo.applicationInfo;
         PackageManager pm = getApplication().getPackageManager();
+        boolean isExternalApk = mainModel.getIsExternalApk();
         AppInfo appInfo = new AppInfo();
         // Set source dir
-        appInfo.sourceDir = new File(applicationInfo.publicSourceDir).getParent();
+        if (!isExternalApk) {
+            appInfo.sourceDir = new File(applicationInfo.publicSourceDir).getParent();
+        }
         // Set split entries
         ApkFile apkFile = ApkFile.getInstance(mainModel.getApkFileKey());
         int countSplits = apkFile.getEntries().size() - 1;
@@ -163,105 +166,107 @@ public class AppInfoViewModel extends AndroidViewModel {
             appInfo.splitEntries.add(apkFile.getEntries().get(i));
         }
         // Set data dirs
-        appInfo.dataDir = applicationInfo.dataDir;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            appInfo.dataDeDir = applicationInfo.deviceProtectedDataDir;
+        if (!isExternalApk) {
+            appInfo.dataDir = applicationInfo.dataDir;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                appInfo.dataDeDir = applicationInfo.deviceProtectedDataDir;
+            }
         }
         appInfo.extDataDirs = new ArrayList<>();
-        File[] dataDirs = getApplication().getExternalCacheDirs();
-        if (dataDirs != null) {
-            String tmpDataDir;
-            for (File dataDir : dataDirs) {
-                if (dataDir == null) continue;
-                tmpDataDir = dataDir.getParent();
-                if (tmpDataDir != null) {
-                    tmpDataDir = new File(tmpDataDir).getParent();
-                }
-                if (tmpDataDir != null) {
-                    tmpDataDir = tmpDataDir + File.separatorChar + packageName;
-                    if (new File(tmpDataDir).exists()) {
-                        appInfo.extDataDirs.add(tmpDataDir);
+        if (!isExternalApk) {
+            File[] dataDirs = getApplication().getExternalCacheDirs();
+            if (dataDirs != null) {
+                String tmpDataDir;
+                for (File dataDir : dataDirs) {
+                    if (dataDir == null) continue;
+                    tmpDataDir = dataDir.getParent();
+                    if (tmpDataDir != null) {
+                        tmpDataDir = new File(tmpDataDir).getParent();
+                    }
+                    if (tmpDataDir != null) {
+                        tmpDataDir = tmpDataDir + File.separatorChar + packageName;
+                        if (new File(tmpDataDir).exists()) {
+                            appInfo.extDataDirs.add(tmpDataDir);
+                        }
                     }
                 }
             }
         }
         // Set JNI dir
-        if (new File(applicationInfo.nativeLibraryDir).exists()) {
+        if (!isExternalApk && new File(applicationInfo.nativeLibraryDir).exists()) {
             appInfo.jniDir = applicationInfo.nativeLibraryDir;
         }
         // Net statistics
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if ((Boolean) AppPref.get(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL)) {
-                    try {
+        if (!isExternalApk) {
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if ((Boolean) AppPref.get(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL)) {
                         final Pair<Pair<Long, Long>, Pair<Long, Long>> dataUsage;
-                        dataUsage = AppUsageStatsManager.getWifiMobileUsageForPackage(getApplication(),
-                                packageName, UsageUtils.USAGE_LAST_BOOT);
+                        dataUsage = AppUsageStatsManager.getWifiMobileUsageForPackage(getApplication(), packageName,
+                                UsageUtils.USAGE_LAST_BOOT);
                         appInfo.dataTx = dataUsage.first.first + dataUsage.second.first;
                         appInfo.dataRx = dataUsage.first.second + dataUsage.second.second;
-                    } catch (Exception e) {
+                    }
+                } else {
+                    final Pair<Long, Long> uidNetStats = getNetStats(applicationInfo.uid);
+                    appInfo.dataTx = uidNetStats.first;
+                    appInfo.dataRx = uidNetStats.second;
+                }
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+            // Set sizes
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+                try {
+                    Method getPackageSizeInfo = pm.getClass().getMethod("getPackageSizeInfo", String.class,
+                            IPackageStatsObserver.class);
+                    getPackageSizeInfo.invoke(pm, packageName, new IPackageStatsObserver.Stub() {
+                        @SuppressWarnings("deprecation")
+                        @Override
+                        public void onGetStatsCompleted(final PackageStats pStats, boolean succeeded) {
+                            appInfo.codeSize = pStats.codeSize + pStats.externalCodeSize;
+                            appInfo.dataSize = pStats.dataSize + pStats.externalDataSize;
+                            appInfo.cacheSize = pStats.cacheSize + pStats.externalCacheSize;
+                            appInfo.obbSize = pStats.externalObbSize;
+                            appInfo.mediaSize = pStats.externalMediaSize;
+                        }
+                    });
+                } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                if (Utils.hasUsageStatsPermission(getApplication())) {
+                    try {
+                        StorageStatsManager storageStatsManager = (StorageStatsManager) getApplication().getSystemService(Context.STORAGE_STATS_SERVICE);
+                        StorageStats storageStats = storageStatsManager.queryStatsForPackage(applicationInfo.storageUuid, packageName, Process.myUserHandle());
+                        appInfo.cacheSize = storageStats.getCacheBytes();
+                        appInfo.codeSize = storageStats.getAppBytes();
+                        appInfo.dataSize = storageStats.getDataBytes() - appInfo.cacheSize;
+                        // TODO(24/1/21): List obb and media size
+                    } catch (IOException | PackageManager.NameNotFoundException e) {
                         e.printStackTrace();
                     }
                 }
-            } else {
-                final Pair<Long, Long> uidNetStats = getNetStats(applicationInfo.uid);
-                appInfo.dataTx = uidNetStats.first;
-                appInfo.dataRx = uidNetStats.second;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        // Set sizes
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            // Set installer app
             try {
-                Method getPackageSizeInfo = pm.getClass().getMethod("getPackageSizeInfo", String.class,
-                        IPackageStatsObserver.class);
-                getPackageSizeInfo.invoke(pm, packageName, new IPackageStatsObserver.Stub() {
-                    @SuppressWarnings("deprecation")
-                    @Override
-                    public void onGetStatsCompleted(final PackageStats pStats, boolean succeeded) {
-                        appInfo.codeSize = pStats.codeSize + pStats.externalCodeSize;
-                        appInfo.dataSize = pStats.dataSize + pStats.externalDataSize;
-                        appInfo.cacheSize = pStats.cacheSize + pStats.externalCacheSize;
-                        appInfo.obbSize = pStats.externalObbSize;
-                        appInfo.mediaSize = pStats.externalMediaSize;
+                @SuppressWarnings("deprecation")
+                String installerPackageName = pm.getInstallerPackageName(packageName);
+                if (installerPackageName != null) {
+                    String applicationLabel;
+                    try {
+                        applicationLabel = pm.getApplicationInfo(installerPackageName, 0).loadLabel(pm).toString();
+                    } catch (PackageManager.NameNotFoundException e) {
+                        e.printStackTrace();
+                        applicationLabel = installerPackageName;
                     }
-                });
-            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
-            }
-        } else {
-            if (Utils.hasUsageStatsPermission(getApplication())) {
-                try {
-                    StorageStatsManager storageStatsManager = (StorageStatsManager) getApplication().getSystemService(Context.STORAGE_STATS_SERVICE);
-                    StorageStats storageStats = storageStatsManager.queryStatsForPackage(applicationInfo.storageUuid, packageName, Process.myUserHandle());
-                    appInfo.cacheSize = storageStats.getCacheBytes();
-                    appInfo.codeSize = storageStats.getAppBytes();
-                    appInfo.dataSize = storageStats.getDataBytes() - appInfo.cacheSize;
-                    // TODO(24/1/21): List obb and media size
-                } catch (IOException | PackageManager.NameNotFoundException e) {
-                    e.printStackTrace();
+                    appInfo.installerApp = applicationLabel;
                 }
+            } catch (IllegalArgumentException ignore) {
             }
+            // Set main activity
+            appInfo.mainActivity = pm.getLaunchIntentForPackage(packageName);
         }
-        // Set installer app
-        try {
-            @SuppressWarnings("deprecation")
-            String installerPackageName = pm.getInstallerPackageName(packageName);
-            if (installerPackageName != null) {
-                String applicationLabel;
-                try {
-                    applicationLabel = pm.getApplicationInfo(installerPackageName, 0).loadLabel(pm).toString();
-                } catch (PackageManager.NameNotFoundException e) {
-                    e.printStackTrace();
-                    applicationLabel = installerPackageName;
-                }
-                appInfo.installerApp = applicationLabel;
-            }
-        } catch (IllegalArgumentException ignore) {
-        }
-        // Set main activity
-        appInfo.mainActivity = pm.getLaunchIntentForPackage(packageName);
         this.appInfo.postValue(appInfo);
     }
 

@@ -17,7 +17,6 @@
 
 package io.github.muntashirakon.AppManager.details.info;
 
-import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -188,6 +187,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         mPackageName = mainModel.getPackageName();
         iconView = view.findViewById(R.id.icon);
         versionView = view.findViewById(R.id.version);
+        isExternalApk = mainModel.getIsExternalApk();
         // Set adapter only after package info is loaded
         executor.submit(() -> {
             mPackageName = mainModel.getPackageName();
@@ -1040,11 +1040,13 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         model.getAppInfo().observe(getViewLifecycleOwner(), appInfo -> {
             synchronized (mListItems) {
                 mListItems.clear();
-                setPathsAndDirectories(appInfo);
-                setDataUsage(appInfo);
-                // Storage and Cache
-                if ((boolean) AppPref.get(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL)) {
-                    setStorageAndCache(appInfo);
+                if (!isExternalApk) {
+                    setPathsAndDirectories(appInfo);
+                    setDataUsage(appInfo);
+                    // Storage and Cache
+                    if ((boolean) AppPref.get(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL)) {
+                        setStorageAndCache(appInfo);
+                    }
                 }
                 setMoreInfo(appInfo);
                 adapter.setAdapterList(mListItems);
@@ -1118,10 +1120,6 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         return view;
     }
 
-    /**
-     * Load package sizes and update views if success.
-     */
-    @SuppressWarnings("deprecation")
     @GuardedBy("mListItems")
     private void setStorageAndCache(AppInfoViewModel.AppInfo appInfo) {
         if (!Utils.hasUsageStatsPermission(mActivity)) {
@@ -1160,7 +1158,6 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         }
     }
 
-    @SuppressLint("WrongConstant")
     @WorkerThread
     private void loadPackageInfo() {
         mInstalledPackageInfo = mainModel.getInstalledPackageInfo();
