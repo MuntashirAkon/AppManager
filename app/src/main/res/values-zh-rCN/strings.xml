@@ -818,4 +818,20 @@
     <string name="backup_all_apps_msg">备份所有已安装的应用程序</string>
     <string name="backup_all_apps">备份所有应用</string>
     <string name="back_up">备份</string>
+    <string name="list_options">列表选项</string>
+    <string name="reverse">撤销</string>
+    <string name="os_version">操作系统版本</string>
+    <string name="add">添加</string>
+    <string name="add_to_profile">添加到配置</string>
+    <string name="initializing">初始化中…</string>
+    <string name="allow_background">允许后台连接</string>
+    <string name="reject_background">拒绝后台连接</string>
+    <string name="net_policy">网络策略</string>
+    <string name="has_net_policy">网络策略</string>
+    <string name="choose_what_to_do">选择做什么。</string>
+    <string name="enable_battery_optimization">启用电池优化？</string>
+    <string name="battery_optimization">电池优化</string>
+    <string name="no_battery_optimization">无电池优化</string>
+    <string name="screen_lock_msg">用安卓屏幕锁锁定 App Manager</string>
+    <string name="screen_lock">屏幕锁</string>
 </resources>
