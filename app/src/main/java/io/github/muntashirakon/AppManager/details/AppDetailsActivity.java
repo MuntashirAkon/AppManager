@@ -23,6 +23,7 @@ import android.content.pm.UserInfo;
 import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.view.MenuItem;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -99,7 +100,7 @@ public class AppDetailsActivity extends BaseActivity {
             try {
                 if (packageName != null) model.setPackage(packageName);
                 else model.setPackage(apkUri, apkType);
-            } catch (ApkFile.ApkFileException | IOException e) {
+            } catch (ApkFile.ApkFileException | IOException | RemoteException e) {
                 Log.e("ADA", "Could not fetch package info.", e);
                 runOnUiThread(() -> {
                     Toast.makeText(this, getString(R.string.failed_to_fetch_package_info), Toast.LENGTH_LONG).show();

@@ -32,29 +32,19 @@ import android.os.RemoteException;
 import android.provider.OpenableColumns;
 import android.system.ErrnoException;
 import android.system.Os;
-
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.EOFException;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.charset.Charset;
-import java.util.Arrays;
-import java.util.zip.CRC32;
-import java.util.zip.ZipEntry;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.runner.RunnerUtils;
+import io.github.muntashirakon.io.ProxyFile;
 import io.github.muntashirakon.io.ProxyInputStream;
 import io.github.muntashirakon.io.ProxyOutputStream;
+
+import java.io.*;
+import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.zip.CRC32;
+import java.util.zip.ZipEntry;
 
 public final class IOUtils {
     private static final byte[] ZIP_FILE_HEADER = new byte[]{0x50, 0x4B, 0x03, 0x04};
@@ -149,16 +139,16 @@ public final class IOUtils {
     public static File saveZipFile(@NonNull InputStream zipInputStream,
                                    @NonNull File destinationDirectory,
                                    @NonNull String fileName)
-            throws IOException {
-        return saveZipFile(zipInputStream, new File(destinationDirectory, fileName));
+            throws IOException, RemoteException {
+        return saveZipFile(zipInputStream, new ProxyFile(destinationDirectory, fileName));
     }
 
     @NonNull
     public static File saveZipFile(@NonNull InputStream zipInputStream, @NonNull File filePath)
-            throws IOException {
+            throws IOException, RemoteException {
         if (filePath.exists()) //noinspection ResultOfMethodCallIgnored
             filePath.delete();
-        try (OutputStream outputStream = new FileOutputStream(filePath)) {
+        try (OutputStream outputStream = new ProxyOutputStream(filePath)) {
             copy(zipInputStream, outputStream);
         }
         return filePath;
@@ -312,9 +302,6 @@ public final class IOUtils {
                 // This isn't just another EACCESS exception
                 e.printStackTrace();
             }
-        }
-        if (AppPref.isRootOrAdbEnabled()) {
-            return RunnerUtils.cat(file.getAbsolutePath(), emptyValue);
         }
         return emptyValue;
     }

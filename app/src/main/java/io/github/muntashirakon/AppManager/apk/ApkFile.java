@@ -24,31 +24,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
+import android.os.RemoteException;
 import android.text.TextUtils;
 import android.util.SparseArray;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -61,17 +39,22 @@ import io.github.muntashirakon.AppManager.apk.signing.SigSchemes;
 import io.github.muntashirakon.AppManager.apk.signing.SignUtils;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
-import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.io.ProxyFile;
 
-import static io.github.muntashirakon.AppManager.apk.ApkUtils.getDensityFromName;
-import static io.github.muntashirakon.AppManager.apk.ApkUtils.getManifestAttributes;
-import static io.github.muntashirakon.AppManager.apk.ApkUtils.getManifestFromApk;
+import java.io.*;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.nio.ByteBuffer;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+
+import static io.github.muntashirakon.AppManager.apk.ApkUtils.*;
 
 public final class ApkFile implements AutoCloseable {
     public static final String TAG = "ApkFile";
@@ -319,7 +302,7 @@ public final class ApkFile implements AutoCloseable {
                 } else if (fileName.endsWith(".idsig")) {
                     try {
                         idsigFile = IOUtils.saveZipFile(zipFile.getInputStream(zipEntry), getCachePath(), IDSIG_FILE);
-                    } catch (IOException e) {
+                    } catch (IOException | RemoteException e) {
                         throw new ApkFileException(e);
                     }
                 }
@@ -466,42 +449,15 @@ public final class ApkFile implements AutoCloseable {
             } else {
                 if (!writableObbDir.mkdirs()) return false;
             }
-
-            if (AppPref.isRootOrAdbEnabled()) {
-                for (ZipEntry obbEntry : obbFiles) {
-                    String fileName = IOUtils.getFileNameFromZipEntry(obbEntry);
-                    if (cacheFilePath.getAbsolutePath().startsWith("/proc")) {
-                        // Normal way won't work for FD
-                        File obbCacheFile = IOUtils.getCachedFile(zipFile.getInputStream(obbEntry));
-                        if (AppPref.isAdbEnabled()) {
-                            boolean result = RunnerUtils.cp(obbCacheFile, new File(writableObbDir, fileName));
-                            IOUtils.deleteSilently(obbCacheFile);
-                            return result;
-                        } else {
-                            return RunnerUtils.mv(obbCacheFile, new File(writableObbDir, fileName));
-                        }
-                    } else {
-                        if (!Runner.runCommand(new String[]{"unzip", cacheFilePath.getAbsolutePath(),
-                                obbEntry.getName(), "-d", obbEntry.getName().startsWith(OBB_DIR) ?
-                                writableExtDir.getAbsolutePath() : writableObbDir.getAbsolutePath()}
-                        ).isSuccessful()) {
-                            return false;
-                        }
-                    }
-                }
-            } else {
-                for (ZipEntry obbEntry : obbFiles) {
-                    String fileName = IOUtils.getFileNameFromZipEntry(obbEntry);
-                    if (fileName.endsWith(".obb")) {
-                        // Extract obb file to the destination directory
-                        try (InputStream zipInputStream = zipFile.getInputStream(obbEntry)) {
-                            IOUtils.saveZipFile(zipInputStream, writableObbDir, fileName);
-                        }
-                    }
+            for (ZipEntry obbEntry : obbFiles) {
+                String fileName = IOUtils.getFileNameFromZipEntry(obbEntry);
+                // Extract obb file to the destination directory
+                try (InputStream zipInputStream = zipFile.getInputStream(obbEntry)) {
+                    IOUtils.saveZipFile(zipInputStream, writableObbDir, fileName);
                 }
             }
             return true;
-        } catch (IOException e) {
+        } catch (IOException | RemoteException e) {
             e.printStackTrace();
             return false;
         }
@@ -519,6 +475,7 @@ public final class ApkFile implements AutoCloseable {
         entries.set(entry, tmpEntry);
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean needSigning() {
         return (boolean) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_SIGN_APK_BOOL);
     }
@@ -695,7 +652,7 @@ public final class ApkFile implements AutoCloseable {
             else throw new RuntimeException("Neither zipEntry nor source is defined.");
         }
 
-        public File getSignedFile(Context context) throws IOException {
+        public File getSignedFile(Context context) throws IOException, RemoteException {
             if (signedFile != null) return signedFile;
             File realFile = getRealCachedFile();
             if (!needSigning()) {
@@ -721,7 +678,7 @@ public final class ApkFile implements AutoCloseable {
             }
         }
 
-        public InputStream getSignedInputStream(Context context) throws IOException {
+        public InputStream getSignedInputStream(Context context) throws IOException, RemoteException {
             if (!needSigning()) {
                 // Return original/real input stream if signing is not requested
                 return getRealInputStream();
@@ -754,7 +711,7 @@ public final class ApkFile implements AutoCloseable {
         }
 
         @WorkerThread
-        public File getRealCachedFile() throws IOException {
+        public File getRealCachedFile() throws IOException, RemoteException {
             if (source != null && source.canRead() && !source.getAbsolutePath().startsWith("/proc/self")) return source;
             if (cachedFile != null) {
                 if (cachedFile.canRead()) return cachedFile;

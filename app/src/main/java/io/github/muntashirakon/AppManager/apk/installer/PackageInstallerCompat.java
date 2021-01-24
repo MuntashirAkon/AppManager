@@ -379,7 +379,7 @@ public final class PackageInstallerCompat extends AMPackageInstaller {
                     IOUtils.copy(apkInputStream, apkOutputStream);
                     session.fsync(apkOutputStream);
                     Log.d(TAG, "Install: copied entry " + entry.name);
-                } catch (IOException e) {
+                } catch (IOException | RemoteException e) {
                     sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_WRITE, sessionId);
                     Log.e(TAG, "Install: Cannot copy files to session.", e);
                     return abandon();

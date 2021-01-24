@@ -794,7 +794,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                 File file = apkEntries.get(which).getRealCachedFile();
                                 intent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
                                 runOnUiThread(() -> startActivity(intent));
-                            } catch (IOException e) {
+                            } catch (IOException | RemoteException e) {
                                 e.printStackTrace();
                             }
                         }))

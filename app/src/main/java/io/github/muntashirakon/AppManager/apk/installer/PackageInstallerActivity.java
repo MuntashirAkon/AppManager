@@ -23,6 +23,7 @@ import android.content.pm.*;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.RelativeSizeSpan;
@@ -198,7 +199,7 @@ public class PackageInstallerActivity extends BaseActivity {
                     }
                 }
             }
-        } catch (ApkFile.ApkFileException | PackageManager.NameNotFoundException | IOException e) {
+        } catch (ApkFile.ApkFileException | PackageManager.NameNotFoundException | IOException | RemoteException e) {
             Log.e("PIA", "Could not fetch package info.", e);
             runOnUiThread(this::finish);
         }
@@ -217,7 +218,7 @@ public class PackageInstallerActivity extends BaseActivity {
 //    }
 
     @NonNull
-    private PackageInfo getPackageInfo() throws PackageManager.NameNotFoundException, IOException {
+    private PackageInfo getPackageInfo() throws PackageManager.NameNotFoundException, IOException, RemoteException {
         String apkPath = apkFile.getBaseEntry().getSignedFile(this).getAbsolutePath();
         @SuppressLint("WrongConstant")
         PackageInfo packageInfo = mPackageManager.getPackageArchiveInfo(apkPath, PackageManager.GET_PERMISSIONS

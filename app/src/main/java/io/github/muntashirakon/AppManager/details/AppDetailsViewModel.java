@@ -122,7 +122,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     }
 
     @WorkerThread
-    public void setPackage(@NonNull Uri packageUri, @Nullable String type) throws ApkFile.ApkFileException, IOException {
+    public void setPackage(@NonNull Uri packageUri, @Nullable String type) throws ApkFile.ApkFileException, IOException, RemoteException {
         Log.d("ADVM", "Package Uri is being set");
         isExternalApk = true;
         apkFileKey = ApkFile.createInstance(packageUri, type);
@@ -1254,7 +1254,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     appDetailsItems.add(item);
                 }
             }
-        } catch (IOException | ApkFormatException | NoSuchAlgorithmException e) {
+        } catch (IOException | ApkFormatException | NoSuchAlgorithmException | RemoteException e) {
             e.printStackTrace();
         }
         signatures.postValue(appDetailsItems);

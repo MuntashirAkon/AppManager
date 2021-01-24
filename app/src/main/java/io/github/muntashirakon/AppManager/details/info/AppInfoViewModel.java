@@ -43,6 +43,7 @@ import io.github.muntashirakon.AppManager.servermanager.NetworkPolicyManagerComp
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.usage.UsageUtils;
 import io.github.muntashirakon.AppManager.utils.*;
+import io.github.muntashirakon.io.ProxyFile;
 
 import java.io.File;
 import java.io.IOException;
@@ -285,7 +286,7 @@ public class AppInfoViewModel extends AndroidViewModel {
     private Pair<Long, Long> getNetStats(int uid) {
         long tx = 0;
         long rx = 0;
-        File uidStatsDir = new File(UID_STATS_PATH + uid);
+        File uidStatsDir = new ProxyFile(UID_STATS_PATH + uid);
         if (uidStatsDir.exists() && uidStatsDir.isDirectory()) {
             for (File child : Objects.requireNonNull(uidStatsDir.listFiles())) {
                 if (child.getName().equals(UID_STATS_TX))

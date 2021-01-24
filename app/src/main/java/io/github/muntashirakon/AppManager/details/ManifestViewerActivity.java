@@ -24,6 +24,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -120,7 +121,7 @@ public class ManifestViewerActivity extends BaseActivity {
                         int key = ApkFile.createInstance(packageUri, intent.getType());
                         apkFile = ApkFile.getInstance(key);
                         archiveFilePath = apkFile.getBaseEntry().getRealCachedFile().getAbsolutePath();
-                    } catch (IOException | ApkFile.ApkFileException e) {
+                    } catch (IOException | ApkFile.ApkFileException | RemoteException e) {
                         Log.e("Manifest", "Error: ", e);
                         runOnUiThread(this::showErrorAndFinish);
                         return;
