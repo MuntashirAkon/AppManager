@@ -43,6 +43,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.GuardedBy;
@@ -165,7 +166,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME, item.packageName);
                     if (item.userHandles.length > 0) {
                         if (item.userHandles.length > 1) {
-                            List<UserInfo> users = Users.getUsers();
+                            List<UserInfo> users = Objects.requireNonNull(Users.getUsers());
                             String[] userNames = new String[item.userHandles.length];
                             for (UserInfo info : users) {
                                 for (int i = 0; i < item.userHandles.length; ++i) {
@@ -192,9 +193,15 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             } else toggleSelection(item, position);
         });
         holder.itemView.setOnLongClickListener(v -> {
-            // Long click listener: Select/deselect an app. Turn selection mode on if this is
-            // the first item in the selection list
-            toggleSelection(item, position);
+            // Long click listener: Select/deselect an app.
+            // 1) Turn selection mode on if this is the first item in the selection list
+            // 2) Select between last selection position and this position (inclusive) if selection mode is on
+            ApplicationItem lastSelectedItem = mActivity.mModel.getLastSelectedPackage();
+            int lastSelectedItemPosition = lastSelectedItem == null ? -1 : mAdapterList.indexOf(lastSelectedItem);
+            if (lastSelectedItemPosition >= 0) {
+                // Select from last selection to this selection
+                selectRange(lastSelectedItemPosition, position);
+            } else toggleSelection(item, position);
             return true;
         });
         holder.icon.setOnClickListener(v -> toggleSelection(item, position));
@@ -355,6 +362,19 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             }
         }
         notifyItemChanged(position);
+        mActivity.handleSelection();
+    }
+
+    @GuardedBy("mAdapterList")
+    public void selectRange(int firstPosition, int secondPosition) {
+        int beginPosition = Math.min(firstPosition, secondPosition);
+        int endPosition = Math.max(firstPosition, secondPosition);
+        synchronized (mAdapterList) {
+            for (int position = beginPosition; position <= endPosition; ++position) {
+                mAdapterList.set(position, mActivity.mModel.select(mAdapterList.get(position)));
+            }
+        }
+        notifyItemRangeChanged(beginPosition, endPosition - beginPosition + 1);
         mActivity.handleSelection();
     }
 

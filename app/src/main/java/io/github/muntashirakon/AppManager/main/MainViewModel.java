@@ -29,7 +29,6 @@ import android.text.TextUtils;
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.collection.ArraySet;
 import androidx.core.content.pm.PackageInfoCompat;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -71,7 +70,7 @@ public class MainViewModel extends AndroidViewModel {
     private String searchQuery;
     private HashMap<String, MetadataManager.Metadata> backupMetadata;
     private final Map<String, int[]> selectedPackages = new HashMap<>();
-    private final ArraySet<ApplicationItem> selectedApplicationItems = new ArraySet<>();
+    private final ArrayList<ApplicationItem> selectedApplicationItems = new ArrayList<>();
 
     public MainViewModel(@NonNull Application application) {
         super(application);
@@ -118,7 +117,12 @@ public class MainViewModel extends AndroidViewModel {
             selectedPackages.put(item.packageName, item.userHandles);
             item.isSelected = true;
             applicationItems.set(i, item);
-            selectedApplicationItems.add(item);
+            int selIndex = selectedApplicationItems.indexOf(item);
+            if (selIndex >= 0) {
+                selectedApplicationItems.set(selIndex, item);
+            } else {
+                selectedApplicationItems.add(item);
+            }
             return item;
         }
     }
@@ -136,6 +140,13 @@ public class MainViewModel extends AndroidViewModel {
             }
             selectedApplicationItems.clear();
         }
+    }
+
+    @Nullable
+    public ApplicationItem getLastSelectedPackage() {
+        if (selectedApplicationItems.size() > 0) {
+            return selectedApplicationItems.get(selectedApplicationItems.size() - 1);
+        } else return null;
     }
 
     public Map<String, int[]> getSelectedPackages() {
@@ -162,8 +173,8 @@ public class MainViewModel extends AndroidViewModel {
         return userPackagePairs;
     }
 
-    public List<ApplicationItem> getSelectedApplicationItems() {
-        return new ArrayList<>(selectedApplicationItems);
+    public ArrayList<ApplicationItem> getSelectedApplicationItems() {
+        return selectedApplicationItems;
     }
 
     public String getSearchQuery() {
