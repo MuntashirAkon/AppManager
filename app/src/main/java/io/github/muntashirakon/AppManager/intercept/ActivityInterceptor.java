@@ -30,25 +30,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.android.internal.util.TextUtils;
-import com.google.android.material.textfield.MaterialAutoCompleteTextView;
-
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -62,11 +48,19 @@ import androidx.core.util.Pair;
 import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.android.internal.util.TextUtils;
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.types.TextInputDropdownDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 public class ActivityInterceptor extends AppCompatActivity {
     public static final String EXTRA_PACKAGE_NAME = BuildConfig.APPLICATION_ID + ".intent.extra.PACKAGE_NAME";
@@ -120,6 +114,12 @@ public class ActivityInterceptor extends AppCompatActivity {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 put(Intent.FLAG_ACTIVITY_REQUIRE_DEFAULT, "FLAG_ACTIVITY_REQUIRE_DEFAULT");
             }
+        }
+    };
+
+    // TODO(25/1/21): Add support for receiver flags
+    private static final SparseArrayCompat<String> INTENT_RECEIVER_FLAG_TO_STRING = new SparseArrayCompat<String>() {
+        {
             put(Intent.FLAG_RECEIVER_REGISTERED_ONLY, "FLAG_RECEIVER_REGISTERED_ONLY");
             put(Intent.FLAG_RECEIVER_REPLACE_PENDING, "FLAG_RECEIVER_REPLACE_PENDING");
             put(Intent.FLAG_RECEIVER_FOREGROUND, "FLAG_RECEIVER_FOREGROUND");
@@ -388,6 +388,12 @@ public class ActivityInterceptor extends AppCompatActivity {
         flagsAdapter.setDefaultList(flagsStrings);
 
         // Display extras
+        extrasAdapter.setDefaultList(getExtras());
+        refreshUI();
+    }
+
+    @NonNull
+    private List<Pair<String, Object>> getExtras() {
         List<Pair<String, Object>> extras = new ArrayList<>();
         Bundle intentBundle = mutableIntent.getExtras();
         if (intentBundle != null) {
@@ -397,8 +403,7 @@ public class ActivityInterceptor extends AppCompatActivity {
                 extras.add(new Pair<>(extraKey, extraValue));
             }
         }
-        extrasAdapter.setDefaultList(extras);
-        refreshUI();
+        return extras;
     }
 
     /**
@@ -480,9 +485,16 @@ public class ActivityInterceptor extends AppCompatActivity {
                                 int i = getFlagIndex(String.valueOf(inputText).trim());
                                 if (i >= 0) {
                                     mutableIntent.addFlags(INTENT_FLAG_TO_STRING.keyAt(i));
-                                    flagsAdapter.setDefaultList(getFlags());
-                                    showTextViewIntentData(null);
+                                } else {
+                                    try {
+                                        int flag = Integer.decode(String.valueOf(inputText).trim());
+                                        mutableIntent.addFlags(flag);
+                                    } catch (NumberFormatException e) {
+                                        return;
+                                    }
                                 }
+                                flagsAdapter.setDefaultList(getFlags());
+                                showTextViewIntentData(null);
                             }
                         })
                         .show());
@@ -494,7 +506,15 @@ public class ActivityInterceptor extends AppCompatActivity {
 
         // Setup extras
         findViewById(R.id.intent_extras_add_btn).setOnClickListener(v -> {
-            // TODO(15/1/21): Add extras
+            AddIntentExtraFragment fragment = new AddIntentExtraFragment();
+            fragment.setOnSaveListener((mode, prefItem) -> {
+                IntentCompat.addToIntent(mutableIntent, prefItem);
+                extrasAdapter.setDefaultList(getExtras());
+            });
+            Bundle args = new Bundle();
+            args.putInt(AddIntentExtraFragment.ARG_MODE, AddIntentExtraFragment.MODE_CREATE);
+            fragment.setArguments(args);
+            fragment.show(getSupportFragmentManager(), AddIntentExtraFragment.TAG);
         });
         RecyclerView extrasRecyclerView = findViewById(R.id.intent_extras);
         extrasRecyclerView.setHasFixedSize(true);
@@ -780,7 +800,8 @@ public class ActivityInterceptor extends AppCompatActivity {
     private Intent cloneIntent(String intentUri) {
         if (intentUri != null) {
             try {
-                Intent clone = Intent.parseUri(intentUri, Intent.URI_INTENT_SCHEME);
+                Intent clone = Intent.parseUri(intentUri, Intent.URI_INTENT_SCHEME | Intent.URI_ANDROID_APP_SCHEME
+                        | Intent.URI_ALLOW_UNSAFE);
                 // Restore extras that are lost in the intent to string conversion
                 if (additionalExtras != null) {
                     clone.putExtras(additionalExtras);
@@ -920,9 +941,9 @@ public class ActivityInterceptor extends AppCompatActivity {
             this.activity = activity;
         }
 
-        public void setDefaultList(@Nullable List<Pair<String, Object>> matchingActivities) {
+        public void setDefaultList(@Nullable List<Pair<String, Object>> extras) {
             this.extras.clear();
-            if (matchingActivities != null) this.extras.addAll(matchingActivities);
+            if (extras != null) this.extras.addAll(extras);
             notifyDataSetChanged();
         }
 

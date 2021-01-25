@@ -58,6 +58,24 @@
         <item>@string/type_long</item>
         <item>@string/type_string</item>
     </string-array>
+    <string-array name="extras_types">
+        <item>@string/type_boolean</item>
+        <item>@string/type_component_name</item>
+        <item>@string/type_float</item>
+        <item>@string/type_float_array</item>
+        <item>@string/type_float_array_list</item>
+        <item>@string/type_int</item>
+        <item>@string/type_int_array</item>
+        <item>@string/type_int_array_list</item>
+        <item>@string/type_long</item>
+        <item>@string/type_long_array</item>
+        <item>@string/type_long_array_list</item>
+        <item>@string/type_null</item>
+        <item>@string/type_string</item>
+        <item>@string/type_string_array</item>
+        <item>@string/type_string_array_list</item>
+        <item>@string/type_uri</item>
+    </string-array>
     <string-array name="usage_interval_dropdown_list">
         <item>@string/usage_today</item>
         <item>@string/usage_yesterday</item>

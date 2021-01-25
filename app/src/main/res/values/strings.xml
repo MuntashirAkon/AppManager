@@ -880,6 +880,17 @@
     <string name="unlock_app_manager">Unlock App Manager</string>
     <string name="screen_lock">Screen Lock</string>
     <string name="screen_lock_msg">Lock App Manager using Android screen lock</string>
+    <string name="type_null">No value</string>
+    <string name="type_component_name">Component Name</string>
+    <string name="type_int_array">Array of integers</string>
+    <string name="type_int_array_list">List of integers</string>
+    <string name="type_long_array">Array of long integers</string>
+    <string name="type_long_array_list">List of long integers</string>
+    <string name="type_float_array">Array of decimal numbers</string>
+    <string name="type_float_array_list">List of decimal numbers</string>
+    <string name="type_string_array">Array of strings</string>
+    <string name="type_string_array_list">List of strings</string>
+    <string name="type_uri">URI</string>
     <string name="no_battery_optimization">No battery optimization</string>
     <string name="battery_optimization">Battery optimization</string>
     <string name="enable_battery_optimization">Enable battery optimization?</string>
