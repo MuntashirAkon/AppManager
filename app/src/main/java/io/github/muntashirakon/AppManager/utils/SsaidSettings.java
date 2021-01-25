@@ -22,12 +22,14 @@ import android.content.pm.Signature;
 import android.os.Build;
 import android.os.HandlerThread;
 import android.os.Process;
+import android.os.RemoteException;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.WorkerThread;
 import aosp.libcore.util.HexEncoding;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
+import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.io.ProxyFile;
 
@@ -68,6 +70,11 @@ public class SsaidSettings {
     }
 
     public boolean setSsaid(String ssaid) {
+        try {
+            PackageManagerCompat.forceStopPackage(packageName, Users.getUserHandle(uid));
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
         return settingsState.insertSettingLocked(getName(), ssaid, null, true, packageName);
     }
 
