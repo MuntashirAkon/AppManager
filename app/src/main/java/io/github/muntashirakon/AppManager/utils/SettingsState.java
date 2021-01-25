@@ -18,23 +18,15 @@
 package io.github.muntashirakon.AppManager.utils;
 
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.os.*;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.util.Base64;
-import android.util.SparseIntArray;
 import android.util.Xml;
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
-import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.io.AtomicProxyFile;
 import io.github.muntashirakon.io.ProxyFile;
 import io.github.muntashirakon.io.ProxyInputStream;
@@ -49,9 +41,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-
-import static android.os.Process.FIRST_APPLICATION_UID;
-import static android.os.Process.INVALID_UID;
 
 /**
  * This class contains the state for one type of settings. It is responsible
@@ -126,27 +115,13 @@ public final class SettingsState {
     private static final String HISTORICAL_OPERATION_INITIALIZE = "initialize";
     private static final String HISTORICAL_OPERATION_RESET = "reset";
 
-    private static final String SHELL_PACKAGE_NAME = "com.android.shell";
-    private static final String ROOT_PACKAGE_NAME = "root";
-
     private static final String NULL_VALUE = "null";
-
-    private static final Object sLock = new Object();
-
-    @GuardedBy("sLock")
-    private static final SparseIntArray sSystemUids = new SparseIntArray();
-
-    @GuardedBy("sLock")
-    private static Signature sSystemSignature;
 
     private final Object mWriteLock = new Object();
 
     private final Object mLock;
 
     private final Handler mHandler;
-
-    @GuardedBy("mLock")
-    private final Context mContext;
 
     @GuardedBy("mLock")
     private final ArrayMap<String, Setting> mSettings = new ArrayMap<>();
@@ -245,12 +220,11 @@ public final class SettingsState {
                 + settingTypeToString(getTypeFromKey(key)) + "]";
     }
 
-    public SettingsState(Context context, Object lock, File file, int key,
+    public SettingsState(Object lock, File file, int key,
                          int maxBytesPerAppPackage, Looper looper) {
         // It is important that we use the same lock as the settings provider
         // to ensure multiple mutations on this state are atomically persisted
         // as the async persistence should be blocked while we make changes.
-        mContext = context;
         mLock = lock;
         mStatePersistFile = new ProxyFile(file);
         mKey = key;
@@ -1216,18 +1190,10 @@ public final class SettingsState {
                 value = null;
             }
 
-            final boolean callerSystem = !forceNonSystemPackage &&
-                    !isNull() && isSystemPackage(mContext, packageName);
-            // Settings set by the system are always defaults.
-            if (callerSystem) {
-                setDefault = true;
-            }
-
             String defaultValue = this.defaultValue;
             boolean defaultFromSystem = this.defaultFromSystem;
             if (setDefault) {
-                if (!Objects.equals(value, this.defaultValue)
-                        && (!defaultFromSystem || callerSystem)) {
+                if (!Objects.equals(value, this.defaultValue)) {
                     defaultValue = value;
                     // Default null means no default, so the tag is irrelevant
                     // since it is used to reset a settings subset their defaults.
@@ -1238,9 +1204,7 @@ public final class SettingsState {
                     }
                 }
                 if (!defaultFromSystem && value != null) {
-                    if (callerSystem) {
-                        defaultFromSystem = true;
-                    }
+                    defaultFromSystem = true;
                 }
             }
 
@@ -1344,102 +1308,5 @@ public final class SettingsState {
             sb.append(ch);
         }
         return sb.toString();
-    }
-
-    // Check if a specific package belonging to the caller is part of the system package.
-    public static boolean isSystemPackage(Context context, String packageName) {
-        final int callingUid = Binder.getCallingUid();
-        final int callingUserId = Users.getUserHandle(callingUid);
-        return isSystemPackage(context, packageName, callingUid, callingUserId);
-    }
-
-    // Check if a specific package, uid, and user ID are part of the system package.
-    public static boolean isSystemPackage(Context context, String packageName, int uid,
-                                          int userId) {
-        synchronized (sLock) {
-            if (SYSTEM_PACKAGE_NAME.equals(packageName)) {
-                return true;
-            }
-
-            // Shell and Root are not considered a part of the system
-            if (SHELL_PACKAGE_NAME.equals(packageName)
-                    || ROOT_PACKAGE_NAME.equals(packageName)) {
-                return false;
-            }
-
-            if (uid != INVALID_UID) {
-                // Native services running as a special UID get a pass
-                final int callingAppId = Users.getAppId(uid);
-                if (callingAppId < FIRST_APPLICATION_UID) {
-                    sSystemUids.put(callingAppId, callingAppId);
-                    return true;
-                }
-            }
-
-            final long identity = Binder.clearCallingIdentity();
-            try {
-                try {
-                    uid = AppManager.getIPackageManager().getApplicationInfo(packageName, 0, userId).uid;
-                } catch (RemoteException e) {
-                    return false;
-                }
-
-                // If the system or a special system UID (like telephony), done.
-                if (Users.getAppId(uid) < FIRST_APPLICATION_UID) {
-                    sSystemUids.put(uid, uid);
-                    return true;
-                }
-
-                // If already known system component, done.
-                if (sSystemUids.indexOfKey(uid) >= 0) {
-                    return true;
-                }
-
-                // If SetupWizard, done.
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-                    try {
-                        String setupWizPackage = AppManager.getIPackageManager().getSetupWizardPackageName();
-                        if (packageName.equals(setupWizPackage)) {
-                            sSystemUids.put(uid, uid);
-                            return true;
-                        }
-                    } catch (RemoteException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                // If a persistent system app, done.
-                PackageInfo packageInfo;
-                try {
-                    packageInfo = PackageManagerCompat.getPackageInfo(packageName, PackageManager.GET_SIGNATURES, userId);
-                    if ((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_PERSISTENT) != 0
-                            && (packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
-                        sSystemUids.put(uid, uid);
-                        return true;
-                    }
-                } catch (PackageManager.NameNotFoundException | RemoteException e) {
-                    return false;
-                }
-
-                // Last check if system signed.
-                if (sSystemSignature == null) {
-                    try {
-                        sSystemSignature = PackageManagerCompat.getPackageInfo(SYSTEM_PACKAGE_NAME,
-                                PackageManager.GET_SIGNATURES, 0).signatures[0];
-                    } catch (PackageManager.NameNotFoundException | RemoteException e) {
-                        /* impossible */
-                        return false;
-                    }
-                }
-                if (sSystemSignature.equals(packageInfo.signatures[0])) {
-                    sSystemUids.put(uid, uid);
-                    return true;
-                }
-            } finally {
-                Binder.restoreCallingIdentity(identity);
-            }
-
-            return false;
-        }
     }
 }

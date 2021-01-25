@@ -27,7 +27,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.WorkerThread;
 import aosp.libcore.util.HexEncoding;
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.io.ProxyFile;
@@ -58,10 +57,9 @@ public class SsaidSettings {
         HandlerThread thread = new HandlerThread("SSAID", Process.THREAD_PRIORITY_BACKGROUND);
         thread.start();
         int ssaidKey = SettingsState.makeKey(SETTINGS_TYPE_SSAID, 0);
-        settingsState = new SettingsState(AppManager.getContext(), lock,
-                new ProxyFile(OsEnvironment.getUserSystemDirectory(Users.getUserHandle(uid)),
-                        "settings_ssaid.xml"), ssaidKey, SettingsState.MAX_BYTES_PER_APP_PACKAGE_UNLIMITED,
-                thread.getLooper());
+        settingsState = new SettingsState(lock, new ProxyFile(OsEnvironment.getUserSystemDirectory(
+                Users.getUserHandle(uid)), "settings_ssaid.xml"), ssaidKey,
+                SettingsState.MAX_BYTES_PER_APP_PACKAGE_UNLIMITED, thread.getLooper());
     }
 
     @Nullable
@@ -75,16 +73,6 @@ public class SsaidSettings {
 
     private String getName() {
         return packageName.equals(SettingsState.SYSTEM_PACKAGE_NAME) ? SSAID_USER_KEY : String.valueOf(uid);
-    }
-
-    @NonNull
-    private static String generateUserKey() {
-        // Generate a random key for each user used for creating a new ssaid.
-        final byte[] keyBytes = new byte[32];
-        final SecureRandom rand = new SecureRandom();
-        rand.nextBytes(keyBytes);
-        // Convert to string for storage in settings table.
-        return HexEncoding.encodeToString(keyBytes, true /* upperCase */);
     }
 
     @NonNull
@@ -107,7 +95,7 @@ public class SsaidSettings {
         if (userKeySetting == null || userKeySetting.isNull()
                 || userKeySetting.getValue() == null) {
             // Lazy initialize and store the user key.
-            String userKey = generateUserKey();
+            String userKey = generateSsaid(SettingsState.SYSTEM_PACKAGE_NAME);
             settingsState.insertSettingLocked(SSAID_USER_KEY, userKey, null, true,
                     SettingsState.SYSTEM_PACKAGE_NAME);
             userKeySetting = settingsState.getSettingLocked(SSAID_USER_KEY);
