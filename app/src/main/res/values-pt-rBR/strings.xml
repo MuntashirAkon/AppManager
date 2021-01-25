@@ -871,4 +871,21 @@
     <string name="sd_card">Cartão SD</string>
     <string name="external_storage">Armazenamento Externo</string>
     <string name="internal_storage">Armazenamento Interno</string>
+    <string name="restart_to_reflect_changes">Por favor, reinicie imediatamente para refletir as alterações</string>
+    <string name="failed_to_change_ssaid">Não foi possível mudar o SSAID</string>
+    <string name="copied_to_clipboard">Copiado para a área de transferência.</string>
+    <string name="ssaid_info">SSAID (&lt;tt&gt;Settings.Secure.ANDROID_ID&lt;/tt&gt;) é um identificador de dispositivo atribuído a cada aplicativo (do Android Oreo). É amplamente utilizado por aplicativos para rastrear usuários.</string>
+    <string name="ssaid">SSAID</string>
+    <string name="type_uri">URI</string>
+    <string name="type_string_array_list">Lista de strings</string>
+    <string name="type_string_array">Matriz de strings</string>
+    <string name="type_float_array_list">Lista de números decimais</string>
+    <string name="type_float_array">Matriz de números decimais</string>
+    <string name="type_long_array_list">Lista de números inteiros longos</string>
+    <string name="type_long_array">Matriz de números inteiros longos</string>
+    <string name="type_int_array_list">Lista de números inteiros</string>
+    <string name="type_int_array">Matriz de números inteiros</string>
+    <string name="type_component_name">Nome do Componente</string>
+    <string name="type_null">Nenhum valor</string>
+    <string name="user_with_id">Usuário: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"user_id\" example=\"0\"&gt;%1$d&lt;/xliff:g&gt;</string>
 </resources>
