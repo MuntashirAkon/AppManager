@@ -157,8 +157,7 @@
         <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g>個のトラッカーに<xliff:g id="class_no" example="50">%2$d</xliff:g>個のクラス</item>
         <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g>個のトラッカーに<xliff:g id="class_no" example="50">%2$d</xliff:g>個のクラス</item>
     </plurals>
-    <string name="tested_signatures_on_classes_and_time_taken">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"signature_no\" example=\"342\"&gt;%1$d&lt;/xliff:g&gt;件の定義リストで&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"6000\"&gt;%2$d&lt;/xliff:g&gt;個のクラスを検証しました.
-\n計測時間: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"time\" example=\"10000\"&gt;%3$d&lt;/xliff:g&gt; ms (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"iteration_no\" example=\"100000\"&gt;%4$d&lt;/xliff:g&gt; 反復).</string>
+    <string name="tested_signatures_on_classes_and_time_taken"><xliff:g id="signature_no" example="342">%1$d</xliff:g>件の定義リストで<xliff:g id="class_no" example="6000">%2$d</xliff:g>個のクラスを検証しました.\n計測時間: <xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> 反復)</string>
     <string name="found_trackers">見つかったトラッカー:</string>
     <string name="tracker_details">トラッカーの詳細</string>
     <string name="tracker_classes">トラッカーのクラス</string>
@@ -236,16 +235,16 @@
     <string name="no_content">コンテンツがありません</string>
     <string name="view_in_settings">設定画面で開く</string>
     <string name="uninstall_app_message">このアプリをアンインストールしますか？</string>
-    <string name="failed_to_uninstall">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;のアプリをアンストールできませんでした。</string>
+    <string name="failed_to_uninstall"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g>のアプリをアンストールできませんでした。</string>
     <string name="uninstalled_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g>はアンインストールされました。</string>
     <string name="uninstall_system_app_message">このアプリはシステムアプリです。本当にアンインストールしますか？</string>
     <string name="stopped">停止</string>
     <string name="disable">無効にする</string>
     <string name="enable">有効にする</string>
-    <string name="failed_to_disable">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;を無効にできませんでした。</string>
-    <string name="failed_to_enable">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;を有効にできませんでした。</string>
+    <string name="failed_to_disable"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g>を無効にできませんでした。</string>
+    <string name="failed_to_enable"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g>を有効にできませんでした。</string>
     <string name="force_stop">強制終了</string>
-    <string name="failed_to_stop">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;を停止できませんでした。</string>
+    <string name="failed_to_stop"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g>を停止できませんでした</string>
     <string name="storage_and_cache">ストレージとキャッシュ</string>
     <string name="total_size">合計</string>
     <string name="app_size">アプリ本体</string>
@@ -433,7 +432,7 @@
     <string name="failed_to_fetch_package_info_possibly_a_split_apk">パッケージ情報を取得できませんでした。恐らく分割APKです。</string>
     <string name="termux">Termux</string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> インストール済み</string>
-    <string name="failed_to_install_package_name">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; をインストールできませんでした</string>
+    <string name="failed_to_install_package_name"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> をインストールできませんでした</string>
     <string name="filter">フィルタ</string>
     <string name="filter_user_apps">ユーザーアプリ</string>
     <string name="filter_system_apps">システムアプリ</string>
@@ -657,8 +656,8 @@
     <string name="confirm_installation">インストールを確認</string>
     <string name="allow_open_pgp_operation">クリックしてAMにOpenPGPの利用を許可する</string>
     <string name="uninstall_updates">アップデートをアンインストール</string>
-    <string name="update_uninstalled_successfully">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; のアップデートは正常に削除されました</string>
-    <string name="failed_to_uninstall_updates">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; のアップデートが削除できませんでした</string>
+    <string name="update_uninstalled_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> のアップデートは正常に削除されました</string>
+    <string name="failed_to_uninstall_updates"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> のアップデートが削除できませんでした</string>
     <string name="sort_by_backup">バックアップ済みを優先</string>
     <string name="filter_apps_with_backups">バックアップ済みアプリ</string>
     <string name="subject">識別子</string>
