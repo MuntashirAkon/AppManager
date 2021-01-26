@@ -765,7 +765,7 @@
 \nTiempo tomado <xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> iteraciones).</string>
     <string name="interceptor">Interceptor</string>
     <string name="backup_data_description">Respaldo de las carpetas de datos. Si se selecciona, se hará un respaldo de las carpetas de datos internas por defecto.</string>
-    <string name="backup_apk_only_description">Respaldo sólo de los archivos APK del directorio de origen. &lt;b&gt;Fuente&lt;/b&gt; debe ser seleccionado para que esto funcione.</string>
+    <string name="backup_apk_only_description">Respaldo sólo de los archivos APK del directorio de origen. <b>Fuente</b> debe ser seleccionado para que esto funcione.</string>
     <string name="backup_source_description">Respaldo de todo el directorio fuente.</string>
     <string name="backup_obb_media_description">Respaldo de OBB y multimedia.</string>
     <string name="board_name">Tablón</string>
@@ -798,7 +798,7 @@
     <string name="backup_volume">Volumen del Backup</string>
     <string name="pref_backup_restore_msg">Personalizar Backup/Restore.</string>
     <string name="pref_interceptor_enabled_msg">Intercepta la comunicación entre aplicaciones a través de Intent</string>
-    <string name="disable_background_run_description">Establece el modo &lt;i&gt;ignorar&lt;/i&gt; para las siguientes aplicaciones: &lt;tt&gt;RUN_IN_BACKGROUND&lt;/tt&gt; (del Androide 7.0) y &lt;tt&gt;RUN_ANY_IN_BACKGROUND&lt;/tt&gt; (desde Android 9).</string>
+    <string name="disable_background_run_description">Establece el modo <i>ignorar</i> para las siguientes aplicaciones: <tt>RUN_IN_BACKGROUND</tt> (del Androide 7.0) y <tt>RUN_ANY_IN_BACKGROUND</tt> (desde Android 9).</string>
     <string name="failed_to_enable_magisk_hide">No se pudo habilitar MagiskHide</string>
     <string name="enable_magisk_hide">Habilitar MagiskHide</string>
     <string name="failed_to_disable_magisk_hide">No se pudo deshabilitar MagiskHide</string>
@@ -820,7 +820,7 @@
     <string name="backup_extras_description">Back up de los permisos de las aplicaciones, ahorro de batería, opciones de uso de datos, estado de MagiskHide, etc.</string>
     <string name="backup_extras">Extras</string>
     <string name="backup_exclude_cache_description">No hacer backup de las carpetas caché, no_cache y no_backup.</string>
-    <string name="backup_external_data_description">Hacer una copia de seguridad de las carpetas de datos externos. &lt;b&gt;Datos&lt;/b&gt; deben ser seleccionado para que esto funcione.</string>
+    <string name="backup_external_data_description">Hacer una copia de seguridad de las carpetas de datos externos. <b>Datos</b> deben ser seleccionado para que esto funcione.</string>
     <string name="set_mode_for_app_ops_dots">Establecer modo para las app ops…</string>
     <string name="security">Seguridad</string>
     <string name="battery">Batería</string>
