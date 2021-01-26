@@ -576,4 +576,9 @@
     <string name="pref_backup_restore_msg">Dostosuj kopię zapasową/przywracanie.</string>
     <string name="pref_interceptor_enabled_msg">Przechwytuje komunikację między aplikacjami za pośrednictwem intentów</string>
     <string name="failed_to_enable_magisk_hide">Nie można włączyć MagiskHide</string>
+    <string name="backup_exclude_cache_description">Nie twórz kopii zapasowych folderów cache, no_cache i no_backup.</string>
+    <string name="backup_obb_media_description">Utwórz kopię zapasową folderów OBB i media.</string>
+    <string name="backup_source_description">Utwórz kopię zapasową całego katalogu źródłowego.</string>
+    <string name="resend_intent">Wyślij intent ponownie</string>
+    <string name="category">Kategorie</string>
 </resources>
