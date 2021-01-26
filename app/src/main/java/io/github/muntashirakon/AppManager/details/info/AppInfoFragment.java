@@ -242,6 +242,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             isDebuggable = (mApplicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
         }
         menu.findItem(R.id.action_run_in_termux).setVisible(isDebuggable);
+        menu.findItem(R.id.action_battery_opt).setVisible(isRootEnabled || isAdbEnabled);
+        menu.findItem(R.id.action_net_policy).setVisible(isRootEnabled || isAdbEnabled);
     }
 
     @Override
