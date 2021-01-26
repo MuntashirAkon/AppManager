@@ -118,41 +118,6 @@ public final class RunnerUtils {
         return Runner.runCommand(cmd);
     }
 
-    public static boolean fileExists(@NonNull String fileName) {
-        return Runner.runCommand(new String[]{Runner.TOYBOX, "test", "-e", fileName}).isSuccessful();
-    }
-
-    public static boolean fileExists(@NonNull File fileName) {
-        return Runner.runCommand(new String[]{Runner.TOYBOX, "test", "-e", fileName.getAbsolutePath()}).isSuccessful();
-    }
-
-    public static boolean isDirectory(@NonNull String fileName) {
-        return Runner.runCommand(new String[]{Runner.TOYBOX, "test", "-d", fileName}).isSuccessful();
-    }
-
-    public static void deleteFile(@NonNull String fileName, boolean isForce) {
-        String forceSwitch = isForce ? "-rf" : "-f";
-        Runner.runCommand(new String[]{Runner.TOYBOX, "rm", forceSwitch, fileName});
-    }
-
-    public static boolean mv(@NonNull File source, @NonNull File dest) {
-        return Runner.runCommand(new String[]{Runner.TOYBOX, "mv", "-f", source.getAbsolutePath(), dest.getAbsolutePath()}).isSuccessful();
-    }
-
-    public static boolean cp(@NonNull File source, @NonNull File dest) {
-        return Runner.runCommand(new String[]{Runner.TOYBOX, "cp", "-a", source.getAbsolutePath(), dest.getAbsolutePath()}).isSuccessful();
-    }
-
-    public static String cat(@NonNull String fileName, String emptyValue) {
-        Runner.Result result = Runner.runCommand(String.format(Runner.TOYBOX + " cat \"%s\" 2> /dev/null", fileName));
-        return result.isSuccessful() ? result.getOutput() : emptyValue;
-    }
-
-    @NonNull
-    public static Runner.Result touch(@NonNull File file) {
-        return Runner.runCommand(new String[]{"touch", file.getAbsolutePath()});
-    }
-
     @NonNull
     public static String userHandleToUser(int userHandle) {
         if (userHandle == Users.USER_ALL) return "all";

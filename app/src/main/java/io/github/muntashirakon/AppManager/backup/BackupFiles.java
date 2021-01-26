@@ -20,18 +20,12 @@ package io.github.muntashirakon.AppManager.backup;
 import android.os.RemoteException;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.io.ProxyFile;
 import io.github.muntashirakon.io.ProxyFileReader;
 import io.github.muntashirakon.io.ProxyFileWriter;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.Closeable;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -74,14 +68,14 @@ public class BackupFiles {
         return new ProxyFile(getBackupDirectory(), APK_SAVING_DIRECTORY);
     }
 
-    public static void createNoMediaIfNotExists() {
+    public static void createNoMediaIfNotExists() throws IOException {
         ProxyFile backupDirectory = getBackupDirectory();
         ProxyFile noMediaFile = new ProxyFile(backupDirectory, NO_MEDIA);
         if (noMediaFile.exists()) return;
         if (!backupDirectory.exists()) {
             backupDirectory.mkdirs();
         }
-        RunnerUtils.touch(noMediaFile);
+        noMediaFile.createNewFile();
     }
 
     public static class BackupFile {
@@ -126,8 +120,8 @@ public class BackupFiles {
             return new ProxyFile(getBackupPath(), RULES_TSV + CryptoUtils.getExtension(mode));
         }
 
-        public void freeze() {
-            RunnerUtils.touch(getFreezeFile());
+        public void freeze() throws IOException {
+            getFreezeFile().createNewFile();
         }
 
         public void unfreeze() {

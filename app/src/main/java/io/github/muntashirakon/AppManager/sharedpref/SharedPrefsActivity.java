@@ -63,7 +63,7 @@ public class SharedPrefsActivity extends BaseActivity implements
 
     public static final int REASONABLE_STR_SIZE = 200;
 
-    private String mSharedPrefFile;
+    private ProxyFile mSharedPrefFile;
     private SharedPrefsListingAdapter mAdapter;
     private LinearProgressIndicator mProgressIndicator;
     private HashMap<String, Object> mSharedPrefMap;
@@ -72,13 +72,14 @@ public class SharedPrefsActivity extends BaseActivity implements
     protected void onAuthenticated(Bundle savedInstanceState) {
         setContentView(R.layout.activity_shared_prefs);
         setSupportActionBar(findViewById(R.id.toolbar));
-        mSharedPrefFile = getIntent().getStringExtra(EXTRA_PREF_LOCATION);
+        String sharedPrefFile = getIntent().getStringExtra(EXTRA_PREF_LOCATION);
         String appLabel = getIntent().getStringExtra(EXTRA_PREF_LABEL);
-        if (mSharedPrefFile == null) {
+        if (sharedPrefFile == null) {
             finish();
             return;
         }
-        String fileName =  (new File(mSharedPrefFile)).getName();
+        mSharedPrefFile = new ProxyFile(sharedPrefFile);
+        String fileName =  mSharedPrefFile.getName();
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle(appLabel != null ? appLabel : "Shared Preferences Viewer");
@@ -144,17 +145,15 @@ public class SharedPrefsActivity extends BaseActivity implements
         int id = item.getItemId();
         if (id == android.R.id.home || id == R.id.action_discard) {
             finish();
-        } else if (id == R.id.action_delete) { // Make sure it's a file and then delete
-            boolean isSuccess = Runner.runCommand(String.format("[ -f '%s' ] && " + Runner.TOYBOX + " rm -f '%s'",
-                    mSharedPrefFile, mSharedPrefFile)).isSuccessful();
-            if (isSuccess) {
+        } else if (id == R.id.action_delete) {
+            if (mSharedPrefFile.delete()) {
                 Toast.makeText(this, R.string.deleted_successfully, Toast.LENGTH_LONG).show();
                 finish();
             } else {
                 Toast.makeText(this, R.string.deletion_failed, Toast.LENGTH_LONG).show();
             }
         } else if (id == R.id.action_save) {
-            if (writeSharedPref(new ProxyFile(mSharedPrefFile), mSharedPrefMap)) {
+            if (writeSharedPref(mSharedPrefFile, mSharedPrefMap)) {
                 Toast.makeText(this, R.string.saved_successfully, Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(this, R.string.saving_failed, Toast.LENGTH_LONG).show();
@@ -239,7 +238,7 @@ public class SharedPrefsActivity extends BaseActivity implements
     private class SharedPrefsReaderThread extends Thread {
         @Override
         public void run() {
-            mSharedPrefMap = readSharedPref(new ProxyFile(mSharedPrefFile));
+            mSharedPrefMap = readSharedPref(mSharedPrefFile);
             runOnUiThread(() -> {
                 mAdapter.setDefaultList(mSharedPrefMap);
                 mProgressIndicator.hide();

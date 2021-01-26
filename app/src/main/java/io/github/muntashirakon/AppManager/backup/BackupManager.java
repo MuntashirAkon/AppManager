@@ -17,6 +17,7 @@
 
 package io.github.muntashirakon.AppManager.backup;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Locale;
 
@@ -73,7 +74,11 @@ public class BackupManager {
         this.targetPackage = targetPackage;
         metadataManager = MetadataManager.getNewInstance();
         requestedFlags = new BackupFlags(flags);
-        BackupFiles.createNoMediaIfNotExists();
+        try {
+            BackupFiles.createNoMediaIfNotExists();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         Log.d(TAG, String.format(Locale.ROOT, "Package: %s, user: %d", targetPackage.getPackageName(), targetPackage.getUserHandle()));
     }
 

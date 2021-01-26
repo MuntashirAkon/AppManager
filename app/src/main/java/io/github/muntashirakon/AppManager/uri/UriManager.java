@@ -20,46 +20,32 @@ package io.github.muntashirakon.AppManager.uri;
 import android.net.Uri;
 import android.os.RemoteException;
 import android.util.Xml;
-
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlSerializer;
-
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
-import java.util.StringTokenizer;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
-import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
-import io.github.muntashirakon.io.ProxyFile;
+import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.io.AtomicProxyFile;
 import io.github.muntashirakon.io.ProxyOutputStream;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlSerializer;
 
-import static com.android.internal.util.XmlUtils.readBooleanAttribute;
-import static com.android.internal.util.XmlUtils.readIntAttribute;
-import static com.android.internal.util.XmlUtils.readLongAttribute;
-import static com.android.internal.util.XmlUtils.writeBooleanAttribute;
-import static com.android.internal.util.XmlUtils.writeIntAttribute;
-import static com.android.internal.util.XmlUtils.writeLongAttribute;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
+
+import static com.android.internal.util.XmlUtils.*;
 import static org.xmlpull.v1.XmlPullParser.END_DOCUMENT;
 import static org.xmlpull.v1.XmlPullParser.START_TAG;
 
 public class UriManager {
     public static final String TAG = "UriManager";
 
-    private final ProxyFile mGrantFile;
+    private final AtomicProxyFile mGrantFile;
 
     private final HashMap<String, ArrayList<UriGrant>> uriGrantsHashMap = new HashMap<>();
 
@@ -79,7 +65,7 @@ public class UriManager {
     private static final String ATTR_PREFIX = "prefix";
 
     public UriManager() {
-        mGrantFile = new ProxyFile(new File(OsEnvironment.getDataSystemDirectory(), "urigrants.xml"));
+        mGrantFile = new AtomicProxyFile(new File(OsEnvironment.getDataSystemDirectory(), "urigrants.xml"));
         readGrantedUriPermissions();
     }
 
@@ -110,41 +96,40 @@ public class UriManager {
             }
         }
 
+        ProxyOutputStream fos = null;
         try {
-            File tempFile = IOUtils.getTempFile();
-            try (OutputStream fos = new ProxyOutputStream(tempFile)) {
-                XmlSerializer out = Xml.newSerializer();
-                out.setOutput(fos, "utf-8");
-                out.startDocument(null, true);
-                out.startTag(null, TAG_URI_GRANTS);
-                for (UriGrant perm : persist) {
-                    out.startTag(null, TAG_URI_GRANT);
-                    writeIntAttribute(out, ATTR_SOURCE_USER_ID, perm.sourceUserId);
-                    writeIntAttribute(out, ATTR_TARGET_USER_ID, perm.targetUserId);
-                    out.attribute(null, ATTR_SOURCE_PKG, perm.sourcePkg);
-                    out.attribute(null, ATTR_TARGET_PKG, perm.targetPkg);
-                    out.attribute(null, ATTR_URI, String.valueOf(perm.uri));
-                    writeBooleanAttribute(out, ATTR_PREFIX, perm.prefix);
-                    writeIntAttribute(out, ATTR_MODE_FLAGS, perm.modeFlags);
-                    writeLongAttribute(out, ATTR_CREATED_TIME, perm.createdTime);
-                    out.endTag(null, TAG_URI_GRANT);
-                }
-                out.endTag(null, TAG_URI_GRANTS);
-                out.endDocument();
-                Runner.runCommand(String.format(Runner.TOYBOX + " cp \"%s\" \"%s\"", tempFile.getAbsolutePath(), mGrantFile.getAbsolutePath()));
-                Runner.runCommand(String.format(Runner.TOYBOX + " chmod 600 \"%s\"", mGrantFile.getAbsolutePath()));
-                Runner.runCommand(String.format(Runner.TOYBOX + " chown 1000:1000 \"%s\"", mGrantFile.getAbsolutePath()));
-                Runner.runCommand(new String[]{"restorecon", mGrantFile.getAbsolutePath()});
-                tempFile.delete();
+            fos = mGrantFile.startWrite();
+            XmlSerializer out = Xml.newSerializer();
+            out.setOutput(fos, "utf-8");
+            out.startDocument(null, true);
+            out.startTag(null, TAG_URI_GRANTS);
+            for (UriGrant perm : persist) {
+                out.startTag(null, TAG_URI_GRANT);
+                writeIntAttribute(out, ATTR_SOURCE_USER_ID, perm.sourceUserId);
+                writeIntAttribute(out, ATTR_TARGET_USER_ID, perm.targetUserId);
+                out.attribute(null, ATTR_SOURCE_PKG, perm.sourcePkg);
+                out.attribute(null, ATTR_TARGET_PKG, perm.targetPkg);
+                out.attribute(null, ATTR_URI, String.valueOf(perm.uri));
+                writeBooleanAttribute(out, ATTR_PREFIX, perm.prefix);
+                writeIntAttribute(out, ATTR_MODE_FLAGS, perm.modeFlags);
+                writeLongAttribute(out, ATTR_CREATED_TIME, perm.createdTime);
+                out.endTag(null, TAG_URI_GRANT);
             }
-        } catch (IOException | RemoteException e) {
+            out.endTag(null, TAG_URI_GRANTS);
+            out.endDocument();
+            mGrantFile.finishWrite(fos);
+            Runner.runCommand(String.format(Runner.TOYBOX + " chmod 600 \"%s\"", mGrantFile.getBaseFile()));
+            Runner.runCommand(String.format(Runner.TOYBOX + " chown 1000:1000 \"%s\"", mGrantFile.getBaseFile()));
+            Runner.runCommand(new String[]{"restorecon", mGrantFile.getBaseFile().getAbsolutePath()});
+        } catch (IOException e) {
             Log.e(TAG, "Failed writing Uri grants", e);
+            mGrantFile.failWrite(fos);
         }
     }
 
     private void readGrantedUriPermissions() {
         final long now = System.currentTimeMillis();
-        try (InputStream fis = new ByteArrayInputStream(IOUtils.getFileContent(mGrantFile).getBytes())) {
+        try (InputStream fis = mGrantFile.openRead()) {
             final XmlPullParser in = Xml.newPullParser();
             in.setInput(fis, null);
 
@@ -187,7 +172,7 @@ public class UriManager {
             }
         } catch (FileNotFoundException e) {
             // Missing grants is okay
-        } catch (IOException | XmlPullParserException e) {
+        } catch (IOException | XmlPullParserException | RemoteException e) {
             Log.e(TAG, "Failed reading Uri grants", e);
         }
     }

@@ -24,8 +24,6 @@ import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.IAMService;
 import io.github.muntashirakon.AppManager.IRemoteFile;
 import io.github.muntashirakon.AppManager.ipc.IPCUtils;
-import io.github.muntashirakon.AppManager.runner.RunnerUtils;
-import io.github.muntashirakon.AppManager.utils.AppPref;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -68,6 +66,18 @@ public class ProxyFile extends File {
     }
 
     @Override
+    public boolean createNewFile() throws IOException {
+        if (isRemoteAlive()) {
+            try {
+                //noinspection ConstantConditions
+                return file.createNewFile();
+            } catch (RemoteException ignore) {
+            }
+        }
+        return super.createNewFile();
+    }
+
+    @Override
     public boolean delete() {
         if (isRemoteAlive()) {
             try {
@@ -80,16 +90,8 @@ public class ProxyFile extends File {
     }
 
     public boolean forceDelete() {
-        boolean isDeleted = false;
-        try {
-            isDeleted = super.delete();
-        } catch (SecurityException ignore) {
-        }
-        if (!isDeleted && AppPref.isRootOrAdbEnabled()) {
-            RunnerUtils.deleteFile(getAbsolutePath(), true);
-            return !RunnerUtils.fileExists(getAbsolutePath());
-        }
-        return isDeleted;
+        if (isFile()) return super.delete();
+        else return deleteDir(this);
     }
 
     @Nullable
@@ -289,5 +291,19 @@ public class ProxyFile extends File {
 
     private boolean isRemoteAlive() {
         return file != null && file.asBinder().pingBinder();
+    }
+
+    private static boolean deleteDir(ProxyFile dir) {
+        if (dir != null && dir.isDirectory()) {
+            String[] children = dir.list();
+            if (children == null) return false;
+            for (String child : children) {
+                boolean success = deleteDir(new ProxyFile(dir, child));
+                if (!success) return false;
+            }
+            return dir.delete();
+        } else if (dir != null && dir.isFile()) {
+            return dir.delete();
+        } else return false;
     }
 }

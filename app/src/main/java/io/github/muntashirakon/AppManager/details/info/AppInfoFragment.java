@@ -929,15 +929,6 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                 .setTitle(R.string.databases)
                                 .setItems(databases2, (dialog, which) -> {
                                     // TODO(10/9/20): Need a custom ContentProvider
-//                                    File realFile = databases.get(which);
-//                                    File sharableFile = new File(AppManager.getContext().getExternalCacheDir(), realFile.getName());
-//                                    RunnerUtils.cp(realFile, sharableFile);
-//                                    Intent openFile = new Intent(Intent.ACTION_VIEW)
-//                                            .setDataAndType(FileProvider.getUriForFile(mActivity, BuildConfig.APPLICATION_ID + ".provider", sharableFile), "application/x-sqlite3")
-//                                            .putExtra("real_path", realFile.getAbsolutePath())
-//                                            .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                                    if (openFile.resolveActivityInfo(mPackageManager, 0) != null)
-//                                        startActivity(openFile);
                                 })
                                 .setNegativeButton(R.string.ok, null)
                                 .show());

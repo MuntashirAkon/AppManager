@@ -41,7 +41,6 @@ import io.github.muntashirakon.AppManager.rules.PseudoRules;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.servermanager.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.uri.UriManager;
@@ -262,12 +261,14 @@ class BackupOp implements Closeable {
         }
         List<String> cachedKeyStoreFileNames = new ArrayList<>();
         for (String keyStoreFileName : KeyStoreUtils.getKeyStoreFiles(applicationInfo.uid, userHandle)) {
-            String newFileName = Utils.replaceOnce(keyStoreFileName,
-                    String.valueOf(applicationInfo.uid), String.valueOf(KEYSTORE_PLACEHOLDER));
-            if (!RunnerUtils.cp(new File(keyStorePath, keyStoreFileName), new File(cachePath, newFileName))) {
-                throw new BackupException("Could not cache " + keyStoreFileName);
+            try {
+                String newFileName = Utils.replaceOnce(keyStoreFileName, String.valueOf(applicationInfo.uid),
+                        String.valueOf(KEYSTORE_PLACEHOLDER));
+                IOUtils.copy(new ProxyFile(keyStorePath, keyStoreFileName), new ProxyFile(cachePath, newFileName));
+                cachedKeyStoreFileNames.add(newFileName);
+            } catch (Throwable e) {
+                throw new BackupException("Could not cache " + keyStoreFileName, e);
             }
-            cachedKeyStoreFileNames.add(newFileName);
         }
         if (cachedKeyStoreFileNames.size() == 0) {
             throw new BackupException("There were some KeyStore items but they couldn't be cached before taking a backup.");

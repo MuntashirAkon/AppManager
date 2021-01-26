@@ -40,7 +40,6 @@ import io.github.muntashirakon.AppManager.rules.PseudoRules;
 import io.github.muntashirakon.AppManager.rules.RulesImporter;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.servermanager.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.FreshFile;
@@ -240,8 +239,10 @@ class RestoreOp implements Closeable {
                 }
             }
             // Setup package staging directory
-            File packageStagingDirectory = PackageUtils.PACKAGE_STAGING_DIRECTORY;
-            if (!RunnerUtils.fileExists(packageStagingDirectory)) {
+            File packageStagingDirectory;
+            if (new ProxyFile(PackageUtils.PACKAGE_STAGING_DIRECTORY).exists()) {
+                packageStagingDirectory = PackageUtils.PACKAGE_STAGING_DIRECTORY;
+            } else {
                 packageStagingDirectory = backupPath;
             }
             // Setup apk files, including split apk
@@ -331,9 +332,8 @@ class RestoreOp implements Closeable {
             int uid = packageInfo.applicationInfo.uid;
             List<String> keyStoreFileNames = KeyStoreUtils.getKeyStoreFiles(KEYSTORE_PLACEHOLDER, userHandle);
             for (String keyStoreFileName : keyStoreFileNames) {
-                if (!RunnerUtils.mv(new File(keyStorePath, keyStoreFileName), new File(keyStorePath,
-                        Utils.replaceOnce(keyStoreFileName, String.valueOf(KEYSTORE_PLACEHOLDER),
-                                String.valueOf(uid))))) {
+                if (!new ProxyFile(keyStorePath, keyStoreFileName).renameTo(new ProxyFile(keyStorePath,
+                        Utils.replaceOnce(keyStoreFileName, String.valueOf(KEYSTORE_PLACEHOLDER), String.valueOf(uid))))) {
                     throw new BackupException("Failed to rename KeyStore files");
                 }
             }
@@ -377,7 +377,7 @@ class RestoreOp implements Closeable {
                 dataSource = Utils.replaceOnce(metadata.dataDirs[i], "/" + metadata.userHandle + "/", "/" + userHandle + "/");
                 dataFiles = getDataFiles(backupPath, i);
                 Pair<Integer, Integer> uidAndGid = null;
-                if (RunnerUtils.fileExists(dataSource)) {
+                if (new ProxyFile(dataSource).exists()) {
                     uidAndGid = BackupUtils.getUidAndGid(dataSource, packageInfo.applicationInfo.uid);
                 }
                 if (dataFiles == null || dataFiles.length == 0) {
