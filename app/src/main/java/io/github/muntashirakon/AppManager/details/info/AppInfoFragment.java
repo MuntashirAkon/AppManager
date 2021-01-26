@@ -353,8 +353,9 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             new MaterialAlertDialogBuilder(mActivity)
                     .setTitle(R.string.net_policy)
                     .setMultiChoiceItems(policyStrings, choices, (dialog, which, isChecked) -> {
-                        if (isChecked) selectedPolicies.updateAndGet(v -> v | polices[which]);
-                        else selectedPolicies.updateAndGet(v -> v & ~polices[which]);
+                        int currentPolicies = selectedPolicies.get();
+                        if (isChecked) selectedPolicies.set(currentPolicies | polices[which]);
+                        else selectedPolicies.set(currentPolicies & ~polices[which]);
                     })
                     .setNegativeButton(R.string.cancel, null)
                     .setPositiveButton(R.string.save, (dialog, which) -> {
