@@ -917,7 +917,7 @@
     <string name="backup_all_apps_msg">Резервное копирование всех установленных приложений.</string>
     <string name="bootloader">Загрузчик</string>
     <string name="selinux">SELinux</string>
-    <string name="net_policy">Чистая политика</string>
+    <string name="net_policy">Сетевая политика</string>
     <string name="has_net_policy">Чистая политика</string>
     <string name="allow_background">Разрешить фон</string>
     <string name="reject_background">Отклонить фон</string>
@@ -940,4 +940,17 @@
     <string name="type_null">Нет значения</string>
     <string name="backup_custom_users">Выборочные пользователи</string>
     <string name="user_with_id">Пользователь: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"user_id\" example=\"0\"&gt;%1$d&lt;/xliff:g&gt;</string>
+    <string name="restart_to_reflect_changes">Чтобы отобразить изменения, пожалуйста немедленно перезапустите</string>
+    <string name="failed_to_change_ssaid">Не удалось изменить SSAID</string>
+    <string name="copied_to_clipboard">Скопировано в буфер обмена.</string>
+    <string name="ssaid_info">SSAID (&lt;tt&gt;Settings.Secure.ANDROID_ID&lt;/tt&gt;) - это идентификатор устройства, присвоенный каждому приложению (начиная с Android Oreo). Он широко используется приложениями для отслеживания пользователей.</string>
+    <string name="type_string_array_list">Список строк</string>
+    <string name="type_string_array">Массив строк</string>
+    <string name="type_float_array_list">Список десятичных чисел</string>
+    <string name="type_float_array">Массив десятичных чисел</string>
+    <string name="type_long_array_list">Список длинных целых чисел</string>
+    <string name="type_long_array">Массив длинных целых чисел</string>
+    <string name="type_int_array_list">Список целых чисел</string>
+    <string name="type_int_array">Массив целых чисел</string>
+    <string name="type_component_name">Имя компонента</string>
 </resources>
