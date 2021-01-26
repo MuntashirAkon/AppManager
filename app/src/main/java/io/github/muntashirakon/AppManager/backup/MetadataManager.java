@@ -87,7 +87,6 @@ public final class MetadataManager {
         @TarUtils.TarType
         public String tarType;  // tar_type
         public boolean keyStore;  // key_store
-        public long size;  // size
         public String installer;  // installer
     }
 
@@ -176,7 +175,6 @@ public final class MetadataManager {
         this.metadata.userHandle = rootObject.getInt("user_handle");
         this.metadata.tarType = rootObject.getString("tar_type");
         this.metadata.keyStore = rootObject.getBoolean("key_store");
-        this.metadata.size = rootObject.getLong("size");
         this.metadata.installer = rootObject.getString("installer");
     }
 
@@ -221,7 +219,6 @@ public final class MetadataManager {
             rootObject.put("user_handle", metadata.userHandle);
             rootObject.put("tar_type", metadata.tarType);
             rootObject.put("key_store", metadata.keyStore);
-            rootObject.put("size", metadata.size);
             rootObject.put("installer", metadata.installer);
             outputStream.write(rootObject.toString(4).getBytes());
         }
