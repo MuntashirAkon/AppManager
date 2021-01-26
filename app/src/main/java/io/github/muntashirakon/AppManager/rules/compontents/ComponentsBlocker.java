@@ -132,12 +132,10 @@ public final class ComponentsBlocker extends RulesStorageManager {
      */
     @NonNull
     public static ComponentsBlocker getInstance(@NonNull String packageName, int userHandle, boolean noLoadFromDisk) {
-        // TODO(3/12/20): Handle multiple users
         if (INSTANCE == null) {
             INSTANCE = new ComponentsBlocker(AppManager.getContext(), packageName, userHandle);
         } else if (!INSTANCE.packageName.equals(packageName)) {
             INSTANCE.close();
-            INSTANCE = null;
             INSTANCE = new ComponentsBlocker(AppManager.getContext(), packageName, userHandle);
         }
         if (!noLoadFromDisk && AppPref.isRootEnabled())

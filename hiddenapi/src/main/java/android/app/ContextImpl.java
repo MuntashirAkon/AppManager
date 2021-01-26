@@ -18,9 +18,12 @@
 package android.app;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.UserHandle;
 
-/**
- * Created by zl on 2017/2/13.
- */
-
-public abstract class ContextImpl extends Context {}
+public abstract class ContextImpl extends Context {
+    public Context createPackageContextAsUser(String packageName, int flags, UserHandle user)
+            throws PackageManager.NameNotFoundException {
+        throw new UnsupportedOperationException();
+    }
+}

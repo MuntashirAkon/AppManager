@@ -2,14 +2,13 @@ package io.github.muntashirakon.AppManager.servermanager;
 
 import android.app.ActivityManagerNative;
 import android.app.IActivityManager;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.IIntentReceiver;
-import android.content.Intent;
+import android.content.*;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.os.RemoteException;
 
+import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -66,6 +65,23 @@ public final class ActivityManagerCompat {
             res = am.broadcastIntent(null, intent, null, null, 0, null, null, null, AppOpsManager.OP_NONE, true, false, userHandle);
         }
         return res;
+    }
+
+    @Nullable
+    public static IContentProvider getContentProviderExternal(String name, int userId, IBinder token, String tag)
+            throws RemoteException {
+        IActivityManager am = getActivityManager();
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                return am.getContentProviderExternal(name, userId, token, tag).provider;
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                return ((android.app.ContentProviderHolder) am.getContentProviderExternal(name, userId, token)).provider;
+            } else {
+                return ((IActivityManager.ContentProviderHolder) am.getContentProviderExternal(name, userId, token)).provider;
+            }
+        } catch (NullPointerException e) {
+            return null;
+        }
     }
 
     public static IActivityManager getActivityManager() {

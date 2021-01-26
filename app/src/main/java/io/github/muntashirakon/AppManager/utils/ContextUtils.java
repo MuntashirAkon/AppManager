@@ -32,7 +32,6 @@ public final class ContextUtils {
     public static Context context;
     private static final String TAG = "IPC";
 
-    @SuppressLint("PrivateApi")
     public static synchronized Context getContext() {
         if (context == null) {
             UiThreadHandler.runAndWait(() -> {

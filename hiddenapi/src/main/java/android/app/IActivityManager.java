@@ -1,13 +1,10 @@
 package android.app;
 
-import android.content.ComponentName;
-import android.content.IIntentReceiver;
-import android.content.IIntentSender;
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.*;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageDataObserver;
 import android.content.pm.ParceledListSlice;
+import android.content.pm.ProviderInfo;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
@@ -15,6 +12,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.IInterface;
 import android.os.ParcelFileDescriptor;
+import android.os.Parcelable;
 import android.os.RemoteException;
 
 import java.util.List;
@@ -92,7 +90,27 @@ public interface IActivityManager extends IInterface {
 
     List<ActivityManager.RunningTaskInfo> getTasks(int maxNum) throws RemoteException;
 
+    @RequiresApi(29)
+    android.app.ContentProviderHolder getContentProviderExternal(String name, int userId, IBinder token, String tag) throws RemoteException;
+
     /**
+     * @deprecated Removed in Android Q
+     * @return {@link ContentProviderHolder} before Android O and {@link android.app.ContentProviderHolder} after Android O
+     */
+    @Deprecated
+    Object getContentProviderExternal(String name, int userId, IBinder token) throws RemoteException;
+    void removeContentProvider(IBinder connection, boolean stable) throws RemoteException;
+    void removeContentProviderExternal(String name, IBinder token) throws RemoteException;
+
+    /**
+     * @deprecated Removed in Android O.
+     */
+    @Deprecated
+    class ContentProviderHolder implements Parcelable {
+        public IContentProvider provider;
+    }
+
+        /**
      * @deprecated Removed in Android M
      */
     @Deprecated
@@ -142,11 +160,65 @@ public interface IActivityManager extends IInterface {
 
     int checkPermission(String permission, int pid, int uid) throws RemoteException;
 
+    /**
+     * @deprecated Removed in Android LOLLIPOP_MR1.
+     */
+    @Deprecated
+    int checkUriPermission(Uri uri, int pid, int uid, int mode, int userId) throws RemoteException;
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
     int checkUriPermission(Uri uri, int pid, int uid, int mode, int userId, IBinder callerToken) throws RemoteException;
 
     void grantUriPermission(IApplicationThread caller, String targetPkg, Uri uri, int mode, int userId) throws RemoteException;
 
+    /**
+     * @deprecated Removed in Android O.
+     */
+    @Deprecated
+    void revokeUriPermission(IApplicationThread caller, Uri uri, int mode, int userId) throws RemoteException;
+
+    @RequiresApi(Build.VERSION_CODES.O)
     void revokeUriPermission(IApplicationThread caller, String targetPkg, Uri uri, int mode, int userId) throws RemoteException;
+
+    // Gets the URI permissions granted to an arbitrary package.
+    // NOTE: this is different from getPersistedUriPermissions(), which returns the URIs the package
+    // granted to another packages (instead of those granted to it).
+
+    /**
+     * @return {@link UriPermission} before Android P and {@link GrantedUriPermission} from Android P
+     */
+    @RequiresApi(Build.VERSION_CODES.N)
+    ParceledListSlice<Parcelable> getGrantedUriPermissions(String packageName, int userId)
+            throws RemoteException;
+    // Clears the URI permissions granted to an arbitrary package.
+    @RequiresApi(Build.VERSION_CODES.N)
+    void clearGrantedUriPermissions(String packageName, int userId) throws RemoteException;
+
+    /**
+     * @deprecated Removed in Android Q.
+     */
+    @Deprecated
+    IBinder newUriPermissionOwner(String name) throws RemoteException;
+    /**
+     * @deprecated Removed in Android Q.
+     */
+    @Deprecated
+    @RequiresApi(Build.VERSION_CODES.N_MR1)
+    IBinder getUriPermissionOwnerForActivity(IBinder activityToken) throws RemoteException;
+    /**
+     * @deprecated Removed in Android Q.
+     */
+    @Deprecated
+    void grantUriPermissionFromOwner(IBinder owner, int fromUid, String targetPkg, Uri uri, int mode, int sourceUserId, int targetUserId) throws RemoteException;
+    /**
+     * @deprecated Removed in Android Q.
+     */
+    @Deprecated
+    void revokeUriPermissionFromOwner(IBinder owner, Uri uri, int mode, int userId) throws RemoteException;
+    /**
+     * @deprecated Removed in Android Q.
+     */
+    @Deprecated
+    int checkGrantUriPermission(int callingUid, String targetPkg, Uri uri, int modeFlags, int userId) throws RemoteException;
 
     android.content.pm.ParceledListSlice getRecentTasks(int maxNum, int flags, int userId) throws RemoteException;
 
