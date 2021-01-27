@@ -24,7 +24,7 @@ import java.nio.channels.FileChannel;
 
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 
-public final class ProxyInputStream extends InputStream {
+public class ProxyInputStream extends InputStream {
     private final FileInputStream privateInputStream;
 
     public ProxyInputStream(File file) throws FileNotFoundException, RemoteException {
@@ -33,6 +33,10 @@ public final class ProxyInputStream extends InputStream {
         } else {
             privateInputStream = new FileInputStream(file);
         }
+    }
+
+    public ProxyInputStream(String file) throws FileNotFoundException, RemoteException {
+        privateInputStream = new ProxyFile(file).getInputStream();
     }
 
     @Override
