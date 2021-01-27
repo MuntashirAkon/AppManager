@@ -909,4 +909,21 @@
     <string name="backup_all_apps_msg">Резервне копіювання всіх встановлених програм.</string>
     <string name="backup_all_apps">Резервне копіювання всіх програм</string>
     <string name="signature_schemes">Схема підпису</string>
+    <string name="restart_to_reflect_changes">Будь ласка, негайно перезапустіть, щоб відобразити зміни</string>
+    <string name="failed_to_change_ssaid">Не вдалося змінити SSAID</string>
+    <string name="copied_to_clipboard">Скопійовано до буфера обміну.</string>
+    <string name="ssaid_info">SSAID (&lt;tt&gt;Settings.Secure.ANDROID_ID&lt;/tt&gt;) - це ідентифікатор пристрою, призначений кожному додатку (з Android Oreo). Він широко використовується додатками для відстеження користувачів.</string>
+    <string name="allow_background">Дозволити фон</string>
+    <string name="reject_background">Відхилити фон</string>
+    <string name="net_policy">Політика мережі</string>
+    <string name="has_net_policy">Політика мережі</string>
+    <string name="type_string_array_list">Список рядків</string>
+    <string name="type_string_array">Масив рядків</string>
+    <string name="type_float_array_list">Список десяткових чисел</string>
+    <string name="type_float_array">Масив десяткових чисел</string>
+    <string name="type_long_array_list">Список довгих цілих чисел</string>
+    <string name="type_long_array">Масив довгих цілих чисел</string>
+    <string name="type_int_array_list">Список цілих чисел</string>
+    <string name="type_int_array">Масив цілих чисел</string>
+    <string name="type_component_name">Ім\'я компонента</string>
 </resources>
