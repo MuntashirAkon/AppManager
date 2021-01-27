@@ -838,7 +838,7 @@
     <string name="sd_card">SD卡</string>
     <string name="external_storage">外部存储</string>
     <string name="internal_storage">内部共享存储空间</string>
-    <string name="restart_to_reflect_changes">请立即重启以反映变化</string>
+    <string name="restart_to_reflect_changes">重启以应用更改</string>
     <string name="failed_to_change_ssaid">无法更改 SSAID</string>
     <string name="copied_to_clipboard">已复制到剪贴板。</string>
     <string name="ssaid_info">SSAID (&lt;tt&gt;Settings.Secure.ANDROID_ID&lt;/tt&gt;) 是分配给每个应用程序的设备标识符 (从 Android Oreo 起)。它被应用程序广泛用于跟踪用户。</string>
