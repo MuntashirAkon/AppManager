@@ -14,7 +14,7 @@
   ~
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  --><resources>
+  --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="instructions_header">[Instruksi ini sudah usang dan tidak akan lagi diperbarui. Kunjungi situs dokumen resmi (https://muntashirakon.github.io/AppManager) untuk mendapatkan informasi terbaru]</string>
     <string name="uninstall">Hapus Pemasangan</string>
     <string name="permissions">Memerlukan Izin</string>
@@ -25,4 +25,62 @@
     <string name="no_activities">Tidak ada aktifitas</string>
     <string name="installer_error_blocked_device">Perangkat</string>
     <string name="receivers">Penerima</string>
+    <string name="starting_activity">Memulai aktivitas:
+\n&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"activity_name\" example=\".main.MainActivity\"&gt;%1$s&lt;/xliff:g&gt;</string>
+    <string name="error_verbose_pin_shortcut">Peluncur saat ini tidak mendukung Pinshortcut. Tidak dapat membuat pintasan.</string>
+    <string name="error_creating_shortcut">Kesalahan dalam membuat pintasan</string>
+    <string name="instructions">Intruksi</string>
+    <string name="main_activity">Aktifitas utama</string>
+    <string name="user_id">ID pengguna</string>
+    <string name="installer_app">Pemasang Aplikasi</string>
+    <string name="date_updated">Tanggal di-update</string>
+    <string name="date_installed">Tanggal terinstall</string>
+    <string name="more_info">Informasi lainnya</string>
+    <string name="data_dir">Direktori data</string>
+    <string name="source_dir">Direktori sumber</string>
+    <string name="paths_and_directories">Path &amp; direktori</string>
+    <string name="user_app">Aplikasi pengguna</string>
+    <string name="system_app">Aplikasi sistem</string>
+    <string name="app_info">Info aplikasi</string>
+    <string name="sort">Urutkan</string>
+    <string name="user">Pengguna</string>
+    <string name="system">Sistem</string>
+    <string name="app_not_installed">App tidak terinstall</string>
+    <string name="obb_size">Ukuran obb</string>
+    <string name="cache_size">Cache</string>
+    <string name="data_size">Data</string>
+    <string name="about">Tentang</string>
+    <string name="data_usage_msg">Penggunaan data sejak boot terakhir</string>
+    <string name="data_transmitted">Data ditransmisikan</string>
+    <string name="data_received">Data diterima</string>
+    <string name="sort_by_domain">App pengguna lebih dulu</string>
+    <string name="sort_by_package_name">Nama paket</string>
+    <string name="sort_by_app_label">Label App</string>
+    <string name="loading">Memuat…</string>
+    <string name="error">Kesalahan</string>
+    <string name="manifest">Manifes</string>
+    <string name="input_features">Fitur masukan</string>
+    <string name="no_configurations">Tidak ada konfigurasi</string>
+    <string name="configurations">Konfigurasi</string>
+    <string name="no_signatures">Tidak ada tanda tangan yang valid</string>
+    <string name="sort_by_sha">Tanda tangan</string>
+    <string name="shared_user_id">ID pengguna yang dibagikan</string>
+    <string name="sort_by_shared_user_id">ID pengguna yang dibagikan</string>
+    <string name="no_feature">Tidak ada fitur</string>
+    <string name="gles_ver">Membutuhkan versi GL ES</string>
+    <string name="uses_feature">Menggunakan fitur</string>
+    <string name="protection_level">Tingkat proteksi</string>
+    <string name="declared_permission">Perizinan</string>
+    <string name="patterns_allowed">pola diperbolehkan</string>
+    <string name="write">Tulis</string>
+    <string name="read">Baca</string>
+    <string name="orientation">Orientasi</string>
+    <string name="no_service">Tidak ada layanan</string>
+    <string name="service">Layanan</string>
+    <string name="authority">Wewenang</string>
+    <string name="sort_by_last_update">Update terakhir</string>
+    <string name="launch_mode">Mode peluncuran</string>
+    <string name="no_providers">Tidak ada penyedia</string>
+    <string name="providers">Penyedia</string>
+    <string name="no_receivers">Tidak ada penerima</string>
 </resources>
