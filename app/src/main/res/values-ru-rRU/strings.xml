@@ -918,7 +918,7 @@
     <string name="bootloader">Загрузчик</string>
     <string name="selinux">SELinux</string>
     <string name="net_policy">Сетевая политика</string>
-    <string name="has_net_policy">Чистая политика</string>
+    <string name="has_net_policy">Сетевая политика</string>
     <string name="allow_background">Разрешить фон</string>
     <string name="reject_background">Отклонить фон</string>
     <string name="list_options">Параметры списка</string>
