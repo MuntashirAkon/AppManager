@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
+import io.github.muntashirakon.io.ProxyInputStream;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveInputStream;
 import org.apache.commons.compress.archivers.zip.ZipEncoding;
@@ -467,7 +468,7 @@ public class TarArchiveInputStream extends ArchiveInputStream {
      */
     private long getActuallySkipped(final long available, final long skipped, final long expected) throws IOException {
         long actuallySkipped = skipped;
-        if (inputStream instanceof FileInputStream) {
+        if (inputStream instanceof FileInputStream || inputStream instanceof ProxyInputStream) {
             actuallySkipped = Math.min(skipped, available);
         }
 

@@ -18,6 +18,9 @@
  */
 package org.apache.commons.compress.utils;
 
+import android.os.RemoteException;
+import io.github.muntashirakon.io.ProxyInputStream;
+
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
@@ -142,8 +145,8 @@ public final class IOUtils {
      * @throws IOException on error
      * @since 1.20
      */
-    public static int read(final File file, final byte[] array) throws IOException {
-        try (FileInputStream inputStream = new FileInputStream(file)) {
+    public static int read(final File file, final byte[] array) throws IOException, RemoteException {
+        try (ProxyInputStream inputStream = new ProxyInputStream(file)) {
             return readFully(inputStream, array, 0, array.length);
         }
     }
@@ -270,8 +273,8 @@ public final class IOUtils {
      * @throws IOException if an I/O error occurs when reading or writing.
      * @since 1.21
      */
-    public static void copy(final File sourceFile, final OutputStream outputStream) throws IOException {
-        try (FileInputStream fis = new FileInputStream(sourceFile)) {
+    public static void copy(final File sourceFile, final OutputStream outputStream) throws IOException, RemoteException {
+        try (ProxyInputStream fis = new ProxyInputStream(sourceFile)) {
             io.github.muntashirakon.AppManager.utils.IOUtils.copy(fis, outputStream);
         }
     }

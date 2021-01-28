@@ -18,16 +18,17 @@
  */
 package org.apache.commons.compress.archivers.tar;
 
+import android.os.RemoteException;
 import android.system.ErrnoException;
 import android.system.Os;
 import android.system.StructStat;
+import io.github.muntashirakon.io.ProxyInputStream;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.EntryStreamOffsets;
 import org.apache.commons.compress.archivers.zip.ZipEncoding;
 import org.apache.commons.compress.utils.ArchiveUtils;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 
@@ -384,7 +385,7 @@ public class TarArchiveEntry implements ArchiveEntry, TarConstants, EntryStreamO
         this.userName = "";
         try {
             readOsSpecificProperties(this.file);
-        } catch (final IOException | ErrnoException e) {
+        } catch (final IOException | ErrnoException | RemoteException e) {
             // Ignore exceptions from NIO for backwards compatibility
             // Fallback to get the last modified date of the file from the old file api
             this.modTime = file.lastModified() / MILLIS_PER_SECOND;
@@ -392,8 +393,8 @@ public class TarArchiveEntry implements ArchiveEntry, TarConstants, EntryStreamO
         preserveAbsolutePath = false;
     }
 
-    private void readOsSpecificProperties(final File file) throws IOException, ErrnoException {
-        try (FileInputStream is = new FileInputStream(file)) {
+    private void readOsSpecificProperties(final File file) throws IOException, ErrnoException, RemoteException {
+        try (ProxyInputStream is = new ProxyInputStream(file)) {
             StructStat availableAttributeViews = Os.fstat(is.getFD());
             setModTime(availableAttributeViews.st_mtime * 1000);
             this.userId = availableAttributeViews.st_uid;

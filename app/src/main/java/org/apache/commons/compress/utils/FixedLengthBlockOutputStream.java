@@ -18,6 +18,8 @@
  */
 package org.apache.commons.compress.utils;
 
+import io.github.muntashirakon.io.ProxyOutputStream;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -62,6 +64,10 @@ public class FixedLengthBlockOutputStream extends OutputStream implements Writab
     public FixedLengthBlockOutputStream(final OutputStream os, final int blockSize) {
         if (os instanceof FileOutputStream) {
             final FileOutputStream fileOutputStream = (FileOutputStream) os;
+            out = fileOutputStream.getChannel();
+            buffer = ByteBuffer.allocateDirect(blockSize);
+        } else if (os instanceof ProxyOutputStream) {
+            final ProxyOutputStream fileOutputStream = (ProxyOutputStream) os;
             out = fileOutputStream.getChannel();
             buffer = ByteBuffer.allocateDirect(blockSize);
         } else {
