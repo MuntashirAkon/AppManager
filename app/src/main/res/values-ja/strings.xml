@@ -899,7 +899,7 @@
     <string name="type_long_array">長整数値の配列</string>
     <string name="failed_to_change_ssaid">SSAIDを変更できませんでした</string>
     <string name="copied_to_clipboard">クリップボードにコピーされました。</string>
-    <string name="ssaid_info">SSAID (&lt;tt&gt;Settings.Secure.ANDROID_ID&lt;/tt&gt;) はAndroid8以降でそれぞれのアプリごとに関連付けられた識別子です、よくユーザーを追跡するのに使用されています。</string>
+    <string name="ssaid_info">SSAID (<tt>Settings.Secure.ANDROID_ID</tt>) はAndroid8以降でそれぞれのアプリごとに関連付けられた識別子です、よくユーザーを追跡するのに使用されています。</string>
     <string name="ssaid">SSAID</string>
     <string name="type_uri">URI</string>
     <string name="type_string_array_list">文字列のリスト</string>
@@ -909,5 +909,5 @@
     <string name="type_int_array">整数の配列</string>
     <string name="type_component_name">コンポーネント名</string>
     <string name="type_null">値がありません</string>
-    <string name="user_with_id">ユーザー:&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"user_id\" example=\"0\"&gt;%1$d&lt;/xliff:g&gt;</string>
+    <string name="user_with_id">ユーザー:<xliff:g id="user_id" example="0">%1$d</xliff:g></string>
 </resources>

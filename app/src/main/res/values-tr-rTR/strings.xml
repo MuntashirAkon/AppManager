@@ -872,7 +872,7 @@
     <string name="restart_to_reflect_changes">Değişiklikleri yansıtmak için lütfen hemen yeniden başlatın</string>
     <string name="failed_to_change_ssaid">SSAID değiştirilemedi</string>
     <string name="copied_to_clipboard">Panoya kopyalandı.</string>
-    <string name="ssaid_info">SSAID (&lt;tt&gt;Settings.Secure.ANDROID_ID&lt;/tt&gt;) (Android Oreo\'dan itibaren) her uygulamaya atanan bir aygıt tanımlayıcısıdır. Kullanıcıları izlemek için uygulamalar tarafından yaygın olarak kullanılır.</string>
+    <string name="ssaid_info">SSAID (<tt>Settings.Secure.ANDROID_ID</tt>) (Android Oreo\'dan itibaren) her uygulamaya atanan bir aygıt tanımlayıcısıdır. Kullanıcıları izlemek için uygulamalar tarafından yaygın olarak kullanılır.</string>
     <string name="ssaid">SSAID</string>
     <string name="type_uri">URI</string>
     <string name="type_string_array_list">Dizge listesi</string>
@@ -885,5 +885,5 @@
     <string name="type_int_array">Tam sayı dizisi</string>
     <string name="type_component_name">Bileşen Adı</string>
     <string name="type_null">Değer yok</string>
-    <string name="user_with_id">Kullanıcı: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"user_id\" example=\"0\"&gt;%1$d&lt;/xliff:g&gt;</string>
+    <string name="user_with_id">Kullanıcı: <xliff:g id="user_id" example="0">%1$d</xliff:g></string>
 </resources>

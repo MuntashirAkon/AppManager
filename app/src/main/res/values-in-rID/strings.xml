@@ -26,7 +26,7 @@
     <string name="installer_error_blocked_device">Perangkat</string>
     <string name="receivers">Penerima</string>
     <string name="starting_activity">Memulai aktivitas:
-\n&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"activity_name\" example=\".main.MainActivity\"&gt;%1$s&lt;/xliff:g&gt;</string>
+\n<xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="error_verbose_pin_shortcut">Peluncur saat ini tidak mendukung Pinshortcut. Tidak dapat membuat pintasan.</string>
     <string name="error_creating_shortcut">Kesalahan dalam membuat pintasan</string>
     <string name="instructions">Intruksi</string>
