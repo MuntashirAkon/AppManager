@@ -199,6 +199,17 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.pager_app_details, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         model = new ViewModelProvider(this).get(AppDetailsFragmentViewModel.class);
         mActivity = (AppDetailsActivity) requireActivity();
         if (isEmptyFragmentConstructCalled) {
@@ -214,17 +225,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             mColorRunning = ContextCompat.getColor(mActivity, R.color.running);
             mColorTracker = ContextCompat.getColor(mActivity, R.color.tracker);
         }
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.pager_app_details, container, false);
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         // Swipe refresh
         mSwipeRefresh = view.findViewById(R.id.swipe_refresh);
         mSwipeRefresh.setColorSchemeColors(UIUtils.getAccentColor(mActivity));
