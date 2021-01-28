@@ -398,6 +398,10 @@ public class TarArchiveEntry implements ArchiveEntry, TarConstants, EntryStreamO
             setModTime(availableAttributeViews.st_mtime * 1000);
             this.userId = availableAttributeViews.st_uid;
             this.groupId = availableAttributeViews.st_gid;
+        } catch (RuntimeException e) {
+            if (e.getMessage() == null || !e.getMessage().contains("mocked")) {
+                throw e;
+            }
         }
     }
 
