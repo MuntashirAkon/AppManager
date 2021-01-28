@@ -31,9 +31,33 @@ public class SplitInputStream extends InputStream {
     private int currentIndex = -1;
     private final List<File> files;
 
+    private final byte[] buf;
+
+    // Number of valid bytes in buf
+    private int count = 0;
+    // Current read pos, > 0 in buf, < 0 in markBuf (interpret in bitwise negate)
+    private int pos = 0;
+
+    // -1 when no active mark, 0 when markBuf is active, pos when mark is called
+    private int markPos = -1;
+    // Number of valid bytes in markBuf
+    private int markBufCount = 0;
+
+    // markBuf.length == markBufSize
+    private int markBufSize;
+    private byte[] markBuf;
+
+    // Some value ranges:
+    // 0 <= count <= buf.length
+    // 0 <= pos <= count (if pos > 0)
+    // 0 <= markPos <= pos (markPos = -1 means no mark)
+    // 0 <= ~pos <= markBufCount (if pos < 0)
+    // 0 <= markBufCount <= markLimit
+
     public SplitInputStream(@NonNull List<File> files) {
         this.files = files;
         this.proxyInputStreams = new ArrayList<>(files.size());
+        buf = new byte[1024 * 1024 * 4];
     }
 
     public SplitInputStream(@NonNull File[] files) {
@@ -43,29 +67,27 @@ public class SplitInputStream extends InputStream {
     @Override
     public int read() throws IOException {
         byte[] bytes = new byte[1];
-        int readBytes = readStream(bytes, 0, 1);
-        if (readBytes == -1) return -1;
+        int readBytes = read(bytes);
+        if (readBytes != 1) return -1;
         else return bytes[0];
     }
 
     @Override
     public int read(byte[] b) throws IOException {
-        return readStream(b, 0, b.length);
+        return read(b, 0, b.length);
     }
 
     @Override
     public int read(byte[] b, int off, int len) throws IOException {
-        return readStream(b, off, len);
+        if (off < 0 || len < 0 || off + len > b.length)
+            throw new IndexOutOfBoundsException();
+        return read0(b, off, len);
     }
 
     @Override
     public long skip(long n) throws IOException {
-        return skipStream(n);
-    }
-
-    @Override
-    public int available() throws IOException {
-        return proxyInputStreams.get(currentIndex).available();
+        if (n <= 0) return 0;
+        return Math.max(read0(null, 0, (int) n), 0);
     }
 
     @Override
@@ -77,88 +99,149 @@ public class SplitInputStream extends InputStream {
 
     @Override
     public synchronized void mark(int readlimit) {
-        // Not supported
-        // TODO: 27/1/21 Add mark support
+        // Reset mark
+        markPos = pos;
+        markBufCount = 0;
+        markBuf = null;
+
+        int remain = count - pos;
+        if (readlimit <= remain) {
+            // Don't need a separate buffer
+            markBufSize = 0;
+        } else {
+            // Extra buffer required is remain + n * buf.length
+            markBufSize = remain + ((readlimit - remain) / buf.length) * buf.length;
+        }
+    }
+
+    @Override
+    public synchronized void reset() throws IOException {
+        if (markPos < 0)
+            throw new IOException("Resetting to invalid mark");
+        // Switch to markPos or use markBuf
+        pos = markBuf == null ? markPos : ~0;
+    }
+
+    @Override
+    public synchronized int available() throws IOException {
+        if (count < 0) return 0;
+        if (pos >= count) {
+            // Try to read the next chunk into memory
+            read0(null, 0, 1);
+            if (count < 0) return 0;
+            // Revert the 1 byte read
+            --pos;
+        }
+        // Return the size available in memory
+        if (pos < 0) {
+            return (markBufCount - ~pos) + count;
+        } else {
+            return count - pos;
+        }
     }
 
     @Override
     public boolean markSupported() {
-        // TODO: 27/1/21 Add mark support
-        return false;
+        return true;
     }
 
-    private int readStream(byte[] b, int off, int len) throws IOException {
-        if (len == 0) return 0;
-        try {
-            if (currentIndex == -1) {
-                // Initialize and read from a new stream
-                proxyInputStreams.add(new ProxyInputStream(files.get(0)));
-                ++currentIndex;
-            }
-            while (len != 0) {
-                // Fetch bytes from the streams
-                int readBytes = proxyInputStreams.get(currentIndex).read(b, off, len);
-                if (readBytes == -1 || readBytes < len) {
-                    // Need to fetch next bytes from the next stream
-                    if (currentIndex + 1 == files.size()) {
-                        // Already read from the last file, return as is
-                        return readBytes;
-                    } else {
-                        // Initialize the next stream and set both offset and length
-                        proxyInputStreams.add(new ProxyInputStream(files.get(currentIndex + 1)));
-                        ++currentIndex;
-                        if (readBytes != -1) {
-                            off += readBytes;
-                            len -= readBytes;
-                        }
-                        // continue the loop
-                    }
-                } else if (readBytes == len) {
-                    // Read exactly the number of bytes requested
-                    return readBytes;
+    private synchronized int read0(byte[] b, int off, int len) throws IOException {
+        int n = 0;
+        while (n < len) {
+            if (pos < 0) {
+                // Read from markBuf
+                int pos = ~this.pos;
+                int size = Math.min(markBufCount - pos, len - n);
+                if (b != null) {
+                    System.arraycopy(markBuf, pos, b, off + n, size);
+                }
+                n += size;
+                pos += size;
+                if (pos == markBufCount) {
+                    // markBuf done, switch to buf
+                    this.pos = 0;
                 } else {
-                    throw new IOException(String.format("Byte length = %d, bytes read = %d", len, readBytes));
+                    // continue reading markBuf
+                    this.pos = ~pos;
+                }
+                continue;
+            }
+            // Read from buf
+            if (pos >= count) {
+                // We ran out of buffer, need to either refill or abort
+                if (markPos >= 0) {
+                    // We need to preserve some buffer for mark
+                    long size = count - markPos;
+                    if ((markBufSize - markBufCount) < size) {
+                        // Out of mark limit, discard markBuf
+                        markBuf = null;
+                        markBufCount = 0;
+                        markPos = -1;
+                    } else if (markBuf == null) {
+                        markBuf = new byte[(int) markBufSize];
+                        markBufCount = 0;
+                    }
+                    if (markBuf != null) {
+                        // Accumulate data in markBuf
+                        System.arraycopy(buf, markPos, markBuf, markBufCount, (int) size);
+                        markBufCount += size;
+                        // Set markPos to 0 as buffer will refill
+                        markPos = 0;
+                    }
+                }
+                // refill buffer
+                pos = 0;
+                count = readStream(buf);
+                if (count < 0) {
+                    return n == 0 ? -1 : n;
                 }
             }
-            throw new IOException("Invalid request.");
-        } catch (IOException e) {
-            throw e;
-        } catch (Throwable th) {
-            throw new IOException(th);
+            int size = Math.min(count - pos, len - n);
+            if (b != null) {
+                System.arraycopy(buf, pos, b, off + n, size);
+            }
+            n += size;
+            pos += size;
         }
+        return n;
     }
 
-    private long skipStream(long n) throws IOException {
-        if (n <= 0) return 0;
+    private synchronized int readStream(@NonNull byte[] b) throws IOException {
+        int off = 0;
+        int len = b.length;
+        if (len <= 0) return len;
         try {
             if (currentIndex == -1) {
                 // Initialize and read from a new stream
                 proxyInputStreams.add(new ProxyInputStream(files.get(0)));
                 ++currentIndex;
-            }
-            while (n != 0) {
-                // Skip bytes from the streams
-                long skippedBytes = proxyInputStreams.get(currentIndex).skip(n);
-                if (skippedBytes == 0 || skippedBytes < n) {
-                    // Need to fetch next bytes from the next stream
-                    if (currentIndex + 1 == files.size()) {
-                        // Already skipped from the last file, return as is
-                        return skippedBytes;
-                    } else {
-                        // Initialize the next stream and set length
-                        proxyInputStreams.add(new ProxyInputStream(files.get(currentIndex + 1)));
-                        ++currentIndex;
-                        n -= skippedBytes;
-                        // continue the loop
-                    }
-                } else if (skippedBytes == n) {
-                    // Read exactly the number of bytes requested
-                    return skippedBytes;
-                } else {
-                    throw new IOException(String.format("Byte length = %d, bytes skipped = %d", n, skippedBytes));
+            } else if (currentIndex + 1 == files.size()) {
+                // The last file is being read
+                int available = proxyInputStreams.get(currentIndex).available();
+                if (available == 0) {
+                    // The last file has been read completely
+                    return -1;
                 }
             }
-            throw new IOException("Invalid request.");
+            // Fetch bytes from the streams
+            // Read
+            int available = proxyInputStreams.get(currentIndex).available();
+            while (available != 0 && len > 0) {
+                // Stream still has some bytes left and the buffer is still unfinished.
+                int readCount = proxyInputStreams.get(currentIndex).read(b, off, Math.min(available, len));
+                off += readCount;
+                len -= readCount;
+                available = proxyInputStreams.get(currentIndex).available();
+            }
+            // Either the stream has been completely read or the buffer is still unfinished
+            if (available == 0) {
+                // This stream has been read completely, initialize new stream if available
+                if (currentIndex + 1 != files.size()) {
+                    proxyInputStreams.add(new ProxyInputStream(files.get(currentIndex + 1)));
+                    ++currentIndex;
+                }
+            }
+            return b.length - len;
         } catch (IOException e) {
             throw e;
         } catch (Throwable th) {

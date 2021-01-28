@@ -19,26 +19,53 @@ public class BZip2CompressorOutputStreamTest {
     private final ClassLoader classLoader = getClass().getClassLoader();
 
     @Test
-    public void testTarBZip2() throws IOException, RemoteException {
+    public void testTarGzip() throws IOException, RemoteException {
         List<File> fileList = new ArrayList<>();
         assert classLoader != null;
         fileList.add(new File(classLoader.getResource("AppManager_v2.5.22.apks.0").getFile()));
         fileList.add(new File(classLoader.getResource("AppManager_v2.5.22.apks.1").getFile()));
 
-        // Always run tests using SplitOutputStream
-        try (SplitOutputStream sot = new SplitOutputStream("/tmp/AppManager_v2.5.22.apks.tar.bz2", 1024 * 1024);
-             BufferedOutputStream bot = new BufferedOutputStream(sot);
-             BZip2CompressorOutputStream bZot = new BZip2CompressorOutputStream(bot);
-             TarArchiveOutputStream tot = new TarArchiveOutputStream(bZot)) {
+        try (FileOutputStream fos = new FileOutputStream("/tmp/AppManager_v2.5.22.apks.tar.bz2");
+             BufferedOutputStream bos = new BufferedOutputStream(fos);
+             BZip2CompressorOutputStream bZos = new BZip2CompressorOutputStream(bos);
+             TarArchiveOutputStream tos = new TarArchiveOutputStream(bZos)) {
             for (File file : fileList) {
                 TarArchiveEntry tarEntry = new TarArchiveEntry(file, file.getName());
-                tot.putArchiveEntry(tarEntry);
+                tos.putArchiveEntry(tarEntry);
                 try (InputStream is = new ProxyInputStream(file)) {
-                    IOUtils.copy(is, tot);
+                    IOUtils.copy(is, tos);
                 }
-                tot.closeArchiveEntry();
+                tos.closeArchiveEntry();
             }
-            tot.finish();
+            tos.finish();
+        }
+
+        // Check integrity
+        String expectedHash = DigestUtils.getHexDigest(DigestUtils.SHA_256, new File(classLoader.getResource("AppManager_v2.5.22.apks.tar.bz2").getFile()));
+        String actualHash = DigestUtils.getHexDigest(DigestUtils.SHA_256, new File("/tmp/AppManager_v2.5.22.apks.tar.bz2"));
+        assertEquals(expectedHash, actualHash);
+    }
+
+    @Test
+    public void testSplitTarBZip2() throws IOException, RemoteException {
+        List<File> fileList = new ArrayList<>();
+        assert classLoader != null;
+        fileList.add(new File(classLoader.getResource("AppManager_v2.5.22.apks.0").getFile()));
+        fileList.add(new File(classLoader.getResource("AppManager_v2.5.22.apks.1").getFile()));
+
+        try (SplitOutputStream sos = new SplitOutputStream("/tmp/AppManager_v2.5.22.apks.tar.bz2", 1024 * 1024);
+             BufferedOutputStream bos = new BufferedOutputStream(sos);
+             BZip2CompressorOutputStream bZos = new BZip2CompressorOutputStream(bos);
+             TarArchiveOutputStream tos = new TarArchiveOutputStream(bZos)) {
+            for (File file : fileList) {
+                TarArchiveEntry tarEntry = new TarArchiveEntry(file, file.getName());
+                tos.putArchiveEntry(tarEntry);
+                try (InputStream is = new ProxyInputStream(file)) {
+                    IOUtils.copy(is, tos);
+                }
+                tos.closeArchiveEntry();
+            }
+            tos.finish();
         }
 
         // Check integrity

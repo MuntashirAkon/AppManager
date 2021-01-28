@@ -25,20 +25,47 @@ public class GzipCompressorOutputStreamTest {
         fileList.add(new File(classLoader.getResource("AppManager_v2.5.22.apks.0").getFile()));
         fileList.add(new File(classLoader.getResource("AppManager_v2.5.22.apks.1").getFile()));
 
-        // Always run tests using SplitOutputStream
-        try (SplitOutputStream sot = new SplitOutputStream("/tmp/AppManager_v2.5.22.apks.tar.gz", 1024 * 1024);
-             BufferedOutputStream bot = new BufferedOutputStream(sot);
-             GzipCompressorOutputStream got = new GzipCompressorOutputStream(bot);
-             TarArchiveOutputStream tot = new TarArchiveOutputStream(got)) {
+        try (FileOutputStream fos = new FileOutputStream("/tmp/AppManager_v2.5.22.apks.tar.gz");
+             BufferedOutputStream bos = new BufferedOutputStream(fos);
+             GzipCompressorOutputStream gos = new GzipCompressorOutputStream(bos);
+             TarArchiveOutputStream tos = new TarArchiveOutputStream(gos)) {
             for (File file : fileList) {
                 TarArchiveEntry tarEntry = new TarArchiveEntry(file, file.getName());
-                tot.putArchiveEntry(tarEntry);
+                tos.putArchiveEntry(tarEntry);
                 try (InputStream is = new ProxyInputStream(file)) {
-                    IOUtils.copy(is, tot);
+                    IOUtils.copy(is, tos);
                 }
-                tot.closeArchiveEntry();
+                tos.closeArchiveEntry();
             }
-            tot.finish();
+            tos.finish();
+        }
+
+        // Check integrity
+        String expectedHash = DigestUtils.getHexDigest(DigestUtils.SHA_256, new File(classLoader.getResource("AppManager_v2.5.22.apks.tar.gz").getFile()));
+        String actualHash = DigestUtils.getHexDigest(DigestUtils.SHA_256, new File("/tmp/AppManager_v2.5.22.apks.tar.gz"));
+        assertEquals(expectedHash, actualHash);
+    }
+
+    @Test
+    public void testSplitTarGzip() throws IOException, RemoteException {
+        List<File> fileList = new ArrayList<>();
+        assert classLoader != null;
+        fileList.add(new File(classLoader.getResource("AppManager_v2.5.22.apks.0").getFile()));
+        fileList.add(new File(classLoader.getResource("AppManager_v2.5.22.apks.1").getFile()));
+
+        try (SplitOutputStream sos = new SplitOutputStream("/tmp/AppManager_v2.5.22.apks.tar.gz", 1024 * 1024);
+             BufferedOutputStream bos = new BufferedOutputStream(sos);
+             GzipCompressorOutputStream gos = new GzipCompressorOutputStream(bos);
+             TarArchiveOutputStream tos = new TarArchiveOutputStream(gos)) {
+            for (File file : fileList) {
+                TarArchiveEntry tarEntry = new TarArchiveEntry(file, file.getName());
+                tos.putArchiveEntry(tarEntry);
+                try (InputStream is = new ProxyInputStream(file)) {
+                    IOUtils.copy(is, tos);
+                }
+                tos.closeArchiveEntry();
+            }
+            tos.finish();
         }
 
         // Check integrity
