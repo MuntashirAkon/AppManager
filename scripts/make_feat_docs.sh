@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 # Abort on errors
 set -e
@@ -14,11 +14,11 @@ yarn build
 assets_folder="feat_docs/src/main/assets"
 
 if ! [[ -d "${assets_folder}" ]]; then
-    mkdir -p "${assets_folder}"
+  mkdir -p "${assets_folder}"
 fi
 
 if [[ -e "${assets_folder}/docs" ]]; then
-    rm -rf "${assets_folder}/docs"
+  rm -rf "${assets_folder}/docs"
 fi
 
 mv docs/.vuepress/dist "${assets_folder}/docs"

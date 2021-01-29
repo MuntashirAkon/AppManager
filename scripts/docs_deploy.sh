@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 # Abort on errors
 set -e
@@ -19,7 +19,7 @@ pages_branch="pages"
 cd "${base_dist}"
 
 # Ignore .DS_Store files
-echo "*.DS_Store" > .gitignore
+echo "*.DS_Store" >.gitignore
 
 # Commit changes
 git init
@@ -33,4 +33,3 @@ cd -
 
 # Delete the output directory
 rm -rf "${base_dist}"
-
