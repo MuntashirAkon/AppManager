@@ -151,7 +151,6 @@
         <item>com.estimote.</item>
         <item>com.baidu.navi</item>
         <item>com.fyber.</item>
-        <item>com.heyzap.</item>
         <item>com.google.tagmanager</item>
         <item>com.google.android.gms.tagmanager</item>
         <item>com.inmobi</item>
@@ -440,6 +439,13 @@
         <item>org.prebid.mobile</item>
         <item>com.skplanet.tad</item>
         <item>io.split.android.</item>
+        <item>com.infinario.android.infinariosdk.</item>
+        <item>com.ipqualityscore.</item>
+        <item>com.opensignal.datacollection.OpenSignalNdcSdk</item>
+        <item>com.wirelessregistry.observersdk.</item>
+        <item>io.xmode.BcnConfig</item>
+        <item>io.xmode.locationsdk</item>
+        <item>io.mysdk.</item>
         <item>com.acuant.acuantcamera</item>
         <item>mobi.mclick.ad.</item>
         <item>com.adlocus.</item>
@@ -461,7 +467,6 @@
         <item>com.evrythng</item>
         <item>com.hawk</item>
         <item>com.evidon.</item>
-        <item>com.infinario.android.infinariosdk.</item>
         <item>com.fluzo.sdk.</item>
         <item>com.facebook.flipper</item>
         <item>com.gpshopper</item>
@@ -472,7 +477,6 @@
         <item>com.ibm.mce.sdk.</item>
         <item>co.acoustic.mobile.push.sdk.</item>
         <item>com.xtify.mce.sdk.</item>
-        <item>com.ipqualityscore.</item>
         <item>com.indooratlas.android.sdk</item>
         <item>com.intrasonics.</item>
         <item>com.janrain.android</item>
@@ -482,15 +486,14 @@
         <item>com.marketo</item>
         <item>com.mobiquitynetworks.</item>
         <item>com.innoquant.moca</item>
+        <item>com.oneaudience.sdk.</item>
         <item>com.openback</item>
-        <item>com.opensignal.datacollection.OpenSignalNdcSdk</item>
         <item>net.opentracker.android</item>
         <item>com.pinterest.android.pdk.</item>
         <item>com.pointinside</item>
         <item>io.proximi.proximiiolibrary</item>
         <item>com.pubnub.api.</item>
         <item>com.scoreloop.client.android</item>
-        <item>com.wirelessregistry.observersdk.</item>
         <item>com.sina.weibo.sdk</item>
         <item>com.skyhook.context.Accelerator</item>
         <item>com.synerise.sdk</item>
@@ -509,9 +512,6 @@
         <item>net.veloxity.</item>
         <item>com.sina.deviceidjnisdk</item>
         <item>com.wonderpush</item>
-        <item>io.xmode.BcnConfig</item>
-        <item>io.xmode.locationsdk</item>
-        <item>io.mysdk.</item>
         <item>com.xiaomi.push</item>
         <item>com.yoc.sdk.</item>
         <item>com.yext.locationsdk.</item>
@@ -708,7 +708,6 @@
         <item>Baidu Mobile Stat</item>
         <item>Estimote</item>
         <item>Baidu Navigation</item>
-        <item>Fyber</item>
         <item>Fyber</item>
         <item>Google Tag Manager</item>
         <item>Google Tag Manager</item>
@@ -998,6 +997,13 @@
         <item>Prebid Mobile</item>
         <item>SK planet Tad</item>
         <item>Split</item>
+        <item>Exponea</item>
+        <item>IPQualityScore</item>
+        <item>Opensignal</item>
+        <item>SignalFrame</item>
+        <item>X-Mode</item>
+        <item>X-Mode</item>
+        <item>X-Mode</item>
         <item>²Acuant</item>
         <item>²AdFlex</item>
         <item>²AdLocus</item>
@@ -1019,7 +1025,6 @@
         <item>²EVRYTHNG</item>
         <item>²Ehawk</item>
         <item>²Evidon (now Crownpeak)</item>
-        <item>²Exponea</item>
         <item>²FLUZO</item>
         <item>²Facebook Flipper</item>
         <item>²GPShopper</item>
@@ -1030,7 +1035,6 @@
         <item>²IBM Mobile Marketing (Acoustic)</item>
         <item>²IBM Mobile Marketing (Acoustic)</item>
         <item>²IBM Mobile Marketing (Acoustic)</item>
-        <item>²IPQualityScore</item>
         <item>²IndoorAtlas</item>
         <item>²Intrasonics</item>
         <item>²Janrain</item>
@@ -1040,15 +1044,14 @@
         <item>²Marketo (an Adobe Company)</item>
         <item>²Mobiquity Networks</item>
         <item>²Moca</item>
+        <item>²OneAudience</item>
         <item>²OpenBack</item>
-        <item>²Opensignal</item>
         <item>²Opentracker</item>
         <item>²Pinterest</item>
         <item>²Point Inside</item>
         <item>²Proximi</item>
         <item>²PubNub</item>
         <item>²ScoreLoop</item>
-        <item>²Signalframe  (prev Wireless Registry)</item>
         <item>²Sino Weibo SDK</item>
         <item>²Skyhook</item>
         <item>²Synerise</item>
@@ -1067,9 +1070,6 @@
         <item>²Veloxity</item>
         <item>²Weibo DeviceID</item>
         <item>²WonderPush</item>
-        <item>²X-Mode (EasyOpt, Picket, The Visualizer App)</item>
-        <item>²X-Mode (EasyOpt, Picket, The Visualizer App)</item>
-        <item>²X-Mode (EasyOpt, Picket, The Visualizer App)</item>
         <item>²Xiaomi Push Service</item>
         <item>²YOC</item>
         <item>²Yext</item>
