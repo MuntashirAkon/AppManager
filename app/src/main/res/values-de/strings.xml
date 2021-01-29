@@ -872,4 +872,21 @@
     <string name="sd_card">SD-Karte</string>
     <string name="external_storage">Externer Speicher</string>
     <string name="internal_storage">Interner Speicher</string>
+    <string name="user_with_id">Nutzer: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"user_id\" example=\"0\"&gt;%1$d&lt;/xliff:g&gt;</string>
+    <string name="type_float_array_list">Liste dezimaler Zahlen</string>
+    <string name="type_float_array">Array von Dezimalzahlen</string>
+    <string name="type_long_array_list">Liste von langen Ganzzahlen</string>
+    <string name="type_long_array">Array von langen Ganzzahlen</string>
+    <string name="type_string_array">Array von Zeichenketten</string>
+    <string name="type_string_array_list">Liste von Zeichenketten</string>
+    <string name="type_uri">URI</string>
+    <string name="ssaid">SSAID</string>
+    <string name="ssaid_info">SSAID (&lt;tt&gt;Settings.Secure.ANDROID_ID&lt;/tt&gt;) ist eine Gerätekennung, die jeder App (von Android Oreo) zugewiesen wird. Es wird häufig von Apps verwendet, um Benutzer zu verfolgen.</string>
+    <string name="type_int_array_list">Liste der ganzen Zahlen</string>
+    <string name="type_int_array">Array von Ganzzahlen</string>
+    <string name="type_component_name">Komponentenname</string>
+    <string name="type_null">Kein Wert</string>
+    <string name="restart_to_reflect_changes">Bitte sofort neu starten, um die Änderungen zu berücksichtigen</string>
+    <string name="failed_to_change_ssaid">Konnte SSAID nicht ändern</string>
+    <string name="copied_to_clipboard">In Zwischenablage kopiert.</string>
 </resources>
