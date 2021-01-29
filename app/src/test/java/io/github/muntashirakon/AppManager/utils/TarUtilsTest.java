@@ -1,0 +1,277 @@
+/*
+ * Copyright (c) 2021 Muntashir Al-Islam
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+package io.github.muntashirakon.AppManager.utils;
+
+import android.os.RemoteException;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import io.github.muntashirakon.io.SplitInputStream;
+import org.apache.commons.compress.archivers.ArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+
+public class TarUtilsTest {
+    private final ClassLoader classLoader = getClass().getClassLoader();
+    private File testRoot;
+    private File tarGzFile;
+    private File[] tarGzFilesForExtractTest;
+
+    @Before
+    public void setUp() throws IOException, RemoteException {
+        assert classLoader != null;
+        List<File> resFiles = new ArrayList<>();
+        resFiles.add(new File(classLoader.getResource("plain.txt").getFile()));
+        resFiles.add(new File(classLoader.getResource("raw/exclude.txt").getFile()));
+        resFiles.add(new File(classLoader.getResource("raw/include.txt").getFile()));
+        resFiles.add(new File(classLoader.getResource("prefixed/prefixed_exclude.txt").getFile()));
+        resFiles.add(new File(classLoader.getResource("prefixed/prefixed_include.txt").getFile()));
+        File tmpRoot = new File("/tmp");
+        List<File> tmpFiles = new ArrayList<>();
+        testRoot = new File(tmpRoot, "test");
+        testRoot.mkdir();
+        new File(testRoot, "raw").mkdir();
+        new File(testRoot, "prefixed").mkdir();
+        tmpFiles.add(new File(testRoot, "plain.txt"));
+        tmpFiles.add(new File(testRoot, "raw/exclude.txt"));
+        tmpFiles.add(new File(testRoot, "raw/include.txt"));
+        tmpFiles.add(new File(testRoot, "prefixed/prefixed_exclude.txt"));
+        tmpFiles.add(new File(testRoot, "prefixed/prefixed_include.txt"));
+        // Copy files to tmpRoot
+        for (int i = 0; i < resFiles.size(); ++i) {
+            IOUtils.copy(resFiles.get(i), tmpFiles.get(i));
+        }
+        tarGzFile = new File(tmpRoot, "am.tar.gz");
+        tarGzFilesForExtractTest = TarUtils.create(TarUtils.TAR_GZIP, testRoot, new File(tmpRoot, "am_ex.tar.gz"),
+                null, null, null).toArray(new File[0]);
+    }
+
+    @Test
+    public void testCreateTarGZipWithFilter() throws IOException, RemoteException {
+        createTest(tarGzFile, testRoot, /* language=regexp */ new String[]{".*include\\.txt"}, null,
+                Arrays.asList("/", "prefixed/", "prefixed/prefixed_include.txt", "raw/", "raw/include.txt"));
+    }
+
+    @Test
+    public void testExtractTarGZipWithFilter() throws IOException, RemoteException {
+        extractTest(tarGzFilesForExtractTest, testRoot, /* language=regexp */ new String[]{".*include\\.txt"},
+                null, Arrays.asList("", "prefixed/", "prefixed/prefixed_include.txt", "raw/", "raw/include.txt"));
+    }
+
+    @Test
+    public void testCreateTarGZipWithDirectoryFilter() throws IOException, RemoteException {
+        createTest(tarGzFile, testRoot, /* language=regexp */ new String[]{"prefixed/.*"}, null,
+                Arrays.asList("/", "prefixed/", "prefixed/prefixed_include.txt", "prefixed/prefixed_exclude.txt"));
+    }
+
+    @Test
+    public void testExtractTarGZipWithDirectoryFilter() throws IOException, RemoteException {
+        extractTest(tarGzFilesForExtractTest, testRoot, /* language=regexp */ new String[]{"prefixed/.*"}, null,
+                Arrays.asList("", "prefixed/", "prefixed/prefixed_include.txt", "prefixed/prefixed_exclude.txt"));
+    }
+
+    @Test
+    public void testCreateTarGZipWithMultipleFilters() throws IOException, RemoteException {
+        createTest(tarGzFile, testRoot, /* language=regexp */ /* language=regexp */ new String[]{".*include\\.txt",
+                        "plain.*"}, null, Arrays.asList("/", "prefixed/", "prefixed/prefixed_include.txt",
+                "plain.txt", "raw/", "raw/include.txt"));
+    }
+
+    @Test
+    public void testExtractTarGZipWithMultipleFilters() throws IOException, RemoteException {
+        extractTest(tarGzFilesForExtractTest, testRoot, /* language=regexp */ /* language=regexp */
+                new String[]{".*include\\.txt", "plain.*"}, null, Arrays.asList("", "prefixed/",
+                        "prefixed/prefixed_include.txt", "plain.txt", "raw/", "raw/include.txt"));
+    }
+
+    @Test
+    public void testCreateTarGZipWithDirectoryAndMultipleFilters() throws IOException, RemoteException {
+        createTest(tarGzFile, testRoot, /* language=regexp */ new String[]{".*include\\.txt", "plain.*", "prefixed/.*"},
+                null, Arrays.asList("/", "prefixed/", "prefixed/prefixed_include.txt",
+                        "prefixed/prefixed_exclude.txt", "plain.txt", "raw/", "raw/include.txt"));
+    }
+
+    @Test
+    public void testExtractTarGZipWithDirectoryAndMultipleFilters() throws IOException, RemoteException {
+        extractTest(tarGzFilesForExtractTest, testRoot, /* language=regexp */ new String[]{".*include\\.txt", "plain.*",
+                        "prefixed/.*"}, null, Arrays.asList("", "prefixed/", "prefixed/prefixed_include.txt",
+                        "prefixed/prefixed_exclude.txt", "plain.txt", "raw/", "raw/include.txt"));
+    }
+
+    @Test
+    public void testCreateTarGZipWithExclude() throws IOException, RemoteException {
+        createTest(tarGzFile, testRoot, null, /* language=regexp */ new String[]{".*exclude\\.txt"},
+                Arrays.asList("/", "prefixed/", "prefixed/prefixed_include.txt", "plain.txt", "raw/", "raw/include.txt"));
+    }
+
+    @Test
+    public void testExtractTarGZipWithExclude() throws IOException, RemoteException {
+        extractTest(tarGzFilesForExtractTest, testRoot, null, /* language=regexp */
+                new String[]{".*exclude\\.txt"}, Arrays.asList("", "prefixed/", "prefixed/prefixed_include.txt",
+                        "plain.txt", "raw/", "raw/include.txt"));
+    }
+
+    @Test
+    public void testCreateTarGZipWithExcludeDirectory() throws IOException, RemoteException {
+        createTest(tarGzFile, testRoot, null, /* language=regexp */ new String[]{"raw/.*"},
+                Arrays.asList("/", "prefixed/", "prefixed/prefixed_include.txt", "prefixed/prefixed_exclude.txt",
+                        "plain.txt"));
+    }
+
+    @Test
+    public void testExtractTarGZipWithExcludeDirectory() throws IOException, RemoteException {
+        extractTest(tarGzFilesForExtractTest, testRoot, null, /* language=regexp */ new String[]{"raw/.*"},
+                Arrays.asList("", "prefixed/", "prefixed/prefixed_include.txt", "prefixed/prefixed_exclude.txt",
+                        "plain.txt", "raw/"));
+    }
+
+    @Test
+    public void testCreateTarGZipWithMultipleExcludes() throws IOException, RemoteException {
+        createTest(tarGzFile, testRoot, null, /* language=regexp */ new String[]{".*exclude\\.txt", "plain.*"},
+                Arrays.asList("/", "prefixed/", "prefixed/prefixed_include.txt", "raw/", "raw/include.txt"));
+    }
+
+    @Test
+    public void testExtractTarGZipWithMultipleExcludes() throws IOException, RemoteException {
+        extractTest(tarGzFilesForExtractTest, testRoot, null, /* language=regexp */
+                new String[]{".*exclude\\.txt", "plain.*"}, Arrays.asList("", "prefixed/",
+                        "prefixed/prefixed_include.txt", "raw/", "raw/include.txt"));
+    }
+
+    @Test
+    public void testCreateTarGZipWithDirectoryAndMultipleExcludes() throws IOException, RemoteException {
+        createTest(tarGzFile, testRoot, null, /* language=regexp */ new String[]{".*exclude\\.txt", "plain.*",
+                        "raw/.*"}, Arrays.asList("/", "prefixed/", "prefixed/prefixed_include.txt"));
+    }
+
+    @Test
+    public void testExtractTarGZipWithDirectoryAndMultipleExcludes() throws IOException, RemoteException {
+        extractTest(tarGzFilesForExtractTest, testRoot, null, /* language=regexp */
+                new String[]{".*exclude\\.txt", "plain.*", "raw/.*"}, Arrays.asList("", "prefixed/",
+                        "prefixed/prefixed_include.txt", "raw/"));
+    }
+
+    @Test
+    public void testCreateTarGZipWithFilterAndExclude() throws IOException, RemoteException {
+        createTest(tarGzFile, testRoot, /* language=regexp */ new String[]{".*\\.txt"}, /* language=regexp */
+                new String[]{".*exclude\\.txt"}, Arrays.asList("/", "prefixed/", "prefixed/prefixed_include.txt",
+                        "plain.txt", "raw/", "raw/include.txt"));
+    }
+
+    @Test
+    public void testExtractTarGZipWithFilterAndExclude() throws IOException, RemoteException {
+        extractTest(tarGzFilesForExtractTest, testRoot, /* language=regexp */ new String[]{".*\\.txt"},
+                /* language=regexp */new String[]{".*exclude\\.txt"}, Arrays.asList("", "prefixed/",
+                        "prefixed/prefixed_include.txt", "plain.txt", "raw/", "raw/include.txt"));
+    }
+
+    @Test
+    public void testCreateTarGZipWithFilterAndExcludeContainingDirectory() throws IOException, RemoteException {
+        createTest(tarGzFile, testRoot, /* language=regexp */ new String[]{".*\\.txt", "include/.*"},
+                /* language=regexp */ new String[]{".*exclude\\.txt", "raw/.*"}, Arrays.asList("/", "prefixed/",
+                        "prefixed/prefixed_include.txt", "plain.txt"));
+    }
+
+    @Test
+    public void testExtractTarGZipWithFilterAndExcludeContainingDirectory() throws IOException, RemoteException {
+        extractTest(tarGzFilesForExtractTest, testRoot, /* language=regexp */ new String[]{".*\\.txt", "include/.*"},
+                /* language=regexp */ new String[]{".*exclude\\.txt", "raw/.*"}, Arrays.asList("", "prefixed/",
+                        "prefixed/prefixed_include.txt", "plain.txt"));
+    }
+
+    @Test
+    public void testCreateTarGZipWithNoFiltersOrExcludes() throws IOException, RemoteException {
+        createTest(tarGzFile, testRoot, null, null, Arrays.asList("/", "prefixed/",
+                "prefixed/prefixed_include.txt", "prefixed/prefixed_exclude.txt", "plain.txt", "raw/",
+                "raw/include.txt", "raw/exclude.txt"));
+    }
+
+    @Test
+    public void testExtractTarGZipWithNoFiltersOrExcludes() throws IOException, RemoteException {
+        extractTest(tarGzFilesForExtractTest, testRoot, null, null, Arrays.asList("", "prefixed/",
+                "prefixed/prefixed_include.txt", "prefixed/prefixed_exclude.txt", "plain.txt", "raw/",
+                "raw/include.txt", "raw/exclude.txt"));
+    }
+
+    @NonNull
+    private static List<String> getFileNamesGZip(@NonNull List<File> tarFiles) throws IOException {
+        List<String> fileNames = new ArrayList<>();
+        try (SplitInputStream sis = new SplitInputStream(tarFiles);
+             BufferedInputStream bis = new BufferedInputStream(sis);
+             GzipCompressorInputStream gis = new GzipCompressorInputStream(bis);
+             TarArchiveInputStream tis = new TarArchiveInputStream(gis)) {
+            ArchiveEntry entry;
+            while ((entry = tis.getNextEntry()) != null) {
+                fileNames.add(entry.getName());
+            }
+        }
+        return fileNames;
+    }
+
+    private static void createTest(@NonNull File source, @NonNull File testRoot, @Nullable String[] include,
+                                   @Nullable String[] exclude, @NonNull List<String> expectedPaths)
+            throws IOException, RemoteException {
+        List<File> files = TarUtils.create(TarUtils.TAR_GZIP, testRoot, source, include, null, exclude);
+        assertEquals(expectedPaths, getFileNamesGZip(files));
+    }
+
+    private static void extractTest(@NonNull File[] sourceFiles, @NonNull File testRoot, @Nullable String[] include,
+                                    @Nullable String[] exclude, @NonNull List<String> expectedPaths)
+            throws IOException, RemoteException {
+        List<String> actualPaths = new ArrayList<>();
+        recreateDir(testRoot);
+        TarUtils.extract(TarUtils.TAR_GZIP, sourceFiles, testRoot, include, exclude);
+        gatherFiles(actualPaths, testRoot, testRoot);
+        assertEquals(expectedPaths, actualPaths);
+    }
+
+    private static void recreateDir(File dir) {
+        IOUtils.deleteDir(dir);
+        dir.mkdirs();
+    }
+
+    @NonNull
+    private static String getRelativePath(@NonNull File file, @NonNull File baseFile) {
+        URI childPath = file.toURI();
+        URI basePath = baseFile.toURI();
+        URI relPath = basePath.relativize(childPath);
+        return relPath.getPath();
+    }
+
+    private static void gatherFiles(@NonNull List<String> files, @NonNull File basePath, @NonNull File source) {
+        files.add(getRelativePath(source, basePath));
+        if (source.isDirectory()) {
+            File[] children = source.listFiles();
+            if (children == null) return;
+            for (File child : children) {
+                gatherFiles(files, basePath, child);
+            }
+        }
+    }
+}

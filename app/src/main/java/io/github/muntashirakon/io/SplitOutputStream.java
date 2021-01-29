@@ -29,6 +29,7 @@ public class SplitOutputStream extends OutputStream {
     private static final long MAX_BYTES_WRITTEN = 1024*1024*1024;  // 1GB
 
     private final List<ProxyOutputStream> outputStreams = new ArrayList<>(1);
+    private final List<File> files = new ArrayList<>(1);
     private int currentIndex = -1;
     private long bytesWritten;
     private final long maxBytesPerFile;
@@ -50,6 +51,10 @@ public class SplitOutputStream extends OutputStream {
 
     public SplitOutputStream(@NonNull File baseFile, long maxBytesPerFile) {
         this(baseFile.getAbsolutePath(), maxBytesPerFile);
+    }
+
+    public List<File> getFiles() {
+        return files;
     }
 
     @Override
@@ -91,7 +96,9 @@ public class SplitOutputStream extends OutputStream {
         if (bytesWritten + nextBytesSize > maxBytesPerFile) {
             // Need to create a new stream
             try {
-                outputStreams.add(new ProxyOutputStream(getNextFile()));
+                File newFile = getNextFile();
+                files.add(newFile);
+                outputStreams.add(new ProxyOutputStream(newFile));
                 ++currentIndex;
                 bytesWritten = 0;
             } catch (Throwable th) {
