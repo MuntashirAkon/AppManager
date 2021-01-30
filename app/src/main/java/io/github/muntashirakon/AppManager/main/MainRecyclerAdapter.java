@@ -156,9 +156,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             // not installed, 2) If installed, load the App Details page, 3) If selection mode
             // is on, select/deselect the current item instead of 1 & 2.
             if (mActivity.mModel.getSelectedPackages().size() == 0) {
-                if (!item.isInstalled)
+                if (!item.isInstalled) {
                     Toast.makeText(mActivity, R.string.app_not_installed, Toast.LENGTH_SHORT).show();
-                else {
+                } else {
                     Intent appDetailsIntent = new Intent(mActivity, AppDetailsActivity.class);
                     appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME, item.packageName);
                     if (item.userHandles.length > 0) {
@@ -219,9 +219,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         holder.version.setText(item.versionName);
         // Set date and (if available,) days between first install and last update
         String lastUpdateDate = DateUtils.formatDate(item.lastUpdateTime);
-        if (item.firstInstallTime == item.lastUpdateTime)
+        if (item.firstInstallTime == item.lastUpdateTime) {
             holder.date.setText(lastUpdateDate);
-        else {
+        } else {
             long days = TimeUnit.DAYS.convert(item.lastUpdateTime - item.firstInstallTime, TimeUnit.MILLISECONDS);
             SpannableString ssDate = new SpannableString(mActivity.getResources()
                     .getQuantityString(R.plurals.main_list_date_days, (int) days, lastUpdateDate, days));
@@ -231,9 +231,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         }
         // Set date color to orange if app can read logs (and accepted)
         if (mPackageManager.checkPermission(Manifest.permission.READ_LOGS, item.packageName)
-                == PackageManager.PERMISSION_GRANTED)
+                == PackageManager.PERMISSION_GRANTED) {
             holder.date.setTextColor(mColorOrange);
-        else holder.date.setTextColor(mColorSecondary);
+        } else holder.date.setTextColor(mColorSecondary);
         if (item.isInstalled) {
             // Set kernel user ID
             holder.sharedId.setText(String.valueOf(item.uid));
@@ -320,15 +320,16 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             holder.size.setText(String.format(Locale.getDefault(), "SDK %d", item.sdk));
         } else holder.size.setText("-");
         // Set SDK color to orange if the app is using cleartext (e.g. HTTP) traffic
-        if ((item.flags & ApplicationInfo.FLAG_USES_CLEARTEXT_TRAFFIC) != 0)
+        if ((item.flags & ApplicationInfo.FLAG_USES_CLEARTEXT_TRAFFIC) != 0) {
             holder.size.setTextColor(mColorOrange);
-        else holder.size.setTextColor(mColorSecondary);
+        } else holder.size.setTextColor(mColorSecondary);
         // Check for backup
         if (item.metadata != null) {
             holder.backupIndicator.setVisibility(View.VISIBLE);
             holder.backupInfo.setVisibility(View.VISIBLE);
             holder.backupInfoExt.setVisibility(View.VISIBLE);
             holder.backupIndicator.setText(R.string.backup);
+            holder.backupIndicator.setTextColor(item.isInstalled ? mColorSecondary : mColorRed);
             MetadataManager.Metadata metadata = item.metadata;
             long days = TimeUnit.DAYS.convert(System.currentTimeMillis() -
                     metadata.backupTime, TimeUnit.MILLISECONDS);
