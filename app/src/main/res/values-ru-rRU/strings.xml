@@ -533,7 +533,7 @@
     <string name="failed_to_extract_obb_files">Не удалось извлечь файлы OBB</string>
     <string name="obb_files_extracted_successfully">Файлы OBB извлечены</string>
     <string name="source">Источник</string>
-    <string name="backup_multiple">Резервное копирование нескольких приложений</string>
+    <string name="backup_multiple">Создание нескольких резервных копий</string>
     <string name="backup_all_users">Все пользователи</string>
     <string name="pref_app_language">Язык</string>
     <string name="auto">Авто</string>
@@ -713,7 +713,7 @@
     <string name="send_crash_report">Отправить отчет о сбое</string>
     <string name="select_apk">Выбрать APK</string>
     <string name="systemless_app">Внесистемное приложение</string>
-    <string name="duplicate">Дубликат</string>
+    <string name="duplicate">Дублировать</string>
     <string name="new_profile">Новый профиль</string>
     <string name="input_profile_name_description">Название профиля не может содержать пробелов.</string>
     <string name="input_profile_name">Название профиля</string>
@@ -820,7 +820,7 @@
     <string name="send_edited_intent">Отправить редактированную цель</string>
     <string name="matching_activities">Соответствующие активити</string>
     <string name="filter_apps_with_splits">Разделенные приложения</string>
-    <string name="set_custom_app_op">Задание приложения</string>
+    <string name="set_custom_app_op">Индивидуальная настройка операции приложения</string>
     <string name="cpu">Процессор</string>
     <string name="battery">Аккумулятор</string>
     <string name="graphics">Графика</string>
