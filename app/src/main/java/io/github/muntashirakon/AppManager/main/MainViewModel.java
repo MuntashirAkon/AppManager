@@ -294,7 +294,9 @@ public class MainViewModel extends AndroidViewModel {
                         continue;
                     }
                     // Filter rests
-                    if ((mFilterFlags & ListOptions.FILTER_DISABLED_APPS) != 0 && !item.isDisabled) {
+                    if ((mFilterFlags & ListOptions.FILTER_INSTALLED_APPS) != 0 && !item.isInstalled) {
+                        continue;
+                    } else if ((mFilterFlags & ListOptions.FILTER_DISABLED_APPS) != 0 && !item.isDisabled) {
                         continue;
                     } else if ((mFilterFlags & ListOptions.FILTER_APPS_WITH_RULES) != 0 && item.blockedCount <= 0) {
                         continue;

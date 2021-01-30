@@ -910,4 +910,5 @@
     <string name="copied_to_clipboard">Copied to clipboard.</string>
     <string name="failed_to_change_ssaid">Could not change SSAID</string>
     <string name="restart_to_reflect_changes">Please restart immediately to reflect changes</string>
+    <string name="installed_apps">Installed apps</string>
 </resources>
