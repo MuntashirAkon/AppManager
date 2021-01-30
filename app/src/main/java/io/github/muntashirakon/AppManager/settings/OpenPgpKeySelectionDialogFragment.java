@@ -62,8 +62,7 @@ public class OpenPgpKeySelectionDialogFragment extends DialogFragment {
     private AlertDialog dialog;
     private FragmentActivity activity;
     private final ActivityResultLauncher<IntentSenderRequest> keyIdResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartIntentSenderForResult(),
-            result -> {
+            new ActivityResultContracts.StartIntentSenderForResult(), result -> {
                 if (result.getData() != null) {
                     getUserId(result.getData());
                 }
@@ -78,7 +77,6 @@ public class OpenPgpKeySelectionDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         activity = requireActivity();
-        // This must be registered using an activity context since the dialog won't exist
         mOpenPgpProvider = (String) AppPref.get(AppPref.PrefKey.PREF_OPEN_PGP_PACKAGE_STR);
         List<ServiceInfo> serviceInfoList = OpenPgpUtils.getPgpClientServices(activity);
         CharSequence[] packageLabels = new String[serviceInfoList.size()];
