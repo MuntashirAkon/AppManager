@@ -926,4 +926,12 @@
     <string name="type_int_array_list">Список цілих чисел</string>
     <string name="type_int_array">Масив цілих чисел</string>
     <string name="type_component_name">Ім\'я компонента</string>
+    <string name="enable_battery_optimization">Увімкнути оптимізацію енергоспоживання\?</string>
+    <string name="battery_optimization">Оптимізація енергоспоживання</string>
+    <string name="no_battery_optimization">Без оптимізації енергоспоживання</string>
+    <string name="patch_level">Оновлення безпеки Андроїд</string>
+    <string name="type_null">Немає значення</string>
+    <string name="vendor">Постачальник</string>
+    <string name="set_custom_app_op">Індивідуальне налаштування app op</string>
+    <string name="user_with_id">Користувач: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"user_id\" example=\"0\"&gt;%1$d&lt;/xliff:g&gt;</string>
 </resources>
