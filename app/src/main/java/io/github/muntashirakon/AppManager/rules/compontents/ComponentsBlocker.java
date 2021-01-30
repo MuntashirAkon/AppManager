@@ -315,16 +315,11 @@ public final class ComponentsBlocker extends RulesStorageManager {
     public void applyRules(boolean apply) {
         try {
             // Validate components
-            List<Entry> allEntries = getAllComponents();
-            for (Entry entry : allEntries) {
-                if (!components.contains(entry.name)) {
-                    // Remove non-existent components
-                    removeEntry(entry);
-                }
-            }
+            validateComponents();
             // Save blocked IFW components
             if (apply) saveDisabledComponents();
             // Enable/disable components
+            List<Entry> allEntries = getAllComponents();
             Log.d(TAG, "All: " + allEntries.toString());
             if (apply) {
                 // Enable the components that need removal and disable requested components
@@ -366,11 +361,28 @@ public final class ComponentsBlocker extends RulesStorageManager {
         }
     }
 
+    /**
+     * Whether the given entry is a component
+     */
     private static boolean isComponent(@NonNull Entry entry) {
         return entry.type.equals(Type.ACTIVITY)
                 || entry.type.equals(Type.PROVIDER)
                 || entry.type.equals(Type.RECEIVER)
                 || entry.type.equals(Type.SERVICE);
+    }
+
+    /**
+     * Check if the components are up-to-date and remove the ones that are not up-to-date.
+     */
+    private void validateComponents() {
+        // Validate components
+        List<Entry> allEntries = getAllComponents();
+        for (Entry entry : allEntries) {
+            if (!components.contains(entry.name)) {
+                // Remove non-existent components
+                removeEntry(entry);
+            }
+        }
     }
 
     /**
