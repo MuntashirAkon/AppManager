@@ -1,5 +1,4 @@
 ---
-next: false
 sidebarDepth: 2
 ---
 # Settings Page

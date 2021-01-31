@@ -41,7 +41,6 @@ module.exports = {
     logo: '/icon.png',
     locales: {
       '/': {
-        selectText: 'Languages',
         // text for the language dropdown
         selectText: 'Languages',
         // label for this locale in the language dropdown
@@ -89,6 +88,7 @@ module.exports = {
               '/guide/profiles-page',
               '/guide/profile-page',
               '/guide/backup-restore',
+              '/guide/interceptor-page',
             ]
           },
           {
@@ -113,7 +113,6 @@ module.exports = {
         ],
       },
       '/pt-BR/': {
-        selectText: 'Idiomas',
         // text for the language dropdown
         selectText: 'Idiomas',
         // label for this locale in the language dropdown
@@ -183,7 +182,6 @@ module.exports = {
         ],
       },
       '/ru/': {
-        selectText: 'Языки',
         // text for the language dropdown
         selectText: 'Языки',
         // label for this locale in the language dropdown
@@ -252,7 +250,6 @@ module.exports = {
         ],
       },
       '/zh-CN/': {
-        selectText: '语言',
         // text for the language dropdown
         selectText: '语言',
         // label for this locale in the language dropdown
