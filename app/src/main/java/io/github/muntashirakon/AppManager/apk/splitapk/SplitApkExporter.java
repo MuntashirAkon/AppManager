@@ -20,21 +20,21 @@ package io.github.muntashirakon.AppManager.apk.splitapk;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.graphics.Bitmap;
+import androidx.annotation.NonNull;
+import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.io.ProxyFile;
+import io.github.muntashirakon.io.ProxyInputStream;
+import io.github.muntashirakon.io.ProxyOutputStream;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
-import androidx.annotation.NonNull;
-import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
-import io.github.muntashirakon.io.ProxyOutputStream;
 
 /**
  * Used to generate app bundle with .apks extension. This file has all the apks as well as 3 other
@@ -111,7 +111,7 @@ public final class SplitApkExporter {
                 zipEntry.setCrc(IOUtils.calculateFileCrc32(apkFile));
                 zipEntry.setTime(apksMetadata.exportTimestamp);
                 zipOutputStream.putNextEntry(zipEntry);
-                try (FileInputStream apkInputStream = new FileInputStream(apkFile)) {
+                try (ProxyInputStream apkInputStream = new ProxyInputStream(apkFile)) {
                     IOUtils.copy(apkInputStream, zipOutputStream);
                 }
                 zipOutputStream.closeEntry();
@@ -123,10 +123,10 @@ public final class SplitApkExporter {
     private static List<File> getAllApkFiles(@NonNull PackageInfo packageInfo) {
         ApplicationInfo applicationInfo = packageInfo.applicationInfo;
         List<File> apkFiles = new ArrayList<>();
-        apkFiles.add(new File(applicationInfo.publicSourceDir));
+        apkFiles.add(new ProxyFile(applicationInfo.publicSourceDir));
         if (applicationInfo.splitPublicSourceDirs != null) {
             for (String splitPath : applicationInfo.splitPublicSourceDirs)
-                apkFiles.add(new File(splitPath));
+                apkFiles.add(new ProxyFile(splitPath));
         }
         return apkFiles;
     }

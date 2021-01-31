@@ -24,11 +24,8 @@ import android.content.pm.PackageManager;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -44,9 +41,7 @@ import io.github.muntashirakon.AppManager.apk.splitapk.SplitApkExporter;
 import io.github.muntashirakon.AppManager.backup.BackupFiles;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
-import io.github.muntashirakon.io.ProxyOutputStream;
-
-import static io.github.muntashirakon.AppManager.utils.IOUtils.copy;
+import io.github.muntashirakon.io.ProxyFile;
 
 public final class ApkUtils {
     public static final String EXT_APK = ".apk";
@@ -67,10 +62,7 @@ public final class ApkUtils {
         } else {
             // Regular apk
             tmpPublicSource = new File(AppManager.getContext().getExternalCacheDir(), outputName + EXT_APK);
-            try (FileInputStream apkInputStream = new FileInputStream(packageInfo.applicationInfo.publicSourceDir);
-                 OutputStream apkOutputStream = new ProxyOutputStream(tmpPublicSource)) {
-                copy(apkInputStream, apkOutputStream);
-            }
+            IOUtils.copy(new ProxyFile(packageInfo.applicationInfo.publicSourceDir), tmpPublicSource);
         }
         return tmpPublicSource;
     }
@@ -92,18 +84,15 @@ public final class ApkUtils {
             PackageInfo packageInfo = PackageManagerCompat.getPackageInfo(packageName, 0, userHandle);
             ApplicationInfo info = packageInfo.applicationInfo;
             String outputName = info.loadLabel(pm).toString() + "_" + packageInfo.versionName;
-            File tmpPublicSource;
+            File apkFile;
             if (isSplitApk(info)) {
                 // Split apk
-                tmpPublicSource = new File(backupPath, outputName + EXT_APKS);
-                SplitApkExporter.saveApks(packageInfo, tmpPublicSource);
+                apkFile = new ProxyFile(backupPath, outputName + EXT_APKS);
+                SplitApkExporter.saveApks(packageInfo, apkFile);
             } else {
                 // Regular apk
-                tmpPublicSource = new File(backupPath, outputName + EXT_APK);
-                try (FileInputStream apkInputStream = new FileInputStream(info.publicSourceDir);
-                     OutputStream apkOutputStream = new ProxyOutputStream(tmpPublicSource)) {
-                    IOUtils.copy(apkInputStream, apkOutputStream);
-                }
+                apkFile = new ProxyFile(backupPath, outputName + EXT_APK);
+                IOUtils.copy(new ProxyFile(info.publicSourceDir), apkFile);
             }
             return true;
         } catch (Exception e) {
