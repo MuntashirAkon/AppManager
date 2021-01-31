@@ -36,13 +36,16 @@ This is the text that will be displayed in the [profiles page][profiles]. If not
 ### State
 Denotes how certain configured options will behave. For instance, if _disable_ option is turned on, the apps will be disabled if the state is _on_ and will be enabled if the state is _off_. Currently state only support _on_ and _off_ values.
 
+### Users
+Select users for which is the profile will be applied. All users are selected by default.
+
 ### Components
 This behaves the same way as the [Block Components…][block_components] option does in the 1-Click Ops page. However, this only applies for the selected packages. If the [state](#state) is _on_, the components will be blocked, and if the [state](#state) is _off_, the components will be unblocked. The option can be disabled (regardless of the inserted values) by clicking on the _disabled_ button on the input dialog.
 
 _See also: [What are the app components?][what_are_components]_
 
 ### App Ops
-This behaves the same way as the [Deny App Ops…][deny_app_ops] option does in the 1-Click Ops page. However, this only applies for the selected packages. If the [state](#state) is _on_, the app ops will be denied, and if the [state](#state) is _off_, the app ops will be allowed. The option can be disabled (regardless of the inserted values) by clicking on the _disabled_ button on the input dialog.
+This behaves the same way as the [Set Mode for App Ops…][set_mode_for_app_ops] option does in the 1-Click Ops page. However, this only applies for the selected packages. If the [state](#state) is _on_, the app ops will be denied (ie. ignored), and if the [state](#state) is _off_, the app ops will be allowed. The option can be disabled (regardless of the inserted values) by clicking on the _disabled_ button on the input dialog.
 
 ### Permissions
 This option can be used to grant or revoke certain permissions from the selected packages. Like others above, permissions must be separated by spaces. If the [state](#state) is _on_, the permissions will be revoked, and if the [state](#state) is _off_, the permissions will be allowed. The option can be disabled (regardless of the inserted values) by clicking on the _disabled_ button on the input dialog.
@@ -50,7 +53,7 @@ This option can be used to grant or revoke certain permissions from the selected
 ### Backup/Restore
 This option can be used to take a backup of the selected apps and its data or restore them. There two options available there: _Backup options_ and _backup name_.
 - **Backup options.** Same as the [backup options][backup_options] of the backup/restore feature. If not set, the default options will be used.
-- **Backup name.** Set a custom name for the backup. If the backup name is set, each time a backup is made, it will be given a unique name with backup name as the suffix. This behaviour will be fixed in a future release. Leave this field empty for regular or "base" backup.
+- **Backup name.** Set a custom name for the backup. If the backup name is set, each time a backup is made, it will be given a unique name with backup-name as the suffix. This behaviour will be fixed in a future release. Leave this field empty for regular or "base" backup (also, make sure not to enable _backup multiple_ in the backup options).
 
 If the [state](#state) is _on_, the packages will be backed up, and if the [state](#state) is _off_, the packages will be restored. The option can be disabled by clicking on the _disabled_ button on the input dialog.
 
@@ -79,6 +82,6 @@ Enabling this option will enable APK backup for the selected packages. This is n
 [profiles]: ./profiles-page.md
 [block_components]: ./one-click-ops-page.md#block-components
 [what_are_components]: ../faq/app-components.md#what-are-the-app-components
-[deny_app_ops]: ./one-click-ops-page.md##deny-app-ops
+[set_mode_for_app_ops]: ./one-click-ops-page.md#set-mode-for-app-ops
 [backup_options]: ./backup-restore.md#backup-options
 [backup_restore]: ./backup-restore.md
