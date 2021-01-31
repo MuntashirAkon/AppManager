@@ -581,4 +581,10 @@
     <string name="backup_source_description">Utwórz kopię zapasową całego katalogu źródłowego.</string>
     <string name="resend_intent">Wyślij intent ponownie</string>
     <string name="category">Kategorie</string>
+    <string name="type_component_name">Nazwa komponentu</string>
+    <string name="screen_lock_msg">Zablokuj App Manager za pomocą blokady ekranu systemu Android</string>
+    <string name="screen_lock">Blokada ekranu</string>
+    <string name="unlock_app_manager">Odblokuj App Manager</string>
+    <string name="sd_card">Karta SD</string>
+    <string name="external_storage">Pamięć zewnętrzna</string>
 </resources>
