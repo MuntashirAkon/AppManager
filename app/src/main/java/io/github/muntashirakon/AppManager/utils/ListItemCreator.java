@@ -20,7 +20,6 @@ package io.github.muntashirakon.AppManager.utils;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,6 +27,7 @@ import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.LinearLayoutCompat;
+import com.google.android.material.button.MaterialButton;
 import io.github.muntashirakon.AppManager.R;
 
 public class ListItemCreator {
@@ -40,7 +40,7 @@ public class ListItemCreator {
     public TextView item_title;
     public TextView item_subtitle;
     public ImageView item_icon;
-    public ImageButton item_open;
+    public MaterialButton item_open;
 
     public ListItemCreator(@NonNull Activity activity, @IdRes int resIdMenuContainer) {
         mListContainer = activity.findViewById(resIdMenuContainer);

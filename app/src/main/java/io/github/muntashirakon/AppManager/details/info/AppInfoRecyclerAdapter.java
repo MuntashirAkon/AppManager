@@ -31,6 +31,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.button.MaterialButton;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
@@ -121,7 +122,7 @@ class AppInfoRecyclerAdapter extends RecyclerView.Adapter<AppInfoRecyclerAdapter
                 else holder.subtitle.setTypeface(Typeface.DEFAULT);
                 if (listItem.icon != 0) holder.icon.setImageResource(listItem.icon);
                 if (listItem.actionIcon != 0) {
-                    holder.actionIcon.setImageResource(listItem.actionIcon);
+                    holder.actionIcon.setIconResource(listItem.actionIcon);
                 }
                 if (listItem.actionListener != null) {
                     holder.actionIcon.setVisibility(View.VISIBLE);
@@ -140,7 +141,7 @@ class AppInfoRecyclerAdapter extends RecyclerView.Adapter<AppInfoRecyclerAdapter
         TextView title;
         TextView subtitle;
         ImageView icon;
-        ImageView actionIcon;
+        MaterialButton actionIcon;
 
         public ViewHolder(@NonNull View itemView, @ListItem.ListItemType int viewType) {
             super(itemView);

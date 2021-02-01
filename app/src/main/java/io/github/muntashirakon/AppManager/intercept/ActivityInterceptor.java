@@ -43,12 +43,12 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.ShareActionProvider;
 import androidx.collection.SparseArrayCompat;
-import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
 import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.android.internal.util.TextUtils;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
@@ -870,7 +870,7 @@ public class ActivityInterceptor extends AppCompatActivity {
 
         static class ViewHolder extends RecyclerView.ViewHolder {
             TextView title;
-            ImageView actionIcon;
+            MaterialButton actionIcon;
 
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
@@ -923,7 +923,7 @@ public class ActivityInterceptor extends AppCompatActivity {
 
         static class ViewHolder extends RecyclerView.ViewHolder {
             TextView title;
-            ImageView actionIcon;
+            MaterialButton actionIcon;
 
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
@@ -974,11 +974,11 @@ public class ActivityInterceptor extends AppCompatActivity {
             return extras.size();
         }
 
-        class ViewHolder extends RecyclerView.ViewHolder {
+        static class ViewHolder extends RecyclerView.ViewHolder {
             TextView title;
             TextView subtitle;
             ImageView icon;
-            ImageView actionIcon;
+            MaterialButton actionIcon;
             IconLoaderThread iconLoader;
 
             public ViewHolder(@NonNull View itemView) {
@@ -986,7 +986,7 @@ public class ActivityInterceptor extends AppCompatActivity {
                 title = itemView.findViewById(R.id.item_title);
                 subtitle = itemView.findViewById(R.id.item_subtitle);
                 actionIcon = itemView.findViewById(R.id.item_open);
-                actionIcon.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_delete_black_24dp));
+                actionIcon.setIconResource(R.drawable.ic_delete_black_24dp);
                 icon = itemView.findViewById(R.id.item_icon);
                 icon.setVisibility(View.GONE);
             }
@@ -1045,7 +1045,7 @@ public class ActivityInterceptor extends AppCompatActivity {
             TextView title;
             TextView subtitle;
             ImageView icon;
-            ImageView actionIcon;
+            MaterialButton actionIcon;
             IconLoaderThread iconLoader;
 
             public ViewHolder(@NonNull View itemView) {

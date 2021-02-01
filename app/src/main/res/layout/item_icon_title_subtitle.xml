@@ -69,18 +69,19 @@
                 tools:text="@tools:sample/lorem" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <androidx.appcompat.widget.AppCompatImageButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/item_open"
+            style="@android:style/Widget.Material.ImageButton"
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:layout_gravity="center"
             android:layout_marginStart="@dimen/padding_medium"
             android:layout_weight="0"
-            android:background="@drawable/border_left"
-            android:foreground="?attr/selectableItemBackground"
-            android:padding="@dimen/padding_medium"
-            android:src="@drawable/ic_open_in_new_black_24dp"
-            tools:ignore="ContentDescription,UnusedAttribute" />
+            android:background="?attr/selectableItemBackground"
+            app:icon="@drawable/ic_open_in_new_black_24dp"
+            app:iconGravity="textTop"
+            app:iconPadding="0dp"
+            tools:ignore="UnusedAttribute" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

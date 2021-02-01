@@ -141,13 +141,15 @@
 						android:textAllCaps="true"
 						android:textColor="@color/colorAccent" />
 
-					<androidx.appcompat.widget.AppCompatImageButton
+					<com.google.android.material.button.MaterialButton
 						android:id="@+id/intent_categories_add_btn"
 						android:layout_width="30dp"
 						android:layout_height="30dp"
 						android:layout_weight="0"
 						android:background="?selectableItemBackgroundBorderless"
-						android:src="@drawable/ic_baseline_add_24" />
+						app:icon="@drawable/ic_baseline_add_24"
+						app:iconGravity="textTop"
+						app:iconPadding="0dp" />
 
 				</androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -176,13 +178,15 @@
 						android:textAllCaps="true"
 						android:textColor="@color/colorAccent" />
 
-					<androidx.appcompat.widget.AppCompatImageButton
+					<com.google.android.material.button.MaterialButton
 						android:id="@+id/intent_flags_add_btn"
 						android:layout_width="30dp"
 						android:layout_height="30dp"
 						android:layout_weight="0"
 						android:background="?selectableItemBackgroundBorderless"
-						android:src="@drawable/ic_baseline_add_24" />
+						app:icon="@drawable/ic_baseline_add_24"
+						app:iconGravity="textTop"
+						app:iconPadding="0dp" />
 
 				</androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -211,13 +215,15 @@
 						android:textAllCaps="true"
 						android:textColor="@color/colorAccent" />
 
-					<androidx.appcompat.widget.AppCompatImageButton
+					<com.google.android.material.button.MaterialButton
 						android:id="@+id/intent_extras_add_btn"
 						android:layout_width="30dp"
 						android:layout_height="30dp"
 						android:layout_weight="0"
 						android:background="?selectableItemBackgroundBorderless"
-						android:src="@drawable/ic_baseline_add_24" />
+						app:icon="@drawable/ic_baseline_add_24"
+						app:iconGravity="textTop"
+						app:iconPadding="0dp" />
 
 				</androidx.appcompat.widget.LinearLayoutCompat>
 

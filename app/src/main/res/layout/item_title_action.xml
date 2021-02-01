@@ -18,6 +18,7 @@
 
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/item_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -39,17 +40,18 @@
         android:textSize="@dimen/title_font"
         tools:text="@tools:sample/lorem" />
 
-    <androidx.appcompat.widget.AppCompatImageButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/item_action"
+        style="@android:style/Widget.Material.ImageButton"
         android:layout_width="56dp"
         android:layout_height="30dp"
         android:layout_gravity="center"
         android:layout_marginStart="@dimen/padding_medium"
         android:layout_weight="0"
-        android:background="@drawable/border_left"
-        android:foreground="?attr/selectableItemBackground"
-        android:padding="@dimen/padding_medium"
-        android:src="@drawable/ic_baseline_clear_24"
-        tools:ignore="ContentDescription,UnusedAttribute" />
+        android:background="?attr/selectableItemBackground"
+        app:icon="@drawable/ic_baseline_clear_24"
+        app:iconGravity="textTop"
+        app:iconPadding="0dp"
+        tools:ignore="UnusedAttribute" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

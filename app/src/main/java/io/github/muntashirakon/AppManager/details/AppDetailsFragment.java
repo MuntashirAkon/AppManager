@@ -44,11 +44,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.switchmaterial.SwitchMaterial;
@@ -634,7 +634,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             TextView textView7;
             TextView textView8;
             ImageView imageView;
-            ImageButton blockBtn;
+            MaterialButton blockBtn;
             Button createBtn;
             Button editBtn;
             Button launchBtn;
@@ -939,9 +939,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             // Blocking
             if (isRootEnabled && !isExternalApk) {
                 if (appDetailsItem.isBlocked) {
-                    holder.blockBtn.setImageDrawable(ContextCompat.getDrawable(mActivity, R.drawable.ic_restore_black_24dp));
+                    holder.blockBtn.setIconResource(R.drawable.ic_restore_black_24dp);
                 } else {
-                    holder.blockBtn.setImageDrawable(ContextCompat.getDrawable(mActivity, R.drawable.ic_block_black_24dp));
+                    holder.blockBtn.setIconResource(R.drawable.ic_block_black_24dp);
                 }
                 holder.blockBtn.setVisibility(View.VISIBLE);
                 holder.blockBtn.setOnClickListener(v -> {
@@ -1003,9 +1003,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             // Blocking
             if (isRootEnabled && !isExternalApk) {
                 if (appDetailsItem.isBlocked) {
-                    holder.blockBtn.setImageDrawable(ContextCompat.getDrawable(mActivity, R.drawable.ic_restore_black_24dp));
+                    holder.blockBtn.setIconResource(R.drawable.ic_restore_black_24dp);
                 } else {
-                    holder.blockBtn.setImageDrawable(ContextCompat.getDrawable(mActivity, R.drawable.ic_block_black_24dp));
+                    holder.blockBtn.setIconResource(R.drawable.ic_block_black_24dp);
                 }
                 holder.blockBtn.setVisibility(View.VISIBLE);
                 holder.blockBtn.setOnClickListener(v -> {
@@ -1056,9 +1056,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             // Blocking
             if (isRootEnabled && !isExternalApk) {
                 if (appDetailsItem.isBlocked) {
-                    holder.blockBtn.setImageDrawable(ContextCompat.getDrawable(mActivity, R.drawable.ic_restore_black_24dp));
+                    holder.blockBtn.setIconResource(R.drawable.ic_restore_black_24dp);
                 } else {
-                    holder.blockBtn.setImageDrawable(ContextCompat.getDrawable(mActivity, R.drawable.ic_block_black_24dp));
+                    holder.blockBtn.setIconResource(R.drawable.ic_block_black_24dp);
                 }
                 holder.blockBtn.setVisibility(View.VISIBLE);
                 holder.blockBtn.setOnClickListener(v -> {
@@ -1132,9 +1132,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             // Blocking
             if (isRootEnabled && !isExternalApk) {
                 if (appDetailsItem.isBlocked) {
-                    holder.blockBtn.setImageDrawable(ContextCompat.getDrawable(mActivity, R.drawable.ic_restore_black_24dp));
+                    holder.blockBtn.setIconResource(R.drawable.ic_restore_black_24dp);
                 } else {
-                    holder.blockBtn.setImageDrawable(ContextCompat.getDrawable(mActivity, R.drawable.ic_block_black_24dp));
+                    holder.blockBtn.setIconResource(R.drawable.ic_block_black_24dp);
                 }
                 holder.blockBtn.setVisibility(View.VISIBLE);
                 holder.blockBtn.setOnClickListener(v -> {
