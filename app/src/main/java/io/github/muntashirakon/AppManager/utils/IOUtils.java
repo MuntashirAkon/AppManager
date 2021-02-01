@@ -34,6 +34,7 @@ import android.system.ErrnoException;
 import android.system.Os;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import com.android.internal.util.TextUtils;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.io.ProxyFile;
@@ -198,6 +199,21 @@ public final class IOUtils {
         }
         // There are path components, so return the last one.
         return path.substring(lastIndexOfSeparator + 1);
+    }
+
+    @Nullable
+    public static String getSanitizedFileName(@NonNull String fileName, boolean replaceSpace) {
+        if (fileName.equals(".") || fileName.equals("..")) {
+            return null;
+        }
+        fileName = fileName.trim().replaceAll("[\\\\/:*?\"<>|]", "_");
+        if (replaceSpace) {
+            fileName = fileName.replaceAll("\\s", "_");
+        }
+        if (TextUtils.isEmpty(fileName)) {
+            return null;
+        }
+        return fileName;
     }
 
     @NonNull

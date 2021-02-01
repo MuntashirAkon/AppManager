@@ -53,7 +53,9 @@ public final class ApkUtils {
     public static File getSharableApkFile(@NonNull PackageInfo packageInfo) throws Exception {
         ApplicationInfo info = packageInfo.applicationInfo;
         PackageManager pm = AppManager.getContext().getPackageManager();
-        String outputName = info.loadLabel(pm).toString() + "_" + packageInfo.versionName;
+        String outputName = IOUtils.getSanitizedFileName(info.loadLabel(pm).toString() + "_" +
+                packageInfo.versionName, false);
+        if (outputName == null) outputName = info.packageName;
         File tmpPublicSource;
         if (isSplitApk(info)) {
             // Split apk
@@ -83,7 +85,9 @@ public final class ApkUtils {
             PackageManager pm = AppManager.getContext().getPackageManager();
             PackageInfo packageInfo = PackageManagerCompat.getPackageInfo(packageName, 0, userHandle);
             ApplicationInfo info = packageInfo.applicationInfo;
-            String outputName = info.loadLabel(pm).toString() + "_" + packageInfo.versionName;
+            String outputName = IOUtils.getSanitizedFileName(info.loadLabel(pm).toString() + "_" +
+                    packageInfo.versionName, false);
+            if (outputName == null) outputName = packageName;
             File apkFile;
             if (isSplitApk(info)) {
                 // Split apk
