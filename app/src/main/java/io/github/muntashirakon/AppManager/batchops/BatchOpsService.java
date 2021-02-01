@@ -24,6 +24,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 
 import java.util.ArrayList;
@@ -251,6 +252,9 @@ public class BatchOpsService extends ForegroundService {
                 String detailsMessage = getString(R.string.full_stop_tap_to_see_details);
                 String message = getDesiredErrorString(opResult.getFailedPackages().size());
                 Intent intent = new Intent(this, AlertDialogActivity.class);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    intent.setIdentifier(String.valueOf(System.currentTimeMillis()));
+                }
                 intent.putExtra(EXTRA_OP, op);
                 intent.putExtra(EXTRA_OP_EXTRA_ARGS, args);
                 intent.putExtra(EXTRA_FAILURE_MESSAGE, message);

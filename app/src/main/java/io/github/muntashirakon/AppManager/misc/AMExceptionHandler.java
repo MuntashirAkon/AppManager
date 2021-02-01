@@ -22,6 +22,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
+import android.os.Build;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import io.github.muntashirakon.AppManager.R;
@@ -55,6 +56,9 @@ public class AMExceptionHandler implements Thread.UncaughtExceptionHandler {
         report.append(new DeviceInfo(context).toString());
         // Send notification
         Intent i = new Intent(Intent.ACTION_SEND);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            i.setIdentifier(String.valueOf(System.currentTimeMillis()));
+        }
         i.setType("message/rfc822");
         i.putExtra(Intent.EXTRA_EMAIL, new String[]{"muntashirakon@riseup.net"});
         i.putExtra(Intent.EXTRA_SUBJECT, "App Manager: Crash report");

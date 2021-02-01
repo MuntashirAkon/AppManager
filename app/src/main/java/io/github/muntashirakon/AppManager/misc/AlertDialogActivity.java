@@ -41,12 +41,24 @@ public class AlertDialogActivity extends BaseActivity {
             finish();
             return;
         }
+        onNewIntent(getIntent());
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.clear();
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
         // Check for failed batch ops
-        ArrayList<String> failedPackages = getIntent().getStringArrayListExtra(BatchOpsService.EXTRA_FAILED_PKG);
-        ArrayList<Integer> userHandles = getIntent().getIntegerArrayListExtra(BatchOpsService.EXTRA_OP_USERS);
-        String failureMessage = getIntent().getStringExtra(BatchOpsService.EXTRA_FAILURE_MESSAGE);
-        int op = getIntent().getIntExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_NONE);
-        Bundle args = getIntent().getBundleExtra(BatchOpsService.EXTRA_OP_EXTRA_ARGS);
+        ArrayList<String> failedPackages = intent.getStringArrayListExtra(BatchOpsService.EXTRA_FAILED_PKG);
+        ArrayList<Integer> userHandles = intent.getIntegerArrayListExtra(BatchOpsService.EXTRA_OP_USERS);
+        String failureMessage = intent.getStringExtra(BatchOpsService.EXTRA_FAILURE_MESSAGE);
+        int op = intent.getIntExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_NONE);
+        Bundle args = intent.getBundleExtra(BatchOpsService.EXTRA_OP_EXTRA_ARGS);
         ArrayList<String> packageLabels = PackageUtils.packagesToAppLabels(getPackageManager(), failedPackages, userHandles);
         // Failed
         if (failedPackages != null) {
@@ -56,24 +68,18 @@ public class AlertDialogActivity extends BaseActivity {
                             packageLabels), null)
                     .setNegativeButton(R.string.ok, null)
                     .setPositiveButton(R.string.try_again, (dialog, which) -> {
-                        Intent intent = new Intent(this, BatchOpsService.class);
-                        intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, failedPackages);
-                        intent.putIntegerArrayListExtra(BatchOpsService.EXTRA_OP_USERS, userHandles);
-                        intent.putExtra(BatchOpsService.EXTRA_OP, op);
-                        intent.putExtra(BatchOpsService.EXTRA_OP_EXTRA_ARGS, args);
-                        ContextCompat.startForegroundService(this, intent);
+                        Intent BatchOpsIntent = new Intent(this, BatchOpsService.class);
+                        BatchOpsIntent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, failedPackages);
+                        BatchOpsIntent.putIntegerArrayListExtra(BatchOpsService.EXTRA_OP_USERS, userHandles);
+                        BatchOpsIntent.putExtra(BatchOpsService.EXTRA_OP, op);
+                        BatchOpsIntent.putExtra(BatchOpsService.EXTRA_OP_EXTRA_ARGS, args);
+                        ContextCompat.startForegroundService(this, BatchOpsIntent);
                     })
                     .setOnDismissListener(dialog -> finish())
                     .show();
         }
-        getIntent().removeExtra(BatchOpsService.EXTRA_FAILED_PKG);
-        getIntent().removeExtra(BatchOpsService.EXTRA_OP_USERS);
-        getIntent().removeExtra(BatchOpsService.EXTRA_FAILURE_MESSAGE);
-    }
-
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.clear();
-        super.onSaveInstanceState(outState);
+        intent.removeExtra(BatchOpsService.EXTRA_FAILED_PKG);
+        intent.removeExtra(BatchOpsService.EXTRA_OP_USERS);
+        intent.removeExtra(BatchOpsService.EXTRA_FAILURE_MESSAGE);
     }
 }
