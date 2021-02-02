@@ -587,4 +587,17 @@
     <string name="unlock_app_manager">Odblokuj App Manager</string>
     <string name="sd_card">Karta SD</string>
     <string name="external_storage">Pamięć zewnętrzna</string>
+    <string name="restart_to_reflect_changes">Zrestartuj urządzenie, aby zastosować zmiany</string>
+    <string name="failed_to_change_ssaid">Nie udało się zmienić SSAID</string>
+    <string name="copied_to_clipboard">Skopiowano do schowka.</string>
+    <string name="ssaid_info">SSAID (&lt;tt&gt;Settings.Secure.ANDROID_ID&lt;/tt&gt;) jest identyfikatorem urządzenia przypisanym do każdej aplikacji (od Android Oreo wzwyż). Jest on szeroko wykorzystywany przez aplikacje do śledzenia użytkowników.</string>
+    <string name="ssaid">SSAID</string>
+    <string name="os_version">Wersja systemu operacyjnego</string>
+    <string name="add">Dodaj</string>
+    <string name="add_to_profile">Dodaj do profilu</string>
+    <string name="initializing">Inicjalizacja…</string>
+    <string name="allow_background">Zezwól na działanie w tle</string>
+    <string name="enable_battery_optimization">Włączyć optymalizację baterii\?</string>
+    <string name="type_uri">URI</string>
+    <string name="receivers">Odbiorniki</string>
 </resources>
