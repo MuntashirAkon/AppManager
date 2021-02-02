@@ -888,4 +888,5 @@
     <string name="type_component_name">Nome do Componente</string>
     <string name="type_null">Nenhum valor</string>
     <string name="user_with_id">Usuário: <xliff:g id="user_id" example="0">%1$d</xliff:g></string>
+    <string name="installed_apps">Aplicativos instalados</string>
 </resources>
