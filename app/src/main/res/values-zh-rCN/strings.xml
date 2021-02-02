@@ -855,4 +855,5 @@
     <string name="type_component_name">组件名</string>
     <string name="type_null">无值</string>
     <string name="user_with_id">用户：<xliff:g id="user_id" example="0">%1$d</xliff:g></string>
+    <string name="installed_apps">已安装的应用</string>
 </resources>
