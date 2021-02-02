@@ -58,7 +58,7 @@ Os aplicativos listados na página principal podem ser classificados de diferent
 - _Nome do pacote_ - Ordenar em ordem crescente com base nos nomes de pacotes
 - _Última atualização_ - Ordenar em ordem decrescente com base na data de atualização do pacote (ou data de instalação se for um pacote recém-instalado)
 - _ID de Usuário compartilhado_ - Ordenar em ordem decrescente com base no id do usuário do kernel
-- _Tamanho/sdk do aplicativo_ - Ordenar em ordem crescente com base no sdk do aplicativo (ordenar pelo tamanho do aplicativo não está disponível no momento)
+- _SDK do aplicativo_ - Ordenar em ordem crescente com base no sdk do aplicativo
 - _Assinatura_ - Ordenar em ordem crescente com base nas informações de assinatura do aplicativo
 - _Desativado primeiro_ - Liste primeiro aplicativos desativados
 - _Bloqueado primeiro_ - Ordenar em ordem decrescente com base no número de componentes bloqueados
@@ -89,6 +89,9 @@ Uma lista de aplicativos ou processos em execução pode ser visualizada clicand
 ### APK Updater
 Se você tem o aplicativo [APK Updater][3] instalado, você pode usar a opção correspondente no menu para abrir o aplicativo diretamente. A opção é ocultada se você não tiver ele instalado.
 
+### Profiles
+Opens the [profiles page][profiles]. Profiles are a way to configure regularly used tasks. You can also add shortcuts of the profiles in the launcher to run them directly.
+
 ### Termux
 Se você tem o [Termux][2] instalado, você pode ir diretamente para a sessão de execução ou abrir uma nova sessão usando a opção **Termux** no menu.
 
@@ -101,3 +104,4 @@ Você pode ir para as [Configurações][settings] do aplicativo clicando na opç
 [4]: ./app-details-page.md
 [5]: ./one-click-ops-page.md
 [settings]: ./settings-page.md
+[profiles]: ./profiles-page.md

@@ -13,6 +13,16 @@ sidebarDepth: 2
 ## O que são os componentes de aplicativo?
 Atividades, serviços, receptores de transmissão (também conhecidos como receptores) e provedores de conteúdo (também conhecidos como provedores) são combinadamente chamados de componentes de aplicativo. Mais tecnicamente, todos eles herdam a classe `ComponentInfo`.
 
+## What are trackers?
+_Tracker_ is a special keyword in AM that is used to denote ad or tracker component. It doesn't denote the number of actual trackers like in the [scanner page](../guide/scanner-page.md). This is analogous to _tracker component_ (as opposed to _trackers classes_).
+
+## How are the tracker or other components blocked in AM? What are its limitations?
+AM blocks application components (or tracker components) using a method called [Intent Firewall][1] (IFW), it is very superior to other methods such as `pm`, [Shizuku][5] or any other method that uses the package manager to enable or disable the components. If a component is disabled by the latter methods, the app itself can detect that the component is being blocked and can re-enable it as it has full access to its own components. (Many deceptive apps actually exploit this in order to keep the tracker components unblocked.) On the other hand, IFW is a true firewall and the app cannot detect if the blocking is present. It also cannot re-enable it by any means. AM uses the term _block_ rather than _disable_ for this reason.
+
+But even IFW has some limitations which are primarily applicable for the system apps:
+- The app in question is whitelisted by the system ie. the system cannot function properly without these apps and may cause random crashes. These apps include but not limited to Android System, System UI, Phone Services. They will run even if you disable them or block their components via IFW.
+- Another system app or system process is calling an specific component of the app in question via interprocess communication (IPC). In this case, the component will be activated regardless of its presence in the IFW rules or even if the entire app is disabled. If you have such system apps, the only way to prevent them from running is to get rid of them.
+
 ## Por que os componentes bloqueados pela AM não são detectados por outros aplicativos relacionados?
 É por causa do método de bloqueio que estou usando. Este método é chamado de [Intent Firewall][1] (IFW) e é compatível com [Watt][2] e [Blocker][3]. [MyAndroidTool][4] (MAT) suporta o IFW mas usa um formato diferente. Existem outros métodos para bloquear componentes de aplicativo, como _pm_ e [Shizuku][5]. Se um componente de aplicativo for bloqueado usando esses últimos métodos, o aplicativo afetado pode identificá-lo e desbloqueá-lo, pois tem acesso total aos seus próprios componentes. Muitos aplicativos enganosos realmente exploram isso para manter os componentes rastreadores desbloqueados.
 

@@ -16,17 +16,19 @@ Configure o idioma no aplicativo. O App Manager atualmente suporta 12 (doze) idi
 ## Tema do Aplicativo
 Configure o tema no aplicativo.
 
+## Mode of Operation
+You can select one of the four options:
+- **Auto.** Let AM select the suitable option for you. Although this is the default option, it may cause problems in some devices.
+- **Root.** Select root mode. AM will request for root permission if not already granted. But when selected, AM will run in root mode even if you don't allow root. This may cause crashes, therefore, you shouldn't enable it if you haven't granted root.
+- **ADB over TCP.** Enable [ADB over TCP][1] mode. AM may hang indefinitely if you haven't enabled ADB over TCP.
+- **No-root.** AM runs in no-root mode. AM will perform better if this is enabled but all the root/ADB features will be disabled.
+
 ## Acesso ao Uso
 Desativar esta opção desativa a página de **Uso de Aplicativos**, bem como _uso de dados_ e _informações de armazenamento de aplicativos_ na [Aba de Informações do Aplicativo][3]. Com essa opção desligada, o App Manager nunca pedirá pela permissão de _Acesso ao Uso_
 
-## Modo Root
-Ativar ou desativar o modo root.
-
-::: tip
-Para usar o [ADB][1], o modo root deve ser desativado no início e, em seguida, de preferência após um reinício, o modo ADB será detectado automaticamente.
-:::
-
-_Veja também: [ADB sobre TCP][1]_
+## APK Signing
+### Signature schemes
+Select the [signature schemes](https://source.android.com/security/apksigning) to use. It is recommended that you use at least v1 and v2 signature schemes. Use the _Reset to Default_ button in case you're confused.
 
 ## Regras
 
@@ -70,6 +72,21 @@ Importar regras de bloqueio do [Blocker][4], cada arquivo contendo regras para u
 ### Remover todas as regras
 Opção de um clique para remover todas as regras configuradas no App Manager. Isso ativará todos os componentes bloqueados, as opções de aplicativos serão definidas para seus valores padrão e as permissões serão concedidas.
 
+## Installer
+Installer specific options
+
+### Show users in installer
+For root/ADB users, a list of users will be displayed before installing the app. The app will be installed only for the specified user (or all users if selected).
+
+### Sign APK
+Whether to sign the APK files before installing the app. See [APK signing](#apk-signing) section above to configure signing.
+
+### Install location
+Choose APK install location. This can be one of _auto_, _internal only_ and _prefer external_. Depending on Android version, the last option may not always install the app in the external storage.
+
+### Installer App
+Select the installer app, useful for some apps which explicitly checks for installer. This only works for root/ADB users.
+
 ## Backup/Restauração
 Configurações relacionadas a [backup/restauração][backup_restore].
 
@@ -79,12 +96,18 @@ Defina qual método de compressão deve ser usado durante os backups. O App Mana
 ### Opções de backup
 Personalize o diálogo de backup/restauração.
 
-### Provedor OpenPGP
-Defina o provedor OpenPGP para criptografar backups.
+### Backup apps with Android KeyStore
+Allow backup of apps that has entries in the Android KeyStore (disabled by default). Some apps (such as Signal) may crash if restored. KeyStore backup also doesn't work from Android 9 but still kept as many apps having KeyStore can be restored without problem.
+
+### Encryption
+Set an encryption method for the backups. AM currently supports OpenPGP only.
 
 ::: warning Atenção
 A partir da v2.5.16, o App Manager não se lembra do ID das chaves para um backup específico. Você tem que se lembrar deles você mesmo.
 :::
+
+## Device Info
+Display Android version, security, CPU, GPU, battery, memory, screen, languages, user info, etc.
 
 [1]: ./adb-over-tcp.md
 [2]: ./app-details-page.md

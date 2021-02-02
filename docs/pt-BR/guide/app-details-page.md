@@ -80,20 +80,20 @@ Ativar essa opção não enfraquece a segurança do seu Termux. Os aplicativos d
 :::
 
 ## Abas de Componentes
-**Atividades**, **Serviços**, **Receptores** (originalmente _receptores de transmissão_) e **Provedores** (originalmente _Provedores de Conteúdo_) são juntos chamados de componentes do aplicativo. Isso porque eles compartilham características semelhantes em muitos aspectos. Por exemplo, todos eles têm um _nome_ e um _rótulo_. Os componentes do aplicativo são os blocos de construção de qualquer aplicativo, e a maioria deles tem que ser declarado no manifest do aplicativo. O manifest do aplicativo é um arquivo onde metadados específicos do aplicativo são armazenados. O sistema operacional Android aprende o que fazer com um aplicativo lendo os metadados. As [cores](#codigos-de-cores) usadas nestas abas são explicadas acima.
+**Atividades**, **Serviços**, **Receptores** (originalmente _receptores de transmissão_) e **Provedores** (originalmente _Provedores de Conteúdo_) são juntos chamados de componentes do aplicativo. Isso porque eles compartilham características semelhantes em muitos aspectos. Por exemplo, todos eles têm um _nome_ e um _rótulo_. Os componentes do aplicativo são os blocos de construção de qualquer aplicativo, e a maioria deles tem que ser declarado no manifest do aplicativo. O manifest do aplicativo é um arquivo onde metadados específicos do aplicativo são armazenados. O sistema operacional Android aprende o que fazer com um aplicativo lendo os metadados. As [cores](#codigos-de-cores) usadas nestas abas são explicadas acima. You also have the ability to sort the list of components to display blocked or tracker components on top of the list using the **Sort** option in the overflow menu.
 
 ::: details Tabela de Conteúdos
 - [Atividades](#atividades)
 - [Serviços](#servicos)
 - [Receptores](#receivers)
 - [Provedores](#providers)
-- [Funções Adicionais para Telefones Rooteados](#additional-features-for-rooted-phones)
+- [Funções Adicionais para Telefones Rooteados](#funcoes-adicionais-para-telefones-rooteados)
 :::
 
 ### Atividades
 As **Atividades** são janelas ou páginas que você pode navegar (por exemplo _Página principal_ e _Página de Detalhes do Aplicativo_ são duas atividades separadas). Em outras palavras, uma atividade é um componente da interface de usuário (UI). Cada atividade pode ter vários componentes de interface de usuário conhecidos como _widgets_ ou _fragmentos_, e da mesma forma, cada um desses últimos componentes pode ter vários deles aninhados ou em cima um do outro. Mas uma atividade é um componente _mestre_: Não pode haver duas atividades aninhadas. Um autor de aplicativo também pode optar por abrir arquivos externos dentro de uma atividade usando um método chamado _filtros de intenção_. Quando você tenta abrir um arquivo usando seu gerenciador de arquivos, o gerenciador de arquivos ou o sistema verifica se os filtros de intenção decidem quais atividades podem abrir esse arquivo em particular e oferece que você abra o arquivo com essas atividades (portanto, não tem nada a ver com o aplicativo em si). Há outros filtros de intenção também.
 
-Atividades que são _exportáveis_ geralmente podem ser abertas por quaisquer aplicativos de terceiros (algumas atividades exigem permissões, se esse for o caso, apenas um aplicativo com essas permissões pode abri-las). Na aba de _Atividades_, o nome da atividade (no topo de cada item da lista) é na verdade um botão. Isso é ativado para as atividades _exportáveis_ e desativado para as outras. Você pode usá-lo para abrir a atividade diretamente usando o App Manager.
+Atividades que são _exportáveis_ geralmente podem ser abertas por quaisquer aplicativos de terceiros (algumas atividades exigem permissões, se esse for o caso, apenas um aplicativo com essas permissões pode abri-las). Na aba de _Atividades_, o nome da atividade (no topo de cada item da lista) é na verdade um botão. Isso é ativado para as atividades _exportáveis_ e desativado para as outras. Você pode usá-lo para abrir a atividade diretamente usando o App Manager. You can also open the Interceptor page by long clicking on an activity. Currently it only works for _exportable_ activities.
 
 ::: warning Aviso
 Se você não é capaz de abrir qualquer atividade, as chances são de que ele tenha certas dependências que não se encontram, por exemplo, você não pode abrir a _Atividade de Detalhes do Aplicativo_ porque requer que você pelo menos forneça um nome de pacote. Essas dependências nem sempre podem ser inferidas programáticamente. Portanto, você não pode abri-las usando o App Manager.
@@ -119,11 +119,24 @@ A propósito, tanto as atividades quanto os serviços são executados no mesmo l
 **Provedores** (também chamados de _provedores de conteúdo_) são usados para o gerenciamento de dados. Por exemplo, quando você salva um arquivo apk ou regras de exportação no App Manager, ele usa um provedor de conteúdo chamado `androidx.core.content.FileProvider` para salvar o apk ou exportar as regras. Existem outros provedores de conteúdo ou mesmo personalizados para gerenciar várias tarefas relacionadas ao conteúdo, como gerenciamento de banco de dados, rastreamento, busca, etc. Cada provedor de conteúdo tem um campo chamado _Autoridade_ que é exclusivo desse aplicativo em particular em todo o ecossistema Android, assim como o nome do pacote.
 
 ### Funções Adicionais para Telefones Rooteados
-Ao contrário dos usuários sem root que são apenas espectadores nessas abas, os usuários com root podem executar várias operações. No lado direito de cada item componente, há um ícone de "bloqueio" (que se torna um ícone de "desbloquear/restaurar" quando o componente está sendo bloqueado). Este ícone pode ser usado para alternar o status de bloqueio desse componente em particular. Se você não tem o [Bloqueio Global de Componentes][settings_gcb] ativado ou não aplicou um bloqueio para o aplicativo antes, você tem que aplicar as alterações usando a opção **Aplicar regras** no menu superior direito. Você também pode remover regras já aplicadas usando a mesma opção (que seria lida como **Remover regras** desta vez). Você também tem a capacidade de classificar a lista de componentes para exibir componentes bloqueados ou rastreadores no topo da lista usando a opção **Ordenar** no mesmo menu. Você também pode desativar todos os componentes de anúncios e rastreadores usando a opção **Bloquear rastreadores** no menu.
+Ao contrário dos usuários sem root que são apenas espectadores nessas abas, os usuários com root podem executar várias operações.
 
-_Veja também:_
+#### Blocking Components
+No lado direito de cada item componente, há um ícone de "bloqueio" (que se torna um ícone de "desbloquear/restaurar" quando o componente está sendo bloqueado). Este ícone pode ser usado para alternar o status de bloqueio desse componente em particular. Se você não tem o [Bloqueio Global de Componentes][settings_gcb] ativado ou não aplicou um bloqueio para o aplicativo antes, você tem que aplicar as alterações usando a opção **Aplicar regras** no menu superior direito. Você também pode remover regras já aplicadas usando a mesma opção (que seria lida como **Remover regras** desta vez).
+
+_Veja também: [FAQ: Componentes de Aplicativo][faq_ac]_
+
+#### Blocking Trackers
+Você também tem a capacidade de classificar a lista de componentes para exibir componentes bloqueados ou rastreadores no topo da lista usando a opção **Ordenar** no mesmo menu. All tracker components will be blocked regardless of the tab you're currently in.
+
+::: tip Info
+Tracker components are a subset of app components. Therefore, they are blocked using the same method used for blocking any other components.
+:::
+
+_See also:_
+- _[FAQ: Classes de rastreador versus componentes rastreadores](../faq/app-components.md#classes-de-rastreador-versus-componentes-rastreadores)_
 - _[Página de Scanner][scanner]_
-- _[FAQ: Componentes de Aplicativo][faq_ac]_
+- _[1-Click Ops Page: Block/Unblock Trackers](./one-click-ops-page.md#block-unblock-trackers)_
 
 ## Abas de Permissão
 **Operações de Aplicativo**, **Permissões Utilizadas** e abas de **Permissões** estão relacionadas com permissões. Na comunicação do Android entre aplicativos ou processos que não têm a mesma identidade (conhecida como _id compartilhado_) muitas vezes requerem permissão(ões). Essas permissões são gerenciadas pelo controlador de permissão. Algumas permissões são consideradas permissões _normais_ que são concedidas automaticamente se elas aparecem no manifest do aplicativo, mas permissões _perigosas_ e de _desenvolvimento_ exigem confirmação do usuário. As [cores](#codigos-de-cores) usadas nestas abas são explicadas acima.

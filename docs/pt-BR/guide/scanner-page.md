@@ -14,6 +14,10 @@ tags:
 
 Ele verifica rastreadores e bibliotecas e exibe o número de rastreadores e bibliotecas como um resumo. Ele também exibe checksums do arquivo apk, bem como o(s) certificado(s) de assinatura(s).
 
+::: danger Disclaimer
+AM only scans an app statically. An app may provide the options for opting out, or in some cases, certain features of the tracker may not be used at all by the app (such as F-Droid), or some apps may simply use them as placeholders to prevent breaking certain features (such as Fennec F-Droid). The intention of the scanner is to give you an idea about what the APK might contain. It should be taken as an initial step for further investigations.
+:::
+
 Clicar no primeiro item (ou seja, número de classes) abre uma nova página contendo uma lista de classes rastreadoras para o aplicativo. Todas as classes também podem ser visualizadas clicando no menu _Alternar Lista de Classes_. Uma espiada de cada classe pode ser visualizada simplesmente clicando em qualquer item da classe.
 
 ::: warning Aviso

@@ -157,6 +157,8 @@ module.exports = {
               '/pt-BR/guide/scanner-page',
               '/pt-BR/guide/shared-pref-editor-page',
               '/pt-BR/guide/settings-page',
+              '/pt-BR/guide/profiles-page',
+              '/pt-BR/guide/profile-page',
               '/pt-BR/guide/backup-restore',
             ]
           },
