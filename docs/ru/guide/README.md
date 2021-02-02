@@ -1,6 +1,6 @@
 # Введение
 
-[![Группа в Telegram](https://img.shields.io/badge/TG-Group-blue?logo=telegram)](https://t.me/AppManagerAndroid) [![Канал в Telegram](https://img.shields.io/badge/TG-Channel-blue?logo=telegram)](https://t.me/AppManagerChannel)
+[![Группа в Telegram](https://img.shields.io/badge/TG-Group-blue?logo=telegram)](https://t.me/AppManagerAndroid) [![Канал обновлений в Telegram](https://img.shields.io/badge/TG-Channel-blue?logo=telegram)](https://t.me/AppManagerChannel)
 
 Добро пожаловать в документацию App Manager!
 

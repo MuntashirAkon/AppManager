@@ -223,9 +223,12 @@ module.exports = {
               '/ru/guide/main-page',
               '/ru/guide/app-details-page',
               '/ru/guide/one-click-ops-page',
-              '/ru/guide/exodus-page',
+              '/ru/guide/scanner-page',
               '/ru/guide/shared-pref-editor-page',
               '/ru/guide/settings-page',
+              '/ru/guide/profiles-page',
+              '/ru/guide/profile-page',
+              '/ru/guide/backup-restore',
             ]
           },
           {
