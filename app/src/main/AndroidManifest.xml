@@ -21,6 +21,13 @@
     package="io.github.muntashirakon.AppManager"
     android:installLocation="auto">
 
+    <uses-feature
+        android:name="android.software.leanback"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.DUMP"
         tools:ignore="ProtectedPermissions" />
@@ -50,6 +57,7 @@
     <application
         android:name=".AppManager"
         android:allowBackup="false"
+        android:banner="@mipmap/ic_banner"
         android:extractNativeLibs="true"
         android:hasFragileUserData="true"
         android:icon="@mipmap/ic_launcher"
