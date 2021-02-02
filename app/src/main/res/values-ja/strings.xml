@@ -910,4 +910,5 @@
     <string name="type_component_name">コンポーネント名</string>
     <string name="type_null">値がありません</string>
     <string name="user_with_id">ユーザー:<xliff:g id="user_id" example="0">%1$d</xliff:g></string>
+    <string name="installed_apps">インストール済みのアプリ</string>
 </resources>
