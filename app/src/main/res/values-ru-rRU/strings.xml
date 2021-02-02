@@ -953,4 +953,5 @@
     <string name="type_int_array_list">Список целых чисел</string>
     <string name="type_int_array">Массив целых чисел</string>
     <string name="type_component_name">Имя компонента</string>
+    <string name="installed_apps">Установленные приложения</string>
 </resources>
