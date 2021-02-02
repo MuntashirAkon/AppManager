@@ -886,4 +886,5 @@
     <string name="type_component_name">Bileşen Adı</string>
     <string name="type_null">Değer yok</string>
     <string name="user_with_id">Kullanıcı: <xliff:g id="user_id" example="0">%1$d</xliff:g></string>
+    <string name="installed_apps">Kurulu uygulamalar</string>
 </resources>
