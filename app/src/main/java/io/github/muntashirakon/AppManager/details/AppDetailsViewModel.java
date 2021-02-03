@@ -302,6 +302,66 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     @WorkerThread
     @GuardedBy("blockerLocker")
+    public void addRules(List<RulesStorageManager.Entry> entries, boolean forceApply) {
+        if (isExternalApk) return;
+        synchronized (blockerLocker) {
+            waitForBlockerOrExit();
+            blocker.setMutable();
+            for (RulesStorageManager.Entry entry : entries) {
+                String componentName = entry.name;
+                if (blocker.hasComponent(componentName)) {
+                    // Remove from the list
+                    blocker.removeComponent(componentName);
+                }
+                // Add to the list (again)
+                blocker.addComponent(componentName, entry.type);
+            }
+            // Apply rules if global blocking enable or already applied
+            if (forceApply || (Boolean) AppPref.get(AppPref.PrefKey.PREF_GLOBAL_BLOCKING_ENABLED_BOOL)
+                    || (ruleApplicationStatus != null && RULE_APPLIED == ruleApplicationStatus.getValue())) {
+                blocker.applyRules(true);
+            }
+            // Set new status
+            setRuleApplicationStatus();
+            // Commit changes
+            blocker.commit();
+            blocker.setReadOnly();
+            // Update UI
+            reloadComponents();
+        }
+    }
+
+    @WorkerThread
+    @GuardedBy("blockerLocker")
+    public void removeRules(List<RulesStorageManager.Entry> entries, boolean forceApply) {
+        if (isExternalApk) return;
+        synchronized (blockerLocker) {
+            waitForBlockerOrExit();
+            blocker.setMutable();
+            for (RulesStorageManager.Entry entry : entries) {
+                String componentName = entry.name;
+                if (blocker.hasComponent(componentName)) {
+                    // Remove from the list
+                    blocker.removeComponent(componentName);
+                }
+            }
+            // Apply rules if global blocking enable or already applied
+            if (forceApply || (Boolean) AppPref.get(AppPref.PrefKey.PREF_GLOBAL_BLOCKING_ENABLED_BOOL)
+                    || (ruleApplicationStatus != null && RULE_APPLIED == ruleApplicationStatus.getValue())) {
+                blocker.applyRules(true);
+            }
+            // Set new status
+            setRuleApplicationStatus();
+            // Commit changes
+            blocker.commit();
+            blocker.setReadOnly();
+            // Update UI
+            reloadComponents();
+        }
+    }
+
+    @WorkerThread
+    @GuardedBy("blockerLocker")
     public boolean setPermission(String permissionName, boolean isGranted) {
         if (isExternalApk) return false;
         int appOp = AppOpsManager.permissionToOpCode(permissionName);

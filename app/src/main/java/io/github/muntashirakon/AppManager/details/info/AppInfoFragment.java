@@ -65,8 +65,6 @@ import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
 import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
 import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
-import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
-import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.details.AppDetailsFragment;
 import io.github.muntashirakon.AppManager.details.AppDetailsViewModel;
@@ -496,31 +494,48 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             mTagCloud.removeAllViews();
             // Add tracker chip
             if (!tagCloud.trackerComponents.isEmpty()) {
+                CharSequence[] trackerComponentNames = new CharSequence[tagCloud.trackerComponents.size()];
+                for (int i = 0; i < trackerComponentNames.length; ++i) {
+                    trackerComponentNames[i] = tagCloud.trackerComponents.get(i).name;
+                }
                 addChip(getResources().getQuantityString(R.plurals.no_of_trackers, tagCloud.trackerComponents.size(),
-                        tagCloud.trackerComponents.size()), R.color.tracker)
-                        .setOnClickListener(v -> {
-                            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(mActivity)
-                                    .setTitle(R.string.trackers)
-                                    .setItems(tagCloud.trackerComponents.keySet().toArray(new String[0]), null);
-                            if (!isExternalApk && isRootEnabled) {
-                                builder.setPositiveButton(R.string.block, (dialog, which) -> {
-                                    Intent intent = new Intent(mActivity, BatchOpsService.class);
-                                    intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, new ArrayList<>(Collections.singletonList(mPackageName)));
-                                    intent.putIntegerArrayListExtra(BatchOpsService.EXTRA_OP_USERS, new ArrayList<>(Collections.singletonList(mainModel.getUserHandle())));
-                                    intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_BLOCK_TRACKERS);
-                                    intent.putExtra(BatchOpsService.EXTRA_HEADER, getString(R.string.one_click_ops));
-                                    ContextCompat.startForegroundService(mActivity, intent);
-                                }).setNeutralButton(R.string.unblock, (dialog, which) -> {
-                                    Intent intent = new Intent(mActivity, BatchOpsService.class);
-                                    intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, new ArrayList<>(Collections.singletonList(mPackageName)));
-                                    intent.putIntegerArrayListExtra(BatchOpsService.EXTRA_OP_USERS, new ArrayList<>(Collections.singletonList(mainModel.getUserHandle())));
-                                    intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_UNBLOCK_TRACKERS);
-                                    intent.putExtra(BatchOpsService.EXTRA_HEADER, getString(R.string.one_click_ops));
-                                    ContextCompat.startForegroundService(mActivity, intent);
-                                }).setNegativeButton(R.string.cancel, null);
-                            } else builder.setNegativeButton(R.string.close, null);
-                            builder.show();
-                        });
+                        tagCloud.trackerComponents.size()), R.color.tracker).setOnClickListener(v -> {
+                    if (!isExternalApk && isRootEnabled) {
+                        new SearchableMultiChoiceDialogBuilder<>(mActivity, tagCloud.trackerComponents, trackerComponentNames)
+                                .setTitle(R.string.trackers)
+                                .setSelections(tagCloud.trackerComponents)
+                                .setNegativeButton(R.string.cancel, null)
+                                .setPositiveButton(R.string.block, (dialog, which, selectedItems) -> {
+                                    showProgressIndicator(true);
+                                    executor.submit(() -> {
+                                        mainModel.addRules(selectedItems, true);
+                                        runOnUiThread(() -> {
+                                            if (isDetached()) return;
+                                            showProgressIndicator(false);
+                                            Toast.makeText(mActivity, R.string.done, Toast.LENGTH_SHORT).show();
+                                        });
+                                    });
+                                })
+                                .setNeutralButton(R.string.unblock, (dialog, which, selectedItems) -> {
+                                    showProgressIndicator(true);
+                                    executor.submit(() -> {
+                                        mainModel.removeRules(selectedItems, true);
+                                        runOnUiThread(() -> {
+                                            if (isDetached()) return;
+                                            showProgressIndicator(false);
+                                            Toast.makeText(mActivity, R.string.done, Toast.LENGTH_SHORT).show();
+                                        });
+                                    });
+                                })
+                                .show();
+                    } else {
+                        new MaterialAlertDialogBuilder(mActivity)
+                                .setTitle(R.string.trackers)
+                                .setItems(trackerComponentNames, null)
+                                .setNegativeButton(R.string.close, null)
+                                .show();
+                    }
+                });
             }
             if (tagCloud.isSystemApp) {
                 if (tagCloud.isSystemlessPath) {

@@ -106,7 +106,11 @@ public class AppInfoViewModel extends AndroidViewModel {
         String packageName = packageInfo.packageName;
         ApplicationInfo applicationInfo = packageInfo.applicationInfo;
         TagCloud tagCloud = new TagCloud();
-        tagCloud.trackerComponents = ComponentUtils.getTrackerComponentsForPackageInfo(packageInfo);
+        HashMap<String, RulesStorageManager.Type> trackerComponents = ComponentUtils.getTrackerComponentsForPackageInfo(packageInfo);
+        tagCloud.trackerComponents = new ArrayList<>(trackerComponents.size());
+        for (String component : trackerComponents.keySet()) {
+            tagCloud.trackerComponents.add(new RulesStorageManager.Entry(component, trackerComponents.get(component), RulesStorageManager.COMPONENT_TO_BE_BLOCKED));
+        }
         tagCloud.isSystemApp = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
         tagCloud.isSystemlessPath = !mainModel.getIsExternalApk() && AppPref.isRootEnabled()
                 && MagiskUtils.isSystemlessPath(PackageUtils.getHiddenCodePathOrDefault(packageName,
@@ -304,7 +308,7 @@ public class AppInfoViewModel extends AndroidViewModel {
     }
 
     public static class TagCloud {
-        public HashMap<String, RulesStorageManager.Type> trackerComponents;
+        public List<RulesStorageManager.Entry> trackerComponents;
         public boolean isSystemApp;
         public boolean isSystemlessPath;
         public boolean isUpdatedSystemApp;
