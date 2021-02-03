@@ -888,5 +888,9 @@
     <string name="type_null">Kein Wert</string>
     <string name="restart_to_reflect_changes">Bitte sofort neu starten, um die Änderungen zu berücksichtigen</string>
     <string name="failed_to_change_ssaid">Konnte SSAID nicht ändern</string>
-    <string name="copied_to_clipboard">In Zwischenablage kopiert.</string>
+    <string name="copied_to_clipboard">In die Zwischenablage kopiert.</string>
+    <string name="last_actions">Letzte Aktionen</string>
+    <string name="pref_enable_disable_features_msg">Aktivieren oder Deaktivieren von Funktionen im App-Manager.</string>
+    <string name="enable_disable_features">Aktivieren/Deaktivieren von Funktionen</string>
+    <string name="installed_apps">Installierte Apps</string>
 </resources>
