@@ -159,6 +159,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         super.onViewCreated(view, savedInstanceState);
         mActivity = (AppDetailsActivity) requireActivity();
         mainModel = mActivity.model;
+        if (mainModel == null) return;
         model.setMainModel(mainModel);
         isRootEnabled = AppPref.isRootEnabled();
         isAdbEnabled = AppPref.isAdbEnabled();
