@@ -78,7 +78,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
     /**
      * Get a new or existing IMMUTABLE instance of {@link ComponentsBlocker}. The existing instance
      * will only be returned if the existing instance has the same package name as the original.
-     * This read rules from the {@link #SYSTEM_RULES_PATH}. If reading rules is necessary, use
+     * This reads rules from the {@link #SYSTEM_RULES_PATH}. If reading rules is necessary, use
      * {@link #getInstance(String, int, boolean)} with the last argument set to true. It is also
      * possible to make this instance mutable by calling {@link #setMutable()} and once set mutable,
      * closing this instance will commit the changes automatically. To prevent this,
@@ -123,23 +123,24 @@ public final class ComponentsBlocker extends RulesStorageManager {
      * mutable, closing this instance will commit the changes automatically. To prevent this,
      * {@link #setReadOnly()} should be called before closing the instance.
      *
-     * @param packageName    The package whose instance is to be returned
-     * @param userHandle     The user to whom the rules belong
-     * @param noLoadFromDisk Whether not to load rules from the {@link #SYSTEM_RULES_PATH}
+     * @param packageName      The package whose instance is to be returned
+     * @param userHandle       The user to whom the rules belong
+     * @param noReloadFromDisk Whether not to load rules from the {@link #SYSTEM_RULES_PATH}
      * @return New or existing immutable instance for the package
      * @see #getInstance(String, int)
      * @see #getMutableInstance(String, int)
      */
     @NonNull
-    public static ComponentsBlocker getInstance(@NonNull String packageName, int userHandle, boolean noLoadFromDisk) {
+    public static ComponentsBlocker getInstance(@NonNull String packageName, int userHandle, boolean noReloadFromDisk) {
         if (INSTANCE == null) {
             INSTANCE = new ComponentsBlocker(AppManager.getContext(), packageName, userHandle);
-        } else if (!INSTANCE.packageName.equals(packageName)) {
+        } else if (!noReloadFromDisk || !INSTANCE.packageName.equals(packageName)) {
             INSTANCE.close();
             INSTANCE = new ComponentsBlocker(AppManager.getContext(), packageName, userHandle);
         }
-        if (!noLoadFromDisk && AppPref.isRootEnabled())
+        if (!noReloadFromDisk && AppPref.isRootEnabled()) {
             INSTANCE.retrieveDisabledComponents();
+        }
         INSTANCE.readOnly = true;
         return INSTANCE;
     }
@@ -179,7 +180,6 @@ public final class ComponentsBlocker extends RulesStorageManager {
      *
      * @param componentName The component name to check
      * @return {@code true} if exists, {@code false} otherwise
-     *
      * @see #isComponentBlocked(String)
      */
     public boolean hasComponent(String componentName) {
@@ -188,6 +188,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
 
     /**
      * Whether the given component is blocked.
+     *
      * @param componentName The component name to check
      * @return {@code true} if blocked, {@code false} otherwise
      */
@@ -214,7 +215,6 @@ public final class ComponentsBlocker extends RulesStorageManager {
      *
      * @param componentName The component to add
      * @param componentType Component type
-     *
      * @see #addEntry(Entry)
      */
     public void addComponent(String componentName, RulesStorageManager.Type componentType) {
