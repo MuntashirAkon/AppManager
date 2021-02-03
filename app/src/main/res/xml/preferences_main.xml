@@ -44,10 +44,10 @@
         app:title="@string/pref_usage_access_enabled"
         app:summary="@string/pref_usage_access_enabled_msg" />
 
-    <SwitchPreferenceCompat
-        app:key="interceptor_enabled"
-        app:title="@string/interceptor"
-        app:summary="@string/pref_interceptor_enabled_msg" />
+    <Preference
+        app:key="enabled_features"
+        app:title="@string/enable_disable_features"
+        app:summary="@string/pref_enable_disable_features_msg" />
 
     <Preference
         app:key="apk_signing_prefs"

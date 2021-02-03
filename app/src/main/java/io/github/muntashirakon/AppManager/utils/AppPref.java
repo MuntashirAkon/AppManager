@@ -63,6 +63,7 @@ public class AppPref {
         PREF_BACKUP_VOLUME_STR,
         PREF_BACKUP_FLAGS_INT,
         PREF_BACKUP_ANDROID_KEYSTORE_BOOL,
+        PREF_ENABLED_FEATURES_INT,
         PREF_COMPONENTS_SORT_ORDER_INT,
         PREF_CUSTOM_LOCALE_STR,
         PREF_ENABLE_KILL_FOR_SYSTEM_BOOL,
@@ -328,6 +329,8 @@ public class AppPref {
                 return true;
             case PREF_LAST_VERSION_CODE_LONG:
                 return 0L;
+            case PREF_ENABLED_FEATURES_INT:
+                return 0xffff_ffff;  /* All features enabled */
             case PREF_APP_THEME_INT:
                 return AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
             case PREF_MAIN_WINDOW_FILTER_FLAGS_INT:

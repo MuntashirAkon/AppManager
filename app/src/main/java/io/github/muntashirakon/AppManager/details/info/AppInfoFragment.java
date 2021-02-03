@@ -82,6 +82,7 @@ import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.scanner.ScannerActivity;
 import io.github.muntashirakon.AppManager.servermanager.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.sharedpref.SharedPrefsActivity;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.types.ScrollableDialogBuilder;
@@ -118,7 +119,6 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private LinearLayout mHorizontalLayout;
     private ChipGroup mTagCloud;
     private SwipeRefreshLayout mSwipeRefresh;
-    private int mAccentColor;
     private CharSequence mPackageLabel;
     private LinearProgressIndicator mProgressIndicator;
     private AppDetailsViewModel mainModel;
@@ -165,10 +165,9 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         isRootEnabled = AppPref.isRootEnabled();
         isAdbEnabled = AppPref.isAdbEnabled();
         mPackageManager = mActivity.getPackageManager();
-        mAccentColor = UIUtils.getAccentColor(mActivity);
         // Swipe refresh
         mSwipeRefresh = view.findViewById(R.id.swipe_refresh);
-        mSwipeRefresh.setColorSchemeColors(mAccentColor);
+        mSwipeRefresh.setColorSchemeColors(UIUtils.getAccentColor(mActivity));
         mSwipeRefresh.setProgressBackgroundColorSchemeColor(UIUtils.getPrimaryColor(mActivity));
         mSwipeRefresh.setOnRefreshListener(this);
         // Recycler view
@@ -806,7 +805,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                             }));
                 }
             }  // End root only
-        } else {
+        } else if (FeatureController.isInstallerEnabled()) {
             if (mInstalledPackageInfo == null) {
                 // App not installed
                 addToHorizontalLayout(R.string.install, R.drawable.ic_baseline_get_app_24)
@@ -842,48 +841,52 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             }
         }
         // Set manifest
-        addToHorizontalLayout(R.string.manifest, R.drawable.ic_tune_black_24dp).setOnClickListener(v -> {
-            Intent intent = new Intent(mActivity, ManifestViewerActivity.class);
-            ApkFile apkFile = ApkFile.getInstance(mainModel.getApkFileKey());
-            if (apkFile.isSplit()) {
-                // Display a list of apks
-                List<ApkFile.Entry> apkEntries = apkFile.getEntries();
-                String[] entryNames = new String[apkEntries.size()];
-                for (int i = 0; i < apkEntries.size(); ++i) {
-                    entryNames[i] = apkEntries.get(i).toLocalizedString(requireActivity());
-                }
-                new MaterialAlertDialogBuilder(mActivity)
-                        .setTitle(R.string.select_apk)
-                        .setItems(entryNames, (dialog, which) -> executor.submit(() -> {
-                            try {
-                                File file = apkEntries.get(which).getRealCachedFile();
-                                intent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
-                                runOnUiThread(() -> startActivity(intent));
-                            } catch (IOException | RemoteException e) {
-                                e.printStackTrace();
-                            }
-                        }))
-                        .setNegativeButton(R.string.cancel, null)
-                        .show();
-            } else {
-                // Open directly
-                if (mainModel.getIsExternalApk()) {
-                    File file = new File(mApplicationInfo.publicSourceDir);
-                    intent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
+        if (FeatureController.isManifestEnabled()) {
+            addToHorizontalLayout(R.string.manifest, R.drawable.ic_tune_black_24dp).setOnClickListener(v -> {
+                Intent intent = new Intent(mActivity, ManifestViewerActivity.class);
+                ApkFile apkFile = ApkFile.getInstance(mainModel.getApkFileKey());
+                if (apkFile.isSplit()) {
+                    // Display a list of apks
+                    List<ApkFile.Entry> apkEntries = apkFile.getEntries();
+                    String[] entryNames = new String[apkEntries.size()];
+                    for (int i = 0; i < apkEntries.size(); ++i) {
+                        entryNames[i] = apkEntries.get(i).toLocalizedString(requireActivity());
+                    }
+                    new MaterialAlertDialogBuilder(mActivity)
+                            .setTitle(R.string.select_apk)
+                            .setItems(entryNames, (dialog, which) -> executor.submit(() -> {
+                                try {
+                                    File file = apkEntries.get(which).getRealCachedFile();
+                                    intent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
+                                    runOnUiThread(() -> startActivity(intent));
+                                } catch (IOException | RemoteException e) {
+                                    e.printStackTrace();
+                                }
+                            }))
+                            .setNegativeButton(R.string.cancel, null)
+                            .show();
                 } else {
-                    intent.putExtra(ManifestViewerActivity.EXTRA_PACKAGE_NAME, mPackageName);
+                    // Open directly
+                    if (mainModel.getIsExternalApk()) {
+                        File file = new File(mApplicationInfo.publicSourceDir);
+                        intent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
+                    } else {
+                        intent.putExtra(ManifestViewerActivity.EXTRA_PACKAGE_NAME, mPackageName);
+                    }
+                    startActivity(intent);
                 }
-                startActivity(intent);
-            }
-        });
+            });
+        }
         // Set scanner
-        addToHorizontalLayout(R.string.scanner, R.drawable.ic_baseline_security_24).setOnClickListener(v -> {
-            Intent intent = new Intent(mActivity, ScannerActivity.class);
-            intent.putExtra(ScannerActivity.EXTRA_IS_EXTERNAL, isExternalApk);
-            File file = new File(mApplicationInfo.publicSourceDir);
-            intent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
-            startActivity(intent);
-        });
+        if (FeatureController.isScannerEnabled()) {
+            addToHorizontalLayout(R.string.scanner, R.drawable.ic_baseline_security_24).setOnClickListener(v -> {
+                Intent intent = new Intent(mActivity, ScannerActivity.class);
+                intent.putExtra(ScannerActivity.EXTRA_IS_EXTERNAL, isExternalApk);
+                File file = new File(mApplicationInfo.publicSourceDir);
+                intent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
+                startActivity(intent);
+            });
+        }
         // Root only features
         if (!mainModel.getIsExternalApk()) {
             // Shared prefs (root only)

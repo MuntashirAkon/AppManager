@@ -19,7 +19,6 @@ package io.github.muntashirakon.AppManager.settings;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.*;
 import android.os.Build;
@@ -51,7 +50,6 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.StaticDataset;
-import io.github.muntashirakon.AppManager.intercept.ActivityInterceptor;
 import io.github.muntashirakon.AppManager.misc.SystemProperties;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
@@ -143,7 +141,6 @@ public class MainPreferences extends PreferenceFragmentCompat {
             return true;
         });
         // Screen lock
-        // App usage permission toggle
         SwitchPreferenceCompat screenLock = Objects.requireNonNull(findPreference("enable_screen_lock"));
         screenLock.setChecked((boolean) AppPref.get(AppPref.PrefKey.PREF_ENABLE_SCREEN_LOCK_BOOL));
         // Mode of operation
@@ -168,17 +165,15 @@ public class MainPreferences extends PreferenceFragmentCompat {
         // App usage permission toggle
         SwitchPreferenceCompat usageEnabled = Objects.requireNonNull(findPreference("usage_access_enabled"));
         usageEnabled.setChecked((boolean) AppPref.get(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL));
-        // Interceptor
-        SwitchPreferenceCompat interceptorEnabled = Objects.requireNonNull(findPreference("interceptor_enabled"));
-        ComponentName interceptorComponent = new ComponentName(activity.getPackageName(), ActivityInterceptor.class.getName());
-        interceptorEnabled.setChecked(isComponentEnabled(interceptorComponent));
-        interceptorEnabled.setOnPreferenceChangeListener((preference, isEnabled) -> {
-            if ((boolean) isEnabled) {
-                pm.setComponentEnabledSetting(interceptorComponent, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
-            } else {
-                pm.setComponentEnabledSetting(interceptorComponent, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
-            }
-            interceptorEnabled.setChecked(isComponentEnabled(interceptorComponent));
+        // Enable/disable features
+        FeatureController fc = FeatureController.getInstance();
+        ((Preference) Objects.requireNonNull(findPreference("enabled_features"))).setOnPreferenceClickListener(preference -> {
+            new MaterialAlertDialogBuilder(activity)
+                    .setTitle(R.string.enable_disable_features)
+                    .setMultiChoiceItems(FeatureController.getFormattedFlagNames(activity), fc.flagsToCheckedItems(),
+                            (dialog, index, isChecked) -> fc.modifyState(FeatureController.featureFlags.get(index), isChecked))
+                    .setNegativeButton(R.string.close, null)
+                    .show();
             return true;
         });
         // Global blocking enabled
@@ -359,7 +354,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
                 .append(getPrimaryText(activity, getString(R.string.sdk_max) + ": "))
                 .append(String.valueOf(Build.VERSION.SDK_INT));
         String minSdk = SystemProperties.get("ro.build.version.min_supported_target_sdk", "");
-        if (!TextUtils.isEmpty(minSdk)){
+        if (!TextUtils.isEmpty(minSdk)) {
             builder.append(", ").append(getPrimaryText(activity,
                     getString(R.string.sdk_min) + ": ")).append(minSdk);
         }
@@ -607,10 +602,5 @@ public class MainPreferences extends PreferenceFragmentCompat {
             }
         }
         return density;
-    }
-
-    private boolean isComponentEnabled(ComponentName componentName) {
-        int status = pm.getComponentEnabledSetting(componentName);
-        return status == PackageManager.COMPONENT_ENABLED_STATE_DEFAULT || status == PackageManager.COMPONENT_ENABLED_STATE_ENABLED;
     }
 }

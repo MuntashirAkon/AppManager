@@ -67,6 +67,7 @@ import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity;
+import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.types.EmptySpan;
 import io.github.muntashirakon.AppManager.types.NumericSpan;
 import io.github.muntashirakon.AppManager.types.ScrollableDialogBuilder;
@@ -268,7 +269,7 @@ public class ScannerActivity extends BaseActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
-        menu.findItem(R.id.action_install).setVisible(isExternalApk);
+        menu.findItem(R.id.action_install).setVisible(isExternalApk && FeatureController.isInstallerEnabled());
         return super.onPrepareOptionsMenu(menu);
     }
 
