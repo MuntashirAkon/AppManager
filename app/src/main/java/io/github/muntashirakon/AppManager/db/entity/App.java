@@ -27,6 +27,7 @@ import androidx.core.content.pm.PackageInfoCompat;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
+import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
@@ -92,6 +93,9 @@ public class App implements Serializable {
     @ColumnInfo(name = "rules_count", defaultValue = "0")
     public int rulesCount;
 
+    @ColumnInfo(name = "tracker_count", defaultValue = "0")
+    public int trackerCount;
+
     @ColumnInfo(name = "last_action_time", defaultValue = "0")
     public long lastActionTime;
 
@@ -115,7 +119,8 @@ public class App implements Serializable {
         newApp.lastUpdateTime = app.lastUpdateTime;
         newApp.hasActivities = app.hasActivities;
         newApp.hasSplits = app.hasSplits;
-        app.rulesCount = 0;
+        newApp.rulesCount = 0;
+        newApp.trackerCount = app.trackerCount;
         newApp.lastActionTime = System.currentTimeMillis();
         return newApp;
     }
@@ -143,6 +148,7 @@ public class App implements Serializable {
         app.hasActivities = packageInfo.activities != null;
         app.hasSplits = applicationInfo.splitSourceDirs != null;
         app.rulesCount = 0;
+        app.trackerCount = ComponentUtils.getTrackerComponentsForPackage(packageInfo).size();
         app.lastActionTime = System.currentTimeMillis();
         return app;
     }
@@ -170,6 +176,7 @@ public class App implements Serializable {
         app.hasActivities = false;
         app.hasSplits = metadata.isSplitApk;
         app.rulesCount = 0;
+        app.trackerCount = 0;
         app.lastActionTime = System.currentTimeMillis();
         return app;
     }

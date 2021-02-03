@@ -280,9 +280,6 @@ public class MainViewModel extends AndroidViewModel {
                 }
             } else {
                 List<ApplicationItem> filteredApplicationItems = new ArrayList<>();
-                if ((mFilterFlags & ListOptions.FILTER_APPS_WITH_RULES) != 0) {
-                    loadBlockingRules();
-                }
                 if ((mFilterFlags & ListOptions.FILTER_RUNNING_APPS) != 0) {
                     loadRunningApps();
                 }
@@ -325,21 +322,6 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     @GuardedBy("applicationItems")
-    private void loadBlockingRules() {
-        synchronized (applicationItems) {
-            // Only load blocking rules for the current user
-            int userHandle = Users.getCurrentUserHandle();
-            for (int i = 0; i < applicationItems.size(); ++i) {
-                ApplicationItem applicationItem = applicationItems.get(i);
-                try (ComponentsBlocker cb = ComponentsBlocker.getInstance(applicationItem.packageName, userHandle, true)) {
-                    applicationItem.blockedCount = cb.componentCount();
-                }
-                applicationItems.set(i, applicationItem);
-            }
-        }
-    }
-
-    @GuardedBy("applicationItems")
     private void loadRunningApps() {
         synchronized (applicationItems) {
             Runner.Result result = Runner.runCommand(new String[]{Runner.TOYBOX, "ps", "-dw", "-o", "NAME"});
@@ -360,9 +342,6 @@ public class MainViewModel extends AndroidViewModel {
             final boolean isRootEnabled = AppPref.isRootEnabled();
             if (sortBy != ListOptions.SORT_BY_APP_LABEL) {
                 sortApplicationList(ListOptions.SORT_BY_APP_LABEL, false);
-            }
-            if (sortBy == ListOptions.SORT_BY_BLOCKED_COMPONENTS && isRootEnabled) {
-                loadBlockingRules();
             }
             int mode = reverse ? -1 : 1;
             Collections.sort(applicationItems, (o1, o2) -> {
@@ -398,13 +377,18 @@ public class MainViewModel extends AndroidViewModel {
                             } else return mode * i;
                         }
                     case ListOptions.SORT_BY_BLOCKED_COMPONENTS:
-                        if (isRootEnabled)
+                        if (isRootEnabled) {
                             return -mode * o1.blockedCount.compareTo(o2.blockedCount);
+                        }
                         break;
                     case ListOptions.SORT_BY_DISABLED_APP:
                         return -mode * Boolean.compare(o1.isDisabled, o2.isDisabled);
                     case ListOptions.SORT_BY_BACKUP:
                         return -mode * Boolean.compare(o1.metadata != null, o2.metadata != null);
+                    case ListOptions.SORT_BY_LAST_ACTION:
+                        return -mode * o1.lastActionTime.compareTo(o2.lastActionTime);
+                    case ListOptions.SORT_BY_TRACKERS:
+                        return -mode * o1.trackerCount.compareTo(o2.trackerCount);
                 }
                 return 0;
             });
@@ -519,9 +503,9 @@ public class MainViewModel extends AndroidViewModel {
             try {
                 @SuppressLint("WrongConstant")
                 PackageInfo packageInfo = PackageManagerCompat.getPackageInfo(packageName,
-                        PackageManager.GET_META_DATA | flagSigningInfo
-                                | PackageManager.GET_ACTIVITIES | flagDisabledComponents,
-                        userHandle);
+                        PackageManager.GET_META_DATA | flagSigningInfo | PackageManager.GET_ACTIVITIES
+                                | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
+                                | PackageManager.GET_SERVICES | flagDisabledComponents, userHandle);
                 App app = App.fromPackageInfo(getApplication(), packageInfo);
                 try (ComponentsBlocker cb = ComponentsBlocker.getInstance(app.packageName, app.userId, true)) {
                     app.rulesCount = cb.entryCount();
@@ -550,6 +534,8 @@ public class MainViewModel extends AndroidViewModel {
                 item.sdk = applicationInfo.targetSdkVersion;
                 item.userHandles = ArrayUtils.appendInt(item.userHandles, userHandle);
                 item.blockedCount = app.rulesCount;
+                item.trackerCount = app.trackerCount;
+                item.lastActionTime = app.lastActionTime;
                 oldItem = item;
                 AppManager.getDb().appDao().insert(app);
             } catch (Exception ignore) {

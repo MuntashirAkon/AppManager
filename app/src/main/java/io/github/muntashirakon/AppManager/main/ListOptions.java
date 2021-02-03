@@ -54,6 +54,8 @@ public class ListOptions extends DialogFragment {
             SORT_BY_DISABLED_APP,
             SORT_BY_BLOCKED_COMPONENTS,
             SORT_BY_BACKUP,
+            SORT_BY_TRACKERS,
+            SORT_BY_LAST_ACTION,
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface SortOrder {
@@ -69,6 +71,8 @@ public class ListOptions extends DialogFragment {
     public static final int SORT_BY_DISABLED_APP = 7;
     public static final int SORT_BY_BLOCKED_COMPONENTS = 8;
     public static final int SORT_BY_BACKUP = 9;
+    public static final int SORT_BY_TRACKERS = 10;
+    public static final int SORT_BY_LAST_ACTION = 11;
 
     @IntDef(flag = true, value = {
             FILTER_NO_FILTER,
@@ -100,7 +104,7 @@ public class ListOptions extends DialogFragment {
     private static final int[] SORT_ITEMS_MAP = {R.string.sort_by_domain, R.string.sort_by_app_label,
             R.string.sort_by_package_name, R.string.sort_by_last_update, R.string.sort_by_shared_user_id,
             R.string.sort_by_target_sdk, R.string.sort_by_sha, R.string.sort_by_disabled_app,
-            R.string.sort_by_blocked_components, R.string.sort_by_backup};
+            R.string.sort_by_blocked_components, R.string.sort_by_backup, R.string.trackers, R.string.last_actions};
 
     private MainViewModel model;
 

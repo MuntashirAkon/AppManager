@@ -105,7 +105,7 @@ public final class PackageUtils {
 
     @NonNull
     public static List<ApplicationItem> getInstalledOrBackedUpApplicationsFromDb(@NonNull Context context,
-                                                                           @Nullable HashMap<String, MetadataManager.Metadata> backupMetadata) {
+                                                                                 @Nullable HashMap<String, MetadataManager.Metadata> backupMetadata) {
         List<ApplicationItem> applicationItems = new ArrayList<>();
         List<App> apps = AppManager.getDb().appDao().getAll();
         if (apps.size() == 0) {
@@ -151,6 +151,8 @@ public final class PackageUtils {
             item.hasActivities = app.hasActivities;
             item.hasSplits = app.hasSplits;
             item.blockedCount = app.rulesCount;
+            item.trackerCount = app.trackerCount;
+            item.lastActionTime = app.lastActionTime;
             item.userHandles = ArrayUtils.appendInt(item.userHandles, app.userId);
             item.isInstalled = app.isInstalled;
             applicationItems.add(item);
@@ -178,16 +180,16 @@ public final class PackageUtils {
     }
 
     private static void updateInstalledOrBackedUpApplications(@NonNull Context context,
-                                                             @Nullable HashMap<String, MetadataManager.Metadata> backupMetadata) {
+                                                              @Nullable HashMap<String, MetadataManager.Metadata> backupMetadata) {
         List<App> newApps = new ArrayList<>();
         List<Integer> newAppHashes = new ArrayList<>();
         int[] userHandles = Users.getUsersHandles();
         for (int userHandle : userHandles) {
             List<PackageInfo> packageInfoList;
             try {
-                packageInfoList = PackageManagerCompat.getInstalledPackages(
-                        flagSigningInfo | PackageManager.GET_ACTIVITIES
-                                | flagDisabledComponents, userHandle);
+                packageInfoList = PackageManagerCompat.getInstalledPackages(flagSigningInfo
+                        | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
+                        | PackageManager.GET_SERVICES | flagDisabledComponents, userHandle);
             } catch (Exception e) {
                 Log.e("PackageUtils", "Could not retrieve package info list for user " + userHandle, e);
                 continue;

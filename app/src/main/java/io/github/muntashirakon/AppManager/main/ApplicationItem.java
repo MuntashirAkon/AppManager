@@ -93,6 +93,8 @@ public class ApplicationItem extends PackageItemInfo {
      * Blocked components count
      */
     public Integer blockedCount = 0;
+    public Integer trackerCount = 0;
+    public Long lastActionTime = 0L;
     /**
      * Whether the item is a user app (or system app)
      */
