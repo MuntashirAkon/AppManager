@@ -146,11 +146,18 @@ public final class ComponentsBlocker extends RulesStorageManager {
     }
 
     private final ProxyFile rulesFile;
-    private final Set<String> components;
+    private Set<String> components;
 
     protected ComponentsBlocker(Context context, String packageName, int userHandle) {
         super(context, packageName, userHandle);
         this.rulesFile = new ProxyFile(SYSTEM_RULES_PATH, packageName + ".xml");
+        this.components = PackageUtils.collectComponentClassNames(packageName, userHandle).keySet();
+    }
+
+    /**
+     * Reload package components
+     */
+    public void reloadComponents() {
         this.components = PackageUtils.collectComponentClassNames(packageName, userHandle).keySet();
     }
 

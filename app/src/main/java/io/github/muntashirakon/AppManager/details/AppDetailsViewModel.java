@@ -682,8 +682,21 @@ public class AppDetailsViewModel extends AndroidViewModel {
     }
 
     @WorkerThread
+    @GuardedBy("blockerLocker")
     public void setIsPackageChanged() {
         setPackageInfo(true);
+        if (isExternalApk) return;
+        executor.submit(() -> {
+            synchronized (blockerLocker) {
+                try {
+                    waitForBlockerOrExit();
+                    // Reload app components
+                    blocker.reloadComponents();
+                } finally {
+                    blockerLocker.notifyAll();
+                }
+            }
+        });
     }
 
     @AnyThread
