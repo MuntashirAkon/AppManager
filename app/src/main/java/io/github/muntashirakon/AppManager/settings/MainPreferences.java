@@ -205,13 +205,15 @@ public class MainPreferences extends PreferenceFragmentCompat {
                     .setPositiveButton(R.string.yes, (dialog, which) -> {
                         activity.progressIndicator.show();
                         new Thread(() -> {
-                            // TODO: Remove for all users
-                            int userHandle = Users.getCurrentUserHandle();
+                            int[] userHandles = Users.getUsersHandles();
                             List<String> packages = ComponentUtils.getAllPackagesWithRules();
-                            for (String packageName : packages) {
-                                ComponentUtils.removeAllRules(packageName, userHandle);
+                            for (int userHandle : userHandles) {
+                                for (String packageName : packages) {
+                                    ComponentUtils.removeAllRules(packageName, userHandle);
+                                }
                             }
                             activity.runOnUiThread(() -> {
+                                if (isDetached()) return;
                                 activity.progressIndicator.hide();
                                 Toast.makeText(activity, R.string.the_operation_was_successful, Toast.LENGTH_SHORT).show();
                             });
