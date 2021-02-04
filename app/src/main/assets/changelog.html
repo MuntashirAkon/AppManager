@@ -18,6 +18,36 @@
 <p>App Manager docs: https://muntashirakon.github.io/AppManager</p>
 <p>Changelog: https://muntashirakon.github.io/AppManager/changelog.html</p><br />
 
+<h5>v2.5.23 (381) pre-release:</h5>
+&#x2022; <font color="#09868B">[Feature]</font> Added screen lock<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added <b>Add to profile</b> in the batch ops and app info tab<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added enable/disable features in settings (replacing interceptor setting)<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added leanback launcher support with banner (Android TV)<br />
+&#x2022; <font color="#09868B">[Feature]</font> Backup/restore SSAID (requires immediate restart)<br />
+&#x2022; <font color="#09868B">[Feature]</font> Backup APK in external SD card<br />
+&#x2022; <font color="#09868B">[Feature]</font> AppInfo: Added options to configure battery optimization, net policy, SSAID. For each of them, tag clouds will be displayed if the values are not default.<br />
+&#x2022; <font color="#09868B">[Feature]</font> AppInfo: Added options to select tracker components to block/unblock<br />
+&#x2022; <font color="#09868B">[Feature]</font> Improved backup volume selection<br />
+&#x2022; <font color="#09868B">[Feature]</font> Interceptor: add/remove extras<br />
+&#x2022; <font color="#09868B">[Feature]</font> Made settings page accessible from Android Settings<br />
+&#x2022; <font color="#09868B">[Feature]</font> Main: Added filter by installed app, sort by number of trackers and last actions (the latter is not stable yet)<br />
+&#x2022; <font color="#09868B">[Feature]</font> Main: Batch selection on long click after the selection mode is turned on (i.e. selection mode is turned on if you click on any app icon or long click on any app)<br />
+&#x2022; <font color="#09868B">[Feature]</font> Main: Replaced sort and filter with list options<br />
+&#x2022; <font color="#09868B">[Feature]</font> Main: Set <b>backup</b> to red if the app is not installed<br />
+&#x2022; <font color="#09868B">[Feature]</font> New language: Japanese<br />
+&#x2022; <font color="#09868B">[Feature]</font> Removed F-Droid, Aurora Droid in favour of F-Droid links (to support user preferred clients)<br />
+&#x2022; <font color="#09868B">[Feature]</font> Search using app initials in the main page (e.g. TS will list TrebleShot in the search results)<br />
+&#x2022; <font color="#09868B">[Feature]</font> Updated trackers, libraries, profile presets<br />
+&#x2022; <font color="#09868B">[Feature]</font> Use of database as a middle man to improve load time<br />
+&#x2022; <font color="red">[Fix]</font> Fixed app icon (it now matches app theme)<br />
+&#x2022; <font color="red">[Fix]</font> Fixed crash while blocking app components of a recently updated app<br />
+&#x2022; <font color="red">[Fix]</font> Fixed various crashes in the app info tab<br />
+&#x2022; <font color="red">[Fix]</font> Properly sanitize profile names and exported APK(S) file names<br />
+&#x2022; <font color="red">[Fix]</font> Remove rules for all users (rather than the current user) in settings<br />
+&#x2022; <font color="red">[Fix]</font> Replaced AppManager/tmp with AppManager/.tmp<br />
+&#x2022; <font color="red">[Fix]</font> Replaced image buttons with material buttons (fixes crash when using Substratum themes)<br />
+<p>Don't set folders inside <tt>/mnt/media_rw/</tt> as the backup volume. It doesn't work for backup/restore.</p><br />
+
 <h5>v2.5.22 (379) pre-release:</h5>
 &#x2022; <font color="#09868B">[Feature]</font> 1-Click Ops: add backup/restore options<br />
 &#x2022; <font color="#09868B">[Feature]</font> Added encryption info in about device<br />
