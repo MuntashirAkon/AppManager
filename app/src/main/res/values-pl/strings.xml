@@ -600,4 +600,6 @@
     <string name="enable_battery_optimization">Włączyć optymalizację baterii\?</string>
     <string name="type_uri">URI</string>
     <string name="receivers">Odbiorniki</string>
+    <string name="backup_extras_description">Utwórz kopię zapasową uprawnień aplikacji, oszczędzania baterii, opcji wykorzystania danych, statusu MagiskHide itp.</string>
+    <string name="backup_data_description">Utwórz kopię zapasową folderów danych. Jeśli ta opcja jest wybrana, kopie zapasowe wewnętrznych folderów danych zostaną utworzone.</string>
 </resources>
