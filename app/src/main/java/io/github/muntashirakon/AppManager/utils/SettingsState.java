@@ -872,7 +872,7 @@ public final class SettingsState {
         AtomicProxyFile file = new AtomicProxyFile(mStatePersistFile);
         try {
             in = file.openRead();
-        } catch (FileNotFoundException | RemoteException fnfe) {
+        } catch (IOException | RemoteException fnfe) {
             Log.w(LOG_TAG, "No settings state " + mStatePersistFile);
             logSettingsDirectoryInformation(mStatePersistFile);
             addHistoricalOperationLocked(HISTORICAL_OPERATION_INITIALIZE, null);
@@ -888,7 +888,7 @@ public final class SettingsState {
                 + ", retrying with fallback file: " + statePersistFallbackFile);
         try {
             in = new AtomicProxyFile(statePersistFallbackFile).openRead();
-        } catch (FileNotFoundException | RemoteException fnfe) {
+        } catch (IOException | RemoteException fnfe) {
             final String message = "No fallback file found for: " + mStatePersistFile;
             Log.e(LOG_TAG, message);
             throw new IllegalStateException(message);

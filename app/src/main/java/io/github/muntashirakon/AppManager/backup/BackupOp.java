@@ -202,16 +202,19 @@ class BackupOp implements Closeable {
 
     private void backupSource() throws BackupException {
         final File dataAppPath = OsEnvironment.getDataAppDirectory();
-        final File sourceFile = new File(tmpBackupPath, SOURCE_PREFIX + getExt(metadata.tarType) + ".");
+        final File sourceFile = new ProxyFile(tmpBackupPath, SOURCE_PREFIX + getExt(metadata.tarType));
         String sourceDir = PackageUtils.getSourceDir(applicationInfo);
         if (dataAppPath.getAbsolutePath().equals(sourceDir)) {
             // Backup only the apk file (no split apk support for this type of apk)
-            sourceDir = new File(sourceDir, metadata.apkName).getAbsolutePath();
+            sourceDir = new ProxyFile(sourceDir, metadata.apkName).getAbsolutePath();
         }
-        File[] sourceFiles = TarUtils.create(metadata.tarType, new File(sourceDir), sourceFile,
-                backupFlags.backupOnlyApk() ? new String[]{"*.apk"} : null, null, null);
-        if (sourceFiles.length == 0) {
-            throw new BackupException("Source backup is requested but no source directory has been backed up.");
+        File[] sourceFiles;
+        try {
+            sourceFiles = TarUtils.create(metadata.tarType, new ProxyFile(sourceDir), sourceFile, /* language=regexp */
+                    backupFlags.backupOnlyApk() ? new String[]{".*\\.apk"} : null, null, null)
+                    .toArray(new File[0]);
+        } catch (Throwable th) {
+            throw new BackupException("Source backup is requested but no source directory has been backed up.", th);
         }
         if (!crypto.encrypt(sourceFiles)) {
             throw new BackupException("Failed to encrypt " + Arrays.toString(sourceFiles));
@@ -227,11 +230,12 @@ class BackupOp implements Closeable {
         File sourceFile;
         File[] dataFiles;
         for (int i = 0; i < metadata.dataDirs.length; ++i) {
-            sourceFile = new File(tmpBackupPath, DATA_PREFIX + i + getExt(metadata.tarType) + ".");
-            dataFiles = TarUtils.create(metadata.tarType, new File(metadata.dataDirs[i]), sourceFile,
-                    null, null, backupFlags.excludeCache() ? CACHE_DIRS : null);
-            if (dataFiles.length == 0) {
-                throw new BackupException("Failed to backup data directory at " + metadata.dataDirs[i]);
+            sourceFile = new ProxyFile(tmpBackupPath, DATA_PREFIX + i + getExt(metadata.tarType));
+            try {
+                dataFiles = TarUtils.create(metadata.tarType, new ProxyFile(metadata.dataDirs[i]), sourceFile,
+                        null, null, backupFlags.excludeCache() ? CACHE_DIRS : null).toArray(new File[0]);
+            } catch (Throwable th) {
+                throw new BackupException("Failed to backup data directory at " + metadata.dataDirs[i], th);
             }
             if (!crypto.encrypt(dataFiles)) {
                 throw new BackupException("Failed to encrypt " + Arrays.toString(dataFiles));
@@ -273,16 +277,18 @@ class BackupOp implements Closeable {
         if (cachedKeyStoreFileNames.size() == 0) {
             throw new BackupException("There were some KeyStore items but they couldn't be cached before taking a backup.");
         }
-        File keyStoreSavePath = new File(tmpBackupPath, KEYSTORE_PREFIX + getExt(metadata.tarType) + ".");
-        File[] backedUpKeyStoreFiles = TarUtils.create(metadata.tarType, cachePath,
-                keyStoreSavePath, cachedKeyStoreFileNames.toArray(new String[0]), null, null);
+        File keyStoreSavePath = new ProxyFile(tmpBackupPath, KEYSTORE_PREFIX + getExt(metadata.tarType));
+        File[] backedUpKeyStoreFiles;
+        try {
+            backedUpKeyStoreFiles = TarUtils.create(metadata.tarType, cachePath, keyStoreSavePath,
+                    cachedKeyStoreFileNames.toArray(new String[0]), null, null).toArray(new File[0]);
+        } catch (Throwable th) {
+            throw new BackupException("Could not backup KeyStore item.");
+        }
         // Remove cache
         for (String name : cachedKeyStoreFileNames) {
             //noinspection ResultOfMethodCallIgnored
-            new File(cachePath, name).delete();
-        }
-        if (backedUpKeyStoreFiles.length == 0) {
-            throw new BackupException("Could not backup KeyStore item.");
+            new ProxyFile(cachePath, name).delete();
         }
         if (!crypto.encrypt(backedUpKeyStoreFiles)) {
             throw new BackupException("Failed to encrypt " + Arrays.toString(backedUpKeyStoreFiles));
@@ -375,6 +381,7 @@ class BackupOp implements Closeable {
             if (ssaid != null) rules.setSsaid(ssaid);
         }
         rules.commitExternal(miscFile);
+        if (!miscFile.exists()) return;
         if (!crypto.encrypt(new File[]{miscFile})) {
             throw new BackupException("Failed to encrypt " + miscFile.getName());
         }
@@ -396,6 +403,7 @@ class BackupOp implements Closeable {
         } catch (IOException | RemoteException e) {
             throw new BackupException("Rules backup is requested but encountered an error during fetching rules.", e);
         }
+        if (!rulesFile.exists()) return;
         if (!crypto.encrypt(new File[]{rulesFile})) {
             throw new BackupException("Failed to encrypt " + rulesFile.getName());
         }

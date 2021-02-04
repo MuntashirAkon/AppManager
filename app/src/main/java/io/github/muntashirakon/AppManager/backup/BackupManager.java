@@ -26,6 +26,7 @@ import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
+import io.github.muntashirakon.AppManager.utils.TarUtils;
 import io.github.muntashirakon.io.ProxyFile;
 
 /**
@@ -37,7 +38,8 @@ public class BackupManager {
     static final String EXT_DATA = "/Android/data/";
     static final String EXT_MEDIA = "/Android/media/";
     static final String EXT_OBB = "/Android/obb/";
-    static final String[] CACHE_DIRS = new String[]{"cache", "code_cache", "no_backup"};
+    /* language=regexp */
+    static final String[] CACHE_DIRS = new String[]{"cache/.*", "code_cache/.*", "no_backup/.*"};
     static final String SOURCE_PREFIX = "source";
     static final String DATA_PREFIX = "data";
     static final String KEYSTORE_PREFIX = "keystore";

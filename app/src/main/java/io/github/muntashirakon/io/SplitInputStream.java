@@ -27,7 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SplitInputStream extends InputStream {
-    private final List<ProxyInputStream> proxyInputStreams;
+    private final List<InputStream> inputStreams;
     private int currentIndex = -1;
     private final List<File> files;
 
@@ -56,7 +56,7 @@ public class SplitInputStream extends InputStream {
 
     public SplitInputStream(@NonNull List<File> files) {
         this.files = files;
-        this.proxyInputStreams = new ArrayList<>(files.size());
+        this.inputStreams = new ArrayList<>(files.size());
         buf = new byte[1024 * 1024 * 4];
     }
 
@@ -92,7 +92,7 @@ public class SplitInputStream extends InputStream {
 
     @Override
     public void close() throws IOException {
-        for (ProxyInputStream stream : proxyInputStreams) {
+        for (InputStream stream : inputStreams) {
             stream.close();
         }
     }
@@ -211,33 +211,32 @@ public class SplitInputStream extends InputStream {
         int len = b.length;
         if (len <= 0) return len;
         try {
-            if (currentIndex == -1) {
-                // Initialize and read from a new stream
-                proxyInputStreams.add(new ProxyInputStream(files.get(0)));
+            if (files.size() == 0) {
+                // No files supplied, nothing to read
+                return -1;
+            } else if (currentIndex == -1) {
+                // Initialize a new stream
+                inputStreams.add(new ProxyInputStream(files.get(0)));
                 ++currentIndex;
-            } else if (currentIndex + 1 == files.size()) {
-                // The last file is being read
-                int available = proxyInputStreams.get(currentIndex).available();
-                if (available == 0) {
-                    // The last file has been read completely
-                    return -1;
-                }
             }
-            // Fetch bytes from the streams
-            // Read
-            int available = proxyInputStreams.get(currentIndex).available();
+            // Read next available bytes from the current stream
+            int available = inputStreams.get(currentIndex).available();
+            if (available == 0 && currentIndex + 1 == files.size()) {
+                // Finished reading the last file
+                return -1;
+            }
             while (available != 0 && len > 0) {
                 // Stream still has some bytes left and the buffer is still unfinished.
-                int readCount = proxyInputStreams.get(currentIndex).read(b, off, Math.min(available, len));
+                int readCount = inputStreams.get(currentIndex).read(b, off, Math.min(available, len));
                 off += readCount;
                 len -= readCount;
-                available = proxyInputStreams.get(currentIndex).available();
+                available = inputStreams.get(currentIndex).available();
             }
             // Either the stream has been completely read or the buffer is still unfinished
             if (available == 0) {
                 // This stream has been read completely, initialize new stream if available
                 if (currentIndex + 1 != files.size()) {
-                    proxyInputStreams.add(new ProxyInputStream(files.get(currentIndex + 1)));
+                    inputStreams.add(new ProxyInputStream(files.get(currentIndex + 1)));
                     ++currentIndex;
                 }
             }

@@ -30,7 +30,6 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.apk.signing.SigSchemes;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
-import io.github.muntashirakon.AppManager.backup.TarUtils;
 import io.github.muntashirakon.AppManager.details.AppDetailsFragment;
 import io.github.muntashirakon.AppManager.main.ListOptions;
 import io.github.muntashirakon.AppManager.runner.Runner;

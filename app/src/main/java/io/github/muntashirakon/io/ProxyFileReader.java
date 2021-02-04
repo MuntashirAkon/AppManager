@@ -21,6 +21,7 @@ import android.os.RemoteException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class ProxyFileReader  extends InputStreamReader {
@@ -34,7 +35,7 @@ public class ProxyFileReader  extends InputStreamReader {
      *                   or for some other reason cannot be opened for
      *                   reading.
      */
-    public ProxyFileReader(String fileName) throws FileNotFoundException, RemoteException {
+    public ProxyFileReader(String fileName) throws IOException, RemoteException {
         super(new ProxyInputStream(new ProxyFile(fileName)));
     }
 
@@ -48,7 +49,7 @@ public class ProxyFileReader  extends InputStreamReader {
      *                   or for some other reason cannot be opened for
      *                   reading.
      */
-    public ProxyFileReader(File file) throws FileNotFoundException, RemoteException {
+    public ProxyFileReader(File file) throws IOException, RemoteException {
         super(new ProxyInputStream(file));
     }
 }

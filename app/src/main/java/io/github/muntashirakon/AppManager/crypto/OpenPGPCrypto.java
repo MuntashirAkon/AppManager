@@ -25,6 +25,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.RemoteException;
 
+import io.github.muntashirakon.io.ProxyFile;
 import org.openintents.openpgp.IOpenPgpService2;
 import org.openintents.openpgp.OpenPgpError;
 import org.openintents.openpgp.util.OpenPgpApi;
@@ -135,8 +136,8 @@ public class OpenPGPCrypto implements Crypto {
             for (File file : files) {
                 File outputFilename;
                 if (mode == Cipher.DECRYPT_MODE) {
-                    outputFilename = new File(file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf(GPG_EXT)));
-                } else outputFilename = new File(file.getAbsolutePath() + GPG_EXT);
+                    outputFilename = new ProxyFile(file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf(GPG_EXT)));
+                } else outputFilename = new ProxyFile(file.getAbsolutePath() + GPG_EXT);
                 newFiles.add(outputFilename);
                 Log.i(TAG, "Input: " + file + "\nOutput: " + outputFilename);
                 try (InputStream is = new ProxyInputStream(file);

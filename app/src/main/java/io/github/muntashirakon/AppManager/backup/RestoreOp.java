@@ -266,8 +266,11 @@ class RestoreOp implements Closeable {
                 decryptedFiles.addAll(Arrays.asList(backupSourceFiles));
             }
             // Extract apk files to the package staging directory
-            if (!TarUtils.extract(metadata.tarType, backupSourceFiles, packageStagingDirectory, allApkNames, null)) {
-                throw new BackupException("Failed to extract the apk file(s).");
+            try {
+                Log.e("TestRestore", Arrays.toString(backupSourceFiles));
+                TarUtils.extract(metadata.tarType, backupSourceFiles, packageStagingDirectory, allApkNames, null);
+            } catch (Throwable th) {
+                throw new BackupException("Failed to extract the apk file(s).", th);
             }
             // A normal update will do it now
             PackageInstallerCompat packageInstaller = PackageInstallerCompat.getNewInstance(userHandle, metadata.installer);
@@ -289,15 +292,17 @@ class RestoreOp implements Closeable {
             // TODO(10/9/20): Investigate support for unmatched instruction set as well
             final String instructionSet = VMRuntime.getInstructionSet(Build.SUPPORTED_ABIS[0]);
             final File dataAppPath = OsEnvironment.getDataAppDirectory();
-            final File sourceDir = new File(PackageUtils.getSourceDir(packageInfo.applicationInfo));
+            final File sourceDir = new ProxyFile(PackageUtils.getSourceDir(packageInfo.applicationInfo));
             // Restore source directory only if instruction set is matched or app path is not /data/app
             // Or only apk restoring is requested
             if (!requestedFlags.backupOnlyApk()  // Only apk restoring is not requested
                     && metadata.instructionSet.equals(instructionSet)  // Instruction set matched
                     && !dataAppPath.equals(sourceDir)) {  // Path is not /data/app
                 // Restore source: Get installed source directory and copy backups directly
-                if (!TarUtils.extract(metadata.tarType, backupSourceFiles, sourceDir, null, null)) {
-                    throw new BackupException("Failed to restore the source files.");
+                try {
+                    TarUtils.extract(metadata.tarType, backupSourceFiles, sourceDir, null, allApkNames);
+                } catch (Throwable th) {
+                    throw new BackupException("Failed to restore the source files.", th);
                 }
                 // Restore permissions
                 Runner.runCommand(new String[]{"restorecon", "-R", sourceDir.getAbsolutePath()});
@@ -325,8 +330,10 @@ class RestoreOp implements Closeable {
             }
             // Restore KeyStore files
             ProxyFile keyStorePath = KeyStoreUtils.getKeyStorePath(userHandle);
-            if (!TarUtils.extract(metadata.tarType, keyStoreFiles, keyStorePath, null, null)) {
-                throw new BackupException("Failed to restore the KeyStore files.");
+            try {
+                TarUtils.extract(metadata.tarType, keyStoreFiles, keyStorePath, null, null);
+            } catch (Throwable th) {
+                throw new BackupException("Failed to restore the KeyStore files.", th);
             }
             // Rename files
             int uid = packageInfo.applicationInfo.uid;
@@ -419,9 +426,11 @@ class RestoreOp implements Closeable {
                     decryptedFiles.addAll(Arrays.asList(dataFiles));
                 }
                 // Extract data to the data directory
-                if (!TarUtils.extract(metadata.tarType, dataFiles, dataSourceFile,
-                        null, requestedFlags.excludeCache() ? CACHE_DIRS : null)) {
-                    throw new BackupException("Failed to restore data files for index " + i + ".");
+                try {
+                    TarUtils.extract(metadata.tarType, dataFiles, dataSourceFile, null,
+                            requestedFlags.excludeCache() ? CACHE_DIRS : null);
+                } catch (Throwable th) {
+                    throw new BackupException("Failed to restore data files for index " + i + ".", th);
                 }
                 // Fix UID and GID
                 if (uidAndGid != null && !Runner.runCommand(String.format(Runner.TOYBOX + " chown -R %d:%d \"%s\"", uidAndGid.first, uidAndGid.second, dataSource)).isSuccessful()) {
