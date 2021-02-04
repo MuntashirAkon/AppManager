@@ -35,7 +35,10 @@ import android.text.SpannableStringBuilder;
 import android.text.format.Formatter;
 import android.view.*;
 import android.webkit.MimeTypeMap;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.*;
@@ -101,10 +104,11 @@ import java.util.concurrent.atomic.AtomicReference;
 import static io.github.muntashirakon.AppManager.details.info.ListItem.LIST_ITEM_FLAG_MONOSPACE;
 import static io.github.muntashirakon.AppManager.utils.PermissionUtils.TERMUX_PERM_RUN_COMMAND;
 import static io.github.muntashirakon.AppManager.utils.PermissionUtils.hasDumpPermission;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.*;
 
 public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+    public static final String TAG = "AppInfoFragment";
+
     private static final String PACKAGE_NAME_AURORA_STORE = "com.aurora.store";
     private static final String ACTIVITY_NAME_AURORA_STORE = "com.aurora.store.ui.details.DetailsActivity";
 
@@ -261,8 +265,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         startActivity(Intent.createChooser(intent, getString(R.string.share_apk)));
                     });
                 } catch (Exception e) {
-                    e.printStackTrace();
-                    runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.failed_to_extract_apk_file), Toast.LENGTH_SHORT).show());
+                    Log.e(TAG, e);
+                    displayLongToast(R.string.failed_to_extract_apk_file);
                 }
             });
         } else if (itemId == R.id.action_backup) {
@@ -316,7 +320,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     refreshDetails();
                 }
             } else {
-                Toast.makeText(mActivity, R.string.failed_to_enable_magisk_hide, Toast.LENGTH_SHORT).show();
+                displayLongToast(R.string.failed_to_enable_magisk_hide);
             }
         } else if (itemId == R.id.action_battery_opt) {
             if (hasDumpPermission()) {
@@ -333,7 +337,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         })
                         .show();
             } else {
-                Log.e("AppInfo", "No DUMP permission.");
+                Log.e(TAG, "No DUMP permission.");
             }
         } else if (itemId == R.id.action_net_policy) {
             ArrayMap<Integer, String> netPolicyMap = NetworkPolicyManagerCompat.getAllReadablePolicies(mActivity);
@@ -382,11 +386,11 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         Bitmap bitmap = IOUtils.getBitmapFromDrawable(mApplicationInfo.loadIcon(mPackageManager));
                         bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
                         outputStream.flush();
-                        Toast.makeText(mActivity, R.string.saved_successfully, Toast.LENGTH_SHORT).show();
+                        displayShortToast(R.string.saved_successfully);
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
-                    Toast.makeText(mActivity, R.string.saving_failed, Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, e);
+                    displayShortToast(R.string.saving_failed);
                 }
             });
         } else if (itemId == R.id.action_add_to_profile) {
@@ -513,7 +517,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                         runOnUiThread(() -> {
                                             if (isDetached()) return;
                                             showProgressIndicator(false);
-                                            Toast.makeText(mActivity, R.string.done, Toast.LENGTH_SHORT).show();
+                                            displayShortToast(R.string.done);
                                         });
                                     });
                                 })
@@ -524,7 +528,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                         runOnUiThread(() -> {
                                             if (isDetached()) return;
                                             showProgressIndicator(false);
-                                            Toast.makeText(mActivity, R.string.done, Toast.LENGTH_SHORT).show();
+                                            displayShortToast(R.string.done);
                                         });
                                     });
                                 })
@@ -596,8 +600,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                     refreshDetails();
                                 }
                             } else {
-                                Toast.makeText(mActivity, R.string.failed_to_disable_magisk_hide,
-                                        Toast.LENGTH_SHORT).show();
+                                displayLongToast(R.string.failed_to_disable_magisk_hide);
                             }
                         })
                         .setNegativeButton(R.string.cancel, null)
@@ -667,9 +670,9 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                             SsaidSettings ssaidSettings = new SsaidSettings(mPackageName, mApplicationInfo.uid);
                             if (ssaidSettings.setSsaid(ssaid.get())) {
                                 model.loadTagCloud();
-                                Toast.makeText(mActivity, R.string.restart_to_reflect_changes, Toast.LENGTH_LONG).show();
+                                displayLongToast(R.string.restart_to_reflect_changes);
                             } else {
-                                Toast.makeText(mActivity, R.string.failed_to_change_ssaid, Toast.LENGTH_LONG).show();
+                                displayLongToast(R.string.failed_to_change_ssaid);
                             }
                             alertDialog.dismiss();
                         });
@@ -687,7 +690,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         ClipboardManager clipboard = (ClipboardManager) mActivity.getSystemService(Context.CLIPBOARD_SERVICE);
                         ClipData clip = ClipData.newPlainText("SSAID", ssaid.get());
                         clipboard.setPrimaryClip(clip);
-                        Toast.makeText(mActivity, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show();
+                        displayShortToast(R.string.copied_to_clipboard);
                     });
                     ssaidInputLayout.setEndIconOnClickListener(v2 -> {
                         ssaid.set(SsaidSettings.generateSsaid(mPackageName));
@@ -725,8 +728,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                     PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER,
                                     0, mainModel.getUserHandle());
                         } catch (RemoteException e) {
-                            Log.e("AppInfo", e);
-                            Toast.makeText(mActivity, getString(R.string.failed_to_disable, mPackageLabel), Toast.LENGTH_LONG).show();
+                            Log.e(TAG, e);
+                            displayLongToast(R.string.failed_to_disable, mPackageLabel);
                         }
                     });
                 }
@@ -743,12 +746,12 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                 try {
                                     PackageInstallerCompat.uninstall(mPackageName, mainModel.getUserHandle(), keepData);
                                     runOnUiThread(() -> {
-                                        Toast.makeText(mActivity, getString(R.string.uninstalled_successfully, mPackageLabel), Toast.LENGTH_LONG).show();
+                                        displayLongToast(R.string.uninstalled_successfully, mPackageLabel);
                                         mActivity.finish();
                                     });
                                 } catch (Exception e) {
-                                    e.printStackTrace();
-                                    runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.failed_to_uninstall, mPackageLabel), Toast.LENGTH_LONG).show());
+                                    Log.e(TAG, e);
+                                    runOnUiThread(() -> displayLongToast(R.string.failed_to_uninstall, mPackageLabel));
                                 }
                             }))
                             .setNegativeButton(R.string.cancel, (dialog, which, keepData) -> {
@@ -759,9 +762,9 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                 executor.submit(() -> {
                                     Runner.Result result = RunnerUtils.uninstallPackageUpdate(mPackageName, mainModel.getUserHandle(), keepData);
                                     if (result.isSuccessful()) {
-                                        runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.update_uninstalled_successfully, mPackageLabel), Toast.LENGTH_LONG).show());
+                                        runOnUiThread(() -> displayLongToast(R.string.update_uninstalled_successfully, mPackageLabel));
                                     } else {
-                                        runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.failed_to_uninstall_updates, mPackageLabel), Toast.LENGTH_LONG).show());
+                                        runOnUiThread(() -> displayLongToast(R.string.failed_to_uninstall_updates, mPackageLabel));
                                     }
                                 }));
                     }
@@ -782,8 +785,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                     PackageManager.COMPONENT_ENABLED_STATE_ENABLED, 0,
                                     mainModel.getUserHandle());
                         } catch (RemoteException e) {
-                            Log.e("AppInfo", e);
-                            Toast.makeText(mActivity, getString(R.string.failed_to_enable, mPackageLabel), Toast.LENGTH_LONG).show();
+                            Log.e(TAG, e);
+                            displayLongToast(R.string.failed_to_enable, mPackageLabel);
                         }
                     });
                 }
@@ -794,7 +797,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                             PackageManagerCompat.forceStopPackage(mPackageName, mainModel.getUserHandle());
                             runOnUiThread(this::refreshDetails);
                         } catch (RemoteException | SecurityException e) {
-                            runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.failed_to_stop, mPackageLabel), Toast.LENGTH_LONG).show());
+                            Log.e(TAG, e);
+                            displayLongToast(R.string.failed_to_stop, mPackageLabel);
                         }
                     }));
                 }

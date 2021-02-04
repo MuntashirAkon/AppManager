@@ -36,6 +36,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import android.widget.Toast;
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SearchView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -47,6 +49,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
+import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 
 public class UIUtils {
@@ -208,6 +211,24 @@ public class UIUtils {
         layoutParams.gravity = Gravity.END;
         actionBar.setCustomView(searchView, layoutParams);
         return searchView;
+    }
+
+    public static void displayShortToast(@StringRes int res) {
+        Toast.makeText(AppManager.getContext(), res, Toast.LENGTH_SHORT).show();
+    }
+
+    public static void displayShortToast(@StringRes int res, Object... args) {
+        Context appContext = AppManager.getContext();
+        Toast.makeText(appContext, appContext.getString(res, args), Toast.LENGTH_SHORT).show();
+    }
+
+    public static void displayLongToast(@StringRes int res) {
+        Toast.makeText(AppManager.getContext(), res, Toast.LENGTH_LONG).show();
+    }
+
+    public static void displayLongToast(@StringRes int res, Object... args) {
+        Context appContext = AppManager.getContext();
+        Toast.makeText(appContext, appContext.getString(res, args), Toast.LENGTH_LONG).show();
     }
 
     @NonNull
