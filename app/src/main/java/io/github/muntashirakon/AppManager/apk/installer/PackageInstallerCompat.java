@@ -39,7 +39,6 @@ import android.os.RemoteException;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -65,6 +64,7 @@ import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.io.ProxyInputStream;
 
 @SuppressLint("ShiftFlags")
 public final class PackageInstallerCompat extends AMPackageInstaller {
@@ -403,11 +403,11 @@ public final class PackageInstallerCompat extends AMPackageInstaller {
             if (!openSession()) return false;
             // Write apk files
             for (File apkFile : apkFiles) {
-                try (InputStream apkInputStream = new FileInputStream(apkFile);
+                try (InputStream apkInputStream = new ProxyInputStream(apkFile);
                      OutputStream apkOutputStream = session.openWrite(apkFile.getName(), 0, apkFile.length())) {
                     IOUtils.copy(apkInputStream, apkOutputStream);
                     session.fsync(apkOutputStream);
-                } catch (IOException e) {
+                } catch (IOException | RemoteException e) {
                     sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_WRITE, sessionId);
                     Log.e(TAG, "Install: Cannot copy files to session.", e);
                     return abandon();

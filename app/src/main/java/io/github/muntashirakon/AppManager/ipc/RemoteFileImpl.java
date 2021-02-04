@@ -21,17 +21,14 @@ import android.annotation.SuppressLint;
 import android.os.ParcelFileDescriptor;
 import android.os.RemoteException;
 import android.util.Log;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Objects;
-
 import androidx.annotation.NonNull;
 import aosp.libcore.util.EmptyArray;
 import io.github.muntashirakon.AppManager.IRemoteFile;
 import io.github.muntashirakon.AppManager.utils.ParcelFileDescriptorUtil;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Objects;
 
 import static io.github.muntashirakon.AppManager.ipc.RootService.TAG;
 
@@ -226,7 +223,7 @@ class RemoteFileImpl extends IRemoteFile.Stub {
     @NonNull
     public ParcelFileDescriptor getInputStream() throws RemoteException {
         try {
-            return Objects.requireNonNull(ParcelFileDescriptorUtil.pipeFrom(new FileInputStream(file)));
+            return ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY);
         } catch (IOException | NullPointerException e) {
             Log.e(TAG, null, e);
             throw new RemoteException(e.toString());
@@ -237,7 +234,8 @@ class RemoteFileImpl extends IRemoteFile.Stub {
     @NonNull
     public ParcelFileDescriptor getOutputStream() throws RemoteException {
         try {
-            return Objects.requireNonNull(ParcelFileDescriptorUtil.pipeTo(new FileOutputStream(file)));
+            if (!file.exists()) file.createNewFile();
+            return ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_WRITE_ONLY);
         } catch (IOException | NullPointerException e) {
             Log.e(TAG, null, e);
             throw new RemoteException(e.toString());

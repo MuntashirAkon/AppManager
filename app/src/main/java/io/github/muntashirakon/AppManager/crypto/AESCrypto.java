@@ -44,6 +44,7 @@ import javax.security.auth.DestroyFailedException;
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.io.ProxyFile;
 import io.github.muntashirakon.io.ProxyInputStream;
 import io.github.muntashirakon.io.ProxyOutputStream;
 
@@ -103,8 +104,8 @@ public class AESCrypto implements Crypto {
             for (File file : files) {
                 File outputFilename;
                 if (mode == Cipher.DECRYPT_MODE) {
-                    outputFilename = new File(file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf(AES_EXT)));
-                } else outputFilename = new File(file.getAbsolutePath() + AES_EXT);
+                    outputFilename = new ProxyFile(file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf(AES_EXT)));
+                } else outputFilename = new ProxyFile(file.getAbsolutePath() + AES_EXT);
                 newFiles.add(outputFilename);
                 Log.i(TAG, "Input: " + file + "\nOutput: " + outputFilename);
                 try (InputStream is = new ProxyInputStream(file);

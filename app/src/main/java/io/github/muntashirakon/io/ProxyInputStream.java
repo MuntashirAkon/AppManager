@@ -22,21 +22,19 @@ import android.os.RemoteException;
 import java.io.*;
 import java.nio.channels.FileChannel;
 
-import io.github.muntashirakon.AppManager.servermanager.LocalServer;
-
 public class ProxyInputStream extends InputStream {
     private final FileInputStream privateInputStream;
 
     public ProxyInputStream(File file) throws FileNotFoundException, RemoteException {
-        if (file instanceof ProxyFile && LocalServer.isAMServiceAlive()) {
+        if (file instanceof ProxyFile) {
             privateInputStream = ((ProxyFile) file).getInputStream();
         } else {
             privateInputStream = new FileInputStream(file);
         }
     }
 
-    public ProxyInputStream(String file) throws FileNotFoundException, RemoteException {
-        privateInputStream = new ProxyFile(file).getInputStream();
+    public ProxyInputStream(String file) throws IOException, RemoteException {
+        this(new ProxyFile(file));
     }
 
     @Override

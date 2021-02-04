@@ -33,6 +33,7 @@ import java.util.zip.CRC32;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.StringDef;
+import aosp.libcore.util.HexEncoding;
 import io.github.muntashirakon.io.ProxyInputStream;
 
 public class DigestUtils {
@@ -53,7 +54,7 @@ public class DigestUtils {
 
     @NonNull
     public static String getHexDigest(@Algorithm String algo, @NonNull byte[] bytes) {
-        return Utils.bytesToHex(getDigest(algo, bytes));
+        return HexEncoding.encodeToString(getDigest(algo, bytes), false /* lowercase */);
     }
 
     @NonNull
@@ -62,13 +63,13 @@ public class DigestUtils {
             return DigestUtils.getHexDigest(algo, fileInputStream);
         } catch (IOException | RemoteException e) {
             e.printStackTrace();
-            return Utils.bytesToHex(new byte[0]);
+            return HexEncoding.encodeToString(new byte[0], false /* lowercase */);
         }
     }
 
     @NonNull
     public static String getHexDigest(@Algorithm String algo, @NonNull InputStream stream) {
-        return Utils.bytesToHex(getDigest(algo, stream));
+        return HexEncoding.encodeToString(getDigest(algo, stream), false /* lowercase */);
     }
 
     @NonNull
@@ -76,7 +77,7 @@ public class DigestUtils {
         if (CRC32.equals(algo)) {
             java.util.zip.CRC32 crc32 = new CRC32();
             crc32.update(bytes);
-            return Utils.longToBytes(crc32.getValue());
+            return longToBytes(crc32.getValue());
         }
         try {
             return MessageDigest.getInstance(algo).digest(bytes);
@@ -98,7 +99,7 @@ public class DigestUtils {
                 }
             } catch (IOException ignore) {
             }
-            return Utils.longToBytes(crc32.getValue());
+            return longToBytes(crc32.getValue());
         }
         try {
             MessageDigest messageDigest = MessageDigest.getInstance(algo);
@@ -138,5 +139,15 @@ public class DigestUtils {
             digests[i] = new Pair<>(algorithms[i], getHexDigest(algorithms[i], bytes));
         }
         return digests;
+    }
+
+    @NonNull
+    private static byte[] longToBytes(long l) {
+        byte[] result = new byte[8];
+        for (int i = 7; i >= 0; i--) {
+            result[i] = (byte) (l & 0xFF);
+            l >>= 8;
+        }
+        return result;
     }
 }

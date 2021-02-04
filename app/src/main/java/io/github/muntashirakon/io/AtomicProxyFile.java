@@ -162,7 +162,7 @@ public class AtomicProxyFile {
      * You must do your own threading protection for access to AtomicFile.
      */
     @NonNull
-    public ProxyInputStream openRead() throws FileNotFoundException, RemoteException {
+    public ProxyInputStream openRead() throws IOException, RemoteException {
         if (mLegacyBackupName.exists()) {
             rename(mLegacyBackupName, mBaseName);
         }
