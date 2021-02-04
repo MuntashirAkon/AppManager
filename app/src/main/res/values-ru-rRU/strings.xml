@@ -811,13 +811,13 @@
     <string name="interceptor">Перехватчик</string>
     <string name="resend_intent">Повторная отправка цели</string>
     <string name="share">Поделиться</string>
-    <string name="extras">Дополнительно</string>
+    <string name="extras">Extras</string>
     <string name="category">Категории</string>
     <string name="mime_type">Тип MIME</string>
     <string name="action">Действие</string>
     <string name="result_code">Результат кода</string>
     <string name="activity_result">Результат активити</string>
-    <string name="send_edited_intent">Отправить редактированную цель</string>
+    <string name="send_edited_intent">Отправить редактированное намерение</string>
     <string name="matching_activities">Соответствующие активити</string>
     <string name="filter_apps_with_splits">Разделенные приложения</string>
     <string name="set_custom_app_op">Индивидуальная настройка операции приложения</string>
@@ -938,7 +938,7 @@
     <string name="external_storage">Внешнее хранилище</string>
     <string name="internal_storage">Внутреннее хранилище</string>
     <string name="type_null">Нет значения</string>
-    <string name="backup_custom_users">Выборочные пользователи</string>
+    <string name="backup_custom_users">Выбор пользователей</string>
     <string name="user_with_id">Пользователь: <xliff:g id="user_id" example="0">%1$d</xliff:g></string>
     <string name="restart_to_reflect_changes">Чтобы отобразить изменения, пожалуйста немедленно перезапустите</string>
     <string name="failed_to_change_ssaid">Не удалось изменить SSAID</string>
@@ -954,4 +954,7 @@
     <string name="type_int_array">Массив целых чисел</string>
     <string name="type_component_name">Имя компонента</string>
     <string name="installed_apps">Установленные приложения</string>
+    <string name="last_actions">Последние действия</string>
+    <string name="pref_enable_disable_features_msg">Включить или отключить функции в App Manager.</string>
+    <string name="enable_disable_features">Включение/отключение функций</string>
 </resources>
