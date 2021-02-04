@@ -50,7 +50,7 @@ import java.util.zip.ZipEntry;
 public final class IOUtils {
     private static final byte[] ZIP_FILE_HEADER = new byte[]{0x50, 0x4B, 0x03, 0x04};
 
-    public static boolean isInputFileZip(ContentResolver cr, Uri uri) throws IOException {
+    public static boolean isInputFileZip(@NonNull ContentResolver cr, Uri uri) throws IOException {
         byte[] header = new byte[4];
         try (InputStream is = cr.openInputStream(uri)) {
             is.read(header);
@@ -187,6 +187,7 @@ public final class IOUtils {
 
     @NonNull
     public static String getLastPathComponent(@NonNull String path) {
+        if (path.length() == 0) return path;
         int lastIndexOfSeparator = path.lastIndexOf("/");
         int lastIndexOfPath = path.length() - 1;
         if (lastIndexOfSeparator == -1) {
@@ -217,12 +218,14 @@ public final class IOUtils {
     }
 
     @NonNull
-    public static String trimExtension(@NonNull String filename) {
-        try {
-            return filename.substring(0, filename.lastIndexOf('.'));
-        } catch (Exception e) {
-            return filename;
+    public static String trimExtension(@NonNull String path) {
+        String filename = getLastPathComponent(path);
+        int lastIndexOfDot = filename.lastIndexOf('.');
+        int lastIndexOfPath = filename.length() - 1;
+        if (lastIndexOfDot == 0 || lastIndexOfDot == -1 || lastIndexOfDot == lastIndexOfPath) {
+            return path;
         }
+        return path.substring(0, path.lastIndexOf('.'));
     }
 
     @NonNull
@@ -249,11 +252,9 @@ public final class IOUtils {
     @NonNull
     public static String getExtension(@NonNull String path) {
         String str = getLastPathComponent(path);
-        try {
-            return str.substring(str.lastIndexOf('.') + 1);
-        } catch (Exception e) {
-            return str;
-        }
+        int lastIndexOfDot = str.lastIndexOf('.');
+        if (lastIndexOfDot == -1) return "";
+        return str.substring(str.lastIndexOf('.') + 1);
     }
 
     public static long fileSize(@Nullable File root) {
