@@ -79,6 +79,7 @@ public final class TarUtils {
                 throw new IllegalArgumentException("Invalid compression type: " + type);
             }
             try (TarArchiveOutputStream tos = new TarArchiveOutputStream(os)) {
+                tos.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
                 List<File> files = new ArrayList<>();
                 gatherFiles(files, source, source, filters, exclude);
                 for (File file : files) {
