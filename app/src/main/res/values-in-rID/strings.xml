@@ -25,8 +25,7 @@
     <string name="no_activities">Tidak ada aktifitas</string>
     <string name="installer_error_blocked_device">Perangkat</string>
     <string name="receivers">Penerima</string>
-    <string name="starting_activity">Memulai aktivitas:
-\n<xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
+    <string name="starting_activity"></string>
     <string name="error_verbose_pin_shortcut">Peluncur saat ini tidak mendukung Pinshortcut. Tidak dapat membuat pintasan.</string>
     <string name="error_creating_shortcut">Kesalahan dalam membuat pintasan</string>
     <string name="instructions">Intruksi</string>
@@ -85,4 +84,5 @@
     <string name="no_receivers">Tidak ada penerima</string>
     <string name="os_version">Versi OS</string>
     <string name="copied_to_clipboard">Disalin ke papan klip</string>
+    <string name="pref_enable_disable_features_msg">Hidupkan atau matikan fitur di App Manager.</string>
 </resources>
