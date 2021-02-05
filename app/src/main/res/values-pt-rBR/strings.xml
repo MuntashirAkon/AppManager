@@ -16,7 +16,6 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="_lang_tag" translatable="false">pt-BR</string>
-    <string name="instructions_header">[Estas instruções estão desatualizadas e não serão mais atualizadas. Visite o site de documentação oficial (https://muntashirakon.github.io/AppManager) para obter informações atualizadas]</string>
     <string name="uninstall">Desinstalar</string>
     <string name="permissions">Permissões utilizadas</string>
     <string name="require_no_permission">Nenhuma permissão necessária</string>
@@ -149,7 +148,6 @@
     <string name="menu_remove_rules">Remover regras</string>
     <string name="menu_apply_rules">Aplicar regras</string>
     <string name="search">Buscar</string>
-    <string name="aurora">Aurora</string>
     <string name="dev_protected_data_dir">Diretório de dados protegidos pelo dispositivo</string>
     <string name="process_name">Nome do Processo</string>
     <string name="no_code">Nenhum código</string>
@@ -196,8 +194,6 @@
     <string name="no_app_ops">Nenhuma operação de aplicativo</string>
     <string name="failed_to_enable_op">A operação de aplicativo solicitada não pôde ser ativada</string>
     <string name="failed_to_disable_op">A operação de aplicativo solicitada não pôde ser desativada</string>
-    <string name="pref_root_mode_enabled">Modo root</string>
-    <string name="pref_root_mode_enabled_msg">Ativa todas as funções root deste aplicativo, o modo ADB é detectado automaticamente quando isto está desligado.</string>
     <string name="pref_global_blocking_enabled">Bloqueio global de componentes</string>
     <string name="pref_global_blocking_enabled_msg">Permite bloquear qualquer componente de qualquer aplicativo sem ligar explicitamente o bloqueio para o aplicativo.</string>
     <string name="pref_usage_access_enabled">Acesso ao uso</string>
@@ -334,12 +330,10 @@
 \nTwitter: https://twitter.com/AMUpdateChannel</string>
     <string name="pref_import_existing">Importar regras existentes</string>
     <string name="pref_import_existing_msg">Adicione componentes desativados por outros aplicativos ao App Manager. Tenha cuidado ao usar essa ferramenta, pois podem haver muitos falsos positivos. Escolha apenas os aplicativos sobre os quais você tem certeza.</string>
-    <string name="failed_to_get_data_usage_information">Não foi possível obter informações de uso de dados</string>
     <string name="clear_cache">Limpar Cache</string>
     <string name="block_unblock_trackers_description">Bloquear ou desbloquear componentes de propagandas e rastreamento em todos os aplicativos instalados</string>
     <string name="block_components_dots">Bloquear componentes…</string>
     <string name="block_components_description">Bloquear todos os componentes identificados pela(s) assinatura(s) especificada(s)</string>
-    <string name="deny_app_ops_dots">Negar operações de aplicativo…</string>
     <string name="clear_data_from_uninstalled_apps">Limpar dados dos aplicativos desinstalados</string>
     <string name="clear_data_from_uninstalled_apps_description">Limpar dados dos aplicativos que foram desinstalados com a flag DONT_DELETE_DATA</string>
     <string name="clear_app_cache">Limpar cache do aplicativo</string>
@@ -354,7 +348,6 @@
         <item quantity="one">%1$d divisão</item>
         <item quantity="other">%1$d divisões</item>
     </plurals>
-    <string name="failed_to_fetch_package_info_possibly_a_split_apk">Não foi possível obter informações do pacote, possivelmente um APK dividido</string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> instalado</string>
     <string name="failed_to_install_package_name"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> não pôde ser instalado</string>
     <string name="filter">Filtrar</string>
@@ -399,10 +392,6 @@
     <plurals name="alert_failed_to_block_components">
         <item quantity="one">%1$d aplicativo não pôde ter os componentes bloqueados</item>
         <item quantity="other">%1$d aplicativos não puderam ter os componentes bloqueados</item>
-    </plurals>
-    <plurals name="alert_failed_to_deny_app_ops">
-        <item quantity="one">%1$d aplicativo não pôde ter as operações de aplicativo negadas</item>
-        <item quantity="other">%1$d aplicativos não puderam ter as operações de aplicativo negadas</item>
     </plurals>
     <string name="apply_to_system_apps">Aplicar aos aplicativos do sistema</string>
     <string name="apply_to_system_apps_question">Aplicar aos aplicativos do sistema também\? Selecione \"Não\" se não tiver certeza.</string>
@@ -482,7 +471,6 @@
     <string name="error_evaluating_input">Não foi possível avaliar a entrada</string>
     <string name="input_signatures">Inserir assinaturas</string>
     <string name="type_long">Inteiro longo</string>
-    <string name="system_odex_not_supported">.odex e alguns aplicativos do sistema não têm suporte!</string>
     <string name="key_name">Nome da Chave</string>
     <string name="long_integer_value">Valor inteiro longo</string>
     <plurals name="alert_failed_to_enable">
@@ -792,7 +780,6 @@
     <string name="backup_apk_only_description">Faça o backup apenas dos arquivos APK do diretório de origem. <b>Origem</b> deve ser selecionado para que isso funcione.</string>
     <string name="patch_level">Nível do Patch</string>
     <string name="backup_skip_signature_checks_description">Útil para restaurar backups que estão falhando devido a falha na verificação do checksum ou tem uma assinatura APK diferente da do backup.</string>
-    <string name="backup_all_users_description">Realizar o backup para todos os usuários, não apenas para o usuário atual.</string>
     <string name="backup_multiple_description">Use um backup separado nomeado em vez de um backup básico.</string>
     <string name="backup_rules_description">Faça o backup de regras configuradas dentro do App Manager.</string>
     <string name="backup_extras_description">Faça o backup das permissões do aplicativo, economia de bateria, opções de uso de dados, status do MagiskHide, etc.</string>
@@ -821,7 +808,6 @@
         <item quantity="one">%1$d componente</item>
         <item quantity="other">%1$d componentes</item>
     </plurals>
-    <string name="pref_interceptor_enabled_msg">Intercepta a comunicação entre aplicativos via Intenção</string>
     <string name="backup_custom_users_description">Realizar backups apenas para os usuários especificados</string>
     <string name="backup_custom_users">Usuários personalizados</string>
     <string name="bootloader">Bootloader</string>

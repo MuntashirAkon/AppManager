@@ -195,7 +195,6 @@
     <string name="menu_remove_rules">Remove rules</string>
     <string name="menu_apply_rules">Apply rules</string>
     <string name="search">Search</string>
-    <string name="aurora">Aurora</string>
     <string name="dev_protected_data_dir">Device-protected Data Directory</string>
     <string name="native_library_dir">Native JNI Library Directory</string>
     <string name="process_name">Process Name</string>
@@ -220,7 +219,6 @@
     <string name="boolean_value">Boolean value</string>
     <string name="key_name">Key Name</string>
     <string name="select_type">Select a type</string>
-    <string name="system_odex_not_supported">.odex and some system apps lack support!</string>
     <string name="add_item">Add item</string>
     <string name="done">Done</string>
     <string name="type_boolean">True/false</string>
@@ -254,8 +252,6 @@
     <string name="failed_to_disable_op">Could not disable the requested app op</string>
     <string name="rules_not_applied">Rules are not applied</string>
     <string name="str_logo">Logo</string>
-    <string name="pref_root_mode_enabled">Root mode</string>
-    <string name="pref_root_mode_enabled_msg">Activates all the root features of this app, ADB mode is detected automatically when this is off.</string>
     <string name="pref_global_blocking_enabled">Global component blocking</string>
     <string name="pref_global_blocking_enabled_msg">Lets you block any component of any app without explicitly turning on blocking for the app.</string>
     <string name="pref_usage_access_enabled">Usage access</string>
@@ -407,7 +403,6 @@
     <string name="pref_import_existing">Import existing rules</string>
     <string name="pref_import_existing_msg">Add components disabled by others apps to App Manager.
         Be careful when using this tool as there can be many false positives. Choose only the apps you\'re certain about.</string>
-    <string name="failed_to_get_data_usage_information">Could not fetch data usage info</string>
     <string name="clear_cache">Clear Cache</string>
     <string name="block_unblock_trackers_description">Block or unblock ad and tracking components from all the installed apps</string>
     <string name="block_components_dots">Block components…</string>
@@ -430,7 +425,6 @@
         <item quantity="one">%1$d split</item>
         <item quantity="other">%1$d splits</item>
     </plurals>
-    <string name="failed_to_fetch_package_info_possibly_a_split_apk">Could not fetch package info, possibly a split APK</string>
     <string name="termux">Termux</string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> installed</string>
     <string name="failed_to_install_package_name">Could not install <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>

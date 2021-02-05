@@ -16,7 +16,6 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="_lang_tag" translatable="false">de</string>
-    <string name="instructions_header">Diese Anweisungen sind veraltet und werden nicht mehr aktualisiert. Besuchen Sie die offizielle Dokumentation auf (https://muntashirakon.github.io/AppManager), um die aktuellsten Informationen zu erhalten</string>
     <string name="uninstall">Deinstallieren</string>
     <string name="permissions">Verwendet Berechtigungen</string>
     <string name="require_no_permission">Keine Berechtigungen benötigt</string>
@@ -163,7 +162,6 @@
     <string name="menu_remove_rules">Regeln entfernen</string>
     <string name="menu_apply_rules">Regeln anwenden</string>
     <string name="search">Suchen</string>
-    <string name="aurora">Aurora</string>
     <string name="dev_protected_data_dir">Geräte-geschütztes Daten-Verzeichnis</string>
     <string name="native_library_dir">Native-JNI-Bibliotheken-Verzeichnis</string>
     <string name="process_name">Prozess-Name</string>
@@ -188,7 +186,6 @@
     <string name="boolean_value">Wahrheitswert</string>
     <string name="key_name">Schlüssel-Name</string>
     <string name="select_type">Wähle einen Typ</string>
-    <string name="system_odex_not_supported">.odex- und einige System-Anwendungen werden nicht unterstützt!</string>
     <string name="add_item">Hinzufügen</string>
     <string name="done">Fertig</string>
     <string name="type_boolean">Wahr/falsch</string>
@@ -222,8 +219,6 @@
     <string name="failed_to_disable_op">Konnte gewünschte App Op nicht entziehen</string>
     <string name="rules_not_applied">Regeln wurden nicht angewendet</string>
     <string name="str_logo">Logo</string>
-    <string name="pref_root_mode_enabled">Root-Modus</string>
-    <string name="pref_root_mode_enabled_msg">Aktiviert alle Root-Funktionen dieser Anwendung, der ADB-Modus wird automatisch erkannt, wenn er ausgeschaltet ist.</string>
     <string name="pref_global_blocking_enabled">Globales Komponenten-Blockieren</string>
     <string name="pref_global_blocking_enabled_msg">Erlaubt jede Komponente einer Anwendung zu blockieren, ohne die Blockierung für die Anwendung explizit einzuschalten.</string>
     <string name="pref_usage_access_enabled">Zugriff auf Nutzungsdaten</string>
@@ -365,12 +360,10 @@
 \nTwitter: https://twitter.com/AMUpdateChannel</string>
     <string name="pref_import_existing">Existierende Regeln importieren</string>
     <string name="pref_import_existing_msg">Hinzufügen von Komponenten zum App Manager, die von anderen Anwendungen deaktiviert wurden. Seien Sie bei der Verwendung dieses Tools vorsichtig, da es viele Fehlalarme geben kann. Wählen Sie nur die Anwendungen aus, bei denen Sie sich sicher sind.</string>
-    <string name="failed_to_get_data_usage_information">Abfrage der Datennutzung nicht möglich</string>
     <string name="clear_cache">Cache leeren</string>
     <string name="block_unblock_trackers_description">Blockiere oder gebe Verfolger-Komponenten aller installierter Anwendungen frei</string>
     <string name="block_components_dots">Komponenten blockieren…</string>
     <string name="block_components_description">Blockieren aller Komponenten, die Signatur(en) entsprechen</string>
-    <string name="deny_app_ops_dots">App Ops entziehen…</string>
     <string name="deny_app_ops_description">Einstellen eines Modus für App-Operationen, die durch konstante Werte identifiziert werden (z. B. 63 bedeutet RUN_IN_BACKGROUND)</string>
     <string name="clear_data_from_uninstalled_apps">Daten deinstallierter Anwendungen löschen</string>
     <string name="clear_data_from_uninstalled_apps_description">Daten von Anwendungen, die mit der DONT_DELETE_DATA-Flagge deinstalliert wurden, löschen</string>
@@ -389,7 +382,6 @@
         <item quantity="one">%1$d Teil</item>
         <item quantity="other">%1$d Teile</item>
     </plurals>
-    <string name="failed_to_fetch_package_info_possibly_a_split_apk">Laden von Paket-Informationen nicht möglich, es könnte eine geteilte APK sein</string>
     <string name="termux">Termux</string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> ist installiert</string>
     <string name="failed_to_install_package_name">Installation von <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> nicht möglich</string>
@@ -532,10 +524,6 @@
     <plurals name="alert_failed_to_enable">
         <item quantity="one">%1$d Anwendung konnte nicht aktiviert werden</item>
         <item quantity="other">%1$d Anwendungen konnten nicht aktiviert werden</item>
-    </plurals>
-    <plurals name="alert_failed_to_deny_app_ops">
-        <item quantity="one">Verweigern der App-Operationen für %1$d Anwendung nicht möglich</item>
-        <item quantity="other">Verweigern der App-Operationen für %1$d Anwendungen nicht möglich</item>
     </plurals>
     <plurals name="alert_failed_to_block_components">
         <item quantity="one">Komponenten für %1$d Anwendung konnte nicht blockiert werden</item>
@@ -792,7 +780,6 @@
     <string name="matching_activities">Passende Aktivitäten</string>
     <string name="patch_level">Patch-Level</string>
     <string name="backup_skip_signature_checks_description">Nützlich für die Wiederherstellung von Backups, die aufgrund eines Fehlers bei der Prüfsummenüberprüfung fehlschlugen oder eine andere APK-Signatur haben als das gesicherte Backup.</string>
-    <string name="backup_all_users_description">Sicherung für alle Benutzer durchführen, nicht nur für den aktuellen Benutzer.</string>
     <string name="backup_multiple_description">Verwenden Sie ein separat benanntes Backup anstelle des Basis-Backups.</string>
     <string name="backup_rules_description">Im App Manager konfigurierte Regeln sichern.</string>
     <string name="backup_extras_description">Sichern Sie App-Berechtigungen, Batteriesparen, Datennutzungsoptionen, MagiskHide-Status usw.</string>
@@ -812,7 +799,6 @@
     <string name="pref_backup_volume_msg">Wählen Sie den Datenträger oder das Laufwerk aus, auf dem die Sicherungen gespeichert werden sollen.</string>
     <string name="backup_volume">Datenträger sichern</string>
     <string name="pref_backup_restore_msg">Anpassen von Sicherung/ Wiederherstellung.</string>
-    <string name="pref_interceptor_enabled_msg">Abfangen der Kommunikation zwischen Apps über Intent</string>
     <string name="disable_background_run_description">Setzt den Modus <i>ignore</i> auf die folgenden App-Ops: <tt>RUN_IN_BACKGROUND</tt> (ab Android 7.0) und <tt>RUN_ANY_IN_BACKGROUND</tt> (ab Android 9).</string>
     <string name="failed_to_enable_magisk_hide">Konnte MagiskHide nicht aktivieren</string>
     <string name="enable_magisk_hide">MagiskHide einschalten</string>

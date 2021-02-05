@@ -16,9 +16,6 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="_lang_tag" translatable="false">es-ES</string>
-    <string name="instructions_header">[Estas instrucciones están obsoletas y ya no serán
-        actualizadas. Visite el sitio oficial de documentación (https://muntashirakon.github.io/AppManager) para obtener
-        información actualizada]</string>
     <string name="uninstall">Desinstalar</string>
     <string name="permissions">Usos de los permisos</string>
     <string name="require_no_permission">No se requiere ningún permiso</string>
@@ -112,8 +109,6 @@
     <string name="pref_usage_access_enabled">Acceso al uso</string>
     <string name="pref_global_blocking_enabled_msg">Te permite bloquear cualquier componente de cualquier aplicación sin activar explícitamente el bloqueo de la aplicación.</string>
     <string name="pref_global_blocking_enabled">Bloqueo de componente global</string>
-    <string name="pref_root_mode_enabled_msg">Activa todas las funciones de la raíz (root) de esta aplicación, el modo ADB se detecta automáticamente cuando está desactivado.</string>
-    <string name="pref_root_mode_enabled">Modo Root</string>
     <string name="str_logo">Logo</string>
     <string name="rules_not_applied">Las reglas no están aplicadas</string>
     <string name="app_ops">App Ops</string>
@@ -136,7 +131,6 @@
     <string name="type_boolean">Verdadero/Falso</string>
     <string name="done">Hecho</string>
     <string name="add_item">Añadir ítem</string>
-    <string name="system_odex_not_supported">.odex y algunas aplicaciones de sistema carecen de soporte!</string>
     <string name="select_type">Seleccione un tipo</string>
     <string name="key_name">Nombre de la clave</string>
     <string name="string_value">String value</string>
@@ -157,7 +151,6 @@
     <string name="process_name">Nombre del proceso</string>
     <string name="native_library_dir">Directorio de la biblioteca nativa JNI</string>
     <string name="dev_protected_data_dir">Directorio de datos de Dispositivo-Protegido (Device-Protected)</string>
-    <string name="aurora">Aurora</string>
     <string name="search">Buscar</string>
     <string name="menu_apply_rules">Aplicar reglas</string>
     <string name="menu_remove_rules">Eliminar reglar</string>
@@ -355,7 +348,6 @@
     <string name="failed_to_install_package_name">No se pudo instalar <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> instalado</string>
     <string name="termux">Termux</string>
-    <string name="failed_to_fetch_package_info_possibly_a_split_apk">No se pudo obtener información del paquete, posiblemente es un split APK (APK dividido)</string>
     <string name="failed_to_parse_some_numbers">No se pudo analizar algunos números</string>
     <string name="only_works_in_root_or_adb_mode">Sólo funcionan en modo root o ADB</string>
     <string name="filtered_packages">Paquetes filtrados</string>
@@ -367,12 +359,10 @@
     <string name="clear_app_cache">Limpiar caché de la app</string>
     <string name="clear_data_from_uninstalled_apps">Limpiar datos de aplicaciones desinstaladas</string>
     <string name="deny_app_ops_description">Establecer un modo para las operaciones de las aplicaciones identificadas por los valores constantes, es decir, 63 o RUN_IN_BACKGROUND</string>
-    <string name="deny_app_ops_dots">Denegar app ops…</string>
     <string name="block_components_description">Bloquear todos los componentes identificados por la(s) firma(s) dada(s)</string>
     <string name="block_components_dots">Bloquear componentes…</string>
     <string name="block_unblock_trackers_description">Bloquear o desbloquear componentes de anuncios o rastreo de todas las apps instaladas</string>
     <string name="clear_cache">Limpiar caché</string>
-    <string name="failed_to_get_data_usage_information">No se pudo obtener información sobre el uso de datos</string>
     <string name="pref_import_existing_msg">Añadir componentes deshabilitados de otras apps a App Manager. Ten cuidado al usar esta herramienta ya que puede haber muchos falsos positivos.
 \nElige sólo las apps de las que estés seguro.</string>
     <string name="pref_import_existing">Importar reglas existentes</string>
@@ -464,10 +454,6 @@
     <string name="locale_split_for_feature"><xliff:g id="split_name" example="English">%1$s</xliff:g> lugar para la función <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
     <string name="density_split_for_feature"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) recursos para la función <xliff:g id="feature_name" example="Visualizer">%3$s</xliff:g></string>
     <string name="split_feature_name">Función: <xliff:g id="feature_name" example="Visualizer">%1$s</xliff:g></string>
-    <plurals name="alert_failed_to_deny_app_ops">
-        <item quantity="one">No se pudo denegar las app ops para %1$d app</item>
-        <item quantity="other">No se pudo denegar las app ops para %1$d apps</item>
-    </plurals>
     <plurals name="alert_failed_to_block_components">
         <item quantity="one">No se pudo bloquear los componentes para %1$d app</item>
         <item quantity="other">No se pudo bloquear los componentes para %1$d apps</item>
@@ -797,7 +783,6 @@
     <string name="pref_backup_volume_msg">Seleccionar el volumen o el disco donde se almacenarán los backups.</string>
     <string name="backup_volume">Volumen del Backup</string>
     <string name="pref_backup_restore_msg">Personalizar Backup/Restore.</string>
-    <string name="pref_interceptor_enabled_msg">Intercepta la comunicación entre aplicaciones a través de Intent</string>
     <string name="disable_background_run_description">Establece el modo <i>ignorar</i> para las siguientes aplicaciones: <tt>RUN_IN_BACKGROUND</tt> (del Androide 7.0) y <tt>RUN_ANY_IN_BACKGROUND</tt> (desde Android 9).</string>
     <string name="failed_to_enable_magisk_hide">No se pudo habilitar MagiskHide</string>
     <string name="enable_magisk_hide">Habilitar MagiskHide</string>

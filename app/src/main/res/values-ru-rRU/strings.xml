@@ -16,7 +16,6 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="_lang_tag" translatable="false">ru-RU</string>
-    <string name="instructions_header">[Эти инструкции устарели и больше не будут обновляться. Посетите официальный сайт документации (https://muntashirakon.github.io/AppManager), чтобы получить самую свежую информацию]</string>
     <string name="uninstall">Удалить</string>
     <string name="permissions">Используемые разрешения</string>
     <string name="require_no_permission">Не требует разрешений</string>
@@ -171,7 +170,6 @@
     <string name="menu_remove_rules">Удалить правила</string>
     <string name="menu_apply_rules">Применить правила</string>
     <string name="search">Поиск</string>
-    <string name="aurora">Aurora</string>
     <string name="dev_protected_data_dir">Каталог данных, защищенных устройством</string>
     <string name="native_library_dir">Нативная директория библиотеки JNI</string>
     <string name="process_name">Название процесса</string>
@@ -196,7 +194,6 @@
     <string name="boolean_value">Логическое значение</string>
     <string name="key_name">Название ключа</string>
     <string name="select_type">Выберите тип</string>
-    <string name="system_odex_not_supported">Одексированные и некоторые системные приложения не поддерживаются!</string>
     <string name="add_item">Добавить элемент</string>
     <string name="done">Готово</string>
     <string name="type_boolean">Верно/неверно</string>
@@ -230,8 +227,6 @@
     <string name="failed_to_disable_op">Не удалось отключить запрошенную операцию приложения</string>
     <string name="rules_not_applied">Правила не применены</string>
     <string name="str_logo">Логотип</string>
-    <string name="pref_root_mode_enabled">Режим root</string>
-    <string name="pref_root_mode_enabled_msg">Активирует все root-функции этого приложения, режим ADB определяется автоматически, когда он отключен.</string>
     <string name="pref_global_blocking_enabled">Глобальная блокировка компонентов</string>
     <string name="pref_global_blocking_enabled_msg">Позволяет вам блокировать любой компонент любого приложения без явного включения блокировки для приложения.</string>
     <string name="pref_usage_access_enabled">Доступ к истории использования</string>
@@ -391,12 +386,10 @@
 \nTwitter: https://twitter.com/AMUpdateChannel</string>
     <string name="pref_import_existing">Импорт существующих правил</string>
     <string name="pref_import_existing_msg">Добавить компоненты, отключенные другими приложениями, в App Manager. Будьте осторожны при использовании этого инструмента, так как может быть много ложных срабатываний. Выбирайте только те приложения, в которых вы уверены.</string>
-    <string name="failed_to_get_data_usage_information">Не удалось получить информацию об использовании данных</string>
     <string name="clear_cache">Очистить кэш</string>
     <string name="block_unblock_trackers_description">Блокировать или разблокировать рекламу и компоненты трекеров во всех установленных приложениях</string>
     <string name="block_components_dots">Блокировать компоненты…</string>
     <string name="block_components_description">Заблокировать все компоненты, идентифицированные данными подписями</string>
-    <string name="deny_app_ops_dots">Отклонить операции приложения…</string>
     <string name="deny_app_ops_description">Установите режим для операций приложения, определяемых постоянными значениями, например 63 или RUN_IN_BACKGROUND</string>
     <string name="clear_data_from_uninstalled_apps">Очистить данные удаленных приложений</string>
     <string name="clear_data_from_uninstalled_apps_description">Очистить данные приложений, которые были удалены с помощью флага DONT_DELETE_DATA</string>
@@ -417,7 +410,6 @@
         <item quantity="many">%1$d частей</item>
         <item quantity="other">%1$d частей</item>
     </plurals>
-    <string name="failed_to_fetch_package_info_possibly_a_split_apk">Не удалось получить информацию о пакете, возможно, это разделенный файл APK</string>
     <string name="termux">Termux</string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> установлено</string>
     <string name="failed_to_install_package_name">Не удалось установить <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
@@ -475,12 +467,6 @@
         <item quantity="few">Не удалось заблокировать компоненты %1$d приложений</item>
         <item quantity="many">Не удалось заблокировать компоненты %1$d приложений</item>
         <item quantity="other">Не удалось заблокировать компоненты %1$d приложений</item>
-    </plurals>
-    <plurals name="alert_failed_to_deny_app_ops">
-        <item quantity="one">Не удалось запретить операции приложения для %1$d приложения</item>
-        <item quantity="few">Не удалось запретить операции приложения для %1$d приложений</item>
-        <item quantity="many">Не удалось запретить операции приложения для %1$d приложений</item>
-        <item quantity="other">Не удалось запретить операции приложения для %1$d приложений</item>
     </plurals>
     <string name="apply_to_system_apps">Применить к системным приложениям</string>
     <string name="apply_to_system_apps_question">Применить и к системным приложениям\? Если не уверены, выберите \"Нет\".</string>
@@ -848,7 +834,6 @@
     <string name="security">Безопасность</string>
     <string name="patch_level">Обновление системы безопасности Андроид</string>
     <string name="backup_skip_signature_checks_description">Полезно для восстановления резервных копий, которые не работают из-за ошибки проверки контрольной суммы или имеют подпись APK, отличную от подписи для резервной копии.</string>
-    <string name="backup_all_users_description">Выполнить резервное копирование для всех пользователей, а не только для текущего пользователя.</string>
     <string name="backup_multiple_description">Использовать особое название резервной копии, вместо базовой.</string>
     <string name="backup_rules_description">Резервное копирование правил, настроенных в App Manager.</string>
     <string name="backup_extras_description">Резервное копирование разрешений приложения, экономия батареи, параметры использования данных, статус MagiskHide и т.д.</string>
@@ -886,7 +871,6 @@
         <item quantity="many">%1$d компонентов</item>
         <item quantity="other">%1$d компонентов</item>
     </plurals>
-    <string name="pref_interceptor_enabled_msg">Перехватывает связь между приложениями через цель</string>
     <string name="backup_custom_users_description">Выполнять резервное копирование только для указанных пользователей</string>
     <string name="encrypted">Зашифрованный</string>
     <string name="unencrypted">Незашифрованный</string>

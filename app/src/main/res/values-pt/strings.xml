@@ -59,10 +59,6 @@
         <item quantity="one">Não foi possível ativar %s app</item>
         <item quantity="other">Não foi possível ativar %s apps</item>
     </plurals>
-    <plurals name="alert_failed_to_deny_app_ops">
-        <item quantity="one">Não foi possível negar operações de app para %d app</item>
-        <item quantity="other">Não foi possível negar operações de app para %d apps</item>
-    </plurals>
     <plurals name="alert_failed_to_block_components">
         <item quantity="one">Não foi possível bloquear componentes de %d app</item>
         <item quantity="other">Não foi possível bloquear componentes de %d apps</item>
@@ -194,8 +190,6 @@
     <string name="pref_usage_access_enabled">Acesso ao uso</string>
     <string name="pref_global_blocking_enabled_msg">Permite a restrição em outros apps mesmo sem ativar o bloqueio explicitamente</string>
     <string name="pref_global_blocking_enabled">Bloquear componentes globalmente</string>
-    <string name="pref_root_mode_enabled_msg">Ativa todos os recursos root desta app, o modo ADB é detectado automaticamente quando isto está desativado</string>
-    <string name="pref_root_mode_enabled">Modo root</string>
     <string name="str_logo">Logo</string>
     <string name="rules_not_applied">Regras não são aplicadas</string>
     <string name="failed_to_disable_op">A operação da app solicitada não pôde ser desativada</string>
@@ -229,7 +223,6 @@
     <string name="type_boolean">Verdadeiro/Falso</string>
     <string name="done">Feito</string>
     <string name="add_item">Adicionar item</string>
-    <string name="system_odex_not_supported">.odex e alguns apps do sistema não têm suporte!</string>
     <string name="select_type">Selecione um tipo</string>
     <string name="key_name">Nome da Chave</string>
     <string name="boolean_value">Valor booleano</string>
@@ -254,7 +247,6 @@
     <string name="process_name">Nome do Processo</string>
     <string name="native_library_dir">Diretório Nativo da Biblioteca JNI</string>
     <string name="dev_protected_data_dir">Diretório de dados protegidos pelo aparelho</string>
-    <string name="aurora">Aurora</string>
     <string name="search">Pesquisar</string>
     <string name="menu_apply_rules">Aplicar regras</string>
     <string name="menu_remove_rules">Remover regras</string>
@@ -380,7 +372,6 @@
     <string name="filter">Filtro</string>
     <string name="failed_to_install_package_name">O %s não pôde ser instalado</string>
     <string name="package_name_is_installed_successfully">%s instalado</string>
-    <string name="failed_to_fetch_package_info_possibly_a_split_apk">Não foi possível obter informações do pacote, possivelmente um APK dividido</string>
     <plurals name="no_of_splits">
         <item quantity="one">%d APK</item>
         <item quantity="other">%d APKs</item>
@@ -396,12 +387,10 @@
     <string name="clear_app_cache">Limpar cache do app</string>
     <string name="clear_data_from_uninstalled_apps_description">Limpar dados dos apps que foram desinstalados e que continham a flag DONT_DELETE_DATA</string>
     <string name="clear_data_from_uninstalled_apps">Limpar dados dos apps desinstalados</string>
-    <string name="deny_app_ops_dots">Negar app ops…</string>
     <string name="block_components_description">Bloquear todos os componentes identificados pelas assinaturas especificadas</string>
     <string name="block_components_dots">Bloquear componentes…</string>
     <string name="block_unblock_trackers_description">Bloquear ou desbloquear componentes de propagandas e rastreamento em todos os apps instalados</string>
     <string name="clear_cache">Limpar cache</string>
-    <string name="failed_to_get_data_usage_information">Não foi possível obter informações de uso de dados</string>
     <string name="pref_import_existing_msg">Adicione componentes desativados por outros apps ao App Manager. Tenha cuidado ao usar essa ferramenta, pois podem haver muitos falsos positivos. Escolha apenas as apps sobre os quais tem certeza</string>
     <string name="pref_import_existing">Importar regras existentes</string>
     <string name="community_links">Canal de atualizações: https://t.me/AppManagerChannel
@@ -470,7 +459,6 @@
     <string name="require_no_permission">Nenhuma permissão requerida</string>
     <string name="permissions">Usa permissões</string>
     <string name="uninstall">Desinstalar</string>
-    <string name="instructions_header">[Estas instruções estão desatualizadas e não serão mais atualizadas. Visite o site de documentação oficial (https://muntashirakon.github.io/AppManager) para obter mais informações]</string>
     <string name="battery">Bateria</string>
     <string name="graphics">Gráficos</string>
     <string name="users">Utilizadores</string>

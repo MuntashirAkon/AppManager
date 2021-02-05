@@ -196,7 +196,6 @@
     <string name="menu_remove_rules">ルールを除去</string>
     <string name="menu_apply_rules">ルールを反映</string>
     <string name="search">検索</string>
-    <string name="aurora">Aurora</string>
     <string name="dev_protected_data_dir">保護されたデータの保存場所</string>
     <string name="native_library_dir">ネイティブJNIライブラリの保存場所</string>
     <string name="process_name">プロセス名</string>
@@ -221,7 +220,6 @@
     <string name="boolean_value">真偽値</string>
     <string name="key_name">キーの名前</string>
     <string name="select_type">タイプを選択</string>
-    <string name="system_odex_not_supported">odexといくつかのシステムアプリはサポートされていません!</string>
     <string name="add_item">アイテムを追加</string>
     <string name="done">完了</string>
     <string name="type_boolean">真/偽</string>
@@ -255,8 +253,6 @@
     <string name="failed_to_disable_op">権限を無効化できませんでした</string>
     <string name="rules_not_applied">ルールはまだ反映されていません</string>
     <string name="str_logo">ロゴ</string>
-    <string name="pref_root_mode_enabled">Rootモード</string>
-    <string name="pref_root_mode_enabled_msg">このアプリのRoot機能を有効にします。これがオフになったとき、自動的にADBモードが選択されます。</string>
     <string name="pref_global_blocking_enabled">グローバルブロックを有効化</string>
     <string name="pref_global_blocking_enabled_msg">手動でアプリごとにブロックを有効にしなくても自動的に全てのアプリでコンポーネントブロッキングを有効化します。</string>
     <string name="pref_usage_access_enabled">使用状況アクセス</string>
@@ -407,7 +403,6 @@
     <string name="pref_import_existing">既存のルールをインポート</string>
     <string name="pref_import_existing_msg">他のアプリによって無効にされたコンポーネントを追加します。
         多くのご検知が発生する場合があるのでご注意ください。 </string>
-    <string name="failed_to_get_data_usage_information">データ使用状況を取得できませんでした</string>
     <string name="clear_cache">キャッシュを消去</string>
     <string name="block_unblock_trackers_description">全てのインストールされたアプリから広告やトラッカーのコンポーネントをブロック/ブロック解除</string>
     <string name="block_components_dots">コンポーネントをブロック…</string>
@@ -430,7 +425,6 @@
         <item quantity="one">%1$d split</item>
         <item quantity="other">%1$d splits</item>
     </plurals>
-    <string name="failed_to_fetch_package_info_possibly_a_split_apk">パッケージ情報を取得できませんでした。恐らく分割APKです。</string>
     <string name="termux">Termux</string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> インストール済み</string>
     <string name="failed_to_install_package_name"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> をインストールできませんでした</string>
@@ -843,7 +837,6 @@
     <string name="enable_magisk_hide">MagiskHideを有効化</string>
     <string name="failed_to_enable_magisk_hide">MagiskHideを有効化できませんでした</string>
     <string name="disable_background_run_description">これは次のAppOpsに <i>ignore</i> モードを設定します: <tt>RUN_IN_BACKGROUND</tt> (Android 7.0〜) and <tt>RUN_ANY_IN_BACKGROUND</tt> (Android 9〜).</string>
-    <string name="pref_interceptor_enabled_msg">インテントによるアプリ間の通信を検証します</string>
     <string name="pref_backup_restore_msg">バックアップ/復元に関する設定</string>
     <string name="backup_volume">バックアップするボリューム</string>
     <string name="pref_backup_volume_msg">バックアップを保存するディスクやボリュームを選択します。</string>

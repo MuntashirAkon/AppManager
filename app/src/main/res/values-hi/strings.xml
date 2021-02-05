@@ -2,12 +2,10 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="_lang_tag" translatable="false">hi</string>
     <string name="deny_app_ops_description">कांस्टेंट वैल्यू द्वारा पहचाने गए ऐप ऑपरेशंस को अस्वीकार करें, यानी 63 का मतलब है RUN_IN_BACKGROUND</string>
-    <string name="deny_app_ops_dots">ऐप्स ऑप्स अस्वीकार करें…</string>
     <string name="block_components_description">दिए गए हस्ताक्षर द्वारा पहचाने गए सभी कंपोनेंट को ब्लॉक करें</string>
     <string name="block_components_dots">कंपोनेंट ब्लॉक करें…</string>
     <string name="block_unblock_trackers_description">सभी इंस्टॉल किए गए ऐप्स से विज्ञापन और ट्रैकिंग कंपोनेंट को ब्लॉक या अनब्लॉक करें</string>
     <string name="clear_cache">कैश साफ़ करें</string>
-    <string name="failed_to_get_data_usage_information">डेटा उपयोग जानकारी प्राप्त नहीं कर सका</string>
     <string name="pref_import_existing_msg">ऐप मैनेजर में अन्य ऐप्स द्वारा बंद किए कंपोनेंट जोड़ें। इस टूल का उपयोग करते समय सावधान रहें क्योंकि कई झूठी सकारात्मक हो सकती हैं। केवल उन्हीं ऐप्लिकेशन को चुनें जिनके बारे में आप कुछ निश्चित हैं</string>
     <string name="pref_import_existing">मौजूदा रूल्स को आयात करें</string>
     <string name="community_links">अपडेट चैनल: https://t.me/AppManagerChannel
@@ -145,8 +143,6 @@
     <string name="pref_usage_access_enabled">इस्तेमाल का एक्सेस</string>
     <string name="pref_global_blocking_enabled_msg">आप एप्लिकेशन को ब्लॉक किए बिना किसी भी एप्लिकेशन के किसी भी कंपोनेंट को ब्लॉक कर सकते हैं</string>
     <string name="pref_global_blocking_enabled">ग्लोबल कंपोनेंट ब्लॉकिंग</string>
-    <string name="pref_root_mode_enabled_msg">इस ऐप के सभी रूट फीचर्स को सक्रिय करता है, जब यह बंद होता है तो ADB मोड अपने आप प्रारंभ हो जाता है।</string>
-    <string name="pref_root_mode_enabled">रूट मोड</string>
     <string name="str_logo">लोगो</string>
     <string name="rules_not_applied">रूल्स लागू नहीं हैं</string>
     <string name="failed_to_disable_op">अनुरोध किए गए ऐप ऑप को बंद नहीं किया जा सका</string>
@@ -180,7 +176,6 @@
     <string name="type_boolean">ट्रू/फाल्स</string>
     <string name="done">हो गया</string>
     <string name="add_item">आइटम जोड़ें</string>
-    <string name="system_odex_not_supported">.odex और कुछ सिस्टम ऐप्स के पास समर्थन की कमी है!</string>
     <string name="select_type">एक प्रकार का चयन करें</string>
     <string name="key_name">की नाम</string>
     <string name="boolean_value">बूलियन वैल्यू</string>
@@ -205,7 +200,6 @@
     <string name="process_name">प्रोसेस का नाम</string>
     <string name="native_library_dir">नेटिव JNI लाइब्रेरी डायरेक्टरी</string>
     <string name="dev_protected_data_dir">डिवाइस-संरक्षित डेटा डायरेक्टरी</string>
-    <string name="aurora">ऑरोरा</string>
     <string name="search">खोजें</string>
     <string name="menu_apply_rules">रूल्स लागू करें</string>
     <string name="menu_remove_rules">रूल्स हटाएँ</string>
@@ -351,7 +345,6 @@
     <string name="failed_to_install_package_name"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> को इंस्टॉल नहीं कर सके</string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> इंस्टॉल पूर्ण हुआ</string>
     <string name="termux">टर्मक्स</string>
-    <string name="failed_to_fetch_package_info_possibly_a_split_apk">पैकेज की जानकारी प्राप्त नहीं कर सके, संभवतः एक स्प्लिट एपीके है</string>
     <plurals name="no_of_splits">
         <item quantity="one">%1$d स्प्लिट</item>
         <item quantity="other">%1$d स्प्लिट्स</item>
@@ -394,7 +387,6 @@
     <string name="require_no_permission">किसी भी अनुमति की आवश्यकता नहीं</string>
     <string name="permissions">अनुमतियों का उपयोग</string>
     <string name="uninstall">अनइंस्टॉल करें</string>
-    <string name="instructions_header">[ये निर्देश पुराने हैं और अब अपडेट नहीं किए जाएंगे। अप-टू-डेट जानकारी प्राप्त करने के लिए आधिकारिक डॉक्स साइट (https://muntashirakon.github.io/AppManager) पर जाएं]</string>
     <string name="install_without_data_loss">यदि आपने सिग्नेचर वेरिफिकेशन बंद कर रखा है, तो आप बिना डेटा खोए ऐप इंस्टॉल करने के लिए <b>केवल इंस्टॉल</b> विकल्प का उपयोग कर सकते हैं।</string>
     <string name="no">नहीं</string>
     <string name="keyboard_no_keys">कोई कुंजी नहीं</string>
@@ -582,10 +574,6 @@
     <plurals name="alert_failed_to_enable">
         <item quantity="one">%1$d ऐप को चालू नहीं कर सका</item>
         <item quantity="other">%1$d ऐप्स को चालू नहीं कर सके</item>
-    </plurals>
-    <plurals name="alert_failed_to_deny_app_ops">
-        <item quantity="one">%1$d ऐप के ऐप ऑप्स को अस्वीकार नहीं कर सका</item>
-        <item quantity="other">%1$d ऐप्स के ऐप ऑप्स को अस्वीकार नहीं कर सके</item>
     </plurals>
     <plurals name="alert_failed_to_block_components">
         <item quantity="one">%1$d ऐप के कंपोनेंट्स को ब्लॉक नहीं किया जा सका</item>
@@ -790,7 +778,6 @@
     <string name="selinux">SELinux</string>
     <string name="patch_level">पैच स्तर</string>
     <string name="backup_skip_signature_checks_description">बैकअप रिस्टोर करने के लिए उपयोगी है जो चेकसम सत्यापन विफलता के कारण विफल हो रहे हैं या पहले से बने बैकअप की तुलना में एक अलग एपीके हस्ताक्षर है।</string>
-    <string name="backup_all_users_description">सभी यूज़र्स के लिए बैकअप करें, न कि केवल वर्तमान ।</string>
     <string name="backup_multiple_description">बेस बैकअप के बजाय बैक अप नाम से अलग नाम का इस्तेमाल करें।</string>
     <string name="backup_rules_description">ऐप मैनेजर के भीतर कॉन्फ़िगर किए गए नियमों का बैकअप करें।</string>
     <string name="backup_extras_description">ऐप अनुमतियां, बैटरी की बचत, डेटा उपयोग विकल्प, मैजिस्कहाइड स्थिति आदि बैकअप करें।</string>

@@ -15,9 +15,6 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="instructions_header">[Queste istruzioni sono obsolete e non saranno più
-        aggiornate. Visita il sito web con la documentazione ufficiale (https://muntashirakon.github.io/AppManager) per
-        ottenere informazioni aggiornate]</string>
     <string name="uninstall">Disinstalla</string>
     <string name="require_no_permission">Nessun permesso richiesto</string>
     <string name="activities">Attività</string>
@@ -55,7 +52,6 @@
     <string name="usage_today">Oggi</string>
     <string name="usage_7_days">Ultimi 7 giorni</string>
     <string name="search">Cerca</string>
-    <string name="aurora">Aurora</string>
     <string name="process_name">Nome processo</string>
     <string name="requested_large_heap">Heap grande</string>
     <string name="databases">Database</string>
@@ -65,7 +61,6 @@
     <string name="enable">Abilita</string>
     <string name="force_stop">Forza interruzione</string>
     <string name="str_logo">Logo</string>
-    <string name="pref_root_mode_enabled">Modalità root</string>
     <string name="pref_import">Importa</string>
     <string name="pref_export">Esporta</string>
     <string name="import_failed">Importazione fallita!</string>
@@ -110,7 +105,6 @@
     <string name="type_boolean">Vero/Falso</string>
     <string name="done">Fatto</string>
     <string name="add_item">Aggiungi elemento</string>
-    <string name="system_odex_not_supported">.odex e alcune app di sistema mancano di supporto!</string>
     <string name="select_type">Scegli un tipo</string>
     <string name="boolean_value">Valore Booleano</string>
     <string name="decimal_value">Valore decimale</string>
@@ -196,12 +190,10 @@
     <string name="permissions">Permessi utente</string>
     <string name="clear_data_from_uninstalled_apps">Rimuovi dati delle app disinstallate</string>
     <string name="deny_app_ops_description">Nega le operazioni app identificate dati i valori costanti, Ex 63 significa RUN_IN_BACKGROUND</string>
-    <string name="deny_app_ops_dots">Nega operazioni app…</string>
     <string name="block_components_description">Blocca tutti i componenti identificati dalla(e) firma(e) indicata(e)</string>
     <string name="block_components_dots">Blocca componenti…</string>
     <string name="block_unblock_trackers_description">Blocca o sblocca pubblicità e componenti tracking da tutte applicazioni installe</string>
     <string name="clear_cache">Svuota Cache</string>
-    <string name="failed_to_get_data_usage_information">Impossibile trovare dati sull\'utilizzo</string>
     <string name="pref_import_existing_msg">Aggiunge componenti disabilitati dalle altre applicazioni su App Manager. Fai attenzione ad usare questa funzione in quanto possono esserci dei falsi positivi. Scegli solo le app di cui sei sicuro.</string>
     <string name="pref_import_existing">Importa regole esistenti</string>
     <string name="community_links">Aggiorna canale: https://t.me/AppManagerChannel
@@ -309,7 +301,6 @@
     <string name="pref_global_blocking_enabled">Blocco globale componenti</string>
     <string name="pref_usage_access_enabled_msg">Ti mostara le statistiche di utilizzo dell\'app e le info sui dati.</string>
     <string name="pref_global_blocking_enabled_msg">Ti permette di bloccare ogni componente di qualsiasi app senza aprire esplicitamente il blocco per le app.</string>
-    <string name="pref_root_mode_enabled_msg">Attiva tutte le caratteristiche di root dell\'app, Il modello ADB è stato trovato automaticamente dopo il riavvio.</string>
     <string name="app_size">App</string>
     <string name="no_usage_in_this_time_range">Nessun utilizzo in questo arco di tempo</string>
     <string name="type_string">Caratteri</string>

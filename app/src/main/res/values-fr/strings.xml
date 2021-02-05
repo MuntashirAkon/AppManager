@@ -53,9 +53,7 @@
     <string name="activities">Activités</string>
     <string name="require_no_permission">Aucune autorisation requise</string>
     <string name="permissions">Nécessite des autorisations</string>
-    <string name="instructions_header">[Ces instructions sont dépassées et ne seront plus mises à jour. Visitez le site officiel de la documentation (https://muntashirakon.github.io/AppManager) pour obtenir des informations actualisées]</string>
     <string name="installer_app">Installeur App</string>
-    <string name="aurora">Aurora</string>
     <string name="scanner">Analyseur</string>
     <string name="sort">Trier</string>
     <string name="obb_size">Obb</string>
@@ -347,7 +345,6 @@
     <string name="block_components_dots">Bloquer les composants…</string>
     <string name="block_unblock_trackers_description">Bloquer ou débloquer les composants de publicité et de suivi des applications installées</string>
     <string name="clear_cache">Effacer le cache</string>
-    <string name="failed_to_get_data_usage_information">Impossible de récupérer les informations des données d\'utilisation</string>
     <string name="pref_import_existing">Importer des règles existantes</string>
     <string name="community_links">Salon d\'information : https://t.me/AppManagerChannel
 \nGroupe d\'entraide : https://t.me/AppManagerAndroid
@@ -471,8 +468,6 @@
     <string name="app_settings">Paramètres</string>
     <string name="pref_usage_access_enabled_msg">Vous permet de visualiser des statistiques d\'utilisation et des informations sur les données d\'une application.</string>
     <string name="pref_usage_access_enabled">Accès aux données d\'utilisation</string>
-    <string name="pref_root_mode_enabled_msg">Active toutes les fonctionnalités root de cette application, le mode ADB est detecté automatiquement lorsque ceci est désactivé.</string>
-    <string name="pref_root_mode_enabled">Mode root</string>
     <string name="str_logo">Logo</string>
     <string name="rules_not_applied">Les règles ne sont pas appliquées</string>
     <string name="app_size">Application</string>
@@ -650,7 +645,6 @@
         <item quantity="other">Vérifié avec %d avertissements</item>
     </plurals>
     <string name="filter">Filtre</string>
-    <string name="failed_to_fetch_package_info_possibly_a_split_apk">Impossible d\'extraire les informations du paquet, peut-être à cause d\'un APK divisé</string>
     <string name="failed_to_parse_some_numbers">Ne peut pas analyser certains nombres</string>
     <string name="failed_packages">Paquets en echec</string>
     <string name="pref_import_existing_msg">Ajouter des composants désactivés par les autres applis à App Manager. Faites attention en utilisant cet outil car il peut y avoir de nombreux faux positifs. Ne choisissez que les applis dont vous êtes certain.</string>

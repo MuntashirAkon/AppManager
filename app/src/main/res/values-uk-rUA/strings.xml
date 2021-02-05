@@ -52,12 +52,6 @@
     <string name="credits">Автори</string>
     <string name="toggle_default_app_ops">Перемкнути app ops за замовчуванням</string>
     <string name="pref_remove_all_rules_msg">Дозволи надано, app ops та компоненти повернуться до значень за замовчуванням.</string>
-    <plurals name="alert_failed_to_deny_app_ops">
-        <item quantity="one">Не вдалося заборонити дозвіл додатку %1$d</item>
-        <item quantity="few">Не вдалося заборонити дозвіл додатків %1$d</item>
-        <item quantity="many">Не вдалося заборонити дозвіл додатків %1$d</item>
-        <item quantity="other">Не вдалося заборонити дозвіл додатків %1$d</item>
-    </plurals>
     <plurals name="no_of_splits">
         <item quantity="one">%1$d спліт</item>
         <item quantity="few">%1$d спліти</item>
@@ -66,7 +60,6 @@
     </plurals>
     <string name="input_app_ops_description">Введіть імена та/або константи app op із пробілами, наприклад (WAKE_LOCK 63 72 КАМЕРА) тощо.</string>
     <string name="input_app_ops">Введення app ops</string>
-    <string name="deny_app_ops_dots">Забороняю дозволи…</string>
     <string name="external_apk_no_app_op">Зовнішній файл .apk не має жодних операцій з додатками</string>
     <string name="failed_to_deny_dangerous_app_ops">Не вдалося відкликати всі небезпечні app ops</string>
     <string name="failed_to_reset_app_ops">Не вдалося провести скидання app ops</string>
@@ -327,7 +320,6 @@
     <string name="failed_to_install_package_name">Не вдалося встановити <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> встановлено</string>
     <string name="termux">Termux</string>
-    <string name="failed_to_fetch_package_info_possibly_a_split_apk">Не вдалося отримати відомості про пакет, можливо split .apk</string>
     <string name="failed_to_parse_some_numbers">Не вдалося проаналізувати деякі цифри</string>
     <string name="only_works_in_root_or_adb_mode">Працює лише в режимі ROOT або ADB</string>
     <string name="filtered_packages">Відфільтровані пакети</string>
@@ -340,7 +332,6 @@
     <string name="block_components_description">Блокувати всі компоненти, визначені заданими підписами</string>
     <string name="block_unblock_trackers_description">Блокування або розблокування реклами і компонентів трекерів з усіх встановлених програм</string>
     <string name="clear_cache">Очистити кеш</string>
-    <string name="failed_to_get_data_usage_information">Не вдалося отримати інформацію про використання даних</string>
     <string name="pref_import_existing_msg">Додавайте компоненти, вимкнені іншими програмами, до App Manager. Будьте обережні при використанні цього інструменту, оскільки може бути багато помилкових позитивних результатів. Виберіть лише програми, в котрих ви впевнені.</string>
     <string name="pref_import_existing">Імпорт існуючих правил</string>
     <string name="community_links">Канал оновлення: https://t.me/AppManagerChannel
@@ -477,7 +468,6 @@
     <string name="pref_usage_access_enabled_msg">Дозволяє переглянути статистику використання додатка та інформацію про них.</string>
     <string name="pref_usage_access_enabled">Доступ до статистики використання</string>
     <string name="pref_global_blocking_enabled">Глобальне блокування компонентів</string>
-    <string name="pref_root_mode_enabled_msg">Активує всі ROOT функції цього додатка. Режим ADB виявляється автоматично, коли ROOT режим вимкнено.</string>
     <string name="str_logo">Логотип</string>
     <string name="app_size">Додаток</string>
     <string name="total_size">Всього</string>
@@ -505,7 +495,6 @@
     <string name="type_boolean">Правда/хибність</string>
     <string name="done">Завершено</string>
     <string name="add_item">Додати елемент</string>
-    <string name="system_odex_not_supported">.odex-овані і деякі системні додатки не підтримуються!</string>
     <string name="select_type">Виберіть тип</string>
     <string name="key_name">Назва ключа</string>
     <string name="boolean_value">Логічне значення</string>
@@ -525,7 +514,6 @@
     <string name="follow_system">Як в системі</string>
     <string name="pid_and_ppid">Ідентифікатор процесу: %1$d, ідентифікатор батьківського процесу: %2$d</string>
     <string name="pref_import_export_blocking_rules_msg">Імпорт/Експорт правил, імпорт зовнішніх правил з Watt або Blocker.</string>
-    <string name="pref_root_mode_enabled">ROOT режим</string>
     <string name="failed_to_disable_op">Сталася помилка під час спроби заборонити дозвіл</string>
     <string name="debuggable">Налагоджується</string>
     <string name="error_invalid_icon_format">Пошкоджений формат іконки</string>
@@ -567,7 +555,6 @@
     <string name="process_name">Назва процесу</string>
     <string name="native_library_dir">Рідний каталог бібліотеки JNI</string>
     <string name="dev_protected_data_dir">Каталог даних, захищений пристроєм</string>
-    <string name="aurora">Aurora</string>
     <string name="search">Пошук</string>
     <string name="menu_apply_rules">Застосувати правила</string>
     <string name="menu_remove_rules">Видалити правила</string>
@@ -664,7 +651,6 @@
     <string name="no_receivers">Немає ресіверів</string>
     <string name="receivers">Ресівери</string>
     <string name="permissions">Використовує дозволи</string>
-    <string name="instructions_header">[Ці інструкції застаріли і більше не будуть оновлюватися. Щоб отримати актуальну інформацію відвідайте офіційний сайт документації за адресою (https://muntashirakon.github.io/AppManager)]</string>
     <string name="filter_running_apps">Запущені служби</string>
     <string name="copy">Копіювати</string>
     <string name="view_missing_signatures">Торкніться, щоб переглянути або надіслати підписи, котрі наразі відстутні в базі даних бібліотек App Manager.</string>
@@ -809,7 +795,6 @@
     <string name="hardware">Модель</string>
     <string name="selinux">Стан SELinux</string>
     <string name="backup_skip_signature_checks_description">Корисно для відновлення резервних копій, котрі не працюють через помилку перевірки контрольної суми або мають інший підпис APK, ніж підпис резервної копії.</string>
-    <string name="backup_all_users_description">Виконати резервне копіювання для всіх користувачів, а не лише для поточного користувача.</string>
     <string name="backup_multiple_description">Використовувати особливе найменування резервної копії, замість базового.</string>
     <string name="backup_rules_description">Резервне копіювання правил, налаштованих в App Manager.</string>
     <string name="backup_extras_description">Резервне копіювання дозволів додатків, економії заряду, опцій використання даних, стану MagiskHide тощо.</string>
@@ -849,7 +834,6 @@
     <string name="activity_result">Результат activity</string>
     <string name="send_edited_intent">Надіслати відредагований intent</string>
     <string name="matching_activities">Відповідні activities</string>
-    <string name="pref_interceptor_enabled_msg">Перехоплює спілкування між програмами через Intent</string>
     <string name="window_size">Розмір вікна</string>
     <string name="security_providers">Постачальники безпеки</string>
     <string name="un_apkm">Розпакування Apkm</string>

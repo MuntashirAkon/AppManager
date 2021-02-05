@@ -16,7 +16,6 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="_lang_tag" translatable="false">zh-CN</string>
-    <string name="instructions_header">[这些说明已过时且不再更新 ，访问官方文档站点（https://muntashirakon.github.io/AppManager）以获取最新信息]</string>
     <string name="uninstall">卸载</string>
     <string name="permissions">系统预定义权限</string>
     <string name="require_no_permission">无需权限</string>
@@ -158,7 +157,6 @@
     <string name="menu_remove_rules">删除规则</string>
     <string name="menu_apply_rules">应用规则</string>
     <string name="search">搜索</string>
-    <string name="aurora">Aurora</string>
     <string name="dev_protected_data_dir">受设备保护的数据目录</string>
     <string name="native_library_dir">原生的java本地接口目录</string>
     <string name="process_name">进程名称</string>
@@ -183,7 +181,6 @@
     <string name="boolean_value">布尔值</string>
     <string name="key_name">键名</string>
     <string name="select_type">选择一个类型</string>
-    <string name="system_odex_not_supported">不支持.odex和一些系统应用！</string>
     <string name="add_item">新增项目</string>
     <string name="done">已完成</string>
     <string name="type_boolean">正确/错误</string>
@@ -217,8 +214,6 @@
     <string name="failed_to_disable_op">无法禁用请求的 AppOps</string>
     <string name="rules_not_applied">规则未被应用</string>
     <string name="str_logo">Logo</string>
-    <string name="pref_root_mode_enabled">Root 模式</string>
-    <string name="pref_root_mode_enabled_msg">激活此应用程序的所有 root 功能，禁用此功能会自动检测 ADB 模式。</string>
     <string name="pref_global_blocking_enabled">实时拦截组件</string>
     <string name="pref_global_blocking_enabled_msg">允许您拦截任何应用程序的任何组件，而无需拦截该应用程序。</string>
     <string name="pref_usage_access_enabled">使用情况访问权限</string>
@@ -351,12 +346,10 @@
 \n推特: https://twitter.com/AMUpdateChannel</string>
     <string name="pref_import_existing">导入现有规则</string>
     <string name="pref_import_existing_msg">将被其他应用禁用的组件添加到应用管理器。 使用此工具时要小心，因为可能有许多误报。 只选择您确定的应用。</string>
-    <string name="failed_to_get_data_usage_information">无法获取数据使用情况</string>
     <string name="clear_cache">清除缓存</string>
     <string name="block_unblock_trackers_description">阻止或取消屏蔽所有已安装应用的广告和跟踪组件</string>
     <string name="block_components_dots">屏蔽组件…</string>
     <string name="block_components_description">阻止给定签名识别的所有组件</string>
-    <string name="deny_app_ops_dots">拒绝应用程序…</string>
     <string name="deny_app_ops_description">设置由常数值标识的应用操作模式，如 63 表示 RUN_IN_BACKGROUND</string>
     <string name="clear_data_from_uninstalled_apps">清除已卸载应用的数据</string>
     <string name="clear_data_from_uninstalled_apps_description">清除使用 DONT_DELETE_DATA 标志卸载的应用中的数据</string>
@@ -374,7 +367,6 @@
     <plurals name="no_of_splits">
         <item quantity="other">%1$d 个拆分</item>
     </plurals>
-    <string name="failed_to_fetch_package_info_possibly_a_split_apk">无法获取安装包信息，可能是一个拆分 APK</string>
     <string name="termux">Termux</string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> 已安装</string>
     <string name="failed_to_install_package_name">无法安装<xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
@@ -414,9 +406,6 @@
     </plurals>
     <plurals name="alert_failed_to_block_components">
         <item quantity="other">无法拦截%1$d个应用的组件</item>
-    </plurals>
-    <plurals name="alert_failed_to_deny_app_ops">
-        <item quantity="other">无法拒绝%1$d个应用的应用操作</item>
     </plurals>
     <string name="apply_to_system_apps">应用到系统应用</string>
     <string name="apply_to_system_apps_question">也应用于系统应用？如果不确定，请选择“否”。</string>
@@ -756,7 +745,6 @@
     </plurals>
     <string name="patch_level">安全补丁级别</string>
     <string name="backup_skip_signature_checks_description">用于解决因校验和验证失败或与备份的 APK 签名不同导致的还原失败。</string>
-    <string name="backup_all_users_description">为所有用户执行备份，而不仅仅是当前用户。</string>
     <string name="backup_multiple_description">使用一个单独命名的备份，而不是基本备份。</string>
     <string name="backup_rules_description">备份 App Manager 内配置的规则。</string>
     <string name="backup_extras_description">备份应用权限、节电、数据使用选项、MagiskHide 状态等。</string>
@@ -788,7 +776,6 @@
     <string name="state_parked">已放置</string>
     <string name="state_trace_stop">追踪停止</string>
     <string name="orientation_user_landscape">水平视图</string>
-    <string name="pref_interceptor_enabled_msg">通过 Intent 拦截应用之间的通信</string>
     <string name="backup_custom_users">自定义用户</string>
     <string name="no_volumes_found">找不到任何具有写入权限的卷。</string>
     <string name="pref_backup_volume_msg">选择存储备份的卷或磁盘。</string>

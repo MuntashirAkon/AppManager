@@ -256,7 +256,6 @@
     <string name="sort_by_times_opened">Ganger åpnet</string>
     <string name="sort_by_screen_time">Skjermtid</string>
     <string name="pref_usage_access_enabled">Brukstilgang</string>
-    <string name="pref_root_mode_enabled">Rot-modus</string>
     <string name="str_logo">Logo</string>
     <string name="no_code">Ingen kode</string>
     <string name="process_name">Prosessnavn</string>
@@ -430,7 +429,6 @@
     <string name="failed_to_parse_some_numbers">Noen tall kunne ikke tolkes</string>
     <string name="clear_data_from_uninstalled_apps_description">Tøm data fra avinstallerte programmer med DONT_DELETE_DATA-flagg</string>
     <string name="clear_data_from_uninstalled_apps">Tøm data fra avinstallerte programmer</string>
-    <string name="instructions_header">[Disse instruksjonene er utdaterte, og vil ikke lenger oppdateres. Besøk den offisielle dokumentasjonssiden på (https://muntashirakon.github.io/AppManager) for oppdatert info]</string>
     <string name="no_usage_in_this_time_range">Ingen bruk i dette tidsrommet</string>
     <string name="key_name_cannot_be_null">Nøkkelnavn kan ikke stå tomt</string>
     <string name="type_float">Desimaltall</string>
@@ -524,7 +522,6 @@
         <item quantity="one">Kunne ikke blokkere komponenter for %1$d program</item>
         <item quantity="other">Kunne ikke blokkere komponenter for %1$d programmer</item>
     </plurals>
-    <string name="failed_to_get_data_usage_information">Kunne ikke hente databruksinfo</string>
     <string name="manifest_viewer">Manifest-viser</string>
     <string name="rules_not_applied">Regler ikke tillagt</string>
     <string name="not_verified">Ikke bekreftet</string>

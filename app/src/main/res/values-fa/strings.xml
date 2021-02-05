@@ -13,8 +13,6 @@
     <string name="pref_usage_access_enabled">دسترسی به استفاده</string>
     <string name="pref_global_blocking_enabled_msg">به شما اجازه می دهد تا هر جزء از هر برنامه ای را مسدود کنید بدون اینکه به صراحت مسدود کردن برنامه را روشن کنید.</string>
     <string name="pref_global_blocking_enabled">مسدود کردن جزء گلوبال</string>
-    <string name="pref_root_mode_enabled_msg">تمام ویژگی های روت این برنامه را فعال می‌کند، اگر خاموش باشد حالت ADB به طور خودکار شناسایی می‌شود.</string>
-    <string name="pref_root_mode_enabled">حالت روت</string>
     <string name="str_logo">لوگو</string>
     <string name="rules_not_applied">قوانین اعمال نمی شوند</string>
     <string name="failed_to_disable_op">قادر به فعال کردن عملیات برنامه درخواست شده نبود</string>
@@ -48,7 +46,6 @@
     <string name="type_boolean">درست/نادرست</string>
     <string name="done">انجام شد</string>
     <string name="add_item">افزودن مورد</string>
-    <string name="system_odex_not_supported">.odex و برخی از برنامه های سیستم فاقد پشتیبانی هستند!</string>
     <string name="select_type">نوعی را انتخاب کنید</string>
     <string name="key_name">نام کلید</string>
     <string name="boolean_value">ارزش بولی</string>
@@ -73,7 +70,6 @@
     <string name="process_name">نام فرآیند</string>
     <string name="native_library_dir">دایرکتوری کتابخانه JNI بومی</string>
     <string name="dev_protected_data_dir">دایرکتوری داده های محافظت شده توسط دستگاه</string>
-    <string name="aurora">سپیده دم</string>
     <string name="search">جست‌وجو</string>
     <string name="menu_apply_rules">اعمال قوانین</string>
     <string name="menu_remove_rules">حذف قوانین</string>
@@ -231,7 +227,6 @@
     <string name="require_no_permission">مجوز لازم نیست</string>
     <string name="permissions">از مجوزها استفاده می کند</string>
     <string name="uninstall">حذف نصب</string>
-    <string name="instructions_header">[این دستورالعمل ها قدیمی است و دیگر به روز نخواهد شد. برای به روزرسانی اطلاعات به سایت اسناد رسمی (https://muntashirakon.github.io/AppManager) مراجعه کنید]</string>
     <string name="some_items_selected"><xliff:g id="selection_no" example="20"> %1$d </xliff:g> انتخاب شد</string>
     <string name="export_blocking_rules">قوانین مسدود سازی را صادر کن</string>
     <string name="disable_background">غیرفعال کردن پس‌زمینه</string>
@@ -402,7 +397,6 @@
     <string name="block_components_dots">مسدود کردن اجزا…</string>
     <string name="block_unblock_trackers_description">مسدود یا نامسدود کردن تبلیغات و اجزای ردیاب از تمام برنامه های نصب شده</string>
     <string name="clear_cache">پاک کردن حافظه پنهان</string>
-    <string name="failed_to_get_data_usage_information">نتوانست اطلاعات مصرف داده را واکشی کند</string>
     <string name="pref_import_existing_msg">اجزای غیرفعال شده توسط سایر برنامه ها را به مدیر برنامه اضافه کن. زمانی از این ابزار استفاده می‌کنید مراقب باشید که ممکن است مثبت کاذب های بسیاری موجود باشد. تنها برنامه هایی را انتخاب کنید که از آنها اطمینان دارید.</string>
     <string name="deny_app_ops_description">Set a mode for app operations identified by the constant values, i.e. 63 or RUN_IN_BACKGROUND</string>
 </resources>

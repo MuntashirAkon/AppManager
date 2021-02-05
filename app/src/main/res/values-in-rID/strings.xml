@@ -15,7 +15,6 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="instructions_header">[Instruksi ini sudah usang dan tidak akan lagi diperbarui. Kunjungi situs dokumen resmi (https://muntashirakon.github.io/AppManager) untuk mendapatkan informasi terbaru]</string>
     <string name="uninstall">Hapus Pemasangan</string>
     <string name="permissions">Memerlukan Izin</string>
     <string name="require_no_permission">Tidak memerlukan izin</string>

@@ -16,7 +16,6 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="_lang_tag" translatable="false">bn-BD</string>
-    <string name="instructions_header">[এই নির্দেশাবলী পুরানো এবং আর আপডেট করা হবে না আপডেটেড তথ্য পেতে অফিসিয়াল ডক সাইট (https://muntashirakon.github.io/AppManager) ভিজিট করুন]</string>
     <string name="uninstall">আনইনস্টল</string>
     <string name="require_no_permission">কোন অনুমতির প্রয়োজন নেই</string>
     <string name="activities">কার্যকলাপ</string>
@@ -103,7 +102,6 @@
     <string name="menu_remove_rules">বিধি অপসারণ করুন</string>
     <string name="menu_apply_rules">বিধি প্রয়োগ করুন</string>
     <string name="search">অনুসন্ধান</string>
-    <string name="aurora">অরোরা</string>
     <string name="dev_protected_data_dir">ডিভাইস-সুরক্ষিত ডাটা ডিরেক্টরি</string>
     <string name="process_name">প্রক্রিয়ার নাম</string>
     <string name="no_code">কোনো কোড নেই</string>
@@ -123,7 +121,6 @@
     <string name="decimal_value">দশমিকের মান</string>
     <string name="boolean_value">বুলিয়ান এর মান</string>
     <string name="select_type">প্রকার নির্বাচন করুন</string>
-    <string name="system_odex_not_supported">ওডেক্স এবং কিছু সিস্টেম অ্যাপস পুরোপুরি সমর্থিত নয়!</string>
     <string name="add_item">যোগ করুন</string>
     <string name="done">সম্পন্ন</string>
     <string name="type_float">দশমিকের মান</string>
@@ -149,8 +146,6 @@
     <string name="app_size">অ্যাপ</string>
     <string name="app_ops">অ্যাপ অপ্স</string>
     <string name="no_app_ops">কোনো অ্যাপ অপারেশন নেই</string>
-    <string name="pref_root_mode_enabled">রুট মোড</string>
-    <string name="pref_root_mode_enabled_msg">এই অ্যাপটির সব রুটের বৈশিষ্ট্যগুলি সক্রিয় হয়, এটি যখন বন্ধ থাকে এডিবি মোডটি স্বয়ংক্রিয়ভাবে সনাক্ত হয়</string>
     <string name="pref_usage_access_enabled">ইউসেজ অ্যাক্সেস</string>
     <string name="pref_usage_access_enabled_msg">আপনার অ্যাপ ব্যবহারের পরিসংখ্যান এবং অ্যাপ ডেটার তথ্য দেখতে পারবেন</string>
     <string name="app_settings">সেটিংস</string>
@@ -315,12 +310,10 @@
     <string name="unblock_trackers">ট্র্যাকারসমূহ আনব্লক করুন</string>
     <string name="install_in_progress">ইনস্টল হচ্ছে</string>
     <string name="filter_apps_with_rules">বিধি সহ অ্যাপস</string>
-    <string name="failed_to_fetch_package_info_possibly_a_split_apk">প্যাকেজ তথ্য আনতে ব্যর্থ, সম্ভবত একটি স্প্লিট এপিকে</string>
     <string name="failed_to_parse_some_numbers">কিছু সংখ্যাকে পার্স করতে ব্যর্থ</string>
     <string name="input_signatures">স্বাক্ষর ইনপুট করুন</string>
     <string name="failed_packages">ব্যর্থ প্যাকেজগুলো</string>
     <string name="block_components_description">প্রদত্ত স্বাক্ষর(গুলি) দ্বারা চিহ্নিত সকল উপাদান ব্লক করুন</string>
-    <string name="failed_to_get_data_usage_information">ডাটা ব্যবহারের তথ্য পেতে ব্যর্থ</string>
     <string name="external_apk_no_app_op">বহিঃস্থ এপিকের কোন অ্যাপ অপারেশন নেই</string>
     <string name="batch_ops">ব্যাচ অপারেশন</string>
     <string name="installer_error_lidl_rom">আপনার রম রুটহীন ইনস্টলারটির সাথে অসমর্থিত।</string>
@@ -372,7 +365,6 @@
     <string name="uses_feature">ব্যবহৃত ফিচার্স</string>
     <string name="paths_and_directories">পাথ এবং ডিরেক্টরি</string>
     <string name="block_components_dots">উপাদানগুলি ব্লক করুন…</string>
-    <string name="deny_app_ops_dots">অ্যাপস অপস প্রত্যাখ্যান করুন…</string>
     <string name="rules_not_applied">বিধিগুলো প্রয়োগ করা হয়নি</string>
     <string name="failed_to_disable_op">অনুরোধকৃত অ্যাপ অপটিকে নিষ্ক্রিয় করা যায়নি</string>
     <string name="no_shared_libs">কোন শেয়ার্ড লাইব্রেরি নেই</string>

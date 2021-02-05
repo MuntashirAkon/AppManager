@@ -99,7 +99,6 @@
     <string name="menu_remove_rules">Kuralları Kaldır</string>
     <string name="menu_apply_rules">Kuralları Uygula</string>
     <string name="search">Arama</string>
-    <string name="aurora">Şafak</string>
     <string name="dev_protected_data_dir">Aygıt Korumalı Veri Dizini</string>
     <string name="native_library_dir">Yerel JNI Kütüphane dizini</string>
     <string name="process_name">İşlem adı</string>
@@ -308,10 +307,6 @@
         <item quantity="one">%1$d uygulama etkinleştirilemedi</item>
         <item quantity="other">%1$d uygulama etkinleştirilemedi</item>
     </plurals>
-    <plurals name="alert_failed_to_deny_app_ops">
-        <item quantity="one">%1$d uygulama için uygulama işlemleri reddedilemedi</item>
-        <item quantity="other">%1$d uygulama için uygulama işlemleri reddedilemedi</item>
-    </plurals>
     <plurals name="alert_failed_to_block_components">
         <item quantity="one">%1$d uygulama için bileşenler engellenemedi</item>
         <item quantity="other">%1$d uygulama için bileşenler engellenemedi</item>
@@ -343,7 +338,6 @@
     <string name="failed_to_install_package_name"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> kurulamadı</string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> kuruldu</string>
     <string name="termux">Termux</string>
-    <string name="failed_to_fetch_package_info_possibly_a_split_apk">Paket bilgisi alınamadı, bölünmüş bir APK dosyası olabilir</string>
     <plurals name="no_of_splits">
         <item quantity="one">%1$d bölüm</item>
         <item quantity="other">%1$d bölüm</item>
@@ -363,12 +357,10 @@
     <string name="clear_data_from_uninstalled_apps_description">DONT_DELETE_DATA işaretiyle kaldırılan uygulamaların verilerini temizle</string>
     <string name="clear_data_from_uninstalled_apps">Kaldırılan uygulamaların verilerini temizle</string>
     <string name="deny_app_ops_description">Sabit değerlerle tanımlanan uygulama işlemleri için bir mod ayarlayın, örn. 63 veya RUN_IN_BACKGROUND</string>
-    <string name="deny_app_ops_dots">Uygulama işlemlerini reddet…</string>
     <string name="block_components_description">Verilen imza(lar)la tanımlanan tüm bileşenleri engelle</string>
     <string name="block_components_dots">Bileşenleri engelle…</string>
     <string name="block_unblock_trackers_description">Tüm kurulu uygulamalardan reklam ve izleme bileşenlerini engelleyin veya engelini kaldırın</string>
     <string name="clear_cache">Önbelleği Temizle</string>
-    <string name="failed_to_get_data_usage_information">Veri kullanım bilgileri alınamadı</string>
     <string name="pref_import_existing_msg">Diğer uygulamalar tarafından devre dışı bırakılan bileşenleri App Manager\'e ekleyin. Çok sayıda yanlış pozitif olabileceğinden bu aracı kullanırken dikkatli olun. Yalnızca emin olduğunuz uygulamaları seçin.</string>
     <string name="pref_import_existing">Var olan kuralları içe aktar</string>
     <string name="community_links">Güncelleme Kanalı: https://t.me/AppManagerChannel
@@ -477,7 +469,6 @@
     <string name="tested_signatures_on_classes_and_time_taken"><xliff:g id="class_no" example="6000">%2$d</xliff:g> sınıfta <xliff:g id="signature_no" example="342">%1$d</xliff:g> imza test edildi.
 \n<xliff:g id="time" example="10000">%3$d</xliff:g> ms zaman aldı (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> yineleme).</string>
     <string name="split_feature_name">Özellik: <xliff:g id="feature_name" example="Visualizer">%1$s</xliff:g></string>
-    <string name="instructions_header">[Bu talimatların eskidir ve artık güncellenmeyecektir. Güncel bilgiler için resmi belgelendirme sitesini (https://muntashirakon.github.io/AppManager) ziyaret edin]</string>
     <string name="export_blocking_rules">Engelleme Kurallarını Dışa Aktar</string>
     <string name="disable_background">Arka Planı Devre Dışı Bırak</string>
     <string name="backup_restore">Yedekle/Geri Yükle</string>
@@ -519,8 +510,6 @@
     <string name="pref_usage_access_enabled">Kullanım erişimi</string>
     <string name="pref_global_blocking_enabled_msg">Uygulama için açıkça engellemeyi açmadan herhangi bir uygulamanın herhangi bir bileşenini engellemenize izin verir.</string>
     <string name="pref_global_blocking_enabled">Genel bileşen engelleme</string>
-    <string name="pref_root_mode_enabled_msg">Bu uygulamanın tüm root özelliklerini etkinleştirir, bu kapalı olduğunda ADB modu otomatik olarak algılanır.</string>
-    <string name="pref_root_mode_enabled">Root modu</string>
     <string name="str_logo">Logo</string>
     <string name="rules_not_applied">Kurallar uygulanmadı</string>
     <string name="failed_to_disable_op">İstenen uygulama işlemi devre dışı bırakılamadı</string>
@@ -553,7 +542,6 @@
     <string name="type_boolean">Doğru/yanlış</string>
     <string name="done">Bitti</string>
     <string name="add_item">Öge ekle</string>
-    <string name="system_odex_not_supported">.odex ve bazı sistem uygulamaları desteklenmiyor!</string>
     <string name="select_type">Bir tür seçin</string>
     <string name="key_name">Anahtar Adı</string>
     <string name="boolean_value">Boole değeri</string>
@@ -789,7 +777,6 @@
     </plurals>
     <string name="patch_level">Yama seviyesi</string>
     <string name="backup_skip_signature_checks_description">Sağlama toplamı doğrulama hatası nedeniyle başarısız olan veya yedeklenenden farklı bir APK imzasına sahip yedeklemeleri geri yüklemek için faydalıdır.</string>
-    <string name="backup_all_users_description">Yalnızca geçerli kullanıcı için değil, tüm kullanıcılar için yedekleme gerçekleştirin.</string>
     <string name="backup_multiple_description">Temel yedekleme yerine ayrı bir adlandırılmış yedekleme kullanın.</string>
     <string name="backup_rules_description">App Manager içinde yapılandırılan kuralları yedekleyin.</string>
     <string name="backup_extras_description">Uygulama izinlerini, pil tasarrufunu, veri kullanım seçeneklerini, MagiskHide durumunu vs. yedekleyin.</string>
@@ -819,7 +806,6 @@
         <item quantity="one">%1$d bileşen</item>
         <item quantity="other">%1$d bileşen</item>
     </plurals>
-    <string name="pref_interceptor_enabled_msg">Intent aracılığıyla uygulamalar arasındaki iletişimi keser</string>
     <string name="backup_custom_users_description">Yalnızca belirtilen kullanıcılar için yedekleme gerçekleştirin</string>
     <string name="backup_custom_users">Özel kullanıcılar</string>
     <string name="bootloader">Önyükleyici</string>

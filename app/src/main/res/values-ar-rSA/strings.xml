@@ -60,5 +60,4 @@
     <string name="authority">السلطة</string>
     <string name="sort_by_last_update">آخر تحديث</string>
     <string name="task_affinity">تقارب المهمة</string>
-    <string name="instructions_header">هذه التعليمات قديمة و لن يتم تحديثها، يرجى زيارة (https://muntashirakon.github.io/AppManager) للحصول على آخر المستجدات</string>
 </resources>
