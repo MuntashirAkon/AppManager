@@ -23,15 +23,6 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.RemoteException;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
-
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -41,9 +32,16 @@ import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.io.AtomicProxyFile;
 import io.github.muntashirakon.io.ProxyFile;
-import io.github.muntashirakon.io.ProxyInputStream;
 import io.github.muntashirakon.io.ProxyOutputStream;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Block application components: activities, broadcasts, services and providers.
@@ -145,12 +143,12 @@ public final class ComponentsBlocker extends RulesStorageManager {
         return INSTANCE;
     }
 
-    private final ProxyFile rulesFile;
+    private final AtomicProxyFile rulesFile;
     private Set<String> components;
 
     protected ComponentsBlocker(Context context, String packageName, int userHandle) {
         super(context, packageName, userHandle);
-        this.rulesFile = new ProxyFile(SYSTEM_RULES_PATH, packageName + ".xml");
+        this.rulesFile = new AtomicProxyFile(new ProxyFile(SYSTEM_RULES_PATH, packageName + ".xml"));
         this.components = PackageUtils.collectComponentClassNames(packageName, userHandle).keySet();
     }
 
@@ -253,8 +251,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
         if (readOnly) throw new IOException("Saving disabled components in read only mode.");
         if (componentCount() == 0) {
             // No components set, delete if already exists
-            if (rulesFile.exists()) //noinspection ResultOfMethodCallIgnored
-                rulesFile.delete();
+            rulesFile.delete();
             return;
         }
         StringBuilder activities = new StringBuilder();
@@ -287,11 +284,17 @@ public final class ComponentsBlocker extends RulesStorageManager {
                 ((receivers.length() == 0) ? "" : "<broadcast block=\"true\" log=\"false\">\n" + receivers + "</broadcast>\n") +
                 "</rules>";
         // Save rules
-        try (OutputStream rulesStream = new ProxyOutputStream(rulesFile)) {
+        ProxyOutputStream rulesStream = null;
+        try {
+            rulesStream = rulesFile.startWrite();
             Log.d(TAG, "Rules: " + rules);
             rulesStream.write(rules.getBytes());
+            rulesFile.finishWrite(rulesStream);
+            Runner.runCommand(String.format(Runner.TOYBOX + " chmod 0666 %s", rulesFile.getBaseFile()));
+        } catch (IOException e) {
+            Log.e(TAG, "Failed to write rules for package " + packageName, e);
+            rulesFile.failWrite(rulesStream);
         }
-        Runner.runCommand(String.format(Runner.TOYBOX + " chmod 0666 %s", rulesFile));
     }
 
     /**
@@ -399,7 +402,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
     private void retrieveDisabledComponents() {
         if (!AppPref.isRootEnabled()) return;
         Log.d(TAG, "Retrieving disabled components for package " + packageName);
-        if (!rulesFile.exists() || rulesFile.length() == 0) {
+        if (!rulesFile.exists() || rulesFile.getBaseFile().length() == 0) {
             // System doesn't have any rules.
             // Load the rules saved inside App Manager
             for (RulesStorageManager.Entry entry : getAllComponents()) {
@@ -408,7 +411,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
             return;
         }
         try {
-            try (InputStream rulesStream = new ProxyInputStream(rulesFile)) {
+            try (InputStream rulesStream = rulesFile.openRead()) {
                 HashMap<String, Type> components = ComponentUtils.readIFWRules(rulesStream, packageName);
                 for (String componentName : components.keySet()) {
                     // Override existing rule for the component if it exists

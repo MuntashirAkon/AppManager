@@ -17,6 +17,7 @@
 
 package io.github.muntashirakon.io;
 
+import android.os.DeadObjectException;
 import android.os.ParcelFileDescriptor;
 import android.os.RemoteException;
 import androidx.annotation.NonNull;
@@ -262,13 +263,24 @@ public class ProxyFile extends File {
 
     public FileOutputStream getOutputStream() throws RemoteException, FileNotFoundException {
         if (isRemoteAlive()) {
-            //noinspection ConstantConditions
-            ParcelFileDescriptor fd = file.getOutputStream();
+            ParcelFileDescriptor fd;
+            try {
+                //noinspection ConstantConditions
+                fd = file.getOutputStream();
+            } catch (DeadObjectException e) {
+                // SELinux wouldn't let us in
+                fd = file.getPipedOutputStream();
+            }
             if (fd == null) {
                 // Try to get remote file again
                 getRemoteFile();
                 if (isRemoteAlive()) {
-                    fd = file.getOutputStream();
+                    try {
+                        fd = file.getOutputStream();
+                    } catch (DeadObjectException e) {
+                        // SELinux wouldn't let us in
+                        fd = file.getPipedOutputStream();
+                    }
                 }
             }
             if (fd == null) {

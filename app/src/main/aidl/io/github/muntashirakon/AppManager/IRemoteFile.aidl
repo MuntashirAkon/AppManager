@@ -64,4 +64,7 @@ interface IRemoteFile {
 
     ParcelFileDescriptor getInputStream();
     ParcelFileDescriptor getOutputStream();
+
+    ParcelFileDescriptor getPipedInputStream();
+    ParcelFileDescriptor getPipedOutputStream();
 }

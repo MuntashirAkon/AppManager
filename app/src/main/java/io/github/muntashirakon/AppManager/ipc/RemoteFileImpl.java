@@ -27,8 +27,9 @@ import io.github.muntashirakon.AppManager.IRemoteFile;
 import io.github.muntashirakon.AppManager.utils.ParcelFileDescriptorUtil;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Objects;
 
 import static io.github.muntashirakon.AppManager.ipc.RootService.TAG;
 
@@ -224,7 +225,7 @@ class RemoteFileImpl extends IRemoteFile.Stub {
     public ParcelFileDescriptor getInputStream() throws RemoteException {
         try {
             return ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY);
-        } catch (IOException | NullPointerException e) {
+        } catch (IOException e) {
             Log.e(TAG, null, e);
             throw new RemoteException(e.toString());
         }
@@ -236,7 +237,29 @@ class RemoteFileImpl extends IRemoteFile.Stub {
         try {
             if (!file.exists()) file.createNewFile();
             return ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_WRITE_ONLY);
-        } catch (IOException | NullPointerException e) {
+        } catch (IOException e) {
+            Log.e(TAG, null, e);
+            throw new RemoteException(e.toString());
+        }
+    }
+
+    @Override
+    @NonNull
+    public ParcelFileDescriptor getPipedInputStream() throws RemoteException {
+        try {
+            return ParcelFileDescriptorUtil.pipeFrom(new FileInputStream(file));
+        } catch (IOException e) {
+            Log.e(TAG, null, e);
+            throw new RemoteException(e.toString());
+        }
+    }
+
+    @Override
+    @NonNull
+    public ParcelFileDescriptor getPipedOutputStream() throws RemoteException {
+        try {
+            return ParcelFileDescriptorUtil.pipeTo(new FileOutputStream(file));
+        } catch (IOException e) {
             Log.e(TAG, null, e);
             throw new RemoteException(e.toString());
         }

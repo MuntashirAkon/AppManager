@@ -102,7 +102,7 @@ public class AtomicProxyFile {
         } catch (FileNotFoundException | RemoteException e) {
             File parent = mNewName.getParentFile();
             if (!parent.mkdirs()) {
-                throw new IOException("Failed to create directory for " + mNewName);
+                throw new IOException("Failed to create directory for " + mNewName, e);
             }
             try {
                 return new ProxyOutputStream(mNewName);
