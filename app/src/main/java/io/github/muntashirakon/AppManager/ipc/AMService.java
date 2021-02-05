@@ -25,12 +25,15 @@ import android.os.RemoteException;
 import android.util.Log;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.IAMService;
 import io.github.muntashirakon.AppManager.IRemoteFile;
 import io.github.muntashirakon.AppManager.IRemoteProcess;
 import io.github.muntashirakon.AppManager.IRemoteShell;
+import io.github.muntashirakon.AppManager.ipc.ps.ProcessEntry;
+import io.github.muntashirakon.AppManager.ipc.ps.Ps;
 import io.github.muntashirakon.AppManager.server.common.IRootIPC;
 
 public class AMService extends RootService {
@@ -58,6 +61,13 @@ public class AMService extends RootService {
         @Override
         public IRemoteFile getFile(String file) {
             return new RemoteFileImpl(file);
+        }
+
+        @Override
+        public ArrayList<ProcessEntry> getRunningProcesses() {
+            Ps ps = new Ps();
+            ps.loadProcesses();
+            return ps.getProcesses();
         }
 
         @Override

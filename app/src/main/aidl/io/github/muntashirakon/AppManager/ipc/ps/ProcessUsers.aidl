@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Muntashir Al-Islam
+ * Copyright (c) 2021 Muntashir Al-Islam
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,16 +15,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.muntashirakon.AppManager;
+package io.github.muntashirakon.AppManager.debug;
 
-import io.github.muntashirakon.AppManager.IRemoteFile;
-import io.github.muntashirakon.AppManager.IRemoteProcess;
-import io.github.muntashirakon.AppManager.IRemoteShell;
-
-// Transact code starts from 3
-interface IAMService {
-    IRemoteProcess newProcess(in String[] cmd, in String[] env, in String dir) = 3;
-    IRemoteShell getShell(in String[] cmd) = 4;
-    IRemoteFile getFile(in String file) = 5;
-    List getRunningProcesses() = 6;
-}
+parcelable ProcessUsers;

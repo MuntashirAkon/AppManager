@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.muntashirakon.AppManager.runningapps;
+package io.github.muntashirakon.AppManager.ipc.ps;
 
 import androidx.annotation.*;
 import androidx.collection.ArrayMap;
@@ -184,7 +184,7 @@ public class Ps {
 
     private final File procFile;
     @GuardedBy("processes")
-    private final ArrayList<Process> processes = new ArrayList<>(256);
+    private final ArrayList<ProcessEntry> processEntries = new ArrayList<>(256);
 
     public Ps() {
         this(new ProxyFile("/proc"));
@@ -198,18 +198,18 @@ public class Ps {
     @AnyThread
     @GuardedBy("processes")
     @NonNull
-    public ArrayList<Process> getProcesses() {
-        synchronized (processes) {
-            return processes;
+    public ArrayList<ProcessEntry> getProcesses() {
+        synchronized (processEntries) {
+            return processEntries;
         }
     }
 
     @WorkerThread
     @GuardedBy("processes")
     public void loadProcesses() {
-        synchronized (processes) {
+        synchronized (processEntries) {
             ArrayList<File> procPidFiles = new ArrayList<>(256);
-            processes.clear();
+            processEntries.clear();
             // Gather proc files
             File[] procFileArr = procFile.listFiles((dir, name) -> TextUtils.isDigitsOnly(name));
             if (procFileArr != null) {
@@ -237,39 +237,39 @@ public class Ps {
                 procItem.name = IOUtils.getFileContent(new ProxyFile(pidFile, NAME)).trim();
                 procItem.sepol = IOUtils.getFileContent(new ProxyFile(pidFile, SEPOL)).trim();
                 procItem.wchan = IOUtils.getFileContent(new ProxyFile(pidFile, WCHAN)).trim();
-                processes.add(newProcess(procItem));
+                processEntries.add(newProcess(procItem));
             }
         }
     }
 
     @NonNull
-    private static Process newProcess(@NonNull ProcItem procItem) {
-        Process process = new Process();
-        process.pid = Integer.decode(procItem.stat[STAT_PID]);
-        process.ppid = Integer.decode(procItem.stat[STAT_PPID]);
-        process.priority = Integer.decode(procItem.stat[STAT_PRIORITY]);
-        process.niceness = Integer.decode(procItem.stat[STAT_NICE]);
-        process.instructionPointer = Long.decode(procItem.stat[STAT_EIP]);
-        process.virtualMemorySize = Long.decode(procItem.stat[STAT_VSIZE]);
-        process.residentSetSize = Long.decode(procItem.stat[STAT_RSS]);
-        process.processGroupId = Integer.decode(procItem.stat[STAT_PGRP]);
-        process.majorPageFaults = Integer.decode(procItem.stat[STAT_MAJ_FLT]);
-        process.minorPageFaults = Integer.decode(procItem.stat[STAT_MIN_FLT]);
-        process.realTimePriority = Integer.decode(procItem.stat[STAT_RT_PRIORITY]);
-        process.schedulingPolicy = Integer.decode(procItem.stat[STAT_POLICY]);
-        process.cpu = Integer.decode(procItem.stat[STAT_TASK_CPU]);
-        process.threadCount = Integer.decode(procItem.stat[STAT_NUM_THREADS]);
-        process.tty = Integer.decode(procItem.stat[STAT_TTY_NR]);
-        process.seLinuxPolicy = procItem.sepol;
-        process.name = procItem.status.get(STATUS_NAME);
-        process.users = new ProcessUsers(procItem.status.get(STATUS_UID), procItem.status.get(STATUS_GID));
-        process.cpuTimeConsumed = Integer.decode(procItem.stat[STAT_UTIME]);
-        process.elapsedTime = Integer.decode(procItem.stat[STAT_START_TIME]);
+    private static ProcessEntry newProcess(@NonNull ProcItem procItem) {
+        ProcessEntry processEntry = new ProcessEntry();
+        processEntry.pid = Integer.decode(procItem.stat[STAT_PID]);
+        processEntry.ppid = Integer.decode(procItem.stat[STAT_PPID]);
+        processEntry.priority = Integer.decode(procItem.stat[STAT_PRIORITY]);
+        processEntry.niceness = Integer.decode(procItem.stat[STAT_NICE]);
+        processEntry.instructionPointer = Long.decode(procItem.stat[STAT_EIP]);
+        processEntry.virtualMemorySize = Long.decode(procItem.stat[STAT_VSIZE]);
+        processEntry.residentSetSize = Long.decode(procItem.stat[STAT_RSS]);
+        processEntry.processGroupId = Integer.decode(procItem.stat[STAT_PGRP]);
+        processEntry.majorPageFaults = Integer.decode(procItem.stat[STAT_MAJ_FLT]);
+        processEntry.minorPageFaults = Integer.decode(procItem.stat[STAT_MIN_FLT]);
+        processEntry.realTimePriority = Integer.decode(procItem.stat[STAT_RT_PRIORITY]);
+        processEntry.schedulingPolicy = Integer.decode(procItem.stat[STAT_POLICY]);
+        processEntry.cpu = Integer.decode(procItem.stat[STAT_TASK_CPU]);
+        processEntry.threadCount = Integer.decode(procItem.stat[STAT_NUM_THREADS]);
+        processEntry.tty = Integer.decode(procItem.stat[STAT_TTY_NR]);
+        processEntry.seLinuxPolicy = procItem.sepol;
+        processEntry.name = procItem.name;
+        processEntry.users = new ProcessUsers(procItem.status.get(STATUS_UID), procItem.status.get(STATUS_GID));
+        processEntry.cpuTimeConsumed = Integer.decode(procItem.stat[STAT_UTIME]);
+        processEntry.elapsedTime = Integer.decode(procItem.stat[STAT_START_TIME]);
         String state = procItem.status.get(STATUS_STATE);
         if (state == null) {
             throw new RuntimeException("Process state cannot be empty!");
         }
-        process.processState = state.substring(0, 1);
+        processEntry.processState = state.substring(0, 1);
         StringBuilder stateExtra = new StringBuilder();
         if (Integer.decode(procItem.stat[STAT_NICE]) < 0) {
             stateExtra.append("<");
@@ -286,8 +286,8 @@ public class Ps {
         if (procItem.stat[STAT_TTY_PGRP].equals(procItem.stat[STAT_PID])) {
             stateExtra.append("+");
         }
-        process.processStatePlus = stateExtra.toString();
-        return process;
+        processEntry.processStatePlus = stateExtra.toString();
+        return processEntry;
     }
 
     private static class ProcItem {
@@ -297,62 +297,5 @@ public class Ps {
         private String name;
         private String sepol;
         private String wchan;
-    }
-
-    public static class Process {
-        public int pid;
-        public int ppid;
-        public int priority;
-        public int niceness;
-        public long instructionPointer;
-        public long virtualMemorySize;
-        public long residentSetSize;
-        public int processGroupId;
-        public int majorPageFaults;
-        public int minorPageFaults;
-        public int realTimePriority;
-        public int schedulingPolicy;
-        public int cpu;
-        public int threadCount;
-        public int tty;
-        public String seLinuxPolicy;
-        public String name;
-        public ProcessUsers users;
-        public long cpuTimeConsumed;
-        public long elapsedTime;
-        public String processState;
-        public String processStatePlus;
-    }
-
-    public static class ProcessUsers {
-        public final int realUid;
-        public final int realGid;
-        public final int effectiveUid;
-        public final int effectiveGid;
-        public final int savedSetUid;
-        public final int savedSetGid;
-        public final int fsUid;
-        public final int fsGid;
-
-        private ProcessUsers(@Nullable String uidLine, @Nullable String gidLine) {
-            if (uidLine == null || gidLine == null) {
-                throw new IllegalArgumentException("UID/GID must be non null");
-            }
-            String[] uids = uidLine.split("\\s+");
-            String[] gids = gidLine.split("\\s+");
-            if (uids.length != gids.length && uids.length >= 4) {
-                throw new IllegalArgumentException("Invalid UID/GID.\nUid: " + uidLine + "\nGid: " + gidLine);
-            }
-            // Set uids
-            realUid = Integer.decode(uids[0].trim());
-            effectiveUid = Integer.decode(uids[1].trim());
-            savedSetUid = Integer.decode(uids[2].trim());
-            fsUid = Integer.decode(uids[3].trim());
-            // Set gids
-            realGid = Integer.decode(gids[0].trim());
-            effectiveGid = Integer.decode(gids[1].trim());
-            savedSetGid = Integer.decode(gids[2].trim());
-            fsGid = Integer.decode(gids[3].trim());
-        }
     }
 }
