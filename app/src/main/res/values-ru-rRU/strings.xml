@@ -782,14 +782,14 @@
         <item quantity="many">Схемы подписи</item>
         <item quantity="other">Схемы подписи</item>
     </plurals>
-    <string name="input_keystore_pass_msg">Нажмите здесь, чтобы ввести пароль менеджера ключей</string>
+    <string name="input_keystore_pass_msg">Нажмите здесь, чтобы ввести пароль хранилища ключей</string>
     <string name="input_keystore_pass_description">Вставьте пароль хранилища ключей App Manager. Если вы видите это впервые, используйте генератор паролей, чтобы сгенерировать пароль и сохранить его в безопасном месте, прежде чем вставлять его здесь.</string>
     <string name="input_keystore_pass">Введите пароль хранилища ключей</string>
     <string name="input_keystore_alias_pass_description">Вставьте пароль для псевдонима <b>%1$s</b>. Вы можете оставить это поле пустым, если пароль совпадает с паролем хранилища ключей.</string>
     <string name="input_keystore_alias_pass">Пароль для псевдонима <b>%1$s</b></string>
     <string name="no_app_ops_permission">Нет разрешения на отображение операций приложения</string>
-    <string name="pref_backup_android_keystore_msg">Не все приложения будут работать после восстановления. Восстановление KeyStore не работает на большинстве устройств.</string>
-    <string name="pref_backup_android_keystore">Резервное копирование приложений с Android KeyStore</string>
+    <string name="pref_backup_android_keystore_msg">Не все приложения будут работать после восстановления. Восстановление хранилища ключей не работает на большинстве устройств.</string>
+    <string name="pref_backup_android_keystore">Резервное копирование приложений с хранилищем ключей Android</string>
     <string name="keep_data_and_signatures">Сохранить данные и подписи</string>
     <string name="this_action_cannot_be_undone">Это действие не может быть отменено.</string>
     <string name="set_app_op_mode">Установить режим работы приложения</string>
@@ -830,7 +830,7 @@
     <string name="about_device">Об устройстве</string>
     <string name="uri">URI</string>
     <string name="magisk_hide_enabled">MagiskHide</string>
-    <string name="keystore">KeyStore</string>
+    <string name="keystore">Хранилище ключей</string>
     <string name="security">Безопасность</string>
     <string name="patch_level">Обновление системы безопасности Андроид</string>
     <string name="backup_skip_signature_checks_description">Полезно для восстановления резервных копий, которые не работают из-за ошибки проверки контрольной суммы или имеют подпись APK, отличную от подписи для резервной копии.</string>
@@ -915,7 +915,7 @@
     <string name="enable_battery_optimization">Включить оптимизацию батареи\?</string>
     <string name="battery_optimization">Оптимизация батареи</string>
     <string name="no_battery_optimization">Без оптимизации батареи</string>
-    <string name="screen_lock_msg">Заблокировать App Manager с помощью блокировки экрана Android</string>
+    <string name="screen_lock_msg">Блокировать App Manager с помощью блокировки экрана Android</string>
     <string name="screen_lock">Блокировка экрана</string>
     <string name="unlock_app_manager">Разблокировать App Manager</string>
     <string name="sd_card">SD-карта</string>
