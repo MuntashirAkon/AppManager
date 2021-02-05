@@ -595,4 +595,12 @@
     <string name="receivers">Odbiorniki</string>
     <string name="backup_extras_description">Utwórz kopię zapasową uprawnień aplikacji, oszczędzania baterii, opcji wykorzystania danych, statusu MagiskHide itp.</string>
     <string name="backup_data_description">Utwórz kopię zapasową folderów danych. Jeśli ta opcja jest wybrana, kopie zapasowe wewnętrznych folderów danych zostaną utworzone.</string>
+    <string name="disable_magisk_hide">Wyłączyć MagiskHide\?</string>
+    <string name="window_size">Rozmiar okna</string>
+    <string name="refresh_rate">Częstotliwość odświeżania</string>
+    <string name="scaling_factor">Współczynnik skalowania</string>
+    <string name="size">Rozmiar</string>
+    <string name="screen">Ekran</string>
+    <string name="selinux">SELinux</string>
+    <string name="patch_level">Poziom łatki</string>
 </resources>
