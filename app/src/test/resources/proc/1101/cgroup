@@ -1,0 +1,5 @@
+4:schedtune:/foreground
+3:cpuset:/foreground
+2:cpuacct:/uid_1046/pid_1101
+1:cpu:/
+0::/
