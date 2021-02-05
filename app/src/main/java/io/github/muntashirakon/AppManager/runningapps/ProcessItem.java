@@ -17,6 +17,8 @@
 
 package io.github.muntashirakon.AppManager.runningapps;
 
+import androidx.annotation.NonNull;
+
 public class ProcessItem {
     public int pid;
     public int ppid;
@@ -34,4 +36,21 @@ public class ProcessItem {
     public String context;
 
     public boolean selected = false;
+
+    @Override
+    @NonNull
+    public String toString() {
+        return "ProcessItem{" +
+                "pid=" + pid +
+                ", ppid=" + ppid +
+                ", rss=" + rss +
+                ", vsz=" + vsz +
+                ", user='" + user + '\'' +
+                ", uid=" + uid +
+                ", state='" + state + '\'' +
+                ", state_extra='" + state_extra + '\'' +
+                ", name='" + name + '\'' +
+                ", context='" + context + '\'' +
+                '}';
+    }
 }

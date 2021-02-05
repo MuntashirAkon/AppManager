@@ -21,28 +21,26 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
+import java.io.File;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
+import android.system.Os;
 import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 import androidx.annotation.WorkerThread;
+import androidx.collection.SparseArrayCompat;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.users.Users;
-import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 @WorkerThread
 final class ProcessParser {
-    // "^(?<label>[^\\t\\s]+)[\\t\\s]+(?<pid>\\d+)[\\t\\s]+(?<ppid>\\d+)[\\t\\s]+(?<rss>\\d+)[\\t\\s]+(?<vsz>\\d+)[\\t\\s]+(?<user>[^\\t\\s]+)[\\t\\s]+(?<uid>\\d+)[\\t\\s]+(?<state>\\w)(?<stateplus>[\\w\\+<])?[\\t\\s]+(?<name>[^\\t\\s]+)$"
-    private static final Pattern PROCESS_MATCHER = Pattern.compile("^([^\\t\\s]+)[\\t\\s]+(\\d+)" +
-            "[\\t\\s]+(\\d+)[\\t\\s]+(\\d+)[\\t\\s]+(\\d+)[\\t\\s]+([^\\t\\s]+)[\\t\\s]+(\\d+)" +
-            "[\\t\\s]+(\\w)([\\w+<])?[\\t\\s]+([^\\t\\s]+)$");
-
     private final Context context;
     private final PackageManager pm;
     private HashMap<String, PackageInfo> installedPackages;
@@ -53,52 +51,82 @@ final class ProcessParser {
         getInstalledPackages();
     }
 
+    @VisibleForTesting
+    ProcessParser(boolean isUnitTest) {
+        if (isUnitTest) {
+            installedPackages = new HashMap<>();
+            pm = null;
+            context = null;
+        } else {
+            context = AppManager.getContext();
+            pm = AppManager.getContext().getPackageManager();
+            getInstalledPackages();
+        }
+    }
+
     @NonNull
     HashMap<Integer, ProcessItem> parse() {
-        Runner.Result result = Runner.runCommand(new String[]{Runner.TOYBOX, "ps", "-dwZ", "-o", "PID,PPID,RSS,VSZ,USER,UID,STAT,NAME"});
         HashMap<Integer, ProcessItem> processItems = new HashMap<>();
-        if (result.isSuccessful()) {
-            List<String> processInfoLines = result.getOutputAsList(1);
-            for (String processInfoLine : processInfoLines) {
-                if (processInfoLine.contains(":kernel:") || processInfoLine.contains("toybox"))
-                    continue;
-                try {
-                    ProcessItem processItem = parseProcess(processInfoLine);
-                    processItems.put(processItem.pid, processItem);
-                } catch (Exception ignore) {
-                }
+        Ps ps = new Ps();
+        ps.loadProcesses();
+        List<Ps.Process> processes = ps.getProcesses();
+        for (Ps.Process process : processes) {
+            if (process.name.contains(":kernel:")) continue;
+            try {
+                ProcessItem processItem = parseProcess(process);
+                processItems.put(processItem.pid, processItem);
+            } catch (Exception ignore) {
+            }
+        }
+        return processItems;
+    }
+
+    @VisibleForTesting
+    @NonNull
+    HashMap<Integer, ProcessItem> parse(@NonNull File procDir) {
+        HashMap<Integer, ProcessItem> processItems = new HashMap<>();
+        Ps ps = new Ps(procDir);
+        ps.loadProcesses();
+        List<Ps.Process> processes = ps.getProcesses();
+        for (Ps.Process process : processes) {
+            if (process.name.contains(":kernel:")) continue;
+            try {
+                ProcessItem processItem = parseProcess(process);
+                processItems.put(processItem.pid, processItem);
+            } catch (Exception ignore) {
             }
         }
         return processItems;
     }
 
     @NonNull
-    private ProcessItem parseProcess(String line) throws Exception {
-        Matcher matcher = PROCESS_MATCHER.matcher(line);
-        if (matcher.find() && matcher.groupCount() == 10) {
-            String processName = matcher.group(10);
-            ProcessItem processItem;
-            if (installedPackages.containsKey(processName)) {
-                processItem = new AppProcessItem();
-                @NonNull PackageInfo packageInfo = Objects.requireNonNull(installedPackages.get(processName));
-                ((AppProcessItem) processItem).packageInfo = packageInfo;
-                processItem.name = pm.getApplicationLabel(packageInfo.applicationInfo).toString();
-            } else {
-                processItem = new ProcessItem();
-                processItem.name = processName;
-            }
-            processItem.context = matcher.group(1);
-            processItem.pid = Integer.parseInt(matcher.group(2));
-            processItem.ppid = Integer.parseInt(matcher.group(3));
-            processItem.rss = Integer.parseInt(matcher.group(4));
-            processItem.vsz = Integer.parseInt(matcher.group(5));
-            processItem.user = matcher.group(6);
-            processItem.uid = Integer.parseInt(matcher.group(7));
-            processItem.state = context.getString(Utils.getProcessStateName(matcher.group(8)));
-            processItem.state_extra = context.getString(Utils.getProcessStateExtraName(matcher.group(9)));
-            return processItem;
+    private ProcessItem parseProcess(Ps.Process process) {
+        String processName = process.name;
+        ProcessItem processItem;
+        if (installedPackages.containsKey(processName)) {
+            processItem = new AppProcessItem();
+            @NonNull PackageInfo packageInfo = Objects.requireNonNull(installedPackages.get(processName));
+            ((AppProcessItem) processItem).packageInfo = packageInfo;
+            processItem.name = pm.getApplicationLabel(packageInfo.applicationInfo).toString();
+        } else {
+            processItem = new ProcessItem();
+            processItem.name = processName;
         }
-        throw new Exception("Failed to parse line");
+        processItem.context = process.seLinuxPolicy;
+        processItem.pid = process.pid;
+        processItem.ppid = process.ppid;
+        processItem.rss = process.residentSetSize;
+        processItem.vsz = process.virtualMemorySize;
+        processItem.uid = process.users.fsUid;
+        processItem.user = getNameForUid(process.users.fsUid);
+        if (context == null) {
+            processItem.state = process.processState;
+            processItem.state_extra = process.processStatePlus;
+        } else {
+            processItem.state = context.getString(Utils.getProcessStateName(process.processState));
+            processItem.state_extra = context.getString(Utils.getProcessStateExtraName(process.processStatePlus));
+        }
+        return processItem;
     }
 
     private void getInstalledPackages() {
@@ -114,5 +142,34 @@ final class ProcessParser {
         for (PackageInfo info : packageInfoList) {
             installedPackages.put(info.packageName, info);
         }
+    }
+
+    private static final SparseArrayCompat<String> uidNameCache = new SparseArrayCompat<>(150);
+
+    @SuppressWarnings("JavaReflectionMemberAccess")
+    @NonNull
+    private static String getNameForUid(int uid) {
+        String username = uidNameCache.get(uid);
+        if (username != null) return username;
+        try {
+            Method getpwuid = Os.class.getMethod("getpwuid", int.class);
+            if (!getpwuid.isAccessible()) {
+                getpwuid.setAccessible(true);
+            }
+            Object passwd = getpwuid.invoke(null, uid);  // StructPasswd
+            if (passwd != null) {
+                Field pw_name = passwd.getClass().getDeclaredField("pw_name");
+                if (!pw_name.isAccessible()) {
+                    pw_name.setAccessible(true);
+                }
+                username = (String) pw_name.get(passwd);
+            }
+        } catch (Exception ignored) {
+        }
+        if (username == null) {
+            username = String.valueOf(uid);
+        }
+        uidNameCache.put(uid, username);
+        return username;
     }
 }
