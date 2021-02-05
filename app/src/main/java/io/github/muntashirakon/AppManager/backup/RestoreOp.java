@@ -51,10 +51,7 @@ import org.json.JSONException;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static io.github.muntashirakon.AppManager.backup.BackupManager.*;
 
@@ -433,7 +430,7 @@ class RestoreOp implements Closeable {
                     throw new BackupException("Failed to restore data files for index " + i + ".", th);
                 }
                 // Fix UID and GID
-                if (uidAndGid != null && !Runner.runCommand(String.format(Runner.TOYBOX + " chown -R %d:%d \"%s\"", uidAndGid.first, uidAndGid.second, dataSource)).isSuccessful()) {
+                if (uidAndGid != null && !Runner.runCommand(String.format(Locale.ROOT, "chown -R %d:%d \"%s\"", uidAndGid.first, uidAndGid.second, dataSource)).isSuccessful()) {
                     throw new BackupException("Failed to restore ownership info for index " + i + ".");
                 }
                 // Restore permissions

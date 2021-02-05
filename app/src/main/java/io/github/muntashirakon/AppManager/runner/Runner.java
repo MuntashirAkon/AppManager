@@ -17,7 +17,13 @@
 
 package io.github.muntashirakon.AppManager.runner;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringDef;
+import androidx.annotation.WorkerThread;
 import com.android.internal.util.TextUtils;
+import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.utils.AppPref;
 
 import java.io.InputStream;
 import java.lang.annotation.Retention;
@@ -26,18 +32,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.StringDef;
-import androidx.annotation.WorkerThread;
-import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.toybox.ToyboxInitializer;
-
 public abstract class Runner {
     public static final String TAG = "Runner";
-    public static final String TOYBOX = ToyboxInitializer.getToyboxLib(AppManager.getContext()).getAbsolutePath();
 
     @StringDef({MODE_AUTO, MODE_ROOT, MODE_ADB, MODE_NO_ROOT})
     @Retention(RetentionPolicy.SOURCE)

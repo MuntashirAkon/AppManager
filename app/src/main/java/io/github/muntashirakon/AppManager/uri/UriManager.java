@@ -118,8 +118,8 @@ public class UriManager {
             out.endTag(null, TAG_URI_GRANTS);
             out.endDocument();
             mGrantFile.finishWrite(fos);
-            Runner.runCommand(String.format(Runner.TOYBOX + " chmod 600 \"%s\"", mGrantFile.getBaseFile()));
-            Runner.runCommand(String.format(Runner.TOYBOX + " chown 1000:1000 \"%s\"", mGrantFile.getBaseFile()));
+            Runner.runCommand(new String[]{"chmod", "600", mGrantFile.getBaseFile().getAbsolutePath()});
+            Runner.runCommand(new String[]{"chown", "1000:1000", mGrantFile.getBaseFile().getAbsolutePath()});
             Runner.runCommand(new String[]{"restorecon", mGrantFile.getBaseFile().getAbsolutePath()});
         } catch (IOException e) {
             Log.e(TAG, "Failed writing Uri grants", e);

@@ -514,8 +514,7 @@ public final class PackageUtils {
     }
 
     public static String getHiddenCodePathOrDefault(String packageName, String defaultPath) {
-        Runner.Result result = Runner.runCommand(RunnerUtils.CMD_PM + " dump " + packageName + " | "
-                + Runner.TOYBOX + " grep codePath");
+        Runner.Result result = Runner.runCommand(RunnerUtils.CMD_PM + " dump " + packageName + " | grep codePath");
         if (result.isSuccessful()) {
             List<String> paths = result.getOutputAsList();
             if (paths.size() > 0) {

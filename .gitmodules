@@ -1,6 +1,3 @@
 [submodule "scripts/universal-android-debloater"]
 	path = scripts/universal-android-debloater
 	url = https://gitlab.com/W1nst0n/universal-android-debloater.git
-[submodule "toybox/toybox"]
-	path = toybox/toybox
-	url = https://github.com/MuntashirAkon/toybox.git

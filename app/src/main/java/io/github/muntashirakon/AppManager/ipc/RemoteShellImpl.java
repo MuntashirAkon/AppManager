@@ -26,13 +26,11 @@ import java.util.List;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.IRemoteShell;
 import io.github.muntashirakon.AppManager.IShellResult;
-import io.github.muntashirakon.toybox.ToyboxInitializer;
 
 class RemoteShellImpl extends IRemoteShell.Stub {
     static {
         Shell.enableVerboseLogging = BuildConfig.DEBUG;
         Shell.setDefaultBuilder(Shell.Builder.create()
-                .setInitializers(ToyboxInitializer.class)
                 .setFlags(Shell.FLAG_MOUNT_MASTER)
                 .setTimeout(10));
     }

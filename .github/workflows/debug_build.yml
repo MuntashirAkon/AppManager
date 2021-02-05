@@ -26,12 +26,6 @@ jobs:
       uses: actions/checkout@v2
       with:
         submodules: 'recursive'
-    - name: Restore toybox
-      uses: actions/cache@v2
-      with:
-        path: |
-          toybox/src/main/jniLibs
-        key: ${{ runner.os }}-${{ hashFiles('toybox/toybox/**') }}
     - name: Restore docs
       uses: actions/cache@v2
       with:

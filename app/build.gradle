@@ -89,7 +89,6 @@ dependencies {
     implementation project(path: ':libapkparser')
     implementation project(path: ':libopenpgp')
     implementation project(path: ':sun')
-    implementation project(path: ':toybox')
     implementation project(path: ':libserver')
 
     //noinspection GradleDependency

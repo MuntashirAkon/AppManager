@@ -289,7 +289,7 @@ public class SharedPrefsActivity extends BaseActivity implements
             xmlSerializer.flush();
             xmlFile.write(stringWriter.toString().getBytes());
             xmlFile.close();
-            return Runner.runCommand(String.format(Runner.TOYBOX + " chmod 0666 '%s'", sharedPrefsFile)).isSuccessful();
+            return Runner.runCommand(new String[]{"chmod", "0666", sharedPrefsFile.getAbsolutePath()}).isSuccessful();
         } catch (IOException | RemoteException e) {
             e.printStackTrace();
         }

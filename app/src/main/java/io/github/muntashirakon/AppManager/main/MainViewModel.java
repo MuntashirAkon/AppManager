@@ -38,13 +38,14 @@ import io.github.muntashirakon.AppManager.backup.BackupUtils;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.db.entity.App;
+import io.github.muntashirakon.AppManager.ipc.IPCUtils;
+import io.github.muntashirakon.AppManager.ipc.ps.ProcessEntry;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
-import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.PackageChangeReceiver;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
+import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -321,17 +322,23 @@ public class MainViewModel extends AndroidViewModel {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @GuardedBy("applicationItems")
     private void loadRunningApps() {
         synchronized (applicationItems) {
-            Runner.Result result = Runner.runCommand(new String[]{Runner.TOYBOX, "ps", "-dw", "-o", "NAME"});
-            if (result.isSuccessful()) {
-                List<String> processInfoLines = result.getOutputAsList(1);
+            try {
+                List<ProcessEntry> processEntries = (List<ProcessEntry>) IPCUtils.getServiceSafe().getRunningProcesses();
+                List<String> processNames = new ArrayList<>();
+                for (ProcessEntry entry : processEntries) {
+                    processNames.add(entry.name);
+                }
                 for (int i = 0; i < applicationItems.size(); ++i) {
                     ApplicationItem applicationItem = applicationItems.get(i);
-                    applicationItem.isRunning = processInfoLines.contains(applicationItem.packageName);
+                    applicationItem.isRunning = processNames.contains(applicationItem.packageName);
                     applicationItems.set(i, applicationItem);
                 }
+            } catch (Throwable th) {
+                Log.e("MVM", th);
             }
         }
     }
@@ -457,8 +464,7 @@ public class MainViewModel extends AndroidViewModel {
                     for (int userHandle : item.userHandles) {
                         AppManager.getDb().appDao().delete(item.packageName, userHandle);
                     }
-                }
-                else {
+                } else {
                     ApplicationItem changedItem = getNewApplicationItem(packageName);
                     if (changedItem != null) insertOrAddApplicationItem(changedItem);
                 }

@@ -128,7 +128,7 @@ public class RunningAppsAdapter extends RecyclerView.Adapter<RunningAppsAdapter.
             if ((processItem.pid >= 10000 || RunningAppsActivity.enableKillForSystem) && !isAdbMode) {
                 killItem.setVisible(true).setOnMenuItemClickListener(item -> {
                     new Thread(() -> {
-                        if (Runner.runCommand(new String[]{Runner.TOYBOX, "kill", "-9", String.valueOf(processItem.pid)}).isSuccessful()) {
+                        if (Runner.runCommand(new String[]{"kill", "-9", String.valueOf(processItem.pid)}).isSuccessful()) {
                             mActivity.runOnUiThread(mActivity::refresh);
                         } else {
                             mActivity.runOnUiThread(() -> Toast.makeText(mActivity, mActivity.getString(R.string.failed_to_stop, processName), Toast.LENGTH_LONG).show());

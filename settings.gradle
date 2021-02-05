@@ -1,6 +1,5 @@
 include ':feat_docs'
 include ':libserver'
-include ':toybox'
 include ':sun'
 include ':libopenpgp'
 include ':libapkparser'

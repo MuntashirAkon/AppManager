@@ -98,8 +98,8 @@ public class MagiskUtils {
     }
 
     public static boolean isHidden(String packageName) {
-        return Runner.runCommand(Runner.getRootInstance(), "magiskhide ls | " +
-                Runner.TOYBOX + " grep " + packageName).isSuccessful();
+        // FIXME: 6/2/21 This implementation is greedy and can match multiple packages
+        return Runner.runCommand(Runner.getRootInstance(), "magiskhide ls | grep " + packageName).isSuccessful();
     }
 
     public static boolean hide(String packageName) {

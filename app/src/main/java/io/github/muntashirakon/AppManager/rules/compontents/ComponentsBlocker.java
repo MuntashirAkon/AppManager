@@ -290,7 +290,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
             Log.d(TAG, "Rules: " + rules);
             rulesStream.write(rules.getBytes());
             rulesFile.finishWrite(rulesStream);
-            Runner.runCommand(String.format(Runner.TOYBOX + " chmod 0666 %s", rulesFile.getBaseFile()));
+            Runner.runCommand(new String[]{"chmod", "0666", rulesFile.getBaseFile().getAbsolutePath()});
         } catch (IOException e) {
             Log.e(TAG, "Failed to write rules for package " + packageName, e);
             rulesFile.failWrite(rulesStream);
