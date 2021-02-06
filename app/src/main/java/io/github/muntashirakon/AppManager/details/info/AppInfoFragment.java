@@ -556,7 +556,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     ApkFile apkFile = ApkFile.getInstance(mainModel.getApkFileKey());
                     // Display a list of apks
                     List<ApkFile.Entry> apkEntries = apkFile.getEntries();
-                    String[] entryNames = new String[tagCloud.splitCount];
+                    CharSequence[] entryNames = new CharSequence[tagCloud.splitCount];
                     for (int i = 0; i < tagCloud.splitCount; ++i) {
                         entryNames[i] = apkEntries.get(i + 1).toLocalizedString(mActivity);
                     }
@@ -868,9 +868,9 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 if (apkFile.isSplit()) {
                     // Display a list of apks
                     List<ApkFile.Entry> apkEntries = apkFile.getEntries();
-                    String[] entryNames = new String[apkEntries.size()];
+                    CharSequence[] entryNames = new CharSequence[apkEntries.size()];
                     for (int i = 0; i < apkEntries.size(); ++i) {
-                        entryNames[i] = apkEntries.get(i).toLocalizedString(requireActivity());
+                        entryNames[i] = apkEntries.get(i).toShortLocalizedString(requireActivity());
                     }
                     new MaterialAlertDialogBuilder(mActivity)
                             .setTitle(R.string.select_apk)
@@ -1002,7 +1002,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             // Split source directories
             if (appInfo.splitEntries.size() > 0) {
                 for (ApkFile.Entry entry : appInfo.splitEntries) {
-                    mListItems.add(ListItem.getSelectableRegularItem(entry.toLocalizedString(mActivity),
+                    mListItems.add(ListItem.getSelectableRegularItem(entry.toShortLocalizedString(mActivity),
                             entry.getApkSource(), openAsFolderInFM(entry.getApkSource())));
                 }
             }

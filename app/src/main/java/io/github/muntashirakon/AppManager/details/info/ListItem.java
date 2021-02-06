@@ -52,8 +52,8 @@ class ListItem {
     int type;
     @ListItemFlag
     int flags = 0;
-    String title;
-    String subtitle;
+    CharSequence title;
+    CharSequence subtitle;
     @DrawableRes
     int icon = 0;
     @DrawableRes
@@ -61,7 +61,7 @@ class ListItem {
     View.OnClickListener actionListener;
 
     @NonNull
-    static ListItem getGroupHeader(String title) {
+    static ListItem getGroupHeader(CharSequence title) {
         ListItem listItem = new ListItem();
         listItem.type = LIST_ITEM_GROUP_BEGIN;
         listItem.title = title;
@@ -76,7 +76,7 @@ class ListItem {
     }
 
     @NonNull
-    static ListItem getInlineItem(String title, String subtitle) {
+    static ListItem getInlineItem(CharSequence title, CharSequence subtitle) {
         ListItem listItem = new ListItem();
         listItem.type = LIST_ITEM_INLINE;
         listItem.title = title;
@@ -85,7 +85,7 @@ class ListItem {
     }
 
     @NonNull
-    static ListItem getRegularItem(String title, String subtitle) {
+    static ListItem getRegularItem(CharSequence title, CharSequence subtitle) {
         ListItem listItem = new ListItem();
         listItem.type = LIST_ITEM_REGULAR;
         listItem.title = title;
@@ -94,7 +94,7 @@ class ListItem {
     }
 
     @NonNull
-    static ListItem getSelectableRegularItem(String title, String subtitle) {
+    static ListItem getSelectableRegularItem(CharSequence title, CharSequence subtitle) {
         ListItem listItem = new ListItem();
         listItem.type = LIST_ITEM_REGULAR;
         listItem.flags |= LIST_ITEM_FLAG_SELECTABLE;
@@ -104,7 +104,7 @@ class ListItem {
     }
 
     @NonNull
-    static ListItem getSelectableRegularItem(String title, String subtitle, View.OnClickListener actionListener) {
+    static ListItem getSelectableRegularItem(CharSequence title, CharSequence subtitle, View.OnClickListener actionListener) {
         ListItem listItem = new ListItem();
         listItem.type = LIST_ITEM_REGULAR;
         listItem.flags |= LIST_ITEM_FLAG_SELECTABLE;

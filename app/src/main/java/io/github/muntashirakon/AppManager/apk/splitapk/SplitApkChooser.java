@@ -72,7 +72,7 @@ public class SplitApkChooser extends DialogFragment {
         apkFile = ApkFile.getInstance(apkFileKey);
         if (!apkFile.isSplit()) throw new RuntimeException("Apk file does not contain any split.");
         List<ApkFile.Entry> apkEntries = apkFile.getEntries();
-        String[] entryNames = new String[apkEntries.size()];
+        CharSequence[] entryNames = new CharSequence[apkEntries.size()];
         final boolean[] choices = getChoices(apkEntries);
         for (int i = 0; i < apkEntries.size(); ++i) {
             entryNames[i] = apkEntries.get(i).toLocalizedString(requireActivity());

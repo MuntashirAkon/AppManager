@@ -25,7 +25,9 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.os.RemoteException;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.format.Formatter;
 import android.util.SparseArray;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -39,10 +41,7 @@ import io.github.muntashirakon.AppManager.apk.signing.SigSchemes;
 import io.github.muntashirakon.AppManager.apk.signing.SignUtils;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
-import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.AppManager.utils.ArrayUtils;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
-import io.github.muntashirakon.AppManager.utils.LangUtils;
+import io.github.muntashirakon.AppManager.utils.*;
 import io.github.muntashirakon.io.ProxyFile;
 
 import java.io.*;
@@ -54,6 +53,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import static io.github.muntashirakon.AppManager.apk.ApkUtils.*;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.*;
 
 public final class ApkFile implements AutoCloseable {
     public static final String TAG = "ApkFile";
@@ -701,7 +701,6 @@ public final class ApkFile implements AutoCloseable {
             return required;
         }
 
-        @SuppressWarnings("unused")
         public boolean isIsolated() {
             return isolated;
         }
@@ -729,7 +728,22 @@ public final class ApkFile implements AutoCloseable {
             throw new RuntimeException("Attempt to fetch Locale for invalid apk");
         }
 
-        public String toLocalizedString(Context context) {
+        public CharSequence toLocalizedString(Context context) {
+            CharSequence localizedString = toShortLocalizedString(context);
+            SpannableStringBuilder builder = new SpannableStringBuilder()
+                    .append(context.getString(R.string.size)).append(": ")
+                    .append(Formatter.formatFileSize(context, getFileSize()));
+            if (isRequired()) {
+                builder.append(", ").append(context.getString(R.string.required));
+            }
+            if (isIsolated()) {
+                builder.append(", ").append(context.getString(R.string.isolated));
+            }
+            return new SpannableStringBuilder(getTitleText(context, localizedString)).append("\n")
+                    .append(getSmallerText(getSecondaryText(context, builder)));
+        }
+
+        public CharSequence toShortLocalizedString(Context context) {
             switch (type) {
                 case ApkFile.APK_BASE:
                     return context.getString(R.string.base_apk);
