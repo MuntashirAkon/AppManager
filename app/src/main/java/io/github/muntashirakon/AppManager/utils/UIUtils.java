@@ -20,7 +20,9 @@ package io.github.muntashirakon.AppManager.utils;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.BackgroundColorSpan;
@@ -37,15 +39,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import android.widget.Toast;
-import androidx.annotation.StringRes;
+import androidx.annotation.*;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SearchView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.Locale;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -176,6 +176,25 @@ public class UIUtils {
 
     public static int spToPx(@NonNull Context context, float sp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, context.getResources().getDisplayMetrics());
+    }
+
+    @UiThread
+    @NonNull
+    public static View getDialogTitle(@NonNull FragmentActivity activity, @NonNull CharSequence title,
+                                      @Nullable Drawable drawable, @Nullable CharSequence subtitle) {
+        View appLabelWithVersionView = activity.getLayoutInflater().inflate(R.layout.dialog_title_with_icon, null);
+        ImageView iv = appLabelWithVersionView.findViewById(R.id.icon);
+        if (drawable != null) {
+            iv.setImageDrawable(drawable);
+        } else {
+            iv.setVisibility(View.GONE);
+        }
+        SpannableStringBuilder fullTitle = new SpannableStringBuilder(getBoldString(getTitleText(activity, title)));
+        if (subtitle != null) {
+            fullTitle.append("\n").append(getSmallerText(getSecondaryText(activity, subtitle)));
+        }
+        ((TextView) appLabelWithVersionView.findViewById(R.id.title)).setText(fullTitle);
+        return appLabelWithVersionView;
     }
 
     @NonNull

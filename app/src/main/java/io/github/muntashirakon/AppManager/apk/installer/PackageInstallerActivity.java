@@ -32,6 +32,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
@@ -45,6 +46,7 @@ import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.splitapk.SplitApkChooser;
 import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -57,6 +59,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfo;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getDialogTitle;
 
 public class PackageInstallerActivity extends BaseActivity {
     public static final String EXTRA_APK_FILE_KEY = "EXTRA_APK_FILE_KEY";
@@ -64,6 +67,8 @@ public class PackageInstallerActivity extends BaseActivity {
 
     private ApkFile apkFile;
     private String appLabel;
+    private Drawable appIcon;
+    private String versionWithTrackers;
     private PackageInfo packageInfo;
     private PackageInfo installedPackageInfo;
     private String actionName;
@@ -139,7 +144,8 @@ public class PackageInstallerActivity extends BaseActivity {
             } catch (PackageManager.NameNotFoundException ignore) {
             }
             appLabel = mPackageManager.getApplicationLabel(packageInfo.applicationInfo).toString();
-            Drawable appIcon = mPackageManager.getApplicationIcon(packageInfo.applicationInfo);
+            appIcon = mPackageManager.getApplicationIcon(packageInfo.applicationInfo);
+            versionWithTrackers = getVersionInfoWithTrackers();
             runOnUiThread(() -> {
                 if (!isDestroyed()) progressDialog.dismiss();
             });
@@ -151,8 +157,7 @@ public class PackageInstallerActivity extends BaseActivity {
                 } else {
                     runOnUiThread(() -> new MaterialAlertDialogBuilder(this)
                             .setCancelable(false)
-                            .setTitle(appLabel)
-                            .setIcon(appIcon)
+                            .setCustomTitle(getDialogTitle(this, appLabel, appIcon, versionWithTrackers))
                             .setMessage(R.string.install_app_message)
                             .setPositiveButton(R.string.install, (dialog, which) -> install())
                             .setNegativeButton(R.string.cancel, (dialog, which) -> finish())
@@ -179,8 +184,7 @@ public class PackageInstallerActivity extends BaseActivity {
                         } else {
                             runOnUiThread(() -> new MaterialAlertDialogBuilder(this)
                                     .setCancelable(false)
-                                    .setTitle(appLabel)
-                                    .setIcon(appIcon)
+                                    .setCustomTitle(getDialogTitle(this, appLabel, appIcon, versionWithTrackers))
                                     .setMessage(R.string.reinstall_app_message)
                                     .setPositiveButton(R.string.reinstall, (dialog, which) -> install())
                                     .setNegativeButton(R.string.cancel, (dialog, which) -> finish())
@@ -205,18 +209,19 @@ public class PackageInstallerActivity extends BaseActivity {
         }
     }
 
-//    @NonNull
-//    private String getVersionInfoWithTrackers() {
-//        long newVersionCode = PackageInfoCompat.getLongVersionCode(packageInfo);
-//        String newVersionName = packageInfo.versionName;
-//        int trackers = ComponentUtils.getTrackerComponentsForPackageInfo(packageInfo).size();
-//        StringBuilder sb = new StringBuilder(getString(R.string.version_name_with_code, newVersionName, newVersionCode));
-//        if (trackers > 0) {
-//            sb.append(", ").append(getResources().getQuantityString(R.plurals.no_of_trackers, trackers, trackers));
-//        }
-//        return sb.toString();
-//    }
+    @NonNull
+    private String getVersionInfoWithTrackers() {
+        long newVersionCode = PackageInfoCompat.getLongVersionCode(packageInfo);
+        String newVersionName = packageInfo.versionName;
+        int trackers = ComponentUtils.getTrackerComponentsForPackageInfo(packageInfo).size();
+        StringBuilder sb = new StringBuilder(getString(R.string.version_name_with_code, newVersionName, newVersionCode));
+        if (trackers > 0) {
+            sb.append(", ").append(getResources().getQuantityString(R.plurals.no_of_trackers, trackers, trackers));
+        }
+        return sb.toString();
+    }
 
+    @SuppressWarnings("deprecation")
     @NonNull
     private PackageInfo getPackageInfo() throws PackageManager.NameNotFoundException, IOException, RemoteException {
         String apkPath = apkFile.getBaseEntry().getSignedFile(this).getAbsolutePath();
@@ -226,8 +231,9 @@ public class PackageInstallerActivity extends BaseActivity {
                 | PackageManager.GET_SERVICES | PackageManager.GET_URI_PERMISSION_PATTERNS
                 | flagDisabledComponents | PackageManager.GET_SIGNATURES | PackageManager.GET_CONFIGURATIONS
                 | PackageManager.GET_SHARED_LIBRARY_FILES);
-        if (packageInfo == null)
+        if (packageInfo == null) {
             throw new PackageManager.NameNotFoundException("Package cannot be parsed.");
+        }
         packageInfo.applicationInfo.sourceDir = apkPath;
         packageInfo.applicationInfo.publicSourceDir = apkPath;
         return packageInfo;
@@ -273,14 +279,12 @@ public class PackageInstallerActivity extends BaseActivity {
                             .append(getString(R.string.do_you_want_to_uninstall_and_install)).append(" ")
                             .append(UIUtils.getItalicString(getString(R.string.app_data_will_be_lost)))
                             .append("\n\n");
-                    CharSequence only_install_message = getText(R.string.install_without_data_loss);
                     int start = builder.length();
-                    builder.append(only_install_message);
+                    builder.append(getText(R.string.install_without_data_loss));
                     builder.setSpan(new RelativeSizeSpan(0.8f), start, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                     new MaterialAlertDialogBuilder(PackageInstallerActivity.this)
-                            .setIcon(getPackageManager().getApplicationIcon(info))
-                            .setTitle(appLabel)
+                            .setCustomTitle(getDialogTitle(PackageInstallerActivity.this, appLabel, appIcon, versionWithTrackers))
                             .setMessage(builder)
                             .setPositiveButton(R.string.yes, (dialog, which) -> {
                                 // Uninstall and then install again
@@ -331,6 +335,7 @@ public class PackageInstallerActivity extends BaseActivity {
         super.onSaveInstanceState(outState);
     }
 
+    @UiThread
     private void install() {
         if (apkFile.hasObb() && !AppPref.isRootOrAdbEnabled()) {
             // Need to request permissions if not given
@@ -340,6 +345,7 @@ public class PackageInstallerActivity extends BaseActivity {
         } else launchInstaller();
     }
 
+    @UiThread
     private void launchInstaller() {
         if (apkFile.isSplit()) {
             SplitApkChooser splitApkChooser = new SplitApkChooser();
@@ -347,6 +353,7 @@ public class PackageInstallerActivity extends BaseActivity {
             args.putInt(SplitApkChooser.EXTRA_APK_FILE_KEY, apkFileKey);
             args.putString(SplitApkChooser.EXTRA_ACTION_NAME, actionName);
             args.putParcelable(SplitApkChooser.EXTRA_APP_INFO, packageInfo.applicationInfo);
+            args.putString(SplitApkChooser.EXTRA_VERSION_INFO, versionWithTrackers);
             splitApkChooser.setArguments(args);
             splitApkChooser.setCancelable(false);
             splitApkChooser.setOnTriggerInstall(new SplitApkChooser.InstallInterface() {

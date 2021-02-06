@@ -35,12 +35,14 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 public class SplitApkChooser extends DialogFragment {
     public static final String TAG = "SplitApkChooser";
     public static final String EXTRA_APK_FILE_KEY = "EXTRA_APK_FILE_KEY";
     public static final String EXTRA_ACTION_NAME = "EXTRA_ACTION_NAME";
     public static final String EXTRA_APP_INFO = "EXTRA_APP_INFO";
+    public static final String EXTRA_VERSION_INFO = "EXTRA_VERSION_INFO";
 
     public interface InstallInterface {
         void triggerInstall();
@@ -62,6 +64,7 @@ public class SplitApkChooser extends DialogFragment {
         int apkFileKey = requireArguments().getInt(EXTRA_APK_FILE_KEY, -1);
         String actionName = requireArguments().getString(EXTRA_ACTION_NAME);
         ApplicationInfo appInfo = requireArguments().getParcelable(EXTRA_APP_INFO);
+        String versionInfo = requireArguments().getString(EXTRA_VERSION_INFO);
         pm = requireActivity().getPackageManager();
         if (apkFileKey == -1 || appInfo == null) {
             throw new IllegalArgumentException("ApkFile cannot be empty.");
@@ -77,8 +80,8 @@ public class SplitApkChooser extends DialogFragment {
         if (installInterface == null) throw new RuntimeException("No install action has been set.");
         return new MaterialAlertDialogBuilder(requireActivity())
                 .setCancelable(false)
-                .setIcon(pm.getApplicationIcon(appInfo))
-                .setTitle(pm.getApplicationLabel(appInfo))
+                .setCustomTitle(UIUtils.getDialogTitle(requireActivity(), pm.getApplicationLabel(appInfo),
+                        pm.getApplicationIcon(appInfo), versionInfo))
                 .setMultiChoiceItems(entryNames, choices, (dialog, which, isChecked) -> {
                     if (isChecked) apkFile.select(which);
                     else apkFile.deselect(which);
