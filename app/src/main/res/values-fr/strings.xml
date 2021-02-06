@@ -605,7 +605,7 @@
     <string name="date_installed">Date d\'installation</string>
     <string name="more_info">Plus d\'informations</string>
     <string name="sdk_flags">Drapeaux</string>
-    <string name="sdk_max">Max</string>
+    <string name="sdk_max">Cible</string>
     <string name="sdk_min">Min</string>
     <string name="source_dir">Répertoire source</string>
     <string name="paths_and_directories">Chemins et répertoires</string>
