@@ -45,7 +45,7 @@ public class ProcessEntry implements Parcelable {
     public String processState;
     public String processStatePlus;
 
-    public ProcessEntry() {
+    ProcessEntry() {
     }
 
     protected ProcessEntry(@NonNull Parcel in) {

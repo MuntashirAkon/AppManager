@@ -19,9 +19,7 @@ package io.github.muntashirakon.AppManager.utils;
 
 import android.Manifest;
 import android.app.AppOpsManager;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ConfigurationInfo;
 import android.content.pm.FeatureInfo;
@@ -37,9 +35,6 @@ import android.text.TextUtils;
 import android.util.Pair;
 import android.view.WindowManager;
 
-import androidx.annotation.Nullable;
-import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.ipc.AuthenticationActivity;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -81,7 +76,7 @@ import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 public class Utils {
     public static final String TERMUX_LOGIN_PATH = OsEnvironment.getDataDataDirectory() + "/com.termux/files/usr/bin/login";
 
-    @SuppressWarnings({"BooleanMethodIsAlwaysInverted", "deprecation"})
+    @SuppressWarnings({"deprecation"})
     public static boolean hasUsageStatsPermission(@NonNull Context context) {
         AppOpsManager appOpsManager = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
         assert appOpsManager != null;

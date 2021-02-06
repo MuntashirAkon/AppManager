@@ -21,7 +21,6 @@ import androidx.annotation.*;
 import androidx.collection.ArrayMap;
 import com.android.internal.util.TextUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
-import io.github.muntashirakon.io.ProxyFile;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -187,7 +186,7 @@ public class Ps {
     private final ArrayList<ProcessEntry> processEntries = new ArrayList<>(256);
 
     public Ps() {
-        this(new ProxyFile("/proc"));
+        this(new File("/proc"));
     }
 
     @VisibleForTesting
@@ -219,24 +218,24 @@ public class Ps {
             for (File pidFile : procPidFiles) {
                 ProcItem procItem = new ProcItem();
                 // Parse stat
-                File statFile = new ProxyFile(pidFile, STAT);
+                File statFile = new File(pidFile, STAT);
                 procItem.stat = IOUtils.getFileContent(statFile).split("\\s");
                 if (procItem.stat.length != STAT_COUNT) continue;
                 // Parse statm
-                File memStatFile = new ProxyFile(pidFile, MEM_STAT);
+                File memStatFile = new File(pidFile, MEM_STAT);
                 procItem.memStat = IOUtils.getFileContent(memStatFile).split("\\s");
                 if (procItem.memStat.length != MEM_STAT_COUNT) continue;
                 // Parse status
-                File statusFile = new ProxyFile(pidFile, STATUS);
+                File statusFile = new File(pidFile, STATUS);
                 for (String line : IOUtils.getFileContent(statusFile).split("\\n")) {
                     int idxOfColon = line.indexOf(':');
                     if (idxOfColon != -1) {
                         procItem.status.put(line.substring(0, idxOfColon), line.substring(idxOfColon + 1).trim());
                     }
                 }
-                procItem.name = IOUtils.getFileContent(new ProxyFile(pidFile, NAME)).trim();
-                procItem.sepol = IOUtils.getFileContent(new ProxyFile(pidFile, SEPOL)).trim();
-                procItem.wchan = IOUtils.getFileContent(new ProxyFile(pidFile, WCHAN)).trim();
+                procItem.name = IOUtils.getFileContent(new File(pidFile, NAME)).trim();
+                procItem.sepol = IOUtils.getFileContent(new File(pidFile, SEPOL)).trim();
+                procItem.wchan = IOUtils.getFileContent(new File(pidFile, WCHAN)).trim();
                 processEntries.add(newProcess(procItem));
             }
         }
