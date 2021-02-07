@@ -27,6 +27,9 @@ public interface AppDao {
     @Query("SELECT * FROM app")
     List<App> getAll();
 
+    @Query("SELECT * FROM app WHERE is_installed = 1")
+    List<App> getAllInstalled();
+
     @Query("SELECT * FROM app WHERE package_name = :packageName")
     List<App> getAll(String packageName);
 

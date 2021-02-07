@@ -20,7 +20,6 @@ package io.github.muntashirakon.AppManager.settings;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -28,26 +27,26 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
-
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.AppManager.db.entity.App;
 import io.github.muntashirakon.AppManager.oneclickops.ItemCount;
 import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.rules.compontents.ExternalComponentsImporter;
+import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ImportExportDialogFragment extends DialogFragment {
     public static final String TAG = "ImportExportDialogFragment";
@@ -72,40 +71,54 @@ public class ImportExportDialogFragment extends DialogFragment {
                 args.putStringArrayList(RulesTypeSelectionDialogFragment.ARG_PKG, null);
                 args.putIntArray(RulesTypeSelectionDialogFragment.ARG_USERS, Users.getUsersHandles());
                 dialogFragment.setArguments(args);
-                activity.getSupportFragmentManager().popBackStackImmediate();
                 dialogFragment.show(activity.getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
-                requireDialog().cancel();
             });
-    private final ActivityResultLauncher<String> importRules = registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
-        RulesTypeSelectionDialogFragment dialogFragment = new RulesTypeSelectionDialogFragment();
-        Bundle args = new Bundle();
-        args.putInt(RulesTypeSelectionDialogFragment.ARG_MODE, RulesTypeSelectionDialogFragment.MODE_IMPORT);
-        args.putParcelable(RulesTypeSelectionDialogFragment.ARG_URI, uri);
-        args.putStringArrayList(RulesTypeSelectionDialogFragment.ARG_PKG, null);
-        args.putIntArray(RulesTypeSelectionDialogFragment.ARG_USERS, Users.getUsersHandles());
-        dialogFragment.setArguments(args);
-        activity.getSupportFragmentManager().popBackStackImmediate();
-        dialogFragment.show(activity.getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
-        requireDialog().cancel();
-    });
-    private final ActivityResultLauncher<String> importFromWatt = registerForActivityResult(new ActivityResultContracts.GetMultipleContents(), uris -> {
-        Pair<Boolean, Integer> status = ExternalComponentsImporter.applyFromWatt(activity.getApplicationContext(), uris, Users.getUsersHandles());
-        if (!status.first) {  // Not failed
-            Toast.makeText(getContext(), R.string.the_import_was_successful, Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(getContext(), getResources().getQuantityString(R.plurals.failed_to_import_files, status.second, status.second), Toast.LENGTH_LONG).show();
-        }
-        requireDialog().cancel();
-    });
-    private final ActivityResultLauncher<String> importFromBlocker = registerForActivityResult(new ActivityResultContracts.GetMultipleContents(), uris -> {
-        Pair<Boolean, Integer> status = ExternalComponentsImporter.applyFromBlocker(activity.getApplicationContext(), uris, Users.getUsersHandles());
-        if (!status.first) {  // Not failed
-            Toast.makeText(getContext(), R.string.the_import_was_successful, Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(getContext(), getResources().getQuantityString(R.plurals.failed_to_import_files, status.second, status.second), Toast.LENGTH_LONG).show();
-        }
-        requireDialog().cancel();
-    });
+    private final ActivityResultLauncher<String> importRules = registerForActivityResult(
+            new ActivityResultContracts.GetContent(),
+            uri -> {
+                if (uri == null) {
+                    // Back button pressed.
+                    return;
+                }
+                RulesTypeSelectionDialogFragment dialogFragment = new RulesTypeSelectionDialogFragment();
+                Bundle args = new Bundle();
+                args.putInt(RulesTypeSelectionDialogFragment.ARG_MODE, RulesTypeSelectionDialogFragment.MODE_IMPORT);
+                args.putParcelable(RulesTypeSelectionDialogFragment.ARG_URI, uri);
+                args.putStringArrayList(RulesTypeSelectionDialogFragment.ARG_PKG, null);
+                args.putIntArray(RulesTypeSelectionDialogFragment.ARG_USERS, Users.getUsersHandles());
+                dialogFragment.setArguments(args);
+                dialogFragment.show(activity.getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
+            });
+    private final ActivityResultLauncher<String> importFromWatt = registerForActivityResult(
+            new ActivityResultContracts.GetMultipleContents(),
+            uris -> {
+                if (uris == null) {
+                    // Back button pressed.
+                    return;
+                }
+                Pair<Boolean, Integer> status = ExternalComponentsImporter.applyFromWatt(activity.getApplicationContext(), uris, Users.getUsersHandles());
+                if (!status.first) {  // Not failed
+                    Toast.makeText(getContext(), R.string.the_import_was_successful, Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getContext(), getResources().getQuantityString(R.plurals.failed_to_import_files, status.second, status.second), Toast.LENGTH_LONG).show();
+                }
+                requireDialog().dismiss();
+            });
+    private final ActivityResultLauncher<String> importFromBlocker = registerForActivityResult(
+            new ActivityResultContracts.GetMultipleContents(),
+            uris -> {
+                if (uris == null) {
+                    // Back button pressed.
+                    return;
+                }
+                Pair<Boolean, Integer> status = ExternalComponentsImporter.applyFromBlocker(activity.getApplicationContext(), uris, Users.getUsersHandles());
+                if (!status.first) {  // Not failed
+                    Toast.makeText(getContext(), R.string.the_import_was_successful, Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getContext(), getResources().getQuantityString(R.plurals.failed_to_import_files, status.second, status.second), Toast.LENGTH_LONG).show();
+                }
+                requireDialog().dismiss();
+            });
 
     @SuppressLint("SimpleDateFormat")
     @NonNull
@@ -144,17 +157,16 @@ public class ImportExportDialogFragment extends DialogFragment {
         }
         activity.progressIndicator.show();
         final Handler handler = new Handler(Looper.getMainLooper());
-        final PackageManager pm = activity.getPackageManager();
         new Thread(() -> {
             final List<ItemCount> itemCounts = new ArrayList<>();
             ItemCount trackerCount;
-            for (ApplicationInfo applicationInfo : pm.getInstalledApplications(0)) {
-                if (!systemApps && (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0)
+            for (App app : AppManager.getDb().appDao().getAllInstalled()) {
+                if (!systemApps && (app.flags & ApplicationInfo.FLAG_SYSTEM) != 0)
                     continue;
                 trackerCount = new ItemCount();
-                trackerCount.packageName = applicationInfo.packageName;
-                trackerCount.packageLabel = applicationInfo.loadLabel(pm).toString();
-                trackerCount.count = PackageUtils.getUserDisabledComponentsForPackage(applicationInfo.packageName, userHandle).size();
+                trackerCount.packageName = app.packageName;
+                trackerCount.packageLabel = app.packageLabel;
+                trackerCount.count = PackageUtils.getUserDisabledComponentsForPackage(app.packageName, userHandle).size();
                 if (trackerCount.count > 0) itemCounts.add(trackerCount);
             }
             if (!itemCounts.isEmpty()) {
