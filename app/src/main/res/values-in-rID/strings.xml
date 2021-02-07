@@ -24,7 +24,7 @@
     <string name="no_activities">Tidak ada aktifitas</string>
     <string name="installer_error_blocked_device">Perangkat</string>
     <string name="receivers">Penerima</string>
-    <string name="starting_activity"></string>
+    <string name="starting_activity"/>
     <string name="error_verbose_pin_shortcut">Peluncur saat ini tidak mendukung Pinshortcut. Tidak dapat membuat pintasan.</string>
     <string name="error_creating_shortcut">Kesalahan dalam membuat pintasan</string>
     <string name="instructions">Intruksi</string>
@@ -84,4 +84,36 @@
     <string name="os_version">Versi OS</string>
     <string name="copied_to_clipboard">Disalin ke papan klip</string>
     <string name="pref_enable_disable_features_msg">Hidupkan atau matikan fitur di App Manager.</string>
+    <string name="sort_by_app_ops_names">Nama aplikasi ops</string>
+    <string name="deny_dangerous_app_ops">Tolak aplikasi berbahaya</string>
+    <string name="reset_to_default">Setel ulang ke default</string>
+    <string name="sort_by_component_name">Nama komponen</string>
+    <string name="block_trackers">Blokir tracker</string>
+    <string name="sort_by_wifi_data">Data Wi-Fi</string>
+    <string name="version">Versi</string>
+    <string name="pref_about_msg">Versi, lisensi, kredit, dll App Manager.</string>
+    <string name="current_theme">Tema saat ini:%1$s</string>
+    <string name="apply">Terapkan</string>
+    <string name="select_theme">Tema</string>
+    <string name="night">Malam</string>
+    <string name="day">Hari</string>
+    <string name="unknown_split_for_base_apk">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"some_split\"&gt;%1$s&lt;/xliff:g&gt; untuk base APK</string>
+    <string name="unknown_split_for_feature">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"some_split\"&gt;%1$s&lt;/xliff:g&gt;untuk fitur&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt;%2$s&lt;/xliff:g&gt;</string>
+    <string name="split_feature_name">Fitur:&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt;%1$s&lt;/xliff:g&gt;</string>
+    <string name="base_apk">Base APK</string>
+    <string name="choose_language">Ubah bahasa</string>
+    <string name="current_language">Bahasa:%1$s</string>
+    <string name="auto">Otomatis</string>
+    <string name="pref_app_language">Bahasa</string>
+    <string name="pref_import">Impor</string>
+    <string name="touchscreen">Layar sentuh</string>
+    <string name="navigation">Navigasi</string>
+    <string name="keyboard_type">Tipe Papan ketik</string>
+    <string name="export_failed">Ekspor gagal!</string>
+    <string name="import_failed">Impor gagal!</string>
+    <string name="export_options">Pilihan Ekspor</string>
+    <string name="import_options">Pilihan impor</string>
+    <string name="pref_export">Ekspor</string>
+    <string name="pref_compression_method">Metode kompresi</string>
+    <string name="str_logo">Logo</string>
 </resources>
