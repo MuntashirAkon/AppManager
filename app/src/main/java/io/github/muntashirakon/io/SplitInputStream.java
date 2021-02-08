@@ -219,27 +219,28 @@ public class SplitInputStream extends InputStream {
                 inputStreams.add(new ProxyInputStream(files.get(0)));
                 ++currentIndex;
             }
-            // Read next available bytes from the current stream
-            int available = inputStreams.get(currentIndex).available();
-            if (available == 0 && currentIndex + 1 == files.size()) {
-                // Finished reading the last file
-                return -1;
-            }
-            while (available != 0 && len > 0) {
-                // Stream still has some bytes left and the buffer is still unfinished.
-                int readCount = inputStreams.get(currentIndex).read(b, off, Math.min(available, len));
-                off += readCount;
-                len -= readCount;
-                available = inputStreams.get(currentIndex).available();
-            }
-            // Either the stream has been completely read or the buffer is still unfinished
-            if (available == 0) {
-                // This stream has been read completely, initialize new stream if available
-                if (currentIndex + 1 != files.size()) {
-                    inputStreams.add(new ProxyInputStream(files.get(currentIndex + 1)));
-                    ++currentIndex;
+            do {
+                int readCount = inputStreams.get(currentIndex).read(b, off, len);
+                if (readCount <= 0) {
+                    // This stream has been read completely, initialize new stream if available
+                    if (currentIndex + 1 != files.size()) {
+                        inputStreams.add(new ProxyInputStream(files.get(currentIndex + 1)));
+                        ++currentIndex;
+                    } else {
+                        // Last stream reached
+                        if (len == b.length) {
+                            // Read nothing
+                            return -1;
+                        } else {
+                            // Read something
+                            return b.length - len;
+                        }
+                    }
+                } else {
+                    off += readCount;
+                    len -= readCount;
                 }
-            }
+            } while (len > 0);
             return b.length - len;
         } catch (IOException e) {
             throw e;
