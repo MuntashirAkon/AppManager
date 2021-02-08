@@ -27,6 +27,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.view.menu.MenuBuilder;
 import io.github.muntashirakon.AppManager.crypto.AuthenticationActivity;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.AMExceptionHandler;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.BetterActivityResult;
@@ -40,13 +41,18 @@ public abstract class BaseActivity extends AppCompatActivity {
         Thread.setDefaultUncaughtExceptionHandler(new AMExceptionHandler(this));
         AppCompatDelegate.setDefaultNightMode((int) AppPref.get(AppPref.PrefKey.PREF_APP_THEME_INT));
         if (!AppManager.isAuthenticated()) {
-            authActivity.launch(new Intent(this, AuthenticationActivity.class), result -> {
-                if (result.getResultCode() == RESULT_OK) {
-                    onAuthenticated(savedInstanceState);
-                } else {
-                    finishAndRemoveTask();
-                }
-            });
+            try {
+                authActivity.launch(new Intent(this, AuthenticationActivity.class), result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        onAuthenticated(savedInstanceState);
+                    } else {
+                        finishAndRemoveTask();
+                    }
+                });
+            } catch (Throwable th) {
+                Log.e("BaseActivity", th);
+                finishAndRemoveTask();
+            }
         } else onAuthenticated(savedInstanceState);
     }
 
