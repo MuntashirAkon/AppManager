@@ -569,7 +569,8 @@ class RestoreOp implements Closeable {
 
         @Nullable
         private File[] getSourceFiles(@NonNull File backupPath) {
-            return backupPath.listFiles((dir, name) -> name.startsWith(SOURCE_PREFIX));
+            String mode = CryptoUtils.getExtension(metadata.crypto);
+            return backupPath.listFiles((dir, name) -> name.startsWith(SOURCE_PREFIX) && name.endsWith(mode));
         }
 
         @SuppressWarnings("ResultOfMethodCallIgnored")
@@ -579,12 +580,14 @@ class RestoreOp implements Closeable {
 
         @Nullable
         private File[] getKeyStoreFiles(@NonNull File backupPath) {
-            return backupPath.listFiles((dir, name) -> name.startsWith(KEYSTORE_PREFIX));
+            String mode = CryptoUtils.getExtension(metadata.crypto);
+            return backupPath.listFiles((dir, name) -> name.startsWith(KEYSTORE_PREFIX) && name.endsWith(mode));
         }
 
         @Nullable
         private File[] getDataFiles(@NonNull File backupPath, int index) {
+            String mode = CryptoUtils.getExtension(metadata.crypto);
             final String dataPrefix = DATA_PREFIX + index;
-            return backupPath.listFiles((dir, name) -> name.startsWith(dataPrefix));
+            return backupPath.listFiles((dir, name) -> name.startsWith(dataPrefix) && name.endsWith(mode));
         }
     }

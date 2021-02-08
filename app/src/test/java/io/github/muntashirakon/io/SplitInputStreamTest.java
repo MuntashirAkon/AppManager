@@ -19,7 +19,6 @@ package io.github.muntashirakon.io;
 
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -33,13 +32,12 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class SplitInputStreamTest {
-    private SplitInputStream splitInputStream;
+    private final List<File> fileList = new ArrayList<>();
     private final ClassLoader classLoader = getClass().getClassLoader();
 
     @Before
     public void setUp() {
         assert classLoader != null;
-        List<File> fileList = new ArrayList<>();
         fileList.add(new File(classLoader.getResource("AppManager_v2.5.22.apks.0").getFile()));
         fileList.add(new File(classLoader.getResource("AppManager_v2.5.22.apks.1").getFile()));
         fileList.add(new File(classLoader.getResource("AppManager_v2.5.22.apks.2").getFile()));
@@ -48,19 +46,13 @@ public class SplitInputStreamTest {
         fileList.add(new File(classLoader.getResource("AppManager_v2.5.22.apks.5").getFile()));
         fileList.add(new File(classLoader.getResource("AppManager_v2.5.22.apks.6").getFile()));
         fileList.add(new File(classLoader.getResource("AppManager_v2.5.22.apks.7").getFile()));
-        splitInputStream = new SplitInputStream(fileList);
-
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        splitInputStream.close();
     }
 
     @Test
     public void read() throws IOException {
         File file = new File("/tmp/AppManager_v2.5.22.apks");
-        try (OutputStream outputStream = new FileOutputStream(file)) {
+        try (SplitInputStream splitInputStream = new SplitInputStream(fileList);
+             OutputStream outputStream = new FileOutputStream(file)) {
             IOUtils.copy(splitInputStream, outputStream);
         }
         assert classLoader != null;
@@ -71,17 +63,19 @@ public class SplitInputStreamTest {
 
     @Test
     public void skip() throws IOException {
-        // For 1 KB
-        long expectedSkipBytes = 10024;
-        long actualSkipBytes = splitInputStream.skip(expectedSkipBytes);
-        assertEquals(expectedSkipBytes, actualSkipBytes);
-        // For 1 MB
-        expectedSkipBytes = 1024 * 1024;
-        actualSkipBytes = splitInputStream.skip(expectedSkipBytes);
-        assertEquals(expectedSkipBytes, actualSkipBytes);
-        // For 2 MB
-        expectedSkipBytes = 1024 * 1024 * 2;
-        actualSkipBytes = splitInputStream.skip(expectedSkipBytes);
-        assertEquals(expectedSkipBytes, actualSkipBytes);
+        try (SplitInputStream splitInputStream = new SplitInputStream(fileList)) {
+            // For 1 KB
+            long expectedSkipBytes = 10024;
+            long actualSkipBytes = splitInputStream.skip(expectedSkipBytes);
+            assertEquals(expectedSkipBytes, actualSkipBytes);
+            // For 1 MB
+            expectedSkipBytes = 1024 * 1024;
+            actualSkipBytes = splitInputStream.skip(expectedSkipBytes);
+            assertEquals(expectedSkipBytes, actualSkipBytes);
+            // For 2 MB
+            expectedSkipBytes = 1024 * 1024 * 2;
+            actualSkipBytes = splitInputStream.skip(expectedSkipBytes);
+            assertEquals(expectedSkipBytes, actualSkipBytes);
+        }
     }
 }
