@@ -53,7 +53,7 @@ public class LocalServer {
                         Log.e("IPC", "Init: Local server");
                         localServer = new LocalServer();
                         if (amService == null || !amService.asBinder().pingBinder()) {
-                            amService = IPCUtils.getAmService(AppManager.getContext());
+                            amService = IPCUtils.getAmService();
                         }
                     } catch (Throwable e) {
                         e.printStackTrace();

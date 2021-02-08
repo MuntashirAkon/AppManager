@@ -32,8 +32,10 @@ import android.os.RemoteException;
 import android.provider.OpenableColumns;
 import android.system.ErrnoException;
 import android.system.Os;
+import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
 import com.android.internal.util.TextUtils;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -50,6 +52,7 @@ import java.util.zip.ZipEntry;
 public final class IOUtils {
     private static final byte[] ZIP_FILE_HEADER = new byte[]{0x50, 0x4B, 0x03, 0x04};
 
+    @AnyThread
     public static boolean isInputFileZip(@NonNull ContentResolver cr, Uri uri) throws IOException {
         byte[] header = new byte[4];
         try (InputStream is = cr.openInputStream(uri)) {
@@ -58,6 +61,7 @@ public final class IOUtils {
         return Arrays.equals(ZIP_FILE_HEADER, header);
     }
 
+    @WorkerThread
     public static void bytesToFile(byte[] bytes, File file) throws IOException {
         try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file))) {
             bos.write(bytes);
@@ -75,6 +79,7 @@ public final class IOUtils {
      * @return Desired byte array
      * @throws IOException If maximum capacity exceeded.
      */
+    @WorkerThread
     public static byte[] readFully(InputStream is, int length, boolean readAll)
             throws IOException {
         byte[] output = {};
@@ -106,6 +111,7 @@ public final class IOUtils {
         return output;
     }
 
+    @WorkerThread
     public static long copy(File from, File to) throws IOException, RemoteException {
         try (InputStream in = new ProxyInputStream(from);
              OutputStream out = new ProxyOutputStream(to)) {
@@ -113,6 +119,7 @@ public final class IOUtils {
         }
     }
 
+    @WorkerThread
     public static long copy(InputStream inputStream, OutputStream outputStream) throws IOException {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             return FileUtils.copy(inputStream, outputStream);
@@ -125,6 +132,7 @@ public final class IOUtils {
 
     private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
 
+    @WorkerThread
     private static long copyLarge(@NonNull InputStream inputStream, OutputStream outputStream) throws IOException {
         byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
         long count = 0;
@@ -136,6 +144,7 @@ public final class IOUtils {
         return count;
     }
 
+    @WorkerThread
     @NonNull
     public static File saveZipFile(@NonNull InputStream zipInputStream,
                                    @NonNull File destinationDirectory,
@@ -144,6 +153,7 @@ public final class IOUtils {
         return saveZipFile(zipInputStream, new ProxyFile(destinationDirectory, fileName));
     }
 
+    @WorkerThread
     @NonNull
     public static File saveZipFile(@NonNull InputStream zipInputStream, @NonNull File filePath)
             throws IOException, RemoteException {
@@ -155,6 +165,7 @@ public final class IOUtils {
         return filePath;
     }
 
+    @AnyThread
     @Nullable
     public static String getFileName(@NonNull ContentResolver resolver, @NonNull Uri uri) {
         if (uri.getScheme() == null) return null;
@@ -176,6 +187,7 @@ public final class IOUtils {
         }
     }
 
+    @AnyThread
     @NonNull
     public static String getFileNameFromZipEntry(@NonNull ZipEntry zipEntry) {
         String path = zipEntry.getName();
@@ -185,6 +197,7 @@ public final class IOUtils {
         return path.substring(lastIndexOfSeparator + 1);
     }
 
+    @AnyThread
     @NonNull
     public static String getLastPathComponent(@NonNull String path) {
         if (path.length() == 0) return path;
@@ -202,6 +215,7 @@ public final class IOUtils {
         return path.substring(lastIndexOfSeparator + 1);
     }
 
+    @AnyThread
     @Nullable
     public static String getSanitizedFileName(@NonNull String fileName, boolean replaceSpace) {
         if (fileName.equals(".") || fileName.equals("..")) {
@@ -217,6 +231,7 @@ public final class IOUtils {
         return fileName;
     }
 
+    @AnyThread
     @NonNull
     public static String trimExtension(@NonNull String path) {
         String filename = getLastPathComponent(path);
@@ -228,11 +243,13 @@ public final class IOUtils {
         return path.substring(0, path.lastIndexOf('.'));
     }
 
+    @AnyThread
     @NonNull
     public static File getFileFromFd(@NonNull ParcelFileDescriptor fd) {
         return new File("/proc/self/fd/" + fd.getFd());
     }
 
+    @AnyThread
     public static void closeQuietly(@Nullable AutoCloseable closeable) {
         if (closeable == null) return;
         try {
@@ -242,6 +259,7 @@ public final class IOUtils {
         }
     }
 
+    @AnyThread
     public static void deleteSilently(@Nullable File file) {
         if (file == null || !file.exists()) return;
         if (!file.delete()) {
@@ -249,6 +267,7 @@ public final class IOUtils {
         }
     }
 
+    @AnyThread
     @NonNull
     public static String getExtension(@NonNull String path) {
         String str = getLastPathComponent(path);
@@ -257,6 +276,7 @@ public final class IOUtils {
         return str.substring(str.lastIndexOf('.') + 1);
     }
 
+    @AnyThread
     public static long fileSize(@Nullable File root) {
         if (root == null) {
             return 0;
@@ -285,6 +305,7 @@ public final class IOUtils {
         return length;
     }
 
+    @AnyThread
     private static boolean isSymlink(@NonNull File file) throws IOException {
         File canon;
         File parentFile = file.getParentFile();
@@ -297,6 +318,7 @@ public final class IOUtils {
         return !canon.getCanonicalFile().equals(canon.getAbsoluteFile());
     }
 
+    @WorkerThread
     @NonNull
     public static String getFileContent(@NonNull File file) {
         return getFileContent(file, "");
@@ -309,6 +331,7 @@ public final class IOUtils {
      * @param emptyValue Empty value if no content has been found
      * @return File content as string
      */
+    @WorkerThread
     @NonNull
     public static String getFileContent(@NonNull File file, @NonNull String emptyValue) {
         if (!file.exists() || file.isDirectory()) return emptyValue;
@@ -323,11 +346,13 @@ public final class IOUtils {
         return emptyValue;
     }
 
+    @WorkerThread
     @NonNull
     private static String getInputStreamContent(@NonNull InputStream inputStream) throws IOException {
         return new String(readFully(inputStream, -1, true), Charset.defaultCharset());
     }
 
+    @WorkerThread
     @NonNull
     public static String getContentFromAssets(@NonNull Context context, String fileName) {
         try (InputStream inputStream = context.getResources().getAssets().open(fileName)) {
@@ -338,6 +363,7 @@ public final class IOUtils {
         return "";
     }
 
+    @WorkerThread
     @NonNull
     public static String getFileContent(@NonNull ContentResolver contentResolver, @NonNull Uri file)
             throws IOException {
@@ -347,6 +373,7 @@ public final class IOUtils {
         }
     }
 
+    @AnyThread
     public static boolean isAssetDirectory(@NonNull Context context, @NonNull String path) {
         String[] files;
         try {
@@ -364,6 +391,7 @@ public final class IOUtils {
      * @param dir The directory to delete
      * @return True on success, false on failure
      */
+    @AnyThread
     public static boolean deleteDir(File dir) {
         if (dir != null && dir.isDirectory()) {
             String[] children = dir.list();
@@ -378,6 +406,7 @@ public final class IOUtils {
         } else return false;
     }
 
+    @AnyThread
     @NonNull
     public static Bitmap getBitmapFromDrawable(@NonNull Drawable drawable) {
         final Bitmap bmp = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
@@ -387,6 +416,7 @@ public final class IOUtils {
         return bmp;
     }
 
+    @WorkerThread
     public static void copyFromAsset(@NonNull Context context, String fileName, File destFile) {
         try (AssetFileDescriptor openFd = context.getAssets().openFd(fileName)) {
             try (InputStream open = openFd.createInputStream();
@@ -400,6 +430,7 @@ public final class IOUtils {
         }
     }
 
+    @WorkerThread
     @NonNull
     public static File getCachedFile(InputStream inputStream) throws IOException {
         File tempFile = getTempFile();
@@ -409,6 +440,7 @@ public final class IOUtils {
         return tempFile;
     }
 
+    @WorkerThread
     @NonNull
     public static File getCachedFile(byte[] bytes) throws IOException {
         File tempFile = getTempFile();
@@ -416,6 +448,7 @@ public final class IOUtils {
         return tempFile;
     }
 
+    @AnyThread
     @NonNull
     public static File getTempFile() throws IOException {
         File extDir = AppManager.getContext().getExternalFilesDir("cache");
@@ -426,6 +459,7 @@ public final class IOUtils {
         return File.createTempFile("file_" + System.currentTimeMillis(), ".cached", extDir);
     }
 
+    @AnyThread
     @NonNull
     public static File getCachePath() throws IOException {
         File extDir = AppManager.getContext().getExternalFilesDir("cache");
@@ -436,6 +470,7 @@ public final class IOUtils {
         return extDir;
     }
 
+    @WorkerThread
     @NonNull
     public static File getSharableFile(@NonNull File privateFile) throws IOException {
         File tmpPublicSource = new File(AppManager.getContext().getExternalCacheDir(), privateFile.getName());
@@ -446,14 +481,17 @@ public final class IOUtils {
         return tmpPublicSource;
     }
 
+    @WorkerThread
     public static long calculateFileCrc32(File file) throws IOException, RemoteException {
         return calculateCrc32(new ProxyInputStream(file));
     }
 
+    @AnyThread
     public static long calculateBytesCrc32(byte[] bytes) throws IOException {
         return calculateCrc32(new ByteArrayInputStream(bytes));
     }
 
+    @AnyThread
     public static long calculateCrc32(InputStream inputStream) throws IOException {
         try (InputStream in = inputStream) {
             CRC32 crc32 = new CRC32();
@@ -467,6 +505,7 @@ public final class IOUtils {
         }
     }
 
+    @AnyThread
     public static void chmod711(@NonNull File file) throws IOException {
         try {
             Os.chmod(file.getAbsolutePath(), 457);
@@ -476,6 +515,7 @@ public final class IOUtils {
         }
     }
 
+    @AnyThread
     public static void chmod644(@NonNull File file) throws IOException {
         try {
             Os.chmod(file.getAbsolutePath(), 420);

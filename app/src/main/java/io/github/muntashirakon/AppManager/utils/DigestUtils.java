@@ -31,8 +31,10 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.zip.CRC32;
 
+import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringDef;
+import androidx.annotation.WorkerThread;
 import aosp.libcore.util.HexEncoding;
 import io.github.muntashirakon.io.ProxyInputStream;
 
@@ -52,11 +54,13 @@ public class DigestUtils {
     public static final String SHA_384 = "SHA-384";
     public static final String SHA_512 = "SHA-512";
 
+    @AnyThread
     @NonNull
     public static String getHexDigest(@Algorithm String algo, @NonNull byte[] bytes) {
         return HexEncoding.encodeToString(getDigest(algo, bytes), false /* lowercase */);
     }
 
+    @WorkerThread
     @NonNull
     public static String getHexDigest(@Algorithm String algo, @NonNull File file) {
         try (InputStream fileInputStream = new ProxyInputStream(file)) {
@@ -67,11 +71,13 @@ public class DigestUtils {
         }
     }
 
+    @WorkerThread
     @NonNull
     public static String getHexDigest(@Algorithm String algo, @NonNull InputStream stream) {
         return HexEncoding.encodeToString(getDigest(algo, stream), false /* lowercase */);
     }
 
+    @AnyThread
     @NonNull
     public static byte[] getDigest(@Algorithm String algo, @NonNull byte[] bytes) {
         if (CRC32.equals(algo)) {
@@ -87,6 +93,7 @@ public class DigestUtils {
         }
     }
 
+    @WorkerThread
     @NonNull
     public static byte[] getDigest(@Algorithm String algo, @NonNull InputStream stream) {
         if (CRC32.equals(algo)) {
@@ -117,6 +124,7 @@ public class DigestUtils {
         }
     }
 
+    @WorkerThread
     @NonNull
     public static Pair<String, String>[] getDigests(File file) {
         @Algorithm String[] algorithms = new String[]{DigestUtils.MD5, DigestUtils.SHA_1, DigestUtils.SHA_256,
@@ -129,6 +137,7 @@ public class DigestUtils {
         return digests;
     }
 
+    @AnyThread
     @NonNull
     public static Pair<String, String>[] getDigests(byte[] bytes) {
         @Algorithm String[] algorithms = new String[]{DigestUtils.MD5, DigestUtils.SHA_1, DigestUtils.SHA_256,

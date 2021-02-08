@@ -23,8 +23,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.RemoteException;
 
+import androidx.annotation.AnyThread;
+import androidx.annotation.UiThread;
 import io.github.muntashirakon.io.ProxyFile;
 import org.openintents.openpgp.IOpenPgpService2;
 import org.openintents.openpgp.OpenPgpError;
@@ -72,6 +76,7 @@ public class OpenPGPCrypto implements Crypto {
     private Intent lastIntent;
     private int lastMode;
     private final Context context = AppManager.getContext();
+    private final Handler handler;
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, @NonNull Intent intent) {
@@ -80,12 +85,13 @@ public class OpenPGPCrypto implements Crypto {
                 case ACTION_OPEN_PGP_INTERACTION_BEGIN:
                     break;
                 case ACTION_OPEN_PGP_INTERACTION_END:
-                    doAction(lastIntent, lastMode, false);
+                    new Thread(() -> doAction(lastIntent, lastMode, false)).start();
                     break;
             }
         }
     };
 
+    @AnyThread
     public OpenPGPCrypto(@NonNull String keyIdsStr) throws CryptoException {
         try {
             String[] keyIds = keyIdsStr.split(",");
@@ -95,6 +101,7 @@ public class OpenPGPCrypto implements Crypto {
             throw new CryptoException(e);
         }
         this.provider = (String) AppPref.get(AppPref.PrefKey.PREF_OPEN_PGP_PACKAGE_STR);
+        this.handler = new Handler(Looper.getMainLooper());
         bind();
     }
 
@@ -121,6 +128,7 @@ public class OpenPGPCrypto implements Crypto {
         return handleFiles(intent, Cipher.ENCRYPT_MODE, filesList);
     }
 
+    @WorkerThread
     private boolean handleFiles(Intent intent, int mode, @NonNull File[] filesList) {
         if (!waitForServiceBound()) return false;
         files = filesList;
@@ -130,6 +138,7 @@ public class OpenPGPCrypto implements Crypto {
         return doAction(intent, mode, true);
     }
 
+    @WorkerThread
     private boolean doAction(Intent intent, int mode, boolean waitForResult) {
         errorFlag = false;
         if (files.length > 0) {  // files is never null here
@@ -140,14 +149,14 @@ public class OpenPGPCrypto implements Crypto {
                 } else outputFilename = new ProxyFile(file.getAbsolutePath() + GPG_EXT);
                 newFiles.add(outputFilename);
                 Log.i(TAG, "Input: " + file + "\nOutput: " + outputFilename);
-                try (InputStream is = new ProxyInputStream(file);
-                     OutputStream os = new ProxyOutputStream(outputFilename)) {
+                try {
+                    InputStream is = new ProxyInputStream(file);
+                    OutputStream os = new ProxyOutputStream(outputFilename);
                     OpenPgpApi api = new OpenPgpApi(context, service.getService());
                     Intent result = api.executeApi(intent, is, os);
-                    handleResult(result);
+                    handler.post(() -> handleResult(result));
                     if (waitForResult) waitForResult();
                     if (errorFlag) {
-                        os.close();
                         IOUtils.deleteSilently(outputFilename);
                         return false;
                     }
@@ -197,6 +206,7 @@ public class OpenPGPCrypto implements Crypto {
         context.registerReceiver(receiver, filter);
     }
 
+    @WorkerThread
     private boolean waitForServiceBound() {
         int i = 0;
         while (service.getService() == null) {
@@ -215,6 +225,7 @@ public class OpenPGPCrypto implements Crypto {
         return service.getService() != null;
     }
 
+    @WorkerThread
     private void waitForResult() {
         try {
             int i = 0;
@@ -231,6 +242,7 @@ public class OpenPGPCrypto implements Crypto {
         }
     }
 
+    @UiThread
     private void handleResult(@NonNull Intent result) {
         successFlag = false;
         switch (result.getIntExtra(OpenPgpApi.RESULT_CODE, OpenPgpApi.RESULT_CODE_ERROR)) {

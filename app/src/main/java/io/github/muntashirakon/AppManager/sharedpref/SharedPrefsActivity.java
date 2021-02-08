@@ -26,6 +26,7 @@ import android.util.Xml;
 import android.view.*;
 import android.widget.*;
 import androidx.annotation.NonNull;
+import androidx.annotation.WorkerThread;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
@@ -153,11 +154,13 @@ public class SharedPrefsActivity extends BaseActivity implements
                 Toast.makeText(this, R.string.deletion_failed, Toast.LENGTH_LONG).show();
             }
         } else if (id == R.id.action_save) {
-            if (writeSharedPref(mSharedPrefFile, mSharedPrefMap)) {
-                Toast.makeText(this, R.string.saved_successfully, Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(this, R.string.saving_failed, Toast.LENGTH_LONG).show();
-            }
+            new Thread(() -> {
+                if (writeSharedPref(mSharedPrefFile, mSharedPrefMap)) {
+                    runOnUiThread(() -> UIUtils.displayLongToast(R.string.saved_successfully));
+                } else {
+                    runOnUiThread(() -> UIUtils.displayLongToast(R.string.saving_failed));
+                }
+            }).start();
         } else return super.onOptionsItemSelected(item);
         return true;
     }
@@ -181,6 +184,7 @@ public class SharedPrefsActivity extends BaseActivity implements
         return true;
     }
 
+    @WorkerThread
     @NonNull
     private HashMap<String, Object> readSharedPref(ProxyFile sharedPrefsFile) {
         HashMap<String, Object> prefs = new HashMap<>();
@@ -246,6 +250,7 @@ public class SharedPrefsActivity extends BaseActivity implements
         }
     }
 
+    @WorkerThread
     private boolean writeSharedPref(ProxyFile sharedPrefsFile, @NonNull HashMap<String, Object> hashMap) {
         try {
             OutputStream xmlFile = new ProxyOutputStream(sharedPrefsFile);

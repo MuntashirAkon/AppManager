@@ -22,6 +22,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -91,6 +92,7 @@ public class AtomicProxyFile {
      * safe (or will be lost).  You must do your own threading protection for
      * access to AtomicFile.
      */
+    @WorkerThread
     @NonNull
     public ProxyOutputStream startWrite() throws IOException {
         if (mLegacyBackupName.exists()) {
@@ -161,6 +163,7 @@ public class AtomicProxyFile {
      * <p>
      * You must do your own threading protection for access to AtomicFile.
      */
+    @WorkerThread
     @NonNull
     public ProxyInputStream openRead() throws IOException, RemoteException {
         if (mLegacyBackupName.exists()) {

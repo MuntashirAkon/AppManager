@@ -41,7 +41,9 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.security.auth.DestroyFailedException;
 
+import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
+import androidx.annotation.WorkerThread;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.io.ProxyFile;
@@ -80,16 +82,19 @@ public class AESCrypto implements Crypto {
         }
     }
 
+    @WorkerThread
     @Override
     public boolean encrypt(@NonNull File[] files) {
         return handleFiles(Cipher.ENCRYPT_MODE, files);
     }
 
+    @WorkerThread
     @Override
     public boolean decrypt(@NonNull File[] files) {
         return handleFiles(Cipher.DECRYPT_MODE, files);
     }
 
+    @WorkerThread
     private boolean handleFiles(int mode, @NonNull File[] files) {
         if (files.length > 0) {  // files is never null here
             // Init cipher
@@ -138,6 +143,7 @@ public class AESCrypto implements Crypto {
         return true;
     }
 
+    @AnyThread
     @NonNull
     @Override
     public File[] getNewFiles() {

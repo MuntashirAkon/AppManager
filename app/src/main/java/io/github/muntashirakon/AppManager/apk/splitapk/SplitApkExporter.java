@@ -21,6 +21,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.graphics.Bitmap;
 import androidx.annotation.NonNull;
+import androidx.annotation.WorkerThread;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.io.ProxyFile;
@@ -46,6 +47,7 @@ import java.util.zip.ZipOutputStream;
  * version_code (long), version_name (string), backup_components [ size (long), type (string) ]
  */
 public final class SplitApkExporter {
+    @WorkerThread
     public static void saveApks(PackageInfo packageInfo, File apksFile) throws Exception {
         try (OutputStream outputStream = new ProxyOutputStream(apksFile);
              ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream)) {

@@ -33,10 +33,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import androidx.annotation.CheckResult;
-import androidx.annotation.IntDef;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.annotation.*;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
@@ -54,6 +51,7 @@ import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
+@WorkerThread
 public class BatchOpsManager {
     public static final String TAG = "BatchOpsManager";
 
@@ -361,6 +359,10 @@ public class BatchOpsManager {
 
     private Result opGrantPermissions() {
         String[] permissions = args.getStringArray(ARG_PERMISSIONS);
+        if (permissions.length == 1 && permissions[0].equals("*")) {
+            // Wildcard detected
+            // TODO: 6/2/21 List all permissions for each app and revoke them
+        }
         List<UserPackagePair> failedPackages = new ArrayList<>();
         for (UserPackagePair pair : userPackagePairs) {
             for (String permission : permissions) {
@@ -406,10 +408,14 @@ public class BatchOpsManager {
     }
 
     private Result opSetAppOps() {
-        final List<UserPackagePair> failedPkgList = ExternalComponentsImporter
-                .setModeToFilteredAppOps(Arrays.asList(userPackagePairs),
-                        args.getIntArray(ARG_APP_OPS),
-                        args.getInt(ARG_APP_OP_MODE, AppOpsManager.MODE_IGNORED));
+        int[] appOps = args.getIntArray(ARG_APP_OPS);
+        if (appOps.length == 1 && appOps[0] == AppOpsManager.OP_NONE) {
+            // Wildcard detected
+            // TODO: 6/2/21 Fetch all app ops and apply them for each package
+        }
+        final List<UserPackagePair> failedPkgList = ExternalComponentsImporter.setModeToFilteredAppOps(
+                Arrays.asList(userPackagePairs), args.getIntArray(ARG_APP_OPS),
+                args.getInt(ARG_APP_OP_MODE, AppOpsManager.MODE_IGNORED));
         return lastResult = new Result(failedPkgList);
     }
 

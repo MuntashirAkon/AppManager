@@ -19,10 +19,7 @@ package io.github.muntashirakon.AppManager.rules;
 
 import android.content.Context;
 import android.os.RemoteException;
-import androidx.annotation.GuardedBy;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.StringDef;
+import androidx.annotation.*;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
@@ -361,6 +358,7 @@ public class RulesStorageManager implements Closeable {
         }
     }
 
+    @WorkerThread
     @GuardedBy("entries")
     public void commit() {
         try {
@@ -370,6 +368,7 @@ public class RulesStorageManager implements Closeable {
         }
     }
 
+    @WorkerThread
     @GuardedBy("entries")
     public void commitExternal(File tsvRulesFile) {
         try {
@@ -379,6 +378,7 @@ public class RulesStorageManager implements Closeable {
         }
     }
 
+    @WorkerThread
     @GuardedBy("entries")
     protected void saveEntries(File tsvRulesFile, boolean isExternal) throws IOException, RemoteException {
         synchronized (entries) {

@@ -27,9 +27,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
-import androidx.annotation.IntDef;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.annotation.*;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
@@ -164,7 +162,7 @@ public class BackupDialogFragment extends DialogFragment {
             if ((customModes & MODE_BACKUP) != 0) {
                 positiveButton.setOnClickListener(v -> {
                     mode = MODE_BACKUP;
-                    if (permsGranted) handleCustomUsers();
+                    new Thread(this::handleCustomUsers).start();
                 });
             } else {
                 positiveButton.setVisibility(View.GONE);
@@ -173,7 +171,7 @@ public class BackupDialogFragment extends DialogFragment {
             if ((customModes & MODE_RESTORE) != 0 && baseBackupCount == targetPackages.size()) {
                 negativeButton.setOnClickListener(v -> {
                     mode = MODE_RESTORE;
-                    if (permsGranted) handleCustomUsers();
+                    new Thread(this::handleCustomUsers).start();
                 });
             } else {
                 negativeButton.setVisibility(View.GONE);
@@ -181,7 +179,7 @@ public class BackupDialogFragment extends DialogFragment {
             if ((customModes & MODE_DELETE) != 0 && baseBackupCount == targetPackages.size()) {
                 neutralButton.setOnClickListener(v -> {
                     mode = MODE_DELETE;
-                    if (permsGranted) handleCustomUsers();
+                    new Thread(this::handleCustomUsers).start();
                 });
             } else {
                 neutralButton.setVisibility(View.GONE);
@@ -190,20 +188,23 @@ public class BackupDialogFragment extends DialogFragment {
         return alertDialog;
     }
 
+    @WorkerThread
     public void handleCustomUsers() {
+        if (!permsGranted) return;
         if (flags.backupCustomUsers()) {
-            new Thread(() -> {
-                List<UserInfo> users = Users.getUsers();
-                if (users != null && users.size() > 1) {
-                    CharSequence[] userNames = new String[users.size()];
-                    List<Integer> userHandles = new ArrayList<>(users.size());
-                    int i = 0;
-                    for (UserInfo info : users) {
-                        userNames[i] = info.name == null ? String.valueOf(info.id) : info.name;
-                        userHandles.add(info.id);
-                        ++i;
-                    }
-                    activity.runOnUiThread(() -> new SearchableMultiChoiceDialogBuilder<>(activity, userHandles, userNames)
+            List<UserInfo> users = Users.getUsers();
+            if (users != null && users.size() > 1) {
+                CharSequence[] userNames = new String[users.size()];
+                List<Integer> userHandles = new ArrayList<>(users.size());
+                int i = 0;
+                for (UserInfo info : users) {
+                    userNames[i] = info.name == null ? String.valueOf(info.id) : info.name;
+                    userHandles.add(info.id);
+                    ++i;
+                }
+                activity.runOnUiThread(() -> {
+                    if (isDetached()) return;
+                    new SearchableMultiChoiceDialogBuilder<>(activity, userHandles, userNames)
                             .setTitle(R.string.select_user)
                             .setSelections(Collections.singletonList(Users.getCurrentUserHandle()))
                             .setPositiveButton(R.string.ok, (dialog, which, selectedUsers) -> {
@@ -220,14 +221,15 @@ public class BackupDialogFragment extends DialogFragment {
                                 handleMode();
                             })
                             .setNegativeButton(R.string.cancel, null)
-                            .show());
-                } else {
-                    activity.runOnUiThread(this::handleMode);
-                }
-            }).start();
+                            .show();
+                });
+            } else {
+                handleMode();
+            }
         } else handleMode();
     }
 
+    @WorkerThread
     private void handleMode() {
         switch (mode) {
             case MODE_DELETE:
@@ -242,6 +244,7 @@ public class BackupDialogFragment extends DialogFragment {
         }
     }
 
+    @WorkerThread
     private void handleDelete() {
         @BatchOpsManager.OpType int op = BatchOpsManager.OP_DELETE_BACKUP;
         if (targetPackages.size() == 1) {
@@ -261,36 +264,43 @@ public class BackupDialogFragment extends DialogFragment {
                 userHandle = String.valueOf(metadata[i].userHandle);
                 readableBackupNames[i] = backupName == null ? "Base backup for user " + userHandle : backupName + " for user " + userHandle;
             }
-            new MaterialAlertDialogBuilder(activity)
-                    .setTitle(PackageUtils.getPackageLabel(activity.getPackageManager(), targetPackages.get(0).getPackageName()))
-                    .setMultiChoiceItems(readableBackupNames, choices,
-                            (dialog, which, isChecked) -> choices[which] = isChecked)
-                    .setNegativeButton(R.string.cancel, null)
-                    .setPositiveButton(R.string.delete_backup, (dialog, which) -> {
-                        List<String> newBackupNames = new ArrayList<>(backupNames.length);
-                        for (int i = 0; i < backupNames.length; ++i) {
-                            if (choices[i] && backupNames[i] != null) {
-                                newBackupNames.add(backupNames[i]);
+            activity.runOnUiThread(() -> {
+                if (isDetached()) return;
+                new MaterialAlertDialogBuilder(activity)
+                        .setTitle(PackageUtils.getPackageLabel(activity.getPackageManager(), targetPackages.get(0).getPackageName()))
+                        .setMultiChoiceItems(readableBackupNames, choices,
+                                (dialog, which, isChecked) -> choices[which] = isChecked)
+                        .setNegativeButton(R.string.cancel, null)
+                        .setPositiveButton(R.string.delete_backup, (dialog, which) -> {
+                            List<String> newBackupNames = new ArrayList<>(backupNames.length);
+                            for (int i = 0; i < backupNames.length; ++i) {
+                                if (choices[i] && backupNames[i] != null) {
+                                    newBackupNames.add(backupNames[i]);
+                                }
                             }
-                        }
-                        // backupNames arguments must not be null!!
-                        startOperation(op, newBackupNames.toArray(new String[0]));
-                    })
-                    .show();
+                            // backupNames arguments must not be null!!
+                            startOperation(op, newBackupNames.toArray(new String[0]));
+                        })
+                        .show();
+            });
         } else if (baseBackupCount == targetPackages.size()) {
             // We shouldn't even check this since the restore option will only be visible
             // if backup of all the packages exist
-            new MaterialAlertDialogBuilder(activity)
-                    .setTitle(R.string.delete_backup)
-                    .setMessage(R.string.are_you_sure)
-                    .setPositiveButton(R.string.yes, (dialog, which) -> startOperation(op, null))
-                    .setNegativeButton(R.string.no, null)
-                    .show();
+            activity.runOnUiThread(() -> {
+                if (isDetached()) return;
+                new MaterialAlertDialogBuilder(activity)
+                        .setTitle(R.string.delete_backup)
+                        .setMessage(R.string.are_you_sure)
+                        .setPositiveButton(R.string.yes, (dialog, which) -> startOperation(op, null))
+                        .setNegativeButton(R.string.no, null)
+                        .show();
+            });
         } else {
             Log.e(TAG, "Delete: Why are we even here? Backup count " + baseBackupCount);
         }
     }
 
+    @WorkerThread
     private void handleRestore() {
         @BatchOpsManager.OpType int op = BatchOpsManager.OP_RESTORE_BACKUP;
         if (targetPackages.size() == 1) {
@@ -315,68 +325,86 @@ public class BackupDialogFragment extends DialogFragment {
                 }
                 readableBackupNames[i] = backupName == null ? "Base backup for user " + userHandle : backupName + " for user " + userHandle;
             }
-            new MaterialAlertDialogBuilder(activity)
-                    .setTitle(PackageUtils.getPackageLabel(activity.getPackageManager(), targetPackages.get(0).getPackageName()))
-                    .setSingleChoiceItems(readableBackupNames, choice, (dialog, which) -> selectedItem.set(which))
-                    .setNegativeButton(R.string.cancel, null)
-                    .setPositiveButton(R.string.restore, (dialog, which) -> {
-                        if (selectedItem.get() != -1) {
-                            // Do operation only if something is selected
-                            // Send a singleton array consisting of the chosen backup name.
-                            // Here, the backup name is the full name of the folder itself,
-                            // not just the “short” ie. the user handle is not stripped and
-                            // the argument must not be null.
-                            startOperation(op, new String[]{backupNames[selectedItem.get()]});
-                        }
-                    })
-                    .show();
+            int finalChoice = choice;
+            activity.runOnUiThread(() -> {
+                if (isDetached()) return;
+                new MaterialAlertDialogBuilder(activity)
+                        .setTitle(PackageUtils.getPackageLabel(activity.getPackageManager(), targetPackages.get(0).getPackageName()))
+                        .setSingleChoiceItems(readableBackupNames, finalChoice, (dialog, which) -> selectedItem.set(which))
+                        .setNegativeButton(R.string.cancel, null)
+                        .setPositiveButton(R.string.restore, (dialog, which) -> {
+                            if (selectedItem.get() != -1) {
+                                // Do operation only if something is selected
+                                // Send a singleton array consisting of the chosen backup name.
+                                // Here, the backup name is the full name of the folder itself,
+                                // not just the “short” ie. the user handle is not stripped and
+                                // the argument must not be null.
+                                startOperation(op, new String[]{backupNames[selectedItem.get()]});
+                            }
+                        })
+                        .show();
+            });
         } else if (baseBackupCount == targetPackages.size()) {
             // We shouldn't even check this since the restore option will only be visible
             // if backup of all the packages exist
-            new MaterialAlertDialogBuilder(activity)
-                    .setTitle(R.string.restore)
-                    .setMessage(R.string.are_you_sure)
-                    .setPositiveButton(R.string.yes, (dialog, which) -> startOperation(op, null))
-                    .setNegativeButton(R.string.no, null)
-                    .show();
+            activity.runOnUiThread(() -> {
+                if (isDetached()) return;
+                new MaterialAlertDialogBuilder(activity)
+                        .setTitle(R.string.restore)
+                        .setMessage(R.string.are_you_sure)
+                        .setPositiveButton(R.string.yes, (dialog, which) -> startOperation(op, null))
+                        .setNegativeButton(R.string.no, null)
+                        .show();
+            });
         } else {
             Log.e(TAG, "Restore: Why are we even here? Backup count " + baseBackupCount);
         }
     }
 
+    @WorkerThread
     private void handleBackup() {
         @BatchOpsManager.OpType int op = BatchOpsManager.OP_BACKUP;
         if (flags.backupMultiple()) {
             // Multiple backup is requested, no need to warn users about backups since the
             // user has a choice between overwriting the existing backup or create a new one
             // TODO(18/9/20): Add overwrite option
-            new TextInputDialogBuilder(activity, R.string.input_backup_name)
-                    .setTitle(R.string.backup)
-                    .setHelperText(R.string.input_backup_name_description)
-                    .setPositiveButton(R.string.ok, (dialog, which, backupName, isChecked) -> {
-                        if (!TextUtils.isEmpty(backupName)) {
-                            //noinspection ConstantConditions
-                            startOperation(op, new String[]{backupName.toString()});
-                        } else startOperation(op, null);
-                    })
-                    .show();
+            activity.runOnUiThread(() -> {
+                if (isDetached()) return;
+                new TextInputDialogBuilder(activity, R.string.input_backup_name)
+                        .setTitle(R.string.backup)
+                        .setHelperText(R.string.input_backup_name_description)
+                        .setPositiveButton(R.string.ok, (dialog, which, backupName, isChecked) -> {
+                            if (!TextUtils.isEmpty(backupName)) {
+                                //noinspection ConstantConditions
+                                startOperation(op, new String[]{backupName.toString()});
+                            } else startOperation(op, null);
+                        })
+                        .show();
+            });
         } else {
             // Base backup requested
             if (baseBackupCount > 0) {
                 // One or more app has backups, warn users
-                new MaterialAlertDialogBuilder(activity)
-                        .setTitle(R.string.backup)
-                        .setMessage(getResources().getQuantityString(R.plurals.backup_exists_are_you_sure, baseBackupCount))
-                        .setPositiveButton(R.string.yes, (dialog, which) -> startOperation(op, null))
-                        .setNegativeButton(R.string.no, null)
-                        .show();
+                activity.runOnUiThread(() -> {
+                    if (isDetached()) return;
+                    new MaterialAlertDialogBuilder(activity)
+                            .setTitle(R.string.backup)
+                            .setMessage(getResources().getQuantityString(R.plurals.backup_exists_are_you_sure, baseBackupCount))
+                            .setPositiveButton(R.string.yes, (dialog, which) -> startOperation(op, null))
+                            .setNegativeButton(R.string.no, null)
+                            .show();
+                });
             } else {
                 // No need to warn users, proceed to backup
-                startOperation(op, null);
+                activity.runOnUiThread(() -> {
+                    if (isDetached()) return;
+                    startOperation(op, null);
+                });
             }
         }
     }
 
+    @UiThread
     private void startOperation(int op, @Nullable String[] backupNames) {
         if (actionBeginInterface != null) actionBeginInterface.onActionBegin(mode);
         activity.registerReceiver(mBatchOpsBroadCastReceiver, new IntentFilter(BatchOpsService.ACTION_BATCH_OPS_COMPLETED));

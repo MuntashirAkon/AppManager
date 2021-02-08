@@ -34,6 +34,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.collection.ArrayMap;
 import androidx.core.app.ActivityCompat;
@@ -282,11 +283,17 @@ public class MainPreferences extends PreferenceFragmentCompat {
                 .setChecked((boolean) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_SIGN_APK_BOOL));
         // About device
         ((Preference) Objects.requireNonNull(findPreference("about_device"))).setOnPreferenceClickListener(preference -> {
-            @SuppressLint("InflateParams")
-            View view = getLayoutInflater().inflate(R.layout.dialog_scrollable_text_view, null);
-            ((TextView) view.findViewById(android.R.id.content)).setText(getDeviceInfo());
-            view.findViewById(android.R.id.checkbox).setVisibility(View.GONE);
-            new FullscreenDialog(activity).setTitle(R.string.about_device).setView(view).show();
+            new Thread(() -> {
+                CharSequence deviceInfo = getDeviceInfo();
+                activity.runOnUiThread(() -> {
+                    if (isDetached()) return;
+                    @SuppressLint("InflateParams")
+                    View view = getLayoutInflater().inflate(R.layout.dialog_scrollable_text_view, null);
+                    ((TextView) view.findViewById(android.R.id.content)).setText(deviceInfo);
+                    view.findViewById(android.R.id.checkbox).setVisibility(View.GONE);
+                    new FullscreenDialog(activity).setTitle(R.string.about_device).setView(view).show();
+                });
+            }).start();
             return true;
         });
 
@@ -327,6 +334,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
         return localesL;
     }
 
+    @WorkerThread
     @NonNull
     private CharSequence getDeviceInfo() {
         ActivityManager activityManager = (ActivityManager) activity.getSystemService(Context.ACTIVITY_SERVICE);

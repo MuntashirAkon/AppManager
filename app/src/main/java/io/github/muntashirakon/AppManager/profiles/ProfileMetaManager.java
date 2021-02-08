@@ -21,6 +21,7 @@ import android.content.Context;
 import android.os.RemoteException;
 import android.text.TextUtils;
 
+import androidx.annotation.WorkerThread;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -226,6 +227,7 @@ public class ProfileMetaManager {
         }
     }
 
+    @WorkerThread
     public void writeProfile() throws IOException, JSONException, RemoteException {
         try (OutputStream outputStream = new ProxyOutputStream(getProfilePath())) {
             writeProfile(outputStream);

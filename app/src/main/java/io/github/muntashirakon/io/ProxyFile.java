@@ -17,8 +17,6 @@
 
 package io.github.muntashirakon.io;
 
-import android.os.DeadObjectException;
-import android.os.ParcelFileDescriptor;
 import android.os.RemoteException;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,7 +24,10 @@ import io.github.muntashirakon.AppManager.IAMService;
 import io.github.muntashirakon.AppManager.IRemoteFile;
 import io.github.muntashirakon.AppManager.ipc.IPCUtils;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -241,53 +242,6 @@ public class ProxyFile extends File {
             if ((filter == null) || filter.accept(this, s))
                 files.add(new ProxyFile(this, s));
         return files.toArray(new ProxyFile[0]);
-    }
-
-    public FileInputStream getInputStream() throws RemoteException, FileNotFoundException {
-        if (isRemoteAlive()) {
-            //noinspection ConstantConditions
-            ParcelFileDescriptor fd = file.getInputStream();
-            if (fd == null) {
-                // Try to get remote file again
-                getRemoteFile();
-                if (isRemoteAlive()) {
-                    fd = file.getInputStream();
-                }
-            }
-            if (fd == null) {
-                throw new FileNotFoundException("Cannot get input FD from remote. File is " + getAbsolutePath());
-            }
-            return new ParcelFileDescriptor.AutoCloseInputStream(fd);
-        } return new FileInputStream(this);
-    }
-
-    public FileOutputStream getOutputStream() throws RemoteException, FileNotFoundException {
-        if (isRemoteAlive()) {
-            ParcelFileDescriptor fd;
-            try {
-                //noinspection ConstantConditions
-                fd = file.getOutputStream();
-            } catch (DeadObjectException e) {
-                // SELinux wouldn't let us in
-                fd = file.getPipedOutputStream();
-            }
-            if (fd == null) {
-                // Try to get remote file again
-                getRemoteFile();
-                if (isRemoteAlive()) {
-                    try {
-                        fd = file.getOutputStream();
-                    } catch (DeadObjectException e) {
-                        // SELinux wouldn't let us in
-                        fd = file.getPipedOutputStream();
-                    }
-                }
-            }
-            if (fd == null) {
-                throw new FileNotFoundException("Cannot get output FD from remote. File is " + getAbsolutePath());
-            }
-            return new ParcelFileDescriptor.AutoCloseOutputStream(fd);
-        } else return new FileOutputStream(this);
     }
 
     private void getRemoteFile() {

@@ -18,6 +18,7 @@
 package io.github.muntashirakon.io;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.WorkerThread;
 
 import java.io.File;
 import java.io.IOException;
@@ -122,6 +123,7 @@ public class SplitInputStream extends InputStream {
         pos = markBuf == null ? markPos : ~0;
     }
 
+    @WorkerThread
     @Override
     public synchronized int available() throws IOException {
         if (count < 0) return 0;
@@ -145,6 +147,7 @@ public class SplitInputStream extends InputStream {
         return true;
     }
 
+    @WorkerThread
     private synchronized int read0(byte[] b, int off, int len) throws IOException {
         int n = 0;
         while (n < len) {
@@ -206,6 +209,7 @@ public class SplitInputStream extends InputStream {
         return n;
     }
 
+    @WorkerThread
     private synchronized int readStream(@NonNull byte[] b) throws IOException {
         int off = 0;
         int len = b.length;

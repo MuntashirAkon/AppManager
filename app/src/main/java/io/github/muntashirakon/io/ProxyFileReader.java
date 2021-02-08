@@ -18,6 +18,7 @@
 package io.github.muntashirakon.io;
 
 import android.os.RemoteException;
+import androidx.annotation.WorkerThread;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -35,6 +36,7 @@ public class ProxyFileReader  extends InputStreamReader {
      *                   or for some other reason cannot be opened for
      *                   reading.
      */
+    @WorkerThread
     public ProxyFileReader(String fileName) throws IOException, RemoteException {
         super(new ProxyInputStream(new ProxyFile(fileName)));
     }
@@ -49,6 +51,7 @@ public class ProxyFileReader  extends InputStreamReader {
      *                   or for some other reason cannot be opened for
      *                   reading.
      */
+    @WorkerThread
     public ProxyFileReader(File file) throws IOException, RemoteException {
         super(new ProxyInputStream(file));
     }

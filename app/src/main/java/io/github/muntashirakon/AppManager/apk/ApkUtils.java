@@ -35,6 +35,7 @@ import java.util.zip.ZipInputStream;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.apk.splitapk.SplitApkExporter;
@@ -49,6 +50,7 @@ public final class ApkUtils {
 
     private static final String MANIFEST_FILE = "AndroidManifest.xml";
 
+    @WorkerThread
     @NonNull
     public static File getSharableApkFile(@NonNull PackageInfo packageInfo) throws Exception {
         ApplicationInfo info = packageInfo.applicationInfo;
@@ -75,6 +77,7 @@ public final class ApkUtils {
      *
      * @return true on success, false on failure
      */
+    @WorkerThread
     public static boolean backupApk(String packageName, int userHandle) {
         File backupPath = BackupFiles.getApkBackupDirectory();
         if (!backupPath.exists()) {

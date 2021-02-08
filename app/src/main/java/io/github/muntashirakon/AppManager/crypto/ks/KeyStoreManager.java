@@ -28,13 +28,7 @@ import android.content.SharedPreferences;
 import android.os.RemoteException;
 import android.security.KeyPairGeneratorSpec;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.math.BigInteger;
 import java.security.Key;
 import java.security.KeyPairGenerator;
@@ -66,8 +60,6 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
-import io.github.muntashirakon.io.ProxyInputStream;
-import io.github.muntashirakon.io.ProxyOutputStream;
 
 public class KeyStoreManager {
     public static final String TAG = "KSManager";
@@ -144,7 +136,7 @@ public class KeyStoreManager {
             throw new KeyStoreException("Password for " + alias + " could not be saved.");
         }
         sharedPreferences.edit().putString(prefAlias, encryptedPass).apply();
-        try (OutputStream is = new ProxyOutputStream(AM_KEYSTORE_FILE)) {
+        try (OutputStream is = new FileOutputStream(AM_KEYSTORE_FILE)) {
             amKeyStore.store(is, realPassword);
             Utils.clearChars(realPassword);
             Utils.clearChars(password);
@@ -274,7 +266,7 @@ public class KeyStoreManager {
     private KeyStore getAmKeyStore() throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException, RemoteException {
         KeyStore keyStore = KeyStore.getInstance(AM_KEYSTORE);
         if (AM_KEYSTORE_FILE.exists()) {
-            try (InputStream is = new ProxyInputStream(AM_KEYSTORE_FILE)) {
+            try (InputStream is = new FileInputStream(AM_KEYSTORE_FILE)) {
                 char[] realPassword = getAmKeyStorePassword();
                 keyStore.load(is, realPassword);
                 Utils.clearChars(realPassword);

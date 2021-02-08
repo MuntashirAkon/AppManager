@@ -18,6 +18,7 @@
 package io.github.muntashirakon.io;
 
 import android.os.RemoteException;
+import androidx.annotation.WorkerThread;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,6 +34,7 @@ public class ProxyFileWriter extends OutputStreamWriter {
      *                  than a regular file, does not exist but cannot be
      *                  created, or cannot be opened for any other reason
      */
+    @WorkerThread
     public ProxyFileWriter(String fileName) throws IOException, RemoteException {
         super(new ProxyOutputStream(new ProxyFile(fileName)));
     }
@@ -45,6 +47,7 @@ public class ProxyFileWriter extends OutputStreamWriter {
      *                  a regular file, does not exist but cannot be created,
      *                  or cannot be opened for any other reason
      */
+    @WorkerThread
     public ProxyFileWriter(File file) throws IOException, RemoteException {
         super(new ProxyOutputStream(file));
     }

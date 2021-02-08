@@ -24,6 +24,7 @@ import android.os.Build;
 import android.os.RemoteException;
 import android.text.TextUtils;
 
+import androidx.annotation.WorkerThread;
 import io.github.muntashirakon.AppManager.logs.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -193,6 +194,7 @@ public final class MetadataManager {
         }
     }
 
+    @WorkerThread
     synchronized public void writeMetadata(@NonNull BackupFiles.BackupFile backupFile)
             throws IOException, JSONException, RemoteException {
         if (metadata == null) throw new RuntimeException("Metadata is not set.");

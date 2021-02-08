@@ -23,6 +23,7 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.util.Pair;
 import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
 import aosp.libcore.util.EmptyArray;
 import io.github.muntashirakon.AppManager.backup.BackupManager;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
@@ -134,6 +135,7 @@ public class ApplicationItem extends PackageItemInfo {
         super(orig);
     }
 
+    @WorkerThread
     @Override
     public Drawable loadIcon(PackageManager pm) {
         if (userHandles.length > 0) {

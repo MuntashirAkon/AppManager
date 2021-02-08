@@ -21,6 +21,7 @@ import android.os.RemoteException;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringDef;
+import androidx.annotation.WorkerThread;
 import io.github.muntashirakon.io.*;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
@@ -64,6 +65,7 @@ public final class TarUtils {
      * @param exclude   A list of mutually exclusive regex patterns to be excluded
      * @return List of added files
      */
+    @WorkerThread
     @NonNull
     public static List<File> create(@NonNull @TarType String type, @NonNull File source, @NonNull File dest,
                                     @Nullable String[] filters, @Nullable Long splitSize, @Nullable String[] exclude)
@@ -110,6 +112,7 @@ public final class TarUtils {
      * @param filters A list of mutually exclusive regex filters
      * @param exclude A list of mutually exclusive regex patterns to be excluded
      */
+    @WorkerThread
     public static void extract(@NonNull @TarType String type, @NonNull File[] sources, @NonNull File dest,
                                   @Nullable String[] filters, @Nullable String[] exclude)
             throws IOException, RemoteException {

@@ -27,6 +27,7 @@ import android.content.pm.PermissionInfo;
 import android.graphics.Bitmap;
 import android.os.RemoteException;
 import androidx.annotation.NonNull;
+import androidx.annotation.WorkerThread;
 import androidx.core.content.pm.PermissionInfoCompat;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
@@ -59,6 +60,7 @@ import java.util.List;
 
 import static io.github.muntashirakon.AppManager.backup.BackupManager.*;
 
+@WorkerThread
 class BackupOp implements Closeable {
     static final String TAG = "BackupOp";
 

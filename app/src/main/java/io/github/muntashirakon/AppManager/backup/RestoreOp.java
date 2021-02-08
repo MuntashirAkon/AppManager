@@ -27,6 +27,7 @@ import android.os.Build;
 import android.util.Pair;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
@@ -55,6 +56,7 @@ import java.util.*;
 
 import static io.github.muntashirakon.AppManager.backup.BackupManager.*;
 
+@WorkerThread
 class RestoreOp implements Closeable {
         static final String TAG = "RestoreOp";
 

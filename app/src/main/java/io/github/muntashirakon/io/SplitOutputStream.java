@@ -18,6 +18,7 @@
 package io.github.muntashirakon.io;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.WorkerThread;
 
 import java.io.File;
 import java.io.IOException;
@@ -57,6 +58,7 @@ public class SplitOutputStream extends OutputStream {
         return files;
     }
 
+    @WorkerThread
     @Override
     public void write(int b) throws IOException {
         checkCurrentStream(1);
@@ -64,6 +66,7 @@ public class SplitOutputStream extends OutputStream {
         ++bytesWritten;
     }
 
+    @WorkerThread
     @Override
     public void write(@NonNull byte[] b) throws IOException {
         checkCurrentStream(b.length);
@@ -71,6 +74,7 @@ public class SplitOutputStream extends OutputStream {
         bytesWritten += b.length;
     }
 
+    @WorkerThread
     @Override
     public void write(byte[] b, int off, int len) throws IOException {
         checkCurrentStream(len);
@@ -78,6 +82,7 @@ public class SplitOutputStream extends OutputStream {
         bytesWritten += len;
     }
 
+    @WorkerThread
     @Override
     public void flush() throws IOException {
         for (ProxyOutputStream stream : outputStreams) {
@@ -85,6 +90,7 @@ public class SplitOutputStream extends OutputStream {
         }
     }
 
+    @WorkerThread
     @Override
     public void close() throws IOException {
         for (ProxyOutputStream stream : outputStreams) {
@@ -92,6 +98,7 @@ public class SplitOutputStream extends OutputStream {
         }
     }
 
+    @WorkerThread
     private void checkCurrentStream(int nextBytesSize) throws IOException {
         if (bytesWritten + nextBytesSize > maxBytesPerFile) {
             // Need to create a new stream

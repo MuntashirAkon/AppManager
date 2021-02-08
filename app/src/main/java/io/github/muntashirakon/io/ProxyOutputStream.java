@@ -17,8 +17,13 @@
 
 package io.github.muntashirakon.io;
 
+import android.os.ParcelFileDescriptor;
 import android.os.RemoteException;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
+import io.github.muntashirakon.AppManager.IRemoteFile;
+import io.github.muntashirakon.AppManager.ipc.IPCUtils;
 
 import java.io.*;
 import java.nio.channels.FileChannel;
@@ -26,17 +31,26 @@ import java.nio.channels.FileChannel;
 public class ProxyOutputStream extends OutputStream {
     @NonNull
     private final FileOutputStream privateOutputStream;
+    @Nullable
+    private IPCUtils.AMServiceConnectionWrapper connectionWrapper;
 
+    @WorkerThread
     public ProxyOutputStream(File file) throws FileNotFoundException, RemoteException {
         if (file instanceof ProxyFile) {
-            privateOutputStream = ((ProxyFile) file).getOutputStream();
+            connectionWrapper = IPCUtils.getNewConnection();
+            IRemoteFile file1 = connectionWrapper.getAmService().getFile(file.getAbsolutePath());
+            ParcelFileDescriptor fd = file1.getPipedOutputStream();
+            if (fd == null) {
+                throw new FileNotFoundException("Cannot get input FD from remote. File is " + file);
+            }
+            privateOutputStream = new ParcelFileDescriptor.AutoCloseOutputStream(fd);
         } else {
             privateOutputStream = new FileOutputStream(file);
         }
     }
 
     public ProxyOutputStream(String file) throws FileNotFoundException, RemoteException {
-        privateOutputStream = new ProxyFile(file).getOutputStream();
+        this(new ProxyFile(file));
     }
 
     @Override
@@ -70,5 +84,8 @@ public class ProxyOutputStream extends OutputStream {
     @Override
     public void close() throws IOException {
         privateOutputStream.close();
+        if (connectionWrapper != null) {
+            connectionWrapper.unbindService();
+        }
     }
 }
