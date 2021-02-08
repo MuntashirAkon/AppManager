@@ -30,7 +30,9 @@ import java.util.Map;
 import java.util.Set;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.WorkerThread;
 
+@WorkerThread
 class SysConfigWrapper {
     @NonNull
     static List<SysConfigInfo> getSysConfigs(@NonNull @SysConfigType String type) {

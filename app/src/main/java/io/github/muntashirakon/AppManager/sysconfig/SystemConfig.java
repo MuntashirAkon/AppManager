@@ -27,6 +27,7 @@ import android.util.ArrayMap;
 import android.util.SparseArray;
 import android.util.Xml;
 
+import androidx.annotation.WorkerThread;
 import com.android.internal.util.TextUtils;
 import com.android.internal.util.XmlUtils;
 
@@ -521,6 +522,7 @@ public class SystemConfig {
      *
      * @param readPermissions false to create an empty SystemConfig; true to read the permissions.
      */
+    @WorkerThread
     public SystemConfig(boolean readPermissions) {
         if (readPermissions) {
             Log.w(TAG, "Constructing a test SystemConfig");
@@ -530,6 +532,7 @@ public class SystemConfig {
         }
     }
 
+    @WorkerThread
     SystemConfig() {
         readAllPermissions();
     }

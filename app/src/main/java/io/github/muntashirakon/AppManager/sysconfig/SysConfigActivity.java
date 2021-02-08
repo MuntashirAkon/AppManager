@@ -75,7 +75,14 @@ public class SysConfigActivity extends BaseActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                adapter.setList(SysConfigWrapper.getSysConfigs(type = sysConfigTypes[position]));
+                progressIndicator.show();
+                new Thread(() -> {
+                    List<SysConfigInfo> sysConfigInfoList = SysConfigWrapper.getSysConfigs(type = sysConfigTypes[position]);
+                    runOnUiThread(() -> {
+                        adapter.setList(sysConfigInfoList);
+                        progressIndicator.hide();
+                    });
+                }).start();
             }
 
             @Override
@@ -93,9 +100,9 @@ public class SysConfigActivity extends BaseActivity {
     protected void onStart() {
         super.onStart();
         new Thread(() -> {
-            SystemConfig.getInstance();
+            List<SysConfigInfo> sysConfigInfoList = SysConfigWrapper.getSysConfigs(type);
             runOnUiThread(() -> {
-                adapter.setList(SysConfigWrapper.getSysConfigs(type));
+                adapter.setList(sysConfigInfoList);
                 progressIndicator.hide();
             });
         }).start();
