@@ -135,36 +135,44 @@ public class BackupRestorePreferences extends PreferenceFragmentCompat {
         this.backupVolume = (String) AppPref.get(AppPref.PrefKey.PREF_BACKUP_VOLUME_STR);
         ((Preference) Objects.requireNonNull(findPreference("backup_volume")))
                 .setOnPreferenceClickListener(preference -> {
-                    ArrayMap<String, ProxyFile> storageLocations = StorageUtils.getAllStorageLocations(activity, false);
-                    if (storageLocations.size() == 0) {
-                        new MaterialAlertDialogBuilder(activity)
-                                .setTitle(R.string.backup_volume)
-                                .setMessage(R.string.no_volumes_found)
-                                .setNegativeButton(R.string.ok, null)
-                                .show();
-                    } else {
-                        ProxyFile[] backupVolumes = new ProxyFile[storageLocations.size()];
-                        CharSequence[] backupVolumesStr = new CharSequence[storageLocations.size()];
-                        AtomicInteger selectedIndex = new AtomicInteger(-1);
-                        for (int i = 0; i < storageLocations.size(); ++i) {
-                            backupVolumes[i] = storageLocations.valueAt(i);
-                            backupVolumesStr[i] = new SpannableStringBuilder(storageLocations.keyAt(i)).append("\n")
-                                    .append(getSecondaryText(activity, getSmallerText(backupVolumes[i].getAbsolutePath())));
-                            if (backupVolumes[i].getAbsolutePath().equals(this.backupVolume)) {
-                                selectedIndex.set(i);
+                    new Thread(() -> {
+                        ArrayMap<String, ProxyFile> storageLocations = StorageUtils.getAllStorageLocations(activity, false);
+                        if (storageLocations.size() == 0) {
+                            activity.runOnUiThread(() -> {
+                                if (isDetached()) return;
+                                new MaterialAlertDialogBuilder(activity)
+                                        .setTitle(R.string.backup_volume)
+                                        .setMessage(R.string.no_volumes_found)
+                                        .setNegativeButton(R.string.ok, null)
+                                        .show();
+                            });
+                        } else {
+                            ProxyFile[] backupVolumes = new ProxyFile[storageLocations.size()];
+                            CharSequence[] backupVolumesStr = new CharSequence[storageLocations.size()];
+                            AtomicInteger selectedIndex = new AtomicInteger(-1);
+                            for (int i = 0; i < storageLocations.size(); ++i) {
+                                backupVolumes[i] = storageLocations.valueAt(i);
+                                backupVolumesStr[i] = new SpannableStringBuilder(storageLocations.keyAt(i)).append("\n")
+                                        .append(getSecondaryText(activity, getSmallerText(backupVolumes[i].getAbsolutePath())));
+                                if (backupVolumes[i].getAbsolutePath().equals(this.backupVolume)) {
+                                    selectedIndex.set(i);
+                                }
                             }
+                            activity.runOnUiThread(() -> {
+                                if (isDetached()) return;
+                                new MaterialAlertDialogBuilder(activity)
+                                        .setTitle(R.string.backup_volume)
+                                        .setSingleChoiceItems(backupVolumesStr, selectedIndex.get(), (dialog, which) -> {
+                                            this.backupVolume = backupVolumes[which].getAbsolutePath();
+                                            selectedIndex.set(which);
+                                        })
+                                        .setNegativeButton(R.string.cancel, null)
+                                        .setPositiveButton(R.string.save, (dialog, which) ->
+                                                AppPref.set(AppPref.PrefKey.PREF_BACKUP_VOLUME_STR, this.backupVolume))
+                                        .show();
+                            });
                         }
-                        new MaterialAlertDialogBuilder(activity)
-                                .setTitle(R.string.backup_volume)
-                                .setSingleChoiceItems(backupVolumesStr, selectedIndex.get(), (dialog, which) -> {
-                                        this.backupVolume = backupVolumes[which].getAbsolutePath();
-                                        selectedIndex.set(which);
-                                })
-                                .setNegativeButton(R.string.cancel, null)
-                                .setPositiveButton(R.string.save, (dialog, which) ->
-                                        AppPref.set(AppPref.PrefKey.PREF_BACKUP_VOLUME_STR, this.backupVolume))
-                                .show();
-                    }
+                    }).start();
                     return true;
                 });
     }

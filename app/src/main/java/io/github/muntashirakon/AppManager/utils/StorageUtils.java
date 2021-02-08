@@ -26,6 +26,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
 import androidx.collection.ArrayMap;
 import androidx.core.content.ContextCompat;
 import io.github.muntashirakon.AppManager.R;
@@ -43,6 +44,7 @@ public class StorageUtils {
 
     private static final String ENV_SECONDARY_STORAGE = "SECONDARY_STORAGE";
 
+    @WorkerThread
     @NonNull
     public static ArrayMap<String, ProxyFile> getAllStorageLocations(@NonNull Context context, boolean includeInternal) {
         ArrayMap<String, ProxyFile> storageLocations = new ArrayMap<>(10);
