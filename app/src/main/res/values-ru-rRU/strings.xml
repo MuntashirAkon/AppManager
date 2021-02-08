@@ -943,4 +943,5 @@
     <string name="enable_disable_features">Включение/отключение функций</string>
     <string name="ssaid">SSAID</string>
     <string name="type_uri">URI</string>
+    <string name="isolated">изолированно</string>
 </resources>
