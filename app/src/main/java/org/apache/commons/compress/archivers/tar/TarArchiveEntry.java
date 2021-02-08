@@ -373,7 +373,10 @@ public class TarArchiveEntry implements ArchiveEntry, TarConstants, EntryStreamO
         this.file = file;
 
         try {
-            readFileMode(this.file, normalizedName);
+            if (!this.file.isDirectory()) {
+                // TODO: 8/2/21 Properties for directories
+                readFileMode(this.file, normalizedName);
+            }
         } catch (final IOException e) {
             // Ignore exceptions from NIO for backwards compatibility
             // Fallback to get size of file if it's no directory to the old file api
