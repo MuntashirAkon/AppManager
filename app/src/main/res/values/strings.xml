@@ -908,4 +908,5 @@
     <string name="pref_enable_disable_features_msg">Enable or disable features in App Manager.</string>
     <string name="last_actions">Last actions</string>
     <string name="isolated">Isolated</string>
+    <string name="screen_lock_not_enabled">Screen lock not enabled. Enable screen lock in Android settings or clear app data.</string>
 </resources>

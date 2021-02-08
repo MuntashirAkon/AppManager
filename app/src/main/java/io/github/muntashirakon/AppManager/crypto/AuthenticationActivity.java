@@ -40,6 +40,7 @@ public class AuthenticationActivity extends AppCompatActivity {
                 if (result.getResultCode() == RESULT_OK) {
                     handleModeOfOps();
                 } else {
+                    setResult(RESULT_CANCELED);
                     finishAndRemoveTask();
                 }
             });
@@ -51,9 +52,15 @@ public class AuthenticationActivity extends AppCompatActivity {
         AppCompatDelegate.setDefaultNightMode((int) AppPref.get(AppPref.PrefKey.PREF_APP_THEME_INT));
         alertDialog = UIUtils.getProgressDialog(this, getString(R.string.initializing));
         KeyguardManager keyguardManager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
-        if ((boolean) AppPref.get(AppPref.PrefKey.PREF_ENABLE_SCREEN_LOCK_BOOL) && keyguardManager.isKeyguardSecure()) {
-            Intent intent = keyguardManager.createConfirmDeviceCredentialIntent(getString(R.string.unlock_app_manager), null);
-            authActivity.launch(intent);
+        if ((boolean) AppPref.get(AppPref.PrefKey.PREF_ENABLE_SCREEN_LOCK_BOOL)) {
+            if (keyguardManager.isKeyguardSecure()) {
+                Intent intent = keyguardManager.createConfirmDeviceCredentialIntent(getString(R.string.unlock_app_manager), null);
+                authActivity.launch(intent);
+            } else {
+                UIUtils.displayLongToast(R.string.screen_lock_not_enabled);
+                setResult(RESULT_CANCELED);
+                finishAndRemoveTask();
+            }
         } else {
             // No security enabled
             handleModeOfOps();
@@ -67,6 +74,7 @@ public class AuthenticationActivity extends AppCompatActivity {
             try {
                 RunnerUtils.setModeOfOps(this);
                 AppManager.setIsAuthenticated(true);
+                setResult(RESULT_OK);
             } finally {
                 runOnUiThread(this::finish);
             }

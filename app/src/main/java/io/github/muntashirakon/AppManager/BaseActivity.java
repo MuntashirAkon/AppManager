@@ -40,7 +40,13 @@ public abstract class BaseActivity extends AppCompatActivity {
         Thread.setDefaultUncaughtExceptionHandler(new AMExceptionHandler(this));
         AppCompatDelegate.setDefaultNightMode((int) AppPref.get(AppPref.PrefKey.PREF_APP_THEME_INT));
         if (!AppManager.isAuthenticated()) {
-            authActivity.launch(new Intent(this, AuthenticationActivity.class), result -> onAuthenticated(savedInstanceState));
+            authActivity.launch(new Intent(this, AuthenticationActivity.class), result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    onAuthenticated(savedInstanceState);
+                } else {
+                    finishAndRemoveTask();
+                }
+            });
         } else onAuthenticated(savedInstanceState);
     }
 
