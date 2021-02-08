@@ -9,30 +9,33 @@ tags:
   - анти-функции
 ---
 
-# Страница Сканера
-**Страница Сканера** появляется после нажатия на кнопку _сканер_ на вкладке [Сведения о приложении][app_info]. External APK files can also be opened for scanning from file managers, web browsers, etc.
+# Страница сканера
+**Страница сканера** появляется после нажатия на кнопку _сканер_ на вкладке [«Сведения о приложении»][app_info]. Внешние APK файлы также могут быть открыты для сканирования из файловых менеджеров, веб-браузеров и так далее.
 
 Сканируются трекеры и библиотеки, а также отображается количество трекеров и библиотек в виде сводки. Также отображаются контрольные суммы файла APK и подписывающего сертификата(ов).
 
-::: danger Disclaimer
-AM only scans an app statically. An app may provide the options for opting out, or in some cases, certain features of the tracker may not be used at all by the app (such as F-Droid), or some apps may simply use them as placeholders to prevent breaking certain features (such as Fennec F-Droid). The intention of the scanner is to give you an idea about what the APK might contain. It should be taken as an initial step for further investigations.
+::: danger Отказ от ответственности
+AM сканирует приложение только статически, без каких-либо предубеждений. Приложение может предоставлять опции для отказа, или в некоторых случаях некоторые функции трекера могут вообще не использоваться приложением (например, F-Droid), или некоторые приложения могут просто использовать их в качестве заполнителей, чтобы предотвратить нарушение определенных функций (например, Fennec F-Droid). **Сканер предназначен для того, чтобы дать вам представление о том, что может содержать APK. Это должно быть сделано как начальный шаг для дальнейших исследований.**
 :::
 
-Clicking on the first item (i.e. number of classes) opens a new page containing a list of tracker classes for the app. All classes can also be viewed by clicking on the _Toggle Class Listing_ menu. A sneak-peek of each class can be viewed by simply clicking on any class item.
+Нажатие на первый элемент (то есть количество классов) открывает новую страницу, содержащую список классов трекера. Все классы приложения также можно просмотреть, нажав на пункт _переключить список классов_ в меню. Краткий обзор каждого класса можно просмотреть, просто нажав на любой элемент класса.
 
-::: warning Notice
-Due to various limitations, it is not possible to scan all the components of an APK file. This is especially true if an APK is highly obfuscated. The scanner also does not check strings (or website signatures).
+::: tip Обратите внимание
+Из-за различных ограничений невозможно просканировать все компоненты APK файла. Это особенно верно, если APK сильно обфусцирован. Сканер также не проверяет строки (или подписи веб-сайта).
 :::
 
-The second item lists the number of trackers along with their names. Clicking on the item displays a dialog containing the name of trackers, matched signatures and the number of classes against each signature. The tracker names may have some prefixes such as:
-- `°` denotes that the tracker is missing in the εxodus' list (taken from [IzzyOnDroid repo][izzy])
-- `²` denotes that the tracker is in the [ETIP][etip] stand-by list i.e. whether it is an actual tracker is not yet decided
-- `µ` denotes micro non-intrusive tracker meaning that these trackers are harmless but still a tracker
-- `?` denotes that the tracker status is unknown
+Второй элемент отображает количество трекеров вместе с их именами. Нажатие на элемент отображает диалог, содержащий имя трекеров, совпадающие подписи и количество классов по каждой подписи. Имена трекеров могут иметь некоторые префиксы, такие как:
+- `°` означает, что трекер отсутствует в списке εxodus (взято из [IzzyOnDroid репозитория][izzy])
+- `2` означает, что трекер находится в списке [ETIP][etip] в ожидании, если это реальный трекер еще не выбран
+- `µ` обозначает ненавязчивый микро-трекер, что означает, что эти трекеры безобидны, но все же трекеры
+- `?` означает, что статус трекера неизвестен
 
-The third item lists the number of libraries along with their names. These information are taken from [IzzyOnDroid repo][izzy].
+В третьем пункте перечислено количество библиотек и их имена. Информация в основном взята из [репозитория IzzyOnDroid][izzy].
 
-_See also: [FAQ: Tracker vs tracker components][t_vs_tc]_
+_См. также: [FAQ: Класс трекера и компоненты трекера, в чем разница?][t_vs_tc]_
+
+## Отсутствующие подписи
+В нижней части страницы находится специальный элемент, обозначающий количество отсутствующих подписей (т.е. отсутствующих классов). Отсутствующие подписи - это те, которые AM не удалось сопоставить с какими-либо известными библиотеками. Само число не имеет особого значения, поскольку многие библиотеки содержат сотни классов, но щелчок по элементу вызовет диалоговое окно, содержащее подписи, которое полезно при проверке отсутствующих подписей. **Эта функция предназначена только для людей, которые знают, что такое отсутствующая подпись и что с ней делать. Обычным пользователям следует просто игнорировать это.**
 
 [app_info]: ./app-details-page.md#вкладка-«о-приложении»
 [etip]: https://etip.exodus-privacy.eu.org

@@ -231,6 +231,7 @@ module.exports = {
               '/ru/guide/profiles-page',
               '/ru/guide/profile-page',
               '/ru/guide/backup-restore',
+              '/ru/guide/interceptor-page',
             ]
           },
           {

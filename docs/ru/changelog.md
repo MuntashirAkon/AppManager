@@ -6,100 +6,102 @@ sidebar: auto
 
 ![Отладочная версия](https://github.com/MuntashirAkon/AppManager/workflows/Debug%20Build/badge.svg) [![Релиз GitHub](https://img.shields.io/github/v/release/MuntashirAkon/AppManager)](https://github.com/MuntashirAkon/AppManager/releases/latest) [![F-Droid](https://img.shields.io/f-droid/v/io.github.muntashirakon.AppManager)](https://f-droid.org/packages/io.github.muntashirakon.AppManager) ![Размер репозитория GitHub](https://img.shields.io/github/repo-size/MuntashirAkon/AppManager) ![Коммиты GitHub за неделю](https://img.shields.io/github/commit-activity/w/MuntashirAkon/AppManager)
 
-В настоящее время поддерживаемые версии: [2.5.13](#v2-5-13-348), [2.5.12](#v2-5-12-341), [2.5.11](#v2-5-11-333) и [2.5.10](#v2-5-10-324). Обновите App Manager, если вы пользуетесь более ранней версией.
+В настоящее время поддерживаются версии [v2.5.23](https://github.com/MuntashirAkon/AppManager/releases/tag/pre-v2.5.23) и [v2.5.20](#v2-5-20-375). Обновите App Manager, если вы пользуетесь более ранней версией.
+
+<small>[Нажмите, чтобы увидеть старый список изменений.](./changelog_old.md)</small>
 
 ::: details Таблица содержания
 [[toc]]
 :::
 
 ## v2.5.20 (375)
-### Introducing Profiles
-[Profiles][profile_page] finally closes the [related issue](https://github.com/MuntashirAkon/AppManager/issues/72). Profiles can be used to execute certain tasks repeatedly without doing everything manually. A profile can be applied (or invoked) either from the [Profiles page][profiles_page] or from the home screen by creating shortcuts. There are also some presets which consist of debloating profiles taken from [Universal Android Debloater](https://gitlab.com/W1nst0n/universal-android-debloater).
+### Введение профилей
+[Профили][profile_page] наконец закрывают связанную [проблему](https://github.com/MuntashirAkon/AppManager/issues/72). Профили могут многократно использоваться для выполнения определенных задач, не выполняя все вручную. Профиль может быть применен (или вызван) либо на странице [Профилей][profiles_page] или из домашнего экрана, создав ярлыки нужных профилей. Существуют также некоторые предустановки, которые состоят из debloating профилей, взятых из [Universal Android Debloater](https://gitlab.com/W1nst0n/universal-android-debloater).
 
-**Known limitations:**
-- Exporting rules and applying permissions are not currently working.
-- Profiles are applied for all users.
+**Известные ограничения:**
+- Экспорт правил и применение разрешений в настоящее время не работает.
+- Нет диалогового окна прогресса для отображения хода установки.
 
-### The Interceptor
-[Intent Intercept](https://github.com/MuntashirAkon/intent-intercept) works as a man-in-the-middle between source and destination, that is, when you open a file or URL with another app, you can see what is being shared by opening it with Interceptor first. You can also add or modify the intents before sending them to the destination. Additionally, you can double click on any exportable activities in the Activities tab in the App Details page to open them in the Interceptor to add more configurations.
+### Перехватчик
+[Перехватчик намерений](https://github.com/MuntashirAkon/intent-intercept) работает как MITM между источником и назначением, то есть когда вы открываете файл или URL в другом приложении, вы можете увидеть, чем делятся, открыв его с перехватчиком. Вы также можете добавить или изменить намерения перед отправкой их в пункт назначения. Кроме того, вы можете дважды щелкнуть по любым экспортируемым активити на вкладке Активити на странице Сведения о приложении, чтобы открыть их в перехватчике, чтобы добавить больше конфигураций.
 
-**Known limitation:** Editing extras is not currently possible.
+**Известное ограничение:** редактирование extras в настоящее время невозможно.
 
-### UnAPKM: DeDRM the APKM files
-When I released a small tool called [UnAPKM](https://f-droid.org/en/packages/io.github.muntashirakon.unapkm), I promised that similar feature will be available in App Manager. I am proud to announce that you can open APKM files directly in the App Info page or convert them to APKS or install them directly.
+### UnAPKM: DeDRM файлы APKM
+Когда я выпустил небольшой инструмент под названием [UnAPKM](https://f-droid.org/en/packages/io.github.muntashirakon.unapkm), я обещал, что подобные функции будут доступны в App Manager. Я с гордостью сообщаю, что вы можете открыть APKM файлы прямо на странице информации о приложении или конвертировать их в APKS или установить их напрямую.
 
-### Multiple user
-App manager now supports multiple users! For now, this requires root or ADB. But no-root support is also being considered. If you have multiple users enabled and click on an app installed in multiple profiles, an alert prompt will be displayed where you can select the user.
+### Несколько пользователей
+App Manager теперь поддерживает несколько пользователей! На данный момент это требует root или ADB. Рассматривается также поддержка пользователей без root прав. Если у вас включено несколько пользователей, после нажатия на приложение, установленное в нескольких профилях, будет отображено оповещение, где вы можете выбрать пользователя.
 
 ### Vive la France!
-Thanks to the contributors, we have one more addition to the language club: French. You can add more languages or improve existing translations at [Weblate](https://hosted.weblate.org/engage/app-manager).
+Благодаря соавторам, у нас есть еще одно дополнение к языковому клубу: французский. Вы можете добавить больше языков или улучшить существующие переводы на [Weblate](https://hosted.weblate.org/engage/app-manager).
 
-### Report crashes
-If App Manager crashes, you can now easily report the crash from the notifications which opens the share options. Crashes are not reported by App Manager, it only redirects you to your favourite Email client.
+### Отчёты об ошибках
+Если App Manager дает сбой, теперь вы можете легко сообщить об этом из уведомлений, которые открывают параметры "Поделиться". Ошибки не сообщаются через App Manager, он перенаправляет вас только на любимый почтовый клиент.
 
 ### Android 11
-Added support for Android 11. Not everything may work as expected though.
+Добавлена поддержка Android 11. Но не все может работать, как и ожидалось.
 
-### App Installer Improvements
-#### Set installation locations
-In settings page, you can set install locations such as auto (default), internal only and prefer external.
-#### Set APK installer
-In settings page, you can also set default APK installer (root/ADB only) instead of App Manager.
-#### Multiple users
-In settings page, you can allow App Manager to display multiple users during APK installation.
-#### Signing APK files
-In settings page, you can choose to sign APK files before installing them. You can also select which signature scheme to use in the _APK signing_ option in settings.
+### Улучшения установщика приложений
+#### Возможность задать место установки
+Файлы APK теперь сохраняются как `app name_version.extension` вместо `package.name.extension`.
+#### Настройка установщика APK
+Добавлены переводы на немецкий и португальский (бразильский) языки.
+#### Несколько пользователей
+**Известные ограничения:** еще не все переводы проверены.
+#### Подписание APK файлов
+На странице настроек перед установкой можно выбрать подписание APK файлов. Вы также можете выбрать схему подписания в настройках _подписания APK_.
 
-**Known limitation:** Currently, only a generic key is used to sign APK files
+**Известное ограничение:** В настоящее время для подписания APK файлов используется только общий ключ
 
 ## v2.5.17 (368)
-### App Installer
-As promised, it is now possible to select splits. AM also provides recommendations based on device configurations. If the app is already installed, recommendations are provided based on the installed app. It is also possible to downgrade to a lower version without data loss if the device has root or ADB. But it should be noted that not all app can be downgraded. Installer is also improved to speed up the install process, especially, for root users. If the app has already been installed and the new (x)apk(s) is newer or older or the same version with a different signature, AM will display a list of changes similar to [what's new][whats_new] before prompting the user to install the app. This is useful if the app has introduced tracker components, new permissions, etc.
+### Установщик приложений
+Как и обещано, теперь можно выбрать разделенные приложения, splits. AM также предоставляет рекомендации на основе конфигураций устройства. Если приложение уже установлено, рекомендации предоставляются на основе установленного приложения. Также можно понизить версию до более низкой версии без потери данных, если устройство имеет root или ADB. Но следует отметить, что не все приложения могут быть понижены. Установщик также улучшен для ускорения процесса установки, особенно для root пользователей. Если приложение уже установлено, и новая (x)apk(s) более новой или более поздней версией с другой подписью, AM покажет список изменений, похожих на [что нового][whats_new] перед тем, как предложить пользователю установить приложение. Это полезно, если приложение ввело компоненты трекера, новые права доступа и т. д.
 
-**Known Limitations:**
-- Large app can take a long time to fetch app info and therefore it may take a long time display the install prompt.
-- If the apk is not located in the internal storage, the app has to be cached first which might also take a long time depending on the size of the apk.
+**Известные ограничения:**
+- Понижение версии пока что недоступно.
+- Если apk не находится во внутренней памяти, приложение должно быть кэшировано, что также может занять много времени в зависимости от размера apk.
 
-### Scanner: Replacement for Exodus Page
-exodus page is now replaced with scanner page. [Scanner page][scanner] contains not only a list of trackers but also a list of used libraries. This is just a start. In future, this page will contain more in depth analysis of the app.
+### Сканер: Замена страницы Exodus
+Страница exodus теперь заменена на страницу сканера. Страница [сканера][scanner] содержит не только список трекеров, но и список используемых библиотек. Это только начало. В будущем эта страница будет содержать больше углубленного анализа приложения.
 
-### Introducing System Config
-System Config lists various system configurations and whitelists/blacklists included in Android by either OEM/vendor, AOSP or even some Magisk modules. Root users can access this option from the overflow menu in the main page. There isn't any official documentation for these options therefore it's difficult to write a complete documentation for this page. But I will gradually add documentations using my own knowledge. But some of the functions should be understandable by their name.
+### Представляем конфигурацию системы
+Отображает различные системные настройки и белые списки/черные списки, включенные в Android либо OEM/поставщиком, AOSP или даже некоторые модули Magisk. Пользователи с правами root могут получить доступ к этой опции из дополнительного меню на главной странице. Не существует официальной документации для этих параметров, поэтому трудно написать полную документацию для этой страницы. Но я постепенно добавлю документацию, используя свои собственные знания. Однако некоторые из функций должны быть понятными по их имени.
 
-### More Languages
-Thanks to the contributors, AM now has more than 12 languages. New languages include Bengali, Hindi, Norwegian, Polish, Russian, Simplified Chinese, Turkish and Ukrainian. You can add more languages or improve existing translations at [Weblate](https://hosted.weblate.org/engage/app-manager).
+### Больше языков
+Благодаря соавторам, сегодня у нас более 12 языков. Новые языки включают бенгальский, хинди, норвежский, польский, русский, упрощенный китайский, турецкий и украинский. Вы можете добавить новые языки или улучшить существующие переводы на [Weblate](https://hosted. weblate. org/engage/app-manager).
 
-### App Info Tab
-More tags are added in the [app info tab][app_info] such as **KeyStore** (apps with KeyStore items), **Systemless app** (apps installed via Magisk), **Running** (apps that are running). For external apk, two more options are added namely **Reinstall** and **Downgrade**. Now it is possible to share an apk via Bluetooth. For system apps, it is possible to uninstall updates for root/ADB users. But like the similar option in the system settings, this operation will clear all app data. As stated above, exodus has been replaced with scanner.
+### Вкладка «О приложении»
+Больше тегов добавлено на вкладке [сведения о приложении][app_info], например **хранилище ключей** (приложения с элементами хранилища ключей), **внесистемные приложения** (приложения, установленные с помощью Magisk), **работающие** (работающие приложения). Для внешних apk, добавлены еще два варианта: **переустановить** и **понизить**. Добавлена возможность поделиться apk через Bluetooth. Для системных приложений можно удалить обновления для пользователей root/ADB. Однако, как и в системных настройках, эта операция очистит все данные приложения. Как уже говорилось выше, exodus был заменен сканером.
 
-### Navigation Improvements
-It's now relatively easy to navigate to various UI components just by using keyboard. You can use up/down button to navigate between list items and tab button to navigate to UI components inside an item.
+### Улучшения навигации
+Теперь относительно легко переходить к различным компонентам пользовательского интерфейса, просто используя клавиатуру. Вы можете использовать кнопку вверх/вниз для навигации между элементами списка и кнопкой вкладки для перехода к компонентам пользовательского интерфейса внутри элемента.
 
-### Running Apps Page
-It is now possible to sort and filter processes in this tab. Also the three big buttons are replaced with an easy to use three dot menu. Previously the memory usage was wrong which is fixed in this version.
+### Реструктуризация страницы использования приложений
+Добавлена возможность сортировать и фильтровать процессы на этой вкладке. Также три большие кнопки заменены простым в использовании меню трех точек. Раньше использование памяти было неправильным, что было исправлено в этой версии.
 
-### Built-in Toybox
-Toybox (an alternative to busybox) is bundled with AM. Although Android has this utility built-in from API 23, toybox is bundled in order to prevent buggy implementations and to support API < 23.
+### Встроенный Toybox
+Toybox (альтернатива busybox) входит в комплект AM. Хотя Android имеет эту утилиту встроенную из API 23, toybox комплектуется для предотвращения ошибочных реализаций и для поддержки API < 23.
 
-### Component Blocker Improvements
-Component blocker seemed to be problematic in the previous version, especially when global component blocking is enabled. The issues are mostly fixed now.
+### Улучшения блокировки компонентов
+Блокировщик компонентов, похоже, проблематичен в предыдущей версии, особенно если включена глобальная блокировка компонентов. Сейчас проблемы в основном исправлены.
 
-::: warning Caution
-The component blocking mechanism is no longer compatible with v2.5.6 due to various security issues. If you have this version, upgrade to v2.5.13 or earlier versions first. After that enable [global component blocking][5] and disable it again.
+::: warnin Предупреждение
+Механизм блокировки компонентов больше не совместим с v2.5.6 из-за различных проблем безопасности. Если у вас эта версия, сначала обновитесь до версии 2.5.13 или более ранней версии. После этого включите [глобальную блокировку компонентов][5] и отключите их снова.
 :::
 
-### Improvements in the App Details Page
-Value of various app ops depend on their parent app ops. Therefore, when you allow/deny an app op, the parent of the app op gets modified. This fixes the issues some users have been complaining regarding some app ops that couldn't be changed.
+### Улучшения на странице сведений о приложении
+Значение различных опций приложения зависит от их родительского приложения. Следовательно, когда вы разрешаете / запрещаете операцию приложения, родительская операция приложения изменяется. Это устраняет проблемы, на которые некоторые пользователи жаловались в отношении некоторых операций приложения, которые нельзя было изменить.
 
-If an app has the target API 23 or less, its permissions cannot be modified using the `pm grant ...` command. Therefore, for such apps, option to toggle permission has been disabled.
+Если приложение имеет целевой API 23 или меньше, его разрешения не могут быть изменены с помощью команды `pm grant ...`. Таким образом, для таких приложений опция переключения прав доступа отключена.
 
-The signature tab is improved to support localization. It also displays multiple checksums for a signature.
+Улучшена вкладка "Подпись" для поддержки локализации. В нем также отображаются несколько контрольных сумм для подписи.
 
-### App Manifest
-Manifest no longer crashes if the size of the manifest is too long. Generated manifest are now more accurate than before.
+### Манифест приложения
+Манифест больше не крашится, если размер манифеста слишком длинный. Сгенерированный манифест теперь более точен, чем раньше.
 
 ## v2.5.13 (348)
-### Пакетное приложение (Split APK)
+### Пакетное (разделенное) приложение (Split APK)
 Добавлена поддержка форматов пакетных приложений, таких как **APKS** и **XAPK**. Вы можете установить эти приложения с помощью обычных кнопок установки. Для пользователей root и ADB приложения устанавливаются с использованием метода оболочки, а для пользователей без root-прав используется метод платформы по умолчанию.
 
 **Известные ограничения:**
@@ -130,12 +132,12 @@ Manifest no longer crashes if the size of the manifest is too long. Generated ma
 ### Фильтрация на главной странице
 Добавлена опция для фильтрации приложений, у которых есть хотя бы одно активити.
 
-### Резервное копирование/отправка APK
-Файлы APK теперь сохраняются как `app name_version.extension` вместо `package.name.extension`.
+### Восстановление исходных файлов (за исключением файлов APK) отключено на неподдерживаемых архитектурах
+Реализовано сохранение файлов APK в режиме пакетного выбора.
 
 ### Пакетные операции
-- Добавлен служба переднего плана для выполнения пакетных операций. Результат операции отображается в уведомлении. Если операция не удалась для некоторых пакетов, нажатие на уведомление откроет диалоговое окно со списком неудачных пакетов. Также есть кнопка **«Повторить попытку»** внизу, которую можно использовать для повторного выполнения операции с ошибочными пакетами.
-- Замена Linux _kill_ на **force-stop**.
+- Добавлена служба переднего плана для выполнения пакетных операций. Результат операции отображается в уведомлении. Если операция не удалась для некоторых пакетов, нажатие на уведомление откроет диалоговое окно со списком неудачных пакетов. Также есть кнопка **«Повторить попытку»** внизу, которую можно использовать для повторного выполнения операции с ошибочными пакетами.
+- Добавлена возможность отправки разделенных файлов APK в формате APKS (можно установить через [SAI][8]).
 
 ### Переводы
 Добавлены переводы на немецкий и португальский (бразильский) языки.
@@ -147,160 +149,10 @@ Manifest no longer crashes if the size of the manifest is too long. Generated ma
 
 _Опция резервного копирования данных в данный момент считается нестабильной. Если у вас возникнут какие-либо проблемы, пожалуйста, сообщите о них без колебаний._
 
-
-## v2.5.12 (341)
-- <span><tagfeature/></span>  Добавлена поддержка разделения резервных копий данных на файлы размером 1 ГБ для обхода ограничения файловой системы FAT32
-- <span><tagfeature/></span>  Добавлена возможность разблокировать трекеры
-- <span><tagfeature/></span>  Добавлена опция пропуска проверки подписи при восстановлении резервных копий
-- <span><tagfeature/></span>  Поддержка [Termux][termux]: <code>run-as</code> отладка приложения или запуск нового сеанса в виде приложения во вкладке [«О приложении»][app_info]
-- <span><tagfeature/></span>  Отображание информации о резервной копии приложения на [главной странице][main_page]
-- <span><tagfeature/></span>  Восстановление исходных файлов (за исключением файлов APK) отключено на неподдерживаемых архитектурах
-- <span><tagfeature/></span>  Отображение диалогового окна подтверждения операции перед очисткой данных приложения
-- <span><tagfeature/></span>  Возможность импорта компонентов отключена с помощью IFW на MAT
-- <span><tagfeature/></span>  Включение внешнего носителя и каталога OBB для резервного копирования
-- <span><tagfeature/></span>  Разрешение импорта существующих правил другими приложениями или инструментами
-- <span><tagfeature/></span>  Добавлена опция для извлечения значков приложений во вкладке [«О приложении»][app_info]
-- <span><tagfix/></span> Отображание функции восстановления и удаления резервных копий только для приложений с существующими резервными копиями
-- <span><tagfix/></span> Отображание индикатора прогресса во время создания резервной копии
-- <span><tagfix/></span> Отображение индикатора прогресса во время загрузки операций приложения
-- <span><tagfix/></span> Исправлено неоткрытие приложения в последней и единственной поддерживаемой версии Aurora Droid (версия 1.0.6)
-- <span><tagfix/></span> Исправлен сбой приложения при смене ночного режима во время просмотра страницы [«О приложении»][1]
-- <span><tagfix/></span> Исправлен сбой приложения при попытке открыть внешний файл APK
-- <span><tagfix/></span> Исправлена ошибка NullPointerException, когда внешний каталог данных имел значение NULL
-- <span><tagfix/></span> Исправлено отображение панели инструментов в полноэкранном диалоге
-- <span><tagfix/></span> Исправлен поиск без учета регистра
-- <span><tagfix/></span> Оптимизация темы приложения
-- <span><tagfix/></span> Замена AndroidShell на LibSuperuser
-- <span><tagfix/></span> апрос разрешения доступа к внешнему хранилищу при сохранении файлов APK
-- <span><tagfix/></span> Обход ошибки AppBarLayout в Material Design
-- <span><tagfix/></span> Обновление внешней информации об APK при установке/удалении событий
-
-Чтобы использовать возможности Termux, убедитесь, что вы используете Termux версии 0.96 или новее, а команда `allow-external-apps=true` добавлена в <tt>~/.termux/termux.properties</tt>.
-
-Функция резервного копирования данных по-прежнему является экспериментальной, и поэтому, пожалуйста, не полагайтесь на нее при управлении своими резервными копиями.
-
-## v2.5.11 (333)
-- <span><tagfeature/></span>  Добавлена экспериментальная поддержка резервного копирования данных приложений. Пожалуйста, тестируйте только те приложения, которые вам не нужны. (только в режиме root)
-- <span><tagfeature/></span>  Добавлена возможность отправки разделенных файлов APK в формате APKS (можно установить через [SAI][8]).
-- <span><tagfeature/></span>  Реализовано сохранение файлов APK в режиме пакетного выбора.
-- <span><tagfeature/></span>  Добавлен список изменений для файла APK, который нуждается в обновлении (при открытии внешних файлов APK).
-- <span><tagfeature/></span>  Добавлена возможность применения операций в один клик к системным приложениям (по умолчанию отключено).
-- <span><tagfeature/></span>  Добавлена отображение информации о версии установленного приложения во вкладке «О приложении». Нажатие на значок _i_ открывает вкладку [«О приложении»][app_info].
-- <span><tagfeature/></span>  Новые разрешения по запросу <tt>READ_EXTERNAL_STORAGE</tt> и <tt>WRITE_EXTERNAL_STORAGE</tt> для поддержки резервного копирования приложений
-- <span><tagfeature/></span>  Отображение удаленных приложений, у которых есть резервные копии, на главной странице
-- <span><tagfeature/></span>  Добавлен отказ от ответственности
-- <span><tagfix/></span> Исправлено неочищение выбора после выполнения задачи на главной странице
-- <span><tagfix/></span> Преобразование различной информации во вкладке конфигураций и функций в текст для улучшения читаемости.
-- <span><tagfix/></span> Исправлен сбой на [главной странице][main_page] при фильтрации приложений по поисковому запросу
-- <span><tagfix/></span> Исправлена сбой во вкладке [«О приложении»][app_info] когда наличие каталога внешних данных давало ложноположительный результат
-
-**Примечание:** резервные копии данных хранятся в <tt>/sdcard/AppManager</tt>, а резервные копии файлов APK хранятся в <tt>/sdcard/AppManager/apks</tt>. Резервное копирование данных в настоящее время не работает на Android Lollipop.
-
-## v2.5.10 (324)
-- <span><tagfeature/></span>  Добавлены операции в один клик (опция [«Операции в один клик»](./guide/one-click-ops-page.md) на [главной странице][main_page]): блокировка трекеров, блокировка компонентов по подписи, блокировка операций приложения
-- <span><tagfeature/></span>  Добавлена поддержка внешних файлов APK: теперь вы можете открывать файлы APK из вашего файлового менеджера. Вы можете просматривать сведения о приложении, манифест или сканировать трекеры прямо из него
-- <span><tagfeature/></span>  Добавлена опция постоянной фильтрации приложений на [главной странице][main_page].
-- <span><tagfeature/></span>  Альтернативный просмотрщик манифестов для установленных файлов APKS
-- <span><tagfeature/></span>  Отображение количества трекеров в виде тега во вкладке [«О приложении»][app_info]
-- <span><tagfeature/></span>  Добавлена опция выбора всех приложений на [главной странице][main_page] в режиме выделения
-- <span><tagfeature/></span>  Добавлены ссылки на исходный код и сообщество
-- <span><tagfeature/></span>  Добавлена поддержка установки/обновления файлов APK во вкладке [«О приложении»][app_info] (бета)
-- <span><tagfeature/></span>  Добавлена возможность импортировать существующие отключенные компоненты в настройках импорта/экспорта (бета)
-- <span><tagfeature/></span>  Добавлено отображение информации о разделенных файлах APK во вкладке [«О приложении»][app_info]
-- <span><tagfeature/></span>  Добавлена возможность открыть [Termux](./guide/main-page.md#termux) на [главной странице][main_page] (бета)
-- <span><tagfeature/></span>  Начальная поддержка баннера приложения
-- <span><tagfix/></span> Исправлено несоответствие включения и выключения во вкладке «О приложении»
-- <span><tagfix/></span> Исправлена проблема с постоянным кэшем приложения
-- <span><tagfix/></span> Исправлена проблема с прокруткой на странице настроек
-- <span><tagfix/></span> Исправлены сбои при переходе на вкладку компонентов для пользователей без root-прав
-- <span><tagfix/></span> Исправлен сбой при попытке просмотреть сводку во время сканирования на странице exodus
-- <span><tagfix/></span> Исправлены сбои на устройствах, не поддерживающих отображение статистики использования данных
-- <span><tagfix/></span> Исправлен сбой при попытке просмотреть манифест разделенного файла APK
-- <span><tagfix/></span> Исправлено неправильное отображение имени установщика пакета во вкладке [«О приложении»][app_info]
-- <span><tagfix/></span> Исправлено форматирование списка изменений для старых устройств
-
-## v2.5.9 (315)
-- <span><tagfeature/></span>  Слияние [«О приложении»][app_info] в виде одной вкладки на странице [«Сведения о приложении»][1]
-- <span><tagfeature/></span>  Добавлена опция сброса всех операций приложения
-- <span><tagfeature/></span>  Добавлена опция отзыва всех опасных операций/разрешений приложения
-- <span><tagfeature/></span>  Выделение трекеров во вкладке компонентов
-- <span><tagfeature/></span>  Добавлена опция сохранения манифеста и дампа класса
-- <span><tagfeature/></span>  Добавлена возможность предоставлять/отзывать разрешения на разработку
-- <span><tagfeature/></span>  Добавлены параметры сортировки для вкладок компонентов, операций приложения и используемых разрешений.
-- <span><tagfeature/></span>  Добавлена сортировка приложений по использованию Wi-Fi на странице [«Использование приложений»][6]
-- <span><tagfeature/></span>  Добавлена кнопка запуска во вкладке [«О приложении»][app_info]
-- <span><tagfeature/></span>  Добавлена опция «Никогда не спрашивать» в диалоговом окне
-- <span><tagfeature/></span>  Добавлено долгое нажатие для выбора приложений на [главной странице][main_page].
-- <span><tagfeature/></span>  Добавлен список изменений в приложении
-- <span><tagfix/></span> Нажатие для выбора приложений в режиме выделения
-- <span><tagfix/></span> Улучшен блокировщик компонентов
-- <span><tagfix/></span> Улучшена загрузка манифеста для больших приложений
-- <span><tagfix/></span> Улучшена скорость загрузки вкладок
-- <span><tagfix/></span> Исправлена проверка операций приложений и пользовательских операций приложений для некоторых устройств
-- <span><tagfix/></span> Отключено открытие активити для отключенных активити
-- <span><tagfix/></span> Загрузка настоящего имени активити для активити, которые используют псевдонимы
-- <span><tagfix/></span> Исправлены фоновые цвета
-- <span><tagfix/></span> Исправлен сбой при загрузке вкладки служб у пользователей без root-прав
-- <span><tagfix/></span> Исправлена неработающая кнопка возврата во время просмотра классов
-- <span><tagfix/></span> Изменены цвета значков блоков на цвет акцента.
-- <span><tagfix/></span> Удалены переводы до релиза стабильной версии приложения
-- <span><tagfix/></span> Кликабельные ссылки в разделе «О приложении»
-- <span><tagfix/></span> Исправлены различные утечки памяти.
-
-## v2.5.8 (289)
-- <span><tagfeature/></span>  Добавлена [возможность импорта/экспорта правил блокировки](./guide/settings-page.md#импортирование-существующих-правиn).
-- <span><tagfeature/></span>  Добавлена возможность [выбора тем](./guide/settings-page.html#тема-приnожения) (светлая/ночная)
-- <span><tagfeature/></span>  Добавлен режим, длительность, время подтверждения, время отклонения для операций приложений
-- <span><tagfeature/></span>  Выделение работающих служб
-- <span><tagfeature/></span>  Выделение компонентов, отключенных не с помощью App Manager
-- <span><tagfeature/></span>  Добавлен жест обновления на странице [«Использование приложений»][app_usage]
-- <span><tagfeature/></span>  Добавлено отображение процентного соотношения использования экрана с индикатором
-- <span><tagfeature/></span>  Разделение страниц «Инструкции» и «О приложении» с полноэкранным диалогом для обеих страниц
-- <span><tagfeature/></span>  Закругленное меню переполнения (бета)
-- <span><tagfix/></span> Исправлены различные проблемы с операциями приложений для конкретных устройств/SDK
-- <span><tagfix/></span> Улучшена стабильность всех приложений
-- <span><tagfix/></span> Добавлено разрешение <tt>ACCESS_NETWORK_STATE</tt> для поддержки старых версий операционной системы
-- <span><tagfix/></span> Исправлено удаление всех правил IFW при выборе [глобальной блокировки компонентов][5].
-- <span><tagfix/></span> Исправлены различные проблемы с поиском
-
-## v2.5.7 (265)
-- <span><tagfeature/></span>  Первоначальная поддержка [ADB через TCP](./guide/adb-over-tcp.md) (порт 5555) для пользователей без root-прав
-- <span><tagfix/></span> Исправлены правила импорта из [Watt][2] и [Blocker][3].
-- <span><tagfix/></span> Отображение приложения Aurora Droid на странице [«О приложении»][app_info] как приоритетное над F-Droid
-- <span><tagfix/></span> Улучшена скорость блокировки компонентов
-- <span><tagfix/></span> Исправлена проблема с определением режима операции приложения
-
-**Для root-пользователей:** если вы пропустили версию [v2.5.6](#v2-5-6-233), вам может потребоваться применить все правила глобально, применив [глобальную блокировку компонентов][5] в настройках приложения, чтобы они работали корректно
-
-## v2.5.6 (233)
-- <span><tagfeature/></span>  [Пакетные операции](./guide/main-page.md#пакетные-операции) на главной странице: очистка данных приложения, отключение запуска в фоновом режиме, отключение/закрытие/удаление приложения (нажмите на значок приложения для выбора)
-- <span><tagfeature/></span>  Полная поддержка экспортированных и поврежденных файлов с помощью [Blocker][3].
-- <span><tagfeature/></span>  Повторная реализация блокирующих активити, приемников, служб и поставщиков
-- <span><tagfix/></span> Удалена зависимость ConstraintLayout, поэтому возможно уменьшение размера приложения
-- <span><tagfix/></span> Исправлено предупреждение о дублировании использования приложения на странице [«О приложении»][app_info].
-- <span><tagfix/></span> Исправлен сбой при ненахождении значка приложения на странице [«Сведения о приложении»][1].
-
-**Примечание для пользователей root:** чтобы гарантировать, что предыдущие правила блокировки сохраняются с новой реализацией блокировки, это обновление основано на предыдущих правилах, следовательно, увеличивая время загрузки на [главной странице][main_page]. Эта функция будет удалена в следующей версии приложения, но ее все еще можно будет симулировать, применив [глобальную блокировку компонентов][5] в настройках приложения.
-
-## v2.5.5 (215)
-- <span><tagfeature/></span>  Добавлен [просмотрщик работающих приложений/процессов](./guide/main-page.md#работающие-приложения) (требует root-прав)
-- <span><tagfeature/></span>  Добавлен [просмотрщик деталей использования приложений][6]
-- <span><tagfeature/></span>  Добавлена поддержка [Apk Updater](./guide/main-page.md#apk-updater) и [Aurora Store](./guide/app-details-page.md#горизонтаnьная-панеnь-действий)
-- <span><tagfeature/></span>  Сохранение измененных значений операций и разрешений приложений в хранилище устройства (в стадии разработки)
-- <span><tagfix/></span> Удаление поддержки для пользователей без root-прав
-- <span><tagfix/></span> Реструктуризация страницы использования приложений
-- <span><tagfix/></span> Добавлено больше ясности, а также улучшена производительность на странице [«Сведения о приложении»][1]
-
 [profile_page]: ./guide/profile-page.md
-[1]: ./guide/app-details-page.md
-[2]: https://github.com/tuyafeng/Watt
 [profiles_page]: ./guide/profiles-page.md
 [scanner]: ./guide/scanner-page.md
-[3]: https://github.com/lihenggui/blocker
 [whats_new]: ./guide/app-details-page.md#горизонтальная-панель-деиствии
 [app_info]: ./guide/app-details-page.md#вкладка-«о-приложении»
 [5]: ./guide/settings-page.md#гnобаnьная-бnокировка-компонентов
-[app_usage]: ./guide/main-page.md#испоnьзование-приnожений
-[main_page]: ./guide/main-page.md
 [8]: https://github.com/Aefyr/SAI
-[termux]: https://github.com/termux/termux-app

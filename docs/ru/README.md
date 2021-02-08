@@ -2,7 +2,7 @@
 home: true
 heroImage: /icon.png
 heroText: App Manager
-tagline: Для v2.5.21
+tagline: Для v2.5.23
 actionText: Начать
 actionLink: ./guide/
 features:
@@ -14,4 +14,3 @@ features:
     details: Резервное копирование приложений с данными и правилами блокировки для их восстановления после обновления устройства или ОС.
 footer: © 2020 Muntashir Al-Islam
 ---
-
