@@ -24,7 +24,7 @@
     <string name="no_activities">Tidak ada aktifitas</string>
     <string name="installer_error_blocked_device">Perangkat</string>
     <string name="receivers">Penerima</string>
-    <string name="starting_activity"/>
+    <string name="starting_activity">Aktifitas baru dimulai: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"activity_name\" example=\".main.MainActivity\"&gt;%1$s&lt;/xliff:g&gt;</string>
     <string name="error_verbose_pin_shortcut">Peluncur saat ini tidak mendukung Pinshortcut. Tidak dapat membuat pintasan.</string>
     <string name="error_creating_shortcut">Kesalahan dalam membuat pintasan</string>
     <string name="instructions">Intruksi</string>
@@ -116,4 +116,144 @@
     <string name="pref_export">Ekspor</string>
     <string name="pref_compression_method">Metode kompresi</string>
     <string name="str_logo">Logo</string>
+    <string name="rules_not_applied">Aturan tidak dapat diterapkan</string>
+    <string name="failed_to_disable_op">Tidak dapat menon-aktifkan permintaan operasi aplikasi</string>
+    <string name="failed_to_enable_op">Tidak dapat mengaktifkan permintaan operasi aplikasi</string>
+    <string name="no_app_ops">Tidak ada operasi aplikasi</string>
+    <string name="app_ops">Operasi Aplikasi</string>
+    <string name="app_size">Aplikasi</string>
+    <string name="total_size">Total</string>
+    <string name="storage_and_cache">Penyimpanan dan Cache</string>
+    <string name="failed_to_stop">Tidak dapat menghentikan &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.</string>
+    <string name="force_stop">Paksa-berhenti</string>
+    <string name="failed_to_enable">Tidak dapat mengaktifkan &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.</string>
+    <string name="failed_to_disable">Tidak dapat menon-aktifkan &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.</string>
+    <string name="enable">Aktifkan</string>
+    <string name="disable">Non-aktifkan</string>
+    <string name="stopped">Dihentikan</string>
+    <string name="uninstall_system_app_message">Ini adalah aplikasi sistem. Apakah Anda yakin ingin mencopot aplikasi ini\?</string>
+    <string name="uninstalled_successfully">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; telah dicopot.</string>
+    <string name="failed_to_uninstall">Tidak dapt mencopot &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.</string>
+    <string name="uninstall_app_message">Apakah Anda ingin mencopot aplikasi ini\?</string>
+    <string name="view_in_settings">Tinjau pada Pengaturan</string>
+    <string name="no_content">Tidak ada isi</string>
+    <string name="no_usage_in_this_time_range">Tidak ada penggunaan pada jarak waktu ini</string>
+    <string name="disabled_app">Dinon-aktifkan</string>
+    <string name="key_name_cannot_be_null">Nama key tidak boleh kosong</string>
+    <string name="error_evaluating_input">Tidak dapat evaluasi masukan</string>
+    <string name="type_string">Karakter</string>
+    <string name="type_long">Integer panjang</string>
+    <string name="type_int">Integer</string>
+    <string name="type_float">Nomor Desimal</string>
+    <string name="type_boolean">Benar/salah</string>
+    <string name="done">Selesai</string>
+    <string name="add_item">Tambahkan item</string>
+    <string name="select_type">Pilih jenis</string>
+    <string name="key_name">Nama Key</string>
+    <string name="boolean_value">Nilai Boolean</string>
+    <string name="decimal_value">Nilai desimal</string>
+    <string name="integer_value">Nilai integer</string>
+    <string name="long_integer_value">Nilai integer panjang</string>
+    <string name="string_value">Nilai string</string>
+    <string name="saving_failed">Simpan gagal, coba lagi.</string>
+    <string name="saved_successfully">Tersimpan</string>
+    <string name="deletion_failed">Hapus gagal</string>
+    <string name="deleted_successfully">Terhapus</string>
+    <string name="delete">Hapus</string>
+    <string name="discard">Buang</string>
+    <string name="save">Simpan</string>
+    <string name="databases">Database</string>
+    <string name="shared_prefs">Preferensi Bersama</string>
+    <string name="test_only">Hanya uji saja</string>
+    <string name="debuggable">Dapat di-debug</string>
+    <string name="updated_app">Diperbarui</string>
+    <string name="requested_large_heap">Tumpukan besar</string>
+    <string name="no_code">Tidak ada kode</string>
+    <string name="process_name">Nama Proses</string>
+    <string name="native_library_dir">Direktori Library JNI Asli</string>
+    <string name="dev_protected_data_dir">Direktori Data yang dilindungi Perangkat</string>
+    <string name="search">Cari</string>
+    <string name="menu_apply_rules">Terapkan aturan</string>
+    <string name="menu_remove_rules">Hapus aturan</string>
+    <string name="failed_to_extract_apk_file">Tidak dapat mengekstrak berkas APK</string>
+    <string name="share_apk">Bagikan APK</string>
+    <string name="grant_usage_acess_message">Akses penggunaan adalah wajib untuk menampilkan info penggunaan aplikasi.</string>
+    <string name="grant_usage_access">Berikan Akses Penggunaan</string>
+    <string name="go">Pindah ke layar Pengaturan</string>
+    <string name="go_back">Kembali</string>
+    <string name="usage_less_than_a_minute">Kurang dari semenit</string>
+    <string name="usage_min">%1$d menit</string>
+    <plurals name="usage_hours">
+        <item quantity="other">%1$d jam</item>
+    </plurals>
+    <plurals name="usage_days">
+        <item quantity="other">%1$d hari</item>
+    </plurals>
+    <plurals name="usage_months">
+        <item quantity="other">%1$d bulan</item>
+    </plurals>
+    <string name="usage_7_days">7 hari terakhir</string>
+    <string name="usage_today">Hari ini</string>
+    <string name="usage_weekly">Mingguan</string>
+    <string name="app_usage">Pengunaan Aplikasi</string>
+    <string name="no_tracker_class">Tidak ada class tracker</string>
+    <string name="no_shared_libs">Tidak ada library bersama</string>
+    <plurals name="main_list_date_days">
+        <item quantity="other">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"last_update_date\" example=\"20/10/2020\"&gt;%1$s&lt;/xliff:g&gt; &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"day_no\" example=\"5\"&gt;%2$d&lt;/xliff:g&gt; hari</item>
+    </plurals>
+    <string name="all_classes">Semua class</string>
+    <string name="tracker_classes">Class tracker</string>
+    <string name="tracker_details">Rincian tracker</string>
+    <string name="found_trackers">Tracker ditemukan:</string>
+    <string name="tested_signatures_on_classes_and_time_taken">Diperiksa &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"signature_no\" example=\"342\"&gt;%1$d&lt;/xliff:g&gt; tanda pada &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"6000\"&gt;%2$d&lt;/xliff:g&gt; class.
+\nWaktu terambil &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"time\" example=\"10000\"&gt;%3$d&lt;/xliff:g&gt; ms (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"iteration_no\" example=\"100000\"&gt;%4$d&lt;/xliff:g&gt; pengulangan).</string>
+    <plurals name="other_trackers_and_classes">
+        <item quantity="other">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"tracker_no\" example=\"8\"&gt;%1$d&lt;/xliff:g&gt; tracker dengan &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%2$d&lt;/xliff:g&gt; class</item>
+    </plurals>
+    <plurals name="two_trackers_and_classes">
+        <item quantity="other">2 trackers dengan &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; class</item>
+    </plurals>
+    <plurals name="tracker_and_classes">
+        <item quantity="other">1 trackers dengan &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; class</item>
+    </plurals>
+    <string name="toggle_class_listing">Alihkan Pendaftar Class</string>
+    <string name="class_viewer">Peninjau Class</string>
+    <string name="word_wrap">alihkan word wrap</string>
+    <string name="credits_message">"Kepada pemilik dari
+\n- Proyek Sumber Terbuka Android
+\n- &lt;a href=\"https://bitbucket.org/oF2pks/fdroid-applications-info\"&gt;Apps_packages Info&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/butzist/ActivityLauncher\"&gt;Activity Launcher&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/billthefarmer/editor\"&gt;Editor&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/zhaobao/AppsMonitor\"&gt;AppsMonitor&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/tuyafeng/Watt\"&gt;Watt&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/8enet/AppOpsX\"&gt;AppOpsX&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/Aefyr/SAI\"&gt;SAI&lt;/a&gt;
+\nLogo pembuat: &lt;a href=\"https://github.com/Atrate\"&gt;Atrate&lt;/a&gt;. "</string>
+    <string name="credits">Pembuat</string>
+    <string name="third_party">Ikon dan Library Pihak-Ketiga</string>
+    <string name="license">Lisensi</string>
+    <string name="icon_picker">Pengambil Ikon</string>
+    <string name="error_invalid_icon_format">Format ikon tidak valid</string>
+    <string name="error_invalid_icon_resource">Sumber ikon tidak valid</string>
+    <string name="insert_icon">Masukkan Ikon</string>
+    <string name="class_name">Nama Class</string>
+    <string name="package_name">Nama Package</string>
+    <string name="shortcut_name">Nama Pintasan</string>
+    <string name="edit_shortcut">Sunting Pintasan</string>
+    <string name="create_shortcut">Buat Pintasan</string>
+    <string name="empty_package_name">Nama package kosong</string>
+    <string name="sdk_flags">Bendera</string>
+    <string name="sdk_max">Target</string>
+    <string name="sdk_min">Minimal</string>
+    <string name="version_name_with_code">Versi &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"version_name\" example=\"2.5.17\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"version_code\" example=\"365\"&gt;%2$d&lt;/xliff:g&gt;)</string>
+    <string name="media_size">Media</string>
+    <string name="sort_by_target_sdk">Target untuk SDK</string>
+    <string name="signatures">Tanda tangan</string>
+    <string name="group">Grup</string>
+    <string name="shared_libs">Libs berbagi</string>
+    <string name="path_permissions">Perizinan path</string>
+    <string name="grant_uri_permission">Perbolehkan perizinan UI</string>
+    <string name="flags">Bendera</string>
+    <string name="soft_input">Mode masukan lunak</string>
+    <string name="task_affinity">Pengerjaan Tugas</string>
 </resources>
