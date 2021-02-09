@@ -31,7 +31,7 @@
     <string name="group">Gruppo</string>
     <string name="sort_by_sha">Firma</string>
     <string name="signatures">Firme</string>
-    <string name="no_signatures">Nessuna firma</string>
+    <string name="no_signatures">Nessuna firma valida</string>
     <string name="configurations">Configurazioni</string>
     <string name="no_configurations">Nessuna configurazione</string>
     <!-- &#8230; = ... -->
@@ -358,4 +358,6 @@
     <string name="uses_feature">Impostazioni Utente</string>
     <string name="soft_input">Modalità soft input</string>
     <string name="authority">Autorità</string>
+    <string name="storage_and_cache">Memoria e cache</string>
+    <string name="error_creating_shortcut">Errore nel creare scorciatoia</string>
 </resources>
