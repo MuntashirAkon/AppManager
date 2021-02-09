@@ -75,28 +75,36 @@ public final class IPCUtils {
         private class AMServiceConnection implements ServiceConnection {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
-                Log.e(TAG, "service onServiceConnected");
+                Log.d(TAG, "service onServiceConnected");
                 amService = IAMService.Stub.asInterface(service);
-                if (amServiceBoundWatcher != null) {
-                    // Should never be null
-                    amServiceBoundWatcher.countDown();
-                } else throw new RuntimeException("AMService watcher should never be null!");
+                onResponseReceived();
             }
 
             @Override
             public void onServiceDisconnected(ComponentName name) {
-                Log.e(TAG, "service onServiceDisconnected");
+                Log.d(TAG, "service onServiceDisconnected");
                 amService = null;
+                onResponseReceived();
             }
 
             @Override
             public void onBindingDied(ComponentName name) {
+                Log.d(TAG, "service onServiceDisconnected");
                 amService = null;
+                onResponseReceived();
             }
 
             @Override
             public void onNullBinding(ComponentName name) {
                 amService = null;
+                onResponseReceived();
+            }
+
+            private void onResponseReceived() {
+                if (amServiceBoundWatcher != null) {
+                    // Should never be null
+                    amServiceBoundWatcher.countDown();
+                } else throw new RuntimeException("AMService watcher should never be null!");
             }
         }
 

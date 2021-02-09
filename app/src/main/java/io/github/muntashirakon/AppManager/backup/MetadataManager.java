@@ -112,6 +112,7 @@ public final class MetadataManager {
         return new ProxyFile(backupPath, META_FILE).exists();
     }
 
+    @WorkerThread
     @NonNull
     public static Metadata[] getMetadata(String packageName) {
         File[] backupFiles = getBackupFiles(packageName);
@@ -149,6 +150,7 @@ public final class MetadataManager {
         this.metadata = metadata;
     }
 
+    @WorkerThread
     synchronized public void readMetadata(@NonNull BackupFiles.BackupFile backupFile)
             throws JSONException {
         String metadata = IOUtils.getFileContent(backupFile.getMetadataFile());

@@ -28,10 +28,12 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.io.ProxyFile;
 
 public final class BackupUtils {
+    @WorkerThread
     @Nullable
     public static MetadataManager.Metadata getBackupInfo(String packageName) {
         MetadataManager.Metadata[] metadata = MetadataManager.getMetadata(packageName);
@@ -61,6 +63,7 @@ public final class BackupUtils {
         return packages;
     }
 
+    @WorkerThread
     @NonNull
     public static HashMap<String, MetadataManager.Metadata> getAllBackupMetadata() {
         HashMap<String, MetadataManager.Metadata> backupMetadata = new HashMap<>();
