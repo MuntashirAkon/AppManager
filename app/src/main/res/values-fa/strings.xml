@@ -159,7 +159,7 @@
     <string name="date_installed">تاریخ نصب شده</string>
     <string name="more_info">اطلاعات بیشتر</string>
     <string name="sdk_flags">پرچم‌ها</string>
-    <string name="sdk_max">بیشترین</string>
+    <string name="sdk_max">هدف</string>
     <string name="sdk_min">کمترین</string>
     <string name="data_dir">پوشه دیتا</string>
     <string name="source_dir">پوشه منبع</string>
@@ -359,7 +359,7 @@
     <string name="delete_backup">حذف پشتیبان</string>
     <string name="restore">بازیابی</string>
     <string name="backup">پشتیبان</string>
-    <string name="data">داده</string>
+    <string name="data">داده‌ها</string>
     <string name="external_data">داده خارجی</string>
     <string name="exclude_cache">حافظه پنهان را مستثنا کن</string>
     <string name="blocking_rules">قوانین مسدود کردن</string>
@@ -376,7 +376,7 @@
     <string name="filter">صافی</string>
     <string name="failed_to_install_package_name">نمی تواند <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> را نصب کند</string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager"> %1$s </xliff:g> نصب شده</string>
-    <string name="termux">Termux</string>
+    <string name="termux">ترماکس</string>
     <plurals name="no_of_splits">
         <item quantity="one">%1$d قسمت</item>
         <item quantity="other">%1$d قسمت</item>
@@ -398,5 +398,109 @@
     <string name="block_unblock_trackers_description">مسدود یا نامسدود کردن تبلیغات و اجزای ردیاب از تمام برنامه های نصب شده</string>
     <string name="clear_cache">پاک کردن حافظه پنهان</string>
     <string name="pref_import_existing_msg">اجزای غیرفعال شده توسط سایر برنامه ها را به مدیر برنامه اضافه کن. زمانی از این ابزار استفاده می‌کنید مراقب باشید که ممکن است مثبت کاذب های بسیاری موجود باشد. تنها برنامه هایی را انتخاب کنید که از آنها اطمینان دارید.</string>
-    <string name="deny_app_ops_description">Set a mode for app operations identified by the constant values, i.e. 63 or RUN_IN_BACKGROUND</string>
+    <string name="deny_app_ops_description">تنظیم یک حالت برای عملیات برنامه شناسایی شده توسط مقادیر ثابت، یعنی 63 یا RUN_IN_BACKGROUND</string>
+    <string name="installer_error_session_create">نتوانست یک جلسه نصب کننده ایجاد کند</string>
+    <string name="installer_error_security">نتوانست به پرونده‌های APK دسترسی پیدا کند</string>
+    <string name="install_in_progress">نصب در جریان است</string>
+    <string name="package_installer">نصب کننده بسته</string>
+    <string name="unblock_trackers">رفع انسداد ردیاب‌ها</string>
+    <string name="reinstall">نصب مجدد</string>
+    <string name="reinstall_app_message">آیا می خواهید این برنامه بازنصب کنید؟</string>
+    <string name="install_app_message">آیا می خواهید این برنامه را نصب کنید؟</string>
+    <string name="try_again">دوباره تلاش کنید</string>
+    <string name="full_stop_tap_to_see_details">. برای دیدن جزئیات ضربه بزنید.</string>
+    <string name="operation_running">عمليات در حال اجرا …</string>
+    <string name="batch_ops">عملیات دسته‌ای</string>
+    <string name="failed_to_fetch_package_info">نتوانست اطلاعات بسته را واکشی کند</string>
+    <string name="installer_error_lidl_rom">ROM شما با نصب بدون روت ناسازگار است.</string>
+    <string name="installer_error_generic">نصب ناموفق بود</string>
+    <string name="installer_error_storage">فضای ذخیره سازی ناکافی برای نصب برنامه</string>
+    <string name="installer_error_bad_apks">فایلهای APK نامعتبر انتخاب شده‌اند</string>
+    <string name="installer_error_incompatible">برنامه با این دستگاه ناسازگار است</string>
+    <string name="installer_error_conflict">برنامه نصب نشد زیرا نام بسته در حال استفاده است</string>
+    <string name="installer_error_blocked">نصب توسط &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt; %1$s &lt;/xliff:g&gt; مسدود شده است</string>
+    <string name="installer_error_blocked_device">دستگاه</string>
+    <string name="installer_error_aborted">نصب انجام نشد، زیرا یا لغو شد یا جلسه به طور غیرمنتظره‌ای بسته شد</string>
+    <string name="toggle_default_app_ops">عملیات برنامه پیش‌فرض را تغییر بده</string>
+    <string name="filter_apps_with_activities">برنامه‌های دارای فعالیت</string>
+    <string name="are_you_sure">آیا مطمئن هستید؟</string>
+    <string name="pref_remove_all_rules_msg">مجوزها اعطا شده‌اند، عملیات برنامه و اجزا به مقادیر پیش فرض برمی‌گردند.</string>
+    <string name="pref_remove_all_rules">حذف تمام قوانین</string>
+    <string name="website">وب‌سایت</string>
+    <string name="run_in_termux">اجرا در ترماکس</string>
+    <string name="open_in_termux">باز‌کردن در ترماکس</string>
+    <string name="export_icon">استخراج نماد</string>
+    <string name="no_matching_package_found">هیچ بسته مطابقی یافت نشد</string>
+    <string name="block_unblock_trackers">مسدود کردن/رفع انسداد ردیاب‌ها</string>
+    <string name="unblock">رفع انسداد</string>
+    <string name="block">مسدودسازی</string>
+    <string name="clear">پاک‌کردن</string>
+    <string name="clear_data_message">آیا مطمئن هستید که می‌خواهید داده‌ها را از این برنامه پاک کنید؟</string>
+    <string name="skip_signature_checks">از بررسی‌ امضا رد شوید</string>
+    <string name="yes">آره</string>
+    <string name="no">نه</string>
+    <string name="apply_to_system_apps_question">برای برنامه‌های سیستم نیز اعمال شود؟ اگر مطمئن نیستید \"نه\" را انتخاب کنید.</string>
+    <string name="apply_to_system_apps">اعمال بر روی برنامه‌های سیستم</string>
+    <plurals name="verified_with_warning">
+        <item quantity="one">تایید شده با %d هشدار</item>
+        <item quantity="other">تایید شده با %d هشدار</item>
+    </plurals>
+    <plurals name="signature_schemes_pl">
+        <item quantity="one">طرح امضا</item>
+        <item quantity="other">طروح امضا</item>
+    </plurals>
+    <plurals name="missing_signatures">
+        <item quantity="one">%1$d امضا ناموجود</item>
+        <item quantity="other">%1$d امضا ناموجود</item>
+    </plurals>
+    <plurals name="libraries">
+        <item quantity="one">%1$d کتابخانه</item>
+        <item quantity="other">%1$d کتابخانه</item>
+    </plurals>
+    <plurals name="classes">
+        <item quantity="one">%1$d کلاس</item>
+        <item quantity="other">%1$d کلاس</item>
+    </plurals>
+    <plurals name="backup_exists_are_you_sure">
+        <item quantity="one">پشتیبان موجود است. آیا مطمئنید؟</item>
+        <item quantity="other">پشتیبان برای بیشتر از یک برنامه موجود است. آیا مطمئنید؟</item>
+    </plurals>
+    <plurals name="alert_failed_to_enable">
+        <item quantity="one">نتوانست %1$d برنامه را فعال کند</item>
+        <item quantity="other">نتوانست %1$d برنامه را فعال کند</item>
+    </plurals>
+    <plurals name="alert_failed_to_set_app_ops">
+        <item quantity="one">نتوانست عملیات برنامه را برای %1$d برنامه تنظیم کند</item>
+        <item quantity="other">نتوانست عملیات برنامه را برای %1$d برنامه تنظیم کند</item>
+    </plurals>
+    <plurals name="alert_failed_to_block_components">
+        <item quantity="one">نتوانست اجزای %1$d برنامه را مسدود کند</item>
+        <item quantity="other">نتوانست اجزای %1$d برنامه را مسدود کند</item>
+    </plurals>
+    <plurals name="alert_failed_to_unblock_trackers">
+        <item quantity="one">نتوانست ردیاب‌ها‌ را از %1$d برنامه مسدود کند</item>
+        <item quantity="other">نتوانست ردیاب‌ها‌ را از %1$d برنامه مسدود کند</item>
+    </plurals>
+    <plurals name="no_of_components">
+        <item quantity="one">%1$d جزء</item>
+        <item quantity="other">%1$d جزء</item>
+    </plurals>
+    <string name="user_with_id">کاربر: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"user_id\" example=\"0\"&gt;%1$d&lt;/xliff:g&gt;</string>
+    <plurals name="alert_failed_to_delete_backup">
+        <item quantity="one">نتوانست %1$d پشتیبان را پاک کند</item>
+        <item quantity="other">نتوانست %1$d پشتیبان را پاک کند</item>
+    </plurals>
+    <plurals name="alert_failed_to_restore">
+        <item quantity="one">نتوانست %1$d برنامه را بازیابی کند</item>
+        <item quantity="other">نتوانست %1$d برنامه را بازیابی کند</item>
+    </plurals>
+    <plurals name="alert_failed_to_backup">
+        <item quantity="one">نتوانست از %1$d برنامه پشتیبان بگیرد</item>
+        <item quantity="other">نتوانست از %1$d برنامه پشتیبان بگیرد</item>
+    </plurals>
+    <plurals name="failed_to_backup_some_apk_files">
+        <item quantity="one">نتوانست از %1$d برنامه پشتیبان بگیرد</item>
+        <item quantity="other">نتوانست از %1$d برنامه پشتیبان بگیرد</item>
+    </plurals>
+    <string name="clear_data_from_uninstalled_apps_description">پاک کردن داده ها از برنامه هایی که با پرچم DONT_DELETE_DATA حذف شده‌اند</string>
 </resources>
