@@ -143,9 +143,9 @@
     <string name="usage_7_days">Последние 7 дней</string>
     <plurals name="usage_months">
         <item quantity="one">%1$d мес.</item>
-        <item quantity="few">%1$d мес.</item>
-        <item quantity="many">%1$d мес.</item>
-        <item quantity="other">%1$d мес.</item>
+        <item quantity="few">%1$d мес</item>
+        <item quantity="many">%1$d мес</item>
+        <item quantity="other">%1$d мес</item>
     </plurals>
     <plurals name="usage_days">
         <item quantity="one">%1$d день</item>
@@ -154,10 +154,10 @@
         <item quantity="other">%1$d дней</item>
     </plurals>
     <plurals name="usage_hours">
-        <item quantity="one">%1$d ч.</item>
-        <item quantity="few">%1$d ч.</item>
-        <item quantity="many">%1$d ч.</item>
-        <item quantity="other">%1$d ч.</item>
+        <item quantity="one">%1$d ч</item>
+        <item quantity="few">%1$d ч</item>
+        <item quantity="many">%1$d ч</item>
+        <item quantity="other">%1$d ч</item>
     </plurals>
     <string name="usage_min">%1$d мин</string>
     <string name="usage_less_than_a_minute">Меньше минуты</string>
@@ -261,7 +261,7 @@
         <item quantity="many">Ошибка импортирования %1$d файлов.</item>
         <item quantity="other">Ошибка импортирования %1$d файлов.</item>
     </plurals>
-    <string name="apk_updater">APK Updater</string>
+    <string name="apk_updater"></string>
     <string name="store">Магазин</string>
     <string name="running_apps">Работающие приложения</string>
     <string name="kill_process">Закрыть</string>
@@ -410,7 +410,7 @@
         <item quantity="many">%1$d частей</item>
         <item quantity="other">%1$d частей</item>
     </plurals>
-    <string name="termux">Termux</string>
+    <string name="termux"></string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> установлено</string>
     <string name="failed_to_install_package_name">Не удалось установить <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
     <string name="filter">Фильтр</string>
@@ -712,7 +712,7 @@
     <string name="state_waking">Пробуждение</string>
     <string name="state_wake_kill">Отключение пробуждения</string>
     <string name="state_parked">Оформлено</string>
-    <string name="state_device_io">Device I/O</string>
+    <string name="state_device_io"></string>
     <string name="rsa">RSA</string>
     <string name="aes">AES</string>
     <string name="un_apkm">Распаковать Apkm</string>
@@ -829,7 +829,7 @@
     <string name="pref_about_device_msg">Основная информация об устройстве, включая версию Android, ЦП, ГП, ОЗУ, аккумулятор и т. д.</string>
     <string name="about_device">Об устройстве</string>
     <string name="uri">URI</string>
-    <string name="magisk_hide_enabled">MagiskHide</string>
+    <string name="magisk_hide_enabled"></string>
     <string name="keystore">Хранилище ключей</string>
     <string name="security">Безопасность</string>
     <string name="patch_level">Обновление системы безопасности Андроид</string>
@@ -844,8 +844,8 @@
     <string name="backup_data_description">Резервное копирование папок с данными. Если выбран этот параметр, по умолчанию будут созданы резервные копии внутренних папок с данными.</string>
     <string name="backup_apk_only_description">Резервное копирование только файлов APK из исходного каталога. Для этого необходимо выбрать <b>Источник </b>.</string>
     <string name="backup_source_description">Резервное копирование всего каталога источника.</string>
-    <string name="permissive">Permissive</string>
-    <string name="enforcing">Enforcing</string>
+    <string name="permissive"></string>
+    <string name="enforcing"></string>
     <string name="window_size">Размер окна</string>
     <string name="size">Размер</string>
     <string name="hardware">Модель</string>
