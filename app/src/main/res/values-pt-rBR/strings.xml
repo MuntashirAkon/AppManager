@@ -879,4 +879,5 @@
     <string name="pref_enable_disable_features_msg">Ativar ou desativar funções no App Manager.</string>
     <string name="enable_disable_features">Ativar/desativar funções</string>
     <string name="isolated">Isolado</string>
+    <string name="screen_lock_not_enabled">Bloqueio de tela não ativado. Ative o bloqueio de tela nas configurações do Android ou limpe os dados do aplicativo.</string>
 </resources>
