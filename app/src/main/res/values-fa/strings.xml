@@ -418,7 +418,7 @@
     <string name="installer_error_bad_apks">فایلهای APK نامعتبر انتخاب شده‌اند</string>
     <string name="installer_error_incompatible">برنامه با این دستگاه ناسازگار است</string>
     <string name="installer_error_conflict">برنامه نصب نشد زیرا نام بسته در حال استفاده است</string>
-    <string name="installer_error_blocked">نصب توسط &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt; %1$s &lt;/xliff:g&gt; مسدود شده است</string>
+    <string name="installer_error_blocked">نصب توسط <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> مسدود شده است</string>
     <string name="installer_error_blocked_device">دستگاه</string>
     <string name="installer_error_aborted">نصب انجام نشد، زیرا یا لغو شد یا جلسه به طور غیرمنتظره‌ای بسته شد</string>
     <string name="toggle_default_app_ops">عملیات برنامه پیش‌فرض را تغییر بده</string>
@@ -485,7 +485,7 @@
         <item quantity="one">%1$d جزء</item>
         <item quantity="other">%1$d جزء</item>
     </plurals>
-    <string name="user_with_id">کاربر: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"user_id\" example=\"0\"&gt;%1$d&lt;/xliff:g&gt;</string>
+    <string name="user_with_id">کاربر: <xliff:g id="user_id" example="0">%1$d</xliff:g></string>
     <plurals name="alert_failed_to_delete_backup">
         <item quantity="one">نتوانست %1$d پشتیبان را پاک کند</item>
         <item quantity="other">نتوانست %1$d پشتیبان را پاک کند</item>

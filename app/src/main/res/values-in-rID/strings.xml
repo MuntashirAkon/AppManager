@@ -24,7 +24,7 @@
     <string name="no_activities">Tidak ada aktifitas</string>
     <string name="installer_error_blocked_device">Perangkat</string>
     <string name="receivers">Penerima</string>
-    <string name="starting_activity">Aktifitas baru dimulai: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"activity_name\" example=\".main.MainActivity\"&gt;%1$s&lt;/xliff:g&gt;</string>
+    <string name="starting_activity">Aktifitas baru dimulai: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="error_verbose_pin_shortcut">Peluncur saat ini tidak mendukung Pinshortcut. Tidak dapat membuat pintasan.</string>
     <string name="error_creating_shortcut">Kesalahan dalam membuat pintasan</string>
     <string name="instructions">Intruksi</string>
@@ -97,9 +97,9 @@
     <string name="select_theme">Tema</string>
     <string name="night">Malam</string>
     <string name="day">Hari</string>
-    <string name="unknown_split_for_base_apk">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"some_split\"&gt;%1$s&lt;/xliff:g&gt; untuk base APK</string>
-    <string name="unknown_split_for_feature">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"some_split\"&gt;%1$s&lt;/xliff:g&gt;untuk fitur&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt;%2$s&lt;/xliff:g&gt;</string>
-    <string name="split_feature_name">Fitur:&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt;%1$s&lt;/xliff:g&gt;</string>
+    <string name="unknown_split_for_base_apk"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> untuk base APK</string>
+    <string name="unknown_split_for_feature"><xliff:g id="split_name" example="some_split">%1$s</xliff:g>untuk fitur<xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <string name="split_feature_name">Fitur:<xliff:g id="feature_name" example="Visualizer">%1$s</xliff:g></string>
     <string name="base_apk">Base APK</string>
     <string name="choose_language">Ubah bahasa</string>
     <string name="current_language">Bahasa:%1$s</string>
@@ -124,16 +124,16 @@
     <string name="app_size">Aplikasi</string>
     <string name="total_size">Total</string>
     <string name="storage_and_cache">Penyimpanan dan Cache</string>
-    <string name="failed_to_stop">Tidak dapat menghentikan &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.</string>
+    <string name="failed_to_stop">Tidak dapat menghentikan <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="force_stop">Paksa-berhenti</string>
-    <string name="failed_to_enable">Tidak dapat mengaktifkan &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.</string>
-    <string name="failed_to_disable">Tidak dapat menon-aktifkan &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.</string>
+    <string name="failed_to_enable">Tidak dapat mengaktifkan <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="failed_to_disable">Tidak dapat menon-aktifkan <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="enable">Aktifkan</string>
     <string name="disable">Non-aktifkan</string>
     <string name="stopped">Dihentikan</string>
     <string name="uninstall_system_app_message">Ini adalah aplikasi sistem. Apakah Anda yakin ingin mencopot aplikasi ini\?</string>
-    <string name="uninstalled_successfully">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; telah dicopot.</string>
-    <string name="failed_to_uninstall">Tidak dapt mencopot &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.</string>
+    <string name="uninstalled_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> telah dicopot.</string>
+    <string name="failed_to_uninstall">Tidak dapt mencopot <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="uninstall_app_message">Apakah Anda ingin mencopot aplikasi ini\?</string>
     <string name="view_in_settings">Tinjau pada Pengaturan</string>
     <string name="no_content">Tidak ada isi</string>
@@ -199,36 +199,36 @@
     <string name="no_tracker_class">Tidak ada class tracker</string>
     <string name="no_shared_libs">Tidak ada library bersama</string>
     <plurals name="main_list_date_days">
-        <item quantity="other">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"last_update_date\" example=\"20/10/2020\"&gt;%1$s&lt;/xliff:g&gt; &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"day_no\" example=\"5\"&gt;%2$d&lt;/xliff:g&gt; hari</item>
+        <item quantity="other"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> hari</item>
     </plurals>
     <string name="all_classes">Semua class</string>
     <string name="tracker_classes">Class tracker</string>
     <string name="tracker_details">Rincian tracker</string>
     <string name="found_trackers">Tracker ditemukan:</string>
-    <string name="tested_signatures_on_classes_and_time_taken">Diperiksa &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"signature_no\" example=\"342\"&gt;%1$d&lt;/xliff:g&gt; tanda pada &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"6000\"&gt;%2$d&lt;/xliff:g&gt; class.
-\nWaktu terambil &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"time\" example=\"10000\"&gt;%3$d&lt;/xliff:g&gt; ms (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"iteration_no\" example=\"100000\"&gt;%4$d&lt;/xliff:g&gt; pengulangan).</string>
+    <string name="tested_signatures_on_classes_and_time_taken">Diperiksa <xliff:g id="signature_no" example="342">%1$d</xliff:g> tanda pada <xliff:g id="class_no" example="6000">%2$d</xliff:g> class.
+\nWaktu terambil <xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> pengulangan).</string>
     <plurals name="other_trackers_and_classes">
-        <item quantity="other">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"tracker_no\" example=\"8\"&gt;%1$d&lt;/xliff:g&gt; tracker dengan &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%2$d&lt;/xliff:g&gt; class</item>
+        <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> tracker dengan <xliff:g id="class_no" example="50">%2$d</xliff:g> class</item>
     </plurals>
     <plurals name="two_trackers_and_classes">
-        <item quantity="other">2 trackers dengan &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; class</item>
+        <item quantity="other">2 trackers dengan <xliff:g id="class_no" example="50">%1$d</xliff:g> class</item>
     </plurals>
     <plurals name="tracker_and_classes">
-        <item quantity="other">1 trackers dengan &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; class</item>
+        <item quantity="other">1 trackers dengan <xliff:g id="class_no" example="50">%1$d</xliff:g> class</item>
     </plurals>
     <string name="toggle_class_listing">Alihkan Pendaftar Class</string>
     <string name="class_viewer">Peninjau Class</string>
     <string name="word_wrap">alihkan word wrap</string>
     <string name="credits_message">"Kepada pemilik dari
 \n- Proyek Sumber Terbuka Android
-\n- &lt;a href=\"https://bitbucket.org/oF2pks/fdroid-applications-info\"&gt;Apps_packages Info&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/butzist/ActivityLauncher\"&gt;Activity Launcher&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/billthefarmer/editor\"&gt;Editor&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/zhaobao/AppsMonitor\"&gt;AppsMonitor&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/tuyafeng/Watt\"&gt;Watt&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/8enet/AppOpsX\"&gt;AppOpsX&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/Aefyr/SAI\"&gt;SAI&lt;/a&gt;
-\nLogo pembuat: &lt;a href=\"https://github.com/Atrate\"&gt;Atrate&lt;/a&gt;. "</string>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
+\n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
+\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
+\n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://github.com/Aefyr/SAI">SAI</a>
+\nLogo pembuat: <a href="https://github.com/Atrate">Atrate</a>. "</string>
     <string name="credits">Pembuat</string>
     <string name="third_party">Ikon dan Library Pihak-Ketiga</string>
     <string name="license">Lisensi</string>
@@ -245,7 +245,7 @@
     <string name="sdk_flags">Bendera</string>
     <string name="sdk_max">Target</string>
     <string name="sdk_min">Minimal</string>
-    <string name="version_name_with_code">Versi &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"version_name\" example=\"2.5.17\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"version_code\" example=\"365\"&gt;%2$d&lt;/xliff:g&gt;)</string>
+    <string name="version_name_with_code">Versi <xliff:g id="version_name" example="2.5.17">%1$s</xliff:g> (<xliff:g id="version_code" example="365">%2$d</xliff:g>)</string>
     <string name="media_size">Media</string>
     <string name="sort_by_target_sdk">Target untuk SDK</string>
     <string name="signatures">Tanda tangan</string>
