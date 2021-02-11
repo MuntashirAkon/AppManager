@@ -24,21 +24,17 @@ package io.github.muntashirakon.AppManager.details;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageItemInfo;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.widget.Toast;
-
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.pm.ShortcutInfoCompat;
 import androidx.core.content.pm.ShortcutManagerCompat;
 import androidx.core.graphics.drawable.IconCompat;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
 
@@ -98,22 +94,6 @@ public class LauncherIconCreator {
         doCreateShortcut(context, activityName, activityIcon, activityIntent);
     }
 
-    /**
-     * Launch activity.
-     *
-     * @param context      Activity context
-     * @param activityInfo Activity info
-     */
-    public static void launchActivity(Context context, @NonNull ActivityInfo activityInfo) {
-        Intent intent = getActivityIntent(activityInfo.packageName, activityInfo.name);
-        Toast.makeText(context, context.getString(R.string.starting_activity, activityInfo.name), Toast.LENGTH_LONG).show();
-        try {
-            context.startActivity(intent);
-        } catch (Exception e) {
-            Toast.makeText(context, context.getText(R.string.error).toString() + ": " + e.toString(), Toast.LENGTH_LONG).show();
-        }
-    }
-
     private static Bitmap getBitmapFromDrawable(Drawable drawable) {
         if (drawable instanceof BitmapDrawable) {
             return ((BitmapDrawable) drawable).getBitmap();
@@ -126,20 +106,18 @@ public class LauncherIconCreator {
         return bmp;
     }
 
-    private static void doCreateShortcut(@NonNull Context context, String appName, Drawable draw, Intent intent) {
-        if (ShortcutManagerCompat.isRequestPinShortcutSupported(context)) {
-            Bitmap bitmap = getBitmapFromDrawable(draw);
-            intent.setAction(Intent.ACTION_CREATE_SHORTCUT);
+    private static void doCreateShortcut(@NonNull Context context, @NonNull String appName, @NonNull Drawable drawable,
+                                         @NonNull Intent intent) {
+        Bitmap bitmap = getBitmapFromDrawable(drawable);
 
-            ShortcutInfoCompat shortcutInfo = new ShortcutInfoCompat.Builder(context, appName)
-                    .setShortLabel(appName)
-                    .setLongLabel(appName)
-                    .setIcon(IconCompat.createWithBitmap(bitmap))
-                    .setIntent(intent)
-                    .build();
+        ShortcutInfoCompat shortcutInfo = new ShortcutInfoCompat.Builder(context, appName)
+                .setShortLabel(appName)
+                .setLongLabel(appName)
+                .setIcon(IconCompat.createWithBitmap(bitmap))
+                .setIntent(intent)
+                .build();
 
-            ShortcutManagerCompat.requestPinShortcut(context, shortcutInfo, null);
-        } else {
+        if (!ShortcutManagerCompat.requestPinShortcut(context, shortcutInfo, null)) {
             new MaterialAlertDialogBuilder(context)
                     .setTitle(context.getString(R.string.error_creating_shortcut))
                     .setMessage(context.getString(R.string.error_verbose_pin_shortcut))
