@@ -25,14 +25,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-
 import androidx.annotation.*;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
@@ -42,14 +34,20 @@ import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
 import io.github.muntashirakon.AppManager.backup.BackupManager;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.users.UserIdInt;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.rules.compontents.ExternalComponentsImporter;
-import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
+import io.github.muntashirakon.AppManager.users.UserIdInt;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 @WorkerThread
 public class BatchOpsManager {
@@ -132,11 +130,9 @@ public class BatchOpsManager {
     public static final int OP_GRANT_PERMISSIONS = 17;
     public static final int OP_REVOKE_PERMISSIONS = 18;
 
-    private final Runner runner;
     private final Handler handler;
 
     public BatchOpsManager() {
-        this.runner = Runner.getInstance();
         this.handler = new Handler(Looper.getMainLooper());
     }
 
@@ -172,7 +168,6 @@ public class BatchOpsManager {
     @CheckResult
     @NonNull
     private Result performOp(@OpType int op) {
-        this.runner.clear();
         switch (op) {
             case OP_BACKUP_APK:
                 return opBackupApk();

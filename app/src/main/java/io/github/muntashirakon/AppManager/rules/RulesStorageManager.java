@@ -23,7 +23,6 @@ import androidx.annotation.*;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
-import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.servermanager.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
@@ -271,7 +270,6 @@ public class RulesStorageManager implements Closeable {
     }
 
     public void applyAppOpsAndPerms(boolean apply) {
-        Runner runner = Runner.getInstance();
         int uid = PackageUtils.getAppUid(new UserPackagePair(packageName, userHandle));
         AppOpsService appOpsService = new AppOpsService();
         if (apply) {
@@ -315,8 +313,6 @@ public class RulesStorageManager implements Closeable {
                 }
             }
         }
-        // Run all commands
-        runner.runCommand();
     }
 
     @GuardedBy("entries")
