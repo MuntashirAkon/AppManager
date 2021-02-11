@@ -20,7 +20,6 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion rootProject.ext.compileSdk
     buildToolsVersion rootProject.ext.buildTools
-    ndkVersion rootProject.ext.ndk
 
     defaultConfig {
         applicationId 'io.github.muntashirakon.AppManager'

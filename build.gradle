@@ -46,8 +46,6 @@ project.ext {
     minSdk = 21
     targetSdk = 30
 
-    ndk = "21.3.6528147"
-
     libsu = "3.0.2"
     room_version = "2.2.6"
 }
