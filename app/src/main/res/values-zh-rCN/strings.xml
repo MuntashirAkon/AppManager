@@ -847,4 +847,5 @@
     <string name="pref_enable_disable_features_msg">启用/禁用 App Manager 中的功能。</string>
     <string name="enable_disable_features">启用/禁用功能</string>
     <string name="isolated">已隔离</string>
+    <string name="screen_lock_not_enabled">未启用屏幕锁。在安卓系统设置中启用屏幕锁或清除应用数据。</string>
 </resources>
