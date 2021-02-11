@@ -877,4 +877,5 @@
     <string name="pref_enable_disable_features_msg">App Manager\'da özellikleri etkinleştirin veya devre dışı bırakın.</string>
     <string name="enable_disable_features">Özellikleri etkinleştir/devre dışı bırak</string>
     <string name="isolated">Yalıtıldı</string>
+    <string name="screen_lock_not_enabled">Ekran kilidi etkinleştirilmedi. Android ayarlarında ekran kilidini etkinleştirin veya uygulama verilerini temizleyin.</string>
 </resources>
