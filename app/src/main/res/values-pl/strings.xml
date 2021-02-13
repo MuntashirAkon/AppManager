@@ -609,4 +609,9 @@
     <string name="usage_yesterday">Wczoraj</string>
     <string name="pref_usage_access_enabled">Dostęp do danych użytkowania</string>
     <string name="total_size">Łącznie</string>
+    <string name="list_options">Opcje listy</string>
+    <string name="choose_what_to_do">Wybierz, co chcesz zrobić.</string>
+    <string name="battery_optimization">Optymalizacja baterii</string>
+    <string name="no_battery_optimization">Brak optymalizacji baterii</string>
+    <string name="type_float_array_list">Lista liczb dziesiętnych</string>
 </resources>
