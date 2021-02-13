@@ -879,4 +879,6 @@
     <string name="pref_enable_disable_features_msg">Aktivieren oder Deaktivieren von Funktionen im App-Manager.</string>
     <string name="enable_disable_features">Aktivieren/Deaktivieren von Funktionen</string>
     <string name="installed_apps">Installierte Apps</string>
+    <string name="screen_lock_not_enabled">Bildschirmsperre ist nicht aktiviert. Aktivieren Sie die Bildschirmsperre in den Android-Einstellungen oder löschen Sie die App-Daten.</string>
+    <string name="isolated">Isoliert</string>
 </resources>
