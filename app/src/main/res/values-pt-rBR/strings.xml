@@ -880,4 +880,5 @@
     <string name="enable_disable_features">Ativar/desativar funções</string>
     <string name="isolated">Isolado</string>
     <string name="screen_lock_not_enabled">Bloqueio de tela não ativado. Ative o bloqueio de tela nas configurações do Android ou limpe os dados do aplicativo.</string>
+    <string name="input_app_ops_description_profile">Insira nomes de operações de aplicativo e/ou constantes com espaços, p. ex. (WAKE_LOCK 63 72 CAMERA) etc. Use * para solicitar todas as operações de aplicativo configuradas.</string>
 </resources>
