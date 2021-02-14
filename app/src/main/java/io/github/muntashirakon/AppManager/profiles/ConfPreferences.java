@@ -129,7 +129,7 @@ public class ConfPreferences extends PreferenceFragmentCompat {
             new TextInputDialogBuilder(activity, R.string.input_app_ops)
                     .setTitle(R.string.app_ops)
                     .setInputText(app_ops == null ? "" : TextUtils.join(" ", app_ops))
-                    .setHelperText(R.string.input_app_ops_description)
+                    .setHelperText(R.string.input_app_ops_description_profile)
                     .setPositiveButton(R.string.ok, (dialog, which, inputText, isChecked) -> {
                         if (!TextUtils.isEmpty(inputText)) {
                             String[] newAppOps = inputText.toString().split("\\s+");

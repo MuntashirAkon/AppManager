@@ -19,6 +19,7 @@ package io.github.muntashirakon.AppManager.batchops;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageManager;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -31,6 +32,8 @@ import io.github.muntashirakon.AppManager.apk.ApkUtils;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
+import io.github.muntashirakon.AppManager.appops.AppOpsUtils;
+import io.github.muntashirakon.AppManager.appops.OpEntry;
 import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
 import io.github.muntashirakon.AppManager.backup.BackupManager;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -40,14 +43,12 @@ import io.github.muntashirakon.AppManager.rules.compontents.ExternalComponentsIm
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.UserIdInt;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @WorkerThread
 public class BatchOpsManager {
@@ -404,13 +405,30 @@ public class BatchOpsManager {
 
     private Result opSetAppOps() {
         int[] appOps = args.getIntArray(ARG_APP_OPS);
+        int mode = args.getInt(ARG_APP_OP_MODE, AppOpsManager.MODE_IGNORED);
+        List<UserPackagePair> failedPkgList = new ArrayList<>();
         if (appOps.length == 1 && appOps[0] == AppOpsManager.OP_NONE) {
             // Wildcard detected
-            // TODO: 6/2/21 Fetch all app ops and apply them for each package
+            AppOpsService appOpsService = new AppOpsService();
+            for (UserPackagePair pair : userPackagePairs) {
+                try {
+                    List<Integer> appOpList = new ArrayList<>();
+                    ApplicationInfo info = PackageManagerCompat.getApplicationInfo(pair.getPackageName(), pair.getUserHandle(), 0);
+                    List<OpEntry> entries = AppOpsUtils.getChangedAppOps(appOpsService, info.packageName, info.uid);
+                    for (OpEntry entry : entries) {
+                        appOpList.add(entry.getOp());
+                    }
+                    failedPkgList.addAll(ExternalComponentsImporter.setModeToFilteredAppOps(
+                            Collections.singletonList(pair), ArrayUtils.convertToIntArray(appOpList), mode));
+                } catch (Exception e) {
+                    Log.e(TAG, e);
+                    failedPkgList.add(pair);
+                }
+            }
+        } else {
+            failedPkgList.addAll(ExternalComponentsImporter.setModeToFilteredAppOps(
+                    Arrays.asList(userPackagePairs), appOps, mode));
         }
-        final List<UserPackagePair> failedPkgList = ExternalComponentsImporter.setModeToFilteredAppOps(
-                Arrays.asList(userPackagePairs), args.getIntArray(ARG_APP_OPS),
-                args.getInt(ARG_APP_OP_MODE, AppOpsManager.MODE_IGNORED));
         return lastResult = new Result(failedPkgList);
     }
 

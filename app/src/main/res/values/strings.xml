@@ -419,6 +419,7 @@
     <string name="filtered_packages">Filtered packages</string>
     <string name="input_app_ops">Input app ops</string>
     <string name="input_app_ops_description">Input app op names and/or constants with spaces, e.g. (WAKE_LOCK 63 72 CAMERA) etc.</string>
+    <string name="input_app_ops_description_profile">Input app op names and/or constants with spaces, e.g. (WAKE_LOCK 63 72 CAMERA) etc. Use * to apply for all configured app ops.</string>
     <string name="only_works_in_root_or_adb_mode">Only works in root or ADB mode</string>
     <string name="failed_to_parse_some_numbers">Could not parse some numbers</string>
     <plurals name="no_of_splits">

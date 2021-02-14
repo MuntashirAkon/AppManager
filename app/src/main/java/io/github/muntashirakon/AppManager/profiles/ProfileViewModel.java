@@ -20,6 +20,7 @@ package io.github.muntashirakon.AppManager.profiles;
 import android.app.Application;
 import android.os.RemoteException;
 
+import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import org.json.JSONException;
 
 import java.io.IOException;
@@ -277,6 +278,11 @@ public class ProfileViewModel extends AndroidViewModel {
         }
         int[] appOps = new int[appOpsStr.length];
         for (int i = 0; i < appOps.length; ++i) {
+            if (appOpsStr[i].equals("*")) {
+                // Wildcard found, ignore all app ops in favour of global wildcard
+                profile.appOps = new int[]{AppOpsManager.OP_NONE};
+                return;
+            }
             appOps[i] = Integer.parseInt(appOpsStr[i]);
         }
         profile.appOps = appOps;

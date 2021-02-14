@@ -34,10 +34,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.android.apksig.ApkVerifier;
 import com.android.apksig.apk.ApkFormatException;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
-import io.github.muntashirakon.AppManager.appops.AppOpsManager;
-import io.github.muntashirakon.AppManager.appops.AppOpsService;
-import io.github.muntashirakon.AppManager.appops.OpEntry;
-import io.github.muntashirakon.AppManager.appops.PackageOps;
+import io.github.muntashirakon.AppManager.appops.*;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsComponentItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsPermissionItem;
@@ -1031,11 +1028,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
             if (mAppOpsService == null) mAppOpsService = new AppOpsService();
             try {
                 int uid = packageInfo.applicationInfo.uid;
-                List<PackageOps> packageOpsList = mAppOpsService.getOpsForPackage(uid, packageName, null);
-                List<OpEntry> opEntries = new ArrayList<>();
-                if (packageOpsList.size() == 1) {
-                    opEntries.addAll(packageOpsList.get(0).getOps());
-                }
+                List<OpEntry> opEntries = new ArrayList<>(AppOpsUtils.getChangedAppOps(mAppOpsService, packageName, uid));
                 OpEntry opEntry;
                 // Include from permissions
                 List<String> permissions = getRawPermissions();
