@@ -666,16 +666,16 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         positiveButton.set(alertDialog.getButton(AlertDialog.BUTTON_POSITIVE));
                         neutralButton.set(alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL));
                         positiveButton.get().setVisibility(View.GONE);
-                        positiveButton.get().setOnClickListener(v2 -> {
+                        positiveButton.get().setOnClickListener(v2 -> executor.submit(() -> {
                             SsaidSettings ssaidSettings = new SsaidSettings(mPackageName, mApplicationInfo.uid);
                             if (ssaidSettings.setSsaid(ssaid.get())) {
                                 model.loadTagCloud();
-                                displayLongToast(R.string.restart_to_reflect_changes);
+                                runOnUiThread(() -> displayLongToast(R.string.restart_to_reflect_changes));
                             } else {
-                                displayLongToast(R.string.failed_to_change_ssaid);
+                                runOnUiThread(() -> displayLongToast(R.string.failed_to_change_ssaid));
                             }
                             alertDialog.dismiss();
-                        });
+                        }));
                         neutralButton.get().setVisibility(View.GONE);
                         neutralButton.get().setOnClickListener(v2 -> {
                             ssaid.set(tagCloud.ssaid);
