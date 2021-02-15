@@ -28,9 +28,12 @@ import aosp.libcore.util.EmptyArray;
 import io.github.muntashirakon.AppManager.backup.BackupManager;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.io.ProxyFile;
 import io.github.muntashirakon.io.ProxyInputStream;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Objects;
 
 /**
@@ -138,21 +141,27 @@ public class ApplicationItem extends PackageItemInfo {
     @WorkerThread
     @Override
     public Drawable loadIcon(PackageManager pm) {
+        try {
+            return IOUtils.getCachedIcon(packageName);
+        } catch (IOException ignore) {
+        }
         if (userHandles.length > 0) {
             try {
                 ApplicationInfo info = PackageManagerCompat.getApplicationInfo(packageName, 0, userHandles[0]);
-                return info.loadIcon(pm);
+                return IOUtils.cacheIcon(packageName, info.loadIcon(pm));
             } catch (Exception ignore) {
             }
         }
-        try {
-            if (metadata != null) {
+        if (metadata != null) {
+            try {
                 ProxyFile iconFile = new ProxyFile(metadata.backupPath, BackupManager.ICON_FILE);
                 if (iconFile.exists()) {
-                    return Drawable.createFromStream(new ProxyInputStream(iconFile), label);
+                    try (InputStream is = new ProxyInputStream(iconFile)) {
+                        return IOUtils.cacheIcon(packageName, is);
+                    }
                 }
+            } catch (Throwable ignore) {
             }
-        } catch (Throwable ignore) {
         }
         return pm.getDefaultActivityIcon();
     }

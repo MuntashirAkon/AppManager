@@ -470,6 +470,44 @@ public final class IOUtils {
         return extDir;
     }
 
+    public static Drawable cacheIcon(String name, InputStream inputStream) throws IOException {
+        File iconFile = new File(getIconCachePath(), name + ".png");
+        try (OutputStream os = new FileOutputStream(iconFile)) {
+            copy(inputStream, os);
+        }
+        return getCachedIcon(name);
+    }
+
+    public static Drawable cacheIcon(String name, Drawable drawable) throws IOException {
+        File iconFile = new File(getIconCachePath(), name + ".png");
+        try (OutputStream os = new FileOutputStream(iconFile)) {
+            Bitmap bitmap = IOUtils.getBitmapFromDrawable(drawable);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, os);
+            os.flush();
+        }
+        return drawable;
+    }
+
+    public static Drawable getCachedIcon(String name) throws IOException {
+        File iconFile = new File(getIconCachePath(), name + ".png");
+        if (iconFile.exists()) {
+            return Drawable.createFromStream(new FileInputStream(iconFile), name);
+        } else {
+            throw new FileNotFoundException("Icon for " + name + " doesn't exist");
+        }
+    }
+
+    @AnyThread
+    @NonNull
+    public static File getIconCachePath() throws IOException {
+        if (AppManager.getContext().getExternalCacheDir() == null) throw new FileNotFoundException("External storage not available.");
+        File extDir = new File(AppManager.getContext().getExternalCacheDir(), "icons");
+        if (!extDir.exists() && !extDir.mkdirs()) {
+            throw new IOException("Cannot create cache directory in the external storage.");
+        }
+        return extDir;
+    }
+
     @WorkerThread
     @NonNull
     public static File getSharableFile(@NonNull File privateFile) throws IOException {
