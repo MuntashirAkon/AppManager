@@ -614,4 +614,8 @@
     <string name="battery_optimization">Optymalizacja baterii</string>
     <string name="no_battery_optimization">Brak optymalizacji baterii</string>
     <string name="type_float_array_list">Lista liczb dziesiętnych</string>
+    <string name="screen_lock_not_enabled">Blokada ekranu nie jest włączona. Włącz blokadę ekranu w ustawieniach Systemu Android lub wyczyść dane aplikacji.</string>
+    <string name="last_actions">Ostatnie działania</string>
+    <string name="enable_disable_features">Włączanie/wyłączanie funkcji</string>
+    <string name="installed_apps">Zainstalowane aplikacje</string>
 </resources>
