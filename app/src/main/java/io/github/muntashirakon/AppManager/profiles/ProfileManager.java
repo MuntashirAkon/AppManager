@@ -88,7 +88,6 @@ public class ProfileManager {
     public void applyProfile(@Nullable String state) {
         // Set state
         if (state == null) state = profile.state;
-        if (state == null) state = ProfileMetaManager.STATE_OFF;
 
         if (profile.packages.length == 0) return;
         int[] users = profile.users == null ? Users.getUsersHandles() : profile.users;

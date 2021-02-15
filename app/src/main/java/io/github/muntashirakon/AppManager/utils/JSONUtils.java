@@ -89,13 +89,12 @@ public final class JSONUtils {
         }
     }
 
-    @Nullable
-    public static String getStringOrNull(@NonNull final JSONObject jsonObject, @NonNull String key) {
+    public static boolean getBoolean(@NonNull final JSONObject jsonObject, @NonNull String key, boolean defaultValue) {
         try {
-            return jsonObject.getString(key);
-        } catch (JSONException ignore) {
+            return jsonObject.getBoolean(key);
+        } catch (JSONException e) {
+            return defaultValue;
         }
-        return null;
     }
 
     @Nullable

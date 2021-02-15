@@ -60,7 +60,6 @@ public class ProfileMetaManager {
         public int type = 0;  // type
         public int version = 1;  // version
         public boolean allowRoutine = true;  // allow_routine
-        @Nullable
         @ProfileState
         public String state;  // state
         @Nullable
@@ -175,17 +174,11 @@ public class ProfileMetaManager {
         String profileName = profileObj.getString("name");
         String[] packageNames = JSONUtils.getArray(String.class, profileObj.getJSONArray("packages"));
         profile = new Profile(profileName, packageNames);
-        try {
-            profile.comment = profileObj.getString("comment");
-        } catch (JSONException ignore) {
-        }
+        profile.comment = JSONUtils.getString(profileObj, "comment", null);
         profile.type = profileObj.getInt("type");
         profile.version = profileObj.getInt("version");
-        try {
-            profile.allowRoutine = profileObj.getBoolean("allow_routine");
-        } catch (JSONException ignore) {
-        }
-        profile.state = JSONUtils.getStringOrNull(profileObj, "state");
+        profile.allowRoutine = JSONUtils.getBoolean(profileObj, "allow_routine", true);
+        profile.state = JSONUtils.getString(profileObj, "state", STATE_ON);
         try {
             profile.users = JSONUtils.getIntArray(profileObj.getJSONArray("users"));
         } catch (JSONException ignore) {
@@ -203,15 +196,12 @@ public class ProfileMetaManager {
         } catch (JSONException ignore) {
         }
         // Backup info
-        JSONObject backupInfo = null;
         try {
-            backupInfo = profileObj.getJSONObject("backup_data");
-        } catch (JSONException ignore) {
-        }
-        if (backupInfo != null) {
+            JSONObject backupInfo = profileObj.getJSONObject("backup_data");
             profile.backupData = new Profile.BackupInfo();
-            profile.backupData.name = JSONUtils.getStringOrNull(backupInfo, "name");
+            profile.backupData.name = JSONUtils.getString(backupInfo, "name", null);
             profile.backupData.flags = backupInfo.getInt("flags");
+        } catch (JSONException ignore) {
         }
         profile.exportRules = JSONUtils.getIntOrNull(profileObj, "export_rules");
         // Misc
