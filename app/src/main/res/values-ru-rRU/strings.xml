@@ -945,4 +945,5 @@
     <string name="type_uri">URI</string>
     <string name="isolated">изолированно</string>
     <string name="screen_lock_not_enabled">Блокировка экрана не включена. Включите блокировку экрана в настройках Android или очистите данные приложения.</string>
+    <string name="input_app_ops_description_profile">Введите имена операций приложения и/или константы с пробелами, например (WAKE_LOCK 63 72 CAMERA) и т.д. Используйте * для применения ко всем настроенным операциям приложения.</string>
 </resources>
