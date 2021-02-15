@@ -10,10 +10,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import android.os.RemoteException;
-import androidx.annotation.AnyThread;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.WorkerThread;
+import androidx.annotation.*;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.IAMService;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -26,17 +23,36 @@ public final class IPCUtils {
     private static final AMServiceConnectionWrapper connectionWrapper = new AMServiceConnectionWrapper();
     private static IAMService amService;
 
+    @GuardedBy("connectionWrapper")
     @WorkerThread
     @NonNull
     public static IAMService getAmService() throws RemoteException {
         synchronized (connectionWrapper) {
-            return amService = connectionWrapper.getAmService();
+            try {
+                amService = connectionWrapper.getAmService();
+            } finally {
+                connectionWrapper.notifyAll();
+            }
+            return amService;
         }
     }
 
+    @GuardedBy("connectionWrapper")
     @NonNull
     public static AMServiceConnectionWrapper getNewConnection() {
-        return new AMServiceConnectionWrapper();
+        synchronized (connectionWrapper) {
+            try {
+                try {
+                    if (amService == null) {
+                        connectionWrapper.wait();
+                    }
+                } catch (Exception ignore) {
+                }
+                return new AMServiceConnectionWrapper();
+            } finally {
+                connectionWrapper.notifyAll();
+            }
+        }
     }
 
     @AnyThread
