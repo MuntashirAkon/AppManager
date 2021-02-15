@@ -1,2 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="paths_and_directories">Vojoj kaj Dosierujoj</string>
+    <string name="user_app">Uzanta aplikaĵo</string>
+    <string name="system_app">Operaciuma aplikaĵo</string>
+    <string name="app_info">Aplikaĵinformoj</string>
+    <string name="sort">Ordigi</string>
+    <string name="user">Uzanto</string>
+    <string name="system">Operaciuma</string>
+    <string name="app_not_installed">Aplikaĵo ne instalita</string>
+    <string name="data_size">Datumo</string>
+    <string name="about">Pri</string>
+    <string name="data_transmitted">Sendita datumo</string>
+    <string name="data_received">Ricevita datumo</string>
+    <string name="sort_by_package_name">Pakaĵnomo</string>
+    <string name="sort_by_app_label">Aplikaĵa prinoto</string>
+    <string name="error">Eraro</string>
+    <string name="protection_level">Protekta nivelo</string>
+    <string name="group">Grupo</string>
+    <string name="launch_mode">Lanĉada reĝimo</string>
+    <string name="launch">Lanĉi</string>
+    <string name="uninstall">Malinstali</string>
+</resources>
