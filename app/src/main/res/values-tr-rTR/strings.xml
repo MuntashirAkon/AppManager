@@ -878,4 +878,5 @@
     <string name="enable_disable_features">Özellikleri etkinleştir/devre dışı bırak</string>
     <string name="isolated">Yalıtıldı</string>
     <string name="screen_lock_not_enabled">Ekran kilidi etkinleştirilmedi. Android ayarlarında ekran kilidini etkinleştirin veya uygulama verilerini temizleyin.</string>
+    <string name="input_app_ops_description_profile">Uygulama işlem adlarını ve/veya sabitleri aralarında boşluklarla girin, örn. (WAKE_LOCK 63 72 CAMERA) vb. Tüm yapılandırılmış uygulama işlemlerine uygulamak için * kullanın.</string>
 </resources>
