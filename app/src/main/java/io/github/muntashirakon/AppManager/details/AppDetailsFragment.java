@@ -283,7 +283,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             case PROVIDERS:
             case RECEIVERS:
             case SERVICES:
-                if (!mainModel.getIsExternalApk() && AppPref.isRootEnabled()) {
+                if (mainModel != null && !mainModel.getIsExternalApk() && AppPref.isRootEnabled()) {
                     inflater.inflate(R.menu.fragment_app_details_components_actions, menu);
                     blockingToggler = menu.findItem(R.id.action_toggle_blocking);
                     mainModel.getRuleApplicationStatus().observe(mActivity, status -> {
@@ -306,7 +306,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 inflater.inflate(R.menu.fragment_app_details_app_ops_actions, menu);
                 break;
             case USES_PERMISSIONS:
-                if (!mainModel.getIsExternalApk()) {
+                if (mainModel != null && !mainModel.getIsExternalApk()) {
                     inflater.inflate(R.menu.fragment_app_details_permissions_actions, menu);
                     break;
                 }
@@ -326,7 +326,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
 
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
-        if (isExternalApk) return;
+        if (mainModel == null || isExternalApk) return;
         if (neededProperty == APP_INFO) super.onPrepareOptionsMenu(menu);
         else if (neededProperty <= PROVIDERS) {
             if (AppPref.isRootEnabled())
@@ -343,6 +343,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         } else if (id == R.id.action_toggle_blocking) {  // Components
             if (mainModel != null) new Thread(() -> mainModel.applyRules()).start();
         } else if (id == R.id.action_block_trackers) {  // Components
+            if (mainModel == null) return true;
             new Thread(() -> {
                 List<UserPackagePair> failedPkgList = ComponentUtils.blockTrackingComponents(Collections.singletonList(new UserPackagePair(mPackageName, Users.getCurrentUserHandle())));
                 if (failedPkgList.size() > 0) {
@@ -353,7 +354,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         refreshDetails();
                     });
                 }
-                runOnUiThread(() -> mainModel.setRuleApplicationStatus());
+                mainModel.setRuleApplicationStatus();
             }).start();
         } else if (id == R.id.action_reset_to_default) {  // App ops
             new Thread(() -> {
@@ -409,7 +410,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                             return;
                         }
                         new Thread(() -> {
-                            if (mainModel.setAppOp(op, mode)) {
+                            if (mainModel != null && mainModel.setAppOp(op, mode)) {
                                 runOnUiThread(this::refreshDetails);
                             } else {
                                 runOnUiThread(() -> Toast.makeText(mActivity,
@@ -589,6 +590,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         private List<AppDetailsItem> mAdapterList;
         @Property
         private int requestedProperty;
+        @Nullable
         private String mConstraint;
         private Boolean isRootEnabled = true;
         private Boolean isADBEnabled = true;
@@ -602,7 +604,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             isRootEnabled = AppPref.isRootEnabled();
             isADBEnabled = AppPref.isAdbEnabled();
             requestedProperty = neededProperty;
-            mConstraint = mainModel.getSearchQuery();
+            mConstraint = mainModel == null ? null : mainModel.getSearchQuery();
             mAdapterList = list;
             showProgressIndicator(false);
             notifyDataSetChanged();
@@ -614,6 +616,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         }
 
         void set(int currentIndex, AppDetailsItem appDetailsItem) {
+            if (mainModel == null) return;
             mAdapterList.set(currentIndex, appDetailsItem);
             notifyItemChanged(currentIndex);
             // Update the value in the app ops list in view model

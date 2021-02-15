@@ -123,6 +123,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private SwipeRefreshLayout mSwipeRefresh;
     private CharSequence mPackageLabel;
     private LinearProgressIndicator mProgressIndicator;
+    @Nullable
     private AppDetailsViewModel mainModel;
     private AppInfoViewModel model;
     private AppInfoRecyclerAdapter adapter;
@@ -231,7 +232,9 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        if (!mainModel.getIsExternalApk()) inflater.inflate(R.menu.fragment_app_info_actions, menu);
+        if (mainModel != null && !mainModel.getIsExternalApk()) {
+            inflater.inflate(R.menu.fragment_app_info_actions, menu);
+        }
     }
 
     @Override
@@ -712,7 +715,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     private void setHorizontalActions() {
         mHorizontalLayout.removeAllViews();
-        if (!mainModel.getIsExternalApk()) {
+        if (mainModel != null && !mainModel.getIsExternalApk()) {
             // Set open
             final Intent launchIntentForPackage = mPackageManager.getLaunchIntentForPackage(mPackageName);
             if (launchIntentForPackage != null) {
@@ -1239,6 +1242,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @WorkerThread
     private void loadPackageInfo() {
+        if (mainModel == null) return;  // Should never happen but checked anyway
         mInstalledPackageInfo = mainModel.getInstalledPackageInfo();
         mApplicationInfo = mPackageInfo.applicationInfo;
         // Set App Icon
