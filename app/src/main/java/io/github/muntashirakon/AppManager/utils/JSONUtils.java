@@ -81,6 +81,14 @@ public final class JSONUtils {
         return arrayList;
     }
 
+    public static String getString(@NonNull final JSONObject jsonObject, @NonNull String key, String defaultValue) {
+        try {
+            return jsonObject.getString(key);
+        } catch (JSONException e) {
+            return defaultValue;
+        }
+    }
+
     @Nullable
     public static String getStringOrNull(@NonNull final JSONObject jsonObject, @NonNull String key) {
         try {

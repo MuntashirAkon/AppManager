@@ -25,6 +25,7 @@ import android.os.RemoteException;
 import android.text.TextUtils;
 
 import androidx.annotation.WorkerThread;
+import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.logs.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -179,7 +180,7 @@ public final class MetadataManager {
         this.metadata.userHandle = rootObject.getInt("user_handle");
         this.metadata.tarType = rootObject.getString("tar_type");
         this.metadata.keyStore = rootObject.getBoolean("key_store");
-        this.metadata.installer = rootObject.getString("installer");
+        this.metadata.installer = JSONUtils.getString(rootObject, "installer", BuildConfig.APPLICATION_ID);
     }
 
     private void readCrypto(JSONObject rootObj) throws JSONException {
@@ -288,7 +289,7 @@ public final class MetadataManager {
             e.printStackTrace();
         }
         if (metadata.installer == null) {
-            metadata.installer = AppManager.getContext().getPackageName();
+            metadata.installer = BuildConfig.APPLICATION_ID;
         }
         return metadata;
     }
