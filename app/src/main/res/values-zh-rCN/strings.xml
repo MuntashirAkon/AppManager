@@ -41,7 +41,7 @@
     <string name="read">读取</string>
     <string name="write">写入</string>
     <string name="patterns_allowed">允许的模式</string>
-    <string name="declared_permission">应用自定义权限</string>
+    <string name="declared_permission">权限</string>
     <string name="shared_libs">共享程序库</string>
     <string name="group">群组</string>
     <string name="protection_level">保护等级</string>
