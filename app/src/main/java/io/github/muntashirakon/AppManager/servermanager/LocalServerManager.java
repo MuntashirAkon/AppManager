@@ -95,7 +95,7 @@ class LocalServerManager {
             } catch (Exception ignore) {
             }
             if (mSession == null) {
-                if (startServer()) {
+                if (!startServer()) {
                     throw new IOException("Failed to start server.");
                 }
                 mSession = createSession();
