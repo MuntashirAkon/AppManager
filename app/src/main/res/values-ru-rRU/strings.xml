@@ -755,7 +755,7 @@
     <string name="source_stamp_verified">SourceStamp подтвержден.</string>
     <string name="verified">Подтверждённый</string>
     <string name="not_verified">Не подтверждено</string>
-    <string name="pref_signature_schemes_msg">Для большей совместимости следует выбирать схемы как минимум v1 и v2. Схема v4 требует v2 или v3.</string>
+    <string name="pref_signature_schemes_msg">Для большей совместимости следует выбрать как минимум схемы v1 и v2. Схема v4 требует v2 или v3.</string>
     <string name="v4_scheme">Схема v4 (начиная с Android 11)</string>
     <string name="v3_scheme">Схема v3 (начиная с Android 9)</string>
     <string name="v2_scheme">Схема v2 (начиная с Android 7.0)</string>
@@ -775,7 +775,7 @@
         <item quantity="other">Проверено с %d предупреждениями</item>
     </plurals>
     <string name="input_permissions">Ввод разрешений</string>
-    <string name="input_permissions_description">Ввод разрешений с пробелами, например (com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION) и т.п.</string>
+    <string name="input_permissions_description">Введите разрешения с пробелами, например (com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION) и т.п.</string>
     <plurals name="signature_schemes_pl">
         <item quantity="one">Схема подписи</item>
         <item quantity="few">Схемы подписи</item>
@@ -859,7 +859,7 @@
     <string name="scaling_factor">Коэффициент масштабирования</string>
     <string name="density">Плотность пикселей</string>
     <string name="screen">Экран</string>
-    <string name="set_mode_for_app_ops_dots">Установка режима для операций приложения…</string>
+    <string name="set_mode_for_app_ops_dots">Установить режим для операций приложения…</string>
     <string name="failed_to_enable_magisk_hide">Не удалось включить MagiskHide</string>
     <string name="enable_magisk_hide">Включить MagiskHide</string>
     <string name="failed_to_disable_magisk_hide">Не удалось отключить MagiskHide</string>
@@ -882,7 +882,7 @@
     <string name="backup_apps_without_backups_msg">Резервное копирование приложений без каких-либо предыдущих резервных копий.</string>
     <string name="backup_apps_without_backups">Резервное копирование приложений без резервных копий</string>
     <string name="backup_all_apps">Резервное копирование всех приложений</string>
-    <string name="signature_schemes">Схема подписания</string>
+    <string name="signature_schemes">Схемы подписи</string>
     <string name="back_up">Резервное копирование</string>
     <string name="drm_free_apkm_msg">Файл APKM не содержит DRM, конвертировать его в APKS не нужно.</string>
     <string name="restore_msg">Восстановление приложений с данными</string>
