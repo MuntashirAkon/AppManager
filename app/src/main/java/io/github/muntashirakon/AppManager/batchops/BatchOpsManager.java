@@ -205,9 +205,9 @@ public class BatchOpsManager {
             case OP_CLEAR_CACHE:
                 return opClearCache();
             case OP_GRANT_PERMISSIONS:
-                return opGrantPermissions();
+                return opGrantOrRevokePermissions(true);
             case OP_REVOKE_PERMISSIONS:
-                return opRevokePermissions();
+                return opGrantOrRevokePermissions(false);
             case OP_NONE:
                 break;
         }
@@ -353,19 +353,23 @@ public class BatchOpsManager {
         return new Result(failedPackages);
     }
 
-    private Result opGrantPermissions() {
+    private Result opGrantOrRevokePermissions(boolean isGrant) {
         String[] permissions = args.getStringArray(ARG_PERMISSIONS);
+        List<UserPackagePair> failedPackages = new ArrayList<>();
         if (permissions.length == 1 && permissions[0].equals("*")) {
             // Wildcard detected
             // TODO: 6/2/21 List all permissions for each app and revoke them
         }
-        List<UserPackagePair> failedPackages = new ArrayList<>();
         for (UserPackagePair pair : userPackagePairs) {
             for (String permission : permissions) {
                 try {
-                    PackageManagerCompat.grantPermission(pair.getPackageName(), permission, pair.getUserHandle());
+                    if (isGrant) {
+                        PackageManagerCompat.grantPermission(pair.getPackageName(), permission, pair.getUserHandle());
+                    } else {
+                        PackageManagerCompat.revokePermission(pair.getPackageName(), permission, pair.getUserHandle());
+                    }
                 } catch (Throwable e) {
-                    e.printStackTrace();
+                    Log.e(TAG, e);
                     failedPackages.add(pair);
                 }
             }
@@ -380,24 +384,8 @@ public class BatchOpsManager {
             try {
                 PackageManagerCompat.forceStopPackage(pair.getPackageName(), pair.getUserHandle());
             } catch (Throwable e) {
-                e.printStackTrace();
+                Log.e(TAG, e);
                 failedPackages.add(pair);
-            }
-        }
-        return lastResult = new Result(failedPackages);
-    }
-
-    private Result opRevokePermissions() {
-        String[] permissions = args.getStringArray(ARG_PERMISSIONS);
-        List<UserPackagePair> failedPackages = new ArrayList<>();
-        for (UserPackagePair pair : userPackagePairs) {
-            for (String permission : permissions) {
-                try {
-                    PackageManagerCompat.revokePermission(pair.getPackageName(), permission, pair.getUserHandle());
-                } catch (Throwable e) {
-                    e.printStackTrace();
-                    failedPackages.add(pair);
-                }
             }
         }
         return lastResult = new Result(failedPackages);
@@ -449,7 +437,7 @@ public class BatchOpsManager {
             try {
                 PackageInstallerCompat.uninstall(pair.getPackageName(), pair.getUserHandle(), false);
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e(TAG, e);
                 failedPackages.add(pair);
             }
         }
