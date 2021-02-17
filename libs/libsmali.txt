@@ -24,3 +24,7 @@
 {"id":"\/com\/hierynomus\/asn1","path":"\/com\/hierynomus\/asn1","name":"ASN.1 library for Java","type":"Development Aid","perms":"","url":"https:\/\/github.com\/hierynomus\/asn-one"}
 {"id":"\/com\/bytedance\/sdk\/openadsdk","path":"\/com\/bytedance\/sdk\/openadsdk","name":"Pangle SDK","type":"Advertisement","perms":"","url":"https:\/\/www.pangleglobal.com"}
 {"id":"\/com\/vungle\/warren\/","path":"\/com\/vungle\/warren\/","name":"Vungle Android SDK","type":"Advertisement","perms":"","url":"https:\/\/vungle.com"}
+{"id":"\/com\/beint\/zangi","path":"\/com\/beint\/zangi","name":"Zangi","type":"App Market","perms":"","url":"https:\/\/zangi.com\/sip-provider"}
+{"id":"\/com\/paypal\/android\/sdk\/payments\/","path":"\/com\/paypal\/android\/sdk\/payments\/","name":"Paypal Android SDK","type":"Development Aid","perms":"","url":"https:\/\/github.com\/paypal\/PayPal-Android-SDK"}
+{"id":"\/com\/amazonaws\/services\/s3\/","path":"\/com\/amazonaws\/services\/s3\/","name":"Amazon S3","type":"Development Aid","perms":"","url":"https:\/\/docs.aws.amazon.com\/AWSJavaSDK\/latest\/javadoc\/com\/amazonaws\/services\/s3\/package-summary.html"}
+{"id":"\/com\/alipay\/mobile\/framework","path":"\/com\/alipay\/mobile\/framework","name":"Alipay","type":"Payment","perms":"","url":"http:\/\/www.alipay.com"}
