@@ -167,7 +167,7 @@
         <item quantity="other"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> days</item>
     </plurals>
     <string name="no_shared_libs">No shared libraries</string>
-    <string name="no_tracker_class">No tracker class</string>
+    <string name="no_tracker_class">No tracker classes</string>
     <string name="app_usage">App Usage</string>
     <string name="usage_weekly">Weekly</string>
     <string name="usage_today">Today</string>
@@ -272,7 +272,7 @@
     <string name="sort_by_screen_time">Screen time</string>
     <string name="sort_by_times_opened">Times opened</string>
     <string name="sort_by_mobile_data">Mobile data</string>
-    <string name="pref_import_export_blocking_rules">Import/Export blocking rules</string>
+    <string name="pref_import_export_blocking_rules">Import/export blocking rules</string>
     <string name="pref_import_export_blocking_rules_msg">Import/export rules, import external rules from Watt or Blocker.</string>
     <string name="pref_import_watt">Import from Watt</string>
     <string name="pref_import_blocker">Import from Blocker</string>
@@ -338,7 +338,7 @@
     <string name="touchscreen">Touchscreen</string>
     <string name="pref_export_msg">Export blocking rules configured within App Manager to external storage.</string>
     <string name="pref_import_msg">Import previously exported blocking rules from App Manager.</string>
-    <string name="pref_import_watt_msg">Import blocking rules from Watt, each file containing rules for a single named package as packagename.xml etc.</string>
+    <string name="pref_import_watt_msg">Import blocking rules from Watt, each file containing rules for a single named package as <tt>packagename.xml</tt> etc.</string>
     <string name="pref_import_blocker_msg">Import blocking rules from Blocker, each file containing rules for a single package.</string>
     <string name="pref_app_theme">App theme</string>
     <string name="follow_system">Follow system</string>
@@ -365,7 +365,7 @@
     <string name="sort_by_tracker_components">Tracker first</string>
     <string name="unknown_op">Unknown Operation</string>
     <string name="failed_to_disable_trackers">Could not disable trackers</string>
-    <string name="trackers_disabled_successfully">Trackers now disabled</string>
+    <string name="trackers_disabled_successfully">Trackers are now disabled</string>
     <plurals name="alert_failed_to_disable_trackers">
         <item quantity="one">Could not disable trackers from %1$d app</item>
         <item quantity="other">Could not disable trackers from %1$d apps</item>
@@ -379,7 +379,7 @@
     <string name="never_ask">Never ask</string>
     <string name="one_click_ops">1-Click Ops</string>
     <string name="changelog">Changelog</string>
-    <string name="external_apk_no_app_op">External APK does not have any app operation</string>
+    <string name="external_apk_no_app_op">External APK does not have any app operations</string>
     <string name="manifest_viewer">Manifest Viewer</string>
     <plurals name="no_of_trackers">
         <item quantity="one">%1$d tracker</item>
@@ -406,20 +406,20 @@
     <string name="clear_cache">Clear Cache</string>
     <string name="block_unblock_trackers_description">Block or unblock ad and tracking components from all the installed apps</string>
     <string name="block_components_dots">Block components…</string>
-    <string name="block_components_description">Block all components identified by the given signature(s)</string>
-    <string name="deny_app_ops_description">Set a mode for app operations identified by the constant values, i.e. 63 or RUN_IN_BACKGROUND</string>
+    <string name="block_components_description">Block all components identified by the given signatures</string>
+    <string name="deny_app_ops_description">Set a mode for app operations identified by the constant values, i.e. <tt>63</tt> or <tt>RUN_IN_BACKGROUND</tt></string>
     <string name="clear_data_from_uninstalled_apps">Clear data from uninstalled apps</string>
-    <string name="clear_data_from_uninstalled_apps_description">Clear data from apps that are uninstalled with DONT_DELETE_DATA flag</string>
+    <string name="clear_data_from_uninstalled_apps_description">Clear data from apps that are uninstalled with <tt>DONT_DELETE_DATA</tt> flag</string>
     <string name="clear_app_cache">Clear app cache</string>
     <string name="clear_app_cache_description">Clears the cache of all apps</string>
     <string name="no_tracker_found">No tracker found</string>
     <string name="failed_packages">Failed packages</string>
     <string name="input_signatures">Input signatures</string>
-    <string name="input_signatures_description">Input signatures with spaces, e.g. (com.facebook org.app2 com.app3) etc.</string>
+    <string name="input_signatures_description">Input signatures with spaces, e.g. <tt>com.facebook org.app2 com.app3</tt> etc.</string>
     <string name="filtered_packages">Filtered packages</string>
     <string name="input_app_ops">Input app ops</string>
-    <string name="input_app_ops_description">Input app op names and/or constants with spaces, e.g. (WAKE_LOCK 63 72 CAMERA) etc.</string>
-    <string name="input_app_ops_description_profile">Input app op names and/or constants with spaces, e.g. (WAKE_LOCK 63 72 CAMERA) etc. Use * to apply for all configured app ops.</string>
+    <string name="input_app_ops_description">Input app op names and/or constants with spaces, e.g. <tt>WAKE_LOCK 63 72 CAMERA</tt> etc.</string>
+    <string name="input_app_ops_description_profile">Input app op names and/or constants with spaces, e.g. <tt>WAKE_LOCK 63 72 CAMERA</tt> etc. Use <tt>*</tt> to apply for all configured app ops.</string>
     <string name="only_works_in_root_or_adb_mode">Only works in root or ADB mode</string>
     <string name="failed_to_parse_some_numbers">Could not parse some numbers</string>
     <plurals name="no_of_splits">
@@ -514,18 +514,18 @@
     <string name="block">Block</string>
     <string name="unblock">Unblock</string>
     <string name="block_unblock_trackers">Block/unblock trackers</string>
-    <string name="no_matching_package_found">No matching package found</string>
+    <string name="no_matching_package_found">No matching packages found</string>
     <string name="export_icon">Extract Icon</string>
     <string name="open_in_termux">Open in Termux</string>
     <string name="run_in_termux">Run in Termux</string>
     <string name="website">Website</string>
     <string name="website_message" translatable="false">https://muntashirakon.github.io/AppManager</string>
     <string name="pref_remove_all_rules">Remove all rules</string>
-    <string name="pref_remove_all_rules_msg">Permissions are granted, app ops and components will return to default values.</string>
+    <string name="pref_remove_all_rules_msg">Permissions will be granted, app ops and components will return to their default values.</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="filter_apps_with_activities">Apps with activities</string>
     <string name="toggle_default_app_ops">Toggle default app ops</string>
-    <string name="installer_error_aborted">Installation failed because either because it was cancelled, or the session closed unexpectedly</string>
+    <string name="installer_error_aborted">Installation failed either because it was cancelled or the session was closed unexpectedly</string>
     <string name="installer_error_blocked_device">device</string>
     <string name="installer_error_blocked">Installation blocked by <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
     <string name="installer_error_conflict">Could not install app because the package name is in use</string>
@@ -545,7 +545,7 @@
     <string name="unblock_trackers">Unblock trackers</string>
     <string name="package_installer">Package Installer</string>
     <string name="install_in_progress">Install in progress</string>
-    <string name="installer_error_security">Cannot access APK files</string>
+    <string name="installer_error_security">Could not access APK files</string>
     <string name="installer_error_session_create">Could not create an installer session</string>
     <string name="installer_error_session_write">Could not write to the installer session</string>
     <string name="installer_error_session_commit">Could not commit the APK files</string>
@@ -626,7 +626,7 @@
     <string name="downgrade">Downgrade</string>
     <string name="downgrade_not_possible">Downgrade is not possible without root or ADB</string>
     <string name="input_backup_name">Backup name</string>
-    <string name="input_backup_name_description">Backup name should not start with a digit nor should it contain any space. Leave it empty if you want to use current date-time.</string>
+    <string name="input_backup_name_description">Backup name should not start with a digit nor should it contain any spaces. Leave it empty if you want to use current date-time.</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="systemless_app">Systemless App</string>
@@ -694,7 +694,7 @@
     <string name="view_missing_signatures">Tap to view or send in signatures not yet present in App Manager\'s database of libraries.</string>
     <string name="copy">Copy</string>
     <string name="filter_running_apps">Running apps</string>
-    <string name="am_crashed">AM is just crashed</string>
+    <string name="am_crashed">AM has just crashed</string>
     <string name="tap_to_submit_crash_report">Tap to submit the crash report.</string>
     <string name="send_crash_report">Send crash report</string>
     <string name="select_apk">Select APK</string>
@@ -733,7 +733,7 @@
     <string name="off">Off</string>
     <string name="options">Options</string>
     <string name="input_permissions">Input permissions</string>
-    <string name="input_permissions_description">Input permissions with spaces, e.g. (com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION) etc.</string>
+    <string name="input_permissions_description">Input permissions with spaces, e.g. <tt>com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION</tt> etc. Use <tt>*</tt> to apply for all permissions.</string>
     <string name="choose">Choose</string>
     <string name="enabled">Enabled</string>
     <string name="simple">Simple</string>
@@ -771,7 +771,7 @@
     <string name="this_action_cannot_be_undone">This action cannot be undone.</string>
     <string name="keep_data_and_signatures">Keep data and signatures</string>
     <string name="pref_backup_android_keystore">Backup apps with Android KeyStore</string>
-    <string name="pref_backup_android_keystore_msg">Not all apps will work after a restore. Restoring KeyStore doesn\'t work on most devices.</string>
+    <string name="pref_backup_android_keystore_msg">Not all apps will work after the restore. Restoring KeyStore doesn\'t work on most devices.</string>
     <string name="magisk_hide_enabled">MagiskHide</string>
     <string name="set_app_op_mode">Set app op mode</string>
     <string name="filter_apps_with_splits">Apps with splits</string>
