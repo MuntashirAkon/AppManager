@@ -21,9 +21,17 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
-import android.widget.Toast;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.WorkerThread;
 import com.tananaev.adblib.AdbConnection;
+import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.adb.AdbConnectionManager;
+import io.github.muntashirakon.AppManager.adb.AdbShell;
+import io.github.muntashirakon.AppManager.servermanager.LocalServer;
+import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
+import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,15 +43,6 @@ import java.util.BitSet;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.WorkerThread;
-import io.github.muntashirakon.AppManager.adb.AdbConnectionManager;
-import io.github.muntashirakon.AppManager.adb.AdbShell;
-import io.github.muntashirakon.AppManager.users.Users;
-import io.github.muntashirakon.AppManager.servermanager.LocalServer;
-import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
-import io.github.muntashirakon.AppManager.utils.AppPref;
 
 @SuppressWarnings("UnusedReturnValue")
 public final class RunnerUtils {
@@ -172,7 +171,8 @@ public final class RunnerUtils {
                 if (!result.isSuccessful() || !"AMAdbCheck".equals(result.getStdout())) {
                     throw new IOException("Adb not available");
                 }
-                new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(context, "Working on ADB mode", Toast.LENGTH_SHORT).show());
+                LocalServer.getInstance();
+                new Handler(Looper.getMainLooper()).post(() -> UIUtils.displayShortToast(R.string.working_on_adb_mode));
             } catch (IOException e) {
                 AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
             }

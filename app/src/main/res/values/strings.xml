@@ -910,4 +910,5 @@
     <string name="last_actions">Last actions</string>
     <string name="isolated">Isolated</string>
     <string name="screen_lock_not_enabled">Screen lock not enabled. Enable screen lock in Android settings or clear app data.</string>
+    <string name="working_on_adb_mode">Working on ADB mode</string>
 </resources>
