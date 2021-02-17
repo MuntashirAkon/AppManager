@@ -318,6 +318,18 @@ class RestoreOp implements Closeable {
             if (keyStoreFiles == null || keyStoreFiles.length == 0) {
                 throw new BackupException("KeyStore files should've existed but they didn't");
             }
+            if (!requestedFlags.skipSignatureCheck()) {
+                String checksum;
+                for (File file : keyStoreFiles) {
+                    checksum = DigestUtils.getHexDigest(metadata.checksumAlgo, file);
+                    if (!checksum.equals(this.checksum.get(file.getName()))) {
+                        throw new BackupException("KeyStore file verification failed." +
+                                "\nFile: " + file +
+                                "\nFound: " + checksum +
+                                "\nRequired: " + this.checksum.get(file.getName()));
+                    }
+                }
+            }
             // Decrypt sources
             if (!crypto.decrypt(keyStoreFiles)) {
                 throw new BackupException("Failed to decrypt " + Arrays.toString(keyStoreFiles));
