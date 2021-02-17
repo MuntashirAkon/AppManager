@@ -618,4 +618,7 @@
     <string name="last_actions">Ostatnie działania</string>
     <string name="enable_disable_features">Włączanie/wyłączanie funkcji</string>
     <string name="installed_apps">Zainstalowane aplikacje</string>
+    <string name="signature">Sygnatura</string>
+    <string name="not_yet_valid">Jeszcze nie obowiązuje</string>
+    <string name="issuer">Wystawiony przez</string>
 </resources>
