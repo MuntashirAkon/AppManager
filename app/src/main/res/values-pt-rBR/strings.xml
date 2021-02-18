@@ -214,7 +214,7 @@
     <string name="sort_by_screen_time">Tempo de tela</string>
     <string name="sort_by_times_opened">Vezes abertas</string>
     <string name="sort_by_mobile_data">Dados móveis</string>
-    <string name="pref_import_export_blocking_rules">Importar/Exportar regras de bloqueio</string>
+    <string name="pref_import_export_blocking_rules">Importar/exportar regras de bloqueio</string>
     <string name="pref_import_export_blocking_rules_msg">Importar/exportar regras, importar regras externas do Watt ou Blocker.</string>
     <string name="pref_import_watt">Importar do Watt</string>
     <string name="pref_import_blocker">Importar do Blocker</string>
@@ -276,7 +276,7 @@
     <string name="navigation">Navegação</string>
     <string name="pref_export_msg">Exportar regras de bloqueio configuradas no App Manager para o armazenamento externo.</string>
     <string name="pref_import_msg">Importar regras de bloqueio exportadas anteriormente do App Manager.</string>
-    <string name="pref_import_watt_msg">Importar regras de bloqueio do Watt, cada arquivo contendo regras para um único pacote nomeado como packagename.xml, etc.</string>
+    <string name="pref_import_watt_msg">Importar regras de bloqueio do Watt, cada arquivo contendo regras para um único pacote nomeado como &lt;tt&gt;packagename.xml&lt;/tt&gt;, etc.</string>
     <string name="pref_import_blocker_msg">Importar regras de bloqueio do Blocker. Cada arquivo contém regras para um único pacote.</string>
     <string name="pref_app_theme">Tema do aplicativo</string>
     <string name="follow_system">Seguir o sistema</string>
@@ -303,7 +303,7 @@
     <string name="sort_by_tracker_components">Rastreador primeiro</string>
     <string name="unknown_op">Operação Desconhecida</string>
     <string name="failed_to_disable_trackers">Não foi possível desativar rastreadores</string>
-    <string name="trackers_disabled_successfully">Rastreadores agora desativados</string>
+    <string name="trackers_disabled_successfully">Rastreadores agora estão desativados</string>
     <plurals name="alert_failed_to_disable_trackers">
         <item quantity="one">%1$d aplicativo não pôde ter os rastreadores desativados</item>
         <item quantity="other">%1$d aplicativos não puderam ter os rastreadores desativados</item>
@@ -333,14 +333,14 @@
     <string name="clear_cache">Limpar Cache</string>
     <string name="block_unblock_trackers_description">Bloquear ou desbloquear componentes de propagandas e rastreamento em todos os aplicativos instalados</string>
     <string name="block_components_dots">Bloquear componentes…</string>
-    <string name="block_components_description">Bloquear todos os componentes identificados pela(s) assinatura(s) especificada(s)</string>
+    <string name="block_components_description">Bloquear todos os componentes identificados pelas assinaturas especificadas</string>
     <string name="clear_data_from_uninstalled_apps">Limpar dados dos aplicativos desinstalados</string>
-    <string name="clear_data_from_uninstalled_apps_description">Limpar dados dos aplicativos que foram desinstalados com a flag DONT_DELETE_DATA</string>
+    <string name="clear_data_from_uninstalled_apps_description">Limpar dados dos aplicativos que foram desinstalados com a flag &lt;tt&gt;DONT_DELETE_DATA&lt;/tt&gt;</string>
     <string name="clear_app_cache">Limpar cache do aplicativo</string>
     <string name="clear_app_cache_description">Limpar o cache de todos os aplicativos</string>
     <string name="no_tracker_found">Nenhum rastreador encontrado</string>
     <string name="failed_packages">Pacotes falhados</string>
-    <string name="input_signatures_description">Insira assinaturas com espaços, p. ex. (com.facebook org.app2 com.app3), etc.</string>
+    <string name="input_signatures_description">Insira assinaturas com espaços, p. ex. &lt;tt&gt;com.facebook org.app2 com.app3&lt;/tt&gt; etc.</string>
     <string name="filtered_packages">Pacotes filtrados</string>
     <string name="only_works_in_root_or_adb_mode">Funciona apenas no modo Root ou ADB</string>
     <string name="failed_to_parse_some_numbers">Não foi possível analisar alguns números</string>
@@ -409,11 +409,11 @@
     <string name="run_in_termux">Executar no Termux</string>
     <string name="website">Site</string>
     <string name="pref_remove_all_rules">Remover todas as regras</string>
-    <string name="pref_remove_all_rules_msg">As permissões são concedidas, as operações de aplicativo e os componentes retornarão aos valores padrão.</string>
+    <string name="pref_remove_all_rules_msg">As permissões serão concedidas, as operações de aplicativo e os componentes retornarão aos seus valores padrão.</string>
     <string name="are_you_sure">Tem certeza?</string>
     <string name="filter_apps_with_activities">Aplicativos com atividades</string>
     <string name="toggle_default_app_ops">Alternar operações de aplicativo padrões</string>
-    <string name="installer_error_aborted">A instalação falhou porque foi cancelada ou a sessão foi encerrada inesperadamente</string>
+    <string name="installer_error_aborted">A instalação falhou ou porque foi cancelada ou a sessão foi encerrada inesperadamente</string>
     <string name="installer_error_blocked_device">dispositivo</string>
     <string name="installer_error_blocked">Instalação bloqueada por <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
     <string name="installer_error_conflict">Não foi possível instalar o aplicativo porque o nome do pacote está em uso</string>
@@ -484,7 +484,7 @@
     <string name="pref_backup_flags_msg">Adicionar uma predefinição para opções de backup remove o fardo de selecionar flags toda vez que você faz backup/restaura.</string>
     <string name="reject_time">Tempo de Rejeição</string>
     <string name="accept_time">Tempo de Aceitação</string>
-    <string name="deny_app_ops_description">Defina um modo para as operações de aplicativo identificadas pelos valores das constantes, ou seja, 63 ou RUN_IN_BACKGROUND</string>
+    <string name="deny_app_ops_description">Defina um modo para as operações de aplicativo identificadas pelos valores das constantes, ou seja, &lt;tt&gt;63&lt;/tt&gt; ou &lt;tt&gt;RUN_IN_BACKGROUND&lt;/tt&gt;</string>
     <string name="changelog">Histórico de Atualizações</string>
     <string name="one_click_ops">Operações em 1 Clique</string>
     <string name="touchscreen">Touchscreen</string>
@@ -632,7 +632,7 @@
     <string name="unknown_split_for_feature"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> para a função <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
     <string name="unknown_split_for_base_apk"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> para o APK base</string>
     <string name="routine_ops">Operações de rotina</string>
-    <string name="input_app_ops_description">Insira nomes e/ou constantes de operações de aplicativo com espaços, por exemplo (WAKE_LOCK 63 72 CAMERA), etc.</string>
+    <string name="input_app_ops_description">Insira nomes e/ou constantes de operações de aplicativo com espaços, por exemplo &lt;tt&gt;WAKE_LOCK 63 72 CAMERA&lt;/tt&gt; etc.</string>
     <string name="input_app_ops">Inserir operações de aplicativo</string>
     <string name="packages">pacotes</string>
     <string name="onboard">Todos os</string>
@@ -669,7 +669,7 @@
     <string name="failed_to_duplicate_profile">Não foi possível duplicar o perfil</string>
     <string name="pref_show_users_in_installer">Mostrar usuários no instalador</string>
     <string name="send_selected">Enviar selecionado</string>
-    <string name="input_permissions_description">Insira permissões com espaços, p. ex. (com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION), etc.</string>
+    <string name="input_permissions_description">Insira permissões com espaços, p. ex. &lt;tt&gt;com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION&lt;/tt&gt; etc. Use &lt;tt&gt;*&lt;/tt&gt; para solicitar todas as permissões.</string>
     <string name="input_permissions">Inserir permissões</string>
     <string name="enabled">Ativado</string>
     <string name="choose">Escolher</string>
@@ -731,7 +731,7 @@
     <string name="no_app_ops_permission">Sem permissão para mostrar as operações de aplicativo</string>
     <string name="keep_data_and_signatures">Mantenha os dados e assinaturas</string>
     <string name="pref_backup_android_keystore">Backup de aplicativos com Android KeyStore</string>
-    <string name="pref_backup_android_keystore_msg">Nem todos os aplicativos funcionarão após uma restauração. Restaurar o KeyStore não funciona na maioria dos dispositivos.</string>
+    <string name="pref_backup_android_keystore_msg">Nem todos os aplicativos funcionarão após a restauração. Restaurar o KeyStore não funciona na maioria dos dispositivos.</string>
     <string name="this_action_cannot_be_undone">Esta ação não pode ser desfeita.</string>
     <string name="set_app_op_mode">Definir o modo da operação de aplicativo</string>
     <string name="magisk_hide_enabled">MagiskHide</string>
@@ -880,5 +880,6 @@
     <string name="enable_disable_features">Ativar/desativar funções</string>
     <string name="isolated">Isolado</string>
     <string name="screen_lock_not_enabled">Bloqueio de tela não ativado. Ative o bloqueio de tela nas configurações do Android ou limpe os dados do aplicativo.</string>
-    <string name="input_app_ops_description_profile">Insira nomes de operações de aplicativo e/ou constantes com espaços, p. ex. (WAKE_LOCK 63 72 CAMERA) etc. Use * para solicitar todas as operações de aplicativo configuradas.</string>
+    <string name="input_app_ops_description_profile">Insira nomes de operações de aplicativo e/ou constantes com espaços, p. ex. &lt;tt&gt;WAKE_LOCK 63 72 CAMERA&lt;/tt&gt; etc. Use &lt;tt&gt;*&lt;/tt&gt; para solicitar todas as operações de aplicativo configuradas.</string>
+    <string name="working_on_adb_mode">Trabalhando no modo ADB</string>
 </resources>
