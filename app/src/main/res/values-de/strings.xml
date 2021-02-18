@@ -304,7 +304,7 @@
     <string name="touchscreen">Berührungsempfindlicher Bildschirm</string>
     <string name="pref_export_msg">Exportieren von Blockier-Regeln von App Manager in den externen Speicher.</string>
     <string name="pref_import_msg">Importieren von zuvor exportierten Blockier-Regeln vom App Manager.</string>
-    <string name="pref_import_watt_msg">Importieren der Blockier-Regeln von Watt; jede Datei enthält Regeln für ein genanntes Paket „paketname.xml“ usw.</string>
+    <string name="pref_import_watt_msg">Importieren der Blockier-Regeln von Watt; jede Datei enthält Regeln für ein genanntes Paket &lt;tt&gt;paketname.xml&lt;/tt&gt; usw.</string>
     <string name="pref_import_blocker_msg">Importieren von Blockier-Regeln aus Blocker, wobei jede Datei Regeln für ein einzelnes Paket enthält.</string>
     <string name="pref_app_theme">Farbschema der Anwendung</string>
     <string name="follow_system">Systemkonform</string>
@@ -363,19 +363,19 @@
     <string name="clear_cache">Cache leeren</string>
     <string name="block_unblock_trackers_description">Blockiere oder gebe Verfolger-Komponenten aller installierter Anwendungen frei</string>
     <string name="block_components_dots">Komponenten blockieren…</string>
-    <string name="block_components_description">Blockieren aller Komponenten, die Signatur(en) entsprechen</string>
-    <string name="deny_app_ops_description">Einstellen eines Modus für App-Operationen, die durch konstante Werte identifiziert werden (z. B. 63 bedeutet RUN_IN_BACKGROUND)</string>
+    <string name="block_components_description">Sperren aller Komponenten, die durch die angegebenen Signaturen identifiziert werden</string>
+    <string name="deny_app_ops_description">Einstellen eines Modus für App-Operationen, die durch konstante Werte identifiziert werden (z. B. &lt;tt&gt;63&lt;/tt&gt; oder &lt;tt&gt;RUN_IN_BACKGROUND&lt;/tt&gt;)</string>
     <string name="clear_data_from_uninstalled_apps">Daten deinstallierter Anwendungen löschen</string>
-    <string name="clear_data_from_uninstalled_apps_description">Daten von Anwendungen, die mit der DONT_DELETE_DATA-Flagge deinstalliert wurden, löschen</string>
+    <string name="clear_data_from_uninstalled_apps_description">Daten von Anwendungen, die mit der &lt;tt&gt;DONT_DELETE_DATA&lt;/tt&gt;-Flagge deinstalliert wurden, löschen</string>
     <string name="clear_app_cache">Cache der Anwendung leeren</string>
     <string name="clear_app_cache_description">Den Cache aller Anwendungen leeren</string>
     <string name="no_tracker_found">Keine Verfolger gefunden</string>
     <string name="failed_packages">Pakete mit Fehlern</string>
     <string name="input_signatures">Signatur(en)</string>
-    <string name="input_signatures_description">Gib bitte die gewünschten Signaturen mit einer Leerstelle getrennt ein, z. B. com.facebook org.app2 com.app3 usw.</string>
+    <string name="input_signatures_description">Bitte die gewünschten Signaturen mit einer Leerstelle getrennt angeben, z. B. &lt;tt&gt;com.facebook org.app2 com.app3&lt;/tt&gt; usw.</string>
     <string name="filtered_packages">Gefilterte Pakete</string>
     <string name="input_app_ops">App Ops</string>
-    <string name="input_app_ops_description">Geben Sie App-Op-Namen und / oder Konstanten mit Leerzeichen (z.B. WAKE_LOCK 63 72 CAMERA etc.) ein.</string>
+    <string name="input_app_ops_description">Geben Sie App-Op-Namen und/ oder Konstanten mit Leerzeichen (z.B. &lt;tt&gt;WAKE_LOCK 63 72 CAMERA&lt;/tt&gt; etc.) ein.</string>
     <string name="only_works_in_root_or_adb_mode">Nur im Root- oder ADB-Modus verfügbar</string>
     <string name="failed_to_parse_some_numbers">Einlesen mancher Zahlen nicht möglich</string>
     <plurals name="no_of_splits">
@@ -434,14 +434,14 @@
     <string name="block">Blockieren</string>
     <string name="unblock">Freigeben</string>
     <string name="block_unblock_trackers">Verfolger blockieren/freigeben</string>
-    <string name="no_matching_package_found">Kein übereinstimmendes Paket gefunden</string>
+    <string name="no_matching_package_found">Keine übereinstimmende Pakete gefunden</string>
     <string name="export_icon">Icon extrahieren</string>
     <string name="open_in_termux">In Termux öffnen</string>
     <string name="run_in_termux">In Termux ausführen</string>
     <string name="website">Webseite</string>
     <string name="website_message">https://muntashirakon.github.io/AppManager</string>
     <string name="pref_remove_all_rules">Alle Regeln entfernen</string>
-    <string name="pref_remove_all_rules_msg">Berechtigungen werden erteilt, Anwendungen und Komponenten werden auf Standardwerte zurückgesetzt.</string>
+    <string name="pref_remove_all_rules_msg">Berechtigungen werden erteilt, Anwendungen und Komponenten werden auf ihre Standardwerte zurückgesetzt.</string>
     <string name="are_you_sure">Bist du Dir sicher?</string>
     <string name="filter_apps_with_activities">Anwendungen mit Activities</string>
     <string name="toggle_default_app_ops">Voreingestellte App Ops ein-/ausschalten</string>
@@ -465,7 +465,7 @@
     <string name="unblock_trackers">Tracker blockieren</string>
     <string name="package_installer">Paket-Installer</string>
     <string name="install_in_progress">Installation wird durchgeführt</string>
-    <string name="installer_error_security">Zugriff auf APK-Dateien nicht möglich</string>
+    <string name="installer_error_security">Konnte nicht auf APK-Dateien zugreifen</string>
     <string name="installer_error_session_create">Die Installation konnte nicht gestartet werden</string>
     <string name="installer_error_session_write">Der Schreib-Zugriff für die Installation wurde verweigert</string>
     <string name="installer_error_session_commit">Fehler beim Übertragen der APK-Dateien</string>
@@ -541,7 +541,7 @@
     <string name="systemless_app">Systemlose App</string>
     <string name="cancel">Abbrechen</string>
     <string name="ok">okay</string>
-    <string name="input_backup_name_description">Die Bezeichnung der Sicherung sollte weder mit einer Ziffer beginnen, noch Leerzeichen enthalten. Lassen Sie es leer, wenn Sie das aktuelle Datum und die aktuelle Uhrzeit verwenden möchten.</string>
+    <string name="input_backup_name_description">Die Bezeichnung der Sicherung sollte weder mit einer Ziffer beginnen, noch ein Leerzeichen enthalten. Lassen Sie es leer, wenn Sie das aktuelle Datum und die aktuelle Uhrzeit verwenden möchten.</string>
     <string name="input_backup_name">Bezeichnung der Sicherung</string>
     <string name="downgrade_not_possible">Ein Downgrade ist ohne Root oder ADB nicht möglich</string>
     <string name="downgrade">Zurückstufen</string>
@@ -672,7 +672,7 @@
     <string name="failed_to_duplicate_profile">Konnte Profil nicht duplizieren</string>
     <string name="enabled">Aktiviert</string>
     <string name="choose">Auswählen</string>
-    <string name="input_permissions_description">Eingabeberechtigungen mit Leerzeichen, z.B. (com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION) etc.</string>
+    <string name="input_permissions_description">Eingabeberechtigungen mit Leerzeichen, z.B. &lt;tt&gt;(com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION&lt;/tt&gt;) etc. Verwenden Sie &lt;tt&gt;*&lt;/tt&gt; für alle Berechtigungen.</string>
     <string name="input_permissions">Eingabeberechtigungen</string>
     <string name="options">Optionen</string>
     <string name="off">Aus</string>
@@ -730,7 +730,7 @@
         <item quantity="other">Signaturschemata</item>
     </plurals>
     <string name="pref_backup_android_keystore">Sichern von Apps mit Android KeyStore</string>
-    <string name="pref_backup_android_keystore_msg">Die Wiederherstellung des KeyStore funktioniert auf den meisten Geräten nicht.</string>
+    <string name="pref_backup_android_keystore_msg">Nicht alle Apps werden nach der Wiederherstellung funktionieren. Die Wiederherstellung des KeyStore funktioniert auf den meisten Geräten nicht.</string>
     <string name="keep_data_and_signatures">Daten und Signaturen aufbewahren</string>
     <string name="this_action_cannot_be_undone">Diese Aktion kann nicht rückgängig gemacht werden.</string>
     <string name="no_app_ops_permission">Keine Berechtigung zum Anzeigen von App-Ops</string>
@@ -881,4 +881,6 @@
     <string name="installed_apps">Installierte Apps</string>
     <string name="screen_lock_not_enabled">Bildschirmsperre ist nicht aktiviert. Aktivieren Sie die Bildschirmsperre in den Android-Einstellungen oder löschen Sie die App-Daten.</string>
     <string name="isolated">Isoliert</string>
+    <string name="working_on_adb_mode">Arbeiten im ADB-Modus</string>
+    <string name="input_app_ops_description_profile">Geben Sie App-Op-Namen und/ oder Konstanten mit Leerzeichen (z.B. &lt;tt&gt;WAKE_LOCK 63 72 CAMERA&lt;/tt&gt; etc.) ein. Verwenden Sie &lt;tt&gt;*&lt;/tt&gt; für alle konfigurierten App-Ops.</string>
 </resources>
