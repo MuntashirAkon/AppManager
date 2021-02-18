@@ -26,7 +26,6 @@ import androidx.annotation.WorkerThread;
 import com.tananaev.adblib.AdbConnection;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.adb.AdbConnectionManager;
-import io.github.muntashirakon.AppManager.adb.AdbShell;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
@@ -192,11 +191,15 @@ public final class RunnerUtils {
                 if (LocalServer.isAMServiceAlive()) {
                     // Don't bother detecting root/ADB
                     return;
+                } else if (LocalServer.isLocalServerAlive()) {
+                    // Remote server is running
+                    LocalServer.getInstance();
+                    return;
                 } else {
                     // AMService isn't running, check for root/ADB
                     RunnerUtils.autoDetectRootOrAdb(context);
+                    return;
                 }
-                return;
             case Runner.MODE_ROOT:
                 AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, true);
                 AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);

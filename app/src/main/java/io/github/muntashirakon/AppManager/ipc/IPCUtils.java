@@ -29,11 +29,10 @@ public final class IPCUtils {
     public static IAMService getAmService() throws RemoteException {
         synchronized (connectionWrapper) {
             try {
-                amService = connectionWrapper.getAmService();
+                return amService = connectionWrapper.getAmService();
             } finally {
                 connectionWrapper.notifyAll();
             }
-            return amService;
         }
     }
 
@@ -105,18 +104,20 @@ public final class IPCUtils {
 
             @Override
             public void onBindingDied(ComponentName name) {
-                Log.d(TAG, "service onServiceDisconnected");
+                Log.d(TAG, "service onBindingDied");
                 amService = null;
                 onResponseReceived();
             }
 
             @Override
             public void onNullBinding(ComponentName name) {
+                Log.d(TAG, "service onNullBinding");
                 amService = null;
                 onResponseReceived();
             }
 
             private void onResponseReceived() {
+                Log.d(TAG, "service onResponseReceived");
                 if (amServiceBoundWatcher != null) {
                     // Should never be null
                     amServiceBoundWatcher.countDown();
@@ -155,8 +156,8 @@ public final class IPCUtils {
                 if (amService == null && AppPref.isRootOrAdbEnabled()) {
                     startDaemon();
                 }
+                return getServiceSafe();
             }
-            return getServiceSafe();
         }
 
         @AnyThread

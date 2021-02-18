@@ -27,13 +27,14 @@ import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.IAMService;
 import io.github.muntashirakon.AppManager.ipc.IPCUtils;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.server.common.Caller;
 import io.github.muntashirakon.AppManager.server.common.CallerResult;
+import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 
 import java.io.IOException;
+import java.net.ServerSocket;
 import java.net.SocketTimeoutException;
 
 public class LocalServer {
@@ -65,6 +66,17 @@ public class LocalServer {
             }
         }
         return localServer;
+    }
+
+    public static boolean isLocalServerAlive() {
+        if (localServer != null) return true;
+        else {
+            try (ServerSocket ignored = new ServerSocket(ServerConfig.getLocalServerPort())) {
+                return false;
+            } catch (IOException e) {
+                return true;
+            }
+        }
     }
 
     public static boolean isAMServiceAlive() {
