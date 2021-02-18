@@ -46,19 +46,20 @@ public class LocalServer {
 
     @GuardedBy("lockObject")
     public static LocalServer getInstance() {
+        // Non-null check must be done outside the synchronised block to prevent deadlock on ADB over TCP mode.
+        if (localServer != null) return localServer;
         synchronized (lockObject) {
             try {
-                if (localServer == null) {
-                    try {
-                        Log.e("IPC", "Init: Local server");
-                        localServer = new LocalServer();
-                        if (amService == null || !amService.asBinder().pingBinder()) {
-                            amService = IPCUtils.getAmService();
-                        }
-                    } catch (Throwable e) {
-                        e.printStackTrace();
-                    }
+                Log.e("IPC", "Init: Local server");
+                localServer = new LocalServer();
+                if (amService == null || !amService.asBinder().pingBinder()) {
+                    // This calls the AdbShell class which has dependencies on LocalServer which might cause deadlock
+                    // if not careful (see comment above on non-null check)
+                    amService = IPCUtils.getAmService();
                 }
+            } catch (Throwable e) {
+                // FIXME: 18/2/21 The exceptions should be part of the signature rather than discarding them.
+                e.printStackTrace();
             } finally {
                 lockObject.notifyAll();
             }

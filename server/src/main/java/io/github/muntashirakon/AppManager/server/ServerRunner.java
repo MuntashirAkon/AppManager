@@ -23,6 +23,7 @@ import android.os.Process;
 import android.os.SystemClock;
 import android.system.Os;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Arrays;
@@ -171,10 +172,10 @@ public final class ServerRunner {
      */
     @NonNull
     private static String getProcessName(int pid) {
-        FileInputStream fis = null;
-        try {
+        File cmdLine = new File("/proc/" + pid + "/cmdline");
+        if (!cmdLine.exists()) return "";
+        try (FileInputStream fis = new FileInputStream(cmdLine)) {
             byte[] buff = new byte[512];
-            fis = new FileInputStream("/proc/" + pid + "/cmdline");
             int len = fis.read(buff);
             if (len > 0) {
                 int i;
@@ -187,14 +188,6 @@ public final class ServerRunner {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (fis != null) {
-                    fis.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
         return "";
     }

@@ -27,6 +27,7 @@ import com.tananaev.adblib.AdbConnection;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.adb.AdbConnectionManager;
 import io.github.muntashirakon.AppManager.adb.AdbShell;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.AppManager.users.Users;
@@ -164,16 +165,17 @@ public final class RunnerUtils {
             AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
             // Check for adb
             if (RunnerUtils.isAdbAvailable(context)) {
+                Log.e("ADB", "ADB available");
                 AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, true);
             }
             try {
-                AdbShell.CommandResult result = AdbShell.run("echo AMAdbCheck");
-                if (!result.isSuccessful() || !"AMAdbCheck".equals(result.getStdout())) {
-                    throw new IOException("Adb not available");
-                }
                 LocalServer.getInstance();
+                if (!LocalServer.isAMServiceAlive()) {
+                    throw new IOException("ADB not available");
+                }
                 new Handler(Looper.getMainLooper()).post(() -> UIUtils.displayShortToast(R.string.working_on_adb_mode));
             } catch (IOException e) {
+                Log.e("ADB", e);
                 AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
             }
         } else {

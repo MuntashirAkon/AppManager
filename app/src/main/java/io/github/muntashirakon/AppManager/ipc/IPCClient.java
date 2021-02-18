@@ -69,7 +69,7 @@ class IPCClient implements IBinder.DeathRecipient, Closeable {
 
     private IRootIPC server = null;
     private IBinder binder = null;
-    private final CountDownLatch broadcastWatcher = new CountDownLatch(1);
+    private CountDownLatch broadcastWatcher;
 
     IPCClient(@NonNull Intent intent) throws InterruptedException, RemoteException, IOException {
         name = intent.getComponent();
@@ -130,6 +130,7 @@ class IPCClient implements IBinder.DeathRecipient, Closeable {
         intent.putExtra(INTENT_EXTRA_KEY, bundle);
 
         Log.e(TAG, "Running service starter script...");
+        broadcastWatcher = new CountDownLatch(1);
         String cmd = getRunnerScript(context, name, IPCServer.class.getName(), debugParams);
         if (AppPref.isRootEnabled()) {
             if (!Runner.runCommand(Runner.getRootInstance(), cmd).isSuccessful()) {
