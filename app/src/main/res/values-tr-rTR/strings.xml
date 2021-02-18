@@ -204,7 +204,7 @@
     <string name="systemless_app">Sistemsiz Uygulama</string>
     <string name="cancel">İptal</string>
     <string name="ok">Tamam</string>
-    <string name="input_backup_name_description">Yedek adı bir rakamla başlamamalı ve herhangi bir boşluk karakteri içermemelidir. Geçerli tarih-saati kullanmak istiyorsanız boş bırakın.</string>
+    <string name="input_backup_name_description">Yedek adı bir rakamla başlamamalı ve boşluk karakterleri içermemelidir. Geçerli tarih-saati kullanmak istiyorsanız boş bırakın.</string>
     <string name="input_backup_name">Yedek adı</string>
     <string name="downgrade_not_possible">Root veya ADB olmadan sürüm düşürmek mümkün değildir</string>
     <string name="downgrade">Sürüm düşür</string>
@@ -266,7 +266,7 @@
     <string name="installer_error_session_commit">APK dosyaları işlenemedi</string>
     <string name="installer_error_session_write">Kurucu oturumuna yazılamadı</string>
     <string name="installer_error_session_create">Kurucu oturumu oluşturulamadı</string>
-    <string name="installer_error_security">APK dosyalarına erişilemiyor</string>
+    <string name="installer_error_security">APK dosyalarına erişilemedi</string>
     <string name="install_in_progress">Kurulum devam ediyor</string>
     <string name="package_installer">Paket Kurucu</string>
     <string name="unblock_trackers">İzleyicilerin engelini kaldır</string>
@@ -290,12 +290,12 @@
     <string name="toggle_default_app_ops">Öntanımlı uygulama işlemlerini değiştir</string>
     <string name="filter_apps_with_activities">Etkinlikleri olan uygulamalar</string>
     <string name="are_you_sure">Emin misiniz\?</string>
-    <string name="pref_remove_all_rules_msg">İzinler verilir, uygulama işlemleri ve bileşenleri öntanımlı değerlere dönecektir.</string>
+    <string name="pref_remove_all_rules_msg">İzinler verilecek, uygulama işlemleri ve bileşenleri öntanımlı değerlerine dönecektir.</string>
     <string name="pref_remove_all_rules">Tüm kuralları kaldır</string>
     <string name="website">Web sitesi</string>
     <string name="run_in_termux">Termux\'ta çalıştır</string>
     <string name="open_in_termux">Termux\'ta aç</string>
-    <string name="no_matching_package_found">Eşleşen paket bulunamadı</string>
+    <string name="no_matching_package_found">Eşleşen paketler bulunamadı</string>
     <string name="block_unblock_trackers">İzleyicileri engelle/engelini kaldır</string>
     <string name="unblock">Engeli kaldır</string>
     <string name="block">Engelle</string>
@@ -344,20 +344,20 @@
     </plurals>
     <string name="failed_to_parse_some_numbers">Bazı numaralar ayrıştırılamadı</string>
     <string name="only_works_in_root_or_adb_mode">Yalnızca root veya ADB modunda çalışır</string>
-    <string name="input_app_ops_description">Uygulama işlemi adlarını ve/veya sabitlerini aralarında boşluk olacak şekilde girin, örn. (WAKE_LOCK 63 72 CAMERA) vb.</string>
+    <string name="input_app_ops_description">Uygulama işlemi adlarını ve/veya sabitlerini aralarında boşluk olacak şekilde girin, örn. &lt;tt&gt;WAKE_LOCK 63 72 CAMERA&lt;/tt&gt; gibi.</string>
     <string name="starting_activity">Başlangıç etkinliği: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="input_app_ops">Uygulama işlemlerini gir</string>
     <string name="filtered_packages">Filtrelenmiş paketler</string>
-    <string name="input_signatures_description">İmzaları aralarında boşluk olacak şekilde girin, örn. (com.facebook org.app2 com.app3) gibi.</string>
+    <string name="input_signatures_description">İmzaları aralarında boşluk olacak şekilde girin, örn. &lt;tt&gt;com.facebook org.app2 com.app3&lt;/tt&gt; gibi.</string>
     <string name="input_signatures">İmzaları gir</string>
     <string name="failed_packages">Başarısız paketler</string>
     <string name="no_tracker_found">İzleyici bulunamadı</string>
     <string name="clear_app_cache_description">Tüm uygulamaların önbelleğini temizler</string>
     <string name="clear_app_cache">Uygulama önbelleğini temizle</string>
-    <string name="clear_data_from_uninstalled_apps_description">DONT_DELETE_DATA işaretiyle kaldırılan uygulamaların verilerini temizle</string>
+    <string name="clear_data_from_uninstalled_apps_description">&lt;tt&gt;DONT_DELETE_DATA&lt;/tt&gt; işaretiyle kaldırılan uygulamaların verilerini temizle</string>
     <string name="clear_data_from_uninstalled_apps">Kaldırılan uygulamaların verilerini temizle</string>
-    <string name="deny_app_ops_description">Sabit değerlerle tanımlanan uygulama işlemleri için bir mod ayarlayın, örn. 63 veya RUN_IN_BACKGROUND</string>
-    <string name="block_components_description">Verilen imza(lar)la tanımlanan tüm bileşenleri engelle</string>
+    <string name="deny_app_ops_description">Sabit değerlerle tanımlanan uygulama işlemleri için bir mod ayarlayın, örn. &lt;tt&gt;63&lt;/tt&gt; veya &lt;tt&gt;RUN_IN_BACKGROUND&lt;/tt&gt;</string>
+    <string name="block_components_description">Verilen imzalarla tanımlanan tüm bileşenleri engelle</string>
     <string name="block_components_dots">Bileşenleri engelle…</string>
     <string name="block_unblock_trackers_description">Tüm kurulu uygulamalardan reklam ve izleme bileşenlerini engelleyin veya engelini kaldırın</string>
     <string name="clear_cache">Önbelleği Temizle</string>
@@ -416,7 +416,7 @@
     <string name="follow_system">Sisteme uy</string>
     <string name="pref_app_theme">Uygulama teması</string>
     <string name="pref_import_blocker_msg">Engelleme kurallarını Blocker\'dan içe aktarın, her dosya tek bir paket için kurallar içerir.</string>
-    <string name="pref_import_watt_msg">Engelleme kurallarını Watt\'tan içe aktarın, her dosya paket_adı.xml olarak adlandırılmış tek bir paket için kurallar içerir.</string>
+    <string name="pref_import_watt_msg">Engelleme kurallarını Watt\'tan içe aktarın, her dosya &lt;tt&gt;paket_adı.xml&lt;/tt&gt; şeklinde adlandırılmış olarak tek bir paket için kurallar içerir.</string>
     <string name="pref_import_msg">App Manager\'den daha önce dışa aktarılan engelleme kurallarını içe aktarın.</string>
     <string name="pref_export_msg">App Manager içinde yapılandırılan engelleme kurallarını harici depolamaya aktarın.</string>
     <string name="touchscreen">Dokunmatik ekran</string>
@@ -577,7 +577,7 @@
     <string name="usage_today">Bugün</string>
     <string name="usage_weekly">Haftalık</string>
     <string name="app_usage">Uygulama Kullanımı</string>
-    <string name="no_tracker_class">İzleyici sınıf yok</string>
+    <string name="no_tracker_class">İzleyici sınıflar yok</string>
     <string name="no_shared_libs">Paylaşılan kütüphane yok</string>
     <plurals name="main_list_date_days">
         <item quantity="one"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> gün</item>
@@ -672,7 +672,7 @@
     <string name="simple">Basit</string>
     <string name="enabled">Etkin</string>
     <string name="choose">Seç</string>
-    <string name="input_permissions_description">Aralarında boşluk olacak şekilde giriş izinleri, örn. (com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION) vb.</string>
+    <string name="input_permissions_description">İzinleri aralarında boşluk olacak şekilde girin, örn. &lt;tt&gt;com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION&lt;/tt&gt; gibi. Tüm izinlere uygulamak için &lt;tt&gt;*&lt;/tt&gt; kullanın.</string>
     <string name="input_permissions">Giriş izinleri</string>
     <string name="options">Seçenekler</string>
     <string name="off">Kapalı</string>
@@ -878,5 +878,6 @@
     <string name="enable_disable_features">Özellikleri etkinleştir/devre dışı bırak</string>
     <string name="isolated">Yalıtıldı</string>
     <string name="screen_lock_not_enabled">Ekran kilidi etkinleştirilmedi. Android ayarlarında ekran kilidini etkinleştirin veya uygulama verilerini temizleyin.</string>
-    <string name="input_app_ops_description_profile">Uygulama işlem adlarını ve/veya sabitleri aralarında boşluklarla girin, örn. (WAKE_LOCK 63 72 CAMERA) vb. Tüm yapılandırılmış uygulama işlemlerine uygulamak için * kullanın.</string>
+    <string name="input_app_ops_description_profile">Uygulama işlem adlarını ve/veya sabitleri aralarında boşluk olacak şekilde girin, örn. &lt;tt&gt;WAKE_LOCK 63 72 CAMERA&lt;/tt&gt; gibi. Tüm yapılandırılmış uygulama işlemlerine uygulamak için &lt;tt&gt;*&lt;/tt&gt; kullanın.</string>
+    <string name="working_on_adb_mode">ADB modunda çalışma</string>
 </resources>
