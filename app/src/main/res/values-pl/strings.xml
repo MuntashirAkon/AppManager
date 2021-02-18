@@ -621,4 +621,8 @@
     <string name="signature">Sygnatura</string>
     <string name="not_yet_valid">Jeszcze nie obowiązuje</string>
     <string name="issuer">Wystawiony przez</string>
+    <string name="orientation_reverse_landscape">Pozioma, odwrócona</string>
+    <string name="orientation_reverse_portrait">Pionowa, odwrócona</string>
+    <string name="orientation_portrait">Pionowa</string>
+    <string name="orientation_landscape">Pozioma</string>
 </resources>
