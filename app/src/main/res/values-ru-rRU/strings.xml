@@ -326,7 +326,7 @@
     <string name="touchscreen">Сенсорный экран</string>
     <string name="pref_export_msg">Экспортировать правила блокировки, настроенные в App Manager на внешнее хранилище.</string>
     <string name="pref_import_msg">Импортировать ранее экспортированные правила блокировки из App Manager.</string>
-    <string name="pref_import_watt_msg">Импортировать правила блокировки из Watt, каждый файл содержит правила для одного названного пакета как packagename.xml и т. д.</string>
+    <string name="pref_import_watt_msg">Импортировать правила блокировки из Watt, каждый файл содержит правила для одного названного пакета как &lt;tt&gt;packagename.xml&lt;/tt&gt; и т. д.</string>
     <string name="pref_import_blocker_msg">Импортировать правила блокировки из Blocker, каждый файл содержит правила для одного пакета.</string>
     <string name="pref_app_theme">Тема приложения</string>
     <string name="follow_system">Согласно системным настройкам</string>
@@ -369,7 +369,7 @@
     <string name="never_ask">Никогда не спрашивать</string>
     <string name="one_click_ops">Операции в один клик</string>
     <string name="changelog">Список изменений</string>
-    <string name="external_apk_no_app_op">Внешний APK не работает с приложением</string>
+    <string name="external_apk_no_app_op">Внешний APK не имеет операций с приложением</string>
     <string name="manifest_viewer">Просмотр манифеста</string>
     <plurals name="no_of_trackers">
         <item quantity="one">%1$d трекер</item>
@@ -390,18 +390,18 @@
     <string name="block_unblock_trackers_description">Блокировать или разблокировать рекламу и компоненты трекеров во всех установленных приложениях</string>
     <string name="block_components_dots">Блокировать компоненты…</string>
     <string name="block_components_description">Заблокировать все компоненты, идентифицированные данными подписями</string>
-    <string name="deny_app_ops_description">Установите режим для операций приложения, определяемых постоянными значениями, например 63 или RUN_IN_BACKGROUND</string>
+    <string name="deny_app_ops_description">Установите режим для операций приложения, определяемых постоянными значениями, например &lt;tt&gt;63&lt;/tt&gt; или &lt;tt&gt;RUN_IN_BACKGROUND&lt;/tt&gt;</string>
     <string name="clear_data_from_uninstalled_apps">Очистить данные удаленных приложений</string>
-    <string name="clear_data_from_uninstalled_apps_description">Очистить данные приложений, которые были удалены с помощью флага DONT_DELETE_DATA</string>
+    <string name="clear_data_from_uninstalled_apps_description">Очистить данные приложений, которые были удалены с помощью флага &lt;tt&gt;DONT_DELETE_DATA&lt;/tt&gt;</string>
     <string name="clear_app_cache">Очистить кэш приложения</string>
     <string name="clear_app_cache_description">Очистить кэш всех приложений</string>
     <string name="no_tracker_found">Трекеров не найдено</string>
     <string name="failed_packages">Сбойные пакеты</string>
     <string name="input_signatures">Ввод подписей</string>
-    <string name="input_signatures_description">Введите подписи с пробелами, например (com.facebook org.app2 com.app3) и т. д.</string>
+    <string name="input_signatures_description">Введите подписи с пробелами, например &lt;tt&gt;com.facebook org.app2 com.app3&lt;/tt&gt; и т. д.</string>
     <string name="filtered_packages">Отфильтрованные пакеты</string>
     <string name="input_app_ops">Ввод операций приложения</string>
-    <string name="input_app_ops_description">Введите имена операций приложения и/или константы с пробелами, например (WAKE_LOCK 63 72 CAMERA) и т.д.</string>
+    <string name="input_app_ops_description">Введите имена операций приложения и/или константы с пробелами, например &lt;tt&gt;WAKE_LOCK 63 72 CAMERA&lt;/tt&gt; и т.д.</string>
     <string name="only_works_in_root_or_adb_mode">Доступно только в режиме root или ADB</string>
     <string name="failed_to_parse_some_numbers">Не удалось разобрать некоторые числа</string>
     <plurals name="no_of_splits">
@@ -478,18 +478,18 @@
     <string name="block">Заблокировать</string>
     <string name="unblock">Разблокировать</string>
     <string name="block_unblock_trackers">Блокировать/разблокировать трекеры</string>
-    <string name="no_matching_package_found">Соответствующий пакет не найден</string>
+    <string name="no_matching_package_found">Подходящих пакетов не найдено</string>
     <string name="export_icon">Извлечь значок</string>
     <string name="open_in_termux">Открыть в Termux</string>
     <string name="run_in_termux">Запустить в Termux</string>
     <string name="website">Веб-сайт</string>
     <string name="website_message">https://muntashirakon.github.io/AppManager</string>
     <string name="pref_remove_all_rules">Удаление всех правил</string>
-    <string name="pref_remove_all_rules_msg">Разрешения будут предоставлены, операции и компоненты приложений вернутся к значениям по умолчанию.</string>
+    <string name="pref_remove_all_rules_msg">Разрешения будут предоставлены, операциям приложения и компонентам вернутся значения по умолчанию.</string>
     <string name="are_you_sure">Вы уверены?</string>
     <string name="filter_apps_with_activities">Приложения с активити</string>
     <string name="toggle_default_app_ops">Переключение операций приложения по умолчанию</string>
-    <string name="installer_error_aborted">Установка не удалась, потому что либо она была отменена, либо сеанс неожиданно закрылся</string>
+    <string name="installer_error_aborted">Установка не удалась, потому что она была отменена, или сеанс был неожиданно закрыт</string>
     <string name="installer_error_blocked_device">устройством</string>
     <string name="installer_error_blocked">Установка заблокирована <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
     <string name="installer_error_conflict">Не удалось установить приложение, так как имя пакета используется</string>
@@ -775,7 +775,7 @@
         <item quantity="other">Проверено с %d предупреждениями</item>
     </plurals>
     <string name="input_permissions">Ввод разрешений</string>
-    <string name="input_permissions_description">Введите разрешения с пробелами, например (com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION) и т.п.</string>
+    <string name="input_permissions_description">Введите разрешения с пробелами, например &lt;tt&gt;com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION&lt;/tt&gt; и т.п. Используйте &lt;tt&gt;*&lt;/tt&gt;, чтобы подать заявку на все разрешения.</string>
     <plurals name="signature_schemes_pl">
         <item quantity="one">Схема подписи</item>
         <item quantity="few">Схемы подписи</item>
@@ -788,7 +788,7 @@
     <string name="input_keystore_alias_pass_description">Вставьте пароль для псевдонима <b>%1$s</b>. Вы можете оставить это поле пустым, если пароль совпадает с паролем хранилища ключей.</string>
     <string name="input_keystore_alias_pass">Пароль для псевдонима <b>%1$s</b></string>
     <string name="no_app_ops_permission">Нет разрешения на отображение операций приложения</string>
-    <string name="pref_backup_android_keystore_msg">Не все приложения будут работать после восстановления. Восстановление хранилища ключей не работает на большинстве устройств.</string>
+    <string name="pref_backup_android_keystore_msg">Не все приложения будут работать после восстановления. Восстановление KeyStore не работает на большинстве устройств.</string>
     <string name="pref_backup_android_keystore">Резервное копирование приложений с хранилищем ключей Android</string>
     <string name="keep_data_and_signatures">Сохранить данные и подписи</string>
     <string name="this_action_cannot_be_undone">Это действие не может быть отменено.</string>
@@ -945,5 +945,6 @@
     <string name="type_uri">URI</string>
     <string name="isolated">изолированно</string>
     <string name="screen_lock_not_enabled">Блокировка экрана не включена. Включите блокировку экрана в настройках Android или очистите данные приложения.</string>
-    <string name="input_app_ops_description_profile">Введите имена операций приложения и/или константы с пробелами, например (WAKE_LOCK 63 72 CAMERA) и т.д. Используйте * для применения ко всем настроенным операциям приложения.</string>
+    <string name="input_app_ops_description_profile">Введите имена операций приложения и/или константы с пробелами, например &lt;tt&gt;WAKE_LOCK 63 72 CAMERA&lt;/tt&gt; и т.д. Используйте &lt;tt&gt;*&lt;/tt&gt; для применения ко всем настроенным операциям приложения.</string>
+    <string name="working_on_adb_mode">Работа в режиме ADB</string>
 </resources>
