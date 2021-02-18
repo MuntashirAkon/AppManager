@@ -142,10 +142,10 @@
     <string name="usage_today">Сегодня</string>
     <string name="usage_7_days">Последние 7 дней</string>
     <plurals name="usage_months">
-        <item quantity="one">%1$d мес</item>
-        <item quantity="few">%1$d мес</item>
-        <item quantity="many">%1$d мес</item>
-        <item quantity="other">%1$d мес</item>
+        <item quantity="one">%1$d мес.</item>
+        <item quantity="few">%1$d мес.</item>
+        <item quantity="many">%1$d мес.</item>
+        <item quantity="other">%1$d мес.</item>
     </plurals>
     <plurals name="usage_days">
         <item quantity="one">%1$d день</item>
@@ -154,10 +154,10 @@
         <item quantity="other">%1$d дней</item>
     </plurals>
     <plurals name="usage_hours">
-        <item quantity="one">%1$d ч</item>
-        <item quantity="few">%1$d ч</item>
-        <item quantity="many">%1$d ч</item>
-        <item quantity="other">%1$d ч</item>
+        <item quantity="one">%1$d ч.</item>
+        <item quantity="few">%1$d ч.</item>
+        <item quantity="many">%1$d ч.</item>
+        <item quantity="other">%1$d ч.</item>
     </plurals>
     <string name="usage_min">%1$d мин</string>
     <string name="usage_less_than_a_minute">Меньше минуты</string>
@@ -806,7 +806,7 @@
     <string name="send_edited_intent">Отправить измененное намерение</string>
     <string name="matching_activities">Соответствующие активити</string>
     <string name="filter_apps_with_splits">Разделенные приложения</string>
-    <string name="set_custom_app_op">Задания приложений</string>
+    <string name="set_custom_app_op">Пользовательская настройка операции приложения</string>
     <string name="cpu">Процессор</string>
     <string name="battery">Аккумулятор</string>
     <string name="graphics">Графика</string>
@@ -850,10 +850,10 @@
     <string name="size">Размер</string>
     <string name="hardware">Модель</string>
     <plurals name="alert_failed_to_set_app_ops">
-        <item quantity="one">Не удалось настроить операции для %1$d приложения</item>
-        <item quantity="few">Не удалось настроить операции для %1$d приложений</item>
-        <item quantity="many">Не удалось настроить операции для %1$d приложений</item>
-        <item quantity="other">Не удалось настроить операции для %1$d приложений</item>
+        <item quantity="one">Не удалось настроить операции приложения для %1$d приложения</item>
+        <item quantity="few">Не удалось настроить операции приложения для %1$d приложений</item>
+        <item quantity="many">Не удалось настроить операции приложения для %1$d приложений</item>
+        <item quantity="other">Не удалось настроить операции приложения для %1$d приложений</item>
     </plurals>
     <string name="refresh_rate">Частота обновления</string>
     <string name="scaling_factor">Коэффициент масштабирования</string>
