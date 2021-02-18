@@ -132,7 +132,7 @@
         <item quantity="other"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> 天</item>
     </plurals>
     <string name="no_shared_libs">无共享库</string>
-    <string name="no_tracker_class">无 tracker 类</string>
+    <string name="no_tracker_class">无跟踪器类</string>
     <string name="app_usage">应用使用情况</string>
     <string name="usage_weekly">每周</string>
     <string name="usage_today">今天</string>
@@ -292,7 +292,7 @@
     <string name="touchscreen">触摸屏</string>
     <string name="pref_export_msg">导出应用管理器中配置的阻止规则到外部存储。</string>
     <string name="pref_import_msg">导入先前从应用管理器导出的拦截规则。</string>
-    <string name="pref_import_watt_msg">从 Watt 导入阻止规则，每个文件都包含单个命名包的规则，诸如 packagename.xml。</string>
+    <string name="pref_import_watt_msg">从 Watt 导入阻止规则，每个文件都包含针对单个命名包的规则，诸如 &lt;tt&gt; packagename.xml&lt;/tt&gt;等。</string>
     <string name="pref_import_blocker_msg">从 Blocker 导入拦截规则，每个文件包含单个软件包的规则。</string>
     <string name="pref_app_theme">应用主题</string>
     <string name="follow_system">跟随系统</string>
@@ -319,7 +319,7 @@
     <string name="sort_by_tracker_components">优先的跟踪器</string>
     <string name="unknown_op">未知的操作</string>
     <string name="failed_to_disable_trackers">无法禁用跟踪器</string>
-    <string name="trackers_disabled_successfully">已禁用跟踪器</string>
+    <string name="trackers_disabled_successfully">跟踪器已被禁用</string>
     <plurals name="alert_failed_to_disable_trackers">
         <item quantity="other">无法禁用来自%1$d个应用的跟踪器</item>
     </plurals>
@@ -332,7 +332,7 @@
     <string name="never_ask">从不询问</string>
     <string name="one_click_ops">一键操作</string>
     <string name="changelog">更新日志</string>
-    <string name="external_apk_no_app_op">外部APK没有任何应用程序操作</string>
+    <string name="external_apk_no_app_op">外部 APK 没有任何应用程序操作</string>
     <string name="manifest_viewer">清单查看器</string>
     <plurals name="no_of_trackers">
         <item quantity="other">%1$d个跟踪器</item>
@@ -349,19 +349,19 @@
     <string name="clear_cache">清除缓存</string>
     <string name="block_unblock_trackers_description">阻止或取消屏蔽所有已安装应用的广告和跟踪组件</string>
     <string name="block_components_dots">屏蔽组件…</string>
-    <string name="block_components_description">阻止给定签名识别的所有组件</string>
-    <string name="deny_app_ops_description">设置由常数值标识的应用操作模式，如 63 表示 RUN_IN_BACKGROUND</string>
+    <string name="block_components_description">拦截给定特征码识别出的所有部件</string>
+    <string name="deny_app_ops_description">设置由常数值标识的应用操作模式，如 &lt;tt&gt;63&lt;/tt&gt; 或 &lt;tt&gt; RUN_IN_BACKGROUND&lt;/tt&gt;</string>
     <string name="clear_data_from_uninstalled_apps">清除已卸载应用的数据</string>
-    <string name="clear_data_from_uninstalled_apps_description">清除使用 DONT_DELETE_DATA 标志卸载的应用中的数据</string>
+    <string name="clear_data_from_uninstalled_apps_description">清除使用 &lt;tt&gt; DONT_DELETE_DATA &lt;/tt&gt;标志卸载的应用中的数据</string>
     <string name="clear_app_cache">清除缓存</string>
     <string name="clear_app_cache_description">清除所有应用程序的缓存</string>
     <string name="no_tracker_found">没有发现跟踪器</string>
     <string name="failed_packages">错误的软件包</string>
     <string name="input_signatures">输入签名</string>
-    <string name="input_signatures_description">用空格隔开输入的签名，如(com.facebook org.app2 com.app3) 等。</string>
+    <string name="input_signatures_description">用空格隔开输入的签名，如&lt;tt&gt;com.facebook org.app2 com.app3&lt;/tt&gt;等。</string>
     <string name="filtered_packages">已过滤的软件包</string>
     <string name="input_app_ops">输入应用操作</string>
-    <string name="input_app_ops_description">用空格隔开输入的应用操作名称和/或常数，如 (WAKE_LOCK 63 72 CAMERA) 等。</string>
+    <string name="input_app_ops_description">用空格隔开输入的应用操作名称和/或常数，如 &lt;tt&gt;WAKE_LOCK 63 72 CAMERA&lt;/tt&gt; 等。</string>
     <string name="only_works_in_root_or_adb_mode">仅在 root 或 ADB 模式下工作</string>
     <string name="failed_to_parse_some_numbers">无法解析某些数字</string>
     <plurals name="no_of_splits">
@@ -424,11 +424,11 @@
     <string name="website">网址</string>
     <string name="website_message">https://muntashirakon.github.io/AppManager</string>
     <string name="pref_remove_all_rules">删除所有规则</string>
-    <string name="pref_remove_all_rules_msg">权限已被授予，应用操作和组件将回到默认值。</string>
+    <string name="pref_remove_all_rules_msg">权限已被授予，app op 和组件将回到它们的默认值。</string>
     <string name="are_you_sure">您确定吗？</string>
     <string name="filter_apps_with_activities">有活动的应用程序</string>
     <string name="toggle_default_app_ops">切换默认应用</string>
-    <string name="installer_error_aborted">安装失败，要么因为它被取消，要么因为会话意外关闭</string>
+    <string name="installer_error_aborted">安装失败，要么因为它被取消，要么因为会话被意外关闭</string>
     <string name="installer_error_blocked_device">设备</string>
     <string name="installer_error_blocked">安装被阻止, 由 <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
     <string name="installer_error_conflict">无法安装这个应用，因为一个已安装的应用程序的包名和它一样</string>
@@ -635,7 +635,7 @@
     <string name="send_selected">发送选中的应用</string>
     <string name="enabled">已启用</string>
     <string name="choose">选择</string>
-    <string name="input_permissions_description">带空格的输入权限，例如 (com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION)等。</string>
+    <string name="input_permissions_description">输入的权限之间用空格隔开，例如 &lt;tt&gt;com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION&lt;/tt&gt;等。使用 &lt;tt&gt;*&lt;/tt&gt;应用到所有权限。</string>
     <string name="input_permissions">输入权限</string>
     <string name="options">选项</string>
     <string name="off">关闭</string>
@@ -848,5 +848,6 @@
     <string name="enable_disable_features">启用/禁用功能</string>
     <string name="isolated">已隔离</string>
     <string name="screen_lock_not_enabled">未启用屏幕锁。在安卓系统设置中启用屏幕锁或清除应用数据。</string>
-    <string name="input_app_ops_description_profile">app op 名称和/或常数间用英文空格隔开，比如（WAKE_LOCK 63 72 CAMERA）等。用 * 表示应用到所有配置的 app ops。</string>
+    <string name="input_app_ops_description_profile">app op 名称和/或常数间用英文空格隔开，比如 &lt;tt&gt;WAKE_LOCK 63 72 CAMERA&lt;/tt&gt;等。用 &lt;tt&gt;* &lt;/tt&gt;表示应用到所有配置的 app ops。</string>
+    <string name="working_on_adb_mode">在 ADB 模式上正常工作</string>
 </resources>
