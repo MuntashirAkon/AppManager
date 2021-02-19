@@ -18,10 +18,7 @@
 package io.github.muntashirakon.AppManager.details.info;
 
 import android.content.*;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
+import android.content.pm.*;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.net.NetworkPolicyManager;
@@ -33,6 +30,7 @@ import android.provider.Settings;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.format.Formatter;
+import android.util.Pair;
 import android.view.*;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -229,6 +227,29 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             // Set Application Name, aka Label
             labelView.setText(mPackageLabel);
         });
+        iconView.setOnClickListener(v -> new Thread(() -> {
+            ClipboardManager clipboard = (ClipboardManager) mActivity.getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clipData = clipboard.getPrimaryClip();
+            if (clipData.getItemCount() > 0) {
+                String data = clipData.getItemAt(0).getText().toString().trim().toLowerCase(Locale.ROOT);
+                if (data.matches("[0-9a-f]+")) {
+                    Signature[] signatures = PackageUtils.getSigningInfo(mPackageInfo, isExternalApk);
+                    if (signatures != null && signatures.length == 1) {
+                        byte[] certBytes = signatures[0].toByteArray();
+                        Pair<String, String>[] digests = DigestUtils.getDigests(certBytes);
+                        for (Pair<String, String> digest : digests) {
+                            if (digest.second.equals(data)) {
+                                if (digest.first.equals(DigestUtils.MD5) || digest.first.equals(DigestUtils.SHA_1)) {
+                                    runOnUiThread(() -> displayLongToast(R.string.verified_using_unreliable_hash));
+                                } else runOnUiThread(() -> displayLongToast(R.string.verified));
+                                return;
+                            }
+                        }
+                    }
+                    runOnUiThread(() -> displayLongToast(R.string.not_verified));
+                }
+            }
+        }).start());
         setupTagCloud();
         setupVerticalView();
     }
@@ -840,7 +861,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 // App is installed
                 long installedVersionCode = PackageInfoCompat.getLongVersionCode(mInstalledPackageInfo);
                 long thisVersionCode = PackageInfoCompat.getLongVersionCode(mPackageInfo);
-                if (installedVersionCode < thisVersionCode) {  // FIXME: Check for signature
+                if (installedVersionCode < thisVersionCode) {
                     // Needs update
                     addToHorizontalLayout(R.string.whats_new, R.drawable.ic_info_outline_black_24dp)
                             .setOnClickListener(v -> {
