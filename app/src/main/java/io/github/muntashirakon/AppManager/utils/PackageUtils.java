@@ -52,6 +52,7 @@ import io.github.muntashirakon.io.ProxyFile;
 
 import java.io.File;
 import java.security.PublicKey;
+import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.X509Certificate;
@@ -624,10 +625,11 @@ public final class PackageUtils {
     }
 
     @NonNull
-    public static Spannable getSigningCertificateInfo(@NonNull Context ctx, @Nullable X509Certificate certificate) {
+    public static Spannable getSigningCertificateInfo(@NonNull Context ctx, @Nullable X509Certificate certificate)
+            throws CertificateEncodingException {
         SpannableStringBuilder builder = new SpannableStringBuilder();
         if (certificate == null) return builder;
-        byte[] certBytes = certificate.getSignature();
+        byte[] certBytes = certificate.getEncoded();
         builder.append(getPrimaryText(ctx, ctx.getString(R.string.subject) + ": "))
                 .append(certificate.getSubjectX500Principal().getName()).append("\n")
                 .append(getPrimaryText(ctx, ctx.getString(R.string.issuer) + ": "))

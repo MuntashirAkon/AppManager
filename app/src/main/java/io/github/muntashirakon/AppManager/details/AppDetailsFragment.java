@@ -55,6 +55,7 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -1476,7 +1477,10 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             if (!TextUtils.isEmpty(item.name)) {
                 builder.append(UIUtils.getTitleText(mActivity, item.name)).append("\n");
             }
-            builder.append(PackageUtils.getSigningCertificateInfo(mActivity, signature));
+            try {
+                builder.append(PackageUtils.getSigningCertificateInfo(mActivity, signature));
+            } catch (CertificateEncodingException ignore) {
+            }
             textView.setText(builder);
             textView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             textView.setTextIsSelectable(true);
