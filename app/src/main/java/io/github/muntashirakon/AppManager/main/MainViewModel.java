@@ -241,10 +241,12 @@ public class MainViewModel extends AndroidViewModel {
     @GuardedBy("applicationItems")
     public void loadApplicationItems() {
         new Thread(() -> {
+            backupMetadata = BackupUtils.getAllBackupMetadata();
+            List<ApplicationItem> updatedApplicationItems = PackageUtils.getInstalledOrBackedUpApplicationsFromDb(
+                    getApplication(), backupMetadata);
             synchronized (applicationItems) {
                 applicationItems.clear();
-                backupMetadata = BackupUtils.getAllBackupMetadata();
-                applicationItems.addAll(PackageUtils.getInstalledOrBackedUpApplicationsFromDb(getApplication(), backupMetadata));
+                applicationItems.addAll(updatedApplicationItems);
                 // select apps again
                 for (ApplicationItem item : selectedApplicationItems) {
                     select(item);
@@ -402,6 +404,7 @@ public class MainViewModel extends AndroidViewModel {
         }
     }
 
+    @WorkerThread
     private void updateInfoForUid(int uid, String action) {
         Log.d("updateInfoForUid", "Uid: " + uid);
         String[] packages;
@@ -410,6 +413,7 @@ public class MainViewModel extends AndroidViewModel {
         updateInfoForPackages(packages, action);
     }
 
+    @WorkerThread
     private void updateInfoForPackages(@Nullable String[] packages, @NonNull String action) {
         Log.d("updateInfoForPackages", "packages: " + Arrays.toString(packages));
         if (packages == null || packages.length == 0) return;
@@ -454,6 +458,7 @@ public class MainViewModel extends AndroidViewModel {
         filterItemsByFlags();
     }
 
+    @WorkerThread
     @GuardedBy("applicationItems")
     private void removePackageIfNoBackup(String packageName) {
         synchronized (applicationItems) {
@@ -501,6 +506,7 @@ public class MainViewModel extends AndroidViewModel {
         }
     }
 
+    @WorkerThread
     @Nullable
     private ApplicationItem getNewApplicationItem(String packageName) {
         int[] userHandles = Users.getUsersHandles();
