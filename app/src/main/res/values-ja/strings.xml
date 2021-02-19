@@ -338,7 +338,7 @@
     <string name="touchscreen">タッチスクリーン</string>
     <string name="pref_export_msg">App Managerのブロッキングルールを内部ストレージにエクスポートします。</string>
     <string name="pref_import_msg">以前エクスポートしたファイルからApp Managerのブロッキングルールをインポートします。</string>
-    <string name="pref_import_watt_msg">Wattからブロッキングルールをインポートします。各アプリごとに"パッケージ名.xml"の形式でルールが保存されています。</string>
+    <string name="pref_import_watt_msg">Wattからブロッキングルールをインポートします。各アプリごとに「パッケージ名.xml」の形式でルールが保存されています。</string>
     <string name="pref_import_blocker_msg">Blockerからブロッキングルールをインポートします。アプリごとにルールが保存されています。</string>
     <string name="pref_app_theme">アプリテーマ</string>
     <string name="follow_system">システム標準</string>
@@ -353,7 +353,7 @@
     <string name="sort_by_wifi_data">Wi-Fiデータ</string>
     <string name="block_trackers">トラッカーをブロック</string>
     <string name="sort_by_component_name">コンポーネント名</string>
-    <string name="reset_to_default">デフォルトに戻す</string>
+    <string name="reset_to_default">ﾃﾞﾌｫﾙﾄに戻す</string>
     <string name="deny_dangerous_app_ops">危険なアプリ権限を拒否</string>
     <string name="sort_by_app_ops_names">権限名順</string>
     <string name="sort_by_denied_app_ops">拒否したものを優先</string>
@@ -379,7 +379,7 @@
     <string name="never_ask">二度と表示しない</string>
     <string name="one_click_ops">ワンタップ一括処理</string>
     <string name="changelog">更新履歴</string>
-    <string name="external_apk_no_app_op">外部APKにはAppOpsはありません</string>
+    <string name="external_apk_no_app_op">この外部APKにはAppOpsはありません</string>
     <string name="manifest_viewer">マニフェストビューワ</string>
     <plurals name="no_of_trackers">
         <item quantity="one">%1$d 個のトラッカー</item>
@@ -415,10 +415,10 @@
     <string name="no_tracker_found">トラッカーは見つかりませんでした</string>
     <string name="failed_packages">失敗したパッケージ</string>
     <string name="input_signatures">定義シグネチャ</string>
-    <string name="input_signatures_description">入力される定義シグネチャは「com.facebook org.app2 com.app3」のように半角スペース区切りで入力してください</string>
+    <string name="input_signatures_description">入力する定義シグネチャは「com.facebook org.app2 com.app3」のように半角スペース区切りで指定してください</string>
     <string name="filtered_packages">フィルタ済みのパッケージ</string>
     <string name="input_app_ops">AppOpsを指定</string>
-    <string name="input_app_ops_description">AppOpsの名前かその値を「WAKE_LOCK 63 72 CAMERA」のようにスペース区切りで指定してください</string>
+    <string name="input_app_ops_description">AppOpsの名前かその値を「WAKE_LOCK 63 72 CAMERA」のようにスペース区切りで指定してください。</string>
     <string name="only_works_in_root_or_adb_mode">RootかADBモードでのみ動作します</string>
     <string name="failed_to_parse_some_numbers">いくつかをパースできませんでした</string>
     <plurals name="no_of_splits">
@@ -775,7 +775,7 @@
     <string name="filter_apps_with_splits">分割データを含むアプリ</string>
     <string name="value">値</string>
     <string name="matching_activities">一致するアクティビティ</string>
-    <string name="send_edited_intent">改変済みインテントを送信</string>
+    <string name="send_edited_intent">改変済みｲﾝﾃﾝﾄを送信</string>
     <string name="activity_result">実行結果</string>
     <string name="result_code">結果コード</string>
     <string name="action">動作</string>
@@ -904,4 +904,11 @@
     <string name="type_null">値がありません</string>
     <string name="user_with_id">ユーザー:<xliff:g id="user_id" example="0">%1$d</xliff:g></string>
     <string name="installed_apps">インストール済みのアプリ</string>
+    <string name="isolated">隔離済み</string>
+    <string name="working_on_adb_mode">ADBモードで使用中</string>
+    <string name="screen_lock_not_enabled">画面ロックが有効になっていません。Androidの設定で有効にするか、このアプリのデータを消去してください。</string>
+    <string name="last_actions">最終アクション</string>
+    <string name="pref_enable_disable_features_msg">AppManagerの機能を有効化または無効化します。</string>
+    <string name="enable_disable_features">機能の有効化/無効化</string>
+    <string name="input_app_ops_description_profile">AppOpsの名前かその識別値を「WAKE_LOCK 63 72 CAMERA」のようにスペース区切りで指定してください。「*」はワイルドカードとして使用できます。</string>
 </resources>
