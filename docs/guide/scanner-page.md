@@ -23,11 +23,7 @@ Clicking on the first item (i.e. number of classes) opens a new page containing 
 Due to various limitations, it is not possible to scan all the components of an APK file. This is especially true if an APK is highly obfuscated. The scanner also does not check strings (or website signatures).
 :::
 
-The second item lists the number of trackers along with their names. Clicking on the item displays a dialog containing the name of trackers, matched signatures, and the number of classes against each signature. The tracker names may have some prefixes such as:
-- `°` denotes that the tracker is missing in the εxodus' list (taken from [IzzyOnDroid repo][izzy])
-- `²` denotes that the tracker is in the [ETIP][etip] stand-by list i.e. whether it is an actual tracker is not yet decided
-- `µ` denotes micro non-intrusive tracker meaning that these trackers are harmless but still a tracker
-- `?` denotes that the tracker status is unknown
+The second item lists the number of trackers along with their names. Clicking on the item displays a dialog containing the name of trackers, matched signatures, and the number of classes against each signature. Some tracker names may have <kbd>²</kbd> prefix which indicates that the trackers are in the [ETIP][etip] stand-by list i.e. whether they are actual trackers is still being investigated.
 
 The third item lists the number of libraries along with their names. The information are mostly taken from [IzzyOnDroid repo][izzy].
 
