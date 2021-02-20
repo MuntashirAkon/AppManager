@@ -33,9 +33,12 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
+import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
+import io.github.muntashirakon.AppManager.db.entity.App;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
@@ -164,6 +167,17 @@ public class BackupDialogFragment extends DialogFragment {
                     mode = MODE_BACKUP;
                     new Thread(this::handleCustomUsers).start();
                 });
+                new Thread(() -> {
+                    for (UserPackagePair pair : targetPackages) {
+                        List<App> apps = AppManager.getDb().appDao().getAll(pair.getPackageName(), pair.getUserHandle());
+                        if (apps == null || apps.size() <= 0 || !apps.get(0).isInstalled) {
+                            activity.runOnUiThread(() -> {
+                                if (isDetached()) return;
+                                positiveButton.setVisibility(View.GONE);
+                            });
+                        }
+                    }
+                }).start();
             } else {
                 positiveButton.setVisibility(View.GONE);
             }
