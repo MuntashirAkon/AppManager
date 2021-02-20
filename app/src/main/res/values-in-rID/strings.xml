@@ -256,4 +256,9 @@
     <string name="flags">Bendera</string>
     <string name="soft_input">Mode masukan lunak</string>
     <string name="task_affinity">Pengerjaan Tugas</string>
+    <string name="only_works_in_root_mode">Hanya bekerja pada mode root</string>
+    <string name="app_settings">Pengaturan</string>
+    <string name="pref_usage_access_enabled_msg">Memungkinkan anda untuk melihat info statistik dan data aplikasi.</string>
+    <string name="pref_usage_access_enabled">Akses pemakaian</string>
+    <string name="pref_global_blocking_enabled_msg">Memungkinkan anda untuk memblokir komponen apapun tanpa harus menghidupkan pemblokir untuk aplikasi.</string>
 </resources>
