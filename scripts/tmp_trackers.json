@@ -1,27 +1,9 @@
 {
   "trackers": {
-    "2": {
-      "id": 2,
-      "name": "µ?ACRA",
-      "description": "",
-      "creation_date": "",
-      "code_signature": "ch.acra.",
-      "network_signature": "",
-      "website": "https://github.com/ACRA/acra"
-    },
-    "34": {
-      "id": 34,
-      "name": "Pangle SDK",
-      "description": "",
-      "creation_date": "",
-      "code_signature": "com.bytedance.sdk.openadsdk",
-      "network_signature": "",
-      "website": "https://www.pangleglobal.com"
-    },
-    "35": {
-      "id": 35,
+    "1": {
+      "id": 1,
       "name": "Google AdMob",
-      "description": "Addition to Exodus list",
+      "description": "Exodus override. Do not add it to ETIP. It's for internal use only.",
       "creation_date": "",
       "code_signature": "com.google.android.gms.ads.",
       "network_signature": "",

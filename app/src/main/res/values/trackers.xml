@@ -582,6 +582,7 @@
         <item>com.ogury.analytics.</item>
         <item>com.huawei.openalliance.ad.</item>
         <item>net.opentracker.android</item>
+        <item>com.bytedance.sdk.openadsdk</item>
         <item>com.papaya.offer.</item>
         <item>com.parse.Parse</item>
         <item>it.partytrack.sdk.</item>
@@ -659,8 +660,6 @@
         <item>com.mtraction.mtractioninapptracker.</item>
         <item>co.vmob.sdk</item>
         <item>com.tabtale</item>
-        <item>ch.acra.</item>
-        <item>com.bytedance.sdk.openadsdk</item>
 </string-array>
 <string-array name="tracker_names">
         <item>Teemo</item>
@@ -1227,6 +1226,7 @@
         <item>²Ogury</item>
         <item>²Openalliance (Huawei ads kit)</item>
         <item>²Opentracker</item>
+        <item>²Pangle SDK</item>
         <item>²Papaya</item>
         <item>²Parse</item>
         <item>²PartyTrack</item>
@@ -1304,7 +1304,5 @@
         <item>²mTraction (mFaaS)</item>
         <item>²plexure</item>
         <item>²tabtale</item>
-        <item>µ?ACRA</item>
-        <item>Pangle SDK</item>
     </string-array>
 </resources>
