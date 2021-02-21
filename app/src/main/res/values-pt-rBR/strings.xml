@@ -882,4 +882,5 @@
     <string name="screen_lock_not_enabled">Bloqueio de tela não ativado. Ative o bloqueio de tela nas configurações do Android ou limpe os dados do aplicativo.</string>
     <string name="input_app_ops_description_profile">Insira nomes de operações de aplicativo e/ou constantes com espaços, p. ex. <tt>WAKE_LOCK 63 72 CAMERA</tt> etc. Use <tt>*</tt> para solicitar todas as operações de aplicativo configuradas.</string>
     <string name="working_on_adb_mode">Trabalhando no modo ADB</string>
+    <string name="verified_using_unreliable_hash">Verificado usando hash não confiável</string>
 </resources>
