@@ -630,4 +630,12 @@
     <string name="input_profile_name">Nazwa profilu</string>
     <string name="conversion_failed">Konwersja nie powiodła się.</string>
     <string name="select_apk">Wybierz plik APK</string>
+    <string name="input_permissions_description">Wprowadź uprawnienia ze spacjami, np. &lt;tt&gt;com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION&lt;/tt&gt; itd. Użyj &lt;tt&gt;*&lt;/tt&gt; aby zastosować dla wszystkich uprawnień.</string>
+    <string name="input_permissions">Wprowadź uprawnienia</string>
+    <string name="profile_state_msg">Stan włączenia/wyłączenia dla tego profilu</string>
+    <string name="profile_clear_data_msg">Jeśli ta opcja jest włączona, dane aplikacji zostaną wyczyszczone</string>
+    <string name="profile_clear_cache_msg">Jeśli ta opcja jest włączona, pamięć podręczna aplikacji zostanie wyczyszczona</string>
+    <string name="profile_force_stop_msg">Jeśli ta opcja jest włączona, aplikacje zostaną zatrzymane</string>
+    <string name="profile_disable_msg">Jeśli ta opcja jest włączona, aplikacje zostaną wyłączone/włączone na podstawie wybranego stanu</string>
+    <string name="profile_state">Stan profilu</string>
 </resources>
