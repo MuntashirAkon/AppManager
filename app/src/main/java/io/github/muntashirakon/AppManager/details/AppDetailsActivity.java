@@ -25,7 +25,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.view.MenuItem;
-import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -36,7 +36,12 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
+
 import com.google.android.material.tabs.TabLayout;
+
+import java.io.IOException;
+import java.util.List;
+
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
@@ -45,9 +50,6 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
-
-import java.io.IOException;
-import java.util.List;
 
 public class AppDetailsActivity extends BaseActivity {
     public static final String EXTRA_PACKAGE_NAME = "pkg";
@@ -76,7 +78,7 @@ public class AppDetailsActivity extends BaseActivity {
         mTabTitleIds = getResources().obtainTypedArray(R.array.TAB_TITLES);
         fragments = new Fragment[mTabTitleIds.length()];
         if (packageName == null && apkUri == null) {
-            Toast.makeText(this, getString(R.string.empty_package_name), Toast.LENGTH_LONG).show();
+            UIUtils.displayLongToast(R.string.empty_package_name);
             finish();
             return;
         }
@@ -103,7 +105,7 @@ public class AppDetailsActivity extends BaseActivity {
             } catch (ApkFile.ApkFileException | IOException | RemoteException e) {
                 Log.e("ADA", "Could not fetch package info.", e);
                 runOnUiThread(() -> {
-                    Toast.makeText(this, getString(R.string.failed_to_fetch_package_info), Toast.LENGTH_LONG).show();
+                    UIUtils.displayLongToast(R.string.failed_to_fetch_package_info);
                     if (!isDestroyed()) {
                         progressDialog.dismiss();
                         finish();
@@ -113,7 +115,7 @@ public class AppDetailsActivity extends BaseActivity {
             }
             if (model.getPackageInfo() == null) {
                 runOnUiThread(() -> {
-                    Toast.makeText(this, getString(R.string.failed_to_fetch_package_info), Toast.LENGTH_LONG).show();
+                    UIUtils.displayLongToast(R.string.failed_to_fetch_package_info);
                     if (!isDestroyed()) {
                         progressDialog.dismiss();
                         finish();
@@ -144,7 +146,7 @@ public class AppDetailsActivity extends BaseActivity {
                 viewPager.setAdapter(new AppDetailsFragmentPagerAdapter(fragmentManager));
                 model.getIsPackageExistLiveData().observe(this, isPackageExist -> {
                     if (!isPackageExist) {
-                        Toast.makeText(this, R.string.app_not_installed, Toast.LENGTH_LONG).show();
+                        UIUtils.displayLongToast(R.string.app_not_installed);
                         finish();
                     }
                 });
