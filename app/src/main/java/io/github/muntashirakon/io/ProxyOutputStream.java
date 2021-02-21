@@ -24,6 +24,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import io.github.muntashirakon.AppManager.IRemoteFile;
 import io.github.muntashirakon.AppManager.ipc.IPCUtils;
+import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 
 import java.io.*;
 import java.nio.channels.FileChannel;
@@ -36,7 +37,7 @@ public class ProxyOutputStream extends OutputStream {
 
     @WorkerThread
     public ProxyOutputStream(File file) throws FileNotFoundException, RemoteException {
-        if (file instanceof ProxyFile) {
+        if (file instanceof ProxyFile && LocalServer.isAMServiceAlive()) {
             connectionWrapper = IPCUtils.getNewConnection();
             IRemoteFile file1 = connectionWrapper.getAmService().getFile(file.getAbsolutePath());
             ParcelFileDescriptor fd = file1.getPipedOutputStream();
