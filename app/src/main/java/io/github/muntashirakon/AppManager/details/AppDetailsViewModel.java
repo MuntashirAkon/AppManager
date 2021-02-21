@@ -150,23 +150,26 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     @AnyThread
     @GuardedBy("blockerLocker")
-    public void setPackageName(String packageName) {
+    private void setPackageName(String packageName) {
         if (this.packageName != null) return;
         Log.d("ADVM", "Package name is being set for " + packageName);
         this.packageName = packageName;
         if (isExternalApk) return;
         executor.submit(() -> {
             synchronized (blockerLocker) {
-                waitForBlocker = true;
-                if (blocker != null) {
-                    // To prevent commit if a mutable instance was created in the middle,
-                    // set the instance read only again
-                    blocker.setReadOnly();
-                    blocker.close();
+                try {
+                    waitForBlocker = true;
+                    if (blocker != null) {
+                        // To prevent commit if a mutable instance was created in the middle,
+                        // set the instance read only again
+                        blocker.setReadOnly();
+                        blocker.close();
+                    }
+                    blocker = ComponentsBlocker.getInstance(packageName, userHandle);
+                } finally {
+                    waitForBlocker = false;
+                    blockerLocker.notifyAll();
                 }
-                blocker = ComponentsBlocker.getInstance(packageName, userHandle);
-                waitForBlocker = false;
-                blockerLocker.notifyAll();
             }
         });
     }
