@@ -625,4 +625,9 @@
     <string name="orientation_reverse_portrait">Pionowa, odwrócona</string>
     <string name="orientation_portrait">Pionowa</string>
     <string name="orientation_landscape">Pozioma</string>
+    <string name="pref_show_users_in_installer">Pokaż użytkowników w instalatorze</string>
+    <string name="input_profile_name_description">Nazwa profilu nie może zawierać żadnych spacji.</string>
+    <string name="input_profile_name">Nazwa profilu</string>
+    <string name="conversion_failed">Konwersja nie powiodła się.</string>
+    <string name="select_apk">Wybierz plik APK</string>
 </resources>
