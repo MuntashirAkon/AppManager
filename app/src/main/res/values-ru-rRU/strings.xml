@@ -788,7 +788,7 @@
     <string name="input_keystore_alias_pass_description">Вставьте пароль для псевдонима <b>%1$s</b>. Вы можете оставить это поле пустым, если пароль совпадает с паролем хранилища ключей.</string>
     <string name="input_keystore_alias_pass">Пароль для псевдонима <b>%1$s</b></string>
     <string name="no_app_ops_permission">Нет разрешения на отображение операций приложения</string>
-    <string name="pref_backup_android_keystore_msg">Не все приложения будут работать после восстановления. Восстановление KeyStore не работает на большинстве устройств.</string>
+    <string name="pref_backup_android_keystore_msg">Не все приложения будут работать после восстановления. Восстановление хранилища ключей не работает на большинстве устройств.</string>
     <string name="pref_backup_android_keystore">Резервное копирование приложений с хранилищем ключей Android</string>
     <string name="keep_data_and_signatures">Сохранить данные и подписи</string>
     <string name="this_action_cannot_be_undone">Это действие не может быть отменено.</string>
@@ -912,9 +912,9 @@
     <string name="add_to_profile">Добавить в профиль</string>
     <string name="initializing">Инициализация…</string>
     <string name="choose_what_to_do">Выберите, что делать.</string>
-    <string name="enable_battery_optimization">Включить оптимизацию батареи\?</string>
-    <string name="battery_optimization">Оптимизация батареи</string>
-    <string name="no_battery_optimization">Без оптимизации батареи</string>
+    <string name="enable_battery_optimization">Включить экономию заряда батареи\?</string>
+    <string name="battery_optimization">Экономия заряда батареи</string>
+    <string name="no_battery_optimization">Без оптимизации энергопотребления</string>
     <string name="screen_lock_msg">Блокировать App Manager с помощью блокировки экрана Android</string>
     <string name="screen_lock">Блокировка экрана</string>
     <string name="unlock_app_manager">Разблокировать App Manager</string>
