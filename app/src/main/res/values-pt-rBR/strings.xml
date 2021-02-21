@@ -276,7 +276,7 @@
     <string name="navigation">Navegação</string>
     <string name="pref_export_msg">Exportar regras de bloqueio configuradas no App Manager para o armazenamento externo.</string>
     <string name="pref_import_msg">Importar regras de bloqueio exportadas anteriormente do App Manager.</string>
-    <string name="pref_import_watt_msg">Importar regras de bloqueio do Watt, cada arquivo contendo regras para um único pacote nomeado como &lt;tt&gt;packagename.xml&lt;/tt&gt;, etc.</string>
+    <string name="pref_import_watt_msg">Importar regras de bloqueio do Watt, cada arquivo contendo regras para um único pacote nomeado como <tt>packagename.xml</tt>, etc.</string>
     <string name="pref_import_blocker_msg">Importar regras de bloqueio do Blocker. Cada arquivo contém regras para um único pacote.</string>
     <string name="pref_app_theme">Tema do aplicativo</string>
     <string name="follow_system">Seguir o sistema</string>
@@ -335,12 +335,12 @@
     <string name="block_components_dots">Bloquear componentes…</string>
     <string name="block_components_description">Bloquear todos os componentes identificados pelas assinaturas especificadas</string>
     <string name="clear_data_from_uninstalled_apps">Limpar dados dos aplicativos desinstalados</string>
-    <string name="clear_data_from_uninstalled_apps_description">Limpar dados dos aplicativos que foram desinstalados com a flag &lt;tt&gt;DONT_DELETE_DATA&lt;/tt&gt;</string>
+    <string name="clear_data_from_uninstalled_apps_description">Limpar dados dos aplicativos que foram desinstalados com a flag <tt>DONT_DELETE_DATA</tt></string>
     <string name="clear_app_cache">Limpar cache do aplicativo</string>
     <string name="clear_app_cache_description">Limpar o cache de todos os aplicativos</string>
     <string name="no_tracker_found">Nenhum rastreador encontrado</string>
     <string name="failed_packages">Pacotes falhados</string>
-    <string name="input_signatures_description">Insira assinaturas com espaços, p. ex. &lt;tt&gt;com.facebook org.app2 com.app3&lt;/tt&gt; etc.</string>
+    <string name="input_signatures_description">Insira assinaturas com espaços, p. ex. <tt>com.facebook org.app2 com.app3</tt> etc.</string>
     <string name="filtered_packages">Pacotes filtrados</string>
     <string name="only_works_in_root_or_adb_mode">Funciona apenas no modo Root ou ADB</string>
     <string name="failed_to_parse_some_numbers">Não foi possível analisar alguns números</string>
@@ -484,7 +484,7 @@
     <string name="pref_backup_flags_msg">Adicionar uma predefinição para opções de backup remove o fardo de selecionar flags toda vez que você faz backup/restaura.</string>
     <string name="reject_time">Tempo de Rejeição</string>
     <string name="accept_time">Tempo de Aceitação</string>
-    <string name="deny_app_ops_description">Defina um modo para as operações de aplicativo identificadas pelos valores das constantes, ou seja, &lt;tt&gt;63&lt;/tt&gt; ou &lt;tt&gt;RUN_IN_BACKGROUND&lt;/tt&gt;</string>
+    <string name="deny_app_ops_description">Defina um modo para as operações de aplicativo identificadas pelos valores das constantes, ou seja, <tt>63</tt> ou <tt>RUN_IN_BACKGROUND</tt></string>
     <string name="changelog">Histórico de Atualizações</string>
     <string name="one_click_ops">Operações em 1 Clique</string>
     <string name="touchscreen">Touchscreen</string>
@@ -632,7 +632,7 @@
     <string name="unknown_split_for_feature"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> para a função <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
     <string name="unknown_split_for_base_apk"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> para o APK base</string>
     <string name="routine_ops">Operações de rotina</string>
-    <string name="input_app_ops_description">Insira nomes e/ou constantes de operações de aplicativo com espaços, por exemplo &lt;tt&gt;WAKE_LOCK 63 72 CAMERA&lt;/tt&gt; etc.</string>
+    <string name="input_app_ops_description">Insira nomes e/ou constantes de operações de aplicativo com espaços, por exemplo <tt>WAKE_LOCK 63 72 CAMERA</tt> etc.</string>
     <string name="input_app_ops">Inserir operações de aplicativo</string>
     <string name="packages">pacotes</string>
     <string name="onboard">Todos os</string>
@@ -669,7 +669,7 @@
     <string name="failed_to_duplicate_profile">Não foi possível duplicar o perfil</string>
     <string name="pref_show_users_in_installer">Mostrar usuários no instalador</string>
     <string name="send_selected">Enviar selecionado</string>
-    <string name="input_permissions_description">Insira permissões com espaços, p. ex. &lt;tt&gt;com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION&lt;/tt&gt; etc. Use &lt;tt&gt;*&lt;/tt&gt; para solicitar todas as permissões.</string>
+    <string name="input_permissions_description">Insira permissões com espaços, p. ex. <tt>com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION</tt> etc. Use <tt>*</tt> para solicitar todas as permissões.</string>
     <string name="input_permissions">Inserir permissões</string>
     <string name="enabled">Ativado</string>
     <string name="choose">Escolher</string>
@@ -880,6 +880,6 @@
     <string name="enable_disable_features">Ativar/desativar funções</string>
     <string name="isolated">Isolado</string>
     <string name="screen_lock_not_enabled">Bloqueio de tela não ativado. Ative o bloqueio de tela nas configurações do Android ou limpe os dados do aplicativo.</string>
-    <string name="input_app_ops_description_profile">Insira nomes de operações de aplicativo e/ou constantes com espaços, p. ex. &lt;tt&gt;WAKE_LOCK 63 72 CAMERA&lt;/tt&gt; etc. Use &lt;tt&gt;*&lt;/tt&gt; para solicitar todas as operações de aplicativo configuradas.</string>
+    <string name="input_app_ops_description_profile">Insira nomes de operações de aplicativo e/ou constantes com espaços, p. ex. <tt>WAKE_LOCK 63 72 CAMERA</tt> etc. Use <tt>*</tt> para solicitar todas as operações de aplicativo configuradas.</string>
     <string name="working_on_adb_mode">Trabalhando no modo ADB</string>
 </resources>

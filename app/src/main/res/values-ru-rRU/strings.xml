@@ -326,7 +326,7 @@
     <string name="touchscreen">Сенсорный экран</string>
     <string name="pref_export_msg">Экспортировать правила блокировки, настроенные в App Manager на внешнее хранилище.</string>
     <string name="pref_import_msg">Импортировать ранее экспортированные правила блокировки из App Manager.</string>
-    <string name="pref_import_watt_msg">Импортировать правила блокировки из Watt, каждый файл содержит правила для одного названного пакета как &lt;tt&gt;packagename.xml&lt;/tt&gt; и т. д.</string>
+    <string name="pref_import_watt_msg">Импортировать правила блокировки из Watt, каждый файл содержит правила для одного названного пакета как <tt>packagename.xml</tt> и т. д.</string>
     <string name="pref_import_blocker_msg">Импортировать правила блокировки из Blocker, каждый файл содержит правила для одного пакета.</string>
     <string name="pref_app_theme">Тема приложения</string>
     <string name="follow_system">Согласно системным настройкам</string>
@@ -390,18 +390,18 @@
     <string name="block_unblock_trackers_description">Блокировать или разблокировать рекламу и компоненты трекеров во всех установленных приложениях</string>
     <string name="block_components_dots">Блокировать компоненты…</string>
     <string name="block_components_description">Заблокировать все компоненты, идентифицированные данными подписями</string>
-    <string name="deny_app_ops_description">Установите режим для операций приложения, определяемых постоянными значениями, например &lt;tt&gt;63&lt;/tt&gt; или &lt;tt&gt;RUN_IN_BACKGROUND&lt;/tt&gt;</string>
+    <string name="deny_app_ops_description">Установите режим для операций приложения, определяемых постоянными значениями, например <tt>63</tt> или <tt>RUN_IN_BACKGROUND</tt></string>
     <string name="clear_data_from_uninstalled_apps">Очистить данные удаленных приложений</string>
-    <string name="clear_data_from_uninstalled_apps_description">Очистить данные приложений, которые были удалены с помощью флага &lt;tt&gt;DONT_DELETE_DATA&lt;/tt&gt;</string>
+    <string name="clear_data_from_uninstalled_apps_description">Очистить данные приложений, которые были удалены с помощью флага <tt>DONT_DELETE_DATA</tt></string>
     <string name="clear_app_cache">Очистить кэш приложения</string>
     <string name="clear_app_cache_description">Очистить кэш всех приложений</string>
     <string name="no_tracker_found">Трекеров не найдено</string>
     <string name="failed_packages">Сбойные пакеты</string>
     <string name="input_signatures">Ввод подписей</string>
-    <string name="input_signatures_description">Введите подписи с пробелами, например &lt;tt&gt;com.facebook org.app2 com.app3&lt;/tt&gt; и т. д.</string>
+    <string name="input_signatures_description">Введите подписи с пробелами, например <tt>com.facebook org.app2 com.app3</tt> и т. д.</string>
     <string name="filtered_packages">Отфильтрованные пакеты</string>
     <string name="input_app_ops">Ввод операций приложения</string>
-    <string name="input_app_ops_description">Введите имена операций приложения и/или константы с пробелами, например &lt;tt&gt;WAKE_LOCK 63 72 CAMERA&lt;/tt&gt; и т.д.</string>
+    <string name="input_app_ops_description">Введите имена операций приложения и/или константы с пробелами, например <tt>WAKE_LOCK 63 72 CAMERA</tt> и т.д.</string>
     <string name="only_works_in_root_or_adb_mode">Доступно только в режиме root или ADB</string>
     <string name="failed_to_parse_some_numbers">Не удалось разобрать некоторые числа</string>
     <plurals name="no_of_splits">
@@ -775,7 +775,7 @@
         <item quantity="other">Проверено с %d предупреждениями</item>
     </plurals>
     <string name="input_permissions">Ввод разрешений</string>
-    <string name="input_permissions_description">Введите разрешения с пробелами, например &lt;tt&gt;com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION&lt;/tt&gt; и т.п. Используйте &lt;tt&gt;*&lt;/tt&gt;, чтобы подать заявку на все разрешения.</string>
+    <string name="input_permissions_description">Введите разрешения с пробелами, например <tt>com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION</tt> и т.п. Используйте <tt>*</tt>, чтобы подать заявку на все разрешения.</string>
     <plurals name="signature_schemes_pl">
         <item quantity="one">Схема подписи</item>
         <item quantity="few">Схемы подписи</item>
@@ -945,6 +945,6 @@
     <string name="type_uri">URI</string>
     <string name="isolated">изолированно</string>
     <string name="screen_lock_not_enabled">Блокировка экрана не включена. Включите блокировку экрана в настройках Android или очистите данные приложения.</string>
-    <string name="input_app_ops_description_profile">Введите имена операций приложения и/или константы с пробелами, например &lt;tt&gt;WAKE_LOCK 63 72 CAMERA&lt;/tt&gt; и т.д. Используйте &lt;tt&gt;*&lt;/tt&gt; для применения ко всем настроенным операциям приложения.</string>
+    <string name="input_app_ops_description_profile">Введите имена операций приложения и/или константы с пробелами, например <tt>WAKE_LOCK 63 72 CAMERA</tt> и т.д. Используйте <tt>*</tt> для применения ко всем настроенным операциям приложения.</string>
     <string name="working_on_adb_mode">Работа в режиме ADB</string>
 </resources>

@@ -304,7 +304,7 @@
     <string name="touchscreen">Berührungsempfindlicher Bildschirm</string>
     <string name="pref_export_msg">Exportieren von Blockier-Regeln von App Manager in den externen Speicher.</string>
     <string name="pref_import_msg">Importieren von zuvor exportierten Blockier-Regeln vom App Manager.</string>
-    <string name="pref_import_watt_msg">Importieren der Blockier-Regeln von Watt; jede Datei enthält Regeln für ein genanntes Paket &lt;tt&gt;paketname.xml&lt;/tt&gt; usw.</string>
+    <string name="pref_import_watt_msg">Importieren der Blockier-Regeln von Watt; jede Datei enthält Regeln für ein genanntes Paket <tt>paketname.xml</tt> usw.</string>
     <string name="pref_import_blocker_msg">Importieren von Blockier-Regeln aus Blocker, wobei jede Datei Regeln für ein einzelnes Paket enthält.</string>
     <string name="pref_app_theme">Farbschema der Anwendung</string>
     <string name="follow_system">Systemkonform</string>
@@ -364,18 +364,18 @@
     <string name="block_unblock_trackers_description">Blockiere oder gebe Verfolger-Komponenten aller installierter Anwendungen frei</string>
     <string name="block_components_dots">Komponenten blockieren…</string>
     <string name="block_components_description">Sperren aller Komponenten, die durch die angegebenen Signaturen identifiziert werden</string>
-    <string name="deny_app_ops_description">Einstellen eines Modus für App-Operationen, die durch konstante Werte identifiziert werden (z. B. &lt;tt&gt;63&lt;/tt&gt; oder &lt;tt&gt;RUN_IN_BACKGROUND&lt;/tt&gt;)</string>
+    <string name="deny_app_ops_description">Einstellen eines Modus für App-Operationen, die durch konstante Werte identifiziert werden (z. B. <tt>63</tt> oder <tt>RUN_IN_BACKGROUND</tt>)</string>
     <string name="clear_data_from_uninstalled_apps">Daten deinstallierter Anwendungen löschen</string>
-    <string name="clear_data_from_uninstalled_apps_description">Daten von Anwendungen, die mit der &lt;tt&gt;DONT_DELETE_DATA&lt;/tt&gt;-Flagge deinstalliert wurden, löschen</string>
+    <string name="clear_data_from_uninstalled_apps_description">Daten von Anwendungen, die mit der <tt>DONT_DELETE_DATA</tt>-Flagge deinstalliert wurden, löschen</string>
     <string name="clear_app_cache">Cache der Anwendung leeren</string>
     <string name="clear_app_cache_description">Den Cache aller Anwendungen leeren</string>
     <string name="no_tracker_found">Keine Verfolger gefunden</string>
     <string name="failed_packages">Pakete mit Fehlern</string>
     <string name="input_signatures">Signatur(en)</string>
-    <string name="input_signatures_description">Bitte die gewünschten Signaturen mit einer Leerstelle getrennt angeben, z. B. &lt;tt&gt;com.facebook org.app2 com.app3&lt;/tt&gt; usw.</string>
+    <string name="input_signatures_description">Bitte die gewünschten Signaturen mit einer Leerstelle getrennt angeben, z. B. <tt>com.facebook org.app2 com.app3</tt> usw.</string>
     <string name="filtered_packages">Gefilterte Pakete</string>
     <string name="input_app_ops">App Ops</string>
-    <string name="input_app_ops_description">Geben Sie App-Op-Namen und/ oder Konstanten mit Leerzeichen (z.B. &lt;tt&gt;WAKE_LOCK 63 72 CAMERA&lt;/tt&gt; etc.) ein.</string>
+    <string name="input_app_ops_description">Geben Sie App-Op-Namen und/ oder Konstanten mit Leerzeichen (z.B. <tt>WAKE_LOCK 63 72 CAMERA</tt> etc.) ein.</string>
     <string name="only_works_in_root_or_adb_mode">Nur im Root- oder ADB-Modus verfügbar</string>
     <string name="failed_to_parse_some_numbers">Einlesen mancher Zahlen nicht möglich</string>
     <plurals name="no_of_splits">
@@ -672,7 +672,7 @@
     <string name="failed_to_duplicate_profile">Konnte Profil nicht duplizieren</string>
     <string name="enabled">Aktiviert</string>
     <string name="choose">Auswählen</string>
-    <string name="input_permissions_description">Eingabeberechtigungen mit Leerzeichen, z.B. &lt;tt&gt;(com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION&lt;/tt&gt;) etc. Verwenden Sie &lt;tt&gt;*&lt;/tt&gt; für alle Berechtigungen.</string>
+    <string name="input_permissions_description">Eingabeberechtigungen mit Leerzeichen, z.B. <tt>(com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION</tt>) etc. Verwenden Sie <tt>*</tt> für alle Berechtigungen.</string>
     <string name="input_permissions">Eingabeberechtigungen</string>
     <string name="options">Optionen</string>
     <string name="off">Aus</string>
@@ -882,5 +882,5 @@
     <string name="screen_lock_not_enabled">Bildschirmsperre ist nicht aktiviert. Aktivieren Sie die Bildschirmsperre in den Android-Einstellungen oder löschen Sie die App-Daten.</string>
     <string name="isolated">Isoliert</string>
     <string name="working_on_adb_mode">Arbeiten im ADB-Modus</string>
-    <string name="input_app_ops_description_profile">Geben Sie App-Op-Namen und/ oder Konstanten mit Leerzeichen (z.B. &lt;tt&gt;WAKE_LOCK 63 72 CAMERA&lt;/tt&gt; etc.) ein. Verwenden Sie &lt;tt&gt;*&lt;/tt&gt; für alle konfigurierten App-Ops.</string>
+    <string name="input_app_ops_description_profile">Geben Sie App-Op-Namen und/ oder Konstanten mit Leerzeichen (z.B. <tt>WAKE_LOCK 63 72 CAMERA</tt> etc.) ein. Verwenden Sie <tt>*</tt> für alle konfigurierten App-Ops.</string>
 </resources>
