@@ -94,7 +94,7 @@
     <string name="pref_import_blocker">Importar desde Blocker</string>
     <string name="pref_import_watt">Importar desde Watt</string>
     <string name="pref_import_export_blocking_rules_msg">Importar/Exportar reglas, importar reglas externas desde Watt o Blocker.</string>
-    <string name="pref_import_export_blocking_rules">Importar/Exportar reglas de bloqueo</string>
+    <string name="pref_import_export_blocking_rules">Reglas de bloqueo de importación/exportación</string>
     <string name="sort_by_mobile_data">Datos móviles</string>
     <string name="sort_by_screen_time">Tiempo de pantalla</string>
     <string name="sort_by_last_used">Última vez usado</string>
@@ -178,7 +178,7 @@
     <string name="usage_today">Hoy</string>
     <string name="usage_weekly">Semanal</string>
     <string name="app_usage">Uso de las Apps</string>
-    <string name="no_tracker_class">No hay classes de rastreador</string>
+    <string name="no_tracker_class">No hay clases de seguimiento</string>
     <string name="no_shared_libs">Sin bibliotecas compartidas</string>
     <plurals name="main_list_date_days">
         <item quantity="one"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> día</item>
@@ -392,7 +392,7 @@
         <item quantity="one">No se pudieron deshabilitar los rastreadores de %1$d app</item>
         <item quantity="other">No se pudieron deshabilitar los rastreadores de %1$d apps</item>
     </plurals>
-    <string name="trackers_disabled_successfully">Los rastreadores ahora están desactivados</string>
+    <string name="trackers_disabled_successfully">Los rastreadores están ahora desactivados</string>
     <string name="failed_to_disable_trackers">No se pudieron deshabilitar los rastreadores</string>
     <string name="unknown_op">Operación desconocida</string>
     <string name="sort_by_tracker_components">Rastreador primero</string>
@@ -837,4 +837,12 @@
         <item quantity="one">%1$d componente</item>
         <item quantity="other">%1$d componentes</item>
     </plurals>
+    <string name="installer_app_message">Seleccione &lt;b&gt;elegir&lt;/b&gt; para escoger entre las aplicaciones instaladas o seleccione &lt;b&gt;personalizar&lt;/b&gt; para especificar un nombre de paquete personalizado.</string>
+    <string name="specify_custom_name">Personalizado</string>
+    <string name="verified_using_unreliable_hash">Verificado mediante hash no fiable</string>
+    <string name="working_on_adb_mode">Trabajando en modo ADB</string>
+    <string name="screen_lock_not_enabled">El bloqueo de pantalla no está activado. Activa el bloqueo de pantalla en los ajustes de Android o borra los datos de la aplicación.</string>
+    <string name="isolated">Aislado</string>
+    <string name="last_actions">Últimas acciones</string>
+    <string name="pref_enable_disable_features_msg">Activar o desactivar funciones en el App Manager.</string>
 </resources>
