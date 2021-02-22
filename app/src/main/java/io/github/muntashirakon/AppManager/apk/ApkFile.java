@@ -209,9 +209,20 @@ public final class ApkFile implements AutoCloseable {
                 this.fd = fd;
             } catch (FileNotFoundException e) {
                 throw new ApkFileException(e);
+            } catch (SecurityException e) {
+                Log.e(TAG, e);
             }
-            this.cacheFilePath = IOUtils.getFileFromFd(fd);
-            if (!this.cacheFilePath.exists() || !this.cacheFilePath.canRead()) {
+            if (this.fd != null) {
+                this.cacheFilePath = IOUtils.getFileFromFd(fd);
+                if (!this.cacheFilePath.canRead()) {
+                    // Cache manually
+                    try (InputStream is = cr.openInputStream(apkUri)) {
+                        this.cacheFilePath = IOUtils.getCachedFile(is);
+                    } catch (IOException e) {
+                        throw new ApkFileException("Could not cache the input file.");
+                    }
+                }
+            } else {
                 // Cache manually
                 try (InputStream is = cr.openInputStream(apkUri)) {
                     this.cacheFilePath = IOUtils.getCachedFile(is);
