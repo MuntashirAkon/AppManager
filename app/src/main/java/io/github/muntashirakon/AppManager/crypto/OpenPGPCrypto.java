@@ -39,6 +39,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,6 +71,8 @@ public class OpenPGPCrypto implements Crypto {
     private File[] files;
     @NonNull
     private final List<File> newFiles = new ArrayList<>();
+    private InputStream is;
+    private OutputStream os;
     @NonNull
     private final long[] keyIds;
     private final String provider;
@@ -77,6 +80,7 @@ public class OpenPGPCrypto implements Crypto {
     private int lastMode;
     private final Context context = AppManager.getContext();
     private final Handler handler;
+    private boolean isFileMode;  // Whether to en/decrypt a file than an stream
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, @NonNull Intent intent) {
@@ -120,6 +124,14 @@ public class OpenPGPCrypto implements Crypto {
         return handleFiles(intent, Cipher.DECRYPT_MODE, files);
     }
 
+    @Override
+    public void decrypt(@NonNull InputStream encryptedStream, @NonNull OutputStream unencryptedStream) throws IOException, GeneralSecurityException {
+        Intent intent = new Intent(OpenPgpApi.ACTION_DECRYPT_VERIFY);
+        if (!handleStreams(intent, Cipher.DECRYPT_MODE, encryptedStream, unencryptedStream)) {
+            throw new IOException("Could not decrypt stream.");
+        }
+    }
+
     @WorkerThread
     @Override
     public boolean encrypt(@NonNull File[] filesList) {
@@ -128,9 +140,21 @@ public class OpenPGPCrypto implements Crypto {
         return handleFiles(intent, Cipher.ENCRYPT_MODE, filesList);
     }
 
+    @Override
+    public void encrypt(@NonNull InputStream unencryptedStream, @NonNull OutputStream encryptedStream) throws IOException, GeneralSecurityException {
+        Intent intent = new Intent(OpenPgpApi.ACTION_ENCRYPT);
+        intent.putExtra(OpenPgpApi.EXTRA_KEY_IDS, keyIds);
+        if (!handleStreams(intent, Cipher.ENCRYPT_MODE, unencryptedStream, encryptedStream)) {
+            throw new IOException("Could not encrypt stream.");
+        }
+    }
+
     @WorkerThread
     private boolean handleFiles(Intent intent, int mode, @NonNull File[] filesList) {
+        isFileMode = true;
         if (!waitForServiceBound()) return false;
+        is = null;
+        os = null;
         files = filesList;
         newFiles.clear();
         lastIntent = intent;
@@ -139,7 +163,29 @@ public class OpenPGPCrypto implements Crypto {
     }
 
     @WorkerThread
+    private boolean handleStreams(Intent intent, int mode, @NonNull InputStream is, @NonNull OutputStream os) {
+        isFileMode = false;
+        if (!waitForServiceBound()) return false;
+        this.is = is;
+        this.os = os;
+        files = new File[0];
+        newFiles.clear();
+        lastIntent = intent;
+        lastMode = mode;
+        return doAction(intent, mode, true);
+    }
+
+    @WorkerThread
     private boolean doAction(Intent intent, int mode, boolean waitForResult) {
+        if (isFileMode) {
+            return doActionForFiles(intent, mode, waitForResult);
+        } else {
+            return doActionForStream(intent, waitForResult);
+        }
+    }
+
+    @WorkerThread
+    private boolean doActionForFiles(Intent intent, int mode, boolean waitForResult) {
         errorFlag = false;
         if (files.length > 0) {  // files is never null here
             for (File file : files) {
@@ -177,6 +223,16 @@ public class OpenPGPCrypto implements Crypto {
             Log.d(TAG, "No files to de/encrypt");
         }
         return true;
+    }
+
+    @WorkerThread
+    private boolean doActionForStream(Intent intent, boolean waitForResult) {
+        errorFlag = false;
+        OpenPgpApi api = new OpenPgpApi(context, service.getService());
+        Intent result = api.executeApi(intent, is, os);
+        handler.post(() -> handleResult(result));
+        if (waitForResult) waitForResult();
+        return !errorFlag;
     }
 
     @NonNull

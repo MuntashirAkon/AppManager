@@ -88,10 +88,34 @@ public class AESCrypto implements Crypto {
         return handleFiles(Cipher.ENCRYPT_MODE, files);
     }
 
+    @Override
+    public void encrypt(@NonNull InputStream unencryptedStream, @NonNull OutputStream encryptedStream)
+            throws IOException, InvalidAlgorithmParameterException, InvalidKeyException {
+        // Init cipher
+        GCMParameterSpec spec = new GCMParameterSpec(secretKey.getEncoded().length, iv);
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey, spec);
+        // Convert unencrypted stream to encrypted stream
+        try (OutputStream cipherOS = new CipherOutputStream(encryptedStream, cipher)) {
+            IOUtils.copy(unencryptedStream, cipherOS);
+        }
+    }
+
     @WorkerThread
     @Override
     public boolean decrypt(@NonNull File[] files) {
         return handleFiles(Cipher.DECRYPT_MODE, files);
+    }
+
+    @Override
+    public void decrypt(@NonNull InputStream encryptedStream, @NonNull OutputStream unencryptedStream)
+            throws IOException, InvalidAlgorithmParameterException, InvalidKeyException {
+        // Init cipher
+        GCMParameterSpec spec = new GCMParameterSpec(secretKey.getEncoded().length, iv);
+        // Convert encrypted stream to unencrypted stream
+        cipher.init(Cipher.DECRYPT_MODE, secretKey, spec);
+        try (InputStream cipherIS = new CipherInputStream(encryptedStream, cipher)) {
+            IOUtils.copy(cipherIS, unencryptedStream);
+        }
     }
 
     @WorkerThread
