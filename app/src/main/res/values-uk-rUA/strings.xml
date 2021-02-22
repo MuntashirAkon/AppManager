@@ -51,14 +51,14 @@
     <string name="third_party">Сторонні бібліотеки та іконки</string>
     <string name="credits">Автори</string>
     <string name="toggle_default_app_ops">Перемкнути app ops за замовчуванням</string>
-    <string name="pref_remove_all_rules_msg">Дозволи надано, app ops та компоненти повернуться до значень за замовчуванням.</string>
+    <string name="pref_remove_all_rules_msg">Дозволи буде надано, app ops та компоненти повернуться до значень за замовчуванням.</string>
     <plurals name="no_of_splits">
         <item quantity="one">%1$d спліт</item>
         <item quantity="few">%1$d спліти</item>
         <item quantity="many">%1$d сплітів</item>
         <item quantity="other">%1$d сплітів</item>
     </plurals>
-    <string name="input_app_ops_description">Введіть імена та/або константи app op із пробілами, наприклад (WAKE_LOCK 63 72 КАМЕРА) тощо.</string>
+    <string name="input_app_ops_description">Введіть імена та/або константи app op із пробілами, наприклад &lt;tt&gt;WAKE_LOCK 63 72 CAMERA&lt;/tt&gt; тощо.</string>
     <string name="input_app_ops">Введення app ops</string>
     <string name="external_apk_no_app_op">Зовнішній файл .apk не має жодних операцій з додатками</string>
     <string name="failed_to_deny_dangerous_app_ops">Не вдалося відкликати всі небезпечні app ops</string>
@@ -72,10 +72,10 @@
     <string name="app_ops">App Ops</string>
     <string name="sys_config">Конфігурація системи</string>
     <string name="only_install">Лише встановити</string>
-    <string name="install_without_data_loss">Якщо ви вимкнули перевірку підпису, ви можете використовувати опцію <b> Лише встановити </b>, для установки додатка без втрати даних.</string>
+    <string name="install_without_data_loss">Якщо ви вимкнули перевірку підпису, ви можете використовувати опцію &lt;b&gt;Лише встановити&lt;/b&gt;, для установки додатка без втрати даних.</string>
     <string name="app_data_will_be_lost">Існуючі дані буде втрачено.</string>
     <string name="signature_mismatch_for_system_apps">Не вдалося встановити додаток, оскільки встановлений додаток є системним, з іншим підписом.</string>
-    <string name="do_you_want_to_uninstall_and_install">Ви хочете видалити та встановити додаток знову\?</string>
+    <string name="do_you_want_to_uninstall_and_install">Ви хочете видалити і знову встановити додаток \?</string>
     <string name="packages">пакети</string>
     <string name="onboard">Доступні</string>
     <string name="usage_access_not_supported">Не вдалося запросити доступ до використання, оскільки відповідна сторінка налаштувань не існує.</string>
@@ -126,7 +126,7 @@
     <string name="systemless_app">Позасистемний додаток</string>
     <string name="cancel">Скасувати</string>
     <string name="ok">ОК</string>
-    <string name="input_backup_name_description">Ім\'я резервної копії не повинно починатися з цифри і не повинно містити пробілу. Залиште поле порожнім, якщо ви хочете використовувати поточну дату-час.</string>
+    <string name="input_backup_name_description">Ім\'я резервної копії не повинно починатися з цифри і не повинно містити пробілів. Залиште поле порожнім, якщо ви хочете використовувати поточну дату-час.</string>
     <string name="input_backup_name">Ім\'я резервної копії</string>
     <string name="downgrade_not_possible">Пониження версії неможливе без ROOT або ADB</string>
     <string name="downgrade">Понизити версію</string>
@@ -209,7 +209,7 @@
     <string name="installer_error_incompatible">Додаток несумісний з цим пристроєм</string>
     <string name="installer_error_blocked">Встановленя заблоковано <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
     <string name="installer_error_blocked_device">пристрій</string>
-    <string name="installer_error_aborted">Не вдалося виконати встановлення, оскільки воно скасовано, або сеанс несподівано закрито</string>
+    <string name="installer_error_aborted">Помилка встановлення, оскільки воно було скасовано або несподівано закрито сеанс</string>
     <string name="filter_apps_with_activities">Додатки з activities</string>
     <string name="are_you_sure">Ви впевнені\?</string>
     <string name="pref_remove_all_rules">Видалити всі правила</string>
@@ -217,13 +217,13 @@
     <string name="run_in_termux">Запустити в Termux</string>
     <string name="open_in_termux">Відкрити в Termux</string>
     <string name="export_icon">Витягти іконку</string>
-    <string name="no_matching_package_found">Не знайдено відповідного пакета</string>
+    <string name="no_matching_package_found">Не знайдено відповідних пакетів</string>
     <string name="block_unblock_trackers">Заблокувати/розблокувати трекери</string>
     <string name="unblock">Розблокувати</string>
     <string name="block">Блокувати</string>
     <string name="clear">Очистити</string>
     <string name="failed_packages">Збійні пакети</string>
-    <string name="deny_app_ops_description">Встановити режим операцій програм, визначені константами, наприклад 63 або RUN_IN_BACKGROUND</string>
+    <string name="deny_app_ops_description">"Встановити режим операцій програм, визначені константами, наприклад  &lt;tt&gt;63&lt;/tt&gt; або &lt;tt&gt;RUN_IN_BACKGROUND&lt;/tt&gt;"</string>
     <string name="manifest_viewer">Переглядач маніфесту</string>
     <string name="never_ask">Не запитувати</string>
     <string name="unknown_op">Невідома операція</string>
@@ -323,12 +323,12 @@
     <string name="failed_to_parse_some_numbers">Не вдалося проаналізувати деякі цифри</string>
     <string name="only_works_in_root_or_adb_mode">Працює лише в режимі ROOT або ADB</string>
     <string name="filtered_packages">Відфільтровані пакети</string>
-    <string name="input_signatures_description">Ввести підписи з пробілами, наприклад (com.facebook org.app2 com.app3) тощо.</string>
+    <string name="input_signatures_description">Ввести підписи з пробілами, наприклад &lt;tt&gt;com.facebook org.app2 com.app3&lt;/tt&gt; тощо.</string>
     <string name="input_signatures">Введення підписів</string>
     <string name="no_tracker_found">Не знайдено жодного трекера</string>
     <string name="clear_app_cache_description">Очищення кешу всіх додатків</string>
     <string name="clear_app_cache">Очищення кешу додатків</string>
-    <string name="clear_data_from_uninstalled_apps_description">Очистити дані видалених додатків, котрі відмічені прапорцем DONT_DELETE_DATA</string>
+    <string name="clear_data_from_uninstalled_apps_description">Очистити дані видалених додатків, котрі відмічені прапорцем &lt;tt&gt;DONT_DELETE_DATA&lt;/tt&gt;</string>
     <string name="block_components_description">Блокувати всі компоненти, визначені заданими підписами</string>
     <string name="block_unblock_trackers_description">Блокування або розблокування реклами і компонентів трекерів з усіх встановлених програм</string>
     <string name="clear_cache">Очистити кеш</string>
@@ -377,7 +377,7 @@
     <string name="battery_mode">Режим батареї</string>
     <string name="pref_app_theme">Тема додатка</string>
     <string name="pref_import_blocker_msg">Імпорт правил блокування з Blocker, кожен файл містить правила для одного пакета.</string>
-    <string name="pref_import_watt_msg">Імпортуйте правила блокування з Watt, кожен файл, що містить правила для однієї назви пакета як packagename.xml тощо.</string>
+    <string name="pref_import_watt_msg">Імпортуйте правила блокування з Watt, кожен файл, що містить правила для однієї назви пакета як &lt;tt&gt;packagename.xml&lt;/tt&gt; тощо.</string>
     <string name="pref_import_msg">Імпортуйте раніше експортовані правила блокування з App Manager.</string>
     <string name="pref_export_msg">Експортувати правила блокування, налаштованих в App Manager, у зовнішнє сховище.</string>
     <string name="touchscreen">Сенсорний екран</string>
@@ -446,7 +446,7 @@
     <string name="the_import_was_successful">Імпортовано</string>
     <string name="pref_import_blocker">Імпорт з Blocker</string>
     <string name="pref_import_watt">Імпорт з Watt</string>
-    <string name="pref_import_export_blocking_rules">Імпорт/Експорт правил блокування</string>
+    <string name="pref_import_export_blocking_rules">Імпорт/експорт правил блокування</string>
     <string name="sort_by_mobile_data">Мобільні дані</string>
     <string name="sort_by_times_opened">Кількість запусків</string>
     <string name="sort_by_screen_time">Час роботи екрану</string>
@@ -694,7 +694,7 @@
         <item quantity="many">1 трекер з <xliff:g id="class_no" example="50">%1$d</xliff:g> класами</item>
         <item quantity="other">1 трекер з <xliff:g id="class_no" example="50">%1$d</xliff:g> класами</item>
     </plurals>
-    <string name="am_crashed">АМ впав</string>
+    <string name="am_crashed">АМ аварійно завершив роботу</string>
     <string name="duplicate">Дублікат</string>
     <string name="new_profile">Новий профіль</string>
     <string name="input_profile_name_description">Назва профілю не повинна містити пробілу.</string>
@@ -702,7 +702,7 @@
     <string name="in_progress">В процесі</string>
     <string name="conversion_failed">Не вдалося виконати перетворення.</string>
     <string name="select_apk">Виберіть APK</string>
-    <string name="send_crash_report">Надіслати звіт про падіння</string>
+    <string name="send_crash_report">Надіслати звіт про аварійне завершення роботи</string>
     <string name="tap_to_submit_crash_report">Торкніться, щоб надіслати звіт про аварійне завершення роботи.</string>
     <string name="none">Без шифрування</string>
     <string name="ecc">Еліптична криптографія (ЕСС)</string>
@@ -762,7 +762,7 @@
         <item quantity="many">Підтверджено з %d попередженнями</item>
         <item quantity="other">Підтверджено з %d попередженнями</item>
     </plurals>
-    <string name="input_keystore_alias_pass_description">Вставте пароль для псевдоніма <b>%1$s</b>. Ви можете залишити це поле порожнім, якщо пароль збігається з паролем KeyStore.</string>
+    <string name="input_keystore_alias_pass_description">Вставте пароль для псевдоніма &lt;b&gt;%1$s&lt;/b&gt;. Ви можете залишити це поле порожнім, якщо пароль збігається з паролем сховища ключів.</string>
     <string name="input_keystore_alias_pass">Пароль для псевдоніма <b>%1$s</b></string>
     <string name="input_keystore_pass_msg">Натисніть тут, щоб надати пароль сховища ключів</string>
     <string name="input_keystore_pass_description">Вставити пароль сховища ключів App Manager. Якщо ви бачите це вперше, будь ласка, використовуйте генератор паролів для створення пароля та збереження його в безпечному місці, перш ніж вставити його тут.</string>
@@ -773,11 +773,11 @@
         <item quantity="many">Схема підписів</item>
         <item quantity="other">Схема підписів</item>
     </plurals>
-    <string name="input_permissions_description">Введення дозволів з пробілами, наприклад (com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION) тощо.</string>
+    <string name="input_permissions_description">Введення дозволів з пробілами, наприклад &lt;tt&gt;com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION&lt;/tt&gt; тощо. Використайте &lt;tt&gt;*&lt;/tt&gt; щоб застосувати до всіх дозволів.</string>
     <string name="input_permissions">Введення дозволів</string>
     <string name="no_app_ops_permission">Немає дозволу на відображення app ops</string>
-    <string name="pref_backup_android_keystore_msg">Не всі програми працюватимуть після відновлення. Відновлення KeyStore не працює на більшості пристроїв.</string>
-    <string name="pref_backup_android_keystore">Резервне копіювання додатків з Android KeyStore</string>
+    <string name="pref_backup_android_keystore_msg">Не всі програми працюватимуть після відновлення. Відновлення сховища ключів не працює на більшості пристроїв.</string>
+    <string name="pref_backup_android_keystore">Резервне копіювання додатків зі сховищем ключів Android</string>
     <string name="keep_data_and_signatures">Зберегти дані і підписи</string>
     <string name="this_action_cannot_be_undone">Цю операцію неможливо відмінити.</string>
     <string name="filter_apps_with_splits">Додатки з сплітами</string>
@@ -826,9 +826,9 @@
     <string name="interceptor">Перехоплювач</string>
     <string name="resend_intent">Повторно відправити intent</string>
     <string name="share">Поділитися</string>
-    <string name="extras">Додатково</string>
+    <string name="extras">Extras</string>
     <string name="category">Категорії</string>
-    <string name="mime_type">Тип MIME</string>
+    <string name="mime_type">MIME-тип</string>
     <string name="action">Дія</string>
     <string name="result_code">Код результату</string>
     <string name="activity_result">Результат activity</string>
@@ -866,7 +866,7 @@
     <string name="add_to_profile">Додати до профілю</string>
     <string name="initializing">Ініціалізація…</string>
     <string name="choose_what_to_do">Виберіть, що робити.</string>
-    <string name="screen_lock_msg">Заблокувати App Manager за допомогою блокування екрану Android</string>
+    <string name="screen_lock_msg">Блокувати App Manager за допомогою блокування екрану Android</string>
     <string name="screen_lock">Блокування екрана</string>
     <string name="unlock_app_manager">Розблокувати App Manager</string>
     <string name="sd_card">SD-карта</string>
@@ -876,7 +876,7 @@
     <string name="drm_free_apkm_msg">Файл APKM не має DRM, не потрібно конвертувати його в APKS.</string>
     <string name="restore_msg">Відновлення програм із даними</string>
     <string name="backup_msg">Резервне копіювання програм із даними</string>
-    <string name="restore_latest_msg">Відновлення вже встановлених програм, коди версій яких вищий, ніж код встановлених.</string>
+    <string name="restore_latest_msg">Відновлення вже встановлених програм, коди версій котрих вищий, ніж код встановлених.</string>
     <string name="restore_latest">Відновлення останніх резервних копій</string>
     <string name="restore_not_installed_msg">Відновлення базової резервної копії програм, котрі наразі не встановлено.</string>
     <string name="restore_not_installed">Відновити невстановлені програми</string>
@@ -916,11 +916,15 @@
     <string name="patch_level">Оновлення безпеки Андроїд</string>
     <string name="type_null">Немає значення</string>
     <string name="vendor">Постачальник</string>
-    <string name="set_custom_app_op">Індивідуальне налаштування app op</string>
+    <string name="set_custom_app_op">Користувацьке налаштування app op</string>
     <string name="user_with_id">Користувач: <xliff:g id="user_id" example="0">%1$d</xliff:g></string>
     <string name="last_actions">Останні дії</string>
     <string name="pref_enable_disable_features_msg">Увімкніть або вимкніть функції в App Manager.</string>
-    <string name="enable_disable_features">Увімкнути / вимкнути функції</string>
+    <string name="enable_disable_features">Увімкнути/вимкнути функції</string>
     <string name="installed_apps">Встановлені додатки</string>
     <string name="backup_custom_users">Вибір користувачів</string>
+    <string name="isolated">Ізольовано</string>
+    <string name="working_on_adb_mode">Робота в режимі ADB</string>
+    <string name="screen_lock_not_enabled">Блокування екрана не ввімкнуто. Увімкніть блокування екрана в налаштуваннях Android або очистіть дані додатка.</string>
+    <string name="input_app_ops_description_profile">Введіть імена та/або константи додатків із пробілами, наприклад &lt;tt&gt;WAKE_LOCK 63 72 КАМЕРА&lt;/tt&gt; тощо. Використовуйте &lt;tt&gt;*&lt;/tt&gt;, щоб застосувати до всіх налаштованих app ops.</string>
 </resources>
