@@ -261,4 +261,38 @@
     <string name="pref_usage_access_enabled_msg">Memungkinkan anda untuk melihat info statistik dan data aplikasi.</string>
     <string name="pref_usage_access_enabled">Akses pemakaian</string>
     <string name="pref_global_blocking_enabled_msg">Memungkinkan anda untuk memblokir komponen apapun tanpa harus menghidupkan pemblokir untuk aplikasi.</string>
+    <string name="backup_restore">Cadangkan/Pulihkan</string>
+    <string name="backup_apk">Aplikasi Cadangan</string>
+    <string name="clear_data">Bersihkan Data</string>
+    <string name="user_with_id">Pengguna:
+\n&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"user_id\" example=\"0\"&gt;%1$d&lt;/xliff:g&gt;</string>
+    <string name="memory_virtual_memory">Memori: %1$s, Memori Virtual: %2$s</string>
+    <string name="pid_and_ppid">Proses ID: %1$d, Proses ID Utama: %2$d</string>
+    <string name="disable_background_run">Nonaktifkan Berjalan di Latar Belakang</string>
+    <string name="kill_process">Hentikan</string>
+    <string name="running_apps">Aplikasi Berjalan</string>
+    <string name="store">Toko</string>
+    <string name="apk_updater">Pengupdate APK</string>
+    <plurals name="failed_to_import_files">
+        <item quantity="other">Tak dapat memulihkan file %1$d.</item>
+    </plurals>
+    <string name="the_export_was_successful">Tercadangkan</string>
+    <string name="the_import_was_successful">Terpulihkan</string>
+    <string name="pref_import_blocker">Pulihkan dari Penghalang</string>
+    <string name="pref_import_watt">Pulihkan dari Watt</string>
+    <string name="pref_import_export_blocking_rules_msg">Aturan Pencadangan/Pemulihan, Pulihkan Aturan Eksternal dari Watt atau Penghalang.</string>
+    <string name="pref_import_export_blocking_rules">Aturan Halangan Pencadangan/Pemulihan</string>
+    <string name="sort_by_mobile_data">Data Seluler</string>
+    <string name="sort_by_times_opened">Kali dibuka</string>
+    <string name="sort_by_screen_time">Waktu Layar</string>
+    <string name="sort_by_last_used">Terakhir kali dipakai</string>
+    <plurals name="no_of_times_opened">
+        <item quantity="other">%1$d kali</item>
+    </plurals>
+    <string name="external_data_dir">Penyimpanan Data Eksternal</string>
+    <string name="sort_by_blocked_components">Dihalang Pertama</string>
+    <string name="sort_by_disabled_app">Dinonaktifkan Pertama</string>
+    <string name="exodus_link">Link εxodus</string>
+    <string name="usage_yesterday">Kemarin</string>
+    <string name="pref_global_blocking_enabled">Komponen Penghalang Global</string>
 </resources>
