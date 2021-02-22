@@ -638,4 +638,9 @@
     <string name="profile_force_stop_msg">Jeśli ta opcja jest włączona, aplikacje zostaną zatrzymane</string>
     <string name="profile_disable_msg">Jeśli ta opcja jest włączona, aplikacje zostaną wyłączone/włączone na podstawie wybranego stanu</string>
     <string name="profile_state">Stan profilu</string>
+    <string name="not_verified">Nie zweryfikowane</string>
+    <string name="verified">Zweryfikowane</string>
+    <string name="install_location_prefer_external">Preferuj pamięć zewnętrzną</string>
+    <string name="install_location_internal_only">Tylko pamięć wewnętrzna</string>
+    <string name="in_progress">W toku</string>
 </resources>
