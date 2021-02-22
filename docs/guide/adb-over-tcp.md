@@ -117,7 +117,9 @@ adb kill-server
 ```
 Replace `adb` with `./adb` or any other command that you had to use in previous steps.
 
-For lineage OS, you can turn off **ADB over Network** in developer options.
+::: warning Lineage OS users
+You can turn off **ADB over Network** in developer options, but turning off this option will also stop App Manager's remote server. So, turn it off only when you're not going to use App Manager in ADB over TCP mode.
+:::
 
 ## 5. References
 1. [How to Install ADB on Windows, macOS, and Linux](https://www.xda-developers.com/install-adb-windows-macos-linux)
