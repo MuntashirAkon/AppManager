@@ -58,7 +58,7 @@
         <item quantity="many">%1$d сплітів</item>
         <item quantity="other">%1$d сплітів</item>
     </plurals>
-    <string name="input_app_ops_description">Введіть імена та/або константи app op із пробілами, наприклад &lt;tt&gt;WAKE_LOCK 63 72 CAMERA&lt;/tt&gt; тощо.</string>
+    <string name="input_app_ops_description">Введіть імена та/або константи app op із пробілами, наприклад <tt>WAKE_LOCK 63 72 CAMERA</tt> тощо.</string>
     <string name="input_app_ops">Введення app ops</string>
     <string name="external_apk_no_app_op">Зовнішній файл .apk не має жодних операцій з додатками</string>
     <string name="failed_to_deny_dangerous_app_ops">Не вдалося відкликати всі небезпечні app ops</string>
@@ -72,7 +72,7 @@
     <string name="app_ops">App Ops</string>
     <string name="sys_config">Конфігурація системи</string>
     <string name="only_install">Лише встановити</string>
-    <string name="install_without_data_loss">Якщо ви вимкнули перевірку підпису, ви можете використовувати опцію &lt;b&gt;Лише встановити&lt;/b&gt;, для установки додатка без втрати даних.</string>
+    <string name="install_without_data_loss">Якщо ви вимкнули перевірку підпису, ви можете використовувати опцію <b>Лише встановити</b>, для установки додатка без втрати даних.</string>
     <string name="app_data_will_be_lost">Існуючі дані буде втрачено.</string>
     <string name="signature_mismatch_for_system_apps">Не вдалося встановити додаток, оскільки встановлений додаток є системним, з іншим підписом.</string>
     <string name="do_you_want_to_uninstall_and_install">Ви хочете видалити і знову встановити додаток \?</string>
@@ -223,7 +223,7 @@
     <string name="block">Блокувати</string>
     <string name="clear">Очистити</string>
     <string name="failed_packages">Збійні пакети</string>
-    <string name="deny_app_ops_description">"Встановити режим операцій програм, визначені константами, наприклад  &lt;tt&gt;63&lt;/tt&gt; або &lt;tt&gt;RUN_IN_BACKGROUND&lt;/tt&gt;"</string>
+    <string name="deny_app_ops_description">"Встановити режим операцій програм, визначені константами, наприклад  <tt>63</tt> або <tt>RUN_IN_BACKGROUND</tt>"</string>
     <string name="manifest_viewer">Переглядач маніфесту</string>
     <string name="never_ask">Не запитувати</string>
     <string name="unknown_op">Невідома операція</string>
@@ -323,12 +323,12 @@
     <string name="failed_to_parse_some_numbers">Не вдалося проаналізувати деякі цифри</string>
     <string name="only_works_in_root_or_adb_mode">Працює лише в режимі ROOT або ADB</string>
     <string name="filtered_packages">Відфільтровані пакети</string>
-    <string name="input_signatures_description">Ввести підписи з пробілами, наприклад &lt;tt&gt;com.facebook org.app2 com.app3&lt;/tt&gt; тощо.</string>
+    <string name="input_signatures_description">Ввести підписи з пробілами, наприклад <tt>com.facebook org.app2 com.app3</tt> тощо.</string>
     <string name="input_signatures">Введення підписів</string>
     <string name="no_tracker_found">Не знайдено жодного трекера</string>
     <string name="clear_app_cache_description">Очищення кешу всіх додатків</string>
     <string name="clear_app_cache">Очищення кешу додатків</string>
-    <string name="clear_data_from_uninstalled_apps_description">Очистити дані видалених додатків, котрі відмічені прапорцем &lt;tt&gt;DONT_DELETE_DATA&lt;/tt&gt;</string>
+    <string name="clear_data_from_uninstalled_apps_description">Очистити дані видалених додатків, котрі відмічені прапорцем <tt>DONT_DELETE_DATA</tt></string>
     <string name="block_components_description">Блокувати всі компоненти, визначені заданими підписами</string>
     <string name="block_unblock_trackers_description">Блокування або розблокування реклами і компонентів трекерів з усіх встановлених програм</string>
     <string name="clear_cache">Очистити кеш</string>
@@ -377,7 +377,7 @@
     <string name="battery_mode">Режим батареї</string>
     <string name="pref_app_theme">Тема додатка</string>
     <string name="pref_import_blocker_msg">Імпорт правил блокування з Blocker, кожен файл містить правила для одного пакета.</string>
-    <string name="pref_import_watt_msg">Імпортуйте правила блокування з Watt, кожен файл, що містить правила для однієї назви пакета як &lt;tt&gt;packagename.xml&lt;/tt&gt; тощо.</string>
+    <string name="pref_import_watt_msg">Імпортуйте правила блокування з Watt, кожен файл, що містить правила для однієї назви пакета як <tt>packagename.xml</tt> тощо.</string>
     <string name="pref_import_msg">Імпортуйте раніше експортовані правила блокування з App Manager.</string>
     <string name="pref_export_msg">Експортувати правила блокування, налаштованих в App Manager, у зовнішнє сховище.</string>
     <string name="touchscreen">Сенсорний екран</string>
@@ -762,7 +762,7 @@
         <item quantity="many">Підтверджено з %d попередженнями</item>
         <item quantity="other">Підтверджено з %d попередженнями</item>
     </plurals>
-    <string name="input_keystore_alias_pass_description">Вставте пароль для псевдоніма &lt;b&gt;%1$s&lt;/b&gt;. Ви можете залишити це поле порожнім, якщо пароль збігається з паролем сховища ключів.</string>
+    <string name="input_keystore_alias_pass_description">Вставте пароль для псевдоніма <b>%1$s</b>. Ви можете залишити це поле порожнім, якщо пароль збігається з паролем сховища ключів.</string>
     <string name="input_keystore_alias_pass">Пароль для псевдоніма <b>%1$s</b></string>
     <string name="input_keystore_pass_msg">Натисніть тут, щоб надати пароль сховища ключів</string>
     <string name="input_keystore_pass_description">Вставити пароль сховища ключів App Manager. Якщо ви бачите це вперше, будь ласка, використовуйте генератор паролів для створення пароля та збереження його в безпечному місці, перш ніж вставити його тут.</string>
@@ -773,7 +773,7 @@
         <item quantity="many">Схема підписів</item>
         <item quantity="other">Схема підписів</item>
     </plurals>
-    <string name="input_permissions_description">Введення дозволів з пробілами, наприклад &lt;tt&gt;com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION&lt;/tt&gt; тощо. Використайте &lt;tt&gt;*&lt;/tt&gt; щоб застосувати до всіх дозволів.</string>
+    <string name="input_permissions_description">Введення дозволів з пробілами, наприклад <tt>com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION</tt> тощо. Використайте <tt>*</tt> щоб застосувати до всіх дозволів.</string>
     <string name="input_permissions">Введення дозволів</string>
     <string name="no_app_ops_permission">Немає дозволу на відображення app ops</string>
     <string name="pref_backup_android_keystore_msg">Не всі програми працюватимуть після відновлення. Відновлення сховища ключів не працює на більшості пристроїв.</string>
@@ -926,5 +926,5 @@
     <string name="isolated">Ізольовано</string>
     <string name="working_on_adb_mode">Робота в режимі ADB</string>
     <string name="screen_lock_not_enabled">Блокування екрана не ввімкнуто. Увімкніть блокування екрана в налаштуваннях Android або очистіть дані додатка.</string>
-    <string name="input_app_ops_description_profile">Введіть імена та/або константи додатків із пробілами, наприклад &lt;tt&gt;WAKE_LOCK 63 72 КАМЕРА&lt;/tt&gt; тощо. Використовуйте &lt;tt&gt;*&lt;/tt&gt;, щоб застосувати до всіх налаштованих app ops.</string>
+    <string name="input_app_ops_description_profile">Введіть імена та/або константи додатків із пробілами, наприклад <tt>WAKE_LOCK 63 72 КАМЕРА</tt> тощо. Використовуйте <tt>*</tt>, щоб застосувати до всіх налаштованих app ops.</string>
 </resources>
