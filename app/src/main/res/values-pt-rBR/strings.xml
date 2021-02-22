@@ -883,4 +883,6 @@
     <string name="input_app_ops_description_profile">Insira nomes de operações de aplicativo e/ou constantes com espaços, p. ex. <tt>WAKE_LOCK 63 72 CAMERA</tt> etc. Use <tt>*</tt> para solicitar todas as operações de aplicativo configuradas.</string>
     <string name="working_on_adb_mode">Trabalhando no modo ADB</string>
     <string name="verified_using_unreliable_hash">Verificado usando hash não confiável</string>
+    <string name="installer_app_message">Selecione &lt;b&gt;escolher&lt;/b&gt; para escolher entre os aplicativos instalados ou selecione &lt;b&gt;personalizado&lt;/b&gt; para especificar um nome de pacote personalizado.</string>
+    <string name="specify_custom_name">Personalizado</string>
 </resources>
