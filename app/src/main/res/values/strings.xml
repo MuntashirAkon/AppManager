@@ -912,4 +912,6 @@
     <string name="screen_lock_not_enabled">Screen lock not enabled. Enable screen lock in Android settings or clear app data.</string>
     <string name="working_on_adb_mode">Working on ADB mode</string>
     <string name="verified_using_unreliable_hash">Verified using unreliable hash</string>
+    <string name="specify_custom_name">Custom</string>
+    <string name="installer_app_message">Select <b>choose</b> to choose from the installed apps or select <b>custom</b> to specify a custom package name.</string>
 </resources>

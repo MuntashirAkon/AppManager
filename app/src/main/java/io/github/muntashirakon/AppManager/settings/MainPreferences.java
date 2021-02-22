@@ -32,6 +32,7 @@ import android.view.Display;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
@@ -44,14 +45,17 @@ import androidx.core.util.Pair;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
+
 import com.android.internal.util.TextUtils;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.yariksoffice.lingver.Lingver;
+
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.misc.SystemProperties;
+import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
@@ -251,31 +255,55 @@ public class MainPreferences extends PreferenceFragmentCompat {
         installerApp = (String) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_INSTALLER_APP_STR);
         installerAppPref.setSummary(PackageUtils.getPackageLabel(pm, installerApp));
         installerAppPref.setOnPreferenceClickListener(preference -> {
-            activity.progressIndicator.show();
-            new Thread(() -> {
-                // List apps
-                List<PackageInfo> packageInfoList = pm.getInstalledPackages(0);
-                ArrayList<String> items = new ArrayList<>(packageInfoList.size());
-                ArrayList<CharSequence> itemNames = new ArrayList<>(packageInfoList.size());
-                for (PackageInfo info : packageInfoList) {
-                    items.add(info.packageName);
-                    itemNames.add(info.applicationInfo.loadLabel(pm));
-                }
-                int selectedApp = itemNames.indexOf(installerApp);
-                activity.runOnUiThread(() -> {
-                    activity.progressIndicator.hide();
-                    new MaterialAlertDialogBuilder(activity)
-                            .setTitle(R.string.installer_app)
-                            .setSingleChoiceItems(itemNames.toArray(new CharSequence[0]),
-                                    selectedApp, (dialog, which) -> installerApp = items.get(which))
-                            .setPositiveButton(R.string.ok, (dialog, which) -> {
-                                AppPref.set(AppPref.PrefKey.PREF_INSTALLER_INSTALLER_APP_STR, installerApp);
-                                installerAppPref.setSummary(PackageUtils.getPackageLabel(pm, installerApp));
-                            })
-                            .setNegativeButton(R.string.cancel, null)
-                            .show();
-                });
-            }).start();
+            new MaterialAlertDialogBuilder(activity)
+                    .setTitle(R.string.installer_app)
+                    .setMessage(R.string.installer_app_message)
+                    .setPositiveButton(R.string.choose, (dialog1, which1) -> {
+                        activity.progressIndicator.show();
+                        new Thread(() -> {
+                            // List apps
+                            List<PackageInfo> packageInfoList = pm.getInstalledPackages(PackageManager.MATCH_UNINSTALLED_PACKAGES);
+                            ArrayList<String> items = new ArrayList<>(packageInfoList.size());
+                            ArrayList<CharSequence> itemNames = new ArrayList<>(packageInfoList.size());
+                            for (PackageInfo info : packageInfoList) {
+                                if (isDetached()) return;
+                                items.add(info.packageName);
+                                itemNames.add(info.applicationInfo.loadLabel(pm));
+                            }
+                            int selectedApp = itemNames.indexOf(installerApp);
+                            activity.runOnUiThread(() -> {
+                                if (isDetached()) return;
+                                activity.progressIndicator.hide();
+                                new MaterialAlertDialogBuilder(activity)
+                                        .setTitle(R.string.installer_app)
+                                        .setSingleChoiceItems(itemNames.toArray(new CharSequence[0]),
+                                                selectedApp, (dialog, which) -> installerApp = items.get(which))
+                                        .setPositiveButton(R.string.ok, (dialog, which) -> {
+                                            AppPref.set(AppPref.PrefKey.PREF_INSTALLER_INSTALLER_APP_STR, installerApp);
+                                            installerAppPref.setSummary(PackageUtils.getPackageLabel(pm, installerApp));
+                                        })
+                                        .setNegativeButton(R.string.cancel, null)
+                                        .show();
+                            });
+                        }).start();
+                    })
+                    .setNegativeButton(R.string.specify_custom_name, (dialog, which) ->
+                            new TextInputDialogBuilder(activity, R.string.installer_app)
+                                    .setTitle(R.string.installer_app)
+                                    .setInputText(installerApp)
+                                    .setPositiveButton(R.string.ok, (dialog1, which1, inputText, isChecked) -> {
+                                        if (inputText == null) return;
+                                        installerApp = inputText.toString().trim();
+                                        AppPref.set(AppPref.PrefKey.PREF_INSTALLER_INSTALLER_APP_STR, installerApp);
+                                        installerAppPref.setSummary(PackageUtils.getPackageLabel(pm, installerApp));
+                                    })
+                                    .setNegativeButton(R.string.cancel, null)
+                                    .show())
+                    .setNeutralButton(R.string.reset_to_default, (dialog, which) -> {
+                        AppPref.set(AppPref.PrefKey.PREF_INSTALLER_INSTALLER_APP_STR, installerApp = activity.getPackageName());
+                        installerAppPref.setSummary(PackageUtils.getPackageLabel(pm, installerApp));
+                    })
+                    .show();
             return true;
         });
         // Sign apk before install
