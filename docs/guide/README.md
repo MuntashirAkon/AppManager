@@ -1,7 +1,7 @@
 # Introduction
 
-[![TG Group](https://img.shields.io/badge/TG-Group-blue?logo=telegram)](https://t.me/AppManagerAndroid)
 [![TG Channel](https://img.shields.io/badge/TG-Channel-blue?logo=telegram)](https://t.me/AppManagerChannel)
+![Twitter @AppManagerNews](https://img.shields.io/twitter/follow/AppManagerNews?label=%40AppManagerNews)
 
 Welcome to App Manager docs!
 
