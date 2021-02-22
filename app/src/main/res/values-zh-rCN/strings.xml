@@ -850,4 +850,5 @@
     <string name="screen_lock_not_enabled">未启用屏幕锁。在安卓系统设置中启用屏幕锁或清除应用数据。</string>
     <string name="input_app_ops_description_profile">app op 名称和/或常数间用英文空格隔开，比如 <tt>WAKE_LOCK 63 72 CAMERA</tt>等。用 <tt>* </tt>表示应用到所有配置的 app ops。</string>
     <string name="working_on_adb_mode">在 ADB 模式上正常工作</string>
+    <string name="verified_using_unreliable_hash">使用不可靠哈希进行了验证</string>
 </resources>
