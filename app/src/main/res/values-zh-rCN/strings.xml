@@ -851,4 +851,6 @@
     <string name="input_app_ops_description_profile">app op 名称和/或常数间用英文空格隔开，比如 <tt>WAKE_LOCK 63 72 CAMERA</tt>等。用 <tt>* </tt>表示应用到所有配置的 app ops。</string>
     <string name="working_on_adb_mode">在 ADB 模式上正常工作</string>
     <string name="verified_using_unreliable_hash">使用不可靠哈希进行了验证</string>
+    <string name="installer_app_message">选中 &lt;b&gt;挑选&lt;/b&gt;从已安装应用中进行选择或选中&lt;b&gt;自定义&lt;/b&gt;指定自定义包名。</string>
+    <string name="specify_custom_name">自定义</string>
 </resources>
