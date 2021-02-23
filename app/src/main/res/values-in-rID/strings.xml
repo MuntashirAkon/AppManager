@@ -295,4 +295,27 @@
     <string name="exodus_link">Link εxodus</string>
     <string name="usage_yesterday">Kemarin</string>
     <string name="pref_global_blocking_enabled">Komponen Penghalang Global</string>
+    <string name="app_op_cannot_be_disabled">Aplikasi ini tidak bisa dinonaktifkan, kemungkinan aplikasi read-only atau bergantung pada aplikasi lain.</string>
+    <string name="toggle_kill_for_system_apps">Hidupkan Penghentikan aplikasi sistem</string>
+    <plurals name="alert_failed_to_force_stop">
+        <item quantity="other">Tak dapat memaksa penghentikan aplikasi %1$d</item>
+    </plurals>
+    <string name="the_operation_was_successful">Selesai</string>
+    <plurals name="alert_failed_to_disable_background">
+        <item quantity="other">Tidak dapat mencegah aplikasi %1$d dari berjalan di latar belakang</item>
+    </plurals>
+    <plurals name="alert_failed_to_uninstall">
+        <item quantity="other">Tak dapat menghapus aplikasi %1$d</item>
+    </plurals>
+    <plurals name="alert_failed_to_disable">
+        <item quantity="other">Tidak bisa menonaktifkan aplikasi %1$d</item>
+    </plurals>
+    <plurals name="alert_failed_to_clear_data">
+        <item quantity="other">Tidak dapat membersihkan data dari aplikasi %1$d</item>
+    </plurals>
+    <string name="some_items_selected">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"selection_no\" example=\"20\"&gt;%1$d&lt;/xliff:g&gt; dipilih</string>
+    <string name="export_blocking_rules">Ekspor Aturan Penghalang</string>
+    <string name="disable_background">Nonaktifkan Latar Belakang</string>
+    <string name="user_and_uid">Pengguna:&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"user_name\" example=\"root\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"user_id\" example=\"0\"&gt;%2$d&lt;/xliff:g&gt;)</string>
+    <string name="external_multiple_data_dir">Penyimpanan Data Eksternal&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"dir_no\" example=\"1\"&gt;%1$d&lt;/xliff:g&gt;</string>
 </resources>
