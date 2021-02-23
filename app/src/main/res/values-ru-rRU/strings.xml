@@ -943,7 +943,7 @@
     <string name="enable_disable_features">Включение/отключение функций</string>
     <string name="ssaid">SSAID</string>
     <string name="type_uri">URI</string>
-    <string name="isolated">изолированно</string>
+    <string name="isolated">Изолированно</string>
     <string name="screen_lock_not_enabled">Блокировка экрана не включена. Включите блокировку экрана в настройках Android или очистите данные приложения.</string>
     <string name="input_app_ops_description_profile">Введите имена операций приложения и/или константы с пробелами, например <tt>WAKE_LOCK 63 72 CAMERA</tt> и т.д. Используйте <tt>*</tt> для применения ко всем настроенным операциям приложения.</string>
     <string name="working_on_adb_mode">Работа в режиме ADB</string>
