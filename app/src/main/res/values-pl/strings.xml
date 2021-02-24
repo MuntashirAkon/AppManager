@@ -643,4 +643,14 @@
     <string name="install_location_prefer_external">Preferuj pamięć zewnętrzną</string>
     <string name="install_location_internal_only">Tylko pamięć wewnętrzna</string>
     <string name="in_progress">W toku</string>
+    <string name="uri">URI</string>
+    <string name="mime_type">Typ MIME</string>
+    <string name="action">Działanie</string>
+    <string name="result_code">Kod wyniku</string>
+    <string name="send_edited_intent">Wyślij edytowany Intent</string>
+    <string name="value">Wartość</string>
+    <string name="set_app_op_mode">Ustaw tryb App Ops</string>
+    <string name="magisk_hide_enabled">MagiskHide</string>
+    <string name="pref_backup_android_keystore_msg">Nie wszystkie aplikacje będą działać po przywróceniu. Przywracanie KeyStore nie działa na większości urządzeń.</string>
+    <string name="pref_backup_android_keystore">Twórz kopie zapasowe aplikacji używających Android KeyStore</string>
 </resources>
