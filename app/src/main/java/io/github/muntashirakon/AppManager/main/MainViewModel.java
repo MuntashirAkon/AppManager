@@ -524,7 +524,7 @@ public class MainViewModel extends AndroidViewModel {
                 }
                 ApplicationInfo applicationInfo = packageInfo.applicationInfo;
                 ApplicationItem item = new ApplicationItem(applicationInfo);
-                if (item.equals(oldItem)) {
+                if (app.isInstalled && item.equals(oldItem)) {
                     oldItem.userHandles = ArrayUtils.appendInt(oldItem.userHandles, userHandle);
                     continue;
                 }

@@ -29,6 +29,7 @@ import io.github.muntashirakon.AppManager.backup.BackupManager;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.io.ProxyFile;
 import io.github.muntashirakon.io.ProxyInputStream;
 
@@ -147,7 +148,8 @@ public class ApplicationItem extends PackageItemInfo {
         }
         if (userHandles.length > 0) {
             try {
-                ApplicationInfo info = PackageManagerCompat.getApplicationInfo(packageName, 0, userHandles[0]);
+                ApplicationInfo info = PackageManagerCompat.getApplicationInfo(packageName,
+                        PackageUtils.flagMatchUninstalled, userHandles[0]);
                 return IOUtils.cacheIcon(packageName, info.loadIcon(pm));
             } catch (Exception ignore) {
             }

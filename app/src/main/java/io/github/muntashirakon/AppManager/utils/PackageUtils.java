@@ -26,6 +26,7 @@ import android.text.SpannableStringBuilder;
 import android.util.Pair;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
 import androidx.core.content.ContextCompat;
 import com.android.apksig.ApkVerifier;
 import com.android.internal.util.TextUtils;
@@ -39,8 +40,6 @@ import io.github.muntashirakon.AppManager.db.entity.App;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.main.ApplicationItem;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
-import io.github.muntashirakon.AppManager.users.UserIdInt;
-import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
@@ -48,6 +47,8 @@ import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
+import io.github.muntashirakon.AppManager.users.UserIdInt;
+import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.io.ProxyFile;
 
 import java.io.File;
@@ -69,6 +70,7 @@ public final class PackageUtils {
 
     public static final int flagSigningInfo;
     public static final int flagDisabledComponents;
+    public static final int flagMatchUninstalled;
 
     static {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -82,6 +84,12 @@ public final class PackageUtils {
         } else {
             //noinspection deprecation
             flagDisabledComponents = PackageManager.GET_DISABLED_COMPONENTS;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            flagMatchUninstalled = PackageManager.MATCH_UNINSTALLED_PACKAGES;
+        } else {
+            //noinspection deprecation
+            flagMatchUninstalled = PackageManager.GET_UNINSTALLED_PACKAGES;
         }
     }
 
@@ -104,6 +112,7 @@ public final class PackageUtils {
         return userPackagePairList;
     }
 
+    @WorkerThread
     @NonNull
     public static List<ApplicationItem> getInstalledOrBackedUpApplicationsFromDb(@NonNull Context context,
                                                                                  @Nullable HashMap<String, MetadataManager.Metadata> backupMetadata) {
@@ -123,7 +132,7 @@ public final class PackageUtils {
             ApplicationItem item = new ApplicationItem();
             item.packageName = app.packageName;
             int i;
-            if ((i = applicationItems.indexOf(item)) != -1) {
+            if (app.isInstalled && (i = applicationItems.indexOf(item)) != -1) {
                 // Add user handle and continue
                 ApplicationItem oldItem = applicationItems.get(i);
                 oldItem.userHandles = ArrayUtils.appendInt(oldItem.userHandles, app.userId);
@@ -190,7 +199,7 @@ public final class PackageUtils {
             try {
                 packageInfoList = PackageManagerCompat.getInstalledPackages(flagSigningInfo
                         | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
-                        | PackageManager.GET_SERVICES | flagDisabledComponents, userHandle);
+                        | PackageManager.GET_SERVICES | flagDisabledComponents | flagMatchUninstalled, userHandle);
             } catch (Exception e) {
                 Log.e("PackageUtils", "Could not retrieve package info list for user " + userHandle, e);
                 continue;

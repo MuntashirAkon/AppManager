@@ -132,7 +132,7 @@ public class App implements Serializable {
         app.packageName = applicationInfo.packageName;
         app.uid = applicationInfo.uid;
         app.userId = Users.getUserHandle(app.uid);
-        app.isInstalled = true;
+        app.isInstalled = (applicationInfo.flags & ApplicationInfo.FLAG_INSTALLED) != 0;
         app.flags = applicationInfo.flags;
         app.isEnabled = applicationInfo.enabled;
         app.packageLabel = applicationInfo.loadLabel(context.getPackageManager()).toString();

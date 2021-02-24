@@ -24,6 +24,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.UserInfo;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -43,13 +44,16 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -152,11 +156,23 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         }
         // Add click listeners
         holder.itemView.setOnClickListener(v -> {
-            // Click listener: 1) If app not installed, display a toast message saying that it's
-            // not installed, 2) If installed, load the App Details page, 3) If selection mode
-            // is on, select/deselect the current item instead of 1 & 2.
+            // Click listener:
+            // 1) If the app is not installed:
+            //    i.  Display a toast message saying that it's not installed if it's a backup-only app
+            //    ii. Offer to install the app if it can be installed
+            // 2) If installed, load the App Details page
+            // 3) If selection mode is on, select/deselect the current item instead of 1 & 2.
             if (mActivity.mModel.getSelectedPackages().size() == 0) {
                 if (!item.isInstalled) {
+                    try {
+                        ApplicationInfo info = mPackageManager.getApplicationInfo(item.packageName, PackageUtils.flagMatchUninstalled);
+                        if (info.publicSourceDir != null) {
+                            Intent intent = new Intent(mActivity, PackageInstallerActivity.class);
+                            intent.setData(Uri.fromFile(new File(info.publicSourceDir)));
+                            mActivity.startActivity(intent);
+                        }
+                    } catch (PackageManager.NameNotFoundException ignore) {
+                    }
                     Toast.makeText(mActivity, R.string.app_not_installed, Toast.LENGTH_SHORT).show();
                 } else {
                     Intent appDetailsIntent = new Intent(mActivity, AppDetailsActivity.class);
