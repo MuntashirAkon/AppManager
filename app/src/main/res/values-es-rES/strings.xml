@@ -837,7 +837,7 @@
         <item quantity="one">%1$d componente</item>
         <item quantity="other">%1$d componentes</item>
     </plurals>
-    <string name="installer_app_message">Seleccione &lt;b&gt;elegir&lt;/b&gt; para escoger entre las aplicaciones instaladas o seleccione &lt;b&gt;personalizar&lt;/b&gt; para especificar un nombre de paquete personalizado.</string>
+    <string name="installer_app_message">Seleccione <b>elegir</b> para escoger entre las aplicaciones instaladas o seleccione <b>personalizar</b> para especificar un nombre de paquete personalizado.</string>
     <string name="specify_custom_name">Personalizado</string>
     <string name="verified_using_unreliable_hash">Verificado mediante hash no fiable</string>
     <string name="working_on_adb_mode">Trabajando en modo ADB</string>

@@ -881,6 +881,6 @@
     <string name="input_app_ops_description_profile">Uygulama işlem adlarını ve/veya sabitleri aralarında boşluk olacak şekilde girin, örn. <tt>WAKE_LOCK 63 72 CAMERA</tt> gibi. Tüm yapılandırılmış uygulama işlemlerine uygulamak için <tt>*</tt> kullanın.</string>
     <string name="working_on_adb_mode">ADB modunda çalışma</string>
     <string name="verified_using_unreliable_hash">Güvenilir olmayan sağlama kullanılarak doğrulandı</string>
-    <string name="installer_app_message">Kurulu uygulamalar arasından seçmek için &lt;b&gt;Seç&lt;/b&gt;, özel bir paket adı belirtmek için &lt;b&gt;Özel&lt;/b&gt; seçeneğini seçin.</string>
+    <string name="installer_app_message">Kurulu uygulamalar arasından seçmek için <b>Seç</b>, özel bir paket adı belirtmek için <b>Özel</b> seçeneğini seçin.</string>
     <string name="specify_custom_name">Özel</string>
 </resources>
