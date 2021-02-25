@@ -883,4 +883,9 @@
     <string name="isolated">Isoliert</string>
     <string name="working_on_adb_mode">Arbeiten im ADB-Modus</string>
     <string name="input_app_ops_description_profile">Geben Sie App-Op-Namen und/ oder Konstanten mit Leerzeichen (z.B. <tt>WAKE_LOCK 63 72 CAMERA</tt> etc.) ein. Verwenden Sie <tt>*</tt> für alle konfigurierten App-Ops.</string>
+    <string name="filter_apps_without_backups">Apps ohne Backups</string>
+    <string name="uninstalled_apps">Deinstallierte Apps</string>
+    <string name="installer_app_message">Wählen Sie &lt;b&gt;Wählen&lt;/b&gt;, um aus den installierten Apps auszuwählen, oder wählen Sie &lt;b&gt;Benutzerdefiniert&lt;/b&gt;, um einen eigenen Paketnamen anzugeben.</string>
+    <string name="specify_custom_name">Benutzerdefiniert</string>
+    <string name="verified_using_unreliable_hash">Verifiziert mit unzuverlässigem Hash</string>
 </resources>
