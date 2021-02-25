@@ -883,4 +883,6 @@
     <string name="verified_using_unreliable_hash">Güvenilir olmayan sağlama kullanılarak doğrulandı</string>
     <string name="installer_app_message">Kurulu uygulamalar arasından seçmek için <b>Seç</b>, özel bir paket adı belirtmek için <b>Özel</b> seçeneğini seçin.</string>
     <string name="specify_custom_name">Özel</string>
+    <string name="filter_apps_without_backups">Yedeği olmayan uygulamalar</string>
+    <string name="uninstalled_apps">Kaldırılan uygulamalar</string>
 </resources>
