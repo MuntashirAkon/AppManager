@@ -914,4 +914,6 @@
     <string name="verified_using_unreliable_hash">Verified using unreliable hash</string>
     <string name="specify_custom_name">Custom</string>
     <string name="installer_app_message">Select <b>choose</b> to choose from the installed apps or select <b>custom</b> to specify a custom package name.</string>
+    <string name="uninstalled_apps">Uninstalled apps</string>
+    <string name="filter_apps_without_backups">Apps without backups</string>
 </resources>

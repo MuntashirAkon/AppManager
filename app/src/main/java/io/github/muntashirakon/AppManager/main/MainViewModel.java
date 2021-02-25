@@ -293,16 +293,24 @@ public class MainViewModel extends AndroidViewModel {
                     } else if ((mFilterFlags & ListOptions.FILTER_SYSTEM_APPS) != 0 && item.isUser) {
                         continue;
                     }
-                    // Filter rests
+                    // Filter installed/uninstalled
                     if ((mFilterFlags & ListOptions.FILTER_INSTALLED_APPS) != 0 && !item.isInstalled) {
                         continue;
-                    } else if ((mFilterFlags & ListOptions.FILTER_DISABLED_APPS) != 0 && !item.isDisabled) {
+                    } else if ((mFilterFlags & ListOptions.FILTER_UNINSTALLED_APPS) != 0 && item.isInstalled) {
+                        continue;
+                    }
+                    // Filter backups
+                    if ((mFilterFlags & ListOptions.FILTER_APPS_WITH_BACKUPS) != 0 && item.metadata == null) {
+                        continue;
+                    } else if ((mFilterFlags & ListOptions.FILTER_APPS_WITHOUT_BACKUPS) != 0 && item.metadata != null) {
+                        continue;
+                    }
+                    // Filter rests
+                    if ((mFilterFlags & ListOptions.FILTER_DISABLED_APPS) != 0 && !item.isDisabled) {
                         continue;
                     } else if ((mFilterFlags & ListOptions.FILTER_APPS_WITH_RULES) != 0 && item.blockedCount <= 0) {
                         continue;
                     } else if ((mFilterFlags & ListOptions.FILTER_APPS_WITH_ACTIVITIES) != 0 && !item.hasActivities) {
-                        continue;
-                    } else if ((mFilterFlags & ListOptions.FILTER_APPS_WITH_BACKUPS) != 0 && item.metadata == null) {
                         continue;
                     } else if ((mFilterFlags & ListOptions.FILTER_APPS_WITH_SPLITS) != 0 && !item.hasSplits) {
                         continue;

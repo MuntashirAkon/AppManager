@@ -85,6 +85,8 @@ public class ListOptions extends DialogFragment {
             FILTER_RUNNING_APPS,
             FILTER_APPS_WITH_SPLITS,
             FILTER_INSTALLED_APPS,
+            FILTER_UNINSTALLED_APPS,
+            FILTER_APPS_WITHOUT_BACKUPS,
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface Filter {
@@ -100,6 +102,8 @@ public class ListOptions extends DialogFragment {
     public static final int FILTER_RUNNING_APPS = 1 << 6;
     public static final int FILTER_APPS_WITH_SPLITS = 1 << 7;
     public static final int FILTER_INSTALLED_APPS = 1 << 8;
+    public static final int FILTER_UNINSTALLED_APPS = 1 << 9;
+    public static final int FILTER_APPS_WITHOUT_BACKUPS = 1 << 10;
 
     private static final int[] SORT_ITEMS_MAP = {R.string.sort_by_domain, R.string.sort_by_app_label,
             R.string.sort_by_package_name, R.string.sort_by_last_update, R.string.sort_by_shared_user_id,
@@ -162,11 +166,13 @@ public class ListOptions extends DialogFragment {
             flags.put(FILTER_APPS_WITH_RULES, R.string.filter_apps_with_rules);
             flags.put(FILTER_APPS_WITH_ACTIVITIES, R.string.filter_apps_with_activities);
             flags.put(FILTER_APPS_WITH_BACKUPS, R.string.filter_apps_with_backups);
+            flags.put(FILTER_APPS_WITHOUT_BACKUPS, R.string.filter_apps_without_backups);
             if (AppPref.isRootOrAdbEnabled()) {
                 flags.put(FILTER_RUNNING_APPS, R.string.filter_running_apps);
             }
             flags.put(FILTER_APPS_WITH_SPLITS, R.string.filter_apps_with_splits);
             flags.put(FILTER_INSTALLED_APPS, R.string.installed_apps);
+            flags.put(FILTER_UNINSTALLED_APPS, R.string.uninstalled_apps);
             notifyDataSetChanged();
         }
 
