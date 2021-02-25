@@ -885,4 +885,6 @@
     <string name="verified_using_unreliable_hash">Verificado usando hash não confiável</string>
     <string name="installer_app_message">Selecione <b>escolher</b> para escolher entre os aplicativos instalados ou selecione <b>personalizado</b> para especificar um nome de pacote personalizado.</string>
     <string name="specify_custom_name">Personalizado</string>
+    <string name="filter_apps_without_backups">Aplicativos sem backups</string>
+    <string name="uninstalled_apps">Aplicativos desinstalados</string>
 </resources>
