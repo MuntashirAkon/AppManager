@@ -913,4 +913,7 @@
     <string name="input_app_ops_description_profile">AppOpsの名前かその識別値を「WAKE_LOCK 63 72 CAMERA」のようにスペース区切りで指定してください。「*」はワイルドカードとして使用できます。</string>
     <string name="installer_app_message">&lt;b&gt;選択&lt;/b&gt; を選択してインストール済みのアプリから選択するか、&lt;b&gt;カスタム&lt;/b&gt; を選択してカスタムパッケージ名を指定します。</string>
     <string name="specify_custom_name">カスタム</string>
+    <string name="verified_using_unreliable_hash">信頼できないハッシュで検証済み</string>
+    <string name="filter_apps_without_backups">バックアップされていないアプリ</string>
+    <string name="uninstalled_apps">未インストールのアプリ</string>
 </resources>
