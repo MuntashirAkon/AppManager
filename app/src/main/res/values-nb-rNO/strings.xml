@@ -528,4 +528,5 @@
     <string name="verified">Bekreftet</string>
     <string name="compression_method">Kompresjonsmetode: <xliff:g id="compression_method" example="GZip">%1$s</xliff:g></string>
     <string name="pref_compression_method">Kompresjonsmetode</string>
+    <string name="task_affinity">Gjøremålstilknytning</string>
 </resources>
