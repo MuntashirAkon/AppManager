@@ -853,4 +853,6 @@
     <string name="verified_using_unreliable_hash">使用不可靠哈希进行了验证</string>
     <string name="installer_app_message">选中 <b>挑选</b>从已安装应用中进行选择或选中<b>自定义</b>指定自定义包名。</string>
     <string name="specify_custom_name">自定义</string>
+    <string name="filter_apps_without_backups">无备份应用</string>
+    <string name="uninstalled_apps">已卸载应用</string>
 </resources>
