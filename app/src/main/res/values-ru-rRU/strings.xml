@@ -948,4 +948,6 @@
     <string name="input_app_ops_description_profile">Введите имена операций приложения и/или константы с пробелами, например <tt>WAKE_LOCK 63 72 CAMERA</tt> и т.д. Используйте <tt>*</tt> для применения ко всем настроенным операциям приложения.</string>
     <string name="working_on_adb_mode">Работа в режиме ADB</string>
     <string name="verified_using_unreliable_hash">Проверено с использованием ненадежного хеша</string>
+    <string name="filter_apps_without_backups">Приложения без резервных копий</string>
+    <string name="uninstalled_apps">Удаленные приложения</string>
 </resources>
