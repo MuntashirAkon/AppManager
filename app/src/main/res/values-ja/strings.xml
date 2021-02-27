@@ -911,4 +911,6 @@
     <string name="pref_enable_disable_features_msg">AppManagerの機能を有効化または無効化します。</string>
     <string name="enable_disable_features">機能の有効化/無効化</string>
     <string name="input_app_ops_description_profile">AppOpsの名前かその識別値を「WAKE_LOCK 63 72 CAMERA」のようにスペース区切りで指定してください。「*」はワイルドカードとして使用できます。</string>
+    <string name="installer_app_message">&lt;b&gt;選択&lt;/b&gt; を選択してインストール済みのアプリから選択するか、&lt;b&gt;カスタム&lt;/b&gt; を選択してカスタムパッケージ名を指定します。</string>
+    <string name="specify_custom_name">カスタム</string>
 </resources>
