@@ -318,4 +318,25 @@
     <string name="disable_background">Nonaktifkan Latar Belakang</string>
     <string name="user_and_uid">Pengguna:<xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
     <string name="external_multiple_data_dir">Penyimpanan Data Eksternal<xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
+    <string name="sort_by_tracker_components">Pelacak terlebih dahulu</string>
+    <string name="deny_dangerous_permissions">Tolak izin yang berbahaya</string>
+    <string name="sort_by_denied_permissions">Ditolak terlebih dahulu</string>
+    <string name="sort_by_dangerous_permissions">Berbahaya terlebih dahulu</string>
+    <string name="sort_by_permission_names">Nama perizinan</string>
+    <string name="sort_by_app_ops_values">Nilai operasi Aplikasi</string>
+    <string name="sort_by_denied_app_ops">ditolak terlebih dahulu</string>
+    <string name="battery_mode">Mode Baterai</string>
+    <string name="follow_system">Ikuti Sistem</string>
+    <string name="pref_app_theme">Tema Aplikasi</string>
+    <string name="pref_import_blocker_msg">Impor peraturan pemblokir dari Blocker, setiap file mengandung peraturan dari sebuah paket.</string>
+    <string name="pref_import_watt_msg">Impor peraturan penghadang dari Watt, setiap file mengandung peraturan dari sebuah paket ternama seperti &lt;tt&gt;packagename.xml&lt;/tt&gt; dan lain sebagainya.</string>
+    <string name="pref_import_msg">Impor peraturan penghadang yang baru saja di ekspor dari Manager Aplikasi.</string>
+    <string name="pref_export_msg">Ekspor peraturan penghadang yang telah dikonfigurasi dengan Manager Aplikasi pada penyimpanan eksternal.</string>
+    <string name="ago">lalu</string>
+    <string name="reject_time">Tolak Waktu</string>
+    <string name="accept_time">Terima Waktu</string>
+    <string name="duration">Durasi</string>
+    <string name="running">Berjalan</string>
+    <string name="mode">Mode</string>
+    <string name="permission_name">Nama Perizinan</string>
 </resources>
