@@ -1,2 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="path_permissions">Quyền đường dẫn</string>
+    <string name="grant_uri_permission">Cấp quyền cho URI</string>
+    <string name="flags">Cờ</string>
+    <string name="soft_input">Chế độ đầu vào mềm</string>
+    <string name="orientation">Sự định hướng</string>
+    <string name="no_service">Không có dịch vụ</string>
+    <string name="service">Dịch vụ</string>
+    <string name="authority">Thẩm quyền</string>
+    <string name="sort_by_last_update">Cập nhật cuối cùng</string>
+    <string name="task_affinity">Mối quan hệ công việc</string>
+    <string name="launch_mode">Chế độ khởi chạy</string>
+    <string name="no_providers">Không có nhà cung cấp</string>
+    <string name="providers">Nhà cung cấp</string>
+    <string name="no_receivers">Không có người nhận</string>
+    <string name="receivers">Người nhận</string>
+    <string name="no_activities">Không có hoạt động</string>
+    <string name="refresh">Làm mới</string>
+    <string name="launch">Phóng</string>
+    <string name="activities">Hoạt động</string>
+    <string name="require_no_permission">Không cần sự cho phép</string>
+    <string name="permissions">Sử dụng quyền</string>
+    <string name="uninstall">Gỡ cài đặt</string>
+</resources>
