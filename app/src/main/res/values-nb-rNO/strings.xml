@@ -2,13 +2,13 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="_lang_tag" translatable="false">nb-NO</string>
     <string name="choose_language">Velg et språk</string>
-    <string name="current_language">Nåværende språk: %s</string>
+    <string name="current_language">%1$s</string>
     <string name="auto">Automatisk</string>
     <string name="pref_app_language">Språk</string>
     <string name="backup_all_users">Alle brukere</string>
     <string name="source">Kilde</string>
     <string name="installer_error_security">Får ikke tilgang til APK-filer</string>
-    <string name="failed_to_fetch_package_info">Klarte ikke å hente pakkeinfo</string>
+    <string name="failed_to_fetch_package_info">Kunne ikke hente pakkeinfo</string>
     <string name="installer_error_generic">Installasjon mislyktes</string>
     <string name="installer_error_storage">Utilstrekkelig lagringsplass igjen til installering av programmet</string>
     <string name="installer_error_bad_apks">Ugyldige APK-filer valgt</string>
@@ -25,7 +25,7 @@
     <string name="backup_apk">Sikkerhetskopier APK</string>
     <string name="clear_data">Tøm data</string>
     <string name="user_and_uid">Bruker: <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
-    <string name="memory_virtual_memory">Minne: %s, virtuelt minne: %s</string>
+    <string name="memory_virtual_memory">Minne: %1$s, virtuelt minne: %2$s</string>
     <string name="kill_process">Drep</string>
     <string name="running_apps">Kjørende programmer</string>
     <string name="store">Butikk</string>
@@ -99,7 +99,7 @@
     <string name="input_features">Inndatafunksjoner</string>
     <string name="no_configurations">Ingen oppsett</string>
     <string name="configurations">Oppsett</string>
-    <string name="no_signatures">Ingen signaturer</string>
+    <string name="no_signatures">Ingen gyldige signaturer</string>
     <string name="signatures">Signaturer</string>
     <string name="sort_by_sha">Signatur</string>
     <string name="shared_user_id">Delt bruker-ID</string>
@@ -194,8 +194,8 @@
     <string name="yes">Ja</string>
     <string name="no">Nei</string>
     <plurals name="alert_failed_to_delete_backup">
-        <item quantity="one">Kunne ikke slette %d sikkerhetskopi</item>
-        <item quantity="other">Kunne ikke slette %d sikkerhetskopier</item>
+        <item quantity="one">Kunne ikke slette %1$d sikkerhetskopi</item>
+        <item quantity="other">Kunne ikke slette %1$d sikkerhetskopier</item>
     </plurals>
     <string name="delete_backup">Slett sikkerhetskopi</string>
     <string name="restore">Gjenopprett</string>
@@ -221,7 +221,7 @@
     <string name="block_trackers">Blokker sporere</string>
     <string name="sort_by_wifi_data">Wi-Fi-data</string>
     <string name="version">Versjon</string>
-    <string name="current_theme">Nåværende drakt: %s</string>
+    <string name="current_theme">%1$s</string>
     <string name="apply">Bruk</string>
     <string name="select_theme">Drakt</string>
     <string name="night">Natt</string>
@@ -238,17 +238,17 @@
     <string name="permission_name">Tilgangsnavn</string>
     <string name="the_operation_was_successful">Ferdig</string>
     <plurals name="alert_failed_to_uninstall">
-        <item quantity="one">Kunne ikke avinstallere %d program</item>
-        <item quantity="other">Kunne ikke avinstallere %d programmer</item>
+        <item quantity="one">Kunne ikke avinstallere %1$d program</item>
+        <item quantity="other">Kunne ikke avinstallere %1$d programmer</item>
     </plurals>
     <plurals name="alert_failed_to_disable">
-        <item quantity="one">Kunne ikke skru av %d program</item>
-        <item quantity="other">Kunne ikke skru av %d programmer</item>
+        <item quantity="one">Kunne ikke skru av %1$d program</item>
+        <item quantity="other">Kunne ikke skru av %1$d programmer</item>
     </plurals>
     <string name="some_items_selected"><xliff:g id="selection_no" example="20">%1$d</xliff:g> valgt</string>
     <plurals name="failed_to_import_files">
-        <item quantity="one">Kunne ikke importere %d fil.</item>
-        <item quantity="other">Kunne ikke importere %d filer.</item>
+        <item quantity="one">Kunne ikke importere %1$d fil.</item>
+        <item quantity="other">Kunne ikke importere %1$d filer.</item>
     </plurals>
     <string name="pref_import_blocker">Importer fra Blocker</string>
     <string name="pref_import_watt">Importer fra Watt</string>
@@ -267,14 +267,14 @@
     <string name="grant_usage_access">Innvilg brukstilgang</string>
     <string name="go_back">Gå tilbake</string>
     <string name="usage_less_than_a_minute">Mindre enn ett minutt</string>
-    <string name="usage_min">%d min</string>
+    <string name="usage_min">%1$d min</string>
     <plurals name="usage_hours">
-        <item quantity="one">%d t</item>
-        <item quantity="other">%d t</item>
+        <item quantity="one">%1$d t</item>
+        <item quantity="other">%1$d t</item>
     </plurals>
     <plurals name="usage_days">
-        <item quantity="one">%d dag</item>
-        <item quantity="other">%d dager</item>
+        <item quantity="one">%1$d dag</item>
+        <item quantity="other">%1$d dager</item>
     </plurals>
     <string name="usage_7_days">Siste 7 dager</string>
     <string name="sort_by_memory_usage">Minnebruk</string>
@@ -317,16 +317,16 @@
     <string name="apply_to_system_apps_question">Bruk også for systemprogrammer\? Velg \"Nei\" hvis du er usikker.</string>
     <string name="apply_to_system_apps">Bruk for systemprogrammer</string>
     <plurals name="alert_failed_to_restore">
-        <item quantity="one">Kunne ikke gjenopprette %d program</item>
-        <item quantity="other">Kunne ikke gjenopprette %d programmer</item>
+        <item quantity="one">Kunne ikke gjenopprette %1$d program</item>
+        <item quantity="other">Kunne ikke gjenopprette %1$d programmer</item>
     </plurals>
     <plurals name="alert_failed_to_backup">
-        <item quantity="one">Kunne ikke sikkerhetskopiere %d program</item>
-        <item quantity="other">Kunne ikke sikkerhetskopiere %d programmer</item>
+        <item quantity="one">Kunne ikke sikkerhetskopiere %1$d program</item>
+        <item quantity="other">Kunne ikke sikkerhetskopiere %1$d programmer</item>
     </plurals>
     <plurals name="failed_to_backup_some_apk_files">
-        <item quantity="one">Kunne ikke sikkerhetskopiere %d program</item>
-        <item quantity="other">Kunne ikke sikkerhetskopiere %d programmer</item>
+        <item quantity="one">Kunne ikke sikkerhetskopiere %1$d program</item>
+        <item quantity="other">Kunne ikke sikkerhetskopiere %1$d programmer</item>
     </plurals>
     <string name="backup_options">Sikkerhetskopieringsinnstillinger</string>
     <string name="failed_to_install_package_name">Kunne ikke installere <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
@@ -339,8 +339,8 @@
     <string name="update">Oppdater</string>
     <string name="install">Installer</string>
     <plurals name="no_of_trackers">
-        <item quantity="one">%d sporer</item>
-        <item quantity="other">%d sporere</item>
+        <item quantity="one">%1$d sporer</item>
+        <item quantity="other">%1$d sporere</item>
     </plurals>
     <string name="export_failed">Ekportering mislyktes!</string>
     <string name="import_failed">Importering mislyktes!</string>
@@ -349,16 +349,16 @@
     <string name="pref_export">Eksport</string>
     <string name="pref_import">Import</string>
     <string name="ago">siden</string>
-    <string name="pid_and_ppid">Prosess-ID: %d. Foreldreprosess-ID: %d</string>
+    <string name="pid_and_ppid">Prosess-ID: %1$d. Foreldreprosess-ID: %2$d</string>
     <string name="disable_background_run">Skru av bakgrunnskjøring</string>
     <string name="the_export_was_successful">Eksportert</string>
     <string name="the_import_was_successful">Importert</string>
-    <string name="pref_import_export_blocking_rules_msg">Importer/eksporter regler, importer eksterne regler fra Watt eller Blocker</string>
+    <string name="pref_import_export_blocking_rules_msg">Importer/eksporter regler, importer eksterne regler fra Watt eller Blocker.</string>
     <string name="pref_import_export_blocking_rules">Importer/eksporter blokkeringsregler</string>
     <string name="sort_by_last_used">Sist brukt</string>
     <plurals name="no_of_times_opened">
-        <item quantity="one">%d gang</item>
-        <item quantity="other">%d ganger</item>
+        <item quantity="one">%1$d gang</item>
+        <item quantity="other">%1$d ganger</item>
     </plurals>
     <string name="external_multiple_data_dir">Ekstern datamappe <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
     <string name="external_data_dir">Ekstern datamappe</string>
@@ -379,7 +379,7 @@
     <string name="usage_today">I dag</string>
     <string name="usage_weekly">Ukentlig</string>
     <string name="app_usage">Programbruk</string>
-    <string name="no_tracker_class">Ingen sporer-klasse</string>
+    <string name="no_tracker_class">Ingen sporer-klasser</string>
     <string name="no_shared_libs">Ingen delte biblioteker</string>
     <plurals name="main_list_date_days">
         <item quantity="one"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> dag</item>
@@ -427,7 +427,7 @@
         <item quantity="other">%1$d klasser</item>
     </plurals>
     <string name="failed_to_parse_some_numbers">Noen tall kunne ikke tolkes</string>
-    <string name="clear_data_from_uninstalled_apps_description">Tøm data fra avinstallerte programmer med DONT_DELETE_DATA-flagg</string>
+    <string name="clear_data_from_uninstalled_apps_description">Tøm data fra avinstallerte programmer med &lt;tt&gt;DONT_DELETE_DATA&lt;/tt&gt;-flagg</string>
     <string name="clear_data_from_uninstalled_apps">Tøm data fra avinstallerte programmer</string>
     <string name="no_usage_in_this_time_range">Ingen bruk i dette tidsrommet</string>
     <string name="key_name_cannot_be_null">Nøkkelnavn kan ikke stå tomt</string>
@@ -529,4 +529,63 @@
     <string name="compression_method">Kompresjonsmetode: <xliff:g id="compression_method" example="GZip">%1$s</xliff:g></string>
     <string name="pref_compression_method">Kompresjonsmetode</string>
     <string name="task_affinity">Gjøremålstilknytning</string>
+    <string name="systemless_app">Systemløst program</string>
+    <string name="filter_apps_without_backups">Programmer uten sikkerhetskopier</string>
+    <string name="uninstalled_apps">Avinstallerte programmer</string>
+    <string name="isolated">Isolert</string>
+    <string name="installed_apps">Installerte programmer</string>
+    <string name="failed_to_change_ssaid">Kunne ikke endre SSAID</string>
+    <string name="os_version">OS-versjon</string>
+    <string name="add">Legg til</string>
+    <string name="type_uri">URI</string>
+    <string name="type_string_array_list">Strengliste</string>
+    <string name="type_component_name">Komponentnavn</string>
+    <string name="type_null">Ingen verdi</string>
+    <string name="back_up">Sikkerhetskopier …</string>
+    <string name="restore_all">Gjenopprett alle programmer</string>
+    <string name="backup_apps_with_changes">Sikkerhetskopier programmer med endringer</string>
+    <string name="redo_existing_backups">Gjenta eksisterende sikkerhetskopier</string>
+    <string name="verify_and_redo_backups">Bekreft og gjenta sikkerhetskopier</string>
+    <string name="backup_apps_without_backups_msg">Sikkerhetskopier alle programmer uten tidligere sikkerhetskopier.</string>
+    <string name="backup_apps_without_backups">Sikkerhetskopier alle programmer uten sikkerhetskopier</string>
+    <string name="backup_all_apps_msg">Sikkerhetskopier alle installerte programmer.</string>
+    <string name="backup_all_apps">Sikkerhetskopier alle brukere</string>
+    <string name="bootloader">Oppstartslaster</string>
+    <string name="encrypted">Kryptert</string>
+    <string name="unencrypted">Ukryptert</string>
+    <string name="size">Størrelse</string>
+    <string name="security">Sikkerhet</string>
+    <string name="battery">Batteri</string>
+    <string name="graphics">Grafikk</string>
+    <string name="cpu">Prosessor</string>
+    <string name="users">Brukere</string>
+    <string name="languages">Språk</string>
+    <string name="unavailable">Utilgjengelig</string>
+    <string name="available">Tilgjengelig</string>
+    <string name="battery_capacity">Kapasitet</string>
+    <string name="memory">Minne</string>
+    <string name="no_of_cores">Kjerner</string>
+    <string name="support_architectures">Støttede arkitekturer</string>
+    <string name="security_providers">Sikkerhetstilbydere</string>
+    <string name="manufacturer">Fabrikant</string>
+    <string name="kernel">Kjerne</string>
+    <string name="model">Modell</string>
+    <string name="brand_name">Merke</string>
+    <string name="about_device">Om enheten</string>
+    <string name="share">Del</string>
+    <string name="category">Kategorier</string>
+    <string name="uri">URI</string>
+    <string name="action">Handling</string>
+    <string name="value">Verdi</string>
+    <string name="keep_data_and_signatures">Behold data og signaturer</string>
+    <string name="apk_signing">APK-signering</string>
+    <string name="signing_keys">Signeringsnøkler</string>
+    <string name="comment">Kommentar</string>
+    <string name="pref_encryption_msg">Legg til knryptering for sikkerhetskopier.</string>
+    <string name="tap_to_submit_crash_report">Trykk for å sende inn krasjrapporten.</string>
+    <string name="am_crashed">Am har akkurat krasjet</string>
+    <string name="only_install">Kun installer</string>
+    <string name="signature_mismatch_for_system_apps">Kunne ikke installere program fordi et systemprogram med en annen signatur har dette pakkenavnet.</string>
+    <string name="allow_open_pgp_operation">Klikk for å tillate AM for å bruke OpenPGP</string>
+    <string name="storage_and_cache">Lagring og huriglagring</string>
 </resources>
