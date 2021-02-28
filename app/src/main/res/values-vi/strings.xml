@@ -72,4 +72,21 @@
     <string name="user">Người dùng</string>
     <string name="system">Hệ thống</string>
     <string name="app_not_installed">Ứng dụng không được cài đặt</string>
+    <string name="reset_to_default">Đặt lại về mặc định</string>
+    <string name="deny_dangerous_app_ops">Từ chối hoạt động ứng dụng nguy hiểm</string>
+    <string name="sort_by_app_ops_names">Tên hoạt động ứng dụng</string>
+    <string name="sort_by_denied_app_ops">Bị từ chối trước</string>
+    <string name="sort_by_app_ops_values">Giá trị hoạt động ứng dụng</string>
+    <string name="sort_by_permission_names">Tên quyền</string>
+    <string name="sort_by_dangerous_permissions">Nguy hiểm trước</string>
+    <string name="sort_by_denied_permissions">Bị từ chối trước</string>
+    <string name="deny_dangerous_permissions">Từ chối các quyền nguy hiểm</string>
+    <string name="sort_by_tracker_components">Trình theo dõi đầu tiên</string>
+    <string name="unknown_op">Hoạt động không xác định</string>
+    <string name="failed_to_disable_trackers">Không thể tắt trình theo dõi</string>
+    <string name="trackers_disabled_successfully">Trình theo dõi hiện đã bị tắt</string>
+    <plurals name="alert_failed_to_disable_trackers">
+        <item quantity="other">Không thể vô hiệu hóa trình theo dõi từ ứng dụng %1$d</item>
+    </plurals>
+    <string name="failed_to_grant_permission">Không thể cấp quyền</string>
 </resources>
