@@ -659,4 +659,7 @@
     <string name="backup_apk_only_description">Utwórz kopię zapasową tylko plików APK z katalogu źródłowego. &lt;b&gt;Źródło&lt;/b&gt; musi być wybrane, aby to zadziałało.</string>
     <string name="vendor">Producent</string>
     <string name="set_custom_app_op">Ustaw niestandardową app op</string>
+    <string name="type_string_array_list">Lista ciągów znaków</string>
+    <string name="type_string_array">Tablica ciągów znaków</string>
+    <string name="type_float_array">Tablica liczb dziesiętnych</string>
 </resources>
