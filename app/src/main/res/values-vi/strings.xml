@@ -22,4 +22,20 @@
     <string name="require_no_permission">Không cần sự cho phép</string>
     <string name="permissions">Sử dụng quyền</string>
     <string name="uninstall">Gỡ cài đặt</string>
+    <string name="configurations">Cấu hình</string>
+    <string name="no_signatures">Không có chữ ký hợp lệ</string>
+    <string name="signatures">Chữ ký</string>
+    <string name="sort_by_sha">Chữ ký</string>
+    <string name="shared_user_id">ID người dùng được chia sẻ</string>
+    <string name="sort_by_shared_user_id">ID người dùng được chia sẻ</string>
+    <string name="no_feature">Không có tính năng</string>
+    <string name="gles_ver">Yêu cầu Phiên bản GL ES</string>
+    <string name="uses_feature">Sử dụng các tính năng</string>
+    <string name="protection_level">Mức độ bảo vệ</string>
+    <string name="group">Nhóm</string>
+    <string name="shared_libs">Lib được chia sẻ</string>
+    <string name="declared_permission">Quyền</string>
+    <string name="patterns_allowed">Các mẫu được phép</string>
+    <string name="write">Viết</string>
+    <string name="read">Đọc</string>
 </resources>
