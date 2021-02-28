@@ -79,30 +79,47 @@ Translate **App Manager Docs** at _Crowdin_: https://crwd.in/app-manager-docs
 * Active internet connection
 
 #### macOS
-- Install command line tools: (No need to install Xcode)
+- Install Homebrew:
   ```bash
-  xcode-select --install
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   ```
-- Install `gnu-sed`: (Goto https://brew.sh/ if you don't have `brew` installed)
+- Install `yarn` using Homebrew:
   ```bash
-  brew install gnu-sed
+  brew install yarn
+  ```
+  You can also install `yarn` manually, but it is not recommended for macOS.
+- Install `bundletool` if you want to build APKS:
+  ```bash
+  brew install bundletool
   ```
 
 #### Linux
-You need to install development tools.
-
-For Debian/Ubuntu:
-```bash
-sudo apt-get install build-essential
-```
-For Fedora/CentOS/RHEL:
-```bash
-sudo yum groupinstall "Development Tools"
-```
-For Arch/Artix/Manjaro:
-```bash
-sudo pacman -S base-devel
-```
+- Install development tools.
+  For Debian/Ubuntu:
+  ```bash
+  sudo apt-get install build-essential
+  ```
+  For Fedora/CentOS/RHEL:
+  ```bash
+  sudo yum groupinstall "Development Tools"
+  ```
+  For Arch/Artix/Manjaro:
+  ```bash
+  sudo pacman -S base-devel
+  ```
+- Install `yarn`. A generic way would be to install it via the installation script:
+  ```bash
+  curl -o- -L https://yarnpkg.com/install.sh | bash
+  ```
+- Install [**bundletool-all.jar**](https://github.com/google/bundletool) if you want to build APKS, and make sure it is available as `bundletool` command. A quick way would be to create a file `bundletool` in `/usr/local/bin` directory with the following contents:
+  ```bash
+  #!/usr/bin/env bash
+  exec java -jar "/path/to/bundletool-all.jar" "$@"
+  ```
+  Make sure to replace `/path/to/bundletool-all.jar` with actual path for **bundletool-all.jar**. Also, make the file executable:
+  ```bash
+  chmod +x /usr/local/bin/bundletool
+  ```
 
 #### Clone and Build App Manager
 1. Clone the repo along with submodules:
@@ -110,11 +127,21 @@ sudo pacman -S base-devel
     git clone --recurse-submodules https://github.com/MuntashirAkon/AppManager.git
     ```
     You can use the `--depth 1` argument if you don't want to clone past commits.
-2. Open the project **AppManager** using Android Studio. Android Studio should start syncing automatically. It will also download all the necessary files automatically (provided you have Internet connection).
+2. Open the project **AppManager** using Android Studio/IntelliJ IDEA. The IDE should start syncing automatically. It will also download all the necessary dependencies automatically provided you have the Internet connection.
 3. Build debug version of App Manager from Menu > Build > Make Project or from the terminal:
     ```
-    ./gradlew assembleDebug
+    ./gradlew packageDebugUniversalApk
     ```
+   The command will generate a universal APK instead of a bundled app.
+
+#### Create bundled app
+In order to create a bundled app in APKS format, build Android App Bundle (AAB) first. Then run the following command:
+```bash
+./scripts/aab_to_apks.sh preRelease
+```
+Replace `prePelease` with `release` or `debug` based on your requirements. It will ask for keystore credentials interactively.
+
+The script above will also generate a universal APK.
 
 ### Contributing
 You are welcome contribute to App Manager! This doesn't mean that you need coding skills. You can help AM (App Manager) by creating helpful issues, attending discussions, improving documentations and translations, adding unrecognised libraries or ad/tracking signatures, reviewing the source code, as well as reporting security vulnerabilities. If you are going to contribute to AM with your coding skills, please read the following:
@@ -124,15 +151,15 @@ You are welcome contribute to App Manager! This doesn't mean that you need codin
 **Note:** Repositories located in sites other than GitHub are currently considered mirrors and PR/MR submitted there will not be accepted. Instead, you can submit patches (as `.patch` files) via email attachment. My email address is muntashirakon [at] riseup [dot] net. Beware that such emails may be publicly accessible in future. GitHub PRs will be merged manually using the corresponding patches. As a result, GitHub may falsely mark them _closed_ instead of _merged_. Make sure to sign-off your commits.
 
 ### Donation and Funding
-App Manager doesn't support any donations directly. However, if you like my projects (App Manager being one of them), you can buy me a coffee by sending an anonymous donation to one of the following **Bitcoin** addresses:
+**App Manager doesn't support any donations directly.** However, if you like my projects (App Manager being one of them), you can buy me a coffee by sending an anonymous donation to one of the following **Bitcoin** addresses:
 ```
 33TDkWVv5EgwfKGJk7YaS2Ev1CBzBP9Sav
 38bzvWDD99dJhXg9tC4yQEnGdnAKPtwSXG
 3FHTxPoYa92dNJK6pkhwyVkMG8Vv3VpGpg
 ```
-By sending me BTC, you agree that you will not share the transaction information in public ie. anonymous or use it as a leverage to prioritise your requested features. I accept feature requests without any donations and they are prioritised according to my preferences.
+By sending me BTC, you agree that you will not share the transaction information in public i.e. the transaction will remain anonymous nor will you use it as a leverage to prioritise your requested features. I accept feature requests without any donations, and they are prioritised according to my preferences.
 
-App Manager is open for a fund/grant. If you are an organization interested in funding App Manager, you can contact me directly at muntashirakon [at] riseup [dot] net (FINGERPRINT: 7bad37c2981e41f8f6abea7f58f0b4f26c346fce).
+**App Manager is open for a fund/grant.** If you are an organization interested in funding App Manager, you can contact me directly at muntashirakon [at] riseup [dot] net (FINGERPRINT: `7bad37c2981e41f8f6abea7f58f0b4f26c346fce`).
 
 ### Credits and Libraries
 A list of credits and libraries are available in the **About** section of the app.
