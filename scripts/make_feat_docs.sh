@@ -8,7 +8,10 @@ config_js=docs/.vuepress/config.js
 # Set base dir
 sed -i "s|  base: '.*',|  base: '/android_asset/docs/',|" "${config_js}"
 
-# Build
+# Install dependencies
+yarn install
+
+# Build docs
 yarn build
 
 assets_folder="feat_docs/src/main/assets"
