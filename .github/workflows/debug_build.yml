@@ -41,7 +41,7 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
-      run: ./gradlew :app:packageDebugUniversalApk
+      run: ./gradlew packageDebugUniversalApk
     - name: Get app version
       run: echo "APP_VERSION=v$(cat ./app/build.gradle | grep -m1 versionName | awk -F \" '{print $2}')" >> $GITHUB_ENV
     - name: Get app name
@@ -64,3 +64,4 @@ jobs:
           <strong>AM Debug ${{ env.APP_VERSION }} Run#${{ github.run_number }}</strong>
 
           <em>${{ github.event.head_commit.message }}</em>
+      continue-on-error: true
