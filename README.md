@@ -38,29 +38,21 @@ height="80" />](https://f-droid.org/packages/io.github.muntashirakon.AppManager)
 alt="Get it on IzzyOnDroid"
 height="80" />](https://apt.izzysoft.de/fdroid/index/apk/io.github.muntashirakon.AppManager)
 
-App Manager Docs: https://muntashirakon.github.io/AppManager
-
-Telegram Support Group: https://t.me/AppManagerAndroid
-
-Telegram Update Channel: https://t.me/AppManagerChannel
-
-Follow **@AMUpdateChannel** on Twitter: https://twitter.com/AMUpdateChannel
+[App Manager Docs](https://muntashirakon.github.io/AppManager)
 
 ### Translations
 
-Translate **App Manager** at _Weblate_: https://hosted.weblate.org/engage/app-manager/
-
-Translate **App Manager Docs** at _Crowdin_: https://crwd.in/app-manager-docs
+Help translate [App Manager at Hosted Weblate](https://hosted.weblate.org/engage/app-manager/)
 
 [![Translation status](https://hosted.weblate.org/widgets/app-manager/-/multi-auto.svg)](https://hosted.weblate.org/engage/app-manager/)
 
 ### Mirrors
 
-**GitLab**: https://gitlab.com/muntashir/AppManager
+**[GitLab](https://gitlab.com/muntashir/AppManager)**
 
-**Riseup**: https://0xacab.org/muntashir/AppManager
+**[Riseup](https://0xacab.org/muntashir/AppManager)**
 
-**Codeberg**: https://codeberg.org/muntashir/AppManager
+**[Codeberg](https://codeberg.org/muntashir/AppManager)**
 
 ### Screenshots
 
@@ -73,9 +65,9 @@ Translate **App Manager Docs** at _Crowdin_: https://crwd.in/app-manager-docs
 <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/5.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/13.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/7.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/9.png" height="500dp" />
 
 ### Build Instructions
-* **System Requirements:** Any PC/Mac with 4GB RAM (8GB recommended)
+* **System Requirements:** Any computer with 4GB RAM (8GB recommended)
 * **Operating System:** Linux/macOS (no support for Windows)
-* **Software:** Android Studio, gradle
+* **Software:** Android Studio, Gradle
 * Active internet connection
 
 #### macOS
@@ -93,8 +85,8 @@ Translate **App Manager Docs** at _Crowdin_: https://crwd.in/app-manager-docs
   brew install bundletool
   ```
 
-#### Linux
-- Install development tools.
+#### Linux|GNU
+- Install the development tools.
   For Debian/Ubuntu:
   ```bash
   sudo apt-get install build-essential
@@ -111,12 +103,12 @@ Translate **App Manager Docs** at _Crowdin_: https://crwd.in/app-manager-docs
   ```bash
   curl -o- -L https://yarnpkg.com/install.sh | bash
   ```
-- Install [**bundletool-all.jar**](https://github.com/google/bundletool) if you want to build APKS, and make sure it is available as `bundletool` command. A quick way would be to create a file `bundletool` in `/usr/local/bin` directory with the following contents:
+- Install [**bundletool-all.jar**](https://github.com/google/bundletool) if you want to build APKS, and make sure it is available as `bundletool` command. A quick way would be to create a file `bundletool` in `/usr/local/bin` directory with the following content:
   ```bash
   #!/usr/bin/env bash
   exec java -jar "/path/to/bundletool-all.jar" "$@"
   ```
-  Make sure to replace `/path/to/bundletool-all.jar` with actual path for **bundletool-all.jar**. Also, make the file executable:
+  Make sure to replace `/path/to/bundletool-all.jar` with the actual path for **bundletool-all.jar**. Also, make the file executable:
   ```bash
   chmod +x /usr/local/bin/bundletool
   ```
@@ -128,7 +120,7 @@ Translate **App Manager Docs** at _Crowdin_: https://crwd.in/app-manager-docs
     ```
     You can use the `--depth 1` argument if you don't want to clone past commits.
 2. Open the project **AppManager** using Android Studio/IntelliJ IDEA. The IDE should start syncing automatically. It will also download all the necessary dependencies automatically provided you have the Internet connection.
-3. Build debug version of App Manager from Menu > Build > Make Project or from the terminal:
+3. Build debug version of App Manager from `Menu` > `Build` > `Make Project`, or, from the terminal:
     ```
     ./gradlew packageDebugUniversalApk
     ```
@@ -144,9 +136,9 @@ Replace `prePelease` with `release` or `debug` based on your requirements. It wi
 The script above will also generate a universal APK.
 
 ### Contributing
-You are welcome contribute to App Manager! This doesn't mean that you need coding skills. You can help AM (App Manager) by creating helpful issues, attending discussions, improving documentations and translations, adding unrecognised libraries or ad/tracking signatures, reviewing the source code, as well as reporting security vulnerabilities. If you are going to contribute to AM with your coding skills, please read the following:
+You are welcome contribute to App Manager! This doesn't mean that you need coding skills. You can help App Manager by creating helpful issues, attending discussions, improving documentations and translations, making icon for icon packs, adding unrecognised libraries or ad/tracking signatures, reviewing the source code, as well as reporting security vulnerabilities. If you are going to contribute to AM with your coding skills, please read the following:
 - If you're going to implement or work on any specific feature, please inform me before doing so. Due to the complex nature of the project, integrating a new feature could be challenging.
-- You're absolutely welcome to fix issues or mistakes, but AM's code base changes a lot almost every day. Therefore, if you are requested to make changes in your pull request but can't address them within 2 (two) days, your pull request may be closed depending on the importance of the request. This instruction will be removed once AM's code base becomes stable.
+- You're absolutely welcome to fix issues or mistakes, but App Manager's code base changes a lot almost every day. Therefore, if you are requested to make changes in your pull request but can't address them within 2 (two) days, your pull request may be closed depending on the importance of the request. This instruction will be removed once the code base is stable.
 
 **Note:** Repositories located in sites other than GitHub are currently considered mirrors and PR/MR submitted there will not be accepted. Instead, you can submit patches (as `.patch` files) via email attachment. My email address is muntashirakon [at] riseup [dot] net. Beware that such emails may be publicly accessible in future. GitHub PRs will be merged manually using the corresponding patches. As a result, GitHub may falsely mark them _closed_ instead of _merged_. Make sure to sign-off your commits.
 
@@ -157,9 +149,9 @@ You are welcome contribute to App Manager! This doesn't mean that you need codin
 38bzvWDD99dJhXg9tC4yQEnGdnAKPtwSXG
 3FHTxPoYa92dNJK6pkhwyVkMG8Vv3VpGpg
 ```
-By sending me BTC, you agree that you will not share the transaction information in public i.e. the transaction will remain anonymous nor will you use it as a leverage to prioritise your requested features. I accept feature requests without any donations, and they are prioritised according to my preferences.
+By sending me BTC, you agree that you will not share the transaction info in public i.e. the transaction will remain anonymous, nor will you use it as a leverage to prioritise your requested features. I accept feature requests without any donations, and they are prioritised according to my preferences.
 
-**App Manager is open for a fund/grant.** If you are an organization interested in funding App Manager, you can contact me directly at muntashirakon [at] riseup [dot] net (FINGERPRINT: `7bad37c2981e41f8f6abea7f58f0b4f26c346fce`).
+**App Manager is open for funding/grants.** If you are an organisation interested in funding it you can contact me directly at muntashirakon [at] riseup [dot] net (FINGERPRINT: `7bad37c2981e41f8f6abea7f58f0b4f26c346fce`).
 
 ### Credits and Libraries
 A list of credits and libraries are available in the **About** section of the app.
