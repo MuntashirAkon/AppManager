@@ -109,17 +109,17 @@
     <string name="license">Лицензия</string>
     <string name="third_party">Сторонние библиотеки и значки</string>
     <string name="credits">Авторы</string>
-    <string name="credits_message">Благодарность разработчикам:
-        \n- The Android Open Source Project
-        \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
-        \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
-        \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
-        \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
-        \n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
-        \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
-        \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
-        \nАвтор логотипа: <a href="https://github.com/Atrate">Atrate</a>.
-    </string>
+    <string name="credits_message">"Благодарность разработчикам:
+\n-Проект с открытым исходным кодом Android
+\n- &lt;a href=\"https://bitbucket.org/oF2pks/fdroid-applications-info\"&gt;Apps_packages Info&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/butzist/ActivityLauncher\"&gt;Activity Launcher&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/billthefarmer/editor\"&gt;Editor&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/zhaobao/AppsMonitor\"&gt;AppsMonitor&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/tuyafeng/Watt\"&gt;Watt&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/8enet/AppOpsX\"&gt;AppOpsX&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/Aefyr/SAI\"&gt;SAI&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/RikkaApps/Shizuku\"&gt;Shizuku&lt;/a&gt;
+\nАвтор логотипа: &lt;a href=\"https://github.com/Atrate\"&gt;Atrate&lt;/a&gt;. "</string>
     <string name="word_wrap">Перенос слов</string>
     <string name="class_viewer">Просмотр классов</string>
     <string name="toggle_class_listing">Переключить список классов</string>
@@ -142,10 +142,10 @@
     <string name="usage_today">Сегодня</string>
     <string name="usage_7_days">Последние 7 дней</string>
     <plurals name="usage_months">
-        <item quantity="one">%1$d мес.</item>
-        <item quantity="few">%1$d мес.</item>
-        <item quantity="many">%1$d мес.</item>
-        <item quantity="other">%1$d мес.</item>
+        <item quantity="one">%1$d мес</item>
+        <item quantity="few">%1$d мес</item>
+        <item quantity="many">%1$d мес</item>
+        <item quantity="other">%1$d мес</item>
     </plurals>
     <plurals name="usage_days">
         <item quantity="one">%1$d день</item>
@@ -154,10 +154,10 @@
         <item quantity="other">%1$d дней</item>
     </plurals>
     <plurals name="usage_hours">
-        <item quantity="one">%1$d ч.</item>
-        <item quantity="few">%1$d ч.</item>
-        <item quantity="many">%1$d ч.</item>
-        <item quantity="other">%1$d ч.</item>
+        <item quantity="one">%1$d ч</item>
+        <item quantity="few">%1$d ч</item>
+        <item quantity="many">%1$d ч</item>
+        <item quantity="other">%1$d ч</item>
     </plurals>
     <string name="usage_min">%1$d мин</string>
     <string name="usage_less_than_a_minute">Меньше минуты</string>
@@ -859,7 +859,7 @@
     <string name="scaling_factor">Коэффициент масштабирования</string>
     <string name="density">Плотность пикселей</string>
     <string name="screen">Экран</string>
-    <string name="set_mode_for_app_ops_dots">Установить режим для операций приложения…</string>
+    <string name="set_mode_for_app_ops_dots">Установить режим работы приложений…</string>
     <string name="failed_to_enable_magisk_hide">Не удалось включить MagiskHide</string>
     <string name="enable_magisk_hide">Включить MagiskHide</string>
     <string name="failed_to_disable_magisk_hide">Не удалось отключить MagiskHide</string>
@@ -950,4 +950,6 @@
     <string name="verified_using_unreliable_hash">Проверено с использованием ненадежного хеша</string>
     <string name="filter_apps_without_backups">Приложения без резервных копий</string>
     <string name="uninstalled_apps">Удаленные приложения</string>
+    <string name="installer_app_message">Выберите &lt;b&gt; обзор &lt;/b&gt;, чтобы выбрать одно из установленных приложений, или выберите &lt;b&gt; пользовательское имя &lt;/b&gt;, чтобы указать имя пользовательского пакета.</string>
+    <string name="specify_custom_name">Пользовательское имя</string>
 </resources>
