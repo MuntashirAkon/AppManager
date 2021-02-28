@@ -46,7 +46,7 @@
     <string name="group">Group</string>
     <string name="protection_level">Protection level</string>
     <string name="uses_feature">Uses features</string>
-    <string name="gles_ver">Req. GL ES version</string>
+    <string name="gles_ver">Req. OpenGL ES version</string>
     <string name="no_feature">No features</string>
     <string name="sort_by_shared_user_id">Shared User ID</string>
     <string name="shared_user_id">Shared User ID</string>
@@ -61,7 +61,7 @@
     <string name="loading">Loading…</string>
     <string name="sort_by_app_label">App label</string>
     <string name="sort_by_package_name">Package name</string>
-    <string name="sort_by_domain">User app first</string>
+    <string name="sort_by_domain">User apps first</string>
     <string name="sort_by_target_sdk">Target SDK</string>
     <string name="sdk" translatable="false">SDK</string>
     <string name="data_received">Data received</string>
@@ -110,7 +110,7 @@
     <string name="license">License</string>
     <string name="license_message" translatable="false"><a href="https://www.gnu.org/licenses/gpl-3.0.html">GNU General
         Public License v3.0</a></string>
-    <string name="copyright_message" translatable="false">© 2020 <a href="https://github.com/MuntashirAkon">Muntashir Al-Islam</a></string>
+    <string name="copyright_message" translatable="false">🄯© 2020–2021 <a href="https://github.com/MuntashirAkon">Muntashir Al-Islam</a></string>
     <string name="third_party">Third-party Libraries and Icons</string>
     <string name="third_party_message" translatable="false">-
         <a href="https://github.com/material-components/material-components-android">Material Components</a> (Apache 2.0)
@@ -186,7 +186,7 @@
     <string name="go_back">Go back</string>
     <string name="go">Go</string>
     <string name="grant_usage_access">Grant Usage Access</string>
-    <string name="grant_usage_acess_message">Usage access is mandatory in order to display app usage info.</string>
+    <string name="grant_usage_acess_message">Needed to display app usage info.</string>
     <string name="share_apk">Share APK</string>
     <string name="failed_to_extract_apk_file">Could not extract APK file</string>
     <string name="menu_remove_rules">Remove rules</string>
@@ -249,10 +249,10 @@
     <string name="failed_to_disable_op">Could not disable the requested app op</string>
     <string name="rules_not_applied">Rules are not applied</string>
     <string name="str_logo">Logo</string>
-    <string name="pref_global_blocking_enabled">Global component blocking</string>
+    <string name="pref_global_blocking_enabled">System-wide component blocking</string>
     <string name="pref_global_blocking_enabled_msg">Lets you block any component of any app without explicitly turning on blocking for the app.</string>
     <string name="pref_usage_access_enabled">Usage access</string>
-    <string name="pref_usage_access_enabled_msg">Lets you see your app usage statistics and app data info.</string>
+    <string name="pref_usage_access_enabled_msg">Browse your app data info, and -usage stats.</string>
     <string name="app_settings">Settings</string>
     <string name="only_works_in_root_mode">Only works in root mode</string>
     <string name="usage_yesterday">Yesterday</string>
@@ -270,7 +270,7 @@
     <string name="sort_by_times_opened">Times opened</string>
     <string name="sort_by_mobile_data">Mobile data</string>
     <string name="pref_import_export_blocking_rules">Import/export blocking rules</string>
-    <string name="pref_import_export_blocking_rules_msg">Import/export rules, import external rules from Watt or Blocker.</string>
+    <string name="pref_import_export_blocking_rules_msg">(Rules can be imported from Watt or Blocker.)</string>
     <string name="pref_import_watt">Import from Watt</string>
     <string name="pref_import_blocker">Import from Blocker</string>
     <string name="the_import_was_successful">Imported</string>
@@ -283,15 +283,15 @@
     <string name="store">Store</string>
     <string name="running_apps">Running Apps</string>
     <string name="kill_process">Kill</string>
-    <string name="disable_background_run">Disable Background Run</string>
-    <string name="pid_and_ppid">Process ID: %1$d, Parent Process ID: %2$d</string>
-    <string name="memory_virtual_memory">Memory: %1$s, Virtual Memory: %2$s</string>
+    <string name="disable_background_run">Don\'t run in the background</string>
+    <string name="pid_and_ppid">Process ID: %1$d. Parent Process ID: %2$d.</string>
+    <string name="memory_virtual_memory">Memory: %1$s. Virtual Memory: %2$s.</string>
     <string name="user_with_id">User: <xliff:g id="user_id" example="0">%1$d</xliff:g></string>
     <string name="user_and_uid">User: <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
     <string name="clear_data">Clear Data</string>
     <string name="backup_apk">Backup APK</string>
     <string name="backup_restore">Backup/Restore</string>
-    <string name="disable_background">Disable Background</string>
+    <string name="disable_background">Don\'t run in the background</string>
     <string name="export_blocking_rules">Export Blocking Rules</string>
     <string name="some_items_selected"><xliff:g id="selection_no" example="20">%1$d</xliff:g> selected</string>
     <plurals name="alert_failed_to_clear_data">
@@ -316,7 +316,7 @@
         <item quantity="other">Could not force-stop %1$d apps</item>
     </plurals>
     <string name="toggle_kill_for_system_apps">Toggle kill system apps</string>
-    <string name="app_op_cannot_be_disabled">This app op cannot be disabled, possibly a read-only app op depended on another app op.</string>
+    <string name="app_op_cannot_be_disabled">This app op cannot be disabled, possibly a read-only app op depended on another.</string>
     <string name="permission_name">Permission Name</string>
     <string name="mode">Mode</string>
     <string name="running">Running</string>
@@ -344,7 +344,7 @@
     <string name="night">Night</string>
     <string name="select_theme">Theme</string>
     <string name="apply">Apply</string>
-    <string name="current_theme">Current theme: %1$s</string>
+    <string name="current_theme">%1$s</string>
     <string name="pref_about_msg">App Manager version, license, credits, etc.</string>
     <string name="version">Version</string>
     <string name="sort_by_wifi_data">Wi-Fi data</string>
@@ -359,7 +359,7 @@
     <string name="sort_by_dangerous_permissions">Dangerous first</string>
     <string name="sort_by_denied_permissions">Denied first</string>
     <string name="deny_dangerous_permissions">Deny dangerous permissions</string>
-    <string name="sort_by_tracker_components">Tracker first</string>
+    <string name="sort_by_tracker_components">Trackers first</string>
     <string name="unknown_op">Unknown Operation</string>
     <string name="failed_to_disable_trackers">Could not disable trackers</string>
     <string name="trackers_disabled_successfully">Trackers are now disabled</string>
@@ -401,9 +401,9 @@
     <string name="pref_import_existing_msg">Add components disabled by others apps to App Manager.
         Be careful when using this tool as there can be many false positives. Choose only the apps you\'re certain about.</string>
     <string name="clear_cache">Clear Cache</string>
-    <string name="block_unblock_trackers_description">Block or unblock ad and tracking components from all the installed apps</string>
+    <string name="block_unblock_trackers_description">Allow or deny ad and tracking components in all the installed apps</string>
     <string name="block_components_dots">Block components…</string>
-    <string name="block_components_description">Block all components identified by the given signatures</string>
+    <string name="block_components_description">Deny all components identified by the given signatures</string>
     <string name="deny_app_ops_description">Set a mode for app operations identified by the constant values, i.e. <tt>63</tt> or <tt>RUN_IN_BACKGROUND</tt></string>
     <string name="clear_data_from_uninstalled_apps">Clear data from uninstalled apps</string>
     <string name="clear_data_from_uninstalled_apps_description">Clear data from apps that are uninstalled with <tt>DONT_DELETE_DATA</tt> flag</string>
@@ -426,12 +426,12 @@
     <string name="termux">Termux</string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> installed</string>
     <string name="failed_to_install_package_name">Could not install <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
-    <string name="filter">Filter</string>
-    <string name="filter_user_apps">User apps</string>
-    <string name="filter_system_apps">System apps</string>
-    <string name="filter_apps_with_rules">Apps with rules</string>
+    <string name="filter">Filter apps</string>
+    <string name="filter_user_apps">User</string>
+    <string name="filter_system_apps">System</string>
+    <string name="filter_apps_with_rules">With rules</string>
     <string name="select_all">Select All</string>
-    <string name="filter_disabled_apps">Disabled apps</string>
+    <string name="filter_disabled_apps">Disabled</string>
     <string name="installed_version">Installed Version</string>
     <string name="trackers">Trackers</string>
     <string name="components">Components</string>
@@ -478,8 +478,8 @@
         <item quantity="other">Could not enable %1$d apps</item>
     </plurals>
     <plurals name="backup_exists_are_you_sure">
-        <item quantity="one">Backup exists. Are you sure?</item>
-        <item quantity="other">Backup exists for more than one app. Are you sure?</item>
+        <item quantity="one">A backup exists. Are you sure?</item>
+        <item quantity="other">A backup of more than one app exists. Are you sure?</item>
     </plurals>
     <plurals name="classes">
         <item quantity="one">%1$d class</item>
@@ -511,7 +511,7 @@
     <string name="block">Block</string>
     <string name="unblock">Unblock</string>
     <string name="block_unblock_trackers">Block/unblock trackers</string>
-    <string name="no_matching_package_found">No matching packages found</string>
+    <string name="no_matching_package_found">Could not any such package</string>
     <string name="export_icon">Extract Icon</string>
     <string name="open_in_termux">Open in Termux</string>
     <string name="run_in_termux">Run in Termux</string>
@@ -520,7 +520,7 @@
     <string name="pref_remove_all_rules">Remove all rules</string>
     <string name="pref_remove_all_rules_msg">Permissions will be granted, app ops and components will return to their default values.</string>
     <string name="are_you_sure">Are you sure?</string>
-    <string name="filter_apps_with_activities">Apps with activities</string>
+    <string name="filter_apps_with_activities">With activities</string>
     <string name="toggle_default_app_ops">Toggle default app ops</string>
     <string name="installer_error_aborted">Installation failed either because it was cancelled or the session was closed unexpectedly</string>
     <string name="installer_error_blocked_device">device</string>
@@ -530,7 +530,7 @@
     <string name="installer_error_bad_apks">Invalid APK files selected</string>
     <string name="installer_error_storage">Not enough storage space to install the app</string>
     <string name="installer_error_generic">Installation failed</string>
-    <string name="installer_error_lidl_rom">Your ROM is incompatible with rootless installer.</string>
+    <string name="installer_error_lidl_rom">Your ROM is incompatible with Rootless Installer.</string>
     <string name="failed_to_fetch_package_info">Could not fetch package info</string>
     <string name="batch_ops">Batch Operations</string>
     <string name="operation_running">Operation running…</string>
@@ -556,7 +556,7 @@
     <string name="backup_all_users">All users</string>
     <string name="pref_app_language">Language</string>
     <string name="auto">Auto</string>
-    <string name="current_language">Language: %1$s</string>
+    <string name="current_language">%1$s</string>
     <string name="choose_language">Change language</string>
     <string name="base_apk">Base APK</string>
     <string name="split_feature_name">Feature: <xliff:g id="feature_name" example="Visualizer">%1$s</xliff:g></string>
@@ -645,15 +645,15 @@
     <string name="other">Other</string>
     <string name="rules">Rules</string>
     <string name="pref_compression_method">Compression method</string>
-    <string name="pref_backup_flags_msg">Adding a preset for backup options removes the burden of selecting flags every time you backup/restore.</string>
-    <string name="compression_method">Compression method: <xliff:g id="compression_method" example="GZip">%1$s</xliff:g></string>
+    <string name="pref_backup_flags_msg">Adding a preset for backup options removes the burden of selecting flags every time you back up/restore.</string>
+    <string name="compression_method"><xliff:g id="compression_method" example="GZip">%1$s</xliff:g></string>
     <string name="confirm_installation">Confirm installation</string>
-    <string name="allow_open_pgp_operation">Click to allow AM to use OpenPGP</string>
+    <string name="allow_open_pgp_operation">Click to allow App Manager to use OpenPGP</string>
     <string name="uninstall_updates">Uninstall Updates</string>
     <string name="update_uninstalled_successfully">Updates for <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> has been uninstalled.</string>
     <string name="failed_to_uninstall_updates">Could not uninstall updates for <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
-    <string name="sort_by_backup">Backup first</string>
-    <string name="filter_apps_with_backups">Apps with backups</string>
+    <string name="sort_by_backup">Backed up first</string>
+    <string name="filter_apps_with_backups">With backups</string>
     <string name="subject">Subject</string>
     <string name="issuer">Issuer</string>
     <string name="issued_date">Issued date</string>
@@ -691,7 +691,7 @@
     <string name="view_missing_signatures">Tap to view or send in signatures not yet present in App Manager\'s database of libraries.</string>
     <string name="copy">Copy</string>
     <string name="filter_running_apps">Running apps</string>
-    <string name="am_crashed">AM has just crashed</string>
+    <string name="am_crashed">App Manager has just crashed</string>
     <string name="tap_to_submit_crash_report">Tap to submit the crash report.</string>
     <string name="send_crash_report">Send crash report</string>
     <string name="select_apk">Select APK</string>
@@ -707,7 +707,7 @@
     <string name="pref_show_users_in_installer_msg">Display a list of users to select before installing an external app. Requires root or ADB.</string>
     <string name="select_user">Select user</string>
     <string name="encryption">Encryption</string>
-    <string name="pref_encryption_msg">Add encryption for backups.</string>
+    <string name="pref_encryption_msg">Encryption for backups.</string>
     <string name="none">None</string>
     <string name="aes">AES</string>
     <string name="rsa">RSA</string>
@@ -719,12 +719,12 @@
     <string name="allow_routine_ops">Allow routine ops</string>
     <string name="profile_state">Profile state</string>
     <string name="allow_routine_ops_msg">Allow the profile to be used in the routine operations</string>
-    <string name="profile_disable_msg">If enabled, apps will be disabled/enabled based on the value of the state</string>
-    <string name="profile_force_stop_msg">If enabled, apps will be force-stopped</string>
-    <string name="profile_clear_cache_msg">If enabled, cache will be cleared from the apps</string>
-    <string name="profile_clear_data_msg">If enabled, data will be cleared from the apps</string>
-    <string name="profile_block_trackers_msg">If enabled, trackers will be blocked from apps</string>
-    <string name="profile_backup_apk_msg">If enabled, apk files will be backed up</string>
+    <string name="profile_disable_msg">Disables or enabled apps based on state value</string>
+    <string name="profile_force_stop_msg">Force-stops apps</string>
+    <string name="profile_clear_cache_msg">Clears the app cache of apps</string>
+    <string name="profile_clear_data_msg">Clears the data of apps</string>
+    <string name="profile_block_trackers_msg">Blocks the trackers in apps</string>
+    <string name="profile_backup_apk_msg">Backs up APK files</string>
     <string name="profile_state_msg">Custom on/off state for this profile</string>
     <string name="on">On</string>
     <string name="off">Off</string>
@@ -760,15 +760,15 @@
     <string name="source_stamp_verified">SourceStamp verified.</string>
     <string name="splits">Splits</string>
     <string name="input_keystore_pass">Input KeyStore password</string>
-    <string name="input_keystore_pass_description">Insert App Manager KeyStore password. If you\'re seeing this for the first time, please use a password generator to generate a password and save it in a secure place before inserting it here.</string>
-    <string name="input_keystore_pass_msg">Tap here to provide KeyStore password</string>
+    <string name="input_keystore_pass_description">Enter the App Manager KeyStore password. If you\'re seeing this for the first time, please use a password generator to generate a password and save it in a secure place before inserting it here.</string>
+    <string name="input_keystore_pass_msg">Tap here to provide a KeyStore password</string>
     <string name="input_keystore_alias_pass">Password for alias <b>%1$s</b></string>
     <string name="input_keystore_alias_pass_description">Insert password for the alias <b>%1$s</b>. You can leave this empty if the password is the same as the KeyStore password.</string>
     <string name="no_app_ops_permission">No permission to display app ops</string>
     <string name="this_action_cannot_be_undone">This action cannot be undone.</string>
     <string name="keep_data_and_signatures">Keep data and signatures</string>
-    <string name="pref_backup_android_keystore">Backup apps with Android KeyStore</string>
-    <string name="pref_backup_android_keystore_msg">Not all apps will work after the restore. Restoring KeyStore doesn\'t work on most devices.</string>
+    <string name="pref_backup_android_keystore">Back up apps with Android KeyStore</string>
+    <string name="pref_backup_android_keystore_msg">Not all apps will work after being restored. Restoring KeyStore doesn\'t work on most devices.</string>
     <string name="magisk_hide_enabled">MagiskHide</string>
     <string name="set_app_op_mode">Set app op mode</string>
     <string name="filter_apps_with_splits">Apps with splits</string>
@@ -778,7 +778,7 @@
     <string name="activity_result">Activity result</string>
     <string name="result_code">Result code</string>
     <string name="action">Action</string>
-    <string name="mime_type">MIME Type</string>
+    <string name="mime_type">Media type</string>
     <string name="uri">URI</string>
     <string name="category">Categories</string>
     <string name="extras">Extras</string>
@@ -786,8 +786,8 @@
     <string name="resend_intent">Resend Intent</string>
     <string name="interceptor">Interceptor</string>
     <string name="set_custom_app_op">Set custom app op</string>
-    <string name="about_device">About device</string>
-    <string name="pref_about_device_msg">Basic device info including Android system, CPU, GPU, RAM, Battery, etc.</string>
+    <string name="about_device">About the device</string>
+    <string name="pref_about_device_msg">Basic device info including Android system, CPU, GPU, RAM, battery, etc.</string>
     <string name="brand_name">Brand</string>
     <string name="model">Model</string>
     <string name="board_name">Board</string>
@@ -796,7 +796,7 @@
     <string name="security_providers">Security providers</string>
     <string name="support_architectures">Supported architectures</string>
     <string name="no_of_cores">Cores</string>
-    <string name="gles_version">GL ES version</string>
+    <string name="gles_version">OpenGL ES version</string>
     <string name="vendor">Vendor</string>
     <string name="memory">Memory</string>
     <string name="battery_capacity">Capacity</string>
@@ -810,16 +810,16 @@
     <string name="security">Security</string>
     <string name="set_mode_for_app_ops_dots">Set mode for app ops…</string>
     <string name="backup_source_description">Back up the entire source directory.</string>
-    <string name="backup_apk_only_description">Back up only the APK files from the source directory. <b>Source</b> must be selected for this to work.</string>
-    <string name="backup_data_description">Back up data folders. If selected, internal data folders will be backed up by default.</string>
-    <string name="backup_external_data_description">Back up external data folders. <b>Data</b> must be selected for this to work.</string>
+    <string name="backup_apk_only_description">Only back up the APK files from the source directory. (<b>Source</b> must be selected for this to work.)</string>
+    <string name="backup_data_description">Back up data folders. (Also backs up internal data folders.)</string>
+    <string name="backup_external_data_description">Back up external data folders. (<b>Data</b> must be selected for this to work.)</string>
     <string name="backup_obb_media_description">Back up OBB and media folders.</string>
     <string name="backup_exclude_cache_description">Do not back up cache, no_cache and no_backup folders.</string>
     <string name="backup_extras">Extras</string>
     <string name="backup_extras_description">Back up app permissions, battery saving, data usage options, MagiskHide status, etc.</string>
     <string name="backup_rules_description">Back up rules configured within App Manager.</string>
-    <string name="backup_multiple_description">Use a separate named back up instead of base backup.</string>
-    <string name="backup_skip_signature_checks_description">Useful for restoring backups which are failing due to checksum verification failure or has a different APK signature than the backed up one.</string>
+    <string name="backup_multiple_description">Use a separate <i>named</i> backup instead of the base backup.</string>
+    <string name="backup_skip_signature_checks_description">Useful for restoring backups failing checksum verification or ones with a different APK signature than the backed up one.</string>
     <string name="patch_level">Patch level</string>
     <string name="selinux">SELinux</string>
     <string name="enforcing">Enforcing</string>
@@ -835,7 +835,7 @@
     <string name="failed_to_disable_magisk_hide">Could not disable MagiskHide</string>
     <string name="enable_magisk_hide">Enable MagiskHide</string>
     <string name="failed_to_enable_magisk_hide">Could not enable MagiskHide</string>
-    <string name="disable_background_run_description">It sets the mode <i>ignore</i> to the following app ops: <tt>RUN_IN_BACKGROUND</tt> (from Android 7.0) and <tt>RUN_ANY_IN_BACKGROUND</tt> (from Android 9).</string>
+    <string name="disable_background_run_description">Sets <i>Ignore</i> mode for the following app ops: <tt>RUN_IN_BACKGROUND</tt> (from Android 7.0) and <tt>RUN_ANY_IN_BACKGROUND</tt> (from Android 9).</string>
     <string name="pref_backup_restore_msg">Customise backup/restore.</string>
     <string name="backup_volume">Backup Volume</string>
     <string name="pref_backup_volume_msg">Select the volume or disk where the backups will be stored.</string>
@@ -850,7 +850,7 @@
     <string name="backup_apps_without_backups">Back up apps without backups</string>
     <string name="backup_apps_without_backups_msg">Back up apps without any previous backups.</string>
     <string name="verify_and_redo_backups">Verify and redo backups</string>
-    <string name="verify_and_redo_backups_msg">Check integrity of the previous backups and redo backups for which the integrity checkup fails.</string>
+    <string name="verify_and_redo_backups_msg">Check integrity of the previous backups and redo backups for which the integrity check-up fails.</string>
     <string name="redo_existing_backups">Redo existing backups</string>
     <string name="redo_existing_backups_msg">Redo backup for installed apps with previous backups.</string>
     <string name="backup_apps_with_changes">Back up apps with changes</string>
@@ -884,7 +884,7 @@
     <string name="type_uri">URI</string>
     <string name="no_battery_optimization">No battery optimization</string>
     <string name="battery_optimization">Battery optimization</string>
-    <string name="enable_battery_optimization">Enable battery optimization?</string>
+    <string name="enable_battery_optimization">Turn on battery optimization?</string>
     <string name="choose_what_to_do">Choose what to do.</string>
     <string name="has_net_policy">Net policy</string>
     <string name="net_policy">Net policy</string>
@@ -897,20 +897,20 @@
     <string name="reverse">Reverse</string>
     <string name="list_options">List options</string>
     <string name="ssaid">SSAID</string>
-    <string name="ssaid_info">SSAID (<tt>Settings.Secure.ANDROID_ID</tt>) is a device identifier assigned to each app (from Android Oreo). It is widely used by apps to track users.</string>
+    <string name="ssaid_info">SSAID (<tt>Settings.Secure.ANDROID_ID</tt>) is a device identifier assigned to each app (from Android 8 \"Oreo\"). It is widely used by apps to track users.</string>
     <string name="copied_to_clipboard">Copied to clipboard.</string>
     <string name="failed_to_change_ssaid">Could not change SSAID</string>
-    <string name="restart_to_reflect_changes">Please restart immediately to reflect changes</string>
+    <string name="restart_to_reflect_changes">Start the app again to use the new changes.</string>
     <string name="installed_apps">Installed apps</string>
     <string name="enable_disable_features">Enable/disable features</string>
-    <string name="pref_enable_disable_features_msg">Enable or disable features in App Manager.</string>
+    <string name="pref_enable_disable_features_msg">Turn on or off features in App Manager.</string>
     <string name="last_actions">Last actions</string>
     <string name="isolated">Isolated</string>
-    <string name="screen_lock_not_enabled">Screen lock not enabled. Enable screen lock in Android settings or clear app data.</string>
+    <string name="screen_lock_not_enabled">Screen lock off. Turn it on in the Android settings, or clear app data.</string>
     <string name="working_on_adb_mode">Working on ADB mode</string>
     <string name="verified_using_unreliable_hash">Verified using unreliable hash</string>
     <string name="specify_custom_name">Custom</string>
-    <string name="installer_app_message">Select <b>choose</b> to choose from the installed apps or select <b>custom</b> to specify a custom package name.</string>
+    <string name="installer_app_message">Select <b>Choose</b> to choose from the installed apps or select <b>Custom</b> to specify a custom package name.</string>
     <string name="uninstalled_apps">Uninstalled apps</string>
     <string name="filter_apps_without_backups">Apps without backups</string>
 </resources>
