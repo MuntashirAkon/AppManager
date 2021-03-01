@@ -7,7 +7,7 @@
 [![TG Channel](https://img.shields.io/badge/TG-Channel-blue?logo=telegram)](https://t.me/AppManagerChannel)
 ![Twitter @AppManagerNews](https://img.shields.io/twitter/follow/AppManagerNews?label=%40AppManagerNews)
 
-Yet another Android package manager and viewer but...
+Yet another Android package manager and viewer, but...
 
 - Copylefted libre software (GPLv3+)
 - Material design (and a nice UI)
@@ -155,3 +155,7 @@ By sending me BTC, you agree that you will not share the transaction info in pub
 
 ### Credits and Libraries
 A list of credits and libraries are available in the **About** section of the app.
+
+### Community
+
+There is a [Telegram channel](https://t.me/AppManagerChannel) for App Manager.
