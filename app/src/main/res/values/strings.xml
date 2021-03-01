@@ -110,7 +110,7 @@
     <string name="license">License</string>
     <string name="license_message" translatable="false"><a href="https://www.gnu.org/licenses/gpl-3.0.html">GNU General
         Public License v3.0</a></string>
-    <string name="copyright_message" translatable="false">🄯© 2020–2021 <a href="https://github.com/MuntashirAkon">Muntashir Al-Islam</a></string>
+    <string name="copyright_message" translatable="false">© 2020–2021 <a href="https://github.com/MuntashirAkon">Muntashir Al-Islam</a></string>
     <string name="third_party">Third-party Libraries and Icons</string>
     <string name="third_party_message" translatable="false">-
         <a href="https://github.com/material-components/material-components-android">Material Components</a> (Apache 2.0)
@@ -252,7 +252,7 @@
     <string name="pref_global_blocking_enabled">System-wide component blocking</string>
     <string name="pref_global_blocking_enabled_msg">Lets you block any component of any app without explicitly turning on blocking for the app.</string>
     <string name="pref_usage_access_enabled">Usage access</string>
-    <string name="pref_usage_access_enabled_msg">Browse your app data info, and -usage stats.</string>
+    <string name="pref_usage_access_enabled_msg">Shows app data info, and -usage stats.</string>
     <string name="app_settings">Settings</string>
     <string name="only_works_in_root_mode">Only works in root mode</string>
     <string name="usage_yesterday">Yesterday</string>
@@ -316,7 +316,7 @@
         <item quantity="other">Could not force-stop %1$d apps</item>
     </plurals>
     <string name="toggle_kill_for_system_apps">Toggle kill system apps</string>
-    <string name="app_op_cannot_be_disabled">This app op cannot be disabled, possibly a read-only app op depended on another.</string>
+    <string name="app_op_cannot_be_disabled">This app op cannot be disabled. (Possibly a read-only app op depended on another.)</string>
     <string name="permission_name">Permission Name</string>
     <string name="mode">Mode</string>
     <string name="running">Running</string>
@@ -719,7 +719,7 @@
     <string name="allow_routine_ops">Allow routine ops</string>
     <string name="profile_state">Profile state</string>
     <string name="allow_routine_ops_msg">Allow the profile to be used in the routine operations</string>
-    <string name="profile_disable_msg">Disables or enabled apps based on state value</string>
+    <string name="profile_disable_msg">Disables or enables apps based on state value</string>
     <string name="profile_force_stop_msg">Force-stops apps</string>
     <string name="profile_clear_cache_msg">Clears the app cache of apps</string>
     <string name="profile_clear_data_msg">Clears the data of apps</string>
@@ -900,7 +900,7 @@
     <string name="ssaid_info">SSAID (<tt>Settings.Secure.ANDROID_ID</tt>) is a device identifier assigned to each app (from Android 8 \"Oreo\"). It is widely used by apps to track users.</string>
     <string name="copied_to_clipboard">Copied to clipboard.</string>
     <string name="failed_to_change_ssaid">Could not change SSAID</string>
-    <string name="restart_to_reflect_changes">Start the app again to use the new changes.</string>
+    <string name="restart_to_reflect_changes">Restart the device to use the new changes.</string>
     <string name="installed_apps">Installed apps</string>
     <string name="enable_disable_features">Enable/disable features</string>
     <string name="pref_enable_disable_features_msg">Turn on or off features in App Manager.</string>
