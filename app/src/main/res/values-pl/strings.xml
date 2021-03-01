@@ -662,4 +662,30 @@
     <string name="type_string_array_list">Lista ciągów znaków</string>
     <string name="type_string_array">Tablica ciągów znaków</string>
     <string name="type_float_array">Tablica liczb dziesiętnych</string>
+    <string name="navigation">Nawigacja</string>
+    <string name="keyboard_type">Typ klawiatury</string>
+    <string name="export_failed">Eksportowanie nie powiodło się!</string>
+    <string name="import_failed">Importowanie nie powiodło się!</string>
+    <string name="export_options">Opcje Eksportu</string>
+    <string name="import_options">Opcje importu</string>
+    <string name="pref_export">Eksportuj</string>
+    <string name="pref_import">Importuj</string>
+    <string name="ago">temu</string>
+    <string name="duration">Czas trwania</string>
+    <string name="running">Uruchomiona</string>
+    <string name="mode">Tryb</string>
+    <string name="permission_name">Nazwa uprawnienia</string>
+    <plurals name="alert_failed_to_force_stop">
+        <item quantity="one">Nie udało się wymusić zatrzymania %1$d aplikacji</item>
+        <item quantity="few">Nie udało się wymusić zatrzymania %1$d aplikacji</item>
+        <item quantity="many">Nie udało się wymusić zatrzymania %1$d aplikacji</item>
+        <item quantity="other">Nie udało się wymusić zatrzymania %1$d aplikacji</item>
+    </plurals>
+    <string name="the_operation_was_successful">Gotowe</string>
+    <plurals name="alert_failed_to_disable_background">
+        <item quantity="one">Nie udało się zablokować działania %1$d aplikacji w tle</item>
+        <item quantity="few">Nie udało się zablokować działania %1$d aplikacji w tle</item>
+        <item quantity="many">Nie udało się zablokować działania %1$d aplikacji w tle</item>
+        <item quantity="other">Nie udało się zablokować działania %1$d aplikacji w tle</item>
+    </plurals>
 </resources>
