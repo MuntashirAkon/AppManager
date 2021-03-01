@@ -329,7 +329,7 @@
     <string name="follow_system">Ikuti Sistem</string>
     <string name="pref_app_theme">Tema Aplikasi</string>
     <string name="pref_import_blocker_msg">Impor peraturan pemblokir dari Blocker, setiap file mengandung peraturan dari sebuah paket.</string>
-    <string name="pref_import_watt_msg">Impor peraturan penghadang dari Watt, setiap file mengandung peraturan dari sebuah paket ternama seperti &lt;tt&gt;packagename.xml&lt;/tt&gt; dan lain sebagainya.</string>
+    <string name="pref_import_watt_msg">Impor peraturan penghadang dari Watt, setiap file mengandung peraturan dari sebuah paket ternama seperti <tt>packagename.xml</tt> dan lain sebagainya.</string>
     <string name="pref_import_msg">Impor peraturan penghadang yang baru saja di ekspor dari Manager Aplikasi.</string>
     <string name="pref_export_msg">Ekspor peraturan penghadang yang telah dikonfigurasi dengan Manager Aplikasi pada penyimpanan eksternal.</string>
     <string name="ago">lalu</string>

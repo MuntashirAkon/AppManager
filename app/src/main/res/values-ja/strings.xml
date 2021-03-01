@@ -133,15 +133,15 @@
     <string name="credits">謝辞</string>
     <string name="credits_message">"To the authors of
 \n- The Android Open Source Project
-\n- &lt;a href=\"https://bitbucket.org/oF2pks/fdroid-applications-info\"&gt;Apps_packages Info&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/butzist/ActivityLauncher\"&gt;Activity Launcher&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/billthefarmer/editor\"&gt;Editor&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/zhaobao/AppsMonitor\"&gt;AppsMonitor&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/tuyafeng/Watt\"&gt;Watt&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/8enet/AppOpsX\"&gt;AppOpsX&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/Aefyr/SAI\"&gt;SAI&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/RikkaApps/Shizuku\"&gt;Shizuku&lt;/a&gt;
-\nOriginal logo credit: &lt;a href=\"https://github.com/Atrate\"&gt;Atrate&lt;/a&gt;. "</string>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
+\n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
+\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
+\n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://github.com/Aefyr/SAI">SAI</a>
+\n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
+\nOriginal logo credit: <a href="https://github.com/Atrate">Atrate</a>. "</string>
     <string name="word_wrap">ワードラップを切り替え</string>
     <string name="class_viewer">クラスビューワ</string>
     <string name="toggle_class_listing">クラスの表示を切り替え</string>
@@ -911,7 +911,7 @@
     <string name="pref_enable_disable_features_msg">AppManagerの機能を有効化または無効化します。</string>
     <string name="enable_disable_features">機能の有効化/無効化</string>
     <string name="input_app_ops_description_profile">AppOpsの名前かその識別値を「WAKE_LOCK 63 72 CAMERA」のようにスペース区切りで指定してください。「*」はワイルドカードとして使用できます。</string>
-    <string name="installer_app_message">&lt;b&gt;選択&lt;/b&gt; を押してインストール済みのアプリを選択するか、&lt;b&gt;カスタム&lt;/b&gt; で任意のパッケージ名を指定します。</string>
+    <string name="installer_app_message"><b>選択</b> を押してインストール済みのアプリを選択するか、<b>カスタム</b> で任意のパッケージ名を指定します。</string>
     <string name="specify_custom_name">カスタム</string>
     <string name="verified_using_unreliable_hash">信頼できないハッシュで検証済み</string>
     <string name="filter_apps_without_backups">バックアップされていないアプリ</string>

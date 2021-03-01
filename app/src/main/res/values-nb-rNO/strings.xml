@@ -427,7 +427,7 @@
         <item quantity="other">%1$d klasser</item>
     </plurals>
     <string name="failed_to_parse_some_numbers">Noen tall kunne ikke tolkes</string>
-    <string name="clear_data_from_uninstalled_apps_description">Tøm data fra avinstallerte programmer med &lt;tt&gt;DONT_DELETE_DATA&lt;/tt&gt;-flagg</string>
+    <string name="clear_data_from_uninstalled_apps_description">Tøm data fra avinstallerte programmer med <tt>DONT_DELETE_DATA</tt>-flagg</string>
     <string name="clear_data_from_uninstalled_apps">Tøm data fra avinstallerte programmer</string>
     <string name="no_usage_in_this_time_range">Ingen bruk i dette tidsrommet</string>
     <string name="key_name_cannot_be_null">Nøkkelnavn kan ikke stå tomt</string>

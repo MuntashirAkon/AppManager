@@ -655,8 +655,8 @@
     <string name="pref_backup_android_keystore">Twórz kopie zapasowe aplikacji używających Android KeyStore</string>
     <string name="backup_multiple_description">Użyj oddzielnej nazwanej kopii zapasowej zamiast podstawowej kopii zapasowej.</string>
     <string name="backup_rules_description">Utwórz kopię zapasową reguł skonfigurowanych w App Manager.</string>
-    <string name="backup_external_data_description">Utwórz kopię zapasową zewnętrznych folderów danych. Aby funkcja działała, musi być wybrana opcja &lt;b&gt;Dane&lt;/b&gt;.</string>
-    <string name="backup_apk_only_description">Utwórz kopię zapasową tylko plików APK z katalogu źródłowego. &lt;b&gt;Źródło&lt;/b&gt; musi być wybrane, aby to zadziałało.</string>
+    <string name="backup_external_data_description">Utwórz kopię zapasową zewnętrznych folderów danych. Aby funkcja działała, musi być wybrana opcja <b>Dane</b>.</string>
+    <string name="backup_apk_only_description">Utwórz kopię zapasową tylko plików APK z katalogu źródłowego. <b>Źródło</b> musi być wybrane, aby to zadziałało.</string>
     <string name="vendor">Producent</string>
     <string name="set_custom_app_op">Ustaw niestandardową app op</string>
     <string name="type_string_array_list">Lista ciągów znaków</string>
