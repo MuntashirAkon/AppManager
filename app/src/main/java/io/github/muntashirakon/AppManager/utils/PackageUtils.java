@@ -132,11 +132,27 @@ public final class PackageUtils {
             ApplicationItem item = new ApplicationItem();
             item.packageName = app.packageName;
             int i;
-            if (app.isInstalled && (i = applicationItems.indexOf(item)) != -1) {
-                // Add user handle and continue
-                ApplicationItem oldItem = applicationItems.get(i);
-                oldItem.userHandles = ArrayUtils.appendInt(oldItem.userHandles, app.userId);
-                continue;
+            if (app.isInstalled) {
+                if ((i = applicationItems.indexOf(item)) != -1) {
+                    // Item already exists, add the user handle and continue
+                    ApplicationItem oldItem = applicationItems.get(i);
+                    oldItem.userHandles = ArrayUtils.appendInt(oldItem.userHandles, app.userId);
+                    oldItem.isInstalled = true;
+                    continue;
+                } else {
+                    // Item doesn't exist, add the user handle
+                    item.userHandles = ArrayUtils.appendInt(item.userHandles, app.userId);
+                    item.isInstalled = true;
+                }
+            } else {
+                // App not installed but may be installed in other profiles
+                if (applicationItems.contains(item)) {
+                    // Item exists, use the previous status
+                    continue;
+                } else {
+                    // Item doesn't exist, don't add user handle
+                    item.isInstalled = false;
+                }
             }
             if (backupMetadata != null) {
                 MetadataManager.Metadata metadata = backupMetadata.get(item.packageName);
@@ -163,8 +179,6 @@ public final class PackageUtils {
             item.blockedCount = app.rulesCount;
             item.trackerCount = app.trackerCount;
             item.lastActionTime = app.lastActionTime;
-            item.userHandles = ArrayUtils.appendInt(item.userHandles, app.userId);
-            item.isInstalled = app.isInstalled;
             applicationItems.add(item);
         }
         if (backupMetadata != null) {
