@@ -775,7 +775,7 @@
     <string name="activity_result">Activity result</string>
     <string name="result_code">Result code</string>
     <string name="action">Action</string>
-    <string name="mime_type">Media type</string>
+    <string name="mime_type">MIME type</string>
     <string name="uri">URI</string>
     <string name="category">Categories</string>
     <string name="extras">Extras</string>
