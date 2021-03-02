@@ -249,7 +249,7 @@
     <string name="failed_to_disable_op">Could not disable the requested app op</string>
     <string name="rules_not_applied">Rules are not applied</string>
     <string name="str_logo">Logo</string>
-    <string name="pref_global_blocking_enabled">System-wide component blocking</string>
+    <string name="pref_global_blocking_enabled">Block right away</string>
     <string name="pref_global_blocking_enabled_msg">Lets you block any component of any app without explicitly turning on blocking for the app.</string>
     <string name="pref_usage_access_enabled">Usage access</string>
     <string name="pref_usage_access_enabled_msg">Shows app data info, and -usage stats.</string>
@@ -816,7 +816,7 @@
     <string name="backup_extras_description">Back up app permissions, battery saving, data usage options, MagiskHide status, etc.</string>
     <string name="backup_rules_description">Back up rules configured within App Manager.</string>
     <string name="backup_multiple_description">Use a separate <i>named</i> backup instead of the base backup.</string>
-    <string name="backup_skip_signature_checks_description">Useful for restoring backups failing checksum verification or ones with a different APK signature than the backed up one.</string>
+    <string name="backup_skip_signature_checks_description">Can restore backups that either fail checksum verification or have different APK signatures than their prior backups.</string>
     <string name="patch_level">Patch level</string>
     <string name="selinux">SELinux</string>
     <string name="enforcing">Enforcing</string>
@@ -894,7 +894,7 @@
     <string name="reverse">Reverse</string>
     <string name="list_options">List options</string>
     <string name="ssaid">SSAID</string>
-    <string name="ssaid_info">SSAID (<tt>Settings.Secure.ANDROID_ID</tt>) is a device identifier assigned to each app (from Android 8 \"Oreo\"). It is widely used by apps to track users.</string>
+    <string name="ssaid_info">SSAID (<tt>Settings.Secure.ANDROID_ID</tt>) is a device identifier assigned to each app (from Android 8 \"Oreo\" onwards). It is widely used by apps to track users.</string>
     <string name="copied_to_clipboard">Copied to clipboard.</string>
     <string name="failed_to_change_ssaid">Could not change SSAID</string>
     <string name="restart_to_reflect_changes">Restart the device to use the new changes.</string>
