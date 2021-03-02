@@ -284,8 +284,8 @@
     <string name="running_apps">Running Apps</string>
     <string name="kill_process">Kill</string>
     <string name="disable_background_run">Don\'t run in the background</string>
-    <string name="pid_and_ppid">Process ID: %1$d. Parent Process ID: %2$d.</string>
-    <string name="memory_virtual_memory">Memory: %1$s. Virtual Memory: %2$s.</string>
+    <string name="pid_and_ppid">Process ID: %1$d, Parent Process ID: %2$d.</string>
+    <string name="memory_virtual_memory">Memory: %1$s, Virtual Memory: %2$s.</string>
     <string name="user_with_id">User: <xliff:g id="user_id" example="0">%1$d</xliff:g></string>
     <string name="user_and_uid">User: <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
     <string name="clear_data">Clear Data</string>
