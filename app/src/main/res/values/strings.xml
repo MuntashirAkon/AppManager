@@ -291,7 +291,7 @@
     <string name="clear_data">Clear Data</string>
     <string name="backup_apk">Backup APK</string>
     <string name="backup_restore">Backup/Restore</string>
-    <string name="disable_background">Don\'t run in the background</string>
+    <string name="disable_background">Prevent background operation</string>
     <string name="export_blocking_rules">Export Blocking Rules</string>
     <string name="some_items_selected"><xliff:g id="selection_no" example="20">%1$d</xliff:g> selected</string>
     <plurals name="alert_failed_to_clear_data">
@@ -344,7 +344,6 @@
     <string name="night">Night</string>
     <string name="select_theme">Theme</string>
     <string name="apply">Apply</string>
-    <string name="current_theme">%1$s</string>
     <string name="pref_about_msg">App Manager version, license, credits, etc.</string>
     <string name="version">Version</string>
     <string name="sort_by_wifi_data">Wi-Fi data</string>
@@ -401,9 +400,9 @@
     <string name="pref_import_existing_msg">Add components disabled by others apps to App Manager.
         Be careful when using this tool as there can be many false positives. Choose only the apps you\'re certain about.</string>
     <string name="clear_cache">Clear Cache</string>
-    <string name="block_unblock_trackers_description">Allow or deny ad and tracking components in all the installed apps</string>
+    <string name="block_unblock_trackers_description">Block or unblock ad and tracking components in all the installed apps</string>
     <string name="block_components_dots">Block components…</string>
-    <string name="block_components_description">Deny all components identified by the given signatures</string>
+    <string name="block_components_description">Block all components identified by the given signatures</string>
     <string name="deny_app_ops_description">Set a mode for app operations identified by the constant values, i.e. <tt>63</tt> or <tt>RUN_IN_BACKGROUND</tt></string>
     <string name="clear_data_from_uninstalled_apps">Clear data from uninstalled apps</string>
     <string name="clear_data_from_uninstalled_apps_description">Clear data from apps that are uninstalled with <tt>DONT_DELETE_DATA</tt> flag</string>
@@ -426,12 +425,12 @@
     <string name="termux">Termux</string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> installed</string>
     <string name="failed_to_install_package_name">Could not install <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
-    <string name="filter">Filter apps</string>
-    <string name="filter_user_apps">User</string>
-    <string name="filter_system_apps">System</string>
-    <string name="filter_apps_with_rules">With rules</string>
+    <string name="filter">Filter</string>
+    <string name="filter_user_apps">User apps</string>
+    <string name="filter_system_apps">System apps</string>
+    <string name="filter_apps_with_rules">Apps with rules</string>
     <string name="select_all">Select All</string>
-    <string name="filter_disabled_apps">Disabled</string>
+    <string name="filter_disabled_apps">Disabled apps</string>
     <string name="installed_version">Installed Version</string>
     <string name="trackers">Trackers</string>
     <string name="components">Components</string>
@@ -478,8 +477,8 @@
         <item quantity="other">Could not enable %1$d apps</item>
     </plurals>
     <plurals name="backup_exists_are_you_sure">
-        <item quantity="one">A backup exists. Are you sure?</item>
-        <item quantity="other">A backup of more than one app exists. Are you sure?</item>
+        <item quantity="one">Backup already exists. Are you sure?</item>
+        <item quantity="other">More than one app has a backup already. Are you sure?</item>
     </plurals>
     <plurals name="classes">
         <item quantity="one">%1$d class</item>
@@ -511,7 +510,7 @@
     <string name="block">Block</string>
     <string name="unblock">Unblock</string>
     <string name="block_unblock_trackers">Block/unblock trackers</string>
-    <string name="no_matching_package_found">Could not any such package</string>
+    <string name="no_matching_package_found">Could not find any such package</string>
     <string name="export_icon">Extract Icon</string>
     <string name="open_in_termux">Open in Termux</string>
     <string name="run_in_termux">Run in Termux</string>
@@ -556,7 +555,6 @@
     <string name="backup_all_users">All users</string>
     <string name="pref_app_language">Language</string>
     <string name="auto">Auto</string>
-    <string name="current_language">%1$s</string>
     <string name="choose_language">Change language</string>
     <string name="base_apk">Base APK</string>
     <string name="split_feature_name">Feature: <xliff:g id="feature_name" example="Visualizer">%1$s</xliff:g></string>
@@ -646,7 +644,6 @@
     <string name="rules">Rules</string>
     <string name="pref_compression_method">Compression method</string>
     <string name="pref_backup_flags_msg">Adding a preset for backup options removes the burden of selecting flags every time you back up/restore.</string>
-    <string name="compression_method"><xliff:g id="compression_method" example="GZip">%1$s</xliff:g></string>
     <string name="confirm_installation">Confirm installation</string>
     <string name="allow_open_pgp_operation">Click to allow App Manager to use OpenPGP</string>
     <string name="uninstall_updates">Uninstall Updates</string>
@@ -761,7 +758,7 @@
     <string name="splits">Splits</string>
     <string name="input_keystore_pass">Input KeyStore password</string>
     <string name="input_keystore_pass_description">Enter the App Manager KeyStore password. If you\'re seeing this for the first time, please use a password generator to generate a password and save it in a secure place before inserting it here.</string>
-    <string name="input_keystore_pass_msg">Tap here to provide a KeyStore password</string>
+    <string name="input_keystore_pass_msg">Tap here to enter KeyStore password</string>
     <string name="input_keystore_alias_pass">Password for alias <b>%1$s</b></string>
     <string name="input_keystore_alias_pass_description">Insert password for the alias <b>%1$s</b>. You can leave this empty if the password is the same as the KeyStore password.</string>
     <string name="no_app_ops_permission">No permission to display app ops</string>
@@ -811,7 +808,7 @@
     <string name="set_mode_for_app_ops_dots">Set mode for app ops…</string>
     <string name="backup_source_description">Back up the entire source directory.</string>
     <string name="backup_apk_only_description">Only back up the APK files from the source directory. (<b>Source</b> must be selected for this to work.)</string>
-    <string name="backup_data_description">Back up data folders. (Also backs up internal data folders.)</string>
+    <string name="backup_data_description">Backs up data-, and internal data folders.</string>
     <string name="backup_external_data_description">Back up external data folders. (<b>Data</b> must be selected for this to work.)</string>
     <string name="backup_obb_media_description">Back up OBB and media folders.</string>
     <string name="backup_exclude_cache_description">Do not back up cache, no_cache and no_backup folders.</string>
