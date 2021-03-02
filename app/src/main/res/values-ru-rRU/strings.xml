@@ -110,7 +110,7 @@
     <string name="third_party">Сторонние библиотеки и значки</string>
     <string name="credits">Авторы</string>
     <string name="credits_message">"Благодарность разработчикам:
-\n-Проект с открытым исходным кодом Android
+\n-The Android Open Source Project
 \n- &lt;a href=\"https://bitbucket.org/oF2pks/fdroid-applications-info\"&gt;Apps_packages Info&lt;/a&gt;
 \n- &lt;a href=\"https://github.com/butzist/ActivityLauncher\"&gt;Activity Launcher&lt;/a&gt;
 \n- &lt;a href=\"https://github.com/billthefarmer/editor\"&gt;Editor&lt;/a&gt;
@@ -142,10 +142,10 @@
     <string name="usage_today">Сегодня</string>
     <string name="usage_7_days">Последние 7 дней</string>
     <plurals name="usage_months">
-        <item quantity="one">%1$d мес</item>
-        <item quantity="few">%1$d мес</item>
-        <item quantity="many">%1$d мес</item>
-        <item quantity="other">%1$d мес</item>
+        <item quantity="one">%1$d мес.</item>
+        <item quantity="few">%1$d мес.</item>
+        <item quantity="many">%1$d мес.</item>
+        <item quantity="other">%1$d мес.</item>
     </plurals>
     <plurals name="usage_days">
         <item quantity="one">%1$d день</item>
@@ -154,12 +154,12 @@
         <item quantity="other">%1$d дней</item>
     </plurals>
     <plurals name="usage_hours">
-        <item quantity="one">%1$d ч</item>
-        <item quantity="few">%1$d ч</item>
-        <item quantity="many">%1$d ч</item>
-        <item quantity="other">%1$d ч</item>
+        <item quantity="one">%1$d ч.</item>
+        <item quantity="few">%1$d ч.</item>
+        <item quantity="many">%1$d ч.</item>
+        <item quantity="other">%1$d ч.</item>
     </plurals>
-    <string name="usage_min">%1$d мин</string>
+    <string name="usage_min">%1$d мин.</string>
     <string name="usage_less_than_a_minute">Меньше минуты</string>
     <string name="go_back">Вернуться</string>
     <string name="go">Разрешить</string>
@@ -859,7 +859,7 @@
     <string name="scaling_factor">Коэффициент масштабирования</string>
     <string name="density">Плотность пикселей</string>
     <string name="screen">Экран</string>
-    <string name="set_mode_for_app_ops_dots">Установить режим работы приложений…</string>
+    <string name="set_mode_for_app_ops_dots">Установить режим операций приложения…</string>
     <string name="failed_to_enable_magisk_hide">Не удалось включить MagiskHide</string>
     <string name="enable_magisk_hide">Включить MagiskHide</string>
     <string name="failed_to_disable_magisk_hide">Не удалось отключить MagiskHide</string>
@@ -884,7 +884,7 @@
     <string name="backup_all_apps">Резервное копирование всех приложений</string>
     <string name="signature_schemes">Схемы подписи</string>
     <string name="back_up">Резервное копирование</string>
-    <string name="drm_free_apkm_msg">Файл APKM не содержит DRM, конвертировать его в APKS не нужно.</string>
+    <string name="drm_free_apkm_msg">Файл APKM не содержит DRM, не требуется его конвертация в APKS.</string>
     <string name="restore_msg">Восстановление приложений с данными</string>
     <string name="backup_msg">Резервное копирование приложений с данными</string>
     <string name="restore_latest_msg">Восстановление уже установленных приложений, коды версий которых выше, чем код установленной версии.</string>
@@ -950,6 +950,6 @@
     <string name="verified_using_unreliable_hash">Проверено с использованием ненадежного хеша</string>
     <string name="filter_apps_without_backups">Приложения без резервных копий</string>
     <string name="uninstalled_apps">Удаленные приложения</string>
-    <string name="installer_app_message">Выберите &lt;b&gt; обзор &lt;/b&gt;, чтобы выбрать одно из установленных приложений, или выберите &lt;b&gt; пользовательское имя &lt;/b&gt;, чтобы указать имя пользовательского пакета.</string>
-    <string name="specify_custom_name">Пользовательское имя</string>
+    <string name="installer_app_message">Нажмите &lt;b&gt;выбрать&lt;/b&gt; для использования одного из установленных приложений, или нажмите &lt;b&gt;пользовательское&lt;/b&gt;, чтобы ввести имя пользовательского пакета.</string>
+    <string name="specify_custom_name">Пользовательское</string>
 </resources>
