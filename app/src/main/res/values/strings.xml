@@ -270,7 +270,7 @@
     <string name="sort_by_times_opened">Times opened</string>
     <string name="sort_by_mobile_data">Mobile data</string>
     <string name="pref_import_export_blocking_rules">Import/export blocking rules</string>
-    <string name="pref_import_export_blocking_rules_msg">(Rules can be imported from Watt or Blocker.)</string>
+    <string name="pref_import_export_blocking_rules_msg">Import rules exported from Watt or Blocker.</string>
     <string name="pref_import_watt">Import from Watt</string>
     <string name="pref_import_blocker">Import from Blocker</string>
     <string name="the_import_was_successful">Imported</string>
@@ -283,7 +283,7 @@
     <string name="store">Store</string>
     <string name="running_apps">Running Apps</string>
     <string name="kill_process">Kill</string>
-    <string name="disable_background_run">Don\'t run in the background</string>
+    <string name="disable_background_run">Prevent background operation</string>
     <string name="pid_and_ppid">Process ID: %1$d, Parent Process ID: %2$d.</string>
     <string name="memory_virtual_memory">Memory: %1$s, Virtual Memory: %2$s.</string>
     <string name="user_with_id">User: <xliff:g id="user_id" example="0">%1$d</xliff:g></string>
