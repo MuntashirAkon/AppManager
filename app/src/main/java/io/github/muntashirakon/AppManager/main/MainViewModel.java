@@ -25,6 +25,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Pair;
+
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,6 +35,7 @@ import androidx.core.content.pm.PackageInfoCompat;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.backup.BackupUtils;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
@@ -437,6 +440,25 @@ public class MainViewModel extends AndroidViewModel {
                     }
                 }
                 break;
+            case PackageChangeReceiver.ACTION_PACKAGE_REMOVED:
+                for (String packageName : packages) {
+                    ApplicationItem item = getApplicationItemFromApplicationItems(packageName);
+                    if (item == null) return;
+                    synchronized (applicationItems) {
+                        applicationItems.remove(item);
+                    }
+                }
+                sortApplicationList(mSortBy, mSortReverse);
+                break;
+            case PackageChangeReceiver.ACTION_PACKAGE_ALTERED:
+            case PackageChangeReceiver.ACTION_PACKAGE_ADDED:
+                for (String packageName : packages) {
+                    ApplicationItem item = getNewApplicationItem(packageName, AppManager.getDb().appDao()
+                            .getAll(packageName));
+                    if (item != null) insertOrAddApplicationItem(item);
+                }
+                sortApplicationList(mSortBy, mSortReverse);
+                break;
             case Intent.ACTION_PACKAGE_CHANGED:
                 for (String packageName : packages) {
                     ApplicationItem item = getNewApplicationItem(packageName);
@@ -498,11 +520,11 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     @GuardedBy("applicationItems")
-    private boolean insertApplicationItem(ApplicationItem item) {
+    private boolean insertApplicationItem(@NonNull ApplicationItem item) {
         synchronized (applicationItems) {
             boolean isInserted = false;
             for (int i = 0; i < applicationItems.size(); ++i) {
-                if (applicationItems.get(i).equals(item)) {
+                if (item.equals(applicationItems.get(i))) {
                     applicationItems.set(i, item);
                     isInserted = true;
                     if (selectedApplicationItems.contains(item)) {
@@ -558,6 +580,62 @@ public class MainViewModel extends AndroidViewModel {
                 item.lastActionTime = app.lastActionTime;
                 oldItem = item;
                 AppManager.getDb().appDao().insert(app);
+            } catch (Exception ignore) {
+            }
+        }
+        return oldItem;
+    }
+
+    @WorkerThread
+    @Nullable
+    private ApplicationItem getNewApplicationItem(String packageName, @NonNull List<App> apps) {
+        ApplicationItem oldItem = null;
+        for (App app : apps) {
+            try {
+                ApplicationItem item = new ApplicationItem();
+                item.packageName = app.packageName;
+                if (app.isInstalled) {
+                    if (oldItem != null) {
+                        // Item already exists, add the user handle and continue
+                        oldItem.userHandles = ArrayUtils.appendInt(oldItem.userHandles, app.userId);
+                        oldItem.isInstalled = true;
+                        continue;
+                    } else {
+                        // Item doesn't exist, add the user handle
+                        item.userHandles = ArrayUtils.appendInt(item.userHandles, app.userId);
+                        item.isInstalled = true;
+                    }
+                } else {
+                    // App not installed but may be installed in other profiles
+                    if (oldItem != null) {
+                        // Item exists, use the previous status
+                        continue;
+                    } else {
+                        // Item doesn't exist, don't add user handle
+                        item.isInstalled = false;
+                    }
+                }
+                item.packageName = app.packageName;
+                item.versionName = app.versionName;
+                item.versionCode = app.versionCode;
+                item.metadata = BackupUtils.getBackupInfo(packageName);
+                item.flags = app.flags;
+                item.uid = app.uid;
+                item.sharedUserId = app.sharedUserId;
+                item.label = app.packageLabel;
+                item.debuggable = (app.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+                item.isUser = (app.flags & ApplicationInfo.FLAG_SYSTEM) == 0;
+                item.isDisabled = !app.isEnabled;
+                item.hasActivities = app.hasActivities;
+                item.hasSplits = app.hasSplits;
+                item.firstInstallTime = app.firstInstallTime;
+                item.lastUpdateTime = app.lastUpdateTime;
+                item.sha = new Pair<>(app.certName, app.certAlgo);
+                item.sdk = app.sdk;
+                item.blockedCount = app.rulesCount;
+                item.trackerCount = app.trackerCount;
+                item.lastActionTime = app.lastActionTime;
+                oldItem = item;
             } catch (Exception ignore) {
             }
         }

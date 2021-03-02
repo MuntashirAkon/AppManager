@@ -40,7 +40,21 @@ import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import static io.github.muntashirakon.AppManager.batchops.BatchOpsService.ACTION_BATCH_OPS_COMPLETED;
 
 public abstract class PackageChangeReceiver extends BroadcastReceiver {
+    /**
+     * Specifies that some packages have been altered. This could be due to batch operations, database update, etc.
+     * It has one extra namely {@link Intent#EXTRA_CHANGED_PACKAGE_LIST}.
+     */
     public static final String ACTION_PACKAGE_ALTERED = BuildConfig.APPLICATION_ID + ".action.PACKAGE_ALTERED";
+    /**
+     * Specifies that some packages have been added. This could be due to batch operations, database update, etc.
+     * It has one extra namely {@link Intent#EXTRA_CHANGED_PACKAGE_LIST}.
+     */
+    public static final String ACTION_PACKAGE_ADDED = BuildConfig.APPLICATION_ID + ".action.PACKAGE_ADDED";
+    /**
+     * Specifies that some packages have been removed. This could be due to batch operations, database update, etc.
+     * It has one extra namely {@link Intent#EXTRA_CHANGED_PACKAGE_LIST}.
+     */
+    public static final String ACTION_PACKAGE_REMOVED = BuildConfig.APPLICATION_ID + ".action.PACKAGE_REMOVED";
 
     public PackageChangeReceiver(@NonNull Context context) {
         IntentFilter filter = new IntentFilter(Intent.ACTION_PACKAGE_ADDED);
@@ -54,6 +68,8 @@ public abstract class PackageChangeReceiver extends BroadcastReceiver {
         sdFilter.addAction(Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE);
         sdFilter.addAction(Intent.ACTION_LOCALE_CHANGED);
         sdFilter.addAction(ACTION_PACKAGE_ALTERED);
+        sdFilter.addAction(ACTION_PACKAGE_ADDED);
+        sdFilter.addAction(ACTION_PACKAGE_REMOVED);
         sdFilter.addAction(ACTION_BATCH_OPS_COMPLETED);
         context.registerReceiver(this, sdFilter);
     }
@@ -87,10 +103,14 @@ public abstract class PackageChangeReceiver extends BroadcastReceiver {
                 case Intent.ACTION_PACKAGE_REMOVED:
                     if (intent.getBooleanExtra(Intent.EXTRA_REPLACING, false)) return;
                 case Intent.ACTION_PACKAGE_ADDED:
-                case Intent.ACTION_PACKAGE_CHANGED:
+                case Intent.ACTION_PACKAGE_CHANGED: {
                     int uid = intent.getIntExtra(Intent.EXTRA_UID, -1);
                     if (uid != -1) onPackageChanged(intent, uid, null);
                     return;
+                }
+                case ACTION_PACKAGE_ADDED:
+                case ACTION_PACKAGE_ALTERED:
+                case ACTION_PACKAGE_REMOVED:
                 case Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE:
                 case Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE: {
                     String[] packages = intent.getStringArrayExtra(Intent.EXTRA_CHANGED_PACKAGE_LIST);
@@ -100,7 +120,7 @@ public abstract class PackageChangeReceiver extends BroadcastReceiver {
                 case Intent.ACTION_LOCALE_CHANGED:
                     onPackageChanged(intent, null, null);
                     return;
-                case ACTION_BATCH_OPS_COMPLETED:
+                case ACTION_BATCH_OPS_COMPLETED: {
                     // Trigger for all ops except disable, force-stop and uninstall
                     @BatchOpsManager.OpType int op;
                     op = intent.getIntExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_NONE);
@@ -119,6 +139,7 @@ public abstract class PackageChangeReceiver extends BroadcastReceiver {
                             }
                         }
                     }
+                }
             }
         }
     }
