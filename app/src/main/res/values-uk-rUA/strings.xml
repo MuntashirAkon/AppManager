@@ -927,4 +927,9 @@
     <string name="working_on_adb_mode">Робота в режимі ADB</string>
     <string name="screen_lock_not_enabled">Блокування екрана не ввімкнуто. Увімкніть блокування екрана в налаштуваннях Android або очистіть дані додатка.</string>
     <string name="input_app_ops_description_profile">Введіть імена та/або константи додатків із пробілами, наприклад <tt>WAKE_LOCK 63 72 КАМЕРА</tt> тощо. Використовуйте <tt>*</tt>, щоб застосувати до всіх налаштованих app ops.</string>
+    <string name="installer_app_message">Натисніть &lt;b&gt;вибрати&lt;/b&gt; для використання одного з встановлених додатків, або натисніть &lt;b&gt;користувацький&lt;/b&gt;, щоб вказати власне ім\'я пакета.</string>
+    <string name="filter_apps_without_backups">Додатки без резервних копій</string>
+    <string name="uninstalled_apps">Видалені додатки</string>
+    <string name="specify_custom_name">Користувацький</string>
+    <string name="verified_using_unreliable_hash">Перевірено за допомогою ненадійного хешу</string>
 </resources>
