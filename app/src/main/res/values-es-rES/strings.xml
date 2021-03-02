@@ -57,17 +57,17 @@
     <string name="error">Error</string>
     <string name="loading">Cargando…</string>
     <!-- &#8230; = ... -->
-    <string name="credits_message">A los autores de
-        \n- The Android Open Source Project
-        \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
-        \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
-        \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
-        \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
-        \n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
-        \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
-        \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
-        \nLogo credit: <a href="https://github.com/Atrate">Atrate</a>.
-    </string>
+    <string name="credits_message">"A los autores de
+\n- The Android Open Source Project
+\n- &lt;a href=\"https://bitbucket.org/oF2pks/fdroid-applications-info\"&gt;Apps_packages Info&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/butzist/ActivityLauncher\"&gt;Activity Launcher&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/billthefarmer/editor\"&gt;Editor&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/zhaobao/AppsMonitor\"&gt;AppsMonitor&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/tuyafeng/Watt\"&gt;Watt&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/8enet/AppOpsX\"&gt;AppOpsX&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/Aefyr/SAI\"&gt;SAI&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/RikkaApps/Shizuku\"&gt;Shizuku&lt;/a&gt;
+\nLogo credit: &lt;a href=\"https://github.com/Atrate\"&gt;Atrate&lt;/a&gt;. "</string>
     <string name="word_wrap">Cambiar el formato de las palabras</string>
     <string name="touchscreen">Pantalla táctil</string>
     <string name="navigation">Navegación</string>
@@ -351,15 +351,15 @@
     <string name="failed_to_parse_some_numbers">No se pudo analizar algunos números</string>
     <string name="only_works_in_root_or_adb_mode">Sólo funcionan en modo root o ADB</string>
     <string name="filtered_packages">Paquetes filtrados</string>
-    <string name="input_signatures_description">Firmas de entrada con espacios, por ejemplo (com.facebook org.app2 com.app3) etc.</string>
+    <string name="input_signatures_description">Firmas de entrada con espacios, por ejemplo &lt;/tt&gt;com.facebook org.app2 com.app3&lt;/tt&gt; etc.</string>
     <string name="input_signatures">Firmas de entrada</string>
     <string name="failed_packages">Paquetes fallidos</string>
     <string name="no_tracker_found">Sin rastreadores encontrados</string>
     <string name="clear_app_cache_description">Limpiar cahé de todas las apps</string>
     <string name="clear_app_cache">Limpiar caché de la app</string>
     <string name="clear_data_from_uninstalled_apps">Limpiar datos de aplicaciones desinstaladas</string>
-    <string name="deny_app_ops_description">Establecer un modo para las operaciones de las aplicaciones identificadas por los valores constantes, es decir, 63 o RUN_IN_BACKGROUND</string>
-    <string name="block_components_description">Bloquear todos los componentes identificados por la(s) firma(s) dada(s)</string>
+    <string name="deny_app_ops_description">Establecer un modo para las operaciones de las aplicaciones identificadas por los valores constantes, es decir, &lt;/tt&gt;63&lt;/tt&gt; o &lt;/tt&gt;RUN_IN_BACKGROUND&lt;/tt&gt;</string>
+    <string name="block_components_description">Bloquear todos los componentes identificados por las firmas dadas</string>
     <string name="block_components_dots">Bloquear componentes…</string>
     <string name="block_unblock_trackers_description">Bloquear o desbloquear componentes de anuncios o rastreo de todas las apps instaladas</string>
     <string name="clear_cache">Limpiar caché</string>
@@ -378,7 +378,7 @@
         <item quantity="other">%1$d rastreadores</item>
     </plurals>
     <string name="manifest_viewer">Visor del Manifiesto</string>
-    <string name="external_apk_no_app_op">La APK externa no tiene ninguna operación de aplicación</string>
+    <string name="external_apk_no_app_op">La APK externa no tiene ninguna app ops</string>
     <string name="changelog">Lista de cambios</string>
     <string name="one_click_ops">1-Click Ops</string>
     <string name="never_ask">No volver a preguntar</string>
@@ -419,7 +419,7 @@
     <string name="follow_system">Seguir sistema</string>
     <string name="pref_app_theme">Tema de la app</string>
     <string name="pref_import_blocker_msg">Importar reglas de bloqueo desde Blocker, cada archivo contiene reglas para un solo paquete.</string>
-    <string name="pref_import_watt_msg">Importar reglas de bloqueo desde Watt, cada archivo que contiene las reglas para un solo paquete nombrado como packagename.xml etc.</string>
+    <string name="pref_import_watt_msg">Importar reglas de bloqueo desde Watt, cada archivo que contiene las reglas para un solo paquete nombrado como packagename.xml&lt;/tt&gt;&lt;/tt&gt; etc.</string>
     <string name="pref_import_msg">Importar reglas de bloqueo previamente exportadas desde el App Manager.</string>
     <string name="pref_export_msg">Exportar reglas de bloqueo configuradas sin App Manager al almacenamiento externo.</string>
     <string name="keyboard_type">Tipo de teclado</string>
@@ -479,7 +479,7 @@
         <item quantity="other">No se pudo respaldar %1$d apps</item>
     </plurals>
     <string name="restore">Restaurar (Restore)</string>
-    <string name="input_app_ops_description">Introducir nombre y/o constantes de la app op con espacios, por ejemplo (WAKE_LOCK 63 72 CAMERA) etc.</string>
+    <string name="input_app_ops_description">Introducir nombre y/o constantes de la app op con espacios, por ejemplo &lt;/tt&gt;WAKE_LOCK 63 72 CAMERA&lt;/tt&gt; etc.</string>
     <plurals name="alert_failed_to_disable_background">
         <item quantity="one">No se pudo evitar que la app %1$d se ejecutara en segundo plano</item>
         <item quantity="other">No se pudo evitar que la apps %1$d se ejecutaran en segundo plano</item>
@@ -661,7 +661,7 @@
         <item quantity="other">No pudo ser habilitado %1$d apps</item>
     </plurals>
     <string name="input_app_ops">Introducir app ops</string>
-    <string name="clear_data_from_uninstalled_apps_description">Limpiar datos desde apps que son desinstaladas con DONT_DELETE_DATA flag</string>
+    <string name="clear_data_from_uninstalled_apps_description">Limpiar datos desde las aplicaciones que son desinstaladas con &lt;/tt&gt;DONT_DELETE_DATA&lt;/tt&gt; flag</string>
     <string name="ago">hace</string>
     <plurals name="alert_failed_to_force_stop">
         <item quantity="one">No se pudo forzar la detención %1$d app</item>
@@ -845,4 +845,6 @@
     <string name="isolated">Aislado</string>
     <string name="last_actions">Últimas acciones</string>
     <string name="pref_enable_disable_features_msg">Activar o desactivar funciones en el App Manager.</string>
+    <string name="input_app_ops_description_profile">"Introducir los nombres de las operaciones de aplicación y/o las constantes con espacios, por ejemplo, &lt;tt&gt;WAKE_LOCK  63 72 CAMERA&lt;/tt&gt;, etc. Utiliza &lt;tt&gt;*&lt;/tt&gt; para aplicar todas las operaciones de aplicación configuradas."</string>
+    <string name="user_with_id">Usuario: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"user_id\" example=\"0\"&gt;%1$d&lt;/xliff:g&gt;</string>
 </resources>
