@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="path_permissions">Quyền đường dẫn</string>
     <string name="grant_uri_permission">Cấp quyền cho URI</string>
     <string name="flags">Cờ</string>
@@ -89,4 +89,98 @@
         <item quantity="other">Không thể vô hiệu hóa trình theo dõi từ ứng dụng %1$d</item>
     </plurals>
     <string name="failed_to_grant_permission">Không thể cấp quyền</string>
+    <string name="no_configurations">Không có cấu hình</string>
+    <string name="input_features">Các tính năng nhập vào</string>
+    <string name="sort_by_target_sdk">SDK mục tiêu</string>
+    <string name="data_usage_msg">Sử dụng dữ liệu từ lần khởi động cuối</string>
+    <string name="data_transmitted">Dữ liệu đã truyền đi</string>
+    <string name="data_received">Dữ liệu đã nhận</string>
+    <string name="error_verbose_pin_shortcut">Launcher hiện tại không hỗ trợ PinShortcut. Không thể tạo lối tắt.</string>
+    <string name="empty_package_name">Tên gói trống</string>
+    <string name="main_activity">Hoạt động chính</string>
+    <string name="user_id">ID người dùng</string>
+    <string name="installer_app">Ứng dụng cài đặt</string>
+    <string name="sdk_flags">Cờ</string>
+    <string name="sdk_max">Mục tiêu</string>
+    <string name="sdk_min">Thấp nhất</string>
+    <plurals name="alert_failed_to_enable">
+        <item quantity="other">Không thể bật %1$d ứng dụng</item>
+    </plurals>
+    <string name="filter_running_apps">Ứng dụng đang chạy</string>
+    <string name="trackers">Trình theo dõi</string>
+    <string name="installed_version">Phiên bản đã cài đặt</string>
+    <string name="filter_disabled_apps">Ứng dụng đã tắt</string>
+    <string name="select_all">Chọn tất cả</string>
+    <string name="security">Bảo mật</string>
+    <string name="battery">Pin</string>
+    <string name="encrypted">Đã mã hoá</string>
+    <string name="no_matching_package_found">Không có gói trùng khớp được tìm thấy</string>
+    <string name="block_unblock_trackers">Chặn/bỏ chặn trình theo dõi</string>
+    <string name="unblock">Bỏ chặn</string>
+    <string name="block">Chặn</string>
+    <string name="one_click_ops">Hoạt động một chạm</string>
+    <string name="never_ask">Không bao giờ hỏi</string>
+    <string name="simple">Đơn giản</string>
+    <string name="add">Thêm</string>
+    <string name="the_operation_was_successful">Đã xong</string>
+    <plurals name="alert_failed_to_disable_background">
+        <item quantity="other">Không thể ngăn chặn %1$d ứng dụng chạy trong nền</item>
+    </plurals>
+    <plurals name="alert_failed_to_uninstall">
+        <item quantity="other">Không thể gỡ cài đặt %1$d ứng dụng</item>
+    </plurals>
+    <plurals name="alert_failed_to_disable">
+        <item quantity="other">Không thể tắt %1$d ứng dụng</item>
+    </plurals>
+    <string name="copy">Sao chép</string>
+    <string name="close">Đóng</string>
+    <string name="no_root">Không có root</string>
+    <string name="root">Root</string>
+    <string name="user_profile_with_id">Cấu hình: %1$s (%2$d)</string>
+    <string name="advanced">Nâng cao</string>
+    <string name="enabled">Đã bật</string>
+    <string name="choose">Chọn</string>
+    <string name="clear_data_from_uninstalled_apps">Xoá dữ liệu từ các ứng dụng đã gỡ cài đặt</string>
+    <string name="users">Người dùng</string>
+    <string name="languages">Ngôn ngữ</string>
+    <string name="manufacturer">Nhà sản xuất</string>
+    <string name="magisk_hide_enabled">MagiskHide</string>
+    <string name="string_value">Giá trị xâu</string>
+    <string name="saving_failed">Lưu thất bại, hãy thử lại.</string>
+    <string name="saved_successfully">Đã lưu</string>
+    <string name="deletion_failed">Xoá thất bại</string>
+    <string name="deleted_successfully">Đã xoá</string>
+    <string name="delete">Xoá</string>
+    <string name="backup_restore">Sao lưu/Khôi phục</string>
+    <string name="sort_by_wifi_data">Dữ liệu Wi-Fi</string>
+    <string name="state_unknown">Chưa biết</string>
+    <string name="state_waking">Đang thức giấc</string>
+    <string name="state_dead">Đã chết</string>
+    <string name="state_device_io">I/O Thiết bị</string>
+    <string name="state_sleeping">Đang ngủ</string>
+    <string name="state_locked_memory">Bộ nhớ bị khoá</string>
+    <string name="state_low_priority">Ưu tiên thấp</string>
+    <string name="state_high_priority">Ưu tiên cao</string>
+    <string name="failed_to_stop">Không thể dừng &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.</string>
+    <string name="force_stop">Buộc dừng</string>
+    <string name="failed_to_enable">Không thể bật &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.</string>
+    <string name="failed_to_disable">Không thể tắt &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.</string>
+    <string name="enable">Bật</string>
+    <string name="disable">Tắt</string>
+    <string name="stopped">Đã dừng</string>
+    <string name="termux">Termux</string>
+    <plurals name="alert_failed_to_force_stop">
+        <item quantity="other">Không thể buộc dừng %1$d ứng dụng</item>
+    </plurals>
+    <string name="version_name_with_code">Phiên bản &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"version_name\" example=\"2.5.17\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"version_code\" example=\"365\"&gt;%2$d&lt;/xliff:g&gt;)</string>
+    <string name="sort">Sắp xếp</string>
+    <string name="obb_size">Obb</string>
+    <string name="cache_size">Bộ nhớ đệm</string>
+    <string name="data_size">Dữ liệu</string>
+    <string name="about">Giới thiệu</string>
+    <string name="error">Lỗi</string>
+    <string name="sort_by_domain">Ứng dụng người dùng trước</string>
+    <string name="sort_by_package_name">Tên gói</string>
+    <string name="sort_by_app_label">Nhãn ứng dụng</string>
+    <string name="loading">Đang tải…</string>
 </resources>
