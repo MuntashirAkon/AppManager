@@ -24,6 +24,8 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.RemoteException;
 import androidx.annotation.NonNull;
+import androidx.annotation.WorkerThread;
+
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
@@ -165,6 +167,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
      * @param context    Application Context
      * @param userHandle The user to apply rules
      */
+    @WorkerThread
     public static void applyAllRules(@NonNull Context context, int userHandle) {
         // Apply all rules from conf folder
         File confPath = new File(context.getFilesDir(), "conf");
@@ -322,6 +325,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
      *
      * @param apply Whether to apply the rules or remove them altogether
      */
+    @WorkerThread
     public void applyRules(boolean apply) {
         try {
             // Validate components

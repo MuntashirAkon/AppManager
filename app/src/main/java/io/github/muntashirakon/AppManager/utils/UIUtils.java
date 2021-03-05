@@ -250,6 +250,11 @@ public class UIUtils {
         Toast.makeText(appContext, appContext.getString(res, args), Toast.LENGTH_LONG).show();
     }
 
+    public static void displayLongToastPl(@PluralsRes int res, int count, Object... args) {
+        Context appContext = AppManager.getContext();
+        Toast.makeText(appContext, appContext.getResources().getQuantityString(res, count, args), Toast.LENGTH_LONG).show();
+    }
+
     @NonNull
     private static Spannable charSequenceToSpannable(@NonNull CharSequence text) {
         if (text instanceof Spannable) {

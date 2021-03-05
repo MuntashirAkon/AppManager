@@ -36,6 +36,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.WorkerThread;
+
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
@@ -93,6 +95,7 @@ public final class ComponentUtils {
         return trackers;
     }
 
+    @WorkerThread
     @NonNull
     public static List<UserPackagePair> blockTrackingComponents(@NonNull Collection<UserPackagePair> userPackagePairs) {
         List<UserPackagePair> failedPkgList = new ArrayList<>();
@@ -112,6 +115,7 @@ public final class ComponentUtils {
         return failedPkgList;
     }
 
+    @WorkerThread
     @NonNull
     public static List<UserPackagePair> unblockTrackingComponents(@NonNull Collection<UserPackagePair> userPackagePairs) {
         List<UserPackagePair> failedPkgList = new ArrayList<>();
@@ -131,6 +135,7 @@ public final class ComponentUtils {
         return failedPkgList;
     }
 
+    @WorkerThread
     @NonNull
     public static List<UserPackagePair> blockFilteredComponents(@NonNull Collection<UserPackagePair> userPackagePairs, String[] signatures) {
         List<UserPackagePair> failedPkgList = new ArrayList<>();
@@ -150,6 +155,7 @@ public final class ComponentUtils {
         return failedPkgList;
     }
 
+    @WorkerThread
     @NonNull
     public static List<UserPackagePair> unblockFilteredComponents(@NonNull Collection<UserPackagePair> userPackagePairs, String[] signatures) {
         List<UserPackagePair> failedPkgList = new ArrayList<>();
@@ -192,6 +198,7 @@ public final class ComponentUtils {
         return packages;
     }
 
+    @WorkerThread
     public static void removeAllRules(@NonNull String packageName, int userHandle) {
         int uid = PackageUtils.getAppUid(new UserPackagePair(packageName, userHandle));
         try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName, userHandle)) {

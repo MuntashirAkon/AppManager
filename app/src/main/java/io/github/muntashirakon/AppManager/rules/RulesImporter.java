@@ -32,6 +32,8 @@ import java.util.StringTokenizer;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
+
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
@@ -120,6 +122,7 @@ public class RulesImporter implements Closeable {
         mPackagesToImport = packageNames;
     }
 
+    @WorkerThread
     public void applyRules(boolean commitChanges) {
         if (mPackagesToImport == null) mPackagesToImport = getPackages();
         // When #setPackagesToImport(List<String>) is used, ComponentBlocker can be null

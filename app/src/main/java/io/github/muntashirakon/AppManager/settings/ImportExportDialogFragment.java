@@ -43,6 +43,7 @@ import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -96,12 +97,14 @@ public class ImportExportDialogFragment extends DialogFragment {
                     // Back button pressed.
                     return;
                 }
-                Pair<Boolean, Integer> status = ExternalComponentsImporter.applyFromWatt(activity.getApplicationContext(), uris, Users.getUsersHandles());
-                if (!status.first) {  // Not failed
-                    Toast.makeText(getContext(), R.string.the_import_was_successful, Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(getContext(), getResources().getQuantityString(R.plurals.failed_to_import_files, status.second, status.second), Toast.LENGTH_LONG).show();
-                }
+                new Thread(() -> {
+                    Pair<Boolean, Integer> status = ExternalComponentsImporter.applyFromWatt(activity.getApplicationContext(), uris, Users.getUsersHandles());
+                    if (!status.first) {  // Not failed
+                        UIUtils.displayLongToast(R.string.the_import_was_successful);
+                    } else {
+                        UIUtils.displayLongToastPl(R.plurals.failed_to_import_files, status.second, status.second);
+                    }
+                }).start();
                 requireDialog().dismiss();
             });
     private final ActivityResultLauncher<String> importFromBlocker = registerForActivityResult(
@@ -111,12 +114,14 @@ public class ImportExportDialogFragment extends DialogFragment {
                     // Back button pressed.
                     return;
                 }
-                Pair<Boolean, Integer> status = ExternalComponentsImporter.applyFromBlocker(activity.getApplicationContext(), uris, Users.getUsersHandles());
-                if (!status.first) {  // Not failed
-                    Toast.makeText(getContext(), R.string.the_import_was_successful, Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(getContext(), getResources().getQuantityString(R.plurals.failed_to_import_files, status.second, status.second), Toast.LENGTH_LONG).show();
-                }
+                new Thread(() -> {
+                    Pair<Boolean, Integer> status = ExternalComponentsImporter.applyFromBlocker(activity.getApplicationContext(), uris, Users.getUsersHandles());
+                    if (!status.first) {  // Not failed
+                        UIUtils.displayLongToast(R.string.the_import_was_successful);
+                    } else {
+                        UIUtils.displayLongToastPl(R.plurals.failed_to_import_files, status.second, status.second);
+                    }
+                }).start();
                 requireDialog().dismiss();
             });
 

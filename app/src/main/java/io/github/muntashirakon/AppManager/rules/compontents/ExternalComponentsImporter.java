@@ -39,6 +39,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.WorkerThread;
+
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
@@ -54,6 +56,7 @@ import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabled
  * Import components from external apps like Blocker, MyAndroidTools, Watt
  */
 public class ExternalComponentsImporter {
+    @WorkerThread
     @NonNull
     public static List<UserPackagePair> setModeToFilteredAppOps(@NonNull Collection<UserPackagePair> userPackagePairs, int[] appOps, @AppOpsManager.Mode int mode) {
         List<UserPackagePair> failedPkgList = new ArrayList<>();
@@ -78,6 +81,7 @@ public class ExternalComponentsImporter {
         return failedPkgList;
     }
 
+    @WorkerThread
     @NonNull
     public static List<String> applyFromExistingBlockList(@NonNull List<String> packageNames, int userHandle) {
         List<String> failedPkgList = new ArrayList<>();
@@ -99,6 +103,7 @@ public class ExternalComponentsImporter {
         return failedPkgList;
     }
 
+    @WorkerThread
     @NonNull
     public static Pair<Boolean, Integer> applyFromBlocker(@NonNull Context context, @NonNull List<Uri> uriList, int[] userHandles) {
         boolean failed = false;
@@ -117,6 +122,7 @@ public class ExternalComponentsImporter {
         return new Pair<>(failed, failedCount);
     }
 
+    @WorkerThread
     @NonNull
     public static Pair<Boolean, Integer> applyFromWatt(@NonNull Context context, @NonNull List<Uri> uriList, int[] userHandles) {
         boolean failed = false;
@@ -141,6 +147,7 @@ public class ExternalComponentsImporter {
      * @param context Application context
      * @param fileUri File URI
      */
+    @WorkerThread
     private static void applyFromWatt(@NonNull Context context, Uri fileUri, int userHandle) throws FileNotFoundException {
         String filename = IOUtils.getFileName(context.getContentResolver(), fileUri);
         if (filename == null) {
@@ -170,6 +177,7 @@ public class ExternalComponentsImporter {
      * @param context Application context
      * @param uri     File URI
      */
+    @WorkerThread
     @SuppressLint("WrongConstant")
     private static void applyFromBlocker(@NonNull Context context, Uri uri, int userHandle)
             throws Exception {

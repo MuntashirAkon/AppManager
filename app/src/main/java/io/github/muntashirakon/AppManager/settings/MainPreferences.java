@@ -182,13 +182,16 @@ public class MainPreferences extends PreferenceFragmentCompat {
             return true;
         });
         // Global blocking enabled
-        SwitchPreferenceCompat gcb = Objects.requireNonNull(findPreference("global_blocking_enabled"));
+        final SwitchPreferenceCompat gcb = Objects.requireNonNull(findPreference("global_blocking_enabled"));
         gcb.setChecked(AppPref.isGlobalBlockingEnabled());
         gcb.setOnPreferenceChangeListener((preference, isEnabled) -> {
             if (AppPref.isRootEnabled() && (boolean) isEnabled) {
-                // Apply all rules immediately if GCB is true
-                int userHandle = Users.getCurrentUserHandle();
-                ComponentsBlocker.applyAllRules(activity, userHandle);
+                new Thread(() -> {
+                    // Apply all rules immediately if GCB is true
+                    synchronized (gcb) {
+                        ComponentsBlocker.applyAllRules(activity, Users.getCurrentUserHandle());
+                    }
+                }).start();
             }
             return true;
         });
