@@ -59,15 +59,15 @@
     <!-- &#8230; = ... -->
     <string name="credits_message">"A los autores de
 \n- The Android Open Source Project
-\n- &lt;a href=\"https://bitbucket.org/oF2pks/fdroid-applications-info\"&gt;Apps_packages Info&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/butzist/ActivityLauncher\"&gt;Activity Launcher&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/billthefarmer/editor\"&gt;Editor&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/zhaobao/AppsMonitor\"&gt;AppsMonitor&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/tuyafeng/Watt\"&gt;Watt&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/8enet/AppOpsX\"&gt;AppOpsX&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/Aefyr/SAI\"&gt;SAI&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/RikkaApps/Shizuku\"&gt;Shizuku&lt;/a&gt;
-\nLogo credit: &lt;a href=\"https://github.com/Atrate\"&gt;Atrate&lt;/a&gt;. "</string>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
+\n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
+\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
+\n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://github.com/Aefyr/SAI">SAI</a>
+\n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
+\nLogo credit: <a href="https://github.com/Atrate">Atrate</a>. "</string>
     <string name="word_wrap">Cambiar el formato de las palabras</string>
     <string name="touchscreen">Pantalla táctil</string>
     <string name="navigation">Navegación</string>
@@ -845,6 +845,6 @@
     <string name="isolated">Aislado</string>
     <string name="last_actions">Últimas acciones</string>
     <string name="pref_enable_disable_features_msg">Activar o desactivar funciones en el App Manager.</string>
-    <string name="input_app_ops_description_profile">"Introducir los nombres de las operaciones de aplicación y/o las constantes con espacios, por ejemplo, &lt;tt&gt;WAKE_LOCK  63 72 CAMERA&lt;/tt&gt;, etc. Utiliza &lt;tt&gt;*&lt;/tt&gt; para aplicar todas las operaciones de aplicación configuradas."</string>
-    <string name="user_with_id">Usuario: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"user_id\" example=\"0\"&gt;%1$d&lt;/xliff:g&gt;</string>
+    <string name="input_app_ops_description_profile">"Introducir los nombres de las operaciones de aplicación y/o las constantes con espacios, por ejemplo, <tt>WAKE_LOCK  63 72 CAMERA</tt>, etc. Utiliza <tt>*</tt> para aplicar todas las operaciones de aplicación configuradas."</string>
+    <string name="user_with_id">Usuario: <xliff:g id="user_id" example="0">%1$d</xliff:g></string>
 </resources>

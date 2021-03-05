@@ -161,10 +161,10 @@
     <string name="state_locked_memory">Bộ nhớ bị khoá</string>
     <string name="state_low_priority">Ưu tiên thấp</string>
     <string name="state_high_priority">Ưu tiên cao</string>
-    <string name="failed_to_stop">Không thể dừng &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.</string>
+    <string name="failed_to_stop">Không thể dừng <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="force_stop">Buộc dừng</string>
-    <string name="failed_to_enable">Không thể bật &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.</string>
-    <string name="failed_to_disable">Không thể tắt &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.</string>
+    <string name="failed_to_enable">Không thể bật <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="failed_to_disable">Không thể tắt <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="enable">Bật</string>
     <string name="disable">Tắt</string>
     <string name="stopped">Đã dừng</string>
@@ -172,7 +172,7 @@
     <plurals name="alert_failed_to_force_stop">
         <item quantity="other">Không thể buộc dừng %1$d ứng dụng</item>
     </plurals>
-    <string name="version_name_with_code">Phiên bản &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"version_name\" example=\"2.5.17\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"version_code\" example=\"365\"&gt;%2$d&lt;/xliff:g&gt;)</string>
+    <string name="version_name_with_code">Phiên bản <xliff:g id="version_name" example="2.5.17">%1$s</xliff:g> (<xliff:g id="version_code" example="365">%2$d</xliff:g>)</string>
     <string name="sort">Sắp xếp</string>
     <string name="obb_size">Obb</string>
     <string name="cache_size">Bộ nhớ đệm</string>
