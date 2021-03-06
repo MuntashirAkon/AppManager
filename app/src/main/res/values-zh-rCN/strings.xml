@@ -763,7 +763,7 @@
     <string name="size">尺寸</string>
     <string name="density">密度</string>
     <string name="screen">屏幕</string>
-    <string name="hardware">硬體</string>
+    <string name="hardware">硬件</string>
     <string name="permissive">Permissive</string>
     <string name="enforcing">Enforcing</string>
     <string name="failed_to_enable_magisk_hide">无法启用 MagiskHide</string>
