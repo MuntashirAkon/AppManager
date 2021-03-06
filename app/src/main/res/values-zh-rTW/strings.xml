@@ -43,13 +43,13 @@
     <string name="tested_signatures_on_classes_and_time_taken">經過測試 &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"signature_no\" example=\"342\"&gt;%1$d&lt;/xliff:g&gt; signatures on &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"6000\"&gt;%2$d&lt;/xliff:g&gt; classes.
 \n耗費的時間 &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"time\" example=\"10000\"&gt;%3$d&lt;/xliff:g&gt; ms (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"iteration_no\" example=\"100000\"&gt;%4$d&lt;/xliff:g&gt; 迭代).</string>
     <plurals name="other_trackers_and_classes">
-        <item quantity="other">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"tracker_no\" example=\"8\"&gt;%1$d&lt;/xliff:g&gt; trackers with &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%2$d&lt;/xliff:g&gt; classes</item>
+        <item quantity="other">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"tracker_no\" example=\"8\"&gt;%1$d&lt;/xliff:g&gt; 帶有 &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt; %2$d &lt;/xliff:g&gt; 類的追蹤器</item>
     </plurals>
     <plurals name="two_trackers_and_classes">
-        <item quantity="other">2 trackers with &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; classes</item>
+        <item quantity="other">2 個追蹤器，帶 &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; 類</item>
     </plurals>
     <plurals name="tracker_and_classes">
-        <item quantity="other">1 tracker with &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; class</item>
+        <item quantity="other">1 個追蹤器，帶 &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; 類</item>
     </plurals>
     <string name="starting_activity">開始活動：&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"activity_name\" example=\".main.MainActivity\"&gt;%1$s&lt;/xliff:g&gt;</string>
     <string name="pref_about_msg">App Manager版本，授權協議，致謝名單等。</string>
@@ -61,38 +61,38 @@
     <string name="window_size">視窗尺寸</string>
     <string name="input_keystore_alias_pass_description">插入別名的密碼&lt;b&gt;%1$s&lt;/b&gt; 。如果密碼與KeyStore密碼相同，則可以將其保留為空。</string>
     <string name="input_keystore_alias_pass">別名密碼&lt;b&gt;%1$s&lt;/b&gt;</string>
-    <string name="user_profile_with_id">個人資料：+%1$s +（%2$d）</string>
-    <string name="failed_to_uninstall_updates">無法解除安裝的更新&lt;ns0:g xmlns:ns0=\"urn:oasis:names:tc:xliff:document:1.2\" example=\"App Manager\" id=\"app_name\"&gt;%1$s&lt;/ns0:g&gt; .</string>
-    <string name="update_uninstalled_successfully">的更新&lt;ns0:g xmlns:ns0=\"urn:oasis:names:tc:xliff:document:1.2\" example=\"App Manager\" id=\"app_name\"&gt;%1$s&lt;/ns0:g&gt; 已被解除安裝。</string>
-    <string name="compression_method">壓縮方式：&lt;ns0:g xmlns:ns0=\"urn:oasis:names:tc:xliff:document:1.2\" example=\"GZip\" id=\"compression_method\"&gt;%1$s&lt;/ns0:g&gt;</string>
-    <string name="process_state_with_extra">狀態：&lt;ns0:g xmlns:ns0=\"urn:oasis:names:tc:xliff:document:1.2\" example=\"Sleeping\" id=\"process_state\"&gt;%1$s&lt;/ns0:g&gt; (&lt;ns0:g xmlns:ns0=\"urn:oasis:names:tc:xliff:document:1.2\" example=\"High priority\" id=\"state_extra\"&gt;%2$s&lt;/ns0:g&gt; )</string>
-    <string name="process_state">狀態：&lt;ns0:g xmlns:ns0=\"urn:oasis:names:tc:xliff:document:1.2\" example=\"Sleeping\" id=\"process_state\"&gt;%1$s&lt;/ns0:g&gt;</string>
-    <string name="locale_split_for_base_apk">&lt;ns0:g xmlns:ns0=\"urn:oasis:names:tc:xliff:document:1.2\" example=\"English\" id=\"split_name\"&gt;%1$s&lt;/ns0:g&gt; 基本語言環境APK</string>
-    <string name="locale_split_for_feature">&lt;ns0:g xmlns:ns0=\"urn:oasis:names:tc:xliff:document:1.2\" example=\"English\" id=\"split_name\"&gt;%1$s&lt;/ns0:g&gt; 功能的語言環境&lt;ns0:g xmlns:ns0=\"urn:oasis:names:tc:xliff:document:1.2\" example=\"Visualizer\" id=\"feature_name\"&gt;%2$s&lt;/ns0:g&gt;</string>
-    <string name="abi_split_for_base_apk">&lt;ns0:g xmlns:ns0=\"urn:oasis:names:tc:xliff:document:1.2\" example=\"arm64_v8a\" id=\"split_name\"&gt;%1$s&lt;/ns0:g&gt; 基本代號APK</string>
-    <string name="abi_split_for_feature">&lt;ns0:g xmlns:ns0=\"urn:oasis:names:tc:xliff:document:1.2\" example=\"arm64_v8a\" id=\"split_name\"&gt;%1$s&lt;/ns0:g&gt; 的代碼&lt;ns0:g xmlns:ns0=\"urn:oasis:names:tc:xliff:document:1.2\" example=\"Visualizer\" id=\"feature_name\"&gt;%2$s&lt;/ns0:g&gt;</string>
-    <string name="density_split_for_base_apk">&lt;ns0:g xmlns:ns0=\"urn:oasis:names:tc:xliff:document:1.2\" example=\"xxdpi\" id=\"split_name\"&gt;%1$s&lt;/ns0:g&gt; (&lt;ns0:g xmlns:ns0=\"urn:oasis:names:tc:xliff:document:1.2\" example=\"480\" id=\"dpi_no\"&gt;%2$d&lt;/ns0:g&gt; 基本APK的DPI）資源</string>
-    <string name="density_split_for_feature">&lt;ns0:g xmlns:ns0=\"urn:oasis:names:tc:xliff:document:1.2\" example=\"xxdpi\" id=\"split_name\"&gt;%1$s&lt;/ns0:g&gt; (&lt;ns0:g xmlns:ns0=\"urn:oasis:names:tc:xliff:document:1.2\" example=\"480\" id=\"dpi_no\"&gt;%2$d&lt;/ns0:g&gt; DPI）功能資源&lt;ns0:g xmlns:ns0=\"urn:oasis:names:tc:xliff:document:1.2\" example=\"Visualizer\" id=\"feature_name\"&gt;%3$s&lt;/ns0:g&gt;</string>
-    <string name="unknown_split_for_base_apk">&lt;ns0:g xmlns:ns0=\"urn:oasis:names:tc:xliff:document:1.2\" example=\"some_split\" id=\"split_name\"&gt;%1$s&lt;/ns0:g&gt; 對於基礎APK</string>
-    <string name="unknown_split_for_feature">&lt;ns0:g xmlns:ns0=\"urn:oasis:names:tc:xliff:document:1.2\" example=\"some_split\" id=\"split_name\"&gt;%1$s&lt;/ns0:g&gt; 功能&lt;ns0:g xmlns:ns0=\"urn:oasis:names:tc:xliff:document:1.2\" example=\"Visualizer\" id=\"feature_name\"&gt;%2$s&lt;/ns0:g&gt;</string>
-    <string name="split_feature_name">特徵：&lt;ns0:g xmlns:ns0=\"urn:oasis:names:tc:xliff:document:1.2\" example=\"Visualizer\" id=\"feature_name\"&gt;%1$s&lt;/ns0:g&gt;</string>
+    <string name="user_profile_with_id">設定檔：+%1$s +（%2$d）</string>
+    <string name="failed_to_uninstall_updates">無法解除安裝 &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt; %1$s &lt;/xliff:g&gt; 的更新。</string>
+    <string name="update_uninstalled_successfully">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt; %1$s &lt;/xliff:g&gt; 的更新已解除安裝。</string>
+    <string name="compression_method">壓縮方法：&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"compression_method\" example=\"GZip\"&gt;%1$s&lt;/xliff:g&gt;</string>
+    <string name="process_state_with_extra">国家。&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"process_state\" example=\"Sleeping\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"state_extra\" example=\"High priority\"&gt;%2$s&lt;/xliff:g&gt;)</string>
+    <string name="process_state">狀態： &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"process_state\" example=\"Sleeping\"&gt;%1$s&lt;/xliff:g&gt;</string>
+    <string name="locale_split_for_base_apk">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"English\"&gt;%1$s&lt;/xliff:g&gt;基礎 APK的語言</string>
+    <string name="locale_split_for_feature">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"English\"&gt;%1$s&lt;/xliff:g&gt; 功能的著域 &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt; %2$s &lt;/xliff:g&gt;</string>
+    <string name="abi_split_for_base_apk">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"arm64_v8a\"&gt;%1$s&lt;/xliff:g&gt;基礎APK程式碼</string>
+    <string name="abi_split_for_feature">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"arm64_v8a\"&gt;%1$s&lt;/xliff:g&gt; &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt; %2$s &lt;/xliff:g&gt;</string>
+    <string name="density_split_for_base_apk">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"xxdpi\"&gt;%1$s&lt;/xliff:g&gt; （&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"dpi_no\" example=\"480\"&gt;%2$d&lt;/xliff:g&gt; DPI） 基礎 APK 資源</string>
+    <string name="density_split_for_feature">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"xxdpi\"&gt;%1$s&lt;/xliff:g&gt; （&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"dpi_no\" example=\"480\"&gt;%2$d&lt;/xliff:g&gt; DPI） 功能資源 &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt;%3$s&lt;/xliff:g&gt;</string>
+    <string name="unknown_split_for_base_apk">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"some_split\"&gt;%1$s&lt;/xliff:g&gt; 用於基礎 APK</string>
+    <string name="unknown_split_for_feature">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"some_split\"&gt;%1$s&lt;/xliff:g&gt; 功能 &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt;%2$s&lt;/xliff:g&gt;</string>
+    <string name="split_feature_name">特寫： &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt;%1$s&lt;/xliff:g&gt;</string>
     <string name="current_language">語言：+%1$s</string>
-    <string name="installer_error_blocked">安裝被封鎖&lt;ns0:g xmlns:ns0=\"urn:oasis:names:tc:xliff:document:1.2\" example=\"App Manager\" id=\"app_name\"&gt;%1$s&lt;/ns0:g&gt;</string>
+    <string name="installer_error_blocked">安裝被 &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt; %1$s &lt;/xliff:g&gt; 封鎖</string>
     <string name="pref_remove_all_rules_msg">將授予權限，應用程式操作和元件將還原為其預設值。</string>
     <plurals name="verified_with_warning">
         <item quantity="other">Verified with%d warning</item>
     </plurals>
     <plurals name="alert_failed_to_enable">
-        <item quantity="other">Could not enable%1$d app</item>
+        <item quantity="other">無法啟用%1$d應用程式</item>
     </plurals>
     <plurals name="alert_failed_to_set_app_ops">
-        <item quantity="other">Could not set app ops for%1$d app</item>
+        <item quantity="other">無法為 %1$d 應用設置應用操作</item>
     </plurals>
     <plurals name="alert_failed_to_block_components">
-        <item quantity="other">Could not block components for%1$d app</item>
+        <item quantity="other">無法阻止%1$d應用程式的元件</item>
     </plurals>
     <plurals name="alert_failed_to_unblock_trackers">
-        <item quantity="other">Could not unblock trackers from%1$d app</item>
+        <item quantity="other">無法從 %1$d 應用程式中解除封鎖追蹤器</item>
     </plurals>
     <plurals name="alert_failed_to_delete_backup">
         <item quantity="other">Could not delete%1$d backup</item>
@@ -107,8 +107,8 @@
         <item quantity="other">Could not back up%1$d app</item>
     </plurals>
     <string name="backup">備份</string>
-    <string name="failed_to_install_package_name">無法安裝&lt;ns0:g xmlns:ns0=\"urn:oasis:names:tc:xliff:document:1.2\" example=\"App Manager\" id=\"app_name\"&gt;%1$s&lt;/ns0:g&gt;</string>
-    <string name="package_name_is_installed_successfully">&lt;ns0:g xmlns:ns0=\"urn:oasis:names:tc:xliff:document:1.2\" example=\"App Manager\" id=\"app_name\"&gt;%1$s&lt;/ns0:g&gt; 已安裝</string>
+    <string name="failed_to_install_package_name">無法安裝 &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt; %1$s &lt;/xliff:g&gt;</string>
+    <string name="package_name_is_installed_successfully">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; 已安裝</string>
     <string name="block_components_description">封鎖由給定簽名識別的所有元件</string>
     <string name="block_components_dots">塊元件…</string>
     <string name="block_unblock_trackers_description">封鎖或取消封鎖廣告並追蹤所有已安裝應用程式中的元件</string>
@@ -117,7 +117,7 @@
     <string name="source_code">原始碼</string>
     <string name="launch_app">開啟</string>
     <plurals name="alert_failed_to_disable_trackers">
-        <item quantity="other">Could not disable trackers from%1$d app</item>
+        <item quantity="other">無法停用%1$d應用程式的追蹤器</item>
     </plurals>
     <string name="sort_by_component_name">元件名稱</string>
     <string name="current_theme">目前主題：+%1$s</string>
@@ -145,9 +145,9 @@
     <plurals name="alert_failed_to_clear_data">
         <item quantity="other">Could not clear data from%1$d app</item>
     </plurals>
-    <string name="some_items_selected">&lt;ns0:g xmlns:ns0=\"urn:oasis:names:tc:xliff:document:1.2\" example=\"20\" id=\"selection_no\"&gt;%1$d&lt;/ns0:g&gt; 選定的</string>
-    <string name="user_and_uid">使用者：&lt;ns0:g xmlns:ns0=\"urn:oasis:names:tc:xliff:document:1.2\" example=\"root\" id=\"user_name\"&gt;%1$s&lt;/ns0:g&gt; (&lt;ns0:g xmlns:ns0=\"urn:oasis:names:tc:xliff:document:1.2\" example=\"0\" id=\"user_id\"&gt;%2$d&lt;/ns0:g&gt; )</string>
-    <string name="user_with_id">使用者：&lt;ns0:g xmlns:ns0=\"urn:oasis:names:tc:xliff:document:1.2\" example=\"0\" id=\"user_id\"&gt;%1$d&lt;/ns0:g&gt;</string>
+    <string name="some_items_selected">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"selection_no\" example=\"20\"&gt;%1$d&lt;/xliff:g&gt; 已選中</string>
+    <string name="user_and_uid">使用者： &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"user_name\" example=\"root\"&gt;%1$s&lt;/xliff:g&gt; （&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"user_id\" example=\"0\"&gt;%2$d&lt;/xliff:g&gt;）</string>
+    <string name="user_with_id">使用者： &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"user_id\" example=\"0\"&gt;%1$d&lt;/xliff:g&gt;</string>
     <string name="memory_virtual_memory">記憶體：+%1$s，+虛擬+記憶體：+%2$s</string>
     <string name="pid_and_ppid">處理程序+ ID：+%1$d，+父級+處理程序+ ID：+%2$d</string>
     <plurals name="failed_to_import_files">
@@ -156,10 +156,10 @@
     <string name="pref_import_blocker">從攔截器匯入</string>
     <string name="pref_import_export_blocking_rules_msg">匯入/匯出規則，從Watt或Blocker匯入外部規則。</string>
     <string name="pref_import_export_blocking_rules">匯入/匯出封鎖規則</string>
-    <string name="external_multiple_data_dir">外部資料目錄&lt;ns0:g xmlns:ns0=\"urn:oasis:names:tc:xliff:document:1.2\" example=\"1\" id=\"dir_no\"&gt;%1$d&lt;/ns0:g&gt;</string>
+    <string name="external_multiple_data_dir">外部資料目錄 &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"dir_no\" example=\"1\"&gt;%1$d&lt;/xliff:g&gt;</string>
     <string name="pref_global_blocking_enabled_msg">使您可以封鎖任何應用程式的任何元件，而無需顯式開啟該應用程式的封鎖功能。</string>
     <string name="pref_global_blocking_enabled">全域元件封鎖</string>
-    <string name="failed_to_stop">無法停止&lt;ns0:g xmlns:ns0=\"urn:oasis:names:tc:xliff:document:1.2\" example=\"App Manager\" id=\"app_name\"&gt;%1$s&lt;/ns0:g&gt; .</string>
+    <string name="failed_to_stop">無法停止 &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.</string>
     <string name="usage_min">%1$d +分鐘</string>
     <string name="task_affinity">任務親和性</string>
     <string name="launch">開啟</string>
@@ -183,7 +183,7 @@
     <string name="reverse">復原</string>
     <string name="os_version">作業系統版本</string>
     <string name="add">新增</string>
-    <string name="add_to_profile">新增到個人資料</string>
+    <string name="add_to_profile">新增到設定檔</string>
     <string name="initializing">初始化中…</string>
     <string name="allow_background">允許背景</string>
     <string name="reject_background">拒絕背景</string>
@@ -248,7 +248,7 @@
     <string name="size">尺寸</string>
     <string name="density">密度</string>
     <string name="screen">螢幕</string>
-    <string name="hardware">硬件</string>
+    <string name="hardware">硬體</string>
     <string name="permissive">寬容的</string>
     <string name="enforcing">強制執行</string>
     <string name="selinux">SELinux</string>
@@ -279,9 +279,9 @@
     <string name="profile_force_stop_msg">如果啟用，應用程式將被強制停止</string>
     <string name="profile_disable_msg">如果啟用，則將 Root 據狀態值停用/啟用應用程式</string>
     <string name="allow_routine_ops_msg">允許在常規操作中使用配置檔案</string>
-    <string name="profile_state">個人資料狀態</string>
+    <string name="profile_state">設定檔狀態</string>
     <string name="allow_routine_ops">允許例行操作</string>
-    <string name="current_mode">電流+模式：+%s</string>
+    <string name="current_mode">目前模式：%s</string>
     <string name="adb_over_tcp">通過TCP的ADB</string>
     <string name="pref_mode_of_operations">操作模式</string>
     <string name="send_selected">傳送選擇</string>
@@ -294,11 +294,11 @@
     <string name="select_user">選擇使用者</string>
     <string name="pref_show_users_in_installer_msg">顯示要安裝的外部應用程式之前要選擇的使用者清單。需要root或ADB。</string>
     <string name="pref_show_users_in_installer">在安裝程式中顯示使用者</string>
-    <string name="failed_to_duplicate_profile">無法複製個人資料</string>
+    <string name="failed_to_duplicate_profile">無法複製設定檔</string>
     <string name="duplicate">複製</string>
     <string name="new_profile">新的配置檔案</string>
     <string name="input_profile_name_description">配置檔案名稱不能包含任何空格。</string>
-    <string name="input_profile_name">個人資料名稱</string>
+    <string name="input_profile_name">設定檔名稱</string>
     <string name="un_apkm">UnApkm</string>
     <string name="in_progress">進行中</string>
     <string name="conversion_failed">轉換失敗。</string>
@@ -319,8 +319,8 @@
     <string name="app_data_will_be_lost">現有資料將丟失。</string>
     <string name="signature_mismatch_for_system_apps">無法安裝應用程式，因為具有不同簽名的系統應用程式具有此程序包名稱。</string>
     <string name="do_you_want_to_uninstall_and_install">您是否要再次解除安裝並安裝該應用程式？</string>
-    <string name="onboard">在船上</string>
-    <string name="packages">包</string>
+    <string name="onboard">本機</string>
+    <string name="packages">套件</string>
     <string name="usage_access_not_supported">由於相應的設定頁面不存在，因此無法要求使用權限。</string>
     <string name="non_critical_exts">非關鍵擴展</string>
     <string name="critical_exts">關鍵擴展</string>
@@ -363,9 +363,9 @@
     <string name="routine_ops">例行行動</string>
     <string name="apply_now">現在套用…</string>
     <string name="keystore">密鑰資源庫</string>
-    <string name="no_profiles">沒有個人資料</string>
+    <string name="no_profiles">沒有設定檔</string>
     <string name="presets">預設值</string>
-    <string name="profiles">個人資料</string>
+    <string name="profiles">設定檔</string>
     <string name="open_pgp_provider">OpenPGP提供者</string>
     <string name="systemless_app">無系統應用程式</string>
     <string name="cancel">取消</string>
@@ -477,19 +477,19 @@
     <string name="apply_to_system_apps_question">也適用於系統應用程式嗎？如果不確定，請選擇否。</string>
     <string name="apply_to_system_apps">應用程式於系統應用程式</string>
     <plurals name="signature_schemes_pl">
-        <item quantity="other">Signature scheme</item>
+        <item quantity="other">簽名方案</item>
     </plurals>
     <plurals name="missing_signatures">
-        <item quantity="other">%1$d signature missing</item>
+        <item quantity="other">%1$d 簽名缺失</item>
     </plurals>
     <plurals name="libraries">
-        <item quantity="other">%1$d library</item>
+        <item quantity="other">%1$d 庫</item>
     </plurals>
     <plurals name="classes">
-        <item quantity="other">%1$d class</item>
+        <item quantity="other">%1$d類</item>
     </plurals>
     <plurals name="backup_exists_are_you_sure">
-        <item quantity="other">Backup exists. Are you sure\?</item>
+        <item quantity="other">備份已存在。是否確定？</item>
     </plurals>
     <string name="backup_options">備份選項</string>
     <string name="delete_backup">刪除備份</string>
@@ -511,14 +511,14 @@
     <string name="filter">篩選</string>
     <string name="termux">Termux</string>
     <plurals name="no_of_splits">
-        <item quantity="other">%1$d split</item>
+        <item quantity="other">%1$d 拆分</item>
     </plurals>
     <string name="failed_to_parse_some_numbers">無法解析一些數字</string>
     <string name="only_works_in_root_or_adb_mode">僅適用於root或ADB模式</string>
     <string name="input_app_ops_description_profile">輸入應用程式操作名稱和/或帶空格的常量，例如&lt;tt&gt; WAKE_LOCK 63 72相機&lt;/tt&gt; 等使用&lt;tt&gt; *&lt;/tt&gt; 套用所有已配置的應用程式操作。</string>
     <string name="input_app_ops_description">輸入應用程式操作名稱和/或帶空格的常量，例如&lt;tt&gt; WAKE_LOCK 63 72相機&lt;/tt&gt; 等等。</string>
     <string name="input_app_ops">輸入應用程式操作</string>
-    <string name="filtered_packages">過濾包</string>
+    <string name="filtered_packages">過濾套件</string>
     <string name="input_signatures_description">輸入帶有空格的簽名，例如&lt;tt&gt; com.facebook org.app2 com.app3&lt;/tt&gt; 等等。</string>
     <string name="input_signatures">輸入簽名</string>
     <string name="failed_packages">失敗的套件</string>
@@ -539,7 +539,7 @@
         <item quantity="other">%1$d component</item>
     </plurals>
     <plurals name="no_of_trackers">
-        <item quantity="other">%1$d tracker</item>
+        <item quantity="other">%1$d 追蹤器</item>
     </plurals>
     <string name="manifest_viewer">清單檢視器</string>
     <string name="external_apk_no_app_op">外部APK沒有任何應用程式操作</string>
@@ -576,7 +576,7 @@
     <string name="touchscreen">觸摸屏</string>
     <string name="navigation">導航</string>
     <string name="keyboard_type">鍵盤類型</string>
-    <string name="pref_export">出口</string>
+    <string name="pref_export">匯出</string>
     <string name="pref_import">進口</string>
     <string name="ago">前</string>
     <string name="reject_time">拒絕時間</string>
@@ -606,14 +606,14 @@
     <string name="sort_by_screen_time">檢測時間</string>
     <string name="sort_by_last_used">最後使用</string>
     <plurals name="no_of_times_opened">
-        <item quantity="other">%1$d time</item>
+        <item quantity="other">%1$d 次</item>
     </plurals>
     <string name="external_data_dir">外部資料目錄</string>
     <string name="sort_by_blocked_components">先封鎖</string>
     <string name="sort_by_disabled_app">首先停用</string>
     <string name="exodus_link">εxodus鏈接</string>
     <string name="usage_yesterday">昨天</string>
-    <string name="patch_level">補丁程序級別</string>
+    <string name="patch_level">Android 安全性更新</string>
     <string name="backup_skip_signature_checks_description">對於還原由於校驗和驗證失敗而失敗的備份或具有與備份的簽名不同的APK簽名的備份很有用。</string>
     <string name="backup_multiple_description">使用單獨的命名備份而不是基本備份。</string>
     <string name="backup_rules_description">備份在App Manager中配置的規則。</string>
@@ -643,8 +643,8 @@
     <string name="security_providers">安全提供者</string>
     <string name="kernel">核心</string>
     <string name="manufacturer">製造商</string>
-    <string name="board_name">木板</string>
-    <string name="model">模型</string>
+    <string name="board_name">處理器代號</string>
+    <string name="model">機型</string>
     <string name="brand_name">品牌</string>
     <string name="pref_about_device_msg">基本裝置資訊，包括Android系統，CPU，GPU，RAM，電池等。</string>
     <string name="about_device">關於裝置</string>
@@ -687,7 +687,7 @@
     <string name="signing_keys">簽名密鑰</string>
     <string name="signature_schemes">簽名方案</string>
     <string name="only_works_in_root_mode">僅在root模式下可用</string>
-    <string name="app_settings">設定值</string>
+    <string name="app_settings">設定</string>
     <string name="pref_usage_access_enabled_msg">讓您檢視您的應用程式使用情況統計資訊和應用程式詳細資料。</string>
     <string name="pref_usage_access_enabled">使用權限</string>
     <string name="str_logo">標識</string>
@@ -697,7 +697,7 @@
     <string name="no_app_ops">沒有應用程式操作</string>
     <string name="app_ops">應用程式操作</string>
     <string name="app_size">應用程式</string>
-    <string name="total_size">全部的</string>
+    <string name="total_size">全部</string>
     <string name="storage_and_cache">儲存空間和快取</string>
     <string name="force_stop">強制停止</string>
     <string name="enable">使能夠</string>
