@@ -23,7 +23,7 @@
     <!-- &#8230; = ... -->
     <string name="system">系統</string>
     <string name="sort">種類</string>
-    <string name="version_name_with_code">版本 &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"version_name\" example=\"2.5.17\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"version_code\" example=\"365\"&gt;%2$d&lt;/xliff:g&gt;)</string>
+    <string name="version_name_with_code">版本 <xliff:g id="version_name" example="2.5.17">%1$s</xliff:g> (<xliff:g id="version_code" example="365">%2$d</xliff:g>)</string>
     <string name="app_info">應用程式資訊</string>
     <string name="system_app">系統應用程式</string>
     <string name="user_app">使用者應用程式</string>
@@ -33,34 +33,34 @@
     <string name="share_apk">分享APK</string>
     <string name="saved_successfully">已儲存</string>
     <string name="saving_failed">儲存失敗，請重試。</string>
-    <string name="failed_to_enable">無法啟用 &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.</string>
-    <string name="failed_to_disable">無法停用 &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.</string>
-    <string name="uninstalled_successfully">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; 已被解除安裝。</string>
-    <string name="failed_to_uninstall">無法解除安裝 &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.</string>
+    <string name="failed_to_enable">無法啟用 <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="failed_to_disable">無法停用 <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="uninstalled_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> 已被解除安裝。</string>
+    <string name="failed_to_uninstall">無法解除安裝 <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <plurals name="main_list_date_days">
-        <item quantity="other">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"last_update_date\" example=\"20/10/2020\"&gt;%1$s&lt;/xliff:g&gt; &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"day_no\" example=\"5\"&gt;%2$d&lt;/xliff:g&gt; 天</item>
+        <item quantity="other"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> 天</item>
     </plurals>
-    <string name="tested_signatures_on_classes_and_time_taken">經過測試 &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"signature_no\" example=\"342\"&gt;%1$d&lt;/xliff:g&gt; signatures on &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"6000\"&gt;%2$d&lt;/xliff:g&gt; classes.
-\n耗費的時間 &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"time\" example=\"10000\"&gt;%3$d&lt;/xliff:g&gt; ms (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"iteration_no\" example=\"100000\"&gt;%4$d&lt;/xliff:g&gt; 迭代).</string>
+    <string name="tested_signatures_on_classes_and_time_taken">經過測試 <xliff:g id="signature_no" example="342">%1$d</xliff:g> signatures on <xliff:g id="class_no" example="6000">%2$d</xliff:g> classes.
+\n耗費的時間 <xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> 迭代).</string>
     <plurals name="other_trackers_and_classes">
-        <item quantity="other">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"tracker_no\" example=\"8\"&gt;%1$d&lt;/xliff:g&gt; trackers with &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%2$d&lt;/xliff:g&gt; classes</item>
+        <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> trackers with <xliff:g id="class_no" example="50">%2$d</xliff:g> classes</item>
     </plurals>
     <plurals name="two_trackers_and_classes">
-        <item quantity="other">2 trackers with &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; classes</item>
+        <item quantity="other">2 trackers with <xliff:g id="class_no" example="50">%1$d</xliff:g> classes</item>
     </plurals>
     <plurals name="tracker_and_classes">
-        <item quantity="other">1 tracker with &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; class</item>
+        <item quantity="other">1 tracker with <xliff:g id="class_no" example="50">%1$d</xliff:g> class</item>
     </plurals>
-    <string name="starting_activity">開始活動：&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"activity_name\" example=\".main.MainActivity\"&gt;%1$s&lt;/xliff:g&gt;</string>
+    <string name="starting_activity">開始活動：<xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="pref_about_msg">App Manager版本，授權協議，致謝名單等。</string>
     <string name="instructions">說明</string>
     <string name="flags">旗標</string>
     <string name="launch_mode">開啟方式</string>
-    <string name="ssaid_info">SSAID（&lt;tt&gt; Settings.Secure.ANDROID_ID&lt;/tt&gt; ）是分配給每個應用程式的裝置標識字串（來自Android Oreo）。應用程式廣泛使用它來追蹤使用者。</string>
+    <string name="ssaid_info">SSAID（<tt> Settings.Secure.ANDROID_ID</tt> ）是分配給每個應用程式的裝置標識字串（來自Android Oreo）。應用程式廣泛使用它來追蹤使用者。</string>
     <string name="type_component_name">元件名稱</string>
     <string name="window_size">視窗尺寸</string>
-    <string name="input_keystore_alias_pass_description">插入別名的密碼&lt;b&gt;%1$s&lt;/b&gt; 。如果密碼與KeyStore密碼相同，則可以將其保留為空。</string>
-    <string name="input_keystore_alias_pass">別名密碼&lt;b&gt;%1$s&lt;/b&gt;</string>
+    <string name="input_keystore_alias_pass_description">插入別名的密碼<b>%1$s</b> 。如果密碼與KeyStore密碼相同，則可以將其保留為空。</string>
+    <string name="input_keystore_alias_pass">別名密碼<b>%1$s</b></string>
     <string name="user_profile_with_id">個人資料：+%1$s +（%2$d）</string>
     <string name="failed_to_uninstall_updates">無法解除安裝的更新&lt;ns0:g xmlns:ns0=\"urn:oasis:names:tc:xliff:document:1.2\" example=\"App Manager\" id=\"app_name\"&gt;%1$s&lt;/ns0:g&gt; .</string>
     <string name="update_uninstalled_successfully">的更新&lt;ns0:g xmlns:ns0=\"urn:oasis:names:tc:xliff:document:1.2\" example=\"App Manager\" id=\"app_name\"&gt;%1$s&lt;/ns0:g&gt; 已被解除安裝。</string>
@@ -123,7 +123,7 @@
     <string name="current_theme">目前主題：+%1$s</string>
     <string name="follow_system">跟隨系統</string>
     <string name="pref_import_blocker_msg">從Blocker匯入封鎖規則，每個檔案都包含單個程序包的規則。</string>
-    <string name="pref_import_watt_msg">從Watt匯入封鎖規則，每個檔案包含單個命名包的規則，如下所示：&lt;tt&gt; packagename.xml&lt;/tt&gt; 等等。</string>
+    <string name="pref_import_watt_msg">從Watt匯入封鎖規則，每個檔案包含單個命名包的規則，如下所示：<tt> packagename.xml</tt> 等等。</string>
     <string name="pref_import_msg">從App Manager匯入以前匯出的封鎖規則。</string>
     <string name="pref_export_msg">將在App Manager中配置的封鎖規則匯出到外部儲存空間。</string>
     <string name="export_failed">匯出失敗！</string>
@@ -165,7 +165,7 @@
     <string name="launch">開啟</string>
     <string name="filter_apps_without_backups">沒有備份的應用程式</string>
     <string name="uninstalled_apps">解除安裝的應用程式</string>
-    <string name="installer_app_message">選擇&lt;b&gt; 選擇&lt;/b&gt; 從已安裝的應用程式中選擇或選擇&lt;b&gt; 風俗&lt;/b&gt; 指定自訂程序包名稱。</string>
+    <string name="installer_app_message">選擇<b> 選擇</b> 從已安裝的應用程式中選擇或選擇<b> 風俗</b> 指定自訂程序包名稱。</string>
     <string name="specify_custom_name">風俗</string>
     <string name="verified_using_unreliable_hash">使用不可靠的哈希值進行了驗證</string>
     <string name="working_on_adb_mode">在ADB模式下運作</string>
@@ -238,7 +238,7 @@
     <string name="pref_backup_volume_msg">選擇將儲存空間備份的卷宗或磁碟。</string>
     <string name="backup_volume">備份卷宗</string>
     <string name="pref_backup_restore_msg">自訂備份/還原。</string>
-    <string name="disable_background_run_description">設定模式&lt;i&gt; 忽視&lt;/i&gt; 到以下應用程式操作：&lt;tt&gt; RUN_IN_BACKGROUND&lt;/tt&gt; （從Android 7.0開始）和&lt;tt&gt; RUN_ANY_IN_BACKGROUND&lt;/tt&gt; （來自Android 9）。</string>
+    <string name="disable_background_run_description">設定模式<i> 忽視</i> 到以下應用程式操作：<tt> RUN_IN_BACKGROUND</tt> （從Android 7.0開始）和<tt> RUN_ANY_IN_BACKGROUND</tt> （來自Android 9）。</string>
     <string name="failed_to_enable_magisk_hide">無法啟用MagiskHide</string>
     <string name="enable_magisk_hide">啟用MagiskHide</string>
     <string name="failed_to_disable_magisk_hide">無法停用MagiskHide</string>
@@ -266,7 +266,7 @@
     <string name="simple">簡單的</string>
     <string name="enabled">已啟用</string>
     <string name="choose">選擇</string>
-    <string name="input_permissions_description">輸入權限，帶空格，例如&lt;tt&gt; com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION&lt;/tt&gt; 等使用&lt;tt&gt; *&lt;/tt&gt; 套用所有權限。</string>
+    <string name="input_permissions_description">輸入權限，帶空格，例如<tt> com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION</tt> 等使用<tt> *</tt> 套用所有權限。</string>
     <string name="input_permissions">輸入權限</string>
     <string name="options">選項</string>
     <string name="off">離開</string>
@@ -315,7 +315,7 @@
     <string name="scanner">掃描器</string>
     <string name="sys_config">系統配置</string>
     <string name="only_install">僅安裝</string>
-    <string name="install_without_data_loss">如果您關閉了簽名驗證，則可以使用&lt;b&gt; 僅安裝&lt;/b&gt; 選擇安裝應用程式而不會丟失資料。</string>
+    <string name="install_without_data_loss">如果您關閉了簽名驗證，則可以使用<b> 僅安裝</b> 選擇安裝應用程式而不會丟失資料。</string>
     <string name="app_data_will_be_lost">現有資料將丟失。</string>
     <string name="signature_mismatch_for_system_apps">無法安裝應用程式，因為具有不同簽名的系統應用程式具有此程序包名稱。</string>
     <string name="do_you_want_to_uninstall_and_install">您是否要再次解除安裝並安裝該應用程式？</string>
@@ -515,19 +515,19 @@
     </plurals>
     <string name="failed_to_parse_some_numbers">無法解析一些數字</string>
     <string name="only_works_in_root_or_adb_mode">僅適用於root或ADB模式</string>
-    <string name="input_app_ops_description_profile">輸入應用程式操作名稱和/或帶空格的常量，例如&lt;tt&gt; WAKE_LOCK 63 72相機&lt;/tt&gt; 等使用&lt;tt&gt; *&lt;/tt&gt; 套用所有已配置的應用程式操作。</string>
-    <string name="input_app_ops_description">輸入應用程式操作名稱和/或帶空格的常量，例如&lt;tt&gt; WAKE_LOCK 63 72相機&lt;/tt&gt; 等等。</string>
+    <string name="input_app_ops_description_profile">輸入應用程式操作名稱和/或帶空格的常量，例如<tt> WAKE_LOCK 63 72相機</tt> 等使用<tt> *</tt> 套用所有已配置的應用程式操作。</string>
+    <string name="input_app_ops_description">輸入應用程式操作名稱和/或帶空格的常量，例如<tt> WAKE_LOCK 63 72相機</tt> 等等。</string>
     <string name="input_app_ops">輸入應用程式操作</string>
     <string name="filtered_packages">過濾包</string>
-    <string name="input_signatures_description">輸入帶有空格的簽名，例如&lt;tt&gt; com.facebook org.app2 com.app3&lt;/tt&gt; 等等。</string>
+    <string name="input_signatures_description">輸入帶有空格的簽名，例如<tt> com.facebook org.app2 com.app3</tt> 等等。</string>
     <string name="input_signatures">輸入簽名</string>
     <string name="failed_packages">失敗的套件</string>
     <string name="no_tracker_found">找不到追蹤器</string>
     <string name="clear_app_cache_description">清除所有應用程式的快取</string>
     <string name="clear_app_cache">清除應用程式快取</string>
-    <string name="clear_data_from_uninstalled_apps_description">清除通過以下方式解除安裝的應用程式中的資料&lt;tt&gt; DONT_DELETE_DATA&lt;/tt&gt; 旗幟</string>
+    <string name="clear_data_from_uninstalled_apps_description">清除通過以下方式解除安裝的應用程式中的資料<tt> DONT_DELETE_DATA</tt> 旗幟</string>
     <string name="clear_data_from_uninstalled_apps">清除已解除安裝應用程式中的資料</string>
-    <string name="deny_app_ops_description">為通過常量值標識的應用程式操作設定一種模式，即&lt;tt&gt; 63&lt;/tt&gt; 或者&lt;tt&gt; RUN_IN_BACKGROUND&lt;/tt&gt;</string>
+    <string name="deny_app_ops_description">為通過常量值標識的應用程式操作設定一種模式，即<tt> 63</tt> 或者<tt> RUN_IN_BACKGROUND</tt></string>
     <string name="clear_cache">清除快取</string>
     <string name="community_links">更新頻道：https：//t.me/AppManagerChannel
 \n支持小組：https：//t.me/AppManagerAndroid
@@ -621,9 +621,9 @@
     <string name="backup_extras">附加功能</string>
     <string name="backup_exclude_cache_description">不要備份快取，no_cache和no_backup資料夾。</string>
     <string name="backup_obb_media_description">備份OBB和媒體資料夾。</string>
-    <string name="backup_external_data_description">備份外部資料。&lt;b&gt; 資料&lt;/b&gt; 必須選擇此項才能正常運作。</string>
+    <string name="backup_external_data_description">備份外部資料。<b> 資料</b> 必須選擇此項才能正常運作。</string>
     <string name="backup_data_description">備份資料。如果選中，預設情況下將備份內部資料。</string>
-    <string name="backup_apk_only_description">僅備份源目錄中的APK檔案。&lt;b&gt; 來源&lt;/b&gt; 必須選擇此項才能正常運作。</string>
+    <string name="backup_apk_only_description">僅備份源目錄中的APK檔案。<b> 來源</b> 必須選擇此項才能正常運作。</string>
     <string name="backup_source_description">備份整個源目錄。</string>
     <string name="set_mode_for_app_ops_dots">設定應用程式操作的模式…</string>
     <string name="security">安全</string>
@@ -773,15 +773,15 @@
     <string name="word_wrap">切換自動換行</string>
     <string name="credits_message">"致
 \n- Android開源項目
-\n-&lt;a href=\"https://bitbucket.org/oF2pks/fdroid-applications-info\"&gt; Apps_packages資訊&lt;/a&gt;
-\n-&lt;a href=\"https://github.com/butzist/ActivityLauncher\"&gt; 活動啟動器&lt;/a&gt;
-\n-&lt;a href=\"https://github.com/billthefarmer/editor\"&gt; 編輯&lt;/a&gt;
-\n-&lt;a href=\"https://github.com/zhaobao/AppsMonitor\"&gt; AppsMonitor&lt;/a&gt;
-\n-&lt;a href=\"https://github.com/tuyafeng/Watt\"&gt; 瓦&lt;/a&gt;
-\n-&lt;a href=\"https://github.com/8enet/AppOpsX\"&gt; AppOpsX&lt;/a&gt;
-\n-&lt;a href=\"https://github.com/Aefyr/SAI\"&gt; SAI&lt;/a&gt;
-\n-&lt;a href=\"https://github.com/RikkaApps/Shizuku\"&gt; 靜久&lt;/a&gt;
-\n原始徽標信用：&lt;a href=\"https://github.com/Atrate\"&gt; 阿特拉蒂瓦&lt;/a&gt; . "</string>
+\n-<a href="https://bitbucket.org/oF2pks/fdroid-applications-info"> Apps_packages資訊</a>
+\n-<a href="https://github.com/butzist/ActivityLauncher"> 活動啟動器</a>
+\n-<a href="https://github.com/billthefarmer/editor"> 編輯</a>
+\n-<a href="https://github.com/zhaobao/AppsMonitor"> AppsMonitor</a>
+\n-<a href="https://github.com/tuyafeng/Watt"> 瓦</a>
+\n-<a href="https://github.com/8enet/AppOpsX"> AppOpsX</a>
+\n-<a href="https://github.com/Aefyr/SAI"> SAI</a>
+\n-<a href="https://github.com/RikkaApps/Shizuku"> 靜久</a>
+\n原始徽標信用：<a href="https://github.com/Atrate"> 阿特拉蒂瓦</a> . "</string>
     <string name="credits">學分</string>
     <string name="third_party">第三方資源庫和圖示</string>
     <string name="license">執照</string>
