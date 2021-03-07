@@ -1,0 +1,95 @@
+% !TEX program = xelatex
+\documentclass{memoir}
+
+\usepackage[T1]{fontenc}
+\usepackage{mathpazo} % Palatino
+\usepackage{graphicx}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{tikz}
+\usepackage{mdframed}
+\usepackage[outputdir=.]{minted}
+\usepackage{hyperref}
+\usepackage[all]{hypcap}
+
+\hypersetup{
+    unicode=true,
+    colorlinks=true
+}
+
+% Add numbering for subsubsection
+\setcounter{tocdepth}{3}
+\setcounter{secnumdepth}{3}
+
+% -------------------
+% Alert environments
+% -------------------
+
+\newenvironment{amalert}[1][black]
+{\mdframed[linecolor={#1},backgroundcolor=white,linewidth=3pt,topline=false,rightline=false,bottomline=false]}
+{\endmdframed}
+
+\newenvironment{tip}[1][Tip]%
+{
+    \amalert
+    \noindent
+    \textbf{\textit{#1.}}
+    }%
+    {
+    \endamalert
+}
+
+\newenvironment{warning}[1][Warning]%
+{
+    \amalert[Dandelion]
+    \noindent
+    \textbf{\textit{#1.}}
+    }%
+    {
+    \endamalert
+}
+\newenvironment{danger}[1][Danger]%
+{
+    \amalert[BrickRed]
+    \noindent
+    \textbf{\textit{#1.}}
+    }%
+    {
+    \endamalert
+}
+
+% --------------------
+% Reference overrides (useful for localization)
+% --------------------
+\newcommand{\listingrefname}{Listing}
+\newcommand{\Lref}[1]{\listingrefname~\ref{#1}}
+
+% ----------------------
+% See also environments
+% ----------------------
+\newcommand{\seealsoinline}[1]{\noindent\textit{See also: {#1}}}
+\newenvironment{amseealso}{\itshape See also: \begin{itemize}}{\end{itemize}}
+
+% -------------------
+% Colours used in AM
+% -------------------
+\definecolor{AMDarkRed}{HTML}{790D0D}
+\definecolor{AMLightRed}{HTML}{FF8A80}
+\definecolor{AMVeryDarkRed}{HTML}{4F1C14}
+\definecolor{AMVividOrange}{HTML}{FF8017}
+\definecolor{AMVeryDarkOrange}{HTML}{FF8017}
+\definecolor{AMSoftMagenta}{HTML}{EA80FC}
+\definecolor{AMVeryDarkViolet}{HTML}{431C5D}
+\definecolor{AMLightGreyishOrange}{HTML}{FCEED1}
+\definecolor{AMDarkBlue}{HTML}{091F36}
+\definecolor{AMOrange}{HTML}{E05915}
+\definecolor{AMDarkCyan}{HTML}{09868B}
+
+\begin{document}
+    \input{titlepage.tex}
+    \tableofcontents
+    \input{./intro/main.tex}
+    \input{./pages/main.tex}
+    \input{./guide/main.tex}
+    \input{./faq/main.tex}
+    \input{./appendices/main.tex}
+\end{document}

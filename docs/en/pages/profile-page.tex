@@ -1,0 +1,113 @@
+\section{Profile Page}\label{sec:profile-page}
+Profile page displays the configurations for a profile. It also offers editing them.
+
+\begin{tip}[Notice]
+    When you apply a profile, if some packages do not match the criteria, they will simply be ignored.
+\end{tip}
+
+\subsection{Options Menu}\label{subsec:profile-options-menu}
+The three dots menu on the top-right corner opens the options-menu. It contains several options such as--
+\begin{itemize}
+    \item \textbf{Apply.} This option can be used to apply the profile. When clicked, a dialog will be displayed where
+    you can select a \hyperref[subsubsec:profile-state]{profile state}. On selecting one of the options, the profile
+    will be applied immediately.
+    \item \textbf{Save.} Allows you to save the profile.
+    \begin{warning}[Notice]
+        Changes are never saved automatically. You have to save them manually from here.
+    \end{warning}
+    \item \textbf{Discard.} Discard any modifications made since the last save.
+    \item \textbf{Delete.} Clicking on delete will remove the profile immediately without any warning.
+    \item \textbf{Duplicate.} This option can be used to duplicate the profile. When clicked, an input box will be
+    displayed where you can set the profile name. If you click ``OK'', a new profile will be created, and the page will be
+    reloaded. The profile will not be saved until you save it manually.
+    \item \textbf{Create shortcut.} This option can be used to create a shortcut for the profile. When clicked, there
+    will be two options: \textit{Simple} and \textit{Advanced}. The latter option allows you to set the profile state
+    before applying it while the former option uses the default state that was configured when the profile was last saved.
+\end{itemize}
+
+\subsection{Apps Tab}\label{subsec:profile-apps-tab}
+Apps tab lists the packages configured under this profile. Packages can be added or removed using the \textit{plus}
+button located near the bottom of the screen. Packages can also be removed by long clicking on them (in which case, a
+popup will be displayed with the only option \textit{delete}).
+
+\subsection{Configurations Tab}\label{subsec:profile-configurations-tab}
+Configurations tab can be used to configure the selected packages. Description of each item is given below:
+
+\subsubsection{Comment}
+This is the text that will be displayed in the \hyperref[sec:profiles-page]{profiles page}. If not set, the current
+configurations will be displayed instead.
+
+\subsubsection{State}\label{subsubsec:profile-state}
+Denotes how certain configured options will behave. For instance, if \textit{disable} option is turned on, the apps will
+be disabled if the state is \textit{on} and will be enabled if the state is \textit{off}. Currently state only support
+\textit{on} and \textit{off} values.
+
+\subsubsection{Users}
+Select users for which is the profile will be applied. All users are selected by default.
+
+\subsubsection{Components}
+This behaves the same way as the \hyperref[subsec:block-components-dots]{Block Components\dots} option does in the
+1-Click Ops page. However, this only applies for the selected packages. If the \hyperref[subsubsec:profile-state]{state}
+is \textit{on}, the components will be blocked, and if the state is \textit{off}, the components will be unblocked.
+The option can be disabled (regardless of the inserted values) by clicking on the \textit{disabled} button on the input
+dialog.
+
+\seealsoinline{\hyperref[subsec:faq:what-are-app-components]{What are the app components?}}
+
+\subsubsection{App Ops}
+This behaves the same way as the \hyperref[subsec:set-mode-for-app-ops-dots]{Set Mode for App Ops\dots} option does in
+the 1-Click Ops page. However, this only applies for the selected packages. If the
+\hyperref[subsubsec:profile-state]{state} is \textit{on}, the app ops will be denied (ie. ignored), and if the state is
+\textit{off}, the app ops will be allowed. The option can be disabled (regardless of the inserted values) by clicking
+on the \textit{disabled} button on the input dialog.
+
+\subsubsection{Permissions}
+This option can be used to grant or revoke certain permissions from the selected packages. Like others above,
+permissions must be separated by spaces. If the \hyperref[subsubsec:profile-state]{state} is \textit{on}, the
+permissions will be revoked, and if the state is \textit{off}, the permissions will be allowed. The option can be
+disabled (regardless of the inserted values) by clicking on the \textit{disabled} button on the input dialog.
+
+\subsubsection{Backup/Restore}
+This option can be used to take a backup of the selected apps and its data or restore them. There two options available
+there: \textit{Backup options} and \textit{backup name}.
+\begin{itemize}
+    \item \textbf{Backup options.} Same as the \hyperref[subsec:backup-restore-backup-options]{backup options} of the
+    backup/restore feature. If not set, the default options will be used.
+    \item \textbf{Backup name.} Set a custom name for the backup. If the backup name is set, each time a backup is made,
+    it will be given a unique name with backup-name as the suffix. This behaviour will be fixed in a future release.
+    Leave this field empty for regular or ``base'' backup (also, make sure not to enable \textit{backup multiple} in the
+    backup options).
+\end{itemize}
+
+If the \hyperref[subsubsec:profile-state]{state} is \textit{on}, the packages will be backed up, and if the state is
+\textit{off}, the packages will be restored. The option can be disabled by clicking on the \textit{disabled} button on
+the input dialog.
+
+\subsubsection{Export Blocking Rules}
+This option allows you to export blocking rules.
+
+\begin{danger}[Danger]
+    This option is not yet implemented.
+\end{danger}
+
+\subsubsection{Disable}
+Enabling this option will enable/disable the selected packages depending on the \hyperref[subsubsec:profile-state]{state}.
+If the state is \textit{on}, the packages will be disabled, and if the state is \textit{off}, the packages will be enabled.
+
+\subsubsection{Force-stop}
+Enabling this option will allow the selected packages to be force-stopped.
+
+\subsubsection{Clear Cache}
+Enabling this option will enable clearing cache for the selected packages.
+
+\subsubsection{Clear Data}
+Enabling this option will enable clearing data for the selected packages.
+
+\subsubsection{Block Trackers}
+Enabling this option will block/unblock tracker components from the selected packages depending on the
+\hyperref[subsubsec:profile-state]{state}. If the state is \textit{on}, the trackers will be blocked, and if the state
+is \textit{off}, the trackers will be unblocked.
+
+\subsubsection{Backup APK}
+Enabling this option will enable APK backup for the selected packages. This is not the same as
+\hyperref[sec:backup-restore]{backup/restore} as described there.

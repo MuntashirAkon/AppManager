@@ -1,0 +1,48 @@
+\chapter{Specifications}\label{ch:specifications}
+
+\section{Rules Specification}\label{sec:rules-specification}
+\subsection{Background}
+AM currently supports blocking activities, broadcast receivers, content providers, services, app ops and permissions,
+and in future I may add more blocking options. In order to add more portability, it is necessary to import/export all
+these data.
+
+Maintaining a database should be the best choice when it comes to storing data. For now, several \texttt{tsv} files
+with each file having the name of the package and a \texttt{.tsv} extension. The file/database will be queried/processed
+by the \texttt{RulesStorageManager} class. Due to this abstraction, it should be easier to switch to database or
+encrypted database systems in future without changing the design of the entire project. Currently, All configuration
+files are stored at \texttt{/data/data/io.github.muntashirakon.AppManager/Files/conf}.
+
+\subsection{Rules File Format}
+
+\subsubsection{Internal}
+The format below is used internally within App Manager and is \textit{not compatible with the external format.}
+\begin{Verbatim}
+    <name> <type> <mode>|<component_status>|<is_granted>
+\end{Verbatim}
+Here:
+\begin{itemize}
+    \item \texttt{<name>} -- Component/permission/app op name (in case of app op, it could be string or integer)
+    \item \texttt{<type>} -- One of the \texttt{ACTIVITY}, \texttt{RECEIVER}, \texttt{PROVIDER}, \texttt{SERVICE},
+    \texttt{APP\_OP},  \texttt{PERMISSION}
+    \item \texttt{<mode>} -- (For app ops) The associated \hyperref[subsec:mode-constants]{mode constant}
+    \item \texttt{<component\_status>} -- (For components) Component status
+    \begin{itemize}
+        \item \texttt{true} -- Component has been applied (\texttt{true} value is kept for compatibility)
+        \item \texttt{false} -- Component hasn't been applied yet, but will be applied in future (\texttt{false} value
+        is kept for compatibility)
+        \item \texttt{unblocked} -- Component is scheduled to be unblocked
+    \end{itemize}
+    \item \texttt{<is\_granted>} -- (For permissions) Whether the permission is granted or revoked
+\end{itemize}
+
+\subsubsection{External}
+External format is used for importing or exporting rules in App Manager.
+\begin{Verbatim}
+    <package_name> <component_name> <type> <mode>|<component_status>|<is_granted>
+\end{Verbatim}
+This the format is essentially the same as above except for the first item which is the name of the package.
+
+\begin{danger}[Caution]
+    The exported rules have a different format than the internal one and should not be copied directly to the
+    \textbf{conf} folder.
+\end{danger}

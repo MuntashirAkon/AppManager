@@ -1,0 +1,208 @@
+\chapter{Changelogs}\label{ch:changelogs}
+
+\section{v2.5.20 (375)}\label{sec:v2.5.20-(375)}
+
+\subsection{Introducing Profiles}\label{subsec:introducing-profiles}
+\hyperref[sec:profile-page]{Profiles} finally closes the
+\href{https://github.com/MuntashirAkon/AppManager/issues/72}{related issue}. Profiles can be used to execute certain
+tasks repeatedly without doing everything manually. A profile can be applied (or invoked) either from the
+\hyperref[sec:profiles-page]{Profiles page} or from the home screen by creating shortcuts. There are also some presets
+which consist of debloating profiles taken from
+\href{https://gitlab.com/W1nst0n/universal-android-debloater}{Universal Android Debloater}.
+
+\paragraph{Known limitations}
+\begin{itemize}
+    \item Exporting rules and applying permissions are not currently working.
+    \item Profiles are applied for all users.
+\end{itemize}
+
+\subsection{The Interceptor}\label{subsec:the-interceptor}
+\href{https://github.com/MuntashirAkon/intent-intercept}{Intent Intercept} works as a man-in-the-middle between source
+and destination, that is, when you open a file or URL with another app, you can see what is being shared by opening it
+with Interceptor first. You can also add or modify the intents before sending them to the destination. Additionally,
+you can double-click on any exportable activities in the Activities tab in the App Details page to open them in the
+Interceptor to add more configurations.
+
+\paragraph{Known limitation} Editing extras is not currently possible.
+
+\subsection{UnAPKM: DeDRM the APKM files}\label{subsec:unapkm:-dedrm-the-apkm-files}
+When I released a small tool called \href{https://f-droid.org/en/packages/io.github.muntashirakon.unapkm}{UnAPKM},
+I promised that similar feature will be available in App Manager. I am proud to announce that you can open APKM files
+directly in the App Info page or convert them to APKS or install them directly.
+
+\subsection{Multiple user}\label{subsec:multiple-user}
+App manager now supports multiple users! For now, this requires root or ADB. But no-root support is also being
+considered. If you have multiple users enabled and click on an app installed in multiple profiles, an alert prompt will
+be displayed where you can select the user.
+
+\subsection{Vive la France!}
+Thanks to the contributors, we have one more addition to the language club: French. You can add more languages or
+improve existing translations at \href{https://hosted.weblate.org/engage/app-manager}{Weblate}.
+
+\subsection{Report crashes}
+If App Manager crashes, you can now easily report the crash from the notifications which opens the share options.
+Crashes are not reported by App Manager, it only redirects you to your favourite Email client.
+
+\subsection{Android 11}
+Added support for Android 11. Not everything may work as expected though.
+
+\subsection{App Installer Improvements}
+
+\subsubsection{Set installation locations}
+In settings page, you can set install locations such as auto (default), internal only and prefer external.
+
+\subsubsection{Set APK installer}
+In settings page, you can also set default APK installer (root/ADB only) instead of App Manager.
+
+\subsubsection{Multiple users}
+In settings page, you can allow App Manager to display multiple users during APK installation.
+
+\subsubsection{Signing APK files}
+In settings page, you can choose to sign APK files before installing them. You can also select which signature scheme
+to use in the \textit{APK signing} option in settings.
+
+\paragraph{Known limitation} Currently, only a generic key is used to sign APK files
+
+\section{v2.5.17 (368)}
+
+\subsection{App Installer}
+As promised, it is now possible to select splits. AM also provides recommendations based on device configurations.
+If the app is already installed, recommendations are provided based on the installed app. It is also possible to
+downgrade to a lower version without data loss if the device has root or ADB. But it should be noted that not all app
+can be downgraded. Installer is also improved to speed up the installation process, especially, for root users.
+If the app has already been installed and the new (x)apk(s) is newer or older or the same version with a different
+signature, AM will display a list of changes similar to \textbf{What's New} before prompting the user to install
+the app. This is useful if the app has introduced tracker components, new permissions, etc.
+
+\paragraph{Known Limitations}
+\begin{itemize}
+    \item Large app can take a long time to fetch app info and therefore it may take a long time display the installation prompt.
+    \item If the apk is not located in the internal storage, the app has to be cached first which might also take
+    a long time depending on the size of the apk.
+\end{itemize}
+
+\subsection{Scanner: Replacement for Exodus Page}
+Exodus page is now replaced with scanner page. \hyperref[sec:scanner-page]{Scanner page} contains not only a list of
+trackers but also a list of used libraries. This is just a start. In the future, this page will contain more in depth
+analysis of the app.
+
+\subsection{Introducing System Config}
+System Config lists various system configurations and whitelists/blacklists included in Android by either OEM/vendor,
+AOSP or even some Magisk modules. Root users can access this option from the overflow menu in the main page.
+There isn't any official documentation for these options therefore it's difficult to write a complete documentation
+for this page. I will gradually add documentations using my own knowledge. However, some functions should be
+understandable by their name.
+
+\subsection{More Languages}
+Thanks to the contributors, AM now has more than 12 languages. New languages include Bengali, Hindi, Norwegian, Polish,
+Russian, Simplified Chinese, Turkish and Ukrainian.
+
+\subsection{App Info Tab}
+More tags are added in the \hyperref[subsec:app-info-tab]{app info tab} such as \textbf{KeyStore} (apps with KeyStore
+items), \textbf{Systemless app} (apps installed via Magisk), \textbf{Running} (apps that are running). For external apk,
+two more options are added namely \textbf{Reinstall} and \textbf{Downgrade}. Now it is possible to share an apk via
+Bluetooth. For system apps, it is possible to uninstall updates for root/ADB users. But like the similar option in the
+system settings, this operation will clear all app data. As stated above, exodus has been replaced with scanner.
+
+\subsection{Navigation Improvements}
+It's now relatively easy to navigate to various UI components using keyboard. You can use up/down button to navigate
+between list items and tab button to navigate to UI components inside an item.
+
+\subsection{Running Apps Page}
+It is now possible to sort and filter processes in this tab. Also, the three big buttons are replaced with an
+easy-to-use three dot menu. Previously the memory usage was wrong which is fixed in this version.
+
+\subsection{Built-in Toybox}
+Toybox (an alternative to busybox) is bundled with AM. Although Android has this utility built-in from API 23, toybox
+is bundled in order to prevent buggy implementations and to support API < 23.
+
+\subsection{Component Blocker Improvements}
+Component blocker seemed to be problematic in the previous version, especially when global component blocking is enabled.
+The issues are mostly fixed now.
+
+\begin{warning}[Caution]
+    The component blocking mechanism is no longer compatible with v2.5.6 due to various security issues. If you have
+    this version, upgrade to v2.5.13 or earlier versions first. After that, enable
+    \hyperref[subsubsec:instant-component-blocking]{global component blocking} and disable it again.
+\end{warning}
+
+\subsection{Improvements in the App Details Page}
+Value of various app ops depend on their parent app ops. Therefore, when you allow/deny an app op, the parent of the app
+op gets modified. This fixes the issues some users have been complaining regarding some app ops that couldn't be changed.
+
+If an app has the target API 23 or less, its permissions cannot be modified using the \texttt{pm grant \ldots} command.
+Therefore, for such apps, option to toggle permission has been disabled.
+
+The signature tab is improved to support localization. It also displays multiple checksums for a signature.
+
+\subsection{App Manifest}
+Manifest no longer crashes if the size of the manifest is too long. Generated manifest are now more accurate than before.
+
+\section{v2.5.13 (348)}
+
+\subsection{Bundled App (Split APK)}
+Bundled app formats such as \textbf{apks} and \textbf{xapk} are now supported. You can install these apps using
+the regular installation buttons. For root and adb users, apps are installed using shell, and for non-root users,
+the platform default method is used.
+
+\paragraph{Known Limitations}
+\begin{itemize}
+    \item Currently \textit{all} splits apks are installed. But this behaviour is going to change in the next release.
+    If you only need a few splits instead of all, extract the \textbf{APKS} or \textbf{XAPK} file, and then, create a new zip
+    file with your desired split apks and replace the \textbf{ZIP} extension with \textbf{APKS}. Now, open it with AM.
+    \item There is no progress dialog to display the installation progress.
+\end{itemize}
+
+\subsection{Direct Install Support}
+You can now install \textbf{APK}, \textbf{APKS} or \textbf{XAPK} directly from your favourite browser or file manager.
+For apps that need updates, a \textbf{What's New} dialog is displayed showing the changes in the new version.
+
+\paragraph{Known Limitations}
+\begin{itemize}
+    \item Downgrade is not yet possible.
+    \item There is no progress dialog to display the installation progress. If you cannot interact with the current page,
+    wait until the installation is finished.
+\end{itemize}
+
+\subsection{Remove All Blocking Rules}
+In the Settings page, a new option is added which can be used to remove all blocking rules configured within App Manager.
+
+\subsection{App Ops}
+\begin{itemize}
+    \item App Ops are now generated using a technique similar to AppOpsX. This should decrease the loading time
+    significantly in the App Ops tab.
+    \item In the App Ops tab, a menu item is added which can be used to list only active app ops without including the
+    default app ops. The preference is saved in the shared preferences.
+\end{itemize}
+
+\paragraph{Known Limitation} Often the App Ops tab may not be responsive. If that's the case, restart App Manager.
+
+\subsection{Enhanced ADB Support}
+ADB shell commands are now executed using a technique similar to AppOpsX (This is the \textit{free} alternative of AppOps by Rikka.).
+This should dramatically increase the execution time.
+
+\paragraph{Known Limitation} AM can often crash or become not responsive. If that's the case, restart App Manager.
+
+\subsection{Filtering in Main Page}
+Add an option to filter apps that has at least one activity.
+
+\subsection{Apk Backup/Sharing}
+Apk files are now saved as \texttt{app name\_version.extension} instead of \texttt{package.name.extension}.
+
+\subsection{Batch Ops}
+\begin{itemize}
+    \item Added a foreground service to run batch operations. The result of the operation is displayed in a notification.
+    If an operation has failed for some packages, clicking on the notification will open a dialog box listing the failed
+    packages. There is also a \textbf{Try Again} button on the bottom which can be used to perform the operation again for the failed packages.
+    \item Replaced Linux \textit{kill} with \textbf{force-stop}.
+\end{itemize}
+
+\subsection{Translations}
+Added German and Portuguese (Brazilian) translations.
+
+\paragraph{Known Limitation} Not all translations are verified yet.
+
+\subsection{App Data Backup}
+Install app only for the current user at the time of restoring backups. Support for split apks is also added.
+
+\textit{Data backup feature is now considered unstable. If you encounter any problem, please report to me without hesitation.}

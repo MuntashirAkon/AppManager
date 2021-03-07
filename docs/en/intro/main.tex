@@ -1,0 +1,118 @@
+\chapter{Introduction}\label{ch:introduction}
+
+App Manager is an advanced package manager for Android. It offers many features and consequently, it requires a user
+manual to assist its users with features that it offers. This document acts as a user manual for App Manager in the
+sense that it contains the description of every feature that App Manager has to offer. The document can be considered as
+the ``official'' guidelines for App Manager and represent the expected behaviour of App Manager. Translations can
+misinterpret this document (which is written in English). Therefore, it is recommended that you read the English version
+if possible. There might be other unofficial or third-party resources such as blog articles, videos, chat groups, etc.
+While these resources might be useful for many people, they may not be up-to-date. In case any deviations are detected
+in App Manager from this document, they should be reported in the
+\href{https://github.com/MuntashirAkon/AppManager/issues}{App Manager issue tracker}.
+
+
+\section{Terminologies}\label{sec:terminologies}
+\begin{itemize}
+    \item \textbf{AM} --- Short name for App Manager
+    \item \textbf{AoT} --- Short form of ADB over TCP
+    \item \textbf{Block/Unblock} --- Used for component blocking. It denotes that a component is blocked using Intent
+    Firewall and disabled using PackageManager.
+    \item \textbf{IFW} --- Short form of Intent Firewall.
+    \item \textbf{Ops} --- Short name for operations, e.g.\ app ops, batch ops, 1-click ops
+    \item \textbf{SSAID} --- Short form of \texttt{Settings.Secure.ANDROID\_ID}. It is a device identifier assigned to
+    each app (from Android Oreo and onwards). It is generated from the combination of the signing certificate of the app
+    and the SSAID set for the package \texttt{android}. As a result, it is guaranteed to be the same for an app unless
+    the user formats the device. It is widely used for tracking users.
+    \item \textbf{Tracker} --- Denotes tracker components throughout the document and in App Manager except the
+    \hyperref[sec:scanner-page]{scanner page}. Trackers include libraries such as crash reporters, analytics,
+    profiling, identification, ads, location, etc. Thus, they are not equal in functions. There is no distinction or
+    bias between open source and closed source libraries.
+\end{itemize}
+
+\section{Supported Versions}\label{sec:supported-versions}
+Currently supported versions are v2.5.20 (stable), v2.5.23 (pre-release) and v2.5.24 (debug release).
+
+\section{Official Sources}\label{sec:official-sources}
+
+\subsection{Binary Distribution Sources}\label{subsec:binary-distribution-sources}
+App Manager is distributed using the following sources. Unofficial sources may distribute modified versions of App
+Manager, and none but you shall be responsible for the consequences of using such distributions.
+\begin{enumerate}
+    \item Official F-Droid repository.\footnote{For distributing stable releases only}\\
+    \textit{Link:} \url{https://f-droid.org/packages/io.github.muntashirakon.AppManager}
+    \item IzzyOnDroid repository for F-Droid.\footnote{For distributing pre-releases only}\\
+    \textit{Link:} \url{https://apt.izzysoft.de/fdroid/index/apk/io.github.muntashirakon.AppManager}
+    \item GitHub repository.\\
+    \textit{Normal releases:} \url{https://github.com/MuntashirAkon/AppManager/releases}\\
+    \textit{Debug releases:} \url{https://github.com/MuntashirAkon/AppManager/actions}
+    \item Telegram.\\
+    \textit{Normal releases:} \url{https://t.me/AppManagerChannel}\\
+    \textit{Debug releases:} \url{https://t.me/AppManagerDebug}
+\end{enumerate}
+
+\subsection{Links to Source Code}\label{subsec:links-to-source-code}
+All but GitHub are the mirror links. The tags should always be up-to-date, but the master branch is not guaranteed to be
+up-to-date. If the target is to clone the master branch, use the GitHub link instead of the others.
+\begin{enumerate}
+    \item GitHub: \url{https://github.com/MuntashirAkon/AppManager}
+    \item GitLab: \url{https://gitlab.com/muntashir/AppManager}
+    \item Codeberg: \url{https://codeberg.org/muntashir/AppManager}
+    \item Riseup: \url{https://0xacab.org/muntashir/AppManager}
+\end{enumerate}
+
+\subsection{Translations}\label{subsec:translations}
+App Manager does not accept translations directly via pull/merge requests. Translations are managed both automatically
+and manually depending on the context.
+\begin{itemize}
+    \item App Manager app strings are hosted in Weblate.\\
+    \textit{Link:} \url{https://hosted.weblate.org/engage/app-manager/}
+    \item App Manager user manual are hosted in Crowdin.\\
+    \textit{Link:} \url{https://crwd.in/app-manager-docs}
+\end{itemize}
+
+\section{Contributing}\label{sec:contributing}
+There are multiple ways a user can contribute such as creating helpful issues, attending discussions, improving
+documentations and translations, adding unrecognised libraries or trackers, reviewing the source code as well as
+reporting security vulnerabilities.
+
+\subsection{Build Instructions}\label{sec:build-instructions}
+Build instructions are available in the README file of the root directory of the source.
+
+\subsection{Submitting patches}\label{subsec:submitting-patches}
+Repositories located in sites other than GitHub are currently considered mirrors and pull/merge requests submitted there
+will not be accepted. Instead, patches (as .patch files) can be submitted via email attachments. Make sure to sign-off
+your commits.
+
+\begin{tip}[Info]
+    GitHub PRs will be merged manually using the corresponding patches. As a result, GitHub may falsely mark them closed
+    instead of merged.
+\end{tip}
+
+\begin{warning}[Notice]
+    In case of submitting patches via email, the whole conversation may be publicly accessible in the future. So, do not
+    include any personally identifiable information (PII) other than your name or email address.
+\end{warning}
+
+\section{Donation \& Funding}\label{sec:donation-&-funding}
+\emph{Donation or purchase is not a requirement in order to use App Manager.} While App Manager does not support any
+purchases, donations can be sent to the author of App Manager using one of the following Bitcoin addresses as a tribute:
+\begin{Verbatim}[label={verb:btc-donation}]
+    33TDkWVv5EgwfKGJk7YaS2Ev1CBzBP9Sav
+    38bzvWDD99dJhXg9tC4yQEnGdnAKPtwSXG
+    3FHTxPoYa92dNJK6pkhwyVkMG8Vv3VpGpg
+\end{Verbatim}
+
+By sending BTC, the sender agrees that he/she/they shall not make the transaction information public i.e.\ the
+transaction will remain anonymous, nor shall he/she/they use it as a leverage to prioritise his/her/their requested
+features. Feature requests do not require any bounties or donations, and they are prioritised according to the authors'
+preferences.
+
+\emph{App Manager is open for funding/grants.} Representatives of the interested organizations can contact the author
+directly using the options given in \Sref{sec:contact}.
+
+\section{Contact}\label{sec:contact}
+Muntashir Al-Islam\footnote{You can also address me as ``Muntashir Akon''}\\
+Email: \href{mailto:muntashirakon@riseup.net}{muntashirakon [at] riseup [dot] net}\\
+Key Fingerprint: \texttt{7bad37c2981e41f8f6abea7f58f0b4f26c346fce}\\
+GitHub: \url{https://github.com/MuntashirAkon}\\
+Twitter: \url{https://twitter.com/Muntashir}

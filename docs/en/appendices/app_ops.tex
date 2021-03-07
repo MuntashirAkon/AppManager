@@ -1,0 +1,290 @@
+\chapter{App Ops}\label{ch:app-ops}
+\section{Background}\label{sec:app-ops-background}
+\textbf{App Ops} (short hand for \textbf{Application Operations}) are used by Android system (since Android 4.3) to
+control application permissions. The user \emph{can} control some permissions, but only the permissions that are considered
+dangerous (and Google thinks knowing your phone number isn't a dangerous thing). So, app ops seems to be the one we need
+if we want to install apps like Facebook and it's Messenger (the latter literary records everything if you live outside
+the EU) and still want \emph{some} privacy and/or security. Although certain features of app ops were available in
+Settings and later in hidden settings in older version of Android, it's completely hidden in newer versions of Android
+and is continued to be kept hidden. Now, any app with \textbf{android.Manifest.permission.GET\_APP\_OPS\_STATS}
+permission can get the app ops information for other applications but this permission is hidden from users and can only
+be enabled using ADB or root. Still, the app with this permission cannot grant or revoke permissions (actually mode of
+operation) for apps other than itself (with limited capacity, of course). To modify the ops of other app, the app needs
+\textbf{android.Manifest.permission.UPDATE\_APP\_OPS\_STATS} permissions which isn't accessible via \texttt{pm} command.
+So, you cannot grant it via root or ADB, the permission is only granted to the system apps. There are very few apps who
+support disabling permissions via app ops. The best one to my knowledge is
+\href{https://github.com/8enet/AppOpsX}{AppOpsX}. The main (visible) difference between my app (AppManager) and this
+app is that the latter also provides you the ability to revoke internet permissions (by writing ip tables). One crucial
+problem that I faced during the development of the app ops API is the lack of documentation in English language.
+
+\section{Introduction to App Ops}\label{sec:introduction-to-app-ops}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=.6\linewidth]{./images/appops}
+    \caption{How app ops work}
+    \label{fig:appops}
+\end{figure}
+
+\fref{fig:appops} describes the process of changing and processing permission.
+\hyperref[sec:appopsmanager]{AppOpsManager} can be used to manage permissions in Settings app. \textbf{AppOpsManager} is
+also useful in determining if a certain permission (or operation) is granted to the application. Most of the methods of
+\textbf{AppOpsManager} are accessible to the user app but unlike a system app, it can only be used to check permissions
+for any app or for the app itself and start or terminating certain operations. Moreover, not all operations are actually
+accessible from this Java class. \textbf{AppOpsManager} holds all the necessary constants such as
+\hyperref[subsec:op-constants]{\texttt{OP\_*}}, \texttt{OPSTR\_*}, \hyperref[subsec:mode-constants]{\texttt{MODE\_*}}
+which describes operation code, operation string and mode of operations respectively. It also holds necessary data
+structures such as \hyperref[subsec:package-ops]{PackageOps} and \textbf{OpEntry}. \textbf{PackageOps} holds
+\textbf{OpEntry} for a package, and \textbf{OpEntry}, as the name suggests, describes each operation.
+
+\texttt{AppOpService} is completely hidden from a user application but accessible to the system applications.
+As it can be seen in \fref{fig:appops}, this is the class that does the actual management stuff.
+It contains data structures such as \textbf{Ops} to store basic package info and \textbf{Op} which is similar to
+\textbf{OpEntry} of \textbf{AppOpsManager}.
+It also has \textbf{Shell} which is actually the source code of the \hyperref[sec:appops-cli]{\textit{appops} command line tool}.
+It writes configurations to or read configurations from \hyperref[sec:appops-xml]{\texttt{/data/system/appops.xml}}.
+System services calls \textbf{AppOpsService} to find out what an application is allowed and what is not allowed to perform,
+and \textbf{AppOpsService} determines these permissions by parsing \texttt{/data/system/appops.xml}. If no custom values
+are present in \textit{appops.xml}, it returns the default mode available in \textbf{AppOpsManager}.
+
+\section{AppOpsManager}\label{sec:appopsmanager}
+\href{https://android.googlesource.com/platform/frameworks/base/+/master/core/java/android/app/AppOpsManager.java}{AppOpsManager}
+stands for application operations manager. It consists of various constants and classes to modify app operations.
+
+\seealsoinline{\href{https://developer.android.com/reference/android/app/AppOpsManager}{AppOpsManager documentation}}
+
+\subsection{\texttt{OP\_*} Constants}\label{subsec:op-constants}
+\texttt{OP\_*} are the integer constants starting from \texttt{0}. \texttt{OP\_NONE} implies that no operations are
+specified whereas \texttt{\_NUM\_OP} denotes the number of operations defined in \texttt{OP\_*} prefix. While they
+denote each operation, the operations are not necessarily unique. In fact, there are many operations that are actually
+a single operation denoted by multiple \texttt{OP\_*} constant (possibly for future use). Vendors may define their own
+op based on their requirements. MIUI is one of the vendors who are known to do that.
+
+\begin{listing}[ht]
+    \begin{minted}[frame=lines]{java}
+public static final int OP_NONE = -1;
+public static final int OP_COARSE_LOCATION = 0;
+public static final int OP_FINE_LOCATION = 1;
+public static final int OP_GPS = 2;
+public static final int OP_VIBRATE = 3;
+...
+public static final int OP_READ_DEVICE_IDENTIFIERS = 89;
+public static final int OP_ACCESS_MEDIA_LOCATION = 90;
+public static final int OP_ACTIVATE_PLATFORM_VPN = 91;
+public static final int _NUM_OP = 92;
+    \end{minted}
+    \caption{Sneak-peek of \texttt{OP\_*}}
+    \label{lst:op-constants}
+\end{listing}
+
+Whether an operation is unique is defined by \texttt{sOpToSwitch}.
+It maps each operation to another operation or to itself (if it's a unique operation).
+For instance, \texttt{OP\_FINE\_LOCATION} and \texttt{OP\_GPS} are mapped to \texttt{OP\_COARSE\_LOCATION}.
+
+Each operation has a private name which are described by \texttt{sOpNames}.
+These names are usually the same names as the constants without the \texttt{OP\_} prefix.
+Some operations have public names as well which are described by \texttt{sOpToString}.
+For instance, \texttt{OP\_COARSE\_LOCATION} has the public name \textbf{android:coarse\_location}.
+
+As a gradual process of moving permissions to app ops, there are already many permissions that are defined under some operations.
+These permissions are mapped in \texttt{sOpPerms}.
+For example, the permission \textbf{android.Manifest.permission.ACCESS\_COARSE\_LOCATION} is mapped to
+\texttt{OP\_COARSE\_LOCATION}. Some operations may not have any associated permissions which have \texttt{null} values.
+
+As described in the previous section, operations that are configured for an app are stored at
+\hyperref[sec:appops-xml]{\texttt{/data/system/appops.xml}}.
+If an operation is not configured, then whether system will allow that operation is determined from \texttt{sOpDefaultMode}.
+It lists the \textit{default mode} for each operation.
+
+\subsection{\texttt{MODE\_*} Constants}\label{subsec:mode-constants}
+\texttt{MODE\_*} constants also integer constants starting from \texttt{0}. These constants are assigned to each
+operation describing whether an app is authorised to perform that operation. These modes usually have associated names
+such as \textbf{allow} for \texttt{MODE\_ALLOWED}, \textbf{ignore} for \texttt{MODE\_IGNORED}, \textbf{deny} for
+\texttt{MODE\_ERRORED} (a rather misnomer), \textbf{default} for \texttt{MODE\_DEFAULT} and \textbf{foreground}
+for \texttt{MODE\_FOREGROUND}.
+
+\begin{enumerate}\addtocounter{enumi}{-1}
+    \item \textbf{\texttt{MODE\_ALLOWED}.} The app is allowed to perform the given operation
+    \item \textbf{\texttt{MODE\_IGNORED}.} The app is not allowed to perform the given operation, and any attempt to
+    perform the operation should \emph{silently fail}, i.e.\ it should not cause the app to crash
+    \item \textbf{\texttt{MODE\_ERRORED}.} The app is not allowed to perform the given operation, and this attempt
+    should cause it to have a fatal error, typically a \texttt{SecurityException}
+    \item \textbf{\texttt{MODE\_DEFAULT}.} The app should use its default security check, specified in \texttt{AppOpsManager}
+    \item \textbf{\texttt{MODE\_FOREGROUND}.} Special mode that means ``allow only when app is in foreground.''
+    This mode was added in Android 10
+    \item \textbf{\texttt{MODE\_ASK}.} This is a custom mode used by MIUI whose uses are unknown.
+\end{enumerate}
+
+\subsection{PackageOps}\label{subsec:package-ops}
+\textbf{AppOpsManager.PackageOps} is a data structure to store all the \textbf{OpEntry} for a package. In simple terms,
+it stores all the customised operations for a package.
+
+\begin{listing}[H]
+    \begin{minted}[frame=lines]{java}
+public static class PackageOps implements Parcelable {
+    private final String mPackageName;
+    private final int mUid;
+    private final List<OpEntry> mEntries;
+    ...
+}
+    \end{minted}
+    \caption{Class \texttt{PackageOps}}
+    \label{lst:package-ops-class}
+\end{listing}
+
+As can be seen in \Lref{lst:package-ops-class}, it stores all \textbf{OpEntry} for a package as well as the
+corresponding package name and its kernel user ID\@.
+
+\subsection{OpEntry}\label{subsec:opentry}
+\textbf{AppOpsManager.OpEntry} is a data structure that stores a single operation for any package.
+
+\begin{listing}[H]
+    \begin{minted}[frame=lines]{java}
+public static final class OpEntry implements Parcelable {
+    private final int mOp;
+    private final boolean mRunning;
+    private final @Mode int mMode;
+    private final @Nullable LongSparseLongArray mAccessTimes;
+    private final @Nullable LongSparseLongArray mRejectTimes;
+    private final @Nullable LongSparseLongArray mDurations;
+    private final @Nullable LongSparseLongArray mProxyUids;
+    private final @Nullable LongSparseArray<String> mProxyPackageNames;
+    ...
+}
+    \end{minted}
+    \caption{Class \texttt{OpEntry}}
+    \label{lst:class-op-entry}
+\end{listing}
+Here:
+\begin{itemize}
+    \item \texttt{mOp}: Denotes one of the \hyperref[subsec:op-constants]{\texttt{OP\_*} constants}
+    \item \texttt{mRunning}: Whether the operation is in progress (i.e.\ the operation has started but not finished
+    yet). Not all operations can be started or finished this way
+    \item \texttt{mMOde}: One of the \hyperref[subsec:mode-constants]{\texttt{MODE\_*} constants}
+    \item \texttt{mAccessTimes}: Stores all the available access times
+    \item \texttt{mRejectTimes}: Stores all the available reject times
+    \item \texttt{mDurations}: All available access durations, checking this with \texttt{mRunning} will tell you for
+    how long the app is performing a certain app operation
+    \item \texttt{mProxyUids}: No documentation found
+    \item \texttt{mProxyPackageNames:} No documentation found
+\end{itemize}
+
+\subsection{Usage}\label{subsec:usage}
+TODO
+
+\section{AppOpsService}\label{sec:appopsservice}
+TODO
+
+\section{appops.xml}\label{sec:appops-xml}
+
+Latest \texttt{appops.xml} has the following format: (This DTD is made by me and by no means perfect, has compatibility issues.)
+
+\begin{Verbatim}
+<!DOCTYPE app-ops [
+
+<!ELEMENT app-ops (uid|pkg)*>
+<!ATTLIST app-ops v CDATA #IMPLIED>
+
+<!ELEMENT uid (op)*>
+<!ATTLIST uid n CDATA #REQUIRED>
+
+<!ELEMENT pkg (uid)*>
+<!ATTLIST pkg n CDATA #REQUIRED>
+
+<!ELEMENT uid (op)*>
+<!ATTLIST uid
+n CDATA #REQUIRED
+p CDATA #IMPLIED>
+
+<!ELEMENT op (st)*>
+<!ATTLIST op
+n CDATA #REQUIRED
+m CDATA #REQUIRED>
+
+<!ELEMENT st EMPTY>
+<!ATTLIST st
+n CDATA #REQUIRED
+t CDATA #IMPLIED
+r CDATA #IMPLIED
+d CDATA #IMPLIED
+pp CDATA #IMPLIED
+pu CDATA #IMPLIED>
+
+]>
+\end{Verbatim}
+
+The instruction below follows the exact order given above:
+\begin{itemize}
+    \item \texttt{app-ops}: The root element. It can contain any number of \texttt{pkg} or package \texttt{uid}
+    \begin{itemize}
+        \item \texttt{v}: (optional, integer) The version number (default: \texttt{NO\_VERSION} or \texttt{-1})
+    \end{itemize}
+
+    \item \texttt{pkg}: Stores package info. It can contain any number of \texttt{uid}
+    \begin{itemize}
+        \item \texttt{n}: (required, string) Name of the package
+    \end{itemize}
+
+    \item Package \texttt{uid}: Stores package or packages info
+    \begin{itemize}
+        \item \texttt{n}: (required, integer) The user ID
+    \end{itemize}
+
+    \item \texttt{uid}: The package user ID. It can contain any number of \texttt{op}
+    \begin{itemize}
+        \item \texttt{n}: (required, integer) The user ID
+        \item \texttt{p}: (optional, boolean) Is the app is a private/system app
+    \end{itemize}
+
+    \item \texttt{op}: The operation, can contain \texttt{st} or nothing at all
+    \begin{itemize}
+        \item \texttt{n}: (required, integer) The op name in integer, i.e.\ AppOpsManager.OP\_*
+        \item \texttt{m}: (required, integer) The op mode, i.e.\ AppOpsManager.MODE\_*
+    \end{itemize}
+
+    \item \texttt{st}: State of operation: whether the operation is accessed, rejected or running (not available on old versions)
+    \begin{itemize}
+        \item \texttt{n}: (required, long) Key containing flags and uid
+        \item \texttt{t}: (optional, long) Access time (default: \texttt{0})
+        \item \texttt{r}: (optional, long) Reject time (default: \texttt{0})
+        \item \texttt{d}: (optional, long) Access duration (default: \texttt{0})
+        \item \texttt{pp}: (optional, string) Proxy package name
+        \item \texttt{pu}: (optional, integer) Proxy package uid
+    \end{itemize}
+\end{itemize}
+
+This definition can be found at
+\href{https://android.googlesource.com/platform/frameworks/base/+/master/services/core/java/com/android/server/appop/AppOpsService.java}{AppOpsService}.
+
+\section{Command Line Interface}\label{sec:appops-cli}
+\texttt{appops} or \texttt{cmd appops} (on latest versions) can be accessible via ADB or root. This is an easier method
+to get or update any operation for a package (provided the package name is known). The help page of this command is
+self-explanatory:
+
+\begin{Verbatim}
+AppOps service (appops) commands:
+help
+Print this help text.
+start [--user <USER_ID>] <PACKAGE | UID> <OP>
+Starts a given operation for a particular application.
+stop [--user <USER_ID>] <PACKAGE | UID> <OP>
+Stops a given operation for a particular application.
+set [--user <USER_ID>] <[--uid] PACKAGE | UID> <OP> <MODE>
+Set the mode for a particular application and operation.
+get [--user <USER_ID>] <PACKAGE | UID> [<OP>]
+Return the mode for a particular application and optional operation.
+query-op [--user <USER_ID>] <OP> [<MODE>]
+Print all packages that currently have the given op in the given mode.
+reset [--user <USER_ID>] [<PACKAGE>]
+Reset the given application or all applications to default modes.
+write-settings
+Immediately write pending changes to storage.
+read-settings
+Read the last written settings, replacing current state in RAM.
+options:
+<PACKAGE> an Android package name or its UID if prefixed by --uid
+<OP>      an AppOps operation.
+<MODE>    one of allow, ignore, deny, or default
+<USER_ID> the user id under which the package is installed. If --user is not
+specified, the current user is assumed.
+\end{Verbatim}

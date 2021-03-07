@@ -1,0 +1,40 @@
+\section{Scanner Page}\label{sec:scanner-page}
+\textbf{Scanner page} appears after clicking on the \emph{scanner} button in the \hyperref[subsec:app-info-tab]{App Info
+tab}. External APK files can also be opened for scanning from file managers, web browsers, etc.
+
+It scans for trackers and libraries, and displays the number of trackers and libraries as a summary. It also displays
+checksums of the APK file as well as the signing certificate(s).
+
+\begin{danger}[Disclaimer]
+    AM only scans an app statically without prejudice. The app may provide the options for opting out, or in some cases,
+    certain features of the tracker may not be used at all by the app (e.g.\ F-Droid), or some apps may simply use them
+    as placeholders to prevent the breaking of certain features (e.g.\ Fennec F-Droid). \textbf{The intention of the
+    scanner is to give you an idea about what the APK might contain. It should be taken as an initial step for further
+    investigations.}
+\end{danger}
+
+Clicking on the first item (i.e.\ number of classes) opens a new page containing a list of tracker classes for the app.
+All classes can also be viewed by clicking on the \textit{Toggle Class Listing} menu. A sneak-peek of each class can be
+viewed by simply clicking on any class item.
+
+\begin{tip}[Notice]
+    Due to various limitations, it is not possible to scan all the components of an APK file. This is especially true if
+    an APK is highly obfuscated. The scanner also does not check strings (or website signatures).
+\end{tip}
+
+The second item lists the number of trackers along with their names. Clicking on the item displays a dialog containing
+the name of trackers, matched signatures, and the number of classes against each signature. Some tracker names may have
+$^2$ prefix which indicates that the trackers are in the \href{https://etip.exodus-privacy.eu.org}{ETIP} stand-by list
+i.e.\ whether they are actual trackers is still being investigated.
+
+The third item lists the number of libraries along with their names. The information are mostly taken from
+\href{https://gitlab.com/IzzyOnDroid/repo}{IzzyOnDroid repo}.
+
+\seealsoinline{\hyperref[subsec:tracker-classes-versus-tracker-components]{FAQ: Tracker classes vs tracker components}}
+
+\subsection{Missing Signatures}\label{subsec:missing-signatures}
+At the bottom of the page, there is a special item denoting the number of missing signatures (i.e.\ missing classes).
+The missing signatures are the ones that AM has failed to match against any known libraries. The number itself has no
+particular meaning as many libraries contain hundreds of classes, but clicking on the item will bring up a dialog
+containing the signatures which is helpful in inspecting the missing signatures. \textbf{This feature is only intended
+for people who know what a missing signature is and what to do with it, average users should just ignore it.}
