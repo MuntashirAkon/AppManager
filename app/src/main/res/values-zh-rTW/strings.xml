@@ -31,7 +31,7 @@
     <string name="date_installed">安裝日期</string>
     <string name="date_updated">更新日期</string>
     <string name="installer_app">安裝程式</string>
-    <string name="share_apk">分享APK</string>
+    <string name="share_apk">分享 APK</string>
     <string name="saved_successfully">已儲存</string>
     <string name="saving_failed">儲存失敗，請重試。</string>
     <string name="failed_to_enable">無法啟用 <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
@@ -53,24 +53,24 @@
         <item quantity="other">1 個追蹤器，帶 <xliff:g id="class_no" example="50">%1$d</xliff:g> 類</item>
     </plurals>
     <string name="starting_activity">開始活動：<xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
-    <string name="pref_about_msg">App Manager版本，授權協議，致謝名單等。</string>
+    <string name="pref_about_msg">App Manager 版本，授權協議，致謝名單等。</string>
     <string name="instructions">說明</string>
     <string name="flags">旗標</string>
     <string name="launch_mode">開啟方式</string>
     <string name="ssaid_info">SSAID（<tt> Settings.Secure.ANDROID_ID</tt> ）是分配給每個應用程式的裝置標識字串（來自Android Oreo）。應用程式廣泛使用它來追蹤使用者。</string>
     <string name="type_component_name">元件名稱</string>
     <string name="window_size">視窗尺寸</string>
-    <string name="input_keystore_alias_pass_description">插入別名的密碼<b>%1$s</b> 。如果密碼與KeyStore密碼相同，則可以將其保留為空。</string>
+    <string name="input_keystore_alias_pass_description">插入別名的密碼&lt;b&gt;%1$s&lt;/b&gt; 。如果密碼與 KeyStore 密碼相同，則可以將其保留為空。</string>
     <string name="input_keystore_alias_pass">別名密碼<b>%1$s</b></string>
     <string name="user_profile_with_id">設定檔：%1$s（%2$d）</string>
     <string name="failed_to_uninstall_updates">無法解除安裝 <xliff:g id="app_name" example="App Manager"> %1$s </xliff:g> 的更新。</string>
     <string name="update_uninstalled_successfully"><xliff:g id="app_name" example="App Manager"> %1$s </xliff:g> 的更新已解除安裝。</string>
     <string name="compression_method">壓縮方法：<xliff:g id="compression_method" example="GZip">%1$s</xliff:g></string>
-    <string name="process_state_with_extra">国家。<xliff:g id="process_state" example="Sleeping">%1$s</xliff:g> (<xliff:g id="state_extra" example="High priority">%2$s</xliff:g>)</string>
+    <string name="process_state_with_extra">狀態： &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"process_state\" example=\"Sleeping\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"state_extra\" example=\"High priority\"&gt;%2$s&lt;/xliff:g&gt;)</string>
     <string name="process_state">狀態： <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g></string>
-    <string name="locale_split_for_base_apk"><xliff:g id="split_name" example="English">%1$s</xliff:g>基礎 APK的語言</string>
+    <string name="locale_split_for_base_apk">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"English\"&gt; %1$s &lt;/xliff:g&gt;基本語言環境 APK</string>
     <string name="locale_split_for_feature"><xliff:g id="split_name" example="English">%1$s</xliff:g> 功能的著域 <xliff:g id="feature_name" example="Visualizer"> %2$s </xliff:g></string>
-    <string name="abi_split_for_base_apk"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g>基礎APK程式碼</string>
+    <string name="abi_split_for_base_apk">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"arm64_v8a\"&gt;%1$s&lt;/xliff:g&gt;基礎 APK 程式碼</string>
     <string name="abi_split_for_feature"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> <xliff:g id="feature_name" example="Visualizer"> %2$s </xliff:g></string>
     <string name="density_split_for_base_apk"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> （<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI） 基礎 APK 資源</string>
     <string name="density_split_for_feature"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> （<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI） 功能資源 <xliff:g id="feature_name" example="Visualizer">%3$s</xliff:g></string>
@@ -113,7 +113,7 @@
     <string name="block_components_description">封鎖由給定簽名識別的所有元件</string>
     <string name="block_components_dots">塊元件…</string>
     <string name="block_unblock_trackers_description">封鎖或取消封鎖廣告並追蹤所有已安裝應用程式中的元件</string>
-    <string name="pref_import_existing_msg">將其他應用程式停用的元件新增到App Manager。 使用此工具時要小心，因為可能會有很多誤報。僅選擇您確定的應用程式。</string>
+    <string name="pref_import_existing_msg">將其他應用程式停用的元件新增到 App Manager 。 使用此工具時要小心，因為可能會有很多誤報。僅選擇您確定的應用程式。</string>
     <string name="pref_import_existing">匯入現有規則</string>
     <string name="source_code">原始碼</string>
     <string name="launch_app">開啟</string>
@@ -125,8 +125,8 @@
     <string name="follow_system">跟隨系統</string>
     <string name="pref_import_blocker_msg">從Blocker匯入封鎖規則，每個檔案都包含單個程序包的規則。</string>
     <string name="pref_import_watt_msg">從Watt匯入封鎖規則，每個檔案包含單個命名包的規則，如下所示：<tt> packagename.xml</tt> 等等。</string>
-    <string name="pref_import_msg">從App Manager匯入以前匯出的封鎖規則。</string>
-    <string name="pref_export_msg">將在App Manager中配置的封鎖規則匯出到外部儲存空間。</string>
+    <string name="pref_import_msg">從 App Manager 匯入以前匯出的封鎖規則。</string>
+    <string name="pref_export_msg">將在 App Manager 中配置的封鎖規則匯出到外部儲存空間。</string>
     <string name="export_failed">匯出失敗！</string>
     <string name="import_failed">匯入失敗！</string>
     <string name="export_options">匯出選項</string>
@@ -170,10 +170,10 @@
     <string name="specify_custom_name">風俗</string>
     <string name="verified_using_unreliable_hash">使用不可靠的哈希值進行了驗證</string>
     <string name="working_on_adb_mode">在ADB模式下運作</string>
-    <string name="screen_lock_not_enabled">螢幕鎖定未啟用。在Android設定中啟用螢幕鎖定或清除應用程式資料。</string>
+    <string name="screen_lock_not_enabled">螢幕鎖定未啟用。在 Android 設定中啟用螢幕鎖定或清除應用程式資料。</string>
     <string name="isolated">隔離的</string>
     <string name="last_actions">最後動作</string>
-    <string name="pref_enable_disable_features_msg">啟用或停用App Manager中的功能。</string>
+    <string name="pref_enable_disable_features_msg">啟用或停用 App Manager 中的功能。</string>
     <string name="enable_disable_features">啟用/停用功能</string>
     <string name="installed_apps">已安裝的應用程式</string>
     <string name="restart_to_reflect_changes">請立即重新啟動以反映變更</string>
@@ -204,8 +204,8 @@
     <string name="type_int_array_list">整數清單</string>
     <string name="type_int_array">整數數組</string>
     <string name="type_null">沒有價值</string>
-    <string name="screen_lock_msg">使用Android螢幕鎖定鎖定App Manager</string>
-    <string name="screen_lock">螢幕鎖</string>
+    <string name="screen_lock_msg">使用 Android 螢幕鎖定以鎖定 App Manager</string>
+    <string name="screen_lock">螢幕鎖定</string>
     <string name="unlock_app_manager">解鎖應用程式管理器</string>
     <string name="sd_card">SD卡</string>
     <string name="external_storage">外部儲存空間</string>
@@ -232,14 +232,14 @@
     <string name="backup_all_apps">備份所有應用程式</string>
     <string name="backup_custom_users_description">僅對指定使用者執行備份</string>
     <string name="backup_custom_users">自訂使用者</string>
-    <string name="bootloader">引導載入程序</string>
-    <string name="encrypted">加密的</string>
+    <string name="bootloader">引導載入程式</string>
+    <string name="encrypted">已加密</string>
     <string name="unencrypted">未加密</string>
     <string name="no_volumes_found">找不到具有寫入權限的任何卷宗。</string>
     <string name="pref_backup_volume_msg">選擇將儲存空間備份的卷宗或磁碟。</string>
     <string name="backup_volume">備份卷宗</string>
     <string name="pref_backup_restore_msg">自訂備份/還原。</string>
-    <string name="disable_background_run_description">設定模式<i> 忽視</i> 到以下應用程式操作：<tt> RUN_IN_BACKGROUND</tt> （從Android 7.0開始）和<tt> RUN_ANY_IN_BACKGROUND</tt> （來自Android 9）。</string>
+    <string name="disable_background_run_description">它將模式 &lt;i&gt; 忽略 &lt;/i&gt; 設定為以下應用程式操作： &lt;tt&gt; RUN_IN_BACKGROUND &lt;/tt&gt; （從 Android 7.0） 和 &lt;tt&gt; RUN_ANY_IN_BACKGROUND &lt;/tt&gt; （從 Android 9） 。</string>
     <string name="failed_to_enable_magisk_hide">無法啟用MagiskHide</string>
     <string name="enable_magisk_hide">啟用MagiskHide</string>
     <string name="failed_to_disable_magisk_hide">無法停用MagiskHide</string>
@@ -250,11 +250,11 @@
     <string name="density">密度</string>
     <string name="screen">螢幕</string>
     <string name="hardware">硬體</string>
-    <string name="permissive">寬容的</string>
+    <string name="permissive">寬容</string>
     <string name="enforcing">強制執行</string>
     <string name="selinux">SELinux</string>
-    <string name="pref_sign_apk_msg">在安裝APK檔案之前，請先對其進行簽名。</string>
-    <string name="pref_sign_apk">簽名APK</string>
+    <string name="pref_sign_apk_msg">在安裝 APK 檔案之前，請先對其進行簽名。</string>
+    <string name="pref_sign_apk">簽名 APK</string>
     <string name="install_location_prefer_external">偏好外部</string>
     <string name="install_location_internal_only">僅限內部</string>
     <string name="install_location">安裝位置</string>
@@ -303,13 +303,13 @@
     <string name="un_apkm">UnApkm</string>
     <string name="in_progress">進行中</string>
     <string name="conversion_failed">轉換失敗。</string>
-    <string name="select_apk">選擇APK</string>
+    <string name="select_apk">選擇 APK</string>
     <string name="send_crash_report">傳送崩潰報告</string>
     <string name="tap_to_submit_crash_report">點擊提交崩潰報告。</string>
     <string name="am_crashed">AM剛墜毀</string>
     <string name="filter_running_apps">正在執行的應用程式</string>
     <string name="copy">複製</string>
-    <string name="view_missing_signatures">點擊以檢視或傳送尚未出現在App Manager的資源庫資料庫中的簽名。</string>
+    <string name="view_missing_signatures">點擊以檢視或傳送尚未出現在 App Manager 的資源庫資料庫中的簽名。</string>
     <string name="tap_to_see_details">點按即可檢視詳細資訊</string>
     <string name="lib_details">圖書館資料</string>
     <string name="no_libs">沒有圖書館</string>
@@ -423,8 +423,8 @@
     <string name="launch_mode_single_task">單項任務</string>
     <string name="launch_mode_single_instance">單實例</string>
     <string name="launch_mode_multiple">多種的</string>
-    <string name="base_apk">基地APK</string>
-    <string name="choose_language">改變語言</string>
+    <string name="base_apk">基地 APK</string>
+    <string name="choose_language">變更語言</string>
     <string name="auto">自動</string>
     <string name="pref_app_language">語言</string>
     <string name="backup_all_users">全部使用者</string>
@@ -433,12 +433,12 @@
     <string name="obb_files_extracted_successfully">提取的OBB檔案</string>
     <string name="failed_to_extract_obb_files">無法提取OBB檔案</string>
     <string name="backup_obb_media">OBB和媒體</string>
-    <string name="backup_apk_only">僅APK</string>
+    <string name="backup_apk_only">僅 APK</string>
     <string name="installer_error_session_abandon">無法放棄安裝程式會話</string>
-    <string name="installer_error_session_commit">無法提交APK檔案</string>
+    <string name="installer_error_session_commit">無法提交 APK 檔案</string>
     <string name="installer_error_session_write">無法寫入安裝程式會話</string>
     <string name="installer_error_session_create">無法建立安裝程式會話</string>
-    <string name="installer_error_security">無法存取APK檔案</string>
+    <string name="installer_error_security">無法存取 APK 檔案</string>
     <string name="install_in_progress">正在進行安裝</string>
     <string name="package_installer">套件安裝程式</string>
     <string name="unblock_trackers">取消封鎖追蹤器</string>
@@ -453,7 +453,7 @@
     <string name="installer_error_lidl_rom">您的ROM與無 Root 安裝程式不相容。</string>
     <string name="installer_error_generic">安裝失敗</string>
     <string name="installer_error_storage">沒有足夠的儲存空間空間來安裝應用程式</string>
-    <string name="installer_error_bad_apks">選擇了無效的APK檔案</string>
+    <string name="installer_error_bad_apks">選擇了無效的 APK 檔案</string>
     <string name="installer_error_incompatible">該應用程式與此裝置不相容</string>
     <string name="installer_error_conflict">由於與正在使用套件的名稱相衝突，因此無法安裝應用程式</string>
     <string name="installer_error_blocked_device">裝置</string>
@@ -530,9 +530,9 @@
     <string name="clear_data_from_uninstalled_apps">清除已解除安裝應用程式中的資料</string>
     <string name="deny_app_ops_description">為透過常量值標識的應用程式操作設定一種模式，即<tt> 63</tt> 或者<tt> RUN_IN_BACKGROUND</tt></string>
     <string name="clear_cache">清除快取</string>
-    <string name="community_links">更新頻道：https：//t.me/AppManagerChannel
-\n支持小組：https：//t.me/AppManagerAndroid
-\nTwitter：https：//twitter.com/AMUpdateChannel</string>
+    <string name="community_links">更新頻道：https://t.me/AppManagerChannel
+\n支援小組：https://t.me/AppManagerAndroid
+\nTwitter：https://twitter.com/AMUpdateChannel</string>
     <string name="community">電報社區</string>
     <string name="update">更新</string>
     <string name="install">安裝</string>
@@ -543,7 +543,7 @@
         <item quantity="other">%1$d 追蹤器</item>
     </plurals>
     <string name="manifest_viewer">清單檢視器</string>
-    <string name="external_apk_no_app_op">外部APK沒有任何應用程式操作</string>
+    <string name="external_apk_no_app_op">外部 APK 沒有任何應用程式操作</string>
     <string name="changelog">變更日誌</string>
     <string name="one_click_ops">一鍵式操作</string>
     <string name="never_ask">永遠不要問</string>
@@ -592,13 +592,13 @@
     <string name="export_blocking_rules">出口封鎖規則</string>
     <string name="disable_background">停用背景</string>
     <string name="backup_restore">備份/還原</string>
-    <string name="backup_apk">備份APK</string>
+    <string name="backup_apk">備份 APK</string>
     <string name="clear_data">清除資料</string>
     <string name="disable_background_run">停用後台執行</string>
     <string name="kill_process">殺</string>
     <string name="running_apps">正在執行的應用程式</string>
     <string name="store">店鋪</string>
-    <string name="apk_updater">APK更新器</string>
+    <string name="apk_updater">APK 更新器</string>
     <string name="the_export_was_successful">已出口</string>
     <string name="the_import_was_successful">進口的</string>
     <string name="pref_import_watt">從瓦特進口</string>
@@ -615,17 +615,17 @@
     <string name="exodus_link">εxodus鏈接</string>
     <string name="usage_yesterday">昨天</string>
     <string name="patch_level">Android 安全性更新</string>
-    <string name="backup_skip_signature_checks_description">對於還原由於校驗和驗證失敗而失敗的備份或具有與備份的簽名不同的APK簽名的備份很有用。</string>
+    <string name="backup_skip_signature_checks_description">對於還原由於校驗和驗證失敗而失敗的備份或具有與備份的簽名不同的 APK 簽名的備份很有用。</string>
     <string name="backup_multiple_description">使用單獨的命名備份而不是基本備份。</string>
-    <string name="backup_rules_description">備份在App Manager中配置的規則。</string>
+    <string name="backup_rules_description">備份在 App Manager 中配置的規則。</string>
     <string name="backup_extras_description">備份應用程式權限，節省電池，資料使用選項，MagiskHide狀態等。</string>
     <string name="backup_extras">附加功能</string>
     <string name="backup_exclude_cache_description">不要備份快取，no_cache和no_backup資料夾。</string>
     <string name="backup_obb_media_description">備份OBB和媒體資料夾。</string>
     <string name="backup_external_data_description">備份外部資料。<b> 資料</b> 必須選擇此項才能正常運作。</string>
     <string name="backup_data_description">備份資料。如果選中，預設情況下將備份內部資料。</string>
-    <string name="backup_apk_only_description">僅備份源目錄中的APK檔案。<b> 來源</b> 必須選擇此項才能正常運作。</string>
-    <string name="backup_source_description">備份整個源目錄。</string>
+    <string name="backup_apk_only_description">僅備份來源目錄中的 APK 檔案。&lt;b&gt; 來源&lt;/b&gt; 必須選擇此項才能正常運作。</string>
+    <string name="backup_source_description">備份整個來源目錄。</string>
     <string name="set_mode_for_app_ops_dots">設定應用程式操作的模式…</string>
     <string name="security">安全</string>
     <string name="battery">電池</string>
@@ -640,14 +640,14 @@
     <string name="vendor">分發</string>
     <string name="gles_version">GL ES版本</string>
     <string name="no_of_cores">核心數量</string>
-    <string name="support_architectures">支持的架構</string>
+    <string name="support_architectures">支援的架構</string>
     <string name="security_providers">安全提供者</string>
     <string name="kernel">核心</string>
     <string name="manufacturer">製造商</string>
     <string name="board_name">處理器代號</string>
     <string name="model">機型</string>
     <string name="brand_name">品牌</string>
-    <string name="pref_about_device_msg">基本裝置資訊，包括Android系統，CPU，GPU，RAM，電池等。</string>
+    <string name="pref_about_device_msg">基本裝置資訊，包括 Android 系統，CPU，GPU，RAM，電池等。</string>
     <string name="about_device">關於裝置</string>
     <string name="set_custom_app_op">設定自訂應用程式</string>
     <string name="interceptor">攔截器</string>
@@ -666,25 +666,25 @@
     <string name="filter_apps_with_splits">拆分的應用程式</string>
     <string name="set_app_op_mode">在時尚上設定應用程式</string>
     <string name="magisk_hide_enabled">魔力皮</string>
-    <string name="pref_backup_android_keystore_msg">還原後，並非所有應用程式都能正常運作。還原KeyStore不適用於大多數裝置。</string>
-    <string name="pref_backup_android_keystore">使用Android KeyStore備份應用程式</string>
+    <string name="pref_backup_android_keystore_msg">還原後，並非所有應用程式都能正常運作。還原 KeyStore 不適用於大多數裝置。</string>
+    <string name="pref_backup_android_keystore">使用 Android KeyStore 備份應用程式</string>
     <string name="keep_data_and_signatures">保留資料和簽名</string>
     <string name="this_action_cannot_be_undone">此操作無法撤消。</string>
     <string name="no_app_ops_permission">沒有顯示應用程式操作的權限</string>
-    <string name="input_keystore_pass_msg">點按此處以提供KeyStore密碼</string>
-    <string name="input_keystore_pass_description">插入應用程式管理器KeyStore密碼。如果您是第一次看到此密碼，請先使用密碼生成器生成密碼並將其儲存在安全的位置，然後再將其插入此處。</string>
+    <string name="input_keystore_pass_msg">點按此處以提供 KeyStore 密碼</string>
+    <string name="input_keystore_pass_description">插入應用程式管理器 KeyStore 密碼。如果您是第一次看到此密碼，請先使用密碼產生器產生密碼並將其儲存在安全的位置，然後再將其插入此處。</string>
     <string name="input_keystore_pass">輸入密鑰資源庫密碼</string>
     <string name="splits">分裂</string>
     <string name="source_stamp_verified">SourceStamp已驗證。</string>
     <string name="not_verified">未驗證</string>
     <string name="verified">已驗證</string>
     <string name="pref_signature_schemes_msg">至少應選擇v1和v2方案以獲得更大的相容性。 v4方案需要v2或v3。</string>
-    <string name="v4_scheme">v4方案（自Android 11起）</string>
-    <string name="v3_scheme">v3方案（自Android 9起）</string>
-    <string name="v2_scheme">v2方案（自Android 7.0起）</string>
-    <string name="v1_scheme">v1方案（自Android 1.0起）</string>
+    <string name="v4_scheme">v4方案（自 Android 11起）</string>
+    <string name="v3_scheme">v3方案（自 Android 9起）</string>
+    <string name="v2_scheme">v2方案（自 Android 7.0起）</string>
+    <string name="v1_scheme">v1方案（自 Android 1.0起）</string>
     <string name="pref_apk_signing_msg">設定簽名方案，自訂簽名密鑰等。</string>
-    <string name="apk_signing">APK簽名</string>
+    <string name="apk_signing">APK 簽名</string>
     <string name="signing_keys">簽名密鑰</string>
     <string name="signature_schemes">簽名方案</string>
     <string name="only_works_in_root_mode">僅在root模式下可用</string>
@@ -739,16 +739,16 @@
     <string name="requested_large_heap">大堆</string>
     <string name="no_code">沒有密碼</string>
     <string name="process_name">處理程序名稱</string>
-    <string name="native_library_dir">本機JNI資源庫目錄</string>
+    <string name="native_library_dir">原生 JNI 資源庫目錄</string>
     <string name="dev_protected_data_dir">裝置;保護的資料目錄</string>
-    <string name="search">搜索</string>
+    <string name="search">搜尋</string>
     <string name="menu_apply_rules">套用規則</string>
     <string name="menu_remove_rules">刪除規則</string>
-    <string name="failed_to_extract_apk_file">無法提取APK檔案</string>
+    <string name="failed_to_extract_apk_file">無法提取 APK 檔案</string>
     <string name="grant_usage_acess_message">使用權限存取是必不可少的，以便顯示應用程式使用情況資訊。</string>
     <string name="grant_usage_access">授予使用權限</string>
-    <string name="go">去</string>
-    <string name="go_back">回去</string>
+    <string name="go">前往</string>
+    <string name="go_back">返回</string>
     <string name="usage_less_than_a_minute">不到一分鐘</string>
     <plurals name="usage_hours">
         <item quantity="other">%1$d hr</item>
@@ -772,18 +772,18 @@
     <string name="toggle_class_listing">切換類別清單</string>
     <string name="class_viewer">類檢視器</string>
     <string name="word_wrap">切換自動換行</string>
-    <string name="credits_message">"致
-\n- Android開源項目
-\n-<a href="https://bitbucket.org/oF2pks/fdroid-applications-info"> Apps_packages資訊</a>
-\n-<a href="https://github.com/butzist/ActivityLauncher"> 活動啟動器</a>
-\n-<a href="https://github.com/billthefarmer/editor"> 編輯</a>
-\n-<a href="https://github.com/zhaobao/AppsMonitor"> AppsMonitor</a>
-\n-<a href="https://github.com/tuyafeng/Watt"> 瓦</a>
-\n-<a href="https://github.com/8enet/AppOpsX"> AppOpsX</a>
-\n-<a href="https://github.com/Aefyr/SAI"> SAI</a>
-\n-<a href="https://github.com/RikkaApps/Shizuku"> 靜久</a>
-\n原始徽標信用：<a href="https://github.com/Atrate"> 阿特拉蒂瓦</a> . "</string>
-    <string name="credits">學分</string>
+    <string name="credits_message">"感謝以下這些開放原始碼專案的付出
+\n- The Android Open Source Project
+\n- &lt;a href=\"https://bitbucket.org/oF2pks/fdroid-applications-info\"&gt;Apps_packages Info&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/butzist/ActivityLauncher\"&gt;Activity Launcher&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/billthefarmer/editor\"&gt;Editor&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/zhaobao/AppsMonitor\"&gt;AppsMonitor&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/tuyafeng/Watt\"&gt;Watt&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/8enet/AppOpsX\"&gt;AppOpsX&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/Aefyr/SAI\"&gt;SAI&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/RikkaApps/Shizuku\"&gt;Shizuku&lt;/a&gt;
+\nOriginal logo credit: &lt;a href=\"https://github.com/Atrate\"&gt;Atrate&lt;/a&gt;. "</string>
+    <string name="credits">致謝</string>
     <string name="third_party">第三方資源庫和圖示</string>
     <string name="license">執照</string>
     <string name="icon_picker">圖示選擇器</string>
@@ -795,7 +795,7 @@
     <string name="shortcut_name">捷徑名稱</string>
     <string name="edit_shortcut">編輯捷徑</string>
     <string name="create_shortcut">建立捷徑</string>
-    <string name="error_verbose_pin_shortcut">目前啟動器不支持PinShortcut。無法建立捷徑。</string>
+    <string name="error_verbose_pin_shortcut">目前啟動器不支援PinShortcut。無法建立捷徑。</string>
     <string name="error_creating_shortcut">建立捷徑時發生錯誤</string>
     <string name="empty_package_name">空 套件名稱為空</string>
     <string name="main_activity">主要活動</string>
@@ -805,7 +805,7 @@
     <string name="sdk_max">目標</string>
     <string name="sdk_min">最低</string>
     <string name="data_dir">資料目錄</string>
-    <string name="source_dir">源目錄</string>
+    <string name="source_dir">來源目錄</string>
     <string name="paths_and_directories">路徑</string>
     <string name="user">使用者</string>
     <string name="app_not_installed">應用程式未安裝</string>
@@ -821,7 +821,7 @@
     <string name="sort_by_domain">使用者應用程式優先</string>
     <string name="sort_by_package_name">套件名稱</string>
     <string name="sort_by_app_label">應用程式標籤</string>
-    <string name="manifest">顯現</string>
+    <string name="manifest">清單</string>
     <string name="input_features">輸入功能</string>
     <string name="no_configurations">沒有配置</string>
     <string name="configurations">構型</string>
@@ -834,25 +834,25 @@
     <string name="gles_ver">要求GL ES版本</string>
     <string name="uses_feature">使用功能</string>
     <string name="protection_level">防護等級</string>
-    <string name="group">團體</string>
+    <string name="group">群組</string>
     <string name="shared_libs">共享資源庫</string>
     <string name="declared_permission">權限</string>
     <string name="patterns_allowed">允許的圖案</string>
-    <string name="write">寫</string>
-    <string name="read">讀</string>
+    <string name="write">寫入</string>
+    <string name="read">讀取</string>
     <string name="path_permissions">路徑權限</string>
     <string name="grant_uri_permission">授予URI權限</string>
     <string name="soft_input">軟輸入模式</string>
-    <string name="orientation">方向</string>
+    <string name="orientation">螢幕轉向</string>
     <string name="no_service">沒有服務</string>
     <string name="service">服務</string>
     <string name="authority">權威</string>
-    <string name="no_providers">沒有提供者</string>
+    <string name="no_providers">無提供者</string>
     <string name="providers">提供者</string>
-    <string name="no_receivers">沒有接收者</string>
-    <string name="receivers">接收者</string>
+    <string name="no_receivers">無接收器</string>
+    <string name="receivers">接收器</string>
     <string name="no_activities">沒有活動</string>
     <string name="refresh">重新整理</string>
     <string name="activities">活動</string>
-    <string name="require_no_permission">無需授權</string>
+    <string name="require_no_permission">不需要任何權限</string>
 </resources>
