@@ -15,6 +15,7 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="_lang_tag" translatable="false">zh-TW</string>
     <string name="uninstall">解除安裝</string>
     <string name="permissions">使用權限</string>
     <string name="sort_by_last_update">最後更新</string>
@@ -525,9 +526,9 @@
     <string name="no_tracker_found">找不到追蹤器</string>
     <string name="clear_app_cache_description">清除所有應用程式的快取</string>
     <string name="clear_app_cache">清除應用程式快取</string>
-    <string name="clear_data_from_uninstalled_apps_description">清除透過以下方式解除安裝的應用程式中的資料&lt;tt&gt; DONT_DELETE_DATA&lt;/tt&gt; 旗幟</string>
+    <string name="clear_data_from_uninstalled_apps_description">清除透過以下方式解除安裝的應用程式中的資料<tt> DONT_DELETE_DATA</tt> 旗幟</string>
     <string name="clear_data_from_uninstalled_apps">清除已解除安裝應用程式中的資料</string>
-    <string name="deny_app_ops_description">為透過常量值標識的應用程式操作設定一種模式，即&lt;tt&gt; 63&lt;/tt&gt; 或者&lt;tt&gt; RUN_IN_BACKGROUND&lt;/tt&gt;</string>
+    <string name="deny_app_ops_description">為透過常量值標識的應用程式操作設定一種模式，即<tt> 63</tt> 或者<tt> RUN_IN_BACKGROUND</tt></string>
     <string name="clear_cache">清除快取</string>
     <string name="community_links">更新頻道：https：//t.me/AppManagerChannel
 \n支持小組：https：//t.me/AppManagerAndroid
