@@ -1,2 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="disclaimer_body">App Manager ofertas funkciojn de ĉefuzanto, kiuj eble povus damaĝi vian aparaton se ili estas malĝuste uzataj. App Manager ne respondecas pri iuj ajn damaĝoj kaŭzitaj de la uzo de ĉi tiu aplikaĵo. Se vi ne plene konscias pri la funkcioj de ĉefuzanto, vi evitu uzi ĉefuzantajn opciojn ĝis vi plene konscias pri la riskoj.
+\n
+\nĈiu ajn ligilo provizata de mi al aliaj aplikaĵoj kaj retejoj estas por la utilo de la uzanto. Mi ne respondecas pri iu ajn enhavo, kiun vi eble trovos per eksteraj ligiloj.
+\n
+\nUzante App Manager, vi akceptas plenan respondecon pri via propra uzado kaj akceptas, ke neniu damaĝo estos kompensita pro misuzo.
+\n
+\nUzante ĉi tiun aplikaĵon, vi akceptas ĉian respondecon uzi ĝin kaj konsentas, ke mi ne respondecas pri iuj ajn agoj, kiujn vi faros, kiuj malutiligos vian aparaton.</string>
+    <string name="disclaimer_exit">Eliri</string>
+    <string name="disclaimer_agree">Mi Konsentas</string>
+    <string name="disclaimer_agree_forever">Ne montri ĉi tion denove</string>
+    <string name="disclaimer_footer">© 2020 Muntashir Al-Islam</string>
+    <string name="disclaimer_header">MALGARANTIO</string>
+</resources>
