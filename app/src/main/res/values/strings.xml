@@ -813,7 +813,7 @@
     <string name="backup_obb_media_description">Back up OBB and media folders.</string>
     <string name="backup_exclude_cache_description">Do not back up cache, no_cache and no_backup folders.</string>
     <string name="backup_extras">Extras</string>
-    <string name="backup_extras_description">Back up app permissions, battery saving, data usage options, MagiskHide status, etc.</string>
+    <string name="backup_extras_description">Back up app permissions, battery saving and data usage options, MagiskHide status, etc.</string>
     <string name="backup_rules_description">Back up rules configured within App Manager.</string>
     <string name="backup_multiple_description">Use a separate <i>named</i> backup instead of the base backup.</string>
     <string name="backup_skip_signature_checks_description">Can restore backups that either fail checksum verification or have different APK signatures than their prior backups.</string>
@@ -881,7 +881,7 @@
     <string name="type_uri">URI</string>
     <string name="no_battery_optimization">No battery optimization</string>
     <string name="battery_optimization">Battery optimization</string>
-    <string name="enable_battery_optimization">Turn on battery optimization?</string>
+    <string name="enable_battery_optimization">Enable battery optimization for AppManager?</string>
     <string name="choose_what_to_do">Choose what to do.</string>
     <string name="has_net_policy">Net policy</string>
     <string name="net_policy">Net policy</string>
@@ -900,10 +900,10 @@
     <string name="restart_to_reflect_changes">Restart the device to use the new changes.</string>
     <string name="installed_apps">Installed apps</string>
     <string name="enable_disable_features">Enable/disable features</string>
-    <string name="pref_enable_disable_features_msg">Turn on or off features in App Manager.</string>
+    <string name="pref_enable_disable_features_msg">Enable or disable features in App Manager.</string>
     <string name="last_actions">Last actions</string>
     <string name="isolated">Isolated</string>
-    <string name="screen_lock_not_enabled">Screen lock off. Turn it on in the Android settings, or clear app data.</string>
+    <string name="screen_lock_not_enabled">Please pick a screen lock in the Android settings, or clear app data.</string>
     <string name="working_on_adb_mode">Working on ADB mode</string>
     <string name="verified_using_unreliable_hash">Verified using unreliable hash</string>
     <string name="specify_custom_name">Custom</string>
