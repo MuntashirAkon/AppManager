@@ -43,6 +43,8 @@ height="80" />](https://apt.izzysoft.de/fdroid/index/apk/io.github.muntashirakon
 ### Translations
 
 Help translate [App Manager at Hosted Weblate](https://hosted.weblate.org/engage/app-manager/)
+The App Manager Docs are translated [at Crowdin](https://crwd.in/app-manager-docs) till https://github.com/MuntashirAkon/AppManager/issues/303 is closed.
+
 
 [![Translation status](https://hosted.weblate.org/widgets/app-manager/-/multi-auto.svg)](https://hosted.weblate.org/engage/app-manager/)
 
