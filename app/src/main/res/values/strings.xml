@@ -645,7 +645,7 @@
     <string name="pref_compression_method">Compression method</string>
     <string name="pref_backup_flags_msg">Adding a preset for backup options removes the burden of selecting flags every time you back up/restore.</string>
     <string name="confirm_installation">Confirm installation</string>
-    <string name="allow_open_pgp_operation">Click to allow App Manager to use OpenPGP</string>
+    <string name="allow_open_pgp_operation">Tap to allow App Manager to use OpenPGP</string>
     <string name="uninstall_updates">Uninstall Updates</string>
     <string name="update_uninstalled_successfully">Updates for <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> has been uninstalled.</string>
     <string name="failed_to_uninstall_updates">Could not uninstall updates for <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
