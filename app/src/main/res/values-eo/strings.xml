@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="paths_and_directories">Vojoj kaj Dosierujoj</string>
     <string name="user_app">Uzanta aplikaĵo</string>
     <string name="system_app">Operaciuma aplikaĵo</string>
@@ -20,4 +20,53 @@
     <string name="launch_mode">Lanĉada reĝimo</string>
     <string name="launch">Lanĉi</string>
     <string name="uninstall">Malinstali</string>
+    <string name="class_name">Nomo de Klaso</string>
+    <string name="icon_picker">Ikonelektilo</string>
+    <string name="third_party">Triapartiaj Bibliotekoj kaj Ikonoj</string>
+    <string name="all_classes">Ĉiuj klasoj</string>
+    <string name="license">Permesilo</string>
+    <string name="authority">Aŭtoritato</string>
+    <string name="orientation_sensor">Sentilo</string>
+    <string name="orientation_user">Uzanto</string>
+    <string name="orientation_reverse_landscape">Renversita horizontala</string>
+    <string name="orientation_reverse_portrait">Renversita vertikala</string>
+    <string name="orientation_portrait">Vertikala</string>
+    <string name="orientation_landscape">Horizontala</string>
+    <string name="orientation_no_sensor">Neniu sentilo</string>
+    <string name="orientation_locked">Ŝlosita</string>
+    <string name="orientation_full_user">Plena uzanto</string>
+    <string name="orientation_full_sensor">Plena sentilo</string>
+    <string name="orientation_unspecified">Ne specifita</string>
+    <string name="orientation">Orientiĝo</string>
+    <string name="sort_by_permission_names">Nomo de permeso</string>
+    <string name="permission_name">Nomo de Permeso</string>
+    <string name="declared_permission">Permesoj</string>
+    <string name="path_permissions">Dosierindikaj permesoj</string>
+    <string name="no_service">Neniu servo</string>
+    <string name="service">Servoj</string>
+    <string name="write">Skribi</string>
+    <string name="state_multithreaded">Plurfadena</string>
+    <string name="read">Legi</string>
+    <string name="sdk_flags">Flagoj</string>
+    <string name="flags">Flagoj</string>
+    <string name="activity_result">Rezulto de aktiveco</string>
+    <string name="matching_activities">Kongruaj aktivecoj</string>
+    <string name="filter_apps_with_activities">Aplikaĵoj kun aktivecoj</string>
+    <string name="credits_message">Al la aŭtoroj de
+\n- The Android Open Source Project
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
+\n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
+\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
+\n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://github.com/Aefyr/SAI">SAI</a>
+\n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
+\nAŭtoro de originala emblemo: <a href="https://github.com/Atrate">Atrate</a>. </string>
+    <string name="starting_activity">Komencante aktivecon: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"activity_name\" example=\".main.MainActivity\"&gt;%1$s&lt;/xliff:g&gt;</string>
+    <string name="main_activity">Ĉefaktiveco</string>
+    <string name="no_activities">Neniu aktiveco</string>
+    <string name="activities">Aktivecoj</string>
+    <string name="require_no_permission">Neniu permeso necesas</string>
+    <string name="permissions">Uzas permesojn</string>
 </resources>
