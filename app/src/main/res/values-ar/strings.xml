@@ -1,2 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="install_without_data_loss">إذا قمت بإيقاف تشغيل التحقق من التوقيع ، يمكنك استخدام خيار <b> تثبيت </b> فقط لتثبيت التطبيق دون فقدان البيانات.</string>
+    <string name="ssaid_info">SSAID (<tt> Settings.Secure.ANDROID_ID </tt>) هو معرف جهاز يتم تعيينه لكل تطبيق (من Android Oreo). تستخدمه التطبيقات على نطاق واسع لتتبع المستخدمين.</string>
+    <string name="backup_skip_signature_checks_description">مفيدة لاستعادة النسخ الاحتياطية التي تفشل بسبب فشل التحقق المجموع الاختباري أو لديه توقيع APK مختلفة من واحد احتياطياً.</string>
+    <string name="input_app_ops_description_profile">أدخل أسماء عمليات التطبيق و / أو الثوابت بمسافات ، على سبيل المثال <tt> WAKE_LOCK 63 72 CAMERA </tt> إلخ. استخدم <tt> * </tt> للتقدم لجميع عمليات التطبيق التي تمت تهيئتها.</string>
+    <string name="input_backup_name_description">يجب ألا يبدأ اسم النسخة الاحتياطية برقم ولا يجب أن يحتوي على مسافات. اتركه فارغًا إذا كنت تريد استخدام التاريخ والوقت الحالي.</string>
+    <string name="pref_import_existing_msg">أضف مكونات تم تعطيلها بواسطة تطبيقات أخرى إلى App Manager. كن حذرا عند استخدام هذه الأداة كما يمكن أن يكون هناك العديد من الإيجابيات الكاذبة. اختر فقط التطبيقات التي تكون متأكدًا بشأنها.</string>
+    <string name="input_keystore_pass_description">أدخل كلمة مرور App Manager KeyStore. إذا كنت ترى هذا للمرة الأولى ، فالرجاء استخدام منشئ كلمة المرور لإنشاء كلمة مرور وحفظها في مكان آمن قبل إدخالها هنا.</string>
+</resources>
