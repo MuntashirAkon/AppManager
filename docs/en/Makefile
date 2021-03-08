@@ -17,9 +17,14 @@ pdf:
 	xelatex -file-line-error -interaction=nonstopmode -synctex=1 -output-directory=. -shell-escape main.tex
 
 gettext:
-	po4a-gettextize -f latex -m main.tex -p main.$(LOCALE).po --copyright-holder "Muntashir Al-Islam" \
+	po4a-gettextize -f latex -m main.tex -p ../po_files/main.pot --copyright-holder "Muntashir Al-Islam" \
+	 --package-name "io.github.muntashirakon.AppManager" --package-version \
+	 `cat ../../app/build.gradle | grep -m1 versionName | awk -F \" '{print "v"$$2}'`
+
+gettext_po:
+	po4a-gettextize -f latex -m main.tex -p ../po_files/main.$(LOCALE).po --copyright-holder "Muntashir Al-Islam" \
 	 --package-name "io.github.muntashirakon.AppManager" --package-version \
 	 `cat ../../app/build.gradle | grep -m1 versionName | awk -F \" '{print "v"$$2}'`
 
 translate:
-	po4a-translate -f latex -m main.tex -p main.$(LOCALE).po -l main.$(LOCALE).tex
+	po4a-translate -f latex -m main.tex -p ../po_files/main.$(LOCALE).po -l main.$(LOCALE).tex
