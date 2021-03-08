@@ -473,8 +473,8 @@
     <string name="clear">清除</string>
     <string name="clear_data_message">您確定要清除此應用程式中的資料嗎？</string>
     <string name="skip_signature_checks">跳過簽名檢查</string>
-    <string name="yes">是的</string>
-    <string name="no">不</string>
+    <string name="yes">是</string>
+    <string name="no">否</string>
     <string name="apply_to_system_apps_question">也適用於系統應用程式嗎？如果不確定，請選擇否。</string>
     <string name="apply_to_system_apps">應用程式於系統應用程式</string>
     <plurals name="signature_schemes_pl">
@@ -533,7 +533,7 @@
     <string name="community_links">更新頻道：https://t.me/AppManagerChannel
 \n支援小組：https://t.me/AppManagerAndroid
 \nTwitter：https://twitter.com/AMUpdateChannel</string>
-    <string name="community">電報社區</string>
+    <string name="community">Telegram 社群</string>
     <string name="update">更新</string>
     <string name="install">安裝</string>
     <plurals name="no_of_components">
@@ -565,7 +565,7 @@
     <string name="sort_by_app_ops_names">應用程式操作名稱</string>
     <string name="deny_dangerous_app_ops">拒絕危險的應用程式操作</string>
     <string name="reset_to_default">重置為預設</string>
-    <string name="block_trackers">區塊追蹤器</string>
+    <string name="block_trackers">封鎖追蹤器</string>
     <string name="sort_by_wifi_data">Wi-Fi資料</string>
     <string name="version">版本</string>
     <string name="apply">套用</string>
@@ -588,7 +588,7 @@
     <string name="permission_name">權限名稱</string>
     <string name="app_op_cannot_be_disabled">無法停用此應用程式op，可能是只讀應用程式op依賴於另一個應用程式op。</string>
     <string name="toggle_kill_for_system_apps">切換殺死系統應用程式</string>
-    <string name="the_operation_was_successful">完畢</string>
+    <string name="the_operation_was_successful">完成</string>
     <string name="export_blocking_rules">出口封鎖規則</string>
     <string name="disable_background">停用背景</string>
     <string name="backup_restore">備份/還原</string>
@@ -717,7 +717,7 @@
     <string name="type_int">整數</string>
     <string name="type_float">小數</string>
     <string name="type_boolean">真假</string>
-    <string name="done">完畢</string>
+    <string name="done">完成</string>
     <string name="add_item">新增項目</string>
     <string name="select_type">選擇類型</string>
     <string name="key_name">鍵名</string>
@@ -772,7 +772,7 @@
     <string name="toggle_class_listing">切換類別清單</string>
     <string name="class_viewer">類檢視器</string>
     <string name="word_wrap">切換自動換行</string>
-    <string name="credits_message">"感謝以下這些開放原始碼專案的付出
+    <string name="credits_message">"感謝以下開發者
 \n- The Android Open Source Project
 \n- &lt;a href=\"https://bitbucket.org/oF2pks/fdroid-applications-info\"&gt;Apps_packages Info&lt;/a&gt;
 \n- &lt;a href=\"https://github.com/butzist/ActivityLauncher\"&gt;Activity Launcher&lt;/a&gt;
