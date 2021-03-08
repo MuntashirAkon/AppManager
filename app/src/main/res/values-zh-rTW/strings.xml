@@ -589,8 +589,8 @@
     <string name="app_op_cannot_be_disabled">無法停用此應用程式op，可能是只讀應用程式op依賴於另一個應用程式op。</string>
     <string name="toggle_kill_for_system_apps">切換殺死系統應用程式</string>
     <string name="the_operation_was_successful">完成</string>
-    <string name="export_blocking_rules">出口封鎖規則</string>
-    <string name="disable_background">停用背景</string>
+    <string name="export_blocking_rules">匯出封鎖規則</string>
+    <string name="disable_background">停用背景活動</string>
     <string name="backup_restore">備份/還原</string>
     <string name="backup_apk">備份 APK</string>
     <string name="clear_data">清除資料</string>
@@ -599,7 +599,7 @@
     <string name="running_apps">正在執行的應用程式</string>
     <string name="store">店鋪</string>
     <string name="apk_updater">APK 更新器</string>
-    <string name="the_export_was_successful">已出口</string>
+    <string name="the_export_was_successful">已匯出</string>
     <string name="the_import_was_successful">進口的</string>
     <string name="pref_import_watt">從瓦特進口</string>
     <string name="sort_by_mobile_data">移動資料</string>
@@ -701,7 +701,7 @@
     <string name="total_size">全部</string>
     <string name="storage_and_cache">儲存空間和快取</string>
     <string name="force_stop">強制停止</string>
-    <string name="enable">使能夠</string>
+    <string name="enable">啟用</string>
     <string name="disable">停用</string>
     <string name="stopped">已停止</string>
     <string name="uninstall_system_app_message">這是一個系統應用程式。您確定要解除安裝此應用程式嗎？</string>
@@ -843,7 +843,7 @@
     <string name="path_permissions">路徑權限</string>
     <string name="grant_uri_permission">授予URI權限</string>
     <string name="soft_input">軟輸入模式</string>
-    <string name="orientation">螢幕轉向</string>
+    <string name="orientation">螢幕旋轉</string>
     <string name="no_service">沒有服務</string>
     <string name="service">服務</string>
     <string name="authority">權威</string>
