@@ -7,43 +7,55 @@ msgid ""
 msgstr ""
 "Project-Id-Version: io.github.muntashirakon.AppManager v2.5.24\n"
 "POT-Creation-Date: 2021-03-08 14:11+0600\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2021-03-08 23:01+0000\n"
+"Last-Translator: Muntashir Al-Islam <muntashirakon@riseup.net>\n"
+"Language-Team: Russian <https://hosted.weblate.org/projects/app-manager/docs/"
+"ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 4.5.1\n"
 
 #. type: newenvironment{#3}
 #: main.tex:47
 msgid "\\mdframed[linecolor={#1},backgroundcolor=white,linewidth=3pt,topline=false,rightline=false,bottomline=false]"
 msgstr ""
+"\\mdframed[linecolor={#1},backgroundcolor=white,linewidth=3pt,topline=false,r"
+"ightline=false,bottomline=false]"
 
 #. type: newenvironment{#4}
 #: main.tex:47
 msgid "\\endmdframed"
-msgstr ""
+msgstr "\\endmdframed"
 
 #. type: newenvironment{#3}
 #: main.tex:58
 msgid "\\amalert{black} \\noindent \\textbf{\\textit{#1.}}"
 msgstr ""
+"\\amalert{black} \\n"
+"oindent \\textbf{\\textit{#1.}}"
 
 #. type: newenvironment{#4}
 #: main.tex:58 main.tex:69 main.tex:80
 msgid "\\endamalert"
-msgstr ""
+msgstr "\\endamalert"
 
 #. type: newenvironment{#3}
 #: main.tex:69
 msgid "\\amalert{Dandelion} \\noindent \\textbf{\\textit{#1.}}"
 msgstr ""
+"\\amalert{Dandelion} \\n"
+"oindent \\textbf{\\textit{#1.}}"
 
 #. type: newenvironment{#3}
 #: main.tex:80
 msgid "\\amalert{BrickRed} \\noindent \\textbf{\\textit{#1.}}"
 msgstr ""
+"\\amalert{BrickRed} \\n"
+"oindent \\textbf{\\textit{#1.}}"
 
 #.  --------------------
 #.  Reference overrides (useful for localization)
@@ -56,7 +68,7 @@ msgstr ""
 #. type: newcommand{#4}
 #: main.tex:87
 msgid "\\listingrefname~\\ref{#1}"
-msgstr ""
+msgstr "\\listingrefname~\\ref{#1}"
 
 #.  ----------------------
 #.  See also environments
@@ -65,27 +77,29 @@ msgstr ""
 #: main.tex:95
 msgid "\\noindent\\textit{See also: {#1}}"
 msgstr ""
+"\\n"
+"oindent\\textit{Смотрите также: {#1}}"
 
 #. type: newenvironment{#3}
 #: main.tex:95
 msgid "\\itshape See also: \\itemize"
-msgstr ""
+msgstr "\\itshape Смотрите также: \\itemize"
 
 #. type: newenvironment{#4}
 #: main.tex:95
 msgid "\\enditemize"
-msgstr ""
+msgstr "\\enditemize"
 
 #.  META
 #. type: title{#1}
 #: main.tex:114
 msgid "App Manager"
-msgstr ""
+msgstr "App Manager"
 
 #. type: author{#1}
 #: main.tex:114
 msgid "Muntashir Al-Islam"
-msgstr ""
+msgstr "Muntashir Al-Islam"
 
 #. type: center
 #: ./intro/main.tex
@@ -109,7 +123,7 @@ msgstr ""
 #: ./intro/main.tex
 #: :2
 msgid "Introduction"
-msgstr ""
+msgstr "Введение"
 
 #. type: document
 #: ./intro/main.tex
@@ -305,7 +319,7 @@ msgstr ""
 #: ./intro/main.tex
 #: :62
 msgid "Riseup: \\url{https://0xacab.org/muntashir/AppManager}"
-msgstr ""
+msgstr "Riseup: \\url{https://0xacab.org/muntashir/AppManager}"
 
 #. type: subsection{#2}
 #: ./intro/main.tex
@@ -474,7 +488,7 @@ msgstr ""
 #: ./pages/main-page.tex
 #: :8
 msgid "Main Page"
-msgstr ""
+msgstr "Главная страница"
 
 #. type: document
 #: ./pages/main-page.tex
@@ -491,12 +505,24 @@ msgid ""
 "using more than one options. You can also filter apps using app labels or "
 "package name using the search button."
 msgstr ""
+"На главной странице перечислены все установленные приложения (или список "
+"приложений, предоставленных любым сторонним приложением), а также "
+"приложения, для которых есть резервные копии. Одиночное нажатие по любому "
+"элементу установленного приложения открывает соответствующую \\hyperref[sec"
+":app-details-page]{страницу «Сведения о приложении»}. Используя опцию "
+"\\hyperlink{par:main-page-sort}{сортировка} в меню, приложения можно "
+"отсортировать различными способами и сохранять настройку сортировки при "
+"закрытии. Также можно фильтровать элементы в соответствии с вашими "
+"предпочтениями, используя опцию \\hyperlink{par:main-page-filter}{фильтрации}"
+" в меню. Вы можете фильтровать, используя более одной опции. Вы также можете "
+"фильтровать приложения по ярлыкам приложений или имени пакета с помощью "
+"кнопки поиска."
 
 #. type: subsection{#2}
 #: ./pages/main-page.tex
 #: :24
 msgid "Batch Operations"
-msgstr ""
+msgstr "Пакетные Операции"
 
 #. type: document
 #: ./pages/main-page.tex
@@ -509,73 +535,80 @@ msgid ""
 "use the regular click to select apps instead of opening the App Details "
 "page. These operations include:"
 msgstr ""
+"На этой странице также доступны пакетные операции или операции с несколькими "
+"приложениями (для большинства этих операций требуются root-права или "
+"\\hyperref[sec:adb-over-tcp]{ADB через TCP}). Чтобы включить режим "
+"множественного выбора, нажмите на значок любого приложения или коснитесь и "
+"удерживайте название любого приложения. После этого вы можете использовать "
+"обычное нажатие для выбора приложений вместо открытия страницы «Сведения о "
+"приложении». Эти операции включают в себя:"
 
 #. type: itemize
 #: ./pages/main-page.tex
 #: :24
 msgid "Backup APK file (no root)"
-msgstr ""
+msgstr "Резервное копирование файлов APK (без root)"
 
 #. type: hyperref{#2}
 #: ./pages/main-page.tex
 #: :24
 msgid "Backup/restore/delete app data"
-msgstr ""
+msgstr "Резервное копирование/восстановление, удаление данных приложения"
 
 #. type: itemize
 #: ./pages/main-page.tex
 #: :24
 msgid "Clear data from apps"
-msgstr ""
+msgstr "Очистка данных приложений"
 
 #. type: itemize
 #: ./pages/main-page.tex
 #: :24
 msgid "Enable/disable/force-stop/uninstall apps"
-msgstr ""
+msgstr "Отключение/удаление/закрытие приложений"
 
 #. type: itemize
 #: ./pages/main-page.tex
 #: :24
 msgid "Disable run in background"
-msgstr ""
+msgstr "Отключение фонового режима"
 
 #. type: itemize
 #: ./pages/main-page.tex
 #: :24
 msgid "Block ad and tracker components"
-msgstr ""
+msgstr "Блокировать рекламу и компоненты трекера"
 
 #. type: itemize
 #: ./pages/main-page.tex
 #: :24
 msgid "Export blocking rules"
-msgstr ""
+msgstr "Экспорт правил блокировки"
 
 #. type: itemize
 #: ./pages/main-page.tex
 #: :24
 msgid "Add the selected apps to a \\hyperref[sec:profiles-page]{profile}"
-msgstr ""
+msgstr "Добавить выбранные приложения в \\hyperref[sec:profiles-page]{профиль}"
 
 #. type: subsection{#2}
 #: ./pages/main-page.tex
 #: :42 ./pages/app-details-page.tex
 #: :12
 msgid "Colour Codes"
-msgstr ""
+msgstr "Цветовые коды"
 
 #. type: document
 #: ./pages/main-page.tex
 #: :42
 msgid "Here's the list of colours used in this page, and their meaning:"
-msgstr ""
+msgstr "Вот список цветов, используемых на этой странице, и их значения:"
 
 #. type: textcolor{#2}
 #: ./pages/main-page.tex
 #: :42
 msgid "Light greyish orange (day)"
-msgstr ""
+msgstr "Светло-серовато-оранжевый (светлая тема)"
 
 #. type: itemize
 #: ./pages/main-page.tex
@@ -584,13 +617,15 @@ msgid ""
 "/ \\colorbox{AMDarkBlue}{ \\textcolor{white}{dark blue (night)}} -- App "
 "selected for batch operation"
 msgstr ""
+"/ \\colorbox{AMDarkBlue}{ \\textcolor{white}{темно-синий (темная тема)}} -- "
+"приложение выбрано для пакетной операции"
 
 #. type: textcolor{#2}
 #: ./pages/main-page.tex
 #: :42 ./pages/app-details-page.tex
 #: :18
 msgid "Light red (day)"
-msgstr ""
+msgstr "Светло-красный (светлая тема)"
 
 #. type: itemize
 #: ./pages/main-page.tex
@@ -599,102 +634,105 @@ msgid ""
 "/ \\colorbox{AMVeryDarkRed}{ \\textcolor{white}{dark red (night)}} -- "
 "Disabled app"
 msgstr ""
+"/ \\colorbox{AMVeryDarkRed}{ \\textcolor{white}{очень темно-красный (темная "
+"тема)}} -- отключенное приложение"
 
 #. type: colorbox{#2}
 #: ./pages/main-page.tex
 #: :42
 msgid "Yellow Star"
-msgstr ""
+msgstr "Желтая звезда"
 
 #. type: itemize
 #: ./pages/main-page.tex
 #: :42
 msgid "-- App is in debug mode"
-msgstr ""
+msgstr "-- Приложение находится в режиме отладки"
 
 #. type: textcolor{#2}
 #: ./pages/main-page.tex
 #: :42
 msgid "Orange \\textit{Date}"
-msgstr ""
+msgstr "Оранжевая \\textit{дата}"
 
 #. type: itemize
 #: ./pages/main-page.tex
 #: :42
 msgid "-- App can read logs (permission granted)"
-msgstr ""
+msgstr "-- приложение может читать логи (разрешение предоставлено)"
 
 #. type: textcolor{#2}
 #: ./pages/main-page.tex
 #: :42
 msgid "Orange \\textit{UID}"
-msgstr ""
+msgstr "Оранжевый \\textit{UID}"
 
 #. type: itemize
 #: ./pages/main-page.tex
 #: :42
 msgid "-- User ID is being shared between apps"
-msgstr ""
+msgstr "-- идентификатор пользователя используется приложениями совместно"
 
 #. type: textcolor{#2}
 #: ./pages/main-page.tex
 #: :42
 msgid "Orange \\textit{SDK}"
-msgstr ""
+msgstr "Oранжевый \\textit{SDK}"
 
 #. type: itemize
 #: ./pages/main-page.tex
 #: :42
 msgid "-- Uses cleartext (ie. HTTP) traffic"
-msgstr ""
+msgstr "-- использует слабый протокол (например, HTTP)"
 
 #. type: textcolor{#2}
 #: ./pages/main-page.tex
 #: :42
 msgid "Red \\textit{package name}"
-msgstr ""
+msgstr "Красный \\textit{имя пакета}"
 
 #. type: itemize
 #: ./pages/main-page.tex
 #: :42
 msgid "-- App does not allow clearing data"
-msgstr ""
+msgstr "-- приложение не позволяет очищать данные"
 
 #. type: textcolor{#2}
 #: ./pages/main-page.tex
 #: :42
 msgid "Red \\textit{backup}"
-msgstr ""
+msgstr "Красный \\textit{бекап}"
 
 #. type: itemize
 #: ./pages/main-page.tex
 #: :42
 msgid "-- App not installed but has one or more backups"
 msgstr ""
+"-- Приложение не установлено, но имеет одну или несколько резервных копий"
 
 #. type: textcolor{#2}
 #: ./pages/main-page.tex
 #: :42
 msgid "Dark cyan \\textit{package name}"
-msgstr ""
+msgstr "Темно-голубое \\textit{имя пакета}"
 
 #. type: itemize
 #: ./pages/main-page.tex
 #: :42
 msgid "-- Stopped or forced closed app"
-msgstr ""
+msgstr "-- приложение остановлено или принудительно закрыто"
 
 #. type: textcolor{#2}
 #: ./pages/main-page.tex
 #: :42
 msgid "Dark cyan \\textit{version}"
-msgstr ""
+msgstr "Темно-голубая \\textit{версия}"
 
 #. type: itemize
 #: ./pages/main-page.tex
 #: :42
 msgid "-- Inactive app"
-msgstr ""
+msgstr "-- неактивное приложение"
 
 #. type: itemize
 #: ./pages/main-page.tex
@@ -703,12 +741,14 @@ msgid ""
 "\\textcolor{magenta}{Magenta} -- Persistent app i.e.\\ remains running all "
 "the time"
 msgstr ""
+"\\textcolor{magenta}{Пурпурный} -- постоянное приложение, т. е работает все "
+"время"
 
 #. type: subsection{#2}
 #: ./pages/main-page.tex
 #: :52
 msgid "Application Types"
-msgstr ""
+msgstr "Типы Приложений"
 
 #. type: document
 #: ./pages/main-page.tex
@@ -717,6 +757,8 @@ msgid ""
 "An app is either \\textbf{User App} or \\textbf{System App} along with the "
 "following codes:"
 msgstr ""
+"Приложение бывают либо \\textbf{пользовательскими}, либо \\textbf{системными}"
+" вместе со следующими кодами:"
 
 #. type: itemize
 #: ./pages/main-page.tex
@@ -725,60 +767,65 @@ msgid ""
 "\\texttt{X} -- The app supports multiple architectures: 32-bit, 64-bit or "
 "arm-v7, arm-v8, etc."
 msgstr ""
+"\\texttt{X} -- приложение поддерживает несколько архитектур: 32-битную, 64-"
+"битную или arm-v7, arm-v8 и т. д."
 
 #. type: itemize
 #: ./pages/main-page.tex
 #: :52
 msgid "\\texttt{0} -- App does not have code with it"
-msgstr ""
+msgstr "\\texttt{0} -- в приложении нет кода"
 
 #. type: itemize
 #: ./pages/main-page.tex
 #: :52
 msgid "\\texttt{\\textdegree} -- App is in suspended state"
 msgstr ""
+"\\texttt{\\textdegree} -- приложение находится в приостановленном состоянии"
 
 #. type: itemize
 #: ./pages/main-page.tex
 #: :52
 msgid "\\texttt{\\#} -- App has requested a large heap"
-msgstr ""
+msgstr "\\texttt{\\#} -- приложение запросило большую кучу"
 
 #. type: itemize
 #: ./pages/main-page.tex
 #: :52
 msgid "\\texttt{?} -- App has requested VM in safe mode"
 msgstr ""
+"\\texttt{?} -- приложение запросило запуск виртуальной машины в безопасном "
+"режиме"
 
 #. type: subsection{#2}
 #: ./pages/main-page.tex
 #: :60
 msgid "Version Info"
-msgstr ""
+msgstr "Информация о Версии"
 
 #. type: document
 #: ./pages/main-page.tex
 #: :60
 msgid "Version name is followed by the following prefixes:"
-msgstr ""
+msgstr "После названия версии следуют следующие префиксы:"
 
 #. type: itemize
 #: ./pages/main-page.tex
 #: :60
 msgid "\\texttt{\\_} -- No hardware acceleration"
-msgstr ""
+msgstr "\\texttt{\\_} -- нет аппаратного ускорения"
 
 #. type: itemize
 #: ./pages/main-page.tex
 #: :60
 msgid "\\texttt{\\textasciitilde} -- Test only mode"
-msgstr ""
+msgstr "\\texttt{\\textasciitilde} -- только тестовый режим"
 
 #. type: itemize
 #: ./pages/main-page.tex
 #: :60
 msgid "\\texttt{debug} -- Debuggable app"
-msgstr ""
+msgstr "\\texttt{debug} -- отлаживаемое приложение"
 
 #. type: subsection{#2}
 #: ./pages/main-page.tex
@@ -787,7 +834,7 @@ msgstr ""
 #: :15 ./pages/profile-page.tex
 #: :27
 msgid "Options Menu"
-msgstr ""
+msgstr "Меню Опций"
 
 #. type: document
 #: ./pages/main-page.tex
@@ -796,12 +843,15 @@ msgid ""
 "Options menu has several options which can be used to sort, filter the "
 "listed apps as well as navigate to different pages."
 msgstr ""
+"В меню опций есть несколько опций, которые можно использовать для "
+"сортировки, фильтрации перечисленных приложений, а также для перехода к "
+"различным страницам."
 
 #. type: subsubsection{#2}
 #: ./pages/main-page.tex
 #: :67
 msgid "Instructions"
-msgstr ""
+msgstr "Инструкции"
 
 #. type: document
 #: ./pages/main-page.tex
@@ -811,30 +861,35 @@ msgid ""
 "documentations. It opens the online version if the corresponding feature "
 "split i.e.\\ \\texttt{feat\\_docs} is not installed."
 msgstr ""
+"Нажатие на инструкции открывает оффлайн версию документации App Manager. Она "
+"открывает онлайн версию, если не установлен соответствующий раздел функций.\\"
+" \\texttt{feat_docs}."
 
 #. type: subsubsection{#2}
 #: ./pages/main-page.tex
 #: :70
 msgid "List Options"
-msgstr ""
+msgstr "Параметры Списка"
 
 #. type: document
 #: ./pages/main-page.tex
 #: :70
 msgid "List options contain the options to sort or filter the app list."
 msgstr ""
+"Параметры списка содержат параметры для сортировки или фильтрации списка "
+"приложений."
 
 #. type: paragraph{#2}
 #: ./pages/main-page.tex
 #: :89
 msgid "Sort"
-msgstr ""
+msgstr "Сортировка"
 
 #. type: document
 #: ./pages/main-page.tex
 #: :89
 msgid "\\hypertarget{par:main-page-sort}{}"
-msgstr ""
+msgstr "\\hypertarget{par:main-page-sort}{}"
 
 #. type: document
 #: ./pages/main-page.tex
@@ -846,12 +901,19 @@ msgid ""
 "preference, however, the apps are first sorted alphabetically to prevent "
 "random results."
 msgstr ""
+"Приложения, перечисленные на главной странице, можно отсортировать "
+"несколькими способами. Настройки сортировки сохраняются, что означает, что "
+"приложения будут отсортированы так же, как при предыдущем запуске. Однако "
+"независимо от ваших предпочтений сортировки приложения сначала сортируются в "
+"алфавитном порядке, чтобы предотвратить случайные результаты."
 
 #. type: itemize
 #: ./pages/main-page.tex
 #: :89
 msgid "\\textbf{User app first.} User apps are listed on top"
 msgstr ""
+"\\textbf{Сначала пользовательские.} Пользовательские приложения будут "
+"отображаться первыми"
 
 #. type: itemize
 #: ./pages/main-page.tex
@@ -860,12 +922,15 @@ msgid ""
 "\\textbf{App label.} Sort in ascending order based on the app labels (also "
 "known as \\textit{app names}). This is the default sorting preference"
 msgstr ""
+"\\textbf{Название приложения.} Сортировка по возрастанию на основе названий ("
+"также известны как \\textit{ярлыки приложений}). Это значение сортировки по "
+"умолчанию"
 
 #. type: itemize
 #: ./pages/main-page.tex
 #: :89
 msgid "\\textbf{Package name.} Sort in ascending order based on package names"
-msgstr ""
+msgstr "\\textbf{Имя пакета.} Сортировка по возрастанию по именам пакетов"
 
 #. type: itemize
 #: ./pages/main-page.tex
@@ -874,6 +939,8 @@ msgid ""
 "\\textbf{Last update.} Sort in descending order based on the package update "
 "date (or install date if it is a newly installed package)"
 msgstr ""
+"\\textbf{Последнее обновление.} Сортировка в порядке убывания по дате "
+"обновления пакета (или дате установки, если это недавно установленный пакет)"
 
 #. type: itemize
 #: ./pages/main-page.tex
@@ -882,24 +949,32 @@ msgid ""
 "\\textbf{Shared user ID.} Sort in descending order based on the kernel user "
 "ID"
 msgstr ""
+"\\textbf{Общий идентификатор пользователя.} Сортировка по убыванию на основе "
+"идентификатора пользователя ядра"
 
 #. type: itemize
 #: ./pages/main-page.tex
 #: :89
 msgid "\\textbf{Target SDK.} Sort in ascending order based on the target SDK"
 msgstr ""
+"\\textbf{Целевая версия SDK.} Сортировка по возрастанию в зависимости от "
+"целевой SDK"
 
 #. type: itemize
 #: ./pages/main-page.tex
 #: :89
 msgid "\\textbf{Signature.} Sort in ascending order based on app's signing info"
 msgstr ""
+"\\textbf{Подпись.} Сортировка в порядке возрастания на основе информации о "
+"подписи приложения"
 
 #. type: itemize
 #: ./pages/main-page.tex
 #: :89
 msgid "\\textbf{Disabled first.} List disabled apps first"
 msgstr ""
+"\\textbf{Сначала отключенные.} Отключенные приложения будут отображаться "
+"первыми"
 
 #. type: itemize
 #: ./pages/main-page.tex
@@ -908,12 +983,16 @@ msgid ""
 "\\textbf{Blocked first.} Sort in descending order based on the number of "
 "blocked components"
 msgstr ""
+"\\textbf{Сначала заблокированые.} Сортировка по убыванию в зависимости от "
+"количества заблокированных компонентов"
 
 #. type: itemize
 #: ./pages/main-page.tex
 #: :89
 msgid "\\textbf{Backup first.} Display apps with backups on top"
 msgstr ""
+"\\textbf{Сначала резервные копии.} Отображать приложения с резервными "
+"копиями сверху"
 
 #. type: document
 #: ./pages/main-page.tex
@@ -922,18 +1001,20 @@ msgid ""
 "There is also a \\textit{reverse} option which can be used to sort the apps "
 "in reverse order."
 msgstr ""
+"Существует также опция \\textit{Обратный порядок} для сортировки приложений "
+"в обратном порядке."
 
 #. type: paragraph{#2}
 #: ./pages/main-page.tex
 #: :108
 msgid "Filter"
-msgstr ""
+msgstr "Фильтр"
 
 #. type: document
 #: ./pages/main-page.tex
 #: :108
 msgid "\\hypertarget{par:main-page-filter}{}"
-msgstr ""
+msgstr "\\hypertarget{par:main-page-filter}{}"
 
 #. type: document
 #: ./pages/main-page.tex
@@ -943,6 +1024,9 @@ msgid ""
 "sorting, filtering preferences are also stored and retained after a "
 "relaunch."
 msgstr ""
+"Приложения, перечисленные на главной странице, можно отфильтровать "
+"несколькими способами. Как и в случае с сортировкой, настройки фильтрации "
+"также сохраняются после после перезапуска."
 
 #. type: itemize
 #: ./pages/main-page.tex
