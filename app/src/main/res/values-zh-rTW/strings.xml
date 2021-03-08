@@ -70,11 +70,11 @@
     <string name="process_state">狀態： <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g></string>
     <string name="locale_split_for_base_apk">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"English\"&gt; %1$s &lt;/xliff:g&gt;基本語言環境 APK</string>
     <string name="locale_split_for_feature"><xliff:g id="split_name" example="English">%1$s</xliff:g> 功能的著域 <xliff:g id="feature_name" example="Visualizer"> %2$s </xliff:g></string>
-    <string name="abi_split_for_base_apk">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"arm64_v8a\"&gt;%1$s&lt;/xliff:g&gt;基礎 APK 程式碼</string>
+    <string name="abi_split_for_base_apk">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"arm64_v8a\"&gt;%1$s&lt;/xliff:g&gt; 基本 APK 程式碼</string>
     <string name="abi_split_for_feature"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> <xliff:g id="feature_name" example="Visualizer"> %2$s </xliff:g></string>
     <string name="density_split_for_base_apk"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> （<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI） 基礎 APK 資源</string>
     <string name="density_split_for_feature"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> （<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI） 功能資源 <xliff:g id="feature_name" example="Visualizer">%3$s</xliff:g></string>
-    <string name="unknown_split_for_base_apk"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> 用於基礎 APK</string>
+    <string name="unknown_split_for_base_apk">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"some_split\"&gt;%1$s&lt;/xliff:g&gt; 用於基本 APK</string>
     <string name="unknown_split_for_feature"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> 功能 <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
     <string name="split_feature_name">特寫： <xliff:g id="feature_name" example="Visualizer">%1$s</xliff:g></string>
     <string name="current_language">語言：%1$s</string>
@@ -665,7 +665,7 @@
     <string name="value">值</string>
     <string name="filter_apps_with_splits">拆分的應用程式</string>
     <string name="set_app_op_mode">在時尚上設定應用程式</string>
-    <string name="magisk_hide_enabled">魔力皮</string>
+    <string name="magisk_hide_enabled">MagiskHide</string>
     <string name="pref_backup_android_keystore_msg">還原後，並非所有應用程式都能正常運作。還原 KeyStore 不適用於大多數裝置。</string>
     <string name="pref_backup_android_keystore">使用 Android KeyStore 備份應用程式</string>
     <string name="keep_data_and_signatures">保留資料和簽名</string>
