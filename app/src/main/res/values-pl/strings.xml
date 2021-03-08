@@ -688,4 +688,6 @@
         <item quantity="many">Nie udało się zablokować działania %1$d aplikacji w tle</item>
         <item quantity="other">Nie udało się zablokować działania %1$d aplikacji w tle</item>
     </plurals>
+    <string name="deny_dangerous_app_ops">Odmów niebezpiecznych app ops</string>
+    <string name="sort_by_wifi_data">Dane Wi-Fi</string>
 </resources>
