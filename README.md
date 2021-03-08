@@ -42,19 +42,19 @@ height="80" />](https://apt.izzysoft.de/fdroid/index/apk/io.github.muntashirakon
 
 ### Translations
 
-Help translate [App Manager at Hosted Weblate](https://hosted.weblate.org/engage/app-manager/)
-The App Manager Docs are translated [at Crowdin](https://crwd.in/app-manager-docs) till https://github.com/MuntashirAkon/AppManager/issues/303 is closed.
+Help translate [the app strings](https://hosted.weblate.org/engage/app-manager/) and [the docs](https://hosted.weblate.org/projects/app-manager/docs/) at Hosted Weblate.
 
 
 [![Translation status](https://hosted.weblate.org/widgets/app-manager/-/multi-auto.svg)](https://hosted.weblate.org/engage/app-manager/)
 
+
+### Community
+
+There is a [Telegram channel](https://t.me/AppManagerChannel) for App Manager.
+
 ### Mirrors
 
-**[GitLab](https://gitlab.com/muntashir/AppManager)**
-
-**[Riseup](https://0xacab.org/muntashir/AppManager)**
-
-**[Codeberg](https://codeberg.org/muntashir/AppManager)**
+**[GitLab](https://gitlab.com/muntashir/AppManager)** - **[Riseup](https://0xacab.org/muntashir/AppManager)** - **[Codeberg](https://codeberg.org/muntashir/AppManager)**
 
 ### Screenshots
 
@@ -122,7 +122,7 @@ The App Manager Docs are translated [at Crowdin](https://crwd.in/app-manager-doc
     ```
     You can use the `--depth 1` argument if you don't want to clone past commits.
 2. Open the project **AppManager** using Android Studio/IntelliJ IDEA. The IDE should start syncing automatically. It will also download all the necessary dependencies automatically provided you have the Internet connection.
-3. Build debug version of App Manager from `Menu` > `Build` > `Make Project`, or, from the terminal:
+3. Build debug version of App Manager from _Menu_ > _Build_ > _Make Project_, or, from the terminal:
     ```
     ./gradlew packageDebugUniversalApk
     ```
@@ -157,7 +157,3 @@ By sending me BTC, you agree that you will not share the transaction info in pub
 
 ### Credits and Libraries
 A list of credits and libraries are available in the **About** section of the app.
-
-### Community
-
-There is a [Telegram channel](https://t.me/AppManagerChannel) for App Manager.
