@@ -1,6 +1,17 @@
 % !TEX program = xelatex
 \documentclass{memoir}
 
+% ------------------------------
+% Unknown commands/env for po4a
+% ------------------------------
+% po4a: environment Verbatim []
+% po4a: verbatim environment Verbatim
+% po4a: environment minted []
+% po4a: environment listing []
+% po4a: command -hyperref []{_}
+% po4a: command -href {}{_}
+% po4a: command -url {}
+
 \usepackage[T1]{fontenc}
 \usepackage{mathpazo} % Palatino
 \usepackage{graphicx}
@@ -11,6 +22,7 @@
 \usepackage{hyperref}
 \usepackage[all]{hypcap}
 
+% po4a: command hypersetup {}
 \hypersetup{
     unicode=true,
     colorlinks=true
@@ -24,11 +36,14 @@
 % Alert environments
 % -------------------
 
+% po4a: environment amalert []{}
+% po4a: environment mdframed []{_}
 \newenvironment{amalert}[1]
 {\mdframed[linecolor={#1},backgroundcolor=white,linewidth=3pt,topline=false,rightline=false,bottomline=false]}
 {\endmdframed}
 
-\newenvironment{tip}[1][Tip]
+% po4a: environment tip [_]
+\newenvironment{tip}[1]
 {%
     \amalert{black}
     \noindent
@@ -38,7 +53,8 @@
     \endamalert
 }
 
-\newenvironment{warning}[1][Warning]
+% po4a: environment warning [_]
+\newenvironment{warning}[1]
 {
     \amalert{Dandelion}
     \noindent
@@ -48,7 +64,8 @@
     \endamalert
 }
 
-\newenvironment{danger}[1][Danger]
+% po4a: environment danger [_]
+\newenvironment{danger}[1]
 {
     \amalert{BrickRed}
     \noindent
@@ -62,12 +79,15 @@
 % Reference overrides (useful for localization)
 % --------------------
 \newcommand{\listingrefname}{Listing}
+% po4a: command Lref {_}
 \newcommand{\Lref}[1]{\listingrefname~\ref{#1}}
 
 % ----------------------
 % See also environments
 % ----------------------
+% po4a: command amseealsoinline {_}
 \newcommand{\seealsoinline}[1]{\noindent\textit{See also: {#1}}}
+% po4a: environment amseealso
 \newenvironment{amseealso}{\itshape See also: \itemize}{\enditemize}
 
 % -------------------
@@ -92,9 +112,9 @@
 \begin{document}
     \input{titlepage.tex}
     \tableofcontents
-    \input{./intro/main.tex}
-    \input{./pages/main.tex}
-    \input{./guide/main.tex}
-    \input{./faq/main.tex}
-    \input{./appendices/main.tex}
+    \input{intro/main.tex}
+    \input{pages/main.tex}
+    \input{guide/main.tex}
+    \input{faq/main.tex}
+    \input{appendices/main.tex}
 \end{document}

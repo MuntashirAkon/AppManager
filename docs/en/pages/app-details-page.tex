@@ -202,7 +202,7 @@ By default, Termux does not allow running commands from third-party applications
 \texttt{allow-external-apps=true} in \texttt{\textasciitilde/.termux/termux.properties}, and make sure that you are
 running Termux v0.96 or later.
 
-\begin{tip}[Info]
+\begin{tip}{Info}
     Enabling this option does not weaken your Termux' security. The third-party apps still need to request the user to
     allow running arbitrary commands in Termux like any other dangerous permissions.
 \end{tip}
@@ -235,7 +235,7 @@ activities and disabled for others (root users can open any activities). You can
 activity directly in App Manager. You can also open the Interceptor page by long clicking on an activity. Currently, it
 only works for \textit{exportable} activities.
 
-\begin{warning}[Notice]
+\begin{warning}{Notice}
     If you are not able to open any activity, chances are it has certain dependencies which are not met, e.g.\ you
     cannot open  \textit{App Details Activity} because it requires that you at least supply a package name. These
     dependencies cannot always be inferred programmatically. Therefore, you cannot open them using App Manager.
@@ -244,7 +244,7 @@ only works for \textit{exportable} activities.
 You can also create shortcut for these \textit{exportable} activities (using the dedicated button), and if you want, you
 can edit the shortcut as well using the \textit{Edit Shortcut} button.
 
-\begin{danger}[Caution]
+\begin{danger}{Caution}
     If you uninstall App Manager, all shortcuts created by App Manager will be lost.
 \end{danger}
 
@@ -305,7 +305,7 @@ option in three-dots menu. You can also remove already applied rules using the s
 You can disable tracker components using the \textbf{Block tracker} option in the three-dots menu. All tracker
 components will be blocked regardless of the tab you're currently in.
 
-\begin{tip}[Info]
+\begin{tip}{Info}
     Tracker components are a subset of app components. Therefore, they are blocked using the same method used for
     blocking any other components.
 \end{tip}
@@ -347,7 +347,7 @@ information may include the following:
     \item \textbf{Reject Time.} Last time the app op was rejected.
 \end{itemize}
 
-\begin{tip}[Info]
+\begin{tip}{Info}
     Contents of this tab are only visible to the root and \hyperref[sec:adb-over-tcp]{ADB} users.
 \end{tip}
 
@@ -356,7 +356,7 @@ reset your changes using the \textit{Reset to default} option or deny all danger
 option in the menu. You can also sort them in ascending order by app op names and the associated unique numbers (or
 values). You can also list the denied app ops first using the corresponding sorting option.
 
-\begin{warning}[Warning]
+\begin{warning}{Warning}
     Denying an app op may cause the app to misbehave. Use the \textit{reset to default} option if that is the case.
 \end{warning}
 
@@ -374,12 +374,12 @@ using the corresponding option in the menu. Only these two types of permissions 
 allow modifying \textit{normal} permissions (which most of them are). The only alternative is to edit the app manifest
 and remove these permissions from there.
 
-\begin{tip}[Info]
+\begin{tip}{Info}
     Since dangerous permissions are revoked by default by the system, revoking all dangerous permissions is the same as
     resetting all permissions.
 \end{tip}
 
-\begin{tip}[Notice]
+\begin{tip}{Notice}
     Permissions cannot be changed for apps targeting API 23 or earlier. Therefore, permission toggles are disabled for
     such apps.
 \end{tip}
@@ -427,7 +427,7 @@ matching the following \textit{SHA256} checksum with the one displayed in this t
 
 There are three types of checksums displayed there: \textit{MD5}, \textit{SHA1} and \textit{SHA256}.
 
-\begin{danger}[Caution]
+\begin{danger}{Caution}
     It is recommended that you verify signing info using only \textit{SHA256} checksums or all three of them. DO NOT
     rely on \textit{MD5} or \textit{SHA1} checksums only as they are known to generate the same results for multiple
     certificates.

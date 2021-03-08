@@ -2,7 +2,7 @@
 Many root-only features can still be used by enabling ADB over TCP. To do that, a PC or Mac is required with Android
 platform-tools installed, and an Android phone with developer options \& USB debugging enabled.
 
-\begin{tip}[Root users]
+\begin{tip}{Root users}
     If superuser permission has been granted to App Manager, it can already execute privileged code without any problem.
     \textbf{Therefore, root users don't need to enable ADB over TCP.} If you still want to use ADB over TCP, you must
     revoke superuser permission for App Manager and restart your device. You may see \textit{working on ADB mode}
@@ -43,7 +43,7 @@ Enable \textbf{USB debugging (security settings)} as well.
 Enable \textbf{Allow ADB debugging in charge only mode} as well. When connecting to your PC or Mac, you may get a prompt
 saying \textbf{Allow access to device data?} in which case click \textbf{YES, ALLOW ACCESS}.
 
-\begin{tip}[Notice]
+\begin{tip}{Notice}
     Often the \textbf{USB debugging} mode could be disabled automatically by the system. If that's the case, repeat the
     above procedure.
 \end{tip}
@@ -89,7 +89,7 @@ In order to enable ADB over TCP, you have to set up ADB in your PC or Mac. \text
     \textit{Finder} window into the \textit{Terminal} window. Do not close the \textit{Terminal} window yet
 \end{enumerate}
 
-\begin{tip}[Tip]
+\begin{tip}{Tip}
     If you are not afraid to use command line, here's a one liner:
     \begin{minted}[frame=lines]{bash}
 cd ~/Downloads && curl -o platform-tools.zip -L
@@ -133,7 +133,7 @@ command that you needed to use based on your platform and software in the previo
     List of devices attached
     xxxxxxxx  device
     \end{Verbatim}
-    \begin{tip}[Notice]
+    \begin{tip}{Notice}
         In some Android phones, an alert prompt will be appeared with a message \textbf{Allow USB Debugging}
         in which case, check \textit{Always allow from this computer} and click \textbf{Allow}.
     \end{tip}
@@ -143,7 +143,7 @@ command that you needed to use based on your platform and software in the previo
     \end{minted}
 \end{enumerate}
 
-\begin{danger}[Danger]
+\begin{danger}{Danger}
     You cannot disable developer options or USB debugging after enabling ADB over TCP\@.
 \end{danger}
 
@@ -152,11 +152,11 @@ After enabling ADB over TCP (in the previous subsections), open App Manager (AM)
 mode} toast message at the bottom. If not, remove AM from the recents and open AM again from the launcher. If you see
 the toast message, you can safely \hyperref[subsubsec:stop-adb-over-tcp]{stop ADB over TCP}.
 
-\begin{tip}[Notice]
+\begin{tip}{Notice}
     In some Android phones, the USB cable is needed to be disconnected from the PC in order for it to work.
 \end{tip}
 
-\begin{warning}[Warning]
+\begin{warning}{Warning}
     ADB over TCP will be disabled after a restart. In that case, you have to follow
     \Sref{subsubsec:enable-adb-over-tcp-via-pc-or-mac} again.
 \end{warning}
@@ -168,7 +168,7 @@ adb kill-server
 \end{minted}
 Replace \texttt{adb} with \texttt{./adb} or any other command that you had to use in previous steps.
 
-\begin{warning}[Lineage OS users]
+\begin{warning}{Lineage OS users}
     You can turn off \textbf{ADB over Network} in developer options, but turning off this option will also stop App
     Manager's remote server. So, turn it off only when you're not going to use App Manager in ADB over TCP mode.
 \end{warning}

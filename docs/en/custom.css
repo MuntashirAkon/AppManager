@@ -2,8 +2,9 @@
   border-top: 0px!important;
   border-bottom: 0px!important;
   border-right: 0px!important;
-  padding: 5px;
+  padding: 0 0 0 1em;
 }
+
 html {
   font-size: 100%;
   overflow-y: scroll;

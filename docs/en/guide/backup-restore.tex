@@ -3,11 +3,11 @@ App Manager has a modern, advanced and easy-to-use backup/restore system impleme
 the only app that has the ability to restore not only the app or its data but also permissions and rules that you've
 configured within App Manager. You can also choose to back up an app multiple times (with custom names) or for all users.
 
-\begin{tip}[Notice]
+\begin{tip}{Notice}
     Backup/Restore is completely different from \textbf{Backup APK} which is also a part of the batch operations.
 \end{tip}
 
-\begin{warning}[Warning]
+\begin{warning}{Warning}
     As of v2.5.22, backup/restore is a beta feature (previously, it was an alpha feature). Support for old backups are
     removed as a result. From now on, backward compatibility will be provided.
 \end{warning}
@@ -18,7 +18,7 @@ Backup/restore is a part of \hyperref[subsec:batch-operations]{batch operations}
 on \textbf{Backup/Restore} opens the \textbf{Backup Options}. The backups are currently located at
 \texttt{/sdcard/AppManager}.
 
-\begin{tip}[Note]
+\begin{tip}{Note}
     If one or more selected apps don't have any backup, the \textbf{Restore} and \textbf{Delete Backup} options will not
     be displayed.
 \end{tip}
@@ -81,7 +81,7 @@ A complete description of backup options is given below:
     the backup, the checksums are generated again and are matched with the checksums stored in the said file. Enabling
     this option will disable the signature checks. This option is applied only when you restore a backup. During backup,
     the checksums are generated regardless of this option.
-    \begin{warning}[Caution]
+    \begin{warning}{Caution}
         You should always disable this option to ensure that your backups are not modified by any third-party
         applications. However, this would only work if you enabled encryption.
     \end{warning}
@@ -101,7 +101,7 @@ when restoring backups for a single package, you have the option to select which
 \textbf{All users} option is set, AM will restore the selected backup for all users in the latter case but in the former
 case, it will restore base backups for the respective users.
 
-\begin{tip}[Notice]
+\begin{tip}{Notice}
     Apps that use storage access framework (SAF), SSAID or Android KeyStore works properly only after an immediate restart.
 \end{tip}
 
