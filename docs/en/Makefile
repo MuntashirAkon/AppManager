@@ -7,11 +7,8 @@ html_pandoc:
 
 html:
 	# Docs: https://mirror.las.iastate.edu/tex-archive/support/make4ht/make4ht-doc.pdf
-	make4ht -sxu -c main.cfg -f html5+tidy+common_domfilters main "fn-in"
-	sed -i -e 's|<p class='\''noindent'\''></p>||g' main.html
-	cat custom.css main.css >> main.css.tmp
-	rm main.css
-	mv main.css.tmp main.css
+	# tex4ht: 2 = Divide into chapters, fn-in = Footnote in the same file, sec-filename = filename based on section name, sections+ = Links to TOC
+	make4ht -sxu -c main.cfg -f html5+tidy+common_domfilters main "fn-in, sec-filename, sections+"
 
 pdf:
 	xelatex -file-line-error -interaction=nonstopmode -synctex=1 -output-directory=. -shell-escape main.tex
