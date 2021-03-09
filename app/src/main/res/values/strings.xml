@@ -816,7 +816,7 @@
     <string name="backup_obb_media_description">Back up OBB and media folders.</string>
     <string name="backup_exclude_cache_description">Do not back up cache, no_cache and no_backup folders.</string>
     <string name="backup_extras">Extras</string>
-    <string name="backup_extras_description">Back up app permissions, battery saving and data usage options, MagiskHide status, etc.</string>
+    <string name="backup_extras_description">Back up app permissions, battery saving and data usage options, MagiskHide status, SSAID, etc.</string>
     <string name="backup_rules_description">Back up rules configured within App Manager.</string>
     <string name="backup_multiple_description">Use a separate <i>named</i> backup instead of the base backup.</string>
     <string name="backup_skip_signature_checks_description">Can restore backups that either fail checksum verification or have different APK signatures than their prior backups.</string>
