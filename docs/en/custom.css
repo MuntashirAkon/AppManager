@@ -1,3 +1,41 @@
+.sidenav {
+    height: 100%;
+    width: 16em;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    overflow-x: hidden;
+    padding: 0 1.25em;
+}
+
+.main, .footnotes {
+    padding: 1em;
+    margin: auto;
+}
+
+.footnotes {
+    margin-right: auto !important;
+    border-bottom: unset !important;
+    font-size: inherit !important;
+}
+
+@media screen and (max-width: 48em) {
+    .sidenav {display: none;}
+}
+
+@media screen and (min-width: 78.5em) {
+    .main, .footnotes {max-width: 42em;}
+}
+
+@media screen and (min-width: 48em) and (max-width: 78.5em){
+    .main, .footnotes {margin-left: 16em;}
+}
+
+@media screen and (max-width: 48em) {
+    .main, .footnotes {max-width: 42em;}
+}
+
 .mdframed {
     border-top: 0 !important;
     border-bottom: 0 !important;
@@ -23,9 +61,6 @@ body {
     font-family: Palatino, 'Palatino Linotype', Georgia, Times, 'Times New Roman', serif;
     font-size: 12px;
     line-height: 1.5em;
-    padding: 1em;
-    margin: auto;
-    max-width: 42em;
     background: #fefefe;
     word-break: break-word;
 }
@@ -242,6 +277,10 @@ td {
         color: black !important;
         filter: none !important;
         -ms-filter: none !important;
+    }
+
+    .sidenav {
+        display: none;
     }
 
     body {
