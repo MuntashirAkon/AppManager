@@ -7,7 +7,7 @@ html_pandoc:
 
 html:
 	# Docs: https://mirror.las.iastate.edu/tex-archive/support/make4ht/make4ht-doc.pdf
-	make4ht -sxu -f html5+tidy+common_domfilters main.tex
+	make4ht -sxu -c main.cfg -f html5+tidy+common_domfilters main "fn-in"
 	sed -i -e 's|<p class='\''noindent'\''></p>||g' main.html
 	cat custom.css main.css >> main.css.tmp
 	rm main.css
