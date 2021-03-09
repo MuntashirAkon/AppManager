@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: io.github.muntashirakon.AppManager v2.5.24\n"
 "POT-Creation-Date: 2021-03-08 14:11+0600\n"
-"PO-Revision-Date: 2021-03-08 23:01+0000\n"
-"Last-Translator: Muntashir Al-Islam <muntashirakon@riseup.net>\n"
+"PO-Revision-Date: 2021-03-10 01:02+0000\n"
+"Last-Translator: tommynok <yazuzia7080@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/app-manager/docs/"
 "ru/>\n"
 "Language: ru\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.5.1\n"
+"X-Generator: Weblate 4.5.2-dev\n"
 
 #. type: newenvironment{#3}
 #: main.tex:47
@@ -515,14 +515,14 @@ msgstr ""
 "закрытии. Также можно фильтровать элементы в соответствии с вашими "
 "предпочтениями, используя опцию \\hyperlink{par:main-page-filter}{фильтрации}"
 " в меню. Вы можете фильтровать, используя более одной опции. Вы также можете "
-"фильтровать приложения по ярлыкам приложений или имени пакета с помощью "
+"фильтровать приложения по названию приложения или имени пакета с помощью "
 "кнопки поиска."
 
 #. type: subsection{#2}
 #: ./pages/main-page.tex
 #: :24
 msgid "Batch Operations"
-msgstr "Пакетные Операции"
+msgstr "Пакетные операции"
 
 #. type: document
 #: ./pages/main-page.tex
@@ -647,7 +647,7 @@ msgstr "Желтая звезда"
 #: ./pages/main-page.tex
 #: :42
 msgid "-- App is in debug mode"
-msgstr "-- Приложение находится в режиме отладки"
+msgstr "-- приложение находится в режиме отладки"
 
 #. type: textcolor{#2}
 #: ./pages/main-page.tex
@@ -708,7 +708,7 @@ msgstr "Красный \\textit{бекап}"
 #: :42
 msgid "-- App not installed but has one or more backups"
 msgstr ""
-"-- Приложение не установлено, но имеет одну или несколько резервных копий"
+"-- приложение не установлено, но имеет одну или несколько резервных копий"
 
 #. type: textcolor{#2}
 #: ./pages/main-page.tex
@@ -748,7 +748,7 @@ msgstr ""
 #: ./pages/main-page.tex
 #: :52
 msgid "Application Types"
-msgstr "Типы Приложений"
+msgstr "Типы приложений"
 
 #. type: document
 #: ./pages/main-page.tex
@@ -801,7 +801,7 @@ msgstr ""
 #: ./pages/main-page.tex
 #: :60
 msgid "Version Info"
-msgstr "Информация о Версии"
+msgstr "Информация о версии"
 
 #. type: document
 #: ./pages/main-page.tex
@@ -834,7 +834,7 @@ msgstr "\\texttt{debug} -- отлаживаемое приложение"
 #: :15 ./pages/profile-page.tex
 #: :27
 msgid "Options Menu"
-msgstr "Меню Опций"
+msgstr "Меню опций"
 
 #. type: document
 #: ./pages/main-page.tex
@@ -861,15 +861,15 @@ msgid ""
 "documentations. It opens the online version if the corresponding feature "
 "split i.e.\\ \\texttt{feat\\_docs} is not installed."
 msgstr ""
-"Нажатие на инструкции открывает оффлайн версию документации App Manager. Она "
-"открывает онлайн версию, если не установлен соответствующий раздел функций.\\"
-" \\texttt{feat_docs}."
+"Нажатие на пункт инструкции открывает оффлайн версию документации App "
+"Manager. Она открывает онлайн версию, если не установлен соответствующий "
+"раздел функций.\\ \\texttt{feat_docs}."
 
 #. type: subsubsection{#2}
 #: ./pages/main-page.tex
 #: :70
 msgid "List Options"
-msgstr "Параметры Списка"
+msgstr "Параметры списка"
 
 #. type: document
 #: ./pages/main-page.tex
@@ -1026,37 +1026,37 @@ msgid ""
 msgstr ""
 "Приложения, перечисленные на главной странице, можно отфильтровать "
 "несколькими способами. Как и в случае с сортировкой, настройки фильтрации "
-"также сохраняются после после перезапуска."
+"также сохраняются после перезапуска."
 
 #. type: itemize
 #: ./pages/main-page.tex
 #: :108
 msgid "\\textbf{User apps.} List only the user apps"
-msgstr ""
+msgstr "- отображение только пользовательских приложений"
 
 #. type: itemize
 #: ./pages/main-page.tex
 #: :108
 msgid "\\textbf{System apps.} List only the system apps"
-msgstr ""
+msgstr "- отображение только системных приложений"
 
 #. type: itemize
 #: ./pages/main-page.tex
 #: :108
 msgid "\\textbf{Disabled apps.} List only the disabled apps"
-msgstr ""
+msgstr "- отображение только отключенных приложений"
 
 #. type: itemize
 #: ./pages/main-page.tex
 #: :108
 msgid "\\textbf{Apps with rules.} List the apps with one or more blocking rules"
-msgstr ""
+msgstr "- отображение приложений с одним или несколькими правилами блокировки"
 
 #. type: itemize
 #: ./pages/main-page.tex
 #: :108
 msgid "\\textbf{Apps with activities.} List the apps with one or more activities"
-msgstr ""
+msgstr "- отображение только приложений с одной или несколькими активити"
 
 #. type: itemize
 #: ./pages/main-page.tex
@@ -1065,6 +1065,8 @@ msgid ""
 "\\textbf{Apps with backups.} List apps with one or more backups (including "
 "uninstalled apps)"
 msgstr ""
+"- отображение только приложений с одной или несколькими резервными копиями ("
+"включая удаленные приложения)"
 
 #. type: itemize
 #: ./pages/main-page.tex
@@ -1081,24 +1083,26 @@ msgid ""
 "\\textbf{Running apps.} List apps that are currently running (either in "
 "foreground or background)"
 msgstr ""
+"- отображение только работающих приложений (как на переднем плане, так и в "
+"фоне)"
 
 #. type: itemize
 #: ./pages/main-page.tex
 #: :108
 msgid "\\textbf{Apps with splits.} List apps with one or more split APKs"
-msgstr ""
+msgstr "- отображение только приложений с одним или несколькими раздельными APK"
 
 #. type: itemize
 #: ./pages/main-page.tex
 #: :108
 msgid "\\textbf{Installed apps.} List only installed apps"
-msgstr ""
+msgstr "- отображение только установленных приложений"
 
 #. type: itemize
 #: ./pages/main-page.tex
 #: :108
 msgid "\\textbf{Uninstalled apps.} List only uninstalled apps including backups"
-msgstr ""
+msgstr "- отображение только удаленных приложений, включая резервные копии"
 
 #. type: document
 #: ./pages/main-page.tex
@@ -1110,12 +1114,19 @@ msgid ""
 "for \\hyperref[subsec:batch-operations]{batch operations} where you can "
 "filter all user apps to carry out certain operations."
 msgstr ""
+"В отличие от сортировки, вы можете фильтровать приложения, используя более "
+"одного параметра. Например, вы можете просмотреть все отключенные "
+"пользовательские приложения, фильтруя списки приложений, используя кнопки "
+"показа \\textit{пользовательских приложений} и \\textit{отключенных "
+"приложений}. Это особенно полезно для \\hyperref[subsec:batch-operations]{"
+"пакетных операций} в которых вы можете фильтровать все пользовательские "
+"приложения для выполнения определенных операций."
 
 #. type: subsubsection{#2}
 #: ./pages/main-page.tex
 #: :116
 msgid "1-Click Ops"
-msgstr ""
+msgstr "Операции в один клик"
 
 #. type: document
 #: ./pages/main-page.tex
@@ -1130,7 +1141,7 @@ msgstr ""
 #: ./pages/main-page.tex
 #: :121
 msgid "App Usage"
-msgstr ""
+msgstr "Использование приложений"
 
 #. type: document
 #: ./pages/main-page.tex
@@ -1141,12 +1152,16 @@ msgid ""
 "accessed by clicking on the \\textbf{App Usage} option in the menu (requires "
 "\\textit{Usage Access} permission)."
 msgstr ""
+"Статистику использования приложения, среди которой \\textit{время экрана}, "
+"\\textit{использование данных} (мобильный и Wi-Fi), \\textit{количество "
+"запусков} можно получить, нажав на опцию \\textbf{использование приложений} "
+"в меню (требует наличия разрешения \\textit{доступ к истории использования})."
 
 #. type: subsubsection{#2}
 #: ./pages/main-page.tex
 #: :125
 msgid "System Config"
-msgstr ""
+msgstr "Конфигурация системы"
 
 #. type: document
 #: ./pages/main-page.tex
@@ -1155,12 +1170,15 @@ msgid ""
 "Display various system configurations, whitelists/blacklists included in "
 "Android by either OEM/vendor, AOSP or even some Magisk modules."
 msgstr ""
+"Отображает различные системные настройки и белые списки/черные списки, "
+"включенные в Android либо OEM/поставщиком, AOSP или даже некоторые модули "
+"Magisk."
 
 #. type: subsubsection{#2}
 #: ./pages/main-page.tex
 #: :130
 msgid "Running Apps"
-msgstr ""
+msgstr "Работающие приложения"
 
 #. type: document
 #: ./pages/main-page.tex
@@ -1171,6 +1189,10 @@ msgid ""
 "\\hyperref[sec:adb-over-tcp]{ADB}). Running apps or processes can also be "
 "force-closed or killed within the resultant page."
 msgstr ""
+"Список работающих приложений или процессов можно просмотреть, нажав на опцию "
+"\\textbf{работающие приложения в меню (требуется root или \\hyperref[sec:adb-"
+"over-tcp]{ADB}). Работающие приложения или процессы также могут быть "
+"принудительно остановлены или закрыты на странице результата."
 
 #. type: subsubsection{#2}
 #: ./pages/main-page.tex
@@ -1186,6 +1208,10 @@ msgid ""
 "Updater} installed, you can use the corresponding option in the menu to open "
 "the app directly. The option is hidden if you do not have it installed."
 msgstr ""
+"Если у вас установлено приложение \\href{https://github.com/rumboalla/"
+"apkupdater}{APK Updater} вы можете использовать соответствующую опцию в "
+"меню, чтобы его открыть. Параметр скрыт, если у вас не установлено это "
+"приложение."
 
 #. type: subsubsection{#2}
 #: ./pages/main-page.tex
