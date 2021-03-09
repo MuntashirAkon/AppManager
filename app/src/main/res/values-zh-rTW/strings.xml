@@ -70,7 +70,7 @@
     <string name="process_state">狀態： <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g></string>
     <string name="locale_split_for_base_apk">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"English\"&gt; %1$s &lt;/xliff:g&gt;基本語言環境 APK</string>
     <string name="locale_split_for_feature"><xliff:g id="split_name" example="English">%1$s</xliff:g> 功能的著域 <xliff:g id="feature_name" example="Visualizer"> %2$s </xliff:g></string>
-    <string name="abi_split_for_base_apk">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"arm64_v8a\"&gt;%1$s&lt;/xliff:g&gt; 基本 APK 程式碼</string>
+    <string name="abi_split_for_base_apk">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"arm64_v8a\"&gt;%1$s&lt;/xliff:g&gt;基本 APK 程式碼</string>
     <string name="abi_split_for_feature"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> <xliff:g id="feature_name" example="Visualizer"> %2$s </xliff:g></string>
     <string name="density_split_for_base_apk"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> （<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI） 基礎 APK 資源</string>
     <string name="density_split_for_feature"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> （<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI） 功能資源 <xliff:g id="feature_name" example="Visualizer">%3$s</xliff:g></string>
@@ -214,7 +214,7 @@
     <string name="drm_free_apkm_msg">APKM檔案不含DRM，無需將其轉換為APKS。</string>
     <string name="restore_msg">使用資料還原應用程式</string>
     <string name="backup_msg">使用資料備份應用程式</string>
-    <string name="restore_latest_msg">還原版本代碼高於已安裝版本代碼的已安裝應用程式。</string>
+    <string name="restore_latest_msg">還原已安裝的應用程式，其版本代碼高於已安裝的版本代碼。</string>
     <string name="restore_latest">還原最新備份</string>
     <string name="restore_not_installed_msg">還原目前未安裝的應用程式的基本備份。</string>
     <string name="restore_not_installed">還原未安裝的應用程式</string>
@@ -306,7 +306,7 @@
     <string name="select_apk">選擇 APK</string>
     <string name="send_crash_report">傳送崩潰報告</string>
     <string name="tap_to_submit_crash_report">點擊提交崩潰報告。</string>
-    <string name="am_crashed">AM剛墜毀</string>
+    <string name="am_crashed">AM 剛剛當機了</string>
     <string name="filter_running_apps">正在執行的應用程式</string>
     <string name="copy">複製</string>
     <string name="view_missing_signatures">點擊以檢視或傳送尚未出現在 App Manager 的資源庫資料庫中的簽名。</string>
@@ -583,7 +583,7 @@
     <string name="reject_time">拒絕時間</string>
     <string name="accept_time">接受時間</string>
     <string name="duration">期間</string>
-    <string name="running">跑步</string>
+    <string name="running">執行中</string>
     <string name="mode">模式</string>
     <string name="permission_name">權限名稱</string>
     <string name="app_op_cannot_be_disabled">無法停用此應用程式op，可能是只讀應用程式op依賴於另一個應用程式op。</string>
