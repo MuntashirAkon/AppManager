@@ -690,4 +690,9 @@
     </plurals>
     <string name="deny_dangerous_app_ops">Odmów niebezpiecznych app ops</string>
     <string name="sort_by_wifi_data">Dane Wi-Fi</string>
+    <string name="failed_to_disable_trackers">Nie udało się wyłączyć elementów śledzących</string>
+    <string name="unknown_op">Nieznane działanie</string>
+    <string name="sort_by_tracker_components">Najpierw elementy śledzące</string>
+    <string name="sort_by_denied_app_ops">Najpierw odmówione</string>
+    <string name="sort_by_app_ops_names">Nazwa App op</string>
 </resources>
