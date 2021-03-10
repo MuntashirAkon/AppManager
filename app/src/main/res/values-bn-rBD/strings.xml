@@ -137,10 +137,10 @@
     <string name="stopped">স্থগিত</string>
     <string name="disable">নিষ্ক্রিয় করুন</string>
     <string name="enable">সক্রিয় করুন</string>
-    <string name="failed_to_disable">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;টি নিষ্ক্রিয় করতে ব্যর্থ।</string>
-    <string name="failed_to_enable">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;টি সক্রিয় করতে ব্যর্থ।</string>
+    <string name="failed_to_disable"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g>টি নিষ্ক্রিয় করতে ব্যর্থ।</string>
+    <string name="failed_to_enable"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g>টি সক্রিয় করতে ব্যর্থ।</string>
     <string name="force_stop">কাটুন</string>
-    <string name="failed_to_stop">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;টি কাটতে ব্যার্থ.</string>
+    <string name="failed_to_stop"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g>টি কাটতে ব্যার্থ.</string>
     <string name="storage_and_cache">স্টোরেজ এবং ক্যাশে</string>
     <string name="total_size">মোট</string>
     <string name="app_size">অ্যাপ</string>
@@ -155,7 +155,7 @@
     <string name="sort_by_disabled_app">নিষ্ক্রিয় গুলো প্রথমে</string>
     <string name="sort_by_blocked_components">ব্লকড গুলো প্রথমে</string>
     <string name="external_data_dir">বাহ্যিক ডাটা ডিরেক্টরি</string>
-    <string name="external_multiple_data_dir">বাহ্যিক ডাটা ডিরেক্টরি &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"dir_no\" example=\"1\"&gt;%1$d&lt;/xliff:g&gt;</string>
+    <string name="external_multiple_data_dir">বাহ্যিক ডাটা ডিরেক্টরি <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
     <plurals name="no_of_times_opened">
         <item quantity="one">%1$d বার</item>
         <item quantity="other">%1$d বার</item>
@@ -326,7 +326,7 @@
     <string name="installer_error_session_create">ইনস্টলার সেশন তৈরি করতে ব্যর্থ</string>
     <string name="installer_error_session_abandon">ইনস্টলার সেশনটি ত্যাগ করতে ব্যর্থ</string>
     <string name="base_apk">মূল এপিকে</string>
-    <string name="split_feature_name">বৈশিষ্ট্য: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt;%1$s&lt;/xliff:g&gt;</string>
+    <string name="split_feature_name">বৈশিষ্ট্য: <xliff:g id="feature_name" example="Visualizer">%1$s</xliff:g></string>
     <string name="no_content">কোন বিষয়বস্তু নেই</string>
     <string name="no_usage_in_this_time_range">এই সময় সীমার মধ্যে কোনো ব্যবহারের ডাটা নেই</string>
     <string name="sort_by_screen_time">স্ক্রীনের সময়</string>
