@@ -221,15 +221,15 @@
     <string name="word_wrap">alihkan word wrap</string>
     <string name="credits_message">"Kepada pemilik dari 
 \n- Proyek Android Sumber Terbuka
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Informasi Apps_packages</a>
-\n- <a href="https://github.com/butzist/ActivityLauncher">Peluncur Aktifitas</a>
-\n- <a href="https://github.com/billthefarmer/editor">Penyunting</a>
-\n- <a href="https://github.com/zhaobao/AppsMonitor">MonitorApps</a>
-\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
-\n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
-\n- <a href="https://github.com/Aefyr/SAI">SAI</a>
-\n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
-\nHak Cipta logo asli: <a href="https://github.com/Atrate">Atrate</a>. "</string>
+\n- &lt;a href=\"https://bitbucket.org/oF2pks/fdroid-applications-info\"&gt;Informasi Apps_packages&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/butzist/ActivityLauncher\"&gt;Peluncur Aktifitas&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/billthefarmer/editor\"&gt;Penyunting&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/zhaobao/AppsMonitor\"&gt;MonitorApps&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/tuyafeng/Watt\"&gt;Watt&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/8enet/AppOpsX\"&gt;AppOpsX&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/Aefyr/SAI\"&gt;SAI&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/RikkaApps/Shizuku\"&gt;Shizuku&lt;/a&gt;
+\nHak Cipta logo asli: &lt;a href=\"https://github.com/Atrate\"&gt;Atrate&lt;/a&gt;. "</string>
     <string name="credits">Pembuat</string>
     <string name="third_party">Pustakaan dan Ikon Pihak-Ketiga</string>
     <string name="license">Lisensi</string>
