@@ -785,7 +785,7 @@
 \nOriginal logo credit: <a href="https://github.com/Atrate">Atrate</a>. "</string>
     <string name="credits">致謝</string>
     <string name="third_party">第三方資源庫和圖示</string>
-    <string name="license">執照</string>
+    <string name="license">授權條款</string>
     <string name="icon_picker">圖示選擇器</string>
     <string name="error_invalid_icon_format">無效的圖示格式</string>
     <string name="error_invalid_icon_resource">無效的圖示資源</string>
