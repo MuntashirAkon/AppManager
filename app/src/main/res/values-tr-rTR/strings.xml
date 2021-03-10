@@ -734,7 +734,7 @@
     <string name="this_action_cannot_be_undone">Bu eylem geri alınamaz.</string>
     <string name="set_app_op_mode">Uygulama çalışma modunu ayarla</string>
     <string name="magisk_hide_enabled">MagiskHide</string>
-    <string name="interceptor">Interceptor</string>
+    <string name="interceptor">Önleyici</string>
     <string name="resend_intent">Intent\'i yeniden gönder</string>
     <string name="share">Paylaş</string>
     <string name="extras">Ekstralar</string>
