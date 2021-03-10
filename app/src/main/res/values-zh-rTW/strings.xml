@@ -60,21 +60,21 @@
     <string name="ssaid_info">SSAID（<tt> Settings.Secure.ANDROID_ID</tt> ）是分配給每個應用程式的裝置標識字串（來自Android Oreo）。應用程式廣泛使用它來追蹤使用者。</string>
     <string name="type_component_name">元件名稱</string>
     <string name="window_size">視窗尺寸</string>
-    <string name="input_keystore_alias_pass_description">插入別名的密碼&lt;b&gt;%1$s&lt;/b&gt; 。如果密碼與 KeyStore 密碼相同，則可以將其保留為空。</string>
+    <string name="input_keystore_alias_pass_description">插入別名的密碼<b>%1$s</b> 。如果密碼與 KeyStore 密碼相同，則可以將其保留為空。</string>
     <string name="input_keystore_alias_pass">別名密碼<b>%1$s</b></string>
     <string name="user_profile_with_id">設定檔：%1$s（%2$d）</string>
     <string name="failed_to_uninstall_updates">無法解除安裝 <xliff:g id="app_name" example="App Manager"> %1$s </xliff:g> 的更新。</string>
     <string name="update_uninstalled_successfully"><xliff:g id="app_name" example="App Manager"> %1$s </xliff:g> 的更新已解除安裝。</string>
     <string name="compression_method">壓縮方法：<xliff:g id="compression_method" example="GZip">%1$s</xliff:g></string>
-    <string name="process_state_with_extra">狀態： &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"process_state\" example=\"Sleeping\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"state_extra\" example=\"High priority\"&gt;%2$s&lt;/xliff:g&gt;)</string>
+    <string name="process_state_with_extra">狀態： <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g> (<xliff:g id="state_extra" example="High priority">%2$s</xliff:g>)</string>
     <string name="process_state">狀態： <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g></string>
-    <string name="locale_split_for_base_apk">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"English\"&gt; %1$s &lt;/xliff:g&gt;基本語言環境 APK</string>
+    <string name="locale_split_for_base_apk"><xliff:g id="split_name" example="English"> %1$s </xliff:g>基本語言環境 APK</string>
     <string name="locale_split_for_feature"><xliff:g id="split_name" example="English">%1$s</xliff:g> 功能的著域 <xliff:g id="feature_name" example="Visualizer"> %2$s </xliff:g></string>
-    <string name="abi_split_for_base_apk">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"arm64_v8a\"&gt;%1$s&lt;/xliff:g&gt;基本 APK 程式碼</string>
+    <string name="abi_split_for_base_apk"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g>基本 APK 程式碼</string>
     <string name="abi_split_for_feature"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> <xliff:g id="feature_name" example="Visualizer"> %2$s </xliff:g></string>
     <string name="density_split_for_base_apk"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> （<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI） 基礎 APK 資源</string>
     <string name="density_split_for_feature"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> （<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI） 功能資源 <xliff:g id="feature_name" example="Visualizer">%3$s</xliff:g></string>
-    <string name="unknown_split_for_base_apk">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"some_split\"&gt;%1$s&lt;/xliff:g&gt; 用於基本 APK</string>
+    <string name="unknown_split_for_base_apk"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> 用於基本 APK</string>
     <string name="unknown_split_for_feature"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> 功能 <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
     <string name="split_feature_name">特寫： <xliff:g id="feature_name" example="Visualizer">%1$s</xliff:g></string>
     <string name="current_language">語言：%1$s</string>
@@ -239,7 +239,7 @@
     <string name="pref_backup_volume_msg">選擇將儲存空間備份的卷宗或磁碟。</string>
     <string name="backup_volume">備份卷宗</string>
     <string name="pref_backup_restore_msg">自訂備份/還原。</string>
-    <string name="disable_background_run_description">它將模式 &lt;i&gt; 忽略 &lt;/i&gt; 設定為以下應用程式操作： &lt;tt&gt; RUN_IN_BACKGROUND &lt;/tt&gt; （從 Android 7.0） 和 &lt;tt&gt; RUN_ANY_IN_BACKGROUND &lt;/tt&gt; （從 Android 9） 。</string>
+    <string name="disable_background_run_description">它將模式 <i> 忽略 </i> 設定為以下應用程式操作： <tt> RUN_IN_BACKGROUND </tt> （從 Android 7.0） 和 <tt> RUN_ANY_IN_BACKGROUND </tt> （從 Android 9） 。</string>
     <string name="failed_to_enable_magisk_hide">無法啟用MagiskHide</string>
     <string name="enable_magisk_hide">啟用MagiskHide</string>
     <string name="failed_to_disable_magisk_hide">無法停用MagiskHide</string>
@@ -624,7 +624,7 @@
     <string name="backup_obb_media_description">備份OBB和媒體資料夾。</string>
     <string name="backup_external_data_description">備份外部資料。<b> 資料</b> 必須選擇此項才能正常運作。</string>
     <string name="backup_data_description">備份資料。如果選中，預設情況下將備份內部資料。</string>
-    <string name="backup_apk_only_description">僅備份來源目錄中的 APK 檔案。&lt;b&gt; 來源&lt;/b&gt; 必須選擇此項才能正常運作。</string>
+    <string name="backup_apk_only_description">僅備份來源目錄中的 APK 檔案。<b> 來源</b> 必須選擇此項才能正常運作。</string>
     <string name="backup_source_description">備份整個來源目錄。</string>
     <string name="set_mode_for_app_ops_dots">設定應用程式操作的模式…</string>
     <string name="security">安全</string>
@@ -774,15 +774,15 @@
     <string name="word_wrap">切換自動換行</string>
     <string name="credits_message">"感謝以下開發者
 \n- The Android Open Source Project
-\n- &lt;a href=\"https://bitbucket.org/oF2pks/fdroid-applications-info\"&gt;Apps_packages Info&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/butzist/ActivityLauncher\"&gt;Activity Launcher&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/billthefarmer/editor\"&gt;Editor&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/zhaobao/AppsMonitor\"&gt;AppsMonitor&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/tuyafeng/Watt\"&gt;Watt&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/8enet/AppOpsX\"&gt;AppOpsX&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/Aefyr/SAI\"&gt;SAI&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/RikkaApps/Shizuku\"&gt;Shizuku&lt;/a&gt;
-\nOriginal logo credit: &lt;a href=\"https://github.com/Atrate\"&gt;Atrate&lt;/a&gt;. "</string>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
+\n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
+\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
+\n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://github.com/Aefyr/SAI">SAI</a>
+\n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
+\nOriginal logo credit: <a href="https://github.com/Atrate">Atrate</a>. "</string>
     <string name="credits">致謝</string>
     <string name="third_party">第三方資源庫和圖示</string>
     <string name="license">執照</string>

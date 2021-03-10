@@ -221,15 +221,15 @@
     <string name="word_wrap">alihkan word wrap</string>
     <string name="credits_message">"Kepada pemilik dari 
 \n- Proyek Android Sumber Terbuka
-\n- &lt;a href=\"https://bitbucket.org/oF2pks/fdroid-applications-info\"&gt;Informasi Apps_packages&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/butzist/ActivityLauncher\"&gt;Peluncur Aktifitas&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/billthefarmer/editor\"&gt;Penyunting&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/zhaobao/AppsMonitor\"&gt;MonitorApps&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/tuyafeng/Watt\"&gt;Watt&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/8enet/AppOpsX\"&gt;AppOpsX&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/Aefyr/SAI\"&gt;SAI&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/RikkaApps/Shizuku\"&gt;Shizuku&lt;/a&gt;
-\nHak Cipta logo asli: &lt;a href=\"https://github.com/Atrate\"&gt;Atrate&lt;/a&gt;. "</string>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Informasi Apps_packages</a>
+\n- <a href="https://github.com/butzist/ActivityLauncher">Peluncur Aktifitas</a>
+\n- <a href="https://github.com/billthefarmer/editor">Penyunting</a>
+\n- <a href="https://github.com/zhaobao/AppsMonitor">MonitorApps</a>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
+\n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://github.com/Aefyr/SAI">SAI</a>
+\n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
+\nHak Cipta logo asli: <a href="https://github.com/Atrate">Atrate</a>. "</string>
     <string name="credits">Pembuat</string>
     <string name="third_party">Pustakaan dan Ikon Pihak-Ketiga</string>
     <string name="license">Lisensi</string>
@@ -265,7 +265,7 @@
     <string name="backup_restore">Cadangkan/Pulihkan</string>
     <string name="backup_apk">Aplikasi Cadangan</string>
     <string name="clear_data">Bersihkan Data</string>
-    <string name="user_with_id">Pengguna: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"user_id\" example=\"0\"&gt;%1$d&lt;/xliff:g&gt;</string>
+    <string name="user_with_id">Pengguna: <xliff:g id="user_id" example="0">%1$d</xliff:g></string>
     <string name="memory_virtual_memory">Memori: %1$s, Memori Virtual: %2$s</string>
     <string name="pid_and_ppid">Proses ID: %1$d, Proses ID Utama: %2$d</string>
     <string name="disable_background_run">Nonaktifkan Berjalan di Latar Belakang</string>
@@ -339,23 +339,23 @@
     <string name="running">Berjalan</string>
     <string name="mode">Mode</string>
     <string name="permission_name">Nama Perizinan</string>
-    <string name="backup_external_data_description">Cadangkan folder data eksternal. &lt;b&gt;Data&lt;/b&gt; harus dipilih untuk ini agar segera berfungsi.</string>
-    <string name="backup_apk_only_description">Cadangkan hanya berkas APK dari direktori sumber. &lt;b&gt;Sumber&lt;/b&gt; harus dipilih untuk ini dapat segera berfungsi.</string>
+    <string name="backup_external_data_description">Cadangkan folder data eksternal. <b>Data</b> harus dipilih untuk ini agar segera berfungsi.</string>
+    <string name="backup_apk_only_description">Cadangkan hanya berkas APK dari direktori sumber. <b>Sumber</b> harus dipilih untuk ini dapat segera berfungsi.</string>
     <string name="no_of_cores">Core</string>
-    <string name="input_permissions_description">Masukkan izin dengan spasi, mis. &lt;tt&gt;com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION&lt;/tt&gt; dll. Gunakan &lt;tt&gt;*&lt;/tt&gt; untuk menetapkan pada semua izin.</string>
-    <string name="install_without_data_loss">Jika Anda telah mematikan verifikasi tanda tangan, Anda dapat menggunakan opsi &lt;b&gt; Hanya pasang &lt;/b&gt; untuk memasang aplikasi tanpa kehilangan data.</string>
+    <string name="input_permissions_description">Masukkan izin dengan spasi, mis. <tt>com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION</tt> dll. Gunakan <tt>*</tt> untuk menetapkan pada semua izin.</string>
+    <string name="install_without_data_loss">Jika Anda telah mematikan verifikasi tanda tangan, Anda dapat menggunakan opsi <b> Hanya pasang </b> untuk memasang aplikasi tanpa kehilangan data.</string>
     <string name="checksums">Pemeriksa digit</string>
     <string name="downgrade">Turun grade</string>
-    <string name="process_state_with_extra">Status: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"process_state\" example=\"Sleeping\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"state_extra\" example=\"High priority\"&gt;%2$s&lt;/xliff:g&gt;)</string>
+    <string name="process_state_with_extra">Status: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g> (<xliff:g id="state_extra" example="High priority">%2$s</xliff:g>)</string>
     <string name="state_multithreaded">Multi thread</string>
     <string name="state_foreground">Layardepan</string>
     <string name="state_parked">Diparkirkan</string>
     <string name="touchscreen_stylus">Stilus</string>
     <string name="navigation_dial_pad">Pad Panggilan</string>
-    <string name="abi_split_for_base_apk">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"arm64_v8a\"&gt;%1$s&lt;/xliff:g&gt; kode untuk basis APK</string>
-    <string name="density_split_for_base_apk">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"xxdpi\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"dpi_no\" example=\"480\"&gt;%2$d&lt;/xliff:g&gt; DPI) sumber untuk basis APK</string>
-    <string name="density_split_for_feature">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"xxdpi\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"dpi_no\" example=\"480\"&gt;%2$d&lt;/xliff:g&gt; DPI) sumber untuk fitur &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt;%3$s&lt;/xliff:g&gt;</string>
-    <string name="installer_error_blocked">Pemasangan diblokir oleh &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;</string>
+    <string name="abi_split_for_base_apk"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> kode untuk basis APK</string>
+    <string name="density_split_for_base_apk"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) sumber untuk basis APK</string>
+    <string name="density_split_for_feature"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) sumber untuk fitur <xliff:g id="feature_name" example="Visualizer">%3$s</xliff:g></string>
+    <string name="installer_error_blocked">Pemasangan diblokir oleh <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
     <plurals name="verified_with_warning">
         <item quantity="other">Diverifikasi dengan %d peringatan</item>
     </plurals>
@@ -392,13 +392,13 @@
     <plurals name="failed_to_backup_some_apk_files">
         <item quantity="other">Tidak dapat mencadangkan %1$d aplikasi</item>
     </plurals>
-    <string name="input_signatures_description">Masukkan tanda tangan dengan spasi, mis. &lt;tt&gt;com.facebook org.app2 com.app3&lt;/tt&gt; dll.</string>
-    <string name="clear_data_from_uninstalled_apps_description">Kosongkan data dari aplikasi yang dicopot dengan flag &lt;tt&gt;DONT_DELETE_DATA&lt;/tt&gt;</string>
-    <string name="deny_app_ops_description">Tetapkan mode untuk operasi aplikasi yang diidentifikasi oleh nilai konstan, cont. &lt;tt&gt;63&lt;/tt&gt; atau &lt;tt&gt;RUN_IN_BACKGROUND&lt;/tt&gt;</string>
+    <string name="input_signatures_description">Masukkan tanda tangan dengan spasi, mis. <tt>com.facebook org.app2 com.app3</tt> dll.</string>
+    <string name="clear_data_from_uninstalled_apps_description">Kosongkan data dari aplikasi yang dicopot dengan flag <tt>DONT_DELETE_DATA</tt></string>
+    <string name="deny_app_ops_description">Tetapkan mode untuk operasi aplikasi yang diidentifikasi oleh nilai konstan, cont. <tt>63</tt> atau <tt>RUN_IN_BACKGROUND</tt></string>
     <string name="block_components_dots">Blok komponen…</string>
     <string name="filter_apps_without_backups">Aplikasi tanpa cadangan</string>
     <string name="uninstalled_apps">Aplikasi yang dihapus</string>
-    <string name="installer_app_message">Pilih&lt;b&gt;Opsi&lt;/b&gt;untuk memilih dari aplikasi yang diinstal atau pilih &lt;b&gt;Kustom&lt;/b&gt; untuk menentukan nama paket khusus.</string>
+    <string name="installer_app_message">Pilih<b>Opsi</b>untuk memilih dari aplikasi yang diinstal atau pilih <b>Kustom</b> untuk menentukan nama paket khusus.</string>
     <string name="specify_custom_name">Kustom</string>
     <string name="verified_using_unreliable_hash">Terverifikasi menggunakan hash yang tidak dapat diandalkan</string>
     <string name="working_on_adb_mode">Bekerja pada mode ADB</string>
@@ -409,7 +409,7 @@
     <string name="installed_apps">Aplikasi yang diinstal</string>
     <string name="restart_to_reflect_changes">Silakan segera restart untuk mencerminkan perubahan</string>
     <string name="failed_to_change_ssaid">Tidak dapat mengubah SSAID</string>
-    <string name="ssaid_info">SSAID (&lt;tt&gt;settings.secure.android_id&lt;/tt&gt;) adalah pengidentifikasi perangkat yang ditugaskan ke setiap aplikasi (dari Android Oreo). Ini banyak digunakan oleh aplikasi untuk melacak pengguna.</string>
+    <string name="ssaid_info">SSAID (<tt>settings.secure.android_id</tt>) adalah pengidentifikasi perangkat yang ditugaskan ke setiap aplikasi (dari Android Oreo). Ini banyak digunakan oleh aplikasi untuk melacak pengguna.</string>
     <string name="ssaid">SSAID</string>
     <string name="list_options">Daftar opsi</string>
     <string name="reverse">Membalikkan</string>
@@ -470,7 +470,7 @@
     <string name="pref_backup_volume_msg">Pilih volume atau disk di mana cadangan akan disimpan.</string>
     <string name="backup_volume">Volume cadangan</string>
     <string name="pref_backup_restore_msg">Kustomisasi cadangan/pemulihan.</string>
-    <string name="disable_background_run_description">Ini mengatur mode &lt;i&gt; Abaikan &lt;/i&gt; ke aplikasi ops berikut: &lt;tt&gt;RUN_IN_BACKGROUND&lt;/tt&gt; (dari android 7.0) dan &lt;tt&gt;RUN_ANY_IN_BACKGROUD&lt;/tt&gt; (dari Android 9).</string>
+    <string name="disable_background_run_description">Ini mengatur mode <i> Abaikan </i> ke aplikasi ops berikut: <tt>RUN_IN_BACKGROUND</tt> (dari android 7.0) dan <tt>RUN_ANY_IN_BACKGROUD</tt> (dari Android 9).</string>
     <string name="failed_to_enable_magisk_hide">Tidak dapat mengaktifkan Magiskhide</string>
     <string name="enable_magisk_hide">Aktifkan Magiskhide</string>
     <string name="failed_to_disable_magisk_hide">Tidak dapat menonaktifkan Magiskhide</string>
@@ -539,8 +539,8 @@
     <string name="keep_data_and_signatures">Simpan data dan tanda tangan</string>
     <string name="this_action_cannot_be_undone">Tindakan ini tidak bisa dibatalkan.</string>
     <string name="no_app_ops_permission">Tidak ada izin untuk menampilkan ops aplikasi</string>
-    <string name="input_keystore_alias_pass_description">Masukkan kata sandi untuk alias &lt;b&gt;%1$s&lt;/b&gt;. Anda dapat meninggalkan ini kosong jika kata sandi sama dengan kata sandi keystore.</string>
-    <string name="input_keystore_alias_pass">Kata sandi untuk alias &lt;b&gt;%1$s&lt;/b&gt;</string>
+    <string name="input_keystore_alias_pass_description">Masukkan kata sandi untuk alias <b>%1$s</b>. Anda dapat meninggalkan ini kosong jika kata sandi sama dengan kata sandi keystore.</string>
+    <string name="input_keystore_alias_pass">Kata sandi untuk alias <b>%1$s</b></string>
     <string name="input_keystore_pass_msg">Ketuk di sini untuk memberikan kata sandi keystore</string>
     <string name="input_keystore_pass_description">Masukkan kata sandi keystore manager app. Jika Anda melihat ini untuk pertama kalinya, silakan gunakan generator kata sandi untuk menghasilkan kata sandi dan menyimpannya di tempat yang aman sebelum memasukkannya ke sini.</string>
     <string name="input_keystore_pass">Password keystore input</string>
@@ -648,12 +648,12 @@
     <string name="subject">Subyek</string>
     <string name="filter_apps_with_backups">Aplikasi dengan cadangan</string>
     <string name="sort_by_backup">Cadangan dulu</string>
-    <string name="failed_to_uninstall_updates">Tidak dapat mencopot pembaruan untuk &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.</string>
-    <string name="update_uninstalled_successfully">Pembaruan untuk &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; telah dicopot.</string>
+    <string name="failed_to_uninstall_updates">Tidak dapat mencopot pembaruan untuk <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="update_uninstalled_successfully">Pembaruan untuk <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> telah dicopot.</string>
     <string name="uninstall_updates">Copot Pembaruan</string>
     <string name="allow_open_pgp_operation">Klik untuk mengizinkan App Manager untuk menggunakan OpenPGP</string>
     <string name="confirm_installation">Konfirmasi Pemasangan</string>
-    <string name="compression_method">Metode kompresi: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"compression_method\" example=\"GZip\"&gt;%1$s&lt;/xliff:g&gt;</string>
+    <string name="compression_method">Metode kompresi: <xliff:g id="compression_method" example="GZip">%1$s</xliff:g></string>
     <string name="pref_backup_flags_msg">Menambahkan preset untuk opsi cadangan menghapus beban pemilihan bendera setiap kali Anda mencadangkan / memulihkan.</string>
     <string name="rules">Aturan</string>
     <string name="other">Lain</string>
@@ -678,7 +678,7 @@
     <string name="input_backup_name_description">Nama cadangan tidak boleh dimulai dengan digit atau harus mengandung spasi. Biarkan kosong jika Anda ingin menggunakan waktu tanggal saat ini.</string>
     <string name="input_backup_name">Nama cadangan</string>
     <string name="downgrade_not_possible">Downgrade tidak mungkin tanpa root atau ADB</string>
-    <string name="process_state">Status: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"process_state\" example=\"Sleeping\"&gt;%1$s&lt;/xliff:g&gt;</string>
+    <string name="process_state">Status: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g></string>
     <string name="state_session_leader">Pemimpin sesi</string>
     <string name="state_locked_memory">Memori yang terkunci</string>
     <string name="state_low_priority">Prioritas rendah</string>
@@ -722,9 +722,9 @@
     <string name="launch_mode_single_task">Tugas tunggal</string>
     <string name="launch_mode_single_instance">Contoh tunggal</string>
     <string name="launch_mode_multiple">Ganda</string>
-    <string name="locale_split_for_base_apk">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"English\"&gt;%1$s&lt;/xliff:g&gt; lokal untuk basis APK</string>
-    <string name="locale_split_for_feature">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"English\"&gt;%1$s&lt;/xliff:g&gt; lokal untuk fitur &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt;%2$s&lt;/xliff:g&gt;</string>
-    <string name="abi_split_for_feature">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"arm64_v8a\"&gt;%1$s&lt;/xliff:g&gt; code for &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt;%2$s&lt;/xliff:g&gt;</string>
+    <string name="locale_split_for_base_apk"><xliff:g id="split_name" example="English">%1$s</xliff:g> lokal untuk basis APK</string>
+    <string name="locale_split_for_feature"><xliff:g id="split_name" example="English">%1$s</xliff:g> lokal untuk fitur <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <string name="abi_split_for_feature"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> code for <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
     <string name="backup_all_users">Semua pengguna</string>
     <string name="backup_multiple">Cadangkan banyak</string>
     <string name="source">Sumber</string>
@@ -800,16 +800,16 @@
     <string name="filter_system_apps">Aplikasi Sistem</string>
     <string name="filter_user_apps">Aplikasi Pengguna</string>
     <string name="filter">Filter</string>
-    <string name="failed_to_install_package_name">Tidak dapat memasang &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;</string>
-    <string name="package_name_is_installed_successfully">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; terpasang</string>
+    <string name="failed_to_install_package_name">Tidak dapat memasang <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
+    <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> terpasang</string>
     <string name="termux">Termux</string>
     <plurals name="no_of_splits">
         <item quantity="other">Pembagian %1$d</item>
     </plurals>
     <string name="failed_to_parse_some_numbers">Tidak dapat menguraikan beberapa angka</string>
     <string name="only_works_in_root_or_adb_mode">Hanya bekerja dalam mode root atau ADB</string>
-    <string name="input_app_ops_description_profile">Masukkan nama oprs aplikasi dan/atau konstanta dengan spasi, mis. &lt;tt&gt;WAKE_LOCK 63 72 CAMERA&lt;/tt&gt; dll. Gunakan &lt;tt&gt;*&lt;/tt&gt; untuk menerapkan pada semua ops aplikasi yang dikonfigurasi.</string>
-    <string name="input_app_ops_description">Masukkan nama oprs aplikasi dan/atau konstanta dengan spasi, mis. &lt;tt&gt;WAKE_LOCK 63 72 CAMERA&lt;/tt&gt; dll.</string>
+    <string name="input_app_ops_description_profile">Masukkan nama oprs aplikasi dan/atau konstanta dengan spasi, mis. <tt>WAKE_LOCK 63 72 CAMERA</tt> dll. Gunakan <tt>*</tt> untuk menerapkan pada semua ops aplikasi yang dikonfigurasi.</string>
+    <string name="input_app_ops_description">Masukkan nama oprs aplikasi dan/atau konstanta dengan spasi, mis. <tt>WAKE_LOCK 63 72 CAMERA</tt> dll.</string>
     <string name="input_app_ops">Input oprs aplikasi</string>
     <string name="filtered_packages">Paket terfilter</string>
     <string name="input_signatures">Masukkan tanda tangan</string>

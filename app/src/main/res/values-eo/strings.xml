@@ -63,7 +63,7 @@
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
 \nAŭtoro de originala emblemo: <a href="https://github.com/Atrate">Atrate</a>. </string>
-    <string name="starting_activity">Komencante aktivecon: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"activity_name\" example=\".main.MainActivity\"&gt;%1$s&lt;/xliff:g&gt;</string>
+    <string name="starting_activity">Komencante aktivecon: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="main_activity">Ĉefaktiveco</string>
     <string name="no_activities">Neniu aktiveco</string>
     <string name="activities">Aktivecoj</string>
