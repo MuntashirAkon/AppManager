@@ -2,7 +2,7 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="_lang_tag" translatable="false">pt</string>
     <string name="choose_language">Mudar idioma</string>
-    <string name="current_language">Idioma: %s</string>
+    <string name="current_language">Idioma: %1$s</string>
     <string name="pref_app_language">Idioma</string>
     <string name="backup_all_users">Todos os utilizadores</string>
     <string name="backup_multiple">Backup múltiplo</string>
@@ -32,7 +32,7 @@
     <string name="installer_error_bad_apks">Os ficheiros APK selecionados são inválidos</string>
     <string name="installer_error_incompatible">A app é incompatível com esse aparelho</string>
     <string name="installer_error_conflict">Não é possível instalar a app porque uma app já instalada já tem esse nome de pacote</string>
-    <string name="installer_error_blocked">A instalação bloqueada por %s</string>
+    <string name="installer_error_blocked">A instalação bloqueada por &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;</string>
     <string name="installer_error_blocked_device">aparelho</string>
     <string name="installer_error_aborted">A instalação falhou porque foi cancelada ou a sessão foi encerrada inesperadamente</string>
     <string name="toggle_default_app_ops">Alternar app ops padrões</string>
@@ -56,32 +56,32 @@
     <string name="apply_to_system_apps_question">Também aplicar às apps do sistema\? Selecione \"Não\" se não tiver certeza.</string>
     <string name="apply_to_system_apps">Aplicar aos apps de sistema</string>
     <plurals name="alert_failed_to_enable">
-        <item quantity="one">Não foi possível ativar %s app</item>
-        <item quantity="other">Não foi possível ativar %s apps</item>
+        <item quantity="one">Não foi possível ativar %1$d app</item>
+        <item quantity="other">Não foi possível ativar %1$d apps</item>
     </plurals>
     <plurals name="alert_failed_to_block_components">
-        <item quantity="one">Não foi possível bloquear componentes de %d app</item>
-        <item quantity="other">Não foi possível bloquear componentes de %d apps</item>
+        <item quantity="one">Não foi possível bloquear componentes de %1$d app</item>
+        <item quantity="other">Não foi possível bloquear componentes de %1$d apps</item>
     </plurals>
     <plurals name="alert_failed_to_unblock_trackers">
-        <item quantity="one">Não foi possível desbloquear rastreadores de %d app</item>
-        <item quantity="other">Não foi possível desbloquear rastreadores de %d apps</item>
+        <item quantity="one">Não foi possível desbloquear rastreadores de %1$d app</item>
+        <item quantity="other">Não foi possível desbloquear rastreadores de %1$d apps</item>
     </plurals>
     <plurals name="alert_failed_to_delete_backup">
-        <item quantity="one">Não foi possível apagar %d backup</item>
-        <item quantity="other">Não foi possível apagar %d backups</item>
+        <item quantity="one">Não foi possível apagar %1$d backup</item>
+        <item quantity="other">Não foi possível apagar %1$d backups</item>
     </plurals>
     <plurals name="alert_failed_to_restore">
-        <item quantity="one">Não foi possível restaurar %d app</item>
-        <item quantity="other">Não foi possível restaurar %d apps</item>
+        <item quantity="one">Não foi possível restaurar %1$d app</item>
+        <item quantity="other">Não foi possível restaurar %1$d apps</item>
     </plurals>
     <plurals name="alert_failed_to_backup">
-        <item quantity="one">Não foi possível fazer backup de %d app</item>
-        <item quantity="other">Não foi possível fazer backup de %d apps</item>
+        <item quantity="one">Não foi possível fazer backup de %1$d app</item>
+        <item quantity="other">Não foi possível fazer backup de %1$d apps</item>
     </plurals>
     <plurals name="failed_to_backup_some_apk_files">
-        <item quantity="one">Não foi possível fazer backup de %d app</item>
-        <item quantity="other">Não foi possível fazer backup de %d apps</item>
+        <item quantity="one">Não foi possível fazer backup de %1$d app</item>
+        <item quantity="other">Não foi possível fazer backup de %1$d apps</item>
     </plurals>
     <string name="backup_options">Opções do backup</string>
     <string name="delete_backup">Deletar backup</string>
@@ -98,7 +98,7 @@
     <string name="sort_by_wifi_data">Dados Wi-Fi</string>
     <string name="version">Versão</string>
     <string name="pref_about_msg">Versão, licenças e créditos do App Manager.</string>
-    <string name="current_theme">Tema atual: %s</string>
+    <string name="current_theme">Tema atual: %1$s</string>
     <string name="apply">Aplicar</string>
     <string name="select_theme">Tema</string>
     <string name="night">Noite</string>
@@ -106,10 +106,10 @@
     <string name="battery_mode">Modo bateria</string>
     <string name="follow_system">Seguir o sistema</string>
     <string name="pref_app_theme">Tema do app</string>
-    <string name="pref_import_blocker_msg">Importar regras de bloqueio do Blocker, cada ficheiro contém regras para um único pacote</string>
-    <string name="pref_import_watt_msg">Importar regras de bloqueio do Watt, cada ficheiro contendo regras para um único pacote nomeado como packagename.xml etc.</string>
-    <string name="pref_import_msg">Importar regras de bloqueio exportadas anteriormente deste app</string>
-    <string name="pref_export_msg">Exportar regras de bloqueio, configuradas nesta app, para o armazenamento externo</string>
+    <string name="pref_import_blocker_msg">Importar regras de bloqueio do Blocker, cada ficheiro contém regras para um único pacote.</string>
+    <string name="pref_import_watt_msg">Importar regras de bloqueio do Watt, cada ficheiro contendo regras para um único pacote nomeado como &lt;tt&gt;packagename.xml&lt;/tt&gt; etc.</string>
+    <string name="pref_import_msg">Importar regras de bloqueio exportadas anteriormente deste app.</string>
+    <string name="pref_export_msg">Exportar regras de bloqueio, configuradas nesta app, para o armazenamento externo.</string>
     <string name="navigation">Navegação</string>
     <string name="keyboard_type">Tipo de teclado</string>
     <string name="export_failed">Falha ao exportar!</string>
@@ -126,59 +126,59 @@
     <string name="app_op_cannot_be_disabled">Esta operação de app não pode ser desativada. É provável que seja somente leitura ou depende de outro operação de app.</string>
     <string name="toggle_kill_for_system_apps">Alternar encerramento de apps de sistema</string>
     <plurals name="alert_failed_to_force_stop">
-        <item quantity="one">Não foi possível forçar parada de %d app</item>
-        <item quantity="other">Não foi possível forçar parada de %d apps</item>
+        <item quantity="one">Não foi possível forçar parada de %1$d app</item>
+        <item quantity="other">Não foi possível forçar parada de %1$d apps</item>
     </plurals>
     <string name="the_operation_was_successful">Feito</string>
     <plurals name="alert_failed_to_disable_background">
-        <item quantity="one">%d app não pôde ser impedido de ser executado em segundo plano</item>
-        <item quantity="other">%d apps não pôdem ser impedidas de serem executadas em segundo plano</item>
+        <item quantity="one">%1$d app não pôde ser impedido de ser executado em segundo plano</item>
+        <item quantity="other">%1$d apps não pôdem ser impedidas de serem executadas em segundo plano</item>
     </plurals>
     <plurals name="alert_failed_to_uninstall">
-        <item quantity="one">Não foi possível desinstalar %d das app</item>
-        <item quantity="other">Não foi possível desinstalar %d das apps</item>
+        <item quantity="one">Não foi possível desinstalar %1$d das app</item>
+        <item quantity="other">Não foi possível desinstalar %1$d das apps</item>
     </plurals>
     <plurals name="alert_failed_to_disable">
-        <item quantity="one">Não foi possível desativar %d app</item>
-        <item quantity="other">Não foi possível desativar %d das apps</item>
+        <item quantity="one">Não foi possível desativar %1$d app</item>
+        <item quantity="other">Não foi possível desativar %1$d das apps</item>
     </plurals>
     <plurals name="alert_failed_to_clear_data">
-        <item quantity="one">Não foi possível limpar os dados de %d app</item>
-        <item quantity="other">Não foi possível limpar os dados de %d apps</item>
+        <item quantity="one">Não foi possível limpar os dados de %1$d app</item>
+        <item quantity="other">Não foi possível limpar os dados de %1$d apps</item>
     </plurals>
-    <string name="some_items_selected">%d selecionados</string>
+    <string name="some_items_selected">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"selection_no\" example=\"20\"&gt;%1$d&lt;/xliff:g&gt; selecionados</string>
     <string name="export_blocking_rules">Exportar regras de bloqueio</string>
     <string name="disable_background">Desativar segundo plano</string>
     <string name="backup_restore">Backup/Restauração</string>
     <string name="backup_apk">APK do Backup</string>
     <string name="clear_data">Limpar dados</string>
-    <string name="user_and_uid">Utilizador: %s (%d)</string>
-    <string name="memory_virtual_memory">Memória: %s; Memória virtual: %s</string>
-    <string name="pid_and_ppid">ID do processo: %d; ID do processo parental: %d</string>
+    <string name="user_and_uid">Utilizador: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"user_name\" example=\"root\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"user_id\" example=\"0\"&gt;%2$d&lt;/xliff:g&gt;)</string>
+    <string name="memory_virtual_memory">Memória: %1$s; Memória virtual: %2$s</string>
+    <string name="pid_and_ppid">ID do processo: %1$d; ID do processo parental: %2$d</string>
     <string name="disable_background_run">Desativar execução em segundo plano</string>
     <string name="kill_process">Encerrar</string>
     <string name="running_apps">Apps em execução</string>
     <string name="store">Loja</string>
     <string name="apk_updater">Atualizador de APK</string>
     <plurals name="failed_to_import_files">
-        <item quantity="one">%d do ficheiro não pôde ser importado.</item>
-        <item quantity="other">Não foi possível importar %d dos ficheiros.</item>
+        <item quantity="one">%1$d do ficheiro não pôde ser importado.</item>
+        <item quantity="other">Não foi possível importar %1$d dos ficheiros.</item>
     </plurals>
     <string name="the_export_was_successful">Exportado</string>
     <string name="the_import_was_successful">Importado</string>
     <string name="pref_import_blocker">Importar do Blocker</string>
     <string name="pref_import_watt">Importar do Watt</string>
-    <string name="pref_import_export_blocking_rules_msg">Importar/exportar regras, importar regras externas do Watt ou do Blocker</string>
+    <string name="pref_import_export_blocking_rules_msg">Importar/exportar regras, importar regras externas do Watt ou do Blocker.</string>
     <string name="pref_import_export_blocking_rules">Importar/Exportar regras de bloqueio</string>
     <string name="sort_by_mobile_data">Dados móveis</string>
     <string name="sort_by_times_opened">Vezes abertas</string>
     <string name="sort_by_screen_time">Tempo de ecrã</string>
     <string name="sort_by_last_used">Último usado</string>
     <plurals name="no_of_times_opened">
-        <item quantity="one">%d vez</item>
-        <item quantity="other">%d vezes</item>
+        <item quantity="one">%1$d vez</item>
+        <item quantity="other">%1$d vezes</item>
     </plurals>
-    <string name="external_multiple_data_dir">Diretório de Dados Externo %d</string>
+    <string name="external_multiple_data_dir">Diretório de Dados Externo &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"dir_no\" example=\"1\"&gt;%1$d&lt;/xliff:g&gt;</string>
     <string name="external_data_dir">Diretório de Dados Externo</string>
     <string name="sort_by_blocked_components">Bloqueado primeiro</string>
     <string name="sort_by_disabled_app">Desativado primeiro</string>
@@ -186,7 +186,7 @@
     <string name="usage_yesterday">Ontem</string>
     <string name="only_works_in_root_mode">Funciona apenas no modo Root</string>
     <string name="app_settings">Configurações</string>
-    <string name="pref_usage_access_enabled_msg">Permite ver as estatísticas de uso da app e as informações de dados dela</string>
+    <string name="pref_usage_access_enabled_msg">Permite ver as estatísticas de uso da app e as informações de dados dela.</string>
     <string name="pref_usage_access_enabled">Acesso ao uso</string>
     <string name="pref_global_blocking_enabled_msg">Permite a restrição em outros apps mesmo sem ativar o bloqueio explicitamente</string>
     <string name="pref_global_blocking_enabled">Bloquear componentes globalmente</string>
@@ -199,16 +199,16 @@
     <string name="app_size">App</string>
     <string name="total_size">Total</string>
     <string name="storage_and_cache">Armazenamento e Cache</string>
-    <string name="failed_to_stop">%s não pôde ser parado.</string>
+    <string name="failed_to_stop">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; não pôde ser parado.</string>
     <string name="force_stop">Forçar parada</string>
-    <string name="failed_to_enable">%s não pôde ser ativado.</string>
-    <string name="failed_to_disable">%s não pôde ser desativado.</string>
+    <string name="failed_to_enable">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; não pôde ser ativado.</string>
+    <string name="failed_to_disable">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; não pôde ser desativado.</string>
     <string name="enable">Ativar</string>
     <string name="disable">Desativar</string>
     <string name="stopped">Parado</string>
     <string name="uninstall_system_app_message">Este é uma app do sistema. Tem certeza que deseja desinstalá-lo\?</string>
-    <string name="uninstalled_successfully">%s foi desinstalado.</string>
-    <string name="failed_to_uninstall">%s não pôde ser desinstalado.</string>
+    <string name="uninstalled_successfully">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; foi desinstalado.</string>
+    <string name="failed_to_uninstall">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; não pôde ser desinstalado.</string>
     <string name="uninstall_app_message">Deseja desinstalar esta app\?</string>
     <string name="view_in_settings">Ver nas configurações</string>
     <string name="no_content">Nenhum conteúdo</string>
@@ -257,18 +257,18 @@
     <string name="go">Ir</string>
     <string name="go_back">Voltar</string>
     <string name="usage_less_than_a_minute">Menos de um minuto</string>
-    <string name="usage_min">%d minutos</string>
+    <string name="usage_min">%1$d minutos</string>
     <plurals name="usage_hours">
-        <item quantity="one">%d hora</item>
-        <item quantity="other">%d horas</item>
+        <item quantity="one">%1$d hora</item>
+        <item quantity="other">%1$d horas</item>
     </plurals>
     <plurals name="usage_days">
-        <item quantity="one">%d dia</item>
-        <item quantity="other">%d dias</item>
+        <item quantity="one">%1$d dia</item>
+        <item quantity="other">%1$d dias</item>
     </plurals>
     <plurals name="usage_months">
-        <item quantity="one">%d mês</item>
-        <item quantity="other">%d meses</item>
+        <item quantity="one">%1$d mês</item>
+        <item quantity="other">%1$d meses</item>
     </plurals>
     <string name="usage_7_days">Últimos 7 dias</string>
     <string name="usage_today">Hoje</string>
@@ -277,14 +277,15 @@
     <string name="no_tracker_class">Nenhuma classe de rastreador</string>
     <string name="no_shared_libs">Nenhuma biblioteca compartilhada</string>
     <plurals name="main_list_date_days">
-        <item quantity="one">%s %d dia</item>
-        <item quantity="other">%s %d dias</item>
+        <item quantity="one">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"last_update_date\" example=\"20/10/2020\"&gt;%1$s&lt;/xliff:g&gt; &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"day_no\" example=\"5\"&gt;%2$d&lt;/xliff:g&gt; dia</item>
+        <item quantity="other">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"last_update_date\" example=\"20/10/2020\"&gt;%1$s&lt;/xliff:g&gt; &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"day_no\" example=\"5\"&gt;%2$d&lt;/xliff:g&gt; dias</item>
     </plurals>
     <string name="all_classes">Todas as classes</string>
     <string name="tracker_classes">Classes do rastreador</string>
     <string name="tracker_details">Detalhes do reastreador</string>
     <string name="found_trackers">Rastreadores encontrados:</string>
-    <string name="tested_signatures_on_classes_and_time_taken">%d assinaturas testadas em %d classes.\nTempo total: %d ms (%d iterações).</string>
+    <string name="tested_signatures_on_classes_and_time_taken">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"signature_no\" example=\"342\"&gt;%1$d&lt;/xliff:g&gt; assinaturas testadas em &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"6000\"&gt;%2$d&lt;/xliff:g&gt; classes.
+\nTempo total: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"time\" example=\"10000\"&gt;%3$d&lt;/xliff:g&gt; ms (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"iteration_no\" example=\"100000\"&gt;%4$d&lt;/xliff:g&gt; iterações).</string>
     <string name="toggle_class_listing">Alternar lista de classes</string>
     <string name="class_viewer">Visualizador de classe</string>
     <string name="word_wrap">Alternar quebra de palavra</string>
@@ -311,7 +312,7 @@
     <string name="shortcut_name">Nome do atalho</string>
     <string name="edit_shortcut">Editar atalho</string>
     <string name="create_shortcut">Criar atalho</string>
-    <string name="starting_activity">Iniciando atividade: \"%s\"</string>
+    <string name="starting_activity">Iniciando atividade: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"activity_name\" example=\".main.MainActivity\"&gt;%1$s&lt;/xliff:g&gt;</string>
     <string name="error_verbose_pin_shortcut">O launcher atual não suporta PinShortcut. Não foi possível criar o atalho.</string>
     <string name="error_creating_shortcut">Erro ao criar atalho</string>
     <string name="instructions">Instruções</string>
@@ -331,7 +332,7 @@
     <string name="user_app">App do utilizador</string>
     <string name="system_app">App do sistema</string>
     <string name="app_info">Informações da app</string>
-    <string name="version_name_with_code">Versão %s (%d)</string>
+    <string name="version_name_with_code">Versão &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"version_name\" example=\"2.5.17\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"version_code\" example=\"365\"&gt;%2$d&lt;/xliff:g&gt;)</string>
     <string name="sort">Ordenar</string>
     <string name="user">Utilizador</string>
     <string name="system">Sistema</string>
@@ -370,28 +371,28 @@
     <string name="filter_system_apps">Apps do sistema</string>
     <string name="filter_user_apps">Apps do utilizador</string>
     <string name="filter">Filtro</string>
-    <string name="failed_to_install_package_name">O %s não pôde ser instalado</string>
-    <string name="package_name_is_installed_successfully">%s instalado</string>
+    <string name="failed_to_install_package_name">O &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; não pôde ser instalado</string>
+    <string name="package_name_is_installed_successfully">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; instalado</string>
     <plurals name="no_of_splits">
-        <item quantity="one">%d APK</item>
-        <item quantity="other">%d APKs</item>
+        <item quantity="one">%1$d APK</item>
+        <item quantity="other">%1$d APKs</item>
     </plurals>
     <string name="failed_to_parse_some_numbers">Não foi possível analisar alguns números</string>
     <string name="only_works_in_root_or_adb_mode">Somente funciona no modo Root ou ADB</string>
     <string name="filtered_packages">Pacotes filtrados</string>
-    <string name="input_signatures_description">assinaturas de input com espaços, ex. (com.facebook org.app2 com.app3) etc.</string>
+    <string name="input_signatures_description">assinaturas de input com espaços, ex. &lt;tt&gt;com.facebook org.app2 com.app3&lt;/tt&gt; etc.</string>
     <string name="input_signatures">Assinaturas de input</string>
     <string name="failed_packages">Pacotes que falharam</string>
     <string name="no_tracker_found">Nenhum rastreador encontrado</string>
     <string name="clear_app_cache_description">Limpar o cache de todas as apps</string>
     <string name="clear_app_cache">Limpar cache do app</string>
-    <string name="clear_data_from_uninstalled_apps_description">Limpar dados dos apps que foram desinstalados e que continham a flag DONT_DELETE_DATA</string>
+    <string name="clear_data_from_uninstalled_apps_description">Limpar dados dos apps que foram desinstalados e que continham a flag &lt;tt&gt;DONT_DELETE_DATA&lt;/tt&gt;</string>
     <string name="clear_data_from_uninstalled_apps">Limpar dados dos apps desinstalados</string>
     <string name="block_components_description">Bloquear todos os componentes identificados pelas assinaturas especificadas</string>
     <string name="block_components_dots">Bloquear componentes…</string>
     <string name="block_unblock_trackers_description">Bloquear ou desbloquear componentes de propagandas e rastreamento em todos os apps instalados</string>
     <string name="clear_cache">Limpar cache</string>
-    <string name="pref_import_existing_msg">Adicione componentes desativados por outros apps ao App Manager. Tenha cuidado ao usar essa ferramenta, pois podem haver muitos falsos positivos. Escolha apenas as apps sobre os quais tem certeza</string>
+    <string name="pref_import_existing_msg">Adicione componentes desativados por outros apps ao App Manager. Tenha cuidado ao usar essa ferramenta, pois podem haver muitos falsos positivos. Escolha apenas as apps sobre os quais tem certeza.</string>
     <string name="pref_import_existing">Importar regras existentes</string>
     <string name="community_links">Canal de atualizações: https://t.me/AppManagerChannel
 \nGrupo de suporte: https://t.me/AppManagerAndroid</string>
@@ -400,8 +401,8 @@
     <string name="update">Atualizar</string>
     <string name="install">Instalar</string>
     <plurals name="no_of_trackers">
-        <item quantity="one">%d rastreador</item>
-        <item quantity="other">%d rastreadores</item>
+        <item quantity="one">%1$d rastreador</item>
+        <item quantity="other">%1$d rastreadores</item>
     </plurals>
     <string name="manifest_viewer">Visualizador de Manifest</string>
     <string name="external_apk_no_app_op">APKs externos não possuem nenhuma operação de app</string>
@@ -413,8 +414,8 @@
     <string name="failed_to_revoke_permission">A permissão não pôde ser revogada</string>
     <string name="failed_to_grant_permission">A permissão não pôde ser concedida</string>
     <plurals name="alert_failed_to_disable_trackers">
-        <item quantity="one">Não foi possível desativar rastreadores de %d app</item>
-        <item quantity="other">Não foi possível desativar rastreadores de %d app</item>
+        <item quantity="one">Não foi possível desativar rastreadores de %1$d app</item>
+        <item quantity="other">Não foi possível desativar rastreadores de %1$d app</item>
     </plurals>
     <string name="trackers_disabled_successfully">Rastreadores desativados</string>
     <string name="failed_to_disable_trackers">Não foi possível desativar rastreadores</string>
