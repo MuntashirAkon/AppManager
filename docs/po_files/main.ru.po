@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: io.github.muntashirakon.AppManager v2.5.24\n"
 "POT-Creation-Date: 2021-03-08 14:11+0600\n"
 "PO-Revision-Date: 2021-03-10 16:25+0000\n"
-"Last-Translator: Muntashir Al-Islam <muntashirakon@riseup.net>\n"
+"Last-Translator: tommynok <yazuzia7080@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/app-manager/docs/"
 "ru/>\n"
 "Language: ru\n"
@@ -110,6 +110,10 @@ msgid ""
 "v2.5.24\\par} \\vfill {\\large \\today\\par} \\vfill {Copyright \\copyright "
 "2020--2021 Muntashir Al-Islam\\par} \\pagebreak \\pagecolor{white}"
 msgstr ""
+"{\\Huge\\textbf{\\textsc{App Manager}}\\par} \\vspace{2.5cm} {\\huge"
+"\\bfseries Руководство пользователя\\par} \\vspace{.5cm} {\\Large\\itshape v2"
+".5.24\\par} \\vfill {\\large \\today\\par} \\vfill {Copyright \\copyright "
+"2020--2021 Muntashir Al-Islam\\par} \\pagebreak \\pagecolor{white}"
 
 #. type: quotation
 #: ./intro/main.tex
@@ -118,6 +122,9 @@ msgid ""
 "``Wisely and slow. They stumble that run fast.'' \\sourceatright{--- Friar "
 "Laurence, \\textit{Romeo and Juliet}}"
 msgstr ""
+"``Прошу не торопить:\n"
+"Тот падает, кто мчится во всю прыть.'' \\sourceatright{--- Брат Лоренцо, "
+"\\textit{Ромео и Джульетта}}"
 
 #. type: chapter{#2}
 #: ./intro/main.tex
@@ -144,24 +151,38 @@ msgid ""
 "the \\href{https://github.com/MuntashirAkon/AppManager/issues}{App Manager "
 "issue tracker}."
 msgstr ""
+"App Manager - это продвинутый менеджер пакетов для Android. Он предлагает "
+"множество функций и, следовательно, требует руководства пользователя, чтобы "
+"помочь пользователям с функциями, которые он предлагает. Этот документ "
+"действует как руководство пользователя для App Manager в том смысле, что он "
+"содержит описание каждой функции, которую может предложить App Manager. Этот "
+"документ можно рассматривать как `` официальное '' руководство для App "
+"Manager, отражающий ожидаемое поведение App Manager. Переводы могут неверно "
+"истолковать этот документ (который написан на английском языке). Поэтому "
+"рекомендуется, по возможности, прочитать английскую версию. Могут быть и "
+"другие неофициальные или сторонние ресурсы, такие как статьи в блогах, "
+"видео, чат-группы и т.д. Хотя эти ресурсы могут быть полезны для многих, они "
+"могут быть устаревшими. Если в App Manager обнаружены какие-либо отклонения "
+"от этого документа, о них следует сообщить в \\ href {https://github.com/"
+"MuntashirAkon/AppManager/issues} {ветке отслеживания проблем App Manager}."
 
 #. type: section{#2}
 #: ./intro/main.tex
 #: :31
 msgid "Terminologies"
-msgstr ""
+msgstr "Терминология"
 
 #. type: itemize
 #: ./intro/main.tex
 #: :31
 msgid "\\textbf{AM} --- Short name for App Manager"
-msgstr ""
+msgstr "\\textbf{AM} --- краткое название App Manager"
 
 #. type: itemize
 #: ./intro/main.tex
 #: :31
 msgid "\\textbf{AoT} --- Short form of ADB over TCP"
-msgstr ""
+msgstr "\\textbf{AoT} --- краткое название ADB через TCP"
 
 #. type: itemize
 #: ./intro/main.tex
@@ -214,7 +235,7 @@ msgstr ""
 #: ./intro/main.tex
 #: :34
 msgid "Supported Versions"
-msgstr ""
+msgstr "Поддерживаемые версии"
 
 #. type: document
 #: ./intro/main.tex
@@ -223,12 +244,14 @@ msgid ""
 "Currently supported versions are v2.5.20 (stable), v2.5.23 (pre-release) and "
 "v2.5.24 (debug release)."
 msgstr ""
+"В настоящее время поддерживаются следующие версии: v2.5.20 (стабильная), "
+"v2.5.23 (пре-релиз) и v2.5.24 (отладочный релиз)."
 
 #. type: section{#2}
 #: ./intro/main.tex
 #: :36
 msgid "Official Sources"
-msgstr ""
+msgstr "Официальные источники"
 
 #. type: subsection{#2}
 #: ./intro/main.tex
@@ -244,6 +267,10 @@ msgid ""
 "may distribute modified versions of App Manager, and none but you shall be "
 "responsible for the consequences of using such distributions."
 msgstr ""
+"App Manager распространяется с использованием следующих источников. "
+"Неофициальные источники могут распространять модифицированные версии App "
+"Manager, и никто, кроме вас, не несет ответственности за последствия "
+"использования таких дистрибутивов."
 
 #. type: enumerate
 #: ./intro/main.tex
@@ -253,6 +280,9 @@ msgid ""
 "only}\\\\ \\textit{Link:} "
 "\\url{https://f-droid.org/packages/io.github.muntashirakon.AppManager}"
 msgstr ""
+"Официальный репозиторий F-Droid.\\footnote{Только для распространения "
+"стабильных релизов}\\\\ \\textit{Link:} \\url{https://f-droid.org/packages/io"
+".github.muntashirakon.AppManager}"
 
 #. type: enumerate
 #: ./intro/main.tex
@@ -262,6 +292,9 @@ msgid ""
 "only}\\\\ \\textit{Link:} "
 "\\url{https://apt.izzysoft.de/fdroid/index/apk/io.github.muntashirakon.AppManager}"
 msgstr ""
+"IzzyOnDroid репозиторий F-Droid.\\footnote{Только для распространения "
+"пре-релизов}\\\\ \\textit{Link:} \\url{https://apt.izzysoft.de/fdroid/index/"
+"apk/io.github.muntashirakon.AppManager}"
 
 #. type: enumerate
 #: ./intro/main.tex
@@ -272,6 +305,9 @@ msgid ""
 "\\textit{Debug releases:} "
 "\\url{https://github.com/MuntashirAkon/AppManager/actions}"
 msgstr ""
+"GitHub репозиторий.\\\\ \\textit{Normal releases:} \\url{https://github.com/"
+"MuntashirAkon/AppManager/releases}\\\\ \\textit{Отладочные релизы:} \\url"
+"{https://github.com/MuntashirAkon/AppManager/actions}"
 
 #. type: enumerate
 #: ./intro/main.tex
@@ -281,12 +317,15 @@ msgid ""
 "\\url{https://t.me/AppManagerChannel}\\\\ \\textit{Debug releases:} "
 "\\url{https://t.me/AppManagerDebug}"
 msgstr ""
+"Telegram.\\\\ \\textit{Normal releases:} \\url{https://t.me/"
+"AppManagerChannel}\\\\ \\textit{Отладочные релизы:} \\url{https://t.me/"
+"AppManagerDebug}"
 
 #. type: subsection{#2}
 #: ./intro/main.tex
 #: :62
 msgid "Links to Source Code"
-msgstr ""
+msgstr "Ссылки на исходный код"
 
 #. type: document
 #: ./intro/main.tex
@@ -296,24 +335,27 @@ msgid ""
 "but the master branch is not guaranteed to be up-to-date. If the target is "
 "to clone the master branch, use the GitHub link instead of the others."
 msgstr ""
+"Все ссылки, кроме GitHub, являются зеркалами. Теги всегда должны быть "
+"актуальными, но главная ветка не всегда актуальна. Если целью является "
+"клонирование главной ветки, используйте ссылку GitHub вместо других."
 
 #. type: enumerate
 #: ./intro/main.tex
 #: :62
 msgid "GitHub: \\url{https://github.com/MuntashirAkon/AppManager}"
-msgstr ""
+msgstr "GitHub: \\url{https://github.com/MuntashirAkon/AppManager}"
 
 #. type: enumerate
 #: ./intro/main.tex
 #: :62
 msgid "GitLab: \\url{https://gitlab.com/muntashir/AppManager}"
-msgstr ""
+msgstr "GitLab: \\url{https://gitlab.com/muntashir/AppManager}"
 
 #. type: enumerate
 #: ./intro/main.tex
 #: :62
 msgid "Codeberg: \\url{https://codeberg.org/muntashir/AppManager}"
-msgstr ""
+msgstr "Codeberg: \\url{https://codeberg.org/muntashir/AppManager}"
 
 #. type: enumerate
 #: ./intro/main.tex
@@ -326,7 +368,7 @@ msgstr "Riseup: \\url{https://0xacab.org/muntashir/AppManager}"
 #: :72 ./appendices/changelogs.tex
 #: :202
 msgid "Translations"
-msgstr ""
+msgstr "Переводы"
 
 #. type: document
 #: ./intro/main.tex
@@ -344,6 +386,8 @@ msgid ""
 "App Manager app strings are hosted in Weblate.\\\\ \\textit{Link:} "
 "\\url{https://hosted.weblate.org/engage/app-manager/}"
 msgstr ""
+"Строки App Manager размещены на Weblate.\\\\ \\textit{Link:} \\url"
+"{https://hosted.weblate.org/engage/app-manager/}"
 
 #. type: itemize
 #: ./intro/main.tex
@@ -352,12 +396,14 @@ msgid ""
 "App Manager user manual are hosted in Crowdin.\\\\ \\textit{Link:} "
 "\\url{https://crwd.in/app-manager-docs}"
 msgstr ""
+"Строки App Manager размещены на Crowdin.\\\\ \\textit{Link:} \\url"
+"{https://crwd.in/app-manager-docs}"
 
 #. type: section{#2}
 #: ./intro/main.tex
 #: :77
 msgid "Contributing"
-msgstr ""
+msgstr "Помощь проекту"
 
 #. type: document
 #: ./intro/main.tex
@@ -368,12 +414,17 @@ msgid ""
 "adding unrecognised libraries or trackers, reviewing the source code as well "
 "as reporting security vulnerabilities."
 msgstr ""
+"Существует множество способов, которыми пользователь может внести свой "
+"вклад, например: создание полезных запросов (issues), участие в обсуждениях, "
+"улучшение документации и переводов, добавление нераспознанных библиотек или "
+"трекеров, просмотр исходного кода, а также извещение об обнаруженых "
+"уязвимостях безопасности."
 
 #. type: subsection{#2}
 #: ./intro/main.tex
 #: :80
 msgid "Build Instructions"
-msgstr ""
+msgstr "Инструкции по сборке"
 
 #. type: document
 #: ./intro/main.tex
@@ -1219,7 +1270,7 @@ msgstr ""
 #: ./pages/main-page.tex
 #: :138
 msgid "Profiles"
-msgstr ""
+msgstr "Профили"
 
 #. type: document
 #: ./pages/main-page.tex
@@ -1229,13 +1280,16 @@ msgid ""
 "to configure regularly used tasks. You can also add shortcuts of the "
 "profiles in the launcher to run them directly."
 msgstr ""
+"Открывает страницу \\hyperref[sec:profiles-page]{профилей}. Профили - это "
+"способ настраивать часто используемые задачи. Вы также можете добавить "
+"ярлыки профилей в лаунчер для их непосредственного запуска."
 
 #. type: subsubsection{#2}
 #: ./pages/main-page.tex
 #: :142 ./pages/app-details-page.tex
 #: :204
 msgid "Termux"
-msgstr ""
+msgstr "Termux"
 
 #. type: document
 #: ./pages/main-page.tex
@@ -1245,12 +1299,15 @@ msgid ""
 "you can directly go to the running session or open a new session using the "
 "\\textbf{Termux} option in the menu."
 msgstr ""
+"Если у вас установлено приложение \\href{https://github.com/termux/termux-"
+"app}{Termux} вы можете напрямую перейти к текущей сессии или открыть новую, "
+"используя опцию \\textbf{Termux} в меню."
 
 #. type: subsubsection{#2}
 #: ./pages/app-details-page.tex
 #: :5
 msgid "Settings"
-msgstr ""
+msgstr "Настройки"
 
 #. type: document
 #: ./pages/app-details-page.tex
@@ -1263,18 +1320,25 @@ msgid ""
 "can have including all attributes from app manifest, permissions, "
 "\\hyperref[ch:app-ops]{app operations}, signing info, etc."
 msgstr ""
+"Вы можете перейти в \\hyperref[sec:settings-page]{настройки приложения} "
+"нажав на соответствующую опцию.  \\section{Страница «Сведения о приложении»}"
+"\\label{sec:app-details-page} \\textbf{Сведения о приложении} состоит из 11 "
+"(одиннадцати) вкладок. В основном она описывает почти каждый бит информации, "
+"которую может иметь приложение, включая все атрибуты из манифеста "
+"приложения, разрешения, \\hyperref[ch:app-ops]{операции приложения}, "
+"информацию о подписи и т. д."
 
 #. type: document
 #: ./pages/app-details-page.tex
 #: :12
 msgid "List of background colours used in this page, and their meaning:"
-msgstr ""
+msgstr "Список фоновых цветов, используемых на этой странице, и их значение:"
 
 #. type: textcolor{#2}
 #: ./pages/app-details-page.tex
 #: :12
 msgid "Red (day)"
-msgstr ""
+msgstr "Красный (светлая тема)"
 
 #. type: itemize
 #: ./pages/app-details-page.tex
@@ -1313,7 +1377,7 @@ msgstr ""
 #: ./pages/app-details-page.tex
 #: :21
 msgid "Vivid orange (day)"
-msgstr ""
+msgstr "Ярко-оранжевый (светлая тема)"
 
 #. type: itemize
 #: ./pages/app-details-page.tex
@@ -1329,7 +1393,7 @@ msgstr ""
 #: ./pages/app-details-page.tex
 #: :25
 msgid "Soft magenta (day)"
-msgstr ""
+msgstr "Мягкий пурпурный (светлая тема)"
 
 #. type: itemize
 #: ./pages/app-details-page.tex
@@ -1346,7 +1410,7 @@ msgstr ""
 #: :29 ./appendices/changelogs.tex
 #: :106
 msgid "App Info Tab"
-msgstr ""
+msgstr "Вкладка «О приложении»"
 
 #. type: document
 #: ./pages/app-details-page.tex
@@ -1356,18 +1420,22 @@ msgid ""
 "lists many actions that can be performed within this tab. A complete "
 "description is given below:"
 msgstr ""
+"Вкладка \\textbf{«О приложении»} содержит общую информацию о приложении. В "
+"ней также перечислены многие действия, которые могут быть выполнены на этой "
+"вкладке. Полное описание приводится ниже:"
 
 #. type: subsubsection{#2}
 #: ./pages/app-details-page.tex
 #: :34
 msgid "General Information"
-msgstr ""
+msgstr "Общая информация"
 
 #. type: document
 #: ./pages/app-details-page.tex
 #: :34
 msgid "The list below is in the same order as listed in the App Info tab."
 msgstr ""
+"Список ниже находится в том же порядке, что и во вкладке «О приложении»."
 
 #. type: itemize
 #: ./pages/app-details-page.tex
