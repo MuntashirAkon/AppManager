@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: io.github.muntashirakon.AppManager v2.5.24\n"
 "POT-Creation-Date: 2021-03-08 14:11+0600\n"
-"PO-Revision-Date: 2021-03-10 01:02+0000\n"
-"Last-Translator: tommynok <yazuzia7080@gmail.com>\n"
+"PO-Revision-Date: 2021-03-10 16:25+0000\n"
+"Last-Translator: Muntashir Al-Islam <muntashirakon@riseup.net>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/app-manager/docs/"
 "ru/>\n"
 "Language: ru\n"
@@ -1136,6 +1136,8 @@ msgid ""
 "Operations}. You can directly open the corresponding page by clicking on "
 "this option."
 msgstr ""
+"Операции в один клик. Вы можете напрямую открыть \\hyperref[sec:1-click-ops-"
+"page]{соответствующую страницу}, нажав на эту опцию."
 
 #. type: subsubsection{#2}
 #: ./pages/main-page.tex
@@ -1198,7 +1200,7 @@ msgstr ""
 #: ./pages/main-page.tex
 #: :134
 msgid "APK Updater"
-msgstr ""
+msgstr "APK Updater"
 
 #. type: document
 #: ./pages/main-page.tex
@@ -1282,6 +1284,10 @@ msgid ""
 "or permission that has the dangerous flag is marked as red. Components that "
 "are blocked within App Manager are also marked as red"
 msgstr ""
+"/ \\colorbox{AMDarkRed}{\\textcolor{white}{темно-красный (темная тема)}} -- "
+"любая операция приложения или разрешение приложения, имеющие опасный флаг, "
+"помечается красным. Компоненты, заблокированные в App Manager, также "
+"помечаются красным"
 
 #. type: itemize
 #: ./pages/app-details-page.tex
@@ -1295,6 +1301,13 @@ msgid ""
 "disabled app are considered disabled by the system (and by App Manager as "
 "well)"
 msgstr ""
+"/ \\colorbox{AMVeryDarkRed}{\\textcolor{white}{очень темно-красный (темная "
+"тема)}} -- компоненты, отключенные вне App Manager, имеют эти цвета. Следует "
+"отметить, что компонент, отмеченный как отключенный, не всегда означает, что "
+"он отключен пользователем: он также может быть отключен системой или отмечен "
+"как отключенный в манифесте приложения. Кроме того, все компоненты "
+"отключенного приложения считаются отключенными системой (а также с помощью "
+"App Manager)"
 
 #. type: textcolor{#2}
 #: ./pages/app-details-page.tex
@@ -1309,6 +1322,8 @@ msgid ""
 "/ \\colorbox{AMVeryDarkOrange}{ \\textcolor{white}{very dark orange "
 "(night)}} -- Ad or tracker components"
 msgstr ""
+"/ \\colorbox{AMVeryDarkOrange}{ \\textcolor{white}{очень темно-оранжевый ("
+"темная тема)}} -- компоненты трекера или рекламы"
 
 #. type: textcolor{#2}
 #: ./pages/app-details-page.tex
@@ -1323,6 +1338,8 @@ msgid ""
 "/ \\colorbox{AMVeryDarkViolet}{ \\textcolor{white}{very dark violet "
 "(night)}} -- Currently running services"
 msgstr ""
+"/ \\colorbox{AMVeryDarkViolet}{ \\textcolor{white}{очень темно-фиолетовый ("
+"темная тема)}} -- службы, работающие в настоящее время"
 
 #. type: subsection{#2}
 #: ./pages/app-details-page.tex
@@ -1359,12 +1376,14 @@ msgid ""
 "\\textbf{App Icon.} The application icon. If an app doesn't have an icon, "
 "the system default icon is displayed."
 msgstr ""
+"\\textbf{Значок приложения.} Если приложение не имеет значка, отображается "
+"значок системы по умолчанию."
 
 #. type: itemize
 #: ./pages/app-details-page.tex
 #: :36
 msgid "\\textbf{App Label.} The application label or application name."
-msgstr ""
+msgstr "\\textbf{Метка приложения.} Метка приложения или название приложения."
 
 #. type: itemize
 #: ./pages/app-details-page.tex
@@ -1383,6 +1402,19 @@ msgid ""
 "platforms (mobile, tabs, desktops, etc.), these version numbers can be "
 "misleading as they use prefixes for each platform."
 msgstr ""
+"\\textbf{Версия.} Версия приложения разделена на две части. Первая часть "
+"называется \\textit{название версии}, формат этой части варьируется, но "
+"часто он состоит из нескольких целых чисел, разделенных точками. Вторая "
+"часть называется \\textit{код версии} и он закрыт первыми скобками. Код "
+"версии – это целое число, которое обычно используется для различения версий "
+"приложения (поскольку имя версии часто может быть нечитаемым компьютером). "
+"Как правило, новая версия приложения имеет более высокий код версии, чем "
+"старая. Например, если \\texttt{123} и \\texttt{125} – это два кода версии "
+"приложения, мы можем сказать, что последний новый, чем первый, потому что "
+"код версии последнего выше. Для приложений, зависящих от платформ (мобильные "
+"устройства, вкладки, настольные компьютеры и т. д.), эти номера версий могут "
+"вводить в заблуждение, поскольку они используют префиксы для каждой "
+"платформы."
 
 #. type: itemize
 #: ./pages/app-details-page.tex
