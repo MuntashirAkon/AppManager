@@ -137,10 +137,10 @@
     <string name="stopped">স্থগিত</string>
     <string name="disable">নিষ্ক্রিয় করুন</string>
     <string name="enable">সক্রিয় করুন</string>
-    <string name="failed_to_disable">%sটি নিষ্ক্রিয় করতে ব্যর্থ।</string>
-    <string name="failed_to_enable">%sটি সক্রিয় করতে ব্যর্থ।</string>
+    <string name="failed_to_disable">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;টি নিষ্ক্রিয় করতে ব্যর্থ।</string>
+    <string name="failed_to_enable">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;টি সক্রিয় করতে ব্যর্থ।</string>
     <string name="force_stop">কাটুন</string>
-    <string name="failed_to_stop">%sটি কাটতে ব্যার্থ.</string>
+    <string name="failed_to_stop">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;টি কাটতে ব্যার্থ.</string>
     <string name="storage_and_cache">স্টোরেজ এবং ক্যাশে</string>
     <string name="total_size">মোট</string>
     <string name="app_size">অ্যাপ</string>
@@ -155,7 +155,7 @@
     <string name="sort_by_disabled_app">নিষ্ক্রিয় গুলো প্রথমে</string>
     <string name="sort_by_blocked_components">ব্লকড গুলো প্রথমে</string>
     <string name="external_data_dir">বাহ্যিক ডাটা ডিরেক্টরি</string>
-    <string name="external_multiple_data_dir">বাহ্যিক ডাটা ডিরেক্টরি %d</string>
+    <string name="external_multiple_data_dir">বাহ্যিক ডাটা ডিরেক্টরি &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"dir_no\" example=\"1\"&gt;%1$d&lt;/xliff:g&gt;</string>
     <plurals name="no_of_times_opened">
         <item quantity="one">%1$d বার</item>
         <item quantity="other">%1$d বার</item>
@@ -184,12 +184,12 @@
         <item quantity="other">%1$dটি অ্যাপ থেকে ডাটা মুছতে ব্যর্থ</item>
     </plurals>
     <plurals name="alert_failed_to_disable">
-        <item quantity="one">%d অ্যাপটি ডিজ্যাবল করতে ব্যর্থ</item>
-        <item quantity="other">%d অ্যাপস গুলো ডিজ্যাবল করতে ব্যর্থ</item>
+        <item quantity="one">%1$d অ্যাপটি ডিজ্যাবল করতে ব্যর্থ</item>
+        <item quantity="other">%1$d অ্যাপ গুলো ডিজ্যাবল করতে ব্যর্থ</item>
     </plurals>
     <plurals name="alert_failed_to_uninstall">
-        <item quantity="one">%d অ্যাপটি আনইনস্টল করতে ব্যর্থ</item>
-        <item quantity="other">%d অ্যাপ গুলো আনইনস্টল করতে ব্যর্থ</item>
+        <item quantity="one">%1$d অ্যাপটি আনইনস্টল করতে ব্যর্থ</item>
+        <item quantity="other">%1$d অ্যাপ গুলো আনইনস্টল করতে ব্যর্থ</item>
     </plurals>
     <string name="the_operation_was_successful">সম্পন্ন</string>
     <string name="toggle_kill_for_system_apps">কিল অপশনটি টগল করুন সিস্টেম অ্যাপগুলোর জন্য</string>
@@ -219,8 +219,8 @@
     <string name="failed_to_disable_trackers">ট্র্যাকারগুলো নিষ্ক্রিয় করতে ব্যর্থ</string>
     <string name="trackers_disabled_successfully">ট্র্যাকারগুলো এখন নিষ্ক্রিয়</string>
     <plurals name="alert_failed_to_disable_trackers">
-        <item quantity="one">%dটি অ্যাপ থেকে ট্র্যাকার নিষ্ক্রিয় করা যায়নি</item>
-        <item quantity="other">%dটি অ্যাপ থেকে ট্র্যাকার নিষ্ক্রিয় করা যায়নি</item>
+        <item quantity="one">%1$dটি অ্যাপ থেকে ট্র্যাকার নিষ্ক্রিয় করা যায়নি</item>
+        <item quantity="other">%1$dটি অ্যাপ থেকে ট্র্যাকার নিষ্ক্রিয় করা যায়নি</item>
     </plurals>
     <string name="failed_to_grant_permission">অনুমতি দেওয়া যায়নি</string>
     <string name="failed_to_revoke_permission">অনুমতি বাতিল করা যায়নি</string>
@@ -270,16 +270,16 @@
     <string name="restore">পুনরুদ্ধার</string>
     <string name="delete_backup">ব্যাকআপ মুছুন</string>
     <plurals name="alert_failed_to_backup">
-        <item quantity="one">%d অ্যাপটি ব্যাকআপ করতে ব্যর্থ</item>
-        <item quantity="other">%d অ্যাপস গুলো পুনরুদ্ধার করতে ব্যর্থ</item>
+        <item quantity="one">%1$d অ্যাপটি ব্যাকআপ করতে ব্যর্থ</item>
+        <item quantity="other">%1$d অ্যাপস গুলো পুনরুদ্ধার করতে ব্যর্থ</item>
     </plurals>
     <plurals name="alert_failed_to_restore">
-        <item quantity="one">%d অ্যাপটির ব্যাকআপ পুনরুদ্ধার করতে ব্যর্থ</item>
-        <item quantity="other">%d অ্যাপস গুলোর ব্যাকআপ পুনরুদ্ধার করতে ব্যর্থ</item>
+        <item quantity="one">%1$d অ্যাপটির ব্যাকআপ পুনরুদ্ধার করতে ব্যর্থ</item>
+        <item quantity="other">%1$d অ্যাপস গুলোর ব্যাকআপ পুনরুদ্ধার করতে ব্যর্থ</item>
     </plurals>
     <plurals name="alert_failed_to_delete_backup">
-        <item quantity="one">%d অ্যাপটির ব্যাকআপ মুছতে করতে ব্যর্থ</item>
-        <item quantity="other">%d অ্যাপস গুলোর ব্যাকআপ মুছতে করতে ব্যর্থ</item>
+        <item quantity="one">%1$d অ্যাপটির ব্যাকআপ মুছতে করতে ব্যর্থ</item>
+        <item quantity="other">%1$d অ্যাপস গুলোর ব্যাকআপ মুছতে করতে ব্যর্থ</item>
     </plurals>
     <string name="apply_to_system_apps">সিস্টেম অ্যাপ্লিকেশনগুলিতে প্রয়োগ করুন</string>
     <string name="apply_to_system_apps_question">সিস্টেম অ্যাপ গুলোতেও প্রয়োগ করবেন\? অনিশ্চিত হলে \'না\' বাছুন।</string>
@@ -326,7 +326,7 @@
     <string name="installer_error_session_create">ইনস্টলার সেশন তৈরি করতে ব্যর্থ</string>
     <string name="installer_error_session_abandon">ইনস্টলার সেশনটি ত্যাগ করতে ব্যর্থ</string>
     <string name="base_apk">মূল এপিকে</string>
-    <string name="split_feature_name">বৈশিষ্ট্য: % s</string>
+    <string name="split_feature_name">বৈশিষ্ট্য: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt;%1$s&lt;/xliff:g&gt;</string>
     <string name="no_content">কোন বিষয়বস্তু নেই</string>
     <string name="no_usage_in_this_time_range">এই সময় সীমার মধ্যে কোনো ব্যবহারের ডাটা নেই</string>
     <string name="sort_by_screen_time">স্ক্রীনের সময়</string>
@@ -350,8 +350,8 @@
     <string name="accept_time">গ্রহণের সময়</string>
     <string name="app_op_cannot_be_disabled">এই অ্যাপ অপটি নিষ্ক্রিয় করা যাবে না, সম্ভবত এটি একটি রিড-ওনলি অ্যাপ অপ যা অন্য অ্যাপ অপের উপর নির্ভর করে।</string>
     <plurals name="failed_to_import_files">
-        <item quantity="one">%d ফাইলটি ইম্পোর্ট করতে ব্যর্থ।</item>
-        <item quantity="other">%d ফাইলগুলো ইম্পোর্ট করতে ব্যর্থ।</item>
+        <item quantity="one">%1$d ফাইলটি ইম্পোর্ট করতে ব্যর্থ।</item>
+        <item quantity="other">%1$d ফাইলগুলো ইম্পোর্ট করতে ব্যর্থ।</item>
     </plurals>
     <string name="touchscreen">টাচস্ক্রিন</string>
     <string name="keyboard_type">কীবোর্ডের ধরন</string>
@@ -373,16 +373,16 @@
     <string name="installer_app">যে অ্যাপ দ্বারা ইনস্টলড হয়েছে</string>
     <string name="about">সম্পর্কে</string>
     <plurals name="alert_failed_to_unblock_trackers">
-        <item quantity="one">%d অ্যাপ থেকে ট্র্যাকারগুলো আনব্লক করতে ব্যর্থ</item>
-        <item quantity="other">%d অ্যাপগুলি থেকে ট্র্যাকারগুলো আনব্লক করতে ব্যর্থ</item>
+        <item quantity="one">%1$d অ্যাপ থেকে ট্র্যাকারগুলো আনব্লক করতে ব্যর্থ</item>
+        <item quantity="other">%1$d অ্যাপগুলি থেকে ট্র্যাকারগুলো আনব্লক করতে ব্যর্থ</item>
     </plurals>
     <plurals name="failed_to_backup_some_apk_files">
-        <item quantity="one">%d অ্যাপটি ব্যাকআপ করতে ব্যর্থ</item>
-        <item quantity="other">%d অ্যাপগুলো ব্যাকআপ করতে ব্যর্থ</item>
+        <item quantity="one">%1$d অ্যাপটি ব্যাকআপ করতে ব্যর্থ</item>
+        <item quantity="other">%1$d অ্যাপগুলো ব্যাকআপ করতে ব্যর্থ</item>
     </plurals>
     <string name="permissions">ব্যবহৃত অনুমতিসমূহ</string>
     <string name="choose_language">ভাষা নির্বাচন করুন</string>
-    <string name="current_language">বর্তমান ভাষা: %s</string>
+    <string name="current_language">ভাষা: %1$s</string>
     <string name="auto">অটো</string>
     <string name="pref_app_language">ভাষা</string>
     <string name="backup_all_users">সকল ব্যবহারকারী</string>
