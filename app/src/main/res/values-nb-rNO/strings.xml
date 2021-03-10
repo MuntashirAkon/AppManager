@@ -589,4 +589,5 @@
     <string name="signature_mismatch_for_system_apps">Kunne ikke installere program fordi et systemprogram med en annen signatur har dette pakkenavnet.</string>
     <string name="allow_open_pgp_operation">Klikk for å tillate AM for å bruke OpenPGP</string>
     <string name="storage_and_cache">Lagring og huriglagring</string>
+    <string name="user_with_id">Bruker: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"user_id\" example=\"0\"&gt;%1$d&lt;/xliff:g&gt;</string>
 </resources>
