@@ -614,4 +614,35 @@
     <string name="sort_by_domain">Bruker-app først</string>
     <string name="uses_feature">Brukerfunksjoner</string>
     <string name="soft_input">Soft Input modus</string>
+    <plurals name="no_of_components">
+        <item quantity="one">%1$d komponent</item>
+        <item quantity="other">%1$d komponenter</item>
+    </plurals>
+    <string name="external_apk_no_app_op">Ekstern APK har ikke noen app-operasjoner</string>
+    <string name="one_click_ops">Ett-klikk Ops</string>
+    <string name="failed_to_deny_dangerous_app_ops">Kunne ikke tilbakekalle alle farlige app Ops</string>
+    <string name="failed_to_deny_dangerous_perms">Kunne ikke tilbakekalle alle farlige tillatelser</string>
+    <string name="failed_to_reset_app_ops">Kunne ikke tilbakestille app Ops</string>
+    <plurals name="alert_failed_to_disable_trackers">
+        <item quantity="one">Kunne ikke deaktivere sporere fra %1$d app</item>
+        <item quantity="other">Kunne ikke deaktivere sporere fra %1$d apper</item>
+    </plurals>
+    <string name="sort_by_app_ops_values">App Ops verdi</string>
+    <string name="sort_by_denied_app_ops">Nektet først</string>
+    <string name="sort_by_app_ops_names">App-ops navn</string>
+    <string name="deny_dangerous_app_ops">Nekt farlige app-operasjoner</string>
+    <string name="pref_about_msg">App-manager versjon, lisens, kreditter, osv.</string>
+    <string name="pref_import_blocker_msg">Importer blokkerings-regler fra Blocker, hver fil inneholder regler for en enkelt pakke.</string>
+    <string name="pref_import_watt_msg">Importer blokkerings-regler fra Watt, hver fil inneholder regler for en enkelt navngitt pakke som &lt;tt&gt;packagename.xml&lt;/tt&gt; osv.</string>
+    <string name="pref_import_msg">Importer tidligere eksporterte blokkerings-regler fra App-manager.</string>
+    <string name="pref_export_msg">Eksporter blokkerings-regler innstilt innen App-manager til ekstern lagring.</string>
+    <string name="reject_time">Avvis tid</string>
+    <string name="accept_time">Godkjenn tid</string>
+    <string name="app_op_cannot_be_disabled">Denne app-operasjon kan ikke skurs av, en skrivebeskyttet app-op kan være avhengig av en annen app-op.</string>
+    <string name="toggle_kill_for_system_apps">Aktiver eller deaktiver tvungen avslutning av system-apper</string>
+    <plurals name="alert_failed_to_disable_background">
+        <item quantity="one">"Kunne ikke hindre %1$d  app fra å kjøre i bakgrunnen"</item>
+        <item quantity="other">"Kunne ikke hindre %1$d  apper fra å kjøre i bakgrunnen"</item>
+    </plurals>
+    <string name="pref_usage_access_enabled_msg">Lar deg se statistikk om bruk av app og info om app-data.</string>
 </resources>
