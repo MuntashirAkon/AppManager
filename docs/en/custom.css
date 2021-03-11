@@ -7,6 +7,7 @@
     left: 0;
     overflow-x: hidden;
     padding: 0 1.25em;
+    background: wheat;
 }
 
 .main, .footnotes {
@@ -20,19 +21,17 @@
     font-size: inherit !important;
 }
 
-@media screen and (max-width: 48em) {
-    .sidenav {display: none;}
-}
-
-@media screen and (min-width: 78.5em) {
-    .main, .footnotes {max-width: 42em;}
-}
-
-@media screen and (min-width: 48em) and (max-width: 78.5em){
-    .main, .footnotes {margin-left: 16em;}
+@media screen and (min-width: 48em){
+    .main, .footnotes {margin-left: 18.5em;}
 }
 
 @media screen and (max-width: 48em) {
+    .sidenav {
+        position: unset;
+        height: unset;
+        width: unset;
+        background: unset;
+    }
     .main, .footnotes {max-width: 42em;}
 }
 
@@ -42,11 +41,28 @@
     border-right: 0 !important;
     padding: 0 0 0 1em;
     color: unset !important;
+    background: unset !important;
 }
 
 .itemize .colorbox {
     padding: 3px 7px;
     border-radius: 5px;
+}
+
+figcaption.caption span.id:after {
+    content: ' ';
+}
+
+@media (prefers-color-scheme: dark) {
+    .sidenav {background: black !important;}
+
+    body {
+        background-color: #121212 !important;
+        color: wheat !important;
+    }
+    a {color: #61BFC1 !important;}
+    a:visited {color: #466B6C !important;}
+    h1, h2, h3, h4, h5, h6 {color: wheat !important;}
 }
 
 html {
@@ -86,8 +102,7 @@ a:focus {
     outline: thin dotted;
 }
 
-a:hover,
-a:active {
+a:hover, a:active {
     outline: 0;
 }
 
@@ -119,20 +134,13 @@ img {
     max-width: 100%;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+h1, h2, h3, h4, h5, h6 {
     font-weight: normal;
     color: #111;
     line-height: 1em;
 }
 
-h4,
-h5,
-h6 {
+h4, h5, h6 {
     font-weight: bold;
 }
 
@@ -176,10 +184,7 @@ hr {
     padding: 0;
 }
 
-pre,
-code,
-kbd,
-samp {
+pre, code, kbd, samp {
     color: #000;
     font-family: monospace, monospace;
     _font-family: 'courier new', monospace;
@@ -192,8 +197,7 @@ pre {
     word-wrap: break-word;
 }
 
-b,
-strong {
+b, strong {
     font-weight: bold;
 }
 
@@ -214,8 +218,7 @@ mark {
     font-weight: bold;
 }
 
-sub,
-sup {
+sub, sup {
     font-size: 75%;
     line-height: 0;
     position: relative;
@@ -230,8 +233,7 @@ sub {
     bottom: -0.25em;
 }
 
-ul,
-ol {
+ul, ol {
     margin: 1em 0;
     padding: 0 0 0 2em;
 }
