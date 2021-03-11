@@ -183,4 +183,35 @@
     <string name="sort_by_package_name">Tên gói</string>
     <string name="sort_by_app_label">Nhãn ứng dụng</string>
     <string name="loading">Đang tải…</string>
+    <string name="search">Tìm kiếm</string>
+    <string name="menu_apply_rules">Áp dụng các quy tắc</string>
+    <string name="menu_remove_rules">Xoá các quy tắc</string>
+    <string name="failed_to_extract_apk_file">Không thể trích xuất tệp APK</string>
+    <string name="share_apk">Chia sẻ APK</string>
+    <string name="grant_usage_acess_message">Truy cập dữ liệu sử dụng là bắt buộc để hiển thị thông tin sử dụng ứng dụng.</string>
+    <string name="grant_usage_access">Cấp quyền truy cập dữ liệu sử dụng</string>
+    <string name="go_back">Quay lại</string>
+    <string name="usage_less_than_a_minute">Ít hơn một phút</string>
+    <string name="usage_min">%1$d phút</string>
+    <plurals name="usage_hours">
+        <item quantity="other">%1$d tiếng</item>
+    </plurals>
+    <plurals name="usage_days">
+        <item quantity="other">%1$d ngày</item>
+    </plurals>
+    <plurals name="usage_months">
+        <item quantity="other">%1$d tháng</item>
+    </plurals>
+    <string name="usage_7_days">7 ngày cuối</string>
+    <string name="usage_today">Hôm nay</string>
+    <string name="usage_weekly">Hàng tuần</string>
+    <string name="app_usage">Sử dụng ứng dụng</string>
+    <string name="no_shared_libs">Không có thư viện được chia sẻ</string>
+    <plurals name="main_list_date_days">
+        <item quantity="other">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"last_update_date\" example=\"20/10/2020\"&gt;%1$s&lt;/xliff:g&gt;&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"day_no\" example=\"5\"&gt;%2$d&lt;/xliff:g&gt; ngày</item>
+    </plurals>
+    <string name="found_trackers">Trình theo dõi đã thấy:</string>
+    <string name="credits">Ghi nhận</string>
+    <string name="third_party">Thư viện và biểu tượng bên thứ ba</string>
+    <string name="tracker_details">Chi tiết trình theo dõi</string>
 </resources>
