@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: io.github.muntashirakon.AppManager v2.5.24\n"
 "POT-Creation-Date: 2021-03-08 14:11+0600\n"
-"PO-Revision-Date: 2021-03-10 16:25+0000\n"
-"Last-Translator: Muntashir Al-Islam <muntashirakon@riseup.net>\n"
+"PO-Revision-Date: 2021-03-12 02:21+0000\n"
+"Last-Translator: tommynok <yazuzia7080@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/app-manager/docs/"
 "ru/>\n"
 "Language: ru\n"
@@ -432,6 +432,7 @@ msgid ""
 "Build instructions are available in the README file of the root directory of "
 "the source."
 msgstr ""
+"Инструкции по сборке доступны в файле README корневой директории источника."
 
 #. type: subsection{#2}
 #: ./intro/main.tex
@@ -470,7 +471,7 @@ msgstr ""
 #: ./intro/main.tex
 #: :104
 msgid "Donation \\& Funding"
-msgstr ""
+msgstr "Пожертвование и финансирование"
 
 #. type: document
 #: ./intro/main.tex
@@ -481,6 +482,10 @@ msgid ""
 "sent to the author of App Manager using one of the following Bitcoin "
 "addresses as a tribute:"
 msgstr ""
+"\\emph{Пожертвование или покупка не является обязательным условием для "
+"использования App Manager.}. Хотя App Manager не поддерживает любые покупки, "
+"пожертвования могут быть отправлены автору App Manager, используя один из "
+"следующих адресов Bitcoin в качестве дани в знак благодарности:"
 
 #. type: Verbatim
 #: ./intro/main.tex
@@ -489,6 +494,8 @@ msgid ""
 "[label={verb:btc-donation}] 33TDkWVv5EgwfKGJk7YaS2Ev1CBzBP9Sav "
 "38bzvWDD99dJhXg9tC4yQEnGdnAKPtwSXG 3FHTxPoYa92dNJK6pkhwyVkMG8Vv3VpGpg"
 msgstr ""
+"[label={verb:btc-donation}] 33TDkWVv5EgwfKGJk7YaS2Ev1CBzBP9Sav "
+"38bzvWDD99dJhXg9tC4yQEnGdnAKPtwSXG 3FHTxPoYa92dNJK6pkhwyVkMG8Vv3VpGpg"
 
 #. type: document
 #: ./intro/main.tex
@@ -500,6 +507,12 @@ msgid ""
 "requested features. Feature requests do not require any bounties or "
 "donations, and they are prioritised according to the authors' preferences."
 msgstr ""
+"Отправляя BTC, отправитель соглашается с тем, что он/она/они не должны "
+"публиковать информацию о транзакции, т.е. транзакция останется анонимной, и "
+"он/она/они не будут использовать ее в качестве рычага для определения "
+"приоритетности запрашиваемых ими функций. Запросы функций не требуют каких-"
+"либо оплат или пожертвований, они имеют приоритет в соответствии с "
+"предпочтениями авторов."
 
 #. type: document
 #: ./intro/main.tex
@@ -1444,7 +1457,7 @@ msgid ""
 "the system default icon is displayed."
 msgstr ""
 "\\textbf{Значок приложения.} Если приложение не имеет значка, отображается "
-"значок системы по умолчанию."
+"системный значок по умолчанию."
 
 #. type: itemize
 #: ./pages/app-details-page.tex
@@ -1517,6 +1530,9 @@ msgid ""
 "\\Sref{subsubsec:horizontal-action-panel} for a complete list of actions "
 "available here."
 msgstr ""
+"\\ textbf {Горизонтальная панель действий.} Это панель действий, содержащая "
+"различные действия в приложении.. См. \\Sref {subsubsec: horizontal-action-"
+"panel} для получения полного списка действий, доступных здесь."
 
 #. type: itemize
 #: ./pages/app-details-page.tex
@@ -1589,6 +1605,7 @@ msgstr ""
 #: :91
 msgid "\\textbf{Date Installed.} The date when the app was first installed."
 msgstr ""
+"\\textbf{Дата установки.} Дата, когда приложение было впервые установлено."
 
 #. type: itemize
 #: ./pages/app-details-page.tex
@@ -1597,6 +1614,8 @@ msgid ""
 "\\textbf{Date Updated.} The date when the app was last updated. This is the "
 "same as \\textit{Date Installed} if the app hasn't been updated."
 msgstr ""
+"\\textbf{Дата обновления.} Дата последнего обновления приложения. Это то же "
+"самое, что и \\textit{Дата установки}, если приложение не обновлялось."
 
 #. type: itemize
 #: ./pages/app-details-page.tex
@@ -1606,6 +1625,10 @@ msgid ""
 "the information used by the package manager to register the installer "
 "app. Therefore, this value should not be taken for granted."
 msgstr ""
+"\\textbf{Установщик приложения.} Приложение, установившее приложение. Не все "
+"приложения предоставляют информацию, используемую диспетчером пакетов для "
+"регистрации приложения-установщика. Следовательно, это значение не следует "
+"воспринимать как должное."
 
 #. type: itemize
 #: ./pages/app-details-page.tex
@@ -1615,6 +1638,10 @@ msgid ""
 "app. For shared applications, same user ID is assigned to multiple "
 "applications that have the same \\textit{Shared User ID}."
 msgstr ""
+"\\textbf{Идентификатор пользователя.} Уникальный идентификатор пользователя, "
+"установленный системой Android для приложения. Для общих приложений один и "
+"тот же идентификатор пользователя назначается нескольким приложениям, "
+"которые имеют одинаковый \\textit{общий идентификатор пользователя.}."
 
 #. type: itemize
 #: ./pages/app-details-page.tex
@@ -1625,6 +1652,10 @@ msgid ""
 "application must have the same "
 "\\hyperref[subsec:signatures-tab]{signatures}."
 msgstr ""
+"\\textbf{Общий идентификатор пользователя.} Применим для приложений, которые "
+"используются совместно. Хотя и написано, что это идентификатор, на самом "
+"деле это строковое значение. Общее приложение должно иметь такие же "
+"\\hyperref[subsec:signatures-tab]{подписи}."
 
 #. type: itemize
 #: ./pages/app-details-page.tex
@@ -1635,12 +1666,17 @@ msgid ""
 "of those are openable from the Launcher. There's also a launch button on the "
 "right-hand side which can be used to launch this activity."
 msgstr ""
+"\\textbf{Главное активити.} Основная точка входа в приложение. Она видна "
+"только в том случае, если в приложении есть \\hyperref"
+"[subsubsec:activities]{активити} которое можно открыть в лончере. Также есть "
+"кнопка запуска с правой стороны, которую можно использовать для запуска "
+"этого активити."
 
 #. type: subsubsection{#2}
 #: ./pages/app-details-page.tex
 #: :116
 msgid "Horizontal Action Panel"
-msgstr ""
+msgstr "Горизонтальная панель действий"
 
 #. type: document
 #: ./pages/app-details-page.tex
@@ -1649,6 +1685,8 @@ msgid ""
 "Horizontal Action Panel, as described in the previous section, consists of "
 "various app-related actions, such as--"
 msgstr ""
+"Горизонтальная панель действий, как описано в предыдущем разделе, состоит из "
+"различных действий, связанных с приложением, таких как--"
 
 #. type: itemize
 #: ./pages/app-details-page.tex
@@ -1751,6 +1789,8 @@ msgid ""
 "\\textbf{Reinstall.} Displayed for an app that has the same version code as "
 "the installed app."
 msgstr ""
+"\\textbf{Переустановить.} Отображается для приложения, имеющего тот же код "
+"версии, что и установленное приложение."
 
 #. type: itemize
 #: ./pages/app-details-page.tex
@@ -1759,6 +1799,8 @@ msgid ""
 "\\textbf{Downgrade.} Displayed for an app that has a lower version code than "
 "the installed app."
 msgstr ""
+"\\ textbf {Понизить.} Отображается для приложения, у которого код версии "
+"ниже, чем у установленного приложения."
 
 #. type: itemize
 #: ./pages/app-details-page.tex
@@ -1769,6 +1811,10 @@ msgid ""
 "corresponding toggle button (on the top-right side) or can be saved to you "
 "shared storage using the save button."
 msgstr ""
+"\\textbf{Манифест.} При нажатии на эту кнопку на отдельной странице "
+"показывается файл манифеста приложения. Файл манифеста можно свернуть или "
+"развернуть с помощью соответствующей кнопки-переключателя (в правом верхнем "
+"углу) или сохранить в общем хранилище с помощью кнопки сохранения."
 
 #. type: itemize
 #: ./pages/app-details-page.tex
@@ -1780,6 +1826,11 @@ msgid ""
 "that, a scan summary is displayed.\\\\ "
 "\\seealsoinline{\\hyperref[sec:scanner-page]{Scanner page}}"
 msgstr ""
+"\\textbf{Сканер.} Нажатие на эту кнопку отображает информацию о трекерах и "
+"библиотеках приложения. Сначала приложение сканируется для извлечения списка "
+"классов. Затем список классов сопоставляется с числом подписей. После этого "
+"отображается сводка сканирования.\\\\ \\seealsoinline{\\hyperref[sec:scanner-"
+"page]{страница сканера}}"
 
 #. type: itemize
 #: ./pages/app-details-page.tex
@@ -1790,6 +1841,11 @@ msgid ""
 "the \\hyperref[sec:shared-preferences-editor-page]{Shared Preferences Editor "
 "page}. This option is only visible to the root users."
 msgstr ""
+"\\textbf{Общие настройки.} При нажатии на эту кнопку отображается список "
+"общих настроек, используемых приложением. При нажатии на элемент настройки в "
+"списке открывается \\hyperref[sec:shared-preferences-editor-page]{«Страница "
+"редактора общих настроек»}. Эта опция видна только пользователям с "
+"root-доступом."
 
 #. type: itemize
 #: ./pages/app-details-page.tex
@@ -1799,12 +1855,18 @@ msgid ""
 "used by the app. This needs more improvements, and a database editor which "
 "might be added in the future. This option is only visible to the root users."
 msgstr ""
+"\\textbf{ Базы данных.} При нажатии на эту кнопку отображается список баз "
+"данных, используемых приложением. Это требует дополнительных улучшений и "
+"редактора баз данных, которые могут быть добавлены в будущем. Эта опция "
+"видна только пользователям с root-доступом."
 
 #. type: itemize
 #: ./pages/app-details-page.tex
 #: :170
 msgid "\\textbf{F-Droid.} Opens the app in your favourite \\textit{F-Droid} client."
 msgstr ""
+"\\textbf{F-Droid.} Открывает приложение в вашем любимом клиенте \\textit"
+"{F-Droid}."
 
 #. type: itemize
 #: ./pages/app-details-page.tex
@@ -1813,6 +1875,8 @@ msgid ""
 "\\textbf{Store.} Opens the app in \\textit{Aurora Store}. The option is only "
 "visible if \\textit{Aurora Store} is installed."
 msgstr ""
+"\\ textbf {Store.} Открывает приложение в \\ textit {Aurora Store}. Опция "
+"видна, только если установлено приложение \\ textit {Aurora Store}."
 
 #. type: document
 #: ./pages/app-details-page.tex
@@ -1821,6 +1885,8 @@ msgid ""
 "Options-menu is located in the top-right corner of the page. A complete "
 "description of the options present there are given below:"
 msgstr ""
+"Меню опций находится в правом верхнем углу страницы. Полное описание "
+"имеющихся опций приведено ниже:"
 
 #. type: itemize
 #: ./pages/app-details-page.tex
@@ -1831,24 +1897,32 @@ msgid ""
 "\\href{https://github.com/Aefyr/SAI}{SAI}. You can share it with your "
 "favourite file manager to save the file in your shared storage."
 msgstr ""
+"\\textbf{Share.} Кнопка \"поделиться\" может использоваться, чтобы "
+"поделиться файлом APK или \\textit{APKS} file (если приложение разделено на "
+"несколько частей) может быть импортировано в \\href{https://github.com/Aefyr/"
+"SAI}{SAI}. Вы можете поделиться им с помощью вашего любимого файлового "
+"менеджера, чтобы сохранить файл в общем хранилище."
 
 #. type: itemize
 #: ./pages/app-details-page.tex
 #: :187
 msgid "\\textbf{Refresh.} Refreshes the App Info tab."
-msgstr ""
+msgstr "\\textbf{Обновить.} Обновляет вкладку «О приложении»."
 
 #. type: itemize
 #: ./pages/app-details-page.tex
 #: :187
 msgid "\\textbf{View in Settings.} Opens the app in Android Settings."
 msgstr ""
+"\\textbf{Показать в настройках.} Открывает приложение в настройках Android."
 
 #. type: itemize
 #: ./pages/app-details-page.tex
 #: :187
 msgid "\\textbf{Backup/Restore.} Opens the backup/restore dialog."
 msgstr ""
+"\\textbf{Резервное копирование/восстановление.} Открывает диалоговое окно "
+"резервного копирования/восстановления."
 
 #. type: itemize
 #: ./pages/app-details-page.tex
@@ -1857,6 +1931,8 @@ msgid ""
 "\\textbf{Export Blocking Rules.} Export rules configured for this app within "
 "App Manager."
 msgstr ""
+"\\textbf{Экспортировать правила блокировки.} Экспортирует правила, "
+"настроенные для этого приложения с помощью App Manager."
 
 #. type: itemize
 #: ./pages/app-details-page.tex
@@ -1870,6 +1946,13 @@ msgid ""
 "\\Sref{subsubsec:config-termux} to learn how to configure Termux to run "
 "commands from third-party applications."
 msgstr ""
+"\\textbf{Открыть в Termux.} Открывает приложение в Termux. На самом деле это "
+"запускает \\texttt{su - user\\_id} где \\texttt{user\\_id} обозначает "
+"идентификатор пользователя ядра приложения (described in the \\hyperref"
+"[subsubsec:app-info-general-information]{«Общая информация»}). Эта опция "
+"видна только пользователям root. Смотрите \\Sref{subsubsec:config-termux} "
+"чтобы узнать, как настроить Termux на выполнение команд от сторонних "
+"приложений."
 
 #. type: itemize
 #: ./pages/app-details-page.tex
@@ -1880,6 +1963,11 @@ msgid ""
 "both root and ADB users. See \\Sref{subsubsec:config-termux} to learn how to "
 "configure Termux to run commands from third-party applications."
 msgstr ""
+"\\textbf{Запустить в Termux.} Открывает приложение в Termux, используя "
+"команду \\texttt{run-as package\\_name} . Это применимо только для "
+"отлаживаемых приложений и работает как для пользователей root, так и для "
+"пользователей ADB. Смотрите \\Sref{subsubsec:config-termux} чтобы узнать, "
+"как настроить Termux для запуска команд из сторонних приложений."
 
 #. type: itemize
 #: ./pages/app-details-page.tex
@@ -1888,6 +1976,8 @@ msgid ""
 "\\textbf{Extract Icon.} Extract and save the app's icon in your desired "
 "location."
 msgstr ""
+"\\ textbf {Извлечь значок.} Извлечение и сохранение значка приложения в "
+"желаемом месте."
 
 #. type: document
 #: ./pages/app-details-page.tex
@@ -1899,6 +1989,10 @@ msgid ""
 "\\texttt{\\textasciitilde/.termux/termux.properties}, and make sure that you "
 "are running Termux v0.96 or later."
 msgstr ""
+"По умолчанию Termux не разрешает выполнять команды из сторонних приложений. "
+"Чтобы включить эту опцию, вам нужно добавить \\texttt{allow-external-"
+"apps=true} в \\texttt{\\textasciitilde/.termux/termux.properties}, и "
+"убедиться, что вы используете Termux v0.96 или более позднюю версию."
 
 #. type: tip
 #: ./pages/app-details-page.tex
@@ -1908,12 +2002,16 @@ msgid ""
 "third-party apps still need to request the user to allow running arbitrary "
 "commands in Termux like any other dangerous permissions."
 msgstr ""
+"{Информация} Включение этой опции не ослабляет безопасность вашего Termux. "
+"Сторонние приложения по-прежнему должны запрашивать у пользователя "
+"разрешение на запуск произвольных команд в Termux, как и любые другие "
+"опасные разрешения."
 
 #. type: subsection{#2}
 #: ./pages/app-details-page.tex
 #: :219
 msgid "Component Tabs"
-msgstr ""
+msgstr "Вкладка \"Компоненты\""
 
 #. type: document
 #: ./pages/app-details-page.tex
@@ -1938,7 +2036,7 @@ msgstr ""
 #: ./pages/app-details-page.tex
 #: :230
 msgid "Activities"
-msgstr ""
+msgstr "Активити"
 
 #. type: document
 #: ./pages/app-details-page.tex
@@ -2007,7 +2105,7 @@ msgstr ""
 #: ./pages/app-details-page.tex
 #: :255
 msgid "Services"
-msgstr ""
+msgstr "Службы"
 
 #. type: document
 #: ./pages/app-details-page.tex
@@ -2049,7 +2147,7 @@ msgstr ""
 #: ./pages/app-details-page.tex
 #: :281
 msgid "Receivers"
-msgstr ""
+msgstr "Приемники"
 
 #. type: document
 #: ./pages/app-details-page.tex
@@ -2082,7 +2180,7 @@ msgstr ""
 #: ./pages/app-details-page.tex
 #: :288
 msgid "Providers"
-msgstr ""
+msgstr "Поставщики"
 
 #. type: document
 #: ./pages/app-details-page.tex
@@ -2103,7 +2201,7 @@ msgstr ""
 #: ./pages/app-details-page.tex
 #: :291
 msgid "Additional Features for Rooted Phones"
-msgstr ""
+msgstr "Дополнительные функции для телефонов с root-доступом"
 
 #. type: document
 #: ./pages/app-details-page.tex
@@ -2112,12 +2210,15 @@ msgid ""
 "Unlike non-root users who are mostly spectators in these tabs, root users "
 "can perform various operations."
 msgstr ""
+"В отличие от пользователей без root-прав, которые могут только наблюдать за "
+"этими вкладками, пользователи с root-правами могут выполнять различные "
+"операции."
 
 #. type: paragraph{#2}
 #: ./pages/app-details-page.tex
 #: :299
 msgid "Blocking Components"
-msgstr ""
+msgstr "Блокировка компонентов"
 
 #. type: document
 #: ./pages/app-details-page.tex
@@ -2144,7 +2245,7 @@ msgstr ""
 #: ./pages/app-details-page.tex
 #: :307
 msgid "Blocking Trackers"
-msgstr ""
+msgstr "Блокировка трекеров"
 
 #. type: document
 #: ./pages/app-details-page.tex
@@ -2163,6 +2264,9 @@ msgid ""
 "{Info} Tracker components are a subset of app components. Therefore, they "
 "are blocked using the same method used for blocking any other components."
 msgstr ""
+"{Информация} Компоненты трекера - это подмножество компонентов приложения. "
+"Таким образом, они заблокированы с использованием того же метода, который "
+"используется для блокировки любых других компонентов."
 
 #. type: amseealso
 #: ./pages/app-details-page.tex
@@ -2179,7 +2283,7 @@ msgstr ""
 #: ./pages/app-details-page.tex
 #: :326
 msgid "Permission Tabs"
-msgstr ""
+msgstr "Вкладки разрешений"
 
 #. type: document
 #: ./pages/app-details-page.tex
@@ -2202,7 +2306,7 @@ msgstr ""
 #: :63 ./appendices/changelogs.tex
 #: :177
 msgid "App Ops"
-msgstr ""
+msgstr "Операции приложения"
 
 #. type: document
 #: ./pages/app-details-page.tex
@@ -2262,6 +2366,8 @@ msgid ""
 "{Info} Contents of this tab are only visible to the root and "
 "\\hyperref[sec:adb-over-tcp]{ADB} users."
 msgstr ""
+"{Информация} Содержимое этой вкладки видно только root и \\hyperref[sec:adb-"
+"over-tcp]{ADB} пользователям."
 
 #. type: document
 #: ./pages/app-details-page.tex
@@ -2274,6 +2380,14 @@ msgid ""
 "by app op names and the associated unique numbers (or values). You can also "
 "list the denied app ops first using the corresponding sorting option."
 msgstr ""
+"Рядом с каждым элементом операции приложения есть кнопка-переключатель, с "
+"помощью которой можно разрешить или запретить (игнорировать) операцию "
+"приложения. Вы также можете сбросить свои изменения, используя опцию \\textit"
+"{сброс по умолчанию} или отклонить все опасные операции приложения, "
+"используя соответствующую опцию в меню. Вы также можете сортировать их в "
+"порядке возрастания по названиям опций приложений и связанным уникальным "
+"числам (или значениям). Вы также можете сначала вывести список запрещенных "
+"операций приложения, используя соответствующий параметр сортировки."
 
 #. type: warning
 #: ./pages/app-details-page.tex
@@ -2282,6 +2396,9 @@ msgid ""
 "{Warning} Denying an app op may cause the app to misbehave. Use the "
 "\\textit{reset to default} option if that is the case."
 msgstr ""
+"{Предупреждение} Отклонение операции приложения может привести к "
+"некорректному функционированию приложения. В этом случае используйте опцию "
+"\\textit{сброс по умолчанию}."
 
 #. type: document
 #: ./pages/app-details-page.tex
@@ -2293,7 +2410,7 @@ msgstr ""
 #: ./pages/app-details-page.tex
 #: :370
 msgid "Uses Permissions"
-msgstr ""
+msgstr "Используемые разрешения"
 
 #. type: document
 #: ./pages/app-details-page.tex
@@ -2306,6 +2423,12 @@ msgid ""
 "\\textit{package name}, \\textit{group} are taken from the associated "
 "\\hyperref[subsubsec:permissions]{permission}."
 msgstr ""
+"\\textbf{Используемые разрешения} это разрешения, используемые приложением. "
+"Этот раздел назван так, потому что они объявлены в манифесте с "
+"использованием тегов \\texttt{uses-permission}. Информация, такая как "
+"\\textit{флаги}, \\textit{имя разрешения}, \\textit{описание разрешение}, "
+"\\textit{имя пакета}, \\textit{группа} взята из связанных \\hyperref"
+"[subsubsec:permissions]{разрешений}."
 
 #. type: document
 #: ./pages/app-details-page.tex
@@ -2319,6 +2442,14 @@ msgid ""
 "\\textit{normal} permissions (which most of them are). The only alternative "
 "is to edit the app manifest and remove these permissions from there."
 msgstr ""
+"\\textbf{Root и ADB пользователи} могут предоставлять или отзывать \\textit"
+"{опасные} или разрешения для \\textit{разработчиков}, используя "
+"переключатель справа от каждого элемента разрешения. Также они могут сразу "
+"отозвать опасные разрешения, используя соответствующую опцию в меню. Только "
+"эти два типа разрешений можно отозвать, поскольку Android не позволяет "
+"изменять \\textit{обычные} (большинство из них). Единственной альтернативой "
+"является редактирование манифеста приложения и удаление этих разрешений "
+"оттуда."
 
 #. type: tip
 #: ./pages/app-details-page.tex
@@ -2327,6 +2458,8 @@ msgid ""
 "{Info} Since dangerous permissions are revoked by default by the system, "
 "revoking all dangerous permissions is the same as resetting all permissions."
 msgstr ""
+"{Информация} Так как опасные разрешения по умолчанию отозваны системой, "
+"отмена всех опасных разрешений аналогична сбросу всех разрешений."
 
 #. type: tip
 #: ./pages/app-details-page.tex
@@ -2335,6 +2468,9 @@ msgid ""
 "{Notice} Permissions cannot be changed for apps targeting API 23 or "
 "earlier. Therefore, permission toggles are disabled for such apps."
 msgstr ""
+"{Обратите внимание} Разрешения не могут быть изменены для приложений, "
+"ориентированных на API 23 или более ранние версии. Поэтому переключатели "
+"запрещены для таких приложений."
 
 #. type: document
 #: ./pages/app-details-page.tex
@@ -2344,13 +2480,16 @@ msgid ""
 "choose to display denied or dangerous permissions at first using the "
 "corresponding options in the menu."
 msgstr ""
+"Пользователи могут отсортировать разрешения по имени разрешения (в порядке "
+"возрастания) или выбрать сначала отображение отклоненных или опасных "
+"разрешений с помощью соответствующих параметров в меню."
 
 #. type: subsubsection{#2}
 #: ./pages/app-details-page.tex
 #: :396 ./pages/profile-page.tex
 #: :69
 msgid "Permissions"
-msgstr ""
+msgstr "Разрешения"
 
 #. type: document
 #: ./pages/app-details-page.tex
@@ -2361,6 +2500,10 @@ msgid ""
 "applications. Here's a complete description of each item that is displayed "
 "there:"
 msgstr ""
+"\\textbf{Разрешения} обычно являются настраиваемыми разрешениями, "
+"определяемыми самим приложением. Приложение может содержать и обычные "
+"разрешения (в основном старые приложения). Вот полное описание каждого "
+"элемента, который там отображается:"
 
 #. type: itemize
 #: ./pages/app-details-page.tex
@@ -2370,6 +2513,9 @@ msgid ""
 "\\texttt{android.permission.INTERNET} but multiple app can request the "
 "permission."
 msgstr ""
+"\\ textbf {Имя.} Каждое разрешение имеет уникальное имя, например \\texttt"
+"{android.permission.INTERNET}, но несколько приложений могут запрашивать "
+"одно и то же разрешение."
 
 #. type: itemize
 #: ./pages/app-details-page.tex
@@ -2379,6 +2525,9 @@ msgid ""
 "tabs do not have any icon because they do not contain any icon in the app "
 "manifest."
 msgstr ""
+"\\textbf{Значок.} Каждое разрешение может иметь свой значок. На других "
+"вкладках разрешений нет значков, так как они не содержат значков в манифесте "
+"приложения."
 
 #. type: itemize
 #: ./pages/app-details-page.tex
@@ -2388,6 +2537,8 @@ msgid ""
 "there isn't any description associated with the permission, the field is not "
 "displayed."
 msgstr ""
+"\\textbf{Описание.} Это необязательное поле описывает разрешение. Если "
+"описание, связанное с разрешением, отсутствует, поле не отображается."
 
 #. type: itemize
 #: ./pages/app-details-page.tex
@@ -2399,6 +2550,11 @@ msgid ""
 "\\textit{granted}, \\textit{revoked}, \\textit{signature}, "
 "\\textit{privileged}, etc."
 msgstr ""
+"\\textbf{Флаги.} (Используют â символ или имя \\textbf{уровня защиты}) "
+"Описывают различные флаги разрешений, такие как \\textit{обычное}, \\textit"
+"{разработка}, \\textit{опасное}, \\textit{мгновенное}, \\textit"
+"{предоставленное}, \\textit{отозванное}, \\textit{подпись}, \\textit"
+"{привилегированное}, и т.д."
 
 #. type: itemize
 #: ./pages/app-details-page.tex
@@ -2407,6 +2563,8 @@ msgid ""
 "\\textbf{Package Name.} Denotes the package name associated with the "
 "permission, i.e.\\ the package that defined the permission."
 msgstr ""
+"\\textbf{Имя пакета.} Обозначает имя пакета, связанное с разрешением, т.е. "
+"пакет, который определил решение."
 
 #. type: itemize
 #: ./pages/app-details-page.tex
@@ -2417,12 +2575,16 @@ msgid ""
 "usually see \\texttt{android.permission-group.UNDEFINED} or no group name at "
 "all."
 msgstr ""
+"\\textbf{Группа.} Имя группы, назначенное для данного разрешения (если "
+"таковое имеется). Похоже, что новые версии андроида не используют названия "
+"групп, поэтому обычно вы увидите \\texttt{android.permission-group.UNDEFINED}"
+" или вообще не знаете названия группы."
 
 #. type: subsection{#2}
 #: ./pages/app-details-page.tex
 #: :427
 msgid "Signatures Tab"
-msgstr ""
+msgstr "Вкладка \"Подписи\""
 
 #. type: document
 #: ./pages/app-details-page.tex
@@ -2444,12 +2606,28 @@ msgid ""
 "me by simply matching the following \\textit{SHA256} checksum with the one "
 "displayed in this tab:"
 msgstr ""
+"\\textbf{Подписи} на самом деле называется информацией о подписи. Приложение "
+"подписывается разработчиками приложения, одним или несколькими сертификатами "
+"перед его публикацией. Целостность приложения (независимо от того, "
+"принадлежит ли оно фактическому разработчику и не изменено ли оно другими "
+"людьми) можно проверить с помощью информации о подписи; потому что, когда "
+"приложение изменено сторонним неавторизованным лицом, приложение не может "
+"быть снова подписано с использованием исходного сертификата(ов), потому что "
+"информация о подписи хранится в секрете фактическим разработчиком. \\textit{"
+"Как вы верифицируете эти подписи?} С помощью контрольных сумм. Контрольные "
+"суммы создаются из самих сертификатов. Если разработчик предоставляет "
+"контрольные суммы, вы можете сопоставить контрольные суммы, используя разные "
+"контрольные суммы, сгенерированные во вкладке \\textbf{подписи}. Например, "
+"если вы загрузили App Manager с GitHub, канала Telegram или репозитория "
+"IzzyOnDroid, вы можете проверить, действительно ли приложение выпущено мной, "
+"просто сопоставив следующую контрольную сумму \\textit{SHA256} с тем, что "
+"отображается в этой вкладке:"
 
 #. type: Verbatim
 #: ./pages/app-details-page.tex
 #: :427
 msgid "320c0c0fe8cef873f2b554cb88c837f1512589dcced50c5b25c43c04596760ab"
-msgstr ""
+msgstr "320c0c0fe8cef873f2b554cb88c837f1512589dcced50c5b25c43c04596760ab"
 
 #. type: document
 #: ./pages/app-details-page.tex
@@ -2458,6 +2636,8 @@ msgid ""
 "There are three types of checksums displayed there: \\textit{MD5}, "
 "\\textit{SHA1} and \\textit{SHA256}."
 msgstr ""
+"Здесь отображаются контрольные суммы трех типов: \\textit{MD5}, \\textit"
+"{SHA1} and \\textit{SHA256}."
 
 #. type: danger
 #: ./pages/app-details-page.tex
@@ -2468,12 +2648,16 @@ msgid ""
 "\\textit{MD5} or \\textit{SHA1} checksums only as they are known to generate "
 "the same results for multiple certificates."
 msgstr ""
+"{Предупреждение} Рекомендуется проверять информацию о подписи, используя "
+"только контрольные суммы \\textit{SHA256} или все три из них. НЕ полагайтесь "
+"на контрольные суммы \\textit{MD5} или\\textit{SHA1} потому, что они, как "
+"известно, генерируют одинаковые результаты для нескольких сертификатов."
 
 #. type: subsection{#2}
 #: ./pages/one-click-ops-page.tex
 #: :4
 msgid "Other Tabs"
-msgstr ""
+msgstr "Другие вкладки"
 
 #. type: document
 #: ./pages/one-click-ops-page.tex
@@ -2491,7 +2675,7 @@ msgstr ""
 #: ./pages/one-click-ops-page.tex
 #: :11
 msgid "Block/Unblock Trackers"
-msgstr ""
+msgstr "Блокировка/разблокировка трекеров"
 
 #. type: document
 #: ./pages/one-click-ops-page.tex
@@ -2506,6 +2690,15 @@ msgid ""
 "operation. Clicking \\textit{block} or \\textit{unblock} applies the changes "
 "immediately."
 msgstr ""
+"Эту опцию можно использовать для блокировки или разблокировки рекламы или "
+"компонентов трекера для всех установленных приложений. При нажатии на эту "
+"опцию вам будет предложено выбрать, отображать в списке все приложения или "
+"только пользовательские приложения. Начинающим пользователям следует выбрать "
+"отображение только пользовательских приложений. После этого появится "
+"диалоговое окно с множественным выбором, в котором вы можете отменить выбор "
+"приложений, которые хотите исключить из этой операции. Нажатие на кнопку "
+"\\textit{заблокировать} или \\textit{разблокировать} немедленно применит "
+"изменение."
 
 #. type: warning
 #: ./pages/one-click-ops-page.tex
@@ -2516,6 +2709,10 @@ msgid ""
 "one in the component tabs of the corresponding "
 "\\hyperref[sec:app-details-page]{App Details page}."
 msgstr ""
+"{Предупреждение} Некоторые приложения могут не работать должным образом "
+"после применения блокировки. В этом случае удалите правила блокировки сразу "
+"или по одному, используя соответствующую страницу \\hyperref[sec:app-details-"
+"page]{«Сведения о приложении»}."
 
 #. type: amseealso
 #: ./pages/one-click-ops-page.tex
@@ -2526,12 +2723,16 @@ msgid ""
 "\\hyperref[par:appdetails:blocking-trackers]{App Details Page: Blocking "
 "Trackers}"
 msgstr ""
+"\\hyperref[subsec:faq:how-to-unblock-tracker-components]{Как разблокировать "
+"компоненты трекера, заблокированные с помощью Операции в один клик или "
+"пакетных операций?} \\item \\hyperref[par:appdetails:blocking-trackers]{"
+"Страница Сведения о приложении: Блокировка трекеров}"
 
 #. type: subsection{#2}
 #: ./pages/one-click-ops-page.tex
 #: :28
 msgid "Block Components\\dots"
-msgstr ""
+msgstr "Блокировка компонентов..."
 
 #. type: document
 #: ./pages/one-click-ops-page.tex
@@ -2546,6 +2747,14 @@ msgid ""
 "spaces. Similar to the option above, there is an option to apply blocking to "
 "system apps as well."
 msgstr ""
+"Этот параметр можно использовать для блокировки определенных компонентов "
+"приложения, обозначенных подписями. Подпись приложения - это полное или "
+"частичное имя компонентов. В целях безопасности рекомендуется добавить "
+"\\texttt{.} (точку) в конце каждого частичного имени подписи, поскольку "
+"используемый здесь алгоритм выбирает все совпадающие компоненты в алфавитном "
+"порядке. Вы можете вставить более одной подписи, и в этом случае все подписи "
+"должны быть разделены пробелами. Подобно описанному выше варианту, есть "
+"возможность применить блокировку и к системным приложениям."
 
 #. type: danger
 #: ./pages/one-click-ops-page.tex
@@ -2556,12 +2765,17 @@ msgid ""
 "result in boot loop or soft brick, and you may have to apply factory reset "
 "in order to use your OS\\@."
 msgstr ""
+"{Предупреждение} Если вы не знаете о последствиях блокировки компонентов "
+"приложения по подписям, вам следует избегать использования этого параметра, "
+"так как это может привести к бутлупу или «софт окирпичиванию» устройства, и "
+"вам, возможно, придется применить сброс к заводским настройкам, чтобы "
+"использовать вашу ОС."
 
 #. type: subsection{#2}
 #: ./pages/one-click-ops-page.tex
 #: :41
 msgid "Set Mode for App Ops\\dots"
-msgstr ""
+msgstr "Установка режима для операций приложения…"
 
 #. type: document
 #: ./pages/one-click-ops-page.tex
@@ -2578,6 +2792,17 @@ msgid ""
 "\\hyperref[subsec:mode-constants]{modes} that will be applied against the "
 "app ops."
 msgstr ""
+"Эта опция может использоваться для блокировки определенных \\hyperref[ch:app-"
+"ops]{операций приложения} для всех или выбранных приложений. Вы можете "
+"вставить несколько констант операций приложения, разделенных пробелами. "
+"Невозможно заранее узнать все константы операций приложения, поскольку они "
+"различаются от устройства к устройству и от ОС к ОС. Чтобы найти нужную "
+"константу операции приложения, откройте вкладку \\textit{операции приложения}"
+" на странице \\hyperref[sec:app-details-page]{Сведения о приложении}. "
+"Константы представляют собой целые числа, заключенные в квадратные скобки "
+"рядом с каждым именем операции приложения. Вы также можете использовать "
+"имена операций приложения. Вы также должны выбрать один из \\hyperref[subsec"
+":mode-constants]{режимов} который будет применяться к операциям приложения."
 
 #. type: danger
 #: ./pages/profiles-page.tex
