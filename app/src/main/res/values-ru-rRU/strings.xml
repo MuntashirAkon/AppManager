@@ -561,7 +561,7 @@
     <string name="locale_split_for_feature"><xliff:g id="split_name" example="English">%1$s</xliff:g> локаль для <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
     <string name="abi_split_for_base_apk"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> код для базового APK</string>
     <string name="abi_split_for_feature"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> код для <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
-    <string name="density_split_for_base_apk"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) ресурсов для базового APK</string>
+    <string name="density_split_for_base_apk">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"xxdpi\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"dpi_no\" example=\"480\"&gt;%2$d&lt;/xliff:g&gt; DPI) ресурсы для базового APK</string>
     <string name="density_split_for_feature"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) ресурсы для функции <xliff:g id="feature_name" example="Visualizer">%3$s</xliff:g></string>
     <string name="unknown_split_for_base_apk"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> для базового APK</string>
     <string name="unknown_split_for_feature"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> для функции <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
@@ -642,7 +642,7 @@
     <string name="do_you_want_to_uninstall_and_install">Вы хотите удалить и снова установить приложение\?</string>
     <string name="signature_mismatch_for_system_apps">Не удалось установить приложение, поскольку системное приложение с другой подписью имеет такое же имя пакета.</string>
     <string name="app_data_will_be_lost">Существующие данные будут потеряны.</string>
-    <string name="only_install">Только установить</string>
+    <string name="only_install">Только установка</string>
     <string name="install_without_data_loss">Если у вас отключена проверка подписи, вы можете использовать параметр <b>«Только установка»</b>, чтобы установить приложение без потери данных.</string>
     <string name="sort_by_backup">Сначала резервные копии</string>
     <string name="onboard">Доступные</string>
