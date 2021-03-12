@@ -26,6 +26,7 @@
     <string name="launch">실행</string>
     <string name="activities">활동</string>
     <string name="require_no_permission">아무 권한이 필요하지 없습니다</string>
-    <string name="permissions">사용한 권한</string>
+    <string name="permissions">사용 권한</string>
     <string name="uninstall">제서</string>
+    <string name="authority">권한</string>
 </resources>
