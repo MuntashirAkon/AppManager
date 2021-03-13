@@ -142,10 +142,10 @@
     <string name="usage_today">Сегодня</string>
     <string name="usage_7_days">Последние 7 дней</string>
     <plurals name="usage_months">
-        <item quantity="one">%1$d мес</item>
-        <item quantity="few">%1$d мес</item>
-        <item quantity="many">%1$d мес</item>
-        <item quantity="other">%1$d мес</item>
+        <item quantity="one">%1$d месяц</item>
+        <item quantity="few">%1$d месяца</item>
+        <item quantity="many">%1$d месяцев</item>
+        <item quantity="other">%1$d месяцев</item>
     </plurals>
     <plurals name="usage_days">
         <item quantity="one">%1$d день</item>
@@ -154,12 +154,12 @@
         <item quantity="other">%1$d дней</item>
     </plurals>
     <plurals name="usage_hours">
-        <item quantity="one">%1$d ч</item>
-        <item quantity="few">%1$d ч</item>
-        <item quantity="many">%1$d ч</item>
-        <item quantity="other">%1$d ч</item>
+        <item quantity="one">%1$d час</item>
+        <item quantity="few">%1$d часа</item>
+        <item quantity="many">%1$d часов</item>
+        <item quantity="other">%1$d часов</item>
     </plurals>
-    <string name="usage_min">%1$d мин</string>
+    <string name="usage_min">%1$d мин.</string>
     <string name="usage_less_than_a_minute">Меньше минуты</string>
     <string name="go_back">Вернуться</string>
     <string name="go">Разрешить</string>
