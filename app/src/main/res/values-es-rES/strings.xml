@@ -847,4 +847,26 @@
     <string name="pref_enable_disable_features_msg">Activar o desactivar funciones en el App Manager.</string>
     <string name="input_app_ops_description_profile">"Introducir los nombres de las operaciones de aplicación y/o las constantes con espacios, por ejemplo, <tt>WAKE_LOCK  63 72 CAMERA</tt>, etc. Utiliza <tt>*</tt> para aplicar todas las operaciones de aplicación configuradas."</string>
     <string name="user_with_id">Usuario: <xliff:g id="user_id" example="0">%1$d</xliff:g></string>
+    <string name="net_policy">Política de la red</string>
+    <string name="has_net_policy">Política de la red</string>
+    <string name="choose_what_to_do">Elige qué hacer.</string>
+    <string name="enable_battery_optimization">¿Permitir optimización de batería\?</string>
+    <string name="battery_optimization">Optimización de batería</string>
+    <string name="no_battery_optimization">Sin optimización de batería</string>
+    <string name="type_uri">URI</string>
+    <string name="type_string_array_list">Lista de Strings</string>
+    <string name="type_string_array">Matriz de Strings</string>
+    <string name="type_float_array_list">Lista de números decimales</string>
+    <string name="type_float_array">Matriz de números decimales</string>
+    <string name="type_long_array_list">Lista de enteros largos</string>
+    <string name="type_long_array">Matriz de enteros largos</string>
+    <string name="type_int_array_list">Lista de enteros</string>
+    <string name="type_int_array">Matriz de enteros</string>
+    <string name="type_component_name">Nombre del componente</string>
+    <string name="type_null">Sin valor</string>
+    <string name="screen_lock_msg">Bloquea el administrador de aplicaciones usando el bloqueo de pantalla de Android</string>
+    <string name="screen_lock">Bloqueo de pantalla</string>
+    <string name="unlock_app_manager">Desbloquea gestor de aplicaciones</string>
+    <string name="sd_card">Tarjeta SD</string>
+    <string name="external_storage">Almacenamiento externo</string>
 </resources>
