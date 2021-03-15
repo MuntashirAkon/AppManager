@@ -406,6 +406,27 @@ public final class IOUtils {
         } else return false;
     }
 
+    /**
+     * Delete a directory by recursively deleting its children
+     *
+     * @param dir The directory to delete
+     * @return True on success, false on failure
+     */
+    @AnyThread
+    public static boolean deleteDir(ProxyFile dir) {
+        if (dir != null && dir.isDirectory()) {
+            String[] children = dir.list();
+            if (children == null) return false;
+            for (String child : children) {
+                boolean success = deleteDir(new ProxyFile(dir, child));
+                if (!success) return false;
+            }
+            return dir.delete();
+        } else if (dir != null && dir.isFile()) {
+            return dir.delete();
+        } else return false;
+    }
+
     @AnyThread
     @NonNull
     public static Bitmap getBitmapFromDrawable(@NonNull Drawable drawable) {

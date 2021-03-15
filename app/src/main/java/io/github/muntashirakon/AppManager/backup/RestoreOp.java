@@ -417,8 +417,12 @@ class RestoreOp implements Closeable {
                         dataSource = dataSource.replace("/storage/emulated/", "/mnt/shell/emulated/");
                     }
                 }
-                // Create data folder if not exists
                 ProxyFile dataSourceFile = new ProxyFile(dataSource);
+                if (dataSourceFile.exists()) {
+                    // Delete the directory and re-create it to avoid issues with extraction
+                    IOUtils.deleteDir(dataSourceFile);
+                }
+                // Create data folder if not exists
                 if (!dataSourceFile.exists()) {
                     // FIXME(10/9/20): Check if the media is mounted and readable before running
                     //  mkdir, otherwise it may create a folder to a path that will be gone
