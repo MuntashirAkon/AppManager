@@ -394,31 +394,10 @@ public final class IOUtils {
     @AnyThread
     public static boolean deleteDir(File dir) {
         if (dir != null && dir.isDirectory()) {
-            String[] children = dir.list();
+            File[] children = dir.listFiles();
             if (children == null) return false;
-            for (String child : children) {
-                boolean success = deleteDir(new File(dir, child));
-                if (!success) return false;
-            }
-            return dir.delete();
-        } else if (dir != null && dir.isFile()) {
-            return dir.delete();
-        } else return false;
-    }
-
-    /**
-     * Delete a directory by recursively deleting its children
-     *
-     * @param dir The directory to delete
-     * @return True on success, false on failure
-     */
-    @AnyThread
-    public static boolean deleteDir(ProxyFile dir) {
-        if (dir != null && dir.isDirectory()) {
-            String[] children = dir.list();
-            if (children == null) return false;
-            for (String child : children) {
-                boolean success = deleteDir(new ProxyFile(dir, child));
+            for (File child : children) {
+                boolean success = deleteDir(child);
                 if (!success) return false;
             }
             return dir.delete();
