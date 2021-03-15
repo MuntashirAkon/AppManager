@@ -265,15 +265,19 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         if (isExternalApk) return;
-        menu.findItem(R.id.action_open_in_termux).setVisible(isRootEnabled);
-        menu.findItem(R.id.action_enable_magisk_hide).setVisible(isRootEnabled);
-        boolean isDebuggable = false;
-        if (mApplicationInfo != null) {
-            isDebuggable = (mApplicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+        try {
+            menu.findItem(R.id.action_open_in_termux).setVisible(isRootEnabled);
+            menu.findItem(R.id.action_enable_magisk_hide).setVisible(isRootEnabled);
+            boolean isDebuggable = false;
+            if (mApplicationInfo != null) {
+                isDebuggable = (mApplicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+            }
+            menu.findItem(R.id.action_run_in_termux).setVisible(isDebuggable);
+            menu.findItem(R.id.action_battery_opt).setVisible(isRootEnabled || isAdbEnabled);
+            menu.findItem(R.id.action_net_policy).setVisible(isRootEnabled || isAdbEnabled);
+        } catch (NullPointerException ignore) {
+            // Options menu is uninitialised for some reason, just suppress the exception
         }
-        menu.findItem(R.id.action_run_in_termux).setVisible(isDebuggable);
-        menu.findItem(R.id.action_battery_opt).setVisible(isRootEnabled || isAdbEnabled);
-        menu.findItem(R.id.action_net_policy).setVisible(isRootEnabled || isAdbEnabled);
     }
 
     @Override
