@@ -598,20 +598,13 @@ public final class PackageInstallerCompat extends AMPackageInstaller {
         IntentSender sender = receiver.getIntentSender();
         boolean isPrivileged = LocalServer.isAMServiceAlive();
         int flags = 0;
-        if (isPrivileged && userHandle == Users.USER_ALL) {
-            flags |= DELETE_ALL_USERS;
-        }
-        if (isPrivileged && keepData) {
-            flags |= DELETE_KEEP_DATA;
-        }
         if (!isPrivileged || userHandle != Users.USER_ALL) {
             PackageInfo info = PackageManagerCompat.getPackageInfo(packageName, 0, userHandle);
             if (info == null) {
                 throw new PackageManager.NameNotFoundException("Package " + packageName
-                        + " no installed for user " + userHandle);
+                        + " not installed for user " + userHandle);
             }
-            final boolean isSystem =
-                    (info.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
+            final boolean isSystem = (info.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
             // If we are being asked to delete a system app for just one
             // user set flag so it disables rather than reverting to system
             // version of the app.
@@ -619,18 +612,26 @@ public final class PackageInstallerCompat extends AMPackageInstaller {
                 flags |= DELETE_SYSTEM_APP;
             }
         }
-        // Get correct user handle
-        int[] users = Users.getUsersHandles();
-        for (int user : users) {
-            try {
-                PackageInfo info = PackageManagerCompat.getPackageInfo(packageName, 0, user);
-                if (info == null) {
-                    throw new PackageManager.NameNotFoundException("Package " + packageName
-                            + " no installed for user " + user);
+        if (isPrivileged) {
+            if (keepData) {
+                flags |= DELETE_KEEP_DATA;
+            }
+            if (userHandle == Users.USER_ALL) {
+                flags |= DELETE_ALL_USERS;
+                // Get correct user handle
+                int[] users = Users.getUsersHandles();
+                for (int user : users) {
+                    try {
+                        PackageInfo info = PackageManagerCompat.getPackageInfo(packageName, 0, user);
+                        if (info == null) {
+                            throw new PackageManager.NameNotFoundException("Package " + packageName
+                                    + " not installed for user " + user);
+                        }
+                        userHandle = user;
+                        break;
+                    } catch (Throwable ignore) {
+                    }
                 }
-                userHandle = user;
-                break;
-            } catch (Throwable ignore) {
             }
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
