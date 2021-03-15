@@ -21,6 +21,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -171,14 +172,12 @@ public final class IOUtils {
         if (uri.getScheme() == null) return null;
         switch (uri.getScheme()) {
             case ContentResolver.SCHEME_CONTENT:
-                String name;
                 try (Cursor cursor = resolver.query(uri, null, null, null, null)) {
                     if (cursor == null) return null;
                     int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
                     cursor.moveToFirst();
-                    name = cursor.getString(nameIndex);
-                }
-                return name;
+                    return cursor.getString(nameIndex);
+                } catch (CursorIndexOutOfBoundsException ignore) {}
             case ContentResolver.SCHEME_FILE:
                 if (uri.getPath() == null) return null;
                 return new File(uri.getPath()).getName();
