@@ -230,9 +230,10 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         iconView.setOnClickListener(v -> new Thread(() -> {
             ClipboardManager clipboard = (ClipboardManager) mActivity.getSystemService(Context.CLIPBOARD_SERVICE);
             ClipData clipData = clipboard.getPrimaryClip();
-            if (clipData.getItemCount() > 0) {
+            if (clipData != null && clipData.getItemCount() > 0) {
                 String data = clipData.getItemAt(0).getText().toString().trim().toLowerCase(Locale.ROOT);
-                if (data.matches("[0-9a-f]+")) {
+                if (data.matches("[0-9a-f: \n]+")) {
+                    data = data.replaceAll("[: \n]+", "");
                     Signature[] signatures = PackageUtils.getSigningInfo(mPackageInfo, isExternalApk);
                     if (signatures != null && signatures.length == 1) {
                         byte[] certBytes = signatures[0].toByteArray();
