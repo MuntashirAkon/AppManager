@@ -40,6 +40,8 @@ public class BackupManager {
     static final String EXT_OBB = "/Android/obb/";
     /* language=regexp */
     static final String[] CACHE_DIRS = new String[]{"cache/.*", "code_cache/.*", "no_backup/.*"};
+    /* language=regexp */
+    static final String[] DEFAULT_SKIP_DIRS = new String[]{"lib/.*"};
     static final String SOURCE_PREFIX = "source";
     static final String DATA_PREFIX = "data";
     static final String KEYSTORE_PREFIX = "keystore";
