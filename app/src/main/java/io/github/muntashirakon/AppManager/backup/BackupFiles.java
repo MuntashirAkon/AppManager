@@ -56,8 +56,13 @@ public class BackupFiles {
     }
 
     @NonNull
-    public static ProxyFile getTemporaryBackupPath() {
-        ProxyFile tmpFile = new ProxyFile(getTemporaryDirectory(), String.valueOf(System.currentTimeMillis()));
+    public static synchronized ProxyFile getTemporaryBackupPath() {
+        String tmpFilename = "backup_" + System.currentTimeMillis();
+        ProxyFile tmpFile = new ProxyFile(getTemporaryDirectory(), tmpFilename);
+        int i = 0;
+        while (tmpFile.exists()) {
+            tmpFile = new ProxyFile(getTemporaryDirectory(), tmpFilename + "_" + (++i));
+        }
         //noinspection ResultOfMethodCallIgnored
         tmpFile.mkdirs();
         return tmpFile;

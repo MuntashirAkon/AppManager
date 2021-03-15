@@ -720,4 +720,8 @@ public class Utils {
     public static boolean readBoolean(@NonNull Parcel in) {
         return in.readInt() != 0;
     }
+
+    public static int getTotalCores() {
+        return Runtime.getRuntime().availableProcessors();
+    }
 }

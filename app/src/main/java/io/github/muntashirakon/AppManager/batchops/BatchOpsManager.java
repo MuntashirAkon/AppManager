@@ -26,7 +26,21 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import androidx.annotation.*;
+
+import androidx.annotation.CheckResult;
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
@@ -44,11 +58,8 @@ import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.UserIdInt;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.util.*;
 
 @WorkerThread
 public class BatchOpsManager {
@@ -246,32 +257,34 @@ public class BatchOpsManager {
 
     private Result opBackupRestore(@BackupDialogFragment.ActionMode int mode) {
         List<UserPackagePair> failedPackages = new ArrayList<>();
-        int max = userPackagePairs.length;
-        Context context = AppManager.getContext();
-        PackageManager pm = context.getPackageManager();
-        // Initial progress
-        sendProgress(context, null, max, 0);
-        UserPackagePair pair;
-        for (int i = 0; i < max; ++i) {
-            pair = userPackagePairs[i];
-            // Send progress
-            sendProgress(context, PackageUtils.getPackageLabel(pm, pair.getPackageName(),
-                    pair.getUserHandle()).toString(), max, i + 1);
-            // Do operation
+        MultithreadedExecutor executor = MultithreadedExecutor.getNewInstance();
+        try {
             String[] backupNames = args.getStringArray(ARG_BACKUP_NAMES);
-            BackupManager backupManager = BackupManager.getNewInstance(pair, args.getInt(ARG_FLAGS));
-            switch (mode) {
-                case BackupDialogFragment.MODE_BACKUP:
-                    if (!backupManager.backup(backupNames)) failedPackages.add(pair);
-                    break;
-                case BackupDialogFragment.MODE_DELETE:
-                    if (!backupManager.deleteBackup(backupNames)) failedPackages.add(pair);
-                    break;
-                case BackupDialogFragment.MODE_RESTORE:
-                    if (!backupManager.restore(backupNames)) failedPackages.add(pair);
-                    break;
+            for (UserPackagePair pair : userPackagePairs) {
+                executor.submit(() -> {
+                    BackupManager backupManager = BackupManager.getNewInstance(pair, args.getInt(ARG_FLAGS));
+                    boolean hasFailed = true;
+                    switch (mode) {
+                        case BackupDialogFragment.MODE_BACKUP:
+                            hasFailed = !backupManager.backup(backupNames);
+                            break;
+                        case BackupDialogFragment.MODE_DELETE:
+                            hasFailed = !backupManager.deleteBackup(backupNames);
+                            break;
+                        case BackupDialogFragment.MODE_RESTORE:
+                            hasFailed = !backupManager.restore(backupNames);
+                            break;
+                    }
+                    if (hasFailed) {
+                        synchronized (BatchOpsManager.this) {
+                            failedPackages.add(pair);
+                        }
+                    }
+                });
             }
+        } catch (Throwable ignore){
         }
+        executor.awaitCompletion();
         return lastResult = new Result(failedPackages);
     }
 
