@@ -177,7 +177,7 @@ public class App implements Serializable {
         app.hasSplits = metadata.isSplitApk;
         app.rulesCount = 0;
         app.trackerCount = 0;
-        app.lastActionTime = System.currentTimeMillis();
+        app.lastActionTime = metadata.backupTime;
         return app;
     }
 
