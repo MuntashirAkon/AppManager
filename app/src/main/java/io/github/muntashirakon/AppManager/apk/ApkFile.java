@@ -226,7 +226,7 @@ public final class ApkFile implements AutoCloseable {
                 // Cache manually
                 try (InputStream is = cr.openInputStream(apkUri)) {
                     this.cacheFilePath = IOUtils.getCachedFile(is);
-                } catch (IOException e) {
+                } catch (IOException | SecurityException e) {
                     throw new ApkFileException("Could not cache the input file.");
                 }
             }
