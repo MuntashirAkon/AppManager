@@ -22,6 +22,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringDef;
 import androidx.annotation.WorkerThread;
+
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.io.*;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
@@ -138,8 +140,16 @@ public final class TarUtils {
                     }
                     // Zip slip vulnerability check
                     if (!file.getCanonicalFile().toURI().getPath().startsWith(realDestPath)) {
-                        throw new IOException("Zip slip vulnerability detected!\nExpected dest: " + realDestPath
-                                + "\nActual path: " + file.getCanonicalFile().toURI().getPath());
+                        if (file.isDirectory()) {
+                            Log.w("TarUtils", "Zip slip vulnerability detected!" +
+                                    " Skipping since it's a directory." +
+                                    "\nExpected dest: " + new File(realDestPath, entry.getName()) +
+                                    "\nActual path: " + file.getCanonicalFile().toURI().getPath());
+                        } else {
+                            throw new IOException("Zip slip vulnerability detected!" +
+                                    "\nExpected dest: " + new File(realDestPath, entry.getName()) +
+                                    "\nActual path: " + file.getCanonicalFile().toURI().getPath());
+                        }
                     }
                     if (entry.isDirectory()) {
                         file.mkdir();
