@@ -24,6 +24,7 @@ import android.os.Parcel;
 import android.os.RemoteException;
 import android.system.ErrnoException;
 import android.system.Os;
+import android.system.StructStat;
 import android.util.Log;
 
 import java.io.File;
@@ -94,7 +95,9 @@ public class AMService extends RootService {
         @Override
         public FileStatus stat(String path) throws RemoteException {
             try {
-                return new FileStatus(Os.stat(path));
+                StructStat fstat = Os.stat(path);
+                if (fstat == null) throw new ErrnoException("FStat returned null", 1);
+                return new FileStatus(fstat);
             } catch (ErrnoException e) {
                 throw new RemoteException(e.getMessage());
             }

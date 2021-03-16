@@ -665,7 +665,7 @@ public class TarArchiveInputStream extends ArchiveInputStream {
      * @throws IOException if the next entry could not be read
      */
     @Override
-    public ArchiveEntry getNextEntry() throws IOException {
+    public TarArchiveEntry getNextEntry() throws IOException {
         return getNextTarEntry();
     }
 

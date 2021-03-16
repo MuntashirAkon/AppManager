@@ -18,6 +18,8 @@
 package io.github.muntashirakon.AppManager.utils;
 
 import android.os.RemoteException;
+import android.system.ErrnoException;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringDef;
@@ -25,7 +27,6 @@ import androidx.annotation.WorkerThread;
 
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.io.*;
-import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
@@ -131,7 +132,7 @@ public final class TarUtils {
             }
             try (TarArchiveInputStream tis = new TarArchiveInputStream(is)) {
                 String realDestPath = dest.getCanonicalFile().toURI().getPath();
-                ArchiveEntry entry;
+                TarArchiveEntry entry;
                 while ((entry = tis.getNextEntry()) != null) {
                     File file = new ProxyFile(dest, entry.getName());
                     if (!entry.isDirectory() && (!isUnderFilter(file, dest, filters) || willExclude(file, dest, exclude))) {
@@ -159,9 +160,14 @@ public final class TarUtils {
                             IOUtils.copy(tis, os);
                         }
                     }
+                    // Fix permissions
+                    ProxyFiles.chmod(file, entry.getMode());
+                    ProxyFiles.chown(file, entry.getUserId(), entry.getGroupId());
                 }
                 // Delete unwanted files
                 validateFiles(dest, dest, filters, exclude);
+            } catch (ErrnoException | RemoteException e) {
+                throw new IOException(e);
             } finally {
                 is.close();
             }

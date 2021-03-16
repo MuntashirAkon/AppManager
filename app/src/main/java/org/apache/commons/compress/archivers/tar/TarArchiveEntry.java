@@ -20,10 +20,8 @@ package org.apache.commons.compress.archivers.tar;
 
 import android.os.RemoteException;
 import android.system.ErrnoException;
-import android.system.Os;
-import android.system.StructStat;
 
-import io.github.muntashirakon.io.ProxyInputStream;
+import androidx.annotation.NonNull;
 
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.EntryStreamOffsets;
@@ -32,7 +30,16 @@ import org.apache.commons.compress.utils.ArchiveUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+import io.github.muntashirakon.io.FileStatus;
+import io.github.muntashirakon.io.ProxyFiles;
 
 /**
  * This class represents an entry in a Tar archive. It consists
@@ -428,49 +435,22 @@ public class TarArchiveEntry implements ArchiveEntry, TarConstants, EntryStreamO
     public TarArchiveEntry(final File file, final String fileName) {
         final String normalizedName = normalizeFileName(fileName, false);
         this.file = file;
-
         try {
             readFileMode(this.file, normalizedName);
-        } catch (final IOException e) {
-            // Ignore exceptions from NIO for backwards compatibility
-            // Fallback to get size of file if it's no directory to the old file api
+        } catch (final IOException | ErrnoException | RemoteException e) {
             if (!file.isDirectory()) {
                 this.size = file.length();
             }
-        }
-
-        this.userName = "";
-        try {
-            if (!this.file.isDirectory()) {
-                // TODO: 8/2/21 Properties for directories
-                readOsSpecificProperties(this.file);
-            }
-        } catch (final IOException | ErrnoException | RemoteException e) {
-            // Ignore exceptions from NIO for backwards compatibility
-            // Fallback to get the last modified date of the file from the old file api
             this.modTime = file.lastModified() / MILLIS_PER_SECOND;
         }
+        this.userName = "";
         preserveAbsolutePath = false;
     }
 
-    private void readOsSpecificProperties(final File file) throws IOException, ErrnoException, RemoteException {
-        try (ProxyInputStream is = new ProxyInputStream(file)) {
-            StructStat availableAttributeViews = Os.fstat(is.getFD());
-            setModTime(availableAttributeViews.st_mtime * 1000);
-            this.userId = availableAttributeViews.st_uid;
-            this.groupId = availableAttributeViews.st_gid;
-        } catch (RuntimeException e) {
-            if (e.getMessage() == null || !e.getMessage().contains("mocked")) {
-                throw e;
-            }
-        }
-    }
-
-    private void readFileMode(final File file, final String normalizedName) throws IOException {
+    private void readFileMode(@NonNull final File file, final String normalizedName)
+            throws IOException, ErrnoException, RemoteException {
         if (file.isDirectory()) {
-            this.mode = DEFAULT_DIR_MODE;
             this.linkFlag = LF_DIR;
-
             final int nameLength = normalizedName.length();
             if (nameLength == 0 || normalizedName.charAt(nameLength - 1) != '/') {
                 this.name = normalizedName + "/";
@@ -478,10 +458,21 @@ public class TarArchiveEntry implements ArchiveEntry, TarConstants, EntryStreamO
                 this.name = normalizedName;
             }
         } else {
-            this.mode = DEFAULT_FILE_MODE;
             this.linkFlag = LF_NORMAL;
             this.name = normalizedName;
             this.size = file.length();
+        }
+        // Setup file attributes
+        try {
+            FileStatus fstat = ProxyFiles.stat(file);
+            this.mode = fstat.st_mode;
+            this.userId = fstat.st_uid;
+            this.groupId = fstat.st_gid;
+            setModTime(fstat.st_mtime);
+        } catch (RuntimeException e) {
+            if (e.getMessage() == null || !e.getMessage().contains("mocked")) {
+                throw e;
+            }
         }
     }
 

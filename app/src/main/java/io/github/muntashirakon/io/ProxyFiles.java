@@ -31,6 +31,7 @@ import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 
 @WorkerThread
 public final class ProxyFiles {
+    @NonNull
     public static FileStatus stat(@NonNull File path) throws ErrnoException, RemoteException {
         if (path instanceof ProxyFile && LocalServer.isAMServiceAlive()) {
             return IPCUtils.getAmService().stat(path.getAbsolutePath());
