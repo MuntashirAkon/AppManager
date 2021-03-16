@@ -147,6 +147,7 @@ public final class TarUtils {
                                     " Skipping since it's a directory." +
                                     "\nExpected dest: " + new File(realDestPath, entry.getName()) +
                                     "\nActual path: " + file.getCanonicalFile().toURI().getPath());
+                            continue;
                         } else {
                             throw new IOException("Zip slip vulnerability detected!" +
                                     "\nExpected dest: " + new File(realDestPath, entry.getName()) +
