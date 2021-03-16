@@ -15,6 +15,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.muntashirakon.AppManager.ipc.ps;
+package io.github.muntashirakon.io;
 
-parcelable ProcessUsers;
+parcelable FileStatus;

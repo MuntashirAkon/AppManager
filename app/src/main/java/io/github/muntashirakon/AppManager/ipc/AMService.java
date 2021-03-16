@@ -22,6 +22,8 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.os.Parcel;
 import android.os.RemoteException;
+import android.system.ErrnoException;
+import android.system.Os;
 import android.util.Log;
 
 import java.io.File;
@@ -35,6 +37,7 @@ import io.github.muntashirakon.AppManager.IRemoteShell;
 import io.github.muntashirakon.AppManager.ipc.ps.ProcessEntry;
 import io.github.muntashirakon.AppManager.ipc.ps.Ps;
 import io.github.muntashirakon.AppManager.server.common.IRootIPC;
+import io.github.muntashirakon.io.FileStatus;
 
 public class AMService extends RootService {
     static class IAMServiceImpl extends IAMService.Stub {
@@ -68,6 +71,33 @@ public class AMService extends RootService {
             Ps ps = new Ps();
             ps.loadProcesses();
             return ps.getProcesses();
+        }
+
+        @Override
+        public void chmod(String path, int mode) throws RemoteException {
+            try {
+                Os.chmod(path, mode);
+            } catch (ErrnoException e) {
+                throw new RemoteException(e.getMessage());
+            }
+        }
+
+        @Override
+        public void chown(String path, int uid, int gid) throws RemoteException {
+            try {
+                Os.chown(path, uid, gid);
+            } catch (ErrnoException e) {
+                throw new RemoteException(e.getMessage());
+            }
+        }
+
+        @Override
+        public FileStatus stat(String path) throws RemoteException {
+            try {
+                return new FileStatus(Os.stat(path));
+            } catch (ErrnoException e) {
+                throw new RemoteException(e.getMessage());
+            }
         }
 
         @Override
