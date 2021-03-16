@@ -531,7 +531,8 @@
             android:exported="true" />
         <activity
             android:name=".crypto.AuthenticationActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/AppTheme.TransparentBackground" />
 
         <service android:name=".apk.installer.PackageInstallerService" />
         <service
