@@ -84,6 +84,7 @@ public final class TarUtils {
             }
             try (TarArchiveOutputStream tos = new TarArchiveOutputStream(os)) {
                 tos.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
+                tos.setBigNumberMode(TarArchiveOutputStream.BIGNUMBER_POSIX);
                 List<File> files = new ArrayList<>();
                 gatherFiles(files, source, source, filters, exclude);
                 for (File file : files) {
