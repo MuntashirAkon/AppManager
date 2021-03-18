@@ -227,30 +227,32 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             // Set Application Name, aka Label
             labelView.setText(mPackageLabel);
         });
-        iconView.setOnClickListener(v -> new Thread(() -> {
+        iconView.setOnClickListener(v -> {
             ClipboardManager clipboard = (ClipboardManager) mActivity.getSystemService(Context.CLIPBOARD_SERVICE);
-            ClipData clipData = clipboard.getPrimaryClip();
-            if (clipData != null && clipData.getItemCount() > 0) {
-                String data = clipData.getItemAt(0).getText().toString().trim().toLowerCase(Locale.ROOT);
-                if (data.matches("[0-9a-f: \n]+")) {
-                    data = data.replaceAll("[: \n]+", "");
-                    Signature[] signatures = PackageUtils.getSigningInfo(mPackageInfo, isExternalApk);
-                    if (signatures != null && signatures.length == 1) {
-                        byte[] certBytes = signatures[0].toByteArray();
-                        Pair<String, String>[] digests = DigestUtils.getDigests(certBytes);
-                        for (Pair<String, String> digest : digests) {
-                            if (digest.second.equals(data)) {
-                                if (digest.first.equals(DigestUtils.MD5) || digest.first.equals(DigestUtils.SHA_1)) {
-                                    runOnUiThread(() -> displayLongToast(R.string.verified_using_unreliable_hash));
-                                } else runOnUiThread(() -> displayLongToast(R.string.verified));
-                                return;
+            new Thread(() -> {
+                ClipData clipData = clipboard.getPrimaryClip();
+                if (clipData != null && clipData.getItemCount() > 0) {
+                    String data = clipData.getItemAt(0).getText().toString().trim().toLowerCase(Locale.ROOT);
+                    if (data.matches("[0-9a-f: \n]+")) {
+                        data = data.replaceAll("[: \n]+", "");
+                        Signature[] signatures = PackageUtils.getSigningInfo(mPackageInfo, isExternalApk);
+                        if (signatures != null && signatures.length == 1) {
+                            byte[] certBytes = signatures[0].toByteArray();
+                            Pair<String, String>[] digests = DigestUtils.getDigests(certBytes);
+                            for (Pair<String, String> digest : digests) {
+                                if (digest.second.equals(data)) {
+                                    if (digest.first.equals(DigestUtils.MD5) || digest.first.equals(DigestUtils.SHA_1)) {
+                                        runOnUiThread(() -> displayLongToast(R.string.verified_using_unreliable_hash));
+                                    } else runOnUiThread(() -> displayLongToast(R.string.verified));
+                                    return;
+                                }
                             }
                         }
+                        runOnUiThread(() -> displayLongToast(R.string.not_verified));
                     }
-                    runOnUiThread(() -> displayLongToast(R.string.not_verified));
                 }
-            }
-        }).start());
+            }).start();
+        });
         setupTagCloud();
         setupVerticalView();
     }
