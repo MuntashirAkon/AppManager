@@ -900,7 +900,7 @@
     <string name="ssaid_info">SSAID (<tt>Settings.Secure.ANDROID_ID</tt>) is a device identifier assigned to each app (from Android 8 \"Oreo\" onwards). It is widely used by apps to track users.</string>
     <string name="copied_to_clipboard">Copied to clipboard.</string>
     <string name="failed_to_change_ssaid">Could not change SSAID</string>
-    <string name="restart_to_reflect_changes">Restart the device immediately so that the new changes work.</string>
+    <string name="restart_to_reflect_changes">Restart the device immediately and the new changes might work.</string>
     <string name="installed_apps">Installed apps</string>
     <string name="enable_disable_features">Enable/disable features</string>
     <string name="pref_enable_disable_features_msg">Enable or disable features in App Manager.</string>
