@@ -7,4 +7,10 @@
     <string name="input_backup_name_description">يجب ألا يبدأ اسم النسخة الاحتياطية برقم ولا يجب أن يحتوي على مسافات. اتركه فارغًا إذا كنت تريد استخدام التاريخ والوقت الحالي.</string>
     <string name="pref_import_existing_msg">أضف مكونات تم تعطيلها بواسطة تطبيقات أخرى إلى App Manager. كن حذرا عند استخدام هذه الأداة كما يمكن أن يكون هناك العديد من الإيجابيات الكاذبة. اختر فقط التطبيقات التي تكون متأكدًا بشأنها.</string>
     <string name="input_keystore_pass_description">أدخل كلمة مرور App Manager KeyStore. إذا كنت ترى هذا للمرة الأولى ، فالرجاء استخدام منشئ كلمة المرور لإنشاء كلمة مرور وحفظها في مكان آمن قبل إدخالها هنا.</string>
+    <string name="backup_apps_with_changes_msg">إعادة النسخ الاحتياطية للتطبيقات مع التغييرات منذ آخر نسخ احتياطي. وهي تشمل التغييرات في الحجم والإصدار ووقت التشغيل الأخير.</string>
+    <string name="launch">تشغيل</string>
+    <string name="activities">عدد الأنشطة</string>
+    <string name="require_no_permission">لا يوجد إذن مطلوب</string>
+    <string name="permissions">يستخدم الأذونات</string>
+    <string name="uninstall">إلغاء التثبيت</string>
 </resources>
