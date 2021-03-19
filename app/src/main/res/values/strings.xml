@@ -719,7 +719,7 @@
     <string name="allow_routine_ops">Allow routine ops</string>
     <string name="profile_state">Profile state</string>
     <string name="allow_routine_ops_msg">Allow the profile to be used in the routine operations</string>
-    <string name="profile_disable_msg">Disables or enables apps based on state value</string>
+    <string name="profile_disable_msg">Disables or enables apps based on their state</string>
     <string name="profile_force_stop_msg">Force-stops apps</string>
     <string name="profile_clear_cache_msg">Clears the app cache of apps</string>
     <string name="profile_clear_data_msg">Clears the data of apps</string>
