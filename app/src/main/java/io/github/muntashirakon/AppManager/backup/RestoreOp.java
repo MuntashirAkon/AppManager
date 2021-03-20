@@ -295,6 +295,7 @@ class RestoreOp implements Closeable {
             // Restore source directory only if instruction set is matched or app path is not /data/app
             // Or only apk restoring is requested
             if (!requestedFlags.backupOnlyApk()  // Only apk restoring is not requested
+                    && !metadata.flags.backupOnlyApk()  // Only apk files were backed up during backup creation
                     && metadata.instructionSet.equals(instructionSet)  // Instruction set matched
                     && !dataAppPath.equals(sourceDir)) {  // Path is not /data/app
                 // Restore source: Get installed source directory and copy backups directly
@@ -306,7 +307,8 @@ class RestoreOp implements Closeable {
                 // Restore permissions
                 Runner.runCommand(new String[]{"restorecon", "-R", sourceDir.getAbsolutePath()});
             } else {
-                Log.w(TAG, "Skipped restoring files due to mismatched architecture or the path is /data/app or only apk restoring is requested.");
+                Log.w(TAG, "Skipped restoring files due to mismatched architecture or the path is /data/app or " +
+                        "only apk restoring is requested.");
             }
         }
 
