@@ -231,7 +231,7 @@ public class ProfileViewModel extends AndroidViewModel {
     @NonNull
     @ProfileMetaManager.ProfileState
     public String getState() {
-        return profile.state == null ? ProfileMetaManager.STATE_OFF : profile.state;
+        return profile.state;
     }
 
     public void setUsers(@Nullable int[] users) {
@@ -263,6 +263,15 @@ public class ProfileViewModel extends AndroidViewModel {
     }
 
     public void setPermissions(@Nullable String[] permissions) {
+        if (permissions != null) {
+            for (String permission : permissions) {
+                if (permission.equals("*")) {
+                    // Wildcard found, ignore all permissions in favour of global wildcard
+                    profile.permissions = new String[]{"*"};
+                    return;
+                }
+            }
+        }
         profile.permissions = permissions;
     }
 

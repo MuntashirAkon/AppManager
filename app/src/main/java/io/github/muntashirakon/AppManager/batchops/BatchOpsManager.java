@@ -282,7 +282,7 @@ public class BatchOpsManager {
                     }
                 });
             }
-        } catch (Throwable ignore){
+        } catch (Throwable ignore) {
         }
         executor.awaitCompletion();
         return lastResult = new Result(failedPackages);
@@ -371,19 +371,35 @@ public class BatchOpsManager {
         List<UserPackagePair> failedPackages = new ArrayList<>();
         if (permissions.length == 1 && permissions[0].equals("*")) {
             // Wildcard detected
-            // TODO: 6/2/21 List all permissions for each app and revoke them
-        }
-        for (UserPackagePair pair : userPackagePairs) {
-            for (String permission : permissions) {
+            for (UserPackagePair pair : userPackagePairs) {
                 try {
-                    if (isGrant) {
-                        PackageManagerCompat.grantPermission(pair.getPackageName(), permission, pair.getUserHandle());
-                    } else {
-                        PackageManagerCompat.revokePermission(pair.getPackageName(), permission, pair.getUserHandle());
+                    permissions = PackageUtils.getPermissionsForPackage(pair.getPackageName(), pair.getUserHandle());
+                    if (permissions == null) continue;
+                    for (String permission : permissions) {
+                        if (isGrant) {
+                            PackageManagerCompat.grantPermission(pair.getPackageName(), permission, pair.getUserHandle());
+                        } else {
+                            PackageManagerCompat.revokePermission(pair.getPackageName(), permission, pair.getUserHandle());
+                        }
                     }
                 } catch (Throwable e) {
                     Log.e(TAG, e);
                     failedPackages.add(pair);
+                }
+            }
+        } else {
+            for (UserPackagePair pair : userPackagePairs) {
+                for (String permission : permissions) {
+                    try {
+                        if (isGrant) {
+                            PackageManagerCompat.grantPermission(pair.getPackageName(), permission, pair.getUserHandle());
+                        } else {
+                            PackageManagerCompat.revokePermission(pair.getPackageName(), permission, pair.getUserHandle());
+                        }
+                    } catch (Throwable e) {
+                        Log.e(TAG, e);
+                        failedPackages.add(pair);
+                    }
                 }
             }
         }

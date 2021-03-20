@@ -28,6 +28,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.content.pm.SigningInfo;
 import android.os.Build;
+import android.os.RemoteException;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.util.Pair;
@@ -431,6 +432,13 @@ public final class PackageUtils {
             default:
                 return false;
         }
+    }
+
+    @Nullable
+    public static String[] getPermissionsForPackage(String packageName, @UserIdInt int userHandle)
+            throws PackageManager.NameNotFoundException, RemoteException {
+        PackageInfo info = PackageManagerCompat.getPackageInfo(packageName, userHandle, PackageManager.GET_PERMISSIONS);
+        return info.requestedPermissions;
     }
 
     @NonNull
