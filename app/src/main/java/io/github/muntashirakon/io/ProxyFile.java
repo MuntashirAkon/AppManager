@@ -244,6 +244,28 @@ public class ProxyFile extends File {
         return files.toArray(new ProxyFile[0]);
     }
 
+    @NonNull
+    @Override
+    public String getCanonicalPath() throws IOException {
+        if (isRemoteAlive()) {
+            try {
+                //noinspection ConstantConditions
+                return file.getCanonicalPath();
+            } catch (RemoteException ignore) {
+            }
+        }
+        return super.getCanonicalPath();
+    }
+
+    @NonNull
+    @Override
+    public File getCanonicalFile() throws IOException {
+        if (isRemoteAlive()) {
+            return new File(getCanonicalPath());
+        }
+        return super.getCanonicalFile();
+    }
+
     private void getRemoteFile() {
         IAMService amService = IPCUtils.getService();
         if (amService != null) {
