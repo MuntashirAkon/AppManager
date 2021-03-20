@@ -441,7 +441,7 @@ class RestoreOp implements Closeable {
                 // Extract data to the data directory
                 try {
                     TarUtils.extract(metadata.tarType, dataFiles, dataSourceFile, null, BackupUtils
-                            .getExcludeDirs(dataSource.startsWith("/data"), requestedFlags.excludeCache(), null));
+                            .getExcludeDirs(requestedFlags.excludeCache(), null));
                 } catch (Throwable th) {
                     throw new BackupException("Failed to restore data files for index " + i + ".", th);
                 }
