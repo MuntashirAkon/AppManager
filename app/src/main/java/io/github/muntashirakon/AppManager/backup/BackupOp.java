@@ -235,7 +235,7 @@ class BackupOp implements Closeable {
             sourceFile = new ProxyFile(tmpBackupPath, DATA_PREFIX + i + getExt(metadata.tarType));
             try {
                 dataFiles = TarUtils.create(metadata.tarType, new ProxyFile(metadata.dataDirs[i]), sourceFile,
-                        null, null, BackupUtils.getExcludeDirs(metadata.dataDirs[i].startsWith("/data"),
+                        null, null, BackupUtils.getExcludeDirs(
                                 backupFlags.excludeCache(), null), false)
                         .toArray(new File[0]);
             } catch (Throwable th) {
