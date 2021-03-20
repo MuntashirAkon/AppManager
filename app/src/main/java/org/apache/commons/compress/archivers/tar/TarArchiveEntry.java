@@ -637,15 +637,12 @@ public class TarArchiveEntry implements ArchiveEntry, TarConstants, EntryStreamO
     }
 
     /**
-     * Get this entry's user id.
+     * Get this entry's user id. On Android, it's always less than {@link Integer#MAX_VALUE}.
      *
      * @return This entry's user id.
-     * @deprecated use #getLongUserId instead as user ids can be
-     * bigger than {@link Integer#MAX_VALUE}
      */
-    @Deprecated
     public int getUserId() {
-        return (int) (userId & 0xffffffff);
+        return (int) userId;
     }
 
     /**
@@ -678,15 +675,12 @@ public class TarArchiveEntry implements ArchiveEntry, TarConstants, EntryStreamO
     }
 
     /**
-     * Get this entry's group id.
+     * Get this entry's group id. On Android, it's always less than {@link Integer#MAX_VALUE}.
      *
      * @return This entry's group id.
-     * @deprecated use #getLongGroupId instead as group ids can be
-     * bigger than {@link Integer#MAX_VALUE}
      */
-    @Deprecated
     public int getGroupId() {
-        return (int) (groupId & 0xffffffff);
+        return (int) groupId;
     }
 
     /**
