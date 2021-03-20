@@ -169,7 +169,7 @@ public final class TarUtils {
                     }
                     // Check if the given entry is a link. If it's a link, check if the linked file actually exist
                     // before creating the link
-                    if (entry.isLink()) {
+                    if (entry.isSymbolicLink()) {
                         File linkedFile = new ProxyFile(entry.getLinkName());
                         if (linkedFile.exists()) {
                             if (!Runner.runCommand(new String[]{"ln", "-s", linkedFile.getAbsolutePath(),
@@ -177,7 +177,7 @@ public final class TarUtils {
                                 throw new IOException("Couldn't create symbolic link " + file + " pointing to "
                                         + linkedFile);
                             }
-                        }
+                        } else continue;
                     } else {
                         // Zip slip vulnerability check
                         if (!file.getCanonicalFile().toURI().getPath().startsWith(realDestPath)) {
