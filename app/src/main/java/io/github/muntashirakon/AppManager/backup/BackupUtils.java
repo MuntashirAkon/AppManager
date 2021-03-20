@@ -139,11 +139,8 @@ public final class BackupUtils {
     }
 
     @NonNull
-    static String[] getExcludeDirs(boolean isInternalDataDir, boolean includeCache, @Nullable String[] others) {
+    static String[] getExcludeDirs(boolean includeCache, @Nullable String[] others) {
         List<String> excludeDirs = new ArrayList<>();
-        if (isInternalDataDir) {
-            excludeDirs.addAll(Arrays.asList(BackupManager.DEFAULT_SKIP_DIRS));
-        }
         if (includeCache) {
             excludeDirs.addAll(Arrays.asList(BackupManager.CACHE_DIRS));
         }

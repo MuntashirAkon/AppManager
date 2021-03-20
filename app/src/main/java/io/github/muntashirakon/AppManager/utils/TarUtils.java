@@ -47,7 +47,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.io.FileStatus;
 import io.github.muntashirakon.io.ProxyFile;
@@ -170,28 +169,20 @@ public final class TarUtils {
                     // Check if the given entry is a link. If it's a link, check if the linked file actually exist
                     // before creating the link
                     if (entry.isSymbolicLink()) {
-                        File linkedFile = new ProxyFile(entry.getLinkName());
-                        if (linkedFile.exists()) {
-                            if (!Runner.runCommand(new String[]{"ln", "-s", linkedFile.getAbsolutePath(),
-                                    file.getAbsolutePath()}).isSuccessful()) {
+                        String linkName = entry.getLinkName();
+                        if (new ProxyFile(linkName).exists()) {
+                            if (!Runner.runCommand(new String[]{"ln", "-s", linkName, file.getAbsolutePath()})
+                                    .isSuccessful()) {
                                 throw new IOException("Couldn't create symbolic link " + file + " pointing to "
-                                        + linkedFile);
+                                        + linkName);
                             }
                         } else continue;
                     } else {
                         // Zip slip vulnerability check
                         if (!file.getCanonicalFile().toURI().getPath().startsWith(realDestPath)) {
-                            if (file.isDirectory()) {
-                                Log.w("TarUtils", "Zip slip vulnerability detected!" +
-                                        " Skipping since it's a directory." +
-                                        "\nExpected dest: " + new File(realDestPath, entry.getName()) +
-                                        "\nActual path: " + file.getCanonicalFile().toURI().getPath());
-                                continue;
-                            } else {
-                                throw new IOException("Zip slip vulnerability detected!" +
-                                        "\nExpected dest: " + new File(realDestPath, entry.getName()) +
-                                        "\nActual path: " + file.getCanonicalFile().toURI().getPath());
-                            }
+                            throw new IOException("Zip slip vulnerability detected!" +
+                                    "\nExpected dest: " + new File(realDestPath, entry.getName()) +
+                                    "\nActual path: " + file.getCanonicalFile().toURI().getPath());
                         }
                         if (entry.isDirectory()) {
                             file.mkdir();
