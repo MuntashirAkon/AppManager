@@ -39,6 +39,14 @@ public final class ProxyFiles {
         return new FileStatus(Os.stat(path.getAbsolutePath()));
     }
 
+    @NonNull
+    public static FileStatus lstat(@NonNull File path) throws ErrnoException, RemoteException {
+        if (path instanceof ProxyFile && LocalServer.isAMServiceAlive()) {
+            return IPCUtils.getAmService().lstat(path.getAbsolutePath());
+        }
+        return new FileStatus(Os.lstat(path.getAbsolutePath()));
+    }
+
     public static void chmod(@NonNull File path, int mode) throws ErrnoException, RemoteException {
         if (path instanceof ProxyFile && LocalServer.isAMServiceAlive()) {
             IPCUtils.getAmService().chmod(path.getAbsolutePath(), mode);

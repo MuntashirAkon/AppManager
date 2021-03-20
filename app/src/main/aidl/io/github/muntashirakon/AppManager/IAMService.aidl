@@ -31,4 +31,5 @@ interface IAMService {
     void chmod(in String path, in int mode) = 7;
     void chown(in String path, in int uid, in int gid) = 8;
     FileStatus stat(in String path) = 9;
+    FileStatus lstat(in String path) = 10;
 }

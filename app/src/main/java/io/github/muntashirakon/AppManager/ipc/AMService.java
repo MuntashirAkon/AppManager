@@ -104,6 +104,17 @@ public class AMService extends RootService {
         }
 
         @Override
+        public FileStatus lstat(String path) throws RemoteException {
+            try {
+                StructStat lstat = Os.lstat(path);
+                if (lstat == null) throw new ErrnoException("FStat returned null", 1);
+                return new FileStatus(lstat);
+            } catch (ErrnoException e) {
+                throw new RemoteException(e.getMessage());
+            }
+        }
+
+        @Override
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
             if (code == ProxyBinder.PROXY_BINDER_TRANSACT_CODE) {
                 data.enforceInterface(IRootIPC.class.getName());
