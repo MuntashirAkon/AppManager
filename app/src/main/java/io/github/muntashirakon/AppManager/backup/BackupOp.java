@@ -213,7 +213,7 @@ class BackupOp implements Closeable {
         File[] sourceFiles;
         try {
             sourceFiles = TarUtils.create(metadata.tarType, new ProxyFile(sourceDir), sourceFile, /* language=regexp */
-                    backupFlags.backupOnlyApk() ? new String[]{".*\\.apk"} : null, null, null)
+                    backupFlags.backupOnlyApk() ? new String[]{".*\\.apk"} : null, null, null, false)
                     .toArray(new File[0]);
         } catch (Throwable th) {
             throw new BackupException("Source backup is requested but no source directory has been backed up.", th);
@@ -236,7 +236,7 @@ class BackupOp implements Closeable {
             try {
                 dataFiles = TarUtils.create(metadata.tarType, new ProxyFile(metadata.dataDirs[i]), sourceFile,
                         null, null, BackupUtils.getExcludeDirs(metadata.dataDirs[i].startsWith("/data"),
-                                backupFlags.excludeCache(), null))
+                                backupFlags.excludeCache(), null), false)
                         .toArray(new File[0]);
             } catch (Throwable th) {
                 throw new BackupException("Failed to backup data directory at " + metadata.dataDirs[i], th);
@@ -285,7 +285,7 @@ class BackupOp implements Closeable {
         File[] backedUpKeyStoreFiles;
         try {
             backedUpKeyStoreFiles = TarUtils.create(metadata.tarType, cachePath, keyStoreSavePath,
-                    cachedKeyStoreFileNames.toArray(new String[0]), null, null).toArray(new File[0]);
+                    cachedKeyStoreFileNames.toArray(new String[0]), null, null, false).toArray(new File[0]);
         } catch (Throwable th) {
             throw new BackupException("Could not backup KeyStore item.");
         }

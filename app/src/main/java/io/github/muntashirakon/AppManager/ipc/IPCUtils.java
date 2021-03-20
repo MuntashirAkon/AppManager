@@ -19,9 +19,19 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 public final class IPCUtils {
     private static final String TAG = "IPCUtils";
 
-    private static final ComponentName COMPONENT_NAME = new ComponentName(AppManager.getContext(), AMService.class);
+    @Nullable
+    private static final ComponentName COMPONENT_NAME = getComponentName();
     private static final AMServiceConnectionWrapper connectionWrapper = new AMServiceConnectionWrapper();
     private static IAMService amService;
+
+    @Nullable
+    private static ComponentName getComponentName() {
+        try {
+            return new ComponentName(AppManager.getContext(), AMService.class);
+        } catch (Throwable th) {
+            return null;
+        }
+    }
 
     @GuardedBy("connectionWrapper")
     @WorkerThread

@@ -23,24 +23,39 @@ import android.system.ErrnoException;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringDef;
+import androidx.annotation.VisibleForTesting;
 import androidx.annotation.WorkerThread;
 
-import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.io.*;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
+import org.apache.commons.compress.archivers.tar.TarConstants;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+
+import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.runner.Runner;
+import io.github.muntashirakon.io.FileStatus;
+import io.github.muntashirakon.io.ProxyFile;
+import io.github.muntashirakon.io.ProxyFiles;
+import io.github.muntashirakon.io.ProxyInputStream;
+import io.github.muntashirakon.io.ProxyOutputStream;
+import io.github.muntashirakon.io.SplitInputStream;
+import io.github.muntashirakon.io.SplitOutputStream;
 
 public final class TarUtils {
     public static final long DEFAULT_SPLIT_SIZE = 1024 * 1024 * 1024;
@@ -60,19 +75,21 @@ public final class TarUtils {
      * Create a tar file using the given compression method and split it into multiple files based
      * on the supplied split size.
      *
-     * @param type      Compression type
-     * @param source    Source directory
-     * @param dest      Destination directory with file name as prefix (.0, .1, etc. are added at the end)
-     * @param filters   A list of mutually exclusive regex filters
-     * @param splitSize Size of the split, {@link #DEFAULT_SPLIT_SIZE} will be used if null is supplied
-     * @param exclude   A list of mutually exclusive regex patterns to be excluded
+     * @param type        Compression type
+     * @param source      Source directory
+     * @param dest        Destination directory with file name as prefix (.0, .1, etc. are added at the end)
+     * @param filters     A list of mutually exclusive regex filters
+     * @param splitSize   Size of the split, {@link #DEFAULT_SPLIT_SIZE} will be used if null is supplied
+     * @param exclude     A list of mutually exclusive regex patterns to be excluded
+     * @param followLinks Whether to follow the links
      * @return List of added files
      */
     @WorkerThread
     @NonNull
     public static List<File> create(@NonNull @TarType String type, @NonNull File source, @NonNull File dest,
-                                    @Nullable String[] filters, @Nullable Long splitSize, @Nullable String[] exclude)
-            throws IOException, RemoteException {
+                                    @Nullable String[] filters, @Nullable Long splitSize, @Nullable String[] exclude,
+                                    boolean followLinks)
+            throws IOException, RemoteException, ErrnoException {
         try (SplitOutputStream sos = new SplitOutputStream(dest, splitSize == null ? DEFAULT_SPLIT_SIZE : splitSize);
              BufferedOutputStream bos = new BufferedOutputStream(sos)) {
             OutputStream os;
@@ -87,13 +104,22 @@ public final class TarUtils {
                 tos.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
                 tos.setBigNumberMode(TarArchiveOutputStream.BIGNUMBER_POSIX);
                 List<File> files = new ArrayList<>();
-                gatherFiles(files, source, source, filters, exclude);
+                gatherFiles(files, source, source, filters, exclude, followLinks);
                 for (File file : files) {
-                    TarArchiveEntry tarEntry = new TarArchiveEntry(file, getRelativePath(file, source));
-                    tos.putArchiveEntry(tarEntry);
-                    if (!file.isDirectory()) {
-                        try (InputStream is = new ProxyInputStream(file)) {
-                            IOUtils.copy(is, tos);
+                    // For links, check if followLinks is enabled
+                    if (!followLinks && isSymbolicLink(file)) {
+                        // Add the link as is
+                        TarArchiveEntry tarEntry = new TarArchiveEntry(getRelativePath(file, source),
+                                TarConstants.LF_SYMLINK);
+                        tarEntry.setLinkName(file.getCanonicalFile().getAbsolutePath());
+                        tos.putArchiveEntry(tarEntry);
+                    } else {
+                        TarArchiveEntry tarEntry = new TarArchiveEntry(file, getRelativePath(file, source));
+                        tos.putArchiveEntry(tarEntry);
+                        if (!file.isDirectory()) {
+                            try (InputStream is = new ProxyInputStream(file)) {
+                                IOUtils.copy(is, tos);
+                            }
                         }
                     }
                     tos.closeArchiveEntry();
@@ -118,7 +144,7 @@ public final class TarUtils {
      */
     @WorkerThread
     public static void extract(@NonNull @TarType String type, @NonNull File[] sources, @NonNull File dest,
-                                  @Nullable String[] filters, @Nullable String[] exclude)
+                               @Nullable String[] filters, @Nullable String[] exclude)
             throws IOException, RemoteException {
         try (SplitInputStream sis = new SplitInputStream(sources);
              BufferedInputStream bis = new BufferedInputStream(sis)) {
@@ -135,35 +161,55 @@ public final class TarUtils {
                 TarArchiveEntry entry;
                 while ((entry = tis.getNextEntry()) != null) {
                     File file = new ProxyFile(dest, entry.getName());
-                    if (!entry.isDirectory() && (!isUnderFilter(file, dest, filters) || willExclude(file, dest, exclude))) {
+                    if (!entry.isDirectory() && (!isUnderFilter(file, dest, filters)
+                            || willExclude(file, dest, exclude))) {
                         // Unlike create, there's no efficient way to detect if a directory contains any filters.
                         // Therefore, directory can't be filtered during extraction
                         continue;
                     }
-                    // Zip slip vulnerability check
-                    if (!file.getCanonicalFile().toURI().getPath().startsWith(realDestPath)) {
-                        if (file.isDirectory()) {
-                            Log.w("TarUtils", "Zip slip vulnerability detected!" +
-                                    " Skipping since it's a directory." +
-                                    "\nExpected dest: " + new File(realDestPath, entry.getName()) +
-                                    "\nActual path: " + file.getCanonicalFile().toURI().getPath());
-                            continue;
-                        } else {
-                            throw new IOException("Zip slip vulnerability detected!" +
-                                    "\nExpected dest: " + new File(realDestPath, entry.getName()) +
-                                    "\nActual path: " + file.getCanonicalFile().toURI().getPath());
+                    // Check if the given entry is a link. If it's a link, check if the linked file actually exist
+                    // before creating the link
+                    if (entry.isLink()) {
+                        File linkedFile = new ProxyFile(entry.getLinkName());
+                        if (linkedFile.exists()) {
+                            if (!Runner.runCommand(new String[]{"ln", "-s", linkedFile.getAbsolutePath(),
+                                    file.getAbsolutePath()}).isSuccessful()) {
+                                throw new IOException("Couldn't create symbolic link " + file + " pointing to "
+                                        + linkedFile);
+                            }
                         }
-                    }
-                    if (entry.isDirectory()) {
-                        file.mkdir();
                     } else {
-                        try (OutputStream os = new ProxyOutputStream(file)) {
-                            IOUtils.copy(tis, os);
+                        // Zip slip vulnerability check
+                        if (!file.getCanonicalFile().toURI().getPath().startsWith(realDestPath)) {
+                            if (file.isDirectory()) {
+                                Log.w("TarUtils", "Zip slip vulnerability detected!" +
+                                        " Skipping since it's a directory." +
+                                        "\nExpected dest: " + new File(realDestPath, entry.getName()) +
+                                        "\nActual path: " + file.getCanonicalFile().toURI().getPath());
+                                continue;
+                            } else {
+                                throw new IOException("Zip slip vulnerability detected!" +
+                                        "\nExpected dest: " + new File(realDestPath, entry.getName()) +
+                                        "\nActual path: " + file.getCanonicalFile().toURI().getPath());
+                            }
+                        }
+                        if (entry.isDirectory()) {
+                            file.mkdir();
+                        } else {
+                            try (OutputStream os = new ProxyOutputStream(file)) {
+                                IOUtils.copy(tis, os);
+                            }
                         }
                     }
                     // Fix permissions
-                    ProxyFiles.chmod(file, entry.getMode());
-                    ProxyFiles.chown(file, entry.getUserId(), entry.getGroupId());
+                    try {
+                        ProxyFiles.chmod(file, entry.getMode());
+                        ProxyFiles.chown(file, entry.getUserId(), entry.getGroupId());
+                    } catch (RuntimeException e) {
+                        if (e.getMessage() == null || !e.getMessage().contains("mocked")) {
+                            throw e;
+                        }
+                    }
                 }
                 // Delete unwanted files
                 validateFiles(dest, dest, filters, exclude);
@@ -175,11 +221,19 @@ public final class TarUtils {
         }
     }
 
-    private static void gatherFiles(@NonNull List<File> files, @NonNull File basePath, @NonNull File source, @Nullable String[] filters, @Nullable String[] exclude) {
+    @VisibleForTesting
+    static void gatherFiles(@NonNull List<File> files, @NonNull File basePath, @NonNull File source,
+                            @Nullable String[] filters, @Nullable String[] exclude, boolean followLinks)
+            throws ErrnoException, RemoteException {
         if (source.isDirectory()) {
+            // Is a directory, add only the directory if it's a symboilic link and followLinks is disabled
+            if (!followLinks && isSymbolicLink(source)) {
+                files.add(source);
+                return;
+            }
             // Check if the contents of the directory matches the filters
-            File[] children = source.listFiles(pathname -> pathname.isDirectory() || (isUnderFilter(pathname, basePath, filters)
-                    && !willExclude(pathname, basePath, exclude)));
+            File[] children = source.listFiles(pathname -> pathname.isDirectory()
+                    || (isUnderFilter(pathname, basePath, filters) && !willExclude(pathname, basePath, exclude)));
             if (children == null || children.length == 0) {
                 // Add this directory nonetheless if it matches one of the filters
                 if (isUnderFilter(source, basePath, filters) && !willExclude(source, basePath, exclude)) {
@@ -191,7 +245,7 @@ public final class TarUtils {
                 files.add(source);
             }
             for (File child : children) {
-                gatherFiles(files, basePath, child, filters, exclude);
+                gatherFiles(files, basePath, child, filters, exclude, followLinks);
             }
         } else {
             // Not directory, add it
@@ -199,11 +253,28 @@ public final class TarUtils {
         }
     }
 
-    private static void validateFiles(@NonNull File basePath, @NonNull File source, @Nullable String[] filters, @Nullable String[] exclude) {
+    private static boolean isSymbolicLink(@NonNull File file) throws ErrnoException, RemoteException {
+        try {
+            FileStatus lstat = ProxyFiles.lstat(file);
+            // https://github.com/win32ports/unistd_h/blob/master/unistd.h
+            return (lstat.st_mode & 0xF000) == 0xA000;
+        } catch (RuntimeException e) {
+            if (e.getMessage() == null || !e.getMessage().contains("mocked")) {
+                throw e;
+            }
+            // Mock only
+            return false;
+        }
+    }
+
+    private static void validateFiles(@NonNull File basePath,
+                                      @NonNull File source,
+                                      @Nullable String[] filters,
+                                      @Nullable String[] exclude) {
         if (source.isDirectory()) {
             // Check if the contents of the directory matches the filters
-            File[] children = source.listFiles(pathname -> pathname.isDirectory() || (isUnderFilter(pathname, basePath, filters)
-                    && !willExclude(pathname, basePath, exclude)));
+            File[] children = source.listFiles(pathname -> pathname.isDirectory()
+                    || (isUnderFilter(pathname, basePath, filters) && !willExclude(pathname, basePath, exclude)));
             if (children == null || children.length == 0) {
                 // No child has matched, delete this directory
                 IOUtils.deleteDir(source);

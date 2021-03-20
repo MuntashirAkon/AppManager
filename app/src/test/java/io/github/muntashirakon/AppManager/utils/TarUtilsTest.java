@@ -68,7 +68,7 @@ public class TarUtilsTest {
         }
         tarGzFile = new File(tmpRoot, "am.tar.gz");
         tarGzFilesForExtractTest = TarUtils.create(TarUtils.TAR_GZIP, testRoot, new File(tmpRoot, "am_ex.tar.gz"),
-                null, null, null).toArray(new File[0]);
+                null, null, null, false).toArray(new File[0]);
     }
 
     @Test
@@ -97,16 +97,15 @@ public class TarUtilsTest {
 
     @Test
     public void testCreateTarGZipWithMultipleFilters() throws Throwable {
-        createTest(tarGzFile, testRoot, /* language=regexp */ /* language=regexp */ new String[]{".*include\\.txt",
-                        "plain.*"}, null, Arrays.asList("/", "prefixed/", "prefixed/prefixed_include.txt",
-                "plain.txt", "raw/", "raw/include.txt"));
+        createTest(tarGzFile, testRoot, /* language=regexp */ new String[]{".*include\\.txt", "plain.*"}, null,
+                Arrays.asList("/", "prefixed/", "prefixed/prefixed_include.txt", "plain.txt", "raw/", "raw/include.txt"));
     }
 
     @Test
     public void testExtractTarGZipWithMultipleFilters() throws Throwable {
-        extractTest(tarGzFilesForExtractTest, testRoot, /* language=regexp */ /* language=regexp */
-                new String[]{".*include\\.txt", "plain.*"}, null, Arrays.asList("", "prefixed/",
-                        "prefixed/prefixed_include.txt", "plain.txt", "raw/", "raw/include.txt"));
+        extractTest(tarGzFilesForExtractTest, testRoot, /* language=regexp */new String[]{".*include\\.txt", "plain.*"},
+                null, Arrays.asList("", "prefixed/", "prefixed/prefixed_include.txt", "plain.txt", "raw/",
+                        "raw/include.txt"));
     }
 
     @Test
@@ -138,9 +137,8 @@ public class TarUtilsTest {
 
     @Test
     public void testCreateTarGZipWithExcludeDirectory() throws Throwable {
-        createTest(tarGzFile, testRoot, null, /* language=regexp */ new String[]{"raw/.*"},
-                Arrays.asList("/", "prefixed/", "prefixed/prefixed_include.txt", "prefixed/prefixed_exclude.txt",
-                        "plain.txt"));
+        createTest(tarGzFile, testRoot, null, /* language=regexp */ new String[]{"raw/.*"}, Arrays.asList("/",
+                "prefixed/", "prefixed/prefixed_include.txt", "prefixed/prefixed_exclude.txt", "plain.txt"));
     }
 
     @Test
@@ -236,7 +234,7 @@ public class TarUtilsTest {
     private static void createTest(@NonNull File source, @NonNull File testRoot, @Nullable String[] include,
                                    @Nullable String[] exclude, @NonNull List<String> expectedPaths)
             throws Throwable {
-        List<File> files = TarUtils.create(TarUtils.TAR_GZIP, testRoot, source, include, null, exclude);
+        List<File> files = TarUtils.create(TarUtils.TAR_GZIP, testRoot, source, include, null, exclude, false);
         assertEquals(expectedPaths, getFileNamesGZip(files));
     }
 
