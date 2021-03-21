@@ -123,7 +123,7 @@
     <string name="sort_by_component_name">元件名稱</string>
     <string name="current_theme">目前主題：%1$s</string>
     <string name="follow_system">跟隨系統</string>
-    <string name="pref_import_blocker_msg">從Blocker匯入封鎖規則，每個檔案都包含單個程序包的規則。</string>
+    <string name="pref_import_blocker_msg">從Blocker匯入封鎖規則，每個檔案都包含單個套件的規則。</string>
     <string name="pref_import_watt_msg">從Watt匯入封鎖規則，每個檔案包含單個命名包的規則，如下所示：<tt> packagename.xml</tt> 等等。</string>
     <string name="pref_import_msg">從 App Manager 匯入以前匯出的封鎖規則。</string>
     <string name="pref_export_msg">將在 App Manager 中配置的封鎖規則匯出到外部儲存空間。</string>
@@ -166,8 +166,8 @@
     <string name="launch">開啟</string>
     <string name="filter_apps_without_backups">沒有備份的應用程式</string>
     <string name="uninstalled_apps">解除安裝的應用程式</string>
-    <string name="installer_app_message">選擇<b> 選擇</b> 從已安裝的應用程式中選擇或選擇<b> 風俗</b> 指定自訂程序包名稱。</string>
-    <string name="specify_custom_name">風俗</string>
+    <string name="installer_app_message">選擇&lt;b&gt; 選擇&lt;/b&gt; 從已安裝的應用程式中選擇或選擇&lt;b&gt; 自訂&lt;/b&gt; 指定自訂套件名稱。</string>
+    <string name="specify_custom_name">自訂</string>
     <string name="verified_using_unreliable_hash">使用不可靠的哈希值進行了驗證</string>
     <string name="working_on_adb_mode">在ADB模式下運作</string>
     <string name="screen_lock_not_enabled">螢幕鎖定未啟用。在 Android 設定中啟用螢幕鎖定或清除應用程式資料。</string>
@@ -318,7 +318,7 @@
     <string name="only_install">僅安裝</string>
     <string name="install_without_data_loss">如果您關閉了簽名驗證，則可以使用<b> 僅安裝</b> 選擇安裝應用程式而不會丟失資料。</string>
     <string name="app_data_will_be_lost">現有資料將丟失。</string>
-    <string name="signature_mismatch_for_system_apps">無法安裝應用程式，因為具有不同簽名的系統應用程式具有此程序包名稱。</string>
+    <string name="signature_mismatch_for_system_apps">無法安裝應用程式，因為具有不同簽名的系統應用程式具有此套件名稱。</string>
     <string name="do_you_want_to_uninstall_and_install">您是否要再次解除安裝並安裝該應用程式？</string>
     <string name="onboard">本機</string>
     <string name="packages">套件</string>
