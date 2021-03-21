@@ -561,7 +561,7 @@
     <string name="locale_split_for_feature"><xliff:g id="split_name" example="English">%1$s</xliff:g> локаль для <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
     <string name="abi_split_for_base_apk"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> код для базового APK</string>
     <string name="abi_split_for_feature"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> код для <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
-    <string name="density_split_for_base_apk">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"xxdpi\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"dpi_no\" example=\"480\"&gt;%2$d&lt;/xliff:g&gt; DPI) ресурсы для базового APK</string>
+    <string name="density_split_for_base_apk"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) ресурсы для базового APK</string>
     <string name="density_split_for_feature"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) ресурсы для функции <xliff:g id="feature_name" example="Visualizer">%3$s</xliff:g></string>
     <string name="unknown_split_for_base_apk"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> для базового APK</string>
     <string name="unknown_split_for_feature"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> для функции <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>

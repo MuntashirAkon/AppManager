@@ -208,7 +208,7 @@
     <string name="app_usage">Sử dụng ứng dụng</string>
     <string name="no_shared_libs">Không có thư viện được chia sẻ</string>
     <plurals name="main_list_date_days">
-        <item quantity="other">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"last_update_date\" example=\"20/10/2020\"&gt;%1$s&lt;/xliff:g&gt;&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"day_no\" example=\"5\"&gt;%2$d&lt;/xliff:g&gt; ngày</item>
+        <item quantity="other"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g><xliff:g id="day_no" example="5">%2$d</xliff:g> ngày</item>
     </plurals>
     <string name="found_trackers">Trình theo dõi đã thấy:</string>
     <string name="credits">Ghi nhận</string>

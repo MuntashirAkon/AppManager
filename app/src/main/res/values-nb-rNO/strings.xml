@@ -633,7 +633,7 @@
     <string name="deny_dangerous_app_ops">Nekt farlige app-operasjoner</string>
     <string name="pref_about_msg">App-manager versjon, lisens, kreditter, osv.</string>
     <string name="pref_import_blocker_msg">Importer blokkerings-regler fra Blocker, hver fil inneholder regler for en enkelt pakke.</string>
-    <string name="pref_import_watt_msg">Importer blokkerings-regler fra Watt, hver fil inneholder regler for en enkelt navngitt pakke som &lt;tt&gt;packagename.xml&lt;/tt&gt; osv.</string>
+    <string name="pref_import_watt_msg">Importer blokkerings-regler fra Watt, hver fil inneholder regler for en enkelt navngitt pakke som <tt>packagename.xml</tt> osv.</string>
     <string name="pref_import_msg">Importer tidligere eksporterte blokkerings-regler fra App-manager.</string>
     <string name="pref_export_msg">Eksporter blokkerings-regler innstilt innen App-manager til ekstern lagring.</string>
     <string name="reject_time">Avvis tid</string>
