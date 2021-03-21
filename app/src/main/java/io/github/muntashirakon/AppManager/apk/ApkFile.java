@@ -29,31 +29,53 @@ import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.format.Formatter;
 import android.util.SparseArray;
+
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
-import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.StaticDataset;
-import io.github.muntashirakon.AppManager.apk.apkm.UnApkm;
-import io.github.muntashirakon.AppManager.apk.signing.SigSchemes;
-import io.github.muntashirakon.AppManager.apk.signing.SignUtils;
-import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.misc.OsEnvironment;
-import io.github.muntashirakon.AppManager.utils.*;
-import io.github.muntashirakon.io.ProxyFile;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import static io.github.muntashirakon.AppManager.apk.ApkUtils.*;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.*;
+import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.StaticDataset;
+import io.github.muntashirakon.AppManager.apk.signing.SigSchemes;
+import io.github.muntashirakon.AppManager.apk.signing.SignUtils;
+import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.misc.OsEnvironment;
+import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.LangUtils;
+import io.github.muntashirakon.io.ProxyFile;
+import io.github.muntashirakon.unapkm.api.UnApkm;
+
+import static io.github.muntashirakon.AppManager.apk.ApkUtils.getDensityFromName;
+import static io.github.muntashirakon.AppManager.apk.ApkUtils.getManifestAttributes;
+import static io.github.muntashirakon.AppManager.apk.ApkUtils.getManifestFromApk;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getTitleText;
 
 public final class ApkFile implements AutoCloseable {
     public static final String TAG = "ApkFile";
@@ -68,6 +90,8 @@ public final class ApkFile implements AutoCloseable {
     private static final String ATTR_PACKAGE = "package";
     private static final String CONFIG_PREFIX = "config.";
     private static final String OBB_DIR = "Android/obb";
+
+    private static final String UN_APKM_PKG = "io.github.muntashirakon.unapkm";
 
     // There's hardly any chance of using multiple instances of ApkFile but still kept for convenience
     private static final SparseArray<ApkFile> apkFiles = new SparseArray<>(2);
@@ -189,14 +213,15 @@ public final class ApkFile implements AutoCloseable {
             // Convert to APKS
             try {
                 this.cacheFilePath = IOUtils.getTempFile();
-                try (InputStream inputStream = cr.openInputStream(apkUri);
+                try (ParcelFileDescriptor inputFD = cr.openFileDescriptor(apkUri, "r");
                      OutputStream outputStream = new FileOutputStream(this.cacheFilePath)) {
-                    if (inputStream == null) {
+                    if (inputFD == null) {
                         throw new IOException("Apk URI inaccessible or empty.");
                     }
-                    UnApkm.decryptFile(inputStream, outputStream);
+                    UnApkm unApkm = new UnApkm(context, UN_APKM_PKG);
+                    unApkm.decryptFile(inputFD, outputStream);
                 }
-            } catch (IOException e) {
+            } catch (IOException | RemoteException e) {
                 throw new ApkFileException(e);
             }
         } else {
