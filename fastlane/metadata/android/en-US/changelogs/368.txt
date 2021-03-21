@@ -1,9 +1,0 @@
-F-Droid doesn't support extended changelog. View in-app changelog or visit https://muntashirakon.github.io/AppManager/changelog.html for a more helpful changelog.
-- New languages: Bengali, Hindi, Norwegian, Polish, Russian, Simplified Chinese, Turkish, Ukrainian
-- Replace exodus with scanner (with lib scanning support)
-- Installer: split apk support with recommendation, downgrade, reinstall, obb support
-- Bundled toybox
-- Batch enable option
-- Running apps: search, sort and filter options
-- Add System Config: ability to display system configurations
-and various bug fixes, minor features and performance improvements.

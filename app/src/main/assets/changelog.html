@@ -18,6 +18,33 @@
 <p>App Manager docs: https://muntashirakon.github.io/AppManager</p>
 <p>Changelog: https://muntashirakon.github.io/AppManager/changelog.html</p><br />
 
+<h5>v2.5.24 (383) pre-release:</h5>
+&#x2022; <font color="#09868B">[Feature]</font> New language: Tradition Chinese<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added filter by uninstalled apps, apps without backups in the main page<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added wildcard support for app ops and permissions for profiles. <tt>*</tt> can be used instead of specifying app ops or permissions to revoke all configured/dangerous permissions/app ops<br />
+&#x2022; <font color="#09868B">[Feature]</font> Allow specifying custom installer package which may or may not be installed<br />
+&#x2022; <font color="#09868B">[Feature]</font> App icons are cached to improve load time<br />
+&#x2022; <font color="#09868B">[Feature]</font> Complete rewrite of running apps internals in Java<br />
+&#x2022; <font color="#09868B">[Feature]</font> Copy package name on clicking on the package name in the app info tab<br />
+&#x2022; <font color="#09868B">[Feature]</font> Display file size, requirement, etc. for split APKs in the APK selection dialog<br />
+&#x2022; <font color="#09868B">[Feature]</font> Display version and tracker info in the install confirmation dialog<br />
+&#x2022; <font color="#09868B">[Feature]</font> Display uninstalled system apps and display installation prompt on clicking them<br />
+&#x2022; <font color="#09868B">[Feature]</font> Improved ADB detection and persistence of such detection<br />
+&#x2022; <font color="#09868B">[Feature]</font> Removed toybox along with its dependencies<br />
+&#x2022; <font color="#09868B">[Feature]</font> Updated trackers and libraries<br />
+&#x2022; <font color="#09868B">[Feature]</font> Updated credits<br />
+&#x2022; <font color="#09868B">[Feature]</font> Utilise multiple CPUs for back up/restore<br />
+&#x2022; <font color="#09868B">[Feature]</font> Verify copied checksum with the checksum of the signing certificate of the app on clicking on the app icon in the app info page<br />
+&#x2022; <font color="red">[Fix]</font> Added additional verifications to ensure that screen lock is not bypassed<br />
+&#x2022; <font color="red">[Fix]</font> Fixed back up/restore failure on some Android devices<br />
+&#x2022; <font color="red">[Fix]</font> Fixed crashes in the app details page when system configuration changes<br />
+&#x2022; <font color="red">[Fix]</font> Fixed crash on creating shortcuts on devices that do not support pin shortcut<br />
+&#x2022; <font color="red">[Fix]</font> Fixed generating wrong checksum for certificates in the signatures tab<br />
+&#x2022; <font color="red">[Fix]</font> Fixed uninstalling app for multiple users<br />
+&#x2022; <font color="red">[Fix]</font> Fixed various crashes on opening APK files from external apps<br />
+&#x2022; <font color="red">[Fix]</font> Hide backup option if one of the selected apps is not installed<br />
+&#x2022; <font color="red">[Fix]</font> Verify KeyStore backups during restoring a backup<br />
+
 <h5>v2.5.23 (381) pre-release:</h5>
 &#x2022; <font color="#09868B">[Feature]</font> Added screen lock<br />
 &#x2022; <font color="#09868B">[Feature]</font> Added <b>Add to profile</b> in the batch ops and app info tab<br />
