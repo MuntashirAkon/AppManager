@@ -231,7 +231,7 @@ public class ProfileViewModel extends AndroidViewModel {
     @NonNull
     @ProfileMetaManager.ProfileState
     public String getState() {
-        return profile.state;
+        return profile.state == null ? ProfileMetaManager.STATE_OFF : profile.state;
     }
 
     public void setUsers(@Nullable int[] users) {
