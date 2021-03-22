@@ -156,8 +156,11 @@ public class ListOptions extends DialogFragment {
             profileNames.clear();
             profileNames.addAll(ProfileManager.getProfileNames());
             if (isDetached()) return;
-            activity.runOnUiThread(() -> profileNameInput.setAdapter(new AnyFilterArrayAdapter<>(activity,
-                    R.layout.item_checked_text_view, profileNames)));
+            activity.runOnUiThread(() -> {
+                profileNameInput.setAdapter(new AnyFilterArrayAdapter<>(activity, R.layout.item_checked_text_view,
+                        profileNames));
+                profileNameInput.setText(model.getFilterProfileName());
+            });
         }).start();
         // Add radio buttons
         for (int i = 0; i < SORT_ITEMS_MAP.length; ++i) {
