@@ -45,21 +45,22 @@ import io.github.muntashirakon.io.ProxyInputStream;
 import io.github.muntashirakon.io.ProxyOutputStream;
 
 import java.io.*;
+import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 
 public final class IOUtils {
-    private static final byte[] ZIP_FILE_HEADER = new byte[]{0x50, 0x4B, 0x03, 0x04};
-
     @AnyThread
     public static boolean isInputFileZip(@NonNull ContentResolver cr, Uri uri) throws IOException {
-        byte[] header = new byte[4];
+        int header;
         try (InputStream is = cr.openInputStream(uri)) {
-            is.read(header);
+            byte[] headerBytes = new byte[4];
+            is.read(headerBytes);
+            header = new BigInteger(headerBytes).intValue();
         }
-        return Arrays.equals(ZIP_FILE_HEADER, header);
+        return header == 0x504B0304 || header == 0x504B0506 || header == 0x504B0708;
     }
 
     @WorkerThread
