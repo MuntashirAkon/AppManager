@@ -19,6 +19,8 @@ package io.github.muntashirakon.AppManager.main;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.ArrayMap;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,12 +35,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.radiobutton.MaterialRadioButton;
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
+
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.profiles.ProfileManager;
+import io.github.muntashirakon.AppManager.types.AnyFilterArrayAdapter;
 import io.github.muntashirakon.AppManager.types.RadioGroupGridLayout;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ListOptions extends DialogFragment {
     public static final String TAG = "ListOptions";
@@ -111,6 +119,7 @@ public class ListOptions extends DialogFragment {
             R.string.sort_by_blocked_components, R.string.sort_by_backup, R.string.trackers, R.string.last_actions};
 
     private MainViewModel model;
+    private final List<String> profileNames = new ArrayList<>();
 
     @NonNull
     @Override
@@ -121,6 +130,35 @@ public class ListOptions extends DialogFragment {
         RadioGroupGridLayout sortGroup = view.findViewById(R.id.sort_options);
         MaterialCheckBox reverseSort = view.findViewById(R.id.reverse_sort);
         RecyclerView filterView = view.findViewById(R.id.filter_options);
+        MaterialAutoCompleteTextView profileNameInput = view.findViewById(android.R.id.input);
+        profileNameInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s != null) {
+                    String profileName = s.toString().trim();
+                    if (profileNames.contains(profileName)) {
+                        model.setFilterProfileName(profileName);
+                        return;
+                    }
+                }
+                model.setFilterProfileName(null);
+            }
+        });
+        new Thread(() -> {
+            profileNames.clear();
+            profileNames.addAll(ProfileManager.getProfileNames());
+            if (isDetached()) return;
+            activity.runOnUiThread(() -> profileNameInput.setAdapter(new AnyFilterArrayAdapter<>(activity,
+                    R.layout.item_checked_text_view, profileNames)));
+        }).start();
         // Add radio buttons
         for (int i = 0; i < SORT_ITEMS_MAP.length; ++i) {
             MaterialRadioButton button = new MaterialRadioButton(activity);

@@ -44,6 +44,19 @@ public class ProfileManager {
     public static final String TAG = "ProfileManager";
 
     @NonNull
+    public static ArrayList<String> getProfileNames() {
+        File profilesPath = ProfileMetaManager.getProfilesDir();
+        String[] profilesFiles = ArrayUtils.defeatNullable(profilesPath.list((dir, name) -> name.endsWith(ProfileMetaManager.PROFILE_EXT)));
+        ArrayList<String> profileNames = new ArrayList<>(profilesFiles.length);
+        for (String profile : profilesFiles) {
+            int index = profile.indexOf(ProfileMetaManager.PROFILE_EXT);
+            profile = profile.substring(0, index);
+            profileNames.add(profile);
+        }
+        return profileNames;
+    }
+
+    @NonNull
     public static HashMap<String, String> getProfiles() {
         File profilesPath = ProfileMetaManager.getProfilesDir();
         String[] profilesFiles = ArrayUtils.defeatNullable(profilesPath.list((dir, name) -> name.endsWith(ProfileMetaManager.PROFILE_EXT)));

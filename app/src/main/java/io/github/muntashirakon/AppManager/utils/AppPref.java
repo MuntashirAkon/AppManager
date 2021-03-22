@@ -75,6 +75,7 @@ public class AppPref {
         PREF_INSTALLER_SIGN_APK_BOOL,
         PREF_LAST_VERSION_CODE_LONG,
         PREF_MAIN_WINDOW_FILTER_FLAGS_INT,
+        PREF_MAIN_WINDOW_FILTER_PROFILE_STR,
         PREF_MAIN_WINDOW_SORT_ORDER_INT,
         PREF_MAIN_WINDOW_SORT_REVERSE_BOOL,
         PREF_MODE_OF_OPS_STR,
@@ -348,6 +349,7 @@ public class AppPref {
                 return CryptoUtils.MODE_NO_ENCRYPTION;
             case PREF_OPEN_PGP_PACKAGE_STR:
             case PREF_OPEN_PGP_USER_ID_STR:
+            case PREF_MAIN_WINDOW_FILTER_PROFILE_STR:
                 return "";
             case PREF_MODE_OF_OPS_STR:
                 return Runner.MODE_AUTO;

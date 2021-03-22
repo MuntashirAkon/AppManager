@@ -44,6 +44,7 @@ import io.github.muntashirakon.AppManager.db.entity.App;
 import io.github.muntashirakon.AppManager.ipc.IPCUtils;
 import io.github.muntashirakon.AppManager.ipc.ps.ProcessEntry;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.profiles.ProfileMetaManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.PackageChangeReceiver;
@@ -71,6 +72,8 @@ public class MainViewModel extends AndroidViewModel {
     private boolean mSortReverse;
     @ListOptions.Filter
     private int mFilterFlags;
+    @Nullable
+    private String mFilterProfileName;
     private String searchQuery;
     private HashMap<String, MetadataManager.Metadata> backupMetadata;
     private final Map<String, int[]> selectedPackages = new HashMap<>();
@@ -85,6 +88,8 @@ public class MainViewModel extends AndroidViewModel {
         mSortBy = (int) AppPref.get(AppPref.PrefKey.PREF_MAIN_WINDOW_SORT_ORDER_INT);
         mSortReverse = (boolean) AppPref.get(AppPref.PrefKey.PREF_MAIN_WINDOW_SORT_REVERSE_BOOL);
         mFilterFlags = (int) AppPref.get(AppPref.PrefKey.PREF_MAIN_WINDOW_FILTER_FLAGS_INT);
+        mFilterProfileName = (String) AppPref.get(AppPref.PrefKey.PREF_MAIN_WINDOW_FILTER_PROFILE_STR);
+        if ("".equals(mFilterProfileName)) mFilterProfileName = null;
     }
 
     @Nullable
@@ -234,6 +239,19 @@ public class MainViewModel extends AndroidViewModel {
         new Thread(this::filterItemsByFlags).start();
     }
 
+    public void setFilterProfileName(@Nullable String filterProfileName) {
+        if (mFilterProfileName == null) {
+            if (filterProfileName == null) return;
+        } else if (mFilterProfileName.equals(filterProfileName)) return;
+        mFilterProfileName = filterProfileName;
+        AppPref.set(AppPref.PrefKey.PREF_MAIN_WINDOW_FILTER_PROFILE_STR, filterProfileName == null ? "" : filterProfileName);
+        new Thread(this::filterItemsByFlags).start();
+    }
+
+    public String getFilterProfileName() {
+        return mFilterProfileName;
+    }
+
     public void onResume() {
         if ((mFilterFlags & ListOptions.FILTER_RUNNING_APPS) != 0) {
             // Reload filters to get running apps again
@@ -276,12 +294,29 @@ public class MainViewModel extends AndroidViewModel {
     @GuardedBy("applicationItems")
     private void filterItemsByFlags() {
         synchronized (applicationItems) {
+            List<ApplicationItem> candidateApplicationItems = new ArrayList<>();
+            if (mFilterProfileName != null) {
+                ProfileMetaManager profileMetaManager = new ProfileMetaManager(mFilterProfileName);
+                if (profileMetaManager.profile != null) {
+                    for (String packageName : profileMetaManager.profile.packages) {
+                        ApplicationItem item = new ApplicationItem();
+                        item.packageName = packageName;
+                        int index = applicationItems.indexOf(item);
+                        if (index != -1) {
+                            candidateApplicationItems.add(applicationItems.get(index));
+                        }
+                    }
+                } // else profile doesn't exist, display empty list
+            } else candidateApplicationItems.addAll(applicationItems);
+            // Other filters
             if (mFilterFlags == ListOptions.FILTER_NO_FILTER) {
                 if (!TextUtils.isEmpty(searchQuery)) {
-                    filterItemsByQuery(applicationItems);
+                    filterItemsByQuery(candidateApplicationItems);
                 } else {
                     mHandler.post(() -> {
-                        if (applicationItemsLiveData != null) applicationItemsLiveData.postValue(applicationItems);
+                        if (applicationItemsLiveData != null) {
+                            applicationItemsLiveData.postValue(candidateApplicationItems);
+                        }
                     });
                 }
             } else {
@@ -289,7 +324,7 @@ public class MainViewModel extends AndroidViewModel {
                 if ((mFilterFlags & ListOptions.FILTER_RUNNING_APPS) != 0) {
                     loadRunningApps();
                 }
-                for (ApplicationItem item : applicationItems) {
+                for (ApplicationItem item : candidateApplicationItems) {
                     // Filter user and system apps first (if requested)
                     if ((mFilterFlags & ListOptions.FILTER_USER_APPS) != 0 && !item.isUser) {
                         continue;
