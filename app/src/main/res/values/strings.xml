@@ -771,7 +771,7 @@
     <string name="pref_backup_android_keystore_msg">Not all apps will work after being restored. Restoring KeyStore doesn\'t work on most devices.</string>
     <string name="magisk_hide_enabled">MagiskHide</string>
     <string name="set_app_op_mode">Set app op mode</string>
-    <string name="filter_apps_with_splits">Apps with splits</string>
+    <string name="filter_apps_with_splits">With splits</string>
     <string name="value">Value</string>
     <string name="matching_activities">Matching activities</string>
     <string name="send_edited_intent">Send edited Intent</string>
@@ -912,5 +912,5 @@
     <string name="specify_custom_name">Custom</string>
     <string name="installer_app_message">Select <b>Choose</b> to choose from the installed apps or select <b>Custom</b> to specify a custom package name.</string>
     <string name="uninstalled_apps">Uninstalled apps</string>
-    <string name="filter_apps_without_backups">Apps without backups</string>
+    <string name="filter_apps_without_backups">Without backups</string>
 </resources>
