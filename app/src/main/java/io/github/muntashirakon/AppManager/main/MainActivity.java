@@ -75,6 +75,7 @@ import io.github.muntashirakon.AppManager.types.ScrollableDialogBuilder;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.usage.AppUsageActivity;
 import io.github.muntashirakon.AppManager.utils.*;
+import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -170,8 +171,10 @@ public class MainActivity extends BaseActivity implements
 
         mAdapter = new MainRecyclerAdapter(MainActivity.this);
         recyclerView.setHasFixedSize(true);
+        recyclerView.setOverScrollMode(RecyclerView.OVER_SCROLL_NEVER);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(mAdapter);
+        new FastScrollerBuilder(recyclerView).useMd2Style().build();
 
         if ((boolean) AppPref.get(AppPref.PrefKey.PREF_SHOW_DISCLAIMER_BOOL)) {
             @SuppressLint("InflateParams")

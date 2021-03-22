@@ -108,7 +108,7 @@ dependencies {
     implementation 'com.github.tananaev:adblib:1.3'
 
     implementation 'me.weishu:free_reflection:3.0.1'
-
+    implementation 'me.zhanghai.android.fastscroll:library:1.1.5'
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
 
     // Espresso UI Testing

@@ -124,7 +124,8 @@
         \n- <a href="https://github.com/tiann/FreeReflection">FreeReflection</a> (MIT)
         \n- <a href="https://github.com/MuntashirAkon/lazysodium-android">Lazysodium for Android</a> (MPL-2.0)
         \n- <a href="https://github.com/MuntashirAkon/unapkm-android">UnAPKM Android</a> (Apache 2.0)
-        \n- <a href="https://github.com/MuntashirAkon/unapkm-android">apksig-android</a> (Apache 2.0)
+        \n- <a href="https://github.com/MuntashirAkon/apksig-android">apksig-android</a> (Apache 2.0)
+        \n- <a href="https://github.com/zhanghai/AndroidFastScroll">AndroidFastScroll</a> (Apache 2.0)
     </string>
     <string name="credits">Credits</string>
     <string name="credits_message">To the authors of

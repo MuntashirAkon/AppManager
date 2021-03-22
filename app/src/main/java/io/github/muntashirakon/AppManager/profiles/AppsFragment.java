@@ -43,6 +43,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.types.RecyclerViewWithEmptyView;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
 public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     AppsProfileActivity activity;
@@ -74,6 +75,7 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         RecyclerViewWithEmptyView recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false));
+        new FastScrollerBuilder(recyclerView).useMd2Style().build();
         final TextView emptyView = view.findViewById(android.R.id.empty);
         emptyView.setText(R.string.no_apps);
         recyclerView.setEmptyView(emptyView);

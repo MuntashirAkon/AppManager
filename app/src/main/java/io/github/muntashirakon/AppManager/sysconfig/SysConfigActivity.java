@@ -50,6 +50,7 @@ import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.types.RecyclerViewWithEmptyView;
+import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
 public class SysConfigActivity extends BaseActivity {
     private SysConfigRecyclerAdapter adapter;
@@ -94,6 +95,7 @@ public class SysConfigActivity extends BaseActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
+        new FastScrollerBuilder(recyclerView).useMd2Style().build();
     }
 
     @Override

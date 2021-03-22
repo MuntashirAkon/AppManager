@@ -96,6 +96,7 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
 import static io.github.muntashirakon.AppManager.details.AppDetailsViewModel.OPEN_GL_ES;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpModeNames;
@@ -236,6 +237,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         RecyclerViewWithEmptyView recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
+        new FastScrollerBuilder(recyclerView).useMd2Style().build();
         final TextView emptyView = view.findViewById(android.R.id.empty);
         emptyView.setText(getNotFoundString(neededProperty));
         recyclerView.setEmptyView(emptyView);

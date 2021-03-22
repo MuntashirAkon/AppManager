@@ -36,6 +36,7 @@ import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -106,6 +107,7 @@ public class RunningAppsActivity extends BaseActivity implements
         RecyclerView recyclerView = findViewById(R.id.list_item);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        new FastScrollerBuilder(recyclerView).useMd2Style().build();
 //        recyclerView.setEmptyView(findViewById(android.R.id.empty));
         mAdapter = new RunningAppsAdapter(this);
         recyclerView.setAdapter(mAdapter);

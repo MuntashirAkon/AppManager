@@ -47,6 +47,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
+import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
 public class SearchableMultiChoiceDialogBuilder<T> {
     @NonNull
@@ -80,6 +81,7 @@ public class SearchableMultiChoiceDialogBuilder<T> {
         recyclerView = view.findViewById(android.R.id.list);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false));
+        new FastScrollerBuilder(recyclerView).useMd2Style().build();
         searchBar = view.findViewById(R.id.search_bar);
         TextInputEditText searchInput = view.findViewById(R.id.search_input);
         searchInput.addTextChangedListener(new TextWatcher() {
