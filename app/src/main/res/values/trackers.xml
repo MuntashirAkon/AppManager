@@ -50,6 +50,7 @@
         <item>com.crashlytics.</item>
         <item>com.google.firebase.crashlytics</item>
         <item>com.google.firebase.crash.</item>
+        <item>io.invertase.firebase.crashlytics.</item>
         <item>com.leanplum.</item>
         <item>com.tinder.analytics</item>
         <item>com.tinder.ads</item>
@@ -410,6 +411,8 @@
         <item>com.google.android.gms.ads.doubleclick</item>
         <item>com.google.android.ads.</item>
         <item>com.google.unity.ads.</item>
+        <item>com.google.android.gms.admob</item>
+        <item>com.google.firebase.firebase_ads.</item>
         <item>com.google.android.gms.ads.</item>
         <item>com.pure.internal.</item>
         <item>com.pure.sdk.</item>
@@ -496,6 +499,7 @@
         <item>com.loopme.</item>
         <item>com.mindscapehq.android.raygun4android</item>
         <item>com.rjfun.cordova.ad</item>
+        <item>com.rjfun.cordova.admob</item>
         <item>tv.superawesome.sdk</item>
         <item>com.tapr.sdk.</item>
         <item>com.tapr.internal.</item>
@@ -841,6 +845,7 @@
         <item>net.youmi</item>
         <item>zendesk.</item>
         <item>com.zendrive.sdk.</item>
+        <item>com.zenjoy.ads</item>
         <item>net.zucks.</item>
         <item>.com.ew.sdk.adboost</item>
         <item>com.github.aloomaio.androidsdk</item>
@@ -884,6 +889,7 @@
         <item>Sync2Ad</item>
         <item>Flurry</item>
         <item>HockeyApp</item>
+        <item>Google CrashLytics</item>
         <item>Google CrashLytics</item>
         <item>Google CrashLytics</item>
         <item>Google CrashLytics</item>
@@ -1249,6 +1255,8 @@
         <item>Google AdMob</item>
         <item>Google AdMob</item>
         <item>Google AdMob</item>
+        <item>Google AdMob</item>
+        <item>Google AdMob</item>
         <item>Unacast Pure</item>
         <item>Unacast Pure</item>
         <item>Factual</item>
@@ -1333,6 +1341,7 @@
         <item>JumpTap</item>
         <item>LoopMe</item>
         <item>Raygun</item>
+        <item>RjFun</item>
         <item>RjFun</item>
         <item>SuperAwesome</item>
         <item>TapResearch</item>
@@ -1679,6 +1688,7 @@
         <item>²Youmi</item>
         <item>²Zendesk</item>
         <item>²Zendrive</item>
+        <item>²Zenjoy</item>
         <item>²Zucks</item>
         <item>²adboost</item>
         <item>²alooma</item>
