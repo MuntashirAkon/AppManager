@@ -124,7 +124,7 @@
     <string name="current_theme">目前主題：%1$s</string>
     <string name="follow_system">跟隨系統</string>
     <string name="pref_import_blocker_msg">從Blocker匯入封鎖規則，每個檔案都包含單個套件的規則。</string>
-    <string name="pref_import_watt_msg">從Watt匯入封鎖規則，每個檔案包含單個命名包的規則，如下所示：<tt> packagename.xml</tt> 等等。</string>
+    <string name="pref_import_watt_msg">從 Watt 匯入封鎖規則，每個檔案包含單個套件名稱的規則，如下所示：&lt;tt&gt; packagename.xml&lt;/tt&gt; 等等。</string>
     <string name="pref_import_msg">從 App Manager 匯入以前匯出的封鎖規則。</string>
     <string name="pref_export_msg">將在 App Manager 中配置的封鎖規則匯出到外部儲存空間。</string>
     <string name="export_failed">匯出失敗！</string>
@@ -155,7 +155,7 @@
         <item quantity="other">Could not import%1$d file.</item>
     </plurals>
     <string name="pref_import_blocker">從攔截器匯入</string>
-    <string name="pref_import_export_blocking_rules_msg">匯入/匯出規則，從Watt或Blocker匯入外部規則。</string>
+    <string name="pref_import_export_blocking_rules_msg">匯入/匯出規則，從 Watt 或 Blocker 匯入外部規則。</string>
     <string name="pref_import_export_blocking_rules">匯入/匯出封鎖規則</string>
     <string name="external_multiple_data_dir">外部資料目錄 <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
     <string name="pref_global_blocking_enabled_msg">使您可以封鎖任何應用程式的任何元件，而無需顯式開啟該應用程式的封鎖功能。</string>
@@ -166,7 +166,7 @@
     <string name="launch">開啟</string>
     <string name="filter_apps_without_backups">沒有備份的應用程式</string>
     <string name="uninstalled_apps">解除安裝的應用程式</string>
-    <string name="installer_app_message">選擇&lt;b&gt; 選擇&lt;/b&gt; 從已安裝的應用程式中選擇或選擇&lt;b&gt; 自訂&lt;/b&gt; 指定自訂套件名稱。</string>
+    <string name="installer_app_message">選擇&lt;b&gt;選擇&lt;/b&gt; 從已安裝的應用程式中選擇或選擇&lt;b&gt;自訂&lt;/b&gt; 指定自訂套件名稱。</string>
     <string name="specify_custom_name">自訂</string>
     <string name="verified_using_unreliable_hash">使用不可靠的哈希值進行了驗證</string>
     <string name="working_on_adb_mode">在ADB模式下運作</string>
@@ -601,7 +601,7 @@
     <string name="apk_updater">APK 更新器</string>
     <string name="the_export_was_successful">已匯出</string>
     <string name="the_import_was_successful">進口的</string>
-    <string name="pref_import_watt">從瓦特進口</string>
+    <string name="pref_import_watt">從 Watt 匯入</string>
     <string name="sort_by_mobile_data">移動資料</string>
     <string name="sort_by_times_opened">營業時間</string>
     <string name="sort_by_screen_time">檢測時間</string>
