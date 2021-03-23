@@ -695,4 +695,15 @@
     <string name="sort_by_tracker_components">Najpierw elementy śledzące</string>
     <string name="sort_by_denied_app_ops">Najpierw odmówione</string>
     <string name="sort_by_app_ops_names">Nazwa App op</string>
+    <string name="filter_apps_without_backups">Aplikacje bez kopii zapasowych</string>
+    <string name="uninstalled_apps">Odinstalowane aplikacje</string>
+    <string name="specify_custom_name">Niestandardowa</string>
+    <string name="verified_using_unreliable_hash">Zweryfikowano za pomocą niemiarodajnego hashu</string>
+    <string name="working_on_adb_mode">Praca w trybie ADB</string>
+    <string name="pref_enable_disable_features_msg">Włącz lub wyłącz funkcje w App Manager.</string>
+    <string name="type_long_array_list">Lista długich liczb całkowitych</string>
+    <string name="type_long_array">Tablica długich liczb całkowitych</string>
+    <string name="type_int_array_list">Lista liczb całkowitych</string>
+    <string name="type_null">Brak wartości</string>
+    <string name="internal_storage">Pamięć wewnętrzna</string>
 </resources>
