@@ -53,6 +53,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
+import java.io.File;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.security.cert.CertificateEncodingException;
@@ -103,6 +104,7 @@ import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpMode
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpModes;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpNames;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOps;
+import static io.github.muntashirakon.AppManager.utils.Utils.openAsFolderInFM;
 
 public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTextListener,
         SwipeRefreshLayout.OnRefreshListener {
@@ -748,8 +750,12 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         textView4 = itemView.findViewById(R.id.reqnav);
                         textView5 = itemView.findViewById(R.id.reqtouch);
                         break;
-                    case SIGNATURES:
                     case SHARED_LIBRARIES:
+                        textView1 = itemView.findViewById(R.id.item_title);
+                        launchBtn = itemView.findViewById(R.id.item_action);
+                        ((MaterialButton) launchBtn).setIconResource(R.drawable.ic_open_in_new_black_24dp);
+                        break;
+                    case SIGNATURES:
                     case NONE:
                     case APP_INFO:
                     default:
@@ -786,8 +792,10 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_app_details_tertiary, parent, false);
                     break;
                 case SIGNATURES:
-                case SHARED_LIBRARIES:
                     view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_text_view, parent, false);
+                    break;
+                case SHARED_LIBRARIES:
+                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_title_action, parent, false);
                     break;
             }
             return new ViewHolder(view);
@@ -1370,14 +1378,13 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         }
 
         private void getSharedLibsView(@NonNull ViewHolder holder, int index) {
-            TextView textView = (TextView) holder.itemView;
+            AppDetailsItem item = mAdapterList.get(index);
+            File libFile = (File) item.vanillaItem;
+            TextView textView = holder.textView1;
             textView.setTextIsSelectable(true);
-            textView.setText((String) mAdapterList.get(index).vanillaItem);
-            textView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
-            int medium_size = mActivity.getResources().getDimensionPixelSize(R.dimen.padding_medium);
-            int small_size = mActivity.getResources().getDimensionPixelSize(R.dimen.padding_very_small);
-            textView.setTextSize(12);
-            textView.setPadding(medium_size, small_size, medium_size, small_size);
+            textView.setText(item.name);
+            holder.launchBtn.setOnClickListener(openAsFolderInFM(mActivity, libFile.getParent()));
+            holder.itemView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
         }
 
         private void getPermissionsView(@NonNull ViewHolder holder, int index) {

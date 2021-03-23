@@ -24,18 +24,19 @@
     android:layout_height="wrap_content"
     android:clickable="true"
     android:focusable="true"
-    android:orientation="horizontal"
     android:paddingStart="@dimen/padding_medium"
-    android:paddingTop="@dimen/padding_small"
     android:paddingEnd="@dimen/padding_small"
-    android:paddingBottom="@dimen/padding_medium">
+    android:orientation="horizontal">
 
     <TextView
         android:id="@+id/item_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
+        android:layout_marginEnd="@dimen/padding_small"
         android:layout_weight="1"
+        android:paddingTop="@dimen/padding_small"
+        android:paddingBottom="@dimen/padding_small"
         android:textColor="?android:attr/textColorPrimary"
         android:textSize="@dimen/title_font"
         tools:text="@tools:sample/lorem" />
@@ -44,14 +45,16 @@
         android:id="@+id/item_action"
         style="@android:style/Widget.Material.ImageButton"
         android:layout_width="56dp"
-        android:layout_height="30dp"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:layout_marginStart="@dimen/padding_medium"
         android:layout_weight="0"
+        android:paddingTop="@dimen/padding_small"
+        android:paddingBottom="@dimen/padding_small"
         android:background="?attr/selectableItemBackground"
         app:icon="@drawable/ic_baseline_clear_24"
         app:iconGravity="textTop"
         app:iconPadding="0dp"
+        app:iconSize="20dp"
         tools:ignore="UnusedAttribute" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

@@ -20,6 +20,7 @@ package io.github.muntashirakon.AppManager.utils;
 import android.Manifest;
 import android.app.AppOpsManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ConfigurationInfo;
 import android.content.pm.FeatureInfo;
@@ -29,10 +30,12 @@ import android.content.pm.PermissionInfo;
 import android.content.pm.ServiceInfo;
 import android.content.pm.Signature;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Parcel;
 import android.text.TextUtils;
 import android.util.Pair;
+import android.view.View;
 import android.view.WindowManager;
 
 import org.w3c.dom.Document;
@@ -65,6 +68,7 @@ import javax.xml.xpath.XPathFactory;
 
 import androidx.annotation.CheckResult;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.core.content.pm.PermissionInfoCompat;
 import aosp.libcore.util.HexEncoding;
@@ -723,5 +727,17 @@ public class Utils {
 
     public static int getTotalCores() {
         return Runtime.getRuntime().availableProcessors();
+    }
+
+    @Nullable
+    public static View.OnClickListener openAsFolderInFM(@NonNull Context context, @Nullable String dir) {
+        if (dir == null) return null;
+        return view -> {
+            Intent openFile = new Intent(Intent.ACTION_VIEW);
+            openFile.setDataAndType(Uri.parse(dir), "resource/folder");
+            openFile.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            if (openFile.resolveActivityInfo(context.getPackageManager(), 0) != null)
+                context.startActivity(openFile);
+        };
     }
 }

@@ -1344,11 +1344,24 @@ public class AppDetailsViewModel extends AndroidViewModel {
     private void loadSharedLibraries() {
         if (getPackageInfo() == null || sharedLibraries == null) return;
         List<AppDetailsItem> appDetailsItems = new ArrayList<>();
-        if (packageInfo.applicationInfo.sharedLibraryFiles != null) {
-            for (String sharedLibrary : packageInfo.applicationInfo.sharedLibraryFiles) {
-                AppDetailsItem appDetailsItem = new AppDetailsItem(sharedLibrary);
-                appDetailsItem.name = sharedLibrary;
+        ApplicationInfo info = packageInfo.applicationInfo;
+        File jniDir = new File(info.nativeLibraryDir);
+        if (info.sharedLibraryFiles != null) {
+            for (String sharedLibrary : info.sharedLibraryFiles) {
+                File sharedLib = new File(sharedLibrary);
+                AppDetailsItem appDetailsItem = new AppDetailsItem(sharedLib);
+                appDetailsItem.name = sharedLib.getName();
                 appDetailsItems.add(appDetailsItem);
+            }
+        }
+        if (jniDir.isDirectory()) {
+            File[] libs = jniDir.listFiles();
+            if (libs != null) {
+                for (File lib : libs) {
+                    AppDetailsItem appDetailsItem = new AppDetailsItem(lib);
+                    appDetailsItem.name = lib.getName();
+                    appDetailsItems.add(appDetailsItem);
+                }
             }
         }
         sharedLibraries.postValue(appDetailsItems);

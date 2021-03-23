@@ -103,6 +103,7 @@ import static io.github.muntashirakon.AppManager.details.info.ListItem.LIST_ITEM
 import static io.github.muntashirakon.AppManager.utils.PermissionUtils.TERMUX_PERM_RUN_COMMAND;
 import static io.github.muntashirakon.AppManager.utils.PermissionUtils.hasDumpPermission;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.*;
+import static io.github.muntashirakon.AppManager.utils.Utils.openAsFolderInFM;
 
 public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     public static final String TAG = "AppInfoFragment";
@@ -1031,39 +1032,39 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             // Source directory (apk path)
             if (appInfo.sourceDir != null) {
                 mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.source_dir), appInfo.sourceDir,
-                        openAsFolderInFM(appInfo.sourceDir)));
+                        openAsFolderInFM(requireContext(), appInfo.sourceDir)));
             }
             // Split source directories
             if (appInfo.splitEntries.size() > 0) {
                 for (ApkFile.Entry entry : appInfo.splitEntries) {
                     mListItems.add(ListItem.getSelectableRegularItem(entry.toShortLocalizedString(mActivity),
-                            entry.getApkSource(), openAsFolderInFM(entry.getApkSource())));
+                            entry.getApkSource(), openAsFolderInFM(requireContext(), entry.getApkSource())));
                 }
             }
             // Data dir
             if (appInfo.dataDir != null) {
                 mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.data_dir), appInfo.dataDir,
-                        openAsFolderInFM(appInfo.dataDir)));
+                        openAsFolderInFM(requireContext(), appInfo.dataDir)));
             }
             // Device-protected data dir
             if (appInfo.dataDeDir != null) {
                 mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.dev_protected_data_dir), appInfo.dataDeDir,
-                        openAsFolderInFM(appInfo.dataDeDir)));
+                        openAsFolderInFM(requireContext(), appInfo.dataDeDir)));
             }
             // External data dirs
             if (appInfo.extDataDirs.size() == 1) {
                 mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.external_data_dir), appInfo.extDataDirs.get(0),
-                        openAsFolderInFM(appInfo.extDataDirs.get(0))));
+                        openAsFolderInFM(requireContext(), appInfo.extDataDirs.get(0))));
             } else {
                 for (int i = 0; i < appInfo.extDataDirs.size(); ++i) {
                     mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.external_multiple_data_dir, i),
-                            appInfo.extDataDirs.get(i), openAsFolderInFM(appInfo.extDataDirs.get(i))));
+                            appInfo.extDataDirs.get(i), openAsFolderInFM(requireContext(), appInfo.extDataDirs.get(i))));
                 }
             }
             // Native JNI library dir
             if (appInfo.jniDir != null) {
                 mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.native_library_dir), appInfo.jniDir,
-                        openAsFolderInFM(appInfo.jniDir)));
+                        openAsFolderInFM(requireContext(), appInfo.jniDir)));
             }
             mListItems.add(ListItem.getGroupDivider());
         }
@@ -1176,17 +1177,6 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private ProxyFile[] getDatabases(@NonNull String sourceDir) {
         ProxyFile sharedPath = new ProxyFile(sourceDir, "databases");
         return sharedPath.listFiles((dir, name) -> !name.endsWith("-journal"));
-    }
-
-    @NonNull
-    private View.OnClickListener openAsFolderInFM(String dir) {
-        return view -> {
-            Intent openFile = new Intent(Intent.ACTION_VIEW);
-            openFile.setDataAndType(Uri.parse(dir), "resource/folder");
-            openFile.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            if (openFile.resolveActivityInfo(mPackageManager, 0) != null)
-                startActivity(openFile);
-        };
     }
 
     @NonNull
