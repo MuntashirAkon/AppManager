@@ -37,6 +37,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.*;
@@ -51,6 +52,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.android.internal.util.TextUtils;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -58,6 +60,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
@@ -851,14 +854,12 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                 .setNegativeButton(R.string.cancel, null)
                                 .show());
                 // Clear cache
-                if (isRootEnabled) {
-                    addToHorizontalLayout(R.string.clear_cache, R.drawable.ic_delete_black_24dp)
-                            .setOnClickListener(v -> executor.submit(() -> {
-                                if (PackageManagerCompat.deleteApplicationCacheFilesAsUser(mPackageName, mainModel.getUserHandle())) {
-                                    runOnUiThread(this::refreshDetails);
-                                }
-                            }));
-                }
+                addToHorizontalLayout(R.string.clear_cache, R.drawable.ic_delete_black_24dp)
+                        .setOnClickListener(v -> executor.submit(() -> {
+                            if (PackageManagerCompat.deleteApplicationCacheFilesAsUser(mPackageName, mainModel.getUserHandle())) {
+                                runOnUiThread(this::refreshDetails);
+                            }
+                        }));
             }  // End root only
         } else if (FeatureController.isInstallerEnabled()) {
             if (mInstalledPackageInfo == null) {
