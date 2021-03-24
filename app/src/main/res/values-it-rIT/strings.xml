@@ -41,7 +41,7 @@
     <string name="system_app">Applicazione di sistema</string>
     <string name="user_app">Applicazione dell\'utente</string>
     <string name="sdk_min">Minimo</string>
-    <string name="sdk_max">Massimo</string>
+    <string name="sdk_max">Obiettivo</string>
     <string name="more_info">Altre informazioni</string>
     <string name="date_installed">Data di installazione</string>
     <string name="date_updated">Data di aggiornamento</string>
@@ -67,18 +67,18 @@
     <string name="export_failed">Esportazione fallita!</string>
     <string name="keyboard_type">Tipo tastiera</string>
     <string name="navigation">Navigazione</string>
-    <string name="touchscreen">Touchscreen</string>
+    <string name="touchscreen">Schermo touch</string>
     <string name="pref_app_theme">Tema dell\'applicazione</string>
     <string name="battery_mode">Modalità batteria</string>
     <string name="day">Giorno</string>
     <string name="night">Notte</string>
-    <string name="select_theme">Seleziona un tema</string>
+    <string name="select_theme">Tema</string>
     <string name="apply">Applica</string>
     <string name="current_theme">Tema attuale: %1$s</string>
     <string name="version">Versione</string>
     <string name="block_trackers">Blocca tracker</string>
     <string name="failed_to_disable_trackers">Impossibile disattivare i tracker</string>
-    <string name="trackers_disabled_successfully">Tracker disattivati con successo</string>
+    <string name="trackers_disabled_successfully">Tracker ora disattivati</string>
     <string name="never_ask">Non chiedere mai</string>
     <string name="install">Installa</string>
     <string name="sort_by_last_update">Ultimo aggiornamento</string>
@@ -146,7 +146,7 @@
     </plurals>
     <string name="usage_weekly">Settimanale</string>
     <string name="app_usage">Uso dell\'app</string>
-    <string name="no_tracker_class">Nessuna classe di Tracker</string>
+    <string name="no_tracker_class">Nessuna classe di tracker</string>
     <string name="all_classes">Tutte le classi</string>
     <string name="tracker_classes">Classi Tracker</string>
     <string name="tracker_details">Dettagli Tracker</string>
@@ -189,8 +189,8 @@
     <string name="launch_mode">Modalità avvio</string>
     <string name="permissions">Permessi utente</string>
     <string name="clear_data_from_uninstalled_apps">Rimuovi dati delle app disinstallate</string>
-    <string name="deny_app_ops_description">Nega le operazioni app identificate dati i valori costanti, Ex 63 significa RUN_IN_BACKGROUND</string>
-    <string name="block_components_description">Blocca tutti i componenti identificati dalla(e) firma(e) indicata(e)</string>
+    <string name="deny_app_ops_description">Imposta una modalità per l\'operatività delle app identificate dalle costanti, es.: &lt;tt&gt;63&lt;/tt&gt; o &lt;tt&gt;RUN_IN_BACKGROUND&lt;/tt&gt;</string>
+    <string name="block_components_description">Blocca tutti i componenti identificati dalle firme indicate</string>
     <string name="block_components_dots">Blocca componenti…</string>
     <string name="block_unblock_trackers_description">Blocca o sblocca pubblicità e componenti tracking da tutte applicazioni installe</string>
     <string name="clear_cache">Svuota Cache</string>
@@ -207,7 +207,7 @@
         <item quantity="other">%1$d tracker</item>
     </plurals>
     <string name="manifest_viewer">Visualizzatore Manifest</string>
-    <string name="external_apk_no_app_op">APK esterno non ha nessun operazione app</string>
+    <string name="external_apk_no_app_op">L\'APK esterno non ha nessuna app operativa</string>
     <string name="launch_app">Avvio</string>
     <string name="failed_to_deny_dangerous_app_ops">Impossibile revocare tutte le operazioni app ritenute pericolose</string>
     <string name="failed_to_deny_dangerous_perms">Impossibile revocare tutti permessi ritenuti pericolosi</string>
@@ -228,7 +228,7 @@
     <string name="sort_by_wifi_data">Dati Wi-Fi</string>
     <string name="pref_about_msg">Versione, licenze, crediti ed altro da App Manager.</string>
     <string name="pref_import_blocker_msg">Importa regole di blocco da Blocker, ogni file contiene regole per un singolo pacchetto.</string>
-    <string name="pref_import_watt_msg">Importa regole di blocco da Watt, ogni file contiene regole per un singolo pacchetto nominato come pacagename.xml etc.</string>
+    <string name="pref_import_watt_msg">Importa regole di blocco da Watt, ogni file contiene regole per un singolo pacchetto nominato come &lt;tt&gt;packagename.xml&lt;/tt&gt; ecc.</string>
     <string name="pref_import_msg">Importa regole di blocco precedentemente esportate da App Manager.</string>
     <string name="pref_export_msg">Esportazione regole di blocco configurata all\'interno di App Manager al disco esterno.</string>
     <string name="export_options">Esporta Opzioni</string>
@@ -329,20 +329,21 @@
     <string name="class_viewer">Visualizzatore Classi</string>
     <string name="credits_message">"Agli autori di
 \n- Progetto open source Android
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
-\n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
-\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
-\n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
-\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
-\n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
-\n- <a href="https://github.com/Aefyr/SAI">SAI</a>
-\nLogo: <a href="https://github.com/Atrate">Atrate</a>. "</string>
+\n- &lt;a href=\"https://bitbucket.org/oF2pks/fdroid-applications-info\"&gt;Apps_packages Info&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/butzist/ActivityLauncher\"&gt;Activity Launcher&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/billthefarmer/editor\"&gt;Editor&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/zhaobao/AppsMonitor\"&gt;AppsMonitor&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/tuyafeng/Watt\"&gt;Watt&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/8enet/AppOpsX\"&gt;AppOpsX&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/Aefyr/SAI\"&gt;SAI&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/RikkaApps/Shizuku\"&gt;Shizuku&lt;/a&gt;
+\nLogo originale di: &lt;a href=\"https://github.com/Atrate\"&gt;Atrate&lt;/a&gt;. "</string>
     <string name="credits">Crediti</string>
     <string name="sdk_flags">Flags</string>
     <string name="sort_by_domain">Utilizzatore app primario</string>
-    <string name="manifest">Manifest</string>
+    <string name="manifest">Manifesto</string>
     <string name="flags">Flags</string>
-    <string name="sort_by_target_sdk">Target SDK</string>
+    <string name="sort_by_target_sdk">SDK destinazione</string>
     <string name="icon_picker">Seleziona Icona</string>
     <string name="shortcut_name">Nome Collegamento</string>
     <string name="edit_shortcut">Modificare Collegamento</string>
