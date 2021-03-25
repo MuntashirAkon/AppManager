@@ -82,6 +82,7 @@
         <item>com.google.android.gms.measurement.</item>
         <item>com.google.android.datatransport.</item>
         <item>com.google.firebase.datatransport</item>
+        <item>com.google.firebase.firebase_analytics</item>
         <item>com.eulerian.android.sdk</item>
         <item>com.adjust.sdk.</item>
         <item>com.chartboost.sdk.</item>
@@ -325,6 +326,7 @@
         <item>io.repro.android.</item>
         <item>com.sensorsdata.analytics.android.sdk</item>
         <item>com.tenjin.android.TenjinSDK</item>
+        <item>com.tenjin.android.</item>
         <item>com.tapstream.sdk</item>
         <item>com.singular.sdk</item>
         <item>com.calldorado.android</item>
@@ -595,7 +597,9 @@
         <item>com.baidu.xenv.</item>
         <item>com.beemray.</item>
         <item>com.beintoo.nucleon</item>
+        <item>ai.bitlabs.sdk.</item>
         <item>com.parse.bolts</item>
+        <item>com.brandio.ads</item>
         <item>com.bugclipper.android.</item>
         <item>com.buglife.sdk.</item>
         <item>com.adfonic.</item>
@@ -694,7 +698,6 @@
         <item>com.shahenshah.mathematics.</item>
         <item>com.warison.authigene</item>
         <item>com.apld.av.</item>
-        <item>com.lody.virtual.client.stub.</item>
         <item>com.kdeamon.libe.</item>
         <item>net.fivefive.tek.</item>
         <item>com.unfreezable.moze.</item>
@@ -711,7 +714,7 @@
         <item>kr.com.mojise.sdk</item>
         <item>com.mopinion.mopinionsdk</item>
         <item>com.morgoo.droidplugin.</item>
-        <item>mozilla.components.lib.crash.</item>
+        <item>mozilla.components.lib.crash.service</item>
         <item>com.ninjametrics.</item>
         <item>jp.noahapps.sdk.</item>
         <item>com.aiadmobi.sdk.</item>
@@ -750,6 +753,8 @@
         <item>com.rumble.sdk</item>
         <item>com.sas.mkt.mobile.sdk.</item>
         <item>com.ss.android.</item>
+        <item>com.sayso.ui.</item>
+        <item>com.sayso.utils.</item>
         <item>io.sentry.</item>
         <item>com.sina.weibo.sdk</item>
         <item>com.skillz.Skillz</item>
@@ -818,6 +823,7 @@
         <item>com.growstarry.</item>
         <item>com.userexperior</item>
         <item>com.vdopia.client.android.</item>
+        <item>com.vdopia.ads.</item>
         <item>mobi.vserv.android.adengine.</item>
         <item>net.veloxity.</item>
         <item>com.vivo.push.sdk.</item>
@@ -921,6 +927,7 @@
         <item>Facebook Audience</item>
         <item>Google Analytics</item>
         <item>Google Analytics</item>
+        <item>Google Firebase Analytics</item>
         <item>Google Firebase Analytics</item>
         <item>Google Firebase Analytics</item>
         <item>Google Firebase Analytics</item>
@@ -1167,6 +1174,7 @@
         <item>Metrics</item>
         <item>Repro</item>
         <item>Sensors Analytics</item>
+        <item>Tenjin</item>
         <item>Tenjin</item>
         <item>Tapstream</item>
         <item>Singular</item>
@@ -1438,7 +1446,9 @@
         <item>²Baidu Crash Reporter</item>
         <item>²Beemray</item>
         <item>²Beintoo</item>
+        <item>²BitLabs</item>
         <item>²Bolts</item>
+        <item>²Brandio</item>
         <item>²BugClipper</item>
         <item>²Buglife</item>
         <item>²Byyd (Adfonic)</item>
@@ -1544,7 +1554,6 @@
         <item>²Malverting/Adfrauds</item>
         <item>²Malverting/Adfrauds</item>
         <item>²Malverting/Adfrauds</item>
-        <item>²Malverting/Adfrauds</item>
         <item>²Marketo (an Adobe Company)</item>
         <item>²Mobclick</item>
         <item>²Mobiquity Networks</item>
@@ -1593,6 +1602,8 @@
         <item>²Rumble</item>
         <item>²SAS</item>
         <item>²SNS SDK(bytedance)</item>
+        <item>²SaySo Rewards</item>
+        <item>²SaySo Rewards</item>
         <item>²Sentry</item>
         <item>²Sino Weibo SDK</item>
         <item>²Skillz Android Unity</item>
@@ -1660,6 +1671,7 @@
         <item>²Unknown Trackers</item>
         <item>²Unknown Trackers</item>
         <item>²UserExperior</item>
+        <item>²VDopia</item>
         <item>²VDopia</item>
         <item>²VServ</item>
         <item>²Veloxity</item>
