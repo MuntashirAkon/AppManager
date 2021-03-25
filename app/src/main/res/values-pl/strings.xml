@@ -706,4 +706,12 @@
     <string name="type_int_array_list">Lista liczb całkowitych</string>
     <string name="type_null">Brak wartości</string>
     <string name="internal_storage">Pamięć wewnętrzna</string>
+    <string name="failed_to_revoke_permission">Nie udało się odmówić uprawnienia</string>
+    <plurals name="alert_failed_to_disable_trackers">
+        <item quantity="one">Nie udało się wyłączyć elementów śledzących z %1$d aplikacji</item>
+        <item quantity="few">Nie udało się wyłączyć elementów śledzących z %1$d aplikacji</item>
+        <item quantity="many">Nie udało się wyłączyć elementów śledzących z %1$d aplikacji</item>
+        <item quantity="other">Nie udało się wyłączyć elementów śledzących z %1$d aplikacji</item>
+    </plurals>
+    <string name="trackers_disabled_successfully">Elementy śledzące zostały wyłączone</string>
 </resources>
