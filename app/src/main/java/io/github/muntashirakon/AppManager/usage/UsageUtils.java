@@ -18,13 +18,16 @@
 package io.github.muntashirakon.AppManager.usage;
 
 import android.os.SystemClock;
-import android.util.Pair;
+
+import androidx.core.util.Pair;
 
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
+
+import io.github.muntashirakon.AppManager.utils.DateUtils;
 
 public final class UsageUtils {
     public static final int ONE_DAY = 86400000;
@@ -35,50 +38,74 @@ public final class UsageUtils {
             USAGE_WEEKLY,
             USAGE_LAST_BOOT
     })
-    public @interface IntervalType {}
+    public @interface IntervalType {
+    }
+
     public static final int USAGE_TODAY = 0;
     public static final int USAGE_YESTERDAY = 1;
     public static final int USAGE_WEEKLY = 2;
     public static final int USAGE_LAST_BOOT = 5;
 
+    public static class TimeInterval extends Pair<Long, Long> {
+        public TimeInterval(Long begin, Long end) {
+            super(begin, end);
+        }
+
+        public long getStartTime() {
+            return first;
+        }
+
+        public long getEndTime() {
+            return second;
+        }
+
+        public long getDuration() {
+            return second - first + 1;
+        }
+
+        @NonNull
+        @Override
+        public String toString() {
+            return "TimeInterval{" +
+                    "startTime=" + DateUtils.formatDateTime(first) +
+                    ", endTime=" + DateUtils.formatDateTime(second) +
+                    '}';
+        }
+    }
+
     @NonNull
-    public static Pair<Long, Long> getTimeInterval(@IntervalType int sort) {
-        Pair<Long, Long> interval;
+    public static TimeInterval getTimeInterval(@IntervalType int sort) {
         switch (sort) {
             case USAGE_YESTERDAY:
-                interval = getYesterday();
-                break;
+                return getYesterday();
             case USAGE_WEEKLY:
-                interval = getWeeklyInterval();
-                break;
+                return getWeeklyInterval();
             case USAGE_LAST_BOOT:
-                interval = getSinceLastBoot();
-                break;
+                return getSinceLastBoot();
             case USAGE_TODAY:
             default:
-                interval = getToday();
+                return getToday();
         }
-        return interval;
     }
 
     @NonNull
-    private static Pair<Long, Long> getSinceLastBoot() {
-        return new Pair<>(SystemClock.elapsedRealtime(), System.currentTimeMillis());
+    private static TimeInterval getSinceLastBoot() {
+        return new TimeInterval(SystemClock.elapsedRealtime(), System.currentTimeMillis());
     }
 
     @NonNull
-    private static Pair<Long, Long> getToday() {
+    private static TimeInterval getToday() {
         long timeNow = System.currentTimeMillis();
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
-        return new Pair<>(cal.getTimeInMillis(), timeNow);
+        return new TimeInterval(cal.getTimeInMillis(), timeNow);
     }
 
     @NonNull
-    private static Pair<Long, Long> getYesterday() {
+    private static TimeInterval getYesterday() {
         long timeNow = System.currentTimeMillis();
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(timeNow - ONE_DAY);
@@ -87,14 +114,13 @@ public final class UsageUtils {
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
         long start = cal.getTimeInMillis();
-        return new Pair<>(start, Math.min(start + ONE_DAY, timeNow));
+        return new TimeInterval(start, Math.min(start + ONE_DAY, timeNow));
     }
 
     @NonNull
-    private static Pair<Long, Long> getWeeklyInterval() {
+    private static TimeInterval getWeeklyInterval() {
         long timeEnd = System.currentTimeMillis();
         long timeStart = timeEnd - TimeUnit.MILLISECONDS.convert(7, TimeUnit.DAYS);
-        return new Pair<>(timeStart, timeEnd);
+        return new TimeInterval(timeStart, timeEnd);
     }
-
 }

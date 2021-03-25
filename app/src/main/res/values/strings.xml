@@ -66,7 +66,7 @@
     <string name="sdk" translatable="false">SDK</string>
     <string name="data_received">Data received</string>
     <string name="data_transmitted">Data transmitted</string>
-    <string name="data_usage_msg">Data usage since last boot</string>
+    <string name="data_usage_msg">Data usage</string>
     <string name="about">About</string>
     <string name="data_size">Data</string>
     <string name="cache_size">Cache</string>

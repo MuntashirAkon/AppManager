@@ -23,7 +23,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.util.Pair;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -219,16 +218,11 @@ public class AppInfoViewModel extends AndroidViewModel {
             try {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     if ((Boolean) AppPref.get(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL)) {
-                        final Pair<Pair<Long, Long>, Pair<Long, Long>> dataUsage;
-                        dataUsage = AppUsageStatsManager.getWifiMobileUsageForPackage(getApplication(), packageName,
-                                UsageUtils.USAGE_LAST_BOOT);
-                        appInfo.dataTx = dataUsage.first.first + dataUsage.second.first;
-                        appInfo.dataRx = dataUsage.first.second + dataUsage.second.second;
+                        appInfo.dataUsage = AppUsageStatsManager.getDataUsageForPackage(getApplication(),
+                                applicationInfo.uid, UsageUtils.USAGE_LAST_BOOT);
                     }
                 } else {
-                    final Pair<Long, Long> uidNetStats = getNetStats(applicationInfo.uid);
-                    appInfo.dataTx = uidNetStats.first;
-                    appInfo.dataRx = uidNetStats.second;
+                    appInfo.dataUsage = getNetStats(applicationInfo.uid);
                 }
             } catch (Throwable e) {
                 e.printStackTrace();
@@ -272,7 +266,7 @@ public class AppInfoViewModel extends AndroidViewModel {
      * @return A tuple consisting of transmitted and received data
      */
     @NonNull
-    private Pair<Long, Long> getNetStats(int uid) {
+    private AppUsageStatsManager.DataUsage getNetStats(int uid) {
         long tx = 0;
         long rx = 0;
         File uidStatsDir = new ProxyFile(UID_STATS_PATH + uid);
@@ -284,7 +278,7 @@ public class AppInfoViewModel extends AndroidViewModel {
                     rx = Long.parseLong(IOUtils.getFileContent(child, "-1").trim());
             }
         }
-        return new Pair<>(tx, rx);
+        return new AppUsageStatsManager.DataUsage(tx, rx);
     }
 
     public static class TagCloud {
@@ -322,9 +316,8 @@ public class AppInfoViewModel extends AndroidViewModel {
         public List<String> extDataDirs;
         @Nullable
         public String jniDir;
-        // Data usage
-        public long dataTx;
-        public long dataRx;
+        @Nullable
+        public AppUsageStatsManager.DataUsage dataUsage;
         @Nullable
         public PackageSizeInfo sizeInfo;
         // More info

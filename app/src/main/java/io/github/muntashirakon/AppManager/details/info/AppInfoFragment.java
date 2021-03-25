@@ -91,6 +91,7 @@ import io.github.muntashirakon.AppManager.types.PackageSizeInfo;
 import io.github.muntashirakon.AppManager.types.ScrollableDialogBuilder;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
+import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.utils.*;
 import io.github.muntashirakon.io.ProxyFile;
 
@@ -1141,11 +1142,13 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     private void setDataUsage(@NonNull AppInfoViewModel.AppInfo appInfo) {
+        AppUsageStatsManager.DataUsage dataUsage = appInfo.dataUsage;
+        if (dataUsage == null) return;
         synchronized (mListItems) {
             if (isDetached()) return;
             mListItems.add(ListItem.getGroupHeader(getString(R.string.data_usage_msg)));
-            mListItems.add(ListItem.getInlineItem(getString(R.string.data_transmitted), getReadableSize(appInfo.dataTx)));
-            mListItems.add(ListItem.getInlineItem(getString(R.string.data_received), getReadableSize(appInfo.dataRx)));
+            mListItems.add(ListItem.getInlineItem(getString(R.string.data_transmitted), getReadableSize(dataUsage.getTx())));
+            mListItems.add(ListItem.getInlineItem(getString(R.string.data_received), getReadableSize(dataUsage.getRx())));
             mListItems.add(ListItem.getGroupDivider());
         }
     }

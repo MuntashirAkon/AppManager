@@ -53,7 +53,7 @@ public class AppUsageDetailsDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         FragmentActivity activity = requireActivity();
-        AppUsageStatsManager.PackageUS packageUS = requireArguments().getParcelable(ARG_PACKAGE_US);
+        PackageUsageInfo packageUS = requireArguments().getParcelable(ARG_PACKAGE_US);
         LayoutInflater inflater = LayoutInflater.from(activity);
         if (packageUS == null || inflater == null) return super.onCreateDialog(savedInstanceState);
         View view = inflater.inflate(R.layout.dialog_app_usage_details, null);
@@ -83,8 +83,8 @@ public class AppUsageDetailsDialogFragment extends DialogFragment {
 
     static class AppUsageDetailsAdapter extends BaseAdapter {
         private final LayoutInflater mLayoutInflater;
-        private List<AppUsageStatsManager.USEntry> mDefaultList;
-        private List<AppUsageStatsManager.USEntry> mAdapterList;
+        private List<PackageUsageInfo.Entry> mDefaultList;
+        private List<PackageUsageInfo.Entry> mAdapterList;
         private final Context context;
 
         private final int mColorTransparent;
@@ -97,7 +97,7 @@ public class AppUsageDetailsDialogFragment extends DialogFragment {
             mColorSemiTransparent = ContextCompat.getColor(activity, R.color.semi_transparent);
         }
 
-        void setDefaultList(List<AppUsageStatsManager.USEntry> list) {
+        void setDefaultList(List<PackageUsageInfo.Entry> list) {
             mDefaultList = list;
             mAdapterList = list;
             notifyDataSetChanged();
@@ -109,7 +109,7 @@ public class AppUsageDetailsDialogFragment extends DialogFragment {
         }
 
         @Override
-        public AppUsageStatsManager.USEntry getItem(int position) {
+        public PackageUsageInfo.Entry getItem(int position) {
             return mAdapterList.get(position);
         }
 
@@ -133,9 +133,9 @@ public class AppUsageDetailsDialogFragment extends DialogFragment {
                 holder.subtitle = convertView.findViewById(R.id.item_subtitle);
                 convertView.setTag(holder);
             } else holder = (ViewHolder) convertView.getTag();
-            AppUsageStatsManager.USEntry usEntry = mAdapterList.get(position);
-            holder.title.setText(String.format(Locale.ROOT, "%s - %s", DateUtils.formatDateTime(usEntry.startTime), DateUtils.formatDateTime(usEntry.endTime)));
-            holder.subtitle.setText(Utils.getFormattedDuration(context, usEntry.getDuration()));
+            PackageUsageInfo.Entry entry = mAdapterList.get(position);
+            holder.title.setText(String.format(Locale.ROOT, "%s - %s", DateUtils.formatDateTime(entry.startTime), DateUtils.formatDateTime(entry.endTime)));
+            holder.subtitle.setText(Utils.getFormattedDuration(context, entry.getDuration()));
             convertView.setBackgroundColor(position % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
             return convertView;
         }

@@ -25,9 +25,9 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.provider.Settings;
 import android.text.format.Formatter;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,6 +42,11 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.textview.MaterialTextView;
@@ -51,12 +56,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import androidx.annotation.IntDef;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.usage.UsageUtils.IntervalType;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -98,7 +100,7 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
     private LinearProgressIndicator mProgressIndicator;
     private SwipeRefreshLayout mSwipeRefresh;
     private AppUsageAdapter mAppUsageAdapter;
-    List<AppUsageStatsManager.PackageUS> mPackageUSList;
+    List<PackageUsageInfo> packageUsageInfoList;
     private static long totalScreenTime;
     private static PackageManager mPackageManager;
     private @IntervalType int current_interval = USAGE_TODAY;
@@ -220,14 +222,18 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        AppUsageStatsManager.PackageUS packageUS = mAppUsageAdapter.getItem(position-1);
-        AppUsageStatsManager.PackageUS packageUS1 = AppUsageStatsManager.getInstance(this).getUsageStatsForPackage(packageUS.packageName, current_interval);
-        packageUS1.copyOthers(packageUS);
-        AppUsageDetailsDialogFragment appUsageDetailsDialogFragment = new AppUsageDetailsDialogFragment();
-        Bundle args = new Bundle();
-        args.putParcelable(AppUsageDetailsDialogFragment.ARG_PACKAGE_US, packageUS1);
-        appUsageDetailsDialogFragment.setArguments(args);
-        appUsageDetailsDialogFragment.show(getSupportFragmentManager(), AppUsageDetailsDialogFragment.TAG);
+        try {
+            PackageUsageInfo packageUS = mAppUsageAdapter.getItem(position - 1);
+            PackageUsageInfo packageUS1 = AppUsageStatsManager.getInstance(this).getUsageStatsForPackage(packageUS.packageName, current_interval);
+            packageUS1.copyOthers(packageUS);
+            AppUsageDetailsDialogFragment appUsageDetailsDialogFragment = new AppUsageDetailsDialogFragment();
+            Bundle args = new Bundle();
+            args.putParcelable(AppUsageDetailsDialogFragment.ARG_PACKAGE_US, packageUS1);
+            appUsageDetailsDialogFragment.setArguments(args);
+            appUsageDetailsDialogFragment.show(getSupportFragmentManager(), AppUsageDetailsDialogFragment.TAG);
+        } catch (RemoteException e) {
+            Log.e("AppUsage", e);
+        }
     }
 
     private void setSortBy(@SortOrder int sort) {
@@ -238,8 +244,8 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
     }
 
     private void sortPackageUSList() {
-        if (mPackageUSList == null) return;
-        Collections.sort(mPackageUSList, ((o1, o2) -> {
+        if (packageUsageInfoList == null) return;
+        Collections.sort(packageUsageInfoList, ((o1, o2) -> {
             switch (mSortBy) {
                 case SORT_BY_APP_LABEL:
                     return Collator.getInstance().compare(o1.appLabel, o2.appLabel);
@@ -269,14 +275,18 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
         new Thread(() -> {
             int _try = 5; // try to get usage stat 5 times
             do {
-                mPackageUSList = AppUsageStatsManager.getInstance(this).getUsageStats(current_interval);
-            } while (0 != --_try && mPackageUSList.size() == 0);
+                try {
+                    packageUsageInfoList = AppUsageStatsManager.getInstance(this).getUsageStats(current_interval);
+                } catch (RemoteException e) {
+                    Log.e("AppUsage", e);
+                }
+            } while (0 != --_try && packageUsageInfoList.size() == 0);
             totalScreenTime = 0;
-            for (AppUsageStatsManager.PackageUS appItem : mPackageUSList)
+            for (PackageUsageInfo appItem : packageUsageInfoList)
                 totalScreenTime += appItem.screenTime;
             sortPackageUSList();
             runOnUiThread(() -> {
-                mAppUsageAdapter.setDefaultList(mPackageUSList);
+                mAppUsageAdapter.setDefaultList(packageUsageInfoList);
                 setUsageSummary();
                 mProgressIndicator.hide();
             });
@@ -329,7 +339,7 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
 
     static class AppUsageAdapter extends BaseAdapter {
         private final LayoutInflater mLayoutInflater;
-        private List<AppUsageStatsManager.PackageUS> mAdapterList;
+        private List<PackageUsageInfo> mAdapterList;
         private final Activity mActivity;
 
         static class ViewHolder {
@@ -350,7 +360,7 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
             mActivity = activity;
         }
 
-        void setDefaultList(List<AppUsageStatsManager.PackageUS> list) {
+        void setDefaultList(List<PackageUsageInfo> list) {
             mAdapterList = list;
             notifyDataSetChanged();
         }
@@ -361,7 +371,7 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
         }
 
         @Override
-        public AppUsageStatsManager.PackageUS getItem(int position) {
+        public PackageUsageInfo getItem(int position) {
             return mAdapterList.get(position);
         }
 
@@ -391,7 +401,7 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
                 holder = (ViewHolder) convertView.getTag();
                 if(holder.iconLoader != null) holder.iconLoader.interrupt();
             }
-            final AppUsageStatsManager.PackageUS packageUS = mAdapterList.get(position);
+            final PackageUsageInfo packageUS = mAdapterList.get(position);
             final int percentUsage = (int) (packageUS.screenTime * 100f / totalScreenTime);
             // Set label (or package name on failure)
             try {
@@ -419,12 +429,12 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
             holder.screenTime.setText(screenTimesWithTimesOpened);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 // Set data usage
-                final Pair<Long, Long> mobileData = packageUS.mobileData;
+                final AppUsageStatsManager.DataUsage mobileData = packageUS.mobileData;
                 if (mobileData.first != 0 || mobileData.second != 0) {
                     holder.mobileDataUsage.setText("M: \u2191 " + Formatter.formatFileSize(mActivity, mobileData.first)
                             + " \u2193 " + Formatter.formatFileSize(mActivity, mobileData.second));
                 } else holder.mobileDataUsage.setText("");
-                final Pair<Long, Long> wifiData = packageUS.wifiData;
+                final AppUsageStatsManager.DataUsage wifiData = packageUS.wifiData;
                 if (wifiData.first != 0 || wifiData.second != 0) {
                     holder.wifiDataUsage.setText("W: \u2191 " + Formatter.formatFileSize(mActivity, wifiData.first)
                             + " \u2193 " + Formatter.formatFileSize(mActivity, wifiData.second));
