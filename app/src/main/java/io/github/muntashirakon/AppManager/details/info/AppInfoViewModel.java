@@ -235,15 +235,8 @@ public class AppInfoViewModel extends AndroidViewModel {
             }
             // Set sizes
             if (Utils.hasUsageStatsPermission(getApplication())) {
-                PackageSizeInfo sizeInfo = PackageUtils.getPackageSizeInfo(getApplication(), packageName, userHandle,
+                appInfo.sizeInfo = PackageUtils.getPackageSizeInfo(getApplication(), packageName, userHandle,
                         Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? applicationInfo.storageUuid : null);
-                if (sizeInfo != null) {
-                    appInfo.codeSize = sizeInfo.codeSize;
-                    appInfo.dataSize = sizeInfo.dataSize;
-                    appInfo.cacheSize = sizeInfo.cacheSize;
-                    appInfo.obbSize = sizeInfo.obbSize;
-                    appInfo.mediaSize = sizeInfo.mediaSize;
-                }
             }
             // Set installer app
             try {
@@ -332,12 +325,8 @@ public class AppInfoViewModel extends AndroidViewModel {
         // Data usage
         public long dataTx;
         public long dataRx;
-        // Size info
-        public long codeSize;
-        public long dataSize;
-        public long cacheSize;
-        public long obbSize;
-        public long mediaSize;
+        @Nullable
+        public PackageSizeInfo sizeInfo;
         // More info
         @Nullable
         public String installerApp;

@@ -87,6 +87,7 @@ import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.sharedpref.SharedPrefsActivity;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
+import io.github.muntashirakon.AppManager.types.PackageSizeInfo;
 import io.github.muntashirakon.AppManager.types.ScrollableDialogBuilder;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
@@ -1245,19 +1246,20 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     .show());
             return;
         }
+        PackageSizeInfo sizeInfo = appInfo.sizeInfo;
+        if (sizeInfo == null) return;
         synchronized (mListItems) {
             mListItems.add(ListItem.getGroupHeader(getString(R.string.storage_and_cache)));
-            mListItems.add(ListItem.getInlineItem(getString(R.string.app_size), getReadableSize(appInfo.codeSize)));
-            mListItems.add(ListItem.getInlineItem(getString(R.string.data_size), getReadableSize(appInfo.dataSize)));
-            mListItems.add(ListItem.getInlineItem(getString(R.string.cache_size), getReadableSize(appInfo.cacheSize)));
-            if (appInfo.obbSize != 0) {
-                mListItems.add(ListItem.getInlineItem(getString(R.string.obb_size), getReadableSize(appInfo.obbSize)));
+            mListItems.add(ListItem.getInlineItem(getString(R.string.app_size), getReadableSize(sizeInfo.codeSize)));
+            mListItems.add(ListItem.getInlineItem(getString(R.string.data_size), getReadableSize(sizeInfo.dataSize)));
+            mListItems.add(ListItem.getInlineItem(getString(R.string.cache_size), getReadableSize(sizeInfo.cacheSize)));
+            if (sizeInfo.obbSize != 0) {
+                mListItems.add(ListItem.getInlineItem(getString(R.string.obb_size), getReadableSize(sizeInfo.obbSize)));
             }
-            if (appInfo.mediaSize != 0) {
-                mListItems.add(ListItem.getInlineItem(getString(R.string.media_size), getReadableSize(appInfo.mediaSize)));
+            if (sizeInfo.mediaSize != 0) {
+                mListItems.add(ListItem.getInlineItem(getString(R.string.media_size), getReadableSize(sizeInfo.mediaSize)));
             }
-            mListItems.add(ListItem.getInlineItem(getString(R.string.total_size), getReadableSize(appInfo.codeSize
-                    + appInfo.dataSize + appInfo.cacheSize + appInfo.obbSize + appInfo.mediaSize)));
+            mListItems.add(ListItem.getInlineItem(getString(R.string.total_size), getReadableSize(sizeInfo.getTotalSize())));
             mListItems.add(ListItem.getGroupDivider());
         }
     }
