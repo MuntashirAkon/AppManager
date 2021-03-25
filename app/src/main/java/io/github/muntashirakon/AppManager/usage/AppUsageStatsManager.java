@@ -36,6 +36,7 @@ import androidx.core.util.Pair;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -92,7 +93,9 @@ public class AppUsageStatsManager {
         return appUsageStatsManager;
     }
 
+    @NonNull
     private final IUsageStatsManager mUsageStatsManager;
+    @NonNull
     private final Context context;
     private final PackageManager mPackageManager;
 
@@ -111,12 +114,11 @@ public class AppUsageStatsManager {
 
     public PackageUsageInfo getUsageStatsForPackage(@NonNull String packageName, @UsageUtils.IntervalType int usage_interval)
             throws RemoteException {
-        PackageUsageInfo packageUS = new PackageUsageInfo(packageName);
-        packageUS.appLabel = PackageUtils.getPackageLabel(mPackageManager, packageName);
-        if (mUsageStatsManager == null) return packageUS;
-
         UsageUtils.TimeInterval range = UsageUtils.getTimeInterval(usage_interval);
+        PackageUsageInfo packageUsageInfo = new PackageUsageInfo(packageName);
+        packageUsageInfo.appLabel = PackageUtils.getPackageLabel(mPackageManager, packageName);
         UsageEvents events = mUsageStatsManager.queryEvents(range.getStartTime(), range.getEndTime(), context.getPackageName());
+        if (events == null) return packageUsageInfo;
         UsageEvents.Event event = new UsageEvents.Event();
         List<PackageUsageInfo.Entry> usEntries = new ArrayList<>();
         long startTime = 0;
@@ -138,8 +140,8 @@ public class AppUsageStatsManager {
                 endTime = 0;
             }
         }
-        packageUS.entries = usEntries;
-        return packageUS;
+        packageUsageInfo.entries = usEntries;
+        return packageUsageInfo;
     }
 
     /**
@@ -153,13 +155,13 @@ public class AppUsageStatsManager {
      */
     public List<PackageUsageInfo> getUsageStats(@UsageUtils.IntervalType int usage_interval) throws RemoteException {
         List<PackageUsageInfo> screenTimeList = new ArrayList<>();
-        if (mUsageStatsManager == null) return screenTimeList;
         Map<String, Long> screenTimes = new HashMap<>();
         Map<String, Long> lastUse = new HashMap<>();
         Map<String, Integer> accessCount = new HashMap<>();
         // Get events
         UsageUtils.TimeInterval interval = UsageUtils.getTimeInterval(usage_interval);
         UsageEvents events = mUsageStatsManager.queryEvents(interval.getStartTime(), interval.getEndTime(), context.getPackageName());
+        if (events == null) return Collections.emptyList();
         UsageEvents.Event event = new UsageEvents.Event();
         long startTime;
         long endTime;
@@ -184,13 +186,13 @@ public class AppUsageStatsManager {
                         if (packageName.equals(event.getPackageName())) {
                             long time = endTime - startTime;
                             if (time > USAGE_TIME_MAX) {
-                                if (screenTimes.containsKey(packageName))
+                                if (screenTimes.containsKey(packageName)) {
                                     screenTimes.put(packageName, screenTimes.get(packageName) + time);
-                                else screenTimes.put(packageName, time);
+                                } else screenTimes.put(packageName, time);
                                 lastUse.put(packageName, endTime);
-                                if (accessCount.containsKey(packageName))
+                                if (accessCount.containsKey(packageName)) {
                                     accessCount.put(packageName, accessCount.get(packageName) + 1);
-                                else accessCount.put(packageName, 1);
+                                } else accessCount.put(packageName, 1);
                             }
                         }
                         break;
