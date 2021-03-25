@@ -18,20 +18,29 @@
 package io.github.muntashirakon.AppManager.details.info;
 
 import android.app.Application;
-import android.app.usage.StorageStats;
-import android.app.usage.StorageStatsManager;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.*;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Process;
 import android.util.Pair;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
+
 import com.android.internal.util.TextUtils;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.backup.BackupUtils;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
@@ -41,21 +50,19 @@ import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.NetworkPolicyManagerCompat;
+import io.github.muntashirakon.AppManager.types.PackageSizeInfo;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.usage.UsageUtils;
-import io.github.muntashirakon.AppManager.utils.*;
+import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
+import io.github.muntashirakon.AppManager.utils.MagiskUtils;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.PermissionUtils;
+import io.github.muntashirakon.AppManager.utils.SsaidSettings;
+import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.io.ProxyFile;
-
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class AppInfoViewModel extends AndroidViewModel {
     private final MutableLiveData<CharSequence> packageLabel = new MutableLiveData<>();
@@ -160,6 +167,7 @@ public class AppInfoViewModel extends AndroidViewModel {
         PackageInfo packageInfo = mainModel.getPackageInfo();
         String packageName = packageInfo.packageName;
         ApplicationInfo applicationInfo = packageInfo.applicationInfo;
+        int userHandle = Users.getUserHandle(applicationInfo.uid);
         PackageManager pm = getApplication().getPackageManager();
         boolean isExternalApk = mainModel.getIsExternalApk();
         AppInfo appInfo = new AppInfo();
@@ -226,36 +234,15 @@ public class AppInfoViewModel extends AndroidViewModel {
                 e.printStackTrace();
             }
             // Set sizes
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-                try {
-                    Method getPackageSizeInfo = pm.getClass().getMethod("getPackageSizeInfo", String.class,
-                            IPackageStatsObserver.class);
-                    getPackageSizeInfo.invoke(pm, packageName, new IPackageStatsObserver.Stub() {
-                        @SuppressWarnings("deprecation")
-                        @Override
-                        public void onGetStatsCompleted(final PackageStats pStats, boolean succeeded) {
-                            appInfo.codeSize = pStats.codeSize + pStats.externalCodeSize;
-                            appInfo.dataSize = pStats.dataSize + pStats.externalDataSize;
-                            appInfo.cacheSize = pStats.cacheSize + pStats.externalCacheSize;
-                            appInfo.obbSize = pStats.externalObbSize;
-                            appInfo.mediaSize = pStats.externalMediaSize;
-                        }
-                    });
-                } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                if (Utils.hasUsageStatsPermission(getApplication())) {
-                    try {
-                        StorageStatsManager storageStatsManager = (StorageStatsManager) getApplication().getSystemService(Context.STORAGE_STATS_SERVICE);
-                        StorageStats storageStats = storageStatsManager.queryStatsForPackage(applicationInfo.storageUuid, packageName, Process.myUserHandle());
-                        appInfo.cacheSize = storageStats.getCacheBytes();
-                        appInfo.codeSize = storageStats.getAppBytes();
-                        appInfo.dataSize = storageStats.getDataBytes() - appInfo.cacheSize;
-                        // TODO(24/1/21): List obb and media size
-                    } catch (IOException | PackageManager.NameNotFoundException e) {
-                        e.printStackTrace();
-                    }
+            if (Utils.hasUsageStatsPermission(getApplication())) {
+                PackageSizeInfo sizeInfo = PackageUtils.getPackageSizeInfo(getApplication(), packageName, userHandle,
+                        Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? applicationInfo.storageUuid : null);
+                if (sizeInfo != null) {
+                    appInfo.codeSize = sizeInfo.codeSize;
+                    appInfo.dataSize = sizeInfo.dataSize;
+                    appInfo.cacheSize = sizeInfo.cacheSize;
+                    appInfo.obbSize = sizeInfo.obbSize;
+                    appInfo.mediaSize = sizeInfo.mediaSize;
                 }
             }
             // Set installer app

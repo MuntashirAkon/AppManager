@@ -17,18 +17,23 @@
 
 package io.github.muntashirakon.AppManager.utils;
 
+import android.app.usage.IStorageStatsManager;
+import android.app.usage.StorageStats;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.ComponentInfo;
+import android.content.pm.IPackageStatsObserver;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.PackageStats;
 import android.content.pm.Signature;
 import android.content.pm.SigningInfo;
 import android.os.Build;
 import android.os.RemoteException;
+import android.os.storage.StorageManager;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.util.Pair;
@@ -43,6 +48,8 @@ import com.android.apksig.ApkVerifier;
 import com.android.internal.util.TextUtils;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.security.PublicKey;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateExpiredException;
@@ -59,6 +66,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -68,6 +77,7 @@ import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.db.entity.App;
+import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.main.ApplicationItem;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
@@ -78,6 +88,7 @@ import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.PackageChangeReceiver;
+import io.github.muntashirakon.AppManager.types.PackageSizeInfo;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.UserIdInt;
 import io.github.muntashirakon.AppManager.users.Users;
@@ -332,6 +343,38 @@ public final class PackageUtils {
             packages.add(app.packageName);
         }
         return packages.toArray(new String[0]);
+    }
+
+    @Nullable
+    public static PackageSizeInfo getPackageSizeInfo(Context context, String packageName, int userHandle, UUID storageUuid) {
+        AtomicReference<PackageSizeInfo> packageSizeInfo = new AtomicReference<>();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            try {
+                AppManager.getIPackageManager().getPackageSizeInfo(packageName, userHandle, new IPackageStatsObserver.Stub() {
+                    @SuppressWarnings("deprecation")
+                    @Override
+                    public void onGetStatsCompleted(final PackageStats pStats, boolean succeeded) {
+                        packageSizeInfo.set(new PackageSizeInfo(pStats));
+                    }
+                });
+            } catch (RemoteException e) {
+                Log.e("PackageUtils", e);
+            }
+        } else {
+            try {
+                IStorageStatsManager storageStatsManager = IStorageStatsManager.Stub.asInterface(ProxyBinder
+                        .getService(Context.STORAGE_STATS_SERVICE));
+                @SuppressWarnings("JavaReflectionMemberAccess")
+                Method getPackageSizeInfo = StorageManager.class.getMethod("convert", UUID.class);
+                String uuidString = (String) getPackageSizeInfo.invoke(null, storageUuid);
+                StorageStats storageStats = storageStatsManager.queryStatsForPackage(uuidString, packageName,
+                        userHandle, context.getPackageName());
+                packageSizeInfo.set(new PackageSizeInfo(packageName, storageStats));
+            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | RemoteException e) {
+                Log.e("PackageUtils", e);
+            }
+        }
+        return packageSizeInfo.get();
     }
 
     @NonNull

@@ -66,8 +66,14 @@ public final class PackageManagerCompat {
     @Retention(RetentionPolicy.SOURCE)
     public @interface EnabledFlags {}
 
-    public static List<PackageInfo> getInstalledPackages(int flags, @UserIdInt int userHandle) throws RemoteException {
+    public static List<PackageInfo> getInstalledPackages(int flags, @UserIdInt int userHandle)
+            throws RemoteException {
         return AppManager.getIPackageManager().getInstalledPackages(flags, userHandle).getList();
+    }
+
+    public static List<ApplicationInfo> getInstalledApplications(int flags, @UserIdInt int userHandle)
+            throws RemoteException {
+        return AppManager.getIPackageManager().getInstalledApplications(flags, userHandle).getList();
     }
 
     @NonNull
@@ -81,7 +87,8 @@ public final class PackageManagerCompat {
     }
 
     @NonNull
-    public static ApplicationInfo getApplicationInfo(String packageName, int flags, @UserIdInt int userHandle) throws RemoteException {
+    public static ApplicationInfo getApplicationInfo(String packageName, int flags, @UserIdInt int userHandle)
+            throws RemoteException {
         return AppManager.getIPackageManager().getApplicationInfo(packageName, flags, userHandle);
     }
 
@@ -127,7 +134,8 @@ public final class PackageManagerCompat {
         }
     }
 
-    public static int getPermissionFlags(String permissionName, String packageName, @UserIdInt int userId) throws RemoteException {
+    public static int getPermissionFlags(String permissionName, String packageName, @UserIdInt int userId)
+            throws RemoteException {
         IPackageManager pm = AppManager.getIPackageManager();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             IPermissionManager permissionManager = getPermissionManager();
@@ -157,8 +165,7 @@ public final class PackageManagerCompat {
         return AppManager.getIPackageManager().getInstallerPackageName(packageName);
     }
 
-    public static boolean clearApplicationUserData(String packageName,
-                                                   @UserIdInt int userId) {
+    public static boolean clearApplicationUserData(String packageName, @UserIdInt int userId) {
         IPackageManager pm = AppManager.getIPackageManager();
         CountDownLatch dataClearWatcher = new CountDownLatch(1);
         AtomicBoolean isSuccess = new AtomicBoolean(false);
