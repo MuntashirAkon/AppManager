@@ -43,29 +43,19 @@ import java.util.Map;
 
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.utils.NonNullUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
-import static android.net.NetworkCapabilities.TRANSPORT_BLUETOOTH;
 import static android.net.NetworkCapabilities.TRANSPORT_CELLULAR;
-import static android.net.NetworkCapabilities.TRANSPORT_ETHERNET;
-import static android.net.NetworkCapabilities.TRANSPORT_LOWPAN;
-import static android.net.NetworkCapabilities.TRANSPORT_VPN;
 import static android.net.NetworkCapabilities.TRANSPORT_WIFI;
-import static android.net.NetworkCapabilities.TRANSPORT_WIFI_AWARE;
 
 public class AppUsageStatsManager {
-    public static final int USAGE_TIME_MAX = 5000;
     private static final String SYS_USAGE_STATS_SERVICE = "usagestats";
 
     @Retention(RetentionPolicy.SOURCE)
     @IntDef(value = {
             TRANSPORT_CELLULAR,
-            TRANSPORT_WIFI,
-            TRANSPORT_BLUETOOTH,
-            TRANSPORT_ETHERNET,
-            TRANSPORT_VPN,
-            TRANSPORT_WIFI_AWARE,
-            TRANSPORT_LOWPAN,
+            TRANSPORT_WIFI
     })
     public @interface Transport {
     }
@@ -184,16 +174,16 @@ public class AppUsageStatsManager {
                         endTime = eventTime;
                         skip_new = false;
                         if (packageName.equals(event.getPackageName())) {
-                            long time = endTime - startTime;
-                            if (time > USAGE_TIME_MAX) {
-                                if (screenTimes.containsKey(packageName)) {
-                                    screenTimes.put(packageName, screenTimes.get(packageName) + time);
-                                } else screenTimes.put(packageName, time);
-                                lastUse.put(packageName, endTime);
-                                if (accessCount.containsKey(packageName)) {
-                                    accessCount.put(packageName, accessCount.get(packageName) + 1);
-                                } else accessCount.put(packageName, 1);
-                            }
+                            long time = endTime - startTime + 1;
+                            if (screenTimes.containsKey(packageName)) {
+                                screenTimes.put(packageName, NonNullUtils.defeatNullable(screenTimes
+                                        .get(packageName)) + time);
+                            } else screenTimes.put(packageName, time);
+                            lastUse.put(packageName, endTime);
+                            if (accessCount.containsKey(packageName)) {
+                                accessCount.put(packageName, NonNullUtils.defeatNullable(accessCount
+                                        .get(packageName)) + 1);
+                            } else accessCount.put(packageName, 1);
                         }
                         break;
                     }
@@ -283,15 +273,9 @@ public class AppUsageStatsManager {
         long totalRx = 0;
         NetworkStatsManager networkStatsManager = (NetworkStatsManager) context.getSystemService(Context.NETWORK_STATS_SERVICE);
         UsageUtils.TimeInterval range = UsageUtils.getTimeInterval(intervalType);
-        int networkIdCount;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
-            networkIdCount = 7;
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            networkIdCount = 6;
-        } else networkIdCount = 5;
         try {
             if (networkStatsManager != null) {
-                for (int networkId = 0; networkId < networkIdCount; ++networkId) {
+                for (int networkId = 0; networkId < 2; ++networkId) {
                     NetworkStats networkStats = networkStatsManager.querySummary(networkId, null,
                             range.getStartTime(), range.getEndTime());
                     if (networkStats != null) {
