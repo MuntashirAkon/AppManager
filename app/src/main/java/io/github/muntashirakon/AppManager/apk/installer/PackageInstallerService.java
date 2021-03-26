@@ -67,18 +67,31 @@ public class PackageInstallerService extends ForegroundService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        if (intent == null) return;
-        int apkFileKey = intent.getIntExtra(EXTRA_APK_FILE_KEY, -1);
-        if (apkFileKey == -1) return;
-        String appLabel = intent.getStringExtra(EXTRA_APP_LABEL);
-        // Set package name in the ongoing notification
-        builder.setContentTitle(appLabel);
-        notificationManager.notify(NOTIFICATION_ID, builder.build());
-        int userHandle = intent.getIntExtra(EXTRA_USER_ID, Users.getCurrentUserHandle());
-        // Install package
-        PackageInstallerCompat pi = PackageInstallerCompat.getNewInstance(userHandle);
-        pi.setAppLabel(appLabel);
-        pi.setCloseApkFile(intent.getBooleanExtra(EXTRA_CLOSE_APK_FILE, false));
-        pi.install(ApkFile.getInstance(apkFileKey));
+        try {
+            if (intent == null) return;
+            int apkFileKey = intent.getIntExtra(EXTRA_APK_FILE_KEY, -1);
+            if (apkFileKey == -1) return;
+            String appLabel = intent.getStringExtra(EXTRA_APP_LABEL);
+            // Set package name in the ongoing notification
+            builder.setContentTitle(appLabel);
+            notificationManager.notify(NOTIFICATION_ID, builder.build());
+            int userHandle = intent.getIntExtra(EXTRA_USER_ID, Users.getCurrentUserHandle());
+            // Install package
+            PackageInstallerCompat pi = PackageInstallerCompat.getNewInstance(userHandle);
+            pi.setAppLabel(appLabel);
+            pi.setCloseApkFile(intent.getBooleanExtra(EXTRA_CLOSE_APK_FILE, false));
+            pi.install(ApkFile.getInstance(apkFileKey));
+        } finally {
+            stopForeground(true);
+            // Hack to remove ongoing notification
+            notificationManager.deleteNotificationChannel(CHANNEL_ID);
+        }
+    }
+
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        if (notificationManager != null) {
+            notificationManager.cancel(NOTIFICATION_ID);
+        }
     }
 }

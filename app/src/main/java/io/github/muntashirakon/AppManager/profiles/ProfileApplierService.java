@@ -44,6 +44,7 @@ public class ProfileApplierService extends ForegroundService {
 
     @Nullable
     private String profileName;
+    private NotificationManagerCompat notificationManager;
 
     public ProfileApplierService() {
         super("ProfileApplierService");
@@ -57,7 +58,7 @@ public class ProfileApplierService extends ForegroundService {
             intent.putExtra(AppsProfileActivity.EXTRA_PROFILE_NAME, profileName);
             PendingIntent pendingIntent = PendingIntent.getActivity(this,
                     0, notificationIntent, 0);
-            NotificationUtils.getNewNotificationManager(this, CHANNEL_ID,
+            notificationManager = NotificationUtils.getNewNotificationManager(this, CHANNEL_ID,
                     "Profile Applier", NotificationManagerCompat.IMPORTANCE_LOW);
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                     .setContentTitle(profileName)
@@ -84,6 +85,17 @@ public class ProfileApplierService extends ForegroundService {
         } catch (FileNotFoundException e) {
             Log.e("ProfileApplier", "Could not apply the profile");
             sendNotification(Activity.RESULT_CANCELED);
+        } finally {
+            stopForeground(true);
+            // Hack to remove ongoing notification
+            notificationManager.deleteNotificationChannel(CHANNEL_ID);
+        }
+    }
+
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        if (notificationManager != null) {
+            notificationManager.cancel(NOTIFICATION_ID);
         }
     }
 

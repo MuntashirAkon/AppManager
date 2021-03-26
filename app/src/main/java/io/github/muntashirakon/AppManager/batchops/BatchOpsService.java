@@ -27,18 +27,19 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 
-import java.util.ArrayList;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+
+import java.util.ArrayList;
+
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.main.MainActivity;
 import io.github.muntashirakon.AppManager.misc.AlertDialogActivity;
-import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.types.ForegroundService;
+import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 
 public class BatchOpsService extends ForegroundService {
@@ -130,10 +131,10 @@ public class BatchOpsService extends ForegroundService {
     private int op = BatchOpsManager.OP_NONE;
     @Nullable
     private ArrayList<String> packages;
-    Bundle args;
+    private Bundle args;
     private String header;
     private NotificationCompat.Builder builder;
-    NotificationManagerCompat notificationManager;
+    private NotificationManagerCompat notificationManager;
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, @NonNull Intent intent) {
@@ -182,31 +183,44 @@ public class BatchOpsService extends ForegroundService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        if (intent == null) {
-            sendResults(Activity.RESULT_CANCELED, null);
-            return;
+        try {
+            if (intent == null) {
+                sendResults(Activity.RESULT_CANCELED, null);
+                return;
+            }
+            op = intent.getIntExtra(EXTRA_OP, BatchOpsManager.OP_NONE);
+            packages = intent.getStringArrayListExtra(EXTRA_OP_PKG);
+            if (packages == null) return;
+            args = intent.getBundleExtra(EXTRA_OP_EXTRA_ARGS);
+            ArrayList<Integer> userHandles = intent.getIntegerArrayListExtra(EXTRA_OP_USERS);
+            if (userHandles == null) {
+                userHandles = new ArrayList<>(packages.size());
+                for (String ignore : packages) userHandles.add(Users.getCurrentUserHandle());
+            }
+            if (op == BatchOpsManager.OP_NONE || packages == null) {
+                sendResults(Activity.RESULT_CANCELED, null);
+                return;
+            }
+            sendStarted();
+            BatchOpsManager batchOpsManager = new BatchOpsManager();
+            batchOpsManager.setArgs(args);
+            BatchOpsManager.Result result = batchOpsManager.performOp(op, packages, userHandles);
+            if (result.isSuccessful()) {
+                sendResults(Activity.RESULT_OK, null);
+            } else {
+                sendResults(Activity.RESULT_FIRST_USER, result);
+            }
+        } finally {
+            stopForeground(true);
+            // Hack to remove ongoing notification
+            notificationManager.deleteNotificationChannel(CHANNEL_ID);
         }
-        op = intent.getIntExtra(EXTRA_OP, BatchOpsManager.OP_NONE);
-        packages = intent.getStringArrayListExtra(EXTRA_OP_PKG);
-        if (packages == null) return;
-        args = intent.getBundleExtra(EXTRA_OP_EXTRA_ARGS);
-        ArrayList<Integer> userHandles = intent.getIntegerArrayListExtra(EXTRA_OP_USERS);
-        if (userHandles == null) {
-            userHandles = new ArrayList<>(packages.size());
-            for (String ignore : packages) userHandles.add(Users.getCurrentUserHandle());
-        }
-        if (op == BatchOpsManager.OP_NONE || packages == null) {
-            sendResults(Activity.RESULT_CANCELED, null);
-            return;
-        }
-        sendStarted();
-        BatchOpsManager batchOpsManager = new BatchOpsManager();
-        batchOpsManager.setArgs(args);
-        BatchOpsManager.Result result = batchOpsManager.performOp(op, packages, userHandles);
-        if (result.isSuccessful()) {
-            sendResults(Activity.RESULT_OK, null);
-        } else {
-            sendResults(Activity.RESULT_FIRST_USER, result);
+    }
+
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        if (notificationManager != null) {
+            notificationManager.cancel(NOTIFICATION_ID);
         }
     }
 
