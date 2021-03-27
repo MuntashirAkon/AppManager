@@ -48,7 +48,7 @@
     <string name="cache_size">Cache</string>
     <string name="data_size">Data</string>
     <string name="about">Tentang</string>
-    <string name="data_usage_msg">Penggunaan data sejak boot terakhir</string>
+    <string name="data_usage_msg">Penggunaan data</string>
     <string name="data_transmitted">Data ditransmisikan</string>
     <string name="data_received">Data diterima</string>
     <string name="sort_by_domain">App pengguna lebih dulu</string>
