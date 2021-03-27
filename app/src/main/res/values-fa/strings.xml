@@ -146,7 +146,7 @@
     <string name="package_name">نام بسته</string>
     <string name="shortcut_name">نام میانبر</string>
     <string name="edit_shortcut">ویرایش میانبر</string>
-    <string name="create_shortcut">ایجاد میانبر</string>
+    <string name="create_shortcut">ساخت میانبر</string>
     <string name="starting_activity">شروع فعالیت:<xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="error_verbose_pin_shortcut">راه انداز کنونی از PinShortcut پشتیبانی نمی‌کند. ایجاد میانبر امکان‌پذیر نیست.</string>
     <string name="error_creating_shortcut">خطا در ایجاد میانبر</string>
@@ -177,7 +177,7 @@
     <string name="cache_size">حافظه پنهان</string>
     <string name="data_size">داده‌ها</string>
     <string name="about">درباره</string>
-    <string name="data_usage_msg">مصرف دیتا از زمان آخرین بوت شدن</string>
+    <string name="data_usage_msg"></string>
     <string name="data_transmitted">داده‌های منتقل شده</string>
     <string name="data_received">داده دریافت‌شده</string>
     <string name="sort_by_target_sdk">SDK هدف</string>
