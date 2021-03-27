@@ -714,4 +714,9 @@
         <item quantity="other">Nie udało się wyłączyć elementów śledzących z %1$d aplikacji</item>
     </plurals>
     <string name="trackers_disabled_successfully">Elementy śledzące zostały wyłączone</string>
+    <string name="input_keystore_pass_msg">Kliknij tutaj, aby podać hasło KeyStore</string>
+    <string name="splits">Podziały</string>
+    <string name="source_stamp_verified">SourceStamp zweryfikowany.</string>
+    <string name="allow_routine_ops">Zezwalaj na rutynowe operacje</string>
+    <string name="un_apkm">UnApkm</string>
 </resources>
