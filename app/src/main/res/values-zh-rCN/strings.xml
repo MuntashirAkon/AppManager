@@ -66,7 +66,7 @@
     <string name="sort_by_target_sdk">目标 SDK</string>
     <string name="data_received">已接收的数据</string>
     <string name="data_transmitted">已发送数据</string>
-    <string name="data_usage_msg">自上次启动以来的数据使用</string>
+    <string name="data_usage_msg">数据使用量</string>
     <string name="about">关于</string>
     <string name="data_size">数据</string>
     <string name="cache_size">缓存</string>
