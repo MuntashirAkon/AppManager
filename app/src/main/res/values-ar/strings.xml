@@ -99,7 +99,7 @@
     <string name="cache_size">ذاكره التخزين المؤقت</string>
     <string name="data_size">البيانات</string>
     <string name="about">حول</string>
-    <string name="data_usage_msg">استخدام البيانات منذ آخر تشغيل</string>
+    <string name="data_usage_msg">البيانات المستخدمة</string>
     <string name="data_transmitted">البيانات المرسلة</string>
     <string name="data_received">البيانات الواردة</string>
     <string name="sort_by_target_sdk">SDK المستهدفه</string>
@@ -143,4 +143,43 @@
     <string name="receivers">المستقبلات</string>
     <string name="no_activities">لا توجد أنشطة</string>
     <string name="refresh">تحديث</string>
+    <string name="no_app_ops">لا توجد عمليات تطبيق</string>
+    <string name="app_size">التطبيق</string>
+    <string name="storage_and_cache">التخزين وذاكرة التخزين المؤقت</string>
+    <string name="failed_to_stop">لا يمكن ايقافه <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="force_stop">إيقاف إجباري</string>
+    <string name="failed_to_enable">تعذر تمكين التطبيق <xliff:g id="app_name" example="App Manager"> %1$s </xliff:g>.</string>
+    <string name="failed_to_disable">تعذر التعطيل <xliff:g id="app_name" example="App Manager"> %1$s </xliff:g>.</string>
+    <string name="enable">تفعيل</string>
+    <string name="disable">تعطيل</string>
+    <string name="stopped">متوقف</string>
+    <string name="uninstall_system_app_message">هذا من تطبيقات النظام. هل أنت متأكد من أنك تريد إلغاء تثبيت هذا التطبيق؟</string>
+    <string name="uninstalled_successfully"><xliff:g id="app_name" example="App Manager"> %1$s </xliff:g> تم إلغاء تثبيته.</string>
+    <string name="failed_to_uninstall">تعذر إلغاء التثبيت <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="uninstall_app_message">هل تريد إزالة هذا التطبيق؟</string>
+    <string name="view_in_settings">افتح في الإعدادات</string>
+    <string name="no_content">لا يوجد محتوى</string>
+    <string name="no_usage_in_this_time_range">لا يوجد استخدام في هذا النطاق الزمني</string>
+    <string name="disabled_app">مٌعطل</string>
+    <string name="error_evaluating_input">تعذر تقييم الإدخال</string>
+    <string name="type_string">محارف</string>
+    <string name="type_long">عدد صحيح طويل</string>
+    <string name="type_float">الرقم العشري</string>
+    <string name="type_boolean">صواب/خطأ</string>
+    <string name="done">انتهى</string>
+    <string name="add_item">إضافة عنصر</string>
+    <string name="select_type">حدد نوعًا</string>
+    <string name="key_name">اسم المفتاح</string>
+    <string name="decimal_value">القيمة العشرية</string>
+    <string name="string_value">قيمة السلسلة</string>
+    <string name="saving_failed">فشل الحفظ، حاول مرة أخرى.</string>
+    <string name="saved_successfully">تمَّ الحفظ</string>
+    <string name="deletion_failed">فشل الحذف</string>
+    <string name="deleted_successfully">تم حذفه</string>
+    <string name="delete">احذف</string>
+    <string name="discard">ألغِ</string>
+    <string name="save">احفظ</string>
+    <string name="databases">قواعد البيانات</string>
+    <string name="shared_prefs">الأفضليات المشتركة</string>
+    <string name="no_code">لا يوجد رمز</string>
 </resources>
