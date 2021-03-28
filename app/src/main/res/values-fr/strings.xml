@@ -5,7 +5,7 @@
     <string name="cache_size">Cache</string>
     <string name="data_size">Données</string>
     <string name="about">À propos</string>
-    <string name="data_usage_msg">Données d\'utilisation depuis le dernier démarrage</string>
+    <string name="data_usage_msg">Données d\'utilisation</string>
     <string name="data_transmitted">Données envoyées</string>
     <string name="data_received">Données reçues</string>
     <string name="sort_by_target_sdk">SDK cible</string>
@@ -339,9 +339,9 @@
     <string name="no_tracker_found">Aucun traqueur trouvé</string>
     <string name="clear_app_cache_description">Effacer le cache de toutes les applications</string>
     <string name="clear_app_cache">Effacer le cache de l\'application</string>
-    <string name="clear_data_from_uninstalled_apps_description">Effacer les données des applications désinstallées avec le drapeau DONT_DELETE_DATA</string>
+    <string name="clear_data_from_uninstalled_apps_description">Effacer les données des applications désinstallées avec le drapeau <tt>DONT_DELETE_DATA</tt></string>
     <string name="clear_data_from_uninstalled_apps">Effacer les données des applications désinstallées</string>
-    <string name="block_components_description">Bloquer tous les composants identifiés par la ou les signature(s) donnée(s)</string>
+    <string name="block_components_description">Bloquer tous les composants identifiés par les signatures données</string>
     <string name="block_components_dots">Bloquer les composants…</string>
     <string name="block_unblock_trackers_description">Bloquer ou débloquer les composants de publicité et de suivi des applications installées</string>
     <string name="clear_cache">Effacer le cache</string>
@@ -394,7 +394,7 @@
     <string name="follow_system">Système</string>
     <string name="pref_app_theme">Thème de l\'application</string>
     <string name="pref_import_blocker_msg">Importer des règles de blocage depuis Blocker, chaque fichier contenant les règles d\'un seul paquet.</string>
-    <string name="pref_import_watt_msg">Importer des règles de blocage depuis Watt, chaque fichier contenant des règles pour un seul paquet nommé tel que nomdupaquet.xml etc.</string>
+    <string name="pref_import_watt_msg">Importer des règles de blocage depuis Watt, chaque fichier contenant des règles pour un seul paquet nommé tel que <tt>nomdupaquet.xml</tt> etc.</string>
     <string name="pref_import_msg">Importer des règles de blocage précédemment exportées depuis App Manager.</string>
     <string name="pref_export_msg">Exporter les règles de blocage configurées depuis App Manager vers le stockage externe.</string>
     <string name="touchscreen">Écran tactile</string>
@@ -451,7 +451,7 @@
     </plurals>
     <string name="the_export_was_successful">Exporté</string>
     <string name="the_import_was_successful">Importé</string>
-    <string name="pref_import_export_blocking_rules">Importer/Exporter des règles de blocage</string>
+    <string name="pref_import_export_blocking_rules">Importer/exporter des règles de blocage</string>
     <string name="sort_by_mobile_data">Données mobiles</string>
     <string name="sort_by_times_opened">Nombre d\'ouvertures</string>
     <string name="sort_by_screen_time">Temps d\'écran</string>
@@ -573,7 +573,7 @@
     <string name="toggle_class_listing">Activer/Désactiver l\'affichage en liste des classes</string>
     <string name="class_viewer">Visualiseur de classe</string>
     <string name="word_wrap">Activer/Désactiver la coupure de mots</string>
-    <string name="credits_message">"Les auteurs de
+    <string name="credits_message">Les auteurs de
 \n- The Android Open Source Project
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
@@ -582,7 +582,8 @@
 \n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
-\nLogo : <a href="https://github.com/Atrate">Atrate</a>. "</string>
+\n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
+\nOriginal logo credit: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="credits">Crédits</string>
     <string name="third_party">Bibliothèques tierces et icônes</string>
     <string name="license">Licence</string>
@@ -650,4 +651,12 @@
     <string name="pref_import_existing_msg">Ajouter des composants désactivés par les autres applis à App Manager. Faites attention en utilisant cet outil car il peut y avoir de nombreux faux positifs. Ne choisissez que les applis dont vous êtes certain.</string>
     <string name="battery_mode">Mode de batterie</string>
     <string name="pref_import_export_blocking_rules_msg">Importer/exporter des règles, importer des règles depuis Watt ou Blocker.</string>
+    <plurals name="no_of_components">
+        <item quantity="one">%1$d composant</item>
+        <item quantity="other">%1$d composants</item>
+    </plurals>
+    <string name="user_with_id">Utilisateur : <xliff:g id="user_id" example="0">%1$d</xliff:g></string>
+    <string name="no_app_ops">Aucune opération d\'application</string>
+    <string name="os_version">Version du système d\'exploitation</string>
+    <string name="restore_latest_msg">Restaurer les applications déjà installées dont les codes de version sont supérieurs au code de version installée.</string>
 </resources>
