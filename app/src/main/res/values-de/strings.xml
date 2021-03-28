@@ -66,8 +66,8 @@
     <string name="sort_by_target_sdk">Ziel-SDK</string>
     <string name="data_received">Daten empfangen</string>
     <string name="data_transmitted">Daten gesendet</string>
-    <string name="data_usage_msg">Datenverbrauch seit letztem Hochfahren</string>
-    <string name="about">Über App Manager</string>
+    <string name="data_usage_msg">Datenverbrauch</string>
+    <string name="about">Über</string>
     <string name="data_size">Daten</string>
     <string name="cache_size">Cache</string>
     <string name="obb_size">Obb</string>
@@ -840,7 +840,7 @@
     <string name="backup_all_apps">Sichern aller Apps</string>
     <string name="list_options">Optionen auflisten</string>
     <string name="reverse">Zurücksetzen</string>
-    <string name="os_version">OS-Version</string>
+    <string name="os_version">Version des Betriebssystems</string>
     <string name="add">Hinzufügen</string>
     <string name="add_to_profile">Zum Profil hinzufügen</string>
     <string name="initializing">Initialisieren…</string>
@@ -859,7 +859,7 @@
     <string name="external_storage">Externer Speicher</string>
     <string name="internal_storage">Interner Speicher</string>
     <string name="user_with_id">Nutzer: <xliff:g id="user_id" example="0">%1$d</xliff:g></string>
-    <string name="type_float_array_list">Liste dezimaler Zahlen</string>
+    <string name="type_float_array_list">Liste der Dezimalzahlen</string>
     <string name="type_float_array">Array von Dezimalzahlen</string>
     <string name="type_long_array_list">Liste von langen Ganzzahlen</string>
     <string name="type_long_array">Array von langen Ganzzahlen</string>
