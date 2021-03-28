@@ -66,7 +66,7 @@
     <string name="sort_by_target_sdk">Целевая версия SDK</string>
     <string name="data_received">Данных получено</string>
     <string name="data_transmitted">Данных отправлено</string>
-    <string name="data_usage_msg">Использование данных с последнего запуска устройства</string>
+    <string name="data_usage_msg">Использование данных</string>
     <string name="about">О приложении</string>
     <string name="data_size">Данные</string>
     <string name="cache_size">Кэш</string>
