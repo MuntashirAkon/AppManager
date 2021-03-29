@@ -719,4 +719,13 @@
     <string name="source_stamp_verified">SourceStamp zweryfikowany.</string>
     <string name="allow_routine_ops">Zezwalaj na rutynowe operacje</string>
     <string name="un_apkm">UnApkm</string>
+    <string name="pref_import_export_blocking_rules_msg">Importuj/eksportuj reguły, importuj zewnętrzne reguły z Watt lub Blocker.</string>
+    <plurals name="no_of_times_opened">
+        <item quantity="one">%1$d raz</item>
+        <item quantity="few">%1$d razy</item>
+        <item quantity="many">%1$d razy</item>
+        <item quantity="other">%1$d razy</item>
+    </plurals>
+    <string name="exodus_link">Link εxodus</string>
+    <string name="backup_apk">Kopia zapasowa APK</string>
 </resources>
