@@ -270,7 +270,7 @@
     <string name="sort_by_times_opened">Times opened</string>
     <string name="sort_by_mobile_data">Mobile data</string>
     <string name="pref_import_export_blocking_rules">Import/export blocking rules</string>
-    <string name="pref_import_export_blocking_rules_msg">You can import rules exported from Watt or Blocker.</string>
+    <string name="pref_import_export_blocking_rules_msg">Import/export rules, import external rules from Watt or Blocker.</string>
     <string name="pref_import_watt">Import from Watt</string>
     <string name="pref_import_blocker">Import from Blocker</string>
     <string name="the_import_was_successful">Imported</string>
@@ -719,7 +719,7 @@
     <string name="allow_routine_ops">Allow routine ops</string>
     <string name="profile_state">Profile state</string>
     <string name="allow_routine_ops_msg">Allow the profile to be used in the routine operations</string>
-    <string name="profile_disable_msg">Disables or enables apps based on their state</string>
+    <string name="profile_disable_msg">Disables or enables apps based on state</string>
     <string name="profile_force_stop_msg">Force-stops apps</string>
     <string name="profile_clear_cache_msg">Clears the app cache of apps</string>
     <string name="profile_clear_data_msg">Clears the data of apps</string>
@@ -811,7 +811,7 @@
     <string name="set_mode_for_app_ops_dots">Set mode for app ops…</string>
     <string name="backup_source_description">Back up the entire source directory.</string>
     <string name="backup_apk_only_description">Only backs up APK files from the source directory. (Select <b>Source</b> first.)</string>
-    <string name="backup_data_description">Back up internal data folders for inclusion in backups.</string>
+    <string name="backup_data_description">Back up internal data folders (for inclusion in backups) by default.</string>
     <string name="backup_external_data_description">Backs up external data folders. (Select <b>Data</b> first.)</string>
     <string name="backup_obb_media_description">Back up OBB and media folders.</string>
     <string name="backup_exclude_cache_description">Do not back up cache, no_cache and no_backup folders.</string>
@@ -900,7 +900,7 @@
     <string name="ssaid_info">SSAID (<tt>Settings.Secure.ANDROID_ID</tt>) is a device identifier assigned to each app (from Android 8 \"Oreo\" onwards). It is widely used by apps to track users.</string>
     <string name="copied_to_clipboard">Copied to clipboard.</string>
     <string name="failed_to_change_ssaid">Could not change SSAID</string>
-    <string name="restart_to_reflect_changes">Restart the device immediately to hopefully apply the new changes.</string>
+    <string name="restart_to_reflect_changes">Don\'t postpone restarting the device to use the new changes.</string>
     <string name="installed_apps">Installed apps</string>
     <string name="enable_disable_features">Enable/disable features</string>
     <string name="pref_enable_disable_features_msg">Enable or disable features in App Manager.</string>
