@@ -189,7 +189,7 @@
     <string name="launch_mode">Modalità avvio</string>
     <string name="permissions">Permessi utente</string>
     <string name="clear_data_from_uninstalled_apps">Rimuovi dati delle app disinstallate</string>
-    <string name="deny_app_ops_description">Imposta una modalità per l\'operatività delle app identificate dalle costanti, es.: &lt;tt&gt;63&lt;/tt&gt; o &lt;tt&gt;RUN_IN_BACKGROUND&lt;/tt&gt;</string>
+    <string name="deny_app_ops_description">Imposta una modalità per l\'operatività delle app identificate dalle costanti, es.: <tt>63</tt> o <tt>RUN_IN_BACKGROUND</tt></string>
     <string name="block_components_description">Blocca tutti i componenti identificati dalle firme indicate</string>
     <string name="block_components_dots">Blocca componenti…</string>
     <string name="block_unblock_trackers_description">Blocca o sblocca pubblicità e componenti tracking da tutte applicazioni installe</string>
@@ -228,7 +228,7 @@
     <string name="sort_by_wifi_data">Dati Wi-Fi</string>
     <string name="pref_about_msg">Versione, licenze, crediti ed altro da App Manager.</string>
     <string name="pref_import_blocker_msg">Importa regole di blocco da Blocker, ogni file contiene regole per un singolo pacchetto.</string>
-    <string name="pref_import_watt_msg">Importa regole di blocco da Watt, ogni file contiene regole per un singolo pacchetto nominato come &lt;tt&gt;packagename.xml&lt;/tt&gt; ecc.</string>
+    <string name="pref_import_watt_msg">Importa regole di blocco da Watt, ogni file contiene regole per un singolo pacchetto nominato come <tt>packagename.xml</tt> ecc.</string>
     <string name="pref_import_msg">Importa regole di blocco precedentemente esportate da App Manager.</string>
     <string name="pref_export_msg">Esportazione regole di blocco configurata all\'interno di App Manager al disco esterno.</string>
     <string name="export_options">Esporta Opzioni</string>
@@ -329,15 +329,15 @@
     <string name="class_viewer">Visualizzatore Classi</string>
     <string name="credits_message">"Agli autori di
 \n- Progetto open source Android
-\n- &lt;a href=\"https://bitbucket.org/oF2pks/fdroid-applications-info\"&gt;Apps_packages Info&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/butzist/ActivityLauncher\"&gt;Activity Launcher&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/billthefarmer/editor\"&gt;Editor&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/zhaobao/AppsMonitor\"&gt;AppsMonitor&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/tuyafeng/Watt\"&gt;Watt&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/8enet/AppOpsX\"&gt;AppOpsX&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/Aefyr/SAI\"&gt;SAI&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/RikkaApps/Shizuku\"&gt;Shizuku&lt;/a&gt;
-\nLogo originale di: &lt;a href=\"https://github.com/Atrate\"&gt;Atrate&lt;/a&gt;. "</string>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
+\n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
+\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
+\n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://github.com/Aefyr/SAI">SAI</a>
+\n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
+\nLogo originale di: <a href="https://github.com/Atrate">Atrate</a>. "</string>
     <string name="credits">Crediti</string>
     <string name="sdk_flags">Flags</string>
     <string name="sort_by_domain">Utilizzatore app primario</string>

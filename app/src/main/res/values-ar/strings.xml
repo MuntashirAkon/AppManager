@@ -41,22 +41,22 @@
     <string name="tracker_classes">فئات التتبع</string>
     <string name="tracker_details">تفاصيل برمجيات التتبع</string>
     <string name="found_trackers">برمجيات التتبع التي تم العثور عليها:</string>
-    <string name="tested_signatures_on_classes_and_time_taken">اختبرت &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"signature_no\" example=\"342\"&gt; %1$d&lt;/xliff:g&gt; تواقيع على &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"6000\"&gt; %2$d &lt;/xliff:g&gt; أصناف.
-\nالوقت الذي استغرق &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"time\" example=\"10000\"&gt; %3$d &lt;/xliff:g&gt; ms (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"iteration_no\" example=\"100000\"&gt;%4$d &lt;/xliff:g&gt; التكرار).</string>
+    <string name="tested_signatures_on_classes_and_time_taken">اختبرت <xliff:g id="signature_no" example="342"> %1$d</xliff:g> تواقيع على <xliff:g id="class_no" example="6000"> %2$d </xliff:g> أصناف.
+\nالوقت الذي استغرق <xliff:g id="time" example="10000"> %3$d </xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d </xliff:g> التكرار).</string>
     <string name="toggle_class_listing">تبديل قائمة الفصل</string>
     <string name="class_viewer">عارض الفصل</string>
     <string name="word_wrap">تفعيل التفاف النص</string>
     <string name="credits_message">"لمؤلفي
 \n- مشروع Android مفتوح المصدر
-\n- &lt;a href=\"https://bitbucket.org/oF2pks/fdroid-applications-info\"&gt; معلومات عن حزمة التطبيقات &lt;/a&gt;
-\n- &lt;a href=\"https://github.com/butzist/ActivityLauncher\"&gt; مشغل النشاط &lt;/a&gt;
-\n- &lt;a href=\"https://github.com/billthefarmer/editor\"&gt; المحرر &lt;/a&gt;
-\n- &lt;a href=\"https://github.com/zhaobao/AppsMonitor\"&gt; AppsMonitor &lt;/a&gt;
-\n- &lt;a href=\"https://github.com/tuyafeng/Watt\"&gt; واط &lt;/a&gt;
-\n- &lt;a href=\"https://github.com/8enet/AppOpsX\"&gt; AppOpsX &lt;/a&gt;
-\n- &lt;a href=\"https://github.com/Aefyr/SAI\"&gt; الديوان &lt;/a&gt;
-\n- &lt;a href=\"https://github.com/RikkaApps/Shizuku\"&gt; شيزوكو &lt;/a&gt;
-\nمصدر الشعار الأصلي: &lt;a href=\"https://github.com/Atrate\"&gt; Atrate &lt;/a&gt;. "</string>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info"> معلومات عن حزمة التطبيقات </a>
+\n- <a href="https://github.com/butzist/ActivityLauncher"> مشغل النشاط </a>
+\n- <a href="https://github.com/billthefarmer/editor"> المحرر </a>
+\n- <a href="https://github.com/zhaobao/AppsMonitor"> AppsMonitor </a>
+\n- <a href="https://github.com/tuyafeng/Watt"> واط </a>
+\n- <a href="https://github.com/8enet/AppOpsX"> AppOpsX </a>
+\n- <a href="https://github.com/Aefyr/SAI"> الديوان </a>
+\n- <a href="https://github.com/RikkaApps/Shizuku"> شيزوكو </a>
+\nمصدر الشعار الأصلي: <a href="https://github.com/Atrate"> Atrate </a>. "</string>
     <string name="credits">إشادات</string>
     <string name="third_party">مكتبات وأيقونات الطرف الثالث</string>
     <string name="license">الرخصة</string>
@@ -69,7 +69,7 @@
     <string name="shortcut_name">اسم الاختصار</string>
     <string name="edit_shortcut">تحرير الاختصار</string>
     <string name="create_shortcut">إنشاء اختصار</string>
-    <string name="starting_activity">بدء النشاط: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"activity_name\" example=\".main.MainActivity\"&gt; %1$s &lt;/xliff:g&gt;</string>
+    <string name="starting_activity">بدء النشاط: <xliff:g id="activity_name" example=".main.MainActivity"> %1$s </xliff:g></string>
     <string name="error_verbose_pin_shortcut">المشغل الحالي لا يدعم PinShortcut. تعذر إنشاء الاختصار.</string>
     <string name="error_creating_shortcut">خطأ في إنشاء الاختصار</string>
     <string name="instructions">التعليمات</string>
@@ -89,7 +89,7 @@
     <string name="user_app">تطبيق المستخدم</string>
     <string name="system_app">تطبيق النظام</string>
     <string name="app_info">معلومات التطبيق</string>
-    <string name="version_name_with_code">إصدار &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"version_name\" example=\"2.5.17\"&gt; %1$s &lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"version_code\" example=\"365\"&gt;%2$d&lt;/xliff:g&gt;)</string>
+    <string name="version_name_with_code">إصدار <xliff:g id="version_name" example="2.5.17"> %1$s </xliff:g> (<xliff:g id="version_code" example="365">%2$d</xliff:g>)</string>
     <string name="sort">الفرز</string>
     <string name="user">المستخدِم</string>
     <string name="system">النظام</string>
