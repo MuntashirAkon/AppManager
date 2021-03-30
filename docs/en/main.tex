@@ -116,7 +116,11 @@
 
 \begin{document}
     \input{titlepage.tex}
-    \tableofcontents
+    \ifdefined\HCode
+        % Don't display table of contents for tex4ht
+    \else
+        \tableofcontents
+    \fi
     \input{intro/main.tex}
     \input{pages/main.tex}
     \input{guide/main.tex}
