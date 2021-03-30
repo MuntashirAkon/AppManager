@@ -65,7 +65,7 @@
     <string name="simple">Simple</string>
     <string name="enabled">Activé</string>
     <string name="choose">Sélectionner</string>
-    <string name="input_permissions_description">Autorisations séparées par des espaces, par ex. (com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION) etc.</string>
+    <string name="input_permissions_description">Autorisations séparées par des espaces, ex : &lt;tt&gt;com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION&lt;&gt; etc. Utilise &lt;tt&gt;*&lt;tt&gt; pour appliquer toutes les permissions.</string>
     <string name="input_permissions">Autorisations</string>
     <string name="options">Options</string>
     <string name="off">Désactivé</string>
@@ -334,7 +334,7 @@
     <string name="only_works_in_root_or_adb_mode">Fonctionne uniquement en mode root ou ADB</string>
     <string name="input_app_ops">Opérations de l\'application</string>
     <string name="filtered_packages">Paquets filtrés</string>
-    <string name="input_signatures_description">Signatures séparées par des espaces, par ex (com.facebook org.app2 com.app3) etc.</string>
+    <string name="input_signatures_description">Signatures séparées par des espaces, ex : &lt;tt&gt;com.facebook org.app2 com.app3&lt;tt&gt; etc.</string>
     <string name="input_signatures">Signatures</string>
     <string name="no_tracker_found">Aucun traqueur trouvé</string>
     <string name="clear_app_cache_description">Effacer le cache de toutes les applications</string>
@@ -573,17 +573,17 @@
     <string name="toggle_class_listing">Activer/Désactiver l\'affichage en liste des classes</string>
     <string name="class_viewer">Visualiseur de classe</string>
     <string name="word_wrap">Activer/Désactiver la coupure de mots</string>
-    <string name="credits_message">Les auteurs de
-\n- The Android Open Source Project
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
+    <string name="credits_message">Aux auteurs du
+\n- Projet Open Source Android
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Info Apps_packages </a>
 \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
-\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/billthefarmer/editor">Editeur</a>
 \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
 \n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
-\nOriginal logo credit: <a href="https://github.com/Atrate">Atrate</a>. </string>
+\nCredit du logo original : <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="credits">Crédits</string>
     <string name="third_party">Bibliothèques tierces et icônes</string>
     <string name="license">Licence</string>
@@ -659,4 +659,26 @@
     <string name="no_app_ops">Aucune opération d\'application</string>
     <string name="os_version">Version du système d\'exploitation</string>
     <string name="restore_latest_msg">Restaurer les applications déjà installées dont les codes de version sont supérieurs au code de version installée.</string>
+    <string name="extras">Extras</string>
+    <string name="category">Catégories</string>
+    <string name="board_name">Carte mère</string>
+    <string name="model">Modèle</string>
+    <string name="brand_name">Marque</string>
+    <string name="vendor">Fournisseur</string>
+    <string name="support_architectures">Architectures supportées</string>
+    <string name="security_providers">Fournisseur de sécurité</string>
+    <string name="kernel">Kernel</string>
+    <string name="manufacturer">Fabriquant</string>
+    <string name="graphics">Carte graphique</string>
+    <string name="cpu">CPU</string>
+    <string name="users">Utilisateurs</string>
+    <string name="languages">Langages</string>
+    <string name="unavailable">Indisponible</string>
+    <string name="available">Disponible</string>
+    <string name="battery_capacity">Capacité</string>
+    <string name="memory">Mémoire</string>
+    <string name="gles_version">Version GL ES</string>
+    <string name="no_of_cores">Coeurs</string>
+    <string name="security">Sûreté</string>
+    <string name="battery">Batterie</string>
 </resources>
