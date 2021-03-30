@@ -70,7 +70,7 @@
     <string name="process_state">狀態： <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g></string>
     <string name="locale_split_for_base_apk"><xliff:g id="split_name" example="English"> %1$s </xliff:g>基本語言環境 APK</string>
     <string name="locale_split_for_feature"><xliff:g id="split_name" example="English">%1$s</xliff:g> 功能的著域 <xliff:g id="feature_name" example="Visualizer"> %2$s </xliff:g></string>
-    <string name="abi_split_for_base_apk"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g>基本 APK 程式碼</string>
+    <string name="abi_split_for_base_apk"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> 基本 APK 程式碼</string>
     <string name="abi_split_for_feature"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> <xliff:g id="feature_name" example="Visualizer"> %2$s </xliff:g></string>
     <string name="density_split_for_base_apk"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> （<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI） 基礎 APK 資源</string>
     <string name="density_split_for_feature"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> （<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI） 功能資源 <xliff:g id="feature_name" example="Visualizer">%3$s</xliff:g></string>
