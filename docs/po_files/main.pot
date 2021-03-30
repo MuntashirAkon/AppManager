@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: io.github.muntashirakon.AppManager v2.5.24\n"
-"POT-Creation-Date: 2021-03-08 14:11+0600\n"
+"POT-Creation-Date: 2021-03-30 12:28+0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,32 +17,32 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #. type: newenvironment{#3}
-#: main.tex:47
+#: main.tex:49
 msgid "\\mdframed[linecolor={#1},backgroundcolor=white,linewidth=3pt,topline=false,rightline=false,bottomline=false]"
 msgstr ""
 
 #. type: newenvironment{#4}
-#: main.tex:47
+#: main.tex:49
 msgid "\\endmdframed"
 msgstr ""
 
 #. type: newenvironment{#3}
-#: main.tex:58
+#: main.tex:60
 msgid "\\amalert{black} \\noindent \\textbf{\\textit{#1.}}"
 msgstr ""
 
 #. type: newenvironment{#4}
-#: main.tex:58 main.tex:69 main.tex:80
+#: main.tex:60 main.tex:71 main.tex:82
 msgid "\\endamalert"
 msgstr ""
 
 #. type: newenvironment{#3}
-#: main.tex:69
+#: main.tex:71
 msgid "\\amalert{Dandelion} \\noindent \\textbf{\\textit{#1.}}"
 msgstr ""
 
 #. type: newenvironment{#3}
-#: main.tex:80
+#: main.tex:82
 msgid "\\amalert{BrickRed} \\noindent \\textbf{\\textit{#1.}}"
 msgstr ""
 
@@ -50,12 +50,12 @@ msgstr ""
 #.  Reference overrides (useful for localization)
 #.  --------------------
 #. type: newcommand{#4}
-#: main.tex:87
+#: main.tex:89
 msgid "Listing"
 msgstr ""
 
 #. type: newcommand{#4}
-#: main.tex:87
+#: main.tex:89
 msgid "\\listingrefname~\\ref{#1}"
 msgstr ""
 
@@ -63,28 +63,28 @@ msgstr ""
 #.  See also environments
 #.  ----------------------
 #. type: newcommand{#4}
-#: main.tex:95
+#: main.tex:97
 msgid "\\noindent\\textit{See also: {#1}}"
 msgstr ""
 
 #. type: newenvironment{#3}
-#: main.tex:95
+#: main.tex:97
 msgid "\\itshape See also: \\itemize"
 msgstr ""
 
 #. type: newenvironment{#4}
-#: main.tex:95
+#: main.tex:97
 msgid "\\enditemize"
 msgstr ""
 
 #.  META
 #. type: title{#1}
-#: main.tex:114
+#: main.tex:116
 msgid "App Manager"
 msgstr ""
 
 #. type: author{#1}
-#: main.tex:114
+#: main.tex:116
 msgid "Muntashir Al-Islam"
 msgstr ""
 
@@ -104,6 +104,13 @@ msgstr ""
 msgid ""
 "``Wisely and slow. They stumble that run fast.'' \\sourceatright{--- Friar "
 "Laurence, \\textit{Romeo and Juliet}}"
+msgstr ""
+
+#.  Don't display table of contents for tex4ht
+#. type: document
+#: ./intro/main.tex
+#: :2
+msgid "\\ifdefined\\HCode \\else \\tableofcontents \\fi"
 msgstr ""
 
 #. type: chapter{#2}
@@ -601,7 +608,7 @@ msgid ""
 "Disabled app"
 msgstr ""
 
-#. type: colorbox{#2}
+#. type: textcolor{#2}
 #: ./pages/main-page.tex
 #: :42
 msgid "Yellow Star"
@@ -2185,8 +2192,8 @@ msgstr ""
 #: ./pages/app-details-page.tex
 #: :406
 msgid ""
-"\\textbf{Flags.} (Uses â symbol or \\textbf{Protection Level} name) This "
-"describes various permission flags such as \\textit{normal}, "
+"\\textbf{Flags.} (Uses the flag symbol or \\textbf{Protection Level} name) "
+"This describes various permission flags such as \\textit{normal}, "
 "\\textit{development}, \\textit{dangerous}, \\textit{instant}, "
 "\\textit{granted}, \\textit{revoked}, \\textit{signature}, "
 "\\textit{privileged}, etc."
@@ -4584,11 +4591,11 @@ msgid ""
 "\\href{https://github.com/RikkaApps/Shizuku}{Shizuku} method) and blocked "
 "again. But if you unblock a component in the "
 "\\hyperref[sec:app-details-page]{App Details page}, it will be reverted back "
-"to default state â- blocked or unblocked as described in the corresponding "
-"app manifest â- using both IFW and \\textit{pm} method.  However, "
-"components blocked by \\href{https://www.myandroidtools.com}{MyAndroidTools "
-"(MAT)} with IFW method will not be unblocked by AM. To solve this issue, you "
-"can first import the corresponding configuration to AM in "
+"to default state —- blocked or unblocked as described in the corresponding "
+"app manifest —- using both IFW and \\textit{pm} method.  However, components "
+"blocked by \\href{https://www.myandroidtools.com}{MyAndroidTools (MAT)} with "
+"IFW method will not be unblocked by AM. To solve this issue, you can first "
+"import the corresponding configuration to AM in "
 "\\hyperref[par:import-existing-rules]{Settings} in which case MAT's "
 "configurations will be removed. But this option is only available from "
 "v2.5.12."
@@ -6471,7 +6478,7 @@ msgid ""
 msgstr ""
 
 #. type: Verbatim
-#: main.tex:123
+#: main.tex:129
 msgid ""
 "AppOps service (appops) commands: help Print this help text.  start [--user "
 "<USER_ID>] <PACKAGE | UID> <OP> Starts a given operation for a particular "
