@@ -154,8 +154,8 @@ public class GzipCompressorOutputStream extends CompressorOutputStream {
     public void write(final byte[] buffer, final int offset, final int length) throws IOException {
         if (deflater.finished()) {
             throw new IOException("Cannot write more data, the end of the compressed data stream has been reached");
-
-        } else if (length > 0) {
+        }
+        if (length > 0) {
             deflater.setInput(buffer, offset, length);
 
             while (!deflater.needsInput()) {

@@ -18,8 +18,6 @@
  */
 package org.apache.commons.compress.utils;
 
-import io.github.muntashirakon.io.ProxyOutputStream;
-
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -66,18 +64,15 @@ public class FixedLengthBlockOutputStream extends OutputStream implements Writab
             final FileOutputStream fileOutputStream = (FileOutputStream) os;
             out = fileOutputStream.getChannel();
             buffer = ByteBuffer.allocateDirect(blockSize);
-        } else if (os instanceof ProxyOutputStream) {
-            final ProxyOutputStream fileOutputStream = (ProxyOutputStream) os;
-            out = fileOutputStream.getChannel();
-            buffer = ByteBuffer.allocateDirect(blockSize);
         } else {
             out = new BufferAtATimeOutputChannel(os);
             buffer = ByteBuffer.allocate(blockSize);
         }
         this.blockSize = blockSize;
     }
-     /**
-      * Create a fixed length block output stream with given destination writable byte channel and block size
+
+    /**
+     * Create a fixed length block output stream with given destination writable byte channel and block size
      * @param out   The writable byte channel to wrap.
      * @param blockSize The block size to use.
      */
@@ -98,9 +93,7 @@ public class FixedLengthBlockOutputStream extends OutputStream implements Writab
         final int i = out.write(buffer);
         final boolean hasRemaining = buffer.hasRemaining();
         if (i != blockSize || hasRemaining) {
-            final String msg = String
-                .format("Failed to write %,d bytes atomically. Only wrote  %,d",
-                    blockSize, i);
+            final String msg = String.format("Failed to write %,d bytes atomically. Only wrote  %,d", blockSize, i);
             throw new IOException(msg);
         }
         buffer.clear();
@@ -241,7 +234,7 @@ public class FixedLengthBlockOutputStream extends OutputStream implements Writab
                 throw new ClosedChannelException();
             }
             if (!buffer.hasArray()) {
-                throw new IllegalArgumentException("Direct buffer somehow written to BufferAtATimeOutputChannel");
+                throw new IOException("Direct buffer somehow written to BufferAtATimeOutputChannel");
             }
 
             try {

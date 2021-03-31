@@ -74,7 +74,7 @@ import org.apache.commons.compress.utils.InputStreamStatistics;
  * @see "https://tools.ietf.org/html/rfc1952"
  */
 public class GzipCompressorInputStream extends CompressorInputStream
-    implements InputStreamStatistics {
+        implements InputStreamStatistics {
 
     // Header flags
     // private static final int FTEXT = 0x01; // Uninteresting for us
@@ -117,14 +117,11 @@ public class GzipCompressorInputStream extends CompressorInputStream
      * Constructs a new input stream that decompresses gzip-compressed data
      * from the specified input stream.
      * <p>
-     * This is equivalent to
-     * <code>GzipCompressorInputStream(inputStream, false)</code> and thus
-     * will not decompress concatenated .gz files.
+     * This is equivalent to <code>GzipCompressorInputStream(inputStream, false)</code> and thus will not decompress
+     * concatenated .gz files.
      *
-     * @param inputStream  the InputStream from which this object should
-     *                     be created of
-     *
-     * @throws IOException if the stream could not be created
+     * @param inputStream The InputStream from which this object should be created of
+     * @throws IOException If the stream could not be created
      */
     public GzipCompressorInputStream(final InputStream inputStream)
             throws IOException {
@@ -143,12 +140,10 @@ public class GzipCompressorInputStream extends CompressorInputStream
      * If <code>mark</code> isn't supported, the input position will be
      * undefined.
      *
-     * @param inputStream  the InputStream from which this object should
-     *                     be created of
-     * @param decompressConcatenated
-     *                     if true, decompress until the end of the input;
-     *                     if false, stop after the first .gz member
-     *
+     * @param inputStream            the InputStream from which this object should
+     *                               be created of
+     * @param decompressConcatenated if true, decompress until the end of the input;
+     *                               if false, stop after the first .gz member
      * @throws IOException if the stream could not be created
      */
     public GzipCompressorInputStream(final InputStream inputStream,
@@ -170,6 +165,7 @@ public class GzipCompressorInputStream extends CompressorInputStream
     /**
      * Provides the stream's meta data - may change with each stream
      * when decompressing concatenated streams.
+     *
      * @return the stream's meta data
      * @since 1.8
      */
@@ -190,17 +186,15 @@ public class GzipCompressorInputStream extends CompressorInputStream
         }
 
         if (magic0 != 31 || in.read() != 139) {
-            throw new IOException(isFirstMember
-                                  ? "Input is not in the .gz format"
-                                  : "Garbage after a valid .gz stream");
+            throw new IOException(isFirstMember ? "Input is not in the .gz format"
+                    : "Garbage after a valid .gz stream");
         }
 
         // Parsing the rest of the header may throw EOFException.
         final DataInput inData = new DataInputStream(in);
         final int method = inData.readUnsignedByte();
         if (method != Deflater.DEFLATED) {
-            throw new IOException("Unsupported compression method "
-                                  + method + " in the .gz header");
+            throw new IOException("Unsupported compression method " + method + " in the .gz header");
         }
 
         final int flg = inData.readUnsignedByte();
@@ -211,15 +205,15 @@ public class GzipCompressorInputStream extends CompressorInputStream
 
         parameters.setModificationTime(ByteUtils.fromLittleEndian(inData, 4) * 1000);
         switch (inData.readUnsignedByte()) { // extra flags
-        case 2:
-            parameters.setCompressionLevel(Deflater.BEST_COMPRESSION);
-            break;
-        case 4:
-            parameters.setCompressionLevel(Deflater.BEST_SPEED);
-            break;
-        default:
-            // ignored for now
-            break;
+            case 2:
+                parameters.setCompressionLevel(Deflater.BEST_COMPRESSION);
+                break;
+            case 4:
+                parameters.setCompressionLevel(Deflater.BEST_SPEED);
+                break;
+            default:
+                // ignored for now
+                break;
         }
         parameters.setOperatingSystem(inData.readUnsignedByte());
 
@@ -266,7 +260,7 @@ public class GzipCompressorInputStream extends CompressorInputStream
 
     private static byte[] readToNull(final DataInput inData) throws IOException {
         try (final ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
-            int b = 0;
+            int b;
             while ((b = inData.readUnsignedByte()) != 0x00) { // NOPMD NOSONAR
                 bos.write(b);
             }
@@ -340,16 +334,14 @@ public class GzipCompressorInputStream extends CompressorInputStream
                 final long crcStored = ByteUtils.fromLittleEndian(inData, 4);
 
                 if (crcStored != crc.getValue()) {
-                    throw new IOException("Gzip-compressed data is corrupt "
-                                          + "(CRC32 error)");
+                    throw new IOException("Gzip-compressed data is corrupt (CRC32 error)");
                 }
 
                 // Uncompressed size modulo 2^32 (ISIZE in the spec)
                 final long isize = ByteUtils.fromLittleEndian(inData, 4);
 
                 if (isize != (inf.getBytesWritten() & 0xffffffffL)) {
-                    throw new IOException("Gzip-compressed data is corrupt"
-                                          + "(uncompressed size mismatch)");
+                    throw new IOException("Gzip-compressed data is corrupt (uncompressed size mismatch)");
                 }
 
                 // See if this is the end of the file.
@@ -370,8 +362,7 @@ public class GzipCompressorInputStream extends CompressorInputStream
      *
      * @param signature the bytes to check
      * @param length    the number of bytes to check
-     * @return          true if this is a .gz stream, false otherwise
-     *
+     * @return true if this is a .gz stream, false otherwise
      * @since 1.1
      */
     public static boolean matches(final byte[] signature, final int length) {
