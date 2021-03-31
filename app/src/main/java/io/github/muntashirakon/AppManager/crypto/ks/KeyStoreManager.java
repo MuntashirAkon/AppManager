@@ -26,12 +26,22 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.RemoteException;
-import android.security.KeyPairGeneratorSpec;
+import android.util.Base64;
 
-import java.io.*;
-import java.math.BigInteger;
+import androidx.annotation.CheckResult;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.security.Key;
-import java.security.KeyPairGenerator;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -40,22 +50,16 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.security.interfaces.RSAPrivateKey;
-import java.security.interfaces.RSAPublicKey;
-import java.util.Calendar;
+import java.util.ArrayList;
 
-import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
-import javax.security.auth.x500.X500Principal;
+import javax.crypto.SecretKey;
 
-import androidx.annotation.CheckResult;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.crypto.KeystoreUtil;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
@@ -64,18 +68,11 @@ import io.github.muntashirakon.AppManager.utils.Utils;
 public class KeyStoreManager {
     public static final String TAG = "KSManager";
 
-    private static final String AM_KEYSTORE = "JKS";  // Java KeyStore
-    private static final String ANDROID_KEYSTORE = "AndroidKeyStore";
-    private static final String ANDROID_KEYSTORE_ALIAS = "am_secret";
-    private static final String KEY_TYPE_RSA = "RSA";
-    private static final String CIPHER_ALGO_RSA = "RSA/ECB/PKCS1Padding";
-    private static final String CIPHER_PROVIDER = "RSA/ECB/PKCS1Padding";
-    private static final String AM_KEYSTORE_FILE_NAME = "am_keystore.jks";  // Java KeyStore
+    private static final String AM_KEYSTORE = KeyStore.getDefaultType();
+    private static final String AM_KEYSTORE_FILE_NAME = "am_keystore.bks";  // Java KeyStore
     private static final String PREF_AM_KEYSTORE_PREFIX = "ks_";
     private static final String PREF_AM_KEYSTORE_PASS = "kspass";
     private static final File AM_KEYSTORE_FILE;
-    @Nullable
-    private static final KeyStore androidKeyStore;
     private static final SharedPreferences sharedPreferences;
 
     public static final String ACTION_KS_INTERACTION_BEGIN = BuildConfig.APPLICATION_ID + ".action.KS_INTERACTION_BEGIN";
@@ -84,7 +81,6 @@ public class KeyStoreManager {
     static {
         Context ctx = AppManager.getContext();
         AM_KEYSTORE_FILE = new File(ctx.getFilesDir(), AM_KEYSTORE_FILE_NAME);
-        androidKeyStore = getAndroidKeyStore();
         sharedPreferences = ctx.getSharedPreferences("keystore", Context.MODE_PRIVATE);
     }
 
@@ -120,8 +116,8 @@ public class KeyStoreManager {
         amKeyStore = getAmKeyStore();
     }
 
-    public void addItem(String alias, PrivateKey privateKey, X509Certificate certificate, @Nullable char[] password)
-            throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException, RemoteException {
+    public void addPrivateKey(String alias, PrivateKey privateKey, X509Certificate certificate, @Nullable char[] password)
+            throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException {
         // Check existence of this alias in system preferences, this should be unique
         String prefAlias = getPrefAlias(alias);
         if (sharedPreferences.contains(prefAlias) && amKeyStore.containsAlias(alias)) {
@@ -138,6 +134,31 @@ public class KeyStoreManager {
         sharedPreferences.edit().putString(prefAlias, encryptedPass).apply();
         try (OutputStream is = new FileOutputStream(AM_KEYSTORE_FILE)) {
             amKeyStore.store(is, realPassword);
+            Utils.clearChars(realPassword);
+            Utils.clearChars(password);
+        }
+    }
+
+    public void addSecretKey(String alias, SecretKey secretKey, @Nullable char[] password, boolean isOverride)
+            throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException {
+        // Check existence of this alias in system preferences, this should be unique
+        String prefAlias = getPrefAlias(alias);
+        if (sharedPreferences.contains(prefAlias) && amKeyStore.containsAlias(alias)) {
+            if (!isOverride) throw new KeyStoreException("Alias " + alias + " exists.");
+            else Log.w(TAG, "Alias " + alias + " exists.");
+        }
+        char[] realPassword = getAmKeyStorePassword();
+        if (password == null) password = realPassword;
+        amKeyStore.setEntry(alias, new KeyStore.SecretKeyEntry(secretKey), new KeyStore.PasswordProtection(password));
+        String encryptedPass = getEncryptedPassword(password);
+        if (encryptedPass == null) {
+            amKeyStore.deleteEntry(alias);
+            throw new KeyStoreException("Password for " + alias + " could not be saved.");
+        }
+        sharedPreferences.edit().putString(prefAlias, encryptedPass).apply();
+        try (OutputStream is = new FileOutputStream(AM_KEYSTORE_FILE)) {
+            amKeyStore.store(is, realPassword);
+        } finally {
             Utils.clearChars(realPassword);
             Utils.clearChars(password);
         }
@@ -161,6 +182,10 @@ public class KeyStoreManager {
         return key;
     }
 
+    public boolean containsKey(String alias) throws KeyStoreException {
+        return amKeyStore.containsAlias(alias);
+    }
+
     /**
      * Get the certificate associated with the alias
      *
@@ -179,19 +204,10 @@ public class KeyStoreManager {
     @CheckResult
     @Nullable
     private static char[] getDecryptedPassword(@NonNull String encryptedPass) {
-        try {
-            if (androidKeyStore == null) throw new Exception("AndroidKeyStore wasn't initialized.");
-            if (androidKeyStore.containsAlias(ANDROID_KEYSTORE_ALIAS)) {
-                KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry) androidKeyStore.getEntry(ANDROID_KEYSTORE_ALIAS, null);
-                RSAPrivateKey privateKey = (RSAPrivateKey) privateKeyEntry.getPrivateKey();
-                Cipher output = Cipher.getInstance(CIPHER_ALGO_RSA, CIPHER_PROVIDER);
-                output.init(Cipher.DECRYPT_MODE, privateKey);
-                try (ByteArrayInputStream bis = new ByteArrayInputStream(encryptedPass.getBytes());
-                     CipherInputStream cipherInputStream = new CipherInputStream(bis, output)) {
-                    // Use of String as an intermediary has security issues
-                    return Utils.bytesToChars(IOUtils.readFully(cipherInputStream, -1, true));
-                }
-            }
+        byte[] encryptedBytes = Base64.decode(encryptedPass, Base64.NO_WRAP);
+        try (ByteArrayInputStream bis = new ByteArrayInputStream(encryptedBytes);
+             CipherInputStream cipherInputStream = KeystoreUtil.createCipherInputStream(bis, AppManager.getContext())) {
+            return Utils.bytesToChars(IOUtils.readFully(cipherInputStream, -1, true));
         } catch (Exception e) {
             Log.e("KS", "Could not get decrypted password for " + encryptedPass, e);
         }
@@ -200,59 +216,13 @@ public class KeyStoreManager {
 
     @Nullable
     private static String getEncryptedPassword(@NonNull char[] realPass) {
-        try {
-            if (androidKeyStore == null) throw new Exception("AndroidKeyStore wasn't initialized.");
-            if (androidKeyStore.containsAlias(ANDROID_KEYSTORE_ALIAS)) {
-                KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry) androidKeyStore.getEntry(ANDROID_KEYSTORE_ALIAS, null);
-                RSAPublicKey publicKey = (RSAPublicKey) privateKeyEntry.getCertificate().getPublicKey();
-                Cipher input = Cipher.getInstance(CIPHER_ALGO_RSA, CIPHER_PROVIDER);
-                input.init(Cipher.ENCRYPT_MODE, publicKey);
-                try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                     CipherOutputStream cipherOutputStream = new CipherOutputStream(bos, input)) {
-                    cipherOutputStream.write(Utils.charsToBytes(realPass));
-                    Utils.clearChars(realPass);
-                    return new String(bos.toByteArray());
-                }
-            }
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
+             CipherOutputStream cipherOutputStream = KeystoreUtil.createCipherOutputStream(bos, AppManager.getContext())) {
+            cipherOutputStream.write(Utils.charsToBytes(realPass));
+            cipherOutputStream.close();
+            return Base64.encodeToString(bos.toByteArray(), Base64.NO_WRAP);
         } catch (Exception e) {
             Log.e("KS", "Could not get encrypted password", e);
-        }
-        return null;
-    }
-
-    /**
-     * Get AndroidKeyStore. A new am_secret entry will be created if not already exists and all
-     * stored passwords will be removed along with this.
-     *
-     * @return AndroidKeyStore
-     */
-    @Nullable
-    private static KeyStore getAndroidKeyStore() {
-        try {
-            KeyStore keyStore = KeyStore.getInstance(ANDROID_KEYSTORE);
-            keyStore.load(null);
-            // Create am_secret if not exists
-            if (!keyStore.containsAlias(ANDROID_KEYSTORE_ALIAS)) {
-                // Delete all items from shared pref
-                sharedPreferences.edit().clear().apply();
-                // Create new am_secret in AndroidKeyStore
-                Calendar start = Calendar.getInstance();
-                Calendar end = Calendar.getInstance();
-                end.add(Calendar.YEAR, 20);
-                KeyPairGeneratorSpec spec = new KeyPairGeneratorSpec.Builder(AppManager.getContext())
-                        .setAlias(ANDROID_KEYSTORE_ALIAS)
-                        .setSubject(new X500Principal("CN=App Manager"))
-                        .setSerialNumber(BigInteger.ONE)
-                        .setStartDate(start.getTime())
-                        .setEndDate(end.getTime())
-                        .build();
-                KeyPairGenerator generator = KeyPairGenerator.getInstance(KEY_TYPE_RSA, ANDROID_KEYSTORE);
-                generator.initialize(spec);
-                generator.generateKeyPair();
-            }
-            return keyStore;
-        } catch (Exception e) {
-            Log.e(TAG, "Could not initialize AndroidKeyStore", e);
         }
         return null;
     }
@@ -273,6 +243,8 @@ public class KeyStoreManager {
             }
         } else {
             keyStore.load(null);
+            char[] realPassword = getAmKeyStorePassword();
+            Utils.clearChars(realPassword);
         }
         return keyStore;
     }
@@ -293,8 +265,7 @@ public class KeyStoreManager {
             IntentFilter filter = new IntentFilter(ACTION_KS_INTERACTION_BEGIN);
             filter.addAction(ACTION_KS_INTERACTION_END);
             context.registerReceiver(receiver, filter);
-            Intent broadcastIntent = new Intent(ACTION_KS_INTERACTION_BEGIN);
-            context.sendBroadcast(broadcastIntent);
+            context.sendBroadcast(new Intent(ACTION_KS_INTERACTION_BEGIN));
             // Intent wrapper
             Intent intent = new Intent(context, KeyStoreActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -349,8 +320,8 @@ public class KeyStoreManager {
             // Intent wrapper
             Intent intent = new Intent(context, KeyStoreActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra(KeyStoreActivity.EXTRA_TYPE, KeyStoreActivity.TYPE_KS);
-            intent.putExtra(KeyStoreActivity.EXTRA_ALIAS, PREF_AM_KEYSTORE_PASS);
+            intent.putExtra(KeyStoreActivity.EXTRA_TYPE, KeyStoreActivity.TYPE_ALIAS);
+            intent.putExtra(KeyStoreActivity.EXTRA_ALIAS, alias);
             String ks = "AM KeyStore";
             // We don't need a delete intent since the time will be expired anyway
             NotificationCompat.Builder builder = NotificationUtils.getHighPriorityNotificationBuilder(context)

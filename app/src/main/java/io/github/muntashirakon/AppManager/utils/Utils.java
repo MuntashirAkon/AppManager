@@ -508,22 +508,6 @@ public class Utils {
         return HexEncoding.encodeToString(bytes, false /* lowercase */);
     }
 
-    /**
-     * Decodes a hex string.
-     * <p>
-     * Note that this function does <em>NOT</em> convert a hexadecimal number to a
-     * binary number.
-     *
-     * @param hex Hexadecimal representation of data.
-     * @return The byte[] representation of the given data.
-     * @throws NumberFormatException If the hexadecimal input string is of odd
-     *                               length or invalid hexadecimal string.
-     */
-    @NonNull
-    public static byte[] hexToBytes(@NonNull String hex) throws NumberFormatException {
-        return HexEncoding.decode(hex);
-    }
-
     @NonNull
     public static byte[] longToBytes(long l) {
         byte[] result = new byte[8];

@@ -19,17 +19,17 @@ package io.github.muntashirakon.AppManager.crypto;
 
 import android.os.RemoteException;
 
+import androidx.annotation.AnyThread;
+import androidx.annotation.NonNull;
+import androidx.annotation.WorkerThread;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableEntryException;
-import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,9 +41,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.security.auth.DestroyFailedException;
 
-import androidx.annotation.AnyThread;
-import androidx.annotation.NonNull;
-import androidx.annotation.WorkerThread;
+import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.io.ProxyFile;
@@ -55,8 +53,7 @@ public class AESCrypto implements Crypto {
 
     public static final String AES_EXT = ".aes";
 
-    public static final String ANDROID_KEY_STORE = "AndroidKeyStore";
-    public static final String AES_KEY_ALIAS = "aes";
+    public static final String AES_KEY_ALIAS = "backup_aes";
 
     private static final String AES_GCM_CIPHER_TYPE = "AES/GCM/NoPadding";
     public static final int GCM_IV_LENGTH = 12; // in bytes
@@ -69,10 +66,9 @@ public class AESCrypto implements Crypto {
     public AESCrypto(byte[] iv) throws CryptoException {
         this.iv = iv;
         try {
-            KeyStore ks = KeyStore.getInstance(ANDROID_KEY_STORE);
-            ks.load(null);
-            this.secretKey = (SecretKey) ks.getKey(AES_KEY_ALIAS, null);
-        } catch (KeyStoreException | CertificateException | NoSuchAlgorithmException | IOException | UnrecoverableEntryException e) {
+            KeyStoreManager keyStoreManager = KeyStoreManager.getInstance();
+            this.secretKey = (SecretKey) keyStoreManager.getKey(AES_KEY_ALIAS, null);
+        } catch (Exception e) {
             throw new CryptoException(e);
         }
         try {
@@ -120,6 +116,7 @@ public class AESCrypto implements Crypto {
 
     @WorkerThread
     private boolean handleFiles(int mode, @NonNull File[] files) {
+        newFiles.clear();
         if (files.length > 0) {  // files is never null here
             // Init cipher
             try {
@@ -140,13 +137,13 @@ public class AESCrypto implements Crypto {
                 try (InputStream is = new ProxyInputStream(file);
                      OutputStream os = new ProxyOutputStream(outputFilename)) {
                     if (mode == Cipher.ENCRYPT_MODE) {
-                        OutputStream cipherOS = new CipherOutputStream(os, cipher);
-                        IOUtils.copy(is, os);
-                        cipherOS.close();
+                        try (OutputStream cipherOS = new CipherOutputStream(os, cipher)) {
+                            IOUtils.copy(is, cipherOS);
+                        }
                     } else {  // Cipher.DECRYPT_MODE
-                        InputStream cipherIS = new CipherInputStream(is, cipher);
-                        IOUtils.copy(cipherIS, os);
-                        cipherIS.close();
+                        try (InputStream cipherIS = new CipherInputStream(is, cipher)) {
+                            IOUtils.copy(cipherIS, os);
+                        }
                     }
                 } catch (IOException | RemoteException e) {
                     Log.e(TAG, "Error: " + e.toString(), e);

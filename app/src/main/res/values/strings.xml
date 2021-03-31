@@ -913,4 +913,10 @@
     <string name="installer_app_message">Select <b>choose</b> to choose from the installed apps or select <b>custom</b> to specify a custom package name.</string>
     <string name="uninstalled_apps">Uninstalled apps</string>
     <string name="filter_apps_without_backups">Apps without backups</string>
+    <string name="input_key">Input key (in hexadecimal)</string>
+    <string name="generate_key">Generate</string>
+    <string name="failed_to_save_key">Failed to save key.</string>
+    <string name="failed_to_initialize_key_store">Could not initialize App Manager keystore.</string>
+    <string name="invalid_aes_key_size">Invalid key size for AES encryption. Key size can be either 128 or 256 bits.</string>
+    <string name="crypto_key_size">Key size</string>
 </resources>

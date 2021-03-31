@@ -169,7 +169,6 @@ public class OpenPGPCrypto implements Crypto {
         this.is = is;
         this.os = os;
         files = new File[0];
-        newFiles.clear();
         lastIntent = intent;
         lastMode = mode;
         return doAction(intent, mode, true);

@@ -62,16 +62,17 @@ public class KeyStoreActivity extends BaseActivity {
                     .setPositiveButton(R.string.ok, (dialog, which, inputText, isChecked) -> {
                         if (!TextUtils.isEmpty(inputText)) {
                             // Keystore password can't be null
-                            savePass(alias, inputText);
+                            savePass(alias, inputText, false);
                         }
                     })
                     .create();
         } else if (type == TYPE_ALIAS) {
             ksDialog = new TextInputDialogBuilder(this, getString(R.string.input_keystore_alias_pass, alias))
                     .setTitle(getString(R.string.input_keystore_alias_pass, alias))
-                    .setHelperText(R.string.input_keystore_alias_pass_description)
+                    .setHelperText(getString(R.string.input_keystore_alias_pass_description, alias))
                     .setPositiveButton(R.string.ok, (dialog, which, inputText, isChecked) ->
-                            savePass(alias, inputText)).create();
+                            savePass(KeyStoreManager.getPrefAlias(alias), inputText, true)
+                    ).create();
         } else {
             finish();
             return;
@@ -81,14 +82,20 @@ public class KeyStoreActivity extends BaseActivity {
         ksDialog.show();
     }
 
-    private void savePass(@NonNull String prefKey, @Nullable Editable rawPassword) {
+    private void savePass(@NonNull String prefKey, @Nullable Editable rawPassword, boolean isAlias) {
         char[] password;
         if (TextUtils.isEmpty(rawPassword)) {
             // Only applicable for alias
+            if (!isAlias) {
+                Log.e(KeyStoreManager.TAG, "Could not set KeyStore password because its empty");
+                sendBroadcast(new Intent(KeyStoreManager.ACTION_KS_INTERACTION_END));
+                return;
+            }
             try {
                 password = KeyStoreManager.getInstance().getAmKeyStorePassword();
             } catch (Exception e) {
                 Log.e(KeyStoreManager.TAG, "Could not get KeyStore password", e);
+                sendBroadcast(new Intent(KeyStoreManager.ACTION_KS_INTERACTION_END));
                 return;
             }
         } else {
@@ -97,7 +104,6 @@ public class KeyStoreActivity extends BaseActivity {
         }
         KeyStoreManager.savePass(prefKey, password);
         Utils.clearChars(password);
-        Intent broadcastIntent = new Intent(KeyStoreManager.ACTION_KS_INTERACTION_END);
-        sendBroadcast(broadcastIntent);
+        sendBroadcast(new Intent(KeyStoreManager.ACTION_KS_INTERACTION_END));
     }
 }

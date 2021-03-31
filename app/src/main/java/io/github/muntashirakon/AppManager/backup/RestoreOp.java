@@ -148,10 +148,10 @@ class RestoreOp implements Closeable {
         public void close() {
             Log.d(TAG, "Close called");
             crypto.close();
-            for (File file : decryptedFiles) {
-                Log.d(TAG, "Deleting " + file);
-                IOUtils.deleteSilently(new ProxyFile(file));
-            }
+//            for (File file : decryptedFiles) {
+//                Log.d(TAG, "Deleting " + file);
+//                IOUtils.deleteSilently(new ProxyFile(file));
+//            }
         }
 
         boolean runRestore() {

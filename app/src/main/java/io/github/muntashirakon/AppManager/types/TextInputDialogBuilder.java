@@ -155,6 +155,10 @@ public class TextInputDialogBuilder {
         return this;
     }
 
+    public Editable getInputText() {
+        return editText.getText();
+    }
+
     public AlertDialog create() {
         return builder.create();
     }

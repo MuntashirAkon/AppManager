@@ -23,6 +23,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.collection.ArrayMap;
+import androidx.fragment.app.DialogFragment;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
@@ -31,6 +32,8 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
+import io.github.muntashirakon.AppManager.settings.crypto.AESCryptoSelectionDialogFragment;
+import io.github.muntashirakon.AppManager.settings.crypto.OpenPgpKeySelectionDialogFragment;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.StorageUtils;
@@ -116,15 +119,21 @@ public class BackupRestorePreferences extends PreferenceFragmentCompat {
                             case CryptoUtils.MODE_NO_ENCRYPTION:
                                 AppPref.set(AppPref.PrefKey.PREF_ENCRYPTION_STR, encryptionMode);
                                 break;
-                            case CryptoUtils.MODE_AES:
+                            case CryptoUtils.MODE_AES: {
+                                DialogFragment fragment = new AESCryptoSelectionDialogFragment();
+                                fragment.show(getParentFragmentManager(), OpenPgpKeySelectionDialogFragment.TAG);
+                                break;
+                            }
                             case CryptoUtils.MODE_RSA:
                             case CryptoUtils.MODE_ECC:
                                 // TODO(12/11/20): Implement encryption options
                                 Toast.makeText(activity, "Not implemented yet.", Toast.LENGTH_SHORT).show();
                                 break;
-                            case CryptoUtils.MODE_OPEN_PGP:
+                            case CryptoUtils.MODE_OPEN_PGP: {
                                 AppPref.set(AppPref.PrefKey.PREF_ENCRYPTION_STR, encryptionMode);
-                                new OpenPgpKeySelectionDialogFragment().show(getParentFragmentManager(), OpenPgpKeySelectionDialogFragment.TAG);
+                                DialogFragment fragment = new OpenPgpKeySelectionDialogFragment();
+                                fragment.show(getParentFragmentManager(), OpenPgpKeySelectionDialogFragment.TAG);
+                            }
                         }
                     })
                     .setPositiveButton(R.string.ok, null)
