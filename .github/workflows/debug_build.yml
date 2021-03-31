@@ -40,12 +40,14 @@ jobs:
         java-version: 1.8
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-    - name: Build with Gradle
-      run: ./gradlew packageDebugUniversalApk
     - name: Get app version
       run: echo "APP_VERSION=v$(cat ./app/build.gradle | grep -m1 versionName | awk -F \" '{print $2}')" >> $GITHUB_ENV
     - name: Get app name
       run: echo "APP_NAME=AppManager_${{ env.APP_VERSION }}-DEBUG#${{ github.run_number }}" >> $GITHUB_ENV
+    - name: Inject run number
+      run: sed -i -e 's|versionName "\([0-9\.]\+\)"|versionName "\1-${{ github.run_number }}"|' ./app/build.gradle
+    - name: Build with Gradle
+      run: ./gradlew packageDebugUniversalApk
     - name: Rename the APK file
       run: mv ./app/build/outputs/universal_apk/debug/app-debug-universal.apk ./${{ env.APP_NAME }}.apk
     - name: Store generated APK file
