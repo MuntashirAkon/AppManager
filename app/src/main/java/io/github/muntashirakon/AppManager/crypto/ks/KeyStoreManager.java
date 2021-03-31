@@ -330,7 +330,7 @@ public class KeyStoreManager {
                     .setTicker(ks)
                     .setContentTitle(ks)
                     .setSubText(ks)
-                    .setContentText(context.getString(R.string.input_keystore_pass_msg));
+                    .setContentText(context.getString(R.string.input_keystore_alias_pass_msg, alias));
             builder.setContentIntent(PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_UPDATE_CURRENT));
             NotificationUtils.displayHighPriorityNotification(context, builder.build());
             acquireLock();
