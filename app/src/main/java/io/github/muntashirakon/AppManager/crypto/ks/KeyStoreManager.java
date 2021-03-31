@@ -50,7 +50,6 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
 
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
@@ -59,7 +58,6 @@ import javax.crypto.SecretKey;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.crypto.KeystoreUtil;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
@@ -206,7 +204,7 @@ public class KeyStoreManager {
     private static char[] getDecryptedPassword(@NonNull String encryptedPass) {
         byte[] encryptedBytes = Base64.decode(encryptedPass, Base64.NO_WRAP);
         try (ByteArrayInputStream bis = new ByteArrayInputStream(encryptedBytes);
-             CipherInputStream cipherInputStream = KeystoreUtil.createCipherInputStream(bis, AppManager.getContext())) {
+             CipherInputStream cipherInputStream = CompatUtil.createCipherInputStream(bis, AppManager.getContext())) {
             return Utils.bytesToChars(IOUtils.readFully(cipherInputStream, -1, true));
         } catch (Exception e) {
             Log.e("KS", "Could not get decrypted password for " + encryptedPass, e);
@@ -217,7 +215,7 @@ public class KeyStoreManager {
     @Nullable
     private static String getEncryptedPassword(@NonNull char[] realPass) {
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
-             CipherOutputStream cipherOutputStream = KeystoreUtil.createCipherOutputStream(bos, AppManager.getContext())) {
+             CipherOutputStream cipherOutputStream = CompatUtil.createCipherOutputStream(bos, AppManager.getContext())) {
             cipherOutputStream.write(Utils.charsToBytes(realPass));
             cipherOutputStream.close();
             return Base64.encodeToString(bos.toByteArray(), Base64.NO_WRAP);
