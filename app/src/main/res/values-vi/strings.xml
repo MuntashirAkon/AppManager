@@ -92,7 +92,7 @@
     <string name="no_configurations">Không có cấu hình</string>
     <string name="input_features">Các tính năng nhập vào</string>
     <string name="sort_by_target_sdk">SDK mục tiêu</string>
-    <string name="data_usage_msg">Sử dụng dữ liệu từ lần khởi động cuối</string>
+    <string name="data_usage_msg">Sử dụng dữ liệu</string>
     <string name="data_transmitted">Dữ liệu đã truyền đi</string>
     <string name="data_received">Dữ liệu đã nhận</string>
     <string name="error_verbose_pin_shortcut">Launcher hiện tại không hỗ trợ PinShortcut. Không thể tạo lối tắt.</string>
@@ -214,4 +214,107 @@
     <string name="credits">Ghi nhận</string>
     <string name="third_party">Thư viện và biểu tượng bên thứ ba</string>
     <string name="tracker_details">Chi tiết trình theo dõi</string>
+    <string name="version">Phiên bản</string>
+    <string name="pref_about_msg">Phiên bản App Manager, giấy phép, ghi nhận, v.v.</string>
+    <string name="current_theme">Chủ đề hiện tại: %1$s</string>
+    <string name="apply">Áp dụng</string>
+    <string name="select_theme">Chủ đề</string>
+    <string name="night">Đêm</string>
+    <string name="day">Ngày</string>
+    <string name="battery_mode">Chế độ pin</string>
+    <string name="follow_system">Theo hệ thống</string>
+    <string name="pref_app_theme">Chủ đề ứng dụng</string>
+    <string name="pref_import_msg">Nhập các quy tắc chặn đã được xuất trước từ App Manager.</string>
+    <string name="pref_export_msg">Xuất các quy tắc chặn đã thiết lập trong App Manager ra bộ nhớ ngoài.</string>
+    <string name="touchscreen">Màn hình cảm ứng</string>
+    <string name="navigation">Điều hướng</string>
+    <string name="keyboard_type">Loại bàn phím</string>
+    <string name="export_failed">Xuất thất bại!</string>
+    <string name="import_failed">Nhập thất bại!</string>
+    <string name="export_options">Tuỳ chọn xuất</string>
+    <string name="import_options">Tuỳ chọn nhập</string>
+    <string name="pref_export">Xuất</string>
+    <string name="pref_import">Nhập</string>
+    <string name="ago">trước</string>
+    <string name="duration">Thời gian</string>
+    <string name="running">Đang chạy</string>
+    <string name="mode">Chế độ</string>
+    <string name="permission_name">Tên quyền</string>
+    <string name="toggle_kill_for_system_apps">Bật/tắt giết ứng dụng hệ thống</string>
+    <plurals name="alert_failed_to_clear_data">
+        <item quantity="other">Không thể xoá dữ liệu của %1$d ứng dụng</item>
+    </plurals>
+    <string name="some_items_selected">Đã chọn <xliff:g id="selection_no" example="20">%1$d</xliff:g></string>
+    <string name="export_blocking_rules">Xuất các quy tắc chặn</string>
+    <string name="disable_background">Tắt chạy trong nền</string>
+    <string name="clear_data">Xoá dữ liệu</string>
+    <string name="user_and_uid">Người dùng: <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
+    <string name="user_with_id">Người dùng: <xliff:g id="user_id" example="0">%1$d</xliff:g></string>
+    <string name="memory_virtual_memory">Bộ nhớ: %1$s, bộ nhớ ảo: %2$s</string>
+    <string name="pid_and_ppid">ID tiến trình: %1$d, ID tiến trình mẹ: %2$d</string>
+    <string name="disable_background_run">Tắt chạy trong nền</string>
+    <string name="kill_process">Giết</string>
+    <string name="running_apps">Ứng dụng đang chạy</string>
+    <string name="store">Cửa hàng</string>
+    <string name="apk_updater">APK Updater</string>
+    <plurals name="failed_to_import_files">
+        <item quantity="other">Không thể nhập %1$d tệp.</item>
+    </plurals>
+    <string name="the_export_was_successful">Đã xuất</string>
+    <string name="the_import_was_successful">Đã nhập</string>
+    <string name="pref_import_blocker">Nhập từ Blocker</string>
+    <string name="pref_import_watt">Nhập từ Watt</string>
+    <string name="pref_import_export_blocking_rules">Nhập/xuất các quy tắc chặn</string>
+    <string name="sort_by_mobile_data">Dữ liệu di động</string>
+    <string name="sort_by_times_opened">Số lần mở</string>
+    <string name="sort_by_screen_time">Thời gian màn hình</string>
+    <string name="sort_by_last_used">Lần sử dụng cuối</string>
+    <plurals name="no_of_times_opened">
+        <item quantity="other">%1$d lần</item>
+    </plurals>
+    <string name="external_multiple_data_dir">Thư mục dữ liệu ngoài <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
+    <string name="external_data_dir">Thư mục dữ liệu ngoài</string>
+    <string name="sort_by_blocked_components">Đã chặn trước</string>
+    <string name="sort_by_disabled_app">Đã tắt trước</string>
+    <string name="exodus_link">Liên kết εxodus</string>
+    <string name="usage_yesterday">Hôm qua</string>
+    <string name="only_works_in_root_mode">Chỉ hoạt động trong chế độ root</string>
+    <string name="app_settings">Cài đặt</string>
+    <string name="pref_usage_access_enabled_msg">Để cho bạn xem thống kê sử dụng ứng dụng và thông tin dữ liệu ứng dụng.</string>
+    <string name="pref_usage_access_enabled">Truy cập dữ liệu sử dụng</string>
+    <string name="pref_global_blocking_enabled_msg">Để cho bạn chặn bất kỳ thành phần nào của bất kỳ ứng dụng nào mà không bật việc chặn cho ứng dụng một cách rõ ràng.</string>
+    <string name="pref_global_blocking_enabled">Chặn thành phần trên toàn thiết bị</string>
+    <string name="str_logo">Logo</string>
+    <string name="rules_not_applied">Các quy tắc không được áp dụng</string>
+    <string name="failed_to_disable_op">Không thể tắt hoạt động ứng dụng được yêu cầu</string>
+    <string name="failed_to_enable_op">Không thể bật hoạt động ứng dụng được yêu cầu</string>
+    <string name="no_app_ops">Không có hoạt động ứng dụng</string>
+    <string name="app_ops">Hoạt động ứng dụng</string>
+    <string name="app_size">Ứng dụng</string>
+    <string name="total_size">Tổng</string>
+    <string name="storage_and_cache">Bộ nhớ và Bộ nhớ đệm</string>
+    <string name="uninstall_system_app_message">Đây là một ứng dụng hệ thống. Bạn có chắc muốn gỡ cài đặt ứng dụng này không\?</string>
+    <string name="failed_to_uninstall">Không thể gỡ cài đặt <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="uninstall_app_message">Bạn có muốn gỡ cài đặt ứng dụng này không\?</string>
+    <string name="view_in_settings">Xem trong Cài đặt</string>
+    <string name="no_content">Không có nội dung</string>
+    <string name="disabled_app">Đã tắt</string>
+    <string name="error_evaluating_input">Không thể đánh giá đầu vào</string>
+    <string name="type_string">Kí tự</string>
+    <string name="type_boolean">Đúng/sai</string>
+    <string name="done">Xong</string>
+    <string name="add_item">Thêm mục</string>
+    <string name="select_type">Chọn một loại</string>
+    <string name="discard">Bỏ</string>
+    <string name="save">Lưu</string>
+    <string name="databases">Cơ sở dữ liệu</string>
+    <string name="test_only">Chỉ thử nghiệm</string>
+    <string name="debuggable">Có thể gỡ lỗi</string>
+    <string name="updated_app">Đã cập nhật</string>
+    <string name="no_code">Không có mã</string>
+    <string name="process_name">Tên tiến trình</string>
+    <string name="dev_protected_data_dir">Thư mục dữ liệu được thiết bị bảo vệ</string>
+    <string name="data_dir">Thư mục dữ liệu</string>
+    <string name="source_dir">Thư mục nguồn</string>
+    <string name="paths_and_directories">Đường dẫn &amp; Thư mục</string>
 </resources>
