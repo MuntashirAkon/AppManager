@@ -174,7 +174,7 @@
     <string name="app_not_installed">App non installata</string>
     <string name="media_size">Media</string>
     <string name="data_size">Dati</string>
-    <string name="data_usage_msg">Uso dati dall\'ultimo avvio</string>
+    <string name="data_usage_msg">Utilizzo dei dati</string>
     <string name="data_transmitted">Dati trasmessi</string>
     <string name="data_received">Dati ricevuti</string>
     <string name="sort_by_app_label">Etichetta App</string>
