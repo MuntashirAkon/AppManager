@@ -65,7 +65,7 @@
     <string name="simple">Simple</string>
     <string name="enabled">Activé</string>
     <string name="choose">Sélectionner</string>
-    <string name="input_permissions_description">Autorisations séparées par des espaces, ex : &lt;tt&gt;com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION&lt;&gt; etc. Utilise &lt;tt&gt;*&lt;tt&gt; pour appliquer toutes les permissions.</string>
+    <string name="input_permissions_description">Autorisations séparées par des espaces, ex : <tt>com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION</tt> etc. Utilise <tt>*</tt> pour appliquer toutes les permissions.</string>
     <string name="input_permissions">Autorisations</string>
     <string name="options">Options</string>
     <string name="off">Désactivé</string>
@@ -334,7 +334,7 @@
     <string name="only_works_in_root_or_adb_mode">Fonctionne uniquement en mode root ou ADB</string>
     <string name="input_app_ops">Opérations de l\'application</string>
     <string name="filtered_packages">Paquets filtrés</string>
-    <string name="input_signatures_description">Signatures séparées par des espaces, ex : &lt;tt&gt;com.facebook org.app2 com.app3&lt;tt&gt; etc.</string>
+    <string name="input_signatures_description">Signatures séparées par des espaces, ex : <tt>com.facebook org.app2 com.app3</tt> etc.</string>
     <string name="input_signatures">Signatures</string>
     <string name="no_tracker_found">Aucun traqueur trouvé</string>
     <string name="clear_app_cache_description">Effacer le cache de toutes les applications</string>

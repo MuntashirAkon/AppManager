@@ -351,14 +351,14 @@
     <string name="failed_to_parse_some_numbers">No se pudo analizar algunos números</string>
     <string name="only_works_in_root_or_adb_mode">Sólo funcionan en modo root o ADB</string>
     <string name="filtered_packages">Paquetes filtrados</string>
-    <string name="input_signatures_description">Firmas de entrada con espacios, por ejemplo &lt;/tt&gt;com.facebook org.app2 com.app3&lt;/tt&gt; etc.</string>
+    <string name="input_signatures_description">Firmas de entrada con espacios, por ejemplo <tt>com.facebook org.app2 com.app3</tt> etc.</string>
     <string name="input_signatures">Firmas de entrada</string>
     <string name="failed_packages">Paquetes fallidos</string>
     <string name="no_tracker_found">Sin rastreadores encontrados</string>
     <string name="clear_app_cache_description">Limpiar cahé de todas las apps</string>
     <string name="clear_app_cache">Limpiar caché de la app</string>
     <string name="clear_data_from_uninstalled_apps">Limpiar datos de aplicaciones desinstaladas</string>
-    <string name="deny_app_ops_description">Establecer un modo para las operaciones de las aplicaciones identificadas por los valores constantes, es decir, &lt;/tt&gt;63&lt;/tt&gt; o &lt;/tt&gt;RUN_IN_BACKGROUND&lt;/tt&gt;</string>
+    <string name="deny_app_ops_description">Establecer un modo para las operaciones de las aplicaciones identificadas por los valores constantes, es decir, <tt>63</tt> o <tt>RUN_IN_BACKGROUND</tt></string>
     <string name="block_components_description">Bloquear todos los componentes identificados por las firmas dadas</string>
     <string name="block_components_dots">Bloquear componentes…</string>
     <string name="block_unblock_trackers_description">Bloquear o desbloquear componentes de anuncios o rastreo de todas las apps instaladas</string>
@@ -419,7 +419,7 @@
     <string name="follow_system">Seguir sistema</string>
     <string name="pref_app_theme">Tema de la app</string>
     <string name="pref_import_blocker_msg">Importar reglas de bloqueo desde Blocker, cada archivo contiene reglas para un solo paquete.</string>
-    <string name="pref_import_watt_msg">Importar reglas de bloqueo desde Watt, cada archivo que contiene las reglas para un solo paquete nombrado como packagename.xml&lt;/tt&gt;&lt;/tt&gt; etc.</string>
+    <string name="pref_import_watt_msg">Importar reglas de bloqueo desde Watt, cada archivo que contiene las reglas para un solo paquete nombrado como <tt>packagename.xml</tt> etc.</string>
     <string name="pref_import_msg">Importar reglas de bloqueo previamente exportadas desde el App Manager.</string>
     <string name="pref_export_msg">Exportar reglas de bloqueo configuradas sin App Manager al almacenamiento externo.</string>
     <string name="keyboard_type">Tipo de teclado</string>
@@ -479,7 +479,7 @@
         <item quantity="other">No se pudo respaldar %1$d apps</item>
     </plurals>
     <string name="restore">Restaurar (Restore)</string>
-    <string name="input_app_ops_description">Introducir nombre y/o constantes de la app op con espacios, por ejemplo &lt;/tt&gt;WAKE_LOCK 63 72 CAMERA&lt;/tt&gt; etc.</string>
+    <string name="input_app_ops_description">Introducir nombre y/o constantes de la app op con espacios, por ejemplo <tt>WAKE_LOCK 63 72 CAMERA</tt> etc.</string>
     <plurals name="alert_failed_to_disable_background">
         <item quantity="one">No se pudo evitar que la app %1$d se ejecutara en segundo plano</item>
         <item quantity="other">No se pudo evitar que la apps %1$d se ejecutaran en segundo plano</item>
@@ -661,7 +661,7 @@
         <item quantity="other">No pudo ser habilitado %1$d apps</item>
     </plurals>
     <string name="input_app_ops">Introducir app ops</string>
-    <string name="clear_data_from_uninstalled_apps_description">Limpiar datos desde las aplicaciones que son desinstaladas con &lt;/tt&gt;DONT_DELETE_DATA&lt;/tt&gt; flag</string>
+    <string name="clear_data_from_uninstalled_apps_description">Limpiar datos desde las aplicaciones que son desinstaladas con <tt>DONT_DELETE_DATA</tt> flag</string>
     <string name="ago">hace</string>
     <plurals name="alert_failed_to_force_stop">
         <item quantity="one">No se pudo forzar la detención %1$d app</item>
