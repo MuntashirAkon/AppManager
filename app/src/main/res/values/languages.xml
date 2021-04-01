@@ -26,6 +26,7 @@
         <item>fa</item>
         <item>fr</item>
         <item>hi</item>
+        <item>ja-JP</item>
         <item>nb-NO</item>
         <item>pl</item>
         <item>pt</item>
@@ -33,8 +34,8 @@
         <item>ru-RU</item>
         <item>tr-TR</item>
         <item>uk-UA</item>
+        <item>vi</item>
         <item>zh-CN</item>
         <item>zh-TW</item>
-        <item>ja-JP</item>
     </string-array>
 </resources>
