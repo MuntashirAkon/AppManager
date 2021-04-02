@@ -765,13 +765,13 @@
     <string name="restore_all_msg">Restaurar el backup base de todas las aplicaciones respaldadas.</string>
     <string name="restore_all">Restaurar todas las apps</string>
     <string name="backup_apps_with_changes_msg">Rehacer los backups de las aplicaciones con los cambios desde la última copia de seguridad. Incluyen cambios en el tamaño, la versión, la última hora de lanzamiento.</string>
-    <string name="backup_apps_with_changes">Backup aplicaciones con cambios</string>
+    <string name="backup_apps_with_changes">Respaldo de aplicaciones con cambios</string>
     <string name="redo_existing_backups_msg">Rehacer backup para aplicaciones instaladas sin previas copias de seguridad.</string>
     <string name="redo_existing_backups">Rehacer backups existentes</string>
     <string name="verify_and_redo_backups_msg">Verificar la integridad de los backups anteriores y rehacer las copias de seguridad en las que falle el control de integridad.</string>
     <string name="verify_and_redo_backups">Verificar y rehacer los backups</string>
-    <string name="backup_apps_without_backups_msg">Backups aplicaciones sin ninguna copia de seguridad previa.</string>
-    <string name="backup_apps_without_backups">Backup aplicaciones sin copias de seguridad</string>
+    <string name="backup_apps_without_backups_msg">Respaldo de aplicaciones sin ninguna copia de seguridad previa.</string>
+    <string name="backup_apps_without_backups">Respaldo de aplicaciones sin copias de seguridad</string>
     <string name="backup_all_apps_msg">Respaldo de todas las aplicaciones instaladas.</string>
     <string name="backup_all_apps">Respaldo de todas las apps</string>
     <string name="backup_custom_users_description">Realizar backups sólo para los usuarios especificados</string>
@@ -886,4 +886,6 @@
     <string name="initializing">Inicializando…</string>
     <string name="allow_background">Permitir en segundo plano</string>
     <string name="reject_background">Rechazar en segundo plano</string>
+    <string name="internal_storage">Almacenamiento interno</string>
+    <string name="back_up">Respaldo</string>
 </resources>
