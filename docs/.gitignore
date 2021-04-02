@@ -1,10 +1,1 @@
-*.*
-!.gitignore
-!*.tex
-!Makefile
-!*.css
-!*.html
-!*.drawio
-!*.png
-!*.pdf
-*/main-epub3
+/build

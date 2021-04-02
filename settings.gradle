@@ -1,4 +1,4 @@
-include ':feat_docs'
+include ':docs'
 include ':libserver'
 include ':sun'
 include ':libopenpgp'

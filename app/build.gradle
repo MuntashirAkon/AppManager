@@ -78,7 +78,7 @@ android {
     aaptOptions {
         noCompress 'jar', 'sh'
     }
-    dynamicFeatures = [':feat_docs']
+    dynamicFeatures = [':docs']
 }
 
 dependencies {
