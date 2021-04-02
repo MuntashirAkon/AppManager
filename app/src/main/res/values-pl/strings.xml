@@ -728,4 +728,8 @@
     </plurals>
     <string name="exodus_link">Link εxodus</string>
     <string name="backup_apk">Kopia zapasowa APK</string>
+    <string name="input_app_ops">Wprowadź app ops</string>
+    <string name="filtered_packages">Przefiltrowane pakiety</string>
+    <string name="input_signatures_description">Wprowadź sygnatury ze spacjami, np. <tt>com.facebook org.app2 com.app3</tt> itp.</string>
+    <string name="input_signatures">Wprowadź sygnatury</string>
 </resources>
