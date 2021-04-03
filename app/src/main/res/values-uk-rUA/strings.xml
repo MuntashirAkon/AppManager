@@ -597,8 +597,8 @@
     <string name="toggle_class_listing">Переключити перелік класів</string>
     <string name="class_viewer">Переглядач класів</string>
     <string name="word_wrap">Переключити перенесення слів</string>
-    <string name="credits_message">"Подяка розробникам
-\n- The Android Open Source Project
+    <string name="credits_message">Подяка розробникам
+\n- Android Open Source Project
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
 \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
@@ -606,7 +606,8 @@
 \n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
-\nРозробник лого: <a href="https://github.com/Atrate">Atrate</a>.</string>
+\n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
+\nРозробка лого: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="icon_picker">Вибір іконки</string>
     <string name="insert_icon">Вставити іконку</string>
     <string name="package_name">Назва пакету</string>
@@ -639,7 +640,7 @@
     <string name="shared_libs">Спільні бібліотеки</string>
     <string name="media_size">Медіа</string>
     <string name="data_size">Дані</string>
-    <string name="data_usage_msg">Використання даних з моменту останнього завантаження</string>
+    <string name="data_usage_msg">Використання даних</string>
     <string name="data_transmitted">Даних відправлено</string>
     <string name="data_received">Даних отримано</string>
     <string name="sort_by_target_sdk">Цільова SDK</string>

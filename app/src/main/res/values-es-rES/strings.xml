@@ -244,7 +244,7 @@
     <string name="cache_size">Caché</string>
     <string name="data_size">Datos</string>
     <string name="about">Acerca de</string>
-    <string name="data_usage_msg">Uso de datos desde el último inicio</string>
+    <string name="data_usage_msg">Uso de datos</string>
     <string name="data_transmitted">Datos transmitidos</string>
     <string name="data_received">Datos recibidos</string>
     <string name="sort_by_target_sdk">SDK objetivo</string>
@@ -279,7 +279,7 @@
     <string name="backup_apk_only">Sólo APK</string>
     <string name="installer_error_session_abandon">No se pudo abandonar la sesión del instalador</string>
     <string name="installer_error_session_create">No se pudo crear una sesión de instalación</string>
-    <string name="installer_error_security">No se pudo acceder al archivo APK</string>
+    <string name="installer_error_security">No se pudo acceder a los archivos APK</string>
     <string name="install_in_progress">Instalación en progreso</string>
     <string name="package_installer">Instalador de paquetes</string>
     <string name="unblock_trackers">Desbloquear rastreadores</string>
@@ -298,17 +298,17 @@
     <string name="installer_error_conflict">No se pudo instalar la app porque el nombre del paquete está en uso</string>
     <string name="installer_error_blocked">Instalación bloqueada por <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
     <string name="installer_error_blocked_device">dispositivo</string>
-    <string name="installer_error_aborted">La instalación falló porque o bien se canceló, o la sesión se cerró inesperadamente</string>
+    <string name="installer_error_aborted">La instalación falló porque se canceló o la sesión se cerró inesperadamente</string>
     <string name="toggle_default_app_ops">Cambiar las app ops por defecto</string>
     <string name="filter_apps_with_activities">Aplicaciones con actividades</string>
     <string name="are_you_sure">Estás seguro\?</string>
-    <string name="pref_remove_all_rules_msg">Los permisos están concedidos, las app ops y los componentes volverán a los valores por defecto.</string>
+    <string name="pref_remove_all_rules_msg">Se otorgarán permisos, las operaciones de las apps y los componentes volverán a los valores predeterminados.</string>
     <string name="pref_remove_all_rules">Eliminar todas las reglas</string>
     <string name="website">Sitio web</string>
     <string name="run_in_termux">Ejecutar en Termux</string>
     <string name="open_in_termux">Abrir en Termux</string>
     <string name="export_icon">Extraer icono</string>
-    <string name="no_matching_package_found">No se encontró ningún paquete que coincida</string>
+    <string name="no_matching_package_found">No se encontraron paquetes que coincidan</string>
     <string name="block_unblock_trackers">Bloquear/Desbloquear rastreadores</string>
     <string name="unblock">Desbloquear</string>
     <string name="block">Bloquear</string>
@@ -499,7 +499,7 @@
         <item quantity="one">%1$d vez</item>
         <item quantity="other">%1$d veces</item>
     </plurals>
-    <string name="input_permissions_description">Permisos de entrada con espacios, por ejemplo, e.g. (com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION) etc.</string>
+    <string name="input_permissions_description">Permisos de acceso con espacios, p. ej. <tt>com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION</tt> etc. Usa <tt>*</tt> para solicitar todos los permisos.</string>
     <string name="input_permissions">Permisos de entrada</string>
     <string name="profile_clear_cache_msg">Si está habilitado, la caché se borrará de las aplicaciones</string>
     <string name="profile_disable_msg">Si está habilitado, las apps serán deshabilitadas/habilitadas en función del valor del estado</string>
@@ -528,7 +528,7 @@
     <string name="select_apk">Seleccionar APK</string>
     <string name="send_crash_report">Enviar reporte de fallo</string>
     <string name="tap_to_submit_crash_report">Pulsa para enviar un reporte de fallo.</string>
-    <string name="am_crashed">AM acaba de crashear</string>
+    <string name="am_crashed">AM acaba de fallar</string>
     <string name="filter_running_apps">Apps ejecutándose</string>
     <string name="copy">Copiar</string>
     <string name="view_missing_signatures">Pulsa para ver o enviar firmas que aún no están presentes en la base de datos de bibliotecas del App Manager.</string>
@@ -707,7 +707,7 @@
     <string name="filter_apps_with_splits">Aplicaciones con splits</string>
     <string name="set_app_op_mode">Configurar el mode de app ops</string>
     <string name="magisk_hide_enabled">MagiskHide</string>
-    <string name="pref_backup_android_keystore_msg">No todas las aplicaciones funcionarán después de una restauración. La restauración de KeyStore no funciona en la mayoría de los dispositivos.</string>
+    <string name="pref_backup_android_keystore_msg">No todas las aplicaciones funcionarán después de una restauración. Restaurar KeyStore no funciona en la mayoría de los dispositivos.</string>
     <string name="pref_backup_android_keystore">Respaldar a las apps con Android KeyStore</string>
     <string name="keep_data_and_signatures">Mantener datos y firmas</string>
     <string name="this_action_cannot_be_undone">Esta acción no puede deshacerse.</string>
@@ -765,15 +765,15 @@
     <string name="restore_all_msg">Restaurar el backup base de todas las aplicaciones respaldadas.</string>
     <string name="restore_all">Restaurar todas las apps</string>
     <string name="backup_apps_with_changes_msg">Rehacer los backups de las aplicaciones con los cambios desde la última copia de seguridad. Incluyen cambios en el tamaño, la versión, la última hora de lanzamiento.</string>
-    <string name="backup_apps_with_changes">Backup aplicaciones con cambios</string>
+    <string name="backup_apps_with_changes">Respaldo de aplicaciones con cambios</string>
     <string name="redo_existing_backups_msg">Rehacer backup para aplicaciones instaladas sin previas copias de seguridad.</string>
     <string name="redo_existing_backups">Rehacer backups existentes</string>
     <string name="verify_and_redo_backups_msg">Verificar la integridad de los backups anteriores y rehacer las copias de seguridad en las que falle el control de integridad.</string>
     <string name="verify_and_redo_backups">Verificar y rehacer los backups</string>
-    <string name="backup_apps_without_backups_msg">Backups aplicaciones sin ninguna copia de seguridad previa.</string>
-    <string name="backup_apps_without_backups">Backup aplicaciones sin copias de seguridad</string>
-    <string name="backup_all_apps_msg">Backup de todas las aplicaciones instaladas.</string>
-    <string name="backup_all_apps">Backup de todas las apps</string>
+    <string name="backup_apps_without_backups_msg">Respaldo de aplicaciones sin ninguna copia de seguridad previa.</string>
+    <string name="backup_apps_without_backups">Respaldo de aplicaciones sin copias de seguridad</string>
+    <string name="backup_all_apps_msg">Respaldo de todas las aplicaciones instaladas.</string>
+    <string name="backup_all_apps">Respaldo de todas las apps</string>
     <string name="backup_custom_users_description">Realizar backups sólo para los usuarios especificados</string>
     <string name="backup_custom_users">Usuarios personalizados</string>
     <string name="bootloader">Bootloader</string>
@@ -869,4 +869,23 @@
     <string name="unlock_app_manager">Desbloquea gestor de aplicaciones</string>
     <string name="sd_card">Tarjeta SD</string>
     <string name="external_storage">Almacenamiento externo</string>
+    <string name="filter_apps_without_backups">Apps sin copias de seguridad</string>
+    <string name="uninstalled_apps">Apps desinstaladas</string>
+    <string name="enable_disable_features">Habilitar/deshabilitar funciones</string>
+    <string name="installed_apps">Apps instaladas</string>
+    <string name="restart_to_reflect_changes">Por favor reinicie inmediatamente para reflejar los cambios</string>
+    <string name="failed_to_change_ssaid">No se pudo modificar el SSAID</string>
+    <string name="copied_to_clipboard">Copiado al portapapeles.</string>
+    <string name="ssaid_info">SSAID (<tt>Settings.Secure.ANDROID_ID</tt>) es un identificador de dispositivo asignado a cada aplicación (desde Android Oreo). Es ampliamente utilizado por aplicaciones para rastrear usuarios.</string>
+    <string name="ssaid">SSAID</string>
+    <string name="list_options">Lista de opciones</string>
+    <string name="reverse">Revertir</string>
+    <string name="os_version">Versión SO</string>
+    <string name="add">Añadir</string>
+    <string name="add_to_profile">Añadir al perfil</string>
+    <string name="initializing">Inicializando…</string>
+    <string name="allow_background">Permitir en segundo plano</string>
+    <string name="reject_background">Rechazar en segundo plano</string>
+    <string name="internal_storage">Almacenamiento interno</string>
+    <string name="back_up">Respaldo</string>
 </resources>
