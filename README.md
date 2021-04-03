@@ -73,16 +73,12 @@ There is a [Telegram channel](https://t.me/AppManagerChannel) for App Manager.
 * Active internet connection
 
 #### macOS
+The following steps are required only if you want to build APKS:
 - Install Homebrew:
   ```bash
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   ```
-- Install `yarn` using Homebrew:
-  ```bash
-  brew install yarn
-  ```
-  You can also install `yarn` manually, but it is not recommended for macOS.
-- Install `bundletool` if you want to build APKS:
+- Install `bundletool`
   ```bash
   brew install bundletool
   ```
@@ -100,10 +96,6 @@ There is a [Telegram channel](https://t.me/AppManagerChannel) for App Manager.
   For Arch/Artix/Manjaro:
   ```bash
   sudo pacman -S base-devel
-  ```
-- Install `yarn`. A generic way would be to install it via the installation script:
-  ```bash
-  curl -o- -L https://yarnpkg.com/install.sh | bash
   ```
 - Install [**bundletool-all.jar**](https://github.com/google/bundletool) if you want to build APKS, and make sure it is available as `bundletool` command. A quick way would be to create a file `bundletool` in `/usr/local/bin` directory with the following content:
   ```bash
