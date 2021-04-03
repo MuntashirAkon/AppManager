@@ -1,0 +1,144 @@
+\section{Main Page}\label{sec:main-page}
+Main page lists all the installed apps (or a list of apps supplied by any third-party application) as well as apps that
+has existing backups. A single click on any installed app item opens the respective \hyperref[sec:app-details-page]{App
+Details page}. Using the \hyperlink{par:main-page-sort}{sort} option from the menu, the app items can be sorted in
+various ways and preserved on close. It is also possible to filter items based on your needs using the
+\hyperlink{par:main-page-filter}{filter} option in the menu. You can filter using more than one options. You can also
+filter apps using app labels or package name using the search button.
+
+\subsection{Batch Operations}\label{subsec:batch-operations}
+Batch operations or operation on multiple apps are also available within this page (most these operations require root
+or \hyperref[sec:adb-over-tcp]{ADB over TCP}). To enable multiple selection mode, click on any app icon or long click
+on any app. After that, you can use the regular click to select apps instead of opening the App Details page. These
+operations include:
+\begin{itemize}
+    \item Backup APK file (no root)
+    \item \hyperref[sec:backup-restore]{Backup/restore/delete app data}
+    \item Clear data from apps
+    \item Enable/disable/force-stop/uninstall apps
+    \item Disable run in background
+    \item Block ad and tracker components
+    \item Export blocking rules
+    \item Add the selected apps to a \hyperref[sec:profiles-page]{profile}
+\end{itemize}
+
+\subsection{Colour Codes}\label{subsec:main-colour-codes}
+Here's the list of colours used in this page, and their meaning:
+\begin{itemize}
+    \item \colorbox{AMLightGreyishOrange}{\textcolor{black}{Light greyish orange (day)}} / \colorbox{AMDarkBlue}{
+        \textcolor{white}{dark blue (night)}} -- App selected for batch operation
+    \item \colorbox{AMLightRed}{\textcolor{black}{Light red (day)}} / \colorbox{AMVeryDarkRed}{
+        \textcolor{white}{dark red (night)}} -- Disabled app
+    \item \colorbox{yellow}{\textcolor{black}{Yellow Star}} -- App is in debug mode
+    \item \textcolor{AMOrange}{Orange \textit{Date}} -- App can read logs (permission granted)
+    \item \textcolor{AMOrange}{Orange \textit{UID}} -- User ID is being shared between apps
+    \item \textcolor{AMOrange}{Orange \textit{SDK}} -- Uses cleartext (ie. HTTP) traffic
+    \item \textcolor{red}{Red \textit{package name}} -- App does not allow clearing data
+    \item \textcolor{red}{Red \textit{backup}} -- App not installed but has one or more backups
+    \item \textcolor{AMDarkCyan}{Dark cyan \textit{package name}} -- Stopped or forced closed app
+    \item \textcolor{AMDarkCyan}{Dark cyan \textit{version}} -- Inactive app
+    \item \textcolor{magenta}{Magenta} -- Persistent app i.e.\ remains running all the time
+\end{itemize}
+
+\subsection{Application Types}\label{subsec:main-page-application-types}
+An app is either \textbf{User App} or \textbf{System App} along with the following codes:
+\begin{itemize}
+    \item \texttt{X} -- The app supports multiple architectures: 32-bit, 64-bit or arm-v7, arm-v8, etc.
+    \item \texttt{0} -- App does not have code with it
+    \item \texttt{\textdegree} -- App is in suspended state
+    \item \texttt{\#} -- App has requested a large heap
+    \item \texttt{?} -- App has requested VM in safe mode
+\end{itemize}
+
+\subsection{Version Info}\label{subsec:main-page-version-info}
+Version name is followed by the following prefixes:
+\begin{itemize}
+    \item \texttt{\_} -- No hardware acceleration
+    \item \texttt{\textasciitilde} -- Test only mode
+    \item \texttt{debug} -- Debuggable app
+\end{itemize}
+
+\subsection{Options Menu}\label{subsec:main-page-options-menu}
+Options menu has several options which can be used to sort, filter the listed apps as well as navigate to different pages.
+
+\subsubsection{Instructions}
+Clicking on instructions open an offline version of the App Manager documentations. It opens the online version if the
+corresponding feature split i.e.\ \texttt{feat\_docs} is not installed.
+
+\subsubsection{List Options}
+List options contain the options to sort or filter the app list.
+
+\paragraph{Sort}\hypertarget{par:main-page-sort}{}
+Apps listed on the main page can be sorted in different ways. The sorting preference is preserved which means the apps
+will be sorted the same way that was sorted in the previous launch. Regardless of your sorting preference, however, the
+apps are first sorted alphabetically to prevent random results.
+\begin{itemize}
+    \item \textbf{User app first.} User apps are listed on top
+    \item \textbf{App label.} Sort in ascending order based on the app labels (also known as \textit{app names}). This
+    is the default sorting preference
+    \item \textbf{Package name.} Sort in ascending order based on package names
+    \item \textbf{Last update.} Sort in descending order based on the package update date (or install date if it is a
+    newly installed package)
+    \item \textbf{Shared user ID.} Sort in descending order based on the kernel user ID
+    \item \textbf{Target SDK.} Sort in ascending order based on the target SDK
+    \item \textbf{Signature.} Sort in ascending order based on app's signing info
+    \item \textbf{Disabled first.} List disabled apps first
+    \item \textbf{Blocked first.} Sort in descending order based on the number of blocked components
+    \item \textbf{Backup first.} Display apps with backups on top
+\end{itemize}
+
+There is also a \textit{reverse} option which can be used to sort the apps in reverse order.
+
+\paragraph{Filter}\hypertarget{par:main-page-filter}{}
+Apps listed on the main page can be filtered in a number of ways. Like sorting, filtering preferences are also stored
+and retained after a relaunch.
+\begin{itemize}
+    \item \textbf{User apps.} List only the user apps
+    \item \textbf{System apps.} List only the system apps
+    \item \textbf{Disabled apps.} List only the disabled apps
+    \item \textbf{Apps with rules.} List the apps with one or more blocking rules
+    \item \textbf{Apps with activities.} List the apps with one or more activities
+    \item \textbf{Apps with backups.} List apps with one or more backups (including uninstalled apps)
+    \item \textbf{Apps without backups.} List apps without any backups (including uninstalled apps)
+    \item \textbf{Running apps.} List apps that are currently running (either in foreground or background)
+    \item \textbf{Apps with splits.} List apps with one or more split APKs
+    \item \textbf{Installed apps.} List only installed apps
+    \item \textbf{Uninstalled apps.} List only uninstalled apps including backups
+\end{itemize}
+
+Unlike sorting, you can filter using more than one option. For example, you can list the disabled user apps by filtering
+app lists selecting \textit{user apps} and \textit{disabled apps}. This is particularly useful for
+\hyperref[subsec:batch-operations]{batch operations} where you can filter all user apps to carry out certain operations.
+
+\subsubsection{1-Click Ops}\label{subsubsec:main:1-click-ops}
+\hyperref[sec:1-click-ops-page]{1-Click Ops} stands for \textbf{One-Click Operations}. You can directly open the
+corresponding page by clicking on this option.
+
+\subsubsection{App Usage}
+App usage statistics such as \textit{screen time}, \textit{data usage} (both mobile and Wifi), \textit{number of times
+an app was opened} can be accessed by clicking on the \textbf{App Usage} option in the menu (requires \textit{Usage
+Access} permission).
+
+\subsubsection{System Config}
+Display various system configurations, whitelists/blacklists included in Android by either OEM/vendor, AOSP or even some
+Magisk modules.
+
+\subsubsection{Running Apps}\label{subsubsec:main:running-apps}
+A list of running apps or processes can be viewed by clicking on the \textbf{Running Apps} option in the menu (requires
+root or \hyperref[sec:adb-over-tcp]{ADB}). Running apps or processes can also be force-closed or killed within the
+resultant page.
+
+\subsubsection{APK Updater}
+If you have the app \href{https://github.com/rumboalla/apkupdater}{APK Updater} installed, you can use the corresponding
+option in the menu to open the app directly. The option is hidden if you do not have it installed.
+
+\subsubsection{Profiles}
+Opens the \hyperref[sec:profiles-page]{profiles page}. Profiles are a way to configure regularly used tasks. You can
+also add shortcuts of the profiles in the launcher to run them directly.
+
+\subsubsection{Termux}
+If you have \href{https://github.com/termux/termux-app}{Termux} installed, you can directly go to the running session
+or open a new session using the \textbf{Termux} option in the menu.
+
+\subsubsection{Settings}
+You can go to in-app \hyperref[sec:settings-page]{Settings} by clicking on the corresponding option.

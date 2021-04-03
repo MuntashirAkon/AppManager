@@ -78,7 +78,6 @@ android {
     aaptOptions {
         noCompress 'jar', 'sh'
     }
-    dynamicFeatures = [':feat_docs']
 }
 
 dependencies {
@@ -89,6 +88,7 @@ dependencies {
     implementation project(path: ':libopenpgp')
     implementation project(path: ':sun')
     implementation project(path: ':libserver')
+    implementation project(path: ':docs')
 
     //noinspection GradleDependency
     implementation 'com.github.MuntashirAkon:apksig-android:178a05e4c9'

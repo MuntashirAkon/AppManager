@@ -1,0 +1,12 @@
+*.*
+!.gitignore
+!*.tex
+!en/Makefile
+!*.css
+!*.html
+!*.drawio
+!*.png
+!*.pdf
+!*.cfg
+!changelog_old.md
+*/main-epub3
