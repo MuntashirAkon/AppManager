@@ -17,7 +17,6 @@
 
 package io.github.muntashirakon.AppManager.misc;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -27,6 +26,7 @@ import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
@@ -36,21 +36,23 @@ import android.webkit.WebView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.webkit.WebSettingsCompat;
 import androidx.webkit.WebViewClientCompat;
 import androidx.webkit.WebViewFeature;
 
 import java.io.InputStream;
 
+import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 
 public class HelpActivity extends BaseActivity {
-    private WebView webview;
+    private WebView webView;
+    private static boolean firstTime = true;
 
-    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
         setContentView(R.layout.activity_help);
@@ -66,9 +68,22 @@ public class HelpActivity extends BaseActivity {
             finish();
             return;
         }
-        webview = findViewById(R.id.webview);
-        webview.setWebViewClient(new WebViewClientImpl());
-        WebSettings webSettings = webview.getSettings();
+        // WebView has to be loaded dynamically to prevent in-app localization issue.
+        webView = new WebView(AppManager.getContext());
+        if (firstTime) {
+            // Recreate if loaded for the first time to prevent localization issue.
+            recreate();
+            firstTime = false;
+            return;
+        }
+        LinearLayoutCompat webviewWrapper = findViewById(R.id.webview_wrapper);
+        webView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
+        webviewWrapper.addView(webView);
+        webView.setWebViewClient(new WebViewClientImpl());
+        webView.setNetworkAvailable(false);
+        WebSettings webSettings = webView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
         int nightModeFlags = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
         if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES) {
             if(WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
@@ -78,14 +93,14 @@ public class HelpActivity extends BaseActivity {
                 WebSettingsCompat.setForceDarkStrategy(webSettings, WebSettingsCompat.DARK_STRATEGY_WEB_THEME_DARKENING_ONLY);
             }
         }
-        webview.loadUrl("file:///android_res/raw/index.html");
+        webView.loadUrl("file:///android_res/raw/index.html");
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         // Check if the key event was the Back button and if there's history
-        if ((keyCode == KeyEvent.KEYCODE_BACK) && webview.canGoBack()) {
-            webview.goBack();
+        if ((keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack()) {
+            webView.goBack();
             return true;
         }
         // If it wasn't the Back key or there's no web page history, bubble up to the default
@@ -108,7 +123,6 @@ public class HelpActivity extends BaseActivity {
         public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
             WebResourceResponse webResourceResponse = null;
             Uri uri = request.getUrl();
-            Log.e("TAG", uri.toString());
             try {
                 Resources resources = getResources();
                 if (uri.toString().startsWith("file://android_res")) {

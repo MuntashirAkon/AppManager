@@ -22,12 +22,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".scanner.ClassListingActivity">
+    tools:context=".misc.HelpActivity">
 
     <include layout="@layout/appbar" />
 
-    <WebView
-        android:id="@+id/webview"
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/webview_wrapper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
