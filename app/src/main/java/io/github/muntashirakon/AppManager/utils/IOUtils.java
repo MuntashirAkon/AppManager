@@ -39,6 +39,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import com.android.internal.util.TextUtils;
 import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.io.ProxyFile;
 import io.github.muntashirakon.io.ProxyInputStream;
@@ -382,6 +383,10 @@ public final class IOUtils {
             return false;
         }
         return files != null && files.length > 0;
+    }
+
+    public static int getRawDataId(@NonNull Context context, @NonNull String name) {
+        return context.getResources().getIdentifier(name, "raw", context.getPackageName());
     }
 
     /**
