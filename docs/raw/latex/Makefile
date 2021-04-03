@@ -9,8 +9,8 @@ html:
 		-e 's|\(<p[^>]\+>\)figure.*\(<img.*\)|\1\2|' \
 		-e 's|<p class=\"noindent\"></p>||' ../en/main.html
 	# https://github.com/tdewolff/minify/tree/master/cmd/minify
-	minify ../en/main.html -o ../en/index.html; rm ../en/main.html
-	#mv ../en/main.html ../en/index.html
+	#minify ../en/main.html -o ../en/index.html; rm ../en/main.html
+	mv ../en/main.html ../en/index.html
 	minify ../en/main.css -o ../en/main.min.css; rm ../en/main.css; mv ../en/main.min.css ../en/main.css
 
 clean:
