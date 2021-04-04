@@ -34,6 +34,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -51,7 +52,8 @@ public final class SplitApkExporter {
     public static void saveApks(PackageInfo packageInfo, File apksFile) throws Exception {
         try (OutputStream outputStream = new ProxyOutputStream(apksFile);
              ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream)) {
-            zipOutputStream.setMethod(ZipOutputStream.STORED);
+            zipOutputStream.setMethod(ZipOutputStream.DEFLATED);
+            zipOutputStream.setLevel(Deflater.BEST_COMPRESSION);
 
             List<File> apkFiles = getAllApkFiles(packageInfo);
             Collections.sort(apkFiles);
@@ -68,8 +70,7 @@ public final class SplitApkExporter {
             // Add metadata v2
             byte[] metaV2 = apksMetadata.getMetadataV2().getBytes();
             ZipEntry metaV2ZipEntry = new ZipEntry(ApksMetadata.META_V2_FILE);
-            metaV2ZipEntry.setMethod(ZipEntry.STORED);
-            metaV2ZipEntry.setCompressedSize(metaV2.length);
+            metaV2ZipEntry.setMethod(ZipEntry.DEFLATED);
             metaV2ZipEntry.setSize(metaV2.length);
             metaV2ZipEntry.setCrc(IOUtils.calculateBytesCrc32(metaV2));
             metaV2ZipEntry.setTime(apksMetadata.exportTimestamp);
@@ -80,8 +81,7 @@ public final class SplitApkExporter {
             // Add metadata V1
             byte[] metaV1 = apksMetadata.getMetadataV1().getBytes();
             ZipEntry metaV1ZipEntry = new ZipEntry(ApksMetadata.META_V1_FILE);
-            metaV1ZipEntry.setMethod(ZipEntry.STORED);
-            metaV1ZipEntry.setCompressedSize(metaV1.length);
+            metaV1ZipEntry.setMethod(ZipEntry.DEFLATED);
             metaV1ZipEntry.setSize(metaV1.length);
             metaV1ZipEntry.setCrc(IOUtils.calculateBytesCrc32(metaV1));
             metaV1ZipEntry.setTime(apksMetadata.exportTimestamp);
@@ -95,8 +95,7 @@ public final class SplitApkExporter {
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, pngOutputStream);
             byte[] pngIcon = pngOutputStream.toByteArray();
             ZipEntry pngZipEntry = new ZipEntry(ApksMetadata.ICON_FILE);
-            pngZipEntry.setMethod(ZipEntry.STORED);
-            pngZipEntry.setCompressedSize(pngIcon.length);
+            pngZipEntry.setMethod(ZipEntry.DEFLATED);
             pngZipEntry.setSize(pngIcon.length);
             pngZipEntry.setCrc(IOUtils.calculateBytesCrc32(pngIcon));
             pngZipEntry.setTime(apksMetadata.exportTimestamp);
@@ -107,8 +106,7 @@ public final class SplitApkExporter {
             // Add files
             for (File apkFile : apkFiles) {
                 ZipEntry zipEntry = new ZipEntry(apkFile.getName());
-                zipEntry.setMethod(ZipEntry.STORED);
-                zipEntry.setCompressedSize(apkFile.length());
+                zipEntry.setMethod(ZipEntry.DEFLATED);
                 zipEntry.setSize(apkFile.length());
                 zipEntry.setCrc(IOUtils.calculateFileCrc32(apkFile));
                 zipEntry.setTime(apksMetadata.exportTimestamp);
