@@ -6,7 +6,7 @@
     <string name="date_installed">Data instalacji</string>
     <string name="more_info">Więcej informacji</string>
     <string name="sdk_flags">Flagi</string>
-    <string name="sdk_max">Maksimum</string>
+    <string name="sdk_max">Cel</string>
     <string name="sdk_min">Minimum</string>
     <string name="data_dir">Katalog danych</string>
     <string name="source_dir">Katalog źródłowy</string>
@@ -85,7 +85,7 @@
     <string name="disable_background">Wyłącz działanie w tle</string>
     <string name="backup_restore">Tworzenie/przywracanie kopii zapasowych</string>
     <string name="clear_data">Wyczyść dane</string>
-    <string name="user_and_uid">Użytkownik: %s (%d)</string>
+    <string name="user_and_uid">Użytkownik: <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
     <string name="memory_virtual_memory">Pamięć: %s, Pamięć wirtualna: %s</string>
     <string name="pid_and_ppid">Identyfikator procesu: %d, identyfikator procesu nadrzędnego: %d</string>
     <string name="disable_background_run">Wyłącz działanie w tle</string>
@@ -283,7 +283,7 @@
 \n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
-\nLogo credit: <a href="https://github.com/Atrate">Atrate</a>. </string>
+\n- <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="icon_picker">Selektor ikon</string>
     <string name="create_shortcut">Utwórz skrót</string>
     <string name="error_creating_shortcut">Wystąpił błąd podczas tworzenia skrótu</string>
@@ -734,4 +734,103 @@
     <string name="input_signatures">Wprowadź sygnatury</string>
     <string name="lib_details">Szczegóły biblioteki</string>
     <string name="no_libs">Brak bibliotek</string>
+    <string name="failed_to_fetch_package_info">Nie można uzyskać informacji o module</string>
+    <string name="filter_apps_with_activities">Aplikacje z aktywnością</string>
+    <string name="export_icon">Wyodrębnij ikonę</string>
+    <string name="no">Nie</string>
+    <plurals name="no_of_components">
+        <item quantity="one">%1$d komponent</item>
+        <item quantity="few">%1$d komponenty</item>
+        <item quantity="many">%1$d komponenty</item>
+        <item quantity="other">%1$d komponenty</item>
+    </plurals>
+    <string name="failed_to_deny_dangerous_perms">Nie udało się cofnąć wszystkich niebezpiecznych uprawnień</string>
+    <plurals name="verified_with_warning">
+        <item quantity="one">Zweryfikowano z ostrzeżeniem %d</item>
+        <item quantity="few">Zweryfikowano z ostrzeżeniami %d</item>
+        <item quantity="many">Zweryfikowano z ostrzeżeniami %d</item>
+        <item quantity="other">Zweryfikowano z ostrzeżeniami %d</item>
+    </plurals>
+    <plurals name="signature_schemes_pl">
+        <item quantity="one">Schemat podpisu</item>
+        <item quantity="few">Schematy podpisów</item>
+        <item quantity="many">Schematy podpisów</item>
+        <item quantity="other">Schematy podpisów</item>
+    </plurals>
+    <plurals name="missing_signatures">
+        <item quantity="one">%1$d brak sygnatury</item>
+        <item quantity="few">%1$d brak sygnatur</item>
+        <item quantity="many">%1$d brak sygnatur</item>
+        <item quantity="other">%1$d brak sygnatur</item>
+    </plurals>
+    <plurals name="libraries">
+        <item quantity="one">%1$d biblioteka</item>
+        <item quantity="few">%1$d bibliotek</item>
+        <item quantity="many">%1$d bibliotek</item>
+        <item quantity="other">%1$d bibliotek</item>
+    </plurals>
+    <plurals name="backup_exists_are_you_sure">
+        <item quantity="one">Istnieje kopia zapasowa. Czy jesteś pewien\?</item>
+        <item quantity="few">Istnieje kopia zapasowa dla więcej niż jednej aplikacji. Czy jesteś pewien\?</item>
+        <item quantity="many">Istnieje kopia zapasowa dla więcej niż jednej aplikacji. Czy jesteś pewien\?</item>
+        <item quantity="other">Istnieje kopia zapasowa dla więcej niż jednej aplikacji. Czy jesteś pewien\?</item>
+    </plurals>
+    <plurals name="classes">
+        <item quantity="one">%1$d klasa</item>
+        <item quantity="few">%1$d klasy</item>
+        <item quantity="many">%1$d klasy</item>
+        <item quantity="other">%1$d klasy</item>
+    </plurals>
+    <string name="restore">Przywróć</string>
+    <string name="backup">Kopia zapasowa</string>
+    <string name="external_data">Dane zewnętrzne</string>
+    <string name="features">Funkcje</string>
+    <string name="package_name_is_installed_successfully">Zainstalowano <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
+    <string name="termux">Termux</string>
+    <string name="deny_app_ops_description">Określ sposób działania aplikacji określony przez stałe wartości, np. <tt>63</tt> lub <tt>RUN_IN_BACKGROUND</tt></string>
+    <string name="community_links">Kanał informacyjny: https://t.me/AppManagerChannel
+\nGrupa pomocy: https://t.me/AppManagerAndroid
+\nTwitter: https://twitter.com/AMUpdateChannel</string>
+    <string name="external_apk_no_app_op">Zewnętrzny APK nie wykonuje żadnych operacji na aplikacjach</string>
+    <string name="failed_to_deny_dangerous_app_ops">Nie udało się cofnąć wszystkich niebezpiecznych operacji tej aplikacji</string>
+    <string name="failed_to_reset_app_ops">Nie udało się zresetować operacji tej aplikacji</string>
+    <string name="pref_import_blocker_msg">Importuj reguły filtrowania z Blockera, z których każdy zawiera reguły dla pojedynczego modułu.</string>
+    <string name="app_op_cannot_be_disabled">Operacja tej aplikacji nie może zostać wyłączona, zapewne operacja tylko do odczytu zależy od operacji innej aplikacji.</string>
+    <string name="pref_import_watt_msg">Importuj reguły blokowania z Watt, każdy plik zawierający reguły dla pojedyńczego pakietu o nazwie <tt>packagename.xml</tt> itp.</string>
+    <string name="pref_import_msg">Importuj wcześniej wyeksportowane reguły blokowania z menedżera aplikacji.</string>
+    <string name="pref_export_msg">Eksportuj reguły blokowania skonfigurowane w Menedżerze aplikacji do pamięci zewnętrznej.</string>
+    <string name="touchscreen">Ekran dotykowy</string>
+    <string name="reject_time">Czas odrzucenia</string>
+    <string name="accept_time">Czas zatwierdzenia</string>
+    <string name="toggle_kill_for_system_apps">Przełącz zamykanie aplikacji systemowych</string>
+    <string name="user_with_id">Użytkownik: <xliff:g id="user_id" example="0">%1$d</xliff:g></string>
+    <string name="store">Sklep</string>
+    <string name="apk_updater">APK Updater</string>
+    <string name="sort_by_times_opened">Ilości otwarć</string>
+    <string name="sort_by_screen_time">Czas ekranowy</string>
+    <string name="external_multiple_data_dir">Zewnętrzny katalog danych <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
+    <string name="pref_global_blocking_enabled_msg">Umożliwia blokowanie dowolnego komponentu dowolnej aplikacji bez konieczności blokowania aplikacji wprost.</string>
+    <string name="rules_not_applied">Reguły nie zostały wprowadzone</string>
+    <string name="failed_to_disable_op">Nie udało się wyłączyć OP zażądanej aplikacji.</string>
+    <string name="tested_signatures_on_classes_and_time_taken">Sprawdzono <xliff:g id="signature_no" example="342">%1$d</xliff:g> podpisów na <xliff:g id="class_no" example="6000">%2$d</xliff:g> klasach.
+\nCzas trwania <xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> powtórzeń).</string>
+    <plurals name="other_trackers_and_classes">
+        <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> trakery z <xliff:g id="class_no" example="50">%2$d</xliff:g> klasami</item>
+        <item quantity="few"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> trackery z <xliff:g id="class_no" example="50">%2$d</xliff:g> klasami</item>
+        <item quantity="many"></item>
+        <item quantity="other"></item>
+    </plurals>
+    <plurals name="two_trackers_and_classes">
+        <item quantity="one">2 trackery z <xliff:g id="class_no" example="50">%1$d</xliff:g> klasami</item>
+        <item quantity="few">2 trackery z <xliff:g id="class_no" example="50">%1$d</xliff:g> klasami</item>
+        <item quantity="many"></item>
+        <item quantity="other"></item>
+    </plurals>
+    <plurals name="tracker_and_classes">
+        <item quantity="one">1 tracker z <xliff:g id="class_no" example="50">%1$d</xliff:g> klasą</item>
+        <item quantity="few">1 tracker z <xliff:g id="class_no" example="50">%1$d</xliff:g> klasami</item>
+        <item quantity="many"></item>
+        <item quantity="other"></item>
+    </plurals>
+    <string name="starting_activity">Rozpoczynanie aktywności: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
 </resources>
