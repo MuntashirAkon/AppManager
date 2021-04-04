@@ -833,4 +833,9 @@
         <item quantity="other"></item>
     </plurals>
     <string name="starting_activity">Rozpoczynanie aktywności: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
+    <string name="keep_data_and_signatures">Zachowaj dane i sygnatury</string>
+    <string name="this_action_cannot_be_undone">Ta operacja nie może być cofnięta.</string>
+    <string name="input_keystore_alias_pass_description">Wprowadź hasło dla aliasu <b>%1$s</b>. Możesz pozostawić to pole puste, jeśli hasło jest takie samo jak hasło KeyStore.</string>
+    <string name="input_keystore_alias_pass">Hasło dla aliasu <b>%1$s</b></string>
+    <string name="tap_to_see_details">Naciśnij, aby zobaczyć szczegóły</string>
 </resources>
