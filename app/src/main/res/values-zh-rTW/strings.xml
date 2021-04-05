@@ -316,8 +316,8 @@
     <string name="scanner">掃描器</string>
     <string name="sys_config">系統配置</string>
     <string name="only_install">僅安裝</string>
-    <string name="install_without_data_loss">如果您關閉了簽名驗證，則可以使用<b> 僅安裝</b> 選擇安裝應用程式而不會丟失資料。</string>
-    <string name="app_data_will_be_lost">現有資料將丟失。</string>
+    <string name="install_without_data_loss">如果您關閉了簽名驗證，則可以使用<b> 僅安裝</b> 選擇安裝應用程式而不會遺失資料。</string>
+    <string name="app_data_will_be_lost">現有資料將遺失。</string>
     <string name="signature_mismatch_for_system_apps">無法安裝應用程式，因為具有不同簽名的系統應用程式具有此套件名稱。</string>
     <string name="do_you_want_to_uninstall_and_install">您是否要再次解除安裝並安裝該應用程式？</string>
     <string name="onboard">本機</string>
@@ -814,7 +814,7 @@
     <string name="cache_size">快取</string>
     <string name="data_size">資料大小</string>
     <string name="about">關於</string>
-    <string name="data_usage_msg">自上次啟動以來的資料使用情況</string>
+    <string name="data_usage_msg">資料使用情況</string>
     <string name="data_transmitted">已傳送的資料</string>
     <string name="data_received">已接收的資料</string>
     <string name="sort_by_target_sdk">目標SDK</string>
