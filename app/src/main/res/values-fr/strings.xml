@@ -681,4 +681,11 @@
     <string name="no_of_cores">Coeurs</string>
     <string name="security">Sûreté</string>
     <string name="battery">Batterie</string>
+    <string name="interceptor">Intercepteur</string>
+    <string name="installer">Installeur</string>
+    <string name="comment">Commentaire</string>
+    <string name="install_location_prefer_external">Préférer en externe</string>
+    <string name="install_location">Emplacement de l\'installation</string>
+    <string name="install_location_internal_only">Uniquement interne</string>
+    <string name="resend_intent">Renvoyer l\'Intent</string>
 </resources>
