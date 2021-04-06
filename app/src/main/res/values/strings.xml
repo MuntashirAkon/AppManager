@@ -810,7 +810,7 @@
     <string name="security">Security</string>
     <string name="set_mode_for_app_ops_dots">Set mode for app ops…</string>
     <string name="backup_source_description">Back up the entire source directory.</string>
-    <string name="backup_apk_only_description">Only backs up APK files from the source directory. (Select <b>Source</b> first.)</string>
+    <string name="backup_apk_only_description">Only back up APK files from the source directory. (Select <b>Source</b> first.)</string>
     <string name="backup_data_description">Back up internal data folders by default.</string>
     <string name="backup_external_data_description">Back up external data folders. (Select <b>Data</b> first.)</string>
     <string name="backup_obb_media_description">Back up OBB and media folders.</string>
