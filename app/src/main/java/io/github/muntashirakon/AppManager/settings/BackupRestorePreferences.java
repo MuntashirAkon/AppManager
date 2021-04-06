@@ -20,6 +20,7 @@ package io.github.muntashirakon.AppManager.settings;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.collection.ArrayMap;
@@ -27,7 +28,9 @@ import androidx.fragment.app.DialogFragment;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
+
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
@@ -51,7 +54,7 @@ public class BackupRestorePreferences extends PreferenceFragmentCompat {
             R.string.none,
             R.string.aes,
             R.string.rsa,
-            R.string.ecc,
+            /* R.string.ecc, // TODO(01/04/21): Implement ECC */
             R.string.open_pgp_provider
     };
 
@@ -121,7 +124,7 @@ public class BackupRestorePreferences extends PreferenceFragmentCompat {
                                 break;
                             case CryptoUtils.MODE_AES: {
                                 DialogFragment fragment = new AESCryptoSelectionDialogFragment();
-                                fragment.show(getParentFragmentManager(), OpenPgpKeySelectionDialogFragment.TAG);
+                                fragment.show(getParentFragmentManager(), AESCryptoSelectionDialogFragment.TAG);
                                 break;
                             }
                             case CryptoUtils.MODE_RSA:

@@ -20,12 +20,17 @@ package io.github.muntashirakon.AppManager;
 import android.app.Application;
 import android.content.Context;
 import android.content.pm.IPackageManager;
+import android.sun.security.provider.JavaKeyStoreProvider;
 
 import androidx.room.Room;
 import com.topjohnwu.superuser.Shell;
 import com.yariksoffice.lingver.Lingver;
 
 import androidx.annotation.NonNull;
+
+import java.security.Provider;
+import java.security.Security;
+
 import io.github.muntashirakon.AppManager.db.AMDatabase;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
@@ -80,6 +85,7 @@ public class AppManager extends Application {
         instance = this;
         super.onCreate();
         Lingver.init(instance, LangUtils.getLocaleByLanguage(instance));
+        Security.addProvider(new JavaKeyStoreProvider());
     }
 
     @Override

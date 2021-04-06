@@ -35,12 +35,19 @@ import android.text.TextUtils;
 import android.util.Pair;
 import android.view.WindowManager;
 
+import androidx.annotation.CheckResult;
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
+import androidx.core.content.pm.PermissionInfoCompat;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
@@ -63,10 +70,6 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
-import androidx.annotation.CheckResult;
-import androidx.annotation.NonNull;
-import androidx.annotation.StringRes;
-import androidx.core.content.pm.PermissionInfoCompat;
 import aosp.libcore.util.HexEncoding;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
@@ -551,15 +554,14 @@ public class Utils {
         if (signatures == null) return new Pair<>("", "");
         String name = "";
         String algoName = "";
-        try {
-            for (Signature sg : signatures) {
-                c = (X509Certificate) CertificateFactory.getInstance("X.509")
-                        .generateCertificate(new ByteArrayInputStream(sg.toByteArray()));
+        for (Signature sg : signatures) {
+            try (InputStream is = new ByteArrayInputStream(sg.toByteArray())) {
+                c = (X509Certificate) CertificateFactory.getInstance("X.509").generateCertificate(is);
                 name = c.getIssuerX500Principal().getName();
                 algoName = c.getSigAlgName();
                 break;
+            } catch (IOException | CertificateException ignore) {
             }
-        } catch (CertificateException ignored) {
         }
         return new Pair<>(name, algoName);
     }

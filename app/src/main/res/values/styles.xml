@@ -32,6 +32,7 @@
         <item name="popupMenuStyle">@style/AppTheme.PopupMenu.Overflow</item>
         <item name="appBarLayoutStyle">@style/AppTheme.AppBarLayout</item>
         <item name="materialAlertDialogTheme">@style/AppTheme.AlertDialog</item>
+        <item name="materialCalendarTheme">@style/AppTheme.DatePicker</item>
         <item name="bottomNavigationStyle">@style/AppTheme.BottomNavigationView</item>
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
@@ -111,6 +112,15 @@
     <style name="AppTheme.AlertDialog.CheckedTextView" parent="Widget.MaterialComponents.CheckedTextView">
         <item name="android:textSize">@dimen/title_font</item>
         <item name="android:textColor">?android:textColorPrimary</item>
+    </style>
+    <style name="AppTheme.DatePicker" parent="@style/ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="colorPrimary">@color/colorAccent</item>
+        <item name="colorOnPrimary">@color/colorPrimary</item>
+        <item name="shapeAppearanceMediumComponent">@style/AppTheme.ShapeAppearance.MediumComponent</item>
+        <item name="textInputStyle">@style/AppTheme.TextInputLayout</item>
+    </style>
+    <style name="AppTheme.ShapeAppearance.MediumComponent" parent="ShapeAppearance.MaterialComponents.MediumComponent">
+        <item name="cornerSize">16dp</item>
     </style>
     <style name="AppTheme.FloatingActionButton" parent="@style/Widget.MaterialComponents.FloatingActionButton">
         <item name="materialThemeOverlay">@style/AppTheme.FabOverlay</item>

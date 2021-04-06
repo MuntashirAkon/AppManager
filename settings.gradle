@@ -1,6 +1,5 @@
 include ':feat_docs'
 include ':libserver'
-include ':sun'
 include ':libopenpgp'
 include ':libapkparser'
 include ':hiddenapi'

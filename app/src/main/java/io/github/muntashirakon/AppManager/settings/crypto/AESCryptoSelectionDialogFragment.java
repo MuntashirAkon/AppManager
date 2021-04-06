@@ -137,7 +137,7 @@ public class AESCryptoSelectionDialogFragment extends DialogFragment {
         new Thread(() -> {
             try {
                 keyStoreManager = KeyStoreManager.getInstance();
-                SecretKey secretKey = (SecretKey) keyStoreManager.getKey(AES_KEY_ALIAS, null);
+                SecretKey secretKey = keyStoreManager.getSecretKey(AES_KEY_ALIAS, null);
                 if (secretKey != null) {
                     keyChars = HexEncoding.encode(secretKey.getEncoded());
                     try {

@@ -25,7 +25,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.os.RemoteException;
 import android.util.Base64;
 
 import androidx.annotation.CheckResult;
@@ -50,6 +49,8 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
@@ -109,21 +110,25 @@ public class KeyStoreManager {
     };
 
     private KeyStoreManager(@NonNull Context context)
-            throws CertificateException, NoSuchAlgorithmException, KeyStoreException, IOException, RemoteException {
+            throws CertificateException, NoSuchAlgorithmException, KeyStoreException, IOException {
         this.context = context;
         amKeyStore = getAmKeyStore();
     }
 
-    public void addPrivateKey(String alias, PrivateKey privateKey, X509Certificate certificate, @Nullable char[] password)
+    public void addKeyPair(String alias, @NonNull KeyPair keyPair, @Nullable char[] password, boolean isOverride)
             throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException {
         // Check existence of this alias in system preferences, this should be unique
         String prefAlias = getPrefAlias(alias);
         if (sharedPreferences.contains(prefAlias) && amKeyStore.containsAlias(alias)) {
-            throw new KeyStoreException("Alias " + alias + " exists.");
+            Log.w(TAG, "Alias " + alias + " exists.");
+            if (isOverride) removeItem(alias);
+            else return;
         }
         char[] realPassword = getAmKeyStorePassword();
         if (password == null) password = realPassword;
-        amKeyStore.setKeyEntry(alias, privateKey, password, new X509Certificate[]{certificate});
+        PrivateKey privateKey = keyPair.getPrivateKey();
+        Certificate certificate = keyPair.getCertificate();
+        amKeyStore.setKeyEntry(alias, privateKey, password, new Certificate[]{certificate});
         String encryptedPass = getEncryptedPassword(password);
         if (encryptedPass == null) {
             amKeyStore.deleteEntry(alias);
@@ -137,7 +142,7 @@ public class KeyStoreManager {
         }
     }
 
-    public void addSecretKey(String alias, SecretKey secretKey, @Nullable char[] password, boolean isOverride)
+    public void addSecretKey(String alias, @NonNull SecretKey secretKey, @Nullable char[] password, boolean isOverride)
             throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException {
         // Check existence of this alias in system preferences, this should be unique
         String prefAlias = getPrefAlias(alias);
@@ -170,7 +175,8 @@ public class KeyStoreManager {
         }
     }
 
-    public Key getKey(String alias, @Nullable char[] password)
+    @Nullable
+    private Key getKey(String alias, @Nullable char[] password)
             throws UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException {
         if (password == null) {
             password = getAliasPassword(alias);
@@ -178,6 +184,26 @@ public class KeyStoreManager {
         Key key = amKeyStore.getKey(alias, password);
         Utils.clearChars(password);
         return key;
+    }
+
+    @Nullable
+    public SecretKey getSecretKey(String alias, @Nullable char[] password)
+            throws UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException {
+        Key key = getKey(alias, password);
+        if (key instanceof SecretKey) {
+            return (SecretKey) key;
+        }
+        throw new KeyStoreException("The alias " + alias + " does not have a KeyPair.");
+    }
+
+    @Nullable
+    public KeyPair getKeyPair(String alias, @Nullable char[] password)
+            throws UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException {
+        Key key = getKey(alias, password);
+        if (key instanceof PrivateKey) {
+            return new KeyPair((PrivateKey) key, getCertificate(alias));
+        }
+        throw new KeyStoreException("The alias " + alias + " does not have a KeyPair.");
     }
 
     public boolean containsKey(String alias) throws KeyStoreException {
@@ -231,8 +257,9 @@ public class KeyStoreManager {
      *
      * @return App Manager's KeyStore
      */
-    private KeyStore getAmKeyStore() throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException, RemoteException {
+    private KeyStore getAmKeyStore() throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException {
         KeyStore keyStore = KeyStore.getInstance(AM_KEYSTORE);
+        Log.w(TAG, "Using keystore " + AM_KEYSTORE);
         if (AM_KEYSTORE_FILE.exists()) {
             try (InputStream is = new FileInputStream(AM_KEYSTORE_FILE)) {
                 char[] realPassword = getAmKeyStorePassword();
@@ -351,26 +378,18 @@ public class KeyStoreManager {
         return PREF_AM_KEYSTORE_PREFIX + alias;
     }
 
-    private boolean lock;
+    private CountDownLatch interactionWatcher;
 
     private void releaseLock() {
-        lock = false;
+        if (interactionWatcher != null) interactionWatcher.countDown();
     }
 
     private void acquireLock() {
-        lock = true;
+        interactionWatcher = new CountDownLatch(1);
         try {
-            int i = 0;
-            while (lock) {
-                if (i % 200 == 0) Log.i(TAG, "Waiting for user interaction");
-                Thread.sleep(100);
-                if (i > 1000)
-                    break;
-                i++;
-            }
+            interactionWatcher.await(100, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             Log.e(TAG, "waitForResult: interrupted", e);
-            lock = false;
             Thread.currentThread().interrupt();
         }
     }

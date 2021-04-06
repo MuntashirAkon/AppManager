@@ -67,7 +67,10 @@ public class AESCrypto implements Crypto {
         this.iv = iv;
         try {
             KeyStoreManager keyStoreManager = KeyStoreManager.getInstance();
-            this.secretKey = (SecretKey) keyStoreManager.getKey(AES_KEY_ALIAS, null);
+            this.secretKey = keyStoreManager.getSecretKey(AES_KEY_ALIAS, null);
+            if (this.secretKey == null) {
+                throw new CryptoException("No SecretKey with alias " + AES_KEY_ALIAS);
+            }
         } catch (Exception e) {
             throw new CryptoException(e);
         }

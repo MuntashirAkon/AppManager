@@ -18,19 +18,41 @@
 package io.github.muntashirakon.AppManager.settings;
 
 import android.os.Bundle;
+import android.widget.Button;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceFragmentCompat;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import java.security.cert.Certificate;
+import java.security.cert.CertificateEncodingException;
+import java.security.cert.X509Certificate;
 import java.util.Objects;
 
-import androidx.preference.Preference;
-import androidx.preference.PreferenceFragmentCompat;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.signing.SigSchemes;
+import io.github.muntashirakon.AppManager.apk.signing.Signer;
+import io.github.muntashirakon.AppManager.crypto.ks.KeyPair;
+import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager;
+import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.settings.crypto.KeyPairGeneratorDialogFragment;
+import io.github.muntashirakon.AppManager.types.ScrollableDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.DigestUtils;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class ApkSigningPreferences extends PreferenceFragmentCompat {
-    SettingsActivity activity;
+    public static final String TAG = "ApkSigningPreferences";
+    private SettingsActivity activity;
+    @Nullable
+    private KeyStoreManager keyStoreManager;
+    @Nullable
+    private Certificate certificate;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -56,6 +78,96 @@ public class ApkSigningPreferences extends PreferenceFragmentCompat {
             return true;
         });
         Preference customSig = Objects.requireNonNull(findPreference("signing_keys"));
-        customSig.setEnabled(false);
+        new Thread(() -> updateSigningPref(customSig)).start();
+        customSig.setOnPreferenceClickListener(preference -> {
+            ScrollableDialogBuilder builder = new ScrollableDialogBuilder(activity)
+                    .setTitle(R.string.signing_keys)
+                    .setPositiveButton(R.string.pref_import, null)
+                    .setNegativeButton(R.string.generate_key, null)
+                    .setNeutralButton(R.string.use_default, null)
+                    .setMessage(getSigningInfo());
+            AlertDialog alertDialog = builder.create();
+            alertDialog.setOnShowListener(dialog -> {
+                AlertDialog dialog1 = (AlertDialog) dialog;
+                Button importButton = dialog1.getButton(AlertDialog.BUTTON_POSITIVE);
+                Button generateButton = dialog1.getButton(AlertDialog.BUTTON_NEGATIVE);
+                Button defaultButton = dialog1.getButton(AlertDialog.BUTTON_NEUTRAL);
+                importButton.setOnClickListener(v -> {
+                    // TODO: 4/4/21 Import key from JKS/PKCS12/BKS or PK8
+                });
+                generateButton.setOnClickListener(v -> {
+                    KeyPairGeneratorDialogFragment fragment = new KeyPairGeneratorDialogFragment();
+                    fragment.setOnGenerateListener((password, keyPair) -> new Thread(() -> {
+                        try {
+                            if (keyPair == null) {
+                                throw new Exception("Keypair can't be null.");
+                            }
+                            keyStoreManager = KeyStoreManager.getInstance();
+                            keyStoreManager.addKeyPair(Signer.SIGNING_KEY_ALIAS, keyPair, password, true);
+                            if (password != null) Utils.clearChars(password);
+                            if (isDetached()) return;
+                            activity.runOnUiThread(() -> UIUtils.displayShortToast(R.string.done));
+                            updateSigningPref(customSig);
+                            activity.runOnUiThread(() -> builder.setMessage(getSigningInfo()));
+                        } catch (Exception e) {
+                            Log.e(TAG, e);
+                            activity.runOnUiThread(() -> UIUtils.displayLongToast(R.string.failed_to_save_key));
+                        }
+                    }).start());
+                    fragment.show(getParentFragmentManager(), KeyPairGeneratorDialogFragment.TAG);
+                });
+                defaultButton.setOnClickListener(v -> new Thread(() -> {
+                    try {
+                        keyStoreManager = KeyStoreManager.getInstance();
+                        if (keyStoreManager.containsKey(Signer.SIGNING_KEY_ALIAS)) {
+                            keyStoreManager.removeItem(Signer.SIGNING_KEY_ALIAS);
+                        }
+                        if (isDetached()) return;
+                        activity.runOnUiThread(() -> UIUtils.displayShortToast(R.string.done));
+                        updateSigningPref(customSig);
+                    } catch (Exception e) {
+                        Log.e(TAG, e);
+                        activity.runOnUiThread(() -> UIUtils.displayLongToast(R.string.failed_to_save_key));
+                    } finally {
+                        alertDialog.dismiss();
+                    }
+                }).start());
+            });
+            alertDialog.show();
+            return true;
+        });
+    }
+
+    public CharSequence getSigningInfo() {
+        if (certificate != null) {
+            try {
+                return PackageUtils.getSigningCertificateInfo(activity, (X509Certificate) certificate);
+            } catch (CertificateEncodingException e) {
+                return getString(R.string.failed_to_load_signing_key);
+            }
+        }
+        return getString(R.string.default_signing_key_used);
+    }
+
+    public void updateSigningPref(Preference preference) {
+        try {
+            keyStoreManager = KeyStoreManager.getInstance();
+            if (keyStoreManager.containsKey(Signer.SIGNING_KEY_ALIAS)) {
+                KeyPair keyPair = keyStoreManager.getKeyPair(Signer.SIGNING_KEY_ALIAS, null);
+                if (keyPair != null) {
+                    certificate = keyPair.getCertificate();
+                    String hash = DigestUtils.getHexDigest(DigestUtils.SHA_256, certificate.getEncoded());
+                    try {
+                        keyPair.destroy();
+                    } catch (Exception ignore) {
+                    }
+                    activity.runOnUiThread(() -> preference.setSummary(hash));
+                    return;
+                }
+            }
+        } catch (Exception e) {
+            Log.e(TAG, e);
+        }
+        activity.runOnUiThread(() -> preference.setSummary(R.string.signing_key_not_set));
     }
 }

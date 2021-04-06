@@ -498,11 +498,10 @@ public class ScannerActivity extends BaseActivity {
         SpannableStringBuilder builder = new SpannableStringBuilder();
         X509Certificate cert;
         byte[] certBytes;
-        try {
-            for (Signature signature : signatures) {
-                certBytes = signature.toByteArray();
-                cert = (X509Certificate) CertificateFactory.getInstance("X.509")
-                        .generateCertificate(new ByteArrayInputStream(certBytes));
+        for (Signature signature : signatures) {
+            certBytes = signature.toByteArray();
+            try (InputStream is = new ByteArrayInputStream(certBytes)) {
+                cert = (X509Certificate) CertificateFactory.getInstance("X.509").generateCertificate(is);
                 if (builder.length() > 0) builder.append("\n\n");
                 builder.append(getPrimaryText(this, getString(R.string.issuer) + ": "))
                         .append(cert.getIssuerX500Principal().getName()).append("\n")
@@ -514,8 +513,7 @@ public class ScannerActivity extends BaseActivity {
                 for (Pair<String, String> digest : digests) {
                     builder.append("\n").append(getPrimaryText(this, digest.first + ": ")).append(digest.second);
                 }
-            }
-        } catch (CertificateException ignored) {
+            } catch (IOException | CertificateException ignore) {}
         }
         return builder;
     }

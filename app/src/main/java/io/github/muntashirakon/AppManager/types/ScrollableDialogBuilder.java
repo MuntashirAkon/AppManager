@@ -47,13 +47,18 @@ public class ScrollableDialogBuilder {
     }
 
     @SuppressLint("InflateParams")
-    public ScrollableDialogBuilder(@NonNull FragmentActivity activity, @NonNull CharSequence message) {
+    public ScrollableDialogBuilder(@NonNull FragmentActivity activity, @Nullable CharSequence message) {
         View view = activity.getLayoutInflater().inflate(R.layout.dialog_scrollable_text_view, null);
         this.message = view.findViewById(android.R.id.content);
         this.message.setText(message);
         this.checkBox = view.findViewById(android.R.id.checkbox);
         this.checkBox.setVisibility(View.GONE);
         this.builder = new MaterialAlertDialogBuilder(activity).setView(view);
+    }
+
+    @SuppressLint("InflateParams")
+    public ScrollableDialogBuilder(@NonNull FragmentActivity activity) {
+        this(activity, null);
     }
 
     @SuppressLint("InflateParams")
@@ -68,6 +73,21 @@ public class ScrollableDialogBuilder {
 
     public ScrollableDialogBuilder setTitle(@StringRes int title) {
         builder.setTitle(title);
+        return this;
+    }
+
+    public ScrollableDialogBuilder setMessage(@StringRes int message) {
+        this.message.setText(message);
+        return this;
+    }
+
+    public ScrollableDialogBuilder setMessage(@Nullable CharSequence message) {
+        this.message.setText(message);
+        return this;
+    }
+
+    public ScrollableDialogBuilder setSelectable(boolean selectable) {
+        this.message.setTextIsSelectable(selectable);
         return this;
     }
 
