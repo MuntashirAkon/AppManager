@@ -817,20 +817,20 @@
     <plurals name="other_trackers_and_classes">
         <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> trakery z <xliff:g id="class_no" example="50">%2$d</xliff:g> klasami</item>
         <item quantity="few"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> trackery z <xliff:g id="class_no" example="50">%2$d</xliff:g> klasami</item>
-        <item quantity="many"></item>
-        <item quantity="other"></item>
+        <item quantity="many"/>
+        <item quantity="other"/>
     </plurals>
     <plurals name="two_trackers_and_classes">
         <item quantity="one">2 trackery z <xliff:g id="class_no" example="50">%1$d</xliff:g> klasami</item>
         <item quantity="few">2 trackery z <xliff:g id="class_no" example="50">%1$d</xliff:g> klasami</item>
-        <item quantity="many"></item>
-        <item quantity="other"></item>
+        <item quantity="many"/>
+        <item quantity="other"/>
     </plurals>
     <plurals name="tracker_and_classes">
         <item quantity="one">1 tracker z <xliff:g id="class_no" example="50">%1$d</xliff:g> klasą</item>
         <item quantity="few">1 tracker z <xliff:g id="class_no" example="50">%1$d</xliff:g> klasami</item>
-        <item quantity="many"></item>
-        <item quantity="other"></item>
+        <item quantity="many"/>
+        <item quantity="other"/>
     </plurals>
     <string name="starting_activity">Rozpoczynanie aktywności: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="keep_data_and_signatures">Zachowaj dane i sygnatury</string>
@@ -838,4 +838,7 @@
     <string name="input_keystore_alias_pass_description">Wprowadź hasło dla aliasu <b>%1$s</b>. Możesz pozostawić to pole puste, jeśli hasło jest takie samo jak hasło KeyStore.</string>
     <string name="input_keystore_alias_pass">Hasło dla aliasu <b>%1$s</b></string>
     <string name="tap_to_see_details">Naciśnij, aby zobaczyć szczegóły</string>
+    <string name="backup_apps_with_changes">Stwórz kopie zapasowe aplikacji z wprowadzonymi zmianami</string>
+    <string name="isolated">Odizolowana</string>
+    <string name="reverse">Odwrócona</string>
 </resources>
