@@ -31,12 +31,14 @@ import android.content.pm.Signature;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Parcel;
+import android.text.GetChars;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.view.WindowManager;
 
 import androidx.annotation.CheckResult;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.core.content.pm.PermissionInfoCompat;
 
@@ -528,6 +530,15 @@ public class Utils {
         byte[] bytes = Arrays.copyOf(byteBuffer.array(), byteBuffer.limit());
         clearBytes(byteBuffer.array());
         return bytes;
+    }
+
+    @Nullable
+    public static char[] getChars(@Nullable GetChars getChars) {
+        if (TextUtils.isEmpty(getChars)) return null;
+        @SuppressWarnings("ConstantConditions")
+        char[] chars = new char[getChars.length()];
+        getChars.getChars(0, chars.length, chars, 0);
+        return chars;
     }
 
     @CheckResult

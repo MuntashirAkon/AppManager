@@ -121,7 +121,7 @@ public class KeyStoreManager {
         String prefAlias = getPrefAlias(alias);
         if (sharedPreferences.contains(prefAlias) && amKeyStore.containsAlias(alias)) {
             Log.w(TAG, "Alias " + alias + " exists.");
-            if (isOverride) removeItem(alias);
+            if (isOverride) removeItemInternal(alias);
             else return;
         }
         char[] realPassword = getAmKeyStorePassword();
@@ -167,7 +167,18 @@ public class KeyStoreManager {
         }
     }
 
-    public void removeItem(String alias) throws KeyStoreException {
+    public void removeItem(String alias)
+            throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException {
+        removeItemInternal(alias);
+        char[] realPassword = getAmKeyStorePassword();
+        try (OutputStream is = new FileOutputStream(AM_KEYSTORE_FILE)) {
+            amKeyStore.store(is, realPassword);
+        } finally {
+            Utils.clearChars(realPassword);
+        }
+    }
+
+    private void removeItemInternal(String alias) throws KeyStoreException {
         amKeyStore.deleteEntry(alias);
         String prefAlias = getPrefAlias(alias);
         if (sharedPreferences.contains(prefAlias)) {

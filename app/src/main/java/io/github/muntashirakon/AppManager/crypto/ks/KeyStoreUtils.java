@@ -44,6 +44,8 @@ import android.sun.security.x509.X509CertInfo;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.android.internal.util.TextUtils;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -53,16 +55,19 @@ import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
+import java.security.Key;
 import java.security.KeyException;
 import java.security.KeyFactory;
 import java.security.KeyPairGenerator;
 import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.SignatureException;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
@@ -74,6 +79,7 @@ import java.security.spec.KeySpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.RSAPrivateCrtKeySpec;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -100,25 +106,45 @@ public class KeyStoreUtils {
 
     private static final String[] types = {"JKS", "PKCS12", "BKS"};
 
-    public static void storeKeyPair(@NonNull Context context, @NonNull Uri ksUri, int ksType, @NonNull String ksAlias,
-                                    @NonNull String targetAlias, @Nullable char[] ksPass, @Nullable char[] aliasPass)
-            throws Exception {
+    @NonNull
+    public static ArrayList<String> listAliases(@NonNull Context context,
+                                                @NonNull Uri ksUri,
+                                                int ksType,
+                                                @Nullable char[] ksPass)
+            throws IOException, KeyStoreException, CertificateException, NoSuchAlgorithmException {
         String keyType = types[ksType];
         final KeyStore ks = KeyStore.getInstance(keyType);
         try (InputStream is = context.getContentResolver().openInputStream(ksUri)) {
             if (is == null) throw new FileNotFoundException(ksUri + " does not exist.");
             ks.load(is, ksPass);
         }
-        if (ksAlias.isEmpty()) ksAlias = ks.aliases().nextElement();
-        PrivateKey privateKey = (PrivateKey) ks.getKey(ksAlias, aliasPass);
-        X509Certificate cert = (X509Certificate) ks.getCertificate(ksAlias);
-        // Store it to App Manager's KeyStore
-        KeyStoreManager manager = KeyStoreManager.getInstance();
-        manager.addKeyPair(targetAlias, new KeyPair(privateKey, cert), aliasPass, true);
+        return Collections.list(ks.aliases());
     }
 
-    public static void storeKeyPair(@NonNull Context context, @NonNull Uri keyPath, @NonNull Uri certPath,
-                                    @NonNull String targetAlias, @Nullable char[] aliasPass) throws Exception {
+    @NonNull
+    public static KeyPair getKeyPair(@NonNull Context context, @NonNull Uri ksUri, int ksType,
+                                     @Nullable String ksAlias, @Nullable char[] ksPass,
+                                     @Nullable char[] aliasPass)
+            throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException,
+            UnrecoverableKeyException {
+        String keyType = types[ksType];
+        final KeyStore ks = KeyStore.getInstance(keyType);
+        try (InputStream is = context.getContentResolver().openInputStream(ksUri)) {
+            if (is == null) throw new FileNotFoundException(ksUri + " does not exist.");
+            ks.load(is, ksPass);
+        }
+        if (TextUtils.isEmpty(ksAlias)) ksAlias = ks.aliases().nextElement();
+        Key key = ks.getKey(ksAlias, aliasPass);
+        if (key instanceof PrivateKey) {
+            X509Certificate cert = (X509Certificate) ks.getCertificate(ksAlias);
+            return new KeyPair((PrivateKey) key, cert);
+        }
+        throw new KeyStoreException("The provided alias " + ksAlias + " does not exist.");
+    }
+
+    @NonNull
+    public static KeyPair getKeyPair(@NonNull Context context, @NonNull Uri keyPath, @NonNull Uri certPath)
+            throws Exception {
         ContentResolver cr = context.getContentResolver();
         PKCS8EncodedKeySpec spec;
         PrivateKey privateKey;
@@ -131,9 +157,7 @@ public class KeyStoreUtils {
             cert = (X509Certificate) CertificateFactory.getInstance("X.509").generateCertificate(cer);
             privateKey = KeyFactory.getInstance(cert.getPublicKey().getAlgorithm()).generatePrivate(spec);
         }
-        // Store it to App Manager's KeyStore
-        KeyStoreManager manager = KeyStoreManager.getInstance();
-        manager.addKeyPair(targetAlias, new KeyPair(privateKey, cert), aliasPass, true);
+        return new KeyPair(privateKey, cert);
     }
 
     @NonNull

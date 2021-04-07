@@ -14,7 +14,7 @@
   ~
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  --><resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="_lang_tag" translatable="false">en</string>
     <string name="uninstall">Uninstall</string>
     <string name="permissions">Uses permissions</string>
@@ -931,5 +931,19 @@
     <string name="organization_name">Organization name (O)</string>
     <string name="locality_name">Locality (city) name (L)</string>
     <string name="state_name">State name (ST)</string>
-    <string name="country_name">Country name (C)</string>
+    <string name="country_name" tools:ignore="TypographyOther">Country name (C)</string>
+    <string name="keystore_file">KeyStore file</string>
+    <string name="keystore_pass">KeyStore password</string>
+    <string name="java_keystore">Java KeyStore (JKS)</string>
+    <string name="bouncy_castle_keystore">Bouncy Castle KeyStore (BKS)</string>
+    <string name="pkcs12_keystore">PKCS #12 KeyStore (P12)</string>
+    <string name="pem_and_pk8">PEM and PKCS #8 (PK8)</string>
+    <string name="pk8_file">PKCS #8 (PK8) file</string>
+    <string name="pem_file">PEM file</string>
+    <string name="import_key">Import key</string>
+    <string name="new_alias_password">New alias password</string>
+    <string name="found_no_alias_in_keystore">No alias found in the KeyStore!</string>
+    <string name="choose_an_alias">Choose an alias</string>
+    <string name="alias_pass">Alias password</string>
+    <string name="failed_to_read_keystore">Could not read the KeyStore.</string>
 </resources>
