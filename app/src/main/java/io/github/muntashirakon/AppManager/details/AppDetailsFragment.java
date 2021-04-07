@@ -231,6 +231,13 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if (model == null) model = new ViewModelProvider(this).get(AppDetailsFragmentViewModel.class);
+        if (mActivity == null) mActivity = (AppDetailsActivity) requireActivity();
+        if (isEmptyFragmentConstructCalled) {
+            neededProperty = model.getNeededProperty();
+        } else model.setNeededProperty(neededProperty);
+        if (mainModel == null) mainModel = mActivity.model;
+        if (mPackageManager == null) mPackageManager = mActivity.getPackageManager();
         // Swipe refresh
         mSwipeRefresh = view.findViewById(R.id.swipe_refresh);
         mSwipeRefresh.setColorSchemeColors(UIUtils.getAccentColor(mActivity));
@@ -504,6 +511,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
 
     private void setSortBy(@SortOrder int sortBy) {
         showProgressIndicator(true);
+        if (mainModel == null) return;
         mainModel.setSortOrder(sortBy, neededProperty);
         mainModel.load(neededProperty);
     }
@@ -516,6 +524,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
 
     private void refreshDetails() {
         showProgressIndicator(true);
+        if (mainModel == null) {
+            mainModel = mActivity.model;
+        }
         mainModel.setIsPackageChanged();
     }
 
