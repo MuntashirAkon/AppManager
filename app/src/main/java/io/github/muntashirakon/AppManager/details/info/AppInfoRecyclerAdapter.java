@@ -22,16 +22,17 @@ import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.button.MaterialButton;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
@@ -97,8 +98,6 @@ class AppInfoRecyclerAdapter extends RecyclerView.Adapter<AppInfoRecyclerAdapter
         switch (listItem.type) {
             case LIST_ITEM_GROUP_BEGIN:
                 holder.title.setText(listItem.title);
-                holder.title.setAllCaps(true);
-                holder.title.setTextSize(12f);
                 holder.title.setTextColor(accentColor);
                 LinearLayoutCompat item_layout = holder.itemView.findViewById(R.id.item_layout);
                 item_layout.setPadding(paddingMedium, paddingSmall, paddingMedium, paddingVerySmall);
@@ -120,7 +119,6 @@ class AppInfoRecyclerAdapter extends RecyclerView.Adapter<AppInfoRecyclerAdapter
                 if ((listItem.flags & LIST_ITEM_FLAG_MONOSPACE) != 0)
                     holder.subtitle.setTypeface(Typeface.MONOSPACE);
                 else holder.subtitle.setTypeface(Typeface.DEFAULT);
-                if (listItem.icon != 0) holder.icon.setImageResource(listItem.icon);
                 if (listItem.actionIcon != 0) {
                     holder.actionIcon.setIconResource(listItem.actionIcon);
                 }
@@ -140,23 +138,23 @@ class AppInfoRecyclerAdapter extends RecyclerView.Adapter<AppInfoRecyclerAdapter
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView title;
         TextView subtitle;
-        ImageView icon;
         MaterialButton actionIcon;
 
         public ViewHolder(@NonNull View itemView, @ListItem.ListItemType int viewType) {
             super(itemView);
+            if (viewType != LIST_ITEM_GROUP_END) {
+                itemView.findViewById(R.id.item_icon).setVisibility(View.GONE);
+            }
             switch (viewType) {
                 case LIST_ITEM_GROUP_BEGIN:
                     title = itemView.findViewById(R.id.item_title);
                     itemView.findViewById(R.id.item_subtitle).setVisibility(View.GONE);
                     itemView.findViewById(R.id.item_open).setVisibility(View.GONE);
-                    itemView.findViewById(R.id.item_icon).setVisibility(View.INVISIBLE);
                     break;
                 case LIST_ITEM_REGULAR:
                     title = itemView.findViewById(R.id.item_title);
                     subtitle = itemView.findViewById(R.id.item_subtitle);
                     actionIcon = itemView.findViewById(R.id.item_open);
-                    icon = itemView.findViewById(R.id.item_icon);
                     break;
                 case LIST_ITEM_GROUP_END:
                 default:

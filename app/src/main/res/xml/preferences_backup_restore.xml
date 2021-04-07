@@ -23,26 +23,31 @@
     <Preference
         app:key="backup_compression_method"
         app:title="@string/pref_compression_method"
-        tools:summary="Current method: GZip" />
+        tools:summary="Current method: GZip"
+        app:iconSpaceReserved="false" />
 
     <Preference
         app:key="backup_flags"
         app:title="@string/backup_options"
-        app:summary="@string/pref_backup_flags_msg" />
+        app:summary="@string/pref_backup_flags_msg"
+        app:iconSpaceReserved="false" />
 
     <SwitchPreferenceCompat
         app:key="backup_android_keystore"
         app:title="@string/pref_backup_android_keystore"
-        app:summary="@string/pref_backup_android_keystore_msg" />
+        app:summary="@string/pref_backup_android_keystore_msg"
+        app:iconSpaceReserved="false" />
 
     <Preference
         app:key="encryption"
         app:title="@string/encryption"
-        app:summary="@string/pref_encryption_msg" />
+        app:summary="@string/pref_encryption_msg"
+        app:iconSpaceReserved="false" />
 
     <Preference
         app:key="backup_volume"
         app:title="@string/backup_volume"
-        app:summary="@string/pref_backup_volume_msg" />
+        app:summary="@string/pref_backup_volume_msg"
+        app:iconSpaceReserved="false" />
 
 </PreferenceScreen>

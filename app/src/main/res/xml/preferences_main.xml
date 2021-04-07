@@ -22,109 +22,130 @@
     <Preference
         app:key="custom_locale"
         app:title="@string/pref_app_language"
-        tools:summary="Language: Auto" />
+        tools:summary="Language: Auto"
+        app:iconSpaceReserved="false" />
 
     <Preference
         app:key="app_theme"
         app:title="@string/pref_app_theme"
-        tools:summary="Current theme: Follow system" />
+        tools:summary="Current theme: Follow system"
+        app:iconSpaceReserved="false" />
 
     <SwitchPreferenceCompat
         app:key="enable_screen_lock"
         app:title="@string/screen_lock"
-        app:summary="@string/screen_lock_msg" />
+        app:summary="@string/screen_lock_msg"
+        app:iconSpaceReserved="false" />
 
     <Preference
         app:key="mode_of_operations"
         app:title="@string/pref_mode_of_operations"
-        tools:summary="Current mode: Auto" />
+        tools:summary="Current mode: Auto"
+        app:iconSpaceReserved="false" />
 
     <SwitchPreferenceCompat
         app:key="usage_access_enabled"
         app:title="@string/pref_usage_access_enabled"
-        app:summary="@string/pref_usage_access_enabled_msg" />
+        app:summary="@string/pref_usage_access_enabled_msg"
+        app:iconSpaceReserved="false" />
 
     <Preference
         app:key="enabled_features"
         app:title="@string/enable_disable_features"
-        app:summary="@string/pref_enable_disable_features_msg" />
+        app:summary="@string/pref_enable_disable_features_msg"
+        app:iconSpaceReserved="false" />
 
     <Preference
         app:key="apk_signing_prefs"
         app:title="@string/apk_signing"
         app:summary="@string/pref_apk_signing_msg"
-        android:fragment="io.github.muntashirakon.AppManager.settings.ApkSigningPreferences" />
+        android:fragment="io.github.muntashirakon.AppManager.settings.ApkSigningPreferences"
+        app:iconSpaceReserved="false" />
 
     <Preference
         app:key="backup_restore_prefs"
         app:title="@string/backup_restore"
         app:summary="@string/pref_backup_restore_msg"
-        android:fragment="io.github.muntashirakon.AppManager.settings.BackupRestorePreferences" />
+        android:fragment="io.github.muntashirakon.AppManager.settings.BackupRestorePreferences"
+        app:iconSpaceReserved="false" />
 
     <PreferenceCategory
         app:key="rules"
-        app:title="@string/rules">
+        app:title="@string/rules"
+        app:iconSpaceReserved="false" >
 
         <SwitchPreferenceCompat
             app:key="global_blocking_enabled"
             app:title="@string/pref_global_blocking_enabled"
-            app:summary="@string/pref_global_blocking_enabled_msg" />
+            app:summary="@string/pref_global_blocking_enabled_msg"
+            app:iconSpaceReserved="false" />
 
         <Preference
             app:key="import_export_rules"
             app:title="@string/pref_import_export_blocking_rules"
-            app:summary="@string/pref_import_export_blocking_rules_msg" />
+            app:summary="@string/pref_import_export_blocking_rules_msg"
+            app:iconSpaceReserved="false" />
 
         <Preference
             app:key="remove_all_rules"
             app:title="@string/pref_remove_all_rules"
-            app:summary="@string/pref_remove_all_rules_msg" />
+            app:summary="@string/pref_remove_all_rules_msg"
+            app:iconSpaceReserved="false" />
 
     </PreferenceCategory>
 
     <PreferenceCategory
         app:key="installer"
-        app:title="@string/installer">
+        app:title="@string/installer"
+        app:iconSpaceReserved="false" >
 
         <SwitchPreferenceCompat
             app:key="installer_display_users"
             app:title="@string/pref_show_users_in_installer"
-            app:summary="@string/pref_show_users_in_installer_msg" />
+            app:summary="@string/pref_show_users_in_installer_msg"
+            app:iconSpaceReserved="false" />
 
         <SwitchPreferenceCompat
             app:key="installer_sign_apk"
             app:title="@string/pref_sign_apk"
-            app:summary="@string/pref_sign_apk_msg" />
+            app:summary="@string/pref_sign_apk_msg"
+            app:iconSpaceReserved="false" />
 
         <Preference
             app:key="installer_install_location"
             app:title="@string/install_location"
-            tools:summary="Auto" />
+            tools:summary="Auto"
+            app:iconSpaceReserved="false" />
 
         <Preference
             app:key="installer_installer_app"
             app:title="@string/installer_app"
-            tools:summary="App Manager" />
+            tools:summary="App Manager"
+            app:iconSpaceReserved="false" />
 
     </PreferenceCategory>
 
     <PreferenceCategory
         app:key="other_category"
-        app:title="@string/other">
+        app:title="@string/other"
+        app:iconSpaceReserved="false" >
 
         <Preference
             app:key="about_device"
             app:title="@string/about_device"
-            app:summary="@string/pref_about_device_msg" />
+            app:summary="@string/pref_about_device_msg"
+            app:iconSpaceReserved="false" />
 
         <Preference
             app:key="about"
             app:title="@string/about"
-            app:summary="@string/pref_about_msg" />
+            app:summary="@string/pref_about_msg"
+            app:iconSpaceReserved="false" />
 
         <Preference
             app:key="changelog"
-            app:title="@string/changelog" />
+            app:title="@string/changelog"
+            app:iconSpaceReserved="false" />
 
     </PreferenceCategory>
 

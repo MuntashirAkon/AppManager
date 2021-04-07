@@ -22,76 +22,91 @@
     <Preference
         app:key="comment"
         app:title="@string/comment"
-        tools:summary="@tools:sample/lorem[9]" />
+        tools:summary="@tools:sample/lorem[9]"
+        app:iconSpaceReserved="false" />
 
     <Preference
         app:key="state"
         app:summary="@string/profile_state_msg"
-        tools:title="State: On" />
+        tools:title="State: On"
+        app:iconSpaceReserved="false" />
 
     <Preference
         app:key="users"
         app:title="@string/users"
-        tools:summary="Users: Main, Work" />
+        tools:summary="Users: Main, Work"
+        app:iconSpaceReserved="false" />
 
     <Preference
         app:key="components"
         app:title="@string/components"
-        tools:summary="Comma separated list of components" />
+        tools:summary="Comma separated list of components"
+        app:iconSpaceReserved="false" />
 
     <Preference
         app:key="app_ops"
         app:title="@string/app_ops"
-        tools:summary="Comma separated list of app ops" />
+        tools:summary="Comma separated list of app ops"
+        app:iconSpaceReserved="false" />
 
     <Preference
         app:key="permissions"
         app:title="@string/declared_permission"
-        tools:summary="Comma separated list of permissions" />
+        tools:summary="Comma separated list of permissions"
+        app:iconSpaceReserved="false" />
 
     <Preference
         app:key="backup_data"
         app:title="@string/backup_restore"
-        tools:summary="Backup Info" />
+        tools:summary="Backup Info"
+        app:iconSpaceReserved="false" />
 
     <Preference
         app:key="export_rules"
         app:title="@string/export_blocking_rules"
-        tools:summary="Allowed flags" />
+        tools:summary="Allowed flags"
+        app:iconSpaceReserved="false" />
 
     <SwitchPreferenceCompat
         app:key="disable"
         app:title="@string/disable"
-        app:summary="@string/profile_disable_msg" />
+        app:summary="@string/profile_disable_msg"
+        app:iconSpaceReserved="false" />
 
     <SwitchPreferenceCompat
         app:key="force_stop"
         app:title="@string/force_stop"
-        app:summary="@string/profile_force_stop_msg" />
+        app:summary="@string/profile_force_stop_msg"
+        app:iconSpaceReserved="false" />
 
     <SwitchPreferenceCompat
         app:key="clear_cache"
         app:title="@string/clear_cache"
-        app:summary="@string/profile_clear_cache_msg" />
+        app:summary="@string/profile_clear_cache_msg"
+        app:iconSpaceReserved="false" />
 
     <SwitchPreferenceCompat
         app:key="clear_data"
         app:title="@string/clear_data"
-        app:summary="@string/profile_clear_data_msg" />
+        app:summary="@string/profile_clear_data_msg"
+        app:iconSpaceReserved="false" />
 
     <SwitchPreferenceCompat
         app:key="block_trackers"
         app:title="@string/block_trackers"
-        app:summary="@string/profile_block_trackers_msg" />
+        app:summary="@string/profile_block_trackers_msg"
+        app:iconSpaceReserved="false" />
 
     <SwitchPreferenceCompat
         app:key="backup_apk"
         app:title="@string/backup_apk"
-        app:summary="@string/profile_backup_apk_msg" />
+        app:summary="@string/profile_backup_apk_msg"
+        app:iconSpaceReserved="false" />
 
     <SwitchPreferenceCompat
         app:key="allow_routine"
         app:title="@string/allow_routine_ops"
-        app:summary="@string/allow_routine_ops_msg" />
+        app:summary="@string/allow_routine_ops_msg"
+        app:iconSpaceReserved="false" />
 
 </PreferenceScreen>

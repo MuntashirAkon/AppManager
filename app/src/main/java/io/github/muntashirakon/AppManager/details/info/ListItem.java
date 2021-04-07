@@ -55,8 +55,6 @@ class ListItem {
     CharSequence title;
     CharSequence subtitle;
     @DrawableRes
-    int icon = 0;
-    @DrawableRes
     int actionIcon = 0;
     View.OnClickListener actionListener;
 

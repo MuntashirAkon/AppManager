@@ -23,11 +23,13 @@
     <Preference
         app:key="signature_schemes"
         app:summary="@string/pref_signature_schemes_msg"
-        app:title="@string/signature_schemes" />
+        app:title="@string/signature_schemes"
+        app:iconSpaceReserved="false" />
 
     <Preference
         app:key="signing_keys"
         app:title="@string/signing_keys"
-        tools:summary="Using generic keys." />
+        tools:summary="Using generic keys."
+        app:iconSpaceReserved="false" />
 
 </PreferenceScreen>

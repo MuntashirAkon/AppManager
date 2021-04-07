@@ -27,11 +27,16 @@
     android:paddingEnd="@dimen/padding_medium"
     android:paddingBottom="@dimen/padding_medium">
 
+    <View
+        android:id="@+id/item_icon"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="56dp" />
+
     <TextView
         android:id="@+id/item_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="56dp"
         android:gravity="start"
         android:layout_weight="1"
         android:textColor="?android:attr/textColorPrimary"
