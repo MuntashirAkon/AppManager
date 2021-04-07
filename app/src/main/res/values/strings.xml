@@ -946,4 +946,5 @@
     <string name="choose_an_alias">Choose an alias</string>
     <string name="alias_pass">Alias password</string>
     <string name="failed_to_read_keystore">Could not read the KeyStore.</string>
+    <string name="aes_unavailable">No strong AES encryption support is present before Android M.</string>
 </resources>
