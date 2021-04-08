@@ -345,7 +345,20 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             holder.backupInfo.setVisibility(View.VISIBLE);
             holder.backupInfoExt.setVisibility(View.VISIBLE);
             holder.backupIndicator.setText(R.string.backup);
-            holder.backupIndicator.setTextColor(item.isInstalled ? mColorSecondary : mColorRed);
+            int indicatorColor;
+            if (item.isInstalled) {
+                if (item.metadata.versionCode >= item.versionCode) {
+                    // Up-to-date backup
+                    indicatorColor = mColorStopped;
+                } else {
+                    // Outdated backup
+                    indicatorColor = mColorOrange;
+                }
+            } else {
+                // App not installed
+                indicatorColor = mColorRed;
+            }
+            holder.backupIndicator.setTextColor(indicatorColor);
             MetadataManager.Metadata metadata = item.metadata;
             long days = TimeUnit.DAYS.convert(System.currentTimeMillis() -
                     metadata.backupTime, TimeUnit.MILLISECONDS);
