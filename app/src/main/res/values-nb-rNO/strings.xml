@@ -6,7 +6,6 @@
     <string name="auto">Automatisk</string>
     <string name="pref_app_language">Språk</string>
     <string name="backup_all_users">Alle brukere</string>
-    <string name="source">Kilde</string>
     <string name="installer_error_security">Får ikke tilgang til APK-filer</string>
     <string name="failed_to_fetch_package_info">Kunne ikke hente pakkeinfo</string>
     <string name="installer_error_generic">Installasjon mislyktes</string>

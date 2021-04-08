@@ -181,7 +181,6 @@
     <string name="pref_app_language">Мова</string>
     <string name="backup_all_users">Всі користувачі</string>
     <string name="backup_multiple">Резервне копіювання декількох</string>
-    <string name="source">Джерело</string>
     <string name="obb_files_extracted_successfully">Файли OBB витягнуто</string>
     <string name="failed_to_extract_obb_files">Не вдалося витягти файли OBB</string>
     <string name="backup_obb_media">OBB та медіа</string>
@@ -805,7 +804,6 @@
     <string name="backup_external_data_description">Резервне копіювання зовнішніх папок даних. Для цього потрібно вибрати <b>Дані</b>.</string>
     <string name="backup_internal_data_description">Резервне копіювання папок даних. Якщо вибрати цей параметр, за замовчуванням буде створено резервні копії внутрішніх папок даних.</string>
     <string name="backup_apk_files_description">Резервне копіювання лише файлів apk з вихідного каталогу. Для цього слід вибрати <b>Джерело</b>.</string>
-    <string name="backup_source_description">Резервне копіювання всього вихідного каталогу.</string>
     <string name="security">Безпека</string>
     <string name="graphics">Графіка</string>
     <string name="cpu">ЦП</string>

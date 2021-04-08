@@ -441,7 +441,6 @@
     <string name="backup_apk_files">Apenas APK</string>
     <string name="failed_to_extract_obb_files">Não foi possível extrair arquivos OBB</string>
     <string name="obb_files_extracted_successfully">Arquivos OBB extraídos</string>
-    <string name="source">Origem</string>
     <string name="backup_multiple">Backup múltiplo</string>
     <string name="backup_all_users">Todos os usuários</string>
     <string name="pref_app_language">Idioma</string>
@@ -788,7 +787,6 @@
     <string name="backup_obb_media_description">Faça o backup das pastas OBB e de mídia.</string>
     <string name="backup_external_data_description">Faça o backup de pastas de dados externas. <b>Dados</b> deve ser selecionado para que isso funcione.</string>
     <string name="backup_internal_data_description">Faça o backup de pastas de dados. Se selecionado, as pastas de dados internas serão copiadas por padrão.</string>
-    <string name="backup_source_description">Faça o backup de todo o diretório de origem.</string>
     <string name="permissive">Permissive</string>
     <string name="enforcing">Enforcing</string>
     <string name="window_size">Tamanho da janela</string>

@@ -494,7 +494,6 @@
     <string name="backup_cache_description">Jangan mencadangkan folder cache, no_cache dan no_backup.</string>
     <string name="backup_obb_media_description">Cadangkan Folder OBB dan Media.</string>
     <string name="backup_internal_data_description">Cadangkan folder data. Jika dipilih, folder data internal akan dicadangkan secara default.</string>
-    <string name="backup_source_description">Cadangkan seluruh direktori sumber.</string>
     <string name="set_mode_for_app_ops_dots">Atur Mode untuk Ops Aplikasi …</string>
     <string name="security">Keamanan</string>
     <string name="battery">Baterai</string>
@@ -727,7 +726,6 @@
     <string name="abi_split_for_feature"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> code for <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
     <string name="backup_all_users">Semua pengguna</string>
     <string name="backup_multiple">Cadangkan banyak</string>
-    <string name="source">Sumber</string>
     <string name="obb_files_extracted_successfully">File OBB diekstraksi</string>
     <string name="failed_to_extract_obb_files">Tidak dapat mengekstrak file OBB</string>
     <string name="backup_obb_media">OBB dan media</string>

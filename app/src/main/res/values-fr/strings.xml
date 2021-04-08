@@ -219,7 +219,6 @@
     <string name="pref_app_language">Langue</string>
     <string name="backup_all_users">Tous les utilisateurs</string>
     <string name="backup_multiple">Sauvegarde multiple</string>
-    <string name="source">Source</string>
     <string name="obb_files_extracted_successfully">Fichiers OBB extraits</string>
     <string name="failed_to_extract_obb_files">Impossible d\'extraire les fichiers OBB</string>
     <string name="backup_obb_media">OBB et Médias</string>

@@ -272,7 +272,6 @@
     <string name="pref_app_language">Idioma</string>
     <string name="backup_all_users">Todos los usuarios</string>
     <string name="backup_multiple">Respaldo múltiple</string>
-    <string name="source">Fuente</string>
     <string name="obb_files_extracted_successfully">Archivo Obb extraído</string>
     <string name="failed_to_extract_obb_files">No se pudo extraer el archivo Obb</string>
     <string name="backup_obb_media">OBB y Multimedia</string>
@@ -752,7 +751,6 @@
     <string name="interceptor">Interceptor</string>
     <string name="backup_internal_data_description">Respaldo de las carpetas de datos. Si se selecciona, se hará un respaldo de las carpetas de datos internas por defecto.</string>
     <string name="backup_apk_files_description">Respaldo sólo de los archivos APK del directorio de origen. <b>Fuente</b> debe ser seleccionado para que esto funcione.</string>
-    <string name="backup_source_description">Respaldo de todo el directorio fuente.</string>
     <string name="backup_obb_media_description">Respaldo de OBB y multimedia.</string>
     <string name="board_name">Tablón</string>
     <string name="drm_free_apkm_msg">El archivo APKM está libre de DRM, no hay necesidad de convertirlo a APKS.</string>

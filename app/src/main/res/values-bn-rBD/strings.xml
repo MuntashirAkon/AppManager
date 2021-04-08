@@ -386,7 +386,6 @@
     <string name="auto">অটো</string>
     <string name="pref_app_language">ভাষা</string>
     <string name="backup_all_users">সকল ব্যবহারকারী</string>
-    <string name="source">সোর্স</string>
     <string name="obb_files_extracted_successfully">Obb ফাইলগুলি সফলভাবে এক্সট্র্যাক্ট হয়েছে</string>
     <string name="failed_to_extract_obb_files">Obb ফাইলগুলি এক্সট্র্যাক্ট করতে ব্যর্থ</string>
     <string name="backup_obb_media">Backup Obb</string>

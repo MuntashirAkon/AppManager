@@ -109,7 +109,6 @@
     <string name="pref_app_language">Język</string>
     <string name="backup_all_users">Wszyscy użytkownicy</string>
     <string name="backup_multiple">Utwórz kopię zapasową wielu</string>
-    <string name="source">Źródło</string>
     <string name="backup_obb_media">OBB i Media</string>
     <string name="backup_apk_files">Tylko plik APK</string>
     <string name="installer_error_session_commit">Nie udało się zatwierdzić plików APK</string>
@@ -571,7 +570,6 @@
     <string name="failed_to_enable_magisk_hide">Nie można włączyć MagiskHide</string>
     <string name="backup_cache_description">Nie twórz kopii zapasowych folderów cache, no_cache i no_backup.</string>
     <string name="backup_obb_media_description">Utwórz kopię zapasową folderów OBB i media.</string>
-    <string name="backup_source_description">Utwórz kopię zapasową całego katalogu źródłowego.</string>
     <string name="resend_intent">Wyślij intent ponownie</string>
     <string name="category">Kategorie</string>
     <string name="type_component_name">Nazwa komponentu</string>

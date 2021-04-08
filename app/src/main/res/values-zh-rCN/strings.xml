@@ -458,7 +458,6 @@
     <string name="backup_obb_media">OBB 和媒体文件</string>
     <string name="failed_to_extract_obb_files">无法提取 OBB 文件</string>
     <string name="obb_files_extracted_successfully">已提取 OBB 文件</string>
-    <string name="source">源文件</string>
     <string name="backup_multiple">备份多个应用</string>
     <string name="backup_all_users">所有用户</string>
     <string name="pref_app_language">语言</string>
@@ -755,7 +754,6 @@
     <string name="backup_external_data_description">备份外部数据文件夹。要让该选项工作，必须选中<b>Data 文件夹</b>。</string>
     <string name="backup_internal_data_description">备份数据文件夹。如果选中，将默认备份内部数据文件夹。</string>
     <string name="backup_apk_files_description">仅备份来自源目录的 APK 文件。要让该选项工作，必须选中 <b>源目录</b>。</string>
-    <string name="backup_source_description">备份整个源目录。</string>
     <string name="selinux">SELinux 状态</string>
     <string name="window_size">窗口尺寸</string>
     <string name="refresh_rate">刷新率</string>

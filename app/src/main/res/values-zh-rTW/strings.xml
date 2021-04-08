@@ -429,7 +429,6 @@
     <string name="pref_app_language">語言</string>
     <string name="backup_all_users">全部使用者</string>
     <string name="backup_multiple">備份多個</string>
-    <string name="source">來源</string>
     <string name="obb_files_extracted_successfully">提取的OBB檔案</string>
     <string name="failed_to_extract_obb_files">無法提取OBB檔案</string>
     <string name="backup_obb_media">OBB和媒體</string>
@@ -625,7 +624,6 @@
     <string name="backup_external_data_description">備份外部資料。<b> 資料</b> 必須選擇此項才能正常運作。</string>
     <string name="backup_internal_data_description">備份資料。如果選中，預設情況下將備份內部資料。</string>
     <string name="backup_apk_files_description">僅備份來源目錄中的 APK 檔案。<b> 來源</b> 必須選擇此項才能正常運作。</string>
-    <string name="backup_source_description">備份整個來源目錄。</string>
     <string name="set_mode_for_app_ops_dots">設定應用程式操作的模式…</string>
     <string name="security">安全</string>
     <string name="battery">電池</string>

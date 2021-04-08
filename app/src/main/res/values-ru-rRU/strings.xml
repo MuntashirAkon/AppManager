@@ -518,7 +518,6 @@
     <string name="backup_obb_media">OBB и Медиа</string>
     <string name="failed_to_extract_obb_files">Не удалось извлечь файлы OBB</string>
     <string name="obb_files_extracted_successfully">Файлы OBB извлечены</string>
-    <string name="source">Источник</string>
     <string name="backup_multiple">Создание нескольких резервных копий</string>
     <string name="backup_all_users">Все пользователи</string>
     <string name="pref_app_language">Язык</string>
@@ -843,7 +842,6 @@
     <string name="backup_external_data_description">Резервное копирование внешних папок данных. Для этого необходимо выбрать <b> Данные </b>.</string>
     <string name="backup_internal_data_description">Резервное копирование папок с данными. Если выбран этот параметр, по умолчанию будут созданы резервные копии внутренних папок с данными.</string>
     <string name="backup_apk_files_description">Резервное копирование только файлов APK из исходного каталога. Для этого необходимо выбрать <b>Источник </b>.</string>
-    <string name="backup_source_description">Резервное копирование всего каталога источника.</string>
     <string name="permissive">Permissive</string>
     <string name="enforcing">Enforcing</string>
     <string name="window_size">Размер окна</string>

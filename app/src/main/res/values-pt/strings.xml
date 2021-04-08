@@ -6,7 +6,6 @@
     <string name="pref_app_language">Idioma</string>
     <string name="backup_all_users">Todos os utilizadores</string>
     <string name="backup_multiple">Backup múltiplo</string>
-    <string name="source">Fonte</string>
     <string name="obb_files_extracted_successfully">Ficheiros OBB extraídos</string>
     <string name="failed_to_extract_obb_files">Não foi possível extrair ficheiros OBB</string>
     <string name="backup_apk_files">Apenas APK</string>

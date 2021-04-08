@@ -518,7 +518,6 @@
     <string name="pref_app_language">भाषा</string>
     <string name="backup_all_users">सभी यूज़र्स</string>
     <string name="backup_multiple">कई का बैकअप लें</string>
-    <string name="source">स्रोत</string>
     <string name="obb_files_extracted_successfully">ओबीबी फाइलों का एक्सट्रैक्शन सफल हुआ</string>
     <string name="failed_to_extract_obb_files">ओबीबी फाइलें एक्सट्रेक्ट नहीं कर सके</string>
     <string name="backup_obb_media">ओबीबी और मीडिया</string>
@@ -635,7 +634,6 @@
     <string name="conversion_failed">बदलाव करने में त्रुटि हुई।</string>
     <string name="select_apk">Apk चुनें</string>
     <string name="backup_apk_files_description">डेटा डायरेक्टरी से केवल एपीके फ़ाइलों का बैकअप करें। इसके काम करने के लिए <b> स्रोत </b> चुना जाना चाहिए।</string>
-    <string name="backup_source_description">सोर्स डायरेक्टरी का बैकअप लें।</string>
     <string name="set_mode_for_app_ops_dots">ऐप ऑप्स के लिए मोड सेट करें …</string>
     <string name="security">सिक्योरिटी</string>
     <string name="battery">बैटरी</string>

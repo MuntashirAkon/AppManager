@@ -552,7 +552,6 @@
     <string name="backup_obb_media">OBBとメディア</string>
     <string name="failed_to_extract_obb_files">OBBファイルを抽出できませんでした</string>
     <string name="obb_files_extracted_successfully">OBBファイルは抽出されました</string>
-    <string name="source">ソース</string>
     <string name="backup_multiple">複数バックアップ</string>
     <string name="backup_all_users">全てのユーザー</string>
     <string name="pref_app_language">言語</string>
@@ -810,7 +809,6 @@
     <string name="battery">バッテリー</string>
     <string name="security">セキュリティ</string>
     <string name="set_mode_for_app_ops_dots">AppOpsモードをセットします…</string>
-    <string name="backup_source_description">APKの保存ディレクトリ全体をバックアップする.</string>
     <string name="backup_apk_files_description">APKファイルのみをバックアップします <b>ソース</b> を指定する必要があります。</string>
     <string name="backup_internal_data_description">データフォルダをバックアップします。選択した場合内部データフォルダのバックアップは標準で有効になります。</string>
     <string name="backup_external_data_description">外部データフォルダをバックアップします。 <b>データ</b> のバックアップも同時に行う必要があります。</string>
