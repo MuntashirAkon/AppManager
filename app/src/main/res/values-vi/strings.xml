@@ -318,4 +318,77 @@
     <string name="data_dir">Thư mục dữ liệu</string>
     <string name="source_dir">Thư mục nguồn</string>
     <string name="paths_and_directories">Đường dẫn &amp; Thư mục</string>
+    <string name="changelog">Nhật ký thay đổi</string>
+    <string name="source_code">Mã nguồn</string>
+    <string name="update">Cập nhật</string>
+    <string name="clear_app_cache">Xoá bộ nhớ đệm của ứng dụng</string>
+    <string name="failed_to_parse_some_numbers">Không thể xử lý một số chữ số</string>
+    <string name="filter_apps_with_rules">Ứng dụng có quy tắc</string>
+    <string name="filter_system_apps">Ứng dụng hệ thống</string>
+    <string name="filter_user_apps">Ứng dụng người dùng</string>
+    <string name="filter">Lọc</string>
+    <string name="exclude_cache">Trừ bộ nhớ đệm</string>
+    <string name="blocking_rules">Quy tắc chặn</string>
+    <string name="whats_new">Có gì mới</string>
+    <string name="features">Tính năng</string>
+    <string name="components">Thành phần</string>
+    <string name="backup_options">Tuỳ chọn sao lưu</string>
+    <string name="delete_backup">Xoá bản sao lưu</string>
+    <string name="restore">Khôi phục</string>
+    <string name="backup">Sao lưu</string>
+    <string name="data">Dữ liệu</string>
+    <string name="external_data">Dữ liệu ngoài</string>
+    <plurals name="classes">
+        <item quantity="other">%1$d class</item>
+    </plurals>
+    <plurals name="backup_exists_are_you_sure">
+        <item quantity="other">Bản sao lưu đã tồn tại cho nhiều ứng dụng. Bạn có chắc không\?</item>
+    </plurals>
+    <plurals name="alert_failed_to_set_app_ops">
+        <item quantity="other">Không thể đặt hoạt động ứng dụng cho %1$d ứng dụng</item>
+    </plurals>
+    <plurals name="alert_failed_to_block_components">
+        <item quantity="other">Không thể chặn thành phần của %1$d ứng dụng</item>
+    </plurals>
+    <plurals name="alert_failed_to_unblock_trackers">
+        <item quantity="other">Không thể bỏ chặn trình theo dõi của %1$d ứng dụng</item>
+    </plurals>
+    <plurals name="alert_failed_to_delete_backup">
+        <item quantity="other">Không thể xoá %1$d bản sao lưu</item>
+    </plurals>
+    <plurals name="alert_failed_to_restore">
+        <item quantity="other">Không thể khôi phục %1$d ứng dụng</item>
+    </plurals>
+    <plurals name="alert_failed_to_backup">
+        <item quantity="other">Không thể sao lưu %1$d ứng dụng</item>
+    </plurals>
+    <plurals name="failed_to_backup_some_apk_files">
+        <item quantity="other">Không thể sao lưu %1$d ứng dụng</item>
+    </plurals>
+    <string name="touchscreen_finger">Ngón tay</string>
+    <string name="orientation_sensor">Cảm biến</string>
+    <string name="manifest">Manifest</string>
+    <string name="app_op_cannot_be_disabled">Hoạt động ứng dụng này không thể được tắt, có thể là một hoạt động ứng dụng chỉ đọc phụ thuộc vào một hoạt động ứng dụng khác.</string>
+    <string name="reject_time">Thời gian từ chối</string>
+    <string name="accept_time">Thời gian chấp nhận</string>
+    <string name="backup_apk">Sao lưu APK</string>
+    <string name="pref_import_export_blocking_rules_msg">Nhập/xuất các quy tắc, nhập các quy tắc ngoài từ Watt hoặc Blocker.</string>
+    <string name="uninstalled_successfully">Đã gỡ cài đặt <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="no_usage_in_this_time_range">Không có dữ liệu sử dụng trong phạm vi thời gian này</string>
+    <string name="no_tracker_class">Không có class của trình theo dõi</string>
+    <string name="all_classes">Tất cả class</string>
+    <string name="tracker_classes">Các class của trình theo dõi</string>
+    <plurals name="other_trackers_and_classes">
+        <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> trình theo dõi có <xliff:g id="class_no" example="50">%2$d</xliff:g> class</item>
+    </plurals>
+    <plurals name="two_trackers_and_classes">
+        <item quantity="other">2 trình theo dõi có <xliff:g id="class_no" example="50">%1$d</xliff:g> class</item>
+    </plurals>
+    <plurals name="tracker_and_classes">
+        <item quantity="other">1 trình theo dõi có <xliff:g id="class_no" example="50">%1$d</xliff:g> class</item>
+    </plurals>
+    <string name="toggle_class_listing">Bật/tắt danh sách class</string>
+    <string name="class_viewer">Trình xem class</string>
+    <string name="class_name">Tên Class</string>
+    <string name="media_size">Phương tiện</string>
 </resources>
