@@ -54,7 +54,7 @@
 
 					<com.google.android.material.textfield.MaterialAutoCompleteTextView
 						android:id="@+id/action_edit"
-						style="@style/TextAppearance.MaterialComponents.Subtitle1"
+						style="@style/AppTheme.TextAppearance.Input"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:inputType="textNoSuggestions|textMultiLine"
@@ -74,7 +74,7 @@
 
 					<com.google.android.material.textfield.MaterialAutoCompleteTextView
 						android:id="@+id/data_edit"
-						style="@style/TextAppearance.MaterialComponents.Subtitle1"
+						style="@style/AppTheme.TextAppearance.Input"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:inputType="textNoSuggestions|textMultiLine"
@@ -94,7 +94,7 @@
 
 					<com.google.android.material.textfield.MaterialAutoCompleteTextView
 						android:id="@+id/type_edit"
-						style="@style/TextAppearance.MaterialComponents.Subtitle1"
+						style="@style/AppTheme.TextAppearance.Input"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:inputType="textNoSuggestions|textMultiLine"
@@ -114,7 +114,7 @@
 
 					<com.google.android.material.textfield.MaterialAutoCompleteTextView
 						android:id="@+id/uri_edit"
-						style="@style/TextAppearance.MaterialComponents.Subtitle1"
+						style="@style/AppTheme.TextAppearance.Input"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:inputType="textNoSuggestions|textMultiLine"
@@ -132,7 +132,7 @@
 
 					<com.google.android.material.textview.MaterialTextView
 						android:id="@+id/intent_categories_header"
-						style="@style/TextAppearance.MaterialComponents.Subtitle1"
+						style="@style/AppTheme.TextAppearance.Input"
 						android:layout_width="0dp"
 						android:layout_height="wrap_content"
 						android:layout_gravity="center_vertical"
@@ -169,7 +169,7 @@
 					android:paddingEnd="@dimen/padding_medium">
 
 					<com.google.android.material.textview.MaterialTextView
-						style="@style/TextAppearance.MaterialComponents.Subtitle1"
+						style="@style/AppTheme.TextAppearance.Input"
 						android:layout_width="0dp"
 						android:layout_height="wrap_content"
 						android:layout_gravity="center_vertical"
@@ -206,7 +206,7 @@
 					android:paddingEnd="@dimen/padding_medium">
 
 					<com.google.android.material.textview.MaterialTextView
-						style="@style/TextAppearance.MaterialComponents.Subtitle1"
+						style="@style/AppTheme.TextAppearance.Input"
 						android:layout_width="0dp"
 						android:layout_height="wrap_content"
 						android:layout_gravity="center_vertical"
@@ -236,7 +236,7 @@
 
 				<com.google.android.material.textview.MaterialTextView
 					android:id="@+id/intent_matching_activities_header"
-					style="@style/TextAppearance.MaterialComponents.Subtitle1"
+					style="@style/AppTheme.TextAppearance.Input"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:layout_marginTop="@dimen/padding_small"

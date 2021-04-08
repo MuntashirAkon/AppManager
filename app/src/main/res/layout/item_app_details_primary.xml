@@ -43,7 +43,7 @@
         android:layout_marginTop="@dimen/padding_very_small"
         android:layout_marginBottom="@dimen/padding_very_small"
         android:text="@string/launch"
-        style="@style/TextAppearance.MaterialComponents.Button"
+        style="@style/AppTheme.TextAppearance.Button"
         android:textStyle="bold" />
 
     <LinearLayout
@@ -155,7 +155,7 @@
             android:minWidth="0dp"
             android:minHeight="0dp"
             android:singleLine="true"
-            style="@style/TextAppearance.MaterialComponents.Button"
+            style="@style/AppTheme.TextAppearance.Button"
             android:text="@string/create_shortcut" />
 
         <com.google.android.material.button.MaterialButton
@@ -170,7 +170,7 @@
             android:minWidth="0dp"
             android:minHeight="0dp"
             android:singleLine="true"
-            style="@style/TextAppearance.MaterialComponents.Button"
+            style="@style/AppTheme.TextAppearance.Button"
             android:text="@string/edit_shortcut" />
     </LinearLayout>
 

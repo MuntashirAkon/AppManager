@@ -60,7 +60,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/key_name"
-                style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                style="@style/AppTheme.TextAppearance.Input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
@@ -107,7 +107,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/input_float"
-                style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                style="@style/AppTheme.TextAppearance.Input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
@@ -129,7 +129,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/input_int"
-                style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                style="@style/AppTheme.TextAppearance.Input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
@@ -151,7 +151,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/input_long"
-                style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                style="@style/AppTheme.TextAppearance.Input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
@@ -173,7 +173,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/input_string"
-                style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                style="@style/AppTheme.TextAppearance.Input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"

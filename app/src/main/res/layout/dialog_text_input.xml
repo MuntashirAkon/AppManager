@@ -42,7 +42,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@android:id/input"
-                style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                style="@style/AppTheme.TextAppearance.Input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"

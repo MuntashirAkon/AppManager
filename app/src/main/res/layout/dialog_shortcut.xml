@@ -40,7 +40,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/shortcut_name"
-                style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                style="@style/AppTheme.TextAppearance.Input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
@@ -58,7 +58,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/package_name"
-                style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                style="@style/AppTheme.TextAppearance.Input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
@@ -76,7 +76,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/class_name"
-                style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                style="@style/AppTheme.TextAppearance.Input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
@@ -100,7 +100,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/insert_icon"
-                    style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    style="@style/AppTheme.TextAppearance.Input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
