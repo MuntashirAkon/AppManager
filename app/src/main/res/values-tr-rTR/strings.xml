@@ -46,7 +46,7 @@
     <string name="group">Grup</string>
     <string name="protection_level">Güvenlik seviyesi</string>
     <string name="uses_feature">Kullanılan özellikler</string>
-    <string name="gles_ver">Gereken GL ES sürümü</string>
+    <string name="gles_ver">Gereken OpenGL ES sürümü</string>
     <string name="no_feature">Özellik yok</string>
     <string name="sort_by_shared_user_id">Paylaşılan kullanıcı kimliği</string>
     <string name="shared_user_id">Paylaşılan kullanıcı kimliği</string>
@@ -61,7 +61,7 @@
     <string name="loading">Yükleniyor…</string>
     <string name="sort_by_app_label">Uygulama etiketleri</string>
     <string name="sort_by_package_name">Paket adı</string>
-    <string name="sort_by_domain">Kullanıcı uygulaması bölümleri</string>
+    <string name="sort_by_domain">Önce kullanıcı uygulamaları</string>
     <string name="data_received">Alınan veriler</string>
     <string name="data_transmitted">İletilen veriler</string>
     <string name="data_usage_msg">Veri kullanımı</string>
@@ -93,7 +93,7 @@
     <string name="instructions">Açıklamalar</string>
     <string name="error_creating_shortcut">Kısayol oluşturulurken hata oluştu</string>
     <string name="error_verbose_pin_shortcut">Geçerli başlatıcısı \"PinShortcut\" özelliğini desteklemiyor. Kısayol oluşturulamıyor.</string>
-    <string name="grant_usage_acess_message">Uygulama kullanım bilgilerini görüntülemek için kullanım erişimi zorunludur.</string>
+    <string name="grant_usage_acess_message">Uygulama kullanım bilgilerini görüntülemek için kullanılır.</string>
     <string name="share_apk">APK\'yi Paylaş</string>
     <string name="failed_to_extract_apk_file">APK dosyası çıkarılamadı</string>
     <string name="menu_remove_rules">Kuralları Kaldır</string>
@@ -174,12 +174,12 @@
     <string name="issued_date">Veriliş tarihi</string>
     <string name="issuer">Veren</string>
     <string name="subject">Konu</string>
-    <string name="filter_apps_with_backups">Yedekleri olan uygulamalar</string>
-    <string name="sort_by_backup">Önce yedek</string>
+    <string name="filter_apps_with_backups">Yedekleri olan</string>
+    <string name="sort_by_backup">Önce yedeklenen</string>
     <string name="failed_to_uninstall_updates"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> için güncellemeler kaldırılamadı.</string>
     <string name="update_uninstalled_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> için güncellemeler kaldırıldı.</string>
     <string name="uninstall_updates">Güncellemeleri Kaldır</string>
-    <string name="allow_open_pgp_operation">AM\'nin OpenPGP\'yi kullanmasına izin vermek için tıklayın</string>
+    <string name="allow_open_pgp_operation">App Manager\'in OpenPGP\'yi kullanmasına izin vermek için dokunun</string>
     <string name="confirm_installation">Kurulumu onayla</string>
     <string name="compression_method">Sıkıştırma yöntemi: <xliff:g id="compression_method" example="GZip">%1$s</xliff:g></string>
     <string name="pref_backup_flags_msg">Yedekleme seçenekleri için bir ön ayar eklemek, her yedekleme/geri yükleme işleminizde işaretleri seçme yükünü ortadan kaldırır.</string>
@@ -277,7 +277,7 @@
     <string name="operation_running">İşlem gerçekleştiriliyor…</string>
     <string name="batch_ops">Toplu İşlemler</string>
     <string name="failed_to_fetch_package_info">Paket bilgileri alınamadı</string>
-    <string name="installer_error_lidl_rom">ROM\'unuz root olmayan kurucu ile uyumlu değil.</string>
+    <string name="installer_error_lidl_rom">ROM\'unuz Rootless Installer ile uyumlu değil.</string>
     <string name="installer_error_generic">Kurulum başarısız oldu</string>
     <string name="installer_error_storage">Uygulamayı kurmak için yeterli depolama alanı yok</string>
     <string name="installer_error_bad_apks">Geçersiz APK dosyaları seçildi</string>
@@ -287,20 +287,20 @@
     <string name="installer_error_blocked_device">aygıt</string>
     <string name="installer_error_aborted">İptal edildiği için veya oturum beklenmedik şekilde kapandığı için kurulum başarısız oldu</string>
     <string name="toggle_default_app_ops">Öntanımlı uygulama işlemlerini değiştir</string>
-    <string name="filter_apps_with_activities">Etkinlikleri olan uygulamalar</string>
+    <string name="filter_apps_with_activities">Etkinlikleri olan</string>
     <string name="are_you_sure">Emin misiniz\?</string>
     <string name="pref_remove_all_rules_msg">İzinler verilecek, uygulama işlemleri ve bileşenleri öntanımlı değerlerine dönecektir.</string>
     <string name="pref_remove_all_rules">Tüm kuralları kaldır</string>
     <string name="website">Web sitesi</string>
     <string name="run_in_termux">Termux\'ta çalıştır</string>
     <string name="open_in_termux">Termux\'ta aç</string>
-    <string name="no_matching_package_found">Eşleşen paketler bulunamadı</string>
+    <string name="no_matching_package_found">Böyle bir uygulama bulunamadı</string>
     <string name="block_unblock_trackers">İzleyicileri engelle/engelini kaldır</string>
     <string name="unblock">Engeli kaldır</string>
     <string name="block">Engelle</string>
     <plurals name="backup_exists_are_you_sure">
-        <item quantity="one">Yedek var. Emin misiniz\?</item>
-        <item quantity="other">Birden fazla uygulama için yedek var. Emin misiniz\?</item>
+        <item quantity="one">Yedek zaten var. Emin misiniz\?</item>
+        <item quantity="other">Birden fazla uygulamanın zaten yedeği var. Emin misiniz\?</item>
     </plurals>
     <plurals name="alert_failed_to_enable">
         <item quantity="one">%1$d uygulama etkinleştirilemedi</item>
@@ -358,7 +358,7 @@
     <string name="deny_app_ops_description">Sabit değerlerle tanımlanan uygulama işlemleri için bir mod ayarlayın, örn. <tt>63</tt> veya <tt>RUN_IN_BACKGROUND</tt></string>
     <string name="block_components_description">Verilen imzalarla tanımlanan tüm bileşenleri engelle</string>
     <string name="block_components_dots">Bileşenleri engelle…</string>
-    <string name="block_unblock_trackers_description">Tüm kurulu uygulamalardan reklam ve izleme bileşenlerini engelleyin veya engelini kaldırın</string>
+    <string name="block_unblock_trackers_description">Tüm kurulu uygulamalarda reklam ve izleme bileşenlerini engelleyin veya engelini kaldırın</string>
     <string name="clear_cache">Önbelleği Temizle</string>
     <string name="pref_import_existing_msg">Diğer uygulamalar tarafından devre dışı bırakılan bileşenleri App Manager\'e ekleyin. Çok sayıda yanlış pozitif olabileceğinden bu aracı kullanırken dikkatli olun. Yalnızca emin olduğunuz uygulamaları seçin.</string>
     <string name="pref_import_existing">Var olan kuralları içe aktar</string>
@@ -391,7 +391,7 @@
     <string name="trackers_disabled_successfully">İzleyiciler artık devre dışı</string>
     <string name="failed_to_disable_trackers">İzleyiciler devre dışı bırakılamadı</string>
     <string name="unknown_op">Bilinmeyen İşlem</string>
-    <string name="sort_by_tracker_components">Önce izleyici</string>
+    <string name="sort_by_tracker_components">Önce izleyiciler</string>
     <string name="deny_dangerous_permissions">Tehlikeli izinleri reddet</string>
     <string name="sort_by_denied_permissions">Önce reddedilen</string>
     <string name="sort_by_dangerous_permissions">Önce tehlikeli</string>
@@ -434,7 +434,7 @@
     <string name="running">Çalışıyor</string>
     <string name="mode">Mod</string>
     <string name="permission_name">İzin Adı</string>
-    <string name="app_op_cannot_be_disabled">Bu uygulama işlemi devre dışı bırakılamıyor, muhtemelen başka bir uygulama işlemine bağlı olan salt okunur bir uygulama işlemi.</string>
+    <string name="app_op_cannot_be_disabled">Bu uygulama işlemi devre dışı bırakılamıyor. (Muhtemelen salt okunur bir uygulama işlemi diğerine bağımlı.)</string>
     <string name="toggle_kill_for_system_apps">Sistem uygulamalarını sonlandırmayı etkinleştir/devre dışı bırak</string>
     <plurals name="alert_failed_to_force_stop">
         <item quantity="one">%1$d uygulama durmaya zorlanamadı</item>
@@ -469,14 +469,14 @@
 \n<xliff:g id="time" example="10000">%3$d</xliff:g> ms zaman aldı (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> yineleme).</string>
     <string name="split_feature_name">Özellik: <xliff:g id="feature_name" example="Visualizer">%1$s</xliff:g></string>
     <string name="export_blocking_rules">Engelleme Kurallarını Dışa Aktar</string>
-    <string name="disable_background">Arka Planı Devre Dışı Bırak</string>
+    <string name="disable_background">Arka planda çalışmayı engelle</string>
     <string name="backup_restore">Yedekle/Geri Yükle</string>
     <string name="backup_apk">APK\'yı Yedekle</string>
     <string name="clear_data">Verileri Temizle</string>
     <string name="user_and_uid">Kullanıcı: <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
     <string name="memory_virtual_memory">Bellek: %1$s, Sanal Bellek: %2$s</string>
     <string name="pid_and_ppid">İşlem Kimliği: %1$d, Üst İşlem Kimliği: %2$d</string>
-    <string name="disable_background_run">Arka Planda Çalışmayı Devre Dışı Bırak</string>
+    <string name="disable_background_run">Arka planda çalışmayı engelle</string>
     <string name="kill_process">Sonlandır</string>
     <string name="running_apps">Çalışan Uygulamalar</string>
     <string name="store">Mağaza</string>
@@ -505,10 +505,10 @@
     <string name="usage_yesterday">Dün</string>
     <string name="only_works_in_root_mode">Yalnızca root modunda çalışır</string>
     <string name="app_settings">Ayarlar</string>
-    <string name="pref_usage_access_enabled_msg">Uygulama kullanım istatistiklerinizi ve uygulama verisi bilgilerini görmenizi sağlar.</string>
+    <string name="pref_usage_access_enabled_msg">Uygulama veri bilgilerini ve kullanım istatistiklerini gösterir.</string>
     <string name="pref_usage_access_enabled">Kullanım erişimi</string>
     <string name="pref_global_blocking_enabled_msg">Uygulama için açıkça engellemeyi açmadan herhangi bir uygulamanın herhangi bir bileşenini engellemenize izin verir.</string>
-    <string name="pref_global_blocking_enabled">Genel bileşen engelleme</string>
+    <string name="pref_global_blocking_enabled">Anında bileşen engelleme</string>
     <string name="str_logo">Logo</string>
     <string name="rules_not_applied">Kurallar uygulanmadı</string>
     <string name="failed_to_disable_op">İstenen uygulama işlemi devre dışı bırakılamadı</string>
@@ -648,7 +648,7 @@
     <string name="select_apk">APK seç</string>
     <string name="send_crash_report">Çökme bildirimi gönder</string>
     <string name="tap_to_submit_crash_report">Çökme bildirimini göndermek için dokunun.</string>
-    <string name="am_crashed">AM az önce çöktü</string>
+    <string name="am_crashed">App Manager az önce çöktü</string>
     <string name="un_apkm">UnApkm</string>
     <string name="in_progress">Devam ediyor</string>
     <string name="conversion_failed">Dönüştürme başarısız oldu.</string>
@@ -660,7 +660,7 @@
     <string name="rsa">RSA</string>
     <string name="aes">AES</string>
     <string name="none">Yok</string>
-    <string name="pref_encryption_msg">Yedeklemeler için şifreleme ekleyin.</string>
+    <string name="pref_encryption_msg">Yedeklemeler için şifreleme.</string>
     <string name="encryption">Şifreleme</string>
     <string name="select_user">Kullanıcı seç</string>
     <string name="pref_show_users_in_installer_msg">Harici bir uygulamayı kurmadan önce seçilecek bir kullanıcı listesi görüntüle. Root veya ADB gerektirir.</string>
@@ -678,12 +678,12 @@
     <string name="off">Kapalı</string>
     <string name="on">Açık</string>
     <string name="profile_state_msg">Bu profil için özel açık/kapalı durumu</string>
-    <string name="profile_backup_apk_msg">Etkinleştirilirse, apk dosyaları yedeklenecek</string>
-    <string name="profile_block_trackers_msg">Etkinleştirilirse, izleyiciler uygulamalardan engellenecek</string>
-    <string name="profile_clear_data_msg">Etkinleştirilirse, uygulamaların verileri silinecek</string>
-    <string name="profile_clear_cache_msg">Etkinleştirilirse, uygulamaların önbelleği silinecek</string>
-    <string name="profile_force_stop_msg">Etkinleştirilirse, uygulamalar zorla durdurulacak</string>
-    <string name="profile_disable_msg">Etkinleştirilirse, uygulamalar durumun değerine göre devre dışı bırakılacak/etkinleştirilecek</string>
+    <string name="profile_backup_apk_msg">APK dosyalarını yedekler</string>
+    <string name="profile_block_trackers_msg">Uygulamalardaki izleyicileri engeller</string>
+    <string name="profile_clear_data_msg">Uygulamaların verilerini temizler</string>
+    <string name="profile_clear_cache_msg">Uygulamaların uygulama önbelleğini temizler</string>
+    <string name="profile_force_stop_msg">Uygulamaları zorla durdurur</string>
+    <string name="profile_disable_msg">Duruma göre uygulamaları devre dışı bırakır veya etkinleştirir</string>
     <string name="allow_routine_ops_msg">Profilin rutin işlemlerde kullanılmasına izin ver</string>
     <string name="profile_state">Profil durumu</string>
     <string name="allow_routine_ops">Rutin işlemlere izin ver</string>
@@ -723,11 +723,11 @@
     </plurals>
     <string name="input_keystore_alias_pass_description"><b>%1$s</b> takma adı için parolayı girin. Parola, KeyStore parolasıyla aynıysa bunu boş bırakabilirsiniz.</string>
     <string name="input_keystore_alias_pass"><b>%1$s</b> takma adı için parola</string>
-    <string name="input_keystore_pass_msg">KeyStore parolasını sağlamak için buraya dokunun</string>
+    <string name="input_keystore_pass_msg">KeyStore parolasını girmek için buraya dokunun</string>
     <string name="input_keystore_pass_description">App Manager KeyStore parolasını girin. Bunu ilk kez görüyorsanız, lütfen bir parola oluşturucu kullanarak bir parola oluşturun ve buraya girmeden önce güvenli bir yere kaydedin.</string>
     <string name="input_keystore_pass">KeyStore parolasını gir</string>
     <string name="no_app_ops_permission">Uygulama işlemlerini görüntüleme izni yok</string>
-    <string name="pref_backup_android_keystore_msg">Geri yüklemeden sonra bazı uygulamalar çalışmayacaktır. KeyStore\'u geri yüklemek çoğu aygıtta çalışmaz.</string>
+    <string name="pref_backup_android_keystore_msg">Geri yüklendikten sonra bazı uygulamalar çalışmayacaktır. KeyStore\'u geri yüklemek çoğu aygıtta çalışmaz.</string>
     <string name="pref_backup_android_keystore">Android KeyStore ile uygulamaları yedekle</string>
     <string name="keep_data_and_signatures">Verileri ve imzaları sakla</string>
     <string name="this_action_cannot_be_undone">Bu eylem geri alınamaz.</string>
@@ -739,14 +739,14 @@
     <string name="extras">Ekstralar</string>
     <string name="category">Kategoriler</string>
     <string name="uri">URI</string>
-    <string name="mime_type">MIME Türü</string>
+    <string name="mime_type">MIME türü</string>
     <string name="action">Eylem</string>
     <string name="result_code">Sonuç kodu</string>
     <string name="activity_result">Etkinlik sonucu</string>
     <string name="send_edited_intent">Düzenlenen Intent\'i gönder</string>
     <string name="matching_activities">Eşleşen etkinlikler</string>
     <string name="value">Değer</string>
-    <string name="filter_apps_with_splits">Bölümlü uygulamalar</string>
+    <string name="filter_apps_with_splits">Bölümleri olan</string>
     <string name="set_custom_app_op">Özel uygulama işlemi ayarla</string>
     <string name="battery">Pil</string>
     <string name="graphics">Grafikler</string>
@@ -758,7 +758,7 @@
     <string name="battery_capacity">Kapasite</string>
     <string name="memory">Bellek</string>
     <string name="vendor">Satıcı</string>
-    <string name="gles_version">GL ES sürümü</string>
+    <string name="gles_version">OpenGL ES sürümü</string>
     <string name="no_of_cores">Çekirdekler (CPU)</string>
     <string name="support_architectures">Desteklenen mimariler</string>
     <string name="security_providers">Güvenlik sağlayıcıları</string>
@@ -767,7 +767,7 @@
     <string name="board_name">Ana kart</string>
     <string name="model">Model</string>
     <string name="brand_name">Marka</string>
-    <string name="pref_about_device_msg">Android sistemi, CPU, GPU, RAM, pil vb.içeren temel aygıt bilgileri.</string>
+    <string name="pref_about_device_msg">Android sistemi, CPU, GPU, RAM, pil vb. içeren temel aygıt bilgileri.</string>
     <string name="about_device">Aygıt hakkında</string>
     <string name="set_mode_for_app_ops_dots">Uygulama işlemleri için mod ayarla…</string>
     <string name="security">Güvenlik</string>
@@ -776,14 +776,14 @@
         <item quantity="other">%1$d uygulama için uygulama işlemleri ayarlanamadı</item>
     </plurals>
     <string name="patch_level">Yama seviyesi</string>
-    <string name="backup_skip_signature_checks_description">Sağlama toplamı doğrulama hatası nedeniyle başarısız olan veya yedeklenenden farklı bir APK imzasına sahip yedeklemeleri geri yüklemek için faydalıdır.</string>
-    <string name="backup_multiple_description">Temel yedekleme yerine ayrı bir adlandırılmış yedekleme kullanın.</string>
+    <string name="backup_skip_signature_checks_description">Sağlama toplamı doğrulamasında başarısız olan veya önceki yedeklerinden farklı APK imzalarına sahip yedekleri geri yükleyin.</string>
+    <string name="backup_multiple_description">Temel yedekleme yerine ayrı bir <i>adlandırılmış</i> yedekleme oluşturun.</string>
     <string name="backup_rules_description">App Manager içinde yapılandırılan kuralları yedekleyin.</string>
-    <string name="backup_extras_description">Uygulama izinlerini, pil tasarrufunu, veri kullanım seçeneklerini, MagiskHide durumunu vs. yedekleyin.</string>
+    <string name="backup_extras_description">Uygulama izinlerini, pil tasarrufu ve veri kullanım seçeneklerini, MagiskHide durumunu, SSAID vs. yedekleyin.</string>
     <string name="backup_extras">Ekstralar</string>
-    <string name="backup_cache_description">Önbellek, no_cache ve no_backup klasörlerini yedeklemeyin.</string>
+    <string name="backup_cache_description"><b>Önbellek</b>, <b>no_cache</b> ve <b>no_backup</b> klasörlerini yedekleyin.</string>
     <string name="backup_obb_media_description">OBB ve medya klasörlerini yedekleyin.</string>
-    <string name="backup_external_data_description">Harici veri klasörlerini yedekleyin. Bunun çalışması için <b>veri</b> seçilmelidir.</string>
+    <string name="backup_external_data_description">Harici veri klasörlerini yedekleyin.</string>
     <string name="backup_internal_data_description">Veri klasörlerini yedekleyin. Seçilirse, dahili veri klasörleri öntanımlı olarak yedeklenecektir.</string>
     <string name="backup_apk_files_description">Kaynak dizinden yalnızca APK dosyalarını yedekleyin. Bunun çalışması için <b>kaynak</b> seçilmelidir.</string>
     <string name="window_size">Pencere boyutu</string>
@@ -800,7 +800,7 @@
     <string name="enable_magisk_hide">MagiskHide\'ı etkinleştir</string>
     <string name="failed_to_disable_magisk_hide">MagiskHide devre dışı bırakılamadı</string>
     <string name="disable_magisk_hide">MagiskHide devre dışı bırakılsın mı\?</string>
-    <string name="disable_background_run_description"><i>Yok say</i> modunu şu uygulama işlemlerine ayarlar: <tt>RUN_IN_BACKGROUND</tt> (Android 7.0\'dan) ve <tt>RUN_ANY_IN_BACKGROUND</tt> (Android 9\'dan).</string>
+    <string name="disable_background_run_description">Şu uygulama işlemleri için <i>Yok say</i> modunu ayarlar: <tt>RUN_IN_BACKGROUND</tt> (Android 7.0\'dan) ve <tt>RUN_ANY_IN_BACKGROUND</tt> (Android 9\'dan).</string>
     <plurals name="no_of_components">
         <item quantity="one">%1$d bileşen</item>
         <item quantity="other">%1$d bileşen</item>
@@ -854,10 +854,10 @@
     <string name="sd_card">SD Kart</string>
     <string name="external_storage">Harici Depolama</string>
     <string name="internal_storage">Dahili Depolama</string>
-    <string name="restart_to_reflect_changes">Değişiklikleri yansıtmak için lütfen hemen yeniden başlatın</string>
+    <string name="restart_to_reflect_changes">Yeni değişiklikleri kullanmak için aygıtı hemen yeniden başlatmalısınız.</string>
     <string name="failed_to_change_ssaid">SSAID değiştirilemedi</string>
     <string name="copied_to_clipboard">Panoya kopyalandı.</string>
-    <string name="ssaid_info">SSAID (<tt>Settings.Secure.ANDROID_ID</tt>) (Android Oreo\'dan itibaren) her uygulamaya atanan bir aygıt tanımlayıcısıdır. Kullanıcıları izlemek için uygulamalar tarafından yaygın olarak kullanılır.</string>
+    <string name="ssaid_info">SSAID (<tt>Settings.Secure.ANDROID_ID</tt>), (Android 8 \"Oreo\" ve sonrasında) her uygulamaya atanan bir aygıt tanımlayıcısıdır. Kullanıcıları izlemek için uygulamalar tarafından yaygın olarak kullanılır.</string>
     <string name="ssaid">SSAID</string>
     <string name="type_uri">URI</string>
     <string name="type_string_array_list">Dizge listesi</string>
@@ -876,12 +876,13 @@
     <string name="pref_enable_disable_features_msg">App Manager\'da özellikleri etkinleştirin veya devre dışı bırakın.</string>
     <string name="enable_disable_features">Özellikleri etkinleştir/devre dışı bırak</string>
     <string name="isolated">Yalıtıldı</string>
-    <string name="screen_lock_not_enabled">Ekran kilidi etkinleştirilmedi. Android ayarlarında ekran kilidini etkinleştirin veya uygulama verilerini temizleyin.</string>
+    <string name="screen_lock_not_enabled">Lütfen Android ayarlarından bir ekran kilidi seçin veya uygulama verilerini temizleyin.</string>
     <string name="input_app_ops_description_profile">Uygulama işlem adlarını ve/veya sabitleri aralarında boşluk olacak şekilde girin, örn. <tt>WAKE_LOCK 63 72 CAMERA</tt> gibi. Tüm yapılandırılmış uygulama işlemlerine uygulamak için <tt>*</tt> kullanın.</string>
     <string name="working_on_adb_mode">ADB modunda çalışma</string>
     <string name="verified_using_unreliable_hash">Güvenilir olmayan sağlama kullanılarak doğrulandı</string>
     <string name="installer_app_message">Kurulu uygulamalar arasından seçmek için <b>Seç</b>, özel bir paket adı belirtmek için <b>Özel</b> seçeneğini seçin.</string>
     <string name="specify_custom_name">Özel</string>
-    <string name="filter_apps_without_backups">Yedeği olmayan uygulamalar</string>
+    <string name="filter_apps_without_backups">Yedeği olmayan</string>
     <string name="uninstalled_apps">Kaldırılan uygulamalar</string>
+    <string name="internal_data">Dahili veri</string>
 </resources>
