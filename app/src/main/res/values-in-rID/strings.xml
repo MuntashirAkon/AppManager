@@ -340,7 +340,7 @@
     <string name="mode">Mode</string>
     <string name="permission_name">Nama Perizinan</string>
     <string name="backup_external_data_description">Cadangkan folder data eksternal. <b>Data</b> harus dipilih untuk ini agar segera berfungsi.</string>
-    <string name="backup_apk_only_description">Cadangkan hanya berkas APK dari direktori sumber. <b>Sumber</b> harus dipilih untuk ini dapat segera berfungsi.</string>
+    <string name="backup_apk_files_description">Cadangkan hanya berkas APK dari direktori sumber. <b>Sumber</b> harus dipilih untuk ini dapat segera berfungsi.</string>
     <string name="no_of_cores">Core</string>
     <string name="input_permissions_description">Masukkan izin dengan spasi, mis. <tt>com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION</tt> dll. Gunakan <tt>*</tt> untuk menetapkan pada semua izin.</string>
     <string name="install_without_data_loss">Jika Anda telah mematikan verifikasi tanda tangan, Anda dapat menggunakan opsi <b> Hanya pasang </b> untuk memasang aplikasi tanpa kehilangan data.</string>
@@ -491,7 +491,7 @@
     <string name="backup_rules_description">Aturan cadangan dikonfigurasi dalam manajer aplikasi.</string>
     <string name="backup_extras_description">Cadangkan izin aplikasi, hemat baterai, opsi penggunaan data, status majemkhide, dll.</string>
     <string name="backup_extras">Ekstra</string>
-    <string name="backup_exclude_cache_description">Jangan mencadangkan folder cache, no_cache dan no_backup.</string>
+    <string name="backup_cache_description">Jangan mencadangkan folder cache, no_cache dan no_backup.</string>
     <string name="backup_obb_media_description">Cadangkan Folder OBB dan Media.</string>
     <string name="backup_internal_data_description">Cadangkan folder data. Jika dipilih, folder data internal akan dicadangkan secara default.</string>
     <string name="backup_source_description">Cadangkan seluruh direktori sumber.</string>
@@ -731,7 +731,7 @@
     <string name="obb_files_extracted_successfully">File OBB diekstraksi</string>
     <string name="failed_to_extract_obb_files">Tidak dapat mengekstrak file OBB</string>
     <string name="backup_obb_media">OBB dan media</string>
-    <string name="backup_apk_only">Hanya APK</string>
+    <string name="backup_apk_files">Hanya APK</string>
     <string name="installer_error_session_abandon">Tidak bisa meninggalkan sesi installer</string>
     <string name="installer_error_session_commit">Tidak dapat melakukan file APK</string>
     <string name="installer_error_session_write">Tidak bisa menulis ke sesi installer</string>
@@ -787,7 +787,7 @@
     <string name="backup">Cadangan</string>
     <string name="data">Data</string>
     <string name="external_data">Data eksternal</string>
-    <string name="exclude_cache">Kecualikan cache</string>
+    <string name="cache">Kecualikan cache</string>
     <string name="blocking_rules">Memblokir aturan</string>
     <string name="whats_new">Apa yang baru</string>
     <string name="features">Fitur</string>

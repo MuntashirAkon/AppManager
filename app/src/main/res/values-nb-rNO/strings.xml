@@ -180,7 +180,7 @@
     <string name="obb_files_extracted_successfully">OBB-filer pakket ut</string>
     <string name="failed_to_extract_obb_files">Kunne ikke pakke ut OBB-filer</string>
     <string name="backup_obb_media">OBB og media</string>
-    <string name="backup_apk_only">Kun APK</string>
+    <string name="backup_apk_files">Kun APK</string>
     <string name="unblock_trackers">Avblokker sporere</string>
     <string name="reinstall">Reinstaller</string>
     <string name="reinstall_app_message">Ønsker du å reinstallere dette programmet\?</string>
@@ -469,7 +469,7 @@
         <item quantity="one">Kunne ikke skru på %1$d program</item>
         <item quantity="other">Kunne ikke skru på %1$d programmer</item>
     </plurals>
-    <string name="exclude_cache">Utelukk hurtiglager</string>
+    <string name="cache">Utelukk hurtiglager</string>
     <string name="failed_packages">Feilede pakker</string>
     <string name="no_tracker_found">Fant ingen sporer</string>
     <string name="clear_app_cache_description">Tøm hurtiglager for alle programmer</string>

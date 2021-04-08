@@ -263,7 +263,7 @@
     <string name="features">বৈশিষ্ট্যসমূহ</string>
     <string name="whats_new">নুতুনত্ব</string>
     <string name="blocking_rules">ব্লকিং এর বিধিগুলো</string>
-    <string name="exclude_cache">ক্যাশে বাদ দিন</string>
+    <string name="cache">ক্যাশে বাদ দিন</string>
     <string name="external_data">বাহ্যিক ডাটা</string>
     <string name="data">ডাটা</string>
     <string name="backup">ব্যাকআপ</string>
@@ -390,7 +390,7 @@
     <string name="obb_files_extracted_successfully">Obb ফাইলগুলি সফলভাবে এক্সট্র্যাক্ট হয়েছে</string>
     <string name="failed_to_extract_obb_files">Obb ফাইলগুলি এক্সট্র্যাক্ট করতে ব্যর্থ</string>
     <string name="backup_obb_media">Backup Obb</string>
-    <string name="backup_apk_only">শুধু এপিকে</string>
+    <string name="backup_apk_files">শুধু এপিকে</string>
     <string name="website_message">https://muntashirakon.github.io/AppManager</string>
     <string name="no_matching_package_found">কোনো প্যাকেজের সাথে মিল পাওয়া যায়নি</string>
     <string name="skip_signature_checks">স্বাক্ষর চেকগুলি এড়িয়ে যান</string>

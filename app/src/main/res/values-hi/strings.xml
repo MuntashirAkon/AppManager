@@ -329,7 +329,7 @@
     <string name="backup">बैकअप</string>
     <string name="data">डेटा</string>
     <string name="external_data">एक्सटर्नल डेटा</string>
-    <string name="exclude_cache">कैश को शामिल न करें</string>
+    <string name="cache">कैश को शामिल न करें</string>
     <string name="blocking_rules">ब्लॉकिंग रूल्स</string>
     <string name="whats_new">नया क्या है</string>
     <string name="features">फीचर्स</string>
@@ -522,7 +522,7 @@
     <string name="obb_files_extracted_successfully">ओबीबी फाइलों का एक्सट्रैक्शन सफल हुआ</string>
     <string name="failed_to_extract_obb_files">ओबीबी फाइलें एक्सट्रेक्ट नहीं कर सके</string>
     <string name="backup_obb_media">ओबीबी और मीडिया</string>
-    <string name="backup_apk_only">केवल एपीके</string>
+    <string name="backup_apk_files">केवल एपीके</string>
     <string name="installer_error_session_abandon">इंस्टॉलर सत्र को नहीं छोड़ सकते</string>
     <string name="installer_error_session_commit">एपीके फाइलें कमिट नहीं कर सके</string>
     <string name="installer_error_session_write">इंस्टॉलर सत्र में नहीं लिख सके</string>
@@ -634,7 +634,7 @@
     <string name="in_progress">प्रगति पर है</string>
     <string name="conversion_failed">बदलाव करने में त्रुटि हुई।</string>
     <string name="select_apk">Apk चुनें</string>
-    <string name="backup_apk_only_description">डेटा डायरेक्टरी से केवल एपीके फ़ाइलों का बैकअप करें। इसके काम करने के लिए <b> स्रोत </b> चुना जाना चाहिए।</string>
+    <string name="backup_apk_files_description">डेटा डायरेक्टरी से केवल एपीके फ़ाइलों का बैकअप करें। इसके काम करने के लिए <b> स्रोत </b> चुना जाना चाहिए।</string>
     <string name="backup_source_description">सोर्स डायरेक्टरी का बैकअप लें।</string>
     <string name="set_mode_for_app_ops_dots">ऐप ऑप्स के लिए मोड सेट करें …</string>
     <string name="security">सिक्योरिटी</string>
@@ -782,7 +782,7 @@
     <string name="backup_rules_description">ऐप मैनेजर के भीतर कॉन्फ़िगर किए गए नियमों का बैकअप करें।</string>
     <string name="backup_extras_description">ऐप अनुमतियां, बैटरी की बचत, डेटा उपयोग विकल्प, मैजिस्कहाइड स्थिति आदि बैकअप करें।</string>
     <string name="backup_extras">एक्स्ट्रास</string>
-    <string name="backup_exclude_cache_description">, no_cache और no_backup फ़ोल्डर का बैकअप न करें।</string>
+    <string name="backup_cache_description">, no_cache और no_backup फ़ोल्डर का बैकअप न करें।</string>
     <string name="backup_obb_media_description">ओबीबी और मीडिया फ़ोल्डर्स बैकअप करें।</string>
     <string name="backup_external_data_description">बाहरी डेटा फ़ोल्डर्स का बैकअप करें। इसको काम करने के लिए <b> डेटा </b> चयनित होना अनिवार्य है।</string>
     <string name="backup_internal_data_description">डेटा फ़ोल्डर्स बैकअप करें। अगर चयनित किया तो इंटरनल डेटा फ़ोल्डर्स को भी बैकअप किया जाएगा।</string>

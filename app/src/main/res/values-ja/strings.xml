@@ -440,7 +440,7 @@
     <string name="features">機能</string>
     <string name="whats_new">最新情報</string>
     <string name="blocking_rules">ブロッキングルール</string>
-    <string name="exclude_cache">キャッシュを除外</string>
+    <string name="cache">キャッシュを除外</string>
     <string name="external_data">外部データ</string>
     <string name="data">データ</string>
     <string name="backup">バックアップ</string>
@@ -548,7 +548,7 @@
     <string name="installer_error_session_write">インストーラセッションに書き込みができませんでした</string>
     <string name="installer_error_session_commit">APKファイルをコミットできませんでした</string>
     <string name="installer_error_session_abandon">インストーラセッションを中止できませんでした</string>
-    <string name="backup_apk_only">APKのみ</string>
+    <string name="backup_apk_files">APKのみ</string>
     <string name="backup_obb_media">OBBとメディア</string>
     <string name="failed_to_extract_obb_files">OBBファイルを抽出できませんでした</string>
     <string name="obb_files_extracted_successfully">OBBファイルは抽出されました</string>
@@ -811,11 +811,11 @@
     <string name="security">セキュリティ</string>
     <string name="set_mode_for_app_ops_dots">AppOpsモードをセットします…</string>
     <string name="backup_source_description">APKの保存ディレクトリ全体をバックアップする.</string>
-    <string name="backup_apk_only_description">APKファイルのみをバックアップします <b>ソース</b> を指定する必要があります。</string>
+    <string name="backup_apk_files_description">APKファイルのみをバックアップします <b>ソース</b> を指定する必要があります。</string>
     <string name="backup_internal_data_description">データフォルダをバックアップします。選択した場合内部データフォルダのバックアップは標準で有効になります。</string>
     <string name="backup_external_data_description">外部データフォルダをバックアップします。 <b>データ</b> のバックアップも同時に行う必要があります。</string>
     <string name="backup_obb_media_description">OBBとmediaフォルダをバックアップします</string>
-    <string name="backup_exclude_cache_description">「no_cache」と「no_backup」フォルダのキャッシュをバックアップしません。</string>
+    <string name="backup_cache_description">「no_cache」と「no_backup」フォルダのキャッシュをバックアップしません。</string>
     <string name="backup_extras">その他</string>
     <string name="backup_extras_description">アプリ権限、バッテリーセーバー設定、データ使用設定、MagiskHideの状態をバックアップします。</string>
     <string name="backup_rules_description">App Manager内で構成されたルールをバックアップします。</string>

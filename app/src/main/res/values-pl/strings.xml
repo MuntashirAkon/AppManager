@@ -111,7 +111,7 @@
     <string name="backup_multiple">Utwórz kopię zapasową wielu</string>
     <string name="source">Źródło</string>
     <string name="backup_obb_media">OBB i Media</string>
-    <string name="backup_apk_only">Tylko plik APK</string>
+    <string name="backup_apk_files">Tylko plik APK</string>
     <string name="installer_error_session_commit">Nie udało się zatwierdzić plików APK</string>
     <string name="installer_error_session_write">Nie można zapisać do sesji instalatora</string>
     <string name="installer_error_session_create">Nie można utworzyć sesji instalatora</string>
@@ -255,7 +255,7 @@
     <string name="filter_apps_with_rules">Aplikacje z regułami</string>
     <string name="filter_system_apps">Aplikacje systemowe</string>
     <string name="failed_to_install_package_name">Nie można było zainstalować %s</string>
-    <string name="exclude_cache">Wyklucz pamięć podręczną</string>
+    <string name="cache">Wyklucz pamięć podręczną</string>
     <string name="blocking_rules">Reguły blokowania</string>
     <string name="whats_new">Co nowego</string>
     <string name="components">Komponenty</string>
@@ -569,7 +569,7 @@
     <string name="pref_backup_volume_msg">Wybierz wolumin lub dysk, na którym będą przechowywane kopie zapasowe.</string>
     <string name="pref_backup_restore_msg">Dostosuj kopię zapasową/przywracanie.</string>
     <string name="failed_to_enable_magisk_hide">Nie można włączyć MagiskHide</string>
-    <string name="backup_exclude_cache_description">Nie twórz kopii zapasowych folderów cache, no_cache i no_backup.</string>
+    <string name="backup_cache_description">Nie twórz kopii zapasowych folderów cache, no_cache i no_backup.</string>
     <string name="backup_obb_media_description">Utwórz kopię zapasową folderów OBB i media.</string>
     <string name="backup_source_description">Utwórz kopię zapasową całego katalogu źródłowego.</string>
     <string name="resend_intent">Wyślij intent ponownie</string>
@@ -656,7 +656,7 @@
     <string name="backup_multiple_description">Użyj oddzielnej nazwanej kopii zapasowej zamiast podstawowej kopii zapasowej.</string>
     <string name="backup_rules_description">Utwórz kopię zapasową reguł skonfigurowanych w App Manager.</string>
     <string name="backup_external_data_description">Utwórz kopię zapasową zewnętrznych folderów danych. Aby funkcja działała, musi być wybrana opcja <b>Dane</b>.</string>
-    <string name="backup_apk_only_description">Utwórz kopię zapasową tylko plików APK z katalogu źródłowego. <b>Źródło</b> musi być wybrane, aby to zadziałało.</string>
+    <string name="backup_apk_files_description">Utwórz kopię zapasową tylko plików APK z katalogu źródłowego. <b>Źródło</b> musi być wybrane, aby to zadziałało.</string>
     <string name="vendor">Producent</string>
     <string name="set_custom_app_op">Ustaw niestandardową app op</string>
     <string name="type_string_array_list">Lista ciągów znaków</string>

@@ -276,7 +276,7 @@
     <string name="obb_files_extracted_successfully">Archivo Obb extraído</string>
     <string name="failed_to_extract_obb_files">No se pudo extraer el archivo Obb</string>
     <string name="backup_obb_media">OBB y Multimedia</string>
-    <string name="backup_apk_only">Sólo APK</string>
+    <string name="backup_apk_files">Sólo APK</string>
     <string name="installer_error_session_abandon">No se pudo abandonar la sesión del instalador</string>
     <string name="installer_error_session_create">No se pudo crear una sesión de instalación</string>
     <string name="installer_error_security">No se pudo acceder a los archivos APK</string>
@@ -332,7 +332,7 @@
     <string name="backup">Respaldo</string>
     <string name="data">Datos</string>
     <string name="external_data">Datos externos</string>
-    <string name="exclude_cache">Excluir caché</string>
+    <string name="cache">Excluir caché</string>
     <string name="blocking_rules">Reglas de bloqueo</string>
     <string name="whats_new">Qué hay nuevo</string>
     <string name="features">Funciones</string>
@@ -751,7 +751,7 @@
 \nTiempo tomado <xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> iteraciones).</string>
     <string name="interceptor">Interceptor</string>
     <string name="backup_internal_data_description">Respaldo de las carpetas de datos. Si se selecciona, se hará un respaldo de las carpetas de datos internas por defecto.</string>
-    <string name="backup_apk_only_description">Respaldo sólo de los archivos APK del directorio de origen. <b>Fuente</b> debe ser seleccionado para que esto funcione.</string>
+    <string name="backup_apk_files_description">Respaldo sólo de los archivos APK del directorio de origen. <b>Fuente</b> debe ser seleccionado para que esto funcione.</string>
     <string name="backup_source_description">Respaldo de todo el directorio fuente.</string>
     <string name="backup_obb_media_description">Respaldo de OBB y multimedia.</string>
     <string name="board_name">Tablón</string>
@@ -804,7 +804,7 @@
     <string name="backup_rules_description">Back up de reglas configuradas en App Manager.</string>
     <string name="backup_extras_description">Back up de los permisos de las aplicaciones, ahorro de batería, opciones de uso de datos, estado de MagiskHide, etc.</string>
     <string name="backup_extras">Extras</string>
-    <string name="backup_exclude_cache_description">No hacer backup de las carpetas caché, no_cache y no_backup.</string>
+    <string name="backup_cache_description">No hacer backup de las carpetas caché, no_cache y no_backup.</string>
     <string name="backup_external_data_description">Hacer una copia de seguridad de las carpetas de datos externos. <b>Datos</b> deben ser seleccionado para que esto funcione.</string>
     <string name="set_mode_for_app_ops_dots">Establecer modo para las app ops…</string>
     <string name="security">Seguridad</string>

@@ -9,7 +9,7 @@
     <string name="source">Fonte</string>
     <string name="obb_files_extracted_successfully">Ficheiros OBB extraídos</string>
     <string name="failed_to_extract_obb_files">Não foi possível extrair ficheiros OBB</string>
-    <string name="backup_apk_only">Apenas APK</string>
+    <string name="backup_apk_files">Apenas APK</string>
     <string name="installer_error_session_abandon">A sessão de instalação não pôde ser abandonada</string>
     <string name="installer_error_session_commit">O commit dos ficheiros APK não pôde ser feito</string>
     <string name="installer_error_session_write">Não foi possível gravar na sessão de instalação</string>
@@ -358,7 +358,7 @@
     <string name="no_signatures">Nenhuma assinatura</string>
     <string name="signatures">Assinaturas</string>
     <string name="sort_by_sha">Assinatura</string>
-    <string name="exclude_cache">Excluir o cache</string>
+    <string name="cache">Excluir o cache</string>
     <string name="blocking_rules">Regras de bloqueio</string>
     <string name="whats_new">Novidades</string>
     <string name="features">Funcionalidades</string>

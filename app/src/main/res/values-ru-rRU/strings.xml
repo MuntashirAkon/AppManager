@@ -425,7 +425,7 @@
     <string name="features">Функции</string>
     <string name="whats_new">Что нового</string>
     <string name="blocking_rules">Правила блокировки</string>
-    <string name="exclude_cache">Исключить кэш</string>
+    <string name="cache">Исключить кэш</string>
     <string name="external_data">Внешние данные</string>
     <string name="data">Данные</string>
     <string name="backup">Бекап</string>
@@ -514,7 +514,7 @@
     <string name="installer_error_session_write">Не удалось записать в сеанс установщика</string>
     <string name="installer_error_session_commit">Не удалось зафиксировать файлы APK</string>
     <string name="installer_error_session_abandon">Не удалось прервать сеанс установщика</string>
-    <string name="backup_apk_only">Только APK</string>
+    <string name="backup_apk_files">Только APK</string>
     <string name="backup_obb_media">OBB и Медиа</string>
     <string name="failed_to_extract_obb_files">Не удалось извлечь файлы OBB</string>
     <string name="obb_files_extracted_successfully">Файлы OBB извлечены</string>
@@ -838,11 +838,11 @@
     <string name="backup_rules_description">Резервное копирование правил, настроенных в App Manager.</string>
     <string name="backup_extras_description">Резервное копирование разрешений приложения, экономия батареи, параметры использования данных, статус MagiskHide и т.д.</string>
     <string name="backup_extras">Дополнительно</string>
-    <string name="backup_exclude_cache_description">Не создавать резервные копии кеша, папок no_cache и no_backup.</string>
+    <string name="backup_cache_description">Не создавать резервные копии кеша, папок no_cache и no_backup.</string>
     <string name="backup_obb_media_description">Резервное копирование OBB и папок с медиафайлами.</string>
     <string name="backup_external_data_description">Резервное копирование внешних папок данных. Для этого необходимо выбрать <b> Данные </b>.</string>
     <string name="backup_internal_data_description">Резервное копирование папок с данными. Если выбран этот параметр, по умолчанию будут созданы резервные копии внутренних папок с данными.</string>
-    <string name="backup_apk_only_description">Резервное копирование только файлов APK из исходного каталога. Для этого необходимо выбрать <b>Источник </b>.</string>
+    <string name="backup_apk_files_description">Резервное копирование только файлов APK из исходного каталога. Для этого необходимо выбрать <b>Источник </b>.</string>
     <string name="backup_source_description">Резервное копирование всего каталога источника.</string>
     <string name="permissive">Permissive</string>
     <string name="enforcing">Enforcing</string>

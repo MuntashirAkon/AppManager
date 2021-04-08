@@ -185,7 +185,7 @@
     <string name="obb_files_extracted_successfully">Файли OBB витягнуто</string>
     <string name="failed_to_extract_obb_files">Не вдалося витягти файли OBB</string>
     <string name="backup_obb_media">OBB та медіа</string>
-    <string name="backup_apk_only">Лише APK</string>
+    <string name="backup_apk_files">Лише APK</string>
     <string name="installer_error_session_abandon">Не вдалося перервати сеанс програми встановлення</string>
     <string name="installer_error_session_commit">Не вдалося зафіксувати файли .apk</string>
     <string name="installer_error_session_write">Не вдалося записати до сеансу програми встановлення</string>
@@ -304,7 +304,7 @@
     <string name="backup">Резервна копія</string>
     <string name="data">Дані</string>
     <string name="external_data">Зовнішні дані</string>
-    <string name="exclude_cache">Виключити кеш</string>
+    <string name="cache">Виключити кеш</string>
     <string name="blocking_rules">Правила блокування</string>
     <string name="whats_new">Що нового</string>
     <string name="features">Функції</string>
@@ -800,11 +800,11 @@
     <string name="backup_rules_description">Резервне копіювання правил, налаштованих в App Manager.</string>
     <string name="backup_extras_description">Резервне копіювання дозволів додатків, економії заряду, опцій використання даних, стану MagiskHide тощо.</string>
     <string name="backup_extras">Додатково</string>
-    <string name="backup_exclude_cache_description">Не створювати резервні копії кеш, папок no_cache та no_backup.</string>
+    <string name="backup_cache_description">Не створювати резервні копії кеш, папок no_cache та no_backup.</string>
     <string name="backup_obb_media_description">Резервне копіювання файлів OBB та папок медіа.</string>
     <string name="backup_external_data_description">Резервне копіювання зовнішніх папок даних. Для цього потрібно вибрати <b>Дані</b>.</string>
     <string name="backup_internal_data_description">Резервне копіювання папок даних. Якщо вибрати цей параметр, за замовчуванням буде створено резервні копії внутрішніх папок даних.</string>
-    <string name="backup_apk_only_description">Резервне копіювання лише файлів apk з вихідного каталогу. Для цього слід вибрати <b>Джерело</b>.</string>
+    <string name="backup_apk_files_description">Резервне копіювання лише файлів apk з вихідного каталогу. Для цього слід вибрати <b>Джерело</b>.</string>
     <string name="backup_source_description">Резервне копіювання всього вихідного каталогу.</string>
     <string name="security">Безпека</string>
     <string name="graphics">Графіка</string>

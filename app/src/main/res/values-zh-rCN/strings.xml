@@ -383,7 +383,7 @@
     <string name="features">特性</string>
     <string name="whats_new">更新内容</string>
     <string name="blocking_rules">屏蔽规则</string>
-    <string name="exclude_cache">不包括缓存</string>
+    <string name="cache">不包括缓存</string>
     <string name="external_data">外部数据</string>
     <string name="data">数据 </string>
     <string name="backup">备份</string>
@@ -454,7 +454,7 @@
     <string name="installer_error_session_write">无法写入安装程序会话</string>
     <string name="installer_error_session_commit">不能提交APK文件</string>
     <string name="installer_error_session_abandon">无法中断安装包会话</string>
-    <string name="backup_apk_only">仅 APK</string>
+    <string name="backup_apk_files">仅 APK</string>
     <string name="backup_obb_media">OBB 和媒体文件</string>
     <string name="failed_to_extract_obb_files">无法提取 OBB 文件</string>
     <string name="obb_files_extracted_successfully">已提取 OBB 文件</string>
@@ -750,11 +750,11 @@
     <string name="backup_rules_description">备份 App Manager 内配置的规则。</string>
     <string name="backup_extras_description">备份应用权限、节电、数据使用选项、MagiskHide 状态等。</string>
     <string name="backup_extras">附加</string>
-    <string name="backup_exclude_cache_description">不备份缓存、 no_cache 和 no_backup 文件夹。</string>
+    <string name="backup_cache_description">不备份缓存、 no_cache 和 no_backup 文件夹。</string>
     <string name="backup_obb_media_description">备份 OBB 和媒体文件夹。</string>
     <string name="backup_external_data_description">备份外部数据文件夹。要让该选项工作，必须选中<b>Data 文件夹</b>。</string>
     <string name="backup_internal_data_description">备份数据文件夹。如果选中，将默认备份内部数据文件夹。</string>
-    <string name="backup_apk_only_description">仅备份来自源目录的 APK 文件。要让该选项工作，必须选中 <b>源目录</b>。</string>
+    <string name="backup_apk_files_description">仅备份来自源目录的 APK 文件。要让该选项工作，必须选中 <b>源目录</b>。</string>
     <string name="backup_source_description">备份整个源目录。</string>
     <string name="selinux">SELinux 状态</string>
     <string name="window_size">窗口尺寸</string>

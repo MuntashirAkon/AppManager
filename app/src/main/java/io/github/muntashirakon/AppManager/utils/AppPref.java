@@ -306,9 +306,8 @@ public class AppPref {
     public Object getDefaultValue(@NonNull PrefKey key) {
         switch (key) {
             case PREF_BACKUP_FLAGS_INT:
-                return BackupFlags.BACKUP_SOURCE | BackupFlags.BACKUP_INT_DATA
-                        | BackupFlags.BACKUP_RULES | BackupFlags.BACKUP_EXCLUDE_CACHE
-                        | BackupFlags.BACKUP_SOURCE_APK_ONLY | BackupFlags.BACKUP_EXTRAS;
+                return BackupFlags.BACKUP_INT_DATA | BackupFlags.BACKUP_RULES
+                        | BackupFlags.BACKUP_APK_FILES | BackupFlags.BACKUP_EXTRAS;
             case PREF_BACKUP_COMPRESSION_METHOD_STR:
                 return TarUtils.TAR_GZIP;
             case PREF_ROOT_MODE_ENABLED_BOOL:

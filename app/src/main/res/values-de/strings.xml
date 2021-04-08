@@ -397,7 +397,7 @@
     <string name="features">Funktionalitäten</string>
     <string name="whats_new">Was gibt\'s Neues?</string>
     <string name="blocking_rules">Blockierregeln</string>
-    <string name="exclude_cache">Cache nicht einbeziehen</string>
+    <string name="cache">Cache nicht einbeziehen</string>
     <string name="external_data">Externe Daten</string>
     <string name="data">Daten</string>
     <string name="backup">Sichern</string>
@@ -470,7 +470,7 @@
     <string name="installer_error_session_write">Der Schreib-Zugriff für die Installation wurde verweigert</string>
     <string name="installer_error_session_commit">Fehler beim Übertragen der APK-Dateien</string>
     <string name="installer_error_session_abandon">Beenden der Installation nicht möglich</string>
-    <string name="backup_apk_only">Nur APK</string>
+    <string name="backup_apk_files">Nur APK</string>
     <string name="backup_obb_media">OBB und Medien</string>
     <string name="failed_to_extract_obb_files">Extrahieren der OBB-Dateien nicht möglich</string>
     <string name="obb_files_extracted_successfully">OBB-Dateien entpackt</string>
@@ -784,11 +784,11 @@
     <string name="backup_rules_description">Im App Manager konfigurierte Regeln sichern.</string>
     <string name="backup_extras_description">Sichern Sie App-Berechtigungen, Batteriesparen, Datennutzungsoptionen, MagiskHide-Status usw.</string>
     <string name="backup_extras">Zusätze</string>
-    <string name="backup_exclude_cache_description">Die Ordner cache-, no_cache und no_backup werden nicht gesichert.</string>
+    <string name="backup_cache_description">Die Ordner cache-, no_cache und no_backup werden nicht gesichert.</string>
     <string name="backup_obb_media_description">Sichern der OBB- und Medienordner.</string>
     <string name="backup_external_data_description">Sichern Sie die externen Datenordner. <b>Daten</b> muss ausgewählt sein, damit dies funktioniert.</string>
     <string name="backup_internal_data_description">Sichern Sie die Datenordner. Wenn diese Option ausgewählt ist, werden die internen Datenordner standardmäßig gesichert.</string>
-    <string name="backup_apk_only_description">Sichern Sie nur die APK-Dateien aus dem Quellverzeichnis. <b>Die Quelle</b> muss ausgewählt sein, damit dies funktioniert.</string>
+    <string name="backup_apk_files_description">Sichern Sie nur die APK-Dateien aus dem Quellverzeichnis. <b>Die Quelle</b> muss ausgewählt sein, damit dies funktioniert.</string>
     <string name="backup_source_description">Sichern Sie das gesamte Quellverzeichnis.</string>
     <string name="backup_custom_users_description">Backups nur für die angegebenen Benutzer durchführen</string>
     <string name="backup_custom_users">Benutzerdefinierte Nutzung</string>

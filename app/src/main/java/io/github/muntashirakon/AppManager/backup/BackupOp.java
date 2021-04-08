@@ -148,7 +148,7 @@ class BackupOp implements Closeable {
             // Backup icon
             backupIcon();
             // Backup source
-            if (backupFlags.backupSource()) backupSource();
+            if (backupFlags.backupApkFiles()) backupApkFiles();
             // Backup data
             if (backupFlags.backupData()) {
                 backupData();
@@ -202,21 +202,21 @@ class BackupOp implements Closeable {
         }
     }
 
-    private void backupSource() throws BackupException {
+    private void backupApkFiles() throws BackupException {
         final File dataAppPath = OsEnvironment.getDataAppDirectory();
         final File sourceFile = new ProxyFile(tmpBackupPath, SOURCE_PREFIX + getExt(metadata.tarType));
         String sourceDir = PackageUtils.getSourceDir(applicationInfo);
         if (dataAppPath.getAbsolutePath().equals(sourceDir)) {
             // Backup only the apk file (no split apk support for this type of apk)
+            // TODO: 8/4/21 Check if tar can actually back up the APK file
             sourceDir = new ProxyFile(sourceDir, metadata.apkName).getAbsolutePath();
         }
         File[] sourceFiles;
         try {
             sourceFiles = TarUtils.create(metadata.tarType, new ProxyFile(sourceDir), sourceFile, /* language=regexp */
-                    backupFlags.backupOnlyApk() ? new String[]{".*\\.apk"} : null, null, null, false)
-                    .toArray(new File[0]);
+                    new String[]{".*\\.apk"}, null, null, false).toArray(new File[0]);
         } catch (Throwable th) {
-            throw new BackupException("Source backup is requested but no source directory has been backed up.", th);
+            throw new BackupException("APK files backup is requested but no source directory has been backed up.", th);
         }
         if (!crypto.encrypt(sourceFiles)) {
             throw new BackupException("Failed to encrypt " + Arrays.toString(sourceFiles));
@@ -235,9 +235,8 @@ class BackupOp implements Closeable {
             sourceFile = new ProxyFile(tmpBackupPath, DATA_PREFIX + i + getExt(metadata.tarType));
             try {
                 dataFiles = TarUtils.create(metadata.tarType, new ProxyFile(metadata.dataDirs[i]), sourceFile,
-                        null, null, BackupUtils.getExcludeDirs(
-                                backupFlags.excludeCache(), null), false)
-                        .toArray(new File[0]);
+                        null, null, BackupUtils.getExcludeDirs(!backupFlags.backupCache(), null),
+                        false).toArray(new File[0]);
             } catch (Throwable th) {
                 throw new BackupException("Failed to backup data directory at " + metadata.dataDirs[i], th);
             }

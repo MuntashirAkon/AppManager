@@ -160,7 +160,7 @@ class RestoreOp implements Closeable {
                     // Check checksum of master key first
                     checkMasterKey();
                 }
-                if (requestedFlags.backupSource()) restoreSource();
+                if (requestedFlags.backupApkFiles()) restoreApkFiles();
                 if (requestedFlags.backupData()) {
                     restoreData();
                     if (metadata.keyStore) restoreKeyStore();
@@ -191,9 +191,9 @@ class RestoreOp implements Closeable {
             }
         }
 
-        private void restoreSource() throws BackupException {
-            if (!backupFlags.backupSource()) {
-                throw new BackupException("Source restore is requested but backup doesn't contain any source files.");
+        private void restoreApkFiles() throws BackupException {
+            if (!backupFlags.backupApkFiles()) {
+                throw new BackupException("APK restore is requested but backup doesn't contain any source files.");
             }
             File[] backupSourceFiles = getSourceFiles(backupPath);
             if (backupSourceFiles == null || backupSourceFiles.length == 0) {
@@ -265,7 +265,6 @@ class RestoreOp implements Closeable {
             }
             // Extract apk files to the package staging directory
             try {
-                Log.e("TestRestore", Arrays.toString(backupSourceFiles));
                 TarUtils.extract(metadata.tarType, backupSourceFiles, packageStagingDirectory, allApkNames, null);
             } catch (Throwable th) {
                 throw new BackupException("Failed to extract the apk file(s).", th);
@@ -285,29 +284,6 @@ class RestoreOp implements Closeable {
                 isInstalled = true;
             } catch (Exception e) {
                 throw new BackupException("Apparently the install wasn't complete in the previous section.", e);
-            }
-            // Get instruction set
-            // TODO(10/9/20): Investigate support for unmatched instruction set as well
-            final String instructionSet = VMRuntime.getInstructionSet(Build.SUPPORTED_ABIS[0]);
-            final File dataAppPath = OsEnvironment.getDataAppDirectory();
-            final File sourceDir = new ProxyFile(PackageUtils.getSourceDir(packageInfo.applicationInfo));
-            // Restore source directory only if instruction set is matched or app path is not /data/app
-            // Or only apk restoring is requested
-            if (!requestedFlags.backupOnlyApk()  // Only apk restoring is not requested
-                    && !metadata.flags.backupOnlyApk()  // Only apk files were backed up during backup creation
-                    && metadata.instructionSet.equals(instructionSet)  // Instruction set matched
-                    && !dataAppPath.equals(sourceDir)) {  // Path is not /data/app
-                // Restore source: Get installed source directory and copy backups directly
-                try {
-                    TarUtils.extract(metadata.tarType, backupSourceFiles, sourceDir, null, allApkNames);
-                } catch (Throwable th) {
-                    throw new BackupException("Failed to restore the source files.", th);
-                }
-                // Restore permissions
-                Runner.runCommand(new String[]{"restorecon", "-R", sourceDir.getAbsolutePath()});
-            } else {
-                Log.w(TAG, "Skipped restoring files due to mismatched architecture or the path is /data/app or " +
-                        "only apk restoring is requested.");
             }
         }
 
@@ -444,7 +420,7 @@ class RestoreOp implements Closeable {
                 // Extract data to the data directory
                 try {
                     TarUtils.extract(metadata.tarType, dataFiles, dataSourceFile, null, BackupUtils
-                            .getExcludeDirs(requestedFlags.excludeCache(), null));
+                            .getExcludeDirs(!requestedFlags.backupCache(), null));
                 } catch (Throwable th) {
                     throw new BackupException("Failed to restore data files for index " + i + ".", th);
                 }

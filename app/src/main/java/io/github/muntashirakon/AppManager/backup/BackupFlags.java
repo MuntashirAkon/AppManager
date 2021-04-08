@@ -43,11 +43,12 @@ public final class BackupFlags {
             BACKUP_NOTHING,
             BACKUP_CUSTOM_USERS,
             BACKUP_SOURCE,
-            BACKUP_SOURCE_APK_ONLY,
+            BACKUP_APK_FILES,
             BACKUP_INT_DATA,
             BACKUP_EXT_DATA,
             BACKUP_EXT_OBB_MEDIA,
             BACKUP_EXCLUDE_CACHE,
+            BACKUP_CACHE,
             BACKUP_MULTIPLE,
             BACKUP_RULES,
             BACKUP_NO_SIGNATURE_CHECK,
@@ -58,56 +59,27 @@ public final class BackupFlags {
 
     public static final int BACKUP_NOTHING = 0;
     @SuppressWarnings("PointlessBitwiseExpression")
+    @Deprecated
     public static final int BACKUP_SOURCE = 1 << 0;
     public static final int BACKUP_INT_DATA = 1 << 1;
     public static final int BACKUP_EXT_DATA = 1 << 2;
+    @Deprecated
     public static final int BACKUP_EXCLUDE_CACHE = 1 << 3;
     public static final int BACKUP_RULES = 1 << 4;
     public static final int BACKUP_NO_SIGNATURE_CHECK = 1 << 5;
-    public static final int BACKUP_SOURCE_APK_ONLY = 1 << 6;
+    public static final int BACKUP_APK_FILES = 1 << 6;
     public static final int BACKUP_EXT_OBB_MEDIA = 1 << 7;
     public static final int BACKUP_CUSTOM_USERS = 1 << 8;
     public static final int BACKUP_MULTIPLE = 1 << 9;
     public static final int BACKUP_EXTRAS = 1 << 10;
+    public static final int BACKUP_CACHE = 1 << 11;
 
     public static final List<Integer> backupFlags = new ArrayList<>();
 
-    private static final LinkedHashMap<Integer, Pair<Integer, Integer>> backupFlagsMap =
-            new LinkedHashMap<Integer, Pair<Integer, Integer>>() {
-                {
-                    backupFlags.add(BACKUP_SOURCE);
-                    put(BACKUP_SOURCE, new Pair<>(R.string.source, R.string.backup_source_description));
-                    backupFlags.add(BACKUP_SOURCE_APK_ONLY);
-                    put(BACKUP_SOURCE_APK_ONLY, new Pair<>(R.string.backup_apk_only, R.string.backup_apk_only_description));
-                    backupFlags.add(BACKUP_INT_DATA);
-                    put(BACKUP_INT_DATA, new Pair<>(R.string.internal_data, R.string.backup_internal_data_description));
-                    backupFlags.add(BACKUP_EXT_DATA);
-                    put(BACKUP_EXT_DATA, new Pair<>(R.string.external_data, R.string.backup_external_data_description));
-                    backupFlags.add(BACKUP_EXT_OBB_MEDIA);
-                    put(BACKUP_EXT_OBB_MEDIA, new Pair<>(R.string.backup_obb_media, R.string.backup_obb_media_description));
-                    backupFlags.add(BACKUP_EXCLUDE_CACHE);
-                    put(BACKUP_EXCLUDE_CACHE, new Pair<>(R.string.exclude_cache, R.string.backup_exclude_cache_description));
-                    if (AppPref.isRootEnabled()) {
-                        // Display extra backups only in root mode
-                        backupFlags.add(BACKUP_EXTRAS);
-                        put(BACKUP_EXTRAS, new Pair<>(R.string.backup_extras, R.string.backup_extras_description));
-                        backupFlags.add(BACKUP_RULES);
-                        put(BACKUP_RULES, new Pair<>(R.string.rules, R.string.backup_rules_description));
-                    }
-                    backupFlags.add(BACKUP_MULTIPLE);
-                    put(BACKUP_MULTIPLE, new Pair<>(R.string.backup_multiple, R.string.backup_multiple_description));
-                    if (Users.getUsersHandles().length > 1) {
-                        // Display custom users only if multiple users present
-                        backupFlags.add(BACKUP_CUSTOM_USERS);
-                        put(BACKUP_CUSTOM_USERS, new Pair<>(R.string.backup_custom_users, R.string.backup_custom_users_description));
-                    }
-                    backupFlags.add(BACKUP_NO_SIGNATURE_CHECK);
-                    put(BACKUP_NO_SIGNATURE_CHECK, new Pair<>(R.string.skip_signature_checks, R.string.backup_skip_signature_checks_description));
-                }
-            };
-
     @NonNull
     public static CharSequence[] getFormattedFlagNames(@NonNull Context context) {
+        // Reset backup flags
+        LinkedHashMap<Integer, Pair<Integer, Integer>> backupFlagsMap = getBackupFlagsMap();
         CharSequence[] flagNames = new CharSequence[backupFlags.size()];
         for (int i = 0; i < flagNames.length; ++i) {
             Pair<Integer, Integer> flagNamePair = Objects.requireNonNull(backupFlagsMap.get(backupFlags.get(i)));
@@ -156,12 +128,8 @@ public final class BackupFlags {
         return flags == 0;
     }
 
-    public boolean backupSource() {
-        return (flags & BACKUP_SOURCE) != 0;
-    }
-
-    public boolean backupOnlyApk() {
-        return (flags & BACKUP_SOURCE_APK_ONLY) != 0;
+    public boolean backupApkFiles() {
+        return (flags & BACKUP_APK_FILES) != 0;
     }
 
     public boolean backupInternalData() {
@@ -188,8 +156,9 @@ public final class BackupFlags {
         return (flags & BACKUP_EXTRAS) != 0;
     }
 
-    public boolean excludeCache() {
-        return (flags & BACKUP_EXCLUDE_CACHE) != 0;
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    public boolean backupCache() {
+        return (flags & BACKUP_CACHE) != 0 || (flags & BACKUP_EXCLUDE_CACHE) == 0;
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
@@ -203,5 +172,40 @@ public final class BackupFlags {
 
     public boolean backupCustomUsers() {
         return (flags & BACKUP_CUSTOM_USERS) != 0;
+    }
+
+    @NonNull
+    private static LinkedHashMap<Integer, Pair<Integer, Integer>> getBackupFlagsMap() {
+        backupFlags.clear();
+        return new LinkedHashMap<Integer, Pair<Integer, Integer>>() {
+            {
+                backupFlags.add(BACKUP_APK_FILES);
+                put(BACKUP_APK_FILES, new Pair<>(R.string.backup_apk_files, R.string.backup_apk_files_description));
+                backupFlags.add(BACKUP_INT_DATA);
+                put(BACKUP_INT_DATA, new Pair<>(R.string.internal_data, R.string.backup_internal_data_description));
+                backupFlags.add(BACKUP_EXT_DATA);
+                put(BACKUP_EXT_DATA, new Pair<>(R.string.external_data, R.string.backup_external_data_description));
+                backupFlags.add(BACKUP_EXT_OBB_MEDIA);
+                put(BACKUP_EXT_OBB_MEDIA, new Pair<>(R.string.backup_obb_media, R.string.backup_obb_media_description));
+                backupFlags.add(BACKUP_CACHE);
+                put(BACKUP_CACHE, new Pair<>(R.string.cache, R.string.backup_cache_description));
+                if (AppPref.isRootEnabled()) {
+                    // Display extra backups only in root mode
+                    backupFlags.add(BACKUP_EXTRAS);
+                    put(BACKUP_EXTRAS, new Pair<>(R.string.backup_extras, R.string.backup_extras_description));
+                    backupFlags.add(BACKUP_RULES);
+                    put(BACKUP_RULES, new Pair<>(R.string.rules, R.string.backup_rules_description));
+                }
+                backupFlags.add(BACKUP_MULTIPLE);
+                put(BACKUP_MULTIPLE, new Pair<>(R.string.backup_multiple, R.string.backup_multiple_description));
+                if (Users.getUsersHandles().length > 1) {
+                    // Display custom users only if multiple users present
+                    backupFlags.add(BACKUP_CUSTOM_USERS);
+                    put(BACKUP_CUSTOM_USERS, new Pair<>(R.string.backup_custom_users, R.string.backup_custom_users_description));
+                }
+                backupFlags.add(BACKUP_NO_SIGNATURE_CHECK);
+                put(BACKUP_NO_SIGNATURE_CHECK, new Pair<>(R.string.skip_signature_checks, R.string.backup_skip_signature_checks_description));
+            }
+        };
     }
 }

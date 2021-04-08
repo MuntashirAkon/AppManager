@@ -30,16 +30,10 @@ will not be remembered for the future backups. If you want to customise this dia
 
 A complete description of backup options is given below:
 \begin{itemize}
-    \item \textbf{Source.} Whether to back up or restore the entire source directory. When you install an app, the APK
-    files are stored inside the \texttt{/data/app/} along with any native libraries as well as some other files such as
-    the ODEX and VDEX files. This directory is called \textbf{source directory} or \textbf{code path}. You can further
-    customise this using the \textbf{APK only} option.
+    \item \textbf{APK files.} Whether to back up the APK files. This includes the \textit{base APK} file along with the
+    \texttt{split APK} files if they exist.
 
-    \item \textbf{APK only.} When you enable \textbf{Source} option, the whole source directory is backed up or
-    restored. Enabling this along with \textbf{Source} will only backup or restore the APK files and skip backing up the
-    native libraries or ODEX and VDEX files.
-
-    \item \textbf{Internal Data.} Whether to back up the internal data directories. These directories are located at
+    \item \textbf{Internal data.} Whether to back up the internal data directories. These directories are located at
     \texttt{/data/user/<user\_id>} and (for Android N or later) \texttt{/data/user\_de/<user\_id>}.
 
     \item \textbf{External data.} Whether to back up data directories located in the internal memory as well as SD Card
@@ -57,13 +51,13 @@ A complete description of backup options is given below:
     external storage or the SD Card. This is useful for games and the graphical software which actually use these
     folders.
 
-    \item \textbf{Exclude cache.} Android apps have multiple cache directories located at every data directories (both
+    \item \textbf{Cache.} Android apps have multiple cache directories located at every data directories (both
     internal and external). There are two types of cache: \textbf{cache} and \textbf{code cache}. Enabling this option
     excludes both cache directories from all the data directories. It is generally advised to exclude cache directories
     since most apps don't clear the cache (for some reason, the only way an app can clear its cache is by deleting the
     entire cache directory) and usually handled by the OS itself. Apps such as Telegram may use a very large cache
-    (depending on the storage space) which may dramatically increase your backup size. When it is enabled, AM also
-    ignores backup from the \textbf{no\_backup} directories.
+    (depending on the storage space) which may dramatically increase the backup size. When it is disabled, AM also
+    ignores the \textbf{no\_backup} directories.
 
     \item \textbf{Extras.} Backup/restore app permissions, net policy, battery optimization, SSAID, etc. It's enabled
     by default. Note that, blocking rules are applied \textit{after} applying the extras. So, if an item is present in

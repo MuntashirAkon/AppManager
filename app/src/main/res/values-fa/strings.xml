@@ -361,7 +361,7 @@
     <string name="backup">پشتیبان</string>
     <string name="data">داده‌ها</string>
     <string name="external_data">داده خارجی</string>
-    <string name="exclude_cache">حافظه پنهان را مستثنا کن</string>
+    <string name="cache">حافظه پنهان را مستثنا کن</string>
     <string name="blocking_rules">قوانین مسدود کردن</string>
     <string name="whats_new">موارد جدید</string>
     <string name="features">ویژگی‌ها</string>

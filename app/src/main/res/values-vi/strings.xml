@@ -327,7 +327,7 @@
     <string name="filter_system_apps">Ứng dụng hệ thống</string>
     <string name="filter_user_apps">Ứng dụng người dùng</string>
     <string name="filter">Lọc</string>
-    <string name="exclude_cache">Trừ bộ nhớ đệm</string>
+    <string name="cache">Trừ bộ nhớ đệm</string>
     <string name="blocking_rules">Quy tắc chặn</string>
     <string name="whats_new">Có gì mới</string>
     <string name="features">Tính năng</string>

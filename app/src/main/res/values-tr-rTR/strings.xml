@@ -113,7 +113,7 @@
     <string name="features">Özellikler</string>
     <string name="whats_new">Yenilikler</string>
     <string name="blocking_rules">Engelleme kuralları</string>
-    <string name="exclude_cache">Önbelleği hariç tut</string>
+    <string name="cache">Önbelleği hariç tut</string>
     <string name="external_data">Harici veri</string>
     <string name="data">Veri</string>
     <string name="backup">Yedekleme</string>
@@ -261,7 +261,7 @@
     <string name="obb_files_extracted_successfully">OBB dosyaları çıkarıldı</string>
     <string name="failed_to_extract_obb_files">OBB dosyaları çıkarılamadı</string>
     <string name="backup_obb_media">OBB ve Ortam</string>
-    <string name="backup_apk_only">Yalnızca APK</string>
+    <string name="backup_apk_files">Yalnızca APK</string>
     <string name="installer_error_session_abandon">Kurulum oturumu terk edilemedi</string>
     <string name="installer_error_session_commit">APK dosyaları işlenemedi</string>
     <string name="installer_error_session_write">Kurucu oturumuna yazılamadı</string>
@@ -782,11 +782,11 @@
     <string name="backup_rules_description">App Manager içinde yapılandırılan kuralları yedekleyin.</string>
     <string name="backup_extras_description">Uygulama izinlerini, pil tasarrufunu, veri kullanım seçeneklerini, MagiskHide durumunu vs. yedekleyin.</string>
     <string name="backup_extras">Ekstralar</string>
-    <string name="backup_exclude_cache_description">Önbellek, no_cache ve no_backup klasörlerini yedeklemeyin.</string>
+    <string name="backup_cache_description">Önbellek, no_cache ve no_backup klasörlerini yedeklemeyin.</string>
     <string name="backup_obb_media_description">OBB ve medya klasörlerini yedekleyin.</string>
     <string name="backup_external_data_description">Harici veri klasörlerini yedekleyin. Bunun çalışması için <b>veri</b> seçilmelidir.</string>
     <string name="backup_internal_data_description">Veri klasörlerini yedekleyin. Seçilirse, dahili veri klasörleri öntanımlı olarak yedeklenecektir.</string>
-    <string name="backup_apk_only_description">Kaynak dizinden yalnızca APK dosyalarını yedekleyin. Bunun çalışması için <b>kaynak</b> seçilmelidir.</string>
+    <string name="backup_apk_files_description">Kaynak dizinden yalnızca APK dosyalarını yedekleyin. Bunun çalışması için <b>kaynak</b> seçilmelidir.</string>
     <string name="backup_source_description">Tüm kaynak dizini yedekleyin.</string>
     <string name="window_size">Pencere boyutu</string>
     <string name="refresh_rate">Yenileme hızı</string>

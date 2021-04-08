@@ -433,7 +433,7 @@
     <string name="obb_files_extracted_successfully">提取的OBB檔案</string>
     <string name="failed_to_extract_obb_files">無法提取OBB檔案</string>
     <string name="backup_obb_media">OBB和媒體</string>
-    <string name="backup_apk_only">僅 APK</string>
+    <string name="backup_apk_files">僅 APK</string>
     <string name="installer_error_session_abandon">無法放棄安裝程式會話</string>
     <string name="installer_error_session_commit">無法提交 APK 檔案</string>
     <string name="installer_error_session_write">無法寫入安裝程式會話</string>
@@ -497,7 +497,7 @@
     <string name="restore">還原</string>
     <string name="data">資料</string>
     <string name="external_data">外部資料</string>
-    <string name="exclude_cache">排除快取</string>
+    <string name="cache">排除快取</string>
     <string name="blocking_rules">封鎖規則</string>
     <string name="whats_new">什麼是新的</string>
     <string name="features">特徵</string>
@@ -620,11 +620,11 @@
     <string name="backup_rules_description">備份在 App Manager 中配置的規則。</string>
     <string name="backup_extras_description">備份應用程式權限，節省電池，資料使用選項，MagiskHide狀態等。</string>
     <string name="backup_extras">附加功能</string>
-    <string name="backup_exclude_cache_description">不要備份快取，no_cache和no_backup資料夾。</string>
+    <string name="backup_cache_description">不要備份快取，no_cache和no_backup資料夾。</string>
     <string name="backup_obb_media_description">備份OBB和媒體資料夾。</string>
     <string name="backup_external_data_description">備份外部資料。<b> 資料</b> 必須選擇此項才能正常運作。</string>
     <string name="backup_internal_data_description">備份資料。如果選中，預設情況下將備份內部資料。</string>
-    <string name="backup_apk_only_description">僅備份來源目錄中的 APK 檔案。<b> 來源</b> 必須選擇此項才能正常運作。</string>
+    <string name="backup_apk_files_description">僅備份來源目錄中的 APK 檔案。<b> 來源</b> 必須選擇此項才能正常運作。</string>
     <string name="backup_source_description">備份整個來源目錄。</string>
     <string name="set_mode_for_app_ops_dots">設定應用程式操作的模式…</string>
     <string name="security">安全</string>
