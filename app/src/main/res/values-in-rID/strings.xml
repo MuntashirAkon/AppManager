@@ -177,7 +177,7 @@
     <string name="menu_remove_rules">Hapus aturan</string>
     <string name="failed_to_extract_apk_file">Tidak dapat mengekstrak berkas APK</string>
     <string name="share_apk">Bagikan APK</string>
-    <string name="grant_usage_acess_message">Akses penggunaan adalah wajib untuk menampilkan info penggunaan aplikasi.</string>
+    <string name="grant_usage_acess_message">Digunakan untuk menampilkan info penggunaan aplikasi.</string>
     <string name="grant_usage_access">Berikan Akses Penggunaan</string>
     <string name="go">Pindah ke layar Pengaturan</string>
     <string name="go_back">Kembali</string>
