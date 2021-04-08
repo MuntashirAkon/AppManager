@@ -785,5 +785,5 @@
     <string name="backup_exclude_cache_description">, no_cache और no_backup फ़ोल्डर का बैकअप न करें।</string>
     <string name="backup_obb_media_description">ओबीबी और मीडिया फ़ोल्डर्स बैकअप करें।</string>
     <string name="backup_external_data_description">बाहरी डेटा फ़ोल्डर्स का बैकअप करें। इसको काम करने के लिए <b> डेटा </b> चयनित होना अनिवार्य है।</string>
-    <string name="backup_data_description">डेटा फ़ोल्डर्स बैकअप करें। अगर चयनित किया तो इंटरनल डेटा फ़ोल्डर्स को भी बैकअप किया जाएगा।</string>
+    <string name="backup_internal_data_description">डेटा फ़ोल्डर्स बैकअप करें। अगर चयनित किया तो इंटरनल डेटा फ़ोल्डर्स को भी बैकअप किया जाएगा।</string>
 </resources>

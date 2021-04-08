@@ -253,12 +253,9 @@ public final class MetadataManager {
         metadata.versionName = packageInfo.versionName;
         metadata.versionCode = PackageInfoCompat.getLongVersionCode(packageInfo);
         metadata.apkName = new File(applicationInfo.sourceDir).getName();
-        if (requestedFlags.backupData()) {
-            // FIXME(10/7/20): External data directory is not respecting userHandle
-            metadata.dataDirs = PackageUtils.getDataDirs(applicationInfo,
-                    requestedFlags.backupExtData(), requestedFlags.backupMediaObb());
-        }
-        metadata.dataDirs = ArrayUtils.defeatNullable(metadata.dataDirs);
+        // FIXME(10/7/20): External data directory is not respecting userHandle
+        metadata.dataDirs = PackageUtils.getDataDirs(applicationInfo, requestedFlags.backupInternalData(),
+                requestedFlags.backupExternalData(), requestedFlags.backupMediaObb());
         metadata.isSystem = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
         metadata.isSplitApk = false;
         try {

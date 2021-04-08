@@ -785,7 +785,7 @@
     <string name="backup_exclude_cache_description">Önbellek, no_cache ve no_backup klasörlerini yedeklemeyin.</string>
     <string name="backup_obb_media_description">OBB ve medya klasörlerini yedekleyin.</string>
     <string name="backup_external_data_description">Harici veri klasörlerini yedekleyin. Bunun çalışması için <b>veri</b> seçilmelidir.</string>
-    <string name="backup_data_description">Veri klasörlerini yedekleyin. Seçilirse, dahili veri klasörleri öntanımlı olarak yedeklenecektir.</string>
+    <string name="backup_internal_data_description">Veri klasörlerini yedekleyin. Seçilirse, dahili veri klasörleri öntanımlı olarak yedeklenecektir.</string>
     <string name="backup_apk_only_description">Kaynak dizinden yalnızca APK dosyalarını yedekleyin. Bunun çalışması için <b>kaynak</b> seçilmelidir.</string>
     <string name="backup_source_description">Tüm kaynak dizini yedekleyin.</string>
     <string name="window_size">Pencere boyutu</string>

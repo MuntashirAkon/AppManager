@@ -44,7 +44,7 @@ public final class BackupFlags {
             BACKUP_CUSTOM_USERS,
             BACKUP_SOURCE,
             BACKUP_SOURCE_APK_ONLY,
-            BACKUP_DATA,
+            BACKUP_INT_DATA,
             BACKUP_EXT_DATA,
             BACKUP_EXT_OBB_MEDIA,
             BACKUP_EXCLUDE_CACHE,
@@ -59,7 +59,7 @@ public final class BackupFlags {
     public static final int BACKUP_NOTHING = 0;
     @SuppressWarnings("PointlessBitwiseExpression")
     public static final int BACKUP_SOURCE = 1 << 0;
-    public static final int BACKUP_DATA = 1 << 1;
+    public static final int BACKUP_INT_DATA = 1 << 1;
     public static final int BACKUP_EXT_DATA = 1 << 2;
     public static final int BACKUP_EXCLUDE_CACHE = 1 << 3;
     public static final int BACKUP_RULES = 1 << 4;
@@ -79,8 +79,8 @@ public final class BackupFlags {
                     put(BACKUP_SOURCE, new Pair<>(R.string.source, R.string.backup_source_description));
                     backupFlags.add(BACKUP_SOURCE_APK_ONLY);
                     put(BACKUP_SOURCE_APK_ONLY, new Pair<>(R.string.backup_apk_only, R.string.backup_apk_only_description));
-                    backupFlags.add(BACKUP_DATA);
-                    put(BACKUP_DATA, new Pair<>(R.string.data, R.string.backup_data_description));
+                    backupFlags.add(BACKUP_INT_DATA);
+                    put(BACKUP_INT_DATA, new Pair<>(R.string.internal_data, R.string.backup_internal_data_description));
                     backupFlags.add(BACKUP_EXT_DATA);
                     put(BACKUP_EXT_DATA, new Pair<>(R.string.external_data, R.string.backup_external_data_description));
                     backupFlags.add(BACKUP_EXT_OBB_MEDIA);
@@ -164,16 +164,20 @@ public final class BackupFlags {
         return (flags & BACKUP_SOURCE_APK_ONLY) != 0;
     }
 
-    public boolean backupData() {
-        return (flags & BACKUP_DATA) != 0;
+    public boolean backupInternalData() {
+        return (flags & BACKUP_INT_DATA) != 0;
     }
 
-    public boolean backupExtData() {
+    public boolean backupExternalData() {
         return (flags & BACKUP_EXT_DATA) != 0;
     }
 
     public boolean backupMediaObb() {
         return (flags & BACKUP_EXT_OBB_MEDIA) != 0;
+    }
+
+    public boolean backupData() {
+        return backupInternalData() || backupExternalData() || backupMediaObb();
     }
 
     public boolean backupRules() {

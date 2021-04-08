@@ -787,7 +787,7 @@
     <string name="backup_exclude_cache_description">Não faça o backup das pastas cache, no_cache e no_backup.</string>
     <string name="backup_obb_media_description">Faça o backup das pastas OBB e de mídia.</string>
     <string name="backup_external_data_description">Faça o backup de pastas de dados externas. <b>Dados</b> deve ser selecionado para que isso funcione.</string>
-    <string name="backup_data_description">Faça o backup de pastas de dados. Se selecionado, as pastas de dados internas serão copiadas por padrão.</string>
+    <string name="backup_internal_data_description">Faça o backup de pastas de dados. Se selecionado, as pastas de dados internas serão copiadas por padrão.</string>
     <string name="backup_source_description">Faça o backup de todo o diretório de origem.</string>
     <string name="permissive">Permissive</string>
     <string name="enforcing">Enforcing</string>

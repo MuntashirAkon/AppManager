@@ -750,7 +750,7 @@
     <string name="tested_signatures_on_classes_and_time_taken">Testeado <xliff:g id="signature_no" example="342">%1$d</xliff:g> firmas en <xliff:g id="class_no" example="6000">%2$d</xliff:g> classes.
 \nTiempo tomado <xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> iteraciones).</string>
     <string name="interceptor">Interceptor</string>
-    <string name="backup_data_description">Respaldo de las carpetas de datos. Si se selecciona, se hará un respaldo de las carpetas de datos internas por defecto.</string>
+    <string name="backup_internal_data_description">Respaldo de las carpetas de datos. Si se selecciona, se hará un respaldo de las carpetas de datos internas por defecto.</string>
     <string name="backup_apk_only_description">Respaldo sólo de los archivos APK del directorio de origen. <b>Fuente</b> debe ser seleccionado para que esto funcione.</string>
     <string name="backup_source_description">Respaldo de todo el directorio fuente.</string>
     <string name="backup_obb_media_description">Respaldo de OBB y multimedia.</string>

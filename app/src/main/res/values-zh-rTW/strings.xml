@@ -623,7 +623,7 @@
     <string name="backup_exclude_cache_description">不要備份快取，no_cache和no_backup資料夾。</string>
     <string name="backup_obb_media_description">備份OBB和媒體資料夾。</string>
     <string name="backup_external_data_description">備份外部資料。<b> 資料</b> 必須選擇此項才能正常運作。</string>
-    <string name="backup_data_description">備份資料。如果選中，預設情況下將備份內部資料。</string>
+    <string name="backup_internal_data_description">備份資料。如果選中，預設情況下將備份內部資料。</string>
     <string name="backup_apk_only_description">僅備份來源目錄中的 APK 檔案。<b> 來源</b> 必須選擇此項才能正常運作。</string>
     <string name="backup_source_description">備份整個來源目錄。</string>
     <string name="set_mode_for_app_ops_dots">設定應用程式操作的模式…</string>

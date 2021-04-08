@@ -156,8 +156,7 @@ class RestoreOp implements Closeable {
 
         boolean runRestore() {
             try {
-                if (requestedFlags.backupData() && metadata.keyStore
-                        && !requestedFlags.skipSignatureCheck()) {
+                if (requestedFlags.backupData() && metadata.keyStore && !requestedFlags.skipSignatureCheck()) {
                     // Check checksum of master key first
                     checkMasterKey();
                 }
@@ -407,12 +406,16 @@ class RestoreOp implements Closeable {
                 if (dataSource.startsWith("/storage") || dataSource.startsWith("/sdcard")) {
                     isExternal = true;
                     // Skip if external data restore is not requested
-                    if (!requestedFlags.backupExtData() && dataSource.contains(EXT_DATA))
+                    if (!requestedFlags.backupExternalData() && dataSource.contains(EXT_DATA))
                         continue;
                     // Skip if media/obb restore not requested
                     if (!requestedFlags.backupMediaObb() && (dataSource.contains(EXT_MEDIA)
                             || dataSource.contains(EXT_OBB))) continue;
-                } else isExternal = false;
+                } else {
+                    isExternal = false;
+                    // Skip if internal data restore is not requested.
+                    if (!requestedFlags.backupInternalData()) continue;
+                }
                 // Fix problem accessing external directory in Android API < 23
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
                     if (dataSource.contains("/storage/emulated/")) {
@@ -422,7 +425,7 @@ class RestoreOp implements Closeable {
                 // Create data folder if not exists
                 ProxyFile dataSourceFile = new ProxyFile(dataSource);
                 if (!dataSourceFile.exists()) {
-                    // FIXME(10/9/20): Check if the media is mounted and readable before running
+                    // FIXME(10/9/20): Check if the media is mounted and writable before running
                     //  mkdir, otherwise it may create a folder to a path that will be gone
                     //  after a restart
                     if (!dataSourceFile.mkdirs()) {

@@ -841,7 +841,7 @@
     <string name="backup_exclude_cache_description">Не создавать резервные копии кеша, папок no_cache и no_backup.</string>
     <string name="backup_obb_media_description">Резервное копирование OBB и папок с медиафайлами.</string>
     <string name="backup_external_data_description">Резервное копирование внешних папок данных. Для этого необходимо выбрать <b> Данные </b>.</string>
-    <string name="backup_data_description">Резервное копирование папок с данными. Если выбран этот параметр, по умолчанию будут созданы резервные копии внутренних папок с данными.</string>
+    <string name="backup_internal_data_description">Резервное копирование папок с данными. Если выбран этот параметр, по умолчанию будут созданы резервные копии внутренних папок с данными.</string>
     <string name="backup_apk_only_description">Резервное копирование только файлов APK из исходного каталога. Для этого необходимо выбрать <b>Источник </b>.</string>
     <string name="backup_source_description">Резервное копирование всего каталога источника.</string>
     <string name="permissive">Permissive</string>

@@ -493,7 +493,7 @@
     <string name="backup_extras">Ekstra</string>
     <string name="backup_exclude_cache_description">Jangan mencadangkan folder cache, no_cache dan no_backup.</string>
     <string name="backup_obb_media_description">Cadangkan Folder OBB dan Media.</string>
-    <string name="backup_data_description">Cadangkan folder data. Jika dipilih, folder data internal akan dicadangkan secara default.</string>
+    <string name="backup_internal_data_description">Cadangkan folder data. Jika dipilih, folder data internal akan dicadangkan secara default.</string>
     <string name="backup_source_description">Cadangkan seluruh direktori sumber.</string>
     <string name="set_mode_for_app_ops_dots">Atur Mode untuk Ops Aplikasi …</string>
     <string name="security">Keamanan</string>

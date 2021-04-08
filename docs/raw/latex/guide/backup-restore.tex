@@ -39,7 +39,7 @@ A complete description of backup options is given below:
     restored. Enabling this along with \textbf{Source} will only backup or restore the APK files and skip backing up the
     native libraries or ODEX and VDEX files.
 
-    \item \textbf{Data.} Whether to back up the internal data directories. These directories are located at
+    \item \textbf{Internal Data.} Whether to back up the internal data directories. These directories are located at
     \texttt{/data/user/<user\_id>} and (for Android N or later) \texttt{/data/user\_de/<user\_id>}.
 
     \item \textbf{External data.} Whether to back up data directories located in the internal memory as well as SD Card
@@ -47,6 +47,11 @@ A complete description of backup options is given below:
     dedicated media folder) and may increase the backup size. However, it might be essential for some apps. Although
     it isn't checked by default (as it might dramatically increase the size of the backups), you will need to check it
     in order to ensure a smooth restore of your backups.
+    \begin{warning}{Caution}
+        Internal data folders should always be backed up if you are going to back up the external data folders. However,
+        it could be useful to back up only the external folders if the app in questions downloads a lot of assets from
+        the Internet.
+    \end{warning}
 
     \item \textbf{OBB and media.} Whether to back up or restore the OBB and the media directories located in the
     external storage or the SD Card. This is useful for games and the graphical software which actually use these

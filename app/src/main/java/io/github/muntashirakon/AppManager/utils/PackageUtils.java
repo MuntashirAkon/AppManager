@@ -624,7 +624,7 @@ public final class PackageUtils {
     }
 
     @NonNull
-    public static String[] getDataDirs(@NonNull ApplicationInfo applicationInfo, boolean loadExternal, boolean loadMediaObb) {
+    public static String[] getDataDirs(@NonNull ApplicationInfo applicationInfo, boolean loadInternal, boolean loadExternal, boolean loadMediaObb) {
         ArrayList<String> dataDirs = new ArrayList<>();
         if (applicationInfo.dataDir == null) {
             throw new RuntimeException("Data directory cannot be empty.");
