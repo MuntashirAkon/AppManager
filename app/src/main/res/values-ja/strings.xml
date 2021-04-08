@@ -190,7 +190,7 @@
     <string name="go_back">戻る</string>
     <string name="go">設定画面に移動</string>
     <string name="grant_usage_access">使用状況へのアクセスを許可</string>
-    <string name="grant_usage_acess_message">アプリの使用状況を表示するために許可する必要があります。</string>
+    <string name="grant_usage_acess_message">アプリの使用状況を表示するために利用されます。</string>
     <string name="share_apk">APKを共有</string>
     <string name="failed_to_extract_apk_file">APKファイルを抽出できませんでした</string>
     <string name="menu_remove_rules">ルールを除去</string>
@@ -256,7 +256,7 @@
     <string name="pref_global_blocking_enabled">グローバルブロックを有効化</string>
     <string name="pref_global_blocking_enabled_msg">手動でアプリごとにブロックを有効にしなくても自動的に全てのアプリでコンポーネントブロッキングを有効化します。</string>
     <string name="pref_usage_access_enabled">使用状況アクセス</string>
-    <string name="pref_usage_access_enabled_msg">アプリの使用状況とデーター使用量を確認できるようになります。</string>
+    <string name="pref_usage_access_enabled_msg">アプリの使用状況とデーター使用量を表示します。</string>
     <string name="app_settings">設定</string>
     <string name="only_works_in_root_mode">Rootモードのみの機能です</string>
     <string name="usage_yesterday">昨日</string>
@@ -287,14 +287,14 @@
     <string name="store">ストア</string>
     <string name="running_apps">起動中のアプリ</string>
     <string name="kill_process">停止</string>
-    <string name="disable_background_run">バックグラウンド実行を無効化</string>
+    <string name="disable_background_run">バックグラウンドでの実行を妨げる</string>
     <string name="pid_and_ppid">プロセスID: %1$d, 親プロセスID: %2$d</string>
     <string name="memory_virtual_memory">メモリ: %1$s, 仮想メモリ: %2$s</string>
     <string name="user_and_uid">ユーザー: <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
     <string name="clear_data">データを消去</string>
     <string name="backup_apk">APKをバックアップ</string>
     <string name="backup_restore">バックアップ/復元</string>
-    <string name="disable_background">バックグラウンドを無効化</string>
+    <string name="disable_background">バックグラウンドでの実行を妨げる</string>
     <string name="export_blocking_rules">ブロッキングルールをエクスポート</string>
     <string name="some_items_selected"><xliff:g id="selection_no" example="20">%1$d</xliff:g> 件を選択済み</string>
     <plurals name="alert_failed_to_clear_data">
@@ -319,7 +319,7 @@
         <item quantity="other">%1$d 個のアプリを強制終了できませんでした</item>
     </plurals>
     <string name="toggle_kill_for_system_apps">ｼｽﾃﾑｱﾌﾟﾘをｷﾙするか切り替え</string>
-    <string name="app_op_cannot_be_disabled">この権限は無効にできません。恐らく他のアプリに依存する読み取り専用のアプリ権限です</string>
+    <string name="app_op_cannot_be_disabled">このAppOpsは無効にできません。恐らく他に依存する読み取り専用のAppOpsです</string>
     <string name="permission_name">パーミッション名</string>
     <string name="mode">モード</string>
     <string name="running">実行中</string>
@@ -512,7 +512,7 @@
     <string name="block">ブロック</string>
     <string name="unblock">ブロック解除</string>
     <string name="block_unblock_trackers">トラッカーをブロック/ブロック解除</string>
-    <string name="no_matching_package_found">一致するパッケージが見つかりませんでした。</string>
+    <string name="no_matching_package_found">一致するアプリが見つかりませんでした</string>
     <string name="export_icon">アイコンを抽出</string>
     <string name="open_in_termux">Termuxで開く</string>
     <string name="run_in_termux">Termuxで実行</string>
@@ -531,7 +531,7 @@
     <string name="installer_error_bad_apks">無効か、破損したAPKが選択されました</string>
     <string name="installer_error_storage">このアプリをインストールするのに十分なストレージ容量がありません</string>
     <string name="installer_error_generic">インストールに失敗しました</string>
-    <string name="installer_error_lidl_rom">あなたの使用しているROMはルートレスインストーラに対応していません</string>
+    <string name="installer_error_lidl_rom">あなたが使用しているROMはルートレスインストーラに対応していません。</string>
     <string name="failed_to_fetch_package_info">パッケージ情報を取得できませんでした</string>
     <string name="batch_ops">バッチ処理</string>
     <string name="operation_running">処理を実行中…</string>
@@ -648,7 +648,7 @@
     <string name="pref_backup_flags_msg">バックアップオプションのプリセットを追加すると、バックアップ/復元するたびにフラグを選択する必要がなくなります。</string>
     <string name="compression_method">圧縮方式: <xliff:g id="compression_method" example="GZip">%1$s</xliff:g></string>
     <string name="confirm_installation">インストールを確認</string>
-    <string name="allow_open_pgp_operation">クリックしてAMにOpenPGPの利用を許可する</string>
+    <string name="allow_open_pgp_operation">タップしてAppManagerにOpenPGPの利用を許可する</string>
     <string name="uninstall_updates">アップデートをアンインストール</string>
     <string name="update_uninstalled_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> のアップデートは正常に削除されました</string>
     <string name="failed_to_uninstall_updates"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> のアップデートが削除できませんでした</string>
@@ -691,7 +691,7 @@
     <string name="view_missing_signatures">タップしてApp Managerのライブラリデータベースに登録されていないシグネチャを確認/送信する</string>
     <string name="copy">コピー</string>
     <string name="filter_running_apps">起動中のアプリ</string>
-    <string name="am_crashed">AMはクラッシュしました</string>
+    <string name="am_crashed">AppManagerはクラッシュしました</string>
     <string name="tap_to_submit_crash_report">タップしてクラッシュレポートを送信します</string>
     <string name="send_crash_report">クラッシュレポートを送信</string>
     <string name="select_apk">APKを選択</string>
@@ -707,7 +707,7 @@
     <string name="pref_show_users_in_installer_msg">インストーラーでアプリをインストールするユーザーを選択できるようにします。RootかADBが必要です</string>
     <string name="select_user">ユーザーを選択</string>
     <string name="encryption">暗号化</string>
-    <string name="pref_encryption_msg">バックアップに暗号化を行う</string>
+    <string name="pref_encryption_msg">バックアップを暗号化する</string>
     <string name="none">なし</string>
     <string name="aes">AES</string>
     <string name="rsa">RSA</string>
@@ -719,12 +719,12 @@
     <string name="allow_routine_ops">規則的操作を許可</string>
     <string name="profile_state">プロファイルの状態</string>
     <string name="allow_routine_ops_msg">規則的操作をプロファイルで使用することを許可します</string>
-    <string name="profile_disable_msg">有効にした場合、状態の値に基づいて無効化/有効化されます。</string>
-    <string name="profile_force_stop_msg">有効にした場合、アプリは強制終了されます。</string>
-    <string name="profile_clear_cache_msg">有効にした場合、アプリのキャッシュは自動的にクリアされます。</string>
-    <string name="profile_clear_data_msg">有効にした場合、アプリのデータは自動的に消去されます。</string>
-    <string name="profile_block_trackers_msg">有効にした場合、アプリからトラッカーが自動的にブロックされます。</string>
-    <string name="profile_backup_apk_msg">有効にした場合、APKファイルが自動的にバックアップされます。</string>
+    <string name="profile_disable_msg">状態に応じて無効化/有効化されます</string>
+    <string name="profile_force_stop_msg">アプリを強制終了する</string>
+    <string name="profile_clear_cache_msg">アプリのキャッシュを自動的にクリアする</string>
+    <string name="profile_clear_data_msg">アプリのデータは自動的に消去する</string>
+    <string name="profile_block_trackers_msg">アプリからトラッカーを自動的にブロックする</string>
+    <string name="profile_backup_apk_msg">APKファイルを自動的にバックアップする</string>
     <string name="profile_state_msg">このプロファイルのオンオフ状態を切り替えます。</string>
     <string name="on">On</string>
     <string name="off">Off</string>
@@ -811,13 +811,13 @@
     <string name="set_mode_for_app_ops_dots">AppOpsモードをセットします…</string>
     <string name="backup_apk_files_description">APKファイルのみをバックアップします <b>ソース</b> を指定する必要があります。</string>
     <string name="backup_internal_data_description">データフォルダをバックアップします。選択した場合内部データフォルダのバックアップは標準で有効になります。</string>
-    <string name="backup_external_data_description">外部データフォルダをバックアップします。 <b>データ</b> のバックアップも同時に行う必要があります。</string>
+    <string name="backup_external_data_description">外部データフォルダをバックアップします。</string>
     <string name="backup_obb_media_description">OBBとmediaフォルダをバックアップします</string>
     <string name="backup_cache_description">「no_cache」と「no_backup」フォルダのキャッシュをバックアップしません。</string>
     <string name="backup_extras">その他</string>
-    <string name="backup_extras_description">アプリ権限、バッテリーセーバー設定、データ使用設定、MagiskHideの状態をバックアップします。</string>
+    <string name="backup_extras_description">アプリ権限、バッテリーセーバー設定、データ使用設定、MagiskHideの状態、SSAIDをバックアップします。</string>
     <string name="backup_rules_description">App Manager内で構成されたルールをバックアップします。</string>
-    <string name="backup_multiple_description">基本バックアップの代わりに名前付きバックアップを使用する</string>
+    <string name="backup_multiple_description">基本バックアップの代わりに<i>名前付き</i>バックアップを作成する</string>
     <string name="backup_skip_signature_checks_description">復元するバックアップがチェックサム認証に失敗する場合や インストール済みのものと異なるAPK署名を持つ場合に役立ちます。</string>
     <string name="patch_level">セキュリティパッチレベル</string>
     <string name="selinux">SELinux</string>
@@ -914,4 +914,5 @@
     <string name="verified_using_unreliable_hash">信頼できないハッシュで検証済み</string>
     <string name="filter_apps_without_backups">バックアップされていないアプリ</string>
     <string name="uninstalled_apps">未インストールのアプリ</string>
+    <string name="internal_data">内蔵データ</string>
 </resources>
