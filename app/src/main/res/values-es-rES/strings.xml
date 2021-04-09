@@ -133,7 +133,7 @@
     <string name="add_item">Añadir ítem</string>
     <string name="select_type">Seleccione un tipo</string>
     <string name="key_name">Nombre de la clave</string>
-    <string name="string_value">String value</string>
+    <string name="string_value">Valor de string</string>
     <string name="saving_failed">Guardado fallido, prueba de nuevo.</string>
     <string name="saved_successfully">Guardado</string>
     <string name="deletion_failed">Borrado fallido</string>
@@ -143,8 +143,8 @@
     <string name="save">Guardar</string>
     <string name="databases">Bases de datos</string>
     <string name="shared_prefs">Prefs compartidas</string>
-    <string name="test_only">Sólo test</string>
-    <string name="debuggable">Debuggable</string>
+    <string name="test_only">Sólo testeo</string>
+    <string name="debuggable">Depurable</string>
     <string name="updated_app">Actualizado</string>
     <string name="requested_large_heap">Gran heap</string>
     <string name="no_code">Sin código</string>
@@ -689,7 +689,7 @@
     <string name="decimal_value">Decimal value</string>
     <string name="integer_value">Integer value</string>
     <string name="long_integer_value">Long integer value</string>
-    <string name="gles_ver">Req. GL ES versión</string>
+    <string name="gles_ver">Req. OpenGL ES versión</string>
     <string name="set_custom_app_op">Configurar app op personalizada</string>
     <string name="resend_intent">Reenviar Intent</string>
     <string name="share">Compartir</string>
