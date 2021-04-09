@@ -46,7 +46,7 @@
     <string name="group">Gruppe</string>
     <string name="protection_level">Schutz-Level</string>
     <string name="uses_feature">Benutzt Funktionalitäten</string>
-    <string name="gles_ver">Benötigte GL ES-Version</string>
+    <string name="gles_ver">Benötigte OpenGL ES-Version</string>
     <string name="no_feature">Keine Funktionalitäten</string>
     <string name="sort_by_shared_user_id">Geteilte Nutzer-ID</string>
     <string name="shared_user_id">Geteilte Nutzer-ID</string>
@@ -156,7 +156,7 @@
     <string name="go_back">Zurück</string>
     <string name="go">Weiter</string>
     <string name="grant_usage_access">Zugriff auf Nutzungsdaten erlauben</string>
-    <string name="grant_usage_acess_message">Zugriff auf Nutzungsdaten wird benötigt, um Informationen zur App-Nutzung anzuzeigen.</string>
+    <string name="grant_usage_acess_message">Wird verwendet, um Informationen zur App-Nutzung anzuzeigen.</string>
     <string name="share_apk">APK teilen</string>
     <string name="failed_to_extract_apk_file">APK-Extraktion fehlgeschlagen</string>
     <string name="menu_remove_rules">Regeln entfernen</string>
@@ -219,10 +219,10 @@
     <string name="failed_to_disable_op">Konnte gewünschte App Op nicht entziehen</string>
     <string name="rules_not_applied">Regeln wurden nicht angewendet</string>
     <string name="str_logo">Logo</string>
-    <string name="pref_global_blocking_enabled">Globales Komponenten-Blockieren</string>
+    <string name="pref_global_blocking_enabled">Sofortige Komponentensperrung</string>
     <string name="pref_global_blocking_enabled_msg">Erlaubt jede Komponente einer Anwendung zu blockieren, ohne die Blockierung für die Anwendung explizit einzuschalten.</string>
     <string name="pref_usage_access_enabled">Zugriff auf Nutzungsdaten</string>
-    <string name="pref_usage_access_enabled_msg">Dies erlaubt, Nutzungsstatistiken und Informationen über gespeicherte Daten einer Anwendung einzusehen.</string>
+    <string name="pref_usage_access_enabled_msg">Zeigt die Daten der App und die Nutzungsstatistiken an.</string>
     <string name="app_settings">Einstellungen</string>
     <string name="only_works_in_root_mode">Diese Funktion ist nur im Root-Modus verfügbar</string>
     <string name="usage_yesterday">Gestern</string>
@@ -253,14 +253,14 @@
     <string name="store">Store</string>
     <string name="running_apps">Laufende Anwendungen</string>
     <string name="kill_process">Beenden erzwingen</string>
-    <string name="disable_background_run">Ausführung im Hintergrund deaktivieren</string>
+    <string name="disable_background_run">Hintergrundbetrieb verhindern</string>
     <string name="pid_and_ppid">Prozess-ID: %1$d, ID des übergeordneten Prozesses: %2$d</string>
     <string name="memory_virtual_memory">RAM: %1$s, virtueller RAM: %2$s</string>
     <string name="user_and_uid">Benutzer: <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
     <string name="clear_data">Daten löschen</string>
     <string name="backup_apk">APK kopieren</string>
     <string name="backup_restore">Sichern/Wiederherstellen</string>
-    <string name="disable_background">Hinterausführung deaktivieren</string>
+    <string name="disable_background">Hintergrundbetrieb verhindern</string>
     <string name="export_blocking_rules">Blockierregeln exportieren</string>
     <string name="some_items_selected"><xliff:g id="selection_no" example="20">%1$d</xliff:g> ausgewählt</string>
     <plurals name="alert_failed_to_clear_data">
@@ -285,7 +285,7 @@
         <item quantity="other">Forciertes Beenden von %1$d Anwendungen nicht möglich</item>
     </plurals>
     <string name="toggle_kill_for_system_apps">„Beenden erzwingen“ für System-Anwendungen ein- oder ausschalten</string>
-    <string name="app_op_cannot_be_disabled">Dieser App Op kann nicht deaktiviert werden, unter Umständen weil ein nicht-beschreibbarer App Op von einem anderen App Op abhängt.</string>
+    <string name="app_op_cannot_be_disabled">Dieser App-Op kann nicht deaktiviert werden. (Möglicherweise hängt eine schreibgeschützte App-Op von einer anderen ab.)</string>
     <string name="permission_name">Name der Berechtigung</string>
     <string name="mode">Modus</string>
     <string name="running">Laufend</string>
@@ -434,7 +434,7 @@
     <string name="block">Blockieren</string>
     <string name="unblock">Freigeben</string>
     <string name="block_unblock_trackers">Verfolger blockieren/freigeben</string>
-    <string name="no_matching_package_found">Keine übereinstimmende Pakete gefunden</string>
+    <string name="no_matching_package_found">Keine übereinstimmende App gefunden</string>
     <string name="export_icon">Icon extrahieren</string>
     <string name="open_in_termux">In Termux öffnen</string>
     <string name="run_in_termux">In Termux ausführen</string>
@@ -443,7 +443,7 @@
     <string name="pref_remove_all_rules">Alle Regeln entfernen</string>
     <string name="pref_remove_all_rules_msg">Berechtigungen werden erteilt, Anwendungen und Komponenten werden auf ihre Standardwerte zurückgesetzt.</string>
     <string name="are_you_sure">Bist du Dir sicher?</string>
-    <string name="filter_apps_with_activities">Anwendungen mit Activities</string>
+    <string name="filter_apps_with_activities">Mit Aktivitäten</string>
     <string name="toggle_default_app_ops">Voreingestellte App Ops ein-/ausschalten</string>
     <string name="installer_error_aborted">Die Installation ist fehlgeschlagen, weil sie entweder abgebrochen oder die Sitzung unerwartet geschlossen wurde</string>
     <string name="installer_error_blocked_device">Gerät</string>
@@ -453,7 +453,7 @@
     <string name="installer_error_bad_apks">Ungültige APK-Dateien ausgewählt</string>
     <string name="installer_error_storage">Nicht genügend Speicherplatz zur Installation verfügbar</string>
     <string name="installer_error_generic">Installation fehlgeschlagen</string>
-    <string name="installer_error_lidl_rom">Dein ROM ist leider nicht kompatibel mit dem Installationsprogramm ohne Root.</string>
+    <string name="installer_error_lidl_rom">Dein ROM ist leider nicht kompatibel mit dem Rootless Installer.</string>
     <string name="failed_to_fetch_package_info">Laden der Paket-Informationen nicht möglich</string>
     <string name="batch_ops">Stapelverarbeitung</string>
     <string name="operation_running">Vorgang erfolgt…</string>
@@ -579,7 +579,7 @@
     <string name="rules">Regeln</string>
     <string name="other">Andere</string>
     <string name="changes_not_saved">Änderungen nicht gespeichert</string>
-    <string name="allow_open_pgp_operation">Klicken Sie hier, um AM die Verwendung von OpenPGP zu erlauben</string>
+    <string name="allow_open_pgp_operation">Klicken Sie hier, um App Manager die Verwendung von OpenPGP zu erlauben</string>
     <string name="confirm_installation">Installation bestätigen</string>
     <string name="non_critical_exts">Nicht-kritische Erweiterungen</string>
     <string name="critical_exts">Kritische Erweiterungen</string>
@@ -603,7 +603,7 @@
     <string name="expiry_date">Verfallsdatum</string>
     <string name="issuer">Herausgeber</string>
     <string name="subject">Gegenstand</string>
-    <string name="filter_apps_with_backups">Anwendungen mit Sicherungen</string>
+    <string name="filter_apps_with_backups">Mit Sicherungen</string>
     <string name="failed_to_uninstall_updates">Updates für <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> konnten nicht deinstalliert werden.</string>
     <string name="update_uninstalled_successfully">Updates für <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> wurden deinstalliert.</string>
     <string name="uninstall_updates">Updates deinstallieren</string>
@@ -653,7 +653,7 @@
     <string name="select_apk">Apk auswählen</string>
     <string name="send_crash_report">Crash-Bericht senden</string>
     <string name="tap_to_submit_crash_report">Tippen Sie hier, um den Absturzbericht zu senden.</string>
-    <string name="am_crashed">AM ist gerade abgestürzt</string>
+    <string name="am_crashed">App Manager ist gerade abgestürzt</string>
     <string name="new_profile">Neues Profil</string>
     <string name="input_profile_name_description">Der Profilname darf keine Leerzeichen enthalten.</string>
     <string name="input_profile_name">Bezeichnung des Profils</string>
@@ -663,7 +663,7 @@
     <string name="rsa">RSA</string>
     <string name="aes">AES</string>
     <string name="none">Keiner</string>
-    <string name="pref_encryption_msg">Verschlüsselung für Backups hinzufügen.</string>
+    <string name="pref_encryption_msg">Verschlüsselung für Backups.</string>
     <string name="encryption">Verschlüsselung</string>
     <string name="select_user">Benutzer auswählen</string>
     <string name="pref_show_users_in_installer_msg">Anzeigen einer Liste der Benutzer, die vor der Installation einer externen Anwendung ausgewählt werden müssen. Erfordert root oder ADB.</string>
@@ -677,12 +677,12 @@
     <string name="off">Aus</string>
     <string name="on">Ein</string>
     <string name="profile_state_msg">Benutzerdefinierter Ein/Aus-Zustand für dieses Profil</string>
-    <string name="profile_backup_apk_msg">Wenn aktiviert, werden APK-Dateien gesichert</string>
-    <string name="profile_block_trackers_msg">Wenn aktiviert, werden Blocker für Anwendungen blockiert</string>
-    <string name="profile_clear_data_msg">Wenn aktiviert, werden Daten aus den Anwendungen gelöscht</string>
-    <string name="profile_clear_cache_msg">Wenn aktiviert, wird der Cache aus den Anwendungen gelöscht</string>
-    <string name="profile_force_stop_msg">Wenn aktiviert, werden Apps zwangsweise gestoppt</string>
-    <string name="profile_disable_msg">Wenn aktiviert, werden Anwendungen basierend auf dem Wert des Status deaktiviert/ aktiviert</string>
+    <string name="profile_backup_apk_msg">Sichert APK-Dateien</string>
+    <string name="profile_block_trackers_msg">Blockiert die Tracker in Apps</string>
+    <string name="profile_clear_data_msg">Löscht die Daten von Apps</string>
+    <string name="profile_clear_cache_msg">Löscht den App-Cache von Apps</string>
+    <string name="profile_force_stop_msg">Erzwingt das Stoppen von Apps</string>
+    <string name="profile_disable_msg">Deaktiviert oder aktiviert Apps basierend auf dem Status</string>
     <string name="allow_routine_ops_msg">Erlauben Sie die Verwendung des Profils in den Routineoperationen</string>
     <string name="profile_state">Profilstatus</string>
     <string name="allow_routine_ops">Routineoperationen zulassen</string>
@@ -722,14 +722,14 @@
     <string name="input_keystore_alias_pass_description">Geben Sie das Passwort für den Alias <b>%1$s</b> ein. Sie können dieses Feld leer lassen, wenn das Kennwort mit dem KeyStore-Kennwort übereinstimmt.</string>
     <string name="input_keystore_alias_pass">Passwort für den Alias <b>%1$s</b></string>
     <string name="input_keystore_pass_msg">Tippen Sie hier, um das KeyStore-Passwort einzugeben</string>
-    <string name="input_keystore_pass_description">Geben Sie das App Manager KeyStore-Kennwort ein. Wenn Sie dies zum ersten Mal sehen, verwenden Sie bitte einen Passwortgenerator, um ein Passwort zu generieren und es an einem sicheren Ort zu speichern, bevor Sie es hier einfügen.</string>
+    <string name="input_keystore_pass_description">Geben Sie das Passwort für den App Manager KeyStore ein. Wenn Sie dies zum ersten Mal sehen, verwenden Sie bitte einen Passwortgenerator, um ein Passwort zu generieren und es an einem sicheren Ort zu speichern, bevor Sie es hier einfügen.</string>
     <string name="input_keystore_pass">KeyStore-Passwort eingeben</string>
     <plurals name="signature_schemes_pl">
         <item quantity="one">Signaturschema</item>
         <item quantity="other">Signaturschemata</item>
     </plurals>
     <string name="pref_backup_android_keystore">Sichern von Apps mit Android KeyStore</string>
-    <string name="pref_backup_android_keystore_msg">Nicht alle Apps werden nach der Wiederherstellung funktionieren. Die Wiederherstellung des KeyStore funktioniert auf den meisten Geräten nicht.</string>
+    <string name="pref_backup_android_keystore_msg">Nicht alle Apps funktionieren nach der Wiederherstellung. Die Wiederherstellung des KeyStore funktioniert auf den meisten Geräten nicht.</string>
     <string name="keep_data_and_signatures">Daten und Signaturen aufbewahren</string>
     <string name="this_action_cannot_be_undone">Diese Aktion kann nicht rückgängig gemacht werden.</string>
     <string name="no_app_ops_permission">Keine Berechtigung zum Anzeigen von App-Ops</string>
@@ -748,7 +748,7 @@
     <string name="activity_result">Ergebnis der Aktivität</string>
     <string name="send_edited_intent">Bearbeitete Absicht senden</string>
     <string name="value">Wert</string>
-    <string name="filter_apps_with_splits">Apps mit Splits</string>
+    <string name="filter_apps_with_splits">Mit Splits</string>
     <string name="set_mode_for_app_ops_dots">Modus für App Ops einstellen…</string>
     <string name="security">Sicherheit</string>
     <string name="battery">Akku</string>
@@ -761,7 +761,7 @@
     <string name="battery_capacity">Kapazität</string>
     <string name="memory">Speicher</string>
     <string name="vendor">Hersteller</string>
-    <string name="gles_version">GL ES Version</string>
+    <string name="gles_version">OpenGL ES Version</string>
     <string name="no_of_cores">Kerne</string>
     <string name="support_architectures">Unterstützte Architekturen</string>
     <string name="security_providers">Sicherheitsanbieter</string>
@@ -778,14 +778,14 @@
     <string name="about_device">Über das Gerät</string>
     <string name="matching_activities">Passende Aktivitäten</string>
     <string name="patch_level">Patch-Level</string>
-    <string name="backup_skip_signature_checks_description">Nützlich für die Wiederherstellung von Backups, die aufgrund eines Fehlers bei der Prüfsummenüberprüfung fehlschlugen oder eine andere APK-Signatur haben als das gesicherte Backup.</string>
-    <string name="backup_multiple_description">Verwenden Sie ein separat benanntes Backup anstelle des Basis-Backups.</string>
+    <string name="backup_skip_signature_checks_description">Wiederherstellen von Sicherungen, die entweder die Prüfsummenüberprüfung nicht bestehen oder andere APK-Signaturen haben als die vorherigen Sicherungen.</string>
+    <string name="backup_multiple_description">Verwenden Sie ein separat <i> benanntes</i> Backup anstelle des Basis-Backups.</string>
     <string name="backup_rules_description">Im App Manager konfigurierte Regeln sichern.</string>
-    <string name="backup_extras_description">Sichern Sie App-Berechtigungen, Batteriesparen, Datennutzungsoptionen, MagiskHide-Status usw.</string>
+    <string name="backup_extras_description">Sichern Sie App-Berechtigungen, Batteriespar- und Datennutzungsoptionen, MagiskHide-Status, SSAID usw.</string>
     <string name="backup_extras">Zusätze</string>
-    <string name="backup_cache_description">Die Ordner cache-, no_cache und no_backup werden nicht gesichert.</string>
+    <string name="backup_cache_description">Die Ordner <b>cache</b>, <b>no_cache</b> und <b>no_backup</b> werden nicht gesichert.</string>
     <string name="backup_obb_media_description">Sichern der OBB- und Medienordner.</string>
-    <string name="backup_external_data_description">Sichern Sie die externen Datenordner. <b>Daten</b> muss ausgewählt sein, damit dies funktioniert.</string>
+    <string name="backup_external_data_description">Sichern Sie die externen Datenordner.</string>
     <string name="backup_internal_data_description">Sichern Sie die Datenordner. Wenn diese Option ausgewählt ist, werden die internen Datenordner standardmäßig gesichert.</string>
     <string name="backup_apk_files_description">Sichern Sie nur die APK-Dateien aus dem Quellverzeichnis. <b>Die Quelle</b> muss ausgewählt sein, damit dies funktioniert.</string>
     <string name="backup_custom_users_description">Backups nur für die angegebenen Benutzer durchführen</string>
@@ -797,7 +797,7 @@
     <string name="pref_backup_volume_msg">Wählen Sie den Datenträger oder das Laufwerk aus, auf dem die Sicherungen gespeichert werden sollen.</string>
     <string name="backup_volume">Datenträger sichern</string>
     <string name="pref_backup_restore_msg">Anpassen von Sicherung/ Wiederherstellung.</string>
-    <string name="disable_background_run_description">Setzt den Modus <i>ignore</i> auf die folgenden App-Ops: <tt>RUN_IN_BACKGROUND</tt> (ab Android 7.0) und <tt>RUN_ANY_IN_BACKGROUND</tt> (ab Android 9).</string>
+    <string name="disable_background_run_description">Setzt den <i>Ignore</i>-Modus für die folgenden App-Ops: <tt>RUN_IN_BACKGROUND</tt> (ab Android 7.0) und <tt>RUN_ANY_IN_BACKGROUND</tt> (ab Android 9).</string>
     <string name="failed_to_enable_magisk_hide">Konnte MagiskHide nicht aktivieren</string>
     <string name="enable_magisk_hide">MagiskHide einschalten</string>
     <string name="failed_to_disable_magisk_hide">Konnte MagiskHide nicht deaktivieren</string>
@@ -865,25 +865,26 @@
     <string name="type_string_array_list">Liste von Zeichenketten</string>
     <string name="type_uri">URI</string>
     <string name="ssaid">SSAID</string>
-    <string name="ssaid_info">SSAID (<tt>Settings.Secure.ANDROID_ID</tt>) ist eine Gerätekennung, die jeder App (von Android Oreo) zugewiesen wird. Es wird häufig von Apps verwendet, um Benutzer zu verfolgen.</string>
+    <string name="ssaid_info">SSAID (<tt>Settings.Secure.ANDROID_ID</tt>) ist eine Gerätekennung, die jeder App (von Android 8 \"Oreo\" aufwärts) zugewiesen wird. Es wird häufig von Apps verwendet, um Benutzer zu verfolgen.</string>
     <string name="type_int_array_list">Liste der ganzen Zahlen</string>
     <string name="type_int_array">Array von Ganzzahlen</string>
     <string name="type_component_name">Komponentenname</string>
     <string name="type_null">Kein Wert</string>
-    <string name="restart_to_reflect_changes">Bitte sofort neu starten, um die Änderungen zu berücksichtigen</string>
+    <string name="restart_to_reflect_changes">Sie müssen das Gerät sofort neu starten, um die neuen Änderungen zu verwenden.</string>
     <string name="failed_to_change_ssaid">Konnte SSAID nicht ändern</string>
     <string name="copied_to_clipboard">In die Zwischenablage kopiert.</string>
     <string name="last_actions">Letzte Aktionen</string>
     <string name="pref_enable_disable_features_msg">Aktivieren oder Deaktivieren von Funktionen im App-Manager.</string>
     <string name="enable_disable_features">Aktivieren/Deaktivieren von Funktionen</string>
     <string name="installed_apps">Installierte Apps</string>
-    <string name="screen_lock_not_enabled">Bildschirmsperre ist nicht aktiviert. Aktivieren Sie die Bildschirmsperre in den Android-Einstellungen oder löschen Sie die App-Daten.</string>
+    <string name="screen_lock_not_enabled">Bitte wählen Sie eine Bildschirmsperre in den Android-Einstellungen aus oder löschen Sie App-Daten.</string>
     <string name="isolated">Isoliert</string>
     <string name="working_on_adb_mode">Arbeiten im ADB-Modus</string>
     <string name="input_app_ops_description_profile">Geben Sie App-Op-Namen und/ oder Konstanten mit Leerzeichen (z.B. <tt>WAKE_LOCK 63 72 CAMERA</tt> etc.) ein. Verwenden Sie <tt>*</tt> für alle konfigurierten App-Ops.</string>
-    <string name="filter_apps_without_backups">Apps ohne Backups</string>
+    <string name="filter_apps_without_backups">Ohne Sicherung</string>
     <string name="uninstalled_apps">Deinstallierte Apps</string>
     <string name="installer_app_message">Wählen Sie <b>Wählen</b>, um aus den installierten Apps auszuwählen, oder wählen Sie <b>Benutzerdefiniert</b>, um einen eigenen Paketnamen anzugeben.</string>
     <string name="specify_custom_name">Benutzerdefiniert</string>
     <string name="verified_using_unreliable_hash">Verifiziert mit unzuverlässigem Hash</string>
+    <string name="internal_data">Interne Daten</string>
 </resources>
