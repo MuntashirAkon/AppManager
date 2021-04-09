@@ -46,7 +46,7 @@
     <string name="group">群组</string>
     <string name="protection_level">保护等级</string>
     <string name="uses_feature">属性</string>
-    <string name="gles_ver">请求GL ES版本</string>
+    <string name="gles_ver">请求 OpenGL ES 版本</string>
     <string name="no_feature">无</string>
     <string name="sort_by_shared_user_id">共享的用户ID</string>
     <string name="shared_user_id">共享的用户ID</string>
@@ -152,7 +152,7 @@
     <string name="go_back">返回</string>
     <string name="go">前往</string>
     <string name="grant_usage_access">授予使用情况访问权限</string>
-    <string name="grant_usage_acess_message">要显示应用程序的使用信息，必须要有使用情况访问权限。</string>
+    <string name="grant_usage_acess_message">用于展示应用程序的使用信息。</string>
     <string name="share_apk">分享 APK</string>
     <string name="failed_to_extract_apk_file">无法提取 APK 文件</string>
     <string name="menu_remove_rules">删除规则</string>
@@ -215,10 +215,10 @@
     <string name="failed_to_disable_op">无法禁用请求的 AppOps</string>
     <string name="rules_not_applied">规则未被应用</string>
     <string name="str_logo">Logo</string>
-    <string name="pref_global_blocking_enabled">实时拦截组件</string>
+    <string name="pref_global_blocking_enabled">即时组件拦截</string>
     <string name="pref_global_blocking_enabled_msg">允许您拦截任何应用程序的任何组件，而无需拦截该应用程序。</string>
     <string name="pref_usage_access_enabled">使用情况访问权限</string>
-    <string name="pref_usage_access_enabled_msg">让您查看应用程序使用统计数据和应用程序数据信息。</string>
+    <string name="pref_usage_access_enabled_msg">显示应用程序数据信息和使用数据。</string>
     <string name="app_settings">设置</string>
     <string name="only_works_in_root_mode">仅在 root 或 ADB 模式下工作</string>
     <string name="usage_yesterday">昨天</string>
@@ -247,14 +247,14 @@
     <string name="store">Aurora Store</string>
     <string name="running_apps">正在运行的应用</string>
     <string name="kill_process">终止</string>
-    <string name="disable_background_run">禁用后台运行</string>
+    <string name="disable_background_run">防止后台操作</string>
     <string name="pid_and_ppid">进程ID: %1$d, 父进程 ID: %2$d</string>
     <string name="memory_virtual_memory">内存: %1$s, 虚拟内存: %2$s</string>
     <string name="user_and_uid">用户: <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
     <string name="clear_data">删除数据</string>
     <string name="backup_apk">备份 APK</string>
     <string name="backup_restore">备份/还原</string>
-    <string name="disable_background">停用后台</string>
+    <string name="disable_background">防止后台操作</string>
     <string name="export_blocking_rules">导出屏蔽规则</string>
     <string name="some_items_selected"><xliff:g id="selection_no" example="20">%1$d</xliff:g> 个已选中</string>
     <plurals name="alert_failed_to_clear_data">
@@ -274,7 +274,7 @@
         <item quantity="other">无法强制停止%1$d个应用</item>
     </plurals>
     <string name="toggle_kill_for_system_apps">切换杀死系统应用程序</string>
-    <string name="app_op_cannot_be_disabled">此应用无法禁用，可能是一个只读的应用依赖于另一个应用操作。</string>
+    <string name="app_op_cannot_be_disabled">此应用操作无法禁用（可能是一个依赖其他应用操作的只读应用操作）</string>
     <string name="permission_name">权限名称</string>
     <string name="mode">模式</string>
     <string name="running">运行中</string>
@@ -317,7 +317,7 @@
     <string name="sort_by_dangerous_permissions">优先的危险</string>
     <string name="sort_by_denied_permissions">首次拒绝</string>
     <string name="deny_dangerous_permissions">拒绝有危险的权限</string>
-    <string name="sort_by_tracker_components">优先的跟踪器</string>
+    <string name="sort_by_tracker_components">跟踪器优先</string>
     <string name="unknown_op">未知的操作</string>
     <string name="failed_to_disable_trackers">无法禁用跟踪器</string>
     <string name="trackers_disabled_successfully">跟踪器已被禁用</string>
@@ -348,7 +348,7 @@
     <string name="pref_import_existing">导入现有规则</string>
     <string name="pref_import_existing_msg">将被其他应用禁用的组件添加到应用管理器。 使用此工具时要小心，因为可能有许多误报。 只选择您确定的应用。</string>
     <string name="clear_cache">清除缓存</string>
-    <string name="block_unblock_trackers_description">阻止或取消屏蔽所有已安装应用的广告和跟踪组件</string>
+    <string name="block_unblock_trackers_description">拦截或取消屏蔽所有已安装应用的广告和跟踪组件</string>
     <string name="block_components_dots">屏蔽组件…</string>
     <string name="block_components_description">拦截给定特征码识别出的所有部件</string>
     <string name="deny_app_ops_description">设置由常数值标识的应用操作模式，如 <tt>63</tt> 或 <tt> RUN_IN_BACKGROUND</tt></string>
@@ -418,7 +418,7 @@
     <string name="block">屏蔽</string>
     <string name="unblock">取消屏蔽</string>
     <string name="block_unblock_trackers">阻止/解除阻止跟踪器</string>
-    <string name="no_matching_package_found">没有找到匹配的软件包</string>
+    <string name="no_matching_package_found">找不到任何此类应用</string>
     <string name="export_icon">提取图标</string>
     <string name="open_in_termux">在 Termux 中打开</string>
     <string name="run_in_termux">在 Termux 中运行</string>
@@ -437,7 +437,7 @@
     <string name="installer_error_bad_apks">无效的 APK 文件</string>
     <string name="installer_error_storage">没有足够的存储空间安装应用程序</string>
     <string name="installer_error_generic">安装错误</string>
-    <string name="installer_error_lidl_rom">您的 ROM 与无root安装程序不兼容。</string>
+    <string name="installer_error_lidl_rom">你的 ROM 与无 root 安装程序不兼容。</string>
     <string name="failed_to_fetch_package_info">无法获取软件包信息</string>
     <string name="batch_ops">批量操作</string>
     <string name="operation_running">运行中的操作……</string>
@@ -521,7 +521,7 @@
     <string name="state_sleeping">沉睡中</string>
     <string name="navigation_wheel">滚轮</string>
     <plurals name="backup_exists_are_you_sure">
-        <item quantity="other">超过一个应用存在备份。你确定吗？</item>
+        <item quantity="other">超过一个应用已存在备份。你确定吗？</item>
     </plurals>
     <string name="navigation_no_nav">无导航</string>
     <string name="state_wake_kill">唤醒杀死</string>
@@ -569,7 +569,7 @@
     <string name="issuer">发行商</string>
     <string name="subject">名称</string>
     <string name="filter_apps_with_backups">有备份的应用程序</string>
-    <string name="sort_by_backup">已备份</string>
+    <string name="sort_by_backup">先备份</string>
     <string name="failed_to_uninstall_updates">无法卸载更新,它属于 <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="update_uninstalled_successfully">用于 <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>更新已被卸载.</string>
     <string name="uninstall_updates">卸载更新</string>
@@ -613,7 +613,7 @@
     <string name="select_apk">选择 APK</string>
     <string name="send_crash_report">发送崩溃报告</string>
     <string name="tap_to_submit_crash_report">点击提交崩溃报告。</string>
-    <string name="am_crashed">App Manager 崩溃了</string>
+    <string name="am_crashed">App Manager 刚崩溃了</string>
     <string name="un_apkm">将 apkm 文件转换为 apks 文件</string>
     <string name="in_progress">进行中</string>
     <string name="conversion_failed">转换失败。</string>
@@ -625,7 +625,7 @@
     <string name="rsa">RSA</string>
     <string name="aes">AES</string>
     <string name="none">无</string>
-    <string name="pref_encryption_msg">为备份添加加密。</string>
+    <string name="pref_encryption_msg">加密备份。</string>
     <string name="encryption">加密</string>
     <string name="select_user">选择用户</string>
     <string name="pref_show_users_in_installer_msg">安装外部应用程序之前，显示要选择的用户列表。需要 root 或 ADB。</string>
@@ -641,12 +641,12 @@
     <string name="off">关闭</string>
     <string name="on">开启</string>
     <string name="profile_state_msg">自定义该配置文件的开启/关闭状态</string>
-    <string name="profile_backup_apk_msg">若启用选项，apk 文件将被备份</string>
-    <string name="profile_block_trackers_msg">若启用选项，将从应用程序中屏蔽跟踪器</string>
-    <string name="profile_clear_data_msg">若启用选项，将从应用程序中清除数据</string>
-    <string name="profile_clear_cache_msg">若启用选项，将从应用程序中清除缓存</string>
-    <string name="profile_force_stop_msg">若启用该选项，应用程序将被强行停止</string>
-    <string name="profile_disable_msg">若启用选项，则将基于状态值禁用/启用应用程序</string>
+    <string name="profile_backup_apk_msg">备份 APK 文件</string>
+    <string name="profile_block_trackers_msg">屏蔽应用程序中的跟踪器</string>
+    <string name="profile_clear_data_msg">清理应用程序的数据</string>
+    <string name="profile_clear_cache_msg">清理应用程序的缓存</string>
+    <string name="profile_force_stop_msg">强行停止应用</string>
+    <string name="profile_disable_msg">基于状态值禁用/启用应用程序</string>
     <string name="allow_routine_ops_msg">允许在例行操作中使用该配置文件</string>
     <string name="profile_state">配置文件状态</string>
     <string name="allow_routine_ops">允许例行操作</string>
@@ -687,8 +687,8 @@
     </plurals>
     <string name="input_keystore_alias_pass_description">插入别名 <b>%1$s</b> 的密码。如果该密码与密钥存储库密码相同，可以留空。</string>
     <string name="input_keystore_alias_pass">别名 <b>%1$s</b> 的密码</string>
-    <string name="input_keystore_pass_msg">点击此处提供密钥库密码</string>
-    <string name="input_keystore_pass_description">插入 App Manager 密钥库密码。如果您是第一次看到这个，请使用密码生成器生成一个密码，并在插入之前将其保存在一个安全的地方。</string>
+    <string name="input_keystore_pass_msg">点击此处输入密钥库密码</string>
+    <string name="input_keystore_pass_description">输入 App Manager 密钥库密码。如果您是第一次看到这个，请使用密码生成器生成一个密码，并在插入之前将其保存在一个安全的地方。</string>
     <string name="input_keystore_pass">输入密钥库密码</string>
     <string name="no_app_ops_permission">没有显示应用操作的权限</string>
     <string name="pref_backup_android_keystore_msg">并不是所有的应用程序在恢复后都能正常工作。恢复密钥存储库在大多数设备上无法工作。</string>
@@ -716,7 +716,7 @@
     <string name="send_edited_intent">发送编辑过的意图</string>
     <string name="matching_activities">匹配活动</string>
     <string name="set_custom_app_op">设置自定义应用操作</string>
-    <string name="pref_about_device_msg">基本设备信息包括 Android 系统、CPU、GPU、RAM，电池等。</string>
+    <string name="pref_about_device_msg">基本设备信息，包括 Android 系统、CPU、GPU、RAM、电池等。</string>
     <string name="battery">电池</string>
     <string name="graphics">图形处理器</string>
     <string name="cpu">CPU</string>
@@ -727,7 +727,7 @@
     <string name="battery_capacity">容量</string>
     <string name="memory">运行内存</string>
     <string name="vendor">厂商</string>
-    <string name="gles_version">GL ES 版本</string>
+    <string name="gles_version">OpenGL ES 版本</string>
     <string name="no_of_cores">核心数量</string>
     <string name="support_architectures">支持的 ABI</string>
     <string name="security_providers">安全供应商</string>
@@ -736,7 +736,7 @@
     <string name="board_name">主板</string>
     <string name="model">型号</string>
     <string name="brand_name">品牌</string>
-    <string name="about_device">关于设备</string>
+    <string name="about_device">关于此设备</string>
     <string name="set_mode_for_app_ops_dots">为 app ops 设置模式…</string>
     <string name="security">安全性</string>
     <string name="orientation_user_portrait">纵向视图</string>
@@ -744,14 +744,14 @@
         <item quantity="other">无法为 %1$d 个应用设置权限</item>
     </plurals>
     <string name="patch_level">安全补丁级别</string>
-    <string name="backup_skip_signature_checks_description">用于解决因校验和验证失败或与备份的 APK 签名不同导致的还原失败。</string>
-    <string name="backup_multiple_description">使用一个单独命名的备份，而不是基本备份。</string>
+    <string name="backup_skip_signature_checks_description">还原校验和验证失败或具有与先前备份不同的 APK 签名的备份。</string>
+    <string name="backup_multiple_description">使用一个单独<i>命名的</i>备份，而不是基本备份。</string>
     <string name="backup_rules_description">备份 App Manager 内配置的规则。</string>
-    <string name="backup_extras_description">备份应用权限、节电、数据使用选项、MagiskHide 状态等。</string>
+    <string name="backup_extras_description">备份应用权限、节电和数据使用选项、MagiskHide 状态、SSAID等。</string>
     <string name="backup_extras">附加</string>
-    <string name="backup_cache_description">不备份缓存、 no_cache 和 no_backup 文件夹。</string>
+    <string name="backup_cache_description">备份<b>缓存</b>、<b>no_cache</b>和<b>no_backup</b>文件夹。</string>
     <string name="backup_obb_media_description">备份 OBB 和媒体文件夹。</string>
-    <string name="backup_external_data_description">备份外部数据文件夹。要让该选项工作，必须选中<b>Data 文件夹</b>。</string>
+    <string name="backup_external_data_description">备份外部数据文件夹。</string>
     <string name="backup_internal_data_description">备份数据文件夹。如果选中，将默认备份内部数据文件夹。</string>
     <string name="backup_apk_files_description">仅备份来自源目录的 APK 文件。要让该选项工作，必须选中 <b>源目录</b>。</string>
     <string name="selinux">SELinux 状态</string>
@@ -768,7 +768,7 @@
     <string name="enable_magisk_hide">启用 MagiskHide</string>
     <string name="failed_to_disable_magisk_hide">无法禁用 MagiskHide</string>
     <string name="disable_magisk_hide">禁用 MagiskHide？</string>
-    <string name="disable_background_run_description">它将<i>忽略</i>模式设置到下列应用操作：<tt>RUN_IN_BACKGROUND</tt>（从 Android 7.0 起）和 <tt>RUN_ANY_IN_BACKGROUND</tt>（从 Android 9 起）。</string>
+    <string name="disable_background_run_description">将<i>忽略</i>模式设置到下列应用操作：<tt>RUN_IN_BACKGROUND</tt>（从 Android 7.0 起）和 <tt>RUN_ANY_IN_BACKGROUND</tt>（从 Android 9 起）。</string>
     <plurals name="no_of_components">
         <item quantity="other">%1$d 个组件</item>
     </plurals>
@@ -824,10 +824,10 @@
     <string name="sd_card">SD卡</string>
     <string name="external_storage">外部存储</string>
     <string name="internal_storage">内部共享存储空间</string>
-    <string name="restart_to_reflect_changes">重启以应用更改</string>
+    <string name="restart_to_reflect_changes">你必须立即重新启动设备才能使用新的更改。</string>
     <string name="failed_to_change_ssaid">无法更改 SSAID</string>
     <string name="copied_to_clipboard">已复制到剪贴板。</string>
-    <string name="ssaid_info">SSAID (<tt>Settings.Secure.ANDROID_ID</tt>) 是分配给每个应用程序的设备标识符 (从 Android Oreo 起)。它被应用程序广泛用于跟踪用户。</string>
+    <string name="ssaid_info">SSAID (<tt>Settings.Secure.ANDROID_ID</tt>) 是分配给每个应用程序的设备标识符 (从 Android 8 Oreo 起)。它被应用程序广泛用于跟踪用户。</string>
     <string name="ssaid">SSAID</string>
     <string name="type_uri">URI</string>
     <string name="type_string_array_list">字符串列表</string>
@@ -846,12 +846,13 @@
     <string name="pref_enable_disable_features_msg">启用/禁用 App Manager 中的功能。</string>
     <string name="enable_disable_features">启用/禁用功能</string>
     <string name="isolated">已隔离</string>
-    <string name="screen_lock_not_enabled">未启用屏幕锁。在安卓系统设置中启用屏幕锁或清除应用数据。</string>
+    <string name="screen_lock_not_enabled">请在安卓系统设置中选择一个屏幕锁或清除应用数据。</string>
     <string name="input_app_ops_description_profile">app op 名称和/或常数间用英文空格隔开，比如 <tt>WAKE_LOCK 63 72 CAMERA</tt>等。用 <tt>* </tt>表示应用到所有配置的 app ops。</string>
     <string name="working_on_adb_mode">在 ADB 模式上正常工作</string>
     <string name="verified_using_unreliable_hash">使用不可靠哈希进行了验证</string>
     <string name="installer_app_message">选中 <b>挑选</b>从已安装应用中进行选择或选中<b>自定义</b>指定自定义包名。</string>
     <string name="specify_custom_name">自定义</string>
-    <string name="filter_apps_without_backups">无备份应用</string>
+    <string name="filter_apps_without_backups">无备份的应用</string>
     <string name="uninstalled_apps">已卸载应用</string>
+    <string name="internal_data">内部数据</string>
 </resources>
