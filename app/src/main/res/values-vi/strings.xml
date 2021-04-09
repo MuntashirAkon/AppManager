@@ -30,7 +30,7 @@
     <string name="shared_user_id">ID người dùng được chia sẻ</string>
     <string name="sort_by_shared_user_id">ID người dùng được chia sẻ</string>
     <string name="no_feature">Không có tính năng</string>
-    <string name="gles_ver">Yêu cầu Phiên bản GL ES</string>
+    <string name="gles_ver">Yêu cầu phiên bản OpenGL ES</string>
     <string name="uses_feature">Sử dụng các tính năng</string>
     <string name="protection_level">Mức độ bảo vệ</string>
     <string name="group">Nhóm</string>
@@ -39,7 +39,7 @@
     <string name="patterns_allowed">Các mẫu được phép</string>
     <string name="write">Viết</string>
     <string name="read">Đọc</string>
-    <string name="filter_apps_without_backups">Các ứng dụng không có bản sao lưu</string>
+    <string name="filter_apps_without_backups">Không có bản sao lưu</string>
     <string name="uninstalled_apps">Các ứng dụng đã gỡ cài đặt</string>
     <string name="specify_custom_name">Tuỳ chỉnh</string>
     <string name="list_options">Liệt kê các tuỳ chọn</string>
@@ -47,10 +47,10 @@
     <string name="os_version">Phiên bản HĐH</string>
     <string name="enable_disable_features">Bật/tắt các tính năng</string>
     <string name="working_on_adb_mode">Đang hoạt động trong chế độ ADB</string>
-    <string name="screen_lock_not_enabled">Khoá màn hình không được bật. Hãy bật khoá màn hình trong cài đặt Android hoặc xoá dữ liệu ứng dụng.</string>
+    <string name="screen_lock_not_enabled">Vui lòng chọn một khoá màn hình trong cài đặt Android, hoặc xoá dữ liệu ứng dụng.</string>
     <string name="isolated">Bị cô lập</string>
     <string name="installed_apps">Các ứng dụng đã cài đặt</string>
-    <string name="restart_to_reflect_changes">Hãy khởi động lại ngay lập tức để áp dụng thay đổi</string>
+    <string name="restart_to_reflect_changes">Bạn phải khởi động lại thiết bị ngay lập tức để sử dụng các thay đổi mới.</string>
     <string name="failed_to_change_ssaid">Không thể thay đổi SSAID</string>
     <string name="copied_to_clipboard">Đã sao chép vào bộ nhớ.</string>
     <string name="icon_picker">Trình chọn biểu tượng</string>
@@ -82,7 +82,7 @@
     <string name="sort_by_dangerous_permissions">Nguy hiểm trước</string>
     <string name="sort_by_denied_permissions">Bị từ chối trước</string>
     <string name="deny_dangerous_permissions">Từ chối các quyền nguy hiểm</string>
-    <string name="sort_by_tracker_components">Trình theo dõi đầu tiên</string>
+    <string name="sort_by_tracker_components">Trình theo dõi trước</string>
     <string name="unknown_op">Hoạt động không xác định</string>
     <string name="failed_to_disable_trackers">Không thể tắt trình theo dõi</string>
     <string name="trackers_disabled_successfully">Trình theo dõi hiện đã bị tắt</string>
@@ -115,7 +115,7 @@
     <string name="security">Bảo mật</string>
     <string name="battery">Pin</string>
     <string name="encrypted">Đã mã hoá</string>
-    <string name="no_matching_package_found">Không có gói trùng khớp được tìm thấy</string>
+    <string name="no_matching_package_found">Không thể tìm thấy bất kỳ ứng dụng nào như vậy</string>
     <string name="block_unblock_trackers">Chặn/bỏ chặn trình theo dõi</string>
     <string name="unblock">Bỏ chặn</string>
     <string name="block">Chặn</string>
@@ -141,7 +141,7 @@
     <string name="advanced">Nâng cao</string>
     <string name="enabled">Đã bật</string>
     <string name="choose">Chọn</string>
-    <string name="clear_data_from_uninstalled_apps">Xoá dữ liệu từ các ứng dụng đã gỡ cài đặt</string>
+    <string name="clear_data_from_uninstalled_apps">Xoá dữ liệu của các ứng dụng đã gỡ cài đặt</string>
     <string name="users">Người dùng</string>
     <string name="languages">Ngôn ngữ</string>
     <string name="manufacturer">Nhà sản xuất</string>
@@ -189,7 +189,7 @@
     <string name="menu_remove_rules">Xoá các quy tắc</string>
     <string name="failed_to_extract_apk_file">Không thể trích xuất tệp APK</string>
     <string name="share_apk">Chia sẻ APK</string>
-    <string name="grant_usage_acess_message">Truy cập dữ liệu sử dụng là bắt buộc để hiển thị thông tin sử dụng ứng dụng.</string>
+    <string name="grant_usage_acess_message">Được sử dụng để hiển thị thông tin sử dụng ứng dụng.</string>
     <string name="grant_usage_access">Cấp quyền truy cập dữ liệu sử dụng</string>
     <string name="go_back">Quay lại</string>
     <string name="usage_less_than_a_minute">Ít hơn một phút</string>
@@ -247,13 +247,13 @@
     </plurals>
     <string name="some_items_selected">Đã chọn <xliff:g id="selection_no" example="20">%1$d</xliff:g></string>
     <string name="export_blocking_rules">Xuất các quy tắc chặn</string>
-    <string name="disable_background">Tắt chạy trong nền</string>
+    <string name="disable_background">Ngăn chặn hoạt động trong nền</string>
     <string name="clear_data">Xoá dữ liệu</string>
     <string name="user_and_uid">Người dùng: <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
     <string name="user_with_id">Người dùng: <xliff:g id="user_id" example="0">%1$d</xliff:g></string>
     <string name="memory_virtual_memory">Bộ nhớ: %1$s, bộ nhớ ảo: %2$s</string>
     <string name="pid_and_ppid">ID tiến trình: %1$d, ID tiến trình mẹ: %2$d</string>
-    <string name="disable_background_run">Tắt chạy trong nền</string>
+    <string name="disable_background_run">Ngăn chặn hoạt động trong nền</string>
     <string name="kill_process">Giết</string>
     <string name="running_apps">Ứng dụng đang chạy</string>
     <string name="store">Cửa hàng</string>
@@ -281,10 +281,10 @@
     <string name="usage_yesterday">Hôm qua</string>
     <string name="only_works_in_root_mode">Chỉ hoạt động trong chế độ root</string>
     <string name="app_settings">Cài đặt</string>
-    <string name="pref_usage_access_enabled_msg">Để cho bạn xem thống kê sử dụng ứng dụng và thông tin dữ liệu ứng dụng.</string>
+    <string name="pref_usage_access_enabled_msg">Hiện thông tin dữ liệu ứng dụng, và thống kê sử dụng.</string>
     <string name="pref_usage_access_enabled">Truy cập dữ liệu sử dụng</string>
     <string name="pref_global_blocking_enabled_msg">Để cho bạn chặn bất kỳ thành phần nào của bất kỳ ứng dụng nào mà không bật việc chặn cho ứng dụng một cách rõ ràng.</string>
-    <string name="pref_global_blocking_enabled">Chặn thành phần trên toàn thiết bị</string>
+    <string name="pref_global_blocking_enabled">Chặn thành phần ngay lập tức</string>
     <string name="str_logo">Logo</string>
     <string name="rules_not_applied">Các quy tắc không được áp dụng</string>
     <string name="failed_to_disable_op">Không thể tắt hoạt động ứng dụng được yêu cầu</string>
@@ -342,7 +342,7 @@
         <item quantity="other">%1$d class</item>
     </plurals>
     <plurals name="backup_exists_are_you_sure">
-        <item quantity="other">Bản sao lưu đã tồn tại cho nhiều ứng dụng. Bạn có chắc không\?</item>
+        <item quantity="other">Nhiều ứng dụng đã có bản sao lưu. Bạn có chắc không\?</item>
     </plurals>
     <plurals name="alert_failed_to_set_app_ops">
         <item quantity="other">Không thể đặt hoạt động ứng dụng cho %1$d ứng dụng</item>
@@ -368,7 +368,7 @@
     <string name="touchscreen_finger">Ngón tay</string>
     <string name="orientation_sensor">Cảm biến</string>
     <string name="manifest">Manifest</string>
-    <string name="app_op_cannot_be_disabled">Hoạt động ứng dụng này không thể được tắt, có thể là một hoạt động ứng dụng chỉ đọc phụ thuộc vào một hoạt động ứng dụng khác.</string>
+    <string name="app_op_cannot_be_disabled">Hoạt động ứng dụng này không thể được tắt. (Có thể là một hoạt động ứng dụng chỉ đọc phụ thuộc vào một hoạt động ứng dụng khác.)</string>
     <string name="reject_time">Thời gian từ chối</string>
     <string name="accept_time">Thời gian chấp nhận</string>
     <string name="backup_apk">Sao lưu APK</string>
@@ -391,4 +391,51 @@
     <string name="class_viewer">Trình xem class</string>
     <string name="class_name">Tên Class</string>
     <string name="media_size">Phương tiện</string>
+    <string name="input_app_ops_description">Nhập tên hoạt động ứng dụng và/hoặc hằng số có dấu cách, ví dụ <tt>WAKE_LOCK 63 72 CAMERA</tt> v.v.</string>
+    <string name="input_app_ops">Nhập hoạt động ứng dụng</string>
+    <string name="filtered_packages">Gói đã lọc</string>
+    <string name="input_signatures_description">Nhập các chữ ký có dấu cách, ví dụ <tt>com.facebook org.app2 com.app3</tt> v.v.</string>
+    <string name="input_signatures">Nhập chữ ký</string>
+    <string name="failed_packages">Gói thất bại</string>
+    <string name="no_tracker_found">Không tìm thấy trình theo dõi nào</string>
+    <string name="clear_app_cache_description">Xoá bộ nhớ đệm của tất cả ứng dụng</string>
+    <string name="credits_message">Các tác giả của
+\n- Dự án mã nguồn mở Android
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
+\n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
+\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
+\n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://github.com/Aefyr/SAI">SAI</a>
+\n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
+\nGhi nhận cho logo ban đầu: <a href="https://github.com/Atrate">Atrate</a>. </string>
+    <string name="starting_activity">Hoạt động bắt đầu: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
+    <string name="clear_data_message">Bạn có chắc muốn xoá dữ liệu của ứng dụng này không\?</string>
+    <string name="clear_data_from_uninstalled_apps_description">Xoá dữ liệu của các ứng dụng đã gỡ cài đặt với cờ <tt>DONT_DELETE_DATA</tt></string>
+    <string name="block_components_description">Chặn tất cả thành phần được nhận dạng bởi các chữ ký được đưa ra</string>
+    <string name="block_components_dots">Chặn thành phần…</string>
+    <string name="block_unblock_trackers_description">Chặn hoặc bỏ chặn các thành phần quảng cáo và theo dõi trong tất cả ứng dụng đã cài đặt</string>
+    <string name="go">Đi</string>
+    <string name="clear_cache">Xoá bộ nhớ đệm</string>
+    <string name="community_links">Kênh cập nhật: https://t.me/AppManagerChannel
+\nNhóm hỗ trợ: https://t.me/AppManagerAndroid
+\nTwitter: https://twitter.com/AMUpdateChannel</string>
+    <string name="community">Cộng đồng Telegram</string>
+    <string name="install">Cài đặt</string>
+    <plurals name="no_of_components">
+        <item quantity="other">%1$d thành phần</item>
+    </plurals>
+    <plurals name="no_of_trackers">
+        <item quantity="other">%1$d trình theo dõi</item>
+    </plurals>
+    <string name="manifest_viewer">Trình xem Manifest</string>
+    <string name="external_apk_no_app_op">APK ngoài không có bất kỳ hoạt động ứng dụng nào</string>
+    <string name="launch_app">Chạy</string>
+    <string name="failed_to_deny_dangerous_app_ops">Không thể thu hồi tất cả hoạt động ứng dụng nguy hiểm</string>
+    <string name="failed_to_deny_dangerous_perms">Không thể thu hồi tất cả quyền nguy hiểm</string>
+    <string name="failed_to_reset_app_ops">Không thể đặt lại hoạt động ứng dụng</string>
+    <string name="failed_to_revoke_permission">Không thể thu hồi quyền</string>
+    <string name="sort_by_component_name">Tên thành phần</string>
+    <string name="block_trackers">Chặn trình theo dõi</string>
 </resources>
