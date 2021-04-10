@@ -46,7 +46,7 @@
     <string name="group">Группа</string>
     <string name="protection_level">Уровень защиты</string>
     <string name="uses_feature">Используемые функции</string>
-    <string name="gles_ver">Требуемая версия GL ES</string>
+    <string name="gles_ver">Треб. версия OpenGL ES</string>
     <string name="no_feature">Нет функций</string>
     <string name="sort_by_shared_user_id">Общий идентификатор пользователя</string>
     <string name="shared_user_id">Общий идентификатор пользователя</string>
@@ -164,7 +164,7 @@
     <string name="go_back">Вернуться</string>
     <string name="go">Разрешить</string>
     <string name="grant_usage_access">Предоставьте доступ к истории использования</string>
-    <string name="grant_usage_acess_message">Разрешение доступа к истории использования является обязательным для отображения информации об использовании приложений.</string>
+    <string name="grant_usage_acess_message">Используется для отображения информации об использовании приложений.</string>
     <string name="share_apk">Поделиться APK</string>
     <string name="failed_to_extract_apk_file">Не удалось извлечь файл APK</string>
     <string name="menu_remove_rules">Удалить правила</string>
@@ -227,10 +227,10 @@
     <string name="failed_to_disable_op">Не удалось отключить запрошенную операцию приложения</string>
     <string name="rules_not_applied">Правила не применены</string>
     <string name="str_logo">Логотип</string>
-    <string name="pref_global_blocking_enabled">Глобальная блокировка компонентов</string>
+    <string name="pref_global_blocking_enabled">Мгновенная блокировка компонентов</string>
     <string name="pref_global_blocking_enabled_msg">Позволяет вам блокировать любой компонент любого приложения без явного включения блокировки для приложения.</string>
     <string name="pref_usage_access_enabled">Доступ к истории использования</string>
-    <string name="pref_usage_access_enabled_msg">Позволяет просматривать статистику использования вашего приложения и информацию о использовании данных приложением.</string>
+    <string name="pref_usage_access_enabled_msg">Показывает информацию о данных приложения и статистику использования.</string>
     <string name="app_settings">Настройки</string>
     <string name="only_works_in_root_mode">Доступно только в режиме root</string>
     <string name="usage_yesterday">Вчера</string>
@@ -265,14 +265,14 @@
     <string name="store">Магазин</string>
     <string name="running_apps">Работающие приложения</string>
     <string name="kill_process">Закрыть</string>
-    <string name="disable_background_run">Запретить работу в фоне</string>
+    <string name="disable_background_run">Предотвращение работы в фоне</string>
     <string name="pid_and_ppid">Идентификатор процесса: %1$d, идентификатор родительского процесса: %2$d</string>
     <string name="memory_virtual_memory">Память: %1$s, виртуальная память: %2$s</string>
     <string name="user_and_uid">Пользователь: <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
     <string name="clear_data">Очистить данные</string>
     <string name="backup_apk">Резервное копирование APK</string>
     <string name="backup_restore">Резервное копирование/восстановление</string>
-    <string name="disable_background">Отключить фоновый режим</string>
+    <string name="disable_background">Предотвращает работу в фоне</string>
     <string name="export_blocking_rules">Экспортировать правила блокировки</string>
     <string name="some_items_selected"><xliff:g id="selection_no" example="20">%1$d</xliff:g> выбрано</string>
     <plurals name="alert_failed_to_clear_data">
@@ -307,7 +307,7 @@
         <item quantity="other">Не удалось принудительно остановить %1$d приложений</item>
     </plurals>
     <string name="toggle_kill_for_system_apps">Переключение закрытия системных приложений</string>
-    <string name="app_op_cannot_be_disabled">Эта операция приложения не может быть отключена, возможно, операция приложения только для чтения зависела от операции другого приложения.</string>
+    <string name="app_op_cannot_be_disabled">Эта операция приложения не может быть отключена. (Возможно, операция приложения только для чтения зависела от другой.)</string>
     <string name="permission_name">Имя разрешения</string>
     <string name="mode">Режим</string>
     <string name="running">Работающие</string>
@@ -425,7 +425,7 @@
     <string name="features">Функции</string>
     <string name="whats_new">Что нового</string>
     <string name="blocking_rules">Правила блокировки</string>
-    <string name="cache">Исключить кэш</string>
+    <string name="cache">Кеш</string>
     <string name="external_data">Внешние данные</string>
     <string name="data">Данные</string>
     <string name="backup">Бекап</string>
@@ -478,7 +478,7 @@
     <string name="block">Заблокировать</string>
     <string name="unblock">Разблокировать</string>
     <string name="block_unblock_trackers">Блокировать/разблокировать трекеры</string>
-    <string name="no_matching_package_found">Подходящих пакетов не найдено</string>
+    <string name="no_matching_package_found">Не удалось найти такое приложение</string>
     <string name="export_icon">Извлечь значок</string>
     <string name="open_in_termux">Открыть в Termux</string>
     <string name="run_in_termux">Запустить в Termux</string>
@@ -497,7 +497,7 @@
     <string name="installer_error_bad_apks">Выбраны недопустимые файлы APK</string>
     <string name="installer_error_storage">Недостаточно места для установки приложения</string>
     <string name="installer_error_generic">Ошибка установки</string>
-    <string name="installer_error_lidl_rom">Ваша прошивка несовместима с установщиком без root.</string>
+    <string name="installer_error_lidl_rom">Ваша прошивка несовместима с без-root установщиком .</string>
     <string name="failed_to_fetch_package_info">Не удалось получить информацию о пакете</string>
     <string name="batch_ops">Пакетные операции</string>
     <string name="operation_running">Выполнение операции…</string>
@@ -615,11 +615,11 @@
     <string name="compression_method">Метод сжатия: <xliff:g id="compression_method" example="GZip">%1$s</xliff:g></string>
     <string name="state_trace_stop">Остановить отслеживание</string>
     <string name="confirm_installation">Подтвердить установку</string>
-    <string name="allow_open_pgp_operation">Щёлкните, чтобы разрешить AM использовать OpenPGP</string>
+    <string name="allow_open_pgp_operation">Нажмите, чтобы разрешить AM использовать OpenPGP</string>
     <string name="uninstall_updates">Удалить обновления</string>
     <string name="update_uninstalled_successfully">Обновления <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> были удалены.</string>
     <string name="failed_to_uninstall_updates">Не удалось удалить обновления <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
-    <string name="filter_apps_with_backups">Приложения с резервными копиями</string>
+    <string name="filter_apps_with_backups">С резервными копиями</string>
     <string name="issued_date">Дата выпуска</string>
     <string name="expiry_date">Дата истечения</string>
     <string name="type">Тип</string>
@@ -704,7 +704,7 @@
     <string name="input_profile_name">Название профиля</string>
     <string name="in_progress">В процессе</string>
     <string name="conversion_failed">Преобразование не удалось.</string>
-    <string name="am_crashed">Произошло падение АМ</string>
+    <string name="am_crashed">Произошло падение App Manager</string>
     <string name="filter_running_apps">Работающие приложения</string>
     <string name="dsa_affine_y">Аффина координаты y</string>
     <string name="dsa_affine_x">Аффинная координата x</string>
@@ -717,7 +717,7 @@
     <string name="un_apkm">Распаковать Apkm</string>
     <string name="ecc">Эллиптическая криптография (ЕСС)</string>
     <string name="none">Без шифрования</string>
-    <string name="pref_encryption_msg">Добавить шифрование для резервных копий.</string>
+    <string name="pref_encryption_msg">Шифрование резервных копий.</string>
     <string name="encryption">Шифрование</string>
     <string name="select_user">Выбрать пользователя</string>
     <string name="pref_show_users_in_installer_msg">Отображение списка пользователей для выбора, перед установкой внешнего приложения. Требуется ROOT или ADB.</string>
@@ -738,12 +738,12 @@
     <string name="options">Параметры</string>
     <string name="off">ВЫКЛ</string>
     <string name="on">ВКЛ</string>
-    <string name="profile_backup_apk_msg">Если включено, будет произведено резервное копирование АРК</string>
-    <string name="profile_block_trackers_msg">Если включено, будут заблокированы трекеры в приложениях</string>
-    <string name="profile_clear_data_msg">Если включено, данные приложений будут очищены</string>
-    <string name="profile_clear_cache_msg">Если включено, кеш приложений будет очищен</string>
-    <string name="profile_force_stop_msg">Если включено, приложения будут остановлены принудительно</string>
-    <string name="profile_disable_msg">Если включено, приложения будут отключены/включены в зависимости от значения состояния</string>
+    <string name="profile_backup_apk_msg">Резервное копирование APK</string>
+    <string name="profile_block_trackers_msg">Блокирование трекеров в приложениях</string>
+    <string name="profile_clear_data_msg">Очистка данных приложений</string>
+    <string name="profile_clear_cache_msg">Очистка кеш приложений</string>
+    <string name="profile_force_stop_msg">Принудительная остановка приложений</string>
+    <string name="profile_disable_msg">Отключенные или включенные приложения в зависимости от состояния</string>
     <string name="profile_state">Состояние профиля</string>
     <string name="current_mode">Текущий режим: %s</string>
     <string name="adb_over_tcp">ADB через TCP</string>
@@ -782,7 +782,7 @@
         <item quantity="other">Схемы подписи</item>
     </plurals>
     <string name="input_keystore_pass_msg">Нажмите здесь, чтобы ввести пароль хранилища ключей</string>
-    <string name="input_keystore_pass_description">Вставьте пароль хранилища ключей App Manager. Если вы видите это впервые, используйте генератор паролей, чтобы сгенерировать пароль и сохранить его в безопасном месте, прежде чем вставлять его здесь.</string>
+    <string name="input_keystore_pass_description">Введите пароль хранилища ключей App Manager. Если вы видите это впервые, используйте генератор паролей, чтобы сгенерировать пароль и сохранить его в безопасном месте, прежде чем вставлять его здесь.</string>
     <string name="input_keystore_pass">Введите пароль хранилища ключей</string>
     <string name="input_keystore_alias_pass_description">Вставьте пароль для псевдонима <b>%1$s</b>. Вы можете оставить это поле пустым, если пароль совпадает с паролем хранилища ключей.</string>
     <string name="input_keystore_alias_pass">Пароль для псевдонима <b>%1$s</b></string>
@@ -816,7 +816,7 @@
     <string name="battery_capacity">Ёмкость</string>
     <string name="memory">Память</string>
     <string name="vendor">Поставщик</string>
-    <string name="gles_version">Версия GL ES</string>
+    <string name="gles_version">Версия OpenGL ES</string>
     <string name="no_of_cores">Ядра</string>
     <string name="support_architectures">Поддерживаемые архитектуры</string>
     <string name="security_providers">Провайдер безопасности</string>
@@ -832,14 +832,14 @@
     <string name="keystore">Хранилище ключей</string>
     <string name="security">Безопасность</string>
     <string name="patch_level">Обновление системы безопасности Андроид</string>
-    <string name="backup_skip_signature_checks_description">Полезно для восстановления резервных копий, которые не работают из-за ошибки проверки контрольной суммы или имеют подпись APK, отличную от подписи для резервной копии.</string>
-    <string name="backup_multiple_description">Использовать особое название резервной копии, вместо базовой.</string>
+    <string name="backup_skip_signature_checks_description">Восстановление резервных копий, которые либо не прошли проверку контрольных сумм, либо имеют подписи, отличные от предыдущих резервных копий APK.</string>
+    <string name="backup_multiple_description">Создайте отдельную резервную копию <i>с именем</i> вместо базовой.</string>
     <string name="backup_rules_description">Резервное копирование правил, настроенных в App Manager.</string>
-    <string name="backup_extras_description">Резервное копирование разрешений приложения, экономия батареи, параметры использования данных, статус MagiskHide и т.д.</string>
+    <string name="backup_extras_description">Резервное копирование разрешений приложения, экономия батареи, параметры использования данных, статус MagiskHide, SSAID и т.д.</string>
     <string name="backup_extras">Дополнительно</string>
-    <string name="backup_cache_description">Не создавать резервные копии кеша, папок no_cache и no_backup.</string>
+    <string name="backup_cache_description">Резервное копирование папок <b>cache</b>, <b>no_cache</b> и <b>no_backup</b>.</string>
     <string name="backup_obb_media_description">Резервное копирование OBB и папок с медиафайлами.</string>
-    <string name="backup_external_data_description">Резервное копирование внешних папок данных. Для этого необходимо выбрать <b> Данные </b>.</string>
+    <string name="backup_external_data_description">Резервное копирование внешних папок данных.</string>
     <string name="backup_internal_data_description">Резервное копирование папок с данными. Если выбран этот параметр, по умолчанию будут созданы резервные копии внутренних папок с данными.</string>
     <string name="backup_apk_files_description">Резервное копирование только файлов APK из исходного каталога. Для этого необходимо выбрать <b>Источник </b>.</string>
     <string name="permissive">Permissive</string>
@@ -862,7 +862,7 @@
     <string name="enable_magisk_hide">Включить MagiskHide</string>
     <string name="failed_to_disable_magisk_hide">Не удалось отключить MagiskHide</string>
     <string name="disable_magisk_hide">Отключить MagiskHide\?</string>
-    <string name="disable_background_run_description">Это устанавливает режим <i>ignore</i> для следующих операций приложения: <tt>RUN_IN_BACKGROUND</tt> (с Android 7.0) и <tt>RUN_ANY_IN_BACKGROUND</tt> (с Android 9).</string>
+    <string name="disable_background_run_description">Устанавливает режим <i>ignore</i> для следующих операций приложения: <tt>RUN_IN_BACKGROUND</tt> (с Android 7.0) и <tt>RUN_ANY_IN_BACKGROUND</tt> (с Android 9).</string>
     <plurals name="no_of_components">
         <item quantity="one">%1$d компонент</item>
         <item quantity="few">%1$d компонента</item>
@@ -922,10 +922,10 @@
     <string name="type_null">Нет значения</string>
     <string name="backup_custom_users">Выбор пользователей</string>
     <string name="user_with_id">Пользователь: <xliff:g id="user_id" example="0">%1$d</xliff:g></string>
-    <string name="restart_to_reflect_changes">Чтобы отобразить изменения, пожалуйста немедленно перезапустите</string>
+    <string name="restart_to_reflect_changes">Вы должны немедленно перезагрузить устройство, чтобы использовать новые изменения.</string>
     <string name="failed_to_change_ssaid">Не удалось изменить SSAID</string>
     <string name="copied_to_clipboard">Скопировано в буфер обмена.</string>
-    <string name="ssaid_info">SSAID (<tt>Settings.Secure.ANDROID_ID</tt>) - это идентификатор устройства, присвоенный каждому приложению (начиная с Android Oreo). Он широко используется приложениями для отслеживания пользователей.</string>
+    <string name="ssaid_info">SSAID (<tt>Settings.Secure.ANDROID_ID</tt>) - это идентификатор устройства, присвоенный каждому приложению (начиная с Android Oreo и выше). Он широко используется приложениями для отслеживания пользователей.</string>
     <string name="type_string_array_list">Список строк</string>
     <string name="type_string_array">Массив строк</string>
     <string name="type_float_array_list">Список десятичных чисел</string>
@@ -942,12 +942,13 @@
     <string name="ssaid">SSAID</string>
     <string name="type_uri">URI</string>
     <string name="isolated">Изолированно</string>
-    <string name="screen_lock_not_enabled">Блокировка экрана не включена. Включите блокировку экрана в настройках Android или очистите данные приложения.</string>
+    <string name="screen_lock_not_enabled">Включите блокировку экрана в настройках Android или очистите данные приложения.</string>
     <string name="input_app_ops_description_profile">Введите имена операций приложения и/или константы с пробелами, например <tt>WAKE_LOCK 63 72 CAMERA</tt> и т.д. Используйте <tt>*</tt> для применения ко всем настроенным операциям приложения.</string>
     <string name="working_on_adb_mode">Работа в режиме ADB</string>
     <string name="verified_using_unreliable_hash">Проверено с использованием ненадежного хеша</string>
-    <string name="filter_apps_without_backups">Приложения без резервных копий</string>
+    <string name="filter_apps_without_backups">Без резервных копий</string>
     <string name="uninstalled_apps">Удаленные приложения</string>
     <string name="installer_app_message">Нажмите <b>выбрать</b> для использования одного из установленных приложений, или нажмите <b>пользовательское</b>, чтобы ввести имя пользовательского пакета.</string>
     <string name="specify_custom_name">Пользовательское</string>
+    <string name="internal_data">Внутренние данные</string>
 </resources>
