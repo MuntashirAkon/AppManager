@@ -97,7 +97,7 @@ public class AESCryptoSelectionDialogFragment extends DialogFragment {
                     UIUtils.displayLongToast(R.string.invalid_aes_key_size);
                     return;
                 }
-                SecretKey secretKey = new SecretKeySpec(keyBytes, 0, keyBytes.length, "AES");
+                SecretKey secretKey = new SecretKeySpec(keyBytes, "AES");
                 try {
                     keyStoreManager.addSecretKey(AES_KEY_ALIAS, secretKey, null, true);
                     AppPref.set(AppPref.PrefKey.PREF_ENCRYPTION_STR, CryptoUtils.MODE_AES);

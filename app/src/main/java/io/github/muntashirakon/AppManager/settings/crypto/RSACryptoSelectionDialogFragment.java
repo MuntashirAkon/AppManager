@@ -46,7 +46,7 @@ public class RSACryptoSelectionDialogFragment extends DialogFragment {
     public static final String TAG = "RSACryptoSelectionDialogFragment";
 
     public static final String EXTRA_ALIAS = "alias";
-    public static final String EXTRA_SHOW_DEFAULT = "show_default";
+    public static final String EXTRA_ALLOW_DEFAULT = "show_default";
 
     public interface OnKeyPairUpdatedListener {
         @UiThread
@@ -60,7 +60,7 @@ public class RSACryptoSelectionDialogFragment extends DialogFragment {
     @Nullable
     private KeyStoreManager keyStoreManager;
     private String targetAlias;
-    private boolean showDefault;
+    private boolean allowDefault;
 
     public void setOnKeyPairUpdatedListener(OnKeyPairUpdatedListener listener) {
         this.listener = listener;
@@ -71,27 +71,27 @@ public class RSACryptoSelectionDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         activity = requireActivity();
         targetAlias = requireArguments().getString(EXTRA_ALIAS);
-        showDefault = requireArguments().getBoolean(EXTRA_SHOW_DEFAULT, false);
+        allowDefault = requireArguments().getBoolean(EXTRA_ALLOW_DEFAULT, false);
         builder = new ScrollableDialogBuilder(activity)
                 .setTitle(R.string.rsa)
-                .setPositiveButton(R.string.pref_import, null)
-                .setNegativeButton(R.string.generate_key, null);
+                .setNegativeButton(R.string.pref_import, null)
+                .setNeutralButton(R.string.generate_key, null);
         new Thread(() -> {
             CharSequence info = getSigningInfo();
             if (isDetached()) return;
             activity.runOnUiThread(() -> builder.setMessage(info));
         }).start();
-        if (showDefault) {
-            builder.setNeutralButton(R.string.use_default, null);
+        if (allowDefault) {
+            builder.setPositiveButton(R.string.use_default, null);
         } else {
-            builder.setNeutralButton(R.string.cancel, null);
+            builder.setPositiveButton(R.string.ok, null);
         }
         AlertDialog alertDialog = builder.create();
         alertDialog.setOnShowListener(dialog -> {
             AlertDialog dialog1 = (AlertDialog) dialog;
+            Button defaultOrOkButton = dialog1.getButton(AlertDialog.BUTTON_POSITIVE);
             Button importButton = dialog1.getButton(AlertDialog.BUTTON_POSITIVE);
-            Button generateButton = dialog1.getButton(AlertDialog.BUTTON_NEGATIVE);
-            Button defaultButton = dialog1.getButton(AlertDialog.BUTTON_NEUTRAL);
+            Button generateButton = dialog1.getButton(AlertDialog.BUTTON_NEUTRAL);
             importButton.setOnClickListener(v -> {
                 KeyPairImporterDialogFragment fragment = new KeyPairImporterDialogFragment();
                 Bundle args = new Bundle();
@@ -107,12 +107,13 @@ public class RSACryptoSelectionDialogFragment extends DialogFragment {
                         addKeyPair(password, keyPair)).start());
                 fragment.show(getParentFragmentManager(), KeyPairGeneratorDialogFragment.TAG);
             });
-            if (!showDefault) return;
-            defaultButton.setOnClickListener(v -> new Thread(() -> {
+            defaultOrOkButton.setOnClickListener(v -> new Thread(() -> {
                 try {
-                    keyStoreManager = KeyStoreManager.getInstance();
-                    if (keyStoreManager.containsKey(targetAlias)) {
-                        keyStoreManager.removeItem(targetAlias);
+                    if (allowDefault) {
+                        keyStoreManager = KeyStoreManager.getInstance();
+                        if (keyStoreManager.containsKey(targetAlias)) {
+                            keyStoreManager.removeItem(targetAlias);
+                        }
                     }
                     if (isDetached()) return;
                     activity.runOnUiThread(() -> UIUtils.displayShortToast(R.string.done));
@@ -138,7 +139,7 @@ public class RSACryptoSelectionDialogFragment extends DialogFragment {
                 return getString(R.string.failed_to_load_key);
             }
         }
-        return getString(showDefault ? R.string.default_key_used : R.string.key_not_set);
+        return getString(allowDefault ? R.string.default_key_used : R.string.key_not_set);
     }
 
     @AnyThread

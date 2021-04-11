@@ -22,13 +22,12 @@ import android.content.Context;
 import android.content.pm.IPackageManager;
 import android.sun.security.provider.JavaKeyStoreProvider;
 
+import androidx.annotation.NonNull;
 import androidx.room.Room;
+
 import com.topjohnwu.superuser.Shell;
 import com.yariksoffice.lingver.Lingver;
 
-import androidx.annotation.NonNull;
-
-import java.security.Provider;
 import java.security.Security;
 
 import io.github.muntashirakon.AppManager.db.AMDatabase;

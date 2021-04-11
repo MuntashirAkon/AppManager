@@ -67,7 +67,7 @@ import io.github.muntashirakon.AppManager.utils.Utils;
 public class KeyStoreManager {
     public static final String TAG = "KSManager";
 
-    private static final String AM_KEYSTORE = KeyStore.getDefaultType();
+    private static final String AM_KEYSTORE = "BKS";  // KeyStore.getDefaultType() == JKS
     private static final String AM_KEYSTORE_FILE_NAME = "am_keystore.bks";  // Java KeyStore
     private static final String PREF_AM_KEYSTORE_PREFIX = "ks_";
     private static final String PREF_AM_KEYSTORE_PASS = "kspass";

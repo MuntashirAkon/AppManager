@@ -71,7 +71,7 @@ public class ApkSigningPreferences extends PreferenceFragmentCompat {
             RSACryptoSelectionDialogFragment fragment = new RSACryptoSelectionDialogFragment();
             Bundle args = new Bundle();
             args.putString(RSACryptoSelectionDialogFragment.EXTRA_ALIAS, Signer.SIGNING_KEY_ALIAS);
-            args.putBoolean(RSACryptoSelectionDialogFragment.EXTRA_SHOW_DEFAULT, true);
+            args.putBoolean(RSACryptoSelectionDialogFragment.EXTRA_ALLOW_DEFAULT, true);
             fragment.setArguments(args);
             fragment.setOnKeyPairUpdatedListener((keyPair, certificateBytes) -> {
                 if (keyPair != null && certificateBytes != null) {

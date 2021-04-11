@@ -31,6 +31,7 @@ import io.github.muntashirakon.AppManager.crypto.Crypto;
 import io.github.muntashirakon.AppManager.crypto.CryptoException;
 import io.github.muntashirakon.AppManager.crypto.DummyCrypto;
 import io.github.muntashirakon.AppManager.crypto.OpenPGPCrypto;
+import io.github.muntashirakon.AppManager.crypto.RSACrypto;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 
 public class CryptoUtils {
@@ -70,6 +71,8 @@ public class CryptoUtils {
                 return OpenPGPCrypto.GPG_EXT;
             case MODE_AES:
                 return AESCrypto.AES_EXT;
+            case MODE_RSA:
+                return RSACrypto.RSA_EXT;
             case MODE_NO_ENCRYPTION:
             default:
                 return "";
@@ -83,6 +86,12 @@ public class CryptoUtils {
                 return new OpenPGPCrypto(metadata.keyIds);
             case MODE_AES:
                 return new AESCrypto(metadata.iv);
+            case MODE_RSA:
+                RSACrypto rsaCrypto = new RSACrypto(metadata.iv, metadata.aes);
+                if (metadata.aes == null) {
+                    metadata.aes = rsaCrypto.getEncryptedAesKey();
+                }
+                return rsaCrypto;
             case MODE_NO_ENCRYPTION:
             default:
                 // Dummy crypto to generalise and return nonNull

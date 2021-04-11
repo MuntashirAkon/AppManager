@@ -82,6 +82,7 @@ public final class MetadataManager {
         @CryptoUtils.Mode
         public String crypto;  // crypto
         public byte[] iv;  // iv
+        public byte[] aes;  // aes (encrypted using RSA, for RSA only)
         public String keyIds;  // key_ids
         public int version = 3;  // version
         public String apkName;  // apk_name
@@ -189,8 +190,10 @@ public final class MetadataManager {
             case CryptoUtils.MODE_OPEN_PGP:
                 this.metadata.keyIds = rootObj.getString("key_ids");
                 break;
-            case CryptoUtils.MODE_AES:
             case CryptoUtils.MODE_RSA:
+                this.metadata.aes = HexEncoding.decode(rootObj.getString("aes"));
+                // Deliberate fallthrough
+            case CryptoUtils.MODE_AES:
                 this.metadata.iv = HexEncoding.decode(rootObj.getString("iv"));
                 break;
             case CryptoUtils.MODE_NO_ENCRYPTION:
@@ -219,6 +222,7 @@ public final class MetadataManager {
             rootObject.put("crypto", metadata.crypto);
             rootObject.put("key_ids", metadata.keyIds);
             rootObject.put("iv", metadata.iv == null ? null : HexEncoding.encodeToString(metadata.iv));
+            rootObject.put("aes", metadata.aes == null ? null : HexEncoding.encodeToString(metadata.aes));
             rootObject.put("version", metadata.version);
             rootObject.put("apk_name", metadata.apkName);
             rootObject.put("instruction_set", metadata.instructionSet);

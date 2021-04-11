@@ -21,6 +21,7 @@ import android.os.RemoteException;
 
 import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
 import java.io.File;
@@ -41,6 +42,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.security.auth.DestroyFailedException;
 
+import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager;
 import io.github.muntashirakon.AppManager.crypto.ks.SecretKeyCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -62,24 +64,57 @@ public class AESCrypto implements Crypto {
     private final byte[] iv;
     private final SecretKey secretKey;
     private final Cipher cipher;
+    @CryptoUtils.Mode
+    private final String parentMode;
     private final List<File> newFiles = new ArrayList<>();
 
-    public AESCrypto(byte[] iv) throws CryptoException {
+    public AESCrypto(@NonNull byte[] iv) throws CryptoException {
+        this(iv, CryptoUtils.MODE_AES, null);
+    }
+
+    protected AESCrypto(@NonNull byte[] iv, @NonNull @CryptoUtils.Mode String mode, @Nullable byte[] encryptedAesKey)
+            throws CryptoException {
         this.iv = iv;
-        try {
-            KeyStoreManager keyStoreManager = KeyStoreManager.getInstance();
-            this.secretKey = keyStoreManager.getSecretKey(AES_KEY_ALIAS, null);
-            if (this.secretKey == null) {
-                throw new CryptoException("No SecretKey with alias " + AES_KEY_ALIAS);
+        this.parentMode = mode;
+        if (parentMode.equals(CryptoUtils.MODE_AES)) {
+            try {
+                KeyStoreManager keyStoreManager = KeyStoreManager.getInstance();
+                this.secretKey = keyStoreManager.getSecretKey(AES_KEY_ALIAS, null);
+                if (this.secretKey == null) {
+                    throw new CryptoException("No SecretKey with alias " + AES_KEY_ALIAS);
+                }
+            } catch (Exception e) {
+                throw new CryptoException(e);
             }
-        } catch (Exception e) {
-            throw new CryptoException(e);
+        } else if (parentMode.equals(CryptoUtils.MODE_RSA)) {
+            // Hybrid encryption using RSA
+            if (encryptedAesKey == null) {
+                // No encryption key provided, generate one
+                this.secretKey = RSACrypto.generateAesKey();
+            } else {
+                // Encryption key provided
+                this.secretKey = RSACrypto.decryptAesKey(encryptedAesKey);
+            }
+        } else {
+            throw new CryptoException("Unsupported mode " + parentMode);
         }
         try {
             this.cipher = Cipher.getInstance(AES_GCM_CIPHER_TYPE);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
             throw new CryptoException(e);
         }
+    }
+
+    @Nullable
+    protected byte[] getEncryptedAesKey() {
+        try {
+            if (parentMode.equals(CryptoUtils.MODE_RSA)) {
+                return RSACrypto.encryptAesKey(secretKey);
+            }
+        } catch (CryptoException e) {
+            Log.e(TAG, e);
+        }
+        return null;
     }
 
     @WorkerThread
@@ -130,12 +165,14 @@ public class AESCrypto implements Crypto {
                 Log.e(TAG, "Error initializing cipher", e);
                 return false;
             }
+            // Get desired extension
+            String ext = CryptoUtils.getExtension(parentMode);
             // Encrypt/decrypt files
             for (File file : files) {
                 File outputFilename;
                 if (mode == Cipher.DECRYPT_MODE) {
-                    outputFilename = new ProxyFile(file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf(AES_EXT)));
-                } else outputFilename = new ProxyFile(file.getAbsolutePath() + AES_EXT);
+                    outputFilename = new ProxyFile(file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf(ext)));
+                } else outputFilename = new ProxyFile(file.getAbsolutePath() + ext);
                 newFiles.add(outputFilename);
                 Log.i(TAG, "Input: " + file + "\nOutput: " + outputFilename);
                 try (InputStream is = new ProxyInputStream(file);
