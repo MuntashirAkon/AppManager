@@ -259,7 +259,7 @@
     <string name="task_affinity">Afinitas Tugas</string>
     <string name="only_works_in_root_mode">Hanya bekerja pada mode root</string>
     <string name="app_settings">Pengaturan</string>
-    <string name="pref_usage_access_enabled_msg">Memungkinkan anda untuk melihat info statistik dan data aplikasi.</string>
+    <string name="pref_usage_access_enabled_msg">Menampilkan informasi data aplikasi dan -statistik penggunaan.</string>
     <string name="pref_usage_access_enabled">Akses pemakaian</string>
     <string name="pref_global_blocking_enabled_msg">Memungkinkan anda untuk memblokir komponen apapun tanpa harus menghidupkan pemblokir untuk aplikasi.</string>
     <string name="backup_restore">Cadangkan/Pulihkan</string>
@@ -294,8 +294,8 @@
     <string name="sort_by_disabled_app">Dinonaktifkan Pertama</string>
     <string name="exodus_link">Link εxodus</string>
     <string name="usage_yesterday">Kemarin</string>
-    <string name="pref_global_blocking_enabled">Komponen Penghalang Global</string>
-    <string name="app_op_cannot_be_disabled">Aplikasi ini tidak bisa dinonaktifkan, kemungkinan aplikasi read-only atau bergantung pada aplikasi lain.</string>
+    <string name="pref_global_blocking_enabled">Pemblokiran komponen secara instan</string>
+    <string name="app_op_cannot_be_disabled">Aplikasi ini tidak dapat dinonaktifkan. (Kemungkinan sebuah operasi aplikasi hanya-baca atau bergantung pada aplikasi lain.)</string>
     <string name="toggle_kill_for_system_apps">Hidupkan Penghentikan aplikasi sistem</string>
     <plurals name="alert_failed_to_force_stop">
         <item quantity="other">Tak dapat memaksa penghentikan aplikasi %1$d</item>
@@ -318,7 +318,7 @@
     <string name="disable_background">Nonaktifkan Latar Belakang</string>
     <string name="user_and_uid">Pengguna:<xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
     <string name="external_multiple_data_dir">Penyimpanan Data Eksternal<xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
-    <string name="sort_by_tracker_components">Pelacak terlebih dahulu</string>
+    <string name="sort_by_tracker_components">Pelacak terlebih dulu</string>
     <string name="deny_dangerous_permissions">Tolak izin yang berbahaya</string>
     <string name="sort_by_denied_permissions">Ditolak terlebih dahulu</string>
     <string name="sort_by_dangerous_permissions">Berbahaya terlebih dahulu</string>
@@ -339,7 +339,7 @@
     <string name="running">Berjalan</string>
     <string name="mode">Mode</string>
     <string name="permission_name">Nama Perizinan</string>
-    <string name="backup_external_data_description">Cadangkan folder data eksternal. <b>Data</b> harus dipilih untuk ini agar segera berfungsi.</string>
+    <string name="backup_external_data_description">Cadangkan folder data eksternal.</string>
     <string name="backup_apk_files_description">Cadangkan hanya berkas APK dari direktori sumber. <b>Sumber</b> harus dipilih untuk ini dapat segera berfungsi.</string>
     <string name="no_of_cores">Core</string>
     <string name="input_permissions_description">Masukkan izin dengan spasi, mis. <tt>com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION</tt> dll. Gunakan <tt>*</tt> untuk menetapkan pada semua izin.</string>
@@ -396,20 +396,20 @@
     <string name="clear_data_from_uninstalled_apps_description">Kosongkan data dari aplikasi yang dicopot dengan flag <tt>DONT_DELETE_DATA</tt></string>
     <string name="deny_app_ops_description">Tetapkan mode untuk operasi aplikasi yang diidentifikasi oleh nilai konstan, cont. <tt>63</tt> atau <tt>RUN_IN_BACKGROUND</tt></string>
     <string name="block_components_dots">Blok komponen…</string>
-    <string name="filter_apps_without_backups">Aplikasi tanpa cadangan</string>
+    <string name="filter_apps_without_backups">Tanpa cadangan</string>
     <string name="uninstalled_apps">Aplikasi yang dihapus</string>
-    <string name="installer_app_message">Pilih<b>Opsi</b>untuk memilih dari aplikasi yang diinstal atau pilih <b>Kustom</b> untuk menentukan nama paket khusus.</string>
+    <string name="installer_app_message">Pilih <b>Pilih</b> untuk memilih dari aplikasi yang diinstal atau pilih <b>Kustom</b> untuk menentukan nama paket khusus.</string>
     <string name="specify_custom_name">Kustom</string>
     <string name="verified_using_unreliable_hash">Terverifikasi menggunakan hash yang tidak dapat diandalkan</string>
     <string name="working_on_adb_mode">Bekerja pada mode ADB</string>
-    <string name="screen_lock_not_enabled">Layar kunci tidak diaktifkan. Aktifkan kunci layar di pengaturan android atau data aplikasi yang jelas.</string>
+    <string name="screen_lock_not_enabled">Silahkan pilih sebuah layar kunci di pengaturan Android, atau bersihkan data aplikasi.</string>
     <string name="isolated">Terpencil</string>
     <string name="last_actions">Tindakan terakhir</string>
     <string name="enable_disable_features">Aktifkan/nonaktifkan fitur</string>
     <string name="installed_apps">Aplikasi yang diinstal</string>
-    <string name="restart_to_reflect_changes">Silakan segera restart untuk mencerminkan perubahan</string>
+    <string name="restart_to_reflect_changes">Anda harus memulai ulang/restart perangkat segera untuk menggunakan perubahan terbaru.</string>
     <string name="failed_to_change_ssaid">Tidak dapat mengubah SSAID</string>
-    <string name="ssaid_info">SSAID (<tt>settings.secure.android_id</tt>) adalah pengidentifikasi perangkat yang ditugaskan ke setiap aplikasi (dari Android Oreo). Ini banyak digunakan oleh aplikasi untuk melacak pengguna.</string>
+    <string name="ssaid_info">SSAID (<tt>Settings.Secure.ANDROID_ID</tt>) adalah pengidentifikasi perangkat yang ditugaskan ke setiap aplikasi (dari Android 8 \"Oreo\" keatas). Ini banyak digunakan oleh aplikasi untuk melacak pengguna.</string>
     <string name="ssaid">SSAID</string>
     <string name="list_options">Daftar opsi</string>
     <string name="reverse">Membalikkan</string>
@@ -455,7 +455,7 @@
     <string name="backup_apps_with_changes">Cadangkan aplikasi dengan perubahan</string>
     <string name="redo_existing_backups_msg">Ulangi cadangan untuk aplikasi yang diinstal dengan cadangan sebelumnya.</string>
     <string name="redo_existing_backups">Redo backup yang ada</string>
-    <string name="verify_and_redo_backups_msg">Periksa integritas cadangan sebelumnya dan redo backup di mana pemeriksaan integritas gagal.</string>
+    <string name="verify_and_redo_backups_msg">Periksa integritas dari cadangan sebelumnya dan kembalikan/redo cadangan di mana pemeriksaan integritasnya gagal.</string>
     <string name="verify_and_redo_backups">Verifikasi dan Redo Backups</string>
     <string name="backup_apps_without_backups_msg">Cadangkan aplikasi tanpa cadangan sebelumnya.</string>
     <string name="backup_apps_without_backups">Cadangkan aplikasi tanpa cadangan</string>
@@ -470,7 +470,7 @@
     <string name="pref_backup_volume_msg">Pilih volume atau disk di mana cadangan akan disimpan.</string>
     <string name="backup_volume">Volume cadangan</string>
     <string name="pref_backup_restore_msg">Kustomisasi cadangan/pemulihan.</string>
-    <string name="disable_background_run_description">Ini mengatur mode <i> Abaikan </i> ke aplikasi ops berikut: <tt>RUN_IN_BACKGROUND</tt> (dari android 7.0) dan <tt>RUN_ANY_IN_BACKGROUD</tt> (dari Android 9).</string>
+    <string name="disable_background_run_description">Mengatur mode <i> Abaikan </i> untuk operasi aplikasi berikut: <tt>RUN_IN_BACKGROUND</tt> (dari Android 7.0) dan <tt>RUN_ANY_IN_BACKGROUD</tt> (dari Android 9).</string>
     <string name="failed_to_enable_magisk_hide">Tidak dapat mengaktifkan Magiskhide</string>
     <string name="enable_magisk_hide">Aktifkan Magiskhide</string>
     <string name="failed_to_disable_magisk_hide">Tidak dapat menonaktifkan Magiskhide</string>
@@ -486,12 +486,12 @@
     <string name="enforcing">Menegakkan</string>
     <string name="selinux">Selinux</string>
     <string name="patch_level">Tingkat tambalan</string>
-    <string name="backup_skip_signature_checks_description">Berguna untuk memulihkan cadangan yang gagal karena kegagalan verifikasi checksum atau memiliki tanda tangan apk yang berbeda dari yang dicadangkan satu.</string>
-    <string name="backup_multiple_description">Gunakan yang terpisah bernama Back up bukannya basis cadangan.</string>
+    <string name="backup_skip_signature_checks_description">Pulihkan cadangan yang gagal dikarenakan kegagalan verifikasi checksum atau memiliki tanda tangan APK yang berbeda dari apa yang telah dicadangkan sebelumnya.</string>
+    <string name="backup_multiple_description">Buat sebuah cadangan terpisah <i>dinamai</i> cadangan daripada cadangan basis.</string>
     <string name="backup_rules_description">Aturan cadangan dikonfigurasi dalam manajer aplikasi.</string>
-    <string name="backup_extras_description">Cadangkan izin aplikasi, hemat baterai, opsi penggunaan data, status majemkhide, dll.</string>
+    <string name="backup_extras_description">Cadangkan izin aplikasi, penghemat baterai dan opsi penggunaan data, status MagiskHide, SSAID, dll.</string>
     <string name="backup_extras">Ekstra</string>
-    <string name="backup_cache_description">Jangan mencadangkan folder cache, no_cache dan no_backup.</string>
+    <string name="backup_cache_description">Cadangkan folder <b>cache</b>, <b>no_cache</b> dan <b>no_backup</b>.</string>
     <string name="backup_obb_media_description">Cadangkan Folder OBB dan Media.</string>
     <string name="backup_internal_data_description">Cadangkan folder data. Jika dipilih, folder data internal akan dicadangkan secara default.</string>
     <string name="set_mode_for_app_ops_dots">Atur Mode untuk Ops Aplikasi …</string>
@@ -506,7 +506,7 @@
     <string name="battery_capacity">Kapasitas</string>
     <string name="memory">Penyimpanan</string>
     <string name="vendor">Penjaja</string>
-    <string name="gles_version">Versi GL ES</string>
+    <string name="gles_version">Versi OpenGL ES</string>
     <string name="support_architectures">Arsitektur yang didukung</string>
     <string name="security_providers">Penyedia Keamanan</string>
     <string name="kernel">Inti</string>
@@ -530,18 +530,18 @@
     <string name="send_edited_intent">Kirim niat yang diedit</string>
     <string name="matching_activities">Kegiatan yang cocok</string>
     <string name="value">Nilai</string>
-    <string name="filter_apps_with_splits">Aplikasi dengan Pembagi</string>
+    <string name="filter_apps_with_splits">Dengan pembagi</string>
     <string name="set_app_op_mode">Atur Mode Op Aplikasi</string>
     <string name="magisk_hide_enabled">Magiskhide</string>
-    <string name="pref_backup_android_keystore_msg">Tidak semua aplikasi akan bekerja setelah pemulihan. Pulihkan keystore tidak berfungsi pada sebagian besar perangkat.</string>
-    <string name="pref_backup_android_keystore">Aplikasi cadangan dengan keystore Android</string>
+    <string name="pref_backup_android_keystore_msg">Tidak semua aplikasi akan bekerja setelah dipulihkan. Memulihkan KeyStore tidak berfungsi pada sebagian besar perangkat.</string>
+    <string name="pref_backup_android_keystore">Cadangkan aplikasi dengan KeyStore Android</string>
     <string name="keep_data_and_signatures">Simpan data dan tanda tangan</string>
     <string name="this_action_cannot_be_undone">Tindakan ini tidak bisa dibatalkan.</string>
     <string name="no_app_ops_permission">Tidak ada izin untuk menampilkan ops aplikasi</string>
     <string name="input_keystore_alias_pass_description">Masukkan kata sandi untuk alias <b>%1$s</b>. Anda dapat meninggalkan ini kosong jika kata sandi sama dengan kata sandi keystore.</string>
     <string name="input_keystore_alias_pass">Kata sandi untuk alias <b>%1$s</b></string>
-    <string name="input_keystore_pass_msg">Ketuk di sini untuk memberikan kata sandi keystore</string>
-    <string name="input_keystore_pass_description">Masukkan kata sandi keystore manager app. Jika Anda melihat ini untuk pertama kalinya, silakan gunakan generator kata sandi untuk menghasilkan kata sandi dan menyimpannya di tempat yang aman sebelum memasukkannya ke sini.</string>
+    <string name="input_keystore_pass_msg">Ketuk di sini untuk memasukkan kata sandi KeyStore</string>
+    <string name="input_keystore_pass_description">Masukkan kata sandi KeyStore App Manager. Jika Anda melihat ini untuk pertama kalinya, silakan gunakan generator kata sandi untuk menghasilkan sebuah kata sandi dan menyimpannya di tempat yang aman sebelum memasukkannya ke sini.</string>
     <string name="input_keystore_pass">Password keystore input</string>
     <string name="splits">Terbagi</string>
     <string name="source_stamp_verified">SourceRamp memverifikasi.</string>
@@ -576,12 +576,12 @@
     <string name="off">Mati</string>
     <string name="on">Di</string>
     <string name="profile_state_msg">Status kustom On/Off untuk profil ini</string>
-    <string name="profile_backup_apk_msg">Jika diaktifkan, file APK akan dicadangkan</string>
-    <string name="profile_block_trackers_msg">Jika diaktifkan, pelacak akan diblokir dari aplikasi</string>
-    <string name="profile_clear_data_msg">Jika diaktifkan, data akan dihapus dari aplikasi</string>
-    <string name="profile_clear_cache_msg">Jika diaktifkan, cache akan dihapus dari aplikasi</string>
-    <string name="profile_force_stop_msg">Jika diaktifkan, aplikasi akan berhenti paksa</string>
-    <string name="profile_disable_msg">Jika diaktifkan, aplikasi akan dinonaktifkan/diaktifkan berdasarkan nilai negara</string>
+    <string name="profile_backup_apk_msg">Cadangkan berkas APK</string>
+    <string name="profile_block_trackers_msg">Blokir pelacak dalam aplikasi</string>
+    <string name="profile_clear_data_msg">Bersihkan data dari aplikasi</string>
+    <string name="profile_clear_cache_msg">Bersihkan cache aplikasi dari berbagai aplikasi</string>
+    <string name="profile_force_stop_msg">Paksa-berhenti aplikasi</string>
+    <string name="profile_disable_msg">Nonaktifkan/aktifkan aplikasi berdasarkan status</string>
     <string name="allow_routine_ops_msg">Izinkan profil digunakan dalam operasi rutin</string>
     <string name="profile_state">Status Profil</string>
     <string name="allow_routine_ops">Izinkan oprs rutin</string>
@@ -593,7 +593,7 @@
     <string name="rsa">RSA</string>
     <string name="aes">AES</string>
     <string name="none">Tidak ada</string>
-    <string name="pref_encryption_msg">Tambahkan enkripsi untuk cadangan.</string>
+    <string name="pref_encryption_msg">Enkripsi untuk cadangan.</string>
     <string name="encryption">Enkripsi</string>
     <string name="select_user">Pilih Pengguna</string>
     <string name="pref_show_users_in_installer_msg">Tampilkan daftar pengguna untuk memilih sebelum menginstal aplikasi eksternal. Membutuhkan root atau ADB.</string>
@@ -609,7 +609,7 @@
     <string name="select_apk">Pilih APK</string>
     <string name="send_crash_report">Kirim Laporan Kecelakaan</string>
     <string name="tap_to_submit_crash_report">Ketuk untuk mengirimkan laporan kerusakan.</string>
-    <string name="am_crashed">Aku baru saja menabrak</string>
+    <string name="am_crashed">App Manager baru saja crash</string>
     <string name="filter_running_apps">Aplikasi yang sedang berjalan</string>
     <string name="copy">Salinan</string>
     <string name="view_missing_signatures">Ketuk untuk melihat atau mengirim tanda tangan belum ada di database Perpustakaan App Manager.</string>
@@ -645,15 +645,15 @@
     <string name="issued_date">Tanggal Dikeluarkan</string>
     <string name="issuer">Penerbit</string>
     <string name="subject">Subyek</string>
-    <string name="filter_apps_with_backups">Aplikasi dengan cadangan</string>
-    <string name="sort_by_backup">Cadangan dulu</string>
+    <string name="filter_apps_with_backups">Dengan cadangan</string>
+    <string name="sort_by_backup">Dicaadangkan terlebih dulu</string>
     <string name="failed_to_uninstall_updates">Tidak dapat mencopot pembaruan untuk <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="update_uninstalled_successfully">Pembaruan untuk <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> telah dicopot.</string>
     <string name="uninstall_updates">Copot Pembaruan</string>
-    <string name="allow_open_pgp_operation">Klik untuk mengizinkan App Manager untuk menggunakan OpenPGP</string>
+    <string name="allow_open_pgp_operation">Tekan untuk mengizinkan App Manager menggunakan OpenPGP</string>
     <string name="confirm_installation">Konfirmasi Pemasangan</string>
     <string name="compression_method">Metode kompresi: <xliff:g id="compression_method" example="GZip">%1$s</xliff:g></string>
-    <string name="pref_backup_flags_msg">Menambahkan preset untuk opsi cadangan menghapus beban pemilihan bendera setiap kali Anda mencadangkan / memulihkan.</string>
+    <string name="pref_backup_flags_msg">Menambahkan sebuah preset untuk opsi cadangan akan menghapus beban pemilihan bendera setiap kali Anda cadangkan/pulihkan.</string>
     <string name="rules">Aturan</string>
     <string name="other">Lain</string>
     <string name="changes_not_saved">Perubahan tidak disimpan</string>
@@ -746,7 +746,7 @@
     <string name="operation_running">Operasi berjalan …</string>
     <string name="batch_ops">Operasi batch</string>
     <string name="failed_to_fetch_package_info">Tidak dapat mengambil info paket</string>
-    <string name="installer_error_lidl_rom">ROM Anda tidak kompatibel dengan installer tanpa dasar.</string>
+    <string name="installer_error_lidl_rom">ROM Anda tidak kompatibel dengan instaler Rootless.</string>
     <string name="installer_error_generic">Instalasi gagal</string>
     <string name="installer_error_storage">Tidak cukup ruang penyimpanan untuk menginstal aplikasi</string>
     <string name="installer_error_bad_apks">File APK tidak valid yang dipilih</string>
@@ -754,7 +754,7 @@
     <string name="installer_error_conflict">Tidak dapat memasang aplikasi karena nama paket sedang digunakan</string>
     <string name="installer_error_aborted">Instalasi gagal karena dibatalkan atau sesi ditutup secara tak terduga</string>
     <string name="toggle_default_app_ops">Beralih op aplikasi default</string>
-    <string name="filter_apps_with_activities">Aplikasi dengan kegiatan</string>
+    <string name="filter_apps_with_activities">Dengan aktivitas</string>
     <string name="are_you_sure">Apakah kamu yakin\?</string>
     <string name="pref_remove_all_rules_msg">Izin akan diberikan, Ops aplikasi dan komponen akan kembali ke nilai default mereka.</string>
     <string name="pref_remove_all_rules">Hapus semua aturan</string>
@@ -762,7 +762,7 @@
     <string name="run_in_termux">Jalankan di Termusx</string>
     <string name="open_in_termux">Buka di Termusx</string>
     <string name="export_icon">Ikon ekstrak</string>
-    <string name="no_matching_package_found">Tidak ditemukan paket yang cocok</string>
+    <string name="no_matching_package_found">Tidak ditemukan aplikasi apapun seperti itu</string>
     <string name="block_unblock_trackers">Blok / Buka Blokir Pelacak</string>
     <string name="unblock">Buka blokir</string>
     <string name="block">Blok</string>
@@ -777,7 +777,7 @@
         <item quantity="other">Skema tanda tangan</item>
     </plurals>
     <plurals name="backup_exists_are_you_sure">
-        <item quantity="other">Pencadangan ada. Apakah kamu yakin\?</item>
+        <item quantity="other">Lebih dari satu aplikasi telah memiliki cadangan. Apakah Anda yakin\?</item>
     </plurals>
     <string name="backup_options">Opsi cadangan</string>
     <string name="delete_backup">Hapus cadangan</string>
@@ -817,7 +817,7 @@
     <string name="clear_app_cache">Kosongkan Cache App</string>
     <string name="clear_data_from_uninstalled_apps">Kosongkan data dari aplikasi yang dicopot</string>
     <string name="block_components_description">Memblokir semua komponen yang diidentifikasi oleh tanda tangan yang diberikan</string>
-    <string name="block_unblock_trackers_description">Blok atau buka blokir komponen iklan dan pelacakan dari semua aplikasi yang dipasang</string>
+    <string name="block_unblock_trackers_description">Blokir atau buka blokir iklan dan komponen pelacakan di semua aplikasi yang dipasang</string>
     <string name="clear_cache">Kosongkan Cache</string>
     <string name="pref_import_existing_msg">Tambahkan komponen yang dinonaktifkan oleh aplikasi lain ke App Manager. Hati-hati saat menggunakan alat ini karena ada banyak false-positif. Pilih hanya aplikasi yang Anda pasti.</string>
     <string name="pref_import_existing">Impor aturan yang ada</string>
@@ -851,4 +851,5 @@
     <string name="trackers_disabled_successfully">Pelacak saat ini dinonaktifkan</string>
     <string name="failed_to_disable_trackers">Tidak dapat menonaktifkan pelacak</string>
     <string name="unknown_op">Operasi Tidak Diketahui</string>
+    <string name="internal_data">Data internal</string>
 </resources>
