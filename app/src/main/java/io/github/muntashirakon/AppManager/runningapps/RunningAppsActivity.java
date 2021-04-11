@@ -178,8 +178,8 @@ public class RunningAppsActivity extends BaseActivity implements
             mAdapter.setDefaultList();
             mProgressIndicator.hide();
         });
-        mModel.getSelection().observe(this, count ->
-                mCounterView.setText(getString(R.string.some_items_selected, count)));
+        mModel.getSelection().observe(this, count -> mCounterView.setText(getResources()
+                .getQuantityString(R.plurals.items_selected, count, count)));
     }
 
     @Override

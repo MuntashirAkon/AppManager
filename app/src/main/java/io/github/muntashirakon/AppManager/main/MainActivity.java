@@ -475,7 +475,8 @@ public class MainActivity extends BaseActivity implements
             new Thread(() -> mAdapter.clearSelection()).start();
         } else {
             mBottomAppBar.setVisibility(View.VISIBLE);
-            mBottomAppBarCounter.setText(getString(R.string.some_items_selected, mModel.getSelectedPackages().size()));
+            mBottomAppBarCounter.setText(getResources().getQuantityString(R.plurals.items_selected,
+                    mModel.getSelectedPackages().size(), mModel.getSelectedPackages().size()));
             mMainLayout.setLayoutParams(mLayoutParamsSelection);
         }
     }
