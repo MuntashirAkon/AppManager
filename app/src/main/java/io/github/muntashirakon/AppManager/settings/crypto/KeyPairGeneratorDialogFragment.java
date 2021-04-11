@@ -52,7 +52,7 @@ import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class KeyPairGeneratorDialogFragment extends DialogFragment {
     public static final String TAG = "KeyPairGeneratorDialogFragment";
-    public static final List<Integer> SUPPORTED_RSA_KEY_SIZES = Arrays.asList(1024, 2048, 4096);
+    public static final List<Integer> SUPPORTED_RSA_KEY_SIZES = Arrays.asList(2048, 4096);
 
     public interface OnGenerateListener {
         void onGenerate(@Nullable char[] password, @Nullable KeyPair keyPair);
