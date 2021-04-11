@@ -833,7 +833,7 @@
     <string name="security">Безопасность</string>
     <string name="patch_level">Обновление системы безопасности Андроид</string>
     <string name="backup_skip_signature_checks_description">Восстановление резервных копий, которые либо не прошли проверку контрольных сумм, либо имеют подписи, отличные от предыдущих резервных копий APK.</string>
-    <string name="backup_multiple_description">Создайте отдельную резервную копию <i>с именем</i> вместо базовой.</string>
+    <string name="backup_multiple_description">Создать отдельную резервную копию <i>с именем</i> вместо базовой.</string>
     <string name="backup_rules_description">Резервное копирование правил, настроенных в App Manager.</string>
     <string name="backup_extras_description">Резервное копирование разрешений приложения, экономия батареи, параметры использования данных, статус MagiskHide, SSAID и т.д.</string>
     <string name="backup_extras">Дополнительно</string>
@@ -841,7 +841,7 @@
     <string name="backup_obb_media_description">Резервное копирование OBB и папок с медиафайлами.</string>
     <string name="backup_external_data_description">Резервное копирование внешних папок данных.</string>
     <string name="backup_internal_data_description">Резервное копирование папок с данными. Если выбран этот параметр, по умолчанию будут созданы резервные копии внутренних папок с данными.</string>
-    <string name="backup_apk_files_description">Резервное копирование только файлов APK из исходного каталога. Для этого необходимо выбрать <b>Источник </b>.</string>
+    <string name="backup_apk_files_description">Резервное копирование APK файлов из исходного каталога, включая сплиты.</string>
     <string name="permissive">Permissive</string>
     <string name="enforcing">Enforcing</string>
     <string name="window_size">Размер окна</string>
