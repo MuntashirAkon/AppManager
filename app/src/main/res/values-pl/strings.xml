@@ -841,4 +841,8 @@
     <string name="reverse">Odwrócona</string>
     <string name="sort_by_backup">Najpierw z wykonanymi kopiami</string>
     <string name="pref_backup_flags_msg">Dodanie ustawień wstępnych dla opcji tworzenia kopii zapasowych eliminuje konieczność wybierania flag przy każdym tworzeniu kopii zapasowej/przywracaniu danych.</string>
+    <string name="input_keystore_pass">Wprowadź hasło KeyStore</string>
+    <string name="send_crash_report">Wyślij raport o awarii</string>
+    <string name="tap_to_submit_crash_report">Dotknij, aby przesłać raport o awarii.</string>
+    <string name="filter_running_apps">Uruchomione aplikacje</string>
 </resources>
