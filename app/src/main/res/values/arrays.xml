@@ -154,4 +154,11 @@
         <item>@string/v3_scheme</item>
         <item>@string/v4_scheme</item>
     </string-array>
+    <string-array name="crypto_import_types">
+        <!-- The order must be preserved -->
+        <item>@string/java_keystore</item>
+        <item>@string/bouncy_castle_keystore</item>
+        <item>@string/pkcs12_keystore</item>
+        <item>@string/pem_and_pk8</item>
+    </string-array>
 </resources>

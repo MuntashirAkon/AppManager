@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Muntashir Al-Islam
+ * Copyright (c) 2021 Muntashir Al-Islam
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.muntashirakon.AppManager.settings;
+package io.github.muntashirakon.AppManager.settings.crypto;
 
 import android.app.Dialog;
 import android.app.PendingIntent;

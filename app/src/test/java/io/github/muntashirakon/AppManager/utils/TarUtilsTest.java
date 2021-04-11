@@ -221,7 +221,7 @@ public class TarUtilsTest {
         List<String> fileNames = new ArrayList<>();
         try (SplitInputStream sis = new SplitInputStream(tarFiles);
              BufferedInputStream bis = new BufferedInputStream(sis);
-             GzipCompressorInputStream gis = new GzipCompressorInputStream(bis);
+             GzipCompressorInputStream gis = new GzipCompressorInputStream(bis, true);
              TarArchiveInputStream tis = new TarArchiveInputStream(gis)) {
             ArchiveEntry entry;
             while ((entry = tis.getNextEntry()) != null) {

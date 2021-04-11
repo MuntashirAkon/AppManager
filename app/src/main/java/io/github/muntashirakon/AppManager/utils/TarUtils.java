@@ -149,9 +149,9 @@ public final class TarUtils {
              BufferedInputStream bis = new BufferedInputStream(sis)) {
             InputStream is;
             if (TAR_GZIP.equals(type)) {
-                is = new GzipCompressorInputStream(bis);
+                is = new GzipCompressorInputStream(bis, true);
             } else if (TAR_BZIP2.equals(type)) {
-                is = new BZip2CompressorInputStream(bis);
+                is = new BZip2CompressorInputStream(bis, true);
             } else {
                 throw new IllegalArgumentException("Invalid compression type: " + type);
             }

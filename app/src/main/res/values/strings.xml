@@ -14,7 +14,7 @@
   ~
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  --><resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="_lang_tag" translatable="false">en</string>
     <string name="uninstall">Uninstall</string>
     <string name="permissions">Uses permissions</string>
@@ -748,7 +748,6 @@
     <string name="pref_sign_apk">Sign APK</string>
     <string name="pref_sign_apk_msg">Sign APK files before installing them.</string>
     <string name="signature_schemes">Signature schemes</string>
-    <string name="signing_keys">Signing keys</string>
     <string name="apk_signing">APK signing</string>
     <string name="pref_apk_signing_msg">Set signature schemes, custom signing key, etc.</string>
     <string name="v1_scheme">v1 scheme (since Android 1.0)</string>
@@ -765,6 +764,7 @@
     <string name="input_keystore_pass_msg">Tap here to enter KeyStore password</string>
     <string name="input_keystore_alias_pass">Password for alias <b>%1$s</b></string>
     <string name="input_keystore_alias_pass_description">Insert password for the alias <b>%1$s</b>. You can leave this empty if the password is the same as the KeyStore password.</string>
+    <string name="input_keystore_alias_pass_msg">Tap here to provide password for %1$s</string>
     <string name="no_app_ops_permission">No permission to display app ops</string>
     <string name="this_action_cannot_be_undone">This action cannot be undone.</string>
     <string name="keep_data_and_signatures">Keep data and signatures</string>
@@ -913,4 +913,38 @@
     <string name="installer_app_message">Select <b>Choose</b> to choose from the installed apps or select <b>Custom</b> to specify a custom package name.</string>
     <string name="uninstalled_apps">Uninstalled apps</string>
     <string name="filter_apps_without_backups">Without backups</string>
+    <string name="input_key">Input key (in hexadecimal)</string>
+    <string name="generate_key">Generate</string>
+    <string name="failed_to_save_key">Could not save key.</string>
+    <string name="failed_to_initialize_key_store">Could not initialize App Manager keystore.</string>
+    <string name="invalid_aes_key_size">Invalid key size for AES encryption. Key size can be either 128 or 256 bits.</string>
+    <string name="crypto_key_size">Key size</string>
+    <string name="invalid_rsa_key_size">Invalid key size for RSA encryption. Key size can be 1024, 2048 or 4096 bits.</string>
+    <string name="use_default">Use default</string>
+    <string name="key_not_set">Not set.</string>
+    <string name="default_key_used">Default key is used.</string>
+    <string name="failed_to_load_key">Could not load the key.</string>
+    <string name="input_key_password">Key password</string>
+    <string name="common_name">Common name (CN)</string>
+    <string name="organization_unit">Organization unit (OU)</string>
+    <string name="organization_name">Organization name (O)</string>
+    <string name="locality_name">Locality (city) name (L)</string>
+    <string name="state_name">State name (ST)</string>
+    <string name="country_name" tools:ignore="TypographyOther">Country name (C)</string>
+    <string name="keystore_file">KeyStore file</string>
+    <string name="keystore_pass">KeyStore password</string>
+    <string name="java_keystore">Java KeyStore (JKS)</string>
+    <string name="bouncy_castle_keystore">Bouncy Castle KeyStore (BKS)</string>
+    <string name="pkcs12_keystore">PKCS #12 KeyStore (P12)</string>
+    <string name="pem_and_pk8">PEM and PKCS #8 (PK8)</string>
+    <string name="pk8_file">PKCS #8 (PK8) file</string>
+    <string name="pem_file">PEM file</string>
+    <string name="import_key">Import key</string>
+    <string name="new_alias_password">New alias password</string>
+    <string name="found_no_alias_in_keystore">No alias found in the KeyStore!</string>
+    <string name="choose_an_alias">Choose an alias</string>
+    <string name="alias_pass">Alias password</string>
+    <string name="failed_to_read_keystore">Could not read the KeyStore.</string>
+    <string name="signing_key">Signing key</string>
+    <string name="expiry_date_cannot_be_empty">Expiry date cannot be empty.</string>
 </resources>

@@ -29,7 +29,7 @@ import java.io.OutputStream;
  * @since 1.14
  */
 public final class ByteUtils {
-    
+
     /**
      * Empty array.
      *
@@ -187,7 +187,7 @@ public final class ByteUtils {
      * @throws IOException if writing fails
      */
     public static void toLittleEndian(final OutputStream out, final long value, final int length)
-        throws IOException {
+            throws IOException {
         // somewhat duplicates the ByteConsumer version in order to save the creation of a wrapper object
         long num = value;
         for (int i = 0; i < length; i++) {
@@ -205,7 +205,7 @@ public final class ByteUtils {
      * @throws IOException if writing fails
      */
     public static void toLittleEndian(final ByteConsumer consumer, final long value, final int length)
-        throws IOException {
+            throws IOException {
         long num = value;
         for (int i = 0; i < length; i++) {
             consumer.accept((int) (num & 0xff));
@@ -222,7 +222,7 @@ public final class ByteUtils {
      * @throws IOException if writing fails
      */
     public static void toLittleEndian(final DataOutput out, final long value, final int length)
-        throws IOException {
+            throws IOException {
         // somewhat duplicates the ByteConsumer version in order to save the creation of a wrapper object
         long num = value;
         for (int i = 0; i < length; i++) {

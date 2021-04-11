@@ -33,10 +33,17 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Parcel;
+import android.text.GetChars;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.view.View;
 import android.view.WindowManager;
+
+import androidx.annotation.CheckResult;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.core.content.pm.PermissionInfoCompat;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -44,6 +51,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
@@ -66,11 +75,6 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
-import androidx.annotation.CheckResult;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
-import androidx.core.content.pm.PermissionInfoCompat;
 import aosp.libcore.util.HexEncoding;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
@@ -512,22 +516,6 @@ public class Utils {
         return HexEncoding.encodeToString(bytes, false /* lowercase */);
     }
 
-    /**
-     * Decodes a hex string.
-     * <p>
-     * Note that this function does <em>NOT</em> convert a hexadecimal number to a
-     * binary number.
-     *
-     * @param hex Hexadecimal representation of data.
-     * @return The byte[] representation of the given data.
-     * @throws NumberFormatException If the hexadecimal input string is of odd
-     *                               length or invalid hexadecimal string.
-     */
-    @NonNull
-    public static byte[] hexToBytes(@NonNull String hex) throws NumberFormatException {
-        return HexEncoding.decode(hex);
-    }
-
     @NonNull
     public static byte[] longToBytes(long l) {
         byte[] result = new byte[8];
@@ -545,6 +533,15 @@ public class Utils {
         byte[] bytes = Arrays.copyOf(byteBuffer.array(), byteBuffer.limit());
         clearBytes(byteBuffer.array());
         return bytes;
+    }
+
+    @Nullable
+    public static char[] getChars(@Nullable GetChars getChars) {
+        if (TextUtils.isEmpty(getChars)) return null;
+        @SuppressWarnings("ConstantConditions")
+        char[] chars = new char[getChars.length()];
+        getChars.getChars(0, chars.length, chars, 0);
+        return chars;
     }
 
     @CheckResult
@@ -571,15 +568,14 @@ public class Utils {
         if (signatures == null) return new Pair<>("", "");
         String name = "";
         String algoName = "";
-        try {
-            for (Signature sg : signatures) {
-                c = (X509Certificate) CertificateFactory.getInstance("X.509")
-                        .generateCertificate(new ByteArrayInputStream(sg.toByteArray()));
+        for (Signature sg : signatures) {
+            try (InputStream is = new ByteArrayInputStream(sg.toByteArray())) {
+                c = (X509Certificate) CertificateFactory.getInstance("X.509").generateCertificate(is);
                 name = c.getIssuerX500Principal().getName();
                 algoName = c.getSigAlgName();
                 break;
+            } catch (IOException | CertificateException ignore) {
             }
-        } catch (CertificateException ignored) {
         }
         return new Pair<>(name, algoName);
     }

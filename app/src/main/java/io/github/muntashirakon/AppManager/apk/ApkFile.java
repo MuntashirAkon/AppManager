@@ -60,7 +60,7 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.apk.signing.SigSchemes;
-import io.github.muntashirakon.AppManager.apk.signing.SignUtils;
+import io.github.muntashirakon.AppManager.apk.signing.Signer;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -669,13 +669,13 @@ public final class ApkFile implements AutoCloseable {
             signedFile = IOUtils.getTempFile();
             SigSchemes sigSchemes = SigSchemes.fromPref();
             try {
-                SignUtils signUtils = SignUtils.getInstance(sigSchemes, context);
-                if (signUtils.isV4SchemeEnabled()) {
+                Signer signer = Signer.getInstance(sigSchemes, context);
+                if (signer.isV4SchemeEnabled()) {
                     idsigFile = IOUtils.getTempFile();
-                    signUtils.setIdsigFile(idsigFile);
+                    signer.setIdsigFile(idsigFile);
                 }
-                if (signUtils.sign(realFile, signedFile, -1)) {
-                    if (SignUtils.verify(sigSchemes, signedFile, idsigFile)) {
+                if (signer.sign(realFile, signedFile, -1)) {
+                    if (Signer.verify(sigSchemes, signedFile, idsigFile)) {
                         return signedFile;
                     }
                 }

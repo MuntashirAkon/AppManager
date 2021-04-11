@@ -20,24 +20,32 @@ package io.github.muntashirakon.AppManager.settings;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.collection.ArrayMap;
+import androidx.fragment.app.DialogFragment;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
+
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
+import io.github.muntashirakon.AppManager.crypto.RSACrypto;
+import io.github.muntashirakon.AppManager.settings.crypto.AESCryptoSelectionDialogFragment;
+import io.github.muntashirakon.AppManager.settings.crypto.OpenPgpKeySelectionDialogFragment;
+import io.github.muntashirakon.AppManager.settings.crypto.RSACryptoSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.StorageUtils;
 import io.github.muntashirakon.io.ProxyFile;
-
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
@@ -48,7 +56,7 @@ public class BackupRestorePreferences extends PreferenceFragmentCompat {
             R.string.none,
             R.string.aes,
             R.string.rsa,
-            R.string.ecc,
+            /* R.string.ecc, // TODO(01/04/21): Implement ECC */
             R.string.open_pgp_provider
     };
 
@@ -116,15 +124,35 @@ public class BackupRestorePreferences extends PreferenceFragmentCompat {
                             case CryptoUtils.MODE_NO_ENCRYPTION:
                                 AppPref.set(AppPref.PrefKey.PREF_ENCRYPTION_STR, encryptionMode);
                                 break;
-                            case CryptoUtils.MODE_AES:
-                            case CryptoUtils.MODE_RSA:
-                            case CryptoUtils.MODE_ECC:
-                                // TODO(12/11/20): Implement encryption options
+                            case CryptoUtils.MODE_AES: {
+                                DialogFragment fragment = new AESCryptoSelectionDialogFragment();
+                                fragment.show(getParentFragmentManager(), AESCryptoSelectionDialogFragment.TAG);
+                                break;
+                            }
+                            case CryptoUtils.MODE_RSA: {
+                                RSACryptoSelectionDialogFragment fragment = new RSACryptoSelectionDialogFragment();
+                                Bundle args = new Bundle();
+                                args.putString(RSACryptoSelectionDialogFragment.EXTRA_ALIAS, RSACrypto.RSA_KEY_ALIAS);
+                                args.putBoolean(RSACryptoSelectionDialogFragment.EXTRA_ALLOW_DEFAULT, false);
+                                fragment.setArguments(args);
+                                fragment.setOnKeyPairUpdatedListener((keyPair, certificateBytes) -> {
+                                    if (keyPair != null) {
+                                        AppPref.set(AppPref.PrefKey.PREF_ENCRYPTION_STR, CryptoUtils.MODE_RSA);
+                                    }
+                                });
+                                fragment.show(getParentFragmentManager(), RSACryptoSelectionDialogFragment.TAG);
+                                break;
+                            }
+                            case CryptoUtils.MODE_ECC: {
+                                // TODO(01/04/21): Implement ECC
                                 Toast.makeText(activity, "Not implemented yet.", Toast.LENGTH_SHORT).show();
                                 break;
-                            case CryptoUtils.MODE_OPEN_PGP:
+                            }
+                            case CryptoUtils.MODE_OPEN_PGP: {
                                 AppPref.set(AppPref.PrefKey.PREF_ENCRYPTION_STR, encryptionMode);
-                                new OpenPgpKeySelectionDialogFragment().show(getParentFragmentManager(), OpenPgpKeySelectionDialogFragment.TAG);
+                                DialogFragment fragment = new OpenPgpKeySelectionDialogFragment();
+                                fragment.show(getParentFragmentManager(), OpenPgpKeySelectionDialogFragment.TAG);
+                            }
                         }
                     })
                     .setPositiveButton(R.string.ok, null)

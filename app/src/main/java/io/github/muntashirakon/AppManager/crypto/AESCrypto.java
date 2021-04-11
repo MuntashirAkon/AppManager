@@ -19,17 +19,18 @@ package io.github.muntashirakon.AppManager.crypto;
 
 import android.os.RemoteException;
 
+import androidx.annotation.AnyThread;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableEntryException;
-import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,9 +42,9 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.security.auth.DestroyFailedException;
 
-import androidx.annotation.AnyThread;
-import androidx.annotation.NonNull;
-import androidx.annotation.WorkerThread;
+import io.github.muntashirakon.AppManager.backup.CryptoUtils;
+import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager;
+import io.github.muntashirakon.AppManager.crypto.ks.SecretKeyCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.io.ProxyFile;
@@ -55,8 +56,7 @@ public class AESCrypto implements Crypto {
 
     public static final String AES_EXT = ".aes";
 
-    public static final String ANDROID_KEY_STORE = "AndroidKeyStore";
-    public static final String AES_KEY_ALIAS = "aes";
+    public static final String AES_KEY_ALIAS = "backup_aes";
 
     private static final String AES_GCM_CIPHER_TYPE = "AES/GCM/NoPadding";
     public static final int GCM_IV_LENGTH = 12; // in bytes
@@ -64,22 +64,57 @@ public class AESCrypto implements Crypto {
     private final byte[] iv;
     private final SecretKey secretKey;
     private final Cipher cipher;
+    @CryptoUtils.Mode
+    private final String parentMode;
     private final List<File> newFiles = new ArrayList<>();
 
-    public AESCrypto(byte[] iv) throws CryptoException {
+    public AESCrypto(@NonNull byte[] iv) throws CryptoException {
+        this(iv, CryptoUtils.MODE_AES, null);
+    }
+
+    protected AESCrypto(@NonNull byte[] iv, @NonNull @CryptoUtils.Mode String mode, @Nullable byte[] encryptedAesKey)
+            throws CryptoException {
         this.iv = iv;
-        try {
-            KeyStore ks = KeyStore.getInstance(ANDROID_KEY_STORE);
-            ks.load(null);
-            this.secretKey = (SecretKey) ks.getKey(AES_KEY_ALIAS, null);
-        } catch (KeyStoreException | CertificateException | NoSuchAlgorithmException | IOException | UnrecoverableEntryException e) {
-            throw new CryptoException(e);
+        this.parentMode = mode;
+        if (parentMode.equals(CryptoUtils.MODE_AES)) {
+            try {
+                KeyStoreManager keyStoreManager = KeyStoreManager.getInstance();
+                this.secretKey = keyStoreManager.getSecretKey(AES_KEY_ALIAS, null);
+                if (this.secretKey == null) {
+                    throw new CryptoException("No SecretKey with alias " + AES_KEY_ALIAS);
+                }
+            } catch (Exception e) {
+                throw new CryptoException(e);
+            }
+        } else if (parentMode.equals(CryptoUtils.MODE_RSA)) {
+            // Hybrid encryption using RSA
+            if (encryptedAesKey == null) {
+                // No encryption key provided, generate one
+                this.secretKey = RSACrypto.generateAesKey();
+            } else {
+                // Encryption key provided
+                this.secretKey = RSACrypto.decryptAesKey(encryptedAesKey);
+            }
+        } else {
+            throw new CryptoException("Unsupported mode " + parentMode);
         }
         try {
             this.cipher = Cipher.getInstance(AES_GCM_CIPHER_TYPE);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
             throw new CryptoException(e);
         }
+    }
+
+    @Nullable
+    protected byte[] getEncryptedAesKey() {
+        try {
+            if (parentMode.equals(CryptoUtils.MODE_RSA)) {
+                return RSACrypto.encryptAesKey(secretKey);
+            }
+        } catch (CryptoException e) {
+            Log.e(TAG, e);
+        }
+        return null;
     }
 
     @WorkerThread
@@ -111,8 +146,8 @@ public class AESCrypto implements Crypto {
             throws IOException, InvalidAlgorithmParameterException, InvalidKeyException {
         // Init cipher
         GCMParameterSpec spec = new GCMParameterSpec(secretKey.getEncoded().length, iv);
-        // Convert encrypted stream to unencrypted stream
         cipher.init(Cipher.DECRYPT_MODE, secretKey, spec);
+        // Convert encrypted stream to unencrypted stream
         try (InputStream cipherIS = new CipherInputStream(encryptedStream, cipher)) {
             IOUtils.copy(cipherIS, unencryptedStream);
         }
@@ -120,6 +155,7 @@ public class AESCrypto implements Crypto {
 
     @WorkerThread
     private boolean handleFiles(int mode, @NonNull File[] files) {
+        newFiles.clear();
         if (files.length > 0) {  // files is never null here
             // Init cipher
             try {
@@ -129,24 +165,26 @@ public class AESCrypto implements Crypto {
                 Log.e(TAG, "Error initializing cipher", e);
                 return false;
             }
+            // Get desired extension
+            String ext = CryptoUtils.getExtension(parentMode);
             // Encrypt/decrypt files
             for (File file : files) {
                 File outputFilename;
                 if (mode == Cipher.DECRYPT_MODE) {
-                    outputFilename = new ProxyFile(file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf(AES_EXT)));
-                } else outputFilename = new ProxyFile(file.getAbsolutePath() + AES_EXT);
+                    outputFilename = new ProxyFile(file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf(ext)));
+                } else outputFilename = new ProxyFile(file.getAbsolutePath() + ext);
                 newFiles.add(outputFilename);
                 Log.i(TAG, "Input: " + file + "\nOutput: " + outputFilename);
                 try (InputStream is = new ProxyInputStream(file);
                      OutputStream os = new ProxyOutputStream(outputFilename)) {
                     if (mode == Cipher.ENCRYPT_MODE) {
-                        OutputStream cipherOS = new CipherOutputStream(os, cipher);
-                        IOUtils.copy(is, os);
-                        cipherOS.close();
+                        try (OutputStream cipherOS = new CipherOutputStream(os, cipher)) {
+                            IOUtils.copy(is, cipherOS);
+                        }
                     } else {  // Cipher.DECRYPT_MODE
-                        InputStream cipherIS = new CipherInputStream(is, cipher);
-                        IOUtils.copy(cipherIS, os);
-                        cipherIS.close();
+                        try (InputStream cipherIS = new CipherInputStream(is, cipher)) {
+                            IOUtils.copy(cipherIS, os);
+                        }
                     }
                 } catch (IOException | RemoteException e) {
                     Log.e(TAG, "Error: " + e.toString(), e);
@@ -177,7 +215,7 @@ public class AESCrypto implements Crypto {
     @Override
     public void close() {
         try {
-            secretKey.destroy();
+            SecretKeyCompat.destroy(secretKey);
         } catch (DestroyFailedException e) {
             e.printStackTrace();
         }

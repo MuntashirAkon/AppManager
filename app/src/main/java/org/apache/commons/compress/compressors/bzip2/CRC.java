@@ -21,6 +21,7 @@ package org.apache.commons.compress.compressors.bzip2;
 /**
  * A simple class the hold and calculate the CRC for sanity checking of the
  * data.
+ *
  * @NotThreadSafe
  */
 class CRC {
@@ -89,46 +90,46 @@ class CRC {
             0x9abc8bd5, 0x9e7d9662, 0x933eb0bb, 0x97ffad0c,
             0xafb010b1, 0xab710d06, 0xa6322bdf, 0xa2f33668,
             0xbcb4666d, 0xb8757bda, 0xb5365d03, 0xb1f740b4
-        };
+    };
 
-        CRC() {
-            initialiseCRC();
+    CRC() {
+        initializeCRC();
+    }
+
+    void initializeCRC() {
+        globalCrc = 0xffffffff;
+    }
+
+    int getFinalCRC() {
+        return ~globalCrc;
+    }
+
+    int getGlobalCRC() {
+        return globalCrc;
+    }
+
+    void setGlobalCRC(final int newCrc) {
+        globalCrc = newCrc;
+    }
+
+    void updateCRC(final int inCh) {
+        int temp = (globalCrc >> 24) ^ inCh;
+        if (temp < 0) {
+            temp = 256 + temp;
         }
+        globalCrc = (globalCrc << 8) ^ CRC.crc32Table[temp];
+    }
 
-        void initialiseCRC() {
-            globalCrc = 0xffffffff;
+    void updateCRC(final int inCh, int repeat) {
+        int globalCrcShadow = this.globalCrc;
+        while (repeat-- > 0) {
+            final int temp = (globalCrcShadow >> 24) ^ inCh;
+            globalCrcShadow = (globalCrcShadow << 8) ^ crc32Table[(temp >= 0)
+                    ? temp
+                    : (temp + 256)];
         }
+        this.globalCrc = globalCrcShadow;
+    }
 
-        int getFinalCRC() {
-            return ~globalCrc;
-        }
-
-        int getGlobalCRC() {
-            return globalCrc;
-        }
-
-        void setGlobalCRC(final int newCrc) {
-            globalCrc = newCrc;
-        }
-
-        void updateCRC(final int inCh) {
-            int temp = (globalCrc >> 24) ^ inCh;
-            if (temp < 0) {
-                temp = 256 + temp;
-            }
-            globalCrc = (globalCrc << 8) ^ CRC.crc32Table[temp];
-        }
-
-        void updateCRC(final int inCh, int repeat) {
-            int globalCrcShadow = this.globalCrc;
-            while (repeat-- > 0) {
-                final int temp = (globalCrcShadow >> 24) ^ inCh;
-                globalCrcShadow = (globalCrcShadow << 8) ^ crc32Table[(temp >= 0)
-                                                          ? temp
-                                                          : (temp + 256)];
-            }
-            this.globalCrc = globalCrcShadow;
-        }
-
-        private int globalCrc;
+    private int globalCrc;
 }

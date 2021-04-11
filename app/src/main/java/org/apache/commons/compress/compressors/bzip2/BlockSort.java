@@ -118,8 +118,8 @@ class BlockSort {
     private static final int FALLBACK_QSORT_STACK_SIZE = 100;
 
     private static final int STACK_SIZE =
-        QSORT_STACK_SIZE < FALLBACK_QSORT_STACK_SIZE
-        ? FALLBACK_QSORT_STACK_SIZE : QSORT_STACK_SIZE;
+            QSORT_STACK_SIZE < FALLBACK_QSORT_STACK_SIZE
+                    ? FALLBACK_QSORT_STACK_SIZE : QSORT_STACK_SIZE;
 
     /*
      * Used when sorting. If too many long comparisons happen, we stop sorting,
@@ -197,12 +197,12 @@ class BlockSort {
         }
     }
 
-/*---------------------------------------------*/
+    /*---------------------------------------------*/
 
-/*---------------------------------------------*/
-/*--- LBZ2: Fallback O(N log(N)^2) sorting        ---*/
-/*--- algorithm, for repetitive blocks      ---*/
-/*---------------------------------------------*/
+    /*---------------------------------------------*/
+    /*--- LBZ2: Fallback O(N log(N)^2) sorting        ---*/
+    /*--- algorithm, for repetitive blocks      ---*/
+    /*---------------------------------------------*/
 
     /*
      * This is the fallback sorting algorithm libbzip2 1.0.6 uses for
@@ -441,7 +441,7 @@ class BlockSort {
     }
 
 
-/*---------------------------------------------*/
+    /*---------------------------------------------*/
 
     private int[] eclass;
 
@@ -572,7 +572,7 @@ class BlockSort {
         }
     }
 
-/*---------------------------------------------*/
+    /*---------------------------------------------*/
 
     /*
      * LBZ2: Knuth's increments seem to work better than Incerpi-Sedgewick here.
@@ -580,8 +580,8 @@ class BlockSort {
      * &lt;= 20.
      */
     private static final int[] INCS = { 1, 4, 13, 40, 121, 364, 1093, 3280,
-                                        9841, 29524, 88573, 265720, 797161,
-                                        2391484 };
+            9841, 29524, 88573, 265720, 797161,
+            2391484 };
 
     /**
      * This is the most hammered method of this class.
@@ -666,7 +666,6 @@ class BlockSort {
                                                 int x = lastShadow;
                                                 X: while (x > 0) {
                                                     x -= 4;
-
                                                     if (block[i1 + 1] == block[i2 + 1]) {
                                                         if (quadrant[i1] == quadrant[i2]) {
                                                             if (block[i1 + 2] == block[i2 + 2]) {
@@ -683,46 +682,46 @@ class BlockSort {
                                                                                     }
                                                                                     workDoneShadow++;
                                                                                     continue X;
-                                                                                } else if ((quadrant[i1 + 3] > quadrant[i2 + 3])) {
-                                                                                    continue HAMMER;
-                                                                                } else {
-                                                                                    break HAMMER;
                                                                                 }
-                                                                            } else if ((block[i1 + 4] & 0xff) > (block[i2 + 4] & 0xff)) {
-                                                                                continue HAMMER;
-                                                                            } else {
+                                                                                if ((quadrant[i1 + 3] > quadrant[i2 + 3])) {
+                                                                                    continue HAMMER;
+                                                                                }
                                                                                 break HAMMER;
                                                                             }
-                                                                        } else if ((quadrant[i1 + 2] > quadrant[i2 + 2])) {
-                                                                            continue HAMMER;
-                                                                        } else {
+                                                                            if ((block[i1 + 4] & 0xff) > (block[i2 + 4] & 0xff)) {
+                                                                                continue HAMMER;
+                                                                            }
                                                                             break HAMMER;
                                                                         }
-                                                                    } else if ((block[i1 + 3] & 0xff) > (block[i2 + 3] & 0xff)) {
-                                                                        continue HAMMER;
-                                                                    } else {
+                                                                        if ((quadrant[i1 + 2] > quadrant[i2 + 2])) {
+                                                                            continue HAMMER;
+                                                                        }
                                                                         break HAMMER;
                                                                     }
-                                                                } else if ((quadrant[i1 + 1] > quadrant[i2 + 1])) {
-                                                                    continue HAMMER;
-                                                                } else {
+                                                                    if ((block[i1 + 3] & 0xff) > (block[i2 + 3] & 0xff)) {
+                                                                        continue HAMMER;
+                                                                    }
                                                                     break HAMMER;
                                                                 }
-                                                            } else if ((block[i1 + 2] & 0xff) > (block[i2 + 2] & 0xff)) {
-                                                                continue HAMMER;
-                                                            } else {
+                                                                if ((quadrant[i1 + 1] > quadrant[i2 + 1])) {
+                                                                    continue HAMMER;
+                                                                }
                                                                 break HAMMER;
                                                             }
-                                                        } else if ((quadrant[i1] > quadrant[i2])) {
-                                                            continue HAMMER;
-                                                        } else {
+                                                            if ((block[i1 + 2] & 0xff) > (block[i2 + 2] & 0xff)) {
+                                                                continue HAMMER;
+                                                            }
                                                             break HAMMER;
                                                         }
-                                                    } else if ((block[i1 + 1] & 0xff) > (block[i2 + 1] & 0xff)) {
-                                                        continue HAMMER;
-                                                    } else {
+                                                        if ((quadrant[i1] > quadrant[i2])) {
+                                                            continue HAMMER;
+                                                        }
                                                         break HAMMER;
                                                     }
+                                                    if ((block[i1 + 1] & 0xff) > (block[i2 + 1] & 0xff)) {
+                                                        continue HAMMER;
+                                                    }
+                                                    break HAMMER;
 
                                                 }
                                                 break HAMMER;
@@ -731,31 +730,31 @@ class BlockSort {
                                                 continue HAMMER;
                                             }
                                             break HAMMER;
-                                        } else if ((block[i1 + 5] & 0xff) > (block[i2 + 5] & 0xff)) {
-                                            continue HAMMER;
-                                        } else {
-                                            break HAMMER;
                                         }
-                                    } else if ((block[i1 + 4] & 0xff) > (block[i2 + 4] & 0xff)) {
-                                        continue HAMMER;
-                                    } else {
+                                        if ((block[i1 + 5] & 0xff) > (block[i2 + 5] & 0xff)) {
+                                            continue HAMMER;
+                                        }
                                         break HAMMER;
                                     }
-                                } else if ((block[i1 + 3] & 0xff) > (block[i2 + 3] & 0xff)) {
-                                    continue HAMMER;
-                                } else {
+                                    if ((block[i1 + 4] & 0xff) > (block[i2 + 4] & 0xff)) {
+                                        continue HAMMER;
+                                    }
                                     break HAMMER;
                                 }
-                            } else if ((block[i1 + 2] & 0xff) > (block[i2 + 2] & 0xff)) {
-                                continue HAMMER;
-                            } else {
+                                if ((block[i1 + 3] & 0xff) > (block[i2 + 3] & 0xff)) {
+                                    continue HAMMER;
+                                }
                                 break HAMMER;
                             }
-                        } else if ((block[i1 + 1] & 0xff) > (block[i2 + 1] & 0xff)) {
-                            continue HAMMER;
-                        } else {
+                            if ((block[i1 + 2] & 0xff) > (block[i2 + 2] & 0xff)) {
+                                continue HAMMER;
+                            }
                             break HAMMER;
                         }
+                        if ((block[i1 + 1] & 0xff) > (block[i2 + 1] & 0xff)) {
+                            continue HAMMER;
+                        }
+                        break HAMMER;
 
                     } // HAMMER
                     // end inline mainGTU
@@ -764,7 +763,7 @@ class BlockSort {
                 }
 
                 if (firstAttemptShadow && (i <= hi)
-                    && (workDoneShadow > workLimitShadow)) {
+                        && (workDoneShadow > workLimitShadow)) {
                     break HP;
                 }
             }
@@ -793,7 +792,7 @@ class BlockSort {
 
     private static byte med3(final byte a, final byte b, final byte c) {
         return (a < b) ? (b < c ? b : a < c ? c : a) : (b > c ? b : a > c ? c
-                                                        : a);
+                : a);
     }
 
     private static final int SMALL_THRESH = 20;
@@ -828,7 +827,7 @@ class BlockSort {
             } else {
                 final int d1 = d + 1;
                 final int med = med3(block[fmap[lo] + d1],
-                                     block[fmap[hi] + d1], block[fmap[(lo + hi) >>> 1] + d1]) & 0xff;
+                        block[fmap[hi] + d1], block[fmap[(lo + hi) >>> 1] + d1]) & 0xff;
 
                 int unLo = lo;
                 int unHi = hi;
@@ -838,7 +837,7 @@ class BlockSort {
                 while (true) {
                     while (unLo <= unHi) {
                         final int n = (block[fmap[unLo] + d1] & 0xff)
-                            - med;
+                                - med;
                         if (n == 0) {
                             final int temp = fmap[unLo];
                             fmap[unLo++] = fmap[ltLo];
@@ -852,7 +851,7 @@ class BlockSort {
 
                     while (unLo <= unHi) {
                         final int n = (block[fmap[unHi] + d1] & 0xff)
-                            - med;
+                                - med;
                         if (n == 0) {
                             final int temp = fmap[unHi];
                             fmap[unHi--] = fmap[gtHi];
@@ -864,13 +863,12 @@ class BlockSort {
                         }
                     }
 
-                    if (unLo <= unHi) {
-                        final int temp = fmap[unLo];
-                        fmap[unLo++] = fmap[unHi];
-                        fmap[unHi--] = temp;
-                    } else {
+                    if (unLo > unHi) {
                         break;
                     }
+                    final int temp = fmap[unLo];
+                    fmap[unLo++] = fmap[unHi];
+                    fmap[unHi--] = temp;
                 }
 
                 if (gtHi < ltLo) {
@@ -879,11 +877,9 @@ class BlockSort {
                     stack_dd[sp] = d1;
                     sp++;
                 } else {
-                    int n = ((ltLo - lo) < (unLo - ltLo)) ? (ltLo - lo)
-                        : (unLo - ltLo);
+                    int n = ((ltLo - lo) < (unLo - ltLo)) ? (ltLo - lo) : (unLo - ltLo);
                     vswap(fmap, lo, unLo - n, n);
-                    int m = ((hi - gtHi) < (gtHi - unHi)) ? (hi - gtHi)
-                        : (gtHi - unHi);
+                    int m = ((hi - gtHi) < (gtHi - unHi)) ? (hi - gtHi) : (gtHi - unHi);
                     vswap(fmap, unLo, hi - m + 1, m);
 
                     n = lo + unLo - ltLo - 1;
@@ -981,7 +977,7 @@ class BlockSort {
                 final int b = h - 1;
                 int j = i;
                 for (int ro = runningOrder[j - h]; (ftab[(ro + 1) << 8] - ftab[ro << 8]) > a; ro = runningOrder[j
-                                                                                                                - h]) {
+                        - h]) {
                     runningOrder[j] = ro;
                     j -= h;
                     if (j <= b) {
@@ -1017,7 +1013,7 @@ class BlockSort {
                     if (hi > lo) {
                         mainQSort3(dataShadow, lo, hi, 2, lastShadow);
                         if (firstAttemptShadow
-                            && (this.workDone > workLimitShadow)) {
+                                && (this.workDone > workLimitShadow)) {
                             return;
                         }
                     }

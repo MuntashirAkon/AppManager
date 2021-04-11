@@ -40,7 +40,7 @@ import org.apache.commons.compress.utils.InputStreamStatistics;
  * @NotThreadSafe
  */
 public class BZip2CompressorInputStream extends CompressorInputStream
-    implements BZip2Constants, InputStreamStatistics {
+        implements BZip2Constants, InputStreamStatistics {
 
     /**
      * Index of the last char in the block, so the block size == last + 1.
@@ -129,7 +129,7 @@ public class BZip2CompressorInputStream extends CompressorInputStream
      */
     public BZip2CompressorInputStream(final InputStream in, final boolean decompressConcatenated) throws IOException {
         this.bin = new BitInputStream(in == System.in ? new CloseShieldFilterInputStream(in) : in,
-            ByteOrder.BIG_ENDIAN);
+                ByteOrder.BIG_ENDIAN);
         this.decompressConcatenated = decompressConcatenated;
 
         init(true);
@@ -153,7 +153,7 @@ public class BZip2CompressorInputStream extends CompressorInputStream
      */
     @Override
     public int read(final byte[] dest, final int offs, final int len)
-        throws IOException {
+            throws IOException {
         if (offs < 0) {
             throw new IndexOutOfBoundsException("offs(" + offs + ") < 0.");
         }
@@ -162,7 +162,7 @@ public class BZip2CompressorInputStream extends CompressorInputStream
         }
         if (offs + len > dest.length) {
             throw new IndexOutOfBoundsException("offs(" + offs + ") + len("
-                                                + len + ") > dest.length(" + dest.length + ").");
+                    + len + ") > dest.length(" + dest.length + ").");
         }
         if (this.bin == null) {
             throw new IOException("Stream closed");
@@ -207,32 +207,32 @@ public class BZip2CompressorInputStream extends CompressorInputStream
 
     private int read0() throws IOException {
         switch (currentState) {
-        case EOF:
-            return -1;
+            case EOF:
+                return -1;
 
-        case START_BLOCK_STATE:
-            return setupBlock();
+            case START_BLOCK_STATE:
+                return setupBlock();
 
-        case RAND_PART_A_STATE:
-            throw new IllegalStateException();
+            case RAND_PART_A_STATE:
+                throw new IllegalStateException();
 
-        case RAND_PART_B_STATE:
-            return setupRandPartB();
+            case RAND_PART_B_STATE:
+                return setupRandPartB();
 
-        case RAND_PART_C_STATE:
-            return setupRandPartC();
+            case RAND_PART_C_STATE:
+                return setupRandPartC();
 
-        case NO_RAND_PART_A_STATE:
-            throw new IllegalStateException();
+            case NO_RAND_PART_A_STATE:
+                throw new IllegalStateException();
 
-        case NO_RAND_PART_B_STATE:
-            return setupNoRandPartB();
+            case NO_RAND_PART_B_STATE:
+                return setupNoRandPartB();
 
-        case NO_RAND_PART_C_STATE:
-            return setupNoRandPartC();
+            case NO_RAND_PART_C_STATE:
+                return setupNoRandPartC();
 
-        default:
-            throw new IllegalStateException();
+            default:
+                throw new IllegalStateException();
         }
     }
 
@@ -308,12 +308,12 @@ public class BZip2CompressorInputStream extends CompressorInputStream
         }
 
         if (magic0 != 0x31 || // '1'
-            magic1 != 0x41 || // ')'
-            magic2 != 0x59 || // 'Y'
-            magic3 != 0x26 || // '&'
-            magic4 != 0x53 || // 'S'
-            magic5 != 0x59 // 'Y'
-            ) {
+                magic1 != 0x41 || // ')'
+                magic2 != 0x59 || // 'Y'
+                magic3 != 0x26 || // '&'
+                magic4 != 0x53 || // 'S'
+                magic5 != 0x59 // 'Y'
+        ) {
             this.currentState = EOF;
             throw new IOException("Bad block header");
         }
@@ -331,7 +331,7 @@ public class BZip2CompressorInputStream extends CompressorInputStream
         // currBlockNo++;
         getAndMoveToFrontDecode();
 
-        this.crc.initialiseCRC();
+        this.crc.initializeCRC();
         this.currentState = START_BLOCK_STATE;
     }
 
@@ -343,14 +343,14 @@ public class BZip2CompressorInputStream extends CompressorInputStream
             // make next blocks readable without error
             // (repair feature, not yet documented, not tested)
             this.computedCombinedCRC = (this.storedCombinedCRC << 1)
-                | (this.storedCombinedCRC >>> 31);
+                    | (this.storedCombinedCRC >>> 31);
             this.computedCombinedCRC ^= this.storedBlockCRC;
 
             throw new IOException("BZip2 CRC error");
         }
 
         this.computedCombinedCRC = (this.computedCombinedCRC << 1)
-            | (this.computedCombinedCRC >>> 31);
+                | (this.computedCombinedCRC >>> 31);
         this.computedCombinedCRC ^= this.computedBlockCRC;
     }
 
@@ -408,7 +408,7 @@ public class BZip2CompressorInputStream extends CompressorInputStream
     }
 
     private static void checkBounds(final int checkVal, final int limitExclusive, final String name)
-        throws IOException {
+            throws IOException {
         if (checkVal < 0) {
             throw new IOException("Corrupted input, " + name + " value negative");
         }
@@ -423,7 +423,7 @@ public class BZip2CompressorInputStream extends CompressorInputStream
     private static void hbCreateDecodeTables(final int[] limit,
                                              final int[] base, final int[] perm, final char[] length,
                                              final int minLen, final int maxLen, final int alphaSize)
-        throws IOException {
+            throws IOException {
         for (int i = minLen, pp = 0; i <= maxLen; i++) {
             for (int j = 0; j < alphaSize; j++) {
                 if (length[j] == i) {
@@ -578,7 +578,7 @@ public class BZip2CompressorInputStream extends CompressorInputStream
                 }
             }
             hbCreateDecodeTables(limit[t], base[t], perm[t], len[t], minLen,
-                                 maxLen, alphaSize);
+                    maxLen, alphaSize);
             minLens[t] = minLen;
         }
     }
@@ -673,12 +673,12 @@ public class BZip2CompressorInputStream extends CompressorInputStream
 
                 if (lastShadow >= limitLast) {
                     throw new IOException("Block overrun while expanding RLE in MTF, "
-                        + lastShadow + " exceeds " + limitLast);
+                            + lastShadow + " exceeds " + limitLast);
                 }
             } else {
                 if (++lastShadow >= limitLast) {
                     throw new IOException("Block overrun in MTF, "
-                        + lastShadow + " exceeds " + limitLast);
+                            + lastShadow + " exceeds " + limitLast);
                 }
                 checkBounds(nextSym, 256 + 1, "nextSym");
 
@@ -837,28 +837,28 @@ public class BZip2CompressorInputStream extends CompressorInputStream
             this.currentState = RAND_PART_A_STATE;
             this.su_count = 1;
             return setupRandPartA();
-        } else if (++this.su_count >= 4) {
-            this.su_z = (char) (this.data.ll8[this.su_tPos] & 0xff);
-            checkBounds(this.su_tPos, this.data.tt.length, "su_tPos");
-            this.su_tPos = this.data.tt[this.su_tPos];
-            if (this.su_rNToGo == 0) {
-                this.su_rNToGo = Rand.rNums(this.su_rTPos) - 1;
-                if (++this.su_rTPos == 512) {
-                    this.su_rTPos = 0;
-                }
-            } else {
-                this.su_rNToGo--;
-            }
-            this.su_j2 = 0;
-            this.currentState = RAND_PART_C_STATE;
-            if (this.su_rNToGo == 1) {
-                this.su_z ^= 1;
-            }
-            return setupRandPartC();
-        } else {
+        }
+        if (++this.su_count < 4) {
             this.currentState = RAND_PART_A_STATE;
             return setupRandPartA();
         }
+        this.su_z = (char) (this.data.ll8[this.su_tPos] & 0xff);
+        checkBounds(this.su_tPos, this.data.tt.length, "su_tPos");
+        this.su_tPos = this.data.tt[this.su_tPos];
+        if (this.su_rNToGo == 0) {
+            this.su_rNToGo = Rand.rNums(this.su_rTPos) - 1;
+            if (++this.su_rTPos == 512) {
+                this.su_rTPos = 0;
+            }
+        } else {
+            this.su_rNToGo--;
+        }
+        this.su_j2 = 0;
+        this.currentState = RAND_PART_C_STATE;
+        if (this.su_rNToGo == 1) {
+            this.su_z ^= 1;
+        }
+        return setupRandPartC();
     }
 
     private int setupRandPartC() throws IOException {
@@ -877,15 +877,15 @@ public class BZip2CompressorInputStream extends CompressorInputStream
         if (this.su_ch2 != this.su_chPrev) {
             this.su_count = 1;
             return setupNoRandPartA();
-        } else if (++this.su_count >= 4) {
+        }
+        if (++this.su_count >= 4) {
             checkBounds(this.su_tPos, this.data.ll8.length, "su_tPos");
             this.su_z = (char) (this.data.ll8[this.su_tPos] & 0xff);
             this.su_tPos = this.data.tt[this.su_tPos];
             this.su_j2 = 0;
             return setupNoRandPartC();
-        } else {
-            return setupNoRandPartA();
         }
+        return setupNoRandPartA();
     }
 
     private int setupNoRandPartC() throws IOException {

@@ -24,7 +24,7 @@ public class GzipCompressorInputStreamTest {
         assert classLoader != null;
         try (ProxyInputStream pis = new ProxyInputStream(new File(classLoader.getResource("AppManager_v2.5.22.apks.tar.gz").getFile()));
              BufferedInputStream bis = new BufferedInputStream(pis);
-             GzipCompressorInputStream gis = new GzipCompressorInputStream(bis);
+             GzipCompressorInputStream gis = new GzipCompressorInputStream(bis, true);
              TarArchiveInputStream tis = new TarArchiveInputStream(gis)) {
             ArchiveEntry entry;
             while ((entry = tis.getNextEntry()) != null) {
@@ -68,7 +68,7 @@ public class GzipCompressorInputStreamTest {
 
         try (SplitInputStream sis = new SplitInputStream(fileList);
              BufferedInputStream bis = new BufferedInputStream(sis);
-             GzipCompressorInputStream gis = new GzipCompressorInputStream(bis);
+             GzipCompressorInputStream gis = new GzipCompressorInputStream(bis, true);
              TarArchiveInputStream tis = new TarArchiveInputStream(gis)) {
             ArchiveEntry entry;
             while ((entry = tis.getNextEntry()) != null) {

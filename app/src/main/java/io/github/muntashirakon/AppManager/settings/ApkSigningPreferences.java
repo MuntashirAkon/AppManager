@@ -19,18 +19,28 @@ package io.github.muntashirakon.AppManager.settings;
 
 import android.os.Bundle;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-
-import java.util.Objects;
-
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
+import java.security.cert.Certificate;
+import java.util.Objects;
+
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.signing.SigSchemes;
+import io.github.muntashirakon.AppManager.apk.signing.Signer;
+import io.github.muntashirakon.AppManager.crypto.ks.KeyPair;
+import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager;
+import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.settings.crypto.RSACryptoSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.DigestUtils;
 
 public class ApkSigningPreferences extends PreferenceFragmentCompat {
-    SettingsActivity activity;
+    public static final String TAG = "ApkSigningPreferences";
+    private SettingsActivity activity;
+    private Preference customSig;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -55,7 +65,50 @@ public class ApkSigningPreferences extends PreferenceFragmentCompat {
                     .show();
             return true;
         });
-        Preference customSig = Objects.requireNonNull(findPreference("signing_keys"));
-        customSig.setEnabled(false);
+        customSig = Objects.requireNonNull(findPreference("signing_keys"));
+        new Thread(this::updateSigningPref).start();
+        customSig.setOnPreferenceClickListener(preference -> {
+            RSACryptoSelectionDialogFragment fragment = new RSACryptoSelectionDialogFragment();
+            Bundle args = new Bundle();
+            args.putString(RSACryptoSelectionDialogFragment.EXTRA_ALIAS, Signer.SIGNING_KEY_ALIAS);
+            args.putBoolean(RSACryptoSelectionDialogFragment.EXTRA_ALLOW_DEFAULT, true);
+            fragment.setArguments(args);
+            fragment.setOnKeyPairUpdatedListener((keyPair, certificateBytes) -> {
+                if (keyPair != null && certificateBytes != null) {
+                    String hash = DigestUtils.getHexDigest(DigestUtils.SHA_256, certificateBytes);
+                    try {
+                        keyPair.destroy();
+                    } catch (Exception ignore) {
+                    }
+                    activity.runOnUiThread(() -> customSig.setSummary(hash));
+                } else {
+                    customSig.setSummary(R.string.key_not_set);
+                }
+            });
+            fragment.show(getParentFragmentManager(), RSACryptoSelectionDialogFragment.TAG);
+            return true;
+        });
+    }
+
+    private void updateSigningPref() {
+        try {
+            KeyStoreManager keyStoreManager = KeyStoreManager.getInstance();
+            if (keyStoreManager.containsKey(Signer.SIGNING_KEY_ALIAS)) {
+                KeyPair keyPair = keyStoreManager.getKeyPair(Signer.SIGNING_KEY_ALIAS, null);
+                if (keyPair != null) {
+                    Certificate certificate = keyPair.getCertificate();
+                    String hash = DigestUtils.getHexDigest(DigestUtils.SHA_256, certificate.getEncoded());
+                    try {
+                        keyPair.destroy();
+                    } catch (Exception ignore) {
+                    }
+                    activity.runOnUiThread(() -> customSig.setSummary(hash));
+                    return;
+                }
+            }
+        } catch (Exception e) {
+            Log.e(TAG, e);
+        }
+        activity.runOnUiThread(() -> customSig.setSummary(R.string.key_not_set));
     }
 }

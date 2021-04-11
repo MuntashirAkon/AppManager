@@ -630,6 +630,7 @@ public class TarArchiveEntry implements ArchiveEntry, TarConstants, EntryStreamO
      * Set this entry's link name.
      *
      * @param link the link name to use.
+     *
      * @since 1.1
      */
     public void setLinkName(final String link) {
@@ -907,8 +908,7 @@ public class TarArchiveEntry implements ArchiveEntry, TarConstants, EntryStreamO
      */
     public void setDevMajor(final int devNo) {
         if (devNo < 0) {
-            throw new IllegalArgumentException("Major device number is out of "
-                    + "range: " + devNo);
+            throw new IllegalArgumentException("Major device number is out of " + "range: " + devNo);
         }
         this.devMajor = devNo;
     }
@@ -932,8 +932,7 @@ public class TarArchiveEntry implements ArchiveEntry, TarConstants, EntryStreamO
      */
     public void setDevMinor(final int devNo) {
         if (devNo < 0) {
-            throw new IllegalArgumentException("Minor device number is out of "
-                    + "range: " + devNo);
+            throw new IllegalArgumentException("Minor device number is out of " + "range: " + devNo);
         }
         this.devMinor = devNo;
     }
@@ -1201,7 +1200,6 @@ public class TarArchiveEntry implements ArchiveEntry, TarConstants, EntryStreamO
 
     /**
      * get named extra PAX header
-     *
      * @param name The full name of an extended PAX header to retrieve
      * @return The value of the header, if any.
      * @since 1.15
@@ -1212,7 +1210,6 @@ public class TarArchiveEntry implements ArchiveEntry, TarConstants, EntryStreamO
 
     /**
      * Update the entry using a map of pax headers.
-     *
      * @param headers
      * @since 1.15
      */
@@ -1228,8 +1225,6 @@ public class TarArchiveEntry implements ArchiveEntry, TarConstants, EntryStreamO
      * process one pax header, using the entries extraPaxHeaders map as source for extra headers
      * used when handling entries for sparse files.
      *
-     * @param key
-     * @param val
      * @since 1.15
      */
     private void processPaxHeader(final String key, final String val) {
@@ -1451,8 +1446,7 @@ public class TarArchiveEntry implements ArchiveEntry, TarConstants, EntryStreamO
      *
      * @param header   The tar entry header buffer to get information from.
      * @param encoding encoding to use for file names
-     * @throws IllegalArgumentException if any of the numeric fields
-     *                                  have an invalid format
+     * @throws IllegalArgumentException if any of the numeric fields have an invalid format
      * @throws IOException              on error
      * @since 1.4
      */
@@ -1476,6 +1470,9 @@ public class TarArchiveEntry implements ArchiveEntry, TarConstants, EntryStreamO
         groupId = (int) parseOctalOrBinary(header, offset, GIDLEN, lenient);
         offset += GIDLEN;
         size = TarUtils.parseOctalOrBinary(header, offset, SIZELEN);
+        if (size < 0) {
+            throw new IOException("broken archive, entry with negative size");
+        }
         offset += SIZELEN;
         modTime = parseOctalOrBinary(header, offset, MODTIMELEN, lenient);
         offset += MODTIMELEN;

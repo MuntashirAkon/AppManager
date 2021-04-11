@@ -137,9 +137,46 @@ public class TextInputDropdownDialogBuilder {
                 dropdownItems, isEnabled);
     }
 
+    public TextInputDropdownDialogBuilder setAuxiliaryInputLabel(CharSequence inputText) {
+        auxiliaryInputLayout.setVisibility(View.VISIBLE);
+        auxiliaryInputLayout.setHint(inputText);
+        return this;
+    }
+
+    public TextInputDropdownDialogBuilder setAuxiliaryInputLabel(@StringRes int inputText) {
+        auxiliaryInputLayout.setVisibility(View.VISIBLE);
+        auxiliaryInputLayout.setHint(inputText);
+        return this;
+    }
+
+    public TextInputDropdownDialogBuilder setAuxiliaryInputHelperText(CharSequence helperText) {
+        auxiliaryInputLayout.setHelperText(helperText);
+        return this;
+    }
+
+    public TextInputDropdownDialogBuilder setAuxiliaryInputHelperText(@StringRes int helperText) {
+        auxiliaryInputLayout.setHelperText(activity.getText(helperText));
+        return this;
+    }
+
+    public TextInputDropdownDialogBuilder setAuxiliaryInputText(CharSequence inputText) {
+        auxiliaryInput.setText(inputText);
+        return this;
+    }
+
+    public TextInputDropdownDialogBuilder setAuxiliaryInputText(@StringRes int inputText) {
+        auxiliaryInput.setText(inputText);
+        return this;
+    }
+
     @Nullable
     public Editable getAuxiliaryInput() {
         return auxiliaryInput.getText();
+    }
+
+    @Nullable
+    public Editable getInputText() {
+        return mainInput.getText();
     }
 
     public TextInputDropdownDialogBuilder setEnable(boolean enable) {
