@@ -42,6 +42,7 @@ import javax.crypto.spec.GCMParameterSpec;
 import javax.security.auth.DestroyFailedException;
 
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager;
+import io.github.muntashirakon.AppManager.crypto.ks.SecretKeyCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.io.ProxyFile;
@@ -110,8 +111,8 @@ public class AESCrypto implements Crypto {
             throws IOException, InvalidAlgorithmParameterException, InvalidKeyException {
         // Init cipher
         GCMParameterSpec spec = new GCMParameterSpec(secretKey.getEncoded().length, iv);
-        // Convert encrypted stream to unencrypted stream
         cipher.init(Cipher.DECRYPT_MODE, secretKey, spec);
+        // Convert encrypted stream to unencrypted stream
         try (InputStream cipherIS = new CipherInputStream(encryptedStream, cipher)) {
             IOUtils.copy(cipherIS, unencryptedStream);
         }
@@ -177,7 +178,7 @@ public class AESCrypto implements Crypto {
     @Override
     public void close() {
         try {
-            secretKey.destroy();
+            SecretKeyCompat.destroy(secretKey);
         } catch (DestroyFailedException e) {
             e.printStackTrace();
         }

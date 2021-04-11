@@ -18,18 +18,13 @@
 package io.github.muntashirakon.AppManager.settings;
 
 import android.os.Bundle;
-import android.widget.Button;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.security.cert.Certificate;
-import java.security.cert.CertificateEncodingException;
-import java.security.cert.X509Certificate;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
@@ -38,24 +33,14 @@ import io.github.muntashirakon.AppManager.apk.signing.Signer;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyPair;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.settings.crypto.KeyPairGeneratorDialogFragment;
-import io.github.muntashirakon.AppManager.settings.crypto.KeyPairImporterDialogFragment;
-import io.github.muntashirakon.AppManager.types.ScrollableDialogBuilder;
+import io.github.muntashirakon.AppManager.settings.crypto.RSACryptoSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
-import io.github.muntashirakon.AppManager.utils.PackageUtils;
-import io.github.muntashirakon.AppManager.utils.UIUtils;
-import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class ApkSigningPreferences extends PreferenceFragmentCompat {
     public static final String TAG = "ApkSigningPreferences";
     private SettingsActivity activity;
-    @Nullable
-    private KeyStoreManager keyStoreManager;
-    @Nullable
-    private Certificate certificate;
     private Preference customSig;
-    private ScrollableDialogBuilder builder;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -83,92 +68,35 @@ public class ApkSigningPreferences extends PreferenceFragmentCompat {
         customSig = Objects.requireNonNull(findPreference("signing_keys"));
         new Thread(this::updateSigningPref).start();
         customSig.setOnPreferenceClickListener(preference -> {
-            builder = new ScrollableDialogBuilder(activity)
-                    .setTitle(R.string.signing_keys)
-                    .setPositiveButton(R.string.pref_import, null)
-                    .setNegativeButton(R.string.generate_key, null)
-                    .setNeutralButton(R.string.use_default, null)
-                    .setMessage(getSigningInfo());
-            AlertDialog alertDialog = builder.create();
-            alertDialog.setOnShowListener(dialog -> {
-                AlertDialog dialog1 = (AlertDialog) dialog;
-                Button importButton = dialog1.getButton(AlertDialog.BUTTON_POSITIVE);
-                Button generateButton = dialog1.getButton(AlertDialog.BUTTON_NEGATIVE);
-                Button defaultButton = dialog1.getButton(AlertDialog.BUTTON_NEUTRAL);
-                importButton.setOnClickListener(v -> {
-                    KeyPairImporterDialogFragment fragment = new KeyPairImporterDialogFragment();
-                    Bundle args = new Bundle();
-                    args.putString(KeyPairImporterDialogFragment.EXTRA_ALIAS, Signer.SIGNING_KEY_ALIAS);
-                    fragment.setArguments(args);
-                    fragment.setOnKeySelectedListener((password, keyPair) -> new Thread(() ->
-                            new Thread(() -> addKeyPair(password, keyPair)).start()).start());
-                    fragment.show(getParentFragmentManager(), KeyPairImporterDialogFragment.TAG);
-                });
-                generateButton.setOnClickListener(v -> {
-                    KeyPairGeneratorDialogFragment fragment = new KeyPairGeneratorDialogFragment();
-                    fragment.setOnGenerateListener((password, keyPair) -> new Thread(() ->
-                            addKeyPair(password, keyPair)).start());
-                    fragment.show(getParentFragmentManager(), KeyPairGeneratorDialogFragment.TAG);
-                });
-                defaultButton.setOnClickListener(v -> new Thread(() -> {
+            RSACryptoSelectionDialogFragment fragment = new RSACryptoSelectionDialogFragment();
+            Bundle args = new Bundle();
+            args.putString(RSACryptoSelectionDialogFragment.EXTRA_ALIAS, Signer.SIGNING_KEY_ALIAS);
+            args.putBoolean(RSACryptoSelectionDialogFragment.EXTRA_SHOW_DEFAULT, true);
+            fragment.setArguments(args);
+            fragment.setOnKeyPairUpdatedListener((keyPair, certificateBytes) -> {
+                if (keyPair != null && certificateBytes != null) {
+                    String hash = DigestUtils.getHexDigest(DigestUtils.SHA_256, certificateBytes);
                     try {
-                        keyStoreManager = KeyStoreManager.getInstance();
-                        if (keyStoreManager.containsKey(Signer.SIGNING_KEY_ALIAS)) {
-                            keyStoreManager.removeItem(Signer.SIGNING_KEY_ALIAS);
-                        }
-                        if (isDetached()) return;
-                        activity.runOnUiThread(() -> UIUtils.displayShortToast(R.string.done));
-                        updateSigningPref();
-                    } catch (Exception e) {
-                        Log.e(TAG, e);
-                        activity.runOnUiThread(() -> UIUtils.displayLongToast(R.string.failed_to_save_key));
-                    } finally {
-                        alertDialog.dismiss();
+                        keyPair.destroy();
+                    } catch (Exception ignore) {
                     }
-                }).start());
+                    activity.runOnUiThread(() -> customSig.setSummary(hash));
+                } else {
+                    customSig.setSummary(R.string.key_not_set);
+                }
             });
-            alertDialog.show();
+            fragment.show(getParentFragmentManager(), RSACryptoSelectionDialogFragment.TAG);
             return true;
         });
     }
 
-    public CharSequence getSigningInfo() {
-        if (certificate != null) {
-            try {
-                return PackageUtils.getSigningCertificateInfo(activity, (X509Certificate) certificate);
-            } catch (CertificateEncodingException e) {
-                return getString(R.string.failed_to_load_signing_key);
-            }
-        }
-        return getString(R.string.default_signing_key_used);
-    }
-
-    private void addKeyPair(@Nullable char[] password, @Nullable KeyPair keyPair) {
+    private void updateSigningPref() {
         try {
-            if (keyPair == null) {
-                throw new Exception("Keypair can't be null.");
-            }
-            keyStoreManager = KeyStoreManager.getInstance();
-            keyStoreManager.addKeyPair(Signer.SIGNING_KEY_ALIAS, keyPair, password, true);
-            if (password != null) Utils.clearChars(password);
-            if (isDetached()) return;
-            activity.runOnUiThread(() -> UIUtils.displayShortToast(R.string.done));
-            updateSigningPref();
-            activity.runOnUiThread(() -> builder.setMessage(getSigningInfo()));
-        } catch (Exception e) {
-            Log.e(TAG, e);
-            activity.runOnUiThread(() -> UIUtils.displayLongToast(R.string.failed_to_save_key));
-        }
-    }
-
-    public void updateSigningPref() {
-        try {
-            keyStoreManager = KeyStoreManager.getInstance();
-            certificate = null;
+            KeyStoreManager keyStoreManager = KeyStoreManager.getInstance();
             if (keyStoreManager.containsKey(Signer.SIGNING_KEY_ALIAS)) {
                 KeyPair keyPair = keyStoreManager.getKeyPair(Signer.SIGNING_KEY_ALIAS, null);
                 if (keyPair != null) {
-                    certificate = keyPair.getCertificate();
+                    Certificate certificate = keyPair.getCertificate();
                     String hash = DigestUtils.getHexDigest(DigestUtils.SHA_256, certificate.getEncoded());
                     try {
                         keyPair.destroy();
@@ -181,6 +109,6 @@ public class ApkSigningPreferences extends PreferenceFragmentCompat {
         } catch (Exception e) {
             Log.e(TAG, e);
         }
-        activity.runOnUiThread(() -> customSig.setSummary(R.string.signing_key_not_set));
+        activity.runOnUiThread(() -> customSig.setSummary(R.string.key_not_set));
     }
 }

@@ -42,6 +42,7 @@ import aosp.libcore.util.HexEncoding;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager;
+import io.github.muntashirakon.AppManager.crypto.ks.SecretKeyCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
 import io.github.muntashirakon.AppManager.types.TextInputDropdownDialogBuilder;
@@ -106,7 +107,7 @@ public class AESCryptoSelectionDialogFragment extends DialogFragment {
                 }
                 Utils.clearBytes(keyBytes);
                 try {
-                    secretKey.destroy();
+                    SecretKeyCompat.destroy(secretKey);
                 } catch (DestroyFailedException e) {
                     Log.e(TAG, e);
                 }
@@ -141,7 +142,7 @@ public class AESCryptoSelectionDialogFragment extends DialogFragment {
                 if (secretKey != null) {
                     keyChars = HexEncoding.encode(secretKey.getEncoded());
                     try {
-                        secretKey.destroy();
+                        SecretKeyCompat.destroy(secretKey);
                     } catch (Exception ex) {
                         Log.e(TAG, ex);
                     }

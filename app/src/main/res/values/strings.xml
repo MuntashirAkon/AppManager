@@ -747,7 +747,6 @@
     <string name="pref_sign_apk">Sign APK</string>
     <string name="pref_sign_apk_msg">Sign APK files before installing them.</string>
     <string name="signature_schemes">Signature schemes</string>
-    <string name="signing_keys">Signing keys</string>
     <string name="apk_signing">APK signing</string>
     <string name="pref_apk_signing_msg">Set signature schemes, custom signing key, etc.</string>
     <string name="v1_scheme">v1 scheme (since Android 1.0)</string>
@@ -922,9 +921,9 @@
     <string name="crypto_key_size">Key size</string>
     <string name="invalid_rsa_key_size">Invalid key size for RSA encryption. Key size can be 1024, 2048 or 4096 bits.</string>
     <string name="use_default">Use default</string>
-    <string name="signing_key_not_set">Not set.</string>
-    <string name="default_signing_key_used">Default signing key is used.</string>
-    <string name="failed_to_load_signing_key">Could not load the signing key.</string>
+    <string name="key_not_set">Not set.</string>
+    <string name="default_key_used">Default key is used.</string>
+    <string name="failed_to_load_key">Could not load the key.</string>
     <string name="input_key_password">Key password</string>
     <string name="common_name">Common name (CN)</string>
     <string name="organization_unit">Organization unit (OU)</string>
@@ -946,5 +945,6 @@
     <string name="choose_an_alias">Choose an alias</string>
     <string name="alias_pass">Alias password</string>
     <string name="failed_to_read_keystore">Could not read the KeyStore.</string>
-    <string name="aes_unavailable">No strong AES encryption support is present before Android M.</string>
+    <string name="signing_key">Signing key</string>
+    <string name="expiry_date_cannot_be_empty">Expiry date cannot be empty.</string>
 </resources>

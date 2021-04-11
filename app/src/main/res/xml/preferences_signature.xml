@@ -27,7 +27,7 @@
 
     <Preference
         app:key="signing_keys"
-        app:title="@string/signing_keys"
+        app:title="@string/signing_key"
         tools:summary="Using generic keys." />
 
 </PreferenceScreen>

@@ -17,7 +17,6 @@
 
 package io.github.muntashirakon.AppManager.settings;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.widget.Toast;
@@ -32,6 +31,9 @@ import androidx.preference.SwitchPreferenceCompat;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
@@ -41,11 +43,7 @@ import io.github.muntashirakon.AppManager.settings.crypto.OpenPgpKeySelectionDia
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.StorageUtils;
-import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.io.ProxyFile;
-
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
@@ -125,11 +123,6 @@ public class BackupRestorePreferences extends PreferenceFragmentCompat {
                                 AppPref.set(AppPref.PrefKey.PREF_ENCRYPTION_STR, encryptionMode);
                                 break;
                             case CryptoUtils.MODE_AES: {
-                                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                                    // AES/GCM/NoPadding is not available before SDK 23
-                                    UIUtils.displayLongToast(R.string.aes_unavailable);
-                                    break;
-                                }
                                 DialogFragment fragment = new AESCryptoSelectionDialogFragment();
                                 fragment.show(getParentFragmentManager(), AESCryptoSelectionDialogFragment.TAG);
                                 break;
