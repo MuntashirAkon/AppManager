@@ -549,7 +549,7 @@
     <string name="installer_error_session_write">Could not write to the installer session</string>
     <string name="installer_error_session_commit">Could not commit the APK files</string>
     <string name="installer_error_session_abandon">Could not abandon the installer session</string>
-    <string name="backup_apk_files">APK only</string>
+    <string name="backup_apk_files">APK files</string>
     <string name="backup_obb_media">OBB and Media</string>
     <string name="failed_to_extract_obb_files">Could not extract OBB files</string>
     <string name="obb_files_extracted_successfully">OBB files extracted</string>
