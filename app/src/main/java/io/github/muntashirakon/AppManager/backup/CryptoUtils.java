@@ -26,12 +26,15 @@ import java.security.SecureRandom;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.StringDef;
+import androidx.annotation.WorkerThread;
+
 import io.github.muntashirakon.AppManager.crypto.AESCrypto;
 import io.github.muntashirakon.AppManager.crypto.Crypto;
 import io.github.muntashirakon.AppManager.crypto.CryptoException;
 import io.github.muntashirakon.AppManager.crypto.DummyCrypto;
 import io.github.muntashirakon.AppManager.crypto.OpenPGPCrypto;
 import io.github.muntashirakon.AppManager.crypto.RSACrypto;
+import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 
 public class CryptoUtils {
@@ -55,13 +58,8 @@ public class CryptoUtils {
     @Mode
     public static String getMode() {
         String currentMode = (String) AppPref.get(AppPref.PrefKey.PREF_ENCRYPTION_STR);
-        if (MODE_OPEN_PGP.equals(currentMode)) {
-            String keyIds = (String) AppPref.get(AppPref.PrefKey.PREF_OPEN_PGP_USER_ID_STR);
-            if (!TextUtils.isEmpty(keyIds)) {
-                // FIXME(1/10/20): Check for the availability of the provider
-                return MODE_OPEN_PGP;
-            }
-        } else return currentMode;
+        if (isAvailable(currentMode)) return currentMode;
+        // Fallback to no encryption if none of the modes are available.
         return MODE_NO_ENCRYPTION;
     }
 
@@ -79,6 +77,7 @@ public class CryptoUtils {
         }
     }
 
+    @WorkerThread
     @NonNull
     public static Crypto getCrypto(@NonNull MetadataManager.Metadata metadata) throws CryptoException {
         switch (metadata.crypto) {
@@ -99,6 +98,7 @@ public class CryptoUtils {
         }
     }
 
+    @WorkerThread
     public static void setupCrypto(@NonNull MetadataManager.Metadata metadata) {
         switch (metadata.crypto) {
             case MODE_OPEN_PGP:
@@ -115,18 +115,29 @@ public class CryptoUtils {
         }
     }
 
+    @WorkerThread
     public static boolean isAvailable(@NonNull @Mode String mode) {
         switch (mode) {
             case MODE_OPEN_PGP:
                 String keyIds = (String) AppPref.get(AppPref.PrefKey.PREF_OPEN_PGP_USER_ID_STR);
                 // FIXME(1/10/20): Check for the availability of the provider
                 return !TextUtils.isEmpty(keyIds);
-            // Others are available
             case MODE_AES:
+                try {
+                    return KeyStoreManager.getInstance().containsKey(AESCrypto.AES_KEY_ALIAS);
+                } catch (Exception e) {
+                    return false;
+                }
             case MODE_RSA:
+                try {
+                    return KeyStoreManager.getInstance().containsKey(RSACrypto.RSA_KEY_ALIAS);
+                } catch (Exception e) {
+                    return false;
+                }
             case MODE_NO_ENCRYPTION:
-            default:
                 return true;
+            default:
+                return false;
         }
     }
 }
