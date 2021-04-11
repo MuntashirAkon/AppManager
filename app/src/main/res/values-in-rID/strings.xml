@@ -51,7 +51,7 @@
     <string name="data_usage_msg">Penggunaan data</string>
     <string name="data_transmitted">Data ditransmisikan</string>
     <string name="data_received">Data diterima</string>
-    <string name="sort_by_domain">App pengguna lebih dulu</string>
+    <string name="sort_by_domain">App pengguna terlebih dulu</string>
     <string name="sort_by_package_name">Nama paket</string>
     <string name="sort_by_app_label">Label App</string>
     <string name="loading">Memuat…</string>
@@ -65,7 +65,7 @@
     <string name="shared_user_id">ID pengguna yang dibagikan</string>
     <string name="sort_by_shared_user_id">ID pengguna yang dibagikan</string>
     <string name="no_feature">Tidak ada fitur</string>
-    <string name="gles_ver">Membutuhkan versi GL ES</string>
+    <string name="gles_ver">Memerlukan versi OpenGL ES</string>
     <string name="uses_feature">Menggunakan fitur</string>
     <string name="protection_level">Tingkat proteksi</string>
     <string name="declared_permission">Perizinan</string>
