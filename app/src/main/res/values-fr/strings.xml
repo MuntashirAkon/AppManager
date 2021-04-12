@@ -625,7 +625,7 @@
     <string name="pref_global_blocking_enabled">Blocage global de composant</string>
     <string name="failed_to_disable_op">Impossible de désactiver l\'autorisation demandée</string>
     <string name="failed_to_enable_op">Impossible d\'activer l\'autorisation demandée</string>
-    <string name="gles_ver">Version GL ES Requise</string>
+    <string name="gles_ver">Version OpenGL ES req.</string>
     <string name="ago">il y a</string>
     <string name="reject_time">Temps de re</string>
     <string name="accept_time">Temps d\'acceptation</string>
@@ -697,4 +697,6 @@
     <string name="about_device">À propos de l\'appareil</string>
     <string name="toggle_kill_for_system_apps">Activer/désactiver l\'arrêt forcé des applications système</string>
     <string name="app_ops">Opérations de l\'appli</string>
+    <string name="internal_data">Données internes</string>
+    <string name="requested_large_heap">Grand tas</string>
 </resources>
