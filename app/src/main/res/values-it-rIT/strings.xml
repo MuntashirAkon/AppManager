@@ -86,7 +86,7 @@
     <string name="failed_to_disable_op">Impossibile disattivare l\'operazione app richiesta</string>
     <string name="failed_to_enable_op">Impossibile attivare l\'operazione app richiesta</string>
     <string name="no_app_ops">Nessuna operazione app</string>
-    <string name="app_ops">Operazioni App</string>
+    <string name="app_ops">Operazioni dell\'app</string>
     <string name="total_size">Totale</string>
     <string name="failed_to_stop">Impossibile fermare <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="failed_to_enable">Impossibile attivare <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
