@@ -618,7 +618,7 @@
     <string name="system">Système</string>
     <string name="app_not_installed">Application non installée</string>
     <string name="media_size">Média</string>
-    <string name="app_op_cannot_be_disabled">Cette autorisation ne peut pas être désactivée, probablement parce-qu\'elle est en lecture seule et dépend d\'une autre autorisation.</string>
+    <string name="app_op_cannot_be_disabled">Cette application ne peut pas être désactivée. (Il est possible qu\'une application en lecture seule dépende d\'une autre).</string>
     <string name="external_data_dir">Répertoire de données externes</string>
     <string name="dev_protected_data_dir">Répertoire de données protégé par l\'appareil</string>
     <string name="pref_global_blocking_enabled_msg">Permet de bloquer tout composant d\'une application sans la bloquer directement.</string>
@@ -687,4 +687,14 @@
     <string name="install_location">Emplacement de l\'installation</string>
     <string name="install_location_internal_only">Uniquement interne</string>
     <string name="resend_intent">Renvoyer l\'Intent</string>
+    <string name="value">Valeur</string>
+    <string name="mime_type">Type MIME</string>
+    <string name="action">Action</string>
+    <string name="result_code">Code de résultat</string>
+    <string name="activity_result">Résultat de l\'activité</string>
+    <string name="uri">URI</string>
+    <string name="share">Partager</string>
+    <string name="about_device">À propos de l\'appareil</string>
+    <string name="toggle_kill_for_system_apps">Activer/désactiver l\'arrêt forcé des applications système</string>
+    <string name="app_ops">Opérations de l\'appli</string>
 </resources>
