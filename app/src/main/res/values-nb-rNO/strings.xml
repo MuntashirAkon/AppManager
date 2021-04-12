@@ -641,7 +641,7 @@
     <string name="toggle_kill_for_system_apps">Aktiver eller deaktiver tvungen avslutning av system-apper</string>
     <plurals name="alert_failed_to_disable_background">
         <item quantity="one">"Kunne ikke hindre %1$d  app fra å kjøre i bakgrunnen"</item>
-        <item quantity="other">"Kunne ikke hindre %1$d  apper fra å kjøre i bakgrunnen"</item>
+        <item quantity="other">Kunne ikke hindre %1$d programmer fra å kjøre i bakgrunnen</item>
     </plurals>
     <string name="pref_usage_access_enabled_msg">Lar deg se statistikk om bruk av app og info om app-data.</string>
 </resources>
