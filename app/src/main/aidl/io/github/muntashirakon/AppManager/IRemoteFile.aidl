@@ -17,6 +17,9 @@
 
 package io.github.muntashirakon.AppManager;
 
+import io.github.muntashirakon.AppManager.IRemoteFileReader;
+import io.github.muntashirakon.AppManager.IRemoteFileWriter;
+
 interface IRemoteFile {
     // Only list the methods that are absolutely necessary
     boolean isAbsolute();
@@ -62,9 +65,6 @@ interface IRemoteFile {
 
     int compareTo(String pathname);
 
-    ParcelFileDescriptor getInputStream();
-    ParcelFileDescriptor getOutputStream();
-
-    ParcelFileDescriptor getPipedInputStream();
-    ParcelFileDescriptor getPipedOutputStream();
+    IRemoteFileReader getFileReader();
+    IRemoteFileWriter getFileWriter();
 }

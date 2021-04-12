@@ -18,18 +18,17 @@
 package io.github.muntashirakon.AppManager.ipc;
 
 import android.annotation.SuppressLint;
-import android.os.ParcelFileDescriptor;
 import android.os.RemoteException;
 import android.util.Log;
-import androidx.annotation.NonNull;
-import aosp.libcore.util.EmptyArray;
-import io.github.muntashirakon.AppManager.IRemoteFile;
-import io.github.muntashirakon.AppManager.utils.ParcelFileDescriptorUtil;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+
+import aosp.libcore.util.EmptyArray;
+import io.github.muntashirakon.AppManager.IRemoteFile;
+import io.github.muntashirakon.AppManager.IRemoteFileReader;
+import io.github.muntashirakon.AppManager.IRemoteFileWriter;
 
 import static io.github.muntashirakon.AppManager.ipc.RootService.TAG;
 
@@ -221,47 +220,20 @@ class RemoteFileImpl extends IRemoteFile.Stub {
     }
 
     @Override
-    @NonNull
-    public ParcelFileDescriptor getInputStream() throws RemoteException {
+    public IRemoteFileReader getFileReader() throws RemoteException {
         try {
-            return ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY);
-        } catch (IOException e) {
-            Log.e(TAG, null, e);
-            throw new RemoteException(e.toString());
+            return new RemoteFileReaderImpl(file);
+        } catch (FileNotFoundException e) {
+            throw new RemoteException(e.getMessage());
         }
     }
 
     @Override
-    @NonNull
-    public ParcelFileDescriptor getOutputStream() throws RemoteException {
+    public IRemoteFileWriter getFileWriter() throws RemoteException {
         try {
-            if (!file.exists()) file.createNewFile();
-            return ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_WRITE_ONLY);
-        } catch (IOException e) {
-            Log.e(TAG, null, e);
-            throw new RemoteException(e.toString());
-        }
-    }
-
-    @Override
-    @NonNull
-    public ParcelFileDescriptor getPipedInputStream() throws RemoteException {
-        try {
-            return ParcelFileDescriptorUtil.pipeFrom(new FileInputStream(file));
-        } catch (IOException e) {
-            Log.e(TAG, null, e);
-            throw new RemoteException(e.toString());
-        }
-    }
-
-    @Override
-    @NonNull
-    public ParcelFileDescriptor getPipedOutputStream() throws RemoteException {
-        try {
-            return ParcelFileDescriptorUtil.pipeTo(new FileOutputStream(file));
-        } catch (IOException e) {
-            Log.e(TAG, null, e);
-            throw new RemoteException(e.toString());
+            return new RemoteFileWriterImpl(file);
+        } catch (FileNotFoundException e) {
+            throw new RemoteException(e.getMessage());
         }
     }
 }

@@ -58,7 +58,7 @@ public class SplitInputStream extends InputStream {
     public SplitInputStream(@NonNull List<File> files) {
         this.files = files;
         this.inputStreams = new ArrayList<>(files.size());
-        buf = new byte[1024 * 1024 * 4];
+        buf = new byte[1024 * 4];
     }
 
     public SplitInputStream(@NonNull File[] files) {

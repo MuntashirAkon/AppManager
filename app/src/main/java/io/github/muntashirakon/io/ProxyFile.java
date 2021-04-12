@@ -22,6 +22,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.IAMService;
 import io.github.muntashirakon.AppManager.IRemoteFile;
+import io.github.muntashirakon.AppManager.IRemoteFileReader;
+import io.github.muntashirakon.AppManager.IRemoteFileWriter;
 import io.github.muntashirakon.AppManager.ipc.IPCUtils;
 
 import java.io.File;
@@ -264,6 +266,20 @@ public class ProxyFile extends File {
             return new File(getCanonicalPath());
         }
         return super.getCanonicalFile();
+    }
+
+    public IRemoteFileReader getFileReader() throws RemoteException {
+        if (isRemoteAlive()) {
+            //noinspection ConstantConditions
+            return file.getFileReader();
+        } else throw new RemoteException("Remote service isn't alive.");
+    }
+
+    public IRemoteFileWriter getFileWriter() throws RemoteException {
+        if (isRemoteAlive()) {
+            //noinspection ConstantConditions
+            return file.getFileWriter();
+        } else throw new RemoteException("Remote service isn't alive.");
     }
 
     private void getRemoteFile() {

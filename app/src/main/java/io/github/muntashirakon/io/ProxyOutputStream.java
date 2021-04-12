@@ -17,36 +17,34 @@
 
 package io.github.muntashirakon.io;
 
-import android.os.ParcelFileDescriptor;
 import android.os.RemoteException;
-import androidx.annotation.NonNull;
+
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
-import io.github.muntashirakon.AppManager.IRemoteFile;
-import io.github.muntashirakon.AppManager.ipc.IPCUtils;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+
+import io.github.muntashirakon.AppManager.IRemoteFileWriter;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 
-import java.io.*;
-import java.nio.channels.FileChannel;
-
 public class ProxyOutputStream extends OutputStream {
-    @NonNull
+    @Nullable
     private final FileOutputStream privateOutputStream;
     @Nullable
-    private IPCUtils.AMServiceConnectionWrapper connectionWrapper;
+    private final IRemoteFileWriter fileWriter;
 
     @WorkerThread
     public ProxyOutputStream(File file) throws FileNotFoundException, RemoteException {
         if (file instanceof ProxyFile && LocalServer.isAMServiceAlive()) {
-            connectionWrapper = IPCUtils.getNewConnection();
-            IRemoteFile file1 = connectionWrapper.getAmService().getFile(file.getAbsolutePath());
-            ParcelFileDescriptor fd = file1.getPipedOutputStream();
-            if (fd == null) {
-                throw new FileNotFoundException("Cannot get input FD from remote. File is " + file);
-            }
-            privateOutputStream = new ParcelFileDescriptor.AutoCloseOutputStream(fd);
+            privateOutputStream = null;
+            fileWriter = ((ProxyFile) file).getFileWriter();
         } else {
             privateOutputStream = new FileOutputStream(file);
+            fileWriter = null;
         }
     }
 
@@ -56,37 +54,72 @@ public class ProxyOutputStream extends OutputStream {
 
     @Override
     public void write(int b) throws IOException {
-        privateOutputStream.write(b);
+        if (fileWriter != null) {
+            try {
+                fileWriter.write0(b);
+            } catch (RemoteException e) {
+                throw new IOException(e);
+            }
+        } else if (privateOutputStream != null) privateOutputStream.write(b);
+        else throw new IOException("Invalid stream");
     }
 
     @Override
     public void write(byte[] b) throws IOException {
-        privateOutputStream.write(b);
+        if (fileWriter != null) {
+            try {
+                fileWriter.write1(b);
+            } catch (RemoteException e) {
+                throw new IOException(e);
+            }
+        } else if (privateOutputStream != null) privateOutputStream.write(b);
+        else throw new IOException("Invalid stream");
     }
 
     @Override
     public void write(byte[] b, int off, int len) throws IOException {
-        privateOutputStream.write(b, off, len);
+        if (fileWriter != null) {
+            try {
+                fileWriter.write2(b, off, len);
+            } catch (RemoteException e) {
+                throw new IOException(e);
+            }
+        } else if (privateOutputStream != null) privateOutputStream.write(b, off, len);
+        else throw new IOException("Invalid stream");
     }
 
     @Override
     public void flush() throws IOException {
-        privateOutputStream.flush();
+        if (fileWriter != null) {
+            try {
+                fileWriter.flush();
+            } catch (RemoteException e) {
+                throw new IOException(e.getMessage());
+            }
+        } else if (privateOutputStream != null) privateOutputStream.flush();
+        else throw new IOException("Invalid stream");
     }
 
-    public final FileDescriptor getFD() throws IOException {
-        return privateOutputStream.getFD();
-    }
-
-    public FileChannel getChannel() {
-        return privateOutputStream.getChannel();
+    public void sync() throws IOException {
+        if (fileWriter != null) {
+            try {
+                fileWriter.sync();
+            } catch (RemoteException e) {
+                throw new IOException(e.getMessage());
+            }
+        } else if (privateOutputStream != null) privateOutputStream.getFD().sync();
+        else throw new IOException("Invalid stream");
     }
 
     @Override
     public void close() throws IOException {
-        privateOutputStream.close();
-        if (connectionWrapper != null) {
-            connectionWrapper.unbindService();
-        }
+        if (fileWriter != null) {
+            try {
+                fileWriter.close();
+            } catch (RemoteException e) {
+                throw new IOException(e.getMessage());
+            }
+        } else if (privateOutputStream != null) privateOutputStream.close();
+        else throw new IOException("Invalid stream");
     }
 }

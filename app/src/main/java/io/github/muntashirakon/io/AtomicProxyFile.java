@@ -225,7 +225,7 @@ public class AtomicProxyFile {
 
     private static boolean sync(@NonNull ProxyOutputStream stream) {
         try {
-            stream.getFD().sync();
+            stream.sync();
             return true;
         } catch (IOException ignored) {
         }
