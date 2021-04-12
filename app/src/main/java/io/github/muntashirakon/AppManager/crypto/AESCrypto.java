@@ -24,22 +24,23 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
+import org.bouncycastle.crypto.engines.AESEngine;
+import org.bouncycastle.crypto.io.CipherInputStream;
+import org.bouncycastle.crypto.io.CipherOutputStream;
+import org.bouncycastle.crypto.modes.GCMBlockCipher;
+import org.bouncycastle.crypto.params.AEADParameters;
+import org.bouncycastle.crypto.params.KeyParameter;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.crypto.Cipher;
-import javax.crypto.CipherInputStream;
-import javax.crypto.CipherOutputStream;
-import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
-import javax.crypto.spec.GCMParameterSpec;
 import javax.security.auth.DestroyFailedException;
 
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
@@ -58,12 +59,11 @@ public class AESCrypto implements Crypto {
 
     public static final String AES_KEY_ALIAS = "backup_aes";
 
-    private static final String AES_GCM_CIPHER_TYPE = "AES/GCM/NoPadding";
     public static final int GCM_IV_LENGTH = 12; // in bytes
 
-    private final byte[] iv;
     private final SecretKey secretKey;
-    private final Cipher cipher;
+    private final GCMBlockCipher cipher;
+    private final AEADParameters spec;
     @CryptoUtils.Mode
     private final String parentMode;
     private final List<File> newFiles = new ArrayList<>();
@@ -74,7 +74,6 @@ public class AESCrypto implements Crypto {
 
     protected AESCrypto(@NonNull byte[] iv, @NonNull @CryptoUtils.Mode String mode, @Nullable byte[] encryptedAesKey)
             throws CryptoException {
-        this.iv = iv;
         this.parentMode = mode;
         if (parentMode.equals(CryptoUtils.MODE_AES)) {
             try {
@@ -98,11 +97,8 @@ public class AESCrypto implements Crypto {
         } else {
             throw new CryptoException("Unsupported mode " + parentMode);
         }
-        try {
-            this.cipher = Cipher.getInstance(AES_GCM_CIPHER_TYPE);
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
-            throw new CryptoException(e);
-        }
+        this.spec = new AEADParameters(new KeyParameter(secretKey.getEncoded()), secretKey.getEncoded().length, iv);
+        this.cipher = new GCMBlockCipher(new AESEngine());
     }
 
     @Nullable
@@ -120,15 +116,14 @@ public class AESCrypto implements Crypto {
     @WorkerThread
     @Override
     public boolean encrypt(@NonNull File[] files) {
-        return handleFiles(Cipher.ENCRYPT_MODE, files);
+        return handleFiles(true, files);
     }
 
     @Override
     public void encrypt(@NonNull InputStream unencryptedStream, @NonNull OutputStream encryptedStream)
             throws IOException, InvalidAlgorithmParameterException, InvalidKeyException {
         // Init cipher
-        GCMParameterSpec spec = new GCMParameterSpec(secretKey.getEncoded().length, iv);
-        cipher.init(Cipher.ENCRYPT_MODE, secretKey, spec);
+        cipher.init(true, spec);
         // Convert unencrypted stream to encrypted stream
         try (OutputStream cipherOS = new CipherOutputStream(encryptedStream, cipher)) {
             IOUtils.copy(unencryptedStream, cipherOS);
@@ -138,15 +133,14 @@ public class AESCrypto implements Crypto {
     @WorkerThread
     @Override
     public boolean decrypt(@NonNull File[] files) {
-        return handleFiles(Cipher.DECRYPT_MODE, files);
+        return handleFiles(false, files);
     }
 
     @Override
     public void decrypt(@NonNull InputStream encryptedStream, @NonNull OutputStream unencryptedStream)
             throws IOException, InvalidAlgorithmParameterException, InvalidKeyException {
         // Init cipher
-        GCMParameterSpec spec = new GCMParameterSpec(secretKey.getEncoded().length, iv);
-        cipher.init(Cipher.DECRYPT_MODE, secretKey, spec);
+        cipher.init(false, spec);
         // Convert encrypted stream to unencrypted stream
         try (InputStream cipherIS = new CipherInputStream(encryptedStream, cipher)) {
             IOUtils.copy(cipherIS, unencryptedStream);
@@ -154,30 +148,24 @@ public class AESCrypto implements Crypto {
     }
 
     @WorkerThread
-    private boolean handleFiles(int mode, @NonNull File[] files) {
+    private boolean handleFiles(boolean forEncryption, @NonNull File[] files) {
         newFiles.clear();
         if (files.length > 0) {  // files is never null here
             // Init cipher
-            try {
-                GCMParameterSpec spec = new GCMParameterSpec(secretKey.getEncoded().length, iv);
-                cipher.init(mode, secretKey, spec);
-            } catch (InvalidAlgorithmParameterException | InvalidKeyException e) {
-                Log.e(TAG, "Error initializing cipher", e);
-                return false;
-            }
+            cipher.init(forEncryption, spec);
             // Get desired extension
             String ext = CryptoUtils.getExtension(parentMode);
             // Encrypt/decrypt files
             for (File file : files) {
                 File outputFilename;
-                if (mode == Cipher.DECRYPT_MODE) {
+                if (!forEncryption) {
                     outputFilename = new ProxyFile(file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf(ext)));
                 } else outputFilename = new ProxyFile(file.getAbsolutePath() + ext);
                 newFiles.add(outputFilename);
                 Log.i(TAG, "Input: " + file + "\nOutput: " + outputFilename);
                 try (InputStream is = new ProxyInputStream(file);
                      OutputStream os = new ProxyOutputStream(outputFilename)) {
-                    if (mode == Cipher.ENCRYPT_MODE) {
+                    if (forEncryption) {
                         try (OutputStream cipherOS = new CipherOutputStream(os, cipher)) {
                             IOUtils.copy(is, cipherOS);
                         }
@@ -191,7 +179,7 @@ public class AESCrypto implements Crypto {
                     return false;
                 }
                 // Delete unencrypted file
-                if (mode == Cipher.ENCRYPT_MODE) {
+                if (forEncryption) {
                     if (!file.delete()) {
                         Log.e(TAG, "Couldn't delete old file " + file);
                         return false;

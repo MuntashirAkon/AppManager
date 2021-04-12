@@ -33,24 +33,35 @@ import android.os.RemoteException;
 import android.provider.OpenableColumns;
 import android.system.ErrnoException;
 import android.system.Os;
+
 import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
-import com.android.internal.util.TextUtils;
-import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.io.ProxyFile;
-import io.github.muntashirakon.io.ProxyInputStream;
-import io.github.muntashirakon.io.ProxyOutputStream;
 
-import java.io.*;
+import com.android.internal.util.TextUtils;
+
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.EOFException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
+
+import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.io.ProxyFile;
+import io.github.muntashirakon.io.ProxyInputStream;
+import io.github.muntashirakon.io.ProxyOutputStream;
 
 public final class IOUtils {
     @AnyThread
@@ -140,7 +151,7 @@ public final class IOUtils {
         byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
         long count = 0;
         int n;
-        while (-1 != (n = inputStream.read(buffer))) {
+        while ((n = inputStream.read(buffer)) > 0) {
             outputStream.write(buffer, 0, n);
             count += n;
         }
@@ -179,7 +190,8 @@ public final class IOUtils {
                     int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
                     cursor.moveToFirst();
                     return cursor.getString(nameIndex);
-                } catch (CursorIndexOutOfBoundsException ignore) {}
+                } catch (CursorIndexOutOfBoundsException ignore) {
+                }
             case ContentResolver.SCHEME_FILE:
                 if (uri.getPath() == null) return null;
                 return new File(uri.getPath()).getName();
@@ -505,7 +517,8 @@ public final class IOUtils {
     @AnyThread
     @NonNull
     public static File getIconCachePath() throws IOException {
-        if (AppManager.getContext().getExternalCacheDir() == null) throw new FileNotFoundException("External storage not available.");
+        if (AppManager.getContext().getExternalCacheDir() == null)
+            throw new FileNotFoundException("External storage not available.");
         File extDir = new File(AppManager.getContext().getExternalCacheDir(), "icons");
         if (!extDir.exists() && !extDir.mkdirs()) {
             throw new IOException("Cannot create cache directory in the external storage.");

@@ -92,7 +92,8 @@ dependencies {
     //noinspection GradleDependency
     implementation 'com.github.MuntashirAkon:apksig-android:178a05e4c9'
     implementation 'com.github.MuntashirAkon:unapkm-android:1.2'
-    implementation 'com.github.MuntashirAkon:sun-security-android:18e5b34'
+    implementation 'com.github.MuntashirAkon:sun-security-android:1.1'
+    implementation 'org.bouncycastle:bcprov-jdk15on:1.68'
 
     implementation 'com.google.android.material:material:1.4.0-alpha02'
     implementation 'androidx.appcompat:appcompat:1.3.0-rc01'
