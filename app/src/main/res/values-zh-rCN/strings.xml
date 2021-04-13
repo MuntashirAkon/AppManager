@@ -14,7 +14,7 @@
   ~
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
     <string name="_lang_tag" translatable="false">zh-CN</string>
     <string name="uninstall">卸载</string>
     <string name="permissions">系统预定义权限</string>
@@ -453,7 +453,7 @@
     <string name="installer_error_session_write">无法写入安装程序会话</string>
     <string name="installer_error_session_commit">不能提交APK文件</string>
     <string name="installer_error_session_abandon">无法中断安装包会话</string>
-    <string name="backup_apk_files">仅 APK</string>
+    <string name="backup_apk_files">APK 文件</string>
     <string name="backup_obb_media">OBB 和媒体文件</string>
     <string name="failed_to_extract_obb_files">无法提取 OBB 文件</string>
     <string name="obb_files_extracted_successfully">已提取 OBB 文件</string>
@@ -853,4 +853,46 @@
     <string name="filter_apps_without_backups">无备份的应用</string>
     <string name="uninstalled_apps">已卸载应用</string>
     <string name="internal_data">内部数据</string>
+    <plurals name="items_selected">
+        <item quantity="other"><xliff:g id="selection_no" example="20">%1$d</xliff:g> 已选中</item>
+    </plurals>
+    <string name="expiry_date_cannot_be_empty">到期日不能为空。</string>
+    <string name="signing_key">签名密钥</string>
+    <string name="failed_to_read_keystore">无法读取密钥库。</string>
+    <string name="alias_pass">别名密码</string>
+    <string name="choose_an_alias">选择一个别名</string>
+    <string name="found_no_alias_in_keystore">在密钥库中未找到别名！</string>
+    <string name="new_alias_password">新建别名密码</string>
+    <string name="import_key">导入密钥</string>
+    <string name="pem_file">PEM 文件</string>
+    <string name="pk8_file">PKCS #8 (PK8) 文件</string>
+    <string name="pem_and_pk8">PEM 和 PKCS #8 (PK8)</string>
+    <string name="pkcs12_keystore">PKCS #12 密钥库 (P12)</string>
+    <string name="bouncy_castle_keystore">Bouncy Castle 密钥库 (BKS)</string>
+    <string name="java_keystore">Java 密钥库 (JKS)</string>
+    <string name="keystore_pass">密钥库密码</string>
+    <string name="keystore_file">密钥库文件</string>
+    <string name="country_name" tools:ignore="TypographyOther">国名（C）</string>
+    <string name="state_name">州名（ST）</string>
+    <string name="locality_name">地区（城市）名称（L）</string>
+    <string name="organization_name">机构名称（O）</string>
+    <string name="organization_unit">组织单位（OU）</string>
+    <string name="common_name">通用名（CN）</string>
+    <string name="input_key_password">密钥密码</string>
+    <string name="failed_to_load_key">无法加载密钥。</string>
+    <string name="default_key_used">使用了默认密钥。</string>
+    <string name="key_not_set">未设置。</string>
+    <string name="use_default">使用默认</string>
+    <string name="invalid_rsa_key_size">RSA加密的密钥大小无效。 密钥大小可以是1024位、2048位或4096位。</string>
+    <string name="crypto_key_size">密钥大小</string>
+    <string name="invalid_aes_key_size">AES加密的密钥大小无效。 密钥大小要么是128位，要么是256位。</string>
+    <string name="failed_to_initialize_key_store">无法初始化 App Manager 密钥库。</string>
+    <string name="failed_to_save_key">无法保存密钥。</string>
+    <string name="generate_key">生成</string>
+    <string name="input_key">输入密钥 (以十六进制表示）</string>
+    <string name="input_keystore_alias_pass_msg">轻按此处提供 %1$s 的密码</string>
+    <string name="source_code_links">GitHub: https://github.com/MuntashirAkon/AppManager
+\nGitLab: https://gitlab.com/muntashir/AppManager
+\nRiseup: https://0xacab.org/muntashir/AppManager
+\nCodeberg: https://codeberg.org/muntashir/AppManager</string>
 </resources>
