@@ -14,7 +14,7 @@
   ~
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
     <string name="_lang_tag" translatable="false">pt-BR</string>
     <string name="uninstall">Desinstalar</string>
     <string name="permissions">Permissões utilizadas</string>
@@ -437,7 +437,7 @@
     <string name="installer_error_session_write">Não foi possível gravar na sessão de instalação</string>
     <string name="installer_error_session_commit">O commit dos arquivos APK não pôde ser feito</string>
     <string name="installer_error_session_abandon">A sessão de instalação não pôde ser abandonada</string>
-    <string name="backup_apk_files">Apenas APK</string>
+    <string name="backup_apk_files">Arquivos APK</string>
     <string name="failed_to_extract_obb_files">Não foi possível extrair arquivos OBB</string>
     <string name="obb_files_extracted_successfully">Arquivos OBB extraídos</string>
     <string name="backup_multiple">Backup múltiplo</string>
@@ -884,4 +884,47 @@
     <string name="filter_apps_without_backups">Sem backups</string>
     <string name="uninstalled_apps">Aplicativos desinstalados</string>
     <string name="internal_data">Dados internos</string>
+    <string name="pkcs12_keystore">PKCS #12 KeyStore (P12)</string>
+    <string name="source_code_links">GitHub: https://github.com/MuntashirAkon/AppManager
+\nGitLab: https://gitlab.com/muntashir/AppManager
+\nRiseup: https://0xacab.org/muntashir/AppManager
+\nCodeberg: https://codeberg.org/muntashir/AppManager</string>
+    <string name="bouncy_castle_keystore">Bouncy Castle KeyStore (BKS)</string>
+    <string name="input_key">Insira uma chave (em hexadecimal)</string>
+    <plurals name="items_selected">
+        <item quantity="one"><xliff:g id="selection_no" example="20">%1$d</xliff:g> selecionado</item>
+        <item quantity="other"><xliff:g id="selection_no" example="20">%1$d</xliff:g> selecionados</item>
+    </plurals>
+    <string name="expiry_date_cannot_be_empty">A data de validade não pode estar vazia.</string>
+    <string name="signing_key">Assinando chave</string>
+    <string name="failed_to_read_keystore">Não foi possível ler a KeyStore.</string>
+    <string name="alias_pass">Senha do alias</string>
+    <string name="choose_an_alias">Escolha um alias</string>
+    <string name="found_no_alias_in_keystore">Nenhum alias encontrado na KeyStore!</string>
+    <string name="new_alias_password">Nova senha de alias</string>
+    <string name="import_key">Importar chave</string>
+    <string name="pem_file">Arquivo PEM</string>
+    <string name="pk8_file">Arquivo PKCS #8 (PK8)</string>
+    <string name="pem_and_pk8">PEM e PKCS #8 (PK8)</string>
+    <string name="java_keystore">Java KeyStore (JKS)</string>
+    <string name="keystore_pass">Senha da keyStore</string>
+    <string name="keystore_file">Arquivo KeyStore</string>
+    <string name="country_name" tools:ignore="TypographyOther">Nome do país (C)</string>
+    <string name="locality_name">Localidade (cidade (city)) nome (L)</string>
+    <string name="state_name">Nome do Estado (ST)</string>
+    <string name="organization_name">Nome da organização (O)</string>
+    <string name="organization_unit">Unidade de organização (OU)</string>
+    <string name="common_name">Nome comum (CN)</string>
+    <string name="input_key_password">Senha da chave</string>
+    <string name="failed_to_load_key">Não foi possível carregar a chave.</string>
+    <string name="default_key_used">A chave padrão é usada.</string>
+    <string name="key_not_set">Não inserida.</string>
+    <string name="use_default">Usar padrão</string>
+    <string name="invalid_rsa_key_size">Tamanho da chave inválida para criptografia RSA. O tamanho da chave pode ser 1024, 2048 ou 4096 bits.</string>
+    <string name="crypto_key_size">Tamanho da chave</string>
+    <string name="invalid_aes_key_size">Tamanho da chave inválida para criptografia AES. O tamanho da chave pode ser de 128 ou 256 bits.</string>
+    <string name="failed_to_initialize_key_store">Não foi possível inicializar a keystore do App Manager.</string>
+    <string name="failed_to_save_key">Não foi possível salvar a chave.</string>
+    <string name="generate_key">Gerar</string>
+    <string name="input_keystore_alias_pass_msg">Toque aqui para fornecer uma senha para %1$s</string>
 </resources>
