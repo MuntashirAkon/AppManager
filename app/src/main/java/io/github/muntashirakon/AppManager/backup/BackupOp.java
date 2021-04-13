@@ -26,9 +26,11 @@ import android.content.pm.PackageManager;
 import android.content.pm.PermissionInfo;
 import android.graphics.Bitmap;
 import android.os.RemoteException;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 import androidx.core.content.pm.PermissionInfoCompat;
+
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.appops.OpEntry;
@@ -42,12 +44,14 @@ import io.github.muntashirakon.AppManager.rules.PseudoRules;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.Runner;
+import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.uri.UriManager;
 import io.github.muntashirakon.AppManager.utils.*;
 import io.github.muntashirakon.io.ProxyFile;
 import io.github.muntashirakon.io.ProxyOutputStream;
+
 import org.json.JSONException;
 
 import java.io.Closeable;
@@ -56,6 +60,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static io.github.muntashirakon.AppManager.backup.BackupManager.*;
@@ -345,7 +350,10 @@ class BackupOp implements Closeable {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O_MR1) {
             INotificationManager notificationManager = INotificationManager.Stub.asInterface(ProxyBinder.getService(Context.NOTIFICATION_SERVICE));
             try {
-                List<ComponentName> notificationComponents = notificationManager.getEnabledNotificationListeners(userHandle);
+                List<ComponentName> notificationComponents;
+                if (LocalServer.isAMServiceAlive()) {
+                    notificationComponents = notificationManager.getEnabledNotificationListeners(userHandle);
+                } else notificationComponents = Collections.emptyList();
                 List<String> componentsForThisPkg = new ArrayList<>();
                 for (ComponentName componentName : notificationComponents) {
                     if (packageName.equals(componentName.getPackageName())) {
