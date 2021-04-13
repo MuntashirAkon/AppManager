@@ -177,6 +177,7 @@ public final class TarUtils {
                             throw new IOException("Couldn't create symbolic link " + file + " pointing to "
                                     + linkName);
                         }
+                        continue;  // links do not need permission fixes
                     } else {
                         // Zip slip vulnerability check
                         if (!file.getCanonicalFile().toURI().getPath().startsWith(realDestPath)) {
