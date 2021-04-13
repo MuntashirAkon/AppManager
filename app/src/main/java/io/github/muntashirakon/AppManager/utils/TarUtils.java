@@ -170,13 +170,13 @@ public final class TarUtils {
                     // before creating the link
                     if (entry.isSymbolicLink()) {
                         String linkName = entry.getLinkName();
-                        if (new ProxyFile(linkName).exists()) {
-                            if (!Runner.runCommand(new String[]{"ln", "-s", linkName, file.getAbsolutePath()})
-                                    .isSuccessful()) {
-                                throw new IOException("Couldn't create symbolic link " + file + " pointing to "
-                                        + linkName);
-                            }
-                        } else continue;
+                        // There's no need to check if the linkName exists as it may be extracted
+                        // after the link has been created
+                        if (!Runner.runCommand(new String[]{"ln", "-s", linkName, file.getAbsolutePath()})
+                                .isSuccessful()) {
+                            throw new IOException("Couldn't create symbolic link " + file + " pointing to "
+                                    + linkName);
+                        }
                     } else {
                         // Zip slip vulnerability check
                         if (!file.getCanonicalFile().toURI().getPath().startsWith(realDestPath)) {
