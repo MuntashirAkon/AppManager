@@ -62,7 +62,6 @@ public class AESCrypto implements Crypto {
     public static final int GCM_IV_LENGTH = 12; // in bytes
 
     private final SecretKey secretKey;
-    private final GCMBlockCipher cipher;
     private final AEADParameters spec;
     @CryptoUtils.Mode
     private final String parentMode;
@@ -98,7 +97,6 @@ public class AESCrypto implements Crypto {
             throw new CryptoException("Unsupported mode " + parentMode);
         }
         this.spec = new AEADParameters(new KeyParameter(secretKey.getEncoded()), secretKey.getEncoded().length, iv);
-        this.cipher = new GCMBlockCipher(new AESEngine());
     }
 
     @Nullable
@@ -123,6 +121,7 @@ public class AESCrypto implements Crypto {
     public void encrypt(@NonNull InputStream unencryptedStream, @NonNull OutputStream encryptedStream)
             throws IOException, InvalidAlgorithmParameterException, InvalidKeyException {
         // Init cipher
+        GCMBlockCipher cipher = new GCMBlockCipher(new AESEngine());
         cipher.init(true, spec);
         // Convert unencrypted stream to encrypted stream
         try (OutputStream cipherOS = new CipherOutputStream(encryptedStream, cipher)) {
@@ -140,6 +139,7 @@ public class AESCrypto implements Crypto {
     public void decrypt(@NonNull InputStream encryptedStream, @NonNull OutputStream unencryptedStream)
             throws IOException, InvalidAlgorithmParameterException, InvalidKeyException {
         // Init cipher
+        GCMBlockCipher cipher = new GCMBlockCipher(new AESEngine());
         cipher.init(false, spec);
         // Convert encrypted stream to unencrypted stream
         try (InputStream cipherIS = new CipherInputStream(encryptedStream, cipher)) {
@@ -152,6 +152,7 @@ public class AESCrypto implements Crypto {
         newFiles.clear();
         if (files.length > 0) {  // files is never null here
             // Init cipher
+            GCMBlockCipher cipher = new GCMBlockCipher(new AESEngine());
             cipher.init(forEncryption, spec);
             // Get desired extension
             String ext = CryptoUtils.getExtension(parentMode);
