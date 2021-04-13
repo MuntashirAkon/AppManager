@@ -245,7 +245,6 @@
     <plurals name="alert_failed_to_clear_data">
         <item quantity="other">Không thể xoá dữ liệu của %1$d ứng dụng</item>
     </plurals>
-    <string name="some_items_selected">Đã chọn <xliff:g id="selection_no" example="20">%1$d</xliff:g></string>
     <string name="export_blocking_rules">Xuất các quy tắc chặn</string>
     <string name="disable_background">Ngăn chặn hoạt động trong nền</string>
     <string name="clear_data">Xoá dữ liệu</string>

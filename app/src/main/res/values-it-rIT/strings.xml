@@ -259,7 +259,6 @@
         <item quantity="one">Impossibile cancellare i dati dall\'app %1$d</item>
         <item quantity="other">Impossibile cancellare i dati delle app %1$d</item>
     </plurals>
-    <string name="some_items_selected">Selezionato <xliff:g id="selection_no" example="20">%1$d</xliff:g></string>
     <string name="export_blocking_rules">Esporta Regole di Blocco</string>
     <string name="disable_background">Disabilita in Background</string>
     <string name="backup_restore">Recupera/Riprendi</string>

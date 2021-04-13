@@ -81,7 +81,6 @@
     <string name="running">Ejecutándose</string>
     <string name="mode">Modo</string>
     <string name="permission_name">Nombre del permiso</string>
-    <string name="some_items_selected"><xliff:g id="selection_no" example="20">%1$d</xliff:g> seleccionado</string>
     <string name="export_blocking_rules">Exportar reglas de bloqueo</string>
     <string name="disable_background">Deshabilitar segundo plano</string>
     <string name="clear_data">Limpiar datos</string>
@@ -727,7 +726,6 @@
     <string name="v1_scheme">Esquema v1 (desde Android 1.0)</string>
     <string name="pref_apk_signing_msg">Establecer esquema de firmas, clave de firma personalizada, etc.</string>
     <string name="apk_signing">Firma de APK</string>
-    <string name="signing_keys">Llaves de firma</string>
     <string name="pref_sign_apk_msg">Firme los archivos APK antes de instalarlos.</string>
     <string name="pref_sign_apk">Firmar APK</string>
     <string name="install_location_prefer_external">Preferir externa</string>

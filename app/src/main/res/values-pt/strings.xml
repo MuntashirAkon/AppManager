@@ -145,7 +145,6 @@
         <item quantity="one">Não foi possível limpar os dados de %1$d app</item>
         <item quantity="other">Não foi possível limpar os dados de %1$d apps</item>
     </plurals>
-    <string name="some_items_selected"><xliff:g id="selection_no" example="20">%1$d</xliff:g> selecionados</string>
     <string name="export_blocking_rules">Exportar regras de bloqueio</string>
     <string name="disable_background">Desativar segundo plano</string>
     <string name="backup_restore">Backup/Restauração</string>

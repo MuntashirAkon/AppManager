@@ -424,7 +424,6 @@
         <item quantity="many">Не вдалося очистити дані додатків %1$d</item>
         <item quantity="other">Не вдалося очистити дані додатків %1$d</item>
     </plurals>
-    <string name="some_items_selected"><xliff:g id="selection_no" example="20">%1$d</xliff:g> вибрано</string>
     <string name="export_blocking_rules">Експорт правил блокування</string>
     <string name="disable_background">Запобігання фонових операцій</string>
     <string name="backup_restore">Резервне копіювання/відновлення</string>
@@ -748,7 +747,6 @@
     <string name="v1_scheme">Схема v1 (з Android 1.0)</string>
     <string name="pref_apk_signing_msg">Налаштування схеми підписування, кастомний ключ підписування тощо.</string>
     <string name="apk_signing">Підписування APK</string>
-    <string name="signing_keys">Ключі підписування</string>
     <string name="pref_sign_apk_msg">Підписати файли APK перед їх встановленням.</string>
     <string name="pref_sign_apk">Підписування APK</string>
     <string name="install_location_prefer_external">Надати перевагу зовнішній пам’яті</string>

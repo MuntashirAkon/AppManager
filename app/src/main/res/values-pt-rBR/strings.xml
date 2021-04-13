@@ -237,7 +237,6 @@
     <string name="backup_restore">Backup/Restauração</string>
     <string name="disable_background">Impedir a operação em segundo plano</string>
     <string name="export_blocking_rules">Exportar Regras de Bloqueio</string>
-    <string name="some_items_selected"><xliff:g id="selection_no" example="20">%1$d</xliff:g> selecionado(s)</string>
     <plurals name="alert_failed_to_clear_data">
         <item quantity="one">%1$d aplicativo não pôde ter os dados limpos</item>
         <item quantity="other">%1$d aplicativos não puderam ter os dados limpos</item>
@@ -708,7 +707,6 @@
     <string name="v2_scheme">Esquema v2 (desde o Android 7.0)</string>
     <string name="pref_apk_signing_msg">Definir esquemas de assinatura, chave de assinatura personalizada, etc.</string>
     <string name="apk_signing">Assinatura do APK</string>
-    <string name="signing_keys">Chaves de assinatura</string>
     <string name="signature_schemes">Esquemas de assinatura</string>
     <string name="source_stamp_verified">SourceStamp verificado.</string>
     <string name="splits">Divisões</string>

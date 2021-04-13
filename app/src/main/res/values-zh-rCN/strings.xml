@@ -256,7 +256,6 @@
     <string name="backup_restore">备份/还原</string>
     <string name="disable_background">防止后台操作</string>
     <string name="export_blocking_rules">导出屏蔽规则</string>
-    <string name="some_items_selected"><xliff:g id="selection_no" example="20">%1$d</xliff:g> 个已选中</string>
     <plurals name="alert_failed_to_clear_data">
         <item quantity="other">无法清除数据从%1$d个应用</item>
     </plurals>
@@ -673,7 +672,6 @@
     <string name="v1_scheme">v1 方案（自 Android 1.0 起）</string>
     <string name="pref_apk_signing_msg">设置签名方案，自定义签名密钥等。</string>
     <string name="apk_signing">APK 签名</string>
-    <string name="signing_keys">签名密钥</string>
     <string name="signature_schemes">签名方案</string>
     <string name="source_stamp_verified">SourceStamp 已验证。</string>
     <string name="verified">已验证</string>

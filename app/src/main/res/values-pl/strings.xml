@@ -80,7 +80,6 @@
         <item quantity="many">Nie można wyczyścić danych %d aplikacji</item>
         <item quantity="other">Nie można wyczyścić danych %d aplikacji</item>
     </plurals>
-    <string name="some_items_selected">Wybrano %d</string>
     <string name="export_blocking_rules">Eksportuj reguły blokowania</string>
     <string name="disable_background">Wyłącz działanie w tle</string>
     <string name="backup_restore">Tworzenie/przywracanie kopii zapasowych</string>
@@ -474,7 +473,6 @@
     <string name="install_location">Miejsce instalacji</string>
     <string name="installer">Instalator</string>
     <string name="comment">Komentarz</string>
-    <string name="signing_keys">Klucze do podpisywania</string>
     <string name="signature_schemes">Schematy podpisów</string>
     <string name="pref_sign_apk_msg">Podpisz pliki APK przed ich zainstalowaniem.</string>
     <string name="pref_sign_apk">Podpisz plik APK</string>

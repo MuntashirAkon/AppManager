@@ -430,7 +430,6 @@
         <item quantity="one">Impossible d\'effacer les données d\'%1$d application</item>
         <item quantity="other">Impossible d\'effacer les données de %1$d applications</item>
     </plurals>
-    <string name="some_items_selected"><xliff:g id="selection_no" example="20">%1$d</xliff:g> sélectionné(s)</string>
     <string name="export_blocking_rules">Exporter les règles de blocage</string>
     <string name="disable_background">Désactiver l\'exécution en arrière-plan</string>
     <string name="backup_restore">Sauvegarder/Restaurer</string>

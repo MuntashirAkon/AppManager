@@ -296,7 +296,6 @@
     <string name="backup_restore">バックアップ/復元</string>
     <string name="disable_background">バックグラウンドでの実行を妨げる</string>
     <string name="export_blocking_rules">ブロッキングルールをエクスポート</string>
-    <string name="some_items_selected"><xliff:g id="selection_no" example="20">%1$d</xliff:g> 件を選択済み</string>
     <plurals name="alert_failed_to_clear_data">
         <item quantity="one">%1$d 個のアプリからデータを消去できませんでした</item>
         <item quantity="other">%1$d 個のアプリからデータを消去できませんでした</item>
@@ -747,7 +746,6 @@
     <string name="pref_sign_apk">APKを署名</string>
     <string name="pref_sign_apk_msg">インストールする前にAPKを署名します</string>
     <string name="signature_schemes">署名方式</string>
-    <string name="signing_keys">署名鍵</string>
     <string name="apk_signing">APK署名</string>
     <string name="pref_apk_signing_msg">署名方式やカスタム署名鍵を設定します。</string>
     <string name="v1_scheme">v1 スキーム (Android 1.0〜)</string>

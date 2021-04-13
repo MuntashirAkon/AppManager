@@ -262,7 +262,6 @@
     <string name="backup_restore">Sichern/Wiederherstellen</string>
     <string name="disable_background">Hintergrundbetrieb verhindern</string>
     <string name="export_blocking_rules">Blockierregeln exportieren</string>
-    <string name="some_items_selected"><xliff:g id="selection_no" example="20">%1$d</xliff:g> ausgewählt</string>
     <plurals name="alert_failed_to_clear_data">
         <item quantity="one">Löschen der Daten von %1$d Anwendung nicht möglich</item>
         <item quantity="other">Löschen der Daten von %1$d Anwendungen nicht möglich</item>
@@ -709,7 +708,6 @@
     <string name="v1_scheme">v1-Schema (ab Android 1.0)</string>
     <string name="pref_apk_signing_msg">Festlegen von Signaturschemata, benutzerdefinierten Signaturschlüsseln usw.</string>
     <string name="apk_signing">APK-Signierung</string>
-    <string name="signing_keys">Signierschlüssel</string>
     <string name="signature_schemes">Signaturschemata</string>
     <string name="splits">Spaltet</string>
     <string name="source_stamp_verified">Quellenstempel verifiziert.</string>

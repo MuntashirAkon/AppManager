@@ -177,7 +177,7 @@
     <string name="cache_size">حافظه پنهان</string>
     <string name="data_size">داده‌ها</string>
     <string name="about">درباره</string>
-    <string name="data_usage_msg"></string>
+    <string name="data_usage_msg"/>
     <string name="data_transmitted">داده‌های منتقل شده</string>
     <string name="data_received">داده دریافت‌شده</string>
     <string name="sort_by_target_sdk">SDK هدف</string>
@@ -227,7 +227,6 @@
     <string name="require_no_permission">مجوز لازم نیست</string>
     <string name="permissions">از مجوزها استفاده می کند</string>
     <string name="uninstall">حذف نصب</string>
-    <string name="some_items_selected"><xliff:g id="selection_no" example="20"> %1$d </xliff:g> انتخاب شد</string>
     <string name="export_blocking_rules">قوانین مسدود سازی را صادر کن</string>
     <string name="disable_background">غیرفعال کردن پس‌زمینه</string>
     <string name="backup_restore">پشتیبان گیری/بازیابی</string>

@@ -99,7 +99,6 @@
         <item quantity="one">%1$d ऐप से डेटा नहीं मिटा सका</item>
         <item quantity="other">%1$d ऐप्स से डेटा नहीं मिटा सका</item>
     </plurals>
-    <string name="some_items_selected"><xliff:g id="selection_no" example="20">%1$d</xliff:g> चयनित</string>
     <string name="export_blocking_rules">ब्लॉकिंग रूल्स को निर्यात करें</string>
     <string name="disable_background">बैकग्राउंड में चलना बंद करें</string>
     <string name="backup_restore">बैकअप/रिस्टोर</string>
@@ -694,7 +693,6 @@
     <string name="v1_scheme">v1 स्कीम (एंड्रॉइड 1.0 के बाद से)</string>
     <string name="pref_apk_signing_msg">सिग्नेचर स्कीम्स, कस्टम साइनिंग कुंजी आदि सेट करें।</string>
     <string name="apk_signing">एपीके साइनिंग</string>
-    <string name="signing_keys">साइनिंग कुंजियाँ</string>
     <string name="pref_sign_apk_msg">इंस्टॉल करने से पहले एपीके फाइल्स को साइन करें।</string>
     <string name="pref_sign_apk">साइन एपीके</string>
     <string name="install_location_prefer_external">एक्सटर्नल को वरीयता</string>

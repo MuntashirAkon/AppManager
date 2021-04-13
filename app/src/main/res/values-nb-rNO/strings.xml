@@ -244,7 +244,6 @@
         <item quantity="one">Kunne ikke skru av %1$d program</item>
         <item quantity="other">Kunne ikke skru av %1$d programmer</item>
     </plurals>
-    <string name="some_items_selected"><xliff:g id="selection_no" example="20">%1$d</xliff:g> valgt</string>
     <plurals name="failed_to_import_files">
         <item quantity="one">Kunne ikke importere %1$d fil.</item>
         <item quantity="other">Kunne ikke importere %1$d filer.</item>
@@ -579,7 +578,6 @@
     <string name="value">Verdi</string>
     <string name="keep_data_and_signatures">Behold data og signaturer</string>
     <string name="apk_signing">APK-signering</string>
-    <string name="signing_keys">Signeringsnøkler</string>
     <string name="comment">Kommentar</string>
     <string name="pref_encryption_msg">Legg til knryptering for sikkerhetskopier.</string>
     <string name="tap_to_submit_crash_report">Trykk for å sende inn krasjrapporten.</string>

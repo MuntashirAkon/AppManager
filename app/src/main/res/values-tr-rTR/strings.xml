@@ -457,7 +457,6 @@
         <item quantity="one">%1$d uygulamadan veriler temizlenemedi</item>
         <item quantity="other">%1$d uygulamadan veriler temizlenemedi</item>
     </plurals>
-    <string name="some_items_selected"><xliff:g id="selection_no" example="20">%1$d</xliff:g> seçildi</string>
     <string name="sort_by_blocked_components">Önce engellenen</string>
     <string name="sort_by_disabled_app">Önce devre dışı bırakılan</string>
     <string name="error_evaluating_input">Giriş değerlendirilemedi</string>
@@ -707,7 +706,6 @@
     <string name="v1_scheme">v1 şeması (Android 1.0\'dan beri)</string>
     <string name="pref_apk_signing_msg">İmza şemaları, özel imzalama anahtarı vb. ayarlayın.</string>
     <string name="apk_signing">APK imzalama</string>
-    <string name="signing_keys">İmzalama anahtarları</string>
     <string name="signature_schemes">İmza şemaları</string>
     <string name="splits">Bölümler</string>
     <string name="source_stamp_verified">SourceStamp doğrulandı.</string>

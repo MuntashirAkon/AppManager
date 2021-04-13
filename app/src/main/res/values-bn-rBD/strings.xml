@@ -178,7 +178,6 @@
     <string name="backup_apk">এপিকের ব্যাকআপ নিন</string>
     <string name="backup_restore">ব্যাকআপ/পুনরুদ্ধার</string>
     <string name="export_blocking_rules">ব্লকিং বিধিগুলো এক্সপোর্ট করুন</string>
-    <string name="some_items_selected"><xliff:g id="selection_no" example="20">%1$d</xliff:g>টি নির্বাচিত</string>
     <plurals name="alert_failed_to_clear_data">
         <item quantity="one">%1$dটি অ্যাপ থেকে ডাটা মুছতে ব্যর্থ</item>
         <item quantity="other">%1$dটি অ্যাপ থেকে ডাটা মুছতে ব্যর্থ</item>
