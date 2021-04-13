@@ -238,10 +238,10 @@ public final class TarUtils {
             for (File child : children) {
                 gatherFiles(files, basePath, child, filters, exclude, followLinks);
             }
-        } else {
+        } else if (source.isFile()) {
             // Not directory, add it
             files.add(source);
-        }
+        } // else we don't support other type of files
     }
 
     private static boolean isSymbolicLink(@NonNull File file) throws ErrnoException, RemoteException {
