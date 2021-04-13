@@ -14,7 +14,7 @@
   ~
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
     <string name="_lang_tag" translatable="false">tr-TR</string>
     <string name="uninstall">Uygulamayı Kaldır</string>
     <string name="permissions">Kullanılan izinler</string>
@@ -260,7 +260,7 @@
     <string name="obb_files_extracted_successfully">OBB dosyaları çıkarıldı</string>
     <string name="failed_to_extract_obb_files">OBB dosyaları çıkarılamadı</string>
     <string name="backup_obb_media">OBB ve Ortam</string>
-    <string name="backup_apk_files">Yalnızca APK</string>
+    <string name="backup_apk_files">APK dosyaları</string>
     <string name="installer_error_session_abandon">Kurulum oturumu terk edilemedi</string>
     <string name="installer_error_session_commit">APK dosyaları işlenemedi</string>
     <string name="installer_error_session_write">Kurucu oturumuna yazılamadı</string>
@@ -883,4 +883,47 @@
     <string name="filter_apps_without_backups">Yedeği olmayan</string>
     <string name="uninstalled_apps">Kaldırılan uygulamalar</string>
     <string name="internal_data">Dahili veri</string>
+    <plurals name="items_selected">
+        <item quantity="one"><xliff:g id="selection_no" example="20">%1$d</xliff:g> seçildi</item>
+        <item quantity="other"><xliff:g id="selection_no" example="20">%1$d</xliff:g> seçildi</item>
+    </plurals>
+    <string name="expiry_date_cannot_be_empty">Bitiş tarihi boş olamaz.</string>
+    <string name="signing_key">İmzalama anahtarı</string>
+    <string name="failed_to_read_keystore">KeyStore okunamadı.</string>
+    <string name="alias_pass">Takma ad parolası</string>
+    <string name="choose_an_alias">Bir takma ad seçin</string>
+    <string name="found_no_alias_in_keystore">KeyStore\'da takma ad bulunamadı!</string>
+    <string name="new_alias_password">Yeni takma ad parolası</string>
+    <string name="import_key">Anahtarı içe aktar</string>
+    <string name="pem_file">PEM dosyası</string>
+    <string name="pk8_file">PKCS #8 (PK8) dosyası</string>
+    <string name="pem_and_pk8">PEM ve PKCS #8 (PK8)</string>
+    <string name="pkcs12_keystore">PKCS #12 KeyStore (P12)</string>
+    <string name="bouncy_castle_keystore">Bouncy Castle KeyStore (BKS)</string>
+    <string name="java_keystore">Java KeyStore (JKS)</string>
+    <string name="keystore_pass">KeyStore parolası</string>
+    <string name="keystore_file">KeyStore dosyası</string>
+    <string name="country_name" tools:ignore="TypographyOther">Ülke adı (C)</string>
+    <string name="state_name">Eyalet adı (ST)</string>
+    <string name="locality_name">Yer (şehir) adı (L)</string>
+    <string name="organization_name">Kuruluş adı (O)</string>
+    <string name="organization_unit">Kuruluş birimi (OU)</string>
+    <string name="common_name">Yaygın ad (CN)</string>
+    <string name="input_key_password">Anahtar parolası</string>
+    <string name="failed_to_load_key">Anahtar yüklenemedi.</string>
+    <string name="default_key_used">Öntanımlı anahtar kullanıldı.</string>
+    <string name="key_not_set">Ayarlanmadı.</string>
+    <string name="use_default">Öntanımlı değeri kullan</string>
+    <string name="invalid_rsa_key_size">RSA şifrelemesi için geçersiz anahtar boyutu. Anahtar boyutu 1024, 2048 veya 4096 bit olabilir.</string>
+    <string name="crypto_key_size">Anahtar boyutu</string>
+    <string name="invalid_aes_key_size">AES şifrelemesi için geçersiz anahtar boyutu. Anahtar boyutu 128 veya 256 bit olabilir.</string>
+    <string name="failed_to_initialize_key_store">App Manager anahtar deposu başlatılamadı.</string>
+    <string name="failed_to_save_key">Anahtar kaydedilemedi.</string>
+    <string name="generate_key">Oluştur</string>
+    <string name="input_key">Anahtarı girin (onaltılık olarak)</string>
+    <string name="input_keystore_alias_pass_msg">%1$s parolasını girmek için buraya dokunun</string>
+    <string name="source_code_links">GitHub: https://github.com/MuntashirAkon/AppManager
+\nGitLab: https://gitlab.com/muntashir/AppManager
+\nRiseup: https://0xacab.org/muntashir/AppManager
+\nCodeberg: https://codeberg.org/muntashir/AppManager</string>
 </resources>
