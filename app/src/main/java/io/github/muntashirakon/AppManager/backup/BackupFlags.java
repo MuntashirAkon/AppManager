@@ -48,6 +48,7 @@ public final class BackupFlags {
             BACKUP_EXT_DATA,
             BACKUP_EXT_OBB_MEDIA,
             BACKUP_EXCLUDE_CACHE,
+            BACKUP_EXTRAS,
             BACKUP_CACHE,
             BACKUP_MULTIPLE,
             BACKUP_RULES,
@@ -95,7 +96,8 @@ public final class BackupFlags {
 
     @NonNull
     public static BackupFlags fromPref() {
-        return new BackupFlags((Integer) AppPref.get(AppPref.PrefKey.PREF_BACKUP_FLAGS_INT));
+        int flags = (Integer) AppPref.get(AppPref.PrefKey.PREF_BACKUP_FLAGS_INT);
+        return new BackupFlags(getSanitizedFlags(flags));
     }
 
     public BackupFlags(@BackupFlag int flags) {
@@ -181,8 +183,10 @@ public final class BackupFlags {
             {
                 backupFlags.add(BACKUP_APK_FILES);
                 put(BACKUP_APK_FILES, new Pair<>(R.string.backup_apk_files, R.string.backup_apk_files_description));
-                backupFlags.add(BACKUP_INT_DATA);
-                put(BACKUP_INT_DATA, new Pair<>(R.string.internal_data, R.string.backup_internal_data_description));
+                if (AppPref.isRootEnabled()) {
+                    backupFlags.add(BACKUP_INT_DATA);
+                    put(BACKUP_INT_DATA, new Pair<>(R.string.internal_data, R.string.backup_internal_data_description));
+                }
                 backupFlags.add(BACKUP_EXT_DATA);
                 put(BACKUP_EXT_DATA, new Pair<>(R.string.external_data, R.string.backup_external_data_description));
                 backupFlags.add(BACKUP_EXT_OBB_MEDIA);
@@ -207,5 +211,20 @@ public final class BackupFlags {
                 put(BACKUP_NO_SIGNATURE_CHECK, new Pair<>(R.string.skip_signature_checks, R.string.backup_skip_signature_checks_description));
             }
         };
+    }
+
+    /**
+     * Remove unsupported flags from the given list of flags
+     */
+    private static int getSanitizedFlags(int flags) {
+        if (!AppPref.isRootEnabled()) {
+            flags &= ~BACKUP_INT_DATA;
+            flags &= ~BACKUP_EXTRAS;
+            flags &= ~BACKUP_RULES;
+        }
+        if (Users.getUsersHandles().length == 1) {
+            flags &= ~BACKUP_CUSTOM_USERS;
+        }
+        return flags;
     }
 }
