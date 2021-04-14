@@ -24,15 +24,16 @@ import java.util.List;
 import androidx.annotation.RequiresApi;
 
 public interface IUserManager extends IInterface {
-    UserInfo getPrimaryUser();
+    UserInfo getPrimaryUser() throws RemoteException;
 
-    List<UserInfo> getUsers(boolean excludeDying);
+    List<UserInfo> getUsers(boolean excludeDying) throws RemoteException;
 
+    // Changed in 10.0.0_r30
     @RequiresApi(api = Build.VERSION_CODES.Q)
-        // Changed in 10.0.0_r30
-    List<UserInfo> getUsers(boolean excludePartial, boolean excludeDying, boolean excludePreCreated);
+    List<UserInfo> getUsers(boolean excludePartial, boolean excludeDying, boolean excludePreCreated)
+            throws RemoteException;
 
-    int getManagedProfileBadge(int userId);
+    int getManagedProfileBadge(int userId) throws RemoteException;
 
     abstract class Stub {
         public static IUserManager asInterface(android.os.IBinder obj) {

@@ -80,7 +80,7 @@ public final class Users {
                 } catch (NoSuchMethodError e) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                         return userInfoList = userManager.getUsers(true, true, true);
-                    } else throw new RemoteException(e.getMessage());
+                    } else throw new SecurityException(e);
                 }
             } catch (RemoteException | SecurityException e) {
                 Log.e(TAG, "Could not get list of users", e);
