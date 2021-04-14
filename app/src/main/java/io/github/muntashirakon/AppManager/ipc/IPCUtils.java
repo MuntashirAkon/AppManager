@@ -143,7 +143,7 @@ public final class IPCUtils {
             if (amService == null) {
                 if (amServiceBoundWatcher == null || amServiceBoundWatcher.getCount() == 0) {
                     amServiceBoundWatcher = new CountDownLatch(1);
-                    Log.e(TAG, "Launching service...");
+                    Log.d(TAG, "Launching service...");
                     Intent intent = new Intent();
                     intent.setComponent(COMPONENT_NAME);
                     synchronized (conn) {
