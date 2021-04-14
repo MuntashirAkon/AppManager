@@ -33,7 +33,6 @@ import java.security.Security;
 import io.github.muntashirakon.AppManager.db.AMDatabase;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
-import me.weishu.reflection.Reflection;
 
 public class AppManager extends Application {
     private static AppManager instance;
@@ -90,6 +89,5 @@ public class AppManager extends Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        Reflection.unseal(base);
     }
 }
