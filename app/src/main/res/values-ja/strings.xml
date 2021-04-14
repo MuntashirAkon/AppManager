@@ -547,7 +547,7 @@
     <string name="installer_error_session_write">インストーラセッションに書き込みができませんでした</string>
     <string name="installer_error_session_commit">APKファイルをコミットできませんでした</string>
     <string name="installer_error_session_abandon">インストーラセッションを中止できませんでした</string>
-    <string name="backup_apk_files">APKのみ</string>
+    <string name="backup_apk_files">APKファイル</string>
     <string name="backup_obb_media">OBBとメディア</string>
     <string name="failed_to_extract_obb_files">OBBファイルを抽出できませんでした</string>
     <string name="obb_files_extracted_successfully">OBBファイルは抽出されました</string>
@@ -913,4 +913,5 @@
     <string name="filter_apps_without_backups">バックアップされていないアプリ</string>
     <string name="uninstalled_apps">未インストールのアプリ</string>
     <string name="internal_data">内蔵データ</string>
+    <string name="input_keystore_alias_pass_msg">タップして%1$sのパスワードを入力</string>
 </resources>
