@@ -34,16 +34,16 @@
 <p class="indent"></p>
 <h2 class="chapterHead"><span class="titlemark">Chapter 1</span><br /> <a href="#QQ2-1-2" id="x1-20001">Introduction</a></h2>
 <!--l. 3-->
-<p class="noindent">App Manager - это продвинутый менеджер пакетов для Android. Он предлагает множество функций и, следовательно, требует руководства пользователя, чтобы помочь пользователям с функциями, которые он предлагает. Этот документ действует как руководство пользователя для App Manager в том смысле, что он содержит описание каждой функции, которую может предложить App Manager. Этот документ можно рассматривать как “ официальное ” руководство для App Manager, отражающий ожидаемое поведение App Manager. Переводы могут неверно истолковать этот документ (который написан на английском языке). Поэтому рекомендуется, по возможности, прочитать английскую версию. Могут быть и другие неофициальные или сторонние ресурсы, такие как статьи в блогах, видео, чат-группы и т.д. Хотя эти ресурсы могут быть полезны для многих, они могут быть устаревшими. Если в App Manager обнаружены какие-либо отклонения от этого документа, о них следует сообщить в <a href="https://github.com/MuntashirAkon/AppManager/issues">ветке отслеживания проблем App Manager</a>.</p>
+<p class="noindent">App Manager is an advanced package manager for Android. It offers many features and consequently, it requires a user manual to assist its users with features that it offers. This document acts as a user manual for App Manager in the sense that it contains the description of every feature that App Manager has to offer. The document can be considered as the “official” guidelines for App Manager and represent the expected behaviour of App Manager. Translations can misinterpret this document (which is written in English). Therefore, it is recommended that you read the English version if possible. There might be other unofficial or third-party resources such as blog articles, videos, chat groups, etc. While these resources might be useful for many people, they may not be up-to-date. In case any deviations are detected in App Manager from this document, they should be reported in the <a href="https://github.com/MuntashirAkon/AppManager/issues">App Manager issue tracker</a>.</p>
 <h3 class="sectionHead"><span class="titlemark">1.1</span> <a href="#QQ2-1-3" id="x1-30001.1">Terminologies</a></h3>
 <ul class="itemize1">
 <li class="itemize"><span class="pplb8t-">AM</span> — Short name for App Manager</li>
 <li class="itemize"><span class="pplb8t-">AoT</span> — Short form of ADB over TCP</li>
-<li class="itemize"><span class="pplb8t-">Блокировка/разблокировка</span> — используется для блокировки компонентов. Это означает, что компонент заблокирован с помощью Intent Firewall и отключается с помощью PackageManager.</li>
-<li class="itemize"><span class="pplb8t-">IFW</span> — краткое название Intent Firewall.</li>
-<li class="itemize"><span class="pplb8t-">Ops</span> — краткое название операций, например app ops, пакетных операций, операций в один клик</li>
-<li class="itemize"><span class="pplb8t-">SSAID</span> - краткая назнвание <span class="ectt-1000">Settings.Secure.ANDROID_ID</span>. Это идентификатор устройства, назначаемый каждому приложению (начиная с Android Oreo и выше). Он создается на основе сертификата подписи приложения и SSAID, установленного для пакета <span class="ectt-1000">android</span>. В результате гарантируется, что приложение будет таким же, если пользователь не отформатирует устройство. Он широко используется для отслеживания пользователей.</li>
-<li class="itemize"><span class="pplb8t-">Трекер</span> — обозначает компоненты трекера по всему документу и в App Manager, кроме <a href="#x1-1050002.7">страницы сканера</a>. Трекеры включают в себя библиотеки, такие как отчеты о сбоях, аналитика, профилирование, идентификация, реклама, местоположение и т. Д. Таким образом, они не равны по функциям. Нет никакого различия или предвзятости между библиотеками с открытым исходным кодом и библиотеками с закрытым исходным кодом.</li>
+<li class="itemize"><span class="pplb8t-">Block/Unblock</span> — Used for component blocking. It denotes that a component is blocked using Intent Firewall and disabled using PackageManager.</li>
+<li class="itemize"><span class="pplb8t-">IFW</span> — Short form of Intent Firewall.</li>
+<li class="itemize"><span class="pplb8t-">Ops</span> — Short name for operations, e.g. app ops, batch ops, 1-click ops</li>
+<li class="itemize"><span class="pplb8t-">SSAID</span> — Short form of <span class="ectt-1000">Settings.Secure.ANDROID_ID</span>. It is a device identifier assigned to each app (from Android Oreo and onwards). It is generated from the combination of the signing certificate of the app and the SSAID set for the package <span class="ectt-1000">android</span>. As a result, it is guaranteed to be the same for an app unless the user formats the device. It is widely used for tracking users.</li>
+<li class="itemize"><span class="pplb8t-">Tracker</span> — Denotes tracker components throughout the document and in App Manager except the <a href="#x1-1050002.7">scanner page</a>. Trackers include libraries such as crash reporters, analytics, profiling, identification, ads, location, etc. Thus, they are not equal in functions. There is no distinction or bias between open source and closed source libraries.</li>
 </ul>
 <!--l. 32-->
 
@@ -58,10 +58,10 @@
 <!--l. 38-->
 <p class="noindent">App Manager is distributed using the following sources. Unofficial sources may distribute modified versions of App Manager, and none but you shall be responsible for the consequences of using such distributions.</p>
 <ol class="enumerate1">
-<li class="enumerate" id="x1-6002x1">Официальный репозиторий F-Droid.<a href="#Hfootnote./theHHfootnote"></a><a href="#fn1x1" id="fn1x1-bk"><sup class="textsuperscript">1</sup></a><a id="x1-6003f1"></a><br class="newline"> <span class="pplri8t-">Ссылка:</span> <a class="url" href="https://f-droid.org/packages/io.github.muntashirakon.AppManager"><span class="ectt-1000">https://f-droid.org/packages/io.github.muntashirakon.AppManager</span></a></li>
-<li class="enumerate" id="x1-6005x2">IzzyOnDroid репозиторий F-Droid.<a href="#Hfootnote./theHHfootnote"></a><a href="#fn2x1" id="fn2x1-bk"><sup class="textsuperscript">2</sup></a><a id="x1-6006f2"></a><br class="newline"> <span class="pplri8t-">Ссылка:</span> <a class="url" href="https://apt.izzysoft.de/fdroid/index/apk/io.github.muntashirakon.AppManager"><span class="ectt-1000">https://apt.izzysoft.de/fdroid/index/apk/io.github.muntashirakon.AppManager</span></a></li>
-<li class="enumerate" id="x1-6008x3">GitHub репозиторий.<br class="newline"> <span class="pplri8t-">Обычные релизы:</span> <a class="url" href="https://github.com/MuntashirAkon/AppManager/releases"><span class="ectt-1000">https://github.com/MuntashirAkon/AppManager/releases</span></a><br class="newline"> <span class="pplri8t-">Отладочные релизы:</span> <a class="url" href="https://github.com/MuntashirAkon/AppManager/actions"><span class="ectt-1000">https://github.com/MuntashirAkon/AppManager/actions</span></a></li>
-<li class="enumerate" id="x1-6010x4">Telegram.<br class="newline"> <span class="pplri8t-">Обычные релизы:</span> <a class="url" href="https://t.me/AppManagerChannel"><span class="ectt-1000">https://t.me/AppManagerChannel</span></a><br class="newline"> <span class="pplri8t-">Отладочные релизы:</span> <a class="url" href="https://t.me/AppManagerDebug"><span class="ectt-1000">https://t.me/AppManagerDebug</span></a></li>
+<li class="enumerate" id="x1-6002x1">Official F-Droid repository.<a href="#Hfootnote./theHHfootnote"></a><a href="#fn1x1" id="fn1x1-bk"><sup class="textsuperscript">1</sup></a><a id="x1-6003f1"></a><br class="newline" /> <span class="pplri8t-">Link:</span> <a href="https://f-droid.org/packages/io.github.muntashirakon.AppManager" class="url"><span class="ectt-1000">https://f-droid.org/packages/io.github.muntashirakon.AppManager</span></a></li>
+<li class="enumerate" id="x1-6005x2">IzzyOnDroid repository for F-Droid.<a href="#Hfootnote./theHHfootnote"></a><a href="#fn2x1" id="fn2x1-bk"><sup class="textsuperscript">2</sup></a><a id="x1-6006f2"></a><br class="newline" /> <span class="pplri8t-">Link:</span> <a href="https://apt.izzysoft.de/fdroid/index/apk/io.github.muntashirakon.AppManager" class="url"><span class="ectt-1000">https://apt.izzysoft.de/fdroid/index/apk/io.github.muntashirakon.AppManager</span></a></li>
+<li class="enumerate" id="x1-6008x3">GitHub repository.<br class="newline" /> <span class="pplri8t-">Normal releases:</span> <a href="https://github.com/MuntashirAkon/AppManager/releases" class="url"><span class="ectt-1000">https://github.com/MuntashirAkon/AppManager/releases</span></a><br class="newline" /> <span class="pplri8t-">Debug releases:</span> <a href="https://github.com/MuntashirAkon/AppManager/actions" class="url"><span class="ectt-1000">https://github.com/MuntashirAkon/AppManager/actions</span></a></li>
+<li class="enumerate" id="x1-6010x4">Telegram.<br class="newline" /> <span class="pplri8t-">Normal releases:</span> <a href="https://t.me/AppManagerChannel" class="url"><span class="ectt-1000">https://t.me/AppManagerChannel</span></a><br class="newline" /> <span class="pplri8t-">Debug releases:</span> <a href="https://t.me/AppManagerDebug" class="url"><span class="ectt-1000">https://t.me/AppManagerDebug</span></a></li>
 </ol>
 <!--l. 53-->
 
@@ -78,44 +78,44 @@
 
 <h4 class="subsectionHead"><span class="titlemark">1.3.3</span> <a href="#QQ2-1-8" id="x1-80001.3.3">Translations</a></h4>
 <!--l. 64-->
-<p class="noindent">App Manager не принимает переводы напрямую через запросы pull/merge. Управление переводами осуществляется как автоматически, так и вручную, в зависимости от контекста.</p>
+<p class="noindent">Horizontal Action Panel, as described in the previous section, consists of various app-related actions, such as–</p>
 <ul class="itemize1">
 <li class="itemize"><span class="pplb8t-">Launch.</span> Application that has a launcher <a href="#x1-410002.2.3.1">activities</a> can be launched using this button.</li>
-<li class="itemize">Руководство пользователя App Manager размещено на Crowdin.<br class="newline"> <span class="pplri8t-">Link:</span> <a class="url" href="https://crwd.in/app-manager-docs"><span class="ectt-1000">https://crwd.in/app-manager-docs</span></a></li>
+<li class="itemize"><span class="pplb8t-">Uninstall.</span> Uninstall an app.</li>
 </ul>
 <!--l. 73-->
 
 <h3 class="sectionHead"><span class="titlemark">1.4</span> <a href="#QQ2-1-9" id="x1-90001.4">Contributing</a></h3>
 <!--l. 74-->
-<p class="noindent">Существует множество способов, которыми пользователь может внести свой вклад, например: создание полезных запросов (issues), участие в обсуждениях, улучшение документации и переводов, добавление нераспознанных библиотек или трекеров, просмотр исходного кода, а также извещение об обнаруженных уязвимостях безопасности. </p>
+<p class="noindent">There are multiple ways a user can contribute such as creating helpful issues, attending discussions, improving documentations and translations, adding unrecognised libraries or trackers, reviewing the source code as well as reporting security vulnerabilities. </p>
 
 <h4 class="subsectionHead"><span class="titlemark">1.4.1</span> <a href="#QQ2-1-10" id="x1-100001.4.1">Build Instructions</a></h4>
 <!--l. 79-->
-<p class="noindent">Инструкции по сборке доступны в файле README корневой директории источника. </p>
+<p class="noindent">Build instructions are available in the README file of the root directory of the source. </p>
 
-<h4 class="subsectionHead"><span class="titlemark">1.4.2</span> <a href="#QQ2-1-11" id="x1-110001.4.2">Отправка патчей</a></h4>
+<h4 class="subsectionHead"><span class="titlemark">1.4.2</span> <a href="#QQ2-1-11" id="x1-110001.4.2">Submitting patches</a></h4>
 <!--l. 82-->
-<p class="noindent">Репозитории, расположенные на сайтах, отличных от GitHub, в настоящее время считаются зеркалами, и отправленные туда pull/merge запросы не принимаются. Вместо этого патчи (как файлы .patch) можно отправлять через вложения электронной почты. Не забудьте подписать свои коммиты.</p>
+<p class="noindent">Repositories located in sites other than GitHub are currently considered mirrors and pull/merge requests submitted there will not be accepted. Instead, patches (as .patch files) can be submitted via email attachments. Make sure to sign-off your commits.</p>
 <div class="mdframed" id="mdframed-1"><!--l. 86-->
-<p class="noindent"><span class="pplbi8t-">Информация.</span> PR на GitHub будут объединены(merged) вручную с использованием соответствующих патчей. В результате GitHub может ошибочно пометить их закрытыми, а не объединенными(merged).</p>
+<p class="noindent"><span class="pplbi8t-">Info.</span> GitHub PRs will be merged manually using the corresponding patches. As a result, GitHub may falsely mark them closed instead of merged.</p>
 
 </div>
 <div class="mdframed" id="mdframed-2"><!--l. 91-->
-<p class="noindent"><span class="pplbi8t-">Уведомление.</span> В случае отправки патчей по электронной почте вся беседа может стать общедоступной в будущем. Поэтому не включайте никакую личную информацию (PII), кроме вашего имени или адреса электронной почты.</p>
+<p class="noindent"><span class="pplbi8t-">Notice.</span> In case of submitting patches via email, the whole conversation may be publicly accessible in the future. So, do not include any personally identifiable information (PII) other than your name or email address.</p>
 
 </div>
-<h3 class="sectionHead"><span class="titlemark">1.5</span> <a href="#QQ2-1-12" id="x1-120001.5">Пожертвования и финансирование</a></h3>
+<h3 class="sectionHead"><span class="titlemark">1.5</span> <a href="#QQ2-1-12" id="x1-120001.5">Donation & Funding</a></h3>
 <!--l. 97-->
-<p class="noindent"><span class="pplri8t-">Пожертвование или покупка не являются обязательными для использования App Manager.</span> Хотя App Manager не поддерживает никаких покупок, пожертвования можно отправить автору App Manager с помощью одного из следующие адреса Bitcoin как дань:</p>
+<p class="noindent"><span class="pplri8t-">Donation or purchase is not a requirement in order to use App Manager.</span> While App Manager does not support any purchases, donations can be sent to the author of App Manager using one of the following Bitcoin addresses as a tribute:</p>
 <div class="fancyvrb" id="fancyvrb1"><a id="x1-12002r1"></a><span class="ectt-1000"> </span><span class="ectt-1000"> </span><span class="ectt-1000"> </span><span class="ectt-1000"> 33TDkWVv5EgwfKGJk7YaS2Ev1CBzBP9Sav</span><br class="fancyvrb" /> <a id="x1-12004r2"></a><span class="ectt-1000"> </span><span class="ectt-1000"> </span><span class="ectt-1000"> </span><span class="ectt-1000"> 38bzvWDD99dJhXg9tC4yQEnGdnAKPtwSXG</span><br class="fancyvrb" /> <a id="x1-12006r3"></a><span class="ectt-1000"> </span><span class="ectt-1000"> </span><span class="ectt-1000"> </span><span class="ectt-1000"> 3FHTxPoYa92dNJK6pkhwyVkMG8Vv3VpGpg</span></div>
 <!--l. 105-->
-<p class="indent">Отправляя BTC, отправитель соглашается с тем, что он/она/они не должны публиковать информацию о транзакции, т.е. транзакция будет оставаться анонимной, и он/она/они не должны использовать ее в качестве рычага для определения приоритетности своих запрашиваемых функций. Запросы функций не требуют каких-либо вознаграждений или пожертвований, и они имеют приоритет в соответствии с предпочтениями авторов. </p>
-<p class="indent"><span class="pplri8t-">App Manager открыт для финансирования/грантов.</span> Представители заинтересованных организаций могут связаться с автором напрямую, используя варианты, указанные в §<a href="#x1-130001.6">1.6</a>. </p>
+<p class="indent">By sending BTC, the sender agrees that he/she/they shall not make the transaction information public i.e. the transaction will remain anonymous, nor shall he/she/they use it as a leverage to prioritise his/her/their requested features. Feature requests do not require any bounties or donations, and they are prioritised according to the authors’ preferences. </p>
+<p class="indent"><span class="pplri8t-">App Manager is open for funding/grants.</span> Representatives of the interested organizations can contact the author directly using the options given in §<a href="#x1-130001.6">1.6</a>. </p>
 
-<h3 class="sectionHead"><span class="titlemark">1.6</span> <a href="#QQ2-1-13" id="x1-130001.6">Связь</a></h3>
+<h3 class="sectionHead"><span class="titlemark">1.6</span> <a href="#QQ2-1-13" id="x1-130001.6">Contact</a></h3>
 <!--l. 114-->
 <p class="noindent">By default, Termux does not allow running commands from third-party applications. To enable this option, you have to add <span class="ectt-1000">allow-external-apps=true</span> in <span class="ectt-1000">~/.termux/termux.properties</span>, and make sure that you are running Termux v0.96 or later.</p>
-<h2 class="chapterHead"><span class="titlemark">Глава 2</span><br> <a href="#QQ2-1-14" id="x1-140002">Страницы</a></h2>
+<h2 class="chapterHead"><span class="titlemark">Chapter 2</span><br /> <a href="#QQ2-1-14" id="x1-140002">Pages</a></h2>
 <h3 class="sectionHead"><span class="titlemark">2.1</span> <a href="#QQ2-1-15" id="x1-150002.1">Main Page</a></h3>
 <!--l. 2-->
 <p class="noindent">Main page lists all the installed apps (or a list of apps supplied by any third-party application) as well as apps that has existing backups. A single click on any installed app item opens the respective <a href="#x1-330002.2">App Details page</a>. Using the <a href="#par:main-page-sort">sort</a> option from the menu, the app items can be sorted in various ways and preserved on close. It is also possible to filter items based on your needs using the <a href="#par:main-page-filter">filter</a> option in the menu. You can filter using more than one options. You can also filter apps using app labels or package name using the search button. </p>
@@ -127,7 +127,7 @@
 <li class="itemize">Backup APK file (no root)</li>
 <li class="itemize"><a href="#x1-1400003.2">Backup/restore/delete app data</a></li>
 <li class="itemize">Clear data from apps</li>
-<li class="itemize">Включение/отключение/принудительная остановка/удаление приложений</li>
+<li class="itemize">Enable/disable/force-stop/uninstall apps</li>
 <li class="itemize">Disable run in background</li>
 <li class="itemize">Block ad and tracker components</li>
 <li class="itemize">Export blocking rules</li>
@@ -155,38 +155,38 @@
 
 <h4 class="subsectionHead"><span class="titlemark">2.1.3</span> <a href="#QQ2-1-18" id="x1-180002.1.3">Application Types</a></h4>
 <!--l. 44-->
-<p class="noindent">An app is either <span class="pplb8t-">User App</span> or <span class="pplb8t-">System App</span> along with the following codes:</p>
+<p class="noindent">Приложения бывают либо <span class="pplb8t-">пользовательскими</span> либо <span class="pplb8t-">системными</span> вместе со следующими кодами:</p>
 <ul class="itemize1">
-<li class="itemize"><span class="ectt-1000">X</span> – The app supports multiple architectures: 32-bit, 64-bit or arm-v7, arm-v8, etc.</li>
-<li class="itemize"><span class="ectt-1000">0</span> – App does not have code with it</li>
-<li class="itemize"><span class="tctt-1000">°</span> – App is in suspended state</li>
-<li class="itemize"><span class="ectt-1000">#</span> – App has requested a large heap</li>
-<li class="itemize"><span class="ectt-1000">?</span> – App has requested VM in safe mode</li>
+<li class="itemize"><span class="ectt-1000">X</span> – приложение поддерживает несколько архитектур: 32-битную, 64-битную или arm-v7, arm-v8 и т. д.</li>
+<li class="itemize"><span class="ectt-1000">0</span> – в приложении нет кода</li>
+<li class="itemize"><span class="tctt-1000">°</span> – приложение находится в приостановленном состоянии</li>
+<li class="itemize"><span class="ectt-1000">#</span> – приложение запросило большую кучу</li>
+<li class="itemize"><span class="ectt-1000">?</span> – приложение запросило запуск виртуальной машины в безопасном режиме</li>
 </ul>
 <!--l. 53-->
 
-<h4 class="subsectionHead"><span class="titlemark">2.1.4</span> <a href="#QQ2-1-19" id="x1-190002.1.4">Version Info</a></h4>
+<h4 class="subsectionHead"><span class="titlemark">2.1.4</span> <a href="#QQ2-1-19" id="x1-190002.1.4">Информация о версии</a></h4>
 <!--l. 54-->
-<p class="noindent"><span class="pplb8t-">App Ops</span> stands for <span class="pplb8t-">Application Operations</span>. Since Android 4.3, <span class="pplri8t-">App Ops</span> are used by Android system to control most of the application permissions. Each app op has a unique number associated with them which are closed inside first brackets in the App Ops tab. They also have private and optionally a public name. Some app ops are associated with <span class="pplri8t-">permissions</span> as well. The dangerousness of an app op is decided based on the associated permission, and other informations such as <span class="pplri8t-">flags</span>, <span class="pplri8t-">permission name</span>, <span class="pplri8t-">permission description</span>, <span class="pplri8t-">package name</span>, <span class="pplri8t-">group</span> are taken from the associated <a href="#x1-510002.2.4.3">permission</a>. Other information may include the following:</p>
+<p class="noindent">После названия версии следуют следующие префиксы:</p>
 <ul class="itemize1">
-<li class="itemize"><span class="pplb8t-">Mode.</span> It describes the current authorisation status which can be <span class="pplri8t-">allow</span>, <span class="pplri8t-">deny</span> (a rather misnomer, it simply means error), <span class="pplri8t-">ignore</span> (it actually means deny), <span class="pplri8t-">default</span> (inferred from a list of defaults set internally by the vendor), <span class="pplri8t-">foreground</span> (in newer Androids, it means the app op can only be used when the app is running in foreground), and some custom modes set by the vendors (MIUI uses <span class="pplri8t-">ask</span> and other modes with just numbers without any associated names).</li>
-<li class="itemize"><span class="pplb8t-">Duration.</span> The amount of time this app op has been used (there can be negative durations whose use cases are currently not known to me).</li>
-<li class="itemize"><span class="pplb8t-">Accept Time.</span> Last time the app op was accepted.</li>
+<li class="itemize"><span class="ectt-1000">_</span> – нет аппаратного ускорения</li>
+<li class="itemize"><span class="ectt-1000">~</span> – только тестовый режим</li>
+<li class="itemize"><span class="ectt-1000">debug</span> – отлаживаемое приложение</li>
 </ul>
 <!--l. 61-->
 
-<h4 class="subsectionHead"><span class="titlemark">2.1.5</span> <a href="#QQ2-1-20" id="x1-200002.1.5">Options Menu</a></h4>
+<h4 class="subsectionHead"><span class="titlemark">2.1.5</span> <a href="#QQ2-1-20" id="x1-200002.1.5">Меню опций</a></h4>
 <!--l. 62-->
-<p class="noindent">Options menu has several options which can be used to sort, filter the listed apps as well as navigate to different pages. </p>
+<p class="noindent">В меню опций есть несколько опций, которые можно использовать для сортировки, фильтрации перечисленных приложений, а также для перехода к различным страницам. </p>
 
-<h5 class="subsubsectionHead"><span class="titlemark">2.1.5.1</span> <a href="#QQ2-1-21" id="x1-210002.1.5.1">Instructions</a></h5>
+<h5 class="subsubsectionHead"><span class="titlemark">2.1.5.1</span> <a href="#QQ2-1-21" id="x1-210002.1.5.1">Инструкции</a></h5>
 <!--l. 65-->
-<p class="noindent">Clicking on instructions open an offline version of the App Manager documentations. It opens the online version if the corresponding feature split i.e. <span class="ectt-1000">feat_docs</span> is not installed. </p>
+<p class="noindent">Нажатие на инструкции открывает оффлайн версию документации App Manager. Она открывает онлайн версию, если не установлен соответствующий раздел <span class="ectt-1000">feat_docs</span> </p>
 
-<h5 class="subsubsectionHead"><span class="titlemark">2.1.5.2</span> <a href="#QQ2-1-22" id="x1-220002.1.5.2">List Options</a></h5>
+<h5 class="subsubsectionHead"><span class="titlemark">2.1.5.2</span> <a href="#QQ2-1-22" id="x1-220002.1.5.2">Параметры списка</a></h5>
 <!--l. 69-->
-<p class="noindent"><span class="pplri8t-">See also:</span> <a href="#x1-220000C"><span class="pplri8t-">Appendix: App Ops</span></a> </p>
-<p class="noindent"><span class="paragraphHead"><a href="#x1-230002.1.5.2" id="x1-230002.1.5.2">Sort</a></span> <a id="par:main-page-sort"></a> Apps listed on the main page can be sorted in different ways. The sorting preference is preserved which means the apps will be sorted the same way that was sorted in the previous launch. Regardless of your sorting preference, however, the apps are first sorted alphabetically to prevent random results.</p>
+<p class="noindent">Параметры списка содержат параметры для сортировки или фильтрации списка приложений. </p>
+<p class="noindent"><span class="paragraphHead"><a href="#x1-230002.1.5.2" id="x1-230002.1.5.2">Сортировка</a></span> <a id="par:main-page-sort"></a> Приложения, перечисленные на главной странице, можно отсортировать несколькими способами. Настройки сортировки сохраняются, что означает, что приложения будут отсортированы так же, как при предыдущем запуске. Однако независимо от ваших предпочтений сортировки приложения сначала сортируются в алфавитном порядке, чтобы предотвратить случайные результаты.</p>
 <ul class="itemize1">
 <li class="itemize"><span class="pplb8t-">User app first.</span> User apps are listed on top</li>
 <li class="itemize"><span class="pplb8t-">App label.</span> Sort in ascending order based on the app labels (also known as <span class="pplri8t-">app names</span>). This is the default sorting preference</li>
@@ -565,7 +565,7 @@
 
 <h5 class="subsubsectionHead"><span class="titlemark">2.5.3.7</span> <a href="#QQ2-1-70" id="x1-700002.5.3.7">Backup/Restore</a></h5>
 <!--l. 71-->
-<p class="noindent">App Manager’s use of hidden API and privileged code execution is now much more complex and cannot be integrated with other third party apps such as <a href="https://shizuku.rikka.app">Shizuku</a>. Here are some reasons for not considering Shizuku (which now has Apache 2.0 license) for App Manager:</p>
+<p class="noindent"><span class="pplb8t-">AppOpsManager.PackageOps</span> is a data structure to store all the <span class="pplb8t-">OpEntry</span> for a package. In simple terms, it stores all the customised operations for a package.</p>
 <ul class="itemize1">
 <li class="itemize"><span class="pplb8t-">Backup options.</span> Same as the <a href="#x1-1420003.2.2">backup options</a> of the backup/restore feature. If not set, the default options will be used.</li>
 <li class="itemize"><span class="pplb8t-">Backup name.</span> Set a custom name for the backup. If the backup name is set, each time a backup is made, it will be given a unique name with backup-name as the suffix. This behaviour will be fixed in a future release. Leave this field empty for regular or “base” backup (also, make sure not to enable <span class="pplri8t-">backup multiple</span> in the backup options).</li>
