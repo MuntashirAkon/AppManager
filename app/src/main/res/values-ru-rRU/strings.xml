@@ -14,7 +14,7 @@
   ~
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
     <string name="_lang_tag" translatable="false">ru-RU</string>
     <string name="uninstall">Удалить</string>
     <string name="permissions">Используемые разрешения</string>
@@ -513,7 +513,7 @@
     <string name="installer_error_session_write">Не удалось записать в сеанс установщика</string>
     <string name="installer_error_session_commit">Не удалось зафиксировать файлы APK</string>
     <string name="installer_error_session_abandon">Не удалось прервать сеанс установщика</string>
-    <string name="backup_apk_files">Только APK</string>
+    <string name="backup_apk_files">Файлы APK</string>
     <string name="backup_obb_media">OBB и Медиа</string>
     <string name="failed_to_extract_obb_files">Не удалось извлечь файлы OBB</string>
     <string name="obb_files_extracted_successfully">Файлы OBB извлечены</string>
@@ -620,7 +620,7 @@
     <string name="failed_to_uninstall_updates">Не удалось удалить обновления <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="filter_apps_with_backups">С резервными копиями</string>
     <string name="issued_date">Дата выпуска</string>
-    <string name="expiry_date">Дата истечения</string>
+    <string name="expiry_date">Срок действия</string>
     <string name="type">Тип</string>
     <string name="validity">Срок действия</string>
     <string name="valid">Действительный</string>
@@ -953,4 +953,42 @@
 \nGitLab: https://gitlab.com/muntashir/AppManager
 \nRiseup: https://0xacab.org/muntashir/AppManager
 \nCodeberg: https://codeberg.org/muntashir/AppManager</string>
+    <string name="expiry_date_cannot_be_empty">Срок действия не может быть пустым.</string>
+    <plurals name="items_selected">
+        <item quantity="one"><xliff:g id="selection_no" example="20"> %1$d </xliff:g> выбран</item>
+        <item quantity="few"><xliff:g id="selection_no" example="20"> %1$d </xliff:g> выбрано</item>
+        <item quantity="many"><xliff:g id="selection_no" example="20"> %1$d </xliff:g> выбрано</item>
+        <item quantity="other"><xliff:g id="selection_no" example="20"> %1$d </xliff:g> выбрано</item>
+    </plurals>
+    <string name="signing_key">Ключ подписи</string>
+    <string name="failed_to_read_keystore">Не удалось прочитать хранилище ключей.</string>
+    <string name="alias_pass">Пароль псевдонима</string>
+    <string name="choose_an_alias">Выберите псевдоним</string>
+    <string name="found_no_alias_in_keystore">В хранилище ключей не найдено псевдонимов!</string>
+    <string name="new_alias_password">Новый пароль псевдонима</string>
+    <string name="import_key">Импортировать ключ</string>
+    <string name="pem_file">PEM-файл</string>
+    <string name="pem_and_pk8">PEM и PKCS #8 (PK8)</string>
+    <string name="keystore_file">Файл хранилища ключей</string>
+    <string name="java_keystore">Java KeyStore (JKS)</string>
+    <string name="keystore_pass">Пароль хранилища ключей</string>
+    <string name="country_name" tools:ignore="TypographyOther">Название страны (C)</string>
+    <string name="state_name">Название государства (ST)</string>
+    <string name="locality_name">Название населенного пункта (города) (L)</string>
+    <string name="organization_name">Название организации (O)</string>
+    <string name="organization_unit">Подразделение организации (OU)</string>
+    <string name="common_name">Общее имя (CN)</string>
+    <string name="input_key_password">Пароль ключа</string>
+    <string name="failed_to_load_key">Не удалось загрузить ключ.</string>
+    <string name="default_key_used">Используется ключ по умолчанию.</string>
+    <string name="key_not_set">Не задано.</string>
+    <string name="use_default">По умолчанию</string>
+    <string name="invalid_rsa_key_size">Неверный размер ключа для шифрования RSA. Размер ключа может составлять 1024, 2048 или 4096 бит.</string>
+    <string name="crypto_key_size">Размер ключа</string>
+    <string name="invalid_aes_key_size">Неверный размер ключа для AES шифрования. Размер ключа может быть 128 или 256 бит.</string>
+    <string name="failed_to_initialize_key_store">Не удалось инициализировать хранилище ключей App Manager.</string>
+    <string name="failed_to_save_key">Не удалось сохранить ключ.</string>
+    <string name="generate_key">Генерировать</string>
+    <string name="input_key">Ввод ключа (в шестнадцатеричном формате)</string>
+    <string name="input_keystore_alias_pass_msg">Нажмите здесь, чтобы ввести пароль для %1$s</string>
 </resources>
