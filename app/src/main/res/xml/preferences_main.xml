@@ -63,6 +63,13 @@
         app:iconSpaceReserved="false" />
 
     <Preference
+        app:key="installer"
+        app:title="@string/installer"
+        app:summary="@string/pref_installer_msg"
+        android:fragment="io.github.muntashirakon.AppManager.settings.InstallerPreferences"
+        app:iconSpaceReserved="false" />
+
+    <Preference
         app:key="backup_restore_prefs"
         app:title="@string/backup_restore"
         app:summary="@string/pref_backup_restore_msg"
@@ -90,37 +97,6 @@
             app:key="remove_all_rules"
             app:title="@string/pref_remove_all_rules"
             app:summary="@string/pref_remove_all_rules_msg"
-            app:iconSpaceReserved="false" />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        app:key="installer"
-        app:title="@string/installer"
-        app:iconSpaceReserved="false" >
-
-        <SwitchPreferenceCompat
-            app:key="installer_display_users"
-            app:title="@string/pref_show_users_in_installer"
-            app:summary="@string/pref_show_users_in_installer_msg"
-            app:iconSpaceReserved="false" />
-
-        <SwitchPreferenceCompat
-            app:key="installer_sign_apk"
-            app:title="@string/pref_sign_apk"
-            app:summary="@string/pref_sign_apk_msg"
-            app:iconSpaceReserved="false" />
-
-        <Preference
-            app:key="installer_install_location"
-            app:title="@string/install_location"
-            tools:summary="Auto"
-            app:iconSpaceReserved="false" />
-
-        <Preference
-            app:key="installer_installer_app"
-            app:title="@string/installer_app"
-            tools:summary="App Manager"
             app:iconSpaceReserved="false" />
 
     </PreferenceCategory>

@@ -948,6 +948,7 @@
     <string name="failed_to_read_keystore">Could not read the KeyStore.</string>
     <string name="signing_key">Signing key</string>
     <string name="expiry_date_cannot_be_empty">Expiry date cannot be empty.</string>
+    <string name="pref_installer_msg">Configure the behaviours of the app installer.</string>
     <plurals name="items_selected">
         <item quantity="one"><xliff:g id="selection_no" example="20">%1$d</xliff:g> selected</item>
         <item quantity="other"><xliff:g id="selection_no" example="20">%1$d</xliff:g> selected</item>
