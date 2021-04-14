@@ -949,4 +949,8 @@
     <string name="installer_app_message">Нажмите <b>выбрать</b> для использования одного из установленных приложений, или нажмите <b>пользовательское</b>, чтобы ввести имя пользовательского пакета.</string>
     <string name="specify_custom_name">Пользовательское</string>
     <string name="internal_data">Внутренние данные</string>
+    <string name="source_code_links">GitHub: https://github.com/MuntashirAkon/AppManager
+\nGitLab: https://gitlab.com/muntashir/AppManager
+\nRiseup: https://0xacab.org/muntashir/AppManager
+\nCodeberg: https://codeberg.org/muntashir/AppManager</string>
 </resources>
