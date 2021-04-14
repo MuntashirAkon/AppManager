@@ -39,7 +39,7 @@ String.metaClass.toPath = { -> toPath(delegate) }
 ext {
     debugClassDir = project.rootDir.absolutePath + '/server/build/intermediates/javac/debug/classes'.toPath()
     libserverClassDir = project.rootDir.absolutePath + '/libserver/build/intermediates/javac/debug/classes'.toPath()
-    hiddenApiClassDir = project.rootDir.absolutePath + '/hiddenapi/build/intermediates/javac/debug/classes'.toPath()
+    hiddenApiClassDir = project.rootDir.absolutePath + '/hiddenapi/build/classes/java/main'.toPath()
     amJar = project.rootDir.absolutePath + '/app/src/main/assets/am.jar'.toPath()
     mainJar = project.rootDir.absolutePath + '/app/src/main/assets/main.jar'.toPath()
 }
@@ -53,7 +53,7 @@ build.doLast {
     def buildArgs = ['--release', '--output', amJar]
     buildArgs.addAll(get_args(libserverClassDir, ["io/github/muntashirakon/AppManager/server/common/"]))
     buildArgs.addAll(get_args(debugClassDir,  ["io/github/muntashirakon/AppManager/server/"]))
-    buildArgs.addAll(get_args(hiddenApiClassDir,  [""]))
+    buildArgs.addAll(hiddenApiClassDir +  "/android/app/ActivityThread.class")
     buildArgs.addAll(['--lib', "${android.sdkDirectory.path}/platforms/android-${rootProject.ext.targetSdk}/android.jar"])
     exec {
         workingDir = project.rootDir
