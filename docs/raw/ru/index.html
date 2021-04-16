@@ -155,68 +155,68 @@
 
 <h4 class="subsectionHead"><span class="titlemark">2.1.3</span> <a href="#QQ2-1-18" id="x1-180002.1.3">Application Types</a></h4>
 <!--l. 44-->
-<p class="noindent">Приложения бывают либо <span class="pplb8t-">пользовательскими</span> либо <span class="pplb8t-">системными</span> вместе со следующими кодами:</p>
+<p class="noindent">An app is either <span class="pplb8t-">User App</span> or <span class="pplb8t-">System App</span> along with the following codes:</p>
 <ul class="itemize1">
-<li class="itemize"><span class="ectt-1000">X</span> – приложение поддерживает несколько архитектур: 32-битную, 64-битную или arm-v7, arm-v8 и т. д.</li>
-<li class="itemize"><span class="ectt-1000">0</span> – в приложении нет кода</li>
-<li class="itemize"><span class="tctt-1000">°</span> – приложение находится в приостановленном состоянии</li>
-<li class="itemize"><span class="ectt-1000">#</span> – приложение запросило большую кучу</li>
-<li class="itemize"><span class="ectt-1000">?</span> – приложение запросило запуск виртуальной машины в безопасном режиме</li>
+<li class="itemize"><span class="ectt-1000">X</span> – The app supports multiple architectures: 32-bit, 64-bit or arm-v7, arm-v8, etc.</li>
+<li class="itemize"><span class="ectt-1000">0</span> – App does not have code with it</li>
+<li class="itemize"><span class="tctt-1000">°</span> – App is in suspended state</li>
+<li class="itemize"><span class="ectt-1000">#</span> – App has requested a large heap</li>
+<li class="itemize"><span class="ectt-1000">?</span> – App has requested VM in safe mode</li>
 </ul>
 <!--l. 53-->
 
-<h4 class="subsectionHead"><span class="titlemark">2.1.4</span> <a href="#QQ2-1-19" id="x1-190002.1.4">Информация о версии</a></h4>
+<h4 class="subsectionHead"><span class="titlemark">2.1.4</span> <a href="#QQ2-1-19" id="x1-190002.1.4">Version Info</a></h4>
 <!--l. 54-->
-<p class="noindent">После названия версии следуют следующие префиксы:</p>
+<p class="noindent"><span class="pplb8t-">App Ops</span> stands for <span class="pplb8t-">Application Operations</span>. Since Android 4.3, <span class="pplri8t-">App Ops</span> are used by Android system to control most of the application permissions. Each app op has a unique number associated with them which are closed inside first brackets in the App Ops tab. They also have private and optionally a public name. Some app ops are associated with <span class="pplri8t-">permissions</span> as well. The dangerousness of an app op is decided based on the associated permission, and other informations such as <span class="pplri8t-">flags</span>, <span class="pplri8t-">permission name</span>, <span class="pplri8t-">permission description</span>, <span class="pplri8t-">package name</span>, <span class="pplri8t-">group</span> are taken from the associated <a href="#x1-510002.2.4.3">permission</a>. Other information may include the following:</p>
 <ul class="itemize1">
-<li class="itemize"><span class="ectt-1000">_</span> – нет аппаратного ускорения</li>
-<li class="itemize"><span class="ectt-1000">~</span> – только тестовый режим</li>
-<li class="itemize"><span class="ectt-1000">debug</span> – отлаживаемое приложение</li>
+<li class="itemize"><span class="pplb8t-">Mode.</span> It describes the current authorisation status which can be <span class="pplri8t-">allow</span>, <span class="pplri8t-">deny</span> (a rather misnomer, it simply means error), <span class="pplri8t-">ignore</span> (it actually means deny), <span class="pplri8t-">default</span> (inferred from a list of defaults set internally by the vendor), <span class="pplri8t-">foreground</span> (in newer Androids, it means the app op can only be used when the app is running in foreground), and some custom modes set by the vendors (MIUI uses <span class="pplri8t-">ask</span> and other modes with just numbers without any associated names).</li>
+<li class="itemize"><span class="pplb8t-">Duration.</span> The amount of time this app op has been used (there can be negative durations whose use cases are currently not known to me).</li>
+<li class="itemize"><span class="pplb8t-">Accept Time.</span> Last time the app op was accepted.</li>
 </ul>
 <!--l. 61-->
 
-<h4 class="subsectionHead"><span class="titlemark">2.1.5</span> <a href="#QQ2-1-20" id="x1-200002.1.5">Меню опций</a></h4>
+<h4 class="subsectionHead"><span class="titlemark">2.1.5</span> <a href="#QQ2-1-20" id="x1-200002.1.5">Options Menu</a></h4>
 <!--l. 62-->
-<p class="noindent">В меню опций есть несколько опций, которые можно использовать для сортировки, фильтрации перечисленных приложений, а также для перехода к различным страницам. </p>
+<p class="noindent">Options menu has several options which can be used to sort, filter the listed apps as well as navigate to different pages. </p>
 
-<h5 class="subsubsectionHead"><span class="titlemark">2.1.5.1</span> <a href="#QQ2-1-21" id="x1-210002.1.5.1">Инструкции</a></h5>
+<h5 class="subsubsectionHead"><span class="titlemark">2.1.5.1</span> <a href="#QQ2-1-21" id="x1-210002.1.5.1">Instructions</a></h5>
 <!--l. 65-->
-<p class="noindent">Нажатие на инструкции открывает оффлайн версию документации App Manager. Она открывает онлайн версию, если не установлен соответствующий раздел <span class="ectt-1000">feat_docs</span> </p>
+<p class="noindent">Clicking on instructions open an offline version of the App Manager documentations. It opens the online version if the corresponding feature split i.e. <span class="ectt-1000">feat_docs</span> is not installed. </p>
 
-<h5 class="subsubsectionHead"><span class="titlemark">2.1.5.2</span> <a href="#QQ2-1-22" id="x1-220002.1.5.2">Параметры списка</a></h5>
+<h5 class="subsubsectionHead"><span class="titlemark">2.1.5.2</span> <a href="#QQ2-1-22" id="x1-220002.1.5.2">List Options</a></h5>
 <!--l. 69-->
-<p class="noindent">Параметры списка содержат параметры для сортировки или фильтрации списка приложений. </p>
-<p class="noindent"><span class="paragraphHead"><a href="#x1-230002.1.5.2" id="x1-230002.1.5.2">Сортировка</a></span> <a id="par:main-page-sort"></a> Приложения, перечисленные на главной странице, можно отсортировать несколькими способами. Настройки сортировки сохраняются, что означает, что приложения будут отсортированы так же, как при предыдущем запуске. Однако независимо от ваших предпочтений сортировки приложения сначала сортируются в алфавитном порядке, чтобы предотвратить случайные результаты.</p>
+<p class="noindent"><span class="pplri8t-">See also:</span> <a href="#x1-220000C"><span class="pplri8t-">Appendix: App Ops</span></a> </p>
+<p class="noindent"><span class="paragraphHead"><a href="#x1-230002.1.5.2" id="x1-230002.1.5.2">Sort</a></span> <a id="par:main-page-sort"></a> Apps listed on the main page can be sorted in different ways. The sorting preference is preserved which means the apps will be sorted the same way that was sorted in the previous launch. Regardless of your sorting preference, however, the apps are first sorted alphabetically to prevent random results.</p>
 <ul class="itemize1">
-<li class="itemize"><span class="pplb8t-">User app first.</span> User apps are listed on top</li>
-<li class="itemize"><span class="pplb8t-">App label.</span> Sort in ascending order based on the app labels (also known as <span class="pplri8t-">app names</span>). This is the default sorting preference</li>
-<li class="itemize"><span class="pplb8t-">Package name.</span> Sort in ascending order based on package names</li>
-<li class="itemize"><span class="pplb8t-">Last update.</span> Sort in descending order based on the package update date (or install date if it is a newly installed package)</li>
-<li class="itemize"><span class="pplb8t-">Shared user ID.</span> Sort in descending order based on the kernel user ID</li>
-<li class="itemize"><span class="pplb8t-">Target SDK.</span> Sort in ascending order based on the target SDK</li>
-<li class="itemize"><span class="pplb8t-">Signature.</span> Sort in ascending order based on app’s signing info</li>
-<li class="itemize"><span class="pplb8t-">Disabled first.</span> List disabled apps first</li>
-<li class="itemize"><span class="pplb8t-">Blocked first.</span> Sort in descending order based on the number of blocked components</li>
-<li class="itemize"><span class="pplb8t-">Backup first.</span> Display apps with backups on top</li>
+<li class="itemize"><span class="pplb8t-">Сначала пользовательские.</span> Пользовательские приложения будут отображаться первыми</li>
+<li class="itemize"><span class="pplb8t-">Название приложения.</span> Сортировка по возрастанию на основе названий (также известны как <span class="pplri8t-">ярлыки приложений</span>). Это значение сортировки по умолчанию</li>
+<li class="itemize"><span class="pplb8t-">Имя пакета.</span> Сортировка по возрастанию по именам пакетов</li>
+<li class="itemize"><span class="pplb8t-">Последнее обновление.</span> Сортировка в порядке убывания по дате обновления пакета (или дате установки, если это недавно установленный пакет)</li>
+<li class="itemize"><span class="pplb8t-">Общий идентификатор пользователя.</span> Сортировка по убыванию на основе идентификатора пользователя ядра</li>
+<li class="itemize"><span class="pplb8t-">Целевая версия SDK.</span> Сортировка по возрастанию в зависимости от целевой SDK</li>
+<li class="itemize"><span class="pplb8t-">Подпись.</span> Сортировка в порядке возрастания на основе информации о подписи приложения</li>
+<li class="itemize"><span class="pplb8t-">Сначала отключенные.</span> Отключенные приложения будут отображаться первыми</li>
+<li class="itemize"><span class="pplb8t-">Сначала заблокированые.</span> Сортировка по убыванию в зависимости от количества заблокированных компонентов</li>
+<li class="itemize"><span class="pplb8t-">Сначала резервные копии.</span> Отображать приложения с резервными копиями сверху</li>
 </ul>
 <!--l. 90-->
-<p class="indent">There is also a <span class="pplri8t-">reverse</span> option which can be used to sort the apps in reverse order. </p>
-<p class="noindent"><span class="paragraphHead"><a href="#x1-240002.1.5.2" id="x1-240002.1.5.2">Filter</a></span> <a id="par:main-page-filter"></a> Apps listed on the main page can be filtered in a number of ways. Like sorting, filtering preferences are also stored and retained after a relaunch.</p>
+<p class="indent">Существует также опция <span class="pplri8t-">обратный порядок</span> для сортировки приложений в обратном порядке. </p>
+<p class="noindent"><span class="paragraphHead"><a href="#x1-240002.1.5.2" id="x1-240002.1.5.2">Фильтр</a></span> <a id="par:main-page-filter"></a> Приложения, перечисленные на главной странице, можно отфильтровать несколькими способами. Как и в случае с сортировкой, настройки фильтрации также сохраняются после после перезапуска.</p>
 <ul class="itemize1">
-<li class="itemize"><span class="pplb8t-">User apps.</span> List only the user apps</li>
-<li class="itemize"><span class="pplb8t-">Name.</span> Each permission has a unique name like <span class="ectt-1000">android.permission.INTERNET</span> but multiple app can request the permission.</li>
-<li class="itemize"><span class="pplb8t-">Icon.</span> Each permission can have a custom icon. The other permission tabs do not have any icon because they do not contain any icon in the app manifest.</li>
-<li class="itemize"><span class="pplb8t-">Description.</span> This optional field describes the permission. If there isn’t any description associated with the permission, the field is not displayed.</li>
-<li class="itemize"><span class="pplb8t-">Flags.</span> (Uses the flag symbol or <span class="pplb8t-">Protection Level</span> name) This describes various permission flags such as <span class="pplri8t-">normal</span>, <span class="pplri8t-">development</span>, <span class="pplri8t-">dangerous</span>, <span class="pplri8t-">instant</span>, <span class="pplri8t-">granted</span>, <span class="pplri8t-">revoked</span>, <span class="pplri8t-">signature</span>, <span class="pplri8t-">privileged</span>, etc.</li>
-<li class="itemize"><span class="pplb8t-">Package Name.</span> Denotes the package name associated with the permission, i.e. the package that defined the permission.</li>
-<li class="itemize"><span class="pplb8t-">Group.</span> The group name associated with the permission (if any). Newer Androids do not seem to use group names which is why you’ll usually see <span class="ectt-1000">android.permission-group.UNDEFINED</span> or no group name at all.</li>
-<li class="itemize"><span class="pplb8t-">Running apps.</span> List apps that are currently running (either in foreground or background)</li>
-<li class="itemize"><span class="pplb8t-">Apps with splits.</span> List apps with one or more split APKs</li>
-<li class="itemize"><span class="pplb8t-">Installed apps.</span> List only installed apps</li>
-<li class="itemize"><span class="pplb8t-">Uninstalled apps.</span> List only uninstalled apps including backups</li>
+<li class="itemize"><span class="pplb8t-">Пользовательские приложения</span> - отображение только пользовательских приложений</li>
+<li class="itemize"><span class="pplb8t-">Системные приложения</span> - отображение только системных приложений.</li>
+<li class="itemize"><span class="pplb8t-">Отключенные приложения</span> - отображение только отключенных приложений</li>
+<li class="itemize"><span class="pplb8t-">Приложения с правилами </span> - отображение только приложений с правилами блокировки</li>
+<li class="itemize"><span class="pplb8t-">Приложения с активити</span> - отображение только приложений с одной или несколькими активити</li>
+<li class="itemize"><span class="pplb8t-">Приложения с резервными копиями</span> - отображение только приложений с одной или несколькими резервными копиями (включая удаленные приложения)</li>
+<li class="itemize"><span class="pplb8t-">Приложения без резервных копий</span> - отображение только приложений без резервных копий (включая удаленные приложения).</li>
+<li class="itemize"><span class="pplb8t-">Работающие приложения</span> - отображение только работающих приложений (как на переднем плане, так и в фоне)</li>
+<li class="itemize"><span class="pplb8t-">Разделенные приложения</span> - отображение только приложений с одним или несколькими раздельными APK</li>
+<li class="itemize"><span class="pplb8t-">Установленные приложения</span> - отображать только установленные приложения</li>
+<li class="itemize"><span class="pplb8t-">Удаленные приложения</span> - отображать только удаленные приложения</li>
 </ul>
 <!--l. 109-->
-<p class="indent">Unlike sorting, you can filter using more than one option. For example, you can list the disabled user apps by filtering app lists selecting <span class="pplri8t-">user apps</span> and <span class="pplri8t-">disabled apps</span>. This is particularly useful for <a href="#x1-160002.1.1">batch operations</a> where you can filter all user apps to carry out certain operations. </p>
+<p class="indent">В отличие от сортировки, вы можете фильтровать приложения, используя более одного параметра. Например, вы можете просмотреть все отключенные пользовательские приложения, фильтруя списки приложений, используя кнопки показа <span class="pplri8t-">пользовательских приложений</span> и <span class="pplri8t-">отключенных приложений</span>. Это особенно полезно для <a href="#x1-160002.1.1">пакетных операций</a> в которых вы можете фильтровать все пользовательские приложения для выполнения определенных операций. </p>
 
 <h5 class="subsubsectionHead"><span class="titlemark">2.1.5.3</span> <a href="#QQ2-1-25" id="x1-250002.1.5.3">1-Click Ops</a></h5>
 <!--l. 114-->
