@@ -698,4 +698,8 @@
     <string name="app_ops">Opérations de l\'appli</string>
     <string name="internal_data">Données internes</string>
     <string name="requested_large_heap">Grand tas</string>
+    <string name="source_code_links">GitHub: https://github.com/MuntashirAkon/AppManager
+\nGitLab: https://gitlab.com/muntashir/AppManager
+\nRiseup: https://0xacab.org/muntashir/AppManager
+\nCodeberg: https://codeberg.org/muntashir/AppManager</string>
 </resources>
