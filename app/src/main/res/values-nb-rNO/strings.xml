@@ -592,7 +592,7 @@
     <string name="failed_to_disable_op">Kunne ikke skru av forespurt app-operasjon</string>
     <string name="failed_to_enable_op">Kunne ikke sette i verk forespurt app-operasjon</string>
     <string name="no_app_ops">Ingen app-operasjoner</string>
-    <string name="app_ops">AppOps</string>
+    <string name="app_ops">App-operasjoner</string>
     <string name="total_size">Totalt</string>
     <string name="error_evaluating_input">Kunne ikke vurdere inngang</string>
     <string name="type_boolean">Sant/usant</string>
@@ -617,16 +617,16 @@
     </plurals>
     <string name="external_apk_no_app_op">Ekstern APK har ikke noen app-operasjoner</string>
     <string name="one_click_ops">Ett-klikk Ops</string>
-    <string name="failed_to_deny_dangerous_app_ops">Kunne ikke tilbakekalle alle farlige app Ops</string>
+    <string name="failed_to_deny_dangerous_app_ops">Kunne ikke tilbakekalle alle farlige app-operasjoner</string>
     <string name="failed_to_deny_dangerous_perms">Kunne ikke tilbakekalle alle farlige tillatelser</string>
-    <string name="failed_to_reset_app_ops">Kunne ikke tilbakestille app Ops</string>
+    <string name="failed_to_reset_app_ops">Kunne ikke tilbakestille app-operasjoner</string>
     <plurals name="alert_failed_to_disable_trackers">
         <item quantity="one">Kunne ikke deaktivere sporere fra %1$d app</item>
         <item quantity="other">Kunne ikke deaktivere sporere fra %1$d apper</item>
     </plurals>
-    <string name="sort_by_app_ops_values">App Ops verdi</string>
+    <string name="sort_by_app_ops_values">App-operasjonsverdi</string>
     <string name="sort_by_denied_app_ops">Nektet først</string>
-    <string name="sort_by_app_ops_names">App-ops navn</string>
+    <string name="sort_by_app_ops_names">App-operasjonsnavn</string>
     <string name="deny_dangerous_app_ops">Nekt farlige app-operasjoner</string>
     <string name="pref_about_msg">App-manager versjon, lisens, kreditter, osv.</string>
     <string name="pref_import_blocker_msg">Importer blokkerings-regler fra Blocker, hver fil inneholder regler for en enkelt pakke.</string>
@@ -638,8 +638,151 @@
     <string name="app_op_cannot_be_disabled">Denne app-operasjon kan ikke skurs av, en skrivebeskyttet app-op kan være avhengig av en annen app-op.</string>
     <string name="toggle_kill_for_system_apps">Aktiver eller deaktiver tvungen avslutning av system-apper</string>
     <plurals name="alert_failed_to_disable_background">
-        <item quantity="one">"Kunne ikke hindre %1$d  app fra å kjøre i bakgrunnen"</item>
+        <item quantity="one">Kunne ikke hindre ett program fra å kjøre i bakgrunnen</item>
         <item quantity="other">Kunne ikke hindre %1$d programmer fra å kjøre i bakgrunnen</item>
     </plurals>
     <string name="pref_usage_access_enabled_msg">Lar deg se statistikk om bruk av app og info om app-data.</string>
+    <string name="failed_to_uninstall_updates">Kunne ikke avinstallere oppgraderinger for <xliff:g id="app_name" example="App Manager"/>.</string>
+    <string name="abi_split_for_base_apk"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> kode for grunn-APK</string>
+    <string name="unknown_split_for_base_apk"><xliff:g id="split_name" example="some_split"/> for grunn-APK</string>
+    <plurals name="items_selected">
+        <item quantity="one"><xliff:g id="selection_no" example="20"/> valgt</item>
+        <item quantity="other"><xliff:g id="selection_no" example="20"/> valgt</item>
+    </plurals>
+    <string name="pref_enable_disable_features_msg">Skru på eller av funksjoner i App Manager.</string>
+    <string name="enable_disable_features">Skru på/av funksjoner</string>
+    <string name="ssaid">SSAID</string>
+    <string name="initializing">Starter …</string>
+    <string name="allow_background">Tillat bakgrunn</string>
+    <string name="reject_background">Avslå bakgrunn</string>
+    <string name="choose_what_to_do">Velg foretagende.</string>
+    <string name="drm_free_apkm_msg">APKM-filen er DRM-fri, og det er unødvendig å konvertere den til APKS.</string>
+    <string name="restore_msg">Gjenopprett programmer med data</string>
+    <string name="backup_msg">Sikkerhetskopier programmer med data</string>
+    <string name="redo_existing_backups_msg">Gjenta sikkerhetskopi for installerte programmer med tidligere sikkerhetskopier.</string>
+    <string name="backup_custom_users_description">Utfør sikkerhetskopier kun for de angitte brukerne</string>
+    <string name="pref_backup_restore_msg">Tilpass sikkerhetskopiering/gjenoppretting.</string>
+    <string name="density">Pikseltetthet</string>
+    <string name="patch_level">Feilfiks-nivå</string>
+    <string name="backup_multiple_description">Opprett egen <i>navngitt</i> sikkerhetskopi istedenfor grunn-sikkerhetskopien.</string>
+    <string name="backup_rules_description">Sikkerhetskopier regler satt opp i App Manager.</string>
+    <string name="backup_external_data_description">Sikkerhetskopier eksterne datamapper.</string>
+    <string name="backup_internal_data_description">Sikkerhetskopier interne datamapper.</string>
+    <string name="pref_about_device_msg">Grunnleggende enhetsinfo, inkludert Android-system, prosessor, GPU, minne, batteri, osv.</string>
+    <string name="set_custom_app_op">Sett egendefinert app-operasjon</string>
+    <string name="mime_type">Media-type</string>
+    <string name="result_code">Resulterende kode</string>
+    <string name="non_critical_exts">Ikke-kritiske utvidelser</string>
+    <string name="critical_exts">Kritiske utvidelser</string>
+    <string name="deny_app_ops_description">Sett et modus for app-operasjoner identifisert av de faste verdiene, f.eks. <tt>63</tt> eller <tt>RUN_IN_BACKGROUND</tt></string>
+    <string name="disable_background_run_description">Setter <i>ignorert</i>-modus for følgende app-operasjoner: <tt>RUN_IN_BACKGROUND</tt> (fra Android 7.0) og <tt>RUN_ANY_IN_BACKGROUND</tt> (fra Android 9).</string>
+    <string name="set_mode_for_app_ops_dots">Sett modus for app-operasjoner …</string>
+    <string name="no_app_ops_permission">Ingen tilganger for visning av app-operasjoner</string>
+    <string name="toggle_default_app_ops">Veksle forvalgte app-operasjoner</string>
+    <string name="pref_remove_all_rules_msg">Tilganger vil bli innvilget, app-operasjoner og komponenter vil tilbakestilles til sine forvalgte verdier.</string>
+    <plurals name="alert_failed_to_set_app_ops">
+        <item quantity="one">Kunne ikke sette app-operasjoner for ett program</item>
+        <item quantity="other">Kunne ikke sette app-operasjoner for %1$s programmer</item>
+    </plurals>
+    <string name="input_app_ops">Skriv inn app-operasjoner</string>
+    <string name="uninstall_updates">Avinstaller oppgraderinger</string>
+    <string name="state_session_leader">Øktleder</string>
+    <string name="navigation_no_nav">Ingen navigasjon</string>
+    <string name="orientation_full_user">Fullbruker</string>
+    <string name="orientation_full_sensor">Full-sensor</string>
+    <string name="base_apk">Grunn-APK</string>
+    <string name="only_works_in_root_or_adb_mode">Fungerer kun i rot- eller ADB-modus</string>
+    <string name="backup_apk_files_description">Sikkerhetskopier APK-filer med kildemappe, inkludert oppdelinger.</string>
+    <string name="filter_apps_with_splits">Med oppdelinger</string>
+    <string name="splits">Oppdelinger</string>
+    <plurals name="no_of_splits">
+        <item quantity="one">%1$d oppdeling</item>
+        <item quantity="other">%1$d oppdelinger</item>
+    </plurals>
+    <string name="magisk_hide_enabled">MagiskHide</string>
+    <string name="this_action_cannot_be_undone">Denne handlingen kan ikke angres.</string>
+    <string name="input_keystore_alias_pass_msg">Trykk her for å angi passord for %1$s</string>
+    <string name="input_keystore_alias_pass">Passord for alias <b>%1$s</b></string>
+    <string name="no_root">Ingen rot-tilgang</string>
+    <string name="root">Rot-tilgang</string>
+    <string name="simple">Enkel</string>
+    <string name="enabled">Påskrudd</string>
+    <string name="profile_backup_apk_msg">Sikkerhetskopierer APK-filer</string>
+    <string name="profile_block_trackers_msg">Blokker sporerne i programmer</string>
+    <string name="profile_clear_data_msg">Tømmer programmers data</string>
+    <string name="profile_clear_cache_msg">Tømmer programmers hurtiglagre</string>
+    <string name="profile_force_stop_msg">Tvinger avslutning av programmer</string>
+    <string name="none">Ingen</string>
+    <string name="failed_to_duplicate_profile">Kunne ikke duplisere profil</string>
+    <string name="duplicate">Dupliser</string>
+    <string name="conversion_failed">Konvertering mislyktes.</string>
+    <string name="filter_apps_with_backups">Med sikkerhetskopier</string>
+    <string name="sort_by_backup">Sikkerhetskopiert først</string>
+    <string name="orientation_unspecified">Ikke angitt</string>
+    <string name="launch_mode_single_instance">Enkel instans</string>
+    <string name="launch_mode_multiple">Flere</string>
+    <string name="backup_multiple">Sikkerhetskopier flere</string>
+    <string name="installer_error_conflict">Kunne ikke installere program fordi pakkenavnet er i bruk</string>
+    <string name="block_unblock_trackers">Blokker/avblokker sporere</string>
+    <plurals name="verified_with_warning">
+        <item quantity="one">Bekreftet med én advarselk</item>
+        <item quantity="other">Bekreftet med %d advarsler</item>
+    </plurals>
+    <string name="filter">Filtrer</string>
+    <string name="filtered_packages">Filtrerte pakker</string>
+    <string name="block_components_description">Blokker alle komponenter identifisert av de gitte signaturene</string>
+    <string name="block_unblock_trackers_description">Blokker eller avblokker reklame- og sporingskomponenter i alle de installerte programmene</string>
+    <string name="pref_import_existing_msg">Legg til komponenter avskrudd av andre programmer i App Manager. Vær forsiktig med dette verktøyet, siden det kan være mange falske positiver. Velg kun programmene du er sikker på.</string>
+    <string name="source_code_links">GitHub: https://github.com/MuntashirAkon/AppManager
+\nGitLab: https://gitlab.com/muntashir/AppManager
+\nRiseup: https://0xacab.org/muntashir/AppManager
+\nCodeberg: https://codeberg.org/muntashir/AppManager</string>
+    <string name="alias_pass">Alias-passord</string>
+    <string name="choose_an_alias">Velg et alias</string>
+    <string name="new_alias_password">Nytt alias-passord</string>
+    <string name="import_key">Importer nøkkel</string>
+    <string name="pem_file">PEM-fil</string>
+    <string name="input_key_password">Nøkkelpassord</string>
+    <string name="failed_to_load_key">Kunne ikke laste inn nøkkelen.</string>
+    <string name="default_key_used">Forvalgt nøkkel blir brukt.</string>
+    <string name="key_not_set">Ikke satt.</string>
+    <string name="use_default">Bruk forvalg</string>
+    <string name="crypto_key_size">Nøkkelstørrelse</string>
+    <string name="failed_to_save_key">Kunne ikke lagre nøkkel.</string>
+    <string name="generate_key">Generer</string>
+    <string name="specify_custom_name">Egendefinert</string>
+    <string name="last_actions">Nylige handlinger</string>
+    <string name="copied_to_clipboard">Kopiert til utklippstavle.</string>
+    <string name="enable_battery_optimization">Skru på batterioptimisering\?</string>
+    <string name="battery_optimization">Batterioptimisering</string>
+    <string name="no_battery_optimization">Ingen batterioptimisering</string>
+    <string name="type_float_array_list">Liste over desimaltall</string>
+    <string name="screen_lock">Skjermlås</string>
+    <string name="unlock_app_manager">Lås opp App Manager</string>
+    <string name="sd_card">SD-kort</string>
+    <string name="external_storage">Eksternlagring</string>
+    <string name="internal_storage">Internlagring</string>
+    <string name="restore_not_installed">Gjenopprett ikke-installerte programmer</string>
+    <string name="backup_custom_users">Egendefinerte brukere</string>
+    <string name="failed_to_enable_magisk_hide">Kunne ikke skru på MagiskHide</string>
+    <string name="enable_magisk_hide">Skru på MagiskHide</string>
+    <string name="failed_to_disable_magisk_hide">Kunne ikke skru av MagiskHide</string>
+    <string name="disable_magisk_hide">Skru av MagiskHide\?</string>
+    <string name="window_size">Vindusstørrelse</string>
+    <string name="refresh_rate">Oppfriskningsrate</string>
+    <string name="scaling_factor">Skaleringsfaktor</string>
+    <string name="screen">Skjerm</string>
+    <string name="hardware">Maskinvare</string>
+    <string name="permissive">Forlatelig</string>
+    <string name="enforcing">Påtvingende</string>
+    <string name="selinux">SELinux</string>
+    <string name="backup_obb_media_description">Sikkerhetskopier OBB- og mediamapper.</string>
+    <string name="gles_version">OpenGL ES-versjon</string>
+    <string name="install_location_prefer_external">Foretrekk ekstern</string>
+    <string name="install_location_internal_only">Kun intern</string>
+    <plurals name="alert_failed_to_unblock_trackers">
+        <item quantity="one">Kunne ikke avblokkere sporere fra ett program</item>
+        <item quantity="other">Kunne ikke avblokkere sporere fra %1$d programmer</item>
+    </plurals>
+    <string name="internal_data">Intern data</string>
 </resources>
