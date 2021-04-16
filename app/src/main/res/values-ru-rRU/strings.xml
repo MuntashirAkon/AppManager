@@ -991,4 +991,6 @@
     <string name="generate_key">Генерировать</string>
     <string name="input_key">Ввод ключа (в шестнадцатеричном формате)</string>
     <string name="input_keystore_alias_pass_msg">Нажмите здесь, чтобы ввести пароль для %1$s</string>
+    <string name="pref_installer_msg">Настройка поведения установщика приложения.</string>
+    <string name="pk8_file">Файл PKCS #8 (PK8)</string>
 </resources>
