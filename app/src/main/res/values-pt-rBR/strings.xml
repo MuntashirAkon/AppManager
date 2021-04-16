@@ -927,4 +927,5 @@
     <string name="failed_to_save_key">Não foi possível salvar a chave.</string>
     <string name="generate_key">Gerar</string>
     <string name="input_keystore_alias_pass_msg">Toque aqui para fornecer uma senha para %1$s</string>
+    <string name="pref_installer_msg">Configurar comportamentos do instalador de aplicativos.</string>
 </resources>
