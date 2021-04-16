@@ -895,4 +895,5 @@
 \nGitLab: https://gitlab.com/muntashir/AppManager
 \nRiseup: https://0xacab.org/muntashir/AppManager
 \nCodeberg: https://codeberg.org/muntashir/AppManager</string>
+    <string name="pref_installer_msg">配置应用安装程序的行为。</string>
 </resources>
