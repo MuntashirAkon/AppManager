@@ -14,7 +14,7 @@
   ~
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
     <string name="_lang_tag" translatable="false">ja-JP</string>
     <string name="uninstall">アンインストール</string>
     <string name="permissions">ユーザー権限</string>
@@ -87,7 +87,7 @@
     <string name="sdk_min">最小</string>
     <string name="sdk_max">ターゲット</string>
     <string name="sdk_flags">フラグ</string>
-    <string name="more_info">さらに表示</string>
+    <string name="more_info">詳細情報</string>
     <string name="date_installed">インストール日</string>
     <string name="date_updated">アップデート日</string>
     <string name="installer_app">インストーラー</string>
@@ -729,7 +729,7 @@
     <string name="off">Off</string>
     <string name="options">オプション</string>
     <string name="input_permissions">権限を指定</string>
-    <string name="input_permissions_description">「com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION」のようにアプリ権限を半角スペース区切りで指定してください</string>
+    <string name="input_permissions_description">「com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION」のようにアプリ権限を半角スペース区切りで指定してください。「*」はワイルドカードとして機能します。</string>
     <string name="choose">選択</string>
     <string name="enabled">有効</string>
     <string name="simple">シンプル</string>
@@ -816,7 +816,7 @@
     <string name="backup_extras_description">アプリ権限、バッテリーセーバー設定、データ使用設定、MagiskHideの状態、SSAIDをバックアップします。</string>
     <string name="backup_rules_description">App Manager内で構成されたルールをバックアップします。</string>
     <string name="backup_multiple_description">基本バックアップの代わりに<i>名前付き</i>バックアップを作成する</string>
-    <string name="backup_skip_signature_checks_description">復元するバックアップがチェックサム認証に失敗する場合や インストール済みのものと異なるAPK署名を持つ場合に役立ちます。</string>
+    <string name="backup_skip_signature_checks_description">チェックサム認証に失敗したり、インストール済みのものと異なる署名を持つバックアップを復元します。</string>
     <string name="patch_level">セキュリティパッチレベル</string>
     <string name="selinux">SELinux</string>
     <string name="enforcing">Enforcing</string>
@@ -832,7 +832,7 @@
     <string name="failed_to_disable_magisk_hide">MagiskHideを無効にできませんでした</string>
     <string name="enable_magisk_hide">MagiskHideを有効化</string>
     <string name="failed_to_enable_magisk_hide">MagiskHideを有効化できませんでした</string>
-    <string name="disable_background_run_description">これは次のAppOpsに <i>ignore</i> モードを設定します: <tt>RUN_IN_BACKGROUND</tt> (Android 7.0〜) and <tt>RUN_ANY_IN_BACKGROUND</tt> (Android 9〜).</string>
+    <string name="disable_background_run_description">次のAppOpsに <i>Ignore</i> モードを設定します: <tt>RUN_IN_BACKGROUND</tt> (Android 7.0〜) and <tt>RUN_ANY_IN_BACKGROUND</tt> (Android 9〜).</string>
     <string name="pref_backup_restore_msg">バックアップ/復元に関する設定</string>
     <string name="backup_volume">バックアップするボリューム</string>
     <string name="pref_backup_volume_msg">バックアップを保存するディスクやボリュームを選択します。</string>
@@ -847,7 +847,7 @@
     <string name="backup_apps_without_backups">新しくバックアップ</string>
     <string name="backup_apps_without_backups_msg">以前のバックアップ無しでアプリをバックアップします。</string>
     <string name="verify_and_redo_backups">検証してバックアップをやり直す。</string>
-    <string name="verify_and_redo_backups_msg">バックアップの完全性をチェックし、完全世チェックに失敗したアプリのバックアップをやり直します。</string>
+    <string name="verify_and_redo_backups_msg">バックアップの完全性をチェックし、チェックに失敗したアプリのバックアップを再試行します。</string>
     <string name="redo_existing_backups">既存のバックアップをやり直す</string>
     <string name="redo_existing_backups_msg">以前バックアップしたインストール済みアプリのバックアップをやり直します。</string>
     <string name="backup_apps_with_changes">変更を含めてアプリをバックアップする</string>
@@ -882,13 +882,13 @@
     <string name="sd_card">SDカード</string>
     <string name="external_storage">外部ストレージ</string>
     <string name="internal_storage">内部ストレージ</string>
-    <string name="restart_to_reflect_changes">今すぐ設定を反映するには再起動してください</string>
+    <string name="restart_to_reflect_changes">今すぐに設定を反映するには再起動する必要があります</string>
     <string name="type_float_array_list">10進数値のリスト</string>
     <string name="type_float_array">10進数値の配列</string>
     <string name="type_long_array">長整数値の配列</string>
     <string name="failed_to_change_ssaid">SSAIDを変更できませんでした</string>
     <string name="copied_to_clipboard">クリップボードにコピーされました。</string>
-    <string name="ssaid_info">SSAID (<tt>Settings.Secure.ANDROID_ID</tt>) はAndroid8以降でそれぞれのアプリごとに関連付けられた識別子です、よくユーザーを追跡するのに使用されています。</string>
+    <string name="ssaid_info">SSAID (<tt>Settings.Secure.ANDROID_ID</tt>) はAndroid8 Oreo以降でそれぞれのアプリごとに関連付けられた識別子です、よくユーザーを追跡するのに使用されています。</string>
     <string name="ssaid">SSAID</string>
     <string name="type_uri">URI</string>
     <string name="type_string_array_list">文字列のリスト</string>
@@ -902,16 +902,54 @@
     <string name="installed_apps">インストール済みのアプリ</string>
     <string name="isolated">隔離済み</string>
     <string name="working_on_adb_mode">ADBモードで使用中</string>
-    <string name="screen_lock_not_enabled">画面ロックが有効になっていません。Androidの設定で有効にするか、このアプリのデータを消去してください。</string>
+    <string name="screen_lock_not_enabled">Androidの設定で画面ロックを有効にするか、このアプリのデータを消去してください。</string>
     <string name="last_actions">最終アクション</string>
     <string name="pref_enable_disable_features_msg">AppManagerの機能を有効化または無効化します。</string>
     <string name="enable_disable_features">機能の有効化/無効化</string>
     <string name="input_app_ops_description_profile">AppOpsの名前かその識別値を「WAKE_LOCK 63 72 CAMERA」のようにスペース区切りで指定してください。「*」はワイルドカードとして使用できます。</string>
-    <string name="installer_app_message"><b>選択</b> を押してインストール済みのアプリを選択するか、<b>カスタム</b> で任意のパッケージ名を指定します。</string>
+    <string name="installer_app_message"><b>選択</b> をタップしてインストール済みのアプリを選択するか、<b>カスタム</b> で任意のパッケージ名を指定します。</string>
     <string name="specify_custom_name">カスタム</string>
     <string name="verified_using_unreliable_hash">信頼できないハッシュで検証済み</string>
     <string name="filter_apps_without_backups">バックアップされていないアプリ</string>
     <string name="uninstalled_apps">未インストールのアプリ</string>
     <string name="internal_data">内蔵データ</string>
-    <string name="input_keystore_alias_pass_msg">タップして%1$sのパスワードを入力</string>
+    <string name="input_keystore_alias_pass_msg">タップしてキーストア %1$s のパスワードを入力</string>
+    <string name="invalid_rsa_key_size">RSA暗号鍵のキーサイズが無効です。キーサイズは1024ビット、2048ビット、4096ビットのいずれかを使用できます。</string>
+    <string name="crypto_key_size">キーサイズ</string>
+    <string name="invalid_aes_key_size">AES暗号鍵のキーサイズが無効です。キーサイズは128ビットまたは256ビットのいずれかを使用できます。</string>
+    <string name="failed_to_save_key">キーを保存できませんでした。</string>
+    <string name="input_key">キーを入力 (16進数値）</string>
+    <string name="pref_installer_msg">App Managerインストーラの動作を設定します。</string>
+    <string name="pk8_file">PKCS #8 (PK8) ファイル</string>
+    <string name="pem_and_pk8">PEM/PKCS #8 (PK8)</string>
+    <string name="pkcs12_keystore">PKCS #12 キーストア (P12)</string>
+    <string name="bouncy_castle_keystore">Bouncy Castle キーストア (BKS)</string>
+    <string name="java_keystore">Javaキーストア (JKS)</string>
+    <string name="country_name" tools:ignore="TypographyOther">国名 (C)</string>
+    <string name="state_name">都道府県名 (ST)</string>
+    <string name="locality_name">市町村名 (L)</string>
+    <string name="organization_name">組織名 (O)</string>
+    <string name="organization_unit">組織単位名 (OU)</string>
+    <string name="common_name">コモンネーム (CN)</string>
+    <string name="failed_to_load_key">キー情報の読み込みに失敗しました。</string>
+    <string name="default_key_used">標準のキーが使用されます。</string>
+    <string name="key_not_set">設定されていません</string>
+    <string name="use_default">標準を使用</string>
+    <plurals name="items_selected">
+        <item quantity="other"><xliff:g id="selection_no" example="20">%1$d</xliff:g> 件を選択済み</item>
+    </plurals>
+    <string name="expiry_date_cannot_be_empty">失効日は空白にできません。</string>
+    <string name="signing_key">署名鍵</string>
+    <string name="failed_to_read_keystore">キーストアの読み込みに失敗しました。</string>
+    <string name="alias_pass">エイリアスのパスワード</string>
+    <string name="choose_an_alias">エイリアスを選択</string>
+    <string name="found_no_alias_in_keystore">キーストア内にエイリアスが見つかりませんでした!</string>
+    <string name="new_alias_password">新規エイリアスのパスワード</string>
+    <string name="import_key">キーをインポート</string>
+    <string name="pem_file">PEMファイル</string>
+    <string name="keystore_pass">キーストアのパスワード</string>
+    <string name="keystore_file">キーストアのファイル</string>
+    <string name="input_key_password">キーのパスワード</string>
+    <string name="failed_to_initialize_key_store">App Managerのキーストアを構成できませんでした。</string>
+    <string name="generate_key">生成</string>
 </resources>
