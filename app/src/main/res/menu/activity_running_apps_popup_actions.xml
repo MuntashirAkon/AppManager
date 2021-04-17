@@ -33,4 +33,9 @@
         android:icon="@drawable/ic_block_black_24dp"
         android:title="@string/disable_background_run" />
 
+    <item
+        android:id="@+id/action_view_logs"
+        android:icon="@drawable/ic_block_black_24dp"
+        android:title="@string/view_logs" />
+
 </menu>
