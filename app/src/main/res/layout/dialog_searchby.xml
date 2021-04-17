@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:baselineAligned="false"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/padding_medium"
+    android:paddingEnd="@dimen/padding_medium">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/dialog_searchby_tag_linear"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="?selectableItemBackground"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_small">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="marquee"
+            android:paddingBottom="8dp"
+            android:text="@string/filter_choice_tag"
+            android:textSize="16sp"
+            android:singleLine="true" />
+
+        <TextView
+            android:id="@+id/dialog_searchby_tag_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="marquee"
+            android:padding="8dp"
+            android:textSize="12sp"
+            android:typeface="monospace"
+            tools:text="text"
+            android:singleLine="true" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/dialog_searchby_pid_linear"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="?selectableItemBackground"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="marquee"
+            android:paddingBottom="8dp"
+            android:text="@string/filter_choice_pid"
+            android:textSize="16sp"
+            android:singleLine="true" />
+
+        <TextView
+            android:id="@+id/dialog_searchby_pid_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="marquee"
+            android:padding="8dp"
+            android:textSize="12sp"
+            android:typeface="monospace"
+            tools:text="text"
+            android:singleLine="true" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <PreferenceCategory
+        app:title="@string/pref_cat_appearance"
+        app:iconSpaceReserved="false">
+
+        <SwitchPreference
+            app:key="log_viewer_expand_by_default"
+            app:summary="@string/pref_expanded_by_default_summary"
+            app:title="@string/pref_expanded_by_default_title"
+            app:iconSpaceReserved="false" />
+
+        <SwitchPreference
+            app:key="log_viewer_show_pid_tid_timestamp"
+            app:summary="@string/pref_show_timestamp_summary"
+            app:title="@string/pref_show_timestamp_title"
+            app:iconSpaceReserved="false" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:title="@string/pref_cat_configuration"
+        app:iconSpaceReserved="false" >
+
+        <Preference
+            app:key="log_viewer_buffer"
+            app:title="@string/pref_buffer_title"
+            tools:summary="main, system, crash"
+            app:iconSpaceReserved="false" />
+
+        <Preference
+            app:key="log_viewer_default_log_level"
+            app:title="@string/pref_default_log_level_title"
+            app:summary="@string/pref_default_log_level_summary"
+            app:iconSpaceReserved="false" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:title="@string/pref_cat_advanced"
+        app:iconSpaceReserved="false" >
+
+        <Preference
+            app:key="log_viewer_write_period"
+            app:title="@string/pref_log_write_period_title"
+            tools:summary="@string/pref_log_write_period_summary"
+            app:iconSpaceReserved="false" />
+
+        <Preference
+            app:key="log_viewer_display_limit"
+            app:title="@string/pref_display_limit_title"
+            tools:summary="@string/pref_display_limit_summary"
+            app:iconSpaceReserved="false" />
+
+        <Preference
+            app:key="log_viewer_filter_pattern"
+            app:title="@string/pref_filter_pattern_title"
+            app:summary="@string/pref_filter_pattern_summary"
+            app:iconSpaceReserved="false" />
+
+        <SwitchPreference
+            app:key="log_viewer_omit_sensitive_info"
+            app:title="@string/omit_sensitive_info"
+            app:summary="@string/omit_sensitive_info_summary"
+            app:iconSpaceReserved="false" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

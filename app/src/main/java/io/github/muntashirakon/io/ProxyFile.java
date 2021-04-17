@@ -143,6 +143,18 @@ public class ProxyFile extends File {
     }
 
     @Override
+    public long lastModified() {
+        if (isRemoteAlive()) {
+            try {
+                //noinspection ConstantConditions
+                return file.lastModified();
+            } catch (RemoteException ignore) {
+            }
+        }
+        return super.lastModified();
+    }
+
+    @Override
     public boolean mkdir() {
         if (isRemoteAlive()) {
             try {

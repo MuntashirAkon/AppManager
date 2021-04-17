@@ -77,7 +77,9 @@ import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.db.entity.App;
+import io.github.muntashirakon.AppManager.ipc.IPCUtils;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
+import io.github.muntashirakon.AppManager.ipc.ps.ProcessEntry;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.main.ApplicationItem;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
@@ -553,6 +555,18 @@ public final class PackageUtils {
             }
         }
         return false;
+    }
+
+    public static int getPidForPackage(String packageName, int uid) {
+        try {
+            @SuppressWarnings("unchecked")
+            List<ProcessEntry> processItems = (List<ProcessEntry>) IPCUtils.getAmService().getRunningProcesses();
+            for (ProcessEntry entry : processItems) {
+                if (entry.name.equals(packageName) && entry.users.fsUid == uid) return entry.pid;
+            }
+        } catch (Throwable ignore) {
+        }
+        return 0;
     }
 
     @NonNull

@@ -169,7 +169,7 @@ public class Log {
         if (msg != null) sb.append(": ").append(msg);
         new Thread(() -> {
             synchronized (INSTANCE) {
-                INSTANCE.writer.println(sb.toString());
+                INSTANCE.writer.println(sb);
                 if (tr != null) {
                     tr.printStackTrace(INSTANCE.writer);
                 }

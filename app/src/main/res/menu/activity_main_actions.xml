@@ -61,6 +61,11 @@
         android:title="@string/profiles" />
 
     <item
+        android:id="@+id/action_log_viewer"
+        android:icon="@drawable/ic_view_list_black_24dp"
+        android:title="@string/log_viewer" />
+
+    <item
         android:id="@+id/action_apk_updater"
         android:icon="@drawable/ic_baseline_sync_24"
         android:title="@string/apk_updater" />

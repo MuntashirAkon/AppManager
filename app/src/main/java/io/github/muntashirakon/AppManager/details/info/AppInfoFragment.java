@@ -74,6 +74,8 @@ import io.github.muntashirakon.AppManager.details.AppDetailsFragment;
 import io.github.muntashirakon.AppManager.details.AppDetailsViewModel;
 import io.github.muntashirakon.AppManager.details.ManifestViewerActivity;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
+import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
+import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.profiles.ProfileManager;
 import io.github.muntashirakon.AppManager.profiles.ProfileMetaManager;
@@ -300,7 +302,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     runOnUiThread(() -> {
                         Intent intent = new Intent(Intent.ACTION_SEND)
                                 .setType("application/*")
-                                .putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(mActivity, BuildConfig.APPLICATION_ID + ".provider", tmpApkSource))
+                                .putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(mActivity,
+                                        BuildConfig.APPLICATION_ID + ".provider", tmpApkSource))
                                 .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                         startActivity(Intent.createChooser(intent, getString(R.string.share_apk)));
                     });
@@ -310,6 +313,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 }
             });
         } else if (itemId == R.id.action_backup) {
+            if (mainModel == null) return true;
             BackupDialogFragment backupDialogFragment = new BackupDialogFragment();
             Bundle args = new Bundle();
             args.putParcelableArrayList(BackupDialogFragment.ARG_PACKAGE_PAIRS, new ArrayList<>(
@@ -326,7 +330,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         } else if (itemId == R.id.action_export_blocking_rules) {
             final String fileName = "app_manager_rules_export-" + DateUtils.formatDateTime(System.currentTimeMillis()) + ".am.tsv";
             export.launch(fileName, uri -> {
-                if (uri == null) {
+                if (uri == null || mainModel == null) {
                     // Back button pressed.
                     return;
                 }
@@ -354,6 +358,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 if (granted) runInTermux();
             });
         } else if (itemId == R.id.action_enable_magisk_hide) {
+            if (mainModel == null) return true;
             if (MagiskUtils.hide(mPackageName)) {
                 try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mPackageName, mainModel.getUserHandle())) {
                     cb.setMagiskHide(true);
@@ -520,6 +525,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     private void install() {
+        if (mainModel == null) return;
         Intent intent = new Intent(this.getContext(), PackageInstallerActivity.class);
         intent.putExtra(PackageInstallerActivity.EXTRA_APK_FILE_KEY, mainModel.getApkFileKey());
         try {
@@ -529,6 +535,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     private void refreshDetails() {
+        if (mainModel == null) return;
         showProgressIndicator(true);
         mainModel.setIsPackageChanged();
     }
@@ -537,6 +544,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private void setupTagCloud() {
         model.getTagCloud().observe(getViewLifecycleOwner(), tagCloud -> {
             mTagCloud.removeAllViews();
+            if (mainModel == null) return;
             // Add tracker chip
             if (!tagCloud.trackerComponents.isEmpty()) {
                 CharSequence[] trackerComponentNames = new CharSequence[tagCloud.trackerComponents.size()];
@@ -619,9 +627,30 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             if (tagCloud.hasRequestedLargeHeap) {
                 addChip(R.string.requested_large_heap, R.color.tracker);
             }
-            if (tagCloud.isRunning) {
-                addChip(R.string.running, R.color.running).setOnClickListener(v ->
-                        mActivity.viewPager.setCurrentItem(AppDetailsFragment.SERVICES));
+            if (tagCloud.runningServices.size() > 0) {
+                addChip(R.string.running, R.color.running).setOnClickListener(v -> {
+                    mProgressIndicator.show();
+                    new Thread(() -> {
+                        int pid = PackageUtils.getPidForPackage(mPackageName, mApplicationInfo.uid);
+                        runOnUiThread(() -> {
+                            mProgressIndicator.hide();
+                            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(mActivity)
+                                    .setTitle(R.string.running_services)
+                                    .setItems(tagCloud.runningServices.toArray(new String[0]), null)
+                                    .setNegativeButton(R.string.close, null);
+                            if (pid != 0) {
+                                builder.setNeutralButton(R.string.view_logs, (dialog, which) -> {
+                                    Intent logViewerIntent = new Intent(mActivity.getApplicationContext(), LogViewerActivity.class)
+                                            .setAction(LogViewerActivity.ACTION_LAUNCH)
+                                            .putExtra(LogViewerActivity.EXTRA_FILTER, SearchCriteria.PID_KEYWORD + pid)
+                                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    mActivity.startActivity(logViewerIntent);
+                                });
+                            }
+                            builder.show();
+                        });
+                    }).start();
+                });
             }
             if (tagCloud.isForceStopped) {
                 addChip(R.string.stopped, R.color.stopped);
@@ -686,7 +715,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         .setNegativeButton(R.string.ok, null)
                         .show());
             }
-            if (tagCloud.ssaid != null) {
+            if (tagCloud.ssaid != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 addChip(R.string.ssaid, R.color.red_orange).setOnClickListener(v -> {
                     View view = getLayoutInflater().inflate(R.layout.dialog_ssaid_info, null);
                     AlertDialog alertDialog = new MaterialAlertDialogBuilder(mActivity)

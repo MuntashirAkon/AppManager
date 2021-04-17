@@ -80,6 +80,7 @@
     <style name="AppTheme.AlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
         <item name="colorPrimary">@color/colorAccent</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorOnPrimary">@color/colorPrimary</item>
         <item name="colorOnSurface">@color/colorPrimaryDark</item>
         <item name="shapeAppearanceOverlay">@style/AppTheme.AlertDialog.Rounded</item>
         <item name="android:checkedTextViewStyle">@style/AppTheme.AlertDialog.CheckedTextView</item>

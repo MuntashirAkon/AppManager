@@ -17,6 +17,7 @@
   -->
 
 <CheckedTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@android:id/text1"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -26,4 +27,5 @@
     android:paddingStart="@dimen/padding_small"
     android:paddingEnd="@dimen/padding_small"
     android:singleLine="true"
-    android:textSize="14sp" />
+    android:textSize="14sp"
+    tools:text="@tools:sample/lorem[5]" />

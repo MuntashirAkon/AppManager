@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import androidx.activity.result.ActivityResult;
+import androidx.annotation.CallSuper;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -35,6 +36,7 @@ import io.github.muntashirakon.AppManager.utils.BetterActivityResult;
 public abstract class BaseActivity extends AppCompatActivity {
     private final BetterActivityResult<Intent, ActivityResult> authActivity = BetterActivityResult.registerActivityForResult(this);
 
+    @CallSuper
     @Override
     protected final void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +60,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected abstract void onAuthenticated(@Nullable Bundle savedInstanceState);
 
+    @CallSuper
     @SuppressLint("RestrictedApi")
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

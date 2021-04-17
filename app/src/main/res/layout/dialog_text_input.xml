@@ -45,8 +45,7 @@
                 style="@style/AppTheme.TextAppearance.Input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:singleLine="true"
-                tools:text="@tools:sample/full_names" />
+                tools:text="@tools:sample/lorem/random" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

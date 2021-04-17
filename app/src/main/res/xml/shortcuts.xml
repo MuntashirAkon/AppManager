@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:targetApi="n_mr1">
+
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_record"
+        android:shortcutId="record"
+        android:shortcutLongLabel="@string/start_recording_log"
+        android:shortcutShortLabel="@string/start_recording_log">
+        <intent
+            android:action="android.intent.action.MAIN"
+            android:targetClass="io.github.muntashirakon.AppManager.logcat.LogViewerActivity"
+            android:targetPackage="io.github.muntashirakon.AppManager">
+
+            <extra
+                android:name="shortcut_action"
+                android:value="record" />
+
+        </intent>
+    </shortcut>
+
+</shortcuts>

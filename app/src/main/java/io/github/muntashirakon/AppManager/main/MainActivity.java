@@ -60,6 +60,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
+import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
 import io.github.muntashirakon.AppManager.misc.HelpActivity;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.oneclickops.OneClickOpsActivity;
@@ -300,6 +301,10 @@ public class MainActivity extends BaseActivity implements
         } else if (id == R.id.action_profiles) {
             Intent profilesIntent = new Intent(this, ProfilesActivity.class);
             startActivity(profilesIntent);
+        } else if (id == R.id.action_log_viewer) {
+            Intent intent = new Intent(getApplicationContext(), LogViewerActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
         } else return super.onOptionsItemSelected(item);
         return true;
     }

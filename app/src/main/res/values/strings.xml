@@ -953,4 +953,97 @@
         <item quantity="one"><xliff:g id="selection_no" example="20">%1$d</xliff:g> selected</item>
         <item quantity="other"><xliff:g id="selection_no" example="20">%1$d</xliff:g> selected</item>
     </plurals>
+    <string name="log_viewer">Log Viewer</string>
+    <string name="pref_log_viewer_msg">Configure how logs are displayed.</string>
+    <string name="restart_log_viewer_to_see_changes">Restart log viewer window to see changes.</string>
+    <string name="filename">Filename</string>
+    <string name="log_level_debug">Debug</string>
+    <string name="log_level_error">Error</string>
+    <string name="log_level_info">Info</string>
+    <string name="log_level_verbose">Verbose</string>
+    <string name="log_level_warn">Warn</string>
+    <string name="log_level_fatal">Fatal</string>
+    <string name="pref_filter_pattern_default" translatable="false">ResourceType|memtrack|android.os.Debug|BufferItemConsumer|DPM.*|MDM.*|ChimeraUtils|BatteryExternalStats.*|chatty.*|DisplayPowerController|WidgetHelper|WearableService|DigitalWidget.*|^ANDR-PERF-.*</string>
+    <string name="pref_hide_partial_select_help" translatable="false">pref_hide_partial_select_help</string>
+    <string name="pref_include_device_info" translatable="false">device_info</string>
+    <string name="add_filter">Add Filter</string>
+    <string name="add_filter_ellipsis">Add Filter…</string>
+    <plurals name="are_you_sure">
+        <item quantity="one">%d file will be deleted</item>
+        <item quantity="other">%d files will be deleted</item>
+    </plurals>
+    <string name="checkbox_never_show_partial_select_help">Don\'t show again</string>
+    <string name="copy_to_clipboard">Copy to clipboard</string>
+    <string name="delete_all">Delete All</string>
+    <string name="delete_saved_log">Delete Saved Logs</string>
+    <string name="dialog_compiling_log">Compiling log…</string>
+    <string name="dialog_partial_select_explanation">1. Select the <b>first</b> line.\n2. Then select the <b>last</b> line.</string>
+    <string name="enter_filename">Enter filename</string>
+    <string name="enter_good_filename">Please enter a valid filename.</string>
+    <string name="filter_choice">Search by</string>
+    <string name="filter_choice_pid">PID</string>
+    <string name="filter_choice_tag">Tag</string>
+    <string name="log_cleared">Logs cleared</string>
+    <string name="log_level">Log Level</string>
+    <string name="log_recording_started">Log recording started.</string>
+    <string name="log_saved">Log saved.</string>
+    <string name="manage_saved_logs">Manage Saved Logs</string>
+    <string name="menu_title_partial_select">Save Partial</string>
+    <string name="no_saved_logs">No saved logs found.</string>
+    <string name="notification_subtext">Touch to stop recording</string>
+    <string name="notification_ticker">Log recording started</string>
+    <string name="notification_title">Log recording in progress</string>
+    <string name="open">Open</string>
+    <string name="pref_buffer_title">Log Buffer(s)</string>
+    <string name="pref_cat_advanced">Advanced</string>
+    <string name="pref_cat_appearance">Appearance</string>
+    <string name="pref_cat_configuration">Configuration</string>
+    <string name="pref_default_log_level_summary">Log level at startup, when opening files, and when recording.</string>
+    <string name="pref_default_log_level_title">Default Log Level</string>
+    <string name="pref_display_limit_summary">Show only the last %1$d logs in order to avoid out of memory errors.</string>
+    <string name="pref_display_limit_title">Log Display Limit</string>
+    <string name="pref_filter_pattern_summary">Filter out the selected tags from logs.</string>
+    <string name="pref_filter_pattern_title">Filter Out Tags</string>
+    <string name="pref_expanded_by_default_summary">Show full log text by default.</string>
+    <string name="pref_expanded_by_default_title">Expand by Default</string>
+    <string name="pref_log_line_period_error">Please enter an integer between 1 and 1000.</string>
+    <string name="pref_log_write_period_summary">When recording, write to SD card every %1$d lines.</string>
+    <string name="pref_log_write_period_title">Write Period</string>
+    <string name="pref_show_timestamp_summary">Show process id and timestamp when expanded.</string>
+    <string name="pref_show_timestamp_title">Show Pid &amp; Timestamp</string>
+    <string name="record_log">Record Log</string>
+    <string name="save_as">Save As…</string>
+    <string name="save_log">Save Log</string>
+    <string name="send_log_title">Send Log</string>
+    <string name="settings">Settings</string>
+    <string name="start_recording_log">Record</string>
+    <string name="subject_log_report">Log report</string>
+    <string name="text_filter_ellipsis">Filter…</string>
+    <string name="text_filter_text">Filter text</string>
+    <string name="text_include_device_info">Include device information</string>
+    <string name="title_filters">Filters</string>
+    <string name="pref_display_limit_hint">Please enter a valid number between %1$d and %2$d.</string>
+    <string name="toast_invalid_level">Invalid level name: %s</string>
+    <string name="toast_invalid_selection">Invalid selection. Please try again.</string>
+    <plurals name="toast_log_truncated">
+        <item quantity="one">Log too large, showing last %d line.</item>
+        <item quantity="other">Log too large, showing last %d lines.</item>
+    </plurals>
+    <string name="toast_started_select_partial">Select Partial mode enabled</string>
+    <string name="unable_to_save_log">Unable to save log. Did you enter a valid filename?</string>
+    <string name="widget_recording_in_progress">Recording…</string>
+    <string name="widget_start_recording">Record\nLog</string>
+    <string name="file">File</string>
+    <string name="expand_all">Expand All</string>
+    <string name="collapse_all">Collapse All</string>
+    <string name="pause_unpause">Play/Pause</string>
+    <string name="undo">Undo</string>
+    <string name="omit_sensitive_info">Omit sensitive info</string>
+    <string name="omit_sensitive_info_summary">Omit sensitive info like web urls, phone numbers or emails.</string>
+    <string name="text_include_dmesg">Include kernel log</string>
+    <string name="pref_include_dmesg" translatable="false">dmesg</string>
+    <string name="save_log_zip">Save zip</string>
+    <string name="share_log">Share</string>
+    <string name="view_logs">View logs</string>
+    <string name="running_services">Running Services</string>
 </resources>
