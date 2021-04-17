@@ -127,7 +127,7 @@ public class AppInfoViewModel extends AndroidViewModel {
         tagCloud.isTestOnly = (applicationInfo.flags & ApplicationInfo.FLAG_TEST_ONLY) != 0;
         tagCloud.hasCode = (applicationInfo.flags & ApplicationInfo.FLAG_HAS_CODE) != 0;
         tagCloud.hasRequestedLargeHeap = (applicationInfo.flags & ApplicationInfo.FLAG_LARGE_HEAP) != 0;
-        tagCloud.isRunning = !mainModel.getIsExternalApk() && PackageUtils.hasRunningServices(packageName);
+        tagCloud.runningServices = PackageUtils.getRunningServicesForPackage(packageName);
         tagCloud.isForceStopped = (applicationInfo.flags & ApplicationInfo.FLAG_STOPPED) != 0;
         tagCloud.isAppEnabled = applicationInfo.enabled;
         tagCloud.isMagiskHideEnabled = !mainModel.getIsExternalApk() && AppPref.isRootEnabled() && MagiskUtils.isHidden(packageName);
@@ -291,7 +291,7 @@ public class AppInfoViewModel extends AndroidViewModel {
         public boolean isTestOnly;
         public boolean hasCode;
         public boolean hasRequestedLargeHeap;
-        public boolean isRunning;
+        public List<String> runningServices;
         public boolean isForceStopped;
         public boolean isAppEnabled;
         public boolean isMagiskHideEnabled;

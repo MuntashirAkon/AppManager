@@ -1045,4 +1045,5 @@
     <string name="save_log_zip">Save zip</string>
     <string name="share_log">Share</string>
     <string name="view_logs">View logs</string>
+    <string name="running_services">Running Services</string>
 </resources>
