@@ -64,7 +64,7 @@ public class AppManager extends Application {
     public static synchronized AMDatabase getDb() {
         if (db == null) {
             db = Room.databaseBuilder(getContext(), AMDatabase.class, "am")
-                    .addMigrations(AMDatabase.MIGRATION_1_2)
+                    .addMigrations(AMDatabase.MIGRATION_1_2, AMDatabase.MIGRATION_2_3)
                     .build();
         }
         return db;

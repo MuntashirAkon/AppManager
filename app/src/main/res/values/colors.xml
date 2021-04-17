@@ -113,4 +113,22 @@
     <color name="blue_underling">#94f0f1</color>
     <color name="pinky_ring">#f2b1d8</color>
     <color name="egg_yellows">#ffdc6a</color>
+
+    <color name="android_theme_tag_color_01">#FF222222</color>
+    <color name="android_theme_tag_color_02">#FF996666</color>
+    <color name="android_theme_tag_color_03">#FFFFCC99</color>
+    <color name="android_theme_tag_color_04">#FFCC0000</color>
+    <color name="android_theme_tag_color_05">#FF666633</color>
+    <color name="android_theme_tag_color_06">#FF990099</color>
+    <color name="android_theme_tag_color_07">#FF006600</color>
+    <color name="android_theme_tag_color_08">#FF660066</color>
+    <color name="android_theme_tag_color_09">#FF003399</color>
+    <color name="android_theme_tag_color_10">#FFFF6633</color>
+    <color name="android_theme_tag_color_11">#FFFFFFFF</color>
+    <color name="android_theme_tag_color_12">#FFCC3333</color>
+    <color name="android_theme_tag_color_13">#FFFFFF00</color>
+    <color name="android_theme_tag_color_14">#FF0099CC</color>
+    <color name="android_theme_tag_color_15">#FF009933</color>
+    <color name="android_theme_tag_color_16">#FFCC3399</color>
+    <color name="android_theme_tag_color_17">#FFFFCC00</color>
 </resources>

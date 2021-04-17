@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:foreground="?selectableItemBackground"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/log_level_text"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="0"
+        android:paddingStart="3dp"
+        android:paddingEnd="3dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        tools:background="#FFFFCC99"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:textSize="12sp"
+        android:typeface="monospace"
+        tools:text="D" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/log_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingStart="3dp"
+        android:paddingEnd="3dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/timestamp_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:paddingEnd="5dp"
+                android:textSize="10sp"
+                android:typeface="monospace"
+                tools:text="@tools:sample/date/ddmmyy"
+                tools:ignore="RtlSymmetry,SmallSp" />
+
+            <TextView
+                android:id="@+id/pid_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:paddingEnd="5dp"
+                android:textSize="10sp"
+                android:typeface="monospace"
+                tools:ignore="RtlSymmetry,SmallSp"
+                tools:text="6177" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <TextView
+            android:id="@+id/tag_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="14sp"
+            android:typeface="monospace"
+            tools:text="SomeActivity" />
+
+        <TextView
+            android:id="@+id/log_output_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textSize="12sp"
+            android:typeface="monospace"
+            android:textColor="?android:attr/textColorPrimary"
+            tools:text="@tools:sample/lorem/random" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

@@ -22,18 +22,23 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.os.Environment;
+import android.util.Log;
+
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.signing.SigSchemes;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.details.AppDetailsFragment;
+import io.github.muntashirakon.AppManager.logcat.helper.LogcatHelper;
 import io.github.muntashirakon.AppManager.main.ListOptions;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runningapps.RunningAppsActivity;
+import io.github.muntashirakon.io.ProxyFile;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -58,10 +63,12 @@ public class AppPref {
         PREF_APP_OP_SHOW_DEFAULT_BOOL,
         PREF_APP_OP_SORT_ORDER_INT,
         PREF_APP_THEME_INT,
+
         PREF_BACKUP_COMPRESSION_METHOD_STR,
         PREF_BACKUP_VOLUME_STR,
         PREF_BACKUP_FLAGS_INT,
         PREF_BACKUP_ANDROID_KEYSTORE_BOOL,
+
         PREF_ENABLED_FEATURES_INT,
         PREF_COMPONENTS_SORT_ORDER_INT,
         PREF_CUSTOM_LOCALE_STR,
@@ -69,22 +76,37 @@ public class AppPref {
         PREF_ENABLE_SCREEN_LOCK_BOOL,
         PREF_ENCRYPTION_STR,
         PREF_GLOBAL_BLOCKING_ENABLED_BOOL,
+
         PREF_INSTALLER_DISPLAY_USERS_BOOL,
         PREF_INSTALLER_INSTALL_LOCATION_INT,
         PREF_INSTALLER_INSTALLER_APP_STR,
         PREF_INSTALLER_SIGN_APK_BOOL,
+
         PREF_LAST_VERSION_CODE_LONG,
+
+        PREF_LOG_VIEWER_BUFFER_INT,
+        PREF_LOG_VIEWER_DEFAULT_LOG_LEVEL_INT,
+        PREF_LOG_VIEWER_DISPLAY_LIMIT_INT,
+        PREF_LOG_VIEWER_EXPAND_BY_DEFAULT_BOOL,
+        PREF_LOG_VIEWER_FILTER_PATTERN_STR,
+        PREF_LOG_VIEWER_OMIT_SENSITIVE_INFO_BOOL,
+        PREF_LOG_VIEWER_SHOW_PID_TID_TIMESTAMP_BOOL,
+        PREF_LOG_VIEWER_WRITE_PERIOD_INT,
+
         PREF_MAIN_WINDOW_FILTER_FLAGS_INT,
         PREF_MAIN_WINDOW_FILTER_PROFILE_STR,
         PREF_MAIN_WINDOW_SORT_ORDER_INT,
         PREF_MAIN_WINDOW_SORT_REVERSE_BOOL,
+
         PREF_MODE_OF_OPS_STR,
         PREF_OPEN_PGP_PACKAGE_STR,
         PREF_OPEN_PGP_USER_ID_STR,
         PREF_PERMISSIONS_SORT_ORDER_INT,
         PREF_ROOT_MODE_ENABLED_BOOL,
+
         PREF_RUNNING_APPS_FILTER_FLAGS_INT,
         PREF_RUNNING_APPS_SORT_ORDER_INT,
+
         PREF_SIGNATURE_SCHEMES_INT,
         PREF_SHOW_DISCLAIMER_BOOL,
         PREF_USAGE_ACCESS_ENABLED_BOOL;
@@ -150,6 +172,7 @@ public class AppPref {
     public static final int TYPE_LONG = 3;
     public static final int TYPE_STRING = 4;
 
+    @SuppressLint("StaticFieldLeak")
     private static AppPref appPref;
 
     @NonNull
@@ -171,37 +194,68 @@ public class AppPref {
         AppPref appPref = getInstance();
         switch (PrefKey.types[index]) {
             case TYPE_BOOLEAN:
-                return appPref.preferences.getBoolean(PrefKey.keys[index], (boolean) appPref.getDefaultValue(PrefKey.prefKeyList.get(index)));
+                return appPref.preferences.getBoolean(PrefKey.keys[index], (boolean) appPref.getDefaultValue(key));
             case TYPE_FLOAT:
-                return appPref.preferences.getFloat(PrefKey.keys[index], (float) appPref.getDefaultValue(PrefKey.prefKeyList.get(index)));
+                return appPref.preferences.getFloat(PrefKey.keys[index], (float) appPref.getDefaultValue(key));
             case TYPE_INTEGER:
-                return appPref.preferences.getInt(PrefKey.keys[index], (int) appPref.getDefaultValue(PrefKey.prefKeyList.get(index)));
+                return appPref.preferences.getInt(PrefKey.keys[index], (int) appPref.getDefaultValue(key));
             case TYPE_LONG:
-                return appPref.preferences.getLong(PrefKey.keys[index], (long) appPref.getDefaultValue(PrefKey.prefKeyList.get(index)));
+                return appPref.preferences.getLong(PrefKey.keys[index], (long) appPref.getDefaultValue(key));
             case TYPE_STRING:
-                return Objects.requireNonNull(appPref.preferences.getString(PrefKey.keys[index], (String) appPref.getDefaultValue(PrefKey.prefKeyList.get(index))));
+                return Objects.requireNonNull(appPref.preferences.getString(PrefKey.keys[index],
+                        (String) appPref.getDefaultValue(key)));
         }
         throw new IllegalArgumentException("Unknown key or type.");
     }
 
+    public static boolean getBoolean(PrefKey key) {
+        return (boolean) get(key);
+    }
+
+    public static int getInt(PrefKey key) {
+        return (int) get(key);
+    }
+
+    @NonNull
+    public static String getString(PrefKey key) {
+        return (String) get(key);
+    }
+
     public static boolean isAdbEnabled() {
-        return getInstance().getBoolean(PrefKey.PREF_ADB_MODE_ENABLED_BOOL);
+        return getBoolean(PrefKey.PREF_ADB_MODE_ENABLED_BOOL);
     }
 
     public static boolean isGlobalBlockingEnabled() {
-        return getInstance().getBoolean(PrefKey.PREF_GLOBAL_BLOCKING_ENABLED_BOOL);
+        return getBoolean(PrefKey.PREF_GLOBAL_BLOCKING_ENABLED_BOOL);
     }
 
     public static boolean isRootEnabled() {
-        return getInstance().getBoolean(PrefKey.PREF_ROOT_MODE_ENABLED_BOOL);
+        return getBoolean(PrefKey.PREF_ROOT_MODE_ENABLED_BOOL);
     }
 
     public static boolean isRootOrAdbEnabled() {
         return isRootEnabled() || isAdbEnabled();
     }
 
+    @NonNull
+    public static ProxyFile getAppManagerDirectory() {
+        return new ProxyFile((String) get(AppPref.PrefKey.PREF_BACKUP_VOLUME_STR), "AppManager");
+    }
+
+    public static String getLanguage(Context context) {
+        AppPref appPref = getNewInstance(context);
+        PrefKey key = PrefKey.PREF_CUSTOM_LOCALE_STR;
+        return Objects.requireNonNull(appPref.preferences.getString(PrefKey.keys[PrefKey.indexOf(key)],
+                (String) appPref.getDefaultValue(key)));
+    }
+
     public static void set(PrefKey key, Object value) {
         getInstance().setPref(key, value);
+    }
+
+    public static void setDefault(PrefKey key) {
+        AppPref appPref = getInstance();
+        appPref.setPref(key, appPref.getDefaultValue(key));
     }
 
     @NonNull
@@ -209,27 +263,14 @@ public class AppPref {
     @NonNull
     private final SharedPreferences.Editor editor;
 
+    private final Context context;
+
     @SuppressLint("CommitPrefEdits")
     private AppPref(@NonNull Context context) {
+        this.context = context;
         this.preferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         editor = preferences.edit();
         init();
-    }
-
-    public boolean getBoolean(PrefKey key) {
-        int index = PrefKey.indexOf(key);
-        return preferences.getBoolean(PrefKey.keys[index], (boolean) getDefaultValue(PrefKey.prefKeyList.get(index)));
-    }
-
-    public int getInt(PrefKey key) {
-        int index = PrefKey.indexOf(key);
-        return preferences.getInt(PrefKey.keys[index], (int) getDefaultValue(PrefKey.prefKeyList.get(index)));
-    }
-
-    @NonNull
-    public String getString(PrefKey key) {
-        int index = PrefKey.indexOf(key);
-        return Objects.requireNonNull(preferences.getString(PrefKey.keys[index], (String) getDefaultValue(PrefKey.prefKeyList.get(index))));
     }
 
     public void setPref(PrefKey key, Object value) {
@@ -319,10 +360,13 @@ public class AppPref {
             case PREF_BACKUP_ANDROID_KEYSTORE_BOOL:
             case PREF_ENABLE_SCREEN_LOCK_BOOL:
             case PREF_MAIN_WINDOW_SORT_REVERSE_BOOL:
+            case PREF_LOG_VIEWER_EXPAND_BY_DEFAULT_BOOL:
+            case PREF_LOG_VIEWER_OMIT_SENSITIVE_INFO_BOOL:
                 return false;
             case PREF_APP_OP_SHOW_DEFAULT_BOOL:
             case PREF_USAGE_ACCESS_ENABLED_BOOL:
             case PREF_SHOW_DISCLAIMER_BOOL:
+            case PREF_LOG_VIEWER_SHOW_PID_TID_TIMESTAMP_BOOL:
                 return true;
             case PREF_LAST_VERSION_CODE_LONG:
                 return 0L;
@@ -360,6 +404,16 @@ public class AppPref {
                 return SigSchemes.SIG_SCHEME_V1 | SigSchemes.SIG_SCHEME_V2;
             case PREF_BACKUP_VOLUME_STR:
                 return Environment.getExternalStorageDirectory().getAbsolutePath();
+            case PREF_LOG_VIEWER_FILTER_PATTERN_STR:
+                return context.getString(R.string.pref_filter_pattern_default);
+            case PREF_LOG_VIEWER_DISPLAY_LIMIT_INT:
+                return 10_000;
+            case PREF_LOG_VIEWER_WRITE_PERIOD_INT:
+                return 200;
+            case PREF_LOG_VIEWER_DEFAULT_LOG_LEVEL_INT:
+                return Log.VERBOSE;
+            case PREF_LOG_VIEWER_BUFFER_INT:
+                return LogcatHelper.LOG_ID_MAIN | LogcatHelper.LOG_ID_SYSTEM | LogcatHelper.LOG_ID_CRASH;
         }
         throw new IllegalArgumentException("Pref key not found.");
     }

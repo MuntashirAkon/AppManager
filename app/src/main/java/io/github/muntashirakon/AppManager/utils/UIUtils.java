@@ -216,6 +216,17 @@ public class UIUtils {
     }
 
     @NonNull
+    public static AlertDialog getProgressDialog(@NonNull FragmentActivity activity, @StringRes int text) {
+        View view = activity.getLayoutInflater().inflate(R.layout.dialog_progress, null);
+        TextView tv = view.findViewById(android.R.id.text1);
+        tv.setText(text);
+        return new MaterialAlertDialogBuilder(activity)
+                .setCancelable(false)
+                .setView(view)
+                .create();
+    }
+
+    @NonNull
     public static SearchView setupSearchView(@NonNull Context context, @NonNull ActionBar actionBar,
                                              @Nullable SearchView.OnQueryTextListener queryTextListener) {
         SearchView searchView = new SearchView(actionBar.getThemedContext());

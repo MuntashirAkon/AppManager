@@ -161,4 +161,74 @@
         <item>@string/pkcs12_keystore</item>
         <item>@string/pem_and_pk8</item>
     </string-array>
+    <integer-array name="random_colors">
+        <item>@color/original_orange</item>
+        <item>@color/dark_orange</item>
+        <item>@color/pink</item>
+        <item>@color/ocean_blue</item>
+        <item>@color/pure_red</item>
+        <item>@color/bright_green</item>
+        <item>@color/electric_red</item>
+        <item>@color/deep_green</item>
+        <item>@color/power_blue</item>
+        <item>@color/purple_y</item>
+        <item>@color/yellow_gloves</item>
+        <item>@color/readhead</item>
+        <item>@color/sand_tan</item>
+        <item>@color/sand_tan_shadow</item>
+        <item>@color/night_blue</item>
+        <item>@color/night_blue_shadow</item>
+        <item>@color/coral_pink</item>
+        <item>@color/sleuthe_yellow</item>
+        <item>@color/pink_leaf</item>
+        <item>@color/grassy_green</item>
+        <item>@color/purple_mountains_majesty</item>
+        <item>@color/misty_mountain_pink</item>
+        <item>@color/factory_stone_purple</item>
+        <item>@color/green_treeline</item>
+        <item>@color/pink_highlight</item>
+        <item>@color/bluewater_lowlight</item>
+        <item>@color/yellow_background</item>
+        <item>@color/pink_red_circle</item>
+        <item>@color/orange_circle</item>
+        <item>@color/old_makeup_pink</item>
+        <item>@color/goldenrod_yellow</item>
+        <item>@color/bluebell_light_blue</item>
+        <item>@color/bold_2019_green</item>
+        <item>@color/lightning_blue</item>
+        <item>@color/lightning_purple</item>
+        <item>@color/apricot</item>
+        <item>@color/citrus</item>
+        <item>@color/left_blue</item>
+        <item>@color/right_blue_muted</item>
+        <item>@color/blue_green</item>
+        <item>@color/red_orange</item>
+        <item>@color/redder_than_you</item>
+        <item>@color/goldi_lots</item>
+        <item>@color/darker_gold</item>
+        <item>@color/silver_tongue</item>
+        <item>@color/the_brown_shirts</item>
+        <item>@color/blondey</item>
+        <item>@color/green_mountain</item>
+        <item>@color/blue_mountain</item>
+        <item>@color/light_blue_backdrop</item>
+        <item>@color/orange</item>
+        <item>@color/yellowbrite</item>
+        <item>@color/painful_red</item>
+        <item>@color/_35_years_old_purple</item>
+        <item>@color/lighter_purple_on_the_gradient</item>
+        <item>@color/shadow_purple_red</item>
+        <item>@color/green</item>
+        <item>@color/ironic_blues</item>
+        <item>@color/pinky_ring</item>
+        <item>@color/egg_yellows</item>
+    </integer-array>
+    <string-array name="log_levels">
+        <item>@string/log_level_verbose</item>
+        <item>@string/log_level_debug</item>
+        <item>@string/log_level_info</item>
+        <item>@string/log_level_warn</item>
+        <item>@string/log_level_error</item>
+        <item>@string/log_level_fatal</item>
+    </string-array>
 </resources>

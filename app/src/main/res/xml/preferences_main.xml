@@ -76,6 +76,13 @@
         android:fragment="io.github.muntashirakon.AppManager.settings.BackupRestorePreferences"
         app:iconSpaceReserved="false" />
 
+    <Preference
+        app:key="log_viewer_prefs"
+        app:title="@string/log_viewer"
+        app:summary="@string/pref_log_viewer_msg"
+        android:fragment="io.github.muntashirakon.AppManager.settings.LogViewerPreferences"
+        app:iconSpaceReserved="false" />
+
     <PreferenceCategory
         app:key="rules"
         app:title="@string/rules"

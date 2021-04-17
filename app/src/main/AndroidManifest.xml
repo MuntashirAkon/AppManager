@@ -48,6 +48,8 @@
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_LOGS"
+        tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -497,6 +499,26 @@
             android:name=".crypto.AuthenticationActivity"
             android:exported="false"
             android:theme="@style/AppTheme.TransparentBackground" />
+        <activity
+            android:name=".logcat.LogViewerActivity"
+            android:configChanges="screenSize|orientation"
+            android:enabled="true"
+            android:exported="true"
+            android:label="@string/log_viewer"
+            android:launchMode="singleTop"
+            android:taskAffinity=".logcat.LogcatActivity">
+            <intent-filter>
+                <action android:name="${applicationId}.action.LAUNCH" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
+        </activity>
+        <activity
+            android:name=".logcat.RecordLogDialogActivity"
+            android:theme="@style/AppTheme.TransparentBackground" />
 
         <service android:name=".apk.installer.PackageInstallerService" />
         <service
@@ -505,6 +527,32 @@
         <service
             android:name=".profiles.ProfileApplierService"
             android:exported="false" />
+        <service
+            android:name=".logcat.LogcatRecordingService"
+            android:exported="false" />
+        <service
+            android:name=".logcat.CrazyLoggerService"
+            android:exported="false" />
+
+        <receiver android:name=".logcat.RecordingWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <data android:scheme="log_viewer_widget" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="${applicationId}.action.RECORD_OR_STOP" />
+                <data android:scheme="log_viewer_widget" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/recording_widget_info" />
+        </receiver>
 
         <provider
             android:name="androidx.core.content.FileProvider"

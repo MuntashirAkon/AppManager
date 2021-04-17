@@ -65,7 +65,7 @@ public final class LangUtils {
 
     @NonNull
     public static Locale getLocaleByLanguage(@NonNull Context context) {
-        String language = AppPref.getNewInstance(context).getString(AppPref.PrefKey.PREF_CUSTOM_LOCALE_STR);
+        String language = AppPref.getLanguage(context);
         getAppLanguages(context);
         Locale locale = sLocaleMap.get(language);
         return locale != null ? locale : sDefaultLocale;

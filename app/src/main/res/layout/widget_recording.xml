@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/clickable_linear_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_centerInParent="true"
+        android:contentDescription="@string/app_name"
+        android:src="@mipmap/ic_launcher"
+        app:tint="#8f312f"
+        android:tintMode="multiply"/>
+
+    <LinearLayout
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_centerInParent="true"
+        android:gravity="end|bottom">
+
+        <ImageView
+            android:id="@+id/record_badge_image_view"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:contentDescription="@string/record_log"
+            app:tint="#EF5350"
+            android:visibility="invisible"
+            app:srcCompat="@drawable/ic_record_white_24dp"
+            tools:visibility="visible" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/widget_subtext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:ellipsize="marquee"
+        android:fontFamily="sans-serif-condensed"
+        android:gravity="center"
+        android:text="@string/widget_start_recording"
+        android:textColor="@color/primary_text_default_material_dark"
+        android:textSize="14sp" />
+
+</RelativeLayout>

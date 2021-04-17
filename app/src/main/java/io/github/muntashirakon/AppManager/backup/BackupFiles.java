@@ -20,6 +20,8 @@ package io.github.muntashirakon.AppManager.backup;
 import android.os.RemoteException;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import io.github.muntashirakon.AppManager.db.entity.App;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.io.ProxyFile;
 import io.github.muntashirakon.io.ProxyFileReader;
@@ -42,7 +44,7 @@ public class BackupFiles {
 
     @NonNull
     public static ProxyFile getBackupDirectory() {
-        return new ProxyFile((String) AppPref.get(AppPref.PrefKey.PREF_BACKUP_VOLUME_STR), "AppManager");
+        return AppPref.getAppManagerDirectory();
     }
 
     @NonNull

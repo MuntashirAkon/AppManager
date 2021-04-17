@@ -10,6 +10,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
 
+import androidx.annotation.CallSuper;
 import androidx.annotation.Nullable;
 
 public abstract class ForegroundService extends Service {
@@ -42,6 +43,7 @@ public abstract class ForegroundService extends Service {
         serviceHandler = new ServiceHandler(serviceLooper);
     }
 
+    @CallSuper
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Message msg = serviceHandler.obtainMessage();

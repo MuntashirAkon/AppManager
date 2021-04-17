@@ -23,9 +23,11 @@ import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 import io.github.muntashirakon.AppManager.db.dao.AppDao;
+import io.github.muntashirakon.AppManager.db.dao.LogFilterDao;
 import io.github.muntashirakon.AppManager.db.entity.App;
+import io.github.muntashirakon.AppManager.db.entity.LogFilter;
 
-@Database(entities = {App.class}, version = 2)
+@Database(entities = {App.class, LogFilter.class}, version = 3)
 public abstract class AMDatabase extends RoomDatabase {
     public static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override
@@ -34,5 +36,15 @@ public abstract class AMDatabase extends RoomDatabase {
         }
     };
 
+    public static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("CREATE TABLE IF NOT EXISTS log_filter (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, name TEXT)");
+            database.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS index_name ON log_filter (name)");
+        }
+    };
+
     public abstract AppDao appDao();
+
+    public abstract LogFilterDao logFilterDao();
 }
