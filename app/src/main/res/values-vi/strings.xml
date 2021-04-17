@@ -437,4 +437,10 @@
     <string name="failed_to_revoke_permission">Không thể thu hồi quyền</string>
     <string name="sort_by_component_name">Tên thành phần</string>
     <string name="block_trackers">Chặn trình theo dõi</string>
+    <plurals name="items_selected">
+        <item quantity="other">Đã chọn <xliff:g id="selection_no" example="20">%1$d</xliff:g></item>
+    </plurals>
+    <string name="pref_installer_msg">Thiết lập hành vi của trình cài đặt ứng dụng.</string>
+    <string name="expiry_date_cannot_be_empty">Ngày hết hạn không thể trống.</string>
+    <string name="signing_key">Mã ký</string>
 </resources>
