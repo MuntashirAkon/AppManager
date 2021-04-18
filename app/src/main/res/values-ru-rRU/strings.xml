@@ -109,8 +109,8 @@
     <string name="license">Лицензия</string>
     <string name="third_party">Сторонние библиотеки и значки</string>
     <string name="credits">Авторы</string>
-    <string name="credits_message">"Благодарность разработчикам:
-\n-The Android Open Source Project
+    <string name="credits_message">Благодарность разработчикам:
+\n- Android Open Source Project
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
 \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
@@ -119,7 +119,7 @@
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
-\nАвтор логотипа: <a href="https://github.com/Atrate">Atrate</a>. "</string>
+\nАвтор логотипа: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="word_wrap">Перенос слов</string>
     <string name="class_viewer">Просмотр классов</string>
     <string name="toggle_class_listing">Переключить список классов</string>
@@ -802,7 +802,7 @@
     <string name="activity_result">Результат активити</string>
     <string name="send_edited_intent">Отправить измененное намерение</string>
     <string name="matching_activities">Соответствующие активити</string>
-    <string name="filter_apps_with_splits">Разделенные приложения (split)</string>
+    <string name="filter_apps_with_splits">Разделенные приложения (сплиты)</string>
     <string name="set_custom_app_op">Пользовательская настройка операции приложения</string>
     <string name="cpu">Процессор</string>
     <string name="battery">Аккумулятор</string>
