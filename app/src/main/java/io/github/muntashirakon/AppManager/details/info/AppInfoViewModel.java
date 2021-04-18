@@ -33,6 +33,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.android.internal.util.TextUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -153,9 +154,12 @@ public class AppInfoViewModel extends AndroidViewModel {
         } else {
             tagCloud.netPolicies = 0;
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            tagCloud.ssaid = new SsaidSettings(packageName, applicationInfo.uid).getSsaid();
-            if (TextUtils.isEmpty(tagCloud.ssaid)) tagCloud.ssaid = null;
+        if (AppPref.isRootEnabled() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            try {
+                tagCloud.ssaid = new SsaidSettings(packageName, applicationInfo.uid).getSsaid();
+                if (TextUtils.isEmpty(tagCloud.ssaid)) tagCloud.ssaid = null;
+            } catch (IOException ignore) {
+            }
         }
         this.tagCloud.postValue(tagCloud);
     }

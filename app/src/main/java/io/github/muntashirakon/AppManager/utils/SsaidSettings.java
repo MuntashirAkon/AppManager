@@ -22,23 +22,27 @@ import android.content.pm.Signature;
 import android.os.Build;
 import android.os.HandlerThread;
 import android.os.Process;
-import android.os.RemoteException;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.WorkerThread;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+
 import aosp.libcore.util.HexEncoding;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.io.ProxyFile;
-
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-import java.nio.ByteBuffer;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 
 import static io.github.muntashirakon.AppManager.utils.SettingsState.SETTINGS_TYPE_SSAID;
 
@@ -53,14 +57,22 @@ public class SsaidSettings {
     private final SettingsState settingsState;
 
     @WorkerThread
-    public SsaidSettings(String packageName, int uid) {
+    public SsaidSettings(String packageName, int uid) throws IOException {
         this.uid = uid;
         this.packageName = packageName;
         HandlerThread thread = new HandlerThread("SSAID", Process.THREAD_PRIORITY_BACKGROUND);
         thread.start();
         int ssaidKey = SettingsState.makeKey(SETTINGS_TYPE_SSAID, 0);
-        settingsState = new SettingsState(lock, new ProxyFile(OsEnvironment.getUserSystemDirectory(
-                Users.getUserHandle(uid)), "settings_ssaid.xml"), ssaidKey,
+        File ssaidLocation = new ProxyFile(OsEnvironment.getUserSystemDirectory(Users.getUserHandle(uid)),
+                "settings_ssaid.xml");
+        try {
+            if (ssaidLocation.canRead()) {
+                throw new IOException("settings_ssaid.xml is inaccessible.");
+            }
+        } catch (SecurityException e) {
+            throw new IOException(e);
+        }
+        settingsState = new SettingsState(lock, ssaidLocation, ssaidKey,
                 SettingsState.MAX_BYTES_PER_APP_PACKAGE_UNLIMITED, thread.getLooper());
     }
 
@@ -94,7 +106,7 @@ public class SsaidSettings {
     }
 
     @NonNull
-    public static String generateSsaid(@NonNull PackageInfo callingPkg) {
+    public static String generateSsaid(@NonNull PackageInfo callingPkg) throws IOException {
         // Read the user's key from the ssaid table.
         SsaidSettings ssaidSettings = new SsaidSettings(callingPkg.packageName, callingPkg.applicationInfo.uid);
         SettingsState settingsState = ssaidSettings.settingsState;

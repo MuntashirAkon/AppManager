@@ -727,30 +727,33 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                             .create();
                     TextInputEditText ssaidHolder = view.findViewById(R.id.ssaid);
                     TextInputLayout ssaidInputLayout = view.findViewById(android.R.id.text1);
-                    AtomicReference<Button> positiveButton = new AtomicReference<>();
-                    AtomicReference<Button> neutralButton = new AtomicReference<>();
+                    AtomicReference<Button> applyButton = new AtomicReference<>();
+                    AtomicReference<Button> resetButton = new AtomicReference<>();
                     AtomicReference<String> ssaid = new AtomicReference<>(tagCloud.ssaid);
 
                     alertDialog.setOnShowListener(dialog -> {
-                        positiveButton.set(alertDialog.getButton(AlertDialog.BUTTON_POSITIVE));
-                        neutralButton.set(alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL));
-                        positiveButton.get().setVisibility(View.GONE);
-                        positiveButton.get().setOnClickListener(v2 -> executor.submit(() -> {
-                            SsaidSettings ssaidSettings = new SsaidSettings(mPackageName, mApplicationInfo.uid);
-                            if (ssaidSettings.setSsaid(ssaid.get())) {
-                                model.loadTagCloud();
-                                runOnUiThread(() -> displayLongToast(R.string.restart_to_reflect_changes));
-                            } else {
-                                runOnUiThread(() -> displayLongToast(R.string.failed_to_change_ssaid));
+                        applyButton.set(alertDialog.getButton(AlertDialog.BUTTON_POSITIVE));
+                        resetButton.set(alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL));
+                        applyButton.get().setVisibility(View.GONE);
+                        applyButton.get().setOnClickListener(v2 -> executor.submit(() -> {
+                            try {
+                                SsaidSettings ssaidSettings = new SsaidSettings(mPackageName, mApplicationInfo.uid);
+                                if (ssaidSettings.setSsaid(ssaid.get())) {
+                                    model.loadTagCloud();
+                                    runOnUiThread(() -> displayLongToast(R.string.restart_to_reflect_changes));
+                                } else {
+                                    runOnUiThread(() -> displayLongToast(R.string.failed_to_change_ssaid));
+                                }
+                                alertDialog.dismiss();
+                            } catch (IOException ignore) {
                             }
-                            alertDialog.dismiss();
                         }));
-                        neutralButton.get().setVisibility(View.GONE);
-                        neutralButton.get().setOnClickListener(v2 -> {
+                        resetButton.get().setVisibility(View.GONE);
+                        resetButton.get().setOnClickListener(v2 -> {
                             ssaid.set(tagCloud.ssaid);
                             ssaidHolder.setText(ssaid.get());
-                            neutralButton.get().setVisibility(View.GONE);
-                            positiveButton.get().setVisibility(View.GONE);
+                            resetButton.get().setVisibility(View.GONE);
+                            applyButton.get().setVisibility(View.GONE);
                         });
                     });
                     ssaidHolder.setText(tagCloud.ssaid);
@@ -765,11 +768,11 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         ssaid.set(SsaidSettings.generateSsaid(mPackageName));
                         ssaidHolder.setText(ssaid.get());
                         if (!tagCloud.ssaid.equals(ssaid.get())) {
-                            if (neutralButton.get() != null) {
-                                neutralButton.get().setVisibility(View.VISIBLE);
+                            if (resetButton.get() != null) {
+                                resetButton.get().setVisibility(View.VISIBLE);
                             }
-                            if (positiveButton.get() != null) {
-                                positiveButton.get().setVisibility(View.VISIBLE);
+                            if (applyButton.get() != null) {
+                                applyButton.get().setVisibility(View.VISIBLE);
                             }
                         }
                     });

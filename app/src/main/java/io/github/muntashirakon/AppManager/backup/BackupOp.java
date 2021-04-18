@@ -25,6 +25,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PermissionInfo;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.RemoteException;
 
 import androidx.annotation.NonNull;
@@ -347,7 +348,7 @@ class BackupOp implements Closeable {
             rules.setMagiskHide(true);
         }
         // Backup allowed notification listeners aka BIND_NOTIFICATION_LISTENER_SERVICE
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O_MR1) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             INotificationManager notificationManager = INotificationManager.Stub.asInterface(ProxyBinder.getService(Context.NOTIFICATION_SERVICE));
             try {
                 List<ComponentName> notificationComponents;
@@ -387,9 +388,14 @@ class BackupOp implements Closeable {
             }
         }
         // Backup SSAID
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            String ssaid = new SsaidSettings(packageName, applicationInfo.uid).getSsaid();
-            if (ssaid != null) rules.setSsaid(ssaid);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            try {
+                String ssaid = new SsaidSettings(packageName, applicationInfo.uid).getSsaid();
+                if (ssaid != null) rules.setSsaid(ssaid);
+            } catch (IOException e) {
+                // Ignore exception
+                Log.e(TAG, e);
+            }
         }
         rules.commitExternal(miscFile);
         if (!miscFile.exists()) return;
