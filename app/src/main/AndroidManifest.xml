@@ -494,7 +494,9 @@
         </activity>
         <activity
             android:name=".misc.HelpActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:taskAffinity="" />
         <activity
             android:name=".crypto.AuthenticationActivity"
             android:exported="false"

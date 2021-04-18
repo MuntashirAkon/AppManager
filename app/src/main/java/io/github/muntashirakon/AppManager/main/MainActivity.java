@@ -31,7 +31,7 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.AnyThread;
@@ -49,11 +49,18 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.textview.MaterialTextView;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
@@ -62,7 +69,6 @@ import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
 import io.github.muntashirakon.AppManager.misc.HelpActivity;
-import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.oneclickops.OneClickOpsActivity;
 import io.github.muntashirakon.AppManager.profiles.ProfileManager;
 import io.github.muntashirakon.AppManager.profiles.ProfileMetaManager;
@@ -75,13 +81,15 @@ import io.github.muntashirakon.AppManager.sysconfig.SysConfigActivity;
 import io.github.muntashirakon.AppManager.types.ScrollableDialogBuilder;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.usage.AppUsageActivity;
-import io.github.muntashirakon.AppManager.utils.*;
+import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.DateUtils;
+import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.StoragePermission;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.AppManager.utils.Utils;
 import me.zhanghai.android.fastscroll.FastScrollerBuilder;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
 
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
@@ -254,6 +262,7 @@ public class MainActivity extends BaseActivity implements
         int id = item.getItemId();
         if (id == R.id.action_instructions) {
             Intent helpIntent = new Intent(this, HelpActivity.class);
+            helpIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(helpIntent);
         } else if (id == R.id.action_list_options) {
             ListOptions listOptions = new ListOptions();
@@ -390,7 +399,7 @@ public class MainActivity extends BaseActivity implements
                                 }
                             }
                         }
-                        Toast.makeText(this, R.string.done, Toast.LENGTH_SHORT);
+                        UIUtils.displayShortToast(R.string.done);
                     })
                     .show();
         } else {
