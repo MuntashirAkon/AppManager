@@ -33,7 +33,6 @@ public class ProfilesViewModel extends AndroidViewModel {
         super(application);
     }
 
-    private HashMap<String, String> profiles;
     private MutableLiveData<HashMap<String, String>> profileLiveData;
 
     public LiveData<HashMap<String, String>> getProfiles() {
@@ -46,7 +45,7 @@ public class ProfilesViewModel extends AndroidViewModel {
 
     @WorkerThread
     public void loadProfiles() {
-        profiles = ProfileManager.getProfiles();
+        HashMap<String, String> profiles = ProfileManager.getProfiles();
         profileLiveData.postValue(profiles);
     }
 }

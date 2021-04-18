@@ -91,7 +91,7 @@ public class ProfileMetaManager {
         public boolean clearCache = false;  // misc.clear_cache (false = remove)
         public boolean clearData = false;  // misc.clear_data (false = remove)
         public boolean blockTrackers = false;  // misc.block_trackers (false = remove)
-        public boolean backupApk = false;  // misc.backup_apk (false = remove)
+        public boolean saveApk = false;  // misc.save_apk (false = remove)
 
         Profile(@NonNull String profileName, @NonNull String[] packageNames) {
             name = profileName;
@@ -212,7 +212,7 @@ public class ProfileMetaManager {
             profile.clearCache = miscConfig.contains("clear_cache");
             profile.clearData = miscConfig.contains("clear_data");
             profile.blockTrackers = miscConfig.contains("block_trackers");
-            profile.backupApk = miscConfig.contains("backup_apk");
+            profile.saveApk = miscConfig.contains("save_apk");
         } catch (Exception ignore) {
         }
     }
@@ -256,7 +256,7 @@ public class ProfileMetaManager {
         if (profile.clearCache) jsonArray.put("clear_cache");
         if (profile.clearData) jsonArray.put("clear_data");
         if (profile.blockTrackers) jsonArray.put("block_trackers");
-        if (profile.backupApk) jsonArray.put("backup_apk");
+        if (profile.saveApk) jsonArray.put("save_apk");
         if (jsonArray.length() > 0) profileObj.put("misc", jsonArray);
         outputStream.write(profileObj.toString().getBytes());
     }
@@ -286,7 +286,7 @@ public class ProfileMetaManager {
         if (profile.clearCache) arrayList.add(context.getString(R.string.clear_cache));
         if (profile.clearData) arrayList.add(context.getString(R.string.clear_data));
         if (profile.blockTrackers) arrayList.add(context.getString(R.string.trackers));
-        if (profile.backupApk) arrayList.add(context.getString(R.string.backup_apk));
+        if (profile.saveApk) arrayList.add(context.getString(R.string.save_apk));
         return arrayList;
     }
 

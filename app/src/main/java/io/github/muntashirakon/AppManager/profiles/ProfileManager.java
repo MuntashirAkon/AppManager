@@ -128,7 +128,7 @@ public class ProfileManager {
                     result = batchOpsManager.performOp(BatchOpsManager.OP_UNBLOCK_COMPONENTS, userPackagePairs);
             }
             if (!result.isSuccessful()) {
-                Log.d(TAG, "Failed packages: " + result.toString());
+                Log.d(TAG, "Failed packages: " + result);
             }
         } else Log.d(TAG, "Skipped components.");
         // Apply app ops blocking
@@ -148,7 +148,7 @@ public class ProfileManager {
             batchOpsManager.setArgs(args);
             result = batchOpsManager.performOp(BatchOpsManager.OP_SET_APP_OPS, userPackagePairs);
             if (!result.isSuccessful()) {
-                Log.d(TAG, "Failed packages: " + result.toString());
+                Log.d(TAG, "Failed packages: " + result);
             }
         } else Log.d(TAG, "Skipped app ops.");
         // Apply permissions
@@ -167,7 +167,7 @@ public class ProfileManager {
                     result = batchOpsManager.performOp(BatchOpsManager.OP_GRANT_PERMISSIONS, userPackagePairs);
             }
             if (!result.isSuccessful()) {
-                Log.d(TAG, "Failed packages: " + result.toString());
+                Log.d(TAG, "Failed packages: " + result);
             }
         } else Log.d(TAG, "Skipped permissions.");
         // Backup/restore data
@@ -196,7 +196,7 @@ public class ProfileManager {
                     result = batchOpsManager.performOp(BatchOpsManager.OP_RESTORE_BACKUP, userPackagePairs);
             }
             if (!result.isSuccessful()) {
-                Log.d(TAG, "Failed packages: " + result.toString());
+                Log.d(TAG, "Failed packages: " + result);
             }
         } else Log.d(TAG, "Skipped backup/restore.");
         // Backup rules
@@ -217,7 +217,7 @@ public class ProfileManager {
                     result = batchOpsManager.performOp(BatchOpsManager.OP_ENABLE, userPackagePairs);
             }
             if (!result.isSuccessful()) {
-                Log.d(TAG, "Failed packages: " + result.toString());
+                Log.d(TAG, "Failed packages: " + result);
             }
         } else Log.d(TAG, "Skipped disable/enable.");
         // Force-stop
@@ -225,7 +225,7 @@ public class ProfileManager {
             Log.d(TAG, "Started force-stop.");
             result = batchOpsManager.performOp(BatchOpsManager.OP_FORCE_STOP, userPackagePairs);
             if (!result.isSuccessful()) {
-                Log.d(TAG, "Failed packages: " + result.toString());
+                Log.d(TAG, "Failed packages: " + result);
             }
         } else Log.d(TAG, "Skipped force stop.");
         // Clear cache
@@ -233,7 +233,7 @@ public class ProfileManager {
             Log.d(TAG, "Started clear cache.");
             result = batchOpsManager.performOp(BatchOpsManager.OP_CLEAR_CACHE, userPackagePairs);
             if (!result.isSuccessful()) {
-                Log.d(TAG, "Failed packages: " + result.toString());
+                Log.d(TAG, "Failed packages: " + result);
             }
         } else Log.d(TAG, "Skipped clear cache.");
         // Clear data
@@ -241,7 +241,7 @@ public class ProfileManager {
             Log.d(TAG, "Started clear data.");
             result = batchOpsManager.performOp(BatchOpsManager.OP_CLEAR_DATA, userPackagePairs);
             if (!result.isSuccessful()) {
-                Log.d(TAG, "Failed packages: " + result.toString());
+                Log.d(TAG, "Failed packages: " + result);
             }
         } else Log.d(TAG, "Skipped clear data.");
         // Block trackers
@@ -256,15 +256,15 @@ public class ProfileManager {
                     result = batchOpsManager.performOp(BatchOpsManager.OP_UNBLOCK_TRACKERS, userPackagePairs);
             }
             if (!result.isSuccessful()) {
-                Log.d(TAG, "Failed packages: " + result.toString());
+                Log.d(TAG, "Failed packages: " + result);
             }
         } else Log.d(TAG, "Skipped block trackers.");
         // Backup apk
-        if (profile.backupApk) {
+        if (profile.saveApk) {
             Log.d(TAG, "Started backup apk.");
             result = batchOpsManager.performOp(BatchOpsManager.OP_BACKUP_APK, userPackagePairs);
             if (!result.isSuccessful()) {
-                Log.d(TAG, "Failed packages: " + result.toString());
+                Log.d(TAG, "Failed packages: " + result);
             }
         } else Log.d(TAG, "Skipped backup apk.");
     }

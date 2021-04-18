@@ -325,7 +325,7 @@ public class MainActivity extends BaseActivity implements
                 backupDialogFragment.show(getSupportFragmentManager(), BackupDialogFragment.TAG);
                 clearAndHandleSelection();
             }
-        } else if (id == R.id.action_backup_apk) {
+        } else if (id == R.id.action_save_apk) {
             storagePermission.request(granted -> {
                 if (granted) handleBatchOp(BatchOpsManager.OP_BACKUP_APK);
             });

@@ -290,7 +290,7 @@ public class BatchOpsService extends ForegroundService {
             case BatchOpsManager.OP_RESTORE_BACKUP:
                 return getString(R.string.backup_restore);
             case BatchOpsManager.OP_BACKUP_APK:
-                return getString(R.string.backup_apk);
+                return getString(R.string.save_apk);
             case BatchOpsManager.OP_BLOCK_TRACKERS:
                 return getString(R.string.block_trackers);
             case BatchOpsManager.OP_CLEAR_DATA:

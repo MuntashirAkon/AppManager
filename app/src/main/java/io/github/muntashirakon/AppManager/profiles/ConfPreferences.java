@@ -257,8 +257,8 @@ public class ConfPreferences extends PreferenceFragmentCompat {
                 .setChecked(model.getBoolean("clear_data", false));
         ((SwitchPreferenceCompat) Objects.requireNonNull(findPreference("block_trackers")))
                 .setChecked(model.getBoolean("block_trackers", false));
-        ((SwitchPreferenceCompat) Objects.requireNonNull(findPreference("backup_apk")))
-                .setChecked(model.getBoolean("backup_apk", false));
+        ((SwitchPreferenceCompat) Objects.requireNonNull(findPreference("save_apk")))
+                .setChecked(model.getBoolean("save_apk", false));
         ((SwitchPreferenceCompat) Objects.requireNonNull(findPreference("allow_routine")))
                 .setChecked(model.getBoolean("allow_routine", false));
     }

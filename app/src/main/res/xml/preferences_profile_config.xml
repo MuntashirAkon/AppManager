@@ -98,9 +98,9 @@
         app:iconSpaceReserved="false" />
 
     <SwitchPreferenceCompat
-        app:key="backup_apk"
-        app:title="@string/backup_apk"
-        app:summary="@string/profile_backup_apk_msg"
+        app:key="save_apk"
+        app:title="@string/save_apk"
+        app:summary="@string/profile_save_apk_msg"
         app:iconSpaceReserved="false" />
 
     <SwitchPreferenceCompat

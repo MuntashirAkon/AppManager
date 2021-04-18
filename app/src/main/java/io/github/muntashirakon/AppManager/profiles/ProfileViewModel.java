@@ -185,8 +185,8 @@ public class ProfileViewModel extends AndroidViewModel {
             case "block_trackers":
                 profile.blockTrackers = value;
                 break;
-            case "backup_apk":
-                profile.backupApk = value;
+            case "save_apk":
+                profile.saveApk = value;
                 break;
             case "allow_routine":
                 profile.allowRoutine = value;
@@ -206,8 +206,8 @@ public class ProfileViewModel extends AndroidViewModel {
                 return profile.clearData;
             case "block_trackers":
                 return profile.blockTrackers;
-            case "backup_apk":
-                return profile.backupApk;
+            case "save_apk":
+                return profile.saveApk;
             case "allow_routine":
                 return profile.allowRoutine;
             default:

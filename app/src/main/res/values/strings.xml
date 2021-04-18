@@ -292,7 +292,6 @@
     <string name="user_with_id">User: <xliff:g id="user_id" example="0">%1$d</xliff:g></string>
     <string name="user_and_uid">User: <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
     <string name="clear_data">Clear Data</string>
-    <string name="backup_apk">Backup APK</string>
     <string name="backup_restore">Backup/Restore</string>
     <string name="disable_background">Prevent background operation</string>
     <string name="export_blocking_rules">Export Blocking Rules</string>
@@ -726,7 +725,6 @@
     <string name="profile_clear_cache_msg">Clears the app cache of apps</string>
     <string name="profile_clear_data_msg">Clears the data of apps</string>
     <string name="profile_block_trackers_msg">Blocks the trackers in apps</string>
-    <string name="profile_backup_apk_msg">Backs up APK files</string>
     <string name="profile_state_msg">Custom on/off state for this profile</string>
     <string name="on">On</string>
     <string name="off">Off</string>
@@ -1046,4 +1044,6 @@
     <string name="share_log">Share</string>
     <string name="view_logs">View logs</string>
     <string name="running_services">Running Services</string>
+    <string name="save_apk">Save APK</string>
+    <string name="profile_save_apk_msg">Saves APK files in <tt>AppManager/apks</tt></string>
 </resources>

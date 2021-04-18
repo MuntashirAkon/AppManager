@@ -52,8 +52,8 @@
         android:icon="@drawable/ic_refresh_black_24dp"
         android:title="@string/clear_data" />
     <item
-        android:id="@+id/action_backup_apk"
-        android:title="@string/backup_apk"
+        android:id="@+id/action_save_apk"
+        android:title="@string/save_apk"
         android:icon="@drawable/ic_baseline_get_app_24"
         app:showAsAction="never" />
     <item
