@@ -510,7 +510,7 @@
     <string name="clear">消去</string>
     <string name="block">ブロック</string>
     <string name="unblock">ブロック解除</string>
-    <string name="block_unblock_trackers">トラッカーをブロック/ブロック解除</string>
+    <string name="block_unblock_trackers">ﾄﾗｯｶｰをﾌﾞﾛｯｸ/ﾌﾞﾛｯｸ解除</string>
     <string name="no_matching_package_found">一致するアプリが見つかりませんでした</string>
     <string name="export_icon">アイコンを抽出</string>
     <string name="open_in_termux">Termuxで開く</string>
@@ -873,7 +873,7 @@
     <string name="reverse">反転</string>
     <string name="allow_background">バックグラウンドを許可</string>
     <string name="reject_background">バックグラウンドを拒否</string>
-    <string name="choose_what_to_do">何をするか選択してください。</string>
+    <string name="choose_what_to_do">実行する操作を選択してください</string>
     <string name="enable_battery_optimization">電池の最適化を有効にしますか？</string>
     <string name="battery_optimization">電池の最適化</string>
     <string name="no_battery_optimization">電池の最適化が無効</string>
