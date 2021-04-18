@@ -491,8 +491,10 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
             int currentLogLevelIdx = LogViewerPreferences.LOG_LEVEL_VALUES.indexOf(mLogListAdapter.getLogLevelLimit());
             new MaterialAlertDialogBuilder(this)
                     .setTitle(R.string.log_level)
-                    .setSingleChoiceItems(logLevelsLocalised, currentLogLevelIdx, (dialog, which) ->
-                            mLogListAdapter.setLogLevelLimit(LogViewerPreferences.LOG_LEVEL_VALUES.get(which)))
+                    .setSingleChoiceItems(logLevelsLocalised, currentLogLevelIdx, (dialog, which) -> {
+                        mLogListAdapter.setLogLevelLimit(LogViewerPreferences.LOG_LEVEL_VALUES.get(which));
+                        logLevelChanged();
+                    })
                     .setNegativeButton(R.string.close, null)
                     .show();
             return true;
@@ -664,15 +666,16 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
                         .setNegativeButton(R.string.cancel, null)
                         .show());
 
-                logFilterAdapter.setOnItemClickListener((parent, view1, position, logFilter) -> {
-                    setSearchText(logFilter.name);
-                });
-
-                new MaterialAlertDialogBuilder(LogViewerActivity.this)
+                AlertDialog alertDialog = new MaterialAlertDialogBuilder(LogViewerActivity.this)
                         .setTitle(R.string.title_filters)
                         .setView(view)
                         .setNegativeButton(R.string.ok, null)
                         .show();
+
+                logFilterAdapter.setOnItemClickListener((parent, view1, position, logFilter) -> {
+                    setSearchText(logFilter.name);
+                    alertDialog.dismiss();
+                });
             });
         }).start();
     }
@@ -1170,6 +1173,9 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
         // Sets the search text without invoking autosuggestions, which are really only useful when typing
         mDynamicallyEnteringSearchText = true;
         search(text);
+        searchView.setIconified(false);
+        searchView.setQuery(mSearchingString, true);
+        searchView.clearFocus();
     }
 
     private void search(String filterText) {
@@ -1178,9 +1184,6 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
         mSearchingString = filterText;
         if (!TextUtils.isEmpty(mSearchingString)) {
             mDynamicallyEnteringSearchText = true;
-            searchView.setIconified(false);
-            searchView.setQuery(mSearchingString, true);
-            searchView.clearFocus();
         }
     }
 
