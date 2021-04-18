@@ -48,6 +48,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.UiThread;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
@@ -64,18 +77,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import androidx.annotation.IntDef;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.UiThread;
-import androidx.appcompat.widget.SearchView;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.OpEntry;
@@ -83,15 +84,15 @@ import io.github.muntashirakon.AppManager.details.struct.AppDetailsComponentItem
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsPermissionItem;
 import io.github.muntashirakon.AppManager.intercept.ActivityInterceptor;
-import io.github.muntashirakon.AppManager.settings.FeatureController;
-import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.servermanager.ActivityManagerCompat;
+import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.types.RecyclerViewWithEmptyView;
 import io.github.muntashirakon.AppManager.types.TextInputDropdownDialogBuilder;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
+import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
@@ -354,20 +355,14 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             refreshDetails();
         } else if (id == R.id.action_toggle_blocking) {  // Components
             if (mainModel != null) new Thread(() -> mainModel.applyRules()).start();
-        } else if (id == R.id.action_block_trackers) {  // Components
-            if (mainModel == null) return true;
-            new Thread(() -> {
-                List<UserPackagePair> failedPkgList = ComponentUtils.blockTrackingComponents(Collections.singletonList(new UserPackagePair(mPackageName, Users.getCurrentUserHandle())));
-                if (failedPkgList.size() > 0) {
-                    runOnUiThread(() -> Toast.makeText(mActivity, R.string.failed_to_disable_trackers, Toast.LENGTH_SHORT).show());
-                } else {
-                    runOnUiThread(() -> {
-                        Toast.makeText(mActivity, R.string.trackers_disabled_successfully, Toast.LENGTH_SHORT).show();
-                        refreshDetails();
-                    });
-                }
-                mainModel.setRuleApplicationStatus();
-            }).start();
+        } else if (id == R.id.action_block_unblock_trackers) {  // Components
+            new MaterialAlertDialogBuilder(mActivity)
+                    .setTitle(R.string.block_unblock_trackers)
+                    .setMessage(R.string.choose_what_to_do)
+                    .setPositiveButton(R.string.block, (dialog, which) -> blockUnblockTrackers(true))
+                    .setNegativeButton(R.string.cancel, null)
+                    .setNeutralButton(R.string.unblock, (dialog, which) -> blockUnblockTrackers(false))
+                    .show();
         } else if (id == R.id.action_reset_to_default) {  // App ops
             new Thread(() -> {
                 if (mainModel == null || !mainModel.resetAppOps()) {
@@ -503,6 +498,26 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     @Override
     public boolean onQueryTextSubmit(String query) {
         return false;
+    }
+
+    public void blockUnblockTrackers(boolean block) {
+        if (mainModel == null) return;
+        List<UserPackagePair> userPackagePairs = Collections.singletonList(new UserPackagePair(mPackageName, Users.getCurrentUserHandle()));
+        new Thread(() -> {
+            List<UserPackagePair> failedPkgList = block ? ComponentUtils.blockTrackingComponents(userPackagePairs)
+                    : ComponentUtils.unblockTrackingComponents(userPackagePairs);
+            if (failedPkgList.size() > 0) {
+                runOnUiThread(() -> Toast.makeText(mActivity, block ? R.string.failed_to_block_trackers
+                        : R.string.failed_to_unblock_trackers, Toast.LENGTH_SHORT).show());
+            } else {
+                runOnUiThread(() -> {
+                    Toast.makeText(mActivity, block ? R.string.trackers_blocked_successfully
+                            : R.string.trackers_unblocked_successfully, Toast.LENGTH_SHORT).show();
+                    refreshDetails();
+                });
+            }
+            mainModel.setRuleApplicationStatus();
+        }).start();
     }
 
     private void runOnUiThread(Runnable runnable) {

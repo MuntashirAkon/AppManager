@@ -32,9 +32,9 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/action_block_trackers"
+        android:id="@+id/action_block_unblock_trackers"
         android:icon="@drawable/ic_block_black_24dp"
-        android:title="@string/block_trackers"
+        android:title="@string/block_unblock_trackers"
         app:showAsAction="never" />
 
     <item

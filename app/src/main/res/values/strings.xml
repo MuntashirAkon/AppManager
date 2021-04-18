@@ -362,8 +362,6 @@
     <string name="deny_dangerous_permissions">Deny dangerous permissions</string>
     <string name="sort_by_tracker_components">Trackers first</string>
     <string name="unknown_op">Unknown Operation</string>
-    <string name="failed_to_disable_trackers">Could not disable trackers</string>
-    <string name="trackers_disabled_successfully">Trackers are now disabled</string>
     <plurals name="alert_failed_to_disable_trackers">
         <item quantity="one">Could not disable trackers from %1$d app</item>
         <item quantity="other">Could not disable trackers from %1$d apps</item>
@@ -1046,4 +1044,8 @@
     <string name="running_services">Running Services</string>
     <string name="save_apk">Save APK</string>
     <string name="profile_save_apk_msg">Saves APK files in <tt>AppManager/apks</tt></string>
+    <string name="failed_to_block_trackers">Could not block trackers</string>
+    <string name="failed_to_unblock_trackers">Could not unblock trackers</string>
+    <string name="trackers_blocked_successfully">Trackers are now blocked</string>
+    <string name="trackers_unblocked_successfully">Trackers are now unblocked</string>
 </resources>

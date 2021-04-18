@@ -329,8 +329,16 @@ public class MainActivity extends BaseActivity implements
             storagePermission.request(granted -> {
                 if (granted) handleBatchOp(BatchOpsManager.OP_BACKUP_APK);
             });
-        } else if (id == R.id.action_block_trackers) {
-            handleBatchOp(BatchOpsManager.OP_BLOCK_TRACKERS);
+        } else if (id == R.id.action_block_unblock_trackers) {
+            new MaterialAlertDialogBuilder(this)
+                    .setTitle(R.string.block_unblock_trackers)
+                    .setMessage(R.string.choose_what_to_do)
+                    .setPositiveButton(R.string.block, (dialog, which) ->
+                            handleBatchOp(BatchOpsManager.OP_BLOCK_TRACKERS))
+                    .setNegativeButton(R.string.cancel, null)
+                    .setNeutralButton(R.string.unblock, (dialog, which) ->
+                            handleBatchOp(BatchOpsManager.OP_UNBLOCK_TRACKERS))
+                    .show();
         } else if (id == R.id.action_clear_data) {
             handleBatchOpWithWarning(BatchOpsManager.OP_CLEAR_DATA);
         } else if (id == R.id.action_enable) {
