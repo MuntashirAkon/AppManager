@@ -478,6 +478,7 @@ public class ScannerActivity extends BaseActivity {
                 view.setOnClickListener(v -> new SearchableMultiChoiceDialogBuilder<>(this,
                         missingLibs, ArrayUtils.toCharSequence(missingLibs))
                         .setTitle(R.string.signatures)
+                        .showSelectAll(false)
                         .setNegativeButton(R.string.ok, null)
                         .setNeutralButton(R.string.send_selected, (dialog, which, selectedItems) -> {
                             Intent i = new Intent(Intent.ACTION_SEND);

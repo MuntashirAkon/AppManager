@@ -970,7 +970,6 @@
     </plurals>
     <string name="checkbox_never_show_partial_select_help">Don\'t show again</string>
     <string name="copy_to_clipboard">Copy to clipboard</string>
-    <string name="delete_all">Delete All</string>
     <string name="delete_saved_log">Delete Saved Logs</string>
     <string name="dialog_compiling_log">Compiling log…</string>
     <string name="dialog_partial_select_explanation">1. Select the <b>first</b> line.\n2. Then select the <b>last</b> line.</string>

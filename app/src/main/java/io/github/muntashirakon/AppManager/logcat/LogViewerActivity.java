@@ -758,28 +758,24 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
         CharSequence[] filenameArray = SaveLogHelper.getFormattedFilenames(this, logFiles);
         new SearchableMultiChoiceDialogBuilder<>(this, logFiles, filenameArray)
                 .setTitle(R.string.manage_saved_logs)
-                .setPositiveButton(R.string.delete, (dialog, which, selectedFiles) -> confirmDelete(selectedFiles))
+                .setPositiveButton(R.string.delete, (dialog, which, selectedFiles) -> {
+                    final int deleteCount = selectedFiles.size();
+                    if (deleteCount == 0) return;
+                    new MaterialAlertDialogBuilder(this)
+                            .setTitle(R.string.delete_saved_log)
+                            .setCancelable(true)
+                            .setMessage(getResources().getQuantityString(R.plurals.are_you_sure, deleteCount, deleteCount))
+                            .setPositiveButton(android.R.string.ok, (dialog1, which1) -> {
+                                for (File selectedFile : selectedFiles) {
+                                    SaveLogHelper.deleteLogIfExists(selectedFile.getName());
+                                }
+                                UIUtils.displayShortToast(R.string.deleted_successfully);
+                            })
+                            .setNegativeButton(android.R.string.cancel, null)
+                            .show();
+                })
                 .setNegativeButton(R.string.cancel, null)
-                .setNeutralButton(R.string.delete_all, (dialog, which, selectedFiles) -> confirmDelete(logFiles))
                 .show();
-    }
-
-    private void confirmDelete(@NonNull final List<File> selectedFiles) {
-        final int deleteCount = selectedFiles.size();
-        if (deleteCount > 0) {
-            new MaterialAlertDialogBuilder(this)
-                    .setTitle(R.string.delete_saved_log)
-                    .setCancelable(true)
-                    .setMessage(getResources().getQuantityString(R.plurals.are_you_sure, deleteCount, deleteCount))
-                    .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                        for (File selectedFile : selectedFiles) {
-                            SaveLogHelper.deleteLogIfExists(selectedFile.getName());
-                        }
-                        UIUtils.displayShortToast(R.string.deleted_successfully);
-                    })
-                    .setNegativeButton(android.R.string.cancel, null)
-                    .show();
-        }
     }
 
     private void displaySaveDebugLogsDialog(boolean share) {

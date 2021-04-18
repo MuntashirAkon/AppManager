@@ -44,11 +44,21 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <com.google.android.material.checkbox.MaterialCheckBox
+        android:id="@android:id/checkbox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/padding_medium"
+        android:layout_marginEnd="@dimen/padding_medium"
+        android:text="@string/select_all" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbars="none"
+        android:scrollIndicators="top|bottom"
+        tools:ignore="UnusedAttribute"
         tools:listitem="@layout/mtrl_alert_select_dialog_multichoice" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

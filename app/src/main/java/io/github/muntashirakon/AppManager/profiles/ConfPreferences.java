@@ -332,6 +332,7 @@ public class ConfPreferences extends PreferenceFragmentCompat {
                     new SearchableMultiChoiceDialogBuilder<>(activity, userHandles, userNames)
                             .setTitle(R.string.select_user)
                             .setSelections(selectedUsers)
+                            .showSelectAll(false)
                             .setPositiveButton(R.string.ok, (dialog, which, selectedUserHandles) -> {
                                 if (selectedUserHandles.size() == 0) {
                                     selectedUsers = userHandles;

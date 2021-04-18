@@ -25,7 +25,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckedTextView;
+import android.widget.CompoundButton;
 
+import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -52,15 +54,13 @@ import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 public class SearchableMultiChoiceDialogBuilder<T> {
     @NonNull
     private final FragmentActivity activity;
-    @Nullable
-    private List<T> selectedItems;
     @NonNull
     private final MaterialAlertDialogBuilder builder;
-    @NonNull
-    private final RecyclerView recyclerView;
     private final View searchBar;
-
-    private SearchableRecyclerViewAdapter adapter;
+    private final MaterialCheckBox selectAll;
+    @NonNull
+    private final SearchableRecyclerViewAdapter adapter;
+    private final CompoundButton.OnCheckedChangeListener selectAllListener;
 
     public interface OnClickListener<T> {
         void onClick(DialogInterface dialog, int which, @NonNull ArrayList<T> selectedItems);
@@ -78,11 +78,12 @@ public class SearchableMultiChoiceDialogBuilder<T> {
     public SearchableMultiChoiceDialogBuilder(@NonNull FragmentActivity activity, @NonNull List<T> items, @NonNull List<CharSequence> itemNames) {
         this.activity = activity;
         View view = activity.getLayoutInflater().inflate(R.layout.dialog_searchable_multi_choice, null);
-        recyclerView = view.findViewById(android.R.id.list);
+        RecyclerView recyclerView = view.findViewById(android.R.id.list);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false));
         new FastScrollerBuilder(recyclerView).useMd2Style().build();
         searchBar = view.findViewById(R.id.search_bar);
+        selectAll = view.findViewById(android.R.id.checkbox);
         TextInputEditText searchInput = view.findViewById(R.id.search_input);
         searchInput.addTextChangedListener(new TextWatcher() {
             @Override
@@ -101,19 +102,35 @@ public class SearchableMultiChoiceDialogBuilder<T> {
         // Don't display search bar if items are less than 6
         if (items.size() < 6) searchBar.setVisibility(View.GONE);
         builder = new MaterialAlertDialogBuilder(activity).setView(view);
-        new Thread(() -> {
-            adapter = new SearchableRecyclerViewAdapter(itemNames, items, selectedItems);
-            activity.runOnUiThread(() -> recyclerView.setAdapter(adapter));
-        }).start();
+        adapter = new SearchableRecyclerViewAdapter(itemNames, items);
+        recyclerView.setAdapter(adapter);
+        selectAllListener = (buttonView, isChecked) -> {
+            if (isChecked) {
+                adapter.selectAll();
+            } else {
+                adapter.deselectAll();
+            }
+        };
+        selectAll.setOnCheckedChangeListener(selectAllListener);
+        if (items.size() < 2) {
+            // No need to display select all if only one item is present
+            selectAll.setVisibility(View.GONE);
+        }
     }
 
     public SearchableMultiChoiceDialogBuilder<T> setSelections(@Nullable List<T> selectedItems) {
-        this.selectedItems = selectedItems;
+        adapter.setSelectedItems(selectedItems);
+        checkSelections();
         return this;
     }
 
     public SearchableMultiChoiceDialogBuilder<T> hideSearchBar(boolean hide) {
         this.searchBar.setVisibility(hide ? View.GONE : View.VISIBLE);
+        return this;
+    }
+
+    public SearchableMultiChoiceDialogBuilder<T> showSelectAll(boolean show) {
+        this.selectAll.setVisibility(show ? View.VISIBLE : View.GONE);
         return this;
     }
 
@@ -177,6 +194,12 @@ public class SearchableMultiChoiceDialogBuilder<T> {
         create().show();
     }
 
+    private void checkSelections() {
+        selectAll.setOnCheckedChangeListener(null);
+        selectAll.setChecked(adapter.selectedItems.size() == adapter.items.size());
+        selectAll.setOnCheckedChangeListener(selectAllListener);
+    }
+
     class SearchableRecyclerViewAdapter extends RecyclerView.Adapter<SearchableRecyclerViewAdapter.ViewHolder> {
         @NonNull
         private final List<CharSequence> itemNames;
@@ -189,29 +212,27 @@ public class SearchableMultiChoiceDialogBuilder<T> {
         @NonNull
         private final Set<Integer> selectedItems = new ArraySet<>();
 
-        SearchableRecyclerViewAdapter(@NonNull List<CharSequence> itemNames, @NonNull List<T> items, @Nullable List<T> preSelectedItems) {
+        SearchableRecyclerViewAdapter(@NonNull List<CharSequence> itemNames, @NonNull List<T> items) {
             this.itemNames = itemNames;
             this.items = items;
-            if (preSelectedItems != null) {
-                for (T item : preSelectedItems) {
-                    int index = items.indexOf(item);
-                    if (index != -1) {
-                        selectedItems.add(index);
-                    } else notFoundItems.add(item);
+            new Thread(() -> {
+                synchronized (filteredItems) {
+                    for (int i = 0; i < items.size(); ++i) {
+                        filteredItems.add(i);
+                    }
                 }
-            }
-            for (int i = 0; i < items.size(); ++i) {
-                filteredItems.add(i);
-            }
+            }).start();
         }
 
         void setFilteredItems(CharSequence constraint) {
             Locale locale = LangUtils.getLocaleByLanguage(activity);
-            filteredItems.clear();
-            for (int i = 0; i < items.size(); ++i) {
-                if (itemNames.get(i).toString().toLowerCase(locale).contains(constraint)
-                        || items.get(i).toString().toLowerCase(Locale.ROOT).contains(constraint)) {
-                    filteredItems.add(i);
+            synchronized (filteredItems) {
+                filteredItems.clear();
+                for (int i = 0; i < items.size(); ++i) {
+                    if (itemNames.get(i).toString().toLowerCase(locale).contains(constraint)
+                            || items.get(i).toString().toLowerCase(Locale.ROOT).contains(constraint)) {
+                        filteredItems.add(i);
+                    }
                 }
             }
             notifyDataSetChanged();
@@ -225,6 +246,31 @@ public class SearchableMultiChoiceDialogBuilder<T> {
             return selections;
         }
 
+        void setSelectedItems(@Nullable List<T> selectedItems) {
+            if (selectedItems != null) {
+                for (T item : selectedItems) {
+                    int index = items.indexOf(item);
+                    if (index != -1) {
+                        this.selectedItems.add(index);
+                    } else notFoundItems.add(item);
+                }
+            }
+        }
+
+        void selectAll() {
+            for (int i = 0; i < items.size(); ++i) {
+                selectedItems.add(i);
+            }
+            checkSelections();
+            notifyDataSetChanged();
+        }
+
+        void deselectAll() {
+            selectedItems.clear();
+            checkSelections();
+            notifyDataSetChanged();
+        }
+
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -235,7 +281,10 @@ public class SearchableMultiChoiceDialogBuilder<T> {
 
         @Override
         public void onBindViewHolder(@NonNull SearchableRecyclerViewAdapter.ViewHolder holder, int position) {
-            Integer index = filteredItems.get(position);
+            Integer index;
+            synchronized (filteredItems) {
+                index = filteredItems.get(position);
+            }
             final AtomicBoolean selected = new AtomicBoolean(selectedItems.contains(index));
             holder.item.setText(itemNames.get(index));
             holder.item.setChecked(selected.get());
@@ -245,12 +294,15 @@ public class SearchableMultiChoiceDialogBuilder<T> {
                 } else selectedItems.add(index);
                 selected.set(!selected.get());
                 holder.item.setChecked(selected.get());
+                checkSelections();
             });
         }
 
         @Override
         public int getItemCount() {
-            return filteredItems.size();
+            synchronized (filteredItems) {
+                return filteredItems.size();
+            }
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {

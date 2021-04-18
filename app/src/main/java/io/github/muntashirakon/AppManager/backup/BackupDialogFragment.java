@@ -221,6 +221,7 @@ public class BackupDialogFragment extends DialogFragment {
                     new SearchableMultiChoiceDialogBuilder<>(activity, userHandles, userNames)
                             .setTitle(R.string.select_user)
                             .setSelections(Collections.singletonList(Users.getCurrentUserHandle()))
+                            .showSelectAll(false)
                             .setPositiveButton(R.string.ok, (dialog, which, selectedUsers) -> {
                                 List<UserPackagePair> newTargetPackages = new ArrayList<>();
                                 List<String> visitedPackages = new ArrayList<>();

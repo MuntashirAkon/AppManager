@@ -165,30 +165,23 @@ public class OneClickOpsActivity extends BaseActivity {
                 if (trackerCount.count > 0) trackerCounts.add(trackerCount);
             }
             if (!trackerCounts.isEmpty()) {
-                final ArrayList<String> selectedPackages = new ArrayList<>();
-                final CharSequence[] trackerPackagesWithTrackerCount = new CharSequence[trackerCounts.size()];
-                for (int i = 0; i < trackerCounts.size(); ++i) {
+                final ArrayList<String> trackerPackages = new ArrayList<>();
+                final List<CharSequence> trackerPackagesWithTrackerCount = new ArrayList<>(trackerCounts.size());
+                for (ItemCount count : trackerCounts) {
                     if (Thread.currentThread().isInterrupted()) return;
-                    trackerCount = trackerCounts.get(i);
-                    selectedPackages.add(trackerCount.packageName);
-                    trackerPackagesWithTrackerCount[i] = new SpannableStringBuilder(trackerCount.packageLabel)
-                            .append("\n").append(getSecondaryText(this, getSmallerText(
-                                    getResources().getQuantityString(R.plurals.no_of_trackers,
-                                            trackerCount.count, trackerCount.count))));
+                    trackerPackages.add(count.packageName);
+                    trackerPackagesWithTrackerCount.add(new SpannableStringBuilder(count.packageLabel)
+                            .append("\n").append(getSecondaryText(this, getSmallerText(getResources()
+                                    .getQuantityString(R.plurals.no_of_trackers, count.count,
+                                            count.count)))));
                 }
-                final String[] trackerPackages = selectedPackages.toArray(new String[0]);
-                final boolean[] checkedItems = new boolean[trackerPackages.length];
-                Arrays.fill(checkedItems, true);
                 if (Thread.currentThread().isInterrupted()) return;
                 runOnUiThread(() -> {
                     mProgressIndicator.hide();
-                    new MaterialAlertDialogBuilder(this)
-                            .setMultiChoiceItems(trackerPackagesWithTrackerCount, checkedItems, (dialog, which, isChecked) -> {
-                                if (!isChecked) selectedPackages.remove(trackerPackages[which]);
-                                else selectedPackages.add(trackerPackages[which]);
-                            })
+                    new SearchableMultiChoiceDialogBuilder<>(this, trackerPackages, trackerPackagesWithTrackerCount)
+                            .setSelections(trackerPackages)
                             .setTitle(R.string.found_trackers)
-                            .setPositiveButton(R.string.block, (dialog, which) -> {
+                            .setPositiveButton(R.string.block, (dialog, which, selectedPackages) -> {
                                 mProgressIndicator.show();
                                 Intent intent = new Intent(this, BatchOpsService.class);
                                 intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, selectedPackages);
@@ -196,7 +189,7 @@ public class OneClickOpsActivity extends BaseActivity {
                                 intent.putExtra(BatchOpsService.EXTRA_HEADER, getString(R.string.one_click_ops));
                                 ContextCompat.startForegroundService(this, intent);
                             })
-                            .setNeutralButton(R.string.unblock, (dialog, which) -> {
+                            .setNeutralButton(R.string.unblock, (dialog, which, selectedPackages) -> {
                                 mProgressIndicator.show();
                                 Intent intent = new Intent(this, BatchOpsService.class);
                                 intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, selectedPackages);
@@ -204,7 +197,7 @@ public class OneClickOpsActivity extends BaseActivity {
                                 intent.putExtra(BatchOpsService.EXTRA_HEADER, getString(R.string.one_click_ops));
                                 ContextCompat.startForegroundService(this, intent);
                             })
-                            .setNegativeButton(R.string.cancel, (dialog, which) -> mProgressIndicator.hide())
+                            .setNegativeButton(R.string.cancel, (dialog, which, selectedPackages) -> mProgressIndicator.hide())
                             .show();
                 });
             } else {
