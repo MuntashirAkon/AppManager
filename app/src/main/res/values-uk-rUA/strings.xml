@@ -14,7 +14,7 @@
   ~
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
     <string name="_lang_tag" translatable="false">uk-UA</string>
     <string name="uninstall">Видалити</string>
     <string name="activities">Activities</string>
@@ -96,7 +96,7 @@
     <string name="type">Тип</string>
     <string name="issued_date">Дата видачі</string>
     <string name="issuer">Видавець</string>
-    <string name="filter_apps_with_backups">Додатки з резервними копіями</string>
+    <string name="filter_apps_with_backups">З резервними копіями</string>
     <string name="sort_by_backup">Спочатку резервні копії</string>
     <string name="failed_to_uninstall_updates">Не вдалося видалити оновлення <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="update_uninstalled_successfully">Оновлення <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> було видалено.</string>
@@ -184,7 +184,7 @@
     <string name="obb_files_extracted_successfully">Файли OBB витягнуто</string>
     <string name="failed_to_extract_obb_files">Не вдалося витягти файли OBB</string>
     <string name="backup_obb_media">OBB та медіа</string>
-    <string name="backup_apk_files">Лише APK</string>
+    <string name="backup_apk_files">Файли APK</string>
     <string name="installer_error_session_abandon">Не вдалося перервати сеанс програми встановлення</string>
     <string name="installer_error_session_commit">Не вдалося зафіксувати файли .apk</string>
     <string name="installer_error_session_write">Не вдалося записати до сеансу програми встановлення</string>
@@ -930,4 +930,44 @@
     <string name="specify_custom_name">Користувацький</string>
     <string name="verified_using_unreliable_hash">Перевірено за допомогою ненадійного хешу</string>
     <string name="internal_data">Внутрішні дані</string>
+    <plurals name="items_selected">
+        <item quantity="one"><xliff:g id="selection_no" example="20">%1$d</xliff:g> вибрано</item>
+        <item quantity="few"><xliff:g id="selection_no" example="20">%1$d</xliff:g> вибрано</item>
+        <item quantity="many"><xliff:g id="selection_no" example="20">%1$d</xliff:g> вибрано</item>
+        <item quantity="other"><xliff:g id="selection_no" example="20">%1$d</xliff:g> вибрано</item>
+    </plurals>
+    <string name="pref_installer_msg">Налаштуйте поведінку встановника додатків.</string>
+    <string name="expiry_date_cannot_be_empty">Дата закінчення терміну дії не може бути порожньою.</string>
+    <string name="signing_key">Ключ підпису</string>
+    <string name="failed_to_read_keystore">Не вдалося прочитати сховище ключів.</string>
+    <string name="alias_pass">Пароль псевдоніма</string>
+    <string name="choose_an_alias">Виберіть псевдонім</string>
+    <string name="found_no_alias_in_keystore">Не знайдено псевдонім у сховищі ключів!</string>
+    <string name="new_alias_password">Новий пароль псевдоніма</string>
+    <string name="import_key">Імпорт ключа</string>
+    <string name="pem_file">Файл PEM</string>
+    <string name="pk8_file">Файл PKCS #8 (PK8)</string>
+    <string name="pem_and_pk8">PEM та PKCS # 8 (PK8)</string>
+    <string name="keystore_pass">Пароль сховища ключів</string>
+    <string name="keystore_file">Файл сховища ключів</string>
+    <string name="country_name" tools:ignore="TypographyOther">Назва країни (C)</string>
+    <string name="state_name">Назва держави (ST)</string>
+    <string name="locality_name">Назва (міста) місцевості (L)</string>
+    <string name="organization_name">Назва організації (O)</string>
+    <string name="organization_unit">Підрозділ організації (OU)</string>
+    <string name="common_name">Загальне ім\'я (CN)</string>
+    <string name="input_key_password">Пароль ключа</string>
+    <string name="failed_to_load_key">Не вдалося завантажити ключ.</string>
+    <string name="default_key_used">Використовується ключ за замовчуванням.</string>
+    <string name="key_not_set">Не встановлено.</string>
+    <string name="use_default">Використовувати за замовчуванням</string>
+    <string name="invalid_rsa_key_size">Неприпустимий розмір ключа для RSA шифрування. Розмір ключа може бути 1024, 2048 або 4096 біт.</string>
+    <string name="crypto_key_size">Розмір ключа</string>
+    <string name="invalid_aes_key_size">Неприпустимий розмір ключа для шифрування AES. Розмір ключа може бути як 128 або 256 біт.</string>
+    <string name="failed_to_initialize_key_store">Не вдалося ініціалізувати сховище ключів App Manager.</string>
+    <string name="failed_to_save_key">Не вдалося зберегти ключ.</string>
+    <string name="generate_key">Створити</string>
+    <string name="input_key">Ввід ключа (в шістнадцятковій системі числення)</string>
+    <string name="gles_version">Версія OpenGL ES</string>
+    <string name="input_keystore_alias_pass_msg">Натисніть тут, щоб вказати пароль для %1$s</string>
 </resources>
