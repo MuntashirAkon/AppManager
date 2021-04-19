@@ -922,4 +922,5 @@
     <string name="log_saved">日志已保存。</string>
     <string name="menu_title_partial_select">保存部分</string>
     <string name="manage_saved_logs">管理已保存的日志</string>
+    <string name="no_saved_logs">未找到已保存的日志。</string>
 </resources>
