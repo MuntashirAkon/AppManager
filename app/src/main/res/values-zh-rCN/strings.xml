@@ -931,4 +931,6 @@
     <string name="pref_cat_advanced">高级</string>
     <string name="pref_buffer_title">日志缓存(s)</string>
     <string name="pref_cat_configuration">配置</string>
+    <string name="pref_default_log_level_title">默认日志级别</string>
+    <string name="pref_default_log_level_summary">启动时、打开文件时和记录时的日志级别。</string>
 </resources>
