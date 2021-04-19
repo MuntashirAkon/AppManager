@@ -916,4 +916,6 @@
     <string name="restart_log_viewer_to_see_changes">重启日志查看器窗口来查看更改。</string>
     <string name="pref_log_viewer_msg">配置日志展示方式。</string>
     <string name="log_viewer">日志查看器</string>
+    <string name="log_level">日志级别</string>
+    <string name="log_cleared">日志已清除</string>
 </resources>
