@@ -923,4 +923,6 @@
     <string name="menu_title_partial_select">保存部分</string>
     <string name="manage_saved_logs">管理已保存的日志</string>
     <string name="no_saved_logs">未找到已保存的日志。</string>
+    <string name="notification_ticker">日志记录已启动</string>
+    <string name="notification_subtext">点击停止记录</string>
 </resources>
