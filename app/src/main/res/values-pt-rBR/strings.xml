@@ -233,7 +233,6 @@
     <string name="memory_virtual_memory">Memória: %1$s, Memória Virtual: %2$s</string>
     <string name="user_and_uid">Usuário: <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
     <string name="clear_data">Limpar Dados</string>
-    <string name="backup_apk">Fazer Backup do APK</string>
     <string name="backup_restore">Backup/Restauração</string>
     <string name="disable_background">Impedir a operação em segundo plano</string>
     <string name="export_blocking_rules">Exportar Regras de Bloqueio</string>
@@ -301,7 +300,6 @@
     <string name="deny_dangerous_permissions">Negar permissões perigosas</string>
     <string name="sort_by_tracker_components">Rastreadores primeiro</string>
     <string name="unknown_op">Operação Desconhecida</string>
-    <string name="failed_to_disable_trackers">Não foi possível desativar rastreadores</string>
     <string name="trackers_disabled_successfully">Rastreadores agora estão desativados</string>
     <plurals name="alert_failed_to_disable_trackers">
         <item quantity="one">%1$d aplicativo não pôde ter os rastreadores desativados</item>
@@ -675,7 +673,6 @@
     <string name="off">Desligado</string>
     <string name="on">Ligado</string>
     <string name="profile_state_msg">Estado de ligado/desligado personalizado para este perfil</string>
-    <string name="profile_backup_apk_msg">Faz backup de arquivos APK</string>
     <string name="profile_block_trackers_msg">Bloqueia os rastreadores nos aplicativos</string>
     <string name="profile_clear_data_msg">Limpa os dados dos aplicativos</string>
     <string name="profile_clear_cache_msg">Limpa o cache de aplicativo dos aplicativos</string>

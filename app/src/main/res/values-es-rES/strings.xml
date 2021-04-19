@@ -390,7 +390,6 @@
         <item quantity="one">No se pudieron deshabilitar los rastreadores de %1$d app</item>
         <item quantity="other">No se pudieron deshabilitar los rastreadores de %1$d apps</item>
     </plurals>
-    <string name="trackers_disabled_successfully">Los rastreadores están ahora desactivados</string>
     <string name="failed_to_disable_trackers">No se pudieron deshabilitar los rastreadores</string>
     <string name="unknown_op">Operación desconocida</string>
     <string name="sort_by_tracker_components">Rastreador primero</string>
@@ -428,7 +427,6 @@
         <item quantity="other">No se pudo limpiar datos desde %1$d apps</item>
     </plurals>
     <string name="backup_restore">Respaldar/Restaurar</string>
-    <string name="backup_apk">Respaldar APK</string>
     <string name="memory_virtual_memory">Memoria: %1$s, Memoria virtual: %2$s</string>
     <plurals name="failed_to_import_files">
         <item quantity="one">No se pudo importar %1$d archivo.</item>
@@ -439,7 +437,6 @@
     <string name="force_stop">Forzar detención</string>
     <string name="view_in_settings">Ver en ajustes</string>
     <string name="choose">Elegir</string>
-    <string name="profile_backup_apk_msg">Si se habilita, a los archivos apk se les hará un respaldo</string>
     <string name="profile_block_trackers_msg">Si se habilita, los rastreadores se bloquearán de las aplicaciones</string>
     <string name="profile_clear_data_msg">Si se habilita, los datos se borrarán de las aplicaciones</string>
     <string name="profile_force_stop_msg">Si está habilitado, las apps forzarán la detención</string>

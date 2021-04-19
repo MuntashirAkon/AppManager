@@ -388,7 +388,6 @@
         <item quantity="one">%1$d uygulamadan izleyiciler devre dışı bırakılamadı</item>
         <item quantity="other">%1$d uygulamadan izleyiciler devre dışı bırakılamadı</item>
     </plurals>
-    <string name="trackers_disabled_successfully">İzleyiciler artık devre dışı</string>
     <string name="failed_to_disable_trackers">İzleyiciler devre dışı bırakılamadı</string>
     <string name="unknown_op">Bilinmeyen İşlem</string>
     <string name="sort_by_tracker_components">Önce izleyiciler</string>
@@ -470,7 +469,6 @@
     <string name="export_blocking_rules">Engelleme Kurallarını Dışa Aktar</string>
     <string name="disable_background">Arka planda çalışmayı engelle</string>
     <string name="backup_restore">Yedekle/Geri Yükle</string>
-    <string name="backup_apk">APK\'yı Yedekle</string>
     <string name="clear_data">Verileri Temizle</string>
     <string name="user_and_uid">Kullanıcı: <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
     <string name="memory_virtual_memory">Bellek: %1$s, Sanal Bellek: %2$s</string>
@@ -677,7 +675,6 @@
     <string name="off">Kapalı</string>
     <string name="on">Açık</string>
     <string name="profile_state_msg">Bu profil için özel açık/kapalı durumu</string>
-    <string name="profile_backup_apk_msg">APK dosyalarını yedekler</string>
     <string name="profile_block_trackers_msg">Uygulamalardaki izleyicileri engeller</string>
     <string name="profile_clear_data_msg">Uygulamaların verilerini temizler</string>
     <string name="profile_clear_cache_msg">Uygulamaların uygulama önbelleğini temizler</string>

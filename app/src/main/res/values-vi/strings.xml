@@ -84,7 +84,6 @@
     <string name="deny_dangerous_permissions">Từ chối các quyền nguy hiểm</string>
     <string name="sort_by_tracker_components">Trình theo dõi trước</string>
     <string name="unknown_op">Hoạt động không xác định</string>
-    <string name="failed_to_disable_trackers">Không thể tắt trình theo dõi</string>
     <string name="trackers_disabled_successfully">Trình theo dõi hiện đã bị tắt</string>
     <plurals name="alert_failed_to_disable_trackers">
         <item quantity="other">Không thể vô hiệu hóa trình theo dõi từ ứng dụng %1$d</item>
@@ -370,7 +369,6 @@
     <string name="app_op_cannot_be_disabled">Hoạt động ứng dụng này không thể được tắt. (Có thể là một hoạt động ứng dụng chỉ đọc phụ thuộc vào một hoạt động ứng dụng khác.)</string>
     <string name="reject_time">Thời gian từ chối</string>
     <string name="accept_time">Thời gian chấp nhận</string>
-    <string name="backup_apk">Sao lưu APK</string>
     <string name="pref_import_export_blocking_rules_msg">Nhập/xuất các quy tắc, nhập các quy tắc ngoài từ Watt hoặc Blocker.</string>
     <string name="uninstalled_successfully">Đã gỡ cài đặt <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="no_usage_in_this_time_range">Không có dữ liệu sử dụng trong phạm vi thời gian này</string>

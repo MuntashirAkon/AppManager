@@ -272,7 +272,6 @@
     <string name="off">離開</string>
     <string name="on">在</string>
     <string name="profile_state_msg">此配置檔案的自訂開/關狀態</string>
-    <string name="profile_backup_apk_msg">如果啟用，將備份apk檔案</string>
     <string name="profile_block_trackers_msg">如果啟用，追蹤器將從應用程式中被封鎖</string>
     <string name="profile_clear_data_msg">如果啟用，資料將從應用程式中清除</string>
     <string name="profile_clear_cache_msg">如果啟用，快取將從應用程式中清除</string>
@@ -550,7 +549,6 @@
     <string name="failed_to_reset_app_ops">無法重置應用程式操作</string>
     <string name="failed_to_revoke_permission">無法撤消權限</string>
     <string name="failed_to_grant_permission">無法授予權限</string>
-    <string name="trackers_disabled_successfully">追蹤器現已停用</string>
     <string name="failed_to_disable_trackers">無法停用追蹤器</string>
     <string name="unknown_op">未知操作</string>
     <string name="sort_by_tracker_components">追蹤器優先</string>
@@ -590,7 +588,6 @@
     <string name="export_blocking_rules">匯出封鎖規則</string>
     <string name="disable_background">停用背景活動</string>
     <string name="backup_restore">備份/還原</string>
-    <string name="backup_apk">備份 APK</string>
     <string name="clear_data">清除資料</string>
     <string name="disable_background_run">停用後台執行</string>
     <string name="kill_process">殺</string>

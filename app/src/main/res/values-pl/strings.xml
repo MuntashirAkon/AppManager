@@ -452,7 +452,6 @@
     <string name="options">Opcje</string>
     <string name="on">Wł.</string>
     <string name="off">Wył.</string>
-    <string name="profile_backup_apk_msg">Jeśli ta opcja jest włączona, zostanie utworzona kopia zapasowa plików apk</string>
     <string name="profile_block_trackers_msg">Jeśli ta opcja jest włączona, komponenty śledzące będą blokowane</string>
     <string name="allow_routine_ops_msg">Pozwól, aby profil był używany w rutynowych operacjach</string>
     <string name="current_mode">Bieżący tryb: %s</string>
@@ -686,7 +685,6 @@
     </plurals>
     <string name="deny_dangerous_app_ops">Odmów niebezpiecznych app ops</string>
     <string name="sort_by_wifi_data">Dane Wi-Fi</string>
-    <string name="failed_to_disable_trackers">Nie udało się wyłączyć elementów śledzących</string>
     <string name="unknown_op">Nieznane działanie</string>
     <string name="sort_by_tracker_components">Najpierw elementy śledzące</string>
     <string name="sort_by_denied_app_ops">Najpierw odmówione</string>
@@ -709,7 +707,6 @@
         <item quantity="many">Nie udało się wyłączyć elementów śledzących z %1$d aplikacji</item>
         <item quantity="other">Nie udało się wyłączyć elementów śledzących z %1$d aplikacji</item>
     </plurals>
-    <string name="trackers_disabled_successfully">Elementy śledzące zostały wyłączone</string>
     <string name="input_keystore_pass_msg">Kliknij tutaj, aby podać hasło KeyStore</string>
     <string name="splits">Podziały</string>
     <string name="source_stamp_verified">SourceStamp zweryfikowany.</string>
@@ -723,7 +720,6 @@
         <item quantity="other">%1$d razy</item>
     </plurals>
     <string name="exodus_link">Link εxodus</string>
-    <string name="backup_apk">Kopia zapasowa APK</string>
     <string name="input_app_ops">Wprowadź app ops</string>
     <string name="filtered_packages">Przefiltrowane pakiety</string>
     <string name="input_signatures_description">Wprowadź sygnatury ze spacjami, np. <tt>com.facebook org.app2 com.app3</tt> itp.</string>

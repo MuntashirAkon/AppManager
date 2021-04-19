@@ -175,7 +175,6 @@
     <string name="memory_virtual_memory">মেমোরি: %1$s, ভার্চুয়াল মেমোরি: %2$s</string>
     <string name="user_and_uid">ব্যবহারকারী: <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
     <string name="clear_data">ডাটা মুছুন</string>
-    <string name="backup_apk">এপিকের ব্যাকআপ নিন</string>
     <string name="backup_restore">ব্যাকআপ/পুনরুদ্ধার</string>
     <string name="export_blocking_rules">ব্লকিং বিধিগুলো এক্সপোর্ট করুন</string>
     <plurals name="alert_failed_to_clear_data">
@@ -215,7 +214,6 @@
     <string name="sort_by_dangerous_permissions">বিপজ্জনক গুলো প্রথমে</string>
     <string name="sort_by_tracker_components">প্রথমে ট্র্যাকার</string>
     <string name="unknown_op">অজানা অপারেশন</string>
-    <string name="failed_to_disable_trackers">ট্র্যাকারগুলো নিষ্ক্রিয় করতে ব্যর্থ</string>
     <string name="trackers_disabled_successfully">ট্র্যাকারগুলো এখন নিষ্ক্রিয়</string>
     <plurals name="alert_failed_to_disable_trackers">
         <item quantity="one">%1$dটি অ্যাপ থেকে ট্র্যাকার নিষ্ক্রিয় করা যায়নি</item>

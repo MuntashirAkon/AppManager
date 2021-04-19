@@ -357,7 +357,6 @@
         <item quantity="many">Не вдалося вимкнути трекери в додатках %1$d</item>
         <item quantity="other">Не вдалося вимкнути трекери в додатках %1$d</item>
     </plurals>
-    <string name="trackers_disabled_successfully">Трекери вимкнено</string>
     <string name="failed_to_disable_trackers">Не вдалося вимкнути трекери</string>
     <string name="deny_dangerous_permissions">Заборонити небезпечні дозволи</string>
     <string name="sort_by_dangerous_permissions">Спочатку небезпечні</string>
@@ -427,7 +426,6 @@
     <string name="export_blocking_rules">Експорт правил блокування</string>
     <string name="disable_background">Запобігання фонових операцій</string>
     <string name="backup_restore">Резервне копіювання/відновлення</string>
-    <string name="backup_apk">Резервне копіювання APK</string>
     <string name="clear_data">Очистити дані</string>
     <string name="user_and_uid">Користувач: <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
     <string name="memory_virtual_memory">Пам\'ять: %1$s, Віртуальна пам\'ять: %2$s</string>
@@ -719,7 +717,6 @@
     <string name="adb_over_tcp">ADB через TCP</string>
     <string name="pref_mode_of_operations">Режим роботи</string>
     <string name="send_selected">Надіслати вибране</string>
-    <string name="profile_backup_apk_msg">Резервне копіювання файлів .apk</string>
     <string name="profile_block_trackers_msg">Блокування трекерів в додатках</string>
     <string name="profile_clear_data_msg">Очищення даних додатків</string>
     <string name="profile_clear_cache_msg">Очищення кешу додатків</string>

@@ -270,7 +270,6 @@
     <string name="memory_virtual_memory">Память: %1$s, виртуальная память: %2$s</string>
     <string name="user_and_uid">Пользователь: <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
     <string name="clear_data">Очистить данные</string>
-    <string name="backup_apk">Резервное копирование APK</string>
     <string name="backup_restore">Резервное копирование/восстановление</string>
     <string name="disable_background">Предотвращает работу в фоне</string>
     <string name="export_blocking_rules">Экспортировать правила блокировки</string>
@@ -351,7 +350,6 @@
     <string name="deny_dangerous_permissions">Отклонить опасные разрешения</string>
     <string name="sort_by_tracker_components">Сначала трекеры</string>
     <string name="unknown_op">Неизвестная операция</string>
-    <string name="failed_to_disable_trackers">Не удалось отключить трекеры</string>
     <string name="trackers_disabled_successfully">Трекеры теперь отключены</string>
     <plurals name="alert_failed_to_disable_trackers">
         <item quantity="one">Не удалось отключить трекеры %1$d приложения</item>
@@ -737,7 +735,6 @@
     <string name="options">Параметры</string>
     <string name="off">ВЫКЛ</string>
     <string name="on">ВКЛ</string>
-    <string name="profile_backup_apk_msg">Резервное копирование APK</string>
     <string name="profile_block_trackers_msg">Блокирование трекеров в приложениях</string>
     <string name="profile_clear_data_msg">Очистка данных приложений</string>
     <string name="profile_clear_cache_msg">Очистка кеш приложений</string>

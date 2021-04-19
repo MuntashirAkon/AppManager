@@ -258,7 +258,6 @@
     <string name="memory_virtual_memory">RAM: %1$s, virtueller RAM: %2$s</string>
     <string name="user_and_uid">Benutzer: <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
     <string name="clear_data">Daten löschen</string>
-    <string name="backup_apk">APK kopieren</string>
     <string name="backup_restore">Sichern/Wiederherstellen</string>
     <string name="disable_background">Hintergrundbetrieb verhindern</string>
     <string name="export_blocking_rules">Blockierregeln exportieren</string>
@@ -329,7 +328,6 @@
     <string name="deny_dangerous_permissions">Gefährliche Berechtigungen entziehen</string>
     <string name="sort_by_tracker_components">Verfolger zuerst</string>
     <string name="unknown_op">Unbekannte Operation</string>
-    <string name="failed_to_disable_trackers">Konnte Verfolger nicht deaktivieren</string>
     <string name="trackers_disabled_successfully">Verfolger sind nun deaktiviert</string>
     <plurals name="alert_failed_to_disable_trackers">
         <item quantity="one">Konnte Verfolger von %1$d Anwendung nicht deaktivieren</item>
@@ -676,7 +674,6 @@
     <string name="off">Aus</string>
     <string name="on">Ein</string>
     <string name="profile_state_msg">Benutzerdefinierter Ein/Aus-Zustand für dieses Profil</string>
-    <string name="profile_backup_apk_msg">Sichert APK-Dateien</string>
     <string name="profile_block_trackers_msg">Blockiert die Tracker in Apps</string>
     <string name="profile_clear_data_msg">Löscht die Daten von Apps</string>
     <string name="profile_clear_cache_msg">Löscht den App-Cache von Apps</string>

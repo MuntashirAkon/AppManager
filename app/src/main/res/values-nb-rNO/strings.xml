@@ -21,7 +21,6 @@
     <string name="run_in_termux">Kjør i Termux</string>
     <string name="open_in_termux">Åpne i Termux</string>
     <string name="backup_restore">Sikkerhetskopier/gjenopprett</string>
-    <string name="backup_apk">Sikkerhetskopier APK</string>
     <string name="clear_data">Tøm data</string>
     <string name="user_and_uid">Bruker: <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
     <string name="memory_virtual_memory">Minne: %1$s, virtuelt minne: %2$s</string>
@@ -207,7 +206,6 @@
     <string name="launch_app">Kjør</string>
     <string name="failed_to_revoke_permission">Kunne ikke tilbakekalle tilgang</string>
     <string name="failed_to_grant_permission">Kunne ikke innvilge tilgang</string>
-    <string name="trackers_disabled_successfully">Sporere nå avskrudd</string>
     <string name="failed_to_disable_trackers">Kunne ikke skru av sporere</string>
     <string name="sort_by_tracker_components">Sporere først</string>
     <string name="unknown_op">Ukjent operasjon</string>
@@ -707,7 +705,6 @@
     <string name="root">Rot-tilgang</string>
     <string name="simple">Enkel</string>
     <string name="enabled">Påskrudd</string>
-    <string name="profile_backup_apk_msg">Sikkerhetskopierer APK-filer</string>
     <string name="profile_block_trackers_msg">Blokker sporerne i programmer</string>
     <string name="profile_clear_data_msg">Tømmer programmers data</string>
     <string name="profile_clear_cache_msg">Tømmer programmers hurtiglagre</string>

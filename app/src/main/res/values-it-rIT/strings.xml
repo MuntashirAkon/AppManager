@@ -77,7 +77,6 @@
     <string name="current_theme">Tema attuale: %1$s</string>
     <string name="version">Versione</string>
     <string name="block_trackers">Blocca tracker</string>
-    <string name="failed_to_disable_trackers">Impossibile disattivare i tracker</string>
     <string name="trackers_disabled_successfully">Tracker ora disattivati</string>
     <string name="never_ask">Non chiedere mai</string>
     <string name="install">Installa</string>
@@ -262,7 +261,6 @@
     <string name="export_blocking_rules">Esporta Regole di Blocco</string>
     <string name="disable_background">Disabilita in Background</string>
     <string name="backup_restore">Recupera/Riprendi</string>
-    <string name="backup_apk">Recupero APK</string>
     <string name="clear_data">Cancella Dati</string>
     <string name="user_and_uid">Utente: <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
     <string name="memory_virtual_memory">Memoria: %1$s, Memoria Virtuale: %2$s</string>

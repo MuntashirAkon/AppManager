@@ -263,7 +263,6 @@
     <string name="pref_usage_access_enabled">Akses pemakaian</string>
     <string name="pref_global_blocking_enabled_msg">Memungkinkan anda untuk memblokir komponen apapun tanpa harus menghidupkan pemblokir untuk aplikasi.</string>
     <string name="backup_restore">Cadangkan/Pulihkan</string>
-    <string name="backup_apk">Aplikasi Cadangan</string>
     <string name="clear_data">Bersihkan Data</string>
     <string name="user_with_id">Pengguna: <xliff:g id="user_id" example="0">%1$d</xliff:g></string>
     <string name="memory_virtual_memory">Memori: %1$s, Memori Virtual: %2$s</string>
@@ -574,7 +573,6 @@
     <string name="off">Mati</string>
     <string name="on">Di</string>
     <string name="profile_state_msg">Status kustom On/Off untuk profil ini</string>
-    <string name="profile_backup_apk_msg">Cadangkan berkas APK</string>
     <string name="profile_block_trackers_msg">Blokir pelacak dalam aplikasi</string>
     <string name="profile_clear_data_msg">Bersihkan data dari aplikasi</string>
     <string name="profile_clear_cache_msg">Bersihkan cache aplikasi dari berbagai aplikasi</string>
@@ -846,7 +844,6 @@
     <plurals name="alert_failed_to_disable_trackers">
         <item quantity="other">Tidak dapat menonaktifkan pelacak dari aplikasi %1$d</item>
     </plurals>
-    <string name="trackers_disabled_successfully">Pelacak saat ini dinonaktifkan</string>
     <string name="failed_to_disable_trackers">Tidak dapat menonaktifkan pelacak</string>
     <string name="unknown_op">Operasi Tidak Diketahui</string>
     <string name="internal_data">Data internal</string>

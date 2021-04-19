@@ -30,7 +30,6 @@
     <string name="failed_to_reset_app_ops">ऐप ऑप्स रीसेट नहीं कर सके</string>
     <string name="failed_to_revoke_permission">अनुमति रद्द नहीं कर सके</string>
     <string name="failed_to_grant_permission">अनुमति नहीं दे सके</string>
-    <string name="trackers_disabled_successfully">ट्रैकर्स अब बंद हैं</string>
     <string name="failed_to_disable_trackers">ट्रैकर्स को बंद नहीं किया जा सका</string>
     <string name="unknown_op">अज्ञात ऑपरेशन</string>
     <string name="sort_by_tracker_components">पहले ट्रैकर्स</string>
@@ -102,7 +101,6 @@
     <string name="export_blocking_rules">ब्लॉकिंग रूल्स को निर्यात करें</string>
     <string name="disable_background">बैकग्राउंड में चलना बंद करें</string>
     <string name="backup_restore">बैकअप/रिस्टोर</string>
-    <string name="backup_apk">बैकअप एपीके</string>
     <string name="clear_data">डाटा मिटायें</string>
     <string name="user_and_uid">यूज़र: <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
     <string name="memory_virtual_memory">मेमोरी: %1$s, वर्चुअल मेमोरी: %2$s</string>
@@ -714,7 +712,6 @@
     <string name="off">बंद</string>
     <string name="on">चालू करे</string>
     <string name="profile_state_msg">इस प्रोफ़ाइल के लिए कस्टम ऑन/ऑफ स्तिथि</string>
-    <string name="profile_backup_apk_msg">सक्षम होने पर एपीके फाइलों का बैकअप लिया जाएगा</string>
     <string name="profile_block_trackers_msg">सक्षम होने पर ट्रैकर्स को ऐप्स से ब्लॉक कर दिया जाएगा</string>
     <string name="profile_clear_data_msg">सक्षम होने पर ऐप्स के डेटा को साफ कर दिया</string>
     <string name="profile_clear_cache_msg">सक्षम होने पर ऐप्स के कैश को साफ कर दिया जाएगा</string>

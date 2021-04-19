@@ -292,7 +292,6 @@
     <string name="memory_virtual_memory">メモリ: %1$s, 仮想メモリ: %2$s</string>
     <string name="user_and_uid">ユーザー: <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
     <string name="clear_data">データを消去</string>
-    <string name="backup_apk">APKをバックアップ</string>
     <string name="backup_restore">バックアップ/復元</string>
     <string name="disable_background">バックグラウンドでの実行を妨げる</string>
     <string name="export_blocking_rules">ブロッキングルールをエクスポート</string>
@@ -363,7 +362,6 @@
     <string name="deny_dangerous_permissions">危険な権限を拒否</string>
     <string name="sort_by_tracker_components">トラッカーを優先</string>
     <string name="unknown_op">未知の操作</string>
-    <string name="failed_to_disable_trackers">トラッカーを無効化できませんでした</string>
     <string name="trackers_disabled_successfully">トラッカーは無効になりました</string>
     <plurals name="alert_failed_to_disable_trackers">
         <item quantity="one">%1$d 個のアプリからトラッカーを無効化できませんでした</item>
@@ -723,7 +721,6 @@
     <string name="profile_clear_cache_msg">アプリのキャッシュを自動的にクリアする</string>
     <string name="profile_clear_data_msg">アプリのデータは自動的に消去する</string>
     <string name="profile_block_trackers_msg">アプリからトラッカーを自動的にブロックする</string>
-    <string name="profile_backup_apk_msg">APKファイルを自動的にバックアップする</string>
     <string name="profile_state_msg">このプロファイルのオンオフ状態を切り替えます。</string>
     <string name="on">On</string>
     <string name="off">Off</string>
