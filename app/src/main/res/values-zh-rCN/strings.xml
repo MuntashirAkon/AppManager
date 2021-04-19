@@ -111,15 +111,16 @@
     <string name="credits">鸣谢</string>
     <string name="credits_message">"致谢下列项目的开发者：
 \n- The Android Open Source Project
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
-\n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
-\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
-\n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
-\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
-\n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
-\n- <a href="https://github.com/Aefyr/SAI">SAI</a>
-\n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
-\n原始图标致谢： <a href="https://github.com/Atrate">Atrate</a>. "</string>
+\n- &lt;a href=\"https://bitbucket.org/oF2pks/fdroid-applications-info\"&gt;Apps_packages Info&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/butzist/ActivityLauncher\"&gt;Activity Launcher&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/billthefarmer/editor\"&gt;Editor&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/zhaobao/AppsMonitor\"&gt;AppsMonitor&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/tuyafeng/Watt\"&gt;Watt&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/8enet/AppOpsX\"&gt;AppOpsX&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/Aefyr/SAI\"&gt;SAI&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/RikkaApps/Shizuku\"&gt;Shizuku&lt;/a
+\n- &lt;a href=\"https://github.com/pluscubed/matlog\"&gt;MatLog&lt;/a&gt;&gt;
+\n原始图标致谢： &lt;a href=\"https://github.com/Atrate\"&gt;Atrate&lt;/a&gt;. "</string>
     <string name="word_wrap">自动换行</string>
     <string name="class_viewer">类查看器</string>
     <string name="toggle_class_listing">切换类列表</string>
@@ -317,7 +318,6 @@
     <string name="deny_dangerous_permissions">拒绝有危险的权限</string>
     <string name="sort_by_tracker_components">跟踪器优先</string>
     <string name="unknown_op">未知的操作</string>
-    <string name="trackers_disabled_successfully">跟踪器已被禁用</string>
     <plurals name="alert_failed_to_disable_trackers">
         <item quantity="other">无法禁用来自%1$d个应用的跟踪器</item>
     </plurals>
@@ -893,4 +893,27 @@
 \nRiseup: https://0xacab.org/muntashir/AppManager
 \nCodeberg: https://codeberg.org/muntashir/AppManager</string>
     <string name="pref_installer_msg">配置应用安装程序的行为。</string>
+    <string name="filter_choice_tag">标签</string>
+    <string name="filter_choice_pid">PID</string>
+    <string name="filter_choice">搜索依据</string>
+    <string name="enter_good_filename">请输入一个有效的文件名。</string>
+    <string name="enter_filename">输入文件名</string>
+    <string name="dialog_partial_select_explanation">1. 选择<b>第一</b>行。
+\n2. 接着选择<b>最后</b>一行。</string>
+    <string name="dialog_compiling_log">正在编译日志…</string>
+    <string name="delete_saved_log">删除已保存的日志</string>
+    <string name="copy_to_clipboard">复制到剪贴板</string>
+    <string name="checkbox_never_show_partial_select_help">不再显示</string>
+    <string name="add_filter_ellipsis">添加过滤器…</string>
+    <string name="add_filter">添加过滤器</string>
+    <string name="log_level_fatal">致命</string>
+    <string name="log_level_warn">警告</string>
+    <string name="log_level_verbose">详细</string>
+    <string name="log_level_info">信息</string>
+    <string name="log_level_error">错误</string>
+    <string name="log_level_debug">调试</string>
+    <string name="filename">文件名</string>
+    <string name="restart_log_viewer_to_see_changes">重启日志查看器窗口来查看更改。</string>
+    <string name="pref_log_viewer_msg">配置日志展示方式。</string>
+    <string name="log_viewer">日志查看器</string>
 </resources>
