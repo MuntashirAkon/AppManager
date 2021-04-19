@@ -918,4 +918,5 @@
     <string name="log_viewer">日志查看器</string>
     <string name="log_level">日志级别</string>
     <string name="log_cleared">日志已清除</string>
+    <string name="log_recording_started">日志记录已启动。</string>
 </resources>
