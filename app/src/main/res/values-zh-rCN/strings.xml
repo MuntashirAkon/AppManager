@@ -920,4 +920,6 @@
     <string name="log_cleared">日志已清除</string>
     <string name="log_recording_started">日志记录已启动。</string>
     <string name="log_saved">日志已保存。</string>
+    <string name="menu_title_partial_select">保存部分</string>
+    <string name="manage_saved_logs">管理已保存的日志</string>
 </resources>
