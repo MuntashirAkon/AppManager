@@ -919,4 +919,5 @@
     <string name="log_level">日志级别</string>
     <string name="log_cleared">日志已清除</string>
     <string name="log_recording_started">日志记录已启动。</string>
+    <string name="log_saved">日志已保存。</string>
 </resources>
