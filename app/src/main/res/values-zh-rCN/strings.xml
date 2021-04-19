@@ -926,4 +926,5 @@
     <string name="notification_ticker">日志记录已启动</string>
     <string name="notification_subtext">点击停止记录</string>
     <string name="notification_title">日志记录进行中</string>
+    <string name="open">打开</string>
 </resources>
