@@ -927,4 +927,7 @@
     <string name="notification_subtext">点击停止记录</string>
     <string name="notification_title">日志记录进行中</string>
     <string name="open">打开</string>
+    <string name="pref_cat_appearance">外观</string>
+    <string name="pref_cat_advanced">高级</string>
+    <string name="pref_buffer_title">日志缓存(s)</string>
 </resources>
