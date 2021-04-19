@@ -388,7 +388,6 @@
         <item quantity="one">%1$d uygulamadan izleyiciler devre dışı bırakılamadı</item>
         <item quantity="other">%1$d uygulamadan izleyiciler devre dışı bırakılamadı</item>
     </plurals>
-    <string name="failed_to_disable_trackers">İzleyiciler devre dışı bırakılamadı</string>
     <string name="unknown_op">Bilinmeyen İşlem</string>
     <string name="sort_by_tracker_components">Önce izleyiciler</string>
     <string name="deny_dangerous_permissions">Tehlikeli izinleri reddet</string>
@@ -586,7 +585,7 @@
     <string name="toggle_class_listing">Sınıf Listesini Aç/Kapat</string>
     <string name="class_viewer">Sınıf Görüntüleyici</string>
     <string name="word_wrap">Sözcük kaydırmayı aç/kapat</string>
-    <string name="credits_message">"Aşağıdaki projelerin yazarlarına
+    <string name="credits_message">Aşağıdaki projelerin yazarlarına
 \n- Android Open Source Project
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
@@ -596,7 +595,8 @@
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
-\nOrijinal logo: <a href="https://github.com/Atrate">Atrate</a>. "</string>
+\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
+\nOrijinal logo: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="credits">Teşekkürler</string>
     <string name="paths_and_directories">Yollar ve Dizinler</string>
     <string name="edit_shortcut">Kısayolu Düzenle</string>
@@ -924,4 +924,96 @@
 \nRiseup: https://0xacab.org/muntashir/AppManager
 \nCodeberg: https://codeberg.org/muntashir/AppManager</string>
     <string name="pref_installer_msg">Uygulama kurucusunun davranışlarını yapılandırın.</string>
+    <string name="trackers_unblocked_successfully">İzleyicilerin engeli artık kaldırıldı</string>
+    <string name="trackers_blocked_successfully">İzleyiciler artık engellendi</string>
+    <string name="failed_to_unblock_trackers">İzleyicilerin engeli kaldırılamadı</string>
+    <string name="failed_to_block_trackers">İzleyiciler engellenemedi</string>
+    <string name="profile_save_apk_msg">APK dosyalarını <tt>AppManager/apks</tt> konumuna kaydeder</string>
+    <string name="save_apk">APK dosyasını kaydet</string>
+    <string name="running_services">Çalışan Hizmetler</string>
+    <string name="view_logs">Günlükleri görüntüle</string>
+    <string name="share_log">Paylaş</string>
+    <string name="save_log_zip">Zip dosyasını kaydet</string>
+    <string name="text_include_dmesg">Çekirdek günlüğünü dahil et</string>
+    <string name="omit_sensitive_info_summary">Web URL\'leri, telefon numaraları veya e-posta adresleri gibi hassas bilgileri atla.</string>
+    <string name="omit_sensitive_info">Hassas bilgileri atla</string>
+    <string name="undo">Geri al</string>
+    <string name="pause_unpause">Oynat/Duraklat</string>
+    <string name="collapse_all">Tümünü Daralt</string>
+    <string name="expand_all">Tümünü Genişlet</string>
+    <string name="file">Dosya</string>
+    <string name="widget_start_recording">Günlük
+\nKaydı</string>
+    <string name="widget_recording_in_progress">Kaydediliyor…</string>
+    <string name="unable_to_save_log">Günlük kaydedilemiyor. Geçerli bir dosya adı girdiniz mi\?</string>
+    <string name="toast_started_select_partial">Kısmi seçim modu etkinleştirildi</string>
+    <plurals name="toast_log_truncated">
+        <item quantity="one">Günlük çok büyük, son %d satır gösteriliyor.</item>
+        <item quantity="other">Günlük çok büyük, son %d satır gösteriliyor.</item>
+    </plurals>
+    <string name="toast_invalid_selection">Geçersiz seçim. Lütfen tekrar deneyin.</string>
+    <string name="toast_invalid_level">Geçersiz seviye adı: %s</string>
+    <string name="pref_display_limit_hint">Lütfen %1$d ile %2$d arasında geçerli bir sayı girin.</string>
+    <string name="title_filters">Filtreler</string>
+    <string name="text_include_device_info">Aygıt bilgilerini dahil et</string>
+    <string name="text_filter_text">Metni filtrele</string>
+    <string name="text_filter_ellipsis">Filtre…</string>
+    <string name="subject_log_report">Günlük raporu</string>
+    <string name="start_recording_log">Kayıt</string>
+    <string name="settings">Ayarlar</string>
+    <string name="send_log_title">Günlüğü Gönder</string>
+    <string name="save_log">Günlüğü Kaydet</string>
+    <string name="save_as">Farklı Kaydet…</string>
+    <string name="record_log">Günlük Kaydı</string>
+    <string name="pref_show_timestamp_title">PID ve Zaman Damgasını Göster</string>
+    <string name="pref_show_timestamp_summary">Genişletildiğinde işlem kimliğini ve zaman damgasını göster.</string>
+    <string name="pref_log_write_period_title">Yazma Aralığı</string>
+    <string name="pref_log_write_period_summary">Kayıt yaparken, her %1$d satırda bir SD karta yaz.</string>
+    <string name="pref_log_line_period_error">Lütfen 1 ile 1000 arasında bir tam sayı girin.</string>
+    <string name="pref_expanded_by_default_title">Öntanımlı Olarak Genişlet</string>
+    <string name="pref_expanded_by_default_summary">Öntanımlı olarak tam günlük metnini göster.</string>
+    <string name="pref_filter_pattern_title">Etiketleri Filtrele</string>
+    <string name="pref_filter_pattern_summary">Günlüklerden seçilen etiketleri filtrele.</string>
+    <string name="pref_display_limit_title">Günlük Görüntüleme Sınırı</string>
+    <string name="pref_display_limit_summary">Yetersiz bellek hatalarını önlemek için yalnızca son %1$d günlüğü göster.</string>
+    <string name="pref_default_log_level_title">Öntanımlı Günlük Seviyesi</string>
+    <string name="pref_default_log_level_summary">Başlangıçta, dosyaları açarken ve kayıt sırasında günlük seviyesi.</string>
+    <string name="pref_cat_configuration">Yapılandırma</string>
+    <string name="pref_cat_appearance">Görünüm</string>
+    <string name="pref_cat_advanced">Gelişmiş</string>
+    <string name="pref_buffer_title">Günlük Arabellek(ler)i</string>
+    <string name="open">Aç</string>
+    <string name="notification_title">Günlük kaydı devam ediyor</string>
+    <string name="notification_ticker">Günlük kaydı başladı</string>
+    <string name="notification_subtext">Kaydı durdurmak için dokunun</string>
+    <string name="no_saved_logs">Kaydedilmiş günlük bulunamadı.</string>
+    <string name="menu_title_partial_select">Kısmi Kaydet</string>
+    <string name="manage_saved_logs">Kaydedilen Günlükleri Yönet</string>
+    <string name="log_saved">Günlük kaydedildi.</string>
+    <string name="log_recording_started">Günlük kaydı başladı.</string>
+    <string name="log_level">Günlük Seviyesi</string>
+    <string name="log_cleared">Günlükler temizlendi</string>
+    <string name="filter_choice_tag">Etiket</string>
+    <string name="filter_choice_pid">PID</string>
+    <string name="filter_choice">Arama ölçütü</string>
+    <string name="enter_good_filename">Lütfen geçerli bir dosya adı girin.</string>
+    <string name="enter_filename">Dosya adını girin</string>
+    <string name="dialog_partial_select_explanation">1. <b>İlk</b> satırı seçin.
+\n2. Ardından <b>son</b> satırı seçin.</string>
+    <string name="dialog_compiling_log">Günlük derleniyor…</string>
+    <string name="delete_saved_log">Kaydedilen Günlükleri Sil</string>
+    <string name="copy_to_clipboard">Panoya kopyala</string>
+    <string name="checkbox_never_show_partial_select_help">Bir daha gösterme</string>
+    <string name="add_filter_ellipsis">Filtre Ekle…</string>
+    <string name="add_filter">Filtre Ekle</string>
+    <string name="log_level_fatal">Ölümcül</string>
+    <string name="log_level_warn">Uyarı</string>
+    <string name="log_level_verbose">Ayrıntılı</string>
+    <string name="log_level_info">Bilgi</string>
+    <string name="log_level_error">Hata</string>
+    <string name="log_level_debug">Hata ayıklama</string>
+    <string name="filename">Dosya adı</string>
+    <string name="restart_log_viewer_to_see_changes">Değişiklikleri görmek için günlük görüntüleyici penceresini yeniden başlatın.</string>
+    <string name="pref_log_viewer_msg">Günlüklerin nasıl görüntüleneceğini yapılandırın.</string>
+    <string name="log_viewer">Günlük Görüntüleyici</string>
 </resources>
