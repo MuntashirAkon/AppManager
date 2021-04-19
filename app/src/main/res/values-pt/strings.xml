@@ -186,7 +186,7 @@
     <string name="pref_usage_access_enabled_msg">Permite ver as estatísticas de uso da app e as informações de dados dela.</string>
     <string name="pref_usage_access_enabled">Acesso ao uso</string>
     <string name="pref_global_blocking_enabled_msg">Permite a restrição em outros apps mesmo sem ativar o bloqueio explicitamente</string>
-    <string name="pref_global_blocking_enabled">Bloquear componentes globalmente</string>
+    <string name="pref_global_blocking_enabled">Bloquear componentes instantaneamente</string>
     <string name="str_logo">Logo</string>
     <string name="rules_not_applied">Regras não são aplicadas</string>
     <string name="failed_to_disable_op">A operação da app solicitada não pôde ser desativada</string>
@@ -249,7 +249,7 @@
     <string name="menu_remove_rules">Remover regras</string>
     <string name="failed_to_extract_apk_file">O ficheiro APK não pôde ser extraído</string>
     <string name="share_apk">Compartilhar APK</string>
-    <string name="grant_usage_acess_message">Acesso do uso é obrigatório para exibir informações de uso dos apps.</string>
+    <string name="grant_usage_acess_message">Utilizado para exibir informações de uso dos apps.</string>
     <string name="grant_usage_access">Conceder Acesso de Uso</string>
     <string name="go">Ir</string>
     <string name="go_back">Voltar</string>
@@ -271,7 +271,7 @@
     <string name="usage_today">Hoje</string>
     <string name="usage_weekly">Semanal</string>
     <string name="app_usage">Uso de app</string>
-    <string name="no_tracker_class">Nenhuma classe de rastreador</string>
+    <string name="no_tracker_class">Sem classes de rastreador</string>
     <string name="no_shared_libs">Nenhuma biblioteca compartilhada</string>
     <plurals name="main_list_date_days">
         <item quantity="one"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> dia</item>
@@ -286,7 +286,7 @@
     <string name="toggle_class_listing">Alternar lista de classes</string>
     <string name="class_viewer">Visualizador de classe</string>
     <string name="word_wrap">Alternar quebra de palavra</string>
-    <string name="credits_message">"Aos autores do
+    <string name="credits_message">Aos autores do
 \n- The Android Open Source Project
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
@@ -295,8 +295,9 @@
 \n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
-\nCréditos do logo: <a href="https://github.com/Atrate\">Atrate</a>.
-    </string>
+\n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
+\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
+\nCréditos do logo original: <a href="https://github.com/Atrate\">Atrate</a>. </string>
     <string name="credits">Méritos</string>
     <string name="third_party">Bibliotecas e Ícones de terceiros</string>
     <string name="license">Licença</string>
@@ -321,7 +322,7 @@
     <string name="date_installed">Data de instalação</string>
     <string name="more_info">Mais informações</string>
     <string name="sdk_flags">Bandeiras</string>
-    <string name="sdk_max">Máx</string>
+    <string name="sdk_max">Destino</string>
     <string name="sdk_min">Mín</string>
     <string name="data_dir">Diretório de dados</string>
     <string name="source_dir">Diretório de origem</string>
@@ -339,11 +340,11 @@
     <string name="cache_size">Cache</string>
     <string name="data_size">Dados</string>
     <string name="about">Sobre</string>
-    <string name="data_usage_msg">Uso de dados desde a última inicialização</string>
+    <string name="data_usage_msg">Uso de dados</string>
     <string name="data_transmitted">Dados transmitidos</string>
     <string name="data_received">Dados recebidos</string>
     <string name="sort_by_target_sdk">SDK de destino</string>
-    <string name="sort_by_domain">App do utilizador primeiro</string>
+    <string name="sort_by_domain">Apps do utilizador primeiro</string>
     <string name="sort_by_package_name">Nome do pacote</string>
     <string name="sort_by_app_label">Rótulo da app</string>
     <string name="loading">Carregando…</string>
@@ -352,7 +353,7 @@
     <string name="input_features">Recursos de input</string>
     <string name="no_configurations">Nenhuma configuração</string>
     <string name="configurations">Configurações</string>
-    <string name="no_signatures">Nenhuma assinatura</string>
+    <string name="no_signatures">Nenhuma assinatura válida</string>
     <string name="signatures">Assinaturas</string>
     <string name="sort_by_sha">Assinatura</string>
     <string name="cache">Excluir o cache</string>
@@ -414,7 +415,6 @@
         <item quantity="one">Não foi possível desativar rastreadores de %1$d app</item>
         <item quantity="other">Não foi possível desativar rastreadores de %1$d app</item>
     </plurals>
-    <string name="failed_to_disable_trackers">Não foi possível desativar rastreadores</string>
     <string name="unknown_op">Operação desconhecida</string>
     <string name="sort_by_tracker_components">Primeiro rastreadores</string>
     <string name="deny_dangerous_permissions">Negar permissões perigosas</string>
