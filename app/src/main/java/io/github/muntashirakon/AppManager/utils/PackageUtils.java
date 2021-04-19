@@ -67,6 +67,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -351,15 +353,21 @@ public final class PackageUtils {
     public static PackageSizeInfo getPackageSizeInfo(Context context, String packageName, int userHandle, UUID storageUuid) {
         AtomicReference<PackageSizeInfo> packageSizeInfo = new AtomicReference<>();
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            CountDownLatch waitForStats = new CountDownLatch(1);
             try {
                 AppManager.getIPackageManager().getPackageSizeInfo(packageName, userHandle, new IPackageStatsObserver.Stub() {
                     @SuppressWarnings("deprecation")
                     @Override
                     public void onGetStatsCompleted(final PackageStats pStats, boolean succeeded) {
-                        packageSizeInfo.set(new PackageSizeInfo(pStats));
+                        try {
+                            if (succeeded) packageSizeInfo.set(new PackageSizeInfo(pStats));
+                        } finally {
+                            waitForStats.countDown();
+                        }
                     }
                 });
-            } catch (RemoteException e) {
+                waitForStats.await(5, TimeUnit.SECONDS);
+            } catch (RemoteException | InterruptedException e) {
                 Log.e("PackageUtils", e);
             }
         } else {
