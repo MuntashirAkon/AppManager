@@ -243,24 +243,29 @@ public class UIUtils {
         return searchView;
     }
 
+    @UiThread
     public static void displayShortToast(@StringRes int res) {
         Toast.makeText(AppManager.getContext(), res, Toast.LENGTH_SHORT).show();
     }
 
+    @UiThread
     public static void displayShortToast(@StringRes int res, Object... args) {
         Context appContext = AppManager.getContext();
         Toast.makeText(appContext, appContext.getString(res, args), Toast.LENGTH_SHORT).show();
     }
 
+    @UiThread
     public static void displayLongToast(@StringRes int res) {
         Toast.makeText(AppManager.getContext(), res, Toast.LENGTH_LONG).show();
     }
 
+    @UiThread
     public static void displayLongToast(@StringRes int res, Object... args) {
         Context appContext = AppManager.getContext();
         Toast.makeText(appContext, appContext.getString(res, args), Toast.LENGTH_LONG).show();
     }
 
+    @UiThread
     public static void displayLongToastPl(@PluralsRes int res, int count, Object... args) {
         Context appContext = AppManager.getContext();
         Toast.makeText(appContext, appContext.getResources().getQuantityString(res, count, args), Toast.LENGTH_LONG).show();

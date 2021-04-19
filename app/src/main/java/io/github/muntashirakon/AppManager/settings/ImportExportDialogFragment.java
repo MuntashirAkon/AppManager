@@ -99,11 +99,14 @@ public class ImportExportDialogFragment extends DialogFragment {
                 }
                 new Thread(() -> {
                     Pair<Boolean, Integer> status = ExternalComponentsImporter.applyFromWatt(activity.getApplicationContext(), uris, Users.getUsersHandles());
-                    if (!status.first) {  // Not failed
-                        UIUtils.displayLongToast(R.string.the_import_was_successful);
-                    } else {
-                        UIUtils.displayLongToastPl(R.plurals.failed_to_import_files, status.second, status.second);
-                    }
+                    if (isDetached()) return;
+                    activity.runOnUiThread(() -> {
+                        if (!status.first) {  // Not failed
+                            UIUtils.displayLongToast(R.string.the_import_was_successful);
+                        } else {
+                            UIUtils.displayLongToastPl(R.plurals.failed_to_import_files, status.second, status.second);
+                        }
+                    });
                 }).start();
                 requireDialog().dismiss();
             });
@@ -116,11 +119,14 @@ public class ImportExportDialogFragment extends DialogFragment {
                 }
                 new Thread(() -> {
                     Pair<Boolean, Integer> status = ExternalComponentsImporter.applyFromBlocker(activity.getApplicationContext(), uris, Users.getUsersHandles());
-                    if (!status.first) {  // Not failed
-                        UIUtils.displayLongToast(R.string.the_import_was_successful);
-                    } else {
-                        UIUtils.displayLongToastPl(R.plurals.failed_to_import_files, status.second, status.second);
-                    }
+                    if (isDetached()) return;
+                    activity.runOnUiThread(() -> {
+                        if (!status.first) {  // Not failed
+                            UIUtils.displayLongToast(R.string.the_import_was_successful);
+                        } else {
+                            UIUtils.displayLongToastPl(R.plurals.failed_to_import_files, status.second, status.second);
+                        }
+                    });
                 }).start();
                 requireDialog().dismiss();
             });
