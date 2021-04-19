@@ -935,4 +935,6 @@
     <string name="pref_default_log_level_summary">启动时、打开文件时和记录时的日志级别。</string>
     <string name="pref_display_limit_title">日志展示限制</string>
     <string name="pref_display_limit_summary">仅显示最后 %1$d 条日志以避免内存不足错误。</string>
+    <string name="pref_filter_pattern_title">过滤掉标签</string>
+    <string name="pref_filter_pattern_summary">从日志中过滤掉选择的标签。</string>
 </resources>
