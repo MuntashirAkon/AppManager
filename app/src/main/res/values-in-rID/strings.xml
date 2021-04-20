@@ -219,7 +219,7 @@
     <string name="toggle_class_listing">Alihkan Pendaftar Class</string>
     <string name="class_viewer">Peninjau Class</string>
     <string name="word_wrap">alihkan word wrap</string>
-    <string name="credits_message">"Kepada pemilik dari
+    <string name="credits_message">Kepada pemilik dari
 \n- Proyek Android Sumber Terbuka
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Informasi Apps_packages</a>
 \n- <a href="https://github.com/butzist/ActivityLauncher">Peluncur Aktifitas</a>
@@ -229,7 +229,8 @@
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
-\nHak Cipta logo asli: <a href="https://github.com/Atrate">Atrate</a>. "</string>
+\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
+\nHak Cipta logo asli: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="credits">Pembuat</string>
     <string name="third_party">Pustakaan dan Ikon Pihak-Ketiga</string>
     <string name="license">Lisensi</string>
@@ -751,7 +752,7 @@
     <string name="installer_error_aborted">Instalasi gagal karena dibatalkan atau sesi ditutup secara tak terduga</string>
     <string name="toggle_default_app_ops">Beralih op aplikasi default</string>
     <string name="filter_apps_with_activities">Dengan aktivitas</string>
-    <string name="are_you_sure">Apakah kamu yakin\?</string>
+    <string name="are_you_sure">Apakah Anda yakin\?</string>
     <string name="pref_remove_all_rules_msg">Izin akan diberikan, Ops aplikasi dan komponen akan kembali ke nilai default mereka.</string>
     <string name="pref_remove_all_rules">Hapus semua aturan</string>
     <string name="website">Situs web</string>
@@ -844,7 +845,6 @@
     <plurals name="alert_failed_to_disable_trackers">
         <item quantity="other">Tidak dapat menonaktifkan pelacak dari aplikasi %1$d</item>
     </plurals>
-    <string name="failed_to_disable_trackers">Tidak dapat menonaktifkan pelacak</string>
     <string name="unknown_op">Operasi Tidak Diketahui</string>
     <string name="internal_data">Data internal</string>
     <plurals name="items_selected">
@@ -890,4 +890,95 @@
 \nGitLab: https://gitlab.com/muntashir/AppManager
 \nRiseup: https://0xacab.org/muntashir/AppManager
 \nCodeberg: https://codeberg.org/muntashir/AppManager</string>
+    <string name="trackers_unblocked_successfully">Pelacak sekarang dibatalkan diblokir</string>
+    <string name="trackers_blocked_successfully">Pelacak sekarang diblokir</string>
+    <string name="failed_to_unblock_trackers">Tidak dapat batal memblokir pelacak</string>
+    <string name="failed_to_block_trackers">Tidak dapat memblokir pelacak</string>
+    <string name="profile_save_apk_msg">Simpan berkas APK di <tt>AppManager/apks</tt></string>
+    <string name="save_apk">Simpan APK</string>
+    <string name="running_services">Menjalankan Layanan</string>
+    <string name="view_logs">Lihat catatan log</string>
+    <string name="share_log">Bagikan</string>
+    <string name="save_log_zip">Simpan zip</string>
+    <string name="text_include_dmesg">termasuk log kernel</string>
+    <string name="omit_sensitive_info_summary">Hilangkan informasi sensitif seperti alamat url web, nomor telepon atau email.</string>
+    <string name="omit_sensitive_info">Hilangkan informasi sensitif</string>
+    <string name="undo">Kembalikan</string>
+    <string name="pause_unpause">Putar/Jeda</string>
+    <string name="collapse_all">Perkecil Semua</string>
+    <string name="expand_all">Perluas Semua</string>
+    <string name="file">Berkas</string>
+    <string name="widget_start_recording">Rekam
+\nLog</string>
+    <string name="widget_recording_in_progress">Merekam…</string>
+    <string name="unable_to_save_log">Tidak dapat menyimpan catatan log. Apakah Anda memasukkan sebuah nama berkas yang valid\?</string>
+    <string name="toast_started_select_partial">Mode Pilih Sebagian diaktifkan</string>
+    <plurals name="toast_log_truncated">
+        <item quantity="other">Catatan log terlalu besar, menampilkan baris %d terakhir.</item>
+    </plurals>
+    <string name="toast_invalid_selection">Pilihan tidak valid. Silahkan coba lagi.</string>
+    <string name="toast_invalid_level">Nama tingkat yang tidak valid: %s</string>
+    <string name="pref_display_limit_hint">Silahkan masukkan sebuah nomor yang valid antara %1$d dan %2$d.</string>
+    <string name="title_filters">Filter</string>
+    <string name="text_include_device_info">Termasuk informasi perangkat</string>
+    <string name="text_filter_text">Teks filter</string>
+    <string name="text_filter_ellipsis">Filter…</string>
+    <string name="subject_log_report">Laporan catatan log</string>
+    <string name="start_recording_log">Rekam</string>
+    <string name="settings">Pengaturan</string>
+    <string name="send_log_title">Kirim Log</string>
+    <string name="save_log">Simpan Log</string>
+    <string name="save_as">Simpan Sebagai…</string>
+    <string name="record_log">Rekam Log</string>
+    <string name="pref_show_timestamp_title">Tampilkan Pid &amp; Perekam waktu/Timestamp</string>
+    <string name="pref_show_timestamp_summary">Tampilkan ID proses dan perekam waktu/timestamp ketika diperluas.</string>
+    <string name="pref_log_write_period_title">Periode Tulis</string>
+    <string name="pref_log_write_period_summary">Ketika merekam, tulis ke kartu SD setiap %1$d baris.</string>
+    <string name="pref_log_line_period_error">Silahkan masukkan bilangan bulat antara 1 dan 1000.</string>
+    <string name="pref_expanded_by_default_title">Perluas secara Bawaan</string>
+    <string name="pref_expanded_by_default_summary">Tampilkan teks lengkap log secara bawaan.</string>
+    <string name="pref_filter_pattern_title">Filter Semua Tag</string>
+    <string name="pref_filter_pattern_summary">Filter semua tag yang dipilih dari catatan log.</string>
+    <string name="pref_display_limit_title">Batas Tampilan Log</string>
+    <string name="pref_display_limit_summary">Hanya tamplkan log %1$d terakhir agar menghindari kesalahan kehabisan memori.</string>
+    <string name="pref_default_log_level_title">Tingkat Log Bawaan</string>
+    <string name="pref_default_log_level_summary">Tingkat log pada saat mulai, ketika membuka berkas, dan ketika melakukan perekaman.</string>
+    <string name="pref_cat_configuration">Konfigurasi</string>
+    <string name="pref_cat_appearance">Tampilan</string>
+    <string name="pref_cat_advanced">Lanjutan</string>
+    <string name="pref_buffer_title">Buffer Log()</string>
+    <string name="open">Buka</string>
+    <string name="notification_title">Perekaman catatan log sedang berlangsung</string>
+    <string name="notification_ticker">Perekaman catatan log dimulai</string>
+    <string name="notification_subtext">Sentuh untuk menghentikan rekaman</string>
+    <string name="no_saved_logs">Tidak ada catatan log ditemukan.</string>
+    <string name="menu_title_partial_select">Simpan Sebagian</string>
+    <string name="manage_saved_logs">Kelola Log Tersimpan</string>
+    <string name="log_saved">Log disimpan.</string>
+    <string name="log_recording_started">Perekaman catatan log dimulai.</string>
+    <string name="log_level">Tingkat Log</string>
+    <string name="log_cleared">Log dibersihkan</string>
+    <string name="filter_choice_tag">Tag</string>
+    <string name="filter_choice_pid">PID</string>
+    <string name="filter_choice">Cari berdasarkan</string>
+    <string name="enter_good_filename">Silahkan masukkan nama berkas yang valid.</string>
+    <string name="enter_filename">Masukkan nama berkas</string>
+    <string name="dialog_partial_select_explanation">1. Pilih baris <b>pertama</b>.
+\n2. Lalu pilih baris <b>terakhir</b>.</string>
+    <string name="dialog_compiling_log">Mengumpulkan catatan log…</string>
+    <string name="delete_saved_log">Hapus Log Tersimpan</string>
+    <string name="copy_to_clipboard">Salin ke papanklip</string>
+    <string name="checkbox_never_show_partial_select_help">Jangan tampilkan lagi</string>
+    <string name="add_filter_ellipsis">Tambah Filter…</string>
+    <string name="add_filter">Tambah Filter</string>
+    <string name="log_level_fatal">Fatal</string>
+    <string name="log_level_warn">Mengingatkan</string>
+    <string name="log_level_verbose">Penjelasan</string>
+    <string name="log_level_info">Informasi</string>
+    <string name="log_level_error">Kesalahan</string>
+    <string name="log_level_debug">Debug</string>
+    <string name="filename">Nama berkas</string>
+    <string name="restart_log_viewer_to_see_changes">Mulai ulang jendela penampil log untuk melihat perubahan.</string>
+    <string name="pref_log_viewer_msg">Konfigurasikan bagaimana catatan log ditampilkan.</string>
+    <string name="log_viewer">Penampil Log</string>
 </resources>
