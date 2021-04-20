@@ -1048,4 +1048,9 @@
     <string name="failed_to_unblock_trackers">Could not unblock trackers</string>
     <string name="trackers_blocked_successfully">Trackers are now blocked</string>
     <string name="trackers_unblocked_successfully">Trackers are now unblocked</string>
+    <string name="base_backup">Base backup</string>
+    <string name="no_encryption">No encryption</string>
+    <string name="pgp_aes_rsa_encrypted">%1$s encrypted</string>
+    <string name="gz_bz2_compressed">%1$s compressed</string>
+    <string name="latest_backup">Latest backup</string>
 </resources>

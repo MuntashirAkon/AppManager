@@ -134,7 +134,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
-                    android:textSize="12sp"
+                    android:textSize="10sp"
                     tools:text="@tools:sample/lorem"
                     tools:ignore="SmallSp" />
 
@@ -185,7 +185,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
-                android:textSize="12sp"
+                android:textSize="10sp"
                 tools:text="@tools:sample/lorem"
                 tools:ignore="SmallSp" />
 

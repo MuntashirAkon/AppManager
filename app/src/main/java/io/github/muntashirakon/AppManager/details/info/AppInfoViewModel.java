@@ -42,7 +42,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import io.github.muntashirakon.AppManager.apk.ApkFile;
-import io.github.muntashirakon.AppManager.backup.BackupUtils;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.details.AppDetailsViewModel;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
@@ -135,11 +134,9 @@ public class AppInfoViewModel extends AndroidViewModel {
         tagCloud.hasKeyStoreItems = KeyStoreUtils.hasKeyStore(applicationInfo.uid);
         tagCloud.hasMasterKeyInKeyStore = KeyStoreUtils.hasMasterKey(applicationInfo.uid);
         MetadataManager.Metadata[] metadata = MetadataManager.getMetadata(packageName);
-        String[] readableBackupNames = new String[metadata.length];
+        CharSequence[] readableBackupNames = new CharSequence[metadata.length];
         for (int i = 0; i < metadata.length; ++i) {
-            String backupName = BackupUtils.getShortBackupName(metadata[i].backupName);
-            int userHandle = metadata[i].userHandle;
-            readableBackupNames[i] = backupName == null ? "Base backup for user " + userHandle : backupName + " for user " + userHandle;
+            readableBackupNames[i] = metadata[i].toLocalizedString(getApplication());
         }
         tagCloud.readableBackupNames = readableBackupNames;
         if (!mainModel.getIsExternalApk() && PermissionUtils.hasDumpPermission()) {
@@ -301,7 +298,7 @@ public class AppInfoViewModel extends AndroidViewModel {
         public boolean isMagiskHideEnabled;
         public boolean hasKeyStoreItems;
         public boolean hasMasterKeyInKeyStore;
-        public String[] readableBackupNames;
+        public CharSequence[] readableBackupNames;
         public boolean isBatteryOptimized;
         public int netPolicies;
         @Nullable

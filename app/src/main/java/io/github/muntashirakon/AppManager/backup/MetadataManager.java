@@ -17,12 +17,15 @@
 
 package io.github.muntashirakon.AppManager.backup;
 
+import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.RemoteException;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.format.Formatter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
@@ -36,10 +39,12 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import aosp.libcore.util.HexEncoding;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
+import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.VMRuntime;
@@ -56,6 +61,10 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.TarUtils;
 import io.github.muntashirakon.io.ProxyFile;
 import io.github.muntashirakon.io.ProxyOutputStream;
+
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getTitleText;
 
 public final class MetadataManager {
     public static final String META_FILE = "meta_v2.am.json";
@@ -93,6 +102,36 @@ public final class MetadataManager {
         public String tarType;  // tar_type
         public boolean keyStore;  // key_store
         public String installer;  // installer
+
+        public long getBackupSize() {
+            if (backupPath == null) return 0L;
+            return IOUtils.fileSize(backupPath);
+        }
+
+        @WorkerThread
+        public CharSequence toLocalizedString(Context context) {
+            String shortName = BackupUtils.getShortBackupName(backupName);
+            CharSequence titleText = shortName == null ? context.getText(R.string.base_backup) : shortName;
+
+            StringBuilder subtitleText = new StringBuilder(flags.toLocalisedString(context));
+            if (subtitleText.length() > 0) subtitleText.append(", ");
+            subtitleText.append(context.getString(R.string.version)).append(": ").append(versionName)
+                    .append(", ").append(context.getString(R.string.user_id)).append(": ").append(userHandle);
+            if (crypto.equals(CryptoUtils.MODE_NO_ENCRYPTION)) {
+                subtitleText.append(", ").append(context.getString(R.string.no_encryption));
+            } else {
+                subtitleText.append(", ").append(context.getString(R.string.pgp_aes_rsa_encrypted,
+                        crypto.toUpperCase(Locale.ROOT)));
+            }
+            subtitleText.append(", ").append(context.getString(R.string.gz_bz2_compressed,
+                    tarType.equals(TarUtils.TAR_GZIP) ? "GZip" : "BZip2"));
+            if (keyStore) subtitleText.append(", ").append(context.getString(R.string.keystore));
+            subtitleText.append(", ").append(context.getString(R.string.size)).append(": ").append(Formatter
+                    .formatFileSize(context, getBackupSize()));
+
+            return new SpannableStringBuilder(getTitleText(context, titleText)).append("\n")
+                    .append(getSmallerText(getSecondaryText(context, subtitleText)));
+        }
     }
 
     @NonNull

@@ -177,6 +177,40 @@ public final class BackupFlags {
     }
 
     @NonNull
+    public CharSequence toLocalisedString(Context context) {
+        StringBuilder sb = new StringBuilder();
+        boolean append = false;
+        if (backupApkFiles()) {
+            sb.append("APK");
+            append = true;
+        }
+        if (backupInternalData()) {
+            sb.append(append ? "+" : "").append("Int");
+            append = true;
+        }
+        if (backupExternalData()) {
+            sb.append(append ? "+" : "").append("Ext");
+            append = true;
+        }
+        if (backupMediaObb()) {
+            sb.append(append ? "+" : "").append("OBB");
+            append = true;
+        }
+        if (backupRules()) {
+            sb.append(append ? "+" : "").append("Rules");
+            append = true;
+        }
+        if (backupExtras()) {
+            sb.append(append ? "+" : "").append("Extras");
+            append = true;
+        }
+        if (backupCache()) {
+            sb.append(append ? "+" : "").append("Caches");
+        }
+        return sb;
+    }
+
+    @NonNull
     private static LinkedHashMap<Integer, Pair<Integer, Integer>> getBackupFlagsMap() {
         backupFlags.clear();
         return new LinkedHashMap<Integer, Pair<Integer, Integer>>() {

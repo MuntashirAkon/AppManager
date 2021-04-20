@@ -363,7 +363,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             long days = TimeUnit.DAYS.convert(System.currentTimeMillis() -
                     metadata.backupTime, TimeUnit.MILLISECONDS);
             holder.backupInfo.setText(String.format("%s: %s, %s %s",
-                    mActivity.getString(R.string.backup), mActivity.getResources()
+                    mActivity.getString(R.string.latest_backup), mActivity.getResources()
                             .getQuantityString(R.plurals.usage_days, (int) days, days),
                     mActivity.getString(R.string.version), metadata.versionName));
             StringBuilder extBulder = new StringBuilder();

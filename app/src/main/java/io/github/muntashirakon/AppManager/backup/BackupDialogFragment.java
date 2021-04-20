@@ -268,16 +268,12 @@ public class BackupDialogFragment extends DialogFragment {
             // TODO(21/9/20): Replace with a custom alert dialog to display more info.
             MetadataManager.Metadata[] metadata = MetadataManager.getMetadata(targetPackages.get(0).getPackageName());
             String[] backupNames = new String[metadata.length];
-            String[] readableBackupNames = new String[metadata.length];
+            CharSequence[] readableBackupNames = new CharSequence[metadata.length];
             boolean[] choices = new boolean[metadata.length];
             Arrays.fill(choices, false);
-            String backupName;
-            String userHandle;
             for (int i = 0; i < backupNames.length; ++i) {
                 backupNames[i] = metadata[i].backupName;
-                backupName = BackupUtils.getShortBackupName(backupNames[i]);
-                userHandle = String.valueOf(metadata[i].userHandle);
-                readableBackupNames[i] = backupName == null ? "Base backup for user " + userHandle : backupName + " for user " + userHandle;
+                readableBackupNames[i] = metadata[i].toLocalizedString(activity);
             }
             activity.runOnUiThread(() -> {
                 if (isDetached()) return;
@@ -325,20 +321,17 @@ public class BackupDialogFragment extends DialogFragment {
             MetadataManager.Metadata[] metadata = MetadataManager.getMetadata(targetPackages.get(0).getPackageName());
             String[] backupNames = new String[metadata.length];
             AtomicInteger selectedItem = new AtomicInteger(-1);
-            String[] readableBackupNames = new String[metadata.length];
-            String backupName;
-            int userHandle;
+            CharSequence[] readableBackupNames = new CharSequence[metadata.length];
             int choice = -1;
             int currentUserHandle = Users.getCurrentUserHandle();
             for (int i = 0; i < backupNames.length; ++i) {
                 backupNames[i] = metadata[i].backupName;
-                backupName = BackupUtils.getShortBackupName(backupNames[i]);
-                userHandle = metadata[i].userHandle;
-                if (backupName == null && userHandle == currentUserHandle) {
+                if (BackupUtils.getShortBackupName(backupNames[i]) == null
+                        && metadata[i].userHandle == currentUserHandle) {
                     choice = i;
                     selectedItem.set(i);
                 }
-                readableBackupNames[i] = backupName == null ? "Base backup for user " + userHandle : backupName + " for user " + userHandle;
+                readableBackupNames[i] = metadata[i].toLocalizedString(activity);
             }
             int finalChoice = choice;
             activity.runOnUiThread(() -> {
