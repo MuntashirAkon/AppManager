@@ -1,35 +1,71 @@
-# App Manager
-![Debug Build](https://github.com/MuntashirAkon/AppManager/workflows/Debug%20Build/badge.svg)
-[![Translation status](https://hosted.weblate.org/widgets/app-manager/-/svg-badge.svg)](https://hosted.weblate.org/engage/app-manager/)
-[![GitHub release (including pre-releases)](https://img.shields.io/github/v/release/MuntashirAkon/AppManager?include_prereleases)](https://github.com/MuntashirAkon/AppManager/releases/latest)
-[![F-Droid](https://img.shields.io/f-droid/v/io.github.muntashirakon.AppManager)](https://f-droid.org/packages/io.github.muntashirakon.AppManager)
-![GitHub Repo Size](https://img.shields.io/github/repo-size/MuntashirAkon/AppManager)
-[![TG Channel](https://img.shields.io/badge/TG-Channel-blue?logo=telegram)](https://t.me/AppManagerChannel)
-![Twitter @AppManagerNews](https://img.shields.io/twitter/follow/AppManagerNews?label=%40AppManagerNews)
+<p align="center">
+  <img src="app/src/main/ic_launcher-playstore.png" alt="App Manager Logo" height="150">
+</p>
 
-Yet another Android package manager and viewer, but...
+<h1 align="center">App Manager</h1>
 
-- Copylefted libre software (GPLv3+)
-- Material design (and a nice UI)
+<p align=center>
+  <a href="https://muntashirakon.github.io/AppManager">Docs</a> ·
+  <a href="https://github.com/MuntashirAkon/AppManager/releases">Releases</a> ·
+  <a href="https://t.me/AppManagerChannel">Telegram Channel</a>
+</p>
+
+---
+
+## Features
+
+### General features
+- Fully reproducible, copylefted libre software (GPLv3+)
+- Material design (but not material colours!)
 - No unnecessary permissions
-- Does not connect to the Internet (the permission is required for ADB mode)
-- Displays as much info as possible in the main window
+- [Does not connect to the Internet](https://muntashirakon.github.io/AppManager/en/#x1-1650004.3.2)
+- Displays as much info as possible in the main page
 - Lists activities, broadcast receivers, services, providers, permissions, signatures, shared libraries, etc. of any app
-- Launch (exportable) activities, create (customizable) shortcuts
-- Block any activities, broadcast receivers, services, or providers you like with native import/export as well as Watt and Blocker import support (requires root)
-- Revoke permissions considered dangerous (requires root/ADB)
-- Disable app ops considered dangerous (requires root/ADB)
-- Scan for trackers in apps and list (all or only) tracking classes (and their code dump)
-- Generate dynamic manifest for any app
-- View/edit/delete shared preferences of any app (requires root)
-- Display running processes/apps (requires root/ADB)
+- Launch (exportable) activities and services
+- Create (customizable) shortcuts of activities
+- [Intercept activities](https://muntashirakon.github.io/AppManager/en/#x1-1080002.8)
+- Scan for trackers and libraries in apps and list (all or only) tracking classes (and their code dump)
+- View the manifest of an app
 - Display your app usage, data usage, and app storage info (requires “Usage Access” permission)
-- Share APK files (hence the use of a provider)
-- Clear app data or app cache (requires root/ADB)
-- Batch operations: clear app data, disable run in background, disable/kill/uninstall apps
-- One-click operations: block ads/tracker components, block components by signature, block multiple app ops
+- Install/uninstall APK files (including APKS, APKM and XAPK with OBB files)
+- Share APK files
+- Back up/restore APK files
+- Batch operations
+- One-click operations
+- Logcat viewer
+- [Profiles](https://muntashirakon.github.io/AppManager/en/#x1-610002.5) (including presets for quick debloating)
+- View app usage along with mobile and wifi data usage
+- Open app in Aurora Store or in your F-Droid client
+- Sign APK files before installing them
+- Backup encryption: OpenPGP via OpenKeychain, RSA (hybrid encryption with AES) and AES.
 
-…and other minor features such as installing/uninstalling/updating/enabling/disabling apps, displaying app installation info, opening in F-Droid, Aurora Droid or Aurora Store. This single app combines the features of 5 or 6 apps any tech-savvy person needs!
+### Root/ADB-only features
+- Revoke permissions considered dangerous by Android
+- Deny or ignore app ops
+- Display/kill/force-stop running processes/apps
+- Clear app data or app cache
+
+### Root-only features
+- Block any activities, broadcast receivers, services, or providers of an app with native import/export as well as Watt and Blocker import support
+- View/edit/delete shared preferences of any app
+- Back up/restore apps with data, rules and extras (such as permissions, battery optimization, SSAID, etc.)
+- System configuration, blacklisted or whitelisted apps
+- View/change SSAID, net policy, battery optimization
+
+…and many more! This single app combines the features of 5 or 6 apps any tech-savvy person needs!
+
+### Upcoming features
+- APK editing
+- Routine operations
+- Backup encryption: Elliptive-curve cryptography (ECC)
+- Finder: Find app components, permissions etc. in all apps
+- Enable/disable app actions such as launch on boot
+- Panic responder for Ripple
+- Crash monitor
+- Systemless disable/uninstall of system apps
+- Import/export app list
+- Terminal emulator
+- Database viewer and editor, etc.
 
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
 alt="Get it on F-Droid"
@@ -37,8 +73,6 @@ height="80" />](https://f-droid.org/packages/io.github.muntashirakon.AppManager)
 [<img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png"
 alt="Get it on IzzyOnDroid"
 height="80" />](https://apt.izzysoft.de/fdroid/index/apk/io.github.muntashirakon.AppManager)
-
-[App Manager Docs](https://muntashirakon.github.io/AppManager)
 
 ### Translations
 
@@ -48,13 +82,9 @@ Help translate [the app strings](https://hosted.weblate.org/engage/app-manager/)
 [![Translation status](https://hosted.weblate.org/widgets/app-manager/-/multi-auto.svg)](https://hosted.weblate.org/engage/app-manager/)
 
 
-### Community
-
-There is a [Telegram channel](https://t.me/AppManagerChannel) for App Manager.
-
 ### Mirrors
 
-**[GitLab](https://gitlab.com/muntashir/AppManager)** - **[Riseup](https://0xacab.org/muntashir/AppManager)** - **[Codeberg](https://codeberg.org/muntashir/AppManager)**
+[GitLab](https://gitlab.com/muntashir/AppManager) · [Riseup](https://0xacab.org/muntashir/AppManager) · [Codeberg](https://codeberg.org/muntashir/AppManager)
 
 ### Screenshots
 
@@ -112,7 +142,7 @@ The following steps are required only if you want to build APKS:
     ```bash
     git clone --recurse-submodules https://github.com/MuntashirAkon/AppManager.git
     ```
-    You can use the `--depth 1` argument if you don't want to clone past commits.
+   You can use the `--depth 1` argument if you don't want to clone past commits.
 2. Open the project **AppManager** using Android Studio/IntelliJ IDEA. The IDE should start syncing automatically. It will also download all the necessary dependencies automatically provided you have the Internet connection.
 3. Build debug version of App Manager from _Menu_ > _Build_ > _Make Project_, or, from the terminal:
     ```
@@ -120,7 +150,7 @@ The following steps are required only if you want to build APKS:
     ```
    The command will generate a universal APK instead of a bundled app.
 
-#### Create bundled app
+#### Create Bundled App
 In order to create a bundled app in APKS format, build Android App Bundle (AAB) first. Then run the following command:
 ```bash
 ./scripts/aab_to_apks.sh preRelease
