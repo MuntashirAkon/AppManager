@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="app/src/main/ic_launcher-playstore.png" alt="App Manager Logo" height="150">
+  <img src="docs/raw/images/icon.png" alt="App Manager Logo" height="150">
 </p>
 
 <h1 align="center">App Manager</h1>
