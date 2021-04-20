@@ -131,7 +131,7 @@
         \n- <a href="https://github.com/MuntashirAkon/lazysodium-android">Lazysodium for Android</a> (MPL-2.0)
     </string>
     <string name="credits">謝辞</string>
-    <string name="credits_message">"To the authors of
+    <string name="credits_message">To the authors of
 \n- The Android Open Source Project
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
@@ -141,7 +141,8 @@
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
-\nOriginal logo credit: <a href="https://github.com/Atrate">Atrate</a>. "</string>
+\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
+\nOriginal logo credit: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="word_wrap">ワードラップを切り替え</string>
     <string name="class_viewer">クラスビューワ</string>
     <string name="toggle_class_listing">クラスの表示を切り替え</string>
@@ -362,7 +363,6 @@
     <string name="deny_dangerous_permissions">危険な権限を拒否</string>
     <string name="sort_by_tracker_components">トラッカーを優先</string>
     <string name="unknown_op">未知の操作</string>
-    <string name="trackers_disabled_successfully">トラッカーは無効になりました</string>
     <plurals name="alert_failed_to_disable_trackers">
         <item quantity="one">%1$d 個のアプリからトラッカーを無効化できませんでした</item>
         <item quantity="other">%1$d 個のアプリからトラッカーを無効化できませんでした</item>
@@ -867,7 +867,7 @@
     <string name="os_version">OSバージョン</string>
     <string name="add">追加</string>
     <string name="add_to_profile">プロファイルに追加</string>
-    <string name="reverse">反転</string>
+    <string name="reverse">順序を反転</string>
     <string name="allow_background">バックグラウンドを許可</string>
     <string name="reject_background">バックグラウンドを拒否</string>
     <string name="choose_what_to_do">実行する操作を選択してください</string>
@@ -949,4 +949,43 @@
     <string name="input_key_password">キーのパスワード</string>
     <string name="failed_to_initialize_key_store">App Managerのキーストアを構成できませんでした。</string>
     <string name="generate_key">生成</string>
+    <string name="menu_title_partial_select">一部分を保存</string>
+    <string name="pref_default_log_level_title">既定のログレベル</string>
+    <string name="pref_cat_configuration">構成</string>
+    <string name="pref_cat_appearance">外観</string>
+    <string name="pref_cat_advanced">高度な設定</string>
+    <string name="pref_buffer_title">ログのバッファ</string>
+    <string name="open">開く</string>
+    <string name="notification_title">ログの記録が進行中です</string>
+    <string name="notification_ticker">ログの記録が開始されました</string>
+    <string name="notification_subtext">タップして記録を停止</string>
+    <string name="no_saved_logs">保存済みのログが見つかりませんでした。</string>
+    <string name="trackers_unblocked_successfully">トラッカーのブロックは解除されました</string>
+    <string name="manage_saved_logs">保存したログを管理</string>
+    <string name="log_saved">ログを保存しました。</string>
+    <string name="log_recording_started">ログの記録が開始されました。</string>
+    <string name="log_level">ログレベル</string>
+    <string name="log_cleared">ログを消去しました</string>
+    <string name="filter_choice_tag">タグ</string>
+    <string name="filter_choice_pid">PID</string>
+    <string name="filter_choice">次で検索</string>
+    <string name="enter_good_filename">有効なファイル名を指定してください。</string>
+    <string name="enter_filename">ファイル名を入力してください</string>
+    <string name="dialog_partial_select_explanation">1.まず、<b>最初の行</b>を選択します。
+\n2.次に、<b>最後の行</b>を選択します。</string>
+    <string name="dialog_compiling_log">ログを生成中…</string>
+    <string name="delete_saved_log">保存したログを消去</string>
+    <string name="copy_to_clipboard">クリップボードにコピー</string>
+    <string name="checkbox_never_show_partial_select_help">再度表示しない</string>
+    <string name="add_filter_ellipsis">フィルタを追加…</string>
+    <string name="add_filter">フィルタを追加</string>
+    <string name="log_level_fatal">Fatal</string>
+    <string name="log_level_warn">Warn</string>
+    <string name="log_level_verbose">Verbose</string>
+    <string name="log_level_info">Info</string>
+    <string name="log_level_error">Error</string>
+    <string name="log_level_debug">Debug</string>
+    <string name="filename">ファイル名</string>
+    <string name="pref_log_viewer_msg">ログの表示方法を設定します</string>
+    <string name="log_viewer">ログビューワ</string>
 </resources>
