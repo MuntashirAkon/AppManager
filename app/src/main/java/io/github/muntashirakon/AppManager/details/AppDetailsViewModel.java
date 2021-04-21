@@ -101,7 +101,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @Override
     public void onCleared() {
         Log.d("ADVM", "On Clear called for " + packageName);
-        new Thread(() -> {
+        super.onCleared();
+        executor.submit(() -> {
             synchronized (blockerLocker) {
                 if (blocker != null) {
                     // To prevent commit if a mutable instance was created in the middle,
@@ -110,12 +111,11 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     blocker.close();
                 }
             }
-        }).start();
+        });
         if (receiver != null) getApplication().unregisterReceiver(receiver);
         receiver = null;
         IOUtils.closeQuietly(apkFile);
-        executor.shutdownNow();
-        super.onCleared();
+        executor.shutdown();
     }
 
     @WorkerThread
@@ -1179,7 +1179,6 @@ public class AppDetailsViewModel extends AndroidViewModel {
         if (getPackageInfo() != null && packageInfo.requestedPermissions != null) {
             rawPermissions.addAll(Arrays.asList(packageInfo.requestedPermissions));
         }
-        // TODO(28/2/20): Get permissions not included in the uses-permission tag
         return rawPermissions;
     }
 
