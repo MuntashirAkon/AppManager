@@ -1089,4 +1089,5 @@
     <string name="pgp_aes_rsa_encrypted">%1$s зашифровано</string>
     <string name="no_encryption">Без шифрования</string>
     <string name="base_backup">Базовая резервная копия</string>
+    <string name="failed">Ошибка</string>
 </resources>
