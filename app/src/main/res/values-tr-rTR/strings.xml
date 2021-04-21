@@ -1021,4 +1021,9 @@
     <string name="pgp_aes_rsa_encrypted">%1$s ile şifrelendi</string>
     <string name="no_encryption">Şifreleme yok</string>
     <string name="base_backup">Temel yedekleme</string>
+    <string name="failed">Başarısız oldu</string>
+    <string name="confirm_import_keystore">Var olan KeyStore\'u değiştirmek istediğinizden emin misiniz\? Bu eylem geri alınamaz.</string>
+    <string name="import_keystore">KeyStore\'u içe aktar</string>
+    <string name="pref_import_export_keystore_msg">App Manager tarafından dahili olarak kullanılan Bouncy Castle KeyStore\'u (BKS) içe/dışa aktarın.</string>
+    <string name="pref_import_export_keystore">KeyStore\'u içe/dışa aktar</string>
 </resources>
