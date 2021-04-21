@@ -984,4 +984,9 @@
     <string name="pref_log_line_period_error">请输入1到1000之间的整数。</string>
     <string name="pref_expanded_by_default_title">默认展开</string>
     <string name="pref_expanded_by_default_summary">默认情况下显示完整的日志文本。</string>
+    <string name="latest_backup">最新备份</string>
+    <string name="gz_bz2_compressed">%1$s 已压缩</string>
+    <string name="pgp_aes_rsa_encrypted">%1$s 已加密</string>
+    <string name="no_encryption">无加密</string>
+    <string name="base_backup">基础备份</string>
 </resources>
