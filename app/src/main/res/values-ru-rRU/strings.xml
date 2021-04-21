@@ -1084,4 +1084,9 @@
     <string name="restart_log_viewer_to_see_changes">Перезапустите окно просмотра логов, чтобы увидеть изменения.</string>
     <string name="pref_log_viewer_msg">Настройте отображение логов.</string>
     <string name="log_viewer">Просмотр логов</string>
+    <string name="latest_backup">Последняя резервная копия</string>
+    <string name="gz_bz2_compressed">%1$s сжато</string>
+    <string name="pgp_aes_rsa_encrypted">%1$s зашифровано</string>
+    <string name="no_encryption">Без шифрования</string>
+    <string name="base_backup">Базовая резервная копия</string>
 </resources>
