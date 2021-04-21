@@ -637,6 +637,15 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(mActivity)
                                     .setTitle(R.string.running_services)
                                     .setItems(tagCloud.runningServices.toArray(new String[0]), null)
+                                    .setPositiveButton(R.string.force_stop, (dialog, which) -> executor.submit(() -> {
+                                        try {
+                                            PackageManagerCompat.forceStopPackage(mPackageName, mainModel.getUserHandle());
+                                            runOnUiThread(this::refreshDetails);
+                                        } catch (RemoteException | SecurityException e) {
+                                            Log.e(TAG, e);
+                                            displayLongToast(R.string.failed_to_stop, mPackageLabel);
+                                        }
+                                    }))
                                     .setNegativeButton(R.string.close, null);
                             if (pid != 0) {
                                 builder.setNeutralButton(R.string.view_logs, (dialog, which) -> {
@@ -864,15 +873,16 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 }
                 // Force stop
                 if ((mApplicationInfo.flags & ApplicationInfo.FLAG_STOPPED) == 0) {
-                    addToHorizontalLayout(R.string.force_stop, R.drawable.ic_baseline_power_settings_new_24).setOnClickListener(v -> executor.submit(() -> {
-                        try {
-                            PackageManagerCompat.forceStopPackage(mPackageName, mainModel.getUserHandle());
-                            runOnUiThread(this::refreshDetails);
-                        } catch (RemoteException | SecurityException e) {
-                            Log.e(TAG, e);
-                            displayLongToast(R.string.failed_to_stop, mPackageLabel);
-                        }
-                    }));
+                    addToHorizontalLayout(R.string.force_stop, R.drawable.ic_baseline_power_settings_new_24)
+                            .setOnClickListener(v -> executor.submit(() -> {
+                                try {
+                                    PackageManagerCompat.forceStopPackage(mPackageName, mainModel.getUserHandle());
+                                    runOnUiThread(this::refreshDetails);
+                                } catch (RemoteException | SecurityException e) {
+                                    Log.e(TAG, e);
+                                    displayLongToast(R.string.failed_to_stop, mPackageLabel);
+                                }
+                            }));
                 }
                 // Clear data
                 addToHorizontalLayout(R.string.clear_data, R.drawable.ic_delete_black_24dp)
