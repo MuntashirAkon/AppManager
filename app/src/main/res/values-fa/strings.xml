@@ -306,7 +306,6 @@
         <item quantity="one">نتوانست ردیاب‌ها را از %1$d برنامه غیرفعال کند</item>
         <item quantity="other">نتوانست ردیاب‌ها را از %1$d برنامه غیرفعال کند</item>
     </plurals>
-    <string name="failed_to_disable_trackers">نتوانست ردیاب‌ها را غیرفعال کند</string>
     <string name="unknown_op">عملیات ناشناخته</string>
     <string name="sort_by_tracker_components">اول ردیاب</string>
     <string name="deny_dangerous_permissions">مجوز های خطرناک را رد کن</string>

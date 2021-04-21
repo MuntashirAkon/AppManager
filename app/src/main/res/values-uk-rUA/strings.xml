@@ -357,7 +357,6 @@
         <item quantity="many">Не вдалося вимкнути трекери в додатках %1$d</item>
         <item quantity="other">Не вдалося вимкнути трекери в додатках %1$d</item>
     </plurals>
-    <string name="failed_to_disable_trackers">Не вдалося вимкнути трекери</string>
     <string name="deny_dangerous_permissions">Заборонити небезпечні дозволи</string>
     <string name="sort_by_dangerous_permissions">Спочатку небезпечні</string>
     <string name="sort_by_permission_names">Ім\'я дозволу</string>

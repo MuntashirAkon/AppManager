@@ -214,7 +214,6 @@
     <string name="sort_by_dangerous_permissions">বিপজ্জনক গুলো প্রথমে</string>
     <string name="sort_by_tracker_components">প্রথমে ট্র্যাকার</string>
     <string name="unknown_op">অজানা অপারেশন</string>
-    <string name="trackers_disabled_successfully">ট্র্যাকারগুলো এখন নিষ্ক্রিয়</string>
     <plurals name="alert_failed_to_disable_trackers">
         <item quantity="one">%1$dটি অ্যাপ থেকে ট্র্যাকার নিষ্ক্রিয় করা যায়নি</item>
         <item quantity="other">%1$dটি অ্যাপ থেকে ট্র্যাকার নিষ্ক্রিয় করা যায়নি</item>

@@ -84,7 +84,6 @@
     <string name="deny_dangerous_permissions">Từ chối các quyền nguy hiểm</string>
     <string name="sort_by_tracker_components">Trình theo dõi trước</string>
     <string name="unknown_op">Hoạt động không xác định</string>
-    <string name="trackers_disabled_successfully">Trình theo dõi hiện đã bị tắt</string>
     <plurals name="alert_failed_to_disable_trackers">
         <item quantity="other">Không thể vô hiệu hóa trình theo dõi từ ứng dụng %1$d</item>
     </plurals>

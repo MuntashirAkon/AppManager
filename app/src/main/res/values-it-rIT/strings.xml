@@ -77,7 +77,6 @@
     <string name="current_theme">Tema attuale: %1$s</string>
     <string name="version">Versione</string>
     <string name="block_trackers">Blocca tracker</string>
-    <string name="trackers_disabled_successfully">Tracker ora disattivati</string>
     <string name="never_ask">Non chiedere mai</string>
     <string name="install">Installa</string>
     <string name="sort_by_last_update">Ultimo aggiornamento</string>

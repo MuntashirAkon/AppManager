@@ -370,7 +370,6 @@
         <item quantity="one">Impossible de désactiver les traqueurs d\'%1$d application</item>
         <item quantity="other">Impossible de désactiver les traqueurs de %1$d applications</item>
     </plurals>
-    <string name="failed_to_disable_trackers">Impossible de désactiver les traqueurs</string>
     <string name="unknown_op">Opération inconnue</string>
     <string name="sort_by_tracker_components">Traqueurs en premier</string>
     <string name="deny_dangerous_permissions">Refuser les autorisations dangereuses</string>

@@ -30,7 +30,6 @@
     <string name="failed_to_reset_app_ops">ऐप ऑप्स रीसेट नहीं कर सके</string>
     <string name="failed_to_revoke_permission">अनुमति रद्द नहीं कर सके</string>
     <string name="failed_to_grant_permission">अनुमति नहीं दे सके</string>
-    <string name="failed_to_disable_trackers">ट्रैकर्स को बंद नहीं किया जा सका</string>
     <string name="unknown_op">अज्ञात ऑपरेशन</string>
     <string name="sort_by_tracker_components">पहले ट्रैकर्स</string>
     <string name="deny_dangerous_permissions">खतरनाक अनुमतियाँ अस्वीकार करें</string>

@@ -328,7 +328,6 @@
     <string name="deny_dangerous_permissions">Gefährliche Berechtigungen entziehen</string>
     <string name="sort_by_tracker_components">Verfolger zuerst</string>
     <string name="unknown_op">Unbekannte Operation</string>
-    <string name="trackers_disabled_successfully">Verfolger sind nun deaktiviert</string>
     <plurals name="alert_failed_to_disable_trackers">
         <item quantity="one">Konnte Verfolger von %1$d Anwendung nicht deaktivieren</item>
         <item quantity="other">Konnte Verfolger von %1$d Anwendungen nicht deaktivieren</item>

@@ -390,7 +390,6 @@
         <item quantity="one">No se pudieron deshabilitar los rastreadores de %1$d app</item>
         <item quantity="other">No se pudieron deshabilitar los rastreadores de %1$d apps</item>
     </plurals>
-    <string name="failed_to_disable_trackers">No se pudieron deshabilitar los rastreadores</string>
     <string name="unknown_op">Operación desconocida</string>
     <string name="sort_by_tracker_components">Rastreador primero</string>
     <string name="deny_dangerous_permissions">Denegar permisos peligrosos</string>

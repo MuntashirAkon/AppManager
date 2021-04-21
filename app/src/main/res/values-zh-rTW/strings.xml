@@ -549,7 +549,6 @@
     <string name="failed_to_reset_app_ops">無法重置應用程式操作</string>
     <string name="failed_to_revoke_permission">無法撤消權限</string>
     <string name="failed_to_grant_permission">無法授予權限</string>
-    <string name="failed_to_disable_trackers">無法停用追蹤器</string>
     <string name="unknown_op">未知操作</string>
     <string name="sort_by_tracker_components">追蹤器優先</string>
     <string name="deny_dangerous_permissions">拒絕危險權限</string>
