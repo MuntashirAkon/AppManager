@@ -326,7 +326,7 @@ class BackupOp implements Closeable {
         int protectionLevels;
         for (int i = 0; i < permissions.length; ++i) {
             try {
-                info = pm.getPermissionInfo(permissions[i], 0);
+                info = PackageManagerCompat.getPermissionInfo(permissions[i], packageName, PackageManager.GET_META_DATA);
                 basePermissionType = PermissionInfoCompat.getProtection(info);
                 protectionLevels = PermissionInfoCompat.getProtectionFlags(info);
                 if (basePermissionType != PermissionInfo.PROTECTION_DANGEROUS
@@ -336,7 +336,7 @@ class BackupOp implements Closeable {
                 }
                 rules.setPermission(permissions[i], (permissionFlags[i]
                         & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0);
-            } catch (PackageManager.NameNotFoundException ignore) {
+            } catch (RemoteException ignore) {
             }
         }
         // Backup app ops

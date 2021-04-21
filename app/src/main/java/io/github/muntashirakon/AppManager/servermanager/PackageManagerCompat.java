@@ -24,9 +24,13 @@ import android.content.pm.IPackageInstaller;
 import android.content.pm.IPackageManager;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.PermissionInfo;
 import android.os.Build;
 import android.os.RemoteException;
 import android.permission.IPermissionManager;
+
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -34,8 +38,6 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import androidx.annotation.IntDef;
-import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.users.UserIdInt;
@@ -90,6 +92,19 @@ public final class PackageManagerCompat {
     public static ApplicationInfo getApplicationInfo(String packageName, int flags, @UserIdInt int userHandle)
             throws RemoteException {
         return AppManager.getIPackageManager().getApplicationInfo(packageName, flags, userHandle);
+    }
+
+    @SuppressWarnings("deprecation")
+    public static PermissionInfo getPermissionInfo(String permissionName, String packageName, int flags)
+            throws RemoteException {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            IPermissionManager permissionManager = getPermissionManager();
+            return permissionManager.getPermissionInfo(permissionName, packageName, flags);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            return AppManager.getIPackageManager().getPermissionInfo(permissionName, packageName, flags);
+        } else {
+            return AppManager.getIPackageManager().getPermissionInfo(permissionName, flags);
+        }
     }
 
     public static void setComponentEnabledSetting(ComponentName componentName,
