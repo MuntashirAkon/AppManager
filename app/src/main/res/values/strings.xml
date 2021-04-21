@@ -1053,4 +1053,9 @@
     <string name="pgp_aes_rsa_encrypted">%1$s encrypted</string>
     <string name="gz_bz2_compressed">%1$s compressed</string>
     <string name="latest_backup">Latest backup</string>
+    <string name="pref_import_export_keystore">Import/export KeyStore</string>
+    <string name="pref_import_export_keystore_msg">Import/export Bouncy Castle KeyStore (BKS) internally used by App Manager.</string>
+    <string name="import_keystore">Import KeyStore</string>
+    <string name="confirm_import_keystore">Are you sure want to replace the existing KeyStore? This action cannot be undone.</string>
+    <string name="failed">Failed</string>
 </resources>
