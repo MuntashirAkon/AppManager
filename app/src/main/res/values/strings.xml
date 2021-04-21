@@ -1048,4 +1048,9 @@
     <string name="failed_to_unblock_trackers">Could not unblock trackers</string>
     <string name="trackers_blocked_successfully">Trackers are now blocked</string>
     <string name="trackers_unblocked_successfully">Trackers are now unblocked</string>
+    <string name="pref_import_export_keystore">Import/export KeyStore</string>
+    <string name="pref_import_export_keystore_msg">Import/export Bouncy Castle KeyStore (BKS) internally used by App Manager.</string>
+    <string name="import_keystore">Import KeyStore</string>
+    <string name="confirm_import_keystore">Are you sure want to replace the existing KeyStore? This action cannot be undone.</string>
+    <string name="failed">Failed</string>
 </resources>

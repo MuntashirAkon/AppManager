@@ -114,6 +114,12 @@
         app:iconSpaceReserved="false" >
 
         <Preference
+            app:key="import_export_keystore"
+            app:title="@string/pref_import_export_keystore"
+            app:summary="@string/pref_import_export_keystore_msg"
+            app:iconSpaceReserved="false" />
+
+        <Preference
             app:key="about_device"
             app:title="@string/about_device"
             app:summary="@string/pref_about_device_msg"

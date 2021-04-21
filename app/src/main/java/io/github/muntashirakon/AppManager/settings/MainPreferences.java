@@ -46,6 +46,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.os.LocaleListCompat;
 import androidx.core.text.HtmlCompat;
 import androidx.core.util.Pair;
+import androidx.fragment.app.DialogFragment;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
@@ -72,6 +73,7 @@ import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
+import io.github.muntashirakon.AppManager.settings.crypto.ImportExportKeyStoreDialogFragment;
 import io.github.muntashirakon.AppManager.types.FullscreenDialog;
 import io.github.muntashirakon.AppManager.types.ScrollableDialogBuilder;
 import io.github.muntashirakon.AppManager.users.Users;
@@ -227,6 +229,13 @@ public class MainPreferences extends PreferenceFragmentCompat {
                     .show();
             return true;
         });
+        // Import/export App Manager's KeyStore
+        ((Preference) Objects.requireNonNull(findPreference("import_export_keystore")))
+                .setOnPreferenceClickListener(preference -> {
+                    DialogFragment fragment = new ImportExportKeyStoreDialogFragment();
+                    fragment.show(getParentFragmentManager(), ImportExportKeyStoreDialogFragment.TAG);
+                    return true;
+                });
         // About device
         ((Preference) Objects.requireNonNull(findPreference("about_device"))).setOnPreferenceClickListener(preference -> {
             new Thread(() -> {
@@ -367,9 +376,10 @@ public class MainPreferences extends PreferenceFragmentCompat {
                 .append(getDensity()).append(" (")
                 .append(String.valueOf(StaticDataset.DEVICE_DENSITY)).append(" DPI)").append("\n");
         Display display;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             display = activity.getDisplay();
         } else {
+            //noinspection deprecation
             display = activity.getWindowManager().getDefaultDisplay();
         }
         DisplayMetrics displayMetrics = new DisplayMetrics();

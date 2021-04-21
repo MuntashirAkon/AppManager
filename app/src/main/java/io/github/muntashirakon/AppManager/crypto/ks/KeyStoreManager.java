@@ -67,11 +67,12 @@ import io.github.muntashirakon.AppManager.utils.Utils;
 public class KeyStoreManager {
     public static final String TAG = "KSManager";
 
+    public static final String AM_KEYSTORE_FILE_NAME = "am_keystore.bks";  // Java KeyStore
+    public static final File AM_KEYSTORE_FILE;
+
     private static final String AM_KEYSTORE = "BKS";  // KeyStore.getDefaultType() == JKS
-    private static final String AM_KEYSTORE_FILE_NAME = "am_keystore.bks";  // Java KeyStore
     private static final String PREF_AM_KEYSTORE_PREFIX = "ks_";
     private static final String PREF_AM_KEYSTORE_PASS = "kspass";
-    private static final File AM_KEYSTORE_FILE;
     private static final SharedPreferences sharedPreferences;
 
     public static final String ACTION_KS_INTERACTION_BEGIN = BuildConfig.APPLICATION_ID + ".action.KS_INTERACTION_BEGIN";
@@ -91,6 +92,10 @@ public class KeyStoreManager {
             INSTANCE = new KeyStoreManager(AppManager.getContext());
         }
         return INSTANCE;
+    }
+
+    public static void reloadKeyStore() throws Exception {
+        INSTANCE = new KeyStoreManager(AppManager.getContext());
     }
 
     private final Context context;
