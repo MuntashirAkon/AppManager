@@ -651,14 +651,15 @@ public final class PackageUtils {
         if (applicationInfo.dataDir == null) {
             throw new RuntimeException("Data directory cannot be empty.");
         }
-        dataDirs.add(applicationInfo.dataDir);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N &&
-                !applicationInfo.dataDir.equals(applicationInfo.deviceProtectedDataDir)) {
-            dataDirs.add(applicationInfo.deviceProtectedDataDir);
+        if (loadInternal) {
+            dataDirs.add(applicationInfo.dataDir);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N &&
+                    !applicationInfo.dataDir.equals(applicationInfo.deviceProtectedDataDir)) {
+                dataDirs.add(applicationInfo.deviceProtectedDataDir);
+            }
         }
         if (loadExternal) {
-            List<ProxyFile> externalFiles = new ArrayList<>(Arrays.asList(OsEnvironment
-                    .buildExternalStorageAppDataDirs(applicationInfo.packageName)));
+            ProxyFile[] externalFiles = OsEnvironment.buildExternalStorageAppDataDirs(applicationInfo.packageName);
             for (ProxyFile externalFile : externalFiles) {
                 if (externalFile != null && externalFile.exists())
                     dataDirs.add(externalFile.getAbsolutePath());
