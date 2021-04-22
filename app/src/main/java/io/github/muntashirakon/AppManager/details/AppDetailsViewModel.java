@@ -523,7 +523,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
             try {
                 permName = AppOpsManager.opToPermission(opEntry.getOp());
                 if (permName != null) {
-                    PermissionInfo permissionInfo = PackageManagerCompat.getPermissionInfo(permName, packageName, PackageManager.GET_META_DATA);
+                    PermissionInfo permissionInfo = mPackageManager.getPermissionInfo(permName, PackageManager.GET_META_DATA);
                     int basePermissionType = PermissionInfoCompat.getProtection(permissionInfo);
                     if (basePermissionType == PermissionInfo.PROTECTION_DANGEROUS) {
                         // Set mode
@@ -543,7 +543,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                         }
                     }
                 }
-            } catch (IllegalArgumentException | IndexOutOfBoundsException | RemoteException ignore) {
+            } catch (PackageManager.NameNotFoundException | IllegalArgumentException | IndexOutOfBoundsException ignore) {
             }
         }
         // Save values to the blocking rules
@@ -1131,8 +1131,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
         }
         for (int i = 0; i < packageInfo.requestedPermissions.length; ++i) {
             try {
-                PermissionInfo permissionInfo = PackageManagerCompat.getPermissionInfo(
-                        packageInfo.requestedPermissions[i], packageName, PackageManager.GET_META_DATA);
+                PermissionInfo permissionInfo = mPackageManager.getPermissionInfo(
+                        packageInfo.requestedPermissions[i], PackageManager.GET_META_DATA);
                 AppDetailsPermissionItem appDetailsItem = new AppDetailsPermissionItem(permissionInfo);
                 appDetailsItem.name = packageInfo.requestedPermissions[i];
                 appDetailsItem.flags = packageInfo.requestedPermissionsFlags[i];
@@ -1149,7 +1149,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     }
                 }
                 usesPermissionItems.add(appDetailsItem);
-            } catch (RemoteException ignore) {
+            } catch (PackageManager.NameNotFoundException ignore) {
             }
         }
         // Filter items

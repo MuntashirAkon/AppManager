@@ -87,7 +87,6 @@ import io.github.muntashirakon.AppManager.intercept.ActivityInterceptor;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.servermanager.ActivityManagerCompat;
-import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.types.RecyclerViewWithEmptyView;
@@ -1201,8 +1200,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             try {
                 String permName = AppOpsManager.opToPermission(opEntry.getOp());
                 if (permName != null)
-                    permissionInfo = PackageManagerCompat.getPermissionInfo(permName, mPackageName, PackageManager.GET_META_DATA);
-            } catch (IllegalArgumentException | IndexOutOfBoundsException | RemoteException ignore) {
+                    permissionInfo = mPackageManager.getPermissionInfo(permName, PackageManager.GET_META_DATA);
+            } catch (PackageManager.NameNotFoundException | IllegalArgumentException | IndexOutOfBoundsException ignore) {
             }
             // Set op name
             SpannableStringBuilder opName = new SpannableStringBuilder("(" + opEntry.getOp() + ") ");
