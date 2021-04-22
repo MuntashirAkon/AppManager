@@ -37,7 +37,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -257,8 +256,8 @@ public class AppInfoViewModel extends AndroidViewModel {
 
 
     private static final String UID_STATS_PATH = "/proc/uid_stat/";
-    private static final String UID_STATS_TX = "tcp_rcv";
-    private static final String UID_STATS_RX = "tcp_snd";
+    private static final String UID_STATS_TX = "tcp_snd";
+    private static final String UID_STATS_RX = "tcp_rcv";
 
     /**
      * Get network stats.
@@ -268,15 +267,17 @@ public class AppInfoViewModel extends AndroidViewModel {
      */
     @NonNull
     private AppUsageStatsManager.DataUsage getNetStats(int uid) {
-        long tx = 0;
-        long rx = 0;
+        long tx = 0L;
+        long rx = 0L;
         File uidStatsDir = new ProxyFile(UID_STATS_PATH + uid);
-        if (uidStatsDir.exists() && uidStatsDir.isDirectory()) {
-            for (File child : Objects.requireNonNull(uidStatsDir.listFiles())) {
-                if (child.getName().equals(UID_STATS_TX))
-                    tx = Long.parseLong(IOUtils.getFileContent(child, "-1").trim());
-                else if (child.getName().equals(UID_STATS_RX))
-                    rx = Long.parseLong(IOUtils.getFileContent(child, "-1").trim());
+        if (uidStatsDir.isDirectory()) {
+            File txFile = new ProxyFile(uidStatsDir, UID_STATS_TX);
+            File rxFile = new ProxyFile(uidStatsDir, UID_STATS_RX);
+            if (txFile.exists()) {
+                tx = Long.parseLong(IOUtils.getFileContent(txFile, "0").trim());
+            }
+            if (rxFile.exists()) {
+                rx = Long.parseLong(IOUtils.getFileContent(rxFile, "0").trim());
             }
         }
         return new AppUsageStatsManager.DataUsage(tx, rx);
