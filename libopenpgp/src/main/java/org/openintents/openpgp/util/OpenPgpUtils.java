@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2020 Muntashir Al-Islam
+ * Copyright (C) 2014-2015 Dominik Schürmann <dominik@dominikschuermann.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +25,7 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -79,6 +81,7 @@ public class OpenPgpUtils {
         return hexString;
     }
 
+    @SuppressLint("QueryPermissionsNeeded")
     @NonNull
     public static List<ServiceInfo> getPgpClientServices(@NonNull Context context) {
         PackageManager pm = context.getPackageManager();
