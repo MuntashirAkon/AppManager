@@ -743,7 +743,7 @@
     <string name="pref_sign_apk">APKを署名</string>
     <string name="pref_sign_apk_msg">インストールする前にAPKを署名します</string>
     <string name="app_signing_signature_schemes">署名方式</string>
-    <string name="apk_signing">APK署名</string>
+    <string name="apk_signing">APKの署名</string>
     <string name="pref_apk_signing_msg">署名方式やカスタム署名鍵を設定します。</string>
     <string name="v1_scheme">v1 スキーム (Android 1.0〜)</string>
     <string name="v2_scheme">v2 スキーム (Android 7.0〜)</string>
@@ -831,7 +831,7 @@
     <string name="failed_to_enable_magisk_hide">MagiskHideを有効化できませんでした</string>
     <string name="disable_background_run_description">次のAppOpsに <i>Ignore</i> モードを設定します: <tt>RUN_IN_BACKGROUND</tt> (Android 7.0〜) and <tt>RUN_ANY_IN_BACKGROUND</tt> (Android 9〜).</string>
     <string name="pref_backup_restore_msg">バックアップ/復元に関する設定</string>
-    <string name="backup_volume">バックアップするボリューム</string>
+    <string name="backup_volume">バックアップを保存するボリューム</string>
     <string name="pref_backup_volume_msg">バックアップを保存するディスクやボリュームを選択します。</string>
     <string name="no_volumes_found">書き込み権限のあるボリュームを見つけることができませんでした</string>
     <string name="unencrypted">暗号化されていません</string>
@@ -1044,4 +1044,11 @@
     <string name="widget_recording_in_progress">記録中…</string>
     <string name="start_recording_log">記録を開始</string>
     <string name="file">ファイル</string>
+    <string name="app_signing_signatures">アプリ署名</string>
+    <string name="failed">失敗</string>
+    <string name="confirm_import_keystore">既存のキーストアを上書きしてもよろしいですか？この操作はやり直しできません。</string>
+    <string name="import_keystore">キーストアをインポート</string>
+    <string name="pref_import_export_keystore_msg">App Manager内で使用される Bouncy Castle キーストアをインポート/エクスポートします。</string>
+    <string name="pref_import_export_keystore">キーストアをインポート/エクスポート</string>
+    <string name="toast_started_select_partial">部分選択モードが有効になりました</string>
 </resources>
