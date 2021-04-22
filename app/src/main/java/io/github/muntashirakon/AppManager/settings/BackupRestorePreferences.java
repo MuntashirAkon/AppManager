@@ -54,10 +54,10 @@ public class BackupRestorePreferences extends PreferenceFragmentCompat {
     @StringRes
     private static final int[] encryptionNames = new int[]{
             R.string.none,
+            R.string.open_pgp_provider,
             R.string.aes,
             R.string.rsa,
             /* R.string.ecc, // TODO(01/04/21): Implement ECC */
-            R.string.open_pgp_provider
     };
 
     SettingsActivity activity;
@@ -212,13 +212,13 @@ public class BackupRestorePreferences extends PreferenceFragmentCompat {
             case 0:
                 return CryptoUtils.MODE_NO_ENCRYPTION;
             case 1:
-                return CryptoUtils.MODE_AES;
-            case 2:
-                return CryptoUtils.MODE_RSA;
-            case 3:
-                return CryptoUtils.MODE_ECC;
-            case 4:
                 return CryptoUtils.MODE_OPEN_PGP;
+            case 2:
+                return CryptoUtils.MODE_AES;
+            case 3:
+                return CryptoUtils.MODE_RSA;
+            case 4:
+                return CryptoUtils.MODE_ECC;
         }
     }
 
@@ -227,13 +227,13 @@ public class BackupRestorePreferences extends PreferenceFragmentCompat {
             default:
             case CryptoUtils.MODE_NO_ENCRYPTION:
                 return 0;
-            case CryptoUtils.MODE_AES:
-                return 1;
-            case CryptoUtils.MODE_RSA:
-                return 2;
-            case CryptoUtils.MODE_ECC:
-                return 3;
             case CryptoUtils.MODE_OPEN_PGP:
+                return 1;
+            case CryptoUtils.MODE_AES:
+                return 2;
+            case CryptoUtils.MODE_RSA:
+                return 3;
+            case CryptoUtils.MODE_ECC:
                 return 4;
         }
     }
