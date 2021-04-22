@@ -434,7 +434,7 @@
     <string name="user_and_uid">Utilisateur : <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
     <string name="memory_virtual_memory">Mémoire : %1$s, Mémoire virtuelle : %2$s</string>
     <string name="pid_and_ppid">Identifiant du processus : %1$d, Identifiant du processus parent : %2$d</string>
-    <string name="disable_background_run">Désactiver l\'exécution en arrière-plan</string>
+    <string name="disable_background_run">Empêcher le fonctionnement en arrière-plan</string>
     <string name="kill_process">Tuer</string>
     <string name="running_apps">Applications en cours d\'exécution</string>
     <string name="store">Magasin</string>
@@ -460,7 +460,7 @@
     <string name="usage_yesterday">Hier</string>
     <string name="only_works_in_root_mode">Fonctionne uniquement en mode root</string>
     <string name="app_settings">Paramètres</string>
-    <string name="pref_usage_access_enabled_msg">Vous permet de visualiser des statistiques d\'utilisation et des informations sur les données d\'une application.</string>
+    <string name="pref_usage_access_enabled_msg">Affiche les informations sur les données de l\'application et les statistiques d\'utilisation.</string>
     <string name="pref_usage_access_enabled">Accès aux données d\'utilisation</string>
     <string name="str_logo">Logo</string>
     <string name="rules_not_applied">Les règles ne sont pas appliquées</string>
@@ -520,7 +520,7 @@
     <string name="menu_remove_rules">Supprimer les règles</string>
     <string name="failed_to_extract_apk_file">Impossible d\'extraire le fichier APK</string>
     <string name="share_apk">Partager l\'APK</string>
-    <string name="grant_usage_acess_message">L\'accès aux données d\'utilisation est obligatoire pour pouvoir afficher les informations d\'utilisation de l\'application.</string>
+    <string name="grant_usage_acess_message">Utilisé pour afficher des informations sur l\'utilisation de l\'application.</string>
     <string name="grant_usage_access">Autoriser l\'accès aux données d\'utilisation</string>
     <string name="go">Aller</string>
     <string name="go_back">Retour</string>
@@ -571,13 +571,13 @@
 \n- Projet Open Source Android
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Info Apps_packages </a>
 \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
-\n- <a href="https://github.com/billthefarmer/editor">Editeur</a>
+\n- <a href="https://github.com/billthefarmer/editor">Éditeur</a>
 \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
 \n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
-\nCredit du logo original : <a href="https://github.com/Atrate">Atrate</a>. </string>
+\nCrédit du logo original : <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="credits">Crédits</string>
     <string name="third_party">Bibliothèques tierces et icônes</string>
     <string name="license">Licence</string>
@@ -617,7 +617,7 @@
     <string name="external_data_dir">Répertoire de données externes</string>
     <string name="dev_protected_data_dir">Répertoire de données protégé par l\'appareil</string>
     <string name="pref_global_blocking_enabled_msg">Permet de bloquer tout composant d\'une application sans la bloquer directement.</string>
-    <string name="pref_global_blocking_enabled">Blocage global de composant</string>
+    <string name="pref_global_blocking_enabled">Blocage instantané des composants</string>
     <string name="failed_to_disable_op">Impossible de désactiver l\'autorisation demandée</string>
     <string name="failed_to_enable_op">Impossible d\'activer l\'autorisation demandée</string>
     <string name="gles_ver">Version OpenGL ES req.</string>
@@ -698,4 +698,6 @@
 \nGitLab: https://gitlab.com/muntashir/AppManager
 \nRiseup: https://0xacab.org/muntashir/AppManager
 \nCodeberg: https://codeberg.org/muntashir/AppManager</string>
+    <string name="omit_sensitive_info_summary">Omettez les informations sensibles comme les URL, les numéros de téléphone ou les adresses courriel.</string>
+    <string name="app_signing_signatures">Signatures</string>
 </resources>
