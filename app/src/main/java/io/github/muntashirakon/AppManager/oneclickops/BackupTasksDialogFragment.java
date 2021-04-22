@@ -103,41 +103,40 @@ public class BackupTasksDialogFragment extends DialogFragment {
                 requireActivity().runOnUiThread(() -> runMultiChoiceDialog(applicationItems, applicationLabels));
             }).start();
         });
-        if (BuildConfig.DEBUG) {
-            view.findViewById(R.id.verify_and_redo_backups).setOnClickListener(v -> {
+        view.findViewById(R.id.verify_and_redo_backups).setOnClickListener(v -> {
+            if (isDetached()) return;
+            activity.mProgressIndicator.show();
+            new Thread(() -> {
                 if (isDetached()) return;
-                activity.mProgressIndicator.show();
-                new Thread(() -> {
+                HashMap<String, MetadataManager.Metadata> backupMetadata = BackupUtils.getAllBackupMetadata();
+                List<ApplicationItem> applicationItems = new ArrayList<>();
+                List<CharSequence> applicationLabels = new ArrayList<>();
+                MetadataManager.Metadata metadata;
+                for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), backupMetadata)) {
                     if (isDetached()) return;
-                    HashMap<String, MetadataManager.Metadata> backupMetadata = BackupUtils.getAllBackupMetadata();
-                    List<ApplicationItem> applicationItems = new ArrayList<>();
-                    List<CharSequence> applicationLabels = new ArrayList<>();
-                    MetadataManager.Metadata metadata;
-                    for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), backupMetadata)) {
-                        if (isDetached()) return;
-                        metadata = item.metadata;
-                        if (metadata != null) {
-                            try {
-                                BackupManager.getNewInstance(new UserPackagePair(item.packageName, metadata.userHandle),
-                                        0).verify(metadata.backupName);
-                            } catch (Throwable e) {
-                                applicationItems.add(item);
-                                applicationLabels.add(new SpannableStringBuilder(UIUtils.getPrimaryText(activity,
-                                        metadata.label + ": " + metadata.backupName)).append('\n').append(UIUtils
-                                        .getSmallerText(UIUtils.getSecondaryText(activity, new SpannableStringBuilder(
-                                                metadata.packageName).append('\n').append(e.getMessage())))));
-                            }
+                    metadata = item.metadata;
+                    if (metadata != null) {
+                        try {
+                            BackupManager.getNewInstance(new UserPackagePair(item.packageName, metadata.userHandle),
+                                    0).verify(metadata.backupName);
+                        } catch (Throwable e) {
+                            applicationItems.add(item);
+                            applicationLabels.add(new SpannableStringBuilder(UIUtils.getPrimaryText(activity,
+                                    metadata.label + ": " + metadata.backupName)).append('\n').append(UIUtils
+                                    .getSmallerText(UIUtils.getSecondaryText(activity, new SpannableStringBuilder(
+                                            metadata.packageName).append('\n').append(e.getMessage())))));
                         }
                     }
-                    if (isDetached()) return;
-                    requireActivity().runOnUiThread(() -> runMultiChoiceDialog(applicationItems, applicationLabels));
-                }).start();
-            });
+                }
+                if (isDetached()) return;
+                requireActivity().runOnUiThread(() -> runMultiChoiceDialog(applicationItems, applicationLabels));
+            }).start();
+        });
+        if (BuildConfig.DEBUG) {
             view.findViewById(R.id.backup_apps_with_changes).setOnClickListener(v -> {
                 // TODO(14/1/21): Backup apps with changes
             });
         } else {
-            view.findViewById(R.id.verify_and_redo_backups).setVisibility(View.GONE);
             view.findViewById(R.id.backup_apps_with_changes).setVisibility(View.GONE);
         }
         return new MaterialAlertDialogBuilder(activity)
