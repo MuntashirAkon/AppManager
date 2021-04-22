@@ -36,7 +36,7 @@
     <string name="input_features">مميزات الادخال</string>
     <string name="no_configurations">لا يوجد مكونات</string>
     <string name="configurations">مكونات</string>
-    <string name="no_signatures">لا يوجد انطباعات مميزة</string>
+    <string name="app_signing_no_signatures">لا يوجد انطباعات مميزة</string>
     <string name="signatures">التوقيع المميز</string>
     <string name="sort_by_sha">ترتيب حسب التوقيع SHA</string>
     <string name="shared_user_id">رقم تعريف المستخدم المميز المشارك</string>

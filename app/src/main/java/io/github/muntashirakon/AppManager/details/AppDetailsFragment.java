@@ -571,7 +571,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             case CONFIGURATIONS:
                 return R.string.no_configurations;
             case SIGNATURES:
-                return R.string.no_signatures;
+                return R.string.app_signing_no_signatures;
             case SHARED_LIBRARIES:
                 return R.string.no_shared_libs;
             case ACTIVITIES:

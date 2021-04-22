@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="install_without_data_loss">إذا قمت بإيقاف تشغيل التحقق من التوقيع ، يمكنك استخدام خيار <b> تثبيت </b> فقط لتثبيت التطبيق دون فقدان البيانات.</string>
+    <string name="app_signing_install_without_data_loss">إذا قمت بإيقاف تشغيل التحقق من التوقيع ، يمكنك استخدام خيار <b> تثبيت </b> فقط لتثبيت التطبيق دون فقدان البيانات.</string>
     <string name="ssaid_info">SSAID (<tt> Settings.Secure.ANDROID_ID </tt>) هو معرف جهاز يتم تعيينه لكل تطبيق (من Android Oreo). تستخدمه التطبيقات على نطاق واسع لتتبع المستخدمين.</string>
     <string name="backup_skip_signature_checks_description">مفيدة لاستعادة النسخ الاحتياطية التي تفشل بسبب فشل التحقق المجموع الاختباري أو لديه توقيع APK مختلفة من واحد احتياطياً.</string>
     <string name="input_app_ops_description_profile">أدخل أسماء عمليات التطبيق و / أو الثوابت بمسافات ، على سبيل المثال <tt> WAKE_LOCK 63 72 CAMERA </tt> إلخ. استخدم <tt> * </tt> للتقدم لجميع عمليات التطبيق التي تمت تهيئتها.</string>
@@ -112,7 +112,7 @@
     <string name="input_features">ميزات الإدخال</string>
     <string name="no_configurations">لا توجد تكوينات</string>
     <string name="configurations">التكوينات</string>
-    <string name="no_signatures">لا توجد تواقيع صالحة</string>
+    <string name="app_signing_no_signatures">لا توجد تواقيع صالحة</string>
     <string name="signatures">التواقيع</string>
     <string name="sort_by_sha">التوقيع</string>
     <string name="shared_user_id">معرف المستخدم المشترك</string>

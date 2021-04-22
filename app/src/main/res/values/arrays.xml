@@ -28,7 +28,7 @@
         <item>@string/declared_permission</item>
         <item>@string/uses_feature</item>
         <item>@string/configurations</item>
-        <item>@string/signatures</item>
+        <item>@string/app_signing_signatures</item>
         <item>@string/shared_libs</item>
     </array>
     <array name="rule_types">
@@ -84,7 +84,7 @@
     <string-array name="whats_new_titles">
         <item>@string/version</item>
         <item>@string/trackers</item>
-        <item>@string/signatures</item>
+        <item>@string/app_signing_signatures</item>
         <item>@string/declared_permission</item>
         <item>@string/components</item>
         <item>@string/features</item>

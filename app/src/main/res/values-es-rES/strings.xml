@@ -50,7 +50,7 @@
     <string name="shared_user_id">ID de usuario compartido</string>
     <string name="sort_by_sha">Firma</string>
     <string name="signatures">Firmas</string>
-    <string name="no_signatures">Sin firmas válidas</string>
+    <string name="app_signing_no_signatures">Sin firmas válidas</string>
     <string name="configurations">Configuraciones</string>
     <string name="no_configurations">Sin configuraciones</string>
     <string name="input_features">Funciones de entrada</string>
@@ -317,7 +317,7 @@
     <string name="no">No</string>
     <string name="apply_to_system_apps_question">Aplicar para aplicaciones del sistema también\? Selecciona \"No\" si no estás seguro.</string>
     <string name="apply_to_system_apps">Aplicar para aplicaciones del sistema</string>
-    <plurals name="signature_schemes_pl">
+    <plurals name="app_signing_signature_schemes_pl">
         <item quantity="one">Esquema de firma</item>
         <item quantity="other">Esquema de firmas</item>
     </plurals>
@@ -531,9 +531,9 @@
     <string name="scanner">Escáner</string>
     <string name="sys_config">Configuración del sistema</string>
     <string name="only_install">Sólo instalar</string>
-    <string name="install_without_data_loss">Si has desactivado la verificación de firma, puede usar la opción <b>Sólo instalar</b> para instalar la aplicación sin perder datos.</string>
+    <string name="app_signing_install_without_data_loss">Si has desactivado la verificación de firma, puede usar la opción <b>Sólo instalar</b> para instalar la aplicación sin perder datos.</string>
     <string name="app_data_will_be_lost">Los datos existentes serán perdidos.</string>
-    <string name="signature_mismatch_for_system_apps">No se pudo instalar la aplicación porque una aplicación del sistema con una firma diferente tiene este nombre de paquete.</string>
+    <string name="app_signing_signature_mismatch_for_system_apps">No se pudo instalar la aplicación porque una aplicación del sistema con una firma diferente tiene este nombre de paquete.</string>
     <string name="do_you_want_to_uninstall_and_install">Quieres desinstalar e instalar la app de nuevo\?</string>
     <string name="onboard">A bordo</string>
     <string name="packages">Paquetes</string>
@@ -547,7 +547,7 @@
     <string name="format">Formato</string>
     <string name="public_key">Clave pública</string>
     <string name="algorithm">Algoritmo</string>
-    <string name="signature">Firma</string>
+    <string name="app_signing_signature">Firma</string>
     <string name="checksums">Checksums (verificaciones)</string>
     <string name="serial_no">Número de serie</string>
     <string name="not_yet_valid">No es válido aún</string>
@@ -703,7 +703,7 @@
     <string name="magisk_hide_enabled">MagiskHide</string>
     <string name="pref_backup_android_keystore_msg">No todas las aplicaciones funcionarán después de una restauración. Restaurar KeyStore no funciona en la mayoría de los dispositivos.</string>
     <string name="pref_backup_android_keystore">Respaldar a las apps con Android KeyStore</string>
-    <string name="keep_data_and_signatures">Mantener datos y firmas</string>
+    <string name="keep_data_and_app_signing_signatures">Mantener datos y firmas</string>
     <string name="this_action_cannot_be_undone">Esta acción no puede deshacerse.</string>
     <string name="no_app_ops_permission">No hay permiso para mostrar las app ops</string>
     <string name="input_keystore_alias_pass_description">Pulse aquí para proporcionar la contraseña de KeyStore. Inserte la contraseña del alias <b>%1$s</b>. Puede dejarla vacía si la contraseña es la misma que la de KeyStore.</string>
@@ -820,7 +820,7 @@
     <string name="brand_name">Marca</string>
     <string name="pref_about_device_msg">Información básica del dispositivo, incluyendo el sistema Android, CPU, GPU, RAM, Batería, etc.</string>
     <string name="about_device">Sobre el dispositivo</string>
-    <string name="signature_schemes">Esquemas de la firma</string>
+    <string name="app_signing_signature_schemes">Esquemas de la firma</string>
     <plurals name="alert_failed_to_set_app_ops">
         <item quantity="one">No se pudieron establecer app ops para %1$d aplicación</item>
         <item quantity="other">No se pudieron establecer app ops para %1$d aplicaciones</item>

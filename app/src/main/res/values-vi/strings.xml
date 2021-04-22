@@ -24,7 +24,7 @@
     <string name="permissions">Sử dụng quyền</string>
     <string name="uninstall">Gỡ cài đặt</string>
     <string name="configurations">Cấu hình</string>
-    <string name="no_signatures">Không có chữ ký hợp lệ</string>
+    <string name="app_signing_no_signatures">Không có chữ ký hợp lệ</string>
     <string name="signatures">Chữ ký</string>
     <string name="sort_by_sha">Chữ ký</string>
     <string name="shared_user_id">ID người dùng được chia sẻ</string>

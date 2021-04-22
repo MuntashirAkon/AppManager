@@ -821,7 +821,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 if (AppPref.isRootOrAdbEnabled()) {
                     ScrollableDialogBuilder builder = new ScrollableDialogBuilder(mActivity,
                             isSystemApp ? R.string.uninstall_system_app_message : R.string.uninstall_app_message)
-                            .setCheckboxLabel(R.string.keep_data_and_signatures)
+                            .setCheckboxLabel(R.string.keep_data_and_app_signing_signatures)
                             .setTitle(mPackageLabel)
                             .setPositiveButton(R.string.uninstall, (dialog, which, keepData) -> executor.submit(() -> {
                                 try {

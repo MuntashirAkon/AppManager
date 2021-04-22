@@ -23,7 +23,7 @@
     <Preference
         app:key="signature_schemes"
         app:summary="@string/pref_signature_schemes_msg"
-        app:title="@string/signature_schemes"
+        app:title="@string/app_signing_signature_schemes"
         app:iconSpaceReserved="false" />
 
     <Preference

@@ -271,7 +271,7 @@ public class PackageInstallerActivity extends BaseActivity {
                     ApplicationInfo info = installedPackageInfo.applicationInfo;  // Installed package info is never null here.
                     if ((info.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
                         Toast.makeText(PackageInstallerActivity.this,
-                                R.string.signature_mismatch_for_system_apps,
+                                R.string.app_signing_signature_mismatch_for_system_apps,
                                 Toast.LENGTH_SHORT).show();
                         return;
                     }
@@ -280,7 +280,7 @@ public class PackageInstallerActivity extends BaseActivity {
                             .append(UIUtils.getItalicString(getString(R.string.app_data_will_be_lost)))
                             .append("\n\n");
                     int start = builder.length();
-                    builder.append(getText(R.string.install_without_data_loss));
+                    builder.append(getText(R.string.app_signing_install_without_data_loss));
                     builder.setSpan(new RelativeSizeSpan(0.8f), start, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                     new MaterialAlertDialogBuilder(PackageInstallerActivity.this)

@@ -314,9 +314,9 @@
     <string name="scanner">掃描器</string>
     <string name="sys_config">系統配置</string>
     <string name="only_install">僅安裝</string>
-    <string name="install_without_data_loss">如果您關閉了簽名驗證，則可以使用<b> 僅安裝</b> 選擇安裝應用程式而不會遺失資料。</string>
+    <string name="app_signing_install_without_data_loss">如果您關閉了簽名驗證，則可以使用<b> 僅安裝</b> 選擇安裝應用程式而不會遺失資料。</string>
     <string name="app_data_will_be_lost">現有資料將遺失。</string>
-    <string name="signature_mismatch_for_system_apps">無法安裝應用程式，因為具有不同簽名的系統應用程式具有此套件名稱。</string>
+    <string name="app_signing_signature_mismatch_for_system_apps">無法安裝應用程式，因為具有不同簽名的系統應用程式具有此套件名稱。</string>
     <string name="do_you_want_to_uninstall_and_install">您是否要再次解除安裝並安裝該應用程式？</string>
     <string name="onboard">本機</string>
     <string name="packages">套件</string>
@@ -330,7 +330,7 @@
     <string name="format">格式</string>
     <string name="public_key">公鑰</string>
     <string name="algorithm">算法</string>
-    <string name="signature">簽名</string>
+    <string name="app_signing_signature">簽名</string>
     <string name="checksums">校驗和</string>
     <string name="serial_no">序列號</string>
     <string name="not_yet_valid">尚未生效</string>
@@ -474,7 +474,7 @@
     <string name="no">否</string>
     <string name="apply_to_system_apps_question">也適用於系統應用程式嗎？如果不確定，請選擇否。</string>
     <string name="apply_to_system_apps">應用程式於系統應用程式</string>
-    <plurals name="signature_schemes_pl">
+    <plurals name="app_signing_signature_schemes_pl">
         <item quantity="other">簽名方案</item>
     </plurals>
     <plurals name="missing_signatures">
@@ -661,7 +661,7 @@
     <string name="magisk_hide_enabled">MagiskHide</string>
     <string name="pref_backup_android_keystore_msg">還原後，並非所有應用程式都能正常運作。還原 KeyStore 不適用於大多數裝置。</string>
     <string name="pref_backup_android_keystore">使用 Android KeyStore 備份應用程式</string>
-    <string name="keep_data_and_signatures">保留資料和簽名</string>
+    <string name="keep_data_and_app_signing_signatures">保留資料和簽名</string>
     <string name="this_action_cannot_be_undone">此操作無法撤消。</string>
     <string name="no_app_ops_permission">沒有顯示應用程式操作的權限</string>
     <string name="input_keystore_pass_msg">點按此處以提供 KeyStore 密碼</string>
@@ -678,7 +678,7 @@
     <string name="v1_scheme">v1方案（自 Android 1.0起）</string>
     <string name="pref_apk_signing_msg">設定簽名方案，自訂簽名密鑰等。</string>
     <string name="apk_signing">APK 簽名</string>
-    <string name="signature_schemes">簽名方案</string>
+    <string name="app_signing_signature_schemes">簽名方案</string>
     <string name="only_works_in_root_mode">僅在root模式下可用</string>
     <string name="app_settings">設定</string>
     <string name="pref_usage_access_enabled_msg">讓您檢視您的應用程式使用情況統計資訊和應用程式詳細資料。</string>
@@ -817,7 +817,7 @@
     <string name="input_features">輸入功能</string>
     <string name="no_configurations">沒有配置</string>
     <string name="configurations">構型</string>
-    <string name="no_signatures">沒有有效的簽名</string>
+    <string name="app_signing_no_signatures">沒有有效的簽名</string>
     <string name="signatures">簽名</string>
     <string name="sort_by_sha">簽名</string>
     <string name="shared_user_id">共享的使用者ID</string>

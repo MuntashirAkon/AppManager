@@ -60,7 +60,7 @@
     <string name="input_features">Fitur masukan</string>
     <string name="no_configurations">Tidak ada konfigurasi</string>
     <string name="configurations">Konfigurasi</string>
-    <string name="no_signatures">Tidak ada tanda tangan yang valid</string>
+    <string name="app_signing_no_signatures">Tidak ada tanda tangan yang valid</string>
     <string name="sort_by_sha">Tanda tangan</string>
     <string name="shared_user_id">ID pengguna yang dibagikan</string>
     <string name="sort_by_shared_user_id">ID pengguna yang dibagikan</string>
@@ -342,7 +342,7 @@
     <string name="backup_apk_files_description">Cadangkan hanya berkas APK dari direktori sumber. <b>Sumber</b> harus dipilih untuk ini dapat segera berfungsi.</string>
     <string name="no_of_cores">Core</string>
     <string name="input_permissions_description">Masukkan izin dengan spasi, mis. <tt>com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION</tt> dll. Gunakan <tt>*</tt> untuk menetapkan pada semua izin.</string>
-    <string name="install_without_data_loss">Jika Anda telah mematikan verifikasi tanda tangan, Anda dapat menggunakan opsi <b> Hanya pasang </b> untuk memasang aplikasi tanpa kehilangan data.</string>
+    <string name="app_signing_install_without_data_loss">Jika Anda telah mematikan verifikasi tanda tangan, Anda dapat menggunakan opsi <b> Hanya pasang </b> untuk memasang aplikasi tanpa kehilangan data.</string>
     <string name="checksums">Pemeriksa digit</string>
     <string name="downgrade">Turun grade</string>
     <string name="process_state_with_extra">Status: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g> (<xliff:g id="state_extra" example="High priority">%2$s</xliff:g>)</string>
@@ -534,7 +534,7 @@
     <string name="magisk_hide_enabled">Magiskhide</string>
     <string name="pref_backup_android_keystore_msg">Tidak semua aplikasi akan bekerja setelah dipulihkan. Memulihkan KeyStore tidak berfungsi pada sebagian besar perangkat.</string>
     <string name="pref_backup_android_keystore">Cadangkan aplikasi dengan KeyStore Android</string>
-    <string name="keep_data_and_signatures">Simpan data dan tanda tangan</string>
+    <string name="keep_data_and_app_signing_signatures">Simpan data dan tanda tangan</string>
     <string name="this_action_cannot_be_undone">Tindakan ini tidak bisa dibatalkan.</string>
     <string name="no_app_ops_permission">Tidak ada izin untuk menampilkan ops aplikasi</string>
     <string name="input_keystore_alias_pass_description">Masukkan kata sandi untuk alias <b>%1$s</b>. Anda dapat meninggalkan ini kosong jika kata sandi sama dengan kata sandi keystore.</string>
@@ -553,7 +553,7 @@
     <string name="v1_scheme">Skema V1 (sejak Android 1.0)</string>
     <string name="pref_apk_signing_msg">Atur skema tanda tangan, kunci penandatanganan kustom, dll.</string>
     <string name="apk_signing">Tanda tangan apk</string>
-    <string name="signature_schemes">Skema tanda tangan</string>
+    <string name="app_signing_signature_schemes">Skema tanda tangan</string>
     <string name="pref_sign_apk_msg">Tandatangani file APK sebelum memasangnya.</string>
     <string name="pref_sign_apk">Tanda APK</string>
     <string name="install_location_prefer_external">Memilih eksternal</string>
@@ -617,7 +617,7 @@
     <string name="sys_config">Konfigurasi Sistem</string>
     <string name="only_install">Hanya instal</string>
     <string name="app_data_will_be_lost">Data yang ada akan hilang.</string>
-    <string name="signature_mismatch_for_system_apps">Tidak dapat menginstal aplikasi karena aplikasi sistem dengan tanda tangan yang berbeda memiliki nama paket ini.</string>
+    <string name="app_signing_signature_mismatch_for_system_apps">Tidak dapat menginstal aplikasi karena aplikasi sistem dengan tanda tangan yang berbeda memiliki nama paket ini.</string>
     <string name="do_you_want_to_uninstall_and_install">Apakah Anda ingin menghapus dan menginstal aplikasi lagi\?</string>
     <string name="onboard">Di atas kapal</string>
     <string name="packages">Paket</string>
@@ -631,7 +631,7 @@
     <string name="format">Format</string>
     <string name="public_key">Kunci Publik</string>
     <string name="algorithm">Algoritma</string>
-    <string name="signature">Tanda tangan</string>
+    <string name="app_signing_signature">Tanda tangan</string>
     <string name="serial_no">Nomor seri</string>
     <string name="not_yet_valid">Belum valid</string>
     <string name="expired">Kedaluwarsa</string>
@@ -770,7 +770,7 @@
     <string name="no">Tidak</string>
     <string name="apply_to_system_apps_question">Terapkan untuk aplikasi sistem juga\? Pilih \"Tidak\" jika tidak yakin.</string>
     <string name="apply_to_system_apps">Berlaku untuk aplikasi sistem</string>
-    <plurals name="signature_schemes_pl">
+    <plurals name="app_signing_signature_schemes_pl">
         <item quantity="other">Skema tanda tangan</item>
     </plurals>
     <plurals name="backup_exists_are_you_sure">

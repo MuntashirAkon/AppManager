@@ -31,7 +31,7 @@
     <string name="group">Gruppo</string>
     <string name="sort_by_sha">Firma</string>
     <string name="signatures">Firme</string>
-    <string name="no_signatures">Nessuna firma valida</string>
+    <string name="app_signing_no_signatures">Nessuna firma valida</string>
     <string name="configurations">Configurazioni</string>
     <string name="no_configurations">Nessuna configurazione</string>
     <!-- &#8230; = ... -->

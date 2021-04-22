@@ -400,7 +400,7 @@
     <string name="error_invalid_icon_format">অকার্যকর আইকন ফরমেট</string>
     <string name="error_invalid_icon_resource">অকার্যকর আইকন রিসোর্স</string>
     <string name="error_creating_shortcut">শর্টকাট তৈরি করতে ব্যর্থ</string>
-    <string name="no_signatures">কোন স্বাক্ষর নেই</string>
+    <string name="app_signing_no_signatures">কোন স্বাক্ষর নেই</string>
     <string name="signatures">স্বাক্ষর</string>
     <string name="write">রাইট</string>
     <string name="path_permissions">পথের অনুমতিসমূহ</string>

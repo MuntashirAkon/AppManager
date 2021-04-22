@@ -23,7 +23,7 @@
     <string name="manifest">Manifest</string>
     <string name="no_configurations">Brak konfiguracji</string>
     <string name="configurations">Konfiguracje</string>
-    <string name="no_signatures">Brak sygnatur</string>
+    <string name="app_signing_no_signatures">Brak sygnatur</string>
     <string name="signatures">Sygnatury</string>
     <string name="sort_by_sha">Sygnatura</string>
     <string name="shared_user_id">Współdzielony identyfikator użytkownika</string>
@@ -298,7 +298,7 @@
     <string name="sort_by_domain">Najpierw aplikacje użytkownika</string>
     <string name="only_install">Tylko zainstaluj</string>
     <string name="app_data_will_be_lost">Istniejące dane zostaną utracone.</string>
-    <string name="signature_mismatch_for_system_apps">Nie można było zainstalować aplikacji, ponieważ zainstalowana aplikacja jest aplikacją systemową z inną sygnaturą.</string>
+    <string name="app_signing_signature_mismatch_for_system_apps">Nie można było zainstalować aplikacji, ponieważ zainstalowana aplikacja jest aplikacją systemową z inną sygnaturą.</string>
     <string name="do_you_want_to_uninstall_and_install">Czy chcesz odinstalować i ponownie zainstalować aplikację\?</string>
     <string name="usage_access_not_supported">Nie można żądać dostępu do danych użytkowania, ponieważ nie istnieje odpowiednia strona ustawień.</string>
     <string name="rsa_exponent">Wykładnik</string>
@@ -472,7 +472,7 @@
     <string name="install_location">Miejsce instalacji</string>
     <string name="installer">Instalator</string>
     <string name="comment">Komentarz</string>
-    <string name="signature_schemes">Schematy podpisów</string>
+    <string name="app_signing_signature_schemes">Schematy podpisów</string>
     <string name="pref_sign_apk_msg">Podpisz pliki APK przed ich zainstalowaniem.</string>
     <string name="pref_sign_apk">Podpisz plik APK</string>
     <string name="pref_signature_schemes_msg">Aby zapewnić większą kompatybilność, należy wybrać co najmniej schematy v1 i v2. Schemat v4 wymaga wersji v2 lub v3.</string>
@@ -613,7 +613,7 @@
     <string name="last_actions">Ostatnie działania</string>
     <string name="enable_disable_features">Włączanie/wyłączanie funkcji</string>
     <string name="installed_apps">Zainstalowane aplikacje</string>
-    <string name="signature">Sygnatura</string>
+    <string name="app_signing_signature">Sygnatura</string>
     <string name="not_yet_valid">Jeszcze nie obowiązuje</string>
     <string name="issuer">Wystawiony przez</string>
     <string name="orientation_reverse_landscape">Pozioma, odwrócona</string>
@@ -743,7 +743,7 @@
         <item quantity="many">Zweryfikowano z ostrzeżeniami %d</item>
         <item quantity="other">Zweryfikowano z ostrzeżeniami %d</item>
     </plurals>
-    <plurals name="signature_schemes_pl">
+    <plurals name="app_signing_signature_schemes_pl">
         <item quantity="one">Schemat podpisu</item>
         <item quantity="few">Schematy podpisów</item>
         <item quantity="many">Schematy podpisów</item>
@@ -825,7 +825,7 @@
         <item quantity="other"/>
     </plurals>
     <string name="starting_activity">Rozpoczynanie aktywności: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
-    <string name="keep_data_and_signatures">Zachowaj dane i sygnatury</string>
+    <string name="keep_data_and_app_signing_signatures">Zachowaj dane i sygnatury</string>
     <string name="this_action_cannot_be_undone">Ta operacja nie może być cofnięta.</string>
     <string name="input_keystore_alias_pass_description">Wprowadź hasło dla aliasu <b>%1$s</b>. Możesz pozostawić to pole puste, jeśli hasło jest takie samo jak hasło KeyStore.</string>
     <string name="input_keystore_alias_pass">Hasło dla aliasu <b>%1$s</b></string>

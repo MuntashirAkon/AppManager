@@ -824,13 +824,13 @@ public final class PackageUtils {
             builder.append(getPrimaryText(ctx, digest.first + ": ")).append(digest.second).append("\n");
         }
         // Signature
-        builder.append(getTitleText(ctx, ctx.getString(R.string.signature)))
+        builder.append(getTitleText(ctx, ctx.getString(R.string.app_signing_signature)))
                 .append("\n")
                 .append(getPrimaryText(ctx, ctx.getString(R.string.algorithm) + ": "))
                 .append(certificate.getSigAlgName()).append("\n")
                 .append(getPrimaryText(ctx, "OID: "))
                 .append(certificate.getSigAlgOID()).append("\n")
-                .append(getPrimaryText(ctx, ctx.getString(R.string.signature) + ": "))
+                .append(getPrimaryText(ctx, ctx.getString(R.string.app_signing_signature) + ": "))
                 .append(Utils.bytesToHex(certificate.getSignature())).append("\n");
         // Public key used by Google: https://github.com/google/conscrypt
         // 1. X509PublicKey (PublicKey)
@@ -916,7 +916,7 @@ public final class PackageUtils {
             if (result.isVerifiedUsingV3Scheme()) sigSchemes.add("v3");
             if (result.isVerifiedUsingV4Scheme()) sigSchemes.add("v4");
             builder.append("\n").append(getPrimaryText(ctx, ctx.getResources()
-                    .getQuantityString(R.plurals.signature_schemes_pl, sigSchemes.size()) + ": "));
+                    .getQuantityString(R.plurals.app_signing_signature_schemes_pl, sigSchemes.size()) + ": "));
             builder.append(TextUtils.joinSpannable(", ", sigSchemes));
         } else {
             builder.append(getColoredText(getTitleText(ctx, "\u2718 " + ctx.getString(R.string.not_verified)), colorRed));

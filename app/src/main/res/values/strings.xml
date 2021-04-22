@@ -52,7 +52,8 @@
     <string name="shared_user_id">Shared User ID</string>
     <string name="sort_by_sha">Signature</string>
     <string name="signatures">Signatures</string>
-    <string name="no_signatures">No valid signatures</string>
+    <string name="app_signing_signatures">Signatures</string>
+    <string name="app_signing_no_signatures">No valid signatures</string>
     <string name="configurations">Configurations</string>
     <string name="no_configurations">No configurations</string>
     <string name="input_features">Input features</string>
@@ -494,7 +495,7 @@
         <item quantity="one">%1$d signature missing</item>
         <item quantity="other">%1$d signatures missing</item>
     </plurals>
-    <plurals name="signature_schemes_pl">
+    <plurals name="app_signing_signature_schemes_pl">
         <item quantity="one">Signature scheme</item>
         <item quantity="other">Signature schemes</item>
     </plurals>
@@ -665,7 +666,7 @@
     <string name="not_yet_valid">Not yet valid</string>
     <string name="serial_no">Serial Number</string>
     <string name="checksums">Checksums</string>
-    <string name="signature">Signature</string>
+    <string name="app_signing_signature">Signature</string>
     <string name="algorithm">Algorithm</string>
     <string name="public_key">Public Key</string>
     <string name="format">Format</string>
@@ -679,9 +680,9 @@
     <string name="packages">packages</string>
     <string name="onboard">Onboard</string>
     <string name="do_you_want_to_uninstall_and_install">Do you want to uninstall and install the app again?</string>
-    <string name="signature_mismatch_for_system_apps">Could not install app because a system app with a different signature has this package name.</string>
+    <string name="app_signing_signature_mismatch_for_system_apps">Could not install app because a system app with a different signature has this package name.</string>
     <string name="app_data_will_be_lost">The existing data will be lost.</string>
-    <string name="install_without_data_loss">If you have turned off signature verification, you can use the <b>Only install</b> option to install the app without losing data.</string>
+    <string name="app_signing_install_without_data_loss">If you have turned off signature verification, you can use the <b>Only install</b> option to install the app without losing data.</string>
     <string name="only_install">Only Install</string>
     <string name="sys_config">System Config</string>
     <string name="scanner">Scanner</string>
@@ -745,7 +746,7 @@
     <string name="install_location_prefer_external">Prefer external</string>
     <string name="pref_sign_apk">Sign APK</string>
     <string name="pref_sign_apk_msg">Sign APK files before installing them.</string>
-    <string name="signature_schemes">Signature schemes</string>
+    <string name="app_signing_signature_schemes">Signature schemes</string>
     <string name="apk_signing">APK signing</string>
     <string name="pref_apk_signing_msg">Set signature schemes, custom signing key, etc.</string>
     <string name="v1_scheme">v1 scheme (since Android 1.0)</string>
@@ -765,7 +766,7 @@
     <string name="input_keystore_alias_pass_msg">Tap here to provide password for %1$s</string>
     <string name="no_app_ops_permission">No permission to display app ops</string>
     <string name="this_action_cannot_be_undone">This action cannot be undone.</string>
-    <string name="keep_data_and_signatures">Keep data and signatures</string>
+    <string name="keep_data_and_app_signing_signatures">Keep data and signatures</string>
     <string name="pref_backup_android_keystore">Back up apps with Android KeyStore</string>
     <string name="pref_backup_android_keystore_msg">Not all apps will work after being restored. Restoring KeyStore doesn\'t work on most devices.</string>
     <string name="magisk_hide_enabled">MagiskHide</string>

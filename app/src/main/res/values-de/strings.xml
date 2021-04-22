@@ -52,7 +52,7 @@
     <string name="shared_user_id">Geteilte Nutzer-ID</string>
     <string name="sort_by_sha">Signatur</string>
     <string name="signatures">Signaturen</string>
-    <string name="no_signatures">Keine gültigen Signaturen</string>
+    <string name="app_signing_no_signatures">Keine gültigen Signaturen</string>
     <string name="configurations">Konfigurationen</string>
     <string name="no_configurations">Keine Konfigurationen</string>
     <string name="input_features">Eingabe-Funktionalitäten</string>
@@ -589,7 +589,7 @@
     <string name="not_yet_valid">Noch nicht gültig</string>
     <string name="serial_no">Seriennummer</string>
     <string name="checksums">Prüfsummen</string>
-    <string name="signature">Signatur</string>
+    <string name="app_signing_signature">Signatur</string>
     <string name="issued_date">Ausgabedatum</string>
     <string name="sort_by_backup">Zuerst sichern</string>
     <string name="expired">Abgelaufen</string>
@@ -604,9 +604,9 @@
     <string name="update_uninstalled_successfully">Updates für <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> wurden deinstalliert.</string>
     <string name="uninstall_updates">Updates deinstallieren</string>
     <string name="only_install">Nur installieren</string>
-    <string name="install_without_data_loss">Wenn Sie die Signaturprüfung deaktiviert haben, können Sie die Option <b>Nur installieren</b> verwenden, um die Anwendung ohne Datenverlust zu installieren.</string>
+    <string name="app_signing_install_without_data_loss">Wenn Sie die Signaturprüfung deaktiviert haben, können Sie die Option <b>Nur installieren</b> verwenden, um die Anwendung ohne Datenverlust zu installieren.</string>
     <string name="app_data_will_be_lost">Die vorhandenen Daten gehen dabei verloren.</string>
-    <string name="signature_mismatch_for_system_apps">Konnte die Anwendung nicht installieren, weil eine Systemanwendung mit einer anderen Signatur diesen Paketnamen hat.</string>
+    <string name="app_signing_signature_mismatch_for_system_apps">Konnte die Anwendung nicht installieren, weil eine Systemanwendung mit einer anderen Signatur diesen Paketnamen hat.</string>
     <string name="do_you_want_to_uninstall_and_install">Möchten Sie die Anwendung deinstallieren und erneut installieren\?</string>
     <string name="onboard">An Bord</string>
     <string name="packages">Pakete</string>
@@ -704,7 +704,7 @@
     <string name="v1_scheme">v1-Schema (ab Android 1.0)</string>
     <string name="pref_apk_signing_msg">Festlegen von Signaturschemata, benutzerdefinierten Signaturschlüsseln usw.</string>
     <string name="apk_signing">APK-Signierung</string>
-    <string name="signature_schemes">Signaturschemata</string>
+    <string name="app_signing_signature_schemes">Signaturschemata</string>
     <string name="splits">Spaltet</string>
     <string name="source_stamp_verified">Quellenstempel verifiziert.</string>
     <string name="not_verified">Nicht überprüft</string>
@@ -718,13 +718,13 @@
     <string name="input_keystore_pass_msg">Tippen Sie hier, um das KeyStore-Passwort einzugeben</string>
     <string name="input_keystore_pass_description">Geben Sie das Passwort für den App Manager KeyStore ein. Wenn Sie dies zum ersten Mal sehen, verwenden Sie bitte einen Passwortgenerator, um ein Passwort zu generieren und es an einem sicheren Ort zu speichern, bevor Sie es hier einfügen.</string>
     <string name="input_keystore_pass">KeyStore-Passwort eingeben</string>
-    <plurals name="signature_schemes_pl">
+    <plurals name="app_signing_signature_schemes_pl">
         <item quantity="one">Signaturschema</item>
         <item quantity="other">Signaturschemata</item>
     </plurals>
     <string name="pref_backup_android_keystore">Sichern von Apps mit Android KeyStore</string>
     <string name="pref_backup_android_keystore_msg">Nicht alle Apps funktionieren nach der Wiederherstellung. Die Wiederherstellung des KeyStore funktioniert auf den meisten Geräten nicht.</string>
-    <string name="keep_data_and_signatures">Daten und Signaturen aufbewahren</string>
+    <string name="keep_data_and_app_signing_signatures">Daten und Signaturen aufbewahren</string>
     <string name="this_action_cannot_be_undone">Diese Aktion kann nicht rückgängig gemacht werden.</string>
     <string name="no_app_ops_permission">Keine Berechtigung zum Anzeigen von App-Ops</string>
     <string name="set_app_op_mode">App-Op-Modus einstellen</string>

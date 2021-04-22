@@ -52,7 +52,7 @@
     <string name="shared_user_id">Общий идентификатор пользователя</string>
     <string name="sort_by_sha">Подпись</string>
     <string name="signatures">Подписи</string>
-    <string name="no_signatures">Нет действительных подписей</string>
+    <string name="app_signing_no_signatures">Нет действительных подписей</string>
     <string name="configurations">Конфигурации</string>
     <string name="no_configurations">Нет конфигураций</string>
     <string name="input_features">Функции ввода</string>
@@ -626,7 +626,7 @@
     <string name="not_yet_valid">Ещё недействительный</string>
     <string name="serial_no">Серийный номер</string>
     <string name="checksums">Контрольные суммы</string>
-    <string name="signature">Подпись</string>
+    <string name="app_signing_signature">Подпись</string>
     <string name="algorithm">Алгоритм</string>
     <string name="public_key">Публичный ключ</string>
     <string name="format">Формат</string>
@@ -636,10 +636,10 @@
     <string name="state_locked_memory">Заблокированная память</string>
     <string name="usage_access_not_supported">Не удалось запросить разрешение на доступ к истории использования, так как соответствующая страница настроек не существует.</string>
     <string name="do_you_want_to_uninstall_and_install">Вы хотите удалить и снова установить приложение\?</string>
-    <string name="signature_mismatch_for_system_apps">Не удалось установить приложение, поскольку системное приложение с другой подписью имеет такое же имя пакета.</string>
+    <string name="app_signing_signature_mismatch_for_system_apps">Не удалось установить приложение, поскольку системное приложение с другой подписью имеет такое же имя пакета.</string>
     <string name="app_data_will_be_lost">Существующие данные будут потеряны.</string>
     <string name="only_install">Только установка</string>
-    <string name="install_without_data_loss">Если у вас отключена проверка подписи, вы можете использовать параметр <b>«Только установка»</b>, чтобы установить приложение без потери данных.</string>
+    <string name="app_signing_install_without_data_loss">Если у вас отключена проверка подписи, вы можете использовать параметр <b>«Только установка»</b>, чтобы установить приложение без потери данных.</string>
     <string name="sort_by_backup">Сначала резервные копии</string>
     <string name="onboard">Доступные</string>
     <string name="packages">пакеты</string>
@@ -770,7 +770,7 @@
     </plurals>
     <string name="input_permissions">Ввод разрешений</string>
     <string name="input_permissions_description">Введите разрешения с пробелами, например <tt>com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION</tt> и т.п. Используйте <tt>*</tt>, чтобы подать заявку на все разрешения.</string>
-    <plurals name="signature_schemes_pl">
+    <plurals name="app_signing_signature_schemes_pl">
         <item quantity="one">Схема подписи</item>
         <item quantity="few">Схемы подписи</item>
         <item quantity="many">Схемы подписи</item>
@@ -784,7 +784,7 @@
     <string name="no_app_ops_permission">Нет разрешения на отображение операций приложения</string>
     <string name="pref_backup_android_keystore_msg">Не все приложения будут работать после восстановления. Восстановление хранилища ключей не работает на большинстве устройств.</string>
     <string name="pref_backup_android_keystore">Резервное копирование приложений с хранилищем ключей Android</string>
-    <string name="keep_data_and_signatures">Сохранить данные и подписи</string>
+    <string name="keep_data_and_app_signing_signatures">Сохранить данные и подписи</string>
     <string name="this_action_cannot_be_undone">Это действие не может быть отменено.</string>
     <string name="set_app_op_mode">Установить режим работы приложения</string>
     <string name="value">Значение</string>
@@ -875,7 +875,7 @@
     <string name="backup_apps_without_backups_msg">Резервное копирование приложений без каких-либо предыдущих резервных копий.</string>
     <string name="backup_apps_without_backups">Резервное копирование приложений без резервных копий</string>
     <string name="backup_all_apps">Резервное копирование всех приложений</string>
-    <string name="signature_schemes">Схемы подписи</string>
+    <string name="app_signing_signature_schemes">Схемы подписи</string>
     <string name="back_up">Резервное копирование</string>
     <string name="drm_free_apkm_msg">Файл APKM не содержит DRM, не требуется его конвертация в APKS.</string>
     <string name="restore_msg">Восстановление приложений с данными</string>

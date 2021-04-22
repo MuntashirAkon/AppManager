@@ -176,7 +176,7 @@
                         android:id="@+id/checksum_title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/signature"
+                        android:text="@string/app_signing_signature"
                         android:textSize="@dimen/title_font"
                         android:textColor="?android:attr/textColorPrimary" />
 

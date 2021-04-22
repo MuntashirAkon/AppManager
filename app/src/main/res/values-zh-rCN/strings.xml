@@ -52,7 +52,7 @@
     <string name="shared_user_id">共享的用户ID</string>
     <string name="sort_by_sha">签名</string>
     <string name="signatures">签名</string>
-    <string name="no_signatures">无有效签名</string>
+    <string name="app_signing_no_signatures">无有效签名</string>
     <string name="configurations">配置</string>
     <string name="no_configurations">无配置</string>
     <string name="input_features">输入特性</string>
@@ -553,7 +553,7 @@
     <string name="format">格式</string>
     <string name="public_key">公钥</string>
     <string name="algorithm">算法</string>
-    <string name="signature">签名</string>
+    <string name="app_signing_signature">签名</string>
     <string name="checksums">校验和</string>
     <string name="serial_no">序列号</string>
     <string name="not_yet_valid">尚未生效</string>
@@ -572,9 +572,9 @@
     <string name="uninstall_updates">卸载更新</string>
     <string name="launch_mode_single_top">栈顶</string>
     <string name="only_install">仅安装</string>
-    <string name="install_without_data_loss">如果您已经关闭了签名验证，您可以使用<b>仅安装</b>选项在不丢失数据情况下安装这个应用程序。</string>
+    <string name="app_signing_install_without_data_loss">如果您已经关闭了签名验证，您可以使用<b>仅安装</b>选项在不丢失数据情况下安装这个应用程序。</string>
     <string name="app_data_will_be_lost">现有数据将丢失。</string>
-    <string name="signature_mismatch_for_system_apps">无法安装应用程序，因为一个具有不同签名的系统应用程序的包名和它一样。</string>
+    <string name="app_signing_signature_mismatch_for_system_apps">无法安装应用程序，因为一个具有不同签名的系统应用程序的包名和它一样。</string>
     <string name="do_you_want_to_uninstall_and_install">您想要卸载并重新安装该应用程序吗\?</string>
     <string name="packages">软件包</string>
     <string name="usage_access_not_supported">无法请求使用情况访问权限，因为相应的设置页不存在。</string>
@@ -669,7 +669,7 @@
     <string name="v1_scheme">v1 方案（自 Android 1.0 起）</string>
     <string name="pref_apk_signing_msg">设置签名方案，自定义签名密钥等。</string>
     <string name="apk_signing">APK 签名</string>
-    <string name="signature_schemes">签名方案</string>
+    <string name="app_signing_signature_schemes">签名方案</string>
     <string name="source_stamp_verified">SourceStamp 已验证。</string>
     <string name="verified">已验证</string>
     <string name="splits">分割</string>
@@ -677,7 +677,7 @@
     <plurals name="verified_with_warning">
         <item quantity="other">已验证，但有 %d 个警告</item>
     </plurals>
-    <plurals name="signature_schemes_pl">
+    <plurals name="app_signing_signature_schemes_pl">
         <item quantity="other">签名方案</item>
     </plurals>
     <string name="input_keystore_alias_pass_description">插入别名 <b>%1$s</b> 的密码。如果该密码与密钥存储库密码相同，可以留空。</string>
@@ -688,7 +688,7 @@
     <string name="no_app_ops_permission">没有显示应用操作的权限</string>
     <string name="pref_backup_android_keystore_msg">并不是所有的应用程序在恢复后都能正常工作。恢复密钥存储库在大多数设备上无法工作。</string>
     <string name="pref_backup_android_keystore">备份带 Android 密钥库的应用程序</string>
-    <string name="keep_data_and_signatures">保留数据和签名</string>
+    <string name="keep_data_and_app_signing_signatures">保留数据和签名</string>
     <string name="this_action_cannot_be_undone">此操作无法被撤销。</string>
     <string name="orientation_sensor_portrait">纵向显示</string>
     <string name="orientation_sensor_landscape">横向显示</string>

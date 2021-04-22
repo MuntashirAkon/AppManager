@@ -353,7 +353,7 @@
     <string name="input_features">Recursos de input</string>
     <string name="no_configurations">Nenhuma configuração</string>
     <string name="configurations">Configurações</string>
-    <string name="no_signatures">Nenhuma assinatura válida</string>
+    <string name="app_signing_no_signatures">Nenhuma assinatura válida</string>
     <string name="signatures">Assinaturas</string>
     <string name="sort_by_sha">Assinatura</string>
     <string name="cache">Excluir o cache</string>
@@ -504,7 +504,7 @@
     <string name="copy">Copiar</string>
     <string name="only_install">Apenas instalar</string>
     <string name="app_data_will_be_lost">Os dados existentes serão perdidos.</string>
-    <string name="signature_mismatch_for_system_apps">Não foi possível instalar uma aplicação porque uma aplicação de sistema com uma assinatura diferente tem este nome de pacote.</string>
+    <string name="app_signing_signature_mismatch_for_system_apps">Não foi possível instalar uma aplicação porque uma aplicação de sistema com uma assinatura diferente tem este nome de pacote.</string>
     <string name="do_you_want_to_uninstall_and_install">Quer desinstalar e instalar novamente o aplicativo\?</string>
     <string name="packages">pacotes</string>
     <string name="usage_access_not_supported">Não foi possível solicitar o acesso de utilização, uma vez que a página de definições correspondente não existe.</string>
@@ -514,7 +514,7 @@
     <string name="format">Formato</string>
     <string name="public_key">Chave pública</string>
     <string name="algorithm">Algoritmo</string>
-    <string name="signature">Assinatura</string>
+    <string name="app_signing_signature">Assinatura</string>
     <string name="serial_no">Número de série</string>
     <string name="not_yet_valid">Ainda não válido</string>
     <string name="expired">Expirado</string>
@@ -566,7 +566,7 @@
     <string name="orientation_unspecified">Não especificado</string>
     <string name="launch_mode_single_task">Tarefa única</string>
     <string name="launch_mode_single_instance">Um único caso</string>
-    <plurals name="signature_schemes_pl">
+    <plurals name="app_signing_signature_schemes_pl">
         <item quantity="one">Esquema de assinatura</item>
         <item quantity="other">Esquemas de assinatura</item>
     </plurals>

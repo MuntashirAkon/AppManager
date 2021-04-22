@@ -18,7 +18,7 @@
     <string name="input_features">Fonctionnalités d\'entrée</string>
     <string name="no_configurations">Aucune configuration</string>
     <string name="configurations">Configurations</string>
-    <string name="no_signatures">Aucune signature valide</string>
+    <string name="app_signing_no_signatures">Aucune signature valide</string>
     <string name="signatures">Signatures</string>
     <string name="sort_by_sha">Signature</string>
     <string name="shared_user_id">Identifiant utilisateur partagé</string>
@@ -109,9 +109,9 @@
     <string name="no_libs">Aucune bibliothèque</string>
     <string name="sys_config">Configuration du système</string>
     <string name="only_install">Installation seule</string>
-    <string name="install_without_data_loss">Si vous avez désactivé la vérification des signaturs, vous pouvez utiliser l\'option <b>Installation seule</b> pour installer l\'application sans perdre de données.</string>
+    <string name="app_signing_install_without_data_loss">Si vous avez désactivé la vérification des signaturs, vous pouvez utiliser l\'option <b>Installation seule</b> pour installer l\'application sans perdre de données.</string>
     <string name="app_data_will_be_lost">Les données existantes seront perdues.</string>
-    <string name="signature_mismatch_for_system_apps">Impossible d\'installer l\'application car une application système avec une signature différente possède déjà ce nom de paquet.</string>
+    <string name="app_signing_signature_mismatch_for_system_apps">Impossible d\'installer l\'application car une application système avec une signature différente possède déjà ce nom de paquet.</string>
     <string name="do_you_want_to_uninstall_and_install">Voulez-vous désinstaller et installer à nouveau l\'application \?</string>
     <string name="onboard">Tableau de bord</string>
     <string name="packages">paquets</string>
@@ -125,7 +125,7 @@
     <string name="format">Format</string>
     <string name="public_key">Clé publique</string>
     <string name="algorithm">Algorithme</string>
-    <string name="signature">Signature</string>
+    <string name="app_signing_signature">Signature</string>
     <string name="checksums">Sommes de contrôle</string>
     <string name="serial_no">Numéro de série</string>
     <string name="not_yet_valid">Pas encore valide</string>

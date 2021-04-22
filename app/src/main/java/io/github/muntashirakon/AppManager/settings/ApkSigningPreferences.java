@@ -52,7 +52,7 @@ public class ApkSigningPreferences extends PreferenceFragmentCompat {
         final SigSchemes sigSchemeFlags = SigSchemes.fromPref();
         sigSchemes.setOnPreferenceClickListener(preference -> {
             new MaterialAlertDialogBuilder(activity)
-                    .setTitle(R.string.signature_schemes)
+                    .setTitle(R.string.app_signing_signature_schemes)
                     .setMultiChoiceItems(R.array.sig_schemes, sigSchemeFlags.flagsToCheckedItems(), (dialog, which, isChecked) -> {
                         if (isChecked) sigSchemeFlags.addFlag(which);
                         else sigSchemeFlags.removeFlag(which);

@@ -97,7 +97,7 @@
     <string name="input_features">Inndatafunksjoner</string>
     <string name="no_configurations">Ingen oppsett</string>
     <string name="configurations">Oppsett</string>
-    <string name="no_signatures">Ingen gyldige signaturer</string>
+    <string name="app_signing_no_signatures">Ingen gyldige signaturer</string>
     <string name="signatures">Signaturer</string>
     <string name="sort_by_sha">Signatur</string>
     <string name="shared_user_id">Delt bruker-ID</string>
@@ -397,7 +397,7 @@
     <string name="format">Format</string>
     <string name="public_key">Offentlig nøkkel</string>
     <string name="algorithm">Algoritme</string>
-    <string name="signature">Signatur</string>
+    <string name="app_signing_signature">Signatur</string>
     <string name="checksums">Sjekksummer</string>
     <string name="serial_no">Serienummer</string>
     <string name="not_yet_valid">Ikke gyldig enda</string>
@@ -574,14 +574,14 @@
     <string name="uri">URI</string>
     <string name="action">Handling</string>
     <string name="value">Verdi</string>
-    <string name="keep_data_and_signatures">Behold data og signaturer</string>
+    <string name="keep_data_and_app_signing_signatures">Behold data og signaturer</string>
     <string name="apk_signing">APK-signering</string>
     <string name="comment">Kommentar</string>
     <string name="pref_encryption_msg">Legg til knryptering for sikkerhetskopier.</string>
     <string name="tap_to_submit_crash_report">Trykk for å sende inn krasjrapporten.</string>
     <string name="am_crashed">App Manager har akkurat krasjet</string>
     <string name="only_install">Kun installer</string>
-    <string name="signature_mismatch_for_system_apps">Kunne ikke installere program fordi et systemprogram med en annen signatur har dette pakkenavnet.</string>
+    <string name="app_signing_signature_mismatch_for_system_apps">Kunne ikke installere program fordi et systemprogram med en annen signatur har dette pakkenavnet.</string>
     <string name="allow_open_pgp_operation">Klikk for å tillate App Manager å bruke OpenPGP</string>
     <string name="storage_and_cache">Lagring og huriglagring</string>
     <string name="user_with_id">Bruker: <xliff:g id="user_id" example="0">%1$d</xliff:g></string>

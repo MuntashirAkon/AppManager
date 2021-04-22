@@ -52,7 +52,7 @@
     <string name="shared_user_id">共有UID</string>
     <string name="sort_by_sha">署名</string>
     <string name="signatures">シグネチャ</string>
-    <string name="no_signatures">有効な署名がありません</string>
+    <string name="app_signing_no_signatures">有効な署名がありません</string>
     <string name="configurations">構成</string>
     <string name="no_configurations">構成は見つかりませんでした</string>
     <string name="input_features">入力機能</string>
@@ -491,7 +491,7 @@
     <plurals name="missing_signatures">
         <item quantity="other">%1$d 個のシグネチャが不明</item>
     </plurals>
-    <plurals name="signature_schemes_pl">
+    <plurals name="app_signing_signature_schemes_pl">
         <item quantity="one">署名方式</item>
         <item quantity="other">署名方式</item>
     </plurals>
@@ -662,7 +662,7 @@
     <string name="not_yet_valid">まだ有効ではありません</string>
     <string name="serial_no">シリアルナンバー</string>
     <string name="checksums">チェックサム</string>
-    <string name="signature">アプリ署名</string>
+    <string name="app_signing_signature">アプリ署名</string>
     <string name="algorithm">アルゴリズム</string>
     <string name="public_key">公開鍵</string>
     <string name="format">フォーマット</string>
@@ -676,9 +676,9 @@
     <string name="packages">パッケージ</string>
     <string name="onboard">Onboard</string>
     <string name="do_you_want_to_uninstall_and_install">アンインストール後再度インストールしますか？</string>
-    <string name="signature_mismatch_for_system_apps">異なるアプリ署名のシステムアプリが同じパッケージ名のため、アプリをインストールできませんでした。</string>
+    <string name="app_signing_signature_mismatch_for_system_apps">異なるアプリ署名のシステムアプリが同じパッケージ名のため、アプリをインストールできませんでした。</string>
     <string name="app_data_will_be_lost">既存のデータは失われます。</string>
-    <string name="install_without_data_loss">署名認証をオフにしている場合、データを失うこと無く <b>インストール</b> オプションが使用できます。</string>
+    <string name="app_signing_install_without_data_loss">署名認証をオフにしている場合、データを失うこと無く <b>インストール</b> オプションが使用できます。</string>
     <string name="only_install">インストール</string>
     <string name="sys_config">システムコンフィグ</string>
     <string name="scanner">スキャナー</string>
@@ -742,7 +742,7 @@
     <string name="install_location_prefer_external">外部ストレージを優先</string>
     <string name="pref_sign_apk">APKを署名</string>
     <string name="pref_sign_apk_msg">インストールする前にAPKを署名します</string>
-    <string name="signature_schemes">署名方式</string>
+    <string name="app_signing_signature_schemes">署名方式</string>
     <string name="apk_signing">APK署名</string>
     <string name="pref_apk_signing_msg">署名方式やカスタム署名鍵を設定します。</string>
     <string name="v1_scheme">v1 スキーム (Android 1.0〜)</string>
@@ -761,7 +761,7 @@
     <string name="input_keystore_alias_pass_description">エイリアス <b>%1$s</b>のパスワードを入力してください。キーストアに登録してあるパスワードと共通の場合この項目を空にすることができます。</string>
     <string name="no_app_ops_permission">AppOpsを表示するための権限がありません</string>
     <string name="this_action_cannot_be_undone">この操作はやり直しできません</string>
-    <string name="keep_data_and_signatures">データと署名を保持する</string>
+    <string name="keep_data_and_app_signing_signatures">データと署名を保持する</string>
     <string name="pref_backup_android_keystore">Androidキーストアを含めてバックアップ</string>
     <string name="pref_backup_android_keystore_msg">リストア後、全てのアプリが正常動作するとは限りません。キーストアの復元はほとんどの端末で動作しません。</string>
     <string name="magisk_hide_enabled">MagiskHide</string>

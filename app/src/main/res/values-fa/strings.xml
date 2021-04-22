@@ -190,7 +190,7 @@
     <string name="input_features">ویژگی های ورودی</string>
     <string name="no_configurations">بدون پیکربندی</string>
     <string name="configurations">پیکربندی‌ها</string>
-    <string name="no_signatures">بدون امضاهای معتبر</string>
+    <string name="app_signing_no_signatures">بدون امضاهای معتبر</string>
     <string name="signatures">امضاها</string>
     <string name="sort_by_sha">امضا</string>
     <string name="shared_user_id">شناسه کاربر مشترک</string>
@@ -441,7 +441,7 @@
         <item quantity="one">تایید شده با %d هشدار</item>
         <item quantity="other">تایید شده با %d هشدار</item>
     </plurals>
-    <plurals name="signature_schemes_pl">
+    <plurals name="app_signing_signature_schemes_pl">
         <item quantity="one">طرح امضا</item>
         <item quantity="other">طروح امضا</item>
     </plurals>

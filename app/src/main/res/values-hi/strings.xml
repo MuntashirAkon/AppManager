@@ -303,7 +303,7 @@
     <string name="input_features">इनपुट फीचर्स</string>
     <string name="no_configurations">कोई कॉन्फ़िगरेशन नहीं</string>
     <string name="configurations">कॉन्फ़िगरेशन</string>
-    <string name="no_signatures">कोई हस्ताक्षर नहीं है</string>
+    <string name="app_signing_no_signatures">कोई हस्ताक्षर नहीं है</string>
     <string name="signatures">हस्ताक्षर</string>
     <string name="sort_by_sha">हस्ताक्षर</string>
     <string name="shared_user_id">साझा यूजर आईडी</string>
@@ -383,7 +383,7 @@
     <string name="require_no_permission">किसी भी अनुमति की आवश्यकता नहीं</string>
     <string name="permissions">अनुमतियों का उपयोग</string>
     <string name="uninstall">अनइंस्टॉल करें</string>
-    <string name="install_without_data_loss">यदि आपने सिग्नेचर वेरिफिकेशन बंद कर रखा है, तो आप बिना डेटा खोए ऐप इंस्टॉल करने के लिए <b>केवल इंस्टॉल</b> विकल्प का उपयोग कर सकते हैं।</string>
+    <string name="app_signing_install_without_data_loss">यदि आपने सिग्नेचर वेरिफिकेशन बंद कर रखा है, तो आप बिना डेटा खोए ऐप इंस्टॉल करने के लिए <b>केवल इंस्टॉल</b> विकल्प का उपयोग कर सकते हैं।</string>
     <string name="no">नहीं</string>
     <string name="keyboard_no_keys">कोई कुंजी नहीं</string>
     <string name="navigation_no_nav">कोई नेविगेशन नहीं</string>
@@ -393,7 +393,7 @@
     <string name="sys_config">सिस्टम कॉन्फ़िग</string>
     <string name="only_install">केवल इंस्टॉल</string>
     <string name="app_data_will_be_lost">मौजूदा डाटा खत्म हो जाएगा।</string>
-    <string name="signature_mismatch_for_system_apps">ऐप इंस्टॉल नहीं कर सके क्योंकि इंस्टॉल किया गया ऐप अलग हस्ताक्षर वाला एक सिस्टम ऐप है।</string>
+    <string name="app_signing_signature_mismatch_for_system_apps">ऐप इंस्टॉल नहीं कर सके क्योंकि इंस्टॉल किया गया ऐप अलग हस्ताक्षर वाला एक सिस्टम ऐप है।</string>
     <string name="do_you_want_to_uninstall_and_install">क्या आप ऐप को फिर से अनइंस्टॉल और इंस्टॉल करना चाहते हैं\?</string>
     <string name="onboard">ऑनबोर्ड</string>
     <string name="packages">पैकेजेस</string>
@@ -407,7 +407,7 @@
     <string name="format">स्वरूप</string>
     <string name="public_key">सार्वजनिक कुंजी</string>
     <string name="algorithm">एल्गोरिथ्म</string>
-    <string name="signature">हस्ताक्षर</string>
+    <string name="app_signing_signature">हस्ताक्षर</string>
     <string name="checksums">चेकसम्स</string>
     <string name="serial_no">सीरियल क्रमांक</string>
     <string name="not_yet_valid">अभी तक मान्य नहीं है</string>
@@ -671,7 +671,7 @@
     <string name="magisk_hide_enabled">MagiskHide</string>
     <string name="pref_backup_android_keystore_msg">कुछ ऐप्स रिस्टोर के बाद काम नहीं करेंगे। कीस्टोर को रिस्टोर करना अधिकांश डिवाइस पर काम नहीं करता है।</string>
     <string name="pref_backup_android_keystore">एंड्रॉइड कीस्टोर वाले ऐप्स को बैकअप करें</string>
-    <string name="keep_data_and_signatures">डेटा और हस्ताक्षर रखें</string>
+    <string name="keep_data_and_app_signing_signatures">डेटा और हस्ताक्षर रखें</string>
     <string name="this_action_cannot_be_undone">इस कार्रवाई को पूर्ववत नहीं किया जा सकता ।</string>
     <string name="no_app_ops_permission">ऐप ऑप्स प्रदर्शित करने की अनुमति नहीं</string>
     <string name="input_keystore_alias_pass_description">उपनाम <b> %1$s </b> के लिए पासवर्ड डालें। यदि आपका पासवर्ड कीस्टोर पासवर्ड के समान है, तो आप इसे खाली छोड़ सकते हैं।</string>
@@ -744,7 +744,7 @@
         <item quantity="one">%d चेतावनी के साथ सत्यापित</item>
         <item quantity="other">%d चेतावनियों के साथ सत्यापित</item>
     </plurals>
-    <plurals name="signature_schemes_pl">
+    <plurals name="app_signing_signature_schemes_pl">
         <item quantity="one">सिग्नेचर स्कीम</item>
         <item quantity="other">सिग्नेचर स्कीम्स</item>
     </plurals>

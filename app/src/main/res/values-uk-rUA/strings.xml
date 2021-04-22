@@ -34,7 +34,7 @@
     <string name="protection_level">Рівень захисту</string>
     <string name="sort_by_sha">Підпис</string>
     <string name="signatures">Підписи</string>
-    <string name="no_signatures">Немає дійсних підписів</string>
+    <string name="app_signing_no_signatures">Немає дійсних підписів</string>
     <string name="configurations">Конфігурації</string>
     <string name="manifest">Маніфест</string>
     <string name="error">Помилка</string>
@@ -72,9 +72,9 @@
     <string name="app_ops">App Ops</string>
     <string name="sys_config">Конфігурація системи</string>
     <string name="only_install">Лише встановити</string>
-    <string name="install_without_data_loss">Якщо ви вимкнули перевірку підпису, ви можете використовувати опцію <b>Лише встановити</b>, для установки додатка без втрати даних.</string>
+    <string name="app_signing_install_without_data_loss">Якщо ви вимкнули перевірку підпису, ви можете використовувати опцію <b>Лише встановити</b>, для установки додатка без втрати даних.</string>
     <string name="app_data_will_be_lost">Існуючі дані буде втрачено.</string>
-    <string name="signature_mismatch_for_system_apps">Не вдалося встановити додаток, оскільки встановлений додаток є системним, з іншим підписом.</string>
+    <string name="app_signing_signature_mismatch_for_system_apps">Не вдалося встановити додаток, оскільки встановлений додаток є системним, з іншим підписом.</string>
     <string name="do_you_want_to_uninstall_and_install">Ви хочете видалити і знову встановити додаток \?</string>
     <string name="packages">пакети</string>
     <string name="onboard">Доступні</string>
@@ -86,7 +86,7 @@
     <string name="format">Формат</string>
     <string name="public_key">Відкритий ключ</string>
     <string name="algorithm">Алгоритм</string>
-    <string name="signature">Підпис</string>
+    <string name="app_signing_signature">Підпис</string>
     <string name="checksums">Контрольна сума</string>
     <string name="serial_no">Серійний номер</string>
     <string name="not_yet_valid">Ще не дійсний</string>
@@ -761,7 +761,7 @@
     <string name="input_keystore_pass_msg">Натисніть тут, щоб ввести пароль сховища ключів</string>
     <string name="input_keystore_pass_description">Ввести пароль сховища ключів App Manager. Якщо ви бачите це вперше, будь ласка, використовуйте генератор паролів для створення пароля та збереження його в безпечному місці, перш ніж вставити його тут.</string>
     <string name="input_keystore_pass">Введіть пароль сховища ключів</string>
-    <plurals name="signature_schemes_pl">
+    <plurals name="app_signing_signature_schemes_pl">
         <item quantity="one">Схема підпису</item>
         <item quantity="few">Схема підписів</item>
         <item quantity="many">Схема підписів</item>
@@ -772,7 +772,7 @@
     <string name="no_app_ops_permission">Немає дозволу на відображення app ops</string>
     <string name="pref_backup_android_keystore_msg">Не всі програми працюватимуть після відновлення. Відновлення сховища ключів не працює на більшості пристроїв.</string>
     <string name="pref_backup_android_keystore">Резервне копіювання додатків зі сховищем ключів Android</string>
-    <string name="keep_data_and_signatures">Зберегти дані і підписи</string>
+    <string name="keep_data_and_app_signing_signatures">Зберегти дані і підписи</string>
     <string name="this_action_cannot_be_undone">Цю операцію неможливо відмінити.</string>
     <string name="filter_apps_with_splits">Додатки з сплітами</string>
     <string name="battery">Акумулятор</string>
@@ -885,7 +885,7 @@
     <string name="backup_apps_without_backups">Резервне копіювання програм без резервних копій</string>
     <string name="backup_all_apps_msg">Резервне копіювання всіх встановлених програм.</string>
     <string name="backup_all_apps">Резервне копіювання всіх програм</string>
-    <string name="signature_schemes">Схема підпису</string>
+    <string name="app_signing_signature_schemes">Схема підпису</string>
     <string name="restart_to_reflect_changes">Вам потрібно негайно перезапустити пристрій, щоб відобразити зміни</string>
     <string name="failed_to_change_ssaid">Не вдалося змінити SSAID</string>
     <string name="copied_to_clipboard">Скопійовано до буфера обміну.</string>
