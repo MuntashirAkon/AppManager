@@ -29,6 +29,8 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
+
+import io.github.muntashirakon.AppManager.logcat.helper.SaveLogHelper;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.io.ProxyFile;
 
@@ -56,6 +58,7 @@ public final class BackupUtils {
         String[] files = backupPath.list((dir, name) -> new ProxyFile(dir, name).isDirectory());
         if (files != null) packages = new ArrayList<>(Arrays.asList(files));
         else return new ArrayList<>();
+        packages.remove(SaveLogHelper.SAVED_LOGS_DIR);
         packages.remove(BackupFiles.APK_SAVING_DIRECTORY);
         packages.remove(BackupFiles.TEMPORARY_DIRECTORY);
         // We don't need to check the contents of the packages at this stage.
@@ -78,6 +81,27 @@ public final class BackupUtils {
                 backupMetadata.put(metadata.packageName, metadata);
             } else {
                 backupMetadata.put(metadata1.packageName, metadata1);
+            }
+        }
+        return backupMetadata;
+    }
+
+    /**
+     * Retrieves all metadata for all packages
+     */
+    @WorkerThread
+    @NonNull
+    public static HashMap<String, List<MetadataManager.Metadata>> getAllMetadata() {
+        HashMap<String, List<MetadataManager.Metadata>> backupMetadata = new HashMap<>();
+        List<String> backupPackages = getBackupPackages();
+        for (String dirtyPackageName : backupPackages) {
+            MetadataManager.Metadata[] metadataList = MetadataManager.getMetadata(dirtyPackageName);
+            for (MetadataManager.Metadata metadata : metadataList) {
+                if (backupMetadata.get(metadata.packageName) == null) {
+                    backupMetadata.put(metadata.packageName, new ArrayList<>());
+                }
+                //noinspection ConstantConditions
+                backupMetadata.get(metadata.packageName).add(metadata);
             }
         }
         return backupMetadata;

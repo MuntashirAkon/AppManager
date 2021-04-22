@@ -64,9 +64,9 @@ public class SaveLogHelper {
     public static final String TEMP_DEVICE_INFO_FILENAME = "device_info.txt";
     public static final String TEMP_LOG_FILENAME = "logcat.log";
     public static final String TEMP_DMESG_FILENAME = "dmesg.txt";
+    public static final String SAVED_LOGS_DIR = "saved_logs";
     private static final String TEMP_ZIP_FILENAME = "logs";
     private static final int BUFFER = 0x1000; // 4K
-    private static final String SAVED_LOGS_DIR = "saved_logs";
 
     @Nullable
     public static File saveTemporaryFile(String filename, CharSequence text, List<String> lines) {

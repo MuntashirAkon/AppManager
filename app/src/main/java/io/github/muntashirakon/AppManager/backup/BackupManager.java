@@ -206,4 +206,31 @@ public class BackupManager {
         }
         return true;
     }
+
+    public void verify(@Nullable String backupName) throws BackupException {
+        // The user handle with backups, this is different from the target user handle
+        int backupUserHandle = -1;
+        if (backupName != null) {
+            // Strip userHandle from backup name
+            backupUserHandle = BackupUtils.getUserHandleFromBackupName(backupName);
+            backupName = BackupUtils.getShortBackupName(backupName);
+        }
+        // Set backup userHandle to the userHandle we're working with.
+        // This value is only set if backupNames is null or it consisted of only user handle
+        if (backupUserHandle == -1) backupUserHandle = targetPackage.getUserHandle();
+        BackupFiles backupFiles = new BackupFiles(targetPackage.getPackageName(), backupUserHandle,
+                backupName == null ? null : new String[]{backupName});
+        BackupFiles.BackupFile[] backupFileList = backupFiles.getBackupPaths(false);
+        // Only verify the first backup though we shouldn't have more than one backup.
+        if (backupFileList.length > 0) {
+            if (backupFileList.length > 1) {
+                Log.w(RestoreOp.TAG, "More than one backups found! Verifying only the first backup.");
+            }
+            try (VerifyOp restoreOp = new VerifyOp(metadataManager, backupFileList[0])) {
+                restoreOp.verify();
+            }
+        } else {
+            throw new BackupException("No backups found.");
+        }
+    }
 }
