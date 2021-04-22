@@ -989,4 +989,10 @@
     <string name="pgp_aes_rsa_encrypted">%1$s 已加密</string>
     <string name="no_encryption">无加密</string>
     <string name="base_backup">基础备份</string>
+    <string name="failed">失败了</string>
+    <string name="confirm_import_keystore">你确定要替换现有的密钥存储库吗\?此操作无法撤消。</string>
+    <string name="import_keystore">导入密钥库</string>
+    <string name="pref_import_export_keystore_msg">导入/导出 App Manager 内部使用的 Bouncy Castle KeyStore (BKS)。</string>
+    <string name="pref_import_export_keystore">导入/导出密钥库</string>
+    <string name="app_signing_signatures">签名</string>
 </resources>
