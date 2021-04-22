@@ -483,10 +483,10 @@
     <string name="website_message">https://muntashirakon.github.io/AppManager</string>
     <string name="pref_remove_all_rules">Удаление всех правил</string>
     <string name="pref_remove_all_rules_msg">Разрешения будут предоставлены, операциям приложения и компонентам вернутся значения по умолчанию.</string>
-    <string name="are_you_sure">Вы уверены?</string>
-    <string name="filter_apps_with_activities">Приложения с активити</string>
-    <string name="toggle_default_app_ops">Переключение операций приложения по умолчанию</string>
-    <string name="installer_error_aborted">Установка не удалась, потому что она была отменена, или сеанс был неожиданно закрыт</string>
+    <string name="are_you_sure">Вы уверены\?</string>
+    <string name="filter_apps_with_activities">Активные приложения</string>
+    <string name="toggle_default_app_ops">Включить настройки по умолчанию</string>
+    <string name="installer_error_aborted">Установка не удалась, потому что она была отменена или сеанс был неожиданно закрыт</string>
     <string name="installer_error_blocked_device">устройством</string>
     <string name="installer_error_blocked">Установка заблокирована <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
     <string name="installer_error_conflict">Не удалось установить приложение, так как имя пакета используется</string>
