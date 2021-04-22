@@ -1017,4 +1017,15 @@
     <string name="filename">Nome do arquivo</string>
     <string name="restart_log_viewer_to_see_changes">Reinicie a janela do visualizador de registro para ver as alterações.</string>
     <string name="pref_log_viewer_msg">Configurar como os registros são exibidos.</string>
+    <string name="failed">Falhou</string>
+    <string name="confirm_import_keystore">Você tem certeza de que deseja substituir o KeyStore existente\? Esta ação não pode ser desfeita.</string>
+    <string name="import_keystore">Importar KeyStore</string>
+    <string name="pref_import_export_keystore_msg">Importar/exportar Bouncy Castle KeyStore (BKS) usado internamente pelo App Manager.</string>
+    <string name="pref_import_export_keystore">Importar/exportar KeyStore</string>
+    <string name="latest_backup">Backup mais recente</string>
+    <string name="gz_bz2_compressed">%1$s comprimido</string>
+    <string name="pgp_aes_rsa_encrypted">%1$s criptografado</string>
+    <string name="no_encryption">Sem criptografia</string>
+    <string name="base_backup">Backup base</string>
+    <string name="app_signing_signatures">Assinaturas</string>
 </resources>
