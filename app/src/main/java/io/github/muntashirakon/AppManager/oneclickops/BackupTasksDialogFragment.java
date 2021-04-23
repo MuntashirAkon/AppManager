@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import io.github.muntashirakon.AppManager.BuildConfig;
+import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
 import io.github.muntashirakon.AppManager.backup.BackupManager;
@@ -27,8 +27,12 @@ import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.main.ApplicationItem;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
+import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
+import io.github.muntashirakon.AppManager.usage.UsageUtils;
+import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.io.ProxyFile;
 
 public class BackupTasksDialogFragment extends DialogFragment {
     public static final String TAG = "BackupTasksDialogFragment";
@@ -115,30 +119,69 @@ public class BackupTasksDialogFragment extends DialogFragment {
                 for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), backupMetadata)) {
                     if (isDetached()) return;
                     metadata = item.metadata;
-                    if (metadata != null) {
-                        try {
-                            BackupManager.getNewInstance(new UserPackagePair(item.packageName, metadata.userHandle),
-                                    0).verify(metadata.backupName);
-                        } catch (Throwable e) {
-                            applicationItems.add(item);
-                            applicationLabels.add(new SpannableStringBuilder(UIUtils.getPrimaryText(activity,
-                                    metadata.label + ": " + metadata.backupName)).append('\n').append(UIUtils
-                                    .getSmallerText(UIUtils.getSecondaryText(activity, new SpannableStringBuilder(
-                                            metadata.packageName).append('\n').append(e.getMessage())))));
-                        }
+                    if (metadata == null || !item.isInstalled) continue;
+                    try {
+                        BackupManager.getNewInstance(new UserPackagePair(item.packageName, metadata.userHandle),
+                                0).verify(metadata.backupName);
+                    } catch (Throwable e) {
+                        applicationItems.add(item);
+                        applicationLabels.add(new SpannableStringBuilder(UIUtils.getPrimaryText(activity,
+                                metadata.label + ": " + metadata.backupName)).append('\n').append(UIUtils
+                                .getSmallerText(UIUtils.getSecondaryText(activity, new SpannableStringBuilder(
+                                        metadata.packageName).append('\n').append(e.getMessage())))));
                     }
                 }
                 if (isDetached()) return;
                 requireActivity().runOnUiThread(() -> runMultiChoiceDialog(applicationItems, applicationLabels));
             }).start();
         });
-        if (BuildConfig.DEBUG) {
-            view.findViewById(R.id.backup_apps_with_changes).setOnClickListener(v -> {
-                // TODO(14/1/21): Backup apps with changes
-            });
-        } else {
-            view.findViewById(R.id.backup_apps_with_changes).setVisibility(View.GONE);
-        }
+        view.findViewById(R.id.backup_apps_with_changes).setOnClickListener(v -> {
+            if (isDetached()) return;
+            activity.mProgressIndicator.show();
+            new Thread(() -> {
+                if (isDetached()) return;
+                HashMap<String, MetadataManager.Metadata> backupMetadata = BackupUtils.getAllBackupMetadata();
+                List<ApplicationItem> applicationItems = new ArrayList<>();
+                List<CharSequence> applicationLabels = new ArrayList<>();
+                MetadataManager.Metadata metadata;
+                for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), backupMetadata)) {
+                    if (isDetached()) return;
+                    metadata = item.metadata;
+                    if (metadata == null) continue;
+                    // Checks
+                    // 0. App is installed (Skip backup)
+                    if (!item.isInstalled) continue;
+                    // 1. App version code and 2. last update date (Whether to backup source)
+                    boolean needSourceUpdate = item.versionCode > metadata.versionCode
+                            || item.lastUpdateTime > metadata.backupTime;
+                    if (needSourceUpdate
+                            // 3. Last activity date
+                            || AppUsageStatsManager.getLastActivityTime(item.packageName, new UsageUtils.TimeInterval(
+                            metadata.backupTime, System.currentTimeMillis())) > metadata.backupTime
+                            // 4. Check integrity
+                            || !isVerified(item, metadata)) {
+                        // 5. Check hash
+                        List<String> changedDirs = new ArrayList<>();
+                        for (String dir : metadata.dataDirs) {
+                            String hash = AppManager.getDb().fileHashDao().getHash(dir);
+                            // For now, if hash is null, don't proceed to backup
+                            if (hash == null) {
+                                break;
+                            }
+                            String newHash = DigestUtils.getHexDigest(DigestUtils.SHA_256, new ProxyFile(dir));
+                            if (!hash.equals(newHash)) changedDirs.add(dir);
+                        }
+                        // TODO: 23/4/21 Support delta backup
+                        applicationItems.add(item);
+                        applicationLabels.add(new SpannableStringBuilder(UIUtils.getPrimaryText(activity,
+                                metadata.label + ": " + metadata.backupName)).append('\n').append(UIUtils
+                                .getSmallerText(UIUtils.getSecondaryText(activity, metadata.packageName))));
+                    }
+                }
+                if (isDetached()) return;
+                requireActivity().runOnUiThread(() -> runMultiChoiceDialog(applicationItems, applicationLabels));
+            }).start();
+        });
         return new MaterialAlertDialogBuilder(activity)
                 .setView(view)
                 .setTitle(R.string.back_up)
@@ -168,6 +211,16 @@ public class BackupTasksDialogFragment extends DialogFragment {
                 })
                 .setNegativeButton(R.string.cancel, null)
                 .show();
+    }
+
+    private boolean isVerified(ApplicationItem item, MetadataManager.Metadata metadata) {
+        try {
+            BackupManager.getNewInstance(new UserPackagePair(item.packageName, metadata.userHandle),
+                    0).verify(metadata.backupName);
+            return true;
+        } catch (Throwable ignore) {
+            return false;
+        }
     }
 
     private ArrayList<UserPackagePair> getUserPackagePairs(List<MetadataManager.Metadata> metadataList) {
