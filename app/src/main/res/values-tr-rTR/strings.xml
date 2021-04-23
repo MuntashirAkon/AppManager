@@ -501,7 +501,6 @@
     <string name="usage_yesterday">Dün</string>
     <string name="only_works_in_root_mode">Yalnızca root modunda çalışır</string>
     <string name="app_settings">Ayarlar</string>
-    <string name="pref_usage_access_enabled_msg">Uygulama veri bilgilerini ve kullanım istatistiklerini gösterir.</string>
     <string name="usage_access">Kullanım erişimi</string>
     <string name="pref_global_blocking_enabled_msg">Uygulama için açıkça engellemeyi açmadan herhangi bir uygulamanın herhangi bir bileşenini engellemenize izin verir.</string>
     <string name="pref_global_blocking_enabled">Anında bileşen engelleme</string>

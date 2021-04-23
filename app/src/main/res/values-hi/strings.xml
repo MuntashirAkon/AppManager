@@ -135,7 +135,6 @@
     <string name="usage_yesterday">पिछले दिन</string>
     <string name="only_works_in_root_mode">केवल रुट मोड में काम करता है</string>
     <string name="app_settings">सेटिंग्स</string>
-    <string name="pref_usage_access_enabled_msg">आपको अपने ऐप उपयोग के आंकड़े और ऐप डेटा जानकारी देखने की सुविधा देता है</string>
     <string name="usage_access">इस्तेमाल का एक्सेस</string>
     <string name="pref_global_blocking_enabled_msg">आप एप्लिकेशन को ब्लॉक किए बिना किसी भी एप्लिकेशन के किसी भी कंपोनेंट को ब्लॉक कर सकते हैं</string>
     <string name="pref_global_blocking_enabled">ग्लोबल कंपोनेंट ब्लॉकिंग</string>

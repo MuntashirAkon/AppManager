@@ -278,7 +278,6 @@
     <string name="usage_yesterday">Hôm qua</string>
     <string name="only_works_in_root_mode">Chỉ hoạt động trong chế độ root</string>
     <string name="app_settings">Cài đặt</string>
-    <string name="pref_usage_access_enabled_msg">Hiện thông tin dữ liệu ứng dụng, và thống kê sử dụng.</string>
     <string name="usage_access">Truy cập dữ liệu sử dụng</string>
     <string name="pref_global_blocking_enabled_msg">Để cho bạn chặn bất kỳ thành phần nào của bất kỳ ứng dụng nào mà không bật việc chặn cho ứng dụng một cách rõ ràng.</string>
     <string name="pref_global_blocking_enabled">Chặn thành phần ngay lập tức</string>

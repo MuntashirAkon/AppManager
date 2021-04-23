@@ -92,7 +92,6 @@
     <string name="permissions">Użycie uprawnień</string>
     <string name="only_works_in_root_mode">Działa tylko w trybie root</string>
     <string name="app_settings">Ustawienia</string>
-    <string name="pref_usage_access_enabled_msg">Umożliwia wyświetlanie statystyk użycia aplikacji i informacji o danych aplikacji</string>
     <string name="pref_global_blocking_enabled">Globalne blokowanie komponentów</string>
     <string name="str_logo">Logo</string>
     <string name="orientation_locked">Zablokowany</string>

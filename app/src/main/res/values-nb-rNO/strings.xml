@@ -639,7 +639,6 @@
         <item quantity="one">Kunne ikke hindre ett program fra å kjøre i bakgrunnen</item>
         <item quantity="other">Kunne ikke hindre %1$d programmer fra å kjøre i bakgrunnen</item>
     </plurals>
-    <string name="pref_usage_access_enabled_msg">Viser info om programdata og bruksstatistkk.</string>
     <string name="failed_to_uninstall_updates">Kunne ikke avinstallere oppgraderinger for <xliff:g id="app_name" example="App Manager"/>.</string>
     <string name="abi_split_for_base_apk"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> kode for grunn-APK</string>
     <string name="unknown_split_for_base_apk"><xliff:g id="split_name" example="some_split"/> for grunn-APK</string>

@@ -681,7 +681,6 @@
     <string name="app_signing_signature_schemes">簽名方案</string>
     <string name="only_works_in_root_mode">僅在root模式下可用</string>
     <string name="app_settings">設定</string>
-    <string name="pref_usage_access_enabled_msg">讓您檢視您的應用程式使用情況統計資訊和應用程式詳細資料。</string>
     <string name="usage_access">使用權限</string>
     <string name="str_logo">標識</string>
     <string name="rules_not_applied">規則不適用</string>
