@@ -17,6 +17,7 @@
 
 package io.github.muntashirakon.AppManager.details.info;
 
+import android.Manifest;
 import android.content.*;
 import android.content.pm.*;
 import android.graphics.Bitmap;
@@ -148,9 +149,12 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @GuardedBy("mListItems")
     private final List<ListItem> mListItems = new ArrayList<>();
-    private final BetterActivityResult<String, Uri> export = BetterActivityResult.registerForActivityResult(this, new ActivityResultContracts.CreateDocument());
-    private final BetterActivityResult<String, Boolean> termux = BetterActivityResult.registerForActivityResult(this, new ActivityResultContracts.RequestPermission());
-    private final BetterActivityResult<Intent, ActivityResult> activityLauncher = BetterActivityResult.registerActivityForResult(this);
+    private final BetterActivityResult<String, Uri> export = BetterActivityResult
+            .registerForActivityResult(this, new ActivityResultContracts.CreateDocument());
+    private final BetterActivityResult<String, Boolean> requestPerm = BetterActivityResult
+            .registerForActivityResult(this, new ActivityResultContracts.RequestPermission());
+    private final BetterActivityResult<Intent, ActivityResult> activityLauncher = BetterActivityResult
+            .registerActivityForResult(this);
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -348,13 +352,13 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         } else if (itemId == R.id.action_open_in_termux) {
             if (PermissionUtils.hasTermuxPermission(mActivity)) {
                 openInTermux();
-            } else termux.launch(TERMUX_PERM_RUN_COMMAND, granted -> {
+            } else requestPerm.launch(TERMUX_PERM_RUN_COMMAND, granted -> {
                 if (granted) openInTermux();
             });
         } else if (itemId == R.id.action_run_in_termux) {
             if (PermissionUtils.hasTermuxPermission(mActivity)) {
                 runInTermux();
-            } else termux.launch(TERMUX_PERM_RUN_COMMAND, granted -> {
+            } else requestPerm.launch(TERMUX_PERM_RUN_COMMAND, granted -> {
                 if (granted) runInTermux();
             });
         } else if (itemId == R.id.action_enable_magisk_hide) {
@@ -1275,6 +1279,15 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @GuardedBy("mListItems")
     private void setStorageAndCache(AppInfoViewModel.AppInfo appInfo) {
+        if (FeatureController.isUsageAccessEnabled()) {
+            // Grant optional READ_PHONE_STATE permission
+            if (!PermissionUtils.hasPermission(mActivity, Manifest.permission.READ_PHONE_STATE) &&
+                    Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+                runOnUiThread(() -> requestPerm.launch(Manifest.permission.READ_PHONE_STATE, granted -> {
+                    if (granted) model.loadAppInfo();
+                }));
+            }
+        }
         if (!Utils.hasUsageStatsPermission(mActivity)) {
             runOnUiThread(() -> new MaterialAlertDialogBuilder(mActivity)
                     .setTitle(R.string.grant_usage_access)
@@ -1294,7 +1307,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     })
                     .setNegativeButton(R.string.cancel, null)
                     .setNeutralButton(R.string.never_ask, (dialog, which) -> FeatureController.getInstance().modifyState(
-                            FeatureController.FEAT_USAGE_ACCESS, true))
+                            FeatureController.FEAT_USAGE_ACCESS, false))
                     .setCancelable(false)
                     .show());
             return;

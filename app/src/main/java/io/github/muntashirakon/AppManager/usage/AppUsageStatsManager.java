@@ -17,6 +17,7 @@
 
 package io.github.muntashirakon.AppManager.usage;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.usage.IUsageStatsManager;
 import android.app.usage.NetworkStats;
@@ -26,6 +27,9 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.RemoteException;
+import android.telephony.SubscriptionInfo;
+import android.telephony.SubscriptionManager;
+import android.telephony.TelephonyManager;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -35,6 +39,7 @@ import androidx.core.util.Pair;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -46,6 +51,7 @@ import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.NonNullUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 
 import static android.net.NetworkCapabilities.TRANSPORT_CELLULAR;
 import static android.net.NetworkCapabilities.TRANSPORT_WIFI;
@@ -155,7 +161,8 @@ public class AppUsageStatsManager {
         Map<String, Integer> accessCount = new HashMap<>();
         // Get events
         UsageUtils.TimeInterval interval = UsageUtils.getTimeInterval(usageInterval);
-        UsageEvents events = mUsageStatsManager.queryEvents(interval.getStartTime(), interval.getEndTime(), context.getPackageName());
+        UsageEvents events = mUsageStatsManager.queryEvents(interval.getStartTime(), interval.getEndTime(),
+                context.getPackageName());
         if (events == null) return Collections.emptyList();
         UsageEvents.Event event = new UsageEvents.Event();
         long startTime;
@@ -198,13 +205,13 @@ public class AppUsageStatsManager {
         SparseArrayCompat<DataUsage> mobileData = new SparseArrayCompat<>();
         SparseArrayCompat<DataUsage> wifiData = new SparseArrayCompat<>();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            NetworkStatsManager networkStatsManager = (NetworkStatsManager) context.getSystemService(Context.NETWORK_STATS_SERVICE);
+            NetworkStatsManager nsm = (NetworkStatsManager) context.getSystemService(Context.NETWORK_STATS_SERVICE);
             try {
-                mobileData.putAll(getMobileData(networkStatsManager, usageInterval));
+                mobileData.putAll(getMobileData(nsm, usageInterval));
             } catch (Exception ignore) {
             }
             try {
-                wifiData.putAll(getWifiData(networkStatsManager, usageInterval));
+                wifiData.putAll(getWifiData(nsm, usageInterval));
             } catch (Exception ignore) {
             }
         }
@@ -227,7 +234,6 @@ public class AppUsageStatsManager {
             }
             screenTimeList.add(packageUS);
         }
-//        Log.d("US", getUsageStatsForPackage(context.getPackageName(), usage_interval).toString());
         return screenTimeList;
     }
 
@@ -271,15 +277,24 @@ public class AppUsageStatsManager {
                                                                 @UsageUtils.IntervalType int intervalType) {
         SparseArrayCompat<DataUsage> dataUsageSparseArray = new SparseArrayCompat<>();
         UsageUtils.TimeInterval range = UsageUtils.getTimeInterval(intervalType);
+        List<String> subscriberIds = getSubscriberIds(context, networkType);
+        NetworkStats.Bucket bucket = new NetworkStats.Bucket();
         NetworkStats networkStats;
         try {
-            networkStats = nsm.querySummary(networkType, null, range.getStartTime(), range.getEndTime());
-            if (networkStats != null) {
-                while (networkStats.hasNextBucket()) {
-                    NetworkStats.Bucket bucket = new NetworkStats.Bucket();
-                    networkStats.getNextBucket(bucket);
-                    Log.d("Data usage", "UID:" + bucket.getUid());
-                    dataUsageSparseArray.put(bucket.getUid(), new DataUsage(bucket.getTxBytes(), bucket.getRxBytes()));
+            for (String subscriberId : subscriberIds) {
+                networkStats = nsm.querySummary(networkType, subscriberId, range.getStartTime(), range.getEndTime());
+                if (networkStats != null) {
+                    while (networkStats.hasNextBucket()) {
+                        networkStats.getNextBucket(bucket);
+                        DataUsage dataUsage = dataUsageSparseArray.get(bucket.getUid());
+                        if (dataUsage != null) {
+                            dataUsage = new DataUsage(bucket.getTxBytes() + dataUsage.getTx(),
+                                    bucket.getRxBytes() + dataUsage.getRx());
+                        } else {
+                            dataUsage = new DataUsage(bucket.getTxBytes(), bucket.getRxBytes());
+                        }
+                        dataUsageSparseArray.put(bucket.getUid(), dataUsage);
+                    }
                 }
             }
         } catch (RemoteException e) {
@@ -292,23 +307,25 @@ public class AppUsageStatsManager {
     @NonNull
     public static DataUsage getDataUsageForPackage(@NonNull Context context, int uid,
                                                    @UsageUtils.IntervalType int intervalType) {
+        NetworkStatsManager nsm = (NetworkStatsManager) context.getSystemService(Context.NETWORK_STATS_SERVICE);
+        if (nsm == null) return new DataUsage(0L, 0L);
+        UsageUtils.TimeInterval range = UsageUtils.getTimeInterval(intervalType);
+        List<String> subscriberIds;
+        NetworkStats.Bucket bucket = new NetworkStats.Bucket();
         long totalTx = 0;
         long totalRx = 0;
-        NetworkStatsManager networkStatsManager = (NetworkStatsManager) context.getSystemService(Context.NETWORK_STATS_SERVICE);
-        UsageUtils.TimeInterval range = UsageUtils.getTimeInterval(intervalType);
         try {
-            if (networkStatsManager != null) {
-                for (int networkId = 0; networkId < 2; ++networkId) {
-                    NetworkStats networkStats = networkStatsManager.querySummary(networkId, null,
+            for (int networkId = 0; networkId < 2; ++networkId) {
+                subscriberIds = getSubscriberIds(context, networkId);
+                for (String subscriberId : subscriberIds) {
+                    NetworkStats networkStats = nsm.querySummary(networkId, subscriberId,
                             range.getStartTime(), range.getEndTime());
-                    if (networkStats != null) {
-                        while (networkStats.hasNextBucket()) {
-                            NetworkStats.Bucket bucket = new NetworkStats.Bucket();
-                            networkStats.getNextBucket(bucket);
-                            if (bucket.getUid() == uid) {
-                                totalTx += bucket.getTxBytes();
-                                totalRx += bucket.getRxBytes();
-                            }
+                    if (networkStats == null) continue;
+                    while (networkStats.hasNextBucket()) {
+                        networkStats.getNextBucket(bucket);
+                        if (bucket.getUid() == uid) {
+                            totalTx += bucket.getTxBytes();
+                            totalRx += bucket.getRxBytes();
                         }
                     }
                 }
@@ -316,5 +333,50 @@ public class AppUsageStatsManager {
         } catch (RemoteException ignore) {
         }
         return new DataUsage(totalTx, totalRx);
+    }
+
+    /**
+     * @return A list of subscriber IDs if networkType is {@link android.net.NetworkCapabilities#TRANSPORT_CELLULAR}, or
+     * a singleton array with {@code null} being the only element.
+     * @deprecated Requires {@code android.Manifest.permission.READ_PRIVILEGED_PHONE_STATE} from Android 10 (API 29)
+     */
+    @SuppressLint({"HardwareIds", "MissingPermission"})
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
+    @Deprecated
+    @NonNull
+    private static List<String> getSubscriberIds(@NonNull Context context, @Transport int networkType) {
+        if (networkType != TRANSPORT_CELLULAR || !PermissionUtils.hasPermission(context,
+                Manifest.permission.READ_PHONE_STATE)) {
+            return Collections.singletonList(null);
+        }
+        // FIXME: 24/4/21 Consider using Binder to fetch subscriber info
+        try {
+            SubscriptionManager sm = (SubscriptionManager) context.getSystemService(Context
+                    .TELEPHONY_SUBSCRIPTION_SERVICE);
+            TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+
+            List<SubscriptionInfo> subscriptionInfoList = sm.getActiveSubscriptionInfoList();
+            List<String> subscriberIds = new ArrayList<>();
+            for (SubscriptionInfo info : subscriptionInfoList) {
+                int subscriptionId = info.getSubscriptionId();
+                try {
+                    @SuppressWarnings("JavaReflectionMemberAccess")
+                    Method getSubscriberId = TelephonyManager.class.getMethod("getSubscriberId", int.class);
+                    String subscriberId = (String) getSubscriberId.invoke(tm, subscriptionId);
+                    subscriberIds.add(subscriberId);
+                } catch (Exception e) {
+                    try {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            subscriberIds.add(tm.createForSubscriptionId(subscriptionId).getSubscriberId());
+                        }
+                    } catch (Exception e2) {
+                        subscriberIds.add(tm.getSubscriberId());
+                    }
+                }
+            }
+            return subscriberIds.size() == 0 ? Collections.singletonList(null) : subscriberIds;
+        } catch (SecurityException e) {
+            return Collections.singletonList(null);
+        }
     }
 }

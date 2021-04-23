@@ -17,6 +17,7 @@
 
 package io.github.muntashirakon.AppManager.usage;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -42,6 +43,7 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -62,7 +64,9 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.usage.UsageUtils.IntervalType;
+import io.github.muntashirakon.AppManager.utils.BetterActivityResult;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
+import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
@@ -100,11 +104,13 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
     private LinearProgressIndicator mProgressIndicator;
     private SwipeRefreshLayout mSwipeRefresh;
     private AppUsageAdapter mAppUsageAdapter;
-    List<PackageUsageInfo> packageUsageInfoList;
+    private List<PackageUsageInfo> packageUsageInfoList;
     private static long totalScreenTime;
     private static PackageManager mPackageManager;
     private @IntervalType int current_interval = USAGE_TODAY;
     private @SortOrder int mSortBy;
+    private final BetterActivityResult<String, Boolean> requestPerm = BetterActivityResult
+            .registerForActivityResult(this, new ActivityResultContracts.RequestPermission());
 
     @SuppressLint("WrongConstant")
     @Override
@@ -159,9 +165,7 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
     @Override
     protected void onStart() {
         super.onStart();
-        // Check permission
-        if (!Utils.hasUsageStatsPermission(this)) promptForUsageStatsPermission();
-        else getAppUsage();
+        checkPermissions();
     }
 
     @Override
@@ -173,9 +177,20 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
     @Override
     public void onRefresh() {
         mSwipeRefresh.setRefreshing(false);
+        checkPermissions();
+    }
+
+    private void checkPermissions() {
         // Check permission
         if (!Utils.hasUsageStatsPermission(this)) promptForUsageStatsPermission();
         else getAppUsage();
+        // Grant optional READ_PHONE_STATE permission
+        if (!PermissionUtils.hasPermission(this, Manifest.permission.READ_PHONE_STATE) &&
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+            requestPerm.launch(Manifest.permission.READ_PHONE_STATE, granted -> {
+                if (granted) recreate();
+            });
+        }
     }
 
     @Override
