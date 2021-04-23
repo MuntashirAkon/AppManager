@@ -601,6 +601,7 @@
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
+\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
 \nРозробка лого: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="icon_picker">Вибір іконки</string>
     <string name="insert_icon">Вставити іконку</string>
@@ -965,4 +966,5 @@
     <string name="input_key">Ввід ключа (в шістнадцятковій системі числення)</string>
     <string name="gles_version">Версія OpenGL ES</string>
     <string name="input_keystore_alias_pass_msg">Натисніть тут, щоб вказати пароль для %1$s</string>
+    <string name="app_signing_signatures">Підписи</string>
 </resources>
