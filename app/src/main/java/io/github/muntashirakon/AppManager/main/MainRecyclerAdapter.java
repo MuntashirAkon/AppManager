@@ -18,6 +18,7 @@
 package io.github.muntashirakon.AppManager.main;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.usage.UsageStatsManager;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -165,6 +166,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             if (mActivity.mModel.getSelectedPackages().size() == 0) {
                 if (!item.isInstalled) {
                     try {
+                        @SuppressLint("WrongConstant")
                         ApplicationInfo info = mPackageManager.getApplicationInfo(item.packageName, PackageUtils.flagMatchUninstalled);
                         if (info.publicSourceDir != null) {
                             Intent intent = new Intent(mActivity, PackageInstallerActivity.class);

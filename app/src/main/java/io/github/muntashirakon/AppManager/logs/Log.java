@@ -66,7 +66,7 @@ public class Log {
         try {
             writer = new PrintWriter(new BufferedWriter(new FileWriter(LOG_FILE)));
         } catch (IOException e) {
-            throw new RuntimeException("Could not write to log file.");
+            throw new RuntimeException("Could not write to log file.", e);
         }
     }
 

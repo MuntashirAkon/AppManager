@@ -108,7 +108,6 @@ public class RunningAppsActivity extends BaseActivity implements
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         new FastScrollerBuilder(recyclerView).useMd2Style().build();
-//        recyclerView.setEmptyView(findViewById(android.R.id.empty));
         mAdapter = new RunningAppsAdapter(this);
         recyclerView.setAdapter(mAdapter);
         mConstraint = null;
@@ -174,12 +173,14 @@ public class RunningAppsActivity extends BaseActivity implements
     @Override
     protected void onStart() {
         super.onStart();
-        mModel.getProcessLiveData().observe(this, processList -> {
-            mAdapter.setDefaultList();
-            mProgressIndicator.hide();
-        });
-        mModel.getSelection().observe(this, count -> mCounterView.setText(getResources()
-                .getQuantityString(R.plurals.items_selected, count, count)));
+        if (mModel != null) {
+            mModel.getProcessLiveData().observe(this, processList -> {
+                mAdapter.setDefaultList();
+                mProgressIndicator.hide();
+            });
+            mModel.getSelection().observe(this, count -> mCounterView.setText(getResources()
+                    .getQuantityString(R.plurals.items_selected, count, count)));
+        }
     }
 
     @Override

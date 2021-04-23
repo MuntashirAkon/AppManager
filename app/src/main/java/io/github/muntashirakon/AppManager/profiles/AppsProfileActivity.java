@@ -184,6 +184,7 @@ public class AppsProfileActivity extends BaseActivity
                                                 : R.string.user)))));
                     }
                     runOnUiThread(() -> {
+                        if (isDestroyed()) return;
                         progressIndicator.hide();
                         new SearchableMultiChoiceDialogBuilder<>(this, items, itemNames)
                                 .setSelections(model.getCurrentPackages())

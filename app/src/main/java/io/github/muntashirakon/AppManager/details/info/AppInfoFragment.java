@@ -498,7 +498,9 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @Override
     public void onDestroy() {
-        IOUtils.deleteDir(mActivity.getExternalCacheDir());
+        if (mActivity != null) {
+            IOUtils.deleteDir(mActivity.getExternalCacheDir());
+        }
         super.onDestroy();
     }
 
@@ -1276,14 +1278,18 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             runOnUiThread(() -> new MaterialAlertDialogBuilder(mActivity)
                     .setTitle(R.string.grant_usage_access)
                     .setMessage(R.string.grant_usage_acess_message)
-                    .setPositiveButton(R.string.go, (dialog, which) -> activityLauncher.launch(new Intent(
-                            Settings.ACTION_USAGE_ACCESS_SETTINGS), result -> {
-                        if (Utils.hasUsageStatsPermission(mActivity)) {
-                            AppPref.set(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL, true);
-                            // Reload app info
-                            model.loadAppInfo();
+                    .setPositiveButton(R.string.go, (dialog, which) -> {
+                        try {
+                            activityLauncher.launch(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS), result -> {
+                                if (Utils.hasUsageStatsPermission(mActivity)) {
+                                    AppPref.set(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL, true);
+                                    // Reload app info
+                                    model.loadAppInfo();
+                                }
+                            });
+                        } catch (SecurityException ignore) {
                         }
-                    }))
+                    })
                     .setNegativeButton(R.string.cancel, null)
                     .setNeutralButton(R.string.never_ask, (dialog, which) ->
                             AppPref.set(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL, false))
