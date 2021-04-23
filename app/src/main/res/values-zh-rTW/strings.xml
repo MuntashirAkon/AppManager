@@ -14,7 +14,7 @@
   ~
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
     <string name="_lang_tag" translatable="false">zh-TW</string>
     <string name="uninstall">解除安裝</string>
     <string name="permissions">使用權限</string>
@@ -158,7 +158,7 @@
     <string name="pref_import_export_blocking_rules">匯入/匯出封鎖規則</string>
     <string name="external_multiple_data_dir">外部資料目錄 <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
     <string name="pref_global_blocking_enabled_msg">使您可以封鎖任何應用程式的任何元件，而無需顯式開啟該應用程式的封鎖功能。</string>
-    <string name="pref_global_blocking_enabled">全域元件封鎖</string>
+    <string name="pref_global_blocking_enabled">即時元件封鎖</string>
     <string name="failed_to_stop">無法停止 <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="usage_min">%1$d分鐘</string>
     <string name="task_affinity">任務親和性</string>
@@ -272,11 +272,11 @@
     <string name="off">離開</string>
     <string name="on">在</string>
     <string name="profile_state_msg">此配置檔案的自訂開/關狀態</string>
-    <string name="profile_block_trackers_msg">如果啟用，追蹤器將從應用程式中被封鎖</string>
-    <string name="profile_clear_data_msg">如果啟用，資料將從應用程式中清除</string>
-    <string name="profile_clear_cache_msg">如果啟用，快取將從應用程式中清除</string>
-    <string name="profile_force_stop_msg">如果啟用，應用程式將被強制停止</string>
-    <string name="profile_disable_msg">如果啟用，則將 Root 據狀態值停用/啟用應用程式</string>
+    <string name="profile_block_trackers_msg">追蹤器將從應用程式中被封鎖</string>
+    <string name="profile_clear_data_msg">資料將從應用程式中清除</string>
+    <string name="profile_clear_cache_msg">快取將從應用程式中清除</string>
+    <string name="profile_force_stop_msg">應用程式將被強制停止</string>
+    <string name="profile_disable_msg">據狀態值停用/啟用應用程式</string>
     <string name="allow_routine_ops_msg">允許在常規操作中使用配置檔案</string>
     <string name="profile_state">設定檔狀態</string>
     <string name="allow_routine_ops">允許例行操作</string>
@@ -288,7 +288,7 @@
     <string name="rsa">RSA</string>
     <string name="aes">AES</string>
     <string name="none">沒有</string>
-    <string name="pref_encryption_msg">為備份新增加密。</string>
+    <string name="pref_encryption_msg">為備份加密。</string>
     <string name="encryption">加密</string>
     <string name="select_user">選擇使用者</string>
     <string name="pref_show_users_in_installer_msg">顯示要安裝的外部應用程式之前要選擇的使用者清單。需要root或ADB。</string>
@@ -304,7 +304,7 @@
     <string name="select_apk">選擇 APK</string>
     <string name="send_crash_report">傳送崩潰報告</string>
     <string name="tap_to_submit_crash_report">點擊提交崩潰報告。</string>
-    <string name="am_crashed">AM 剛剛當機了</string>
+    <string name="am_crashed">App Manager 剛剛當機了</string>
     <string name="filter_running_apps">正在執行的應用程式</string>
     <string name="copy">複製</string>
     <string name="view_missing_signatures">點擊以檢視或傳送尚未出現在 App Manager 的資源庫資料庫中的簽名。</string>
@@ -342,10 +342,10 @@
     <string name="issued_date">發行日期</string>
     <string name="issuer">發行人</string>
     <string name="subject">學科</string>
-    <string name="filter_apps_with_backups">帶有備份的應用程式</string>
-    <string name="sort_by_backup">先備份</string>
+    <string name="filter_apps_with_backups">帶有備份的</string>
+    <string name="sort_by_backup">預先備份</string>
     <string name="uninstall_updates">解除安裝更新</string>
-    <string name="allow_open_pgp_operation">單擊以允許AM使用OpenPGP</string>
+    <string name="allow_open_pgp_operation">按一下以允許 App Manager 使用 OpenPGP</string>
     <string name="confirm_installation">確認安裝</string>
     <string name="pref_backup_flags_msg">為備份選項新增預設消除了每次備份/還原時選擇旗標的負擔。</string>
     <string name="pref_compression_method">壓縮方式</string>
@@ -430,7 +430,7 @@
     <string name="obb_files_extracted_successfully">提取的OBB檔案</string>
     <string name="failed_to_extract_obb_files">無法提取OBB檔案</string>
     <string name="backup_obb_media">OBB和媒體</string>
-    <string name="backup_apk_files">僅 APK</string>
+    <string name="backup_apk_files">APK 檔案</string>
     <string name="installer_error_session_abandon">無法放棄安裝程式會話</string>
     <string name="installer_error_session_commit">無法提交 APK 檔案</string>
     <string name="installer_error_session_write">無法寫入安裝程式會話</string>
@@ -447,7 +447,7 @@
     <string name="operation_running">正在執行…</string>
     <string name="batch_ops">批次處理操作</string>
     <string name="failed_to_fetch_package_info">無法取得套件資訊</string>
-    <string name="installer_error_lidl_rom">您的ROM與無 Root 安裝程式不相容。</string>
+    <string name="installer_error_lidl_rom">您的 ROM 與無 Root 安裝程式不相容。</string>
     <string name="installer_error_generic">安裝失敗</string>
     <string name="installer_error_storage">沒有足夠的儲存空間空間來安裝應用程式</string>
     <string name="installer_error_bad_apks">選擇了無效的 APK 檔案</string>
@@ -456,14 +456,14 @@
     <string name="installer_error_blocked_device">裝置</string>
     <string name="installer_error_aborted">由於安裝被取消或會話意外關閉，安裝失敗</string>
     <string name="toggle_default_app_ops">切換預設應用程式操作</string>
-    <string name="filter_apps_with_activities">帶有活動的應用程式</string>
+    <string name="filter_apps_with_activities">帶有活動的</string>
     <string name="are_you_sure">你確定嗎？</string>
     <string name="pref_remove_all_rules">刪除所有規則</string>
     <string name="website">網站</string>
     <string name="run_in_termux">在Termux中執行</string>
     <string name="open_in_termux">在Termux開啟</string>
     <string name="export_icon">提取圖示</string>
-    <string name="no_matching_package_found">找不到相符的套件</string>
+    <string name="no_matching_package_found">找不到任何此類別的應用程式</string>
     <string name="block_unblock_trackers">封鎖/取消封鎖追蹤器</string>
     <string name="unblock">解除封鎖</string>
     <string name="block">封鎖</string>
@@ -487,7 +487,7 @@
         <item quantity="other">%1$d類</item>
     </plurals>
     <plurals name="backup_exists_are_you_sure">
-        <item quantity="other">備份已存在。是否確定？</item>
+        <item quantity="other">超過一個應用程式已備份完成。是否確定？</item>
     </plurals>
     <string name="backup_options">備份選項</string>
     <string name="delete_backup">刪除備份</string>
@@ -581,14 +581,14 @@
     <string name="running">執行中</string>
     <string name="mode">模式</string>
     <string name="permission_name">權限名稱</string>
-    <string name="app_op_cannot_be_disabled">無法停用此應用程式op，可能是只讀應用程式op依賴於另一個應用程式op。</string>
+    <string name="app_op_cannot_be_disabled">此應用程式操作不能禁用。（可能只有唯讀的應用程式操作依賴於另一個。</string>
     <string name="toggle_kill_for_system_apps">切換殺死系統應用程式</string>
     <string name="the_operation_was_successful">完成</string>
     <string name="export_blocking_rules">匯出封鎖規則</string>
-    <string name="disable_background">停用背景活動</string>
+    <string name="disable_background">防止後台操作</string>
     <string name="backup_restore">備份/還原</string>
     <string name="clear_data">清除資料</string>
-    <string name="disable_background_run">停用後台執行</string>
+    <string name="disable_background_run">防止後台操作</string>
     <string name="kill_process">殺</string>
     <string name="running_apps">正在執行的應用程式</string>
     <string name="store">店鋪</string>
@@ -736,7 +736,7 @@
     <string name="menu_apply_rules">套用規則</string>
     <string name="menu_remove_rules">刪除規則</string>
     <string name="failed_to_extract_apk_file">無法提取 APK 檔案</string>
-    <string name="grant_usage_acess_message">使用權限存取是必不可少的，以便顯示應用程式使用情況資訊。</string>
+    <string name="grant_usage_acess_message">用於顯示應用使用資訊。</string>
     <string name="grant_usage_access">授予使用權限</string>
     <string name="go">前往</string>
     <string name="go_back">返回</string>
@@ -763,7 +763,7 @@
     <string name="toggle_class_listing">切換類別清單</string>
     <string name="class_viewer">類檢視器</string>
     <string name="word_wrap">切換自動換行</string>
-    <string name="credits_message">"向以下開放原始碼專案的協作者致謝
+    <string name="credits_message">向以下開放原始碼專案的協作者致謝
 \n- The Android Open Source Project
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
@@ -773,7 +773,8 @@
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
-\n原創 logo 致謝： <a href="https://github.com/Atrate">Atrate</a>. "</string>
+\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
+\n原創 logo 致謝： <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="credits">致謝</string>
     <string name="third_party">第三方資源庫和圖示</string>
     <string name="license">授權條款</string>
@@ -822,7 +823,7 @@
     <string name="shared_user_id">共享的使用者ID</string>
     <string name="sort_by_shared_user_id">共享的使用者ID</string>
     <string name="no_feature">沒有功能</string>
-    <string name="gles_ver">要求GL ES版本</string>
+    <string name="gles_ver">要求的 OpenGL ES 版本</string>
     <string name="uses_feature">使用功能</string>
     <string name="protection_level">防護等級</string>
     <string name="group">群組</string>
@@ -846,4 +847,43 @@
     <string name="refresh">重新整理</string>
     <string name="activities">活動</string>
     <string name="require_no_permission">不需要任何權限</string>
+    <string name="pref_log_viewer_msg">配置日誌顯示方式。</string>
+    <string name="log_viewer">日誌檢視器</string>
+    <plurals name="items_selected">
+        <item quantity="other"><xliff:g id="selection_no" example="20">%1$d</xliff:g> 已選定</item>
+    </plurals>
+    <string name="pref_installer_msg">配置應用安裝程式的行為。</string>
+    <string name="expiry_date_cannot_be_empty">到期日期不能是空的。</string>
+    <string name="signing_key">簽署金鑰</string>
+    <string name="failed_to_read_keystore">無法讀取金鑰庫。</string>
+    <string name="alias_pass">別名密碼</string>
+    <string name="choose_an_alias">選擇別名</string>
+    <string name="found_no_alias_in_keystore">在KeyStore中找不到別名！</string>
+    <string name="new_alias_password">新別名密碼</string>
+    <string name="import_key">匯入金鑰</string>
+    <string name="pem_file">PEM 檔</string>
+    <string name="pk8_file">PKCS #8 （PK8） 檔</string>
+    <string name="keystore_pass">鑰匙商店密碼</string>
+    <string name="keystore_file">金鑰庫檔案</string>
+    <string name="country_name" tools:ignore="TypographyOther">國家/地區名稱 （C）</string>
+    <string name="state_name">州名（ST）</string>
+    <string name="locality_name">地方（城市）名稱（L）</string>
+    <string name="organization_name">組織名稱 （O）</string>
+    <string name="organization_unit">組織單位（OU）</string>
+    <string name="common_name">通用名稱（CN）</string>
+    <string name="input_key_password">金鑰密碼</string>
+    <string name="failed_to_load_key">無法載入金鑰。</string>
+    <string name="default_key_used">使用預設金鑰。</string>
+    <string name="key_not_set">未設定</string>
+    <string name="use_default">使用預設值</string>
+    <string name="invalid_rsa_key_size">RSA 加密的密鑰大小無效。密鑰大小可以是1024、2048 或 4096 位元。</string>
+    <string name="crypto_key_size">密鑰大小：</string>
+    <string name="invalid_aes_key_size">AES 加密的金鑰大小無效。金鑰大小可以是 128 位元或 256 位元。</string>
+    <string name="failed_to_initialize_key_store">無法初始化App Manager密鑰庫。</string>
+    <string name="failed_to_save_key">無法保存金鑰。</string>
+    <string name="generate_key">產生</string>
+    <string name="input_key">輸入鍵（十六進制）</string>
+    <string name="input_keystore_alias_pass_msg">點擊此處為%1$s 提供密碼</string>
+    <string name="internal_data">內部資料</string>
+    <string name="app_signing_signatures">簽名</string>
 </resources>
