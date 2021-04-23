@@ -19,6 +19,7 @@ package io.github.muntashirakon.AppManager.utils;
 
 import android.annotation.TargetApi;
 import android.os.RemoteException;
+import android.text.TextUtils;
 import android.util.Pair;
 
 import java.io.File;
@@ -29,6 +30,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.CRC32;
 
 import androidx.annotation.AnyThread;
@@ -62,13 +65,21 @@ public class DigestUtils {
 
     @WorkerThread
     @NonNull
-    public static String getHexDigest(@Algorithm String algo, @NonNull File file) {
-        try (InputStream fileInputStream = new ProxyInputStream(file)) {
-            return DigestUtils.getHexDigest(algo, fileInputStream);
-        } catch (IOException | RemoteException e) {
-            e.printStackTrace();
-            return HexEncoding.encodeToString(new byte[0], false /* lowercase */);
+    public static String getHexDigest(@Algorithm String algo, @NonNull File path) {
+        List<File> allFiles = new ArrayList<>();
+        gatherFiles(allFiles, path);
+        List<String> hashes = new ArrayList<>(allFiles.size());
+        for (File file : allFiles) {
+            try (InputStream fileInputStream = new ProxyInputStream(file)) {
+                hashes.add(DigestUtils.getHexDigest(algo, fileInputStream));
+            } catch (IOException | RemoteException e) {
+                e.printStackTrace();
+            }
         }
+        if (hashes.size() == 0) return HexEncoding.encodeToString(new byte[0], false /* lowercase */);
+        if (hashes.size() == 1) return hashes.get(0);
+        String fullString = TextUtils.join("", hashes);
+        return getHexDigest(algo, fullString.getBytes());
     }
 
     @WorkerThread
@@ -126,13 +137,13 @@ public class DigestUtils {
 
     @WorkerThread
     @NonNull
-    public static Pair<String, String>[] getDigests(File file) {
+    public static Pair<String, String>[] getDigests(File path) {
         @Algorithm String[] algorithms = new String[]{DigestUtils.MD5, DigestUtils.SHA_1, DigestUtils.SHA_256,
                 DigestUtils.SHA_384, DigestUtils.SHA_512};
         @SuppressWarnings("unchecked")
         Pair<String, String>[] digests = new Pair[algorithms.length];
         for (int i = 0; i < algorithms.length; ++i) {
-            digests[i] = new Pair<>(algorithms[i], getHexDigest(algorithms[i], file));
+            digests[i] = new Pair<>(algorithms[i], getHexDigest(algorithms[i], path));
         }
         return digests;
     }
@@ -158,5 +169,20 @@ public class DigestUtils {
             l >>= 8;
         }
         return result;
+    }
+
+    static void gatherFiles(@NonNull List<File> files, @NonNull File source) {
+        if (source.isDirectory()) {
+            File[] children = source.listFiles();
+            if (children == null || children.length == 0) {
+                return;
+            }
+            for (File child : children) {
+                gatherFiles(files, child);
+            }
+        } else if (source.isFile()) {
+            // Not directory, add it
+            files.add(source);
+        } // else we don't support other type of files
     }
 }

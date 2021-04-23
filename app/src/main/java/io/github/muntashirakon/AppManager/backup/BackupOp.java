@@ -38,6 +38,7 @@ import io.github.muntashirakon.AppManager.appops.OpEntry;
 import io.github.muntashirakon.AppManager.appops.PackageOps;
 import io.github.muntashirakon.AppManager.crypto.Crypto;
 import io.github.muntashirakon.AppManager.crypto.CryptoException;
+import io.github.muntashirakon.AppManager.db.entity.FileHash;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
@@ -237,6 +238,15 @@ class BackupOp implements Closeable {
     private void backupData() throws BackupException {
         File sourceFile;
         File[] dataFiles;
+        // Store file hash in a separate thread
+        new Thread(() -> {
+            for (String dir : metadata.dataDirs) {
+                FileHash fileHash = new FileHash();
+                fileHash.path = dir;
+                fileHash.hash = DigestUtils.getHexDigest(DigestUtils.SHA_256, new ProxyFile(dir));
+                AppManager.getDb().fileHashDao().insert(fileHash);
+            }
+        }).start();
         for (int i = 0; i < metadata.dataDirs.length; ++i) {
             sourceFile = new ProxyFile(tmpBackupPath, DATA_PREFIX + i + getExt(metadata.tarType));
             try {

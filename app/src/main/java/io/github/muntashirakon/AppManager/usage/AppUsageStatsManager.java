@@ -41,6 +41,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.NonNullUtils;
@@ -51,6 +52,16 @@ import static android.net.NetworkCapabilities.TRANSPORT_WIFI;
 
 public class AppUsageStatsManager {
     private static final String SYS_USAGE_STATS_SERVICE = "usagestats";
+
+    private static final String USAGE_STATS_SERVICE_NAME;
+
+    static {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            USAGE_STATS_SERVICE_NAME = Context.USAGE_STATS_SERVICE;
+        } else {
+            USAGE_STATS_SERVICE_NAME = SYS_USAGE_STATS_SERVICE;
+        }
+    }
 
     @Retention(RetentionPolicy.SOURCE)
     @IntDef(value = {
@@ -93,18 +104,12 @@ public class AppUsageStatsManager {
     private AppUsageStatsManager(@NonNull Context context) {
         this.context = context;
         this.mPackageManager = context.getPackageManager();
-        String usageStatsServiceName;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            usageStatsServiceName = Context.USAGE_STATS_SERVICE;
-        } else {
-            usageStatsServiceName = SYS_USAGE_STATS_SERVICE;
-        }
-        this.mUsageStatsManager = IUsageStatsManager.Stub.asInterface(ProxyBinder.getService(usageStatsServiceName));
+        this.mUsageStatsManager = IUsageStatsManager.Stub.asInterface(ProxyBinder.getService(USAGE_STATS_SERVICE_NAME));
     }
 
-    public PackageUsageInfo getUsageStatsForPackage(@NonNull String packageName, @UsageUtils.IntervalType int usage_interval)
+    public PackageUsageInfo getUsageStatsForPackage(@NonNull String packageName, @UsageUtils.IntervalType int usageInterval)
             throws RemoteException {
-        UsageUtils.TimeInterval range = UsageUtils.getTimeInterval(usage_interval);
+        UsageUtils.TimeInterval range = UsageUtils.getTimeInterval(usageInterval);
         PackageUsageInfo packageUsageInfo = new PackageUsageInfo(packageName);
         packageUsageInfo.appLabel = PackageUtils.getPackageLabel(mPackageManager, packageName);
         UsageEvents events = mUsageStatsManager.queryEvents(range.getStartTime(), range.getEndTime(), context.getPackageName());
@@ -140,16 +145,16 @@ public class AppUsageStatsManager {
      * called whenever an app goes to background and <code>Activity#onResume</code> is called
      * whenever an app appears in foreground.
      *
-     * @param usage_interval Usage interval
+     * @param usageInterval Usage interval
      * @return A list of package usage
      */
-    public List<PackageUsageInfo> getUsageStats(@UsageUtils.IntervalType int usage_interval) throws RemoteException {
+    public List<PackageUsageInfo> getUsageStats(@UsageUtils.IntervalType int usageInterval) throws RemoteException {
         List<PackageUsageInfo> screenTimeList = new ArrayList<>();
         Map<String, Long> screenTimes = new HashMap<>();
         Map<String, Long> lastUse = new HashMap<>();
         Map<String, Integer> accessCount = new HashMap<>();
         // Get events
-        UsageUtils.TimeInterval interval = UsageUtils.getTimeInterval(usage_interval);
+        UsageUtils.TimeInterval interval = UsageUtils.getTimeInterval(usageInterval);
         UsageEvents events = mUsageStatsManager.queryEvents(interval.getStartTime(), interval.getEndTime(), context.getPackageName());
         if (events == null) return Collections.emptyList();
         UsageEvents.Event event = new UsageEvents.Event();
@@ -195,11 +200,11 @@ public class AppUsageStatsManager {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             NetworkStatsManager networkStatsManager = (NetworkStatsManager) context.getSystemService(Context.NETWORK_STATS_SERVICE);
             try {
-                mobileData.putAll(getMobileData(networkStatsManager, usage_interval));
+                mobileData.putAll(getMobileData(networkStatsManager, usageInterval));
             } catch (Exception ignore) {
             }
             try {
-                wifiData.putAll(getWifiData(networkStatsManager, usage_interval));
+                wifiData.putAll(getWifiData(networkStatsManager, usageInterval));
             } catch (Exception ignore) {
             }
         }
@@ -224,6 +229,24 @@ public class AppUsageStatsManager {
         }
 //        Log.d("US", getUsageStatsForPackage(context.getPackageName(), usage_interval).toString());
         return screenTimeList;
+    }
+
+    public static long getLastActivityTime(String packageName, @NonNull UsageUtils.TimeInterval interval) {
+        IUsageStatsManager usm = IUsageStatsManager.Stub.asInterface(ProxyBinder.getService(USAGE_STATS_SERVICE_NAME));
+        try {
+            UsageEvents events = usm.queryEvents(interval.getStartTime(), interval.getEndTime(), AppManager.getContext()
+                    .getPackageName());
+            if (events == null) return 0L;
+            UsageEvents.Event event = new UsageEvents.Event();
+            while (events.hasNextEvent()) {
+                events.getNextEvent(event);
+                if (event.getPackageName().equals(packageName)) {
+                    return event.getTimeStamp();
+                }
+            }
+        } catch (RemoteException ignore) {
+        }
+        return 0L;
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
