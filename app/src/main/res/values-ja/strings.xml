@@ -17,7 +17,7 @@
   --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
     <string name="_lang_tag" translatable="false">ja-JP</string>
     <string name="uninstall">アンインストール</string>
-    <string name="permissions">ユーザー権限</string>
+    <string name="permissions">アプリ権限</string>
     <string name="require_no_permission">権限が要求されていません</string>
     <string name="activities">アクティビティ</string>
     <string name="launch">起動</string>
@@ -90,7 +90,7 @@
     <string name="more_info">詳細情報</string>
     <string name="date_installed">インストール日</string>
     <string name="date_updated">アップデート日</string>
-    <string name="installer_app">インストーラー</string>
+    <string name="installer_app">インストーラアプリ</string>
     <string name="user_id">ユーザーID</string>
     <string name="main_activity">メインアクティビティ</string>
     <string name="empty_package_name">空のパッケージ名</string>
@@ -254,7 +254,7 @@
     <string name="failed_to_disable_op">権限を無効化できませんでした</string>
     <string name="rules_not_applied">ルールはまだ反映されていません</string>
     <string name="str_logo">ロゴ</string>
-    <string name="pref_global_blocking_enabled">グローバルブロックを有効化</string>
+    <string name="pref_global_blocking_enabled">インスタントブロッキングを有効化</string>
     <string name="pref_global_blocking_enabled_msg">手動でアプリごとにブロックを有効にしなくても自動的に全てのアプリでコンポーネントブロッキングを有効化します。</string>
     <string name="usage_access">使用状況アクセス</string>
     <string name="app_settings">設定</string>
@@ -285,7 +285,7 @@
     </plurals>
     <string name="apk_updater">APKアップデータ</string>
     <string name="store">ストア</string>
-    <string name="running_apps">起動中のアプリ</string>
+    <string name="running_apps">実行中のアプリ</string>
     <string name="kill_process">停止</string>
     <string name="disable_background_run">バックグラウンドでの実行を妨げる</string>
     <string name="pid_and_ppid">プロセスID: %1$d, 親プロセスID: %2$d</string>
@@ -699,7 +699,7 @@
     <string name="new_profile">新しいプロファイル</string>
     <string name="duplicate">複製</string>
     <string name="failed_to_duplicate_profile">プロファイルを複製できませんでした</string>
-    <string name="pref_show_users_in_installer">インストーラにユーザーを表示する</string>
+    <string name="pref_show_users_in_installer">インストーラにユーザーを表示</string>
     <string name="pref_show_users_in_installer_msg">インストーラーでアプリをインストールするユーザーを選択できるようにします。RootかADBが必要です</string>
     <string name="select_user">ユーザーを選択</string>
     <string name="encryption">暗号化</string>
@@ -778,7 +778,7 @@
     <string name="extras">その他</string>
     <string name="share">共有</string>
     <string name="resend_intent">インテントを再送信</string>
-    <string name="interceptor">Interceptor</string>
+    <string name="interceptor">インタセプター</string>
     <string name="set_custom_app_op">カスタムAppOpsを適用</string>
     <string name="about_device">端末情報</string>
     <string name="pref_about_device_msg">Androidシステム、CPU、GPU、RAM、バッテリーなどのデバイス情報</string>
@@ -802,7 +802,7 @@
     <string name="graphics">グラフィック</string>
     <string name="battery">バッテリー</string>
     <string name="security">セキュリティ</string>
-    <string name="set_mode_for_app_ops_dots">AppOpsモードをセットします…</string>
+    <string name="set_mode_for_app_ops_dots">AppOpsモードをセット…</string>
     <string name="backup_apk_files_description">APKファイルのみをバックアップします <b>ソース</b> を指定する必要があります。</string>
     <string name="backup_internal_data_description">データフォルダをバックアップします。選択した場合内部データフォルダのバックアップは標準で有効になります。</string>
     <string name="backup_external_data_description">外部データフォルダをバックアップします。</string>
@@ -1050,4 +1050,5 @@
     <string name="pref_import_export_keystore_msg">App Manager内で使用される Bouncy Castle キーストアをインポート/エクスポートします。</string>
     <string name="pref_import_export_keystore">キーストアをインポート/エクスポート</string>
     <string name="toast_started_select_partial">部分選択モードが有効になりました</string>
+    <string name="pref_rules_msg">インスタントブロッキング、ルールのインポート/エクスポート/削除 等の操作を行います</string>
 </resources>
