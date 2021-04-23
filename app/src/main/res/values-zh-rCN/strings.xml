@@ -994,4 +994,5 @@
     <string name="pref_import_export_keystore_msg">导入/导出 App Manager 内部使用的 Bouncy Castle KeyStore (BKS)。</string>
     <string name="pref_import_export_keystore">导入/导出密钥库</string>
     <string name="app_signing_signatures">签名</string>
+    <string name="pref_rules_msg">即时拦截，导入/导出/移除规则等。</string>
 </resources>
