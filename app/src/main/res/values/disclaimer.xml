@@ -32,7 +32,7 @@
         \n\nBy using this application, you accept all responsibility using it and agree that I am
         not responsible for any actions you make that has an adverse affect on your device.
     </string>
-    <string name="disclaimer_footer">© 2020 Muntashir Al-Islam</string>
+    <string name="disclaimer_footer">© 2020–2021 Muntashir Al-Islam</string>
     <string name="disclaimer_agree_forever">Never show this again</string>
     <string name="disclaimer_agree">I Agree</string>
     <string name="disclaimer_exit">Exit</string>
