@@ -415,7 +415,7 @@
     <string name="filter_system_apps">Системные приложения</string>
     <string name="filter_apps_with_rules">Приложения с правилами</string>
     <string name="select_all">Выбрать все</string>
-    <string name="filter_disabled_apps">Отключенные приложения</string>
+    <string name="filter_disabled_apps">Отключенные</string>
     <string name="installed_version">Установленная версия</string>
     <string name="trackers">Трекеры</string>
     <string name="components">Компоненты</string>
@@ -799,7 +799,7 @@
     <string name="activity_result">Результат активити</string>
     <string name="send_edited_intent">Отправить измененное намерение</string>
     <string name="matching_activities">Соответствующие активити</string>
-    <string name="filter_apps_with_splits">Разделенные приложения (сплиты)</string>
+    <string name="filter_apps_with_splits">Разделенные (сплиты)</string>
     <string name="set_custom_app_op">Пользовательская настройка операции приложения</string>
     <string name="cpu">Процессор</string>
     <string name="battery">Аккумулятор</string>
@@ -1089,7 +1089,7 @@
     <string name="pgp_aes_rsa_encrypted">%1$s зашифровано</string>
     <string name="no_encryption">Без шифрования</string>
     <string name="base_backup">Базовая резервная копия</string>
-    <string name="failed">Ошибка</string>
+    <string name="failed">Сбой</string>
     <string name="confirm_import_keystore">Вы уверены, что хотите заменить существующее хранилище ключей\? Это действие нельзя отменить.</string>
     <string name="import_keystore">Импортировать хранилище ключей</string>
     <string name="pref_import_export_keystore_msg">Импорт/экспорт Bouncy Castle KeyStore (BKS), используемых внутри App Manager.</string>
