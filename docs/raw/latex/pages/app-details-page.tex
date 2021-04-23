@@ -43,17 +43,19 @@ The list below is in the same order as listed in the App Info tab.
     latter is higher. For applications that depend on platforms (mobile, tabs, desktops, etc.), these version numbers
     can be misleading as they use prefixes for each platform.
 
-    \item \textbf{Tags.} (Also known as tag clouds) Tags include the basic, concise and most useful info of an app. Tags
-    contain \textit{tracker info} (i.e.\ number of tracker components), \textit{app type} (user app or system app and
-    whether the app is an updated version of the system app or if the app is installed systemless-ly using Magisk),
+    \item \textbf{Tags.} (Also known as tag clouds) Tags include the basic, concise and most useful info of an app.
+    Tags contain \textit{tracker info} (i.e.\ number of tracker components), \textit{app type} (user app or system app
+    and whether the app is an updated version of the system app or if the app is installed systemless-ly using Magisk),
     \textit{running} (i.e. one or more services of the app is running in the background), \textit{split APK info} (i.e.
     \ number of splits), \textit{debuggable} (the app is a debug version), \textit{test only} (the app is a test only
     app), \textit{large heap} (the app has requested a large heap size), \textit{stopped} (the app is force stopped),
-    \textit{disabled} (the app is disabled), \textit{KeyStore} (the app has items in the Android KeyStore) and
-    \textit{no code} (the app doesn't have any code associated with it). The importance of including \textit{test only}
-    and \textit{debuggable} is that app with these properties can do additional tasks or these apps can be
-    \texttt{run-as} without root which can cause potential security problems if these apps store any private
-    information. \textit{large heap} denotes that the app will be allocated a higher amount of memory (RAM) if needed.
+    \textit{disabled} (the app is disabled), \textit{KeyStore} (the app has items in the Android KeyStore),
+    \textit{no code} (the app doesn't have any code associated with it), \hyperref[sec:terminologies]{\textit{SSAID}},
+    \textit{netpolicy} (network policy such as background data usage), and \textit{battery optimization}.
+    The importance of including \textit{test only} and \textit{debuggable} is that app with these properties can do
+    additional tasks or these apps can be \texttt{run-as} without root which can cause potential security problems
+    if these apps store any private information.
+    \textit{Large heap} denotes that the app will be allocated a higher amount of memory (RAM) if needed.
     While this may not be harmful for most cases, any suspicious apps requesting large heap should be taken seriously.
 
     \item \textbf{Horizontal Action Panel.} This is an action panel containing various actions regarding the app. See

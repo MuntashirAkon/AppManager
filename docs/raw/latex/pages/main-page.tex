@@ -129,16 +129,25 @@ Magisk modules.
 
 \subsubsection{Running Apps}\label{subsubsec:main:running-apps}
 A list of running apps or processes can be viewed by clicking on the \textbf{Running Apps} option in the menu (requires
-root or \hyperref[sec:adb-over-tcp]{ADB}). Running apps or processes can also be force-closed or killed within the
-resultant page.
+root or \hyperref[sec:adb-over-tcp]{ADB}).
+Running apps or processes can also be force-closed or killed within the resultant page.
+Logs for each process ID (PID) can also be viewed in the \hyperref[subsubsec:log-viewer]{log viewer}.
 
 \subsubsection{APK Updater}
 If you have the app \href{https://github.com/rumboalla/apkupdater}{APK Updater} installed, you can use the corresponding
-option in the menu to open the app directly. The option is hidden if you do not have it installed.
+option in the menu to open the app directly.
+The option is hidden if you do not have it installed.
 
 \subsubsection{Profiles}
-Opens the \hyperref[sec:profiles-page]{profiles page}. Profiles are a way to configure regularly used tasks. You can
-also add shortcuts of the profiles in the launcher to run them directly.
+Opens the \hyperref[sec:profiles-page]{profiles page}.
+Profiles are a way to configure regularly used tasks.
+You can also add shortcuts of the profiles in the launcher to run them directly.
+
+\subsubsection{Log Viewer}\label{subsubsec:log-viewer}
+Display, manage logs from \texttt{logcat}.
+For no-root users, this only logs the activities of App Manager due to its limitation.
+However, it can display logs from all users if \texttt{android.permission.READ\_LOGS} is granted using ADB (granted by
+automatically when using ADB over TCP).
 
 \subsubsection{Termux}
 If you have \href{https://github.com/termux/termux-app}{Termux} installed, you can directly go to the running session
