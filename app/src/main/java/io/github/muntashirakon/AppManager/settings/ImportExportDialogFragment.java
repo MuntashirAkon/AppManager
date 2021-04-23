@@ -23,16 +23,22 @@ import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.db.entity.App;
@@ -44,10 +50,6 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class ImportExportDialogFragment extends DialogFragment {
     public static final String TAG = "ImportExportDialogFragment";
@@ -98,13 +100,19 @@ public class ImportExportDialogFragment extends DialogFragment {
                     return;
                 }
                 new Thread(() -> {
-                    Pair<Boolean, Integer> status = ExternalComponentsImporter.applyFromWatt(activity.getApplicationContext(), uris, Users.getUsersHandles());
+                    List<String> failedFiles = ExternalComponentsImporter.applyFromWatt(activity
+                            .getApplicationContext(), uris, Users.getUsersHandles());
                     if (isDetached()) return;
                     activity.runOnUiThread(() -> {
-                        if (!status.first) {  // Not failed
+                        if (failedFiles.size() == 0) {  // Not failed
                             UIUtils.displayLongToast(R.string.the_import_was_successful);
                         } else {
-                            UIUtils.displayLongToastPl(R.plurals.failed_to_import_files, status.second, status.second);
+                            new MaterialAlertDialogBuilder(activity)
+                                    .setTitle(activity.getResources().getQuantityString(R.plurals
+                                                    .failed_to_import_files, failedFiles.size(), failedFiles.size()))
+                                    .setItems(failedFiles.toArray(new String[0]), null)
+                                    .setNegativeButton(R.string.close, null)
+                                    .show();
                         }
                     });
                 }).start();
@@ -118,13 +126,19 @@ public class ImportExportDialogFragment extends DialogFragment {
                     return;
                 }
                 new Thread(() -> {
-                    Pair<Boolean, Integer> status = ExternalComponentsImporter.applyFromBlocker(activity.getApplicationContext(), uris, Users.getUsersHandles());
+                    List<String> failedFiles = ExternalComponentsImporter.applyFromBlocker(activity
+                            .getApplicationContext(), uris, Users.getUsersHandles());
                     if (isDetached()) return;
                     activity.runOnUiThread(() -> {
-                        if (!status.first) {  // Not failed
+                        if (failedFiles.size() == 0) {  // Not failed
                             UIUtils.displayLongToast(R.string.the_import_was_successful);
                         } else {
-                            UIUtils.displayLongToastPl(R.plurals.failed_to_import_files, status.second, status.second);
+                            new MaterialAlertDialogBuilder(activity)
+                                    .setTitle(activity.getResources().getQuantityString(R.plurals
+                                                    .failed_to_import_files, failedFiles.size(), failedFiles.size()))
+                                    .setItems(failedFiles.toArray(new String[0]), null)
+                                    .setNegativeButton(R.string.close, null)
+                                    .show();
                         }
                     });
                 }).start();
@@ -202,7 +216,8 @@ public class ImportExportDialogFragment extends DialogFragment {
                             .setPositiveButton(R.string.apply, (dialog, which) -> {
                                 activity.progressIndicator.show();
                                 new Thread(() -> {
-                                    List<String> failedPackages = ExternalComponentsImporter.applyFromExistingBlockList(selectedPackages, userHandle);
+                                    List<String> failedPackages = ExternalComponentsImporter
+                                            .applyFromExistingBlockList(selectedPackages, userHandle);
                                     if (!failedPackages.isEmpty()) {
                                         handler.post(() -> {
                                             new MaterialAlertDialogBuilder(activity)
