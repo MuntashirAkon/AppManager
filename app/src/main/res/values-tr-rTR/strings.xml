@@ -1026,4 +1026,5 @@
     <string name="pref_import_export_keystore_msg">App Manager tarafından dahili olarak kullanılan Bouncy Castle KeyStore\'u (BKS) içe/dışa aktarın.</string>
     <string name="pref_import_export_keystore">KeyStore\'u içe/dışa aktar</string>
     <string name="app_signing_signatures">İmzalar</string>
+    <string name="pref_rules_msg">Anında engelleme, kuralları içe/dışa aktarma/kaldırma vb.</string>
 </resources>
