@@ -23,6 +23,7 @@ import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.SpannableStringBuilder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
@@ -36,7 +37,6 @@ import androidx.fragment.app.DialogFragment;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.AppManager;
@@ -45,6 +45,7 @@ import io.github.muntashirakon.AppManager.db.entity.App;
 import io.github.muntashirakon.AppManager.oneclickops.ItemCount;
 import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.rules.compontents.ExternalComponentsImporter;
+import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
@@ -186,6 +187,7 @@ public class ImportExportDialogFragment extends DialogFragment {
             final List<ItemCount> itemCounts = new ArrayList<>();
             ItemCount trackerCount;
             for (App app : AppManager.getDb().appDao().getAllInstalled()) {
+                if (isDetached()) return;
                 if (!systemApps && (app.flags & ApplicationInfo.FLAG_SYSTEM) != 0)
                     continue;
                 trackerCount = new ItemCount();
@@ -195,25 +197,23 @@ public class ImportExportDialogFragment extends DialogFragment {
                 if (trackerCount.count > 0) itemCounts.add(trackerCount);
             }
             if (!itemCounts.isEmpty()) {
-                final List<String> selectedPackages = new ArrayList<>();
-                final String[] packagesWithItemCounts = new String[itemCounts.size()];
+                final List<String> packages = new ArrayList<>();
+                final CharSequence[] packagesWithItemCounts = new CharSequence[itemCounts.size()];
                 for (int i = 0; i < itemCounts.size(); ++i) {
+                    if (isDetached()) return;
                     trackerCount = itemCounts.get(i);
-                    selectedPackages.add(trackerCount.packageName);
-                    packagesWithItemCounts[i] = "(" + trackerCount.count + ") " + trackerCount.packageLabel;
+                    packages.add(trackerCount.packageName);
+                    packagesWithItemCounts[i] = new SpannableStringBuilder(trackerCount.packageLabel).append("\n")
+                            .append(UIUtils.getSmallerText(UIUtils.getSecondaryText(activity, activity.getResources()
+                                    .getQuantityString(R.plurals.no_of_components, trackerCount.count,
+                                            trackerCount.count))));
                 }
-                final String[] trackerPackages = selectedPackages.toArray(new String[0]);
-                final boolean[] checkedItems = new boolean[trackerPackages.length];
-                Arrays.fill(checkedItems, false);
                 handler.post(() -> {
+                    if (isDetached()) return;
                     activity.progressIndicator.hide();
-                    new MaterialAlertDialogBuilder(activity)
-                            .setMultiChoiceItems(packagesWithItemCounts, checkedItems, (dialog, which, isChecked) -> {
-                                if (!isChecked) selectedPackages.remove(trackerPackages[which]);
-                                else selectedPackages.add(trackerPackages[which]);
-                            })
+                    new SearchableMultiChoiceDialogBuilder<>(activity, packages, packagesWithItemCounts)
                             .setTitle(R.string.filtered_packages)
-                            .setPositiveButton(R.string.apply, (dialog, which) -> {
+                            .setPositiveButton(R.string.apply, (dialog, which, selectedPackages) -> {
                                 activity.progressIndicator.show();
                                 new Thread(() -> {
                                     List<String> failedPackages = ExternalComponentsImporter
@@ -233,7 +233,8 @@ public class ImportExportDialogFragment extends DialogFragment {
                                     });
                                 }).start();
                             })
-                            .setNegativeButton(R.string.cancel, (dialog, which) -> activity.progressIndicator.hide())
+                            .setNegativeButton(R.string.cancel, (dialog, which, selectedItems) ->
+                                    activity.progressIndicator.hide())
                             .show();
                 });
             } else {
