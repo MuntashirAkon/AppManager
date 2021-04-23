@@ -1094,4 +1094,5 @@
     <string name="pref_import_export_keystore_msg">Импорт/экспорт Bouncy Castle KeyStore (BKS), используемых внутри App Manager.</string>
     <string name="pref_import_export_keystore">Импорт/экспорт хранилища ключей</string>
     <string name="app_signing_signatures">Подписи</string>
+    <string name="pref_rules_msg">Мгновенная блокировка, импорт/экспорт/удаление правил и т. д.</string>
 </resources>
