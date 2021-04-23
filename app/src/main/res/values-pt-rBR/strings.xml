@@ -163,7 +163,7 @@
     <string name="saved_successfully">Salvo</string>
     <string name="saving_failed">Falha ao salvar, tente novamente.</string>
     <string name="string_value">Valor da string</string>
-    <string name="integer_value">Valor inteiro</string>
+    <string name="integer_value">Valor do número inteiro</string>
     <string name="decimal_value">Valor decimal</string>
     <string name="boolean_value">Valor booleano</string>
     <string name="select_type">Selecione um tipo</string>
@@ -171,7 +171,7 @@
     <string name="done">Feito</string>
     <string name="type_boolean">Verdadeiro/Falso</string>
     <string name="type_float">Número Decimal</string>
-    <string name="type_int">Inteiro</string>
+    <string name="type_int">Número inteiro</string>
     <string name="type_string">Caracteres</string>
     <string name="disabled_app">Desativado</string>
     <string name="no_usage_in_this_time_range">Nenhum uso nesse intervalo de tempo</string>
@@ -465,9 +465,9 @@
     <string name="key_name_cannot_be_null">O nome da chave não pode estar vazio</string>
     <string name="error_evaluating_input">Não foi possível avaliar a entrada</string>
     <string name="input_signatures">Inserir assinaturas</string>
-    <string name="type_long">Inteiro longo</string>
+    <string name="type_long">Número inteiro longo</string>
     <string name="key_name">Nome da Chave</string>
-    <string name="long_integer_value">Valor inteiro longo</string>
+    <string name="long_integer_value">Valor do número inteiro longo</string>
     <plurals name="alert_failed_to_enable">
         <item quantity="one">%1$d aplicativo não pôde ser ativado</item>
         <item quantity="other">%1$d aplicativos não puderam ser ativados</item>
