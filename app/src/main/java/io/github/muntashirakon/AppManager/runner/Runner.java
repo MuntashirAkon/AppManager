@@ -80,8 +80,11 @@ public abstract class Runner {
         }
 
         @NonNull
-        public List<String> getOutputAsList(int first_index) {
-            return stdout.subList(first_index, stdout.size());
+        public List<String> getOutputAsList(int firstIndex) {
+            if (firstIndex >= stdout.size()) {
+                return Collections.emptyList();
+            }
+            return stdout.subList(firstIndex, stdout.size());
         }
 
         @NonNull
