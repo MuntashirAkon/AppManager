@@ -98,7 +98,7 @@ public class DigestUtils {
     public static byte[] getDigest(@Algorithm String algo, @NonNull InputStream stream) {
         if (CRC32.equals(algo)) {
             java.util.zip.CRC32 crc32 = new CRC32();
-            byte[] buffer = new byte[1024 * 1024];
+            byte[] buffer = new byte[IOUtils.DEFAULT_BUFFER_SIZE];
             int read;
             try {
                 while ((read = stream.read(buffer)) > 0) {
@@ -111,7 +111,7 @@ public class DigestUtils {
         try {
             MessageDigest messageDigest = MessageDigest.getInstance(algo);
             try (DigestInputStream digestInputStream = new DigestInputStream(stream, messageDigest)) {
-                byte[] buffer = new byte[1024 * 8];
+                byte[] buffer = new byte[IOUtils.DEFAULT_BUFFER_SIZE];
                 //noinspection StatementWithEmptyBody
                 while (digestInputStream.read(buffer) != -1) {
                 }

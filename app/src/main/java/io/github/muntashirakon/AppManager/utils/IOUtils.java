@@ -64,6 +64,8 @@ import io.github.muntashirakon.io.ProxyInputStream;
 import io.github.muntashirakon.io.ProxyOutputStream;
 
 public final class IOUtils {
+    public static final int DEFAULT_BUFFER_SIZE = 1024 * 50;
+
     @AnyThread
     public static boolean isInputFileZip(@NonNull ContentResolver cr, Uri uri) throws IOException {
         int header;
@@ -143,8 +145,6 @@ public final class IOUtils {
             return count;
         }
     }
-
-    private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
 
     @WorkerThread
     private static long copyLarge(@NonNull InputStream inputStream, OutputStream outputStream) throws IOException {
@@ -551,7 +551,7 @@ public final class IOUtils {
     public static long calculateCrc32(InputStream inputStream) throws IOException {
         try (InputStream in = inputStream) {
             CRC32 crc32 = new CRC32();
-            byte[] buffer = new byte[1024 * 1024];
+            byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
             int read;
 
             while ((read = in.read(buffer)) > 0)

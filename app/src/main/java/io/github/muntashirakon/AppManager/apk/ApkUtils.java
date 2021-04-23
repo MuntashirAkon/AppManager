@@ -124,7 +124,7 @@ public final class ApkUtils {
                 }
                 try (InputStream zipInputStream = zipFile.getInputStream(zipEntry)) {
                     ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-                    byte[] buf = new byte[1024 * 4];
+                    byte[] buf = new byte[IOUtils.DEFAULT_BUFFER_SIZE];
                     int n;
                     while (-1 != (n = zipInputStream.read(buf))) {
                         buffer.write(buf, 0, n);
@@ -145,7 +145,7 @@ public final class ApkUtils {
                     continue;
                 }
                 ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-                byte[] buf = new byte[1024 * 4];
+                byte[] buf = new byte[IOUtils.DEFAULT_BUFFER_SIZE];
                 int n;
                 while (-1 != (n = zipInputStream.read(buf))) {
                     buffer.write(buf, 0, n);

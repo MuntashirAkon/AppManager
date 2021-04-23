@@ -78,7 +78,7 @@ public class ParcelFileDescriptorUtil {
 
         @Override
         public void run() {
-            byte[] buf = new byte[4096];
+            byte[] buf = new byte[IOUtils.DEFAULT_BUFFER_SIZE];
             int len;
 
             try {

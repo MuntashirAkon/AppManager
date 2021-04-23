@@ -55,7 +55,7 @@ class AssetsUtils {
 
             try (FileInputStream open = openFd.createInputStream();
                  FileOutputStream fos = new FileOutputStream(destFile)) {
-                byte[] buff = new byte[1024 * 16];
+                byte[] buff = new byte[IOUtils.DEFAULT_BUFFER_SIZE];
                 int len;
                 while ((len = open.read(buff)) != -1) {
                     fos.write(buff, 0, len);
