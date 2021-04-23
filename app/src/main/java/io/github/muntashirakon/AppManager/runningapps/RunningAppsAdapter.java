@@ -44,6 +44,7 @@ import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
 import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
+import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.Runner;
@@ -142,14 +143,16 @@ public class RunningAppsAdapter extends RecyclerView.Adapter<RunningAppsAdapter.
             } else killItem.setVisible(false);
             // Set view logs
             MenuItem viewLogsItem = menu.findItem(R.id.action_view_logs);
-            viewLogsItem.setOnMenuItemClickListener(item -> {
-                Intent logViewerIntent = new Intent(mActivity.getApplicationContext(), LogViewerActivity.class)
-                        .setAction(LogViewerActivity.ACTION_LAUNCH)
-                        .putExtra(LogViewerActivity.EXTRA_FILTER, SearchCriteria.PID_KEYWORD + processItem.pid)
-                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                mActivity.startActivity(logViewerIntent);
-                return true;
-            });
+            if (FeatureController.isLogViewerEnabled()) {
+                viewLogsItem.setVisible(true).setOnMenuItemClickListener(item -> {
+                    Intent logViewerIntent = new Intent(mActivity.getApplicationContext(), LogViewerActivity.class)
+                            .setAction(LogViewerActivity.ACTION_LAUNCH)
+                            .putExtra(LogViewerActivity.EXTRA_FILTER, SearchCriteria.PID_KEYWORD + processItem.pid)
+                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    mActivity.startActivity(logViewerIntent);
+                    return true;
+                });
+            } else viewLogsItem.setVisible(false);
             // Set others
             MenuItem forceStopItem = menu.findItem(R.id.action_force_stop);
             MenuItem bgItem = menu.findItem(R.id.action_disable_background);

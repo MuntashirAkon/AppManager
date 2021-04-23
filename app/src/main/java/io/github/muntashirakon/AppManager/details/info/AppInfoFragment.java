@@ -633,7 +633,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 addChip(R.string.running, R.color.running).setOnClickListener(v -> {
                     mProgressIndicator.show();
                     new Thread(() -> {
-                        int pid = PackageUtils.getPidForPackage(mPackageName, mApplicationInfo.uid);
+                        int pid = FeatureController.isLogViewerEnabled() ? PackageUtils.getPidForPackage(mPackageName,
+                                mApplicationInfo.uid) : 0;
                         runOnUiThread(() -> {
                             mProgressIndicator.hide();
                             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(mActivity)

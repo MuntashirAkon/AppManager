@@ -116,6 +116,7 @@ public class MainActivity extends BaseActivity implements
     private CoordinatorLayout.LayoutParams mLayoutParamsTypical;
     private MenuItem appUsageMenu;
     private MenuItem runningAppsMenu;
+    private MenuItem logViewerMenu;
 
     private final StoragePermission storagePermission = StoragePermission.init(this);
 
@@ -230,6 +231,7 @@ public class MainActivity extends BaseActivity implements
         getMenuInflater().inflate(R.menu.activity_main_actions, menu);
         appUsageMenu = menu.findItem(R.id.action_app_usage);
         runningAppsMenu = menu.findItem(R.id.action_running_apps);
+        logViewerMenu = menu.findItem(R.id.action_log_viewer);
         MenuItem apkUpdaterMenu = menu.findItem(R.id.action_apk_updater);
         try {
             if (!getPackageManager().getApplicationInfo(PACKAGE_NAME_APK_UPDATER, 0).enabled)
@@ -254,6 +256,7 @@ public class MainActivity extends BaseActivity implements
         super.onPrepareOptionsMenu(menu);
         menu.findItem(R.id.action_sys_config).setVisible(AppPref.isRootEnabled());
         appUsageMenu.setVisible(FeatureController.isUsageAccessEnabled());
+        logViewerMenu.setVisible(FeatureController.isLogViewerEnabled());
         return true;
     }
 
@@ -428,6 +431,10 @@ public class MainActivity extends BaseActivity implements
         // Show/hide app usage menu
         if (appUsageMenu != null) {
             appUsageMenu.setVisible(FeatureController.isUsageAccessEnabled());
+        }
+        // Show/hide log viewer menu
+        if (logViewerMenu != null) {
+            logViewerMenu.setVisible(FeatureController.isLogViewerEnabled());
         }
         // Set sort by
         if (mModel != null) {

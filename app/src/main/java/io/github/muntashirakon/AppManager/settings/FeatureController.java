@@ -30,6 +30,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity;
 import io.github.muntashirakon.AppManager.details.ManifestViewerActivity;
 import io.github.muntashirakon.AppManager.intercept.ActivityInterceptor;
+import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
 import io.github.muntashirakon.AppManager.scanner.ScannerActivity;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 
@@ -42,6 +43,7 @@ public class FeatureController {
             FEAT_SCANNER,
             FEAT_INSTALLER,
             FEAT_USAGE_ACCESS,
+            FEAT_LOG_VIEWER,
     })
     public @interface FeatureFlags {
     }
@@ -51,6 +53,7 @@ public class FeatureController {
     public static final int FEAT_SCANNER = 1 << 2;
     public static final int FEAT_INSTALLER = 1 << 3;
     public static final int FEAT_USAGE_ACCESS = 1 << 4;
+    public static final int FEAT_LOG_VIEWER = 1 << 5;
 
     @NonNull
     public static FeatureController getInstance() {
@@ -72,6 +75,8 @@ public class FeatureController {
             put(FEAT_INSTALLER, R.string.package_installer);
             featureFlags.add(FEAT_USAGE_ACCESS);
             put(FEAT_USAGE_ACCESS, R.string.usage_access);
+            featureFlags.add(FEAT_LOG_VIEWER);
+            put(FEAT_LOG_VIEWER, R.string.log_viewer);
         }
     };
 
@@ -115,6 +120,10 @@ public class FeatureController {
         return getInstance().isEnabled(FEAT_USAGE_ACCESS);
     }
 
+    public static boolean isLogViewerEnabled() {
+        return getInstance().isEnabled(FEAT_LOG_VIEWER);
+    }
+
     public boolean isEnabled(@FeatureFlags int key) {
         ComponentName cn;
         switch (key) {
@@ -133,6 +142,9 @@ public class FeatureController {
             case FEAT_USAGE_ACCESS:
                 // Only depends on flag
                 return (flags & key) != 0;
+            case FEAT_LOG_VIEWER:
+                cn = getComponentName(key, LogViewerActivity.class);
+                break;
             default:
                 throw new IllegalArgumentException();
         }
@@ -165,6 +177,9 @@ public class FeatureController {
                 break;
             case FEAT_USAGE_ACCESS:
                 // Only depends on flag
+                break;
+            case FEAT_LOG_VIEWER:
+                modifyState(key, LogViewerActivity.class, enabled);
                 break;
         }
         // Modify flags

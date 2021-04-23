@@ -222,6 +222,14 @@ public class MainPreferences extends PreferenceFragmentCompat {
             }).start();
             return true;
         });
+
+        // Hide preferences for disabled features
+        if (!FeatureController.isInstallerEnabled()) {
+            ((Preference) Objects.requireNonNull(findPreference("installer"))).setVisible(false);
+        }
+        if (!FeatureController.isLogViewerEnabled()) {
+            ((Preference) Objects.requireNonNull(findPreference("log_viewer_prefs"))).setVisible(false);
+        }
     }
 
     @NonNull
