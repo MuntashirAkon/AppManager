@@ -109,7 +109,7 @@ public class AppPref {
 
         PREF_SIGNATURE_SCHEMES_INT,
         PREF_SHOW_DISCLAIMER_BOOL,
-        PREF_USAGE_ACCESS_ENABLED_BOOL;
+        ;
 
         public static final String[] keys = new String[values().length];
         @Type
@@ -364,7 +364,6 @@ public class AppPref {
             case PREF_LOG_VIEWER_OMIT_SENSITIVE_INFO_BOOL:
                 return false;
             case PREF_APP_OP_SHOW_DEFAULT_BOOL:
-            case PREF_USAGE_ACCESS_ENABLED_BOOL:
             case PREF_SHOW_DISCLAIMER_BOOL:
             case PREF_LOG_VIEWER_SHOW_PID_TID_TIMESTAMP_BOOL:
                 return true;

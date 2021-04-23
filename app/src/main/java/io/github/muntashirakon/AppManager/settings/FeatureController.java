@@ -41,6 +41,7 @@ public class FeatureController {
             FEAT_MANIFEST,
             FEAT_SCANNER,
             FEAT_INSTALLER,
+            FEAT_USAGE_ACCESS,
     })
     public @interface FeatureFlags {
     }
@@ -49,6 +50,7 @@ public class FeatureController {
     public static final int FEAT_MANIFEST = 1 << 1;
     public static final int FEAT_SCANNER = 1 << 2;
     public static final int FEAT_INSTALLER = 1 << 3;
+    public static final int FEAT_USAGE_ACCESS = 1 << 4;
 
     @NonNull
     public static FeatureController getInstance() {
@@ -68,6 +70,8 @@ public class FeatureController {
             put(FEAT_SCANNER, R.string.scanner);
             featureFlags.add(FEAT_INSTALLER);
             put(FEAT_INSTALLER, R.string.package_installer);
+            featureFlags.add(FEAT_USAGE_ACCESS);
+            put(FEAT_USAGE_ACCESS, R.string.usage_access);
         }
     };
 
@@ -107,6 +111,10 @@ public class FeatureController {
         return getInstance().isEnabled(FEAT_INSTALLER);
     }
 
+    public static boolean isUsageAccessEnabled() {
+        return getInstance().isEnabled(FEAT_USAGE_ACCESS);
+    }
+
     public boolean isEnabled(@FeatureFlags int key) {
         ComponentName cn;
         switch (key) {
@@ -122,6 +130,9 @@ public class FeatureController {
             case FEAT_SCANNER:
                 cn = getComponentName(key, ScannerActivity.class);
                 break;
+            case FEAT_USAGE_ACCESS:
+                // Only depends on flag
+                return (flags & key) != 0;
             default:
                 throw new IllegalArgumentException();
         }
@@ -151,6 +162,9 @@ public class FeatureController {
                 break;
             case FEAT_SCANNER:
                 modifyState(key, ScannerActivity.class, enabled);
+                break;
+            case FEAT_USAGE_ACCESS:
+                // Only depends on flag
                 break;
         }
         // Modify flags

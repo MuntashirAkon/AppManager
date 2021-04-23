@@ -250,7 +250,7 @@
     <string name="sort_by_mobile_data">Mobildata</string>
     <string name="sort_by_times_opened">Ganger åpnet</string>
     <string name="sort_by_screen_time">Skjermtid</string>
-    <string name="pref_usage_access_enabled">Brukstilgang</string>
+    <string name="usage_access">Brukstilgang</string>
     <string name="str_logo">Logo</string>
     <string name="no_code">Ingen kode</string>
     <string name="process_name">Prosessnavn</string>

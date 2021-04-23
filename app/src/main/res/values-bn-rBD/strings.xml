@@ -146,7 +146,7 @@
     <string name="app_size">অ্যাপ</string>
     <string name="app_ops">অ্যাপ অপ্স</string>
     <string name="no_app_ops">কোনো অ্যাপ অপারেশন নেই</string>
-    <string name="pref_usage_access_enabled">ইউসেজ অ্যাক্সেস</string>
+    <string name="usage_access">ইউসেজ অ্যাক্সেস</string>
     <string name="pref_usage_access_enabled_msg">আপনার অ্যাপ ব্যবহারের পরিসংখ্যান এবং অ্যাপ ডেটার তথ্য দেখতে পারবেন</string>
     <string name="app_settings">সেটিংস</string>
     <string name="only_works_in_root_mode">শুধুমাত্র রুট মোডে ব্যবহারযোগ্য</string>

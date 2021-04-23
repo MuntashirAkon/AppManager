@@ -221,7 +221,7 @@
     <string name="str_logo">Logo</string>
     <string name="pref_global_blocking_enabled">Sofortige Komponentensperrung</string>
     <string name="pref_global_blocking_enabled_msg">Erlaubt jede Komponente einer Anwendung zu blockieren, ohne die Blockierung für die Anwendung explizit einzuschalten.</string>
-    <string name="pref_usage_access_enabled">Zugriff auf Nutzungsdaten</string>
+    <string name="usage_access">Zugriff auf Nutzungsdaten</string>
     <string name="pref_usage_access_enabled_msg">Zeigt die Daten der App und die Nutzungsstatistiken an.</string>
     <string name="app_settings">Einstellungen</string>
     <string name="only_works_in_root_mode">Diese Funktion ist nur im Root-Modus verfügbar</string>

@@ -293,7 +293,7 @@
     <string name="usage_yesterday">Ieri</string>
     <string name="only_works_in_root_mode">Opera solo in modalità root</string>
     <string name="app_settings">Impostazioni</string>
-    <string name="pref_usage_access_enabled">Informazioni di utilizzo</string>
+    <string name="usage_access">Informazioni di utilizzo</string>
     <string name="pref_global_blocking_enabled">Blocco globale componenti</string>
     <string name="pref_usage_access_enabled_msg">Ti mostara le statistiche di utilizzo dell\'app e le info sui dati.</string>
     <string name="pref_global_blocking_enabled_msg">Ti permette di bloccare ogni componente di qualsiasi app senza aprire esplicitamente il blocco per le app.</string>

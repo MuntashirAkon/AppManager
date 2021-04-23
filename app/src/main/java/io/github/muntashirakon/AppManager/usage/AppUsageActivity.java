@@ -59,9 +59,9 @@ import java.util.Locale;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.usage.UsageUtils.IntervalType;
-import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -307,7 +307,8 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
                                 .setTitle(R.string.grant_usage_access)
                                 .setMessage(R.string.usage_access_not_supported)
                                 .setPositiveButton(R.string.go_back, (dialog1, which1) -> {
-                                    AppPref.set(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL, false);
+                                    FeatureController.getInstance().modifyState(FeatureController
+                                            .FEAT_USAGE_ACCESS, false);
                                     finish();
                                 })
                                 .show();

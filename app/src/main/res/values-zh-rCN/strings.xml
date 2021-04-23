@@ -218,7 +218,7 @@
     <string name="str_logo">Logo</string>
     <string name="pref_global_blocking_enabled">即时组件拦截</string>
     <string name="pref_global_blocking_enabled_msg">允许您拦截任何应用程序的任何组件，而无需拦截该应用程序。</string>
-    <string name="pref_usage_access_enabled">使用情况访问权限</string>
+    <string name="usage_access">使用情况访问权限</string>
     <string name="pref_usage_access_enabled_msg">显示应用程序数据信息和使用数据。</string>
     <string name="app_settings">设置</string>
     <string name="only_works_in_root_mode">仅在 root 或 ADB 模式下工作</string>

@@ -256,8 +256,7 @@
     <string name="str_logo">Logo</string>
     <string name="pref_global_blocking_enabled">Instant component blocking</string>
     <string name="pref_global_blocking_enabled_msg">Lets you block any component of any app without explicitly turning on blocking for the app.</string>
-    <string name="pref_usage_access_enabled">Usage access</string>
-    <string name="pref_usage_access_enabled_msg">Shows app data info, and -usage stats.</string>
+    <string name="usage_access">Usage access</string>
     <string name="app_settings">Settings</string>
     <string name="only_works_in_root_mode">Only works in root mode</string>
     <string name="usage_yesterday">Yesterday</string>

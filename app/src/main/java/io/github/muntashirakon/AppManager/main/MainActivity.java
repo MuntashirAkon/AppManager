@@ -76,6 +76,7 @@ import io.github.muntashirakon.AppManager.profiles.ProfilesActivity;
 import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.runningapps.RunningAppsActivity;
 import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
+import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.SettingsActivity;
 import io.github.muntashirakon.AppManager.sysconfig.SysConfigActivity;
 import io.github.muntashirakon.AppManager.types.ScrollableDialogBuilder;
@@ -252,7 +253,7 @@ public class MainActivity extends BaseActivity implements
     public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
         super.onPrepareOptionsMenu(menu);
         menu.findItem(R.id.action_sys_config).setVisible(AppPref.isRootEnabled());
-        appUsageMenu.setVisible((boolean) AppPref.get(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL));
+        appUsageMenu.setVisible(FeatureController.isUsageAccessEnabled());
         return true;
     }
 
@@ -426,7 +427,7 @@ public class MainActivity extends BaseActivity implements
         }
         // Show/hide app usage menu
         if (appUsageMenu != null) {
-            appUsageMenu.setVisible((Boolean) AppPref.get(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL));
+            appUsageMenu.setVisible(FeatureController.isUsageAccessEnabled());
         }
         // Set sort by
         if (mModel != null) {

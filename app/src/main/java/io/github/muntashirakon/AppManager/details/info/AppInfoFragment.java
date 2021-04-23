@@ -1207,7 +1207,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     setPathsAndDirectories(appInfo);
                     setDataUsage(appInfo);
                     // Storage and Cache
-                    if ((boolean) AppPref.get(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL)) {
+                    if (FeatureController.isUsageAccessEnabled()) {
                         setStorageAndCache(appInfo);
                     }
                 }
@@ -1282,7 +1282,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         try {
                             activityLauncher.launch(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS), result -> {
                                 if (Utils.hasUsageStatsPermission(mActivity)) {
-                                    AppPref.set(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL, true);
+                                    FeatureController.getInstance().modifyState(FeatureController
+                                            .FEAT_USAGE_ACCESS, true);
                                     // Reload app info
                                     model.loadAppInfo();
                                 }
@@ -1291,8 +1292,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         }
                     })
                     .setNegativeButton(R.string.cancel, null)
-                    .setNeutralButton(R.string.never_ask, (dialog, which) ->
-                            AppPref.set(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL, false))
+                    .setNeutralButton(R.string.never_ask, (dialog, which) -> FeatureController.getInstance().modifyState(
+                            FeatureController.FEAT_USAGE_ACCESS, true))
                     .setCancelable(false)
                     .show());
             return;

@@ -43,12 +43,6 @@
         tools:summary="Current mode: Auto"
         app:iconSpaceReserved="false" />
 
-    <SwitchPreferenceCompat
-        app:key="usage_access_enabled"
-        app:title="@string/pref_usage_access_enabled"
-        app:summary="@string/pref_usage_access_enabled_msg"
-        app:iconSpaceReserved="false" />
-
     <Preference
         app:key="enabled_features"
         app:title="@string/enable_disable_features"

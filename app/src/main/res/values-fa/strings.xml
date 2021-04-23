@@ -10,7 +10,7 @@
     <string name="only_works_in_root_mode">فقط در حالت روت کار می کند</string>
     <string name="app_settings">تنظیمات</string>
     <string name="pref_usage_access_enabled_msg">به شما امکان می دهد آمار استفاده از برنامه و اطلاعات داده برنامه را مشاهده کنید.</string>
-    <string name="pref_usage_access_enabled">دسترسی به استفاده</string>
+    <string name="usage_access">دسترسی به استفاده</string>
     <string name="pref_global_blocking_enabled_msg">به شما اجازه می دهد تا هر جزء از هر برنامه ای را مسدود کنید بدون اینکه به صراحت مسدود کردن برنامه را روشن کنید.</string>
     <string name="pref_global_blocking_enabled">مسدود کردن جزء گلوبال</string>
     <string name="str_logo">لوگو</string>

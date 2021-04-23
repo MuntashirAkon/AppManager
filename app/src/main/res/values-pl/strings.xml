@@ -602,7 +602,7 @@
     <string name="sort_by_blocked_components">Najpierw zablokowane</string>
     <string name="sort_by_disabled_app">Najpierw wyłączone</string>
     <string name="usage_yesterday">Wczoraj</string>
-    <string name="pref_usage_access_enabled">Dostęp do danych użytkowania</string>
+    <string name="usage_access">Dostęp do danych użytkowania</string>
     <string name="total_size">Łącznie</string>
     <string name="list_options">Opcje listy</string>
     <string name="choose_what_to_do">Wybierz, co chcesz zrobić.</string>

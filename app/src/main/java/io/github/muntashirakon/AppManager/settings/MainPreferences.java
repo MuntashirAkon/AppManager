@@ -167,9 +167,6 @@ public class MainPreferences extends PreferenceFragmentCompat {
                     .show();
             return true;
         });
-        // App usage permission toggle
-        SwitchPreferenceCompat usageEnabled = Objects.requireNonNull(findPreference("usage_access_enabled"));
-        usageEnabled.setChecked((boolean) AppPref.get(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL));
         // Enable/disable features
         FeatureController fc = FeatureController.getInstance();
         ((Preference) Objects.requireNonNull(findPreference("enabled_features"))).setOnPreferenceClickListener(preference -> {

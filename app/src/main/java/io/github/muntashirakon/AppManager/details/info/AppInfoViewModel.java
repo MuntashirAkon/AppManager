@@ -48,6 +48,7 @@ import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.NetworkPolicyManagerCompat;
+import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.types.PackageSizeInfo;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.usage.UsageUtils;
@@ -217,7 +218,7 @@ public class AppInfoViewModel extends AndroidViewModel {
         if (!isExternalApk) {
             try {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if ((Boolean) AppPref.get(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL)) {
+                    if (FeatureController.isUsageAccessEnabled()) {
                         appInfo.dataUsage = AppUsageStatsManager.getDataUsageForPackage(getApplication(),
                                 applicationInfo.uid, UsageUtils.USAGE_LAST_BOOT);
                     }

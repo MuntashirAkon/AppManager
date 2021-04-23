@@ -197,7 +197,7 @@
     <string name="failed_to_disable_op">A operação de aplicativo solicitada não pôde ser desativada</string>
     <string name="pref_global_blocking_enabled">Bloqueio imediato de componentes</string>
     <string name="pref_global_blocking_enabled_msg">Permite bloquear qualquer componente de qualquer aplicativo sem ligar explicitamente o bloqueio para o aplicativo.</string>
-    <string name="pref_usage_access_enabled">Acesso ao uso</string>
+    <string name="usage_access">Acesso ao uso</string>
     <string name="pref_usage_access_enabled_msg">Mostra informações de dados do aplicativo e estatísticas de uso.</string>
     <string name="app_settings">Configurações</string>
     <string name="only_works_in_root_mode">Funciona apenas no modo root</string>
