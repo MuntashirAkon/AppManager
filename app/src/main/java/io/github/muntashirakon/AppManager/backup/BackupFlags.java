@@ -259,6 +259,6 @@ public final class BackupFlags {
         if (Users.getUsersHandles().length == 1) {
             flags &= ~BACKUP_CUSTOM_USERS;
         }
-        return flags;
+        return flags | BACKUP_EXCLUDE_CACHE;
     }
 }
