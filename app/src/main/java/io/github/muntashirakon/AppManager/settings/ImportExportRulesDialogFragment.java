@@ -52,8 +52,8 @@ import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
-public class ImportExportDialogFragment extends DialogFragment {
-    public static final String TAG = "ImportExportDialogFragment";
+public class ImportExportRulesDialogFragment extends DialogFragment {
+    public static final String TAG = "ImportExportRulesDialogFragment";
 
     private static final String MIME_JSON = "application/json";
     private static final String MIME_TSV = "text/tab-separated-values";

@@ -83,30 +83,12 @@
         android:fragment="io.github.muntashirakon.AppManager.settings.LogViewerPreferences"
         app:iconSpaceReserved="false" />
 
-    <PreferenceCategory
-        app:key="rules"
+    <Preference
+        app:key="rules_prefs"
         app:title="@string/rules"
-        app:iconSpaceReserved="false" >
-
-        <SwitchPreferenceCompat
-            app:key="global_blocking_enabled"
-            app:title="@string/pref_global_blocking_enabled"
-            app:summary="@string/pref_global_blocking_enabled_msg"
-            app:iconSpaceReserved="false" />
-
-        <Preference
-            app:key="import_export_rules"
-            app:title="@string/pref_import_export_blocking_rules"
-            app:summary="@string/pref_import_export_blocking_rules_msg"
-            app:iconSpaceReserved="false" />
-
-        <Preference
-            app:key="remove_all_rules"
-            app:title="@string/pref_remove_all_rules"
-            app:summary="@string/pref_remove_all_rules_msg"
-            app:iconSpaceReserved="false" />
-
-    </PreferenceCategory>
+        app:summary="@string/pref_rules_msg"
+        android:fragment="io.github.muntashirakon.AppManager.settings.RulesPreferences"
+        app:iconSpaceReserved="false" />
 
     <PreferenceCategory
         app:key="other_category"
