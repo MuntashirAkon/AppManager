@@ -390,11 +390,12 @@ class BackupOp implements Closeable {
             rules.setNetPolicy(policies);
         }
         // Backup URI grants
-        UriManager uriManager = new UriManager();
-        List<UriManager.UriGrant> uriGrants = uriManager.getGrantedUris(packageName);
+        List<UriManager.UriGrant> uriGrants = new UriManager().getGrantedUris(packageName);
         if (uriGrants != null) {
             for (UriManager.UriGrant uriGrant : uriGrants) {
-                rules.setUriGrant(uriGrant);
+                if (uriGrant.targetUserId == userHandle) {
+                    rules.setUriGrant(uriGrant);
+                }
             }
         }
         // Backup SSAID
