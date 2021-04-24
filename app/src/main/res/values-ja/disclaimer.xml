@@ -14,9 +14,7 @@
   ~
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  -->
-
-<resources>
+  --><resources>
     <string name="disclaimer_header">免責事項</string>
     <string name="disclaimer_body">App Managerは、誤って使用するとデバイスに害を及ぼす可能性のあるルート機能を提供します。
         App Managerは、このアプリケーションを使用して生じたいかなる損害についても責任を負いません。
@@ -31,7 +29,7 @@
         \n\nこのアプリケーションを使用することによって あなた自身の操作によって生じる
         一切の悪影響について保証が行われないことに同意します。
     </string>
-    <string name="disclaimer_footer">© 2020 Muntashir Al-Islam</string>
+    <string name="disclaimer_footer">© 2020–2021 Muntashir Al-Islam</string>
     <string name="disclaimer_agree_forever">二度と表示しない</string>
     <string name="disclaimer_agree">同意する</string>
     <string name="disclaimer_exit">終了</string>
