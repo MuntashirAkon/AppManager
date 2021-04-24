@@ -1,5 +1,59 @@
 \chapter{Changelogs}\label{ch:changelogs}
 
+\section{v2.6.0 (385)}\label{sec:v2.6.0-(385)}
+
+\subsection{Introducing Backups}
+Back up/restore feature is now finally out of beta!
+Read \hyperref[sec:backup-restore]{the corresponding guide} to understand how it works.
+
+\subsection{Introducing Log Viewer}
+\hyperref[subsubsec:log-viewer]{Log viewer} is essentially a front-end for \texttt{logcat}.
+It can be used to filter logs by \textit{tag} or \textit{pid} (process ID), or even by custom filters.
+Log levels AKA verbosity can also be configured.
+You can also save, share and manage logs.
+
+\subsection{Lock App Manager}
+\hyperref[subsec:screen-lock]{Lock App Manager} with the screen lock configured for your device.
+
+\subsection{Extended Modes for App Ops}
+You can set any mode for any app ops that your device supports, either from the
+\hyperref[subsec:set-mode-for-app-ops-dots]{1-click ops page} or from the \hyperref[subsubsec:app-ops]{app ops tab}.
+
+\subsection{New Batch Ops: Add to Profile}
+You can now easily add selected apps to an existing profile using the batch operations.
+
+\subsection{App Info: Improved}
+App info tab now has many options, including the ability to change \hyperref[sec:terminologies]{SSAID}, network policy
+(i.e.\ background network usage), battery optimization, etc.
+Most of the tags used in this tab are also clickable, and if you click on them, you will be able to look at the current
+state or configure them right away.
+
+\subsection{Advanced Sort and Filtering Options in the Main Page}
+Sort and filter options are now replaced by \hyperref[subsubsec:main-list-options]{List Options} which is highly configurable,
+including the ability to filter using profiles.
+
+\subsection{About This Device}
+Interested in knowing about your device in just one page?
+Go to the bottom of the \hyperref[subsec:device-info]{settings page}.
+
+\subsection{Enable/disable Features}
+Not interested in all the features that AM offers?
+You can disable some features in \hyperref[subsec:enable/disable-features]{settings}.
+
+\subsection{New Languages}
+AM now has more than 19 languages!
+New languages include Farsi, Japanese and Traditional Chinese.
+
+\subsection{Signing the APK Files}
+You can now import external signing keys in AM! For security, App Manager has its own encrypted KeyStore which can also be \hyperref[subsec:import/export-keystore]{imported or exported}.
+
+\subsection{New Extension: UnAPKM}
+Since APKMirror has removed encryption from their APKM files, it's no longer necessary to decrypt them.
+As a result, the option to decrypt APKM files has been removed.
+Instead, this option is now provided by the UnAPKM extension which you can grab from \href{https://f-droid.org/packages/io.github.muntashirakon.unapkm/}{F-Droid}.
+So, if you have an encrypted APKM file and have this extension installed, you can open the file directly in AM\@.
+
+
 \section{v2.5.20 (375)}\label{sec:v2.5.20-(375)}
 
 \subsection{Introducing Profiles}\label{subsec:introducing-profiles}

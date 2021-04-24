@@ -3,15 +3,15 @@ This page appears after clicking on the \hyperref[subsubsec:main:1-click-ops]{1-
 \hyperref[subsec:main-page-options-menu]{main menu}.
 
 \subsection{Block/Unblock Trackers}\label{subsec:block-unblock-trackers}
-This option can be used to block or unblock the ad/tracker components from the installed apps. After you click on this
-option, you will be asked to select if AM will list trackers from all apps or only from the user apps. Novice users
-should avoid blocking trackers from the system apps in order to avoid consequences. After that, a multi-choice dialog
-box will appear where you can deselect the apps you want to exclude from this operation. Clicking \textit{block} or
-\textit{unblock} applies the changes immediately.
+This option can be used to block or unblock the ad/tracker components from the installed apps.
+After you click on this option, you will be asked to select if AM will list trackers from all apps or only from the user apps.
+Novice users should avoid blocking trackers from the system apps in order to avoid consequences.
+After that, a multi-choice dialog box will appear where you can deselect the apps you want to exclude from this operation.
+Clicking \textit{block} or \textit{unblock} applies the changes immediately.
 
 \begin{warning}{Notice}
-    Certain apps may not function as expected after applying the blocking. If that is the case, remove blocking rules
-    all at once or one by one in the component tabs of the corresponding \hyperref[sec:app-details-page]{App Details page}.
+    Certain apps may not function as expected after applying the blocking.
+    If that is the case, remove blocking rules all at once or one by one in the component tabs of the corresponding \hyperref[sec:app-details-page]{App Details page}.
 \end{warning}
 
 \begin{amseealso}
@@ -20,11 +20,11 @@ box will appear where you can deselect the apps you want to exclude from this op
 \end{amseealso}
 
 \subsection{Block Components\dots}\label{subsec:block-components-dots}
-This option can be used to block certain app components denoted by the signatures. App signature is the full name or
-partial name of the components. For safety, it is recommended that you should add a \texttt{.} (dot) at the end of each
-partial signature name as the algorithm used here chooses all matched components in a greedy manner. You can insert more
-than one signature in which case all signatures have to be separated by spaces. Similar to the option above, there is an
-option to apply blocking to system apps as well.
+This option can be used to block certain app components denoted by the signatures.
+App signature is the full name or partial name of the components.
+For safety, it is recommended that you should add a \texttt{.} (dot) at the end of each partial signature name as the algorithm used here chooses all matched components in a greedy manner.
+You can insert more than one signature in which case all signatures have to be separated by spaces.
+Similar to the option above, there is an option to apply blocking to system apps as well.
 
 \begin{danger}{Caution}
     If you are not aware of the consequences of blocking app components by signature(s), you should avoid using this
@@ -32,14 +32,42 @@ option to apply blocking to system apps as well.
 \end{danger}
 
 \subsection{Set Mode for App Ops\dots}\label{subsec:set-mode-for-app-ops-dots}
-This option can be used to configure certain \hyperref[ch:app-ops]{app operations} of all or selected apps. You can
-insert more than one app op constants separated by spaces. It is not always possible to know in advance about all the
-app op constants as they vary from device to device and from OS to OS. To find the desired app op constant, browse the
-\textit{App Ops} tab in the \hyperref[sec:app-details-page]{App Details page}. The constants are integers closed inside
-brackets next to each app op name. You can also use the app op names. You also have to select one of the
-\hyperref[subsec:mode-constants]{modes} that will be applied against the app ops.
+This option can be used to configure certain \hyperref[ch:app-ops]{app operations} of all or selected apps.
+You can insert more than one app op constants separated by spaces.
+It is not always possible to know in advance about all the app op constants as they vary from device to device and from OS to OS\@.
+To find the desired app op constant, browse the \textit{App Ops} tab in the \hyperref[sec:app-details-page]{App Details page}.
+The constants are integers closed inside brackets next to each app op name.
+You can also use the app op names.
+You also have to select one of the \hyperref[subsec:mode-constants]{modes} that will be applied against the app ops.
 
 \begin{danger}{Caution}
     Unless you are well-informed about app ops and the consequences of blocking them, you should avoid using this
     feature as it may result in boot loop or soft brick, and you may have to apply factory reset in order to use your OS\@.
 \end{danger}
+
+\subsection{Back up}\label{subsec:1-click-back-up}
+1-Click options for back up.
+As a precaution, it lists the affected backups before performing any operation.
+
+\paragraph{Back up all apps.} Back up all the installed apps.
+
+\paragraph{Redo existing backups.} Back up all the installed apps that have a previous backup.
+
+\paragraph{Back up apps without backups.} Back up all the installed apps without a previous backup.
+
+\paragraph{Verify and redo backups.} Verify the recently made backups of the installed apps and redo backup if necessary.
+
+\paragraph{Back up apps with changes.} If an app has changed since the last backup, redo backup for it.
+It checks a number of indices including app version, last update date, last launch date, integrity and file hashes.
+Directory hashes are taken during the back up and stored in a database.
+On running this operation, new hashes are taken and compared with the ones kept in the database.
+
+\subsection{Restore}\label{subsec:1-click-restore}
+1-Click options for restore.
+As a precaution, it lists the affected backups before performing any operation.
+
+\paragraph{Restore all apps.} Restore \textit{base backup} of all the backed up apps.
+
+\paragraph{Restore not installed apps.} Restore \textit{base backup} of all the backed up apps that are not currently installed.
+
+\paragraph{Restore latest backups.} Restore \textit{base backup} of already installed apps whose version codes are higher than the installed version code.

@@ -326,23 +326,25 @@ permission(s). These permissions are managed by the permission controller. Some 
 \textit{dangerous} and \textit{development} permissions require confirmation from the user. Colours used in these tabs
 are explained in \Sref{subsec:app-details-colour-codes}.
 
-\subsubsection{App Ops}
-\textbf{App Ops} stands for \textbf{Application Operations}. Since Android 4.3, \textit{App Ops} are used by Android
-system to control most of the application permissions. Each app op has a unique number associated with them which are
-closed inside first brackets in the App Ops tab. They also have private and optionally a public name. Some app ops are
-associated with \textit{permissions} as well. The dangerousness of an app op is decided based on the associated
-permission, and other informations such as \textit{flags}, \textit{permission name}, \textit{permission description},
-\textit{package name}, \textit{group} are taken from the associated \hyperref[subsubsec:permissions]{permission}. Other
-information may include the following:
+\subsubsection{App Ops}\label{subsubsec:app-ops}
+\textbf{App Ops} stands for \textbf{Application Operations}.
+Since Android 4.3, \textit{App Ops} are used by Android system to control most of the application permissions.
+Each app op has a unique number associated with them which are closed inside first brackets in the App Ops tab.
+They also have a private and optionally, a public name.
+Some app ops are also associated with \textit{permissions}.
+The dangerousness of an app op is decided based on the associated permission, and other information such as
+\textit{flags}, \textit{permission name}, \textit{permission description}, \textit{package name}, \textit{group} are
+taken from the associated \hyperref[subsubsec:permissions]{permission}.
+Other information may include the following:
 \begin{itemize}
     \item \textbf{Mode.} It describes the current authorisation status which can be \textit{allow}, \textit{deny} (a
     rather misnomer, it simply means error), \textit{ignore} (it actually means deny), \textit{default} (inferred from
     a list of defaults set internally by the vendor), \textit{foreground} (in newer Androids, it means the app op can
     only be used when the app is running in foreground), and some custom modes set by the vendors (MIUI uses
-    \textit{ask} and other modes with just numbers without any associated names).
+    \textit{ask}, for instance).
 
     \item \textbf{Duration.} The amount of time this app op has been used (there can be negative durations whose use
-    cases are currently not known to me).
+    cases are currently unknown to me).
 
     \item \textbf{Accept Time.} Last time the app op was accepted.
 
@@ -350,16 +352,21 @@ information may include the following:
 \end{itemize}
 
 \begin{tip}{Info}
-    Contents of this tab are only visible to the root and \hyperref[sec:adb-over-tcp]{ADB} users.
+    Contents of this tab are visible to no-root users if \texttt{android.permission.GET\_APP\_OPS\_STATS} is granted via ADB\@.
 \end{tip}
 
-There is a toggle button next to each app op item which can be used to allow or deny (ignore) the app op. You can also
-reset your changes using the \textit{Reset to default} option or deny all dangerous app ops using the corresponding
-option in the menu. You can also sort them in ascending order by app op names and the associated unique numbers (or
-values). You can also list the denied app ops first using the corresponding sorting option.
+There is a toggle button next to each app op item which can be used to allow or deny (ignore) the app op.
+If you need to set other modes available to your device, simply long click on an item.
+If you need to set additional app ops that are not listed in the tab, use the \textit{Set custom app op} option in the menu.
+You can also reset your changes using the \textit{Reset to default} option or deny all dangerous app ops using the
+corresponding option in the menu.
+You can also sort them in ascending order by app op names and the associated unique numbers (or values).
+You can also list the denied app ops first using the corresponding sorting option.
 
 \begin{warning}{Warning}
-    Denying an app op may cause the app to misbehave. Use the \textit{reset to default} option if that is the case.
+    Denying an app op may cause the app to misbehave.
+    Use the \textit{reset to default} option if that is the case.
+    Due to the nature how app ops work, the system may take some time to apply them.
 \end{warning}
 
 \seealsoinline{\hyperref[ch:app-ops]{Appendix: App Ops}}
