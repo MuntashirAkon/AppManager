@@ -15,7 +15,7 @@
         \n\nИспользуя это приложение, вы принимаете на себя всю ответственность за его использование и соглашаетесь с тем, что я
         не несу ответственности за любые ваши действия, которые могут негативно повлиять на ваше устройство.
     </string>
-    <string name="disclaimer_footer">© 2020 Muntashir Al-Islam</string>
+    <string name="disclaimer_footer">© 2020–2021 Muntashir Al-Islam</string>
     <string name="disclaimer_agree_forever">Не показывать снова</string>
     <string name="disclaimer_agree">Принять</string>
     <string name="disclaimer_exit">Выход</string>
