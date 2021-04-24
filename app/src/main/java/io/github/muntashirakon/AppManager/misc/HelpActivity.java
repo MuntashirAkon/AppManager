@@ -19,17 +19,13 @@ package io.github.muntashirakon.AppManager.misc;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
 import android.webkit.WebResourceRequest;
-import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
@@ -41,12 +37,9 @@ import androidx.webkit.WebSettingsCompat;
 import androidx.webkit.WebViewClientCompat;
 import androidx.webkit.WebViewFeature;
 
-import java.io.InputStream;
-
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 
 public class HelpActivity extends BaseActivity {
@@ -83,7 +76,6 @@ public class HelpActivity extends BaseActivity {
         webView.setWebViewClient(new WebViewClientImpl());
         webView.setNetworkAvailable(false);
         WebSettings webSettings = webView.getSettings();
-        webSettings.setJavaScriptEnabled(true);
         int nightModeFlags = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
         if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES) {
             if(WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
@@ -118,33 +110,15 @@ public class HelpActivity extends BaseActivity {
     }
 
     class WebViewClientImpl extends WebViewClientCompat {
-        @Nullable
         @Override
-        public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
-            WebResourceResponse webResourceResponse = null;
+        public boolean shouldOverrideUrlLoading(@NonNull WebView view, @NonNull WebResourceRequest request) {
             Uri uri = request.getUrl();
-            try {
-                Resources resources = getResources();
-                if (uri.toString().startsWith("file://android_res")) {
-                    String resName = uri.getLastPathSegment();
-                    int resourceId = resources.getIdentifier(resName, "raw", getPackageName());
-
-                    TypedValue value = new TypedValue();
-                    resources.getValue(resourceId, value, false);
-                    String typeValueString = value.string.toString();
-                    String extension = typeValueString.substring(typeValueString.lastIndexOf('.') + 1);
-                    String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
-                    InputStream inputStream = resources.openRawResource(resourceId);
-                    webResourceResponse = new WebResourceResponse(mimeType, null, inputStream);
-                } else {
-                    // Otherwise, the link is not for a page on my site, so launch another Activity that handles URLs
-                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                    startActivity(intent);
-                }
-            } catch (Exception e) {
-                Log.w("InterceptRequest", "url = " + uri, e);
+            if (uri.toString().startsWith("file://android_res")) {
+                return false;
             }
-            return webResourceResponse;
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+            return true;
         }
     }
 }
