@@ -19,7 +19,25 @@ package io.github.muntashirakon.AppManager.rules;
 
 import android.content.Context;
 import android.os.RemoteException;
-import androidx.annotation.*;
+
+import androidx.annotation.GuardedBy;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringDef;
+import androidx.annotation.WorkerThread;
+
+import java.io.BufferedReader;
+import java.io.Closeable;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
+
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
@@ -30,13 +48,6 @@ import io.github.muntashirakon.AppManager.uri.UriManager;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.io.ProxyFileReader;
 import io.github.muntashirakon.io.ProxyOutputStream;
-
-import java.io.*;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
 
 public class RulesStorageManager implements Closeable {
     @StringDef(value = {
@@ -79,9 +90,21 @@ public class RulesStorageManager implements Closeable {
     public static class Entry {
         public static final String STUB = "STUB";
 
+        /**
+         * Name of the entry, unique for {@link Type#ACTIVITY}, {@link Type#PROVIDER}, {@link Type#RECEIVER},
+         * {@link Type#SERVICE} and {@link Type#PERMISSION} but not others. In other cases, they can be {@link #STUB}.
+         */
         @NonNull
-        public String name; // pk
+        public String name;
+        /**
+         * Type of the entry.
+         */
         public Type type;
+        /**
+         * Extra data.
+         *
+         * @see #getExtra(Type, String)
+         */
         public Object extra; // mode, is_applied, is_granted
 
         public Entry() {
@@ -141,7 +164,7 @@ public class RulesStorageManager implements Closeable {
     }
 
     @GuardedBy("entries")
-    public Entry get(String name) {
+    protected Entry get(String name) {
         synchronized (entries) {
             for (Entry entry : entries) if (entry.name.equals(name)) return entry;
             return null;
@@ -180,7 +203,7 @@ public class RulesStorageManager implements Closeable {
     }
 
     @GuardedBy("entries")
-    public boolean hasName(String name) {
+    protected boolean hasName(String name) {
         synchronized (entries) {
             for (Entry entry : entries) if (entry.name.equals(name)) return true;
             return false;
@@ -202,69 +225,113 @@ public class RulesStorageManager implements Closeable {
     }
 
     @GuardedBy("entries")
-    public void removeEntry(String name) {
+    protected void removeEntries(String name, Type type) {
         synchronized (entries) {
-            Entry removableEntry = null;
-            for (Entry entry : entries) if (entry.name.equals(name)) removableEntry = entry;
-            entries.remove(removableEntry);
+            for (Entry entry : entries) {
+                if (entry.name.equals(name) && entry.type.equals(type)) {
+                    entries.remove(entry);
+                }
+            }
         }
     }
 
     protected void setComponent(String name, Type componentType, @ComponentStatus String componentStatus) {
-        addEntry(new Entry(name, componentType, componentStatus));
+        addUniqueEntry(new Entry(name, componentType, componentStatus));
     }
 
     public void setAppOp(String name, @AppOpsManager.Mode int mode) {
-        addEntry(new Entry(name, Type.APP_OP, mode));
+        addUniqueEntry(new Entry(name, Type.APP_OP, mode));
     }
 
     public void setPermission(String name, Boolean isGranted) {
-        addEntry(new Entry(name, Type.PERMISSION, isGranted));
+        addUniqueEntry(new Entry(name, Type.PERMISSION, isGranted));
     }
 
     public void setNotificationListener(String name, Boolean isGranted) {
-        addEntry(new Entry(name, Type.NOTIFICATION, isGranted));
+        addUniqueEntry(new Entry(name, Type.NOTIFICATION, isGranted));
     }
 
     public void setMagiskHide(Boolean isHide) {
         Entry entry = new Entry();
         entry.type = Type.MAGISK_HIDE;
         entry.extra = isHide;
-        addEntry(entry);
+        addEntryInternal(entry);
     }
 
     public void setBatteryOptimization(Boolean willOptimize) {
         Entry entry = new Entry();
         entry.type = Type.BATTERY_OPT;
         entry.extra = willOptimize;
-        addEntry(entry);
+        addEntryInternal(entry);
     }
 
     public void setNetPolicy(@NetworkPolicyManagerCompat.NetPolicy int netPolicy) {
         Entry entry = new Entry();
         entry.type = Type.BATTERY_OPT;
         entry.extra = netPolicy;
-        addEntry(entry);
+        addEntryInternal(entry);
     }
 
     public void setUriGrant(@NonNull UriManager.UriGrant uriGrant) {
         Entry entry = new Entry();
         entry.type = Type.URI_GRANT;
         entry.extra = uriGrant;
-        addEntry(entry);
+        addEntryInternal(entry);
     }
 
     public void setSsaid(@NonNull String ssaid) {
         Entry entry = new Entry();
         entry.type = Type.SSAID;
         entry.extra = ssaid;
-        addEntry(entry);
+        addEntryInternal(entry);
     }
 
+    /**
+     * Add entry, remove old entries depending on entry {@link Type}.
+     */
     @GuardedBy("entries")
     public void addEntry(@NonNull Entry entry) {
         synchronized (entries) {
-            removeEntry(entry.name);
+            switch (entry.type) {
+                case ACTIVITY:
+                case PROVIDER:
+                case RECEIVER:
+                case SERVICE:
+                case PERMISSION:
+                case APP_OP:
+                case NOTIFICATION:
+                    addUniqueEntry(entry);
+                    break;
+                case SSAID:
+                case URI_GRANT:
+                case NET_POLICY:
+                case BATTERY_OPT:
+                case MAGISK_HIDE:
+                case UNKNOWN:
+                default:
+                    addEntryInternal(entry);
+            }
+        }
+    }
+
+    /**
+     * Remove the exact entry if exists before adding it.
+     */
+    @GuardedBy("entries")
+    private void addEntryInternal(@NonNull Entry entry) {
+        synchronized (entries) {
+            removeEntry(entry);
+            entries.add(entry);
+        }
+    }
+
+    /**
+     * Remove all entries of the given name and type before adding the entry.
+     */
+    @GuardedBy("entries")
+    private void addUniqueEntry(@NonNull Entry entry) {
+        synchronized (entries) {
+            removeEntries(entry.name, entry.type);
             entries.add(entry);
         }
     }
@@ -386,8 +453,9 @@ public class RulesStorageManager implements Closeable {
             StringBuilder stringBuilder = new StringBuilder();
             for (Entry entry : entries) {
                 if (isExternal) stringBuilder.append(packageName).append("\t");
-                stringBuilder.append(entry.name).append("\t").append(entry.type.name()).append("\t").
-                        append(entry.extra).append("\n");
+                stringBuilder.append(entry.name).append("\t")
+                        .append(entry.type.name()).append("\t")
+                        .append(entry.extra).append("\n");
             }
             try (OutputStream TSVFile = new ProxyOutputStream(tsvRulesFile)) {
                 TSVFile.write(stringBuilder.toString().getBytes());

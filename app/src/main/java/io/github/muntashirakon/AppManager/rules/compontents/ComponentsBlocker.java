@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.RemoteException;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 
@@ -201,7 +202,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
      * @return {@code true} if blocked, {@code false} otherwise
      */
     public boolean isComponentBlocked(String componentName) {
-        return hasComponent(componentName) && get(componentName).extra == COMPONENT_BLOCKED;
+        return hasComponent(componentName) && COMPONENT_BLOCKED.equals(get(componentName).extra);
     }
 
     /**
@@ -212,7 +213,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
     public int componentCount() {
         int count = 0;
         for (Entry entry : getAll()) {
-            if (isComponent(entry) && entry.extra != COMPONENT_TO_BE_UNBLOCKED)
+            if (isComponent(entry) && !COMPONENT_TO_BE_UNBLOCKED.equals(entry.extra))
                 ++count;
         }
         return count;
@@ -236,12 +237,28 @@ public final class ComponentsBlocker extends RulesStorageManager {
      *
      * @param componentName The component to remove
      * @see #removeEntry(Entry)
-     * @see #removeEntry(String)
+     * @see #deleteComponent(String)
      */
     public void removeComponent(String componentName) {
         if (readOnly) return;
-        if (hasName(componentName)) {
+        if (hasComponent(componentName)) {
             setComponent(componentName, get(componentName).type, COMPONENT_TO_BE_UNBLOCKED);
+        }
+    }
+
+    /**
+     * Remove component from the list rules without triggering a component removal request, does nothing
+     * if the instance is immutable or the component does not exist. The rules are only applied when
+     * {@link #commit()} is called.
+     *
+     * @param componentName The component to remove
+     * @see #removeEntry(Entry)
+     * @see #removeComponent(String)
+     */
+    public void deleteComponent(String componentName) {
+        if (readOnly) return;
+        if (hasComponent(componentName)) {
+            removeEntries(componentName, get(componentName).type);
         }
     }
 
@@ -262,7 +279,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
         StringBuilder receivers = new StringBuilder();
         for (RulesStorageManager.Entry component : getAllComponents()) {
             // Ignore components that needs unblocking
-            if (component.extra == COMPONENT_TO_BE_UNBLOCKED) continue;
+            if (COMPONENT_TO_BE_UNBLOCKED.equals(component.extra)) continue;
             String componentFilter = "  <component-filter name=\"" + packageName + "/" + component.name + "\"/>\n";
             RulesStorageManager.Type componentType = component.type;
             switch (component.type) {
@@ -312,7 +329,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
     public boolean isRulesApplied() {
         List<RulesStorageManager.Entry> entries = getAllComponents();
         for (RulesStorageManager.Entry entry : entries)
-            if (entry.extra == COMPONENT_TO_BE_BLOCKED) return false;
+            if (COMPONENT_TO_BE_BLOCKED.equals(entry.extra)) return false;
         return true;
     }
 
@@ -338,7 +355,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
             if (apply) {
                 // Enable the components that need removal and disable requested components
                 for (RulesStorageManager.Entry entry : allEntries) {
-                    if (entry.extra == COMPONENT_TO_BE_UNBLOCKED) {
+                    if (COMPONENT_TO_BE_UNBLOCKED.equals(entry.extra)) {
                         // Enable components that are removed
                         try {
                             PackageManagerCompat.setComponentEnabledSetting(new ComponentName(packageName, entry.name), PackageManager.COMPONENT_ENABLED_STATE_DEFAULT, 0, userHandle);
@@ -363,7 +380,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
                     // IFW rules are already removed above.
                     try {
                         PackageManagerCompat.setComponentEnabledSetting(new ComponentName(packageName, entry.name), PackageManager.COMPONENT_ENABLED_STATE_DEFAULT, 0, userHandle);
-                        if (entry.extra == COMPONENT_TO_BE_UNBLOCKED) removeEntry(entry);
+                        if (COMPONENT_TO_BE_UNBLOCKED.equals(entry.extra)) removeEntry(entry);
                         else setComponent(entry.name, entry.type, COMPONENT_TO_BE_BLOCKED);
                     } catch (RemoteException e) {
                         Log.e(TAG, "Could not enable component: " + packageName + "/" + entry.name);

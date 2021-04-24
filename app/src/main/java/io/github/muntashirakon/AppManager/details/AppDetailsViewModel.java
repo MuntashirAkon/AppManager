@@ -278,8 +278,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     // Remove from the list
                     blocker.removeComponent(componentName);
                 } else {
-                    // The component isn't being blocked, simply remove it
-                    blocker.removeEntry(componentName);
+                    // The component isn't being blocked, simply delete it
+                    blocker.deleteComponent(componentName);
                 }
             } else {
                 // Add to the list
