@@ -320,10 +320,10 @@
         <item quantity="one">1 tracker con la classe <xliff:g id="class_no" example="50">%1$d</xliff:g></item>
         <item quantity="other">1 tracker con le classi <xliff:g id="class_no" example="50">%1$d</xliff:g></item>
     </plurals>
-    <string name="toggle_class_listing">Scambiare lista classi</string>
+    <string name="toggle_class_listing">Attiva/Disattiva Elencazione Classi</string>
     <string name="class_viewer">Visualizzatore Classi</string>
-    <string name="credits_message">"Agli autori di
-\n- Progetto open source Android
+    <string name="credits_message">Agli autori di:
+\n- Progetto Open Source Android
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
 \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
@@ -332,10 +332,10 @@
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
-\nLogo originale di: <a href="https://github.com/Atrate">Atrate</a>. "</string>
+\nLogo originale di: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="credits">Crediti</string>
     <string name="sdk_flags">Flags</string>
-    <string name="sort_by_domain">Utilizzatore app primario</string>
+    <string name="sort_by_domain">Prima app dell\'utente</string>
     <string name="manifest">Manifesto</string>
     <string name="flags">Flags</string>
     <string name="sort_by_target_sdk">SDK destinazione</string>
@@ -350,10 +350,12 @@
     <string name="about">Informazioni</string>
     <string name="input_features">Inserisci impostazioni</string>
     <string name="no_feature">Nessun impostazione</string>
-    <string name="gles_ver">Rich. Versione GL ES</string>
+    <string name="gles_ver">Rich. Versione OpenGL ES</string>
     <string name="uses_feature">Impostazioni Utente</string>
     <string name="soft_input">Modalità soft input</string>
     <string name="authority">Autorità</string>
     <string name="storage_and_cache">Memoria e cache</string>
     <string name="error_creating_shortcut">Errore nel creare scorciatoia</string>
+    <string name="word_wrap">Attiva/Disattiva andata a capo</string>
+    <string name="app_signing_signatures">Firme</string>
 </resources>
