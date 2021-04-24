@@ -85,7 +85,7 @@
     <string name="disable_background">Deshabilitar segundo plano</string>
     <string name="clear_data">Limpiar datos</string>
     <string name="user_and_uid">Usuario: <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
-    <string name="disable_background_run">Deshabilitar la ejecución en segundo plano</string>
+    <string name="disable_background_run">Evitar la operación en segundo plano</string>
     <string name="kill_process">Matar</string>
     <string name="running_apps">Aplicaciones ejecutándose</string>
     <string name="the_export_was_successful">Exportado</string>
@@ -106,7 +106,7 @@
     <string name="app_settings">Ajustes</string>
     <string name="usage_access">Acceso al uso</string>
     <string name="pref_global_blocking_enabled_msg">Te permite bloquear cualquier componente de cualquier aplicación sin activar explícitamente el bloqueo de la aplicación.</string>
-    <string name="pref_global_blocking_enabled">Bloqueo de componente global</string>
+    <string name="pref_global_blocking_enabled">Bloqueo instantáneo de componentes</string>
     <string name="str_logo">Logo</string>
     <string name="rules_not_applied">Las reglas no están aplicadas</string>
     <string name="app_ops">App Ops</string>
@@ -246,7 +246,7 @@
     <string name="data_transmitted">Datos transmitidos</string>
     <string name="data_received">Datos recibidos</string>
     <string name="sort_by_target_sdk">SDK objetivo</string>
-    <string name="sort_by_domain">Aplicaciones de usuario primero</string>
+    <string name="sort_by_domain">Ordenar por App. Usuario</string>
     <string name="sort_by_package_name">Nombre del paquete</string>
     <string name="sort_by_app_label">Etiqueta de la App</string>
     <string name="manifest">Manifiesto</string>
@@ -880,4 +880,5 @@
     <string name="internal_storage">Almacenamiento interno</string>
     <string name="back_up">Respaldo</string>
     <string name="internal_data">Datos internos</string>
+    <string name="app_signing_signatures">Firmas</string>
 </resources>
