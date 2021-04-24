@@ -1027,4 +1027,5 @@
     <string name="pref_import_export_keystore">KeyStore\'u içe/dışa aktar</string>
     <string name="app_signing_signatures">İmzalar</string>
     <string name="pref_rules_msg">Anında engelleme, kuralları içe/dışa aktarma/kaldırma vs.</string>
+    <string name="saf">SAF</string>
 </resources>
