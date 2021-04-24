@@ -25,7 +25,7 @@
     <string name="menu_remove_rules">إزالة القواعد</string>
     <string name="failed_to_extract_apk_file">تعذر استخراج ملف APK</string>
     <string name="share_apk">مشاركة APK</string>
-    <string name="grant_usage_acess_message">الوصول إلى الاستخدام إلزامي لعرض معلومات استخدام التطبيق.</string>
+    <string name="grant_usage_acess_message">يستخدم لعرض معلومات استخدام التطبيق.</string>
     <string name="grant_usage_access">منح حق الوصول إلى الاستخدام</string>
     <string name="go">اذهب</string>
     <string name="go_back">عودة</string>
@@ -46,7 +46,7 @@
     <string name="toggle_class_listing">تبديل قائمة الفصل</string>
     <string name="class_viewer">عارض الفصل</string>
     <string name="word_wrap">تفعيل التفاف النص</string>
-    <string name="credits_message">"لمؤلفي
+    <string name="credits_message">لمؤلفي
 \n- مشروع Android مفتوح المصدر
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info"> معلومات عن حزمة التطبيقات </a>
 \n- <a href="https://github.com/butzist/ActivityLauncher"> مشغل النشاط </a>
@@ -56,7 +56,8 @@
 \n- <a href="https://github.com/8enet/AppOpsX"> AppOpsX </a>
 \n- <a href="https://github.com/Aefyr/SAI"> الديوان </a>
 \n- <a href="https://github.com/RikkaApps/Shizuku"> شيزوكو </a>
-\nمصدر الشعار الأصلي: <a href="https://github.com/Atrate"> Atrate </a>. "</string>
+\n- <a href="https://github.com/pluscubed/matlog"> MatLog </a>
+\nمصدر الشعار الأصلي: <a href="https://github.com/Atrate"> Atrate </a>. </string>
     <string name="credits">إشادات</string>
     <string name="third_party">مكتبات وأيقونات الطرف الثالث</string>
     <string name="license">الرخصة</string>
@@ -118,7 +119,7 @@
     <string name="shared_user_id">معرف المستخدم المشترك</string>
     <string name="sort_by_shared_user_id">معرف المستخدم المشترك</string>
     <string name="no_feature">لا توجد ميزات</string>
-    <string name="gles_ver">مطلوب. إصدار GL ES</string>
+    <string name="gles_ver">مطلوب. إصدار OpenGL ES</string>
     <string name="uses_feature">يستخدم المميزات</string>
     <string name="protection_level">مستوى الحماية</string>
     <string name="group">المجموعة</string>
@@ -182,4 +183,254 @@
     <string name="databases">قواعد البيانات</string>
     <string name="shared_prefs">الأفضليات المشتركة</string>
     <string name="no_code">لا يوجد رمز</string>
+    <string name="orientation_portrait">طولي</string>
+    <string name="orientation_landscape">بالعرض</string>
+    <string name="orientation_no_sensor">لا يوجد مستشعر</string>
+    <string name="orientation_locked">مقفل</string>
+    <string name="orientation_full_user">مستخدم كامل</string>
+    <string name="orientation_full_sensor">مستشعر كامل</string>
+    <string name="orientation_behind">وراء</string>
+    <string name="orientation_unspecified">غير محدّد</string>
+    <string name="launch_mode_single_top">أعلى واحد</string>
+    <string name="launch_mode_single_task">مهمة واحدة</string>
+    <string name="launch_mode_single_instance">مثيل واحد</string>
+    <string name="launch_mode_multiple">مضاعفة</string>
+    <string name="locale_split_for_base_apk"><xliff:g id="split_name" example="English"> %1$s </xliff:g> ترجمة APK الأساسية</string>
+    <string name="locale_split_for_feature"><xliff:g id="split_name" example="English"> %1$s </xliff:g> ترجمة للميزة <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <string name="abi_split_for_base_apk"><xliff:g id="split_name" example="arm64_v8a"> %1$s </xliff:g> رمز لملف APK الأساسي</string>
+    <string name="abi_split_for_feature"><xliff:g id="split_name" example="arm64_v8a"> %1$s </xliff:g> رمز لـ <xliff:g id="feature_name" example="Visualizer"> %2$s </xliff:g></string>
+    <string name="density_split_for_base_apk"><xliff:g id="split_name" example="xxdpi"> %1$s </xliff:g> (<xliff:g id="dpi_no" example="480"> %2$d </xliff:g> موارد DPI) لملف APK الأساسي</string>
+    <string name="density_split_for_feature"><xliff:g id="split_name" example="xxdpi"> %1$s </xliff:g> (<xliff:g id="dpi_no" example="480"> %2$d </xliff:g> موارد DPI) للميزات <xliff:g id="feature_name" example="Visualizer"> %3$s </xliff:g></string>
+    <string name="unknown_split_for_base_apk"><xliff:g id="split_name" example="some_split"> %1$s </xliff:g> لملف APK الأساسي</string>
+    <string name="unknown_split_for_feature"><xliff:g id="split_name" example="some_split"> %1$s </xliff:g> للميزة <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <string name="split_feature_name">الميزة: <xliff:g id="feature_name" example="Visualizer">%1$s</xliff:g></string>
+    <string name="base_apk">APK الأساسي</string>
+    <string name="choose_language">تغيير اللغة</string>
+    <string name="current_language">اللغة: %1$s</string>
+    <string name="auto">تلقائي</string>
+    <string name="pref_app_language">اللغة</string>
+    <string name="backup_all_users">جميع المستخدمين</string>
+    <string name="backup_multiple">نسخ احتياطي متعدد</string>
+    <string name="obb_files_extracted_successfully">ملفات OBB المستخرجة</string>
+    <string name="failed_to_extract_obb_files">تعذر استخراج ملفات OBB</string>
+    <string name="backup_obb_media">OBB و Media</string>
+    <string name="backup_apk_files">ملفات APK</string>
+    <string name="installer_error_session_abandon">تعذر التخلي عن جلسة عمل المثبت</string>
+    <string name="installer_error_session_commit">تعذر تنفيذ ملفات APK</string>
+    <string name="installer_error_session_write">تعذر الكتابة إلى جلسة المثبت</string>
+    <string name="installer_error_session_create">تعذر إنشاء جلسة المثبت</string>
+    <string name="installer_error_security">تعذر الوصول إلى ملفات APK</string>
+    <string name="install_in_progress">التثبيت قيد التقدم</string>
+    <string name="package_installer">مثبت الحزمة</string>
+    <string name="unblock_trackers">إلغاء حظر أجهزة المتعقبين</string>
+    <string name="reinstall">اعادة التثبيت</string>
+    <string name="reinstall_app_message">هل تريد إعادة تثبيت هذا التطبيق؟</string>
+    <string name="install_app_message">هل تريد تثبيت هذا التطبيق؟</string>
+    <string name="try_again">أعد المحاولة</string>
+    <string name="full_stop_tap_to_see_details">. اضغط للاطلاع على التفاصيل.</string>
+    <string name="operation_running">العملية قيد التشغيل …</string>
+    <string name="batch_ops">عمليات الدُفعات</string>
+    <string name="failed_to_fetch_package_info">تعذر جلب معلومات الحزمة</string>
+    <string name="installer_error_lidl_rom">ROM الخاص بك غير متوافق مع Rootless Installer.</string>
+    <string name="installer_error_generic">فشل التثبيت</string>
+    <string name="installer_error_storage">لا توجد مساحة تخزين كافية لتثبيت التطبيق</string>
+    <string name="installer_error_bad_apks">تم تحديد ملفات APK غير صالحة</string>
+    <string name="installer_error_incompatible">التطبيق غير متوافق مع هذا الجهاز</string>
+    <string name="installer_error_conflict">تعذر تثبيت التطبيق لأن اسم الحزمة قيد الاستخدام</string>
+    <string name="installer_error_blocked">تم حظر التثبيت بواسطة <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
+    <string name="installer_error_blocked_device">جهاز</string>
+    <string name="installer_error_aborted">فشل التثبيت إما لأنه تم إلغاؤه أو تم إغلاق جلسة العمل بشكل غير متوقع</string>
+    <string name="toggle_default_app_ops">تبديل عمليات التطبيق الافتراضية</string>
+    <string name="filter_apps_with_activities">مع الأنشطة</string>
+    <plurals name="are_you_sure">
+        <item quantity="zero">هل أنت متأكد؟</item>
+        <item quantity="one"></item>
+        <item quantity="two"></item>
+        <item quantity="few"></item>
+        <item quantity="many"></item>
+        <item quantity="other"></item>
+    </plurals>
+    <string name="pref_remove_all_rules_msg">سيتم منح الأذونات، وستعود عمليات التطبيق ومكوناته إلى قيمها الافتراضية.</string>
+    <string name="pref_remove_all_rules">إزالة كافة القواعد</string>
+    <string name="website">الموقع الإلكتروني</string>
+    <string name="run_in_termux">تشغيل في Termux</string>
+    <string name="open_in_termux">فتح في Termux</string>
+    <string name="export_icon">استخراج الأيقونة</string>
+    <string name="no_matching_package_found">تعذر العثور على أي تطبيق من هذا القبيل</string>
+    <string name="block_unblock_trackers">حظر / إلغاء حظر المتعقبين</string>
+    <string name="unblock">إلغاء الحظر</string>
+    <string name="block">حظر</string>
+    <string name="clear">تنظيف</string>
+    <string name="clear_data_message">هل أنت متأكد من أنك تريد مسح البيانات من هذا التطبيق؟</string>
+    <string name="skip_signature_checks">تخطي عمليات التحقق من التوقيع</string>
+    <string name="yes">نعم</string>
+    <string name="no">ﻻ</string>
+    <string name="apply_to_system_apps_question">تنطبق على تطبيقات النظام أيضا؟ حدد \"لا\" إذا لم تكن متأكدا.</string>
+    <string name="apply_to_system_apps">تطبيق على تطبيقات النظام</string>
+    <plurals name="failed_to_backup_some_apk_files">
+        <item quantity="zero">تعذر نسخ التطبيق %1$d نسخا احتياطية</item>
+        <item quantity="one">تعذر نسخ التطبيق %1$d نسخا احتياطية</item>
+        <item quantity="two">تعذر نسخ التطبيقين %1$d نسخا احتياطية</item>
+        <item quantity="few">تعذر نسخ بعض التطبيقات %1$d نسخا احتياطية</item>
+        <item quantity="many">تعذر نسخ التطبيقات %1$d نسخا احتياطية</item>
+        <item quantity="other">تعذر نسخ التطبيق %1$d نسخا احتياطية</item>
+    </plurals>
+    <string name="backup_options">خيارات النسخ الاحتياطي</string>
+    <string name="delete_backup">حذف النسخة الاحتياطية</string>
+    <string name="backup">النسخ الإحتياطي</string>
+    <string name="restore">استعادة</string>
+    <string name="data">البيانات</string>
+    <string name="internal_data">البيانات الداخلية</string>
+    <string name="external_data">البيانات الخارجية</string>
+    <string name="cache">التخزين المؤقت</string>
+    <string name="blocking_rules">قواعد المنع</string>
+    <string name="whats_new">ما الجديد</string>
+    <string name="features">المميزات</string>
+    <string name="components">المكونات</string>
+    <string name="trackers">المقتعقبون</string>
+    <string name="installed_version">النسخة المُثبتة</string>
+    <string name="filter_disabled_apps">التطبيقات المعطلة</string>
+    <string name="select_all">اختر الكل</string>
+    <string name="filter_apps_with_rules">التطبيقات ذات القواعد</string>
+    <string name="filter_system_apps">تطبيقات النظام</string>
+    <string name="filter_user_apps">تطبيقات المستخدم</string>
+    <string name="filter">عامل التصفية</string>
+    <string name="failed_to_install_package_name">تعذر تثبيت <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
+    <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager"> %1$s </xliff:g> مثبت</string>
+    <string name="termux">ترموكس</string>
+    <string name="failed_to_parse_some_numbers">تعذر تحليل بعض الأرقام</string>
+    <string name="only_works_in_root_or_adb_mode">يعمل فقط في وضع الجذر أو ADB</string>
+    <string name="input_app_ops_description">أدخل أسماء عمليات التطبيق و / أو الثوابت بمسافات ، على سبيل المثال <tt> WAKE_LOCK 63 72 CAMERA </tt> إلخ.</string>
+    <string name="input_app_ops">عمليات إدخال التطبيق</string>
+    <string name="filtered_packages">الحزم المفلترة</string>
+    <string name="input_signatures_description">أدخل التوقيعات بمسافات ، على سبيل المثال <tt> com.facebook org.app2 com.app3 </tt> إلخ.</string>
+    <string name="input_signatures">تواقيع الإدخال</string>
+    <string name="failed_packages">الحزم الفاشلة</string>
+    <string name="no_tracker_found">لم يتم العثور على متعقبات</string>
+    <string name="clear_app_cache_description">مسح ذاكرة التخزين المؤقت لجميع التطبيقات</string>
+    <string name="clear_app_cache">مسح ذاكرة التخزين المؤقت للتطبيق</string>
+    <string name="clear_data_from_uninstalled_apps_description">امسح البيانات من التطبيقات التي تم إلغاء تثبيتها بعلامة <tt> DONT_DELETE_DATA </tt></string>
+    <string name="clear_data_from_uninstalled_apps">مسح البيانات من التطبيقات التي تم إلغاء تثبيتها</string>
+    <string name="deny_app_ops_description">قم بتعيين وضع لعمليات التطبيق التي تحددها القيم الثابتة، أي <tt>63</tt> أو <tt>RUN_IN_BACKGROUND</tt></string>
+    <string name="block_components_description">حظر كافة المكونات التي تم تعريفها بواسطة التواقيع المحددة</string>
+    <string name="block_components_dots">حجب المكونات…</string>
+    <string name="block_unblock_trackers_description">حظر أو إلغاء حظر الإعلانات ومكونات التتبع في جميع التطبيقات المثبتة</string>
+    <string name="clear_cache">مسح ذاكرة التخزين المؤقت</string>
+    <string name="pref_import_existing">استيراد القواعد الموجودة</string>
+    <string name="community_links">قناة التحديث : https://t.me/AppManagerChannel
+\nمجموعة الدعم: https://t.me/AppManagerAndroid
+\nتويتر: https://twitter.com/AMUpdateChannel</string>
+    <string name="community">مجتمع تيليجرام</string>
+    <string name="source_code_links">جيثب: https://github.com/MuntashirAkon/AppManager
+\nجيت لاب: https://gitlab.com/muntashir/AppManager
+\nالنهوض: https://0xacab.org/muntashir/AppManager
+\nكودبرغ: https://codeberg.org/muntashir/AppManager</string>
+    <string name="source_code">الشفرة المصدرية</string>
+    <string name="update">تحديث</string>
+    <string name="install">تثبيت</string>
+    <string name="manifest_viewer">عارض البيان</string>
+    <string name="external_apk_no_app_op">لا يحتوي ملف APK الخارجي على أي عمليات تطبيق</string>
+    <string name="changelog">سجل التغييرات</string>
+    <string name="one_click_ops">1-انقر فوق العمليات</string>
+    <string name="never_ask">لا تسأل أبدا</string>
+    <string name="launch_app">تشغيل</string>
+    <string name="failed_to_deny_dangerous_app_ops">لا يمكن إلغاء جميع عمليات التطبيق الخطرة</string>
+    <string name="failed_to_deny_dangerous_perms">تعذر إبطال كافة الأذونات الخطيرة</string>
+    <string name="failed_to_reset_app_ops">تعذر إعادة تعيين عمليات التطبيق</string>
+    <string name="failed_to_revoke_permission">تعذر إلغاء الأذن</string>
+    <string name="failed_to_grant_permission">تعذر منح الإذن</string>
+    <string name="unknown_op">عملية غير معروفة</string>
+    <string name="sort_by_tracker_components">المتعقبات أولا</string>
+    <string name="deny_dangerous_permissions">رفض الأذونات الخطيرة</string>
+    <string name="sort_by_denied_permissions">المرفوضة أولا</string>
+    <string name="sort_by_dangerous_permissions">الخطيرة أولا</string>
+    <string name="sort_by_permission_names">اسم الصلاحية</string>
+    <string name="sort_by_app_ops_values">قيمة عمليات التطبيق</string>
+    <string name="sort_by_denied_app_ops">المرفوضة أولا</string>
+    <string name="sort_by_app_ops_names">اسم عمليات التطبيق</string>
+    <string name="deny_dangerous_app_ops">رفض عمليات التطبيق الخطيرة</string>
+    <string name="reset_to_default">إعادة التعيين إلى الوضع الافتراضي</string>
+    <string name="sort_by_component_name">اسم المكون</string>
+    <string name="block_trackers">حجب المتعقبات</string>
+    <string name="sort_by_wifi_data">بيانات شبكة Wi-Fi</string>
+    <string name="version">اﻹصدار</string>
+    <string name="pref_about_msg">إصدار مدير التطبيق ، الترخيص ، الاعتمادات ، إلخ.</string>
+    <string name="current_theme">السمة الحالية: %1$s</string>
+    <string name="apply">تطبيق</string>
+    <string name="select_theme">السمة</string>
+    <string name="night">ليلي</string>
+    <string name="day">نهار</string>
+    <string name="battery_mode">وضع البطارية</string>
+    <string name="follow_system">اتبع مظهر النظام</string>
+    <string name="pref_app_theme">مظهر التطبيق</string>
+    <string name="pref_import_blocker_msg">استيراد قواعد الحظر من Blocker، كل ملف يحتوي على قواعد لحزمة واحدة.</string>
+    <string name="pref_import_watt_msg">استيراد قواعد الحظر من Watt ، كل ملف يحتوي على قواعد لحزمة واحدة مسماة مثل <tt> packagename.xml </tt> إلخ.</string>
+    <string name="pref_import_msg">استيراد قواعد الحظر التي تم تصديرها مسبقًا من مدير التطبيقات.</string>
+    <string name="pref_export_msg">تصدير قواعد الحظر التي تم تكوينها داخل مدير التطبيقات إلى وحدة تخزين خارجية.</string>
+    <string name="touchscreen">شاشة اللمس</string>
+    <string name="navigation">التَّنَقُّل</string>
+    <string name="keyboard_type">نوع لوحة المفاتيح</string>
+    <string name="export_failed">فشل التصدير!</string>
+    <string name="import_failed">فشل الاستيراد!</string>
+    <string name="export_options">خيارات التصدير</string>
+    <string name="import_options">خيارات الاستيراد</string>
+    <string name="pref_export">تصدير</string>
+    <string name="pref_import">استيراد</string>
+    <string name="ago">منذ</string>
+    <string name="reject_time">وقت الرفض</string>
+    <string name="accept_time">وقت القبول</string>
+    <string name="duration">المدة الزمنية</string>
+    <string name="running">يعمل</string>
+    <string name="mode">الوضع</string>
+    <string name="permission_name">اسم الصلاحية</string>
+    <string name="app_op_cannot_be_disabled">لا يمكن تعطيل هذا التطبيق. (من المحتمل أن يعتمد التطبيق للقراءة فقط على تطبيق آخر.)</string>
+    <string name="toggle_kill_for_system_apps">تفعيل قتل تطبيقات النظام</string>
+    <string name="the_operation_was_successful">إنتهى</string>
+    <string name="export_blocking_rules">تصدير قواعد الحظر</string>
+    <string name="disable_background">منع التشغيل في الخلفية</string>
+    <string name="backup_restore">النسخ الاحتياطي/ الاستعادة</string>
+    <string name="clear_data">مسح البيانات</string>
+    <string name="user_and_uid">المستخدم: <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
+    <string name="user_with_id">المستخدم: <xliff:g id="user_id" example="0">%1$d</xliff:g></string>
+    <string name="memory_virtual_memory">الذاكرة: %1$s، الذاكرة الظاهرية: %2$s</string>
+    <string name="pid_and_ppid">معرّف العملية: %1$d ، معرّف العملية الأصل: %2$d</string>
+    <string name="disable_background_run">منع التشغيل في الخلفية</string>
+    <string name="kill_process">قتل</string>
+    <string name="running_apps">التطبيقات المشغلة</string>
+    <string name="store">متجر</string>
+    <string name="apk_updater">محدث APK</string>
+    <string name="the_export_was_successful">تمت عملية التصدير</string>
+    <string name="the_import_was_successful">تمَّت عملية الإستيراد</string>
+    <string name="pref_import_blocker">الاستيراد من Blocker</string>
+    <string name="pref_import_watt">استيراد من Watt</string>
+    <string name="pref_import_export_blocking_rules_msg">استيراد / تصدير ، القواعد الخارجية من Watt أو Blocker.</string>
+    <string name="pref_import_export_blocking_rules">استيراد / تصدير قواعد المنع</string>
+    <string name="sort_by_mobile_data">بيانات الجوال</string>
+    <string name="sort_by_times_opened">أوقات الفتح</string>
+    <string name="sort_by_screen_time">وقت الشاشة</string>
+    <string name="sort_by_last_used">آخر أستخدام</string>
+    <string name="external_multiple_data_dir">مسار البيانات الخارجي <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
+    <string name="external_data_dir">مسار البيانات الخارجية</string>
+    <string name="sort_by_blocked_components">المحظورة أولاً</string>
+    <string name="sort_by_disabled_app">المعطلة أولا</string>
+    <string name="exodus_link">رابط εxodus</string>
+    <string name="usage_yesterday">في الامس</string>
+    <string name="only_works_in_root_mode">يعمل فقط في وضع الجذر</string>
+    <string name="app_settings">اﻹعدادات</string>
+    <string name="usage_access">الوصول إلى الاستخدام</string>
+    <string name="pref_global_blocking_enabled_msg">يتيح لك حظر أي مكون من أي تطبيق دون تشغيل الحظر بشكل صريح للتطبيق.</string>
+    <string name="pref_global_blocking_enabled">الحظر الفوري للمكونات</string>
+    <string name="str_logo">الشعار</string>
+    <string name="rules_not_applied">لم يتم تطبيق القواعد</string>
+    <string name="failed_to_disable_op">تعذر تعطيل عملية التطبيق المطلوبة</string>
+    <string name="failed_to_enable_op">تعذر تمكين عملية التطبيق المطلوبة</string>
+    <string name="app_ops">عمليات التطبيق</string>
+    <string name="total_size">الإجمالي</string>
+    <string name="key_name_cannot_be_null">لا يمكن أن يكون اسم المفتاح فارغًا</string>
+    <string name="type_int">عدد صحيح</string>
+    <string name="boolean_value">قيمة منطقية</string>
+    <string name="integer_value">قيمة عدد صحيح</string>
+    <string name="long_integer_value">قيمة عدد صحيح طويل</string>
+    <string name="app_signing_signatures">التواقيع</string>
+    <string name="task_affinity">تقارب المهام</string>
 </resources>
