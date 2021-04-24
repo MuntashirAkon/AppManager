@@ -980,4 +980,17 @@
     <string name="restart_log_viewer_to_see_changes">Mulai ulang jendela penampil log untuk melihat perubahan.</string>
     <string name="pref_log_viewer_msg">Konfigurasikan bagaimana catatan log ditampilkan.</string>
     <string name="log_viewer">Penampil Log</string>
+    <string name="saf">SAF</string>
+    <string name="pref_rules_msg">Blokir instan, impor/ekspor/hapus aturan, dll.</string>
+    <string name="failed">Gagal</string>
+    <string name="confirm_import_keystore">Apakah Anda yakin ingin mengganti KeyStore saat ini\? Tindakan ini tidak dapat dikembalikan.</string>
+    <string name="import_keystore">Impor KeyStore</string>
+    <string name="pref_import_export_keystore_msg">Impor/ekspor Bouncy Castle KeyStore (BKS) secara internal yang dipakai oleh App Manager.</string>
+    <string name="pref_import_export_keystore">Impor/ekspor KeyStore</string>
+    <string name="latest_backup">Cadangan terbaru</string>
+    <string name="gz_bz2_compressed">%1$s dikompresi</string>
+    <string name="pgp_aes_rsa_encrypted">%1$s dienskripsi</string>
+    <string name="no_encryption">Tidak ada enskripsi</string>
+    <string name="base_backup">Cadangan basis</string>
+    <string name="app_signing_signatures">Signatur</string>
 </resources>
