@@ -700,7 +700,7 @@
     <string name="v3_scheme">v3 şeması (Android 9\'dan beri)</string>
     <string name="v2_scheme">v2 şeması (Android 7.0\'dan beri)</string>
     <string name="v1_scheme">v1 şeması (Android 1.0\'dan beri)</string>
-    <string name="pref_apk_signing_msg">İmza şemaları, özel imzalama anahtarı vb. ayarlayın.</string>
+    <string name="pref_apk_signing_msg">İmza şemaları, özel imzalama anahtarı vs. ayarlayın.</string>
     <string name="apk_signing">APK imzalama</string>
     <string name="app_signing_signature_schemes">İmza şemaları</string>
     <string name="splits">Bölümler</string>
@@ -761,7 +761,7 @@
     <string name="board_name">Ana kart</string>
     <string name="model">Model</string>
     <string name="brand_name">Marka</string>
-    <string name="pref_about_device_msg">Android sistemi, CPU, GPU, RAM, pil vb. içeren temel aygıt bilgileri.</string>
+    <string name="pref_about_device_msg">Android sistemi, CPU, GPU, RAM, pil vs. içeren temel aygıt bilgileri.</string>
     <string name="about_device">Aygıt hakkında</string>
     <string name="set_mode_for_app_ops_dots">Uygulama işlemleri için mod ayarla…</string>
     <string name="security">Güvenlik</string>
@@ -1026,5 +1026,5 @@
     <string name="pref_import_export_keystore_msg">App Manager tarafından dahili olarak kullanılan Bouncy Castle KeyStore\'u (BKS) içe/dışa aktarın.</string>
     <string name="pref_import_export_keystore">KeyStore\'u içe/dışa aktar</string>
     <string name="app_signing_signatures">İmzalar</string>
-    <string name="pref_rules_msg">Anında engelleme, kuralları içe/dışa aktarma/kaldırma vb.</string>
+    <string name="pref_rules_msg">Anında engelleme, kuralları içe/dışa aktarma/kaldırma vs.</string>
 </resources>
