@@ -1,0 +1,9 @@
+F-Droid doesn't support extended changelog. In-app changelog offers a more detailed changelog.
+- New feature: Back up/restore, log viewer, about the device, import/export/generate signing keys
+- New languages: Farsi, Japanese and Traditional Chinese
+- Ability to lock AM with Android's lock
+- Extended support for app ops
+- New Batch Op: Add to Profile
+- App Info: View/change SSAID, netpolicy, battery optimization, SAF
+- Option to enable/disable features
+- Extension: UnAPKM (available on F-Droid)

@@ -1,7 +1,0 @@
-F-Droid doesn't support extended changelog. In-app changelog offers a more detailed changelog.
-- Add crash reporter
-- Support for APKM files. Supported activities are: App Info, Installer and UnAPKM
-- Installer: Multiple user support. Enable it in settings
-- Update list of trackers and libs
-- Upcoming feature: Profile (incomplete)
-- APKS: Backup/export support for Android 7 or less
