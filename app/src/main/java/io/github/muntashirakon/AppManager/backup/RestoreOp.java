@@ -452,7 +452,7 @@ class RestoreOp implements Closeable {
         }
     }
 
-    private void restoreExtras() throws BackupException {
+    private synchronized void restoreExtras() throws BackupException {
         if (!isInstalled) {
             throw new BackupException("Misc restore is requested but the app isn't installed.");
         }
