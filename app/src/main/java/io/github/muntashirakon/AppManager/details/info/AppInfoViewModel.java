@@ -36,6 +36,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -50,6 +51,7 @@ import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.types.PackageSizeInfo;
+import io.github.muntashirakon.AppManager.uri.UriManager;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.usage.UsageUtils;
 import io.github.muntashirakon.AppManager.users.Users;
@@ -156,6 +158,20 @@ public class AppInfoViewModel extends AndroidViewModel {
                 tagCloud.ssaid = new SsaidSettings(packageName, applicationInfo.uid).getSsaid();
                 if (TextUtils.isEmpty(tagCloud.ssaid)) tagCloud.ssaid = null;
             } catch (IOException ignore) {
+            }
+        }
+        if (AppPref.isRootEnabled()) {
+            List<UriManager.UriGrant> uriGrants = new UriManager().getGrantedUris(packageName);
+            if (uriGrants != null) {
+                Iterator<UriManager.UriGrant> uriGrantIterator = uriGrants.listIterator();
+                UriManager.UriGrant uriGrant;
+                while (uriGrantIterator.hasNext()) {
+                    uriGrant = uriGrantIterator.next();
+                    if (uriGrant.targetUserId != mainModel.getUserHandle()) {
+                        uriGrantIterator.remove();
+                    }
+                }
+                tagCloud.uriGrants = uriGrants;
             }
         }
         this.tagCloud.postValue(tagCloud);
@@ -305,6 +321,8 @@ public class AppInfoViewModel extends AndroidViewModel {
         public int netPolicies;
         @Nullable
         public String ssaid;
+        @Nullable
+        public List<UriManager.UriGrant> uriGrants;
     }
 
     public static class AppInfo {

@@ -18,8 +18,16 @@
 package io.github.muntashirakon.AppManager.details.info;
 
 import android.Manifest;
-import android.content.*;
-import android.content.pm.*;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.content.pm.Signature;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.net.NetworkPolicyManager;
@@ -32,7 +40,12 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.format.Formatter;
 import android.util.Pair;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -41,7 +54,14 @@ import android.widget.TextView;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.*;
+import androidx.annotation.ColorRes;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.GuardedBy;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.annotation.UiThread;
+import androidx.annotation.WorkerThread;
 import androidx.appcompat.app.AlertDialog;
 import androidx.collection.ArrayMap;
 import androidx.core.app.ActivityCompat;
@@ -61,6 +81,20 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
@@ -95,22 +129,28 @@ import io.github.muntashirakon.AppManager.types.ScrollableDialogBuilder;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
-import io.github.muntashirakon.AppManager.utils.*;
+import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.BetterActivityResult;
+import io.github.muntashirakon.AppManager.utils.DateUtils;
+import io.github.muntashirakon.AppManager.utils.DigestUtils;
+import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
+import io.github.muntashirakon.AppManager.utils.MagiskUtils;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.PermissionUtils;
+import io.github.muntashirakon.AppManager.utils.SsaidSettings;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.io.ProxyFile;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static io.github.muntashirakon.AppManager.details.info.ListItem.LIST_ITEM_FLAG_MONOSPACE;
 import static io.github.muntashirakon.AppManager.utils.PermissionUtils.TERMUX_PERM_RUN_COMMAND;
 import static io.github.muntashirakon.AppManager.utils.PermissionUtils.hasDumpPermission;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.*;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.displayLongToast;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.displayShortToast;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 import static io.github.muntashirakon.AppManager.utils.Utils.openAsFolderInFM;
 
 public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
@@ -793,6 +833,19 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         }
                     });
                     alertDialog.show();
+                });
+            }
+            if (tagCloud.uriGrants != null) {
+                addChip(R.string.saf).setOnClickListener(v -> {
+                    CharSequence[] uriGrants = new CharSequence[tagCloud.uriGrants.size()];
+                    for (int i = 0; i < tagCloud.uriGrants.size(); ++i) {
+                        uriGrants[i] = tagCloud.uriGrants.get(i).uri.toString();
+                    }
+                    new MaterialAlertDialogBuilder(mActivity)
+                            .setTitle(R.string.saf)
+                            .setItems(uriGrants, null)
+                            .setNegativeButton(R.string.close, null)
+                            .show();
                 });
             }
         });
