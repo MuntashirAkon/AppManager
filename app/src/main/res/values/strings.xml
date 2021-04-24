@@ -346,7 +346,6 @@
     <string name="night">Night</string>
     <string name="select_theme">Theme</string>
     <string name="apply">Apply</string>
-    <string name="current_theme">Current theme: %1$s</string>
     <string name="pref_about_msg">App Manager version, license, credits, etc.</string>
     <string name="version">Version</string>
     <string name="sort_by_wifi_data">Wi-Fi data</string>
@@ -556,7 +555,6 @@
     <string name="backup_all_users">All users</string>
     <string name="pref_app_language">Language</string>
     <string name="auto">Auto</string>
-    <string name="current_language">Language: %1$s</string>
     <string name="choose_language">Change language</string>
     <string name="base_apk">Base APK</string>
     <string name="split_feature_name">Feature: <xliff:g id="feature_name" example="Visualizer">%1$s</xliff:g></string>
@@ -646,7 +644,6 @@
     <string name="rules">Rules</string>
     <string name="pref_compression_method">Compression method</string>
     <string name="pref_backup_flags_msg">Adding a preset for backup options removes the burden of selecting flags every time you back up/restore.</string>
-    <string name="compression_method">Compression method: <xliff:g id="compression_method" example="GZip">%1$s</xliff:g></string>
     <string name="confirm_installation">Confirm installation</string>
     <string name="allow_open_pgp_operation">Tap to allow App Manager to use OpenPGP</string>
     <string name="uninstall_updates">Uninstall Updates</string>
@@ -715,7 +712,6 @@
     <string name="send_selected">Send selected</string>
     <string name="pref_mode_of_operations">Mode of operation</string>
     <string name="adb_over_tcp">ADB over TCP</string>
-    <string name="current_mode">Current mode: %s</string>
     <string name="allow_routine_ops">Allow routine ops</string>
     <string name="profile_state">Profile state</string>
     <string name="allow_routine_ops_msg">Allow the profile to be used in the routine operations</string>

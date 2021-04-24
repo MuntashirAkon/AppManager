@@ -111,7 +111,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
         ArrayMap<String, Locale> locales = LangUtils.getAppLanguages(activity);
         final CharSequence[] languages = getLanguagesL(locales);
         Preference locale = Objects.requireNonNull(findPreference("custom_locale"));
-        locale.setSummary(getString(R.string.current_language, languages[locales.indexOfKey(currentLang)]));
+        locale.setSummary(languages[locales.indexOfKey(currentLang)]);
         locale.setOnPreferenceClickListener(preference -> {
             new MaterialAlertDialogBuilder(activity)
                     .setTitle(R.string.choose_language)
@@ -130,7 +130,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
         final String[] themes = getResources().getStringArray(R.array.themes);
         currentTheme = (int) AppPref.get(AppPref.PrefKey.PREF_APP_THEME_INT);
         Preference appTheme = Objects.requireNonNull(findPreference("app_theme"));
-        appTheme.setSummary(getString(R.string.current_theme, themes[THEME_CONST.indexOf(currentTheme)]));
+        appTheme.setSummary(themes[THEME_CONST.indexOf(currentTheme)]);
         appTheme.setOnPreferenceClickListener(preference -> {
             new MaterialAlertDialogBuilder(activity)
                     .setTitle(R.string.select_theme)
@@ -139,7 +139,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
                     .setPositiveButton(R.string.apply, (dialog, which) -> {
                         AppPref.set(AppPref.PrefKey.PREF_APP_THEME_INT, currentTheme);
                         AppCompatDelegate.setDefaultNightMode(currentTheme);
-                        appTheme.setSummary(getString(R.string.current_theme, themes[THEME_CONST.indexOf(currentTheme)]));
+                        appTheme.setSummary(themes[THEME_CONST.indexOf(currentTheme)]);
                     })
                     .setNegativeButton(R.string.cancel, null)
                     .show();
@@ -152,7 +152,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
         Preference mode = Objects.requireNonNull(findPreference("mode_of_operations"));
         final String[] modes = getResources().getStringArray(R.array.modes);
         currentMode = (String) AppPref.get(AppPref.PrefKey.PREF_MODE_OF_OPS_STR);
-        mode.setSummary(getString(R.string.current_mode, modes[MODE_NAMES.indexOf(currentMode)]));
+        mode.setSummary(modes[MODE_NAMES.indexOf(currentMode)]);
         mode.setOnPreferenceClickListener(preference -> {
             new MaterialAlertDialogBuilder(activity)
                     .setTitle(R.string.pref_mode_of_operations)
@@ -160,7 +160,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
                             (dialog, which) -> currentMode = MODE_NAMES.get(which))
                     .setPositiveButton(R.string.apply, (dialog, which) -> {
                         AppPref.set(AppPref.PrefKey.PREF_MODE_OF_OPS_STR, currentMode);
-                        mode.setSummary(getString(R.string.current_mode, modes[MODE_NAMES.indexOf(currentMode)]));
+                        mode.setSummary(modes[MODE_NAMES.indexOf(currentMode)]);
                         new Thread(() -> RunnerUtils.setModeOfOps(activity)).start();
                     })
                     .setNegativeButton(R.string.cancel, null)
