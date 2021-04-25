@@ -363,7 +363,7 @@
     <plurals name="no_of_splits">
         <item quantity="other">%1$d 个拆分</item>
     </plurals>
-    <string name="termux">Termux</string>
+    <string name="termux">Termux 终端模拟器</string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> 已安装</string>
     <string name="failed_to_install_package_name">无法安装<xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
     <string name="filter">筛选器</string>
@@ -883,10 +883,10 @@
     <string name="generate_key">生成</string>
     <string name="input_key">输入密钥 (以十六进制表示）</string>
     <string name="input_keystore_alias_pass_msg">轻按此处提供 %1$s 的密码</string>
-    <string name="source_code_links">GitHub: https://github.com/MuntashirAkon/AppManager
-\nGitLab: https://gitlab.com/muntashir/AppManager
-\nRiseup: https://0xacab.org/muntashir/AppManager
-\nCodeberg: https://codeberg.org/muntashir/AppManager</string>
+    <string name="source_code_links">GitHub 地址: https://github.com/MuntashirAkon/AppManager
+\nGitLab 地址: https://gitlab.com/muntashir/AppManager
+\nRiseup 地址: https://0xacab.org/muntashir/AppManager
+\nCodeberg 地址: https://codeberg.org/muntashir/AppManager</string>
     <string name="pref_installer_msg">配置应用安装程序的行为。</string>
     <string name="filter_choice_tag">标签</string>
     <string name="filter_choice_pid">PID</string>
@@ -992,4 +992,11 @@
     <string name="app_signing_signatures">签名</string>
     <string name="pref_rules_msg">即时拦截，导入/导出/移除规则等。</string>
     <string name="saf">存储访问框架</string>
+    <string name="orientation_right_to_left">从右至左</string>
+    <string name="orientation_left_to_right">从左至右</string>
+    <string name="orientation_follow_locale">遵照语言环境</string>
+    <string name="pref_layout_orientation">布局方向</string>
+    <plurals name="file_deletion_confirmation">
+        <item quantity="other">%d 个文件已被删除</item>
+    </plurals>
 </resources>
