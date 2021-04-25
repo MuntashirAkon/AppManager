@@ -802,4 +802,41 @@
     <string name="delete_saved_log">Slett lagrede logger</string>
     <string name="copy_to_clipboard">Kopier til utklippstavle</string>
     <string name="checkbox_never_show_partial_select_help">Ikke vis igjen</string>
+    <string name="keystore_pass">KeyStore-passord</string>
+    <string name="keystore_file">KeyStore-fil</string>
+    <string name="failed_to_initialize_key_store">Kunne ikke starte App Manager KeyStore.</string>
+    <string name="add_to_profile">Legg til i profil</string>
+    <string name="latest_backup">Siste sikkerhetskopi</string>
+    <string name="gz_bz2_compressed">%1$s sammenpakket</string>
+    <string name="pgp_aes_rsa_encrypted">%1$s kryptert</string>
+    <string name="no_encryption">Ingen kryptering</string>
+    <string name="trackers_unblocked_successfully">Sporere er nå avblokkert</string>
+    <string name="trackers_blocked_successfully">Sporere er nå blokkert</string>
+    <string name="failed_to_unblock_trackers">Kunne ikke avblokkere sporere</string>
+    <string name="failed_to_block_trackers">Kunne ikke blokkere sporere</string>
+    <string name="save_apk">Lagre APK</string>
+    <string name="running_services">Kjørende tjenester</string>
+    <string name="view_logs">Vis loggføring</string>
+    <string name="share_log">Del</string>
+    <string name="title_filters">Filter</string>
+    <string name="text_include_device_info">Inkluder enhetsinfo</string>
+    <string name="text_filter_text">Filtertekst</string>
+    <string name="text_filter_ellipsis">Filtrer …</string>
+    <string name="subject_log_report">Loggrapport</string>
+    <string name="dialog_partial_select_explanation">1. Velg den <b>første</b> linjen.
+\n2. Velg så den <b>siste</b> linjen.</string>
+    <string name="dialog_compiling_log">Kompilerer logg …</string>
+    <plurals name="file_deletion_confirmation">
+        <item quantity="one">Én fil vil bli slettet</item>
+        <item quantity="other">%d filer vil bli slettet</item>
+    </plurals>
+    <string name="add_filter_ellipsis">Legg til filter …</string>
+    <string name="add_filter">Legg til filter</string>
+    <string name="allow_routine_ops_msg">Tillat at profilen brukes i rutineoperasjonene</string>
+    <string name="allow_routine_ops">Tillat rutineoperasjoner</string>
+    <string name="locale_split_for_base_apk"><xliff:g id="split_name" example="English">%1$s</xliff:g> lokalitet for grunn-APK</string>
+    <string name="locale_split_for_feature"><xliff:g id="split_name" example="English">%1$s</xliff:g> lokalitet for funksjonen <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <string name="density_split_for_feature"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) ressurser for funksjonen <xliff:g id="feature_name" example="Visualizer">%3$s</xliff:g></string>
+    <string name="density_split_for_base_apk"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) ressurser for grunn-APK</string>
+    <string name="app_signing_signatures">Signaturer</string>
 </resources>
