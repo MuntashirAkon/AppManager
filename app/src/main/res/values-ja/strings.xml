@@ -1048,4 +1048,11 @@
     <string name="toast_started_select_partial">部分選択モードが有効になりました</string>
     <string name="pref_rules_msg">インスタントブロッキング、ルールのインポート/エクスポート/削除 等の操作を行います</string>
     <string name="saf">SAF</string>
+    <plurals name="file_deletion_confirmation">
+        <item quantity="other">%d 個のファイルを削除しようとしています</item>
+    </plurals>
+    <string name="pref_layout_orientation">レイアウト方向</string>
+    <string name="orientation_right_to_left">右から左（RTL方向）</string>
+    <string name="orientation_left_to_right">左から右（LTR方向）</string>
+    <string name="orientation_follow_locale">言語設定に従う</string>
 </resources>
