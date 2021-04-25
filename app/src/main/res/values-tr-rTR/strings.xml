@@ -1024,4 +1024,12 @@
     <string name="app_signing_signatures">İmzalar</string>
     <string name="pref_rules_msg">Anında engelleme, kuralları içe/dışa aktarma/kaldırma vs.</string>
     <string name="saf">SAF</string>
+    <string name="orientation_right_to_left">Sağdan sola</string>
+    <string name="orientation_left_to_right">Soldan sağa</string>
+    <string name="orientation_follow_locale">Yerel ayarı takip et</string>
+    <string name="pref_layout_orientation">Düzen yönü</string>
+    <plurals name="file_deletion_confirmation">
+        <item quantity="one">%d dosya silinecek</item>
+        <item quantity="other">%d dosya silinecek</item>
+    </plurals>
 </resources>
