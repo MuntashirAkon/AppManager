@@ -35,6 +35,7 @@ import java.io.OutputStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -227,9 +228,12 @@ public class RulesStorageManager implements Closeable {
     @GuardedBy("entries")
     protected void removeEntries(String name, Type type) {
         synchronized (entries) {
-            for (Entry entry : entries) {
+            Iterator<Entry> entryIterator = entries.iterator();
+            Entry entry;
+            while (entryIterator.hasNext()) {
+                entry = entryIterator.next();
                 if (entry.name.equals(name) && entry.type.equals(type)) {
-                    entries.remove(entry);
+                    entryIterator.remove();
                 }
             }
         }
