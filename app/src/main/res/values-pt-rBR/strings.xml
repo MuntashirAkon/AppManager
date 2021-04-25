@@ -1025,4 +1025,12 @@
     <string name="app_signing_signatures">Assinaturas</string>
     <string name="pref_rules_msg">Bloqueio imediato, importação/exportação/remoção de regras, etc.</string>
     <string name="saf">SAF</string>
+    <string name="orientation_right_to_left">Da direita para a esquerda</string>
+    <string name="orientation_left_to_right">Da esquerda para a direita</string>
+    <string name="orientation_follow_locale">Seguir o local</string>
+    <string name="pref_layout_orientation">Orientação do layout</string>
+    <plurals name="file_deletion_confirmation">
+        <item quantity="one">%d arquivo será excluído</item>
+        <item quantity="other">%d arquivos serão excluídos</item>
+    </plurals>
 </resources>
