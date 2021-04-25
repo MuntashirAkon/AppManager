@@ -19,15 +19,13 @@ package io.github.muntashirakon.AppManager.logcat;
 
 import android.os.Bundle;
 
-import androidx.appcompat.app.AppCompatActivity;
+import io.github.muntashirakon.AppManager.BaseActivity;
 
-public class RecordLogDialogActivity extends AppCompatActivity {
+public class RecordLogDialogActivity extends BaseActivity {
     public static final String EXTRA_QUERY_SUGGESTIONS = "suggestions";
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
+    protected void onAuthenticated(Bundle savedInstanceState) {
         final String[] suggestions = (getIntent() != null && getIntent().hasExtra(EXTRA_QUERY_SUGGESTIONS))
                 ? getIntent().getStringArrayExtra(EXTRA_QUERY_SUGGESTIONS) : new String[]{};
 

@@ -30,31 +30,31 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.ShareActionProvider;
 import androidx.collection.SparseArrayCompat;
 import androidx.core.util.Pair;
 import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.android.internal.util.TextUtils;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
-import io.github.muntashirakon.AppManager.BuildConfig;
-import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.types.IconLoaderThread;
-import io.github.muntashirakon.AppManager.types.TextInputDropdownDialogBuilder;
-import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -62,7 +62,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-public class ActivityInterceptor extends AppCompatActivity {
+import io.github.muntashirakon.AppManager.BaseActivity;
+import io.github.muntashirakon.AppManager.BuildConfig;
+import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.types.IconLoaderThread;
+import io.github.muntashirakon.AppManager.types.TextInputDropdownDialogBuilder;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
+
+public class ActivityInterceptor extends BaseActivity {
     public static final String EXTRA_PACKAGE_NAME = BuildConfig.APPLICATION_ID + ".intent.extra.PACKAGE_NAME";
     public static final String EXTRA_CLASS_NAME = BuildConfig.APPLICATION_ID + ".intent.extra.CLASS_NAME";
 
@@ -294,8 +301,7 @@ public class ActivityInterceptor extends AppCompatActivity {
             });
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onAuthenticated(Bundle savedInstanceState) {
         setContentView(R.layout.activity_interceptor);
         setSupportActionBar(findViewById(R.id.toolbar));
         findViewById(R.id.progress_linear).setVisibility(View.GONE);
