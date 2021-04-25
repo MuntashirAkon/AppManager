@@ -989,4 +989,11 @@
     <string name="no_encryption">Tidak ada enskripsi</string>
     <string name="base_backup">Cadangan basis</string>
     <string name="app_signing_signatures">Signatur</string>
+    <string name="orientation_right_to_left">Kanan ke kiri</string>
+    <string name="orientation_left_to_right">Kiri ke kanan</string>
+    <string name="orientation_follow_locale">Ikuti bahasa lokal</string>
+    <string name="pref_layout_orientation">Orientasi layout</string>
+    <plurals name="file_deletion_confirmation">
+        <item quantity="other">Berkas %d akan dihapus</item>
+    </plurals>
 </resources>
