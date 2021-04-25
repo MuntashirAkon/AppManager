@@ -299,11 +299,11 @@
     <string name="conversion_failed">轉換失敗。</string>
     <string name="select_apk">選擇 APK</string>
     <string name="send_crash_report">傳送崩潰報告</string>
-    <string name="tap_to_submit_crash_report">點擊提交崩潰報告。</string>
+    <string name="tap_to_submit_crash_report">按一下提交崩潰報告。</string>
     <string name="am_crashed">App Manager 剛剛當機了</string>
     <string name="filter_running_apps">正在執行的應用程式</string>
     <string name="copy">複製</string>
-    <string name="view_missing_signatures">點擊以檢視或傳送尚未出現在 App Manager 的資源庫資料庫中的簽名。</string>
+    <string name="view_missing_signatures">按一下以檢視或傳送尚未出現在 App Manager 的資源庫資料庫中的簽名。</string>
     <string name="tap_to_see_details">點按即可檢視詳細資訊</string>
     <string name="lib_details">圖書館資料</string>
     <string name="no_libs">沒有圖書館</string>
@@ -879,7 +879,7 @@
     <string name="failed_to_save_key">無法儲存金鑰。</string>
     <string name="generate_key">產生</string>
     <string name="input_key">輸入鍵（十六進制）</string>
-    <string name="input_keystore_alias_pass_msg">點擊此處為%1$s 提供密碼</string>
+    <string name="input_keystore_alias_pass_msg">按一下此處為%1$s 提供密碼</string>
     <string name="internal_data">內部資料</string>
     <string name="app_signing_signatures">簽名</string>
     <string name="unable_to_save_log">無法儲存日誌。您是否輸入了有效的檔案名稱？</string>
@@ -940,7 +940,7 @@
     <string name="pref_show_timestamp_title">顯示 PID 與時間戳</string>
     <string name="pref_show_timestamp_summary">展開時顯示處理程序 ID 和時間戳。</string>
     <string name="pref_log_write_period_title">寫入期間</string>
-    <string name="pref_log_write_period_summary">記錄時，每%1$d行寫入SD卡。</string>
+    <string name="pref_log_write_period_summary">記錄時，每 %1$d 行寫入 SD 卡。</string>
     <string name="pref_log_line_period_error">請輸入1到1000之間的整數。</string>
     <string name="pref_expanded_by_default_title">預設為展開</string>
     <string name="pref_expanded_by_default_summary">預設情況下顯示完整的日誌。</string>
@@ -981,4 +981,11 @@
     <string name="log_level_error">錯誤</string>
     <string name="log_level_debug">偵錯</string>
     <string name="filename">檔案名稱</string>
+    <string name="orientation_right_to_left">由右至左</string>
+    <string name="orientation_left_to_right">由左至右</string>
+    <string name="orientation_follow_locale">按照語言環境</string>
+    <string name="pref_layout_orientation">佈局方向</string>
+    <plurals name="file_deletion_confirmation">
+        <item quantity="other">%d 檔案將被刪除</item>
+    </plurals>
 </resources>
