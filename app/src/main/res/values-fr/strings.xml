@@ -77,7 +77,6 @@
     <string name="profile_force_stop_msg">Si activé, les applications seront arrêtées de force</string>
     <string name="profile_disable_msg">Si activé, les applications seront activées/désactivées en fonctione de la valeur de leur état</string>
     <string name="profile_state">État du profil</string>
-    <string name="current_mode">Mode actuel : %s</string>
     <string name="adb_over_tcp">ADB via TCP</string>
     <string name="pref_mode_of_operations">Type d\'opération</string>
     <string name="ecc">Cryptographie à courbe elliptique</string>
@@ -142,7 +141,6 @@
     <string name="uninstall_updates">Désinstaller les mises à jour</string>
     <string name="allow_open_pgp_operation">Cliquez pour autoriser AM à utiliser OpenPGP</string>
     <string name="confirm_installation">Confirmer l\'installation</string>
-    <string name="compression_method">Méthode de compression : <xliff:g id="compression_method" example="GZip">%1$s</xliff:g></string>
     <string name="pref_backup_flags_msg">Ajouter un préréglage pour les options de sauvegarde évite de devoir sélectionner les drapeaux souhaités à chaque sauvegarde/restauration.</string>
     <string name="pref_compression_method">Méthode de compression</string>
     <string name="rules">Règles</string>
@@ -213,7 +211,6 @@
     <string name="split_feature_name">Fonctionnalité : <xliff:g id="feature_name" example="Visualizer">%1$s</xliff:g></string>
     <string name="base_apk">APK de base</string>
     <string name="choose_language">Modifier la langue</string>
-    <string name="current_language">Langue : %1$s</string>
     <string name="auto">Auto</string>
     <string name="pref_app_language">Langue</string>
     <string name="backup_all_users">Tous les utilisateurs</string>
@@ -382,7 +379,6 @@
     <string name="sort_by_wifi_data">Données Wi-Fi</string>
     <string name="version">Version</string>
     <string name="pref_about_msg">Version de App Manager, licence, crédits, etc.</string>
-    <string name="current_theme">Thème actuel : %1$s</string>
     <string name="apply">Appliquer</string>
     <string name="select_theme">Thème</string>
     <string name="night">Sombre</string>

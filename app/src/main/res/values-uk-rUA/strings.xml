@@ -103,7 +103,6 @@
     <string name="uninstall_updates">Видалити оновлення</string>
     <string name="allow_open_pgp_operation">Натисніть, щоб дозволити App Manager використовувати OpenPGP</string>
     <string name="confirm_installation">Підтвердьте встановлення</string>
-    <string name="compression_method">Метод стиснення: <xliff:g id="compression_method" example="GZip">%1$s</xliff:g></string>
     <string name="pref_backup_flags_msg">Додавання попередньо встановлених параметрів резервного копіювання позбавляє від необхідності вибору пунктів під час кожного резервного копіювання/відновлення.</string>
     <string name="pref_compression_method">Метод стиснення</string>
     <string name="rules">Правила</string>
@@ -176,7 +175,6 @@
     <string name="split_feature_name">Функції: <xliff:g id="feature_name" example="Visualizer">%1$s</xliff:g></string>
     <string name="base_apk">Базовий файл .apk</string>
     <string name="choose_language">Змінити мову</string>
-    <string name="current_language">Мова: %1$s</string>
     <string name="auto">Авто</string>
     <string name="pref_app_language">Мова</string>
     <string name="backup_all_users">Всі користувачі</string>
@@ -366,7 +364,6 @@
     <string name="sort_by_wifi_data">Дані Wi-Fi</string>
     <string name="version">Версія</string>
     <string name="pref_about_msg">Версія App Manager, ліцензія, автори тощо.</string>
-    <string name="current_theme">Поточна тема: %1$s</string>
     <string name="apply">Застосувати</string>
     <string name="select_theme">Тема</string>
     <string name="night">Ніч</string>
@@ -712,7 +709,6 @@
     <string name="choose">Вибрати</string>
     <string name="options">Параметри</string>
     <string name="profile_state">Стан профілю</string>
-    <string name="current_mode">Поточний режим: %s</string>
     <string name="adb_over_tcp">ADB через TCP</string>
     <string name="pref_mode_of_operations">Режим роботи</string>
     <string name="send_selected">Надіслати вибране</string>

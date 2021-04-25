@@ -202,7 +202,6 @@
     <string name="night">রাত</string>
     <string name="select_theme">থিম নির্বাচন করুন</string>
     <string name="apply">প্রয়োগ করুন</string>
-    <string name="current_theme">বর্তমান থিম: %1$s</string>
     <string name="version">সংস্করণ</string>
     <string name="sort_by_wifi_data">ওয়াইফাই ডাটা</string>
     <string name="block_trackers">ট্র্যাকার গুলো ব্লক করুন</string>
@@ -377,7 +376,6 @@
     </plurals>
     <string name="permissions">ব্যবহৃত অনুমতিসমূহ</string>
     <string name="choose_language">ভাষা নির্বাচন করুন</string>
-    <string name="current_language">ভাষা: %1$s</string>
     <string name="auto">অটো</string>
     <string name="pref_app_language">ভাষা</string>
     <string name="backup_all_users">সকল ব্যবহারকারী</string>

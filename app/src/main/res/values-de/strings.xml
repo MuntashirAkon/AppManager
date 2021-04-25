@@ -310,7 +310,6 @@
     <string name="night">Nacht</string>
     <string name="select_theme">Farbschema</string>
     <string name="apply">Anwenden</string>
-    <string name="current_theme">Aktuelles Farbschema: %1$s</string>
     <string name="pref_about_msg">App Manager-Version und -Lizenz, Danksagungen, etc.</string>
     <string name="version">Version</string>
     <string name="sort_by_wifi_data">Wlan-Daten</string>
@@ -473,7 +472,6 @@
     <string name="backup_all_users">Alle Benutzer</string>
     <string name="pref_app_language">Sprache</string>
     <string name="auto">Automatisch</string>
-    <string name="current_language">Sprache: %1$s</string>
     <string name="choose_language">Wähle eine Sprache</string>
     <string name="touchscreen_finger">Finger</string>
     <string name="touchscreen_stylus">Schreibstift</string>
@@ -568,7 +566,6 @@
     <string name="filter_apps">Apps</string>
     <string name="no_apps">Keine Apps</string>
     <string name="apps">Apps</string>
-    <string name="compression_method">Kompressionsverfahren: <xliff:g id="compression_method" example="GZip">%1$s</xliff:g></string>
     <string name="pref_backup_flags_msg">Durch Hinzufügen von Voreinstellungen für Sicherungsoptionen entfällt die Auswahl von Flags bei jeder Sicherung / Wiederherstellung.</string>
     <string name="pref_compression_method">Kompressionsverfahren</string>
     <string name="rules">Regeln</string>
@@ -680,7 +677,6 @@
     <string name="allow_routine_ops_msg">Erlauben Sie die Verwendung des Profils in den Routineoperationen</string>
     <string name="profile_state">Profilstatus</string>
     <string name="allow_routine_ops">Routineoperationen zulassen</string>
-    <string name="current_mode">Aktueller Modus: %s</string>
     <string name="adb_over_tcp">ADB über TCP</string>
     <string name="pref_mode_of_operations">Arbeitsweise</string>
     <string name="user_profile_with_id">Profil: %1$s (%2$d)</string>

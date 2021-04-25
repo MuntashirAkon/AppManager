@@ -300,7 +300,6 @@
     <string name="night">夜间</string>
     <string name="select_theme">主题</string>
     <string name="apply">应用</string>
-    <string name="current_theme">当前主题: %1$s</string>
     <string name="pref_about_msg">应用程序管理器版本、许可、致谢等。</string>
     <string name="version">版本</string>
     <string name="sort_by_wifi_data">Wi-Fi 数据</string>
@@ -458,7 +457,6 @@
     <string name="backup_all_users">所有用户</string>
     <string name="pref_app_language">语言</string>
     <string name="auto">自动</string>
-    <string name="current_language">语言: %1$s</string>
     <string name="choose_language">更改语言</string>
     <string name="navigation_dial_pad">拨号键盘</string>
     <string name="keyboard_12_keys">12 键</string>
@@ -534,7 +532,6 @@
     <string name="filter_apps">应用程序</string>
     <string name="no_apps">没有应用</string>
     <string name="apps">应用程序</string>
-    <string name="compression_method">压缩方法: <xliff:g id="compression_method" example="GZip">%1$s</xliff:g></string>
     <string name="pref_backup_flags_msg">为备份选项添加一个预设消除了每次备份/恢复时选择 flags 的负担。</string>
     <string name="pref_compression_method">压缩方法</string>
     <string name="rules">规则</string>
@@ -645,7 +642,6 @@
     <string name="allow_routine_ops_msg">允许在例行操作中使用该配置文件</string>
     <string name="profile_state">配置文件状态</string>
     <string name="allow_routine_ops">允许例行操作</string>
-    <string name="current_mode">当前模式：%s</string>
     <string name="adb_over_tcp">ADB over TCP</string>
     <string name="pref_mode_of_operations">操作模式</string>
     <string name="user_profile_with_id">用户：%1$s (%2$d)</string>

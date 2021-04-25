@@ -283,7 +283,6 @@
     <string name="night">Noite</string>
     <string name="select_theme">Tema</string>
     <string name="apply">Aplicar</string>
-    <string name="current_theme">Tema atual: %1$s</string>
     <string name="pref_about_msg">Versão, licenças, créditos, etc. do App Manager.</string>
     <string name="version">Versão</string>
     <string name="sort_by_wifi_data">Dados Wi-Fi</string>
@@ -440,7 +439,6 @@
     <string name="backup_multiple">Backup múltiplo</string>
     <string name="backup_all_users">Todos os usuários</string>
     <string name="pref_app_language">Idioma</string>
-    <string name="current_language">Idioma: %1$s</string>
     <string name="choose_language">Mudar idioma</string>
     <string name="shared_prefs">Preferências Compartilhadas</string>
     <string name="debuggable">Depurável</string>
@@ -540,7 +538,6 @@
     <string name="uninstall_updates">Desinstalar Atualizações</string>
     <string name="allow_open_pgp_operation">Toque para permitir que o App Manager use o OpenPGP</string>
     <string name="confirm_installation">Confirmar instalação</string>
-    <string name="compression_method">Método de compressão: <xliff:g id="compression_method" example="GZip">%1$s</xliff:g></string>
     <string name="pref_compression_method">Método de compressão</string>
     <string name="rules">Regras</string>
     <string name="other">Outros</string>
@@ -680,7 +677,6 @@
     <string name="allow_routine_ops_msg">Permitir que o perfil seja usado nas operações de rotina</string>
     <string name="profile_state">Estado do perfil</string>
     <string name="allow_routine_ops">Permitir operações de rotina</string>
-    <string name="current_mode">Modo atual: %s</string>
     <string name="adb_over_tcp">ADB sobre TCP</string>
     <string name="pref_mode_of_operations">Modo de operação</string>
     <string name="user_profile_with_id">Perfil: %1$s (%2$d)</string>

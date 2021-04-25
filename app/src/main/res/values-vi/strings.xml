@@ -215,7 +215,6 @@
     <string name="tracker_details">Chi tiết trình theo dõi</string>
     <string name="version">Phiên bản</string>
     <string name="pref_about_msg">Phiên bản App Manager, giấy phép, ghi nhận, v.v.</string>
-    <string name="current_theme">Chủ đề hiện tại: %1$s</string>
     <string name="apply">Áp dụng</string>
     <string name="select_theme">Chủ đề</string>
     <string name="night">Đêm</string>

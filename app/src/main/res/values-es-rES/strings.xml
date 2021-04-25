@@ -265,7 +265,6 @@
     <string name="launch_mode_multiple">Múltiple</string>
     <string name="base_apk">Base APK</string>
     <string name="choose_language">Cambiar idioma</string>
-    <string name="current_language">Idioma: %1$s</string>
     <string name="auto">Auto</string>
     <string name="pref_app_language">Idioma</string>
     <string name="backup_all_users">Todos los usuarios</string>
@@ -405,7 +404,6 @@
     <string name="sort_by_wifi_data">Datos Wi-Fi</string>
     <string name="version">Versión</string>
     <string name="pref_about_msg">App Manager versión, licencia, créditos, etc.</string>
-    <string name="current_theme">Tema actual: %1$s</string>
     <string name="apply">Aplicar</string>
     <string name="select_theme">Tema</string>
     <string name="night">Noche</string>
@@ -499,7 +497,6 @@
     <string name="allow_routine_ops_msg">Permitir que el perfil se utilice en las operaciones de rutinarias</string>
     <string name="profile_state">Estado del perfil</string>
     <string name="allow_routine_ops">Permitir ops rutinarias</string>
-    <string name="current_mode">Modo actual: %s</string>
     <string name="adb_over_tcp">ADB sobre TCP</string>
     <string name="pref_mode_of_operations">Modo de operación</string>
     <string name="send_selected">Enviar seleccionado</string>
@@ -565,7 +562,6 @@
     <string name="uninstall_updates">Desinstalar actualizaciones</string>
     <string name="allow_open_pgp_operation">Pulsar para permitir a AM usar OpenPGP</string>
     <string name="confirm_installation">Confirmar la instalación</string>
-    <string name="compression_method">Método de compresión: <xliff:g id="compression_method" example="GZip">%1$s</xliff:g></string>
     <string name="pref_backup_flags_msg">Al añadir un preajuste para las opciones del respaldo se elimina la carga de seleccionar flags cada vez que se hace un Respaldar/Restaurar.</string>
     <string name="pref_compression_method">Método de compresión</string>
     <string name="rules">Reglas</string>

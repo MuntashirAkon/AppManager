@@ -345,7 +345,6 @@
     <string name="night">ナイトテーマ</string>
     <string name="select_theme">テーマ</string>
     <string name="apply">反映</string>
-    <string name="current_theme">現在のテーマ: %1$s</string>
     <string name="pref_about_msg">App Managerのバージョン、ライセンス、謝辞など</string>
     <string name="version">バージョン</string>
     <string name="sort_by_wifi_data">Wi-Fiデータ</string>
@@ -552,7 +551,6 @@
     <string name="backup_all_users">全てのユーザー</string>
     <string name="pref_app_language">言語</string>
     <string name="auto">自動</string>
-    <string name="current_language">言語: %1$s</string>
     <string name="choose_language">言語を変更</string>
     <string name="base_apk">Base APK</string>
     <string name="split_feature_name">機能: <xliff:g id="feature_name" example="Visualizer">%1$s</xliff:g></string>
@@ -642,7 +640,6 @@
     <string name="rules">ルール</string>
     <string name="pref_compression_method">圧縮方式</string>
     <string name="pref_backup_flags_msg">バックアップオプションのプリセットを追加すると、バックアップ/復元するたびにフラグを選択する必要がなくなります。</string>
-    <string name="compression_method">圧縮方式: <xliff:g id="compression_method" example="GZip">%1$s</xliff:g></string>
     <string name="confirm_installation">インストールを確認</string>
     <string name="allow_open_pgp_operation">タップしてAppManagerにOpenPGPの利用を許可する</string>
     <string name="uninstall_updates">アップデートをアンインストール</string>
@@ -711,7 +708,6 @@
     <string name="send_selected">選択したものを送信</string>
     <string name="pref_mode_of_operations">動作モード</string>
     <string name="adb_over_tcp">ADB over TCP</string>
-    <string name="current_mode">現在のモード: %s</string>
     <string name="allow_routine_ops">規則的操作を許可</string>
     <string name="profile_state">プロファイルの状態</string>
     <string name="allow_routine_ops_msg">規則的操作をプロファイルで使用することを許可します</string>

@@ -2,7 +2,6 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="_lang_tag" translatable="false">pt</string>
     <string name="choose_language">Mudar idioma</string>
-    <string name="current_language">Idioma: %1$s</string>
     <string name="pref_app_language">Idioma</string>
     <string name="backup_all_users">Todos os utilizadores</string>
     <string name="backup_multiple">Backup múltiplo</string>
@@ -97,7 +96,6 @@
     <string name="sort_by_wifi_data">Dados Wi-Fi</string>
     <string name="version">Versão</string>
     <string name="pref_about_msg">Versão, licenças e créditos do App Manager.</string>
-    <string name="current_theme">Tema atual: %1$s</string>
     <string name="apply">Aplicar</string>
     <string name="select_theme">Tema</string>
     <string name="night">Noite</string>

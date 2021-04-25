@@ -92,7 +92,6 @@
     <string name="sort_by_wifi_data">Data Wi-Fi</string>
     <string name="version">Versi</string>
     <string name="pref_about_msg">Versi, lisensi, kredit, dll App Manager.</string>
-    <string name="current_theme">Tema saat ini:%1$s</string>
     <string name="apply">Terapkan</string>
     <string name="select_theme">Tema</string>
     <string name="night">Malam</string>
@@ -102,7 +101,6 @@
     <string name="split_feature_name">Fitur:<xliff:g id="feature_name" example="Visualizer">%1$s</xliff:g></string>
     <string name="base_apk">Basis APK</string>
     <string name="choose_language">Ubah bahasa</string>
-    <string name="current_language">Bahasa:%1$s</string>
     <string name="auto">Otomatis</string>
     <string name="pref_app_language">Bahasa</string>
     <string name="pref_import">Impor</string>
@@ -581,7 +579,6 @@
     <string name="allow_routine_ops_msg">Izinkan profil digunakan dalam operasi rutin</string>
     <string name="profile_state">Status Profil</string>
     <string name="allow_routine_ops">Izinkan oprs rutin</string>
-    <string name="current_mode">Mode saat ini: %s</string>
     <string name="adb_over_tcp">ADB Over TCP</string>
     <string name="pref_mode_of_operations">Modus operasi</string>
     <string name="send_selected">Kirim Terpilih</string>
@@ -648,7 +645,6 @@
     <string name="uninstall_updates">Copot Pembaruan</string>
     <string name="allow_open_pgp_operation">Tekan untuk mengizinkan App Manager menggunakan OpenPGP</string>
     <string name="confirm_installation">Konfirmasi Pemasangan</string>
-    <string name="compression_method">Metode kompresi: <xliff:g id="compression_method" example="GZip">%1$s</xliff:g></string>
     <string name="pref_backup_flags_msg">Menambahkan sebuah preset untuk opsi cadangan akan menghapus beban pemilihan bendera setiap kali Anda cadangkan/pulihkan.</string>
     <string name="rules">Aturan</string>
     <string name="other">Lain</string>

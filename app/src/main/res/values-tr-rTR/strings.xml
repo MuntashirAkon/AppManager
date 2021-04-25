@@ -181,7 +181,6 @@
     <string name="uninstall_updates">Güncellemeleri Kaldır</string>
     <string name="allow_open_pgp_operation">App Manager\'in OpenPGP\'yi kullanmasına izin vermek için dokunun</string>
     <string name="confirm_installation">Kurulumu onayla</string>
-    <string name="compression_method">Sıkıştırma yöntemi: <xliff:g id="compression_method" example="GZip">%1$s</xliff:g></string>
     <string name="pref_backup_flags_msg">Yedekleme seçenekleri için bir ön ayar eklemek, her yedekleme/geri yükleme işleminizde işaretleri seçme yükünü ortadan kaldırır.</string>
     <string name="pref_compression_method">Sıkıştırma yöntemi</string>
     <string name="rules">Kurallar</string>
@@ -252,7 +251,6 @@
     <string name="unknown_split_for_feature"><xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g> özelliği için <xliff:g id="split_name" example="some_split">%1$s</xliff:g></string>
     <string name="base_apk">Temel APK</string>
     <string name="choose_language">Dili değiştir</string>
-    <string name="current_language">Dil: %1$s</string>
     <string name="auto">Otomatik</string>
     <string name="pref_app_language">Dil</string>
     <string name="backup_all_users">Tüm kullanıcılar</string>
@@ -404,7 +402,6 @@
     <string name="sort_by_wifi_data">Wi-Fi verisi</string>
     <string name="version">Sürüm</string>
     <string name="pref_about_msg">App Manager sürümü, lisansı, katkıda bulunanlar, vs.</string>
-    <string name="current_theme">Şu anki tema: %1$s</string>
     <string name="apply">Uygula</string>
     <string name="select_theme">Tema</string>
     <string name="night">Gece</string>
@@ -682,7 +679,6 @@
     <string name="allow_routine_ops_msg">Profilin rutin işlemlerde kullanılmasına izin ver</string>
     <string name="profile_state">Profil durumu</string>
     <string name="allow_routine_ops">Rutin işlemlere izin ver</string>
-    <string name="current_mode">Geçerli mod: %s</string>
     <string name="adb_over_tcp">TCP üzerinden ADB</string>
     <string name="pref_mode_of_operations">İşlem modu</string>
     <string name="close">Kapat</string>

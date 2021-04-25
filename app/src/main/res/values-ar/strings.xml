@@ -206,7 +206,6 @@
     <string name="split_feature_name">الميزة: <xliff:g id="feature_name" example="Visualizer">%1$s</xliff:g></string>
     <string name="base_apk">APK الأساسي</string>
     <string name="choose_language">تغيير اللغة</string>
-    <string name="current_language">اللغة: %1$s</string>
     <string name="auto">تلقائي</string>
     <string name="pref_app_language">اللغة</string>
     <string name="backup_all_users">جميع المستخدمين</string>
@@ -355,7 +354,6 @@
     <string name="sort_by_wifi_data">بيانات شبكة Wi-Fi</string>
     <string name="version">اﻹصدار</string>
     <string name="pref_about_msg">إصدار مدير التطبيق ، الترخيص ، الاعتمادات ، إلخ.</string>
-    <string name="current_theme">السمة الحالية: %1$s</string>
     <string name="apply">تطبيق</string>
     <string name="select_theme">السمة</string>
     <string name="night">ليلي</string>
@@ -475,7 +473,6 @@
     <string name="allow_routine_ops_msg">السماح باستخدام ملف التعريف في العمليات الروتينية</string>
     <string name="profile_state">حالة الملف الشخصي</string>
     <string name="allow_routine_ops">السماح بالعمليات الروتينية</string>
-    <string name="current_mode">الوضع الحالي: %s</string>
     <string name="adb_over_tcp">ADB عبر TCP</string>
     <string name="pref_mode_of_operations">طريقة التشغيل</string>
     <string name="send_selected">إرسال المحدد</string>
@@ -534,7 +531,6 @@
     <string name="uninstall_updates">إلغاء تثبيت التحديثات</string>
     <string name="allow_open_pgp_operation">اضغط للسماح لمدير التطبيقات باستخدام OpenPGP</string>
     <string name="confirm_installation">تأكيد التثبيت</string>
-    <string name="compression_method">طريقة الضغط: <xliff:g id="compression_method" example="GZip">%1$s</xliff:g></string>
     <string name="pref_backup_flags_msg">يؤدي إضافة إعداد مسبق لخيارات النسخ الاحتياطي إلى إزالة عبء تحديد العلامات في كل مرة تقوم فيها بالنسخ الاحتياطي / الاستعادة.</string>
     <string name="pref_compression_method">طريقة الضغط</string>
     <string name="rules">القواعد</string>

@@ -103,7 +103,6 @@
     <string name="split_feature_name">Funkcja: %s</string>
     <string name="base_apk">Podstawowy plik APK</string>
     <string name="choose_language">Zmień język</string>
-    <string name="current_language">Język: %s</string>
     <string name="pref_app_language">Język</string>
     <string name="backup_all_users">Wszyscy użytkownicy</string>
     <string name="backup_multiple">Utwórz kopię zapasową wielu</string>
@@ -262,7 +261,6 @@
     <string name="block_trackers">Blokuj elementy śledzące</string>
     <string name="version">Wersja</string>
     <string name="pref_about_msg">Wersja App Manager, licencja, autorzy itp.</string>
-    <string name="current_theme">Aktualny motyw: %s</string>
     <string name="apply">Zastosuj</string>
     <string name="select_theme">Motyw</string>
     <string name="night">Ciemny</string>
@@ -314,7 +312,6 @@
     <string name="uninstall_updates">Odinstaluj aktualizacje</string>
     <string name="allow_open_pgp_operation">Kliknij, aby zezwolić AM na używanie OpenPGP</string>
     <string name="confirm_installation">Potwierdź instalację</string>
-    <string name="compression_method">Metoda kompresji: %s</string>
     <string name="error_evaluating_input">Nie można ewaluować danych wejściowych</string>
     <string name="type_string">Znaki</string>
     <string name="type_long">Długa liczba całkowita</string>
@@ -453,7 +450,6 @@
     <string name="off">Wył.</string>
     <string name="profile_block_trackers_msg">Jeśli ta opcja jest włączona, komponenty śledzące będą blokowane</string>
     <string name="allow_routine_ops_msg">Pozwól, aby profil był używany w rutynowych operacjach</string>
-    <string name="current_mode">Bieżący tryb: %s</string>
     <string name="adb_over_tcp">ADB przez TCP</string>
     <string name="pref_mode_of_operations">Tryb pracy</string>
     <string name="send_selected">Wyślij wybrane</string>

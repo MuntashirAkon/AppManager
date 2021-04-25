@@ -74,7 +74,6 @@
     <string name="night">Notte</string>
     <string name="select_theme">Tema</string>
     <string name="apply">Applica</string>
-    <string name="current_theme">Tema attuale: %1$s</string>
     <string name="version">Versione</string>
     <string name="block_trackers">Blocca tracker</string>
     <string name="never_ask">Non chiedere mai</string>

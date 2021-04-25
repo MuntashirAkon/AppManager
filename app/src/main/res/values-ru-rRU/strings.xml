@@ -333,7 +333,6 @@
     <string name="night">Темная тема</string>
     <string name="select_theme">Тема</string>
     <string name="apply">Применить</string>
-    <string name="current_theme">Текущая тема: %1$s</string>
     <string name="pref_about_msg">Версия App Manager, лицензия, авторы и т. д.</string>
     <string name="version">Версия</string>
     <string name="sort_by_wifi_data">Данные Wi-Fi</string>
@@ -518,7 +517,6 @@
     <string name="backup_all_users">Все пользователи</string>
     <string name="pref_app_language">Язык</string>
     <string name="auto">Авто</string>
-    <string name="current_language">Язык: %1$s</string>
     <string name="choose_language">Изменить язык</string>
     <string name="launch_mode_single_top">Единственный сверху</string>
     <string name="touchscreen_finger">Палец</string>
@@ -608,7 +606,6 @@
     <string name="rules">Правила</string>
     <string name="pref_compression_method">Метод сжатия</string>
     <string name="pref_backup_flags_msg">Добавление предустановки для параметров резервного копирования избавляет от необходимости выбора флагов при каждом резервном копировании/восстановлении.</string>
-    <string name="compression_method">Метод сжатия: <xliff:g id="compression_method" example="GZip">%1$s</xliff:g></string>
     <string name="state_trace_stop">Остановить отслеживание</string>
     <string name="confirm_installation">Подтвердить установку</string>
     <string name="allow_open_pgp_operation">Нажмите, чтобы разрешить AM использовать OpenPGP</string>
@@ -740,7 +737,6 @@
     <string name="profile_force_stop_msg">Принудительная остановка приложений</string>
     <string name="profile_disable_msg">Отключенные или включенные приложения в зависимости от состояния</string>
     <string name="profile_state">Состояние профиля</string>
-    <string name="current_mode">Текущий режим: %s</string>
     <string name="adb_over_tcp">ADB через TCP</string>
     <string name="pref_mode_of_operations">Режим работы</string>
     <string name="allow_routine_ops_msg">Разрешить использовать профиль в повторяющихся операциях</string>

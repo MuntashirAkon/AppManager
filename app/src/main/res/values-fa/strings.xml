@@ -321,7 +321,6 @@
     <string name="sort_by_wifi_data">داده وای فای</string>
     <string name="version">نسخه</string>
     <string name="pref_about_msg">نسخه مدیر برنامه، پروانه، اعتبار، و غیره.</string>
-    <string name="current_theme">تم کنونی:%1$s</string>
     <string name="apply">اعمال کن</string>
     <string name="select_theme">تم</string>
     <string name="night">شب</string>
