@@ -671,7 +671,7 @@
     <string name="source_stamp_verified">SourceStamp已驗證。</string>
     <string name="not_verified">未驗證</string>
     <string name="verified">已驗證</string>
-    <string name="pref_signature_schemes_msg">至少應選擇v1和v2方案以獲得更大的相容性。 v4方案需要v2或v3。</string>
+    <string name="pref_signature_schemes_msg">至少應選擇v1和v2方案以取得更大的相容性。 v4方案需要v2或v3。</string>
     <string name="v4_scheme">v4方案（自 Android 11起）</string>
     <string name="v3_scheme">v3方案（自 Android 9起）</string>
     <string name="v2_scheme">v2方案（自 Android 7.0起）</string>
@@ -891,7 +891,7 @@
     <string name="restart_log_viewer_to_see_changes">重新啟動日誌檢視器視窗以檢視變更。</string>
     <string name="view_logs">檢視日誌</string>
     <string name="save_log">儲存日誌</string>
-    <string name="source_code_links"></string>
+    <string name="source_code_links"/>
     <string name="pref_default_log_level_summary">啟動時的日誌等級、開啟檔案時以及錄製時。</string>
     <string name="log_level">日誌等級</string>
     <string name="failed_to_block_trackers">無法封鎖追蹤器</string>
@@ -942,8 +942,8 @@
     <string name="send_log_title">發送日誌</string>
     <string name="save_as">另存為…</string>
     <string name="record_log">記錄日誌</string>
-    <string name="pref_show_timestamp_title">顯示 PID與時間戳</string>
-    <string name="pref_show_timestamp_summary">展開時顯示進程ID和時間戳。</string>
+    <string name="pref_show_timestamp_title">顯示 PID 與時間戳</string>
+    <string name="pref_show_timestamp_summary">展開時顯示處理程序 ID 和時間戳。</string>
     <string name="pref_log_write_period_title">寫入期間</string>
     <string name="pref_log_write_period_summary">記錄時，每%1$d行寫入SD卡。</string>
     <string name="pref_log_line_period_error">請輸入1到1000之間的整數。</string>

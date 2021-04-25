@@ -1051,4 +1051,5 @@
     <string name="pref_import_export_keystore">キーストアをインポート/エクスポート</string>
     <string name="toast_started_select_partial">部分選択モードが有効になりました</string>
     <string name="pref_rules_msg">インスタントブロッキング、ルールのインポート/エクスポート/削除 等の操作を行います</string>
+    <string name="saf">SAF</string>
 </resources>
