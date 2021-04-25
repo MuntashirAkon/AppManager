@@ -92,11 +92,8 @@ done
 for arch in "${SUPPORTED_ARCHS[@]}"; do
   mv "base-${arch}.apk" "config.${arch}.apk"
 done
-# Move feat_docs
-mv feat_docs-master.apk feat_docs.apk
 # Delete rests
 rm ./base-*
-rm ./feat_docs-*
 # Make zip
 cd "${lastPWD}"
 zip -j "${RELEASE_PATH}/${default_name}.apks" "${RELEASE_PATH}/${TMP_PATH}/splits"/*
