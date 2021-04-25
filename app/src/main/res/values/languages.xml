@@ -18,6 +18,7 @@
 
 <resources>
     <string-array name="languages_key">
+        <item>ar</item>
         <item>auto</item>
         <item>bn-BD</item>
         <item>de</item>

@@ -40,7 +40,7 @@ APKS_PATH=${RELEASE_PATH}/${default_name}.apks
 APK_PATH=${RELEASE_PATH}/${default_name}-universal.apks
 APK_FILE_PATH=${RELEASE_PATH}/${default_name}.apk
 
-SUPPORTED_LANGUAGES=(bn de en es fa fr hi ja nb pl pt ru tr uk vi zh)
+SUPPORTED_LANGUAGES=(ar bn de en es fa fr hi ja nb pl pt ru tr uk vi zh)
 SUPPORTED_DPIS=(ldpi mdpi tvdpi hdpi xhdpi xxhdpi xxxhdpi)
 SUPPORTED_ARCHS=(armeabi_v7a arm64_v8a x86 x86_64)
 

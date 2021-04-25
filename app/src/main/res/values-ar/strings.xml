@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="_lang_tag" translatable="false">ar</string>
     <string name="app_signing_install_without_data_loss">إذا قمت بإيقاف تشغيل التحقق من التوقيع ، يمكنك استخدام خيار <b> تثبيت </b> فقط لتثبيت التطبيق دون فقدان البيانات.</string>
     <string name="ssaid_info">SSAID (<tt>Settings.Secure.ANDROID_ID</tt>) هو معرف جهاز معين لكل تطبيق (من Android 8 \"Oreo\" فصاعدا). يتم استخدامه على نطاق واسع من قبل التطبيقات لتتبع المستخدمين.</string>
     <string name="backup_skip_signature_checks_description">استعادة النسخ الاحتياطية التي تفشل إما التحقق من المجموع الاختباري أو لها توقيعات APK مختلفة عن النسخ الاحتياطية السابقة الخاصة بهم.</string>
