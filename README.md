@@ -18,12 +18,12 @@
 - Fully reproducible, copylefted libre software (GPLv3+)
 - Material design (but not material colours!)
 - No unnecessary permissions
-- [Does not connect to the Internet](https://muntashirakon.github.io/AppManager/en/#x1-1650004.3.2)
+- [Does not connect to the Internet](https://muntashirakon.github.io/AppManager/en/#x1-1780004.3.2)
 - Displays as much info as possible in the main page
 - Lists activities, broadcast receivers, services, providers, permissions, signatures, shared libraries, etc. of any app
 - Launch (exportable) activities and services
 - Create (customizable) shortcuts of activities
-- [Intercept activities](https://muntashirakon.github.io/AppManager/en/#x1-1080002.8)
+- [Intercept activities](https://muntashirakon.github.io/AppManager/en/#x1-1220002.8)
 - Scan for trackers and libraries in apps and list (all or only) tracking classes (and their code dump)
 - View the manifest of an app
 - Display your app usage, data usage, and app storage info (requires “Usage Access” permission)
@@ -33,7 +33,7 @@
 - Batch operations
 - One-click operations
 - Logcat viewer
-- [Profiles](https://muntashirakon.github.io/AppManager/en/#x1-610002.5) (including presets for quick debloating)
+- [Profiles](https://muntashirakon.github.io/AppManager/en/#x1-710002.5) (including presets for quick debloating)
 - View app usage along with mobile and wifi data usage
 - Open app in Aurora Store or in your F-Droid client
 - Sign APK files before installing them
@@ -74,7 +74,7 @@ height="80" />](https://f-droid.org/packages/io.github.muntashirakon.AppManager)
 alt="Get it on IzzyOnDroid"
 height="80" />](https://apt.izzysoft.de/fdroid/index/apk/io.github.muntashirakon.AppManager)
 
-### Translations
+## Translations
 
 Help translate [the app strings](https://hosted.weblate.org/engage/app-manager/) and [the docs](https://hosted.weblate.org/projects/app-manager/docs/) at Hosted Weblate.
 
@@ -82,27 +82,27 @@ Help translate [the app strings](https://hosted.weblate.org/engage/app-manager/)
 [![Translation status](https://hosted.weblate.org/widgets/app-manager/-/multi-auto.svg)](https://hosted.weblate.org/engage/app-manager/)
 
 
-### Mirrors
+## Mirrors
 
 [GitLab](https://gitlab.com/muntashir/AppManager) · [Riseup](https://0xacab.org/muntashir/AppManager) · [Codeberg](https://codeberg.org/muntashir/AppManager)
 
-### Screenshots
+## Screenshots
 
-#### Dark
+### Dark
 
 <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/6.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/14.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/8.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/10.png" height="500dp" />
 
-#### Light
+### Light
 
 <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/5.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/13.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/7.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/9.png" height="500dp" />
 
-### Build Instructions
+## Build Instructions
 * **System Requirements:** Any computer with 4GB RAM (8GB recommended)
 * **Operating System:** Linux/macOS (no support for Windows)
 * **Software:** Android Studio, Gradle
 * Active internet connection
 
-#### macOS
+### macOS
 The following steps are required only if you want to build APKS:
 - Install Homebrew:
   ```bash
@@ -113,7 +113,7 @@ The following steps are required only if you want to build APKS:
   brew install bundletool
   ```
 
-#### Linux|GNU
+### Linux|GNU
 - Install the development tools.
   For Debian/Ubuntu:
   ```bash
@@ -137,7 +137,7 @@ The following steps are required only if you want to build APKS:
   chmod +x /usr/local/bin/bundletool
   ```
 
-#### Clone and Build App Manager
+### Clone and Build App Manager
 1. Clone the repo along with submodules:
     ```bash
     git clone --recurse-submodules https://github.com/MuntashirAkon/AppManager.git
@@ -150,7 +150,7 @@ The following steps are required only if you want to build APKS:
     ```
    The command will generate a universal APK instead of a bundled app.
 
-#### Create Bundled App
+### Create Bundled App
 In order to create a bundled app in APKS format, build Android App Bundle (AAB) first. Then run the following command:
 ```bash
 ./scripts/aab_to_apks.sh preRelease
@@ -159,14 +159,14 @@ Replace `prePelease` with `release` or `debug` based on your requirements. It wi
 
 The script above will also generate a universal APK.
 
-### Contributing
+## Contributing
 You are welcome contribute to App Manager! This doesn't mean that you need coding skills. You can help App Manager by creating helpful issues, attending discussions, improving documentations and translations, making icon for icon packs, adding unrecognised libraries or ad/tracking signatures, reviewing the source code, as well as reporting security vulnerabilities. If you are going to contribute to AM with your coding skills, please read the following:
 - If you're going to implement or work on any specific feature, please inform me before doing so. Due to the complex nature of the project, integrating a new feature could be challenging.
 - You're absolutely welcome to fix issues or mistakes, but App Manager's code base changes a lot almost every day. Therefore, if you are requested to make changes in your pull request but can't address them within 2 (two) days, your pull request may be closed depending on the importance of the request. This instruction will be removed once the code base is stable.
 
 **Note:** Repositories located in sites other than GitHub are currently considered mirrors and PR/MR submitted there will not be accepted. Instead, you can submit patches (as `.patch` files) via email attachment. My email address is muntashirakon [at] riseup [dot] net. Beware that such emails may be publicly accessible in future. GitHub PRs will be merged manually using the corresponding patches. As a result, GitHub may falsely mark them _closed_ instead of _merged_. Make sure to sign-off your commits.
 
-### Donation and Funding
+## Donation and Funding
 **App Manager doesn't support any donations directly.** However, if you like my projects (App Manager being one of them), you can buy me a coffee by sending an anonymous donation to one of the following **Bitcoin** addresses:
 ```
 33TDkWVv5EgwfKGJk7YaS2Ev1CBzBP9Sav
@@ -177,5 +177,5 @@ By sending me BTC, you agree that you will not share the transaction info in pub
 
 **App Manager is open for funding/grants.** If you are an organisation interested in funding it you can contact me directly at muntashirakon [at] riseup [dot] net (FINGERPRINT: `7bad37c2981e41f8f6abea7f58f0b4f26c346fce`).
 
-### Credits and Libraries
+## Credits and Libraries
 A list of credits and libraries are available in the **About** section of the app.
