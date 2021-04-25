@@ -231,4 +231,9 @@
         <item>@string/log_level_error</item>
         <item>@string/log_level_fatal</item>
     </string-array>
+    <string-array name="layout_orientations">
+        <item>@string/orientation_follow_locale</item>
+        <item>@string/orientation_left_to_right</item>
+        <item>@string/orientation_right_to_left</item>
+    </string-array>
 </resources>

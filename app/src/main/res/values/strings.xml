@@ -1056,4 +1056,8 @@
     <string name="failed">Failed</string>
     <string name="pref_rules_msg">Instant blocking, import/export/remove rules, etc.</string>
     <string name="saf">SAF</string>
+    <string name="pref_layout_orientation">Layout orientation</string>
+    <string name="orientation_follow_locale">Follow locale</string>
+    <string name="orientation_left_to_right">Left to right</string>
+    <string name="orientation_right_to_left">Right to left</string>
 </resources>

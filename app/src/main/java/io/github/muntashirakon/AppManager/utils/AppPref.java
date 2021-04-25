@@ -23,6 +23,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.os.Environment;
 import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -83,6 +84,7 @@ public class AppPref {
         PREF_INSTALLER_SIGN_APK_BOOL,
 
         PREF_LAST_VERSION_CODE_LONG,
+        PREF_LAYOUT_ORIENTATION_INT,
 
         PREF_LOG_VIEWER_BUFFER_INT,
         PREF_LOG_VIEWER_DEFAULT_LOG_LEVEL_INT,
@@ -413,6 +415,8 @@ public class AppPref {
                 return Log.VERBOSE;
             case PREF_LOG_VIEWER_BUFFER_INT:
                 return LogcatHelper.LOG_ID_MAIN | LogcatHelper.LOG_ID_SYSTEM | LogcatHelper.LOG_ID_CRASH;
+            case PREF_LAYOUT_ORIENTATION_INT:
+                return View.LAYOUT_DIRECTION_LTR;
         }
         throw new IllegalArgumentException("Pref key not found.");
     }

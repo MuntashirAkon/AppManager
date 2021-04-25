@@ -22,13 +22,19 @@
     <Preference
         app:key="custom_locale"
         app:title="@string/pref_app_language"
-        tools:summary="Language: Auto"
+        tools:summary="Auto"
         app:iconSpaceReserved="false" />
 
     <Preference
         app:key="app_theme"
         app:title="@string/pref_app_theme"
-        tools:summary="Current theme: Follow system"
+        tools:summary="Follow system"
+        app:iconSpaceReserved="false" />
+
+    <Preference
+        app:key="layout_orientation"
+        app:title="@string/pref_layout_orientation"
+        tools:summary="Left to right"
         app:iconSpaceReserved="false" />
 
     <SwitchPreferenceCompat
@@ -40,7 +46,7 @@
     <Preference
         app:key="mode_of_operations"
         app:title="@string/pref_mode_of_operations"
-        tools:summary="Current mode: Auto"
+        tools:summary="Auto"
         app:iconSpaceReserved="false" />
 
     <Preference

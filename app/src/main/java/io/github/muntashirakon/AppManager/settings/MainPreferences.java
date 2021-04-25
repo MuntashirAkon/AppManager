@@ -89,6 +89,10 @@ public class MainPreferences extends PreferenceFragmentCompat {
             AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY,
             AppCompatDelegate.MODE_NIGHT_NO,
             AppCompatDelegate.MODE_NIGHT_YES);
+    private static final List<Integer> LAYOUT_ORIENTATION_CONST = Arrays.asList(
+            View.LAYOUT_DIRECTION_LOCALE,
+            View.LAYOUT_DIRECTION_LTR,
+            View.LAYOUT_DIRECTION_RTL);
     private static final List<String> MODE_NAMES = Arrays.asList(
             Runner.MODE_AUTO,
             Runner.MODE_ROOT,
@@ -97,6 +101,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
 
     SettingsActivity activity;
     private int currentTheme;
+    private int currentLayoutOrientation;
     private String currentLang;
     @Runner.Mode
     private String currentMode;
@@ -107,7 +112,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
         getPreferenceManager().setPreferenceDataStore(new SettingsDataStore());
         activity = (SettingsActivity) requireActivity();
         // Custom locale
-        currentLang = (String) AppPref.get(AppPref.PrefKey.PREF_CUSTOM_LOCALE_STR);
+        currentLang = AppPref.getString(AppPref.PrefKey.PREF_CUSTOM_LOCALE_STR);
         ArrayMap<String, Locale> locales = LangUtils.getAppLanguages(activity);
         final CharSequence[] languages = getLanguagesL(locales);
         Preference locale = Objects.requireNonNull(findPreference("custom_locale"));
@@ -128,7 +133,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
         });
         // App theme
         final String[] themes = getResources().getStringArray(R.array.themes);
-        currentTheme = (int) AppPref.get(AppPref.PrefKey.PREF_APP_THEME_INT);
+        currentTheme = AppPref.getInt(AppPref.PrefKey.PREF_APP_THEME_INT);
         Preference appTheme = Objects.requireNonNull(findPreference("app_theme"));
         appTheme.setSummary(themes[THEME_CONST.indexOf(currentTheme)]);
         appTheme.setOnPreferenceClickListener(preference -> {
@@ -145,13 +150,31 @@ public class MainPreferences extends PreferenceFragmentCompat {
                     .show();
             return true;
         });
+        // Layout orientation
+        final String[] layoutOrientations = getResources().getStringArray(R.array.layout_orientations);
+        currentLayoutOrientation = AppPref.getInt(AppPref.PrefKey.PREF_LAYOUT_ORIENTATION_INT);
+        Preference layoutOrientation = Objects.requireNonNull(findPreference("layout_orientation"));
+        layoutOrientation.setSummary(layoutOrientations[LAYOUT_ORIENTATION_CONST.indexOf(currentLayoutOrientation)]);
+        layoutOrientation.setOnPreferenceClickListener(preference -> {
+            new MaterialAlertDialogBuilder(activity)
+                    .setTitle(R.string.pref_layout_orientation)
+                    .setSingleChoiceItems(layoutOrientations, LAYOUT_ORIENTATION_CONST.indexOf(currentLayoutOrientation),
+                            (dialog, which) -> currentLayoutOrientation = LAYOUT_ORIENTATION_CONST.get(which))
+                    .setPositiveButton(R.string.apply, (dialog, which) -> {
+                        AppPref.set(AppPref.PrefKey.PREF_LAYOUT_ORIENTATION_INT, currentLayoutOrientation);
+                        ActivityCompat.recreate(activity);
+                    })
+                    .setNegativeButton(R.string.cancel, null)
+                    .show();
+            return true;
+        });
         // Screen lock
         SwitchPreferenceCompat screenLock = Objects.requireNonNull(findPreference("enable_screen_lock"));
-        screenLock.setChecked((boolean) AppPref.get(AppPref.PrefKey.PREF_ENABLE_SCREEN_LOCK_BOOL));
+        screenLock.setChecked(AppPref.getBoolean(AppPref.PrefKey.PREF_ENABLE_SCREEN_LOCK_BOOL));
         // Mode of operation
         Preference mode = Objects.requireNonNull(findPreference("mode_of_operations"));
         final String[] modes = getResources().getStringArray(R.array.modes);
-        currentMode = (String) AppPref.get(AppPref.PrefKey.PREF_MODE_OF_OPS_STR);
+        currentMode = AppPref.getString(AppPref.PrefKey.PREF_MODE_OF_OPS_STR);
         mode.setSummary(modes[MODE_NAMES.indexOf(currentMode)]);
         mode.setOnPreferenceClickListener(preference -> {
             new MaterialAlertDialogBuilder(activity)
@@ -169,15 +192,16 @@ public class MainPreferences extends PreferenceFragmentCompat {
         });
         // Enable/disable features
         FeatureController fc = FeatureController.getInstance();
-        ((Preference) Objects.requireNonNull(findPreference("enabled_features"))).setOnPreferenceClickListener(preference -> {
-            new MaterialAlertDialogBuilder(activity)
-                    .setTitle(R.string.enable_disable_features)
-                    .setMultiChoiceItems(FeatureController.getFormattedFlagNames(activity), fc.flagsToCheckedItems(),
-                            (dialog, index, isChecked) -> fc.modifyState(FeatureController.featureFlags.get(index), isChecked))
-                    .setNegativeButton(R.string.close, null)
-                    .show();
-            return true;
-        });
+        ((Preference) Objects.requireNonNull(findPreference("enabled_features")))
+                .setOnPreferenceClickListener(preference -> {
+                    new MaterialAlertDialogBuilder(activity)
+                            .setTitle(R.string.enable_disable_features)
+                            .setMultiChoiceItems(FeatureController.getFormattedFlagNames(activity), fc.flagsToCheckedItems(),
+                                    (dialog, index, isChecked) -> fc.modifyState(FeatureController.featureFlags.get(index), isChecked))
+                            .setNegativeButton(R.string.close, null)
+                            .show();
+                    return true;
+                });
         // Import/export App Manager's KeyStore
         ((Preference) Objects.requireNonNull(findPreference("import_export_keystore")))
                 .setOnPreferenceClickListener(preference -> {
@@ -186,20 +210,21 @@ public class MainPreferences extends PreferenceFragmentCompat {
                     return true;
                 });
         // About device
-        ((Preference) Objects.requireNonNull(findPreference("about_device"))).setOnPreferenceClickListener(preference -> {
-            new Thread(() -> {
-                CharSequence deviceInfo = getDeviceInfo();
-                activity.runOnUiThread(() -> {
-                    if (isDetached()) return;
-                    @SuppressLint("InflateParams")
-                    View view = getLayoutInflater().inflate(R.layout.dialog_scrollable_text_view, null);
-                    ((TextView) view.findViewById(android.R.id.content)).setText(deviceInfo);
-                    view.findViewById(android.R.id.checkbox).setVisibility(View.GONE);
-                    new FullscreenDialog(activity).setTitle(R.string.about_device).setView(view).show();
+        ((Preference) Objects.requireNonNull(findPreference("about_device")))
+                .setOnPreferenceClickListener(preference -> {
+                    new Thread(() -> {
+                        CharSequence deviceInfo = getDeviceInfo();
+                        activity.runOnUiThread(() -> {
+                            if (isDetached()) return;
+                            @SuppressLint("InflateParams")
+                            View view = getLayoutInflater().inflate(R.layout.dialog_scrollable_text_view, null);
+                            ((TextView) view.findViewById(android.R.id.content)).setText(deviceInfo);
+                            view.findViewById(android.R.id.checkbox).setVisibility(View.GONE);
+                            new FullscreenDialog(activity).setTitle(R.string.about_device).setView(view).show();
+                        });
+                    }).start();
+                    return true;
                 });
-            }).start();
-            return true;
-        });
         // About
         ((Preference) Objects.requireNonNull(findPreference("about"))).setOnPreferenceClickListener(preference -> {
             @SuppressLint("InflateParams")
