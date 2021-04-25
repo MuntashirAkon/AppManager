@@ -767,7 +767,8 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
                     new MaterialAlertDialogBuilder(this)
                             .setTitle(R.string.delete_saved_log)
                             .setCancelable(true)
-                            .setMessage(getResources().getQuantityString(R.plurals.are_you_sure, deleteCount, deleteCount))
+                            .setMessage(getResources().getQuantityString(R.plurals.file_deletion_confirmation,
+                                    deleteCount, deleteCount))
                             .setPositiveButton(android.R.string.ok, (dialog1, which1) -> {
                                 for (File selectedFile : selectedFiles) {
                                     SaveLogHelper.deleteLogIfExists(selectedFile.getName());

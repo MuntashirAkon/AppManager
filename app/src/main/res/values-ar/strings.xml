@@ -241,14 +241,6 @@
     <string name="installer_error_aborted">فشل التثبيت إما لأنه تم إلغاؤه أو تم إغلاق جلسة العمل بشكل غير متوقع</string>
     <string name="toggle_default_app_ops">تبديل عمليات التطبيق الافتراضية</string>
     <string name="filter_apps_with_activities">مع الأنشطة</string>
-    <plurals name="are_you_sure">
-        <item quantity="zero">هل أنت متأكد؟</item>
-        <item quantity="one"/>
-        <item quantity="two"/>
-        <item quantity="few"/>
-        <item quantity="many"/>
-        <item quantity="other"/>
-    </plurals>
     <string name="pref_remove_all_rules_msg">سيتم منح الأذونات، وستعود عمليات التطبيق ومكوناته إلى قيمها الافتراضية.</string>
     <string name="pref_remove_all_rules">إزالة كافة القواعد</string>
     <string name="website">الموقع الإلكتروني</string>

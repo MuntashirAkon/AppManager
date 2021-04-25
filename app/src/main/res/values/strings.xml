@@ -961,7 +961,7 @@
     <string name="pref_include_device_info" translatable="false">device_info</string>
     <string name="add_filter">Add Filter</string>
     <string name="add_filter_ellipsis">Add Filter…</string>
-    <plurals name="are_you_sure">
+    <plurals name="file_deletion_confirmation">
         <item quantity="one">%d file will be deleted</item>
         <item quantity="other">%d files will be deleted</item>
     </plurals>

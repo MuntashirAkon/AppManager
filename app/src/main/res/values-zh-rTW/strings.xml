@@ -887,7 +887,6 @@
     <string name="restart_log_viewer_to_see_changes">重新啟動日誌檢視器視窗以檢視變更。</string>
     <string name="view_logs">檢視日誌</string>
     <string name="save_log">儲存日誌</string>
-    <string name="source_code_links"/>
     <string name="pref_default_log_level_summary">啟動時的日誌等級、開啟檔案時以及錄製時。</string>
     <string name="log_level">日誌等級</string>
     <string name="failed_to_block_trackers">無法封鎖追蹤器</string>
