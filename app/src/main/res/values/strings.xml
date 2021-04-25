@@ -911,7 +911,7 @@
     <string name="generate_key">Generate</string>
     <string name="failed_to_save_key">Could not save key.</string>
     <string name="failed_to_initialize_key_store">Could not initialize App Manager KeyStore.</string>
-    <string name="invalid_aes_key_size">Use 128 or 256 bit key size for AES encryption isntead.</string>
+    <string name="invalid_aes_key_size">Use 128 or 256 bit key size for AES encryption instead.</string>
     <string name="crypto_key_size">Key size</string>
     <string name="invalid_rsa_key_size">Use 1024, 2048 or 4096 bit key size for RSA encryption instead.</string>
     <string name="use_default">Use default</string>
