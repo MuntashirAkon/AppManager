@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
     <string name="_lang_tag" translatable="false">ar</string>
     <string name="app_signing_install_without_data_loss">إذا قمت بإيقاف تشغيل التحقق من التوقيع ، يمكنك استخدام خيار <b> تثبيت </b> فقط لتثبيت التطبيق دون فقدان البيانات.</string>
     <string name="ssaid_info">SSAID (<tt>Settings.Secure.ANDROID_ID</tt>) هو معرف جهاز معين لكل تطبيق (من Android 8 \"Oreo\" فصاعدا). يتم استخدامه على نطاق واسع من قبل التطبيقات لتتبع المستخدمين.</string>
@@ -199,7 +199,7 @@
     <string name="locale_split_for_base_apk"><xliff:g id="split_name" example="English"> %1$s </xliff:g> ترجمة APK الأساسية</string>
     <string name="locale_split_for_feature"><xliff:g id="split_name" example="English"> %1$s </xliff:g> ترجمة للميزة <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
     <string name="abi_split_for_base_apk"><xliff:g id="split_name" example="arm64_v8a"> %1$s </xliff:g> رمز لملف APK الأساسي</string>
-    <string name="abi_split_for_feature"><xliff:g id="split_name" example="arm64_v8a"> %1$s </xliff:g> رمز لـ <xliff:g id="feature_name" example="Visualizer"> %2$s </xliff:g></string>
+    <string name="abi_split_for_feature"><xliff:g id="split_name" example="arm64_v8a"> %1$s </xliff:g> رمز ل <xliff:g id="feature_name" example="Visualizer"> %2$s </xliff:g></string>
     <string name="density_split_for_base_apk"><xliff:g id="split_name" example="xxdpi"> %1$s </xliff:g> (<xliff:g id="dpi_no" example="480"> %2$d </xliff:g> موارد DPI) لملف APK الأساسي</string>
     <string name="density_split_for_feature"><xliff:g id="split_name" example="xxdpi"> %1$s </xliff:g> (<xliff:g id="dpi_no" example="480"> %2$d </xliff:g> موارد DPI) للميزات <xliff:g id="feature_name" example="Visualizer"> %3$s </xliff:g></string>
     <string name="unknown_split_for_base_apk"><xliff:g id="split_name" example="some_split"> %1$s </xliff:g> لملف APK الأساسي</string>
@@ -538,7 +538,7 @@
     <string name="apps">التطبيقات</string>
     <string name="routine_ops">العمليات الروتينية</string>
     <string name="apply_now">تطبيق الان…</string>
-    <string name="keystore">KeyStore</string>
+    <string name="keystore">تخزين المفاتيح</string>
     <string name="no_profiles">لا توجد ملفات تعريف</string>
     <string name="profiles">الأوضاع</string>
     <string name="open_pgp_provider">موفر OpenPGP</string>
@@ -646,4 +646,515 @@
     <string name="failed">فشل</string>
     <string name="pref_rules_msg">حظر فوري، استيراد / تصدير / إزالة القواعد، الخ.</string>
     <string name="saf">SAF</string>
+    <string name="java_keystore">مخزن مفاتيح الجافا (JKS)</string>
+    <string name="onboard">عملية الاعداد</string>
+    <string name="update_uninstalled_successfully">التحديثات الخاصة ب <xliff:g id="app_name" example="App Manager"> %1$s </xliff:g>تم إلغاء تثبيتها.</string>
+    <plurals name="alert_failed_to_set_app_ops">
+        <item quantity="zero">تعذر تعيين عمليات التطبيق لتطبيق %1$d</item>
+        <item quantity="one">تعذر تعيين عمليات التطبيق لتطبيق %1$d</item>
+        <item quantity="two">تعذر تعيين عمليات التطبيق لتطبيقات %1$d</item>
+        <item quantity="few">تعذر تعيين عمليات التطبيق لتطبيق %1$d</item>
+        <item quantity="many">تعذر تعيين عمليات التطبيق لتطبيق %1$d</item>
+        <item quantity="other">تعذر تعيين عمليات التطبيق لتطبيق %1$d</item>
+    </plurals>
+    <plurals name="toast_log_truncated">
+        <item quantity="zero">السجل كبير جدًا ، ويظهر آخر %d سطر.</item>
+        <item quantity="one">السجل كبير جدًا ، ويظهر آخر %d سطر.</item>
+        <item quantity="two">السجل كبير جدًا ، ويظهر آخر %d سطر.</item>
+        <item quantity="few">السجل كبير جدًا ، ويظهر آخر %d السطور.</item>
+        <item quantity="many">السجل كبير جدًا ، ويظهر آخر %d سطر.</item>
+        <item quantity="other">السجل كبير جدًا ، ويظهر آخر %d سطر.</item>
+    </plurals>
+    <plurals name="file_deletion_confirmation">
+        <item quantity="zero">%d سيتم حذف الملف</item>
+        <item quantity="one">%d سيتم حذف الملف</item>
+        <item quantity="two">%d سيتم حذف الملف</item>
+        <item quantity="few">%d سيتم حذف الملفات</item>
+        <item quantity="many">%d سيتم حذف الملف</item>
+        <item quantity="other">%d سيتم حذف الملف</item>
+    </plurals>
+    <plurals name="items_selected">
+        <item quantity="zero"><xliff:g id="selection_no" example="20"> %1$d </xliff:g> تم اختياره</item>
+        <item quantity="one"><xliff:g id="selection_no" example="20"> %1$d </xliff:g> تم اختياره</item>
+        <item quantity="two"><xliff:g id="selection_no" example="20"> %1$d </xliff:g> تم اختياره</item>
+        <item quantity="few"><xliff:g id="selection_no" example="20"> %1$d </xliff:g> تم اختيارهم</item>
+        <item quantity="many"><xliff:g id="selection_no" example="20"> %1$d </xliff:g> تم اختياره</item>
+        <item quantity="other"><xliff:g id="selection_no" example="20"> %1$d </xliff:g> تم اختياره</item>
+    </plurals>
+    <plurals name="alert_failed_to_block_components">
+        <item quantity="zero">تعذر حظر مكون التطبيق %1$d</item>
+        <item quantity="one">تعذر حظر مكون التطبيق %1$d</item>
+        <item quantity="two">تعذر حظر مكون التطبيق %1$d</item>
+        <item quantity="few">تعذر حظر مكونات التطبيق %1$d</item>
+        <item quantity="many">تعذر حظر مكون التطبيق %1$d</item>
+        <item quantity="other">تعذر حظر مكونات التطبيق %1$d</item>
+    </plurals>
+    <plurals name="alert_failed_to_unblock_trackers">
+        <item quantity="zero">تعذر إلغاء حظر برمجيات التتبع من تطبيق %1$d</item>
+        <item quantity="one">تعذر إلغاء حظر برمجيات التتبع من تطبيق %1$d</item>
+        <item quantity="two">تعذر إلغاء حظر برمجيات التتبع من تطبيق %1$d</item>
+        <item quantity="few">تعذر إلغاء حظر برمجيات التتبع من تطبيق %1$d</item>
+        <item quantity="many">تعذر إلغاء حظر برمجيات التتبع من تطبيق %1$d</item>
+        <item quantity="other">تعذر إلغاء حظر برمجياتِ التتبع من تطبيق %1$d</item>
+    </plurals>
+    <plurals name="alert_failed_to_delete_backup">
+        <item quantity="zero">تعذر حذف %1$d النسخ الاحتياطية</item>
+        <item quantity="one">تعذر حذف %1$d النسخ الاحتياطية</item>
+        <item quantity="two">تعذر حذف %1$d النسخ الاحتياطية</item>
+        <item quantity="few">تعذر حذف %1$d النسخٍ الاحتياطية</item>
+        <item quantity="many">تعذر حذف %1$d النسخ الاحتياطية</item>
+        <item quantity="other">تعذر حذف %1$d النسخ الاحتياطية</item>
+    </plurals>
+    <plurals name="alert_failed_to_restore">
+        <item quantity="zero">تعذر استعادة %1$d تطبيق</item>
+        <item quantity="one">تعذر استعادة %1$d تطبيق</item>
+        <item quantity="two">تعذر استعادة %1$d تطبيق</item>
+        <item quantity="few">تعذر استعادة %1$d التطبيقات</item>
+        <item quantity="many">تعذر استعادة %1$d تطبيق</item>
+        <item quantity="other">تعذر استعادة %1$d تطبيق</item>
+    </plurals>
+    <plurals name="alert_failed_to_enable">
+        <item quantity="zero">تعذر تمكين %1$d تطبيق</item>
+        <item quantity="one">تعذر تمكين %1$d تطبيق</item>
+        <item quantity="two">تعذر تمكين %1$d تطبيق</item>
+        <item quantity="few">تعذر تمكين %1$d تطبيقات</item>
+        <item quantity="many">تعذر تمكين %1$d تطبيقات</item>
+        <item quantity="other">تعذر تمكين %1$d تطبيق</item>
+    </plurals>
+    <plurals name="backup_exists_are_you_sure">
+        <item quantity="zero">النسخة الاحتياطية موجودة بالفعل. هل أنت متأكد؟</item>
+        <item quantity="one">النسخة الاحتياطية موجودة بالفعل. هل أنت متأكد؟</item>
+        <item quantity="two">النسخة الاحتياطية موجودة بالفعل. هل أنت متأكد؟</item>
+        <item quantity="few">النسخ الاحتياطية موجودة بالفعل. هل أنت متأكد؟</item>
+        <item quantity="many">النسخة الاحتياطية موجودة بالفعل. هل أنت متأكد؟</item>
+        <item quantity="other">النسخة الاحتياطية موجودة بالفعل. هل أنت متأكد؟</item>
+    </plurals>
+    <plurals name="classes">
+        <item quantity="zero">%1$d فئة</item>
+        <item quantity="one">%1$d فئة</item>
+        <item quantity="two">%1$d فئة</item>
+        <item quantity="few">%1$d فئات</item>
+        <item quantity="many">%1$d فئة</item>
+        <item quantity="other">%1$d فئة</item>
+    </plurals>
+    <plurals name="libraries">
+        <item quantity="zero">%1$d مكتبة</item>
+        <item quantity="one">%1$d مكتبة</item>
+        <item quantity="two">%1$d مكتبة</item>
+        <item quantity="few">%1$d مكتبات</item>
+        <item quantity="many">%1$d مكتبة</item>
+        <item quantity="other">%1$d مكتبة</item>
+    </plurals>
+    <plurals name="missing_signatures">
+        <item quantity="zero">%1$d التوقيع مفقود</item>
+        <item quantity="one">%1$d التوقيع مفقود</item>
+        <item quantity="two">%1$d التوقيع مفقود</item>
+        <item quantity="few">%1$d التوقيعات مفقود</item>
+        <item quantity="many">%1$d التوقيع مفقود</item>
+        <item quantity="other">%1$d التوقيع مفقود</item>
+    </plurals>
+    <plurals name="app_signing_signature_schemes_pl">
+        <item quantity="zero">مخطط التوقيع</item>
+        <item quantity="one">مخطط التوقيع</item>
+        <item quantity="two">مخطط التوقيع</item>
+        <item quantity="few">مخطط التوقيعات</item>
+        <item quantity="many">مخطط التوقيع</item>
+        <item quantity="other">مخطط التوقيع</item>
+    </plurals>
+    <plurals name="verified_with_warning">
+        <item quantity="zero">تم التحقق مع تحذير %d</item>
+        <item quantity="one">تم التحقق مع تحذير %d</item>
+        <item quantity="two">تم التحقق مع تحذير %d</item>
+        <item quantity="few">تم التحقق مع تحذيرات %d</item>
+        <item quantity="many">تم التحقق مع تحذير %d</item>
+        <item quantity="other">تم التحقق مع تحذير %d</item>
+    </plurals>
+    <string name="presets">الإعدادات المسبقة</string>
+    <string name="verified_using_unreliable_hash">تم التحقق باستخدام تجزئة غير موثوقة</string>
+    <plurals name="alert_failed_to_backup">
+        <item quantity="zero">تعذر نسخ تطبيق %1$d احتياطيًا</item>
+        <item quantity="one">تعذر نسخ تطبيق %1$d احتياطيًا</item>
+        <item quantity="two">تعذر نسخ تطبيقات %1$d احتياطيًا</item>
+        <item quantity="few">تعذر نسخ تطبيق %1$d احتياطيًا</item>
+        <item quantity="many">تعذر نسخ تطبيق %1$d احتياطيًا</item>
+        <item quantity="other">تعذر نسخ تطبيق %1$d احتياطيًا</item>
+    </plurals>
+    <plurals name="no_of_splits">
+        <item quantity="zero">%1$d مقسم</item>
+        <item quantity="one">%1$d مقسم</item>
+        <item quantity="two">%1$d مقسم</item>
+        <item quantity="few">%1$d مقسمات</item>
+        <item quantity="many">%1$d مقسم</item>
+        <item quantity="other">%1$d مقسم</item>
+    </plurals>
+    <plurals name="no_of_components">
+        <item quantity="zero">%1$d مكون</item>
+        <item quantity="one">%1$d مكون</item>
+        <item quantity="two">%1$d مكون</item>
+        <item quantity="few">%1$d مكونات</item>
+        <item quantity="many">%1$d مكون</item>
+        <item quantity="other">%1$d مكون</item>
+    </plurals>
+    <string name="failed_to_initialize_key_store">تعذرت تهيئة ملف تخزين مفاتيح مدير التطبيقات.</string>
+    <string name="failed_to_change_ssaid">تعذر تغيير SSAID</string>
+    <string name="screen">الشَّاشة</string>
+    <string name="navigation_trackball">تراكبال</string>
+    <plurals name="failed_to_import_files">
+        <item quantity="zero">تعذر استيراد ملف %1$d.</item>
+        <item quantity="one">تعذر استيراد ملف %1$d.</item>
+        <item quantity="two">تعذر استيراد ملف %1$d.</item>
+        <item quantity="few">تعذر استيراد الملفات %1$d.</item>
+        <item quantity="many">تعذر استيراد ملف %1$d.</item>
+        <item quantity="other">تعذر استيراد ملف %1$d.</item>
+    </plurals>
+    <plurals name="no_of_times_opened">
+        <item quantity="zero">%1$d وقت</item>
+        <item quantity="one">%1$d وقت</item>
+        <item quantity="two">%1$d وقت</item>
+        <item quantity="few">%1$d اوقات</item>
+        <item quantity="many">%1$d وقت</item>
+        <item quantity="other">%1$d وقت</item>
+    </plurals>
+    <plurals name="usage_hours">
+        <item quantity="zero">%1$d ساعة</item>
+        <item quantity="one">%1$d ساعة</item>
+        <item quantity="two">%1$d ساعة</item>
+        <item quantity="few">%1$d ساعات</item>
+        <item quantity="many">%1$d ساعة</item>
+        <item quantity="other">%1$d ساعة</item>
+    </plurals>
+    <plurals name="usage_days">
+        <item quantity="zero">%1$d يوم</item>
+        <item quantity="one">%1$d يوم</item>
+        <item quantity="two">%1$d يوم</item>
+        <item quantity="few">%1$d ايام</item>
+        <item quantity="many">%1$d يوم</item>
+        <item quantity="other">%1$d يوم</item>
+    </plurals>
+    <plurals name="usage_months">
+        <item quantity="zero">%1$d شهر</item>
+        <item quantity="one">%1$d شهر</item>
+        <item quantity="two">%1$d شهر</item>
+        <item quantity="few">%1$d اشهر</item>
+        <item quantity="many">%1$d شهر</item>
+        <item quantity="other">%1$d شهر</item>
+    </plurals>
+    <plurals name="main_list_date_days">
+        <item quantity="zero"><xliff:g id="last_update_date" example="20/10/2020"> %1$s </xliff:g> <xliff:g id="day_no" example="5"> %2$d </xliff:g> يوم</item>
+        <item quantity="one"><xliff:g id="last_update_date" example="20/10/2020"> %1$s </xliff:g> <xliff:g id="day_no" example="5"> %2$d </xliff:g> يوم</item>
+        <item quantity="two"><xliff:g id="last_update_date" example="20/10/2020"> %1$s </xliff:g> <xliff:g id="day_no" example="5"> %2$d </xliff:g> يوم</item>
+        <item quantity="few"><xliff:g id="last_update_date" example="20/10/2020"> %1$s </xliff:g> <xliff:g id="day_no" example="5"> %2$d </xliff:g> يوم</item>
+        <item quantity="many"><xliff:g id="last_update_date" example="20/10/2020"> %1$s </xliff:g> <xliff:g id="day_no" example="5"> %2$d </xliff:g> ايام</item>
+        <item quantity="other"><xliff:g id="last_update_date" example="20/10/2020"> %1$s </xliff:g> <xliff:g id="day_no" example="5"> %2$d </xliff:g> يوم</item>
+    </plurals>
+    <plurals name="no_of_trackers">
+        <item quantity="zero">%1$d برمجية تعقب</item>
+        <item quantity="one">%1$d برمجية تعقب</item>
+        <item quantity="two">%1$d برمجية تعقب</item>
+        <item quantity="few">%1$d برمجية تعقب</item>
+        <item quantity="many">%1$d برمجيات تعقب</item>
+        <item quantity="other">%1$d برمجية تعقب</item>
+    </plurals>
+    <plurals name="alert_failed_to_disable_trackers">
+        <item quantity="zero">تعذر تعطيل أدوات التتبع من %1$d التطبيق</item>
+        <item quantity="one">تعذر تعطيل أدوات التتبع من %1$d التطبيق</item>
+        <item quantity="two">تعذر تعطيل أدوات التتبع من %1$d التطبيق</item>
+        <item quantity="few">تعذر تعطيل أدوات التتبع من %1$d التطبيق</item>
+        <item quantity="many">تعذر تعطيل أدوات التتبع من %1$d التطبيقات</item>
+        <item quantity="other">تعذر تعطيل أدوات التتبع من %1$d التطبيق</item>
+    </plurals>
+    <plurals name="alert_failed_to_force_stop">
+        <item quantity="zero">تعذر إيقاف التطبيق %1$d بالقوة</item>
+        <item quantity="one">تعذر إيقاف التطبيق %1$d بالقوة</item>
+        <item quantity="two">تعذر إيقاف التطبيق %1$d بالقوة</item>
+        <item quantity="few">تعذر إيقاف التطبيق %1$d بالقوة</item>
+        <item quantity="many">تعذر إيقاف التطبيقات %1$d بالقوة</item>
+        <item quantity="other">تعذر إيقاف التطبيق %1$d بالقوة</item>
+    </plurals>
+    <plurals name="alert_failed_to_disable_background">
+        <item quantity="zero">تعذر منع %1$d التطبيق من العمل في الخلفية</item>
+        <item quantity="one">تعذر منع %1$d التطبيق من العمل في الخلفية</item>
+        <item quantity="two">تعذر منع %1$d التطبيق من العمل في الخلفية</item>
+        <item quantity="few">تعذر منع %1$d التطبيق من العمل في الخلفية</item>
+        <item quantity="many">تعذر منع %1$d التطبيقات من العمل في الخلفية</item>
+        <item quantity="other">تعذر منع %1$d التطبيق من العمل في الخلفية</item>
+    </plurals>
+    <plurals name="alert_failed_to_uninstall">
+        <item quantity="zero">تعذر إلغاء تثبيت %1$d التطبيق</item>
+        <item quantity="one">تعذر إلغاء تثبيت %1$d التطبيق</item>
+        <item quantity="two">تعذر إلغاء تثبيت %1$d التطبيق</item>
+        <item quantity="few">تعذر إلغاء تثبيت %1$d التطبيق</item>
+        <item quantity="many">تعذر إلغاء تثبيت %1$d التطبيقات</item>
+        <item quantity="other">تعذر إلغاء تثبيت %1$d التطبيق</item>
+    </plurals>
+    <plurals name="alert_failed_to_disable">
+        <item quantity="zero">تعذر تعطيل %1$d تطبيق</item>
+        <item quantity="one">تعذر تعطيل %1$d تطبيق</item>
+        <item quantity="two">تعذر تعطيل %1$d تطبيق</item>
+        <item quantity="few">تعذر تعطيل %1$d تطبيقات</item>
+        <item quantity="many">تعذر تعطيل %1$d تطبيق</item>
+        <item quantity="other">تعذر تعطيل %1$d تطبيق</item>
+    </plurals>
+    <plurals name="alert_failed_to_clear_data">
+        <item quantity="zero">تعذر مسح البيانات من %1$d تطبيق</item>
+        <item quantity="one">تعذر مسح البيانات من %1$d تطبيق</item>
+        <item quantity="two">تعذر مسح البيانات من %1$d تطبيق</item>
+        <item quantity="few">تعذر مسح البيانات من %1$d تطبيقات</item>
+        <item quantity="many">تعذر مسح البيانات من %1$d تطبيقات</item>
+        <item quantity="other">تعذر مسح البيانات من %1$d تطبيق</item>
+    </plurals>
+    <plurals name="other_trackers_and_classes">
+        <item quantity="zero"><xliff:g id="tracker_no" example="8"> %1$d </xliff:g> بتتبع مع <xliff:g id="class_no" example="50">%2$d</xliff:g> فصول</item>
+        <item quantity="one"><xliff:g id="tracker_no" example="8"> %1$d </xliff:g> بتتبعات مع <xliff:g id="class_no" example="50">%2$d</xliff:g> فصول</item>
+        <item quantity="two"><xliff:g id="tracker_no" example="8"> %1$d </xliff:g> بتتبعات مع <xliff:g id="class_no" example="50">%2$d</xliff:g> فصول</item>
+        <item quantity="few"><xliff:g id="tracker_no" example="8"> %1$d </xliff:g> بتتبعات مع <xliff:g id="class_no" example="50">%2$d</xliff:g> فصول</item>
+        <item quantity="many"><xliff:g id="tracker_no" example="8"> %1$d </xliff:g> بتتبعات مع <xliff:g id="class_no" example="50">%2$d</xliff:g> فصول</item>
+        <item quantity="other"><xliff:g id="tracker_no" example="8"> %1$d </xliff:g> بتتبعات مع <xliff:g id="class_no" example="50">%2$d</xliff:g> فصول</item>
+    </plurals>
+    <plurals name="two_trackers_and_classes">
+        <item quantity="zero">2 تتبعات مع <xliff:g id="class_no" example="50">%1$d</xliff:g> فصول</item>
+        <item quantity="one">2 تتبعات مع <xliff:g id="class_no" example="50">%1$d</xliff:g> فصول</item>
+        <item quantity="two">2 تتبعات مع <xliff:g id="class_no" example="50">%1$d</xliff:g> فصول</item>
+        <item quantity="few">2 تتبعات مع <xliff:g id="class_no" example="50">%1$d</xliff:g> فصول</item>
+        <item quantity="many">2 تتبعات مع <xliff:g id="class_no" example="50">%1$d</xliff:g> فصول</item>
+        <item quantity="other">2 تتبعات مع <xliff:g id="class_no" example="50">%1$d</xliff:g> فصول</item>
+    </plurals>
+    <plurals name="tracker_and_classes">
+        <item quantity="zero">1 من المتعقب مع <xliff:g id="class_no" example="50">%1$d</xliff:g> فئة</item>
+        <item quantity="one">1 تعقب مع <xliff:g id="class_no" example="50">%1$d</xliff:g> فئة</item>
+        <item quantity="two">1 تعقبان مع <xliff:g id="class_no" example="50">%1$d</xliff:g> فئة</item>
+        <item quantity="few">1 تعقبات مع <xliff:g id="class_no" example="50">%1$d</xliff:g> فئة</item>
+        <item quantity="many">1 تعقب مع <xliff:g id="class_no" example="50">%1$d</xliff:g> فئة</item>
+        <item quantity="other">1 تعقب مع <xliff:g id="class_no" example="50">%1$d</xliff:g> فئة</item>
+    </plurals>
+    <string name="are_you_sure">هل أنت متأكد؟</string>
+    <string name="orientation_reverse_portrait">طولي معكوس</string>
+    <string name="orientation_reverse_landscape">عرضي معكوس</string>
+    <string name="orientation_sensor_landscape">عرضي المستشعر</string>
+    <string name="orientation_sensor_portrait">طولي المستشعر</string>
+    <string name="orientation_user_landscape">عرضي المستخدم</string>
+    <string name="orientation_user_portrait">طولي المستخدم</string>
+    <string name="state_parked">متوقفة</string>
+    <string name="state_wake_kill">قتل الاستيقاظ</string>
+    <string name="state_waking">الاستيقاظ</string>
+    <string name="state_locked_memory">الذاكرة المؤمنة</string>
+    <string name="state_foreground">المقدمة</string>
+    <string name="state_multithreaded">متعدد المهام</string>
+    <string name="systemless_app">تطبيق غير نظامي</string>
+    <string name="issuer">المصدر</string>
+    <string name="issued_date">تاريخ الإصدار</string>
+    <string name="valid">ساري</string>
+    <string name="rsa_exponent">معامل المضاعفة</string>
+    <string name="rsa_modulus">المكونات</string>
+    <string name="scanner">الفاحص</string>
+    <string name="ecc">تشفير المنحنى البيضاوي</string>
+    <string name="profile_force_stop_msg">إيقاف التطبيقات بالقوة</string>
+    <string name="backup_apk_files_description">نسخ ملفات APK احتياطيًا من المسار المصدر ، بما في ذلك التقسيمات.</string>
+    <string name="backup_internal_data_description">نسخ احتياطي لمجلدات البيانات الداخلية.</string>
+    <string name="backup_external_data_description">نسخ احتياطي لمجلدات البيانات الخارجية.</string>
+    <string name="backup_obb_media_description">النسخ الاحتياطي لمجلدات OBB والوسائط.</string>
+    <string name="backup_cache_description">نسخ <b> ذاكرة التخزين المؤقت</b>، <b>no_cache</b> و <b>no_backup</b> المجلدات.</string>
+    <string name="backup_extras">إضافية</string>
+    <string name="backup_extras_description">نسخ أذونات التطبيق احتياطيًا ، وخيارات توفير البطارية واستخدام البيانات ، وحالة MagiskHide ، و SSAID ، وما إلى ذلك.</string>
+    <string name="backup_rules_description">قواعد النسخ الاحتياطي التي تم تكوينها داخل مدير التطبيقات.</string>
+    <string name="backup_multiple_description">قم بإنشاء نسخة احتياطية منفصلة <i> باسم </i> بدلاً من النسخة الاحتياطية الأساسية.</string>
+    <string name="patch_level">مستوى التصحيح</string>
+    <string name="selinux">SELinux</string>
+    <string name="enforcing">اجباري</string>
+    <string name="permissive">متساهل</string>
+    <string name="hardware">العتاد</string>
+    <string name="density">الكثافة</string>
+    <string name="size">الحجم</string>
+    <string name="scaling_factor">عامل التحجيم</string>
+    <string name="refresh_rate">معدل التحديث</string>
+    <string name="window_size">حجم النافذة</string>
+    <string name="disable_magisk_hide">تعطيل MagiskHide؟</string>
+    <string name="failed_to_disable_magisk_hide">تعذر تعطيل MagiskHide</string>
+    <string name="enable_magisk_hide">قم بتمكين MagiskHide</string>
+    <string name="failed_to_enable_magisk_hide">تعذر تمكين MagiskHide</string>
+    <string name="disable_background_run_description">يضبط وضع <i> تجاهل </i> لعمليات التطبيق التالية: <tt> RUN_IN_BACKGROUND </tt> (من Android 7.0) و <tt> RUN_ANY_IN_BACKGROUND </tt> (من Android 9).</string>
+    <string name="pref_backup_restore_msg">تخصيص النسخ الاحتياطي / الاستعادة.</string>
+    <string name="backup_volume">حجم النسخة الاحتياطية</string>
+    <string name="pref_backup_volume_msg">حدد وحدة التخزين أو القرص حيث سيتم تخزين النسخ الاحتياطية.</string>
+    <string name="no_volumes_found">تعذر العثور على أي وحدات تخزين بإذن الكتابة.</string>
+    <string name="unencrypted">غير مشفر</string>
+    <string name="encrypted">المشفره</string>
+    <string name="bootloader">محمل الاقلاع</string>
+    <string name="backup_custom_users">المستخدمين المخصصين</string>
+    <string name="backup_custom_users_description">إجراء النسخ الاحتياطية للمستخدمين المحددين فقط</string>
+    <string name="backup_all_apps">نسخ جميع التطبيقات احتياطيًا</string>
+    <string name="backup_all_apps_msg">قم بعمل نسخة احتياطية من جميع التطبيقات المثبتة.</string>
+    <string name="backup_apps_without_backups">نسخ احتياطي للتطبيقات التي لاتحتوي على نسخ احتياطية</string>
+    <string name="backup_apps_without_backups_msg">النسخ الاحتياطي للتطبيقات التي لاتحتوي على أي نسخ احتياطية سابقة.</string>
+    <string name="verify_and_redo_backups">تحقق من النسخ الاحتياطية وأعادتها</string>
+    <string name="verify_and_redo_backups_msg">تحقق من سلامة النسخ الاحتياطية السابقة وأعاد النسخ الاحتياطية التي فشل فحص السلامة من أجلها.</string>
+    <string name="redo_existing_backups">إعادة النسخ الاحتياطية الموجودة</string>
+    <string name="redo_existing_backups_msg">إعادة النسخ الاحتياطي للتطبيقات المثبتة مع النسخ الاحتياطية السابقة.</string>
+    <string name="backup_apps_with_changes">نسخة احتياطية للتطبيقات مع التغييرات</string>
+    <string name="restore_all">استعادة جميع التطبيقات</string>
+    <string name="restore_all_msg">استعادة النسخ الاحتياطي الأساسي من جميع التطبيقات الاحتياطية.</string>
+    <string name="restore_not_installed">استعادة التطبيقات غير المثبتة</string>
+    <string name="restore_not_installed_msg">استعادة النسخ الاحتياطي الأساسي للتطبيقات غير المثبتة حاليا.</string>
+    <string name="restore_latest">استعادة أحدث النسخ الاحتياطية</string>
+    <string name="restore_latest_msg">استعادة التطبيقات المثبتة بالفعل والتي تكون رموز إصدارها أعلى من رمز الإصدار الحالي المثبت.</string>
+    <string name="backup_msg">النسخ الاحتياطي لتطبيقات مع بالبيانات</string>
+    <string name="restore_msg">استعادة التطبيقات مع البيانات</string>
+    <string name="drm_free_apkm_msg">ملف APKM خالي من DRM، لا حاجة لتحويله إلى APKS.</string>
+    <string name="back_up">النسخة الإحتياطية</string>
+    <string name="internal_storage">الذاكرة الداخلية</string>
+    <string name="external_storage">التخزين الخارجي</string>
+    <string name="sd_card">بطاقة الذاكرة</string>
+    <string name="unlock_app_manager">إلغاء تأمين مدير التطبيقات</string>
+    <string name="screen_lock">قفل الشاشة</string>
+    <string name="screen_lock_msg">قفل مدير التطبيقات باستخدام قفل شاشة أندرويد</string>
+    <string name="type_null">بلا قيمة</string>
+    <string name="type_component_name">اسم المكون</string>
+    <string name="type_int_array">صف من الأعداد الصحيحة</string>
+    <string name="type_int_array_list">قائمة الأعداد الصحيحة</string>
+    <string name="type_long_array">صف من الأعداد الصحيحة الطويلة</string>
+    <string name="type_long_array_list">قائمة بالأعداد الصحيحة الطويلة</string>
+    <string name="type_float_array">صف من الأعداد العشرية</string>
+    <string name="type_float_array_list">قائمة بالأرقام العشرية</string>
+    <string name="type_string_array">صف من السلاسل</string>
+    <string name="type_string_array_list">قائمة السلاسل</string>
+    <string name="type_uri">URI</string>
+    <string name="no_battery_optimization">لا يوجد تحسين للبطارية</string>
+    <string name="battery_optimization">تحسين البطارية</string>
+    <string name="enable_battery_optimization">تمكين تحسين البطارية؟</string>
+    <string name="choose_what_to_do">اختر ما يجب القيام به.</string>
+    <string name="has_net_policy">سياسة الانترنت</string>
+    <string name="net_policy">سياسة الانترنت</string>
+    <string name="allow_background">السماح بالمهام في الخلفية</string>
+    <string name="reject_background">رفض المهام في الخلفية</string>
+    <string name="initializing">جار التهيئة…</string>
+    <string name="add_to_profile">إضافة إلى ملف التعريف</string>
+    <string name="add">أضِف</string>
+    <string name="os_version">إصدار نظام التشغيل</string>
+    <string name="reverse">عكس</string>
+    <string name="list_options">قائمة الخيارات</string>
+    <string name="ssaid">SSAID</string>
+    <string name="copied_to_clipboard">نُسخ الى الحافظة.</string>
+    <string name="restart_to_reflect_changes">يجب إعادة تشغيل الجهاز مباشرة لاستخدام التغييرات الجديدة.</string>
+    <string name="installed_apps">التطبيقات المثبتة</string>
+    <string name="enable_disable_features">تمكين/تعطيل الميزات</string>
+    <string name="pref_enable_disable_features_msg">تمكين أو تعطيل الميزات في إدارة التطبيقات.</string>
+    <string name="last_actions">الإجراءات الأخيرة</string>
+    <string name="isolated">معزول</string>
+    <string name="screen_lock_not_enabled">يرجى اختيار قفل الشاشة في إعدادات Android، أو مسح بيانات التطبيق.</string>
+    <string name="working_on_adb_mode">يعمل على وضع ADB</string>
+    <string name="specify_custom_name">مُخصّص</string>
+    <string name="installer_app_message">حدد <b> اختر </b> للاختيار من بين التطبيقات المثبتة أو حدد <b> مخصص </b> لتحديد اسم حزمة مخصص.</string>
+    <string name="uninstalled_apps">التطبيقات غير المثبتة</string>
+    <string name="filter_apps_without_backups">بدون نسخ احتياطية</string>
+    <string name="input_key">مفتاح الإدخال (بالنظام الست عشري)</string>
+    <string name="generate_key">توليد</string>
+    <string name="failed_to_save_key">لا يمكن حفظ المفتاح.</string>
+    <string name="invalid_aes_key_size">حجم المفتاح غير صالح لتشفير AES. يمكن أن يكون حجم المفتاح إما 128 أو 256 بت.</string>
+    <string name="crypto_key_size">حجم المفتاح</string>
+    <string name="invalid_rsa_key_size">حجم المفتاح غير صالح لتشفير RSA. يمكن أن يكون حجم المفتاح 1024 أو 2048 أو 4096 بت.</string>
+    <string name="use_default">استخدم الافتراضيّ</string>
+    <string name="key_not_set">لم يتم تعيينه.</string>
+    <string name="default_key_used">يتم استخدام المفتاح الافتراضي.</string>
+    <string name="failed_to_load_key">تعذر تحميل المفتاح.</string>
+    <string name="input_key_password">كلمة السر الرئيسية</string>
+    <string name="common_name">الاسم الشائع (CN)</string>
+    <string name="organization_unit">الوحدة التنظيمية (OU)</string>
+    <string name="organization_name">اسم المؤسسة (O)</string>
+    <string name="locality_name">اسم المنطقة (المدينة) (L)</string>
+    <string name="state_name">اسم الدولة (ST)</string>
+    <string name="country_name" tools:ignore="TypographyOther">اسم الدولة (ج)</string>
+    <string name="keystore_file">ملف KeyStore</string>
+    <string name="keystore_pass">كلمة مرور KeyStore</string>
+    <string name="bouncy_castle_keystore">قلعة النطاط KeyStore (BKS)</string>
+    <string name="pkcs12_keystore">PKCS # 12 KeyStore (P12)</string>
+    <string name="pem_and_pk8">#8 PEM و PKCS (PK8)</string>
+    <string name="pk8_file">ملف #8 PKCS (PK8)</string>
+    <string name="pem_file">ملف PEM</string>
+    <string name="import_key">استيراد المفتاح</string>
+    <string name="new_alias_password">اسم مستعار جديد</string>
+    <string name="found_no_alias_in_keystore">لم يتم العثور على اسم مستعار في KeyStore!</string>
+    <string name="choose_an_alias">اختر اسمًا مستعارًا</string>
+    <string name="alias_pass">كلمة مرور الاسم المستعار</string>
+    <string name="failed_to_read_keystore">تعذرت قراءة KeyStore.</string>
+    <string name="signing_key">مفتاح التوقيع</string>
+    <string name="expiry_date_cannot_be_empty">لا يمكن أن يكون تاريخ انتهاء الصلاحية فارغا.</string>
+    <string name="pref_installer_msg">قم بتكوين سلوكيات مثبت التطبيق.</string>
+    <string name="log_viewer">عارض السجل</string>
+    <string name="pref_log_viewer_msg">تكوين كيفية عرض السجلات.</string>
+    <string name="restart_log_viewer_to_see_changes">أعد تشغيل نافذة عارض السجل لرؤية التغييرات.</string>
+    <string name="filename">اسم الملف</string>
+    <string name="log_level_debug">تصحيح</string>
+    <string name="log_level_error">خطأ</string>
+    <string name="log_level_info">معلومات</string>
+    <string name="log_level_verbose">مطوّل</string>
+    <string name="log_level_warn">حذر</string>
+    <string name="log_level_fatal">خطأ قاتل</string>
+    <string name="add_filter">إضافة عامل تصفية</string>
+    <string name="add_filter_ellipsis">إضافة عامل تصفية…</string>
+    <string name="checkbox_never_show_partial_select_help">لا تظهر مرة أخرى</string>
+    <string name="copy_to_clipboard">نسخ إلى الحافظة</string>
+    <string name="delete_saved_log">حذف السجلات المحفوظة</string>
+    <string name="dialog_compiling_log">يتم الآن تجميع السجل…</string>
+    <string name="dialog_partial_select_explanation">1. حدد السطر <b> الأول </b>.
+\n2. ثم حدد <b> آخر سطر </b>.</string>
+    <string name="enter_filename">أدخل اسم ملف</string>
+    <string name="enter_good_filename">الرجاء إدخال اسم ملف صالح.</string>
+    <string name="filter_choice">البحث عبر</string>
+    <string name="log_recording_started">بدأ تسجيل السجل.</string>
+    <string name="notification_ticker">بدأ تسجيل السجل</string>
+    <string name="pref_filter_pattern_title">تصفية العلامات</string>
+    <string name="record_log">تسجيل السجل</string>
+    <string name="base_backup">النسخ الاحتياطي الأساسي</string>
+    <string name="pref_layout_orientation">اتجاه التخطيط</string>
+    <string name="orientation_follow_locale">اتبع اللغة</string>
+    <string name="orientation_left_to_right">من اليسار إلى اليمين</string>
+    <string name="orientation_right_to_left">من اليمين الى اليسار</string>
+    <string name="set_mode_for_app_ops_dots">ضبط الوضع لعمليات التطبيق …</string>
+    <string name="security">الأمن</string>
+    <string name="battery">البطارية</string>
+    <string name="graphics">الرسوميات</string>
+    <string name="cpu">المعالج</string>
+    <string name="users">المستخدمين</string>
+    <string name="languages">اللغات</string>
+    <string name="unavailable">غير متوفر</string>
+    <string name="available">متاح</string>
+    <string name="battery_capacity">السعة</string>
+    <string name="memory">الذاكرة</string>
+    <string name="vendor">المورد</string>
+    <string name="gles_version">إصدار OpenGL ES</string>
+    <string name="no_of_cores">الانوية</string>
+    <string name="support_architectures">المعمارية المدعومة</string>
+    <string name="security_providers">موفرو الأمان</string>
+    <string name="kernel">النواة</string>
+    <string name="manufacturer">الشركه المصنعه</string>
+    <string name="board_name">اللوحة</string>
+    <string name="model">النموذج</string>
+    <string name="brand_name">العلامة التجارية</string>
+    <string name="pref_about_device_msg">معلومات الجهاز الأساسية بما في ذلك نظام Android ووحدة المعالجة المركزية ووحدة معالجة الرسومات وذاكرة الوصول العشوائي والبطارية وما إلى ذلك.</string>
+    <string name="about_device">حول الجهاز</string>
+    <string name="set_custom_app_op">تعيين عملية تطبيق مخصصة</string>
+    <string name="interceptor">المعترض</string>
+    <string name="resend_intent">مقصد إعادة الإرسال</string>
+    <string name="share">مشاركة</string>
+    <string name="extras">إضافية</string>
+    <string name="category">الفئات</string>
+    <string name="uri">URI</string>
+    <string name="mime_type">نوع MIME</string>
+    <string name="action">الإجراء</string>
+    <string name="result_code">رمز النتيجة</string>
+    <string name="activity_result">نتيجة النشاط</string>
+    <string name="send_edited_intent">إرسال القصد المحرر</string>
+    <string name="matching_activities">الأنشطة المطابقة</string>
+    <string name="value">القيمة</string>
+    <string name="filter_apps_with_splits">تحتوي تقسيمات</string>
+    <string name="set_app_op_mode">تعيين وضع تشغيل التطبيق</string>
+    <string name="magisk_hide_enabled">MagiskHide</string>
+    <string name="pref_backup_android_keystore_msg">لن تعمل جميع التطبيقات بعد استعادتها. لا تعمل استعادة KeyStore على معظم الأجهزة.</string>
+    <string name="pref_backup_android_keystore">نسخ التطبيقات احتياطيًا باستخدام Android KeyStore</string>
+    <string name="keep_data_and_app_signing_signatures">الاحتفاظ بالبيانات والتوقيعات</string>
+    <string name="this_action_cannot_be_undone">لا يمكن التراجع عن هذا الإجراء.</string>
+    <string name="no_app_ops_permission">لا يوجد إذن لعرض عمليات التطبيق</string>
+    <string name="input_keystore_alias_pass_msg">اضغط هنا لتوفير كلمة المرور ل %1$s</string>
+    <string name="input_keystore_alias_pass_description">إدراج كلمة المرور للاسم المستعار <b>%1$s</b>. يمكنك ترك هذا فارغا إذا كانت كلمة المرور هي نفس كلمة مرور KeyStore.</string>
+    <string name="input_keystore_alias_pass">كلمة المرور للاسم المستعار <b> %1$s </b></string>
 </resources>
