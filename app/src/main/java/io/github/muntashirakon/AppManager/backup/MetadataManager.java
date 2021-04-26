@@ -93,6 +93,15 @@ public final class MetadataManager {
         public byte[] iv;  // iv
         public byte[] aes;  // aes (encrypted using RSA, for RSA only)
         public String keyIds;  // key_ids
+        /**
+         * Metadata version.
+         * <p>
+         * {@code 1} indicates that it was part of an alpha version which is no longer supported.
+         * <p>
+         * {@code 2} was used in the beta versions but it is used to simulate that the permissions are not preserved.
+         * <p>
+         * {@code 3} is the currently used version and it preserves permissions.
+         */
         public int version = 3;  // version
         public String apkName;  // apk_name
         public String instructionSet = VMRuntime.getInstructionSet(Build.SUPPORTED_ABIS[0]);  // instruction_set
@@ -102,6 +111,37 @@ public final class MetadataManager {
         public String tarType;  // tar_type
         public boolean keyStore;  // key_store
         public String installer;  // installer
+
+        public Metadata() {
+        }
+
+        public Metadata(@NonNull Metadata metadata) {
+            backupName = metadata.backupName;
+            backupPath = metadata.backupPath == null ? null : new ProxyFile(metadata.backupPath);
+            label = metadata.label;
+            packageName = metadata.packageName;
+            versionName = metadata.versionName;
+            versionCode = metadata.versionCode;
+            dataDirs = metadata.dataDirs.clone();
+            isSystem = metadata.isSystem;
+            isSplitApk = metadata.isSplitApk;
+            splitConfigs = metadata.splitConfigs.clone();
+            hasRules = metadata.hasRules;
+            backupTime = metadata.backupTime;
+            checksumAlgo = metadata.checksumAlgo;
+            crypto = metadata.crypto;
+            iv = metadata.iv.clone();
+            aes = metadata.aes.clone();
+            keyIds = metadata.keyIds;
+            version = metadata.version;
+            apkName = metadata.apkName;
+            instructionSet = metadata.instructionSet;
+            flags = new BackupFlags(metadata.flags.getFlags());
+            userHandle = metadata.userHandle;
+            tarType = metadata.tarType;
+            keyStore = metadata.keyStore;
+            installer = metadata.installer;
+        }
 
         public long getBackupSize() {
             if (backupPath == null) return 0L;
