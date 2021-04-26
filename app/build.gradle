@@ -25,8 +25,8 @@ android {
         applicationId 'io.github.muntashirakon.AppManager'
         minSdkVersion rootProject.ext.minSdk
         targetSdkVersion rootProject.ext.targetSdk
-        versionCode 385
-        versionName "2.6.0"
+        versionCode 386
+        versionName "2.6.1"
     }
 
     signingConfigs {
