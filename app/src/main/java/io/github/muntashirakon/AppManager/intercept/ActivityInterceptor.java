@@ -716,7 +716,7 @@ public class ActivityInterceptor extends BaseActivity {
                             || thisObject instanceof Boolean
                             || thisObject instanceof Uri) {
                         result.append(getString(R.string.value)).append(BLANK)
-                                .append(thisObject.toString())
+                                .append(thisObject)
                                 .append(NEWLINE);
                     } else if (thisObject instanceof ArrayList) {
                         result.append(getString(R.string.value)).append(NEWLINE);
@@ -794,8 +794,9 @@ public class ActivityInterceptor extends BaseActivity {
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(INTENT_EDITED,
-                resetIntentButton.getVisibility() == View.VISIBLE);
+        if (resetIntentButton != null) {
+            outState.putBoolean(INTENT_EDITED, resetIntentButton.getVisibility() == View.VISIBLE);
+        }
         if (mHistory != null) mHistory.saveHistory();
     }
 
@@ -806,8 +807,11 @@ public class ActivityInterceptor extends BaseActivity {
     private Intent cloneIntent(String intentUri) {
         if (intentUri != null) {
             try {
-                Intent clone = Intent.parseUri(intentUri, Intent.URI_INTENT_SCHEME | Intent.URI_ANDROID_APP_SCHEME
-                        | Intent.URI_ALLOW_UNSAFE);
+                Intent clone;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP_MR1) {
+                    clone = Intent.parseUri(intentUri, Intent.URI_INTENT_SCHEME | Intent.URI_ANDROID_APP_SCHEME
+                            | Intent.URI_ALLOW_UNSAFE);
+                } else clone = Intent.parseUri(intentUri, Intent.URI_INTENT_SCHEME);
                 // Restore extras that are lost in the intent to string conversion
                 if (additionalExtras != null) {
                     clone.putExtras(additionalExtras);
