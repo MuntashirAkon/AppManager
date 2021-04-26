@@ -1061,4 +1061,14 @@
     <string name="record_log">Запис логу</string>
     <string name="pref_show_timestamp_title">Показати pid і timestamp</string>
     <string name="pref_show_timestamp_summary">Показувати process id та timestamp при розгортанні.</string>
+    <string name="orientation_right_to_left">Справа наліво</string>
+    <string name="orientation_left_to_right">Зліва направо</string>
+    <string name="orientation_follow_locale">Згідно системної мови</string>
+    <string name="pref_layout_orientation">Орієнтація макета</string>
+    <plurals name="file_deletion_confirmation">
+        <item quantity="one">%d файл буде видалено</item>
+        <item quantity="few">%d файли буде видалено</item>
+        <item quantity="many">%d файлів буде видалено</item>
+        <item quantity="other">%d файлів буде видалено</item>
+    </plurals>
 </resources>
