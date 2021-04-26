@@ -2,7 +2,7 @@ package io.github.muntashirakon.AppManager.backup;
 
 import androidx.annotation.NonNull;
 
-class BackupException extends Throwable {
+public class BackupException extends Throwable {
     @NonNull
     private final String detailMessage;
 
