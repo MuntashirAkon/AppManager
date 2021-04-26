@@ -304,7 +304,7 @@
         <item quantity="many">Не удалось принудительно остановить %1$d приложений</item>
         <item quantity="other">Не удалось принудительно остановить %1$d приложений</item>
     </plurals>
-    <string name="toggle_kill_for_system_apps">Переключение закрытия системных приложений</string>
+    <string name="toggle_kill_for_system_apps">Вкл/выкл закрытие системных приложений</string>
     <string name="app_op_cannot_be_disabled">Эта операция приложения не может быть отключена. (Возможно, операция приложения только для чтения зависела от другой.)</string>
     <string name="permission_name">Имя разрешения</string>
     <string name="mode">Режим</string>
@@ -1091,4 +1091,14 @@
     <string name="pref_import_export_keystore">Импорт/экспорт хранилища ключей</string>
     <string name="app_signing_signatures">Подписи</string>
     <string name="pref_rules_msg">Мгновенная блокировка, импорт/экспорт/удаление правил и т. д.</string>
+    <string name="orientation_right_to_left">Справа налево</string>
+    <string name="orientation_left_to_right">Слева направо</string>
+    <string name="orientation_follow_locale">В соответствии с локалью</string>
+    <string name="pref_layout_orientation">Ориентация макета</string>
+    <plurals name="file_deletion_confirmation">
+        <item quantity="one">%d файл будет удален</item>
+        <item quantity="few">%d файла будет удалено</item>
+        <item quantity="many">%d файлов будет удалено</item>
+        <item quantity="other">%d файлов будет удалено</item>
+    </plurals>
 </resources>
