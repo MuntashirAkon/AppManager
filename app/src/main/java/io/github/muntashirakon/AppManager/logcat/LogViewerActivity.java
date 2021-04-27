@@ -820,7 +820,32 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
             dialog.setCancelable(false);
         } else dialog = null;
         new Thread(() -> {
-            SendLogDetails sendLogDetails = getSendLogDetails(includeDeviceInfo, includeDmesg);
+            SendLogDetails sendLogDetails = new SendLogDetails();
+            List<File> files = saveLogDetails(includeDeviceInfo, includeDmesg);
+            sendLogDetails.setBody("");
+            sendLogDetails.setSubject(getString(R.string.subject_log_report));
+            // either zip up multiple files or just attach the one file
+            switch (files.size()) {
+                case 0: // no attachments
+                    sendLogDetails.setAttachmentType(SendLogDetails.AttachmentType.None);
+                    break;
+                case 1: // one plaintext file attachment
+                    sendLogDetails.setAttachmentType(SendLogDetails.AttachmentType.Text);
+                    sendLogDetails.setAttachment(files.get(0));
+                    break;
+                default: // 2 files - need to zip them up
+                    try {
+                        File zipFile = SaveLogHelper.saveTemporaryZipFile(SaveLogHelper.createZipFilename(true), files);
+                        sendLogDetails.setSubject(zipFile.getName());
+                        sendLogDetails.setAttachmentType(SendLogDetails.AttachmentType.Zip);
+                        sendLogDetails.setAttachment(zipFile);
+                    } catch (Exception e) {
+                        Log.e(TAG, e);
+                        runOnUiThread(() -> UIUtils.displayLongToast(R.string.failed));
+                        return;
+                    }
+                    break;
+            }
             runOnUiThread(() -> {
                 startChooser(LogViewerActivity.this, sendLogDetails.getSubject(), sendLogDetails.getBody(),
                         sendLogDetails.getAttachmentType(), sendLogDetails.getAttachment());
@@ -863,32 +888,6 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
             });
         }).start();
 
-    }
-
-    @NonNull
-    @WorkerThread
-    private SendLogDetails getSendLogDetails(boolean includeDeviceInfo, boolean includeDmesg) {
-        SendLogDetails sendLogDetails = new SendLogDetails();
-        List<File> files = saveLogDetails(includeDeviceInfo, includeDmesg);
-        sendLogDetails.setBody("");
-        sendLogDetails.setSubject(getString(R.string.subject_log_report));
-        // either zip up multiple files or just attach the one file
-        switch (files.size()) {
-            case 0: // no attachments
-                sendLogDetails.setAttachmentType(SendLogDetails.AttachmentType.None);
-                break;
-            case 1: // one plaintext file attachment
-                sendLogDetails.setAttachmentType(SendLogDetails.AttachmentType.Text);
-                sendLogDetails.setAttachment(files.get(0));
-                break;
-            default: // 2 files - need to zip them up
-                File zipFile = SaveLogHelper.saveTemporaryZipFile(SaveLogHelper.createZipFilename(true), files);
-                sendLogDetails.setSubject(zipFile.getName());
-                sendLogDetails.setAttachmentType(SendLogDetails.AttachmentType.Zip);
-                sendLogDetails.setAttachment(zipFile);
-                break;
-        }
-        return sendLogDetails;
     }
 
     @NonNull
