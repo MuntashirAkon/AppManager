@@ -61,6 +61,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static io.github.muntashirakon.AppManager.appops.AppOpsManager.OP_NONE;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagMatchUninstalled;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfo;
 
 public class AppDetailsViewModel extends AndroidViewModel {
@@ -747,11 +748,10 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 installedPackageInfo = PackageManagerCompat.getPackageInfo(packageName,
                         PackageManager.GET_PERMISSIONS | PackageManager.GET_ACTIVITIES
                                 | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
-                                | PackageManager.GET_SERVICES
-                                | PackageManager.GET_URI_PERMISSION_PATTERNS
-                                | flagDisabledComponents | flagSigningInfo
-                                | PackageManager.GET_CONFIGURATIONS
-                                | PackageManager.GET_SHARED_LIBRARY_FILES, userHandle);
+                                | PackageManager.GET_SERVICES | PackageManager.GET_URI_PERMISSION_PATTERNS
+                                | flagDisabledComponents | flagSigningInfo | flagMatchUninstalled
+                                | PackageManager.GET_CONFIGURATIONS | PackageManager.GET_SHARED_LIBRARY_FILES,
+                        userHandle);
             } catch (Throwable e) {
                 installedPackageInfo = null;
                 e.printStackTrace();

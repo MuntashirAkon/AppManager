@@ -17,6 +17,7 @@
 
 package io.github.muntashirakon.AppManager.settings;
 
+import android.annotation.SuppressLint;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -35,6 +36,8 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagMatchUninstalled;
 
 public class InstallerPreferences extends PreferenceFragmentCompat {
     private static final int[] installLocationNames = new int[]{
@@ -92,7 +95,8 @@ public class InstallerPreferences extends PreferenceFragmentCompat {
                         activity.progressIndicator.show();
                         new Thread(() -> {
                             // List apps
-                            List<PackageInfo> packageInfoList = pm.getInstalledPackages(PackageManager.MATCH_UNINSTALLED_PACKAGES);
+                            @SuppressLint("WrongConstant")
+                            List<PackageInfo> packageInfoList = pm.getInstalledPackages(flagMatchUninstalled);
                             ArrayList<String> items = new ArrayList<>(packageInfoList.size());
                             ArrayList<CharSequence> itemNames = new ArrayList<>(packageInfoList.size());
                             for (PackageInfo info : packageInfoList) {
