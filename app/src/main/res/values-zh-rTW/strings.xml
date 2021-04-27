@@ -719,7 +719,7 @@
     <string name="discard">丟棄</string>
     <string name="save">儲存</string>
     <string name="databases">資料庫</string>
-    <string name="shared_prefs">共享偏好</string>
+    <string name="shared_prefs">共用偏好</string>
     <string name="test_only">僅測試</string>
     <string name="debuggable">可偵錯的</string>
     <string name="updated_app">更新</string>
@@ -751,7 +751,7 @@
     <string name="usage_weekly">每週</string>
     <string name="app_usage">應用程式使用情況</string>
     <string name="no_tracker_class">沒有追蹤器類別</string>
-    <string name="no_shared_libs">沒有共享資源庫</string>
+    <string name="no_shared_libs">沒有共用資源庫</string>
     <string name="all_classes">所有類別</string>
     <string name="tracker_classes">追蹤器類</string>
     <string name="tracker_details">追蹤器詳細資訊</string>
@@ -805,7 +805,7 @@
     <string name="data_usage_msg">資料使用情況</string>
     <string name="data_transmitted">已傳送的資料</string>
     <string name="data_received">已接收的資料</string>
-    <string name="sort_by_target_sdk">目標SDK</string>
+    <string name="sort_by_target_sdk">目標 SDK</string>
     <string name="sort_by_domain">使用者應用程式優先</string>
     <string name="sort_by_package_name">套件名稱</string>
     <string name="sort_by_app_label">應用程式標籤</string>
@@ -816,14 +816,14 @@
     <string name="app_signing_no_signatures">沒有有效的簽名</string>
     <string name="signatures">簽名</string>
     <string name="sort_by_sha">簽名</string>
-    <string name="shared_user_id">共享的使用者ID</string>
-    <string name="sort_by_shared_user_id">共享的使用者ID</string>
+    <string name="shared_user_id">共用的使用者ID</string>
+    <string name="sort_by_shared_user_id">共用的使用者ID</string>
     <string name="no_feature">沒有功能</string>
     <string name="gles_ver">要求的 OpenGL ES 版本</string>
     <string name="uses_feature">使用功能</string>
     <string name="protection_level">防護等級</string>
     <string name="group">群組</string>
-    <string name="shared_libs">共享資源庫</string>
+    <string name="shared_libs">共用資源庫</string>
     <string name="declared_permission">權限</string>
     <string name="patterns_allowed">允許的圖案</string>
     <string name="write">寫入</string>
