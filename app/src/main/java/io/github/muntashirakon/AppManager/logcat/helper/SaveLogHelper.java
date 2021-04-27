@@ -103,7 +103,7 @@ public class SaveLogHelper {
     public static CharSequence[] getFormattedFilenames(@NonNull Context context, @NonNull List<File> files) {
         CharSequence[] fileNames = new CharSequence[files.size()];
         DateFormat dateFormat = DateFormat.getDateTimeInstance();
-        for (int i =0; i < files.size(); ++i) {
+        for (int i = 0; i < files.size(); ++i) {
             fileNames[i] = new SpannableStringBuilder(UIUtils.getPrimaryText(context, files.get(i).getName()))
                     .append("\n").append(UIUtils.getSmallerText(UIUtils.getSecondaryText(context,
                             dateFormat.format(new Date(files.get(i).lastModified())))));
@@ -203,20 +203,9 @@ public class SaveLogHelper {
         return amDir;
     }
 
-    @Nullable
-    public static File saveTemporaryZipFile(String filename, List<File> files) {
-        try {
-            return saveZipFileAndThrow(getTempDirectory(), filename, files);
-        } catch (IOException | RemoteException e) {
-            Log.e(TAG, e);
-        }
-        return null;
-    }
-
     @NonNull
-    private static File saveZipFileAndThrow(@NonNull File dir, @NonNull String filename, @NonNull List<File> files)
-            throws IOException, RemoteException {
-        File zipFile = new ProxyFile(dir, filename);
+    public static File saveTemporaryZipFile(String filename, List<File> files) throws IOException, RemoteException {
+        File zipFile = new ProxyFile(getTempDirectory(), filename);
         try (ZipOutputStream output = new ZipOutputStream(new BufferedOutputStream(new ProxyOutputStream(zipFile), BUFFER))) {
             for (File file : files) {
                 ProxyInputStream fi = new ProxyInputStream(file);
