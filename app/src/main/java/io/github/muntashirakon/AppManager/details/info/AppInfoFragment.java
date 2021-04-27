@@ -679,11 +679,15 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     new Thread(() -> {
                         int pid = FeatureController.isLogViewerEnabled() ? PackageUtils.getPidForPackage(mPackageName,
                                 mApplicationInfo.uid) : 0;
+                        CharSequence[] runningServices = new CharSequence[tagCloud.runningServices.size()];
+                        for (int i = 0; i < runningServices.length; ++i) {
+                            runningServices[i] = tagCloud.runningServices.get(i).getClassName();
+                        }
                         runOnUiThread(() -> {
                             mProgressIndicator.hide();
                             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(mActivity)
                                     .setTitle(R.string.running_services)
-                                    .setItems(tagCloud.runningServices.toArray(new String[0]), null)
+                                    .setItems(runningServices, null)
                                     .setPositiveButton(R.string.force_stop, (dialog, which) -> executor.submit(() -> {
                                         try {
                                             PackageManagerCompat.forceStopPackage(mPackageName, mainModel.getUserHandle());

@@ -625,7 +625,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         private String mConstraint;
         private Boolean isRootEnabled = true;
         private Boolean isADBEnabled = true;
-        private List<String> runningServices;
+        private List<ComponentName> runningServices;
 
         AppDetailsRecyclerAdapter() {
             mAdapterList = new ArrayList<>();
@@ -641,7 +641,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             notifyDataSetChanged();
             new Thread(() -> {
                 if (requestedProperty == SERVICES && (isRootEnabled || isADBEnabled) && !isExternalApk) {
-                    runningServices = PackageUtils.getRunningServicesForPackage(mPackageName);
+                    runningServices = PackageUtils.getRunningServicesForPackage(mPackageName, mainModel.getUserHandle());
                 }
             }).start();
         }
@@ -1002,8 +1002,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             final ServiceInfo serviceInfo = (ServiceInfo) appDetailsItem.vanillaItem;
             final boolean isDisabled = !isExternalApk && isComponentDisabled(mPackageManager, serviceInfo);
             // Background color: regular < tracker < disabled < blocked < running
-            if (runningServices != null && runningServices.contains(serviceInfo.name))
-                view.setBackgroundColor(mColorRunning);
+            if (runningServices != null && runningServices.contains(new ComponentName(serviceInfo.packageName,
+                    serviceInfo.name))) view.setBackgroundColor(mColorRunning);
             else if (!isExternalApk && appDetailsItem.isBlocked) view.setBackgroundColor(mColorRed);
             else if (isDisabled) view.setBackgroundColor(mColorDisabled);
             else if (appDetailsItem.isTracker) view.setBackgroundColor(mColorTracker);

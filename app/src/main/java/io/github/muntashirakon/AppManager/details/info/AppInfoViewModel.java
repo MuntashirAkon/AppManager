@@ -18,6 +18,7 @@
 package io.github.muntashirakon.AppManager.details.info;
 
 import android.app.Application;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -129,7 +130,7 @@ public class AppInfoViewModel extends AndroidViewModel {
         tagCloud.isTestOnly = (applicationInfo.flags & ApplicationInfo.FLAG_TEST_ONLY) != 0;
         tagCloud.hasCode = (applicationInfo.flags & ApplicationInfo.FLAG_HAS_CODE) != 0;
         tagCloud.hasRequestedLargeHeap = (applicationInfo.flags & ApplicationInfo.FLAG_LARGE_HEAP) != 0;
-        tagCloud.runningServices = PackageUtils.getRunningServicesForPackage(packageName);
+        tagCloud.runningServices = PackageUtils.getRunningServicesForPackage(packageName, mainModel.getUserHandle());
         tagCloud.isForceStopped = (applicationInfo.flags & ApplicationInfo.FLAG_STOPPED) != 0;
         tagCloud.isAppEnabled = applicationInfo.enabled;
         tagCloud.isMagiskHideEnabled = !mainModel.getIsExternalApk() && AppPref.isRootEnabled() && MagiskUtils.isHidden(packageName);
@@ -310,7 +311,7 @@ public class AppInfoViewModel extends AndroidViewModel {
         public boolean isTestOnly;
         public boolean hasCode;
         public boolean hasRequestedLargeHeap;
-        public List<String> runningServices;
+        public List<ComponentName> runningServices;
         public boolean isForceStopped;
         public boolean isAppEnabled;
         public boolean isMagiskHideEnabled;

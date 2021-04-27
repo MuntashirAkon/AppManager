@@ -132,7 +132,7 @@ public final class PackageUtils {
     }
 
     @SuppressWarnings("RegExpRedundantEscape")
-    private static final Pattern SERVICE_REGEX = Pattern.compile("ServiceRecord\\{.*/([^\\}]+)\\}");
+    private static final Pattern SERVICE_REGEX = Pattern.compile("ServiceRecord\\{[0-9a-f]+ u(\\d+) ([^\\}]+)\\}");
     private static final String SERVICE_NOTHING = "(nothing)";
 
     @NonNull
@@ -495,28 +495,33 @@ public final class PackageUtils {
     }
 
     @NonNull
-    public static List<String> getRunningServicesForPackage(String packageName) {
-        List<String> runningServices = new ArrayList<>();
+    public static List<ComponentName> getRunningServicesForPackage(String packageName, @UserIdInt int userHandle) {
+        List<ComponentName> runningServices = new ArrayList<>();
         if (!PermissionUtils.hasDumpPermission()) return runningServices;
         Runner.Result result = Runner.runCommand(new String[]{"dumpsys", "activity", "services", "-p", packageName});
         if (result.isSuccessful()) {
             List<String> serviceDump = result.getOutputAsList(1);
             Matcher matcher;
-            String service, line;
+            ComponentName service;
+            String line;
             ListIterator<String> it = serviceDump.listIterator();
             if (it.hasNext()) {
                 matcher = SERVICE_REGEX.matcher(it.next());
                 while (it.hasNext()) {
                     if (matcher.find(0)) {
-                        service = matcher.group(1);
+                        String userId = matcher.group(1);
+                        String serviceName = matcher.group(2);
+                        if (userId == null || serviceName == null || Integer.decode(userId) != userHandle) {
+                            matcher = SERVICE_REGEX.matcher(it.next());
+                            continue;
+                        }
+                        service = ComponentName.unflattenFromString(serviceName);
                         line = it.next();
                         matcher = SERVICE_REGEX.matcher(line);
                         while (it.hasNext()) {
                             if (matcher.find(0)) break;
                             if (line.contains("app=ProcessRecord{")) {
-                                if (service != null) {
-                                    runningServices.add(service.startsWith(".") ? packageName + service : service);
-                                }
+                                runningServices.add(service);
                                 break;
                             }
                             line = it.next();
