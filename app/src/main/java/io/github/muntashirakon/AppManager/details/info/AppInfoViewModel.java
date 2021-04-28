@@ -48,6 +48,7 @@ import io.github.muntashirakon.AppManager.details.AppDetailsViewModel;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.runner.Runner;
+import io.github.muntashirakon.AppManager.servermanager.ApplicationInfoCompat;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
@@ -133,6 +134,11 @@ public class AppInfoViewModel extends AndroidViewModel {
         tagCloud.runningServices = PackageUtils.getRunningServicesForPackage(packageName, mainModel.getUserHandle());
         tagCloud.isForceStopped = (applicationInfo.flags & ApplicationInfo.FLAG_STOPPED) != 0;
         tagCloud.isAppEnabled = applicationInfo.enabled;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            tagCloud.isAppSuspended = (applicationInfo.flags & ApplicationInfo.FLAG_SUSPENDED) != 0;
+        }
+        int privateFlags = ApplicationInfoCompat.getPrivateFlags(applicationInfo);
+        tagCloud.isAppHidden = (privateFlags & ApplicationInfoCompat.PRIVATE_FLAG_HIDDEN) != 0;
         tagCloud.isMagiskHideEnabled = !mainModel.getIsExternalApk() && AppPref.isRootEnabled() && MagiskUtils.isHidden(packageName);
         tagCloud.hasKeyStoreItems = KeyStoreUtils.hasKeyStore(applicationInfo.uid);
         tagCloud.hasMasterKeyInKeyStore = KeyStoreUtils.hasMasterKey(applicationInfo.uid);
@@ -314,6 +320,8 @@ public class AppInfoViewModel extends AndroidViewModel {
         public List<ComponentName> runningServices;
         public boolean isForceStopped;
         public boolean isAppEnabled;
+        public boolean isAppHidden;
+        public boolean isAppSuspended;
         public boolean isMagiskHideEnabled;
         public boolean hasKeyStoreItems;
         public boolean hasMasterKeyInKeyStore;

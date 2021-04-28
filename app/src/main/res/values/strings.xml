@@ -1060,4 +1060,6 @@
     <string name="orientation_follow_locale">Follow locale</string>
     <string name="orientation_left_to_right">Left to right</string>
     <string name="orientation_right_to_left">Right to left</string>
+    <string name="suspended">Suspended</string>
+    <string name="hidden">Hidden</string>
 </resources>

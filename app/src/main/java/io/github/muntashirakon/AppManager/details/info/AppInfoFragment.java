@@ -718,6 +718,12 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             if (!tagCloud.isAppEnabled) {
                 addChip(R.string.disabled_app, R.color.disabled_user);
             }
+            if (tagCloud.isAppSuspended) {
+                addChip(R.string.suspended, R.color.stopped);
+            }
+            if (tagCloud.isAppHidden) {
+                addChip(R.string.hidden, R.color.disabled_user);
+            }
             if (tagCloud.isMagiskHideEnabled) {
                 addChip(R.string.magisk_hide_enabled).setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
                         .setTitle(R.string.magisk_hide_enabled)
