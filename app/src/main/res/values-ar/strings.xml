@@ -10,7 +10,7 @@
     <string name="input_keystore_pass_description">أدخل كلمة مرور App Manager KeyStore. إذا كنت ترى هذا للمرة الأولى ، فالرجاء استخدام منشئ كلمة المرور لإنشاء كلمة مرور وحفظها في مكان آمن قبل إدخالها هنا.</string>
     <string name="backup_apps_with_changes_msg">إعادة النسخ الاحتياطية للتطبيقات مع التغييرات منذ آخر نسخ احتياطي. وهي تشمل التغييرات في الحجم والإصدار ووقت التشغيل الأخير.</string>
     <string name="launch">تشغيل</string>
-    <string name="activities">عدد الأنشطة</string>
+    <string name="activities">الأنشطة</string>
     <string name="require_no_permission">لا يوجد إذن مطلوب</string>
     <string name="permissions">يستخدم الأذونات</string>
     <string name="uninstall">إلغاء التثبيت</string>
@@ -59,7 +59,7 @@
 \n- <a href="https://github.com/RikkaApps/Shizuku"> شيزوكو </a>
 \n- <a href="https://github.com/pluscubed/matlog"> MatLog </a>
 \nمصدر الشعار الأصلي: <a href="https://github.com/Atrate"> Atrate </a>. </string>
-    <string name="credits">إشادات</string>
+    <string name="credits">الإشادات</string>
     <string name="third_party">مكتبات وأيقونات الطرف الثالث</string>
     <string name="license">الرخصة</string>
     <string name="icon_picker">منتقي الأيقونات</string>
@@ -72,13 +72,13 @@
     <string name="edit_shortcut">تحرير الاختصار</string>
     <string name="create_shortcut">إنشاء اختصار</string>
     <string name="starting_activity">بدء النشاط: <xliff:g id="activity_name" example=".main.MainActivity"> %1$s </xliff:g></string>
-    <string name="error_verbose_pin_shortcut">المشغل الحالي لا يدعم PinShortcut. تعذر إنشاء الاختصار.</string>
+    <string name="error_verbose_pin_shortcut">المشغل الحالي لا يدعم تدبيس الإختصار. تعذر إنشاء الاختصار.</string>
     <string name="error_creating_shortcut">خطأ في إنشاء الاختصار</string>
     <string name="instructions">التعليمات</string>
     <string name="empty_package_name">اسم الحزمة فارغ</string>
     <string name="main_activity">النشاط الرئيسي</string>
     <string name="user_id">معرف المستخدم</string>
-    <string name="installer_app">مثبت التطبيق</string>
+    <string name="installer_app">تم تثبيته بواسطة</string>
     <string name="date_updated">تاريخ التحديث</string>
     <string name="date_installed">تاريخ التثبيت</string>
     <string name="more_info">مزيد من المعلومات</string>
@@ -91,14 +91,14 @@
     <string name="user_app">تطبيق المستخدم</string>
     <string name="system_app">تطبيق النظام</string>
     <string name="app_info">معلومات التطبيق</string>
-    <string name="version_name_with_code">إصدار <xliff:g id="version_name" example="2.5.17"> %1$s </xliff:g> (<xliff:g id="version_code" example="365">%2$d</xliff:g>)</string>
+    <string name="version_name_with_code">الإصدار <xliff:g id="version_name" example="2.5.17"> %1$s </xliff:g> (<xliff:g id="version_code" example="365">%2$d</xliff:g>)</string>
     <string name="sort">الفرز</string>
-    <string name="user">المستخدِم</string>
+    <string name="user">المستخدم</string>
     <string name="system">النظام</string>
     <string name="app_not_installed">التطبيق غير مثبت</string>
     <string name="media_size">وسائط</string>
     <string name="obb_size">Obb</string>
-    <string name="cache_size">ذاكره التخزين المؤقت</string>
+    <string name="cache_size">التخزين المؤقت</string>
     <string name="data_size">البيانات</string>
     <string name="about">حول</string>
     <string name="data_usage_msg">البيانات المستخدمة</string>
@@ -121,10 +121,10 @@
     <string name="sort_by_shared_user_id">معرف المستخدم المشترك</string>
     <string name="no_feature">لا توجد ميزات</string>
     <string name="gles_ver">مطلوب. إصدار OpenGL ES</string>
-    <string name="uses_feature">يستخدم المميزات</string>
+    <string name="uses_feature">المميزات المستخدمه</string>
     <string name="protection_level">مستوى الحماية</string>
     <string name="group">المجموعة</string>
-    <string name="shared_libs">libs المشتركة</string>
+    <string name="shared_libs">المكتبات المشتركة</string>
     <string name="declared_permission">الصلاحيات</string>
     <string name="patterns_allowed">الأنماط المسموح بها</string>
     <string name="write">كتابه</string>
@@ -323,7 +323,7 @@
     <string name="manifest_viewer">عارض البيان</string>
     <string name="external_apk_no_app_op">لا يحتوي ملف APK الخارجي على أي عمليات تطبيق</string>
     <string name="changelog">سجل التغييرات</string>
-    <string name="one_click_ops">1-انقر فوق العمليات</string>
+    <string name="one_click_ops">عمليات بضغطة واحدة</string>
     <string name="never_ask">لا تسأل أبدا</string>
     <string name="launch_app">تشغيل</string>
     <string name="failed_to_deny_dangerous_app_ops">لا يمكن إلغاء جميع عمليات التطبيق الخطرة</string>
@@ -388,7 +388,7 @@
     <string name="disable_background_run">منع التشغيل في الخلفية</string>
     <string name="kill_process">قتل</string>
     <string name="running_apps">التطبيقات المشغلة</string>
-    <string name="store">متجر</string>
+    <string name="store">متجر التطبيقات</string>
     <string name="apk_updater">محدث APK</string>
     <string name="the_export_was_successful">تمت عملية التصدير</string>
     <string name="the_import_was_successful">تمَّت عملية الإستيراد</string>
