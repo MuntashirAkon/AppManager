@@ -1032,4 +1032,6 @@
         <item quantity="one">%d dosya silinecek</item>
         <item quantity="other">%d dosya silinecek</item>
     </plurals>
+    <string name="hidden">Gizli</string>
+    <string name="suspended">Askıya alındı</string>
 </resources>
