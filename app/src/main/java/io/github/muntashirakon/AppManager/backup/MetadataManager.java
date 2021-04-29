@@ -53,6 +53,7 @@ import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.JSONUtils;
@@ -113,8 +114,8 @@ public final class MetadataManager {
             String shortName = BackupUtils.getShortBackupName(backupName);
             CharSequence titleText = shortName == null ? context.getText(R.string.base_backup) : shortName;
 
-            StringBuilder subtitleText = new StringBuilder(flags.toLocalisedString(context));
-            if (subtitleText.length() > 0) subtitleText.append(", ");
+            StringBuilder subtitleText = new StringBuilder(DateUtils.formatDateTime(backupTime)).append(", ")
+                    .append(flags.toLocalisedString(context)).append(", ");
             subtitleText.append(context.getString(R.string.version)).append(": ").append(versionName)
                     .append(", ").append(context.getString(R.string.user_id)).append(": ").append(userHandle);
             if (crypto.equals(CryptoUtils.MODE_NO_ENCRYPTION)) {
