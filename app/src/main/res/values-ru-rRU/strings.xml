@@ -1101,4 +1101,5 @@
         <item quantity="many">%d файлов будет удалено</item>
         <item quantity="other">%d файлов будет удалено</item>
     </plurals>
+    <string name="bouncy_castle_keystore">Замок бунси (БКС)</string>
 </resources>
