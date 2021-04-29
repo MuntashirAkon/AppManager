@@ -999,4 +999,6 @@
     <plurals name="file_deletion_confirmation">
         <item quantity="other">%d 个文件已被删除</item>
     </plurals>
+    <string name="hidden">隐藏</string>
+    <string name="suspended">已挂起</string>
 </resources>
