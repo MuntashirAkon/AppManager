@@ -1,8 +1,9 @@
 #!/bin/bash
 
-function func_build-html {
+#function func_build-html {
+
 OUTPUT=main.pandoc.html
-pandoc main.tex -c main.css -c custom.css -o $OUTPUT -t html5 -f latex -s --toc -N --section-divs --default-image-extension=png
+pandoc main.tex -c main.css -c custom.css -o $OUTPUT -t html5 -f latex -s --toc -N --section-divs --default-image-extension=png -i --listings --verbose
 
 ##Custom Color Fixup
 while read line
@@ -23,12 +24,16 @@ done < <(grep "<div class=\"amalert--.*;\">" $OUTPUT)
 
 ##Icon Fixup(Need --default-image-extension=png option)
 sed -i -e "s/\<img src\=\"images\/icon.png\" style\=\"width:2cm\"/\<img src\=\"images\/icon-.png\" style\=\"width\:16.69\%\"/g" $OUTPUT
-}
 
-function func_update-xliff {
-# Working
-}
+##Hide Level5 section number
+sed -i -e "s/<span class=\"header-section-number\">.*\..*\..*\..*\..*<\/span\>/<span class=\"header-section-number\" style=\"display\: none\;\"><\/span>/g" $OUTPUT
 
-function func_merge-translation {
+#}
+
+#function func_update-xliff {
 # Working
-}
+#}
+
+#function func_merge-translation {
+# Working
+#}
