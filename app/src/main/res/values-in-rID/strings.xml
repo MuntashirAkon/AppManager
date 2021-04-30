@@ -996,4 +996,6 @@
     <plurals name="file_deletion_confirmation">
         <item quantity="other">Berkas %d akan dihapus</item>
     </plurals>
+    <string name="hidden">Tersembunyi</string>
+    <string name="suspended">Ditangguhkan</string>
 </resources>
