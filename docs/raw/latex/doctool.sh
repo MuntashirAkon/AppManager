@@ -1,8 +1,27 @@
 #!/bin/bash
 
-#function func_build-html {
+function func_help {
+echo -n "\
+./doctool.sh COMMAND ARGS
+--COMMANDS--
+buildhtml [OUTPUTFILE(.html)]
+Build HTML from TeX
 
-OUTPUT=main.pandoc.html
+updatetranslation [OUTPUTFILE(.xliff)]
+Extract strings and create xliff translation file
+NOTE:Use this option when you want to start new translation too
+
+mergetranslation [INPUTFILE(.xliff)] [SOURCEDIR]
+Merge translation from xliff to TeX
+
+help
+Show this help and exit
+"
+}
+
+function func_build-html {
+
+OUTPUT=${arg[$2]}
 pandoc main.tex -c main.css -c custom.css -o $OUTPUT -t html5 -f latex -s --toc -N --section-divs --default-image-extension=png -i --verbose
 
 ##Custom Color Fixup
@@ -36,12 +55,20 @@ sed -i -e "s/<span class=\"header-section-number\">.*\..*\..*\..*\..*<\/span\>/<
 sed -i -r "s/<div class\=\"amalert--(.*)\">/<div class\=\"amalert\" style\=\"border\: 3.0pt solid #\1\;\">/g" $OUTPUT
 
 
-#}
+}
 
-#function func_update-xliff {
-# Working
-#}
+function func_update-xliff {
+echo update translation
+}
 
-#function func_merge-translation {
-# Working
-#}
+function func_merge-translation {
+echo merge translation
+}
+
+arg=("$@")
+case ${arg[$1]} in
+"help" ) func_help ;;
+"buildhtml" ) func_build-html ;;
+"updatetranslation" ) func_update-xliff ;;
+"mergetranslation" ) func_merge-translation ;;
+esac
