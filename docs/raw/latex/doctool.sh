@@ -3,7 +3,7 @@
 #function func_build-html {
 
 OUTPUT=main.pandoc.html
-pandoc main.tex -c main.css -c custom.css -o $OUTPUT -t html5 -f latex -s --toc -N --section-divs --default-image-extension=png -i --listings --verbose
+pandoc main.tex -c main.css -c custom.css -o $OUTPUT -t html5 -f latex -s --toc -N --section-divs --default-image-extension=png -i --verbose
 
 ##Custom Color Fixup
 while read line
@@ -16,17 +16,23 @@ sed -i -e "s/style\=\"background-color\: ${colorname}\"/style\=\"background-colo
        -e "s/style\=\"color\: ${colorname}\"/style\=\"color\: ${colorcode}\"/g" $OUTPUT
 done < <(grep "\definecolor" main.tex)
 
-##Alertbox Fixup
+
+##Add link on section title
 while read line
 do
-sed -i -e "s/--/\" style\=\"border\: 3.0pt solid #/g" $OUTPUT
-done < <(grep "<div class=\"amalert--.*;\">" $OUTPUT)
+sectionid=$(echo $line |  grep -o -P "(?<=href\=\"#).*" | grep -o -P ".*(?=\"\>\<span)")
+done < <(grep -o "<a href=\"#.*\"><span class=\"toc-section-number\">" $OUTPUT)
+
 
 ##Icon Fixup(Need --default-image-extension=png option)
 sed -i -e "s/\<img src\=\"images\/icon.png\" style\=\"width:2cm\"/\<img src\=\"images\/icon-.png\" style\=\"width\:16.69\%\"/g" $OUTPUT
 
 ##Hide Level5 section number
 sed -i -e "s/<span class=\"header-section-number\">.*\..*\..*\..*\..*<\/span\>/<span class=\"header-section-number\" style=\"display\: none\;\"><\/span>/g" $OUTPUT
+
+##Alertbox Fixup
+sed -i -r "s/<div class\=\"amalert--(.*)\">/<div class\=\"amalert\" style\=\"border\: 3.0pt solid #\1\;\">/g" $OUTPUT
+
 
 #}
 

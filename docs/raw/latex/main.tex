@@ -34,8 +34,8 @@
 }
 
 % Add numbering for subsubsection
-\setcounter{tocdepth}{3}
-\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{2}
+\setcounter{secnumdepth}{2}
 
 % -------------------
 % Alert environments
@@ -51,34 +51,34 @@
 % po4a: environment tip [_]
 \newenvironment{tip}[1]
 {%
-    \begin{amalert--000000;}
+    \begin{amalert--000000}
     \noindent
     \textbf{\textit{#1.}}
     }%
     {
-    \end{amalert--000000;}
+    \end{amalert--000000}
 }
 
 % po4a: environment warning [_]
 \newenvironment{warning}[1]
 {
-    \begin{amalert--F0E130;}
+    \begin{amalert--F0E130}
     \noindent
     \textbf{\textit{#1.}}
     }%
     {
-    \end{amalert--F0E130;}
+    \end{amalert--F0E130}
 }
 
 % po4a: environment danger [_]
 \newenvironment{danger}[1]
 {
-    \begin{amalert--CB4154;}
+    \begin{amalert--CB4154}
     \noindent
     \textbf{\textit{#1.}}
     }%
     {
-    \end{amalert--CB4154;}
+    \end{amalert--CB4154}
 }
 
 % --------------------
