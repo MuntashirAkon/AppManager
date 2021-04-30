@@ -11,7 +11,6 @@ do
 colorset=$(echo $line | sed -e "s/\\definecolor{//" -e "s/}{HTML}{/ /" -e "s/}//")
 colorname=$(echo $colorset | awk '{print $1}')
 colorcode=$(echo $colorset | awk '{print $2}' | sed -e "s/^/#/")
-#echo N $colorname C $colorcode
 sed -i -e "s/style\=\"background-color\: ${colorname}\"/style\=\"background-color\: ${colorcode}\"/g" \
        -e "s/style\=\"color\: ${colorname}\"/style\=\"color\: ${colorcode}\"/g" $OUTPUT
 done < <(grep "\definecolor" main.tex)
@@ -20,8 +19,11 @@ done < <(grep "\definecolor" main.tex)
 ##Add link on section title
 while read line
 do
-sectionid=$(echo $line |  grep -o -P "(?<=href\=\"#).*" | grep -o -P ".*(?=\"\>\<span)")
-done < <(grep -o "<a href=\"#.*\"><span class=\"toc-section-number\">" $OUTPUT)
+sectionid=$(echo $line | grep -oP "(?<=\<span class\=\"toc-section-number\"\>).*(?=<\/span\>)")
+tocsectionid=toc:${sectionid}
+sed -i -r "s/<span class=\"toc-section-number\">${sectionid}<\/span>/<span class\=\"toc-section-number\" id\=\"${tocsectionid}\"\>${sectionid}<\/span\>/g" $OUTPUT
+sed -i -r "s/(<(.*) data-number=\"${sectionid}\"><span class=\"header-section-number\">${sectionid}<\/span>.*<\/\2>)/<a href=\"#${tocsectionid}\">\1<\/a>/" $OUTPUT
+done < <(grep -o "<span class=\"toc-section-number\">.*<\/span>" $OUTPUT)
 
 
 ##Icon Fixup(Need --default-image-extension=png option)
