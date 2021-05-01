@@ -110,7 +110,7 @@ dependencies {
 
 //    implementation 'me.weishu:free_reflection:3.0.1'
     implementation 'com.github.ChickenHook:RestrictionBypass:2.2'
-    implementation 'me.zhanghai.android.fastscroll:library:1.1.5'
+    implementation 'com.github.zhanghai:AndroidFastScroll:v1.1.5'
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
 
     // Espresso UI Testing
