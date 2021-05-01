@@ -7,6 +7,13 @@ assignees: ''
 
 ---
 
+<!--
+Your issue will be closed without warning if you don't check at least two items.
+-->
+- [ ] I know what my device, OS and App Manager versions are
+- [ ] I know how to take logs
+- [ ] I know how to reproduce the issue which may not be specific to my device
+
 **Describe the bug**
 A clear and concise description of what the bug is.
 
