@@ -1,5 +1,6 @@
 \section{ADB over TCP}\label{sec:faq:adb-over-tcp}
 
+%%!!faq_aot_restart<<
 \subsection{Do I have to enable ADB over TCP everytime I restart?}
 Unfortunately, yes. However, as of v2.5.13, you don't need to keep AoT enabled all the time as it now uses a
 server-client mechanism to interact with the system, but you do have to keep the \textbf{Developer options} as well as
@@ -7,15 +8,22 @@ server-client mechanism to interact with the system, but you do have to keep the
 should see \textit{working on ADB mode} toast message in the bottom. If you see it, you can safely stop the server. For
 Lineage OS or its derivative OS, you can toggle AoT without any PC or Mac by simply toggling the \textbf{ADB over
 network} option located just below the \textbf{USB debugging}, but the server can't be stopped for the latter case.
+%%!!>>
 
+%%!!faq_aot_usbdebugging
 \subsection{Cannot enable USB debugging. What to do?}
-See \Sref{subsec:enable-usb-debugging} in \Cref{ch:guides}.
+See \hyperref[subsec:enable-usb-debugging]{Enable USB debugging} in \hyperref[ch:guides]{Guides}.
+%%!!>>
 
+%%!!faq_aot_blocktracker
 \subsection{Can I block tracker or any other application components using ADB over TCP?}
 Sadly, no. ADB has limited \href{https://github.com/aosp-mirror/platform_frameworks_base/blob/master/packages/Shell/AndroidManifest.xml}{permissions}
 and controlling application components is not one of them.
+%%!!>>
 
+%%!!faq_aot_featureadb
 \subsection{Which features can be used in ADB mode?}
 Most of the features supported by ADB mode are enabled by default once ADB support is detected by AM. These include
 disable, force-stop, clear data, grant/revoke app ops and permissions. You can also install applications without any
 prompt and view \hyperref[subsubsec:main:running-apps]{running apps/processes}.
+%%!!>>
