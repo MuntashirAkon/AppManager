@@ -33,6 +33,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.server.common.IRootIPC;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
+import io.github.muntashirakon.AppManager.utils.AppPref;
 
 public class ProxyBinder implements IBinder {
     public static final int PROXY_BINDER_TRANSACT_CODE = 2;
@@ -57,7 +58,10 @@ public class ProxyBinder implements IBinder {
 
     @Override
     public boolean transact(int code, @NonNull Parcel data, @Nullable Parcel reply, int flags) throws RemoteException {
-        if (LocalServer.isAMServiceAlive()) {
+        if (AppPref.isRootOrAdbEnabled()) {
+            if (!LocalServer.isAMServiceAlive()) {
+                throw new RemoteException("Root/ADB enabled but privileged service isn't alive.");
+            }
             Parcel newData = Parcel.obtain();
             try {
                 newData.writeInterfaceToken(IRootIPC.class.getName());
