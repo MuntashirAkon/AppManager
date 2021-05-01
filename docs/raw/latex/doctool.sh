@@ -9,20 +9,28 @@ Build HTML from TeX
 
 updatetranslation [OUTPUTFILE(.xliff)]
 Extract strings and create xliff translation file
-NOTE:Use this option when you want to start new translation too
 
 mergetranslation [INPUTFILE(.xliff)] [SOURCEDIR]
 Merge translation from xliff to TeX
 
 help
 Show this help and exit
+
+--Dependencies--
+・pandoc-crossref
+https://github.com/lierdakil/pandoc-crossref
+https://lierdakil.github.io/pandoc-crossref/
+
+--Translating Note--
+Use \"updatetranslation\" command when you want to start new translation too.
+Do not remove/change section label,this will break link.
 "
 }
 
 function func_build-html {
 
-OUTPUT=${arg[$2]}
-pandoc main.tex -c main.css -c custom.css -o $OUTPUT -t html5 -f latex -s --toc -N --section-divs --default-image-extension=png -i --verbose
+OUTPUT=main.pandoc.html
+pandoc main.tex -c main.css -c custom.css -o $OUTPUT -t html5 -f latex -s --toc -N --section-divs --default-image-extension=png -i -F pandoc-crossref --citeproc --verbose
 
 ##Custom Color Fixup
 while read line
@@ -66,7 +74,7 @@ echo merge translation
 }
 
 arg=("$@")
-case ${arg[$1]} in
+case $1 in
 "help" ) func_help ;;
 "buildhtml" ) func_build-html ;;
 "updatetranslation" ) func_update-xliff ;;
