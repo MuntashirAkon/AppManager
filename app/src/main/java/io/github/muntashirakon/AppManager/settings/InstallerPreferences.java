@@ -143,5 +143,8 @@ public class InstallerPreferences extends PreferenceFragmentCompat {
         // Sign apk before install
         ((SwitchPreferenceCompat) Objects.requireNonNull(findPreference("installer_sign_apk")))
                 .setChecked((boolean) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_SIGN_APK_BOOL));
+        // Display changes
+        ((SwitchPreferenceCompat) Objects.requireNonNull(findPreference("installer_display_changes")))
+                .setChecked((boolean) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_DISPLAY_CHANGES_BOOL));
     }
 }

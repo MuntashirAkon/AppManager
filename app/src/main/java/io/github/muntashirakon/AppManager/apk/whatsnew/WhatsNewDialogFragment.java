@@ -43,6 +43,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import io.github.muntashirakon.AppManager.R;
 
 public class WhatsNewDialogFragment extends DialogFragment {
@@ -66,6 +67,7 @@ public class WhatsNewDialogFragment extends DialogFragment {
     WhatsNewRecyclerAdapter adapter;
     PackageInfo newPkgInfo;
     PackageInfo oldPkgInfo;
+
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -84,8 +86,12 @@ public class WhatsNewDialogFragment extends DialogFragment {
         new Thread(() -> {
             ApkWhatsNewFinder.Change[][] changes = ApkWhatsNewFinder.getInstance().getWhatsNew(newPkgInfo, oldPkgInfo);
             List<ApkWhatsNewFinder.Change> changeList = new ArrayList<>();
-            for (ApkWhatsNewFinder.Change[] changes1: changes) {
+            for (ApkWhatsNewFinder.Change[] changes1 : changes) {
                 if (changes1.length > 0) Collections.addAll(changeList, changes1);
+            }
+            if (isDetached()) return;
+            if (changeList.size() == 0) {
+                changeList.add(new ApkWhatsNewFinder.Change(ApkWhatsNewFinder.CHANGE_INFO, getString(R.string.no_changes)));
             }
             activity.runOnUiThread(() -> adapter.setAdapterList(changeList));
         }).start();
@@ -111,7 +117,10 @@ public class WhatsNewDialogFragment extends DialogFragment {
 
     class WhatsNewRecyclerAdapter extends RecyclerView.Adapter<WhatsNewRecyclerAdapter.ViewHolder> {
         private final List<ApkWhatsNewFinder.Change> mAdapterList = new ArrayList<>();
-        WhatsNewRecyclerAdapter() {}
+
+        WhatsNewRecyclerAdapter() {
+        }
+
         void setAdapterList(List<ApkWhatsNewFinder.Change> list) {
             mAdapterList.clear();
             mAdapterList.addAll(list);
@@ -157,6 +166,7 @@ public class WhatsNewDialogFragment extends DialogFragment {
 
         class ViewHolder extends RecyclerView.ViewHolder {
             TextView textView;
+
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
                 textView = (TextView) itemView;
