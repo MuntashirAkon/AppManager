@@ -56,7 +56,7 @@
     <string name="configurations">Konfigurationen</string>
     <string name="no_configurations">Keine Konfigurationen</string>
     <string name="input_features">Eingabe-Funktionalitäten</string>
-    <string name="manifest">Manifest</string>
+    <string name="manifest">Erscheinungsbild</string>
     <string name="error">Fehler</string>
     <string name="loading">Laden…</string>
     <!-- &#8230; = ... -->
@@ -250,7 +250,7 @@
         <item quantity="other">%1$d Dateien konnten nicht importiert werden.</item>
     </plurals>
     <string name="apk_updater">APK-Aktualisierung</string>
-    <string name="store">Store</string>
+    <string name="store">Speicher</string>
     <string name="running_apps">Laufende Anwendungen</string>
     <string name="kill_process">Beenden erzwingen</string>
     <string name="disable_background_run">Hintergrundbetrieb verhindern</string>
@@ -390,7 +390,7 @@
     <string name="trackers">Verfolger</string>
     <string name="components">Komponenten</string>
     <string name="features">Funktionalitäten</string>
-    <string name="whats_new">Was gibt\'s Neues?</string>
+    <string name="whats_new">Was gibt\'s Neues</string>
     <string name="blocking_rules">Blockierregeln</string>
     <string name="cache">Cache nicht einbeziehen</string>
     <string name="external_data">Externe Daten</string>
@@ -942,9 +942,9 @@
     <string name="pem_file">PEM Datei</string>
     <string name="pk8_file">PKCS #8 (PK8) Datei</string>
     <string name="pem_and_pk8">PEM und PKCS #8 (PK8)</string>
-    <string name="pkcs12_keystore">PKCS #12 KeyStore (P12)</string>
-    <string name="bouncy_castle_keystore">Bouncy Castle KeyStore (BKS)</string>
-    <string name="java_keystore">Java KeyStore (JKS)</string>
+    <string name="pkcs12_keystore">PKCS #12 Schlüsselspeicher (P12)</string>
+    <string name="bouncy_castle_keystore">Bouncy Castle Schlüsselspeicher (BKS)</string>
+    <string name="java_keystore">Java-Schlüsselspeicher (JKS)</string>
     <string name="keystore_pass">KeyStore-Passwort</string>
     <string name="keystore_file">KeyStore-Datei</string>
     <string name="country_name" tools:ignore="TypographyOther">Name des Landes</string>
@@ -952,7 +952,7 @@
     <string name="locality_name">Ortsname (Stadt)</string>
     <string name="organization_name">Name der Organisation</string>
     <string name="organization_unit">Organisationseinheit</string>
-    <string name="common_name">Common name (CN)</string>
+    <string name="common_name">Gebräuchliche Bezeichnung (CN)</string>
     <string name="input_key_password">Schlüssel-Passwort</string>
     <string name="failed_to_load_key">Der Schlüssel konnte nicht geladen werden.</string>
     <string name="default_key_used">Der Standardschlüssel wird verwendet.</string>
@@ -971,4 +971,69 @@
 \nRiseup: https://0xacab.org/muntashir/AppManager
 \nCodeberg: https://codeberg.org/muntashir/AppManager</string>
     <string name="app_signing_signatures">Signaturen</string>
+    <string name="toast_started_select_partial">Auswahl Teilmodus aktiviert</string>
+    <string name="orientation_right_to_left">Von Rechts nach Links</string>
+    <string name="orientation_left_to_right">Von Links nach Rechts</string>
+    <string name="orientation_follow_locale">Lokale folgen</string>
+    <string name="pref_layout_orientation">Ausrichtung des Layouts</string>
+    <string name="saf">SAF</string>
+    <string name="pref_rules_msg">Sofortiges Sperren, Importieren/Exportieren/Entfernen von Regeln, etc.</string>
+    <string name="failed">Fehlgeschlagen</string>
+    <string name="confirm_import_keystore">Sind Sie sicher den bestehenden Schlüsselspeicher zu ersetzen\? Dies Aktion kann nicht rückgängig gemacht werden.</string>
+    <string name="import_keystore">Importieren des Schlüsselspeichers</string>
+    <string name="pref_import_export_keystore_msg">Importiert/exportiert den Bouncy Castle KeyStore (BKS), der intern vom App Manager verwendet wird.</string>
+    <string name="pref_import_export_keystore">Importieren/Exportieren des Schlüsselspeichers</string>
+    <string name="latest_backup">Letztes Backup</string>
+    <string name="gz_bz2_compressed">%1$s komprimiert</string>
+    <string name="pgp_aes_rsa_encrypted">%1$s entschlüsselt</string>
+    <string name="no_encryption">Keine Verschlüsselung</string>
+    <string name="base_backup">Basis sichern</string>
+    <string name="trackers_unblocked_successfully">Tracker sind nun entblockt</string>
+    <string name="trackers_blocked_successfully">Tracker sind nun geblockt</string>
+    <string name="failed_to_unblock_trackers">Konnte Tracker nicht entblocken</string>
+    <string name="failed_to_block_trackers">Konnte Tracker nicht blockieren</string>
+    <string name="profile_save_apk_msg">Speichert APK-Dateien in <tt>AppManager/apks</tt></string>
+    <string name="save_apk">APK-Datei speichern</string>
+    <string name="running_services">Aktive Dienste</string>
+    <string name="view_logs">Protokolle anzeigen</string>
+    <string name="share_log">Teilen</string>
+    <string name="save_log_zip">Zip-Datei speichern</string>
+    <string name="text_include_dmesg">Kernel-Log mit einschließen</string>
+    <string name="omit_sensitive_info_summary">Sensible Informationen wie Web-URLs, Telefonnummern oder E-Mails auslassen.</string>
+    <string name="omit_sensitive_info">Sensible Informationen auslassen</string>
+    <string name="undo">Rückgängig machen</string>
+    <string name="pause_unpause">Abspielen/Pause</string>
+    <string name="collapse_all">Alles einklappen</string>
+    <string name="expand_all">Alles aufklappen</string>
+    <string name="file">Datei</string>
+    <string name="widget_start_recording">Aufzeichen
+\nProtokoll</string>
+    <string name="widget_recording_in_progress">Zeichne auf…</string>
+    <string name="unable_to_save_log">Kann Protokoll nicht speichern. Haben Sie einen gültigen Dateinamen eingegeben\?</string>
+    <plurals name="toast_log_truncated">
+        <item quantity="one">Protokoll zu groß, zeige letzte %d Zeile.</item>
+        <item quantity="other">Protokoll zu groß, zeige die letzten %d Zeilen.</item>
+    </plurals>
+    <string name="toast_invalid_selection">Ungültige Auswahl. Bitte nochmals versuchen.</string>
+    <string name="toast_invalid_level">Ungültiger Level-Name: %s</string>
+    <string name="pref_display_limit_hint">Bitte eine gültige Zahl zwischen %1$d und %2$d eingeben.</string>
+    <string name="title_filters">Filter</string>
+    <string name="text_include_device_info">Geräteinformationen mit einschließen</string>
+    <string name="text_filter_text">Text filtern</string>
+    <string name="text_filter_ellipsis">Filter…</string>
+    <string name="pref_log_write_period_title">Zeitraum beschreiben</string>
+    <string name="pref_log_write_period_summary">Bei der Aufzeichnung wird jede %1$d Zeile auf die SD-Karte geschrieben.</string>
+    <string name="suspended">Angehalten</string>
+    <string name="subject_log_report">Protokollbericht erstellen</string>
+    <string name="start_recording_log">Aufzeichnen</string>
+    <string name="settings">Einstellungen</string>
+    <string name="send_log_title">Protokoll senden</string>
+    <string name="save_log">Protokoll speichern</string>
+    <string name="save_as">Speichern als…</string>
+    <string name="record_log">Protokoll aufzeichnen</string>
+    <string name="pref_show_timestamp_title">Zeige Pid &amp; Zeitstempel</string>
+    <string name="pref_show_timestamp_summary">Zeige Prozess-ID und Zeitstempel wenn aufgeklappt.</string>
+    <string name="pref_log_line_period_error">Bitte geben Sie einen Integer zwischen 1 und 1000 an.</string>
+    <string name="pref_expanded_by_default_title">Standardmäßig aufklappen</string>
+    <string name="hidden">Versteckt</string>
 </resources>
