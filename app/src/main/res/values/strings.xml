@@ -537,7 +537,6 @@
     <string name="full_stop_tap_to_see_details">. Tap to see details.</string>
     <string name="try_again">Try again</string>
     <string name="install_app_message">Do you want to install this app?</string>
-    <string name="reinstall_app_message">Do you want to reinstall this app?</string>
     <string name="reinstall">Reinstall</string>
     <string name="unblock_trackers">Unblock trackers</string>
     <string name="package_installer">Package Installer</string>
@@ -1062,4 +1061,7 @@
     <string name="orientation_right_to_left">Right to left</string>
     <string name="suspended">Suspended</string>
     <string name="hidden">Hidden</string>
+    <string name="pref_display_changes">Display changes</string>
+    <string name="pref_display_changes_msg">Display changes in version, trackers, components, permissions, signatures, SDK, etc. in a version controlled manner.</string>
+    <string name="no_changes">No changes</string>
 </resources>

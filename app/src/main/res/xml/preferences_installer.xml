@@ -26,4 +26,10 @@
         tools:summary="App Manager"
         app:iconSpaceReserved="false" />
 
+    <SwitchPreferenceCompat
+        app:key="installer_display_changes"
+        app:title="@string/pref_display_changes"
+        app:summary="@string/pref_display_changes_msg"
+        app:iconSpaceReserved="false" />
+
 </PreferenceScreen>
