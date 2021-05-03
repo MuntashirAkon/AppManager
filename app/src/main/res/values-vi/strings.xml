@@ -403,6 +403,7 @@
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
+\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
 \nGhi nhận cho logo ban đầu: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="starting_activity">Hoạt động bắt đầu: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="clear_data_message">Bạn có chắc muốn xoá dữ liệu của ứng dụng này không\?</string>
@@ -438,4 +439,5 @@
     <string name="pref_installer_msg">Thiết lập hành vi của trình cài đặt ứng dụng.</string>
     <string name="expiry_date_cannot_be_empty">Ngày hết hạn không thể trống.</string>
     <string name="signing_key">Mã ký</string>
+    <string name="app_signing_signatures">Chữ ký</string>
 </resources>
