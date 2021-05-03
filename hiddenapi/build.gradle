@@ -24,5 +24,5 @@ java {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation 'androidx.annotation:annotation:1.2.0'
+    implementation "androidx.annotation:annotation:${annotation_version}"
 }
