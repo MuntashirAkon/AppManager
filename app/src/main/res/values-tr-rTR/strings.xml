@@ -1033,4 +1033,7 @@
     </plurals>
     <string name="hidden">Gizli</string>
     <string name="suspended">Askıya alındı</string>
+    <string name="no_changes">Değişiklik yok</string>
+    <string name="pref_display_changes_msg">Sürüm, izleyiciler, bileşenler, izinler, imzalar, SDK, vb.\'deki değişiklikleri sürüm denetimi ile görüntüleyin.</string>
+    <string name="pref_display_changes">Değişiklikleri görüntüle</string>
 </resources>
