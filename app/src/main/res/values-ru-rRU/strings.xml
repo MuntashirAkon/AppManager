@@ -1103,4 +1103,7 @@
     <string name="bouncy_castle_keystore">Bouncy Castle KeyStore (BKS)</string>
     <string name="suspended">Приостановлено</string>
     <string name="hidden">Скрыто</string>
+    <string name="no_changes">Без изменений</string>
+    <string name="pref_display_changes_msg">Отображение изменений версии, трекеров, компонентов, разрешений, подписей, SDK и т.д., в режиме контроля версий.</string>
+    <string name="pref_display_changes">Отображение изменений</string>
 </resources>
