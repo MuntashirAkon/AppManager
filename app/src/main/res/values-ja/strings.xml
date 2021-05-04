@@ -533,7 +533,6 @@
     <string name="full_stop_tap_to_see_details">. タップして詳細を表示.</string>
     <string name="try_again">再試行</string>
     <string name="install_app_message">このアプリをインストールしますか？</string>
-    <string name="reinstall_app_message">このアプリを再インストールしますか？</string>
     <string name="reinstall">再インストール</string>
     <string name="unblock_trackers">トラッカーをブロック解除</string>
     <string name="package_installer">パッケージインストーラ</string>

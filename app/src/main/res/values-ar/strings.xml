@@ -224,7 +224,6 @@
     <string name="package_installer">مثبت الحزمة</string>
     <string name="unblock_trackers">إلغاء حظر أجهزة المتعقبين</string>
     <string name="reinstall">اعادة التثبيت</string>
-    <string name="reinstall_app_message">هل تريد إعادة تثبيت هذا التطبيق؟</string>
     <string name="install_app_message">هل تريد تثبيت هذا التطبيق؟</string>
     <string name="try_again">أعد المحاولة</string>
     <string name="full_stop_tap_to_see_details">. اضغط للاطلاع على التفاصيل.</string>

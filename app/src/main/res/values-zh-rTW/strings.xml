@@ -436,7 +436,6 @@
     <string name="package_installer">套件安裝程式</string>
     <string name="unblock_trackers">取消封鎖追蹤器</string>
     <string name="reinstall">重新安裝</string>
-    <string name="reinstall_app_message">您要重新安裝該應用程式嗎？</string>
     <string name="install_app_message">您要安裝此應用程式嗎？</string>
     <string name="try_again">再試一次</string>
     <string name="full_stop_tap_to_see_details">。點按可檢視詳細資訊。</string>
