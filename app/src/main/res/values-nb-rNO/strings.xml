@@ -180,7 +180,6 @@
     <string name="backup_apk_files">APK-filer</string>
     <string name="unblock_trackers">Avblokker sporere</string>
     <string name="reinstall">Reinstaller</string>
-    <string name="reinstall_app_message">Ønsker du å reinstallere dette programmet\?</string>
     <string name="install_app_message">Ønsker du å installere dette programmet\?</string>
     <string name="try_again">Prøv igjen</string>
     <string name="export_icon">Pakk ut ikon</string>
@@ -903,7 +902,7 @@
     <string name="organization_unit">Organisasjonsenhet (OU)</string>
     <string name="common_name">Vanlig navn (CN)</string>
     <string name="verified_using_unreliable_hash">Bekreftet ved bruk av upålitelig sjekksum</string>
-    <string name="type_int_array_list"></string>
+    <string name="type_int_array_list"/>
     <string name="restore_latest">Gjenopprett siste sikkerhetskopier</string>
     <string name="restore_not_installed_msg">Gjenopprett grunn-sikkerhetskopi for programmer som ikke er installert nå.</string>
     <string name="restore_all_msg">Gjenopprett grunn-sikkerhetskopi fra alle sikkerhetskopierte programmer.</string>

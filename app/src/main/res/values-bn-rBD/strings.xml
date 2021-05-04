@@ -299,7 +299,6 @@
     <string name="full_stop_tap_to_see_details">. বিবরণ দেখার জন্য ট্যাপ করুন।</string>
     <string name="try_again">পুনরায় চেষ্টা করুন</string>
     <string name="install_app_message">আপনি কি এই অ্যাপটি ইনস্টল করতে চান?</string>
-    <string name="reinstall_app_message">আপনি কি এই অ্যাপটি পুনরায় ইনস্টল করতে চান?</string>
     <string name="reinstall">পুনরায় ইনস্টল করুন</string>
     <string name="unblock_trackers">ট্র্যাকারসমূহ আনব্লক করুন</string>
     <string name="install_in_progress">ইনস্টল হচ্ছে</string>

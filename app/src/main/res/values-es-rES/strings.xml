@@ -281,7 +281,6 @@
     <string name="package_installer">Instalador de paquetes</string>
     <string name="unblock_trackers">Desbloquear rastreadores</string>
     <string name="reinstall">Reinstalar</string>
-    <string name="reinstall_app_message">Quieres reinstalar esta app\?</string>
     <string name="install_app_message">Quieres instalar esta app\?</string>
     <string name="try_again">Prueba de nuevo</string>
     <string name="full_stop_tap_to_see_details">Toca para ver detalles.</string>

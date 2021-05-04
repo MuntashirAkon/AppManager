@@ -423,7 +423,6 @@
     <string name="full_stop_tap_to_see_details">. Toque para ver detalhes.</string>
     <string name="try_again">Tentar novamente</string>
     <string name="install_app_message">Você deseja instalar este app?</string>
-    <string name="reinstall_app_message">Você deseja reinstalar este app?</string>
     <string name="reinstall">Reinstalar</string>
     <string name="unblock_trackers">Desbloquear rastreadores</string>
     <string name="package_installer">Instalador de Pacotes</string>

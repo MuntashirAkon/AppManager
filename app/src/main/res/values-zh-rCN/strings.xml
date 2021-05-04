@@ -439,7 +439,6 @@
     <string name="full_stop_tap_to_see_details">. 点按查看详情.</string>
     <string name="try_again">再试一次</string>
     <string name="install_app_message">安装应用？</string>
-    <string name="reinstall_app_message">你想要重新安装该应用吗？</string>
     <string name="reinstall">重新安装</string>
     <string name="unblock_trackers">取消屏蔽跟踪器</string>
     <string name="package_installer">软件包安装程序</string>

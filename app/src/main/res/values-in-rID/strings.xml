@@ -731,7 +731,6 @@
     <string name="package_installer">Penginstal Paket</string>
     <string name="unblock_trackers">Buka blokir pelacak</string>
     <string name="reinstall">Instal ulang</string>
-    <string name="reinstall_app_message">Apakah kamu ingin menginstal ulang aplikasi ini\?</string>
     <string name="install_app_message">Apakah kamu ingin menginstal aplikasi ini\?</string>
     <string name="try_again">Coba lagi</string>
     <string name="full_stop_tap_to_see_details">Ketuk untuk melihat detail.</string>

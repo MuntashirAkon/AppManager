@@ -193,7 +193,6 @@
     </plurals>
     <string name="the_export_was_successful">Wyeksportowano</string>
     <string name="the_import_was_successful">Importowano</string>
-    <string name="reinstall_app_message">Czy chcesz ponownie zainstalować tę aplikację\?</string>
     <string name="install_app_message">Czy chcesz zainstalować tę aplikację\?</string>
     <string name="try_again">Spróbuj ponownie</string>
     <string name="full_stop_tap_to_see_details">. Naciśnij, aby wyświetlić szczegóły.</string>

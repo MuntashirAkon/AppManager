@@ -192,7 +192,6 @@
     <string name="package_installer">Інсталятор пакетів</string>
     <string name="unblock_trackers">Розблокування трекерів</string>
     <string name="reinstall">Перевстановлення</string>
-    <string name="reinstall_app_message">Ви хочете перевстановити цей додаток\?</string>
     <string name="install_app_message">Ви хочете встановити цей додаток\?</string>
     <string name="try_again">Спробуйте ще раз</string>
     <string name="full_stop_tap_to_see_details">. Торкніться, щоб переглянути деталі.</string>

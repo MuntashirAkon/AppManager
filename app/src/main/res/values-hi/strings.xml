@@ -523,7 +523,6 @@
     <string name="package_installer">पैकेज इंस्टॉलर</string>
     <string name="unblock_trackers">ट्रैकर्स को अनब्लॉक करें</string>
     <string name="reinstall">पुनः इंस्टॉल करें</string>
-    <string name="reinstall_app_message">क्या आप इस ऐप को पुनः इंस्टॉल करना चाहते हैं\?</string>
     <string name="install_app_message">क्या आप यह ऐप इंस्टॉल करना चाहते हैं\?</string>
     <string name="try_again">पुन: प्रयास करें</string>
     <string name="full_stop_tap_to_see_details">। विवरण देखने के लिए टैप करें।</string>

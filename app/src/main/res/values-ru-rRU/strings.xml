@@ -499,7 +499,6 @@
     <string name="full_stop_tap_to_see_details">. Нажмите, чтобы увидеть детали.</string>
     <string name="try_again">Попробуйте снова</string>
     <string name="install_app_message">Вы хотите установить это приложение?</string>
-    <string name="reinstall_app_message">Вы хотите переустановить это приложение?</string>
     <string name="reinstall">Переустановить</string>
     <string name="unblock_trackers">Разблокировать трекеры</string>
     <string name="package_installer">Установщик пакетов</string>

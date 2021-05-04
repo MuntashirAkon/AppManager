@@ -455,7 +455,6 @@
     <string name="full_stop_tap_to_see_details">. Berühren für mehr Details.</string>
     <string name="try_again">Erneut versuchen</string>
     <string name="install_app_message">Möchtest du diese App installieren?</string>
-    <string name="reinstall_app_message">Willst du diese App wiederherstellen?</string>
     <string name="reinstall">Erneut installieren</string>
     <string name="unblock_trackers">Tracker blockieren</string>
     <string name="package_installer">Paket-Installer</string>
