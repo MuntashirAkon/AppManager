@@ -66,18 +66,18 @@ sed -i -r "s/<div class\=\"amalert--(.*)\">/<div class\=\"amalert\" style\=\"bor
 }
 
 function func_update-xliff {
+OUTPUT=strings.xml
+rm $OUTPUT
+
 while read file
 do
-echo ${file}
+
     while read stringkey
     do
 
-    echo ${stringkey}
-        while read string
-        do
-        echo "<string name=\"${stringkey}\">${string}</string>"
+    string=$(sed '1,/%%!!'${stringkey}'<</d;/%%!!>>/,$d' ${file})
+    echo -e "<string name=\"${stringkey}\">${string}</string>" >>${OUTPUT}
 
-        done < <(sed '1,/%%!!'${stringkey}'<</d;/%%!!>>/,$d' ${file})
 
     done < <(grep -oP "(?<=\%\%!!).*(?=<<)" ${file})
 
@@ -89,7 +89,6 @@ function func_merge-translation {
 echo merge translation
 }
 
-arg=("$@")
 case $1 in
 "help" ) func_help ;;
 "buildhtml" ) func_build-html ;;
