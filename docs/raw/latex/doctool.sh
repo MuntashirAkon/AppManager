@@ -76,7 +76,7 @@ do
     do
 
     string=$(sed '1,/%%!!'${stringkey}'<</d;/%%!!>>/,$d' ${file})
-    echo -e "<string name=\"${stringkey}\">${string}</string>" >>${OUTPUT}
+    echo "<string name=\"${stringkey}\">${string}</string>" >>${OUTPUT}
 
 
     done < <(grep -oP "(?<=\%\%!!).*(?=<<)" ${file})
