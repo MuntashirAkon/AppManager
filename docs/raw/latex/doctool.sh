@@ -66,7 +66,23 @@ sed -i -r "s/<div class\=\"amalert--(.*)\">/<div class\=\"amalert\" style\=\"bor
 }
 
 function func_update-xliff {
-echo update translation
+while read file
+do
+echo ${file}
+    while read stringkey
+    do
+
+    echo ${stringkey}
+        while read string
+        do
+        echo "<string name=\"${stringkey}\">${string}</string>"
+
+        done < <(sed '1,/%%!!'${stringkey}'<</d;/%%!!>>/,$d' ${file})
+
+    done < <(grep -oP "(?<=\%\%!!).*(?=<<)" ${file})
+
+
+done < <(find ./ -type f -name "*.tex")
 }
 
 function func_merge-translation {
