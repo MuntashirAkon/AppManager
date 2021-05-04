@@ -1034,4 +1034,7 @@
     </plurals>
     <string name="hidden">Oculto</string>
     <string name="suspended">Suspenso</string>
+    <string name="no_changes">Nenhuma mudança</string>
+    <string name="pref_display_changes_msg">Mostrar mudanças na versão, rastreadores, componentes, permissões, assinaturas, SDK, etc. de forma controlada por versão.</string>
+    <string name="pref_display_changes">Mostrar mudanças</string>
 </resources>
