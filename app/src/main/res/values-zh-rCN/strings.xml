@@ -1000,4 +1000,7 @@
     </plurals>
     <string name="hidden">隐藏</string>
     <string name="suspended">已挂起</string>
+    <string name="no_changes">无更改</string>
+    <string name="pref_display_changes_msg">以版本控制的方式显示版本、跟踪器、组件、权限、签名、SDK等的更改。</string>
+    <string name="pref_display_changes">展示更改</string>
 </resources>
