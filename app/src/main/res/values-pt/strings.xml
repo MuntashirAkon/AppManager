@@ -1018,4 +1018,7 @@
         <item quantity="other">2 rastreadores com <xliff:g id="class_no" example="50">%1$d</xliff:g> classes</item>
     </plurals>
     <string name="app_signing_signatures">Assinaturas</string>
+    <string name="no_changes">Sem modificações</string>
+    <string name="pref_display_changes_msg">Mostrar alterações na versão, rasteadores, componentes, permissões, assinaturas, SDK, etc. de uma forma controlada de versão.</string>
+    <string name="pref_display_changes">Mostrar alterações</string>
 </resources>
