@@ -1158,4 +1158,7 @@
     <string name="input_keystore_alias_pass">كلمة المرور للاسم المستعار <b> %1$s </b></string>
     <string name="hidden">مَخفي</string>
     <string name="suspended">معلق</string>
+    <string name="no_changes">لا تغييرات</string>
+    <string name="pref_display_changes_msg">عرض التغييرات في الإصدار ، برمجيات التتبع ، والمكونات ، والأذونات ، والتوقيعات ، SDK ، وما إلى ذلك بطريقة النسخة التي تسيطر عليها.</string>
+    <string name="pref_display_changes">عرض التغييرات</string>
 </resources>
