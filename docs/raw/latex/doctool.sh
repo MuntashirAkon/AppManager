@@ -72,15 +72,24 @@ rm $OUTPUT
 while read file
 do
 
-    while read stringkey
+    while read line_title
     do
 
-    string=$(sed '1,/%%!!'${stringkey}'<</d;/%%!!>>/,$d' ${file})
-    echo "<string name=\"${stringkey}\">${string}</string>" >>${OUTPUT}
+        stringkey_title=$(echo ${line_title} | grep -oP "(?<=\%\%##).*(?=>>)")
+        string_title=$(echo ${line_title} | grep -oP "((?<=section{)|(?<=subsection{)|(?<=subsubsection{)).*(?=})")
+        echo "<string name=\"${stringkey_title}\">${string_title}</string>" >>${OUTPUT}
+        echo -e "--\n$stringkey_title\n$string_title\n--\n"
 
+    done < <(grep -P "(?<=\%\%##).*(?=>>)" ${file})
+
+    while read stringkey_content
+    do
+
+        string_content=$(sed '1,/%%!!'${stringkey_content}'<</d;/%%!!>>/,$d' ${file})
+        echo "<string name=\"${stringkey_content}\">${string_content}</string>" >>${OUTPUT}
+        echo -e "--\n$stringkey_content\n$string_content\n--\n"
 
     done < <(grep -oP "(?<=\%\%!!).*(?=<<)" ${file})
-
 
 done < <(find ./ -type f -name "*.tex")
 }
