@@ -1035,4 +1035,7 @@
     <string name="pref_log_line_period_error">Bitte geben Sie einen Integer zwischen 1 und 1000 an.</string>
     <string name="pref_expanded_by_default_title">Standardmäßig aufklappen</string>
     <string name="hidden">Versteckt</string>
+    <string name="no_changes">Keine Änderungen</string>
+    <string name="pref_display_changes_msg">Änderungen in Version, Tracker, Komponenten, Berechtigungen, Signaturen, SDK usw. versionskontrolliert anzeigen.</string>
+    <string name="pref_display_changes">Änderungen anzeigen</string>
 </resources>
