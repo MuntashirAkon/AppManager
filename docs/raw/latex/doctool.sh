@@ -76,7 +76,7 @@ do
     do
 
         stringkey_title=$(echo ${line_title} | grep -oP "(?<=\%\%##).*(?=>>)")
-        string_title=$(echo ${line_title} | grep -oP "((?<=section{)|(?<=subsection{)|(?<=subsubsection{)).*(?=})")
+        string_title=$(echo ${line_title} | grep -oP "((?<=section{)|(?<=subsection{)|(?<=subsubsection{)).*?(?=})")
         echo "<string name=\"${stringkey_title}\">${string_title}</string>" >>${OUTPUT}
         echo -e "--\n$stringkey_title\n$string_title\n--\n"
 
