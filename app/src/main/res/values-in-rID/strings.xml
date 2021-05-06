@@ -997,4 +997,7 @@
     </plurals>
     <string name="hidden">Tersembunyi</string>
     <string name="suspended">Ditangguhkan</string>
+    <string name="pref_display_changes_msg">Tampilkan perubahan dalam versi, pelacak, komponen, perizinan, tanda tangan (signature), SDK, dll. di sebuah bentuk versi yang terkontrol.</string>
+    <string name="no_changes">Tidak ada perubahan</string>
+    <string name="pref_display_changes">Tampilkan perubahan</string>
 </resources>
