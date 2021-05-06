@@ -738,7 +738,7 @@
 \nEl proceso demoró <xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> iteraciones).</string>
     <string name="interceptor">Interceptor</string>
     <string name="backup_internal_data_description">Hacer copia de respaldo de las carpetas de datos internos.</string>
-    <string name="backup_apk_files_description">Respaldo sólo de los archivos APK del directorio de origen. <b>Fuente</b> debe ser seleccionado para que esto funcione.</string>
+    <string name="backup_apk_files_description">Respaldo solo de los archivos APK del directorio de origen, «splits» incluidos.</string>
     <string name="backup_obb_media_description">Respaldo de OBB y multimedia.</string>
     <string name="board_name">Placa</string>
     <string name="drm_free_apkm_msg">El archivo APKM no tiene DRM; no hay necesidad de convertirlo en APKS.</string>
@@ -823,9 +823,9 @@
         <item quantity="one">%1$d componente</item>
         <item quantity="other">%1$d componentes</item>
     </plurals>
-    <string name="installer_app_message">Seleccione <b>elegir</b> para escoger entre las aplicaciones instaladas o seleccione <b>personalizar</b> para especificar un nombre de paquete personalizado.</string>
+    <string name="installer_app_message">Seleccione <b>Elegir</b> para escoger de entre las aplicaciones instaladas, o bien, <b>Personalizado</b> para especificar un nombre de paquete personalizado.</string>
     <string name="specify_custom_name">Personalizado</string>
-    <string name="verified_using_unreliable_hash">Verificado mediante hash no fiable</string>
+    <string name="verified_using_unreliable_hash">Verificado con una suma no fidedigna</string>
     <string name="working_on_adb_mode">Trabajando en modo ADB</string>
     <string name="screen_lock_not_enabled">Elija un bloqueo de pantalla en la configuración de Android o elimine los datos de la aplicación.</string>
     <string name="isolated">Aislado</string>
@@ -1021,4 +1021,6 @@
     <string name="log_recording_started">Comenzó la grabación de los registros.</string>
     <string name="log_cleared">Se vaciaron los registros</string>
     <string name="enter_filename">Introducir nombre de archivo</string>
+    <string name="omit_sensitive_info_summary">Omite información delicada, como URL, números telefónicos y direcciones de correo.</string>
+    <string name="text_include_dmesg">Incluir registro de núcleo</string>
 </resources>
