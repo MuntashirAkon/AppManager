@@ -92,6 +92,9 @@ do
     done < <(grep -oP "(?<=\%\%!!).*(?=<<)" ${file})
 
 done < <(find ./ -type f -name "*.tex")
+sed -i -e '1i <?xml version="1.0" encoding="utf-8"?>' \
+       -e '1i <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">' \
+       -e '$a </resources>' ${OUTPUT}
 }
 
 function func_merge-translation {
