@@ -29,7 +29,6 @@ import android.content.pm.PathPermission;
 import android.content.pm.PermissionInfo;
 import android.content.pm.ProviderInfo;
 import android.content.pm.ServiceInfo;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -953,20 +952,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         return true;
                     });
                 }
-                holder.createBtn.setOnClickListener(v -> {
-                    String iconResourceName = null;
-                    try {
-                        ComponentName activity = new ComponentName(activityInfo.packageName, activityInfo.name);
-                        iconResourceName = mPackageManager.getResourcesForActivity(activity)
-                                .getResourceName(activityInfo.getIconResource());
-                    } catch (PackageManager.NameNotFoundException e) {
-                        Toast.makeText(mActivity, e.toString(), Toast.LENGTH_LONG).show();
-                    } catch (Resources.NotFoundException ignore) {
-                    }
-                    LauncherIconCreator.createLauncherIcon(getActivity(), activityInfo,
-                            (String) activityInfo.loadLabel(mPackageManager),
-                            activityInfo.loadIcon(mPackageManager), iconResourceName);
-                });
+                holder.createBtn.setOnClickListener(v -> LauncherIconCreator.createLauncherIcon(mActivity,
+                        activityInfo, activityInfo.loadLabel(mPackageManager).toString(),
+                        activityInfo.loadIcon(mPackageManager)));
                 holder.editBtn.setOnClickListener(v -> {
                     DialogFragment dialog = new EditShortcutDialogFragment();
                     Bundle args = new Bundle();
