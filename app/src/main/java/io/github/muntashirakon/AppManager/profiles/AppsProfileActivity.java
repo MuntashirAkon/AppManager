@@ -292,10 +292,9 @@ public class AppsProfileActivity extends BaseActivity
                         intent.putExtra(EXTRA_SHORTCUT_TYPE, shortcutTypes[which]);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        LauncherIconCreator.createLauncherIcon(this, getPackageName(),
+                        LauncherIconCreator.createLauncherIcon(this,
                                 model.getProfileName() + " - " + shortcutTypesL[which],
-                                ContextCompat.getDrawable(this, R.drawable.ic_launcher_foreground),
-                                getResources().getResourceName(R.drawable.ic_launcher_foreground), intent);
+                                ContextCompat.getDrawable(this, R.drawable.ic_launcher_foreground), intent);
                         dialog.dismiss();
                     })
                     .show();

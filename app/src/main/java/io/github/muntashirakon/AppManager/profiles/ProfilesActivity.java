@@ -347,10 +347,9 @@ public class ProfilesActivity extends BaseActivity {
                                     intent.putExtra(AppsProfileActivity.EXTRA_SHORTCUT_TYPE, shortcutTypes[which]);
                                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                    LauncherIconCreator.createLauncherIcon(activity, activity.getPackageName(),
-                                            profName + " - " + shortcutTypesL[which],
-                                            ContextCompat.getDrawable(activity, R.drawable.ic_launcher_foreground),
-                                            activity.getResources().getResourceName(R.drawable.ic_launcher_foreground), intent);
+                                    LauncherIconCreator.createLauncherIcon(activity,
+                                            profName + " - " + shortcutTypesL[which], ContextCompat
+                                                    .getDrawable(activity, R.drawable.ic_launcher_foreground), intent);
                                     dialog.dismiss();
                                 })
                                 .show();
