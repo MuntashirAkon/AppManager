@@ -21,7 +21,6 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.widget.Button;
 
-import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
@@ -77,8 +76,8 @@ public class RSACryptoSelectionDialogFragment extends DialogFragment {
                 .setNegativeButton(R.string.pref_import, null)
                 .setNeutralButton(R.string.generate_key, null);
         new Thread(() -> {
-            CharSequence info = getSigningInfo();
             if (isDetached()) return;
+            CharSequence info = getSigningInfo();
             activity.runOnUiThread(() -> builder.setMessage(info));
         }).start();
         if (allowDefault) {
@@ -142,7 +141,7 @@ public class RSACryptoSelectionDialogFragment extends DialogFragment {
         return getString(allowDefault ? R.string.default_key_used : R.string.key_not_set);
     }
 
-    @AnyThread
+    @WorkerThread
     private void addKeyPair(@Nullable char[] password, @Nullable KeyPair keyPair) {
         try {
             if (keyPair == null) {
@@ -154,6 +153,7 @@ public class RSACryptoSelectionDialogFragment extends DialogFragment {
             if (isDetached()) return;
             activity.runOnUiThread(() -> UIUtils.displayShortToast(R.string.done));
             keyPairUpdated();
+            if (isDetached()) return;
             CharSequence info = getSigningInfo();
             activity.runOnUiThread(() -> builder.setMessage(info));
         } catch (Exception e) {
