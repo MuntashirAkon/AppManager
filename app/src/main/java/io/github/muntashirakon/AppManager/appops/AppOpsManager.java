@@ -355,8 +355,8 @@ public class AppOpsManager {
     public static final int OP_MANAGE_ONGOING_CALLS = 103;
     public static final int _NUM_OP;  // fetched using reflection
 
-    // MIUI app ops taken from com.lbe.security.miui.apk
-    public static final int _MIUI_START_OP = 10001;
+    // MIUI app ops taken from framework.jar
+    public static final int MIUI_OP_START = 10000;
     public static final int OP_WIFI_CHANGE = 10001;
     public static final int OP_BLUETOOTH_CHANGE = 10002;
     public static final int OP_DATA_CONNECT_CHANGE = 10003;
@@ -385,11 +385,17 @@ public class AppOpsManager {
     public static final int OP_DEAMON_NOTIFICATION = 10026;
     public static final int OP_BACKGROUND_LOCATION = 10027;
     public static final int OP_READ_SMS_REAL = 10028;
+    // MIUI 12 start?
     public static final int OP_READ_CONTACTS_REAL = 10029;
     public static final int OP_READ_CALENDAR_REAL = 10030;
     public static final int OP_READ_CALL_LOG_REAL = 10031;
     public static final int OP_READ_PHONE_STATE_REAL = 10032;
-    public static final int _NUM_MIUI_OP = 32;
+    // MIUI 12
+    public static final int OP_POST_LOCAL_NOTIFICATION = 10033;
+    public static final int OP_ACCESS_GALLERY = 10034;
+    public static final int OP_ACCESS_SOCIALITY = 10035;
+    public static final int OP_ACCESS_LOCATION_REAL = 10036;
+    public static final int MIUI_OP_END = 10037;
 
     public static final String OPSTR_COARSE_LOCATION = "android:coarse_location";
     public static final String OPSTR_FINE_LOCATION = "android:fine_location";
@@ -710,7 +716,11 @@ public class AppOpsManager {
             OP_READ_CONTACTS_REAL,
             OP_READ_CALENDAR_REAL,
             OP_READ_CALL_LOG_REAL,
-            OP_READ_PHONE_STATE_REAL
+            OP_READ_PHONE_STATE_REAL,
+            OP_POST_LOCAL_NOTIFICATION,
+            OP_ACCESS_GALLERY,
+            OP_ACCESS_SOCIALITY,
+            OP_ACCESS_LOCATION_REAL,
     };
 
     /**
@@ -970,7 +980,11 @@ public class AppOpsManager {
             "READ_CONTACTS_REAL",
             "READ_CALENDAR_REAL",
             "READ_CALL_LOG_REAL",
-            "READ_PHONE_STATE_REAL"
+            "READ_PHONE_STATE_REAL",
+            "POST_LOCAL_NOTIFICATION",
+            "ACCESS_GALLERY",
+            "ACCESS_SOCIALITY",
+            "ACCESS_LOCATION_REAL",
     };
 
     /**
@@ -1596,9 +1610,9 @@ public class AppOpsManager {
      */
     public static String opToName(int op) {
         if (op == OP_NONE) return "NONE";
-        else if (op >= _MIUI_START_OP && op < (_MIUI_START_OP + _NUM_MIUI_OP)) {
+        else if (op > MIUI_OP_START && op < MIUI_OP_END) {
             // MIUI app operations
-            return sMiuiOpNames[op - _MIUI_START_OP];
+            return sMiuiOpNames[op - MIUI_OP_START - 1];
         }
         return op < sOpNames.length ? sOpNames[op] : ("Unknown(" + op + ")");
     }
