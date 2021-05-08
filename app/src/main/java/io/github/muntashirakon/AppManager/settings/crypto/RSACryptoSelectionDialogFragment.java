@@ -89,7 +89,7 @@ public class RSACryptoSelectionDialogFragment extends DialogFragment {
         alertDialog.setOnShowListener(dialog -> {
             AlertDialog dialog1 = (AlertDialog) dialog;
             Button defaultOrOkButton = dialog1.getButton(AlertDialog.BUTTON_POSITIVE);
-            Button importButton = dialog1.getButton(AlertDialog.BUTTON_POSITIVE);
+            Button importButton = dialog1.getButton(AlertDialog.BUTTON_NEGATIVE);
             Button generateButton = dialog1.getButton(AlertDialog.BUTTON_NEUTRAL);
             importButton.setOnClickListener(v -> {
                 KeyPairImporterDialogFragment fragment = new KeyPairImporterDialogFragment();
