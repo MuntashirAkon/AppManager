@@ -881,8 +881,6 @@
     <string name="choose_what_to_do">Choose what to do.</string>
     <string name="has_net_policy">Net policy</string>
     <string name="net_policy">Net policy</string>
-    <string name="reject_background">Reject background</string>
-    <string name="allow_background">Allow background</string>
     <string name="initializing">Initializing…</string>
     <string name="add_to_profile">Add to profile</string>
     <string name="add">Add</string>
@@ -1064,4 +1062,11 @@
     <string name="pref_display_changes">Display changes</string>
     <string name="pref_display_changes_msg">Display changes in version, trackers, components, permissions, signatures, SDK, etc. in a version controlled manner.</string>
     <string name="no_changes">No changes</string>
+    <string name="unknown_netpolicy">Unknown netpolicy (%s)</string>
+    <string name="netpolicy_reject_background_data">Reject background data</string>
+    <string name="netpolicy_allow_background_data">Allow background data when Data Saver is on</string>
+    <string name="netpolicy_reject_cellular_data">Reject cellular data</string>
+    <string name="netpolicy_reject_vpn_data">Reject VPN data</string>
+    <string name="netpolicy_reject_wifi_data">Reject Wi-Fi data</string>
+    <string name="netpolicy_disable_network_access">Disable network access</string>
 </resources>
