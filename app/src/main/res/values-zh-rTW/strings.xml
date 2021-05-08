@@ -987,4 +987,9 @@
     <plurals name="file_deletion_confirmation">
         <item quantity="other">%d 檔案將被刪除</item>
     </plurals>
+    <string name="no_changes">沒有變更</string>
+    <string name="pref_display_changes_msg">以版本控制的方式顯示版本，追蹤器，元件，權限，簽名，SDK 等的變更。</string>
+    <string name="pref_display_changes">顯示變更</string>
+    <string name="hidden">已隱藏</string>
+    <string name="suspended">已待命</string>
 </resources>
