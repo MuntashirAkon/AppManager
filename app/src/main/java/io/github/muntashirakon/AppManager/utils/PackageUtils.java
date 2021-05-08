@@ -719,8 +719,8 @@ public final class PackageUtils {
             appOps.add(i);
         }
         if (MiuiUtils.isMiui()) {
-            for (int i = 0; i < AppOpsManager._NUM_MIUI_OP; ++i) {
-                appOps.add(AppOpsManager._MIUI_START_OP + i);
+            for (int op = AppOpsManager.MIUI_OP_START + 1; op < AppOpsManager.MIUI_OP_END; ++op) {
+                appOps.add(op);
             }
         }
         return appOps;
