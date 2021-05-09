@@ -1080,4 +1080,6 @@
     <string name="aes">AES</string>
     <string name="dsa_affine_y">Аффінна координата y</string>
     <string name="dsa_affine_x">Аффінна координата x</string>
+    <string name="magisk_hide_enabled">MagiskHide</string>
+    <string name="state_wake_kill">Вимкнути пробудження</string>
 </resources>
