@@ -27,17 +27,22 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.RemoteException;
 import android.permission.IPermissionManager;
+import android.text.TextUtils;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
+import androidx.annotation.WorkerThread;
+
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
+import io.github.muntashirakon.AppManager.misc.SystemProperties;
 import io.github.muntashirakon.AppManager.users.UserIdInt;
 
 import static android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DEFAULT;
@@ -66,11 +71,34 @@ public final class PackageManagerCompat {
     @Retention(RetentionPolicy.SOURCE)
     public @interface EnabledFlags {}
 
+    @WorkerThread
     public static List<PackageInfo> getInstalledPackages(int flags, @UserIdInt int userHandle)
             throws RemoteException {
+        if (flags > 0) {  // GET_META_DATA should also be included
+            String patchLevel = SystemProperties.get("ro.build.version.security_patch", "");
+            if (!TextUtils.isEmpty(patchLevel) && "2018-01-01".equals(patchLevel)) {
+                // Need workaround
+                List<ApplicationInfo> applicationInfoList = getInstalledApplications(0, userHandle);
+                List<PackageInfo> packageInfoList = new ArrayList<>(applicationInfoList.size());
+                for (int i = 0; i < applicationInfoList.size(); ++i) {
+                    try {
+                        packageInfoList.add(getPackageInfo(applicationInfoList.get(i).packageName, flags, userHandle));
+                        if (i % 100 == 0) {
+                            // Prevent DeadObjectException
+                            //noinspection BusyWait
+                            Thread.sleep(300);
+                        }
+                    } catch (Exception e) {
+                        throw new RemoteException(e.getMessage());
+                    }
+                }
+                return packageInfoList;
+            }
+        }
         return AppManager.getIPackageManager().getInstalledPackages(flags, userHandle).getList();
     }
 
+    @WorkerThread
     public static List<ApplicationInfo> getInstalledApplications(int flags, @UserIdInt int userHandle)
             throws RemoteException {
         return AppManager.getIPackageManager().getInstalledApplications(flags, userHandle).getList();
