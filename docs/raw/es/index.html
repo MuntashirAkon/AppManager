@@ -19,22 +19,22 @@
 <main class="main">
 <div class="center"><!--l. 5-->
 <p class="noindent"><!--l. 6--></p>
-<p class="noindent"><img src="../images/icon.png" alt="PIC" style="width:16.69%" /> <!--l. 7--></p>
+<p class="noindent"><img src="../images/icon.png" alt="FOTO" style="width:16.69%" /> <!--l. 7--></p>
 <p class="noindent"><span class="pplbc8t-x-x-207">A<span class="small-caps">P</span><span class="small-caps">P</span> M<span class="small-caps">A</span><span class="small-caps">N</span><span class="small-caps">A</span><span class="small-caps">G</span><span class="small-caps">E</span><span class="small-caps">R</span></span> </p>
-<p class="noindent"><span class="pplb8t-x-x-172">Manual de usuario</span> </p>
-<p class="noindent"><span class="pplri8t-x-x-120">v2.6.0</span> </p>
-<p class="noindent"><span class="pplr8t-x-x-109">April 24, 2021</span> </p>
+<p class="noindent"><span class="pplb8t-x-x-172">User Manual</span> </p>
+<p class="noindent"><span class="pplri8t-x-x-120">V2.6.0</span> </p>
+<p class="noindent"><span class="pplr8t-x-x-109">24 de abril de 2021</span> </p>
 <p class="noindent">Copyright <span class="pplr8c-">©</span>2020–2021 Muntashir Al-Islam</p>
 <div class="quotation"><!--l. 19-->
-<p class="indent">“Wisely and slow. They stumble that run fast.” — Friar Laurence, <span class="pplri8t-">Romeo and Juliet</span></p>
+<p class="indent">“Sabia y lentamente. Tropiezan rápido.” — Friar Laurence, <span class="pplri8t-">Romeo y Julieta</span></p>
 </div>
 </div>
-<h2 class="chapterHead"><span class="titlemark">Chapter 1</span><br /> <a href="#QQ2-1-2" id="x1-20001">Introduction</a></h2>
+<h2 class="chapterHead"><span class="titlemark">Capitulo 1</span><br> <a href="#QQ2-1-2" id="x1-20001">Introducción</a></h2>
 <!--l. 3-->
-<p class="noindent">Currently supported versions are v2.5.20 (stable), v2.5.23 (pre-release) and v2.5.24 (debug release).</p>
-<h3 class="sectionHead"><span class="titlemark">1.3</span> <a href="#QQ2-1-5" id="x1-50001.3">Official Sources</a></h3>
+<p class="noindent">App Manager is an advanced package manager for Android. It offers many features and consequently, it requires a user manual to assist its users with features that it offers. This document acts as a user manual for App Manager in the sense that it contains the description of every feature that App Manager has to offer. The document can be considered as the “official” guidelines for App Manager and represent the expected behaviour of App Manager. Translations can misinterpret this document (which is written in English). Therefore, it is recommended that you read the English version if possible. There might be other unofficial or third-party resources such as blog articles, videos, chat groups, etc. While these resources might be useful for many people, they may not be up-to-date. In case any deviations are detected in App Manager from this document, they should be reported in the <a href="https://github.com/MuntashirAkon/AppManager/issues">App Manager issue tracker</a>.</p>
+<h3 class="sectionHead"><span class="titlemark">1.1</span> <a href="#QQ2-1-3" id="x1-30001.1">Terminologies</a></h3>
 <ul class="itemize1">
-<li class="itemize"><span class="pplb8t-">AM</span> — Short name for App Manager</li>
+<li class="itemize"><span class="pplb8t-">AM</span> — Abreviación de "App Manager"</li>
 <li class="itemize"><span class="pplb8t-">AoT</span> — Short form of ADB over TCP</li>
 <li class="itemize"><span class="pplb8t-">Block/Unblock</span> — Used for component blocking. It denotes that a component is blocked using Intent Firewall and disabled using PackageManager.</li>
 <li class="itemize"><span class="pplb8t-">IFW</span> — Short form of Intent Firewall.</li>
@@ -56,8 +56,8 @@
 <p class="noindent">App Manager is distributed using the following sources. Unofficial sources may distribute modified versions of App Manager, and none but you shall be responsible for the consequences of using such distributions.</p>
 <ol class="enumerate1">
 <li class="enumerate" id="x1-6002x1">Official F-Droid repository.<a href="#Hfootnote./theHHfootnote"></a><a href="#fn1x1" id="fn1x1-bk"><sup class="textsuperscript">1</sup></a><a id="x1-6003f1"></a><br class="newline" /> <span class="pplri8t-">Link:</span> <a href="https://f-droid.org/packages/io.github.muntashirakon.AppManager" class="url"><span class="ectt-1000">https://f-droid.org/packages/io.github.muntashirakon.AppManager</span></a></li>
-<li class="enumerate" id="x1-6005x2">GitLab: <a href="https://gitlab.com/muntashir/AppManager" class="url"><span class="ectt-1000">https://gitlab.com/muntashir/AppManager</span></a></li>
-<li class="enumerate" id="x1-6008x3">Riseup: <a href="https://0xacab.org/muntashir/AppManager" class="url"><span class="ectt-1000">https://0xacab.org/muntashir/AppManager</span></a></li>
+<li class="enumerate" id="x1-6005x2">IzzyOnDroid repository for F-Droid.<a href="#Hfootnote./theHHfootnote"></a><a href="#fn2x1" id="fn2x1-bk"><sup class="textsuperscript">2</sup></a><a id="x1-6006f2"></a><br class="newline" /> <span class="pplri8t-">Link:</span> <a href="https://apt.izzysoft.de/fdroid/index/apk/io.github.muntashirakon.AppManager" class="url"><span class="ectt-1000">https://apt.izzysoft.de/fdroid/index/apk/io.github.muntashirakon.AppManager</span></a></li>
+<li class="enumerate" id="x1-6008x3">GitHub repository.<br class="newline" /> <span class="pplri8t-">Normal releases:</span> <a href="https://github.com/MuntashirAkon/AppManager/releases" class="url"><span class="ectt-1000">https://github.com/MuntashirAkon/AppManager/releases</span></a><br class="newline" /> <span class="pplri8t-">Debug releases:</span> <a href="https://github.com/MuntashirAkon/AppManager/actions" class="url"><span class="ectt-1000">https://github.com/MuntashirAkon/AppManager/actions</span></a></li>
 <li class="enumerate" id="x1-6010x4">Telegram.<br class="newline" /> <span class="pplri8t-">Normal releases:</span> <a href="https://t.me/AppManagerChannel" class="url"><span class="ectt-1000">https://t.me/AppManagerChannel</span></a><br class="newline" /> <span class="pplri8t-">Debug releases:</span> <a href="https://t.me/AppManagerDebug" class="url"><span class="ectt-1000">https://t.me/AppManagerDebug</span></a></li>
 </ol>
 <!--l. 53-->
@@ -77,8 +77,8 @@
 <!--l. 64-->
 <p class="noindent">App Manager does not accept translations directly via pull/merge requests. Translations are managed both automatically and manually depending on the context.</p>
 <ul class="itemize1">
-<li class="itemize">App Manager app strings are hosted in Weblate.<br class="newline" /> <span class="pplri8t-">Link:</span> <a href="https://hosted.weblate.org/engage/app-manager/" class="url"><span class="ectt-1000">https://hosted.weblate.org/engage/app-manager/</span></a></li>
-<li class="itemize">App Manager user manual are hosted in Crowdin.<br class="newline" /> <span class="pplri8t-">Link:</span> <a href="https://crwd.in/app-manager-docs" class="url"><span class="ectt-1000">https://crwd.in/app-manager-docs</span></a></li>
+<li class="itemize"><span class="pplb8t-">Scanner.</span> Clicking on this button displays the app’s tracker and library information. At first, it scans the app to extract a list of classes. Then the class list is matched with a number of signatures. After that, a scan summary is displayed.<br class="newline" /> <span class="pplri8t-">See also:</span> <a href="#x1-1200002.7"><span class="pplri8t-">Scanner page</span></a></li>
+<li class="itemize"><span class="pplb8t-">Databases.</span> Clicking on this button displays a list of databases used by the app. This needs more improvements, and a database editor which might be added in the future. This option is only visible to the root users.</li>
 </ul>
 <!--l. 73-->
 
@@ -92,7 +92,7 @@
 
 <h4 class="subsectionHead"><span class="titlemark">1.4.2</span> <a href="#QQ2-1-11" id="x1-110001.4.2">Submitting patches</a></h4>
 <!--l. 82-->
-<p class="noindent">By sending BTC, the sender agrees that he/she/they shall not make the transaction information public i.e. the transaction will remain anonymous, nor shall he/she/they use it as a leverage to prioritise his/her/their requested features. Feature requests do not require any bounties or donations, and they are prioritised according to the authors’ preferences.</p>
+<p class="noindent">Repositories located in sites other than GitHub are currently considered mirrors and pull/merge requests submitted there will not be accepted. Instead, patches (as .patch files) can be submitted via email attachments. Make sure to sign-off your commits.</p>
 <div class="mdframed" id="mdframed-1"><!--l. 86-->
 <p class="noindent"><span class="pplbi8t-">Info.</span> GitHub PRs will be merged manually using the corresponding patches. As a result, GitHub may falsely mark them closed instead of merged.</p>
 
@@ -119,30 +119,30 @@
 
 <h4 class="subsectionHead"><span class="titlemark">2.1.1</span> <a href="#QQ2-1-16" id="x1-160002.1.1">Batch Operations</a></h4>
 <!--l. 10-->
-<p class="noindent">Batch operations or operation on multiple apps are also available within this page (most these operations require root or <a href="#x1-1360003.1">ADB over TCP</a>). To enable multiple selection mode, click on any app icon or long click on any app. After that, you can use the regular click to select apps instead of opening the App Details page. These operations include:</p>
+<p class="noindent">By the way, both activities and services are run in the same <a href="https://stackoverflow.com/questions/7597742">looper</a> called the main looper, which means the services are not really run in the background. It’s the application authors job to ensure that. How do application communicate with services? They use <a href="#x1-440002.2.3.3">broadcast receivers</a>.</p>
 <ul class="itemize1">
-<li class="itemize"><span class="colorbox" id="colorbox5"><span id="textcolor6">Light red (day)</span></span> / <span class="colorbox" id="colorbox7"><span id="textcolor8">dark red (night)</span></span> – Disabled app</li>
-<li class="itemize"><a href="#x1-1550003.2"><span class="colorbox" id="colorbox9"><span id="textcolor10">Yellow Star</span></span> – App is in debug mode</a></li>
-<li class="itemize"><span id="textcolor11">Orange <span class="pplri8t-">Date</span></span> – App can read logs (permission granted)</li>
-<li class="itemize"><span id="textcolor12">Orange <span class="pplri8t-">UID</span></span> – User ID is being shared between apps</li>
-<li class="itemize"><span id="textcolor13">Orange <span class="pplri8t-">SDK</span></span> – Uses cleartext (ie. HTTP) traffic</li>
-<li class="itemize"><span id="textcolor14">Red <span class="pplri8t-">package name</span></span> – App does not allow clearing data</li>
-<li class="itemize"><span id="textcolor15">Red <span class="pplri8t-">backup</span></span> – App not installed but has one or more backups</li>
-<li class="itemize"><span id="textcolor16">Dark cyan <span class="pplri8t-">package name</span></span> – Stopped or forced closed app</li>
+<li class="itemize">Save APK files to <span class="ectt-1000">AppManager/apks</span></li>
+<li class="itemize"><a href="#x1-1550003.2">Backup/restore/delete app data</a></li>
+<li class="itemize">Clear data from apps</li>
+<li class="itemize">Enable/disable/force-stop/uninstall apps</li>
+<li class="itemize">Prevent background operation</li>
+<li class="itemize">Block ad and tracker components</li>
+<li class="itemize">Export blocking rules</li>
+<li class="itemize">Add the selected apps to a <a href="#x1-690002.4">profile</a></li>
 </ul>
 <!--l. 25-->
 
 <h4 class="subsectionHead"><span class="titlemark">2.1.2</span> <a href="#QQ2-1-17" id="x1-170002.1.2">Colour Codes</a></h4>
 <!--l. 26-->
-<p class="noindent">Here’s the list of colours used in this page, and their meaning:</p>
+<p class="noindent"><span class="pplri8t-">See also:</span> <a href="#x1-1620004.1"><span class="pplri8t-">FAQ: App Components</span></a></p>
 <ul class="itemize1">
 <li class="itemize"><span class="colorbox" id="colorbox1"><span id="textcolor2">Light greyish orange (day)</span></span> / <span class="colorbox" id="colorbox3"><span id="textcolor4">dark blue (night)</span></span> – App selected for batch operation</li>
 <li class="itemize"><span class="colorbox" id="colorbox5"><span id="textcolor6">Light red (day)</span></span> / <span class="colorbox" id="colorbox7"><span id="textcolor8">dark red (night)</span></span> – Disabled app</li>
-<li class="itemize"><span class="ectt-1000">X</span> – The app supports multiple architectures: 32-bit, 64-bit or arm-v7, arm-v8, etc.</li>
-<li class="itemize"><span class="ectt-1000">0</span> – App does not have code with it</li>
-<li class="itemize"><span class="tctt-1000">°</span> – App is in suspended state</li>
-<li class="itemize"><span class="ectt-1000">#</span> – App has requested a large heap</li>
-<li class="itemize"><span class="ectt-1000">?</span> – App has requested VM in safe mode</li>
+<li class="itemize"><span class="colorbox" id="colorbox9"><span id="textcolor10">Yellow Star</span></span> – App is in debug mode</li>
+<li class="itemize"><span id="textcolor11">Orange <span class="pplri8t-">Date</span></span> – App can read logs (permission granted)</li>
+<li class="itemize"><span id="textcolor12">Orange <span class="pplri8t-">UID</span></span> – User ID is being shared between apps</li>
+<li class="itemize"><span id="textcolor13">Orange <span class="pplri8t-">SDK</span></span> – Uses cleartext (ie. HTTP) traffic</li>
+<li class="itemize"><span id="textcolor14">Red <span class="pplri8t-">package name</span></span> – App does not allow clearing data</li>
 <li class="itemize"><span id="textcolor15">Red <span class="pplri8t-">backup</span></span> – App not installed but has one or more backups</li>
 <li class="itemize"><span id="textcolor16">Orange <span class="pplri8t-">backup</span></span> – Outdated backup, i.e. the version code of the backed up app is less than the installed version code of the same app</li>
 <li class="itemize"><span id="textcolor17">Dark cyan <span class="pplri8t-">backup</span></span> – Up to date backup, i.e. the version code of the backed up app is greater than or equal to the installed version code of the same app</li>
@@ -156,7 +156,7 @@
 <!--l. 48-->
 <p class="noindent">An app is either <span class="pplb8t-">User App</span> or <span class="pplb8t-">System App</span> along with the following codes:</p>
 <ul class="itemize1">
-<li class="itemize"><span class="ectt-1000">X</span> – The app supports multiple architectures: 32-bit, 64-bit or arm-v7, arm-v8, etc.</li>
+<li class="itemize"><span class="pplb8t-">Reject Time.</span> Last time the app op was rejected.</li>
 <li class="itemize"><span class="ectt-1000">0</span> – App does not have code with it</li>
 <li class="itemize"><span class="tctt-1000">°</span> – App is in suspended state</li>
 <li class="itemize"><span class="ectt-1000">#</span> – App has requested a large heap</li>
@@ -166,11 +166,11 @@
 
 <h4 class="subsectionHead"><span class="titlemark">2.1.4</span> <a href="#QQ2-1-19" id="x1-190002.1.4">Version Info</a></h4>
 <!--l. 58-->
-<p class="noindent">List options contain the options to sort or filter the app list.</p>
+<p class="noindent">Version name is followed by the following prefixes:</p>
 <ul class="itemize1">
 <li class="itemize"><span class="ectt-1000">_</span> – No hardware acceleration</li>
-<li class="itemize"><span class="pplb8t-">User app first.</span> User apps are listed on top</li>
-<li class="itemize"><span class="pplb8t-">App label.</span> Sort in ascending order based on the app labels (also known as <span class="pplri8t-">app names</span>). This is the default sorting preference</li>
+<li class="itemize"><span class="ectt-1000">~</span> – Test only mode</li>
+<li class="itemize"><span class="ectt-1000">debug</span> – Debuggable app</li>
 </ul>
 <!--l. 65-->
 
@@ -187,27 +187,27 @@
 <p class="noindent">List options contain the options to sort or filter the app list. </p>
 <p class="noindent"><span class="paragraphHead"><a href="#x1-230002.1.5.2" id="x1-230002.1.5.2">Sort</a></span> <a id="par:main-page-sort"></a> Apps listed on the main page can be sorted in different ways. The sorting preference is preserved which means the apps will be sorted the same way that was sorted in the previous launch. Regardless of your sorting preference, however, the apps are first sorted alphabetically to prevent random results.</p>
 <ul class="itemize1">
-<li class="itemize"><span class="pplb8t-">Apps with rules.</span> List the apps with one or more blocking rules</li>
-<li class="itemize"><span class="pplb8t-">Apps with activities.</span> List the apps with one or more activities</li>
-<li class="itemize"><span class="pplb8t-">Apps with backups.</span> List apps with one or more backups (including uninstalled apps)</li>
-<li class="itemize"><span class="pplb8t-">Apps without backups.</span> List apps without any backups (including uninstalled apps)</li>
-<li class="itemize"><span class="pplb8t-">Running apps.</span> List apps that are currently running (either in foreground or background)</li>
-<li class="itemize"><span class="pplb8t-">Apps with splits.</span> List apps with one or more split APKs</li>
-<li class="itemize"><span class="pplb8t-">Installed apps.</span> List only installed apps</li>
-<li class="itemize"><span class="pplb8t-">Uninstalled apps.</span> List only uninstalled apps including backups</li>
+<li class="itemize"><span class="pplb8t-">User app first.</span> User apps are listed on top</li>
+<li class="itemize"><span class="pplb8t-">Name.</span> Each permission has a unique name like <span class="ectt-1000">android.permission.INTERNET</span> but multiple app can request the permission.</li>
+<li class="itemize"><span class="pplb8t-">Icon.</span> Each permission can have a custom icon. The other permission tabs do not have any icon because they do not contain any icon in the app manifest.</li>
+<li class="itemize"><span class="pplb8t-">Description.</span> This optional field describes the permission. If there isn’t any description associated with the permission, the field is not displayed.</li>
+<li class="itemize"><span class="pplb8t-">Flags.</span> (Uses the flag symbol or <span class="pplb8t-">Protection Level</span> name) This describes various permission flags such as <span class="pplri8t-">normal</span>, <span class="pplri8t-">development</span>, <span class="pplri8t-">dangerous</span>, <span class="pplri8t-">instant</span>, <span class="pplri8t-">granted</span>, <span class="pplri8t-">revoked</span>, <span class="pplri8t-">signature</span>, <span class="pplri8t-">privileged</span>, etc.</li>
+<li class="itemize"><span class="pplb8t-">Package Name.</span> Denotes the package name associated with the permission, i.e. the package that defined the permission.</li>
+<li class="itemize"><span class="pplb8t-">Group.</span> The group name associated with the permission (if any). Newer Androids do not seem to use group names which is why you’ll usually see <span class="ectt-1000">android.permission-group.UNDEFINED</span> or no group name at all.</li>
+<li class="itemize"><span class="pplb8t-">Disabled first.</span> List disabled apps first</li>
 <li class="itemize"><span class="pplb8t-">Blocked first.</span> Sort in descending order based on the number of blocked components</li>
 <li class="itemize"><span class="pplb8t-">Backup first.</span> Display apps with backups on top</li>
 </ul>
 <!--l. 94-->
-<p class="indent">There is also a <span class="pplri8t-">reverse</span> option which can be used to sort the apps in reverse order. </p>
+<p class="indent"><span class="pplb8t-">Signatures</span> are actually called signing info. An application is signed by one or more singing certificates by the application developers before publishing it. The integrity of an application (whether the app is from the actual developer and isn’t modified by other people) can be checked using the signing info; because when an app is modified by a third-party unauthorised person, the app cannot be signed using the original certificate(s) again because the signing info are kept private by the actual developer. <span class="pplri8t-">How do you verify these signatures?</span> Using checksums. Checksums are generated from the certificates themselves. If the developer supplies the checksums, you can match the checksums using the different checksums generated in the <span class="pplb8t-">Signatures</span> tab. For example, if you have downloaded App Manager from Github, Telegram Channel or IzzyOnDroid’s repo, you can verify whether the app is actually released by me by simply matching the following <span class="pplri8t-">SHA256</span> checksum with the one displayed in this tab: </p>
 <p class="noindent"><span class="paragraphHead"><a href="#x1-240002.1.5.2" id="x1-240002.1.5.2">Filter</a></span> <a id="par:main-page-filter"></a> Apps listed on the main page can be filtered in a number of ways. Like sorting, filtering preferences are also stored and retained after a relaunch.</p>
 <ul class="itemize1">
-<li class="itemize"><span class="pplb8t-">Aplicaciones de usuario.</span> Enumera únicamente las aplicaciones personales</li>
-<li class="itemize"><span class="pplb8t-">Aplicaciones de sistema.</span> Enumera únicamente las aplicaciones del sistema</li>
-<li class="itemize"><span class="pplb8t-">Aplicaciones desactivadas.</span> Enumera únicamente las aplicaciones inhabilitadas</li>
-<li class="itemize"><span class="pplb8t-">Aplicaciones con reglas.</span> Enumera las aplicaciones que cuentan con una o más reglas de bloqueo</li>
-<li class="itemize"><span class="pplb8t-">Aplicaciones con actividades.</span> Enumera las aplicaciones que cuentan con una o más actividades</li>
-<li class="itemize"><span class="pplb8t-">Aplicaciones con respaldos.</span> Enumera aquellas aplicaciones, las desinstaladas inclusive, que tienen una o más copias de respaldo</li>
+<li class="itemize"><span class="pplb8t-">User apps.</span> List only the user apps</li>
+<li class="itemize"><span class="pplb8t-">System apps.</span> List only the system apps</li>
+<li class="itemize"><span class="pplb8t-">Disabled apps.</span> List only the disabled apps</li>
+<li class="itemize"><span class="pplb8t-">Apps with rules.</span> List the apps with one or more blocking rules</li>
+<li class="itemize"><span class="pplb8t-">Apps with activities.</span> List the apps with one or more activities</li>
+<li class="itemize"><span class="pplb8t-">Apps with backups.</span> List apps with one or more backups (including uninstalled apps)</li>
 <li class="itemize"><span class="pplb8t-">Apps without backups.</span> List apps without any backups (including uninstalled apps)</li>
 <li class="itemize"><span class="pplb8t-">Running apps.</span> List apps that are currently running (either in foreground or background)</li>
 <li class="itemize"><span class="pplb8t-">Apps with splits.</span> List apps with one or more split APKs</li>
@@ -235,7 +235,7 @@
 
 <h5 class="subsubsectionHead"><span class="titlemark">2.1.5.7</span> <a href="#QQ2-1-29" id="x1-290002.1.5.7">APK Updater</a></h5>
 <!--l. 137-->
-<p class="noindent">If you have the app <a href="https://github.com/rumboalla/apkupdater">APK Updater</a> installed, you can use the corresponding option in the menu to open the app directly. The option is hidden if you do not have it installed. </p>
+<p class="noindent">This option can be used to configure certain <a href="#x1-247000C">app operations</a> of all or selected apps. You can insert more than one app op constants separated by spaces. It is not always possible to know in advance about all the app op constants as they vary from device to device and from OS to OS. To find the desired app op constant, browse the <span class="pplri8t-">App Ops</span> tab in the <a href="#x1-340002.2">App Details page</a>. The constants are integers closed inside brackets next to each app op name. You can also use the app op names. You also have to select one of the <a href="#x1-252000C.3.2">modes</a> that will be applied against the app ops. </p>
 
 <h5 class="subsubsectionHead"><span class="titlemark">2.1.5.8</span> <a href="#QQ2-1-30" id="x1-300002.1.5.8">Profiles</a></h5>
 <!--l. 142-->
@@ -243,18 +243,18 @@
 
 <h5 class="subsubsectionHead"><span class="titlemark">2.1.5.9</span> <a href="#QQ2-1-31" id="x1-310002.1.5.9">Log Viewer</a></h5>
 <!--l. 147-->
-<p class="noindent">Display, manage logs from <span class="ectt-1000">logcat</span>. For no-root users, this only logs the activities of App Manager due to its limitation. However, it can display logs from all users if <span class="ectt-1000">android.permission.READ_LOGS</span> is granted using ADB (granted by automatically when using ADB over TCP). </p>
+<p class="noindent"><span class="paragraphHead"><a href="#x1-600002.3.4" id="x1-600002.3.4">Back up all apps.</a></span> Back up all the installed apps. </p>
 
 <h5 class="subsubsectionHead"><span class="titlemark">2.1.5.10</span> <a href="#QQ2-1-32" id="x1-320002.1.5.10">Termux</a></h5>
 <!--l. 153-->
-<p class="noindent">If you have <a href="https://github.com/termux/termux-app">Termux</a> installed, you can directly go to the running session or open a new session using the <span class="pplb8t-">Termux</span> option in the menu. </p>
+<p class="noindent"><span class="paragraphHead"><a href="#x1-640002.3.4" id="x1-640002.3.4">Back up apps with changes.</a></span> If an app has changed since the last backup, redo backup for it. It checks a number of indices including app version, last update date, last launch date, integrity and file hashes. Directory hashes are taken during the back up and stored in a database. On running this operation, new hashes are taken and compared with the ones kept in the database. </p>
 
 <h5 class="subsubsectionHead"><span class="titlemark">2.1.5.11</span> <a href="#QQ2-1-33" id="x1-330002.1.5.11">Settings</a></h5>
 <!--l. 157-->
-<p class="noindent">You can go to in-app <a href="#x1-890002.6">Settings</a> by clicking on the corresponding option.</p>
+<p class="noindent">1-Click options for restore. As a precaution, it lists the affected backups before performing any operation.</p>
 <h3 class="sectionHead"><span class="titlemark">2.2</span> <a href="#QQ2-1-34" id="x1-340002.2">App Details Page</a></h3>
 <!--l. 2-->
-<p class="noindent"><span class="pplb8t-">App Details</span> page consists of 11 (eleven) tabs. It basically describes almost every bit of information an app can have including all attributes from app manifest, permissions, <a href="#x1-247000C">app operations</a>, signing info, etc. </p>
+<p class="noindent"><span class="paragraphHead"><a href="#x1-680002.3.5" id="x1-680002.3.5">Restore latest backups.</a></span> Restore <span class="pplri8t-">base backup</span> of already installed apps whose version codes are higher than the installed version code. </p>
 
 <h4 class="subsectionHead"><span class="titlemark">2.2.1</span> <a href="#QQ2-1-35" id="x1-350002.2.1">Colour Codes</a></h4>
 <!--l. 7-->
@@ -262,8 +262,8 @@
 <ul class="itemize1">
 <li class="itemize"><span class="colorbox" id="colorbox21"><span id="textcolor22">Red (day)</span></span> / <span class="colorbox" id="colorbox23"><span id="textcolor24">dark red (night)</span></span> – Any app op or permission that has the dangerous flag is marked as red. Components that are blocked within App Manager are also marked as red</li>
 <li class="itemize"><span class="colorbox" id="colorbox25"><span id="textcolor26">Light red (day)</span></span> / <span class="colorbox" id="colorbox27"><span id="textcolor28">very dark red (night)</span></span> – Components that are disabled outside App Manager have these colors. It should be noted that a component that is marked as disabled does not always mean that it is disabled by the user: It could be disabled by the system as well or marked as disabled in the app manifest. Also, all components of a disabled app are considered disabled by the system (and by App Manager as well)</li>
-<li class="itemize"><span class="pplb8t-">Paths & Directories.</span> Contains various information regarding application paths including <span class="pplri8t-">app directory</span> (where the APK files are stored), <span class="pplri8t-">data directories</span> (internal, device protected and externals), <span class="pplri8t-">split</span> <span class="pplri8t-">APK directories</span> (along with the split names), and <span class="pplri8t-">native JNI library</span> (if present). JNI libraries are used to invoke native codes usually written in C/C++. Use of native library can make the app run faster or help an app use third-party libraries written using languages other than Java like in most games. You can also open these directories using your favourite file managers (provided they support it and have necessary permissions) by clicking on the launch icon on the right-hand side of each item.</li>
-<li class="itemize"><span class="colorbox" id="colorbox33"><span id="textcolor34">Soft magenta (day)</span></span> / <span class="colorbox" id="colorbox35"><span id="textcolor36">very dark violet (night)</span></span> – Currently running services</li>
+<li class="itemize"><span class="pplb8t-">Presets.</span> Presets option lists a number of built-in profiles that can be used as a starting point. The profiles are generated from the project <a href="https://gitlab.com/W1nst0n/universal-android-debloater">Universal Android Debloater</a>.<br class="newline" /> <span class="pplri8t-">See also:</span> <a href="#x1-1810004.3.5"><span class="pplri8t-">FAQ: What are bloatware and how to remove them?</span></a></li>
+<li class="itemize"><span class="pplb8t-">Import.</span> This option can be used to import an existing profile.</li>
 </ul>
 <!--l. 26-->
 
@@ -281,9 +281,9 @@
 <li class="itemize"><span class="pplb8t-">Tags.</span> (Also known as tag clouds) Tags include the basic, concise and most useful info of an app. Tags contain <span class="pplri8t-">tracker info</span> (i.e. number of tracker components), <span class="pplri8t-">app type</span> (user app or system app and whether the app is an updated version of the system app or if the app is installed systemless-ly using Magisk), <span class="pplri8t-">running</span> (i.e. one or more services of the app is running in the background), <span class="pplri8t-">split APK info</span> (i.e. number of splits), <span class="pplri8t-">debuggable</span> (the app is a debug version), <span class="pplri8t-">test only</span> (the app is a test only app), <span class="pplri8t-">large heap</span> (the app has requested a large heap size), <span class="pplri8t-">stopped</span> (the app is force stopped), <span class="pplri8t-">disabled</span> (the app is disabled), <span class="pplri8t-">KeyStore</span> (the app has items in the Android KeyStore), <span class="pplri8t-">no code</span> (the app doesn’t have any code associated with it), <a href="#x1-30001.1"><span class="pplri8t-">SSAID</span></a>, <span class="pplri8t-">netpolicy</span> (network policy such as background data usage), and <span class="pplri8t-">battery optimization</span>. The importance of including <span class="pplri8t-">test</span> <span class="pplri8t-">only</span> and <span class="pplri8t-">debuggable</span> is that app with these properties can do additional tasks or these apps can be <span class="ectt-1000">run-as</span> without root which can cause potential security problems if these apps store any private information. <span class="pplri8t-">Large</span> <span class="pplri8t-">heap</span> denotes that the app will be allocated a higher amount of memory (RAM) if needed. While this may not be harmful for most cases, any suspicious apps requesting large heap should be taken seriously.</li>
 <li class="itemize"><span class="pplb8t-">Horizontal Action Panel.</span> This is an action panel containing various actions regarding the app. See §<a href="#x1-380002.2.2.2">2.2.2.2</a> for a complete list of actions available here.</li>
 <li class="itemize"><span class="pplb8t-">Paths & Directories.</span> Contains various information regarding application paths including <span class="pplri8t-">app directory</span> (where the APK files are stored), <span class="pplri8t-">data directories</span> (internal, device protected and externals), <span class="pplri8t-">split</span> <span class="pplri8t-">APK directories</span> (along with the split names), and <span class="pplri8t-">native JNI library</span> (if present). JNI libraries are used to invoke native codes usually written in C/C++. Use of native library can make the app run faster or help an app use third-party libraries written using languages other than Java like in most games. You can also open these directories using your favourite file managers (provided they support it and have necessary permissions) by clicking on the launch icon on the right-hand side of each item.</li>
-<li class="itemize"><span class="pplb8t-">Launch.</span> Application that has a launcher <a href="#x1-410002.2.3.1">activities</a> can be launched using this button.</li>
-<li class="itemize"><span class="pplb8t-">Disable.</span> Disable an app. This button is not displayed for already disabled apps or to users who do not have root or <a href="#x1-1210003.1">ADB</a>. If you disable an app, the app will not be displayed in your Launcher app. Shortcuts for the app will also be removed. If you disable a user app, you can only enable them via App Manager or any other tool that supports it. There isn’t any option in Android Settings to enable a disabled user app.</li>
-<li class="itemize"><span class="pplb8t-">Uninstall.</span> Uninstall an app.
+<li class="itemize"><span class="pplb8t-">Data Usage Since Last Boot.</span> A rather self explanatory option. But beware that due to some issues, the results might often be misleading and simply wrong. This part remains hidden if <span class="pplri8t-">Usage Access</span> permission is not granted in newer devices.</li>
+<li class="itemize"><span class="pplb8t-">Apply.</span> This option can be used to apply the profile. When clicked, a dialog will be displayed where you can select a <a href="#x1-760002.5.3.2">profile state</a>. On selecting one of the options, the profile will be applied immediately.</li>
+<li class="itemize"><span class="pplb8t-">Save.</span> Allows you to save the profile.
 <ul class="itemize2">
 <li class="itemize"><span class="pplb8t-">SDK.</span> Displays information related to the Android SDK. There are two (one in old devices) values: <span class="pplri8t-">Max</span> denotes the target SDK and <span class="pplri8t-">Min</span> denotes the minimum SDK (the latter is not available in old devices). It is best practice to use apps with maximum SDK that the platform currently supports. SDK is also known as <span class="pplb8t-">API Level</span>. <span class="pplri8t-">See</span> <span class="pplri8t-">also:</span> <a href="https://en.wikipedia.org/wiki/Android_version_history#Overview"><span class="pplri8t-">Android Version History</span></a></li>
 <li class="itemize"><span class="pplb8t-">Flags.</span> The application flags used at the time of building the app. For a complete list of flags and what they do, visit the <a href="https://developer.android.com/reference/android/content/pm/ApplicationInfo#flags">official documentation</a>.</li>
@@ -307,14 +307,14 @@
 <li class="itemize"><span class="pplb8t-">Uninstall.</span> Uninstall an app.</li>
 <li class="itemize"><span class="pplb8t-">Enable.</span> Enable an app. This button is not displayed for already enabled apps or to users who do not have root or ADB.</li>
 <li class="itemize"><span class="pplb8t-">Force Stop.</span> Force-stop an app. When you force stop an app, the app will not be able to run in background unless you explicitly open it first. However, this is not always true.</li>
-<li class="itemize"><span class="pplb8t-">Share.</span> Share button can be used to share the APK file or <span class="pplri8t-">APKS</span> file (if the app is has multiple splits) can be imported into <a href="https://github.com/Aefyr/SAI">SAI</a>. You can share it with your favourite file manager to save the file in your shared storage.</li>
-<li class="itemize"><span class="pplb8t-">Refresh.</span> Refreshes the App Info tab.</li>
-<li class="itemize"><span class="pplb8t-">View in Settings.</span> Opens the app in Android Settings.</li>
-<li class="itemize"><span class="pplb8t-">Backup/Restore.</span> Opens the backup/restore dialog.</li>
-<li class="itemize"><span class="pplb8t-">Open in Termux.</span> Opens the app in Termux. This actually runs <span class="ectt-1000">su -</span> <span class="ectt-1000">user_id</span> where <span class="ectt-1000">user_id</span> denotes the app’s kernel user ID (described in the <a href="#x1-360002.2.2.1">General Information section</a>). This option is only visible to the root users. See §<a href="#x1-390002.2.2.4">2.2.2.4</a> to learn how to configure Termux to run commands from third-party applications.</li>
+<li class="itemize"><span class="pplb8t-">Clear Data.</span> Clear data from an app. This includes any information stored in the internal and often the external directories, including accounts (if set by the app), cache, etc. Clearing data from App Manager, for example, removes all the rules (the blocking is not removed though) saved within the app. Which is why you should always take backups of your rules. This button is not displayed to users who do not have root or ADB.</li>
+<li class="itemize"><span class="pplb8t-">Clear Cache.</span> Clear app cache only. There is not any Android-way to clear app cache. Therefore, it needs root permission to clear cache from the app’s internal storage.</li>
+<li class="itemize"><span class="pplb8t-">Install.</span> Install an APK opened using any third-party app. This button is only displayed for an external APK that hasn’t been installed.</li>
+<li class="itemize"><span class="pplb8t-">What’s New.</span> This button is displayed for an APK that has higher version code than the installed one. Clicking on this button displays a dialog consisting of differences in a version control manner. The information it displays include <span class="pplri8t-">version</span>, <span class="pplri8t-">trackers</span>, <span class="pplri8t-">permissions</span>, <span class="pplri8t-">components</span>, <span class="pplri8t-">signatures</span> (checksum changes), <span class="pplri8t-">features</span>, <span class="pplri8t-">shared libraries</span> and <span class="pplri8t-">SDK</span>.</li>
+<li class="itemize"><span class="pplb8t-">Update.</span> Displayed for an app that has a higher version code than the installed app.</li>
 <li class="itemize"><span class="pplb8t-">Reinstall.</span> Displayed for an app that has the same version code as the installed app.</li>
-<li class="itemize"><span class="pplb8t-">Run in Termux.</span> Open the app using <span class="ectt-1000">run-as package_name</span> in Termux. This is only applicable for the debuggable apps and works for both root and ADB users. See §<a href="#x1-390002.2.2.4">2.2.2.4</a> to learn how to configure Termux to run commands from third-party applications.</li>
-<li class="itemize"><span class="pplb8t-">Extract Icon.</span> Extract and save the app’s icon in your desired location.</li>
+<li class="itemize"><span class="pplb8t-">Downgrade.</span> Displayed for an app that has a lower version code than the installed app.</li>
+<li class="itemize"><span class="pplb8t-">Manifest.</span> Clicking on this button displays the app’s manifest file in a separate page. The manifest file can be wrapped or unwrapped using the corresponding toggle button (on the top-right side) or can be saved to you shared storage using the save button.</li>
 <li class="itemize"><span class="pplb8t-">Scanner.</span> Clicking on this button displays the app’s tracker and library information. At first, it scans the app to extract a list of classes. Then the class list is matched with a number of signatures. After that, a scan summary is displayed.<br class="newline" /> <span class="pplri8t-">See also:</span> <a href="#x1-1200002.7"><span class="pplri8t-">Scanner page</span></a></li>
 <li class="itemize"><span class="pplb8t-">Shared Prefs.</span> Clicking on this button displays a list of shared preferences used by the app. Clicking on a preference item in the list opens the <a href="#x1-1340002.9">Shared Preferences Editor page</a>. This option is only visible to the root users.</li>
 <li class="itemize"><span class="pplb8t-">Databases.</span> Clicking on this button displays a list of databases used by the app. This needs more improvements, and a database editor which might be added in the future. This option is only visible to the root users.</li>
@@ -328,8 +328,8 @@
 <p class="noindent">Options-menu is located in the top-right corner of the page. A complete description of the options present there are given below:</p>
 <ul class="itemize1">
 <li class="itemize"><span class="pplb8t-">Share.</span> Share button can be used to share the APK file or <span class="pplri8t-">APKS</span> file (if the app is has multiple splits) can be imported into <a href="https://github.com/Aefyr/SAI">SAI</a>. You can share it with your favourite file manager to save the file in your shared storage.</li>
-<li class="itemize"><span class="pplb8t-">Refresh.</span> Refreshes the App Info tab.</li>
-<li class="itemize"><span class="pplb8t-">View in Settings.</span> Opens the app in Android Settings.</li>
+<li class="itemize"><span class="pplb8t-">Backup options.</span> Same as the <a href="#x1-1570003.2.2">backup options</a> of the backup/restore feature. If not set, the default options will be used.</li>
+<li class="itemize"><span class="pplb8t-">Backup name.</span> Set a custom name for the backup. If the backup name is set, each time a backup is made, it will be given a unique name with backup-name as the suffix. This behaviour will be fixed in a future release. Leave this field empty for regular or “base” backup (also, make sure not to enable <span class="pplri8t-">backup multiple</span> in the backup options).</li>
 <li class="itemize"><span class="pplb8t-">Backup/Restore.</span> Opens the backup/restore dialog.</li>
 <li class="itemize"><span class="pplb8t-">Export Blocking Rules.</span> Export rules configured for this app within App Manager.</li>
 <li class="itemize"><span class="pplb8t-">Open in Termux.</span> Opens the app in Termux. This actually runs <span class="ectt-1000">su -</span> <span class="ectt-1000">user_id</span> where <span class="ectt-1000">user_id</span> denotes the app’s kernel user ID (described in the <a href="#x1-370002.2.2.1">General Information section</a>). This option is only visible to the root users. See §<a href="#x1-400002.2.2.4">2.2.2.4</a> to learn how to configure Termux to run commands from third-party applications.</li>
@@ -365,13 +365,13 @@
 </div>
 <h5 class="subsubsectionHead"><span class="titlemark">2.2.3.2</span> <a href="#QQ2-1-43" id="x1-430002.2.3.2">Services</a></h5>
 <!--l. 254-->
-<p class="noindent"><span class="pplri8t-">See also:</span> <a href="#x1-1480004.1"><span class="pplri8t-">FAQ: App Components</span></a> </p>
-<p class="indent"><span class="paragraphHead"><a href="#x1-470002.2.3.5" id="x1-470002.2.3.5">Blocking Trackers</a></span> <a id="likesection.5"></a> You can disable tracker components using the <span class="pplb8t-">Block tracker</span> option in the three-dots menu. All tracker components will be blocked regardless of the tab you’re currently in. </p>
-<p class="indent">By the way, both activities and services are run in the same <a href="https://stackoverflow.com/questions/7597742">looper</a> called the main looper, which means the services are not really run in the background. It’s the application authors job to ensure that. How do application communicate with services? They use <a href="#x1-440002.2.3.3">broadcast receivers</a>. </p>
+<p class="noindent">Unlike <a href="#x1-420002.2.3.1">activities</a> which users can see, <span class="pplb8t-">Services</span> handle background tasks. If you’re, for example, downloading a video from the internet using your phone’s Internet browser, the Internet browser is using a foreground service to download the content. </p>
+<p class="indent">When you close an activity, it usually gets destroyed immediately (depending on many factors such as how much free memory your phone has). But services can be run for indefinite periods if desired. If more services are running in background, your phone will get slower due to shortage of memory and/or processing power, and your phone’s battery can be drained more quickly. Newer Android versions have a battery optimisation feature enabled by default for all apps. With this feature enabled, the system can randomly terminate any service. </p>
+<p class="indent">It is possible to import or export blocking rules within App Manager for all apps. There is a choice to export or import only certain rules (components, app ops or permissions) instead of all of them. It is also possible to import blocking rules from <a href="https://github.com/lihenggui/blocker">Blocker</a> and <a href="https://github.com/tuyafeng/Watt">Watt</a>. If it is necessary to export blocking rules for a single app, use the corresponding <a href="#x1-330002.2">App Details page</a> to export rules, or for multiple apps, use <a href="#x1-160002.1.1">batch operations</a>. </p>
 
 <h5 class="subsubsectionHead"><span class="titlemark">2.2.3.3</span> <a href="#QQ2-1-44" id="x1-440002.2.3.3">Receivers</a></h5>
 <!--l. 270-->
-<p class="noindent"><span class="pplb8t-">Receivers</span> (also called <span class="pplri8t-">broadcast receivers</span>) can be used to trigger execution of certain tasks for certain events. These components are called broadcast receivers because they are executed as soon as a broadcast message is received. These broadcast messages are sent using a method called intent. Intent is a special feature for Android which can be used to open applications, activities, services and send broadcast messages. Therefore, like <a href="#x1-420002.2.3.1">activities</a>, broadcast receivers use intent filters to receive only the desired broadcast message(s). Broadcast messages can be sent by either system or the app itself. When a broadcast message is sent, the corresponding receivers are awakened by the system so that they can execute tasks. For example, if you have low memory, your phone may freeze or experience lags for a moment after you enable mobile data or connect to the Wifi. Ever wondered why? This is because broadcast receivers that can receive ‘android.net.conn.CONNECTIVITY_CHANGE‘ are awakened by the system as soon as you enable data connection. Since many apps use this intent filter, all of these apps are awakened almost immediately by the system which causes the freeze or lags. That being said, receivers can be used for inter-process communication (IPC), i.e., it helps you communicate between different apps (provided you have the necessary permissions) or even different components of a single app. 
+<p class="noindent"><span class="paragraphHead"><a href="#x1-890002.6.6.2" id="x1-890002.6.6.2">Import</a></span> Import previously exported blocking rules from App Manager. Similar to export, this may include <a href="#x1-1490004.1.1">app components</a>, app ops and permissions based on the options selected in the multi-choice options. 
 </p>
 
 <h5 class="subsubsectionHead"><span class="titlemark">2.2.3.4</span> <a href="#QQ2-1-45" id="x1-450002.2.3.4">Providers</a></h5>
@@ -382,7 +382,7 @@
 <!--l. 292-->
 <p class="noindent">Unlike non-root users who are mostly spectators in these tabs, root users can perform various operations. </p>
 <p class="noindent"><span class="paragraphHead"><a href="#x1-470002.2.3.5" id="x1-470002.2.3.5">Blocking Components</a></span> On the right-most side of each component item, there is a “block” icon (which becomes a “unblock/restore” icon when the component is being blocked). This icon (actually, a button) can be used to toggle the blocking status of that particular component. If you do not have <a href="#x1-1100002.6.9.1">Instant Component Blocking</a> enabled or haven’t applied blocking for the app before, you have to apply the changes using the <span class="pplb8t-">Apply rules</span> option in three-dots menu. You can also remove already applied rules using the same option (which would be read as <span class="pplb8t-">Remove rules</span> this time). </p>
-<p class="noindent"><span class="pplri8t-">See also:</span> <a href="#x1-1620004.1"><span class="pplri8t-">FAQ: App Components</span></a> </p>
+<p class="noindent">Enable or disable certain features in App Manager, such as </p>
 <p class="noindent"><span class="paragraphHead"><a href="#x1-480002.2.3.5" id="x1-480002.2.3.5">Blocking Trackers</a></span> <a id="likesection.5"></a> You can disable tracker components using the <span class="pplb8t-">Block tracker</span> option in the three-dots menu. All tracker components will be blocked regardless of the tab you’re currently in.</p>
 <div class="mdframed" id="mdframed-6"><!--l. 310-->
 <p class="noindent"><span class="pplbi8t-">Info.</span> Tracker components are a subset of app components. Therefore, they are blocked using the same method used for blocking any other components.</p>
@@ -393,7 +393,7 @@
 <div class="am-see-also"><span class="pplri8t-">See also:</span> <span class="pplri8c-">•</span> <a href="#x1-1690004.1.7"><span class="pplri8t-">FAQ: Tracker classes versus tracker components</span></a> <span class="pplri8c-">•</span> <a href="#x1-1200002.7"><span class="pplri8t-">Scanner Page</span></a> <span class="pplri8c-">•</span> <a href="#x1-560002.3.1"><span class="pplri8t-">1-Click Ops Page: Block/Unblock Trackers</span></a> 
 
 </div>
-<h4 class="subsectionHead"><span class="titlemark">2.2.4</span> <a href="#QQ2-1-49" id="x1-490002.2.4">Permission Tabs</a></h4>
+<h4 class="subsectionHead"><span class="titlemark">2.6.6</span> <a href="#QQ2-1-95" id="x1-950002.6.6">APK Signing</a></h4>
 <!--l. 322-->
 <p class="noindent"><span class="pplb8t-">App Ops</span>, <span class="pplb8t-">Uses Permissions</span> and <span class="pplb8t-">Permissions</span> tabs are related to permissions. In Android communication between apps or processes which do not have the same identity (known as <span class="pplri8t-">shared id</span>) often require permission(s). These permissions are managed by the permission controller. Some permissions are considered <span class="pplri8t-">normal</span> permissions which are granted automatically if they appear in the application manifest, but <span class="pplri8t-">dangerous</span> and <span class="pplri8t-">development</span> permissions require confirmation from the user. Colours used in these tabs are explained in §<a href="#x1-350002.2.1">2.2.1</a>. </p>
 
@@ -407,20 +407,20 @@
 <li class="itemize"><span class="pplb8t-">Reject Time.</span> Last time the app op was rejected.</li>
 </ul>
 <div class="mdframed" id="mdframed-7"><!--l. 354-->
-<p class="noindent"><span class="pplbi8t-">Notice.</span> Permissions cannot be changed for apps targeting API 23 or earlier. Therefore, permission toggles are disabled for such apps.</p>
+<p class="noindent"><span class="pplbi8t-">Info.</span> Contents of this tab are visible to no-root users if <span class="ectt-1000">android.permission.GET_APP_OPS_STATS</span> is granted via ADB.</p>
 
 </div>
 <!--l. 358-->
-<p class="indent">Users can sort the permissions by permission name (in ascending order) or choose to display denied or dangerous permissions at first using the corresponding options in the menu.</p>
+<p class="indent">There is a toggle button next to each app op item which can be used to allow or deny (ignore) the app op. If you need to set other modes available to your device, simply long click on an item. If you need to set additional app ops that are not listed in the tab, use the <span class="pplri8t-">Set custom app op</span> option in the menu. You can also reset your changes using the <span class="pplri8t-">Reset to default</span> option or deny all dangerous app ops using the corresponding option in the menu. You can also sort them in ascending order by app op names and the associated unique numbers (or values). You can also list the denied app ops first using the corresponding sorting option.</p>
 <div class="mdframed" id="mdframed-8"><!--l. 366-->
 <p class="noindent"><span class="pplbi8t-">Warning.</span> Denying an app op may cause the app to misbehave. Use the <span class="pplri8t-">reset to</span> <span class="pplri8t-">default</span> option if that is the case. Due to the nature how app ops work, the system may take some time to apply them.</p>
 
 </div>
 <!--l. 372-->
 <p class="noindent"><span class="pplri8t-">See also:</span> <a href="#x1-247000C"><span class="pplri8t-">Appendix: App Ops</span></a></p>
-<h5 class="subsubsectionHead"><span class="titlemark">2.2.4.2</span> <a href="#QQ2-1-51" id="x1-510002.2.4.2">Uses Permissions</a></h5>
+<h5 class="subsubsectionHead"><span class="titlemark">2.6.7.4</span> <a href="#QQ2-1-102" id="x1-1020002.6.7.4">Installer App</a></h5>
 <!--l. 375-->
-<p class="noindent"><span class="pplb8t-">Uses Permissions</span> are the permissions used by the application. This is named so because they are declared in the manifest using <span class="ectt-1000">uses-permission</span> tags. Information such as <span class="pplri8t-">flags</span>, <span class="pplri8t-">permission name</span>, <span class="pplri8t-">permission description</span>, <span class="pplri8t-">package name</span>, <span class="pplri8t-">group</span> are taken from the associated <a href="#x1-520002.2.4.3">permission</a>. </p>
+<p class="noindent">Select the installer app, useful for some apps which explicitly checks for their installer. This only works for root/ADB users. </p>
 <p class="indent"><span class="pplb8t-">Root and ADB users</span> can grant or revoke the <span class="pplri8t-">dangerous</span> and <span class="pplri8t-">development</span> permissions using the toggle button on the right side of each permission item. They can also revoke dangerous permissions all at once using the corresponding option in the menu. Only these two types of permissions can be revoked because Android doesn’t allow modifying <span class="pplri8t-">normal</span> permissions (which most of them are). The only alternative is to edit the app manifest and remove these permissions from there.</p>
 <div class="mdframed" id="mdframed-9"><!--l. 386-->
 <p class="noindent"><span class="pplbi8t-">Info.</span> Since dangerous permissions are revoked by default by the system, revoking all dangerous permissions is the same as resetting all permissions.</p>
@@ -432,9 +432,9 @@
 </div>
 <!--l. 396-->
 <p class="indent">Users can sort the permissions by permission name (in ascending order) or choose to display denied or dangerous permissions at first using the corresponding options in the menu.</p>
-<h5 class="subsubsectionHead"><span class="titlemark">2.2.4.3</span> <a href="#QQ2-1-52" id="x1-520002.2.4.3">Permissions</a></h5>
+<h5 class="subsubsectionHead"><span class="titlemark">2.6.8.3</span> <a href="#QQ2-1-106" id="x1-1060002.6.8.3">Backup apps with Android KeyStore</a></h5>
 <!--l. 400-->
-<p class="noindent"><span class="pplb8t-">Permissions</span> are usually custom permissions defined by the app itself. It could contain regular permissions as well, mostly in old applications. Here’s a complete description of each item that is displayed there:</p>
+<p class="noindent">Allow backup of apps that has entries in the Android KeyStore (disabled by default). Some apps (such as Signal) may crash if restored. KeyStore backup also doesn’t work from Android 9 but still kept as many apps having KeyStore can be restored without problem.</p>
 <ul class="itemize1">
 <li class="itemize"><span class="pplb8t-">Name.</span> Each permission has a unique name like <span class="ectt-1000">android.permission.INTERNET</span> but multiple app can request the permission.</li>
 <li class="itemize"><span class="pplb8t-">Icon.</span> Each permission can have a custom icon. The other permission tabs do not have any icon because they do not contain any icon in the app manifest.</li>
@@ -460,7 +460,7 @@
 <p class="noindent">Other tabs list android manifest components such as features, configurations, shared libraries, and signatures. A complete description about these tabs will be available soon.</p>
 <h3 class="sectionHead"><span class="titlemark">2.3</span> <a href="#QQ2-1-55" id="x1-550002.3">1-Click Ops Page</a></h3>
 <!--l. 2-->
-<p class="noindent">This page appears after clicking on the <a href="#x1-250002.1.5.3">1-Click Ops option</a> in the <a href="#x1-200002.1.5">main menu</a>. </p>
+<p class="noindent"><span class="paragraphHead"><a href="#x1-1120002.6.9.2" id="x1-1120002.6.9.2">Export</a></span> Export blocking rules for all apps configured within App Manager. This may include <a href="#x1-1630004.1.1">app components</a>, app ops and permissions based on the options selected in the multi-choice options. </p>
 
 <h4 class="subsectionHead"><span class="titlemark">2.3.1</span> <a href="#QQ2-1-56" id="x1-560002.3.1">Block/Unblock Trackers</a></h4>
 <!--l. 6-->
@@ -490,22 +490,22 @@
 </div>
 <h4 class="subsectionHead"><span class="titlemark">2.3.4</span> <a href="#QQ2-1-59" id="x1-590002.3.4">Back up</a></h4>
 <!--l. 49-->
-<p class="noindent">Profile page displays the configurations for a profile. It also offers editing them. </p>
+<p class="noindent">1-Click options for back up. As a precaution, it lists the affected backups before performing any operation. </p>
 <p class="noindent"><span class="paragraphHead"><a href="#x1-600002.3.4" id="x1-600002.3.4">Back up all apps.</a></span> Back up all the installed apps. </p>
 <p class="noindent"><span class="paragraphHead"><a href="#x1-610002.3.4" id="x1-610002.3.4">Redo existing backups.</a></span> Back up all the installed apps that have a previous backup. </p>
-<p class="noindent"><span class="paragraphHead"><a href="#x1-620002.3.4" id="x1-620002.3.4">Back up apps without backups.</a></span> Back up all the installed apps without a previous backup. </p>
+<p class="noindent">Extras are the key-value pairs used for supplying additional information to the destination component. You can add extras using the <span class="pplri8t-">plus</span> button next to the title. </p>
 <p class="noindent"><span class="paragraphHead"><a href="#x1-630002.3.4" id="x1-630002.3.4">Verify and redo backups.</a></span> Verify the recently made backups of the installed apps and redo backup if necessary. </p>
 <p class="noindent"><span class="paragraphHead"><a href="#x1-640002.3.4" id="x1-640002.3.4">Back up apps with changes.</a></span> If an app has changed since the last backup, redo backup for it. It checks a number of indices including app version, last update date, last launch date, integrity and file hashes. Directory hashes are taken during the back up and stored in a database. On running this operation, new hashes are taken and compared with the ones kept in the database. </p>
 
 <h4 class="subsectionHead"><span class="titlemark">2.3.5</span> <a href="#QQ2-1-65" id="x1-650002.3.5">Restore</a></h4>
 <!--l. 66-->
-<p class="noindent">1-Click options for restore. As a precaution, it lists the affected backups before performing any operation. </p>
+<p class="noindent">The second item lists the number of trackers along with their names. Clicking on the item displays a dialog containing the name of trackers, matched signatures, and the number of classes against each signature. Some tracker names may have <sup><span class="pplr7t-x-x-76">2</span></sup> prefix which indicates that the trackers are in the <a href="https://etip.exodus-privacy.eu.org">ETIP</a> stand-by list i.e. whether they are actual trackers is still being investigated. </p>
 <p class="noindent"><span class="paragraphHead"><a href="#x1-660002.3.5" id="x1-660002.3.5">Restore all apps.</a></span> Restore <span class="pplri8t-">base backup</span> of all the backed up apps. </p>
-<p class="noindent"><span class="paragraphHead"><a href="#x1-670002.3.5" id="x1-670002.3.5">Restore not installed apps.</a></span> Restore <span class="pplri8t-">base backup</span> of all the backed up apps that are not currently installed. </p>
-<p class="noindent"><span class="paragraphHead"><a href="#x1-680002.3.5" id="x1-680002.3.5">Restore latest backups.</a></span> Restore <span class="pplri8t-">base backup</span> of already installed apps whose version codes are higher than the installed version code.</p>
+<p class="noindent">List all the activity components that matches the Intent. This is internally determined by the system (rather than AM). The launch button next to each component can be used to launch them directly from AM. </p>
+<p class="noindent"><span class="pplri8t-">See also:</span> <a href="#x1-1690004.1.7"><span class="pplri8t-">FAQ: Tracker classes vs tracker components</span></a></p>
 <h3 class="sectionHead"><span class="titlemark">2.4</span> <a href="#QQ2-1-69" id="x1-690002.4">Profiles Page</a></h3>
 <!--l. 2-->
-<p class="noindent">Profiles page can be accessed from the options-menu in the main page. It displays a list of configured profiles. Profiles can be added using the <span class="pplri8t-">plus</span> button at the bottom-right corner, imported from the import option, created from one of the presets or even duplicated from an already existing profile. Clicking on any profile opens the <a href="#x1-710002.5">profile page</a>. </p>
+<p class="noindent">Reset the Intent to its initial state. This may not always work as expected. </p>
 
 <h4 class="subsectionHead"><span class="titlemark">2.4.1</span> <a href="#QQ2-1-70" id="x1-700002.4.1">Options Menu</a></h4>
 <!--l. 8-->
@@ -527,14 +527,14 @@
 
 <h3 class="sectionHead"><span class="titlemark">2.5</span> <a href="#QQ2-1-71" id="x1-710002.5">Profile Page</a></h3>
 <!--l. 2-->
-<p class="noindent">Profile page displays the configurations for a profile. It also offers editing them.</p>
+<p class="noindent"><span class="pplb8t-">Developer options</span> is located in Android <span class="pplb8t-">Settings</span>, either directly near the bottom of the page (in most ROMs) or under some other settings such as <span class="pplb8t-">System</span> (Lineage OS, Asus Zenfone 8.0+), <span class="pplb8t-">System</span> &gt; <span class="pplb8t-">Advanced</span> (Google Pixel), <span class="pplb8t-">Additional Settings</span> (Xiaomi MIUI, Oppo ColorOS), <span class="pplb8t-">More Settings</span> (Vivo FuntouchOS), <span class="pplb8t-">More</span> (ZTE Nubia). Unlike other options, it is not visible until explicitly enabled by the user. If developer options is enabled, you can use the search box in Android <span class="pplb8t-">Settings</span> to locate it as well.</p>
 <div class="mdframed" id="mdframed-15"><!--l. 4-->
 <p class="noindent"><span class="pplbi8t-">Notice.</span> When you apply a profile, if some packages do not match the criteria, they will simply be ignored.</p>
 
 </div>
 <h4 class="subsectionHead"><span class="titlemark">2.5.1</span> <a href="#QQ2-1-72" id="x1-720002.5.1">Options Menu</a></h4>
 <!--l. 9-->
-<p class="noindent"><span class="pplri8t-">See also:</span> <a href="#x1-1490004.1.1"><span class="pplri8t-">What are the app components?</span></a></p>
+<p class="noindent">The three dots menu on the top-right corner opens the options-menu. It contains several options such as–</p>
 <ul class="itemize1">
 <li class="itemize"><span class="pplb8t-">Apply.</span> This option can be used to apply the profile. When clicked, a dialog will be displayed where you can select a <a href="#x1-760002.5.3.2">profile state</a>. On selecting one of the options, the profile will be applied immediately.</li>
 <li class="itemize"><span class="pplb8t-">Save.</span> Allows you to save the profile.
@@ -550,23 +550,23 @@
 </ul>
 <h4 class="subsectionHead"><span class="titlemark">2.5.2</span> <a href="#QQ2-1-73" id="x1-730002.5.2">Apps Tab</a></h4>
 <!--l. 29-->
-<p class="noindent">Apps tab lists the packages configured under this profile. Packages can be added or removed using the <span class="pplri8t-">plus</span> button located near the bottom of the screen. Packages can also be removed by long clicking on them (in which case, a popup will be displayed with the only option <span class="pplri8t-">delete</span>). </p>
+<p class="noindent">Extras are the key-value pairs used for supplying additional information to the destination component. You can add extras using the <span class="pplri8t-">plus</span> button next to the title. </p>
 
 <h4 class="subsectionHead"><span class="titlemark">2.5.3</span> <a href="#QQ2-1-74" id="x1-740002.5.3">Configurations Tab</a></h4>
 <!--l. 34-->
-<p class="noindent">If the <a href="#x1-650002.5.3.2">state</a> is <span class="pplri8t-">on</span>, the packages will be backed up, and if the state is <span class="pplri8t-">off</span>, the packages will be restored. The option can be disabled by clicking on the <span class="pplri8t-">disabled</span> button on the input dialog. </p>
+<p class="noindent">Represents the entire Intent as a URI (e.g. <span class="ectt-1000">intent://</span><span class="ectt-1000">…</span>). Some data cannot be converted to string, and as a result, they might not appear here. </p>
 
-<h5 class="subsubsectionHead"><span class="titlemark">2.5.3.8</span> <a href="#QQ2-1-71" id="x1-710002.5.3.8">Export Blocking Rules</a></h5>
+<h5 class="subsubsectionHead"><span class="titlemark">2.5.3.1</span> <a href="#QQ2-1-75" id="x1-750002.5.3.1">Comment</a></h5>
 <!--l. 37-->
-<p class="noindent">This option allows you to export blocking rules. </p>
+<p class="noindent">List all the activity components that matches the Intent. This is internally determined by the system (rather than AM). The launch button next to each component can be used to launch them directly from AM. </p>
 
 <h5 class="subsubsectionHead"><span class="titlemark">2.5.3.2</span> <a href="#QQ2-1-76" id="x1-760002.5.3.2">State</a></h5>
 <!--l. 41-->
-<p class="noindent">Denotes how certain configured options will behave. For instance, if <span class="pplri8t-">disable</span> option is turned on, the apps will be disabled if the state is <span class="pplri8t-">on</span> and will be enabled if the state is <span class="pplri8t-">off</span>. Currently state only support <span class="pplri8t-">on</span> and <span class="pplri8t-">off</span> values. </p>
+<p class="noindent">In order to enable ADB over TCP, you have to set up ADB in your PC or Mac. <span class="pplbi8t-">Lineage OS users can skip to §</span><a href="#x1-1350003.1.4.1"><span class="pplbi8t-">3.1.4.1</span></a><span class="pplbi8t-">.</span> </p>
 
 <h5 class="subsubsectionHead"><span class="titlemark">2.5.3.3</span> <a href="#QQ2-1-77" id="x1-770002.5.3.3">Users</a></h5>
 <!--l. 46-->
-<p class="noindent">Select users for which is the profile will be applied. All users are selected by default. </p>
+<p class="noindent">Resend the edited Intent to the destination app. This may open a list of apps where you have to select the desired app. The result received from the target app will be sent to the source app. As a result the source app will not know if there was a man-in-the-middle. </p>
 
 <h5 class="subsubsectionHead"><span class="titlemark">2.5.3.4</span> <a href="#QQ2-1-78" id="x1-780002.5.3.4">Components</a></h5>
 <!--l. 49-->
@@ -577,9 +577,9 @@
 <!--l. 58-->
 <p class="noindent">This behaves the same way as the <a href="#x1-580002.3.3">Set Mode for App Ops…</a> option does in the 1-Click Ops page. However, this only applies for the selected packages. If the <a href="#x1-760002.5.3.2">state</a> is <span class="pplri8t-">on</span>, the app ops will be denied (ie. ignored), and if the state is <span class="pplri8t-">off</span>, the app ops will be allowed. The option can be disabled (regardless of the inserted values) by clicking on the <span class="pplri8t-">disabled</span> button on the input dialog. </p>
 
-<h5 class="subsubsectionHead"><span class="titlemark">2.5.3.13</span> <a href="#QQ2-1-76" id="x1-760002.5.3.13">Block Trackers</a></h5>
+<h5 class="subsubsectionHead"><span class="titlemark">2.5.3.6</span> <a href="#QQ2-1-80" id="x1-800002.5.3.6">Permissions</a></h5>
 <!--l. 65-->
-<p class="noindent">Enabling this option will block/unblock tracker components from the selected packages depending on the <a href="#x1-650002.5.3.2">state</a>. If the state is <span class="pplri8t-">on</span>, the trackers will be blocked, and if the state is <span class="pplri8t-">off</span>, the trackers will be unblocked. </p>
+<p class="noindent">This option can be used to grant or revoke certain permissions from the selected packages. Like others above, permissions must be separated by spaces. If the <a href="#x1-760002.5.3.2">state</a> is <span class="pplri8t-">on</span>, the permissions will be revoked, and if the state is <span class="pplri8t-">off</span>, the permissions will be allowed. The option can be disabled (regardless of the inserted values) by clicking on the <span class="pplri8t-">disabled</span> button on the input dialog. </p>
 
 <h5 class="subsubsectionHead"><span class="titlemark">2.5.3.7</span> <a href="#QQ2-1-81" id="x1-810002.5.3.7">Backup/Restore</a></h5>
 <!--l. 71-->
@@ -589,11 +589,11 @@
 <li class="itemize"><span class="pplb8t-">Backup name.</span> Set a custom name for the backup. If the backup name is set, each time a backup is made, it will be given a unique name with backup-name as the suffix. This behaviour will be fixed in a future release. Leave this field empty for regular or “base” backup (also, make sure not to enable <span class="pplri8t-">backup multiple</span> in the backup options).</li>
 </ul>
 <!--l. 82-->
-<p class="indent">Configure in-app language. App Manager currently supports 15 (fifteen) languages. </p>
+<p class="indent">If the <a href="#x1-760002.5.3.2">state</a> is <span class="pplri8t-">on</span>, the packages will be backed up, and if the state is <span class="pplri8t-">off</span>, the packages will be restored. The option can be disabled by clicking on the <span class="pplri8t-">disabled</span> button on the input dialog. </p>
 
 <h5 class="subsubsectionHead"><span class="titlemark">2.5.3.8</span> <a href="#QQ2-1-82" id="x1-820002.5.3.8">Export Blocking Rules</a></h5>
 <!--l. 87-->
-<p class="noindent">Configure in-app theme.</p>
+<p class="noindent">This option allows you to export blocking rules.</p>
 <div class="mdframed" id="mdframed-17"><!--l. 89-->
 <p class="noindent"><span class="pplbi8t-">Danger.</span> This option is not yet implemented.</p>
 
@@ -608,7 +608,7 @@
 
 <h5 class="subsubsectionHead"><span class="titlemark">2.5.3.11</span> <a href="#QQ2-1-85" id="x1-850002.5.3.11">Clear Cache</a></h5>
 <!--l. 101-->
-<p class="noindent">Turning off this option disables the <span class="pplb8t-">App Usage</span> page as well as <span class="pplri8t-">data usage</span> and <span class="pplri8t-">app</span> <span class="pplri8t-">storage info</span> in the <a href="#x1-350002.2.2">App Info tab</a>. With this option turned off, App Manager will never ask for <span class="pplri8t-">Usage Access</span> permission. </p>
+<p class="noindent">Enables clearing cache for the selected packages. </p>
 
 <h5 class="subsubsectionHead"><span class="titlemark">2.5.3.12</span> <a href="#QQ2-1-86" id="x1-860002.5.3.12">Clear Data</a></h5>
 <!--l. 104-->
@@ -631,11 +631,11 @@
 
 <h4 class="subsectionHead"><span class="titlemark">2.6.2</span> <a href="#QQ2-1-91" id="x1-910002.6.2">App Theme</a></h4>
 <!--l. 9-->
-<p class="noindent">It is possible to import or export blocking rules within App Manager for all apps. There is a choice to export or import only certain rules (components, app ops or permissions) instead of all of them. It is also possible to import blocking rules from <a href="https://github.com/lihenggui/blocker">Blocker</a> and <a href="https://github.com/tuyafeng/Watt">Watt</a>. If it is necessary to export blocking rules for a single app, use the corresponding <a href="#x1-330002.2">App Details page</a> to export rules, or for multiple apps, use <a href="#x1-160002.1.1">batch operations</a>. </p>
+<p class="noindent">Configure in-app theme. </p>
 
 <h4 class="subsectionHead"><span class="titlemark">2.6.3</span> <a href="#QQ2-1-92" id="x1-920002.6.3">Screen Lock</a></h4>
 <!--l. 12-->
-<p class="noindent"><span class="paragraphHead"><a href="#x1-890002.6.6.2" id="x1-890002.6.6.2">Import</a></span> Import previously exported blocking rules from App Manager. Similar to export, this may include <a href="#x1-1490004.1.1">app components</a>, app ops and permissions based on the options selected in the multi-choice options. </p>
+<p class="noindent">Lock App Manager using Android screen lock provided a screen lock is configured. </p>
 
 <h4 class="subsectionHead"><span class="titlemark">2.6.4</span> <a href="#QQ2-1-93" id="x1-930002.6.4">Mode of Operation</a></h4>
 <!--l. 15-->
@@ -675,7 +675,7 @@
 <p class="noindent"><span class="pplbi8t-">Notice.</span> App Manager maintains a KeyStore where the keys used within the app are stored. The password for the keystore will be asked when necessary. Be sure to store the password in a safe place, otherwise the KeyStore cannot be recovered when necessary.</p>
 
 </div>
-<h4 class="subsectionHead"><span class="titlemark">2.6.8</span> <a href="#QQ2-1-99" id="x1-990002.6.8">Backup/Restore</a></h4>
+<h4 class="subsectionHead"><span class="titlemark">2.6.7</span> <a href="#QQ2-1-98" id="x1-980002.6.7">Installer</a></h4>
 <!--l. 64-->
 
 <h5 class="subsubsectionHead"><span class="titlemark">2.6.7.1</span> <a href="#QQ2-1-99" id="x1-990002.6.7.1">Show users in installer</a></h5>
@@ -700,11 +700,11 @@
 
 <h5 class="subsubsectionHead"><span class="titlemark">2.6.8.1</span> <a href="#QQ2-1-104" id="x1-1040002.6.8.1">Compression method</a></h5>
 <!--l. 86-->
-<p class="noindent">Display Android version, security, CPU, GPU, battery, memory, screen, languages, user info, etc. </p>
+<p class="noindent">Set which compression method to be used during backups. App Manager supports GZip and BZip2 compression methods, GZip being the default compression method. It doesn’t affect the restore of an existing backup. </p>
 
 <h5 class="subsubsectionHead"><span class="titlemark">2.6.8.2</span> <a href="#QQ2-1-105" id="x1-1050002.6.8.2">Backup Options</a></h5>
 <!--l. 91-->
-<p class="noindent">It scans for trackers and libraries, and displays the number of trackers and libraries as a summary. It also displays checksums of the APK file as well as the signing certificate(s). </p>
+<p class="noindent">Customise the back up/restore dialog. </p>
 
 <h5 class="subsubsectionHead"><span class="titlemark">2.6.8.3</span> <a href="#QQ2-1-106" id="x1-1060002.6.8.3">Backup apps with Android KeyStore</a></h5>
 <!--l. 94-->
@@ -721,7 +721,7 @@
 <p class="noindent"><span class="pplbi8t-">Notice.</span> The backup volume only specifies the storage, not the path. Backups are stored in <span class="ectt-1000">AppManager</span> folder inside the storage path. This is also where logs and exported APK files are saved.</p>
 
 </div>
-<h4 class="subsectionHead"><span class="titlemark">2.7.1</span> <a href="#QQ2-1-106" id="x1-1060002.7.1">Missing Signatures</a></h4>
+<h4 class="subsectionHead"><span class="titlemark">2.6.9</span> <a href="#QQ2-1-109" id="x1-1090002.6.9">Rules</a></h4>
 <!--l. 117-->
 
 <h5 class="subsubsectionHead"><span class="titlemark">2.6.9.1</span> <a href="#QQ2-1-110" id="x1-1100002.6.9.1">Instant Component Blocking</a></h5>
@@ -735,7 +735,7 @@
 <p class="noindent"><span class="pplri8t-">See also:</span> <a href="#x1-1680004.1.6"><span class="pplri8t-">FAQ: What is instant component blocking?</span></a></p>
 <h5 class="subsubsectionHead"><span class="titlemark">2.6.9.2</span> <a href="#QQ2-1-111" id="x1-1110002.6.9.2">Import/Export Blocking Rules</a></h5>
 <!--l. 133-->
-<p class="noindent">It is possible to import or export blocking rules within App Manager for all apps. There is a choice to export or import only certain rules (components, app ops or permissions) instead of all of them. It is also possible to import blocking rules from <a href="https://github.com/lihenggui/blocker">Blocker</a> and <a href="https://github.com/tuyafeng/Watt">Watt</a>. If it is necessary to export blocking rules for a single app, use the corresponding <a href="#x1-340002.2">App Details page</a> to export rules, or for multiple apps, use <a href="#x1-160002.1.1">batch operations</a>. </p>
+<p class="noindent">It is because of the blocking method I’m using. This method is called <a href="https://carteryagemann.com/pages/android-intent-firewall.html">Intent Firewall (IFW)</a> and is compatible with <a href="https://github.com/tuyafeng/Watt">Watt</a> and <a href="https://github.com/lihenggui/blocker">Blocker</a>. <a href="https://www.myandroidtools.com">MyAndroidTool (MAT)</a> supports IFW, but it uses a different format. Therefore, Watt can detect blocked components by default but Blocker can only detect them if you enable IFW in its settings page. MAT cannot detect AM’s blocking rules since the format is different. AM cannot detect MAT’s rules if IFW is enabled in MAT. In that case, you can still import them from the <a href="#x1-780002.6">settings page</a>. MAT has an export option, but it’s not supported due to its non-free nature. </p>
 <p class="noindent"><span class="pplri8t-">See also:</span> <a href="#x1-183000A.1"><span class="pplri8t-">Rules Specification</span></a> </p>
 <p class="noindent"><span class="paragraphHead"><a href="#x1-1120002.6.9.2" id="x1-1120002.6.9.2">Export</a></span> Export blocking rules for all apps configured within App Manager. This may include <a href="#x1-1630004.1.1">app components</a>, app ops and permissions based on the options selected in the multi-choice options. </p>
 <p class="noindent"><span class="paragraphHead"><a href="#x1-1130002.6.9.2" id="x1-1130002.6.9.2">Import</a></span> Import previously exported blocking rules from App Manager. Similar to export, this may include <a href="#x1-1630004.1.1">app components</a>, app ops and permissions based on the options selected in the multi-choice options. </p>
@@ -751,7 +751,7 @@
 
 </div>
 <!--l. 172-->
-<p class="noindent">Data is originally known as URI (Uniform Resource Identifier) defined in <a href="http://www.faqs.org/rfcs/rfc2396.html">RFC 2396</a>. It can be web links, file location, or a special feature called <span class="pplri8t-">content</span>. Contents are an Android feature managed by the <a href="#x1-440002.2.3.4">content providers</a>. Data are often associated with a <a href="#x1-1110002.8.1.3">MIME type</a>. </p>
+<p class="noindent"><span class="paragraphHead"><a href="#x1-1160002.6.9.2" id="x1-1160002.6.9.2">Import from Blocker</a></span> Import blocking rules from <a href="https://github.com/lihenggui/blocker">Blocker</a>, each file containing rules for a single package. These files have a <span class="ectt-1000">.json</span> extension. </p>
 
 <h5 class="subsubsectionHead"><span class="titlemark">2.6.9.3</span> <a href="#QQ2-1-117" id="x1-1170002.6.9.3">Remove all rules</a></h5>
 <!--l. 177-->
@@ -766,14 +766,14 @@
 <p class="noindent">Display Android version, security, CPU, GPU, battery, memory, screen, languages, user info, etc.</p>
 <h3 class="sectionHead"><span class="titlemark">2.7</span> <a href="#QQ2-1-120" id="x1-1200002.7">Scanner Page</a></h3>
 <!--l. 2-->
-<p class="noindent">This is similar to <a href="#x1-1090002.8.1.1">action</a> in the sense that it is also used by the system to filter app components. This has no further benefits. Unlike <span class="pplri8t-">action</span>, there can be more than one category. Clicking on the <span class="pplri8t-">plus</span> button next to the title allows adding more categories. </p>
+<p class="noindent"><span class="pplb8t-">Scanner page</span> appears after clicking on the <span class="pplri8t-">scanner</span> button in the <a href="#x1-360002.2.2">App Info tab</a>. External APK files can also be opened for scanning from file managers, web browsers, etc. </p>
 <p class="indent">It scans for trackers and libraries, and displays the number of trackers and libraries as a summary. It also displays checksums of the APK file as well as the signing certificate(s).</p>
 <div class="mdframed" id="mdframed-23"><!--l. 8-->
 <p class="noindent"><span class="pplbi8t-">Disclaimer.</span> AM only scans an app statically without prejudice. The app may provide the options for opting out, or in some cases, certain features of the tracker may not be used at all by the app (e.g. F-Droid), or some apps may simply use them as placeholders to prevent the breaking of certain features (e.g. Fennec F-Droid). <span class="pplb8t-">The intention of the scanner is to give you an idea about what</span> <span class="pplb8t-">the APK might contain. It should be taken as an initial step for further</span> <span class="pplb8t-">investigations.</span></p>
 
 </div>
 <!--l. 16-->
-<p class="indent">Extras are the key-value pairs used for supplying additional information to the destination component. You can add extras using the <span class="pplri8t-">plus</span> button next to the title.</p>
+<p class="indent">Clicking on the first item (i.e. number of classes) opens a new page containing a list of tracker classes for the app. All classes can also be viewed by clicking on the <span class="pplri8t-">Toggle Class Listing</span> menu. A sneak-peek of each class can be viewed by simply clicking on any class item.</p>
 <div class="mdframed" id="mdframed-24"><!--l. 20-->
 <p class="noindent"><span class="pplbi8t-">Notice.</span> Due to various limitations, it is not possible to scan all the components of an APK file. This is especially true if an APK is highly obfuscated. The scanner also does not check strings (or website signatures).</p>
 
@@ -781,14 +781,14 @@
 <!--l. 25-->
 <p class="indent">The second item lists the number of trackers along with their names. Clicking on the item displays a dialog containing the name of trackers, matched signatures, and the number of classes against each signature. Some tracker names may have <sup><span class="pplr7t-x-x-76">2</span></sup> prefix which indicates that the trackers are in the <a href="https://etip.exodus-privacy.eu.org">ETIP</a> stand-by list i.e. whether they are actual trackers is still being investigated. 
 </p>
-<p class="indent">List all the activity components that matches the Intent. This is internally determined by the system (rather than AM). The launch button next to each component can be used to launch them directly from AM. </p>
-<p class="noindent"><span class="pplri8t-">See also:</span> <a href="#x1-1690004.1.7"><span class="pplri8t-">FAQ: Tracker classes vs tracker components</span></a></p>
-<h4 class="subsectionHead"><span class="titlemark">2.8.3</span> <a href="#QQ2-1-117" id="x1-1170002.8.3">Reset to Default</a></h4>
+<p class="indent">AM blocks application components (or tracker components) using a method called <a href="https://carteryagemann.com/pages/android-intent-firewall.html">Intent Firewall (IFW)</a>, it is very superior to other methods such as <span class="pplri8t-">pm</span> (PackageManager), <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a> or any other method that uses the package manager to enable or disable the components. If a component is disabled by the latter methods, the app itself can detect that the component is being blocked and can re-enable it as it has full access to its own components. (Many deceptive apps actually exploit this in order to keep the tracker components unblocked.) On the other hand, IFW is a true firewall and the app cannot detect if the blocking is present. It also cannot re-enable it by any means. AM uses the term <span class="pplri8t-">block</span> rather than <span class="pplri8t-">disable</span> for this reason. </p>
+<p class="noindent">Even IFW has some limitations which are primarily applicable for the system apps:</p>
+<h4 class="subsectionHead"><span class="titlemark">2.7.1</span> <a href="#QQ2-1-121" id="x1-1210002.7.1">Missing Signatures</a></h4>
 <!--l. 36-->
-<p class="noindent">Reset the Intent to its initial state. This may not always work as expected.</p>
+<p class="noindent">At the bottom of the page, there is a special item denoting the number of missing signatures (i.e. missing classes). The missing signatures are the ones that AM has failed to match against any known libraries. The number itself has no particular meaning as many libraries contain hundreds of classes, but clicking on the item will bring up a dialog containing the signatures which is helpful in inspecting the missing signatures. <span class="pplb8t-">This feature is only intended for people who know what a</span> <span class="pplb8t-">missing signature is and what to do with it, average users should just ignore</span> <span class="pplb8t-">it.</span></p>
 <h3 class="sectionHead"><span class="titlemark">2.8</span> <a href="#QQ2-1-122" id="x1-1220002.8">Interceptor Page</a></h3>
 <!--l. 2-->
-<p class="noindent">Resend the edited Intent to the destination app. This may open a list of apps where you have to select the desired app. The result received from the target app will be sent to the source app. As a result the source app will not know if there was a man-in-the-middle.</p>
+<p class="noindent">Interceptor can be used to intercept communication between apps using <span class="ectt-1000">Intent</span>. It works as a man-in-the-middle between the source and the destination apps. It offers a feature-complete user interface for editing <span class="ectt-1000">Intent</span>s.</p>
 <div class="mdframed" id="mdframed-25"><!--l. 5-->
 <p class="noindent"><span class="pplbi8t-">Info.</span> Development of interceptor is still in progress. It can only intercept activities for now.</p>
 
@@ -806,13 +806,13 @@
 <!--l. 20-->
 <p class="noindent">Intent filters are used by the apps to specify which tasks they are able to perform or which tasks they are going to perform using other apps. For example, when you’re opening a PDF file using a file manager, the file manager will try to find which apps to open the PDF with. To find the right applications, the file manager will create an Intent with filters such as MIME type and ask the system to retrieve the matched applications that is able to open this filter. The system will search through the Manifest of the installed applications to match the filter and list the app components that are able to open this filter (in our case the PDF). At this, either the file manager will open the desired app component itself or use a system provided option to open it. If multiple app components are able to open it and no default is set, you may get a prompt where you have to choose the right app component. </p>
 
-<h5 class="subsubsectionHead"><span class="titlemark">3.1.1.1</span> <a href="#QQ2-1-123" id="x1-1230003.1.1.1">Location of developer options</a></h5>
+<h5 class="subsubsectionHead"><span class="titlemark">2.8.1.1</span> <a href="#QQ2-1-124" id="x1-1240002.8.1.1">Action</a></h5>
 <!--l. 30-->
-<p class="noindent"><span class="pplb8t-">Developer options</span> is located in Android <span class="pplb8t-">Settings</span>, either directly near the bottom of the page (in most ROMs) or under some other settings such as <span class="pplb8t-">System</span> (Lineage OS, Asus Zenfone 8.0+), <span class="pplb8t-">System</span> &gt; <span class="pplb8t-">Advanced</span> (Google Pixel), <span class="pplb8t-">Additional Settings</span> (Xiaomi MIUI, Oppo ColorOS), <span class="pplb8t-">More Settings</span> (Vivo FuntouchOS), <span class="pplb8t-">More</span> (ZTE Nubia). Unlike other options, it is not visible until explicitly enabled by the user. If developer options is enabled, you can use the search box in Android <span class="pplb8t-">Settings</span> to locate it as well. </p>
+<p class="noindent">Action specifies the generic action to perform such as <span class="ectt-1000">android.intent.action.VIEW</span>. Applications often declare the relevant actions in the Manifest file to catch the desired Intents. The action is particularly useful for broadcast Intent where it plays a vital rule. In other cases, it works as an initial way to filter out relevant app components. Generic actions such as <span class="ectt-1000">android.intent.action.VIEW</span> and <span class="ectt-1000">android.intent.action.SEND</span> are widely used by apps. So, setting this alone may match many app components. </p>
 
-<h5 class="subsubsectionHead"><span class="titlemark">3.1.1.2</span> <a href="#QQ2-1-124" id="x1-1240003.1.1.2">How to enable developer options</a></h5>
+<h5 class="subsubsectionHead"><span class="titlemark">2.8.1.2</span> <a href="#QQ2-1-125" id="x1-1250002.8.1.2">Data</a></h5>
 <!--l. 37-->
-<p class="noindent">This option is available within Android <span class="pplb8t-">Settings</span> as well but like the location of the developer options, it also differs from device to device. But in general, you have to find <span class="pplb8t-">Build number</span> (or <span class="pplb8t-">MIUI version</span> for MIUI ROMs and <span class="pplb8t-">Software</span> <span class="pplb8t-">version</span> for Vivo FuntouchOS, <span class="pplb8t-">Version</span> for Oppo ColorOS) and tap it at least 7 (seven) times until you finally get a message saying <span class="pplri8t-">You are now a developer</span> (you may be prompted to insert pin/password/pattern or solve captchas at this point). In most devices, it is located at the bottom of the settings page, inside <span class="pplb8t-">About Phone</span>. But the best way to find it is to use the search box. </p>
+<p class="noindent">If you have <span class="pplb8t-">Google Play Services</span> (<span class="ectt-1000">com.google.android.gms</span>) installed, unblocking the following <a href="#x1-430002.2.3.2">services</a> may fix certain crashes: </p>
 <p class="indent">Examples:</p>
 <div class="fancyvrb" id="fancyvrb3"><a id="x1-125002r1"></a><span class="ectt-1000">http://search.disroot.org/?q=URI%20in%20Android%20scheme&amp;categories=general&amp;language=en-US</span><br class="fancyvrb" /> <a id="x1-125004r2"></a><span class="ectt-1000">https://developer.android.com/reference/android/net/Uri</span><br class="fancyvrb" /> <a id="x1-125006r3"></a><span class="ectt-1000">file:///sdcard/AppManager.apk</span><br class="fancyvrb" /> <a id="x1-125008r4"></a><span class="ectt-1000">mailto:email@example.com</span><br class="fancyvrb" /> <a id="x1-125010r5"></a><span class="ectt-1000">content://io.github.muntashirakon.AppManager.provider/23485af89b08d87e898a90c7e/AppManager.apk</span></div>
 <!--l. 51-->
@@ -823,27 +823,27 @@
 
 <h5 class="subsubsectionHead"><span class="titlemark">2.8.1.4</span> <a href="#QQ2-1-127" id="x1-1270002.8.1.4">Categories</a></h5>
 <!--l. 56-->
-<p class="noindent">This is similar to <a href="#x1-1240002.8.1.1">action</a> in the sense that it is also used by the system to filter app components. This has no further benefits. Unlike <span class="pplri8t-">action</span>, there can be more than one category. Clicking on the <span class="pplri8t-">plus</span> button next to the title allows adding more categories. </p>
+<p class="noindent">Unfortunately, yes. However, as of v2.5.13, you don’t need to keep AoT enabled all the time as it now uses a server-client mechanism to interact with the system, but you do have to keep the <span class="pplb8t-">Developer options</span> as well as <span class="pplb8t-">USB debugging</span> enabled. To do that, enable <a href="#x1-1360003.1">ADB over TCP</a> and open App Manager. You should see <span class="pplri8t-">working on</span> <span class="pplri8t-">ADB mode</span> toast message in the bottom. If you see it, you can safely stop the server. For Lineage OS or its derivative OS, you can toggle AoT without any PC or Mac by simply toggling the <span class="pplb8t-">ADB over network</span> option located just below the <span class="pplb8t-">USB debugging</span>, but the server can’t be stopped for the latter case. </p>
 
 <h5 class="subsubsectionHead"><span class="titlemark">2.8.1.5</span> <a href="#QQ2-1-128" id="x1-1280002.8.1.5">Flags</a></h5>
 <!--l. 61-->
-<p class="noindent">Flags are useful in determining how system should behave during the launch or after the launch of an activity. An average user should avoid this as it requires some technical background. The <span class="pplri8t-">plus</span> button next to the title can be used to add one or more flags. </p>
+<p class="noindent">AM currently supports blocking activities, broadcast receivers, content providers, services, app ops and permissions, and in future I may add more blocking options. In order to add more portability, it is necessary to import/export all these data. </p>
 
 <h5 class="subsubsectionHead"><span class="titlemark">2.8.1.6</span> <a href="#QQ2-1-129" id="x1-1290002.8.1.6">Extras</a></h5>
 <!--l. 66-->
-<p class="noindent">Extras are the key-value pairs used for supplying additional information to the destination component. You can add extras using the <span class="pplri8t-">plus</span> button next to the title. </p>
+<p class="noindent">Sadly, no. ADB has limited <a href="https://github.com/aosp-mirror/platform_frameworks_base/blob/master/packages/Shell/AndroidManifest.xml">permissions</a> and controlling application components is not one of them. </p>
 
 <h5 class="subsubsectionHead"><span class="titlemark">2.8.1.7</span> <a href="#QQ2-1-130" id="x1-1300002.8.1.7">URI</a></h5>
 <!--l. 70-->
-<p class="noindent">Represents the entire Intent as a URI (e.g. <span class="ectt-1000">intent://</span><span class="ectt-1000">…</span>). Some data cannot be converted to string, and as a result, they might not appear here. </p>
+<p class="noindent">Most of the features supported by ADB mode are enabled by default once ADB support is detected by AM. These include disable, force-stop, clear data, grant/revoke app ops and permissions. You can also install applications without any prompt and view <a href="#x1-280002.1.5.6">running apps/processes</a>. </p>
 
 <h4 class="subsectionHead"><span class="titlemark">2.8.2</span> <a href="#QQ2-1-131" id="x1-1310002.8.2">Matching Activities</a></h4>
 <!--l. 74-->
 <p class="noindent">List all the activity components that matches the Intent. This is internally determined by the system (rather than AM). The launch button next to each component can be used to launch them directly from AM. </p>
 
-<h4 class="subsectionHead"><span class="titlemark">3.1.3</span> <a href="#QQ2-1-130" id="x1-1300003.1.3">Setup ADB on PC or Mac</a></h4>
+<h4 class="subsectionHead"><span class="titlemark">2.8.3</span> <a href="#QQ2-1-132" id="x1-1320002.8.3">Reset to Default</a></h4>
 <!--l. 78-->
-<p class="noindent">In order to enable ADB over TCP, you have to set up ADB in your PC or Mac. <span class="pplbi8t-">Lineage OS users can skip to §</span><a href="#x1-1350003.1.4.1"><span class="pplbi8t-">3.1.4.1</span></a><span class="pplbi8t-">.</span> </p>
+<p class="noindent">Reset the Intent to its initial state. This may not always work as expected. </p>
 
 <h4 class="subsectionHead"><span class="titlemark">2.8.4</span> <a href="#QQ2-1-133" id="x1-1330002.8.4">Send Edited Intent</a></h4>
 <!--l. 81-->
@@ -870,7 +870,7 @@
 
 <h5 class="subsubsectionHead"><span class="titlemark">3.1.1.2</span> <a href="#QQ2-1-139" id="x1-1390003.1.1.2">How to enable developer options</a></h5>
 <!--l. 25-->
-<p class="noindent">This option is available within Android <span class="pplb8t-">Settings</span> as well but like the location of the developer options, it also differs from device to device. But in general, you have to find <span class="pplb8t-">Build number</span> (or <span class="pplb8t-">MIUI version</span> for MIUI ROMs and <span class="pplb8t-">Software</span> <span class="pplb8t-">version</span> for Vivo FuntouchOS, <span class="pplb8t-">Version</span> for Oppo ColorOS) and tap it at least 7 (seven) times until you finally get a message saying <span class="pplri8t-">You are now a developer</span> (you may be prompted to insert pin/password/pattern or solve captchas at this point). In most devices, it is located at the bottom of the settings page, inside <span class="pplb8t-">About Phone</span>. But the best way to find it is to use the search box. </p>
+<p class="noindent">From v2.5.19, AM has a new feature called <a href="#x1-710002.5">profiles</a>. The <a href="#x1-690002.4">profiles page</a> has an option to create new profiles from one of the presets. The presets consist of debloating profiles which can be used as a starting point to monitor, disable, and remove the bloatware from a proprietary Android operating system. </p>
 
 <h4 class="subsectionHead"><span class="titlemark">3.1.2</span> <a href="#QQ2-1-140" id="x1-1400003.1.2">Enable USB debugging</a></h4>
 <!--l. 33-->
@@ -882,21 +882,21 @@
 
 <h5 class="subsubsectionHead"><span class="titlemark">3.1.2.2</span> <a href="#QQ2-1-142" id="x1-1420003.1.2.2">Huawei (EMUI)</a></h5>
 <!--l. 43-->
-<p class="noindent">Enable <span class="pplb8t-">Allow ADB debugging in charge only mode</span> as well. When connecting to your PC or Mac, you may get a prompt saying <span class="pplb8t-">Allow access to device data?</span> in which case click <span class="pplb8t-">YES, ALLOW ACCESS</span>.</p>
+<p class="noindent">Maintaining a database should be the best choice when it comes to storing data. For now, several <span class="ectt-1000">tsv</span> files with each file having the name of the package and a <span class="ectt-1000">.tsv</span> extension. The file/database will be queried/processed by the <span class="ectt-1000">RulesStorageManager</span> class. Due to this abstraction, it should be easier to switch to database or encrypted database systems in future without changing the design of the entire project. Currently, All configuration files are stored at <span class="ectt-1000">/data/data/io.github.muntashirakon.AppManager/Files/conf</span>.</p>
 <div class="mdframed" id="mdframed-28"><!--l. 46-->
 <p class="noindent"><span class="pplbi8t-">Notice.</span> Often the <span class="pplb8t-">USB debugging</span> mode could be disabled automatically by the system. If that’s the case, repeat the above procedure.</p>
 
 </div>
-<h5 class="subsubsectionHead"><span class="titlemark">3.1.4.1</span> <a href="#QQ2-1-135" id="x1-1350003.1.4.1">Lineage OS</a></h5>
+<h5 class="subsubsectionHead"><span class="titlemark">A.1.2.1</span> <a href="#QQ2-1-186" id="x1-186000A.1.2.1">Internal</a></h5>
 <!--l. 52-->
-<p class="noindent">Lineage OS (or its derivatives) users can directly enable ADB over TCP using the developer options. To enable that, go to the <span class="pplb8t-">Developer options</span>, scroll down until you find <span class="pplb8t-">ADB over Network</span>. Now, use the toggle button on the right-hand side to enable it and skip to §<a href="#x1-1370003.1.4.3">3.1.4.3</a>. </p>
+<p class="noindent">The format below is used internally within App Manager and is <span class="pplri8t-">not compatible with</span> <span class="pplri8t-">the external format.</span> </p>
 
-<h5 class="subsubsectionHead"><span class="titlemark">3.1.4.2</span> <a href="#QQ2-1-136" id="x1-1360003.1.4.2">Enable ADB over TCP via PC or Mac</a></h5>
+<h5 class="subsubsectionHead"><span class="titlemark">3.1.2.4</span> <a href="#QQ2-1-144" id="x1-1440003.1.2.4">Troubleshooting</a></h5>
 <!--l. 55-->
-<p class="noindent">For other ROMs, you can do this using the command prompt/PowerShell/terminal emulator that you’ve opened in the step 3 of the previous section. In this section, I will use <span class="ectt-1000">adb</span> to denote <span class="ectt-1000">./adb</span>, <span class="ectt-1000">adb</span> or any other command that you needed to use based on your platform and software in the previous section.</p>
+<p class="noindent">In case <span class="pplb8t-">USB Debugging</span> is greyed out, you can do the following:</p>
 <ol class="enumerate1">
-<li class="enumerate" id="x1-144002x1">Connect your device to your PC or Mac using a USB cable. For some devices, it is necessary to turn on <span class="pplri8t-">File transfer mode (MTP)</span> as well</li>
-<li class="enumerate" id="x1-144004x2">To confirm that everything is working as expected, type <span class="ectt-1000">adb devices</span> in your terminal. If your device is connected successfully, you will see something like this:</li>
+<li class="enumerate" id="x1-144002x1">Make sure you enabled USB debugging before connecting your phone to the PC or Mac via USB cable</li>
+<li class="enumerate" id="x1-144004x2">Enable USB tethering after connecting to PC or Mac via USB cable</li>
 <li class="enumerate" id="x1-144006x3">(For Samsung) If your device is running KNOX, you may have to follow some additional steps. See official documentations or consult support for further assistant</li>
 </ol>
 <!--l. 63-->
@@ -934,8 +934,8 @@
 <!--l. 104-->
 
 <ol class="enumerate1">
-<li class="enumerate" id="x1-148002x1">Android Debug Bridge (adb)</li>
-<li class="enumerate" id="x1-148004x2">How to fix USB debugging greyed out?
+<li class="enumerate" id="x1-148002x1">Open your favourite terminal emulator. In most GUI-distros, you can open it by holding <span class="ectt-1000">Control</span>, <span class="ectt-1000">Alter</span> and <span class="ectt-1000">T</span> at the same time</li>
+<li class="enumerate" id="x1-148004x2">Run the following command:
 <div class="fancyvrb" id="fancyvrb5"><a id="x1-148009r1"></a><span id="textcolor43"><span class="ectt-1000">cd</span></span><span class="ectt-1000"> ~/Downloads</span><span class="ectt-1000"> </span><span id="textcolor44"><span class="ectt-1000">&amp;&</span></span><span class="ectt-1000"> curl</span><span class="ectt-1000"> -o</span><span class="ectt-1000"> platform-tools.zip</span><span class="ectt-1000"> -L</span><br class="fancyvrb" /> <a id="x1-148011r2"></a><span class="ectt-1000">https://dl.google.com/android/repository/platform-tools-latest-linux.zip</span><span class="ectt-1000"> </span><span id="textcolor45"><span class="ectt-1000">&amp;&</span></span><br class="fancyvrb" /> <a id="x1-148013r3"></a><span class="ectt-1000">unzip</span><span class="ectt-1000"> platform-tools.zip</span><span class="ectt-1000"> </span><span id="textcolor46"><span class="ectt-1000">&amp;&</span></span><span class="ectt-1000"> rm</span><span class="ectt-1000"> platform-tools.zip</span><span class="ectt-1000"> </span><span id="textcolor47"><span class="ectt-1000">&amp;&</span></span><span class="ectt-1000"> </span><span id="textcolor48"><span class="ectt-1000">cd</span></span><span class="ectt-1000"> platform-tools</span></div>
 </li>
 <li class="enumerate" id="x1-148015x3">If it is successful, you can simply type <span class="ectt-1000">./adb</span> in the in <span class="pplri8t-">same</span> terminal emulator window or type <span class="ectt-1000">~/Downloads/platform-tools/adb</span> in any terminal emulator to access ADB.</li>
@@ -985,7 +985,7 @@
 <p class="noindent">In order to ensure device security, you should stop ADB over TCP right after AM detects it. To do that, connect your device to your PC or Mac and run the following command:</p>
 <div class="fancyvrb" id="fancyvrb8"><a id="x1-153003r1"></a><span class="ectt-1000">adb</span><span class="ectt-1000"> kill-server</span></div>
 <!--l. 169-->
-<p class="noindent">Restore respects all the backup options and will fail if <span class="pplb8t-">Source</span> option is set, but the backup doesn’t contain any source backups or in other cases, if the app isn’t installed. When restoring backups for multiple packages, you can only restore the base backups (see <a href="#x1-1430003.2.3">backup</a> section for an explanation). However, when restoring backups for a single package, you have the option to select which backup to restore. If <span class="pplb8t-">All users</span> option is set, AM will restore the selected backup for all users in the latter case but in the former case, it will restore base backups for the respective users.</p>
+<p class="noindent">Replace <span class="ectt-1000">adb</span> with <span class="ectt-1000">./adb</span> or any other command that you had to use in previous steps.</p>
 <div class="mdframed" id="mdframed-34"><!--l. 171-->
 <p class="noindent"><span class="pplbi8t-">Lineage OS users.</span> You can turn off <span class="pplb8t-">ADB over Network</span> in developer options, but turning off this option will also stop App Manager’s remote server. So, turn it off only when you’re not going to use App Manager in ADB over TCP mode.</p>
 
@@ -1000,7 +1000,7 @@
 </ol>
 <!--l. 1-->
 
-<h3 class="sectionHead"><span class="titlemark">4.1</span> <a href="#QQ2-1-148" id="x1-1480004.1">App Components</a></h3>
+<h3 class="sectionHead"><span class="titlemark">3.2</span> <a href="#QQ2-1-155" id="x1-1550003.2">Back up/Restore</a></h3>
 <!--l. 2-->
 <p class="noindent">App Manager has a modern, advanced and easy-to-use backup/restore system implemented from the scratch. This is probably the only app that has the ability to restore not only the app or its data but also permissions and rules that you’ve configured within App Manager. You can also choose to back up an app multiple times (with custom names) or for all users. </p>
 <p class="indent"></p>
@@ -1011,15 +1011,15 @@
 
 <h4 class="subsectionHead"><span class="titlemark">3.2.1</span> <a href="#QQ2-1-156" id="x1-1560003.2.1">Location</a></h4>
 <!--l. 13-->
-<p class="noindent">Even IFW has some limitations which are primarily applicable for the system apps:</p>
+<p class="noindent">Back up/restore is a part of <a href="#x1-160002.1.1">batch operations</a>. It is also located inside the <a href="#x1-390002.2.2.3">options menu</a> in the <a href="#x1-360002.2.2">App Info tab</a>. Clicking on <span class="pplb8t-">Backup/Restore</span> opens the <span class="pplb8t-">Backup</span> <span class="pplb8t-">Options</span>. Backups are located at <span class="ectt-1000">/storage/emulated/0/AppManager</span> by default. You can configure custom backup location in the <a href="#x1-1080002.6.8.5">settings page</a> in which case the backups will be located at the <span class="ectt-1000">AppManager</span> folder in the selected volume.</p>
 <div class="mdframed" id="mdframed-35"><!--l. 21-->
 <p class="noindent"><span class="pplbi8t-">Note.</span> If one or more selected apps do not have any backup, the <span class="pplb8t-">Restore</span> and <span class="pplb8t-">Delete</span> <span class="pplb8t-">Backup</span> options will not be displayed.</p>
 
 </div>
 <h4 class="subsectionHead"><span class="titlemark">3.2.2</span> <a href="#QQ2-1-157" id="x1-1570003.2.2">Backup Options</a></h4>
 <!--l. 27-->
-<p class="noindent">Backup options (internally known as backup flags) let you customise the backups on the fly. However, the customisations will not be remembered for the future backups. If you want to customise this dialog, use <a href="#x1-1050002.6.8.2">Backup Options</a> in the <a href="#x1-890002.6">Settings page</a>. </p>
-<p class="indent">It is because of the blocking method I’m using. This method is called <a href="https://carteryagemann.com/pages/android-intent-firewall.html">Intent Firewall (IFW)</a> and is compatible with <a href="https://github.com/tuyafeng/Watt">Watt</a> and <a href="https://github.com/lihenggui/blocker">Blocker</a>. <a href="https://www.myandroidtools.com">MyAndroidTool (MAT)</a> supports IFW, but it uses a different format. Therefore, Watt can detect blocked components by default but Blocker can only detect them if you enable IFW in its settings page. MAT cannot detect AM’s blocking rules since the format is different. AM cannot detect MAT’s rules if IFW is enabled in MAT. In that case, you can still import them from the <a href="#x1-780002.6">settings page</a>. MAT has an export option, but it’s not supported due to its non-free nature.</p>
+<p class="noindent"><span class="paragraphHead"><a href="#x1-217000B.2.8.4" id="x1-217000B.2.8.4">Known limitation</a></span> Currently, only a generic key is used to sign APK files </p>
+<p class="indent">A complete description of the backup options is given below:</p>
 <ul class="itemize1">
 <li class="itemize"><span class="pplb8t-">APK files.</span> Whether to back up the APK files. This includes the <span class="pplri8t-">base APK</span> file along with the <span class="ectt-1000">split APK</span> files if they exist.</li>
 <li class="itemize"><span class="pplb8t-">Internal data.</span> Whether to back up the internal data directories. These directories are located at <span class="ectt-1000">/data/user/&lt;user_id&gt;</span> and (for Android N or later) <span class="ectt-1000">/data/user_de/&lt;user_id&gt;</span>.</li>
@@ -1068,7 +1068,7 @@
 
 <h4 class="subsectionHead"><span class="titlemark">4.1.2</span> <a href="#QQ2-1-164" id="x1-1640004.1.2">How are the tracker or other components blocked in AM? What are its limitations?</a></h4>
 <!--l. 9-->
-<p class="noindent">AM blocks application components (or tracker components) using a method called <a href="https://carteryagemann.com/pages/android-intent-firewall.html">Intent Firewall (IFW)</a>, it is very superior to other methods such as <span class="pplri8t-">pm</span> (PackageManager), <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a> or any other method that uses the package manager to enable or disable the components. If a component is disabled by the latter methods, the app itself can detect that the component is being blocked and can re-enable it as it has full access to its own components. (Many deceptive apps actually exploit this in order to keep the tracker components unblocked.) On the other hand, IFW is a true firewall and the app cannot detect if the blocking is present. It also cannot re-enable it by any means. AM uses the term <span class="pplri8t-">block</span> rather than <span class="pplri8t-">disable</span> for this reason. </p>
+<p class="noindent">The signature tab is improved to support localization. It also displays multiple checksums for a signature. </p>
 <p class="indent">Even IFW has some limitations which are primarily applicable for the system apps:</p>
 <ul class="itemize1">
 <li class="itemize">The app in question is whitelisted by the system i.e. the system cannot function properly without these apps and may cause random crashes. These apps include but not limited to Android System, System UI, Phone Services. They will run even if you disable them or block their components via IFW.</li>
@@ -1076,9 +1076,9 @@
 </ul>
 <!--l. 30-->
 
-<h4 class="subsectionHead"><span class="titlemark">4.1.3</span> <a href="#QQ2-1-165" id="x1-1650004.1.3">Why are the components blocked by AM not detected by other related apps?</a></h4>
+<h4 class="subsectionHead"><span class="titlemark">B.4.1</span> <a href="#QQ2-1-232" id="x1-232000B.4.1">Bundled App (Split APK)</a></h4>
 <!--l. 31-->
-<p class="noindent">It is because of the blocking method I’m using. This method is called <a href="https://carteryagemann.com/pages/android-intent-firewall.html">Intent Firewall (IFW)</a> and is compatible with <a href="https://github.com/tuyafeng/Watt">Watt</a> and <a href="https://github.com/lihenggui/blocker">Blocker</a>. <a href="https://www.myandroidtools.com">MyAndroidTool (MAT)</a> supports IFW, but it uses a different format. Therefore, Watt can detect blocked components by default but Blocker can only detect them if you enable IFW in its settings page. MAT cannot detect AM’s blocking rules since the format is different. AM cannot detect MAT’s rules if IFW is enabled in MAT. In that case, you can still import them from the <a href="#x1-890002.6">settings page</a>. MAT has an export option, but it’s not supported due to its non-free nature. </p>
+<p class="noindent">Bundled app formats such as <span class="pplb8t-">apks</span> and <span class="pplb8t-">xapk</span> are now supported. You can install these apps using the regular installation buttons. For root and adb users, apps are installed using shell, and for non-root users, the platform default method is used. </p>
 
 <h4 class="subsectionHead"><span class="titlemark">4.1.4</span> <a href="#QQ2-1-166" id="x1-1660004.1.4">Does app components blocked by other tools retained in AM?</a></h4>
 <!--l. 41-->
@@ -1119,17 +1119,17 @@
 <!--l. 4-->
 <p class="noindent">Unfortunately, yes. However, as of v2.5.13, you don’t need to keep AoT enabled all the time as it now uses a server-client mechanism to interact with the system, but you do have to keep the <span class="pplb8t-">Developer options</span> as well as <span class="pplb8t-">USB debugging</span> enabled. To do that, enable <a href="#x1-1360003.1">ADB over TCP</a> and open App Manager. You should see <span class="pplri8t-">working on</span> <span class="pplri8t-">ADB mode</span> toast message in the bottom. If you see it, you can safely stop the server. For Lineage OS or its derivative OS, you can toggle AoT without any PC or Mac by simply toggling the <span class="pplb8t-">ADB over network</span> option located just below the <span class="pplb8t-">USB debugging</span>, but the server can’t be stopped for the latter case. </p>
 
-<h4 class="subsectionHead"><span class="titlemark">A.1.1</span> <a href="#QQ2-1-170" id="x1-170000A.1.1">Background</a></h4>
+<h4 class="subsectionHead"><span class="titlemark">4.2.2</span> <a href="#QQ2-1-173" id="x1-1730004.2.2">Cannot enable USB debugging. What to do?</a></h4>
 <!--l. 12-->
-<p class="noindent">AM currently supports blocking activities, broadcast receivers, content providers, services, app ops and permissions, and in future I may add more blocking options. In order to add more portability, it is necessary to import/export all these data. </p>
+<p class="noindent">See §<a href="#x1-1400003.1.2">3.1.2</a> in Chapter <a href="#x1-1350003">3</a>. </p>
 
 <h4 class="subsectionHead"><span class="titlemark">4.2.3</span> <a href="#QQ2-1-174" id="x1-1740004.2.3">Can I block tracker or any other application components using ADB over TCP?</a></h4>
 <!--l. 15-->
-<p class="noindent">Sadly, no. ADB has limited <a href="https://github.com/aosp-mirror/platform_frameworks_base/blob/master/packages/Shell/AndroidManifest.xml">permissions</a> and controlling application components is not one of them. </p>
+<p class="noindent"><span class="paragraphHead"><a href="#x1-245000B.4.9" id="x1-245000B.4.9">Known Limitation</a></span> Not all translations are verified yet. </p>
 
-<h4 class="subsectionHead"><span class="titlemark">4.2.4</span> <a href="#QQ2-1-175" id="x1-1750004.2.4">Which features can be used in ADB mode?</a></h4>
+<h4 class="subsectionHead"><span class="titlemark">B.4.10</span> <a href="#QQ2-1-246" id="x1-246000B.4.10">App Data Backup</a></h4>
 <!--l. 19-->
-<p class="noindent">Most of the features supported by ADB mode are enabled by default once ADB support is detected by AM. These include disable, force-stop, clear data, grant/revoke app ops and permissions. You can also install applications without any prompt and view <a href="#x1-280002.1.5.6">running apps/processes</a>.</p>
+<p class="noindent">Install app only for the current user at the time of restoring backups. Support for split apks is also added.</p>
 <h3 class="sectionHead"><span class="titlemark">4.3</span> <a href="#QQ2-1-176" id="x1-1760004.3">Miscellanea</a></h3>
 <!--l. 3-->
 
@@ -1163,10 +1163,10 @@
 
 <h4 class="subsectionHead"><span class="titlemark">4.3.5</span> <a href="#QQ2-1-181" id="x1-1810004.3.5">What are bloatware and how to remove them?</a></h4>
 <!--l. 34-->
-<p class="noindent">Bloatware are the unnecessary apps supplied by the vendor or OEM and are usually system apps. These apps are often used to track users and collect user data which they might sell for profits. System apps do not need to request any permission in order to access device info, contacts and messaging data, and other usage info such as your phone usage habits and everything you store on your shared storage(s). </p>
-<p class="indent">The bloatware may also include Google apps (such as Google Play Services, Google Play Store, Gmail, Google, Messages, Dialer, Contacts), Facebook apps (the Facebook app consists of four or five apps), Facebook Messenger, Instagram, Twitter and many other apps which can also track users and/or collect user data without consent given that they all are system apps. You can disable a few permissions from the Android settings but be aware that Android settings hides almost every permission any security specialist would call potentially <span class="pplri8t-">dangerous</span>. </p>
-<p class="indent"><a href="#x1-600002.5">Profiles</a> finally closes the <a href="https://github.com/MuntashirAkon/AppManager/issues/72">related issue</a>. Profiles can be used to execute certain tasks repeatedly without doing everything manually. A profile can be applied (or invoked) either from the <a href="#x1-580002.4">Profiles page</a> or from the home screen by creating shortcuts. There are also some presets which consist of debloating profiles taken from <a href="https://gitlab.com/W1nst0n/universal-android-debloater">Universal Android Debloater</a>. </p>
-<p class="indent">Another solution is to disable these apps either from Android settings (no-root) or AM, but certain services can still run in the background as they can be started by other system apps using Inter-process Communication (IPC). One possible solution is to disable all bloatware until the service has finally stopped (after a restart). However, due to heavy modifications of the Android frameworks by the vendors, removing or disabling certain bloatware may cause the System UI to crash or even cause bootloop, thus, (soft) bricking your device. You may search the web or consult the fellow users to find out more about how to debloat your device. </p>
+<p class="noindent">Each operation has a private name which are described by <span class="ectt-1000">sOpNames</span>. These names are usually the same names as the constants without the <span class="ectt-1000">OP_</span> prefix. Some operations have public names as well which are described by <span class="ectt-1000">sOpToString</span>. For instance, <span class="ectt-1000">OP_COARSE_LOCATION</span> has the public name <span class="pplb8t-">android:coarse_location</span>. </p>
+<p class="indent">As a gradual process of moving permissions to app ops, there are already many permissions that are defined under some operations. These permissions are mapped in <span class="ectt-1000">sOpPerms</span>. For example, the permission <span class="pplb8t-">android.Manifest.permission.ACCESS_COARSE_LOCATION</span> is mapped to <span class="ectt-1000">OP_COARSE_LOCATION</span>. Some operations may not have any associated permissions which have <span class="ectt-1000">null</span> values. </p>
+<p class="indent">As described in the previous section, operations that are configured for an app are stored at <a href="#x1-257000C.5"><span class="ectt-1000">/data/system/appops.xml</span></a>. If an operation is not configured, then whether system will allow that operation is determined from <span class="ectt-1000">sOpDefaultMode</span>. It lists the <span class="pplri8t-">default mode</span> for each operation. </p>
+<p class="indent"><span class="ectt-1000">MODE_*</span> constants also integer constants starting from <span class="ectt-1000">0</span>. These constants are assigned to each operation describing whether an app is authorised to perform that operation. These modes usually have associated names such as <span class="pplb8t-">allow</span> for <span class="ectt-1000">MODE_ALLOWED</span>, <span class="pplb8t-">ignore</span> for <span class="ectt-1000">MODE_IGNORED</span>, <span class="pplb8t-">deny</span> for <span class="ectt-1000">MODE_ERRORED</span> (a rather misnomer), <span class="pplb8t-">default</span> for <span class="ectt-1000">MODE_DEFAULT</span> and <span class="pplb8t-">foreground</span> for <span class="ectt-1000">MODE_FOREGROUND</span>. </p>
 <p class="indent">From v2.5.19, AM has a new feature called <a href="#x1-710002.5">profiles</a>. The <a href="#x1-690002.4">profiles page</a> has an option to create new profiles from one of the presets. The presets consist of debloating profiles which can be used as a starting point to monitor, disable, and remove the bloatware from a proprietary Android operating system.</p>
 <div class="mdframed" id="mdframed-40"><!--l. 67-->
 <p class="noindent"><span class="pplbi8t-">Note.</span> In most cases, you cannot completely debloat your device. Therefore, it is recommended that you use a custom ROM free from bloatware such as Graphene OS, Lineage OS or their derivatives.</p>
@@ -1183,7 +1183,7 @@
 <p class="noindent">AM currently supports blocking activities, broadcast receivers, content providers, services, app ops and permissions, and in future I may add more blocking options. In order to add more portability, it is necessary to import/export all these data. </p>
 <p class="indent">Maintaining a database should be the best choice when it comes to storing data. For now, several <span class="ectt-1000">tsv</span> files with each file having the name of the package and a <span class="ectt-1000">.tsv</span> extension. The file/database will be queried/processed by the <span class="ectt-1000">RulesStorageManager</span> class. Due to this abstraction, it should be easier to switch to database or encrypted database systems in future without changing the design of the entire project. Currently, All configuration files are stored at <span class="ectt-1000">/data/data/io.github.muntashirakon.AppManager/Files/conf</span>. </p>
 
-<h4 class="subsectionHead"><span class="titlemark">B.1.5</span> <a href="#QQ2-1-182" id="x1-182000B.1.5">Vive la France!</a></h4>
+<h4 class="subsectionHead"><span class="titlemark">A.1.2</span> <a href="#QQ2-1-185" id="x1-185000A.1.2">Rules File Format</a></h4>
 <!--l. 17-->
 
 <h5 class="subsubsectionHead"><span class="titlemark">A.1.2.1</span> <a href="#QQ2-1-186" id="x1-186000A.1.2.1">Internal</a></h5>
@@ -1196,14 +1196,14 @@
 <li class="itemize"><span class="ectt-1000">&lt;name&gt;</span> – Component/permission/app op name (in case of app op, it could be string or integer)</li>
 <li class="itemize"><span class="ectt-1000">&lt;type&gt;</span> – One of the <span class="ectt-1000">ACTIVITY</span>, <span class="ectt-1000">RECEIVER</span>, <span class="ectt-1000">PROVIDER</span>, <span class="ectt-1000">SERVICE</span>, <span class="ectt-1000">APP_OP</span>, <span class="ectt-1000">PERMISSION</span></li>
 <li class="itemize"><span class="ectt-1000">&lt;mode&gt;</span> – (For app ops) The associated <a href="#x1-252000C.3.2">mode constant</a></li>
-<li class="itemize"><span class="ectt-1000">&lt;component_status&gt;</span> – (For components) Component status
+<li class="itemize"><span class="ectt-1000">mOp</span>: Denotes one of the <a href="#x1-251000C.3.1"><span class="ectt-1000">OP_*</span> constants</a>
 <ul class="itemize2">
 <li class="itemize"><span class="ectt-1000">true</span> – Component has been applied (<span class="ectt-1000">true</span> value is kept for compatibility)</li>
 <li class="itemize"><span class="ectt-1000">false</span> – Component hasn’t been applied yet, but will be applied in future (<span class="ectt-1000">false</span> value is kept for compatibility)</li>
 <li class="itemize"><span class="ectt-1000">unblocked</span> – Component is scheduled to be unblocked</li>
 </ul>
 </li>
-<li class="itemize"><span class="ectt-1000">&lt;is_granted&gt;</span> – (For permissions) Whether the permission is granted or revoked</li>
+<li class="itemize"><span class="ectt-1000">mProxyPackageNames:</span> No documentation found</li>
 </ul>
 <!--l. 38-->
 
@@ -1212,7 +1212,7 @@
 <p class="noindent">External format is used for importing or exporting rules in App Manager.</p>
 <div class="fancyvrb" id="fancyvrb10"><a id="x1-187002r1"></a><span class="ectt-1000"> </span><span class="ectt-1000"> </span><span class="ectt-1000"> </span><span class="ectt-1000"> &lt;package_name&gt;</span><span class="ectt-1000"> &lt;component_name&gt;</span><span class="ectt-1000"> &lt;type&gt;</span><span class="ectt-1000"> &lt;mode&gt;|&lt;component_status&gt;|&lt;is_granted&gt;</span></div>
 <!--l. 43-->
-<p class="noindent">In settings page, you can choose to sign APK files before installing them. You can also select which signature scheme to use in the <span class="pplri8t-">APK signing</span> option in settings.</p>
+<p class="noindent">This the format is essentially the same as above except for the first item which is the name of the package.</p>
 <div class="mdframed" id="mdframed-41"><!--l. 45-->
 <p class="noindent"><span class="pplbi8t-">Caution.</span> The exported rules have a different format than the internal one and should not be copied directly to the <span class="pplb8t-">conf</span> folder.</p>
 
@@ -1246,21 +1246,21 @@
 <!--l. 26-->
 <p class="noindent">App info tab now has many options, including the ability to change <a href="#x1-30001.1">SSAID</a>, network policy (i.e. background network usage), battery optimization, etc. Most of the tags used in this tab are also clickable, and if you click on them, you will be able to look at the current state or configure them right away. </p>
 
-<h4 class="subsectionHead"><span class="titlemark">B.2.6</span> <a href="#QQ2-1-198" id="x1-198000B.2.6">Navigation Improvements</a></h4>
+<h4 class="subsectionHead"><span class="titlemark">B.1.7</span> <a href="#QQ2-1-196" id="x1-196000B.1.7">Advanced Sort and Filtering Options in the Main Page</a></h4>
 <!--l. 32-->
-<p class="noindent">It’s now relatively easy to navigate to various UI components using keyboard. You can use up/down button to navigate between list items and tab button to navigate to UI components inside an item. </p>
+<p class="noindent">Sort and filter options are now replaced by <a href="#x1-220002.1.5.2">List Options</a> which is highly configurable, including the ability to filter using profiles. </p>
 
-<h4 class="subsectionHead"><span class="titlemark">B.2.7</span> <a href="#QQ2-1-199" id="x1-199000B.2.7">Running Apps Page</a></h4>
+<h4 class="subsectionHead"><span class="titlemark">B.1.8</span> <a href="#QQ2-1-197" id="x1-197000B.1.8">About This Device</a></h4>
 <!--l. 36-->
-<p class="noindent">It is now possible to sort and filter processes in this tab. Also, the three big buttons are replaced with an easy-to-use three dot menu. Previously the memory usage was wrong which is fixed in this version. </p>
+<p class="noindent">Interested in knowing about your device in just one page? Go to the bottom of the <a href="#x1-1190002.6.11">settings page</a>. </p>
 
-<h4 class="subsectionHead"><span class="titlemark">B.2.8</span> <a href="#QQ2-1-200" id="x1-200000B.2.8">Built-in Toybox</a></h4>
+<h4 class="subsectionHead"><span class="titlemark">B.1.9</span> <a href="#QQ2-1-198" id="x1-198000B.1.9">Enable/disable Features</a></h4>
 <!--l. 40-->
-<p class="noindent">Toybox (an alternative to busybox) is bundled with AM. Although Android has this utility built-in from API 23, toybox is bundled in order to prevent buggy implementations and to support API &lt; 23. </p>
+<p class="noindent">Not interested in all the features that AM offers? You can disable some features in <a href="#x1-940002.6.5">settings</a>. </p>
 
-<h4 class="subsectionHead"><span class="titlemark">B.2.9</span> <a href="#QQ2-1-201" id="x1-201000B.2.9">Component Blocker Improvements</a></h4>
+<h4 class="subsectionHead"><span class="titlemark">B.1.10</span> <a href="#QQ2-1-199" id="x1-199000B.1.10">New Languages</a></h4>
 <!--l. 44-->
-<p class="noindent">Component blocker seemed to be problematic in the previous version, especially when global component blocking is enabled. The issues are mostly fixed now. </p>
+<p class="noindent">AM now has more than 19 languages! New languages include Farsi, Japanese and Traditional Chinese. </p>
 
 <h4 class="subsectionHead"><span class="titlemark">B.1.11</span> <a href="#QQ2-1-200" id="x1-200000B.1.11">Signing the APK Files</a></h4>
 <!--l. 48-->
@@ -1268,7 +1268,7 @@
 
 <h4 class="subsectionHead"><span class="titlemark">B.1.12</span> <a href="#QQ2-1-201" id="x1-201000B.1.12">New Extension: UnAPKM</a></h4>
 <!--l. 51-->
-<p class="noindent">If an app has the target API 23 or less, its permissions cannot be modified using the <span class="ectt-1000">pm grant</span> <span class="ectt-1000">…</span> command. Therefore, for such apps, option to toggle permission has been disabled. </p>
+<p class="noindent">Since APKMirror has removed encryption from their APKM files, it’s no longer necessary to decrypt them. As a result, the option to decrypt APKM files has been removed. Instead, this option is now provided by the UnAPKM extension which you can grab from <a href="https://f-droid.org/packages/io.github.muntashirakon.unapkm/">F-Droid</a>. So, if you have an encrypted APKM file and have this extension installed, you can open the file directly in AM. </p>
 
 <h3 class="sectionHead"><span class="titlemark">B.2</span> <a href="#QQ2-1-202" id="x1-202000B.2">v2.5.20 (375)</a></h3>
 <!--l. 59-->
@@ -1296,19 +1296,19 @@
 <!--l. 88-->
 <p class="noindent">App manager now supports multiple users! For now, this requires root or ADB. But no-root support is also being considered. If you have multiple users enabled and click on an app installed in multiple profiles, an alert prompt will be displayed where you can select the user. </p>
 
-<h4 class="subsectionHead"><span class="titlemark">B.3.3</span> <a href="#QQ2-1-209" id="x1-209000B.3.3">Remove All Blocking Rules</a></h4>
+<h4 class="subsectionHead"><span class="titlemark">B.2.5</span> <a href="#QQ2-1-209" id="x1-209000B.2.5">Vive la France!</a></h4>
 <!--l. 93-->
-<p class="noindent">In the Settings page, a new option is added which can be used to remove all blocking rules configured within App Manager. </p>
+<p class="noindent">Thanks to the contributors, we have one more addition to the language club: French. You can add more languages or improve existing translations at <a href="https://hosted.weblate.org/engage/app-manager">Weblate</a>. </p>
 
-<h4 class="subsectionHead"><span class="titlemark">B.3.4</span> <a href="#QQ2-1-210" id="x1-210000B.3.4">App Ops</a></h4>
+<h4 class="subsectionHead"><span class="titlemark">B.2.6</span> <a href="#QQ2-1-210" id="x1-210000B.2.6">Report crashes</a></h4>
 <!--l. 97-->
 <p class="noindent">If App Manager crashes, you can now easily report the crash from the notifications which opens the share options. Crashes are not reported by App Manager, it only redirects you to your favourite Email client. </p>
 
 <h4 class="subsectionHead"><span class="titlemark">B.2.7</span> <a href="#QQ2-1-211" id="x1-211000B.2.7">Android 11</a></h4>
 <!--l. 101-->
-<p class="noindent"><span class="paragraphHead"><a href="#x1-211000B.3.4" id="x1-211000B.3.4">Known Limitation</a></span> Often the App Ops tab may not be responsive. If that’s the case, restart App Manager. </p>
+<p class="noindent">Added support for Android 11. Not everything may work as expected though. </p>
 
-<h4 class="subsectionHead"><span class="titlemark">B.3.5</span> <a href="#QQ2-1-212" id="x1-212000B.3.5">Enhanced ADB Support</a></h4>
+<h4 class="subsectionHead"><span class="titlemark">B.2.8</span> <a href="#QQ2-1-212" id="x1-212000B.2.8">App Installer Improvements</a></h4>
 <!--l. 105-->
 
 <h5 class="subsubsectionHead"><span class="titlemark">B.2.8.1</span> <a href="#QQ2-1-213" id="x1-213000B.2.8.1">Set installation locations</a></h5>
@@ -1334,7 +1334,7 @@
 <h4 class="subsectionHead"><span class="titlemark">B.3.1</span> <a href="#QQ2-1-219" id="x1-219000B.3.1">App Installer</a></h4>
 <!--l. 123-->
 <p class="noindent">As promised, it is now possible to select splits. AM also provides recommendations based on device configurations. If the app is already installed, recommendations are provided based on the installed app. It is also possible to downgrade to a lower version without data loss if the device has root or ADB. But it should be noted that not all app can be downgraded. Installer is also improved to speed up the installation process, especially, for root users. If the app has already been installed and the new (x)apk(s) is newer or older or the same version with a different signature, AM will display a list of changes similar to <span class="pplb8t-">What’s New</span> before prompting the user to install the app. This is useful if the app has introduced tracker components, new permissions, etc. </p>
-<p class="noindent"><span class="paragraphHead"><a href="#x1-220000B.3.1" id="x1-220000B.3.1">Install app only for the current user at the time of restoring backups. Support for split apks is also added.</a></span></p>
+<p class="noindent"><span class="paragraphHead"><a href="#x1-220000B.3.1" id="x1-220000B.3.1">Known Limitations</a></span></p>
 <ul class="itemize1">
 <li class="itemize">Large app can take a long time to fetch app info and therefore it may take a long time display the installation prompt.</li>
 <li class="itemize">If the apk is not located in the internal storage, the app has to be cached first which might also take a long time depending on the size of the apk.</li>
@@ -1356,7 +1356,7 @@
 
 <h4 class="subsectionHead"><span class="titlemark">B.3.5</span> <a href="#QQ2-1-224" id="x1-224000B.3.5">App Info Tab</a></h4>
 <!--l. 155-->
-<p class="noindent">Figure <a href="#x1-222001r0">C.0</a> describes the process of changing and processing permission. <a href="#x1-223000C.3">AppOpsManager</a> can be used to manage permissions in Settings app. <span class="pplb8t-">AppOpsManager</span> is also useful in determining if a certain permission (or operation) is granted to the application. Most of the methods of <span class="pplb8t-">AppOpsManager</span> are accessible to the user app but unlike a system app, it can only be used to check permissions for any app or for the app itself and start or terminating certain operations. Moreover, not all operations are actually accessible from this Java class. <span class="pplb8t-">AppOpsManager</span> holds all the necessary constants such as <a href="#x1-224000C.3.1"><span class="ectt-1000">OP_*</span></a>, <span class="ectt-1000">OPSTR_*</span>, <a href="#x1-225000C.3.2"><span class="ectt-1000">MODE_*</span></a> which describes operation code, operation string and mode of operations respectively. It also holds necessary data structures such as <a href="#x1-226000C.3.3">PackageOps</a> and <span class="pplb8t-">OpEntry</span>. <span class="pplb8t-">PackageOps</span> holds <span class="pplb8t-">OpEntry</span> for a package, and <span class="pplb8t-">OpEntry</span>, as the name suggests, describes each operation. </p>
+<p class="noindent">More tags are added in the <a href="#x1-360002.2.2">app info tab</a> such as <span class="pplb8t-">KeyStore</span> (apps with KeyStore items), <span class="pplb8t-">Systemless app</span> (apps installed via Magisk), <span class="pplb8t-">Running</span> (apps that are running). For external apk, two more options are added namely <span class="pplb8t-">Reinstall</span> and <span class="pplb8t-">Downgrade</span>. Now it is possible to share an apk via Bluetooth. For system apps, it is possible to uninstall updates for root/ADB users. But like the similar option in the system settings, this operation will clear all app data. As stated above, exodus has been replaced with scanner. </p>
 
 <h4 class="subsectionHead"><span class="titlemark">B.3.6</span> <a href="#QQ2-1-225" id="x1-225000B.3.6">Navigation Improvements</a></h4>
 <!--l. 162-->
@@ -1364,11 +1364,11 @@
 
 <h4 class="subsectionHead"><span class="titlemark">B.3.7</span> <a href="#QQ2-1-226" id="x1-226000B.3.7">Running Apps Page</a></h4>
 <!--l. 166-->
-<p class="noindent"><span class="pplri8t-">See also:</span> <a href="https://developer.android.com/reference/android/app/AppOpsManager"><span class="pplri8t-">AppOpsManager documentation</span></a> </p>
+<p class="noindent">It is now possible to sort and filter processes in this tab. Also, the three big buttons are replaced with an easy-to-use three dot menu. Previously the memory usage was wrong which is fixed in this version. </p>
 
-<h4 class="subsectionHead"><span class="titlemark">C.3.1</span> <a href="#QQ2-1-225" id="x1-224000C.3.1"><span class="ectt-1000">OP_*</span> Constants</a></h4>
+<h4 class="subsectionHead"><span class="titlemark">B.3.8</span> <a href="#QQ2-1-227" id="x1-227000B.3.8">Built-in Toybox</a></h4>
 <!--l. 170-->
-<p class="noindent"><span class="ectt-1000">OP_*</span> are the integer constants starting from <span class="ectt-1000">0</span>. <span class="ectt-1000">OP_NONE</span> implies that no operations are specified whereas <span class="ectt-1000">_NUM_OP</span> denotes the number of operations defined in <span class="ectt-1000">OP_*</span> prefix. While they denote each operation, the operations are not necessarily unique. In fact, there are many operations that are actually a single operation denoted by multiple <span class="ectt-1000">OP_*</span> constant (possibly for future use). Vendors may define their own op based on their requirements. MIUI is one of the vendors who are known to do that. </p>
+<p class="noindent">Toybox (an alternative to busybox) is bundled with AM. Although Android has this utility built-in from API 23, toybox is bundled in order to prevent buggy implementations and to support API &lt; 23. </p>
 
 <h4 class="subsectionHead"><span class="titlemark">B.3.9</span> <a href="#QQ2-1-228" id="x1-228000B.3.9">Component Blocker Improvements</a></h4>
 <!--l. 174-->
@@ -1393,7 +1393,7 @@
 <h4 class="subsectionHead"><span class="titlemark">B.4.1</span> <a href="#QQ2-1-232" id="x1-232000B.4.1">Bundled App (Split APK)</a></h4>
 <!--l. 198-->
 <p class="noindent">Bundled app formats such as <span class="pplb8t-">apks</span> and <span class="pplb8t-">xapk</span> are now supported. You can install these apps using the regular installation buttons. For root and adb users, apps are installed using shell, and for non-root users, the platform default method is used. </p>
-<p class="noindent"><span class="paragraphHead"><a href="#x1-233000B.4.1" id="x1-233000B.4.1">Install app only for the current user at the time of restoring backups. Support for split apks is also added.</a></span></p>
+<p class="noindent"><span class="paragraphHead"><a href="#x1-233000B.4.1" id="x1-233000B.4.1">Known Limitations</a></span></p>
 <ul class="itemize1">
 <li class="itemize">Currently <span class="pplri8t-">all</span> splits apks are installed. But this behaviour is going to change in the next release. If you only need a few splits instead of all, extract the <span class="pplb8t-">APKS</span> or <span class="pplb8t-">XAPK</span> file, and then, create a new zip file with your desired split apks and replace the <span class="pplb8t-">ZIP</span> extension with <span class="pplb8t-">APKS</span>. Now, open it with AM.</li>
 <li class="itemize">There is no progress dialog to display the installation progress.</li>
@@ -1403,7 +1403,7 @@
 <h4 class="subsectionHead"><span class="titlemark">B.4.2</span> <a href="#QQ2-1-234" id="x1-234000B.4.2">Direct Install Support</a></h4>
 <!--l. 211-->
 <p class="noindent">You can now install <span class="pplb8t-">APK</span>, <span class="pplb8t-">APKS</span> or <span class="pplb8t-">XAPK</span> directly from your favourite browser or file manager. For apps that need updates, a <span class="pplb8t-">What’s New</span> dialog is displayed showing the changes in the new version. </p>
-<p class="noindent"><span class="paragraphHead"><a href="#x1-235000B.4.2" id="x1-235000B.4.2">Install app only for the current user at the time of restoring backups. Support for split apks is also added.</a></span></p>
+<p class="noindent"><span class="paragraphHead"><a href="#x1-235000B.4.2" id="x1-235000B.4.2">Known Limitations</a></span></p>
 <ul class="itemize1">
 <li class="itemize">Downgrade is not yet possible.</li>
 <li class="itemize">There is no progress dialog to display the installation progress. If you cannot interact with the current page, wait until the installation is finished.</li>
@@ -1414,7 +1414,7 @@
 <!--l. 222-->
 <p class="noindent">In the Settings page, a new option is added which can be used to remove all blocking rules configured within App Manager. </p>
 
-<h4 class="subsectionHead"><span class="titlemark">C.3.3</span> <a href="#QQ2-1-228" id="x1-226000C.3.3">PackageOps</a></h4>
+<h4 class="subsectionHead"><span class="titlemark">B.4.4</span> <a href="#QQ2-1-237" id="x1-237000B.4.4">App Ops</a></h4>
 <ul class="itemize1">
 <li class="itemize">App Ops are now generated using a technique similar to AppOpsX. This should decrease the loading time significantly in the App Ops tab.</li>
 <li class="itemize">In the App Ops tab, a menu item is added which can be used to list only active app ops without including the default app ops. The preference is saved in the shared preferences.</li>
@@ -1431,9 +1431,9 @@
 <!--l. 241-->
 <p class="noindent">Add an option to filter apps that has at least one activity. </p>
 
-<h4 class="subsectionHead"><span class="titlemark">C.3.4</span> <a href="#QQ2-1-230" id="x1-227000C.3.4">OpEntry</a></h4>
+<h4 class="subsectionHead"><span class="titlemark">B.4.7</span> <a href="#QQ2-1-242" id="x1-242000B.4.7">Apk Backup/Sharing</a></h4>
 <!--l. 244-->
-<p class="noindent"><span class="pplb8t-">AppOpsManager.OpEntry</span> is a data structure that stores a single operation for any package. </p>
+<p class="noindent">Apk files are now saved as <span class="ectt-1000">app name_version.extension</span> instead of <span class="ectt-1000">package.name.extension</span>. </p>
 
 <h4 class="subsectionHead"><span class="titlemark">B.4.8</span> <a href="#QQ2-1-243" id="x1-243000B.4.8">Batch Ops</a></h4>
 <ul class="itemize1">
@@ -1460,18 +1460,18 @@
 <!--l. 22-->
 
 <figure class="figure"><a id="x1-249001r0"></a> <!--l. 22-->
-<p class="noindent"><img src="../images/appops.png" alt="PIC" style="width:83.44%" /></p>
+<p class="noindent"><img src="../images/appops.png" alt="FOTO" style="width:83.44%" /></p>
 <figcaption class="caption"><span class="id">Figure C.0:</span><span class="content">How app ops work</span></figcaption>
 <!--tex4ht:label?: x1-249001r0 -->
 <!--l. 27-->
 
 </figure>
 <!--l. 29-->
-<p class="indent">TODO </p>
+<p class="indent">Figure <a href="#x1-249001r0">C.0</a> describes the process of changing and processing permission. <a href="#x1-250000C.3">AppOpsManager</a> can be used to manage permissions in Settings app. <span class="pplb8t-">AppOpsManager</span> is also useful in determining if a certain permission (or operation) is granted to the application. Most of the methods of <span class="pplb8t-">AppOpsManager</span> are accessible to the user app but unlike a system app, it can only be used to check permissions for any app or for the app itself and start or terminating certain operations. Moreover, not all operations are actually accessible from this Java class. <span class="pplb8t-">AppOpsManager</span> holds all the necessary constants such as <a href="#x1-251000C.3.1"><span class="ectt-1000">OP_*</span></a>, <span class="ectt-1000">OPSTR_*</span>, <a href="#x1-252000C.3.2"><span class="ectt-1000">MODE_*</span></a> which describes operation code, operation string and mode of operations respectively. It also holds necessary data structures such as <a href="#x1-253000C.3.3">PackageOps</a> and <span class="pplb8t-">OpEntry</span>. <span class="pplb8t-">PackageOps</span> holds <span class="pplb8t-">OpEntry</span> for a package, and <span class="pplb8t-">OpEntry</span>, as the name suggests, describes each operation. </p>
 <p class="indent"><span class="ectt-1000">AppOpService</span> is completely hidden from a user application but accessible to the system applications. As it can be seen in Figure <a href="#x1-249001r0">C.0</a>, this is the class that does the actual management stuff. It contains data structures such as <span class="pplb8t-">Ops</span> to store basic package info and <span class="pplb8t-">Op</span> which is similar to <span class="pplb8t-">OpEntry</span> of <span class="pplb8t-">AppOpsManager</span>. It also has <span class="pplb8t-">Shell</span> which is actually the source code of the <a href="#x1-258000C.6"><span class="pplri8t-">appops</span> command line tool</a>. It writes configurations to or read configurations from <a href="#x1-257000C.5"><span class="ectt-1000">/data/system/appops.xml</span></a>. System services calls <span class="pplb8t-">AppOpsService</span> to find out what an application is allowed and what is not allowed to perform, and <span class="pplb8t-">AppOpsService</span> determines these permissions by parsing <span class="ectt-1000">/data/system/appops.xml</span>. If no custom values are present in <span class="pplri8t-">appops.xml</span>, it returns the default mode available in <span class="pplb8t-">AppOpsManager</span>.</p>
-<h3 class="sectionHead"><span class="titlemark">C.5</span> <a href="#QQ2-1-234" id="x1-230000C.5">appops.xml</a></h3>
+<h3 class="sectionHead"><span class="titlemark">C.3</span> <a href="#QQ2-1-251" id="x1-250000C.3">AppOpsManager</a></h3>
 <!--l. 51-->
-<p class="noindent">Latest <span class="ectt-1000">appops.xml</span> has the following format: (This DTD is made by me and by no means perfect, has compatibility issues.) </p>
+<p class="noindent"><a href="https://android.googlesource.com/platform/frameworks/base/+/master/core/java/android/app/AppOpsManager.java">AppOpsManager</a> stands for application operations manager. It consists of various constants and classes to modify app operations. </p>
 <p class="noindent"><span class="pplri8t-">See also:</span> <a href="https://developer.android.com/reference/android/app/AppOpsManager"><span class="pplri8t-">AppOpsManager documentation</span></a> </p>
 
 <h4 class="subsectionHead"><span class="titlemark">C.3.1</span> <a href="#QQ2-1-252" id="x1-251000C.3.1"><span class="ectt-1000">OP_*</span> Constants</a></h4>
