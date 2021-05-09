@@ -1109,4 +1109,6 @@
     <string name="java_keystore">Java KeyStore (JKS)</string>
     <string name="bootloader">Bootloader</string>
     <string name="permissive">Дозволено</string>
+    <string name="ssaid">SSAID</string>
+    <string name="type_uri">URI</string>
 </resources>
