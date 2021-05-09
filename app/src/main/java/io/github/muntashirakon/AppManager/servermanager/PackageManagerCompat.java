@@ -121,7 +121,7 @@ public final class PackageManagerCompat {
                     int newFlags = flags & ~(PackageManager.GET_SERVICES | PackageManager.GET_PROVIDERS
                             | PackageManager.GET_RECEIVERS | PackageManager.GET_PERMISSIONS);
                     PackageInfo info1 = pm.getPackageInfo(packageName, newFlags, userHandle);
-                    activities = info1.activities;
+                    if (info1 != null) activities = info1.activities;
                     flags &= ~PackageManager.GET_ACTIVITIES;
                 }
                 ServiceInfo[] services = null;
@@ -129,7 +129,7 @@ public final class PackageManagerCompat {
                     int newFlags = flags & ~(PackageManager.GET_ACTIVITIES | PackageManager.GET_PROVIDERS
                             | PackageManager.GET_RECEIVERS | PackageManager.GET_PERMISSIONS);
                     PackageInfo info1 = pm.getPackageInfo(packageName, newFlags, userHandle);
-                    services = info1.services;
+                    if (info1 != null) services = info1.services;
                     flags &= ~PackageManager.GET_SERVICES;
                 }
                 ProviderInfo[] providers = null;
@@ -137,7 +137,7 @@ public final class PackageManagerCompat {
                     int newFlags = flags & ~(PackageManager.GET_ACTIVITIES | PackageManager.GET_SERVICES
                             | PackageManager.GET_RECEIVERS | PackageManager.GET_PERMISSIONS);
                     PackageInfo info1 = pm.getPackageInfo(packageName, newFlags, userHandle);
-                    providers = info1.providers;
+                    if (info1 != null) providers = info1.providers;
                     flags &= ~PackageManager.GET_PROVIDERS;
                 }
                 ActivityInfo[] receivers = null;
@@ -145,7 +145,7 @@ public final class PackageManagerCompat {
                     int newFlags = flags & ~(PackageManager.GET_ACTIVITIES | PackageManager.GET_SERVICES
                             | PackageManager.GET_PROVIDERS | PackageManager.GET_PERMISSIONS);
                     PackageInfo info1 = pm.getPackageInfo(packageName, newFlags, userHandle);
-                    receivers = info1.receivers;
+                    if (info1 != null) receivers = info1.receivers;
                     flags &= ~PackageManager.GET_RECEIVERS;
                 }
                 PermissionInfo[] permissions = null;
@@ -153,7 +153,7 @@ public final class PackageManagerCompat {
                     int newFlags = flags & ~(PackageManager.GET_ACTIVITIES | PackageManager.GET_SERVICES
                             | PackageManager.GET_PROVIDERS | PackageManager.GET_RECEIVERS);
                     PackageInfo info1 = pm.getPackageInfo(packageName, newFlags, userHandle);
-                    permissions = info1.permissions;
+                    if (info1 != null) permissions = info1.permissions;
                     flags &= ~PackageManager.GET_PERMISSIONS;
                 }
                 info = pm.getPackageInfo(packageName, flags, userHandle);
