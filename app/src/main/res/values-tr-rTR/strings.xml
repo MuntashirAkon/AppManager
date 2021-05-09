@@ -829,7 +829,6 @@
     <string name="add">Ekle</string>
     <string name="add_to_profile">Profile ekle</string>
     <string name="initializing">Başlatılıyor…</string>
-    <string name="reject_background">Arka planı reddet</string>
     <string name="net_policy">Ağ politikası</string>
     <string name="has_net_policy">Ağ politikası</string>
     <string name="choose_what_to_do">Ne yapılacağını seç.</string>
@@ -1035,4 +1034,11 @@
     <string name="no_changes">Değişiklik yok</string>
     <string name="pref_display_changes_msg">Sürüm, izleyiciler, bileşenler, izinler, imzalar, SDK, vb.\'deki değişiklikleri sürüm denetimi ile görüntüleyin.</string>
     <string name="pref_display_changes">Değişiklikleri görüntüle</string>
+    <string name="netpolicy_disable_network_access">Ağ erişimini devre dışı bırak</string>
+    <string name="netpolicy_reject_wifi_data">Wi-Fi verilerini reddet</string>
+    <string name="netpolicy_reject_vpn_data">VPN verilerini reddet</string>
+    <string name="netpolicy_reject_cellular_data">Hücresel verileri reddet</string>
+    <string name="netpolicy_allow_background_data">Veri Tasarrufu açıkken arka plan verilerine izin ver</string>
+    <string name="netpolicy_reject_background_data">Arka plan verilerini reddet</string>
+    <string name="unknown_netpolicy">Bilinmeyen ağ politikası (%s)</string>
 </resources>
