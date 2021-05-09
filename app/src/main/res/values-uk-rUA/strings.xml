@@ -1071,4 +1071,9 @@
         <item quantity="other">%d файлів буде видалено</item>
     </plurals>
     <string name="launch_mode_single_top">Єдиний зверху</string>
+    <string name="source_code_links">GitHub: https://github.com/MuntashirAkon/AppManager
+\nGitLab: https://gitlab.com/muntashir/AppManager
+\nRiseup: https://0xacab.org/muntashir/AppManager
+\nCodeberg: https://codeberg.org/muntashir/AppManager</string>
+    <string name="apk_updater">APK Updater</string>
 </resources>
