@@ -27,7 +27,10 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.RemoteException;
 import android.permission.IPermissionManager;
-import android.text.TextUtils;
+
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.annotation.WorkerThread;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -36,15 +39,10 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import androidx.annotation.IntDef;
-import androidx.annotation.NonNull;
-import androidx.annotation.WorkerThread;
-
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
-import io.github.muntashirakon.AppManager.misc.SystemProperties;
 import io.github.muntashirakon.AppManager.users.UserIdInt;
-import io.github.muntashirakon.AppManager.utils.DateUtils;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 import static android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DEFAULT;
 import static android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
@@ -74,12 +72,14 @@ public final class PackageManagerCompat {
     public @interface EnabledFlags {
     }
 
+    private static final int workingFlags = PackageManager.GET_META_DATA | PackageUtils.flagMatchUninstalled;
+
     @WorkerThread
     public static List<PackageInfo> getInstalledPackages(int flags, @UserIdInt int userHandle)
             throws RemoteException {
-        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M && flags > 0) {  // GET_META_DATA should also be included
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M && (flags & workingFlags) > 0) {
             // Need workaround
-            List<ApplicationInfo> applicationInfoList = getInstalledApplications(0, userHandle);
+            List<ApplicationInfo> applicationInfoList = getInstalledApplications(flags & workingFlags, userHandle);
             List<PackageInfo> packageInfoList = new ArrayList<>(applicationInfoList.size());
             for (int i = 0; i < applicationInfoList.size(); ++i) {
                 try {
