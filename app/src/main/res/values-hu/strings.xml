@@ -1,2 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="error">Hiba</string>
+    <string name="no_configurations">Nincsenek konfigurációk</string>
+    <string name="configurations">Konfigurációk</string>
+    <string name="sort_by_shared_user_id">Megosztott felhasználói azonosító</string>
+    <string name="no_feature">Nincsenek funkciók</string>
+    <string name="protection_level">Védelmi szint</string>
+    <string name="group">Csoport</string>
+    <string name="declared_permission">Engedélyek</string>
+    <string name="write">Ír</string>
+    <string name="read">Olvas</string>
+    <string name="orientation">Orientáció</string>
+    <string name="service">Szolgáltatások</string>
+    <string name="sort_by_last_update">Utolsó frissítés</string>
+    <string name="no_activities">Nincs aktivitás</string>
+    <string name="refresh">Frissítés</string>
+    <string name="activities">Aktivitás</string>
+    <string name="require_no_permission">Nincs szükség engedélyre</string>
+</resources>
