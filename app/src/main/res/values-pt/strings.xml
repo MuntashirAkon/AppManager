@@ -756,7 +756,6 @@
     <string name="add">Adicionar</string>
     <string name="add_to_profile">Adicionar ao perfil</string>
     <string name="initializing">Iniciando…</string>
-    <string name="reject_background">Rejeitar segundo plano</string>
     <string name="net_policy">Política de rede</string>
     <string name="has_net_policy">Política de rede</string>
     <string name="choose_what_to_do">Escolha o que fazer.</string>
@@ -764,8 +763,8 @@
     <string name="battery_optimization">Otimização de bateria</string>
     <string name="no_battery_optimization">Nenhuma otimização de bateria</string>
     <string name="type_uri">URI</string>
-    <string name="type_string_array_list">Lista de strings</string>
-    <string name="type_string_array">Matriz de strings</string>
+    <string name="type_string_array_list">Lista de cadeias</string>
+    <string name="type_string_array">Matriz de cadeias</string>
     <string name="type_float_array_list">Lista de números decimais</string>
     <string name="type_float_array">Matriz de números decimais</string>
     <string name="type_long_array_list">Lista de números inteiros longos</string>
