@@ -1070,7 +1070,7 @@
         <item quantity="many">%d файлів буде видалено</item>
         <item quantity="other">%d файлів буде видалено</item>
     </plurals>
-    <string name="launch_mode_single_top">Єдиний зверху</string>
+    <string name="launch_mode_single_top">Один зверху</string>
     <string name="source_code_links">GitHub: https://github.com/MuntashirAkon/AppManager
 \nGitLab: https://gitlab.com/muntashir/AppManager
 \nRiseup: https://0xacab.org/muntashir/AppManager
