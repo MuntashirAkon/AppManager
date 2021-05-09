@@ -885,7 +885,6 @@
     <string name="failed_to_change_ssaid">Не вдалося змінити SSAID</string>
     <string name="copied_to_clipboard">Скопійовано до буфера обміну.</string>
     <string name="ssaid_info">SSAID (<tt>Settings.Secure.ANDROID_ID</tt>) - це ідентифікатор пристрою, призначений кожному додатку (з Android Oreo і вище). Він широко використовується додатками для відстеження користувачів.</string>
-    <string name="reject_background">Відхилити фон</string>
     <string name="net_policy">Політика мережі</string>
     <string name="has_net_policy">Політика мережі</string>
     <string name="type_string_array_list">Список рядків</string>
@@ -1075,4 +1074,10 @@
 \nRiseup: https://0xacab.org/muntashir/AppManager
 \nCodeberg: https://codeberg.org/muntashir/AppManager</string>
     <string name="apk_updater">APK Updater</string>
+    <string name="enforcing">Примус</string>
+    <string name="uri">URI</string>
+    <string name="rsa">RSA</string>
+    <string name="aes">AES</string>
+    <string name="dsa_affine_y">Аффінна координата y</string>
+    <string name="dsa_affine_x">Аффінна координата x</string>
 </resources>
