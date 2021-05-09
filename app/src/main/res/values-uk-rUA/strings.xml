@@ -17,7 +17,7 @@
   --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
     <string name="_lang_tag" translatable="false">uk-UA</string>
     <string name="uninstall">Видалити</string>
-    <string name="activities">Актівітності</string>
+    <string name="activities">Activities</string>
     <string name="launch">Запустити</string>
     <string name="refresh">Оновити</string>
     <string name="providers">Провайдери</string>
@@ -69,7 +69,7 @@
     <string name="app_op_cannot_be_disabled">Цей дозвіл неможливо вимкнути. (Можливо він лише для читання, або залежить від іншого дозволу.)</string>
     <string name="failed_to_enable_op">Сталася помилка під час спроби надати дозвіл</string>
     <string name="no_app_ops">Немає операцій з дозволами</string>
-    <string name="app_ops">Операції додатку</string>
+    <string name="app_ops">App Ops</string>
     <string name="sys_config">Конфігурація системи</string>
     <string name="only_install">Лише встановити</string>
     <string name="app_signing_install_without_data_loss">Якщо ви вимкнули перевірку підпису, ви можете використовувати опцію <b>Лише встановити</b>, для установки додатка без втрати даних.</string>
@@ -1088,11 +1088,11 @@
     <string name="netpolicy_reject_cellular_data">Заборонити мобільні дані</string>
     <string name="netpolicy_allow_background_data">Дозволити дані у фоні, коли зберігання даних увімкнено</string>
     <string name="netpolicy_reject_background_data">Заборонити дані у фоні</string>
-    <string name="unknown_netpolicy">Невідома netpolixy (%s)</string>
+    <string name="unknown_netpolicy">Невідома netpolicy (%s)</string>
     <string name="state_parked">Припарковано</string>
     <string name="state_device_io">Пристрій вводу/виводу</string>
     <string name="no_changes">Без змін</string>
-    <string name="pref_display_changes_msg">Показати зміни у версіях, трекери, компоненти, дозволи, підписи, SDK, ітд в режимі контролю версій.</string>
+    <string name="pref_display_changes_msg">Показати зміни у версіях, трекери, компоненти, дозволи, підписи, SDK, і т.д. в режимі контролю версій.</string>
     <string name="pref_display_changes">Показати зміни</string>
     <string name="hidden">Приховано</string>
     <string name="suspended">Призупинено</string>
