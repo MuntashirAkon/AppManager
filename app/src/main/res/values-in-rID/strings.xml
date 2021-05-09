@@ -412,7 +412,6 @@
     <string name="add">Menambahkan</string>
     <string name="add_to_profile">Tambahkan ke profil</string>
     <string name="initializing">Inisialisasi …</string>
-    <string name="allow_background">Izinkan latar belakang</string>
     <string name="reject_background">Tolak latar belakang</string>
     <string name="net_policy">Kebijakan net</string>
     <string name="has_net_policy">Kebijakan net</string>

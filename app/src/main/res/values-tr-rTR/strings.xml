@@ -829,7 +829,6 @@
     <string name="add">Ekle</string>
     <string name="add_to_profile">Profile ekle</string>
     <string name="initializing">Başlatılıyor…</string>
-    <string name="allow_background">Arka plana izin ver</string>
     <string name="reject_background">Arka planı reddet</string>
     <string name="net_policy">Ağ politikası</string>
     <string name="has_net_policy">Ağ politikası</string>

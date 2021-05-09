@@ -1023,7 +1023,6 @@
     <string name="choose_what_to_do">اختر ما يجب القيام به.</string>
     <string name="has_net_policy">سياسة الانترنت</string>
     <string name="net_policy">سياسة الانترنت</string>
-    <string name="allow_background">السماح بالمهام في الخلفية</string>
     <string name="reject_background">رفض المهام في الخلفية</string>
     <string name="initializing">جار التهيئة…</string>
     <string name="add_to_profile">إضافة إلى ملف التعريف</string>

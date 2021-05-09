@@ -578,7 +578,6 @@
     <string name="add">Dodaj</string>
     <string name="add_to_profile">Dodaj do profilu</string>
     <string name="initializing">Inicjalizacja…</string>
-    <string name="allow_background">Zezwól na działanie w tle</string>
     <string name="enable_battery_optimization">Włączyć optymalizację baterii\?</string>
     <string name="type_uri">URI</string>
     <string name="receivers">Odbiorniki</string>

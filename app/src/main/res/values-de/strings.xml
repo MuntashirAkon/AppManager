@@ -831,7 +831,6 @@
     <string name="add">Hinzufügen</string>
     <string name="add_to_profile">Zum Profil hinzufügen</string>
     <string name="initializing">Initialisieren…</string>
-    <string name="allow_background">Hintergrund zulassen</string>
     <string name="reject_background">Hintergrund ablehnen</string>
     <string name="net_policy">Netz-Richtlinie</string>
     <string name="has_net_policy">Netz-Richtlinie</string>
