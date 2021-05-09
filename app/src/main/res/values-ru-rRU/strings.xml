@@ -890,7 +890,6 @@
     <string name="selinux">SELinux</string>
     <string name="net_policy">Сетевая политика</string>
     <string name="has_net_policy">Сетевая политика</string>
-    <string name="reject_background">Отклонить фон</string>
     <string name="list_options">Параметры списка</string>
     <string name="reverse">Обратный порядок</string>
     <string name="os_version">Версия ОС</string>
@@ -1105,4 +1104,11 @@
     <string name="no_changes">Без изменений</string>
     <string name="pref_display_changes_msg">Отображение изменений версии, трекеров, компонентов, разрешений, подписей, SDK и т.д., в режиме контроля версий.</string>
     <string name="pref_display_changes">Отображение изменений</string>
+    <string name="netpolicy_disable_network_access">Отключить доступ к сети</string>
+    <string name="netpolicy_reject_wifi_data">Отклонить данные Wi-Fi</string>
+    <string name="netpolicy_reject_vpn_data">Отклонить данные VPN</string>
+    <string name="netpolicy_reject_cellular_data">Отклонить сотовые данные</string>
+    <string name="netpolicy_allow_background_data">Разрешить фоновые данные, когда включена экономия трафика</string>
+    <string name="netpolicy_reject_background_data">Отклонить фоновые данные</string>
+    <string name="unknown_netpolicy">Неизвестная netpolicy (%s)</string>
 </resources>
