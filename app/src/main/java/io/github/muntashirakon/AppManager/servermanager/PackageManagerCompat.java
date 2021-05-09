@@ -44,6 +44,7 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.misc.SystemProperties;
 import io.github.muntashirakon.AppManager.users.UserIdInt;
+import io.github.muntashirakon.AppManager.utils.DateUtils;
 
 import static android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DEFAULT;
 import static android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
@@ -62,38 +63,37 @@ public final class PackageManagerCompat {
             COMPONENT_ENABLED_STATE_DISABLED_UNTIL_USED,
     })
     @Retention(RetentionPolicy.SOURCE)
-    public @interface EnabledState {}
+    public @interface EnabledState {
+    }
 
     @IntDef(flag = true, value = {
             DONT_KILL_APP,
             SYNCHRONOUS
     })
     @Retention(RetentionPolicy.SOURCE)
-    public @interface EnabledFlags {}
+    public @interface EnabledFlags {
+    }
 
     @WorkerThread
     public static List<PackageInfo> getInstalledPackages(int flags, @UserIdInt int userHandle)
             throws RemoteException {
-        if (flags > 0) {  // GET_META_DATA should also be included
-            String patchLevel = SystemProperties.get("ro.build.version.security_patch", "");
-            if (!TextUtils.isEmpty(patchLevel) && "2018-01-01".equals(patchLevel)) {
-                // Need workaround
-                List<ApplicationInfo> applicationInfoList = getInstalledApplications(0, userHandle);
-                List<PackageInfo> packageInfoList = new ArrayList<>(applicationInfoList.size());
-                for (int i = 0; i < applicationInfoList.size(); ++i) {
-                    try {
-                        packageInfoList.add(getPackageInfo(applicationInfoList.get(i).packageName, flags, userHandle));
-                        if (i % 100 == 0) {
-                            // Prevent DeadObjectException
-                            //noinspection BusyWait
-                            Thread.sleep(300);
-                        }
-                    } catch (Exception e) {
-                        throw new RemoteException(e.getMessage());
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M && flags > 0) {  // GET_META_DATA should also be included
+            // Need workaround
+            List<ApplicationInfo> applicationInfoList = getInstalledApplications(0, userHandle);
+            List<PackageInfo> packageInfoList = new ArrayList<>(applicationInfoList.size());
+            for (int i = 0; i < applicationInfoList.size(); ++i) {
+                try {
+                    packageInfoList.add(getPackageInfo(applicationInfoList.get(i).packageName, flags, userHandle));
+                    if (i % 100 == 0) {
+                        // Prevent DeadObjectException
+                        //noinspection BusyWait
+                        Thread.sleep(300);
                     }
+                } catch (Exception e) {
+                    throw new RemoteException(e.getMessage());
                 }
-                return packageInfoList;
             }
+            return packageInfoList;
         }
         return AppManager.getIPackageManager().getInstalledPackages(flags, userHandle).getList();
     }
@@ -206,7 +206,7 @@ public final class PackageManagerCompat {
                 }
             }, userId);
             dataClearWatcher.await();
-        } catch (RemoteException|SecurityException|InterruptedException e) {
+        } catch (RemoteException | SecurityException | InterruptedException e) {
             e.printStackTrace();
             return false;
         }
@@ -229,7 +229,7 @@ public final class PackageManagerCompat {
                 pm.deleteApplicationCacheFilesAsUser(packageName, userId, observer);
             } else pm.deleteApplicationCacheFiles(packageName, observer);
             dataClearWatcher.await();
-        } catch (RemoteException|SecurityException|InterruptedException e) {
+        } catch (RemoteException | SecurityException | InterruptedException e) {
             e.printStackTrace();
             return false;
         }
