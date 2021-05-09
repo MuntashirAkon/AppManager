@@ -885,7 +885,6 @@
     <string name="failed_to_change_ssaid">Не вдалося змінити SSAID</string>
     <string name="copied_to_clipboard">Скопійовано до буфера обміну.</string>
     <string name="ssaid_info">SSAID (<tt>Settings.Secure.ANDROID_ID</tt>) - це ідентифікатор пристрою, призначений кожному додатку (з Android Oreo і вище). Він широко використовується додатками для відстеження користувачів.</string>
-    <string name="allow_background">Дозволити фон</string>
     <string name="reject_background">Відхилити фон</string>
     <string name="net_policy">Політика мережі</string>
     <string name="has_net_policy">Політика мережі</string>

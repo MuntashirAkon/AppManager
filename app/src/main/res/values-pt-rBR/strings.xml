@@ -830,7 +830,6 @@
     <string name="add">Adicionar</string>
     <string name="add_to_profile">Adicionar ao perfil</string>
     <string name="initializing">Iniciando…</string>
-    <string name="allow_background">Permitir segundo plano</string>
     <string name="reject_background">Rejeitar segundo plano</string>
     <string name="net_policy">Política de rede</string>
     <string name="has_net_policy">Política de rede</string>

@@ -799,7 +799,6 @@
     <string name="add">添加</string>
     <string name="add_to_profile">添加到配置</string>
     <string name="initializing">初始化中…</string>
-    <string name="allow_background">允许后台连接</string>
     <string name="reject_background">拒绝后台连接</string>
     <string name="net_policy">网络策略</string>
     <string name="has_net_policy">网络策略</string>
