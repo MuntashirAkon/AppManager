@@ -831,7 +831,6 @@
     <string name="add">Hinzufügen</string>
     <string name="add_to_profile">Zum Profil hinzufügen</string>
     <string name="initializing">Initialisieren…</string>
-    <string name="reject_background">Hintergrund ablehnen</string>
     <string name="net_policy">Netz-Richtlinie</string>
     <string name="has_net_policy">Netz-Richtlinie</string>
     <string name="choose_what_to_do">Wähle, was Du tun möchtest.</string>
@@ -1037,4 +1036,11 @@
     <string name="no_changes">Keine Änderungen</string>
     <string name="pref_display_changes_msg">Änderungen in Version, Tracker, Komponenten, Berechtigungen, Signaturen, SDK usw. versionskontrolliert anzeigen.</string>
     <string name="pref_display_changes">Änderungen anzeigen</string>
+    <string name="netpolicy_disable_network_access">Netzwerkzugang deaktivieren</string>
+    <string name="netpolicy_reject_wifi_data">Wi-Fi-Daten zurückweisen</string>
+    <string name="netpolicy_reject_vpn_data">VPN-Daten verwerfen</string>
+    <string name="netpolicy_reject_cellular_data">Mobilfunkdaten ablehnen</string>
+    <string name="netpolicy_allow_background_data">Hintergrunddaten zulassen, wenn der Datensparer eingeschaltet ist</string>
+    <string name="netpolicy_reject_background_data">Hintergrunddaten verwerfen</string>
+    <string name="unknown_netpolicy">Unbekannte Netzrichtlinie (%s)</string>
 </resources>
