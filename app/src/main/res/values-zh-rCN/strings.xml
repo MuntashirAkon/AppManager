@@ -18,7 +18,7 @@
     <string name="_lang_tag" translatable="false">zh-CN</string>
     <string name="uninstall">卸载</string>
     <string name="permissions">系统预定义权限</string>
-    <string name="require_no_permission">无需权限</string>
+    <string name="require_no_permission">无权限</string>
     <string name="activities">活动</string>
     <string name="launch">打开</string>
     <string name="refresh">刷新</string>
@@ -163,7 +163,7 @@
     <string name="native_library_dir">原生的java本地接口目录</string>
     <string name="process_name">进程名称</string>
     <string name="no_code">没有代码</string>
-    <string name="requested_large_heap">堆大小</string>
+    <string name="requested_large_heap">大内存</string>
     <string name="updated_app">更新</string>
     <string name="debuggable">可调试</string>
     <string name="test_only">仅测试</string>
@@ -420,7 +420,7 @@
     <string name="website">网址</string>
     <string name="website_message">https://muntashirakon.github.io/AppManager</string>
     <string name="pref_remove_all_rules">删除所有规则</string>
-    <string name="pref_remove_all_rules_msg">权限已被授予，app op 和组件将回到它们的默认值。</string>
+    <string name="pref_remove_all_rules_msg">权限已被授予，APPOPS 和组件将回到它们的默认值。</string>
     <string name="are_you_sure">您确定吗？</string>
     <string name="filter_apps_with_activities">有活动的应用程序</string>
     <string name="toggle_default_app_ops">切换默认应用</string>
@@ -799,7 +799,6 @@
     <string name="add">添加</string>
     <string name="add_to_profile">添加到配置</string>
     <string name="initializing">初始化中…</string>
-    <string name="reject_background">拒绝后台连接</string>
     <string name="net_policy">网络策略</string>
     <string name="has_net_policy">网络策略</string>
     <string name="choose_what_to_do">选择做什么。</string>
@@ -922,7 +921,7 @@
     <string name="open">打开</string>
     <string name="pref_cat_appearance">外观</string>
     <string name="pref_cat_advanced">高级</string>
-    <string name="pref_buffer_title">日志缓存(s)</string>
+    <string name="pref_buffer_title">日志缓冲区(s)</string>
     <string name="pref_cat_configuration">配置</string>
     <string name="pref_default_log_level_title">默认日志级别</string>
     <string name="pref_default_log_level_summary">启动时、打开文件时和记录时的日志级别。</string>
@@ -958,7 +957,7 @@
     </plurals>
     <string name="toast_invalid_selection">无效选择。请重试。</string>
     <string name="toast_invalid_level">无效的级别名称：%s</string>
-    <string name="pref_display_limit_hint">请输入一个 %1$d和%2$d之间的有效数字。</string>
+    <string name="pref_display_limit_hint">请输入一个 %1$d 和 %2$d 之间的有效数字。</string>
     <string name="title_filters">过滤器</string>
     <string name="text_include_device_info">包含设备信息</string>
     <string name="text_filter_text">过滤器文本</string>
@@ -1000,6 +999,6 @@
     <string name="hidden">隐藏</string>
     <string name="suspended">已挂起</string>
     <string name="no_changes">无更改</string>
-    <string name="pref_display_changes_msg">以版本控制的方式显示版本、跟踪器、组件、权限、签名、SDK等的更改。</string>
+    <string name="pref_display_changes_msg">以版本控制的方式显示版本、跟踪器、组件、权限、签名、SDK 等的更改。</string>
     <string name="pref_display_changes">展示更改</string>
 </resources>
