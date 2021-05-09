@@ -106,7 +106,7 @@
 <p class="noindent"><span class="pplri8t-">Donation or purchase is not a requirement in order to use App Manager.</span> While App Manager does not support any purchases, donations can be sent to the author of App Manager using one of the following Bitcoin addresses as a tribute:</p>
 <div class="fancyvrb" id="fancyvrb1"><a id="x1-12002r1"></a><span class="ectt-1000"> </span><span class="ectt-1000"> </span><span class="ectt-1000"> </span><span class="ectt-1000"> 33TDkWVv5EgwfKGJk7YaS2Ev1CBzBP9Sav</span><br class="fancyvrb" /> <a id="x1-12004r2"></a><span class="ectt-1000"> </span><span class="ectt-1000"> </span><span class="ectt-1000"> </span><span class="ectt-1000"> 38bzvWDD99dJhXg9tC4yQEnGdnAKPtwSXG</span><br class="fancyvrb" /> <a id="x1-12006r3"></a><span class="ectt-1000"> </span><span class="ectt-1000"> </span><span class="ectt-1000"> </span><span class="ectt-1000"> 3FHTxPoYa92dNJK6pkhwyVkMG8Vv3VpGpg</span></div>
 <!--l. 105-->
-<p class="indent">Mit dem Senden von BTC stimmt der Absender zu, dass er/sie die Transaktionsinformationen nicht veröffentlicht, d. h. die Transaktion bleibt anonym, und dass er/sie sie nicht als Hebel benutzt, um seine/ihre gewünschten Funktionen zu priorisieren. Feature-Anfragen erfordern keine Kopfgelder oder Spenden, und sie werden nach den Präferenzen der Autoren priorisiert. </p>
+<p class="indent">By sending BTC, the sender agrees that he/she/they shall not make the transaction information public i.e. the transaction will remain anonymous, nor shall he/she/they use it as a leverage to prioritise his/her/their requested features. Feature requests do not require any bounties or donations, and they are prioritised according to the authors’ preferences. </p>
 <p class="indent"><span class="pplri8t-">App Manager is open for funding/grants.</span> Representatives of the interested organizations can contact the author directly using the options given in §<a href="#x1-130001.6">1.6</a>. </p>
 
 <h3 class="sectionHead"><span class="titlemark">1.6</span> <a href="#QQ2-1-13" id="x1-130001.6">Contact</a></h3>
@@ -119,190 +119,190 @@
 
 <h4 class="subsectionHead"><span class="titlemark">2.1.1</span> <a href="#QQ2-1-16" id="x1-160002.1.1">Batch Operations</a></h4>
 <!--l. 10-->
-<p class="noindent">By the way, both activities and services are run in the same <a href="https://stackoverflow.com/questions/7597742">looper</a> called the main looper, which means the services are not really run in the background. It’s the application authors job to ensure that. How do application communicate with services? They use <a href="#x1-440002.2.3.3">broadcast receivers</a>.</p>
+<p class="noindent">Configure in-app theme.</p>
 <ul class="itemize1">
 <li class="itemize">Save APK files to <span class="ectt-1000">AppManager/apks</span></li>
 <li class="itemize"><a href="#x1-1550003.2">Backup/restore/delete app data</a></li>
-<li class="itemize">Löschen von Daten aus Apps</li>
-<li class="itemize">Apps aktivieren/deaktivieren/zwangsstoppen/deinstallieren</li>
-<li class="itemize">Hintergrundbetrieb verhindern</li>
-<li class="itemize">Werbe- und Tracker-Komponenten blockieren</li>
-<li class="itemize">Sperrregeln exportieren</li>
-<li class="itemize">Hinzufügen der ausgewählten Apps zu einem <a href="#x1-690002.4">Profil</a></li>
+<li class="itemize">Clear data from apps</li>
+<li class="itemize">Enable/disable/force-stop/uninstall apps</li>
+<li class="itemize">Prevent background operation</li>
+<li class="itemize">Block ad and tracker components</li>
+<li class="itemize">Export blocking rules</li>
+<li class="itemize">Add the selected apps to a <a href="#x1-690002.4">profile</a></li>
 </ul>
 <!--l. 25-->
 
-<h4 class="subsectionHead"><span class="titlemark">2.1.2</span> <a href="#QQ2-1-17" id="x1-170002.1.2">Farbcodes</a></h4>
+<h4 class="subsectionHead"><span class="titlemark">2.1.2</span> <a href="#QQ2-1-17" id="x1-170002.1.2">Colour Codes</a></h4>
 <!--l. 26-->
-<p class="noindent">Hier ist die Liste der Farben, die auf dieser Seite verwendet werden, und ihre Bedeutung:</p>
+<p class="noindent">Enable or disable certain features in App Manager, such as</p>
 <ul class="itemize1">
-<li class="itemize"><span class="colorbox" id="colorbox1"><span id="textcolor2">Hell grau-orange (Tag)</span></span> / <span class="colorbox" id="colorbox3"><span id="textcolor4">dunkelblau (Nacht)</span></span> - App für Batchbetrieb ausgewählt</li>
-<li class="itemize"><span class="colorbox" id="colorbox5"><span id="textcolor6">Hellrot (Tag)</span></span> / <span class="colorbox" id="colorbox7"><span id="textcolor8">Dunkelrot (Nacht)</span></span> - Deaktivierte App</li>
-<li class="itemize"><span class="colorbox" id="colorbox9"><span id="textcolor10">Gelber Stern</span></span> - App ist im Debug-Modus</li>
-<li class="itemize"><span id="textcolor11">Orange <span class="pplri8t-">Datum</span></span> - App kann Protokolle lesen (Berechtigung erteilt)</li>
-<li class="itemize"><span id="textcolor12">Orange <span class="pplri8t-">UID</span></span> - Benutzer-ID wird von Apps gemeinsam genutzt</li>
-<li class="itemize"><span id="textcolor13">Orange <span class="pplri8t-">SDK</span></span> - Verwendet Klartextverkehr (d. h. HTTP)</li>
-<li class="itemize"><span id="textcolor14">Rot <span class="pplri8t-">Paketname</span></span> - App erlaubt keine Datenlöschung</li>
-<li class="itemize"><span id="textcolor15">Rot <span class="pplri8t-">Backup</span></span> - App nicht installiert, hat aber ein oder mehrere Backups</li>
-<li class="itemize"><span id="textcolor16">Orange <span class="pplri8t-">Backup</span></span> - Veraltetes Backup, d. h. der Versionscode der gesicherten App ist kleiner als der installierte Versionscode der gleichen App</li>
-<li class="itemize"><span id="textcolor17">Dunkelcyan <span class="pplri8t-">Backup</span></span> - Aktuelles Backup, d. h. der Versionscode der gesicherten App ist größer oder gleich dem installierten Versionscode der gleichen App</li>
-<li class="itemize"><span id="textcolor18">Dunkelcyan <span class="pplri8t-">Paketname</span></span> - Angehaltene oder zwangsweise geschlossene App</li>
-<li class="itemize"><span id="textcolor19">Dunkelcyan <span class="pplri8t-">Version</span></span> - Inaktive App</li>
-<li class="itemize"><span id="textcolor20">Magenta</span> - Persistente App, d. h. sie bleibt die ganze Zeit über aktiv</li>
+<li class="itemize"><span class="colorbox" id="colorbox1"><span id="textcolor2">Light greyish orange (day)</span></span> / <span class="colorbox" id="colorbox3"><span id="textcolor4">dark blue (night)</span></span> – App selected for batch operation</li>
+<li class="itemize"><span class="colorbox" id="colorbox5"><span id="textcolor6">Light red (day)</span></span> / <span class="colorbox" id="colorbox7"><span id="textcolor8">dark red (night)</span></span> – Disabled app</li>
+<li class="itemize"><span class="colorbox" id="colorbox9"><span id="textcolor10">Yellow Star</span></span> – App is in debug mode</li>
+<li class="itemize"><span id="textcolor11">Orange <span class="pplri8t-">Date</span></span> – App can read logs (permission granted)</li>
+<li class="itemize"><span id="textcolor12">Orange <span class="pplri8t-">UID</span></span> – User ID is being shared between apps</li>
+<li class="itemize"><span id="textcolor13">Orange <span class="pplri8t-">SDK</span></span> – Uses cleartext (ie. HTTP) traffic</li>
+<li class="itemize"><span id="textcolor14">Red <span class="pplri8t-">package name</span></span> – App does not allow clearing data</li>
+<li class="itemize"><span id="textcolor15">Red <span class="pplri8t-">backup</span></span> – App not installed but has one or more backups</li>
+<li class="itemize"><span id="textcolor16">Orange <span class="pplri8t-">backup</span></span> – Outdated backup, i.e. the version code of the backed up app is less than the installed version code of the same app</li>
+<li class="itemize"><span id="textcolor17">Dark cyan <span class="pplri8t-">backup</span></span> – Up to date backup, i.e. the version code of the backed up app is greater than or equal to the installed version code of the same app</li>
+<li class="itemize"><span id="textcolor18">Dark cyan <span class="pplri8t-">package name</span></span> – Stopped or forced closed app</li>
+<li class="itemize"><span id="textcolor19">Dark cyan <span class="pplri8t-">version</span></span> – Inactive app</li>
+<li class="itemize"><span id="textcolor20">Magenta</span> – Persistent app i.e. remains running all the time</li>
 </ul>
 <!--l. 47-->
 
-<h4 class="subsectionHead"><span class="titlemark">2.1.3</span> <a href="#QQ2-1-18" id="x1-180002.1.3">Anwendungstypen</a></h4>
+<h4 class="subsectionHead"><span class="titlemark">2.1.3</span> <a href="#QQ2-1-18" id="x1-180002.1.3">Application Types</a></h4>
 <!--l. 48-->
-<p class="noindent">Eine App ist entweder <span class="pplb8t-">Benutzer-App</span> oder <span class="pplb8t-">System-App</span> mit den folgenden Codes:</p>
+<p class="noindent">An app is either <span class="pplb8t-">User App</span> or <span class="pplb8t-">System App</span> along with the following codes:</p>
 <ul class="itemize1">
-<li class="itemize"><span class="ectt-1000">X</span> - Die App unterstützt mehrere Architekturen: 32-Bit, 64-Bit oder arm-v7, arm-v8, etc.</li>
-<li class="itemize"><span class="ectt-1000">0</span> - App hat keinen Code dabei</li>
-<li class="itemize"><span class="tctt-1000">°</span> - App ist im angehaltenen Zustand</li>
-<li class="itemize"><span class="ectt-1000">#</span> - App hat einen großen Speicherbereich angefordert</li>
-<li class="itemize"><span class="ectt-1000">?</span> - App hat eine virtuelle Maschine im abgesicherten Modus angefordert</li>
+<li class="itemize"><span class="pplb8t-">Reject Time.</span> Last time the app op was rejected.</li>
+<li class="itemize"><span class="ectt-1000">0</span> – App does not have code with it</li>
+<li class="itemize"><span class="tctt-1000">°</span> – App is in suspended state</li>
+<li class="itemize"><span class="ectt-1000">#</span> – App has requested a large heap</li>
+<li class="itemize"><span class="ectt-1000">?</span> – App has requested VM in safe mode</li>
 </ul>
 <!--l. 57-->
 
-<h4 class="subsectionHead"><span class="titlemark">2.1.4</span> <a href="#QQ2-1-19" id="x1-190002.1.4">Versionsinfo</a></h4>
+<h4 class="subsectionHead"><span class="titlemark">2.1.4</span> <a href="#QQ2-1-19" id="x1-190002.1.4">Version Info</a></h4>
 <!--l. 58-->
-<p class="noindent">Auf den Versionsnamen folgen die folgenden Präfixe:</p>
+<p class="noindent">Version name is followed by the following prefixes:</p>
 <ul class="itemize1">
-<li class="itemize"><span class="ectt-1000">_</span> - Keine Hardware-Beschleunigung</li>
-<li class="itemize"><span class="ectt-1000">~</span> - Nur Testmodus</li>
-<li class="itemize"><span class="ectt-1000">debug</span> - Debuggingfähige App</li>
+<li class="itemize"><span class="ectt-1000">_</span> – No hardware acceleration</li>
+<li class="itemize"><span class="ectt-1000">~</span> – Test only mode</li>
+<li class="itemize"><span class="ectt-1000">debug</span> – Debuggable app</li>
 </ul>
 <!--l. 65-->
 
-<h4 class="subsectionHead"><span class="titlemark">2.1.5</span> <a href="#QQ2-1-20" id="x1-200002.1.5">Optionsmenü</a></h4>
+<h4 class="subsectionHead"><span class="titlemark">2.1.5</span> <a href="#QQ2-1-20" id="x1-200002.1.5">Options Menu</a></h4>
 <!--l. 66-->
-<p class="noindent">Das Optionsmenü verfügt über mehrere Optionen, mit denen Sie die aufgelisteten Apps sortieren, filtern und zu verschiedenen Seiten navigieren können. </p>
+<p class="noindent">Options menu has several options which can be used to sort, filter the listed apps as well as navigate to different pages. </p>
 
-<h5 class="subsubsectionHead"><span class="titlemark">2.1.5.1</span> <a href="#QQ2-1-21" id="x1-210002.1.5.1">Hinweise</a></h5>
+<h5 class="subsubsectionHead"><span class="titlemark">2.1.5.1</span> <a href="#QQ2-1-21" id="x1-210002.1.5.1">Instructions</a></h5>
 <!--l. 69-->
 <p class="noindent">Clicking on instructions open an offline version of the App Manager documentations. It opens the online version if the corresponding feature split i.e. <span class="ectt-1000">feat_docs</span> is not installed. </p>
 
-<h5 class="subsubsectionHead"><span class="titlemark">2.1.5.2</span> <a href="#QQ2-1-22" id="x1-220002.1.5.2">Listenoptionen</a></h5>
+<h5 class="subsubsectionHead"><span class="titlemark">2.1.5.2</span> <a href="#QQ2-1-22" id="x1-220002.1.5.2">List Options</a></h5>
 <!--l. 73-->
-<p class="noindent">Listenoptionen enthalten die Optionen zum Sortieren oder Filtern der App-Liste. </p>
-<p class="noindent"><span class="paragraphHead"><a href="#x1-230002.1.5.2" id="x1-230002.1.5.2">Sortieren</a></span> <a id="par:main-page-sort"></a> Die auf der Hauptseite aufgelisteten Apps können auf verschiedene Arten sortiert werden. Die Sortierpräferenz wird beibehalten, was bedeutet, dass die Apps auf dieselbe Weise sortiert werden, wie beim vorherigen Start. Unabhängig von Ihrer Sortierpräferenz werden die Apps jedoch zunächst alphabetisch sortiert, um zufällige Ergebnisse zu vermeiden.</p>
+<p class="noindent">List options contain the options to sort or filter the app list. </p>
+<p class="noindent"><span class="paragraphHead"><a href="#x1-230002.1.5.2" id="x1-230002.1.5.2">Sort</a></span> <a id="par:main-page-sort"></a> Apps listed on the main page can be sorted in different ways. The sorting preference is preserved which means the apps will be sorted the same way that was sorted in the previous launch. Regardless of your sorting preference, however, the apps are first sorted alphabetically to prevent random results.</p>
 <ul class="itemize1">
 <li class="itemize"><span class="pplb8t-">User app first.</span> User apps are listed on top</li>
-<li class="itemize"><span class="pplb8t-">App-Bezeichnung.</span> Sortieren Sie in aufsteigender Reihenfolge anhand der App-Bezeichnungen (auch <span class="pplri8t-">App-Namen</span> genannt). Dies ist die Standardeinstellung für die Sortierung</li>
-<li class="itemize"><span class="pplb8t-">Paketname.</span> In aufsteigender Reihenfolge nach Paketnamen sortieren</li>
-<li class="itemize"><span class="pplb8t-">Letzte Aktualisierung.</span> Sortieren in absteigender Reihenfolge basierend auf dem Aktualisierungsdatum des Pakets (oder dem Installationsdatum, wenn es sich um ein neu installiertes Paket handelt)</li>
-<li class="itemize"><span class="pplb8t-">Gemeinsame Benutzer-ID.</span> Sortieren in absteigender Reihenfolge basierend auf der Kernel-Benutzer-ID</li>
-<li class="itemize"><span class="pplb8t-">Ziel-SDK.</span> Sortierung in aufsteigender Reihenfolge basierend auf dem Ziel-SDK</li>
-<li class="itemize"><span class="pplb8t-">Signatur.</span> Sortieren in aufsteigender Reihenfolge basierend auf den Signierinformationen der App</li>
-<li class="itemize"><span class="pplb8t-">Deaktivierte zuerst.</span> Deaktivierte Apps zuerst auflisten</li>
-<li class="itemize"><span class="pplb8t-">Blockierte zuerst.</span> Sortieren Sie in absteigender Reihenfolge nach der Anzahl der blockierten Komponenten</li>
-<li class="itemize"><span class="pplb8t-">Backup zuerst.</span> Apps mit Backups ganz oben anzeigen</li>
+<li class="itemize"><span class="pplb8t-">Name.</span> Each permission has a unique name like <span class="ectt-1000">android.permission.INTERNET</span> but multiple app can request the permission.</li>
+<li class="itemize"><span class="pplb8t-">Icon.</span> Each permission can have a custom icon. The other permission tabs do not have any icon because they do not contain any icon in the app manifest.</li>
+<li class="itemize"><span class="pplb8t-">Description.</span> This optional field describes the permission. If there isn’t any description associated with the permission, the field is not displayed.</li>
+<li class="itemize"><span class="pplb8t-">Flags.</span> (Uses the flag symbol or <span class="pplb8t-">Protection Level</span> name) This describes various permission flags such as <span class="pplri8t-">normal</span>, <span class="pplri8t-">development</span>, <span class="pplri8t-">dangerous</span>, <span class="pplri8t-">instant</span>, <span class="pplri8t-">granted</span>, <span class="pplri8t-">revoked</span>, <span class="pplri8t-">signature</span>, <span class="pplri8t-">privileged</span>, etc.</li>
+<li class="itemize"><span class="pplb8t-">Package Name.</span> Denotes the package name associated with the permission, i.e. the package that defined the permission.</li>
+<li class="itemize"><span class="pplb8t-">Group.</span> The group name associated with the permission (if any). Newer Androids do not seem to use group names which is why you’ll usually see <span class="ectt-1000">android.permission-group.UNDEFINED</span> or no group name at all.</li>
+<li class="itemize"><span class="pplb8t-">Disabled first.</span> List disabled apps first</li>
+<li class="itemize"><span class="pplb8t-">Blocked first.</span> Sort in descending order based on the number of blocked components</li>
+<li class="itemize"><span class="pplb8t-">Backup first.</span> Display apps with backups on top</li>
 </ul>
 <!--l. 94-->
 <p class="indent"><span class="pplb8t-">Signatures</span> are actually called signing info. An application is signed by one or more singing certificates by the application developers before publishing it. The integrity of an application (whether the app is from the actual developer and isn’t modified by other people) can be checked using the signing info; because when an app is modified by a third-party unauthorised person, the app cannot be signed using the original certificate(s) again because the signing info are kept private by the actual developer. <span class="pplri8t-">How do you verify these signatures?</span> Using checksums. Checksums are generated from the certificates themselves. If the developer supplies the checksums, you can match the checksums using the different checksums generated in the <span class="pplb8t-">Signatures</span> tab. For example, if you have downloaded App Manager from Github, Telegram Channel or IzzyOnDroid’s repo, you can verify whether the app is actually released by me by simply matching the following <span class="pplri8t-">SHA256</span> checksum with the one displayed in this tab: </p>
-<p class="noindent"><span class="paragraphHead"><a href="#x1-240002.1.5.2" id="x1-240002.1.5.2">Filter</a></span> <a id="par:main-page-filter"></a> Die auf der Hauptseite aufgelisteten Apps können auf verschiedene Arten gefiltert werden. Wie die Sortierung werden auch die Filtereinstellungen gespeichert und bleiben nach einem Neustart erhalten.</p>
+<p class="noindent"><span class="paragraphHead"><a href="#x1-240002.1.5.2" id="x1-240002.1.5.2">Filter</a></span> <a id="par:main-page-filter"></a> Apps listed on the main page can be filtered in a number of ways. Like sorting, filtering preferences are also stored and retained after a relaunch.</p>
 <ul class="itemize1">
-<li class="itemize"><span class="pplb8t-">Benutzer-Apps.</span> Nur die Benutzer-Apps auflisten</li>
-<li class="itemize"><span class="pplb8t-">System-Apps.</span> Nur die System-Apps auflisten</li>
-<li class="itemize"><span class="pplb8t-">Deaktivierte Apps.</span> Nur die deaktivierten Apps auflisten</li>
-<li class="itemize"><span class="pplb8t-">Apps mit Regeln.</span> Liste der Apps mit einer oder mehreren Blockierungsregeln</li>
-<li class="itemize"><span class="pplb8t-">Apps mit Aktivitäten.</span> Liste der Apps mit einer oder mehreren Aktivitäten</li>
-<li class="itemize"><span class="pplb8t-">Apps mit Backups.</span> Apps mit einem oder mehreren Backups auflisten (einschließlich der von deinstallierten Apps)</li>
-<li class="itemize"><span class="pplb8t-">Apps ohne Backups.</span> Apps ohne Backups auflisten (einschließlich deinstallierter Apps)</li>
-<li class="itemize"><span class="pplb8t-">Laufende Apps.</span> Auflisten von Apps, die derzeit ausgeführt werden (entweder im Vordergrund oder im Hintergrund)</li>
-<li class="itemize"><span class="pplb8t-">Apps mit Splits.</span> Apps mit einer oder mehreren geteilten APKs auflisten</li>
-<li class="itemize"><span class="pplb8t-">Installierte Apps.</span> Nur installierte Apps auflisten</li>
-<li class="itemize"><span class="pplb8t-">Nicht installierte Apps.</span> Nur deinstallierte Apps inklusive Backups auflisten</li>
+<li class="itemize"><span class="pplb8t-">User apps.</span> List only the user apps</li>
+<li class="itemize"><span class="pplb8t-">System apps.</span> List only the system apps</li>
+<li class="itemize"><span class="pplb8t-">Disabled apps.</span> List only the disabled apps</li>
+<li class="itemize"><span class="pplb8t-">Apps with rules.</span> List the apps with one or more blocking rules</li>
+<li class="itemize"><span class="pplb8t-">Apps with activities.</span> List the apps with one or more activities</li>
+<li class="itemize"><span class="pplb8t-">Apps with backups.</span> List apps with one or more backups (including uninstalled apps)</li>
+<li class="itemize"><span class="pplb8t-">Apps without backups.</span> List apps without any backups (including uninstalled apps)</li>
+<li class="itemize"><span class="pplb8t-">Running apps.</span> List apps that are currently running (either in foreground or background)</li>
+<li class="itemize"><span class="pplb8t-">Apps with splits.</span> List apps with one or more split APKs</li>
+<li class="itemize"><span class="pplb8t-">Installed apps.</span> List only installed apps</li>
+<li class="itemize"><span class="pplb8t-">Uninstalled apps.</span> List only uninstalled apps including backups</li>
 </ul>
 <!--l. 113-->
-<p class="indent">Anders als beim Sortieren können Sie mit mehr als einer Option filtern. Zum Beispiel können Sie die deaktivierten Benutzer-Apps auflisten, indem Sie App-Listen filtern, indem Sie <span class="pplri8t-">Benutzer-Apps</span> und <span class="pplri8t-">Inaktivierte Apps</span> auswählen. Dies ist besonders nützlich für <a href="#x1-160002.1.1">Batch-Operationen</a>, bei denen Sie alle Benutzer-Apps filtern können, um bestimmte Operationen auszuführen. </p>
+<p class="indent">Unlike sorting, you can filter using more than one option. For example, you can list the disabled user apps by filtering app lists selecting <span class="pplri8t-">user apps</span> and <span class="pplri8t-">disabled apps</span>. This is particularly useful for <a href="#x1-160002.1.1">batch operations</a> where you can filter all user apps to carry out certain operations. </p>
 
-<h5 class="subsubsectionHead"><span class="titlemark">2.1.5.3</span> <a href="#QQ2-1-25" id="x1-250002.1.5.3">1-Klick Ops</a></h5>
+<h5 class="subsubsectionHead"><span class="titlemark">2.1.5.3</span> <a href="#QQ2-1-25" id="x1-250002.1.5.3">1-Click Ops</a></h5>
 <!--l. 118-->
-<p class="noindent"><a href="#x1-550002.3">1-Click Ops</a> steht für <span class="pplb8t-">1-Klick Operationen</span>. Mit einem Klick auf diese Option können Sie direkt die entsprechende Seite öffnen. </p>
+<p class="noindent"><a href="#x1-550002.3">1-Click Ops</a> stands for <span class="pplb8t-">One-Click Operations</span>. You can directly open the corresponding page by clicking on this option. </p>
 
-<h5 class="subsubsectionHead"><span class="titlemark">2.1.5.4</span> <a href="#QQ2-1-26" id="x1-260002.1.5.4">App-Nutzung</a></h5>
+<h5 class="subsubsectionHead"><span class="titlemark">2.1.5.4</span> <a href="#QQ2-1-26" id="x1-260002.1.5.4">App Usage</a></h5>
 <!--l. 122-->
-<p class="noindent">App-Nutzungsstatistiken wie <span class="pplri8t-">Bildschirmzeit</span>, <span class="pplri8t-">Datennutzung</span> (sowohl mobil als auch Wifi), <span class="pplri8t-">Anzahl der</span> <span class="pplri8t-">Zeiten, in denen eine App geöffnet wurde</span>, können Sie durch Klicken auf die Option <span class="pplb8t-">App-Nutzung</span> im Menü aufrufen (erfordert die Berechtigung <span class="pplri8t-">Nutzungszugang</span>). </p>
+<p class="noindent">App usage statistics such as <span class="pplri8t-">screen time</span>, <span class="pplri8t-">data usage</span> (both mobile and Wifi), <span class="pplri8t-">number of</span> <span class="pplri8t-">times an app was opened</span> can be accessed by clicking on the <span class="pplb8t-">App Usage</span> option in the menu (requires <span class="pplri8t-">Usage Access</span> permission). </p>
 
-<h5 class="subsubsectionHead"><span class="titlemark">2.1.5.5</span> <a href="#QQ2-1-27" id="x1-270002.1.5.5">Systemkonfiguration</a></h5>
+<h5 class="subsubsectionHead"><span class="titlemark">2.1.5.5</span> <a href="#QQ2-1-27" id="x1-270002.1.5.5">System Config</a></h5>
 <!--l. 127-->
-<p class="noindent">Anzeige verschiedener Systemkonfigurationen, Whitelists/Blacklists, die in Android entweder von OEM/Hersteller, AOSP oder sogar einigen Magisk-Modulen enthalten sind. </p>
+<p class="noindent">Display various system configurations, whitelists/blacklists included in Android by either OEM/vendor, AOSP or even some Magisk modules. </p>
 
-<h5 class="subsubsectionHead"><span class="titlemark">2.1.5.6</span> <a href="#QQ2-1-28" id="x1-280002.1.5.6">Laufende Apps</a></h5>
+<h5 class="subsubsectionHead"><span class="titlemark">2.1.5.6</span> <a href="#QQ2-1-28" id="x1-280002.1.5.6">Running Apps</a></h5>
 <!--l. 131-->
-<p class="noindent">Eine Liste der laufenden Apps oder Prozesse kann durch Klicken auf die Option <span class="pplb8t-">Laufende Apps</span> im Menü angezeigt werden (erfordert Root oder <a href="#x1-1360003.1">ADB</a>). Laufende Apps oder Prozesse können auch innerhalb der Ergebnisseite zwangsgeschlossen oder beendet werden. Protokolle für jede Prozess-ID (PID) können auch im <a href="#x1-310002.1.5.9">Protokollbetrachter</a> angezeigt werden. </p>
+<p class="noindent">A list of running apps or processes can be viewed by clicking on the <span class="pplb8t-">Running Apps</span> option in the menu (requires root or <a href="#x1-1360003.1">ADB</a>). Running apps or processes can also be force-closed or killed within the resultant page. Logs for each process ID (PID) can also be viewed in the <a href="#x1-310002.1.5.9">log viewer</a>. </p>
 
 <h5 class="subsubsectionHead"><span class="titlemark">2.1.5.7</span> <a href="#QQ2-1-29" id="x1-290002.1.5.7">APK Updater</a></h5>
 <!--l. 137-->
-<p class="noindent">Wenn Sie die App <a href="https://github.com/rumboalla/apkupdater">APK Updater</a> installiert haben, können Sie die entsprechende Option im Menü verwenden, um die App direkt zu öffnen. Die Option ist ausgeblendet, wenn Sie sie nicht installiert haben. </p>
+<p class="noindent">This option can be used to configure certain <a href="#x1-247000C">app operations</a> of all or selected apps. You can insert more than one app op constants separated by spaces. It is not always possible to know in advance about all the app op constants as they vary from device to device and from OS to OS. To find the desired app op constant, browse the <span class="pplri8t-">App Ops</span> tab in the <a href="#x1-340002.2">App Details page</a>. The constants are integers closed inside brackets next to each app op name. You can also use the app op names. You also have to select one of the <a href="#x1-252000C.3.2">modes</a> that will be applied against the app ops. </p>
 
-<h5 class="subsubsectionHead"><span class="titlemark">2.1.5.8</span> <a href="#QQ2-1-30" id="x1-300002.1.5.8">Profile</a></h5>
+<h5 class="subsubsectionHead"><span class="titlemark">2.1.5.8</span> <a href="#QQ2-1-30" id="x1-300002.1.5.8">Profiles</a></h5>
 <!--l. 142-->
 <p class="noindent">Opens the <a href="#x1-690002.4">profiles page</a>. Profiles are a way to configure regularly used tasks. You can also add shortcuts of the profiles in the launcher to run them directly. </p>
 
-<h5 class="subsubsectionHead"><span class="titlemark">2.1.5.9</span> <a href="#QQ2-1-31" id="x1-310002.1.5.9">Protokollanzeige</a></h5>
+<h5 class="subsubsectionHead"><span class="titlemark">2.1.5.9</span> <a href="#QQ2-1-31" id="x1-310002.1.5.9">Log Viewer</a></h5>
 <!--l. 147-->
 <p class="noindent"><span class="paragraphHead"><a href="#x1-600002.3.4" id="x1-600002.3.4">Back up all apps.</a></span> Back up all the installed apps. </p>
 
 <h5 class="subsubsectionHead"><span class="titlemark">2.1.5.10</span> <a href="#QQ2-1-32" id="x1-320002.1.5.10">Termux</a></h5>
 <!--l. 153-->
-<p class="noindent">Wenn Sie <a href="https://github.com/termux/termux-app">Termux</a> installiert haben, können Sie direkt in die laufende Sitzung wechseln oder über die Option <span class="pplb8t-">Termux</span> im Menü eine neue Sitzung öffnen. </p>
+<p class="noindent"><span class="paragraphHead"><a href="#x1-640002.3.4" id="x1-640002.3.4">Back up apps with changes.</a></span> If an app has changed since the last backup, redo backup for it. It checks a number of indices including app version, last update date, last launch date, integrity and file hashes. Directory hashes are taken during the back up and stored in a database. On running this operation, new hashes are taken and compared with the ones kept in the database. </p>
 
-<h5 class="subsubsectionHead"><span class="titlemark">2.1.5.11</span> <a href="#QQ2-1-33" id="x1-330002.1.5.11">Einstellungen</a></h5>
+<h5 class="subsubsectionHead"><span class="titlemark">2.1.5.11</span> <a href="#QQ2-1-33" id="x1-330002.1.5.11">Settings</a></h5>
 <!--l. 157-->
-<p class="noindent">Sie können zu den In-App- <a href="#x1-890002.6">Einstellungen</a> gehen, indem Sie auf die entsprechende Option klicken.</p>
-<h3 class="sectionHead"><span class="titlemark">2.2</span> <a href="#QQ2-1-34" id="x1-340002.2">App-Detailseite</a></h3>
+<p class="noindent">Activities, services, broadcast receivers (also known as receivers) and content providers (also known as providers) are jointly called app components. More technically, they all inherit the <a href="https://developer.android.com/reference/android/content/pm/ComponentInfo">ComponentInfo</a> class.</p>
+<h3 class="sectionHead"><span class="titlemark">2.2</span> <a href="#QQ2-1-34" id="x1-340002.2">App Details Page</a></h3>
 <!--l. 2-->
-<p class="noindent">Die Seite <span class="pplb8t-">App-Details</span> besteht aus 11 (elf) Registerkarten. Sie beschreibt im Grunde fast alle Informationen, die eine App haben kann, einschließlich aller Attribute aus dem App-Manifest, Berechtigungen, <a href="#x1-247000C">App-Operationen</a>, Signierinformationen usw. </p>
+<p class="noindent"><span class="pplri8t-">See also:</span> <a href="#x1-1690004.1.7"><span class="pplri8t-">FAQ: Tracker classes vs tracker components</span></a> </p>
 
-<h4 class="subsectionHead"><span class="titlemark">2.2.1</span> <a href="#QQ2-1-35" id="x1-350002.2.1">Farbschlüssel</a></h4>
+<h4 class="subsectionHead"><span class="titlemark">2.2.1</span> <a href="#QQ2-1-35" id="x1-350002.2.1">Colour Codes</a></h4>
 <!--l. 7-->
-<p class="noindent">Liste der Hintergrundfarben, die auf dieser Seite verwendet werden, und ihre Bedeutung:</p>
+<p class="noindent">List of background colours used in this page, and their meaning:</p>
 <ul class="itemize1">
-<li class="itemize"><span class="colorbox" id="colorbox21"><span id="textcolor22">Rot (Tag)</span></span> / <span class="colorbox" id="colorbox23"><span id="textcolor24">Dunkelrot (Nacht)</span></span> - Jede App-Operation oder Berechtigung, die das Flag "gefährlich" hat, wird als rot markiert. Komponenten, die im App-Manager gesperrt sind, werden ebenfalls als rot markiert</li>
-<li class="itemize"><span class="colorbox" id="colorbox25"><span id="textcolor26">Hellrot (Tag)</span></span> / <span class="colorbox" id="colorbox27"><span id="textcolor28">sehr dunkelrot (Nacht)</span></span> - Komponenten, die außerhalb von App Manager deaktiviert sind, haben diese Farben. Es ist zu beachten, dass eine Komponente, die als deaktiviert markiert ist, nicht immer bedeutet, dass sie vom Benutzer deaktiviert wurde: Sie könnte auch vom System deaktiviert werden oder im App-Manifest als deaktiviert markiert sein. Außerdem werden alle Komponenten einer deaktivierten App vom System (und auch vom App Manager) als deaktiviert betrachtet</li>
-<li class="itemize"><span class="colorbox" id="colorbox29"><span id="textcolor30">Leuchtendes Orange (Tag)</span></span> / <span class="colorbox" id="colorbox31"><span id="textcolor32">sehr dunkles Orange (Nacht)</span></span> - Webung oder Tracker-Komponenten</li>
-<li class="itemize"><span class="colorbox" id="colorbox33"><span id="textcolor34">Zartes Magenta (Tag)</span></span> / <span class="colorbox" id="colorbox35"><span id="textcolor36">sehr dunkles Violett (Nacht)</span></span> - Derzeit laufende Dienste</li>
+<li class="itemize"><span class="colorbox" id="colorbox21"><span id="textcolor22">Red (day)</span></span> / <span class="colorbox" id="colorbox23"><span id="textcolor24">dark red (night)</span></span> – Any app op or permission that has the dangerous flag is marked as red. Components that are blocked within App Manager are also marked as red</li>
+<li class="itemize"><span class="colorbox" id="colorbox25"><span id="textcolor26">Light red (day)</span></span> / <span class="colorbox" id="colorbox27"><span id="textcolor28">very dark red (night)</span></span> – Components that are disabled outside App Manager have these colors. It should be noted that a component that is marked as disabled does not always mean that it is disabled by the user: It could be disabled by the system as well or marked as disabled in the app manifest. Also, all components of a disabled app are considered disabled by the system (and by App Manager as well)</li>
+<li class="itemize"><span class="pplb8t-">Presets.</span> Presets option lists a number of built-in profiles that can be used as a starting point. The profiles are generated from the project <a href="https://gitlab.com/W1nst0n/universal-android-debloater">Universal Android Debloater</a>.<br class="newline" /> <span class="pplri8t-">See also:</span> <a href="#x1-1810004.3.5"><span class="pplri8t-">FAQ: What are bloatware and how to remove them?</span></a></li>
+<li class="itemize"><span class="pplb8t-">Import.</span> This option can be used to import an existing profile.</li>
 </ul>
 <!--l. 26-->
 
-<h4 class="subsectionHead"><span class="titlemark">2.2.2</span> <a href="#QQ2-1-36" id="x1-360002.2.2">Registerkarte App-Info</a></h4>
+<h4 class="subsectionHead"><span class="titlemark">2.2.2</span> <a href="#QQ2-1-36" id="x1-360002.2.2">App Info Tab</a></h4>
 <!--l. 27-->
-<p class="noindent">Die Registerkarte <span class="pplb8t-">App-Info</span> enthält allgemeine Informationen über eine App. Außerdem werden viele Aktionen aufgelistet, die innerhalb dieser Registerkarte ausgeführt werden können. Eine vollständige Beschreibung finden Sie unten: </p>
+<p class="noindent"><span class="pplb8t-">App Info</span> tab contains general information about an app. It also lists many actions that can be performed within this tab. A complete description is given below: </p>
 
-<h5 class="subsubsectionHead"><span class="titlemark">2.2.2.1</span> <a href="#QQ2-1-37" id="x1-370002.2.2.1">Allgemeine Informationen</a></h5>
+<h5 class="subsubsectionHead"><span class="titlemark">2.2.2.1</span> <a href="#QQ2-1-37" id="x1-370002.2.2.1">General Information</a></h5>
 <!--l. 31-->
-<p class="noindent">Die folgende Liste ist in der gleichen Reihenfolge wie auf der Registerkarte "App-Info" aufgeführt.</p>
+<p class="noindent">The list below is in the same order as listed in the App Info tab.</p>
 <ul class="itemize1">
-<li class="itemize"><span class="pplb8t-">App-Symbol.</span> Das Symbol der Anwendung. Wenn eine App kein Symbol hat, wird das Standardsymbol des Systems angezeigt.</li>
+<li class="itemize"><span class="pplb8t-">App Icon.</span> The application icon. If an app doesn’t have an icon, the system default icon is displayed.</li>
 <li class="itemize"><span class="pplb8t-">App Label.</span> The application label or application name.</li>
 <li class="itemize"><span class="pplb8t-">Version.</span> Application version is divided into two parts. The first part is called <span class="pplri8t-">version name</span>, the format of this part varies but it often consists of multiple integers separated by dots. The second part is called <span class="pplri8t-">version</span> <span class="pplri8t-">code</span> and it is closed under first brackets. Version code is an integer which is usually used to differentiate between app versions (as version name can often be unreadable by a machine). In general, new version of an app has higher version code than the old ones. For instance, if <span class="ectt-1000">123</span> and <span class="ectt-1000">125</span> are two version codes of an app, we can say that the latter is more updated than the former because the version code of the latter is higher. For applications that depend on platforms (mobile, tabs, desktops, etc.), these version numbers can be misleading as they use prefixes for each platform.</li>
 <li class="itemize"><span class="pplb8t-">Tags.</span> (Also known as tag clouds) Tags include the basic, concise and most useful info of an app. Tags contain <span class="pplri8t-">tracker info</span> (i.e. number of tracker components), <span class="pplri8t-">app type</span> (user app or system app and whether the app is an updated version of the system app or if the app is installed systemless-ly using Magisk), <span class="pplri8t-">running</span> (i.e. one or more services of the app is running in the background), <span class="pplri8t-">split APK info</span> (i.e. number of splits), <span class="pplri8t-">debuggable</span> (the app is a debug version), <span class="pplri8t-">test only</span> (the app is a test only app), <span class="pplri8t-">large heap</span> (the app has requested a large heap size), <span class="pplri8t-">stopped</span> (the app is force stopped), <span class="pplri8t-">disabled</span> (the app is disabled), <span class="pplri8t-">KeyStore</span> (the app has items in the Android KeyStore), <span class="pplri8t-">no code</span> (the app doesn’t have any code associated with it), <a href="#x1-30001.1"><span class="pplri8t-">SSAID</span></a>, <span class="pplri8t-">netpolicy</span> (network policy such as background data usage), and <span class="pplri8t-">battery optimization</span>. The importance of including <span class="pplri8t-">test</span> <span class="pplri8t-">only</span> and <span class="pplri8t-">debuggable</span> is that app with these properties can do additional tasks or these apps can be <span class="ectt-1000">run-as</span> without root which can cause potential security problems if these apps store any private information. <span class="pplri8t-">Large</span> <span class="pplri8t-">heap</span> denotes that the app will be allocated a higher amount of memory (RAM) if needed. While this may not be harmful for most cases, any suspicious apps requesting large heap should be taken seriously.</li>
-<li class="itemize"><span class="pplb8t-">Horizontales Aktionsfeld.</span> Dies ist ein Aktionsfeld, das verschiedene Aktionen bezüglich der App enthält. Siehe §<a href="#x1-380002.2.2.2">2.2.2.2</a> für eine vollständige Liste der hier verfügbaren Aktionen.</li>
-<li class="itemize"><span class="pplb8t-">Pfade &amp; Verzeichnisse.</span> Enthält verschiedene Informationen zu Anwendungspfaden, einschließlich <span class="pplri8t-">App-Verzeichnis</span> (wo die APK-Dateien gespeichert sind), <span class="pplri8t-">Datenverzeichnisse</span> (intern, gerätegeschützt und extern), <span class="pplri8t-">split</span> <span class="pplri8t-">APK-Verzeichnisse</span> (zusammen mit den Split-Namen) und <span class="pplri8t-">native JNI-Bibliothek</span> (falls vorhanden). JNI-Bibliotheken werden verwendet, um nativen Code aufzurufen, der normalerweise in C/C++ geschrieben ist. Die Verwendung einer nativen Bibliothek kann die App schneller laufen lassen oder einer App helfen, Bibliotheken von Drittanbietern zu verwenden, die in anderen Sprachen als Java geschrieben wurden, wie in den meisten Spielen. Sie können diese Verzeichnisse auch mit Ihren bevorzugten Dateimanagern öffnen (sofern diese es unterstützen und über die erforderlichen Berechtigungen verfügen), indem Sie auf das Startsymbol auf der rechten Seite des jeweiligen Elements klicken.</li>
-<li class="itemize"><span class="pplb8t-">Datennutzung seit dem letzten Start.</span> Eine ziemlich selbsterklärende Option. Aber Vorsicht, aufgrund einiger Probleme können die Ergebnisse oft irreführend und einfach falsch sein. Dieser Teil bleibt ausgeblendet, wenn die Berechtigung <span class="pplri8t-">Nutzungszugriff</span> bei neueren Geräten nicht gewährt wird.</li>
-<li class="itemize"><span class="pplb8t-">Speicher &amp; Cache.</span> Zeigt Informationen zur Größe der App (APK-Dateien), Daten und Cache an. Bei älteren Geräten wird auch die Größe der externen Daten, des Caches, der Medien und der OBB-Ordner angezeigt. Dieser Teil bleibt ausgeblendet, wenn bei neueren Geräten die Berechtigung <span class="pplri8t-">Nutzungszugriff</span> nicht erteilt ist.</li>
-<li class="itemize"><span class="pplb8t-">Weitere Infos.</span> Zeigt weitere Informationen an, wie z. B.–
+<li class="itemize"><span class="pplb8t-">Horizontal Action Panel.</span> This is an action panel containing various actions regarding the app. See §<a href="#x1-380002.2.2.2">2.2.2.2</a> for a complete list of actions available here.</li>
+<li class="itemize"><span class="pplb8t-">Paths & Directories.</span> Contains various information regarding application paths including <span class="pplri8t-">app directory</span> (where the APK files are stored), <span class="pplri8t-">data directories</span> (internal, device protected and externals), <span class="pplri8t-">split</span> <span class="pplri8t-">APK directories</span> (along with the split names), and <span class="pplri8t-">native JNI library</span> (if present). JNI libraries are used to invoke native codes usually written in C/C++. Use of native library can make the app run faster or help an app use third-party libraries written using languages other than Java like in most games. You can also open these directories using your favourite file managers (provided they support it and have necessary permissions) by clicking on the launch icon on the right-hand side of each item.</li>
+<li class="itemize"><span class="pplb8t-">Data Usage Since Last Boot.</span> A rather self explanatory option. But beware that due to some issues, the results might often be misleading and simply wrong. This part remains hidden if <span class="pplri8t-">Usage Access</span> permission is not granted in newer devices.</li>
+<li class="itemize"><span class="pplb8t-">Apply.</span> This option can be used to apply the profile. When clicked, a dialog will be displayed where you can select a <a href="#x1-760002.5.3.2">profile state</a>. On selecting one of the options, the profile will be applied immediately.</li>
+<li class="itemize"><span class="pplb8t-">Save.</span> Allows you to save the profile.
 <ul class="itemize2">
-<li class="itemize"><span class="pplb8t-">SDK.</span> Zeigt Informationen im Zusammenhang mit dem Android-SDK an. Es gibt zwei (bei alten Geräten einen) Werte: <span class="pplri8t-">Max</span> bezeichnet das Ziel-SDK und <span class="pplri8t-">Min</span> bezeichnet das Mindest-SDK (letzteres ist in alten Geräten nicht verfügbar). Es ist die beste Praxis, Apps mit dem maximalen SDK zu verwenden, das die Plattform derzeit unterstützt. SDK ist auch als <span class="pplb8t-">API Level</span> bekannt. <span class="pplri8t-">Siehe</span> <span class="pplri8t-">auch:</span> <a href="https://en.wikipedia.org/wiki/Android_version_history#Overview"><span class="pplri8t-">Android Versionsgeschichte</span></a></li>
-<li class="itemize"><span class="pplb8t-">Flags.</span>Eine vollständige Liste der Flags und ihrer Funktionen finden Sie in der <a href="https://developer.android.com/reference/android/content/pm/ApplicationInfo#flags">offiziellen Dokumentation</a></li>
-<li class="itemize"><span class="pplb8t-">Installationsdatum.</span> Das Datum, an dem die App erstmals installiert wurde.</li>
-<li class="itemize"><span class="pplb8t-">Aktualisierte Datum.</span> Das Datum, an dem die App zuletzt aktualisiert wurde. Dies ist dasselbe wie <span class="pplri8t-">Date Installed</span>, wenn die App nicht aktualisiert wurde.</li>
-<li class="itemize"><span class="pplb8t-">Installer-App.</span> Die App, die diese App installiert hat. Nicht alle Apps liefern die Informationen, die der Paketmanager zur Registrierung der Installer-App verwendet. Daher sollte dieser Wert nicht als selbstverständlich angesehen werden.</li>
-<li class="itemize"><span class="pplb8t-">User ID.</span> The unique user ID set by the Android system to the app. For shared applications, same user ID is assigned to multiple applications that have the same <span class="pplri8t-">Shared User ID</span>.</li>
-<li class="itemize"><span class="pplb8t-">Shared User ID.</span> Applicable for applications that are shared together. Although it says ID, this is actually a string value. The shared application must have the same <a href="#x1-530002.2.5">signatures</a>.</li>
-<li class="itemize"><span class="pplb8t-">Main Activity.</span> The main entry point to the app. This is only visible if the app has <a href="#x1-420002.2.3.1">activities</a> and any of those are openable from the Launcher. There’s also a launch button on the right-hand side which can be used to launch this activity.</li>
+<li class="itemize"><span class="pplb8t-">SDK.</span> Displays information related to the Android SDK. There are two (one in old devices) values: <span class="pplri8t-">Max</span> denotes the target SDK and <span class="pplri8t-">Min</span> denotes the minimum SDK (the latter is not available in old devices). It is best practice to use apps with maximum SDK that the platform currently supports. SDK is also known as <span class="pplb8t-">API Level</span>. <span class="pplri8t-">See</span> <span class="pplri8t-">also:</span> <a href="https://en.wikipedia.org/wiki/Android_version_history#Overview"><span class="pplri8t-">Android Version History</span></a></li>
+<li class="itemize"><span class="pplb8t-">Flags.</span> The application flags used at the time of building the app. For a complete list of flags and what they do, visit the <a href="https://developer.android.com/reference/android/content/pm/ApplicationInfo#flags">official documentation</a>.</li>
+<li class="itemize"><span class="pplb8t-">Date Installed.</span> The date when the app was first installed.</li>
+<li class="itemize"><span class="pplb8t-">Date Updated.</span> The date when the app was last updated. This is the same as <span class="pplri8t-">Date Installed</span> if the app hasn’t been updated.</li>
+<li class="itemize"><span class="pplb8t-">Installer App.</span> The app that installed this app. Not all app supply the information used by the package manager to register the installer app. Therefore, this value should not be taken for granted.</li>
+<li class="itemize"><span class="pplb8t-">Benutzer-ID.</span> Die eindeutige Benutzer-ID, die der App vom Android-System zugewiesen wird. Bei gemeinsam genutzten Anwendungen wird die gleiche Benutzer-ID mehreren Anwendungen zugewiesen, die die gleiche <span class="pplri8t-">Gemeinsame Benutzer-ID</span> haben.</li>
+<li class="itemize"><span class="pplb8t-">Gemeinsame Benutzer-ID.</span> Gilt für Anwendungen, die gemeinsam genutzt werden. Obwohl hier ID steht, handelt es sich tatsächlich um einen String-Wert. Die gemeinsam genutzte Anwendung muss die gleichen <a href="#x1-530002.2.5">Signaturen</a> haben.</li>
+<li class="itemize"><span class="pplb8t-">Hauptaktivität.</span> Der Haupteinstiegspunkt in die App. Dies ist nur sichtbar, wenn die App <a href="#x1-420002.2.3.1">Aktivitäten</a> hat und eine davon vom Launcher aus geöffnet werden kann. Es gibt auch eine Start-Schaltfläche auf der rechten Seite, die zum Starten dieser Aktivität verwendet werden kann.</li>
 </ul>
 </li>
 </ul>
 <!--l. 113-->
 
-<h5 class="subsubsectionHead"><span class="titlemark">2.2.2.2</span> <a href="#QQ2-1-38" id="x1-380002.2.2.2">Horizontal Action Panel</a></h5>
+<h5 class="subsubsectionHead"><span class="titlemark">2.2.2.2</span> <a href="#QQ2-1-38" id="x1-380002.2.2.2">Horizontales Aktionsfeld</a></h5>
 <!--l. 114-->
-<p class="noindent">Horizontal Action Panel, as described in the previous section, consists of various app-related actions, such as–</p>
+<p class="noindent">Das horizontale Aktionsfeld, wie im vorherigen Abschnitt beschrieben, besteht aus verschiedenen app-bezogenen Aktionen, wie z. B.–</p>
 <ul class="itemize1">
-<li class="itemize"><span class="pplb8t-">Launch.</span> Application that has a launcher <a href="#x1-420002.2.3.1">activities</a> can be launched using this button.</li>
+<li class="itemize"><span class="pplb8t-">Launch.</span> Anwendungen, die über einen Launcher <a href="#x1-420002.2.3.1">Aktivitäten</a> verfügen, können über diese Schaltfläche gestartet werden.</li>
 <li class="itemize"><span class="pplb8t-">Disable.</span> Disable an app. This button is not displayed for already disabled apps or to users who do not have root or <a href="#x1-1360003.1">ADB</a>. If you disable an app, the app will not be displayed in your Launcher app. Shortcuts for the app will also be removed. If you disable a user app, you can only enable them via App Manager or any other tool that supports it. There isn’t any option in Android Settings to enable a disabled user app.</li>
 <li class="itemize"><span class="pplb8t-">Uninstall.</span> Uninstall an app.</li>
 <li class="itemize"><span class="pplb8t-">Enable.</span> Enable an app. This button is not displayed for already enabled apps or to users who do not have root or ADB.</li>
@@ -499,10 +499,10 @@
 
 <h4 class="subsectionHead"><span class="titlemark">2.3.5</span> <a href="#QQ2-1-65" id="x1-650002.3.5">Restore</a></h4>
 <!--l. 66-->
-<p class="noindent">Activities, services, broadcast receivers (also known as receivers) and content providers (also known as providers) are jointly called app components. More technically, they all inherit the <a href="https://developer.android.com/reference/android/content/pm/ComponentInfo">ComponentInfo</a> class. </p>
+<p class="noindent">The second item lists the number of trackers along with their names. Clicking on the item displays a dialog containing the name of trackers, matched signatures, and the number of classes against each signature. Some tracker names may have <sup><span class="pplr7t-x-x-76">2</span></sup> prefix which indicates that the trackers are in the <a href="https://etip.exodus-privacy.eu.org">ETIP</a> stand-by list i.e. whether they are actual trackers is still being investigated. </p>
 <p class="noindent"><span class="paragraphHead"><a href="#x1-660002.3.5" id="x1-660002.3.5">Restore all apps.</a></span> Restore <span class="pplri8t-">base backup</span> of all the backed up apps. </p>
-<p class="noindent">The third item lists the number of libraries along with their names. The information are mostly taken from <a href="https://gitlab.com/IzzyOnDroid/repo">IzzyOnDroid repo</a>. </p>
-<p class="noindent"><span class="pplri8t-">See also:</span> <a href="#x1-1690004.1.7"><span class="pplri8t-">FAQ: Tracker classes vs tracker components</span></a></p>
+<p class="noindent">Value of various app ops depend on their parent app ops. Therefore, when you allow/deny an app op, the parent of the app op gets modified. This fixes the issues some users have been complaining regarding some app ops that couldn’t be changed. </p>
+<p class="noindent">The signature tab is improved to support localization. It also displays multiple checksums for a signature.</p>
 <h3 class="sectionHead"><span class="titlemark">2.4</span> <a href="#QQ2-1-69" id="x1-690002.4">Profiles Page</a></h3>
 <!--l. 2-->
 <p class="noindent">At the bottom of the page, there is a special item denoting the number of missing signatures (i.e. missing classes). The missing signatures are the ones that AM has failed to match against any known libraries. The number itself has no particular meaning as many libraries contain hundreds of classes, but clicking on the item will bring up a dialog containing the signatures which is helpful in inspecting the missing signatures. <span class="pplb8t-">This feature is only intended for people who know what a</span> <span class="pplb8t-">missing signature is and what to do with it, average users should just ignore</span> <span class="pplb8t-">it.</span> </p>
@@ -550,11 +550,11 @@
 </ul>
 <h4 class="subsectionHead"><span class="titlemark">2.5.2</span> <a href="#QQ2-1-73" id="x1-730002.5.2">Apps Tab</a></h4>
 <!--l. 29-->
-<p class="noindent">Extras are the key-value pairs used for supplying additional information to the destination component. You can add extras using the <span class="pplri8t-">plus</span> button next to the title. </p>
+<p class="noindent">Sadly, no. ADB has limited <a href="https://github.com/aosp-mirror/platform_frameworks_base/blob/master/packages/Shell/AndroidManifest.xml">permissions</a> and controlling application components is not one of them. </p>
 
 <h4 class="subsectionHead"><span class="titlemark">2.5.3</span> <a href="#QQ2-1-74" id="x1-740002.5.3">Configurations Tab</a></h4>
 <!--l. 34-->
-<p class="noindent">Represents the entire Intent as a URI (e.g. <span class="ectt-1000">intent://</span><span class="ectt-1000">…</span>). Some data cannot be converted to string, and as a result, they might not appear here. </p>
+<p class="noindent">Most of the features supported by ADB mode are enabled by default once ADB support is detected by AM. These include disable, force-stop, clear data, grant/revoke app ops and permissions. You can also install applications without any prompt and view <a href="#x1-280002.1.5.6">running apps/processes</a>. </p>
 
 <h5 class="subsubsectionHead"><span class="titlemark">2.5.3.1</span> <a href="#QQ2-1-75" id="x1-750002.5.3.1">Comment</a></h5>
 <!--l. 37-->
@@ -562,11 +562,11 @@
 
 <h5 class="subsubsectionHead"><span class="titlemark">2.5.3.2</span> <a href="#QQ2-1-76" id="x1-760002.5.3.2">State</a></h5>
 <!--l. 41-->
-<p class="noindent">Yes. AM cannot modify any system settings without root or ADB over TCP. </p>
+<p class="noindent">Reset the Intent to its initial state. This may not always work as expected. </p>
 
 <h5 class="subsubsectionHead"><span class="titlemark">2.5.3.3</span> <a href="#QQ2-1-77" id="x1-770002.5.3.3">Users</a></h5>
 <!--l. 46-->
-<p class="noindent">AM uses the INTERNET permission for the following reasons: </p>
+<p class="noindent">Resend the edited Intent to the destination app. This may open a list of apps where you have to select the desired app. The result received from the target app will be sent to the source app. As a result the source app will not know if there was a man-in-the-middle. </p>
 
 <h5 class="subsubsectionHead"><span class="titlemark">2.5.3.4</span> <a href="#QQ2-1-78" id="x1-780002.5.3.4">Components</a></h5>
 <!--l. 49-->
@@ -735,7 +735,7 @@
 <p class="noindent"><span class="pplri8t-">See also:</span> <a href="#x1-1680004.1.6"><span class="pplri8t-">FAQ: What is instant component blocking?</span></a></p>
 <h5 class="subsubsectionHead"><span class="titlemark">2.6.9.2</span> <a href="#QQ2-1-111" id="x1-1110002.6.9.2">Import/Export Blocking Rules</a></h5>
 <!--l. 133-->
-<p class="noindent">In settings page, you can choose to sign APK files before installing them. You can also select which signature scheme to use in the <span class="pplri8t-">APK signing</span> option in settings. </p>
+<p class="noindent">A complete description of the backup options is given below: </p>
 <p class="noindent"><span class="pplri8t-">See also:</span> <a href="#x1-183000A.1"><span class="pplri8t-">Rules Specification</span></a> </p>
 <p class="noindent"><span class="paragraphHead"><a href="#x1-1120002.6.9.2" id="x1-1120002.6.9.2">Export</a></span> Export blocking rules for all apps configured within App Manager. This may include <a href="#x1-1630004.1.1">app components</a>, app ops and permissions based on the options selected in the multi-choice options. </p>
 <p class="noindent"><span class="paragraphHead"><a href="#x1-1130002.6.9.2" id="x1-1130002.6.9.2">Import</a></span> Import previously exported blocking rules from App Manager. Similar to export, this may include <a href="#x1-1630004.1.1">app components</a>, app ops and permissions based on the options selected in the multi-choice options. </p>
@@ -781,8 +781,8 @@
 <!--l. 25-->
 <p class="indent">The second item lists the number of trackers along with their names. Clicking on the item displays a dialog containing the name of trackers, matched signatures, and the number of classes against each signature. Some tracker names may have <sup><span class="pplr7t-x-x-76">2</span></sup> prefix which indicates that the trackers are in the <a href="https://etip.exodus-privacy.eu.org">ETIP</a> stand-by list i.e. whether they are actual trackers is still being investigated. 
 </p>
-<p class="indent">Value of various app ops depend on their parent app ops. Therefore, when you allow/deny an app op, the parent of the app op gets modified. This fixes the issues some users have been complaining regarding some app ops that couldn’t be changed. </p>
-<p class="noindent">The signature tab is improved to support localization. It also displays multiple checksums for a signature.</p>
+<p class="indent">The signature tab is improved to support localization. It also displays multiple checksums for a signature. </p>
+<p class="noindent">Even IFW has some limitations which are primarily applicable for the system apps:</p>
 <h4 class="subsectionHead"><span class="titlemark">2.7.1</span> <a href="#QQ2-1-121" id="x1-1210002.7.1">Missing Signatures</a></h4>
 <!--l. 36-->
 <p class="noindent">At the bottom of the page, there is a special item denoting the number of missing signatures (i.e. missing classes). The missing signatures are the ones that AM has failed to match against any known libraries. The number itself has no particular meaning as many libraries contain hundreds of classes, but clicking on the item will bring up a dialog containing the signatures which is helpful in inspecting the missing signatures. <span class="pplb8t-">This feature is only intended for people who know what a</span> <span class="pplb8t-">missing signature is and what to do with it, average users should just ignore</span> <span class="pplb8t-">it.</span></p>
@@ -831,11 +831,11 @@
 
 <h5 class="subsubsectionHead"><span class="titlemark">2.8.1.6</span> <a href="#QQ2-1-129" id="x1-1290002.8.1.6">Extras</a></h5>
 <!--l. 66-->
-<p class="noindent">Sadly, no. ADB has limited <a href="https://github.com/aosp-mirror/platform_frameworks_base/blob/master/packages/Shell/AndroidManifest.xml">permissions</a> and controlling application components is not one of them. </p>
+<p class="noindent"><span class="paragraphHead"><a href="#x1-245000B.4.9" id="x1-245000B.4.9">Known Limitation</a></span> Not all translations are verified yet. </p>
 
 <h5 class="subsubsectionHead"><span class="titlemark">2.8.1.7</span> <a href="#QQ2-1-130" id="x1-1300002.8.1.7">URI</a></h5>
 <!--l. 70-->
-<p class="noindent">Most of the features supported by ADB mode are enabled by default once ADB support is detected by AM. These include disable, force-stop, clear data, grant/revoke app ops and permissions. You can also install applications without any prompt and view <a href="#x1-280002.1.5.6">running apps/processes</a>. </p>
+<p class="noindent">Install app only for the current user at the time of restoring backups. Support for split apks is also added. </p>
 
 <h4 class="subsectionHead"><span class="titlemark">2.8.2</span> <a href="#QQ2-1-131" id="x1-1310002.8.2">Matching Activities</a></h4>
 <!--l. 74-->
@@ -870,7 +870,7 @@
 
 <h5 class="subsubsectionHead"><span class="titlemark">3.1.1.2</span> <a href="#QQ2-1-139" id="x1-1390003.1.1.2">How to enable developer options</a></h5>
 <!--l. 25-->
-<p class="noindent"><span class="ectt-1000">MODE_*</span> constants also integer constants starting from <span class="ectt-1000">0</span>. These constants are assigned to each operation describing whether an app is authorised to perform that operation. These modes usually have associated names such as <span class="pplb8t-">allow</span> for <span class="ectt-1000">MODE_ALLOWED</span>, <span class="pplb8t-">ignore</span> for <span class="ectt-1000">MODE_IGNORED</span>, <span class="pplb8t-">deny</span> for <span class="ectt-1000">MODE_ERRORED</span> (a rather misnomer), <span class="pplb8t-">default</span> for <span class="ectt-1000">MODE_DEFAULT</span> and <span class="pplb8t-">foreground</span> for <span class="ectt-1000">MODE_FOREGROUND</span>. </p>
+<p class="noindent">From v2.5.19, AM has a new feature called <a href="#x1-710002.5">profiles</a>. The <a href="#x1-690002.4">profiles page</a> has an option to create new profiles from one of the presets. The presets consist of debloating profiles which can be used as a starting point to monitor, disable, and remove the bloatware from a proprietary Android operating system. </p>
 
 <h4 class="subsectionHead"><span class="titlemark">3.1.2</span> <a href="#QQ2-1-140" id="x1-1400003.1.2">Enable USB debugging</a></h4>
 <!--l. 33-->
