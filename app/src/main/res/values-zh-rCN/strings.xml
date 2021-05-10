@@ -18,7 +18,7 @@
     <string name="_lang_tag" translatable="false">zh-CN</string>
     <string name="uninstall">卸载</string>
     <string name="permissions">系统预定义权限</string>
-    <string name="require_no_permission">无权限</string>
+    <string name="require_no_permission">无需权限</string>
     <string name="activities">活动</string>
     <string name="launch">打开</string>
     <string name="refresh">刷新</string>
