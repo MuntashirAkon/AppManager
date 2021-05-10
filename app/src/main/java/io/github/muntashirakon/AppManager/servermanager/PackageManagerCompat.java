@@ -17,6 +17,7 @@
 
 package io.github.muntashirakon.AppManager.servermanager;
 
+import android.annotation.UserIdInt;
 import android.content.ComponentName;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
@@ -44,7 +45,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
-import io.github.muntashirakon.AppManager.users.UserIdInt;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 import static android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DEFAULT;

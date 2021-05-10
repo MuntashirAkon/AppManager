@@ -18,6 +18,7 @@
 package io.github.muntashirakon.AppManager.utils;
 
 import android.annotation.SuppressLint;
+import android.miui.AppOpsUtils;
 import android.os.Build;
 import android.text.TextUtils;
 
@@ -92,10 +93,8 @@ public class MiuiUtils {
             return true;
         }
         try {
-            return (boolean) Class.forName("android.miui.AppOpsUtils")
-                    .getDeclaredMethod("isXOptMode")
-                    .invoke(null);
-        } catch (Exception e) {
+            return AppOpsUtils.isXOptMode();
+        } catch (Throwable e) {
             return false;
         }
     }

@@ -17,6 +17,7 @@
 
 package io.github.muntashirakon.AppManager.utils;
 
+import android.annotation.UserIdInt;
 import android.app.usage.IStorageStatsManager;
 import android.app.usage.StorageStats;
 import android.content.ComponentName;
@@ -94,7 +95,6 @@ import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.PackageChangeReceiver;
 import io.github.muntashirakon.AppManager.types.PackageSizeInfo;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
-import io.github.muntashirakon.AppManager.users.UserIdInt;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.io.ProxyFile;
 

@@ -17,6 +17,7 @@
 
 package io.github.muntashirakon.AppManager.servermanager;
 
+import android.annotation.UserIdInt;
 import android.content.pm.IPackageManager;
 import android.os.Build;
 import android.os.RemoteException;
@@ -26,7 +27,6 @@ import androidx.annotation.RequiresApi;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
-import io.github.muntashirakon.AppManager.users.UserIdInt;
 
 public class PermissionCompat {
     @RequiresApi(Build.VERSION_CODES.M)

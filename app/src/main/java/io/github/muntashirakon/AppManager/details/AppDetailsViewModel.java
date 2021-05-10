@@ -18,6 +18,7 @@
 package io.github.muntashirakon.AppManager.details;
 
 import android.annotation.SuppressLint;
+import android.annotation.UserIdInt;
 import android.app.Application;
 import android.content.Intent;
 import android.content.pm.*;
@@ -40,7 +41,6 @@ import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsPermissionItem;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
-import io.github.muntashirakon.AppManager.users.UserIdInt;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
