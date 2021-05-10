@@ -18,6 +18,7 @@
 package io.github.muntashirakon.AppManager.apk.installer;
 
 import android.annotation.SuppressLint;
+import android.annotation.UserIdInt;
 import android.app.PendingIntent;
 import android.content.IIntentReceiver;
 import android.content.IIntentSender;
@@ -58,7 +59,6 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.users.UserIdInt;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
@@ -351,7 +351,7 @@ public final class PackageInstallerCompat extends AMPackageInstaller {
     private String installerPackageName;
     private final boolean isPrivileged;
 
-    private PackageInstallerCompat(int userHandle) {
+    private PackageInstallerCompat(@UserIdInt int userHandle) {
         this.isPrivileged = LocalServer.isAMServiceAlive();
         this.allUsers = isPrivileged && userHandle == Users.USER_ALL;
         this.userHandle = allUsers ? Users.getCurrentUserHandle() : userHandle;
