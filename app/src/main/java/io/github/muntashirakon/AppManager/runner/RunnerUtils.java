@@ -21,6 +21,8 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.RemoteException;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 import com.tananaev.adblib.AdbConnection;
@@ -173,46 +175,55 @@ public final class RunnerUtils {
                     throw new IOException("ADB not available");
                 }
                 new Handler(Looper.getMainLooper()).post(() -> UIUtils.displayShortToast(R.string.working_on_adb_mode));
-            } catch (IOException e) {
+            } catch (IOException | RemoteException e) {
                 Log.e("ADB", e);
                 AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
             }
         } else {
             AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, true);
-            LocalServer.getInstance();
+            try {
+                LocalServer.launchAmService();
+            } catch (RemoteException e) {
+                Log.e("ROOT", e);
+                AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
+            }
         }
     }
 
     @WorkerThread
     public static void setModeOfOps(Context context) {
-        String mode = (String) AppPref.get(AppPref.PrefKey.PREF_MODE_OF_OPS_STR);
-        switch (mode) {
-            case Runner.MODE_AUTO:
-                if (LocalServer.isAMServiceAlive()) {
-                    // Don't bother detecting root/ADB
-                    return;
-                } else if (LocalServer.isLocalServerAlive()) {
-                    // Remote server is running
+        String mode = AppPref.getString(AppPref.PrefKey.PREF_MODE_OF_OPS_STR);
+        try {
+            switch (mode) {
+                case Runner.MODE_AUTO:
+                    if (LocalServer.isAMServiceAlive()) {
+                        // Don't bother detecting root/ADB
+                        return;
+                    } else if (LocalServer.isLocalServerAlive()) {
+                        // Remote server is running
+                        LocalServer.getInstance();
+                        return;
+                    } else {
+                        // AMService isn't running, check for root/ADB
+                        RunnerUtils.autoDetectRootOrAdb(context);
+                        return;
+                    }
+                case Runner.MODE_ROOT:
+                    AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, true);
+                    AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
+                    LocalServer.launchAmService();
+                    break;
+                case Runner.MODE_ADB:
+                    AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
+                    AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, true);
                     LocalServer.getInstance();
-                    return;
-                } else {
-                    // AMService isn't running, check for root/ADB
-                    RunnerUtils.autoDetectRootOrAdb(context);
-                    return;
-                }
-            case Runner.MODE_ROOT:
-                AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, true);
-                AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
-                LocalServer.getInstance();
-                break;
-            case Runner.MODE_ADB:
-                AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
-                AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, true);
-                LocalServer.getInstance();
-                break;
-            case Runner.MODE_NO_ROOT:
-                AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
-                AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
+                    break;
+                case Runner.MODE_NO_ROOT:
+                    AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
+                    AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
+            }
+        } catch (Exception e) {
+            Log.e("ModeOfOps", e);
         }
     }
 

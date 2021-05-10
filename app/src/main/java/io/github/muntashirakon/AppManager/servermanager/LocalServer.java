@@ -19,6 +19,8 @@ package io.github.muntashirakon.AppManager.servermanager;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.RemoteException;
+
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
@@ -46,26 +48,27 @@ public class LocalServer {
     private static IAMService amService;
 
     @GuardedBy("lockObject")
-    public static LocalServer getInstance() {
+    public static LocalServer getInstance() throws RemoteException {
         // Non-null check must be done outside the synchronised block to prevent deadlock on ADB over TCP mode.
         if (localServer != null) return localServer;
         synchronized (lockObject) {
             try {
-                Log.e("IPC", "Init: Local server");
+                Log.d("IPC", "Init: Local server");
                 localServer = new LocalServer();
-                if (amService == null || !amService.asBinder().pingBinder()) {
-                    // This calls the AdbShell class which has dependencies on LocalServer which might cause deadlock
-                    // if not careful (see comment above on non-null check)
-                    amService = IPCUtils.getAmService();
-                }
-            } catch (Throwable e) {
-                // FIXME: 18/2/21 The exceptions should be part of the signature rather than discarding them.
-                e.printStackTrace();
+                // This calls the AdbShell class which has dependencies on LocalServer which might cause deadlock
+                // if not careful (see comment above on non-null check)
+                launchAmService();
             } finally {
                 lockObject.notifyAll();
             }
         }
         return localServer;
+    }
+
+    public static void launchAmService() throws RemoteException {
+        if (amService == null || !amService.asBinder().pingBinder()) {
+            amService = IPCUtils.getAmService();
+        }
     }
 
     public static boolean isLocalServerAlive() {
@@ -174,7 +177,7 @@ public class LocalServer {
         AssetsUtils.writeScript(getConfig());
     }
 
-    public static void restart() throws IOException {
+    public static void restart() throws IOException, RemoteException {
         LocalServerManager manager = getInstance().mLocalServerManager;
         manager.closeBgServer();
         manager.stop();
