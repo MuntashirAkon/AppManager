@@ -39,6 +39,7 @@ import io.github.muntashirakon.AppManager.details.struct.AppDetailsComponentItem
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsPermissionItem;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
 import io.github.muntashirakon.AppManager.users.UserIdInt;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
@@ -376,7 +377,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 }
             } else {
                 try {
-                    PackageManagerCompat.grantPermission(packageName, permissionName, userHandle);
+                    PermissionCompat.grantPermission(packageName, permissionName, userHandle);
                 } catch (RemoteException e) {
                     e.printStackTrace();
                     return false;
@@ -391,7 +392,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 }
             } else {
                 try {
-                    PackageManagerCompat.revokePermission(packageName, permissionName, userHandle);
+                    PermissionCompat.revokePermission(packageName, permissionName, userHandle);
                 } catch (RemoteException e) {
                     e.printStackTrace();
                     return false;
@@ -426,7 +427,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
             permissionItem = usesPermissionItems.get(i);
             if (permissionItem.isDangerous && permissionItem.isGranted) {
                 try {
-                    PackageManagerCompat.revokePermission(packageName, permissionItem.name, userHandle);
+                    PermissionCompat.revokePermission(packageName, permissionItem.name, userHandle);
                     permissionItem.isGranted = false;
                     usesPermissionItems.set(i, permissionItem);
                     revokedPermissions.add(permissionItem.name);

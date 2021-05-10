@@ -92,7 +92,7 @@ import io.github.muntashirakon.AppManager.logcat.struct.SendLogDetails;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
-import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
 import io.github.muntashirakon.AppManager.settings.LogViewerPreferences;
 import io.github.muntashirakon.AppManager.settings.SettingsActivity;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
@@ -254,7 +254,8 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
         if (!PermissionUtils.hasPermission(this, Manifest.permission.READ_LOGS) && LocalServer.isAMServiceAlive()) {
             new Thread(() -> {
                 try {
-                    PackageManagerCompat.grantPermission(getPackageName(), Manifest.permission.READ_LOGS, Users.getCurrentUserHandle());
+                    PermissionCompat.grantPermission(getPackageName(), Manifest.permission.READ_LOGS,
+                            Users.getCurrentUserHandle());
                 } catch (RemoteException e) {
                     Log.d(TAG, e.toString());
                 }

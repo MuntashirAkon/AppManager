@@ -25,10 +25,11 @@ import android.os.Environment;
 import android.os.RemoteException;
 
 import androidx.core.content.ContextCompat;
+
 import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
-import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
+import io.github.muntashirakon.AppManager.users.Users;
 
 @SuppressWarnings("BooleanMethodIsAlwaysInverted")
 public final class PermissionUtils {
@@ -40,7 +41,8 @@ public final class PermissionUtils {
         if (!hasPermission(context, Manifest.permission.DUMP)) {
             if (LocalServer.isAMServiceAlive()) {
                 try {
-                    PackageManagerCompat.grantPermission(context.getPackageName(), Manifest.permission.DUMP, Users.getCurrentUserHandle());
+                    PermissionCompat.grantPermission(context.getPackageName(), Manifest.permission.DUMP,
+                            Users.getCurrentUserHandle());
                     return true;
                 } catch (RemoteException e) {
                     e.printStackTrace();

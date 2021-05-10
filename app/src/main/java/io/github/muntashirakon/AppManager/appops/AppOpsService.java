@@ -23,20 +23,21 @@ import android.os.Build;
 import android.os.Parcelable;
 import android.os.RemoteException;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.android.internal.app.IAppOpsService;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.appops.reflector.ReflectUtils;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
 import io.github.muntashirakon.AppManager.users.Users;
-import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 
@@ -48,7 +49,8 @@ public class AppOpsService {
         Context context = AppManager.getContext();
         if (!PermissionUtils.hasAppOpsPermission(context) && AppPref.isRootOrAdbEnabled()) {
             try {
-                PackageManagerCompat.grantPermission(context.getPackageName(), PermissionUtils.PERMISSION_GET_APP_OPS_STATS, Users.getCurrentUserHandle());
+                PermissionCompat.grantPermission(context.getPackageName(), PermissionUtils.PERMISSION_GET_APP_OPS_STATS,
+                        Users.getCurrentUserHandle());
             } catch (RemoteException e) {
                 throw new RuntimeException("Couldn't connect to appOpsService locally", e);
             }

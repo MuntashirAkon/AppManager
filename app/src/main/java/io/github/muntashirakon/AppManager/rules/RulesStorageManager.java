@@ -43,7 +43,7 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.servermanager.NetworkPolicyManagerCompat;
-import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.uri.UriManager;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -359,9 +359,9 @@ public class RulesStorageManager implements Closeable {
                 try {
                     if ((Boolean) permission.extra) {
                         // grant permission
-                        PackageManagerCompat.grantPermission(packageName, permission.name, userHandle);
+                        PermissionCompat.grantPermission(packageName, permission.name, userHandle);
                     } else {
-                        PackageManagerCompat.revokePermission(packageName, permission.name, userHandle);
+                        PermissionCompat.revokePermission(packageName, permission.name, userHandle);
                     }
                 } catch (RemoteException e) {
                     e.printStackTrace();
@@ -378,7 +378,7 @@ public class RulesStorageManager implements Closeable {
             List<Entry> permissions = getAll(Type.PERMISSION);
             for (Entry permission : permissions) {
                 try {
-                    PackageManagerCompat.revokePermission(packageName, permission.name, userHandle);
+                    PermissionCompat.revokePermission(packageName, permission.name, userHandle);
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
