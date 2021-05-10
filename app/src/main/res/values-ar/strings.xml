@@ -1159,4 +1159,11 @@
     <string name="no_changes">لا تغييرات</string>
     <string name="pref_display_changes_msg">عرض التغييرات في الإصدار ، برمجيات التتبع ، والمكونات ، والأذونات ، والتوقيعات ، SDK ، وما إلى ذلك بطريقة النسخة التي تسيطر عليها.</string>
     <string name="pref_display_changes">عرض التغييرات</string>
+    <string name="netpolicy_disable_network_access">تعطيل الوصول إلى الشبكة</string>
+    <string name="netpolicy_reject_wifi_data">رفض بيانات Wi-Fi</string>
+    <string name="netpolicy_reject_vpn_data">رفض بيانات VPN</string>
+    <string name="netpolicy_reject_cellular_data">رفض البيانات الخلوية</string>
+    <string name="netpolicy_allow_background_data">السماح ببيانات الخلفية عند تشغيل \"توفير البيانات\"</string>
+    <string name="netpolicy_reject_background_data">ارفض بيانات الخلفية</string>
+    <string name="unknown_netpolicy">سياسة انترنت غير معروفة (%s)</string>
 </resources>
