@@ -440,4 +440,64 @@
     <string name="expiry_date_cannot_be_empty">Ngày hết hạn không thể trống.</string>
     <string name="signing_key">Mã ký</string>
     <string name="app_signing_signatures">Chữ ký</string>
+    <string name="backup_rules_description">Sao lưu các quy tắc đã thiết lập từ trong App Manager.</string>
+    <string name="backup_extras_description">Sao lưu các quyền của ứng dụng, các tuỳ chọn tiết kiệm pin và sử dụng dữ liệu, trạng thái MagiskHide, SSAID, v.v.</string>
+    <string name="backup_extras">Bổ sung</string>
+    <string name="backup_cache_description">Sao lưu các thư mục <b>cache</b>, <b>no_cache</b> và <b>no_backup</b>.</string>
+    <string name="backup_obb_media_description">Sao lưu OBB và các thư mục phương tiện.</string>
+    <string name="backup_external_data_description">Sao lưu các thư mục dữ liệu ở ngoài.</string>
+    <string name="backup_internal_data_description">Sao lưu các thư mục dữ liệu ở trong.</string>
+    <string name="backup_apk_files_description">Sao lưu các tệp APK từ thư mục nguồn, bao gồm cả các tệp tách.</string>
+    <string name="set_mode_for_app_ops_dots">Đặt chế độ cho hoạt động ứng dụng…</string>
+    <string name="graphics">Đồ hoạ</string>
+    <string name="cpu">CPU</string>
+    <string name="pref_sign_apk_msg">Ký các tệp APK trước khi cài đặt chúng.</string>
+    <string name="pref_sign_apk">Ký APK</string>
+    <string name="install_location_prefer_external">Ưu tiên ở ngoài</string>
+    <string name="install_location_internal_only">Chỉ ở trong</string>
+    <string name="install_location">Vị trí cài đặt</string>
+    <string name="installer">Trình cài đặt</string>
+    <string name="comment">Bình luận</string>
+    <string name="orientation_unspecified">Chưa chỉ định</string>
+    <string name="orientation_behind">Phía sau</string>
+    <string name="orientation_locked">Đã khoá</string>
+    <string name="orientation_full_user">Đầy đủ người dùng</string>
+    <string name="orientation_full_sensor">Đầy đủ cảm biến</string>
+    <string name="launch_mode_single_task">Một công việc</string>
+    <string name="launch_mode_multiple">Nhiều</string>
+    <string name="locale_split_for_base_apk"><xliff:g id="split_name" example="English">%1$s</xliff:g> ngôn ngữ cho APK cơ sở</string>
+    <string name="locale_split_for_feature"><xliff:g id="split_name" example="English">%1$s</xliff:g> ngôn ngữ cho tính năng <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <string name="abi_split_for_base_apk"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> mã cho APK cơ sở</string>
+    <string name="abi_split_for_feature"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> mã cho <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <string name="density_split_for_base_apk"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) tài nguyên cho APK cơ sở</string>
+    <string name="density_split_for_feature"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) tài nguyên cho tính năng <xliff:g id="feature_name" example="Visualizer">%3$s</xliff:g></string>
+    <string name="unknown_split_for_base_apk"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> cho APK cơ sở</string>
+    <string name="unknown_split_for_feature"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> cho tính năng <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <string name="split_feature_name">Tính năng: <xliff:g id="feature_name" example="Visualizer">%1$s</xliff:g></string>
+    <string name="base_apk">APK cơ sở</string>
+    <string name="choose_language">Đổi ngôn ngữ</string>
+    <string name="auto">Tự động</string>
+    <string name="pref_app_language">Ngôn ngữ</string>
+    <string name="backup_all_users">Tất cả người dùng</string>
+    <string name="backup_multiple">Sao lưu nhiều</string>
+    <string name="obb_files_extracted_successfully">Đã trích xuất tệp OBB</string>
+    <string name="failed_to_extract_obb_files">Không thể trích xuất tệp OBB</string>
+    <string name="orientation_no_sensor">Không có cảm biến</string>
+    <string name="orientation_landscape">Ngang</string>
+    <string name="_undefined">Chưa định nghĩa</string>
+    <string name="required">Bắt buộc</string>
+    <string name="orientation_user_portrait">Dọc theo người dùng</string>
+    <string name="orientation_user_landscape">Ngang theo người dùng</string>
+    <string name="orientation_sensor_portrait">Dọc theo cảm biến</string>
+    <string name="orientation_sensor_landscape">Ngang theo cảm biến</string>
+    <string name="orientation_user">Người dùng</string>
+    <string name="orientation_reverse_landscape">Ngang đảo ngược</string>
+    <string name="orientation_reverse_portrait">Dọc đảo ngược</string>
+    <string name="orientation_portrait">Dọc</string>
+    <string name="navigation_no_nav">Không có điều hướng</string>
+    <string name="keyboard_12_keys">12 phím</string>
+    <string name="keyboard_qwerty">QWERTY</string>
+    <string name="keyboard_no_keys">Không có phím</string>
+    <string name="shared_prefs">Cài đặt dùng chung</string>
+    <string name="word_wrap">Bật/tắt gói gọn từ</string>
 </resources>
