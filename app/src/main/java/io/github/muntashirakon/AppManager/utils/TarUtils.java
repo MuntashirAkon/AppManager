@@ -19,6 +19,7 @@ package io.github.muntashirakon.AppManager.utils;
 
 import android.os.RemoteException;
 import android.system.ErrnoException;
+import android.system.OsConstants;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -195,8 +196,7 @@ public final class TarUtils {
                     }
                     // Fix permissions
                     try {
-                        ProxyFiles.chmod(file, entry.getMode());
-                        ProxyFiles.chown(file, entry.getUserId(), entry.getGroupId());
+                        ProxyFiles.setPermissions(file, entry.getMode(), entry.getUserId(), entry.getGroupId());
                     } catch (RuntimeException e) {
                         if (e.getMessage() == null || !e.getMessage().contains("mocked")) {
                             throw e;
@@ -217,7 +217,7 @@ public final class TarUtils {
     static void gatherFiles(@NonNull List<File> files, @NonNull File basePath, @NonNull File source,
                             @Nullable String[] filters, @Nullable String[] exclude, boolean followLinks)
             throws ErrnoException, RemoteException {
-        if (source.isDirectory()) {
+        if (source.isDirectory()) {  // OsConstants#S_ISDIR
             // Is a directory, add only the directory if it's a symboilic link and followLinks is disabled
             if (!followLinks && isSymbolicLink(source)) {
                 files.add(source);
@@ -239,7 +239,7 @@ public final class TarUtils {
             for (File child : children) {
                 gatherFiles(files, basePath, child, filters, exclude, followLinks);
             }
-        } else if (source.isFile()) {
+        } else if (source.isFile()) {  // OsConstants#S_ISREG
             // Not directory, add it
             files.add(source);
         } // else we don't support other type of files
@@ -249,7 +249,7 @@ public final class TarUtils {
         try {
             FileStatus lstat = ProxyFiles.lstat(file);
             // https://github.com/win32ports/unistd_h/blob/master/unistd.h
-            return (lstat.st_mode & 0xF000) == 0xA000;
+            return OsConstants.S_ISLNK(lstat.st_mode);
         } catch (RuntimeException e) {
             if (e.getMessage() == null || !e.getMessage().contains("mocked")) {
                 throw e;

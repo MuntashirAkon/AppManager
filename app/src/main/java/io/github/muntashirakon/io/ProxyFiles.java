@@ -31,6 +31,8 @@ import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 
 @WorkerThread
 public final class ProxyFiles {
+    public static final String TAG = ProxyFiles.class.getSimpleName();
+
     @NonNull
     public static FileStatus stat(@NonNull File path) throws ErrnoException, RemoteException {
         if (path instanceof ProxyFile && LocalServer.isAMServiceAlive()) {
@@ -57,5 +59,31 @@ public final class ProxyFiles {
         if (path instanceof ProxyFile && LocalServer.isAMServiceAlive()) {
             IPCUtils.getAmService().chown(path.getAbsolutePath(), uid, gid);
         } else Os.chown(path.getAbsolutePath(), uid, gid);
+    }
+
+    /**
+     * Set owner and mode of of given path.
+     *
+     * @param mode to apply through {@code chmod}
+     * @param uid  to apply through {@code chown}, or -1 to leave unchanged
+     * @param gid  to apply through {@code chown}, or -1 to leave unchanged
+     */
+    public static void setPermissions(File path, int mode, int uid, int gid) throws ErrnoException, RemoteException {
+        chmod(path, mode);
+        if (uid >= 0 || gid >= 0) {
+            chown(path, uid, gid);
+        }
+    }
+
+    /**
+     * Copy the owner UID, owner GID, and mode bits from one file to another.
+     *
+     * @param from File where attributes should be copied from.
+     * @param to   File where attributes should be copied to.
+     */
+    public static void copyPermissions(@NonNull File from, @NonNull File to) throws ErrnoException, RemoteException {
+        final FileStatus stat = stat(from);
+        chmod(to, stat.st_mode);
+        chown(to, stat.st_uid, stat.st_gid);
     }
 }
