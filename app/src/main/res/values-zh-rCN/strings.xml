@@ -420,7 +420,7 @@
     <string name="website">网址</string>
     <string name="website_message">https://muntashirakon.github.io/AppManager</string>
     <string name="pref_remove_all_rules">删除所有规则</string>
-    <string name="pref_remove_all_rules_msg">权限已被授予，APPOPS 和组件将回到它们的默认值。</string>
+    <string name="pref_remove_all_rules_msg">权限已被授予，app ops 和组件将回到它们的默认值。</string>
     <string name="are_you_sure">您确定吗？</string>
     <string name="filter_apps_with_activities">有活动的应用程序</string>
     <string name="toggle_default_app_ops">切换默认应用</string>
@@ -805,12 +805,12 @@
     <string name="enable_battery_optimization">启用电池优化？</string>
     <string name="battery_optimization">电池优化</string>
     <string name="no_battery_optimization">无电池优化</string>
-    <string name="screen_lock_msg">用 Android 屏幕锁锁定 App Manager</string>
+    <string name="screen_lock_msg">用安卓屏幕锁锁定 App Manager</string>
     <string name="screen_lock">屏幕锁</string>
     <string name="unlock_app_manager">解锁 App Manager</string>
     <string name="sd_card">SD卡</string>
     <string name="external_storage">外部存储</string>
-    <string name="internal_storage">内部共享存储空间</string>
+    <string name="internal_storage">内部存储</string>
     <string name="restart_to_reflect_changes">你必须立即重新启动设备才能使用新的更改。</string>
     <string name="failed_to_change_ssaid">无法更改 SSAID</string>
     <string name="copied_to_clipboard">已复制到剪贴板。</string>
