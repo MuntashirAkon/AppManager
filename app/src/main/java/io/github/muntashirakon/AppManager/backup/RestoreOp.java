@@ -54,6 +54,7 @@ import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.servermanager.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
 import io.github.muntashirakon.AppManager.types.FreshFile;
 import io.github.muntashirakon.AppManager.uri.UriManager;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
@@ -476,9 +477,9 @@ class RestoreOp implements Closeable {
                         break;
                     case PERMISSION:
                         if ((boolean) entry.extra /* isGranted */) {
-                            PackageManagerCompat.grantPermission(packageName, entry.name, userHandle);
+                            PermissionCompat.grantPermission(packageName, entry.name, userHandle);
                         } else {
-                            PackageManagerCompat.revokePermission(packageName, entry.name, userHandle);
+                            PermissionCompat.revokePermission(packageName, entry.name, userHandle);
                         }
                         break;
                     case BATTERY_OPT:

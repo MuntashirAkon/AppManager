@@ -55,6 +55,7 @@ import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.rules.compontents.ExternalComponentsImporter;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.UserIdInt;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
@@ -377,9 +378,9 @@ public class BatchOpsManager {
                     if (permissions == null) continue;
                     for (String permission : permissions) {
                         if (isGrant) {
-                            PackageManagerCompat.grantPermission(pair.getPackageName(), permission, pair.getUserHandle());
+                            PermissionCompat.grantPermission(pair.getPackageName(), permission, pair.getUserHandle());
                         } else {
-                            PackageManagerCompat.revokePermission(pair.getPackageName(), permission, pair.getUserHandle());
+                            PermissionCompat.revokePermission(pair.getPackageName(), permission, pair.getUserHandle());
                         }
                     }
                 } catch (Throwable e) {
@@ -392,9 +393,9 @@ public class BatchOpsManager {
                 for (String permission : permissions) {
                     try {
                         if (isGrant) {
-                            PackageManagerCompat.grantPermission(pair.getPackageName(), permission, pair.getUserHandle());
+                            PermissionCompat.grantPermission(pair.getPackageName(), permission, pair.getUserHandle());
                         } else {
-                            PackageManagerCompat.revokePermission(pair.getPackageName(), permission, pair.getUserHandle());
+                            PermissionCompat.revokePermission(pair.getPackageName(), permission, pair.getUserHandle());
                         }
                     } catch (Throwable e) {
                         Log.e(TAG, e);

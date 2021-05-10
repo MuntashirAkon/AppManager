@@ -30,7 +30,6 @@ import android.content.pm.ProviderInfo;
 import android.content.pm.ServiceInfo;
 import android.os.Build;
 import android.os.RemoteException;
-import android.permission.IPermissionManager;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -191,61 +190,6 @@ public final class PackageManagerCompat {
         AppManager.getIPackageManager().setApplicationEnabledSetting(packageName, newState, flags, userId, null);
     }
 
-    @SuppressWarnings("deprecation")
-    public static void grantPermission(String packageName, String permissionName, @UserIdInt int userId)
-            throws RemoteException {
-        IPackageManager pm = AppManager.getIPackageManager();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            IPermissionManager permissionManager = getPermissionManager();
-            permissionManager.grantRuntimePermission(packageName, permissionName, userId);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            pm.grantRuntimePermission(packageName, permissionName, userId);
-        } else {
-            pm.grantPermission(packageName, permissionName);
-        }
-    }
-
-    @SuppressWarnings("deprecation")
-    public static void revokePermission(String packageName, String permissionName, @UserIdInt int userId)
-            throws RemoteException {
-        IPackageManager pm = AppManager.getIPackageManager();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            IPermissionManager permissionManager = getPermissionManager();
-            permissionManager.revokeRuntimePermission(packageName, permissionName, userId, null);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            pm.revokeRuntimePermission(packageName, permissionName, userId);
-        } else {
-            pm.revokePermission(packageName, permissionName);
-        }
-    }
-
-    public static int getPermissionFlags(String permissionName, String packageName, @UserIdInt int userId)
-            throws RemoteException {
-        IPackageManager pm = AppManager.getIPackageManager();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            IPermissionManager permissionManager = getPermissionManager();
-            return permissionManager.getPermissionFlags(packageName, permissionName, userId);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return pm.getPermissionFlags(permissionName, packageName, userId);
-        } else return 0;
-    }
-
-    public static void updatePermissionFlags(String permissionName, String packageName,
-                                             int flagMask, int flagValues,
-                                             boolean checkAdjustPolicyFlagPermission,
-                                             @UserIdInt int userId)
-            throws RemoteException {
-        IPackageManager pm = AppManager.getIPackageManager();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            IPermissionManager permissionManager = getPermissionManager();
-            permissionManager.updatePermissionFlags(permissionName, packageName, flagMask, flagValues, checkAdjustPolicyFlagPermission, userId);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            pm.updatePermissionFlags(permissionName, packageName, flagMask, flagValues, checkAdjustPolicyFlagPermission, userId);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            pm.updatePermissionFlags(permissionName, packageName, flagMask, flagValues, userId);
-        }
-    }
-
     public static String getInstallerPackage(String packageName) throws RemoteException {
         return AppManager.getIPackageManager().getInstallerPackageName(packageName);
     }
@@ -300,9 +244,5 @@ public final class PackageManagerCompat {
     @NonNull
     public static IPackageInstaller getPackageInstaller(@NonNull IPackageManager pm) throws RemoteException {
         return IPackageInstaller.Stub.asInterface(new ProxyBinder(pm.getPackageInstaller().asBinder()));
-    }
-
-    public static IPermissionManager getPermissionManager() {
-        return IPermissionManager.Stub.asInterface(ProxyBinder.getService("permissionmgr"));
     }
 }
