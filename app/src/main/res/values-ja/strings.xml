@@ -862,7 +862,6 @@
     <string name="add">追加</string>
     <string name="add_to_profile">プロファイルに追加</string>
     <string name="reverse">順序を反転</string>
-    <string name="reject_background">バックグラウンドを拒否</string>
     <string name="choose_what_to_do">実行する操作を選択してください</string>
     <string name="enable_battery_optimization">電池の最適化を有効にしますか？</string>
     <string name="battery_optimization">電池の最適化</string>
