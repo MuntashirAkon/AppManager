@@ -645,7 +645,6 @@
     <string name="enable_disable_features">Skru på/av funksjoner</string>
     <string name="ssaid">SSAID</string>
     <string name="initializing">Starter …</string>
-    <string name="reject_background">Avslå bakgrunn</string>
     <string name="choose_what_to_do">Velg foretagende.</string>
     <string name="drm_free_apkm_msg">APKM-filen er DRM-fri, og det er unødvendig å konvertere den til APKS.</string>
     <string name="restore_msg">Gjenopprett programmer med data</string>

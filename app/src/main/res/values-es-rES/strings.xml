@@ -870,7 +870,6 @@
     <string name="add">Añadir</string>
     <string name="add_to_profile">Añadir al perfil</string>
     <string name="initializing">Inicializando…</string>
-    <string name="reject_background">Rechazar en segundo plano</string>
     <string name="internal_storage">Almacenamiento interno</string>
     <string name="back_up">Respaldo</string>
     <string name="internal_data">Datos internos</string>
