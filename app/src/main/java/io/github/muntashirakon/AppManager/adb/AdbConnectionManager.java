@@ -21,8 +21,6 @@ package io.github.muntashirakon.AppManager.adb;
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 
-import java.net.Socket;
-
 import io.github.muntashirakon.AppManager.crypto.ks.KeyPair;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreUtils;
@@ -48,19 +46,12 @@ public class AdbConnectionManager {
 
     @WorkerThread
     @NonNull
-    public static AdbConnection buildConnect(String host, int port) throws Exception {
+    public static AdbConnection connect(@NonNull String host, int port) throws Exception {
         // Setup the crypto object required for the AdbConnection
         AdbCrypto crypto = AdbCrypto.loadAdbKeyPair(getAdbKeyPair());
-        // Connect the socket to the remote host
-        Socket sock = new Socket(host, port);
         // Construct the AdbConnection object
-        return AdbConnection.create(sock, crypto);
-    }
-
-    @WorkerThread
-    @NonNull
-    public static AdbConnection connect(@NonNull String host, int port) throws Exception {
-        AdbConnection adbConnection = buildConnect(host, port);
+        AdbConnection adbConnection = AdbConnection.create(host, port, crypto);
+        // Connect to ADB
         adbConnection.connect();
         return adbConnection;
     }

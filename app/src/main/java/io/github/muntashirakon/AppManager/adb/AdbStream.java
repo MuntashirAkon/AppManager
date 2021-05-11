@@ -22,6 +22,7 @@ package io.github.muntashirakon.AppManager.adb;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -78,7 +79,7 @@ public class AdbStream implements Closeable {
     public AdbStream(AdbConnection adbConn, int localId) {
         this.adbConn = adbConn;
         this.localId = localId;
-        this.readQueue = new ConcurrentLinkedQueue<byte[]>();
+        this.readQueue = new ConcurrentLinkedQueue<>();
         this.writeReady = new AtomicBoolean(false);
         this.isClosed = false;
     }
@@ -105,9 +106,9 @@ public class AdbStream implements Closeable {
         /* Generate and send a READY packet */
         byte[] packet = AdbProtocol.generateReady(localId, remoteId);
 
-        synchronized (adbConn.outputStream) {
-            adbConn.outputStream.write(packet);
-            adbConn.outputStream.flush();
+        synchronized (adbConn.lock) {
+            adbConn.getOutputStream().write(packet);
+            adbConn.getOutputStream().flush();
         }
     }
 
@@ -156,7 +157,7 @@ public class AdbStream implements Closeable {
      * @throws IOException          If the stream fails while waiting
      */
     public byte[] read() throws InterruptedException, IOException {
-        byte[] data = null;
+        byte[] data;
 
         synchronized (readQueue) {
             /* Wait for the connection to close or data to be received */
@@ -186,7 +187,7 @@ public class AdbStream implements Closeable {
      */
     public void write(String payload) throws IOException, InterruptedException {
         /* ADB needs null-terminated strings */
-        write(payload.getBytes("UTF-8"), false);
+        write(payload.getBytes(StandardCharsets.UTF_8), false);
         write(new byte[]{0}, true);
     }
 
@@ -223,11 +224,12 @@ public class AdbStream implements Closeable {
         /* Generate a WRITE packet and send it */
         byte[] packet = AdbProtocol.generateWrite(localId, remoteId, payload);
 
-        synchronized (adbConn.outputStream) {
-            adbConn.outputStream.write(packet);
+        synchronized (adbConn.lock) {
+            adbConn.getOutputStream().write(packet);
 
-            if (flush)
-                adbConn.outputStream.flush();
+            if (flush) {
+                adbConn.getOutputStream().flush();
+            }
         }
     }
 
@@ -249,9 +251,9 @@ public class AdbStream implements Closeable {
 
         byte[] packet = AdbProtocol.generateClose(localId, remoteId);
 
-        synchronized (adbConn.outputStream) {
-            adbConn.outputStream.write(packet);
-            adbConn.outputStream.flush();
+        synchronized (adbConn.lock) {
+            adbConn.getOutputStream().write(packet);
+            adbConn.getOutputStream().flush();
         }
     }
 
