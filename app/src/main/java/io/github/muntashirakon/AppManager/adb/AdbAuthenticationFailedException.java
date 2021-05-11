@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Muntashir Al-Islam
  * Copyright (c) 2020 Sam Palmer
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,13 +22,11 @@ package io.github.muntashirakon.AppManager.adb;
  * Thrown when the peer rejects our initial authentication attempt,
  * which typically means that the peer has not previously saved our
  * public key.
- *
+ * <p>
  * This is an unchecked exception for backwards-compatibility.
  */
-public class AdbAuthenticationFailedException extends RuntimeException {
-
+class AdbAuthenticationFailedException extends RuntimeException {
     public AdbAuthenticationFailedException() {
         super("Initial authentication attempt rejected by peer");
     }
-
 }

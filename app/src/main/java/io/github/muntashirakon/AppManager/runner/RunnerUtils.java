@@ -25,26 +25,25 @@ import android.os.RemoteException;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
-import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.adb.AdbConnection;
-import io.github.muntashirakon.AppManager.adb.AdbConnectionManager;
-import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.servermanager.LocalServer;
-import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
-import io.github.muntashirakon.AppManager.users.Users;
-import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.security.InvalidParameterException;
-import java.security.NoSuchAlgorithmException;
 import java.util.BitSet;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.adb.AdbUtils;
+import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.servermanager.LocalServer;
+import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
+import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 @SuppressWarnings("UnusedReturnValue")
 public final class RunnerUtils {
@@ -149,14 +148,6 @@ public final class RunnerUtils {
         return false;
     }
 
-    private static boolean isAdbAvailable(Context context) {
-        try (AdbConnection ignored = AdbConnectionManager.connect(context, ServerConfig.getAdbHost(), ServerConfig.getAdbPort())) {
-            return true;
-        } catch (IOException | NoSuchAlgorithmException | InterruptedException e) {
-            return false;
-        }
-    }
-
     @WorkerThread
     private static void autoDetectRootOrAdb(Context context) {
         // Update config
@@ -165,7 +156,7 @@ public final class RunnerUtils {
         if (!RunnerUtils.isRootGiven()) {
             AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
             // Check for adb
-            if (RunnerUtils.isAdbAvailable(context)) {
+            if (AdbUtils.isAdbAvailable(context, ServerConfig.getAdbHost(), ServerConfig.getAdbPort())) {
                 Log.e("ADB", "ADB available");
                 AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, true);
             }

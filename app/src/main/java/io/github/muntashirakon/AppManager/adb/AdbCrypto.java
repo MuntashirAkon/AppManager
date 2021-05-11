@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.KeyFactory;
 import java.security.KeyPair;
@@ -42,7 +43,7 @@ import javax.crypto.Cipher;
  * This class encapsulates the ADB cryptography functions and provides
  * an interface for the storage and retrieval of keys.
  */
-public class AdbCrypto {
+class AdbCrypto {
 
     /**
      * An RSA keypair encapsulated by the AdbCrypto object
@@ -135,9 +136,9 @@ public class AdbCrypto {
         rem = n.remainder(r32);
         n0inv = rem.modInverse(r32);
 
-        int myN[] = new int[KEY_LENGTH_WORDS];
-        int myRr[] = new int[KEY_LENGTH_WORDS];
-        BigInteger res[];
+        int[] myN = new int[KEY_LENGTH_WORDS];
+        int[] myRr = new int[KEY_LENGTH_WORDS];
+        BigInteger[] res;
         for (int i = 0; i < KEY_LENGTH_WORDS; i++) {
             res = rr.divideAndRemainder(r32);
             rr = res[0];
@@ -261,18 +262,14 @@ public class AdbCrypto {
      * Gets the RSA public key in ADB format.
      *
      * @return Byte array containing the RSA public key in ADB format.
-     * @throws IOException If the key cannot be retrived
      */
-    public byte[] getAdbPublicKeyPayload() throws IOException {
+    public byte[] getAdbPublicKeyPayload() {
         byte[] convertedKey = convertRsaPublicKeyToAdbFormat((RSAPublicKey) keyPair.getPublic());
-        StringBuilder keyString = new StringBuilder(720);
 
         /* The key is base64 encoded with a user@host suffix and terminated with a NUL */
-        keyString.append(base64.encodeToString(convertedKey));
-        keyString.append(" unknown@unknown");
-        keyString.append('\0');
 
-        return keyString.toString().getBytes("UTF-8");
+        String keyString = base64.encodeToString(convertedKey) + " unknown@unknown" + '\0';
+        return keyString.getBytes(StandardCharsets.UTF_8);
     }
 
     /**

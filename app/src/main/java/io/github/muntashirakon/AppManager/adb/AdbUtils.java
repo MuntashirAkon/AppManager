@@ -1,7 +1,5 @@
 /*
  * Copyright (c) 2021 Muntashir Al-Islam
- * Copyright (c) 2016 Anton Tananaev
- * Copyright (c) 2013 Cameron Gutman
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,17 +17,17 @@
 
 package io.github.muntashirakon.AppManager.adb;
 
-/**
- * This interface specifies the required functions for AdbCrypto to
- * perform Base64 encoding of its public key.
- */
-interface AdbBase64 {
-    /**
-     * This function must encoded the specified data as a base 64 string, without
-     * appending any extra newlines or other characters.
-     *
-     * @param data Data to encode
-     * @return String containing base 64 encoded data
-     */
-    String encodeToString(byte[] data);
+import android.content.Context;
+
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+
+public class AdbUtils {
+    public static boolean isAdbAvailable(Context context, String host, int port) {
+        try (AdbConnection ignored = AdbConnectionManager.connect(context, host, port)) {
+            return true;
+        } catch (IOException | NoSuchAlgorithmException | InterruptedException e) {
+            return false;
+        }
+    }
 }
