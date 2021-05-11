@@ -32,12 +32,14 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.ConnectException;
 import java.net.Socket;
+import java.security.interfaces.RSAPublicKey;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
 
+import io.github.muntashirakon.AppManager.crypto.ks.KeyPair;
 import io.github.muntashirakon.AppManager.logs.Log;
 
 /**
@@ -121,10 +123,7 @@ public class AdbConnection implements Closeable {
      */
     private volatile int maxData;
 
-    /**
-     * An initialized ADB crypto object that contains a key pair.
-     */
-    private final AdbCrypto crypto;
+    private final KeyPair keyPair;
 
     /**
      * Specifies whether this connection has already sent a signed token.
@@ -144,10 +143,10 @@ public class AdbConnection implements Closeable {
     /**
      * Internal constructor to initialize some internal state
      */
-    private AdbConnection(@NonNull String host, int port, @NonNull AdbCrypto crypto) throws IOException {
+    private AdbConnection(@NonNull String host, int port, @NonNull KeyPair keyPair) throws IOException {
         this.host = host;
         this.port = port;
-        this.crypto = crypto;
+        this.keyPair = keyPair;
         this.socket = new Socket(host, port);
         this.plainInputStream = socket.getInputStream();
         this.plainOutputStream = socket.getOutputStream();
@@ -164,13 +163,12 @@ public class AdbConnection implements Closeable {
      * Creates a AdbConnection object associated with the socket and
      * crypto object specified.
      *
-     * @param crypto The crypto object that stores the key pair for authentication.
      * @return A new AdbConnection object.
      * @throws IOException If there is a socket error
      */
     @NonNull
-    public static AdbConnection create(@NonNull String host, int port, @NonNull AdbCrypto crypto) throws IOException {
-        return new AdbConnection(host, port, crypto);
+    public static AdbConnection create(@NonNull String host, int port, @NonNull KeyPair keyPair) throws IOException {
+        return new AdbConnection(host, port, keyPair);
     }
 
     @GuardedBy("lock")
@@ -246,7 +244,7 @@ public class AdbConnection implements Closeable {
                                     getOutputStream().flush();
                                 }
 
-                                SSLContext sslContext = AdbUtils.getSslContext(crypto.getKeyPair());
+                                SSLContext sslContext = AdbUtils.getSslContext(keyPair);
                                 SSLSocket tlsSocket = (SSLSocket) sslContext.getSocketFactory()
                                         .createSocket(socket, host, port, true);
                                 tlsSocket.startHandshake();
@@ -271,12 +269,13 @@ public class AdbConnection implements Closeable {
                                     }
 
                                     /* We've already tried our signature, so send our public key */
-                                    packet = AdbProtocol.generateAuth(AdbProtocol.AUTH_TYPE_RSA_PUBLIC,
-                                            conn.crypto.getAdbPublicKeyPayload());
+                                    packet = AdbProtocol.generateAuth(AdbProtocol.AUTH_TYPE_RSA_PUBLIC, AdbCrypto
+                                            .getAdbFormattedRsaPublicKey((RSAPublicKey) keyPair.getPublicKey(),
+                                                    "AppManager"));
                                 } else {
                                     /* We'll sign the token */
-                                    packet = AdbProtocol.generateAuth(AdbProtocol.AUTH_TYPE_SIGNATURE,
-                                            conn.crypto.signAdbTokenPayload(msg.payload));
+                                    packet = AdbProtocol.generateAuth(AdbProtocol.AUTH_TYPE_SIGNATURE, AdbCrypto
+                                            .signAdbTokenPayload(keyPair, msg.payload));
                                     conn.sentSignature = true;
                                 }
 
