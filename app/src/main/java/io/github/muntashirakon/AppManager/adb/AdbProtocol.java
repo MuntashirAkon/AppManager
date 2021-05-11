@@ -19,8 +19,13 @@
 
 package io.github.muntashirakon.AppManager.adb;
 
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
@@ -82,6 +87,10 @@ class AdbProtocol {
      */
     public static final int AUTH_TYPE_RSA_PUBLIC = 3;
 
+    @IntDef({AUTH_TYPE_TOKEN, AUTH_TYPE_SIGNATURE, AUTH_TYPE_RSA_PUBLIC})
+    private @interface AuthType {
+    }
+
     /**
      * OPEN is the open stream message. It is sent to open
      * a new stream on the target device.
@@ -105,6 +114,21 @@ class AdbProtocol {
      * that is the data to write to the stream.
      */
     public static final int CMD_WRTE = 0x45545257;
+
+    /**
+     * STLS is the TLS1.3 authentication method, added in Android 9
+     */
+    public static final int CMD_STLS = 0x534c5453;
+
+    /**
+     * The current version of the STLS
+     */
+    public static final int STLS_VERSION = 0x01000000;
+
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({CMD_SYNC, CMD_CLSE, CMD_WRTE, CMD_AUTH, CMD_OPEN, CMD_CNXN, CMD_STLS, CMD_OKAY})
+    private @interface Cmd {
+    }
 
     /**
      * This function performs a checksum on the ADB payload data.
@@ -154,7 +178,8 @@ class AdbProtocol {
      * @param payload Data payload
      * @return Byte array containing the message
      */
-    public static byte[] generateMessage(int cmd, int arg0, int arg1, byte[] payload) {
+    @NonNull
+    public static byte[] generateMessage(@Cmd int cmd, int arg0, int arg1, byte[] payload) {
         /* struct message {
          *     unsigned command;       // command identifier constant
          *     unsigned arg0;          // first argument
@@ -199,6 +224,7 @@ class AdbProtocol {
      *
      * @return Byte array containing the message
      */
+    @NonNull
     public static byte[] generateConnect() {
         return generateMessage(CMD_CNXN, CONNECT_VERSION, CONNECT_MAXDATA, CONNECT_PAYLOAD);
     }
@@ -210,8 +236,19 @@ class AdbProtocol {
      * @param data The payload for the message
      * @return Byte array containing the message
      */
-    public static byte[] generateAuth(int type, byte[] data) {
+    @NonNull
+    public static byte[] generateAuth(@AuthType int type, byte[] data) {
         return generateMessage(CMD_AUTH, type, 0, data);
+    }
+
+    /**
+     * Generates an STLS message with default parameters.
+     *
+     * @return Byte array containing the message
+     */
+    @NonNull
+    public static byte[] generateStls() {
+        return generateMessage(CMD_STLS, STLS_VERSION, 0, null);
     }
 
     /**
@@ -221,7 +258,8 @@ class AdbProtocol {
      * @param dest    The destination of the stream on the target
      * @return Byte array containing the message
      */
-    public static byte[] generateOpen(int localId, String dest) {
+    @NonNull
+    public static byte[] generateOpen(int localId, @NonNull String dest) {
         ByteBuffer bbuf = ByteBuffer.allocate(dest.length() + 1);
         bbuf.put(dest.getBytes(StandardCharsets.UTF_8));
         bbuf.put((byte) 0);
@@ -236,6 +274,7 @@ class AdbProtocol {
      * @param data     The data to provide as the write payload
      * @return Byte array containing the message
      */
+    @NonNull
     public static byte[] generateWrite(int localId, int remoteId, byte[] data) {
         return generateMessage(CMD_WRTE, localId, remoteId, data);
     }
@@ -247,6 +286,7 @@ class AdbProtocol {
      * @param remoteId The unique remote ID of the stream
      * @return Byte array containing the message
      */
+    @NonNull
     public static byte[] generateClose(int localId, int remoteId) {
         return generateMessage(CMD_CLSE, localId, remoteId, null);
     }
@@ -258,6 +298,7 @@ class AdbProtocol {
      * @param remoteId The unique remote ID of the stream
      * @return Byte array containing the message
      */
+    @NonNull
     public static byte[] generateReady(int localId, int remoteId) {
         return generateMessage(CMD_OKAY, localId, remoteId, null);
     }
@@ -271,6 +312,7 @@ class AdbProtocol {
         /**
          * The command field of the message
          */
+        @Cmd
         public int command;
         /**
          * The arg0 field of the message
@@ -305,7 +347,8 @@ class AdbProtocol {
          * @return An AdbMessage object represented the message read
          * @throws IOException If the stream fails while reading
          */
-        public static AdbMessage parseAdbMessage(InputStream in) throws IOException {
+        @NonNull
+        public static AdbMessage parseAdbMessage(@NonNull InputStream in) throws IOException {
             AdbMessage msg = new AdbMessage();
             ByteBuffer packet = ByteBuffer.allocate(ADB_HEADER_LENGTH).order(ByteOrder.LITTLE_ENDIAN);
 

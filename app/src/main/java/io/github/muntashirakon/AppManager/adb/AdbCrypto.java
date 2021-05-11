@@ -164,12 +164,17 @@ class AdbCrypto {
      * @param keyPair    RSA key pair
      * @return New AdbCrypto object
      */
+    @NonNull
     public static AdbCrypto loadAdbKeyPair(KeyPair keyPair) {
         AdbCrypto crypto = new AdbCrypto();
 
         crypto.keyPair = keyPair;
 
         return crypto;
+    }
+
+    public KeyPair getKeyPair() {
+        return keyPair;
     }
 
     /**

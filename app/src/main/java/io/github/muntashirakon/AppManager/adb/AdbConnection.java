@@ -20,6 +20,11 @@
 
 package io.github.muntashirakon.AppManager.adb;
 
+import android.os.Build;
+
+import androidx.annotation.GuardedBy;
+import androidx.annotation.NonNull;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,15 +35,26 @@ import java.net.Socket;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocket;
+
+import io.github.muntashirakon.AppManager.logs.Log;
+
 /**
  * This class represents an ADB connection.
  */
 public class AdbConnection implements Closeable {
+    public static final String TAG = AdbConnection.class.getSimpleName();
+
     /**
      * The underlying socket that this class uses to
      * communicate with the target device.
      */
-    private Socket socket;
+    private final Socket socket;
+
+    private final String host;
+
+    private final int port;
 
     /**
      * The last allocated local stream ID. The ID
@@ -50,13 +66,29 @@ public class AdbConnection implements Closeable {
      * The input stream that this class uses to read from
      * the socket.
      */
-    private volatile InputStream inputStream;
+    @GuardedBy("lock")
+    private final InputStream plainInputStream;
 
     /**
      * The output stream that this class uses to read from
      * the socket.
      */
-    volatile OutputStream outputStream;
+    @GuardedBy("lock")
+    private final OutputStream plainOutputStream;
+
+    /**
+     * The input stream that this class uses to read from
+     * the TLS socket.
+     */
+    @GuardedBy("lock")
+    private volatile InputStream tlsInputStream;
+
+    /**
+     * The output stream that this class uses to read from
+     * the TLS socket.
+     */
+    @GuardedBy("lock")
+    private volatile OutputStream tlsOutputStream;
 
     /**
      * The backend thread that handles responding to ADB packets.
@@ -92,49 +124,63 @@ public class AdbConnection implements Closeable {
     /**
      * An initialized ADB crypto object that contains a key pair.
      */
-    private volatile AdbCrypto crypto;
+    private final AdbCrypto crypto;
 
     /**
      * Specifies whether this connection has already sent a signed token.
      */
-    private boolean sentSignature;
+    private volatile boolean sentSignature;
 
     /**
      * A hash map of our open streams indexed by local ID.
      **/
     private final ConcurrentHashMap<Integer, AdbStream> openStreams;
 
+    private volatile boolean isTls = false;
+
+    @GuardedBy("lock")
+    public final Object lock = new Object();
+
     /**
      * Internal constructor to initialize some internal state
      */
-    private AdbConnection() {
-        openStreams = new ConcurrentHashMap<>();
-        lastLocalId = 0;
-        connectionThread = createConnectionThread();
+    private AdbConnection(@NonNull String host, int port, @NonNull AdbCrypto crypto) throws IOException {
+        this.host = host;
+        this.port = port;
+        this.crypto = crypto;
+        this.socket = new Socket(host, port);
+        this.plainInputStream = socket.getInputStream();
+        this.plainOutputStream = socket.getOutputStream();
+
+        /* Disable Nagle because we're sending tiny packets */
+        socket.setTcpNoDelay(true);
+
+        this.openStreams = new ConcurrentHashMap<>();
+        this.lastLocalId = 0;
+        this.connectionThread = createConnectionThread();
     }
 
     /**
      * Creates a AdbConnection object associated with the socket and
      * crypto object specified.
      *
-     * @param socket The socket that the connection will use for communcation.
      * @param crypto The crypto object that stores the key pair for authentication.
      * @return A new AdbConnection object.
      * @throws IOException If there is a socket error
      */
-    public static AdbConnection create(Socket socket, AdbCrypto crypto) throws IOException {
-        AdbConnection newConn = new AdbConnection();
+    @NonNull
+    public static AdbConnection create(@NonNull String host, int port, @NonNull AdbCrypto crypto) throws IOException {
+        return new AdbConnection(host, port, crypto);
+    }
 
-        newConn.crypto = crypto;
+    @GuardedBy("lock")
+    public InputStream getInputStream() {
+        return isTls ? tlsInputStream : plainInputStream;
+    }
 
-        newConn.socket = socket;
-        newConn.inputStream = socket.getInputStream();
-        newConn.outputStream = socket.getOutputStream();
-
-        /* Disable Nagle because we're sending tiny packets */
-        socket.setTcpNoDelay(true);
-
-        return newConn;
+    @GuardedBy("lock")
+    public OutputStream getOutputStream() {
+        return isTls ? tlsOutputStream : plainOutputStream;
     }
 
     /**
@@ -142,13 +188,14 @@ public class AdbConnection implements Closeable {
      *
      * @return A new connection thread.
      */
+    @NonNull
     private Thread createConnectionThread() {
-        @SuppressWarnings("resource") final AdbConnection conn = this;
+        final AdbConnection conn = this;
         return new Thread(() -> {
             while (!connectionThread.isInterrupted()) {
                 try {
                     /* Read and parse a message off the socket's input stream */
-                    AdbProtocol.AdbMessage msg = AdbProtocol.AdbMessage.parseAdbMessage(inputStream);
+                    AdbProtocol.AdbMessage msg = AdbProtocol.AdbMessage.parseAdbMessage(getInputStream());
 
                     /* Verify magic and checksum */
                     if (!AdbProtocol.validateMessage(msg))
@@ -158,7 +205,7 @@ public class AdbConnection implements Closeable {
                         /* Stream-oriented commands */
                         case AdbProtocol.CMD_OKAY:
                         case AdbProtocol.CMD_WRTE:
-                        case AdbProtocol.CMD_CLSE:
+                        case AdbProtocol.CMD_CLSE: {
                             /* We must ignore all packets when not connected */
                             if (!conn.connected)
                                 continue;
@@ -190,11 +237,28 @@ public class AdbConnection implements Closeable {
                                     waitingStream.notifyClose(true);
                                 }
                             }
-
                             break;
+                        }
+                        case AdbProtocol.CMD_STLS: {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                                synchronized (lock) {
+                                    getOutputStream().write(AdbProtocol.generateStls());
+                                    getOutputStream().flush();
+                                }
 
-                        case AdbProtocol.CMD_AUTH:
+                                SSLContext sslContext = AdbUtils.getSslContext(crypto.getKeyPair());
+                                SSLSocket tlsSocket = (SSLSocket) sslContext.getSocketFactory()
+                                        .createSocket(socket, host, port, true);
+                                tlsSocket.startHandshake();
+                                Log.d(TAG, "Handshake succeeded.");
 
+                                tlsInputStream = tlsSocket.getInputStream();
+                                tlsOutputStream = tlsSocket.getOutputStream();
+                                isTls = true;
+                            }
+                            break;
+                        }
+                        case AdbProtocol.CMD_AUTH: {
                             byte[] packet;
 
                             if (msg.arg0 == AdbProtocol.AUTH_TYPE_TOKEN) {
@@ -217,14 +281,14 @@ public class AdbConnection implements Closeable {
                                 }
 
                                 /* Write the AUTH reply */
-                                synchronized (conn.outputStream) {
-                                    conn.outputStream.write(packet);
-                                    conn.outputStream.flush();
+                                synchronized (lock) {
+                                    getOutputStream().write(packet);
+                                    getOutputStream().flush();
                                 }
                             }
                             break;
-
-                        case AdbProtocol.CMD_CNXN:
+                        }
+                        case AdbProtocol.CMD_CNXN: {
                             synchronized (conn) {
                                 /* We need to store the max data size */
                                 conn.maxData = msg.arg1;
@@ -234,8 +298,9 @@ public class AdbConnection implements Closeable {
                                 conn.notifyAll();
                             }
                             break;
-
+                        }
                         default:
+                            Log.e(TAG, String.format("Unrecognized command = 0x%x", msg.command));
                             /* Unrecognized packet, just drop it */
                             break;
                     }
@@ -303,9 +368,9 @@ public class AdbConnection implements Closeable {
             throw new IllegalStateException("Already connected");
 
         /* Write the CONNECT packet */
-        synchronized (outputStream) {
-            outputStream.write(AdbProtocol.generateConnect());
-            outputStream.flush();
+        synchronized (lock) {
+            getOutputStream().write(AdbProtocol.generateConnect());
+            getOutputStream().flush();
         }
 
         /* Start the connection thread to respond to the peer */
@@ -340,9 +405,9 @@ public class AdbConnection implements Closeable {
         openStreams.put(localId, stream);
 
         /* Send the open */
-        synchronized (outputStream) {
-            outputStream.write(AdbProtocol.generateOpen(localId, destination));
-            outputStream.flush();
+        synchronized (lock) {
+            getOutputStream().write(AdbProtocol.generateOpen(localId, destination));
+            getOutputStream().flush();
         }
 
         /* Wait for the connection thread to receive the OKAY */
