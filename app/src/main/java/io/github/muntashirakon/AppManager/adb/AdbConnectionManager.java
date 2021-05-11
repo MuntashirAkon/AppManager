@@ -47,10 +47,8 @@ public class AdbConnectionManager {
     @WorkerThread
     @NonNull
     public static AdbConnection connect(@NonNull String host, int port) throws Exception {
-        // Setup the crypto object required for the AdbConnection
-        AdbCrypto crypto = AdbCrypto.loadAdbKeyPair(getAdbKeyPair());
         // Construct the AdbConnection object
-        AdbConnection adbConnection = AdbConnection.create(host, port, crypto);
+        AdbConnection adbConnection = AdbConnection.create(host, port, getAdbKeyPair());
         // Connect to ADB
         adbConnection.connect();
         return adbConnection;

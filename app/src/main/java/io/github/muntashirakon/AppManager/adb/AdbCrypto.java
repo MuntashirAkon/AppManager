@@ -34,17 +34,7 @@ import javax.crypto.Cipher;
 
 import io.github.muntashirakon.AppManager.crypto.ks.KeyPair;
 
-/**
- * This class encapsulates the ADB cryptography functions and provides
- * an interface for the storage and retrieval of keys.
- */
 class AdbCrypto {
-
-    /**
-     * An RSA keypair encapsulated by the AdbCrypto object
-     */
-    private KeyPair keyPair;
-
     /**
      * The ADB RSA key length in bits
      */
@@ -100,11 +90,12 @@ class AdbCrypto {
     /**
      * Converts a standard RSAPublicKey object to the special ADB format
      *
-     * @param pubkey RSAPublicKey object to convert
+     * @param publicKey RSAPublicKey object to convert
+     * @param name      Name without null terminator
      * @return Byte array containing the converted RSAPublicKey object
      */
     @NonNull
-    private static byte[] convertRsaPublicKeyToAdbFormat(@NonNull RSAPublicKey pubkey) {
+    public static byte[] getAdbFormattedRsaPublicKey(@NonNull RSAPublicKey publicKey, @NonNull String name) {
         /*
          * ADB literally just saves the RSAPublicKey struct to a file.
          *
@@ -121,7 +112,7 @@ class AdbCrypto {
         BigInteger r32, r, rr, rem, n, n0inv;
 
         r32 = BigInteger.ZERO.setBit(32);
-        n = pubkey.getModulus();
+        n = publicKey.getModulus();
         r = BigInteger.ZERO.setBit(KEY_LENGTH_WORDS * 32);
         rr = r.modPow(BigInteger.valueOf(2), n);
         rem = n.remainder(r32);
@@ -144,37 +135,22 @@ class AdbCrypto {
 
         /* ------------------------------------------------------------------------------------------- */
 
-        ByteBuffer bbuf = ByteBuffer.allocate(524).order(ByteOrder.LITTLE_ENDIAN);
+        ByteBuffer buffer = ByteBuffer.allocate(524).order(ByteOrder.LITTLE_ENDIAN);
+        buffer.putInt(KEY_LENGTH_WORDS);
+        buffer.putInt(n0inv.negate().intValue());
+        for (int i : myN) buffer.putInt(i);
+        for (int i : myRr) buffer.putInt(i);
 
+        buffer.putInt(publicKey.getPublicExponent().intValue());
 
-        bbuf.putInt(KEY_LENGTH_WORDS);
-        bbuf.putInt(n0inv.negate().intValue());
-        for (int i : myN)
-            bbuf.putInt(i);
-        for (int i : myRr)
-            bbuf.putInt(i);
+        byte[] convertedKey = Base64.encode(buffer.array(), Base64.NO_WRAP);
 
-        bbuf.putInt(pubkey.getPublicExponent().intValue());
-        return bbuf.array();
-    }
-
-    /**
-     * Creates a new AdbCrypto object from a key pair loaded from files.
-     *
-     * @param keyPair    RSA key pair
-     * @return New AdbCrypto object
-     */
-    @NonNull
-    public static AdbCrypto loadAdbKeyPair(KeyPair keyPair) {
-        AdbCrypto crypto = new AdbCrypto();
-
-        crypto.keyPair = keyPair;
-
-        return crypto;
-    }
-
-    public KeyPair getKeyPair() {
-        return keyPair;
+        /* The key is base64 encoded with a user@host suffix and terminated with a NUL */
+        byte[] nameBytes = (' ' + name + '\u0000').getBytes(StandardCharsets.UTF_8);
+        byte[] payload = new byte[convertedKey.length + nameBytes.length];
+        System.arraycopy(convertedKey, 0, payload, 0, convertedKey.length);
+        System.arraycopy(nameBytes, 0, payload, convertedKey.length, nameBytes.length);
+        return payload;
     }
 
     /**
@@ -184,30 +160,13 @@ class AdbCrypto {
      * @return Signed SHA1 payload
      * @throws GeneralSecurityException If signing fails
      */
-    public byte[] signAdbTokenPayload(byte[] payload) throws GeneralSecurityException {
+    public static byte[] signAdbTokenPayload(@NonNull KeyPair keyPair, byte[] payload) throws GeneralSecurityException {
         Cipher c = Cipher.getInstance("RSA/ECB/NoPadding");
-
         c.init(Cipher.ENCRYPT_MODE, keyPair.getPrivateKey());
-
         c.update(SIGNATURE_PADDING);
-
         return c.doFinal(payload);
     }
 
-    /**
-     * Gets the RSA public key in ADB format.
-     *
-     * @return Byte array containing the RSA public key in ADB format.
-     */
-    public byte[] getAdbPublicKeyPayload() {
-        byte[] convertedKey = Base64.encode(convertRsaPublicKeyToAdbFormat((RSAPublicKey) keyPair.getPublicKey()),
-                Base64.NO_WRAP);
-
-        /* The key is base64 encoded with a user@host suffix and terminated with a NUL */
-        byte[] name = " AppManager\u0000".getBytes(StandardCharsets.UTF_8);
-        byte[] payload = new byte[convertedKey.length + name.length];
-        System.arraycopy(convertedKey, 0, payload, 0, convertedKey.length);
-        System.arraycopy(name, 0, payload, convertedKey.length, name.length);
-        return payload;
+    private AdbCrypto() {
     }
 }
