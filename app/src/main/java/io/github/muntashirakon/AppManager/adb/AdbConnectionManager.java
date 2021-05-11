@@ -20,11 +20,6 @@ package io.github.muntashirakon.AppManager.adb;
 import android.content.Context;
 import android.util.Base64;
 
-import com.tananaev.adblib.AdbBase64;
-import com.tananaev.adblib.AdbConnection;
-import com.tananaev.adblib.AdbCrypto;
-import com.tananaev.adblib.AdbStream;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
@@ -34,7 +29,7 @@ import java.security.spec.InvalidKeySpecException;
 import androidx.annotation.NonNull;
 
 public class AdbConnectionManager {
-    public static final String TAG = "AdbConnMan";
+    public static final String TAG = AdbConnectionManager.class.getSimpleName();
 
     @NonNull
     private static AdbBase64 getAdbBase64() {
@@ -42,16 +37,13 @@ public class AdbConnectionManager {
     }
 
     @NonNull
-    private static AdbCrypto setupCrypto(String publicKey, String privateKey)
+    private static AdbCrypto setupCrypto(File publicKey, File privateKey)
             throws NoSuchAlgorithmException, IOException {
-        File publicKeyFile = new File(publicKey);
-        File privateKeyFile = new File(privateKey);
         AdbCrypto adbCrypto = null;
-
         // Try to load a key pair from the files
-        if (publicKeyFile.exists() && privateKeyFile.exists()) {
+        if (publicKey.exists() && privateKey.exists()) {
             try {
-                adbCrypto = AdbCrypto.loadAdbKeyPair(getAdbBase64(), privateKeyFile, publicKeyFile);
+                adbCrypto = AdbCrypto.loadAdbKeyPair(getAdbBase64(), privateKey, publicKey);
             } catch (IOException e) {
                 // Failed to read from file
             } catch (InvalidKeySpecException e) {
@@ -65,7 +57,7 @@ public class AdbConnectionManager {
             // We couldn't load a key, so let's generate a new one
             adbCrypto = AdbCrypto.generateAdbKeyPair(getAdbBase64());
             // Save it
-            adbCrypto.saveAdbKeyPair(privateKeyFile, publicKeyFile);
+            adbCrypto.saveAdbKeyPair(privateKey, publicKey);
         }
         return adbCrypto;
     }
@@ -75,8 +67,8 @@ public class AdbConnectionManager {
             throws IOException, NoSuchAlgorithmException {
         // Setup the crypto object required for the AdbConnection
         String path = context.getCacheDir().getAbsolutePath();
-        String publicKey = path + File.separatorChar + "pub.key";
-        String privateKey = path + File.separatorChar + "priv.key";
+        File publicKey = new File(path, "pub.key");
+        File privateKey = new File(path, "priv.key");
         AdbCrypto crypto = setupCrypto(publicKey, privateKey);
         // Connect the socket to the remote host
         Socket sock = new Socket(host, port);
