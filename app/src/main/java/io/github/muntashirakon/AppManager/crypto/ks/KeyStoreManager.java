@@ -222,6 +222,15 @@ public class KeyStoreManager {
         throw new KeyStoreException("The alias " + alias + " does not have a KeyPair.");
     }
 
+    @Nullable
+    public KeyPair getKeyPairNoThrow(String alias, @Nullable char[] password) {
+        try {
+            return getKeyPair(alias, password);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public boolean containsKey(String alias) throws KeyStoreException {
         return amKeyStore.containsAlias(alias);
     }

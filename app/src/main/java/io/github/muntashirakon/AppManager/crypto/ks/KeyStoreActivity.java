@@ -21,18 +21,22 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 
-import com.android.internal.util.TextUtils;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import io.github.muntashirakon.AppManager.BaseActivity;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+
+import com.android.internal.util.TextUtils;
+
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.misc.AMExceptionHandler;
 import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
+import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
-public class KeyStoreActivity extends BaseActivity {
+public class KeyStoreActivity extends AppCompatActivity {
     public static final String EXTRA_TYPE = "type";
     public static final String EXTRA_ALIAS = "key";
 
@@ -40,7 +44,11 @@ public class KeyStoreActivity extends BaseActivity {
     public static final int TYPE_ALIAS = 2;
 
     @Override
-    protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Thread.setDefaultUncaughtExceptionHandler(new AMExceptionHandler(this));
+        AppCompatDelegate.setDefaultNightMode(AppPref.getInt(AppPref.PrefKey.PREF_APP_THEME_INT));
+        getWindow().getDecorView().setLayoutDirection(AppPref.getInt(AppPref.PrefKey.PREF_LAYOUT_ORIENTATION_INT));
         if (getIntent() != null) onNewIntent(getIntent());
         else finish();
     }

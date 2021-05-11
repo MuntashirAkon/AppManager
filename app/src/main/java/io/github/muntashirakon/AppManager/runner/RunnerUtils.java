@@ -17,7 +17,6 @@
 
 package io.github.muntashirakon.AppManager.runner;
 
-import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -149,14 +148,14 @@ public final class RunnerUtils {
     }
 
     @WorkerThread
-    private static void autoDetectRootOrAdb(Context context) {
+    private static void autoDetectRootOrAdb() {
         // Update config
         LocalServer.updateConfig();
         // Check root, ADB and load am_local_server
         if (!RunnerUtils.isRootGiven()) {
             AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
             // Check for adb
-            if (AdbUtils.isAdbAvailable(context, ServerConfig.getAdbHost(), ServerConfig.getAdbPort())) {
+            if (AdbUtils.isAdbAvailable(ServerConfig.getAdbHost(), ServerConfig.getAdbPort())) {
                 Log.e("ADB", "ADB available");
                 AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, true);
             }
@@ -182,7 +181,7 @@ public final class RunnerUtils {
     }
 
     @WorkerThread
-    public static void setModeOfOps(Context context) {
+    public static void setModeOfOps() {
         String mode = AppPref.getString(AppPref.PrefKey.PREF_MODE_OF_OPS_STR);
         try {
             switch (mode) {
@@ -196,7 +195,7 @@ public final class RunnerUtils {
                         return;
                     } else {
                         // AMService isn't running, check for root/ADB
-                        RunnerUtils.autoDetectRootOrAdb(context);
+                        RunnerUtils.autoDetectRootOrAdb();
                         return;
                     }
                 case Runner.MODE_ROOT:
