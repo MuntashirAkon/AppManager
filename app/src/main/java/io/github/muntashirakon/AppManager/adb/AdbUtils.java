@@ -17,16 +17,11 @@
 
 package io.github.muntashirakon.AppManager.adb;
 
-import android.content.Context;
-
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-
 public class AdbUtils {
-    public static boolean isAdbAvailable(Context context, String host, int port) {
-        try (AdbConnection ignored = AdbConnectionManager.connect(context, host, port)) {
+    public static boolean isAdbAvailable(String host, int port) {
+        try (AdbConnection ignored = AdbConnectionManager.connect(host, port)) {
             return true;
-        } catch (IOException | NoSuchAlgorithmException | InterruptedException e) {
+        } catch (Exception e) {
             return false;
         }
     }

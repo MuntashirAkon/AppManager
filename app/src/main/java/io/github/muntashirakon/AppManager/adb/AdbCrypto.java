@@ -19,25 +19,20 @@
 
 package io.github.muntashirakon.AppManager.adb;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import android.util.Base64;
+
+import androidx.annotation.NonNull;
+
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
-import java.security.KeyFactory;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPublicKey;
-import java.security.spec.EncodedKeySpec;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.X509EncodedKeySpec;
+
 import javax.crypto.Cipher;
+
+import io.github.muntashirakon.AppManager.crypto.ks.KeyPair;
 
 /**
  * This class encapsulates the ADB cryptography functions and provides
@@ -49,11 +44,6 @@ class AdbCrypto {
      * An RSA keypair encapsulated by the AdbCrypto object
      */
     private KeyPair keyPair;
-
-    /**
-     * The base 64 conversion interface to use
-     */
-    private AdbBase64 base64;
 
     /**
      * The ADB RSA key length in bits
@@ -113,7 +103,8 @@ class AdbCrypto {
      * @param pubkey RSAPublicKey object to convert
      * @return Byte array containing the converted RSAPublicKey object
      */
-    private static byte[] convertRsaPublicKeyToAdbFormat(RSAPublicKey pubkey) {
+    @NonNull
+    private static byte[] convertRsaPublicKeyToAdbFormat(@NonNull RSAPublicKey pubkey) {
         /*
          * ADB literally just saves the RSAPublicKey struct to a file.
          *
@@ -170,73 +161,13 @@ class AdbCrypto {
     /**
      * Creates a new AdbCrypto object from a key pair loaded from files.
      *
-     * @param base64     Implementation of base 64 conversion interface required by ADB
-     * @param privateKey File containing the RSA private key
-     * @param publicKey  File containing the RSA public key
-     * @return New AdbCrypto object
-     * @throws IOException              If the files cannot be read
-     * @throws NoSuchAlgorithmException If an RSA key factory cannot be found
-     * @throws InvalidKeySpecException  If a PKCS8 or X509 key spec cannot be found
-     */
-    public static AdbCrypto loadAdbKeyPair(AdbBase64 base64, File privateKey, File publicKey) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
-        AdbCrypto crypto = new AdbCrypto();
-
-        int privKeyLength = (int) privateKey.length();
-        int pubKeyLength = (int) publicKey.length();
-        byte[] privKeyBytes = new byte[privKeyLength];
-        byte[] pubKeyBytes = new byte[pubKeyLength];
-
-        FileInputStream privIn = new FileInputStream(privateKey);
-        FileInputStream pubIn = new FileInputStream(publicKey);
-
-        privIn.read(privKeyBytes);
-        pubIn.read(pubKeyBytes);
-
-        privIn.close();
-        pubIn.close();
-
-        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-        EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(privKeyBytes);
-        EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(pubKeyBytes);
-
-        crypto.keyPair = new KeyPair(keyFactory.generatePublic(publicKeySpec),
-                keyFactory.generatePrivate(privateKeySpec));
-        crypto.base64 = base64;
-
-        return crypto;
-    }
-
-    /**
-     * Creates a new AdbCrypto object from a key pair loaded from files.
-     *
-     * @param base64     Implementation of base 64 conversion interface required by ADB
      * @param keyPair    RSA key pair
      * @return New AdbCrypto object
      */
-    public static AdbCrypto loadAdbKeyPair(AdbBase64 base64, KeyPair keyPair) {
+    public static AdbCrypto loadAdbKeyPair(KeyPair keyPair) {
         AdbCrypto crypto = new AdbCrypto();
 
         crypto.keyPair = keyPair;
-        crypto.base64 = base64;
-
-        return crypto;
-    }
-
-    /**
-     * Creates a new AdbCrypto object by generating a new key pair.
-     *
-     * @param base64 Implementation of base 64 conversion interface required by ADB
-     * @return A new AdbCrypto object
-     * @throws NoSuchAlgorithmException If an RSA key factory cannot be found
-     */
-    public static AdbCrypto generateAdbKeyPair(AdbBase64 base64) throws NoSuchAlgorithmException {
-        AdbCrypto crypto = new AdbCrypto();
-
-        KeyPairGenerator rsaKeyPg = KeyPairGenerator.getInstance("RSA");
-        rsaKeyPg.initialize(KEY_LENGTH_BITS);
-
-        crypto.keyPair = rsaKeyPg.genKeyPair();
-        crypto.base64 = base64;
 
         return crypto;
     }
@@ -251,7 +182,7 @@ class AdbCrypto {
     public byte[] signAdbTokenPayload(byte[] payload) throws GeneralSecurityException {
         Cipher c = Cipher.getInstance("RSA/ECB/NoPadding");
 
-        c.init(Cipher.ENCRYPT_MODE, keyPair.getPrivate());
+        c.init(Cipher.ENCRYPT_MODE, keyPair.getPrivateKey());
 
         c.update(SIGNATURE_PADDING);
 
@@ -264,30 +195,14 @@ class AdbCrypto {
      * @return Byte array containing the RSA public key in ADB format.
      */
     public byte[] getAdbPublicKeyPayload() {
-        byte[] convertedKey = convertRsaPublicKeyToAdbFormat((RSAPublicKey) keyPair.getPublic());
+        byte[] convertedKey = Base64.encode(convertRsaPublicKeyToAdbFormat((RSAPublicKey) keyPair.getPublicKey()),
+                Base64.NO_WRAP);
 
         /* The key is base64 encoded with a user@host suffix and terminated with a NUL */
-
-        String keyString = base64.encodeToString(convertedKey) + " unknown@unknown" + '\0';
-        return keyString.getBytes(StandardCharsets.UTF_8);
+        byte[] name = " AppManager\u0000".getBytes(StandardCharsets.UTF_8);
+        byte[] payload = new byte[convertedKey.length + name.length];
+        System.arraycopy(convertedKey, 0, payload, 0, convertedKey.length);
+        System.arraycopy(name, 0, payload, convertedKey.length, name.length);
+        return payload;
     }
-
-    /**
-     * Saves the AdbCrypto's key pair to the specified files.
-     *
-     * @param privateKey The file to store the encoded private key
-     * @param publicKey  The file to store the encoded public key
-     * @throws IOException If the files cannot be written
-     */
-    public void saveAdbKeyPair(File privateKey, File publicKey) throws IOException {
-        FileOutputStream privOut = new FileOutputStream(privateKey);
-        FileOutputStream pubOut = new FileOutputStream(publicKey);
-
-        privOut.write(keyPair.getPrivate().getEncoded());
-        pubOut.write(keyPair.getPublic().getEncoded());
-
-        privOut.close();
-        pubOut.close();
-    }
-
 }
