@@ -20,9 +20,6 @@ package io.github.muntashirakon.AppManager.servermanager;
 import android.os.SystemClock;
 import android.text.TextUtils;
 
-import com.tananaev.adblib.AdbConnection;
-import com.tananaev.adblib.AdbStream;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -30,7 +27,10 @@ import java.net.Socket;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
+
+import io.github.muntashirakon.AppManager.adb.AdbConnection;
 import io.github.muntashirakon.AppManager.adb.AdbConnectionManager;
+import io.github.muntashirakon.AppManager.adb.AdbStream;
 import io.github.muntashirakon.AppManager.adb.LineReader;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.runner.Runner;

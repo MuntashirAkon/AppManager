@@ -25,8 +25,8 @@ import android.os.RemoteException;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
-import com.tananaev.adblib.AdbConnection;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.adb.AdbConnection;
 import io.github.muntashirakon.AppManager.adb.AdbConnectionManager;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;

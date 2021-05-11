@@ -17,8 +17,6 @@
 
 package io.github.muntashirakon.AppManager.adb;
 
-import com.tananaev.adblib.AdbStream;
-
 import java.io.Closeable;
 import java.io.IOException;
 import java.nio.ByteBuffer;
