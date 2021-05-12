@@ -114,34 +114,38 @@
     <string name="copyright_message" translatable="false">© 2020–2021 <a href="https://github.com/MuntashirAkon">Muntashir Al-Islam</a></string>
     <string name="third_party">Third-party Libraries and Icons</string>
     <string name="third_party_message" translatable="false">-
-        <a href="https://github.com/material-components/material-components-android">Material Components</a> (Apache 2.0)
-        \n- <a href="https://github.com/google/material-design-icons">Material Design Icons</a> (Apache 2.0)
-        \n- <a href="https://github.com/dkanada/frost">Frost</a> Icons (GPLv3.0)
-        \n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a> (Apache 2.0)
-        \n- <a href="https://github.com/tananaev/adblib">ADB Library</a> (BSD-3-Clause)
+        <a href="https://github.com/tananaev/adblib">ADB Library</a> (BSD-3-Clause)
+        \n- <a href="https://github.com/zhanghai/AndroidFastScroll">AndroidFastScroll</a> (Apache 2.0)
         \n- <a href="https://github.com/MuntashirAkon/apk-parser">APK-parser</a> (BSD-2-Clause)
+        \n- <a href="https://github.com/MuntashirAkon/apksig-android">apksig for android</a> (Apache 2.0)
+        \n- <a href="https://github.com/bcgit/bc-java">Bouncy Castle</a> (MIT)
+        \n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a> (Apache 2.0)
+        \n- <a href="https://commons.apache.org/proper/commons-compress/">Commons Compress</a> (Apache 2.0)
+        \n- <a href="https://github.com/dkanada/frost">Frost</a> Icons (GPLv3.0)
         \n- <a href="https://github.com/topjohnwu/libsu">libsu</a> (Apache 2.0)
         \n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a> (MIT)
-        \n- <a href="https://github.com/tiann/FreeReflection">FreeReflection</a> (MIT)
-        \n- <a href="https://github.com/MuntashirAkon/lazysodium-android">Lazysodium for Android</a> (MPL-2.0)
-        \n- <a href="https://github.com/MuntashirAkon/unapkm-android">UnAPKM Android</a> (Apache 2.0)
-        \n- <a href="https://github.com/MuntashirAkon/apksig-android">apksig for android</a> (Apache 2.0)
+        \n- <a href="https://github.com/material-components/material-components-android">Material Components</a> (Apache 2.0)
+        \n- <a href="https://github.com/google/material-design-icons">Material Design Icons</a> (Apache 2.0)
+        \n- <a href="https://github.com/ChickenHook/RestrictionBypass">RestrictionBypass</a> (Apachhe 2.0)
         \n- <a href="https://github.com/MuntashirAkon/sun-security-android">sun.security for Android</a> (GPL-2.0 \"Classpath Exception\")
-        \n- <a href="https://github.com/zhanghai/AndroidFastScroll">AndroidFastScroll</a> (Apache 2.0)
-        \n- <a href="https://github.com/bcgit/bc-java">Bouncy Castle</a> (MIT)
+        \n- <a href="https://github.com/MuntashirAkon/unapkm-android">UnAPKM Android</a> (Apache 2.0)
     </string>
     <string name="credits">Credits</string>
     <string name="credits_message">To the authors of
         \n- The Android Open Source Project
-        \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
         \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
-        \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+        \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
         \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
-        \n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
         \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+        \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+        \n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+        \n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
+        \n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
+        \n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
+        \n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a>
         \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
         \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
-        \n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
+        \n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
         \nOriginal logo credit: <a href="https://github.com/Atrate">Atrate</a>.
     </string>
     <string name="word_wrap">Toggle word wrap</string>
