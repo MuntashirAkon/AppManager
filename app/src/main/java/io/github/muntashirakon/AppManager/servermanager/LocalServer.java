@@ -48,7 +48,7 @@ public class LocalServer {
     private static IAMService amService;
 
     @GuardedBy("lockObject")
-    public static LocalServer getInstance() throws RemoteException {
+    public static LocalServer getInstance() throws RemoteException, IOException {
         // Non-null check must be done outside the synchronised block to prevent deadlock on ADB over TCP mode.
         if (localServer != null) return localServer;
         synchronized (lockObject) {

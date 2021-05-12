@@ -1069,4 +1069,12 @@
     <string name="netpolicy_reject_vpn_data">Reject VPN data</string>
     <string name="netpolicy_reject_wifi_data">Reject Wi-Fi data</string>
     <string name="netpolicy_disable_network_access">Disable network access</string>
+    <string name="wireless_debugging">Wireless debugging</string>
+    <string name="wireless_debugging_not_supported">Wireless debugging isn\'t supported in this platform.</string>
+    <string name="adb_connect">Connect</string>
+    <string name="port_number">Port</string>
+    <string name="adb_connect_port_number_description">Port number is located under <b>IP address &amp; port</b> section
+        just below the <b>Device name</b> section.</string>
+    <string name="port_number_empty">Port number is empty.</string>
+    <string name="port_number_invalid">Invalid port number.</string>
 </resources>
