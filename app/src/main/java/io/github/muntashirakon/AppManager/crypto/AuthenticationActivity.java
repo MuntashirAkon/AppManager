@@ -75,7 +75,7 @@ public class AuthenticationActivity extends AppCompatActivity {
         // Set mode of operation
         new Thread(() -> {
             try {
-                RunnerUtils.setModeOfOps();
+                RunnerUtils.setModeOfOps(this);
                 AppManager.setIsAuthenticated(true);
                 setResult(RESULT_OK);
             } finally {

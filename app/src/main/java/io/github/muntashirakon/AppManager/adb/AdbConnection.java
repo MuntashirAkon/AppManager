@@ -24,6 +24,7 @@ import android.os.Build;
 
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
+import androidx.annotation.WorkerThread;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -143,6 +144,7 @@ public class AdbConnection implements Closeable {
     /**
      * Internal constructor to initialize some internal state
      */
+    @WorkerThread
     private AdbConnection(@NonNull String host, int port, @NonNull KeyPair keyPair) throws IOException {
         this.host = host;
         this.port = port;
@@ -166,6 +168,7 @@ public class AdbConnection implements Closeable {
      * @return A new AdbConnection object.
      * @throws IOException If there is a socket error
      */
+    @WorkerThread
     @NonNull
     public static AdbConnection create(@NonNull String host, int port, @NonNull KeyPair keyPair) throws IOException {
         return new AdbConnection(host, port, keyPair);
