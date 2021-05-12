@@ -17,7 +17,6 @@
 
 package io.github.muntashirakon.AppManager.runner;
 
-import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -25,26 +24,29 @@ import android.os.RemoteException;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
-import com.tananaev.adblib.AdbConnection;
-import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.adb.AdbConnectionManager;
-import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.servermanager.LocalServer;
-import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
-import io.github.muntashirakon.AppManager.users.Users;
-import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.AppManager.utils.UIUtils;
+import androidx.fragment.app.FragmentActivity;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.security.InvalidParameterException;
-import java.security.NoSuchAlgorithmException;
 import java.util.BitSet;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
+import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.adb.AdbUtils;
+import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.servermanager.LocalServer;
+import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
+import io.github.muntashirakon.AppManager.settings.MainPreferences;
+import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 @SuppressWarnings("UnusedReturnValue")
 public final class RunnerUtils {
@@ -149,23 +151,15 @@ public final class RunnerUtils {
         return false;
     }
 
-    private static boolean isAdbAvailable(Context context) {
-        try (AdbConnection ignored = AdbConnectionManager.connect(context, ServerConfig.getAdbHost(), ServerConfig.getAdbPort())) {
-            return true;
-        } catch (IOException | NoSuchAlgorithmException | InterruptedException e) {
-            return false;
-        }
-    }
-
     @WorkerThread
-    private static void autoDetectRootOrAdb(Context context) {
+    private static void autoDetectRootOrAdb() {
         // Update config
         LocalServer.updateConfig();
         // Check root, ADB and load am_local_server
         if (!RunnerUtils.isRootGiven()) {
             AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
             // Check for adb
-            if (RunnerUtils.isAdbAvailable(context)) {
+            if (AdbUtils.isAdbAvailable(ServerConfig.getAdbHost(), ServerConfig.getAdbPort())) {
                 Log.e("ADB", "ADB available");
                 AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, true);
             }
@@ -191,33 +185,43 @@ public final class RunnerUtils {
     }
 
     @WorkerThread
-    public static void setModeOfOps(Context context) {
+    public static void setModeOfOps(FragmentActivity activity) {
         String mode = AppPref.getString(AppPref.PrefKey.PREF_MODE_OF_OPS_STR);
         try {
+            if (LocalServer.isAMServiceAlive()) {
+                // Don't bother detecting root/ADB
+                return;
+            } else if (LocalServer.isLocalServerAlive()) {
+                // Remote server is running
+                LocalServer.getInstance();
+                return;
+            }
             switch (mode) {
                 case Runner.MODE_AUTO:
-                    if (LocalServer.isAMServiceAlive()) {
-                        // Don't bother detecting root/ADB
-                        return;
-                    } else if (LocalServer.isLocalServerAlive()) {
-                        // Remote server is running
-                        LocalServer.getInstance();
-                        return;
-                    } else {
-                        // AMService isn't running, check for root/ADB
-                        RunnerUtils.autoDetectRootOrAdb(context);
-                        return;
-                    }
+                    RunnerUtils.autoDetectRootOrAdb();
+                    return;
                 case Runner.MODE_ROOT:
                     AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, true);
                     AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
                     LocalServer.launchAmService();
-                    break;
-                case Runner.MODE_ADB:
+                    return;
+                case Runner.MODE_ADB_WIFI:
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
+                        AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, true);
+                        CountDownLatch waitForConfig = new CountDownLatch(1);
+                        new Handler(Looper.getMainLooper()).post(() -> MainPreferences
+                                .displayAdbConnect(activity, waitForConfig));
+                        waitForConfig.await(2, TimeUnit.MINUTES);
+                        return;
+                    } // else fallback to ADB over TCP
+                case Runner.MODE_ADB_OVER_TCP:
                     AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
                     AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, true);
+                    ServerConfig.setAdbPort(ServerConfig.DEFAULT_ADB_PORT);
+                    LocalServer.updateConfig();
                     LocalServer.getInstance();
-                    break;
+                    return;
                 case Runner.MODE_NO_ROOT:
                     AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
                     AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);

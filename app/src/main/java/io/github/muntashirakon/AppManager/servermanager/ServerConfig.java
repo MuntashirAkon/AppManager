@@ -4,18 +4,19 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+
 import java.io.File;
 import java.io.IOException;
+import java.net.Inet4Address;
 
-import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 
 public class ServerConfig {
+    public static final int DEFAULT_ADB_PORT = 5555;
     static String SOCKET_PATH = "am_socket";
-    private static final String DEFAULT_ADB_HOST = "127.0.0.1";
     private static final String DEFAULT_LOCAL_SERVER_HOST = "127.0.0.1";
-    private static final int DEFAULT_ADB_PORT = 5555;
     private static int DEFAULT_LOCAL_SERVER_PORT = 60001;
     private static final String LOCAL_TOKEN = "l_token";
 
@@ -86,12 +87,16 @@ public class ServerConfig {
         return sPreferences.getInt("adb_port", DEFAULT_ADB_PORT);
     }
 
+    public static void setAdbPort(int port) {
+        sPreferences.edit().putInt("adb_port", port).apply();
+    }
+
     static int getLocalServerPort() {
         return DEFAULT_LOCAL_SERVER_PORT;
     }
 
     public static String getAdbHost() {
-        return DEFAULT_ADB_HOST;
+        return Inet4Address.getLoopbackAddress().getHostName();
     }
 
     public static String getLocalServerHost() {

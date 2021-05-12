@@ -35,14 +35,15 @@ import java.util.List;
 public abstract class Runner {
     public static final String TAG = "Runner";
 
-    @StringDef({MODE_AUTO, MODE_ROOT, MODE_ADB, MODE_NO_ROOT})
+    @StringDef({MODE_AUTO, MODE_ROOT, MODE_ADB_OVER_TCP, MODE_ADB_WIFI, MODE_NO_ROOT})
     @Retention(RetentionPolicy.SOURCE)
     public @interface Mode {
     }
 
     public static final String MODE_AUTO = "auto";
     public static final String MODE_ROOT = "root";
-    public static final String MODE_ADB = "adb";
+    public static final String MODE_ADB_OVER_TCP = "adb_tcp";
+    public static final String MODE_ADB_WIFI = "adb_wifi";
     public static final String MODE_NO_ROOT = "no-root";
 
     public static class Result {
