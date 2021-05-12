@@ -990,4 +990,11 @@
     <string name="pref_display_changes">顯示變更</string>
     <string name="hidden">已隱藏</string>
     <string name="suspended">已待命</string>
+    <string name="netpolicy_reject_wifi_data">拒絕 Wi-Fi 資料</string>
+    <string name="netpolicy_reject_vpn_data">拒絕 VPN 資料</string>
+    <string name="netpolicy_allow_background_data">開啟Data Saver時允許背景資料</string>
+    <string name="netpolicy_reject_background_data">拒絕背景資料</string>
+    <string name="netpolicy_disable_network_access">停用網路存取</string>
+    <string name="netpolicy_reject_cellular_data">拒絕行動網路</string>
+    <string name="unknown_netpolicy">未知的網路政策 （%s）</string>
 </resources>
