@@ -1086,13 +1086,13 @@
     <string name="netpolicy_reject_wifi_data">Заборонити Wi-Fi передачу</string>
     <string name="netpolicy_reject_vpn_data">Заборонити VPN передачу</string>
     <string name="netpolicy_reject_cellular_data">Заборонити мобільні дані</string>
-    <string name="netpolicy_allow_background_data">Дозволити дані у фоні, коли зберігання даних увімкнено</string>
+    <string name="netpolicy_allow_background_data">Дозволити передачу у фоновому режимі, коли ввімкнено заощадження трафіку</string>
     <string name="netpolicy_reject_background_data">Заборонити дані у фоні</string>
     <string name="unknown_netpolicy">Невідома netpolicy (%s)</string>
     <string name="state_parked">Припарковано</string>
     <string name="state_device_io">Пристрій вводу/виводу</string>
     <string name="no_changes">Без змін</string>
-    <string name="pref_display_changes_msg">Показати зміни у версіях, трекери, компоненти, дозволи, підписи, SDK, і т.д. в режимі контролю версій.</string>
+    <string name="pref_display_changes_msg">Показати зміни у версіях, трекерах, компонентах, дозволах, підписах, SDK, і т.д. в режимі контролю версій.</string>
     <string name="pref_display_changes">Показати зміни</string>
     <string name="hidden">Приховано</string>
     <string name="suspended">Призупинено</string>
