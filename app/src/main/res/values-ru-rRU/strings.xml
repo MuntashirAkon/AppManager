@@ -160,7 +160,7 @@
         <item quantity="many">%1$d часов</item>
         <item quantity="other">%1$d часов</item>
     </plurals>
-    <string name="usage_min">%1$d мин</string>
+    <string name="usage_min">%1$d мин.</string>
     <string name="usage_less_than_a_minute">Меньше минуты</string>
     <string name="go_back">Вернуться</string>
     <string name="go">Разрешить</string>
@@ -1105,11 +1105,11 @@
     <string name="pref_display_changes_msg">Отображение изменений версии, трекеров, компонентов, разрешений, подписей, SDK и т.д., в режиме контроля версий.</string>
     <string name="pref_display_changes">Отображение изменений</string>
     <string name="netpolicy_disable_network_access">Отключить доступ к сети</string>
-    <string name="netpolicy_reject_wifi_data">Отклонить данные Wi-Fi</string>
-    <string name="netpolicy_reject_vpn_data">Отклонить данные VPN</string>
-    <string name="netpolicy_reject_cellular_data">Отклонить сотовые данные</string>
-    <string name="netpolicy_allow_background_data">Разрешить фоновые данные, когда включена экономия трафика</string>
-    <string name="netpolicy_reject_background_data">Отклонить фоновые данные</string>
+    <string name="netpolicy_reject_wifi_data">Отклонить Wi-Fi передачу данных</string>
+    <string name="netpolicy_reject_vpn_data">Отклонить VPN передачу данных</string>
+    <string name="netpolicy_reject_cellular_data">Отклонить передачу мобильных данных</string>
+    <string name="netpolicy_allow_background_data">Разрешить фоновую передачу данных, когда включена экономия трафика</string>
+    <string name="netpolicy_reject_background_data">Отклонить фоновую передачу данных</string>
     <string name="unknown_netpolicy">Неизвестная netpolicy (%s)</string>
     <string name="pkcs12_keystore">PKCS #12 Хранилище ключей (P12)</string>
     <string name="saf">SAF</string>
