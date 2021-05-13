@@ -111,15 +111,19 @@
     <string name="credits">Авторы</string>
     <string name="credits_message">Благодарность разработчикам:
 \n- Android Open Source Project
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
-\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
-\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
+\n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
+\n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
+\n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a>
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
-\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
 \nАвтор логотипа: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="word_wrap">Перенос слов</string>
     <string name="class_viewer">Просмотр классов</string>
@@ -1113,4 +1117,11 @@
     <string name="unknown_netpolicy">Неизвестная netpolicy (%s)</string>
     <string name="pkcs12_keystore">PKCS #12 Хранилище ключей (P12)</string>
     <string name="saf">SAF</string>
+    <string name="port_number_invalid">Недействительный номер порта.</string>
+    <string name="port_number_empty">Номер порта пуст.</string>
+    <string name="adb_connect_port_number_description">Номер порта расположен в разделе <b>IP-адрес &amp; порт</b>, чуть ниже раздела <b>Имя устройства</b>.</string>
+    <string name="port_number">Порт</string>
+    <string name="adb_connect">Подключение</string>
+    <string name="wireless_debugging_not_supported">Беспроводная отладка не поддерживается на этой платформе.</string>
+    <string name="wireless_debugging">Беспроводная отладка</string>
 </resources>
