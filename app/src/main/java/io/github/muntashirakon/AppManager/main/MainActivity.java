@@ -181,6 +181,7 @@ public class MainActivity extends BaseActivity implements
         mLayoutParamsTypical.setMargins(0, margin, 0, 0);
 
         mAdapter = new MainRecyclerAdapter(MainActivity.this);
+        mAdapter.setHasStableIds(true);
         recyclerView.setHasFixedSize(true);
         recyclerView.setOverScrollMode(RecyclerView.OVER_SCROLL_NEVER);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
