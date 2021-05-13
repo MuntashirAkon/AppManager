@@ -95,17 +95,21 @@
     <string name="license">Licença</string>
     <string name="third_party">Bibliotecas e Ícones de terceiros</string>
     <string name="credits">Créditos</string>
-    <string name="credits_message">Para os autores de
+    <string name="credits_message">Para os autores do
 \n- The Android Open Source Project
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
-\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
-\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
+\n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
+\n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
+\n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a>
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
-\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
 \nCrédito do logo original: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="word_wrap">Alternar quebra de palavra</string>
     <string name="class_viewer">Visualizador de Classe</string>
@@ -1042,4 +1046,11 @@
     <string name="netpolicy_allow_background_data">Permitir dados em segundo plano quando o Salvar Dados estiver ligado</string>
     <string name="netpolicy_reject_background_data">Rejeitar dados em segundo plano</string>
     <string name="unknown_netpolicy">Política de rede desconhecida (%s)</string>
+    <string name="adb_connect_port_number_description">O número de porta está localizado abaixo da seção <b>endereço IP &amp; porta</b> logo abaixo da seção <b>Nome do dispositivo</b>.</string>
+    <string name="port_number_invalid">Número de porta inválido.</string>
+    <string name="port_number_empty">O número de porta está vazio.</string>
+    <string name="port_number">Porta</string>
+    <string name="adb_connect">Conectar</string>
+    <string name="wireless_debugging_not_supported">A depuração sem fio não é suportada nesta plataforma.</string>
+    <string name="wireless_debugging">Depuração sem fio</string>
 </resources>
