@@ -98,7 +98,21 @@ sed -i -e '1i <?xml version="1.0" encoding="utf-8"?>' \
 }
 
 function func_merge-translation {
-echo merge translation
+INPUT=strings.xml
+keys=$(grep -oP "(?<=<string name=\").*?(?=\">)" ${INPUT})
+
+while read key_content
+do
+
+string_content=$(echo 'cat resources/string[@name="'${key_content}'"]/text()' | xmllint --shell strings.xml | sed -e '$d' -e '1d'|sed 's/\\/\\\\/g')
+while read file
+do
+source=$(cat ${file})
+echo "import re;import sys;print(re.sub(r'(?<=%%!!"${key_content}"<<\n)[^%%!!>>]*(?=%%!!>>)', sys.argv[2]+'\n', sys.argv[1], flags=re.M))" | python - "${source}" "${string_content}" >${file}
+
+done < <(find ./ -type f -name "*.tex")
+
+done < <(echo "$keys" | grep -Pv ".*(?===title)")
 }
 
 case $1 in
