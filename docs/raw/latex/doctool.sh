@@ -17,13 +17,22 @@ help
 Show this help and exit
 
 --Dependencies--
-・pandoc-crossref
+・pandoc(Tested with 2.13-1)
+https://github.com/jgm/pandoc
+https://pandoc.org/
+
+・pandoc-crossref(Tested with v0.3.10.0a)
 https://github.com/lierdakil/pandoc-crossref
 https://lierdakil.github.io/pandoc-crossref/
 
---Translating Note--
-Use \"updatetranslation\" command when you want to start new translation too.
-Do not remove/change section label,this will break link.
+・Python(Tested with 3.8.5)
+https://www.python.org/
+
+・GNU Sed(Tested with 4.7)
+https://www.gnu.org/software/sed/
+
+・Bash(Not work with sh,Untested with zsh)
+https://www.gnu.org/software/bash/
 "
 }
 
