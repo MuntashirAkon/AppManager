@@ -1112,4 +1112,5 @@
     <string name="netpolicy_reject_background_data">Отклонить фоновые данные</string>
     <string name="unknown_netpolicy">Неизвестная netpolicy (%s)</string>
     <string name="pkcs12_keystore">PKCS #12 Хранилище ключей (P12)</string>
+    <string name="saf">SAF</string>
 </resources>
