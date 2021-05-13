@@ -17,10 +17,14 @@
 
 package io.github.muntashirakon.AppManager.rules.compontents;
 
+import android.annotation.UserIdInt;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.RemoteException;
 import android.util.Xml;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.WorkerThread;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -35,19 +39,15 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.WorkerThread;
-
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.users.UserIdInt;
 import io.github.muntashirakon.AppManager.oneclickops.ItemCount;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -226,7 +226,7 @@ public final class ComponentUtils {
             // Grant configured permissions
             for (RulesStorageManager.Entry entry : cb.getAll(RulesStorageManager.Type.PERMISSION)) {
                 try {
-                    PackageManagerCompat.grantPermission(packageName, entry.name, userHandle);
+                    PermissionCompat.grantPermission(packageName, entry.name, userHandle);
                     cb.removeEntry(entry);
                 } catch (RemoteException e) {
                     Log.e("ComponentUtils", "Cannot revoke permission " + entry.name + " for package " + packageName, e);

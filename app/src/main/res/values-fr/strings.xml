@@ -228,7 +228,6 @@
     <string name="package_installer">Installateur de paquets</string>
     <string name="unblock_trackers">Débloquer les traqueurs</string>
     <string name="reinstall">Réinstaller</string>
-    <string name="reinstall_app_message">Voulez-vous réinstaller cette application \?</string>
     <string name="install_app_message">Voulez-vous installer cette application \?</string>
     <string name="try_again">Veuillez réessayer</string>
     <string name="full_stop_tap_to_see_details">. Appuyez pour voir les détails.</string>
@@ -250,7 +249,7 @@
     <string name="run_in_termux">Exécuter dans Termux</string>
     <string name="open_in_termux">Ouvrir dans Termux</string>
     <string name="export_icon">Extraire l\'icône</string>
-    <string name="no_matching_package_found">Aucun paquet correspondant trouvé</string>
+    <string name="no_matching_package_found">Aucune application correspondante n\'a pu être trouvée</string>
     <string name="block_unblock_trackers">Bloquer/Débloquer les traqueurs</string>
     <string name="unblock">Débloquer</string>
     <string name="block">Bloquer</string>
@@ -338,7 +337,7 @@
     <string name="clear_data_from_uninstalled_apps">Effacer les données des applications désinstallées</string>
     <string name="block_components_description">Bloquer tous les composants identifiés par les signatures données</string>
     <string name="block_components_dots">Bloquer les composants…</string>
-    <string name="block_unblock_trackers_description">Bloquer ou débloquer les composants de publicité et de suivi des applications installées</string>
+    <string name="block_unblock_trackers_description">Bloquer ou débloquer les composants de publicité et de suivi dans toutes les applications installées</string>
     <string name="clear_cache">Effacer le cache</string>
     <string name="pref_import_existing">Importer des règles existantes</string>
     <string name="community_links">Salon d\'information : https://t.me/AppManagerChannel
@@ -695,4 +694,11 @@
 \nCodeberg: https://codeberg.org/muntashir/AppManager</string>
     <string name="omit_sensitive_info_summary">Omettez les informations sensibles comme les URL, les numéros de téléphone ou les adresses courriel.</string>
     <string name="app_signing_signatures">Signatures</string>
+    <plurals name="alert_failed_to_set_app_ops">
+        <item quantity="one">Impossible de définir les opérations d\'application pour %1$d application</item>
+        <item quantity="other">Impossible de définir les opérations d\'application pour %1$d applications</item>
+    </plurals>
+    <string name="input_app_ops_description_profile">Saisissez les noms ou les constantes d\'opérations d\'application avec des espaces, par exemple <tt>WAKE_LOCK 63 72 CAMERA</tt>. Utilisez <tt>*</tt> pour appliquer toutes les opérations d\'application configurées.</string>
+    <string name="input_app_ops_description">Saisissez les noms ou les constantes d\'opérations d\'application avec des espaces, par exemple <tt>WAKE_LOCK 63 72 CAMERA</tt></string>
+    <string name="deny_app_ops_description">Définir un mode pour les opérations de l\'application identifiées par les valeurs constante, par exemple <tt>63</tt> ou <tt>RUN_IN_BACKGROUND</tt></string>
 </resources>

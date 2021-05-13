@@ -224,7 +224,6 @@
     <string name="package_installer">مثبت الحزمة</string>
     <string name="unblock_trackers">إلغاء حظر أجهزة المتعقبين</string>
     <string name="reinstall">اعادة التثبيت</string>
-    <string name="reinstall_app_message">هل تريد إعادة تثبيت هذا التطبيق؟</string>
     <string name="install_app_message">هل تريد تثبيت هذا التطبيق؟</string>
     <string name="try_again">أعد المحاولة</string>
     <string name="full_stop_tap_to_see_details">. اضغط للاطلاع على التفاصيل.</string>
@@ -307,7 +306,7 @@
     <string name="block_components_description">حظر كافة المكونات التي تم تعريفها بواسطة التواقيع المحددة</string>
     <string name="block_components_dots">حجب المكونات…</string>
     <string name="block_unblock_trackers_description">حظر أو إلغاء حظر الإعلانات ومكونات التتبع في جميع التطبيقات المثبتة</string>
-    <string name="clear_cache">مسح ذاكرة التخزين المؤقت</string>
+    <string name="clear_cache">مسح التخزين المؤقت</string>
     <string name="pref_import_existing">استيراد القواعد الموجودة</string>
     <string name="community_links">قناة التحديث : https://t.me/AppManagerChannel
 \nمجموعة الدعم: https://t.me/AppManagerAndroid
@@ -1024,8 +1023,6 @@
     <string name="choose_what_to_do">اختر ما يجب القيام به.</string>
     <string name="has_net_policy">سياسة الانترنت</string>
     <string name="net_policy">سياسة الانترنت</string>
-    <string name="allow_background">السماح بالمهام في الخلفية</string>
-    <string name="reject_background">رفض المهام في الخلفية</string>
     <string name="initializing">جار التهيئة…</string>
     <string name="add_to_profile">إضافة إلى ملف التعريف</string>
     <string name="add">أضِف</string>
@@ -1157,4 +1154,16 @@
     <string name="input_keystore_alias_pass_msg">اضغط هنا لتوفير كلمة المرور ل %1$s</string>
     <string name="input_keystore_alias_pass_description">إدراج كلمة المرور للاسم المستعار <b>%1$s</b>. يمكنك ترك هذا فارغا إذا كانت كلمة المرور هي نفس كلمة مرور KeyStore.</string>
     <string name="input_keystore_alias_pass">كلمة المرور للاسم المستعار <b> %1$s </b></string>
+    <string name="hidden">مَخفي</string>
+    <string name="suspended">معلق</string>
+    <string name="no_changes">لا تغييرات</string>
+    <string name="pref_display_changes_msg">عرض التغييرات في الإصدار ، برمجيات التتبع ، والمكونات ، والأذونات ، والتوقيعات ، SDK ، وما إلى ذلك بطريقة النسخة التي تسيطر عليها.</string>
+    <string name="pref_display_changes">عرض التغييرات</string>
+    <string name="netpolicy_disable_network_access">تعطيل الوصول إلى الشبكة</string>
+    <string name="netpolicy_reject_wifi_data">رفض بيانات Wi-Fi</string>
+    <string name="netpolicy_reject_vpn_data">رفض بيانات VPN</string>
+    <string name="netpolicy_reject_cellular_data">رفض البيانات الخلوية</string>
+    <string name="netpolicy_allow_background_data">السماح ببيانات الخلفية عند تشغيل \"توفير البيانات\"</string>
+    <string name="netpolicy_reject_background_data">ارفض بيانات الخلفية</string>
+    <string name="unknown_netpolicy">سياسة انترنت غير معروفة (%s)</string>
 </resources>

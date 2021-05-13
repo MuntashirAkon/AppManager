@@ -17,12 +17,12 @@
 
 package io.github.muntashirakon.AppManager.types;
 
+import android.annotation.UserIdInt;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
-import io.github.muntashirakon.AppManager.users.UserIdInt;
 
 public final class UserPackagePair extends Pair<String, Integer> implements Parcelable {
     public UserPackagePair(String packageName, @UserIdInt int userHandle) {

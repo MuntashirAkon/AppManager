@@ -40,6 +40,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
+import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -129,6 +130,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     }
 
     @GuardedBy("mAdapterList")
+    @UiThread
     void selectAll() {
         synchronized (mAdapterList) {
             for (int i = 0; i < mAdapterList.size(); ++i) {
@@ -387,6 +389,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     }
 
     @GuardedBy("mAdapterList")
+    @UiThread
     public void toggleSelection(@NonNull ApplicationItem item, int position) {
         synchronized (mAdapterList) {
             if (mActivity.mModel.getSelectedPackages().containsKey(item.packageName)) {
@@ -400,6 +403,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     }
 
     @GuardedBy("mAdapterList")
+    @UiThread
     public void selectRange(int firstPosition, int secondPosition) {
         int beginPosition = Math.min(firstPosition, secondPosition);
         int endPosition = Math.max(firstPosition, secondPosition);
@@ -412,9 +416,12 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         mActivity.handleSelection();
     }
 
+    @GuardedBy("mAdapterList")
     @Override
     public long getItemId(int i) {
-        return i;
+        synchronized (mAdapterList) {
+            return mAdapterList.get(i).hashCode();
+        }
     }
 
     @GuardedBy("mAdapterList")

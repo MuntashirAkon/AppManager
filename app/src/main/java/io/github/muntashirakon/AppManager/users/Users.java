@@ -17,6 +17,7 @@
 
 package io.github.muntashirakon.AppManager.users;
 
+import android.annotation.UserIdInt;
 import android.content.Context;
 import android.content.pm.UserInfo;
 import android.os.Build;

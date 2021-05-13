@@ -192,7 +192,6 @@
     <string name="package_installer">Інсталятор пакетів</string>
     <string name="unblock_trackers">Розблокування трекерів</string>
     <string name="reinstall">Перевстановлення</string>
-    <string name="reinstall_app_message">Ви хочете перевстановити цей додаток\?</string>
     <string name="install_app_message">Ви хочете встановити цей додаток\?</string>
     <string name="try_again">Спробуйте ще раз</string>
     <string name="full_stop_tap_to_see_details">. Торкніться, щоб переглянути деталі.</string>
@@ -514,7 +513,7 @@
     <string name="require_no_permission">Не вимагає дозволів</string>
     <string name="required">Вимагається</string>
     <string name="subject">Тема</string>
-    <string name="state_waking">Waking</string>
+    <string name="state_waking">Пробудження</string>
     <string name="state_trace_stop">Трасування зупинки</string>
     <string name="sdk_flags">Прапорці</string>
     <string name="flags">Прапорці</string>
@@ -882,12 +881,10 @@
     <string name="backup_all_apps_msg">Резервне копіювання всіх встановлених програм.</string>
     <string name="backup_all_apps">Резервне копіювання всіх програм</string>
     <string name="app_signing_signature_schemes">Схема підпису</string>
-    <string name="restart_to_reflect_changes">Вам потрібно негайно перезапустити пристрій, щоб відобразити зміни</string>
+    <string name="restart_to_reflect_changes">Вам потрібно негайно перезапустити пристрій, щоб відобразити зміни.</string>
     <string name="failed_to_change_ssaid">Не вдалося змінити SSAID</string>
     <string name="copied_to_clipboard">Скопійовано до буфера обміну.</string>
     <string name="ssaid_info">SSAID (<tt>Settings.Secure.ANDROID_ID</tt>) - це ідентифікатор пристрою, призначений кожному додатку (з Android Oreo і вище). Він широко використовується додатками для відстеження користувачів.</string>
-    <string name="allow_background">Дозволити фон</string>
-    <string name="reject_background">Відхилити фон</string>
     <string name="net_policy">Політика мережі</string>
     <string name="has_net_policy">Політика мережі</string>
     <string name="type_string_array_list">Список рядків</string>
@@ -1071,4 +1068,47 @@
         <item quantity="many">%d файлів буде видалено</item>
         <item quantity="other">%d файлів буде видалено</item>
     </plurals>
+    <string name="launch_mode_single_top">Один зверху</string>
+    <string name="source_code_links">GitHub: https://github.com/MuntashirAkon/AppManager
+\nGitLab: https://gitlab.com/muntashir/AppManager
+\nRiseup: https://0xacab.org/muntashir/AppManager
+\nCodeberg: https://codeberg.org/muntashir/AppManager</string>
+    <string name="apk_updater">APK Updater</string>
+    <string name="enforcing">Примусово</string>
+    <string name="uri">URI</string>
+    <string name="rsa">RSA</string>
+    <string name="aes">AES</string>
+    <string name="dsa_affine_y">Аффінна координата y</string>
+    <string name="dsa_affine_x">Аффінна координата x</string>
+    <string name="magisk_hide_enabled">MagiskHide</string>
+    <string name="state_wake_kill">Вимкнути пробудження</string>
+    <string name="netpolicy_disable_network_access">Заборонити передачу даних</string>
+    <string name="netpolicy_reject_wifi_data">Заборонити Wi-Fi передачу</string>
+    <string name="netpolicy_reject_vpn_data">Заборонити VPN передачу</string>
+    <string name="netpolicy_reject_cellular_data">Заборонити мобільні дані</string>
+    <string name="netpolicy_allow_background_data">Дозволити передачу у фоновому режимі, коли ввімкнено заощадження трафіку</string>
+    <string name="netpolicy_reject_background_data">Заборонити дані у фоні</string>
+    <string name="unknown_netpolicy">Невідома netpolicy (%s)</string>
+    <string name="state_parked">Припарковано</string>
+    <string name="state_device_io">Пристрій вводу/виводу</string>
+    <string name="no_changes">Без змін</string>
+    <string name="pref_display_changes_msg">Показати зміни у версіях, трекерах, компонентах, дозволах, підписах, SDK, і т.д. в режимі контролю версій.</string>
+    <string name="pref_display_changes">Показати зміни</string>
+    <string name="hidden">Приховано</string>
+    <string name="suspended">Призупинено</string>
+    <string name="saf">SAF</string>
+    <string name="filter_choice_pid">PID</string>
+    <string name="log_level_fatal">Фатальна помилка</string>
+    <string name="log_level_warn">Застереження</string>
+    <string name="log_level_verbose">Докладний лог</string>
+    <string name="log_level_info">Інформація</string>
+    <string name="log_level_error">Помилка</string>
+    <string name="log_level_debug">Налагодження</string>
+    <string name="pkcs12_keystore">PKCS #12 KeyStore (P12)</string>
+    <string name="bouncy_castle_keystore">Bouncy Castle KeyStore (BKS)</string>
+    <string name="java_keystore">Java KeyStore (JKS)</string>
+    <string name="bootloader">Bootloader</string>
+    <string name="permissive">Дозволено</string>
+    <string name="ssaid">SSAID</string>
+    <string name="type_uri">URI</string>
 </resources>

@@ -65,11 +65,14 @@ import java.util.Set;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.types.TextInputDropdownDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 public class ActivityInterceptor extends BaseActivity {
+    public static final String TAG = ActivityInterceptor.class.getSimpleName();
+
     public static final String EXTRA_PACKAGE_NAME = BuildConfig.APPLICATION_ID + ".intent.extra.PACKAGE_NAME";
     public static final String EXTRA_CLASS_NAME = BuildConfig.APPLICATION_ID + ".intent.extra.CLASS_NAME";
 
@@ -545,11 +548,16 @@ public class ActivityInterceptor extends BaseActivity {
 
         // Send Intent on clicking the resend intent button
         resendIntentButton.setOnClickListener(v -> {
-            if (requestedComponent == null) {
-                launcher.launch(Intent.createChooser(mutableIntent, resendIntentButton.getText()));
-            } else {
-                mutableIntent.setComponent(requestedComponent);
-                launcher.launch(mutableIntent);
+            try {
+                if (requestedComponent == null) {
+                    launcher.launch(Intent.createChooser(mutableIntent, resendIntentButton.getText()));
+                } else {
+                    mutableIntent.setComponent(requestedComponent);
+                    launcher.launch(mutableIntent);
+                }
+            } catch (Throwable th) {
+                Log.e(TAG, th);
+                Toast.makeText(this, th.getClass().getName() + ": " + th.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
         // Reset Intent data on clicking the reset intent button

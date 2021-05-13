@@ -182,8 +182,6 @@
     <string name="add">新增</string>
     <string name="add_to_profile">新增到設定檔</string>
     <string name="initializing">初始化中…</string>
-    <string name="allow_background">允許背景</string>
-    <string name="reject_background">拒絕背景</string>
     <string name="net_policy">淨政策</string>
     <string name="has_net_policy">淨政策</string>
     <string name="choose_what_to_do">選擇要做什麼。</string>
@@ -436,7 +434,6 @@
     <string name="package_installer">套件安裝程式</string>
     <string name="unblock_trackers">取消封鎖追蹤器</string>
     <string name="reinstall">重新安裝</string>
-    <string name="reinstall_app_message">您要重新安裝該應用程式嗎？</string>
     <string name="install_app_message">您要安裝此應用程式嗎？</string>
     <string name="try_again">再試一次</string>
     <string name="full_stop_tap_to_see_details">。點按可檢視詳細資訊。</string>
@@ -988,4 +985,16 @@
     <plurals name="file_deletion_confirmation">
         <item quantity="other">%d 檔案將被刪除</item>
     </plurals>
+    <string name="no_changes">沒有變更</string>
+    <string name="pref_display_changes_msg">以版本控制的方式顯示版本，追蹤器，元件，權限，簽名，SDK 等的變更。</string>
+    <string name="pref_display_changes">顯示變更</string>
+    <string name="hidden">已隱藏</string>
+    <string name="suspended">已待命</string>
+    <string name="netpolicy_reject_wifi_data">拒絕 Wi-Fi 資料</string>
+    <string name="netpolicy_reject_vpn_data">拒絕 VPN 資料</string>
+    <string name="netpolicy_allow_background_data">開啟Data Saver時允許背景資料</string>
+    <string name="netpolicy_reject_background_data">拒絕背景資料</string>
+    <string name="netpolicy_disable_network_access">停用網路存取</string>
+    <string name="netpolicy_reject_cellular_data">拒絕行動網路</string>
+    <string name="unknown_netpolicy">未知的網路政策 （%s）</string>
 </resources>

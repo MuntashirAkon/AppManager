@@ -17,22 +17,16 @@
 
 package io.github.muntashirakon.AppManager.misc;
 
-import android.annotation.SuppressLint;
-
 import androidx.annotation.NonNull;
+
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.runner.Runner;
 
 public final class SystemProperties {
-    @SuppressLint("PrivateApi")
     @NonNull
     public static String get(@NonNull String key, @NonNull String defaultVal) {
         try {
-            String value = (String) Class.forName("android.os.SystemProperties")
-                    .getDeclaredMethod("get", String.class)
-                    .invoke(null, key);
-            if (value == null) return defaultVal;
-            else return value;
+            return android.os.SystemProperties.get(key, defaultVal);
         } catch (Exception e) {
             Log.w("SystemProperties", "Unable to use SystemProperties.get", e);
             Runner.Result result = Runner.runCommand(new String[]{"getprop", key, defaultVal});

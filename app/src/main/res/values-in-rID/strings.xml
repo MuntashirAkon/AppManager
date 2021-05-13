@@ -412,8 +412,6 @@
     <string name="add">Menambahkan</string>
     <string name="add_to_profile">Tambahkan ke profil</string>
     <string name="initializing">Inisialisasi …</string>
-    <string name="allow_background">Izinkan latar belakang</string>
-    <string name="reject_background">Tolak latar belakang</string>
     <string name="net_policy">Kebijakan net</string>
     <string name="has_net_policy">Kebijakan net</string>
     <string name="choose_what_to_do">Pilih apa yang harus dilakukan.</string>
@@ -731,7 +729,6 @@
     <string name="package_installer">Penginstal Paket</string>
     <string name="unblock_trackers">Buka blokir pelacak</string>
     <string name="reinstall">Instal ulang</string>
-    <string name="reinstall_app_message">Apakah kamu ingin menginstal ulang aplikasi ini\?</string>
     <string name="install_app_message">Apakah kamu ingin menginstal aplikasi ini\?</string>
     <string name="try_again">Coba lagi</string>
     <string name="full_stop_tap_to_see_details">Ketuk untuk melihat detail.</string>
@@ -996,4 +993,16 @@
     <plurals name="file_deletion_confirmation">
         <item quantity="other">Berkas %d akan dihapus</item>
     </plurals>
+    <string name="hidden">Tersembunyi</string>
+    <string name="suspended">Ditangguhkan</string>
+    <string name="pref_display_changes_msg">Tampilkan perubahan dalam versi, pelacak, komponen, perizinan, tanda tangan (signature), SDK, dll. di sebuah bentuk versi yang terkontrol.</string>
+    <string name="no_changes">Tidak ada perubahan</string>
+    <string name="pref_display_changes">Tampilkan perubahan</string>
+    <string name="netpolicy_disable_network_access">Nonaktifkan akses jaringan</string>
+    <string name="netpolicy_reject_wifi_data">Tolak data Wi-Fi</string>
+    <string name="netpolicy_reject_vpn_data">Tolak data VPN</string>
+    <string name="netpolicy_reject_cellular_data">Tolak data seluler</string>
+    <string name="netpolicy_allow_background_data">Izinkan data di latar belakang saat Penghemat Data aktif</string>
+    <string name="netpolicy_reject_background_data">Tolak data di latar belakang</string>
+    <string name="unknown_netpolicy">Kebijakan net tidak dikenal (%s)</string>
 </resources>

@@ -18,13 +18,9 @@
 package io.github.muntashirakon.io;
 
 import android.os.RemoteException;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import io.github.muntashirakon.AppManager.IAMService;
-import io.github.muntashirakon.AppManager.IRemoteFile;
-import io.github.muntashirakon.AppManager.IRemoteFileReader;
-import io.github.muntashirakon.AppManager.IRemoteFileWriter;
-import io.github.muntashirakon.AppManager.ipc.IPCUtils;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -32,6 +28,12 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import io.github.muntashirakon.AppManager.IAMService;
+import io.github.muntashirakon.AppManager.IRemoteFile;
+import io.github.muntashirakon.AppManager.IRemoteFileReader;
+import io.github.muntashirakon.AppManager.IRemoteFileWriter;
+import io.github.muntashirakon.AppManager.ipc.IPCUtils;
 
 public class ProxyFile extends File {
     @Nullable
@@ -280,17 +282,23 @@ public class ProxyFile extends File {
         return super.getCanonicalFile();
     }
 
+    @NonNull
     public IRemoteFileReader getFileReader() throws RemoteException {
         if (isRemoteAlive()) {
             //noinspection ConstantConditions
-            return file.getFileReader();
+            IRemoteFileReader reader = file.getFileReader();
+            if (reader == null) throw new RemoteException(getAbsolutePath() + ": Couldn't get remote file reader");
+            return reader;
         } else throw new RemoteException("Remote service isn't alive.");
     }
 
+    @NonNull
     public IRemoteFileWriter getFileWriter() throws RemoteException {
         if (isRemoteAlive()) {
             //noinspection ConstantConditions
-            return file.getFileWriter();
+            IRemoteFileWriter writer = file.getFileWriter();
+            if (writer == null) throw new RemoteException(getAbsolutePath() + ": Couldn't get remote file writer.");
+            return writer;
         } else throw new RemoteException("Remote service isn't alive.");
     }
 

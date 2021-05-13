@@ -399,7 +399,6 @@
     <string name="package_installer">نصب کننده بسته</string>
     <string name="unblock_trackers">رفع انسداد ردیاب‌ها</string>
     <string name="reinstall">نصب مجدد</string>
-    <string name="reinstall_app_message">آیا می خواهید این برنامه بازنصب کنید؟</string>
     <string name="install_app_message">آیا می خواهید این برنامه را نصب کنید؟</string>
     <string name="try_again">دوباره تلاش کنید</string>
     <string name="full_stop_tap_to_see_details">. برای دیدن جزئیات ضربه بزنید.</string>

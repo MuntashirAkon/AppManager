@@ -302,7 +302,7 @@ class BackupOp implements Closeable {
             backedUpKeyStoreFiles = TarUtils.create(metadata.tarType, cachePath, keyStoreSavePath,
                     cachedKeyStoreFileNames.toArray(new String[0]), null, null, false).toArray(new File[0]);
         } catch (Throwable th) {
-            throw new BackupException("Could not backup KeyStore item.");
+            throw new BackupException("Could not backup KeyStore item.", th);
         }
         // Remove cache
         for (String name : cachedKeyStoreFileNames) {

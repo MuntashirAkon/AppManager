@@ -423,7 +423,6 @@
     <string name="full_stop_tap_to_see_details">. Toque para ver detalhes.</string>
     <string name="try_again">Tentar novamente</string>
     <string name="install_app_message">Você deseja instalar este app?</string>
-    <string name="reinstall_app_message">Você deseja reinstalar este app?</string>
     <string name="reinstall">Reinstalar</string>
     <string name="unblock_trackers">Desbloquear rastreadores</string>
     <string name="package_installer">Instalador de Pacotes</string>
@@ -831,8 +830,6 @@
     <string name="add">Adicionar</string>
     <string name="add_to_profile">Adicionar ao perfil</string>
     <string name="initializing">Iniciando…</string>
-    <string name="allow_background">Permitir segundo plano</string>
-    <string name="reject_background">Rejeitar segundo plano</string>
     <string name="net_policy">Política de rede</string>
     <string name="has_net_policy">Política de rede</string>
     <string name="choose_what_to_do">Escolha o que fazer.</string>
@@ -1033,4 +1030,16 @@
         <item quantity="one">%d arquivo será excluído</item>
         <item quantity="other">%d arquivos serão excluídos</item>
     </plurals>
+    <string name="hidden">Oculto</string>
+    <string name="suspended">Suspenso</string>
+    <string name="no_changes">Nenhuma mudança</string>
+    <string name="pref_display_changes_msg">Mostrar mudanças na versão, rastreadores, componentes, permissões, assinaturas, SDK, etc. de forma controlada por versão.</string>
+    <string name="pref_display_changes">Mostrar mudanças</string>
+    <string name="netpolicy_reject_cellular_data">Rejeitar dados móveis</string>
+    <string name="netpolicy_disable_network_access">Desativar o acesso à rede</string>
+    <string name="netpolicy_reject_wifi_data">Rejeitar dados Wi-Fi</string>
+    <string name="netpolicy_reject_vpn_data">Rejeitar dados VPN</string>
+    <string name="netpolicy_allow_background_data">Permitir dados em segundo plano quando o Salvar Dados estiver ligado</string>
+    <string name="netpolicy_reject_background_data">Rejeitar dados em segundo plano</string>
+    <string name="unknown_netpolicy">Política de rede desconhecida (%s)</string>
 </resources>

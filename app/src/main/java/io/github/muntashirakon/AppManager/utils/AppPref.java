@@ -78,6 +78,7 @@ public class AppPref {
         PREF_ENCRYPTION_STR,
         PREF_GLOBAL_BLOCKING_ENABLED_BOOL,
 
+        PREF_INSTALLER_DISPLAY_CHANGES_BOOL,
         PREF_INSTALLER_DISPLAY_USERS_BOOL,
         PREF_INSTALLER_INSTALL_LOCATION_INT,
         PREF_INSTALLER_INSTALLER_APP_STR,
@@ -368,6 +369,7 @@ public class AppPref {
             case PREF_APP_OP_SHOW_DEFAULT_BOOL:
             case PREF_SHOW_DISCLAIMER_BOOL:
             case PREF_LOG_VIEWER_SHOW_PID_TID_TIMESTAMP_BOOL:
+            case PREF_INSTALLER_DISPLAY_CHANGES_BOOL:
                 return true;
             case PREF_LAST_VERSION_CODE_LONG:
                 return 0L;

@@ -499,7 +499,6 @@
     <string name="full_stop_tap_to_see_details">. Нажмите, чтобы увидеть детали.</string>
     <string name="try_again">Попробуйте снова</string>
     <string name="install_app_message">Вы хотите установить это приложение?</string>
-    <string name="reinstall_app_message">Вы хотите переустановить это приложение?</string>
     <string name="reinstall">Переустановить</string>
     <string name="unblock_trackers">Разблокировать трекеры</string>
     <string name="package_installer">Установщик пакетов</string>
@@ -891,8 +890,6 @@
     <string name="selinux">SELinux</string>
     <string name="net_policy">Сетевая политика</string>
     <string name="has_net_policy">Сетевая политика</string>
-    <string name="allow_background">Разрешить фон</string>
-    <string name="reject_background">Отклонить фон</string>
     <string name="list_options">Параметры списка</string>
     <string name="reverse">Обратный порядок</string>
     <string name="os_version">Версия ОС</string>
@@ -1069,12 +1066,12 @@
     <string name="checkbox_never_show_partial_select_help">Больше не показывать</string>
     <string name="add_filter_ellipsis">Добавить фильтр…</string>
     <string name="add_filter">Добавить фильтр</string>
-    <string name="log_level_fatal">Fatal</string>
-    <string name="log_level_warn">Warn</string>
-    <string name="log_level_verbose">Verbose</string>
-    <string name="log_level_info">Info</string>
-    <string name="log_level_error">Error</string>
-    <string name="log_level_debug">Debug</string>
+    <string name="log_level_fatal">Фатально</string>
+    <string name="log_level_warn">Предупреждение</string>
+    <string name="log_level_verbose">Подробно</string>
+    <string name="log_level_info">Инфа</string>
+    <string name="log_level_error">Ошибка</string>
+    <string name="log_level_debug">Отладка</string>
     <string name="filename">Имя файла</string>
     <string name="restart_log_viewer_to_see_changes">Перезапустите окно просмотра логов, чтобы увидеть изменения.</string>
     <string name="pref_log_viewer_msg">Настройка отображения логов.</string>
@@ -1101,4 +1098,19 @@
         <item quantity="many">%d файлов будет удалено</item>
         <item quantity="other">%d файлов будет удалено</item>
     </plurals>
+    <string name="bouncy_castle_keystore">Bouncy Castle KeyStore (BKS)</string>
+    <string name="suspended">Приостановлено</string>
+    <string name="hidden">Скрыто</string>
+    <string name="no_changes">Без изменений</string>
+    <string name="pref_display_changes_msg">Отображение изменений версии, трекеров, компонентов, разрешений, подписей, SDK и т.д., в режиме контроля версий.</string>
+    <string name="pref_display_changes">Отображение изменений</string>
+    <string name="netpolicy_disable_network_access">Отключить доступ к сети</string>
+    <string name="netpolicy_reject_wifi_data">Отклонить Wi-Fi передачу данных</string>
+    <string name="netpolicy_reject_vpn_data">Отклонить VPN передачу данных</string>
+    <string name="netpolicy_reject_cellular_data">Отклонить передачу мобильных данных</string>
+    <string name="netpolicy_allow_background_data">Разрешить фоновую передачу данных, когда включена экономия трафика</string>
+    <string name="netpolicy_reject_background_data">Отклонить фоновую передачу данных</string>
+    <string name="unknown_netpolicy">Неизвестная netpolicy (%s)</string>
+    <string name="pkcs12_keystore">PKCS #12 Хранилище ключей (P12)</string>
+    <string name="saf">SAF</string>
 </resources>

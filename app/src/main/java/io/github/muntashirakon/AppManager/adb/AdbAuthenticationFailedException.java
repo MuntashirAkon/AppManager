@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2021 Muntashir Al-Islam
+ * Copyright (c) 2020 Sam Palmer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,21 +16,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.muntashirakon.AppManager.users;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
-
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.RetentionPolicy.SOURCE;
+package io.github.muntashirakon.AppManager.adb;
 
 /**
- * Denotes that the annotated element is a multi-user user ID. This is
- * <em>not</em> the same as a UID.
+ * Thrown when the peer rejects our initial authentication attempt,
+ * which typically means that the peer has not previously saved our
+ * public key.
+ * <p>
+ * This is an unchecked exception for backwards-compatibility.
  */
-@Retention(SOURCE)
-@Target({METHOD, PARAMETER, FIELD})
-public @interface UserIdInt {
+class AdbAuthenticationFailedException extends RuntimeException {
+    public AdbAuthenticationFailedException() {
+        super("Initial authentication attempt rejected by peer");
+    }
 }

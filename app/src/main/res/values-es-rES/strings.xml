@@ -110,7 +110,7 @@
     <string name="pref_global_blocking_enabled">Bloqueo instantáneo de componentes</string>
     <string name="str_logo">Logo</string>
     <string name="rules_not_applied">No se aplican las reglas</string>
-    <string name="app_ops">App Ops</string>
+    <string name="app_ops">Operaciones de aplicación</string>
     <string name="app_size">Aplicación</string>
     <string name="total_size">Total</string>
     <string name="storage_and_cache">Almacenamiento y antememoria</string>
@@ -281,7 +281,6 @@
     <string name="package_installer">Instalador de paquetes</string>
     <string name="unblock_trackers">Desbloquear rastreadores</string>
     <string name="reinstall">Reinstalar</string>
-    <string name="reinstall_app_message">Quieres reinstalar esta app\?</string>
     <string name="install_app_message">Quieres instalar esta app\?</string>
     <string name="try_again">Prueba de nuevo</string>
     <string name="full_stop_tap_to_see_details">Toca para ver detalles.</string>
@@ -297,32 +296,32 @@
     <string name="installer_error_blocked_device">dispositivo</string>
     <string name="installer_error_aborted">La instalación falló porque se canceló o la sesión se cerró inesperadamente</string>
     <string name="toggle_default_app_ops">Alternar operaciones de aplicación predeterminadas</string>
-    <string name="filter_apps_with_activities">Aplicaciones con actividades</string>
-    <string name="are_you_sure">Estás seguro\?</string>
+    <string name="filter_apps_with_activities">Con actividades</string>
+    <string name="are_you_sure">¿Lo confirma\?</string>
     <string name="pref_remove_all_rules_msg">Se otorgarán permisos, las operaciones de las apps y los componentes volverán a los valores predeterminados.</string>
     <string name="pref_remove_all_rules">Quitar todas las reglas</string>
     <string name="website">Sitio web</string>
     <string name="run_in_termux">Ejecutar en Termux</string>
     <string name="open_in_termux">Abrir en Termux</string>
     <string name="export_icon">Extraer icono</string>
-    <string name="no_matching_package_found">No se encontraron paquetes que coincidan</string>
-    <string name="block_unblock_trackers">Bloquear/Desbloquear rastreadores</string>
+    <string name="no_matching_package_found">No se encontró ninguna aplicación de esas.</string>
+    <string name="block_unblock_trackers">Bloquear/desbloquear rastreadores</string>
     <string name="unblock">Desbloquear</string>
     <string name="block">Bloquear</string>
     <string name="clear">Limpiar</string>
-    <string name="clear_data_message">Estás seguro que quieres limpiar loa datos de esta app\?</string>
-    <string name="skip_signature_checks">Saltar el chequeo de firmas</string>
-    <string name="yes">Si</string>
+    <string name="clear_data_message">¿Confirma que quiere vaciar los datos de esta aplicación\?</string>
+    <string name="skip_signature_checks">Omitir comprobación de firmas</string>
+    <string name="yes">Sí</string>
     <string name="no">No</string>
     <string name="apply_to_system_apps_question">¿Quiere aplicarlo también a las aplicaciones del sistema\? Seleccione «No» si no está seguro.</string>
-    <string name="apply_to_system_apps">Aplicar para aplicaciones del sistema</string>
+    <string name="apply_to_system_apps">Aplicar a aplicaciones del sistema</string>
     <plurals name="app_signing_signature_schemes_pl">
         <item quantity="one">Esquema de firma</item>
         <item quantity="other">Esquema de firmas</item>
     </plurals>
     <plurals name="backup_exists_are_you_sure">
-        <item quantity="one">Respaldo existente. Estás seguro\?</item>
-        <item quantity="other">Respaldo existente para más de una app. Estás seguro\?</item>
+        <item quantity="one">La copia de respaldo ya existe. ¿Quiere continuar\?</item>
+        <item quantity="other">Ya existe una copia de respaldo para más de una aplicación. ¿Quiere continuar\?</item>
     </plurals>
     <string name="backup_options">Opciones de respaldo</string>
     <string name="delete_backup">Eliminar respaldo</string>
@@ -358,7 +357,7 @@
     <string name="deny_app_ops_description">Establecer un modo para las operaciones de las aplicaciones identificadas por los valores constantes, es decir, <tt>63</tt> o <tt>RUN_IN_BACKGROUND</tt></string>
     <string name="block_components_description">Bloquear todos los componentes identificados por las firmas dadas</string>
     <string name="block_components_dots">Bloquear componentes…</string>
-    <string name="block_unblock_trackers_description">Bloquear o desbloquear componentes de anuncios o rastreo de todas las apps instaladas</string>
+    <string name="block_unblock_trackers_description">Bloquear o desbloquear componentes de anuncios o rastreo en todas las aplicaciones instaladas</string>
     <string name="clear_cache">Vaciar antememoria</string>
     <string name="pref_import_existing_msg">Añada componentes desactivados por otras aplicaciones al Gestor de aplicaciones. Tenga cuidado al utilizar esta herramienta, dado que puede haber muchos falsos positivos. Elija solo aquellas aplicaciones de las que tenga certeza.</string>
     <string name="pref_import_existing">Importar reglas existentes</string>
@@ -385,11 +384,11 @@
     <string name="failed_to_revoke_permission">No se pudo revocar el permiso</string>
     <string name="failed_to_grant_permission">No se pudo conceder el permiso</string>
     <plurals name="alert_failed_to_disable_trackers">
-        <item quantity="one">No se pudieron deshabilitar los rastreadores de %1$d app</item>
-        <item quantity="other">No se pudieron deshabilitar los rastreadores de %1$d apps</item>
+        <item quantity="one">No se pudieron desactivar los rastreadores de %1$d aplicación</item>
+        <item quantity="other">No se pudieron desactivar los rastreadores de %1$d aplicaciones</item>
     </plurals>
     <string name="unknown_op">Operación desconocida</string>
-    <string name="sort_by_tracker_components">Rastreador primero</string>
+    <string name="sort_by_tracker_components">Rastreadores primero</string>
     <string name="deny_dangerous_permissions">Denegar permisos peligrosos</string>
     <string name="sort_by_denied_permissions">Denegado primero</string>
     <string name="sort_by_dangerous_permissions">Peligroso primero</string>
@@ -429,7 +428,7 @@
         <item quantity="other">No se pudo importar %1$d archivos.</item>
     </plurals>
     <string name="sort_by_times_opened">Veces abierto</string>
-    <string name="no_app_ops">No hay operaciones de app</string>
+    <string name="no_app_ops">No hay operaciones de aplicación</string>
     <string name="force_stop">Forzar detención</string>
     <string name="view_in_settings">Ver en Configuración</string>
     <string name="choose">Elegir</string>
@@ -446,28 +445,28 @@
     <string name="density_split_for_feature"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) recursos para la función <xliff:g id="feature_name" example="Visualizer">%3$s</xliff:g></string>
     <string name="split_feature_name">Función: <xliff:g id="feature_name" example="Visualizer">%1$s</xliff:g></string>
     <plurals name="alert_failed_to_block_components">
-        <item quantity="one">No se pudo bloquear los componentes para %1$d app</item>
-        <item quantity="other">No se pudo bloquear los componentes para %1$d apps</item>
+        <item quantity="one">No se pudieron bloquear los componentes de %1$d aplicación</item>
+        <item quantity="other">No se pudieron bloquear los componentes de %1$d aplicaciones</item>
     </plurals>
     <plurals name="alert_failed_to_unblock_trackers">
-        <item quantity="one">No se pudo desbloquear los rastreadores desde %1$d app</item>
-        <item quantity="other">No se pudo desbloquear los rastreadores desde %1$d apps</item>
+        <item quantity="one">No se pudieron desbloquear los rastreadores de %1$d aplicación</item>
+        <item quantity="other">No se pudieron desbloquear los rastreadores de %1$d aplicaciones</item>
     </plurals>
     <plurals name="alert_failed_to_delete_backup">
-        <item quantity="one">No se pudo borrar %1$d respaldo</item>
-        <item quantity="other">No se pudo borrar %1$d respaldos</item>
+        <item quantity="one">No se pudo eliminar %1$d respaldo</item>
+        <item quantity="other">No se pudieron eliminar %1$d respaldos</item>
     </plurals>
     <plurals name="alert_failed_to_restore">
-        <item quantity="one">No se pudo restaurar %1$d app</item>
-        <item quantity="other">No se pudo restaurar %1$d apps</item>
+        <item quantity="one">No se pudo restaurar %1$d aplicación</item>
+        <item quantity="other">No se pudieron restaurar %1$d aplicaciones</item>
     </plurals>
     <plurals name="alert_failed_to_backup">
-        <item quantity="one">No se pudo respaldar %1$d app</item>
-        <item quantity="other">No se pudo respaldar %1$d apps</item>
+        <item quantity="one">No se pudo respaldar %1$d aplicación</item>
+        <item quantity="other">No se pudieron respaldar %1$d aplicaciones</item>
     </plurals>
     <plurals name="failed_to_backup_some_apk_files">
-        <item quantity="one">No se pudo respaldar %1$d app</item>
-        <item quantity="other">No se pudo respaldar %1$d apps</item>
+        <item quantity="one">No se pudo respaldar %1$d aplicación</item>
+        <item quantity="other">No se pudieron respaldar %1$d aplicaciones</item>
     </plurals>
     <string name="restore">Restaurar</string>
     <string name="input_app_ops_description">Introducir nombre y/o constantes de la app op con espacios, por ejemplo <tt>WAKE_LOCK 63 72 CAMERA</tt> etc.</string>
@@ -481,7 +480,7 @@
         <item quantity="other">%1$d splits</item>
     </plurals>
     <string name="launch_mode_single_top">Parte superior</string>
-    <string name="installer_error_lidl_rom">Tú ROM es incompatible con el instalador rootless.</string>
+    <string name="installer_error_lidl_rom">Su ROM no es compatible con Rootless Installer.</string>
     <string name="reject_time">Rechazar la hora</string>
     <string name="accept_time">Aceptar la hora</string>
     <string name="toggle_kill_for_system_apps">Cambiar las aplicaciones matadas del sistema</string>
@@ -556,7 +555,7 @@
     <string name="issuer">Emisor</string>
     <string name="subject">Asunto</string>
     <string name="filter_apps_with_backups">Con copia de respaldo</string>
-    <string name="sort_by_backup">Respaldo primero</string>
+    <string name="sort_by_backup">Respaldadas primero</string>
     <string name="failed_to_uninstall_updates">No se pudieron desinstalar las actualizaciones de <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="update_uninstalled_successfully">Se desinstalaron las actualizaciones de <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="uninstall_updates">Desinstalar actualizaciones</string>
@@ -634,20 +633,20 @@
         <item quantity="other">Verificado con %d advertencias</item>
     </plurals>
     <plurals name="missing_signatures">
-        <item quantity="one">%1$d firma perdida</item>
-        <item quantity="other">%1$d firmas perdidas</item>
+        <item quantity="one">%1$d firma faltante</item>
+        <item quantity="other">%1$d firmas faltantes</item>
     </plurals>
     <plurals name="libraries">
-        <item quantity="one">%1$d librería</item>
-        <item quantity="other">%1$d librerías</item>
+        <item quantity="one">%1$d biblioteca</item>
+        <item quantity="other">%1$d bibliotecas</item>
     </plurals>
     <plurals name="classes">
-        <item quantity="one">%1$d class</item>
-        <item quantity="other">%1$d classes</item>
+        <item quantity="one">%1$d clase</item>
+        <item quantity="other">%1$d clases</item>
     </plurals>
     <plurals name="alert_failed_to_enable">
-        <item quantity="one">No pudo ser habilitado %1$d app</item>
-        <item quantity="other">No pudo ser habilitado %1$d apps</item>
+        <item quantity="one">No se pudo activar %1$d aplicación</item>
+        <item quantity="other">No se pudieron activar %1$d aplicaciones</item>
     </plurals>
     <string name="input_app_ops">Introducir app ops</string>
     <string name="clear_data_from_uninstalled_apps_description">Limpiar datos desde las aplicaciones que son desinstaladas con <tt>DONT_DELETE_DATA</tt> flag</string>
@@ -688,7 +687,7 @@
     <string name="uri">URI</string>
     <string name="mime_type">Tipo MIME</string>
     <string name="action">Acción</string>
-    <string name="result_code">Resultado del código</string>
+    <string name="result_code">Código de resultado</string>
     <string name="activity_result">Resultado de la actividad</string>
     <string name="send_edited_intent">Enviar intent editada</string>
     <string name="matching_activities">Actividades de emparejamiento</string>
@@ -697,11 +696,11 @@
     <string name="set_app_op_mode">Configurar el mode de app ops</string>
     <string name="magisk_hide_enabled">MagiskHide</string>
     <string name="pref_backup_android_keystore_msg">No todas las aplicaciones funcionarán después de una restauración. Restaurar KeyStore no funciona en la mayoría de los dispositivos.</string>
-    <string name="pref_backup_android_keystore">Respaldar a las apps con Android KeyStore</string>
+    <string name="pref_backup_android_keystore">Respaldar aplicaciones con el almacén de claves de Android</string>
     <string name="keep_data_and_app_signing_signatures">Mantener datos y firmas</string>
     <string name="this_action_cannot_be_undone">Esta acción no puede deshacerse.</string>
     <string name="no_app_ops_permission">No tiene permitido mostrar las operaciones de aplicación</string>
-    <string name="input_keystore_alias_pass_description">Pulse aquí para proporcionar la contraseña de KeyStore. Inserte la contraseña del alias <b>%1$s</b>. Puede dejarla vacía si la contraseña es la misma que la de KeyStore.</string>
+    <string name="input_keystore_alias_pass_description">Inserte la contraseña del alias <b>%1$s</b>. Puede dejarla vacía si la contraseña es la misma que la del almacén de claves.</string>
     <string name="input_keystore_alias_pass">Contraseña del alias <b>%1$s</b></string>
     <string name="input_keystore_pass_msg">Toque aquí para introducir la contraseña del almacén de claves</string>
     <string name="input_keystore_pass_description">Proporcione la contraseña del almacén de claves del Gestor de aplicaciones. Si esta es la primera vez que ve esto, sírvase de un generador de contraseñas para crear una y guárdela en un lugar seguro antes de introducirla aquí.</string>
@@ -720,8 +719,8 @@
     <string name="pref_sign_apk_msg">Firme los archivos APK antes de instalarlos.</string>
     <string name="pref_sign_apk">Firmar APK</string>
     <string name="install_location_prefer_external">Preferir externa</string>
-    <string name="install_location_internal_only">Sólo interna</string>
-    <string name="install_location">Localización de la instalación</string>
+    <string name="install_location_internal_only">Solo interna</string>
+    <string name="install_location">Ubicación de la instalación</string>
     <string name="installer">Instalador</string>
     <string name="comment">Comentario</string>
     <string name="close">Cerrar</string>
@@ -730,7 +729,7 @@
     <string name="user_profile_with_id">Perfil: %1$s (%2$d)</string>
     <string name="advanced">Avanzado</string>
     <string name="simple">Simple</string>
-    <string name="enabled">Habilitado</string>
+    <string name="enabled">Activado</string>
     <string name="options">Opciones</string>
     <string name="off">Apagado</string>
     <string name="on">Encendido</string>
@@ -739,18 +738,18 @@
 \nEl proceso demoró <xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> iteraciones).</string>
     <string name="interceptor">Interceptor</string>
     <string name="backup_internal_data_description">Hacer copia de respaldo de las carpetas de datos internos.</string>
-    <string name="backup_apk_files_description">Respaldo sólo de los archivos APK del directorio de origen. <b>Fuente</b> debe ser seleccionado para que esto funcione.</string>
+    <string name="backup_apk_files_description">Respaldo solo de los archivos APK del directorio de origen, «splits» incluidos.</string>
     <string name="backup_obb_media_description">Respaldo de OBB y multimedia.</string>
     <string name="board_name">Placa</string>
-    <string name="drm_free_apkm_msg">El archivo APKM está libre de DRM, no hay necesidad de convertirlo a APKS.</string>
+    <string name="drm_free_apkm_msg">El archivo APKM no tiene DRM; no hay necesidad de convertirlo en APKS.</string>
     <string name="restore_msg">Restaurar aplicaciones con datos</string>
-    <string name="backup_msg">Respalda aplicaciones con datos</string>
-    <string name="restore_latest_msg">Restaurar las aplicaciones ya instaladas cuyos códigos de versión son más altos que el código de la versión instalada.</string>
-    <string name="restore_latest">Restaurar los últimos backups</string>
-    <string name="restore_not_installed_msg">Restaurar el backup base para las aplicaciones que no están instaladas actualmente.</string>
+    <string name="backup_msg">Respaldar aplicaciones con datos</string>
+    <string name="restore_latest_msg">Restaurar las aplicaciones ya instaladas cuyos códigos de versión superan los de la versión instalada.</string>
+    <string name="restore_latest">Restaurar respaldos más recientes</string>
+    <string name="restore_not_installed_msg">Restaurar la copia de base de las aplicaciones que no están instaladas actualmente.</string>
     <string name="restore_not_installed">Restaurar aplicaciones no instaladas</string>
-    <string name="restore_all_msg">Restaurar el backup base de todas las aplicaciones respaldadas.</string>
-    <string name="restore_all">Restaurar todas las apps</string>
+    <string name="restore_all_msg">Restaurar la copia de base de todas las aplicaciones respaldadas.</string>
+    <string name="restore_all">Restaurar todas las aplicaciones</string>
     <string name="backup_apps_with_changes_msg">Rehacer los backups de las aplicaciones con los cambios desde la última copia de seguridad. Incluyen cambios en el tamaño, la versión, la última hora de lanzamiento.</string>
     <string name="backup_apps_with_changes">Respaldo de aplicaciones con cambios</string>
     <string name="redo_existing_backups_msg">Rehacer backup para aplicaciones instaladas sin previas copias de seguridad.</string>
@@ -792,7 +791,7 @@
     <string name="backup_extras_description">Back up de los permisos de las aplicaciones, ahorro de batería, opciones de uso de datos, estado de MagiskHide, etc.</string>
     <string name="backup_extras">Extras</string>
     <string name="backup_cache_description">Respaldar carpetas <b>cache</b>, <b>no_cache</b> y <b>no_backup</b>.</string>
-    <string name="backup_external_data_description">Hacer una copia de seguridad de las carpetas de datos externos. <b>Datos</b> deben ser seleccionado para que esto funcione.</string>
+    <string name="backup_external_data_description">Hacer una copia de respaldo de las carpetas de datos externos.</string>
     <string name="set_mode_for_app_ops_dots">Establecer modo para las app ops…</string>
     <string name="security">Seguridad</string>
     <string name="battery">Batería</string>
@@ -824,25 +823,25 @@
         <item quantity="one">%1$d componente</item>
         <item quantity="other">%1$d componentes</item>
     </plurals>
-    <string name="installer_app_message">Seleccione <b>elegir</b> para escoger entre las aplicaciones instaladas o seleccione <b>personalizar</b> para especificar un nombre de paquete personalizado.</string>
+    <string name="installer_app_message">Seleccione <b>Elegir</b> para escoger de entre las aplicaciones instaladas, o bien, <b>Personalizado</b> para especificar un nombre de paquete personalizado.</string>
     <string name="specify_custom_name">Personalizado</string>
-    <string name="verified_using_unreliable_hash">Verificado mediante hash no fiable</string>
+    <string name="verified_using_unreliable_hash">Verificado con una suma no fidedigna</string>
     <string name="working_on_adb_mode">Trabajando en modo ADB</string>
-    <string name="screen_lock_not_enabled">El bloqueo de pantalla no está activado. Activa el bloqueo de pantalla en los ajustes de Android o borra los datos de la aplicación.</string>
+    <string name="screen_lock_not_enabled">Elija un bloqueo de pantalla en la configuración de Android o elimine los datos de la aplicación.</string>
     <string name="isolated">Aislado</string>
     <string name="last_actions">Últimas acciones</string>
-    <string name="pref_enable_disable_features_msg">Activar o desactivar funciones en el App Manager.</string>
+    <string name="pref_enable_disable_features_msg">Activar o desactivar funciones en el gestor de aplicaciones.</string>
     <string name="input_app_ops_description_profile">"Introducir los nombres de las operaciones de aplicación y/o las constantes con espacios, por ejemplo, <tt>WAKE_LOCK  63 72 CAMERA</tt>, etc. Utiliza <tt>*</tt> para aplicar todas las operaciones de aplicación configuradas."</string>
     <string name="user_with_id">Usuario: <xliff:g id="user_id" example="0">%1$d</xliff:g></string>
-    <string name="net_policy">Política de la red</string>
-    <string name="has_net_policy">Política de la red</string>
-    <string name="choose_what_to_do">Elige qué hacer.</string>
+    <string name="net_policy">Directiva de la red</string>
+    <string name="has_net_policy">Directiva de la red</string>
+    <string name="choose_what_to_do">Elija qué hacer.</string>
     <string name="enable_battery_optimization">¿Permitir optimización de batería\?</string>
     <string name="battery_optimization">Optimización de batería</string>
     <string name="no_battery_optimization">Sin optimización de batería</string>
     <string name="type_uri">URI</string>
-    <string name="type_string_array_list">Lista de Strings</string>
-    <string name="type_string_array">Matriz de Strings</string>
+    <string name="type_string_array_list">Lista de cadenas</string>
+    <string name="type_string_array">Matriz de cadenas</string>
     <string name="type_float_array_list">Lista de números decimales</string>
     <string name="type_float_array">Matriz de números decimales</string>
     <string name="type_long_array_list">Lista de enteros largos</string>
@@ -851,28 +850,26 @@
     <string name="type_int_array">Matriz de enteros</string>
     <string name="type_component_name">Nombre del componente</string>
     <string name="type_null">Sin valor</string>
-    <string name="screen_lock_msg">Bloquea el administrador de aplicaciones usando el bloqueo de pantalla de Android</string>
+    <string name="screen_lock_msg">Bloquear el gestor de aplicaciones usando el bloqueo de pantalla de Android</string>
     <string name="screen_lock">Bloqueo de pantalla</string>
-    <string name="unlock_app_manager">Desbloquea gestor de aplicaciones</string>
+    <string name="unlock_app_manager">Desbloquear gestor de aplicaciones</string>
     <string name="sd_card">Tarjeta SD</string>
     <string name="external_storage">Almacenamiento externo</string>
     <string name="filter_apps_without_backups">Sin copias de respaldo</string>
-    <string name="uninstalled_apps">Apps desinstaladas</string>
-    <string name="enable_disable_features">Habilitar/deshabilitar funciones</string>
-    <string name="installed_apps">Apps instaladas</string>
+    <string name="uninstalled_apps">Aplicaciones desinstaladas</string>
+    <string name="enable_disable_features">Activar/desactivar funciones</string>
+    <string name="installed_apps">Aplicaciones instaladas</string>
     <string name="restart_to_reflect_changes">Debe reiniciar inmediatamente el dispositivo para que surtan efecto los cambios.</string>
     <string name="failed_to_change_ssaid">No se pudo modificar el SSAID</string>
-    <string name="copied_to_clipboard">Copiado al portapapeles.</string>
+    <string name="copied_to_clipboard">Se copió en el portapapeles.</string>
     <string name="ssaid_info">SSAID (<tt>Settings.Secure.ANDROID_ID</tt>) es un identificador de dispositivo asignado a cada aplicación (desde Android Oreo). Es ampliamente utilizado por aplicaciones para rastrear usuarios.</string>
     <string name="ssaid">SSAID</string>
     <string name="list_options">Lista de opciones</string>
     <string name="reverse">Revertir</string>
-    <string name="os_version">Versión SO</string>
+    <string name="os_version">Versión del SO</string>
     <string name="add">Añadir</string>
     <string name="add_to_profile">Añadir al perfil</string>
     <string name="initializing">Inicializando…</string>
-    <string name="allow_background">Permitir en segundo plano</string>
-    <string name="reject_background">Rechazar en segundo plano</string>
     <string name="internal_storage">Almacenamiento interno</string>
     <string name="back_up">Respaldo</string>
     <string name="internal_data">Datos internos</string>
@@ -1003,4 +1000,25 @@
         <item quantity="one"><xliff:g id="selection_no" example="20">%1$d</xliff:g> seleccionado</item>
         <item quantity="other"><xliff:g id="selection_no" example="20">%1$d</xliff:g> seleccionados</item>
     </plurals>
+    <string name="pref_show_timestamp_summary">Mostrar identificador de proceso y cronomarcador al expandir.</string>
+    <string name="pref_log_write_period_summary">Al grabar, escribir en la tarjeta SD cada %1$d renglones.</string>
+    <string name="pref_log_write_period_title">Período de escritura</string>
+    <string name="pref_display_limit_title">Límite de visualización de registro</string>
+    <string name="pref_display_limit_summary">Mostrar únicamente los últimos %1$d registros para evitar errores de agotamiento de memoria.</string>
+    <string name="pref_expanded_by_default_title">Expandir de manera predeterminada</string>
+    <string name="pref_expanded_by_default_summary">Mostrar de manera predeterminada todo el texto del registro.</string>
+    <string name="pref_log_line_period_error">Introduzca un entero entre 1 y 1000.</string>
+    <string name="pref_rules_msg">Bloqueo instantáneo, importación/exportación/eliminación de reglas, etc.</string>
+    <string name="no_changes">Ningún cambio</string>
+    <string name="notification_title">Grabación de registros en curso</string>
+    <string name="notification_ticker">Comenzó la grabación de los registros</string>
+    <string name="no_saved_logs">No se encontró ningún registro guardado.</string>
+    <string name="menu_title_partial_select">Guardar parcialmente</string>
+    <string name="manage_saved_logs">Gestionar registros guardados</string>
+    <string name="log_saved">Se guardó el registro.</string>
+    <string name="log_recording_started">Comenzó la grabación de los registros.</string>
+    <string name="log_cleared">Se vaciaron los registros</string>
+    <string name="enter_filename">Introducir nombre de archivo</string>
+    <string name="omit_sensitive_info_summary">Omite información delicada, como URL, números telefónicos y direcciones de correo.</string>
+    <string name="text_include_dmesg">Incluir registro de núcleo</string>
 </resources>

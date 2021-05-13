@@ -18,7 +18,7 @@
 buildscript {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:4.1.1'
@@ -30,7 +30,7 @@ buildscript {
 allprojects {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
         maven { url "https://jitpack.io" }
     }
     gradle.projectsEvaluated {
@@ -46,6 +46,8 @@ project.ext {
     minSdk = 21
     targetSdk = 30
 
-    libsu = "3.0.2"
-    room_version = "2.2.6"
+    libsu_version = "3.1.2"
+    room_version = "2.3.0"
+    annotation_version = "1.2.0"
+    appcompat_version = "1.3.0-rc01"
 }

@@ -1,18 +1,23 @@
 package io.github.muntashirakon.AppManager.servermanager;
 
+import android.annotation.UserIdInt;
 import android.app.ActivityManagerNative;
 import android.app.IActivityManager;
-import android.content.*;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.IContentProvider;
+import android.content.IIntentReceiver;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
 
 import androidx.annotation.Nullable;
+
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.users.UserIdInt;
 
 public final class ActivityManagerCompat {
     public static final String SHELL_PACKAGE_NAME = "com.android.shell";

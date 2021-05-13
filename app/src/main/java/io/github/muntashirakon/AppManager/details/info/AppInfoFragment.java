@@ -157,7 +157,6 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     public static final String TAG = "AppInfoFragment";
 
     private static final String PACKAGE_NAME_AURORA_STORE = "com.aurora.store";
-    private static final String ACTIVITY_NAME_AURORA_STORE = "com.aurora.store.ui.details.DetailsActivity";
 
     private PackageManager mPackageManager;
     private String mPackageName;
@@ -1126,10 +1125,10 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 throw new PackageManager.NameNotFoundException();
             addToHorizontalLayout(R.string.store, R.drawable.ic_frost_aurorastore_black_24dp)
                     .setOnClickListener(v -> {
-                        Intent intent = new Intent();
-                        intent.setClassName(PACKAGE_NAME_AURORA_STORE, ACTIVITY_NAME_AURORA_STORE);
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setPackage(PACKAGE_NAME_AURORA_STORE);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putExtra("INTENT_PACKAGE_NAME", mPackageName);
+                        intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=" + mPackageName));
                         try {
                             startActivity(intent);
                         } catch (Exception ignored) {
