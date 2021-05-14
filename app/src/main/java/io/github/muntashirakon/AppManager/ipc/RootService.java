@@ -36,6 +36,7 @@ import java.util.concurrent.ExecutorService;
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 
 /**
  * A remote root service using native Android Binder IPC.

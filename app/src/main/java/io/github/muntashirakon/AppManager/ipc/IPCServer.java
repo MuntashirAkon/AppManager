@@ -38,6 +38,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import io.github.muntashirakon.AppManager.server.common.IRootIPC;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
+import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 
 import static io.github.muntashirakon.AppManager.ipc.IPCClient.BUNDLE_BINDER_KEY;
 import static io.github.muntashirakon.AppManager.ipc.IPCClient.INTENT_DEBUG_KEY;
