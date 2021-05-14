@@ -233,8 +233,8 @@
     <string name="rules_not_applied">Правила не застосовані</string>
     <string name="error_evaluating_input">Не вдалося оцінити вхідні дані</string>
     <string name="shared_prefs">Спільні налаштування</string>
-    <string name="tested_signatures_on_classes_and_time_taken">Перевірені <xliff:g id="signature_no" example="342">%1$d</xliff:g> підписи в <xliff:g id="class_no" example="6000">%2$d</xliff:g> класах.
-\nЗайняло часу <xliff:g id="time" example="10000">%3$d</xliff:g> мс(<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> ітерації).</string>
+    <string name="tested_signatures_on_classes_and_time_taken">Протестовано <xliff:g id="signature_no" example="342">%1$d</xliff:g> підписи в <xliff:g id="class_no" example="6000">%2$d</xliff:g> класах.
+\nВитрачений час <xliff:g id="time" example="10000">%3$d</xliff:g> мс (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> ітерацій).</string>
     <plurals name="main_list_date_days">
         <item quantity="one"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> день</item>
         <item quantity="few"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> дні</item>
@@ -589,15 +589,19 @@
     <string name="word_wrap">Переключити перенесення слів</string>
     <string name="credits_message">Подяка розробникам
 \n- Android Open Source Project
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
-\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
-\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
+\n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
+\n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
+\n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a>
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
-\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
 \nРозробка лого: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="icon_picker">Вибір іконки</string>
     <string name="insert_icon">Вставити іконку</string>
@@ -1111,4 +1115,11 @@
     <string name="permissive">Дозволено</string>
     <string name="ssaid">SSAID</string>
     <string name="type_uri">URI</string>
+    <string name="port_number_invalid">Недійсний номер порту.</string>
+    <string name="port_number_empty">Номер порту порожній.</string>
+    <string name="adb_connect_port_number_description">Номер порту знаходиться в розділі <b>IP-адреса&amp; порт</b> трохи нижче розділу <b>Назва пристрою</b>.</string>
+    <string name="port_number">Порт</string>
+    <string name="adb_connect">З\'єднання</string>
+    <string name="wireless_debugging_not_supported">Бездротове налагодження не підтримується в цій платформі.</string>
+    <string name="wireless_debugging">Бездротове налагодження</string>
 </resources>
