@@ -19,6 +19,7 @@ package io.github.muntashirakon.AppManager.ipc;
 
 import android.os.ParcelFileDescriptor;
 import android.os.RemoteException;
+import android.os.SystemClock;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -98,7 +99,7 @@ class RemoteProcessImpl extends IRemoteProcess.Stub {
     }
 
     @Override
-    public boolean waitForTimeout(long timeout, String unitName) throws RemoteException {
+    public boolean waitForTimeout(long timeout, String unitName) {
         TimeUnit unit = TimeUnit.valueOf(unitName);
         long startTime = System.nanoTime();
         long rem = unit.toNanos(timeout);
@@ -109,12 +110,7 @@ class RemoteProcessImpl extends IRemoteProcess.Stub {
                 return true;
             } catch (IllegalThreadStateException ex) {
                 if (rem > 0) {
-                    try {
-                        Thread.sleep(
-                                Math.min(TimeUnit.NANOSECONDS.toMillis(rem) + 1, 100));
-                    } catch (InterruptedException e) {
-                        throw new IllegalStateException();
-                    }
+                    SystemClock.sleep(Math.min(TimeUnit.NANOSECONDS.toMillis(rem) + 1, 100));
                 }
             }
             rem = unit.toNanos(timeout) - (System.nanoTime() - startTime);

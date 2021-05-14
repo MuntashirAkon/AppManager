@@ -18,6 +18,7 @@
 package io.github.muntashirakon.AppManager.logcat;
 
 import android.content.Intent;
+import android.os.SystemClock;
 import android.util.Log;
 
 import java.util.Random;
@@ -45,11 +46,7 @@ public class CrazyLoggerService extends ForegroundService {
 
     protected void onHandleIntent(Intent intent) {
         while (!kill) {
-            try {
-                Thread.sleep(INTERVAL);
-            } catch (InterruptedException e) {
-                Log.e(TAG, "Interrupted", e);
-            }
+            SystemClock.sleep(INTERVAL);
             if (new Random().nextInt(100) % 5 == 0) {
                 Log.println(LOG_LEVELS[new Random().nextInt(6)], TAG, LOG_MESSAGES[new Random().nextInt(5)]);
             }

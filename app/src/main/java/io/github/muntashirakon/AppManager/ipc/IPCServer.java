@@ -29,6 +29,7 @@ import android.os.Looper;
 import android.os.Parcel;
 import android.os.RemoteException;
 import android.os.ServiceManager;
+import android.os.SystemClock;
 import android.util.Log;
 
 import java.io.File;
@@ -149,10 +150,7 @@ class IPCServer extends IRootIPC.Stub implements IBinder.DeathRecipient {
             HiddenAPIs.setAppName(service.getPackageName() + ":root");
             // For some reason Debug.waitForDebugger() won't work, manual spin lock...
             while (!Debug.isDebuggerConnected()) {
-                try {
-                    Thread.sleep(200);
-                } catch (InterruptedException ignored) {
-                }
+                SystemClock.sleep(200);
             }
         }
 

@@ -31,6 +31,7 @@ import android.content.pm.ProviderInfo;
 import android.content.pm.ServiceInfo;
 import android.os.Build;
 import android.os.RemoteException;
+import android.os.SystemClock;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -89,8 +90,7 @@ public final class PackageManagerCompat {
                     packageInfoList.add(getPackageInfo(applicationInfoList.get(i).packageName, flags, userHandle));
                     if (i % 100 == 0) {
                         // Prevent DeadObjectException
-                        //noinspection BusyWait
-                        Thread.sleep(300);
+                        SystemClock.sleep(300);
                     }
                 } catch (Exception e) {
                     throw new RemoteException(e.getMessage());
