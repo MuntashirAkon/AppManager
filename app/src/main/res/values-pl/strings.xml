@@ -56,7 +56,6 @@
     <string name="are_you_sure">Czy jesteś pewien\?</string>
     <string name="pref_remove_all_rules_msg">Wszystkie skonfigurowane zablokowane komponenty zostaną włączone, app ops zostaną ustawione na wartości domyślne, a uprawnienia zostaną przyznane</string>
     <string name="pref_remove_all_rules">Usuń wszystkie reguły</string>
-    <string name="website_message">https://muntashirakon.github.io/AppManager</string>
     <string name="website">Strona internetowa</string>
     <string name="run_in_termux">Uruchom w Termux</string>
     <string name="open_in_termux">Otwórz w Termux</string>

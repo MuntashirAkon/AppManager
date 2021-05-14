@@ -55,6 +55,7 @@
         android:src="@drawable/ic_baseline_add_24"
         style="@style/AppTheme.FloatingActionButton"
         android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/padding_medium" />
+        android:layout_margin="@dimen/padding_medium"
+        android:contentDescription="@string/add_item" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

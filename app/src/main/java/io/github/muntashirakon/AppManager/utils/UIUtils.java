@@ -17,6 +17,7 @@
 
 package io.github.muntashirakon.AppManager.utils;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Typeface;
@@ -182,6 +183,7 @@ public class UIUtils {
     @NonNull
     public static View getDialogTitle(@NonNull FragmentActivity activity, @NonNull CharSequence title,
                                       @Nullable Drawable drawable, @Nullable CharSequence subtitle) {
+        @SuppressLint("InflateParams")
         View appLabelWithVersionView = activity.getLayoutInflater().inflate(R.layout.dialog_title_with_icon, null);
         ImageView iv = appLabelWithVersionView.findViewById(R.id.icon);
         if (drawable != null) {

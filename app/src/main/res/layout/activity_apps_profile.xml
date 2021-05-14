@@ -58,6 +58,6 @@
         android:layout_marginBottom="@dimen/padding_medium"
         app:layout_anchor="@id/bottom_navigation"
         app:layout_anchorGravity="center"
-        />
+        android:contentDescription="@string/add_item" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

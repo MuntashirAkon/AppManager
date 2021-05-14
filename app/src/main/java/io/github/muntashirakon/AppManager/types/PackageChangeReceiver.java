@@ -88,6 +88,7 @@ public abstract class PackageChangeReceiver extends BroadcastReceiver {
         args.putParcelable("intent", intent);
         msg.setData(args);
         receiverHandler.sendMessage(msg);
+        thread.quitSafely();
     }
 
     // Handler that receives messages from the thread

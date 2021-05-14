@@ -64,7 +64,6 @@ import io.github.muntashirakon.AppManager.utils.MagiskUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.SsaidSettings;
-import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.io.ProxyFile;
 
 public class AppInfoViewModel extends AndroidViewModel {
@@ -252,7 +251,7 @@ public class AppInfoViewModel extends AndroidViewModel {
                 e.printStackTrace();
             }
             // Set sizes
-            if (Utils.hasUsageStatsPermission(getApplication())) {
+            if (PermissionUtils.hasUsageStatsPermission(getApplication())) {
                 appInfo.sizeInfo = PackageUtils.getPackageSizeInfo(getApplication(), packageName, userHandle,
                         Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? applicationInfo.storageUuid : null);
             }

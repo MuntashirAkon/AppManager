@@ -8,6 +8,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.security.cert.CertificateEncodingException;
 import javax.security.cert.X509Certificate;
@@ -33,7 +34,7 @@ public class CertificateMetas {
         String publicKeyString = byteToHexString(bytes);
         String certBase64Md5 = md5Digest(publicKeyString);
         return new CertificateMeta.Builder()
-                .signAlgorithm(certificate.getSigAlgName().toUpperCase())
+                .signAlgorithm(certificate.getSigAlgName().toUpperCase(Locale.ROOT))
                 .signAlgorithmOID(certificate.getSigAlgOID())
                 .startDate(certificate.getNotBefore())
                 .endDate(certificate.getNotAfter())
@@ -45,14 +46,14 @@ public class CertificateMetas {
 
     @NonNull
     private static String md5Digest(byte[] input) {
-        MessageDigest digest = getDigest("md5");
+        MessageDigest digest = getMd5Digest();
         digest.update(input);
         return getHexString(digest.digest());
     }
 
     @NonNull
     private static String md5Digest(@NonNull String input) {
-        MessageDigest digest = getDigest("md5");
+        MessageDigest digest = getMd5Digest();
         digest.update(input.getBytes(StandardCharsets.UTF_8));
         return getHexString(digest.digest());
     }
@@ -66,7 +67,7 @@ public class CertificateMetas {
             if (sTemp.length() < 2) {
                 sb.append(0);
             }
-            sb.append(sTemp.toUpperCase());
+            sb.append(sTemp.toUpperCase(Locale.ROOT));
         }
         return sb.toString();
     }
@@ -78,9 +79,9 @@ public class CertificateMetas {
     }
 
     @NonNull
-    private static MessageDigest getDigest(String algorithm) {
+    private static MessageDigest getMd5Digest() {
         try {
-            return MessageDigest.getInstance(algorithm);
+            return MessageDigest.getInstance("MD5");
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e.getMessage());
         }

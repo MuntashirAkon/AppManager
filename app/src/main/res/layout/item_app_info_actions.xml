@@ -32,11 +32,11 @@
         android:id="@+id/item_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:drawableTop="@drawable/ic_delete_black_24dp"
         android:gravity="center"
         android:padding="16dp"
         android:text="@string/uninstall"
         android:textSize="@dimen/title_font"
-        android:textColor="?android:attr/colorAccent" />
+        android:textColor="?android:attr/colorAccent"
+        app:drawableTopCompat="@drawable/ic_delete_black_24dp" />
 
 </com.google.android.material.card.MaterialCardView>

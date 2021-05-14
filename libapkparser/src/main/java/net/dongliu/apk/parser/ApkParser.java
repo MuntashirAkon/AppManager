@@ -9,6 +9,7 @@ import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Locale;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
@@ -26,7 +27,7 @@ import androidx.annotation.Nullable;
 public class ApkParser extends AbstractApkFile implements Closeable {
 
     private final ZipFile zf;
-    private File apkFile;
+    private final File apkFile;
     @Nullable
     private FileChannel fileChannel;
 
@@ -49,7 +50,7 @@ public class ApkParser extends AbstractApkFile implements Closeable {
             if (ne.isDirectory()) {
                 continue;
             }
-            String name = ne.getName().toUpperCase();
+            String name = ne.getName().toUpperCase(Locale.ROOT);
             if (name.endsWith(".RSA") || name.endsWith(".DSA")) {
                 list.add(new CertificateFile(name, Inputs.readAllAndClose(zf.getInputStream(ne))));
             }
@@ -100,8 +101,7 @@ public class ApkParser extends AbstractApkFile implements Closeable {
                 }
                 try (InputStream in = jarFile.getInputStream(e)) {
                     // Read in each jar entry. A security exception will be thrown if a signature/digest check fails.
-                    int count;
-                    while ((count = in.read(buffer, 0, buffer.length)) != -1) {
+                    while (in.read(buffer, 0, buffer.length) != -1) {
                         // Don't care
                     }
                 } catch (SecurityException se) {
@@ -114,16 +114,9 @@ public class ApkParser extends AbstractApkFile implements Closeable {
 
     @Override
     public void close() throws IOException {
-        try (Closeable superClosable = new Closeable() {
-            @Override
-            public void close() throws IOException {
-                ApkParser.super.close();
-            }
-        };
-             Closeable zipFileClosable = zf;
-             Closeable fileChannelClosable = fileChannel) {
-
+        try (Closeable ignored = ApkParser.super::close;
+             Closeable ignored1 = zf;
+             Closeable ignored2 = fileChannel) {
         }
     }
-
 }

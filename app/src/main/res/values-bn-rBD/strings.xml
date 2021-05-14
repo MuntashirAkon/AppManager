@@ -382,7 +382,6 @@
     <string name="failed_to_extract_obb_files">Obb ফাইলগুলি এক্সট্র্যাক্ট করতে ব্যর্থ</string>
     <string name="backup_obb_media">Backup Obb</string>
     <string name="backup_apk_files">শুধু এপিকে</string>
-    <string name="website_message">https://muntashirakon.github.io/AppManager</string>
     <string name="no_matching_package_found">কোনো প্যাকেজের সাথে মিল পাওয়া যায়নি</string>
     <string name="skip_signature_checks">স্বাক্ষর চেকগুলি এড়িয়ে যান</string>
     <string name="backup_options">Backup Options</string>

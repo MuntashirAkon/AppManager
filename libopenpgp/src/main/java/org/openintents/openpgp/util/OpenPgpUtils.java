@@ -18,13 +18,6 @@
 
 package org.openintents.openpgp.util;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -34,7 +27,13 @@ import android.content.pm.ServiceInfo;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class OpenPgpUtils {
 
@@ -63,6 +62,7 @@ public class OpenPgpUtils {
         }
     }
 
+    @SuppressLint("QueryPermissionsNeeded")
     public static boolean isAvailable(Context context) {
         Intent intent = new Intent(OpenPgpApi.SERVICE_INTENT_2);
         List<ResolveInfo> resInfo = context.getPackageManager().queryIntentServices(intent, 0);
@@ -74,11 +74,11 @@ public class OpenPgpUtils {
     }
 
     private static String convertKeyIdToHex32bit(long keyId) {
-        String hexString = Long.toHexString(keyId & 0xffffffffL).toLowerCase(Locale.ENGLISH);
+        StringBuilder hexString = new StringBuilder(Long.toHexString(keyId & 0xffffffffL).toLowerCase(Locale.ENGLISH));
         while (hexString.length() < 8) {
-            hexString = "0" + hexString;
+            hexString.insert(0, "0");
         }
-        return hexString;
+        return hexString.toString();
     }
 
     @SuppressLint("QueryPermissionsNeeded")

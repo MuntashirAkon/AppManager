@@ -63,7 +63,6 @@
     <string name="sort_by_package_name">パッケージ名</string>
     <string name="sort_by_domain">ユーザーアプリを優先</string>
     <string name="sort_by_target_sdk">ターゲットSDK</string>
-    <string name="sdk" translatable="false">SDK</string>
     <string name="data_received">受信したデータ</string>
     <string name="data_transmitted">転送したデータ</string>
     <string name="data_usage_msg">データ使用量</string>
@@ -78,7 +77,6 @@
     <string name="sort">並び替え</string>
     <string name="version_name_with_code">バージョン <xliff:g id="version_name" example="2.5.17">%1$s</xliff:g> (<xliff:g id="version_code" example="365">%2$d</xliff:g>)</string>
     <string name="app_info">アプリ情報</string>
-    <string name="fdroid" translatable="false">F-Droid</string>
     <string name="system_app">システムアプリ</string>
     <string name="user_app">ユーザーアプリ</string>
     <string name="paths_and_directories">パスとディレクトリ</string>
@@ -108,28 +106,7 @@
     <string name="error_invalid_icon_format">アイコンのフォーマットが無効です</string>
     <string name="icon_picker">アイコンを選択</string>
     <string name="license">ライセンス</string>
-    <string name="license_message" translatable="false"><a href="https://www.gnu.org/licenses/gpl-3.0.html">GNU General
-        Public License v3.0</a></string>
-    <string name="copyright_message" translatable="false">© 2020 <a href="https://github.com/MuntashirAkon">Muntashir Al-Islam</a></string>
     <string name="third_party">サードパーティのライブラリとアイコン</string>
-    <string name="third_party_message" translatable="false">-
-        <a href="https://github.com/material-components/material-components-android">Material
-        Components</a> (Apache 2.0)
-        \n- <a href="https://github.com/google/material-design-icons">Material Design Icons</a>
-        (Apache 2.0)
-        \n- <a href="https://github.com/dkanada/frost">Frost</a> Icons (GPLv3.0)
-        \n- <a href="https://code.google.com/p/xml-apk-parser">XmlApkParser</a> (Apache 2.0)
-        \n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a>
-        (Apache 2.0)
-        \n- <a href="https://github.com/jaredrummler/AndroidShell">Android Shell</a> (Apache 2.0)
-        \n- <a href="https://github.com/tananaev/adblib">ADB Library</a> (BSD-3-Clause)
-        \n- <a href="https://github.com/MuntashirAkon/toybox">Toybox</a> (0BSD)
-        \n- <a href="https://github.com/MuntashirAkon/apk-parser">APK-parser</a> (BSD-2-Clause)
-        \n- <a href="https://github.com/topjohnwu/libsu">libsu</a> (Apache 2.0)
-        \n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a> (MIT)
-        \n- <a href="https://github.com/tiann/FreeReflection">FreeReflection</a> (MIT)
-        \n- <a href="https://github.com/MuntashirAkon/lazysodium-android">Lazysodium for Android</a> (MPL-2.0)
-    </string>
     <string name="credits">謝辞</string>
     <string name="credits_message">To the authors of
 \n- The Android Open Source Project
@@ -147,15 +124,12 @@
     <string name="class_viewer">クラスビューワ</string>
     <string name="toggle_class_listing">クラスの表示を切り替え</string>
     <plurals name="tracker_and_classes">
-        <item quantity="one">1個のトラッカーに<xliff:g id="class_no" example="50">%1$d</xliff:g>個のクラス</item>
         <item quantity="other">1個のトラッカーに<xliff:g id="class_no" example="50">%1$d</xliff:g>個のクラス</item>
     </plurals>
     <plurals name="two_trackers_and_classes">
-        <item quantity="one">2個のトラッカーに<xliff:g id="class_no" example="50">%1$d</xliff:g>個のクラス</item>
         <item quantity="other">2個のトラッカーに<xliff:g id="class_no" example="50">%1$d</xliff:g>個のクラス</item>
     </plurals>
     <plurals name="other_trackers_and_classes">
-        <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g>個のトラッカーに<xliff:g id="class_no" example="50">%2$d</xliff:g>個のクラス</item>
         <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g>個のトラッカーに<xliff:g id="class_no" example="50">%2$d</xliff:g>個のクラス</item>
     </plurals>
     <string name="tested_signatures_on_classes_and_time_taken"><xliff:g id="signature_no" example="342">%1$d</xliff:g>件の定義リストで<xliff:g id="class_no" example="6000">%2$d</xliff:g>個のクラスを検証しました.
@@ -165,7 +139,6 @@
     <string name="tracker_classes">トラッカーのクラス</string>
     <string name="all_classes">全てのクラス</string>
     <plurals name="main_list_date_days">
-        <item quantity="one"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g>日</item>
         <item quantity="other"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g>日</item>
     </plurals>
     <string name="no_shared_libs">共有ライブラリはありません</string>
@@ -175,15 +148,12 @@
     <string name="usage_today">今日</string>
     <string name="usage_7_days">最終７日間で</string>
     <plurals name="usage_months">
-        <item quantity="one">%1$d 月</item>
         <item quantity="other">%1$d 月</item>
     </plurals>
     <plurals name="usage_days">
-        <item quantity="one">%1$d 日</item>
         <item quantity="other">%1$d 日</item>
     </plurals>
     <plurals name="usage_hours">
-        <item quantity="one">%1$d 時間</item>
         <item quantity="other">%1$d 時間</item>
     </plurals>
     <string name="usage_min">%1$d 分</string>
@@ -266,7 +236,6 @@
     <string name="external_data_dir">外部データディレクトリ</string>
     <string name="external_multiple_data_dir">外部データの場所 <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
     <plurals name="no_of_times_opened">
-        <item quantity="one">%1$d 時間</item>
         <item quantity="other">%1$d 時間</item>
     </plurals>
     <string name="sort_by_last_used">最終起動</string>
@@ -280,7 +249,6 @@
     <string name="the_import_was_successful">インポートしました</string>
     <string name="the_export_was_successful">エクスポートしました</string>
     <plurals name="failed_to_import_files">
-        <item quantity="one">%1$d 個のファイルをインポートできませんでした。</item>
         <item quantity="other">%1$d 個のファイルをインポートできませんでした。</item>
     </plurals>
     <string name="apk_updater">APKアップデータ</string>
@@ -296,24 +264,19 @@
     <string name="disable_background">バックグラウンドでの実行を妨げる</string>
     <string name="export_blocking_rules">ブロッキングルールをエクスポート</string>
     <plurals name="alert_failed_to_clear_data">
-        <item quantity="one">%1$d 個のアプリからデータを消去できませんでした</item>
         <item quantity="other">%1$d 個のアプリからデータを消去できませんでした</item>
     </plurals>
     <plurals name="alert_failed_to_disable">
-        <item quantity="one">%1$d 個のアプリを無効にできませんでした</item>
         <item quantity="other">%1$d 個のアプリを無効にできませんでした</item>
     </plurals>
     <plurals name="alert_failed_to_uninstall">
-        <item quantity="one">%1$d 個のアプリをアンインストールできませんでした</item>
         <item quantity="other">%1$d 個のアプリをアンインストールできませんでした</item>
     </plurals>
     <plurals name="alert_failed_to_disable_background">
-        <item quantity="one">%1$d 個のアプリのバックグラウンド実行を無効にできませんでした</item>
         <item quantity="other">%1$d 個のアプリのバックグラウンド実行を無効にできませんでした</item>
     </plurals>
     <string name="the_operation_was_successful">完了</string>
     <plurals name="alert_failed_to_force_stop">
-        <item quantity="one">%1$d 個のアプリを強制終了できませんでした</item>
         <item quantity="other">%1$d 個のアプリを強制終了できませんでした</item>
     </plurals>
     <string name="toggle_kill_for_system_apps">ｼｽﾃﾑｱﾌﾟﾘをｷﾙするか切り替え</string>
@@ -362,7 +325,6 @@
     <string name="sort_by_tracker_components">トラッカーを優先</string>
     <string name="unknown_op">未知の操作</string>
     <plurals name="alert_failed_to_disable_trackers">
-        <item quantity="one">%1$d 個のアプリからトラッカーを無効化できませんでした</item>
         <item quantity="other">%1$d 個のアプリからトラッカーを無効化できませんでした</item>
     </plurals>
     <string name="failed_to_grant_permission">権限を許可できませんでした</string>
@@ -377,17 +339,15 @@
     <string name="external_apk_no_app_op">この外部APKにはAppOpsはありません</string>
     <string name="manifest_viewer">マニフェストビューワ</string>
     <plurals name="no_of_trackers">
-        <item quantity="one">%1$d 個のトラッカー</item>
         <item quantity="other">%1$d 個のトラッカー</item>
     </plurals>
     <plurals name="no_of_components">
-        <item quantity="one">%1$d 個のコンポーネント</item>
         <item quantity="other">%1$d 個のコンポーネント</item>
     </plurals>
     <string name="install">インストール</string>
     <string name="update">アップデート</string>
     <string name="source_code">ソースコード</string>
-    <string name="source_code_links" translatable="false">GitHub: https://github.com/MuntashirAkon/AppManager
+    <string name="source_code_links">GitHub: https://github.com/MuntashirAkon/AppManager
         \nGitLab: https://gitlab.com/muntashir/AppManager
         \nRiseup: https://0xacab.org/muntashir/AppManager
         \nCodeberg: https://codeberg.org/muntashir/AppManager</string>
@@ -417,7 +377,6 @@
     <string name="only_works_in_root_or_adb_mode">RootかADBモードでのみ動作します</string>
     <string name="failed_to_parse_some_numbers">いくつかをパースできませんでした</string>
     <plurals name="no_of_splits">
-        <item quantity="one">%1$d split</item>
         <item quantity="other">%1$d splits</item>
     </plurals>
     <string name="termux">Termux</string>
@@ -443,58 +402,45 @@
     <string name="delete_backup">バックアップを削除</string>
     <string name="backup_options">バックアップオプション</string>
     <plurals name="failed_to_backup_some_apk_files">
-        <item quantity="one">%1$d 個のアプリをバックアップできませんでした</item>
         <item quantity="other">%1$d 個のアプリをバックアップできませんでした</item>
     </plurals>
     <plurals name="alert_failed_to_backup">
-        <item quantity="one">%1$d 個のアプリをバックアップできませんでした</item>
         <item quantity="other">%1$d 個のアプリをバックアップできませんでした</item>
     </plurals>
     <plurals name="alert_failed_to_restore">
-        <item quantity="one">%1$d 個のアプリを復元できませんでした</item>
         <item quantity="other">%1$d 個のアプリを復元できませんでした</item>
     </plurals>
     <plurals name="alert_failed_to_delete_backup">
-        <item quantity="one">%1$d 個のバックアップを削除できませんでした</item>
         <item quantity="other">%1$d 個のバックアップを削除できませんでした</item>
     </plurals>
     <plurals name="alert_failed_to_unblock_trackers">
-        <item quantity="one">%1$d 個のアプリからトラッカーのブロック解除ができませんでした</item>
         <item quantity="other">%1$d 個のアプリからトラッカーのブロック解除ができませんでした</item>
     </plurals>
     <plurals name="alert_failed_to_block_components">
-        <item quantity="one">%1$d 個のアプリのコンポーネントをブロックできませんでした</item>
         <item quantity="other">%1$d 個のアプリのコンポーネントをブロックできませんでした</item>
     </plurals>
     <plurals name="alert_failed_to_set_app_ops">
-        <item quantity="one">%1$d 個のアプリのAppOpsを設定できませんでした</item>
         <item quantity="other">%1$d 個のアプリのAppOpsを設定できませんでした</item>
     </plurals>
     <plurals name="alert_failed_to_enable">
-        <item quantity="one">%1$d 個のアプリを有効にできませんでした</item>
         <item quantity="other">%1$d 個のアプリを有効にできませんでした</item>
     </plurals>
     <plurals name="backup_exists_are_you_sure">
-        <item quantity="one">既存のバックアップがあります。宜しいですか？</item>
         <item quantity="other">２つ以上のアプリに既存のバックアップがあります。宜しいですか？</item>
     </plurals>
     <plurals name="classes">
-        <item quantity="one">%1$d 個のクラス</item>
         <item quantity="other">%1$d 個のクラス</item>
     </plurals>
     <plurals name="libraries">
-        <item quantity="one">%1$d 個のライブラリ</item>
         <item quantity="other">%1$d 個のライブラリ</item>
     </plurals>
     <plurals name="missing_signatures">
         <item quantity="other">%1$d 個のシグネチャが不明</item>
     </plurals>
     <plurals name="app_signing_signature_schemes_pl">
-        <item quantity="one">署名方式</item>
         <item quantity="other">署名方式</item>
     </plurals>
     <plurals name="verified_with_warning">
-        <item quantity="one">検証済み、 %d 個の警告</item>
         <item quantity="other">検証済み、 %d 個の警告</item>
     </plurals>
     <string name="apply_to_system_apps">システムアプリにも反映</string>
@@ -512,7 +458,6 @@
     <string name="open_in_termux">Termuxで開く</string>
     <string name="run_in_termux">Termuxで実行</string>
     <string name="website">ウェブサイト</string>
-    <string name="website_message" translatable="false">https://muntashirakon.github.io/AppManager</string>
     <string name="pref_remove_all_rules">全てのルールを消去</string>
     <string name="pref_remove_all_rules_msg">権限は全て許可され、AppOpsとコンポーネントは標準の値に戻されます。</string>
     <string name="are_you_sure">本当に宜しいですか？</string>
@@ -561,8 +506,6 @@
     <string name="abi_split_for_base_apk"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> code for base APK</string>
     <string name="locale_split_for_feature"><xliff:g id="split_name" example="English">%1$s</xliff:g> locale for feature <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
     <string name="locale_split_for_base_apk"><xliff:g id="split_name" example="English">%1$s</xliff:g> locale for base APK</string>
-    <string name="empty" translatable="false"/>
-    <string name="_null" translatable="false">null</string>
     <string name="launch_mode_multiple">複数</string>
     <string name="launch_mode_single_instance">単一インスタンス</string>
     <string name="launch_mode_single_task">単一タスク</string>

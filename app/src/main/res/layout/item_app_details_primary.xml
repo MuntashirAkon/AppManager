@@ -84,7 +84,8 @@
                 android:layout_height="wrap_content"
                 android:textIsSelectable="true"
                 android:textSize="11sp"
-                tools:text="@tools:sample/lorem" />
+                tools:text="@tools:sample/lorem"
+                tools:ignore="SmallSp" />
 
             <TextView
                 android:id="@+id/taskAffinity"
@@ -101,7 +102,8 @@
                 android:layout_height="wrap_content"
                 android:textIsSelectable="true"
                 android:textSize="10sp"
-                tools:text="@tools:sample/lorem" />
+                tools:text="@tools:sample/lorem"
+                tools:ignore="SmallSp" />
 
             <TextView
                 android:id="@+id/softInput"
@@ -109,7 +111,8 @@
                 android:layout_height="wrap_content"
                 android:textIsSelectable="true"
                 android:textSize="9sp"
-                tools:text="@tools:sample/lorem" />
+                tools:text="@tools:sample/lorem"
+                tools:ignore="SmallSp" />
 
         </LinearLayout>
 

@@ -52,6 +52,7 @@ public class StoragePermission {
         }
     }
 
+    @SuppressWarnings("InlinedApi")
     public void request(@Nullable StoragePermissionCallback callback) {
         if (PermissionUtils.hasStoragePermission(AppManager.getContext())) {
             if (callback != null) callback.onResult(true);

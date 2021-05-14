@@ -90,7 +90,7 @@ public class CompatUtil {
      *
      * @param context the context holding the application shared preferences
      */
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"deprecation", "InlinedApi"})
     private static synchronized SecretKeyAndVersion getAesGcmLocalProtectionKey(@NonNull Context context)
             throws KeyStoreException, CertificateException, NoSuchAlgorithmException, IOException,
             NoSuchProviderException, InvalidAlgorithmParameterException, NoSuchPaddingException,
@@ -122,8 +122,7 @@ public class CompatUtil {
                         Log.i(TAG, "Generating AES key with keystore");
                         final KeyGenerator generator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES,
                                 ANDROID_KEY_STORE_PROVIDER);
-                        generator.init(
-                                new KeyGenParameterSpec.Builder(AES_LOCAL_PROTECTION_KEY_ALIAS,
+                        generator.init(new KeyGenParameterSpec.Builder(AES_LOCAL_PROTECTION_KEY_ALIAS,
                                         KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT)
                                         .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
                                         .setKeySize(AES_GCM_KEY_SIZE_IN_BITS)

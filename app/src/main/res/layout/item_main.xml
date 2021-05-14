@@ -55,7 +55,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textSize="11sp"
-                android:text="@string/backup" />
+                android:text="@string/backup"
+                tools:ignore="SmallSp" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
