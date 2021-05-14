@@ -53,7 +53,7 @@ public class SerialExecutorService extends AbstractExecutorService implements Ca
     public synchronized void execute(Runnable r) {
         if (isShutdown) {
             throw new RejectedExecutionException(
-                    "Task " + r.toString() + " rejected from " + toString());
+                    "Task " + r.toString() + " rejected from " + this);
         }
         mTasks.offer(r);
         if (scheduleTask == null) {
@@ -91,8 +91,7 @@ public class SerialExecutorService extends AbstractExecutorService implements Ca
     }
 
     @Override
-    public synchronized boolean awaitTermination(long timeout, TimeUnit unit)
-            throws InterruptedException {
+    public synchronized boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
         if (scheduleTask == null)
             return true;
         try {

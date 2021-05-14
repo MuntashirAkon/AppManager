@@ -23,7 +23,6 @@ import android.content.pm.UserInfo;
 import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.RemoteException;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -39,12 +38,10 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 
-import java.io.IOException;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.details.info.AppInfoFragment;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.users.Users;
@@ -98,69 +95,59 @@ public class AppDetailsActivity extends BaseActivity {
             // Display progress dialog only for external apk files
             progressDialog.show();
         }
-        new Thread(() -> {
-            try {
-                if (packageName != null) model.setPackage(packageName);
-                else model.setPackage(apkUri, apkType);
-            } catch (ApkFile.ApkFileException | IOException | RemoteException e) {
-                Log.e("ADA", "Could not fetch package info.", e);
-                runOnUiThread(() -> {
-                    UIUtils.displayLongToast(R.string.failed_to_fetch_package_info);
-                    if (!isDestroyed()) {
-                        progressDialog.dismiss();
-                        finish();
-                    }
-                });
-                return;
-            }
-            if (model.getPackageInfo() == null) {
-                runOnUiThread(() -> {
-                    UIUtils.displayLongToast(R.string.failed_to_fetch_package_info);
-                    if (!isDestroyed()) {
-                        progressDialog.dismiss();
-                        finish();
-                    }
-                });
-                return;
-            }
-            ApplicationInfo applicationInfo = model.getPackageInfo().applicationInfo;
-            final List<UserInfo> userInfoList;
-            if (!model.getIsExternalApk() && AppPref.isRootOrAdbEnabled()) {
-                userInfoList = Users.getUsers();
-            } else userInfoList = null;
-            runOnUiThread(() -> {
-                if (isDestroyed()) return;
-                progressDialog.dismiss();
-                // Set title as the package label
-                setTitle(applicationInfo.loadLabel(getPackageManager()));
-                // Set subtitle as the user name if more than one user exists
-                if (userInfoList != null && userInfoList.size() > 1) {
-                    for (UserInfo userInfo : userInfoList) {
-                        if (userInfo.id == userHandle) {
-                            getSupportActionBar().setSubtitle(getString(R.string.user_profile_with_id, userInfo.name, userInfo.id));
-                            break;
+        // Set tabs
+        viewPager.setAdapter(new AppDetailsFragmentPagerAdapter(fragmentManager));
+        // Get package info
+        (packageName != null ? model.setPackage(packageName) : model.setPackage(apkUri, apkType))
+                .observe(this, packageInfo -> {
+                    progressDialog.dismiss();
+                    if (packageInfo == null) {
+                        UIUtils.displayLongToast(R.string.failed_to_fetch_package_info);
+                        if (!isDestroyed()) {
+                            finish();
                         }
+                        return;
                     }
-                }
-                // Check for the existence of package
-                viewPager.setAdapter(new AppDetailsFragmentPagerAdapter(fragmentManager));
-                model.getIsPackageExistLiveData().observe(this, isPackageExist -> {
-                    if (!isPackageExist) {
-                        UIUtils.displayLongToast(R.string.app_not_installed);
-                        finish();
-                    }
+                    // Load tabs for the first time
+                    for (int i = 0; i < mTabTitleIds.length(); ++i) model.load(i);
+                    // Set title
+                    ApplicationInfo applicationInfo = model.getPackageInfo().applicationInfo;
+                    // Set title as the package label
+                    setTitle(applicationInfo.loadLabel(getPackageManager()));
+                    new Thread(() -> {
+                        // FIXME: 14/5/21 Replace with ViewModel
+                        final List<UserInfo> userInfoList;
+                        if (!model.getIsExternalApk() && AppPref.isRootOrAdbEnabled()) {
+                            userInfoList = Users.getUsers();
+                        } else userInfoList = null;
+                        runOnUiThread(() -> {
+                            if (isDestroyed()) return;
+                            // Set subtitle as the user name if more than one user exists
+                            if (userInfoList != null && userInfoList.size() > 1) {
+                                for (UserInfo userInfo : userInfoList) {
+                                    if (userInfo.id == userHandle) {
+                                        getSupportActionBar().setSubtitle(getString(R.string.user_profile_with_id,
+                                                userInfo.name, userInfo.id));
+                                        break;
+                                    }
+                                }
+                            }
+                        });
+                    }).start();
                 });
-                // Check for package changes
-                model.getIsPackageChanged().observe(this, isPackageChanged -> {
-                    if (isPackageChanged && model.isPackageExist()) {
-                        @AppDetailsFragment.Property int id = viewPager.getCurrentItem();
-                        Log.e("ADA - " + mTabTitleIds.getText(id), "isPackageChanged called");
-                        if (model.getIsExternalApk()) model.load(AppDetailsFragment.APP_INFO);
-                        else for (int i = 0; i<mTabTitleIds.length(); ++i) model.load(i);
-                    }
-                });
-            });
-        }).start();
+        // Check for the existence of package
+        model.getIsPackageExistLiveData().observe(this, isPackageExist -> {
+            if (!isPackageExist) {
+                UIUtils.displayLongToast(R.string.app_not_installed);
+                finish();
+            }
+        });
+        // Check for package changes
+        model.getIsPackageChanged().observe(this, isPackageChanged -> {
+            if (isPackageChanged && model.isPackageExist()) {
+                loadTabs();
+            }
+        });
     }
 
     @Override
@@ -171,6 +158,12 @@ public class AppDetailsActivity extends BaseActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void loadTabs() {
+        @AppDetailsFragment.Property int id = viewPager.getCurrentItem();
+        Log.e("ADA - " + mTabTitleIds.getText(id), "isPackageChanged called");
+        for (int i = 0; i < mTabTitleIds.length(); ++i) model.load(i);
     }
 
     // For tab layout

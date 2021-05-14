@@ -120,24 +120,43 @@ public class AppDetailsViewModel extends AndroidViewModel {
         executor.shutdown();
     }
 
-    @WorkerThread
-    public void setPackage(@NonNull Uri packageUri, @Nullable String type) throws ApkFile.ApkFileException, IOException, RemoteException {
-        Log.d("ADVM", "Package Uri is being set");
-        isExternalApk = true;
-        apkFileKey = ApkFile.createInstance(packageUri, type);
-        apkFile = ApkFile.getInstance(apkFileKey);
-        setPackageName(apkFile.getPackageName());
-        apkPath = apkFile.getBaseEntry().getRealCachedFile().getAbsolutePath();
+    @UiThread
+    @NonNull
+    public LiveData<PackageInfo> setPackage(@NonNull Uri packageUri, @Nullable String type) {
+        MutableLiveData<PackageInfo> packageInfoLiveData = new MutableLiveData<>();
+        executor.submit(() -> {
+            try {
+                Log.d("ADVM", "Package Uri is being set");
+                isExternalApk = true;
+                apkFileKey = ApkFile.createInstance(packageUri, type);
+                apkFile = ApkFile.getInstance(apkFileKey);
+                setPackageName(apkFile.getPackageName());
+                apkPath = apkFile.getBaseEntry().getRealCachedFile().getAbsolutePath();
+                packageInfoLiveData.postValue(getPackageInfo());
+            } catch (Throwable th) {
+                Log.e("ADVM", "Could not fetch package info.", th);
+            }
+        });
+        return packageInfoLiveData;
     }
 
-    @WorkerThread
-    public void setPackage(@NonNull String packageName) throws ApkFile.ApkFileException {
-        Log.d("ADVM", "Package name is being set");
-        isExternalApk = false;
-        setPackageName(packageName);
-        if (getPackageInfo() == null) throw new ApkFile.ApkFileException("Package not installed.");
-        apkFileKey = ApkFile.createInstance(getPackageInfo().applicationInfo);
-        apkFile = ApkFile.getInstance(apkFileKey);
+    @UiThread
+    @NonNull
+    public LiveData<PackageInfo> setPackage(@NonNull String packageName) {
+        MutableLiveData<PackageInfo> packageInfoLiveData = new MutableLiveData<>();
+        executor.submit(() -> {
+            try {
+                Log.d("ADVM", "Package name is being set");
+                isExternalApk = false;
+                setPackageName(packageName);
+                if (getPackageInfo() == null) throw new ApkFile.ApkFileException("Package not installed.");
+                apkFileKey = ApkFile.createInstance(getPackageInfo().applicationInfo);
+                apkFile = ApkFile.getInstance(apkFileKey);
+            } catch (Throwable th) {
+                Log.e("ADVM", "Could not fetch package info.", th);
+            }
+        });
+        return packageInfoLiveData;
     }
 
     @AnyThread
@@ -236,15 +255,15 @@ public class AppDetailsViewModel extends AndroidViewModel {
         return searchQuery;
     }
 
-    private MutableLiveData<Integer> ruleApplicationStatus;
+    @NonNull
+    private final MutableLiveData<Integer> ruleApplicationStatus = new MutableLiveData<>();
     public static final int RULE_APPLIED = 0;
     public static final int RULE_NOT_APPLIED = 1;
     public static final int RULE_NO_RULE = 2;
 
     @UiThread
     public LiveData<Integer> getRuleApplicationStatus() {
-        if (ruleApplicationStatus == null) {
-            ruleApplicationStatus = new MutableLiveData<>();
+        if (ruleApplicationStatus.getValue() == null) {
             executor.submit(this::setRuleApplicationStatus);
         }
         return ruleApplicationStatus;
@@ -253,8 +272,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @WorkerThread
     @GuardedBy("blockerLocker")
     public void setRuleApplicationStatus() {
-        if (packageName == null) return;
-        if (isExternalApk) {
+        if (packageName == null || isExternalApk) {
             ruleApplicationStatus.postValue(RULE_NO_RULE);
             return;
         }
@@ -289,7 +307,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
             }
             // Apply rules if global blocking enable or already applied
             if ((Boolean) AppPref.get(AppPref.PrefKey.PREF_GLOBAL_BLOCKING_ENABLED_BOOL)
-                    || (ruleApplicationStatus != null && RULE_APPLIED == ruleApplicationStatus.getValue())) {
+                    || (ruleApplicationStatus.getValue() != null && RULE_APPLIED == ruleApplicationStatus.getValue())) {
                 blocker.applyRules(true);
             }
             // Set new status
@@ -320,7 +338,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
             }
             // Apply rules if global blocking enable or already applied
             if (forceApply || (Boolean) AppPref.get(AppPref.PrefKey.PREF_GLOBAL_BLOCKING_ENABLED_BOOL)
-                    || (ruleApplicationStatus != null && RULE_APPLIED == ruleApplicationStatus.getValue())) {
+                    || (ruleApplicationStatus.getValue() != null && RULE_APPLIED == ruleApplicationStatus.getValue())) {
                 blocker.applyRules(true);
             }
             // Set new status
@@ -349,7 +367,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
             }
             // Apply rules if global blocking enable or already applied
             if (forceApply || (Boolean) AppPref.get(AppPref.PrefKey.PREF_GLOBAL_BLOCKING_ENABLED_BOOL)
-                    || (ruleApplicationStatus != null && RULE_APPLIED == ruleApplicationStatus.getValue())) {
+                    || (ruleApplicationStatus.getValue() != null && RULE_APPLIED == ruleApplicationStatus.getValue())) {
                 blocker.applyRules(true);
             }
             // Set new status
@@ -734,6 +752,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         executor.submit(this::loadProviders);
     }
 
+    @SuppressWarnings("deprecation")
     @SuppressLint("WrongConstant")
     @WorkerThread
     public void setPackageInfo(boolean reload) {
@@ -812,12 +831,12 @@ public class AppDetailsViewModel extends AndroidViewModel {
         return installedPackageInfo;
     }
 
-    private MutableLiveData<List<AppDetailsItem>> appInfo;
+    @NonNull
+    private final MutableLiveData<List<AppDetailsItem>> appInfo = new MutableLiveData<>();
 
     @UiThread
     private LiveData<List<AppDetailsItem>> getAppInfo() {
-        if (appInfo == null) {
-            appInfo = new MutableLiveData<>();
+        if (appInfo.getValue() == null) {
             executor.submit(this::loadAppInfo);
         }
         return appInfo;
@@ -825,19 +844,22 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     @WorkerThread
     private void loadAppInfo() {
-        if (getPackageInfo() == null || appInfo == null) return;
         AppDetailsItem appDetailsItem = new AppDetailsItem(packageInfo);
+        if (getPackageInfo() == null) {
+            appInfo.postValue(null);
+            return;
+        }
         appDetailsItem.name = packageName;
         List<AppDetailsItem> appDetailsItems = Collections.singletonList(appDetailsItem);
         appInfo.postValue(appDetailsItems);
     }
 
-    private MutableLiveData<List<AppDetailsItem>> activities;
+    @NonNull
+    private final MutableLiveData<List<AppDetailsItem>> activities = new MutableLiveData<>();
 
     @UiThread
     private LiveData<List<AppDetailsItem>> getActivities() {
-        if (activities == null) {
-            activities = new MutableLiveData<>();
+        if (activities.getValue() == null) {
             executor.submit(this::loadActivities);
         }
         return activities;
@@ -846,10 +868,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @WorkerThread
     @GuardedBy("blockerLocker")
     private void loadActivities() {
-        if (getPackageInfo() == null || activities == null) return;
         List<AppDetailsItem> appDetailsItems = new ArrayList<>();
-        if (packageInfo.activities == null) {
-            // There are no activities
+        if (getPackageInfo() == null || packageInfo.activities == null) {
             activities.postValue(appDetailsItems);
             return;
         }
@@ -869,12 +889,12 @@ public class AppDetailsViewModel extends AndroidViewModel {
         activities.postValue(appDetailsItems);
     }
 
-    private MutableLiveData<List<AppDetailsItem>> services;
+    @NonNull
+    private final MutableLiveData<List<AppDetailsItem>> services = new MutableLiveData<>();
 
     @UiThread
     private LiveData<List<AppDetailsItem>> getServices() {
-        if (services == null) {
-            services = new MutableLiveData<>();
+        if (services.getValue() == null) {
             executor.submit(this::loadServices);
         }
         return services;
@@ -883,9 +903,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @WorkerThread
     @GuardedBy("blockerLocker")
     private void loadServices() {
-        if (getPackageInfo() == null || services == null) return;
         List<AppDetailsItem> appDetailsItems = new ArrayList<>();
-        if (packageInfo.services == null) {
+        if (getPackageInfo() == null || packageInfo.services == null) {
             // There are no services
             services.postValue(appDetailsItems);
             return;
@@ -907,12 +926,12 @@ public class AppDetailsViewModel extends AndroidViewModel {
         services.postValue(appDetailsItems);
     }
 
-    private MutableLiveData<List<AppDetailsItem>> receivers;
+    @NonNull
+    private final MutableLiveData<List<AppDetailsItem>> receivers = new MutableLiveData<>();
 
     @UiThread
     private LiveData<List<AppDetailsItem>> getReceivers() {
-        if (receivers == null) {
-            receivers = new MutableLiveData<>();
+        if (receivers.getValue() == null) {
             executor.submit(this::loadReceivers);
         }
         return receivers;
@@ -921,9 +940,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @WorkerThread
     @GuardedBy("blockerLocker")
     private void loadReceivers() {
-        if (getPackageInfo() == null || receivers == null) return;
         List<AppDetailsItem> appDetailsItems = new ArrayList<>();
-        if (packageInfo.receivers == null) {
+        if (getPackageInfo() == null || packageInfo.receivers == null) {
             // There are no receivers
             receivers.postValue(appDetailsItems);
             return;
@@ -945,12 +963,12 @@ public class AppDetailsViewModel extends AndroidViewModel {
         receivers.postValue(appDetailsItems);
     }
 
-    private MutableLiveData<List<AppDetailsItem>> providers;
+    @NonNull
+    private final MutableLiveData<List<AppDetailsItem>> providers = new MutableLiveData<>();
 
     @UiThread
     private LiveData<List<AppDetailsItem>> getProviders() {
-        if (providers == null) {
-            providers = new MutableLiveData<>();
+        if (providers.getValue() == null) {
             executor.submit(this::loadProviders);
         }
         return providers;
@@ -959,9 +977,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @WorkerThread
     @GuardedBy("blockerLocker")
     private void loadProviders() {
-        if (getPackageInfo() == null || providers == null) return;
         List<AppDetailsItem> appDetailsItems = new ArrayList<>();
-        if (packageInfo.providers == null) {
+        if (getPackageInfo() == null || packageInfo.providers == null) {
             // There are no providers
             providers.postValue(appDetailsItems);
             return;
@@ -1001,13 +1018,13 @@ public class AppDetailsViewModel extends AndroidViewModel {
         });
     }
 
-    private MutableLiveData<List<AppDetailsItem>> appOps;
+    @NonNull
+    private final MutableLiveData<List<AppDetailsItem>> appOps = new MutableLiveData<>();
     private List<AppDetailsItem> appOpItems;
 
     @UiThread
     private LiveData<List<AppDetailsItem>> getAppOps() {
-        if (appOps == null) {
-            appOps = new MutableLiveData<>();
+        if (appOps.getValue() == null) {
             executor.submit(this::loadAppOps);
         }
         return appOps;
@@ -1026,7 +1043,11 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @SuppressLint("SwitchIntDef")
     @WorkerThread
     private void loadAppOps() {
-        if (packageName == null || appOps == null) return;
+        List<AppDetailsItem> appDetailsItems = new ArrayList<>();
+        if (packageName == null) {
+            appOps.postValue(appDetailsItems);
+            return;
+        }
         if (!isExternalApk && (AppPref.isRootOrAdbEnabled()
                 || PermissionUtils.hasAppOpsPermission(getApplication()))) {
             if (mAppOpsService == null) mAppOpsService = new AppOpsService();
@@ -1067,12 +1088,13 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 e.printStackTrace();
             }
         }
-        final List<AppDetailsItem> appDetailsItems = new ArrayList<>();
         if (appOpItems == null) appOpItems = new ArrayList<>(0);
         if (!TextUtils.isEmpty(searchQuery)) {
-            for (AppDetailsItem appDetailsItem : appOpItems)
-                if (appDetailsItem.name.toLowerCase(Locale.ROOT).contains(searchQuery))
+            for (AppDetailsItem appDetailsItem : appOpItems) {
+                if (appDetailsItem.name.toLowerCase(Locale.ROOT).contains(searchQuery)) {
                     appDetailsItems.add(appDetailsItem);
+                }
+            }
         } else appDetailsItems.addAll(appOpItems);
         Collections.sort(appDetailsItems, (o1, o2) -> {
             switch (sortOrderAppOps) {
@@ -1093,13 +1115,13 @@ public class AppDetailsViewModel extends AndroidViewModel {
         appOps.postValue(appDetailsItems);
     }
 
-    private MutableLiveData<List<AppDetailsItem>> usesPermissions;
+    @NonNull
+    private final MutableLiveData<List<AppDetailsItem>> usesPermissions = new MutableLiveData<>();
     private CopyOnWriteArrayList<AppDetailsPermissionItem> usesPermissionItems;
 
     @UiThread
     private LiveData<List<AppDetailsItem>> getUsesPermissions() {
-        if (usesPermissions == null) {
-            usesPermissions = new MutableLiveData<>();
+        if (usesPermissions.getValue() == null) {
             executor.submit(this::loadUsesPermissions);
         }
         return usesPermissions;
@@ -1121,13 +1143,13 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @SuppressLint("SwitchIntDef")
     @WorkerThread
     private void loadUsesPermissions() {
-        if (getPackageInfo() == null || usesPermissions == null) return;
+        List<AppDetailsItem> appDetailsItems = new ArrayList<>();
         if (usesPermissionItems == null) {
             usesPermissionItems = new CopyOnWriteArrayList<>();
         } else usesPermissionItems.clear();
-        if (packageInfo.requestedPermissions == null) {
+        if (getPackageInfo() == null || packageInfo.requestedPermissions == null) {
             // No requested permissions
-            usesPermissions.postValue(new ArrayList<>());
+            usesPermissions.postValue(appDetailsItems);
             return;
         }
         for (int i = 0; i < packageInfo.requestedPermissions.length; ++i) {
@@ -1154,7 +1176,6 @@ public class AppDetailsViewModel extends AndroidViewModel {
             }
         }
         // Filter items
-        final List<AppDetailsItem> appDetailsItems = new ArrayList<>();
         if (!TextUtils.isEmpty(searchQuery)) {
             for (AppDetailsPermissionItem appDetailsItem : usesPermissionItems)
                 if (appDetailsItem.name.toLowerCase(Locale.ROOT).contains(searchQuery))
@@ -1183,12 +1204,12 @@ public class AppDetailsViewModel extends AndroidViewModel {
         return rawPermissions;
     }
 
-    private MutableLiveData<List<AppDetailsItem>> permissions;
+    @NonNull
+    private final MutableLiveData<List<AppDetailsItem>> permissions = new MutableLiveData<>();
 
     @UiThread
     private LiveData<List<AppDetailsItem>> getPermissions() {
-        if (permissions == null) {
-            permissions = new MutableLiveData<>();
+        if (permissions.getValue() == null) {
             executor.submit(this::loadPermissions);
         }
         return permissions;
@@ -1196,9 +1217,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     @WorkerThread
     private void loadPermissions() {
-        if (getPackageInfo() == null || permissions == null) return;
         List<AppDetailsItem> appDetailsItems = new ArrayList<>();
-        if (packageInfo.permissions == null) {
+        if (getPackageInfo() == null || packageInfo.permissions == null) {
             // No custom permissions
             permissions.postValue(appDetailsItems);
             return;
@@ -1214,12 +1234,12 @@ public class AppDetailsViewModel extends AndroidViewModel {
         permissions.postValue(appDetailsItems);
     }
 
-    private MutableLiveData<List<AppDetailsItem>> features;
+    @NonNull
+    private final MutableLiveData<List<AppDetailsItem>> features = new MutableLiveData<>();
 
     @UiThread
     private LiveData<List<AppDetailsItem>> getFeatures() {
-        if (features == null) {
-            features = new MutableLiveData<>();
+        if (features.getValue() == null) {
             executor.submit(this::loadFeatures);
         }
         return features;
@@ -1229,9 +1249,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     @WorkerThread
     private void loadFeatures() {
-        if (getPackageInfo() == null || features == null) return;
         List<AppDetailsItem> appDetailsItems = new ArrayList<>();
-        if (packageInfo.reqFeatures == null) {
+        if (getPackageInfo() == null || packageInfo.reqFeatures == null) {
             // No required features
             features.postValue(appDetailsItems);
             return;
@@ -1248,12 +1267,12 @@ public class AppDetailsViewModel extends AndroidViewModel {
         features.postValue(appDetailsItems);
     }
 
-    private MutableLiveData<List<AppDetailsItem>> configurations;
+    @NonNull
+    private final MutableLiveData<List<AppDetailsItem>> configurations = new MutableLiveData<>();
 
     @UiThread
     private LiveData<List<AppDetailsItem>> getConfigurations() {
-        if (configurations == null) {
-            configurations = new MutableLiveData<>();
+        if (configurations.getValue() == null) {
             executor.submit(this::loadConfigurations);
         }
         return configurations;
@@ -1261,9 +1280,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     @WorkerThread
     private void loadConfigurations() {
-        if (getPackageInfo() == null || configurations == null) return;
         List<AppDetailsItem> appDetailsItems = new ArrayList<>();
-        if (packageInfo.configPreferences != null) {
+        if (getPackageInfo() == null || packageInfo.configPreferences != null) {
             for (ConfigurationInfo configurationInfo : packageInfo.configPreferences) {
                 AppDetailsItem appDetailsItem = new AppDetailsItem(configurationInfo);
                 appDetailsItems.add(appDetailsItem);
@@ -1272,13 +1290,13 @@ public class AppDetailsViewModel extends AndroidViewModel {
         configurations.postValue(appDetailsItems);
     }
 
-    private MutableLiveData<List<AppDetailsItem>> signatures;
+    @NonNull
+    private final MutableLiveData<List<AppDetailsItem>> signatures = new MutableLiveData<>();
     private ApkVerifier.Result apkVerifierResult;
 
     @UiThread
     private LiveData<List<AppDetailsItem>> getSignatures() {
-        if (signatures == null) {
-            signatures = new MutableLiveData<>();
+        if (signatures.getValue() == null) {
             executor.submit(this::loadSignatures);
         }
         return signatures;
@@ -1291,8 +1309,11 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     @WorkerThread
     private void loadSignatures() {
-        if (apkFile == null || signatures == null) return;
         List<AppDetailsItem> appDetailsItems = new ArrayList<>();
+        if (apkFile == null) {
+            signatures.postValue(appDetailsItems);
+            return;
+        }
         try {
             File idsigFile = apkFile.getIdsigFile();
             ApkVerifier.Builder builder = new ApkVerifier.Builder(apkFile.getBaseEntry().getRealCachedFile());
@@ -1329,12 +1350,12 @@ public class AppDetailsViewModel extends AndroidViewModel {
         signatures.postValue(appDetailsItems);
     }
 
-    private MutableLiveData<List<AppDetailsItem>> sharedLibraries;
+    @NonNull
+    private final MutableLiveData<List<AppDetailsItem>> sharedLibraries = new MutableLiveData<>();
 
     @UiThread
     private LiveData<List<AppDetailsItem>> getSharedLibraries() {
-        if (sharedLibraries == null) {
-            sharedLibraries = new MutableLiveData<>();
+        if (sharedLibraries.getValue() == null) {
             executor.submit(this::loadSharedLibraries);
         }
         return sharedLibraries;
@@ -1342,8 +1363,11 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     @WorkerThread
     private void loadSharedLibraries() {
-        if (getPackageInfo() == null || sharedLibraries == null) return;
         List<AppDetailsItem> appDetailsItems = new ArrayList<>();
+        if (getPackageInfo() == null) {
+            sharedLibraries.postValue(appDetailsItems);
+            return;
+        }
         ApplicationInfo info = packageInfo.applicationInfo;
         File jniDir = new File(info.nativeLibraryDir);
         if (info.sharedLibraryFiles != null) {

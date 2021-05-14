@@ -54,6 +54,7 @@ import android.widget.TextView;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.AnyThread;
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.GuardedBy;
@@ -141,6 +142,7 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.SsaidSettings;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.io.ProxyFile;
 
@@ -254,7 +256,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         });
         // Set observer
         mainModel.get(AppDetailsFragment.APP_INFO).observe(getViewLifecycleOwner(), appDetailsItems -> {
-            if (!appDetailsItems.isEmpty() && mainModel.isPackageExist()) {
+            if (appDetailsItems != null && !appDetailsItems.isEmpty() && mainModel.isPackageExist()) {
                 AppDetailsItem appDetailsItem = appDetailsItems.get(0);
                 mPackageInfo = (PackageInfo) appDetailsItem.vanillaItem;
                 mPackageName = appDetailsItem.name;
@@ -271,7 +273,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 versionView.setText(version);
                 // Set others
                 executor.submit(this::loadPackageInfo);
-            }
+            } else showProgressIndicator(false);
         });
         model.getPackageLabel().observe(getViewLifecycleOwner(), packageLabel -> {
             mPackageLabel = packageLabel;
@@ -280,7 +282,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         });
         iconView.setOnClickListener(v -> {
             ClipboardManager clipboard = (ClipboardManager) mActivity.getSystemService(Context.CLIPBOARD_SERVICE);
-            new Thread(() -> {
+            executor.submit(() -> {
                 ClipData clipData = clipboard.getPrimaryClip();
                 if (clipData != null && clipData.getItemCount() > 0) {
                     String data = clipData.getItemAt(0).getText().toString().trim().toLowerCase(Locale.ROOT);
@@ -302,7 +304,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         runOnUiThread(() -> displayLongToast(R.string.not_verified));
                     }
                 }
-            }).start();
+            });
         });
         setupTagCloud();
         setupVerticalView();
@@ -675,7 +677,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             if (tagCloud.runningServices.size() > 0) {
                 addChip(R.string.running, R.color.running).setOnClickListener(v -> {
                     mProgressIndicator.show();
-                    new Thread(() -> {
+                    executor.submit(() -> {
                         int pid = FeatureController.isLogViewerEnabled() ? PackageUtils.getPidForPackage(mPackageName,
                                 mApplicationInfo.uid) : 0;
                         CharSequence[] runningServices = new CharSequence[tagCloud.runningServices.size()];
@@ -708,7 +710,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                             }
                             builder.show();
                         });
-                    }).start();
+                    });
                 });
             }
             if (tagCloud.isForceStopped) {
@@ -1440,7 +1442,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         else mProgressIndicator.hide();
     }
 
+    @AnyThread
     private void runOnUiThread(Runnable runnable) {
-        mActivity.runOnUiThread(runnable);
+        UiThreadHandler.run(runnable);
     }
 }
