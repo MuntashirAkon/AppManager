@@ -182,7 +182,7 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
 
     private void checkPermissions() {
         // Check permission
-        if (!Utils.hasUsageStatsPermission(this)) promptForUsageStatsPermission();
+        if (!PermissionUtils.hasUsageStatsPermission(this)) promptForUsageStatsPermission();
         else getAppUsage();
         // Grant optional READ_PHONE_STATE permission
         if (!PermissionUtils.hasPermission(this, Manifest.permission.READ_PHONE_STATE) &&

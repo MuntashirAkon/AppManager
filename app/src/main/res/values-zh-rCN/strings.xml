@@ -418,7 +418,6 @@
     <string name="open_in_termux">在 Termux 中打开</string>
     <string name="run_in_termux">在 Termux 中运行</string>
     <string name="website">网址</string>
-    <string name="website_message">https://muntashirakon.github.io/AppManager</string>
     <string name="pref_remove_all_rules">删除所有规则</string>
     <string name="pref_remove_all_rules_msg">权限已被授予，app ops 和组件将回到它们的默认值。</string>
     <string name="are_you_sure">您确定吗？</string>

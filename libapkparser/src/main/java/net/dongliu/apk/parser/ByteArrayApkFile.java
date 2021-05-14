@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -35,7 +36,7 @@ public class ByteArrayApkFile extends AbstractApkFile implements Closeable {
             ZipEntry entry;
             while ((entry = zis.getNextEntry()) != null) {
                 String name = entry.getName();
-                if (name.toUpperCase().endsWith(".RSA") || name.toUpperCase().endsWith(".DSA")) {
+                if (name.toUpperCase(Locale.ROOT).endsWith(".RSA") || name.toUpperCase(Locale.ROOT).endsWith(".DSA")) {
                     list.add(new CertificateFile(name, Inputs.readAll(zis)));
                 }
             }

@@ -24,6 +24,7 @@ import androidx.annotation.NonNull;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -61,7 +62,7 @@ public class BuildHelper {
         try {
             Field field = clazz.getField(buildField);
             Object value = field.get(null);
-            String key = clazz.getSimpleName().toLowerCase() + "." + buildField.toLowerCase();
+            String key = clazz.getSimpleName().toLowerCase(Locale.ROOT) + "." + buildField.toLowerCase(Locale.ROOT);
             keysToValues.put(key, String.valueOf(value));
         } catch (SecurityException | NoSuchFieldException | IllegalAccessException ignore) {
         }

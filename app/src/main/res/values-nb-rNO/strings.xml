@@ -15,7 +15,6 @@
     <string name="filter_apps_with_activities">Med aktiviteter</string>
     <string name="are_you_sure">Er du sikker\?</string>
     <string name="pref_remove_all_rules">Fjern alle regler</string>
-    <string name="website_message">https://muntashirakon.github.io/AppManager</string>
     <string name="website">Nettside</string>
     <string name="run_in_termux">Kjør i Termux</string>
     <string name="open_in_termux">Åpne i Termux</string>
@@ -631,12 +630,12 @@
     <string name="app_op_cannot_be_disabled">Denne app-operasjon kan ikke skurs av, en skrivebeskyttet app-op kan være avhengig av en annen app-op.</string>
     <string name="toggle_kill_for_system_apps">Aktiver eller deaktiver tvungen avslutning av system-apper</string>
     <plurals name="alert_failed_to_disable_background">
-        <item quantity="one">Kunne ikke hindre ett program fra å kjøre i bakgrunnen</item>
+        <item quantity="one">Kufnne ikke hindre ett program fra å kjøre i bakgrunnen</item>
         <item quantity="other">Kunne ikke hindre %1$d programmer fra å kjøre i bakgrunnen</item>
     </plurals>
-    <string name="failed_to_uninstall_updates">Kunne ikke avinstallere oppgraderinger for <xliff:g id="app_name" example="App Manager"/>.</string>
+    <string name="failed_to_uninstall_updates">Kunne ikke avinstallere oppgraderinger for <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="abi_split_for_base_apk"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> kode for grunn-APK</string>
-    <string name="unknown_split_for_base_apk"><xliff:g id="split_name" example="some_split"/> for grunn-APK</string>
+    <string name="unknown_split_for_base_apk"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> for grunn-APK</string>
     <plurals name="items_selected">
         <item quantity="one"><xliff:g id="selection_no" example="20"/> valgt</item>
         <item quantity="other"><xliff:g id="selection_no" example="20"/> valgt</item>

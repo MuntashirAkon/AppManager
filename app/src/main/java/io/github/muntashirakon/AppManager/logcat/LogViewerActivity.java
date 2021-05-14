@@ -71,6 +71,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import io.github.muntashirakon.AppManager.AppManager;
@@ -400,7 +401,7 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
         List<String> actualSuggestions = new ArrayList<>();
         if (query != null) {
             for (String suggestion : suggestions) {
-                if (suggestion.toLowerCase().startsWith(query.toLowerCase())) {
+                if (suggestion.toLowerCase(Locale.getDefault()).startsWith(query.toLowerCase(Locale.getDefault()))) {
                     actualSuggestions.add(suggestion);
                 }
             }

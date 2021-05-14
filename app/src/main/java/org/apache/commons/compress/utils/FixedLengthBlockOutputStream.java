@@ -25,6 +25,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.ClosedChannelException;
 import java.nio.channels.WritableByteChannel;
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -93,7 +94,7 @@ public class FixedLengthBlockOutputStream extends OutputStream implements Writab
         final int i = out.write(buffer);
         final boolean hasRemaining = buffer.hasRemaining();
         if (i != blockSize || hasRemaining) {
-            final String msg = String.format("Failed to write %,d bytes atomically. Only wrote  %,d", blockSize, i);
+            final String msg = String.format(Locale.ROOT, "Failed to write %,d bytes atomically. Only wrote  %,d", blockSize, i);
             throw new IOException(msg);
         }
         buffer.clear();

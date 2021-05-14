@@ -434,7 +434,6 @@
     <string name="open_in_termux">In Termux öffnen</string>
     <string name="run_in_termux">In Termux ausführen</string>
     <string name="website">Webseite</string>
-    <string name="website_message">https://muntashirakon.github.io/AppManager</string>
     <string name="pref_remove_all_rules">Alle Regeln entfernen</string>
     <string name="pref_remove_all_rules_msg">Berechtigungen werden erteilt, Anwendungen und Komponenten werden auf ihre Standardwerte zurückgesetzt.</string>
     <string name="are_you_sure">Bist du Dir sicher?</string>

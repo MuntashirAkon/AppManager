@@ -35,6 +35,7 @@ import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Locale;
 
 import javax.security.cert.CertificateException;
 import javax.security.cert.X509Certificate;
@@ -67,14 +68,14 @@ public class CertificateParser {
 
     @NonNull
     private String md5Digest(byte[] input) {
-        MessageDigest digest = getDigest("MD5");
+        MessageDigest digest = getMd5Digest();
         digest.update(input);
         return getHexString(digest.digest());
     }
 
     @NonNull
     private String md5Digest(@NonNull String input) {
-        MessageDigest digest = getDigest("MD5");
+        MessageDigest digest = getMd5Digest();
         digest.update(input.getBytes(StandardCharsets.UTF_8));
         return getHexString(digest.digest());
     }
@@ -88,7 +89,7 @@ public class CertificateParser {
             if (sTemp.length() < 2) {
                 sb.append(0);
             }
-            sb.append(sTemp.toUpperCase());
+            sb.append(sTemp.toUpperCase(Locale.ROOT));
         }
         return sb.toString();
     }
@@ -100,9 +101,9 @@ public class CertificateParser {
     }
 
     @NonNull
-    private MessageDigest getDigest(String algorithm) {
+    private MessageDigest getMd5Digest() {
         try {
-            return MessageDigest.getInstance(algorithm);
+            return MessageDigest.getInstance("MD5");
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }

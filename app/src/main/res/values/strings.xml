@@ -163,7 +163,7 @@
         <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> trackers with <xliff:g id="class_no" example="50">%2$d</xliff:g> classes</item>
         <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> trackers with <xliff:g id="class_no" example="50">%2$d</xliff:g> classes</item>
     </plurals>
-    <string name="tested_signatures_on_classes_and_time_taken">Tested <xliff:g id="signature_no" example="342">%1$d</xliff:g> signatures on <xliff:g id="class_no" example="6000">%2$d</xliff:g> classes.\nTime taken <xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> iterations).</string>
+    <string name="tested_signatures_on_classes_and_time_taken" tools:ignore="PluralsCandidate">Tested <xliff:g id="signature_no" example="342">%1$d</xliff:g> signatures on <xliff:g id="class_no" example="6000">%2$d</xliff:g> classes.\nTime taken <xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> iterations).</string>
     <string name="found_trackers">Found Trackers:</string>
     <string name="tracker_details">Tracker details</string>
     <string name="tracker_classes">Tracker classes</string>
@@ -993,14 +993,14 @@
     <string name="pref_cat_configuration">Configuration</string>
     <string name="pref_default_log_level_summary">Log level at startup, when opening files, and when recording.</string>
     <string name="pref_default_log_level_title">Default Log Level</string>
-    <string name="pref_display_limit_summary">Show only the last %1$d logs in order to avoid out of memory errors.</string>
+    <string name="pref_display_limit_summary" tools:ignore="PluralsCandidate">Show only the last %1$d logs in order to avoid out of memory errors.</string>
     <string name="pref_display_limit_title">Log Display Limit</string>
     <string name="pref_filter_pattern_summary">Filter out the selected tags from logs.</string>
     <string name="pref_filter_pattern_title">Filter Out Tags</string>
     <string name="pref_expanded_by_default_summary">Show full log text by default.</string>
     <string name="pref_expanded_by_default_title">Expand by Default</string>
     <string name="pref_log_line_period_error">Please enter an integer between 1 and 1000.</string>
-    <string name="pref_log_write_period_summary">When recording, write to SD card every %1$d lines.</string>
+    <string name="pref_log_write_period_summary" tools:ignore="PluralsCandidate">When recording, write to SD card every %1$d lines.</string>
     <string name="pref_log_write_period_title">Write Period</string>
     <string name="pref_show_timestamp_summary">Show process id and timestamp when expanded.</string>
     <string name="pref_show_timestamp_title">Show Pid &amp; Timestamp</string>
@@ -1015,7 +1015,7 @@
     <string name="text_filter_text">Filter text</string>
     <string name="text_include_device_info">Include device information</string>
     <string name="title_filters">Filters</string>
-    <string name="pref_display_limit_hint">Please enter a valid number between %1$d and %2$d.</string>
+    <string name="pref_display_limit_hint" tools:ignore="PluralsCandidate">Please enter a valid number between %1$d and %2$d.</string>
     <string name="toast_invalid_level">Invalid level name: %s</string>
     <string name="toast_invalid_selection">Invalid selection. Please try again.</string>
     <plurals name="toast_log_truncated">

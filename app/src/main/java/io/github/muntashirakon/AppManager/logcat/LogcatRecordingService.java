@@ -17,30 +17,27 @@
 
 package io.github.muntashirakon.AppManager.logcat;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
-
-import io.github.muntashirakon.AppManager.logcat.helper.SaveLogHelper;
-import io.github.muntashirakon.AppManager.logcat.helper.ServiceHelper;
-import io.github.muntashirakon.AppManager.logcat.helper.WidgetHelper;
+import androidx.core.app.NotificationManagerCompat;
 
 import java.io.IOException;
 import java.util.Random;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.logcat.helper.SaveLogHelper;
+import io.github.muntashirakon.AppManager.logcat.helper.ServiceHelper;
+import io.github.muntashirakon.AppManager.logcat.helper.WidgetHelper;
 import io.github.muntashirakon.AppManager.logcat.reader.LogcatReader;
 import io.github.muntashirakon.AppManager.logcat.reader.LogcatReaderLoader;
 import io.github.muntashirakon.AppManager.logcat.struct.LogLine;
@@ -48,6 +45,7 @@ import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.types.ForegroundService;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 
 /**
  * Reads logs.
@@ -140,14 +138,8 @@ public class LogcatRecordingService extends ForegroundService {
         notification.setContentText(getString(R.string.notification_subtext));
         notification.setContentIntent(pendingIntent);
 
-        NotificationManager manager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        // Fix Oreo notifications showing
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            final CharSequence name = getString(R.string.app_name);
-            final int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            manager.createNotificationChannel(channel);
-        }
+        NotificationUtils.getNewNotificationManager(this, CHANNEL_ID, "Logcat Recording Service",
+                NotificationManagerCompat.IMPORTANCE_DEFAULT);
         startForeground(R.string.notification_title, notification.build());
         return super.onStartCommand(intent, flags, startId);
     }
