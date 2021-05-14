@@ -26,10 +26,14 @@ import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.RemoteException;
+import android.os.SystemClock;
 
 import androidx.annotation.AnyThread;
+import androidx.annotation.NonNull;
 import androidx.annotation.UiThread;
-import io.github.muntashirakon.io.ProxyFile;
+import androidx.annotation.WorkerThread;
+import androidx.core.app.NotificationCompat;
+
 import org.openintents.openpgp.IOpenPgpService2;
 import org.openintents.openpgp.OpenPgpError;
 import org.openintents.openpgp.util.OpenPgpApi;
@@ -45,9 +49,6 @@ import java.util.List;
 
 import javax.crypto.Cipher;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.WorkerThread;
-import androidx.core.app.NotificationCompat;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
@@ -55,6 +56,7 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
+import io.github.muntashirakon.io.ProxyFile;
 import io.github.muntashirakon.io.ProxyInputStream;
 import io.github.muntashirakon.io.ProxyOutputStream;
 
@@ -265,35 +267,24 @@ public class OpenPGPCrypto implements Crypto {
     private boolean waitForServiceBound() {
         int i = 0;
         while (service.getService() == null) {
-            try {
-                if (i % 20 == 0)
-                    Log.i(TAG, "Waiting for openpgp-api service to be bound");
-                Thread.sleep(100);
-                if (i > 1000)
-                    break;
-                i++;
-            } catch (InterruptedException e) {
-                Log.e(TAG, "WaitForServiceBound: interrupted", e);
-                Thread.currentThread().interrupt();
-            }
+            if (i % 20 == 0) Log.i(TAG, "Waiting for openpgp-api service to be bound");
+            SystemClock.sleep(100);
+            if (i > 1000)
+                break;
+            i++;
         }
         return service.getService() != null;
     }
 
     @WorkerThread
     private void waitForResult() {
-        try {
-            int i = 0;
-            while (!successFlag && !errorFlag) {
-                if (i % 200 == 0) Log.i(TAG, "Waiting for user interaction");
-                Thread.sleep(100);
-                if (i > 1000)
-                    break;
-                i++;
-            }
-        } catch (InterruptedException e) {
-            Log.e(TAG, "waitForResult: interrupted", e);
-            Thread.currentThread().interrupt();
+        int i = 0;
+        while (!successFlag && !errorFlag) {
+            if (i % 200 == 0) Log.i(TAG, "Waiting for user interaction");
+            SystemClock.sleep(100);
+            if (i > 1000)
+                break;
+            i++;
         }
     }
 
