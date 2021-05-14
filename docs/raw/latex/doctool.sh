@@ -4,13 +4,13 @@ function func_help {
 echo -n "\
 ./doctool.sh COMMAND ARGS
 --COMMANDS--
-buildhtml [OUTPUTFILE(.html)]
+buildhtml
 Build HTML from TeX
 
-updatetranslation [OUTPUTFILE(.xliff)]
+updatetranslation
 Extract strings and create xliff translation file
 
-mergetranslation [INPUTFILE(.xliff)] [SOURCEDIR]
+mergetranslation
 Merge translation from xliff to TeX
 
 help
@@ -28,11 +28,19 @@ https://lierdakil.github.io/pandoc-crossref/
 ・Python(Tested with 3.8.5)
 https://www.python.org/
 
-・GNU Sed(Tested with 4.7)
+・GNU Sed(Tested with 4.7,May not work with Posix SED)
 https://www.gnu.org/software/sed/
 
-・Bash(Not work with sh,Untested with zsh)
+・Bash(Tested with 5.0.17,Not work with sh,Untested with zsh)
 https://www.gnu.org/software/bash/
+
+・Awk(Tested with 5.0.1-API2.0)
+
+・Grep（Tested with 3.4)
+
+・xmllint(Tested with 20910)
+
+・Perl(Tested with 5-v30)
 "
 }
 
@@ -122,6 +130,20 @@ echo "import re;import sys;print(re.sub(r'(?<=%%!!"${key_content}"<<\n)[^%%!!>>]
 done < <(find ./ -type f -name "*.tex")
 
 done < <(echo "$keys" | grep -Pv ".*(?===title)")
+
+
+while read key_title
+do
+    string_title=$(echo 'cat resources/string[@name="'${key_title}'"]/text()' | xmllint --shell strings.xml | sed -e '$d' -e '1d'|sed 's/\\/\\\\/g')
+
+    while read file
+    do
+
+         perl -pi -e "s/(section\{|subsection\{|subsubsection\{).*?(\}.*\%\%\#\#${key_title}>>)/\1${string_title}\2/" ${file}
+
+    done < <(find ./ -type f -name "*.tex")
+done < <(echo "$keys" | grep -P ".*(?===title)")
+
 }
 
 case $1 in
