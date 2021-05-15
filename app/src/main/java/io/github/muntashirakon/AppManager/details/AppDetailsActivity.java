@@ -102,7 +102,7 @@ public class AppDetailsActivity extends BaseActivity {
                 .observe(this, packageInfo -> {
                     progressDialog.dismiss();
                     if (packageInfo == null) {
-                        UIUtils.displayLongToast(R.string.failed_to_fetch_package_info);
+                        UIUtils.displayShortToast(R.string.failed_to_fetch_package_info);
                         if (!isDestroyed()) {
                             finish();
                         }
@@ -138,7 +138,7 @@ public class AppDetailsActivity extends BaseActivity {
         // Check for the existence of package
         model.getIsPackageExistLiveData().observe(this, isPackageExist -> {
             if (!isPackageExist) {
-                UIUtils.displayLongToast(R.string.app_not_installed);
+                UIUtils.displayShortToast(R.string.app_not_installed);
                 finish();
             }
         });
@@ -163,7 +163,8 @@ public class AppDetailsActivity extends BaseActivity {
     private void loadTabs() {
         @AppDetailsFragment.Property int id = viewPager.getCurrentItem();
         Log.e("ADA - " + mTabTitleIds.getText(id), "isPackageChanged called");
-        for (int i = 0; i < mTabTitleIds.length(); ++i) model.load(i);
+        if (model.getIsExternalApk()) model.load(AppDetailsFragment.APP_INFO);
+        else for (int i = 0; i < mTabTitleIds.length(); ++i) model.load(i);
     }
 
     // For tab layout
