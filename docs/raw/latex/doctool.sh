@@ -16,6 +16,9 @@ Merge translation from xliff to TeX
 help
 Show this help and exit
 
+checkdeps
+Run dependency checker
+
 --Dependencies--
 ・pandoc(Tested with 2.13-1)
 https://github.com/jgm/pandoc
@@ -43,6 +46,64 @@ https://www.gnu.org/software/bash/
 ・Perl(Tested with 5-v30)
 "
 }
+
+
+function func_checkdeps {
+
+echo Warning:This checker doesnt check version.
+
+which pandoc && echo Pass || echo -n "\
+Pandoc not found!
+
+-Solution-
+Please install pandoc above v2.13.
+Download releases from here and install it.(maybe your package manager have pandoc package,but it will cause bug due to it is outdated)
+https://github.com/jgm/pandoc/releases/tag/2.13
+"
+
+which pandoc-crossref && echo Pass || { ls ./pandoc-crossref && echo Pass || echo -n "\
+pandoc-crossref not found!
+
+-Solution1-
+Download file from here
+https://github.com/lierdakil/pandoc-crossref/releases
+Extract it
+Put files to working directory(THIS DIRECTORY)
+
+-Solution2-
+Follow this guide to install pandoc-crossref in to system
+https://github.com/lierdakil/pandoc-crossref/blob/master/README.md
+"; }
+
+which python && echo Pass || echo -n "\
+Python not found!
+
+-Solution-
+Just run 
+apt install python
+"
+
+which xmllint && echo Pass || echo -n "\
+xmllint not found!
+
+-Solution-
+Just run 
+apt install xmllint
+"
+
+which python && echo Pass || echo -n "\
+Perl not found!
+
+-Solution-
+Just run 
+apt install perl
+"
+
+}
+
+
+
+
 
 function func_build-html {
 
@@ -152,4 +213,5 @@ case $1 in
 "buildhtml" ) func_build-html ;;
 "updatetranslation" ) func_update-xliff ;;
 "mergetranslation" ) func_merge-translation ;;
+"checkdeps" ) func_checkdeps ;;
 esac
