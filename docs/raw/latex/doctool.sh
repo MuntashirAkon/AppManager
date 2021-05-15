@@ -39,7 +39,7 @@ https://www.gnu.org/software/bash/
 
 ・Awk(Tested with 5.0.1-API2.0)
 
-・Grep（Tested with 3.4)
+・GNU grep（Tested with 3.4)
 
 ・xmllint(Tested with 20910)
 

@@ -48,9 +48,10 @@ All distros installed by default.Don't use "sh".Please use "bash"
 Most distros installed by default.
 If not,run "apt install awk"
 
-・Grep
+・GNU grep
 Most distros installed by default.
 If not,run "apt install grep"
+Probably you have to install it manually too if you are using mac
 
 ・xmllint
 Probably installed by default in your distro.
