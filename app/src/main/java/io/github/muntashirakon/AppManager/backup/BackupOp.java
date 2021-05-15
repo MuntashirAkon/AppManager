@@ -64,6 +64,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import static io.github.muntashirakon.AppManager.backup.BackupManager.*;
 
@@ -283,12 +284,14 @@ class BackupOp implements Closeable {
             throw new BackupException("Could not get cache path", e);
         }
         List<String> cachedKeyStoreFileNames = new ArrayList<>();
+        List<String> keyStoreFilters = new ArrayList<>();
         for (String keyStoreFileName : KeyStoreUtils.getKeyStoreFiles(applicationInfo.uid, userHandle)) {
             try {
                 String newFileName = Utils.replaceOnce(keyStoreFileName, String.valueOf(applicationInfo.uid),
                         String.valueOf(KEYSTORE_PLACEHOLDER));
                 IOUtils.copy(new ProxyFile(keyStorePath, keyStoreFileName), new ProxyFile(cachePath, newFileName));
                 cachedKeyStoreFileNames.add(newFileName);
+                keyStoreFilters.add(Pattern.quote(newFileName));
             } catch (Throwable e) {
                 throw new BackupException("Could not cache " + keyStoreFileName, e);
             }
@@ -300,7 +303,7 @@ class BackupOp implements Closeable {
         File[] backedUpKeyStoreFiles;
         try {
             backedUpKeyStoreFiles = TarUtils.create(metadata.tarType, cachePath, keyStoreSavePath,
-                    cachedKeyStoreFileNames.toArray(new String[0]), null, null, false).toArray(new File[0]);
+                    keyStoreFilters.toArray(new String[0]), null, null, false).toArray(new File[0]);
         } catch (Throwable th) {
             throw new BackupException("Could not backup KeyStore item.");
         }
