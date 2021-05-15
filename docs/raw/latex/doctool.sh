@@ -91,19 +91,14 @@ Just run
 apt install xmllint
 "
 
-which python && echo Pass || echo -n "\
+which perl && echo Pass || echo -n "\
 Perl not found!
 
 -Solution-
 Just run 
 apt install perl
 "
-
 }
-
-
-
-
 
 function func_build-html {
 
