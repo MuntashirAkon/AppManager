@@ -607,7 +607,7 @@
     <string name="system">Système</string>
     <string name="app_not_installed">Application non installée</string>
     <string name="media_size">Média</string>
-    <string name="app_op_cannot_be_disabled">Cette application ne peut pas être désactivée. (Il est possible qu\'une application en lecture seule dépende d\'une autre).</string>
+    <string name="app_op_cannot_be_disabled">Cette application ne peut pas être désactivée. (Il est possible qu\'une application en lecture seule dépende d\'une autre.)</string>
     <string name="external_data_dir">Répertoire de données externes</string>
     <string name="dev_protected_data_dir">Répertoire de données protégé par l\'appareil</string>
     <string name="pref_global_blocking_enabled_msg">Permet de bloquer tout composant d\'une application sans la bloquer directement.</string>
@@ -701,4 +701,9 @@
     <string name="input_app_ops_description_profile">Saisissez les noms ou les constantes d\'opérations d\'application avec des espaces, par exemple <tt>WAKE_LOCK 63 72 CAMERA</tt>. Utilisez <tt>*</tt> pour appliquer toutes les opérations d\'application configurées.</string>
     <string name="input_app_ops_description">Saisissez les noms ou les constantes d\'opérations d\'application avec des espaces, par exemple <tt>WAKE_LOCK 63 72 CAMERA</tt></string>
     <string name="deny_app_ops_description">Définir un mode pour les opérations de l\'application identifiées par les valeurs constante, par exemple <tt>63</tt> ou <tt>RUN_IN_BACKGROUND</tt></string>
+    <string name="pref_remove_all_rules_msg">Les autorisations seront accordées, les opérations et les composants de l\'application retrouveront leurs valeurs par défaut.</string>
+    <plurals name="app_signing_signature_schemes_pl">
+        <item quantity="one">Schéma de signature</item>
+        <item quantity="other">Schémas de signature</item>
+    </plurals>
 </resources>
