@@ -762,7 +762,7 @@ public final class PackageUtils {
         return getSigningCertSha256Checksum(packageInfo, false);
     }
 
-    public static boolean isSignatureDifferent(PackageInfo newPkgInfo, PackageInfo oldPkgInfo) {
+    public static boolean isSignatureDifferent(@NonNull PackageInfo newPkgInfo, @NonNull PackageInfo oldPkgInfo) {
         String[] newChecksums = getSigningCertSha256Checksum(newPkgInfo, true);
         List<String> oldChecksums = new ArrayList<>(Arrays.asList(getSigningCertSha256Checksum(oldPkgInfo)));
         // Signature is different if the number of signatures don't match
