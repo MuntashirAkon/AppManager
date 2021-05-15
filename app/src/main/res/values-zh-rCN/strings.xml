@@ -111,21 +111,25 @@
     <string name="credits">鸣谢</string>
     <string name="credits_message">致谢下列项目的作者
 \n- The Android Open Source Project
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
-\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
-\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
+\n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
+\n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
+\n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a>
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
-\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
-\n原始图标致谢：<a href="https://github.com/Atrate">Atrate</a>. </string>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
+\nOriginal logo credit: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="word_wrap">自动换行</string>
     <string name="class_viewer">类查看器</string>
     <string name="toggle_class_listing">切换类列表</string>
-    <string name="tested_signatures_on_classes_and_time_taken">测试了 <xliff:g id="signature_no" example="342">%1$d</xliff:g> 个签名在 <xliff:g id="class_no" example="6000">%2$d</xliff:g> 个 classes 上.
-\n所花时间 <xliff:g id="time" example="10000">%3$d</xliff:g> 毫秒(<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> 迭代器).</string>
+    <string name="tested_signatures_on_classes_and_time_taken">测试了 <xliff:g id="signature_no" example="342">%1$d</xliff:g> 特征码于<xliff:g id="class_no" example="6000">%2$d</xliff:g> 个 classes。
+\n耗费时间 <xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> 迭代)。</string>
     <string name="found_trackers">已找到追踪器:</string>
     <string name="tracker_details">追踪器详细信息</string>
     <string name="tracker_classes">追踪器类</string>
@@ -750,8 +754,8 @@
     <string name="density">密度</string>
     <string name="screen">屏幕</string>
     <string name="hardware">硬件</string>
-    <string name="permissive">Permissive</string>
-    <string name="enforcing">Enforcing</string>
+    <string name="permissive">被动</string>
+    <string name="enforcing">强制</string>
     <string name="failed_to_enable_magisk_hide">无法启用 MagiskHide</string>
     <string name="enable_magisk_hide">启用 MagiskHide</string>
     <string name="failed_to_disable_magisk_hide">无法禁用 MagiskHide</string>
@@ -1007,4 +1011,11 @@
     <string name="netpolicy_allow_background_data">启用数据节省器时允许后台数据</string>
     <string name="netpolicy_reject_background_data">拒绝后台数据</string>
     <string name="unknown_netpolicy">未知的 netpolicy (%s)</string>
+    <string name="port_number_invalid">无效的端口号。</string>
+    <string name="port_number_empty">端口号为空。</string>
+    <string name="adb_connect_port_number_description">端口号位于 <b>IP地址&amp;端口</b>部分，这部分在<b>设备名称</b>部分的下方。</string>
+    <string name="port_number">端口</string>
+    <string name="adb_connect">连接</string>
+    <string name="wireless_debugging_not_supported">此平台不支持无线调试。</string>
+    <string name="wireless_debugging">无线调试</string>
 </resources>
