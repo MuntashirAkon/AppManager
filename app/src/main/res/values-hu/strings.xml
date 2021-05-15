@@ -17,4 +17,15 @@
     <string name="refresh">Frissítés</string>
     <string name="activities">Aktivitás</string>
     <string name="require_no_permission">Nincs szükség engedélyre</string>
+    <string name="no_service">Nincs szolgáltatás</string>
+    <string name="authority">Hatóság</string>
+    <string name="task_affinity">Feladat affinitás</string>
+    <string name="launch_mode">Indító mód</string>
+    <string name="no_providers">Nincs szolgáltató</string>
+    <string name="providers">Szolgáltatók</string>
+    <string name="no_receivers">Nincs fogadó</string>
+    <string name="receivers">Fogadók</string>
+    <string name="launch">Indítás</string>
+    <string name="permissions">Engedélyeket használ</string>
+    <string name="uninstall">Eltávolítás</string>
 </resources>
