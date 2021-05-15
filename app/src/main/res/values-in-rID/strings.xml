@@ -203,8 +203,8 @@
     <string name="tracker_classes">Class tracker</string>
     <string name="tracker_details">Rincian tracker</string>
     <string name="found_trackers">Tracker ditemukan:</string>
-    <string name="tested_signatures_on_classes_and_time_taken">Diperiksa <xliff:g id="signature_no" example="342">%1$d</xliff:g> tanda pada <xliff:g id="class_no" example="6000">%2$d</xliff:g> class.
-\nWaktu terambil <xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> pengulangan).</string>
+    <string name="tested_signatures_on_classes_and_time_taken">Telah diuji tanda tangan <xliff:g id="signature_no" example="342">%1$d</xliff:g> pada kelas <xliff:g id="class_no" example="6000">%2$d</xliff:g>.
+\nWaktu terpakai <xliff:g id="time" example="10000">%3$d</xliff:g> milidetik (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> pengualngan).</string>
     <plurals name="other_trackers_and_classes">
         <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> tracker dengan <xliff:g id="class_no" example="50">%2$d</xliff:g> class</item>
     </plurals>
@@ -217,18 +217,22 @@
     <string name="toggle_class_listing">Alihkan Pendaftar Class</string>
     <string name="class_viewer">Peninjau Class</string>
     <string name="word_wrap">alihkan word wrap</string>
-    <string name="credits_message">Kepada pemilik dari
+    <string name="credits_message">Kepada pembuat/pemilik dari
 \n- Proyek Android Sumber Terbuka
+\n- <a href="https://github.com/butzist/ActivityLauncher">Peluncur Aktivfitas</a>
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Informasi Apps_packages</a>
-\n- <a href="https://github.com/butzist/ActivityLauncher">Peluncur Aktifitas</a>
-\n- <a href="https://github.com/billthefarmer/editor">Penyunting</a>
-\n- <a href="https://github.com/zhaobao/AppsMonitor">MonitorApps</a>
-\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
+\n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
+\n- <a href="https://github.com/matrix-org/matrix-android-sdk">SDK Android Matrix</a>
+\n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
+\n- <a href="https://github.com/open-keychain/open-keychain">Keychain Sumber Terbuka</a>
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
-\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
-\nHak Cipta logo asli: <a href="https://github.com/Atrate">Atrate</a>. </string>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
+\nKarya Logo Asli: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="credits">Pembuat</string>
     <string name="third_party">Pustakaan dan Ikon Pihak-Ketiga</string>
     <string name="license">Lisensi</string>
@@ -1005,4 +1009,11 @@
     <string name="netpolicy_allow_background_data">Izinkan data di latar belakang saat Penghemat Data aktif</string>
     <string name="netpolicy_reject_background_data">Tolak data di latar belakang</string>
     <string name="unknown_netpolicy">Kebijakan net tidak dikenal (%s)</string>
+    <string name="wireless_debugging_not_supported">Debug nirkabel tidak didukung dalam platform ini.</string>
+    <string name="wireless_debugging">Debug nirkabel</string>
+    <string name="port_number_invalid">Nomor port tidak valid.</string>
+    <string name="port_number_empty">Nomor port kosong.</string>
+    <string name="adb_connect_port_number_description">Nomor port terdapat dibawah bagian <b>Alamat IP &amp; port</b> tepat dibawah bagian <b>Nama perangkat</b>.</string>
+    <string name="port_number">Port</string>
+    <string name="adb_connect">Hbungkan</string>
 </resources>
