@@ -92,9 +92,21 @@
 % See also environments
 % ----------------------
 % po4a: command amseealsoinline {_}
-\newcommand{\seealsoinline}[1]{\noindent\textit{See also: {#1}}}
+\newcommand{\seealsoinline}[1]{
+\begin{amseealsoinlinediv}
+\noindent\textit{See also: {#1}}
+\end{amseealsoinlinediv}
+}
 % po4a: environment amseealso
-\newenvironment{amseealso}{\itshape See also: \itemize}{\enditemize}
+\newenvironment{amseealso}{
+\begin{amseealsodiv}
+\itshape See also: 
+\itemize
+}
+{
+\enditemize
+\end{amseealsodiv}
+}
 
 % -------------------
 % Colours used in AM

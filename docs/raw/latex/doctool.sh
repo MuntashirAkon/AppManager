@@ -131,7 +131,8 @@ done < <(grep -o "<span class=\"toc-section-number\">.*<\/span>" $OUTPUT)
 sed -i -r -e "s/(<img src\=\"images\/icon\.png\" style\=\")width\:2cm(\" alt\=\"image\")/\1width:16.69%\2/g" $OUTPUT
 
 ##Hide Level5 section number
-sed -i -e "s/<span class=\"header-section-number\">.*\..*\..*\..*\..*<\/span\>/<span class=\"header-section-number\" style=\"display\: none\;\"><\/span>/g" $OUTPUT
+#sed -i -e "s/<span class=\"header-section-number\">.*\..*\..*\..*\..*<\/span\>/<span class=\"header-section-number\" style=\"display\: none\;\"><\/span>/g" $OUTPUT
+sed -i -r -e "s/(<span class=\"header-section-number\")(>[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*<\/span>)/\1 style=\"display:none\;\"\2/g" $OUTPUT
 
 ##Alertbox Fixup
 sed -i -r "s/<div class\=\"amalert--(.*)\">/<div class\=\"amalert\" style\=\"border\: 3.0pt solid #\1\;\">/g" $OUTPUT

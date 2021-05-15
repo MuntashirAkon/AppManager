@@ -48,6 +48,14 @@
     display: inline;
 }
 
+.amseealsodiv {
+    font-style: oblique; 
+}
+
+.amseealsoinlinediv {
+    font-style: oblique; 
+}
+
 .itemize .colorbox {
     padding: 3px 7px;
     border-radius: 5px;
