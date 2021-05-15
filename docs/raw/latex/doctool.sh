@@ -71,7 +71,8 @@ done < <(grep -o "<span class=\"toc-section-number\">.*<\/span>" $OUTPUT)
 
 
 ##Icon Fixup(Need --default-image-extension=png option)
-sed -i -e "s/\<img src\=\"images\/icon.png\" style\=\"width:2cm\"/\<img src\=\"images\/icon-.png\" style\=\"width\:16.69\%\"/g" $OUTPUT
+#sed -i -e "s/\<img src\=\"images\/icon.png\" style\=\"width:2cm\"/\<img src\=\"images\/icon-.png\" style\=\"width\:16.69\%\"/g" $OUTPUT 
+sed -i -r -e "s/(<img src\=\"images\/icon\.png\" style\=\")width\:2cm(\" alt\=\"image\")/\1width:16.69%\2/g" $OUTPUT
 
 ##Hide Level5 section number
 sed -i -e "s/<span class=\"header-section-number\">.*\..*\..*\..*\..*<\/span\>/<span class=\"header-section-number\" style=\"display\: none\;\"><\/span>/g" $OUTPUT
@@ -121,13 +122,13 @@ keys=$(grep -oP "(?<=<string name=\").*?(?=\">)" ${INPUT})
 while read key_content
 do
 
-string_content=$(echo 'cat resources/string[@name="'${key_content}'"]/text()' | xmllint --shell strings.xml | sed -e '$d' -e '1d'|sed 's/\\/\\\\/g')
-while read file
-do
-source=$(cat ${file})
-echo "import re;import sys;print(re.sub(r'(?<=%%!!"${key_content}"<<\n)[^%%!!>>]*(?=%%!!>>)', sys.argv[2]+'\n', sys.argv[1], flags=re.M))" | python - "${source}" "${string_content}" >${file}
+    string_content=$(echo 'cat resources/string[@name="'${key_content}'"]/text()' | xmllint --shell strings.xml | sed -e '$d' -e '1d'|sed 's/\\/\\\\/g')
+    while read file
+    do
+        source=$(cat ${file})
+        echo "import re;import sys;print(re.sub(r'(?<=%%!!"${key_content}"<<\n)[^%%!!>>]*(?=%%!!>>)', sys.argv[2]+'\n', sys.argv[1], flags=re.M))" | python - "${source}" "${string_content}" >${file}
 
-done < <(find ./ -type f -name "*.tex")
+    done < <(find ./ -type f -name "*.tex")
 
 done < <(echo "$keys" | grep -Pv ".*(?===title)")
 
