@@ -102,7 +102,7 @@ Help translate [the app strings](https://hosted.weblate.org/engage/app-manager/)
 * **Software:** Android Studio, Gradle
 * Active internet connection
 
-**Note:**For documentation build instruction,see [here](docs/raw/latex/README)
+**Note:** For documentation build instruction,see [here](docs/raw/latex/README)
 
 
 ### macOS
