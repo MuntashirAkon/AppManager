@@ -48,6 +48,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
+import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
@@ -168,7 +169,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     try {
                         @SuppressLint("WrongConstant")
                         ApplicationInfo info = mPackageManager.getApplicationInfo(item.packageName, PackageUtils.flagMatchUninstalled);
-                        if (info.publicSourceDir != null) {
+                        if (info.publicSourceDir != null && FeatureController.isInstallerEnabled()) {
                             Intent intent = new Intent(mActivity, PackageInstallerActivity.class);
                             intent.setData(Uri.fromFile(new File(info.publicSourceDir)));
                             mActivity.startActivity(intent);
