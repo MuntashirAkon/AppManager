@@ -42,23 +42,27 @@
     <string name="tracker_classes">فئات التتبع</string>
     <string name="tracker_details">تفاصيل برمجيات التتبع</string>
     <string name="found_trackers">برمجيات التتبع التي تم العثور عليها:</string>
-    <string name="tested_signatures_on_classes_and_time_taken">اختبرت <xliff:g id="signature_no" example="342"> %1$d</xliff:g> تواقيع على <xliff:g id="class_no" example="6000"> %2$d </xliff:g> أصناف.
-\nالوقت الذي استغرق <xliff:g id="time" example="10000"> %3$d </xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d </xliff:g> التكرار).</string>
+    <string name="tested_signatures_on_classes_and_time_taken">تم اختبار <xliff:g id="signature_no" example="342">%1$d</xliff:g> التوقيعات على <xliff:g id="class_no" example="6000">%2$d</xliff:g> الفئات.
+\nالوقت الذي استغرق <xliff:g id="time" example="10000">%3$d</xliff:g> مللي ثانية (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> التكرارات).</string>
     <string name="toggle_class_listing">تبديل قائمة الفصل</string>
     <string name="class_viewer">عارض الفصل</string>
     <string name="word_wrap">تفعيل التفاف النص</string>
     <string name="credits_message">لمؤلفي
 \n- مشروع Android مفتوح المصدر
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info"> معلومات عن حزمة التطبيقات </a>
 \n- <a href="https://github.com/butzist/ActivityLauncher"> مشغل النشاط </a>
-\n- <a href="https://github.com/billthefarmer/editor"> المحرر </a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info"> معلومات عن حزم التطبيقات </a>
 \n- <a href="https://github.com/zhaobao/AppsMonitor"> AppsMonitor </a>
-\n- <a href="https://github.com/tuyafeng/Watt"> واط </a>
 \n- <a href="https://github.com/8enet/AppOpsX"> AppOpsX </a>
+\n- <a href="https://github.com/billthefarmer/editor"> محرر </a>
+\n- <a href="https://github.com/k3b/intent-intercept"> اعتراض النية </a>
+\n- <a href="https://github.com/pluscubed/matlog"> مات لوغ </a>
+\n- <a href="https://github.com/matrix-org/matrix-android-sdk"> Matrix Android SDK </a>
+\n- <a href="https://github.com/jensstein/oandbackup"> OAndBackup </a>
+\n- <a href="https://github.com/open-keychain/open-keychain"> Open Keychain </a>
 \n- <a href="https://github.com/Aefyr/SAI"> الديوان </a>
 \n- <a href="https://github.com/RikkaApps/Shizuku"> شيزوكو </a>
-\n- <a href="https://github.com/pluscubed/matlog"> MatLog </a>
-\nمصدر الشعار الأصلي: <a href="https://github.com/Atrate"> Atrate </a>. </string>
+\n- <a href="https://github.com/tuyafeng/Watt"> واط </a>
+\nمصدر الشعار الأصلي: <a href="https://github.com/Atrate"> أتراتي </a>. </string>
     <string name="credits">الإشادات</string>
     <string name="third_party">مكتبات وأيقونات الطرف الثالث</string>
     <string name="license">الرخصة</string>
@@ -1159,4 +1163,18 @@
     <string name="no_changes">لا تغييرات</string>
     <string name="pref_display_changes_msg">عرض التغييرات في الإصدار ، برمجيات التتبع ، والمكونات ، والأذونات ، والتوقيعات ، SDK ، وما إلى ذلك بطريقة النسخة التي تسيطر عليها.</string>
     <string name="pref_display_changes">عرض التغييرات</string>
+    <string name="netpolicy_disable_network_access">تعطيل الوصول إلى الشبكة</string>
+    <string name="netpolicy_reject_wifi_data">رفض بيانات Wi-Fi</string>
+    <string name="netpolicy_reject_vpn_data">رفض بيانات VPN</string>
+    <string name="netpolicy_reject_cellular_data">رفض البيانات الخلوية</string>
+    <string name="netpolicy_allow_background_data">السماح ببيانات الخلفية عند تشغيل \"توفير البيانات\"</string>
+    <string name="netpolicy_reject_background_data">ارفض بيانات الخلفية</string>
+    <string name="unknown_netpolicy">سياسة انترنت غير معروفة (%s)</string>
+    <string name="port_number_invalid">رقم المنفذ غير صحيح.</string>
+    <string name="port_number_empty">رقم المنفذ فارغ.</string>
+    <string name="adb_connect_port_number_description">يوجد رقم المنفذ أسفل قسم <b> عنوان IP &amp; المنفذ </b> أسفل قسم <b> اسم الجهاز </b> مباشرةً.</string>
+    <string name="port_number">المنفذ</string>
+    <string name="adb_connect">اتصال</string>
+    <string name="wireless_debugging_not_supported">التصحيح اللاسلكي غير مدعوم في هذا النظام الأساسي.</string>
+    <string name="wireless_debugging">التصحيح اللاسلكي</string>
 </resources>
