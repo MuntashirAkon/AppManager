@@ -1,0 +1,79 @@
+./doctool.sh COMMAND ARGS
+--COMMANDS--
+buildhtml
+Build HTML from TeX
+
+updatetranslation
+Extract strings and create xliff translation file
+
+mergetranslation
+Merge translation from xliff to TeX
+
+help
+Show this help and exit
+
+checkdeps
+Run dependency checker
+
+
+
+Dependencies
+・pandoc
+Install pandoc above v2.13.
+Download releases from here and install it.(maybe your package manager have pandoc package,but it will cause bug due to it is outdated)
+https://github.com/jgm/pandoc/releases/tag/2.13
+
+・pandoc-crossref
+-Solution1-
+Download file from here
+https://github.com/lierdakil/pandoc-crossref/releases
+Extract it
+Put files to working directory(THIS DIRECTORY)
+
+-Solution2-
+Follow this guide to install pandoc-crossref in to system
+https://github.com/lierdakil/pandoc-crossref/blob/master/README.md
+
+・Python
+Run "apt install python"
+
+・GNU Sed
+Most distros installed by default.Probably you have to install yourself if you're using mac.
+If not, run "apt install sed"
+
+・Bash
+All distros installed by default.Don't use "sh".Please use "bash"
+
+・Awk
+Most distros installed by default.
+If not,run "apt install awk"
+
+・Grep
+Most distros installed by default.
+If not,run "apt install grep"
+
+・xmllint
+Probably installed by default in your distro.
+If not,run "apt install xmllint"
+
+・Perl
+Run "apt install perl"
+
+
+
+Tutorial
+
+./doctool.sh updatetranslation
+This command will extract strings from TeX and create strings.xml.
+Copy it with identificatable name and translate it.
+Please note that line breaks are ignored.
+And Please don't break TeX tags(eg,\hyperref[],\textbf,\cref)
+
+./doctool.sh mergetranslation
+Then,this command will update TeX from strings.xml.
+If strings.xml syntax is invaild,you will get error when you run this command.
+It takes several times.
+
+./doctool.sh buildhtml
+Finally this command will build html file.
+Please check output file to check if your translation applied correctly
