@@ -831,4 +831,19 @@
     <string name="send_crash_report">Wyślij raport o awarii</string>
     <string name="tap_to_submit_crash_report">Dotknij, aby przesłać raport o awarii.</string>
     <string name="filter_running_apps">Uruchomione aplikacje</string>
+    <string name="no_matching_package_found">Nie znaleziono takiej applikacji</string>
+    <plurals name="alert_failed_to_set_app_ops">
+        <item quantity="one">Błąd w ustawieniu operacji dla aplikacji %1$d</item>
+        <item quantity="few">Błąd w ustawieniu operacji dla aplikacji %1$d</item>
+        <item quantity="many">Błąd w ustawieniu operacji dla aplikacji %1$d</item>
+        <item quantity="other">Błąd w ustawieniu operacji dla aplikacji %1$d</item>
+    </plurals>
+    <string name="internal_data">Dane wewnętrzne</string>
+    <string name="failed_to_parse_some_numbers">Nie można przetworzyć niektórych liczb</string>
+    <string name="input_app_ops_description_profile">Wprowadź nazwy operacji aplikacji i/lub stałe ze spacjami, np. <tt>WAKE_LOCK 63 72 CAMERA</tt> itp. Użyj <tt>*</tt>, aby zastosować zmiany wszystkich skonfigurowanych operacji aplikacji.</string>
+    <string name="input_app_ops_description">Wprowadź nazwy operacji aplikacji i/lub stałe ze spacjami, np. <tt>WAKE_LOCK 63 72 CAMERA</tt> itp.</string>
+    <string name="battery_mode">Tryb oszczędzania baterii</string>
+    <string name="app_signing_signatures">Sygnatury</string>
+    <string name="soft_input">Tryb delikatnego wprowadzenia</string>
+    <string name="authority">Autoryzacja</string>
 </resources>
