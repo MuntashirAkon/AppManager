@@ -61,9 +61,10 @@ public class UIUtils {
                                                int color) {
         Spannable spannable = sSpannableFactory.newSpannable(text);
         int start = text.toLowerCase(Locale.ROOT).indexOf(constraint);
+        if (start == -1) return spannable;
         int end = start + constraint.length();
-        spannable.setSpan(new BackgroundColorSpan(color), start, end,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        if (end > text.length()) return spannable;
+        spannable.setSpan(new BackgroundColorSpan(color), start, end, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
         return spannable;
     }
 
