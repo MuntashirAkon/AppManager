@@ -394,17 +394,21 @@
     <string name="no_tracker_found">Không tìm thấy trình theo dõi nào</string>
     <string name="clear_app_cache_description">Xoá bộ nhớ đệm của tất cả ứng dụng</string>
     <string name="credits_message">Các tác giả của
-\n- Dự án mã nguồn mở Android
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
+\n- Android Open Source Project
 \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
-\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
-\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
+\n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
+\n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
+\n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a>
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
-\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
-\nGhi nhận cho logo ban đầu: <a href="https://github.com/Atrate">Atrate</a>. </string>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
+\nGhi nhận logo ban đầu: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="starting_activity">Hoạt động bắt đầu: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="clear_data_message">Bạn có chắc muốn xoá dữ liệu của ứng dụng này không\?</string>
     <string name="clear_data_from_uninstalled_apps_description">Xoá dữ liệu của các ứng dụng đã gỡ cài đặt với cờ <tt>DONT_DELETE_DATA</tt></string>
@@ -440,4 +444,121 @@
     <string name="expiry_date_cannot_be_empty">Ngày hết hạn không thể trống.</string>
     <string name="signing_key">Mã ký</string>
     <string name="app_signing_signatures">Chữ ký</string>
+    <string name="backup_rules_description">Sao lưu các quy tắc đã thiết lập từ trong App Manager.</string>
+    <string name="backup_extras_description">Sao lưu các quyền của ứng dụng, các tuỳ chọn tiết kiệm pin và sử dụng dữ liệu, trạng thái MagiskHide, SSAID, v.v.</string>
+    <string name="backup_extras">Bổ sung</string>
+    <string name="backup_cache_description">Sao lưu các thư mục <b>cache</b>, <b>no_cache</b> và <b>no_backup</b>.</string>
+    <string name="backup_obb_media_description">Sao lưu OBB và các thư mục phương tiện.</string>
+    <string name="backup_external_data_description">Sao lưu các thư mục dữ liệu ở ngoài.</string>
+    <string name="backup_internal_data_description">Sao lưu các thư mục dữ liệu ở trong.</string>
+    <string name="backup_apk_files_description">Sao lưu các tệp APK từ thư mục nguồn, bao gồm cả các tệp tách.</string>
+    <string name="set_mode_for_app_ops_dots">Đặt chế độ cho hoạt động ứng dụng…</string>
+    <string name="graphics">Đồ hoạ</string>
+    <string name="cpu">CPU</string>
+    <string name="pref_sign_apk_msg">Ký các tệp APK trước khi cài đặt chúng.</string>
+    <string name="pref_sign_apk">Ký APK</string>
+    <string name="install_location_prefer_external">Ưu tiên ở ngoài</string>
+    <string name="install_location_internal_only">Chỉ ở trong</string>
+    <string name="install_location">Vị trí cài đặt</string>
+    <string name="installer">Trình cài đặt</string>
+    <string name="comment">Bình luận</string>
+    <string name="orientation_unspecified">Chưa chỉ định</string>
+    <string name="orientation_behind">Phía sau</string>
+    <string name="orientation_locked">Đã khoá</string>
+    <string name="orientation_full_user">Đầy đủ người dùng</string>
+    <string name="orientation_full_sensor">Đầy đủ cảm biến</string>
+    <string name="launch_mode_single_task">Một công việc</string>
+    <string name="launch_mode_multiple">Nhiều</string>
+    <string name="locale_split_for_base_apk"><xliff:g id="split_name" example="English">%1$s</xliff:g> ngôn ngữ cho APK cơ sở</string>
+    <string name="locale_split_for_feature"><xliff:g id="split_name" example="English">%1$s</xliff:g> ngôn ngữ cho tính năng <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <string name="abi_split_for_base_apk"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> mã cho APK cơ sở</string>
+    <string name="abi_split_for_feature"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> mã cho <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <string name="density_split_for_base_apk"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) tài nguyên cho APK cơ sở</string>
+    <string name="density_split_for_feature"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) tài nguyên cho tính năng <xliff:g id="feature_name" example="Visualizer">%3$s</xliff:g></string>
+    <string name="unknown_split_for_base_apk"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> cho APK cơ sở</string>
+    <string name="unknown_split_for_feature"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> cho tính năng <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <string name="split_feature_name">Tính năng: <xliff:g id="feature_name" example="Visualizer">%1$s</xliff:g></string>
+    <string name="base_apk">APK cơ sở</string>
+    <string name="choose_language">Đổi ngôn ngữ</string>
+    <string name="auto">Tự động</string>
+    <string name="pref_app_language">Ngôn ngữ</string>
+    <string name="backup_all_users">Tất cả người dùng</string>
+    <string name="backup_multiple">Sao lưu nhiều</string>
+    <string name="obb_files_extracted_successfully">Đã trích xuất tệp OBB</string>
+    <string name="failed_to_extract_obb_files">Không thể trích xuất tệp OBB</string>
+    <string name="orientation_no_sensor">Không có cảm biến</string>
+    <string name="orientation_landscape">Ngang</string>
+    <string name="_undefined">Chưa định nghĩa</string>
+    <string name="required">Bắt buộc</string>
+    <string name="orientation_user_portrait">Dọc theo người dùng</string>
+    <string name="orientation_user_landscape">Ngang theo người dùng</string>
+    <string name="orientation_sensor_portrait">Dọc theo cảm biến</string>
+    <string name="orientation_sensor_landscape">Ngang theo cảm biến</string>
+    <string name="orientation_user">Người dùng</string>
+    <string name="orientation_reverse_landscape">Ngang đảo ngược</string>
+    <string name="orientation_reverse_portrait">Dọc đảo ngược</string>
+    <string name="orientation_portrait">Dọc</string>
+    <string name="navigation_no_nav">Không có điều hướng</string>
+    <string name="keyboard_12_keys">12 phím</string>
+    <string name="keyboard_qwerty">QWERTY</string>
+    <string name="keyboard_no_keys">Không có phím</string>
+    <string name="shared_prefs">Cài đặt dùng chung</string>
+    <string name="word_wrap">Bật/tắt gói gọn từ</string>
+    <string name="installer_error_session_write">Không thể ghi vào phiên làm việc của trình cài đặt</string>
+    <string name="installer_error_session_create">Không thể tạo một phiên làm việc của trình cài đặt</string>
+    <string name="installer_error_security">Không thể truy cập các tệp APK</string>
+    <string name="install_in_progress">Đang cài đặt</string>
+    <string name="package_installer">Trình cài đặt gói</string>
+    <string name="unblock_trackers">Bỏ chặn trình theo dõi</string>
+    <string name="reinstall">Cài đặt lại</string>
+    <string name="install_app_message">Bạn có muốn cài đặt ứng dụng này không\?</string>
+    <string name="try_again">Thử lại</string>
+    <string name="full_stop_tap_to_see_details">. Nhấn để xem chi tiết.</string>
+    <string name="operation_running">Hoạt động đang chạy…</string>
+    <string name="batch_ops">Hoạt động hàng loạt</string>
+    <string name="failed_to_fetch_package_info">Không thể lấy thông tin gói</string>
+    <string name="installer_error_lidl_rom">ROM của bạn không tương thích với Trình cài đặt không dùng root.</string>
+    <string name="installer_error_generic">Cài đặt thất bại</string>
+    <string name="installer_error_storage">Không đủ dung lương bộ nhớ để cài đặt ứng dụng</string>
+    <string name="installer_error_bad_apks">Đã chọn các tệp APK không hợp lệ</string>
+    <string name="installer_error_incompatible">Ứng dụng không tương thích với thiết bị</string>
+    <string name="installer_error_conflict">Không thể cài đặt ứng dụng vì tên gói đang được sử dụng</string>
+    <string name="installer_error_blocked">Cài đặt bị <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> chặn</string>
+    <string name="installer_error_blocked_device">thiết bị</string>
+    <string name="installer_error_aborted">Cài đặt thất bại vì nó bị huỷ hoặc phiên làm việc bị đóng đột ngột</string>
+    <string name="toggle_default_app_ops">Bật/tắt hoạt động ứng dụng mặc định</string>
+    <string name="filter_apps_with_activities">Có hoạt động</string>
+    <string name="are_you_sure">Bạn có chắc không\?</string>
+    <string name="pref_remove_all_rules_msg">Các quyền sẽ được cấp, các hoạt động ứng dụng và thành phần sẽ trở về giá trị ban đầu của chúng.</string>
+    <string name="pref_remove_all_rules">Xoá tất cả quy tắc</string>
+    <string name="website">Trang web</string>
+    <string name="run_in_termux">Chạy trong Termux</string>
+    <string name="open_in_termux">Mở trong Termux</string>
+    <string name="export_icon">Trích xuất biểu tượng</string>
+    <string name="clear">Xoá</string>
+    <string name="skip_signature_checks">Bỏ qua kiểm tra chữ ký</string>
+    <string name="yes">Có</string>
+    <string name="no">Không</string>
+    <string name="apply_to_system_apps_question">Cũng áp dụng cho các ứng dụng hệ thống\? Hãy chọn \"Không\" nếu không chắc.</string>
+    <string name="apply_to_system_apps">Áp dụng cho các ứng dụng hệ thống</string>
+    <plurals name="verified_with_warning">
+        <item quantity="other">Đã xác minh với %d cảnh báo</item>
+    </plurals>
+    <plurals name="missing_signatures">
+        <item quantity="other">%1$d chữ ký bị thiếu</item>
+    </plurals>
+    <plurals name="libraries">
+        <item quantity="other">%1$d thư viện</item>
+    </plurals>
+    <string name="internal_data">Dữ liệu nội bộ</string>
+    <string name="failed_to_install_package_name">Không thể cài đặt <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
+    <string name="package_name_is_installed_successfully">Đã cài đặt <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
+    <plurals name="no_of_splits">
+        <item quantity="other">%1$d tách</item>
+    </plurals>
+    <string name="only_works_in_root_or_adb_mode">Chỉ hoạt động trong chế độ root hoặc ADB</string>
+    <string name="input_app_ops_description_profile">Nhập tên hoạt động ứng dụng và/hoặc hằng số có dấu cách, vd: <tt>WAKE_LOCK 63 72 CAMERA</tt>, v.v. Sử dụng <tt>*</tt> để áp dụng cho tất cả hoạt động ứng dụng đã thiết lập.</string>
+    <string name="deny_app_ops_description">Đặt một chế độ cho hoạt động ứng dụng được nhận dạng bởi các giá trị hằng số, vd: <tt>63</tt> hoặc <tt>RUN_IN_BACKGROUND</tt></string>
+    <string name="pref_import_existing_msg">Thêm các thành phần bị các ứng dụng khác tắt vào App Manager. Hãy cẩn thận khi sử dụng công cụ này vì có thể có nhiều mục dương tính sai. Chỉ chọn các ứng dụng mà bạn chắc chắn về chúng.</string>
+    <string name="pref_import_existing">Nhập các quy tắc đang tồn tại</string>
 </resources>
