@@ -394,17 +394,21 @@
     <string name="no_tracker_found">Không tìm thấy trình theo dõi nào</string>
     <string name="clear_app_cache_description">Xoá bộ nhớ đệm của tất cả ứng dụng</string>
     <string name="credits_message">Các tác giả của
-\n- Dự án mã nguồn mở Android
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
+\n- Android Open Source Project
 \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
-\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
-\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
+\n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
+\n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
+\n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a>
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
-\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
-\nGhi nhận cho logo ban đầu: <a href="https://github.com/Atrate">Atrate</a>. </string>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
+\nGhi nhận logo ban đầu: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="starting_activity">Hoạt động bắt đầu: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="clear_data_message">Bạn có chắc muốn xoá dữ liệu của ứng dụng này không\?</string>
     <string name="clear_data_from_uninstalled_apps_description">Xoá dữ liệu của các ứng dụng đã gỡ cài đặt với cờ <tt>DONT_DELETE_DATA</tt></string>
@@ -500,4 +504,61 @@
     <string name="keyboard_no_keys">Không có phím</string>
     <string name="shared_prefs">Cài đặt dùng chung</string>
     <string name="word_wrap">Bật/tắt gói gọn từ</string>
+    <string name="installer_error_session_write">Không thể ghi vào phiên làm việc của trình cài đặt</string>
+    <string name="installer_error_session_create">Không thể tạo một phiên làm việc của trình cài đặt</string>
+    <string name="installer_error_security">Không thể truy cập các tệp APK</string>
+    <string name="install_in_progress">Đang cài đặt</string>
+    <string name="package_installer">Trình cài đặt gói</string>
+    <string name="unblock_trackers">Bỏ chặn trình theo dõi</string>
+    <string name="reinstall">Cài đặt lại</string>
+    <string name="install_app_message">Bạn có muốn cài đặt ứng dụng này không\?</string>
+    <string name="try_again">Thử lại</string>
+    <string name="full_stop_tap_to_see_details">. Nhấn để xem chi tiết.</string>
+    <string name="operation_running">Hoạt động đang chạy…</string>
+    <string name="batch_ops">Hoạt động hàng loạt</string>
+    <string name="failed_to_fetch_package_info">Không thể lấy thông tin gói</string>
+    <string name="installer_error_lidl_rom">ROM của bạn không tương thích với Trình cài đặt không dùng root.</string>
+    <string name="installer_error_generic">Cài đặt thất bại</string>
+    <string name="installer_error_storage">Không đủ dung lương bộ nhớ để cài đặt ứng dụng</string>
+    <string name="installer_error_bad_apks">Đã chọn các tệp APK không hợp lệ</string>
+    <string name="installer_error_incompatible">Ứng dụng không tương thích với thiết bị</string>
+    <string name="installer_error_conflict">Không thể cài đặt ứng dụng vì tên gói đang được sử dụng</string>
+    <string name="installer_error_blocked">Cài đặt bị <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> chặn</string>
+    <string name="installer_error_blocked_device">thiết bị</string>
+    <string name="installer_error_aborted">Cài đặt thất bại vì nó bị huỷ hoặc phiên làm việc bị đóng đột ngột</string>
+    <string name="toggle_default_app_ops">Bật/tắt hoạt động ứng dụng mặc định</string>
+    <string name="filter_apps_with_activities">Có hoạt động</string>
+    <string name="are_you_sure">Bạn có chắc không\?</string>
+    <string name="pref_remove_all_rules_msg">Các quyền sẽ được cấp, các hoạt động ứng dụng và thành phần sẽ trở về giá trị ban đầu của chúng.</string>
+    <string name="pref_remove_all_rules">Xoá tất cả quy tắc</string>
+    <string name="website">Trang web</string>
+    <string name="run_in_termux">Chạy trong Termux</string>
+    <string name="open_in_termux">Mở trong Termux</string>
+    <string name="export_icon">Trích xuất biểu tượng</string>
+    <string name="clear">Xoá</string>
+    <string name="skip_signature_checks">Bỏ qua kiểm tra chữ ký</string>
+    <string name="yes">Có</string>
+    <string name="no">Không</string>
+    <string name="apply_to_system_apps_question">Cũng áp dụng cho các ứng dụng hệ thống\? Hãy chọn \"Không\" nếu không chắc.</string>
+    <string name="apply_to_system_apps">Áp dụng cho các ứng dụng hệ thống</string>
+    <plurals name="verified_with_warning">
+        <item quantity="other">Đã xác minh với %d cảnh báo</item>
+    </plurals>
+    <plurals name="missing_signatures">
+        <item quantity="other">%1$d chữ ký bị thiếu</item>
+    </plurals>
+    <plurals name="libraries">
+        <item quantity="other">%1$d thư viện</item>
+    </plurals>
+    <string name="internal_data">Dữ liệu nội bộ</string>
+    <string name="failed_to_install_package_name">Không thể cài đặt <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
+    <string name="package_name_is_installed_successfully">Đã cài đặt <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
+    <plurals name="no_of_splits">
+        <item quantity="other">%1$d tách</item>
+    </plurals>
+    <string name="only_works_in_root_or_adb_mode">Chỉ hoạt động trong chế độ root hoặc ADB</string>
+    <string name="input_app_ops_description_profile">Nhập tên hoạt động ứng dụng và/hoặc hằng số có dấu cách, vd: <tt>WAKE_LOCK 63 72 CAMERA</tt>, v.v. Sử dụng <tt>*</tt> để áp dụng cho tất cả hoạt động ứng dụng đã thiết lập.</string>
+    <string name="deny_app_ops_description">Đặt một chế độ cho hoạt động ứng dụng được nhận dạng bởi các giá trị hằng số, vd: <tt>63</tt> hoặc <tt>RUN_IN_BACKGROUND</tt></string>
+    <string name="pref_import_existing_msg">Thêm các thành phần bị các ứng dụng khác tắt vào App Manager. Hãy cẩn thận khi sử dụng công cụ này vì có thể có nhiều mục dương tính sai. Chỉ chọn các ứng dụng mà bạn chắc chắn về chúng.</string>
+    <string name="pref_import_existing">Nhập các quy tắc đang tồn tại</string>
 </resources>
