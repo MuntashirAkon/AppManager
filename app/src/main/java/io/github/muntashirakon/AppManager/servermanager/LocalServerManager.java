@@ -5,13 +5,13 @@ package io.github.muntashirakon.AppManager.servermanager;
 import android.os.SystemClock;
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.WorkerThread;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.WorkerThread;
 
 import io.github.muntashirakon.AppManager.adb.AdbConnection;
 import io.github.muntashirakon.AppManager.adb.AdbConnectionManager;
@@ -238,7 +238,7 @@ class LocalServerManager {
             } catch (IOException | InterruptedException e) {
                 Log.e(TAG, "useAdbStartServer: unable to read from shell.", e);
             }
-            Log.e(TAG, "useAdbStartServer: " + sb.toString());
+            Log.e(TAG, "useAdbStartServer: " + sb);
         }).start();
 
         try {
