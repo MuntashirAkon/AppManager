@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 if ! [[ -f ./app/src/main/assets/am.jar ]]; then
   echo "M"
