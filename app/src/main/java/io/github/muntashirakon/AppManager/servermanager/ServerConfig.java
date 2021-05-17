@@ -99,7 +99,7 @@ public class ServerConfig {
     }
 
     public static String getAdbHost() {
-        return Inet4Address.getLoopbackAddress().getHostName();
+        return Inet4Address.getLoopbackAddress().getHostAddress();
     }
 
     public static String getLocalServerHost() {
