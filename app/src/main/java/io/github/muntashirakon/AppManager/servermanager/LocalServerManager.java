@@ -196,7 +196,7 @@ class LocalServerManager {
             }
         }
 
-        Log.d(TAG, "useAdbStartServer: connecting...");
+        Log.d(TAG, "useAdbStartServer: connecting using host=" + mConfig.adbHost + ", port=" + mConfig.adbPort);
         try {
             connection = AdbConnectionManager.connect(mConfig.adbHost, mConfig.adbPort);
         } catch (Exception e) {
