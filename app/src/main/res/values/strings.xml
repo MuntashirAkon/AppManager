@@ -1052,7 +1052,6 @@
     <string name="pref_display_changes">Display changes</string>
     <string name="pref_display_changes_msg">Display changes in version, trackers, components, permissions, signatures, SDK, etc. in a version controlled manner.</string>
     <string name="no_changes">No changes</string>
-    <string name="unknown_netpolicy">Unknown netpolicy (%s)</string>
     <string name="netpolicy_reject_background_data">Reject background data</string>
     <string name="netpolicy_allow_background_data">Allow background data when Data Saver is on</string>
     <string name="netpolicy_reject_cellular_data">Reject cellular data</string>
@@ -1067,4 +1066,5 @@
         just below the <b>Device name</b> section.</string>
     <string name="port_number_empty">Port number is empty.</string>
     <string name="port_number_invalid">Invalid port number.</string>
+    <string name="unknown_net_policy">Unknown netpolicy (%1$s - %2$X)</string>
 </resources>
