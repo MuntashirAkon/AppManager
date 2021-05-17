@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 package org.apache.commons.compress.compressors.bzip2;
 
 import android.os.RemoteException;

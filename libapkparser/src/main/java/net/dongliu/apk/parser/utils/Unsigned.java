@@ -1,8 +1,11 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.utils;
 
 /**
  * Unsigned utils, for compatible with java6/java7.
  */
+// Copyright 2017 hsiafan
 public class Unsigned {
     public static long toLong(int value) {
         return value & 0xffffffffL;

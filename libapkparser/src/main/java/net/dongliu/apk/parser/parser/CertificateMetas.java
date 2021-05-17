@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.parser;
 
 import net.dongliu.apk.parser.bean.CertificateMeta;
@@ -15,6 +17,7 @@ import javax.security.cert.X509Certificate;
 
 import androidx.annotation.NonNull;
 
+// Copyright 2018 hsiafan
 public class CertificateMetas {
 
     @NonNull

@@ -1,8 +1,11 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.struct.resource;
 
 /**
  * Screen density values
  */
+// Copyright 2016 Liu Dong
 public abstract class Densities {
     public static final int DEFAULT = 0;
     public static final int LOW = 120;

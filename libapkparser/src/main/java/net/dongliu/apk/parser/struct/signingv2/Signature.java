@@ -1,5 +1,8 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.struct.signingv2;
 
+// Copyright 2018 hsiafan
 public class Signature {
     private int algorithmID;
     private byte[] data;

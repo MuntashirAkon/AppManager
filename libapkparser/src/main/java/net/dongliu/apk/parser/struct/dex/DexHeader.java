@@ -1,11 +1,12 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.struct.dex;
 
 /**
  * dex file header.
  * see http://dexandroid.googlecode.com/svn/trunk/dalvik/libdex/DexFile.h
- *
- * @author dongliu
  */
+// Copyright 2014 Liu Dong
 public class DexHeader {
 
     public static final int kSHA1DigestLen = 20;

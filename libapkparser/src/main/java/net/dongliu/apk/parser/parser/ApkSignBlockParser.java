@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.parser;
 
 import net.dongliu.apk.parser.struct.signingv2.ApkSigningBlock;
@@ -23,6 +25,7 @@ import androidx.annotation.NonNull;
 /**
  * The Apk Sign Block V2 Parser.
  */
+// Copyright 2018 hsiafan
 public class ApkSignBlockParser {
     private ByteBuffer data;
 

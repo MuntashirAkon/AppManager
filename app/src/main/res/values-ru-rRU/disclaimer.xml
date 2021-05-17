@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <resources>
     <string name="disclaimer_header">ПРЕДУПРЕЖДЕНИЕ</string>
     <string name="disclaimer_body">App Manager предлагает функции, которых могут выполняться с помощью root-прав, которые могут нанести вред

@@ -1,8 +1,11 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.bean;
 
 /**
  * Icon path, and density
  */
+// Copyright 2017 Liu Dong
 public class IconPath {
     private String path;
     private int density;

@@ -1,3 +1,16 @@
+Valid-License-Identifier: GPL-3.0+
+Valid-License-Identifier: GPL-3.0-or-later
+SPDX-URL: https://spdx.org/licenses/GPL-3.0-or-later.html
+Usage-Guide:
+  To use this license in source code, put one of the following SPDX
+  tag/value pairs into a comment according to the placement
+  guidelines in the licensing rules documentation.
+  For 'GNU General Public License (GPL) version 3 or any later version' use:
+    SPDX-License-Identifier: GPL-3.0+
+  or
+    SPDX-License-Identifier: GPL-3.0-or-later
+License-Text:
+
                     GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 

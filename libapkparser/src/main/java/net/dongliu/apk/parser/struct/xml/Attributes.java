@@ -1,12 +1,13 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.struct.xml;
 
 import androidx.annotation.Nullable;
 
 /**
  * xml node attributes
- *
- * @author dongliu
  */
+// Copyright 2014 Liu Dong
 public class Attributes {
 
     private final Attribute[] attributes;

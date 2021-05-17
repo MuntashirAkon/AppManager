@@ -1,9 +1,12 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+// Copyright 2017 Liu Dong
 public class Inputs {
 
     public static byte[] readAll(InputStream in) throws IOException {

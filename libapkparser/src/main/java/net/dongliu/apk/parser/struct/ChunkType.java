@@ -1,11 +1,12 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.struct;
 
 /**
  * Resource type
  * see https://android.googlesource.com/platform/frameworks/base/+/master/libs/androidfw/include/androidfw/ResourceTypes.h
- *
- * @author dongliu
  */
+// Copyright 2014 Liu Dong
 public class ChunkType {
     public static final int NULL = 0x0000;
     public static final int STRING_POOL = 0x0001;

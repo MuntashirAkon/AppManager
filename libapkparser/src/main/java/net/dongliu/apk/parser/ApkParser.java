@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser;
 
 import net.dongliu.apk.parser.bean.ApkSignStatus;
@@ -21,9 +23,8 @@ import androidx.annotation.Nullable;
 /**
  * ApkParser, for parsing apk file info.
  * This class is not thread-safe.
- *
- * @author dongliu
  */
+// Copyright 2016 Liu Dong
 public class ApkParser extends AbstractApkFile implements Closeable {
 
     private final ZipFile zf;

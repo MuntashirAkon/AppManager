@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.struct.resource;
 
 import net.dongliu.apk.parser.struct.ChunkHeader;
@@ -6,12 +8,11 @@ import net.dongliu.apk.parser.utils.Unsigned;
 
 /**
  * Table library chunk header
- *
- * @author Liu Dong
  */
+// Copyright 2016 Liu Dong
 public class LibraryHeader extends ChunkHeader {
 
-    /**
+    /*
      * A package-id to package name mapping for any shared libraries used
      * in this resource table. The package-id's encoded in this resource
      * table may be different than the id's assigned at runtime. We must

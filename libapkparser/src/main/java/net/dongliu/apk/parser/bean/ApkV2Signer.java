@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.bean;
 
 import java.util.List;
@@ -5,6 +7,7 @@ import java.util.List;
 /**
  * ApkSignV1 certificate file.
  */
+// Copyright 2018 hsiafan
 public class ApkV2Signer {
     /**
      * The meta info of certificate contained in this cert file.

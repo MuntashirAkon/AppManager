@@ -1,10 +1,11 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.bean;
 
 /**
  * the glEsVersion apk used.
- *
- * @author dongliu
  */
+// Copyright 2014 Liu Dong
 public class GlEsVersion {
     private final int major;
     private final int minor;

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT AND GPL-3.0-or-later
+
 package io.github.muntashirakon.AppManager.servermanager;
 
 import android.content.Context;
@@ -13,6 +15,7 @@ import java.net.Inet4Address;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 
+// Copyright 2016 Zheng Li
 public class ServerConfig {
     public static final int DEFAULT_ADB_PORT = 5555;
     static String SOCKET_PATH = "am_socket";
