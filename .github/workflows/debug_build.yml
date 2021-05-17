@@ -51,9 +51,9 @@ jobs:
         to: ${{ secrets.TELEGRAM_TO }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
         document: ./${{ env.APP_NAME }}.apk
-        format: html
+        format: markdown
         message: |
-          <strong>AM Debug ${{ env.APP_VERSION }} Run#${{ github.run_number }}</strong>
+          *AM Debug ${{ env.APP_VERSION }} Run#${{ github.run_number }}*
 
-          <em>${{ github.event.head_commit.message }}</em>
+          _${{ github.event.head_commit.message }}_
       continue-on-error: true
