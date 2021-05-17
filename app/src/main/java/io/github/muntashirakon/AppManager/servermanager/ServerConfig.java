@@ -19,7 +19,6 @@ import io.github.muntashirakon.AppManager.utils.IOUtils;
 public class ServerConfig {
     public static final int DEFAULT_ADB_PORT = 5555;
     static String SOCKET_PATH = "am_socket";
-    private static final String DEFAULT_LOCAL_SERVER_HOST = "127.0.0.1";
     private static int DEFAULT_LOCAL_SERVER_PORT = 60001;
     private static final String LOCAL_TOKEN = "l_token";
 
@@ -103,6 +102,6 @@ public class ServerConfig {
     }
 
     public static String getLocalServerHost() {
-        return DEFAULT_LOCAL_SERVER_HOST;
+        return Inet4Address.getLoopbackAddress().getHostAddress();
     }
 }
