@@ -1,10 +1,17 @@
+// SPDX-License-Identifier: Apache-2.0
+
 package android.app;
 
-import android.content.*;
+import android.content.ComponentName;
+import android.content.IContentProvider;
+import android.content.IIntentReceiver;
+import android.content.IIntentSender;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.UriPermission;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageDataObserver;
 import android.content.pm.ParceledListSlice;
-import android.content.pm.ProviderInfo;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
@@ -15,9 +22,9 @@ import android.os.ParcelFileDescriptor;
 import android.os.Parcelable;
 import android.os.RemoteException;
 
-import java.util.List;
-
 import androidx.annotation.RequiresApi;
+
+import java.util.List;
 
 /**
  * System private API for talking with the activity manager service.  This
@@ -64,6 +71,7 @@ public interface IActivityManager extends IInterface {
                         IIntentReceiver resultTo, int resultCode, String resultData, Bundle map,
                         String requiredPermission, int appOp, boolean serialized, boolean sticky,
                         int userId) throws RemoteException;
+
     /**
      * @deprecated Deprecated in Android 11. Use {@link #broadcastIntentWithFeature} instead
      */
@@ -99,7 +107,9 @@ public interface IActivityManager extends IInterface {
      */
     @Deprecated
     Object getContentProviderExternal(String name, int userId, IBinder token) throws RemoteException;
+
     void removeContentProvider(IBinder connection, boolean stable) throws RemoteException;
+
     void removeContentProviderExternal(String name, IBinder token) throws RemoteException;
 
     /**
@@ -110,7 +120,7 @@ public interface IActivityManager extends IInterface {
         public IContentProvider provider;
     }
 
-        /**
+    /**
      * @deprecated Removed in Android M
      */
     @Deprecated
@@ -165,6 +175,7 @@ public interface IActivityManager extends IInterface {
      */
     @Deprecated
     int checkUriPermission(Uri uri, int pid, int uid, int mode, int userId) throws RemoteException;
+
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
     int checkUriPermission(Uri uri, int pid, int uid, int mode, int userId, IBinder callerToken) throws RemoteException;
 
@@ -189,6 +200,7 @@ public interface IActivityManager extends IInterface {
     @RequiresApi(Build.VERSION_CODES.N)
     ParceledListSlice<Parcelable> getGrantedUriPermissions(String packageName, int userId)
             throws RemoteException;
+
     // Clears the URI permissions granted to an arbitrary package.
     @RequiresApi(Build.VERSION_CODES.N)
     void clearGrantedUriPermissions(String packageName, int userId) throws RemoteException;
@@ -198,22 +210,26 @@ public interface IActivityManager extends IInterface {
      */
     @Deprecated
     IBinder newUriPermissionOwner(String name) throws RemoteException;
+
     /**
      * @deprecated Removed in Android Q.
      */
     @Deprecated
     @RequiresApi(Build.VERSION_CODES.N_MR1)
     IBinder getUriPermissionOwnerForActivity(IBinder activityToken) throws RemoteException;
+
     /**
      * @deprecated Removed in Android Q.
      */
     @Deprecated
     void grantUriPermissionFromOwner(IBinder owner, int fromUid, String targetPkg, Uri uri, int mode, int sourceUserId, int targetUserId) throws RemoteException;
+
     /**
      * @deprecated Removed in Android Q.
      */
     @Deprecated
     void revokeUriPermissionFromOwner(IBinder owner, Uri uri, int mode, int userId) throws RemoteException;
+
     /**
      * @deprecated Removed in Android Q.
      */

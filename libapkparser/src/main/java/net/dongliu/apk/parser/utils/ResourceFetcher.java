@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: Apache 2.0 AND BSD-2-Clause
+// SPDX-License-Identifier: Apache-2.0 AND BSD-2-Clause
 package net.dongliu.apk.parser.utils;
 
 import android.util.Pair;
@@ -6,10 +6,6 @@ import android.util.Pair;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -21,6 +17,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 /**
  * fetch dependency resource file from android source
