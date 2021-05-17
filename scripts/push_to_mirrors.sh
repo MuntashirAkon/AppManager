@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 if ! git push gitlab; then
     git remote add --mirror=push gitlab git@gitlab.com:muntashir/AppManager.git

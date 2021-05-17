@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 html:
 	# Docs: https://mirror.las.iastate.edu/tex-archive/support/make4ht/make4ht-doc.pdf
 	# tex4ht: 2 = Divide into chapters, fn-in = Footnote in the same file, sec-filename = filename based on section name, sections+ = Links to TOC
