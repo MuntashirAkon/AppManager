@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 package android.app;
 
 import android.content.ComponentName;
@@ -7,9 +9,9 @@ import android.os.IBinder;
 import android.os.IInterface;
 import android.os.RemoteException;
 
-import java.util.List;
-
 import androidx.annotation.RequiresApi;
+
+import java.util.List;
 
 public interface INotificationManager extends IInterface {
     abstract class Stub extends Binder implements INotificationManager {
