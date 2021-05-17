@@ -55,5 +55,5 @@ jobs:
         message: |
           *AM Debug ${{ env.APP_VERSION }} Run#${{ github.run_number }}*
 
-          _${{ github.event.head_commit.message }}_
+          ${{ github.event.head_commit.message }}
       continue-on-error: true
