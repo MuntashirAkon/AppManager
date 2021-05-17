@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.parser;
 
 import android.util.Pair;
@@ -24,10 +26,10 @@ import static net.dongliu.apk.parser.struct.ChunkType.UNKNOWN_YET;
 /**
  * Parse android resource table file.
  *
- * @author dongliu
  * @see <a href="https://github.com/aosp-mirror/platform_frameworks_base/blob/master/libs/androidfw/include/androidfw/ResourceTypes.h">ResourceTypes.h</a>
  * @see <a href="https://github.com/aosp-mirror/platform_frameworks_base/blob/master/libs/androidfw/ResourceTypes.cpp">ResourceTypes.cpp</a>
  */
+// Copyright 2014 Liu Dong
 public class ResourceTableParser {
 
     /**

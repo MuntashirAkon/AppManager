@@ -1,8 +1,10 @@
-package net.dongliu.apk.parser.utils;
+// SPDX-License-Identifier: Apache-2.0 AND BSD-2-Clause
 
+package net.dongliu.apk.parser.utils;
 
 import java.util.Iterator;
 
+// Copyright 2017 hsiafan
 public class Strings {
 
     /**

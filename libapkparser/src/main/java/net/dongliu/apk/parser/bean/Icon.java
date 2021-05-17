@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.bean;
 
 import java.io.Serializable;
@@ -6,9 +8,8 @@ import androidx.annotation.Nullable;
 
 /**
  * The plain file apk icon.
- *
- * @author Liu Dong
  */
+// Copyright 2014 Liu Dong
 public class Icon implements IconFace, Serializable {
 
     private static final long serialVersionUID = 8680309892249769701L;

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <resources>
     <string name="disclaimer_header">অস্বীকৃতি</string>
     <string name="disclaimer_body">অ্যাপ ম্যানেজার যে রুট ফাংশন গুলো সরবাহ করে তা যদি সঠিকভাবে ব্যবহৃত না হয় তাহলে 

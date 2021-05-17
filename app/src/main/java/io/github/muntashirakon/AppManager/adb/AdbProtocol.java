@@ -1,21 +1,4 @@
-/*
- * Copyright (c) 2021 Muntashir Al-Islam
- * Copyright (c) 2016 Anton Tananaev
- * Copyright (c) 2013 Cameron Gutman
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: BSD-3-Clause AND GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.adb;
 
@@ -33,6 +16,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * This class provides useful functions and fields for ADB protocol details.
  */
+// Copyright 2013 Cameron Gutman
 class AdbProtocol {
     /**
      * The length of the ADB message header

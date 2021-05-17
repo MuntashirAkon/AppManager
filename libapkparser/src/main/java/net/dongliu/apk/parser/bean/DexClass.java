@@ -1,12 +1,12 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.bean;
 
 import net.dongliu.apk.parser.struct.dex.DexClassStruct;
 
 import androidx.annotation.Nullable;
 
-/**
- * @author dongliu
- */
+// Copyright 2014 Liu Dong
 public class DexClass {
     /**
      * the class name

@@ -1,9 +1,12 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.struct.signingv2;
 
 import java.util.List;
 
 import javax.security.cert.X509Certificate;
 
+// Copyright 2018 hsiafan
 public class SignerBlock {
     private List<Digest> digests;
     private List<X509Certificate> certificates;

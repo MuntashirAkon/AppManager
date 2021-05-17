@@ -1,12 +1,13 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.struct;
 
 import net.dongliu.apk.parser.utils.Unsigned;
 
 /**
  * String pool chunk header.
- *
- * @author dongliu
  */
+// Copyright 2014 Liu Dong
 public class StringPoolHeader extends ChunkHeader {
     public StringPoolHeader(int headerSize, long chunkSize) {
         super(ChunkType.STRING_POOL, headerSize, chunkSize);

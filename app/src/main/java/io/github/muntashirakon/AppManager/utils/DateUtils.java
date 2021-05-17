@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 package io.github.muntashirakon.AppManager.utils;
 
 import java.text.DateFormat;

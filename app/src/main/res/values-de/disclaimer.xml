@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <resources>
     <string name="disclaimer_header">HAFTUNGSAUSSCHLUSS</string>
     <string name="disclaimer_body">App Manager bietet Root-Funktionen, die Ihr Gerät unbrauchbar machen können, wenn sie falsch angewendet werden. App Manager ist nicht verantwortlich zu machen für jedwede Art von Schaden, der durch die Nutzung der Applikation entsteht. Wenn Sie sich nicht vollkommen klar darüber sind, wie Root-Funktionen verwendet werden, dann vermeiden Sie eine Anwendung bis Sie das Risiko einschätzen können.

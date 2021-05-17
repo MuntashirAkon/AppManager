@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache 2.0 AND BSD-2-Clause
 package net.dongliu.apk.parser.utils;
 
 import android.util.Pair;
@@ -23,9 +24,8 @@ import java.util.regex.Pattern;
 
 /**
  * fetch dependency resource file from android source
- *
- * @author Liu Dong dongliu@live.cn
  */
+// Copyright 2014 Liu Dong
 public class ResourceFetcher {
 
     // from https://android.googlesource.com/platform/frameworks/base/+/master/core/res/res/values/public.xml

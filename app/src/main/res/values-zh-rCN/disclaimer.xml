@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <resources>
     <string name="disclaimer_header">免责声明</string>
     <string name="disclaimer_body">App Manager 提供的与 root 权限相关的操作可能会对设备造成损害，App Manager 不对任何因使用不当而造成的损害负责。 

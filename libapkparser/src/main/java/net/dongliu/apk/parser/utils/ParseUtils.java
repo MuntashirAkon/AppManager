@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.utils;
 
 import net.dongliu.apk.parser.exception.ParserException;
@@ -9,15 +11,14 @@ import net.dongliu.apk.parser.struct.StringPoolHeader;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import androidx.annotation.Nullable;
 
-/**
- * @author dongliu
- */
+// Copyright 2018 Liu Dong
 public class ParseUtils {
 
-    public static Charset charsetUTF8 = Charset.forName("UTF-8");
+    public static Charset charsetUTF8 = StandardCharsets.UTF_8;
 
     /**
      * read string from input buffer. if get EOF before read enough data, throw IOException.

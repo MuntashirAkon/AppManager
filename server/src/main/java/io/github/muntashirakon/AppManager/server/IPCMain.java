@@ -1,19 +1,4 @@
-/*
- * Copyright 2020 John "topjohnwu" Wu
- * Copyright 2020 Muntashir Al-Islam
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.server;
 
@@ -46,10 +31,11 @@ import static io.github.muntashirakon.AppManager.server.common.ServerUtils.getSy
  * Expected command-line args:
  * args[0]: client service component name
  * args[1]: {@link ServerUtils#CMDLINE_STOP_SERVER} or class name of IPCServer
- *<p>
+ * <p>
  * <b>Note:</b> This class is hardcoded in {@code IPCClient#IPCMAIN_CLASSNAME}. Don't change the class name or package
  * path without changing them there.
  */
+// Copyright 2020 John "topjohnwu" Wu
 public class IPCMain {
     private static void stopRemoteService(ComponentName name) throws Exception {
         @SuppressLint("PrivateApi")

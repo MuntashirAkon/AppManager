@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.struct;
 
 import androidx.annotation.Nullable;
@@ -5,9 +7,8 @@ import androidx.annotation.Nullable;
 /**
  * Apk res value struct.
  * Only for description now, The value is hold in ResourceValue
- *
- * @author dongliu
  */
+// Copyright 2014 Liu Dong
 public class ResValue {
     // Number of bytes in this structure. uint16; always 8
     private int size;

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.struct.xml;
 
 import android.util.SparseArray;
@@ -11,9 +13,8 @@ import java.util.Map;
 
 /**
  * xml node attribute
- *
- * @author dongliu
  */
+// Copyright 2014 Liu Dong
 public class Attribute {
     private String namespace;
     private String name;

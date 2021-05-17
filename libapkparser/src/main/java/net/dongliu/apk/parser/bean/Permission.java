@@ -1,12 +1,13 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.bean;
 
 import androidx.annotation.Nullable;
 
 /**
  * permission provided by the app
- *
- * @author Liu Dong
  */
+// Copyright 2014 Liu Dong
 public class Permission {
     private final String name;
     private final String label;

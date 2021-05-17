@@ -1,12 +1,13 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.parser;
 
 import net.dongliu.apk.parser.struct.xml.*;
 
 /**
  * Parse adaptive icon xml file.
- *
- * @author Liu Dong dongliu@live.cn
  */
+// Copyright 2018 Liu Dong
 public class AdaptiveIconParser implements XmlStreamer {
 
     private String foreground;

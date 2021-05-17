@@ -1,10 +1,11 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.struct;
 
 /**
- * android system file.
- *
- * @author dongiu
+ * Android system file.
  */
+// Copyright 2014 Liu Dong
 public class AndroidConstants {
 
     public static final String RESOURCE_FILE = "resources.arsc";

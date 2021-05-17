@@ -1,19 +1,4 @@
-/*
- * Copyright (c) 2021 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.ipc.ps;
 
@@ -29,8 +14,6 @@ import java.util.Arrays;
 /**
  * This is a generic Java-way of parsing processes from /proc. This is a work in progress and by no means perfect. To
  * create this class, I extensively followed the documentation located at https://www.kernel.org/doc/Documentation/filesystems/proc.txt.
- *
- * @author Muntashir Al-Islam
  */
 public class Ps {
     /**

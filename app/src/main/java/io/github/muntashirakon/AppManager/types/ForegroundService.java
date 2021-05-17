@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 package io.github.muntashirakon.AppManager.types;
 
 import android.app.Service;
@@ -15,6 +16,7 @@ import androidx.annotation.Nullable;
 
 public abstract class ForegroundService extends Service {
     private final String name;
+    @SuppressWarnings("FieldCanBeLocal")
     private Looper serviceLooper;
     private ServiceHandler serviceHandler;
 
