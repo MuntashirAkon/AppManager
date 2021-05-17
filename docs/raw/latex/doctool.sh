@@ -151,7 +151,7 @@ do
     do
 
         stringkey_title=$(echo ${line_title} | grep -oP "(?<=\%\%##).*(?=>>)")
-        string_title=$(echo ${line_title} | grep -oP "((?<=section{)|(?<=subsection{)|(?<=subsubsection{)|(?<=chapter{)).*?(?=})")
+        string_title=$(echo ${line_title} | grep -oP "((?<=section{)|(?<=subsection{)|(?<=subsubsection{)|(?<=chapter{)|(?<=caption{)).*?(?=})")
         echo "<string name=\"${stringkey_title}\">${string_title}</string>" >>${OUTPUT}
         echo -e "--\n$stringkey_title\n$string_title\n--\n"
 
@@ -197,7 +197,7 @@ do
     while read file
     do
 
-         perl -pi -e "s/(section\{|subsection\{|subsubsection\{|chapter\{).*?(\}.*\%\%\#\#${key_title}>>)/\1${string_title}\2/" ${file}
+         perl -pi -e "s/(section\{|subsection\{|subsubsection\{|chapter\{|caption\{).*?(\}.*\%\%\#\#${key_title}>>)/\1${string_title}\2/" ${file}
 
     done < <(find ./ -type f -name "*.tex")
 done < <(echo "$keys" | grep -P ".*(?===title)")
