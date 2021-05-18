@@ -1036,4 +1036,5 @@
     <string name="adb_connect">Bağlan</string>
     <string name="wireless_debugging_not_supported">Kablosuz hata ayıklama bu platformda desteklenmiyor.</string>
     <string name="wireless_debugging">Kablosuz hata ayıklama</string>
+    <string name="unknown_net_policy">Bilinmeyen ağ politikası (%1$s - %2$X)</string>
 </resources>
