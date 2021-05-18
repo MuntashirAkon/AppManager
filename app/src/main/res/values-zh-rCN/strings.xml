@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
     <string name="_lang_tag" translatable="false">zh-CN</string>
     <string name="uninstall">卸载</string>
     <string name="permissions">系统预定义权限</string>
@@ -996,7 +995,6 @@
     <string name="netpolicy_reject_cellular_data">拒绝移动网络数据</string>
     <string name="netpolicy_allow_background_data">启用数据节省器时允许后台数据</string>
     <string name="netpolicy_reject_background_data">拒绝后台数据</string>
-    <string name="unknown_netpolicy">未知的 netpolicy (%s)</string>
     <string name="port_number_invalid">无效的端口号。</string>
     <string name="port_number_empty">端口号为空。</string>
     <string name="adb_connect_port_number_description">端口号位于 <b>IP地址&amp;端口</b>部分，这部分在<b>设备名称</b>部分的下方。</string>

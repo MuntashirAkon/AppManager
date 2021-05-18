@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
     <string name="_lang_tag" translatable="false">pt-BR</string>
     <string name="uninstall">Desinstalar</string>
     <string name="permissions">Permissões utilizadas</string>
@@ -1031,7 +1030,6 @@
     <string name="netpolicy_reject_vpn_data">Rejeitar dados VPN</string>
     <string name="netpolicy_allow_background_data">Permitir dados em segundo plano quando o Salvar Dados estiver ligado</string>
     <string name="netpolicy_reject_background_data">Rejeitar dados em segundo plano</string>
-    <string name="unknown_netpolicy">Política de rede desconhecida (%s)</string>
     <string name="adb_connect_port_number_description">O número de porta está localizado abaixo da seção <b>endereço IP &amp; porta</b> logo abaixo da seção <b>Nome do dispositivo</b>.</string>
     <string name="port_number_invalid">Número de porta inválido.</string>
     <string name="port_number_empty">O número de porta está vazio.</string>
