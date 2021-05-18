@@ -1037,4 +1037,5 @@
     <string name="adb_connect">Conectar</string>
     <string name="wireless_debugging_not_supported">A depuração sem fio não é suportada nesta plataforma.</string>
     <string name="wireless_debugging">Depuração sem fio</string>
+    <string name="unknown_net_policy">Política de rede desconhecida (%1$s - %2$X)</string>
 </resources>
