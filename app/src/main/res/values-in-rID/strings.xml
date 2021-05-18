@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
     <string name="uninstall">Hapus Pemasangan</string>
     <string name="permissions">Memerlukan Izin</string>
     <string name="require_no_permission">Tidak memerlukan izin</string>
@@ -994,7 +993,6 @@
     <string name="netpolicy_reject_cellular_data">Tolak data seluler</string>
     <string name="netpolicy_allow_background_data">Izinkan data di latar belakang saat Penghemat Data aktif</string>
     <string name="netpolicy_reject_background_data">Tolak data di latar belakang</string>
-    <string name="unknown_netpolicy">Kebijakan net tidak dikenal (%s)</string>
     <string name="wireless_debugging_not_supported">Debug nirkabel tidak didukung dalam platform ini.</string>
     <string name="wireless_debugging">Debug nirkabel</string>
     <string name="port_number_invalid">Nomor port tidak valid.</string>
