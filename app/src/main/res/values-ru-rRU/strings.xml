@@ -150,7 +150,7 @@
         <item quantity="many">%1$d часов</item>
         <item quantity="other">%1$d часов</item>
     </plurals>
-    <string name="usage_min">%1$d мин.</string>
+    <string name="usage_min">%1$d мин</string>
     <string name="usage_less_than_a_minute">Меньше минуты</string>
     <string name="go_back">Вернуться</string>
     <string name="go">Разрешить</string>
@@ -692,7 +692,7 @@
     <string name="state_waking">Пробуждение</string>
     <string name="state_wake_kill">Отключение пробуждения</string>
     <string name="state_parked">Оформлено</string>
-    <string name="state_device_io">Device I/O</string>
+    <string name="state_device_io">Ввод/вывод устройства</string>
     <string name="rsa">RSA</string>
     <string name="aes">AES</string>
     <string name="un_apkm">Распаковать Apkm</string>
@@ -820,7 +820,7 @@
     <string name="backup_external_data_description">Резервное копирование внешних папок данных.</string>
     <string name="backup_internal_data_description">Резервное копирование папок с данными. Если выбран этот параметр, по умолчанию будут созданы резервные копии внутренних папок с данными.</string>
     <string name="backup_apk_files_description">Резервное копирование APK файлов из исходного каталога, включая сплиты.</string>
-    <string name="permissive">Permissive</string>
+    <string name="permissive">Разрешения</string>
     <string name="enforcing">Enforcing</string>
     <string name="window_size">Размер окна</string>
     <string name="size">Размер</string>
