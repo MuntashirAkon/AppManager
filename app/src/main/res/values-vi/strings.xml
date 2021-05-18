@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="_lang_tag" translatable="false">vi</string>
     <string name="path_permissions">Quyền đường dẫn</string>
     <string name="grant_uri_permission">Cấp quyền cho URI</string>
@@ -562,4 +561,68 @@
     <string name="deny_app_ops_description">Đặt một chế độ cho hoạt động ứng dụng được nhận dạng bởi các giá trị hằng số, vd: <tt>63</tt> hoặc <tt>RUN_IN_BACKGROUND</tt></string>
     <string name="pref_import_existing_msg">Thêm các thành phần bị các ứng dụng khác tắt vào App Manager. Hãy cẩn thận khi sử dụng công cụ này vì có thể có nhiều mục dương tính sai. Chỉ chọn các ứng dụng mà bạn chắc chắn về chúng.</string>
     <string name="pref_import_existing">Nhập các quy tắc đang tồn tại</string>
+    <string name="backup_skip_signature_checks_description">Khôi phục các bản sao lưu xác minh mã kiểm tra thất bại hoặc có chữ ký APK khác với các bản sao lưu trước của chúng.</string>
+    <string name="backup_multiple_description">Tạo một bản sao lưu <i>được đặt tên</i> riêng thay vì bản sao lưu cơ sở.</string>
+    <string name="unavailable">Không có sẵn</string>
+    <string name="available">Có sẵn</string>
+    <string name="battery_capacity">Dung lượng</string>
+    <string name="memory">Bộ nhớ</string>
+    <string name="vendor">Người tạo</string>
+    <string name="gles_version">Phiên bản OpenGL ES</string>
+    <string name="no_of_cores">Lõi</string>
+    <string name="support_architectures">Kiến trúc được hỗ trợ</string>
+    <string name="security_providers">Nhà cung cấp bảo mật</string>
+    <string name="kernel">Kernel</string>
+    <string name="board_name">Bảng mạch</string>
+    <string name="model">Mẫu</string>
+    <string name="brand_name">Hãng</string>
+    <string name="pref_about_device_msg">Thông tin thiết bị cơ bản bao gồm hệ thống Android, CPU, GPU, RAM, pin, v.v.</string>
+    <string name="about_device">Về thiết bị</string>
+    <string name="set_custom_app_op">Đặt hoạt động ứng dụng tuỳ chỉnh</string>
+    <string name="interceptor">Trình can thiệp</string>
+    <string name="resend_intent">Gửi lại Intent</string>
+    <string name="share">Chia sẻ</string>
+    <string name="extras">Bổ sung</string>
+    <string name="category">Thể loại</string>
+    <string name="uri">URI</string>
+    <string name="mime_type">Loại MIME</string>
+    <string name="action">Hành động</string>
+    <string name="result_code">Mã kết quả</string>
+    <string name="activity_result">Kết quả hoạt động</string>
+    <string name="send_edited_intent">Gửi Intent đã chỉnh sửa</string>
+    <string name="matching_activities">Hoạt động trùng khớp</string>
+    <string name="value">Giá trị</string>
+    <string name="filter_apps_with_splits">Có tách</string>
+    <string name="set_app_op_mode">Đặt chế độ hoạt động ứng dụng</string>
+    <string name="pref_backup_android_keystore_msg">Không phải tất cả ứng dụng sẽ hoạt động sau khi được khôi phục. Việc khôi phục KeyStore không hoạt động trên đa số thiết bị.</string>
+    <string name="pref_backup_android_keystore">Sao lưu các ứng dụng bằng Android KeyStore</string>
+    <string name="keep_data_and_app_signing_signatures">Giữ dữ liệu và chữ ký</string>
+    <string name="this_action_cannot_be_undone">Hành động này không thể được hoàn tác.</string>
+    <string name="no_app_ops_permission">Không có quyền để hiển thị hoạt động ứng dụng</string>
+    <string name="input_keystore_alias_pass_msg">Nhấn vào đây để cung cấp mật khẩu cho %1$s</string>
+    <string name="input_keystore_alias_pass_description">Nhập mật khẩu cho bí danh <b>%1$s</b>. Bạn có thể để trống nếu mật khẩu y hệt như mật khẩu KeyStore.</string>
+    <string name="input_keystore_alias_pass">Mật khẩu cho bí danh <b>%1$s</b></string>
+    <string name="input_keystore_pass_msg">Nhấn vào đây để nhập mật khẩu KeyStore</string>
+    <string name="input_keystore_pass_description">Nhập mật khẩu KeyStore của App Manager. Nếu bạn đang thấy điều này lần đầu tiên, hãy vui lòng sử dụng một trình tạo mật khẩu để tạo một mật khẩu và lưu nó trong một nơi bảo mật trước khi chèn nó vào đây.</string>
+    <string name="input_keystore_pass">Nhập mật khẩu KeyStore</string>
+    <string name="splits">Tách</string>
+    <string name="source_stamp_verified">SourceStamp đã được xác minh.</string>
+    <string name="not_verified">Không được xác minh</string>
+    <string name="verified">Đã xác minh</string>
+    <string name="pref_signature_schemes_msg">Ít nhất các đề án v1 và v2 nên được chọn để có sự tương thích tốt hơn. Đề án v4 yêu cầu v2 hoặc v3.</string>
+    <string name="v4_scheme">Đề án v4 (từ Android 11)</string>
+    <string name="v3_scheme">Đề án v3 (từ Android 9)</string>
+    <string name="v2_scheme">Đề án v2 (từ Android 7.0)</string>
+    <string name="v1_scheme">Đề án v1 (từ Android 1.0)</string>
+    <string name="pref_apk_signing_msg">Đặt đề án chữ ký, mã ký tuỳ chỉnh, v.v.</string>
+    <string name="apk_signing">Ký APK</string>
+    <string name="app_signing_signature_schemes">Đề án chữ ký</string>
+    <string name="source_code_links">GitHub: https://github.com/MuntashirAkon/AppManager
+\nGitLab: https://gitlab.com/muntashir/AppManager
+\nRiseup: https://0xacab.org/muntashir/AppManager
+\nCodeberg: https://codeberg.org/muntashir/AppManager</string>
+    <string name="key_name_cannot_be_null">Tên mã không thể trống</string>
+    <string name="key_name">Tên mã</string>
+    <string name="boolean_value">Giá trị sự thật</string>
+    <string name="requested_large_heap">Bộ nhớ lớn</string>
 </resources>
