@@ -1037,4 +1037,5 @@
     <string name="adb_connect">Anschließen</string>
     <string name="wireless_debugging_not_supported">Fehlersucher über Funk wird auf dieser Plattform nicht unterstützt.</string>
     <string name="wireless_debugging">Fehlersuche über WLAN</string>
+    <string name="unknown_net_policy">Unbekannte Netz-Richtlinie (%1$s - %2$X)</string>
 </resources>
