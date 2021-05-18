@@ -1002,4 +1002,5 @@
     <string name="adb_connect">连接</string>
     <string name="wireless_debugging_not_supported">此平台不支持无线调试。</string>
     <string name="wireless_debugging">无线调试</string>
+    <string name="unknown_net_policy">未知的 netpolicy (%1$s - %2$X)</string>
 </resources>
