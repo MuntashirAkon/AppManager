@@ -820,7 +820,7 @@
     <string name="backup_internal_data_description">Резервное копирование папок с данными. Если выбран этот параметр, по умолчанию будут созданы резервные копии внутренних папок с данными.</string>
     <string name="backup_apk_files_description">Резервное копирование APK файлов из исходного каталога, включая сплиты.</string>
     <string name="permissive">Разрешения</string>
-    <string name="enforcing">Enforcing</string>
+    <string name="enforcing">Принудительно</string>
     <string name="window_size">Размер окна</string>
     <string name="size">Размер</string>
     <string name="hardware">Модель</string>
@@ -1107,4 +1107,5 @@
     <string name="adb_connect">Подключение</string>
     <string name="wireless_debugging_not_supported">Беспроводная отладка не поддерживается на этой платформе.</string>
     <string name="wireless_debugging">Беспроводная отладка</string>
+    <string name="unknown_net_policy">Неизвестная сетевая политика (%1$s - %2$X)</string>
 </resources>
