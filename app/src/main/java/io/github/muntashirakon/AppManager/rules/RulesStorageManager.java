@@ -2,7 +2,6 @@
 
 package io.github.muntashirakon.AppManager.rules;
 
-import android.content.Context;
 import android.os.RemoteException;
 
 import androidx.annotation.GuardedBy;
@@ -22,7 +21,6 @@ import java.util.List;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
-import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.rules.struct.AppOpRule;
 import io.github.muntashirakon.AppManager.rules.struct.BatteryOptimizationRule;
 import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
@@ -42,31 +40,6 @@ import io.github.muntashirakon.io.ProxyFileReader;
 import io.github.muntashirakon.io.ProxyOutputStream;
 
 public class RulesStorageManager implements Closeable {
-    public enum Type {
-        ACTIVITY,
-        PROVIDER,
-        RECEIVER,
-        SERVICE,
-        APP_OP,
-        PERMISSION,
-        MAGISK_HIDE,
-        BATTERY_OPT,
-        NET_POLICY,
-        NOTIFICATION,
-        URI_GRANT,
-        SSAID,
-        ;
-
-        public static final String[] names = new String[values().length];
-
-        static {
-            Type[] values = values();
-            for (int i = 0; i < values.length; ++i) names[i] = values[i].name();
-        }
-    }
-
-    @NonNull
-    protected final Context context;
     @NonNull
     private final ArrayList<RuleEntry> entries;
     @GuardedBy("entries")
@@ -76,8 +49,7 @@ public class RulesStorageManager implements Closeable {
     protected boolean readOnly = true;
     protected int userHandle;
 
-    protected RulesStorageManager(@NonNull Context context, @NonNull String packageName, int userHandle) {
-        this.context = context;
+    protected RulesStorageManager(@NonNull String packageName, int userHandle) {
         this.packageName = packageName;
         this.userHandle = userHandle;
         this.entries = new ArrayList<>();
@@ -101,14 +73,6 @@ public class RulesStorageManager implements Closeable {
     }
 
     @GuardedBy("entries")
-    protected RuleEntry get(String name) {
-        synchronized (entries) {
-            for (RuleEntry entry : entries) if (entry.name.equals(name)) return entry;
-            return null;
-        }
-    }
-
-    @GuardedBy("entries")
     public <T extends RuleEntry> List<T> getAll(Class<T> type) {
         synchronized (entries) {
             List<T> newEntries = new ArrayList<>();
@@ -129,22 +93,6 @@ public class RulesStorageManager implements Closeable {
         }
     }
 
-    /**
-     * Check if the given component exists in the rules. It does not necessarily mean that the
-     * component is being blocked.
-     *
-     * @param componentName The component name to check
-     * @return {@code true} if exists, {@code false} otherwise
-     * @see ComponentsBlocker#isComponentBlocked(String)
-     */
-    @GuardedBy("entries")
-    public boolean hasComponentName(String componentName) {
-        synchronized (entries) {
-            for (RuleEntry entry : getAll(ComponentRule.class)) if (entry.name.equals(componentName)) return true;
-            return false;
-        }
-    }
-
     @GuardedBy("entries")
     public int entryCount() {
         synchronized (entries) {
@@ -160,7 +108,7 @@ public class RulesStorageManager implements Closeable {
     }
 
     @GuardedBy("entries")
-    protected void removeEntries(String name, Type type) {
+    protected void removeEntries(String name, RuleType type) {
         synchronized (entries) {
             Iterator<RuleEntry> entryIterator = entries.iterator();
             RuleEntry entry;
@@ -173,7 +121,7 @@ public class RulesStorageManager implements Closeable {
         }
     }
 
-    protected void setComponent(String name, Type componentType, @ComponentRule.ComponentStatus String componentStatus) {
+    protected void setComponent(String name, RuleType componentType, @ComponentRule.ComponentStatus String componentStatus) {
         addUniqueEntry(new ComponentRule(packageName, name, componentType, componentStatus));
     }
 
@@ -190,49 +138,36 @@ public class RulesStorageManager implements Closeable {
     }
 
     public void setMagiskHide(boolean isHide) {
-        addEntryInternal(new MagiskHideRule(packageName, isHide));
+        addUniqueEntry(new MagiskHideRule(packageName, isHide));
     }
 
     public void setBatteryOptimization(boolean willOptimize) {
-        addEntryInternal(new BatteryOptimizationRule(packageName, willOptimize));
+        addUniqueEntry(new BatteryOptimizationRule(packageName, willOptimize));
     }
 
     public void setNetPolicy(@NetworkPolicyManagerCompat.NetPolicy int netPolicy) {
-        addEntryInternal(new NetPolicyRule(packageName, netPolicy));
+        addUniqueEntry(new NetPolicyRule(packageName, netPolicy));
     }
 
     public void setUriGrant(@NonNull UriManager.UriGrant uriGrant) {
+        // There could be many UriGrants
         addEntryInternal(new UriGrantRule(packageName, uriGrant));
     }
 
     public void setSsaid(@NonNull String ssaid) {
-        addEntryInternal(new SsaidRule(packageName, ssaid));
+        addUniqueEntry(new SsaidRule(packageName, ssaid));
     }
 
     /**
-     * Add entry, remove old entries depending on entry {@link Type}.
+     * Add entry, remove old entries depending on entry {@link RuleType}.
      */
     @GuardedBy("entries")
     public void addEntry(@NonNull RuleEntry entry) {
         synchronized (entries) {
-            switch (entry.type) {
-                case ACTIVITY:
-                case PROVIDER:
-                case RECEIVER:
-                case SERVICE:
-                case PERMISSION:
-                case APP_OP:
-                case NOTIFICATION:
-                    addUniqueEntry(entry);
-                    break;
-                case SSAID:
-                case URI_GRANT:
-                case NET_POLICY:
-                case BATTERY_OPT:
-                case MAGISK_HIDE:
-                default:
-                    addEntryInternal(entry);
-            }
+            if (entry.type.equals(RuleType.URI_GRANT)) {
+                // UriGrant is not unique
+                addEntryInternal(entry);
+            } else addUniqueEntry(entry);
         }
     }
 
@@ -252,7 +187,6 @@ public class RulesStorageManager implements Closeable {
      */
     @GuardedBy("entries")
     private void addUniqueEntry(@NonNull RuleEntry entry) {
-        // TODO: 19/5/21 Test uniqueness of the rules
         synchronized (entries) {
             removeEntries(entry.name, entry.type);
             entries.add(entry);

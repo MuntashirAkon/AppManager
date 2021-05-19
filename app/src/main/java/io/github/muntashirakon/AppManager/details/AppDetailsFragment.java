@@ -70,7 +70,7 @@ import io.github.muntashirakon.AppManager.details.struct.AppDetailsComponentItem
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsPermissionItem;
 import io.github.muntashirakon.AppManager.intercept.ActivityInterceptor;
-import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
+import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.servermanager.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
@@ -521,7 +521,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         mainModel.load(neededProperty);
     }
 
-    synchronized private void applyRules(String componentName, RulesStorageManager.Type type) {
+    synchronized private void applyRules(String componentName, RuleType type) {
         if (mainModel != null) {
             executor.submit(() -> mainModel.updateRulesForComponent(componentName, type));
         }
@@ -970,7 +970,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 }
                 holder.blockBtn.setVisibility(View.VISIBLE);
                 holder.blockBtn.setOnClickListener(v -> {
-                    applyRules(activityName, RulesStorageManager.Type.ACTIVITY);
+                    applyRules(activityName, RuleType.ACTIVITY);
                     appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
                     set(index, appDetailsItem);
                 });
@@ -1034,7 +1034,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 }
                 holder.blockBtn.setVisibility(View.VISIBLE);
                 holder.blockBtn.setOnClickListener(v -> {
-                    applyRules(serviceInfo.name, RulesStorageManager.Type.SERVICE);
+                    applyRules(serviceInfo.name, RuleType.SERVICE);
                     appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
                     set(index, appDetailsItem);
                 });
@@ -1087,7 +1087,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 }
                 holder.blockBtn.setVisibility(View.VISIBLE);
                 holder.blockBtn.setOnClickListener(v -> {
-                    applyRules(activityInfo.name, RulesStorageManager.Type.RECEIVER);
+                    applyRules(activityInfo.name, RuleType.RECEIVER);
                     appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
                     set(index, appDetailsItem);
                 });
@@ -1163,7 +1163,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 }
                 holder.blockBtn.setVisibility(View.VISIBLE);
                 holder.blockBtn.setOnClickListener(v -> {
-                    applyRules(providerName, RulesStorageManager.Type.PROVIDER);
+                    applyRules(providerName, RuleType.PROVIDER);
                     appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
                     set(index, appDetailsItem);
                     notifyItemChanged(index);

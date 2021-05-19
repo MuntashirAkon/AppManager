@@ -4,10 +4,10 @@ package io.github.muntashirakon.AppManager.rules.struct;
 
 import androidx.annotation.NonNull;
 
+import java.util.Objects;
 import java.util.StringTokenizer;
 
-import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
+import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
 
 public class PermissionRule extends RuleEntry {
@@ -17,14 +17,14 @@ public class PermissionRule extends RuleEntry {
 
     public PermissionRule(@NonNull String packageName, @NonNull String permName, boolean isGranted,
                           @PermissionCompat.PermissionFlags int flags) {
-        super(packageName, permName, RulesStorageManager.Type.PERMISSION);
+        super(packageName, permName, RuleType.PERMISSION);
         this.isGranted = isGranted;
         this.flags = flags;
     }
 
     public PermissionRule(@NonNull String packageName, @NonNull String permName, @NonNull StringTokenizer tokenizer)
             throws IllegalArgumentException {
-        super(packageName, permName, RulesStorageManager.Type.PERMISSION);
+        super(packageName, permName, RuleType.PERMISSION);
         if (tokenizer.hasMoreElements()) {
             isGranted = Boolean.parseBoolean(tokenizer.nextElement().toString());
         } else throw new IllegalArgumentException("Invalid format: isGranted not found");
@@ -32,7 +32,6 @@ public class PermissionRule extends RuleEntry {
             flags = Integer.parseInt(tokenizer.nextElement().toString());
         } else {
             // Don't throw exception in order to provide backward compatibility
-            Log.d(PermissionRule.class.getSimpleName(), "Invalid format: flags not found");
             flags = 0;
         }
     }
@@ -69,5 +68,19 @@ public class PermissionRule extends RuleEntry {
     @Override
     public String flattenToString(boolean isExternal) {
         return addPackageWithTab(isExternal) + name + "\t" + type.name() + "\t" + isGranted + "\t" + flags;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PermissionRule)) return false;
+        if (!super.equals(o)) return false;
+        PermissionRule that = (PermissionRule) o;
+        return isGranted() == that.isGranted() && getFlags() == that.getFlags();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), isGranted(), getFlags());
     }
 }

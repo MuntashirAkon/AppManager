@@ -26,7 +26,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.crypto.Crypto;
@@ -34,8 +33,8 @@ import io.github.muntashirakon.AppManager.crypto.CryptoException;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.rules.PseudoRules;
+import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.RulesImporter;
-import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.struct.AppOpRule;
 import io.github.muntashirakon.AppManager.rules.struct.NetPolicyRule;
 import io.github.muntashirakon.AppManager.rules.struct.PermissionRule;
@@ -448,7 +447,7 @@ class RestoreOp implements Closeable {
         if (!isInstalled) {
             throw new BackupException("Misc restore is requested but the app isn't installed.");
         }
-        PseudoRules rules = new PseudoRules(AppManager.getContext(), packageName, userHandle);
+        PseudoRules rules = new PseudoRules(packageName, userHandle);
         // Backward compatibility for restoring permissions
         loadMiscRules(rules);
         // Apply rules
@@ -561,7 +560,7 @@ class RestoreOp implements Closeable {
             // Get decrypted file
             rulesFile = backupFile.getRulesFile(CryptoUtils.MODE_NO_ENCRYPTION);
             decryptedFiles.addAll(Arrays.asList(crypto.getNewFiles()));
-            try (RulesImporter importer = new RulesImporter(Arrays.asList(RulesStorageManager.Type.values()), new int[]{userHandle})) {
+            try (RulesImporter importer = new RulesImporter(Arrays.asList(RuleType.values()), new int[]{userHandle})) {
                 importer.addRulesFromUri(Uri.fromFile(rulesFile));
                 importer.setPackagesToImport(Collections.singletonList(packageName));
                 importer.applyRules(true);

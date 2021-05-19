@@ -4,21 +4,22 @@ package io.github.muntashirakon.AppManager.rules.struct;
 
 import androidx.annotation.NonNull;
 
+import java.util.Objects;
 import java.util.StringTokenizer;
 
-import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
+import io.github.muntashirakon.AppManager.rules.RuleType;
 
 public class SsaidRule extends RuleEntry {
     @NonNull
     private String ssaid;
 
     public SsaidRule(@NonNull String packageName, @NonNull String ssaid) {
-        super(packageName, STUB, RulesStorageManager.Type.SSAID);
+        super(packageName, STUB, RuleType.SSAID);
         this.ssaid = ssaid;
     }
 
     public SsaidRule(@NonNull String packageName, @NonNull StringTokenizer tokenizer) {
-        super(packageName, STUB, RulesStorageManager.Type.SSAID);
+        super(packageName, STUB, RuleType.SSAID);
         if (tokenizer.hasMoreElements()) {
             ssaid = tokenizer.nextElement().toString();
         } else throw new IllegalArgumentException("Invalid format: ssaid not found");
@@ -46,5 +47,19 @@ public class SsaidRule extends RuleEntry {
     @Override
     public String flattenToString(boolean isExternal) {
         return addPackageWithTab(isExternal) + name + "\t" + type.name() + "\t" + ssaid;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SsaidRule)) return false;
+        if (!super.equals(o)) return false;
+        SsaidRule ssaidRule = (SsaidRule) o;
+        return getSsaid().equals(ssaidRule.getSsaid());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), getSsaid());
     }
 }

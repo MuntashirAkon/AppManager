@@ -31,6 +31,7 @@ import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.oneclickops.ItemCount;
+import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.struct.AppOpRule;
 import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
@@ -52,9 +53,9 @@ public final class ComponentUtils {
     }
 
     @NonNull
-    public static HashMap<String, RulesStorageManager.Type> getTrackerComponentsForPackage(PackageInfo packageInfo) {
-        HashMap<String, RulesStorageManager.Type> trackers = new HashMap<>();
-        HashMap<String, RulesStorageManager.Type> components = PackageUtils.collectComponentClassNames(packageInfo);
+    public static HashMap<String, RuleType> getTrackerComponentsForPackage(PackageInfo packageInfo) {
+        HashMap<String, RuleType> trackers = new HashMap<>();
+        HashMap<String, RuleType> components = PackageUtils.collectComponentClassNames(packageInfo);
         for (String componentName : components.keySet()) {
             if (isTracker(componentName))
                 trackers.put(componentName, components.get(componentName));
@@ -63,9 +64,9 @@ public final class ComponentUtils {
     }
 
     @NonNull
-    public static HashMap<String, RulesStorageManager.Type> getTrackerComponentsForPackage(String packageName, @UserIdInt int userHandle) {
-        HashMap<String, RulesStorageManager.Type> trackers = new HashMap<>();
-        HashMap<String, RulesStorageManager.Type> components = PackageUtils.collectComponentClassNames(packageName, userHandle);
+    public static HashMap<String, RuleType> getTrackerComponentsForPackage(String packageName, @UserIdInt int userHandle) {
+        HashMap<String, RuleType> trackers = new HashMap<>();
+        HashMap<String, RuleType> components = PackageUtils.collectComponentClassNames(packageName, userHandle);
         for (String componentName : components.keySet()) {
             if (isTracker(componentName))
                 trackers.put(componentName, components.get(componentName));
@@ -74,9 +75,9 @@ public final class ComponentUtils {
     }
 
     @NonNull
-    public static HashMap<String, RulesStorageManager.Type> getTrackerComponentsForPackageInfo(PackageInfo packageInfo) {
-        HashMap<String, RulesStorageManager.Type> trackers = new HashMap<>();
-        HashMap<String, RulesStorageManager.Type> components = PackageUtils.collectComponentClassNames(packageInfo);
+    public static HashMap<String, RuleType> getTrackerComponentsForPackageInfo(PackageInfo packageInfo) {
+        HashMap<String, RuleType> trackers = new HashMap<>();
+        HashMap<String, RuleType> components = PackageUtils.collectComponentClassNames(packageInfo);
         for (String componentName : components.keySet()) {
             if (isTracker(componentName))
                 trackers.put(componentName, components.get(componentName));
@@ -88,7 +89,7 @@ public final class ComponentUtils {
     @NonNull
     public static List<UserPackagePair> blockTrackingComponents(@NonNull Collection<UserPackagePair> userPackagePairs) {
         List<UserPackagePair> failedPkgList = new ArrayList<>();
-        HashMap<String, RulesStorageManager.Type> components;
+        HashMap<String, RuleType> components;
         for (UserPackagePair pair : userPackagePairs) {
             components = ComponentUtils.getTrackerComponentsForPackage(pair.getPackageName(), pair.getUserHandle());
             try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserHandle())) {
@@ -108,7 +109,7 @@ public final class ComponentUtils {
     @NonNull
     public static List<UserPackagePair> unblockTrackingComponents(@NonNull Collection<UserPackagePair> userPackagePairs) {
         List<UserPackagePair> failedPkgList = new ArrayList<>();
-        HashMap<String, RulesStorageManager.Type> components;
+        HashMap<String, RuleType> components;
         for (UserPackagePair pair : userPackagePairs) {
             components = getTrackerComponentsForPackage(pair.getPackageName(), pair.getUserHandle());
             try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserHandle())) {
@@ -128,7 +129,7 @@ public final class ComponentUtils {
     @NonNull
     public static List<UserPackagePair> blockFilteredComponents(@NonNull Collection<UserPackagePair> userPackagePairs, String[] signatures) {
         List<UserPackagePair> failedPkgList = new ArrayList<>();
-        HashMap<String, RulesStorageManager.Type> components;
+        HashMap<String, RuleType> components;
         for (UserPackagePair pair : userPackagePairs) {
             components = PackageUtils.getFilteredComponents(pair.getPackageName(), pair.getUserHandle(), signatures);
             try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserHandle())) {
@@ -148,7 +149,7 @@ public final class ComponentUtils {
     @NonNull
     public static List<UserPackagePair> unblockFilteredComponents(@NonNull Collection<UserPackagePair> userPackagePairs, String[] signatures) {
         List<UserPackagePair> failedPkgList = new ArrayList<>();
-        HashMap<String, RulesStorageManager.Type> components;
+        HashMap<String, RuleType> components;
         for (UserPackagePair pair : userPackagePairs) {
             components = PackageUtils.getFilteredComponents(pair.getPackageName(), pair.getUserHandle(), signatures);
             try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserHandle())) {
@@ -224,8 +225,8 @@ public final class ComponentUtils {
     }
 
     @NonNull
-    public static HashMap<String, RulesStorageManager.Type> getIFWRulesForPackage(@NonNull String packageName) {
-        HashMap<String, RulesStorageManager.Type> rules = new HashMap<>();
+    public static HashMap<String, RuleType> getIFWRulesForPackage(@NonNull String packageName) {
+        HashMap<String, RuleType> rules = new HashMap<>();
         Runner.Result result = Runner.runCommand(Runner.getRootInstance(), String.format("ls %s/%s*.xml", ComponentsBlocker.SYSTEM_RULES_PATH, packageName));
         if (result.isSuccessful()) {
             List<String> ifwRulesFiles = result.getOutputAsList();
@@ -251,8 +252,8 @@ public final class ComponentUtils {
     public static final String TAG_SERVICE = "service";
 
     @NonNull
-    public static HashMap<String, RulesStorageManager.Type> readIFWRules(@NonNull InputStream inputStream, @NonNull String packageName) {
-        HashMap<String, RulesStorageManager.Type> rules = new HashMap<>();
+    public static HashMap<String, RuleType> readIFWRules(@NonNull InputStream inputStream, @NonNull String packageName) {
+        HashMap<String, RuleType> rules = new HashMap<>();
         XmlPullParser parser = Xml.newPullParser();
         try {
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
@@ -260,7 +261,7 @@ public final class ComponentUtils {
             parser.nextTag();
             parser.require(XmlPullParser.START_TAG, null, "rules");
             int event = parser.nextTag();
-            RulesStorageManager.Type componentType = null;
+            RuleType componentType = null;
             while (event != XmlPullParser.END_DOCUMENT) {
                 String name = parser.getName();
                 switch (event) {
@@ -293,17 +294,17 @@ public final class ComponentUtils {
      * Get component type from TAG_* constants
      *
      * @param componentName Name of the constant: one of the TAG_*
-     * @return One of the {@link RulesStorageManager.Type}
+     * @return One of the {@link RuleType}
      */
     @Nullable
-    static RulesStorageManager.Type getComponentType(@NonNull String componentName) {
+    static RuleType getComponentType(@NonNull String componentName) {
         switch (componentName) {
             case TAG_ACTIVITY:
-                return RulesStorageManager.Type.ACTIVITY;
+                return RuleType.ACTIVITY;
             case TAG_RECEIVER:
-                return RulesStorageManager.Type.RECEIVER;
+                return RuleType.RECEIVER;
             case TAG_SERVICE:
-                return RulesStorageManager.Type.SERVICE;
+                return RuleType.SERVICE;
             default:
                 return null;
         }
