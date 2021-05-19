@@ -1176,4 +1176,5 @@
     <string name="adb_connect">اتصال</string>
     <string name="wireless_debugging_not_supported">التصحيح اللاسلكي غير مدعوم في هذا النظام الأساسي.</string>
     <string name="wireless_debugging">التصحيح اللاسلكي</string>
+    <string name="unknown_net_policy">سياسة شبكة غير معروفة (%1$s - %2$X)</string>
 </resources>
