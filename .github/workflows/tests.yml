@@ -36,3 +36,8 @@ jobs:
         run: chmod +x gradlew
       - name: Run tests
         run: ./gradlew test
+      - name: Upload test results
+        uses: actions/upload-artifact@v1
+        with:
+          name: unitTestResults
+          path: ./app/build/reports/tests/testDebugUnitTest/index.html
