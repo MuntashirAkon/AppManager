@@ -3,19 +3,26 @@
 package org.apache.commons.compress.compressors.bzip2;
 
 import android.os.RemoteException;
-import io.github.muntashirakon.AppManager.utils.DigestUtils;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
-import io.github.muntashirakon.io.ProxyInputStream;
-import io.github.muntashirakon.io.SplitOutputStream;
+
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.junit.Test;
 
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import io.github.muntashirakon.AppManager.utils.DigestUtils;
+import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.io.ProxyInputStream;
+import io.github.muntashirakon.io.SplitOutputStream;
+
+import static org.junit.Assert.assertEquals;
 
 public class BZip2CompressorOutputStreamTest {
     private final ClassLoader classLoader = getClass().getClassLoader();
@@ -75,7 +82,6 @@ public class BZip2CompressorOutputStreamTest {
         fileList.clear();
         fileList.add(new File(classLoader.getResource("AppManager_v2.5.22.apks.tar.bz2.0").getFile()));
         fileList.add(new File(classLoader.getResource("AppManager_v2.5.22.apks.tar.bz2.1").getFile()));
-        fileList.add(new File(classLoader.getResource("AppManager_v2.5.22.apks.tar.bz2.2").getFile()));
         for (File file : fileList) {
             expectedHashes.add(DigestUtils.getHexDigest(DigestUtils.SHA_256, file));
         }
@@ -83,7 +89,6 @@ public class BZip2CompressorOutputStreamTest {
         fileList.clear();
         fileList.add(new File("/tmp/AppManager_v2.5.22.apks.tar.bz2.0"));
         fileList.add(new File("/tmp/AppManager_v2.5.22.apks.tar.bz2.1"));
-        fileList.add(new File("/tmp/AppManager_v2.5.22.apks.tar.bz2.2"));
         for (File file : fileList) {
             if (!file.exists()) {
                 throw new FileNotFoundException(file + " does not exist.");
