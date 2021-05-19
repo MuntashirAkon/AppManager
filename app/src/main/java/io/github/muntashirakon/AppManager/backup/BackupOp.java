@@ -17,28 +17,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 import androidx.core.content.pm.PermissionInfoCompat;
 
-import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.appops.AppOpsService;
-import io.github.muntashirakon.AppManager.appops.OpEntry;
-import io.github.muntashirakon.AppManager.appops.PackageOps;
-import io.github.muntashirakon.AppManager.crypto.Crypto;
-import io.github.muntashirakon.AppManager.crypto.CryptoException;
-import io.github.muntashirakon.AppManager.db.entity.FileHash;
-import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
-import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.misc.OsEnvironment;
-import io.github.muntashirakon.AppManager.rules.PseudoRules;
-import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
-import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
-import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.servermanager.LocalServer;
-import io.github.muntashirakon.AppManager.servermanager.NetworkPolicyManagerCompat;
-import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
-import io.github.muntashirakon.AppManager.uri.UriManager;
-import io.github.muntashirakon.AppManager.utils.*;
-import io.github.muntashirakon.io.ProxyFile;
-import io.github.muntashirakon.io.ProxyOutputStream;
-
 import org.json.JSONException;
 
 import java.io.Closeable;
@@ -51,7 +29,45 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static io.github.muntashirakon.AppManager.backup.BackupManager.*;
+import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.appops.AppOpsService;
+import io.github.muntashirakon.AppManager.appops.OpEntry;
+import io.github.muntashirakon.AppManager.appops.PackageOps;
+import io.github.muntashirakon.AppManager.crypto.Crypto;
+import io.github.muntashirakon.AppManager.crypto.CryptoException;
+import io.github.muntashirakon.AppManager.db.entity.FileHash;
+import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
+import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.misc.OsEnvironment;
+import io.github.muntashirakon.AppManager.rules.PseudoRules;
+import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
+import io.github.muntashirakon.AppManager.rules.struct.RuleEntry;
+import io.github.muntashirakon.AppManager.runner.Runner;
+import io.github.muntashirakon.AppManager.servermanager.LocalServer;
+import io.github.muntashirakon.AppManager.servermanager.NetworkPolicyManagerCompat;
+import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.uri.UriManager;
+import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.DigestUtils;
+import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
+import io.github.muntashirakon.AppManager.utils.MagiskUtils;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.SsaidSettings;
+import io.github.muntashirakon.AppManager.utils.TarUtils;
+import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.io.ProxyFile;
+import io.github.muntashirakon.io.ProxyOutputStream;
+
+import static io.github.muntashirakon.AppManager.backup.BackupManager.CERT_PREFIX;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.DATA_PREFIX;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.ICON_FILE;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.KEYSTORE_PLACEHOLDER;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.KEYSTORE_PREFIX;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.MASTER_KEY;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.SOURCE_PREFIX;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.getExt;
 
 @WorkerThread
 class BackupOp implements Closeable {
@@ -339,7 +355,7 @@ class BackupOp implements Closeable {
         }
         // Backup app ops
         for (OpEntry entry : opEntries) {
-            rules.setAppOp(String.valueOf(entry.getOp()), entry.getMode());
+            rules.setAppOp(entry.getOp(), entry.getMode());
         }
         // Backup Magisk status
         if (MagiskUtils.isHidden(packageName)) {
@@ -411,10 +427,9 @@ class BackupOp implements Closeable {
         File rulesFile = backupFile.getRulesFile(CryptoUtils.MODE_NO_ENCRYPTION);
         try (OutputStream outputStream = new ProxyOutputStream(rulesFile);
              ComponentsBlocker cb = ComponentsBlocker.getInstance(packageName, userHandle)) {
-            for (RulesStorageManager.Entry entry : cb.getAll()) {
+            for (RuleEntry entry : cb.getAll()) {
                 // TODO: Do it in ComponentUtils
-                outputStream.write(String.format("%s\t%s\t%s\t%s\n", packageName, entry.name,
-                        entry.type.name(), entry.extra).getBytes());
+                outputStream.write((entry.flattenToString(true) + "\n").getBytes());
             }
         } catch (IOException | RemoteException e) {
             throw new BackupException("Rules backup is requested but encountered an error during fetching rules.", e);

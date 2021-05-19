@@ -12,6 +12,7 @@ import android.content.pm.ServiceInfo;
 import android.net.Uri;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
 import org.json.JSONArray;
@@ -55,7 +56,7 @@ public class ExternalComponentsImporter {
                 for (int appOp : appOpList) {
                     try {
                         appOpsService.setMode(appOp, PackageUtils.getAppUid(pair), pair.getPackageName(), mode);
-                        cb.setAppOp(String.valueOf(appOp), mode);
+                        cb.setAppOp(appOp, mode);
                     } catch (Exception ignore) {
                     }
                 }
@@ -216,6 +217,7 @@ public class ExternalComponentsImporter {
         }
     }
 
+    @Nullable
     private static RulesStorageManager.Type getType(@NonNull String name, @NonNull PackageInfo packageInfo) {
         for (ActivityInfo activityInfo : packageInfo.activities)
             if (activityInfo.name.equals(name)) return RulesStorageManager.Type.ACTIVITY;
@@ -225,6 +227,6 @@ public class ExternalComponentsImporter {
             if (receiverInfo.name.equals(name)) return RulesStorageManager.Type.RECEIVER;
         for (ServiceInfo serviceInfo : packageInfo.services)
             if (serviceInfo.name.equals(name)) return RulesStorageManager.Type.SERVICE;
-        return RulesStorageManager.Type.UNKNOWN;
+        return null;
     }
 }

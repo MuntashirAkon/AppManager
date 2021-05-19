@@ -32,6 +32,7 @@ import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.details.AppDetailsViewModel;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
+import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.servermanager.ApplicationInfoCompat;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
@@ -103,7 +104,8 @@ public class AppInfoViewModel extends AndroidViewModel {
         HashMap<String, RulesStorageManager.Type> trackerComponents = ComponentUtils.getTrackerComponentsForPackageInfo(packageInfo);
         tagCloud.trackerComponents = new ArrayList<>(trackerComponents.size());
         for (String component : trackerComponents.keySet()) {
-            tagCloud.trackerComponents.add(new RulesStorageManager.Entry(component, trackerComponents.get(component), RulesStorageManager.COMPONENT_TO_BE_BLOCKED));
+            tagCloud.trackerComponents.add(new ComponentRule(packageName, component, trackerComponents.get(component),
+                    ComponentRule.COMPONENT_TO_BE_BLOCKED));
         }
         tagCloud.isSystemApp = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
         tagCloud.isSystemlessPath = !mainModel.getIsExternalApk() && AppPref.isRootEnabled()
@@ -292,7 +294,7 @@ public class AppInfoViewModel extends AndroidViewModel {
     }
 
     public static class TagCloud {
-        public List<RulesStorageManager.Entry> trackerComponents;
+        public List<ComponentRule> trackerComponents;
         public boolean isSystemApp;
         public boolean isSystemlessPath;
         public boolean isUpdatedSystemApp;

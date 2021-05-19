@@ -6,44 +6,71 @@ import android.annotation.SuppressLint;
 import android.annotation.UserIdInt;
 import android.app.Application;
 import android.content.Intent;
-import android.content.pm.*;
+import android.content.pm.ActivityInfo;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.ConfigurationInfo;
+import android.content.pm.FeatureInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PermissionInfo;
+import android.content.pm.ProviderInfo;
+import android.content.pm.ServiceInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.DeadSystemException;
 import android.os.RemoteException;
 import android.text.TextUtils;
-import androidx.annotation.*;
+
+import androidx.annotation.AnyThread;
+import androidx.annotation.GuardedBy;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.UiThread;
+import androidx.annotation.WorkerThread;
 import androidx.core.content.pm.PermissionInfoCompat;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+
 import com.android.apksig.ApkVerifier;
 import com.android.apksig.apk.ApkFormatException;
-import io.github.muntashirakon.AppManager.apk.ApkFile;
-import io.github.muntashirakon.AppManager.appops.*;
-import io.github.muntashirakon.AppManager.details.struct.AppDetailsComponentItem;
-import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
-import io.github.muntashirakon.AppManager.details.struct.AppDetailsPermissionItem;
-import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
-import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
-import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
-import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
-import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
-import io.github.muntashirakon.AppManager.types.PackageChangeReceiver;
-import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
-import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import io.github.muntashirakon.AppManager.apk.ApkFile;
+import io.github.muntashirakon.AppManager.appops.AppOpsManager;
+import io.github.muntashirakon.AppManager.appops.AppOpsService;
+import io.github.muntashirakon.AppManager.appops.AppOpsUtils;
+import io.github.muntashirakon.AppManager.appops.OpEntry;
+import io.github.muntashirakon.AppManager.details.struct.AppDetailsComponentItem;
+import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
+import io.github.muntashirakon.AppManager.details.struct.AppDetailsPermissionItem;
+import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
+import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
+import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
+import io.github.muntashirakon.AppManager.rules.struct.AppOpRule;
+import io.github.muntashirakon.AppManager.rules.struct.RuleEntry;
+import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
+import io.github.muntashirakon.AppManager.types.PackageChangeReceiver;
+import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 
 import static io.github.muntashirakon.AppManager.appops.AppOpsManager.OP_NONE;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
@@ -277,7 +304,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         synchronized (blockerLocker) {
             waitForBlockerOrExit();
             blocker.setMutable();
-            if (blocker.hasComponent(componentName)) {
+            if (blocker.hasComponentName(componentName)) {
                 // Component is in the list
                 if (blocker.isComponentBlocked(componentName)) {
                     // Remove from the list
@@ -307,14 +334,14 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     @WorkerThread
     @GuardedBy("blockerLocker")
-    public void addRules(List<RulesStorageManager.Entry> entries, boolean forceApply) {
+    public void addRules(List<? extends RuleEntry> entries, boolean forceApply) {
         if (isExternalApk) return;
         synchronized (blockerLocker) {
             waitForBlockerOrExit();
             blocker.setMutable();
-            for (RulesStorageManager.Entry entry : entries) {
+            for (RuleEntry entry : entries) {
                 String componentName = entry.name;
-                if (blocker.hasComponent(componentName)) {
+                if (blocker.hasComponentName(componentName)) {
                     // Remove from the list
                     blocker.removeComponent(componentName);
                 }
@@ -338,14 +365,14 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     @WorkerThread
     @GuardedBy("blockerLocker")
-    public void removeRules(List<RulesStorageManager.Entry> entries, boolean forceApply) {
+    public void removeRules(List<? extends RuleEntry> entries, boolean forceApply) {
         if (isExternalApk) return;
         synchronized (blockerLocker) {
             waitForBlockerOrExit();
             blocker.setMutable();
-            for (RulesStorageManager.Entry entry : entries) {
+            for (RuleEntry entry : entries) {
                 String componentName = entry.name;
-                if (blocker.hasComponent(componentName)) {
+                if (blocker.hasComponentName(componentName)) {
                     // Remove from the list
                     blocker.removeComponent(componentName);
                 }
@@ -407,7 +434,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 waitForBlockerOrExit();
                 blocker.setMutable();
                 if (appOp != OP_NONE) {
-                    blocker.setAppOp(String.valueOf(appOp), isGranted ? AppOpsManager.MODE_ALLOWED : AppOpsManager.MODE_IGNORED);
+                    blocker.setAppOp(appOp, isGranted ? AppOpsManager.MODE_ALLOWED : AppOpsManager.MODE_IGNORED);
                 } else {
                     blocker.setPermission(permissionName, isGranted);
                 }
@@ -470,7 +497,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 synchronized (blockerLocker) {
                     waitForBlockerOrExit();
                     blocker.setMutable();
-                    blocker.setAppOp(String.valueOf(op), mode);
+                    blocker.setAppOp(op, mode);
                     blocker.commit();
                     blocker.setReadOnly();
                     blockerLocker.notifyAll();
@@ -495,9 +522,9 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 executor.submit(() -> {
                     synchronized (blockerLocker) {
                         waitForBlockerOrExit();
-                        List<RulesStorageManager.Entry> appOpEntries = blocker.getAll(RulesStorageManager.Type.APP_OP);
+                        List<AppOpRule> appOpEntries = blocker.getAll(AppOpRule.class);
                         blocker.setMutable();
-                        for (RulesStorageManager.Entry entry : appOpEntries)
+                        for (AppOpRule entry : appOpEntries)
                             blocker.removeEntry(entry);
                         blocker.commit();
                         blocker.setReadOnly();
@@ -557,7 +584,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 waitForBlockerOrExit();
                 blocker.setMutable();
                 for (int op : opItems)
-                    blocker.setAppOp(String.valueOf(op), AppOpsManager.MODE_IGNORED);
+                    blocker.setAppOp(op, AppOpsManager.MODE_IGNORED);
                 blocker.commit();
                 blocker.setReadOnly();
                 blockerLocker.notifyAll();
@@ -863,7 +890,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
             appDetailsItem.name = activityInfo.targetActivity == null ? activityInfo.name : activityInfo.targetActivity;
             synchronized (blockerLocker) {
                 if (!isExternalApk) {
-                    appDetailsItem.isBlocked = blocker.hasComponent(activityInfo.name);
+                    appDetailsItem.isBlocked = blocker.hasComponentName(activityInfo.name);
                 }
             }
             appDetailsItem.isTracker = ComponentUtils.isTracker(activityInfo.name);
@@ -899,7 +926,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
             appDetailsItem.name = serviceInfo.name;
             synchronized (blockerLocker) {
                 if (!isExternalApk) {
-                    appDetailsItem.isBlocked = blocker.hasComponent(serviceInfo.name);
+                    appDetailsItem.isBlocked = blocker.hasComponentName(serviceInfo.name);
                 }
             }
             appDetailsItem.isTracker = ComponentUtils.isTracker(serviceInfo.name);
@@ -936,7 +963,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
             appDetailsItem.name = activityInfo.name;
             synchronized (blockerLocker) {
                 if (!isExternalApk) {
-                    appDetailsItem.isBlocked = blocker.hasComponent(activityInfo.name);
+                    appDetailsItem.isBlocked = blocker.hasComponentName(activityInfo.name);
                 }
             }
             appDetailsItem.isTracker = ComponentUtils.isTracker(activityInfo.name);
@@ -973,7 +1000,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
             appDetailsItem.name = providerInfo.name;
             synchronized (blockerLocker) {
                 if (!isExternalApk) {
-                    appDetailsItem.isBlocked = blocker.hasComponent(providerInfo.name);
+                    appDetailsItem.isBlocked = blocker.hasComponentName(providerInfo.name);
                 }
             }
             appDetailsItem.isTracker = ComponentUtils.isTracker(providerInfo.name);

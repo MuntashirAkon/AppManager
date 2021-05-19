@@ -9,6 +9,7 @@ import android.os.RemoteException;
 import android.util.Xml;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -31,6 +32,9 @@ import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.oneclickops.ItemCount;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
+import io.github.muntashirakon.AppManager.rules.struct.AppOpRule;
+import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
+import io.github.muntashirakon.AppManager.rules.struct.PermissionRule;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
@@ -188,7 +192,7 @@ public final class ComponentUtils {
         int uid = PackageUtils.getAppUid(new UserPackagePair(packageName, userHandle));
         try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName, userHandle)) {
             // Remove all blocking rules
-            for (RulesStorageManager.Entry entry : cb.getAllComponents()) {
+            for (ComponentRule entry : cb.getAllComponents()) {
                 cb.removeComponent(entry.name);
             }
             cb.applyRules(true);
@@ -196,10 +200,9 @@ public final class ComponentUtils {
             AppOpsService appOpsService = new AppOpsService();
             try {
                 appOpsService.resetAllModes(userHandle, packageName);
-                for (RulesStorageManager.Entry entry : cb.getAll(RulesStorageManager.Type.APP_OP)) {
+                for (AppOpRule entry : cb.getAll(AppOpRule.class)) {
                     try {
-                        int op = (int) entry.extra;
-                        appOpsService.setMode(op, uid, packageName, AppOpsManager.MODE_DEFAULT);
+                        appOpsService.setMode(entry.getOp(), uid, packageName, AppOpsManager.MODE_DEFAULT);
                         cb.removeEntry(entry);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -209,7 +212,7 @@ public final class ComponentUtils {
                 e.printStackTrace();
             }
             // Grant configured permissions
-            for (RulesStorageManager.Entry entry : cb.getAll(RulesStorageManager.Type.PERMISSION)) {
+            for (PermissionRule entry : cb.getAll(PermissionRule.class)) {
                 try {
                     PermissionCompat.grantPermission(packageName, entry.name, userHandle);
                     cb.removeEntry(entry);
@@ -257,7 +260,7 @@ public final class ComponentUtils {
             parser.nextTag();
             parser.require(XmlPullParser.START_TAG, null, "rules");
             int event = parser.nextTag();
-            RulesStorageManager.Type componentType = RulesStorageManager.Type.UNKNOWN;
+            RulesStorageManager.Type componentType = null;
             while (event != XmlPullParser.END_DOCUMENT) {
                 String name = parser.getName();
                 switch (event) {
@@ -292,6 +295,7 @@ public final class ComponentUtils {
      * @param componentName Name of the constant: one of the TAG_*
      * @return One of the {@link RulesStorageManager.Type}
      */
+    @Nullable
     static RulesStorageManager.Type getComponentType(@NonNull String componentName) {
         switch (componentName) {
             case TAG_ACTIVITY:
@@ -301,7 +305,7 @@ public final class ComponentUtils {
             case TAG_SERVICE:
                 return RulesStorageManager.Type.SERVICE;
             default:
-                return RulesStorageManager.Type.UNKNOWN;
+                return null;
         }
     }
 }
