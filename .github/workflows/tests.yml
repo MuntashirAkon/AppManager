@@ -1,0 +1,38 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - 'master'
+      - 'AppManager-*'
+    paths-ignore:
+      - 'fastlane/**'
+      - 'scripts/**'
+      - 'docs/raw/**'
+      - 'README.md'
+  pull_request:
+    branches:
+      - 'master'
+      - 'AppManager-*'
+    paths-ignore:
+      - 'fastlane/**'
+      - 'scripts/**'
+      - 'docs/raw/**'
+      - 'README.md'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone the repository
+        uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Run tests
+        run: ./gradlew test
