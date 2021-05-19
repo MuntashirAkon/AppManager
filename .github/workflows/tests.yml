@@ -37,6 +37,7 @@ jobs:
       - name: Run tests
         run: ./gradlew test
       - name: Upload test results
+        if: ${{ always() }}
         uses: actions/upload-artifact@v1
         with:
           name: unitTestResults
