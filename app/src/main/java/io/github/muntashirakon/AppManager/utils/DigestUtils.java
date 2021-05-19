@@ -7,6 +7,11 @@ import android.os.RemoteException;
 import android.text.TextUtils;
 import android.util.Pair;
 
+import androidx.annotation.AnyThread;
+import androidx.annotation.NonNull;
+import androidx.annotation.StringDef;
+import androidx.annotation.WorkerThread;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,11 +23,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.CRC32;
+import java.util.zip.CheckedInputStream;
 
-import androidx.annotation.AnyThread;
-import androidx.annotation.NonNull;
-import androidx.annotation.StringDef;
-import androidx.annotation.WorkerThread;
 import aosp.libcore.util.HexEncoding;
 import io.github.muntashirakon.io.ProxyInputStream;
 
@@ -95,10 +97,9 @@ public class DigestUtils {
         if (CRC32.equals(algo)) {
             java.util.zip.CRC32 crc32 = new CRC32();
             byte[] buffer = new byte[IOUtils.DEFAULT_BUFFER_SIZE];
-            int read;
-            try {
-                while ((read = stream.read(buffer)) > 0) {
-                    crc32.update(buffer, 0, read);
+            try (CheckedInputStream cis = new CheckedInputStream(stream, crc32)) {
+                //noinspection StatementWithEmptyBody
+                while (cis.read(buffer) >= 0) {
                 }
             } catch (IOException ignore) {
             }

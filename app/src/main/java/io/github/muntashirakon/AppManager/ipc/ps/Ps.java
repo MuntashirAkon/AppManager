@@ -2,14 +2,21 @@
 
 package io.github.muntashirakon.AppManager.ipc.ps;
 
-import androidx.annotation.*;
+import androidx.annotation.AnyThread;
+import androidx.annotation.GuardedBy;
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
+import androidx.annotation.WorkerThread;
 import androidx.collection.ArrayMap;
+
 import com.android.internal.util.TextUtils;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import io.github.muntashirakon.AppManager.utils.IOUtils;
 
 /**
  * This is a generic Java-way of parsing processes from /proc. This is a work in progress and by no means perfect. To
@@ -243,7 +250,7 @@ public class Ps {
         processEntry.threadCount = Integer.decode(procItem.stat[STAT_NUM_THREADS]);
         processEntry.tty = Integer.decode(procItem.stat[STAT_TTY_NR]);
         processEntry.seLinuxPolicy = procItem.sepol;
-        processEntry.name = procItem.name;
+        processEntry.name = procItem.name.equals("") ? procItem.status.get(STATUS_NAME) : procItem.name;
         processEntry.users = new ProcessUsers(procItem.status.get(STATUS_UID), procItem.status.get(STATUS_GID));
         processEntry.cpuTimeConsumed = Integer.decode(procItem.stat[STAT_UTIME]);
         processEntry.elapsedTime = Integer.decode(procItem.stat[STAT_START_TIME]);
