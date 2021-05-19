@@ -4,7 +4,7 @@ package io.github.muntashirakon.AppManager.utils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import io.github.muntashirakon.io.SplitInputStream;
+
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
@@ -17,7 +17,10 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+
+import io.github.muntashirakon.io.SplitInputStream;
 
 import static org.junit.Assert.assertEquals;
 
@@ -217,19 +220,22 @@ public class TarUtilsTest {
     }
 
     private static void createTest(@NonNull File source, @NonNull File testRoot, @Nullable String[] include,
-                                   @Nullable String[] exclude, @NonNull List<String> expectedPaths)
-            throws Throwable {
+                                   @Nullable String[] exclude, @NonNull List<String> expectedPaths) throws Throwable {
         List<File> files = TarUtils.create(TarUtils.TAR_GZIP, testRoot, source, include, null, exclude, false);
-        assertEquals(expectedPaths, getFileNamesGZip(files));
+        List<String> actualPaths = getFileNamesGZip(files);
+        Collections.sort(expectedPaths);
+        Collections.sort(actualPaths);
+        assertEquals(expectedPaths, actualPaths);
     }
 
     private static void extractTest(@NonNull File[] sourceFiles, @NonNull File testRoot, @Nullable String[] include,
-                                    @Nullable String[] exclude, @NonNull List<String> expectedPaths)
-            throws Throwable {
+                                    @Nullable String[] exclude, @NonNull List<String> expectedPaths) throws Throwable {
         List<String> actualPaths = new ArrayList<>();
         recreateDir(testRoot);
         TarUtils.extract(TarUtils.TAR_GZIP, sourceFiles, testRoot, include, exclude);
         gatherFiles(actualPaths, testRoot, testRoot);
+        Collections.sort(expectedPaths);
+        Collections.sort(actualPaths);
         assertEquals(expectedPaths, actualPaths);
     }
 
