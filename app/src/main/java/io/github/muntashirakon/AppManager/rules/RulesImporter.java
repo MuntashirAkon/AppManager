@@ -30,7 +30,7 @@ import io.github.muntashirakon.AppManager.utils.IOUtils;
  * Format: <code>package_name component_name type mode|is_applied|is_granted</code>
  *
  * @see RulesExporter
- * @see RulesStorageManager.Type
+ * @see RuleType
  */
 public class RulesImporter implements Closeable {
     @NonNull
@@ -38,13 +38,13 @@ public class RulesImporter implements Closeable {
     @NonNull
     private final HashMap<String, ComponentsBlocker>[] mComponentsBlockers;
     @NonNull
-    private final List<RulesStorageManager.Type> mTypesToImport;
+    private final List<RuleType> mTypesToImport;
     @Nullable
     private List<String> mPackagesToImport;
     @NonNull
     private final int[] userHandles;
 
-    public RulesImporter(@NonNull List<RulesStorageManager.Type> typesToImport, @NonNull int[] userHandles) {
+    public RulesImporter(@NonNull List<RuleType> typesToImport, @NonNull int[] userHandles) {
         mContext = AppManager.getContext();
         if (userHandles.length <= 0) {
             throw new IllegalArgumentException("Input must contain one or more user handles");

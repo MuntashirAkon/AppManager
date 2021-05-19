@@ -28,7 +28,7 @@ import java.util.List;
 
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
-import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
+import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
@@ -73,7 +73,7 @@ public class ExternalComponentsImporter {
     @NonNull
     public static List<String> applyFromExistingBlockList(@NonNull List<String> packageNames, int userHandle) {
         List<String> failedPkgList = new ArrayList<>();
-        HashMap<String, RulesStorageManager.Type> components;
+        HashMap<String, RuleType> components;
         for (String packageName : packageNames) {
             components = PackageUtils.getUserDisabledComponentsForPackage(packageName, userHandle);
             try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName, userHandle)) {
@@ -148,7 +148,7 @@ public class ExternalComponentsImporter {
         try (InputStream rulesStream = context.getContentResolver().openInputStream(fileUri)) {
             if (rulesStream == null) throw new IOException("Failed to open input stream.");
             try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName, userHandle)) {
-                HashMap<String, RulesStorageManager.Type> components = ComponentUtils.readIFWRules(rulesStream,
+                HashMap<String, RuleType> components = ComponentUtils.readIFWRules(rulesStream,
                         packageName);
                 for (String componentName : components.keySet()) {
                     // Overwrite rules if exists
@@ -169,7 +169,7 @@ public class ExternalComponentsImporter {
     @SuppressLint("WrongConstant")
     private static void applyFromBlocker(@NonNull Context context, Uri uri, int userHandle) throws Exception {
         String jsonString = IOUtils.getFileContent(context.getContentResolver(), uri);
-        HashMap<String, HashMap<String, RulesStorageManager.Type>> packageComponents = new HashMap<>();
+        HashMap<String, HashMap<String, RuleType>> packageComponents = new HashMap<>();
         HashMap<String, PackageInfo> packageInfoList = new HashMap<>();
         JSONObject jsonObject = new JSONObject(jsonString);
         JSONArray components = jsonObject.getJSONArray("components");
@@ -201,7 +201,7 @@ public class ExternalComponentsImporter {
         }
         if (packageComponents.size() > 0) {
             for (String packageName : packageComponents.keySet()) {
-                HashMap<String, RulesStorageManager.Type> disabledComponents = packageComponents.get(packageName);
+                HashMap<String, RuleType> disabledComponents = packageComponents.get(packageName);
                 //noinspection ConstantConditions
                 if (disabledComponents.size() > 0) {
                     try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName, userHandle)) {
@@ -218,15 +218,15 @@ public class ExternalComponentsImporter {
     }
 
     @Nullable
-    private static RulesStorageManager.Type getType(@NonNull String name, @NonNull PackageInfo packageInfo) {
+    private static RuleType getType(@NonNull String name, @NonNull PackageInfo packageInfo) {
         for (ActivityInfo activityInfo : packageInfo.activities)
-            if (activityInfo.name.equals(name)) return RulesStorageManager.Type.ACTIVITY;
+            if (activityInfo.name.equals(name)) return RuleType.ACTIVITY;
         for (ProviderInfo providerInfo : packageInfo.providers)
-            if (providerInfo.name.equals(name)) return RulesStorageManager.Type.PROVIDER;
+            if (providerInfo.name.equals(name)) return RuleType.PROVIDER;
         for (ActivityInfo receiverInfo : packageInfo.receivers)
-            if (receiverInfo.name.equals(name)) return RulesStorageManager.Type.RECEIVER;
+            if (receiverInfo.name.equals(name)) return RuleType.RECEIVER;
         for (ServiceInfo serviceInfo : packageInfo.services)
-            if (serviceInfo.name.equals(name)) return RulesStorageManager.Type.SERVICE;
+            if (serviceInfo.name.equals(name)) return RuleType.SERVICE;
         return null;
     }
 }

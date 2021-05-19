@@ -28,11 +28,11 @@ public class RulesExporter {
     @Nullable
     private List<String> mPackagesToExport;
     @NonNull
-    private final List<RulesStorageManager.Type> mTypesToExport;
+    private final List<RuleType> mTypesToExport;
     @NonNull
     private final int[] userHandles;
 
-    public RulesExporter(@NonNull List<RulesStorageManager.Type> typesToExport, @Nullable List<String> packagesToExport, @NonNull int[] userHandles) {
+    public RulesExporter(@NonNull List<RuleType> typesToExport, @Nullable List<String> packagesToExport, @NonNull int[] userHandles) {
         mContext = AppManager.getContext();
         mPackagesToExport = packagesToExport;
         mTypesToExport = typesToExport;

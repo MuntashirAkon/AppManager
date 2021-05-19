@@ -5,16 +5,16 @@ package io.github.muntashirakon.AppManager.rules.struct;
 import org.junit.Test;
 
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
-import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
+import io.github.muntashirakon.AppManager.rules.RuleType;
 
 import static org.junit.Assert.assertEquals;
 
 public class RuleEntryTest {
-    public static final String PACKAGE_NAME = "sample.package";
+    private static final String PACKAGE_NAME = "sample.package";
 
     @Test
     public void flattenActivityToString() {
-        RuleEntry rule = new ComponentRule(PACKAGE_NAME, ".activity", RulesStorageManager.Type.ACTIVITY,
+        RuleEntry rule = new ComponentRule(PACKAGE_NAME, ".activity", RuleType.ACTIVITY,
                 ComponentRule.COMPONENT_BLOCKED);
         assertEquals(PACKAGE_NAME + "\t.activity\tACTIVITY\ttrue", rule.flattenToString(true));
         assertEquals(".activity\tACTIVITY\ttrue", rule.flattenToString(false));
@@ -22,7 +22,7 @@ public class RuleEntryTest {
 
     @Test
     public void flattenProviderToString() {
-        RuleEntry rule = new ComponentRule(PACKAGE_NAME, ".provider", RulesStorageManager.Type.PROVIDER,
+        RuleEntry rule = new ComponentRule(PACKAGE_NAME, ".provider", RuleType.PROVIDER,
                 ComponentRule.COMPONENT_TO_BE_BLOCKED);
         assertEquals(PACKAGE_NAME + "\t.provider\tPROVIDER\tfalse", rule.flattenToString(true));
         assertEquals(".provider\tPROVIDER\tfalse", rule.flattenToString(false));
@@ -30,7 +30,7 @@ public class RuleEntryTest {
 
     @Test
     public void flattenReceiverToString() {
-        RuleEntry rule = new ComponentRule(PACKAGE_NAME, ".receiver", RulesStorageManager.Type.RECEIVER,
+        RuleEntry rule = new ComponentRule(PACKAGE_NAME, ".receiver", RuleType.RECEIVER,
                 ComponentRule.COMPONENT_TO_BE_UNBLOCKED);
         assertEquals(PACKAGE_NAME + "\t.receiver\tRECEIVER\tunblocked", rule.flattenToString(true));
         assertEquals(".receiver\tRECEIVER\tunblocked", rule.flattenToString(false));
@@ -38,7 +38,7 @@ public class RuleEntryTest {
 
     @Test
     public void flattenServiceToString() {
-        RuleEntry rule = new ComponentRule(PACKAGE_NAME, ".service", RulesStorageManager.Type.SERVICE,
+        RuleEntry rule = new ComponentRule(PACKAGE_NAME, ".service", RuleType.SERVICE,
                 ComponentRule.COMPONENT_TO_BE_UNBLOCKED);
         assertEquals(PACKAGE_NAME + "\t.service\tSERVICE\tunblocked", rule.flattenToString(true));
         assertEquals(".service\tSERVICE\tunblocked", rule.flattenToString(false));
@@ -87,7 +87,7 @@ public class RuleEntryTest {
     }
 
     @Test
-    public void flattenSsaidListenerToString() {
+    public void flattenSsaidToString() {
         RuleEntry rule = new SsaidRule(PACKAGE_NAME, "bc9948c6");
         assertEquals(PACKAGE_NAME + "\tSTUB\tSSAID\tbc9948c6", rule.flattenToString(true));
         assertEquals("STUB\tSSAID\tbc9948c6", rule.flattenToString(false));
@@ -95,7 +95,7 @@ public class RuleEntryTest {
 
     @Test
     public void addPackageWithTab() {
-        ComponentRule rule = new ComponentRule(PACKAGE_NAME, ".activity", RulesStorageManager.Type.ACTIVITY,
+        ComponentRule rule = new ComponentRule(PACKAGE_NAME, ".activity", RuleType.ACTIVITY,
                 ComponentRule.COMPONENT_BLOCKED);
         assertEquals(PACKAGE_NAME + "\t", rule.addPackageWithTab(true));
         assertEquals("", rule.addPackageWithTab(false));
@@ -103,7 +103,7 @@ public class RuleEntryTest {
 
     @Test
     public void unflattenActivityFromString() {
-        RuleEntry rule = new ComponentRule(PACKAGE_NAME, ".activity", RulesStorageManager.Type.ACTIVITY,
+        RuleEntry rule = new ComponentRule(PACKAGE_NAME, ".activity", RuleType.ACTIVITY,
                 ComponentRule.COMPONENT_BLOCKED);
         assertEquals(RuleEntry.unflattenFromString(null, PACKAGE_NAME + "\t.activity\tACTIVITY\ttrue", true), rule);
         assertEquals(RuleEntry.unflattenFromString(PACKAGE_NAME, PACKAGE_NAME + "\t.activity\tACTIVITY\ttrue", true), rule);
@@ -112,7 +112,7 @@ public class RuleEntryTest {
 
     @Test
     public void unflattenProviderFromString() {
-        RuleEntry rule = new ComponentRule(PACKAGE_NAME, ".provider", RulesStorageManager.Type.PROVIDER,
+        RuleEntry rule = new ComponentRule(PACKAGE_NAME, ".provider", RuleType.PROVIDER,
                 ComponentRule.COMPONENT_TO_BE_BLOCKED);
         assertEquals(RuleEntry.unflattenFromString(null, PACKAGE_NAME + "\t.provider\tPROVIDER\tfalse", true), rule);
         assertEquals(RuleEntry.unflattenFromString(PACKAGE_NAME, PACKAGE_NAME + "\t.provider\tPROVIDER\tfalse", true), rule);
@@ -121,7 +121,7 @@ public class RuleEntryTest {
 
     @Test
     public void unflattenReceiverFromString() {
-        RuleEntry rule = new ComponentRule(PACKAGE_NAME, ".receiver", RulesStorageManager.Type.RECEIVER,
+        RuleEntry rule = new ComponentRule(PACKAGE_NAME, ".receiver", RuleType.RECEIVER,
                 ComponentRule.COMPONENT_TO_BE_UNBLOCKED);
         assertEquals(RuleEntry.unflattenFromString(null, PACKAGE_NAME + "\t.receiver\tRECEIVER\tunblocked", true), rule);
         assertEquals(RuleEntry.unflattenFromString(PACKAGE_NAME, PACKAGE_NAME + "\t.receiver\tRECEIVER\tunblocked", true), rule);
@@ -130,7 +130,7 @@ public class RuleEntryTest {
 
     @Test
     public void unflattenServiceFromString() {
-        RuleEntry rule = new ComponentRule(PACKAGE_NAME, ".service", RulesStorageManager.Type.SERVICE,
+        RuleEntry rule = new ComponentRule(PACKAGE_NAME, ".service", RuleType.SERVICE,
                 ComponentRule.COMPONENT_TO_BE_UNBLOCKED);
         assertEquals(RuleEntry.unflattenFromString(null, PACKAGE_NAME + "\t.service\tSERVICE\tunblocked", true), rule);
         assertEquals(RuleEntry.unflattenFromString(PACKAGE_NAME, PACKAGE_NAME + "\t.service\tSERVICE\tunblocked", true), rule);
@@ -151,6 +151,14 @@ public class RuleEntryTest {
         assertEquals(RuleEntry.unflattenFromString(null, PACKAGE_NAME + "\t.permission\tPERMISSION\ttrue\t32", true), rule);
         assertEquals(RuleEntry.unflattenFromString(PACKAGE_NAME, PACKAGE_NAME + "\t.permission\tPERMISSION\ttrue\t32", true), rule);
         assertEquals(RuleEntry.unflattenFromString(PACKAGE_NAME, ".permission\tPERMISSION\ttrue\t32", false), rule);
+    }
+
+    @Test
+    public void unflattenPermissionWithoutFlagsFromString() {
+        RuleEntry rule = new PermissionRule(PACKAGE_NAME, ".permission", true, 0);
+        assertEquals(RuleEntry.unflattenFromString(null, PACKAGE_NAME + "\t.permission\tPERMISSION\ttrue", true), rule);
+        assertEquals(RuleEntry.unflattenFromString(PACKAGE_NAME, PACKAGE_NAME + "\t.permission\tPERMISSION\ttrue", true), rule);
+        assertEquals(RuleEntry.unflattenFromString(PACKAGE_NAME, ".permission\tPERMISSION\ttrue", false), rule);
     }
 
     @Test
@@ -186,7 +194,7 @@ public class RuleEntryTest {
     }
 
     @Test
-    public void unflattenSsaidListenerFromString() {
+    public void unflattenSsaidFromString() {
         RuleEntry rule = new SsaidRule(PACKAGE_NAME, "bc9948c6");
         assertEquals(RuleEntry.unflattenFromString(null, PACKAGE_NAME + "\tSTUB\tSSAID\tbc9948c6", true), rule);
         assertEquals(RuleEntry.unflattenFromString(PACKAGE_NAME, PACKAGE_NAME + "\tSTUB\tSSAID\tbc9948c6", true), rule);

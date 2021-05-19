@@ -30,7 +30,7 @@ import java.util.concurrent.Executors;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.details.AppDetailsViewModel;
-import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
+import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
 import io.github.muntashirakon.AppManager.runner.Runner;
@@ -101,7 +101,7 @@ public class AppInfoViewModel extends AndroidViewModel {
         String packageName = packageInfo.packageName;
         ApplicationInfo applicationInfo = packageInfo.applicationInfo;
         TagCloud tagCloud = new TagCloud();
-        HashMap<String, RulesStorageManager.Type> trackerComponents = ComponentUtils.getTrackerComponentsForPackageInfo(packageInfo);
+        HashMap<String, RuleType> trackerComponents = ComponentUtils.getTrackerComponentsForPackageInfo(packageInfo);
         tagCloud.trackerComponents = new ArrayList<>(trackerComponents.size());
         for (String component : trackerComponents.keySet()) {
             tagCloud.trackerComponents.add(new ComponentRule(packageName, component, trackerComponents.get(component),

@@ -71,7 +71,7 @@ import io.github.muntashirakon.AppManager.ipc.ps.ProcessEntry;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.main.ApplicationItem;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
-import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
+import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.Runner;
@@ -373,7 +373,7 @@ public final class PackageUtils {
     }
 
     @NonNull
-    public static HashMap<String, RulesStorageManager.Type> collectComponentClassNames(String packageName, @UserIdInt int userHandle) {
+    public static HashMap<String, RuleType> collectComponentClassNames(String packageName, @UserIdInt int userHandle) {
         try {
             PackageInfo packageInfo = PackageManagerCompat.getPackageInfo(packageName,
                     PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS
@@ -388,36 +388,36 @@ public final class PackageUtils {
     }
 
     @NonNull
-    public static HashMap<String, RulesStorageManager.Type> collectComponentClassNames(@NonNull PackageInfo packageInfo) {
-        HashMap<String, RulesStorageManager.Type> componentClasses = new HashMap<>();
+    public static HashMap<String, RuleType> collectComponentClassNames(@NonNull PackageInfo packageInfo) {
+        HashMap<String, RuleType> componentClasses = new HashMap<>();
         // Add activities
         if (packageInfo.activities != null) {
             for (ActivityInfo activityInfo : packageInfo.activities) {
                 if (activityInfo.targetActivity != null)
-                    componentClasses.put(activityInfo.targetActivity, RulesStorageManager.Type.ACTIVITY);
-                else componentClasses.put(activityInfo.name, RulesStorageManager.Type.ACTIVITY);
+                    componentClasses.put(activityInfo.targetActivity, RuleType.ACTIVITY);
+                else componentClasses.put(activityInfo.name, RuleType.ACTIVITY);
             }
         }
         // Add others
         if (packageInfo.services != null) {
             for (ComponentInfo componentInfo : packageInfo.services)
-                componentClasses.put(componentInfo.name, RulesStorageManager.Type.SERVICE);
+                componentClasses.put(componentInfo.name, RuleType.SERVICE);
         }
         if (packageInfo.receivers != null) {
             for (ComponentInfo componentInfo : packageInfo.receivers)
-                componentClasses.put(componentInfo.name, RulesStorageManager.Type.RECEIVER);
+                componentClasses.put(componentInfo.name, RuleType.RECEIVER);
         }
         if (packageInfo.providers != null) {
             for (ComponentInfo componentInfo : packageInfo.providers)
-                componentClasses.put(componentInfo.name, RulesStorageManager.Type.PROVIDER);
+                componentClasses.put(componentInfo.name, RuleType.PROVIDER);
         }
         return componentClasses;
     }
 
     @NonNull
-    public static HashMap<String, RulesStorageManager.Type> getFilteredComponents(String packageName, @UserIdInt int userHandle, String[] signatures) {
-        HashMap<String, RulesStorageManager.Type> filteredComponents = new HashMap<>();
-        HashMap<String, RulesStorageManager.Type> components = collectComponentClassNames(packageName, userHandle);
+    public static HashMap<String, RuleType> getFilteredComponents(String packageName, @UserIdInt int userHandle, String[] signatures) {
+        HashMap<String, RuleType> filteredComponents = new HashMap<>();
+        HashMap<String, RuleType> components = collectComponentClassNames(packageName, userHandle);
         for (String componentName : components.keySet()) {
             for (String signature : signatures) {
                 if (componentName.startsWith(signature) || componentName.contains(signature)) {
@@ -446,9 +446,9 @@ public final class PackageUtils {
     }
 
     @NonNull
-    public static HashMap<String, RulesStorageManager.Type> getUserDisabledComponentsForPackage(String packageName, @UserIdInt int userHandle) {
-        HashMap<String, RulesStorageManager.Type> componentClasses = collectComponentClassNames(packageName, userHandle);
-        HashMap<String, RulesStorageManager.Type> disabledComponents = new HashMap<>();
+    public static HashMap<String, RuleType> getUserDisabledComponentsForPackage(String packageName, @UserIdInt int userHandle) {
+        HashMap<String, RuleType> componentClasses = collectComponentClassNames(packageName, userHandle);
+        HashMap<String, RuleType> disabledComponents = new HashMap<>();
         PackageManager pm = AppManager.getContext().getPackageManager();
         for (String componentName : componentClasses.keySet()) {
             if (isComponentDisabledByUser(pm, packageName, componentName))

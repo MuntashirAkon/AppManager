@@ -9,7 +9,9 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.RemoteException;
 
+import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
 import java.io.File;
@@ -19,8 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
 import io.github.muntashirakon.AppManager.rules.struct.RuleEntry;
@@ -121,10 +123,10 @@ public final class ComponentsBlocker extends RulesStorageManager {
     @NonNull
     public static ComponentsBlocker getInstance(@NonNull String packageName, int userHandle, boolean noReloadFromDisk) {
         if (INSTANCE == null) {
-            INSTANCE = new ComponentsBlocker(AppManager.getContext(), packageName, userHandle);
+            INSTANCE = new ComponentsBlocker(packageName, userHandle);
         } else if (!noReloadFromDisk || !INSTANCE.packageName.equals(packageName)) {
             INSTANCE.close();
-            INSTANCE = new ComponentsBlocker(AppManager.getContext(), packageName, userHandle);
+            INSTANCE = new ComponentsBlocker(packageName, userHandle);
         }
         if (!noReloadFromDisk && AppPref.isRootEnabled()) {
             INSTANCE.retrieveDisabledComponents();
@@ -136,8 +138,8 @@ public final class ComponentsBlocker extends RulesStorageManager {
     private final AtomicProxyFile rulesFile;
     private Set<String> components;
 
-    protected ComponentsBlocker(Context context, String packageName, int userHandle) {
-        super(context, packageName, userHandle);
+    protected ComponentsBlocker(String packageName, int userHandle) {
+        super(packageName, userHandle);
         this.rulesFile = new AtomicProxyFile(new ProxyFile(SYSTEM_RULES_PATH, packageName + ".xml"));
         this.components = PackageUtils.collectComponentClassNames(packageName, userHandle).keySet();
     }
@@ -177,8 +179,22 @@ public final class ComponentsBlocker extends RulesStorageManager {
      * @return {@code true} if blocked, {@code false} otherwise
      */
     public boolean isComponentBlocked(String componentName) {
-        return hasComponentName(componentName) && ComponentRule.COMPONENT_BLOCKED
-                .equals(((ComponentRule) get(componentName)).getComponentStatus());
+        ComponentRule cr = getComponent(componentName);
+        return cr != null && ComponentRule.COMPONENT_BLOCKED.equals(cr.getComponentStatus());
+    }
+
+    /**
+     * Check if the given component exists in the rules. It does not necessarily mean that the
+     * component is being blocked.
+     *
+     * @param componentName The component name to check
+     * @return {@code true} if exists, {@code false} otherwise
+     * @see ComponentsBlocker#isComponentBlocked(String)
+     */
+    @GuardedBy("entries")
+    public boolean hasComponentName(String componentName) {
+        for (ComponentRule entry : getAllComponents()) if (entry.name.equals(componentName)) return true;
+        return false;
     }
 
     /**
@@ -195,6 +211,14 @@ public final class ComponentsBlocker extends RulesStorageManager {
         return count;
     }
 
+    @Nullable
+    protected ComponentRule getComponent(String componentName) {
+        for (ComponentRule rule : getAllComponents()) {
+            if (rule.name.equals(componentName)) return rule;
+        }
+        return null;
+    }
+
     /**
      * Add the given component to the rules list, does nothing if the instance is immutable.
      *
@@ -202,7 +226,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
      * @param componentType Component type
      * @see #addEntry(RuleEntry)
      */
-    public void addComponent(String componentName, RulesStorageManager.Type componentType) {
+    public void addComponent(String componentName, RuleType componentType) {
         if (!readOnly) setComponent(componentName, componentType, ComponentRule.COMPONENT_TO_BE_BLOCKED);
     }
 
@@ -217,8 +241,9 @@ public final class ComponentsBlocker extends RulesStorageManager {
      */
     public void removeComponent(String componentName) {
         if (readOnly) return;
-        if (hasComponentName(componentName)) {
-            setComponent(componentName, get(componentName).type, ComponentRule.COMPONENT_TO_BE_UNBLOCKED);
+        ComponentRule cr = getComponent(componentName);
+        if (cr != null) {
+            setComponent(componentName, cr.type, ComponentRule.COMPONENT_TO_BE_UNBLOCKED);
         }
     }
 
@@ -233,8 +258,9 @@ public final class ComponentsBlocker extends RulesStorageManager {
      */
     public void deleteComponent(String componentName) {
         if (readOnly) return;
-        if (hasComponentName(componentName)) {
-            removeEntries(componentName, get(componentName).type);
+        ComponentRule cr = getComponent(componentName);
+        if (cr != null) {
+            removeEntries(componentName, cr.type);
         }
     }
 
@@ -257,7 +283,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
             // Ignore components that needs unblocking
             if (ComponentRule.COMPONENT_TO_BE_UNBLOCKED.equals(component.getComponentStatus())) continue;
             String componentFilter = "  <component-filter name=\"" + packageName + "/" + component.name + "\"/>\n";
-            RulesStorageManager.Type componentType = component.type;
+            RuleType componentType = component.type;
             switch (component.type) {
                 case ACTIVITY:
                     activities.append(componentFilter);
@@ -403,7 +429,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
         }
         try {
             try (InputStream rulesStream = rulesFile.openRead()) {
-                HashMap<String, Type> components = ComponentUtils.readIFWRules(rulesStream, packageName);
+                HashMap<String, RuleType> components = ComponentUtils.readIFWRules(rulesStream, packageName);
                 for (String componentName : components.keySet()) {
                     // Override existing rule for the component if it exists
                     setComponent(componentName, components.get(componentName), ComponentRule.COMPONENT_BLOCKED);

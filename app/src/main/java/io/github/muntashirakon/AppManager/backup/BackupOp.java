@@ -324,7 +324,7 @@ class BackupOp implements Closeable {
     }
 
     private void backupExtras() throws BackupException {
-        PseudoRules rules = new PseudoRules(AppManager.getContext(), packageName, userHandle);
+        PseudoRules rules = new PseudoRules(packageName, userHandle);
         File miscFile = backupFile.getMiscFile(CryptoUtils.MODE_NO_ENCRYPTION);
         // Backup permissions
         @NonNull String[] permissions = ArrayUtils.defeatNullable(packageInfo.requestedPermissions);

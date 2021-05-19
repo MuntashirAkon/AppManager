@@ -7,9 +7,10 @@ import androidx.annotation.StringDef;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.Objects;
 import java.util.StringTokenizer;
 
-import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
+import io.github.muntashirakon.AppManager.rules.RuleType;
 
 public class ComponentRule extends RuleEntry {
     @StringDef(value = {
@@ -29,13 +30,13 @@ public class ComponentRule extends RuleEntry {
     @ComponentStatus
     private String componentStatus;
 
-    public ComponentRule(@NonNull String packageName, @NonNull String name, RulesStorageManager.Type componentType,
+    public ComponentRule(@NonNull String packageName, @NonNull String name, RuleType componentType,
                          @NonNull @ComponentStatus String componentStatus) {
         super(packageName, name, componentType);
         this.componentStatus = componentStatus;
     }
 
-    public ComponentRule(@NonNull String packageName, @NonNull String name, RulesStorageManager.Type componentType,
+    public ComponentRule(@NonNull String packageName, @NonNull String name, RuleType componentType,
                          @NonNull StringTokenizer tokenizer) throws IllegalArgumentException {
         super(packageName, name, componentType);
         if (tokenizer.hasMoreElements()) {
@@ -68,5 +69,19 @@ public class ComponentRule extends RuleEntry {
     @Override
     public String flattenToString(boolean isExternal) {
         return addPackageWithTab(isExternal) + name + "\t" + type.name() + "\t" + componentStatus;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ComponentRule)) return false;
+        if (!super.equals(o)) return false;
+        ComponentRule rule = (ComponentRule) o;
+        return getComponentStatus().equals(rule.getComponentStatus());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), getComponentStatus());
     }
 }
