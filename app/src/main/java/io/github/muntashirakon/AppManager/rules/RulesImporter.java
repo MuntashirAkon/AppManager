@@ -5,6 +5,10 @@ package io.github.muntashirakon.AppManager.rules;
 import android.content.Context;
 import android.net.Uri;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
+
 import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.IOException;
@@ -13,23 +17,20 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.StringTokenizer;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.WorkerThread;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
+import io.github.muntashirakon.AppManager.rules.struct.RuleEntry;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 
 /**
  * Rules importer is used to import internal rules to App Manager. Rules should only be imported
  * from settings and app data restore sections (although can be exported from various places).
  * <br>
- * Format: <code>package_name component_name type [mode|is_applied|is_granted]</code>
+ * Format: <code>package_name component_name type mode|is_applied|is_granted</code>
  *
  * @see RulesExporter
+ * @see RulesStorageManager.Type
  */
 public class RulesImporter implements Closeable {
     @NonNull
@@ -61,37 +62,18 @@ public class RulesImporter implements Closeable {
     public void addRulesFromUri(Uri uri) throws IOException {
         try (InputStream inputStream = mContext.getContentResolver().openInputStream(uri)) {
             try (BufferedReader TSVFile = new BufferedReader(new InputStreamReader(inputStream))) {
-                StringTokenizer tokenizer;
                 String dataRow;
-                String packageName;
                 while ((dataRow = TSVFile.readLine()) != null) {
-                    tokenizer = new StringTokenizer(dataRow, "\t");
-                    RulesStorageManager.Entry entry = new RulesStorageManager.Entry();
-                    if (tokenizer.hasMoreElements()) {
-                        packageName = tokenizer.nextElement().toString();
-                    } else throw new IOException("Malformed file.");
-                    if (tokenizer.hasMoreElements()) {
-                        entry.name = tokenizer.nextElement().toString();
-                    } else throw new IOException("Malformed file.");
-                    if (tokenizer.hasMoreElements()) {
-                        try {
-                            entry.type = RulesStorageManager.Type.valueOf(tokenizer.nextElement().toString());
-                        } catch (Exception e) {
-                            entry.type = RulesStorageManager.Type.UNKNOWN;
-                        }
-                    } else throw new IOException("Malformed file.");
-                    if (tokenizer.hasMoreElements()) {
-                        entry.extra = RulesStorageManager.getExtra(entry.type, tokenizer.nextElement().toString());
-                    } else throw new IOException("Malformed file.");
+                    RuleEntry entry = RuleEntry.unflattenFromString(null, dataRow, true);
                     // Parse complete, now add the row to CB
                     for (int i = 0; i < userHandles.length; ++i) {
-                        if (mComponentsBlockers[i].get(packageName) == null) {
+                        if (mComponentsBlockers[i].get(entry.packageName) == null) {
                             // Get a read-only instance, commit will be called manually
-                            mComponentsBlockers[i].put(packageName, ComponentsBlocker.getInstance(packageName, userHandles[i]));
+                            mComponentsBlockers[i].put(entry.packageName, ComponentsBlocker.getInstance(entry.packageName, userHandles[i]));
                         }
                         if (mTypesToImport.contains(entry.type)) {
                             //noinspection ConstantConditions Returned ComponentsBlocker will never be null here
-                            mComponentsBlockers[i].get(packageName).addEntry(entry);
+                            mComponentsBlockers[i].get(entry.packageName).addEntry(entry);
                         }
                     }
                 }

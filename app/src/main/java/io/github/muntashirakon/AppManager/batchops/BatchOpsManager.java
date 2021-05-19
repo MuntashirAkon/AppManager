@@ -346,7 +346,7 @@ public class BatchOpsManager {
         }
         for (UserPackagePair pair : appliedPackages) {
             try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserHandle())) {
-                cb.setAppOp(String.valueOf(AppOpsManager.OP_RUN_IN_BACKGROUND), AppOpsManager.MODE_IGNORED);
+                cb.setAppOp(AppOpsManager.OP_RUN_IN_BACKGROUND, AppOpsManager.MODE_IGNORED);
             }
         }
         return new Result(failedPackages);

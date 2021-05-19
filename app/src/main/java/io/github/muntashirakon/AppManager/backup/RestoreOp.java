@@ -36,6 +36,12 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.rules.PseudoRules;
 import io.github.muntashirakon.AppManager.rules.RulesImporter;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
+import io.github.muntashirakon.AppManager.rules.struct.AppOpRule;
+import io.github.muntashirakon.AppManager.rules.struct.NetPolicyRule;
+import io.github.muntashirakon.AppManager.rules.struct.PermissionRule;
+import io.github.muntashirakon.AppManager.rules.struct.RuleEntry;
+import io.github.muntashirakon.AppManager.rules.struct.SsaidRule;
+import io.github.muntashirakon.AppManager.rules.struct.UriGrantRule;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.servermanager.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
@@ -446,22 +452,22 @@ class RestoreOp implements Closeable {
         // Backward compatibility for restoring permissions
         loadMiscRules(rules);
         // Apply rules
-        List<RulesStorageManager.Entry> entries = rules.getAll();
+        List<RuleEntry> entries = rules.getAll();
         AppOpsService appOpsService = new AppOpsService();
         INotificationManager notificationManager = INotificationManager.Stub.asInterface(ProxyBinder.getService(Context.NOTIFICATION_SERVICE));
-        for (RulesStorageManager.Entry entry : entries) {
+        for (RuleEntry entry : entries) {
             try {
                 switch (entry.type) {
                     case APP_OP:
-                        appOpsService.setMode(Integer.parseInt(entry.name),
-                                packageInfo.applicationInfo.uid, packageName,
-                                (int) entry.extra);
+                        appOpsService.setMode(Integer.parseInt(entry.name), packageInfo.applicationInfo.uid,
+                                packageName, ((AppOpRule) entry).getMode());
                         break;
                     case NET_POLICY:
-                        NetworkPolicyManagerCompat.setUidPolicy(packageInfo.applicationInfo.uid, (int) entry.extra);
+                        NetworkPolicyManagerCompat.setUidPolicy(packageInfo.applicationInfo.uid,
+                                ((NetPolicyRule) entry).getPolicies());
                         break;
                     case PERMISSION:
-                        if ((boolean) entry.extra /* isGranted */) {
+                        if (((PermissionRule) entry).isGranted()) {
                             PermissionCompat.grantPermission(packageName, entry.name, userHandle);
                         } else {
                             PermissionCompat.revokePermission(packageName, entry.name, userHandle);
@@ -480,7 +486,7 @@ class RestoreOp implements Closeable {
                         }
                         break;
                     case URI_GRANT:
-                        UriManager.UriGrant uriGrant = (UriManager.UriGrant) entry.extra;
+                        UriManager.UriGrant uriGrant = ((UriGrantRule) entry).getUriGrant();
                         UriManager.UriGrant newUriGrant = new UriManager.UriGrant(
                                 uriGrant.sourceUserId, userHandle, uriGrant.userHandle,
                                 uriGrant.sourcePkg, uriGrant.targetPkg, uriGrant.uri,
@@ -492,7 +498,7 @@ class RestoreOp implements Closeable {
                     case SSAID:
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             new SsaidSettings(packageName, packageInfo.applicationInfo.uid)
-                                    .setSsaid((String) entry.extra);
+                                    .setSsaid(((SsaidRule) entry).getSsaid());
                         }
                         break;
                 }
