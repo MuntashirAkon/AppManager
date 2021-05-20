@@ -1,0 +1,15 @@
+<rules>
+    <activity block="true" log="false">
+        <component-filter name="sample.package/.NastyActivity" />
+        <component-filter name="sample.package/.ad.AdActivity" />
+        <component-filter name="sample.package/.log.CrashLogActivity" />
+    </activity>
+    <broadcast block="true" log="false">
+        <component-filter name="sample.package/.SystemBroadcastReceiver" />
+        <component-filter name="sample.package/.ThirdPartyReceiver" />
+    </broadcast>
+    <service block="true" log="false">
+        <component-filter name="sample.package/.MalwareService" />
+        <component-filter name="sample.package/.AlwaysRunningLoggingService" />
+    </service>
+</rules>
