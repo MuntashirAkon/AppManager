@@ -63,6 +63,9 @@ android {
     aaptOptions {
         noCompress 'jar', 'sh'
     }
+    testOptions {
+        unitTests.includeAndroidResources = true
+    }
 }
 
 dependencies {
@@ -103,6 +106,7 @@ dependencies {
     androidTestImplementation "com.android.support.test.espresso:espresso-intents:3.0.2"
 
     testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.robolectric:robolectric:4.4'
 }
 
 preBuild.dependsOn ":server:build"
