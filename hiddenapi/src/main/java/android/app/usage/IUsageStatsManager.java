@@ -58,13 +58,13 @@ public interface IUsageStatsManager extends IInterface {
      */
     @RequiresApi(Build.VERSION_CODES.M)
     @Deprecated
-    boolean isAppInactive(String packageName, int userId);
+    boolean isAppInactive(String packageName, int userId) throws RemoteException;
 
     @RequiresApi(Build.VERSION_CODES.R)
     boolean isAppInactive(String packageName, int userId, String callingPackage) throws RemoteException;
 
     @RequiresApi(Build.VERSION_CODES.M)
-    void whitelistAppTemporarily(String packageName, long duration, int userId);
+    void whitelistAppTemporarily(String packageName, long duration, int userId) throws RemoteException;
 
     @RequiresApi(Build.VERSION_CODES.N)
     void onCarrierPrivilegedAppsChanged() throws RemoteException;
