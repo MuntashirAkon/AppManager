@@ -36,25 +36,25 @@ jobs:
       - name: Get app name
         run: echo "APP_NAME=AppManager_${{ env.APP_VERSION }}-DEBUG#${{ github.run_number }}" >> $GITHUB_ENV
       - name: Inject run number
-      run: sed -i -e 's|versionName "\([0-9\.]\+\)"|versionName "\1-${{ github.run_number }}"|' ./app/build.gradle
-    - name: Build with Gradle
-      run: ./gradlew packageDebugUniversalApk
-    - name: Rename the APK file
-      run: mv ./app/build/outputs/universal_apk/debug/app-debug-universal.apk ./${{ env.APP_NAME }}.apk
-    - name: Store generated APK file
-      uses: actions/upload-artifact@v1
-      with:
-        name: ${{ env.APP_NAME }}
-        path: ./${{ env.APP_NAME }}.apk
-    - name: Upload APK to telegram
-      uses: appleboy/telegram-action@master
-      with:
-        to: ${{ secrets.TELEGRAM_TO }}
-        token: ${{ secrets.TELEGRAM_TOKEN }}
-        document: ./${{ env.APP_NAME }}.apk
-        format: markdown
-        message: |
-          *AM Debug ${{ env.APP_VERSION }} Run#${{ github.run_number }}*
+        run: sed -i -e 's|versionName "\([0-9\.]\+\)"|versionName "\1-${{ github.run_number }}"|' ./app/build.gradle
+      - name: Build with Gradle
+        run: ./gradlew packageDebugUniversalApk
+      - name: Rename the APK file
+        run: mv ./app/build/outputs/universal_apk/debug/app-debug-universal.apk ./${{ env.APP_NAME }}.apk
+      - name: Store generated APK file
+        uses: actions/upload-artifact@v1
+        with:
+          name: ${{ env.APP_NAME }}
+          path: ./${{ env.APP_NAME }}.apk
+      - name: Upload APK to telegram
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          document: ./${{ env.APP_NAME }}.apk
+          format: markdown
+          message: |
+            *AM Debug ${{ env.APP_VERSION }} Run#${{ github.run_number }}*
 
-          ${{ github.event.head_commit.message }}
-      continue-on-error: true
+            ${{ github.event.head_commit.message }}
+        continue-on-error: true
