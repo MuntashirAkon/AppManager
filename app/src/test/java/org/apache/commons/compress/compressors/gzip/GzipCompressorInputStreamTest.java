@@ -1,20 +1,28 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 package org.apache.commons.compress.compressors.gzip;
 
 import android.os.RemoteException;
+
+import org.apache.commons.compress.archivers.ArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.junit.Test;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
+
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.io.ProxyInputStream;
 import io.github.muntashirakon.io.ProxyOutputStream;
 import io.github.muntashirakon.io.SplitInputStream;
-import org.apache.commons.compress.archivers.ArchiveEntry;
-import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
-import org.junit.Test;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class GzipCompressorInputStreamTest {
     private final ClassLoader classLoader = getClass().getClassLoader();
@@ -64,7 +72,6 @@ public class GzipCompressorInputStreamTest {
         assert classLoader != null;
         fileList.add(new File(classLoader.getResource("AppManager_v2.5.22.apks.tar.gz.0").getFile()));
         fileList.add(new File(classLoader.getResource("AppManager_v2.5.22.apks.tar.gz.1").getFile()));
-        fileList.add(new File(classLoader.getResource("AppManager_v2.5.22.apks.tar.gz.2").getFile()));
 
         try (SplitInputStream sis = new SplitInputStream(fileList);
              BufferedInputStream bis = new BufferedInputStream(sis);

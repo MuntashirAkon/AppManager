@@ -1,44 +1,37 @@
-/*
- * Copyright (C) 2021 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.servermanager;
 
+import android.annotation.UserIdInt;
 import android.content.ComponentName;
+import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageDataObserver;
 import android.content.pm.IPackageInstaller;
 import android.content.pm.IPackageManager;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.PermissionInfo;
+import android.content.pm.ProviderInfo;
+import android.content.pm.ServiceInfo;
 import android.os.Build;
 import android.os.RemoteException;
-import android.permission.IPermissionManager;
+import android.os.SystemClock;
+
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.annotation.WorkerThread;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import androidx.annotation.IntDef;
-import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
-import io.github.muntashirakon.AppManager.users.UserIdInt;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 import static android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DEFAULT;
 import static android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
@@ -57,20 +50,43 @@ public final class PackageManagerCompat {
             COMPONENT_ENABLED_STATE_DISABLED_UNTIL_USED,
     })
     @Retention(RetentionPolicy.SOURCE)
-    public @interface EnabledState {}
+    public @interface EnabledState {
+    }
 
     @IntDef(flag = true, value = {
             DONT_KILL_APP,
             SYNCHRONOUS
     })
     @Retention(RetentionPolicy.SOURCE)
-    public @interface EnabledFlags {}
+    public @interface EnabledFlags {
+    }
 
+    private static final int workingFlags = PackageManager.GET_META_DATA | PackageUtils.flagMatchUninstalled;
+
+    @WorkerThread
     public static List<PackageInfo> getInstalledPackages(int flags, @UserIdInt int userHandle)
             throws RemoteException {
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M && (flags & workingFlags) != 0) {
+            // Need workaround
+            List<ApplicationInfo> applicationInfoList = getInstalledApplications(flags & workingFlags, userHandle);
+            List<PackageInfo> packageInfoList = new ArrayList<>(applicationInfoList.size());
+            for (int i = 0; i < applicationInfoList.size(); ++i) {
+                try {
+                    packageInfoList.add(getPackageInfo(applicationInfoList.get(i).packageName, flags, userHandle));
+                    if (i % 100 == 0) {
+                        // Prevent DeadObjectException
+                        SystemClock.sleep(300);
+                    }
+                } catch (Exception e) {
+                    throw new RemoteException(e.getMessage());
+                }
+            }
+            return packageInfoList;
+        }
         return AppManager.getIPackageManager().getInstalledPackages(flags, userHandle).getList();
     }
 
+    @WorkerThread
     public static List<ApplicationInfo> getInstalledApplications(int flags, @UserIdInt int userHandle)
             throws RemoteException {
         return AppManager.getIPackageManager().getInstalledApplications(flags, userHandle).getList();
@@ -79,8 +95,61 @@ public final class PackageManagerCompat {
     @NonNull
     public static PackageInfo getPackageInfo(String packageName, int flags, @UserIdInt int userHandle)
             throws RemoteException, PackageManager.NameNotFoundException {
-        PackageInfo info = AppManager.getIPackageManager().getPackageInfo(packageName, flags, userHandle);
+        IPackageManager pm = AppManager.getIPackageManager();
+        PackageInfo info = pm.getPackageInfo(packageName, flags, userHandle);
         if (info == null) {
+            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {
+                // The app might not be loaded properly due parcel size limit, try to load components separately.
+                ActivityInfo[] activities = null;
+                if ((flags & PackageManager.GET_ACTIVITIES) != 0) {
+                    int newFlags = flags & ~(PackageManager.GET_SERVICES | PackageManager.GET_PROVIDERS
+                            | PackageManager.GET_RECEIVERS | PackageManager.GET_PERMISSIONS);
+                    PackageInfo info1 = pm.getPackageInfo(packageName, newFlags, userHandle);
+                    if (info1 != null) activities = info1.activities;
+                    flags &= ~PackageManager.GET_ACTIVITIES;
+                }
+                ServiceInfo[] services = null;
+                if ((flags & PackageManager.GET_SERVICES) != 0) {
+                    int newFlags = flags & ~(PackageManager.GET_ACTIVITIES | PackageManager.GET_PROVIDERS
+                            | PackageManager.GET_RECEIVERS | PackageManager.GET_PERMISSIONS);
+                    PackageInfo info1 = pm.getPackageInfo(packageName, newFlags, userHandle);
+                    if (info1 != null) services = info1.services;
+                    flags &= ~PackageManager.GET_SERVICES;
+                }
+                ProviderInfo[] providers = null;
+                if ((flags & PackageManager.GET_PROVIDERS) != 0) {
+                    int newFlags = flags & ~(PackageManager.GET_ACTIVITIES | PackageManager.GET_SERVICES
+                            | PackageManager.GET_RECEIVERS | PackageManager.GET_PERMISSIONS);
+                    PackageInfo info1 = pm.getPackageInfo(packageName, newFlags, userHandle);
+                    if (info1 != null) providers = info1.providers;
+                    flags &= ~PackageManager.GET_PROVIDERS;
+                }
+                ActivityInfo[] receivers = null;
+                if ((flags & PackageManager.GET_RECEIVERS) != 0) {
+                    int newFlags = flags & ~(PackageManager.GET_ACTIVITIES | PackageManager.GET_SERVICES
+                            | PackageManager.GET_PROVIDERS | PackageManager.GET_PERMISSIONS);
+                    PackageInfo info1 = pm.getPackageInfo(packageName, newFlags, userHandle);
+                    if (info1 != null) receivers = info1.receivers;
+                    flags &= ~PackageManager.GET_RECEIVERS;
+                }
+                PermissionInfo[] permissions = null;
+                if ((flags & PackageManager.GET_PERMISSIONS) != 0) {
+                    int newFlags = flags & ~(PackageManager.GET_ACTIVITIES | PackageManager.GET_SERVICES
+                            | PackageManager.GET_PROVIDERS | PackageManager.GET_RECEIVERS);
+                    PackageInfo info1 = pm.getPackageInfo(packageName, newFlags, userHandle);
+                    if (info1 != null) permissions = info1.permissions;
+                    flags &= ~PackageManager.GET_PERMISSIONS;
+                }
+                info = pm.getPackageInfo(packageName, flags, userHandle);
+                info.activities = activities;
+                info.services = services;
+                info.providers = providers;
+                info.receivers = receivers;
+                info.permissions = permissions;
+                if (info != null) {
+                    return info;
+                }
+            }
             throw new PackageManager.NameNotFoundException(packageName + " not found.");
         }
         return info;
@@ -106,61 +175,6 @@ public final class PackageManagerCompat {
         AppManager.getIPackageManager().setApplicationEnabledSetting(packageName, newState, flags, userId, null);
     }
 
-    @SuppressWarnings("deprecation")
-    public static void grantPermission(String packageName, String permissionName, @UserIdInt int userId)
-            throws RemoteException {
-        IPackageManager pm = AppManager.getIPackageManager();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            IPermissionManager permissionManager = getPermissionManager();
-            permissionManager.grantRuntimePermission(packageName, permissionName, userId);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            pm.grantRuntimePermission(packageName, permissionName, userId);
-        } else {
-            pm.grantPermission(packageName, permissionName);
-        }
-    }
-
-    @SuppressWarnings("deprecation")
-    public static void revokePermission(String packageName, String permissionName, @UserIdInt int userId)
-            throws RemoteException {
-        IPackageManager pm = AppManager.getIPackageManager();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            IPermissionManager permissionManager = getPermissionManager();
-            permissionManager.revokeRuntimePermission(packageName, permissionName, userId, null);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            pm.revokeRuntimePermission(packageName, permissionName, userId);
-        } else {
-            pm.revokePermission(packageName, permissionName);
-        }
-    }
-
-    public static int getPermissionFlags(String permissionName, String packageName, @UserIdInt int userId)
-            throws RemoteException {
-        IPackageManager pm = AppManager.getIPackageManager();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            IPermissionManager permissionManager = getPermissionManager();
-            return permissionManager.getPermissionFlags(packageName, permissionName, userId);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return pm.getPermissionFlags(permissionName, packageName, userId);
-        } else return 0;
-    }
-
-    public static void updatePermissionFlags(String permissionName, String packageName,
-                                             int flagMask, int flagValues,
-                                             boolean checkAdjustPolicyFlagPermission,
-                                             @UserIdInt int userId)
-            throws RemoteException {
-        IPackageManager pm = AppManager.getIPackageManager();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            IPermissionManager permissionManager = getPermissionManager();
-            permissionManager.updatePermissionFlags(permissionName, packageName, flagMask, flagValues, checkAdjustPolicyFlagPermission, userId);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            pm.updatePermissionFlags(permissionName, packageName, flagMask, flagValues, checkAdjustPolicyFlagPermission, userId);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            pm.updatePermissionFlags(permissionName, packageName, flagMask, flagValues, userId);
-        }
-    }
-
     public static String getInstallerPackage(String packageName) throws RemoteException {
         return AppManager.getIPackageManager().getInstallerPackageName(packageName);
     }
@@ -178,7 +192,7 @@ public final class PackageManagerCompat {
                 }
             }, userId);
             dataClearWatcher.await();
-        } catch (RemoteException|SecurityException|InterruptedException e) {
+        } catch (RemoteException | SecurityException | InterruptedException e) {
             e.printStackTrace();
             return false;
         }
@@ -201,7 +215,7 @@ public final class PackageManagerCompat {
                 pm.deleteApplicationCacheFilesAsUser(packageName, userId, observer);
             } else pm.deleteApplicationCacheFiles(packageName, observer);
             dataClearWatcher.await();
-        } catch (RemoteException|SecurityException|InterruptedException e) {
+        } catch (RemoteException | SecurityException | InterruptedException e) {
             e.printStackTrace();
             return false;
         }
@@ -215,9 +229,5 @@ public final class PackageManagerCompat {
     @NonNull
     public static IPackageInstaller getPackageInstaller(@NonNull IPackageManager pm) throws RemoteException {
         return IPackageInstaller.Stub.asInterface(new ProxyBinder(pm.getPackageInstaller().asBinder()));
-    }
-
-    public static IPermissionManager getPermissionManager() {
-        return IPermissionManager.Stub.asInterface(ProxyBinder.getService("permissionmgr"));
     }
 }

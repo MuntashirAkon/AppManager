@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.struct.signingv2;
 
 import java.util.List;
@@ -7,6 +9,7 @@ import java.util.List;
  *
  * @see <a href="https://source.android.com/security/apksigning/v2">apksigning v2 scheme</a>
  */
+// Copyright 2018 hsiafan
 public class ApkSigningBlock {
     public static final int SIGNING_V2_ID = 0x7109871a;
 

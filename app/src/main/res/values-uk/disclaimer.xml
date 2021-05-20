@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <resources>
     <string name="disclaimer_exit">Вийти</string>
     <string name="disclaimer_agree">Погоджуюся</string>
@@ -11,4 +12,5 @@
 \n
 \nВикористовуючи цю програму, ви приймаєте на себе всю відповідальність за її використання і погоджуєтесь, що я не несу відповідальності за будь-які ваші дії, які негативно впливають на ваш пристрій.</string>
     <string name="disclaimer_header">ВІДМОВА ВІД ВІДПОВІДАЛЬНОСТІ</string>
+    <string name="disclaimer_footer">© 2020–2021 Muntashir Al-Islam</string>
 </resources>

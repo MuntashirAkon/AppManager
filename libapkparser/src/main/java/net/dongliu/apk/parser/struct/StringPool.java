@@ -1,10 +1,11 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.struct;
 
 /**
  * String pool.
- *
- * @author dongliu
  */
+// Copyright 2014 Liu Dong
 public class StringPool {
     private String[] pool;
 

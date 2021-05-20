@@ -1,31 +1,4 @@
-/*
- * Copyright (c) 2020, Muntashir Al-Islam
- * Copyright (c) 2015, Jared Rummler
- * Copyright (c) 2015, Liu Dong
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the <organization> nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+// SPDX-License-Identifier: BSD-2-Clause AND BSD-3-Clause
 
 package net.dongliu.apk.parser.parser;
 
@@ -35,12 +8,15 @@ import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Locale;
 
 import javax.security.cert.CertificateException;
 import javax.security.cert.X509Certificate;
 
 import androidx.annotation.NonNull;
 
+// Copyright 2015 Jared Rummler
+//           2014 Liu Dong
 public class CertificateParser {
     private final byte[] data;
 
@@ -67,14 +43,14 @@ public class CertificateParser {
 
     @NonNull
     private String md5Digest(byte[] input) {
-        MessageDigest digest = getDigest("MD5");
+        MessageDigest digest = getMd5Digest();
         digest.update(input);
         return getHexString(digest.digest());
     }
 
     @NonNull
     private String md5Digest(@NonNull String input) {
-        MessageDigest digest = getDigest("MD5");
+        MessageDigest digest = getMd5Digest();
         digest.update(input.getBytes(StandardCharsets.UTF_8));
         return getHexString(digest.digest());
     }
@@ -88,7 +64,7 @@ public class CertificateParser {
             if (sTemp.length() < 2) {
                 sb.append(0);
             }
-            sb.append(sTemp.toUpperCase());
+            sb.append(sTemp.toUpperCase(Locale.ROOT));
         }
         return sb.toString();
     }
@@ -100,9 +76,9 @@ public class CertificateParser {
     }
 
     @NonNull
-    private MessageDigest getDigest(String algorithm) {
+    private MessageDigest getMd5Digest() {
         try {
-            return MessageDigest.getInstance(algorithm);
+            return MessageDigest.getInstance("MD5");
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }

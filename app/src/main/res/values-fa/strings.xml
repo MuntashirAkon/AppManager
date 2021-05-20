@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="_lang_tag" translatable="false">fa</string>
     <string name="external_multiple_data_dir">دایرکتوری داده‌های خارجی <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
@@ -399,7 +400,6 @@
     <string name="package_installer">نصب کننده بسته</string>
     <string name="unblock_trackers">رفع انسداد ردیاب‌ها</string>
     <string name="reinstall">نصب مجدد</string>
-    <string name="reinstall_app_message">آیا می خواهید این برنامه بازنصب کنید؟</string>
     <string name="install_app_message">آیا می خواهید این برنامه را نصب کنید؟</string>
     <string name="try_again">دوباره تلاش کنید</string>
     <string name="full_stop_tap_to_see_details">. برای دیدن جزئیات ضربه بزنید.</string>

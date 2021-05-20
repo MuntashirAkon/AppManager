@@ -1,19 +1,4 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.main;
 
@@ -40,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
+import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -48,6 +34,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
+import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
@@ -129,6 +116,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     }
 
     @GuardedBy("mAdapterList")
+    @UiThread
     void selectAll() {
         synchronized (mAdapterList) {
             for (int i = 0; i < mAdapterList.size(); ++i) {
@@ -168,7 +156,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     try {
                         @SuppressLint("WrongConstant")
                         ApplicationInfo info = mPackageManager.getApplicationInfo(item.packageName, PackageUtils.flagMatchUninstalled);
-                        if (info.publicSourceDir != null) {
+                        if (info.publicSourceDir != null && FeatureController.isInstallerEnabled()) {
                             Intent intent = new Intent(mActivity, PackageInstallerActivity.class);
                             intent.setData(Uri.fromFile(new File(info.publicSourceDir)));
                             mActivity.startActivity(intent);
@@ -387,6 +375,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     }
 
     @GuardedBy("mAdapterList")
+    @UiThread
     public void toggleSelection(@NonNull ApplicationItem item, int position) {
         synchronized (mAdapterList) {
             if (mActivity.mModel.getSelectedPackages().containsKey(item.packageName)) {
@@ -400,6 +389,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     }
 
     @GuardedBy("mAdapterList")
+    @UiThread
     public void selectRange(int firstPosition, int secondPosition) {
         int beginPosition = Math.min(firstPosition, secondPosition);
         int endPosition = Math.max(firstPosition, secondPosition);
@@ -412,9 +402,12 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         mActivity.handleSelection();
     }
 
+    @GuardedBy("mAdapterList")
     @Override
     public long getItemId(int i) {
-        return i;
+        synchronized (mAdapterList) {
+            return mAdapterList.get(i).hashCode();
+        }
     }
 
     @GuardedBy("mAdapterList")

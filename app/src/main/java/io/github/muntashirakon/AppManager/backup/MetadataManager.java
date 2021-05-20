@@ -1,19 +1,4 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.backup;
 
@@ -53,6 +38,7 @@ import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.JSONUtils;
@@ -113,8 +99,8 @@ public final class MetadataManager {
             String shortName = BackupUtils.getShortBackupName(backupName);
             CharSequence titleText = shortName == null ? context.getText(R.string.base_backup) : shortName;
 
-            StringBuilder subtitleText = new StringBuilder(flags.toLocalisedString(context));
-            if (subtitleText.length() > 0) subtitleText.append(", ");
+            StringBuilder subtitleText = new StringBuilder(DateUtils.formatDateTime(backupTime)).append(", ")
+                    .append(flags.toLocalisedString(context)).append(", ");
             subtitleText.append(context.getString(R.string.version)).append(": ").append(versionName)
                     .append(", ").append(context.getString(R.string.user_id)).append(": ").append(userHandle);
             if (crypto.equals(CryptoUtils.MODE_NO_ENCRYPTION)) {

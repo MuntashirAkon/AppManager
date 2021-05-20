@@ -1,24 +1,10 @@
-/*
- * Copyright 2020 Rikka
- * Copyright 2020 Muntashir Al-Islam
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// SPDX-License-Identifier: Apache-2.0
 
 package io.github.muntashirakon.AppManager.ipc;
 
 import android.os.ParcelFileDescriptor;
 import android.os.RemoteException;
+import android.os.SystemClock;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -26,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 import io.github.muntashirakon.AppManager.IRemoteProcess;
 import io.github.muntashirakon.AppManager.utils.ParcelFileDescriptorUtil;
 
+// Copyright 2020 Rikka
 class RemoteProcessImpl extends IRemoteProcess.Stub {
     private final Process process;
     private ParcelFileDescriptor in;
@@ -98,7 +85,7 @@ class RemoteProcessImpl extends IRemoteProcess.Stub {
     }
 
     @Override
-    public boolean waitForTimeout(long timeout, String unitName) throws RemoteException {
+    public boolean waitForTimeout(long timeout, String unitName) {
         TimeUnit unit = TimeUnit.valueOf(unitName);
         long startTime = System.nanoTime();
         long rem = unit.toNanos(timeout);
@@ -109,12 +96,7 @@ class RemoteProcessImpl extends IRemoteProcess.Stub {
                 return true;
             } catch (IllegalThreadStateException ex) {
                 if (rem > 0) {
-                    try {
-                        Thread.sleep(
-                                Math.min(TimeUnit.NANOSECONDS.toMillis(rem) + 1, 100));
-                    } catch (InterruptedException e) {
-                        throw new IllegalStateException();
-                    }
+                    SystemClock.sleep(Math.min(TimeUnit.NANOSECONDS.toMillis(rem) + 1, 100));
                 }
             }
             rem = unit.toNanos(timeout) - (System.nanoTime() - startTime);

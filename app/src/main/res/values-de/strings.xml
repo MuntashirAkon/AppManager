@@ -1,20 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (C) 2020 Muntashir Al-Islam
-  ~
-  ~ This program is free software: you can redistribute it and/or modify
-  ~ it under the terms of the GNU General Public License as published by
-  ~ the Free Software Foundation, either version 3 of the License, or
-  ~ (at your option) any later version.
-  ~
-  ~ This program is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~ GNU General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU General Public License
-  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
     <string name="_lang_tag" translatable="false">de</string>
     <string name="uninstall">Deinstallieren</string>
     <string name="permissions">Verwendet Berechtigungen</string>
@@ -56,7 +41,7 @@
     <string name="configurations">Konfigurationen</string>
     <string name="no_configurations">Keine Konfigurationen</string>
     <string name="input_features">Eingabe-Funktionalitäten</string>
-    <string name="manifest">Manifest</string>
+    <string name="manifest">Erscheinungsbild</string>
     <string name="error">Fehler</string>
     <string name="loading">Laden…</string>
     <!-- &#8230; = ... -->
@@ -109,22 +94,27 @@
     <string name="license">Lizenz</string>
     <string name="third_party">Drittanbieter-Lizenzen und -Icons</string>
     <string name="credits">Danksagungen</string>
-    <string name="credits_message">"Dieses Projekt baut auf folgenden Projekten auf:
+    <string name="credits_message">Dieses Projekt baut auf folgenden Projekten auf:
 \n- The Android Open Source Project
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
-\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
-\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
+\n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
+\n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
+\n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a>
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
-\n- <a href="https://github.com/RikkaApps/Shizuku"> Shizuku</a>
-\nLogo von <a href="https://github.com/Atrate">Atrate</a>. "</string>
+\n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
+\nCopyright für das Original-Logo: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="word_wrap">Zeilenumbruch ein-/ausschalten</string>
     <string name="class_viewer">Klassen-Betrachter</string>
     <string name="toggle_class_listing">Auflisten von Klassen ein-/ausschalten</string>
-    <string name="tested_signatures_on_classes_and_time_taken">Getestete <xliff:g id="signature_no" example="342">%1$d</xliff:g> Signaturen von <xliff:g id="class_no" example="6000">%2$d</xliff:g> Klassen.
-\nDauer: <xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> Durchläufe).</string>
+    <string name="tested_signatures_on_classes_and_time_taken">Geprüfte <xliff:g id="signature_no" example="342">%1$d</xliff:g> Signaturen auf <xliff:g id="class_no" example="6000">%2$d</xliff:g> Klassen.
+\nBenötigte Zeit der <xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> Durchläufe).</string>
     <string name="found_trackers">Gefundene Verfolger:</string>
     <string name="tracker_details">Verfolger-Details</string>
     <string name="tracker_classes">Verfolger-Klassen</string>
@@ -249,7 +239,7 @@
         <item quantity="other">%1$d Dateien konnten nicht importiert werden.</item>
     </plurals>
     <string name="apk_updater">APK-Aktualisierung</string>
-    <string name="store">Store</string>
+    <string name="store">Speicher</string>
     <string name="running_apps">Laufende Anwendungen</string>
     <string name="kill_process">Beenden erzwingen</string>
     <string name="disable_background_run">Hintergrundbetrieb verhindern</string>
@@ -389,7 +379,7 @@
     <string name="trackers">Verfolger</string>
     <string name="components">Komponenten</string>
     <string name="features">Funktionalitäten</string>
-    <string name="whats_new">Was gibt\'s Neues?</string>
+    <string name="whats_new">Was gibt\'s Neues</string>
     <string name="blocking_rules">Blockierregeln</string>
     <string name="cache">Cache nicht einbeziehen</string>
     <string name="external_data">Externe Daten</string>
@@ -433,7 +423,6 @@
     <string name="open_in_termux">In Termux öffnen</string>
     <string name="run_in_termux">In Termux ausführen</string>
     <string name="website">Webseite</string>
-    <string name="website_message">https://muntashirakon.github.io/AppManager</string>
     <string name="pref_remove_all_rules">Alle Regeln entfernen</string>
     <string name="pref_remove_all_rules_msg">Berechtigungen werden erteilt, Anwendungen und Komponenten werden auf ihre Standardwerte zurückgesetzt.</string>
     <string name="are_you_sure">Bist du Dir sicher?</string>
@@ -454,7 +443,6 @@
     <string name="full_stop_tap_to_see_details">. Berühren für mehr Details.</string>
     <string name="try_again">Erneut versuchen</string>
     <string name="install_app_message">Möchtest du diese App installieren?</string>
-    <string name="reinstall_app_message">Willst du diese App wiederherstellen?</string>
     <string name="reinstall">Erneut installieren</string>
     <string name="unblock_trackers">Tracker blockieren</string>
     <string name="package_installer">Paket-Installer</string>
@@ -464,7 +452,7 @@
     <string name="installer_error_session_write">Der Schreib-Zugriff für die Installation wurde verweigert</string>
     <string name="installer_error_session_commit">Fehler beim Übertragen der APK-Dateien</string>
     <string name="installer_error_session_abandon">Beenden der Installation nicht möglich</string>
-    <string name="backup_apk_files">Nur APK</string>
+    <string name="backup_apk_files">APK Dateien</string>
     <string name="backup_obb_media">OBB und Medien</string>
     <string name="failed_to_extract_obb_files">Extrahieren der OBB-Dateien nicht möglich</string>
     <string name="obb_files_extracted_successfully">OBB-Dateien entpackt</string>
@@ -831,8 +819,6 @@
     <string name="add">Hinzufügen</string>
     <string name="add_to_profile">Zum Profil hinzufügen</string>
     <string name="initializing">Initialisieren…</string>
-    <string name="allow_background">Hintergrund zulassen</string>
-    <string name="reject_background">Hintergrund ablehnen</string>
     <string name="net_policy">Netz-Richtlinie</string>
     <string name="has_net_policy">Netz-Richtlinie</string>
     <string name="choose_what_to_do">Wähle, was Du tun möchtest.</string>
@@ -876,4 +862,180 @@
     <string name="specify_custom_name">Benutzerdefiniert</string>
     <string name="verified_using_unreliable_hash">Verifiziert mit unzuverlässigem Hash</string>
     <string name="internal_data">Interne Daten</string>
+    <string name="pref_expanded_by_default_summary">Zeigt standardmäßig den vollständigen Protokolltext an.</string>
+    <string name="pref_filter_pattern_title">Kennzeichen herausfiltern</string>
+    <string name="pref_filter_pattern_summary">Filtern Sie die ausgewählten Kennzeichen aus den Protokollen heraus.</string>
+    <string name="pref_display_limit_title">Protokollieren der Anzeigegrenze</string>
+    <string name="pref_display_limit_summary">Zeigt nur die letzten %1$d Protokolle an, um Speicherplatzmangel zu vermeiden.</string>
+    <string name="pref_default_log_level_title">Standard-Protokollstufe</string>
+    <string name="pref_default_log_level_summary">Protokollierungsebene beim Start, beim Öffnen von Dateien und bei der Aufzeichnung.</string>
+    <string name="pref_cat_configuration">Konfiguration</string>
+    <string name="pref_cat_appearance">Erscheinungsbild</string>
+    <string name="pref_cat_advanced">Erweitert</string>
+    <string name="pref_buffer_title">Protokollpuffer</string>
+    <string name="open">Öffnen</string>
+    <string name="notification_title">Protokollierung lauft</string>
+    <string name="notification_ticker">Protokollierung gestartet</string>
+    <string name="notification_subtext">Berühren, um die Aufnahme zu stoppen</string>
+    <string name="no_saved_logs">Keine gespeicherten Protokolle gefunden.</string>
+    <string name="menu_title_partial_select">Teilweise speichern</string>
+    <string name="manage_saved_logs">Gespeicherte Protokolle verwalten</string>
+    <string name="filter_choice_tag">Kennzeichnung</string>
+    <string name="log_cleared">Protokolle gelöscht</string>
+    <string name="log_level">Protokollstufe</string>
+    <string name="log_recording_started">Protokollaufzeichnung gestartet.</string>
+    <string name="log_saved">Protokoll gespeichert.</string>
+    <string name="filter_choice_pid">PID</string>
+    <string name="filter_choice">Suche nach</string>
+    <string name="enter_good_filename">Bitte geben Sie einen gültigen Dateinamen ein.</string>
+    <string name="enter_filename">Dateinamen eingeben</string>
+    <string name="dialog_partial_select_explanation">1. Wählen Sie die <b>erste</b> Zeile.
+\n2. Wählen Sie dann die <b>letzte</b> Zeile.</string>
+    <string name="dialog_compiling_log">Log kompilieren…</string>
+    <string name="delete_saved_log">Gespeicherte Protokolle löschen</string>
+    <string name="copy_to_clipboard">In die Zwischenablage kopieren</string>
+    <string name="checkbox_never_show_partial_select_help">Nicht wieder anzeigen</string>
+    <plurals name="file_deletion_confirmation">
+        <item quantity="one">Die Datei %d wird gelöscht</item>
+        <item quantity="other">Die Dateien %d werden gelöscht</item>
+    </plurals>
+    <string name="add_filter_ellipsis">Filter hinzufügen…</string>
+    <string name="add_filter">Filter hinzufügen</string>
+    <string name="log_level_fatal">Schwerwiegend</string>
+    <string name="log_level_warn">Warnung</string>
+    <string name="log_level_verbose">Ausführlich</string>
+    <string name="log_level_info">Info</string>
+    <string name="log_level_error">Fehler</string>
+    <string name="log_level_debug">Fehlersuche</string>
+    <string name="filename">Dateiname</string>
+    <string name="restart_log_viewer_to_see_changes">Starten Sie das Fenster des Log-Betrachters neu, um die Änderungen zu sehen.</string>
+    <string name="log_viewer">Log-Betrachter</string>
+    <string name="pref_log_viewer_msg">Konfigurieren Sie, wie Protokolle angezeigt werden.</string>
+    <plurals name="items_selected">
+        <item quantity="one"><xliff:g id="selection_no" example="20">%1$d</xliff:g> ausgewählt</item>
+        <item quantity="other"><xliff:g id="selection_no" example="20">%1$d</xliff:g> ausgewählt</item>
+    </plurals>
+    <string name="pref_installer_msg">Konfigurieren Sie die Einstellungen für das App-Installationsprogramms.</string>
+    <string name="expiry_date_cannot_be_empty">Das Verfallsdatum kann nicht leer sein.</string>
+    <string name="signing_key">Signierschlüssel</string>
+    <string name="failed_to_read_keystore">Konnte den KeyStore nicht lesen.</string>
+    <string name="alias_pass">Alias-Passwort</string>
+    <string name="choose_an_alias">Wählen Sie einen Alias</string>
+    <string name="found_no_alias_in_keystore">Kein Alias im KeyStore gefunden!</string>
+    <string name="new_alias_password">Neues Alias-Passwort</string>
+    <string name="import_key">Schlüssel importieren</string>
+    <string name="pem_file">PEM Datei</string>
+    <string name="pk8_file">PKCS #8 (PK8) Datei</string>
+    <string name="pem_and_pk8">PEM und PKCS #8 (PK8)</string>
+    <string name="pkcs12_keystore">PKCS #12 Schlüsselspeicher (P12)</string>
+    <string name="bouncy_castle_keystore">Bouncy Castle Schlüsselspeicher (BKS)</string>
+    <string name="java_keystore">Java-Schlüsselspeicher (JKS)</string>
+    <string name="keystore_pass">KeyStore-Passwort</string>
+    <string name="keystore_file">KeyStore-Datei</string>
+    <string name="country_name" tools:ignore="TypographyOther">Name des Landes</string>
+    <string name="state_name">Name des Staates (ST)</string>
+    <string name="locality_name">Ortsname (Stadt)</string>
+    <string name="organization_name">Name der Organisation</string>
+    <string name="organization_unit">Organisationseinheit</string>
+    <string name="common_name">Gebräuchliche Bezeichnung (CN)</string>
+    <string name="input_key_password">Schlüssel-Passwort</string>
+    <string name="failed_to_load_key">Der Schlüssel konnte nicht geladen werden.</string>
+    <string name="default_key_used">Der Standardschlüssel wird verwendet.</string>
+    <string name="key_not_set">Nicht angegeben.</string>
+    <string name="use_default">Standard verwenden</string>
+    <string name="invalid_rsa_key_size">Ungültige Schlüsselgröße für die RSA-Verschlüsselung. Die Schlüsselgröße kann 1024, 2048 oder 4096 Bit betragen.</string>
+    <string name="crypto_key_size">Schlüsselgröße</string>
+    <string name="invalid_aes_key_size">Ungültige Schlüsselgröße für die AES-Verschlüsselung. Die Schlüsselgröße kann entweder 128 oder 256 Bit betragen.</string>
+    <string name="failed_to_initialize_key_store">Der App Manager Keystore konnte nicht initialisiert werden.</string>
+    <string name="failed_to_save_key">Der Schlüssel konnte nicht gespeichert werden.</string>
+    <string name="generate_key">Erzeugen</string>
+    <string name="input_key">Eingabeschlüssel (in hexadezimaler Form)</string>
+    <string name="input_keystore_alias_pass_msg">Tippen Sie hier, um das Passwort für %1$s anzugeben</string>
+    <string name="source_code_links">GitHub: https://github.com/MuntashirAkon/AppManager
+\nGitLab: https://gitlab.com/muntashir/AppManager
+\nRiseup: https://0xacab.org/muntashir/AppManager
+\nCodeberg: https://codeberg.org/muntashir/AppManager</string>
+    <string name="app_signing_signatures">Signaturen</string>
+    <string name="toast_started_select_partial">Auswahl Teilmodus aktiviert</string>
+    <string name="orientation_right_to_left">Von Rechts nach Links</string>
+    <string name="orientation_left_to_right">Von Links nach Rechts</string>
+    <string name="orientation_follow_locale">Lokale folgen</string>
+    <string name="pref_layout_orientation">Ausrichtung des Layouts</string>
+    <string name="saf">SAF</string>
+    <string name="pref_rules_msg">Sofortiges Sperren, Importieren/Exportieren/Entfernen von Regeln, etc.</string>
+    <string name="failed">Fehlgeschlagen</string>
+    <string name="confirm_import_keystore">Sind Sie sicher den bestehenden Schlüsselspeicher zu ersetzen\? Dies Aktion kann nicht rückgängig gemacht werden.</string>
+    <string name="import_keystore">Importieren des Schlüsselspeichers</string>
+    <string name="pref_import_export_keystore_msg">Importiert/exportiert den Bouncy Castle KeyStore (BKS), der intern vom App Manager verwendet wird.</string>
+    <string name="pref_import_export_keystore">Importieren/Exportieren des Schlüsselspeichers</string>
+    <string name="latest_backup">Letztes Backup</string>
+    <string name="gz_bz2_compressed">%1$s komprimiert</string>
+    <string name="pgp_aes_rsa_encrypted">%1$s entschlüsselt</string>
+    <string name="no_encryption">Keine Verschlüsselung</string>
+    <string name="base_backup">Basis sichern</string>
+    <string name="trackers_unblocked_successfully">Tracker sind nun entblockt</string>
+    <string name="trackers_blocked_successfully">Tracker sind nun geblockt</string>
+    <string name="failed_to_unblock_trackers">Konnte Tracker nicht entblocken</string>
+    <string name="failed_to_block_trackers">Konnte Tracker nicht blockieren</string>
+    <string name="profile_save_apk_msg">Speichert APK-Dateien in <tt>AppManager/apks</tt></string>
+    <string name="save_apk">APK-Datei speichern</string>
+    <string name="running_services">Aktive Dienste</string>
+    <string name="view_logs">Protokolle anzeigen</string>
+    <string name="share_log">Teilen</string>
+    <string name="save_log_zip">Zip-Datei speichern</string>
+    <string name="text_include_dmesg">Kernel-Log mit einschließen</string>
+    <string name="omit_sensitive_info_summary">Sensible Informationen wie Web-URLs, Telefonnummern oder E-Mails auslassen.</string>
+    <string name="omit_sensitive_info">Sensible Informationen auslassen</string>
+    <string name="undo">Rückgängig machen</string>
+    <string name="pause_unpause">Abspielen/Pause</string>
+    <string name="collapse_all">Alles einklappen</string>
+    <string name="expand_all">Alles aufklappen</string>
+    <string name="file">Datei</string>
+    <string name="widget_start_recording">Aufzeichen
+\nProtokoll</string>
+    <string name="widget_recording_in_progress">Zeichne auf…</string>
+    <string name="unable_to_save_log">Kann Protokoll nicht speichern. Haben Sie einen gültigen Dateinamen eingegeben\?</string>
+    <plurals name="toast_log_truncated">
+        <item quantity="one">Protokoll zu groß, zeige letzte %d Zeile.</item>
+        <item quantity="other">Protokoll zu groß, zeige die letzten %d Zeilen.</item>
+    </plurals>
+    <string name="toast_invalid_selection">Ungültige Auswahl. Bitte nochmals versuchen.</string>
+    <string name="toast_invalid_level">Ungültiger Level-Name: %s</string>
+    <string name="pref_display_limit_hint">Bitte eine gültige Zahl zwischen %1$d und %2$d eingeben.</string>
+    <string name="title_filters">Filter</string>
+    <string name="text_include_device_info">Geräteinformationen mit einschließen</string>
+    <string name="text_filter_text">Text filtern</string>
+    <string name="text_filter_ellipsis">Filter…</string>
+    <string name="pref_log_write_period_title">Zeitraum beschreiben</string>
+    <string name="pref_log_write_period_summary">Bei der Aufzeichnung wird jede %1$d Zeile auf die SD-Karte geschrieben.</string>
+    <string name="suspended">Angehalten</string>
+    <string name="subject_log_report">Protokollbericht erstellen</string>
+    <string name="start_recording_log">Aufzeichnen</string>
+    <string name="settings">Einstellungen</string>
+    <string name="send_log_title">Protokoll senden</string>
+    <string name="save_log">Protokoll speichern</string>
+    <string name="save_as">Speichern als…</string>
+    <string name="record_log">Protokoll aufzeichnen</string>
+    <string name="pref_show_timestamp_title">Zeige Pid &amp; Zeitstempel</string>
+    <string name="pref_show_timestamp_summary">Zeige Prozess-ID und Zeitstempel wenn aufgeklappt.</string>
+    <string name="pref_log_line_period_error">Bitte geben Sie einen Integer zwischen 1 und 1000 an.</string>
+    <string name="pref_expanded_by_default_title">Standardmäßig aufklappen</string>
+    <string name="hidden">Versteckt</string>
+    <string name="no_changes">Keine Änderungen</string>
+    <string name="pref_display_changes_msg">Änderungen in Version, Tracker, Komponenten, Berechtigungen, Signaturen, SDK usw. versionskontrolliert anzeigen.</string>
+    <string name="pref_display_changes">Änderungen anzeigen</string>
+    <string name="netpolicy_disable_network_access">Netzwerkzugang deaktivieren</string>
+    <string name="netpolicy_reject_wifi_data">Wi-Fi-Daten zurückweisen</string>
+    <string name="netpolicy_reject_vpn_data">VPN-Daten verwerfen</string>
+    <string name="netpolicy_reject_cellular_data">Mobilfunkdaten ablehnen</string>
+    <string name="netpolicy_allow_background_data">Hintergrunddaten zulassen, wenn der Datensparer eingeschaltet ist</string>
+    <string name="netpolicy_reject_background_data">Hintergrunddaten verwerfen</string>
+    <string name="port_number_invalid">Ungültige Portnummer.</string>
+    <string name="port_number_empty">Die Portnummer ist leer.</string>
+    <string name="adb_connect_port_number_description">Die Portnummer befindet sich unter dem <b>IP-Adresse &amp; Port</b>-Abschnitt direkt unter dem Abschnitt <b>Gerätenamen</b>.</string>
+    <string name="port_number">Port</string>
+    <string name="adb_connect">Anschließen</string>
+    <string name="wireless_debugging_not_supported">Fehlersucher über Funk wird auf dieser Plattform nicht unterstützt.</string>
+    <string name="wireless_debugging">Fehlersuche über WLAN</string>
+    <string name="unknown_net_policy">Unbekannte Netz-Richtlinie (%1$s - %2$X)</string>
 </resources>

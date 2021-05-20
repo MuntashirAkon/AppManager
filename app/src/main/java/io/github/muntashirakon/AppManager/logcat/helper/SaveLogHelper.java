@@ -1,19 +1,4 @@
-/*
- * Copyright (c) 2021 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: WTFPL AND GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.logcat.helper;
 
@@ -58,6 +43,7 @@ import io.github.muntashirakon.io.ProxyFile;
 import io.github.muntashirakon.io.ProxyInputStream;
 import io.github.muntashirakon.io.ProxyOutputStream;
 
+// Copyright 2012 Nolan Lawson
 public class SaveLogHelper {
     public static final String TAG = SaveLogHelper.class.getSimpleName();
 
@@ -103,7 +89,7 @@ public class SaveLogHelper {
     public static CharSequence[] getFormattedFilenames(@NonNull Context context, @NonNull List<File> files) {
         CharSequence[] fileNames = new CharSequence[files.size()];
         DateFormat dateFormat = DateFormat.getDateTimeInstance();
-        for (int i =0; i < files.size(); ++i) {
+        for (int i = 0; i < files.size(); ++i) {
             fileNames[i] = new SpannableStringBuilder(UIUtils.getPrimaryText(context, files.get(i).getName()))
                     .append("\n").append(UIUtils.getSmallerText(UIUtils.getSecondaryText(context,
                             dateFormat.format(new Date(files.get(i).lastModified())))));
@@ -203,20 +189,9 @@ public class SaveLogHelper {
         return amDir;
     }
 
-    @Nullable
-    public static File saveTemporaryZipFile(String filename, List<File> files) {
-        try {
-            return saveZipFileAndThrow(getTempDirectory(), filename, files);
-        } catch (IOException | RemoteException e) {
-            Log.e(TAG, e);
-        }
-        return null;
-    }
-
     @NonNull
-    private static File saveZipFileAndThrow(@NonNull File dir, @NonNull String filename, @NonNull List<File> files)
-            throws IOException, RemoteException {
-        File zipFile = new ProxyFile(dir, filename);
+    public static File saveTemporaryZipFile(String filename, List<File> files) throws IOException, RemoteException {
+        File zipFile = new ProxyFile(getTempDirectory(), filename);
         try (ZipOutputStream output = new ZipOutputStream(new BufferedOutputStream(new ProxyOutputStream(zipFile), BUFFER))) {
             for (File file : files) {
                 ProxyInputStream fi = new ProxyInputStream(file);

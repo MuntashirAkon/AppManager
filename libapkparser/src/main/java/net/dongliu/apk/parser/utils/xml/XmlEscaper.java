@@ -1,12 +1,11 @@
-package net.dongliu.apk.parser.utils.xml;
+// SPDX-License-Identifier: Apache-2.0 AND BSD-2-Clause
 
-import net.dongliu.apk.parser.utils.*;
+package net.dongliu.apk.parser.utils.xml;
 
 /**
  * Utils method to escape xml string, copied from apache commons lang3
- *
- * @author Liu Dong {@literal <dongliu@live.cn>}
  */
+// Copyright 2015 Liu Dong
 public class XmlEscaper {
 
     /**

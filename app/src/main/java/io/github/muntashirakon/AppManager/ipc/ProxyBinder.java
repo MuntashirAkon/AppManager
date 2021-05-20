@@ -1,20 +1,4 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- * Copyright (C) 2020 Rikka
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.ipc;
 
@@ -33,7 +17,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.server.common.IRootIPC;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
+import io.github.muntashirakon.AppManager.utils.AppPref;
 
+// Copyright 2020 Rikka
 public class ProxyBinder implements IBinder {
     public static final int PROXY_BINDER_TRANSACT_CODE = 2;
 
@@ -57,7 +43,10 @@ public class ProxyBinder implements IBinder {
 
     @Override
     public boolean transact(int code, @NonNull Parcel data, @Nullable Parcel reply, int flags) throws RemoteException {
-        if (LocalServer.isAMServiceAlive()) {
+        if (AppPref.isRootOrAdbEnabled()) {
+            if (!LocalServer.isAMServiceAlive()) {
+                throw new RemoteException("Root/ADB enabled but privileged service isn't alive.");
+            }
             Parcel newData = Parcel.obtain();
             try {
                 newData.writeInterfaceToken(IRootIPC.class.getName());

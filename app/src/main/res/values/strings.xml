@@ -1,20 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (C) 2020 Muntashir Al-Islam
-  ~
-  ~ This program is free software: you can redistribute it and/or modify
-  ~ it under the terms of the GNU General Public License as published by
-  ~ the Free Software Foundation, either version 3 of the License, or
-  ~ (at your option) any later version.
-  ~
-  ~ This program is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~ GNU General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU General Public License
-  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  --><resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="_lang_tag" translatable="false">en</string>
     <string name="uninstall">Uninstall</string>
     <string name="permissions">Uses permissions</string>
@@ -114,34 +100,38 @@
     <string name="copyright_message" translatable="false">© 2020–2021 <a href="https://github.com/MuntashirAkon">Muntashir Al-Islam</a></string>
     <string name="third_party">Third-party Libraries and Icons</string>
     <string name="third_party_message" translatable="false">-
-        <a href="https://github.com/material-components/material-components-android">Material Components</a> (Apache 2.0)
-        \n- <a href="https://github.com/google/material-design-icons">Material Design Icons</a> (Apache 2.0)
-        \n- <a href="https://github.com/dkanada/frost">Frost</a> Icons (GPLv3.0)
-        \n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a> (Apache 2.0)
-        \n- <a href="https://github.com/tananaev/adblib">ADB Library</a> (BSD-3-Clause)
+        <a href="https://github.com/tananaev/adblib">ADB Library</a> (BSD-3-Clause)
+        \n- <a href="https://github.com/zhanghai/AndroidFastScroll">AndroidFastScroll</a> (Apache 2.0)
         \n- <a href="https://github.com/MuntashirAkon/apk-parser">APK-parser</a> (BSD-2-Clause)
+        \n- <a href="https://github.com/MuntashirAkon/apksig-android">apksig for android</a> (Apache 2.0)
+        \n- <a href="https://github.com/bcgit/bc-java">Bouncy Castle</a> (MIT)
+        \n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a> (Apache 2.0)
+        \n- <a href="https://commons.apache.org/proper/commons-compress/">Commons Compress</a> (Apache 2.0)
+        \n- <a href="https://github.com/dkanada/frost">Frost</a> Icons (GPLv3.0)
         \n- <a href="https://github.com/topjohnwu/libsu">libsu</a> (Apache 2.0)
         \n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a> (MIT)
-        \n- <a href="https://github.com/tiann/FreeReflection">FreeReflection</a> (MIT)
-        \n- <a href="https://github.com/MuntashirAkon/lazysodium-android">Lazysodium for Android</a> (MPL-2.0)
-        \n- <a href="https://github.com/MuntashirAkon/unapkm-android">UnAPKM Android</a> (Apache 2.0)
-        \n- <a href="https://github.com/MuntashirAkon/apksig-android">apksig for android</a> (Apache 2.0)
+        \n- <a href="https://github.com/material-components/material-components-android">Material Components</a> (Apache 2.0)
+        \n- <a href="https://github.com/google/material-design-icons">Material Design Icons</a> (Apache 2.0)
+        \n- <a href="https://github.com/ChickenHook/RestrictionBypass">RestrictionBypass</a> (Apachhe 2.0)
         \n- <a href="https://github.com/MuntashirAkon/sun-security-android">sun.security for Android</a> (GPL-2.0 \"Classpath Exception\")
-        \n- <a href="https://github.com/zhanghai/AndroidFastScroll">AndroidFastScroll</a> (Apache 2.0)
-        \n- <a href="https://github.com/bcgit/bc-java">Bouncy Castle</a> (MIT)
+        \n- <a href="https://github.com/MuntashirAkon/unapkm-android">UnAPKM Android</a> (Apache 2.0)
     </string>
     <string name="credits">Credits</string>
     <string name="credits_message">To the authors of
         \n- The Android Open Source Project
-        \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
         \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
-        \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+        \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
         \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
-        \n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
         \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+        \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+        \n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+        \n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
+        \n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
+        \n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
+        \n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a>
         \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
         \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
-        \n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
+        \n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
         \nOriginal logo credit: <a href="https://github.com/Atrate">Atrate</a>.
     </string>
     <string name="word_wrap">Toggle word wrap</string>
@@ -159,7 +149,7 @@
         <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> trackers with <xliff:g id="class_no" example="50">%2$d</xliff:g> classes</item>
         <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> trackers with <xliff:g id="class_no" example="50">%2$d</xliff:g> classes</item>
     </plurals>
-    <string name="tested_signatures_on_classes_and_time_taken">Tested <xliff:g id="signature_no" example="342">%1$d</xliff:g> signatures on <xliff:g id="class_no" example="6000">%2$d</xliff:g> classes.\nTime taken <xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> iterations).</string>
+    <string name="tested_signatures_on_classes_and_time_taken" tools:ignore="PluralsCandidate">Tested <xliff:g id="signature_no" example="342">%1$d</xliff:g> signatures on <xliff:g id="class_no" example="6000">%2$d</xliff:g> classes.\nTime taken <xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> iterations).</string>
     <string name="found_trackers">Found Trackers:</string>
     <string name="tracker_details">Tracker details</string>
     <string name="tracker_classes">Tracker classes</string>
@@ -537,7 +527,6 @@
     <string name="full_stop_tap_to_see_details">. Tap to see details.</string>
     <string name="try_again">Try again</string>
     <string name="install_app_message">Install this app?</string>
-    <string name="reinstall_app_message">Reinstall this app?</string>
     <string name="reinstall">Reinstall</string>
     <string name="unblock_trackers">Unblock trackers</string>
     <string name="package_installer">Package Installer</string>
@@ -882,8 +871,6 @@
     <string name="choose_what_to_do">Choose what to do.</string>
     <string name="has_net_policy">Net policy</string>
     <string name="net_policy">Net policy</string>
-    <string name="reject_background">Reject background</string>
-    <string name="allow_background">Allow background</string>
     <string name="initializing">Initializing…</string>
     <string name="add_to_profile">Add to profile</string>
     <string name="add">Add</string>
@@ -992,14 +979,14 @@
     <string name="pref_cat_configuration">Configuration</string>
     <string name="pref_default_log_level_summary">Log level at startup, when opening files, and when recording.</string>
     <string name="pref_default_log_level_title">Default Log Level</string>
-    <string name="pref_display_limit_summary">Show only the last %1$d logs in order to avoid \'out of memory\' errors.</string>
+    <string name="pref_display_limit_summary" tools:ignore="PluralsCandidate">Show only the last %1$d logs in order to avoid \'out of memory\' errors.</string>
     <string name="pref_display_limit_title">Log Display Limit</string>
     <string name="pref_filter_pattern_summary">Filter out the selected tags from logs.</string>
     <string name="pref_filter_pattern_title">Filter Out Tags</string>
     <string name="pref_expanded_by_default_summary">Show full log text by default.</string>
     <string name="pref_expanded_by_default_title">Expand by Default</string>
     <string name="pref_log_line_period_error">Please enter an integer between 1 and 1000.</string>
-    <string name="pref_log_write_period_summary">When recording, write to SD card every %1$d lines.</string>
+    <string name="pref_log_write_period_summary" tools:ignore="PluralsCandidate">When recording, write to SD card every %1$d lines.</string>
     <string name="pref_log_write_period_title">Write Period</string>
     <string name="pref_show_timestamp_summary">Show process ID and timestamp when expanded.</string>
     <string name="pref_show_timestamp_title">Show PID and Timestamp</string>
@@ -1014,7 +1001,7 @@
     <string name="text_filter_text">Filter text</string>
     <string name="text_include_device_info">Include device info</string>
     <string name="title_filters">Filters</string>
-    <string name="pref_display_limit_hint">Please enter a valid number between %1$d and %2$d.</string>
+    <string name="pref_display_limit_hint" tools:ignore="PluralsCandidate">Please enter a valid number between %1$d and %2$d.</string>
     <string name="toast_invalid_level">Invalid level name: %s</string>
     <string name="toast_invalid_selection">Invalid selection. Please try again.</string>
     <plurals name="toast_log_truncated">
@@ -1060,4 +1047,24 @@
     <string name="orientation_follow_locale">Use system setting</string>
     <string name="orientation_left_to_right">→ ABC</string>
     <string name="orientation_right_to_left">CBA ←</string>
+    <string name="suspended">Suspended</string>
+    <string name="hidden">Hidden</string>
+    <string name="pref_display_changes">Display changes</string>
+    <string name="pref_display_changes_msg">Display changes in version, trackers, components, permissions, signatures, SDK, etc. in a version controlled manner.</string>
+    <string name="no_changes">No changes</string>
+    <string name="netpolicy_reject_background_data">Reject background data</string>
+    <string name="netpolicy_allow_background_data">Allow background data when using \'Data Saver\'</string>
+    <string name="netpolicy_reject_cellular_data">Reject cellular data</string>
+    <string name="netpolicy_reject_vpn_data">Reject VPN data</string>
+    <string name="netpolicy_reject_wifi_data">Reject Wi-Fi data</string>
+    <string name="netpolicy_disable_network_access">Disable network access</string>
+    <string name="wireless_debugging">Wireless debugging</string>
+    <string name="wireless_debugging_not_supported">Wireless debugging isn\'t supported in this platform.</string>
+    <string name="adb_connect">Connect</string>
+    <string name="port_number">Port</string>
+    <string name="adb_connect_port_number_description">The port number can be set in <b>IP address &amp; port</b>
+        just below the <b>Device name</b>.</string>
+    <string name="port_number_empty">Pick a port number first.</string>
+    <string name="port_number_invalid">Pick a valid port number.</string>
+    <string name="unknown_net_policy">Unknown netpolicy (%1$s - %2$X)</string>
 </resources>

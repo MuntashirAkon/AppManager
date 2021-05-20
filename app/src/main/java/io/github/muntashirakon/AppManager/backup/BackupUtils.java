@@ -1,24 +1,13 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.backup;
 
 import android.text.TextUtils;
 import android.util.Pair;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -26,13 +15,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.WorkerThread;
-
 import io.github.muntashirakon.AppManager.logcat.helper.SaveLogHelper;
-import io.github.muntashirakon.AppManager.runner.Runner;
+import io.github.muntashirakon.io.FileStatus;
 import io.github.muntashirakon.io.ProxyFile;
+import io.github.muntashirakon.io.ProxyFiles;
 
 public final class BackupUtils {
     @WorkerThread
@@ -109,20 +95,12 @@ public final class BackupUtils {
 
     @NonNull
     static Pair<Integer, Integer> getUidAndGid(String filepath, int uid) {
-        // Default UID and GID should be the same as the kernel user ID, and will fallback to it
-        // if the stat command fails
-        Pair<Integer, Integer> defaultUidGid = new Pair<>(uid, uid);
-        Runner.Result result = Runner.runCommand(Runner.getRootInstance(), String.format("stat -c \"%%u %%g\" \"%s\"", filepath));
-        if (!result.isSuccessful()) return defaultUidGid;
-        String[] uidGid = result.getOutput().split(" ");
-        if (uidGid.length != 2) return defaultUidGid;
-        // Fix for Magisk bug
-        if (uidGid[0].equals("0")) return defaultUidGid;
         try {
-            // There could be other underlying bugs as well
-            return new Pair<>(Integer.parseInt(uidGid[0]), Integer.parseInt(uidGid[1]));
+            FileStatus status = ProxyFiles.stat(new ProxyFile(filepath));
+            return new Pair<>(status.st_uid, status.st_gid);
         } catch (Exception e) {
-            return defaultUidGid;
+            // Fallback to kernel user ID
+            return new Pair<>(uid, uid);
         }
     }
 

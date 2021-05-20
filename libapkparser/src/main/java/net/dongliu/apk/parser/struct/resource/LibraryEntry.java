@@ -1,10 +1,11 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.struct.resource;
 
 /**
  * Library chunk entry
- *
- * @author Liu Dong
  */
+// Copyright 2016 Liu Dong
 public class LibraryEntry {
     // uint32. The package-id this shared library was assigned at build time.
     private int packageId;

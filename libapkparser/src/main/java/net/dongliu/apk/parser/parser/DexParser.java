@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.parser;
 
 import net.dongliu.apk.parser.bean.DexClass;
@@ -17,9 +19,8 @@ import java.nio.ByteOrder;
  * see:
  * http://source.android.com/devices/tech/dalvik/dex-format.html
  * http://dexandroid.googlecode.com/svn/trunk/dalvik/libdex/DexFile.h
- *
- * @author dongliu
  */
+// Copyright 2014 Liu Dong
 public class DexParser {
 
     private ByteBuffer buffer;

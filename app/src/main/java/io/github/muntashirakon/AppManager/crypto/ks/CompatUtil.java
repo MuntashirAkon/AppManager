@@ -1,20 +1,4 @@
-/*
- * Copyright (c) 2021 Muntashir Al-Islam
- * Copyright (c) 2018 New Vector Ltd
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: Apache-2.0
 
 package io.github.muntashirakon.AppManager.crypto.ks;
 
@@ -63,6 +47,7 @@ import javax.security.auth.x500.X500Principal;
 
 import io.github.muntashirakon.AppManager.logs.Log;
 
+// Copyright 2018 New Vector Ltd
 public class CompatUtil {
     private static final String TAG = CompatUtil.class.getSimpleName();
     private static final String ANDROID_KEY_STORE_PROVIDER = "AndroidKeyStore";
@@ -90,7 +75,7 @@ public class CompatUtil {
      *
      * @param context the context holding the application shared preferences
      */
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"deprecation", "InlinedApi"})
     private static synchronized SecretKeyAndVersion getAesGcmLocalProtectionKey(@NonNull Context context)
             throws KeyStoreException, CertificateException, NoSuchAlgorithmException, IOException,
             NoSuchProviderException, InvalidAlgorithmParameterException, NoSuchPaddingException,
@@ -122,8 +107,7 @@ public class CompatUtil {
                         Log.i(TAG, "Generating AES key with keystore");
                         final KeyGenerator generator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES,
                                 ANDROID_KEY_STORE_PROVIDER);
-                        generator.init(
-                                new KeyGenParameterSpec.Builder(AES_LOCAL_PROTECTION_KEY_ALIAS,
+                        generator.init(new KeyGenParameterSpec.Builder(AES_LOCAL_PROTECTION_KEY_ALIAS,
                                         KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT)
                                         .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
                                         .setKeySize(AES_GCM_KEY_SIZE_IN_BITS)

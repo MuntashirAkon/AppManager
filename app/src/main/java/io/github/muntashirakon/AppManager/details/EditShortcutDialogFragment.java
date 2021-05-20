@@ -1,24 +1,4 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
-
-// This is a modified version of ShortcutEditDialogFragment.java taken
-// from https://github.com/butzist/ActivityLauncher/commit/dfb7fe271dae9379b5453bbb6e88f30a1adc94a9
-// and was authored by Adam M. Szalkowski with ISC License.
-// All derivative works are licensed under GPLv3.0.
+// SPDX-License-Identifier: ISC AND GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.details;
 
@@ -47,6 +27,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import io.github.muntashirakon.AppManager.R;
 
+// Copyright 2017 Adam M. Szalkowski
 public class EditShortcutDialogFragment extends DialogFragment {
     static final String ARG_ACTIVITY_INFO = "activityInfo";
     static final String TAG = "EditShortcutDialogFragment";
@@ -76,10 +57,10 @@ public class EditShortcutDialogFragment extends DialogFragment {
         text_class.setText(mActivityInfo.name);
         text_icon = view.findViewById(R.id.insert_icon);
         ComponentName activityComponent = new ComponentName(mActivityInfo.packageName, mActivityInfo.name);
-        final String[] activityIconResourceName = new String[1];
         try {
-            activityIconResourceName[0] = mPackageManager.getResourcesForActivity(activityComponent).getResourceName(mActivityInfo.getIconResource());
-            text_icon.setText(activityIconResourceName[0]);
+            String activityIconResourceName = mPackageManager.getResourcesForActivity(activityComponent)
+                    .getResourceName(mActivityInfo.getIconResource());
+            text_icon.setText(activityIconResourceName);
         } catch (PackageManager.NameNotFoundException | Resources.NotFoundException ignored) {}
 
         text_icon.addTextChangedListener(new TextWatcher() {
@@ -114,31 +95,29 @@ public class EditShortcutDialogFragment extends DialogFragment {
                     String newActivityName = text_name.getText().toString();
                     if (newActivityName.length() == 0) newActivityName = activityName;
 
-                    activityIconResourceName[0] = text_icon.getText().toString();
-                    Drawable icon;
+                    Drawable icon = null;
                     try {
-                        final String icon_resource_string = activityIconResourceName[0];
-                        final String pack = icon_resource_string.substring(0, icon_resource_string.indexOf(':'));
-                        final String type = icon_resource_string.substring(icon_resource_string.indexOf(':') + 1, icon_resource_string.indexOf('/'));
-                        final String name = icon_resource_string.substring(icon_resource_string.indexOf('/') + 1);
+                        final String iconResourceString = text_icon.getText().toString();
+                        final String pack = iconResourceString.substring(0, iconResourceString.indexOf(':'));
+                        final String type = iconResourceString.substring(iconResourceString.indexOf(':') + 1, iconResourceString.indexOf('/'));
+                        final String name = iconResourceString.substring(iconResourceString.indexOf('/') + 1);
 
                         Resources resources = mPackageManager.getResourcesForApplication(pack);
-                        int icon_resource = resources.getIdentifier(name, type, pack);
-                        if (icon_resource != 0) {
-                            icon = ResourcesCompat.getDrawable(resources, icon_resource, activity.getTheme());
+                        int iconResource = resources.getIdentifier(name, type, pack);
+                        if (iconResource != 0) {
+                            icon = ResourcesCompat.getDrawable(resources, iconResource, activity.getTheme());
                         } else {
-                            icon = mPackageManager.getDefaultActivityIcon();
                             Toast.makeText(activity, R.string.error_invalid_icon_resource, Toast.LENGTH_LONG).show();
                         }
                     } catch (PackageManager.NameNotFoundException e) {
-                        icon = mPackageManager.getDefaultActivityIcon();
                         Toast.makeText(activity, R.string.error_invalid_icon_resource, Toast.LENGTH_LONG).show();
                     } catch (Exception e) {
-                        icon = mPackageManager.getDefaultActivityIcon();
                         Toast.makeText(getActivity(), R.string.error_invalid_icon_format, Toast.LENGTH_LONG).show();
                     }
-
-                    LauncherIconCreator.createLauncherIcon(getActivity(), mActivityInfo, newActivityName, icon, activityIconResourceName[0]);
+                    if (icon == null) {
+                        icon = mPackageManager.getDefaultActivityIcon();
+                    }
+                    LauncherIconCreator.createLauncherIcon(activity, mActivityInfo, newActivityName, icon);
                 })
                 .setNegativeButton(R.string.cancel, (dialog, which) -> {
                     if (getDialog() != null) getDialog().cancel();

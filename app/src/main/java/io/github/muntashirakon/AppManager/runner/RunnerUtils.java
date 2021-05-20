@@ -1,48 +1,37 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.runner;
 
-import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.RemoteException;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
-import com.tananaev.adblib.AdbConnection;
-import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.adb.AdbConnectionManager;
-import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.servermanager.LocalServer;
-import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
-import io.github.muntashirakon.AppManager.users.Users;
-import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.AppManager.utils.UIUtils;
+import androidx.fragment.app.FragmentActivity;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.security.InvalidParameterException;
-import java.security.NoSuchAlgorithmException;
 import java.util.BitSet;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
+import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.adb.AdbUtils;
+import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.servermanager.LocalServer;
+import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
+import io.github.muntashirakon.AppManager.settings.MainPreferences;
+import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 @SuppressWarnings("UnusedReturnValue")
 public final class RunnerUtils {
@@ -147,23 +136,15 @@ public final class RunnerUtils {
         return false;
     }
 
-    private static boolean isAdbAvailable(Context context) {
-        try (AdbConnection ignored = AdbConnectionManager.connect(context, ServerConfig.getAdbHost(), ServerConfig.getAdbPort())) {
-            return true;
-        } catch (IOException | NoSuchAlgorithmException | InterruptedException e) {
-            return false;
-        }
-    }
-
     @WorkerThread
-    private static void autoDetectRootOrAdb(Context context) {
+    private static void autoDetectRootOrAdb() {
         // Update config
         LocalServer.updateConfig();
         // Check root, ADB and load am_local_server
         if (!RunnerUtils.isRootGiven()) {
             AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
             // Check for adb
-            if (RunnerUtils.isAdbAvailable(context)) {
+            if (AdbUtils.isAdbAvailable(ServerConfig.getAdbHost(), ServerConfig.getAdbPort())) {
                 Log.e("ADB", "ADB available");
                 AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, true);
             }
@@ -173,46 +154,65 @@ public final class RunnerUtils {
                     throw new IOException("ADB not available");
                 }
                 new Handler(Looper.getMainLooper()).post(() -> UIUtils.displayShortToast(R.string.working_on_adb_mode));
-            } catch (IOException e) {
+            } catch (IOException | RemoteException e) {
                 Log.e("ADB", e);
                 AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
             }
         } else {
             AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, true);
-            LocalServer.getInstance();
+            try {
+                LocalServer.launchAmService();
+            } catch (RemoteException e) {
+                Log.e("ROOT", e);
+                AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
+            }
         }
     }
 
     @WorkerThread
-    public static void setModeOfOps(Context context) {
-        String mode = (String) AppPref.get(AppPref.PrefKey.PREF_MODE_OF_OPS_STR);
-        switch (mode) {
-            case Runner.MODE_AUTO:
-                if (LocalServer.isAMServiceAlive()) {
-                    // Don't bother detecting root/ADB
+    public static void setModeOfOps(FragmentActivity activity) {
+        String mode = AppPref.getString(AppPref.PrefKey.PREF_MODE_OF_OPS_STR);
+        try {
+            if (LocalServer.isAMServiceAlive()) {
+                // Don't bother detecting root/ADB
+                return;
+            } else if (LocalServer.isLocalServerAlive()) {
+                // Remote server is running
+                LocalServer.getInstance();
+                return;
+            }
+            switch (mode) {
+                case Runner.MODE_AUTO:
+                    RunnerUtils.autoDetectRootOrAdb();
                     return;
-                } else if (LocalServer.isLocalServerAlive()) {
-                    // Remote server is running
+                case Runner.MODE_ROOT:
+                    AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, true);
+                    AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
+                    LocalServer.launchAmService();
+                    return;
+                case Runner.MODE_ADB_WIFI:
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
+                        AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, true);
+                        CountDownLatch waitForConfig = new CountDownLatch(1);
+                        new Handler(Looper.getMainLooper()).post(() -> MainPreferences
+                                .displayAdbConnect(activity, waitForConfig));
+                        waitForConfig.await(2, TimeUnit.MINUTES);
+                        return;
+                    } // else fallback to ADB over TCP
+                case Runner.MODE_ADB_OVER_TCP:
+                    AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
+                    AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, true);
+                    ServerConfig.setAdbPort(ServerConfig.DEFAULT_ADB_PORT);
+                    LocalServer.updateConfig();
                     LocalServer.getInstance();
                     return;
-                } else {
-                    // AMService isn't running, check for root/ADB
-                    RunnerUtils.autoDetectRootOrAdb(context);
-                    return;
-                }
-            case Runner.MODE_ROOT:
-                AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, true);
-                AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
-                LocalServer.getInstance();
-                break;
-            case Runner.MODE_ADB:
-                AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
-                AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, true);
-                LocalServer.getInstance();
-                break;
-            case Runner.MODE_NO_ROOT:
-                AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
-                AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
+                case Runner.MODE_NO_ROOT:
+                    AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
+                    AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
+            }
+        } catch (Exception e) {
+            Log.e("ModeOfOps", e);
         }
     }
 

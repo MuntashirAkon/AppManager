@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
     <string name="_lang_tag" translatable="false">nb-NO</string>
     <string name="choose_language">Endre språk</string>
     <string name="auto">Automatisk</string>
@@ -15,7 +16,6 @@
     <string name="filter_apps_with_activities">Med aktiviteter</string>
     <string name="are_you_sure">Er du sikker\?</string>
     <string name="pref_remove_all_rules">Fjern alle regler</string>
-    <string name="website_message">https://muntashirakon.github.io/AppManager</string>
     <string name="website">Nettside</string>
     <string name="run_in_termux">Kjør i Termux</string>
     <string name="open_in_termux">Åpne i Termux</string>
@@ -180,7 +180,6 @@
     <string name="backup_apk_files">APK-filer</string>
     <string name="unblock_trackers">Avblokker sporere</string>
     <string name="reinstall">Reinstaller</string>
-    <string name="reinstall_app_message">Ønsker du å reinstallere dette programmet\?</string>
     <string name="install_app_message">Ønsker du å installere dette programmet\?</string>
     <string name="try_again">Prøv igjen</string>
     <string name="export_icon">Pakk ut ikon</string>
@@ -632,12 +631,12 @@
     <string name="app_op_cannot_be_disabled">Denne app-operasjon kan ikke skurs av, en skrivebeskyttet app-op kan være avhengig av en annen app-op.</string>
     <string name="toggle_kill_for_system_apps">Aktiver eller deaktiver tvungen avslutning av system-apper</string>
     <plurals name="alert_failed_to_disable_background">
-        <item quantity="one">Kunne ikke hindre ett program fra å kjøre i bakgrunnen</item>
+        <item quantity="one">Kufnne ikke hindre ett program fra å kjøre i bakgrunnen</item>
         <item quantity="other">Kunne ikke hindre %1$d programmer fra å kjøre i bakgrunnen</item>
     </plurals>
-    <string name="failed_to_uninstall_updates">Kunne ikke avinstallere oppgraderinger for <xliff:g id="app_name" example="App Manager"/>.</string>
+    <string name="failed_to_uninstall_updates">Kunne ikke avinstallere oppgraderinger for <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="abi_split_for_base_apk"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> kode for grunn-APK</string>
-    <string name="unknown_split_for_base_apk"><xliff:g id="split_name" example="some_split"/> for grunn-APK</string>
+    <string name="unknown_split_for_base_apk"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> for grunn-APK</string>
     <plurals name="items_selected">
         <item quantity="one"><xliff:g id="selection_no" example="20"/> valgt</item>
         <item quantity="other"><xliff:g id="selection_no" example="20"/> valgt</item>
@@ -646,8 +645,6 @@
     <string name="enable_disable_features">Skru på/av funksjoner</string>
     <string name="ssaid">SSAID</string>
     <string name="initializing">Starter …</string>
-    <string name="allow_background">Tillat bakgrunn</string>
-    <string name="reject_background">Avslå bakgrunn</string>
     <string name="choose_what_to_do">Velg foretagende.</string>
     <string name="drm_free_apkm_msg">APKM-filen er DRM-fri, og det er unødvendig å konvertere den til APKS.</string>
     <string name="restore_msg">Gjenopprett programmer med data</string>
@@ -802,4 +799,126 @@
     <string name="delete_saved_log">Slett lagrede logger</string>
     <string name="copy_to_clipboard">Kopier til utklippstavle</string>
     <string name="checkbox_never_show_partial_select_help">Ikke vis igjen</string>
+    <string name="keystore_pass">KeyStore-passord</string>
+    <string name="keystore_file">KeyStore-fil</string>
+    <string name="failed_to_initialize_key_store">Kunne ikke starte App Manager KeyStore.</string>
+    <string name="add_to_profile">Legg til i profil</string>
+    <string name="latest_backup">Siste sikkerhetskopi</string>
+    <string name="gz_bz2_compressed">%1$s sammenpakket</string>
+    <string name="pgp_aes_rsa_encrypted">%1$s kryptert</string>
+    <string name="no_encryption">Ingen kryptering</string>
+    <string name="trackers_unblocked_successfully">Sporere er nå avblokkert</string>
+    <string name="trackers_blocked_successfully">Sporere er nå blokkert</string>
+    <string name="failed_to_unblock_trackers">Kunne ikke avblokkere sporere</string>
+    <string name="failed_to_block_trackers">Kunne ikke blokkere sporere</string>
+    <string name="save_apk">Lagre APK</string>
+    <string name="running_services">Kjørende tjenester</string>
+    <string name="view_logs">Vis loggføring</string>
+    <string name="share_log">Del</string>
+    <string name="title_filters">Filter</string>
+    <string name="text_include_device_info">Inkluder enhetsinfo</string>
+    <string name="text_filter_text">Filtertekst</string>
+    <string name="text_filter_ellipsis">Filtrer …</string>
+    <string name="subject_log_report">Loggrapport</string>
+    <string name="dialog_partial_select_explanation">1. Velg den <b>første</b> linjen.
+\n2. Velg så den <b>siste</b> linjen.</string>
+    <string name="dialog_compiling_log">Kompilerer logg …</string>
+    <plurals name="file_deletion_confirmation">
+        <item quantity="one">Én fil vil bli slettet</item>
+        <item quantity="other">%d filer vil bli slettet</item>
+    </plurals>
+    <string name="add_filter_ellipsis">Legg til filter …</string>
+    <string name="add_filter">Legg til filter</string>
+    <string name="allow_routine_ops_msg">Tillat at profilen brukes i rutineoperasjonene</string>
+    <string name="allow_routine_ops">Tillat rutineoperasjoner</string>
+    <string name="locale_split_for_base_apk"><xliff:g id="split_name" example="English">%1$s</xliff:g> lokalitet for grunn-APK</string>
+    <string name="locale_split_for_feature"><xliff:g id="split_name" example="English">%1$s</xliff:g> lokalitet for funksjonen <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <string name="density_split_for_feature"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) ressurser for funksjonen <xliff:g id="feature_name" example="Visualizer">%3$s</xliff:g></string>
+    <string name="density_split_for_base_apk"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) ressurser for grunn-APK</string>
+    <string name="app_signing_signatures">Signaturer</string>
+    <string name="invalid_rsa_key_size">Ugyldig nøkkelstørrelse for RSA-kryptering. Nøkkelstørrelse kan enten være 1024, 2048, eller 4096 biter.</string>
+    <string name="invalid_aes_key_size">Ugyldig nøkkelstørrelse for AES-kryptering. Nøkkelstørrelse kan enten være 128 eller 256 biter.</string>
+    <string name="screen_lock_not_enabled">Velg en skjermlås i Android-innstillingene, eller tøm programdata.</string>
+    <string name="restart_to_reflect_changes">Du må starte enheten på nytt umiddelbart for å bruke de nye endringene.</string>
+    <string name="ssaid_info">SSAID (<tt>Settings.Secure.ANDROID_ID</tt>) er en enhetsidentifikator som tildeles hvert program (fra Android 8 «Oreo» osv). Det brukes ofte til å spore brukere.</string>
+    <string name="restore_latest_msg">Gjenopprett allerede installerte programmer som har versjonskoder høyere enn allerede installert versjon.</string>
+    <string name="pref_backup_volume_msg">Velg dataområdet eller disken der sikkerhetskopier skal lagres.</string>
+    <string name="backup_skip_signature_checks_description">Gjenopprett sikkerhetskopier som enten ikke passerer sjekksumsbekreftelse, eller har forskjellige APK-signaturer enn deres tidligere sikkerhetskopier.</string>
+    <string name="backup_volume">Sikkerhetskopier dataområde</string>
+    <string name="backup_extras_description">Sikkerhetskopier programtilganger, batterisparings- og databruksinnstillinger, MagiskHide-status, SSAID, osv.</string>
+    <string name="app_signing_install_without_data_loss">Hvis du har skrudd av signaturbekreftelse kan du bruke <b>Kun installer</b>-valget for å installere programmet uten å miste data.</string>
+    <string name="profile_disable_msg">Skrur av eller på programmer basert på tilstand</string>
+    <string name="usage_access_not_supported">Kunne ikke forespørre brukstilgang. Tilhørende innstillingsside finnes ikke.</string>
+    <string name="rsa_exponent">Eksponent</string>
+    <string name="pref_backup_flags_msg">Å legge til en forhåndsinnstilling for sikkerhetskopivalg lar deg unngå å velge flagg hver gang du sikkerhetskopierer/gjenoppretter.</string>
+    <string name="routine_ops">Rutineoperasjoner</string>
+    <string name="state_sleeping">Sover</string>
+    <string name="keyboard_12_keys">12-taster</string>
+    <string name="orientation_behind">Bak</string>
+    <string name="installer_error_lidl_rom">Ditt ROM er ikke kompatibelt med Rootless Installer.</string>
+    <string name="installer_error_aborted">Installasjon mislyktes enten fordi den ble avbrutt, eller fordi økten ble lukket uventet</string>
+    <string name="unable_to_save_log">Klarte ikke å lagre logg. Skrev du inn et gyldig filnavn\?</string>
+    <string name="omit_sensitive_info_summary">Unnlat sensitiv info som vev-nettadresser, telefonnummer eller e-postadresser.</string>
+    <string name="text_include_dmesg">Inkluder kjerne-logg</string>
+    <string name="profile_save_apk_msg">Lagrer APK-filer i <tt>AppManager/apks</tt></string>
+    <string name="pref_rules_msg">Umiddelbar blokkering, importer/eksporter/fjern regler, osv.</string>
+    <string name="failed">Mislykket</string>
+    <string name="orientation_follow_locale">Følg systemspråk</string>
+    <string name="pref_layout_orientation">Leseretning</string>
+    <string name="hidden">Skjult</string>
+    <string name="orientation_right_to_left">Høyre til venstre</string>
+    <string name="orientation_left_to_right">Venstre til høyre</string>
+    <string name="base_backup">Grunn-sikkerhetskopi</string>
+    <string name="save_log_zip">Lagre ZIP</string>
+    <string name="widget_start_recording">Før opp
+\nlogg</string>
+    <string name="widget_recording_in_progress">Fører opp …</string>
+    <string name="toast_invalid_selection">Ugyldig utvalg. Prøv igjen.</string>
+    <string name="toast_invalid_level">Ugyldig nivånavn: %s</string>
+    <string name="pref_display_limit_hint">Skriv inn et gyldig tall mellom %1$d og %2$d.</string>
+    <string name="pref_show_timestamp_title">Vis PID og tidsstempel</string>
+    <string name="log_level">Loggingsnivå</string>
+    <string name="log_cleared">Loggføring tømt</string>
+    <string name="log_level_fatal">Kritisk</string>
+    <string name="log_level_warn">Advar</string>
+    <string name="log_level_info">Info</string>
+    <string name="log_level_error">Feil</string>
+    <string name="log_level_debug">Avlusing</string>
+    <string name="filename">Filnavn</string>
+    <string name="pk8_file">PKCS #8 (PK8)-fil</string>
+    <string name="pem_and_pk8">PEM og PKCS #8 (PK8)</string>
+    <string name="screen_lock_msg">Lås App Manager ved bruk av Android-skjermlås</string>
+    <plurals name="app_signing_signature_schemes_pl">
+        <item quantity="one">Signaturkoding</item>
+        <item quantity="other">Signaturkodinger</item>
+    </plurals>
+    <string name="pref_log_viewer_msg">Sett opp visning av loggføring.</string>
+    <string name="log_viewer">Loggviser</string>
+    <string name="signing_key">Signeringsnøkkel</string>
+    <string name="country_name" tools:ignore="TypographyOther">Landsnavn (C)</string>
+    <string name="organization_name">Organisasjonsnavn (O)</string>
+    <string name="organization_unit">Organisasjonsenhet (OU)</string>
+    <string name="common_name">Vanlig navn (CN)</string>
+    <string name="verified_using_unreliable_hash">Bekreftet ved bruk av upålitelig sjekksum</string>
+    <string name="type_int_array_list"/>
+    <string name="restore_latest">Gjenopprett siste sikkerhetskopier</string>
+    <string name="restore_not_installed_msg">Gjenopprett grunn-sikkerhetskopi for programmer som ikke er installert nå.</string>
+    <string name="restore_all_msg">Gjenopprett grunn-sikkerhetskopi fra alle sikkerhetskopierte programmer.</string>
+    <string name="no_volumes_found">Fant ingen dataområder med skrivetilgang.</string>
+    <string name="backup_cache_description">Sikkerhetskopier <b>cache</b>, <b>no_cache</b> og <b>no_backup</b> mappene.</string>
+    <string name="activity_result">Aktivitetsresultat</string>
+    <string name="v4_scheme">v4-koding (siden Android 11)</string>
+    <string name="v3_scheme">v3-koding (siden Android 9)</string>
+    <string name="v2_scheme">v2-koding (siden Android 7.0)</string>
+    <string name="v1_scheme">v1-koding (siden Android 1.0)</string>
+    <string name="pref_apk_signing_msg">Sett signaturkoding, egendefinert signeringsnøkkel, osv.</string>
+    <string name="app_signing_signature_schemes">Signaturkoding</string>
+    <string name="install_location">Installasjonssted</string>
+    <string name="profile_state_msg">Egendefinert av/på -tilstand for denne profilen.</string>
+    <string name="update_uninstalled_successfully">Oppgraderinger for <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> har blitt avinstallert.</string>
+    <string name="other">Annet</string>
+    <plurals name="backup_exists_are_you_sure">
+        <item quantity="one">Sikkerhetskopi finnes allerede. Er du sikker\?</item>
+        <item quantity="other">Mer enn ett program har en sikkerhetskopi allerede. Er du sikker\?</item>
+    </plurals>
 </resources>

@@ -1,23 +1,9 @@
-/*
- * Copyright (c) 2021 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.details.info;
 
 import android.app.Application;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -44,9 +30,11 @@ import java.util.concurrent.Executors;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.details.AppDetailsViewModel;
-import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
+import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
+import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
 import io.github.muntashirakon.AppManager.runner.Runner;
+import io.github.muntashirakon.AppManager.servermanager.ApplicationInfoCompat;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
@@ -62,7 +50,6 @@ import io.github.muntashirakon.AppManager.utils.MagiskUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.SsaidSettings;
-import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.io.ProxyFile;
 
 public class AppInfoViewModel extends AndroidViewModel {
@@ -114,10 +101,11 @@ public class AppInfoViewModel extends AndroidViewModel {
         String packageName = packageInfo.packageName;
         ApplicationInfo applicationInfo = packageInfo.applicationInfo;
         TagCloud tagCloud = new TagCloud();
-        HashMap<String, RulesStorageManager.Type> trackerComponents = ComponentUtils.getTrackerComponentsForPackageInfo(packageInfo);
+        HashMap<String, RuleType> trackerComponents = ComponentUtils.getTrackerComponentsForPackageInfo(packageInfo);
         tagCloud.trackerComponents = new ArrayList<>(trackerComponents.size());
         for (String component : trackerComponents.keySet()) {
-            tagCloud.trackerComponents.add(new RulesStorageManager.Entry(component, trackerComponents.get(component), RulesStorageManager.COMPONENT_TO_BE_BLOCKED));
+            tagCloud.trackerComponents.add(new ComponentRule(packageName, component, trackerComponents.get(component),
+                    ComponentRule.COMPONENT_TO_BE_BLOCKED));
         }
         tagCloud.isSystemApp = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
         tagCloud.isSystemlessPath = !mainModel.getIsExternalApk() && AppPref.isRootEnabled()
@@ -129,9 +117,14 @@ public class AppInfoViewModel extends AndroidViewModel {
         tagCloud.isTestOnly = (applicationInfo.flags & ApplicationInfo.FLAG_TEST_ONLY) != 0;
         tagCloud.hasCode = (applicationInfo.flags & ApplicationInfo.FLAG_HAS_CODE) != 0;
         tagCloud.hasRequestedLargeHeap = (applicationInfo.flags & ApplicationInfo.FLAG_LARGE_HEAP) != 0;
-        tagCloud.runningServices = PackageUtils.getRunningServicesForPackage(packageName);
+        tagCloud.runningServices = PackageUtils.getRunningServicesForPackage(packageName, mainModel.getUserHandle());
         tagCloud.isForceStopped = (applicationInfo.flags & ApplicationInfo.FLAG_STOPPED) != 0;
         tagCloud.isAppEnabled = applicationInfo.enabled;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            tagCloud.isAppSuspended = (applicationInfo.flags & ApplicationInfo.FLAG_SUSPENDED) != 0;
+        }
+        int privateFlags = ApplicationInfoCompat.getPrivateFlags(applicationInfo);
+        tagCloud.isAppHidden = (privateFlags & ApplicationInfoCompat.PRIVATE_FLAG_HIDDEN) != 0;
         tagCloud.isMagiskHideEnabled = !mainModel.getIsExternalApk() && AppPref.isRootEnabled() && MagiskUtils.isHidden(packageName);
         tagCloud.hasKeyStoreItems = KeyStoreUtils.hasKeyStore(applicationInfo.uid);
         tagCloud.hasMasterKeyInKeyStore = KeyStoreUtils.hasMasterKey(applicationInfo.uid);
@@ -245,7 +238,7 @@ public class AppInfoViewModel extends AndroidViewModel {
                 e.printStackTrace();
             }
             // Set sizes
-            if (Utils.hasUsageStatsPermission(getApplication())) {
+            if (PermissionUtils.hasUsageStatsPermission(getApplication())) {
                 appInfo.sizeInfo = PackageUtils.getPackageSizeInfo(getApplication(), packageName, userHandle,
                         Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? applicationInfo.storageUuid : null);
             }
@@ -301,7 +294,7 @@ public class AppInfoViewModel extends AndroidViewModel {
     }
 
     public static class TagCloud {
-        public List<RulesStorageManager.Entry> trackerComponents;
+        public List<ComponentRule> trackerComponents;
         public boolean isSystemApp;
         public boolean isSystemlessPath;
         public boolean isUpdatedSystemApp;
@@ -310,9 +303,11 @@ public class AppInfoViewModel extends AndroidViewModel {
         public boolean isTestOnly;
         public boolean hasCode;
         public boolean hasRequestedLargeHeap;
-        public List<String> runningServices;
+        public List<ComponentName> runningServices;
         public boolean isForceStopped;
         public boolean isAppEnabled;
+        public boolean isAppHidden;
+        public boolean isAppSuspended;
         public boolean isMagiskHideEnabled;
         public boolean hasKeyStoreItems;
         public boolean hasMasterKeyInKeyStore;

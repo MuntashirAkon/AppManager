@@ -1,11 +1,11 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.struct.resource;
 
 import java.util.Arrays;
 import java.util.Locale;
 
-/**
- * @author dongliu.
- */
+// Copyright 2014 Liu Dong
 public class ResourceMapEntry extends ResourceEntry {
     // Resource identifier of the parent mapping, or 0 if there is none.
     //ResTable_ref specifies the parent Resource, if any, of this Resource.

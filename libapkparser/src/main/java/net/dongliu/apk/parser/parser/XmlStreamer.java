@@ -1,12 +1,13 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.parser;
 
 import net.dongliu.apk.parser.struct.xml.*;
 
 /**
  * callback interface for parse binary xml file.
- *
- * @author dongliu
  */
+// Copyright 2014 Liu Dong
 public interface XmlStreamer {
 
     void onStartTag(XmlNodeStartTag xmlNodeStartTag);

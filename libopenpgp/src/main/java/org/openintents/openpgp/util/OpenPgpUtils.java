@@ -1,29 +1,6 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- * Copyright (C) 2014-2015 Dominik Schürmann <dominik@dominikschuermann.de>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later
 
 package org.openintents.openpgp.util;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -34,8 +11,15 @@ import android.content.pm.ServiceInfo;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+// Copyright 2014-2015 Dominik Schürmann
 public class OpenPgpUtils {
 
     public static final Pattern PGP_MESSAGE = Pattern.compile(
@@ -63,6 +47,7 @@ public class OpenPgpUtils {
         }
     }
 
+    @SuppressLint("QueryPermissionsNeeded")
     public static boolean isAvailable(Context context) {
         Intent intent = new Intent(OpenPgpApi.SERVICE_INTENT_2);
         List<ResolveInfo> resInfo = context.getPackageManager().queryIntentServices(intent, 0);
@@ -74,11 +59,11 @@ public class OpenPgpUtils {
     }
 
     private static String convertKeyIdToHex32bit(long keyId) {
-        String hexString = Long.toHexString(keyId & 0xffffffffL).toLowerCase(Locale.ENGLISH);
+        StringBuilder hexString = new StringBuilder(Long.toHexString(keyId & 0xffffffffL).toLowerCase(Locale.ENGLISH));
         while (hexString.length() < 8) {
-            hexString = "0" + hexString;
+            hexString.insert(0, "0");
         }
-        return hexString;
+        return hexString.toString();
     }
 
     @SuppressLint("QueryPermissionsNeeded")

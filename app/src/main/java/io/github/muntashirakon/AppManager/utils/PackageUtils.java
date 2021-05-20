@@ -1,22 +1,8 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.utils;
 
+import android.annotation.UserIdInt;
 import android.app.usage.IStorageStatsManager;
 import android.app.usage.StorageStats;
 import android.content.ComponentName;
@@ -85,7 +71,7 @@ import io.github.muntashirakon.AppManager.ipc.ps.ProcessEntry;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.main.ApplicationItem;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
-import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
+import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.Runner;
@@ -94,7 +80,6 @@ import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.PackageChangeReceiver;
 import io.github.muntashirakon.AppManager.types.PackageSizeInfo;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
-import io.github.muntashirakon.AppManager.users.UserIdInt;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.io.ProxyFile;
 
@@ -132,7 +117,7 @@ public final class PackageUtils {
     }
 
     @SuppressWarnings("RegExpRedundantEscape")
-    private static final Pattern SERVICE_REGEX = Pattern.compile("ServiceRecord\\{.*/([^\\}]+)\\}");
+    private static final Pattern SERVICE_REGEX = Pattern.compile("ServiceRecord\\{[0-9a-f]+ u(\\d+) ([^\\}]+)\\}");
     private static final String SERVICE_NOTHING = "(nothing)";
 
     @NonNull
@@ -388,7 +373,7 @@ public final class PackageUtils {
     }
 
     @NonNull
-    public static HashMap<String, RulesStorageManager.Type> collectComponentClassNames(String packageName, @UserIdInt int userHandle) {
+    public static HashMap<String, RuleType> collectComponentClassNames(String packageName, @UserIdInt int userHandle) {
         try {
             PackageInfo packageInfo = PackageManagerCompat.getPackageInfo(packageName,
                     PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS
@@ -403,36 +388,36 @@ public final class PackageUtils {
     }
 
     @NonNull
-    public static HashMap<String, RulesStorageManager.Type> collectComponentClassNames(@NonNull PackageInfo packageInfo) {
-        HashMap<String, RulesStorageManager.Type> componentClasses = new HashMap<>();
+    public static HashMap<String, RuleType> collectComponentClassNames(@NonNull PackageInfo packageInfo) {
+        HashMap<String, RuleType> componentClasses = new HashMap<>();
         // Add activities
         if (packageInfo.activities != null) {
             for (ActivityInfo activityInfo : packageInfo.activities) {
                 if (activityInfo.targetActivity != null)
-                    componentClasses.put(activityInfo.targetActivity, RulesStorageManager.Type.ACTIVITY);
-                else componentClasses.put(activityInfo.name, RulesStorageManager.Type.ACTIVITY);
+                    componentClasses.put(activityInfo.targetActivity, RuleType.ACTIVITY);
+                else componentClasses.put(activityInfo.name, RuleType.ACTIVITY);
             }
         }
         // Add others
         if (packageInfo.services != null) {
             for (ComponentInfo componentInfo : packageInfo.services)
-                componentClasses.put(componentInfo.name, RulesStorageManager.Type.SERVICE);
+                componentClasses.put(componentInfo.name, RuleType.SERVICE);
         }
         if (packageInfo.receivers != null) {
             for (ComponentInfo componentInfo : packageInfo.receivers)
-                componentClasses.put(componentInfo.name, RulesStorageManager.Type.RECEIVER);
+                componentClasses.put(componentInfo.name, RuleType.RECEIVER);
         }
         if (packageInfo.providers != null) {
             for (ComponentInfo componentInfo : packageInfo.providers)
-                componentClasses.put(componentInfo.name, RulesStorageManager.Type.PROVIDER);
+                componentClasses.put(componentInfo.name, RuleType.PROVIDER);
         }
         return componentClasses;
     }
 
     @NonNull
-    public static HashMap<String, RulesStorageManager.Type> getFilteredComponents(String packageName, @UserIdInt int userHandle, String[] signatures) {
-        HashMap<String, RulesStorageManager.Type> filteredComponents = new HashMap<>();
-        HashMap<String, RulesStorageManager.Type> components = collectComponentClassNames(packageName, userHandle);
+    public static HashMap<String, RuleType> getFilteredComponents(String packageName, @UserIdInt int userHandle, String[] signatures) {
+        HashMap<String, RuleType> filteredComponents = new HashMap<>();
+        HashMap<String, RuleType> components = collectComponentClassNames(packageName, userHandle);
         for (String componentName : components.keySet()) {
             for (String signature : signatures) {
                 if (componentName.startsWith(signature) || componentName.contains(signature)) {
@@ -461,9 +446,9 @@ public final class PackageUtils {
     }
 
     @NonNull
-    public static HashMap<String, RulesStorageManager.Type> getUserDisabledComponentsForPackage(String packageName, @UserIdInt int userHandle) {
-        HashMap<String, RulesStorageManager.Type> componentClasses = collectComponentClassNames(packageName, userHandle);
-        HashMap<String, RulesStorageManager.Type> disabledComponents = new HashMap<>();
+    public static HashMap<String, RuleType> getUserDisabledComponentsForPackage(String packageName, @UserIdInt int userHandle) {
+        HashMap<String, RuleType> componentClasses = collectComponentClassNames(packageName, userHandle);
+        HashMap<String, RuleType> disabledComponents = new HashMap<>();
         PackageManager pm = AppManager.getContext().getPackageManager();
         for (String componentName : componentClasses.keySet()) {
             if (isComponentDisabledByUser(pm, packageName, componentName))
@@ -495,28 +480,33 @@ public final class PackageUtils {
     }
 
     @NonNull
-    public static List<String> getRunningServicesForPackage(String packageName) {
-        List<String> runningServices = new ArrayList<>();
+    public static List<ComponentName> getRunningServicesForPackage(String packageName, @UserIdInt int userHandle) {
+        List<ComponentName> runningServices = new ArrayList<>();
         if (!PermissionUtils.hasDumpPermission()) return runningServices;
         Runner.Result result = Runner.runCommand(new String[]{"dumpsys", "activity", "services", "-p", packageName});
         if (result.isSuccessful()) {
             List<String> serviceDump = result.getOutputAsList(1);
             Matcher matcher;
-            String service, line;
+            ComponentName service;
+            String line;
             ListIterator<String> it = serviceDump.listIterator();
             if (it.hasNext()) {
                 matcher = SERVICE_REGEX.matcher(it.next());
                 while (it.hasNext()) {
                     if (matcher.find(0)) {
-                        service = matcher.group(1);
+                        String userId = matcher.group(1);
+                        String serviceName = matcher.group(2);
+                        if (userId == null || serviceName == null || Integer.decode(userId) != userHandle) {
+                            matcher = SERVICE_REGEX.matcher(it.next());
+                            continue;
+                        }
+                        service = ComponentName.unflattenFromString(serviceName);
                         line = it.next();
                         matcher = SERVICE_REGEX.matcher(line);
                         while (it.hasNext()) {
                             if (matcher.find(0)) break;
                             if (line.contains("app=ProcessRecord{")) {
-                                if (service != null) {
-                                    runningServices.add(service.startsWith(".") ? packageName + service : service);
-                                }
+                                runningServices.add(service);
                                 break;
                             }
                             line = it.next();
@@ -714,8 +704,8 @@ public final class PackageUtils {
             appOps.add(i);
         }
         if (MiuiUtils.isMiui()) {
-            for (int i = 0; i < AppOpsManager._NUM_MIUI_OP; ++i) {
-                appOps.add(AppOpsManager._MIUI_START_OP + i);
+            for (int op = AppOpsManager.MIUI_OP_START + 1; op < AppOpsManager.MIUI_OP_END; ++op) {
+                appOps.add(op);
             }
         }
         return appOps;
@@ -757,7 +747,7 @@ public final class PackageUtils {
         return getSigningCertSha256Checksum(packageInfo, false);
     }
 
-    public static boolean isSignatureDifferent(PackageInfo newPkgInfo, PackageInfo oldPkgInfo) {
+    public static boolean isSignatureDifferent(@NonNull PackageInfo newPkgInfo, @NonNull PackageInfo oldPkgInfo) {
         String[] newChecksums = getSigningCertSha256Checksum(newPkgInfo, true);
         List<String> oldChecksums = new ArrayList<>(Arrays.asList(getSigningCertSha256Checksum(oldPkgInfo)));
         // Signature is different if the number of signatures don't match

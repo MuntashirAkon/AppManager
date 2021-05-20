@@ -1,19 +1,4 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.apk.whatsnew;
 
@@ -43,6 +28,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import io.github.muntashirakon.AppManager.R;
 
 public class WhatsNewDialogFragment extends DialogFragment {
@@ -66,6 +52,7 @@ public class WhatsNewDialogFragment extends DialogFragment {
     WhatsNewRecyclerAdapter adapter;
     PackageInfo newPkgInfo;
     PackageInfo oldPkgInfo;
+
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -84,8 +71,12 @@ public class WhatsNewDialogFragment extends DialogFragment {
         new Thread(() -> {
             ApkWhatsNewFinder.Change[][] changes = ApkWhatsNewFinder.getInstance().getWhatsNew(newPkgInfo, oldPkgInfo);
             List<ApkWhatsNewFinder.Change> changeList = new ArrayList<>();
-            for (ApkWhatsNewFinder.Change[] changes1: changes) {
+            for (ApkWhatsNewFinder.Change[] changes1 : changes) {
                 if (changes1.length > 0) Collections.addAll(changeList, changes1);
+            }
+            if (isDetached()) return;
+            if (changeList.size() == 0) {
+                changeList.add(new ApkWhatsNewFinder.Change(ApkWhatsNewFinder.CHANGE_INFO, getString(R.string.no_changes)));
             }
             activity.runOnUiThread(() -> adapter.setAdapterList(changeList));
         }).start();
@@ -111,7 +102,10 @@ public class WhatsNewDialogFragment extends DialogFragment {
 
     class WhatsNewRecyclerAdapter extends RecyclerView.Adapter<WhatsNewRecyclerAdapter.ViewHolder> {
         private final List<ApkWhatsNewFinder.Change> mAdapterList = new ArrayList<>();
-        WhatsNewRecyclerAdapter() {}
+
+        WhatsNewRecyclerAdapter() {
+        }
+
         void setAdapterList(List<ApkWhatsNewFinder.Change> list) {
             mAdapterList.clear();
             mAdapterList.addAll(list);
@@ -157,6 +151,7 @@ public class WhatsNewDialogFragment extends DialogFragment {
 
         class ViewHolder extends RecyclerView.ViewHolder {
             TextView textView;
+
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
                 textView = (TextView) itemView;

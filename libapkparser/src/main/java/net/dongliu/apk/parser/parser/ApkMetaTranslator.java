@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.parser;
 
 import net.dongliu.apk.parser.bean.*;
@@ -15,9 +17,8 @@ import androidx.annotation.Nullable;
 
 /**
  * trans binary xml to apk meta info
- *
- * @author Liu Dong dongliu@live.cn
  */
+// Copyright 2014 Liu Dong
 public class ApkMetaTranslator implements XmlStreamer {
     private String[] tagStack = new String[100];
     private int depth = 0;

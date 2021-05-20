@@ -1,19 +1,4 @@
-/*
- * Copyright (C) 2021 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.backup;
 
@@ -32,6 +17,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 import androidx.core.content.pm.PermissionInfoCompat;
 
+import org.json.JSONException;
+
+import java.io.Closeable;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.regex.Pattern;
+
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.appops.OpEntry;
@@ -43,29 +40,34 @@ import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.rules.PseudoRules;
-import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
+import io.github.muntashirakon.AppManager.rules.struct.RuleEntry;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.uri.UriManager;
-import io.github.muntashirakon.AppManager.utils.*;
+import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.DigestUtils;
+import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
+import io.github.muntashirakon.AppManager.utils.MagiskUtils;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.SsaidSettings;
+import io.github.muntashirakon.AppManager.utils.TarUtils;
+import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.io.ProxyFile;
 import io.github.muntashirakon.io.ProxyOutputStream;
 
-import org.json.JSONException;
-
-import java.io.Closeable;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import static io.github.muntashirakon.AppManager.backup.BackupManager.*;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.CERT_PREFIX;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.DATA_PREFIX;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.ICON_FILE;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.KEYSTORE_PLACEHOLDER;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.KEYSTORE_PREFIX;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.MASTER_KEY;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.SOURCE_PREFIX;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.getExt;
 
 @WorkerThread
 class BackupOp implements Closeable {
@@ -283,12 +285,14 @@ class BackupOp implements Closeable {
             throw new BackupException("Could not get cache path", e);
         }
         List<String> cachedKeyStoreFileNames = new ArrayList<>();
+        List<String> keyStoreFilters = new ArrayList<>();
         for (String keyStoreFileName : KeyStoreUtils.getKeyStoreFiles(applicationInfo.uid, userHandle)) {
             try {
                 String newFileName = Utils.replaceOnce(keyStoreFileName, String.valueOf(applicationInfo.uid),
                         String.valueOf(KEYSTORE_PLACEHOLDER));
                 IOUtils.copy(new ProxyFile(keyStorePath, keyStoreFileName), new ProxyFile(cachePath, newFileName));
                 cachedKeyStoreFileNames.add(newFileName);
+                keyStoreFilters.add(Pattern.quote(newFileName));
             } catch (Throwable e) {
                 throw new BackupException("Could not cache " + keyStoreFileName, e);
             }
@@ -300,9 +304,9 @@ class BackupOp implements Closeable {
         File[] backedUpKeyStoreFiles;
         try {
             backedUpKeyStoreFiles = TarUtils.create(metadata.tarType, cachePath, keyStoreSavePath,
-                    cachedKeyStoreFileNames.toArray(new String[0]), null, null, false).toArray(new File[0]);
+                    keyStoreFilters.toArray(new String[0]), null, null, false).toArray(new File[0]);
         } catch (Throwable th) {
-            throw new BackupException("Could not backup KeyStore item.");
+            throw new BackupException("Could not backup KeyStore item.", th);
         }
         // Remove cache
         for (String name : cachedKeyStoreFileNames) {
@@ -320,7 +324,7 @@ class BackupOp implements Closeable {
     }
 
     private void backupExtras() throws BackupException {
-        PseudoRules rules = new PseudoRules(AppManager.getContext(), packageName, userHandle);
+        PseudoRules rules = new PseudoRules(packageName, userHandle);
         File miscFile = backupFile.getMiscFile(CryptoUtils.MODE_NO_ENCRYPTION);
         // Backup permissions
         @NonNull String[] permissions = ArrayUtils.defeatNullable(packageInfo.requestedPermissions);
@@ -351,7 +355,7 @@ class BackupOp implements Closeable {
         }
         // Backup app ops
         for (OpEntry entry : opEntries) {
-            rules.setAppOp(String.valueOf(entry.getOp()), entry.getMode());
+            rules.setAppOp(entry.getOp(), entry.getMode());
         }
         // Backup Magisk status
         if (MagiskUtils.isHidden(packageName)) {
@@ -423,10 +427,9 @@ class BackupOp implements Closeable {
         File rulesFile = backupFile.getRulesFile(CryptoUtils.MODE_NO_ENCRYPTION);
         try (OutputStream outputStream = new ProxyOutputStream(rulesFile);
              ComponentsBlocker cb = ComponentsBlocker.getInstance(packageName, userHandle)) {
-            for (RulesStorageManager.Entry entry : cb.getAll()) {
+            for (RuleEntry entry : cb.getAll()) {
                 // TODO: Do it in ComponentUtils
-                outputStream.write(String.format("%s\t%s\t%s\t%s\n", packageName, entry.name,
-                        entry.type.name(), entry.extra).getBytes());
+                outputStream.write((entry.flattenToString(true) + "\n").getBytes());
             }
         } catch (IOException | RemoteException e) {
             throw new BackupException("Rules backup is requested but encountered an error during fetching rules.", e);

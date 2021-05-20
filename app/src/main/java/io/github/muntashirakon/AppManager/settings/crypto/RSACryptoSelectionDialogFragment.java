@@ -1,19 +1,4 @@
-/*
- * Copyright (c) 2021 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.settings.crypto;
 
@@ -21,7 +6,6 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.widget.Button;
 
-import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
@@ -77,8 +61,8 @@ public class RSACryptoSelectionDialogFragment extends DialogFragment {
                 .setNegativeButton(R.string.pref_import, null)
                 .setNeutralButton(R.string.generate_key, null);
         new Thread(() -> {
-            CharSequence info = getSigningInfo();
             if (isDetached()) return;
+            CharSequence info = getSigningInfo();
             activity.runOnUiThread(() -> builder.setMessage(info));
         }).start();
         if (allowDefault) {
@@ -90,7 +74,7 @@ public class RSACryptoSelectionDialogFragment extends DialogFragment {
         alertDialog.setOnShowListener(dialog -> {
             AlertDialog dialog1 = (AlertDialog) dialog;
             Button defaultOrOkButton = dialog1.getButton(AlertDialog.BUTTON_POSITIVE);
-            Button importButton = dialog1.getButton(AlertDialog.BUTTON_POSITIVE);
+            Button importButton = dialog1.getButton(AlertDialog.BUTTON_NEGATIVE);
             Button generateButton = dialog1.getButton(AlertDialog.BUTTON_NEUTRAL);
             importButton.setOnClickListener(v -> {
                 KeyPairImporterDialogFragment fragment = new KeyPairImporterDialogFragment();
@@ -142,7 +126,7 @@ public class RSACryptoSelectionDialogFragment extends DialogFragment {
         return getString(allowDefault ? R.string.default_key_used : R.string.key_not_set);
     }
 
-    @AnyThread
+    @WorkerThread
     private void addKeyPair(@Nullable char[] password, @Nullable KeyPair keyPair) {
         try {
             if (keyPair == null) {
@@ -154,6 +138,7 @@ public class RSACryptoSelectionDialogFragment extends DialogFragment {
             if (isDetached()) return;
             activity.runOnUiThread(() -> UIUtils.displayShortToast(R.string.done));
             keyPairUpdated();
+            if (isDetached()) return;
             CharSequence info = getSigningInfo();
             activity.runOnUiThread(() -> builder.setMessage(info));
         } catch (Exception e) {

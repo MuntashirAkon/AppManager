@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser;
 
 import net.dongliu.apk.parser.bean.ApkSignStatus;
@@ -10,15 +12,15 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 /**
  * Parse apk file from byte array.
  * This class is not thread-safe
- *
- * @author Liu Dong
  */
+// Copyright 2016 Liu Dong
 public class ByteArrayApkFile extends AbstractApkFile implements Closeable {
 
     private byte[] apkData;
@@ -35,7 +37,7 @@ public class ByteArrayApkFile extends AbstractApkFile implements Closeable {
             ZipEntry entry;
             while ((entry = zis.getNextEntry()) != null) {
                 String name = entry.getName();
-                if (name.toUpperCase().endsWith(".RSA") || name.toUpperCase().endsWith(".DSA")) {
+                if (name.toUpperCase(Locale.ROOT).endsWith(".RSA") || name.toUpperCase(Locale.ROOT).endsWith(".DSA")) {
                     list.add(new CertificateFile(name, Inputs.readAll(zis)));
                 }
             }

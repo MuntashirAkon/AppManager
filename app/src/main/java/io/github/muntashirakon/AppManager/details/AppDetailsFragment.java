@@ -1,19 +1,4 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.details;
 
@@ -29,7 +14,6 @@ import android.content.pm.PathPermission;
 import android.content.pm.PermissionInfo;
 import android.content.pm.ProviderInfo;
 import android.content.pm.ServiceInfo;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -76,6 +60,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
@@ -84,7 +70,7 @@ import io.github.muntashirakon.AppManager.details.struct.AppDetailsComponentItem
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsPermissionItem;
 import io.github.muntashirakon.AppManager.intercept.ActivityInterceptor;
-import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
+import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.servermanager.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
@@ -184,6 +170,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     @Nullable
     AppDetailsViewModel mainModel;
 
+    private final ExecutorService executor = Executors.newFixedThreadPool(3);
+
     private static int mColorGrey1;
     private static int mColorGrey2;
     private static int mColorRed;
@@ -262,18 +250,12 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         mSwipeRefresh.setOnChildScrollUpCallback((parent, child) -> recyclerView.canScrollVertically(-1));
         if (mainModel == null) return;
         if (mPackageName == null) mPackageName = mainModel.getPackageName();
-        // Set adapter only after package info is loaded
-        new Thread(() -> {
-            mPackageName = mainModel.getPackageName();
-            if (mPackageName == null) {
-                mainModel.setPackageInfo(false);
-                mPackageName = mainModel.getPackageName();
-            }
-            isExternalApk = mainModel.getIsExternalApk();
-        }).start();
         mainModel.get(neededProperty).observe(getViewLifecycleOwner(), appDetailsItems -> {
-            if (mAdapter != null && mainModel.isPackageExist())
+            if (appDetailsItems != null && mAdapter != null && mainModel.isPackageExist()) {
+                mPackageName = mainModel.getPackageName();
+                isExternalApk = mainModel.getIsExternalApk();
                 mAdapter.setDefaultList(appDetailsItems);
+            } else showProgressIndicator(false);
         });
         mainModel.getRuleApplicationStatus().observe(getViewLifecycleOwner(), status -> {
             if (neededProperty > APP_INFO && neededProperty <= PROVIDERS) {
@@ -281,6 +263,12 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         View.GONE : View.VISIBLE);
             }
         });
+    }
+
+    @Override
+    public void onDetach() {
+        executor.shutdownNow();
+        super.onDetach();
     }
 
     @Override
@@ -354,7 +342,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         if (id == R.id.action_refresh_details) {
             refreshDetails();
         } else if (id == R.id.action_toggle_blocking) {  // Components
-            if (mainModel != null) new Thread(() -> mainModel.applyRules()).start();
+            if (mainModel != null) {
+                executor.submit(() -> mainModel.applyRules());
+            }
         } else if (id == R.id.action_block_unblock_trackers) {  // Components
             new MaterialAlertDialogBuilder(mActivity)
                     .setTitle(R.string.block_unblock_trackers)
@@ -364,14 +354,14 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     .setNeutralButton(R.string.unblock, (dialog, which) -> blockUnblockTrackers(false))
                     .show();
         } else if (id == R.id.action_reset_to_default) {  // App ops
-            new Thread(() -> {
+            executor.submit(() -> {
                 if (mainModel == null || !mainModel.resetAppOps()) {
-                    runOnUiThread(() -> Toast.makeText(mActivity, R.string.failed_to_reset_app_ops, Toast.LENGTH_SHORT).show());
+                    runOnUiThread(() -> UIUtils.displayShortToast(R.string.failed_to_reset_app_ops));
                 } else runOnUiThread(() -> showProgressIndicator(true));
-            }).start();
+            });
         } else if (id == R.id.action_deny_dangerous_app_ops) {  // App ops
             showProgressIndicator(true);
-            new Thread(() -> {
+            executor.submit(() -> {
                 boolean isSuccessful = true;
                 try {
                     if (mainModel == null || !mainModel.ignoreDangerousAppOps()) {
@@ -385,7 +375,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 } else {
                     runOnUiThread(() -> Toast.makeText(mActivity, R.string.failed_to_deny_dangerous_app_ops, Toast.LENGTH_SHORT).show());
                 }
-            }).start();
+            });
         } else if (id == R.id.action_toggle_default_app_ops) {  // App ops
             showProgressIndicator(true);
             // Turn filter on/off
@@ -416,25 +406,25 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         } catch (IllegalArgumentException e) {
                             return;
                         }
-                        new Thread(() -> {
+                        executor.submit(() -> {
                             if (mainModel != null && mainModel.setAppOp(op, mode)) {
                                 runOnUiThread(this::refreshDetails);
                             } else {
                                 runOnUiThread(() -> Toast.makeText(mActivity,
                                         R.string.failed_to_enable_op, Toast.LENGTH_LONG).show());
                             }
-                        }).start();
+                        });
                     })
                     .setNegativeButton(R.string.cancel, null)
                     .show();
         } else if (id == R.id.action_deny_dangerous_permissions) {  // permissions
             showProgressIndicator(true);
-            new Thread(() -> {
+            executor.submit(() -> {
                 if (mainModel == null || !mainModel.revokeDangerousPermissions()) {
                     runOnUiThread(() -> Toast.makeText(mActivity, R.string.failed_to_deny_dangerous_perms, Toast.LENGTH_SHORT).show());
                 }
                 runOnUiThread(this::refreshDetails);
-            }).start();
+            });
             // Sorting
         } else if (id == R.id.action_sort_by_name) {  // All
             setSortBy(SORT_BY_NAME);
@@ -503,7 +493,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     public void blockUnblockTrackers(boolean block) {
         if (mainModel == null) return;
         List<UserPackagePair> userPackagePairs = Collections.singletonList(new UserPackagePair(mPackageName, Users.getCurrentUserHandle()));
-        new Thread(() -> {
+        executor.submit(() -> {
             List<UserPackagePair> failedPkgList = block ? ComponentUtils.blockTrackingComponents(userPackagePairs)
                     : ComponentUtils.unblockTrackingComponents(userPackagePairs);
             if (failedPkgList.size() > 0) {
@@ -517,7 +507,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 });
             }
             mainModel.setRuleApplicationStatus();
-        }).start();
+        });
     }
 
     private void runOnUiThread(Runnable runnable) {
@@ -531,9 +521,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         mainModel.load(neededProperty);
     }
 
-    synchronized private void applyRules(String componentName, RulesStorageManager.Type type) {
+    synchronized private void applyRules(String componentName, RuleType type) {
         if (mainModel != null) {
-            new Thread(() -> mainModel.updateRulesForComponent(componentName, type)).start();
+            executor.submit(() -> mainModel.updateRulesForComponent(componentName, type));
         }
     }
 
@@ -587,6 +577,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         else mProgressIndicator.hide();
     }
 
+    @SuppressLint("SwitchIntDef") // False negative
     public static boolean isComponentDisabled(@NonNull PackageManager pm, @NonNull ComponentInfo componentInfo) {
         String className = componentInfo.name;
         if (componentInfo instanceof ActivityInfo
@@ -625,12 +616,13 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         private String mConstraint;
         private Boolean isRootEnabled = true;
         private Boolean isADBEnabled = true;
-        private List<String> runningServices;
+        private List<ComponentName> runningServices;
 
         AppDetailsRecyclerAdapter() {
             mAdapterList = new ArrayList<>();
         }
 
+        @UiThread
         void setDefaultList(@NonNull List<AppDetailsItem> list) {
             isRootEnabled = AppPref.isRootEnabled();
             isADBEnabled = AppPref.isAdbEnabled();
@@ -639,11 +631,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             mAdapterList = list;
             showProgressIndicator(false);
             notifyDataSetChanged();
-            new Thread(() -> {
+            executor.submit(() -> {
                 if (requestedProperty == SERVICES && (isRootEnabled || isADBEnabled) && !isExternalApk) {
-                    runningServices = PackageUtils.getRunningServicesForPackage(mPackageName);
+                    runningServices = PackageUtils.getRunningServicesForPackage(mPackageName, mainModel.getUserHandle());
                 }
-            }).start();
+            });
         }
 
         void set(int currentIndex, AppDetailsItem appDetailsItem) {
@@ -652,7 +644,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             notifyItemChanged(currentIndex);
             // Update the value in the app ops list in view model
             if (neededProperty == APP_OPS) {
-                new Thread(() -> mainModel.setAppOp(appDetailsItem)).start();
+                executor.submit(() -> mainModel.setAppOp(appDetailsItem));
             }
         }
 
@@ -953,20 +945,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         return true;
                     });
                 }
-                holder.createBtn.setOnClickListener(v -> {
-                    String iconResourceName = null;
-                    try {
-                        ComponentName activity = new ComponentName(activityInfo.packageName, activityInfo.name);
-                        iconResourceName = mPackageManager.getResourcesForActivity(activity)
-                                .getResourceName(activityInfo.getIconResource());
-                    } catch (PackageManager.NameNotFoundException e) {
-                        Toast.makeText(mActivity, e.toString(), Toast.LENGTH_LONG).show();
-                    } catch (Resources.NotFoundException ignore) {
-                    }
-                    LauncherIconCreator.createLauncherIcon(getActivity(), activityInfo,
-                            (String) activityInfo.loadLabel(mPackageManager),
-                            activityInfo.loadIcon(mPackageManager), iconResourceName);
-                });
+                holder.createBtn.setOnClickListener(v -> LauncherIconCreator.createLauncherIcon(mActivity,
+                        activityInfo, activityInfo.loadLabel(mPackageManager).toString(),
+                        activityInfo.loadIcon(mPackageManager)));
                 holder.editBtn.setOnClickListener(v -> {
                     DialogFragment dialog = new EditShortcutDialogFragment();
                     Bundle args = new Bundle();
@@ -989,7 +970,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 }
                 holder.blockBtn.setVisibility(View.VISIBLE);
                 holder.blockBtn.setOnClickListener(v -> {
-                    applyRules(activityName, RulesStorageManager.Type.ACTIVITY);
+                    applyRules(activityName, RuleType.ACTIVITY);
                     appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
                     set(index, appDetailsItem);
                 });
@@ -1002,8 +983,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             final ServiceInfo serviceInfo = (ServiceInfo) appDetailsItem.vanillaItem;
             final boolean isDisabled = !isExternalApk && isComponentDisabled(mPackageManager, serviceInfo);
             // Background color: regular < tracker < disabled < blocked < running
-            if (runningServices != null && runningServices.contains(serviceInfo.name))
-                view.setBackgroundColor(mColorRunning);
+            if (runningServices != null && runningServices.contains(new ComponentName(serviceInfo.packageName,
+                    serviceInfo.name))) view.setBackgroundColor(mColorRunning);
             else if (!isExternalApk && appDetailsItem.isBlocked) view.setBackgroundColor(mColorRed);
             else if (isDisabled) view.setBackgroundColor(mColorDisabled);
             else if (appDetailsItem.isTracker) view.setBackgroundColor(mColorTracker);
@@ -1053,7 +1034,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 }
                 holder.blockBtn.setVisibility(View.VISIBLE);
                 holder.blockBtn.setOnClickListener(v -> {
-                    applyRules(serviceInfo.name, RulesStorageManager.Type.SERVICE);
+                    applyRules(serviceInfo.name, RuleType.SERVICE);
                     appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
                     set(index, appDetailsItem);
                 });
@@ -1106,7 +1087,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 }
                 holder.blockBtn.setVisibility(View.VISIBLE);
                 holder.blockBtn.setOnClickListener(v -> {
-                    applyRules(activityInfo.name, RulesStorageManager.Type.RECEIVER);
+                    applyRules(activityInfo.name, RuleType.RECEIVER);
                     appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
                     set(index, appDetailsItem);
                 });
@@ -1182,7 +1163,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 }
                 holder.blockBtn.setVisibility(View.VISIBLE);
                 holder.blockBtn.setOnClickListener(v -> {
-                    applyRules(providerName, RulesStorageManager.Type.PROVIDER);
+                    applyRules(providerName, RuleType.PROVIDER);
                     appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
                     set(index, appDetailsItem);
                     notifyItemChanged(index);
@@ -1290,9 +1271,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             holder.toggleSwitch.setChecked(opEntry.getMode() == AppOpsManager.MODE_ALLOWED);
             holder.toggleSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (buttonView.isPressed()) {
-                    new Thread(() -> {
+                    executor.submit(() -> {
                         int opMode = isChecked ? AppOpsManager.MODE_ALLOWED : AppOpsManager.MODE_IGNORED;
-                        if (mainModel.setAppOp(opEntry.getOp(), opMode)) {
+                        if (mainModel != null && mainModel.setAppOp(opEntry.getOp(), opMode)) {
                             OpEntry opEntry1 = new OpEntry(opEntry.getOp(), opMode, opEntry.getTime(),
                                     opEntry.getRejectTime(), opEntry.getDuration(),
                                     opEntry.getProxyUid(), opEntry.getProxyPackageName());
@@ -1301,11 +1282,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                             runOnUiThread(() -> set(index, appDetailsItem));
                         } else {
                             runOnUiThread(() -> {
-                                Toast.makeText(mActivity, isChecked ? R.string.failed_to_enable_op : R.string.app_op_cannot_be_disabled, Toast.LENGTH_LONG).show();
+                                UIUtils.displayLongToast(isChecked ? R.string.failed_to_enable_op : R.string.app_op_cannot_be_disabled);
                                 notifyItemChanged(index);
                             });
                         }
-                    }).start();
+                    });
                 }
             });
             holder.itemView.setOnLongClickListener(v -> {
@@ -1314,7 +1295,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         .setTitle(R.string.set_app_op_mode)
                         .setSingleChoiceItems(getAppOpModeNames(modes), modes.indexOf(opEntry.getMode()), (dialog, which) -> {
                             int opMode = modes.get(which);
-                            new Thread(() -> {
+                            executor.submit(() -> {
                                 if (mainModel.setAppOp(opEntry.getOp(), opMode)) {
                                     OpEntry opEntry1 = new OpEntry(opEntry.getOp(), opMode, opEntry.getTime(),
                                             opEntry.getRejectTime(), opEntry.getDuration(),
@@ -1328,7 +1309,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                                         notifyItemChanged(index);
                                     });
                                 }
-                            }).start();
+                            });
                             dialog.dismiss();
                         })
                         .show();
@@ -1385,7 +1366,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 holder.toggleSwitch.setChecked(permissionItem.isGranted);
                 holder.toggleSwitch.setOnCheckedChangeListener((buttonView, isGranted) -> {
                     if (buttonView.isPressed()) {
-                        new Thread(() -> {
+                        executor.submit(() -> {
                             if (mainModel.setPermission(permName, isGranted)) {
                                 AppDetailsPermissionItem appDetailsItem = new AppDetailsPermissionItem(permissionItem);
                                 appDetailsItem.isGranted = isGranted;
@@ -1397,7 +1378,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                                     notifyItemChanged(index);
                                 });
                             }
-                        }).start();
+                        });
                     }
                 });
             } else holder.toggleSwitch.setVisibility(View.GONE);

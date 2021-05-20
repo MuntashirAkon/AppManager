@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.bean;
 
 import net.dongliu.apk.parser.AbstractApkFile;
@@ -9,9 +11,8 @@ import androidx.annotation.Nullable;
 
 /**
  * Apk meta info
- *
- * @author dongliu
  */
+// Copyright 2014 Liu Dong
 public class ApkMeta {
 
     private final String packageName;

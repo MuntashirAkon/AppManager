@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later
 package io.github.muntashirakon.AppManager.server.common;
 
 import android.content.ComponentName;
@@ -6,6 +7,7 @@ import android.os.Looper;
 
 import java.lang.reflect.Method;
 
+// Copyright 2020 John "topjohnwu" Wu
 // Must be accessed via reflection
 public final class ServerUtils {
     public static final String CMDLINE_STOP_SERVER = "stopServer";

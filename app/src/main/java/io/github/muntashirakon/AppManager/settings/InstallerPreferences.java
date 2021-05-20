@@ -1,22 +1,8 @@
-/*
- * Copyright (c) 2021 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.settings;
 
+import android.annotation.SuppressLint;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -35,6 +21,8 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagMatchUninstalled;
 
 public class InstallerPreferences extends PreferenceFragmentCompat {
     private static final int[] installLocationNames = new int[]{
@@ -92,7 +80,8 @@ public class InstallerPreferences extends PreferenceFragmentCompat {
                         activity.progressIndicator.show();
                         new Thread(() -> {
                             // List apps
-                            List<PackageInfo> packageInfoList = pm.getInstalledPackages(PackageManager.MATCH_UNINSTALLED_PACKAGES);
+                            @SuppressLint("WrongConstant")
+                            List<PackageInfo> packageInfoList = pm.getInstalledPackages(flagMatchUninstalled);
                             ArrayList<String> items = new ArrayList<>(packageInfoList.size());
                             ArrayList<CharSequence> itemNames = new ArrayList<>(packageInfoList.size());
                             for (PackageInfo info : packageInfoList) {
@@ -139,5 +128,8 @@ public class InstallerPreferences extends PreferenceFragmentCompat {
         // Sign apk before install
         ((SwitchPreferenceCompat) Objects.requireNonNull(findPreference("installer_sign_apk")))
                 .setChecked((boolean) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_SIGN_APK_BOOL));
+        // Display changes
+        ((SwitchPreferenceCompat) Objects.requireNonNull(findPreference("installer_display_changes")))
+                .setChecked((boolean) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_DISPLAY_CHANGES_BOOL));
     }
 }

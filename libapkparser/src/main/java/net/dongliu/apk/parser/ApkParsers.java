@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: BSD-2-Clause AND GPL-3.0-or-later
+
 package net.dongliu.apk.parser;
 
 import net.dongliu.apk.parser.bean.ApkMeta;
@@ -8,9 +10,8 @@ import java.util.Locale;
 
 /**
  * Convenient utils method for parse apk file
- *
- * @author Liu Dong
  */
+// Copyright 2016 Liu Dong
 public class ApkParsers {
     /**
      * Get apk meta info for apk file

@@ -1,19 +1,4 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.settings;
 
@@ -27,7 +12,10 @@ import android.content.pm.PackageManager;
 import android.content.pm.UserInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.RemoteException;
+import android.text.Editable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.format.Formatter;
@@ -38,7 +26,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.collection.ArrayMap;
 import androidx.core.app.ActivityCompat;
@@ -46,6 +37,7 @@ import androidx.core.os.LocaleListCompat;
 import androidx.core.text.HtmlCompat;
 import androidx.core.util.Pair;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
@@ -55,6 +47,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.yariksoffice.lingver.Lingver;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.security.Provider;
 import java.security.Security;
 import java.util.ArrayList;
@@ -62,21 +55,28 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.concurrent.CountDownLatch;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.StaticDataset;
+import io.github.muntashirakon.AppManager.adb.AdbConnectionManager;
 import io.github.muntashirakon.AppManager.misc.SystemProperties;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
+import io.github.muntashirakon.AppManager.servermanager.LocalServer;
+import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.AppManager.settings.crypto.ImportExportKeyStoreDialogFragment;
 import io.github.muntashirakon.AppManager.types.FullscreenDialog;
 import io.github.muntashirakon.AppManager.types.ScrollableDialogBuilder;
+import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
+import io.github.muntashirakon.AppManager.types.TextInputDropdownDialogBuilder;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.io.ProxyFileReader;
 
@@ -96,7 +96,8 @@ public class MainPreferences extends PreferenceFragmentCompat {
     private static final List<String> MODE_NAMES = Arrays.asList(
             Runner.MODE_AUTO,
             Runner.MODE_ROOT,
-            Runner.MODE_ADB,
+            Runner.MODE_ADB_OVER_TCP,
+            Runner.MODE_ADB_WIFI,
             Runner.MODE_NO_ROOT);
 
     SettingsActivity activity;
@@ -179,8 +180,19 @@ public class MainPreferences extends PreferenceFragmentCompat {
         mode.setOnPreferenceClickListener(preference -> {
             new MaterialAlertDialogBuilder(activity)
                     .setTitle(R.string.pref_mode_of_operations)
-                    .setSingleChoiceItems(modes, MODE_NAMES.indexOf(currentMode),
-                            (dialog, which) -> currentMode = MODE_NAMES.get(which))
+                    .setSingleChoiceItems(modes, MODE_NAMES.indexOf(currentMode), (dialog, which) -> {
+                        String modeName = MODE_NAMES.get(which);
+                        if (Runner.MODE_ADB_WIFI.equals(modeName)) {
+                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+                                UIUtils.displayShortToast(R.string.wireless_debugging_not_supported);
+                                return;
+                            }
+                        } else {
+                            ServerConfig.setAdbPort(ServerConfig.DEFAULT_ADB_PORT);
+                            LocalServer.updateConfig();
+                        }
+                        currentMode = modeName;
+                    })
                     .setPositiveButton(R.string.apply, (dialog, which) -> {
                         AppPref.set(AppPref.PrefKey.PREF_MODE_OF_OPS_STR, currentMode);
                         mode.setSummary(modes[MODE_NAMES.indexOf(currentMode)]);
@@ -268,6 +280,44 @@ public class MainPreferences extends PreferenceFragmentCompat {
             } else localesL[i] = locale.getDisplayName(locale);
         }
         return localesL;
+    }
+
+    @UiThread
+    public static void displayAdbConnect(FragmentActivity activity, CountDownLatch waitForConfig) {
+        AlertDialog alertDialog = new TextInputDialogBuilder(activity, R.string.port_number)
+                .setTitle(R.string.wireless_debugging)
+                .setInputText(String.valueOf(ServerConfig.getAdbPort()))
+                .setHelperText(R.string.adb_connect_port_number_description)
+                .setPositiveButton(R.string.ok, (dialog2, which2, inputText, isChecked) -> {
+                    if (TextUtils.isEmpty(inputText)) {
+                        UIUtils.displayShortToast(R.string.port_number_empty);
+                        waitForConfig.countDown();
+                        return;
+                    }
+                    int port;
+                    try {
+                        port = Integer.decode(inputText.toString().trim());
+                    } catch (NumberFormatException e) {
+                        UIUtils.displayShortToast(R.string.port_number_invalid);
+                        waitForConfig.countDown();
+                        return;
+                    }
+                    new Thread(() -> {
+                        try {
+                            ServerConfig.setAdbPort(port);
+                            LocalServer.updateConfig();
+                            LocalServer.restart();
+                        } catch (IOException | RemoteException e) {
+                            e.printStackTrace();
+                        } finally {
+                            waitForConfig.countDown();
+                        }
+                    }).start();
+                })
+                .setNegativeButton(R.string.cancel, (dialog, which, inputText, isChecked) -> waitForConfig.countDown())
+                .create();
+        alertDialog.setCancelable(false);
+        alertDialog.show();
     }
 
     @WorkerThread

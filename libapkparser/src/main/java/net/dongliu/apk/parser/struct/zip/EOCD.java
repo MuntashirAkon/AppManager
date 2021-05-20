@@ -1,8 +1,11 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.struct.zip;
 
 /**
  * End of central directory record
  */
+// Copyright 2017 hsiafan
 public class EOCD {
     public static final int SIGNATURE = 0x06054b50;
     //    private int signature;

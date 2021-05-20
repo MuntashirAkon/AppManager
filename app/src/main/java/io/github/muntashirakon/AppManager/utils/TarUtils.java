@@ -1,24 +1,10 @@
-/*
- * Copyright (c) 2021 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.utils;
 
 import android.os.RemoteException;
 import android.system.ErrnoException;
+import android.system.OsConstants;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -195,8 +181,7 @@ public final class TarUtils {
                     }
                     // Fix permissions
                     try {
-                        ProxyFiles.chmod(file, entry.getMode());
-                        ProxyFiles.chown(file, entry.getUserId(), entry.getGroupId());
+                        ProxyFiles.setPermissions(file, entry.getMode(), entry.getUserId(), entry.getGroupId());
                     } catch (RuntimeException e) {
                         if (e.getMessage() == null || !e.getMessage().contains("mocked")) {
                             throw e;
@@ -217,7 +202,7 @@ public final class TarUtils {
     static void gatherFiles(@NonNull List<File> files, @NonNull File basePath, @NonNull File source,
                             @Nullable String[] filters, @Nullable String[] exclude, boolean followLinks)
             throws ErrnoException, RemoteException {
-        if (source.isDirectory()) {
+        if (source.isDirectory()) {  // OsConstants#S_ISDIR
             // Is a directory, add only the directory if it's a symboilic link and followLinks is disabled
             if (!followLinks && isSymbolicLink(source)) {
                 files.add(source);
@@ -239,7 +224,7 @@ public final class TarUtils {
             for (File child : children) {
                 gatherFiles(files, basePath, child, filters, exclude, followLinks);
             }
-        } else if (source.isFile()) {
+        } else if (source.isFile()) {  // OsConstants#S_ISREG
             // Not directory, add it
             files.add(source);
         } // else we don't support other type of files
@@ -249,7 +234,7 @@ public final class TarUtils {
         try {
             FileStatus lstat = ProxyFiles.lstat(file);
             // https://github.com/win32ports/unistd_h/blob/master/unistd.h
-            return (lstat.st_mode & 0xF000) == 0xA000;
+            return OsConstants.S_ISLNK(lstat.st_mode);
         } catch (RuntimeException e) {
             if (e.getMessage() == null || !e.getMessage().contains("mocked")) {
                 throw e;

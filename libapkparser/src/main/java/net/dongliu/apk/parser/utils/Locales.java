@@ -1,10 +1,10 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.utils;
 
 import java.util.Locale;
 
-/**
- * @author dongliu
- */
+// Copyright 2018 Liu Dong
 public class Locales {
 
     /**

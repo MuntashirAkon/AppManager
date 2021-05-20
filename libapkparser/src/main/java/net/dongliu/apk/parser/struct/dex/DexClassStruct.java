@@ -1,8 +1,8 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.struct.dex;
 
-/**
- * @author dongliu
- */
+// Copyright 2014 Liu Dong
 public class DexClassStruct {
     /* index into typeIds for this class. u4 */
     private int classIdx;

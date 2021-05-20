@@ -1,20 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (C) 2020 Muntashir Al-Islam
-  ~
-  ~ This program is free software: you can redistribute it and/or modify
-  ~ it under the terms of the GNU General Public License as published by
-  ~ the Free Software Foundation, either version 3 of the License, or
-  ~ (at your option) any later version.
-  ~
-  ~ This program is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~ GNU General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU General Public License
-  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="_lang_tag" translatable="false">bn-BD</string>
     <string name="uninstall">আনইনস্টল</string>
     <string name="require_no_permission">কোন অনুমতির প্রয়োজন নেই</string>
@@ -299,7 +285,6 @@
     <string name="full_stop_tap_to_see_details">. বিবরণ দেখার জন্য ট্যাপ করুন।</string>
     <string name="try_again">পুনরায় চেষ্টা করুন</string>
     <string name="install_app_message">আপনি কি এই অ্যাপটি ইনস্টল করতে চান?</string>
-    <string name="reinstall_app_message">আপনি কি এই অ্যাপটি পুনরায় ইনস্টল করতে চান?</string>
     <string name="reinstall">পুনরায় ইনস্টল করুন</string>
     <string name="unblock_trackers">ট্র্যাকারসমূহ আনব্লক করুন</string>
     <string name="install_in_progress">ইনস্টল হচ্ছে</string>
@@ -383,7 +368,6 @@
     <string name="failed_to_extract_obb_files">Obb ফাইলগুলি এক্সট্র্যাক্ট করতে ব্যর্থ</string>
     <string name="backup_obb_media">Backup Obb</string>
     <string name="backup_apk_files">শুধু এপিকে</string>
-    <string name="website_message">https://muntashirakon.github.io/AppManager</string>
     <string name="no_matching_package_found">কোনো প্যাকেজের সাথে মিল পাওয়া যায়নি</string>
     <string name="skip_signature_checks">স্বাক্ষর চেকগুলি এড়িয়ে যান</string>
     <string name="backup_options">Backup Options</string>

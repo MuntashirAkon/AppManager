@@ -1,16 +1,17 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 package io.github.muntashirakon.AppManager.rules;
 
-import android.content.Context;
+import android.os.RemoteException;
+
+import androidx.annotation.NonNull;
 
 import java.io.File;
 import java.io.IOException;
 
-import android.os.RemoteException;
-import androidx.annotation.NonNull;
-
 public class PseudoRules extends RulesStorageManager {
-    public PseudoRules(@NonNull Context context, @NonNull String packageName, int userHandle) {
-        super(context, packageName, userHandle);
+    public PseudoRules(@NonNull String packageName, int userHandle) {
+        super(packageName, userHandle);
         setReadOnly();
     }
 

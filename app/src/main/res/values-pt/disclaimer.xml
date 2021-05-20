@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <resources>
     <string name="disclaimer_exit">Sair</string>
     <string name="disclaimer_agree">Eu Concordo</string>
     <string name="disclaimer_agree_forever">Nunca mostrar novamente</string>
-    <string name="disclaimer_footer">© 2020 Muntashir Al-Islam</string>
+    <string name="disclaimer_footer">© 2020–2021 Muntashir Al-Islam</string>
     <string name="disclaimer_body">O App Manager oferece funções Root que podem eventualmente prejudicar o seu aparelho, se utilizado incorretamente. O App Manager não é responsável por quaisquer danos causados pela utilização desta aplicação. Se não estiver totalmente consciente de como o modo Root funciona, então deve evitar utilizar essas opções até estar plenamente consciente dos riscos.
 \n
 \nQualquer link que eu forneça para outras apps e websites é para o benefício dos utilizadores. Não sou responsável por qualquer conteúdo que possa encontrar através de links externos.

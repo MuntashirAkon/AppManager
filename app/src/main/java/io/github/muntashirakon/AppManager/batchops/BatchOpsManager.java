@@ -1,22 +1,8 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.batchops;
 
+import android.annotation.UserIdInt;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -55,8 +41,8 @@ import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.rules.compontents.ExternalComponentsImporter;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
-import io.github.muntashirakon.AppManager.users.UserIdInt;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -360,7 +346,7 @@ public class BatchOpsManager {
         }
         for (UserPackagePair pair : appliedPackages) {
             try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserHandle())) {
-                cb.setAppOp(String.valueOf(AppOpsManager.OP_RUN_IN_BACKGROUND), AppOpsManager.MODE_IGNORED);
+                cb.setAppOp(AppOpsManager.OP_RUN_IN_BACKGROUND, AppOpsManager.MODE_IGNORED);
             }
         }
         return new Result(failedPackages);
@@ -377,9 +363,9 @@ public class BatchOpsManager {
                     if (permissions == null) continue;
                     for (String permission : permissions) {
                         if (isGrant) {
-                            PackageManagerCompat.grantPermission(pair.getPackageName(), permission, pair.getUserHandle());
+                            PermissionCompat.grantPermission(pair.getPackageName(), permission, pair.getUserHandle());
                         } else {
-                            PackageManagerCompat.revokePermission(pair.getPackageName(), permission, pair.getUserHandle());
+                            PermissionCompat.revokePermission(pair.getPackageName(), permission, pair.getUserHandle());
                         }
                     }
                 } catch (Throwable e) {
@@ -392,9 +378,9 @@ public class BatchOpsManager {
                 for (String permission : permissions) {
                     try {
                         if (isGrant) {
-                            PackageManagerCompat.grantPermission(pair.getPackageName(), permission, pair.getUserHandle());
+                            PermissionCompat.grantPermission(pair.getPackageName(), permission, pair.getUserHandle());
                         } else {
-                            PackageManagerCompat.revokePermission(pair.getPackageName(), permission, pair.getUserHandle());
+                            PermissionCompat.revokePermission(pair.getPackageName(), permission, pair.getUserHandle());
                         }
                     } catch (Throwable e) {
                         Log.e(TAG, e);

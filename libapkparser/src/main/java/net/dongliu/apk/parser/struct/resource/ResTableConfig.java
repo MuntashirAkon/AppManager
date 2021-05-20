@@ -1,12 +1,13 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.struct.resource;
 
 import net.dongliu.apk.parser.utils.Unsigned;
 
 /**
  * used by resource Type.
- *
- * @author dongliu
  */
+// Copyright 2014 Liu Dong
 public class ResTableConfig {
     // Number of bytes in this structure. uint32_t
     private int size;

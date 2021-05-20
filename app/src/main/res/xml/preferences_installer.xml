@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -24,6 +24,12 @@
         app:key="installer_installer_app"
         app:title="@string/installer_app"
         tools:summary="App Manager"
+        app:iconSpaceReserved="false" />
+
+    <SwitchPreferenceCompat
+        app:key="installer_display_changes"
+        app:title="@string/pref_display_changes"
+        app:summary="@string/pref_display_changes_msg"
         app:iconSpaceReserved="false" />
 
 </PreferenceScreen>

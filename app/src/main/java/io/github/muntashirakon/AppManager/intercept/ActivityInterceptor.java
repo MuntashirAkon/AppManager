@@ -1,20 +1,4 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- * Copyright (C) 2012-2014 Intrications
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.intercept;
 
@@ -65,11 +49,15 @@ import java.util.Set;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.types.TextInputDropdownDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
+// Copyright 2012 Intrications
 public class ActivityInterceptor extends BaseActivity {
+    public static final String TAG = ActivityInterceptor.class.getSimpleName();
+
     public static final String EXTRA_PACKAGE_NAME = BuildConfig.APPLICATION_ID + ".intent.extra.PACKAGE_NAME";
     public static final String EXTRA_CLASS_NAME = BuildConfig.APPLICATION_ID + ".intent.extra.CLASS_NAME";
 
@@ -545,11 +533,16 @@ public class ActivityInterceptor extends BaseActivity {
 
         // Send Intent on clicking the resend intent button
         resendIntentButton.setOnClickListener(v -> {
-            if (requestedComponent == null) {
-                launcher.launch(Intent.createChooser(mutableIntent, resendIntentButton.getText()));
-            } else {
-                mutableIntent.setComponent(requestedComponent);
-                launcher.launch(mutableIntent);
+            try {
+                if (requestedComponent == null) {
+                    launcher.launch(Intent.createChooser(mutableIntent, resendIntentButton.getText()));
+                } else {
+                    mutableIntent.setComponent(requestedComponent);
+                    launcher.launch(mutableIntent);
+                }
+            } catch (Throwable th) {
+                Log.e(TAG, th);
+                Toast.makeText(this, th.getClass().getName() + ": " + th.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
         // Reset Intent data on clicking the reset intent button
@@ -716,7 +709,7 @@ public class ActivityInterceptor extends BaseActivity {
                             || thisObject instanceof Boolean
                             || thisObject instanceof Uri) {
                         result.append(getString(R.string.value)).append(BLANK)
-                                .append(thisObject.toString())
+                                .append(thisObject)
                                 .append(NEWLINE);
                     } else if (thisObject instanceof ArrayList) {
                         result.append(getString(R.string.value)).append(NEWLINE);
@@ -794,8 +787,9 @@ public class ActivityInterceptor extends BaseActivity {
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(INTENT_EDITED,
-                resetIntentButton.getVisibility() == View.VISIBLE);
+        if (resetIntentButton != null) {
+            outState.putBoolean(INTENT_EDITED, resetIntentButton.getVisibility() == View.VISIBLE);
+        }
         if (mHistory != null) mHistory.saveHistory();
     }
 
@@ -806,8 +800,11 @@ public class ActivityInterceptor extends BaseActivity {
     private Intent cloneIntent(String intentUri) {
         if (intentUri != null) {
             try {
-                Intent clone = Intent.parseUri(intentUri, Intent.URI_INTENT_SCHEME | Intent.URI_ANDROID_APP_SCHEME
-                        | Intent.URI_ALLOW_UNSAFE);
+                Intent clone;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP_MR1) {
+                    clone = Intent.parseUri(intentUri, Intent.URI_INTENT_SCHEME | Intent.URI_ANDROID_APP_SCHEME
+                            | Intent.URI_ALLOW_UNSAFE);
+                } else clone = Intent.parseUri(intentUri, Intent.URI_INTENT_SCHEME);
                 // Restore extras that are lost in the intent to string conversion
                 if (additionalExtras != null) {
                     clone.putExtras(additionalExtras);

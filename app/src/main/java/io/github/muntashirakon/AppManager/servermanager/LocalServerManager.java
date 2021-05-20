@@ -1,36 +1,21 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: MIT AND GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.servermanager;
 
 import android.os.SystemClock;
 import android.text.TextUtils;
 
-import com.tananaev.adblib.AdbConnection;
-import com.tananaev.adblib.AdbStream;
+import androidx.annotation.NonNull;
+import androidx.annotation.WorkerThread;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.WorkerThread;
+import io.github.muntashirakon.AppManager.adb.AdbConnection;
 import io.github.muntashirakon.AppManager.adb.AdbConnectionManager;
+import io.github.muntashirakon.AppManager.adb.AdbStream;
 import io.github.muntashirakon.AppManager.adb.LineReader;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.runner.Runner;
@@ -42,6 +27,7 @@ import io.github.muntashirakon.AppManager.server.common.DataTransmission;
 import io.github.muntashirakon.AppManager.server.common.ParcelableUtil;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 
+// Copyright 2016 Zheng Li
 class LocalServerManager {
     private static final String TAG = "LocalServerManager";
 
@@ -210,9 +196,9 @@ class LocalServerManager {
             }
         }
 
-        Log.d(TAG, "useAdbStartServer: connecting...");
+        Log.d(TAG, "useAdbStartServer: connecting using host=" + mConfig.adbHost + ", port=" + mConfig.adbPort);
         try {
-            connection = AdbConnectionManager.connect(mConfig.context, mConfig.adbHost, mConfig.adbPort);
+            connection = AdbConnectionManager.connect(mConfig.adbHost, mConfig.adbPort);
         } catch (Exception e) {
             Log.e(TAG, "useAdbStartServer: unable to connect.", e);
             if (connection != null) {
@@ -252,7 +238,7 @@ class LocalServerManager {
             } catch (IOException | InterruptedException e) {
                 Log.e(TAG, "useAdbStartServer: unable to read from shell.", e);
             }
-            Log.e(TAG, "useAdbStartServer: " + sb.toString());
+            Log.e(TAG, "useAdbStartServer: " + sb);
         }).start();
 
         try {

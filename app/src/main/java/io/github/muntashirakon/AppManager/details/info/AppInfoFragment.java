@@ -1,19 +1,4 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.details.info;
 
@@ -54,6 +39,7 @@ import android.widget.TextView;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.AnyThread;
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.GuardedBy;
@@ -141,6 +127,7 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.SsaidSettings;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.io.ProxyFile;
 
@@ -157,7 +144,6 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     public static final String TAG = "AppInfoFragment";
 
     private static final String PACKAGE_NAME_AURORA_STORE = "com.aurora.store";
-    private static final String ACTIVITY_NAME_AURORA_STORE = "com.aurora.store.ui.details.DetailsActivity";
 
     private PackageManager mPackageManager;
     private String mPackageName;
@@ -255,7 +241,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         });
         // Set observer
         mainModel.get(AppDetailsFragment.APP_INFO).observe(getViewLifecycleOwner(), appDetailsItems -> {
-            if (!appDetailsItems.isEmpty() && mainModel.isPackageExist()) {
+            if (appDetailsItems != null && !appDetailsItems.isEmpty() && mainModel.isPackageExist()) {
                 AppDetailsItem appDetailsItem = appDetailsItems.get(0);
                 mPackageInfo = (PackageInfo) appDetailsItem.vanillaItem;
                 mPackageName = appDetailsItem.name;
@@ -272,7 +258,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 versionView.setText(version);
                 // Set others
                 executor.submit(this::loadPackageInfo);
-            }
+            } else showProgressIndicator(false);
         });
         model.getPackageLabel().observe(getViewLifecycleOwner(), packageLabel -> {
             mPackageLabel = packageLabel;
@@ -281,7 +267,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         });
         iconView.setOnClickListener(v -> {
             ClipboardManager clipboard = (ClipboardManager) mActivity.getSystemService(Context.CLIPBOARD_SERVICE);
-            new Thread(() -> {
+            executor.submit(() -> {
                 ClipData clipData = clipboard.getPrimaryClip();
                 if (clipData != null && clipData.getItemCount() > 0) {
                     String data = clipData.getItemAt(0).getText().toString().trim().toLowerCase(Locale.ROOT);
@@ -303,7 +289,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         runOnUiThread(() -> displayLongToast(R.string.not_verified));
                     }
                 }
-            }).start();
+            });
         });
         setupTagCloud();
         setupVerticalView();
@@ -676,14 +662,18 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             if (tagCloud.runningServices.size() > 0) {
                 addChip(R.string.running, R.color.running).setOnClickListener(v -> {
                     mProgressIndicator.show();
-                    new Thread(() -> {
+                    executor.submit(() -> {
                         int pid = FeatureController.isLogViewerEnabled() ? PackageUtils.getPidForPackage(mPackageName,
                                 mApplicationInfo.uid) : 0;
+                        CharSequence[] runningServices = new CharSequence[tagCloud.runningServices.size()];
+                        for (int i = 0; i < runningServices.length; ++i) {
+                            runningServices[i] = tagCloud.runningServices.get(i).getClassName();
+                        }
                         runOnUiThread(() -> {
                             mProgressIndicator.hide();
                             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(mActivity)
                                     .setTitle(R.string.running_services)
-                                    .setItems(tagCloud.runningServices.toArray(new String[0]), null)
+                                    .setItems(runningServices, null)
                                     .setPositiveButton(R.string.force_stop, (dialog, which) -> executor.submit(() -> {
                                         try {
                                             PackageManagerCompat.forceStopPackage(mPackageName, mainModel.getUserHandle());
@@ -705,7 +695,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                             }
                             builder.show();
                         });
-                    }).start();
+                    });
                 });
             }
             if (tagCloud.isForceStopped) {
@@ -713,6 +703,12 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             }
             if (!tagCloud.isAppEnabled) {
                 addChip(R.string.disabled_app, R.color.disabled_user);
+            }
+            if (tagCloud.isAppSuspended) {
+                addChip(R.string.suspended, R.color.stopped);
+            }
+            if (tagCloud.isAppHidden) {
+                addChip(R.string.hidden, R.color.disabled_user);
             }
             if (tagCloud.isMagiskHideEnabled) {
                 addChip(R.string.magisk_hide_enabled).setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
@@ -1116,10 +1112,10 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 throw new PackageManager.NameNotFoundException();
             addToHorizontalLayout(R.string.store, R.drawable.ic_frost_aurorastore_black_24dp)
                     .setOnClickListener(v -> {
-                        Intent intent = new Intent();
-                        intent.setClassName(PACKAGE_NAME_AURORA_STORE, ACTIVITY_NAME_AURORA_STORE);
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setPackage(PACKAGE_NAME_AURORA_STORE);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putExtra("INTENT_PACKAGE_NAME", mPackageName);
+                        intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=" + mPackageName));
                         try {
                             startActivity(intent);
                         } catch (Exception ignored) {
@@ -1341,14 +1337,14 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 }));
             }
         }
-        if (!Utils.hasUsageStatsPermission(mActivity)) {
+        if (!PermissionUtils.hasUsageStatsPermission(mActivity)) {
             runOnUiThread(() -> new MaterialAlertDialogBuilder(mActivity)
                     .setTitle(R.string.grant_usage_access)
                     .setMessage(R.string.grant_usage_acess_message)
                     .setPositiveButton(R.string.go, (dialog, which) -> {
                         try {
                             activityLauncher.launch(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS), result -> {
-                                if (Utils.hasUsageStatsPermission(mActivity)) {
+                                if (PermissionUtils.hasUsageStatsPermission(mActivity)) {
                                     FeatureController.getInstance().modifyState(FeatureController
                                             .FEAT_USAGE_ACCESS, true);
                                     // Reload app info
@@ -1431,7 +1427,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         else mProgressIndicator.hide();
     }
 
+    @AnyThread
     private void runOnUiThread(Runnable runnable) {
-        mActivity.runOnUiThread(runnable);
+        UiThreadHandler.run(runnable);
     }
 }

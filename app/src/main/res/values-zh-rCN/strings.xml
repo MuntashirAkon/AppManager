@@ -1,20 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (C) 2020 Muntashir Al-Islam
-  ~
-  ~ This program is free software: you can redistribute it and/or modify
-  ~ it under the terms of the GNU General Public License as published by
-  ~ the Free Software Foundation, either version 3 of the License, or
-  ~ (at your option) any later version.
-  ~
-  ~ This program is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~ GNU General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU General Public License
-  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
     <string name="_lang_tag" translatable="false">zh-CN</string>
     <string name="uninstall">卸载</string>
     <string name="permissions">系统预定义权限</string>
@@ -111,21 +96,25 @@
     <string name="credits">鸣谢</string>
     <string name="credits_message">致谢下列项目的作者
 \n- The Android Open Source Project
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
-\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
-\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
+\n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
+\n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
+\n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a>
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
-\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
-\n原始图标致谢：<a href="https://github.com/Atrate">Atrate</a>. </string>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
+\nOriginal logo credit: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="word_wrap">自动换行</string>
     <string name="class_viewer">类查看器</string>
     <string name="toggle_class_listing">切换类列表</string>
-    <string name="tested_signatures_on_classes_and_time_taken">测试了 <xliff:g id="signature_no" example="342">%1$d</xliff:g> 个签名在 <xliff:g id="class_no" example="6000">%2$d</xliff:g> 个 classes 上.
-\n所花时间 <xliff:g id="time" example="10000">%3$d</xliff:g> 毫秒(<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> 迭代器).</string>
+    <string name="tested_signatures_on_classes_and_time_taken">测试了 <xliff:g id="signature_no" example="342">%1$d</xliff:g> 特征码于<xliff:g id="class_no" example="6000">%2$d</xliff:g> 个 classes。
+\n耗费时间 <xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> 迭代)。</string>
     <string name="found_trackers">已找到追踪器:</string>
     <string name="tracker_details">追踪器详细信息</string>
     <string name="tracker_classes">追踪器类</string>
@@ -163,7 +152,7 @@
     <string name="native_library_dir">原生的java本地接口目录</string>
     <string name="process_name">进程名称</string>
     <string name="no_code">没有代码</string>
-    <string name="requested_large_heap">堆大小</string>
+    <string name="requested_large_heap">大内存</string>
     <string name="updated_app">更新</string>
     <string name="debuggable">可调试</string>
     <string name="test_only">仅测试</string>
@@ -363,7 +352,7 @@
     <plurals name="no_of_splits">
         <item quantity="other">%1$d 个拆分</item>
     </plurals>
-    <string name="termux">Termux</string>
+    <string name="termux">Termux 终端模拟器</string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> 已安装</string>
     <string name="failed_to_install_package_name">无法安装<xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
     <string name="filter">筛选器</string>
@@ -418,9 +407,8 @@
     <string name="open_in_termux">在 Termux 中打开</string>
     <string name="run_in_termux">在 Termux 中运行</string>
     <string name="website">网址</string>
-    <string name="website_message">https://muntashirakon.github.io/AppManager</string>
     <string name="pref_remove_all_rules">删除所有规则</string>
-    <string name="pref_remove_all_rules_msg">权限已被授予，app op 和组件将回到它们的默认值。</string>
+    <string name="pref_remove_all_rules_msg">权限已被授予，app ops 和组件将回到它们的默认值。</string>
     <string name="are_you_sure">您确定吗？</string>
     <string name="filter_apps_with_activities">有活动的应用程序</string>
     <string name="toggle_default_app_ops">切换默认应用</string>
@@ -439,7 +427,6 @@
     <string name="full_stop_tap_to_see_details">. 点按查看详情.</string>
     <string name="try_again">再试一次</string>
     <string name="install_app_message">安装应用？</string>
-    <string name="reinstall_app_message">你想要重新安装该应用吗？</string>
     <string name="reinstall">重新安装</string>
     <string name="unblock_trackers">取消屏蔽跟踪器</string>
     <string name="package_installer">软件包安装程序</string>
@@ -752,8 +739,8 @@
     <string name="density">密度</string>
     <string name="screen">屏幕</string>
     <string name="hardware">硬件</string>
-    <string name="permissive">Permissive</string>
-    <string name="enforcing">Enforcing</string>
+    <string name="permissive">被动</string>
+    <string name="enforcing">强制</string>
     <string name="failed_to_enable_magisk_hide">无法启用 MagiskHide</string>
     <string name="enable_magisk_hide">启用 MagiskHide</string>
     <string name="failed_to_disable_magisk_hide">无法禁用 MagiskHide</string>
@@ -800,20 +787,18 @@
     <string name="add">添加</string>
     <string name="add_to_profile">添加到配置</string>
     <string name="initializing">初始化中…</string>
-    <string name="allow_background">允许后台连接</string>
-    <string name="reject_background">拒绝后台连接</string>
     <string name="net_policy">网络策略</string>
     <string name="has_net_policy">网络策略</string>
     <string name="choose_what_to_do">选择做什么。</string>
     <string name="enable_battery_optimization">启用电池优化？</string>
     <string name="battery_optimization">电池优化</string>
     <string name="no_battery_optimization">无电池优化</string>
-    <string name="screen_lock_msg">用 Android 屏幕锁锁定 App Manager</string>
+    <string name="screen_lock_msg">用安卓屏幕锁锁定 App Manager</string>
     <string name="screen_lock">屏幕锁</string>
     <string name="unlock_app_manager">解锁 App Manager</string>
     <string name="sd_card">SD卡</string>
     <string name="external_storage">外部存储</string>
-    <string name="internal_storage">内部共享存储空间</string>
+    <string name="internal_storage">内部存储</string>
     <string name="restart_to_reflect_changes">你必须立即重新启动设备才能使用新的更改。</string>
     <string name="failed_to_change_ssaid">无法更改 SSAID</string>
     <string name="copied_to_clipboard">已复制到剪贴板。</string>
@@ -883,10 +868,10 @@
     <string name="generate_key">生成</string>
     <string name="input_key">输入密钥 (以十六进制表示）</string>
     <string name="input_keystore_alias_pass_msg">轻按此处提供 %1$s 的密码</string>
-    <string name="source_code_links">GitHub: https://github.com/MuntashirAkon/AppManager
-\nGitLab: https://gitlab.com/muntashir/AppManager
-\nRiseup: https://0xacab.org/muntashir/AppManager
-\nCodeberg: https://codeberg.org/muntashir/AppManager</string>
+    <string name="source_code_links">GitHub 地址: https://github.com/MuntashirAkon/AppManager
+\nGitLab 地址: https://gitlab.com/muntashir/AppManager
+\nRiseup 地址: https://0xacab.org/muntashir/AppManager
+\nCodeberg 地址: https://codeberg.org/muntashir/AppManager</string>
     <string name="pref_installer_msg">配置应用安装程序的行为。</string>
     <string name="filter_choice_tag">标签</string>
     <string name="filter_choice_pid">PID</string>
@@ -924,7 +909,7 @@
     <string name="open">打开</string>
     <string name="pref_cat_appearance">外观</string>
     <string name="pref_cat_advanced">高级</string>
-    <string name="pref_buffer_title">日志缓存(s)</string>
+    <string name="pref_buffer_title">日志缓冲区(s)</string>
     <string name="pref_cat_configuration">配置</string>
     <string name="pref_default_log_level_title">默认日志级别</string>
     <string name="pref_default_log_level_summary">启动时、打开文件时和记录时的日志级别。</string>
@@ -960,7 +945,7 @@
     </plurals>
     <string name="toast_invalid_selection">无效选择。请重试。</string>
     <string name="toast_invalid_level">无效的级别名称：%s</string>
-    <string name="pref_display_limit_hint">请输入一个 %1$d和%2$d之间的有效数字。</string>
+    <string name="pref_display_limit_hint">请输入一个 %1$d 和 %2$d 之间的有效数字。</string>
     <string name="title_filters">过滤器</string>
     <string name="text_include_device_info">包含设备信息</string>
     <string name="text_filter_text">过滤器文本</string>
@@ -992,4 +977,30 @@
     <string name="app_signing_signatures">签名</string>
     <string name="pref_rules_msg">即时拦截，导入/导出/移除规则等。</string>
     <string name="saf">存储访问框架</string>
+    <string name="orientation_right_to_left">从右至左</string>
+    <string name="orientation_left_to_right">从左至右</string>
+    <string name="orientation_follow_locale">遵照语言环境</string>
+    <string name="pref_layout_orientation">布局方向</string>
+    <plurals name="file_deletion_confirmation">
+        <item quantity="other">%d 个文件已被删除</item>
+    </plurals>
+    <string name="hidden">隐藏</string>
+    <string name="suspended">已挂起</string>
+    <string name="no_changes">无更改</string>
+    <string name="pref_display_changes_msg">以版本控制的方式显示版本、跟踪器、组件、权限、签名、SDK 等的更改。</string>
+    <string name="pref_display_changes">展示更改</string>
+    <string name="netpolicy_disable_network_access">禁用网络访问</string>
+    <string name="netpolicy_reject_wifi_data">拒绝 Wi-Fi 数据</string>
+    <string name="netpolicy_reject_vpn_data">拒绝 VPN 数据</string>
+    <string name="netpolicy_reject_cellular_data">拒绝移动网络数据</string>
+    <string name="netpolicy_allow_background_data">启用数据节省器时允许后台数据</string>
+    <string name="netpolicy_reject_background_data">拒绝后台数据</string>
+    <string name="port_number_invalid">无效的端口号。</string>
+    <string name="port_number_empty">端口号为空。</string>
+    <string name="adb_connect_port_number_description">端口号位于 <b>IP地址&amp;端口</b>部分，这部分在<b>设备名称</b>部分的下方。</string>
+    <string name="port_number">端口</string>
+    <string name="adb_connect">连接</string>
+    <string name="wireless_debugging_not_supported">此平台不支持无线调试。</string>
+    <string name="wireless_debugging">无线调试</string>
+    <string name="unknown_net_policy">未知的 netpolicy (%1$s - %2$X)</string>
 </resources>

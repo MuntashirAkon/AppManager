@@ -1,25 +1,10 @@
-/*
- * Copyright (c) 2021 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.utils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import io.github.muntashirakon.io.SplitInputStream;
+
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
@@ -32,7 +17,10 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+
+import io.github.muntashirakon.io.SplitInputStream;
 
 import static org.junit.Assert.assertEquals;
 
@@ -232,19 +220,22 @@ public class TarUtilsTest {
     }
 
     private static void createTest(@NonNull File source, @NonNull File testRoot, @Nullable String[] include,
-                                   @Nullable String[] exclude, @NonNull List<String> expectedPaths)
-            throws Throwable {
+                                   @Nullable String[] exclude, @NonNull List<String> expectedPaths) throws Throwable {
         List<File> files = TarUtils.create(TarUtils.TAR_GZIP, testRoot, source, include, null, exclude, false);
-        assertEquals(expectedPaths, getFileNamesGZip(files));
+        List<String> actualPaths = getFileNamesGZip(files);
+        Collections.sort(expectedPaths);
+        Collections.sort(actualPaths);
+        assertEquals(expectedPaths, actualPaths);
     }
 
     private static void extractTest(@NonNull File[] sourceFiles, @NonNull File testRoot, @Nullable String[] include,
-                                    @Nullable String[] exclude, @NonNull List<String> expectedPaths)
-            throws Throwable {
+                                    @Nullable String[] exclude, @NonNull List<String> expectedPaths) throws Throwable {
         List<String> actualPaths = new ArrayList<>();
         recreateDir(testRoot);
         TarUtils.extract(TarUtils.TAR_GZIP, sourceFiles, testRoot, include, exclude);
         gatherFiles(actualPaths, testRoot, testRoot);
+        Collections.sort(expectedPaths);
+        Collections.sort(actualPaths);
         assertEquals(expectedPaths, actualPaths);
     }
 

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.struct.resource;
 
 import net.dongliu.apk.parser.struct.ChunkHeader;
@@ -6,9 +8,8 @@ import net.dongliu.apk.parser.utils.Unsigned;
 
 /**
  * resource file header
- *
- * @author dongliu
  */
+// Copyright 2014 Liu Dong
 public class ResourceTableHeader extends ChunkHeader {
     // The number of ResTable_package structures. uint32
     private int packageCount;

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.bean;
 
 import java.io.Serializable;
@@ -5,6 +7,7 @@ import java.io.Serializable;
 /**
  * The icon interface
  */
+// Copyright 2018 Liu Dong
 public interface IconFace extends Serializable {
 
     /**

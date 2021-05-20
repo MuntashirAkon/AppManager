@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.struct;
 
 import net.dongliu.apk.parser.struct.resource.*;
@@ -8,9 +10,8 @@ import java.util.Locale;
 
 /**
  * Resource entity, contains the resource id, should retrieve the value from resource table, or string pool if it is a string resource.
- *
- * @author dongliu
  */
+// Copyright 2016 Liu Dong
 public abstract class ResourceValue {
     protected final int value;
 

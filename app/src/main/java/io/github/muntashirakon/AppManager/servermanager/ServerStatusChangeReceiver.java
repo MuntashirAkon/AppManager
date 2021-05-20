@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 package io.github.muntashirakon.AppManager.servermanager;
 
 import android.content.BroadcastReceiver;
@@ -8,6 +10,7 @@ import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.server.common.Actions;
 
+// Copyright 2016 Zheng Li
 public class ServerStatusChangeReceiver extends BroadcastReceiver {
     private static final String TAG = "ServerStatusChangeRecei";
 

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="_lang_tag" translatable="false">hi</string>
     <string name="deny_app_ops_description">कांस्टेंट वैल्यू द्वारा पहचाने गए ऐप ऑपरेशंस को अस्वीकार करें, यानी 63 का मतलब है RUN_IN_BACKGROUND</string>
@@ -523,7 +524,6 @@
     <string name="package_installer">पैकेज इंस्टॉलर</string>
     <string name="unblock_trackers">ट्रैकर्स को अनब्लॉक करें</string>
     <string name="reinstall">पुनः इंस्टॉल करें</string>
-    <string name="reinstall_app_message">क्या आप इस ऐप को पुनः इंस्टॉल करना चाहते हैं\?</string>
     <string name="install_app_message">क्या आप यह ऐप इंस्टॉल करना चाहते हैं\?</string>
     <string name="try_again">पुन: प्रयास करें</string>
     <string name="full_stop_tap_to_see_details">। विवरण देखने के लिए टैप करें।</string>

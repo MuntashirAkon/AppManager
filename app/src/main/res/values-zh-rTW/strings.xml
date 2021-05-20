@@ -1,20 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (C) 2020 Muntashir Al-Islam
-  ~
-  ~ This program is free software: you can redistribute it and/or modify
-  ~ it under the terms of the GNU General Public License as published by
-  ~ the Free Software Foundation, either version 3 of the License, or
-  ~ (at your option) any later version.
-  ~
-  ~ This program is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~ GNU General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU General Public License
-  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
     <string name="_lang_tag" translatable="false">zh-TW</string>
     <string name="uninstall">解除安裝</string>
     <string name="permissions">使用權限</string>
@@ -182,8 +167,6 @@
     <string name="add">新增</string>
     <string name="add_to_profile">新增到設定檔</string>
     <string name="initializing">初始化中…</string>
-    <string name="allow_background">允許背景</string>
-    <string name="reject_background">拒絕背景</string>
     <string name="net_policy">淨政策</string>
     <string name="has_net_policy">淨政策</string>
     <string name="choose_what_to_do">選擇要做什麼。</string>
@@ -299,11 +282,11 @@
     <string name="conversion_failed">轉換失敗。</string>
     <string name="select_apk">選擇 APK</string>
     <string name="send_crash_report">傳送崩潰報告</string>
-    <string name="tap_to_submit_crash_report">點擊提交崩潰報告。</string>
+    <string name="tap_to_submit_crash_report">按一下提交崩潰報告。</string>
     <string name="am_crashed">App Manager 剛剛當機了</string>
     <string name="filter_running_apps">正在執行的應用程式</string>
     <string name="copy">複製</string>
-    <string name="view_missing_signatures">點擊以檢視或傳送尚未出現在 App Manager 的資源庫資料庫中的簽名。</string>
+    <string name="view_missing_signatures">按一下以檢視或傳送尚未出現在 App Manager 的資源庫資料庫中的簽名。</string>
     <string name="tap_to_see_details">點按即可檢視詳細資訊</string>
     <string name="lib_details">圖書館資料</string>
     <string name="no_libs">沒有圖書館</string>
@@ -436,7 +419,6 @@
     <string name="package_installer">套件安裝程式</string>
     <string name="unblock_trackers">取消封鎖追蹤器</string>
     <string name="reinstall">重新安裝</string>
-    <string name="reinstall_app_message">您要重新安裝該應用程式嗎？</string>
     <string name="install_app_message">您要安裝此應用程式嗎？</string>
     <string name="try_again">再試一次</string>
     <string name="full_stop_tap_to_see_details">。點按可檢視詳細資訊。</string>
@@ -561,15 +543,15 @@
     <string name="version">版本</string>
     <string name="apply">套用</string>
     <string name="select_theme">主題</string>
-    <string name="night">夜晚</string>
-    <string name="day">天</string>
+    <string name="night">夜間</string>
+    <string name="day">日間</string>
     <string name="battery_mode">電池模式</string>
     <string name="pref_app_theme">應用程式主題</string>
-    <string name="touchscreen">觸摸屏</string>
+    <string name="touchscreen">觸控螢幕</string>
     <string name="navigation">導航</string>
     <string name="keyboard_type">鍵盤類型</string>
     <string name="pref_export">匯出</string>
-    <string name="pref_import">進口</string>
+    <string name="pref_import">匯入</string>
     <string name="ago">前</string>
     <string name="reject_time">拒絕時間</string>
     <string name="accept_time">接受時間</string>
@@ -590,7 +572,7 @@
     <string name="store">店鋪</string>
     <string name="apk_updater">APK 更新器</string>
     <string name="the_export_was_successful">已匯出</string>
-    <string name="the_import_was_successful">進口的</string>
+    <string name="the_import_was_successful">匯入完成</string>
     <string name="pref_import_watt">從 Watt 匯入</string>
     <string name="sort_by_mobile_data">移動資料</string>
     <string name="sort_by_times_opened">營業時間</string>
@@ -719,7 +701,7 @@
     <string name="discard">丟棄</string>
     <string name="save">儲存</string>
     <string name="databases">資料庫</string>
-    <string name="shared_prefs">共享偏好</string>
+    <string name="shared_prefs">共用偏好</string>
     <string name="test_only">僅測試</string>
     <string name="debuggable">可偵錯的</string>
     <string name="updated_app">更新</string>
@@ -751,7 +733,7 @@
     <string name="usage_weekly">每週</string>
     <string name="app_usage">應用程式使用情況</string>
     <string name="no_tracker_class">沒有追蹤器類別</string>
-    <string name="no_shared_libs">沒有共享資源庫</string>
+    <string name="no_shared_libs">沒有共用資源庫</string>
     <string name="all_classes">所有類別</string>
     <string name="tracker_classes">追蹤器類</string>
     <string name="tracker_details">追蹤器詳細資訊</string>
@@ -805,7 +787,7 @@
     <string name="data_usage_msg">資料使用情況</string>
     <string name="data_transmitted">已傳送的資料</string>
     <string name="data_received">已接收的資料</string>
-    <string name="sort_by_target_sdk">目標SDK</string>
+    <string name="sort_by_target_sdk">目標 SDK</string>
     <string name="sort_by_domain">使用者應用程式優先</string>
     <string name="sort_by_package_name">套件名稱</string>
     <string name="sort_by_app_label">應用程式標籤</string>
@@ -816,14 +798,14 @@
     <string name="app_signing_no_signatures">沒有有效的簽名</string>
     <string name="signatures">簽名</string>
     <string name="sort_by_sha">簽名</string>
-    <string name="shared_user_id">共享的使用者ID</string>
-    <string name="sort_by_shared_user_id">共享的使用者ID</string>
+    <string name="shared_user_id">共用的使用者ID</string>
+    <string name="sort_by_shared_user_id">共用的使用者ID</string>
     <string name="no_feature">沒有功能</string>
     <string name="gles_ver">要求的 OpenGL ES 版本</string>
     <string name="uses_feature">使用功能</string>
     <string name="protection_level">防護等級</string>
     <string name="group">群組</string>
-    <string name="shared_libs">共享資源庫</string>
+    <string name="shared_libs">共用資源庫</string>
     <string name="declared_permission">權限</string>
     <string name="patterns_allowed">允許的圖案</string>
     <string name="write">寫入</string>
@@ -879,7 +861,7 @@
     <string name="failed_to_save_key">無法儲存金鑰。</string>
     <string name="generate_key">產生</string>
     <string name="input_key">輸入鍵（十六進制）</string>
-    <string name="input_keystore_alias_pass_msg">點擊此處為%1$s 提供密碼</string>
+    <string name="input_keystore_alias_pass_msg">按一下此處為%1$s 提供密碼</string>
     <string name="internal_data">內部資料</string>
     <string name="app_signing_signatures">簽名</string>
     <string name="unable_to_save_log">無法儲存日誌。您是否輸入了有效的檔案名稱？</string>
@@ -940,7 +922,7 @@
     <string name="pref_show_timestamp_title">顯示 PID 與時間戳</string>
     <string name="pref_show_timestamp_summary">展開時顯示處理程序 ID 和時間戳。</string>
     <string name="pref_log_write_period_title">寫入期間</string>
-    <string name="pref_log_write_period_summary">記錄時，每%1$d行寫入SD卡。</string>
+    <string name="pref_log_write_period_summary">記錄時，每 %1$d 行寫入 SD 卡。</string>
     <string name="pref_log_line_period_error">請輸入1到1000之間的整數。</string>
     <string name="pref_expanded_by_default_title">預設為展開</string>
     <string name="pref_expanded_by_default_summary">預設情況下顯示完整的日誌。</string>
@@ -981,4 +963,22 @@
     <string name="log_level_error">錯誤</string>
     <string name="log_level_debug">偵錯</string>
     <string name="filename">檔案名稱</string>
+    <string name="orientation_right_to_left">由右至左</string>
+    <string name="orientation_left_to_right">由左至右</string>
+    <string name="orientation_follow_locale">按照語言環境</string>
+    <string name="pref_layout_orientation">佈局方向</string>
+    <plurals name="file_deletion_confirmation">
+        <item quantity="other">%d 檔案將被刪除</item>
+    </plurals>
+    <string name="no_changes">沒有變更</string>
+    <string name="pref_display_changes_msg">以版本控制的方式顯示版本，追蹤器，元件，權限，簽名，SDK 等的變更。</string>
+    <string name="pref_display_changes">顯示變更</string>
+    <string name="hidden">已隱藏</string>
+    <string name="suspended">已待命</string>
+    <string name="netpolicy_reject_wifi_data">拒絕 Wi-Fi 資料</string>
+    <string name="netpolicy_reject_vpn_data">拒絕 VPN 資料</string>
+    <string name="netpolicy_allow_background_data">開啟Data Saver時允許背景資料</string>
+    <string name="netpolicy_reject_background_data">拒絕背景資料</string>
+    <string name="netpolicy_disable_network_access">停用網路存取</string>
+    <string name="netpolicy_reject_cellular_data">拒絕行動網路</string>
 </resources>

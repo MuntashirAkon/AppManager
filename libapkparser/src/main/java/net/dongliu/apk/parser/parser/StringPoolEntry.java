@@ -1,8 +1,11 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.parser;
 
 /**
  * class for sort string pool indexes
  */
+// Copyright 2014 Liu Dong
 public class StringPoolEntry {
     private int idx;
     private long offset;

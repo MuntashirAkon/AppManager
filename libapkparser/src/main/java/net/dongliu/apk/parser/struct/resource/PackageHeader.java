@@ -1,12 +1,12 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.struct.resource;
 
 import net.dongliu.apk.parser.struct.ChunkHeader;
 import net.dongliu.apk.parser.struct.ChunkType;
 import net.dongliu.apk.parser.utils.Unsigned;
 
-/**
- * @author dongliu
- */
+// Copyright 2014 Liu Dong
 public class PackageHeader extends ChunkHeader {
 
     // ResourcePackage IDs start at 1 (corresponding to the value of the package bits in a resource identifier).

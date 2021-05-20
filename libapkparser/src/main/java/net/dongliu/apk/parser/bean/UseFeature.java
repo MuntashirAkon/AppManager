@@ -1,10 +1,11 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.bean;
 
 /**
  * the permission used by apk
- *
- * @author dongliu
  */
+// Copyright 2014 Liu Dong
 public class UseFeature {
     private final String name;
     private final boolean required;

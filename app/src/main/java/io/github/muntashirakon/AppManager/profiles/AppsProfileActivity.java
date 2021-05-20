@@ -1,19 +1,4 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.profiles;
 
@@ -30,6 +15,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringDef;
+import androidx.core.content.ContextCompat;
+import androidx.core.util.Pair;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.viewpager.widget.ViewPager;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -44,28 +40,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.StringDef;
-import androidx.core.content.ContextCompat;
-import androidx.core.util.Pair;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.viewpager.widget.ViewPager;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.details.LauncherIconCreator;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
+import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
-
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfo;
 
 public class AppsProfileActivity extends BaseActivity
         implements BottomNavigationView.OnNavigationItemSelectedListener, ViewPager.OnPageChangeListener {
@@ -165,10 +148,10 @@ public class AppsProfileActivity extends BaseActivity
                 // List apps
                 PackageManager pm = getPackageManager();
                 try {
+                    ArrayList<Pair<CharSequence, ApplicationInfo>> itemPairs;
                     List<PackageInfo> packageInfoList = PackageManagerCompat.getInstalledPackages(
-                            flagSigningInfo | PackageManager.GET_ACTIVITIES
-                                    | flagDisabledComponents, Users.getCurrentUserHandle());
-                    ArrayList<Pair<CharSequence, ApplicationInfo>> itemPairs = new ArrayList<>(packageInfoList.size());
+                            PackageManager.GET_META_DATA, Users.getCurrentUserHandle());
+                    itemPairs = new ArrayList<>(packageInfoList.size());
                     for (PackageInfo info : packageInfoList) {
                         itemPairs.add(new Pair<>(pm.getApplicationLabel(info.applicationInfo), info.applicationInfo));
                     }
@@ -292,10 +275,9 @@ public class AppsProfileActivity extends BaseActivity
                         intent.putExtra(EXTRA_SHORTCUT_TYPE, shortcutTypes[which]);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        LauncherIconCreator.createLauncherIcon(this, getPackageName(),
+                        LauncherIconCreator.createLauncherIcon(this,
                                 model.getProfileName() + " - " + shortcutTypesL[which],
-                                ContextCompat.getDrawable(this, R.drawable.ic_launcher_foreground),
-                                getResources().getResourceName(R.drawable.ic_launcher_foreground), intent);
+                                ContextCompat.getDrawable(this, R.drawable.ic_launcher_foreground), intent);
                         dialog.dismiss();
                     })
                     .show();

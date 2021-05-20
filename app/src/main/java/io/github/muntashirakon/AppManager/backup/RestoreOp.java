@@ -1,19 +1,4 @@
-/*
- * Copyright (C) 2021 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.backup;
 
@@ -41,7 +26,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.crypto.Crypto;
@@ -49,11 +33,18 @@ import io.github.muntashirakon.AppManager.crypto.CryptoException;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.rules.PseudoRules;
+import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.RulesImporter;
-import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
+import io.github.muntashirakon.AppManager.rules.struct.AppOpRule;
+import io.github.muntashirakon.AppManager.rules.struct.NetPolicyRule;
+import io.github.muntashirakon.AppManager.rules.struct.PermissionRule;
+import io.github.muntashirakon.AppManager.rules.struct.RuleEntry;
+import io.github.muntashirakon.AppManager.rules.struct.SsaidRule;
+import io.github.muntashirakon.AppManager.rules.struct.UriGrantRule;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.servermanager.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
 import io.github.muntashirakon.AppManager.types.FreshFile;
 import io.github.muntashirakon.AppManager.uri.UriManager;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
@@ -456,29 +447,29 @@ class RestoreOp implements Closeable {
         if (!isInstalled) {
             throw new BackupException("Misc restore is requested but the app isn't installed.");
         }
-        PseudoRules rules = new PseudoRules(AppManager.getContext(), packageName, userHandle);
+        PseudoRules rules = new PseudoRules(packageName, userHandle);
         // Backward compatibility for restoring permissions
         loadMiscRules(rules);
         // Apply rules
-        List<RulesStorageManager.Entry> entries = rules.getAll();
+        List<RuleEntry> entries = rules.getAll();
         AppOpsService appOpsService = new AppOpsService();
         INotificationManager notificationManager = INotificationManager.Stub.asInterface(ProxyBinder.getService(Context.NOTIFICATION_SERVICE));
-        for (RulesStorageManager.Entry entry : entries) {
+        for (RuleEntry entry : entries) {
             try {
                 switch (entry.type) {
                     case APP_OP:
-                        appOpsService.setMode(Integer.parseInt(entry.name),
-                                packageInfo.applicationInfo.uid, packageName,
-                                (int) entry.extra);
+                        appOpsService.setMode(Integer.parseInt(entry.name), packageInfo.applicationInfo.uid,
+                                packageName, ((AppOpRule) entry).getMode());
                         break;
                     case NET_POLICY:
-                        NetworkPolicyManagerCompat.setUidPolicy(packageInfo.applicationInfo.uid, (int) entry.extra);
+                        NetworkPolicyManagerCompat.setUidPolicy(packageInfo.applicationInfo.uid,
+                                ((NetPolicyRule) entry).getPolicies());
                         break;
                     case PERMISSION:
-                        if ((boolean) entry.extra /* isGranted */) {
-                            PackageManagerCompat.grantPermission(packageName, entry.name, userHandle);
+                        if (((PermissionRule) entry).isGranted()) {
+                            PermissionCompat.grantPermission(packageName, entry.name, userHandle);
                         } else {
-                            PackageManagerCompat.revokePermission(packageName, entry.name, userHandle);
+                            PermissionCompat.revokePermission(packageName, entry.name, userHandle);
                         }
                         break;
                     case BATTERY_OPT:
@@ -494,7 +485,7 @@ class RestoreOp implements Closeable {
                         }
                         break;
                     case URI_GRANT:
-                        UriManager.UriGrant uriGrant = (UriManager.UriGrant) entry.extra;
+                        UriManager.UriGrant uriGrant = ((UriGrantRule) entry).getUriGrant();
                         UriManager.UriGrant newUriGrant = new UriManager.UriGrant(
                                 uriGrant.sourceUserId, userHandle, uriGrant.userHandle,
                                 uriGrant.sourcePkg, uriGrant.targetPkg, uriGrant.uri,
@@ -506,7 +497,7 @@ class RestoreOp implements Closeable {
                     case SSAID:
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             new SsaidSettings(packageName, packageInfo.applicationInfo.uid)
-                                    .setSsaid((String) entry.extra);
+                                    .setSsaid(((SsaidRule) entry).getSsaid());
                         }
                         break;
                 }
@@ -569,7 +560,7 @@ class RestoreOp implements Closeable {
             // Get decrypted file
             rulesFile = backupFile.getRulesFile(CryptoUtils.MODE_NO_ENCRYPTION);
             decryptedFiles.addAll(Arrays.asList(crypto.getNewFiles()));
-            try (RulesImporter importer = new RulesImporter(Arrays.asList(RulesStorageManager.Type.values()), new int[]{userHandle})) {
+            try (RulesImporter importer = new RulesImporter(Arrays.asList(RuleType.values()), new int[]{userHandle})) {
                 importer.addRulesFromUri(Uri.fromFile(rulesFile));
                 importer.setPackagesToImport(Collections.singletonList(packageName));
                 importer.applyRules(true);

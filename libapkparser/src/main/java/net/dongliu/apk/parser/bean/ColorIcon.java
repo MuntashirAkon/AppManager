@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.bean;
 
 import java.io.Serializable;
@@ -5,6 +7,7 @@ import java.io.Serializable;
 /**
  * The plain icon, using color drawable resource.
  */
+// Copyright 2018 Liu Dong
 //to be implemented
 public class ColorIcon implements IconFace, Serializable {
     private static final long serialVersionUID = -7913024425268466186L;

@@ -1,19 +1,4 @@
-/*
- * Copyright (c) 2021 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: WTFPL AND GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.logcat;
 
@@ -71,6 +56,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import io.github.muntashirakon.AppManager.AppManager;
@@ -92,7 +78,7 @@ import io.github.muntashirakon.AppManager.logcat.struct.SendLogDetails;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
-import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
 import io.github.muntashirakon.AppManager.settings.LogViewerPreferences;
 import io.github.muntashirakon.AppManager.settings.SettingsActivity;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
@@ -109,6 +95,7 @@ import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 import static io.github.muntashirakon.AppManager.logcat.LogViewerRecyclerAdapter.ViewHolder.CONTEXT_MENU_COPY_ID;
 import static io.github.muntashirakon.AppManager.logcat.LogViewerRecyclerAdapter.ViewHolder.CONTEXT_MENU_FILTER_ID;
 
+// Copyright 2012 Nolan Lawson
 public class LogViewerActivity extends BaseActivity implements FilterListener,
         LogViewerRecyclerAdapter.ViewHolder.OnClickListener {
     public static final String TAG = LogViewerActivity.class.getSimpleName();
@@ -254,7 +241,8 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
         if (!PermissionUtils.hasPermission(this, Manifest.permission.READ_LOGS) && LocalServer.isAMServiceAlive()) {
             new Thread(() -> {
                 try {
-                    PackageManagerCompat.grantPermission(getPackageName(), Manifest.permission.READ_LOGS, Users.getCurrentUserHandle());
+                    PermissionCompat.grantPermission(getPackageName(), Manifest.permission.READ_LOGS,
+                            Users.getCurrentUserHandle());
                 } catch (RemoteException e) {
                     Log.d(TAG, e.toString());
                 }
@@ -399,7 +387,7 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
         List<String> actualSuggestions = new ArrayList<>();
         if (query != null) {
             for (String suggestion : suggestions) {
-                if (suggestion.toLowerCase().startsWith(query.toLowerCase())) {
+                if (suggestion.toLowerCase(Locale.getDefault()).startsWith(query.toLowerCase(Locale.getDefault()))) {
                     actualSuggestions.add(suggestion);
                 }
             }
@@ -820,7 +808,32 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
             dialog.setCancelable(false);
         } else dialog = null;
         new Thread(() -> {
-            SendLogDetails sendLogDetails = getSendLogDetails(includeDeviceInfo, includeDmesg);
+            SendLogDetails sendLogDetails = new SendLogDetails();
+            List<File> files = saveLogDetails(includeDeviceInfo, includeDmesg);
+            sendLogDetails.setBody("");
+            sendLogDetails.setSubject(getString(R.string.subject_log_report));
+            // either zip up multiple files or just attach the one file
+            switch (files.size()) {
+                case 0: // no attachments
+                    sendLogDetails.setAttachmentType(SendLogDetails.AttachmentType.None);
+                    break;
+                case 1: // one plaintext file attachment
+                    sendLogDetails.setAttachmentType(SendLogDetails.AttachmentType.Text);
+                    sendLogDetails.setAttachment(files.get(0));
+                    break;
+                default: // 2 files - need to zip them up
+                    try {
+                        File zipFile = SaveLogHelper.saveTemporaryZipFile(SaveLogHelper.createZipFilename(true), files);
+                        sendLogDetails.setSubject(zipFile.getName());
+                        sendLogDetails.setAttachmentType(SendLogDetails.AttachmentType.Zip);
+                        sendLogDetails.setAttachment(zipFile);
+                    } catch (Exception e) {
+                        Log.e(TAG, e);
+                        runOnUiThread(() -> UIUtils.displayLongToast(R.string.failed));
+                        return;
+                    }
+                    break;
+            }
             runOnUiThread(() -> {
                 startChooser(LogViewerActivity.this, sendLogDetails.getSubject(), sendLogDetails.getBody(),
                         sendLogDetails.getAttachmentType(), sendLogDetails.getAttachment());
@@ -863,32 +876,6 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
             });
         }).start();
 
-    }
-
-    @NonNull
-    @WorkerThread
-    private SendLogDetails getSendLogDetails(boolean includeDeviceInfo, boolean includeDmesg) {
-        SendLogDetails sendLogDetails = new SendLogDetails();
-        List<File> files = saveLogDetails(includeDeviceInfo, includeDmesg);
-        sendLogDetails.setBody("");
-        sendLogDetails.setSubject(getString(R.string.subject_log_report));
-        // either zip up multiple files or just attach the one file
-        switch (files.size()) {
-            case 0: // no attachments
-                sendLogDetails.setAttachmentType(SendLogDetails.AttachmentType.None);
-                break;
-            case 1: // one plaintext file attachment
-                sendLogDetails.setAttachmentType(SendLogDetails.AttachmentType.Text);
-                sendLogDetails.setAttachment(files.get(0));
-                break;
-            default: // 2 files - need to zip them up
-                File zipFile = SaveLogHelper.saveTemporaryZipFile(SaveLogHelper.createZipFilename(true), files);
-                sendLogDetails.setSubject(zipFile.getName());
-                sendLogDetails.setAttachmentType(SendLogDetails.AttachmentType.Zip);
-                sendLogDetails.setAttachment(zipFile);
-                break;
-        }
-        return sendLogDetails;
     }
 
     @NonNull

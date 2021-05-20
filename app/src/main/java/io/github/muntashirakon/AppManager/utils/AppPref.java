@@ -1,19 +1,4 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.utils;
 
@@ -78,6 +63,7 @@ public class AppPref {
         PREF_ENCRYPTION_STR,
         PREF_GLOBAL_BLOCKING_ENABLED_BOOL,
 
+        PREF_INSTALLER_DISPLAY_CHANGES_BOOL,
         PREF_INSTALLER_DISPLAY_USERS_BOOL,
         PREF_INSTALLER_INSTALL_LOCATION_INT,
         PREF_INSTALLER_INSTALLER_APP_STR,
@@ -368,6 +354,7 @@ public class AppPref {
             case PREF_APP_OP_SHOW_DEFAULT_BOOL:
             case PREF_SHOW_DISCLAIMER_BOOL:
             case PREF_LOG_VIEWER_SHOW_PID_TID_TIMESTAMP_BOOL:
+            case PREF_INSTALLER_DISPLAY_CHANGES_BOOL:
                 return true;
             case PREF_LAST_VERSION_CODE_LONG:
                 return 0L;

@@ -1,19 +1,4 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.rules;
 
@@ -21,6 +6,12 @@ import android.app.Dialog;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Toast;
+
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -30,15 +21,10 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
-import androidx.annotation.IntDef;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.settings.SettingsActivity;
+import io.github.muntashirakon.AppManager.users.Users;
 
 public class RulesTypeSelectionDialogFragment extends DialogFragment {
     public static final String TAG = "RulesTypeSelectionDialogFragment";
@@ -51,24 +37,27 @@ public class RulesTypeSelectionDialogFragment extends DialogFragment {
             MODE_IMPORT,
             MODE_EXPORT
     })
-    public @interface Mode {}
+    public @interface Mode {
+    }
+
     public static final int MODE_IMPORT = 1;
     public static final int MODE_EXPORT = 2;
 
-    public static final RulesStorageManager.Type[] types = new RulesStorageManager.Type[]{
-            RulesStorageManager.Type.ACTIVITY,
-            RulesStorageManager.Type.SERVICE,
-            RulesStorageManager.Type.RECEIVER,
-            RulesStorageManager.Type.PROVIDER,
-            RulesStorageManager.Type.APP_OP,
-            RulesStorageManager.Type.PERMISSION,
+    public static final RuleType[] types = new RuleType[]{
+            RuleType.ACTIVITY,
+            RuleType.SERVICE,
+            RuleType.RECEIVER,
+            RuleType.PROVIDER,
+            RuleType.APP_OP,
+            RuleType.PERMISSION,
     };
 
     private FragmentActivity activity;
     private Uri mUri;
     private List<String> mPackages = null;
-    private HashSet<RulesStorageManager.Type> mSelectedTypes;
+    private HashSet<RuleType> mSelectedTypes;
     private int[] userHandles;
+
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -82,7 +71,7 @@ public class RulesTypeSelectionDialogFragment extends DialogFragment {
         if (mUri == null) return super.onCreateDialog(savedInstanceState);
         final boolean[] checkedItems = new boolean[6];
         Arrays.fill(checkedItems, true);
-        mSelectedTypes = new HashSet<>(Arrays.asList(RulesStorageManager.Type.values()));
+        mSelectedTypes = new HashSet<>(Arrays.asList(RuleType.values()));
         return new MaterialAlertDialogBuilder(activity)
                 .setTitle(mode == MODE_IMPORT ? R.string.import_options : R.string.export_options)
                 .setMultiChoiceItems(R.array.rule_types, checkedItems, (dialog, which, isChecked) -> {

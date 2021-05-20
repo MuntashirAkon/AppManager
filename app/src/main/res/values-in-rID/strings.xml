@@ -1,20 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (C) 2020 Muntashir Al-Islam
-  ~
-  ~ This program is free software: you can redistribute it and/or modify
-  ~ it under the terms of the GNU General Public License as published by
-  ~ the Free Software Foundation, either version 3 of the License, or
-  ~ (at your option) any later version.
-  ~
-  ~ This program is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~ GNU General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU General Public License
-  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
     <string name="uninstall">Hapus Pemasangan</string>
     <string name="permissions">Memerlukan Izin</string>
     <string name="require_no_permission">Tidak memerlukan izin</string>
@@ -203,8 +188,8 @@
     <string name="tracker_classes">Class tracker</string>
     <string name="tracker_details">Rincian tracker</string>
     <string name="found_trackers">Tracker ditemukan:</string>
-    <string name="tested_signatures_on_classes_and_time_taken">Diperiksa <xliff:g id="signature_no" example="342">%1$d</xliff:g> tanda pada <xliff:g id="class_no" example="6000">%2$d</xliff:g> class.
-\nWaktu terambil <xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> pengulangan).</string>
+    <string name="tested_signatures_on_classes_and_time_taken">Telah diuji tanda tangan <xliff:g id="signature_no" example="342">%1$d</xliff:g> pada kelas <xliff:g id="class_no" example="6000">%2$d</xliff:g>.
+\nWaktu terpakai <xliff:g id="time" example="10000">%3$d</xliff:g> milidetik (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> pengualngan).</string>
     <plurals name="other_trackers_and_classes">
         <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> tracker dengan <xliff:g id="class_no" example="50">%2$d</xliff:g> class</item>
     </plurals>
@@ -217,18 +202,22 @@
     <string name="toggle_class_listing">Alihkan Pendaftar Class</string>
     <string name="class_viewer">Peninjau Class</string>
     <string name="word_wrap">alihkan word wrap</string>
-    <string name="credits_message">Kepada pemilik dari
+    <string name="credits_message">Kepada pembuat/pemilik dari
 \n- Proyek Android Sumber Terbuka
+\n- <a href="https://github.com/butzist/ActivityLauncher">Peluncur Aktivfitas</a>
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Informasi Apps_packages</a>
-\n- <a href="https://github.com/butzist/ActivityLauncher">Peluncur Aktifitas</a>
-\n- <a href="https://github.com/billthefarmer/editor">Penyunting</a>
-\n- <a href="https://github.com/zhaobao/AppsMonitor">MonitorApps</a>
-\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
+\n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
+\n- <a href="https://github.com/matrix-org/matrix-android-sdk">SDK Android Matrix</a>
+\n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
+\n- <a href="https://github.com/open-keychain/open-keychain">Keychain Sumber Terbuka</a>
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
-\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
-\nHak Cipta logo asli: <a href="https://github.com/Atrate">Atrate</a>. </string>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
+\nKarya Logo Asli: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="credits">Pembuat</string>
     <string name="third_party">Pustakaan dan Ikon Pihak-Ketiga</string>
     <string name="license">Lisensi</string>
@@ -412,8 +401,6 @@
     <string name="add">Menambahkan</string>
     <string name="add_to_profile">Tambahkan ke profil</string>
     <string name="initializing">Inisialisasi …</string>
-    <string name="allow_background">Izinkan latar belakang</string>
-    <string name="reject_background">Tolak latar belakang</string>
     <string name="net_policy">Kebijakan net</string>
     <string name="has_net_policy">Kebijakan net</string>
     <string name="choose_what_to_do">Pilih apa yang harus dilakukan.</string>
@@ -731,7 +718,6 @@
     <string name="package_installer">Penginstal Paket</string>
     <string name="unblock_trackers">Buka blokir pelacak</string>
     <string name="reinstall">Instal ulang</string>
-    <string name="reinstall_app_message">Apakah kamu ingin menginstal ulang aplikasi ini\?</string>
     <string name="install_app_message">Apakah kamu ingin menginstal aplikasi ini\?</string>
     <string name="try_again">Coba lagi</string>
     <string name="full_stop_tap_to_see_details">Ketuk untuk melihat detail.</string>
@@ -989,4 +975,29 @@
     <string name="no_encryption">Tidak ada enskripsi</string>
     <string name="base_backup">Cadangan basis</string>
     <string name="app_signing_signatures">Signatur</string>
+    <string name="orientation_right_to_left">Kanan ke kiri</string>
+    <string name="orientation_left_to_right">Kiri ke kanan</string>
+    <string name="orientation_follow_locale">Ikuti bahasa lokal</string>
+    <string name="pref_layout_orientation">Orientasi layout</string>
+    <plurals name="file_deletion_confirmation">
+        <item quantity="other">Berkas %d akan dihapus</item>
+    </plurals>
+    <string name="hidden">Tersembunyi</string>
+    <string name="suspended">Ditangguhkan</string>
+    <string name="pref_display_changes_msg">Tampilkan perubahan dalam versi, pelacak, komponen, perizinan, tanda tangan (signature), SDK, dll. di sebuah bentuk versi yang terkontrol.</string>
+    <string name="no_changes">Tidak ada perubahan</string>
+    <string name="pref_display_changes">Tampilkan perubahan</string>
+    <string name="netpolicy_disable_network_access">Nonaktifkan akses jaringan</string>
+    <string name="netpolicy_reject_wifi_data">Tolak data Wi-Fi</string>
+    <string name="netpolicy_reject_vpn_data">Tolak data VPN</string>
+    <string name="netpolicy_reject_cellular_data">Tolak data seluler</string>
+    <string name="netpolicy_allow_background_data">Izinkan data di latar belakang saat Penghemat Data aktif</string>
+    <string name="netpolicy_reject_background_data">Tolak data di latar belakang</string>
+    <string name="wireless_debugging_not_supported">Debug nirkabel tidak didukung dalam platform ini.</string>
+    <string name="wireless_debugging">Debug nirkabel</string>
+    <string name="port_number_invalid">Nomor port tidak valid.</string>
+    <string name="port_number_empty">Nomor port kosong.</string>
+    <string name="adb_connect_port_number_description">Nomor port terdapat dibawah bagian <b>Alamat IP &amp; port</b> tepat dibawah bagian <b>Nama perangkat</b>.</string>
+    <string name="port_number">Port</string>
+    <string name="adb_connect">Hbungkan</string>
 </resources>
