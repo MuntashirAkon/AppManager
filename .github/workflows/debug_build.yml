@@ -20,21 +20,22 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Clone the repository
-      uses: actions/checkout@v2
-      with:
-        submodules: 'recursive'
-    - name: Set up JDK 1.8
-      uses: actions/setup-java@v1
-      with:
-        java-version: 1.8
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-    - name: Get app version
-      run: echo "APP_VERSION=v$(cat ./app/build.gradle | grep -m1 versionName | awk -F \" '{print $2}')" >> $GITHUB_ENV
-    - name: Get app name
-      run: echo "APP_NAME=AppManager_${{ env.APP_VERSION }}-DEBUG#${{ github.run_number }}" >> $GITHUB_ENV
-    - name: Inject run number
+      - name: Clone the repository
+        uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'zulu'
+          java-version: 11
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Get app version
+        run: echo "APP_VERSION=v$(cat ./app/build.gradle | grep -m1 versionName | awk -F \" '{print $2}')" >> $GITHUB_ENV
+      - name: Get app name
+        run: echo "APP_NAME=AppManager_${{ env.APP_VERSION }}-DEBUG#${{ github.run_number }}" >> $GITHUB_ENV
+      - name: Inject run number
       run: sed -i -e 's|versionName "\([0-9\.]\+\)"|versionName "\1-${{ github.run_number }}"|' ./app/build.gradle
     - name: Build with Gradle
       run: ./gradlew packageDebugUniversalApk
