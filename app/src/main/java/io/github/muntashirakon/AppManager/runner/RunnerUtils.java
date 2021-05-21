@@ -188,7 +188,7 @@ public final class RunnerUtils {
                     RunnerUtils.autoDetectRootOrAdb();
                     return;
                 case Runner.MODE_ROOT:
-                    if (isRootAvailable()) {
+                    if (!isRootAvailable()) {
                         throw new Exception("Root not available.");
                     }
                     AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, true);
