@@ -5,6 +5,10 @@ package io.github.muntashirakon.AppManager.servermanager;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 
+import androidx.annotation.AnyThread;
+import androidx.annotation.NonNull;
+import androidx.annotation.WorkerThread;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -15,7 +19,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.security.SecureRandom;
 
-import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.server.common.ConfigParam;
 import io.github.muntashirakon.AppManager.server.common.Constants;
@@ -25,6 +28,7 @@ import io.github.muntashirakon.AppManager.utils.Utils;
 // Copyright 2016 Zheng Li
 @SuppressWarnings("ResultOfMethodCallIgnored")
 class AssetsUtils {
+    @WorkerThread
     public static void copyFile(@NonNull Context context, String fileName, File destFile, boolean force) {
         try (AssetFileDescriptor openFd = context.getAssets().openFd(fileName)) {
             if (force) {
@@ -55,6 +59,7 @@ class AssetsUtils {
         }
     }
 
+    @WorkerThread
     static void writeScript(@NonNull LocalServer.Config config) {
         try (AssetFileDescriptor openFd = config.context.getAssets().openFd(ServerConfig.EXECUTABLE_FILE_NAME);
              FileInputStream fdInputStream = openFd.createInputStream();
@@ -100,6 +105,7 @@ class AssetsUtils {
         }
     }
 
+    @AnyThread
     @NonNull
     static String generateToken() {
         SecureRandom secureRandom = new SecureRandom();

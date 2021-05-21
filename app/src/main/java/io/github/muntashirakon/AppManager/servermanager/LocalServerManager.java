@@ -5,7 +5,9 @@ package io.github.muntashirakon.AppManager.servermanager;
 import android.os.SystemClock;
 import android.text.TextUtils;
 
+import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
 import java.io.IOException;
@@ -26,6 +28,7 @@ import io.github.muntashirakon.AppManager.server.common.CallerResult;
 import io.github.muntashirakon.AppManager.server.common.DataTransmission;
 import io.github.muntashirakon.AppManager.server.common.ParcelableUtil;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.IOUtils;
 
 // Copyright 2016 Zheng Li
 class LocalServerManager {
@@ -33,6 +36,7 @@ class LocalServerManager {
 
     private static LocalServerManager sLocalServerManager;
 
+    @AnyThread
     static LocalServerManager getInstance(LocalServer.Config config) {
         if (sLocalServerManager == null) {
             synchronized (LocalServerManager.class) {
@@ -44,9 +48,11 @@ class LocalServerManager {
         return sLocalServerManager;
     }
 
+    @Nullable
     private ClientSession mSession = null;
     private LocalServer.Config mConfig;
 
+    @AnyThread
     private LocalServerManager(LocalServer.Config config) {
         mConfig = config;
     }
@@ -56,12 +62,14 @@ class LocalServerManager {
      *
      * @param config The new preferences
      */
+    @AnyThread
     void updateConfig(LocalServer.Config config) {
         if (config != null) {
             mConfig = config;
         }
     }
 
+    @AnyThread
     LocalServer.Config getConfig() {
         return mConfig;
     }
@@ -90,6 +98,7 @@ class LocalServerManager {
         return mSession;
     }
 
+    @AnyThread
     public boolean isRunning() {
         return mSession != null && mSession.isRunning();
     }
@@ -97,30 +106,20 @@ class LocalServerManager {
     /**
      * Close client session
      */
+    @AnyThread
     void closeSession() {
-        if (mSession != null) {
-            mSession.close();
-            mSession = null;
-        }
+        IOUtils.closeQuietly(mSession);
+        mSession = null;
     }
 
     /**
      * Stop ADB and then close client session
      */
     void stop() {
-        try {
-            if (adbStream != null) {
-                adbStream.close();
-            }
-            adbStream = null;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        if (mSession != null) {
-            mSession.close();
-            mSession = null;
-        }
+        IOUtils.closeQuietly(adbStream);
+        IOUtils.closeQuietly(mSession);
+        adbStream = null;
+        mSession = null;
     }
 
     @WorkerThread
@@ -162,6 +161,7 @@ class LocalServerManager {
         return ParcelableUtil.unmarshall(result, CallerResult.CREATOR);
     }
 
+    @WorkerThread
     void closeBgServer() {
         try {
             BaseCaller baseCaller = new BaseCaller(BaseCaller.TYPE_CLOSE);
@@ -171,6 +171,7 @@ class LocalServerManager {
         }
     }
 
+    @WorkerThread
     @NonNull
     private String getExecCommand() {
         AssetsUtils.writeScript(mConfig);
@@ -298,6 +299,7 @@ class LocalServerManager {
      * @throws IOException      If session creation failed
      * @throws RuntimeException If supplied token is empty
      */
+    @WorkerThread
     private ClientSession createSession() throws IOException {
         if (isRunning()) {
             return mSession;
@@ -325,6 +327,7 @@ class LocalServerManager {
         private volatile boolean isRunning;
         private DataTransmission transmission;
 
+        @AnyThread
         ClientSession(DataTransmission transmission) {
             this.transmission = transmission;
             this.isRunning = true;
@@ -333,6 +336,7 @@ class LocalServerManager {
         /**
          * Close the session, stop any active transmission
          */
+        @AnyThread
         @Override
         public void close() {
             isRunning = false;
@@ -345,10 +349,12 @@ class LocalServerManager {
         /**
          * Whether the client session is running
          */
+        @AnyThread
         boolean isRunning() {
             return isRunning && transmission != null;
         }
 
+        @AnyThread
         DataTransmission getTransmission() {
             return transmission;
         }

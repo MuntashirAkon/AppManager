@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
+import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
+import androidx.annotation.WorkerThread;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,6 +33,7 @@ public class ServerConfig {
             .getSharedPreferences("server_config", Context.MODE_PRIVATE);
     private static volatile boolean sInitialised = false;
 
+    @AnyThread
     static void init(Context context, int userHandleId) {
         if (sInitialised) {
             return;
@@ -52,16 +55,19 @@ public class ServerConfig {
         sInitialised = true;
     }
 
+    @AnyThread
     @NonNull
     public static File getDestJarFile() {
         return destJarFile;
     }
 
+    @AnyThread
     @NonNull
     static String getClassPath() {
         return destJarFile.getAbsolutePath();
     }
 
+    @AnyThread
     @NonNull
     public static File getExecPath() {
         return destExecFile;
@@ -72,6 +78,8 @@ public class ServerConfig {
      *
      * @return Existing or new token
      */
+    @AnyThread
+    @NonNull
     static String getLocalToken() {
         String token = sPreferences.getString(LOCAL_TOKEN, null);
         if (TextUtils.isEmpty(token)) {
@@ -81,26 +89,34 @@ public class ServerConfig {
         return token;
     }
 
+    @AnyThread
     static boolean getAllowBgRunning() {
         return sPreferences.getBoolean("allow_bg_running", true);
     }
 
+    @AnyThread
     public static int getAdbPort() {
         return sPreferences.getInt("adb_port", DEFAULT_ADB_PORT);
     }
 
+    @AnyThread
     public static void setAdbPort(int port) {
         sPreferences.edit().putInt("adb_port", port).apply();
     }
 
+    @AnyThread
     static int getLocalServerPort() {
         return DEFAULT_LOCAL_SERVER_PORT;
     }
 
+    @WorkerThread
+    @NonNull
     public static String getAdbHost() {
         return Inet4Address.getLoopbackAddress().getHostAddress();
     }
 
+    @WorkerThread
+    @NonNull
     public static String getLocalServerHost() {
         return Inet4Address.getLoopbackAddress().getHostAddress();
     }

@@ -11,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 import androidx.fragment.app.FragmentActivity;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -186,6 +188,9 @@ public final class RunnerUtils {
                     RunnerUtils.autoDetectRootOrAdb();
                     return;
                 case Runner.MODE_ROOT:
+                    if (isRootAvailable()) {
+                        throw new Exception("Root not available.");
+                    }
                     AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, true);
                     AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
                     LocalServer.launchAmService();
@@ -198,13 +203,22 @@ public final class RunnerUtils {
                         new Handler(Looper.getMainLooper()).post(() -> MainPreferences
                                 .displayAdbConnect(activity, waitForConfig));
                         waitForConfig.await(2, TimeUnit.MINUTES);
+                        // Check if the configuration is correct
+                        if (!AdbUtils.isAdbAvailable(ServerConfig.getAdbHost(), ServerConfig.getAdbPort())) {
+                            throw new Exception("Wireless debugging not available.");
+                        }
+                        LocalServer.restart();
                         return;
                     } // else fallback to ADB over TCP
                 case Runner.MODE_ADB_OVER_TCP:
-                    AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
-                    AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, true);
+                    // Port is always 5555
                     ServerConfig.setAdbPort(ServerConfig.DEFAULT_ADB_PORT);
                     LocalServer.updateConfig();
+                    if (!AdbUtils.isAdbAvailable(ServerConfig.getAdbHost(), ServerConfig.getAdbPort())) {
+                        throw new Exception("ADB not available.");
+                    }
+                    AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
+                    AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, true);
                     LocalServer.getInstance();
                     return;
                 case Runner.MODE_NO_ROOT:
@@ -213,6 +227,27 @@ public final class RunnerUtils {
             }
         } catch (Exception e) {
             Log.e("ModeOfOps", e);
+            CountDownLatch waitForInteraction = new CountDownLatch(1);
+            new Handler(Looper.getMainLooper()).post(() -> new MaterialAlertDialogBuilder(activity)
+                    .setTitle(R.string.fallback_to_no_root_mode)
+                    .setMessage(R.string.fallback_to_no_root_mode_description)
+                    .setPositiveButton(R.string.yes, (dialog, which) -> {
+                        AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
+                        AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
+                        waitForInteraction.countDown();
+                    })
+                    .setNegativeButton(R.string.no, (dialog, which) -> waitForInteraction.countDown())
+                    .setCancelable(false)
+                    .show());
+            try {
+                waitForInteraction.await(2, TimeUnit.MINUTES);
+                if (waitForInteraction.getCount() == 1) {
+                    // Closed due to timeout: fallback to no-root by default
+                    AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
+                    AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
+                }
+            } catch (InterruptedException ignore) {
+            }
         }
     }
 
