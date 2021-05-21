@@ -1,11 +1,14 @@
-\section{App Components}\label{sec:faq:app-components}
+\section{App Components}\label{sec:faq:app-components} %%##faq_appcomponents-section==title>>
 
-\subsection{What are the app components?}\label{subsec:faq:what-are-app-components}
+\subsection{What are the app components?}\label{subsec:faq:what-are-app-components} %%##faq_appcomponents-whatareappcomponents==title>>
+%%!!faq_appcomponents-whatareappcomponents<<
 Activities, services, broadcast receivers (also known as receivers) and content providers (also known as providers) are
 jointly called app components. More technically, they all inherit the
 \href{https://developer.android.com/reference/android/content/pm/ComponentInfo}{ComponentInfo} class.
+%%!!>>
 
-\subsection{How are the tracker or other components blocked in AM? What are its limitations?}
+\subsection{How are the tracker or other components blocked in AM? What are its limitations?} %%##faq_appcomponents-limitations==title>>
+%%!!faq_appcomponents-limitations<<
 AM blocks application components (or tracker components) using a method called
 \href{https://carteryagemann.com/pages/android-intent-firewall.html}{Intent Firewall (IFW)}, it is very superior to
 other methods such as \textit{pm} (PackageManager), \href{https://github.com/RikkaApps/Shizuku}{Shizuku} or any other
@@ -26,8 +29,10 @@ Even IFW has some limitations which are primarily applicable for the system apps
     even if the entire app is disabled. If you have such system apps, the only way to prevent them from running is to
     get rid of them.
 \end{itemize}
+%%!!>>
 
-\subsection{Why are the components blocked by AM not detected by other related apps?}
+\subsection{Why are the components blocked by AM not detected by other related apps?} %%##faq_appcomponents-detectbyrelatedapps==title>>
+%%!!faq_appcomponents-detectbyrelatedapps<<
 It is because of the blocking method I'm using. This method is called
 \href{https://carteryagemann.com/pages/android-intent-firewall.html}{Intent Firewall (IFW)} and is compatible with
 \href{https://github.com/tuyafeng/Watt}{Watt} and \href{https://github.com/lihenggui/blocker}{Blocker}.
@@ -36,15 +41,19 @@ Watt can detect blocked components by default but Blocker can only detect them i
 MAT cannot detect AM's blocking rules since the format is different. AM cannot detect MAT's rules if IFW is enabled in
 MAT. In that case, you can still import them from the \hyperref[sec:settings-page]{settings page}. MAT has an export
 option, but it's not supported due to its non-free nature.
+%%!!>>
 
-\subsection{Does app components blocked by other tools retained in AM?}
+\subsection{Does app components blocked by other tools retained in AM?} %%##faq_appcomponents-othertoolsretainedinam==title>>
+%%!!faq_appcomponents-othertoolsretainedinam<<
 \textbf{No.} But components blocked by the Android System or any other tools are displayed in the
 \hyperref[sec:app-details-page]{App Details page} (within the component tabs). In v2.5.12 and onwards, you can import
 these rules in \hyperref[par:import-existing-rules]{Settings}. But since there is no way to distinguish between
 components blocked by third-party apps and components blocked by the System, you should be very careful when choosing
 app.
+%%!!>>
 
-\subsection{What happened to the components blocked by AM which are also blocked by other tools?}
+\subsection{What happened to the components blocked by AM which are also blocked by other tools?} %%##faq_appcomponents-alsoblockedbyothertools==title>>
+%%!!faq_appcomponents-alsoblockedbyothertools<<
 AM blocks the components again using
 \href{https://carteryagemann.com/pages/android-intent-firewall.html}{Intent Firewall (IFW)}. They are not unblocked (if
 blocked using \textit{pm} or \href{https://github.com/RikkaApps/Shizuku}{Shizuku} method) and blocked again. But if you
@@ -54,8 +63,10 @@ However, components blocked by \href{https://www.myandroidtools.com}{MyAndroidTo
 unblocked by AM. To solve this issue, you can first import the corresponding configuration to AM in
 \hyperref[par:import-existing-rules]{Settings} in which case MAT's configurations will be removed. But this option is
 only available from v2.5.12.
+%%!!>>
 
-\subsection{What is instant component blocking?}\label{subsec:faq:what-is-instant-component-blocking}
+\subsection{What is instant component blocking?}\label{subsec:faq:what-is-instant-component-blocking} %%##faq_appcomponents-whatiscomponentblocking==title>>
+%%!!faq_appcomponents-whatiscomponentblocking<<
 When you block a component in the \hyperref[sec:app-details-page]{App Details page}, the blocking is not applied by
 default. It is only applied when you apply blocking using the \textit{Apply rules} option in the top-right menu. If you
 enable \hyperref[subsubsec:instant-component-blocking]{instant component blocking}, blocking will be applied as soon as you block a component. If you choose to
@@ -63,8 +74,10 @@ block tracker components, however, blocking is applied automatically regardless 
 blocking for an app by simply clicking on \textit{Remove rules} in the same menu in the \textbf{App Details page}. Since
 the default behaviour gives you more control over apps, it is better to keep \textit{instant component blocking} option
 disabled.
+%%!!>>
 
-\subsection{Tracker classes versus tracker components}\label{subsec:tracker-classes-versus-tracker-components}
+\subsection{Tracker classes versus tracker components}\label{subsec:tracker-classes-versus-tracker-components} %%##faq_appcomponents-trackerclassesversustrackercomponents==title>>
+%%!!faq_appcomponents-trackerclassesversustrackercomponents<<
 All app components are classes but not all classes are components. In fact, only a few of the classes are components.
 That being said, \hyperref[sec:scanner-page]{scanner page} displays a list of trackers along with the number of classes,
 not just the components. In all other pages, trackers and tracker components are used synonymously to denote tracker
@@ -73,8 +86,10 @@ components, i.e.\ blocking tracker means blocking tracker components, not tracke
 \begin{tip}{Info}
     Tracker classes cannot be blocked. They can only be removed by editing the app itself.
 \end{tip}
+%%!!>>
 
-\subsection{How to unblock the tracker components blocked using 1-Click Ops or Batch Ops?}\label{subsec:faq:how-to-unblock-tracker-components}
+\subsection{How to unblock the tracker components blocked using 1-Click Ops or Batch Ops?}\label{subsec:faq:how-to-unblock-tracker-components} %%##faq_appcomponents-howtounblock==title>>
+%%!!faq_appcomponents-howtounblock<<
 Some apps may misbehave due to their dependency to tracker components blocked by AM. From v2.5.12, there is an option
 to unblock tracker components in the \hyperref[sec:1-click-ops-page]{1-Click Ops page}. However, in previous versions,
 there is no such options. To unblock these tracker components, first go to the \hyperref[sec:app-details-page]{App
@@ -94,3 +109,4 @@ If you have \textbf{Google Play Services} (\texttt{com.google.android.gms}) inst
     \item Advertising Id Notification Service \small{\texttt{.ads.identifier.service.AdvertisingIdNotificationService}}
     \item Advertising Id Service \small{\texttt{.ads.identifier.service.AdvertisingIdService}}
 \end{enumerate}
+%%!!>>
