@@ -16,15 +16,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.switchmaterial.SwitchMaterial;
-import com.google.android.material.textfield.TextInputEditText;
-
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.switchmaterial.SwitchMaterial;
+import com.google.android.material.textfield.TextInputEditText;
+
 import io.github.muntashirakon.AppManager.R;
 
 public class EditPrefItemFragment extends DialogFragment {
@@ -143,7 +144,9 @@ public class EditPrefItemFragment extends DialogFragment {
             String keyName = prefItem.keyName;
             Object keyValue = prefItem.keyValue;
             editKeyName.setText(keyName);
-            if (mode == MODE_EDIT) editKeyName.setEnabled(false);
+            if (mode == MODE_EDIT) {
+                editKeyName.setKeyListener(null);
+            }
             // Key value
             if (keyValue instanceof Boolean) {
                 currentType = TYPE_BOOLEAN;
