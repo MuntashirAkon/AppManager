@@ -1000,4 +1000,5 @@
     <string name="adb_connect_port_number_description">Nomor port terdapat dibawah bagian <b>Alamat IP &amp; port</b> tepat dibawah bagian <b>Nama perangkat</b>.</string>
     <string name="port_number">Port</string>
     <string name="adb_connect">Hbungkan</string>
+    <string name="unknown_net_policy">Netpolicy yang tidak dikenal (%1$s - %2$X)</string>
 </resources>
