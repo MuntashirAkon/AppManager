@@ -50,6 +50,8 @@
                 android:singleLine="true"
                 android:importantForAutofill="no"
                 android:inputType="text"
+                android:scrollHorizontally="true"
+                android:textIsSelectable="true"
                 tools:text="@tools:sample/full_names" />
 
         </com.google.android.material.textfield.TextInputLayout>
