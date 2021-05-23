@@ -26,6 +26,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import java.io.File;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -298,7 +299,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
             triggerCancel();
             return;
         }
-        if ((info.flags & ApplicationInfo.FLAG_IS_DATA_ONLY) == 0) {
+        if (!new File(info.publicSourceDir).exists()) {
             // Cannot reinstall an uninstalled app
             UIUtils.displayLongToast(R.string.app_signing_signature_mismatch_for_data_only_app);
             triggerCancel();
