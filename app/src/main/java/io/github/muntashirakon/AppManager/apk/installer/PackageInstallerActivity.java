@@ -46,21 +46,23 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
     public static final String EXTRA_APK_FILE_KEY = "EXTRA_APK_FILE_KEY";
     public static final String ACTION_PACKAGE_INSTALLED = BuildConfig.APPLICATION_ID + ".action.PACKAGE_INSTALLED";
 
-    private int actionName;
-    private FragmentManager fm;
-    private AlertDialog progressDialog;
     private int sessionId = -1;
-    private PackageInstallerViewModel model;
-    private final StoragePermission storagePermission = StoragePermission.init(this);
+    private String packageName;
     private final ActivityResultLauncher<Intent> confirmIntentLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 // User did some interaction and the installer screen is closed now
-                Intent broadcastIntent = new Intent(AMPackageInstaller.ACTION_INSTALL_INTERACTION_END);
-                broadcastIntent.putExtra(PackageInstaller.EXTRA_PACKAGE_NAME, model.getPackageName());
+                Intent broadcastIntent = new Intent(PackageInstallerCompat.ACTION_INSTALL_INTERACTION_END);
+                broadcastIntent.putExtra(PackageInstaller.EXTRA_PACKAGE_NAME, packageName);
                 broadcastIntent.putExtra(PackageInstaller.EXTRA_SESSION_ID, sessionId);
                 getApplicationContext().sendBroadcast(broadcastIntent);
                 triggerCancel();
             });
+
+    private int actionName;
+    private FragmentManager fm;
+    private AlertDialog progressDialog;
+    private PackageInstallerViewModel model;
+    private final StoragePermission storagePermission = StoragePermission.init(this);
     private final ActivityResultLauncher<Intent> uninstallIntentLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -265,18 +267,15 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
         // Check for action first
         if (ACTION_PACKAGE_INSTALLED.equals(intent.getAction())) {
             sessionId = intent.getIntExtra(PackageInstaller.EXTRA_SESSION_ID, -1);
+            packageName = intent.getStringExtra(PackageInstaller.EXTRA_PACKAGE_NAME);
+            Intent confirmIntent = intent.getParcelableExtra(Intent.EXTRA_INTENT);
             try {
-                Intent confirmIntent = intent.getParcelableExtra(Intent.EXTRA_INTENT);
-                String packageName = intent.getStringExtra(PackageInstaller.EXTRA_PACKAGE_NAME);
-                if (confirmIntent == null) throw new Exception("Empty confirmation intent.");
-                if (!model.getPackageName().equals(packageName)) {
-                    throw new Exception("Current package name doesn't match with the package name sent to confirm intent");
-                }
-                Log.d("PIA", "Requesting user confirmation for package " + model.getPackageName());
+                if (packageName == null || confirmIntent == null) throw new Exception("Empty confirmation intent.");
+                Log.d("PIA", "Requesting user confirmation for package " + packageName);
                 confirmIntentLauncher.launch(confirmIntent);
             } catch (Exception e) {
                 e.printStackTrace();
-                AMPackageInstaller.sendCompletedBroadcast(model.getPackageName(), AMPackageInstaller.STATUS_FAILURE_INCOMPATIBLE_ROM, sessionId);
+                PackageInstallerCompat.sendCompletedBroadcast(packageName, PackageInstallerCompat.STATUS_FAILURE_INCOMPATIBLE_ROM, sessionId);
                 triggerCancel();
             }
         }
