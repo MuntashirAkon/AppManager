@@ -743,16 +743,20 @@
     <string name="word_wrap">切換自動換行</string>
     <string name="credits_message">向以下開放原始碼專案的協作者致謝
 \n- The Android Open Source Project
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
-\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
-\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
+\n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
+\n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
+\n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a>
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
-\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
-\n原創 logo 致謝： <a href="https://github.com/Atrate">Atrate</a>. </string>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
+\n原創 logo 致謝: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="credits">致謝</string>
     <string name="third_party">第三方資源庫和圖示</string>
     <string name="license">授權條款</string>
