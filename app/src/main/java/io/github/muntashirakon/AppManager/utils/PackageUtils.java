@@ -638,7 +638,8 @@ public final class PackageUtils {
     }
 
     @NonNull
-    public static String[] getDataDirs(@NonNull ApplicationInfo applicationInfo, boolean loadInternal, boolean loadExternal, boolean loadMediaObb) {
+    public static String[] getDataDirs(@NonNull ApplicationInfo applicationInfo, boolean loadInternal,
+                                       boolean loadExternal, boolean loadMediaObb) {
         ArrayList<String> dataDirs = new ArrayList<>();
         if (applicationInfo.dataDir == null) {
             throw new RuntimeException("Data directory cannot be empty.");
@@ -650,8 +651,10 @@ public final class PackageUtils {
                 dataDirs.add(applicationInfo.deviceProtectedDataDir);
             }
         }
+        int userHandle = Users.getUserHandle(applicationInfo.uid);
+        OsEnvironment.UserEnvironment ue = OsEnvironment.getUserEnvironment(userHandle);
         if (loadExternal) {
-            ProxyFile[] externalFiles = OsEnvironment.buildExternalStorageAppDataDirs(applicationInfo.packageName);
+            ProxyFile[] externalFiles = ue.buildExternalStorageAppDataDirs(applicationInfo.packageName);
             for (ProxyFile externalFile : externalFiles) {
                 if (externalFile != null && externalFile.exists())
                     dataDirs.add(externalFile.getAbsolutePath());
@@ -659,8 +662,8 @@ public final class PackageUtils {
         }
         if (loadMediaObb) {
             List<ProxyFile> externalFiles = new ArrayList<>();
-            externalFiles.addAll(Arrays.asList(OsEnvironment.buildExternalStorageAppMediaDirs(applicationInfo.packageName)));
-            externalFiles.addAll(Arrays.asList(OsEnvironment.buildExternalStorageAppObbDirs(applicationInfo.packageName)));
+            externalFiles.addAll(Arrays.asList(ue.buildExternalStorageAppMediaDirs(applicationInfo.packageName)));
+            externalFiles.addAll(Arrays.asList(ue.buildExternalStorageAppObbDirs(applicationInfo.packageName)));
             for (ProxyFile externalFile : externalFiles) {
                 if (externalFile != null && externalFile.exists())
                     dataDirs.add(externalFile.getAbsolutePath());
