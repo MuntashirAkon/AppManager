@@ -775,10 +775,6 @@ public final class PackageInstallerCompat {
         int flags = 0;
         if (!isPrivileged || userHandle != Users.USER_ALL) {
             PackageInfo info = PackageManagerCompat.getPackageInfo(packageName, 0, userHandle);
-            if (info == null) {
-                throw new PackageManager.NameNotFoundException("Package " + packageName
-                        + " not installed for user " + userHandle);
-            }
             final boolean isSystem = (info.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
             // If we are being asked to delete a system app for just one
             // user set flag so it disables rather than reverting to system
@@ -797,11 +793,7 @@ public final class PackageInstallerCompat {
                 int[] users = Users.getUsersHandles();
                 for (int user : users) {
                     try {
-                        PackageInfo info = PackageManagerCompat.getPackageInfo(packageName, 0, user);
-                        if (info == null) {
-                            throw new PackageManager.NameNotFoundException("Package " + packageName
-                                    + " not installed for user " + user);
-                        }
+                        PackageManagerCompat.getPackageInfo(packageName, 0, user);
                         userHandle = user;
                         break;
                     } catch (Throwable ignore) {
@@ -816,8 +808,7 @@ public final class PackageInstallerCompat {
             pi.uninstall(packageName, null, flags, sender, userHandle);
         }
         final Intent result = receiver.getResult();
-        final int status = result.getIntExtra(PackageInstaller.EXTRA_STATUS,
-                PackageInstaller.STATUS_FAILURE);
+        final int status = result.getIntExtra(PackageInstaller.EXTRA_STATUS, PackageInstaller.STATUS_FAILURE);
         if (status != PackageInstaller.STATUS_SUCCESS) {
             throw new Exception(result.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE));
         }

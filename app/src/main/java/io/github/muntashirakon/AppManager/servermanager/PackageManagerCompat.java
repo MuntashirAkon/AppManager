@@ -187,8 +187,8 @@ public final class PackageManagerCompat {
             pm.clearApplicationUserData(packageName, new IPackageDataObserver.Stub() {
                 @Override
                 public void onRemoveCompleted(String packageName, boolean succeeded) {
-                    dataClearWatcher.countDown();
                     isSuccess.set(succeeded);
+                    dataClearWatcher.countDown();
                 }
             }, userId);
             dataClearWatcher.await();
