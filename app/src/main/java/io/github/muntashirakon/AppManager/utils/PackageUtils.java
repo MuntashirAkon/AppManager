@@ -335,6 +335,7 @@ public final class PackageUtils {
         return packages.toArray(new String[0]);
     }
 
+    @WorkerThread
     @Nullable
     public static PackageSizeInfo getPackageSizeInfo(Context context, String packageName, int userHandle, UUID storageUuid) {
         AtomicReference<PackageSizeInfo> packageSizeInfo = new AtomicReference<>();
@@ -365,7 +366,7 @@ public final class PackageUtils {
                 String uuidString = (String) getPackageSizeInfo.invoke(null, storageUuid);
                 StorageStats storageStats = storageStatsManager.queryStatsForPackage(uuidString, packageName,
                         userHandle, context.getPackageName());
-                packageSizeInfo.set(new PackageSizeInfo(packageName, storageStats));
+                packageSizeInfo.set(new PackageSizeInfo(packageName, storageStats, userHandle));
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | RemoteException e) {
                 Log.e("PackageUtils", e);
             }

@@ -4,7 +4,6 @@ package io.github.muntashirakon.AppManager.details;
 
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.UserInfo;
 import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,14 +22,11 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 
-import java.util.List;
-
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.details.info.AppInfoFragment;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.users.Users;
-import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 public class AppDetailsActivity extends BaseActivity {
@@ -99,26 +95,9 @@ public class AppDetailsActivity extends BaseActivity {
                     ApplicationInfo applicationInfo = model.getPackageInfo().applicationInfo;
                     // Set title as the package label
                     setTitle(applicationInfo.loadLabel(getPackageManager()));
-                    new Thread(() -> {
-                        // FIXME: 14/5/21 Replace with ViewModel
-                        final List<UserInfo> userInfoList;
-                        if (!model.getIsExternalApk() && AppPref.isRootOrAdbEnabled()) {
-                            userInfoList = Users.getUsers();
-                        } else userInfoList = null;
-                        runOnUiThread(() -> {
-                            if (isDestroyed()) return;
-                            // Set subtitle as the user name if more than one user exists
-                            if (userInfoList != null && userInfoList.size() > 1) {
-                                for (UserInfo userInfo : userInfoList) {
-                                    if (userInfo.id == userHandle) {
-                                        getSupportActionBar().setSubtitle(getString(R.string.user_profile_with_id,
-                                                userInfo.name, userInfo.id));
-                                        break;
-                                    }
-                                }
-                            }
-                        });
-                    }).start();
+                    // Set subtitle as the user name if more than one user exists
+                    model.getUserInfo().observe(this, userInfo -> getSupportActionBar()
+                            .setSubtitle(getString(R.string.user_profile_with_id, userInfo.name, userInfo.id)));
                 });
         // Check for the existence of package
         model.getIsPackageExistLiveData().observe(this, isPackageExist -> {

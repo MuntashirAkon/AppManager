@@ -15,7 +15,6 @@ import java.util.List;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
-import io.github.muntashirakon.AppManager.rules.struct.RuleEntry;
 
 /**
  * Export rules to external directory either for a single package or multiple packages.
@@ -46,11 +45,7 @@ public class RulesExporter {
                 for (int userHandle : userHandles) {
                     // Get a read-only instance
                     try (ComponentsBlocker cb = ComponentsBlocker.getInstance(packageName, userHandle)) {
-                        for (RuleEntry entry : cb.getAll()) {
-                            if (mTypesToExport.contains(entry.type)) {
-                                outputStream.write((entry.flattenToString(true) + "\n").getBytes());
-                            }
-                        }
+                        ComponentUtils.storeRules(outputStream, cb.getAll(mTypesToExport), true);
                     }
                 }
             }

@@ -19,6 +19,7 @@ import org.xmlpull.v1.XmlPullParser;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -35,6 +36,7 @@ import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.struct.AppOpRule;
 import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
 import io.github.muntashirakon.AppManager.rules.struct.PermissionRule;
+import io.github.muntashirakon.AppManager.rules.struct.RuleEntry;
 import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
@@ -173,6 +175,13 @@ public final class ComponentUtils {
         trackerCount.packageLabel = packageInfo.applicationInfo.loadLabel(pm).toString();
         trackerCount.count = getTrackerComponentsForPackage(packageInfo).size();
         return trackerCount;
+    }
+
+    public static void storeRules(@NonNull OutputStream os, @NonNull List<RuleEntry> rules, boolean isExternal)
+            throws IOException {
+        for (RuleEntry entry : rules) {
+            os.write((entry.flattenToString(isExternal) + "\n").getBytes());
+        }
     }
 
     @NonNull

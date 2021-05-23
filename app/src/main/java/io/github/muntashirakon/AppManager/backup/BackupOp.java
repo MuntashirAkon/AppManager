@@ -40,8 +40,8 @@ import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.rules.PseudoRules;
+import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
-import io.github.muntashirakon.AppManager.rules.struct.RuleEntry;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.NetworkPolicyManagerCompat;
@@ -217,7 +217,6 @@ class BackupOp implements Closeable {
         String sourceDir = PackageUtils.getSourceDir(applicationInfo);
         if (dataAppPath.getAbsolutePath().equals(sourceDir)) {
             // Backup only the apk file (no split apk support for this type of apk)
-            // TODO: 8/4/21 Check if tar can actually back up the APK file
             sourceDir = new ProxyFile(sourceDir, metadata.apkName).getAbsolutePath();
         }
         File[] sourceFiles;
@@ -427,10 +426,7 @@ class BackupOp implements Closeable {
         File rulesFile = backupFile.getRulesFile(CryptoUtils.MODE_NO_ENCRYPTION);
         try (OutputStream outputStream = new ProxyOutputStream(rulesFile);
              ComponentsBlocker cb = ComponentsBlocker.getInstance(packageName, userHandle)) {
-            for (RuleEntry entry : cb.getAll()) {
-                // TODO: Do it in ComponentUtils
-                outputStream.write((entry.flattenToString(true) + "\n").getBytes());
-            }
+            ComponentUtils.storeRules(outputStream, cb.getAll(), true);
         } catch (IOException | RemoteException e) {
             throw new BackupException("Rules backup is requested but encountered an error during fetching rules.", e);
         }

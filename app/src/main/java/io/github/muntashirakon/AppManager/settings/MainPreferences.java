@@ -4,6 +4,7 @@ package io.github.muntashirakon.AppManager.settings;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
+import android.app.Application;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.FeatureInfo;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
 import androidx.appcompat.app.AlertDialog;
@@ -34,6 +36,10 @@ import androidx.core.text.HtmlCompat;
 import androidx.core.util.Pair;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
@@ -73,9 +79,6 @@ import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.io.ProxyFileReader;
 
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getPrimaryText;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getTitleText;
-
 public class MainPreferences extends PreferenceFragmentCompat {
     private static final List<Integer> THEME_CONST = Arrays.asList(
             AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM,
@@ -99,11 +102,13 @@ public class MainPreferences extends PreferenceFragmentCompat {
     private String currentLang;
     @Runner.Mode
     private String currentMode;
+    private MainPreferencesViewModel model;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences_main, rootKey);
         getPreferenceManager().setPreferenceDataStore(new SettingsDataStore());
+        model = new ViewModelProvider(this).get(MainPreferencesViewModel.class);
         activity = (SettingsActivity) requireActivity();
         // Custom locale
         currentLang = AppPref.getString(AppPref.PrefKey.PREF_CUSTOM_LOCALE_STR);
@@ -217,17 +222,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
         // About device
         ((Preference) Objects.requireNonNull(findPreference("about_device")))
                 .setOnPreferenceClickListener(preference -> {
-                    new Thread(() -> {
-                        CharSequence deviceInfo = getDeviceInfo();
-                        activity.runOnUiThread(() -> {
-                            if (isDetached()) return;
-                            @SuppressLint("InflateParams")
-                            View view = getLayoutInflater().inflate(R.layout.dialog_scrollable_text_view, null);
-                            ((TextView) view.findViewById(android.R.id.content)).setText(deviceInfo);
-                            view.findViewById(android.R.id.checkbox).setVisibility(View.GONE);
-                            new FullscreenDialog(activity).setTitle(R.string.about_device).setView(view).show();
-                        });
-                    }).start();
+                    new Thread(() -> model.loadDeviceInfo(getDisplay())).start();
                     return true;
                 });
         // About
@@ -240,17 +235,26 @@ public class MainPreferences extends PreferenceFragmentCompat {
             return true;
         });
         // Changelog
-        ((Preference) Objects.requireNonNull(findPreference("changelog"))).setOnPreferenceClickListener(preference -> {
-            new Thread(() -> {
-                final Spanned spannedChangelog = HtmlCompat.fromHtml(IOUtils.getContentFromAssets(activity, "changelog.html"), HtmlCompat.FROM_HTML_MODE_COMPACT);
-                activity.runOnUiThread(() ->
-                        new ScrollableDialogBuilder(activity, spannedChangelog)
-                                .linkifyAll()
-                                .setTitle(R.string.changelog)
-                                .setNegativeButton(R.string.ok, null)
-                                .show());
-            }).start();
-            return true;
+        ((Preference) Objects.requireNonNull(findPreference("changelog")))
+                .setOnPreferenceClickListener(preference -> {
+                    model.loadChangeLog();
+                    return true;
+                });
+
+        // Preference loaders
+        // Changelog
+        model.getChangeLog().observe(this, changeLog -> new ScrollableDialogBuilder(activity, changeLog)
+                .linkifyAll()
+                .setTitle(R.string.changelog)
+                .setNegativeButton(R.string.ok, null)
+                .show());
+        // Device info
+        model.getDeviceInfo().observe(this, deviceInfo -> {
+            @SuppressLint("InflateParams")
+            View view = getLayoutInflater().inflate(R.layout.dialog_scrollable_text_view, null);
+            ((TextView) view.findViewById(android.R.id.content)).setText(deviceInfo);
+            view.findViewById(android.R.id.checkbox).setVisibility(View.GONE);
+            new FullscreenDialog(activity).setTitle(R.string.about_device).setView(view).show();
         });
 
         // Hide preferences for disabled features
@@ -305,282 +309,327 @@ public class MainPreferences extends PreferenceFragmentCompat {
         alertDialog.show();
     }
 
-    @WorkerThread
-    @NonNull
-    private CharSequence getDeviceInfo() {
-        ActivityManager activityManager = (ActivityManager) activity.getSystemService(Context.ACTIVITY_SERVICE);
-        PackageManager pm = activity.getPackageManager();
-        SpannableStringBuilder builder = new SpannableStringBuilder();
-        // Android platform info
-        builder.append(getPrimaryText(activity, getString(R.string.os_version) + ": "))
-                .append(Build.VERSION.RELEASE).append("\n")
-                .append(getPrimaryText(activity, getString(R.string.bootloader) + ": "))
-                .append(Build.BOOTLOADER).append(", ")
-                .append(getPrimaryText(activity, "VM: "))
-                .append(getVmVersion()).append("\n")
-                .append(getPrimaryText(activity, getString(R.string.kernel) + ": "))
-                .append(getKernel()).append("\n")
-                .append(getPrimaryText(activity, getString(R.string.brand_name) + ": "))
-                .append(Build.BRAND).append(", ")
-                .append(getPrimaryText(activity, getString(R.string.model) + ": "))
-                .append(Build.MODEL).append("\n")
-                .append(getPrimaryText(activity, getString(R.string.board_name) + ": "))
-                .append(Build.BOARD).append(", ")
-                .append(getPrimaryText(activity, getString(R.string.manufacturer) + ": "))
-                .append(Build.MANUFACTURER).append("\n");
-        // SDK
-        builder.append("\n").append(getTitleText(activity, getString(R.string.sdk))).append("\n")
-                .append(getPrimaryText(activity, getString(R.string.sdk_max) + ": "))
-                .append(String.valueOf(Build.VERSION.SDK_INT));
-        String minSdk = SystemProperties.get("ro.build.version.min_supported_target_sdk", "");
-        if (!TextUtils.isEmpty(minSdk)) {
-            builder.append(", ").append(getPrimaryText(activity,
-                    getString(R.string.sdk_min) + ": ")).append(minSdk);
-        }
-        builder.append("\n");
-        // Security
-        builder.append("\n").append(getTitleText(activity, getString(R.string.security))).append("\n");
-        builder.append(getPrimaryText(activity, getString(R.string.root) + ": "))
-                .append(String.valueOf(RunnerUtils.isRootAvailable())).append("\n");
-        int selinux = getSelinuxStatus();
-        if (selinux != 2) {
-            builder.append(getPrimaryText(activity, getString(R.string.selinux) + ": "))
-                    .append(getString(selinux == 1 ? R.string.enforcing : R.string.permissive))
-                    .append("\n");
-        }
-        builder.append(getPrimaryText(activity, getString(R.string.encryption) + ": "))
-                .append(getEncryptionStatus()).append("\n");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            builder.append(getPrimaryText(activity, getString(R.string.patch_level) + ": "))
-                    .append(Build.VERSION.SECURITY_PATCH).append("\n");
-        }
-        List<CharSequence> securityProviders = new ArrayList<>();
-        builder.append(getPrimaryText(activity, getString(R.string.security_providers) + ": "));
-        for (Provider provider : Security.getProviders()) {
-            securityProviders.add(provider.getName() + " (v" + provider.getVersion() + ")");
-        }
-        builder.append(TextUtils.joinSpannable(", ", securityProviders)).append("\n");
-        // CPU info
-        builder.append("\n").append(getTitleText(activity, getString(R.string.cpu))).append("\n");
-        String cpuHardware = getCpuHardware();
-        if (cpuHardware != null) {
-            builder.append(getPrimaryText(activity, getString(R.string.hardware) + ": "))
-                    .append(cpuHardware).append("\n");
-        }
-        builder.append(getPrimaryText(activity, getString(R.string.support_architectures) + ": "))
-                .append(TextUtils.join(", ", Build.SUPPORTED_ABIS)).append("\n")
-                .append(getPrimaryText(activity, getString(R.string.no_of_cores) + ": "))
-                .append(String.valueOf(Runtime.getRuntime().availableProcessors())).append("\n");
-        // GPU info
-        builder.append("\n").append(getTitleText(activity, getString(R.string.graphics))).append("\n");
-        builder.append(getPrimaryText(activity, getString(R.string.gles_version) + ": "))
-                .append(Utils.getGlEsVersion(activityManager.getDeviceConfigurationInfo().reqGlEsVersion)).append("\n");
-        // TODO(19/12/20): Get vendor name
-        // RAM info
-        ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
-        activityManager.getMemoryInfo(memoryInfo);
-        long memorySize = memoryInfo.totalMem;
-        builder.append("\n").append(getTitleText(activity, getString(R.string.memory))).append("\n")
-                .append(Formatter.formatFileSize(activity, memorySize)).append("\n");
-        // Battery info
-        builder.append("\n").append(getTitleText(activity, getString(R.string.battery))).append("\n");
-        builder.append(getPrimaryText(activity, getString(R.string.battery_capacity) + ": "))
-                .append(String.valueOf(getBatteryCapacity())).append("mAh").append("\n");
-        // TODO(19/12/20): Get more battery info
-        // Screen resolution
-        builder.append("\n").append(getTitleText(activity, getString(R.string.screen))).append("\n")
-                .append(getPrimaryText(activity, getString(R.string.density) + ": "))
-                .append(getDensity()).append(" (")
-                .append(String.valueOf(StaticDataset.DEVICE_DENSITY)).append(" DPI)").append("\n");
-        Display display;
+    private Display getDisplay() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            display = activity.getDisplay();
+            return activity.getDisplay();
         } else {
             //noinspection deprecation
-            display = activity.getWindowManager().getDefaultDisplay();
+            return activity.getWindowManager().getDefaultDisplay();
         }
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        // Actual size
-        display.getRealMetrics(displayMetrics);
-        builder.append(getPrimaryText(activity, getString(R.string.scaling_factor) + ": "))
-                .append(String.valueOf(displayMetrics.density)).append("\n")
-                .append(getPrimaryText(activity, getString(R.string.size) + ": "))
-                .append(String.valueOf(displayMetrics.widthPixels)).append("px × ")
-                .append(String.valueOf(displayMetrics.heightPixels)).append("px\n");
-        // Window size
-        display.getMetrics(displayMetrics);
-        builder.append(getPrimaryText(activity, getString(R.string.window_size) + ": "))
-                .append(String.valueOf(displayMetrics.widthPixels)).append("px × ")
-                .append(String.valueOf(displayMetrics.heightPixels)).append("px\n");
-        // Refresh rate
-        builder.append(getPrimaryText(activity, getString(R.string.refresh_rate) + ": "))
-                .append(String.format(Locale.ROOT, "%.1f", display.getRefreshRate()))
-                .append("\n");
-        // List system locales
-        LocaleListCompat locales = LocaleListCompat.getDefault();
-        List<String> localeStrings = new ArrayList<>(locales.size());
-        for (int i = 0; i < locales.size(); ++i) {
-            localeStrings.add(locales.get(i).getDisplayName());
+    }
+
+    public static class MainPreferencesViewModel extends AndroidViewModel {
+        @SuppressLint("StaticFieldLeak")
+        private final Context ctx;
+
+        public MainPreferencesViewModel(@NonNull Application application) {
+            super(application);
+            ctx = application;
         }
-        builder.append("\n").append(getTitleText(activity, getString(R.string.languages)))
-                .append("\n").append(TextUtils.joinSpannable(", ", localeStrings))
-                .append("\n");
-        List<UserInfo> users = Users.getUsers();
-        if (users != null) {
-            // Users
-            builder.append("\n").append(getTitleText(activity, getString(R.string.users)))
-                    .append("\n");
-            List<String> userNames = new ArrayList<>();
-            for (UserInfo user : users) {
-                userNames.add(user.name);
+
+        private final MutableLiveData<CharSequence> changeLog = new MutableLiveData<>();
+
+        public LiveData<CharSequence> getChangeLog() {
+            return changeLog;
+        }
+
+        public void loadChangeLog() {
+            new Thread(() -> {
+                Spanned spannedChangelog = HtmlCompat.fromHtml(IOUtils.getContentFromAssets(ctx,
+                        "changelog.html"), HtmlCompat.FROM_HTML_MODE_COMPACT);
+                changeLog.postValue(spannedChangelog);
+            }).start();
+        }
+
+        private final MutableLiveData<CharSequence> deviceInfo = new MutableLiveData<>();
+
+        public LiveData<CharSequence> getDeviceInfo() {
+            return deviceInfo;
+        }
+
+        @WorkerThread
+        private void loadDeviceInfo(Display display) {
+            ActivityManager activityManager = (ActivityManager) ctx.getSystemService(Context.ACTIVITY_SERVICE);
+            PackageManager pm = ctx.getPackageManager();
+            SpannableStringBuilder builder = new SpannableStringBuilder();
+            // Android platform info
+            builder.append(getPrimaryText(R.string.os_version))
+                    .append(Build.VERSION.RELEASE).append("\n")
+                    .append(getPrimaryText(R.string.bootloader))
+                    .append(Build.BOOTLOADER).append(", ")
+                    .append(UIUtils.getPrimaryText(ctx, "VM: "))
+                    .append(getVmVersion()).append("\n")
+                    .append(getPrimaryText(R.string.kernel))
+                    .append(getKernel()).append("\n")
+                    .append(getPrimaryText(R.string.brand_name))
+                    .append(Build.BRAND).append(", ")
+                    .append(getPrimaryText(R.string.model))
+                    .append(Build.MODEL).append("\n")
+                    .append(getPrimaryText(R.string.board_name))
+                    .append(Build.BOARD).append(", ")
+                    .append(getPrimaryText(R.string.manufacturer))
+                    .append(Build.MANUFACTURER).append("\n");
+            // SDK
+            builder.append("\n").append(getTitleText(R.string.sdk)).append("\n")
+                    .append(getPrimaryText(R.string.sdk_max))
+                    .append(String.valueOf(Build.VERSION.SDK_INT));
+            String minSdk = SystemProperties.get("ro.build.version.min_supported_target_sdk", "");
+            if (!TextUtils.isEmpty(minSdk)) {
+                builder.append(", ").append(getPrimaryText(R.string.sdk_min)).append(minSdk);
             }
-            builder.append(String.valueOf(users.size())).append(" (")
-                    .append(TextUtils.joinSpannable(", ", userNames))
-                    .append(")\n");
-            // App stats per user
-            builder.append("\n").append(getTitleText(activity, getString(R.string.apps))).append("\n");
-            for (UserInfo user : users) {
-                Pair<Integer, Integer> packageSizes = getPackageStats(user.id);
-                if (packageSizes.first + packageSizes.second == 0) continue;
-                builder.append(getPrimaryText(activity, getString(R.string.user) + ": "))
-                        .append(user.name).append("\n   ")
-                        .append(getPrimaryText(activity, getString(R.string.total_size) + ": "))
+            builder.append("\n");
+            // Security
+            builder.append("\n").append(getTitleText(R.string.security)).append("\n");
+            builder.append(getPrimaryText(R.string.root))
+                    .append(String.valueOf(RunnerUtils.isRootAvailable())).append("\n");
+            int selinux = getSelinuxStatus();
+            if (selinux != 2) {
+                builder.append(getPrimaryText(R.string.selinux))
+                        .append(getString(selinux == 1 ? R.string.enforcing : R.string.permissive))
+                        .append("\n");
+            }
+            builder.append(getPrimaryText(R.string.encryption))
+                    .append(getEncryptionStatus()).append("\n");
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                builder.append(getPrimaryText(R.string.patch_level))
+                        .append(Build.VERSION.SECURITY_PATCH).append("\n");
+            }
+            List<CharSequence> securityProviders = new ArrayList<>();
+            builder.append(getPrimaryText(R.string.security_providers));
+            for (Provider provider : Security.getProviders()) {
+                securityProviders.add(provider.getName() + " (v" + provider.getVersion() + ")");
+            }
+            builder.append(TextUtils.joinSpannable(", ", securityProviders)).append("\n");
+            // CPU info
+            builder.append("\n").append(getTitleText(R.string.cpu)).append("\n");
+            String cpuHardware = getCpuHardware();
+            if (cpuHardware != null) {
+                builder.append(getPrimaryText(R.string.hardware))
+                        .append(cpuHardware).append("\n");
+            }
+            builder.append(getPrimaryText(R.string.support_architectures))
+                    .append(TextUtils.join(", ", Build.SUPPORTED_ABIS)).append("\n")
+                    .append(getPrimaryText(R.string.no_of_cores))
+                    .append(String.valueOf(Runtime.getRuntime().availableProcessors())).append("\n");
+            // GPU info
+            builder.append("\n").append(getTitleText(R.string.graphics)).append("\n");
+            builder.append(getPrimaryText(R.string.gles_version))
+                    .append(Utils.getGlEsVersion(activityManager.getDeviceConfigurationInfo().reqGlEsVersion)).append("\n");
+            // TODO(19/12/20): Get vendor name
+            // RAM info
+            ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
+            activityManager.getMemoryInfo(memoryInfo);
+            long memorySize = memoryInfo.totalMem;
+            builder.append("\n").append(getTitleText(R.string.memory)).append("\n")
+                    .append(Formatter.formatFileSize(ctx, memorySize)).append("\n");
+            // Battery info
+            builder.append("\n").append(getTitleText(R.string.battery)).append("\n");
+            builder.append(getPrimaryText(R.string.battery_capacity))
+                    .append(String.valueOf(getBatteryCapacity())).append("mAh").append("\n");
+            // TODO(19/12/20): Get more battery info
+            // Screen resolution
+            builder.append("\n").append(getTitleText(R.string.screen)).append("\n")
+                    .append(getPrimaryText(R.string.density))
+                    .append(getDensity()).append(" (")
+                    .append(String.valueOf(StaticDataset.DEVICE_DENSITY)).append(" DPI)").append("\n");
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            // Actual size
+            display.getRealMetrics(displayMetrics);
+            builder.append(getPrimaryText(R.string.scaling_factor))
+                    .append(String.valueOf(displayMetrics.density)).append("\n")
+                    .append(getPrimaryText(R.string.size))
+                    .append(String.valueOf(displayMetrics.widthPixels)).append("px × ")
+                    .append(String.valueOf(displayMetrics.heightPixels)).append("px\n");
+            // Window size
+            display.getMetrics(displayMetrics);
+            builder.append(getPrimaryText(R.string.window_size))
+                    .append(String.valueOf(displayMetrics.widthPixels)).append("px × ")
+                    .append(String.valueOf(displayMetrics.heightPixels)).append("px\n");
+            // Refresh rate
+            builder.append(getPrimaryText(R.string.refresh_rate))
+                    .append(String.format(Locale.ROOT, "%.1f", display.getRefreshRate()))
+                    .append("\n");
+            // List system locales
+            LocaleListCompat locales = LocaleListCompat.getDefault();
+            List<String> localeStrings = new ArrayList<>(locales.size());
+            for (int i = 0; i < locales.size(); ++i) {
+                localeStrings.add(locales.get(i).getDisplayName());
+            }
+            builder.append("\n").append(getTitleText(R.string.languages))
+                    .append("\n").append(TextUtils.joinSpannable(", ", localeStrings))
+                    .append("\n");
+            List<UserInfo> users = Users.getUsers();
+            if (users != null) {
+                // Users
+                builder.append("\n").append(getTitleText(R.string.users))
+                        .append("\n");
+                List<String> userNames = new ArrayList<>();
+                for (UserInfo user : users) {
+                    userNames.add(user.name);
+                }
+                builder.append(String.valueOf(users.size())).append(" (")
+                        .append(TextUtils.joinSpannable(", ", userNames))
+                        .append(")\n");
+                // App stats per user
+                builder.append("\n").append(getTitleText(R.string.apps)).append("\n");
+                for (UserInfo user : users) {
+                    Pair<Integer, Integer> packageSizes = getPackageStats(user.id);
+                    if (packageSizes.first + packageSizes.second == 0) continue;
+                    builder.append(getPrimaryText(R.string.user))
+                            .append(user.name).append("\n   ")
+                            .append(getPrimaryText(R.string.total_size))
+                            .append(String.valueOf(packageSizes.first + packageSizes.second)).append(", ")
+                            .append(getPrimaryText(R.string.user))
+                            .append(String.valueOf(packageSizes.first)).append(", ")
+                            .append(getPrimaryText(R.string.system))
+                            .append(String.valueOf(packageSizes.second)).append("\n");
+                }
+            } else {
+                builder.append("\n").append(getTitleText(R.string.apps)).append("\n");
+                Pair<Integer, Integer> packageSizes = getPackageStats(Users.getCurrentUserHandle());
+                builder.append(getPrimaryText(R.string.total_size))
                         .append(String.valueOf(packageSizes.first + packageSizes.second)).append(", ")
-                        .append(getPrimaryText(activity, getString(R.string.user) + ": "))
+                        .append(getPrimaryText(R.string.user))
                         .append(String.valueOf(packageSizes.first)).append(", ")
-                        .append(getPrimaryText(activity, getString(R.string.system) + ": "))
+                        .append(getPrimaryText(R.string.system))
                         .append(String.valueOf(packageSizes.second)).append("\n");
             }
-        } else {
-            builder.append("\n").append(getTitleText(activity, getString(R.string.apps))).append("\n");
-            Pair<Integer, Integer> packageSizes = getPackageStats(Users.getCurrentUserHandle());
-            builder.append(getPrimaryText(activity, getString(R.string.total_size) + ": "))
-                    .append(String.valueOf(packageSizes.first + packageSizes.second)).append(", ")
-                    .append(getPrimaryText(activity, getString(R.string.user) + ": "))
-                    .append(String.valueOf(packageSizes.first)).append(", ")
-                    .append(getPrimaryText(activity, getString(R.string.system) + ": "))
-                    .append(String.valueOf(packageSizes.second)).append("\n");
-        }
-        // List available hardware/features
-        builder.append("\n").append(getTitleText(activity, getString(R.string.features))).append("\n");
-        FeatureInfo[] features = pm.getSystemAvailableFeatures();
-        List<CharSequence> featureStrings = new ArrayList<>(features.length);
-        for (FeatureInfo info : features) {
-            if (info.name != null) {
-                // It's a feature
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    featureStrings.add(info.name + " (v" + info.version + ")");
-                } else featureStrings.add(info.name);
-            }
-        }
-        builder.append(TextUtils.joinSpannable("\n", featureStrings)).append("\n");
-        return builder;
-    }
-
-    @NonNull
-    private String getVmVersion() {
-        String vm = "Dalvik";
-        String vmVersion = System.getProperty("java.vm.version");
-        if (vmVersion != null && vmVersion.startsWith("2")) {
-            vm = "ART";
-        }
-        return vm;
-    }
-
-    @NonNull
-    private String getKernel() {
-        String kernel = System.getProperty("os.version");
-        if (kernel == null) return "";
-        else return kernel;
-    }
-
-    @SuppressLint("PrivateApi")
-    private double getBatteryCapacity() {
-        double capacity = -1.0;
-        try {
-            Object powerProfile = Class.forName("com.android.internal.os.PowerProfile")
-                    .getConstructor(Context.class).newInstance(activity.getApplication());
-            //noinspection ConstantConditions
-            capacity = (double) Class.forName("com.android.internal.os.PowerProfile")
-                    .getMethod("getAveragePower", String.class)
-                    .invoke(powerProfile, "battery.capacity");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return capacity;
-    }
-
-    @NonNull
-    private Pair<Integer, Integer> getPackageStats(int userHandle) {
-        IPackageManager pm = AppManager.getIPackageManager();
-        int systemApps = 0;
-        int userApps = 0;
-        try {
-            List<ApplicationInfo> applicationInfoList = pm.getInstalledApplications(0, userHandle).getList();
-            for (ApplicationInfo info : applicationInfoList) {
-                if ((info.flags & ApplicationInfo.FLAG_SYSTEM) == 1) {
-                    ++systemApps;
-                } else ++userApps;
-            }
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return new Pair<>(userApps, systemApps);
-    }
-
-    @Nullable
-    private String getCpuHardware() {
-        try (BufferedReader reader = new BufferedReader(new ProxyFileReader("/proc/cpuinfo"))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (line.trim().startsWith("Hardware")) {
-                    int colonLoc = line.indexOf(':');
-                    if (colonLoc == -1) continue;
-                    colonLoc += 2;
-                    return line.substring(colonLoc).trim();
+            // List available hardware/features
+            builder.append("\n").append(getTitleText(R.string.features)).append("\n");
+            FeatureInfo[] features = pm.getSystemAvailableFeatures();
+            List<CharSequence> featureStrings = new ArrayList<>(features.length);
+            for (FeatureInfo info : features) {
+                if (info.name != null) {
+                    // It's a feature
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        featureStrings.add(info.name + " (v" + info.version + ")");
+                    } else featureStrings.add(info.name);
                 }
             }
-        } catch (Throwable e) {
-            e.printStackTrace();
+            builder.append(TextUtils.joinSpannable("\n", featureStrings)).append("\n");
+
+            deviceInfo.postValue(builder);
         }
-        return null;
-    }
 
-    private int getSelinuxStatus() {
-        Runner.Result result = Runner.runCommand("getenforce");
-        if (result.isSuccessful()) {
-            if (result.getOutput().trim().equals("Enforcing")) return 1;
-            return 0;
-        }
-        return 2;
-    }
-
-    @NonNull
-    private String getEncryptionStatus() {
-        String state = SystemProperties.get("ro.crypto.state", "");
-        if ("encrypted".equals(state)) {
-            String encryptedMsg = getString(R.string.encrypted);
-            String type = SystemProperties.get("ro.crypto.type", "");
-            if ("file".equals(type)) return encryptedMsg + " (FBE)";
-            else if ("block".equals(type)) return encryptedMsg + " (FDE)";
-            else return encryptedMsg;
-        } else if ("unencrypted".equals(state)) {
-            return getString(R.string.unencrypted);
-        } else return getString(R.string.state_unknown);
-    }
-
-    private String getDensity() {
-        int dpi = StaticDataset.DEVICE_DENSITY;
-        int smallestDiff = Integer.MAX_VALUE;
-        String density = StaticDataset.XXXHDPI;
-        // Find the smallest
-        for (int i = 0; i < StaticDataset.DENSITY_NAME_TO_DENSITY.size(); ++i) {
-            int diff = Math.abs(dpi - StaticDataset.DENSITY_NAME_TO_DENSITY.valueAt(i));
-            if (diff < smallestDiff) {
-                smallestDiff = diff;
-                density = StaticDataset.DENSITY_NAME_TO_DENSITY.keyAt(i);
+        @NonNull
+        private String getVmVersion() {
+            String vm = "Dalvik";
+            String vmVersion = System.getProperty("java.vm.version");
+            if (vmVersion != null && vmVersion.startsWith("2")) {
+                vm = "ART";
             }
+            return vm;
         }
-        return density;
+
+        @NonNull
+        private String getKernel() {
+            String kernel = System.getProperty("os.version");
+            if (kernel == null) return "";
+            else return kernel;
+        }
+
+        @SuppressLint("PrivateApi")
+        private double getBatteryCapacity() {
+            double capacity = -1.0;
+            try {
+                Object powerProfile = Class.forName("com.android.internal.os.PowerProfile")
+                        .getConstructor(Context.class).newInstance(ctx);
+                //noinspection ConstantConditions
+                capacity = (double) Class.forName("com.android.internal.os.PowerProfile")
+                        .getMethod("getAveragePower", String.class)
+                        .invoke(powerProfile, "battery.capacity");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return capacity;
+        }
+
+        @NonNull
+        private Pair<Integer, Integer> getPackageStats(int userHandle) {
+            IPackageManager pm = AppManager.getIPackageManager();
+            int systemApps = 0;
+            int userApps = 0;
+            try {
+                List<ApplicationInfo> applicationInfoList = pm.getInstalledApplications(0, userHandle).getList();
+                for (ApplicationInfo info : applicationInfoList) {
+                    if ((info.flags & ApplicationInfo.FLAG_SYSTEM) == 1) {
+                        ++systemApps;
+                    } else ++userApps;
+                }
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+            return new Pair<>(userApps, systemApps);
+        }
+
+        @Nullable
+        private String getCpuHardware() {
+            try (BufferedReader reader = new BufferedReader(new ProxyFileReader("/proc/cpuinfo"))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    if (line.trim().startsWith("Hardware")) {
+                        int colonLoc = line.indexOf(':');
+                        if (colonLoc == -1) continue;
+                        colonLoc += 2;
+                        return line.substring(colonLoc).trim();
+                    }
+                }
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        private int getSelinuxStatus() {
+            Runner.Result result = Runner.runCommand("getenforce");
+            if (result.isSuccessful()) {
+                if (result.getOutput().trim().equals("Enforcing")) return 1;
+                return 0;
+            }
+            return 2;
+        }
+
+        @NonNull
+        private String getEncryptionStatus() {
+            String state = SystemProperties.get("ro.crypto.state", "");
+            if ("encrypted".equals(state)) {
+                String encryptedMsg = getString(R.string.encrypted);
+                String type = SystemProperties.get("ro.crypto.type", "");
+                if ("file".equals(type)) return encryptedMsg + " (FBE)";
+                else if ("block".equals(type)) return encryptedMsg + " (FDE)";
+                else return encryptedMsg;
+            } else if ("unencrypted".equals(state)) {
+                return getString(R.string.unencrypted);
+            } else return getString(R.string.state_unknown);
+        }
+
+        private String getDensity() {
+            int dpi = StaticDataset.DEVICE_DENSITY;
+            int smallestDiff = Integer.MAX_VALUE;
+            String density = StaticDataset.XXXHDPI;
+            // Find the smallest
+            for (int i = 0; i < StaticDataset.DENSITY_NAME_TO_DENSITY.size(); ++i) {
+                int diff = Math.abs(dpi - StaticDataset.DENSITY_NAME_TO_DENSITY.valueAt(i));
+                if (diff < smallestDiff) {
+                    smallestDiff = diff;
+                    density = StaticDataset.DENSITY_NAME_TO_DENSITY.keyAt(i);
+                }
+            }
+            return density;
+        }
+
+        @NonNull
+        private CharSequence getTitleText(@StringRes int strRes) {
+            return UIUtils.getTitleText(ctx, getString(strRes));
+        }
+
+        @NonNull
+        private CharSequence getPrimaryText(@StringRes int strRes) {
+            return UIUtils.getPrimaryText(ctx, getString(strRes) + ": ");
+        }
+
+        private String getString(@StringRes int strRes) {
+            return ctx.getString(strRes);
+        }
     }
 }
