@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.utils;
 
+import android.annotation.SuppressLint;
 import android.annotation.UserIdInt;
 import android.app.usage.IStorageStatsManager;
 import android.app.usage.StorageStats;
@@ -570,7 +571,8 @@ public final class PackageUtils {
     @NonNull
     public static String getPackageLabel(@NonNull PackageManager pm, String packageName) {
         try {
-            ApplicationInfo applicationInfo = pm.getApplicationInfo(packageName, 0);
+            @SuppressLint("WrongConstant")
+            ApplicationInfo applicationInfo = pm.getApplicationInfo(packageName, flagMatchUninstalled);
             return pm.getApplicationLabel(applicationInfo).toString();
         } catch (PackageManager.NameNotFoundException ignore) {
         }

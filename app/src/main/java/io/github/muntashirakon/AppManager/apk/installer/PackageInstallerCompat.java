@@ -22,11 +22,8 @@ import android.content.pm.PackageManager;
 import android.content.pm.VersionedPackage;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
 import android.os.RemoteException;
-import android.widget.Toast;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -54,13 +51,18 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
+import io.github.muntashirakon.io.ProxyFile;
 import io.github.muntashirakon.io.ProxyInputStream;
 
 @SuppressLint("ShiftFlags")
@@ -692,17 +694,40 @@ public final class PackageInstallerCompat {
 
     @WorkerThread
     protected void copyObb(@NonNull ApkFile apkFile) {
-        if (apkFile.hasObb()) {
-            boolean tmpCloseApkFile = closeApkFile;
-            // Disable closing apk file in case the install is finished already.
-            closeApkFile = false;
-            if (!apkFile.extractObb()) {  // FIXME: Extract OBB for user handle
-                new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(context,
-                        R.string.failed_to_extract_obb_files, Toast.LENGTH_LONG).show());
-            } else {
-                new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(context,
-                        R.string.obb_files_extracted_successfully, Toast.LENGTH_LONG).show());
+        if (!apkFile.hasObb()) return;
+        boolean tmpCloseApkFile = closeApkFile;
+        // Disable closing apk file in case the install is finished already.
+        closeApkFile = false;
+        try {
+            // Get the first writable external storage directory
+            OsEnvironment.UserEnvironment ue = OsEnvironment.getUserEnvironment(userHandle);
+            ProxyFile[] extDirs = ue.getExternalDirs();
+            ProxyFile writableExtDir = null;
+            for (ProxyFile extDir : extDirs) {
+                if (extDir.canWrite()) {
+                    writableExtDir = extDir;
+                    break;
+                }
             }
+            if (writableExtDir == null) throw new IOException("Couldn't find any writable Obb dir");
+            // Get writable OBB directory
+            final ProxyFile writableObbDir = new ProxyFile(writableExtDir.getAbsolutePath() + "/" +
+                    ApkFile.OBB_DIR + "/" + packageName);
+            if (writableObbDir.exists()) {
+                File[] oldObbFiles = ArrayUtils.defeatNullable(writableObbDir.listFiles());
+                // Delete old files
+                for (File oldFile : oldObbFiles) {
+                    //noinspection ResultOfMethodCallIgnored
+                    oldFile.delete();
+                }
+            } else {
+                if (!writableObbDir.mkdirs()) throw new IOException("Couldn't create Obb dir");
+            }
+            apkFile.extractObb(writableObbDir);
+            UiThreadHandler.run(() -> UIUtils.displayLongToast(R.string.obb_files_extracted_successfully));
+        } catch (Exception e) {
+            UiThreadHandler.run(() -> UIUtils.displayLongToast(R.string.failed_to_extract_obb_files));
+        } finally {
             if (installWatcher.getCount() != 0) {
                 // Reset close apk file if the install isn't completed
                 closeApkFile = tmpCloseApkFile;
