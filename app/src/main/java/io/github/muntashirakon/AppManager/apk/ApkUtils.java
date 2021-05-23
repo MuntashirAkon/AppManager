@@ -6,6 +6,10 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -18,9 +22,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.WorkerThread;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.apk.splitapk.SplitApkExporter;
@@ -28,6 +29,8 @@ import io.github.muntashirakon.AppManager.backup.BackupFiles;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.io.ProxyFile;
+
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagMatchUninstalled;
 
 public final class ApkUtils {
     public static final String EXT_APK = ".apk";
@@ -71,7 +74,7 @@ public final class ApkUtils {
         // Fetch package info
         try {
             PackageManager pm = AppManager.getContext().getPackageManager();
-            PackageInfo packageInfo = PackageManagerCompat.getPackageInfo(packageName, 0, userHandle);
+            PackageInfo packageInfo = PackageManagerCompat.getPackageInfo(packageName, flagMatchUninstalled, userHandle);
             ApplicationInfo info = packageInfo.applicationInfo;
             String outputName = IOUtils.getSanitizedFileName(info.loadLabel(pm).toString() + "_" +
                     packageInfo.versionName, false);

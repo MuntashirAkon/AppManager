@@ -147,6 +147,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 packageInfoLiveData.postValue(getPackageInfo());
             } catch (Throwable th) {
                 Log.e("ADVM", "Could not fetch package info.", th);
+                packageInfoLiveData.postValue(null);
             }
         });
         return packageInfoLiveData;
@@ -162,10 +163,13 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 isExternalApk = false;
                 setPackageName(packageName);
                 if (getPackageInfo() == null) throw new ApkFile.ApkFileException("Package not installed.");
+                // TODO: 23/5/21 The app could be “data only”
                 apkFileKey = ApkFile.createInstance(getPackageInfo().applicationInfo);
                 apkFile = ApkFile.getInstance(apkFileKey);
+                packageInfoLiveData.postValue(getPackageInfo());
             } catch (Throwable th) {
                 Log.e("ADVM", "Could not fetch package info.", th);
+                packageInfoLiveData.postValue(null);
             }
         });
         return packageInfoLiveData;
@@ -784,6 +788,9 @@ public class AppDetailsViewModel extends AndroidViewModel {
                                 | flagDisabledComponents | flagSigningInfo | flagMatchUninstalled
                                 | PackageManager.GET_CONFIGURATIONS | PackageManager.GET_SHARED_LIBRARY_FILES,
                         userHandle);
+                if (!new File(installedPackageInfo.applicationInfo.publicSourceDir).exists()) {
+                    throw new ApkFile.ApkFileException("App not installed. It only has data.");
+                }
             } catch (Throwable e) {
                 installedPackageInfo = null;
                 e.printStackTrace();

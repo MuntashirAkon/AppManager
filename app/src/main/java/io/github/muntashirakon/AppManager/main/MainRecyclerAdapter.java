@@ -23,12 +23,21 @@ import android.widget.ImageView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
+
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
@@ -39,12 +48,6 @@ import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapter.ViewHolder>
         implements SectionIndexer {
@@ -154,7 +157,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     try {
                         @SuppressLint("WrongConstant")
                         ApplicationInfo info = mPackageManager.getApplicationInfo(item.packageName, PackageUtils.flagMatchUninstalled);
-                        if (info.publicSourceDir != null && FeatureController.isInstallerEnabled()) {
+                        if (info.publicSourceDir != null && new File(info.publicSourceDir).exists()
+                                && FeatureController.isInstallerEnabled()) {
                             Intent intent = new Intent(mActivity, PackageInstallerActivity.class);
                             intent.setData(Uri.fromFile(new File(info.publicSourceDir)));
                             mActivity.startActivity(intent);

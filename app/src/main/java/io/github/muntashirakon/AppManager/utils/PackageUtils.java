@@ -377,9 +377,8 @@ public final class PackageUtils {
     public static HashMap<String, RuleType> collectComponentClassNames(String packageName, @UserIdInt int userHandle) {
         try {
             PackageInfo packageInfo = PackageManagerCompat.getPackageInfo(packageName,
-                    PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS
-                            | PackageManager.GET_PROVIDERS | flagDisabledComponents
-                            | PackageManager.GET_URI_PERMISSION_PATTERNS
+                    PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
+                            | flagDisabledComponents | flagMatchUninstalled | PackageManager.GET_URI_PERMISSION_PATTERNS
                             | PackageManager.GET_SERVICES, userHandle);
             return collectComponentClassNames(packageInfo);
         } catch (Throwable e) {
@@ -476,7 +475,7 @@ public final class PackageUtils {
     @Nullable
     public static String[] getPermissionsForPackage(String packageName, @UserIdInt int userHandle)
             throws PackageManager.NameNotFoundException, RemoteException {
-        PackageInfo info = PackageManagerCompat.getPackageInfo(packageName, userHandle, PackageManager.GET_PERMISSIONS);
+        PackageInfo info = PackageManagerCompat.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS, userHandle);
         return info.requestedPermissions;
     }
 
