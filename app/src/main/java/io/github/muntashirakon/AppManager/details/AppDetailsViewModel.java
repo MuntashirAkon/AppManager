@@ -15,6 +15,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.PermissionInfo;
 import android.content.pm.ProviderInfo;
 import android.content.pm.ServiceInfo;
+import android.content.pm.UserInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.DeadSystemException;
@@ -68,6 +69,7 @@ import io.github.muntashirakon.AppManager.rules.struct.RuleEntry;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
 import io.github.muntashirakon.AppManager.types.PackageChangeReceiver;
+import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
@@ -848,6 +850,26 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @Nullable
     public PackageInfo getInstalledPackageInfo() {
         return installedPackageInfo;
+    }
+
+    @NonNull
+    public LiveData<UserInfo> getUserInfo() {
+        MutableLiveData<UserInfo> userInfoMutableLiveData = new MutableLiveData<>();
+        executor.submit(() -> {
+            final List<UserInfo> userInfoList;
+            if (!isExternalApk && AppPref.isRootOrAdbEnabled()) {
+                userInfoList = Users.getUsers();
+            } else userInfoList = null;
+            if (userInfoList != null && userInfoList.size() > 1) {
+                for (UserInfo userInfo : userInfoList) {
+                    if (userInfo.id == userHandle) {
+                        userInfoMutableLiveData.postValue(userInfo);
+                        break;
+                    }
+                }
+            }
+        });
+        return userInfoMutableLiveData;
     }
 
     @NonNull

@@ -21,6 +21,7 @@ import java.util.List;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
+import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.struct.AppOpRule;
 import io.github.muntashirakon.AppManager.rules.struct.BatteryOptimizationRule;
 import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
@@ -77,6 +78,15 @@ public class RulesStorageManager implements Closeable {
         synchronized (entries) {
             List<T> newEntries = new ArrayList<>();
             for (RuleEntry entry : entries) if (type.isInstance(entry)) newEntries.add(type.cast(entry));
+            return newEntries;
+        }
+    }
+
+    @GuardedBy("entries")
+    public List<RuleEntry> getAll(List<RuleType> types) {
+        synchronized (entries) {
+            List<RuleEntry> newEntries = new ArrayList<>();
+            for (RuleEntry entry : entries) if (types.contains(entry.type)) newEntries.add(entry);
             return newEntries;
         }
     }
@@ -278,12 +288,8 @@ public class RulesStorageManager implements Closeable {
                 tsvRulesFile.delete();
                 return;
             }
-            StringBuilder stringBuilder = new StringBuilder();
-            for (RuleEntry entry : entries) {
-                stringBuilder.append(entry.flattenToString(isExternal)).append("\n");
-            }
             try (OutputStream TSVFile = new ProxyOutputStream(tsvRulesFile)) {
-                TSVFile.write(stringBuilder.toString().getBytes());
+                ComponentUtils.storeRules(TSVFile, entries, isExternal);
             }
         }
     }
