@@ -1106,4 +1106,7 @@
     <string name="adb_connect">З\'єднання</string>
     <string name="wireless_debugging_not_supported">Бездротове налагодження не підтримується в цій платформі.</string>
     <string name="wireless_debugging">Бездротове налагодження</string>
+    <string name="fallback_to_no_root_mode_description">App Manager не вдалося використати поточний режим роботи. Щоб уникнути непередбачуваної поведінки, вам слід тимчасово перейти до режиму без-root. Якщо проблема не вирішиться після перезавантаження пристрою, повідомте розробника.</string>
+    <string name="fallback_to_no_root_mode">Повернутись до режиму без root\?</string>
+    <string name="unknown_net_policy">Невідома мережна політика (%1$s - %2$X)</string>
 </resources>
