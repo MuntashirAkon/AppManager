@@ -7,15 +7,16 @@ import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.UserManager;
 
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import androidx.annotation.IntDef;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 
 /**
@@ -339,6 +340,7 @@ public class AppOpsManager {
     public static final int OP_PHONE_CALL_CAMERA = 101;
     public static final int OP_RECORD_AUDIO_HOTWORD = 102;
     public static final int OP_MANAGE_ONGOING_CALLS = 103;
+    public static final int OP_MANAGE_CREDENTIALS = 104;
     public static final int _NUM_OP;  // fetched using reflection
 
     // MIUI app ops taken from framework.jar
@@ -486,6 +488,7 @@ public class AppOpsManager {
     public static final String OPSTR_PHONE_CALL_CAMERA = "android:phone_call_camera";
     public static final String OPSTR_RECORD_AUDIO_HOTWORD = "android:record_audio_hotword";
     public static final String OPSTR_MANAGE_ONGOING_CALLS = "android:manage_on_going_calls";
+    public static final String OPSTR_MANAGE_CREDENTIALS = "android:manage_credentials";
 
     private static final int[] RUNTIME_AND_APPOP_PERMISSIONS_OPS = {
             // RUNTIME PERMISSIONS
@@ -665,6 +668,7 @@ public class AppOpsManager {
             OP_PHONE_CALL_CAMERA,               // OP_PHONE_CALL_CAMERA
             OP_RECORD_AUDIO_HOTWORD,            // RECORD_AUDIO_HOTWORD
             OP_MANAGE_ONGOING_CALLS,            // MANAGE_ONGOING_CALLS
+            OP_MANAGE_CREDENTIALS,              // MANAGE_CREDENTIALS
     };
 
     /**
@@ -817,6 +821,7 @@ public class AppOpsManager {
             OPSTR_PHONE_CALL_CAMERA,
             OPSTR_RECORD_AUDIO_HOTWORD,
             OPSTR_MANAGE_ONGOING_CALLS,
+            OPSTR_MANAGE_CREDENTIALS,
     };
 
     /**
@@ -928,6 +933,7 @@ public class AppOpsManager {
             "PHONE_CALL_CAMERA",
             "RECORD_AUDIO_HOTWORD",
             "MANAGE_ONGOING_CALLS",
+            "MANAGE_CREDENTIALS",
     };
 
     /**
@@ -1082,6 +1088,7 @@ public class AppOpsManager {
             null, // no permission for OP_PHONE_CALL_CAMERA
             null, // no permission for OP_RECORD_AUDIO_HOTWORD
             "android.permission.MANAGE_ONGOING_CALLS",
+            null, // no permission for OP_MANAGE_CREDENTIALS
     };
 
     /**
@@ -1194,6 +1201,7 @@ public class AppOpsManager {
             null, // PHONE_CALL_MICROPHONE
             null, // RECORD_AUDIO_HOTWORD
             null, // MANAGE_ONGOING_CALLS
+            null, // MANAGE_CREDENTIALS
     };
 
     /**
@@ -1304,6 +1312,7 @@ public class AppOpsManager {
             null, // PHONE_CALL_CAMERA
             null, // RECORD_AUDIO_HOTWORD
             null, // MANAGE_ONGOING_CALLS
+            null, // MANAGE_CREDENTIALS
     };
 
     /**
@@ -1414,6 +1423,7 @@ public class AppOpsManager {
             AppOpsManager.MODE_ALLOWED, // PHONE_CALL_CAMERA
             AppOpsManager.MODE_ALLOWED, // OP_RECORD_AUDIO_HOTWORD
             AppOpsManager.MODE_DEFAULT, // MANAGE_ONGOING_CALLS
+            AppOpsManager.MODE_DEFAULT, // MANAGE_CREDENTIALS
     };
 
 
@@ -1534,6 +1544,7 @@ public class AppOpsManager {
             false, // PHONE_CALL_CAMERA
             false, // RECORD_AUDIO_HOTWORD
             true, // MANAGE_ONGOING_CALLS
+            false, // MANAGE_CREDENTIALS
     };
 
     /**
