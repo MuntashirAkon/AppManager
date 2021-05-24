@@ -2,12 +2,14 @@ name: Debug Build
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - 'master'
+      - 'AppManager-*'
     paths-ignore:
-    - 'fastlane/**'
-    - 'scripts/**'
-    - 'docs/raw/**'
-    - 'README.md'
+      - 'fastlane/**'
+      - 'scripts/**'
+      - 'docs/raw/**'
+      - 'README.md'
   pull_request:
     branches: [ master ]
     paths-ignore:
