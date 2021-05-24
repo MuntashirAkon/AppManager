@@ -1561,11 +1561,12 @@ public class AppOpsManager {
      * Some ops doesn't have any permissions associated with them and are enabled by default.
      * We are interest in the parents of these ops.
      */
+    @Deprecated
     public static int[] sOpsWithNoPerm;
 
     static {
         // Get _NUM_OP
-        int numOp = 100;  // Should be the same as the latest _NUM_OP
+        int numOp = 105;  // Should be the same as the latest _NUM_OP
         try {
             //noinspection JavaReflectionMemberAccess
             numOp = android.app.AppOpsManager.class.getField("_NUM_OP").getInt(null);
@@ -1574,17 +1575,44 @@ public class AppOpsManager {
         }
         _NUM_OP = numOp;
 
+        // Checks
+        if (sOpToSwitch.length < _NUM_OP) {
+            throw new IllegalStateException("sOpToSwitch length " + sOpToSwitch.length + " should be " + _NUM_OP);
+        }
+        if (sOpToString.length < _NUM_OP) {
+            throw new IllegalStateException("sOpToString length " + sOpToString.length + " should be " + _NUM_OP);
+        }
+        if (sOpNames.length < _NUM_OP) {
+            throw new IllegalStateException("sOpNames length " + sOpNames.length + " should be " + _NUM_OP);
+        }
+        if (sOpPerms.length < _NUM_OP) {
+            throw new IllegalStateException("sOpPerms length " + sOpPerms.length + " should be " + _NUM_OP);
+        }
+        if (sOpDefaultMode.length < _NUM_OP) {
+            throw new IllegalStateException("sOpDefaultMode length " + sOpDefaultMode.length + " should be " + _NUM_OP);
+        }
+        if (sOpDisableReset.length < _NUM_OP) {
+            throw new IllegalStateException("sOpDisableReset length " + sOpDisableReset.length + " should be " + _NUM_OP);
+        }
+        if (sOpRestrictions.length < _NUM_OP) {
+            throw new IllegalStateException("sOpRestrictions length " + sOpRestrictions.length + " should be " + _NUM_OP);
+        }
+        if (sOpAllowSystemRestrictionBypass.length < _NUM_OP) {
+            throw new IllegalStateException("sOpAllowSystemRestrictionsBypass length " + sOpRestrictions.length + " should be " + _NUM_OP);
+        }
+
         // Init sOpWithoutPerm
         HashSet<Integer> opWithoutPerm = new HashSet<>();
         for (int op = 0; op < _NUM_OP; op++) {
-            sOpStrToOp.put(sOpToString[op], op);
+            if (sOpToString[op] != null) {
+                sOpStrToOp.put(sOpToString[op], op);
+            }
             if (sOpPerms[op] == null) {
                 opWithoutPerm.add(sOpToSwitch[op]);
             }
             sOpsWithNoPerm = ArrayUtils.convertToIntArray(opWithoutPerm);
         }
         for (int op : RUNTIME_AND_APPOP_PERMISSIONS_OPS) {
-            if (op >= _NUM_OP) break;
             if (sOpPerms[op] != null) {
                 sPermToOp.put(sOpPerms[op], op);
             }
