@@ -885,11 +885,12 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     @WorkerThread
     private void loadAppInfo() {
-        AppDetailsItem appDetailsItem = new AppDetailsItem(packageInfo);
-        if (getPackageInfo() == null) {
+        getPackageInfo();
+        if (packageInfo == null) {
             appInfo.postValue(null);
             return;
         }
+        AppDetailsItem appDetailsItem = new AppDetailsItem(packageInfo);
         appDetailsItem.name = packageName;
         List<AppDetailsItem> appDetailsItems = Collections.singletonList(appDetailsItem);
         appInfo.postValue(appDetailsItems);
