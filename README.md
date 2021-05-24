@@ -22,13 +22,14 @@
 - No unnecessary permissions
 - [Does not connect to the Internet](https://muntashirakon.github.io/AppManager/en/#x1-1780004.3.2)
 - Displays as much info as possible in the main page
-- Lists activities, broadcast receivers, services, providers, permissions, signatures, shared libraries, etc. of any app
+- Lists activities, broadcast receivers, services, providers, app ops, permissions, signatures, shared libraries, etc.
+  of any app
 - Launch (exportable) activities and services
 - Create (customizable) shortcuts of activities
 - [Intercept activities](https://muntashirakon.github.io/AppManager/en/#x1-1220002.8)
 - Scan for trackers and libraries in apps and list (all or only) tracking classes (and their code dump)
 - View the manifest of an app
-- Display your app usage, data usage, and app storage info (requires “Usage Access” permission)
+- Display app usage, data usage (mobile and wifi), and app storage info (requires “Usage Access” permission)
 - Install/uninstall APK files (including APKS, APKM and XAPK with OBB files)
 - Share APK files
 - Back up/restore APK files
@@ -36,23 +37,27 @@
 - One-click operations
 - Logcat viewer
 - [Profiles](https://muntashirakon.github.io/AppManager/en/#x1-710002.5) (including presets for quick debloating)
-- View app usage along with mobile and wifi data usage
-- Open app in Aurora Store or in your F-Droid client
-- Sign APK files before installing them
+- Open app in Aurora Store or in your favourite F-Droid client
+- Sign APK files with custom signatures before installing
 - Backup encryption: OpenPGP via OpenKeychain, RSA (hybrid encryption with AES) and AES.
 
 ### Root/ADB-only features
-- Revoke permissions considered dangerous by Android
-- Deny or ignore app ops
-- Display/kill/force-stop running processes/apps
+
+- Revoke runtime (AKA dangerous) and development permissions
+- Change mode of any app op
+- Display/kill/force-stop running apps or processes
 - Clear app data or app cache
+- View/change net policy
+- Control battery optimization
 
 ### Root-only features
-- Block any activities, broadcast receivers, services, or providers of an app with native import/export as well as Watt and Blocker import support
+
+- Block any activities, broadcast receivers, services, or providers of an app with native import/export as well as Watt
+  and Blocker import support
 - View/edit/delete shared preferences of any app
 - Back up/restore apps with data, rules and extras (such as permissions, battery optimization, SSAID, etc.)
-- System configuration, blacklisted or whitelisted apps
-- View/change SSAID, net policy, battery optimization
+- View system configurations including blacklisted or whitelisted apps, permissions, etc.
+- View/change SSAID
 
 …and many more! This single app combines the features of 5 or 6 apps any tech-savvy person needs!
 
