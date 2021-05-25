@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.scanner.reflector;
 
+import androidx.annotation.NonNull;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -12,8 +14,6 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
-
-import androidx.annotation.NonNull;
 
 // Copyright 2015 Google, Inc.
 @SuppressWarnings("rawtypes")
@@ -26,7 +26,6 @@ public class Reflector {
     }
 
     public static class TaggedWord {
-
         public TaggedWord(String word, TAG tag) {
             this.text = word;
             this.tag = tag;
@@ -42,20 +41,18 @@ public class Reflector {
     }
 
     @NonNull
+    @Override
     public String toString() {
-        if (words == null) {
-            return "";
-        } else {
-            StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
 
-            for (TaggedWord word : words) {
-                sb.append(word.text);
-            }
-
-            return sb.toString();
+        for (TaggedWord word : words) {
+            sb.append(word.text);
         }
+
+        return sb.toString();
     }
 
+    @NonNull
     public Set<String> getImports() {
         Constructor[] constructors;
         Method[] methods;
@@ -75,6 +72,7 @@ public class Reflector {
         return classRef.keySet();
     }
 
+    @NonNull
     public String generateClassData() {
         long start = System.currentTimeMillis();
         Constructor[] constructors;
