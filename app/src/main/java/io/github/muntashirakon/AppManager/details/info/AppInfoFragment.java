@@ -864,7 +864,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                             PackageManagerCompat.setApplicationEnabledSetting(mPackageName,
                                     PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER,
                                     0, mainModel.getUserHandle());
-                        } catch (RemoteException e) {
+                        } catch (RemoteException | SecurityException e) {
                             Log.e(TAG, e);
                             displayLongToast(R.string.failed_to_disable, mPackageLabel);
                         }
@@ -921,7 +921,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                             PackageManagerCompat.setApplicationEnabledSetting(mPackageName,
                                     PackageManager.COMPONENT_ENABLED_STATE_ENABLED, 0,
                                     mainModel.getUserHandle());
-                        } catch (RemoteException e) {
+                        } catch (RemoteException | SecurityException e) {
                             Log.e(TAG, e);
                             displayLongToast(R.string.failed_to_enable, mPackageLabel);
                         }
