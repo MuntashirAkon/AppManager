@@ -341,6 +341,13 @@ public class AppOpsManager {
     public static final int OP_RECORD_AUDIO_HOTWORD = 102;
     public static final int OP_MANAGE_ONGOING_CALLS = 103;
     public static final int OP_MANAGE_CREDENTIALS = 104;
+    public static final int OP_USE_ICC_AUTH_WITH_DEVICE_IDENTIFIER = 105;
+    public static final int OP_RECORD_AUDIO_OUTPUT = 106;
+    public static final int OP_SCHEDULE_EXACT_ALARM = 107;
+    public static final int OP_FINE_LOCATION_SOURCE = 108;
+    public static final int OP_COARSE_LOCATION_SOURCE = 109;
+    public static final int OP_MANAGE_MEDIA = 110;
+    public static final int OP_BLUETOOTH_CONNECT = 111;
     public static final int _NUM_OP;  // fetched using reflection
 
     // MIUI app ops taken from framework.jar
@@ -489,6 +496,13 @@ public class AppOpsManager {
     public static final String OPSTR_RECORD_AUDIO_HOTWORD = "android:record_audio_hotword";
     public static final String OPSTR_MANAGE_ONGOING_CALLS = "android:manage_on_going_calls";
     public static final String OPSTR_MANAGE_CREDENTIALS = "android:manage_credentials";
+    public static final String OPSTR_USE_ICC_AUTH_WITH_DEVICE_IDENTIFIER = "android:use_icc_auth_with_device_identifier";
+    public static final String OPSTR_RECORD_AUDIO_OUTPUT = "android:record_audio_output";
+    public static final String OPSTR_SCHEDULE_EXACT_ALARM = "android:schedule_exact_alarm";
+    public static final String OPSTR_FINE_LOCATION_SOURCE = "android:fine_location_source";
+    public static final String OPSTR_COARSE_LOCATION_SOURCE = "android:coarse_location_source";
+    public static final String OPSTR_MANAGE_MEDIA = "android:manage_media";
+    public static final String OPSTR_BLUETOOTH_CONNECT = "android:bluetooth_connect";
 
     private static final int[] RUNTIME_AND_APPOP_PERMISSIONS_OPS = {
             // RUNTIME PERMISSIONS
@@ -553,6 +567,10 @@ public class AppOpsManager {
             OP_INTERACT_ACROSS_PROFILES,
             OP_LOADER_USAGE_STATS,
             OP_MANAGE_ONGOING_CALLS,
+            OP_USE_ICC_AUTH_WITH_DEVICE_IDENTIFIER,
+            OP_SCHEDULE_EXACT_ALARM,
+            OP_MANAGE_MEDIA,
+            OP_BLUETOOTH_CONNECT,  // Missing in the original file
     };
 
     /**
@@ -669,6 +687,13 @@ public class AppOpsManager {
             OP_RECORD_AUDIO_HOTWORD,            // RECORD_AUDIO_HOTWORD
             OP_MANAGE_ONGOING_CALLS,            // MANAGE_ONGOING_CALLS
             OP_MANAGE_CREDENTIALS,              // MANAGE_CREDENTIALS
+            OP_USE_ICC_AUTH_WITH_DEVICE_IDENTIFIER, // USE_ICC_AUTH_WITH_DEVICE_IDENTIFIER
+            OP_RECORD_AUDIO_OUTPUT,             // RECORD_AUDIO_OUTPUT
+            OP_SCHEDULE_EXACT_ALARM,            // SCHEDULE_EXACT_ALARM
+            OP_FINE_LOCATION,                   // FINE_LOCATION_SOURCE
+            OP_COARSE_LOCATION,                 // COARSE_LOCATION_SOURCE
+            OP_MANAGE_MEDIA,                    // MANAGE_MEDIA
+            OP_BLUETOOTH_CONNECT,               // BLUETOOTH_CONNECT
     };
 
     /**
@@ -822,6 +847,13 @@ public class AppOpsManager {
             OPSTR_RECORD_AUDIO_HOTWORD,
             OPSTR_MANAGE_ONGOING_CALLS,
             OPSTR_MANAGE_CREDENTIALS,
+            OPSTR_USE_ICC_AUTH_WITH_DEVICE_IDENTIFIER,
+            OPSTR_RECORD_AUDIO_OUTPUT,
+            OPSTR_SCHEDULE_EXACT_ALARM,
+            OPSTR_FINE_LOCATION_SOURCE,
+            OPSTR_COARSE_LOCATION_SOURCE,
+            OPSTR_MANAGE_MEDIA,
+            OPSTR_BLUETOOTH_CONNECT,
     };
 
     /**
@@ -934,6 +966,13 @@ public class AppOpsManager {
             "RECORD_AUDIO_HOTWORD",
             "MANAGE_ONGOING_CALLS",
             "MANAGE_CREDENTIALS",
+            "USE_ICC_AUTH_WITH_DEVICE_IDENTIFIER",
+            "RECORD_AUDIO_OUTPUT",
+            "SCHEDULE_EXACT_ALARM",
+            "FINE_LOCATION_SOURCE",
+            "COARSE_LOCATION_SOURCE",
+            "MANAGE_MEDIA",
+            "BLUETOOTH_CONNECT"
     };
 
     /**
@@ -1089,6 +1128,13 @@ public class AppOpsManager {
             null, // no permission for OP_RECORD_AUDIO_HOTWORD
             "android.permission.MANAGE_ONGOING_CALLS",
             null, // no permission for OP_MANAGE_CREDENTIALS
+            "android.permission.USE_ICC_AUTH_WITH_DEVICE_IDENTIFIER",
+            null, // no permission for OP_RECORD_AUDIO_OUTPUT
+            "android.permission.SCHEDULE_EXACT_ALARM",
+            null, // no permission for OP_FINE_LOCATION_SOURCE
+            null, // no permission for OP_COARSE_LOCATION_SOURCE
+            "android.permission.MANAGE_MEDIA",
+            "android.permission.BLUETOOTH_CONNECT",
     };
 
     /**
@@ -1202,6 +1248,13 @@ public class AppOpsManager {
             null, // RECORD_AUDIO_HOTWORD
             null, // MANAGE_ONGOING_CALLS
             null, // MANAGE_CREDENTIALS
+            null, // USE_ICC_AUTH_WITH_DEVICE_IDENTIFIER
+            null, // RECORD_AUDIO_OUTPUT
+            null, // SCHEDULE_EXACT_ALARM
+            null, // FINE_LOCATION_SOURCE
+            null, // COARSE_LOCATION_SOURCE
+            null, // MANAGE_MEDIA
+            null, // BLUETOOTH_CONNECT
     };
 
     /**
@@ -1313,117 +1366,131 @@ public class AppOpsManager {
             null, // RECORD_AUDIO_HOTWORD
             null, // MANAGE_ONGOING_CALLS
             null, // MANAGE_CREDENTIALS
+            null, // USE_ICC_AUTH_WITH_DEVICE_IDENTIFIER
+            null, // RECORD_AUDIO_OUTPUT
+            null, // SCHEDULE_EXACT_ALARM
+            null, // FINE_LOCATION_SOURCE
+            null, // COARSE_LOCATION_SOURCE
+            null, // MANAGE_MEDIA
+            null, // BLUETOOTH_CONNECT
     };
 
     /**
      * This specifies the default mode for each operation.
      */
     private static final int[] sOpDefaultMode = new int[]{
-            AppOpsManager.MODE_ALLOWED, // COARSE_LOCATION
-            AppOpsManager.MODE_ALLOWED, // FINE_LOCATION
-            AppOpsManager.MODE_ALLOWED, // GPS
-            AppOpsManager.MODE_ALLOWED, // VIBRATE
-            AppOpsManager.MODE_ALLOWED, // READ_CONTACTS
-            AppOpsManager.MODE_ALLOWED, // WRITE_CONTACTS
-            AppOpsManager.MODE_ALLOWED, // READ_CALL_LOG
-            AppOpsManager.MODE_ALLOWED, // WRITE_CALL_LOG
-            AppOpsManager.MODE_ALLOWED, // READ_CALENDAR
-            AppOpsManager.MODE_ALLOWED, // WRITE_CALENDAR
-            AppOpsManager.MODE_ALLOWED, // WIFI_SCAN
-            AppOpsManager.MODE_ALLOWED, // POST_NOTIFICATION
-            AppOpsManager.MODE_ALLOWED, // NEIGHBORING_CELLS
-            AppOpsManager.MODE_ALLOWED, // CALL_PHONE
-            AppOpsManager.MODE_ALLOWED, // READ_SMS
-            AppOpsManager.MODE_IGNORED, // WRITE_SMS
-            AppOpsManager.MODE_ALLOWED, // RECEIVE_SMS
-            AppOpsManager.MODE_ALLOWED, // RECEIVE_EMERGENCY_BROADCAST
-            AppOpsManager.MODE_ALLOWED, // RECEIVE_MMS
-            AppOpsManager.MODE_ALLOWED, // RECEIVE_WAP_PUSH
-            AppOpsManager.MODE_ALLOWED, // SEND_SMS
-            AppOpsManager.MODE_ALLOWED, // READ_ICC_SMS
-            AppOpsManager.MODE_ALLOWED, // WRITE_ICC_SMS
-            AppOpsManager.MODE_DEFAULT, // WRITE_SETTINGS
+            MODE_ALLOWED, // COARSE_LOCATION
+            MODE_ALLOWED, // FINE_LOCATION
+            MODE_ALLOWED, // GPS
+            MODE_ALLOWED, // VIBRATE
+            MODE_ALLOWED, // READ_CONTACTS
+            MODE_ALLOWED, // WRITE_CONTACTS
+            MODE_ALLOWED, // READ_CALL_LOG
+            MODE_ALLOWED, // WRITE_CALL_LOG
+            MODE_ALLOWED, // READ_CALENDAR
+            MODE_ALLOWED, // WRITE_CALENDAR
+            MODE_ALLOWED, // WIFI_SCAN
+            MODE_ALLOWED, // POST_NOTIFICATION
+            MODE_ALLOWED, // NEIGHBORING_CELLS
+            MODE_ALLOWED, // CALL_PHONE
+            MODE_ALLOWED, // READ_SMS
+            MODE_IGNORED, // WRITE_SMS
+            MODE_ALLOWED, // RECEIVE_SMS
+            MODE_ALLOWED, // RECEIVE_EMERGENCY_BROADCAST
+            MODE_ALLOWED, // RECEIVE_MMS
+            MODE_ALLOWED, // RECEIVE_WAP_PUSH
+            MODE_ALLOWED, // SEND_SMS
+            MODE_ALLOWED, // READ_ICC_SMS
+            MODE_ALLOWED, // WRITE_ICC_SMS
+            MODE_DEFAULT, // WRITE_SETTINGS
             getSystemAlertWindowDefault(), // SYSTEM_ALERT_WINDOW
-            AppOpsManager.MODE_ALLOWED, // ACCESS_NOTIFICATIONS
-            AppOpsManager.MODE_ALLOWED, // CAMERA
-            AppOpsManager.MODE_ALLOWED, // RECORD_AUDIO
-            AppOpsManager.MODE_ALLOWED, // PLAY_AUDIO
-            AppOpsManager.MODE_ALLOWED, // READ_CLIPBOARD
-            AppOpsManager.MODE_ALLOWED, // WRITE_CLIPBOARD
-            AppOpsManager.MODE_ALLOWED, // TAKE_MEDIA_BUTTONS
-            AppOpsManager.MODE_ALLOWED, // TAKE_AUDIO_FOCUS
-            AppOpsManager.MODE_ALLOWED, // AUDIO_MASTER_VOLUME
-            AppOpsManager.MODE_ALLOWED, // AUDIO_VOICE_VOLUME
-            AppOpsManager.MODE_ALLOWED, // AUDIO_RING_VOLUME
-            AppOpsManager.MODE_ALLOWED, // AUDIO_MEDIA_VOLUME
-            AppOpsManager.MODE_ALLOWED, // AUDIO_ALARM_VOLUME
-            AppOpsManager.MODE_ALLOWED, // AUDIO_NOTIFICATION_VOLUME
-            AppOpsManager.MODE_ALLOWED, // AUDIO_BLUETOOTH_VOLUME
-            AppOpsManager.MODE_ALLOWED, // WAKE_LOCK
-            AppOpsManager.MODE_ALLOWED, // MONITOR_LOCATION
-            AppOpsManager.MODE_ALLOWED, // MONITOR_HIGH_POWER_LOCATION
-            AppOpsManager.MODE_DEFAULT, // GET_USAGE_STATS
-            AppOpsManager.MODE_ALLOWED, // MUTE_MICROPHONE
-            AppOpsManager.MODE_ALLOWED, // TOAST_WINDOW
-            AppOpsManager.MODE_IGNORED, // PROJECT_MEDIA
-            AppOpsManager.MODE_IGNORED, // ACTIVATE_VPN
-            AppOpsManager.MODE_ALLOWED, // WRITE_WALLPAPER
-            AppOpsManager.MODE_ALLOWED, // ASSIST_STRUCTURE
-            AppOpsManager.MODE_ALLOWED, // ASSIST_SCREENSHOT
-            AppOpsManager.MODE_ALLOWED, // READ_PHONE_STATE
-            AppOpsManager.MODE_ALLOWED, // ADD_VOICEMAIL
-            AppOpsManager.MODE_ALLOWED, // USE_SIP
-            AppOpsManager.MODE_ALLOWED, // PROCESS_OUTGOING_CALLS
-            AppOpsManager.MODE_ALLOWED, // USE_FINGERPRINT
-            AppOpsManager.MODE_ALLOWED, // BODY_SENSORS
-            AppOpsManager.MODE_ALLOWED, // READ_CELL_BROADCASTS
-            AppOpsManager.MODE_ERRORED, // MOCK_LOCATION
-            AppOpsManager.MODE_ALLOWED, // READ_EXTERNAL_STORAGE
-            AppOpsManager.MODE_ALLOWED, // WRITE_EXTERNAL_STORAGE
-            AppOpsManager.MODE_ALLOWED, // TURN_SCREEN_ON
-            AppOpsManager.MODE_ALLOWED, // GET_ACCOUNTS
-            AppOpsManager.MODE_ALLOWED, // RUN_IN_BACKGROUND
-            AppOpsManager.MODE_ALLOWED, // AUDIO_ACCESSIBILITY_VOLUME
-            AppOpsManager.MODE_ALLOWED, // READ_PHONE_NUMBERS
-            AppOpsManager.MODE_DEFAULT, // REQUEST_INSTALL_PACKAGES
-            AppOpsManager.MODE_ALLOWED, // PICTURE_IN_PICTURE
-            AppOpsManager.MODE_DEFAULT, // INSTANT_APP_START_FOREGROUND
-            AppOpsManager.MODE_ALLOWED, // ANSWER_PHONE_CALLS
-            AppOpsManager.MODE_ALLOWED, // RUN_ANY_IN_BACKGROUND
-            AppOpsManager.MODE_ALLOWED, // CHANGE_WIFI_STATE
-            AppOpsManager.MODE_ALLOWED, // REQUEST_DELETE_PACKAGES
-            AppOpsManager.MODE_ALLOWED, // BIND_ACCESSIBILITY_SERVICE
-            AppOpsManager.MODE_ALLOWED, // ACCEPT_HANDOVER
-            AppOpsManager.MODE_ERRORED, // MANAGE_IPSEC_TUNNELS
-            AppOpsManager.MODE_ALLOWED, // START_FOREGROUND
-            AppOpsManager.MODE_ALLOWED, // BLUETOOTH_SCAN
-            AppOpsManager.MODE_ALLOWED, // USE_BIOMETRIC
-            AppOpsManager.MODE_ALLOWED, // ACTIVITY_RECOGNITION
-            AppOpsManager.MODE_DEFAULT, // SMS_FINANCIAL_TRANSACTIONS
-            AppOpsManager.MODE_ALLOWED, // READ_MEDIA_AUDIO
-            AppOpsManager.MODE_ERRORED, // WRITE_MEDIA_AUDIO
-            AppOpsManager.MODE_ALLOWED, // READ_MEDIA_VIDEO
-            AppOpsManager.MODE_ERRORED, // WRITE_MEDIA_VIDEO
-            AppOpsManager.MODE_ALLOWED, // READ_MEDIA_IMAGES
-            AppOpsManager.MODE_ERRORED, // WRITE_MEDIA_IMAGES
-            AppOpsManager.MODE_DEFAULT, // LEGACY_STORAGE
-            AppOpsManager.MODE_ALLOWED, // ACCESS_ACCESSIBILITY
-            AppOpsManager.MODE_ERRORED, // READ_DEVICE_IDENTIFIERS
-            AppOpsManager.MODE_ALLOWED, // ALLOW_MEDIA_LOCATION
-            AppOpsManager.MODE_DEFAULT, // QUERY_ALL_PACKAGES
-            AppOpsManager.MODE_DEFAULT, // MANAGE_EXTERNAL_STORAGE
-            AppOpsManager.MODE_DEFAULT, // INTERACT_ACROSS_PROFILES
-            AppOpsManager.MODE_IGNORED, // ACTIVATE_PLATFORM_VPN
-            AppOpsManager.MODE_DEFAULT, // LOADER_USAGE_STATS
-            AppOpsManager.MODE_IGNORED, // deprecated operation
-            AppOpsManager.MODE_DEFAULT, // OP_AUTO_REVOKE_PERMISSIONS_IF_UNUSED
-            AppOpsManager.MODE_ALLOWED, // OP_AUTO_REVOKE_MANAGED_BY_INSTALLER
-            AppOpsManager.MODE_ERRORED, // OP_NO_ISOLATED_STORAGE
-            AppOpsManager.MODE_ALLOWED, // PHONE_CALL_MICROPHONE
-            AppOpsManager.MODE_ALLOWED, // PHONE_CALL_CAMERA
-            AppOpsManager.MODE_ALLOWED, // OP_RECORD_AUDIO_HOTWORD
-            AppOpsManager.MODE_DEFAULT, // MANAGE_ONGOING_CALLS
-            AppOpsManager.MODE_DEFAULT, // MANAGE_CREDENTIALS
+            MODE_ALLOWED, // ACCESS_NOTIFICATIONS
+            MODE_ALLOWED, // CAMERA
+            MODE_ALLOWED, // RECORD_AUDIO
+            MODE_ALLOWED, // PLAY_AUDIO
+            MODE_ALLOWED, // READ_CLIPBOARD
+            MODE_ALLOWED, // WRITE_CLIPBOARD
+            MODE_ALLOWED, // TAKE_MEDIA_BUTTONS
+            MODE_ALLOWED, // TAKE_AUDIO_FOCUS
+            MODE_ALLOWED, // AUDIO_MASTER_VOLUME
+            MODE_ALLOWED, // AUDIO_VOICE_VOLUME
+            MODE_ALLOWED, // AUDIO_RING_VOLUME
+            MODE_ALLOWED, // AUDIO_MEDIA_VOLUME
+            MODE_ALLOWED, // AUDIO_ALARM_VOLUME
+            MODE_ALLOWED, // AUDIO_NOTIFICATION_VOLUME
+            MODE_ALLOWED, // AUDIO_BLUETOOTH_VOLUME
+            MODE_ALLOWED, // WAKE_LOCK
+            MODE_ALLOWED, // MONITOR_LOCATION
+            MODE_ALLOWED, // MONITOR_HIGH_POWER_LOCATION
+            MODE_DEFAULT, // GET_USAGE_STATS
+            MODE_ALLOWED, // MUTE_MICROPHONE
+            MODE_ALLOWED, // TOAST_WINDOW
+            MODE_IGNORED, // PROJECT_MEDIA
+            MODE_IGNORED, // ACTIVATE_VPN
+            MODE_ALLOWED, // WRITE_WALLPAPER
+            MODE_ALLOWED, // ASSIST_STRUCTURE
+            MODE_ALLOWED, // ASSIST_SCREENSHOT
+            MODE_ALLOWED, // READ_PHONE_STATE
+            MODE_ALLOWED, // ADD_VOICEMAIL
+            MODE_ALLOWED, // USE_SIP
+            MODE_ALLOWED, // PROCESS_OUTGOING_CALLS
+            MODE_ALLOWED, // USE_FINGERPRINT
+            MODE_ALLOWED, // BODY_SENSORS
+            MODE_ALLOWED, // READ_CELL_BROADCASTS
+            MODE_ERRORED, // MOCK_LOCATION
+            MODE_ALLOWED, // READ_EXTERNAL_STORAGE
+            MODE_ALLOWED, // WRITE_EXTERNAL_STORAGE
+            MODE_ALLOWED, // TURN_SCREEN_ON
+            MODE_ALLOWED, // GET_ACCOUNTS
+            MODE_ALLOWED, // RUN_IN_BACKGROUND
+            MODE_ALLOWED, // AUDIO_ACCESSIBILITY_VOLUME
+            MODE_ALLOWED, // READ_PHONE_NUMBERS
+            MODE_DEFAULT, // REQUEST_INSTALL_PACKAGES
+            MODE_ALLOWED, // PICTURE_IN_PICTURE
+            MODE_DEFAULT, // INSTANT_APP_START_FOREGROUND
+            MODE_ALLOWED, // ANSWER_PHONE_CALLS
+            MODE_ALLOWED, // RUN_ANY_IN_BACKGROUND
+            MODE_ALLOWED, // CHANGE_WIFI_STATE
+            MODE_ALLOWED, // REQUEST_DELETE_PACKAGES
+            MODE_ALLOWED, // BIND_ACCESSIBILITY_SERVICE
+            MODE_ALLOWED, // ACCEPT_HANDOVER
+            MODE_ERRORED, // MANAGE_IPSEC_TUNNELS
+            MODE_ALLOWED, // START_FOREGROUND
+            MODE_ALLOWED, // BLUETOOTH_SCAN
+            MODE_ALLOWED, // USE_BIOMETRIC
+            MODE_ALLOWED, // ACTIVITY_RECOGNITION
+            MODE_DEFAULT, // SMS_FINANCIAL_TRANSACTIONS
+            MODE_ALLOWED, // READ_MEDIA_AUDIO
+            MODE_ERRORED, // WRITE_MEDIA_AUDIO
+            MODE_ALLOWED, // READ_MEDIA_VIDEO
+            MODE_ERRORED, // WRITE_MEDIA_VIDEO
+            MODE_ALLOWED, // READ_MEDIA_IMAGES
+            MODE_ERRORED, // WRITE_MEDIA_IMAGES
+            MODE_DEFAULT, // LEGACY_STORAGE
+            MODE_ALLOWED, // ACCESS_ACCESSIBILITY
+            MODE_ERRORED, // READ_DEVICE_IDENTIFIERS
+            MODE_ALLOWED, // ALLOW_MEDIA_LOCATION
+            MODE_DEFAULT, // QUERY_ALL_PACKAGES
+            MODE_DEFAULT, // MANAGE_EXTERNAL_STORAGE
+            MODE_DEFAULT, // INTERACT_ACROSS_PROFILES
+            MODE_IGNORED, // ACTIVATE_PLATFORM_VPN
+            MODE_DEFAULT, // LOADER_USAGE_STATS
+            MODE_IGNORED, // deprecated operation
+            MODE_DEFAULT, // OP_AUTO_REVOKE_PERMISSIONS_IF_UNUSED
+            MODE_ALLOWED, // OP_AUTO_REVOKE_MANAGED_BY_INSTALLER
+            MODE_ERRORED, // OP_NO_ISOLATED_STORAGE
+            MODE_ALLOWED, // PHONE_CALL_MICROPHONE
+            MODE_ALLOWED, // PHONE_CALL_CAMERA
+            MODE_ALLOWED, // OP_RECORD_AUDIO_HOTWORD
+            MODE_DEFAULT, // MANAGE_ONGOING_CALLS
+            MODE_DEFAULT, // MANAGE_CREDENTIALS
+            MODE_DEFAULT, // USE_ICC_AUTH_WITH_DEVICE_IDENTIFIER
+            MODE_ALLOWED, // RECORD_AUDIO_OUTPUT
+            MODE_DEFAULT, // SCHEDULE_EXACT_ALARM
+            MODE_ALLOWED, // FINE_LOCATION_SOURCE
+            MODE_ALLOWED, // COARSE_LOCATION_SOURCE
+            MODE_DEFAULT, // MANAGE_MEDIA
+            MODE_ALLOWED, // BLUETOOTH_CONNECT
     };
 
 
@@ -1545,6 +1612,13 @@ public class AppOpsManager {
             false, // RECORD_AUDIO_HOTWORD
             true, // MANAGE_ONGOING_CALLS
             false, // MANAGE_CREDENTIALS
+            true, // USE_ICC_AUTH_WITH_DEVICE_IDENTIFIER
+            false, // RECORD_AUDIO_OUTPUT
+            false, // SCHEDULE_EXACT_ALARM
+            false, // FINE_LOCATION_SOURCE
+            false, // COARSE_LOCATION_SOURCE
+            false, // MANAGE_MEDIA
+            false, // BLUETOOTH_CONNECT
     };
 
     /**
@@ -1566,7 +1640,7 @@ public class AppOpsManager {
 
     static {
         // Get _NUM_OP
-        int numOp = 105;  // Should be the same as the latest _NUM_OP
+        int numOp = 112;  // Should be the same as the latest _NUM_OP
         try {
             //noinspection JavaReflectionMemberAccess
             numOp = android.app.AppOpsManager.class.getField("_NUM_OP").getInt(null);
