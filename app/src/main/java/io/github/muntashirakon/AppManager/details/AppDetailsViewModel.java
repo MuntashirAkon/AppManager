@@ -1101,7 +1101,10 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 List<String> permissions = getRawPermissions();
                 for (String permission : permissions) {
                     int op = AppOpsManager.permissionToOpCode(permission);
-                    if (op == OP_NONE) continue;
+                    if (op == OP_NONE || op >= AppOpsManager._NUM_OP) {
+                        // Invalid/unsupported app operation
+                        continue;
+                    }
                     opEntry = new OpEntry(op, mAppOpsService.checkOperation(op, uid, packageName), 0,
                             0, 0, 0, null);
                     if (!opEntries.contains(opEntry)) opEntries.add(opEntry);
@@ -1109,6 +1112,10 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 // Include defaults ie. app ops without any associated permissions if requested
                 if ((boolean) AppPref.get(AppPref.PrefKey.PREF_APP_OP_SHOW_DEFAULT_BOOL)) {
                     for (int op : AppOpsManager.sOpsWithNoPerm) {
+                        if (op >= AppOpsManager._NUM_OP) {
+                            // Unsupported app operation
+                            continue;
+                        }
                         opEntry = new OpEntry(op, AppOpsManager.opToDefaultMode(op), 0,
                                 0, 0, 0, null);
                         if (!opEntries.contains(opEntry)) opEntries.add(opEntry);
