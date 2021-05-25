@@ -57,8 +57,12 @@ public class SsaidSettings {
         } catch (SecurityException e) {
             throw new IOException(e);
         }
-        settingsState = new SettingsState(lock, ssaidLocation, ssaidKey,
-                SettingsState.MAX_BYTES_PER_APP_PACKAGE_UNLIMITED, thread.getLooper());
+        try {
+            settingsState = new SettingsState(lock, ssaidLocation, ssaidKey,
+                    SettingsState.MAX_BYTES_PER_APP_PACKAGE_UNLIMITED, thread.getLooper());
+        } catch (IllegalStateException e) {
+            throw new IOException(e);
+        }
     }
 
     @Nullable
