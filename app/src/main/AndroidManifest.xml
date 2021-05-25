@@ -104,6 +104,7 @@
         </activity>
         <activity
             android:name=".main.MainActivity"
+            android:exported="true"
             android:icon="@mipmap/ic_launcher"
             android:roundIcon="@mipmap/ic_launcher_round">
             <intent-filter>
@@ -505,9 +506,12 @@
         </activity>
         <activity
             android:name=".logcat.RecordLogDialogActivity"
+            android:exported="true"
             android:theme="@style/AppTheme.TransparentBackground" />
 
-        <service android:name=".apk.installer.PackageInstallerService" />
+        <service
+            android:name=".apk.installer.PackageInstallerService"
+            android:exported="false" />
         <service
             android:name=".batchops.BatchOpsService"
             android:exported="false" />
@@ -521,7 +525,9 @@
             android:name=".logcat.CrazyLoggerService"
             android:exported="false" />
 
-        <receiver android:name=".logcat.RecordingWidgetProvider">
+        <receiver
+            android:name=".logcat.RecordingWidgetProvider"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <data android:scheme="log_viewer_widget" />
