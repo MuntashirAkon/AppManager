@@ -87,9 +87,11 @@ import io.github.muntashirakon.AppManager.types.TextInputDropdownDialogBuilder;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.BetterActivityResult;
+import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.StoragePermission;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
 import static io.github.muntashirakon.AppManager.logcat.LogViewerRecyclerAdapter.ViewHolder.CONTEXT_MENU_COPY_ID;
@@ -137,6 +139,7 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
     private Handler mHandler;
     private SearchView searchView;
 
+    private final MultithreadedExecutor executor = MultithreadedExecutor.getNewInstance();
     private final BetterActivityResult<Intent, ActivityResult> activityLauncher =
             BetterActivityResult.registerActivityForResult(this);
     private final StoragePermission storagePermission = StoragePermission.init(this);
@@ -239,14 +242,14 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
         setUpLogViewerAdapter();
         // Grant read logs permission if not already
         if (!PermissionUtils.hasPermission(this, Manifest.permission.READ_LOGS) && LocalServer.isAMServiceAlive()) {
-            new Thread(() -> {
+            executor.submit(() -> {
                 try {
                     PermissionCompat.grantPermission(getPackageName(), Manifest.permission.READ_LOGS,
                             Users.getCurrentUserHandle());
                 } catch (RemoteException e) {
                     Log.d(TAG, e.toString());
                 }
-            }).start();
+            });
         }
         // It doesn't matter whether the permission has been granted or not
         startLog();
@@ -256,12 +259,12 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
         if (action == null) return;
         if ("record".equals(action)) {
             String logFilename = SaveLogHelper.createLogFilename();
-            new Thread(() -> {
+            executor.submit(() -> {
                 // Start recording logs
                 ServiceHelper.startBackgroundServiceIfNotAlreadyRunning(this, logFilename, "",
                         AppPref.getInt(AppPref.PrefKey.PREF_LOG_VIEWER_DEFAULT_LOG_LEVEL_INT));
                 runOnUiThread(this::finish);
-            }).start();
+            });
         }
     }
 
@@ -369,6 +372,7 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
             mTask.cancel(true);
             mTask = null;
         }
+        executor.shutdownNow();
     }
 
     private void populateSuggestionsAdapter(String query) {
@@ -634,7 +638,7 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
     }
 
     private void showFiltersDialog() {
-        new Thread(() -> {
+        executor.submit(() -> {
             final List<LogFilter> filters = AppManager.getDb().logFilterDao().getAll();
             Collections.sort(filters);
             mHandler.post(() -> {
@@ -665,13 +669,13 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
                     alertDialog.dismiss();
                 });
             });
-        }).start();
+        });
     }
 
     protected void handleNewFilterText(String text, final LogFilterAdapter logFilterAdapter) {
         final String trimmed = text.trim();
         if (!TextUtils.isEmpty(trimmed)) {
-            new Thread(() -> {
+            executor.submit(() -> {
                 LogFilterDao dao = AppManager.getDb().logFilterDao();
                 long id = dao.insert(trimmed);
                 LogFilter logFilter = dao.get(id);
@@ -684,7 +688,7 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
                         addToAutocompleteSuggestions(trimmed);
                     }
                 });
-            }).start();
+            });
         }
     }
 
@@ -807,7 +811,7 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
             dialog.setCanceledOnTouchOutside(false);
             dialog.setCancelable(false);
         } else dialog = null;
-        new Thread(() -> {
+        executor.submit(() -> {
             SendLogDetails sendLogDetails = new SendLogDetails();
             List<File> files = saveLogDetails(includeDeviceInfo, includeDmesg);
             sendLogDetails.setBody("");
@@ -835,13 +839,14 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
                     break;
             }
             runOnUiThread(() -> {
+                if (isDestroyed()) return;
                 startChooser(LogViewerActivity.this, sendLogDetails.getSubject(), sendLogDetails.getBody(),
                         sendLogDetails.getAttachmentType(), sendLogDetails.getAttachment());
                 if (dialog != null && dialog.isShowing()) {
                     dialog.dismiss();
                 }
             });
-        }).start();
+        });
 
     }
 
@@ -853,7 +858,7 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
             dialog.setCanceledOnTouchOutside(false);
             dialog.setCancelable(false);
         } else dialog = null;
-        new Thread(() -> {
+        executor.submit(() -> {
             List<File> files = saveLogDetails(includeDeviceInfo, includeDmesg);
             if (isDestroyed()) return;
             runOnUiThread(() -> {
@@ -862,19 +867,17 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
                 }
                 saveLauncher.launch(SaveLogHelper.createZipFilename(true), uri -> {
                     if (uri == null) return;
-                    new Thread(() -> {
+                    executor.submit(() -> {
                         try {
                             SaveLogHelper.saveZipFileAndThrow(this, uri, files);
-                            if (isDestroyed()) return;
-                            runOnUiThread(() -> UIUtils.displayShortToast(R.string.saved_successfully));
+                            UiThreadHandler.run(() -> UIUtils.displayShortToast(R.string.saved_successfully));
                         } catch (IOException | RemoteException e) {
-                            if (isDestroyed()) return;
-                            runOnUiThread(() -> UIUtils.displayShortToast(R.string.saving_failed));
+                            UiThreadHandler.run(() -> UIUtils.displayShortToast(R.string.saving_failed));
                         }
-                    }).start();
+                    });
                 });
             });
-        }).start();
+        });
 
     }
 
@@ -958,36 +961,36 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
             return;
         }
 
-        new Thread(() -> {
+        executor.submit(() -> {
             SaveLogHelper.deleteLogIfExists(filename);
             final boolean saved = SaveLogHelper.saveLog(logLines, filename);
-            mHandler.post(() -> {
+            UiThreadHandler.run(() -> {
                 if (saved) {
                     UIUtils.displayShortToast(R.string.saved_successfully);
                     openLogFile(filename);
                 } else {
-                    Toast.makeText(getApplicationContext(), R.string.unable_to_save_log, Toast.LENGTH_LONG).show();
+                    UIUtils.displayLongToast(R.string.unable_to_save_log);
                 }
                 cancelPartialSelect();
             });
-        }).start();
+        });
     }
 
     private void saveLog(final String filename) {
         final List<String> logLines = getCurrentLogAsListOfStrings();
 
-        new Thread(() -> {
+        executor.submit(() -> {
             SaveLogHelper.deleteLogIfExists(filename);
             final boolean saved = SaveLogHelper.saveLog(logLines, filename);
-            mHandler.post(() -> {
+            UiThreadHandler.run(() -> {
                 if (saved) {
-                    Toast.makeText(getApplicationContext(), R.string.log_saved, Toast.LENGTH_SHORT).show();
+                    UIUtils.displayShortToast(R.string.log_saved);
                     openLogFile(filename);
                 } else {
-                    Toast.makeText(getApplicationContext(), R.string.unable_to_save_log, Toast.LENGTH_LONG).show();
+                    UIUtils.displayLongToast(R.string.unable_to_save_log);
                 }
             });
-        }).start();
+        });
 
     }
 
@@ -1079,7 +1082,7 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
         mCurrentlyOpenLog = filename;
         mCollapsedMode = !AppPref.getBoolean(AppPref.PrefKey.PREF_LOG_VIEWER_EXPAND_BY_DEFAULT_BOOL);
         // Populate suggestions with existing filters (if any)
-        new Thread(this::addFiltersToSuggestions).start();
+        executor.submit(this::addFiltersToSuggestions);
         updateUiForFilename();
         resetFilter();
     }

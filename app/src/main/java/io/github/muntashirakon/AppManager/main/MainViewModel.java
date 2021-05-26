@@ -21,6 +21,16 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import java.text.Collator;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.backup.BackupUtils;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
@@ -37,11 +47,9 @@ import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
-
-import java.text.Collator;
-import java.util.*;
 
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfo;
@@ -63,6 +71,7 @@ public class MainViewModel extends AndroidViewModel {
     private HashMap<String, MetadataManager.Metadata> backupMetadata;
     private final Map<String, int[]> selectedPackages = new HashMap<>();
     private final ArrayList<ApplicationItem> selectedApplicationItems = new ArrayList<>();
+    final MultithreadedExecutor executor = MultithreadedExecutor.getNewInstance();
 
     public MainViewModel(@NonNull Application application) {
         super(application);
@@ -177,7 +186,7 @@ public class MainViewModel extends AndroidViewModel {
 
     public void setSearchQuery(String searchQuery) {
         this.searchQuery = searchQuery;
-        new Thread(this::filterItemsByFlags).start();
+        executor.submit(this::filterItemsByFlags);
     }
 
     public int getSortBy() {
@@ -185,10 +194,10 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     public void setSortReverse(boolean sortReverse) {
-        new Thread(() -> {
+        executor.submit(() -> {
             sortApplicationList(mSortBy, mSortReverse);
             filterItemsByFlags();
-        }).start();
+        });
         mSortReverse = sortReverse;
         AppPref.set(AppPref.PrefKey.PREF_MAIN_WINDOW_SORT_REVERSE_BOOL, mSortReverse);
     }
@@ -199,10 +208,10 @@ public class MainViewModel extends AndroidViewModel {
 
     public void setSortBy(int sortBy) {
         if (mSortBy != sortBy) {
-            new Thread(() -> {
+            executor.submit(() -> {
                 sortApplicationList(sortBy, mSortReverse);
                 filterItemsByFlags();
-            }).start();
+            });
         }
         mSortBy = sortBy;
         AppPref.set(AppPref.PrefKey.PREF_MAIN_WINDOW_SORT_ORDER_INT, mSortBy);
@@ -215,13 +224,13 @@ public class MainViewModel extends AndroidViewModel {
     public void addFilterFlag(@ListOptions.Filter int filterFlag) {
         mFilterFlags |= filterFlag;
         AppPref.set(AppPref.PrefKey.PREF_MAIN_WINDOW_FILTER_FLAGS_INT, mFilterFlags);
-        new Thread(this::filterItemsByFlags).start();
+        executor.submit(this::filterItemsByFlags);
     }
 
     public void removeFilterFlag(@ListOptions.Filter int filterFlag) {
         mFilterFlags &= ~filterFlag;
         AppPref.set(AppPref.PrefKey.PREF_MAIN_WINDOW_FILTER_FLAGS_INT, mFilterFlags);
-        new Thread(this::filterItemsByFlags).start();
+        executor.submit(this::filterItemsByFlags);
     }
 
     public void setFilterProfileName(@Nullable String filterProfileName) {
@@ -230,7 +239,7 @@ public class MainViewModel extends AndroidViewModel {
         } else if (mFilterProfileName.equals(filterProfileName)) return;
         mFilterProfileName = filterProfileName;
         AppPref.set(AppPref.PrefKey.PREF_MAIN_WINDOW_FILTER_PROFILE_STR, filterProfileName == null ? "" : filterProfileName);
-        new Thread(this::filterItemsByFlags).start();
+        executor.submit(this::filterItemsByFlags);
     }
 
     public String getFilterProfileName() {
@@ -246,7 +255,7 @@ public class MainViewModel extends AndroidViewModel {
 
     @GuardedBy("applicationItems")
     public void loadApplicationItems() {
-        new Thread(() -> {
+        executor.submit(() -> {
             backupMetadata = BackupUtils.getAllBackupMetadata();
             List<ApplicationItem> updatedApplicationItems = PackageUtils.getInstalledOrBackedUpApplicationsFromDb(
                     getApplication(), backupMetadata);
@@ -260,7 +269,7 @@ public class MainViewModel extends AndroidViewModel {
                 sortApplicationList(mSortBy, mSortReverse);
                 filterItemsByFlags();
             }
-        }).start();
+        });
     }
 
     private void filterItemsByQuery(@NonNull List<ApplicationItem> applicationItems) {
@@ -688,6 +697,7 @@ public class MainViewModel extends AndroidViewModel {
     @Override
     protected void onCleared() {
         if (mPackageObserver != null) getApplication().unregisterReceiver(mPackageObserver);
+        executor.shutdownNow();
         super.onCleared();
     }
 

@@ -86,14 +86,15 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     @GuardedBy("mAdapterList")
     void setDefaultList(List<ApplicationItem> list) {
-        new Thread(() -> {
+        if (mActivity.mModel == null) return;
+        mActivity.mModel.executor.submit(() -> {
             synchronized (mAdapterList) {
                 mAdapterList.clear();
                 mAdapterList.addAll(list);
                 mSearchQuery = mActivity.mModel.getSearchQuery();
                 mActivity.runOnUiThread(this::notifyDataSetChanged);
             }
-        }).start();
+        });
     }
 
     @GuardedBy("mAdapterList")

@@ -5,7 +5,6 @@ package io.github.muntashirakon.AppManager.runningapps;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.graphics.Color;
-import android.os.RemoteException;
 import android.text.TextUtils;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
@@ -15,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
@@ -23,19 +21,14 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Locale;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
 import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
-import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
-import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
-import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
@@ -117,13 +110,7 @@ public class RunningAppsAdapter extends RecyclerView.Adapter<RunningAppsAdapter.
             MenuItem killItem = menu.findItem(R.id.action_kill);
             if ((processItem.pid >= 10000 || RunningAppsActivity.enableKillForSystem) && !isAdbMode) {
                 killItem.setVisible(true).setOnMenuItemClickListener(item -> {
-                    new Thread(() -> {
-                        if (Runner.runCommand(new String[]{"kill", "-9", String.valueOf(processItem.pid)}).isSuccessful()) {
-                            mActivity.runOnUiThread(mActivity::refresh);
-                        } else {
-                            mActivity.runOnUiThread(() -> Toast.makeText(mActivity, mActivity.getString(R.string.failed_to_stop, processName), Toast.LENGTH_LONG).show());
-                        }
-                    }).start();
+                    mModel.killProcess(processItem);
                     return true;
                 });
             } else killItem.setVisible(false);
@@ -144,52 +131,26 @@ public class RunningAppsAdapter extends RecyclerView.Adapter<RunningAppsAdapter.
             MenuItem bgItem = menu.findItem(R.id.action_disable_background);
             if (applicationInfo != null) {
                 forceStopItem.setVisible(true).setOnMenuItemClickListener(item -> {
-                    new Thread(() -> {
-                        try {
-                            PackageManagerCompat.forceStopPackage(applicationInfo.packageName, Users.getUserHandle(applicationInfo.uid));
-                            mActivity.runOnUiThread(mActivity::refresh);
-                        } catch (RemoteException|SecurityException e) {
-                            e.printStackTrace();
-                            mActivity.runOnUiThread(() -> Toast.makeText(mActivity, mActivity.getString(R.string.failed_to_stop, processName), Toast.LENGTH_LONG).show());
-                        }
-                    }).start();
+                    mModel.forceStop(applicationInfo);
                     return true;
                 });
-                new Thread(() -> {
-                    final AtomicInteger mode = new AtomicInteger(AppOpsManager.MODE_DEFAULT);
-                    final int userHandle = Users.getUserHandle(applicationInfo.uid);
-                    try {
-                        mode.set(new AppOpsService().checkOperation(AppOpsManager.OP_RUN_IN_BACKGROUND, applicationInfo.uid, applicationInfo.packageName));
-                    } catch (Exception ignore) {
-                    }
-                    mActivity.runOnUiThread(() -> {
-                        if (mode.get() != AppOpsManager.MODE_IGNORED) {
-                            bgItem.setVisible(true).setOnMenuItemClickListener(item -> {
-                                new Thread(() -> {
-                                    try {
-                                        new AppOpsService().setMode(AppOpsManager.OP_RUN_IN_BACKGROUND,
-                                                applicationInfo.uid, applicationInfo.packageName, AppOpsManager.MODE_IGNORED);
-                                        try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(applicationInfo.packageName, userHandle)) {
-                                            cb.setAppOp(AppOpsManager.OP_RUN_IN_BACKGROUND, AppOpsManager.MODE_IGNORED);
-                                        }
-                                        mActivity.runOnUiThread(mActivity::refresh);
-                                    } catch (Exception e) {
-                                        mActivity.runOnUiThread(() -> Toast.makeText(mActivity, mActivity.getString(R.string.failed_to_disable_op), Toast.LENGTH_LONG).show());
-                                    }
-                                }).start();
-                                return true;
-                            });
-                        } else bgItem.setVisible(false);
-                        // Display popup menu
-                        popupMenu.show();
+                int mode = AppOpsManager.MODE_DEFAULT;
+                try {
+                    mode = new AppOpsService().checkOperation(AppOpsManager.OP_RUN_IN_BACKGROUND, applicationInfo.uid, applicationInfo.packageName);
+                } catch (Exception ignore) {
+                }
+                if (mode != AppOpsManager.MODE_IGNORED && mode != AppOpsManager.MODE_ERRORED) {
+                    bgItem.setVisible(true).setOnMenuItemClickListener(item -> {
+                        mModel.preventBackgroundRun(applicationInfo);
+                        return true;
                     });
-                }).start();
+                } else bgItem.setVisible(false);
             } else {
                 forceStopItem.setVisible(false);
                 bgItem.setVisible(false);
-                // Show popup menu without hesitation
-                popupMenu.show();
             }
+            // Display popup menu
+            popupMenu.show();
         });
         // Set background colors
         holder.itemView.setBackgroundColor(position % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
