@@ -4,6 +4,8 @@ package io.github.muntashirakon.AppManager.scanner;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
@@ -13,7 +15,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import androidx.annotation.NonNull;
 import dalvik.system.DexClassLoader;
 import dalvik.system.DexFile;
 import io.github.muntashirakon.AppManager.scanner.reflector.Reflector;
@@ -52,24 +53,17 @@ public class DexClasses implements Closeable {
             // Get imports for each class
             while (enumeration.hasMoreElements()) {
                 className = enumeration.nextElement();
+                classes.add(className);
                 try {
-                    classes.add(className);
                     classes.addAll(getImports(className));
-                } catch (ClassNotFoundException|LinkageError ignore) {
+                } catch (ClassNotFoundException | LinkageError ignore) {
                 }
             }
         }
         return new ArrayList<>(classes);
     }
 
-    public Class<?> loadClass(String className) throws ClassNotFoundException {
-        return loader.loadClass(className);
-    }
-
-    public Set<String> getImports(String className) throws ClassNotFoundException {
-        return new Reflector(loadClass(className)).getImports();
-    }
-
+    @NonNull
     public Reflector getReflector(String className) throws ClassNotFoundException {
         return new Reflector(loadClass(className));
     }
@@ -77,5 +71,15 @@ public class DexClasses implements Closeable {
     @Override
     public void close() throws IOException {
         if (dexFile != null) dexFile.close();
+    }
+
+    @NonNull
+    private Set<String> getImports(String className) throws ClassNotFoundException {
+        return new Reflector(loadClass(className)).getImports();
+    }
+
+    @NonNull
+    private Class<?> loadClass(String className) throws ClassNotFoundException {
+        return loader.loadClass(className);
     }
 }
