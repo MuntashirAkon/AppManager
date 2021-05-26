@@ -459,7 +459,7 @@ public class MainActivity extends BaseActivity implements
         if (Utils.isAppUpdated()) {
             // Clean old am.jar
             IOUtils.deleteSilently(ServerConfig.getDestJarFile());
-            new Thread(() -> {
+            mModel.executor.submit(() -> {
                 final Spanned spannedChangelog = HtmlCompat.fromHtml(IOUtils.getContentFromAssets(this, "changelog.html"), HtmlCompat.FROM_HTML_MODE_COMPACT);
                 runOnUiThread(() ->
                         new ScrollableDialogBuilder(this, spannedChangelog)
@@ -470,17 +470,18 @@ public class MainActivity extends BaseActivity implements
                                     Intent helpIntent = new Intent(this, HelpActivity.class);
                                     startActivity(helpIntent);
                                 }).show());
-            }).start();
+            });
             AppPref.set(AppPref.PrefKey.PREF_LAST_VERSION_CODE_LONG, (long) BuildConfig.VERSION_CODE);
         }
     }
 
     @AnyThread
     private void clearAndHandleSelection() {
-        new Thread(() -> {
+        if (mModel == null) return;
+        mModel.executor.submit(() -> {
             if (mAdapter != null) mAdapter.clearSelection();
             runOnUiThread(this::handleSelection);
-        }).start();
+        });
     }
 
     @UiThread
@@ -488,7 +489,7 @@ public class MainActivity extends BaseActivity implements
         if (mModel == null || mModel.getSelectedPackages().size() == 0) {
             mBottomAppBar.setVisibility(View.GONE);
             mMainLayout.setLayoutParams(mLayoutParamsTypical);
-            new Thread(() -> mAdapter.clearSelection()).start();
+            if (mModel != null) mModel.executor.submit(() -> mAdapter.clearSelection());
         } else {
             mBottomAppBar.setVisibility(View.VISIBLE);
             mBottomAppBarCounter.setText(getResources().getQuantityString(R.plurals.items_selected,

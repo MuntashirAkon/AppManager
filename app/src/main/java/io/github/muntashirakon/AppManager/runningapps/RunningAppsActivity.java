@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -14,17 +15,19 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.textview.MaterialTextView;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import me.zhanghai.android.fastscroll.FastScrollerBuilder;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 
 public class RunningAppsActivity extends BaseActivity implements
         SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener {
@@ -97,6 +100,31 @@ public class RunningAppsActivity extends BaseActivity implements
         recyclerView.setAdapter(mAdapter);
         mConstraint = null;
         enableKillForSystem = (boolean) AppPref.get(AppPref.PrefKey.PREF_ENABLE_KILL_FOR_SYSTEM_BOOL);
+
+        // Set observers
+        mModel.observeKillProcess().observe(this, processInfo -> {
+            if (processInfo.second /* is success */) {
+                refresh();
+            } else {
+                UIUtils.displayLongToast(R.string.failed_to_stop, processInfo.first.name /* process name */);
+            }
+        });
+        mModel.observeForceStop().observe(this, applicationInfoBooleanPair -> {
+            if (applicationInfoBooleanPair.second /* is success */) {
+                refresh();
+            } else {
+                UIUtils.displayLongToast(R.string.failed_to_stop, applicationInfoBooleanPair.first
+                        .loadLabel(getPackageManager()));
+            }
+        });
+        mModel.observePreventBackgroundRun().observe(this, applicationInfoBooleanPair -> {
+            if (applicationInfoBooleanPair.second /* is success */) {
+                refresh();
+            } else {
+                UIUtils.displayLongToast(R.string.failed_to_prevent_background_run, applicationInfoBooleanPair.first
+                        .loadLabel(getPackageManager()));
+            }
+        });
     }
 
     @Override
@@ -198,6 +226,6 @@ public class RunningAppsActivity extends BaseActivity implements
 
     void refresh() {
         mProgressIndicator.show();
-        new Thread(() -> mModel.loadProcesses()).start();
+        mModel.loadProcesses();
     }
 }

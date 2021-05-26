@@ -1070,4 +1070,5 @@
     <string name="fallback_to_no_root_mode">Fallback to no-root mode?</string>
     <string name="fallback_to_no_root_mode_description">App Manager was unable to use the current mode of operation. In order to avoid random behaviour, you should temporarily switch to no-root mode. Consider reporting it if the issue is not fixed after restarting the device.</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">Could not install app due to signature mismatch. The app was uninstalled without clearing its data.</string>
+    <string name="failed_to_prevent_background_run">Could not prevent %1$s from running in the background</string>
 </resources>

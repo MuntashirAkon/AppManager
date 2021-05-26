@@ -17,6 +17,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
@@ -49,6 +51,7 @@ public class Log {
 
     @Nullable
     private PrintWriter writer;
+    private final ExecutorService executor = Executors.newFixedThreadPool(1);
 
     private Log() {
         try {
@@ -156,7 +159,8 @@ public class Log {
         }
         sb.append(tag == null ? "App Manager" : tag);
         if (msg != null) sb.append(": ").append(msg);
-        new Thread(() -> {
+
+        INSTANCE.executor.submit(() -> {
             synchronized (INSTANCE) {
                 INSTANCE.writer.println(sb);
                 if (tr != null) {
@@ -164,6 +168,6 @@ public class Log {
                 }
                 INSTANCE.writer.flush();
             }
-        }).start();
+        });
     }
 }
