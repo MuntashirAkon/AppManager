@@ -70,11 +70,7 @@ public class AppManager extends Application {
     public void onCreate() {
         instance = this;
         super.onCreate();
-        try {
-            Lingver.init(instance, LangUtils.getLocaleByLanguage(instance));
-        } catch (IllegalStateException ignore) {
-            // Suppress for Roboelectric unit tests
-        }
+        Lingver.init(instance, LangUtils.getLocaleByLanguage(instance));
         Security.addProvider(new JavaKeyStoreProvider());
     }
 
