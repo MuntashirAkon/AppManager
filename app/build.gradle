@@ -95,8 +95,7 @@ dependencies {
 
     implementation "com.github.topjohnwu.libsu:core:${libsu_version}"
 
-//    implementation 'me.weishu:free_reflection:3.0.1'
-    implementation 'com.github.ChickenHook:RestrictionBypass:2.2'
+    implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:2.0'
     implementation 'com.github.zhanghai:AndroidFastScroll:v1.1.5'
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
 
