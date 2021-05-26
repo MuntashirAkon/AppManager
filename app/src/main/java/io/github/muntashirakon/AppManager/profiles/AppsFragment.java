@@ -11,12 +11,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.material.progressindicator.LinearProgressIndicator;
-import com.google.android.material.textview.MaterialTextView;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
@@ -24,18 +18,26 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.google.android.material.progressindicator.LinearProgressIndicator;
+import com.google.android.material.textview.MaterialTextView;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.types.IconLoaderThread;
+import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.types.RecyclerViewWithEmptyView;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
 public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
-    AppsProfileActivity activity;
-    SwipeRefreshLayout swipeRefresh;
-    LinearProgressIndicator progressIndicator;
-    ProfileViewModel model;
-    MaterialTextView alertText;
+    private AppsProfileActivity activity;
+    private SwipeRefreshLayout swipeRefresh;
+    private LinearProgressIndicator progressIndicator;
+    private ProfileViewModel model;
+
+    private final ImageLoader imageLoader = new ImageLoader();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,7 +69,7 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         progressIndicator = view.findViewById(R.id.progress_linear);
         progressIndicator.setVisibilityAfterHide(View.GONE);
         progressIndicator.show();
-        alertText = view.findViewById(R.id.alert_text);
+        MaterialTextView alertText = view.findViewById(R.id.alert_text);
         alertText.setVisibility(View.GONE);
         alertText.setText(R.string.changes_not_saved);
         swipeRefresh.setOnChildScrollUpCallback((parent, child) -> recyclerView.canScrollVertically(-1));
@@ -87,6 +89,12 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             activity.getSupportActionBar().setSubtitle(R.string.apps);
         }
         activity.fab.show();
+    }
+
+    @Override
+    public void onDestroy() {
+        imageLoader.close();
+        super.onDestroy();
     }
 
     @Override
@@ -118,15 +126,13 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            if (holder.iconLoader != null) holder.iconLoader.interrupt();
             String packageName = packages.get(position);
             ApplicationInfo info = null;
             try {
                 info = pm.getApplicationInfo(packageName, 0);
             } catch (PackageManager.NameNotFoundException ignore) {
             }
-            holder.iconLoader = new IconLoaderThread(holder.icon, info);
-            holder.iconLoader.start();
+            imageLoader.displayImage(packageName, info, holder.icon);
             String label;
             if (info != null) {
                 label = info.loadLabel(pm).toString();
@@ -158,7 +164,6 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             ImageView icon;
             TextView title;
             TextView subtitle;
-            IconLoaderThread iconLoader;
 
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);

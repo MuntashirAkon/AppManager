@@ -25,6 +25,7 @@ import java.lang.annotation.RetentionPolicy;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import me.zhanghai.android.fastscroll.FastScrollerBuilder;
@@ -73,7 +74,9 @@ public class RunningAppsActivity extends BaseActivity implements
     private LinearProgressIndicator mProgressIndicator;
     private SwipeRefreshLayout mSwipeRefresh;
     private MaterialTextView mCounterView;
+
     RunningAppsViewModel mModel;
+    final ImageLoader imageLoader = new ImageLoader();
 
     @Override
     protected void onAuthenticated(Bundle savedInstanceState) {
@@ -210,6 +213,7 @@ public class RunningAppsActivity extends BaseActivity implements
 
     @Override
     protected void onDestroy() {
+        imageLoader.close();
         super.onDestroy();
     }
 

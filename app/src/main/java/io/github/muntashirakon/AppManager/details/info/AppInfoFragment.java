@@ -15,6 +15,7 @@ import android.content.pm.ResolveInfo;
 import android.content.pm.Signature;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.net.NetworkPolicyManager;
 import android.net.Uri;
 import android.os.Build;
@@ -109,7 +110,6 @@ import io.github.muntashirakon.AppManager.servermanager.NetworkPolicyManagerComp
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.sharedpref.SharedPrefsActivity;
-import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.types.PackageSizeInfo;
 import io.github.muntashirakon.AppManager.types.ScrollableDialogBuilder;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
@@ -165,7 +165,6 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private TextView packageNameView;
     private TextView versionView;
     private ImageView iconView;
-    private IconLoaderThread iconLoaderThread;
 
     private final ExecutorService executor = Executors.newFixedThreadPool(3);
 
@@ -1385,9 +1384,12 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         mInstalledPackageInfo = mainModel.getInstalledPackageInfo();
         mApplicationInfo = mPackageInfo.applicationInfo;
         // Set App Icon
-        if (iconLoaderThread != null) iconLoaderThread.interrupt();
-        iconLoaderThread = new IconLoaderThread(iconView, mApplicationInfo);
-        iconLoaderThread.start();
+        Drawable icon = mApplicationInfo.loadIcon(mPackageManager);
+        runOnUiThread(() -> {
+            if (isAdded() && !isDetached()) {
+                iconView.setImageDrawable(icon);
+            }
+        });
         // (Re)load views
         model.loadPackageLabel();
         model.loadTagCloud();

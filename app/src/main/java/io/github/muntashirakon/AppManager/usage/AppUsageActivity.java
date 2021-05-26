@@ -4,7 +4,6 @@ package io.github.muntashirakon.AppManager.usage;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -45,9 +44,9 @@ import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
-import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.usage.UsageUtils.IntervalType;
 import io.github.muntashirakon.AppManager.utils.BetterActivityResult;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
@@ -91,9 +90,10 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
     private AppUsageAdapter mAppUsageAdapter;
     private List<PackageUsageInfo> packageUsageInfoList;
     private static long totalScreenTime;
-    private static PackageManager mPackageManager;
     private @IntervalType int current_interval = USAGE_TODAY;
-    private @SortOrder int mSortBy;
+    private @SortOrder
+    int mSortBy;
+    private final ImageLoader imageLoader = new ImageLoader();
     private final BetterActivityResult<String, Boolean> requestPerm = BetterActivityResult
             .registerForActivityResult(this, new ActivityResultContracts.RequestPermission());
 
@@ -116,8 +116,6 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
         listView.setEmptyView(findViewById(android.R.id.empty));
         listView.setAdapter(mAppUsageAdapter);
         listView.setOnItemClickListener(this);
-
-        mPackageManager = getPackageManager();
 
         mSwipeRefresh = findViewById(R.id.swipe_refresh);
         mSwipeRefresh.setColorSchemeColors(UIUtils.getAccentColor(this));
@@ -155,7 +153,7 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
 
     @Override
     protected void onDestroy() {
-        mPackageManager = null;
+        imageLoader.close();
         super.onDestroy();
     }
 
@@ -341,7 +339,8 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
     static class AppUsageAdapter extends BaseAdapter {
         private final LayoutInflater mLayoutInflater;
         private List<PackageUsageInfo> mAdapterList;
-        private final Activity mActivity;
+        private final AppUsageActivity mActivity;
+        private final PackageManager mPackageManager;
 
         static class ViewHolder {
             ImageView appIcon;
@@ -353,12 +352,12 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
             MaterialTextView screenTime;
             MaterialTextView percentUsage;
             LinearProgressIndicator usageIndicator;
-            IconLoaderThread iconLoader;
         }
 
-        AppUsageAdapter(@NonNull Activity activity) {
+        AppUsageAdapter(@NonNull AppUsageActivity activity) {
             mLayoutInflater = activity.getLayoutInflater();
             mActivity = activity;
+            mPackageManager = mActivity.getPackageManager();
         }
 
         void setDefaultList(List<PackageUsageInfo> list) {
@@ -400,7 +399,6 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
-                if(holder.iconLoader != null) holder.iconLoader.interrupt();
             }
             final PackageUsageInfo packageUS = mAdapterList.get(position);
             final int percentUsage = (int) (packageUS.screenTime * 100f / totalScreenTime);
@@ -409,8 +407,7 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
                 ApplicationInfo applicationInfo = mPackageManager.getApplicationInfo(packageUS.packageName, 0);
                 holder.appLabel.setText(mPackageManager.getApplicationLabel(applicationInfo));
                 // Set icon
-                holder.iconLoader = new IconLoaderThread(holder.appIcon, applicationInfo);
-                holder.iconLoader.start();
+                mActivity.imageLoader.displayImage(applicationInfo.packageName, applicationInfo, holder.appIcon);
             } catch (PackageManager.NameNotFoundException e) {
                 holder.appLabel.setText(packageUS.packageName);
                 holder.appIcon.setImageDrawable(mPackageManager.getDefaultActivityIcon());

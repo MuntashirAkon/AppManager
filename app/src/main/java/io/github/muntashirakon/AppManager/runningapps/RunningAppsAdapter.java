@@ -28,7 +28,6 @@ import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
 import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
-import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
@@ -73,8 +72,7 @@ public class RunningAppsAdapter extends RecyclerView.Adapter<RunningAppsAdapter.
         } else applicationInfo = null;
         String processName = processItem.name;
         // Load icon
-        holder.iconLoader = new IconLoaderThread(holder.icon, applicationInfo);
-        holder.iconLoader.start();
+        mActivity.imageLoader.displayImage(processName, applicationInfo, holder.icon);
         // Set process name
         if (mModel.getQuery() != null && processName.toLowerCase(Locale.ROOT).contains(mModel.getQuery())) {
             // Highlight searched query
@@ -181,7 +179,6 @@ public class RunningAppsAdapter extends RecyclerView.Adapter<RunningAppsAdapter.
         TextView memoryUsage;
         TextView userAndStateInfo;
         TextView selinuxContext;
-        IconLoaderThread iconLoader;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
