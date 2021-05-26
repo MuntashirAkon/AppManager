@@ -58,4 +58,9 @@ public class MultithreadedExecutor {
         isShutdown = true;
         executor.shutdown();
     }
+
+    public void shutdownNow() {
+        isShutdown = true;
+        executor.shutdownNow();
+    }
 }

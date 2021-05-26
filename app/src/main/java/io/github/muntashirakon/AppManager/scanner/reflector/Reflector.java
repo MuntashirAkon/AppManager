@@ -57,13 +57,11 @@ public class Reflector {
         Constructor[] constructors;
         Method[] methods;
         Field[] fields;
-        Class currentClass;
         Hashtable<String, String> classRef;
-        currentClass = clazz;
         try {
-            fields = currentClass.getDeclaredFields();
-            constructors = currentClass.getDeclaredConstructors();
-            methods = currentClass.getDeclaredMethods();
+            fields = clazz.getDeclaredFields();
+            constructors = clazz.getDeclaredConstructors();
+            methods = clazz.getDeclaredMethods();
         } catch (NoClassDefFoundError e) {
             e.printStackTrace();
             return Collections.emptySet();
