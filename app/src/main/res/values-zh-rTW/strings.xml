@@ -260,7 +260,7 @@
     <string name="allow_routine_ops_msg">允許在常規操作中使用配置檔案</string>
     <string name="profile_state">設定檔狀態</string>
     <string name="allow_routine_ops">允許例行操作</string>
-    <string name="adb_over_tcp">透過TCP的ADB</string>
+    <string name="adb_over_tcp">透過 TCP 的 ADB</string>
     <string name="pref_mode_of_operations">操作模式</string>
     <string name="send_selected">傳送選擇</string>
     <string name="ecc">橢圓曲線密碼學</string>
