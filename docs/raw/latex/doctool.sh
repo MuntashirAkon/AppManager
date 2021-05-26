@@ -180,26 +180,22 @@ while read key_content
 do
 
     string_content=$(echo 'cat resources/string[@name="'${key_content}'"]/text()' | xmllint --shell ${INPUT} | sed -e '$d' -e '1d'|sed 's/\\/\\\\/g')
-    while read file
-    do
-        source=$(cat ${file})
-        echo "import re;import sys;print(re.sub(r'(?<=%%!!"${key_content}"<<\n)[^%%!!>>]*(?=%%!!>>)', sys.argv[2]+'\n', sys.argv[1], flags=re.M))" | python - "${source}" "${string_content}" >${file}
+    file=$(grep -rl --include="*.tex" "\%\%!!${key_content}<<")
+    source=$(cat ${file})
 
-    done < <(find ./ -type f -name "*.tex")
+    echo "import re;import sys;print(re.sub(r'(?<=%%!!"${key_content}"<<\n)[^%%!!>>]*(?=%%!!>>)', sys.argv[2]+'\n', sys.argv[1], flags=re.M))" | python - "${source}" "${string_content}" >${file}
 
 done < <(echo "$keys" | grep -Pv ".*(?===title)")
 
 
 while read key_title
 do
+
     string_title=$(echo 'cat resources/string[@name="'${key_title}'"]/text()' | xmllint --shell ${INPUT} | sed -e '$d' -e '1d'|sed 's/\\/\\\\/g')
+    file=$(grep -rl --include="*.tex" "\%\%##${key_title}>>")
 
-    while read file
-    do
+    perl -pi -e "s/(section\{|subsection\{|subsubsection\{|chapter\{|caption\{).*?(\}.*\%\%\#\#${key_title}>>)/\1${string_title}\2/" ${file}
 
-         perl -pi -e "s/(section\{|subsection\{|subsubsection\{|chapter\{|caption\{).*?(\}.*\%\%\#\#${key_title}>>)/\1${string_title}\2/" ${file}
-
-    done < <(find ./ -type f -name "*.tex")
 done < <(echo "$keys" | grep -P ".*(?===title)")
 
 }
