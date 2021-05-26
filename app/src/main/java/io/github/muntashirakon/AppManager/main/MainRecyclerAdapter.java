@@ -43,8 +43,8 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
+import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
-import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -59,6 +59,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     private String mSearchQuery;
     @GuardedBy("mAdapterList")
     private final List<ApplicationItem> mAdapterList = new ArrayList<>();
+    final ImageLoader imageLoader;
 
     private static int mColorTransparent;
     private static int mColorSemiTransparent;
@@ -73,6 +74,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     MainRecyclerAdapter(@NonNull MainActivity activity) {
         mActivity = activity;
         mPackageManager = activity.getPackageManager();
+        imageLoader = new ImageLoader(mActivity.mModel.executor);
 
         mColorTransparent = Color.TRANSPARENT;
         mColorSemiTransparent = ContextCompat.getColor(mActivity, R.color.semi_transparent);
@@ -141,8 +143,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     @GuardedBy("mAdapterList")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        // Cancel an existing icon loading operation
-        if (holder.iconLoader != null) holder.iconLoader.interrupt();
         final ApplicationItem item;
         synchronized (mAdapterList) {
             item = mAdapterList.get(position);
@@ -270,8 +270,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             holder.sha.setVisibility(View.GONE);
         }
         // Load app icon
-        holder.iconLoader = new IconLoaderThread(holder.icon, item);
-        holder.iconLoader.start();
+        imageLoader.displayImage(item.packageName, item, holder.icon);
         // Set app label
         if (!TextUtils.isEmpty(mSearchQuery) && item.label.toLowerCase(Locale.ROOT).contains(mSearchQuery)) {
             // Highlight searched query
@@ -468,7 +467,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         TextView backupIndicator;
         TextView backupInfo;
         TextView backupInfoExt;
-        IconLoaderThread iconLoader;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

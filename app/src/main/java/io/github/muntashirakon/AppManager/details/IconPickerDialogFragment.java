@@ -7,6 +7,7 @@ import android.app.Application;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageItemInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -36,7 +37,9 @@ import java.util.TreeSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
 
 // Copyright 2017 Adam M. Szalkowski
 public class IconPickerDialogFragment extends DialogFragment {
@@ -45,6 +48,7 @@ public class IconPickerDialogFragment extends DialogFragment {
     private IconPickerListener listener = null;
     private IconListingAdapter adapter;
     private final ExecutorService executor = Executors.newFixedThreadPool(5);
+    private final ImageLoader imageLoader = new ImageLoader(executor);
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -87,6 +91,7 @@ public class IconPickerDialogFragment extends DialogFragment {
     public void onDetach() {
         super.onDetach();
         executor.shutdownNow();
+        imageLoader.close();
     }
 
     public interface IconPickerListener {
@@ -94,26 +99,11 @@ public class IconPickerDialogFragment extends DialogFragment {
     }
 
     class IconListingAdapter extends BaseAdapter {
-        private String[] icons;
-        private final PackageManager pm;
+        private IconItemInfo[] icons;
         private final FragmentActivity activity;
 
         public IconListingAdapter(@NonNull FragmentActivity activity) {
             this.activity = activity;
-            this.pm = activity.getPackageManager();
-        }
-
-        private Drawable getIcon(String iconResourceString, PackageManager pm) {
-            try {
-                String pack = iconResourceString.substring(0, iconResourceString.indexOf(':'));
-                String type = iconResourceString.substring(iconResourceString.indexOf(':') + 1,
-                        iconResourceString.indexOf('/'));
-                String name = iconResourceString.substring(iconResourceString.indexOf('/') + 1);
-                Resources res = pm.getResourcesForApplication(pack);
-                return ResourcesCompat.getDrawable(res, res.getIdentifier(name, type, pack), activity.getTheme());
-            } catch (Exception e) {
-                return pm.getDefaultActivityIcon();
-            }
         }
 
         @Override
@@ -141,12 +131,9 @@ public class IconPickerDialogFragment extends DialogFragment {
             } else {
                 view = (ImageView) convertView;
             }
-            String iconResourceString = this.icons[position];
-            executor.submit(() -> {
-                Drawable icon = getIcon(iconResourceString, this.pm);
-                if (Thread.currentThread().isInterrupted() || isDetached()) return;
-                activity.runOnUiThread(() -> view.setImageDrawable(icon));
-            });
+            IconItemInfo info = this.icons[position];
+
+            executor.submit(() -> imageLoader.displayImage(info.packageName, info, view));
             return convertView;
         }
     }
@@ -159,23 +146,52 @@ public class IconPickerDialogFragment extends DialogFragment {
             pm = application.getPackageManager();
         }
 
-        public LiveData<String[]> resolveIcons(ExecutorService executor) {
-            MutableLiveData<String[]> iconLiveData = new MutableLiveData<>();
+        public LiveData<IconItemInfo[]> resolveIcons(ExecutorService executor) {
+            MutableLiveData<IconItemInfo[]> iconLiveData = new MutableLiveData<>();
             executor.submit(() -> {
-                TreeSet<String> icons = new TreeSet<>();
+                TreeSet<IconItemInfo> icons = new TreeSet<>();
                 List<PackageInfo> installedPackages = pm.getInstalledPackages(0);
 
                 for (PackageInfo pack : installedPackages) {
                     try {
                         String iconResourceName = pm.getResourcesForApplication(pack.packageName)
                                 .getResourceName(pack.applicationInfo.icon);
-                        if (iconResourceName != null) icons.add(iconResourceName);
+                        if (iconResourceName != null) icons.add(new IconItemInfo(pack.packageName, iconResourceName));
                     } catch (PackageManager.NameNotFoundException | RuntimeException ignored) {
                     }
                 }
-                iconLiveData.postValue(icons.toArray(new String[0]));
+                iconLiveData.postValue(icons.toArray(new IconItemInfo[0]));
             });
             return iconLiveData;
+        }
+    }
+
+    private static class IconItemInfo extends PackageItemInfo implements Comparable<IconItemInfo> {
+        private final String iconResourceString;
+        private final Context context = AppManager.getContext();
+
+        public IconItemInfo(String packageName, String iconResourceString) {
+            this.packageName = packageName;
+            this.iconResourceString = iconResourceString;
+        }
+
+        @Override
+        public Drawable loadIcon(PackageManager pm) {
+            try {
+                String pack = iconResourceString.substring(0, iconResourceString.indexOf(':'));
+                String type = iconResourceString.substring(iconResourceString.indexOf(':') + 1,
+                        iconResourceString.indexOf('/'));
+                String name = iconResourceString.substring(iconResourceString.indexOf('/') + 1);
+                Resources res = pm.getResourcesForApplication(pack);
+                return ResourcesCompat.getDrawable(res, res.getIdentifier(name, type, pack), context.getTheme());
+            } catch (Exception e) {
+                return pm.getDefaultActivityIcon();
+            }
+        }
+
+        @Override
+        public int compareTo(@NonNull IconItemInfo o) {
+            return iconResourceString.compareTo(o.iconResourceString);
         }
     }
 }

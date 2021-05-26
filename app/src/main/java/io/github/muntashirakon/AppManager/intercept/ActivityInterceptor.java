@@ -49,8 +49,8 @@ import java.util.Set;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.types.TextInputDropdownDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
@@ -272,6 +272,7 @@ public class ActivityInterceptor extends BaseActivity {
 
     private boolean areTextWatchersActive;
 
+    private final ImageLoader imageLoader = new ImageLoader();
     private final ActivityResultLauncher<Intent> launcher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 Intent data = result.getData();
@@ -328,6 +329,12 @@ public class ActivityInterceptor extends BaseActivity {
         showInitialIntent(isVisible);
         // Save Intent data to history
         if (mHistory != null && requestedComponent == null) mHistory.saveHistory();
+    }
+
+    @Override
+    protected void onDestroy() {
+        imageLoader.close();
+        super.onDestroy();
     }
 
     private void storeOriginalIntent(Intent intent) {
@@ -959,7 +966,6 @@ public class ActivityInterceptor extends BaseActivity {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            if (holder.iconLoader != null) holder.iconLoader.interrupt();
             Pair<String, Object> extraItem = extras.get(position);
             holder.title.setText(extraItem.first);
             holder.title.setTextIsSelectable(true);
@@ -982,7 +988,6 @@ public class ActivityInterceptor extends BaseActivity {
             TextView subtitle;
             ImageView icon;
             MaterialButton actionIcon;
-            IconLoaderThread iconLoader;
 
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
@@ -1021,7 +1026,6 @@ public class ActivityInterceptor extends BaseActivity {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            if (holder.iconLoader != null) holder.iconLoader.interrupt();
             ResolveInfo resolveInfo = matchingActivities.get(position);
             ActivityInfo info = resolveInfo.activityInfo;
             holder.title.setText(info.loadLabel(pm));
@@ -1029,8 +1033,7 @@ public class ActivityInterceptor extends BaseActivity {
             String name = info.packageName + "\n" + activityName;
             holder.subtitle.setText(name);
             holder.subtitle.setTextIsSelectable(true);
-            holder.iconLoader = new IconLoaderThread(holder.icon, info);
-            holder.iconLoader.start();
+            activity.imageLoader.displayImage(info.packageName + "_" + activityName, info, holder.icon);
             holder.actionIcon.setOnClickListener(v -> {
                 Intent intent = new Intent(activity.mutableIntent);
                 intent.setClassName(info.packageName, activityName);
@@ -1049,7 +1052,6 @@ public class ActivityInterceptor extends BaseActivity {
             TextView subtitle;
             ImageView icon;
             MaterialButton actionIcon;
-            IconLoaderThread iconLoader;
 
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);

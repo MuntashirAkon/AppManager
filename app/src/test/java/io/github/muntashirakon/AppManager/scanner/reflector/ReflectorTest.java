@@ -14,7 +14,7 @@ import static org.junit.Assert.assertEquals;
 
 public class ReflectorTest {
     @Test
-    public void getImportsTypicalTest() {
+    public void getImportsTest() {
         List<String> expectedClasses = new ArrayList<String>() {
             {
                 add("java.lang.String");
@@ -26,11 +26,5 @@ public class ReflectorTest {
         List<String> actualClasses = new ArrayList<>(reflector.getImports());
         Collections.sort(actualClasses);
         assertEquals(expectedClasses, actualClasses);
-    }
-
-    @Test
-    public void getImportsAtypicalTest() throws ClassNotFoundException {
-        Reflector reflector = new Reflector(Class.forName("android.miui.AppOpsUtils"));
-        assertEquals(Collections.emptyList(), new ArrayList<>(reflector.getImports()));
     }
 }

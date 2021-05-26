@@ -69,12 +69,12 @@ import io.github.muntashirakon.AppManager.appops.OpEntry;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsComponentItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsPermissionItem;
+import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.intercept.ActivityInterceptor;
 import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.servermanager.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
-import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.types.RecyclerViewWithEmptyView;
 import io.github.muntashirakon.AppManager.types.TextInputDropdownDialogBuilder;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
@@ -171,6 +171,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     AppDetailsViewModel mainModel;
 
     private final ExecutorService executor = Executors.newFixedThreadPool(3);
+    private final ImageLoader imageLoader = new ImageLoader(executor);
 
     private static int mColorGrey1;
     private static int mColorGrey2;
@@ -267,6 +268,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
 
     @Override
     public void onDetach() {
+        imageLoader.close();
         executor.shutdownNow();
         super.onDetach();
     }
@@ -667,7 +669,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             Button editBtn;
             Button launchBtn;
             SwitchMaterial toggleSwitch;
-            IconLoaderThread iconLoader;
 
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
@@ -891,9 +892,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         activityName.replaceFirst(mPackageName, "") : activityName);
             }
             // Icon
-            if (holder.iconLoader != null) holder.iconLoader.interrupt();
-            holder.iconLoader = new IconLoaderThread(holder.imageView, activityInfo);
-            holder.iconLoader.start();
+            imageLoader.displayImage(mPackageName + "_" + activityInfo.name, activityInfo, holder.imageView);
             // TaskAffinity
             holder.textView3.setText(String.format(Locale.ROOT, "%s: %s",
                     getString(R.string.task_affinity), activityInfo.taskAffinity));
@@ -1000,9 +999,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         serviceInfo.name.replaceFirst(mPackageName, "") : serviceInfo.name);
             }
             // Icon
-            if (holder.iconLoader != null) holder.iconLoader.interrupt();
-            holder.iconLoader = new IconLoaderThread(holder.imageView, serviceInfo);
-            holder.iconLoader.start();
+            imageLoader.displayImage(mPackageName + "_" + serviceInfo.name, serviceInfo, holder.imageView);
             // Flags and Permission
             holder.textView3.setText(String.format(Locale.ROOT, "%s\n%s",
                     Utils.getServiceFlagsString(serviceInfo.flags),
@@ -1063,9 +1060,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         : activityInfo.name);
             }
             // Icon
-            if (holder.iconLoader != null) holder.iconLoader.interrupt();
-            holder.iconLoader = new IconLoaderThread(holder.imageView, activityInfo);
-            holder.iconLoader.start();
+            imageLoader.displayImage(mPackageName + "_" + activityInfo.name, activityInfo, holder.imageView);
             // TaskAffinity
             holder.textView3.setText(String.format(Locale.ROOT, "%s: %s",
                     getString(R.string.task_affinity), activityInfo.taskAffinity));
@@ -1108,9 +1103,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             // Label
             holder.textView1.setText(Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(providerName)));
             // Icon
-            if (holder.iconLoader != null) holder.iconLoader.interrupt();
-            holder.iconLoader = new IconLoaderThread(holder.imageView, providerInfo);
-            holder.iconLoader.start();
+            imageLoader.displayImage(mPackageName + "_" + providerName, providerInfo, holder.imageView);
             // Uri permission
             holder.textView3.setText(String.format(Locale.ROOT, "%s: %s", getString(R.string.grant_uri_permission), providerInfo.grantUriPermissions));
             // Path permissions
@@ -1409,9 +1402,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         permissionInfo.name.replaceFirst(mPackageName, "") : permissionInfo.name);
             }
             // Icon
-            if (holder.iconLoader != null) holder.iconLoader.interrupt();
-            holder.iconLoader = new IconLoaderThread(holder.imageView, permissionInfo);
-            holder.iconLoader.start();
+            imageLoader.displayImage(mPackageName + "_" + permissionInfo.name, permissionInfo, holder.imageView);
             // Description
             holder.textView3.setText(permissionInfo.loadDescription(mPackageManager));
             // LaunchMode
