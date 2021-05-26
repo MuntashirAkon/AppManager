@@ -1108,6 +1108,6 @@
     <string name="wireless_debugging_not_supported">Беспроводная отладка не поддерживается на этой платформе.</string>
     <string name="wireless_debugging">Беспроводная отладка</string>
     <string name="unknown_net_policy">Неизвестная сетевая политика (%1$s - %2$X)</string>
-    <string name="fallback_to_no_root_mode_description">App Manager не смог использовать текущий режим работы. Во избежание непредсказуемого поведения, вам следует временно переключиться в режим без-root. Сообщите нам, если проблема не устранится после перезапуска устройства.</string>
+    <string name="fallback_to_no_root_mode_description">App Manager не смог использовать текущий режим работы. Во избежании непредсказуемых действий, вам следует временно переключиться в режим без-root. Сообщите нам, если после перезапуска устройства проблема не будет устранена.</string>
     <string name="fallback_to_no_root_mode">Откат к режиму без-root\?</string>
 </resources>
