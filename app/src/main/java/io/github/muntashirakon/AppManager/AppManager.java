@@ -5,6 +5,7 @@ package io.github.muntashirakon.AppManager;
 import android.app.Application;
 import android.content.Context;
 import android.content.pm.IPackageManager;
+import android.os.Build;
 import android.sun.security.provider.JavaKeyStoreProvider;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,8 @@ import androidx.room.Room;
 
 import com.topjohnwu.superuser.Shell;
 import com.yariksoffice.lingver.Lingver;
+
+import org.lsposed.hiddenapibypass.HiddenApiBypass;
 
 import java.security.Security;
 
@@ -78,5 +81,8 @@ public class AppManager extends Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            HiddenApiBypass.addHiddenApiExemptions("L");
+        }
     }
 }
