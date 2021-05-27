@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="_lang_tag" translatable="false">hi</string>
     <string name="deny_app_ops_description">कांस्टेंट वैल्यू द्वारा पहचाने गए ऐप ऑपरेशंस को अस्वीकार करें, यानी 63 का मतलब है RUN_IN_BACKGROUND</string>
     <string name="block_components_description">दिए गए हस्ताक्षर द्वारा पहचाने गए सभी कंपोनेंट को ब्लॉक करें</string>
@@ -289,7 +288,7 @@
     <string name="cache_size">कैश</string>
     <string name="data_size">डेटा</string>
     <string name="about">ऐप के बारे में</string>
-    <string name="data_usage_msg">पिछले बूट के बाद से डेटा का उपयोग</string>
+    <string name="data_usage_msg">डेटा का उपयोग</string>
     <string name="data_transmitted">प्रेषित डेटा</string>
     <string name="data_received">प्राप्त डेटा</string>
     <string name="sort_by_target_sdk">टार्गेट एसडीके</string>
@@ -379,7 +378,7 @@
     <string name="refresh">रीफ़्रेश करें</string>
     <string name="launch">प्रारंभ करें</string>
     <string name="activities">एक्टिविटी</string>
-    <string name="require_no_permission">किसी भी अनुमति की आवश्यकता नहीं</string>
+    <string name="require_no_permission">अनुमति की आवश्यकता नहीं</string>
     <string name="permissions">अनुमतियों का उपयोग</string>
     <string name="uninstall">अनइंस्टॉल करें</string>
     <string name="app_signing_install_without_data_loss">यदि आपने सिग्नेचर वेरिफिकेशन बंद कर रखा है, तो आप बिना डेटा खोए ऐप इंस्टॉल करने के लिए <b>केवल इंस्टॉल</b> विकल्प का उपयोग कर सकते हैं।</string>
@@ -773,4 +772,5 @@
     <string name="backup_obb_media_description">ओबीबी और मीडिया फ़ोल्डर्स बैकअप करें।</string>
     <string name="backup_external_data_description">बाहरी डेटा फ़ोल्डर्स का बैकअप करें। इसको काम करने के लिए <b> डेटा </b> चयनित होना अनिवार्य है।</string>
     <string name="backup_internal_data_description">डेटा फ़ोल्डर्स बैकअप करें। अगर चयनित किया तो इंटरनल डेटा फ़ोल्डर्स को भी बैकअप किया जाएगा।</string>
+    <string name="user_with_id">यूजर: <xliff:g id="user_id" example="0">%1$d</xliff:g></string>
 </resources>

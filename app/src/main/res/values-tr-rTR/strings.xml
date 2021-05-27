@@ -1037,4 +1037,6 @@
     <string name="wireless_debugging_not_supported">Kablosuz hata ayıklama bu platformda desteklenmiyor.</string>
     <string name="wireless_debugging">Kablosuz hata ayıklama</string>
     <string name="unknown_net_policy">Bilinmeyen ağ politikası (%1$s - %2$X)</string>
+    <string name="fallback_to_no_root_mode_description">App Manager geçerli çalışma modunu kullanamadı. Rastgele davranıştan kaçınmak için, geçici olarak root yok moduna geçmelisiniz. Aygıtı yeniden başlattıktan sonra sorun çözülmezse bildirmeyi düşünün.</string>
+    <string name="fallback_to_no_root_mode">Root yok moduna geçilsin mi\?</string>
 </resources>

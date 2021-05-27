@@ -1038,4 +1038,6 @@
     <string name="wireless_debugging_not_supported">Fehlersucher über Funk wird auf dieser Plattform nicht unterstützt.</string>
     <string name="wireless_debugging">Fehlersuche über WLAN</string>
     <string name="unknown_net_policy">Unbekannte Netz-Richtlinie (%1$s - %2$X)</string>
+    <string name="fallback_to_no_root_mode_description">Der App Manager konnte die aktuelle Betriebsart nicht verwenden. Um zufälliges Verhalten zu vermeiden, sollten Sie vorübergehend in den No-Root-Modus wechseln. Ziehen Sie eine Fehlermeldung in Betracht, wenn das Problem nach einem Neustart des Geräts nicht behoben ist.</string>
+    <string name="fallback_to_no_root_mode">Fallback zum No-Root-Modus\?</string>
 </resources>
