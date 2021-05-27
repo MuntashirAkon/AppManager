@@ -1003,4 +1003,6 @@
     <string name="wireless_debugging_not_supported">此平台不支持无线调试。</string>
     <string name="wireless_debugging">无线调试</string>
     <string name="unknown_net_policy">未知的 netpolicy (%1$s - %2$X)</string>
+    <string name="fallback_to_no_root_mode_description">App Manager 无法使用当前的操作模式。 为了避免出现随机行为，你应该暂时切换到非 root 模式。 重新启动设备后，如果问题仍未解决，请考虑报告此问题。</string>
+    <string name="fallback_to_no_root_mode">退回到非 root 模式吗？</string>
 </resources>
