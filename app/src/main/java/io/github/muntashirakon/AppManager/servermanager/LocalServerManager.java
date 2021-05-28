@@ -36,12 +36,12 @@ class LocalServerManager {
 
     private static LocalServerManager sLocalServerManager;
 
-    @AnyThread
-    static LocalServerManager getInstance(LocalServer.Config config) {
+    @WorkerThread
+    static LocalServerManager getInstance() {
         if (sLocalServerManager == null) {
             synchronized (LocalServerManager.class) {
                 if (sLocalServerManager == null) {
-                    sLocalServerManager = new LocalServerManager(config);
+                    sLocalServerManager = new LocalServerManager();
                 }
             }
         }
@@ -52,9 +52,9 @@ class LocalServerManager {
     private ClientSession mSession = null;
     private LocalServer.Config mConfig;
 
-    @AnyThread
-    private LocalServerManager(LocalServer.Config config) {
-        mConfig = config;
+    @WorkerThread
+    private LocalServerManager() {
+        mConfig = new LocalServer.Config();
     }
 
     /**
@@ -89,8 +89,10 @@ class LocalServerManager {
             } catch (Exception ignore) {
             }
             if (mSession == null) {
-                if (!startServer()) {
-                    throw new IOException("Failed to start server.");
+                try {
+                    startServer();
+                } catch (Exception e) {
+                    throw new IOException("Could not create session", e);
                 }
                 mSession = createSession();
             }
@@ -167,13 +169,14 @@ class LocalServerManager {
             BaseCaller baseCaller = new BaseCaller(BaseCaller.TYPE_CLOSE);
             createSession().getTransmission().sendAndReceiveMessage(ParcelableUtil.marshall(baseCaller));
         } catch (Exception e) {
+            // Since the server is closed abruptly, this should always produce error
             Log.w(TAG, "closeBgServer: " + e.getCause() + "  " + e.getMessage());
         }
     }
 
     @WorkerThread
     @NonNull
-    private String getExecCommand() {
+    private String getExecCommand() throws IOException {
         AssetsUtils.writeScript(mConfig);
         Log.e(TAG, "classpath --> " + ServerConfig.getClassPath());
         Log.e(TAG, "exec path --> " + ServerConfig.getExecPath());
@@ -183,42 +186,28 @@ class LocalServerManager {
     private AdbConnection connection;
     private AdbStream adbStream;
 
-    @WorkerThread
-    private boolean useAdbStartServer() {
-        if (adbStream != null && !adbStream.isClosed()) {
-            return true;
-        }
+    void tryAdb() throws Exception {
         if (connection != null) {
-            try {
-                connection.close();
-            } catch (IOException e) {
-                Log.e(TAG, "useAdbStartServer: unable to close previous connection.", e);
-                return false;
-            }
+            // Connection still present
+            return;
         }
+        connection = AdbConnectionManager.connect(mConfig.adbHost, mConfig.adbPort);
+    }
 
-        Log.d(TAG, "useAdbStartServer: connecting using host=" + mConfig.adbHost + ", port=" + mConfig.adbPort);
-        try {
+    @WorkerThread
+    private void useAdbStartServer() throws Exception {
+        if (adbStream != null && !adbStream.isClosed()) {
+            // ADB shell running
+            return;
+        }
+        if (connection == null) {
+            // ADB server not running running
+            Log.d(TAG, "useAdbStartServer: Connecting using host=" + mConfig.adbHost + ", port=" + mConfig.adbPort);
             connection = AdbConnectionManager.connect(mConfig.adbHost, mConfig.adbPort);
-        } catch (Exception e) {
-            Log.e(TAG, "useAdbStartServer: unable to connect.", e);
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (IOException e1) {
-                    Log.e(TAG, "useAdbStartServer: unable to close previous connection.", e);
-                }
-            }
-            return false;
         }
 
         Log.d(TAG, "useAdbStartServer: opening shell...");
-        try {
-            adbStream = connection.open("shell:");
-        } catch (IOException | InterruptedException e) {
-            Log.e(TAG, "useAdbStartServer: unable to open shell.", e);
-            return false;
-        }
+        adbStream = connection.open("shell:");
 
         // Logging thread
         new Thread(() -> {
@@ -242,29 +231,22 @@ class LocalServerManager {
             Log.e(TAG, "useAdbStartServer: " + sb);
         }).start();
 
-        try {
-            adbStream.write("\n\n".getBytes());
-            SystemClock.sleep(100);
-            adbStream.write("id\n".getBytes());
-            SystemClock.sleep(100);
-            String command = getExecCommand();
-            Log.d(TAG, "useAdbStartServer: " + command);
-            adbStream.write((command + "\n").getBytes());
-            SystemClock.sleep(3000);
-        } catch (IOException | InterruptedException e) {
-            Log.e(TAG, "useAdbStartServer: unable to write to shell.", e);
-            return false;
-        }
+        adbStream.write("\n\n".getBytes());
+        SystemClock.sleep(100);
+        adbStream.write("id\n".getBytes());
+        SystemClock.sleep(100);
+        String command = getExecCommand();
+        Log.d(TAG, "useAdbStartServer: " + command);
+        adbStream.write((command + "\n").getBytes());
+        SystemClock.sleep(3000);
 
         Log.d(TAG, "useAdbStartServer: Server has started.");
-        return true;
     }
 
     @WorkerThread
-    private boolean useRootStartServer() {
+    private void useRootStartServer() throws Exception {
         if (!RunnerUtils.isRootGiven()) {
-            Log.e(TAG, "useRootStartServer: Root access denied.");
-            return false;
+            throw new Exception("Root access denied");
         }
         String command = getExecCommand(); // + "\n" + "supolicy --live 'allow qti_init_shell zygote_exec file execute'";
         Log.d(TAG, "useRootStartServer: " + command);
@@ -272,24 +254,22 @@ class LocalServerManager {
 
         Log.d(TAG, "useRootStartServer: " + result.getOutput());
         if (!result.isSuccessful()) {
-            Log.e(TAG, "useRootStartServer: Failed to start server.");
-            return false;
+            throw new Exception("Could not start server.");
         }
         SystemClock.sleep(3000);
         Log.e(TAG, "useRootStartServer: Server has started.");
-        return true;
     }
 
     /**
      * Start root or ADB server based on config
      */
     @WorkerThread
-    private boolean startServer() {
+    private void startServer() throws Exception {
         if (AppPref.isAdbEnabled()) {
-            return useAdbStartServer();
+            useAdbStartServer();
         } else if (AppPref.isRootEnabled()) {
-            return useRootStartServer();
-        } else return false;
+            useRootStartServer();
+        } else throw new Exception("Neither root nor ADB mode is enabled.");
     }
 
     /**

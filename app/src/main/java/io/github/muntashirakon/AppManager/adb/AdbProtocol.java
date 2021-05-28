@@ -44,11 +44,7 @@ class AdbProtocol {
     /**
      * The payload sent with the connect message
      */
-    public static byte[] CONNECT_PAYLOAD;
-
-    static {
-        CONNECT_PAYLOAD = "host::\0".getBytes(StandardCharsets.UTF_8);
-    }
+    public static final byte[] CONNECT_PAYLOAD = "host::\0".getBytes(StandardCharsets.UTF_8);
 
     /**
      * AUTH is the authentication message. It is part of the
@@ -111,7 +107,7 @@ class AdbProtocol {
 
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({CMD_SYNC, CMD_CLSE, CMD_WRTE, CMD_AUTH, CMD_OPEN, CMD_CNXN, CMD_STLS, CMD_OKAY})
-    private @interface Cmd {
+    private @interface Command {
     }
 
     /**
@@ -120,15 +116,14 @@ class AdbProtocol {
      * @param payload Payload to checksum
      * @return The checksum of the payload
      */
-    private static int getPayloadChecksum(byte[] payload) {
+    private static int getPayloadChecksum(@NonNull byte[] payload) {
         int checksum = 0;
 
         for (byte b : payload) {
             /* We have to manually "unsign" these bytes because Java sucks */
-            if (b >= 0)
+            if (b >= 0) {
                 checksum += b;
-            else
-                checksum += b + 256;
+            } else checksum += b + 256;
         }
 
         return checksum;
@@ -141,10 +136,9 @@ class AdbProtocol {
      * @param msg ADB message to validate
      * @return True if the message was valid, false otherwise
      */
-    public static boolean validateMessage(AdbMessage msg) {
+    public static boolean validateMessage(@NonNull AdbMessage msg) {
         /* Magic is cmd ^ 0xFFFFFFFF */
-        if (msg.command != (~msg.magic))
-            return false;
+        if (msg.command != (~msg.magic)) return false;
 
         if (msg.payloadLength != 0) {
             return getPayloadChecksum(msg.payload) == msg.checksum;
@@ -163,7 +157,7 @@ class AdbProtocol {
      * @return Byte array containing the message
      */
     @NonNull
-    public static byte[] generateMessage(@Cmd int cmd, int arg0, int arg1, byte[] payload) {
+    public static byte[] generateMessage(@Command int cmd, int arg0, int arg1, byte[] payload) {
         /* struct message {
          *     unsigned command;       // command identifier constant
          *     unsigned arg0;          // first argument
@@ -289,35 +283,33 @@ class AdbProtocol {
 
     /**
      * This class provides an abstraction for the ADB message format.
-     *
-     * @author Cameron Gutman
      */
     final static class AdbMessage {
         /**
          * The command field of the message
          */
-        @Cmd
-        public int command;
+        @Command
+        public final int command;
         /**
          * The arg0 field of the message
          */
-        public int arg0;
+        public final int arg0;
         /**
          * The arg1 field of the message
          */
-        public int arg1;
+        public final int arg1;
         /**
          * The payload length field of the message
          */
-        public int payloadLength;
+        public final int payloadLength;
         /**
          * The checksum field of the message
          */
-        public int checksum;
+        public final int checksum;
         /**
          * The magic field of the message
          */
-        public int magic;
+        public final int magic;
         /**
          * The payload of the message
          */
@@ -333,46 +325,43 @@ class AdbProtocol {
          */
         @NonNull
         public static AdbMessage parseAdbMessage(@NonNull InputStream in) throws IOException {
-            AdbMessage msg = new AdbMessage();
-            ByteBuffer packet = ByteBuffer.allocate(ADB_HEADER_LENGTH).order(ByteOrder.LITTLE_ENDIAN);
+            ByteBuffer header = ByteBuffer.allocate(ADB_HEADER_LENGTH).order(ByteOrder.LITTLE_ENDIAN);
 
             /* Read the header first */
-            int dataRead = 0;
-            do {
-                int bytesRead = in.read(packet.array(), dataRead, 24 - dataRead);
-
-                if (bytesRead < 0)
-                    throw new IOException("Stream closed");
-                else
-                    dataRead += bytesRead;
+            {
+                int dataRead = 0;
+                do {
+                    int bytesRead = in.read(header.array(), dataRead, ADB_HEADER_LENGTH - dataRead);
+                    if (bytesRead < 0) {
+                        throw new IOException("Stream closed");
+                    } else dataRead += bytesRead;
+                } while (dataRead < ADB_HEADER_LENGTH);
             }
-            while (dataRead < ADB_HEADER_LENGTH);
 
-            /* Pull out header fields */
-            msg.command = packet.getInt();
-            msg.arg0 = packet.getInt();
-            msg.arg1 = packet.getInt();
-            msg.payloadLength = packet.getInt();
-            msg.checksum = packet.getInt();
-            msg.magic = packet.getInt();
+            AdbMessage msg = new AdbMessage(header);
 
             /* If there's a payload supplied, read that too */
             if (msg.payloadLength != 0) {
                 msg.payload = new byte[msg.payloadLength];
-
-                dataRead = 0;
+                int dataRead = 0;
                 do {
                     int bytesRead = in.read(msg.payload, dataRead, msg.payloadLength - dataRead);
-
-                    if (bytesRead < 0)
+                    if (bytesRead < 0) {
                         throw new IOException("Stream closed");
-                    else
-                        dataRead += bytesRead;
-                }
-                while (dataRead < msg.payloadLength);
+                    } else dataRead += bytesRead;
+                } while (dataRead < msg.payloadLength);
             }
 
             return msg;
+        }
+
+        private AdbMessage(@NonNull ByteBuffer header) {
+            command = header.getInt();
+            arg0 = header.getInt();
+            arg1 = header.getInt();
+            payloadLength = header.getInt();
+            checksum = header.getInt();
+            magic = header.getInt();
         }
     }
 
