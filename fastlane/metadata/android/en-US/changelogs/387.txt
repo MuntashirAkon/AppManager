@@ -1,0 +1,5 @@
+F-Droid doesn't support extended changelog. In-app changelog offers a more detailed changelog.
+- New feature: Wireless debugging
+- Partial support for Android 12
+- Updated trackers and libs
+- Bug fixes and performance improvements.

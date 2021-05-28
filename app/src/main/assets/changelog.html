@@ -15,6 +15,63 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
+<h5>v2.6.1 (387) stable release:</h5>
+This patch release contains bug fixes and minor features. It also provides fixes for a few security vulnerabilities.
+Therefore, it is recommended for all users. Crash-related fixes are annotated with <b>[Crash]</b>
+&#x2022; <b>New Feature:</b> Wireless debugging for Android 11. Due to licensing issues, ADB pairing couldn't be implemented. See notes below.<br />
+&#x2022; <b>Improvement:</b> Fixed various issues with mode of operations, especially ADB<br />
+&#x2022; <b>Improvement:</b> Fixed loading app list in some Android 6 devices<br />
+&#x2022; <b>Improvement:</b> Improved loading app icons<br />
+&#x2022; <b>Improvement:</b> Move from RestrictionBypass to HiddenApiBypass, saves more than 300 KB<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added more debloat profiles: Fujitsu, HTC, Korean and Japanese carriers, Tencent, Toshiba and Vivo. They are added from different sources and are not well-tested.<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added support for ADB via TLS-1.3<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added date-time in the backup info dialog prompt<br />
+&#x2022; <font color="#09868B">[Feature]</font> Display APK verification status in the scanner page<br />
+&#x2022; <font color="#09868B">[Feature]</font> Display suspended and hidden tags for the respective apps in the app info tab<br />
+&#x2022; <font color="#09868B">[Feature]</font> Display unknown netpolicies and Lineage OS specific netpolicies<br />
+&#x2022; <font color="#09868B">[Feature]</font> Prompt user to confirm falling back to no-root when root/ADB is not working/detected<br />
+&#x2022; <font color="#09868B">[Feature]</font> Updated trackers, libraries and translations<br />
+&#x2022; <font color="red">[Fix]</font> Display changes for the external APK for the same version code<br />
+&#x2022; <font color="red">[Fix]</font> Display error message as toast if the activity cannot be launched in the interceptor page<br />
+&#x2022; <font color="red">[Fix]</font> Display “no changes” instead of empty what's new dialog<br />
+&#x2022; <font color="red">[Fix]</font> Enforced privileged execution of hidden APIs in root/ADB mode<br />
+&#x2022; <font color="red">[Fix]</font> Fixed backing up external folders for the given user (instead of nothing if the user is not the current user)<br />
+&#x2022; <font color="red">[Fix]</font> Fixed backing up keystore due to the use of illegal escape characters<br />
+&#x2022; <font color="red">[Fix]</font> Fixed extracting OBB files for the given user (instead of the current user)<br />
+&#x2022; <font color="red">[Fix]</font> Fixed importing RSA or signing keys<br />
+&#x2022; <font color="red">[Fix]</font> Fixed indefinite loading issue in the app info tab if SSAID couldn't be loaded<br />
+&#x2022; <font color="red">[Fix]</font> Fixed installing apps uninstalled without clearing user data (and signature)<br />
+&#x2022; <font color="red">[Fix]</font> Fixed listing unsupported app ops<br />
+&#x2022; <font color="red">[Fix]</font> Fixed opening apps on Aurora Store<br />
+&#x2022; <font color="red">[Fix]</font> Fixed prompting user to confirm ADB connection even if the user clicked “Always allow from this computer”<br />
+&#x2022; <font color="red">[Fix]</font> Load app details page for hidden apps<br />
+&#x2022; <font color="red">[Fix]</font> Made the key name in the shared preferences editor dialog scrollable and selectable<br />
+&#x2022; <font color="red">[Fix]</font> Match running services based on package name and user ID instead of just package name<br />
+&#x2022; <font color="red">[Fix]</font> Store ADB keys in App Manager keystore<br />
+&#x2022; <font color="red">[Fix]</font> Skip running remote server in root mode<br />
+&#x2022; <font color="red">[Crash]</font> On trying to configure RSA encryption<br />
+&#x2022; <font color="red">[Crash]</font> On trying to open an uninstalled system app when the installer feature is disabled<br />
+&#x2022; <font color="red">[Crash]</font> On trying to open the permissions tab on Android 12<br />
+&#x2022; <font color="red">[Crash]</font> On trying to reopen the interceptor<br />
+&#x2022; <font color="red">[Crash]</font> On searching in the main page with certain character combinations<br />
+&#x2022; <font color="red">[Crash]</font> On trying to save logs in a zip file<br />
+&#x2022; <font color="red">[Crash]</font> When external storage is not available for writing logs<br />
+
+<h3>Notes</h3>
+<p>
+    In order to use wireless debugging, first enable ADB over TCP as usual and select <b>Always allow from this computer</b>.
+    When App Manager is working on this mode, enable wireless debugging, and then, go to App Manager settings and
+    change <b>Mode of Operations</b> to <i>Wireless Debugging</i>. At this point, App Manager should display a prompt
+    where the port number from the wireless debugging window should be inserted. With this mode enabled,
+    App Manager will display this prompt everytime it requires the port number. As always, remember to disable wireless
+    debugging once App Manager's initialization screen goes away. Unless you're using MIUI, you won't need to enable
+    wireless debugging until the next restart.
+</p>
+<p>
+    Aurora Store 4.0.5 (and later) have introduced promotional apps. As a result, we stopped supporting these versions.
+    You can still use the previous versions without issues.
+</p><br />
+
 <h5>v2.6.0 (385) stable release:</h5>
 All the changes introduced in v2.5.21 and onwards.<br />
 &#x2022; <b>New Feature:</b> Log Viewer (accessible from the main menu, “running” tag in the app info page and three-dots menu in each item of the running apps page).<br />
