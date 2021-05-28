@@ -26,7 +26,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.adb.AdbUtils;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
@@ -146,7 +145,7 @@ public final class RunnerUtils {
         if (!RunnerUtils.isRootGiven()) {
             AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
             // Check for adb
-            if (AdbUtils.isAdbAvailable(ServerConfig.getAdbHost(), ServerConfig.getAdbPort())) {
+            if (LocalServer.isAdbAvailable()) {
                 Log.e("ADB", "ADB available");
                 AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, true);
             }
@@ -172,16 +171,18 @@ public final class RunnerUtils {
     }
 
     @WorkerThread
-    public static void setModeOfOps(FragmentActivity activity) {
+    public static void setModeOfOps(FragmentActivity activity, boolean force) {
         String mode = AppPref.getString(AppPref.PrefKey.PREF_MODE_OF_OPS_STR);
         try {
-            if (LocalServer.isAMServiceAlive()) {
-                // Don't bother detecting root/ADB
-                return;
-            } else if (LocalServer.isLocalServerAlive()) {
-                // Remote server is running
-                LocalServer.getInstance();
-                return;
+            if (!force) {
+                if (LocalServer.isAMServiceAlive()) {
+                    // Don't bother detecting root/ADB
+                    return;
+                } else if (LocalServer.isLocalServerAlive()) {
+                    // Remote server is running
+                    LocalServer.getInstance();
+                    return;
+                }
             }
             switch (mode) {
                 case Runner.MODE_AUTO:
@@ -203,10 +204,6 @@ public final class RunnerUtils {
                         new Handler(Looper.getMainLooper()).post(() -> MainPreferences
                                 .displayAdbConnect(activity, waitForConfig));
                         waitForConfig.await(2, TimeUnit.MINUTES);
-                        // Check if the configuration is correct
-                        if (!AdbUtils.isAdbAvailable(ServerConfig.getAdbHost(), ServerConfig.getAdbPort())) {
-                            throw new Exception("Wireless debugging not available.");
-                        }
                         LocalServer.restart();
                         return;
                     } // else fallback to ADB over TCP
@@ -214,12 +211,9 @@ public final class RunnerUtils {
                     // Port is always 5555
                     ServerConfig.setAdbPort(ServerConfig.DEFAULT_ADB_PORT);
                     LocalServer.updateConfig();
-                    if (!AdbUtils.isAdbAvailable(ServerConfig.getAdbHost(), ServerConfig.getAdbPort())) {
-                        throw new Exception("ADB not available.");
-                    }
+                    LocalServer.restart();
                     AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
                     AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, true);
-                    LocalServer.getInstance();
                     return;
                 case Runner.MODE_NO_ROOT:
                     AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);

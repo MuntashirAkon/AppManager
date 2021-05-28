@@ -26,14 +26,6 @@ import javax.net.ssl.X509ExtendedTrustManager;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyPair;
 
 public class AdbUtils {
-    public static boolean isAdbAvailable(String host, int port) {
-        try (AdbConnection ignored = AdbConnectionManager.connect(host, port)) {
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
     @RequiresApi(Build.VERSION_CODES.Q)
     @NonNull
     public static SSLContext getSslContext(KeyPair keyPair) throws NoSuchAlgorithmException, KeyManagementException {

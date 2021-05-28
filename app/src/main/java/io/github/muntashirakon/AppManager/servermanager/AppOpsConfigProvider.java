@@ -12,6 +12,9 @@ import android.os.Binder;
 import android.os.Process;
 
 import androidx.annotation.NonNull;
+
+import java.io.IOException;
+
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
@@ -44,7 +47,12 @@ public class AppOpsConfigProvider extends ContentProvider {
                         String sortOrder) {
         checkCalling();
 
-        ServerConfig.init(ContextUtils.getDeContext(getContext()), Users.getCurrentUserHandle());
+        try {
+            ServerConfig.init(ContextUtils.getDeContext(getContext()), Users.getCurrentUserHandle());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
         MatrixCursor cursor = null;
         switch (uriMatcher.match(uri)) {
             case TYPE_TOKEN:

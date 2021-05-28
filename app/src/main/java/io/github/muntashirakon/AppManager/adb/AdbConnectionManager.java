@@ -39,11 +39,4 @@ public class AdbConnectionManager {
         adbConnection.connect();
         return adbConnection;
     }
-
-    @WorkerThread
-    @NonNull
-    public static AdbStream openShell(String host, int port) throws Exception {
-        AdbConnection connection = connect(host, port);
-        return connection.open("shell:");
-    }
 }

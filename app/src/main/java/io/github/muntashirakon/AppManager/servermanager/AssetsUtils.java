@@ -29,7 +29,8 @@ import io.github.muntashirakon.AppManager.utils.Utils;
 @SuppressWarnings("ResultOfMethodCallIgnored")
 class AssetsUtils {
     @WorkerThread
-    public static void copyFile(@NonNull Context context, String fileName, File destFile, boolean force) {
+    public static void copyFile(@NonNull Context context, String fileName, File destFile, boolean force)
+            throws IOException {
         try (AssetFileDescriptor openFd = context.getAssets().openFd(fileName)) {
             if (force) {
                 destFile.delete();
@@ -54,13 +55,11 @@ class AssetsUtils {
                 fos.getFD().sync();
             }
             IOUtils.chmod644(destFile);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
     @WorkerThread
-    static void writeScript(@NonNull LocalServer.Config config) {
+    static void writeScript(@NonNull LocalServer.Config config) throws IOException {
         try (AssetFileDescriptor openFd = config.context.getAssets().openFd(ServerConfig.EXECUTABLE_FILE_NAME);
              FileInputStream fdInputStream = openFd.createInputStream();
              InputStreamReader inputStreamReader = new InputStreamReader(fdInputStream);
@@ -100,8 +99,6 @@ class AssetsUtils {
                 bw.flush();
             }
             IOUtils.chmod644(destFile);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 

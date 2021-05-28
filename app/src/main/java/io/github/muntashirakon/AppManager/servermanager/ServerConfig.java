@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.Inet4Address;
 
@@ -18,7 +19,7 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 
 // Copyright 2016 Zheng Li
-public class ServerConfig {
+public final class ServerConfig {
     public static final int DEFAULT_ADB_PORT = 5555;
     static String SOCKET_PATH = "am_socket";
     private static int DEFAULT_LOCAL_SERVER_PORT = 60001;
@@ -34,24 +35,27 @@ public class ServerConfig {
     private static volatile boolean sInitialised = false;
 
     @AnyThread
-    static void init(Context context, int userHandleId) {
+    static void init(Context context, int userHandle) throws IOException {
         if (sInitialised) {
             return;
         }
 
         File internalStorage = context.getFilesDir().getParentFile();
-        assert internalStorage != null;
-        try {
-            IOUtils.chmod711(internalStorage);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (internalStorage == null || !internalStorage.exists()) {
+            throw new FileNotFoundException("Internal storage unavailable");
         }
+
+        // Set folder permission
+        IOUtils.chmod711(internalStorage);
+
         destJarFile = new File(internalStorage, JAR_NAME);
         destExecFile = new File(internalStorage, EXECUTABLE_FILE_NAME);
-        if (userHandleId != 0) {
-            SOCKET_PATH += userHandleId;
-            DEFAULT_LOCAL_SERVER_PORT += userHandleId;
+
+        if (userHandle != 0) {
+            SOCKET_PATH += userHandle;
+            DEFAULT_LOCAL_SERVER_PORT += userHandle;
         }
+
         sInitialised = true;
     }
 

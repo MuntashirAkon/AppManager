@@ -62,13 +62,13 @@ class AdbCrypto {
     /**
      * The RSA signature padding as a byte array
      */
-    public static byte[] SIGNATURE_PADDING;
+    public static byte[] RSA_SHA_PKCS1_SIGNATURE_PADDING;
 
     static {
-        SIGNATURE_PADDING = new byte[SIGNATURE_PADDING_AS_INT.length];
+        RSA_SHA_PKCS1_SIGNATURE_PADDING = new byte[SIGNATURE_PADDING_AS_INT.length];
 
-        for (int i = 0; i < SIGNATURE_PADDING.length; i++)
-            SIGNATURE_PADDING[i] = (byte) SIGNATURE_PADDING_AS_INT[i];
+        for (int i = 0; i < RSA_SHA_PKCS1_SIGNATURE_PADDING.length; i++)
+            RSA_SHA_PKCS1_SIGNATURE_PADDING[i] = (byte) SIGNATURE_PADDING_AS_INT[i];
     }
 
     /**
@@ -131,6 +131,7 @@ class AdbCrypto {
 
         /* The key is base64 encoded with a user@host suffix and terminated with a NUL */
         byte[] nameBytes = (' ' + name + '\u0000').getBytes(StandardCharsets.UTF_8);
+
         byte[] payload = new byte[convertedKey.length + nameBytes.length];
         System.arraycopy(convertedKey, 0, payload, 0, convertedKey.length);
         System.arraycopy(nameBytes, 0, payload, convertedKey.length, nameBytes.length);
@@ -147,7 +148,7 @@ class AdbCrypto {
     public static byte[] signAdbTokenPayload(@NonNull KeyPair keyPair, byte[] payload) throws GeneralSecurityException {
         Cipher c = Cipher.getInstance("RSA/ECB/NoPadding");
         c.init(Cipher.ENCRYPT_MODE, keyPair.getPrivateKey());
-        c.update(SIGNATURE_PADDING);
+        c.update(RSA_SHA_PKCS1_SIGNATURE_PADDING);
         return c.doFinal(payload);
     }
 
