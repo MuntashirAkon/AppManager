@@ -92,7 +92,7 @@ public class AppDetailsActivity extends BaseActivity {
                     // Load tabs for the first time
                     for (int i = 0; i < mTabTitleIds.length(); ++i) model.load(i);
                     // Set title
-                    ApplicationInfo applicationInfo = model.getPackageInfo().applicationInfo;
+                    ApplicationInfo applicationInfo = packageInfo.applicationInfo;
                     // Set title as the package label
                     setTitle(applicationInfo.loadLabel(getPackageManager()));
                     // Set subtitle as the user name if more than one user exists
