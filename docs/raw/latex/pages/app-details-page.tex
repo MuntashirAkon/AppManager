@@ -1,9 +1,12 @@
-\section{App Details Page}\label{sec:app-details-page}
+\section{App Details Page}\label{sec:app-details-page} %%##pages_appdetails-section==title>>
+%%!!pages_appdetails-section<<
 \textbf{App Details} page consists of 11 (eleven) tabs. It basically describes almost every bit of information an app
 can have including all attributes from app manifest, permissions, \hyperref[ch:app-ops]{app operations}, signing info,
 etc.
+%%!!>>
 
-\subsection{Colour Codes}\label{subsec:app-details-colour-codes}
+\subsection{Colour Codes}\label{subsec:app-details-colour-codes} %%##pages_appdetails-colour-codes==title>>
+%%!!pages_appdetails-colour-codes<<
 List of background colours used in this page, and their meaning:
 \begin{itemize}
     \item \colorbox{red}{\textcolor{black}{Red (day)}} / \colorbox{AMDarkRed}{\textcolor{white}{dark red (night)}}
@@ -22,12 +25,16 @@ List of background colours used in this page, and their meaning:
     \item \colorbox{AMSoftMagenta}{\textcolor{black}{Soft magenta (day)}} / \colorbox{AMVeryDarkViolet}{
         \textcolor{white}{very dark violet (night)}} -- Currently running services
 \end{itemize}
+%%!!>>
 
-\subsection{App Info Tab}\label{subsec:app-info-tab}
+\subsection{App Info Tab}\label{subsec:app-info-tab} %%##pages_appdetails-app-info-tab==title>>
+%%!!pages_appdetails-app-info-tab<<
 \textbf{App Info} tab contains general information about an app. It also lists many actions that can be performed within
 this tab. A complete description is given below:
+%%!!>>
 
-\subsubsection{General Information}\label{subsubsec:app-info-general-information}
+\subsubsection{General Information}\label{subsubsec:app-info-general-information} %%##pages_appdetails-app-info-general-information==title>>
+%%!!pages_appdetails-app-info-general-information<<
 The list below is in the same order as listed in the App Info tab.
 \begin{itemize}
     \item \textbf{App Icon.} The application icon. If an app doesn't have an icon, the system default icon is displayed.
@@ -109,8 +116,10 @@ The list below is in the same order as listed in the App Info tab.
         launch button on the right-hand side which can be used to launch this activity.
     \end{itemize}
 \end{itemize}
+%%!!>>
 
-\subsubsection{Horizontal Action Panel}\label{subsubsec:horizontal-action-panel}
+\subsubsection{Horizontal Action Panel}\label{subsubsec:horizontal-action-panel} %%##pages_appdetails-horizontal-action-panel==title>>
+%%!!pages_appdetails-horizontal-action-panel<<
 Horizontal Action Panel, as described in the previous section, consists of various app-related actions, such as--
 \begin{itemize}
     \item \textbf{Launch.} Application that has a launcher \hyperref[subsubsec:activities]{activities} can be launched
@@ -173,8 +182,10 @@ Horizontal Action Panel, as described in the previous section, consists of vario
     \item \textbf{Store.} Opens the app in \textit{Aurora Store}. The option is only visible if \textit{Aurora Store} is
     installed.
 \end{itemize}
+%%!!>>
 
-\subsubsection{Options Menu}\label{subsubsec:app-info-options-menu}
+\subsubsection{Options Menu}\label{subsubsec:app-info-options-menu} %%##pages_appdetails-app-info-options-menu==title>>
+%%!!pages_appdetails-app-info-options-menu<<
 Options-menu is located in the top-right corner of the page. A complete description of the options present there are
 given below:
 \begin{itemize}
@@ -198,8 +209,10 @@ given below:
 
     \item \textbf{Extract Icon.} Extract and save the app's icon in your desired location.
 \end{itemize}
+%%!!>>
 
-\subsubsection{Termux}\label{subsubsec:config-termux}
+\subsubsection{Termux}\label{subsubsec:config-termux} %%##pages_appdetails-config-termux==title>>
+%%!!pages_appdetails-config-termux<<
 By default, Termux does not allow running commands from third-party applications. To enable this option, you have to add
 \texttt{allow-external-apps=true} in \texttt{\textasciitilde/.termux/termux.properties}, and make sure that you are
 running Termux v0.96 or later.
@@ -208,8 +221,10 @@ running Termux v0.96 or later.
     Enabling this option does not weaken your Termux' security. The third-party apps still need to request the user to
     allow running arbitrary commands in Termux like any other dangerous permissions.
 \end{tip}
+%%!!>>
 
-\subsection{Component Tabs}\label{subsec:component-tabs}
+\subsection{Component Tabs}\label{subsec:component-tabs} %%##pages_appdetails-component-tabs==title>>
+%%!!pages_appdetails-component-tabs<<
 \textbf{Activities}, \textbf{Services}, \textbf{Receivers} (originally \textit{broadcast receivers}) and
 \textbf{Providers} (originally \textit{Content Providers}) are together called the application components. This is
 because they share similar features in many ways. For example, they all have a \textit{name} and a \textit{label}.
@@ -218,8 +233,10 @@ manifest. Application manifest is a file where application specific metadata are
 learns what to do with an app by reading the metadata. Colours used in these tabs are explained in
 §\cref{subsec:app-details-colour-codes}. You also have the ability to sort the list of components to display blocked or
 tracker components on top of the list using the \textbf{Sort} option in the overflow menu.
+%%!!>>
 
-\subsubsection{Activities}\label{subsubsec:activities}
+\subsubsection{Activities}\label{subsubsec:activities} %%##pages_appdetails-activities==title>>
+%%!!pages_appdetails-activities<<
 \textbf{Activities} are windows or pages that you can browse (for instance \textit{Main page} and \textit{App Details
 page} are two separate activities). In other words, an activity is a user interface (UI) component. Each activity can
 have multiple UI components known as \textit{widgets} or \textit{fragments}, and similarly, each of these latter
@@ -249,8 +266,10 @@ can edit the shortcut as well using the \textit{Edit Shortcut} button.
 \begin{danger}{Caution}
     If you uninstall App Manager, all shortcuts created by App Manager will be lost.
 \end{danger}
+%%!!>>
 
-\subsubsection{Services}\label{subsubsec:details:servcies}
+\subsubsection{Services}\label{subsubsec:details:servcies} %%##pages_appdetails-servcies==title>>
+%%!!pages_appdetails-servcies<<
 Unlike \hyperref[subsubsec:activities]{activities} which users can see, \textbf{Services} handle background tasks. If
 you're, for example, downloading a video from the internet using your phone's Internet browser, the Internet browser is
 using a foreground service to download the content.
@@ -265,8 +284,10 @@ By the way, both activities and services are run in the same \href{https://stack
 called the main looper, which means the services are not really run in the background. It's the application authors job
 to ensure that. How do application communicate with services? They use
 \hyperref[subsubsec:app-details-receivers]{broadcast receivers}.
+%%!!>>
 
-\subsubsection{Receivers}\label{subsubsec:app-details-receivers}
+\subsubsection{Receivers}\label{subsubsec:app-details-receivers} %%##pages_appdetails-app-details-receivers==title>>
+%%!!pages_appdetails-app-details-receivers<<
 \textbf{Receivers} (also called \textit{broadcast receivers}) can be used to trigger execution of certain tasks for
 certain events. These components are called broadcast receivers because they are executed as soon as a broadcast message
 is received. These broadcast messages are sent using a method called intent. Intent is a special feature for Android
@@ -280,18 +301,24 @@ awakened by the system as soon as you enable data connection. Since many apps us
 are awakened almost immediately by the system which causes the freeze or lags. That being said, receivers can be used
 for inter-process communication (IPC), i.e., it helps you communicate between different apps (provided you have the
 necessary permissions) or even different components of a single app.
+%%!!>>
 
-\subsubsection{Providers}\label{appdetails:providers}
+\subsubsection{Providers}\label{appdetails:providers} %%##pages_appdetails-providers==title>>
+%%!!pages_appdetails-providers<<
 \textbf{Providers} (also called \textit{content providers}) are used for data management. For example, when you save an
 apk file or export rules in App Manager, it uses a content provider called `androidx.core.content.FileProvider` to save
 the APK or export the rules. There are other content providers or even custom ones to manage various content-related
 tasks such as database management, tracking, searching, etc. Each content provider has a field called \textit{Authority}
 which is unique to that particular app in the entire Android eco-system just like the package name.
+%%!!>>
 
-\subsubsection{Additional Features for Rooted Phones}
+\subsubsection{Additional Features for Rooted Phones} %%##pages_appdetails-additionalrootfeatures==title>>
+%%!!pages_appdetails-additionalrootfeatures<<
 Unlike non-root users who are mostly spectators in these tabs, root users can perform various operations.
+%%!!>>
 
-\paragraph{Blocking Components}
+\paragraph{Blocking Components} %%##pages_appdetails-blockedcomponents==title>>
+%%!!pages_appdetails-blockedcomponents<<
 On the right-most side of each component item, there is a ``block'' icon (which becomes a ``unblock/restore'' icon when
 the component is being blocked). This icon (actually, a button) can be used to toggle the blocking status of that
 particular component. If you do not have \hyperref[subsubsec:instant-component-blocking]{Instant Component Blocking}
@@ -300,9 +327,11 @@ option in three-dots menu. You can also remove already applied rules using the s
 \textbf{Remove rules} this time).
 
 \seealsoinline{\hyperref[sec:faq:app-components]{FAQ: App Components}}
+%%!!>>
 
-\paragraph{Blocking Trackers}\label{par:appdetails:blocking-trackers}
+\paragraph{Blocking Trackers}\label{par:appdetails:blocking-trackers} %%##pages_appdetails-blocking-trackers==title>>
 \phantomsection
+%%!!pages_appdetails-blocking-trackers<<
 You can disable tracker components using the \textbf{Block tracker} option in the three-dots menu. All tracker
 components will be blocked regardless of the tab you're currently in.
 
@@ -316,16 +345,20 @@ components will be blocked regardless of the tab you're currently in.
     \item \hyperref[sec:scanner-page]{Scanner Page}
     \item \hyperref[subsec:block-unblock-trackers]{1-Click Ops Page: Block/Unblock Trackers}
 \end{amseealso}
+%%!!>>
 
-\subsection{Permission Tabs}\label{subsec:permission-tabs}
+\subsection{Permission Tabs}\label{subsec:permission-tabs} %%##pages_appdetails-permission-tabs==title>>
+%%!!pages_appdetails-permission-tabs<<
 \textbf{App Ops}, \textbf{Uses Permissions} and \textbf{Permissions} tabs are related to permissions. In Android
 communication between apps or processes which do not have the same identity (known as \textit{shared id}) often require
 permission(s). These permissions are managed by the permission controller. Some permissions are considered
 \textit{normal} permissions which are granted automatically if they appear in the application manifest, but
 \textit{dangerous} and \textit{development} permissions require confirmation from the user. Colours used in these tabs
 are explained in §\cref{subsec:app-details-colour-codes}.
+%%!!>>
 
-\subsubsection{App Ops}\label{subsubsec:app-ops}
+\subsubsection{App Ops}\label{subsubsec:app-ops} %%##pages_appdetails-app-ops==title>>
+%%!!pages_appdetails-app-ops<<
 \textbf{App Ops} stands for \textbf{Application Operations}.
 Since Android 4.3, \textit{App Ops} are used by Android system to control most of the application permissions.
 Each app op has a unique number associated with them which are closed inside first brackets in the App Ops tab.
@@ -369,8 +402,10 @@ You can also list the denied app ops first using the corresponding sorting optio
 \end{warning}
 
 \seealsoinline{\hyperref[ch:app-ops]{Appendix: App Ops}}
+%%!!>>
 
-\subsubsection{Uses Permissions}
+\subsubsection{Uses Permissions} %%##pages_appdetails-usespermissions==title>>
+%%!!pages_appdetails-usespermissions<<
 \textbf{Uses Permissions} are the permissions used by the application. This is named so because they are declared in the
 manifest using \texttt{uses-permission} tags. Information such as \textit{flags}, \textit{permission name},
 \textit{permission description}, \textit{package name}, \textit{group} are taken from the associated
@@ -394,8 +429,10 @@ and remove these permissions from there.
 
 Users can sort the permissions by permission name (in ascending order) or choose to display denied or dangerous
 permissions at first using the corresponding options in the menu.
+%%!!>>
 
-\subsubsection{Permissions}\label{subsubsec:permissions}
+\subsubsection{Permissions}\label{subsubsec:permissions} %%##pages_appdetails-permissions==title>>
+%%!!pages_appdetails-permissions<<
 \textbf{Permissions} are usually custom permissions defined by the app itself. It could contain regular permissions as
 well, mostly in old applications. Here's a complete description of each item that is displayed there:
 \begin{itemize}
@@ -418,8 +455,10 @@ well, mostly in old applications. Here's a complete description of each item tha
     \item \textbf{Group.} The group name associated with the permission (if any). Newer Androids do not seem to use
     group names which is why you'll usually see \texttt{android.permission-group.UNDEFINED} or no group name at all.
 \end{itemize}
+%%!!>>
 
-\subsection{Signatures Tab}\label{subsec:signatures-tab}
+\subsection{Signatures Tab}\label{subsec:signatures-tab} %%##pages_appdetails-signatures-tab==title>>
+%%!!pages_appdetails-signatures-tab_1<<
 \textbf{Signatures} are actually called signing info. An application is signed by one or more singing certificates by
 the application developers before publishing it. The integrity of an application (whether the app is from the actual
 developer and isn't modified by other people) can be checked using the signing info; because when an app is modified by
@@ -429,10 +468,12 @@ are generated from the certificates themselves. If the developer supplies the ch
 using the different checksums generated in the \textbf{Signatures} tab. For example, if you have downloaded App Manager
 from Github, Telegram Channel or IzzyOnDroid's repo, you can verify whether the app is actually released by me by simply
 matching the following \textit{SHA256} checksum with the one displayed in this tab:
+%%!!>>
 \begin{Verbatim}
     320c0c0fe8cef873f2b554cb88c837f1512589dcced50c5b25c43c04596760ab
 \end{Verbatim}
 
+%%!!pages_appdetails-signatures-tab_2<<
 There are three types of checksums displayed there: \textit{MD5}, \textit{SHA1} and \textit{SHA256}.
 
 \begin{danger}{Caution}
@@ -440,7 +481,10 @@ There are three types of checksums displayed there: \textit{MD5}, \textit{SHA1} 
     rely on \textit{MD5} or \textit{SHA1} checksums only as they are known to generate the same results for multiple
     certificates.
 \end{danger}
+%%!!>>
 
-\subsection{Other Tabs}\label{subsec:other-tabs}
+\subsection{Other Tabs}\label{subsec:other-tabs} %%##pages_appdetails-other-tabs==title>>
+%%!!pages_appdetails-other-tabs<<
 Other tabs list android manifest components such as features, configurations, shared libraries, and signatures. A
 complete description about these tabs will be available soon.
+%%!!>>

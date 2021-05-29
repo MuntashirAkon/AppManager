@@ -1,12 +1,15 @@
-\section{Main Page}\label{sec:main-page}
+\section{Main Page}\label{sec:main-page} %%##pages_mainpage-section==title>>
+%%!!pages_mainpage-section<<
 Main page lists all the installed apps (or a list of apps supplied by any third-party application) as well as apps that
 has existing backups. A single click on any installed app item opens the respective \hyperref[sec:app-details-page]{App
 Details page}. Using the \hyperlink{par:main-page-sort}{sort} option from the menu, the app items can be sorted in
 various ways and preserved on close. It is also possible to filter items based on your needs using the
 \hyperlink{par:main-page-filter}{filter} option in the menu. You can filter using more than one options. You can also
 filter apps using app labels or package name using the search button.
+%%!!>>
 
-\subsection{Batch Operations}\label{subsec:batch-operations}
+\subsection{Batch Operations}\label{subsec:batch-operations} %%##pages_mainpage-batch-operations==title>>
+%%!!pages_mainpage-batch-operations<<
 Batch operations or operation on multiple apps are also available within this page (most these operations require root
 or \hyperref[sec:adb-over-tcp]{ADB over TCP}). To enable multiple selection mode, click on any app icon or long click
 on any app. After that, you can use the regular click to select apps instead of opening the App Details page. These
@@ -21,8 +24,10 @@ operations include:
     \item Export blocking rules
     \item Add the selected apps to a \hyperref[sec:profiles-page]{profile}
 \end{itemize}
+%%!!>>
 
-\subsection{Colour Codes}\label{subsec:main-colour-codes}
+\subsection{Colour Codes}\label{subsec:main-colour-codes} %%##pages_mainpage-colour-codes==title>>
+%%!!pages_mainpage-colour-codes<<
 Here's the list of colours used in this page, and their meaning:
 \begin{itemize}
     \item \colorbox{AMLightGreyishOrange}{\textcolor{black}{Light greyish orange (day)}} / \colorbox{AMDarkBlue}{
@@ -43,8 +48,10 @@ Here's the list of colours used in this page, and their meaning:
     \item \textcolor{AMDarkCyan}{Dark cyan \textit{version}} -- Inactive app
     \item \textcolor{magenta}{Magenta} -- Persistent app i.e.\ remains running all the time
 \end{itemize}
+%%!!>>
 
-\subsection{Application Types}\label{subsec:main-page-application-types}
+\subsection{Application Types}\label{subsec:main-page-application-types} %%##pages_mainpage-application-types==title>>
+%%!!pages_mainpage-application-types<<
 An app is either \textbf{User App} or \textbf{System App} along with the following codes:
 \begin{itemize}
     \item \texttt{X} -- The app supports multiple architectures: 32-bit, 64-bit or arm-v7, arm-v8, etc.
@@ -53,26 +60,36 @@ An app is either \textbf{User App} or \textbf{System App} along with the followi
     \item \texttt{\#} -- App has requested a large heap
     \item \texttt{?} -- App has requested VM in safe mode
 \end{itemize}
+%%!!>>
 
-\subsection{Version Info}\label{subsec:main-page-version-info}
+\subsection{Version Info}\label{subsec:main-page-version-info} %%##pages_mainpage-version-info==title>>
+%%!!pages_mainpage-version-info<<
 Version name is followed by the following prefixes:
 \begin{itemize}
     \item \texttt{\_} -- No hardware acceleration
     \item \texttt{\textasciitilde} -- Test only mode
     \item \texttt{debug} -- Debuggable app
 \end{itemize}
+%%!!>>
 
-\subsection{Options Menu}\label{subsec:main-page-options-menu}
+\subsection{Options Menu}\label{subsec:main-page-options-menu} %%##pages_mainpage-options-menu==title>>
+%%!!pages_mainpage-options-menu<<
 Options menu has several options which can be used to sort, filter the listed apps as well as navigate to different pages.
+%%!!>>
 
-\subsubsection{Instructions}
+\subsubsection{Instructions} %%##pages_mainpage-instructions==title>>
+%%!!pages_mainpage-instructions<<
 Clicking on instructions open an offline version of the App Manager documentations. It opens the online version if the
 corresponding feature split i.e.\ \texttt{feat\_docs} is not installed.
+%%!!>>
 
-\subsubsection{List Options}\label{subsubsec:main-list-options}
+\subsubsection{List Options}\label{subsubsec:main-list-options} %%##pages_mainpage-list-options==title>>
+%%!!pages_mainpage-list-options<<
 List options contain the options to sort or filter the app list.
+%%!!>>
 
-\paragraph{Sort}\hypertarget{par:main-page-sort}{}
+\paragraph{Sort}\hypertarget{par:main-page-sort}{} %%##pages_mainpage-sort==title>>
+%%!!pages_mainpage-sort<<
 Apps listed on the main page can be sorted in different ways. The sorting preference is preserved which means the apps
 will be sorted the same way that was sorted in the previous launch. Regardless of your sorting preference, however, the
 apps are first sorted alphabetically to prevent random results.
@@ -92,8 +109,10 @@ apps are first sorted alphabetically to prevent random results.
 \end{itemize}
 
 There is also a \textit{reverse} option which can be used to sort the apps in reverse order.
+%%!!>>
 
-\paragraph{Filter}\hypertarget{par:main-page-filter}{}
+\paragraph{Filter}\hypertarget{par:main-page-filter}{} %%##pages_mainpage-filter==title>>
+%%!!pages_mainpage-filter<<
 Apps listed on the main page can be filtered in a number of ways. Like sorting, filtering preferences are also stored
 and retained after a relaunch.
 \begin{itemize}
@@ -113,45 +132,64 @@ and retained after a relaunch.
 Unlike sorting, you can filter using more than one option. For example, you can list the disabled user apps by filtering
 app lists selecting \textit{user apps} and \textit{disabled apps}. This is particularly useful for
 \hyperref[subsec:batch-operations]{batch operations} where you can filter all user apps to carry out certain operations.
+%%!!>>
 
-\subsubsection{1-Click Ops}\label{subsubsec:main:1-click-ops}
+\subsubsection{1-Click Ops}\label{subsubsec:main:1-click-ops} %%##pages_mainpage-1-click-ops==title>>
+%%!!pages_mainpage-1-click-ops<<
 \hyperref[sec:1-click-ops-page]{1-Click Ops} stands for \textbf{One-Click Operations}. You can directly open the
 corresponding page by clicking on this option.
+%%!!>>
 
-\subsubsection{App Usage}
+\subsubsection{App Usage} %%##pages_mainpage-appusage==title>>
+%%!!pages_mainpage-appusage<<
 App usage statistics such as \textit{screen time}, \textit{data usage} (both mobile and Wifi), \textit{number of times
 an app was opened} can be accessed by clicking on the \textbf{App Usage} option in the menu (requires \textit{Usage
 Access} permission).
+%%!!>>
 
-\subsubsection{System Config}
+\subsubsection{System Config} %%##pages_mainpage-systemconfig==title>>
+%%!!pages_mainpage-systemconfig<<
 Display various system configurations, whitelists/blacklists included in Android by either OEM/vendor, AOSP or even some
 Magisk modules.
+%%!!>>
 
-\subsubsection{Running Apps}\label{subsubsec:main:running-apps}
+\subsubsection{Running Apps}\label{subsubsec:main:running-apps} %%##pages_mainpage-running-apps==title>>
+%%!!pages_mainpage-running-apps<<
 A list of running apps or processes can be viewed by clicking on the \textbf{Running Apps} option in the menu (requires
 root or \hyperref[sec:adb-over-tcp]{ADB}).
 Running apps or processes can also be force-closed or killed within the resultant page.
 Logs for each process ID (PID) can also be viewed in the \hyperref[subsubsec:log-viewer]{log viewer}.
+%%!!>>
 
-\subsubsection{APK Updater}
+\subsubsection{APK Updater} %%##pages_mainpage-apkupdater==title>>
+%%!!pages_mainpage-apkupdater<<
 If you have the app \href{https://github.com/rumboalla/apkupdater}{APK Updater} installed, you can use the corresponding
 option in the menu to open the app directly.
 The option is hidden if you do not have it installed.
+%%!!>>
 
-\subsubsection{Profiles}
+\subsubsection{Profiles} %%##pages_mainpage-profiles==title>>
+%%!!pages_mainpage-profiles<<
 Opens the \hyperref[sec:profiles-page]{profiles page}.
 Profiles are a way to configure regularly used tasks.
 You can also add shortcuts of the profiles in the launcher to run them directly.
+%%!!>>
 
-\subsubsection{Log Viewer}\label{subsubsec:log-viewer}
+\subsubsection{Log Viewer}\label{subsubsec:log-viewer} %%##pages_mainpage-log-viewer==title>>
+%%!!pages_mainpage-log-viewer<<
 Display, manage logs from \texttt{logcat}.
 For no-root users, this only logs the activities of App Manager due to its limitation.
 However, it can display logs from all users if \texttt{android.permission.READ\_LOGS} is granted using ADB (granted by
 automatically when using ADB over TCP).
+%%!!>>
 
-\subsubsection{Termux}
+\subsubsection{Termux} %%##pages_mainpage-termux==title>>
+%%!!pages_mainpage-termux<<
 If you have \href{https://github.com/termux/termux-app}{Termux} installed, you can directly go to the running session
 or open a new session using the \textbf{Termux} option in the menu.
+%%!!>>
 
-\subsubsection{Settings}
+\subsubsection{Settings} %%##pages_mainpage-settings==title>>
+%%!!pages_mainpage-settings<<
 You can go to in-app \hyperref[sec:settings-page]{Settings} by clicking on the corresponding option.
+%%!!>>
