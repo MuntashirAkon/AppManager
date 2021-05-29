@@ -86,11 +86,11 @@ public class PseudoRulesTest {
 
     @Test
     public void uniquenessOfPermissionsTest() {
-        rules.setPermission(".perm", true);
-        rules.setPermission(".perm", false);
+        rules.setPermission(".perm", true, 32);
+        rules.setPermission(".perm", false, 4);
         assertEquals(1, rules.getAll().size());
-        assertNotEquals(new PermissionRule(PACKAGE_NAME, ".perm", true, 0), rules.getAll().get(0));
-        assertEquals(new PermissionRule(PACKAGE_NAME, ".perm", false, 0), rules.getAll().get(0));
+        assertNotEquals(new PermissionRule(PACKAGE_NAME, ".perm", true, 32), rules.getAll().get(0));
+        assertEquals(new PermissionRule(PACKAGE_NAME, ".perm", false, 4), rules.getAll().get(0));
     }
 
     @Test
@@ -144,7 +144,7 @@ public class PseudoRulesTest {
         rules.setComponent(".component", RuleType.PROVIDER, ComponentRule.COMPONENT_BLOCKED);
         rules.setComponent(".component", RuleType.SERVICE, ComponentRule.COMPONENT_BLOCKED);
         rules.setComponent(".component", RuleType.RECEIVER, ComponentRule.COMPONENT_BLOCKED);
-        rules.setPermission(".component", true);
+        rules.setPermission(".component", true, 4);
         rules.setNotificationListener(".component", true);
         List<RuleEntry> ruleEntries = rules.getAll();
         assertEquals(6, ruleEntries.size());
@@ -156,7 +156,7 @@ public class PseudoRulesTest {
                 ComponentRule.COMPONENT_BLOCKED), ruleEntries.get(2));
         assertEquals(new ComponentRule(PACKAGE_NAME, ".component", RuleType.RECEIVER,
                 ComponentRule.COMPONENT_BLOCKED), ruleEntries.get(3));
-        assertEquals(new PermissionRule(PACKAGE_NAME, ".component", true, 0), ruleEntries.get(4));
+        assertEquals(new PermissionRule(PACKAGE_NAME, ".component", true, 4), ruleEntries.get(4));
         assertEquals(new NotificationListenerRule(PACKAGE_NAME, ".component", true), ruleEntries.get(5));
     }
 
@@ -166,7 +166,7 @@ public class PseudoRulesTest {
         rules.setComponent(RuleEntry.STUB, RuleType.PROVIDER, ComponentRule.COMPONENT_BLOCKED);
         rules.setComponent(RuleEntry.STUB, RuleType.SERVICE, ComponentRule.COMPONENT_BLOCKED);
         rules.setComponent(RuleEntry.STUB, RuleType.RECEIVER, ComponentRule.COMPONENT_BLOCKED);
-        rules.setPermission(RuleEntry.STUB, true);
+        rules.setPermission(RuleEntry.STUB, true, 4);
         rules.setNotificationListener(RuleEntry.STUB, true);
         rules.setNetPolicy(4);
         rules.setBatteryOptimization(true);
@@ -182,7 +182,7 @@ public class PseudoRulesTest {
                 ComponentRule.COMPONENT_BLOCKED), ruleEntries.get(2));
         assertEquals(new ComponentRule(PACKAGE_NAME, RuleEntry.STUB, RuleType.RECEIVER,
                 ComponentRule.COMPONENT_BLOCKED), ruleEntries.get(3));
-        assertEquals(new PermissionRule(PACKAGE_NAME, RuleEntry.STUB, true, 0), ruleEntries.get(4));
+        assertEquals(new PermissionRule(PACKAGE_NAME, RuleEntry.STUB, true, 4), ruleEntries.get(4));
         assertEquals(new NotificationListenerRule(PACKAGE_NAME, RuleEntry.STUB, true), ruleEntries.get(5));
         assertEquals(new NetPolicyRule(PACKAGE_NAME, 4), ruleEntries.get(6));
         assertEquals(new BatteryOptimizationRule(PACKAGE_NAME, true), ruleEntries.get(7));

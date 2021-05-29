@@ -4,17 +4,25 @@ package io.github.muntashirakon.AppManager.servermanager;
 
 import android.annotation.SuppressLint;
 import android.annotation.UserIdInt;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageManager;
+import android.content.pm.PermissionGroupInfo;
+import android.content.pm.PermissionInfo;
+import android.content.pm.permission.SplitPermissionInfoParcelable;
 import android.os.Build;
 import android.os.RemoteException;
 import android.permission.IPermissionManager;
+import android.util.SparseArray;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.Collections;
+import java.util.List;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
@@ -190,6 +198,7 @@ public class PermissionCompat {
     /**
      * Mask for all permission flags.
      */
+    @PermissionFlags
     public static final int MASK_PERMISSION_FLAGS_ALL;
 
     static {
@@ -253,27 +262,33 @@ public class PermissionCompat {
     public @interface PermissionFlags {
     }
 
+    @SuppressWarnings("deprecation")
     @PermissionFlags
     public static int getPermissionFlags(@NonNull String permissionName,
                                          @NonNull String packageName,
-                                         @UserIdInt int userId)
-            throws RemoteException {
-        IPackageManager pm = AppManager.getIPackageManager();
+                                         @UserIdInt int userId) throws RemoteException {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             IPermissionManager permissionManager = getPermissionManager();
-            return permissionManager.getPermissionFlags(packageName, permissionName, userId);
+            return permissionManager.getPermissionFlags(permissionName, packageName, userId);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return pm.getPermissionFlags(permissionName, packageName, userId);
+            return AppManager.getIPackageManager().getPermissionFlags(permissionName, packageName, userId);
         } else return FLAG_PERMISSION_NONE;
     }
 
+    /**
+     * Replace a set of flags with another or {@code 0}
+     *
+     * @param flagMask   The flags to be replaced
+     * @param flagValues The new flags to set (is a subset of flagMask)
+     * @see <a href="https://cs.android.com/android/platform/superproject/+/master:cts/tests/tests/permission/src/android/permission/cts/PermissionFlagsTest.java">PermissionFlagsTest.java</a>
+     */
+    @SuppressWarnings("deprecation")
     public static void updatePermissionFlags(@NonNull String permissionName,
                                              @NonNull String packageName,
                                              @PermissionFlags int flagMask,
                                              @PermissionFlags int flagValues,
                                              boolean checkAdjustPolicyFlagPermission,
-                                             @UserIdInt int userId)
-            throws RemoteException {
+                                             @UserIdInt int userId) throws RemoteException {
         IPackageManager pm = AppManager.getIPackageManager();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             IPermissionManager permissionManager = getPermissionManager();
@@ -303,15 +318,21 @@ public class PermissionCompat {
         }
     }
 
+    public static void revokePermission(@NonNull String packageName,
+                                        @NonNull String permissionName,
+                                        @UserIdInt int userId) throws RemoteException {
+        revokePermission(packageName, permissionName, userId, null);
+    }
+
     @SuppressWarnings("deprecation")
     public static void revokePermission(@NonNull String packageName,
                                         @NonNull String permissionName,
-                                        @UserIdInt int userId)
-            throws RemoteException {
+                                        @UserIdInt int userId,
+                                        @Nullable String reason) throws RemoteException {
         IPackageManager pm = AppManager.getIPackageManager();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             IPermissionManager permissionManager = getPermissionManager();
-            permissionManager.revokeRuntimePermission(packageName, permissionName, userId, null);
+            permissionManager.revokeRuntimePermission(packageName, permissionName, userId, reason);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             pm.revokeRuntimePermission(packageName, permissionName, userId);
         } else {
@@ -319,14 +340,59 @@ public class PermissionCompat {
         }
     }
 
+    @SuppressWarnings("deprecation")
+    @NonNull
+    public static PermissionInfo getPermissionInfo(String permissionName, String packageName, int flags)
+            throws RemoteException {
+        IPackageManager pm = AppManager.getIPackageManager();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            return getPermissionManager().getPermissionInfo(permissionName, packageName, flags);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            return pm.getPermissionInfo(permissionName, packageName, flags);
+        } else return pm.getPermissionInfo(permissionName, flags);
+    }
+
+    @SuppressWarnings("deprecation")
+    @NonNull
+    public static PermissionGroupInfo getPermissionGroupInfo(String groupName, int flags) throws RemoteException {
+        IPackageManager pm = AppManager.getIPackageManager();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            return getPermissionManager().getPermissionGroupInfo(groupName, flags);
+        } else return pm.getPermissionGroupInfo(groupName, flags);
+    }
+
+    public static List<SplitPermissionInfoParcelable> getSplitPermissions() throws RemoteException {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            return getPermissionManager().getSplitPermissions();
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            return AppManager.getIPackageManager().getSplitPermissions();
+        }
+        return Collections.emptyList();
+    }
+
+    public static boolean getCheckAdjustPolicyFlagPermission(@NonNull ApplicationInfo info) {
+        return info.targetSdkVersion >= Build.VERSION_CODES.Q;
+    }
+
     @NonNull
     public static IPermissionManager getPermissionManager() {
         return IPermissionManager.Stub.asInterface(ProxyBinder.getService("permissionmgr"));
     }
 
+    @SuppressLint("WrongConstant")
+    @NonNull
+    public static SparseArray<String> getPermissionFlagsWithString(@PermissionFlags int flags) {
+        SparseArray<String> permissionFlagsWithString = new SparseArray<>();
+        for (int i = 0; i < 18; ++i) {
+            if ((flags & (1 << i)) != 0) {
+                permissionFlagsWithString.put(1 << i, permissionFlagToString((1 << i)));
+            }
+        }
+        return permissionFlagsWithString;
+    }
+
     @SuppressLint("NewApi")
     @NonNull
-    @RequiresApi(Build.VERSION_CODES.M)
     public static String permissionFlagToString(@PermissionFlags int flag) {
         switch (flag) {
             case FLAG_PERMISSION_GRANTED_BY_DEFAULT:

@@ -139,8 +139,8 @@ public class RulesStorageManager implements Closeable {
         addUniqueEntry(new AppOpRule(packageName, op, mode));
     }
 
-    public void setPermission(String name, boolean isGranted) {
-        addUniqueEntry(new PermissionRule(packageName, name, isGranted, 0));
+    public void setPermission(String name, boolean isGranted, @PermissionCompat.PermissionFlags int flags) {
+        addUniqueEntry(new PermissionRule(packageName, name, isGranted, flags));
     }
 
     public void setNotificationListener(String name, boolean isGranted) {

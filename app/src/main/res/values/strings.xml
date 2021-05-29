@@ -1070,4 +1070,5 @@
     <string name="help_permissions_tab">These permissions are defined by this app and cannot be revoked.</string>
     <string name="help_uses_permissions_tab">Click on an item to <b>grant</b> or <b>revoke</b> it. Only <b>dangerous</b> and <b>development</b> permissions may be granted or revoked.</string>
     <string name="minimum_version">Min version: %d</string>
+    <string name="permission_flags">Permission flags</string>
 </resources>

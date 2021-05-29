@@ -46,6 +46,7 @@ import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
 import io.github.muntashirakon.AppManager.uri.UriManager;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
@@ -347,9 +348,10 @@ class BackupOp implements Closeable {
                     // Don't include permissions that are neither dangerous nor development
                     continue;
                 }
-                rules.setPermission(permissions[i], (permissionFlags[i]
-                        & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0);
-            } catch (PackageManager.NameNotFoundException ignore) {
+                boolean isGranted = (permissionFlags[i] & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0;
+                int permFlags = PermissionCompat.getPermissionFlags(info.name, packageName, userHandle);
+                rules.setPermission(permissions[i], isGranted, permFlags);
+            } catch (PackageManager.NameNotFoundException | RemoteException ignore) {
             }
         }
         // Backup app ops
