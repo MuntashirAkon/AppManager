@@ -6,6 +6,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
+import android.content.pm.permission.SplitPermissionInfoParcelable;
 import android.graphics.Bitmap;
 import android.os.BaseBundle;
 import android.os.Binder;
@@ -1256,6 +1257,9 @@ public interface IPackageManager extends IInterface {
 
     @RequiresApi(Build.VERSION_CODES.Q)
     void notifyPackagesReplacedReceived(String[] packages) throws RemoteException;
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    List<SplitPermissionInfoParcelable> getSplitPermissions();
 
     abstract class Stub extends Binder implements IPackageManager {
         public static IPackageManager asInterface(IBinder binder) {
