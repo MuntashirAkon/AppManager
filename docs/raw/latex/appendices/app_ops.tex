@@ -28,7 +28,7 @@ problem that I faced during the development of the app ops API is the lack of do
     \label{fig:appops}
 \end{figure}
 %%!!appendices_appops-introduction<<
-Figure \cref{fig:appops} describes the process of changing and processing permission.
+Figure \hyperref[fig:appops]{1} describes the process of changing and processing permission.
 \hyperref[sec:appopsmanager]{AppOpsManager} can be used to manage permissions in Settings app. \textbf{AppOpsManager} is
 also useful in determining if a certain permission (or operation) is granted to the application. Most of the methods of
 \textbf{AppOpsManager} are accessible to the user app but unlike a system app, it can only be used to check permissions
@@ -40,7 +40,7 @@ structures such as \hyperref[subsec:package-ops]{PackageOps} and \textbf{OpEntry
 \textbf{OpEntry} for a package, and \textbf{OpEntry}, as the name suggests, describes each operation.
 
 \texttt{AppOpService} is completely hidden from a user application but accessible to the system applications.
-As it can be seen in Figure \cref{fig:appops}, this is the class that does the actual management stuff.
+As it can be seen in Figure \hyperref[fig:appops]{1}, this is the class that does the actual management stuff.
 It contains data structures such as \textbf{Ops} to store basic package info and \textbf{Op} which is similar to
 \textbf{OpEntry} of \textbf{AppOpsManager}.
 It also has \textbf{Shell} which is actually the source code of the \hyperref[sec:appops-cli]{\textit{appops} command line tool}.
