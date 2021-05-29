@@ -1003,4 +1003,6 @@
     <string name="unknown_net_policy">Netpolicy yang tidak dikenal (%1$s - %2$X)</string>
     <string name="fallback_to_no_root_mode_description">App Manager tidak dapat menggunakan mode operasi saat ini. Untuk menghindari perilaku acak, Anda harus beralih sementara ke mode no-root. Pertimbangkan untuk melaporkannya jika masalah tidak selesai/diperbaiki setelah memulai ulang perangkat.</string>
     <string name="fallback_to_no_root_mode">Kembalikan ke mode no-root\?</string>
+    <string name="app_signing_signature_mismatch_for_data_only_app">Tidak dapat memasang aplikasi dikarenakan ketidakcocokan tanda tangan. Aplikasi dicopot tanpa membersihkan datanya.</string>
+    <string name="failed_to_prevent_background_run">Tidak dapat mencegah %1$s untuk berjalan di latar belakang</string>
 </resources>
