@@ -19,10 +19,13 @@ package io.github.muntashirakon.AppManager.settings;
 
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
+import androidx.appcompat.app.AlertDialog;
 import androidx.collection.ArrayMap;
 import androidx.fragment.app.DialogFragment;
 import androidx.preference.Preference;
@@ -201,6 +204,38 @@ public class BackupRestorePreferences extends PreferenceFragmentCompat {
                             });
                         }
                     }).start();
+                    return true;
+                });
+        // Import backups
+        ((Preference) Objects.requireNonNull(findPreference("import_backups")))
+                .setOnPreferenceClickListener(preference -> {
+                    View view = getLayoutInflater().inflate(R.layout.dialog_import_external_backups, null);
+                    // TODO: 19/4/21 Set required backup locations
+                    ((TextView) view.findViewById(R.id.import_from_oab_msg)).setText("Not implemented");
+                    ((TextView) view.findViewById(R.id.import_from_tb_msg)).setText("Not implemented");
+                    ((TextView) view.findViewById(R.id.import_from_sb_msg)).setText("Not implemented");
+
+                    AlertDialog alertDialog = new MaterialAlertDialogBuilder(activity)
+                            .setTitle(R.string.pref_import_backups)
+                            .setView(view)
+                            .setNegativeButton(R.string.close, null)
+                            .show();
+                    // Set listeners
+                    view.findViewById(R.id.import_from_oab).setOnClickListener(v -> {
+                        Toast.makeText(activity, "Not implemented", Toast.LENGTH_SHORT).show();
+                        // Not implemented
+                        alertDialog.dismiss();
+                    });
+                    view.findViewById(R.id.import_from_tb).setOnClickListener(v -> {
+                        Toast.makeText(activity, "Not implemented", Toast.LENGTH_SHORT).show();
+                        // Not implemented
+                        alertDialog.dismiss();
+                    });
+                    view.findViewById(R.id.import_from_sb).setOnClickListener(v -> {
+                        Toast.makeText(activity, "Not implemented", Toast.LENGTH_SHORT).show();
+                        // Not implemented
+                        alertDialog.dismiss();
+                    });
                     return true;
                 });
     }
