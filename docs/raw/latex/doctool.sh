@@ -2,7 +2,7 @@
 
 function func_help {
 echo -n "\
-./doctool.sh COMMAND ARGS
+./doctool.sh COMMAND [ARGS]
 --COMMANDS--
 buildhtml
 Build HTML from TeX
@@ -10,7 +10,7 @@ Build HTML from TeX
 updatetranslation
 Extract strings and create xliff translation file
 
-mergetranslation
+mergetranslation [INPUT.xml] [OUTPUT DIR]
 Merge translation from xliff to TeX
 
 help
@@ -151,7 +151,7 @@ do
     do
 
         stringkey_title=$(echo ${line_title} | grep -oP "(?<=\%\%##).*(?=>>)")
-        string_title=$(echo ${line_title} | grep -oP "((?<=section{)|(?<=subsection{)|(?<=subsubsection{)|(?<=chapter{)|(?<=caption{)).*?(?=})")
+        string_title=$(echo ${line_title} | grep -oP "((?<=section{)|(?<=subsection{)|(?<=subsubsection{)|(?<=chapter{)|(?<=caption{)|(?<=paragraph{)).*?(?=})")
         echo "<string name=\"${stringkey_title}\">${string_title}</string>" >>${OUTPUT}
         echo -e "--\n$stringkey_title\n$string_title\n--\n"
 
@@ -174,13 +174,16 @@ sed -i -e '1i <?xml version="1.0" encoding="utf-8"?>' \
 
 function func_merge-translation {
 INPUT=strings.xml
+OUTPUTDIR=../latextranslated
 keys=$(grep -oP "(?<=<string name=\").*?(?=\">)" ${INPUT})
+
+find . | grep -e '\.tex$' -e '\.png$' -e '.png$' -e '.css$' -e main.cfg -e doctool.sh -e Makefile | rsync -R $(cat) ${OUTPUTDIR}
 
 while read key_content
 do
 
     string_content=$(echo 'cat resources/string[@name="'${key_content}'"]/text()' | xmllint --shell ${INPUT} | sed -e '$d' -e '1d'|sed 's/\\/\\\\/g')
-    file=$(grep -rl --include="*.tex" "\%\%!!${key_content}<<")
+    file=$(grep -rl --include="*.tex" "\%\%!!${key_content}<<" ${OUTPUTDIR})
     source=$(cat ${file})
 
     echo "import re;import sys;print(re.sub(r'(?<=%%!!"${key_content}"<<\n)[^%%!!>>]*(?=%%!!>>)', sys.argv[2]+'\n', sys.argv[1], flags=re.M))" | python - "${source}" "${string_content}" >${file}
@@ -192,12 +195,18 @@ while read key_title
 do
 
     string_title=$(echo 'cat resources/string[@name="'${key_title}'"]/text()' | xmllint --shell ${INPUT} | sed -e '$d' -e '1d'|sed 's/\\/\\\\/g')
-    file=$(grep -rl --include="*.tex" "\%\%##${key_title}>>")
+    file=$(grep -rl --include="*.tex" "\%\%##${key_title}>>" ${OUTPUTDIR})
 
-    perl -pi -e "s/(section\{|subsection\{|subsubsection\{|chapter\{|caption\{).*?(\}.*\%\%\#\#${key_title}>>)/\1${string_title}\2/" ${file}
+    perl -pi -e "s/(section\{|subsection\{|subsubsection\{|chapter\{|caption\{|paragraph\{).*?(\}.*\%\%\#\#${key_title}>>)/\1${string_title}\2/" ${file}
 
 done < <(echo "$keys" | grep -P ".*(?===title)")
 
+}
+
+function func_detectabuse {
+echo todo >/dev/null
+#Compare number of latex tags
+#Check URL changes
 }
 
 case $1 in
