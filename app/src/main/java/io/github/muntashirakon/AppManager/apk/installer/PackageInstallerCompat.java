@@ -704,7 +704,7 @@ public final class PackageInstallerCompat {
             ProxyFile[] extDirs = ue.getExternalDirs();
             ProxyFile writableExtDir = null;
             for (ProxyFile extDir : extDirs) {
-                if (extDir.canWrite()) {
+                if (extDir.canWrite() || extDir.getAbsolutePath().startsWith("/storage/emulated")) {
                     writableExtDir = extDir;
                     break;
                 }
@@ -726,6 +726,7 @@ public final class PackageInstallerCompat {
             apkFile.extractObb(writableObbDir);
             UiThreadHandler.run(() -> UIUtils.displayLongToast(R.string.obb_files_extracted_successfully));
         } catch (Exception e) {
+            Log.e(TAG, e);
             UiThreadHandler.run(() -> UIUtils.displayLongToast(R.string.failed_to_extract_obb_files));
         } finally {
             if (installWatcher.getCount() != 0) {
