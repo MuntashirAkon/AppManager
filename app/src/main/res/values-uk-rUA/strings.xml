@@ -315,9 +315,6 @@
     <string name="clear_cache">Очистити кеш</string>
     <string name="pref_import_existing_msg">Додавайте компоненти, вимкнені іншими програмами, до App Manager. Будьте обережні при використанні цього інструменту, оскільки може бути багато помилкових позитивних результатів. Виберіть лише програми, в котрих ви впевнені.</string>
     <string name="pref_import_existing">Імпорт існуючих правил</string>
-    <string name="community_links">Канал оновлення: https://t.me/AppManagerChannel
-\nГрупа підтримки: https://t.me/AppManagerAndroid
-\nTwitter: https://twitter.com/AMUpdateChannel</string>
     <string name="source_code">Вихідний код</string>
     <string name="update">Оновлення</string>
     <string name="install">Встановити</string>
@@ -485,7 +482,6 @@
     </plurals>
     <string name="clear_data_from_uninstalled_apps">Очистити дані видалених додатків</string>
     <string name="block_components_dots">Блокування компонентів …</string>
-    <string name="community">Група Telegram</string>
     <string name="follow_system">Як в системі</string>
     <string name="pid_and_ppid">Ідентифікатор процесу: %1$d, ідентифікатор батьківського процесу: %2$d</string>
     <string name="pref_import_export_blocking_rules_msg">Імпорт/Експорт правил, імпорт зовнішніх правил з Watt або Blocker.</string>

@@ -382,10 +382,9 @@
         \nGitLab: https://gitlab.com/muntashir/AppManager
         \nRiseup: https://0xacab.org/muntashir/AppManager
         \nCodeberg: https://codeberg.org/muntashir/AppManager</string>
-    <string name="community">Telegram Community</string>
-    <string name="community_links">Update Channel: https://t.me/AppManagerChannel
-        \nSupport Group: https://t.me/AppManagerAndroid
-        \nTwitter: https://twitter.com/AMUpdateChannel</string>
+    <string name="community">Community</string>
+    <string name="community_links">Telegram: https://t.me/AppManagerChannel
+        \nTwitter: https://twitter.com/AppManagerNews</string>
     <string name="pref_import_existing">Import existing rules</string>
     <string name="pref_import_existing_msg">Add components disabled by others apps to App Manager.
         Be careful when using this tool as there can be many false positives. Choose only the apps you\'re certain about.</string>

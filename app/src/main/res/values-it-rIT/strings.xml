@@ -194,10 +194,6 @@
     <string name="clear_cache">Svuota Cache</string>
     <string name="pref_import_existing_msg">Aggiunge componenti disabilitati dalle altre applicazioni su App Manager. Fai attenzione ad usare questa funzione in quanto possono esserci dei falsi positivi. Scegli solo le app di cui sei sicuro.</string>
     <string name="pref_import_existing">Importa regole esistenti</string>
-    <string name="community_links">Aggiorna canale: https://t.me/AppManagerChannel
-\nSupporta il Gruppo: https://t.me/AppManagerAndroid
-\nTwitter: https://twitter.com/AMUpdateChannel</string>
-    <string name="community">Community di Telegram</string>
     <string name="source_code">Codice Sorgente</string>
     <string name="update">Aggiorna</string>
     <plurals name="no_of_trackers">

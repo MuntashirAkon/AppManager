@@ -350,10 +350,6 @@
     <string name="clear_cache">Vaciar antememoria</string>
     <string name="pref_import_existing_msg">Añada componentes desactivados por otras aplicaciones al Gestor de aplicaciones. Tenga cuidado al utilizar esta herramienta, dado que puede haber muchos falsos positivos. Elija solo aquellas aplicaciones de las que tenga certeza.</string>
     <string name="pref_import_existing">Importar reglas existentes</string>
-    <string name="community_links">Canal de actualizaciones: https://t.me/AppManagerChannel
-\nGrupo de asistencia: https://t.me/AppManagerAndroid
-\nTwitter: https://twitter.com/AMUpdateChannel</string>
-    <string name="community">Comunidad en Telegram</string>
     <string name="source_code">Código fuente</string>
     <string name="update">Actualizar</string>
     <string name="install">Instalar</string>

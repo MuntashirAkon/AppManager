@@ -8,10 +8,6 @@
     <string name="clear_cache">कैश साफ़ करें</string>
     <string name="pref_import_existing_msg">ऐप मैनेजर में अन्य ऐप्स द्वारा बंद किए कंपोनेंट जोड़ें। इस टूल का उपयोग करते समय सावधान रहें क्योंकि कई झूठी सकारात्मक हो सकती हैं। केवल उन्हीं ऐप्लिकेशन को चुनें जिनके बारे में आप कुछ निश्चित हैं</string>
     <string name="pref_import_existing">मौजूदा रूल्स को आयात करें</string>
-    <string name="community_links">अपडेट चैनल: https://t.me/AppManagerChannel
-\nसहायता समूह: https://t.me/AppManagerAndroid
-\nट्विटर: https://twitter.com/AMUpdateChannel</string>
-    <string name="community">टेलीग्राम समुदाय</string>
     <string name="source_code">सोर्स कोड</string>
     <string name="update">अपडेट</string>
     <string name="install">इनस्टॉल करें</string>

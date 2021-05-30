@@ -435,7 +435,6 @@
     <string name="installer_error_session_abandon">Nie udało się porzucić sesji instalatora</string>
     <string name="unblock_trackers">Odblokuj elementy śledzące</string>
     <string name="reinstall">Zainstaluj ponownie</string>
-    <string name="community">Społeczność Telegram</string>
     <string name="close">Zamknij</string>
     <string name="no_root">Brak roota</string>
     <string name="root">Root</string>
@@ -773,9 +772,6 @@
     <string name="package_name_is_installed_successfully">Zainstalowano <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
     <string name="termux">Termux</string>
     <string name="deny_app_ops_description">Określ sposób działania aplikacji określony przez stałe wartości, np. <tt>63</tt> lub <tt>RUN_IN_BACKGROUND</tt></string>
-    <string name="community_links">Kanał informacyjny: https://t.me/AppManagerChannel
-\nGrupa pomocy: https://t.me/AppManagerAndroid
-\nTwitter: https://twitter.com/AMUpdateChannel</string>
     <string name="external_apk_no_app_op">Zewnętrzny APK nie wykonuje żadnych operacji na aplikacjach</string>
     <string name="failed_to_deny_dangerous_app_ops">Nie udało się cofnąć wszystkich niebezpiecznych operacji tej aplikacji</string>
     <string name="failed_to_reset_app_ops">Nie udało się zresetować operacji tej aplikacji</string>

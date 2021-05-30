@@ -340,10 +340,6 @@
         \nGitLab: https://gitlab.com/muntashir/AppManager
         \nRiseup: https://0xacab.org/muntashir/AppManager
         \nCodeberg: https://codeberg.org/muntashir/AppManager</string>
-    <string name="community">Telegramコミュニティ</string>
-    <string name="community_links">更新速報: https://t.me/AppManagerChannel
-        \nサポートグループ: https://t.me/AppManagerAndroid
-        \nTwitter: https://twitter.com/AMUpdateChannel</string>
     <string name="pref_import_existing">既存のルールをインポート</string>
     <string name="pref_import_existing_msg">他のアプリによって無効にされたコンポーネントを追加します。
         多くのご検知が発生する場合があるのでご注意ください。 </string>

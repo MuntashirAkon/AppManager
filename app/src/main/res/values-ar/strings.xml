@@ -312,10 +312,6 @@
     <string name="block_unblock_trackers_description">حظر أو إلغاء حظر الإعلانات ومكونات التتبع في جميع التطبيقات المثبتة</string>
     <string name="clear_cache">مسح التخزين المؤقت</string>
     <string name="pref_import_existing">استيراد القواعد الموجودة</string>
-    <string name="community_links">قناة التحديث : https://t.me/AppManagerChannel
-\nمجموعة الدعم: https://t.me/AppManagerAndroid
-\nتويتر: https://twitter.com/AMUpdateChannel</string>
-    <string name="community">مجتمع تيليجرام</string>
     <string name="source_code_links">جيثب: https://github.com/MuntashirAkon/AppManager
 \nجيت لاب: https://gitlab.com/muntashir/AppManager
 \nالنهوض: https://0xacab.org/muntashir/AppManager

@@ -417,10 +417,6 @@
     <string name="block_unblock_trackers_description">Chặn hoặc bỏ chặn các thành phần quảng cáo và theo dõi trong tất cả ứng dụng đã cài đặt</string>
     <string name="go">Đi</string>
     <string name="clear_cache">Xoá bộ nhớ đệm</string>
-    <string name="community_links">Kênh cập nhật: https://t.me/AppManagerChannel
-\nNhóm hỗ trợ: https://t.me/AppManagerAndroid
-\nTwitter: https://twitter.com/AMUpdateChannel</string>
-    <string name="community">Cộng đồng Telegram</string>
     <string name="install">Cài đặt</string>
     <plurals name="no_of_components">
         <item quantity="other">%1$d thành phần</item>
