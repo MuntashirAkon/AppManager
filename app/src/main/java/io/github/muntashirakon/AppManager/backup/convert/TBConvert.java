@@ -398,13 +398,14 @@ public class TBConvert implements Convert {
                 sourceMetadata.tarType = TAR_BZIP2;
             } else throw new BackupException("Unsupported compression type: " + compressionType);
             // Flags
-            sourceMetadata.flags = new BackupFlags(0);
+            sourceMetadata.flags = new BackupFlags(BackupFlags.BACKUP_MULTIPLE);
             File dataFile = getDataFile(IOUtils.trimExtension(this.propFile.getName()), sourceMetadata.tarType);
             if (dataFile.exists()) {
                 sourceMetadata.flags.addFlag(BackupFlags.BACKUP_INT_DATA);
                 if ("1".equals(prop.getProperty("has_external_data"))) {
                     sourceMetadata.flags.addFlag(BackupFlags.BACKUP_EXT_DATA);
                 }
+                sourceMetadata.flags.addFlag(BackupFlags.BACKUP_CACHE);
             }
             File apkFile = getApkFile(sourceMetadata.apkName, sourceMetadata.tarType);
             if (apkFile.exists()) {

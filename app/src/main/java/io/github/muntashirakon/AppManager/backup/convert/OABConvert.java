@@ -184,7 +184,7 @@ class OABConvert implements Convert {
         sourceMetadata.crypto = jsonObject.optBoolean("isEncrypted") ? CryptoUtils.MODE_OPEN_PGP : CryptoUtils.MODE_NO_ENCRYPTION;
         sourceMetadata.apkName = new File(jsonObject.getString("sourceDir")).getName();
         // Flags
-        sourceMetadata.flags = new BackupFlags(0);
+        sourceMetadata.flags = new BackupFlags(BackupFlags.BACKUP_MULTIPLE);
         int backupMode = jsonObject.optInt("backupMode", MODE_UNSET);
         if (backupMode == MODE_UNSET) {
             throw new BackupException("Destination doesn't contain any backup.");
@@ -212,6 +212,7 @@ class OABConvert implements Convert {
             if (!hasBackup) {
                 throw new BackupException("Destination doesn't contain any data files.");
             }
+            sourceMetadata.flags.addFlag(BackupFlags.BACKUP_CACHE);
         }
         sourceMetadata.userHandle = Users.getCurrentUserHandle();
         sourceMetadata.dataDirs = ConvertUtils.getDataDirs(this.packageName, this.userHandle, sourceMetadata.flags
@@ -278,6 +279,7 @@ class OABConvert implements Convert {
         }
         int i = 0;
         for (File dataFile : dataFiles) {
+            // TODO: 30/5/21 Decrypt data files
             File backup = new ProxyFile(tmpBackupPath, DATA_PREFIX + (i++) + getExt(destMetadata.tarType));
             try (ZipInputStream zis = new ZipInputStream(new BufferedInputStream(new ProxyInputStream(dataFile)));
                  SplitOutputStream sos = new SplitOutputStream(backup, DEFAULT_SPLIT_SIZE);
