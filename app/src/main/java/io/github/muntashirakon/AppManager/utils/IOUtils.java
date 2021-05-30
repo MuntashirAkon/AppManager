@@ -478,6 +478,19 @@ public final class IOUtils {
 
     @AnyThread
     @NonNull
+    public static File getTempFile(String name) throws IOException {
+        File extDir = AppManager.getContext().getExternalFilesDir("cache");
+        if (extDir == null) throw new FileNotFoundException("External storage not available.");
+        if (!extDir.exists() && !extDir.mkdirs()) {
+            throw new IOException("Cannot create cache directory in the external storage.");
+        }
+        File newFile = new File(extDir, name);
+        if (newFile.exists()) newFile.delete();
+        return newFile;
+    }
+
+    @AnyThread
+    @NonNull
     public static File getCachePath() throws IOException {
         File extDir = AppManager.getContext().getExternalFilesDir("cache");
         if (extDir == null) throw new FileNotFoundException("External storage not available.");
