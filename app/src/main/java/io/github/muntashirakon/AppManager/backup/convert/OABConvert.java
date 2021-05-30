@@ -278,10 +278,24 @@ class OABConvert implements Convert {
                     packageName + ".zip", sourceMetadata.crypto)));
         }
         int i = 0;
+        File[] files;
         for (File dataFile : dataFiles) {
-            // TODO: 30/5/21 Decrypt data files
+            files = new File[]{dataFile};
+            // Decrypt APK file if needed
+            if (!crypto.decrypt(files)) {
+                throw new BackupException("Failed to decrypt " + Arrays.toString(files));
+            }
+            // Get decrypted file
+            if (crypto.getNewFiles().length > 0) {
+                files = crypto.getNewFiles();
+                decryptedFiles.addAll(Arrays.asList(files));
+            }
+            // baseApkFiles should be a singleton array
+            if (files.length != 1) {
+                throw new BackupException("Incorrect number of APK files: " + files.length);
+            }
             File backup = new ProxyFile(tmpBackupPath, DATA_PREFIX + (i++) + getExt(destMetadata.tarType));
-            try (ZipInputStream zis = new ZipInputStream(new BufferedInputStream(new ProxyInputStream(dataFile)));
+            try (ZipInputStream zis = new ZipInputStream(new BufferedInputStream(new ProxyInputStream(files[0])));
                  SplitOutputStream sos = new SplitOutputStream(backup, DEFAULT_SPLIT_SIZE);
                  BufferedOutputStream bos = new BufferedOutputStream(sos)) {
                 OutputStream os;
