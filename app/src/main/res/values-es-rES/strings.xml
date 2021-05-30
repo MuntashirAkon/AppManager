@@ -61,8 +61,8 @@
     <string name="word_wrap">Alternar ajuste de texto</string>
     <string name="touchscreen">Pantalla táctil</string>
     <string name="navigation">Navegación</string>
-    <string name="export_failed">Falló la exportación.</string>
-    <string name="import_failed">Falló la importación.</string>
+    <string name="export_failed">¡Falló la exportación!</string>
+    <string name="import_failed">¡Falló la importación!</string>
     <string name="export_options">Exportar opciones</string>
     <string name="import_options">Importar opciones</string>
     <string name="pref_export">Exportar</string>
@@ -253,7 +253,7 @@
     <string name="launch_mode_single_task">Única tarea</string>
     <string name="launch_mode_single_instance">Única instancia</string>
     <string name="launch_mode_multiple">Múltiple</string>
-    <string name="base_apk">Base APK</string>
+    <string name="base_apk">APKBase</string>
     <string name="choose_language">Cambiar idioma</string>
     <string name="auto">Automático</string>
     <string name="pref_app_language">Idioma</string>
@@ -293,7 +293,7 @@
     <string name="run_in_termux">Ejecutar en Termux</string>
     <string name="open_in_termux">Abrir en Termux</string>
     <string name="export_icon">Extraer icono</string>
-    <string name="no_matching_package_found">No se encontró ninguna aplicación de esas.</string>
+    <string name="no_matching_package_found">No se encontró ninguna aplicación de esas</string>
     <string name="block_unblock_trackers">Bloquear/desbloquear rastreadores</string>
     <string name="unblock">Desbloquear</string>
     <string name="block">Bloquear</string>
@@ -550,7 +550,7 @@
     <string name="uninstall_updates">Desinstalar actualizaciones</string>
     <string name="allow_open_pgp_operation">Toque para permitir al Gestor de aplicaciones utilizar OpenPGP</string>
     <string name="confirm_installation">Confirmar instalación</string>
-    <string name="pref_backup_flags_msg">Al añadir un preajuste para las opciones del respaldo se elimina la carga de seleccionar flags cada vez que se hace un Respaldar/Restaurar.</string>
+    <string name="pref_backup_flags_msg">Al añadir un reajuste para las opciones del respaldo se elimina la carga de seleccionar flags cada vez que se hace un Respaldar/Restaurar.</string>
     <string name="pref_compression_method">Método de compresión</string>
     <string name="rules">Reglas</string>
     <string name="other">Otros</string>
@@ -652,7 +652,7 @@
         <item quantity="one">No se pudo deshabilitar %1$d app</item>
         <item quantity="other">No se pudo deshabilitar %1$d apps</item>
     </plurals>
-    <string name="store">Store</string>
+    <string name="store">Tienda</string>
     <string name="apk_updater">Actualizador APK</string>
     <string name="external_multiple_data_dir">Directorio de datos externos <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
     <string name="failed_to_disable_op">No se pudo deshabilitar la app op solicitada</string>
@@ -681,7 +681,7 @@
     <string name="send_edited_intent">Enviar intent editada</string>
     <string name="matching_activities">Actividades de emparejamiento</string>
     <string name="value">Valor</string>
-    <string name="filter_apps_with_splits">Aplicaciones con splits</string>
+    <string name="filter_apps_with_splits">Con splits</string>
     <string name="set_app_op_mode">Configurar el mode de app ops</string>
     <string name="magisk_hide_enabled">MagiskHide</string>
     <string name="pref_backup_android_keystore_msg">No todas las aplicaciones funcionarán después de una restauración. Restaurar KeyStore no funciona en la mayoría de los dispositivos.</string>
@@ -743,7 +743,7 @@
     <string name="backup_apps_with_changes">Respaldo de aplicaciones con cambios</string>
     <string name="redo_existing_backups_msg">Rehacer backup para aplicaciones instaladas sin previas copias de seguridad.</string>
     <string name="redo_existing_backups">Rehacer backups existentes</string>
-    <string name="verify_and_redo_backups_msg">Verificar la integridad de los backups anteriores y rehacer las copias de seguridad en las que falle el control de integridad.</string>
+    <string name="verify_and_redo_backups_msg">Verificar la integridad de los respaldos anteriores y rehacer las copias de seguridad en las que falle el control de integridad.</string>
     <string name="verify_and_redo_backups">Verificar y rehacer los backups</string>
     <string name="backup_apps_without_backups_msg">Respaldo de aplicaciones sin ninguna copia de seguridad previa.</string>
     <string name="backup_apps_without_backups">Respaldo de aplicaciones sin copias de seguridad</string>
@@ -774,10 +774,10 @@
     <string name="enforcing">Enforcing</string>
     <string name="selinux">SELinux</string>
     <string name="patch_level">Nivel del parche</string>
-    <string name="backup_skip_signature_checks_description">Útil para restaurar backups que fallan debido a un fallo en la verificación del checksum o tiene una firma APK diferente a la del backup.</string>
+    <string name="backup_skip_signature_checks_description">Para restaurar respaldos que o fallan en la verificación del checksum o tiene firmas diferentes APK diferente a los respaldos anteriores.</string>
     <string name="backup_multiple_description">Crear una copia de respaldo <i>con nombre</i> en lugar del respaldo de base.</string>
     <string name="backup_rules_description">Back up de reglas configuradas en App Manager.</string>
-    <string name="backup_extras_description">Back up de los permisos de las aplicaciones, ahorro de batería, opciones de uso de datos, estado de MagiskHide, etc.</string>
+    <string name="backup_extras_description">Respaldos de los permisos de las aplicaciones, ahorro de batería, y opciones de uso de datos, estado de MagiskHide, SSAID, etc.</string>
     <string name="backup_extras">Extras</string>
     <string name="backup_cache_description">Respaldar carpetas <b>cache</b>, <b>no_cache</b> y <b>no_backup</b>.</string>
     <string name="backup_external_data_description">Hacer una copia de respaldo de las carpetas de datos externos.</string>
@@ -1029,4 +1029,13 @@
     <string name="port_number_empty">El número de puerto está vacío.</string>
     <string name="port_number_invalid">Número de puerto no válido.</string>
     <string name="unknown_net_policy">Directiva de red desconocida (%1$s - %2$X)</string>
+    <string name="pref_buffer_title">Buffer de registros</string>
+    <string name="dialog_partial_select_explanation">1. Selecciona la <b>primera</b> linea.
+\n2. Luego selecciona la <b>ultima</b> linea.</string>
+    <string name="app_signing_signature_mismatch_for_data_only_app">No pudimos instalar la aplicación debido a la discrepancia de firma. La aplicación fue desinstalada sin borrar sus datos.</string>
+    <string name="failed">Fallido</string>
+    <string name="pref_filter_pattern_title">Filtrar etiquetas</string>
+    <string name="pref_filter_pattern_summary">Filtrar las siguientes etiquetas seleccionadas de los registros.</string>
+    <string name="pref_default_log_level_summary">Nivel de registro al inicio, al abrir archivos y al grabar.</string>
+    <string name="open">Abierto</string>
 </resources>

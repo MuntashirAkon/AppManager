@@ -149,7 +149,7 @@
         <item quantity="many">%1$d часов</item>
         <item quantity="other">%1$d часов</item>
     </plurals>
-    <string name="usage_min">%1$d мин.</string>
+    <string name="usage_min">%1$d мин</string>
     <string name="usage_less_than_a_minute">Меньше минуты</string>
     <string name="go_back">Вернуться</string>
     <string name="go">Разрешить</string>
@@ -281,10 +281,10 @@
         <item quantity="other">Не удалось удалить %1$d приложений</item>
     </plurals>
     <plurals name="alert_failed_to_disable_background">
-        <item quantity="one">Не удалось отключить работу в фоне для%1$d приложения</item>
-        <item quantity="few">Не удалось отключить работу в фоне для %1$d приложений</item>
-        <item quantity="many">Не удалось отключить работу в фоне для %1$d приложений</item>
-        <item quantity="other">Не удалось отключить работу в фоне для %1$d приложений</item>
+        <item quantity="one">Не удалось предотвратить работу в фоне для%1$d приложения</item>
+        <item quantity="few">Не удалось предотвратить работу в фоне для %1$d приложений</item>
+        <item quantity="many">Не удалось предотвратить работу в фоне для %1$d приложений</item>
+        <item quantity="other">Не удалось предотвратить работу в фоне для %1$d приложений</item>
     </plurals>
     <string name="the_operation_was_successful">Готово</string>
     <plurals name="alert_failed_to_force_stop">
@@ -1108,6 +1108,8 @@
     <string name="wireless_debugging_not_supported">Беспроводная отладка не поддерживается на этой платформе.</string>
     <string name="wireless_debugging">Беспроводная отладка</string>
     <string name="unknown_net_policy">Неизвестная сетевая политика (%1$s - %2$X)</string>
-    <string name="fallback_to_no_root_mode_description">App Manager не смог использовать текущий режим работы. Во избежании непредсказуемых действий, вам следует временно переключиться в режим без-root. Сообщите нам, если после перезапуска устройства проблема не будет устранена.</string>
+    <string name="fallback_to_no_root_mode_description">App Manager не смог использовать текущий режим работы. Во избежание непредсказуемого поведения, вам следует временно переключиться в режим без-root. Сообщите нам, если проблема не устранится после перезапуска устройства.</string>
     <string name="fallback_to_no_root_mode">Откат к режиму без-root\?</string>
+    <string name="failed_to_prevent_background_run">Не удалось предотвратить работу в фоне для приложения %1$s</string>
+    <string name="app_signing_signature_mismatch_for_data_only_app">Не удалось установить приложение из-за несоответствия подписи. Приложение было удалено без очистки данных.</string>
 </resources>

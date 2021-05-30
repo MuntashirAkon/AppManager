@@ -1040,4 +1040,6 @@
     <string name="unknown_net_policy">Política de rede desconhecida (%1$s - %2$X)</string>
     <string name="fallback_to_no_root_mode_description">O App Manager não pôde usar o modo de operação atual. Para evitar comportamentos aleatórios, você deve mudar temporariamente para o modo sem root. Considere reportá-lo se o problema não for corrigido após a reinicialização do dispositivo.</string>
     <string name="fallback_to_no_root_mode">Recuar ao modo sem root\?</string>
+    <string name="failed_to_prevent_background_run">Não foi possível impedir que %1$s funcionasse em segundo plano</string>
+    <string name="app_signing_signature_mismatch_for_data_only_app">Não foi possível instalar o aplicativo devido ao descompasso de assinatura. O aplicativo foi desinstalado sem limpar seus dados.</string>
 </resources>

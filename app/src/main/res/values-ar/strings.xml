@@ -1179,4 +1179,6 @@
     <string name="unknown_net_policy">سياسة شبكة غير معروفة (%1$s - %2$X)</string>
     <string name="fallback_to_no_root_mode_description">مدير التطبيق لا يمكن استخدام طريقة التشغيل الحالية .لتجنب السلوك العشوائي ، يجب التبديل إلى وضع الجذر مؤقتا .إذا كانت المشكلة لم تحل بعد إعادة تشغيل الجهاز ، الرجاء ارفاق تقرير بالمشكلة.</string>
     <string name="fallback_to_no_root_mode">العودة إلى الوضع بدون صلاحية الجذر ؟</string>
+    <string name="failed_to_prevent_background_run">تعذر منع %1$s من العمل في الخلفية</string>
+    <string name="app_signing_signature_mismatch_for_data_only_app">تعذر تثبيت التطبيق بسبب عدم تطابق التوقيع. تم إلغاء تثبيت التطبيق دون مسح بياناته.</string>
 </resources>
