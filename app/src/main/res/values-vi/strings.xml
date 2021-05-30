@@ -915,4 +915,45 @@
     <string name="decimal_value">Giá trị thập phân</string>
     <string name="integer_value">Giá trị số nguyên</string>
     <string name="long_integer_value">Giá trị số nguyên dài</string>
+    <string name="no_libs">Không có thư viện</string>
+    <string name="scanner">Trình quét</string>
+    <string name="sys_config">Thiết lập hệ thống</string>
+    <string name="only_install">Chỉ cài đặt</string>
+    <string name="app_signing_install_without_data_loss">Nếu bạn đã tắt xác minh chữ ký, bạn có thể sử dụng tuỳ chọn <b>Chỉ cài đặt</b> để cài đặt ứng dụng mà không mất dữ liệu.</string>
+    <string name="app_data_will_be_lost">Dữ liệu hiện có sẽ bị mất.</string>
+    <string name="app_signing_signature_mismatch_for_system_apps">Không thể cài đặt ứng dụng vì một ứng dụng hệ thống có chữ ký khác cũng có tên gói này.</string>
+    <string name="do_you_want_to_uninstall_and_install">Bạn có muốn gỡ cài đặt và cài đặt ứng dụng lại không\?</string>
+    <string name="onboard">Có mặt</string>
+    <string name="packages">gói</string>
+    <string name="usage_access_not_supported">Không thể yêu cầu truy cập dữ liệu sử dụng, vì trang cài đặt tương ứng không tồn tại.</string>
+    <string name="subject">Đối tượng</string>
+    <string name="other">Khác</string>
+    <string name="changes_not_saved">Các thay đổi chưa được lưu</string>
+    <string name="sort_by_memory_usage">Sử dụng bộ nhớ</string>
+    <string name="sort_by_apps_first">Ứng dụng trước</string>
+    <string name="sort_by_process_name">Tên tiến trình</string>
+    <string name="sort_by_process_id">ID tiến trình</string>
+    <string name="filter_apps">Ứng dụng</string>
+    <string name="no_apps">Không có ứng dụng</string>
+    <string name="apps">Ứng dụng</string>
+    <string name="routine_ops">Hoạt động thường ngày</string>
+    <string name="apply_now">Áp dụng ngay…</string>
+    <string name="keystore">KeyStore</string>
+    <string name="no_profiles">Không có cấu hình</string>
+    <string name="presets">Thiết lập trước</string>
+    <string name="profiles">Cấu hình</string>
+    <string name="open_pgp_provider">Nhà cung cấp OpenPGP</string>
+    <string name="systemless_app">Ứng dụng không dùng hệ thống</string>
+    <string name="cancel">Huỷ</string>
+    <string name="ok">OK</string>
+    <string name="input_backup_name_description">Tên bản sao lưu không nên bắt đầu bằng một chữ số và cũng không nên chứa dấu cách. Để trống nếu bạn muốn sử dụng ngày-giờ hiện tại.</string>
+    <string name="input_backup_name">Tên bản sao lưu</string>
+    <string name="downgrade_not_possible">Không thể hạ cấp mà không có root hoặc ADB</string>
+    <string name="downgrade">Hạ cấp</string>
+    <string name="process_state_with_extra">Trạng thái: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g> (<xliff:g id="state_extra" example="High priority">%2$s</xliff:g>)</string>
+    <string name="process_state">Trạng thái: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g></string>
+    <string name="state_multithreaded">Nhiều tiến trình</string>
+    <string name="state_foreground">Ở trước</string>
+    <string name="state_session_leader">Lãnh đạo phiên làm việc</string>
+    <string name="state_idle">Không hoạt động</string>
 </resources>
