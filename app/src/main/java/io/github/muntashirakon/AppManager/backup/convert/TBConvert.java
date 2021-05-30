@@ -20,11 +20,9 @@ import org.json.JSONException;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Properties;
 
@@ -268,54 +266,34 @@ public class TBConvert implements Convert {
             // Add files
             TarArchiveEntry inTarEntry;
             while ((inTarEntry = tis.getNextEntry()) != null) {
-                File tmpFile = null;
-                if (!inTarEntry.isDirectory()) {
-                    // We need to use a temporary file
-                    tmpFile = IOUtils.getTempFile();
-                    try (OutputStream fos = new FileOutputStream(tmpFile)) {
-                        IOUtils.copy(tis, fos);
-                    } catch (Throwable th) {
-                        tmpFile.delete();
-                        throw th;
-                    }
-                }
                 String fileName = inTarEntry.getName();
                 boolean isExternal = fileName.startsWith(EXTERNAL_PREFIX);
                 // Get new file name
                 fileName = fileName.replaceFirst((isExternal ? EXTERNAL_PREFIX : INTERNAL_PREFIX) + packageName + "/\\./", "");
                 if (fileName.equals("")) continue;
-                // New tar entry
-                TarArchiveEntry outTarEntry = new TarArchiveEntry(fileName);
-                outTarEntry.setMode(inTarEntry.getMode());
-                outTarEntry.setUserId(inTarEntry.getUserId());
-                outTarEntry.setGroupId(inTarEntry.getGroupId());
-                if (tmpFile != null) {
-                    outTarEntry.setSize(tmpFile.length());
-                }
+                // Set new name
+                inTarEntry.setName(fileName);
                 if (isExternal) {
                     if (extTos != null) {
-                        extTos.putArchiveEntry(outTarEntry);
+                        extTos.putArchiveEntry(inTarEntry);
                     }
                 } else {
                     if (intTos != null) {
-                        intTos.putArchiveEntry(outTarEntry);
+                        intTos.putArchiveEntry(inTarEntry);
                     }
                 }
-                if (tmpFile != null) {
+                if (!inTarEntry.isDirectory() && !inTarEntry.isSymbolicLink()) {
                     // Copy from the temporary file
-                    try (FileInputStream fis = new FileInputStream(tmpFile)) {
-                        if (isExternal) {
-                            if (extTos != null) {
-                                IOUtils.copy(fis, extTos);
-                            }
-                        } else {
-                            if (intTos != null) {
-                                IOUtils.copy(fis, intTos);
-                            }
+                    if (isExternal) {
+                        if (extTos != null) {
+                            IOUtils.copy(tis, extTos);
                         }
-                    } finally {
-                        tmpFile.delete();
+                    } else {
+                        if (intTos != null) {
+                            IOUtils.copy(tis, intTos);
+                        }
                     }
+
                 }
                 if (isExternal) {
                     if (extTos != null) {
