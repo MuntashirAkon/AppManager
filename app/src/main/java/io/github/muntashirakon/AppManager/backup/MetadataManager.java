@@ -117,21 +117,31 @@ public final class MetadataManager {
 
         public Metadata(@NonNull Metadata metadata) {
             backupName = metadata.backupName;
-            backupPath = metadata.backupPath == null ? null : new ProxyFile(metadata.backupPath);
+            if (metadata.backupPath != null) {
+                backupPath = new ProxyFile(metadata.backupPath);
+            }
             label = metadata.label;
             packageName = metadata.packageName;
             versionName = metadata.versionName;
             versionCode = metadata.versionCode;
-            dataDirs = metadata.dataDirs.clone();
+            if (metadata.dataDirs != null) {
+                dataDirs = metadata.dataDirs.clone();
+            }
             isSystem = metadata.isSystem;
             isSplitApk = metadata.isSplitApk;
-            splitConfigs = metadata.splitConfigs.clone();
+            if (metadata.splitConfigs != null) {
+                splitConfigs = metadata.splitConfigs.clone();
+            }
             hasRules = metadata.hasRules;
             backupTime = metadata.backupTime;
             checksumAlgo = metadata.checksumAlgo;
             crypto = metadata.crypto;
-            iv = metadata.iv.clone();
-            aes = metadata.aes.clone();
+            if (metadata.iv != null) {
+                iv = metadata.iv.clone();
+            }
+            if (metadata.aes != null) {
+                aes = metadata.aes.clone();
+            }
             keyIds = metadata.keyIds;
             version = metadata.version;
             apkName = metadata.apkName;

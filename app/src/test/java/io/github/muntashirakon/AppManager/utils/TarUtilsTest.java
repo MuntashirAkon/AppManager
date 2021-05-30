@@ -19,7 +19,7 @@ package io.github.muntashirakon.AppManager.utils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import io.github.muntashirakon.io.SplitInputStream;
+
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
@@ -33,6 +33,8 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import io.github.muntashirakon.io.SplitInputStream;
 
 import static org.junit.Assert.assertEquals;
 
@@ -217,7 +219,7 @@ public class TarUtilsTest {
     }
 
     @NonNull
-    private static List<String> getFileNamesGZip(@NonNull List<File> tarFiles) throws IOException {
+    public static List<String> getFileNamesGZip(@NonNull List<File> tarFiles) throws IOException {
         List<String> fileNames = new ArrayList<>();
         try (SplitInputStream sis = new SplitInputStream(tarFiles);
              BufferedInputStream bis = new BufferedInputStream(sis);

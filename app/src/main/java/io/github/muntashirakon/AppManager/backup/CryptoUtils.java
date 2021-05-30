@@ -20,13 +20,13 @@ package io.github.muntashirakon.AppManager.backup;
 
 import android.text.TextUtils;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.security.SecureRandom;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.StringDef;
 import androidx.annotation.WorkerThread;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.security.SecureRandom;
 
 import io.github.muntashirakon.AppManager.crypto.AESCrypto;
 import io.github.muntashirakon.AppManager.crypto.Crypto;
@@ -75,6 +75,14 @@ public class CryptoUtils {
             default:
                 return "";
         }
+    }
+
+    /**
+     * Get file name with appropriate extension
+     */
+    @NonNull
+    public static String getAppropriateFilename(String filename, @NonNull @Mode String mode) {
+        return filename + getExtension(mode);
     }
 
     @WorkerThread
