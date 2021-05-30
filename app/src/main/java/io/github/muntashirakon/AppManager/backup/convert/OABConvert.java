@@ -224,7 +224,7 @@ class OABConvert implements Convert {
 
     private void backupApkFile() throws BackupException {
         File[] baseApkFiles = new File[]{new ProxyFile(backupLocation, CryptoUtils
-                .getAppropriateFilename(sourceMetadata.apkName, sourceMetadata.tarType))};
+                .getAppropriateFilename(sourceMetadata.apkName, sourceMetadata.crypto))};
         // Decrypt APK file if needed
         if (!crypto.decrypt(baseApkFiles)) {
             throw new BackupException("Failed to decrypt " + Arrays.toString(baseApkFiles));
