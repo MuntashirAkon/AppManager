@@ -2,7 +2,10 @@
 
 package io.github.muntashirakon.AppManager.backup.convert;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.RemoteException;
+import android.util.Base64;
 
 import androidx.annotation.NonNull;
 
@@ -23,6 +26,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Properties;
 
@@ -41,10 +45,12 @@ import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.TarUtils;
 import io.github.muntashirakon.io.ProxyFile;
 import io.github.muntashirakon.io.ProxyInputStream;
+import io.github.muntashirakon.io.ProxyOutputStream;
 import io.github.muntashirakon.io.SplitOutputStream;
 
 import static io.github.muntashirakon.AppManager.backup.BackupManager.CERT_PREFIX;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.DATA_PREFIX;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.ICON_FILE;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.SOURCE_PREFIX;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.getExt;
 import static io.github.muntashirakon.AppManager.utils.TarUtils.DEFAULT_SPLIT_SIZE;
@@ -70,6 +76,7 @@ public class TBConvert implements Convert {
     private MetadataManager.Metadata sourceMetadata;
     private MetadataManager.Metadata destMetadata;
     private File tmpBackupPath;
+    private Bitmap icon;
 
     /**
      * A documentation about Titanium Backup is located at
@@ -115,6 +122,8 @@ public class TBConvert implements Convert {
                 tmpBackupPath = backupFile.getBackupPath();
                 crypto = ConvertUtils.setupCrypto(destMetadata);
                 checksum = new BackupFiles.Checksum(backupFile.getChecksumFile(CryptoUtils.MODE_NO_ENCRYPTION), "w");
+                // Backup icon
+                backupIcon();
                 if (destMetadata.flags.backupApkFiles()) {
                     backupApkFile();
                 }
@@ -395,8 +404,12 @@ public class TBConvert implements Convert {
             sourceMetadata.dataDirs = ConvertUtils.getDataDirs(this.packageName, this.userHandle, sourceMetadata.flags
                     .backupInternalData(), sourceMetadata.flags.backupExternalData(), false);
             sourceMetadata.keyStore = false;
-            sourceMetadata.installer = (String) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_INSTALLER_APP_STR);
-            // TODO: 19/4/21 Read icon
+            sourceMetadata.installer = AppPref.getString(AppPref.PrefKey.PREF_INSTALLER_INSTALLER_APP_STR);
+            String base64Icon = prop.getProperty("app_gui_icon");
+            if (base64Icon != null) {
+                byte[] decodedBytes = Base64.decode(base64Icon, 0);
+                icon = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+            }
         } catch (IOException | RemoteException e) {
             throw new BackupException("Could not read the prop file", e);
         }
@@ -416,4 +429,16 @@ public class TBConvert implements Convert {
         else apkName += ".gz";
         return new ProxyFile(this.backupLocation, apkName);
     }
+
+    private void backupIcon() {
+        if (icon == null) return;
+        final File iconFile = new ProxyFile(tmpBackupPath, ICON_FILE);
+        try (OutputStream outputStream = new ProxyOutputStream(iconFile)) {
+            icon.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+            outputStream.flush();
+        } catch (IOException | RemoteException e) {
+            Log.w(TAG, "Could not back up icon.");
+        }
+    }
+
 }
