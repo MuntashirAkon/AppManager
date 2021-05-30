@@ -286,6 +286,9 @@ public class TBConvert implements Convert {
                 if (fileName.equals("")) continue;
                 // New tar entry
                 TarArchiveEntry outTarEntry = new TarArchiveEntry(fileName);
+                outTarEntry.setMode(inTarEntry.getMode());
+                outTarEntry.setUserId(inTarEntry.getUserId());
+                outTarEntry.setGroupId(inTarEntry.getGroupId());
                 if (tmpFile != null) {
                     outTarEntry.setSize(tmpFile.length());
                 }
