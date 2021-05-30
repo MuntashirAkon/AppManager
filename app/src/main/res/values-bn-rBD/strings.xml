@@ -218,10 +218,6 @@
     <string name="install">ইনস্টল করুন</string>
     <string name="update">হালনাগাদ</string>
     <string name="source_code">সোর্স কোড</string>
-    <string name="community">টেলিগ্রাম কমিউনিটি</string>
-    <string name="community_links">আপডেট চ্যানেল: https://t.me/AppManagerChannel
-\nগ্রুপ: https://t.me/AppManagerAndroid
-\nটুইটার: https://twitter.com/AMUpdateChannel</string>
     <string name="clear_cache">ক্যাশে মুছুন</string>
     <string name="block_unblock_trackers_description">সকল ইনস্টলড থাকা অ্যাপ গুলো থেকে বিজ্ঞাপন এবং ট্র্যাকিং উপাদানগুলিকে ব্লক/আনব্লক করুন</string>
     <string name="clear_data_from_uninstalled_apps">আনইনস্টলড অ্যাপগুলো থেকে ডাটা মুছুন</string>

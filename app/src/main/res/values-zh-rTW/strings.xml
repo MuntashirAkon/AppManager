@@ -505,10 +505,6 @@
     <string name="clear_data_from_uninstalled_apps">清除已解除安裝應用程式中的資料</string>
     <string name="deny_app_ops_description">為透過常量值標識的應用程式操作設定一種模式，即<tt> 63</tt> 或者<tt> RUN_IN_BACKGROUND</tt></string>
     <string name="clear_cache">清除快取</string>
-    <string name="community_links">更新頻道：https://t.me/AppManagerChannel
-\n支援小組：https://t.me/AppManagerAndroid
-\nTwitter：https://twitter.com/AMUpdateChannel</string>
-    <string name="community">Telegram 社群</string>
     <string name="update">更新</string>
     <string name="install">安裝</string>
     <plurals name="no_of_components">

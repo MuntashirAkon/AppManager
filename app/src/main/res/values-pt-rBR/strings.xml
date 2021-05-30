@@ -308,10 +308,6 @@
     <string name="install">Instalar</string>
     <string name="update">Atualizar</string>
     <string name="source_code">Código Fonte</string>
-    <string name="community">Comunidade no Telegram</string>
-    <string name="community_links">Canal de atualizações: https://t.me/AppManagerChannel
-\nGrupo de suporte: https://t.me/AppManagerAndroid
-\nTwitter: https://twitter.com/AMUpdateChannel</string>
     <string name="pref_import_existing">Importar regras existentes</string>
     <string name="pref_import_existing_msg">Adicione componentes desativados por outros aplicativos ao App Manager. Tenha cuidado ao usar essa ferramenta, pois podem haver muitos falsos positivos. Escolha apenas os aplicativos sobre os quais você tem certeza.</string>
     <string name="clear_cache">Limpar Cache</string>

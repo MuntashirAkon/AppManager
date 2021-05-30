@@ -344,10 +344,6 @@
     <string name="clear_cache">Önbelleği Temizle</string>
     <string name="pref_import_existing_msg">Diğer uygulamalar tarafından devre dışı bırakılan bileşenleri App Manager\'e ekleyin. Çok sayıda yanlış pozitif olabileceğinden bu aracı kullanırken dikkatli olun. Yalnızca emin olduğunuz uygulamaları seçin.</string>
     <string name="pref_import_existing">Var olan kuralları içe aktar</string>
-    <string name="community_links">Güncelleme Kanalı: https://t.me/AppManagerChannel
-\nDestek Grubu: https://t.me/AppManagerAndroid
-\nTwitter: https://twitter.com/AMUpdateChannel</string>
-    <string name="community">Telegram Topluluğu</string>
     <string name="source_code">Kaynak Kodları</string>
     <string name="update">Güncelle</string>
     <string name="install">Kur</string>

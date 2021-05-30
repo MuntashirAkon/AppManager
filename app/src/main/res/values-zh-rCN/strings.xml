@@ -325,10 +325,6 @@
     <string name="install">安装</string>
     <string name="update">升级</string>
     <string name="source_code">源代码</string>
-    <string name="community">Telegram 社区</string>
-    <string name="community_links">更新频道: https://t.me/AppManagerChannel
-\n支持小组: https://t.me/AppManagerAndroid
-\n推特: https://twitter.com/AMUpdateChannel</string>
     <string name="pref_import_existing">导入现有规则</string>
     <string name="pref_import_existing_msg">将被其他应用禁用的组件添加到应用管理器。 使用此工具时要小心，因为可能有许多误报。 只选择您确定的应用。</string>
     <string name="clear_cache">清除缓存</string>

@@ -341,10 +341,6 @@
     <string name="block_unblock_trackers_description">Bloquer ou débloquer les composants de publicité et de suivi dans toutes les applications installées</string>
     <string name="clear_cache">Effacer le cache</string>
     <string name="pref_import_existing">Importer des règles existantes</string>
-    <string name="community_links">Salon d\'information : https://t.me/AppManagerChannel
-\nGroupe d\'entraide : https://t.me/AppManagerAndroid
-\nTwitter : https://twitter.com/AMUpdateChannel</string>
-    <string name="community">Communauté Télégram</string>
     <string name="source_code">Code source</string>
     <string name="update">Mettre à jour</string>
     <string name="install">Installer</string>

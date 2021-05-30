@@ -799,10 +799,6 @@
     <string name="clear_cache">Kosongkan Cache</string>
     <string name="pref_import_existing_msg">Tambahkan komponen yang dinonaktifkan oleh aplikasi lain ke App Manager. Hati-hati saat menggunakan alat ini karena ada banyak false-positif. Pilih hanya aplikasi yang Anda pasti.</string>
     <string name="pref_import_existing">Impor aturan yang ada</string>
-    <string name="community_links">Kanal Pembaruan: https://t.me/AppManagerChannel
-\nSupport Grup: https://t.me/AppManagerAndroid
-\nTwitter: https://twitter.com/AMUpdateChannel</string>
-    <string name="community">Komunitas Telegram</string>
     <string name="source_code">Kode Sumber</string>
     <string name="update">Pembaruan</string>
     <string name="install">Pasang</string>

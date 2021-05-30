@@ -279,11 +279,7 @@
         <item quantity="one">نتوانست داده های %1$d برنامه را پاک کند</item>
         <item quantity="other">نتوانست داده های %1$d برنامه را پاک کند</item>
     </plurals>
-    <string name="community_links">کانال به‌روزرسانی: https://t.me/AppManagerChannel
-\nگروه پشتیبانی: https://t.me/AppManagerAndroid
-\nتوییتر: https://twitter.com/AMUpdateChannel</string>
     <string name="pref_import_existing">قوانین موجود را وارد کن</string>
-    <string name="community">انجمن تلگرام</string>
     <string name="source_code">کد منبع</string>
     <string name="update">به‌روزرسانی کن</string>
     <string name="install">نصب کن</string>

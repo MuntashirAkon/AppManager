@@ -364,10 +364,6 @@
     <string name="install">Установить</string>
     <string name="update">Обновить</string>
     <string name="source_code">Исходный код</string>
-    <string name="community">Сообщество Telegram</string>
-    <string name="community_links">Канал с обновлениями: https://t.me/AppManagerChannel
-\nГруппа поддержки: https://t.me/AppManagerAndroid
-\nTwitter: https://twitter.com/AMUpdateChannel</string>
     <string name="pref_import_existing">Импорт существующих правил</string>
     <string name="pref_import_existing_msg">Добавить компоненты, отключенные другими приложениями, в App Manager. Будьте осторожны при использовании этого инструмента, так как может быть много ложных срабатываний. Выбирайте только те приложения, в которых вы уверены.</string>
     <string name="clear_cache">Очистить кэш</string>
