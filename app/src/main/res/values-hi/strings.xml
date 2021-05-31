@@ -112,7 +112,7 @@
     <string name="the_import_was_successful">आयात सफल हुआ</string>
     <string name="pref_import_blocker">ब्लॉकर से आयात करें</string>
     <string name="pref_import_watt">वाट से आयात करें</string>
-    <string name="pref_import_export_blocking_rules_msg">रूल्स का आयात/निर्यात करें, बाहरी रूल्स का वाट और ब्लॉकर से आयात करें</string>
+    <string name="pref_import_export_blocking_rules_msg">रूल्स का आयात/निर्यात करें, बाहरी रूल्स का वाट और ब्लॉकर से आयात करें।</string>
     <string name="pref_import_export_blocking_rules">ब्लॉकिंग रूल्स का आयात/निर्यात</string>
     <string name="sort_by_mobile_data">मोबाइल डेटा</string>
     <string name="sort_by_times_opened">कितनी बार खोला</string>
@@ -131,7 +131,7 @@
     <string name="only_works_in_root_mode">केवल रुट मोड में काम करता है</string>
     <string name="app_settings">सेटिंग्स</string>
     <string name="usage_access">इस्तेमाल का एक्सेस</string>
-    <string name="pref_global_blocking_enabled_msg">आप एप्लिकेशन को ब्लॉक किए बिना किसी भी एप्लिकेशन के किसी भी कंपोनेंट को ब्लॉक कर सकते हैं</string>
+    <string name="pref_global_blocking_enabled_msg">आप एप्लिकेशन को ब्लॉक किए बिना किसी भी एप्लिकेशन के किसी भी कंपोनेंट को ब्लॉक कर सकते हैं।</string>
     <string name="pref_global_blocking_enabled">ग्लोबल कंपोनेंट ब्लॉकिंग</string>
     <string name="str_logo">लोगो</string>
     <string name="rules_not_applied">रूल्स लागू नहीं हैं</string>
@@ -769,4 +769,5 @@
     <string name="backup_external_data_description">बाहरी डेटा फ़ोल्डर्स का बैकअप करें। इसको काम करने के लिए <b> डेटा </b> चयनित होना अनिवार्य है।</string>
     <string name="backup_internal_data_description">डेटा फ़ोल्डर्स बैकअप करें। अगर चयनित किया तो इंटरनल डेटा फ़ोल्डर्स को भी बैकअप किया जाएगा।</string>
     <string name="user_with_id">यूजर: <xliff:g id="user_id" example="0">%1$d</xliff:g></string>
+    <string name="app_signing_signatures">हस्ताक्षर</string>
 </resources>
