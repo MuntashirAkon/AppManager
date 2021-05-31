@@ -1107,4 +1107,5 @@
     <string name="unknown_net_policy">Невідома мережна політика (%1$s - %2$X)</string>
     <string name="failed_to_prevent_background_run">Не вдалося запобігти роботу в фоновому режимі додатку %1$s</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">Не вдалося встановити додаток через невідповідність підпису. Додаток було видалено без очищення даних.</string>
+    <string name="community">Спільнота</string>
 </resources>
