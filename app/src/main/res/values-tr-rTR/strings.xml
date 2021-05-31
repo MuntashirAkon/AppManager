@@ -1037,4 +1037,7 @@
     <string name="fallback_to_no_root_mode">Root yok moduna geçilsin mi\?</string>
     <string name="failed_to_prevent_background_run">%1$s arka planda çalışması engellenemedi</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">İmza uyuşmazlığı nedeniyle uygulama kurulamadı. Uygulama, verileri temizlenmeden kaldırıldı.</string>
+    <string name="community_links">Telegram: https://t.me/AppManagerChannel
+\nTwitter: https://twitter.com/AppManagerNews</string>
+    <string name="community">Topluluk</string>
 </resources>
