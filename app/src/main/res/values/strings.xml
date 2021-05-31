@@ -945,9 +945,8 @@
     <string name="pref_import_backups">Import backups</string>
     <string name="pref_import_backups_msg">Import backups from OAndBackup, Titanium Backup or Swift Backup.</string>
     <string name="import_from_oab">Import from OAndBackup</string>
-    <string name="import_from_oab_tb_sb_msg">Backups must be located at %s.</string>
+    <string name="import_from_oab_tb_msg">Backups must be located at %s.</string>
     <string name="import_from_tb">Import from Titanium Backup</string>
-    <string name="import_from_sb">Import from Swift Backup</string>
     <plurals name="items_selected">
         <item quantity="one"><xliff:g id="selection_no" example="20">%1$d</xliff:g> selected</item>
         <item quantity="other"><xliff:g id="selection_no" example="20">%1$d</xliff:g> selected</item>
@@ -1066,4 +1065,8 @@
     <string name="orientation_follow_locale">Follow locale</string>
     <string name="orientation_left_to_right">Left to right</string>
     <string name="orientation_right_to_left">Right to left</string>
+    <plurals name="alert_failed_to_import_backups">
+        <item quantity="one">Could not import %1$d backup</item>
+        <item quantity="other">Could not import %1$d backups</item>
+    </plurals>
 </resources>

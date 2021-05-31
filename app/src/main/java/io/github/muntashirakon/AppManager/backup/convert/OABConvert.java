@@ -56,7 +56,7 @@ import static io.github.muntashirakon.AppManager.utils.TarUtils.TAR_GZIP;
  * A documentation about OAndBackup is located at
  * <a href=https://github.com/MuntashirAkon/AppManager/issues/371#issuecomment-818429082>GH#371</a>.
  */
-class OABConvert implements Convert {
+public class OABConvert extends Convert {
     public static final String TAG = OABConvert.class.getSimpleName();
 
     public static final String PATH_SUFFIX = "oandbackups";
@@ -165,6 +165,11 @@ class OABConvert implements Convert {
             }
             return;
         }
+    }
+
+    @Override
+    public String getPackageName() {
+        return packageName;
     }
 
     private void readLogFile() throws JSONException, BackupException {

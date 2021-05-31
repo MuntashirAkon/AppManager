@@ -31,7 +31,7 @@
                 android:id="@+id/import_from_oab_msg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:text="@string/import_from_oab_tb_sb_msg"
+                tools:text="@string/import_from_oab_tb_msg"
                 android:textSize="@dimen/subtitle_font" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
@@ -63,39 +63,7 @@
                 android:id="@+id/import_from_tb_msg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:text="@string/import_from_oab_tb_sb_msg"
-                android:textSize="@dimen/subtitle_font" />
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/ten_percent_black" />
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/import_from_sb"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingStart="@dimen/padding_medium"
-            android:paddingTop="@dimen/padding_small"
-            android:paddingEnd="@dimen/padding_medium"
-            android:paddingBottom="@dimen/padding_small"
-            android:background="?selectableItemBackground"
-            android:orientation="vertical">
-
-            <com.google.android.material.textview.MaterialTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="?android:attr/textColorPrimary"
-                android:text="@string/import_from_sb"
-                android:textSize="@dimen/title_font" />
-
-            <TextView
-                android:id="@+id/import_from_sb_msg"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:text="@string/import_from_oab_tb_sb_msg"
+                tools:text="@string/import_from_oab_tb_msg"
                 android:textSize="@dimen/subtitle_font" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>

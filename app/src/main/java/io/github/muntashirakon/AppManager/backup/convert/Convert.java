@@ -4,6 +4,8 @@ package io.github.muntashirakon.AppManager.backup.convert;
 
 import io.github.muntashirakon.AppManager.backup.BackupException;
 
-public interface Convert {
-    void convert() throws BackupException;
+public abstract class Convert {
+    public abstract void convert() throws BackupException;
+
+    public abstract String getPackageName();
 }

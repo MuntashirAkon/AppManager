@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.os.RemoteException;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.android.apksig.ApkVerifier;
 import com.android.apksig.apk.ApkFormatException;
@@ -35,9 +36,53 @@ import io.github.muntashirakon.io.ProxyInputStream;
 import static io.github.muntashirakon.AppManager.backup.MetadataManager.TAR_TYPES;
 
 public final class ConvertUtils {
+    @NonNull
+    public static File getImportPath(@ImportType int backupType) {
+        String backupVolume = AppPref.getString(AppPref.PrefKey.PREF_BACKUP_VOLUME_STR);
+        switch (backupType) {
+            case ImportType.OAndBackup:
+                return new ProxyFile(backupVolume, OABConvert.PATH_SUFFIX);
+            case ImportType.TitaniumBackup:
+                return new ProxyFile(backupVolume, TBConvert.PATH_SUFFIX);
+            default:
+                throw new IllegalArgumentException("Unsupported import type " + backupType);
+        }
+    }
+
+    @Nullable
+    public static File[] getRelevantImportFiles(@ImportType int backupType) {
+        return getRelevantImportFiles(backupType, getImportPath(backupType));
+    }
+
+    @NonNull
+    public static Convert getConversionUtil(@ImportType int backupType, File file) {
+        switch (backupType) {
+            case ImportType.OAndBackup:
+                return new OABConvert(file);
+            case ImportType.TitaniumBackup:
+                return new TBConvert(file);
+            default:
+                throw new IllegalArgumentException("Unsupported import type " + backupType);
+        }
+    }
+
+    @Nullable
+    public static File[] getRelevantImportFiles(@ImportType int backupType, File baseLocation) {
+        switch (backupType) {
+            case ImportType.OAndBackup:
+                // Package directories
+                return baseLocation.listFiles(File::isDirectory);
+            case ImportType.TitaniumBackup:
+                // Properties files
+                return baseLocation.listFiles((dir, name) -> name.endsWith(".properties"));
+            default:
+                throw new IllegalArgumentException("Unsupported import type " + backupType);
+        }
+    }
+
     @SuppressLint("SdCardPath")
     @NonNull
-    public static String[] getDataDirs(String packageName, int userHandle, boolean hasInternal, boolean hasExternal, boolean hasObb) {
+    static String[] getDataDirs(String packageName, int userHandle, boolean hasInternal, boolean hasExternal, boolean hasObb) {
         List<String> dataDirs = new ArrayList<>(2);
         if (hasInternal) {
             dataDirs.add("/data/user/" + userHandle + "/" + packageName);
@@ -53,7 +98,7 @@ public final class ConvertUtils {
 
     @TarUtils.TarType
     @NonNull
-    public static String getTarTypeFromPref() {
+    static String getTarTypeFromPref() {
         String tarType = (String) AppPref.get(AppPref.PrefKey.PREF_BACKUP_COMPRESSION_METHOD_STR);
         // Verify tar type
         if (ArrayUtils.indexOf(TAR_TYPES, tarType) == -1) {
@@ -64,7 +109,7 @@ public final class ConvertUtils {
     }
 
     @NonNull
-    public static Crypto setupCrypto(MetadataManager.Metadata metadata) throws BackupException {
+    static Crypto setupCrypto(MetadataManager.Metadata metadata) throws BackupException {
         try {
             // Setup crypto
             CryptoUtils.setupCrypto(metadata);
@@ -75,7 +120,7 @@ public final class ConvertUtils {
     }
 
     @NonNull
-    public static String[] getChecksumsFromApk(File apkFile, @DigestUtils.Algorithm String algo)
+    static String[] getChecksumsFromApk(File apkFile, @DigestUtils.Algorithm String algo)
             throws IOException, RemoteException, ApkFormatException, NoSuchAlgorithmException,
             CertificateEncodingException {
         if (apkFile instanceof ProxyFile) {

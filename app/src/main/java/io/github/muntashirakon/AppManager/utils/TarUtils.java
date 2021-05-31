@@ -107,15 +107,16 @@ public final class TarUtils {
                 if (basePath == null) basePath = new File("/");
                 gatherFiles(files, basePath, source, filters, exclude, followLinks);
                 for (File file : files) {
+                    String relativePath = getRelativePath(file, basePath);
+                    if (relativePath.equals("") || relativePath.equals("/")) continue;
                     // For links, check if followLinks is enabled
                     if (!followLinks && isSymbolicLink(file)) {
                         // Add the link as is
-                        TarArchiveEntry tarEntry = new TarArchiveEntry(getRelativePath(file, basePath),
-                                TarConstants.LF_SYMLINK);
+                        TarArchiveEntry tarEntry = new TarArchiveEntry(relativePath, TarConstants.LF_SYMLINK);
                         tarEntry.setLinkName(file.getCanonicalFile().getAbsolutePath());
                         tos.putArchiveEntry(tarEntry);
                     } else {
-                        TarArchiveEntry tarEntry = new TarArchiveEntry(file, getRelativePath(file, basePath));
+                        TarArchiveEntry tarEntry = new TarArchiveEntry(file, relativePath);
                         tos.putArchiveEntry(tarEntry);
                         if (!file.isDirectory()) {
                             try (InputStream is = new ProxyInputStream(file)) {

@@ -33,6 +33,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
+import java.io.File;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
@@ -49,7 +50,11 @@ import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.appops.AppOpsUtils;
 import io.github.muntashirakon.AppManager.appops.OpEntry;
 import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
+import io.github.muntashirakon.AppManager.backup.BackupException;
 import io.github.muntashirakon.AppManager.backup.BackupManager;
+import io.github.muntashirakon.AppManager.backup.convert.Convert;
+import io.github.muntashirakon.AppManager.backup.convert.ConvertUtils;
+import io.github.muntashirakon.AppManager.backup.convert.ImportType;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
@@ -57,6 +62,7 @@ import io.github.muntashirakon.AppManager.rules.compontents.ExternalComponentsIm
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.UserIdInt;
+import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -95,6 +101,11 @@ public class BatchOpsManager {
      */
     public static final String ARG_SIGNATURES = "signatures";
 
+    /**
+     * {@link Integer} value, one of the {@link ImportType}s. To be used with {@link #OP_IMPORT_BACKUPS}.
+     */
+    public static final String ARG_BACKUP_TYPE = "backup_type";
+
     @IntDef(value = {
             OP_NONE,
             OP_BACKUP_APK,
@@ -109,6 +120,7 @@ public class BatchOpsManager {
             OP_ENABLE,
             OP_EXPORT_RULES,
             OP_FORCE_STOP,
+            OP_IMPORT_BACKUPS,
             OP_SET_APP_OPS,
             OP_GRANT_PERMISSIONS,
             OP_RESTORE_BACKUP,
@@ -141,6 +153,7 @@ public class BatchOpsManager {
     public static final int OP_CLEAR_CACHE = 16;
     public static final int OP_GRANT_PERMISSIONS = 17;
     public static final int OP_REVOKE_PERMISSIONS = 18;
+    public static final int OP_IMPORT_BACKUPS = 19;
 
     private final Handler handler;
 
@@ -219,6 +232,8 @@ public class BatchOpsManager {
                 return opGrantOrRevokePermissions(true);
             case OP_REVOKE_PERMISSIONS:
                 return opGrantOrRevokePermissions(false);
+            case OP_IMPORT_BACKUPS:
+                return opImportBackups();
             case OP_NONE:
                 break;
         }
@@ -286,6 +301,33 @@ public class BatchOpsManager {
         }
         executor.awaitCompletion();
         return lastResult = new Result(failedPackages);
+    }
+
+    @NonNull
+    private Result opImportBackups() {
+        @ImportType
+        int backupType = args.getInt(ARG_BACKUP_TYPE, ImportType.OAndBackup);
+        int userHandle = Users.getCurrentUserHandle();
+        File[] files = ConvertUtils.getRelevantImportFiles(backupType);
+        if (files == null) return new Result(Collections.emptyList());
+        final List<UserPackagePair> failedPkgList = new ArrayList<>();
+        MultithreadedExecutor executor = MultithreadedExecutor.getNewInstance();
+        try {
+            for (File file : files) {
+                executor.submit(() -> {
+                    Convert convert = ConvertUtils.getConversionUtil(backupType, file);
+                    try {
+                        convert.convert();
+                    } catch (BackupException e) {
+                        Log.e(TAG, "Could not backup " + convert.getPackageName(), e);
+                        failedPkgList.add(new UserPackagePair(convert.getPackageName(), userHandle));
+                    }
+                });
+            }
+        } catch (Throwable ignore) {
+        }
+        executor.awaitCompletion();
+        return new Result(failedPkgList);
     }
 
     private Result opBlockComponents() {

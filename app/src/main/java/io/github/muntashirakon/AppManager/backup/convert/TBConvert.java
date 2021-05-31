@@ -57,7 +57,7 @@ import static io.github.muntashirakon.AppManager.utils.TarUtils.DEFAULT_SPLIT_SI
 import static io.github.muntashirakon.AppManager.utils.TarUtils.TAR_BZIP2;
 import static io.github.muntashirakon.AppManager.utils.TarUtils.TAR_GZIP;
 
-public class TBConvert implements Convert {
+public class TBConvert extends Convert {
     public static final String TAG = TBConvert.class.getSimpleName();
 
     public static final String PATH_SUFFIX = "TitaniumBackup";
@@ -158,6 +158,11 @@ public class TBConvert implements Convert {
             }
             return;
         }
+    }
+
+    @Override
+    public String getPackageName() {
+        return packageName;
     }
 
     private void backupApkFile() throws BackupException {
