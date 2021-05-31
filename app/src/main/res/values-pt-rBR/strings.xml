@@ -1038,4 +1038,7 @@
     <string name="fallback_to_no_root_mode">Recuar ao modo sem root\?</string>
     <string name="failed_to_prevent_background_run">Não foi possível impedir que %1$s funcionasse em segundo plano</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">Não foi possível instalar o aplicativo devido ao descompasso de assinatura. O aplicativo foi desinstalado sem limpar seus dados.</string>
+    <string name="community_links">Telegram: https://t.me/AppManagerChannel
+\nTwitter: https://twitter.com/AppManagerNews</string>
+    <string name="community">Comunidade</string>
 </resources>
