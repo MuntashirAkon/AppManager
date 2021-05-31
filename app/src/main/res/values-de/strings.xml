@@ -756,7 +756,7 @@
     <string name="backup_rules_description">Im App Manager konfigurierte Regeln sichern.</string>
     <string name="backup_extras_description">Sichern Sie App-Berechtigungen, Batteriespar- und Datennutzungsoptionen, MagiskHide-Status, SSAID usw.</string>
     <string name="backup_extras">Zusätze</string>
-    <string name="backup_cache_description">Die Ordner <b>cache</b>, <b>no_cache</b> und <b>no_backup</b> werden nicht gesichert.</string>
+    <string name="backup_cache_description">Die Ordner <b>cache</b>, <b>no_cache</b> und <b>no_backup</b> werden gesichert.</string>
     <string name="backup_obb_media_description">Sichern der OBB- und Medienordner.</string>
     <string name="backup_external_data_description">Sichern Sie die externen Datenordner.</string>
     <string name="backup_internal_data_description">Sichern Sie die Datenordner. Wenn diese Option ausgewählt ist, werden die internen Datenordner standardmäßig gesichert.</string>
