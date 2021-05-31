@@ -23,7 +23,6 @@ import org.json.JSONException;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -281,17 +280,6 @@ public class TBConvert extends Convert {
             // Add files
             TarArchiveEntry inTarEntry;
             while ((inTarEntry = tis.getNextEntry()) != null) {
-                File tmpFile = null;
-                if (!inTarEntry.isDirectory()) {
-                    // We need to use a temporary file
-                    tmpFile = IOUtils.getTempFile();
-                    try (OutputStream fos = new FileOutputStream(tmpFile)) {
-                        IOUtils.copy(tis, fos);
-                    } catch (Throwable th) {
-                        tmpFile.delete();
-                        throw th;
-                    }
-                }
                 String fileName = inTarEntry.getName();
                 boolean isExternal = fileName.startsWith(EXTERNAL_PREFIX);
                 // Get new file name
@@ -302,9 +290,7 @@ public class TBConvert extends Convert {
                 outTarEntry.setMode(inTarEntry.getMode());
                 outTarEntry.setUserId(inTarEntry.getUserId());
                 outTarEntry.setGroupId(inTarEntry.getGroupId());
-                if (tmpFile != null) {
-                    outTarEntry.setSize(tmpFile.length());
-                }
+                outTarEntry.setSize(inTarEntry.getSize());
                 if (isExternal) {
                     if (extTos != null) {
                         extTos.putArchiveEntry(outTarEntry);
@@ -314,20 +300,15 @@ public class TBConvert extends Convert {
                         intTos.putArchiveEntry(outTarEntry);
                     }
                 }
-                if (tmpFile != null) {
-                    // Copy from the temporary file
-                    try (FileInputStream fis = new FileInputStream(tmpFile)) {
-                        if (isExternal) {
-                            if (extTos != null) {
-                                IOUtils.copy(fis, extTos);
-                            }
-                        } else {
-                            if (intTos != null) {
-                                IOUtils.copy(fis, intTos);
-                            }
+                if (!inTarEntry.isDirectory() && !inTarEntry.isSymbolicLink()) {
+                    if (isExternal) {
+                        if (extTos != null) {
+                            IOUtils.copy(tis, extTos);
                         }
-                    } finally {
-                        tmpFile.delete();
+                    } else {
+                        if (intTos != null) {
+                            IOUtils.copy(tis, intTos);
+                        }
                     }
                 }
                 if (isExternal) {
