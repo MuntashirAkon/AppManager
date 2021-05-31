@@ -25,17 +25,17 @@ public class BackupManager {
     static final String EXT_OBB = "/Android/obb/";
     /* language=regexp */
     static final String[] CACHE_DIRS = new String[]{"cache/.*", "code_cache/.*", "no_backup/.*"};
-    static final String SOURCE_PREFIX = "source";
-    static final String DATA_PREFIX = "data";
+    public static final String SOURCE_PREFIX = "source";
+    public static final String DATA_PREFIX = "data";
     static final String KEYSTORE_PREFIX = "keystore";
     static final int KEYSTORE_PLACEHOLDER = -1000;
 
     public static final String ICON_FILE = "icon.png";
-    static final String CERT_PREFIX = "cert_";
+    public static final String CERT_PREFIX = "cert_";
     static final String MASTER_KEY = ".masterkey";
 
     @NonNull
-    static String getExt(@TarUtils.TarType String tarType) {
+    public static String getExt(@TarUtils.TarType String tarType) {
         if (TarUtils.TAR_BZIP2.equals(tarType)) return ".tar.bz2";
         else return ".tar.gz";
     }

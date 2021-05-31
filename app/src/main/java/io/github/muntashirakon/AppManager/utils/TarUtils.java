@@ -89,17 +89,20 @@ public final class TarUtils {
                 tos.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
                 tos.setBigNumberMode(TarArchiveOutputStream.BIGNUMBER_POSIX);
                 List<File> files = new ArrayList<>();
-                gatherFiles(files, source, source, filters, exclude, followLinks);
+                File basePath = source.isDirectory() ? source : source.getParentFile();
+                if (basePath == null) basePath = new File("/");
+                gatherFiles(files, basePath, source, filters, exclude, followLinks);
                 for (File file : files) {
+                    String relativePath = getRelativePath(file, basePath);
+                    if (relativePath.equals("") || relativePath.equals("/")) continue;
                     // For links, check if followLinks is enabled
                     if (!followLinks && isSymbolicLink(file)) {
                         // Add the link as is
-                        TarArchiveEntry tarEntry = new TarArchiveEntry(getRelativePath(file, source),
-                                TarConstants.LF_SYMLINK);
+                        TarArchiveEntry tarEntry = new TarArchiveEntry(relativePath, TarConstants.LF_SYMLINK);
                         tarEntry.setLinkName(file.getCanonicalFile().getAbsolutePath());
                         tos.putArchiveEntry(tarEntry);
                     } else {
-                        TarArchiveEntry tarEntry = new TarArchiveEntry(file, getRelativePath(file, source));
+                        TarArchiveEntry tarEntry = new TarArchiveEntry(file, relativePath);
                         tos.putArchiveEntry(tarEntry);
                         if (!file.isDirectory()) {
                             try (InputStream is = new ProxyInputStream(file)) {
@@ -203,7 +206,7 @@ public final class TarUtils {
                             @Nullable String[] filters, @Nullable String[] exclude, boolean followLinks)
             throws ErrnoException, RemoteException {
         if (source.isDirectory()) {  // OsConstants#S_ISDIR
-            // Is a directory, add only the directory if it's a symboilic link and followLinks is disabled
+            // Is a directory, add only the directory if it's a symbolic link and followLinks is disabled
             if (!followLinks && isSymbolicLink(source)) {
                 files.add(source);
                 return;

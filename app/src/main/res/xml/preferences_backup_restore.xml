@@ -33,4 +33,10 @@
         app:summary="@string/pref_backup_volume_msg"
         app:iconSpaceReserved="false" />
 
+    <Preference
+        app:key="import_backups"
+        app:title="@string/pref_import_backups"
+        app:summary="@string/pref_import_backups_msg"
+        app:iconSpaceReserved="false" />
+
 </PreferenceScreen>

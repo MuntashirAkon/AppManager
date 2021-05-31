@@ -205,7 +205,7 @@ public class TarUtilsTest {
     }
 
     @NonNull
-    private static List<String> getFileNamesGZip(@NonNull List<File> tarFiles) throws IOException {
+    public static List<String> getFileNamesGZip(@NonNull List<File> tarFiles) throws IOException {
         List<String> fileNames = new ArrayList<>();
         try (SplitInputStream sis = new SplitInputStream(tarFiles);
              BufferedInputStream bis = new BufferedInputStream(sis);

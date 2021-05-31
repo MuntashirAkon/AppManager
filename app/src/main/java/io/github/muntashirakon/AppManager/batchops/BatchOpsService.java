@@ -33,7 +33,7 @@ public class BatchOpsService extends ForegroundService {
      */
     public static final String EXTRA_HEADER = "EXTRA_HEADER";
     /**
-     * Name of the batch operation, {@link Integer} value.
+     * Name of the batch operation, {@link Integer} value. One of the {@link BatchOpsManager.OpType}.
      */
     public static final String EXTRA_OP = "EXTRA_OP";
     /**
@@ -298,6 +298,8 @@ public class BatchOpsService extends ForegroundService {
                 return getString(R.string.block_components_dots);
             case BatchOpsManager.OP_SET_APP_OPS:
                 return getString(R.string.set_mode_for_app_ops_dots);
+            case BatchOpsManager.OP_IMPORT_BACKUPS:
+                return getString(R.string.pref_import_backups);
             case BatchOpsManager.OP_NONE:
                 break;
         }
@@ -337,6 +339,8 @@ public class BatchOpsService extends ForegroundService {
                 return getResources().getQuantityString(R.plurals.alert_failed_to_block_components, failedCount, failedCount);
             case BatchOpsManager.OP_SET_APP_OPS:
                 return getResources().getQuantityString(R.plurals.alert_failed_to_set_app_ops, failedCount, failedCount);
+            case BatchOpsManager.OP_IMPORT_BACKUPS:
+                return getResources().getQuantityString(R.plurals.alert_failed_to_import_backups, failedCount, failedCount);
         }
         return getString(R.string.error);
     }

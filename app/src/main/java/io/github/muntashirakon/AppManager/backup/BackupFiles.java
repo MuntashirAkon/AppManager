@@ -3,19 +3,24 @@
 package io.github.muntashirakon.AppManager.backup;
 
 import android.os.RemoteException;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import io.github.muntashirakon.AppManager.db.entity.App;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.Closeable;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.io.ProxyFile;
 import io.github.muntashirakon.io.ProxyFileReader;
 import io.github.muntashirakon.io.ProxyFileWriter;
-
-import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public class BackupFiles {
     static final String APK_SAVING_DIRECTORY = "apks";
@@ -169,7 +174,7 @@ public class BackupFiles {
      * @param backupNames Name of the backups. If {@code null}, user handle will be used. If not
      *                    null, the backup names will have the format {@code userHandle_backupName}.
      */
-    BackupFiles(@NonNull String packageName, int userHandle, @Nullable String[] backupNames) {
+    public BackupFiles(@NonNull String packageName, int userHandle, @Nullable String[] backupNames) {
         this.packageName = packageName;
         this.userHandle = userHandle;
         if (backupNames == null) {
@@ -184,7 +189,7 @@ public class BackupFiles {
         packagePath = getPackagePath(packageName);
     }
 
-    BackupFile[] getBackupPaths(boolean hasTemporary) {
+    public BackupFile[] getBackupPaths(boolean hasTemporary) {
         BackupFile[] backupFiles = new BackupFile[backupNames.length];
         for (int i = 0; i < backupNames.length; ++i) {
             backupFiles[i] = new BackupFile(new ProxyFile(packagePath, backupNames[i]), hasTemporary);
@@ -209,7 +214,7 @@ public class BackupFiles {
         return file;
     }
 
-    static class Checksum implements Closeable {
+    public static class Checksum implements Closeable {
         private PrintWriter writer;
         private final HashMap<String, String> checksums = new HashMap<>();
         private final String mode;
@@ -217,49 +222,59 @@ public class BackupFiles {
         @NonNull
         public static String[] getCertChecksums(@NonNull Checksum checksum) {
             List<String> certChecksums = new ArrayList<>();
-            for (String name : checksum.checksums.keySet()) {
-                if (name.startsWith(BackupManager.CERT_PREFIX)) {
-                    certChecksums.add(checksum.checksums.get(name));
+            synchronized (checksum.checksums) {
+                for (String name : checksum.checksums.keySet()) {
+                    if (name.startsWith(BackupManager.CERT_PREFIX)) {
+                        certChecksums.add(checksum.checksums.get(name));
+                    }
                 }
             }
             return certChecksums.toArray(new String[0]);
         }
 
-        Checksum(@NonNull File checksumFile, String mode) throws IOException, RemoteException {
+        public Checksum(@NonNull File checksumFile, String mode) throws IOException, RemoteException {
             this.mode = mode;
             if ("w".equals(mode)) {
                 writer = new PrintWriter(new BufferedWriter(new ProxyFileWriter(checksumFile)));
             } else if ("r".equals(mode)) {
-                BufferedReader reader = new BufferedReader(new ProxyFileReader(checksumFile));
-                // Get checksums
-                String line;
-                String[] lineSplits;
-                while ((line = reader.readLine()) != null) {
-                    lineSplits = line.split("\t", 2);
-                    if (lineSplits.length != 2) {
-                        throw new RuntimeException("Illegal lines found in the checksum file.");
+                synchronized (checksums) {
+                    BufferedReader reader = new BufferedReader(new ProxyFileReader(checksumFile));
+                    // Get checksums
+                    String line;
+                    String[] lineSplits;
+                    while ((line = reader.readLine()) != null) {
+                        lineSplits = line.split("\t", 2);
+                        if (lineSplits.length != 2) {
+                            throw new RuntimeException("Illegal lines found in the checksum file.");
+                        }
+                        this.checksums.put(lineSplits[1], lineSplits[0]);
                     }
-                    this.checksums.put(lineSplits[1], lineSplits[0]);
+                    reader.close();
                 }
-                reader.close();
             } else throw new IOException("Unknown mode: " + mode);
         }
 
-        void add(@NonNull String fileName, @NonNull String checksum) {
-            if (!"w".equals(mode)) throw new IllegalStateException("add is inaccessible in mode " + mode);
-            writer.println(String.format("%s\t%s", checksum, fileName));
-            this.checksums.put(fileName, checksum);
-            writer.flush();
+        public void add(@NonNull String fileName, @NonNull String checksum) {
+            synchronized (checksums) {
+                if (!"w".equals(mode)) throw new IllegalStateException("add is inaccessible in mode " + mode);
+                writer.println(String.format("%s\t%s", checksum, fileName));
+                this.checksums.put(fileName, checksum);
+                writer.flush();
+            }
         }
 
         @Nullable
         String get(String fileName) {
-            return checksums.get(fileName);
+            synchronized (checksums) {
+                return checksums.get(fileName);
+            }
         }
 
         @Override
         public void close() {
-            if (writer != null) writer.close();
+            synchronized (checksums) {
+                if (writer != null) writer.close();
+            }
         }
     }
 }
