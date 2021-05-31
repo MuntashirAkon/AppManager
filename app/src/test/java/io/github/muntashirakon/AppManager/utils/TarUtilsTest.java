@@ -62,7 +62,7 @@ public class TarUtilsTest {
     @Test
     public void testCreateTarGZipWithFilter() throws Throwable {
         createTest(tarGzFile, testRoot, /* language=regexp */ new String[]{".*include\\.txt"}, null,
-                Arrays.asList("/", "prefixed/", "prefixed/prefixed_include.txt", "raw/", "raw/include.txt"));
+                Arrays.asList("prefixed/", "prefixed/prefixed_include.txt", "raw/", "raw/include.txt"));
     }
 
     @Test
@@ -74,7 +74,7 @@ public class TarUtilsTest {
     @Test
     public void testCreateTarGZipWithDirectoryFilter() throws Throwable {
         createTest(tarGzFile, testRoot, /* language=regexp */ new String[]{"prefixed/.*"}, null,
-                Arrays.asList("/", "prefixed/", "prefixed/prefixed_include.txt", "prefixed/prefixed_exclude.txt"));
+                Arrays.asList("prefixed/", "prefixed/prefixed_include.txt", "prefixed/prefixed_exclude.txt"));
     }
 
     @Test
@@ -86,7 +86,7 @@ public class TarUtilsTest {
     @Test
     public void testCreateTarGZipWithMultipleFilters() throws Throwable {
         createTest(tarGzFile, testRoot, /* language=regexp */ new String[]{".*include\\.txt", "plain.*"}, null,
-                Arrays.asList("/", "prefixed/", "prefixed/prefixed_include.txt", "plain.txt", "raw/", "raw/include.txt"));
+                Arrays.asList("prefixed/", "prefixed/prefixed_include.txt", "plain.txt", "raw/", "raw/include.txt"));
     }
 
     @Test
@@ -99,7 +99,7 @@ public class TarUtilsTest {
     @Test
     public void testCreateTarGZipWithDirectoryAndMultipleFilters() throws Throwable {
         createTest(tarGzFile, testRoot, /* language=regexp */ new String[]{".*include\\.txt", "plain.*", "prefixed/.*"},
-                null, Arrays.asList("/", "prefixed/", "prefixed/prefixed_include.txt",
+                null, Arrays.asList("prefixed/", "prefixed/prefixed_include.txt",
                         "prefixed/prefixed_exclude.txt", "plain.txt", "raw/", "raw/include.txt"));
     }
 
@@ -113,7 +113,7 @@ public class TarUtilsTest {
     @Test
     public void testCreateTarGZipWithExclude() throws Throwable {
         createTest(tarGzFile, testRoot, null, /* language=regexp */ new String[]{".*exclude\\.txt"},
-                Arrays.asList("/", "prefixed/", "prefixed/prefixed_include.txt", "plain.txt", "raw/", "raw/include.txt"));
+                Arrays.asList("prefixed/", "prefixed/prefixed_include.txt", "plain.txt", "raw/", "raw/include.txt"));
     }
 
     @Test
@@ -125,7 +125,7 @@ public class TarUtilsTest {
 
     @Test
     public void testCreateTarGZipWithExcludeDirectory() throws Throwable {
-        createTest(tarGzFile, testRoot, null, /* language=regexp */ new String[]{"raw/.*"}, Arrays.asList("/",
+        createTest(tarGzFile, testRoot, null, /* language=regexp */ new String[]{"raw/.*"}, Arrays.asList(
                 "prefixed/", "prefixed/prefixed_include.txt", "prefixed/prefixed_exclude.txt", "plain.txt"));
     }
 
@@ -139,7 +139,7 @@ public class TarUtilsTest {
     @Test
     public void testCreateTarGZipWithMultipleExcludes() throws Throwable {
         createTest(tarGzFile, testRoot, null, /* language=regexp */ new String[]{".*exclude\\.txt", "plain.*"},
-                Arrays.asList("/", "prefixed/", "prefixed/prefixed_include.txt", "raw/", "raw/include.txt"));
+                Arrays.asList("prefixed/", "prefixed/prefixed_include.txt", "raw/", "raw/include.txt"));
     }
 
     @Test
@@ -152,7 +152,7 @@ public class TarUtilsTest {
     @Test
     public void testCreateTarGZipWithDirectoryAndMultipleExcludes() throws Throwable {
         createTest(tarGzFile, testRoot, null, /* language=regexp */ new String[]{".*exclude\\.txt", "plain.*",
-                        "raw/.*"}, Arrays.asList("/", "prefixed/", "prefixed/prefixed_include.txt"));
+                "raw/.*"}, Arrays.asList("prefixed/", "prefixed/prefixed_include.txt"));
     }
 
     @Test
@@ -165,7 +165,7 @@ public class TarUtilsTest {
     @Test
     public void testCreateTarGZipWithFilterAndExclude() throws Throwable {
         createTest(tarGzFile, testRoot, /* language=regexp */ new String[]{".*\\.txt"}, /* language=regexp */
-                new String[]{".*exclude\\.txt"}, Arrays.asList("/", "prefixed/", "prefixed/prefixed_include.txt",
+                new String[]{".*exclude\\.txt"}, Arrays.asList("prefixed/", "prefixed/prefixed_include.txt",
                         "plain.txt", "raw/", "raw/include.txt"));
     }
 
@@ -179,7 +179,7 @@ public class TarUtilsTest {
     @Test
     public void testCreateTarGZipWithFilterAndExcludeContainingDirectory() throws Throwable {
         createTest(tarGzFile, testRoot, /* language=regexp */ new String[]{".*\\.txt", "include/.*"},
-                /* language=regexp */ new String[]{".*exclude\\.txt", "raw/.*"}, Arrays.asList("/", "prefixed/",
+                /* language=regexp */ new String[]{".*exclude\\.txt", "raw/.*"}, Arrays.asList("prefixed/",
                         "prefixed/prefixed_include.txt", "plain.txt"));
     }
 
@@ -192,7 +192,7 @@ public class TarUtilsTest {
 
     @Test
     public void testCreateTarGZipWithNoFiltersOrExcludes() throws Throwable {
-        createTest(tarGzFile, testRoot, null, null, Arrays.asList("/", "prefixed/",
+        createTest(tarGzFile, testRoot, null, null, Arrays.asList("prefixed/",
                 "prefixed/prefixed_include.txt", "prefixed/prefixed_exclude.txt", "plain.txt", "raw/",
                 "raw/include.txt", "raw/exclude.txt"));
     }
