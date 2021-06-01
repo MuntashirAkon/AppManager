@@ -991,4 +991,5 @@
     <string name="adb_connect">連線</string>
     <string name="wireless_debugging_not_supported">此平臺不支援無線偵錯。</string>
     <string name="wireless_debugging">無線偵錯</string>
+    <string name="community">社群</string>
 </resources>
