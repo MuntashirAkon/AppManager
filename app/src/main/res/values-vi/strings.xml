@@ -952,4 +952,57 @@
     <string name="state_foreground">Ở trước</string>
     <string name="state_session_leader">Lãnh đạo phiên làm việc</string>
     <string name="state_idle">Không hoạt động</string>
+    <string name="failed_to_prevent_background_run">Không thể ngăn chặn %1$s chạy trong nền</string>
+    <string name="app_signing_signature_mismatch_for_data_only_app">Không thể cài đặt ứng dụng do chữ ký không khớp. Ứng dụng đã bị gỡ cài đặt mà không xoá dữ liệu của nó.</string>
+    <string name="fallback_to_no_root_mode_description">App Manager đã không thể sử dụng chế độ hoạt động hiện tại. Để tránh các hành vi ngẫu nhiên, bạn nên tạm thời chuyển sang chế độ không root. Hãy cân nhắc việc báo cáo điều này nếu vấn đề không được sửa sau khi khởi động lại thiết bị.</string>
+    <string name="state_parked">Đã đỗ lại</string>
+    <string name="state_zombie">Zombie</string>
+    <string name="state_trace_stop">Dừng dấu vết</string>
+    <string name="touchscreen_stylus">Bút cảm ứng</string>
+    <string name="touchscreen_no_touch">Không có cảm ứng</string>
+    <string name="navigation_wheel">Con lăn</string>
+    <string name="navigation_trackball">Bi lăn điều khiển</string>
+    <string name="navigation_dial_pad">Bàn phím số</string>
+    <string name="launch_mode_single_top">Một hoạt động ở trên</string>
+    <string name="launch_mode_single_instance">Một bản sao</string>
+    <string name="installer_error_session_commit">Không thể hành động với các tệp APK</string>
+    <string name="community_links">Telegram: https://t.me/AppManagerChannel
+\nTwitter: https://twitter.com/AppManagerNews</string>
+    <string name="community">Cộng đồng</string>
+    <string name="native_library_dir">Thư mục thư viện JNI gốc</string>
+    <string name="tested_signatures_on_classes_and_time_taken" tools:ignore="PluralsCandidate">Đã thử nghiệm <xliff:g id="signature_no" example="342">%1$d</xliff:g> chữ ký trên <xliff:g id="class_no" example="6000">%2$d</xliff:g> class.
+\nĐã mất khoảng thời gian <xliff:g id="time" example="10000">%3$d</xliff:g> mili giây (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> lần lặp lại).</string>
+    <string name="fallback_to_no_root_mode">Quay lại chế độ không root\?</string>
+    <string name="input_key">Nhập mã (ở hệ thập lục phân)</string>
+    <string name="installer_app_message">Chọn <b>Chọn</b> để chọn từ các ứng dụng đã cài đặt hoặc chọn <b>Tuỳ chỉnh</b> để chỉ định một tên gói tuỳ chỉnh.</string>
+    <string name="verified_using_unreliable_hash">Đã xác minh bằng hash không đáng tin cậy</string>
+    <string name="input_permissions_description">Nhập các quyền có dấu cách, vd: <tt>com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION</tt> v.v. Sử dụng <tt>*</tt> để áp dụng cho tất cả quyền.</string>
+    <string name="input_permissions">Nhập các quyền</string>
+    <string name="options">Tuỳ chọn</string>
+    <string name="off">Tắt</string>
+    <string name="on">Bật</string>
+    <string name="profile_state_msg">Trạng thái bật/tắt tuỳ chỉnh cho cấu hình này</string>
+    <string name="profile_block_trackers_msg">Chặn các trình theo dõi trong các ứng dụng</string>
+    <string name="profile_clear_data_msg">Xoá dữ liệu của các ứng dụng</string>
+    <string name="profile_clear_cache_msg">Xoá bộ nhớ đệm của các ứng dụng</string>
+    <string name="profile_force_stop_msg">Buộc dừng các ứng dụng</string>
+    <string name="profile_disable_msg">Tắt hoặc bật các ứng dụng dựa trên trạng thái</string>
+    <string name="allow_routine_ops_msg">Cho phép cấu hình được sử dụng trong các hoạt động thường ngày</string>
+    <string name="profile_state">Trạng thái cấu hình</string>
+    <string name="allow_routine_ops">Cho phép các hoạt động thường ngày</string>
+    <string name="adb_over_tcp">ADB qua TCP</string>
+    <string name="pref_mode_of_operations">Chế độ hoạt động</string>
+    <string name="send_selected">Gửi mục đã chọn</string>
+    <string name="ecc">Mã hoá đường cong elip</string>
+    <string name="rsa">RSA</string>
+    <string name="aes">AES</string>
+    <string name="none">Không có</string>
+    <string name="pref_encryption_msg">Mã hoá cho các bản sao lưu.</string>
+    <string name="non_critical_exts">Phần mở rộng không quan trọng</string>
+    <string name="critical_exts">Phần mở rộng quan trọng</string>
+    <string name="dsa_affine_y">Gán toạ độ y</string>
+    <string name="dsa_affine_x">Gán toạ độ x</string>
+    <string name="rsa_modulus">Mô-đun</string>
+    <string name="rsa_exponent">Người thực hiện</string>
+    <string name="state_wake_kill">Dừng thức dậy</string>
 </resources>
