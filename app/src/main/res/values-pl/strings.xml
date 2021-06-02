@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="_lang_tag" translatable="false">pl</string>
     <string name="user_id">ID użytkownika</string>
     <string name="date_updated">Data aktualizacji</string>
@@ -15,7 +14,7 @@
     <string name="user_app">Aplikacja użytkownika</string>
     <string name="system_app">Aplikacja systemowa</string>
     <string name="app_info">Informacje o aplikacji</string>
-    <string name="version_name_with_code">Wersja %s (%d)</string>
+    <string name="version_name_with_code">Wersja &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"version_name\" example=\"2.5.17\"&gt;</string>
     <string name="sort">Sortuj</string>
     <string name="system">Systemowe</string>
     <string name="sort_by_app_label">Etykieta aplikacji</string>
@@ -30,7 +29,7 @@
     <string name="shared_user_id">Współdzielony identyfikator użytkownika</string>
     <string name="sort_by_shared_user_id">Współdzielony identyfikator użytkownika</string>
     <string name="no_feature">Brak funkcji</string>
-    <string name="gles_ver">Wymagana wersja GL ES</string>
+    <string name="gles_ver">Wymagana wersja OpenGL ES</string>
     <string name="uses_feature">Korzysta z funkcji</string>
     <string name="protection_level">Poziom ochrony</string>
     <string name="group">Grupa</string>
@@ -85,8 +84,8 @@
     <string name="backup_restore">Tworzenie/przywracanie kopii zapasowych</string>
     <string name="clear_data">Wyczyść dane</string>
     <string name="user_and_uid">Użytkownik: <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
-    <string name="memory_virtual_memory">Pamięć: %s, Pamięć wirtualna: %s</string>
-    <string name="pid_and_ppid">Identyfikator procesu: %d, identyfikator procesu nadrzędnego: %d</string>
+    <string name="memory_virtual_memory">Pamięć: %1$s, Pamięć wirtualna: %2$s</string>
+    <string name="pid_and_ppid">Identyfikator procesu: %1$d, identyfikator procesu nadrzędnego: %2$d</string>
     <string name="disable_background_run">Wyłącz działanie w tle</string>
     <string name="running_apps">Uruchomione aplikacje</string>
     <string name="permissions">Użycie uprawnień</string>
@@ -262,8 +261,8 @@
     <string name="pref_about_msg">Wersja App Manager, licencja, autorzy itp.</string>
     <string name="apply">Zastosuj</string>
     <string name="select_theme">Motyw</string>
-    <string name="night">Ciemny</string>
-    <string name="day">Jasny</string>
+    <string name="night">Noc</string>
+    <string name="day">Dzień</string>
     <string name="follow_system">Zgodny z systemowym</string>
     <string name="pref_app_theme">Motyw aplikacji</string>
     <string name="class_viewer">Przeglądarka klas</string>
@@ -287,7 +286,7 @@
     <string name="cache_size">Pamięć podręczna</string>
     <string name="data_size">Dane</string>
     <string name="about">O programie</string>
-    <string name="data_usage_msg">Wykorzystanie danych od ostatniego uruchomienia</string>
+    <string name="data_usage_msg">Użycie danych</string>
     <string name="data_transmitted">Wysłane dane</string>
     <string name="data_received">Odebrane dane</string>
     <string name="sort_by_target_sdk">Docelowy SDK</string>
@@ -331,7 +330,7 @@
     <string name="save">Zapisz</string>
     <string name="databases">Bazy danych</string>
     <string name="debuggable">Debugowalna</string>
-    <string name="updated_app">Zaktualizowane</string>
+    <string name="updated_app">Zaktualizowany</string>
     <string name="requested_large_heap">Duży heap</string>
     <string name="no_code">Brak kodu</string>
     <string name="process_name">Nazwa procesu</string>
@@ -343,7 +342,7 @@
     <string name="share_apk">Udostępnij plik APK</string>
     <string name="go_back">Wróć</string>
     <string name="usage_less_than_a_minute">Mniej niż minuta</string>
-    <string name="usage_min">%d min</string>
+    <string name="usage_min">%1$d min</string>
     <plurals name="usage_hours">
         <item quantity="one">%d godz.</item>
         <item quantity="few">%d godz.</item>
@@ -357,10 +356,10 @@
         <item quantity="other">%d dni</item>
     </plurals>
     <plurals name="usage_months">
-        <item quantity="one">%d mies</item>
-        <item quantity="few">%d mies</item>
-        <item quantity="many">%d mies</item>
-        <item quantity="other">%d mies</item>
+        <item quantity="one">%d mies.</item>
+        <item quantity="few">%d mies.</item>
+        <item quantity="many">%d mies.</item>
+        <item quantity="other">%d mies.</item>
     </plurals>
     <string name="usage_7_days">Ostatnie 7 dni</string>
     <string name="usage_today">Dziś</string>
@@ -487,7 +486,7 @@
     <string name="shared_prefs">Udostępnione Prefs</string>
     <string name="test_only">Tylko test</string>
     <string name="dev_protected_data_dir">Chroniony Katalog Danych</string>
-    <string name="grant_usage_acess_message">Dostęp do użytkowania jest obowiązkowy do wyświetlania informacji o użytkowaniu appki.</string>
+    <string name="grant_usage_acess_message">Służy do wyświetlania informacji o użyciu aplikacji.</string>
     <string name="grant_usage_access">Przyznaj Dostęp do Użytkowania</string>
     <string name="go">Idź</string>
     <string name="tracker_classes">Klasy elementów śledzących</string>
@@ -712,7 +711,7 @@
         <item quantity="other">%1$d razy</item>
     </plurals>
     <string name="exodus_link">Link εxodus</string>
-    <string name="input_app_ops">Wprowadź app ops</string>
+    <string name="input_app_ops">Wprowadź operacje aplikacji</string>
     <string name="filtered_packages">Przefiltrowane pakiety</string>
     <string name="input_signatures_description">Wprowadź sygnatury ze spacjami, np. <tt>com.facebook org.app2 com.app3</tt> itp.</string>
     <string name="input_signatures">Wprowadź sygnatury</string>
@@ -843,4 +842,11 @@
     <string name="app_signing_signatures">Sygnatury</string>
     <string name="soft_input">Tryb delikatnego wprowadzenia</string>
     <string name="authority">Autoryzacja</string>
+    <string name="community_links">Telegram:https://t.me/AppManagerChannel
+\nTwitter:https://twitter.com/AppManagerNews</string>
+    <string name="community">Społeczność</string>
+    <string name="source_code_links">GitHub:https://github.com/MuntashirAkon/AppManager
+\nGitLab:https://gitlab.com/muntashir/AppManager
+\nRiseup:https://0xacab.org/muntashir/AppManager
+\nCodeberg:https://codeberg.org/muntashir/AppManager</string>
 </resources>
