@@ -1001,4 +1001,7 @@
     <string name="fallback_to_no_root_mode">Kembalikan ke mode no-root\?</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">Tidak dapat memasang aplikasi dikarenakan ketidakcocokan tanda tangan. Aplikasi dicopot tanpa membersihkan datanya.</string>
     <string name="failed_to_prevent_background_run">Tidak dapat mencegah %1$s untuk berjalan di latar belakang</string>
+    <string name="community_links">Telegram: https://t.me/AppManagerChannel
+\nTwitter: https://twitter.com/AppManagerNews</string>
+    <string name="community">Komunitas</string>
 </resources>
