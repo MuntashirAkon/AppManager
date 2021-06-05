@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<resources>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources>
     <string name="uninstall">Odinstalovat</string>
     <string name="require_no_permission">Nejsou vyžadována žádná oprávnění</string>
     <string name="activities">Aktivity</string>
@@ -13,4 +12,34 @@
     <string name="usage_today">Dnes</string>
     <string name="usage_7_days">Posledních 7 dní</string>
     <string name="service">Služby</string>
+    <string name="launch_mode">Režim spuštění</string>
+    <string name="no_providers">Žadní poskytovatelé</string>
+    <string name="providers">Poskytovatelé</string>
+    <string name="no_activities">Žádné aktivity</string>
+    <string name="refresh">Aktualizovat</string>
+    <string name="permissions">Využívá oprávnění</string>
+    <string name="input_features">Vstupní funkce</string>
+    <string name="no_configurations">Žádné konfigurace</string>
+    <string name="configurations">Konfigurace</string>
+    <string name="app_signing_no_signatures">Žádné platné podpisy</string>
+    <string name="app_signing_signatures">Podpisy</string>
+    <string name="signatures">Podpisy</string>
+    <string name="sort_by_sha">Podpis</string>
+    <string name="shared_user_id">Sdílené ID uživatele</string>
+    <string name="sort_by_shared_user_id">Sdílené ID uživatele</string>
+    <string name="no_feature">Žádné funkce</string>
+    <string name="uses_feature">Používá funkci</string>
+    <string name="protection_level">Úroveň ochrany</string>
+    <string name="group">Skupina</string>
+    <string name="shared_libs">Sdílené knihovny</string>
+    <string name="declared_permission">Oprávnění</string>
+    <string name="patterns_allowed">Vzor povolen</string>
+    <string name="write">Zapsat</string>
+    <string name="read">Číst</string>
+    <string name="grant_uri_permission">Povolit URI oprávnění</string>
+    <string name="flags">Vlajky</string>
+    <string name="orientation">Orientace</string>
+    <string name="no_service">Žádné služby</string>
+    <string name="authority">Autorita</string>
+    <string name="sort_by_last_update">Poslední update</string>
 </resources>
