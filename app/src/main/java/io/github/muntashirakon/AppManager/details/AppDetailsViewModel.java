@@ -723,7 +723,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @GuardedBy("blockerLocker")
     public void setIsPackageChanged() {
         setPackageInfo(true);
-        if (isExternalApk) return;
+        if (isExternalApk || executor.isShutdown()) return;
         executor.submit(() -> {
             synchronized (blockerLocker) {
                 try {
