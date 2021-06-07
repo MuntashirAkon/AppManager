@@ -29,9 +29,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.io.FileStatus;
@@ -297,11 +297,35 @@ public final class TarUtils {
         return false;
     }
 
+    private static String getRelativePath(@NonNull File file, @NonNull File basePath) {
+        return getRelativePath(file, basePath, File.separator);
+    }
+
+    @VisibleForTesting
     @NonNull
-    private static String getRelativePath(@NonNull File file, @NonNull File baseFile) {
-        URI childPath = file.toURI();
-        URI basePath = baseFile.toURI();
-        URI relPath = basePath.relativize(childPath);
-        return relPath.getPath();
+    static String getRelativePath(@NonNull File file, @NonNull File basePath, @NonNull String separator) {
+        String baseDir = basePath.toURI().getPath();
+        String targetPath = file.toURI().getPath();
+        String[] base = baseDir.split(Pattern.quote(separator));
+        String[] target = targetPath.split(Pattern.quote(separator));
+
+        // Count common elements and their length
+        int commonCount = 0, commonLength = 0, maxCount = Math.min(target.length, base.length);
+        while (commonCount < maxCount) {
+            String targetElement = target[commonCount];
+            if (!targetElement.equals(base[commonCount])) break;
+            commonCount++;
+            commonLength += targetElement.length() + 1; // Directory name length plus slash
+        }
+        if (commonCount == 0) return targetPath; // No common path element
+
+        int targetLength = targetPath.length();
+        int dirsUp = base.length - commonCount;
+        StringBuilder relative = new StringBuilder(dirsUp * 3 + targetLength - commonLength + 1);
+        for (int i = 0; i < dirsUp; i++) {
+            relative.append("..").append(separator);
+        }
+        if (commonLength < targetLength) relative.append(targetPath.substring(commonLength));
+        return relative.toString();
     }
 }

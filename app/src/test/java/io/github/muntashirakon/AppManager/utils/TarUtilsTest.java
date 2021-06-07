@@ -14,7 +14,6 @@ import org.junit.Test;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -22,7 +21,9 @@ import java.util.List;
 
 import io.github.muntashirakon.io.SplitInputStream;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public class TarUtilsTest {
     private final ClassLoader classLoader = getClass().getClassLoader();
@@ -204,6 +205,119 @@ public class TarUtilsTest {
                 "raw/include.txt", "raw/exclude.txt"));
     }
 
+    @Test
+    public void testGetRelativePath() {
+        File basePath = new File("/data/data/package.name");
+        File[] absolutes = new File[]{
+                new File(basePath, "app_lib"),
+                new File(basePath, "app_webview"),
+                new File(basePath, "app_webview/variations_seed_new"),
+                new File(basePath, "app_webview/pref_store"),
+                new File(basePath, "app_webview/webview_data.lock"),
+                new File(basePath, "app_webview/variations_stamp"),
+                new File(basePath, "app_webview/variations_seed"),
+                new File(basePath, "app_webview/Default"),
+                new File(basePath, "app_webview/Default/Session Storage"),
+                new File(basePath, "app_webview/Default/Session Storage"),
+                new File(basePath, "app_webview/Default/Session Storage/CURRENT"),
+                new File(basePath, "app_webview/Default/Session Storage/LOG"),
+                new File(basePath, "app_webview/Default/Session Storage/MANIFEST-000001"),
+                new File(basePath, "app_webview/Default/Session Storage/000003.log"),
+                new File(basePath, "app_webview/Default/Session Storage/LOCK"),
+                new File(basePath, "app_webview/Default/Web Data-journal"),
+                new File(basePath, "app_webview/Default/blob_storage"),
+        };
+        String[] expectedPaths = new String[]{
+                "app_lib",
+                "app_webview",
+                "app_webview/variations_seed_new",
+                "app_webview/pref_store",
+                "app_webview/webview_data.lock",
+                "app_webview/variations_stamp",
+                "app_webview/variations_seed",
+                "app_webview/Default",
+                "app_webview/Default/Session Storage",
+                "app_webview/Default/Session Storage",
+                "app_webview/Default/Session Storage/CURRENT",
+                "app_webview/Default/Session Storage/LOG",
+                "app_webview/Default/Session Storage/MANIFEST-000001",
+                "app_webview/Default/Session Storage/000003.log",
+                "app_webview/Default/Session Storage/LOCK",
+                "app_webview/Default/Web Data-journal",
+                "app_webview/Default/blob_storage",
+        };
+        String[] actualPaths = new String[expectedPaths.length];
+        for (int i = 0; i < actualPaths.length; ++i) {
+            actualPaths[i] = TarUtils.getRelativePath(absolutes[i], basePath, "/");
+        }
+        assertArrayEquals(expectedPaths, actualPaths);
+    }
+
+    @Test
+    public void testGetRelativePathsUnix() {
+        assertEquals("stuff/xyz.dat", TarUtils.getRelativePath(new File("/var/data/stuff/xyz.dat"),
+                new File("/var/data/"), "/"));
+        assertEquals("../../b/c", TarUtils.getRelativePath(new File("/a/b/c"),
+                new File("/a/x/y/"), "/"));
+        assertEquals("../../b/c", TarUtils.getRelativePath(new File("/m/n/o/a/b/c"),
+                new File("/m/n/o/a/x/y/"), "/"));
+    }
+
+    @Test
+    public void testGetRelativePathFileToFileDoesNotWork() {
+        File target = new File("C:\\Windows\\Boot\\Fonts\\chs_boot.ttf");
+        File base = new File("C:\\Windows\\Speech\\Common\\sapisvr.exe");
+        File workingBase = new File("C:\\Windows\\Speech\\Common\\");
+
+        assertNotEquals("..\\..\\Boot\\Fonts\\chs_boot.ttf", TarUtils.getRelativePath(target, base, "\\"));
+        assertEquals("..\\..\\Boot\\Fonts\\chs_boot.ttf", TarUtils.getRelativePath(target, workingBase, "\\"));
+    }
+
+    @Test
+    public void testGetRelativePathDirectoryToFile() {
+        File target = new File("C:\\Windows\\Boot\\Fonts\\chs_boot.ttf");
+        File base = new File("C:\\Windows\\Speech\\Common\\");
+
+        assertEquals("..\\..\\Boot\\Fonts\\chs_boot.ttf", TarUtils.getRelativePath(target, base, "\\"));
+    }
+
+    @Test
+    public void testGetRelativePathFileToDirectoryDoesNotWork() {
+        File target = new File("C:\\Windows\\Boot\\Fonts");
+        File base = new File("C:\\Windows\\Speech\\Common\\foo.txt");
+        File workingBase = new File("C:\\Windows\\Speech\\Common\\");
+
+        assertNotEquals("..\\..\\Boot\\Fonts", TarUtils.getRelativePath(target, base, "\\"));
+        assertEquals("..\\..\\Boot\\Fonts", TarUtils.getRelativePath(target, workingBase, "\\"));
+    }
+
+    @Test
+    public void testGetRelativePathFileToDirectory2DoesNotWork() {
+        File target = new File("C:\\Windows\\Boot\\Fonts");
+        File base = new File("C:\\foo.txt");
+        File workingBase = new File("C:\\");
+
+        assertNotEquals("Windows\\Boot\\Fonts", TarUtils.getRelativePath(target, base, "\\"));
+        assertEquals("Windows\\Boot\\Fonts", TarUtils.getRelativePath(target, workingBase, "\\"));
+    }
+
+    @Test
+    public void testGetRelativePathDirectoryToDirectory() {
+        File target = new File("C:\\Windows\\Boot\\");
+        File base = new File("C:\\Windows\\Speech\\Common\\");
+        String expected = "..\\..\\Boot\\";
+
+        String relPath = TarUtils.getRelativePath(target, base, "\\");
+        assertEquals(expected, relPath);
+    }
+
+    @Test
+    public void testGetRelativePathDifferentDriveLetters() {
+        File target = new File("D:\\sources\\recovery\\RecEnv.exe");
+        File base = new File("C:\\Java\\workspace\\AcceptanceTests\\Standard test data\\geo\\");
+        assertEquals(target.getAbsolutePath(), TarUtils.getRelativePath(target, base, "\\"));
+    }
+
     @NonNull
     public static List<String> getFileNamesGZip(@NonNull List<File> tarFiles) throws IOException {
         List<String> fileNames = new ArrayList<>();
@@ -244,16 +358,8 @@ public class TarUtilsTest {
         dir.mkdirs();
     }
 
-    @NonNull
-    private static String getRelativePath(@NonNull File file, @NonNull File baseFile) {
-        URI childPath = file.toURI();
-        URI basePath = baseFile.toURI();
-        URI relPath = basePath.relativize(childPath);
-        return relPath.getPath();
-    }
-
     private static void gatherFiles(@NonNull List<String> files, @NonNull File basePath, @NonNull File source) {
-        files.add(getRelativePath(source, basePath));
+        files.add(TarUtils.getRelativePath(source, basePath, File.separator));
         if (source.isDirectory()) {
             File[] children = source.listFiles();
             if (children == null) return;
