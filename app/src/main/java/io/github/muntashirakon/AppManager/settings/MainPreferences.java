@@ -174,6 +174,8 @@ public class MainPreferences extends PreferenceFragmentCompat {
         Preference mode = Objects.requireNonNull(findPreference("mode_of_operations"));
         final String[] modes = getResources().getStringArray(R.array.modes);
         currentMode = AppPref.getString(AppPref.PrefKey.PREF_MODE_OF_OPS_STR);
+        // Backward compatibility for v2.6.0
+        if (currentMode.equals("adb")) currentMode = Runner.MODE_ADB_OVER_TCP;
         mode.setSummary(modes[MODE_NAMES.indexOf(currentMode)]);
         mode.setOnPreferenceClickListener(preference -> {
             new MaterialAlertDialogBuilder(activity)
