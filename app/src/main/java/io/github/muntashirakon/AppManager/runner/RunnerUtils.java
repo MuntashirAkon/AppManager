@@ -207,6 +207,12 @@ public final class RunnerUtils {
                         LocalServer.restart();
                         return;
                     } // else fallback to ADB over TCP
+                case "adb":
+                    if (mode.equals("adb")) {
+                        // Backward compatibility for v2.6.0
+                        AppPref.set(AppPref.PrefKey.PREF_MODE_OF_OPS_STR, Runner.MODE_ADB_OVER_TCP);
+                    }
+                    // fallback to ADB over TCP
                 case Runner.MODE_ADB_OVER_TCP:
                     // Port is always 5555
                     ServerConfig.setAdbPort(ServerConfig.DEFAULT_ADB_PORT);
