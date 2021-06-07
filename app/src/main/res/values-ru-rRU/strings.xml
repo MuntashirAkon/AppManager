@@ -1111,4 +1111,15 @@
     <string name="community">Сообщество</string>
     <string name="community_links">Telegram: https://t.me/AppManagerChannel
 \nTwitter: https://twitter.com/AppManagerNews</string>
+    <plurals name="alert_failed_to_import_backups">
+        <item quantity="one">Не удалось импортировать %1$d резервную копию</item>
+        <item quantity="few">Не удалось импортировать %1$d резервных копии</item>
+        <item quantity="many">Не удалось импортировать %1$d резервных копий</item>
+        <item quantity="other">Не удалось импортировать %1$d резервных копий</item>
+    </plurals>
+    <string name="import_from_tb">Импорт из Titanium Backup</string>
+    <string name="import_from_oab_tb_msg">Резервные копии должны находиться в %s.</string>
+    <string name="import_from_oab">Импорт из OAndBackup</string>
+    <string name="pref_import_backups_msg">Импорт резервных копий из OAndBackup, Titanium Backup или Swift Backup.</string>
+    <string name="pref_import_backups">Импорт резервных копий</string>
 </resources>
