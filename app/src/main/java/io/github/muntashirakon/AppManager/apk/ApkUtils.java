@@ -107,7 +107,7 @@ public final class ApkUtils {
             ZipEntry zipEntry;
             while (archiveEntries.hasMoreElements()) {
                 zipEntry = archiveEntries.nextElement();
-                if (!IOUtils.getLastPathComponent(zipEntry.getName()).equals(MANIFEST_FILE)) {
+                if (!zipEntry.getName().equals(MANIFEST_FILE)) {
                     continue;
                 }
                 try (InputStream zipInputStream = zipFile.getInputStream(zipEntry)) {
