@@ -1040,4 +1040,13 @@
     <string name="community_links">Telegram: https://t.me/AppManagerChannel
 \nTwitter: https://twitter.com/AppManagerNews</string>
     <string name="community">Topluluk</string>
+    <plurals name="alert_failed_to_import_backups">
+        <item quantity="one">%1$d yedek içe aktarılamadı</item>
+        <item quantity="other">%1$d yedek içe aktarılamadı</item>
+    </plurals>
+    <string name="import_from_tb">Titanium Backup\'tan içe aktar</string>
+    <string name="import_from_oab_tb_msg">Yedekler %s konumunda bulunmalıdır.</string>
+    <string name="import_from_oab">OAndBackup\'tan içe aktar</string>
+    <string name="pref_import_backups_msg">OAndBackup, Titanium Backup veya Swift Backup\'tan yedekleri içe aktarın.</string>
+    <string name="pref_import_backups">Yedekleri içe aktar</string>
 </resources>
