@@ -1041,4 +1041,13 @@
     <string name="community_links">Telegram: https://t.me/AppManagerChannel
 \nTwitter: https://twitter.com/AppManagerNews</string>
     <string name="community">Comunidade</string>
+    <plurals name="alert_failed_to_import_backups">
+        <item quantity="one">%1$d backup não pôde ser importado</item>
+        <item quantity="other">%1$d backups não puderam ser importados</item>
+    </plurals>
+    <string name="import_from_oab_tb_msg">Os backups devem estar localizados em %s.</string>
+    <string name="import_from_tb">Importar do Titanium Backup</string>
+    <string name="import_from_oab">Importar do OAndBackup</string>
+    <string name="pref_import_backups_msg">Importar backups do OAndBackup, Titanium Backup ou Swift Backup.</string>
+    <string name="pref_import_backups">Importar backups</string>
 </resources>
