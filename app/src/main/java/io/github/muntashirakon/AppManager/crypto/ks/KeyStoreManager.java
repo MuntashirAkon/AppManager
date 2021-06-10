@@ -38,7 +38,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import javax.crypto.CipherInputStream;
-import javax.crypto.CipherOutputStream;
 import javax.crypto.SecretKey;
 
 import io.github.muntashirakon.AppManager.AppManager;
@@ -105,6 +104,9 @@ public class KeyStoreManager {
         amKeyStore = getAmKeyStore();
     }
 
+    /**
+     * @param password Password for the alias or {@code null} if none. {@link Utils#clearChars(char[])} must be called when done.
+     */
     public void addKeyPair(String alias, @NonNull KeyPair keyPair, @Nullable char[] password, boolean isOverride)
             throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException {
         // Check existence of this alias in system preferences, this should be unique
@@ -132,6 +134,9 @@ public class KeyStoreManager {
         }
     }
 
+    /**
+     * @param password Password for the alias or {@code null} if none. {@link Utils#clearChars(char[])} must be called when done.
+     */
     public void addSecretKey(String alias, @NonNull SecretKey secretKey, @Nullable char[] password, boolean isOverride)
             throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException {
         // Check existence of this alias in system preferences, this should be unique
@@ -176,6 +181,9 @@ public class KeyStoreManager {
         }
     }
 
+    /**
+     * @param password Password for the alias or {@code null} if none. {@link Utils#clearChars(char[])} must be called when done.
+     */
     @Nullable
     private Key getKey(String alias, @Nullable char[] password)
             throws UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException {
@@ -187,6 +195,9 @@ public class KeyStoreManager {
         return key;
     }
 
+    /**
+     * @param password Password for the alias or {@code null} if none. {@link Utils#clearChars(char[])} must be called when done.
+     */
     @Nullable
     public SecretKey getSecretKey(String alias, @Nullable char[] password)
             throws UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException {
@@ -197,6 +208,9 @@ public class KeyStoreManager {
         throw new KeyStoreException("The alias " + alias + " does not have a KeyPair.");
     }
 
+    /**
+     * @param password Password for the alias or {@code null} if none. {@link Utils#clearChars(char[])} must be called when done.
+     */
     @Nullable
     public KeyPair getKeyPair(String alias, @Nullable char[] password)
             throws UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException {
@@ -230,11 +244,22 @@ public class KeyStoreManager {
         return amKeyStore.getCertificate(alias);
     }
 
+    /**
+     * Save password in the Shared Preferences in encrypted form.
+     *
+     * @param prefAlias The alias after running {@link #getPrefAlias(String)}
+     * @param password  The password for the alias. {@link Utils#clearChars(char[])} must be called when done.
+     */
     public static void savePass(String prefAlias, char[] password) {
         sharedPreferences.edit().putString(prefAlias, getEncryptedPassword(password)).apply();
-        Utils.clearChars(password);
     }
 
+    /**
+     * Get the password decrypted by Android KeyStore.
+     *
+     * @param encryptedPass Encrypted password (IV length + IV + password) in base 64 format
+     * @return The password in decrypted form. {@link Utils#clearChars(char[])} must be called when done.
+     */
     @CheckResult
     @Nullable
     private static char[] getDecryptedPassword(@NonNull String encryptedPass) {
@@ -248,12 +273,19 @@ public class KeyStoreManager {
         return null;
     }
 
+    /**
+     * Get the password to be encrypted using Android KeyStore.
+     *
+     * @param realPass The password to be encrypted. {@link Utils#clearChars(char[])} must be called when done.
+     * @return Encrypted password (IV length + IV + password) in base 64 format
+     */
     @Nullable
     private static String getEncryptedPassword(@NonNull char[] realPass) {
-        try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
-             CipherOutputStream cipherOutputStream = CompatUtil.createCipherOutputStream(bos, AppManager.getContext())) {
-            cipherOutputStream.write(Utils.charsToBytes(realPass));
-            cipherOutputStream.close();
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+            AesEncryptedData encryptedData = CompatUtil.getEncryptedData(Utils.charsToBytes(realPass), AppManager.getContext());
+            bos.write((byte) encryptedData.getIv().length);
+            bos.write(encryptedData.getIv());
+            bos.write(encryptedData.getEncryptedData());
             return Base64.encodeToString(bos.toByteArray(), Base64.NO_WRAP);
         } catch (Exception e) {
             Log.e("KS", "Could not get encrypted password", e);
@@ -331,6 +363,9 @@ public class KeyStoreManager {
         return realPassword;
     }
 
+    /**
+     * @return Password for the given alias. {@link Utils#clearChars(char[])} must be called when done.
+     */
     @CheckResult
     @NonNull
     private char[] getAliasPassword(@NonNull String alias) throws KeyStoreException {
