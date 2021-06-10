@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0 AND GPL-3-or-later
 
 package io.github.muntashirakon.AppManager.crypto.ks;
 
@@ -221,7 +221,7 @@ public class CompatUtil {
         byte[] iv;
 
         if (keyAndVersion.getAndroidVersionWhenTheKeyHasBeenGenerated() >= Build.VERSION_CODES.M) {
-            cipher.init(Cipher.ENCRYPT_MODE, keyAndVersion.getSecretKey());
+            cipher.init(Cipher.ENCRYPT_MODE, keyAndVersion.getSecretKey(), getPrng());
             iv = cipher.getIV();
         } else {
             iv = new byte[AES_GCM_IV_LENGTH];
