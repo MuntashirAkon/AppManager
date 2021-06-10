@@ -286,10 +286,10 @@ public class AppUsageStatsManager {
         NetworkStats.Bucket bucket = new NetworkStats.Bucket();
         long totalTx = 0;
         long totalRx = 0;
-        try {
-            for (int networkId = 0; networkId < 2; ++networkId) {
-                subscriberIds = getSubscriberIds(context, networkId);
-                for (String subscriberId : subscriberIds) {
+        for (int networkId = 0; networkId < 2; ++networkId) {
+            subscriberIds = getSubscriberIds(context, networkId);
+            for (String subscriberId : subscriberIds) {
+                try {
                     NetworkStats networkStats = nsm.querySummary(networkId, subscriberId,
                             range.getStartTime(), range.getEndTime());
                     if (networkStats == null) continue;
@@ -300,9 +300,9 @@ public class AppUsageStatsManager {
                             totalRx += bucket.getRxBytes();
                         }
                     }
+                } catch (RemoteException | IllegalStateException ignore) {
                 }
             }
-        } catch (RemoteException ignore) {
         }
         return new DataUsage(totalTx, totalRx);
     }
@@ -328,6 +328,10 @@ public class AppUsageStatsManager {
             TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
 
             List<SubscriptionInfo> subscriptionInfoList = sm.getActiveSubscriptionInfoList();
+            if (subscriptionInfoList == null) {
+                // No telephony services
+                return Collections.singletonList(null);
+            }
             List<String> subscriberIds = new ArrayList<>();
             for (SubscriptionInfo info : subscriptionInfoList) {
                 int subscriptionId = info.getSubscriptionId();
