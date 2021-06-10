@@ -12,7 +12,7 @@ import javax.security.auth.DestroyFailedException;
 
 import io.github.muntashirakon.AppManager.utils.Utils;
 
-public class SecretKeyCompat {
+public final class SecretKeyCompat {
     static final Field KEY;
 
     static {
