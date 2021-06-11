@@ -84,8 +84,8 @@ class AppInfoRecyclerAdapter extends RecyclerView.Adapter<AppInfoRecyclerAdapter
             case LIST_ITEM_GROUP_BEGIN:
                 holder.title.setText(listItem.title);
                 holder.title.setTextColor(accentColor);
-                LinearLayoutCompat item_layout = holder.itemView.findViewById(R.id.item_layout);
-                item_layout.setPadding(paddingMedium, paddingSmall, paddingMedium, paddingVerySmall);
+                LinearLayoutCompat itemLayout = holder.itemView.findViewById(R.id.item_layout);
+                itemLayout.setPadding(paddingMedium, paddingSmall, paddingMedium, paddingVerySmall);
                 break;
             case LIST_ITEM_GROUP_END:
                 break;

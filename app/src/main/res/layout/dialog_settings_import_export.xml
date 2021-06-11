@@ -21,14 +21,14 @@
             android:background="?selectableItemBackground"
             android:orientation="vertical">
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="?android:attr/textColorPrimary"
                 android:text="@string/pref_export"
                 android:textSize="@dimen/title_font" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/pref_export_msg"
@@ -52,14 +52,14 @@
             android:background="?selectableItemBackground"
             android:orientation="vertical">
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="?android:attr/textColorPrimary"
                 android:text="@string/pref_import"
                 android:textSize="@dimen/title_font" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/pref_import_msg"
@@ -83,14 +83,14 @@
             android:background="?selectableItemBackground"
             android:orientation="vertical">
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="?android:attr/textColorPrimary"
                 android:text="@string/pref_import_existing"
                 android:textSize="@dimen/title_font" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/pref_import_existing_msg"
@@ -114,14 +114,14 @@
             android:background="?selectableItemBackground"
             android:orientation="vertical">
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="?android:attr/textColorPrimary"
                 android:text="@string/pref_import_watt"
                 android:textSize="@dimen/title_font" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/pref_import_watt_msg"
@@ -152,7 +152,7 @@
                 android:text="@string/pref_import_blocker"
                 android:textSize="@dimen/title_font" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/pref_import_blocker_msg"

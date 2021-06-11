@@ -33,7 +33,7 @@
                 android:paddingStart="@dimen/padding_medium"
                 android:paddingEnd="@dimen/padding_medium">
 
-                <ImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/icon"
                     android:layout_width="match_parent"
                     android:layout_height="44dp"
@@ -44,7 +44,7 @@
                     tools:srcCompat="@tools:sample/avatars"
                     tools:ignore="contentDescription" />
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -57,7 +57,7 @@
                     android:nextFocusDown="@id/packageName"
                     tools:text="@tools:sample/lorem" />
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/packageName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -69,7 +69,7 @@
                     android:nextFocusDown="@id/version"
                     tools:text="@tools:sample/lorem" />
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/version"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -101,7 +101,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <LinearLayout
+                    <androidx.appcompat.widget.LinearLayoutCompat
                         android:id="@+id/horizontal_layout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

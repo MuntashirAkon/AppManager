@@ -21,14 +21,14 @@
             android:background="?selectableItemBackground"
             android:orientation="vertical">
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="?android:attr/textColorPrimary"
                 android:text="@string/restore_all"
                 android:textSize="@dimen/title_font" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/restore_all_msg"
@@ -52,14 +52,14 @@
             android:background="?selectableItemBackground"
             android:orientation="vertical">
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="?android:attr/textColorPrimary"
                 android:text="@string/restore_not_installed"
                 android:textSize="@dimen/title_font" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/restore_not_installed_msg"
@@ -90,7 +90,7 @@
                 android:text="@string/restore_latest"
                 android:textSize="@dimen/title_font" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/restore_latest_msg"

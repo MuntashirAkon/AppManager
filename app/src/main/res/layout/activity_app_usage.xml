@@ -36,7 +36,7 @@
                     android:nextFocusDown="@id/recycler_view"
                     style="@style/AppTheme.Spinner" />
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/time_used"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -46,7 +46,7 @@
                     android:focusable="false"
                     tools:text="@tools:sample/date/hhmm" />
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/time_range"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -68,7 +68,7 @@
                         android:nextFocusUp="@id/spinner_interval"
                         tools:listitem="@layout/item_app_usage" />
 
-                    <TextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:id="@android:id/empty"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"

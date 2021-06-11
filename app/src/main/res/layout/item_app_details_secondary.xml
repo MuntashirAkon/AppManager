@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -11,7 +11,7 @@
     android:paddingEnd="@dimen/padding_medium"
     android:paddingBottom="@dimen/padding_very_small">
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -20,7 +20,7 @@
         android:textStyle="bold"
         tools:text="@tools:sample/lorem" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/flags"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -29,7 +29,7 @@
         android:textSize="12sp"
         tools:text="@tools:sample/lorem" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/gles_ver"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -38,4 +38,4 @@
         android:textSize="12sp"
         tools:text="@tools:sample/lorem" />
 
-</LinearLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>

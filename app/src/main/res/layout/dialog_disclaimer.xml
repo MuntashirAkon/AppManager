@@ -7,7 +7,7 @@
     android:scrollIndicators="top|bottom"
     tools:ignore="UnusedAttribute">
 
-    <LinearLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -16,7 +16,7 @@
         android:paddingEnd="@dimen/padding_medium"
         android:paddingBottom="@dimen/padding_very_small">
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/padding_small"
@@ -27,13 +27,13 @@
             android:textSize="@dimen/title_font"
             android:textColor="?android:attr/textColorPrimary" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/disclaimer_body"
             android:textSize="@dimen/subtitle_font" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/padding_medium"
@@ -47,6 +47,6 @@
             android:text="@string/disclaimer_agree_forever"
             android:textColor="?android:attr/textColorSecondary" />
 
-    </LinearLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 </ScrollView>

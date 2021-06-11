@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -11,13 +11,13 @@
     android:paddingEnd="@dimen/padding_medium"
     android:paddingBottom="@dimen/padding_very_small">
 
-    <LinearLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical">
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/perm_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -25,34 +25,34 @@
             android:textColor="?android:attr/textColorPrimary"
             android:textStyle="bold" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/perm_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="12sp" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/perm_protection_level"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="10sp"
             tools:ignore="SmallSp" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/perm_package_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textIsSelectable="true"
             android:textSize="12sp" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/perm_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textIsSelectable="true"
             android:textSize="12sp" />
 
-    </LinearLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/perm_toggle_btn"
@@ -61,4 +61,4 @@
         android:layout_gravity="center|center_horizontal|center_vertical"
         android:layout_weight="0" />
 
-</LinearLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>

@@ -20,14 +20,14 @@
             android:background="?selectableItemBackground"
             android:orientation="vertical">
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="?android:attr/textColorPrimary"
                 android:text="@string/import_from_oab"
                 android:textSize="@dimen/title_font" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/import_from_oab_msg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -52,14 +52,14 @@
             android:background="?selectableItemBackground"
             android:orientation="vertical">
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="?android:attr/textColorPrimary"
                 android:text="@string/import_from_tb"
                 android:textSize="@dimen/title_font" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/import_from_tb_msg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

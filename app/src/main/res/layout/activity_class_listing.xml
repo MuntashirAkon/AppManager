@@ -22,7 +22,7 @@
             android:fastScrollEnabled="true"
             tools:listitem="@android:layout/simple_list_item_1" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@android:id/empty"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

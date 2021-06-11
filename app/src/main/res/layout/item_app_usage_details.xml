@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -11,7 +11,7 @@
     android:paddingEnd="@dimen/padding_medium"
     android:paddingBottom="@dimen/padding_small">
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/item_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,7 +21,7 @@
         android:textStyle="bold"
         tools:text="@tools:sample/lorem" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/item_subtitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -29,4 +29,4 @@
         android:textSize="@dimen/subtitle_font"
         tools:text="@tools:sample/lorem[9]" />
 
-</LinearLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>

@@ -19,7 +19,7 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <LinearLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -37,7 +37,7 @@
             android:overScrollMode="ifContentScrolls"
             tools:ignore="UselessParent">
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/message"
                 style="?android:attr/textAppearanceMedium"
                 android:layout_width="match_parent"
@@ -46,9 +46,10 @@
 
         </ScrollView>
 
-    </LinearLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
-    <FrameLayout android:id="@+id/custom"
+    <FrameLayout
+        android:id="@+id/custom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
