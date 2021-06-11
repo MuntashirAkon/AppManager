@@ -1004,4 +1004,12 @@
     <string name="community_links">Telegram: https://t.me/AppManagerChannel
 \nTwitter: https://twitter.com/AppManagerNews</string>
     <string name="community">Komunitas</string>
+    <plurals name="alert_failed_to_import_backups">
+        <item quantity="other">Tidak dapat mengimpor %1$d cadangan</item>
+    </plurals>
+    <string name="import_from_tb">Impor dari Titanium Backup</string>
+    <string name="import_from_oab_tb_msg">Cadangan harus berlokasi di %s.</string>
+    <string name="import_from_oab">Impor dari OAndBackup</string>
+    <string name="pref_import_backups_msg">Impor cadangan dari OAndBAckup, Titanium Backup atau Swift Backup.</string>
+    <string name="pref_import_backups">Impor cadangan</string>
 </resources>

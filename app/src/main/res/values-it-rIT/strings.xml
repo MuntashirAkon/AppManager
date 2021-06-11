@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<!--
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><!--
   ~ Copyright (C) 2020 Muntashir Al-Islam
   ~
   ~ This program is free software: you can redistribute it and/or modify
@@ -318,17 +317,22 @@
     </plurals>
     <string name="toggle_class_listing">Attiva/Disattiva Elencazione Classi</string>
     <string name="class_viewer">Visualizzatore Classi</string>
-    <string name="credits_message">Agli autori di:
-\n- Progetto Open Source Android
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
+    <string name="credits_message">Agli autori di
+\n- The Android Open Source Project
 \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
-\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
-\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
+\n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
+\n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
+\n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a>
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
-\nLogo originale di: <a href="https://github.com/Atrate">Atrate</a>. </string>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
+\nCrediti logo originale: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="credits">Crediti</string>
     <string name="sdk_flags">Flags</string>
     <string name="sort_by_domain">Prima app dell\'utente</string>

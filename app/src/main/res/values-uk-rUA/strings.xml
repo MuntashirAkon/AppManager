@@ -1108,4 +1108,15 @@
     <string name="failed_to_prevent_background_run">Не вдалося запобігти роботу в фоновому режимі додатку %1$s</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">Не вдалося встановити додаток через невідповідність підпису. Додаток було видалено без очищення даних.</string>
     <string name="community">Спільнота</string>
+    <plurals name="alert_failed_to_import_backups">
+        <item quantity="one">Не вдалося імпортувати %1$d резервну копію</item>
+        <item quantity="few">Не вдалося імпортувати %1$d резервні копії</item>
+        <item quantity="many">Не вдалося імпортувати %1$d резервних копій</item>
+        <item quantity="other">Не вдалося імпортувати %1$d резервних копій</item>
+    </plurals>
+    <string name="import_from_tb">Імпорт з Titanium Backup</string>
+    <string name="import_from_oab_tb_msg">Резервні копії повинні бути розташовані у %s.</string>
+    <string name="import_from_oab">Імпорт із OAndBackup</string>
+    <string name="pref_import_backups_msg">Імпорт резервних копій з OAndBackup, Titanium Backup або Swift Backup.</string>
+    <string name="pref_import_backups">Імпорт резервних копій</string>
 </resources>
