@@ -6,11 +6,10 @@
     android:id="@+id/item_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clickable="true"
     android:focusable="true"
     android:orientation="horizontal">
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/item_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -35,6 +34,7 @@
         android:paddingBottom="@dimen/padding_small"
         android:layout_marginEnd="@dimen/padding_small"
         android:background="?attr/selectableItemBackgroundBorderless"
+        android:focusable="true"
         app:icon="@drawable/ic_baseline_clear_24"
         app:iconGravity="textTop"
         app:iconPadding="0dp"

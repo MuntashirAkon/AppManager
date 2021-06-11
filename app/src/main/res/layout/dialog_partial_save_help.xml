@@ -7,17 +7,16 @@
     android:paddingStart="@dimen/padding_medium"
     android:paddingEnd="@dimen/padding_medium">
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/dialog_partial_select_explanation"
         android:textSize="16sp" />
 
-    <CheckBox
+    <androidx.appcompat.widget.AppCompatCheckBox
         android:id="@android:id/checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/checkbox_never_show_partial_select_help" />
-
 
 </LinearLayout>

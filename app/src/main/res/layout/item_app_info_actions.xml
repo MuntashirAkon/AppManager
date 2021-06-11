@@ -12,7 +12,7 @@
     app:cardCornerRadius="@dimen/padding_medium"
     app:cardElevation="0dp">
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/item_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

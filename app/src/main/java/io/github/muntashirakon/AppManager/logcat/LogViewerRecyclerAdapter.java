@@ -3,7 +3,6 @@
 package io.github.muntashirakon.AppManager.logcat;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -105,18 +104,9 @@ public class LogViewerRecyclerAdapter extends RecyclerView.Adapter<LogViewerRecy
 
     private int logLevelLimit = AppPref.getInt(AppPref.PrefKey.PREF_LOG_VIEWER_DEFAULT_LOG_LEVEL_INT);
 
-    private static int mColorTransparent;
-    private static int mColorSemiTransparent;
-    private static int mColorHighlight;
-
-    public LogViewerRecyclerAdapter(LogViewerActivity activity) {
+    public LogViewerRecyclerAdapter() {
         mObjects = new ArrayList<>();
-
         setHasStableIds(true);
-
-        mColorTransparent = Color.TRANSPARENT;
-        mColorSemiTransparent = ContextCompat.getColor(activity, R.color.semi_transparent);
-        mColorHighlight = ContextCompat.getColor(activity, R.color.highlight);
     }
 
 
@@ -274,8 +264,8 @@ public class LogViewerRecyclerAdapter extends RecyclerView.Adapter<LogViewerRecy
         t.setVisibility(logLine.getLogLevel() == -1 ? View.GONE : View.VISIBLE);
 
         View contentView = holder.itemView.findViewById(R.id.log_content);
-        contentView.setBackgroundColor(logLine.isHighlighted() ? mColorHighlight : (position % 2 == 0 ?
-                mColorSemiTransparent : mColorTransparent));
+        contentView.setBackgroundResource(logLine.isHighlighted() ? R.drawable.item_highlight : (position % 2 == 0 ?
+                R.drawable.item_semi_transparent : R.drawable.item_transparent));
 
         //OUTPUT TEXT VIEW
         TextView output = holder.output;

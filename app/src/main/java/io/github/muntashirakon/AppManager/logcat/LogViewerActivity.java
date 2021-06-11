@@ -1102,7 +1102,7 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
     }
 
     private void setUpLogViewerAdapter() {
-        mLogListAdapter = new LogViewerRecyclerAdapter(this);
+        mLogListAdapter = new LogViewerRecyclerAdapter();
         mLogListAdapter.setClickListener(this);
         recyclerView.setAdapter(mLogListAdapter);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {

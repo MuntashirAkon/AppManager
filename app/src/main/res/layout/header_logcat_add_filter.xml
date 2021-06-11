@@ -8,7 +8,7 @@
     android:paddingBottom="@dimen/padding_small"
     android:orientation="horizontal">
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="0"
@@ -17,7 +17,7 @@
         android:contentDescription="@string/add_filter"
         app:srcCompat="@drawable/ic_baseline_add_24" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"

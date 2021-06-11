@@ -45,7 +45,7 @@
                 android:scrollbars="none"
                 tools:listitem="@layout/item_app_details_primary" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@android:id/empty"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

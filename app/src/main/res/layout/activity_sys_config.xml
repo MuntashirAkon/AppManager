@@ -35,7 +35,7 @@
                 android:nextFocusUp="@id/spinner"
                 tools:listitem="@layout/item_icon_title_subtitle" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@android:id/empty"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -44,6 +44,7 @@
                 android:text="@string/no_content" />
 
         </FrameLayout>
+
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

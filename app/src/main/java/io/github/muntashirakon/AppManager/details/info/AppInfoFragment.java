@@ -35,7 +35,6 @@ import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResult;
@@ -50,6 +49,7 @@ import androidx.annotation.StringRes;
 import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.collection.ArrayMap;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -151,7 +151,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private PackageInfo mInstalledPackageInfo;
     private AppDetailsActivity mActivity;
     private ApplicationInfo mApplicationInfo;
-    private LinearLayout mHorizontalLayout;
+    private LinearLayoutCompat mHorizontalLayout;
     private ChipGroup mTagCloud;
     private SwipeRefreshLayout mSwipeRefresh;
     private CharSequence mPackageLabel;
