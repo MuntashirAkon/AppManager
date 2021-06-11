@@ -26,9 +26,9 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import org.json.JSONException;
@@ -50,8 +50,8 @@ import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
-public class AppsProfileActivity extends BaseActivity
-        implements BottomNavigationView.OnNavigationItemSelectedListener, ViewPager.OnPageChangeListener {
+public class AppsProfileActivity extends BaseActivity implements NavigationBarView.OnItemSelectedListener,
+        ViewPager.OnPageChangeListener {
     public static final String EXTRA_PROFILE_NAME = "prof";
     public static final String EXTRA_NEW_PROFILE_NAME = "new_prof";
     public static final String EXTRA_NEW_PROFILE = "new";
@@ -67,7 +67,7 @@ public class AppsProfileActivity extends BaseActivity
     public static final String ST_ADVANCED = "advanced";
 
     private ViewPager viewPager;
-    private BottomNavigationView bottomNavigationView;
+    private NavigationBarView bottomNavigationView;
     private MenuItem prevMenuItem;
     private final Fragment[] fragments = new Fragment[2];
     ProfileViewModel model;
@@ -141,7 +141,7 @@ public class AppsProfileActivity extends BaseActivity
         viewPager.addOnPageChangeListener(this);
         viewPager.setAdapter(new ProfileFragmentPagerAdapter(getSupportFragmentManager()));
         bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setOnNavigationItemSelectedListener(this);
+        bottomNavigationView.setOnItemSelectedListener(this);
         fab.setOnClickListener(v -> {
             progressIndicator.show();
             new Thread(() -> {
@@ -196,10 +196,7 @@ public class AppsProfileActivity extends BaseActivity
         if (id == android.R.id.home) {
             finish();
         } else if (id == R.id.action_apply) {
-            final String[] statesL = new String[]{
-                    getString(R.string.on),
-                    getString(R.string.off)
-            };
+            final String[] statesL = new String[]{getString(R.string.on), getString(R.string.off)};
             @ProfileMetaManager.ProfileState final List<String> states = Arrays.asList(ProfileMetaManager.STATE_ON, ProfileMetaManager.STATE_OFF);
             new MaterialAlertDialogBuilder(this)
                     .setTitle(R.string.profile_state)
@@ -242,23 +239,23 @@ public class AppsProfileActivity extends BaseActivity
                     .setNegativeButton(R.string.cancel, null)
                     .setPositiveButton(R.string.go, (dialog, which, profName, isChecked) -> {
                         progressIndicator.show();
-                        if (!TextUtils.isEmpty(profName)) {
-                            if (getSupportActionBar() != null) {
-                                //noinspection ConstantConditions
-                                getSupportActionBar().setTitle(profName.toString());
-                            }
-                            new Thread(() -> {
-                                //noinspection ConstantConditions
-                                model.cloneProfile(profName.toString(), false, "");
-                                runOnUiThread(() -> {
-                                    Toast.makeText(this, R.string.the_operation_was_successful, Toast.LENGTH_SHORT).show();
-                                    progressIndicator.hide();
-                                });
-                            }).start();
-                        } else {
+                        if (TextUtils.isEmpty(profName)) {
                             progressIndicator.hide();
                             Toast.makeText(this, R.string.failed_to_duplicate_profile, Toast.LENGTH_SHORT).show();
+                            return;
                         }
+                        if (getSupportActionBar() != null) {
+                            //noinspection ConstantConditions
+                            getSupportActionBar().setTitle(profName.toString());
+                        }
+                        new Thread(() -> {
+                            //noinspection ConstantConditions
+                            model.cloneProfile(profName.toString(), false, "");
+                            runOnUiThread(() -> {
+                                Toast.makeText(this, R.string.the_operation_was_successful, Toast.LENGTH_SHORT).show();
+                                progressIndicator.hide();
+                            });
+                        }).start();
                     })
                     .show();
         } else if (id == R.id.action_shortcut) {

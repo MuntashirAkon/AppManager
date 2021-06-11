@@ -21,6 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="none"
+            android:focusable="true"
             tools:listitem="@layout/item_running_app" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

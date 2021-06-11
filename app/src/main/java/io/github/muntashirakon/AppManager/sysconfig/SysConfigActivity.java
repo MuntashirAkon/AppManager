@@ -4,7 +4,6 @@ package io.github.muntashirakon.AppManager.sysconfig;
 
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -20,7 +19,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatSpinner;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,7 +29,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
@@ -52,6 +49,8 @@ public class SysConfigActivity extends BaseActivity {
         setContentView(R.layout.activity_sys_config);
         setSupportActionBar(findViewById(R.id.toolbar));
         AppCompatSpinner spinner = findViewById(R.id.spinner);
+        // Make spinner the first item to focus on
+        spinner.requestFocus();
         RecyclerViewWithEmptyView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setEmptyView(findViewById(android.R.id.empty));
         progressIndicator = findViewById(R.id.progress_linear);
@@ -117,14 +116,10 @@ public class SysConfigActivity extends BaseActivity {
         private final List<SysConfigInfo> list = new ArrayList<>();
         private final SysConfigActivity activity;
         private final PackageManager pm;
-        private final int mColorTransparent;
-        private final int mColorSemiTransparent;
 
         SysConfigRecyclerAdapter(SysConfigActivity activity) {
             this.activity = activity;
             pm = activity.getPackageManager();
-            mColorTransparent = Color.TRANSPARENT;
-            mColorSemiTransparent = ContextCompat.getColor(AppManager.getContext(), R.color.semi_transparent);
         }
 
         @NonNull
@@ -144,7 +139,7 @@ public class SysConfigActivity extends BaseActivity {
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             holder.icon.setImageDrawable(null);
 
-            holder.itemView.setBackgroundColor(position % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
+            holder.itemView.setBackgroundResource(position % 2 == 0 ? R.drawable.item_semi_transparent : R.drawable.item_transparent);
 
             SysConfigInfo info = list.get(position);
             if (info.isPackage) {

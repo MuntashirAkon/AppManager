@@ -4,7 +4,6 @@ package io.github.muntashirakon.AppManager.runningapps;
 
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
-import android.graphics.Color;
 import android.text.TextUtils;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
@@ -36,19 +35,13 @@ public class RunningAppsAdapter extends RecyclerView.Adapter<RunningAppsAdapter.
     private final RunningAppsViewModel mModel;
     private boolean isAdbMode = false;
 
-    private final int mColorTransparent;
-    private final int mColorSemiTransparent;
     private final int mColorRed;
-    private final int mColorSelection;
 
     RunningAppsAdapter(@NonNull RunningAppsActivity activity) {
         mActivity = activity;
         mModel = activity.mModel;
 
-        mColorTransparent = Color.TRANSPARENT;
-        mColorSemiTransparent = ContextCompat.getColor(activity, R.color.semi_transparent);
         mColorRed = ContextCompat.getColor(activity, R.color.red);
-        mColorSelection = ContextCompat.getColor(activity, R.color.highlight);
     }
 
     void setDefaultList() {
@@ -60,7 +53,7 @@ public class RunningAppsAdapter extends RecyclerView.Adapter<RunningAppsAdapter.
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_running_app, parent, false);
-        return new RunningAppsAdapter.ViewHolder(view);
+        return new ViewHolder(view);
     }
 
     @Override
@@ -151,8 +144,8 @@ public class RunningAppsAdapter extends RecyclerView.Adapter<RunningAppsAdapter.
             popupMenu.show();
         });
         // Set background colors
-        holder.itemView.setBackgroundColor(position % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
-        if (processItem.selected) holder.itemView.setBackgroundColor(mColorSelection);
+        holder.itemView.setBackgroundResource(position % 2 == 0 ? R.drawable.item_semi_transparent : R.drawable.item_transparent);
+        if (processItem.selected) holder.itemView.setBackgroundResource(R.drawable.item_highlight);
         // Set selections
         holder.icon.setOnClickListener(v -> {
             if (processItem.selected) mModel.deselect(processItem.pid);

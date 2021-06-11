@@ -8,7 +8,7 @@
 
     <include layout="@layout/appbar" />
 
-    <LinearLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -20,6 +20,7 @@
             android:layout_height="35sp"
             android:layout_gravity="center"
             android:layout_margin="@dimen/padding_large"
+            android:nextFocusDown="@id/recycler_view"
             style="@style/AppTheme.Spinner" />
 
         <FrameLayout
@@ -31,6 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scrollbars="none"
+                android:nextFocusUp="@id/spinner"
                 tools:listitem="@layout/item_icon_title_subtitle" />
 
             <TextView
@@ -38,9 +40,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
+                android:focusable="false"
                 android:text="@string/no_content" />
 
         </FrameLayout>
-    </LinearLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

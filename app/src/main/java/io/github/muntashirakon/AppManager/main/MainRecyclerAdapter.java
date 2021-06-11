@@ -61,10 +61,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     private final List<ApplicationItem> mAdapterList = new ArrayList<>();
     final ImageLoader imageLoader;
 
-    private static int mColorTransparent;
-    private static int mColorSemiTransparent;
-    private static int mColorHighlight;
-    private static int mColorDisabled;
     private static int mColorStopped;
     private static int mColorOrange;
     private static int mColorPrimary;
@@ -76,10 +72,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         mPackageManager = activity.getPackageManager();
         imageLoader = new ImageLoader(mActivity.mModel.executor);
 
-        mColorTransparent = Color.TRANSPARENT;
-        mColorSemiTransparent = ContextCompat.getColor(mActivity, R.color.semi_transparent);
-        mColorHighlight = ContextCompat.getColor(mActivity, R.color.highlight);
-        mColorDisabled = ContextCompat.getColor(mActivity, R.color.disabled_user);
         mColorStopped = ContextCompat.getColor(mActivity, R.color.stopped);
         mColorOrange = ContextCompat.getColor(mActivity, R.color.orange);
         mColorPrimary = ContextCompat.getColor(mActivity, R.color.textColorPrimary);
@@ -219,10 +211,10 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         });
         holder.icon.setOnClickListener(v -> toggleSelection(item, position));
         // Alternate background colors: selected > disabled > regular
-        if (item.isSelected) holder.mainView.setBackgroundColor(mColorHighlight);
-        else if (item.isDisabled) holder.mainView.setBackgroundColor(mColorDisabled);
+        if (item.isSelected) holder.itemView.setBackgroundResource(R.drawable.item_highlight);
+        else if (item.isDisabled) holder.itemView.setBackgroundResource(R.drawable.item_disabled);
         else {
-            holder.mainView.setBackgroundColor(position % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
+            holder.itemView.setBackgroundResource(position % 2 == 0 ? R.drawable.item_semi_transparent : R.drawable.item_transparent);
         }
         // Add yellow star if the app is in debug mode
         holder.favorite_icon.setVisibility(item.debuggable ? View.VISIBLE : View.INVISIBLE);
@@ -452,7 +444,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        View mainView;
         ImageView icon;
         ImageView favorite_icon;
         TextView label;
@@ -470,7 +461,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            mainView = itemView.findViewById(R.id.main_view);
             icon = itemView.findViewById(R.id.icon);
             favorite_icon = itemView.findViewById(R.id.favorite_icon);
             label = itemView.findViewById(R.id.label);

@@ -101,6 +101,8 @@ public class RunningAppsActivity extends BaseActivity implements
         new FastScrollerBuilder(recyclerView).useMd2Style().build();
         mAdapter = new RunningAppsAdapter(this);
         recyclerView.setAdapter(mAdapter);
+        // Recycler view is focused by default
+        recyclerView.requestFocus();
         mConstraint = null;
         enableKillForSystem = (boolean) AppPref.get(AppPref.PrefKey.PREF_ENABLE_KILL_FOR_SYSTEM_BOOL);
 

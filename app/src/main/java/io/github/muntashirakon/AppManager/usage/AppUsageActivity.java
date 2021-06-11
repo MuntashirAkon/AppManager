@@ -20,9 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
@@ -31,6 +29,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -38,15 +38,18 @@ import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.textview.MaterialTextView;
 
 import java.text.Collator;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
+import io.github.muntashirakon.AppManager.types.RecyclerViewWithEmptyView;
 import io.github.muntashirakon.AppManager.usage.UsageUtils.IntervalType;
 import io.github.muntashirakon.AppManager.utils.BetterActivityResult;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
@@ -59,8 +62,7 @@ import static io.github.muntashirakon.AppManager.usage.UsageUtils.USAGE_TODAY;
 import static io.github.muntashirakon.AppManager.usage.UsageUtils.USAGE_WEEKLY;
 import static io.github.muntashirakon.AppManager.usage.UsageUtils.USAGE_YESTERDAY;
 
-public class AppUsageActivity extends BaseActivity implements ListView.OnItemClickListener,
-        SwipeRefreshLayout.OnRefreshListener {
+public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
     @IntDef(value = {
             SORT_BY_APP_LABEL,
             SORT_BY_LAST_USED,
@@ -70,14 +72,16 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
             SORT_BY_TIMES_OPENED,
             SORT_BY_WIFI_DATA
     })
-    private @interface SortOrder {}
-    private static final int SORT_BY_APP_LABEL    = 0;
-    private static final int SORT_BY_LAST_USED    = 1;
-    private static final int SORT_BY_MOBILE_DATA  = 2;
+    private @interface SortOrder {
+    }
+
+    private static final int SORT_BY_APP_LABEL = 0;
+    private static final int SORT_BY_LAST_USED = 1;
+    private static final int SORT_BY_MOBILE_DATA = 2;
     private static final int SORT_BY_PACKAGE_NAME = 3;
-    private static final int SORT_BY_SCREEN_TIME  = 4;
+    private static final int SORT_BY_SCREEN_TIME = 4;
     private static final int SORT_BY_TIMES_OPENED = 5;
-    private static final int SORT_BY_WIFI_DATA    = 6;
+    private static final int SORT_BY_WIFI_DATA = 6;
 
     private static final int[] sSortMenuItemIdsMap = {
             R.id.action_sort_by_app_label, R.id.action_sort_by_last_used,
@@ -90,9 +94,10 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
     private AppUsageAdapter mAppUsageAdapter;
     private List<PackageUsageInfo> packageUsageInfoList;
     private static long totalScreenTime;
-    private @IntervalType int current_interval = USAGE_TODAY;
-    private @SortOrder
-    int mSortBy;
+    @IntervalType
+    private int currentInterval = USAGE_TODAY;
+    @SortOrder
+    private int mSortBy;
     private final ImageLoader imageLoader = new ImageLoader();
     private final BetterActivityResult<String, Boolean> requestPerm = BetterActivityResult
             .registerForActivityResult(this, new ActivityResultContracts.RequestPermission());
@@ -111,35 +116,34 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
 
         // Get usage stats
         mAppUsageAdapter = new AppUsageAdapter(this);
-        ListView listView = findViewById(android.R.id.list);
-        listView.setDividerHeight(0);
-        listView.setEmptyView(findViewById(android.R.id.empty));
-        listView.setAdapter(mAppUsageAdapter);
-        listView.setOnItemClickListener(this);
+        RecyclerViewWithEmptyView recyclerView = findViewById(R.id.recycler_view);
+        recyclerView.setEmptyView(findViewById(android.R.id.empty));
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(mAppUsageAdapter);
 
         mSwipeRefresh = findViewById(R.id.swipe_refresh);
         mSwipeRefresh.setColorSchemeColors(UIUtils.getAccentColor(this));
         mSwipeRefresh.setProgressBackgroundColorSchemeColor(UIUtils.getPrimaryColor(this));
         mSwipeRefresh.setOnRefreshListener(this);
-        mSwipeRefresh.setOnChildScrollUpCallback((parent, child) -> listView.canScrollVertically(-1));
-
-        @SuppressLint("InflateParams")
-        View header = getLayoutInflater().inflate(R.layout.header_app_usage, null);
-        listView.addHeaderView(header);
+        mSwipeRefresh.setOnChildScrollUpCallback((parent, child) -> recyclerView.canScrollVertically(-1));
 
         Spinner intervalSpinner = findViewById(R.id.spinner_interval);
+        // Make spinner the first item to focus on
+        intervalSpinner.requestFocus();
         SpinnerAdapter intervalSpinnerAdapter = ArrayAdapter.createFromResource(this,
                 R.array.usage_interval_dropdown_list, R.layout.item_checked_text_view);
         intervalSpinner.setAdapter(intervalSpinnerAdapter);
         intervalSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                current_interval = position;
+                currentInterval = position;
                 getAppUsage();
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
 
         mSortBy = SORT_BY_SCREEN_TIME;
@@ -218,22 +222,6 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
         return true;
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        try {
-            PackageUsageInfo packageUS = mAppUsageAdapter.getItem(position - 1);
-            PackageUsageInfo packageUS1 = AppUsageStatsManager.getInstance(this).getUsageStatsForPackage(packageUS.packageName, current_interval);
-            packageUS1.copyOthers(packageUS);
-            AppUsageDetailsDialogFragment appUsageDetailsDialogFragment = new AppUsageDetailsDialogFragment();
-            Bundle args = new Bundle();
-            args.putParcelable(AppUsageDetailsDialogFragment.ARG_PACKAGE_US, packageUS1);
-            appUsageDetailsDialogFragment.setArguments(args);
-            appUsageDetailsDialogFragment.show(getSupportFragmentManager(), AppUsageDetailsDialogFragment.TAG);
-        } catch (RemoteException e) {
-            Log.e("AppUsage", e);
-        }
-    }
-
     private void setSortBy(@SortOrder int sort) {
         mSortBy = sort;
         sortPackageUSList();
@@ -274,7 +262,7 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
             int _try = 5; // try to get usage stat 5 times
             do {
                 try {
-                    packageUsageInfoList = AppUsageStatsManager.getInstance(this).getUsageStats(current_interval);
+                    packageUsageInfoList = AppUsageStatsManager.getInstance(this).getUsageStats(currentInterval);
                 } catch (RemoteException e) {
                     Log.e("AppUsage", e);
                 }
@@ -321,7 +309,7 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
         TextView timeUsed = findViewById(R.id.time_used);
         TextView timeRange = findViewById(R.id.time_range);
         timeUsed.setText(Utils.getFormattedDuration(this, totalScreenTime));
-        switch (current_interval) {
+        switch (currentInterval) {
             case USAGE_TODAY:
                 timeRange.setText(R.string.usage_today);
                 break;
@@ -336,13 +324,12 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
         }
     }
 
-    static class AppUsageAdapter extends BaseAdapter {
-        private final LayoutInflater mLayoutInflater;
-        private List<PackageUsageInfo> mAdapterList;
+    static class AppUsageAdapter extends RecyclerView.Adapter<AppUsageAdapter.ViewHolder> {
+        private final List<PackageUsageInfo> mAdapterList = new ArrayList<>();
         private final AppUsageActivity mActivity;
         private final PackageManager mPackageManager;
 
-        static class ViewHolder {
+        private static class ViewHolder extends RecyclerView.ViewHolder {
             ImageView appIcon;
             MaterialTextView appLabel;
             MaterialTextView packageName;
@@ -352,54 +339,52 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
             MaterialTextView screenTime;
             MaterialTextView percentUsage;
             LinearProgressIndicator usageIndicator;
+
+            public ViewHolder(@NonNull View itemView) {
+                super(itemView);
+                appIcon = itemView.findViewById(R.id.icon);
+                appLabel = itemView.findViewById(R.id.label);
+                packageName = itemView.findViewById(R.id.package_name);
+                lastUsageDate = itemView.findViewById(R.id.date);
+                mobileDataUsage = itemView.findViewById(R.id.data_usage);
+                wifiDataUsage = itemView.findViewById(R.id.wifi_usage);
+                screenTime = itemView.findViewById(R.id.screen_time);
+                percentUsage = itemView.findViewById(R.id.percent_usage);
+                usageIndicator = itemView.findViewById(R.id.progress_linear);
+            }
         }
 
         AppUsageAdapter(@NonNull AppUsageActivity activity) {
-            mLayoutInflater = activity.getLayoutInflater();
             mActivity = activity;
             mPackageManager = mActivity.getPackageManager();
         }
 
         void setDefaultList(List<PackageUsageInfo> list) {
-            mAdapterList = list;
+            mAdapterList.clear();
+            mAdapterList.addAll(list);
             notifyDataSetChanged();
         }
 
         @Override
-        public int getCount() {
-            return mAdapterList == null ? 0 : mAdapterList.size();
-        }
-
-        @Override
-        public PackageUsageInfo getItem(int position) {
-            return mAdapterList.get(position);
+        public int getItemCount() {
+            return mAdapterList.size();
         }
 
         @Override
         public long getItemId(int position) {
-            return position;
+            return Objects.hashCode(mAdapterList.get(position));
+        }
+
+        @NonNull
+        @Override
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_app_usage, parent, false);
+            return new ViewHolder(view);
         }
 
         @SuppressLint("SetTextI18n")
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder holder;
-            if (convertView == null) {
-                convertView = mLayoutInflater.inflate(R.layout.item_app_usage, parent, false);
-                holder = new ViewHolder();
-                holder.appIcon = convertView.findViewById(R.id.icon);
-                holder.appLabel = convertView.findViewById(R.id.label);
-                holder.packageName = convertView.findViewById(R.id.package_name);
-                holder.lastUsageDate = convertView.findViewById(R.id.date);
-                holder.mobileDataUsage = convertView.findViewById(R.id.data_usage);
-                holder.wifiDataUsage = convertView.findViewById(R.id.wifi_usage);
-                holder.screenTime = convertView.findViewById(R.id.screen_time);
-                holder.percentUsage = convertView.findViewById(R.id.percent_usage);
-                holder.usageIndicator = convertView.findViewById(R.id.progress_linear);
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
-            }
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             final PackageUsageInfo packageUS = mAdapterList.get(position);
             final int percentUsage = (int) (packageUS.screenTime * 100f / totalScreenTime);
             // Set label (or package name on failure)
@@ -443,7 +428,21 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
             holder.percentUsage.setText(String.format(Locale.ROOT, "%d%%", percentUsage));
             holder.usageIndicator.show();
             holder.usageIndicator.setProgress(percentUsage);
-            return convertView;
+            // On Click Listener
+            holder.itemView.setOnClickListener(v -> {
+                try {
+                    PackageUsageInfo packageUS1 = AppUsageStatsManager.getInstance(mActivity)
+                            .getUsageStatsForPackage(packageUS.packageName, mActivity.currentInterval);
+                    packageUS1.copyOthers(packageUS);
+                    AppUsageDetailsDialogFragment appUsageDetailsDialogFragment = new AppUsageDetailsDialogFragment();
+                    Bundle args = new Bundle();
+                    args.putParcelable(AppUsageDetailsDialogFragment.ARG_PACKAGE_US, packageUS1);
+                    appUsageDetailsDialogFragment.setArguments(args);
+                    appUsageDetailsDialogFragment.show(mActivity.getSupportFragmentManager(), AppUsageDetailsDialogFragment.TAG);
+                } catch (RemoteException e) {
+                    Log.e("AppUsage", e);
+                }
+            });
         }
     }
 }

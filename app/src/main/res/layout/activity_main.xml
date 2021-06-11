@@ -6,27 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?android:colorBackground"
-            app:navigationIcon="@null" />
-
-        <com.google.android.material.progressindicator.LinearProgressIndicator
-            android:id="@+id/progress_linear"
-            style="@style/Widget.MaterialComponents.LinearProgressIndicator"
-            android:indeterminate="true"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:indicatorColor="?colorAccent" />
-
-    </com.google.android.material.appbar.AppBarLayout>
+    <include layout="@layout/appbar" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/main_layout"
