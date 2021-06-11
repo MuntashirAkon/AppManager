@@ -109,6 +109,8 @@
     </style>
     <style name="AppTheme.FloatingActionButton" parent="@style/Widget.MaterialComponents.FloatingActionButton">
         <item name="materialThemeOverlay">@style/AppTheme.FabOverlay</item>
+        <item name="tint">@color/colorPrimary</item>
+        <item name="android:tint">@color/colorPrimary</item>
     </style>
     <style name="AppTheme.FullScreenDialog.Animation">
         <item name="android:windowEnterAnimation">@anim/fullscreen_dialog_enter</item>

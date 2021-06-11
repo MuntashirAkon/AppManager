@@ -1,180 +1,171 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later -->
-<androidx.appcompat.widget.LinearLayoutCompat
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:focusable="true">
+    android:focusable="true"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/padding_small"
+    android:paddingEnd="@dimen/padding_small"
+    android:paddingStart="@dimen/padding_small"
+    android:paddingTop="@dimen/padding_small">
 
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/main_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingBottom="@dimen/padding_small"
-        android:paddingEnd="@dimen/padding_small"
-        android:paddingStart="@dimen/padding_small"
-        android:paddingTop="@dimen/padding_small">
+        android:layout_width="@dimen/icon_size"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_marginEnd="@dimen/padding_small"
+        android:orientation="vertical">
 
-        <androidx.appcompat.widget.LinearLayoutCompat
+        <ImageView
+            android:id="@+id/icon"
             android:layout_width="@dimen/icon_size"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:layout_marginEnd="@dimen/padding_small"
-            android:orientation="vertical">
+            android:layout_height="@dimen/icon_size"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            tools:srcCompat="@mipmap/ic_launcher_round"
+            android:contentDescription="@string/str_logo" />
 
-            <ImageView
-                android:id="@+id/icon"
-                android:layout_width="@dimen/icon_size"
-                android:layout_height="@dimen/icon_size"
-                android:layout_weight="1"
-                android:layout_gravity="center"
-                tools:srcCompat="@tools:sample/avatars"
-                android:contentDescription="@string/str_logo" />
-
-            <TextView
-                android:id="@+id/backup_indicator"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textSize="11sp"
-                android:text="@string/backup"
-                tools:ignore="SmallSp" />
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-        <FrameLayout
+        <TextView
+            android:id="@+id/backup_indicator"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:textSize="11sp"
+            android:text="@string/backup"
+            tools:ignore="SmallSp" />
 
-            <ImageView
-                android:id="@+id/favorite_icon"
-                android:layout_width="wrap_content"
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <ImageView
+            android:id="@+id/favorite_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/item_favorite"
+            android:layout_gravity="end|top"
+            tools:ignore="ContentDescription" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/label"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/item_favorite"
-                tools:srcCompat="@tools:sample/avatars"
-                android:layout_gravity="end|top"
-                tools:ignore="ContentDescription" />
+                android:singleLine="true"
+                android:textStyle="bold"
+                tools:text="@string/app_name" />
+
+            <TextView
+                android:id="@+id/packageName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textStyle="italic"
+                tools:text="io.github.muntashirakon.AppManager" />
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/label"
-                    android:layout_width="match_parent"
+                    android:id="@+id/date"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
-                    android:textStyle="bold"
-                    tools:text="@tools:sample/lorem" />
+                    android:textSize="12sp"
+                    tools:text="@tools:sample/date/mmddyy" />
 
                 <TextView
-                    android:id="@+id/packageName"
+                    android:id="@+id/shareid"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:textStyle="italic"
-                    tools:text="@tools:sample/lorem" />
-
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/date"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:singleLine="true"
-                        android:textSize="12sp"
-                        tools:text="@tools:sample/date/mmddyy" />
-
-                    <TextView
-                        android:id="@+id/shareid"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="end"
-                        android:paddingEnd="25sp"
-                        android:singleLine="true"
-                        android:textSize="10sp"
-                        tools:text="@tools:sample/lorem"
-                        tools:ignore="RtlSymmetry,SmallSp" />
-
-                </androidx.appcompat.widget.LinearLayoutCompat>
-
-                <TextView
-                    android:id="@+id/issuer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:textSize="9sp"
-                    tools:text="@tools:sample/lorem"
-                    tools:ignore="SmallSp" />
-
-                <TextView
-                    android:id="@+id/backup_info"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:paddingEnd="25sp"
                     android:singleLine="true"
                     android:textSize="10sp"
-                    tools:text="@tools:sample/lorem"
-                    tools:ignore="SmallSp" />
+                    tools:text="@tools:sample/us_zipcodes"
+                    tools:ignore="RtlSymmetry,SmallSp" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
-        </FrameLayout>
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:orientation="vertical"
-            android:layout_marginStart="@dimen/padding_small">
-
             <TextView
-                android:id="@+id/version"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:textSize="12sp"
-                tools:text="@tools:sample/us_zipcodes" />
-
-            <TextView
-                android:id="@+id/isSystem"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                tools:text="@tools:sample/cities" />
-
-            <TextView
-                android:id="@+id/size"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                tools:text="@tools:sample/us_zipcodes" />
-
-            <TextView
-                android:id="@+id/sha"
+                android:id="@+id/issuer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
                 android:textSize="9sp"
-                tools:text="@tools:sample/lorem"
+                tools:text="CN=Android,OU=Android"
                 tools:ignore="SmallSp" />
 
             <TextView
-                android:id="@+id/backup_info_ext"
+                android:id="@+id/backup_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
                 android:textSize="10sp"
-                tools:text="@tools:sample/lorem"
+                tools:text="@tools:sample/lorem[6]"
                 tools:ignore="SmallSp" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </FrameLayout>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:orientation="vertical"
+        android:layout_marginStart="@dimen/padding_small">
+
+        <TextView
+            android:id="@+id/version"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:textSize="12sp"
+            tools:text="@tools:sample/us_zipcodes" />
+
+        <TextView
+            android:id="@+id/isSystem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            tools:text="User" />
+
+        <TextView
+            android:id="@+id/size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            tools:text="SDK 30" />
+
+        <TextView
+            android:id="@+id/sha"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:textSize="9sp"
+            tools:text="SHA256withRSA"
+            tools:ignore="SmallSp" />
+
+        <TextView
+            android:id="@+id/backup_info_ext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:textSize="10sp"
+            tools:text="APK+Data"
+            tools:ignore="SmallSp" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

@@ -16,25 +16,71 @@
         android:layout_height="match_parent"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-        <FrameLayout
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical">
 
-            <ListView
-                android:id="@android:id/list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:listheader="@layout/header_app_usage"
-                tools:listitem="@layout/item_app_usage" />
-
-            <TextView
-                android:id="@android:id/empty"
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="@string/no_usage_in_this_time_range" />
+                android:orientation="vertical">
 
-        </FrameLayout>
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/spinner_interval"
+                    android:layout_width="130dp"
+                    android:layout_height="35sp"
+                    android:layout_gravity="center"
+                    android:layout_margin="@dimen/padding_large"
+                    android:focusable="true"
+                    android:nextFocusDown="@id/recycler_view"
+                    style="@style/AppTheme.Spinner" />
+
+                <TextView
+                    android:id="@+id/time_used"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="36sp"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:focusable="false"
+                    tools:text="@tools:sample/date/hhmm" />
+
+                <TextView
+                    android:id="@+id/time_range"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/padding_medium"
+                    android:gravity="center"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:focusable="false"
+                    tools:text="@tools:sample/date/day_of_week" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <io.github.muntashirakon.AppManager.types.RecyclerViewWithEmptyView
+                        android:id="@+id/recycler_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:overScrollMode="never"
+                        android:nextFocusUp="@id/spinner_interval"
+                        tools:listitem="@layout/item_app_usage" />
+
+                    <TextView
+                        android:id="@android:id/empty"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:focusable="false"
+                        android:text="@string/no_usage_in_this_time_range" />
+
+                </FrameLayout>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </androidx.core.widget.NestedScrollView>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
