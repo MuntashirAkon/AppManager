@@ -86,6 +86,8 @@
         android:layout_width="56dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center|center_horizontal|center_vertical"
-        android:layout_weight="0" />
+        android:layout_weight="0"
+        android:clickable="false"
+        android:focusable="false" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

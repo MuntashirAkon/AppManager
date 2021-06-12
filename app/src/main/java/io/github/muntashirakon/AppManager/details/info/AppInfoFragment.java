@@ -1125,6 +1125,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     });
         } catch (PackageManager.NameNotFoundException ignored) {
         }
+        View v = mHorizontalLayout.getChildAt(0);
+        if (v != null) v.requestFocus();
     }
 
     @GuardedBy("mListItems")

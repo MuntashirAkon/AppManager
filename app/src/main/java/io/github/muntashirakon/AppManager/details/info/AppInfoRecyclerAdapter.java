@@ -78,40 +78,42 @@ class AppInfoRecyclerAdapter extends RecyclerView.Adapter<AppInfoRecyclerAdapter
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ListItem listItem = adapterList.get(position);
-        holder.itemView.setClickable(false);
-        holder.itemView.setFocusable(false);
-        switch (listItem.type) {
-            case LIST_ITEM_GROUP_BEGIN:
-                holder.title.setText(listItem.title);
-                holder.title.setTextColor(accentColor);
-                LinearLayoutCompat itemLayout = holder.itemView.findViewById(R.id.item_layout);
-                itemLayout.setPadding(paddingMedium, paddingSmall, paddingMedium, paddingVerySmall);
-                break;
-            case LIST_ITEM_GROUP_END:
-                break;
-            case LIST_ITEM_INLINE:
-                holder.title.setText(listItem.title);
-                holder.subtitle.setText(listItem.subtitle);
-                holder.subtitle.setTextIsSelectable((listItem.flags & LIST_ITEM_FLAG_SELECTABLE) != 0);
-                if ((listItem.flags & LIST_ITEM_FLAG_MONOSPACE) != 0)
-                    holder.subtitle.setTypeface(Typeface.MONOSPACE);
-                else holder.subtitle.setTypeface(Typeface.DEFAULT);
-                break;
-            case LIST_ITEM_REGULAR:
-                holder.title.setText(listItem.title);
-                holder.subtitle.setText(listItem.subtitle);
-                holder.subtitle.setTextIsSelectable((listItem.flags & LIST_ITEM_FLAG_SELECTABLE) != 0);
-                if ((listItem.flags & LIST_ITEM_FLAG_MONOSPACE) != 0)
-                    holder.subtitle.setTypeface(Typeface.MONOSPACE);
-                else holder.subtitle.setTypeface(Typeface.DEFAULT);
-                if (listItem.actionIcon != 0) {
-                    holder.actionIcon.setIconResource(listItem.actionIcon);
-                }
-                if (listItem.actionListener != null) {
-                    holder.actionIcon.setVisibility(View.VISIBLE);
-                    holder.actionIcon.setOnClickListener(listItem.actionListener);
-                } else holder.actionIcon.setVisibility(View.GONE);
-                break;
+        if (listItem.type == LIST_ITEM_GROUP_END) {
+            return;
+        }
+        // Set title
+        holder.title.setText(listItem.title);
+        if (listItem.type == LIST_ITEM_GROUP_BEGIN) {
+            holder.itemView.setFocusable(false);
+            holder.title.setTextColor(accentColor);
+            LinearLayoutCompat itemLayout = holder.itemView.findViewById(R.id.item_layout);
+            itemLayout.setPadding(paddingMedium, paddingSmall, paddingMedium, paddingVerySmall);
+            return;
+        }
+        // Set common properties
+        holder.subtitle.setText(listItem.subtitle);
+        boolean isSelectable = (listItem.flags & LIST_ITEM_FLAG_SELECTABLE) != 0;
+        holder.subtitle.setFocusable(isSelectable);
+        holder.subtitle.setTextIsSelectable(isSelectable);
+        holder.subtitle.setBackgroundResource(isSelectable ? R.drawable.item_transparent : 0);
+        if ((listItem.flags & LIST_ITEM_FLAG_MONOSPACE) != 0) {
+            holder.subtitle.setTypeface(Typeface.MONOSPACE);
+        } else holder.subtitle.setTypeface(Typeface.DEFAULT);
+        if (listItem.type == LIST_ITEM_INLINE) {
+            // Inline items aren't focusable if text selection mode is on
+            holder.itemView.setFocusable(!isSelectable);
+            return;
+        }
+        if (listItem.type == LIST_ITEM_REGULAR) {
+            // Having an action listener makes focusing the whole item redundant
+            holder.itemView.setFocusable(listItem.actionListener == null);
+            if (listItem.actionIcon != 0) {
+                holder.actionIcon.setIconResource(listItem.actionIcon);
+            }
+            if (listItem.actionListener != null) {
+                holder.actionIcon.setVisibility(View.VISIBLE);
+                holder.actionIcon.setOnClickListener(listItem.actionListener);
+            } else holder.actionIcon.setVisibility(View.GONE);
         }
     }
 

@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ConfigurationInfo;
-import android.content.pm.FeatureInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PermissionInfo;
 import android.content.pm.ServiceInfo;
@@ -397,11 +396,6 @@ public class Utils {
         return protectionLevel;
     }
 
-    @StringRes
-    public static int getFeatureFlags(int flags) {
-        return (flags == FeatureInfo.FLAG_REQUIRED) ? R.string.required : R.string._null;
-    }
-
     // FIXME Add translation support
     @NonNull
     public static String getInputFeaturesString(int flag) {
@@ -467,7 +461,6 @@ public class Utils {
 
     @NonNull
     public static String getGlEsVersion(int reqGlEsVersion) {
-        if (reqGlEsVersion == 0) return "1";
         int major = ((reqGlEsVersion & 0xffff0000) >> 16);
         int minor = reqGlEsVersion & 0x0000ffff;
         return major + "." + minor;
