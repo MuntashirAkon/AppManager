@@ -919,4 +919,8 @@
     <string name="no_changes">Ingen endringer</string>
     <string name="pref_log_line_period_error">Skriv inn et heltall mellom 1 og 1000.</string>
     <string name="pref_expanded_by_default_summary">Vis full loggtekst som forvalg.</string>
+    <string name="community">Gemenskap</string>
+    <string name="installer_error_session_commit">Kunne ikke sende inn APK-filene</string>
+    <string name="community_links">Telegram: https://t.me/AppManagerChannel
+\nTwitter: https://twitter.com/AppManagerNews</string>
 </resources>
