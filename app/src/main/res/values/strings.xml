@@ -30,9 +30,7 @@
     <string name="declared_permission">Permissions</string>
     <string name="shared_libs">Shared libs</string>
     <string name="group">Group</string>
-    <string name="protection_level">Protection level</string>
     <string name="uses_feature">Uses features</string>
-    <string name="gles_ver">Req. OpenGL ES version</string>
     <string name="no_feature">No features</string>
     <string name="sort_by_shared_user_id">Shared User ID</string>
     <string name="shared_user_id">Shared User ID</string>
@@ -783,8 +781,6 @@
     <string name="vendor">Vendor</string>
     <string name="memory">Memory</string>
     <string name="battery_capacity">Capacity</string>
-    <string name="available">Available</string>
-    <string name="unavailable">Unavailable</string>
     <string name="languages">Languages</string>
     <string name="users">Users</string>
     <string name="cpu">CPU</string>
@@ -1070,4 +1066,8 @@
     <string name="fallback_to_no_root_mode_description">App Manager was unable to use the current mode of operation. In order to avoid random behaviour, you should temporarily switch to no-root mode. Consider reporting it if the issue is not fixed after restarting the device.</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">Could not install app due to signature mismatch. The app was uninstalled without clearing its data.</string>
     <string name="failed_to_prevent_background_run">Could not prevent %1$s from running in the background</string>
+    <string name="help_app_ops_tab">Click on an item to <b>allow</b> or <b>ignore</b> it. Long click on an item to see other supported modes.</string>
+    <string name="help_permissions_tab">These permissions are defined by this app and cannot be revoked.</string>
+    <string name="help_uses_permissions_tab">Click on an item to <b>grant</b> or <b>revoke</b> it. Only <b>dangerous</b> and <b>development</b> permissions may be granted or revoked.</string>
+    <string name="minimum_version">Min version: %d</string>
 </resources>

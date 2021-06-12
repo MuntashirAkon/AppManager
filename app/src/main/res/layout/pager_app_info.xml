@@ -35,48 +35,51 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/icon"
-                    android:layout_width="match_parent"
+                    android:layout_width="44dp"
                     android:layout_height="44dp"
-                    android:layout_marginStart="@dimen/padding_medium"
-                    android:layout_marginEnd="@dimen/padding_medium"
+                    android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/padding_medium"
                     android:layout_marginBottom="@dimen/padding_small"
                     tools:srcCompat="@tools:sample/avatars"
+                    android:nextFocusDown="@id/label"
+                    android:background="@drawable/item_transparent"
                     tools:ignore="contentDescription" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/label"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
+                    android:layout_gravity="center_horizontal"
                     android:textIsSelectable="true"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:textColor="?android:attr/textColorPrimary"
-                    android:focusable="true"
+                    android:background="@drawable/item_transparent"
+                    android:nextFocusUp="@id/icon"
                     android:nextFocusDown="@id/packageName"
                     tools:text="@tools:sample/lorem" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/packageName"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
+                    android:layout_gravity="center_horizontal"
                     android:textIsSelectable="true"
                     android:textStyle="italic"
-                    android:focusable="true"
+                    android:background="@drawable/item_transparent"
                     android:nextFocusUp="@id/label"
                     android:nextFocusDown="@id/version"
                     tools:text="@tools:sample/lorem" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/version"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
+                    android:layout_gravity="center_horizontal"
                     android:textIsSelectable="true"
-                    android:focusable="true"
+                    android:background="@drawable/item_transparent"
                     android:nextFocusUp="@id/packageName"
+                    android:nextFocusDown="@id/tag_cloud"
                     tools:text="@tools:sample/us_zipcodes" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -85,9 +88,11 @@
                 android:id="@+id/tag_cloud"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_marginStart="@dimen/padding_medium"
                 android:layout_marginEnd="@dimen/padding_medium"
-                android:layout_gravity="center" />
+                android:nextFocusUp="@id/version"
+                android:nextFocusDown="@id/horizontal_layout" />
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_marginTop="@dimen/padding_small"
@@ -106,6 +111,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
+                        android:nextFocusUp="@id/tag_cloud"
+                        android:nextFocusDown="@android:id/list"
                         android:paddingStart="8dp"
                         android:paddingTop="4dp"
                         android:paddingEnd="8dp"
@@ -122,6 +129,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:overScrollMode="never"
+                android:nextFocusUp="@id/horizontal_layout"
                 tools:listitem="@layout/item_icon_title_subtitle" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>

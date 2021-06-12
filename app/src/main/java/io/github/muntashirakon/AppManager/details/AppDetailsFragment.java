@@ -3,7 +3,9 @@
 package io.github.muntashirakon.AppManager.details;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ComponentInfo;
@@ -161,7 +163,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     private SwipeRefreshLayout mSwipeRefresh;
     private MenuItem blockingToggler;
     private LinearProgressIndicator mProgressIndicator;
-    private TextView mRulesNotAppliedMsg;
+    private TextView mAlertText;
     private boolean isExternalApk;
     @Property
     private int neededProperty;
@@ -233,9 +235,14 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         mProgressIndicator = view.findViewById(R.id.progress_linear);
         mProgressIndicator.setVisibilityAfterHide(View.GONE);
         showProgressIndicator(true);
-        mRulesNotAppliedMsg = view.findViewById(R.id.alert_text);
-        mRulesNotAppliedMsg.setVisibility(View.GONE);
-        mRulesNotAppliedMsg.setText(R.string.rules_not_applied);
+        mAlertText = view.findViewById(R.id.alert_text);
+        int helpStringRes = getHelpString(neededProperty);
+        if (helpStringRes != 0) mAlertText.setText(helpStringRes);
+        if (helpStringRes == 0 || neededProperty >= ACTIVITIES && neededProperty <= PROVIDERS) {
+            mAlertText.setVisibility(View.GONE);
+        } else {
+            mAlertText.postDelayed(() -> mAlertText.setVisibility(View.GONE), 30_000);
+        }
         mSwipeRefresh.setOnChildScrollUpCallback((parent, child) -> recyclerView.canScrollVertically(-1));
         if (mainModel == null) return;
         if (mPackageName == null) mPackageName = mainModel.getPackageName();
@@ -247,8 +254,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             } else showProgressIndicator(false);
         });
         mainModel.getRuleApplicationStatus().observe(getViewLifecycleOwner(), status -> {
-            if (neededProperty > APP_INFO && neededProperty <= PROVIDERS) {
-                mRulesNotAppliedMsg.setVisibility(status != AppDetailsViewModel.RULE_NOT_APPLIED ?
+            if (neededProperty >= ACTIVITIES && neededProperty <= PROVIDERS) {
+                mAlertText.setVisibility(status != AppDetailsViewModel.RULE_NOT_APPLIED ?
                         View.GONE : View.VISIBLE);
             }
         });
@@ -561,6 +568,37 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         }
     }
 
+    /**
+     * Return corresponding section's array
+     */
+    private int getHelpString(@Property int index) {
+        switch (index) {
+            case ACTIVITIES:
+            case SERVICES:
+            case RECEIVERS:
+            case PROVIDERS:
+                return R.string.rules_not_applied;
+            case APP_INFO:
+            case FEATURES:
+            case CONFIGURATIONS:
+            case SIGNATURES:
+            case SHARED_LIBRARIES:
+            case NONE:
+            default:
+                return 0;
+            case APP_OPS:
+                if (AppPref.isRootOrAdbEnabled() || PermissionUtils.hasAppOpsPermission(mActivity)) {
+                    return R.string.help_app_ops_tab;
+                } else return 0;
+            case USES_PERMISSIONS:
+                if (AppPref.isRootOrAdbEnabled() || PermissionUtils.hasAppOpsPermission(mActivity)) {
+                    return R.string.help_uses_permissions_tab;
+                } else return 0;
+            case PERMISSIONS:
+                return R.string.help_permissions_tab;
+        }
+    }
+
     private void showProgressIndicator(boolean show) {
         if (mProgressIndicator == null) return;
         if (show) mProgressIndicator.show();
@@ -747,7 +785,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         break;
                     case FEATURES:
                         textView1 = itemView.findViewById(R.id.name);
-                        textView2 = itemView.findViewById(R.id.flags);
                         textView3 = itemView.findViewById(R.id.gles_ver);
                         break;
                     case CONFIGURATIONS:
@@ -1169,12 +1206,13 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             PermissionInfo permissionInfo = null;
             try {
                 String permName = AppOpsManager.opToPermission(opEntry.getOp());
-                if (permName != null)
+                if (permName != null) {
                     permissionInfo = mPackageManager.getPermissionInfo(permName, PackageManager.GET_META_DATA);
+                }
             } catch (PackageManager.NameNotFoundException | IllegalArgumentException | IndexOutOfBoundsException ignore) {
             }
             // Set op name
-            SpannableStringBuilder opName = new SpannableStringBuilder("(" + opEntry.getOp() + ") ");
+            SpannableStringBuilder opName = new SpannableStringBuilder(opEntry.getOp() + " - ");
             if (item.name.equals(String.valueOf(opEntry.getOp()))) {
                 opName.append(getString(R.string.unknown_op));
             } else {
@@ -1260,25 +1298,25 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             holder.toggleSwitch.setVisibility(View.VISIBLE);
             // op granted
             holder.toggleSwitch.setChecked(opEntry.getMode() == AppOpsManager.MODE_ALLOWED);
-            holder.toggleSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                if (buttonView.isPressed()) {
-                    executor.submit(() -> {
-                        int opMode = isChecked ? AppOpsManager.MODE_ALLOWED : AppOpsManager.MODE_IGNORED;
-                        if (mainModel != null && mainModel.setAppOp(opEntry.getOp(), opMode)) {
-                            OpEntry opEntry1 = new OpEntry(opEntry.getOp(), opMode, opEntry.getTime(),
-                                    opEntry.getRejectTime(), opEntry.getDuration(),
-                                    opEntry.getProxyUid(), opEntry.getProxyPackageName());
-                            AppDetailsItem appDetailsItem = new AppDetailsItem(opEntry1);
-                            appDetailsItem.name = item.name;
-                            runOnUiThread(() -> set(index, appDetailsItem));
-                        } else {
-                            runOnUiThread(() -> {
-                                UIUtils.displayLongToast(isChecked ? R.string.failed_to_enable_op : R.string.app_op_cannot_be_disabled);
-                                notifyItemChanged(index);
-                            });
-                        }
-                    });
-                }
+            holder.itemView.setOnClickListener(v -> {
+                boolean isChecked = !holder.toggleSwitch.isChecked();
+                holder.toggleSwitch.setChecked(isChecked);
+                executor.submit(() -> {
+                    int opMode = isChecked ? AppOpsManager.MODE_ALLOWED : AppOpsManager.MODE_IGNORED;
+                    if (mainModel != null && mainModel.setAppOp(opEntry.getOp(), opMode)) {
+                        OpEntry opEntry1 = new OpEntry(opEntry.getOp(), opMode, opEntry.getTime(),
+                                opEntry.getRejectTime(), opEntry.getDuration(),
+                                opEntry.getProxyUid(), opEntry.getProxyPackageName());
+                        AppDetailsItem appDetailsItem = new AppDetailsItem(opEntry1);
+                        appDetailsItem.name = item.name;
+                        runOnUiThread(() -> set(index, appDetailsItem));
+                    } else {
+                        runOnUiThread(() -> {
+                            UIUtils.displayLongToast(isChecked ? R.string.failed_to_enable_op : R.string.app_op_cannot_be_disabled);
+                            notifyItemChanged(index);
+                        });
+                    }
+                });
             });
             holder.itemView.setOnLongClickListener(v -> {
                 List<Integer> modes = getAppOpModes();
@@ -1358,24 +1396,27 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     || permissionItem.appOp != AppOpsManager.OP_NONE)) {
                 holder.toggleSwitch.setVisibility(View.VISIBLE);
                 holder.toggleSwitch.setChecked(permissionItem.isGranted);
-                holder.toggleSwitch.setOnCheckedChangeListener((buttonView, isGranted) -> {
-                    if (buttonView.isPressed()) {
-                        executor.submit(() -> {
-                            if (mainModel.setPermission(permName, isGranted)) {
-                                AppDetailsPermissionItem appDetailsItem = new AppDetailsPermissionItem(permissionItem);
-                                appDetailsItem.isGranted = isGranted;
-                                runOnUiThread(() -> set(index, appDetailsItem));
-                                mainModel.setUsesPermission(appDetailsItem.name, isGranted);
-                            } else {
-                                runOnUiThread(() -> {
-                                    Toast.makeText(mActivity, isGranted ? R.string.failed_to_grant_permission : R.string.failed_to_revoke_permission, Toast.LENGTH_SHORT).show();
-                                    notifyItemChanged(index);
-                                });
-                            }
-                        });
-                    }
+                holder.itemView.setOnClickListener(v -> {
+                    boolean isGranted = !holder.toggleSwitch.isChecked();
+                    holder.toggleSwitch.setChecked(isGranted);
+                    executor.submit(() -> {
+                        if (mainModel.setPermission(permName, isGranted)) {
+                            AppDetailsPermissionItem appDetailsItem = new AppDetailsPermissionItem(permissionItem);
+                            appDetailsItem.isGranted = isGranted;
+                            runOnUiThread(() -> set(index, appDetailsItem));
+                            mainModel.setUsesPermission(appDetailsItem.name, isGranted);
+                        } else {
+                            runOnUiThread(() -> {
+                                UIUtils.displayShortToast(isGranted ? R.string.failed_to_grant_permission : R.string.failed_to_revoke_permission);
+                                notifyItemChanged(index);
+                            });
+                        }
+                    });
                 });
-            } else holder.toggleSwitch.setVisibility(View.GONE);
+            } else {
+                holder.toggleSwitch.setVisibility(View.GONE);
+                holder.itemView.setOnClickListener(null);
+            }
         }
 
         private void getSharedLibsView(@NonNull ViewHolder holder, int index) {
@@ -1410,8 +1451,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     getString(R.string.group), permissionInfo.group + permAppOp(permissionInfo.name)));
             // Protection level
             String protectionLevel = Utils.getProtectionLevelString(permissionInfo);
-            holder.textView5.setText(String.format(Locale.ROOT, "%s: %s",
-                    getString(R.string.protection_level), protectionLevel));
+            holder.textView5.setText(String.format(Locale.ROOT, "\u2691 %s", protectionLevel));
             // Set background color
             if (protectionLevel.contains("dangerous")) {
                 view.setBackgroundResource(R.drawable.item_red);
@@ -1424,47 +1464,54 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         private void getFeaturesView(@NonNull ViewHolder holder, int index) {
             View view = holder.itemView;
             final FeatureInfo featureInfo = (FeatureInfo) mAdapterList.get(index).vanillaItem;
-            view.setBackgroundResource(index % 2 == 0 ? R.drawable.item_semi_transparent : R.drawable.item_transparent);
-            if (!featureInfo.name.equals(OPEN_GL_ES)) {
-                boolean isAvailable;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    isAvailable = mPackageManager.hasSystemFeature(featureInfo.name, featureInfo.version);
-                } else {
-                    isAvailable = mPackageManager.hasSystemFeature(featureInfo.name);
-                }
-                // Feature name
-                holder.textView1.setText(new SpannableStringBuilder(featureInfo.name)
-                        .append(UIUtils.getSmallerText(" (" + (isAvailable ?
-                                getText(R.string.available) :
-                                getText(R.string.unavailable)) + ")")));
-                // Feature version
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    holder.textView3.setVisibility(View.VISIBLE);
-                    holder.textView3.setText(getString(R.string.version) + ": " + featureInfo.version);
-                } else holder.textView3.setVisibility(View.GONE);
+            // Currently, feature only has a single flag, which specifies whether the feature is required.
+            boolean isRequired = (featureInfo.flags & FeatureInfo.FLAG_REQUIRED) != 0;
+            boolean isAvailable;
+            if (featureInfo.name.equals(OPEN_GL_ES)) {
+                ActivityManager activityManager = (ActivityManager) mActivity.getSystemService(Context.ACTIVITY_SERVICE);
+                int glEsVersion = activityManager.getDeviceConfigurationInfo().reqGlEsVersion;
+                isAvailable = featureInfo.reqGlEsVersion <= glEsVersion;
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                isAvailable = mPackageManager.hasSystemFeature(featureInfo.name, featureInfo.version);
             } else {
-                // OpenGL ES
-                holder.textView1.setText(featureInfo.name);
-                holder.textView3.setVisibility(View.VISIBLE);
-                // GL ES version
-                holder.textView3.setText(String.format(Locale.ROOT, "%s: %s",
-                        getString(R.string.gles_ver),
-                        Utils.getGlEsVersion(featureInfo.reqGlEsVersion)));
-
+                isAvailable = mPackageManager.hasSystemFeature(featureInfo.name);
             }
-            // Flags
-            holder.textView2.setText(String.format(Locale.ROOT, "%s: %s",
-                    getString(R.string.flags), getString(Utils.getFeatureFlags(featureInfo.flags))
-                            + (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && featureInfo.version != 0 ? " | minV%:" + featureInfo.version : "")));
+            // Set background
+            if (isRequired && !isAvailable) {
+                view.setBackgroundResource(R.drawable.item_red);
+            } else if (!isAvailable) {
+                view.setBackgroundResource(R.drawable.item_disabled);
+            } else {
+                view.setBackgroundResource(index % 2 == 0 ? R.drawable.item_semi_transparent : R.drawable.item_transparent);
+            }
+            if (featureInfo.name.equals(OPEN_GL_ES)) {
+                // OpenGL ES
+                if (featureInfo.reqGlEsVersion == FeatureInfo.GL_ES_VERSION_UNDEFINED) {
+                    holder.textView1.setText(featureInfo.name);
+                } else {
+                    // GL ES version
+                    holder.textView1.setText(String.format(Locale.ROOT, "%s %s",
+                            getString(R.string.gles_version), Utils.getGlEsVersion(featureInfo.reqGlEsVersion)));
+                }
+                holder.textView3.setVisibility(View.GONE);
+                return;
+            }
+            // Set feature name
+            holder.textView1.setText(featureInfo.name);
+            // Feature version: 0 means any version
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && featureInfo.version != 0) {
+                holder.textView3.setVisibility(View.VISIBLE);
+                holder.textView3.setText(getString(R.string.minimum_version, featureInfo.version));
+            } else holder.textView3.setVisibility(View.GONE);
         }
 
         private void getConfigurationView(@NonNull ViewHolder holder, int index) {
             View view = holder.itemView;
             final ConfigurationInfo configurationInfo = (ConfigurationInfo) mAdapterList.get(index).vanillaItem;
             view.setBackgroundResource(index % 2 == 0 ? R.drawable.item_semi_transparent : R.drawable.item_transparent);
-            // GL ES ver
-            holder.textView1.setText(String.format(Locale.ROOT, "%s: %s",
-                    getString(R.string.gles_ver), Utils.getGlEsVersion(configurationInfo.reqGlEsVersion)));
+            // GL ES version
+            holder.textView1.setText(String.format(Locale.ROOT, "%s %s",
+                    getString(R.string.gles_version), Utils.getGlEsVersion(configurationInfo.reqGlEsVersion)));
             // Flag & others
             holder.textView2.setText(String.format(Locale.ROOT, "%s: %s", getString(R.string.input_features),
                     Utils.getInputFeaturesString(configurationInfo.reqInputFeatures)));

@@ -503,7 +503,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
             for (FeatureInfo info : features) {
                 if (info.name != null) {
                     // It's a feature
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && info.version != 0) {
                         featureStrings.add(info.name + " (v" + info.version + ")");
                     } else featureStrings.add(info.name);
                 }
