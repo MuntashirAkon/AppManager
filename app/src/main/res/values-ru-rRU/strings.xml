@@ -1110,7 +1110,7 @@
     <string name="app_signing_signature_mismatch_for_data_only_app">Не удалось установить приложение из-за несоответствия подписи. Приложение было удалено без очистки данных.</string>
     <string name="community">Сообщество</string>
     <string name="community_links">Telegram: https://t.me/AppManagerChannel
-\nTwitter: https://twitter.com/AppManagerNews</string>
+\nТвиттер: https://twitter.com/AppManagerNews</string>
     <plurals name="alert_failed_to_import_backups">
         <item quantity="one">Не удалось импортировать %1$d резервную копию</item>
         <item quantity="few">Не удалось импортировать %1$d резервных копии</item>
