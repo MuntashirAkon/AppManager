@@ -7,11 +7,12 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Intent;
 
-import java.io.FileNotFoundException;
-
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+
+import java.io.FileNotFoundException;
+
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -29,6 +30,7 @@ public class ProfileApplierService extends ForegroundService {
 
     @Nullable
     private String profileName;
+    private NotificationCompat.Builder builder;
     private NotificationManagerCompat notificationManager;
 
     public ProfileApplierService() {
@@ -37,44 +39,66 @@ public class ProfileApplierService extends ForegroundService {
 
     @Override
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
+        if (isWorking()) return super.onStartCommand(intent, flags, startId);
         if (intent != null) {
             profileName = intent.getStringExtra(EXTRA_PROFILE_NAME);
-            Intent notificationIntent = new Intent(this, AppsProfileActivity.class);
-            intent.putExtra(AppsProfileActivity.EXTRA_PROFILE_NAME, profileName);
-            PendingIntent pendingIntent = PendingIntent.getActivity(this,
-                    0, notificationIntent, 0);
-            notificationManager = NotificationUtils.getNewNotificationManager(this, CHANNEL_ID,
-                    "Profile Applier", NotificationManagerCompat.IMPORTANCE_LOW);
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                    .setContentTitle(profileName)
-                    .setContentText(getString(R.string.operation_running))
-                    .setSmallIcon(R.drawable.ic_launcher_foreground)
-                    .setSubText(getText(R.string.profiles))
-                    .setPriority(NotificationCompat.PRIORITY_LOW)
-                    .setProgress(0, 0, true)
-                    .setContentIntent(pendingIntent);
-            startForeground(NOTIFICATION_ID, builder.build());
         }
+        notificationManager = NotificationUtils.getNewNotificationManager(this, CHANNEL_ID,
+                "Profile Applier", NotificationManagerCompat.IMPORTANCE_LOW);
+        builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentText(getString(R.string.operation_running))
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setSubText(getText(R.string.profiles))
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setProgress(0, 0, true);
+        startForeground(NOTIFICATION_ID, builder.build());
         return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        if (intent == null || profileName == null) return;
+        if (intent == null) return;
+        profileName = intent.getStringExtra(EXTRA_PROFILE_NAME);
+        if (profileName == null) return;
         String state = intent.getStringExtra(EXTRA_PROFILE_STATE);
         try {
-            ProfileMetaManager metaManager = new ProfileMetaManager(profileName);
-            ProfileManager profileManager = new ProfileManager(metaManager);
+            ProfileManager profileManager = new ProfileManager(new ProfileMetaManager(profileName));
             profileManager.applyProfile(state);
             sendNotification(Activity.RESULT_OK);
         } catch (FileNotFoundException e) {
             Log.e("ProfileApplier", "Could not apply the profile");
             sendNotification(Activity.RESULT_CANCELED);
-        } finally {
-            stopForeground(true);
-            // Hack to remove ongoing notification
-            notificationManager.deleteNotificationChannel(CHANNEL_ID);
         }
+    }
+
+    @Override
+    protected void onQueued(@Nullable Intent intent) {
+        if (intent == null) return;
+        String profileName = intent.getStringExtra(EXTRA_PROFILE_NAME);
+        NotificationCompat.Builder builder = NotificationUtils.getHighPriorityNotificationBuilder(this)
+                .setAutoCancel(true)
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setWhen(System.currentTimeMillis())
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setTicker(profileName)
+                .setContentTitle(profileName)
+                .setSubText(getText(R.string.profiles))
+                .setContentText(getString(R.string.added_to_queue));
+        NotificationUtils.displayHighPriorityNotification(this, builder.build());
+    }
+
+    @Override
+    protected void onStartIntent(@Nullable Intent intent) {
+        if (intent == null) return;
+        profileName = intent.getStringExtra(EXTRA_PROFILE_NAME);
+        Intent notificationIntent = new Intent(this, AppsProfileActivity.class);
+        notificationIntent.putExtra(AppsProfileActivity.EXTRA_PROFILE_NAME, profileName);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,
+                0, notificationIntent, 0);
+        // Set app name in the ongoing notification
+        builder.setContentTitle(profileName)
+                .setContentIntent(pendingIntent);
+        notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 
     @Override
@@ -82,6 +106,14 @@ public class ProfileApplierService extends ForegroundService {
         if (notificationManager != null) {
             notificationManager.cancel(NOTIFICATION_ID);
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        stopForeground(true);
+        // Hack to remove ongoing notification
+        notificationManager.deleteNotificationChannel(CHANNEL_ID);
+        super.onDestroy();
     }
 
     private void sendNotification(int result) {

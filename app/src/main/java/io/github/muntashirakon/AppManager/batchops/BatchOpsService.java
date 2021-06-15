@@ -143,18 +143,17 @@ public class BatchOpsService extends ForegroundService {
 
     @Override
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
+        if (isWorking()) return super.onStartCommand(intent, flags, startId);
         if (intent != null) {
             op = intent.getIntExtra(EXTRA_OP, BatchOpsManager.OP_NONE);
-            header = intent.getStringExtra(EXTRA_HEADER);
         }
-        if (header == null) header = getString(R.string.batch_ops);
+        header = getHeader(intent);
         notificationManager = NotificationUtils.getNewNotificationManager(this, CHANNEL_ID,
                 "Batch Ops Progress", NotificationManagerCompat.IMPORTANCE_LOW);
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this,
                 0, notificationIntent, 0);
         builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle(getDesiredOpTitle())
                 .setContentText(getString(R.string.operation_running))
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setSubText(header)
@@ -168,38 +167,59 @@ public class BatchOpsService extends ForegroundService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        try {
-            if (intent == null) {
-                sendResults(Activity.RESULT_CANCELED, null);
-                return;
-            }
-            op = intent.getIntExtra(EXTRA_OP, BatchOpsManager.OP_NONE);
-            packages = intent.getStringArrayListExtra(EXTRA_OP_PKG);
-            if (packages == null) return;
-            args = intent.getBundleExtra(EXTRA_OP_EXTRA_ARGS);
-            ArrayList<Integer> userHandles = intent.getIntegerArrayListExtra(EXTRA_OP_USERS);
-            if (userHandles == null) {
-                userHandles = new ArrayList<>(packages.size());
-                for (String ignore : packages) userHandles.add(Users.getCurrentUserHandle());
-            }
-            if (op == BatchOpsManager.OP_NONE || packages == null) {
-                sendResults(Activity.RESULT_CANCELED, null);
-                return;
-            }
-            sendStarted();
-            BatchOpsManager batchOpsManager = new BatchOpsManager();
-            batchOpsManager.setArgs(args);
-            BatchOpsManager.Result result = batchOpsManager.performOp(op, packages, userHandles);
-            if (result.isSuccessful()) {
-                sendResults(Activity.RESULT_OK, null);
-            } else {
-                sendResults(Activity.RESULT_FIRST_USER, result);
-            }
-        } finally {
-            stopForeground(true);
-            // Hack to remove ongoing notification
-            notificationManager.deleteNotificationChannel(CHANNEL_ID);
+        if (intent == null) {
+            sendResults(Activity.RESULT_CANCELED, null);
+            return;
         }
+        op = intent.getIntExtra(EXTRA_OP, BatchOpsManager.OP_NONE);
+        packages = intent.getStringArrayListExtra(EXTRA_OP_PKG);
+        if (packages == null) return;
+        args = intent.getBundleExtra(EXTRA_OP_EXTRA_ARGS);
+        ArrayList<Integer> userHandles = intent.getIntegerArrayListExtra(EXTRA_OP_USERS);
+        if (userHandles == null) {
+            userHandles = new ArrayList<>(packages.size());
+            for (String ignore : packages) userHandles.add(Users.getCurrentUserHandle());
+        }
+        if (op == BatchOpsManager.OP_NONE || packages == null) {
+            sendResults(Activity.RESULT_CANCELED, null);
+            return;
+        }
+        sendStarted();
+        BatchOpsManager batchOpsManager = new BatchOpsManager();
+        batchOpsManager.setArgs(args);
+        BatchOpsManager.Result result = batchOpsManager.performOp(op, packages, userHandles);
+        if (result.isSuccessful()) {
+            sendResults(Activity.RESULT_OK, null);
+        } else {
+            sendResults(Activity.RESULT_FIRST_USER, result);
+        }
+    }
+
+    @Override
+    protected void onQueued(@Nullable Intent intent) {
+        if (intent == null) return;
+        int op = intent.getIntExtra(EXTRA_OP, BatchOpsManager.OP_NONE);
+        String opTitle = getDesiredOpTitle(op);
+        NotificationCompat.Builder builder = NotificationUtils.getHighPriorityNotificationBuilder(this)
+                .setAutoCancel(true)
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setWhen(System.currentTimeMillis())
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setTicker(opTitle)
+                .setContentTitle(opTitle)
+                .setSubText(getHeader(intent))
+                .setContentText(getString(R.string.added_to_queue));
+        NotificationUtils.displayHighPriorityNotification(this, builder.build());
+    }
+
+    @Override
+    protected void onStartIntent(@Nullable Intent intent) {
+        if (intent == null) return;
+        int op = intent.getIntExtra(EXTRA_OP, BatchOpsManager.OP_NONE);
+        header = getHeader(intent);
+        builder.setContentTitle(getDesiredOpTitle(op))
+                .setSubText(header);
+        notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 
     @Override
@@ -212,6 +232,9 @@ public class BatchOpsService extends ForegroundService {
     @Override
     public void onDestroy() {
         unregisterReceiver(broadcastReceiver);
+        stopForeground(true);
+        // Hack to remove ongoing notification
+        notificationManager.deleteNotificationChannel(CHANNEL_ID);
         super.onDestroy();
     }
 
@@ -232,9 +255,9 @@ public class BatchOpsService extends ForegroundService {
     }
 
     private void sendNotification(int result, BatchOpsManager.Result opResult) {
-        String contentTitle = getDesiredOpTitle();
-        NotificationCompat.Builder builder = NotificationUtils.getHighPriorityNotificationBuilder(this);
-        builder.setAutoCancel(true)
+        String contentTitle = getDesiredOpTitle(op);
+        NotificationCompat.Builder builder = NotificationUtils.getHighPriorityNotificationBuilder(this)
+                .setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setWhen(System.currentTimeMillis())
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
@@ -268,7 +291,15 @@ public class BatchOpsService extends ForegroundService {
     }
 
     @NonNull
-    private String getDesiredOpTitle() {
+    public String getHeader(@Nullable Intent intent) {
+        if (intent != null) {
+            return intent.getStringExtra(EXTRA_HEADER);
+        }
+        return getString(R.string.batch_ops);
+    }
+
+    @NonNull
+    private String getDesiredOpTitle(@BatchOpsManager.OpType int op) {
         switch (op) {
             case BatchOpsManager.OP_BACKUP:
             case BatchOpsManager.OP_DELETE_BACKUP:
