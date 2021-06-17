@@ -12,6 +12,11 @@ android {
         targetSdkVersion rootProject.ext.targetSdk
         versionCode 388
         versionName "2.7.0"
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
     }
 
     signingConfigs {
@@ -67,6 +72,9 @@ android {
         unitTests {
             includeAndroidResources = true
         }
+    }
+    sourceSets {
+        androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
     }
 }
 
