@@ -589,6 +589,7 @@
         <item>com.taobao.orange.accssupport.</item>
         <item>com.taobao.sophix.</item>
         <item>com.alipay.sdk.</item>
+        <item>com.amberweather.sdk.amberadsdk.</item>
         <item>anet.channel</item>
         <item>com.anzu.sdk.</item>
         <item>com.appsamurai.</item>
@@ -693,6 +694,7 @@
         <item>com.intrasonics.</item>
         <item>com.ad.intromi.</item>
         <item>io.karte.android.tracker.</item>
+        <item>com.kakao.ad.</item>
         <item>com.kakao.kakaolink</item>
         <item>com.zestadz.android.</item>
         <item>com.apptracker.android.</item>
@@ -904,12 +906,16 @@
         <item>com.ayetstudios.publishersdk.</item>
         <item>co.nearbee</item>
         <item>com.deploygate.sdk.</item>
+        <item>com.fineapptech.fineadscreensdk.</item>
+        <item>com.fineapptech.finechubsdk.</item>
+        <item>com.mfine.sdk.capp.</item>
+        <item>com.fineapptech.finead.</item>
         <item>com.frogermcs.activityframemetrics</item>
         <item>com.mtraction.mtractioninapptracker.</item>
         <item>com.netmera.</item>
         <item>jp.pinable.ssbp.</item>
         <item>com.tabtale</item>
-</string-array>
+    </string-array>
 <string-array name="tracker_names">
         <item>Teemo</item>
         <item>Teemo</item>
@@ -1401,16 +1407,16 @@
         <item>Tappx</item>
         <item>ThinkingData Analytics</item>
         <item>VKontakte SDK</item>
-        <item>VKontakte SDK</item>
-        <item>Virgo Mobile</item>
-        <item>Zoho Analytics</item>
-        <item>fineboost</item>
-        <item>Acuant</item>
-        <item>Anvato (A Google Company)</item>
-        <item>Blesh</item>
-        <item>Bluecats</item>
-        <item>CoolaData</item>
-        <item>FLUZO</item>
+    <item>VKontakte SDK</item>
+    <item>Virgo Mobile</item>
+    <item>Zoho Analytics</item>
+    <item>fineboost</item>
+    <item>Acuant</item>
+    <item>Anvato (A Google Company)</item>
+    <item>Blesh</item>
+    <item>Bluecats</item>
+    <item>CoolaData</item>
+    <item>FLUZO</item>
     <item>Facebook Flipper</item>
     <item>GPShopper</item>
     <item>IndoorAtlas</item>
@@ -1458,16 +1464,16 @@
     <item>²APICloud</item>
     <item>²AWS Kinesis</item>
     <item>²AWS Kinesis</item>
-        <item>²Acrarium</item>
-        <item>²Ad2</item>
-        <item>²Ad4Game</item>
-        <item>²AdFlex</item>
-        <item>²AdGateMedia</item>
-        <item>²AdGem</item>
-        <item>²AdMarvel</item>
+    <item>²Acrarium</item>
+    <item>²Ad2</item>
+    <item>²Ad4Game</item>
+    <item>²AdFlex</item>
+    <item>²AdGateMedia</item>
+    <item>²AdGem</item>
+    <item>²AdMarvel</item>
     <item>²AdTech</item>
-        <item>²AdTheorent</item>
-        <item>²AdTiming</item>
+    <item>²AdTheorent</item>
+    <item>²AdTiming</item>
         <item>²AdTiming</item>
         <item>²AdTrial</item>
         <item>²AdWhirl (AdMob)</item>
@@ -1498,6 +1504,7 @@
         <item>²Alibaba analytics</item>
         <item>²Alibaba analytics</item>
         <item>²Alipay SDK</item>
+    <item>²Amber Weather Ad SDK</item>
         <item>²Anet channel library</item>
         <item>²Anzu</item>
         <item>²App Samurai</item>
@@ -1602,21 +1609,22 @@
         <item>²Intrasonics</item>
         <item>²IntroMi</item>
         <item>²KARTE</item>
+    <item>²Kakao AD SDK</item>
         <item>²KakaoTalk Link</item>
         <item>²Komli Mobile (ZestAdz)</item>
         <item>²LeadBolt</item>
         <item>²LeadBolt</item>
         <item>²LeadBolt</item>
-        <item>²LotaData</item>
-        <item>²Madhouse</item>
-        <item>²Malverting/Adfrauds</item>
-        <item>²Malverting/Adfrauds</item>
-        <item>²Malverting/Adfrauds</item>
-        <item>²Malverting/Adfrauds</item>
-        <item>²Malverting/Adfrauds</item>
-        <item>²Malverting/Adfrauds</item>
-        <item>²Malverting/Adfrauds</item>
-        <item>²Malverting/Adfrauds</item>
+    <item>²LotaData</item>
+    <item>²Madhouse</item>
+    <item>²Malverting/Adfrauds</item>
+    <item>²Malverting/Adfrauds</item>
+    <item>²Malverting/Adfrauds</item>
+    <item>²Malverting/Adfrauds</item>
+    <item>²Malverting/Adfrauds</item>
+    <item>²Malverting/Adfrauds</item>
+    <item>²Malverting/Adfrauds</item>
+    <item>²Malverting/Adfrauds</item>
     <item>²Malverting/Adfrauds</item>
     <item>²Malverting/Adfrauds</item>
     <item>²Malverting/Adfrauds</item>
@@ -1647,16 +1655,16 @@
     <item>²Moblin</item>
     <item>²Mobon SDK</item>
     <item>²Mofiler</item>
-        <item>²Mojise</item>
-        <item>²Morgoo Packer</item>
-        <item>²Mozilla Crashreport</item>
-        <item>²NetVelocity Passive SDK</item>
-        <item>²NetVelocity Passive SDK</item>
+    <item>²Mojise</item>
+    <item>²Morgoo Packer</item>
+    <item>²Mozilla Crashreport</item>
+    <item>²NetVelocity Passive SDK</item>
+    <item>²NetVelocity Passive SDK</item>
     <item>²NewsPic</item>
-        <item>²Ninja Metics</item>
-        <item>²Noah Pass</item>
-        <item>²NoxMobi(AiAdMobi)</item>
-        <item>²ONEstore</item>
+    <item>²Ninja Metics</item>
+    <item>²Noah Pass</item>
+    <item>²NoxMobi(AiAdMobi)</item>
+    <item>²ONEstore</item>
         <item>²Ogury</item>
         <item>²Ogury</item>
         <item>²Ogury</item>
@@ -1756,16 +1764,16 @@
         <item>²Umeng Push SDK</item>
         <item>²Umeng Push SDK</item>
         <item>²Unknown Trackers</item>
-        <item>²Unknown Trackers</item>
-        <item>²Unknown Trackers</item>
-        <item>²Unknown Trackers</item>
-        <item>²Unknown Trackers</item>
-        <item>²Unknown Trackers</item>
-        <item>²Unknown Trackers</item>
-        <item>²Unknown Trackers</item>
-        <item>²Unknown Trackers</item>
-        <item>²Unknown Trackers</item>
-        <item>²Unknown Trackers</item>
+    <item>²Unknown Trackers</item>
+    <item>²Unknown Trackers</item>
+    <item>²Unknown Trackers</item>
+    <item>²Unknown Trackers</item>
+    <item>²Unknown Trackers</item>
+    <item>²Unknown Trackers</item>
+    <item>²Unknown Trackers</item>
+    <item>²Unknown Trackers</item>
+    <item>²Unknown Trackers</item>
+    <item>²Unknown Trackers</item>
     <item>²Unknown Trackers</item>
     <item>²Unknown Trackers</item>
     <item>²Unknown Trackers</item>
@@ -1788,35 +1796,39 @@
     <item>²WapStart.Plus1</item>
     <item>²Weibo DeviceID</item>
     <item>²WonderPush</item>
-        <item>²Woopra</item>
-        <item>²Woorlds</item>
-        <item>²Xiaomi Push Service</item>
-        <item>²Xiaomi Push Service</item>
-        <item>²Yahoo!Japan DataShare</item>
-        <item>²Yahoo!Japan DataShare</item>
-        <item>²Yahoo!Japan DataShare</item>
-        <item>²Yahoo!Japan DataShare</item>
-        <item>²Yahoo!Japan DataShare</item>
-        <item>²Yahoo!Japan DataShare</item>
+    <item>²Woopra</item>
+    <item>²Woorlds</item>
+    <item>²Xiaomi Push Service</item>
+    <item>²Xiaomi Push Service</item>
+    <item>²Yahoo!Japan DataShare</item>
+    <item>²Yahoo!Japan DataShare</item>
+    <item>²Yahoo!Japan DataShare</item>
+    <item>²Yahoo!Japan DataShare</item>
+    <item>²Yahoo!Japan DataShare</item>
+    <item>²Yahoo!Japan DataShare</item>
         <item>²Yext</item>
         <item>²Yoadx</item>
         <item>²Yougoodtech</item>
         <item>²Yougoodtech</item>
         <item>²Youmi</item>
-        <item>²Zendesk</item>
-        <item>²Zenjoy</item>
-        <item>²Zucks</item>
-        <item>²adboost</item>
-        <item>²appPlant</item>
-        <item>²appTV</item>
-        <item>²appgeneration</item>
-        <item>²ayeT-Studios</item>
-        <item>²beaconstac/NearBee (MobStac Inc.)</item>
-        <item>²deploygate</item>
-        <item>²froger_mcs</item>
-        <item>²mTraction (mFaaS)</item>
-        <item>²netmera</item>
-        <item>²pinable</item>
-        <item>²tabtale</item>
-    </string-array>
+    <item>²Zendesk</item>
+    <item>²Zenjoy</item>
+    <item>²Zucks</item>
+    <item>²adboost</item>
+    <item>²appPlant</item>
+    <item>²appTV</item>
+    <item>²appgeneration</item>
+    <item>²ayeT-Studios</item>
+    <item>²beaconstac/NearBee (MobStac Inc.)</item>
+    <item>²deploygate</item>
+    <item>²fineapptech</item>
+    <item>²fineapptech</item>
+    <item>²fineapptech</item>
+    <item>²fineapptech</item>
+    <item>²froger_mcs</item>
+    <item>²mTraction (mFaaS)</item>
+    <item>²netmera</item>
+    <item>²pinable</item>
+    <item>²tabtale</item>
+</string-array>
 </resources>
