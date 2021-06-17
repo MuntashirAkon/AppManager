@@ -16,7 +16,7 @@ import java.util.Objects;
 
 import aosp.libcore.util.EmptyArray;
 import io.github.muntashirakon.AppManager.backup.BackupManager;
-import io.github.muntashirakon.AppManager.backup.MetadataManager;
+import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.io.ProxyFile;
@@ -38,7 +38,7 @@ public class ApplicationItem extends PackageItemInfo {
      * Backup info
      */
     @Nullable
-    public MetadataManager.Metadata metadata;
+    public Backup backup;
     /**
      * Application flags.
      * See {@link android.content.pm.ApplicationInfo#flags}
@@ -135,9 +135,9 @@ public class ApplicationItem extends PackageItemInfo {
             } catch (Exception ignore) {
             }
         }
-        if (metadata != null) {
+        if (backup != null) {
             try {
-                ProxyFile iconFile = new ProxyFile(metadata.backupPath, BackupManager.ICON_FILE);
+                ProxyFile iconFile = new ProxyFile(backup.getBackupPath(), BackupManager.ICON_FILE);
                 if (iconFile.exists()) {
                     try (InputStream is = new ProxyInputStream(iconFile)) {
                         return Drawable.createFromStream(is, name);

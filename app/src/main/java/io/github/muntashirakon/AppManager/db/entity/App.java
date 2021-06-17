@@ -170,6 +170,34 @@ public class App implements Serializable {
         return app;
     }
 
+    @NonNull
+    public static App fromBackup(@NonNull Backup backup) {
+        App app = new App();
+        app.packageName = backup.packageName;
+        app.uid = 0;
+        app.userId = backup.userId;
+        app.isInstalled = false;
+        if (backup.isSystem) {
+            app.flags |= ApplicationInfo.FLAG_SYSTEM;
+        }
+        app.isEnabled = true;
+        app.packageLabel = backup.label;
+        app.sdk = 0;
+        app.versionName = backup.versionName;
+        app.versionCode = backup.versionCode;
+        app.sharedUserId = null;
+        app.certName = "";
+        app.certAlgo = "";
+        app.firstInstallTime = backup.backupTime;
+        app.lastUpdateTime = backup.backupTime;
+        app.hasActivities = false;
+        app.hasSplits = backup.hasSplits;
+        app.rulesCount = 0;
+        app.trackerCount = 0;
+        app.lastActionTime = backup.backupTime;
+        return app;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

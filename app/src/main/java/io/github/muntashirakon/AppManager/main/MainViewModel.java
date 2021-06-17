@@ -33,7 +33,6 @@ import java.util.Map;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.backup.BackupUtils;
-import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.db.entity.App;
 import io.github.muntashirakon.AppManager.ipc.IPCUtils;
@@ -68,7 +67,6 @@ public class MainViewModel extends AndroidViewModel {
     @Nullable
     private String mFilterProfileName;
     private String searchQuery;
-    private HashMap<String, MetadataManager.Metadata> backupMetadata;
     private final Map<String, int[]> selectedPackages = new HashMap<>();
     private final ArrayList<ApplicationItem> selectedApplicationItems = new ArrayList<>();
     final MultithreadedExecutor executor = MultithreadedExecutor.getNewInstance();
@@ -256,9 +254,8 @@ public class MainViewModel extends AndroidViewModel {
     @GuardedBy("applicationItems")
     public void loadApplicationItems() {
         executor.submit(() -> {
-            backupMetadata = BackupUtils.getAllBackupMetadata();
-            List<ApplicationItem> updatedApplicationItems = PackageUtils.getInstalledOrBackedUpApplicationsFromDb(
-                    getApplication(), backupMetadata);
+            List<ApplicationItem> updatedApplicationItems = PackageUtils
+                    .getInstalledOrBackedUpApplicationsFromDb(getApplication(), executor, true);
             synchronized (applicationItems) {
                 applicationItems.clear();
                 applicationItems.addAll(updatedApplicationItems);
@@ -332,9 +329,9 @@ public class MainViewModel extends AndroidViewModel {
                         continue;
                     }
                     // Filter backups
-                    if ((mFilterFlags & ListOptions.FILTER_APPS_WITH_BACKUPS) != 0 && item.metadata == null) {
+                    if ((mFilterFlags & ListOptions.FILTER_APPS_WITH_BACKUPS) != 0 && item.backup == null) {
                         continue;
-                    } else if ((mFilterFlags & ListOptions.FILTER_APPS_WITHOUT_BACKUPS) != 0 && item.metadata != null) {
+                    } else if ((mFilterFlags & ListOptions.FILTER_APPS_WITHOUT_BACKUPS) != 0 && item.backup != null) {
                         continue;
                     }
                     // Filter rests
@@ -433,7 +430,7 @@ public class MainViewModel extends AndroidViewModel {
                     case ListOptions.SORT_BY_DISABLED_APP:
                         return -mode * Boolean.compare(o1.isDisabled, o2.isDisabled);
                     case ListOptions.SORT_BY_BACKUP:
-                        return -mode * Boolean.compare(o1.metadata != null, o2.metadata != null);
+                        return -mode * Boolean.compare(o1.backup != null, o2.backup != null);
                     case ListOptions.SORT_BY_LAST_ACTION:
                         return -mode * o1.lastActionTime.compareTo(o2.lastActionTime);
                     case ListOptions.SORT_BY_TRACKERS:
@@ -523,7 +520,7 @@ public class MainViewModel extends AndroidViewModel {
         synchronized (applicationItems) {
             ApplicationItem item = getApplicationItemFromApplicationItems(packageName);
             if (item != null) {
-                if (item.metadata == null) {
+                if (item.backup == null) {
                     applicationItems.remove(item);
                     for (int userHandle : item.userHandles) {
                         AppManager.getDb().appDao().delete(item.packageName, userHandle);
@@ -589,7 +586,7 @@ public class MainViewModel extends AndroidViewModel {
                 }
                 item.versionName = packageInfo.versionName;
                 item.versionCode = PackageInfoCompat.getLongVersionCode(packageInfo);
-                item.metadata = BackupUtils.getBackupInfo(packageName);
+                item.backup = BackupUtils.storeAllAndGetLatestBackupMetadata(packageName);
                 item.flags = applicationInfo.flags;
                 item.uid = applicationInfo.uid;
                 item.sharedUserId = packageInfo.sharedUserId;
@@ -647,7 +644,7 @@ public class MainViewModel extends AndroidViewModel {
                 item.packageName = app.packageName;
                 item.versionName = app.versionName;
                 item.versionCode = app.versionCode;
-                item.metadata = BackupUtils.getBackupInfo(packageName);
+                item.backup = BackupUtils.storeAllAndGetLatestBackupMetadata(packageName);
                 item.flags = app.flags;
                 item.uid = app.uid;
                 item.sharedUserId = app.sharedUserId;

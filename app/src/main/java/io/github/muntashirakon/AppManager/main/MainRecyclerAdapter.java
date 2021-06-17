@@ -41,7 +41,7 @@ import java.util.concurrent.TimeUnit;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity;
-import io.github.muntashirakon.AppManager.backup.MetadataManager;
+import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
@@ -326,14 +326,14 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             holder.size.setTextColor(mColorOrange);
         } else holder.size.setTextColor(mColorSecondary);
         // Check for backup
-        if (item.metadata != null) {
+        if (item.backup != null) {
             holder.backupIndicator.setVisibility(View.VISIBLE);
             holder.backupInfo.setVisibility(View.VISIBLE);
             holder.backupInfoExt.setVisibility(View.VISIBLE);
             holder.backupIndicator.setText(R.string.backup);
             int indicatorColor;
             if (item.isInstalled) {
-                if (item.metadata.versionCode >= item.versionCode) {
+                if (item.backup.versionCode >= item.versionCode) {
                     // Up-to-date backup
                     indicatorColor = mColorStopped;
                 } else {
@@ -345,20 +345,20 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 indicatorColor = mColorRed;
             }
             holder.backupIndicator.setTextColor(indicatorColor);
-            MetadataManager.Metadata metadata = item.metadata;
+            Backup backup = item.backup;
             long days = TimeUnit.DAYS.convert(System.currentTimeMillis() -
-                    metadata.backupTime, TimeUnit.MILLISECONDS);
+                    backup.backupTime, TimeUnit.MILLISECONDS);
             holder.backupInfo.setText(String.format("%s: %s, %s %s",
                     mActivity.getString(R.string.latest_backup), mActivity.getResources()
                             .getQuantityString(R.plurals.usage_days, (int) days, days),
-                    mActivity.getString(R.string.version), metadata.versionName));
+                    mActivity.getString(R.string.version), backup.versionName));
             StringBuilder extBulder = new StringBuilder();
-            if (metadata.flags.backupApkFiles()) extBulder.append("apk");
-            if (metadata.flags.backupData()) {
+            if (backup.getFlags().backupApkFiles()) extBulder.append("apk");
+            if (backup.getFlags().backupData()) {
                 if (extBulder.length() > 0) extBulder.append("+");
                 extBulder.append("data");
             }
-            if (metadata.hasRules) {
+            if (backup.hasRules) {
                 if (extBulder.length() > 0) extBulder.append("+");
                 extBulder.append("rules");
             }

@@ -25,7 +25,6 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.util.Pair;
 
-import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
@@ -55,6 +54,7 @@ import java.util.ListIterator;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
@@ -64,8 +64,9 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
-import io.github.muntashirakon.AppManager.backup.MetadataManager;
+import io.github.muntashirakon.AppManager.backup.BackupUtils;
 import io.github.muntashirakon.AppManager.db.entity.App;
+import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.ipc.IPCUtils;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.ipc.ps.ProcessEntry;
@@ -136,25 +137,30 @@ public final class PackageUtils {
         return userPackagePairList;
     }
 
-    @GuardedBy("metadataLock")
-    private static final Object metadataLock = new Object();
-
+    /**
+     * List all applications stored in App Manager database as well as from the system.
+     *
+     * @param executor    Retrieve applications from the system using the given thread instead of the current thread.
+     * @param loadBackups Load/List backup metadata
+     * @return List of applications, which could be the cached version if the executor parameter is {@code null}.
+     */
     @WorkerThread
-    @GuardedBy("metadataLock")
     @NonNull
     public static List<ApplicationItem> getInstalledOrBackedUpApplicationsFromDb(@NonNull Context context,
-                                                                                 @Nullable HashMap<String, MetadataManager.Metadata> backupMetadata) {
+                                                                                 @Nullable ExecutorService executor,
+                                                                                 boolean loadBackups) {
         List<ApplicationItem> applicationItems = new ArrayList<>();
         List<App> apps = AppManager.getDb().appDao().getAll();
-        if (apps.size() == 0) {
+        if (apps.size() == 0 || executor == null) {
             // Load app list for the first time
             Log.d("PackageUtils", "Loading apps for the first time.");
-            updateInstalledOrBackedUpApplications(context, backupMetadata);
+            updateInstalledOrBackedUpApplications(context, loadBackups);
             apps = AppManager.getDb().appDao().getAll();
         } else {
             // Update list of apps safely in the background
-            new Thread(() -> updateInstalledOrBackedUpApplications(context, backupMetadata)).start();
+            executor.submit(() -> updateInstalledOrBackedUpApplications(context, loadBackups));
         }
+        HashMap<String, Backup> backups = BackupUtils.getAllLatestBackupMetadataFromDb();
         // Get application items from apps
         for (App app : apps) {
             ApplicationItem item = new ApplicationItem();
@@ -182,12 +188,9 @@ public final class PackageUtils {
                     item.isInstalled = false;
                 }
             }
-            if (backupMetadata != null) {
-                MetadataManager.Metadata metadata = backupMetadata.get(item.packageName);
-                if (metadata != null) {
-                    item.metadata = metadata;
-                    backupMetadata.remove(item.packageName);
-                }
+            if (backups.containsKey(item.packageName)) {
+                item.backup = backups.get(item.packageName);
+                backups.remove(item.packageName);
             }
             item.flags = app.flags;
             item.uid = app.uid;
@@ -209,36 +212,44 @@ public final class PackageUtils {
             item.lastActionTime = app.lastActionTime;
             applicationItems.add(item);
         }
-        if (backupMetadata != null) {
-            synchronized (metadataLock) {
-                // Add rest of the backup items, i.e., items that aren't installed
-                for (MetadataManager.Metadata metadata : backupMetadata.values()) {
-                    ApplicationItem item = new ApplicationItem();
-                    item.packageName = metadata.packageName;
-                    item.metadata = metadata;
-                    item.versionName = item.metadata.versionName;
-                    item.versionCode = item.metadata.versionCode;
-                    item.label = item.metadata.label;
-                    item.firstInstallTime = item.metadata.backupTime;
-                    item.lastUpdateTime = item.metadata.backupTime;
-                    item.isUser = !item.metadata.isSystem;
-                    item.isDisabled = false;
-                    item.isInstalled = false;
-                    item.hasSplits = metadata.isSplitApk;
-                    applicationItems.add(item);
-                }
-            }
+        // Add rest of the backups
+        for (String packageName : backups.keySet()) {
+            Backup backup = backups.get(packageName);
+            if (backup == null) continue;
+            ApplicationItem item = new ApplicationItem();
+            item.packageName = backup.packageName;
+            item.backup = backup;
+            item.versionName = backup.versionName;
+            item.versionCode = backup.versionCode;
+            item.label = backup.label;
+            item.firstInstallTime = backup.backupTime;
+            item.lastUpdateTime = backup.backupTime;
+            item.isUser = !backup.isSystem;
+            item.isDisabled = false;
+            item.isInstalled = false;
+            item.hasSplits = backup.hasSplits;
+            applicationItems.add(item);
         }
         return applicationItems;
     }
 
-    @GuardedBy("metadataLock")
+    @WorkerThread
     private static void updateInstalledOrBackedUpApplications(@NonNull Context context,
-                                                              @Nullable HashMap<String, MetadataManager.Metadata> backupMetadata) {
+                                                              boolean loadBackups) {
+        HashMap<String, Backup> backups;
+        if (loadBackups) {
+            backups = BackupUtils.storeAllAndGetLatestBackupMetadata();
+        } else backups = BackupUtils.getAllLatestBackupMetadataFromDb();
+        // Interrupt thread on request
+        if (Thread.currentThread().isInterrupted()) return;
+
         List<App> newApps = new ArrayList<>();
         List<Integer> newAppHashes = new ArrayList<>();
         int[] userHandles = Users.getUsersHandles();
         for (int userHandle : userHandles) {
+            // Interrupt thread on request
+            if (Thread.currentThread().isInterrupted()) return;
+
             List<PackageInfo> packageInfoList;
             try {
                 packageInfoList = PackageManagerCompat.getInstalledPackages(flagSigningInfo
@@ -249,18 +260,17 @@ public final class PackageUtils {
                 continue;
             }
             ApplicationInfo applicationInfo;
-            MetadataManager.Metadata metadata;
+            Backup backup;
 
             for (PackageInfo packageInfo : packageInfoList) {
+                // Interrupt thread on request
+                if (Thread.currentThread().isInterrupted()) return;
+
                 applicationInfo = packageInfo.applicationInfo;
                 App app = App.fromPackageInfo(context, packageInfo);
-                if (backupMetadata != null) {
-                    synchronized (metadataLock) {
-                        metadata = backupMetadata.get(applicationInfo.packageName);
-                        if (metadata != null) {
-                            backupMetadata.remove(applicationInfo.packageName);
-                        }
-                    }
+                backup = backups.get(applicationInfo.packageName);
+                if (backup != null) {
+                    backups.remove(applicationInfo.packageName);
                 }
                 try (ComponentsBlocker cb = ComponentsBlocker.getInstance(app.packageName, app.userId, true)) {
                     app.rulesCount = cb.entryCount();
@@ -269,25 +279,27 @@ public final class PackageUtils {
                 newAppHashes.add(app.getHashCode());
             }
         }
-        if (backupMetadata != null) {
-            synchronized (metadataLock) {
-                // Add rest of the backup items, i.e., items that aren't installed
-                for (MetadataManager.Metadata metadata : backupMetadata.values()) {
-                    if (metadata == null) continue;
-                    App app = App.fromBackupMetadata(metadata);
-                    try (ComponentsBlocker cb = ComponentsBlocker.getInstance(app.packageName, app.userId, true)) {
-                        app.rulesCount = cb.entryCount();
-                    }
-                    newApps.add(app);
-                    newAppHashes.add(app.getHashCode());
-                }
+        // Add rest of the backup items, i.e., items that aren't installed
+        for (Backup backup : backups.values()) {
+            // Interrupt thread on request
+            if (Thread.currentThread().isInterrupted()) return;
+
+            if (backup == null) continue;
+            App app = App.fromBackup(backup);
+            try (ComponentsBlocker cb = ComponentsBlocker.getInstance(app.packageName, app.userId, true)) {
+                app.rulesCount = cb.entryCount();
             }
+            newApps.add(app);
+            newAppHashes.add(app.getHashCode());
         }
         // Add new and delete old items
         List<App> oldApps = AppManager.getDb().appDao().getAll();
         List<App> updatedApps = new ArrayList<>();
         ListIterator<App> iterator = oldApps.listIterator();
         while (iterator.hasNext()) {
+            // Interrupt thread on request
+            if (Thread.currentThread().isInterrupted()) return;
+
             App oldApp = iterator.next();
             int index = newApps.indexOf(oldApp);
             if (index != -1) {
