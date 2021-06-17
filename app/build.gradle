@@ -36,6 +36,7 @@ android {
         }
         preRelease {
             minifyEnabled false
+            applicationIdSuffix '.pre'
             versionNameSuffix '-PRE'
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             resValue "string", "app_name", "AM Pre-release"
