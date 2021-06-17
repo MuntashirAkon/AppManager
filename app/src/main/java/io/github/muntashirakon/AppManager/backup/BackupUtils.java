@@ -15,28 +15,14 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.logcat.helper.SaveLogHelper;
 import io.github.muntashirakon.io.FileStatus;
 import io.github.muntashirakon.io.ProxyFile;
 import io.github.muntashirakon.io.ProxyFiles;
 
 public final class BackupUtils {
-    @WorkerThread
-    @Nullable
-    public static MetadataManager.Metadata getBackupInfo(String packageName) {
-        MetadataManager.Metadata[] metadata = MetadataManager.getMetadata(packageName);
-        if (metadata.length == 0) return null;
-        int maxIndex = 0;
-        long maxTime = 0;
-        for (int i = 0; i < metadata.length; ++i) {
-            if (metadata[i].backupTime > maxTime) {
-                maxIndex = i;
-                maxTime = metadata[i].backupTime;
-            }
-        }
-        return metadata[maxIndex];
-    }
-
     @NonNull
     private static List<String> getBackupPackages() {
         File backupPath = BackupFiles.getBackupDirectory();
@@ -54,19 +40,54 @@ public final class BackupUtils {
 
     @WorkerThread
     @NonNull
-    public static HashMap<String, MetadataManager.Metadata> getAllBackupMetadata() {
-        HashMap<String, MetadataManager.Metadata> backupMetadata = new HashMap<>();
-        List<String> backupPackages = getBackupPackages();
-        for (String dirtyPackageName : backupPackages) {
-            MetadataManager.Metadata metadata = getBackupInfo(dirtyPackageName);
-            if (metadata == null) continue;
-            MetadataManager.Metadata metadata1 = backupMetadata.get(metadata.packageName);
-            if (metadata1 == null) {
-                backupMetadata.put(metadata.packageName, metadata);
-            } else if (metadata.backupTime > metadata1.backupTime) {
-                backupMetadata.put(metadata.packageName, metadata);
-            } else {
-                backupMetadata.put(metadata1.packageName, metadata1);
+    public static HashMap<String, Backup> storeAllAndGetLatestBackupMetadata() {
+        HashMap<String, Backup> backupMetadata = new HashMap<>();
+        HashMap<String, List<MetadataManager.Metadata>> allBackupMetadata = getAllMetadata();
+        List<Backup> backups = new ArrayList<>();
+        for (List<MetadataManager.Metadata> metadataList : allBackupMetadata.values()) {
+            if (metadataList.size() == 0) continue;
+            Backup latestBackup = null;
+            Backup backup;
+            for (MetadataManager.Metadata metadata : metadataList) {
+                backup = Backup.fromBackupMetadata(metadata);
+                backups.add(backup);
+                if (latestBackup == null || backup.backupTime > latestBackup.backupTime) {
+                    latestBackup = backup;
+                }
+            }
+            backupMetadata.put(latestBackup.packageName, latestBackup);
+        }
+        AppManager.getDb().backupDao().insert(backups);
+        return backupMetadata;
+    }
+
+    @WorkerThread
+    @Nullable
+    public static Backup storeAllAndGetLatestBackupMetadata(String packageName) {
+        MetadataManager.Metadata[] allBackupMetadata = MetadataManager.getMetadata(packageName);
+        List<Backup> backups = new ArrayList<>();
+        Backup latestBackup = null;
+        Backup backup;
+        for (MetadataManager.Metadata metadata : allBackupMetadata) {
+            backup = Backup.fromBackupMetadata(metadata);
+            backups.add(backup);
+            if (latestBackup == null || backup.backupTime > latestBackup.backupTime) {
+                latestBackup = backup;
+            }
+        }
+        AppManager.getDb().backupDao().insert(backups);
+        return latestBackup;
+    }
+
+    @WorkerThread
+    @NonNull
+    public static HashMap<String, Backup> getAllLatestBackupMetadataFromDb() {
+        HashMap<String, Backup> backupMetadata = new HashMap<>();
+        List<Backup> backups = AppManager.getDb().backupDao().getAll();
+        for (Backup backup : backups) {
+            Backup latestBackup = backupMetadata.get(backup.packageName);
+            if (latestBackup == null || backup.backupTime > latestBackup.backupTime) {
+                backupMetadata.put(backup.packageName, backup);
             }
         }
         return backupMetadata;
@@ -83,7 +104,7 @@ public final class BackupUtils {
         for (String dirtyPackageName : backupPackages) {
             MetadataManager.Metadata[] metadataList = MetadataManager.getMetadata(dirtyPackageName);
             for (MetadataManager.Metadata metadata : metadataList) {
-                if (backupMetadata.get(metadata.packageName) == null) {
+                if (!backupMetadata.containsKey(metadata.packageName)) {
                     backupMetadata.put(metadata.packageName, new ArrayList<>());
                 }
                 //noinspection ConstantConditions

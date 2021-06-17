@@ -16,16 +16,19 @@ import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import org.json.JSONException;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
 import io.github.muntashirakon.AppManager.backup.BackupManager;
-import io.github.muntashirakon.AppManager.backup.BackupUtils;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
+import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.main.ApplicationItem;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
@@ -40,6 +43,7 @@ public class BackupTasksDialogFragment extends DialogFragment {
     public static final String TAG = "BackupTasksDialogFragment";
 
     private OneClickOpsActivity activity;
+    private final ExecutorService executor = Executors.newFixedThreadPool(2);
 
     @NonNull
     @Override
@@ -51,15 +55,13 @@ public class BackupTasksDialogFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.dialog_backup_tasks, null);
         // Backup all installed apps
         view.findViewById(R.id.backup_all).setOnClickListener(v -> {
-            if (isDetached()) return;
             activity.mProgressIndicator.show();
-            new Thread(() -> {
-                if (isDetached()) return;
-                HashMap<String, MetadataManager.Metadata> backupMetadata = BackupUtils.getAllBackupMetadata();
+            executor.submit(() -> {
+                if (isDetached() || Thread.currentThread().isInterrupted()) return;
                 List<ApplicationItem> applicationItems = new ArrayList<>();
                 List<CharSequence> applicationLabels = new ArrayList<>();
-                for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), backupMetadata)) {
-                    if (isDetached()) return;
+                for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), null, true)) {
+                    if (isDetached() || Thread.currentThread().isInterrupted()) return;
                     if (item.isInstalled) {
                         applicationItems.add(item);
                         applicationLabels.add(item.label);
@@ -67,122 +69,117 @@ public class BackupTasksDialogFragment extends DialogFragment {
                 }
                 if (isDetached()) return;
                 requireActivity().runOnUiThread(() -> runMultiChoiceDialog(applicationItems, applicationLabels));
-            }).start();
+            });
         });
         // Redo existing backups for the installed apps
         view.findViewById(R.id.redo_existing_backups).setOnClickListener(v -> {
-            if (isDetached()) return;
             activity.mProgressIndicator.show();
-            new Thread(() -> {
-                if (isDetached()) return;
-                HashMap<String, MetadataManager.Metadata> backupMetadata = BackupUtils.getAllBackupMetadata();
+            executor.submit(() -> {
+                if (isDetached() || Thread.currentThread().isInterrupted()) return;
                 List<ApplicationItem> applicationItems = new ArrayList<>();
                 List<CharSequence> applicationLabels = new ArrayList<>();
-                for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), backupMetadata)) {
-                    if (isDetached()) return;
-                    if (item.isInstalled && item.metadata != null) {
+                for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), null, true)) {
+                    if (isDetached() || Thread.currentThread().isInterrupted()) return;
+                    if (item.isInstalled && item.backup != null) {
                         applicationItems.add(item);
                         applicationLabels.add(item.label);
                     }
                 }
-                if (isDetached()) return;
+                if (isDetached() || Thread.currentThread().isInterrupted()) return;
                 requireActivity().runOnUiThread(() -> runMultiChoiceDialog(applicationItems, applicationLabels));
-            }).start();
+            });
         });
         // Backup apps without any previous backups
         view.findViewById(R.id.backup_apps_without_backup).setOnClickListener(v -> {
-            if (isDetached()) return;
             activity.mProgressIndicator.show();
-            new Thread(() -> {
-                if (isDetached()) return;
-                HashMap<String, MetadataManager.Metadata> backupMetadata = BackupUtils.getAllBackupMetadata();
+            executor.submit(() -> {
+                if (isDetached() || Thread.currentThread().isInterrupted()) return;
                 List<ApplicationItem> applicationItems = new ArrayList<>();
                 List<CharSequence> applicationLabels = new ArrayList<>();
-                for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), backupMetadata)) {
-                    if (isDetached()) return;
-                    if (item.isInstalled && item.metadata == null) {
+                for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), null, true)) {
+                    if (isDetached() || Thread.currentThread().isInterrupted()) return;
+                    if (item.isInstalled && item.backup == null) {
                         applicationItems.add(item);
                         applicationLabels.add(item.label);
                     }
                 }
-                if (isDetached()) return;
+                if (isDetached() || Thread.currentThread().isInterrupted()) return;
                 requireActivity().runOnUiThread(() -> runMultiChoiceDialog(applicationItems, applicationLabels));
-            }).start();
+            });
         });
         view.findViewById(R.id.verify_and_redo_backups).setOnClickListener(v -> {
-            if (isDetached()) return;
             activity.mProgressIndicator.show();
-            new Thread(() -> {
-                if (isDetached()) return;
-                HashMap<String, MetadataManager.Metadata> backupMetadata = BackupUtils.getAllBackupMetadata();
+            executor.submit(() -> {
+                if (isDetached() || Thread.currentThread().isInterrupted()) return;
                 List<ApplicationItem> applicationItems = new ArrayList<>();
                 List<CharSequence> applicationLabels = new ArrayList<>();
-                MetadataManager.Metadata metadata;
-                for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), backupMetadata)) {
-                    if (isDetached()) return;
-                    metadata = item.metadata;
-                    if (metadata == null || !item.isInstalled) continue;
+                Backup backup;
+                for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), null, true)) {
+                    if (isDetached() || Thread.currentThread().isInterrupted()) return;
+                    backup = item.backup;
+                    if (backup == null || !item.isInstalled) continue;
                     try {
-                        BackupManager.getNewInstance(new UserPackagePair(item.packageName, metadata.userHandle),
-                                0).verify(metadata.backupName);
+                        BackupManager.getNewInstance(new UserPackagePair(item.packageName, backup.userId),
+                                0).verify(backup.backupName);
                     } catch (Throwable e) {
                         applicationItems.add(item);
                         applicationLabels.add(new SpannableStringBuilder(UIUtils.getPrimaryText(activity,
-                                metadata.label + ": " + metadata.backupName)).append('\n').append(UIUtils
+                                backup.label + ": " + backup.backupName)).append('\n').append(UIUtils
                                 .getSmallerText(UIUtils.getSecondaryText(activity, new SpannableStringBuilder(
-                                        metadata.packageName).append('\n').append(e.getMessage())))));
+                                        backup.packageName).append('\n').append(e.getMessage())))));
                     }
                 }
-                if (isDetached()) return;
+                if (isDetached() || Thread.currentThread().isInterrupted()) return;
                 requireActivity().runOnUiThread(() -> runMultiChoiceDialog(applicationItems, applicationLabels));
-            }).start();
+            });
         });
         view.findViewById(R.id.backup_apps_with_changes).setOnClickListener(v -> {
-            if (isDetached()) return;
             activity.mProgressIndicator.show();
-            new Thread(() -> {
-                if (isDetached()) return;
-                HashMap<String, MetadataManager.Metadata> backupMetadata = BackupUtils.getAllBackupMetadata();
+            executor.submit(() -> {
+                if (isDetached() || Thread.currentThread().isInterrupted()) return;
                 List<ApplicationItem> applicationItems = new ArrayList<>();
                 List<CharSequence> applicationLabels = new ArrayList<>();
-                MetadataManager.Metadata metadata;
-                for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), backupMetadata)) {
-                    if (isDetached()) return;
-                    metadata = item.metadata;
-                    if (metadata == null) continue;
+                Backup backup;
+                for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), null, true)) {
+                    if (isDetached() || Thread.currentThread().isInterrupted()) return;
+                    backup = item.backup;
+                    if (backup == null) continue;
                     // Checks
                     // 0. App is installed (Skip backup)
                     if (!item.isInstalled) continue;
                     // 1. App version code and 2. last update date (Whether to backup source)
-                    boolean needSourceUpdate = item.versionCode > metadata.versionCode
-                            || item.lastUpdateTime > metadata.backupTime;
+                    boolean needSourceUpdate = item.versionCode > backup.versionCode
+                            || item.lastUpdateTime > backup.backupTime;
                     if (needSourceUpdate
                             // 3. Last activity date
                             || AppUsageStatsManager.getLastActivityTime(item.packageName, new UsageUtils.TimeInterval(
-                            metadata.backupTime, System.currentTimeMillis())) > metadata.backupTime
+                            backup.backupTime, System.currentTimeMillis())) > backup.backupTime
                             // 4. Check integrity
-                            || !isVerified(item, metadata)) {
+                            || !isVerified(item, backup)) {
                         // 5. Check hash
-                        List<String> changedDirs = new ArrayList<>();
-                        for (String dir : metadata.dataDirs) {
-                            String hash = AppManager.getDb().fileHashDao().getHash(dir);
-                            // For now, if hash is null, don't proceed to backup
-                            if (hash == null) {
-                                break;
+                        try {
+                            List<String> changedDirs = new ArrayList<>();
+                            for (String dir : backup.getMetadata().dataDirs) {
+                                String hash = AppManager.getDb().fileHashDao().getHash(dir);
+                                // For now, if hash is null, don't proceed to backup
+                                if (hash == null) {
+                                    break;
+                                }
+                                String newHash = DigestUtils.getHexDigest(DigestUtils.SHA_256, new ProxyFile(dir));
+                                if (!hash.equals(newHash)) changedDirs.add(dir);
                             }
-                            String newHash = DigestUtils.getHexDigest(DigestUtils.SHA_256, new ProxyFile(dir));
-                            if (!hash.equals(newHash)) changedDirs.add(dir);
+                            // TODO: 23/4/21 Support delta backup
+                        } catch (JSONException ignore) {
                         }
-                        // TODO: 23/4/21 Support delta backup
                         applicationItems.add(item);
                         applicationLabels.add(new SpannableStringBuilder(UIUtils.getPrimaryText(activity,
-                                metadata.label + ": " + metadata.backupName)).append('\n').append(UIUtils
-                                .getSmallerText(UIUtils.getSecondaryText(activity, metadata.packageName))));
+                                backup.label + ": " + backup.backupName)).append('\n').append(UIUtils
+                                .getSmallerText(UIUtils.getSecondaryText(activity, backup.packageName))));
                     }
                 }
-                if (isDetached()) return;
+                if (isDetached() || Thread.currentThread().isInterrupted()) return;
                 requireActivity().runOnUiThread(() -> runMultiChoiceDialog(applicationItems, applicationLabels));
-            }).start();
+            });
         });
         return new MaterialAlertDialogBuilder(activity)
                 .setView(view)
@@ -215,10 +212,16 @@ public class BackupTasksDialogFragment extends DialogFragment {
                 .show();
     }
 
-    private boolean isVerified(ApplicationItem item, MetadataManager.Metadata metadata) {
+    @Override
+    public void onDestroy() {
+        executor.shutdownNow();
+        super.onDestroy();
+    }
+
+    private boolean isVerified(ApplicationItem item, Backup backup) {
         try {
-            BackupManager.getNewInstance(new UserPackagePair(item.packageName, metadata.userHandle),
-                    0).verify(metadata.backupName);
+            BackupManager.getNewInstance(new UserPackagePair(item.packageName, backup.userId),
+                    0).verify(backup.backupName);
             return true;
         } catch (Throwable ignore) {
             return false;
