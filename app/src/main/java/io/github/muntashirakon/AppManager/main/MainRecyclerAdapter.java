@@ -26,10 +26,8 @@ import android.widget.Toast;
 
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
-import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -45,12 +43,13 @@ import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
+import io.github.muntashirakon.AppManager.types.selection.MultiSelectionView;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
-public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapter.ViewHolder>
+public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecyclerAdapter.ViewHolder>
         implements SectionIndexer {
     static final String sections = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -68,6 +67,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     private static int mColorRed;
 
     MainRecyclerAdapter(@NonNull MainActivity activity) {
+        super();
         mActivity = activity;
         mPackageManager = activity.getPackageManager();
         imageLoader = new ImageLoader(mActivity.mModel.executor);
@@ -87,14 +87,18 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 mAdapterList.clear();
                 mAdapterList.addAll(list);
                 mSearchQuery = mActivity.mModel.getSearchQuery();
-                mActivity.runOnUiThread(this::notifyDataSetChanged);
+                mActivity.runOnUiThread(() -> {
+                    notifyDataSetChanged();
+                    notifySelectionChange();
+                });
             }
         });
     }
 
     @GuardedBy("mAdapterList")
     @WorkerThread
-    void clearSelection() {
+    @Override
+    public void clearSelections() {
         if (mActivity.mModel == null) return;
         synchronized (mAdapterList) {
             final List<Integer> itemIds = new ArrayList<>();
@@ -110,18 +114,44 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 for (int id : itemIds) notifyItemChanged(id);
             });
             mActivity.mModel.clearSelection();
+            super.clearSelections();
         }
     }
 
+    @Override
+    public void cancelSelection() {
+        clearSelections();
+    }
+
+    @Override
+    public int getSelectedItemCount() {
+        if (mActivity.mModel == null) return 0;
+        return mActivity.mModel.getSelectedPackages().size();
+    }
+
+    @Override
+    protected int getTotalItemCount() {
+        if (mActivity.mModel == null) return 0;
+        return mActivity.mModel.getApplicationItemCount();
+    }
+
+    @Override
+    protected boolean isSelected(int position) {
+        return mActivity.mModel.getSelectedPackages().containsKey(mAdapterList.get(position).packageName);
+    }
+
     @GuardedBy("mAdapterList")
-    @UiThread
-    void selectAll() {
+    @Override
+    protected void select(int position) {
         synchronized (mAdapterList) {
-            for (int i = 0; i < mAdapterList.size(); ++i) {
-                mAdapterList.set(i, mActivity.mModel.select(mAdapterList.get(i)));
-                notifyItemChanged(i);
-            }
-            mActivity.handleSelection();
+            mAdapterList.set(position, mActivity.mModel.select(mAdapterList.get(position)));
+        }
+    }
+
+    @Override
+    protected void deselect(int position) {
+        synchronized (mAdapterList) {
+            mAdapterList.set(position, mActivity.mModel.deselect(mAdapterList.get(position)));
         }
     }
 
@@ -142,60 +172,62 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         // Add click listeners
         holder.itemView.setOnClickListener(v -> {
             // Click listener:
-            // 1) If the app is not installed:
+            // 1) If selection mode is on, select/deselect the current item instead of 2 & 3.
+            // 2) If the app is not installed:
             //    i.  Display a toast message saying that it's not installed if it's a backup-only app
             //    ii. Offer to install the app if it can be installed
-            // 2) If installed, load the App Details page
-            // 3) If selection mode is on, select/deselect the current item instead of 1 & 2.
-            if (mActivity.mModel.getSelectedPackages().size() == 0) {
-                if (!item.isInstalled) {
-                    try {
-                        @SuppressLint("WrongConstant")
-                        ApplicationInfo info = mPackageManager.getApplicationInfo(item.packageName, PackageUtils.flagMatchUninstalled);
-                        if (info.publicSourceDir != null && new File(info.publicSourceDir).exists()
-                                && FeatureController.isInstallerEnabled()) {
-                            Intent intent = new Intent(mActivity, PackageInstallerActivity.class);
-                            intent.setData(Uri.fromFile(new File(info.publicSourceDir)));
-                            mActivity.startActivity(intent);
-                        }
-                    } catch (PackageManager.NameNotFoundException ignore) {
+            // 3) If installed, load the App Details page
+            if (isInSelectionMode()) {
+                toggleSelection(position);
+                return;
+            }
+            if (!item.isInstalled) {
+                try {
+                    @SuppressLint("WrongConstant")
+                    ApplicationInfo info = mPackageManager.getApplicationInfo(item.packageName, PackageUtils.flagMatchUninstalled);
+                    if (info.publicSourceDir != null && new File(info.publicSourceDir).exists()
+                            && FeatureController.isInstallerEnabled()) {
+                        Intent intent = new Intent(mActivity, PackageInstallerActivity.class);
+                        intent.setData(Uri.fromFile(new File(info.publicSourceDir)));
+                        mActivity.startActivity(intent);
                     }
-                    Toast.makeText(mActivity, R.string.app_not_installed, Toast.LENGTH_SHORT).show();
-                } else {
-                    Intent appDetailsIntent = new Intent(mActivity, AppDetailsActivity.class);
-                    appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME, item.packageName);
-                    if (item.userHandles.length > 0) {
-                        if (item.userHandles.length > 1) {
-                            String[] userNames = new String[item.userHandles.length];
+                } catch (PackageManager.NameNotFoundException ignore) {
+                }
+                Toast.makeText(mActivity, R.string.app_not_installed, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Intent appDetailsIntent = new Intent(mActivity, AppDetailsActivity.class);
+            appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME, item.packageName);
+            if (item.userHandles.length > 0) {
+                if (item.userHandles.length > 1) {
+                    String[] userNames = new String[item.userHandles.length];
+                    for (int i = 0; i < item.userHandles.length; ++i) {
+                        userNames[i] = mActivity.getString(R.string.user_with_id, item.userHandles[i]);
+                    }
+                    List<UserInfo> users = Users.getUsers();
+                    if (users != null) {
+                        for (UserInfo info : users) {
                             for (int i = 0; i < item.userHandles.length; ++i) {
-                                userNames[i] = mActivity.getString(R.string.user_with_id, item.userHandles[i]);
-                            }
-                            List<UserInfo> users = Users.getUsers();
-                            if (users != null) {
-                                for (UserInfo info : users) {
-                                    for (int i = 0; i < item.userHandles.length; ++i) {
-                                        if (info.id == item.userHandles[i]) {
-                                            userNames[i] = info.name == null ? String.valueOf(info.id) : info.name;
-                                        }
-                                    }
+                                if (info.id == item.userHandles[i]) {
+                                    userNames[i] = info.name == null ? String.valueOf(info.id) : info.name;
                                 }
                             }
-                            new MaterialAlertDialogBuilder(mActivity)
-                                    .setTitle(R.string.select_user)
-                                    .setItems(userNames, (dialog, which) -> {
-                                        appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_USER_HANDLE, item.userHandles[which]);
-                                        mActivity.startActivity(appDetailsIntent);
-                                        dialog.dismiss();
-                                    })
-                                    .setNegativeButton(R.string.cancel, null)
-                                    .show();
-                        } else {
-                            appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_USER_HANDLE, item.userHandles[0]);
-                            mActivity.startActivity(appDetailsIntent);
                         }
-                    } else mActivity.startActivity(appDetailsIntent);
+                    }
+                    new MaterialAlertDialogBuilder(mActivity)
+                            .setTitle(R.string.select_user)
+                            .setItems(userNames, (dialog, which) -> {
+                                appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_USER_HANDLE, item.userHandles[which]);
+                                mActivity.startActivity(appDetailsIntent);
+                                dialog.dismiss();
+                            })
+                            .setNegativeButton(R.string.cancel, null)
+                            .show();
+                } else {
+                    appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_USER_HANDLE, item.userHandles[0]);
+                    mActivity.startActivity(appDetailsIntent);
                 }
-            } else toggleSelection(item, position);
+            } else mActivity.startActivity(appDetailsIntent);
         });
         holder.itemView.setOnLongClickListener(v -> {
             // Long click listener: Select/deselect an app.
@@ -206,13 +238,12 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             if (lastSelectedItemPosition >= 0) {
                 // Select from last selection to this selection
                 selectRange(lastSelectedItemPosition, position);
-            } else toggleSelection(item, position);
+            } else toggleSelection(position);
             return true;
         });
-        holder.icon.setOnClickListener(v -> toggleSelection(item, position));
-        // Alternate background colors: selected > disabled > regular
-        if (item.isSelected) holder.itemView.setBackgroundResource(R.drawable.item_highlight);
-        else if (item.isDisabled) holder.itemView.setBackgroundResource(R.drawable.item_disabled);
+        holder.icon.setOnClickListener(v -> toggleSelection(position));
+        // Alternate background colors: disabled > regular
+        if (item.isDisabled) holder.itemView.setBackgroundResource(R.drawable.item_disabled);
         else {
             holder.itemView.setBackgroundResource(position % 2 == 0 ? R.drawable.item_semi_transparent : R.drawable.item_transparent);
         }
@@ -368,41 +399,14 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             holder.backupInfo.setVisibility(View.GONE);
             holder.backupInfoExt.setVisibility(View.GONE);
         }
-    }
-
-    @GuardedBy("mAdapterList")
-    @UiThread
-    public void toggleSelection(@NonNull ApplicationItem item, int position) {
-        synchronized (mAdapterList) {
-            if (mActivity.mModel.getSelectedPackages().containsKey(item.packageName)) {
-                mAdapterList.set(position, mActivity.mModel.deselect(item));
-            } else {
-                mAdapterList.set(position, mActivity.mModel.select(item));
-            }
-        }
-        notifyItemChanged(position);
-        mActivity.handleSelection();
-    }
-
-    @GuardedBy("mAdapterList")
-    @UiThread
-    public void selectRange(int firstPosition, int secondPosition) {
-        int beginPosition = Math.min(firstPosition, secondPosition);
-        int endPosition = Math.max(firstPosition, secondPosition);
-        synchronized (mAdapterList) {
-            for (int position = beginPosition; position <= endPosition; ++position) {
-                mAdapterList.set(position, mActivity.mModel.select(mAdapterList.get(position)));
-            }
-        }
-        notifyItemRangeChanged(beginPosition, endPosition - beginPosition + 1);
-        mActivity.handleSelection();
+        super.onBindViewHolder(holder, position);
     }
 
     @GuardedBy("mAdapterList")
     @Override
-    public long getItemId(int i) {
+    public long getItemId(int position) {
         synchronized (mAdapterList) {
-            return mAdapterList.get(i).hashCode();
+            return mAdapterList.get(position).hashCode();
         }
     }
 
@@ -443,7 +447,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         return sectionsArr;
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends MultiSelectionView.ViewHolder {
         ImageView icon;
         ImageView favorite_icon;
         TextView label;

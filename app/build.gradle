@@ -94,7 +94,7 @@ dependencies {
     implementation 'com.github.MuntashirAkon:sun-security-android:1.1'
     implementation 'org.bouncycastle:bcprov-jdk15on:1.68'
 
-    implementation 'com.google.android.material:material:1.4.0-rc01'
+    implementation "com.google.android.material:material:${material_version}"
     implementation "androidx.appcompat:appcompat:${appcompat_version}"
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01'
     implementation 'androidx.preference:preference:1.1.1'

@@ -1,36 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<menu xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <item
-        android:id="@+id/action_select_all"
-        android:icon="@drawable/ic_baseline_select_all_24"
-        android:title="@string/select_all"
-        app:showAsAction="always"
-        tools:ignore="AlwaysShowAction" />
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
         android:id="@+id/action_uninstall"
         android:icon="@drawable/ic_delete_black_24dp"
-        android:title="@string/uninstall"
-        app:showAsAction="never" />
+        android:title="@string/uninstall" />
     <item
         android:id="@+id/action_enable"
         android:icon="@drawable/ic_baseline_get_app_24"
-        android:title="@string/enable"
-        app:showAsAction="never" />
+        android:title="@string/enable" />
     <item
         android:id="@+id/action_disable"
         android:icon="@drawable/ic_block_black_24dp"
-        android:title="@string/disable"
-        app:showAsAction="never" />
+        android:title="@string/disable" />
     <item
         android:id="@+id/action_force_stop"
         android:title="@string/force_stop"
-        android:icon="@drawable/ic_baseline_power_settings_new_24"
-        app:showAsAction="never" />
+        android:icon="@drawable/ic_baseline_power_settings_new_24" />
     <item
         android:id="@+id/action_clear_data"
         android:icon="@drawable/ic_refresh_black_24dp"
@@ -38,31 +25,25 @@
     <item
         android:id="@+id/action_save_apk"
         android:title="@string/save_apk"
-        android:icon="@drawable/ic_baseline_get_app_24"
-        app:showAsAction="never" />
+        android:icon="@drawable/ic_baseline_get_app_24" />
     <item
         android:id="@+id/action_backup"
         android:title="@string/backup_restore"
-        android:icon="@drawable/ic_baseline_save_24"
-        app:showAsAction="never" />
+        android:icon="@drawable/ic_baseline_save_24" />
     <item
         android:id="@+id/action_disable_background"
         android:title="@string/disable_background"
-        android:icon="@drawable/ic_block_black_24dp"
-        app:showAsAction="never" />
+        android:icon="@drawable/ic_block_black_24dp" />
     <item
         android:id="@+id/action_block_unblock_trackers"
         android:title="@string/block_unblock_trackers"
-        android:icon="@drawable/ic_block_black_24dp"
-        app:showAsAction="never" />
+        android:icon="@drawable/ic_block_black_24dp" />
     <item
         android:id="@+id/action_export_blocking_rules"
         android:title="@string/export_blocking_rules"
-        android:icon="@drawable/ic_open_in_new_black_24dp"
-        app:showAsAction="never" />
+        android:icon="@drawable/ic_open_in_new_black_24dp" />
     <item
         android:id="@+id/action_add_to_profile"
         android:icon="@drawable/ic_assignment_black_24dp"
-        android:title="@string/add_to_profile"
-        app:showAsAction="never" />
+        android:title="@string/add_to_profile" />
 </menu>

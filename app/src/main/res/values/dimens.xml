@@ -10,4 +10,5 @@
     <dimen name="icon_size">40dp</dimen>
     <dimen name="title_font">16sp</dimen>
     <dimen name="subtitle_font">14sp</dimen>
+    <dimen name="medium_font_size">12sp</dimen>
 </resources>

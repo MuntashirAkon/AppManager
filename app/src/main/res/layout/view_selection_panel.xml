@@ -1,0 +1,72 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="0"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/action_select_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:layout_gravity="start|center_vertical"
+            android:text="@string/select_all"
+            android:textColor="@color/textColorPrimary"
+            android:textAppearance="@style/AppTheme.TextAppearance.Body.Small" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/selection_counter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/textColorPrimary"
+            android:textAppearance="@style/AppTheme.TextAppearance.Body.Small"
+            tools:text="10/11" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/action_cancel"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:layout_gravity="end|center_vertical"
+            android:text="@string/cancel"
+            android:textColor="@color/textColorPrimary"
+            android:textAppearance="@style/AppTheme.TextAppearance.Body.Small"
+            app:icon="@drawable/ic_baseline_clear_24"
+            app:iconSize="@dimen/padding_medium"
+            app:iconTint="@color/textColorPrimary"
+            app:iconPadding="0dp" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <include layout="@layout/item_divider_horizontal" />
+
+    <io.github.muntashirakon.AppManager.types.scroll.MaxHeightScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/padding_very_small"
+        app:maxHeight="112dp">
+
+        <io.github.muntashirakon.AppManager.types.reflow.SelectionActionsView
+            android:id="@+id/selection_actions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            app:itemIconTint="@color/textColorPrimary"
+            app:itemTextColor="@color/textColorPrimary" />
+
+    </io.github.muntashirakon.AppManager.types.scroll.MaxHeightScrollView>
+
+</androidx.appcompat.widget.LinearLayoutCompat>
+

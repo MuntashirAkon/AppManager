@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?><!-- SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later -->
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <FrameLayout
+        android:id="@+id/item_icon_container"
+        android:layout_width="@dimen/design_bottom_navigation_item_max_width"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/design_bottom_navigation_margin"
+        android:layout_marginBottom="@dimen/design_bottom_navigation_margin"
+        android:duplicateParentState="true">
+
+        <View
+            android:id="@+id/item_active_indicator_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_gravity="center" />
+
+        <ImageView
+            android:id="@+id/item_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:contentDescription="@null"
+            android:duplicateParentState="true"
+            tools:src="@drawable/ic_baseline_clear_24" />
+    </FrameLayout>
+
+    <com.google.android.material.internal.BaselineLayout
+        android:id="@+id/item_labels_group"
+        android:layout_width="@dimen/design_bottom_navigation_item_max_width"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:paddingBottom="@dimen/design_bottom_navigation_label_padding"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:duplicateParentState="true">
+
+        <TextView
+            android:id="@+id/item_small_label_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:duplicateParentState="true"
+            android:paddingHorizontal="@dimen/padding_very_small"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="@dimen/design_bottom_navigation_text_size"
+            tools:text="@string/cancel" />
+
+        <TextView
+            android:id="@+id/item_large_label_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:duplicateParentState="true"
+            android:paddingHorizontal="@dimen/padding_very_small"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="@dimen/design_bottom_navigation_active_text_size"
+            android:visibility="invisible"
+            tools:text="@string/cancel" />
+    </com.google.android.material.internal.BaselineLayout>
+</merge>

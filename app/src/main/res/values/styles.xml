@@ -121,17 +121,29 @@
         <item name="hintTextColor">@color/colorAccent</item>
         <item name="endIconTint">@color/colorAccent</item>
     </style>
+
     <style name="AppTheme.TextInputLayout.ExposedDropdownMenu" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
         <item name="boxStrokeColor">@drawable/outlined_stroke_color</item>
         <item name="hintTextColor">@color/colorAccent</item>
         <item name="endIconTint">@color/colorAccent</item>
     </style>
+
     <style name="AppTheme.TextAppearance" />
+
     <style name="AppTheme.TextAppearance.Input" parent="@style/TextAppearance.MaterialComponents.Subtitle1" />
+
     <style name="AppTheme.TextAppearance.Button" parent="@style/TextAppearance.MaterialComponents.Button" />
+
+    <style name="AppTheme.TextAppearance.Body" parent="@style/TextAppearance.MaterialComponents.Body2" />
+
+    <style name="AppTheme.TextAppearance.Body.Small" parent="AppTheme.TextAppearance.Body">
+        <item name="android:textSize">@dimen/medium_font_size</item>
+    </style>
+
     <style name="AppTheme.FabOverlay">
         <item name="colorSecondary">@color/colorAccent</item>
     </style>
+
     <style name="AppTheme.Spinner">
         <item name="android:gravity">center</item>
         <item name="android:background">@drawable/spinner_rounded_border</item>

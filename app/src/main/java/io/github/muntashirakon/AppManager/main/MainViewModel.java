@@ -88,6 +88,10 @@ public class MainViewModel extends AndroidViewModel {
     private MutableLiveData<List<ApplicationItem>> applicationItemsLiveData;
     final private List<ApplicationItem> applicationItems = new ArrayList<>();
 
+    public int getApplicationItemCount() {
+        return applicationItems.size();
+    }
+
     @NonNull
     public LiveData<List<ApplicationItem>> getApplicationItems() {
         if (applicationItemsLiveData == null) {

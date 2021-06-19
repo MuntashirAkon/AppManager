@@ -31,19 +31,19 @@
         android:id="@+id/main_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="?attr/actionBarSize"
         android:orientation="vertical"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/item_list"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:scrollbars="none"
                 tools:listitem="@layout/item_main" />
 
@@ -51,25 +51,10 @@
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-    <com.google.android.material.bottomappbar.BottomAppBar
-        android:id="@+id/bottom_appbar"
+    <io.github.muntashirakon.AppManager.types.selection.MultiSelectionView
+        android:id="@+id/selection_view"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        app:navigationIcon="@drawable/ic_baseline_clear_24"
-        app:menu="@menu/activity_main_selection_actions"
-        style="@style/AppTheme.BottomAppBar"
-        android:layout_gravity="bottom">
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/bottom_appbar_counter"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:textSize="20sp"
-            android:textColor="?android:attr/textColorPrimary"
-            android:ellipsize="marquee"
-            tools:text="@tools:sample/lorem[4]" />
-
-    </com.google.android.material.bottomappbar.BottomAppBar>
+        android:layout_height="wrap_content"
+        app:menu="@menu/activity_main_selection_actions" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
