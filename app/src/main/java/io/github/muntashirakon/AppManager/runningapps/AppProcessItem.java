@@ -4,6 +4,13 @@ package io.github.muntashirakon.AppManager.runningapps;
 
 import android.content.pm.PackageInfo;
 
+import androidx.annotation.NonNull;
+
 public class AppProcessItem extends ProcessItem {
-    PackageInfo packageInfo;
+    public final PackageInfo packageInfo;
+
+    public AppProcessItem(int pid, @NonNull PackageInfo packageInfo) {
+        super(pid);
+        this.packageInfo = packageInfo;
+    }
 }

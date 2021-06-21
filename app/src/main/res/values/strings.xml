@@ -929,10 +929,6 @@
     <string name="import_from_oab">Import from OAndBackup</string>
     <string name="import_from_oab_tb_msg">Backups must be located at %s.</string>
     <string name="import_from_tb">Import from Titanium Backup</string>
-    <plurals name="items_selected">
-        <item quantity="one"><xliff:g id="selection_no" example="20">%1$d</xliff:g> selected</item>
-        <item quantity="other"><xliff:g id="selection_no" example="20">%1$d</xliff:g> selected</item>
-    </plurals>
     <string name="log_viewer">Log Viewer</string>
     <string name="pref_log_viewer_msg">Configure how logs are displayed.</string>
     <string name="restart_log_viewer_to_see_changes">Restart log viewer window to see changes.</string>

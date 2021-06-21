@@ -4,8 +4,10 @@ package io.github.muntashirakon.AppManager.runningapps;
 
 import androidx.annotation.NonNull;
 
+import java.util.Objects;
+
 public class ProcessItem {
-    public int pid;
+    public final int pid;
     public int ppid;
     public long rss;
     public long vsz;
@@ -20,7 +22,9 @@ public class ProcessItem {
      */
     public String context;
 
-    public boolean selected = false;
+    public ProcessItem(int pid) {
+        this.pid = pid;
+    }
 
     @Override
     @NonNull
@@ -37,5 +41,18 @@ public class ProcessItem {
                 ", name='" + name + '\'' +
                 ", context='" + context + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ProcessItem)) return false;
+        ProcessItem that = (ProcessItem) o;
+        return pid == that.pid;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pid);
     }
 }

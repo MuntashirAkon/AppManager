@@ -26,27 +26,10 @@
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <com.google.android.material.bottomappbar.BottomAppBar
-        android:id="@+id/bottom_appbar"
+    <io.github.muntashirakon.AppManager.types.selection.MultiSelectionView
+        android:id="@+id/selection_view"
         android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
-        android:layout_gravity="bottom"
-        android:theme="@style/AppTheme.BottomAppBar"
-        android:visibility="gone"
-        app:menu="@menu/activity_running_apps_selection_actions"
-        app:navigationIcon="@drawable/ic_baseline_clear_24">
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/bottom_appbar_counter"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:textSize="20sp"
-            android:textColor="?android:attr/textColorPrimary"
-            android:ellipsize="marquee"
-            tools:text="@tools:sample/lorem[4]"
-            android:singleLine="true" />
-
-    </com.google.android.material.bottomappbar.BottomAppBar>
+        android:layout_height="wrap_content"
+        app:menu="@menu/activity_running_apps_popup_actions" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

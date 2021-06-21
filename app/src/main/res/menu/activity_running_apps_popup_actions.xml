@@ -19,7 +19,7 @@
 
     <item
         android:id="@+id/action_view_logs"
-        android:icon="@drawable/ic_block_black_24dp"
+        android:icon="@drawable/ic_view_list_black_24dp"
         android:title="@string/view_logs" />
 
 </menu>

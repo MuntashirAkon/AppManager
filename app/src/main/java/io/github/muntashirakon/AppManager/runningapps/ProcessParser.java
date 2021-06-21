@@ -6,18 +6,11 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.system.Os;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.annotation.WorkerThread;
 import androidx.collection.SparseArrayCompat;
-import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.ipc.IPCUtils;
-import io.github.muntashirakon.AppManager.ipc.ps.ProcessEntry;
-import io.github.muntashirakon.AppManager.ipc.ps.Ps;
-import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
-import io.github.muntashirakon.AppManager.users.Users;
-import io.github.muntashirakon.AppManager.utils.Utils;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -26,6 +19,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+
+import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.ipc.IPCUtils;
+import io.github.muntashirakon.AppManager.ipc.ps.ProcessEntry;
+import io.github.muntashirakon.AppManager.ipc.ps.Ps;
+import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.AppManager.utils.Utils;
 
 @WorkerThread
 final class ProcessParser {
@@ -54,15 +56,14 @@ final class ProcessParser {
 
     @SuppressWarnings("unchecked")
     @NonNull
-    HashMap<Integer, ProcessItem> parse() {
-        HashMap<Integer, ProcessItem> processItems = new HashMap<>();
+    List<ProcessItem> parse() {
+        List<ProcessItem> processItems = new ArrayList<>();
         try {
             List<ProcessEntry> processEntries = (List<ProcessEntry>) IPCUtils.getServiceSafe().getRunningProcesses();
             for (ProcessEntry processEntry : processEntries) {
                 if (processEntry.seLinuxPolicy.contains(":kernel:")) continue;
                 try {
-                    ProcessItem processItem = parseProcess(processEntry);
-                    processItems.put(processItem.pid, processItem);
+                    processItems.add(parseProcess(processEntry));
                 } catch (Exception ignore) {
                 }
             }
@@ -94,16 +95,14 @@ final class ProcessParser {
         String processName = processEntry.name;
         ProcessItem processItem;
         if (installedPackages.containsKey(processName)) {
-            processItem = new AppProcessItem();
             @NonNull PackageInfo packageInfo = Objects.requireNonNull(installedPackages.get(processName));
-            ((AppProcessItem) processItem).packageInfo = packageInfo;
+            processItem = new AppProcessItem(processEntry.pid, packageInfo);
             processItem.name = pm.getApplicationLabel(packageInfo.applicationInfo).toString();
         } else {
-            processItem = new ProcessItem();
+            processItem = new ProcessItem(processEntry.pid);
             processItem.name = processName;
         }
         processItem.context = processEntry.seLinuxPolicy;
-        processItem.pid = processEntry.pid;
         processItem.ppid = processEntry.ppid;
         processItem.rss = processEntry.residentSetSize;
         processItem.vsz = processEntry.virtualMemorySize;

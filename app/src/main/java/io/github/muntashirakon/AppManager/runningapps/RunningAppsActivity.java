@@ -2,7 +2,12 @@
 
 package io.github.muntashirakon.AppManager.runningapps;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,27 +16,36 @@ import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.google.android.material.bottomappbar.BottomAppBar;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
-import com.google.android.material.textview.MaterialTextView;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.ArrayList;
+import java.util.List;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
+import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
+import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
+import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
+import io.github.muntashirakon.AppManager.settings.FeatureController;
+import io.github.muntashirakon.AppManager.types.reflow.ReflowMenuViewWrapper;
+import io.github.muntashirakon.AppManager.types.selection.MultiSelectionView;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
-public class RunningAppsActivity extends BaseActivity implements
-        SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener {
+public class RunningAppsActivity extends BaseActivity implements MultiSelectionView.OnSelectionChangeListener,
+        ReflowMenuViewWrapper.OnItemSelectedListener, SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener {
 
     @IntDef(value = {
             SORT_BY_PID,
@@ -61,8 +75,7 @@ public class RunningAppsActivity extends BaseActivity implements
     public static final int FILTER_APPS = 1;
     public static final int FILTER_USER_APPS = 1 << 1;
 
-    static String mConstraint;
-    static boolean enableKillForSystem = false;
+    boolean enableKillForSystem = false;
     private static final int[] sortOrderIds = new int[]{
             R.id.action_sort_by_pid,
             R.id.action_sort_by_process_name,
@@ -73,10 +86,18 @@ public class RunningAppsActivity extends BaseActivity implements
     private RunningAppsAdapter mAdapter;
     private LinearProgressIndicator mProgressIndicator;
     private SwipeRefreshLayout mSwipeRefresh;
-    private MaterialTextView mCounterView;
+    private MultiSelectionView multiSelectionView;
+    private Menu selectionMenu;
+    private boolean isAdbMode;
 
     RunningAppsViewModel mModel;
     final ImageLoader imageLoader = new ImageLoader();
+    private final BroadcastReceiver mBatchOpsBroadCastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            refresh();
+        }
+    };
 
     @Override
     protected void onAuthenticated(Bundle savedInstanceState) {
@@ -90,9 +111,6 @@ public class RunningAppsActivity extends BaseActivity implements
         mModel = new ViewModelProvider(this).get(RunningAppsViewModel.class);
         mProgressIndicator = findViewById(R.id.progress_linear);
         mProgressIndicator.setVisibilityAfterHide(View.GONE);
-        mCounterView = findViewById(R.id.bottom_appbar_counter);
-        BottomAppBar bottomAppBar = findViewById(R.id.bottom_appbar);
-        bottomAppBar.setNavigationOnClickListener(v -> mModel.clearSelections());
         mSwipeRefresh = findViewById(R.id.swipe_refresh);
         mSwipeRefresh.setOnRefreshListener(this);
         RecyclerView recyclerView = findViewById(R.id.list_item);
@@ -103,7 +121,12 @@ public class RunningAppsActivity extends BaseActivity implements
         recyclerView.setAdapter(mAdapter);
         // Recycler view is focused by default
         recyclerView.requestFocus();
-        mConstraint = null;
+        multiSelectionView = findViewById(R.id.selection_view);
+        multiSelectionView.setOnItemSelectedListener(this);
+        multiSelectionView.setOnSelectionChangeListener(this);
+        multiSelectionView.setAdapter(mAdapter);
+        multiSelectionView.updateCounter(true);
+        selectionMenu = multiSelectionView.getMenu();
         enableKillForSystem = (boolean) AppPref.get(AppPref.PrefKey.PREF_ENABLE_KILL_FOR_SYSTEM_BOOL);
 
         // Set observers
@@ -113,6 +136,15 @@ public class RunningAppsActivity extends BaseActivity implements
             } else {
                 UIUtils.displayLongToast(R.string.failed_to_stop, processInfo.first.name /* process name */);
             }
+        });
+        mModel.observeKillSelectedProcess().observe(this, processInfoList -> {
+            if (processInfoList.size() != 0) {
+                List<String> processNames = new ArrayList<String>() {{
+                    for (ProcessItem processItem : processInfoList) add(processItem.name);
+                }};
+                UIUtils.displayLongToast(R.string.failed_to_stop, TextUtils.join(", ", processNames));
+            }
+            refresh();
         });
         mModel.observeForceStop().observe(this, applicationInfoBooleanPair -> {
             if (applicationInfoBooleanPair.second /* is success */) {
@@ -193,18 +225,24 @@ public class RunningAppsActivity extends BaseActivity implements
         super.onStart();
         if (mModel != null) {
             mModel.getProcessLiveData().observe(this, processList -> {
-                mAdapter.setDefaultList();
+                mAdapter.setDefaultList(processList);
                 mProgressIndicator.hide();
             });
-            mModel.getSelection().observe(this, count -> mCounterView.setText(getResources()
-                    .getQuantityString(R.plurals.items_selected, count, count)));
         }
+        isAdbMode = AppPref.isAdbEnabled();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         refresh();
+        registerReceiver(mBatchOpsBroadCastReceiver, new IntentFilter(BatchOpsService.ACTION_BATCH_OPS_COMPLETED));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(mBatchOpsBroadCastReceiver);
     }
 
     @Override
@@ -228,6 +266,79 @@ public class RunningAppsActivity extends BaseActivity implements
     public boolean onQueryTextChange(String newText) {
         mModel.setQuery(newText);
         return true;
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        ArrayList<ProcessItem> selectedItems = mAdapter.getSelectedItems();
+        int id = item.getItemId();
+        if (id == R.id.action_kill) {
+            mModel.killSelectedProcesses();
+        } else if (id == R.id.action_force_stop) {
+            handleBatchOpWithWarning(BatchOpsManager.OP_FORCE_STOP);
+        } else if (id == R.id.action_disable_background) {
+            handleBatchOpWithWarning(BatchOpsManager.OP_DISABLE_BACKGROUND);
+        } else if (id == R.id.action_view_logs) {
+            // Should be a singleton list
+            if (selectedItems.size() == 1) {
+                ProcessItem processItem = selectedItems.get(0);
+                Intent logViewerIntent = new Intent(getApplicationContext(), LogViewerActivity.class)
+                        .setAction(LogViewerActivity.ACTION_LAUNCH)
+                        .putExtra(LogViewerActivity.EXTRA_FILTER, SearchCriteria.PID_KEYWORD + processItem.pid)
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(logViewerIntent);
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void onSelectionChange(int selectionCount) {
+        ArrayList<ProcessItem> selectedItems = mAdapter.getSelectedItems();
+        MenuItem kill = selectionMenu.findItem(R.id.action_kill);
+        MenuItem forceStop = selectionMenu.findItem(R.id.action_force_stop);
+        MenuItem preventBackground = selectionMenu.findItem(R.id.action_disable_background);
+        MenuItem viewLogs = selectionMenu.findItem(R.id.action_view_logs);
+        viewLogs.setEnabled(FeatureController.isLogViewerEnabled() && selectedItems.size() <= 1);
+        int appsCount = 0;
+        for (Object item : selectedItems) {
+            if (item instanceof AppProcessItem) {
+                ++appsCount;
+            } else break;
+        }
+        forceStop.setEnabled(appsCount == selectedItems.size());
+        preventBackground.setEnabled(appsCount == selectedItems.size());
+        boolean killEnabled = !isAdbMode;
+        if (killEnabled && !enableKillForSystem) {
+            for (ProcessItem item : selectedItems) {
+                if (item.uid < 10_000) {
+                    killEnabled = false;
+                    break;
+                }
+            }
+        }
+        kill.setEnabled(killEnabled);
+    }
+
+    private void handleBatchOp(@BatchOpsManager.OpType int op) {
+        if (mModel == null) return;
+        mProgressIndicator.show();
+        Intent intent = new Intent(this, BatchOpsService.class);
+        BatchOpsManager.Result input = new BatchOpsManager.Result(mModel.getSelectedPackagesWithUsers());
+        intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, input.getFailedPackages());
+        intent.putIntegerArrayListExtra(BatchOpsService.EXTRA_OP_USERS, input.getAssociatedUserHandles());
+        intent.putExtra(BatchOpsService.EXTRA_OP, op);
+        ContextCompat.startForegroundService(this, intent);
+        multiSelectionView.cancel();
+    }
+
+    private void handleBatchOpWithWarning(@BatchOpsManager.OpType int op) {
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.are_you_sure)
+                .setMessage(R.string.this_action_cannot_be_undone)
+                .setPositiveButton(R.string.yes, (dialog, which) -> handleBatchOp(op))
+                .setNegativeButton(R.string.no, null)
+                .show();
     }
 
     void refresh() {

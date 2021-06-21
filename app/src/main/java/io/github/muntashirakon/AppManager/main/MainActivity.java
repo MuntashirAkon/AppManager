@@ -19,8 +19,8 @@ import android.view.View;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
+import androidx.annotation.UiThread;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
@@ -457,13 +457,9 @@ public class MainActivity extends BaseActivity implements
         }
     }
 
-    @AnyThread
+    @UiThread
     private void clearAndHandleSelection() {
-        if (mModel == null) return;
-        mModel.executor.submit(() -> {
-            if (mAdapter != null) mAdapter.clearSelections();
-            runOnUiThread(() -> multiSelectionView.hide());
-        });
+        multiSelectionView.cancel();
     }
 
     private void handleBatchOp(@BatchOpsManager.OpType int op) {

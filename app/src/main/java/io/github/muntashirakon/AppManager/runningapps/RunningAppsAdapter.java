@@ -17,8 +17,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.R;
@@ -27,26 +28,31 @@ import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
 import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
+import io.github.muntashirakon.AppManager.types.selection.MultiSelectionView;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
-public class RunningAppsAdapter extends RecyclerView.Adapter<RunningAppsAdapter.ViewHolder> {
+public class RunningAppsAdapter extends MultiSelectionView.Adapter<RunningAppsAdapter.ViewHolder> {
     private final RunningAppsActivity mActivity;
     private final RunningAppsViewModel mModel;
+    private final int mColorRed;
+    private final ArrayList<ProcessItem> processItems = new ArrayList<>();
     private boolean isAdbMode = false;
 
-    private final int mColorRed;
 
     RunningAppsAdapter(@NonNull RunningAppsActivity activity) {
+        super();
         mActivity = activity;
         mModel = activity.mModel;
-
         mColorRed = ContextCompat.getColor(activity, R.color.red);
     }
 
-    void setDefaultList() {
+    void setDefaultList(List<ProcessItem> processItems) {
         isAdbMode = AppPref.isAdbEnabled();
+        this.processItems.clear();
+        this.processItems.addAll(processItems);
         notifyDataSetChanged();
+        notifySelectionChange();
     }
 
     @NonNull
@@ -58,7 +64,7 @@ public class RunningAppsAdapter extends RecyclerView.Adapter<RunningAppsAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        @NonNull ProcessItem processItem = mModel.getProcessItem(position);
+        ProcessItem processItem = processItems.get(position);
         ApplicationInfo applicationInfo;
         if (processItem instanceof AppProcessItem) {
             applicationInfo = ((AppProcessItem) processItem).packageInfo.applicationInfo;
@@ -99,7 +105,7 @@ public class RunningAppsAdapter extends RecyclerView.Adapter<RunningAppsAdapter.
             Menu menu = popupMenu.getMenu();
             // Set kill
             MenuItem killItem = menu.findItem(R.id.action_kill);
-            if ((processItem.pid >= 10000 || RunningAppsActivity.enableKillForSystem) && !isAdbMode) {
+            if ((processItem.uid >= 10000 || mActivity.enableKillForSystem) && !isAdbMode) {
                 killItem.setVisible(true).setOnMenuItemClickListener(item -> {
                     mModel.killProcess(processItem);
                     return true;
@@ -145,25 +151,65 @@ public class RunningAppsAdapter extends RecyclerView.Adapter<RunningAppsAdapter.
         });
         // Set background colors
         holder.itemView.setBackgroundResource(position % 2 == 0 ? R.drawable.item_semi_transparent : R.drawable.item_transparent);
-        if (processItem.selected) holder.itemView.setBackgroundResource(R.drawable.item_highlight);
         // Set selections
-        holder.icon.setOnClickListener(v -> {
-            if (processItem.selected) mModel.deselect(processItem.pid);
-            else mModel.select(processItem.pid);
-        });
+        holder.icon.setOnClickListener(v -> toggleSelection(position));
+        super.onBindViewHolder(holder, position);
     }
 
     @Override
     public long getItemId(int position) {
-        return position;
+        return processItems.get(position).hashCode();
+    }
+
+    @Override
+    protected void select(int position) {
+        mModel.select(processItems.get(position));
+    }
+
+    @Override
+    protected void deselect(int position) {
+        mModel.deselect(processItems.get(position));
+    }
+
+    @Override
+    protected boolean isSelected(int position) {
+        return mModel.isSelected(processItems.get(position));
+    }
+
+    @Override
+    protected void cancelSelection() {
+        mModel.clearSelections();
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public void clearSelections() {
+        mModel.clearSelections();
+        notifyDataSetChanged();
+        super.clearSelections();
+    }
+
+    @NonNull
+    public ArrayList<ProcessItem> getSelectedItems() {
+        return mModel.getSelections();
+    }
+
+    @Override
+    protected int getSelectedItemCount() {
+        return mModel.getSelectionCount();
+    }
+
+    @Override
+    protected int getTotalItemCount() {
+        return mModel.getTotalCount();
     }
 
     @Override
     public int getItemCount() {
-        return mModel.getCount();
+        return processItems.size();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends MultiSelectionView.ViewHolder {
         ImageView icon;
         ImageView more;
         TextView processName;

@@ -63,10 +63,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            app:itemIconTint="@color/textColorPrimary"
-            app:itemTextColor="@color/textColorPrimary" />
+            app:itemIconTint="@color/text_color_primary_stateful"
+            app:itemTextColor="@color/text_color_primary_stateful" />
 
     </io.github.muntashirakon.AppManager.types.scroll.MaxHeightScrollView>
 
 </androidx.appcompat.widget.LinearLayoutCompat>
-

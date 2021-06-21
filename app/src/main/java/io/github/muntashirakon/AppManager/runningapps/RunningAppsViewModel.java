@@ -19,7 +19,6 @@ import androidx.lifecycle.MutableLiveData;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -30,6 +29,7 @@ import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
@@ -53,36 +53,31 @@ public class RunningAppsViewModel extends AndroidViewModel {
         super.onCleared();
     }
 
-    private MutableLiveData<List<Integer>> processLiveData;
+    private MutableLiveData<List<ProcessItem>> processLiveData;
 
-    public LiveData<List<Integer>> getProcessLiveData() {
+    public LiveData<List<ProcessItem>> getProcessLiveData() {
         if (processLiveData == null) {
             processLiveData = new MutableLiveData<>();
         }
         return processLiveData;
     }
 
-    private HashMap<Integer, ProcessItem> processList;
     @NonNull
-    private final List<Integer> originalProcessList = new ArrayList<>();
+    private final List<ProcessItem> processList = new ArrayList<>();
     @NonNull
-    private final List<Integer> filteredProcessList = new ArrayList<>();
+    private final List<ProcessItem> filteredProcessList = new ArrayList<>();
 
     @AnyThread
     public void loadProcesses() {
         executor.submit(() -> {
-            processList = new ProcessParser().parse();
-            for (int pid : selections) {
-                ProcessItem processItem = processList.get(pid);
-                if (processItem != null) processItem.selected = false;
-            }
-            originalProcessList.clear();
-            originalProcessList.addAll(new ArrayList<>(processList.keySet()));
+            processList.clear();
+            processList.addAll(new ProcessParser().parse());
             filterAndSort();
         });
     }
 
     private final MutableLiveData<Pair<ProcessItem, Boolean>> killProcessResult = new MutableLiveData<>();
+    private final MutableLiveData<List<ProcessItem>> killSelectedProcessesResult = new MutableLiveData<>();
 
     public void killProcess(ProcessItem processItem) {
         executor.submit(() -> killProcessResult.postValue(new Pair<>(processItem, Runner.runCommand(
@@ -91,6 +86,22 @@ public class RunningAppsViewModel extends AndroidViewModel {
 
     public LiveData<Pair<ProcessItem, Boolean>> observeKillProcess() {
         return killProcessResult;
+    }
+
+    public void killSelectedProcesses() {
+        executor.submit(() -> {
+            List<ProcessItem> failedProcesses = new ArrayList<>();
+            for (ProcessItem processItem : selectedItems) {
+                if (!Runner.runCommand(new String[]{"kill", "-9", String.valueOf(processItem.pid)}).isSuccessful()) {
+                    failedProcesses.add(processItem);
+                }
+            }
+            killSelectedProcessesResult.postValue(failedProcesses);
+        });
+    }
+
+    public LiveData<List<ProcessItem>> observeKillSelectedProcess() {
+        return killSelectedProcessesResult;
     }
 
     private final MutableLiveData<Pair<ApplicationInfo, Boolean>> forceStopAppResult = new MutableLiveData<>();
@@ -137,23 +148,8 @@ public class RunningAppsViewModel extends AndroidViewModel {
         return preventBackgroundRunResult;
     }
 
-    public int getCount() {
-        return filteredProcessList.size();
-    }
-
-    @NonNull
-    public ProcessItem getProcessItem(int index) {
-        ProcessItem processItem = null;
-        Throwable throwable = null;
-        try {
-            processItem = processList.get(filteredProcessList.get(index));
-        } catch (Exception e) {
-            throwable = e;
-        }
-        if (processItem == null) {
-            throw new IllegalArgumentException("No process found for index " + index, throwable);
-        }
-        return processItem;
+    public int getTotalCount() {
+        return processList.size();
     }
 
     private String query;
@@ -202,23 +198,20 @@ public class RunningAppsViewModel extends AndroidViewModel {
         boolean filterUserApps = (filter & RunningAppsActivity.FILTER_USER_APPS) != 0;
         // If user apps filter is enabled, disable it since it'll be just an overhead
         boolean filterApps = !filterUserApps && (filter & RunningAppsActivity.FILTER_APPS) != 0;
-        ProcessItem processItem;
         ApplicationInfo info;
-        for (int item : originalProcessList) {
-            // Process items are always nonNull
-            processItem = Objects.requireNonNull(processList.get(item));
+        for (ProcessItem item : processList) {
             // Filter by query
-            if (hasQuery && !processItem.name.toLowerCase(Locale.ROOT).contains(query)) {
+            if (hasQuery && !item.name.toLowerCase(Locale.ROOT).contains(query)) {
                 continue;
             }
             // Filter by apps
-            if (filterApps && !(processItem instanceof AppProcessItem)) {
+            if (filterApps && !(item instanceof AppProcessItem)) {
                 continue;
             }
             // Filter by user apps
             if (filterUserApps) {
-                if (processItem instanceof AppProcessItem) {
-                    info = ((AppProcessItem) processItem).packageInfo.applicationInfo;
+                if (item instanceof AppProcessItem) {
+                    info = ((AppProcessItem) item).packageInfo.applicationInfo;
                     if ((info.flags & ApplicationInfo.FLAG_SYSTEM) != 0) continue;
                     // else it's an user app
                 } else continue;
@@ -227,11 +220,12 @@ public class RunningAppsViewModel extends AndroidViewModel {
         }
         // Apply sorts
         // Sort by pid first
-        Collections.sort(filteredProcessList);
+        //noinspection ComparatorCombinators
+        Collections.sort(filteredProcessList, (o1, o2) -> Integer.compare(o1.pid, o2.pid));
         if (sortOrder != RunningAppsActivity.SORT_BY_PID) {
             Collections.sort(filteredProcessList, (o1, o2) -> {
-                ProcessItem p1 = Objects.requireNonNull(processList.get(o1));
-                ProcessItem p2 = Objects.requireNonNull(processList.get(o2));
+                ProcessItem p1 = Objects.requireNonNull(processList.get(o1.pid));
+                ProcessItem p2 = Objects.requireNonNull(processList.get(o2.pid));
                 switch (sortOrder) {
                     case RunningAppsActivity.SORT_BY_APPS_FIRST:
                         return -Boolean.compare(p1 instanceof AppProcessItem, p2 instanceof AppProcessItem);
@@ -248,48 +242,45 @@ public class RunningAppsViewModel extends AndroidViewModel {
         processLiveData.postValue(filteredProcessList);
     }
 
-    private MutableLiveData<Integer> selectionLiveData;
+    private final Set<ProcessItem> selectedItems = new HashSet<>();
 
-    public LiveData<Integer> getSelection() {
-        if (selectionLiveData == null) {
-            selectionLiveData = new MutableLiveData<>(selections.size());
-        }
-        return selectionLiveData;
+    public int getSelectionCount() {
+        return selectedItems.size();
     }
 
-    private final Set<Integer> selections = new HashSet<>();
+    public boolean isSelected(@NonNull ProcessItem processItem) {
+        return selectedItems.contains(processItem);
+    }
 
-    public void select(int pid) {
-        try {
-            ProcessItem processItem = processList.get(pid);
-            if (processItem != null) {
-                processItem.selected = true;
-                selections.add(pid);
-                selectionLiveData.postValue(selections.size());
-            }
-        } catch (Exception ignore) {
+    public void select(@Nullable ProcessItem processItem) {
+        if (processItem != null) {
+            selectedItems.add(processItem);
         }
     }
 
-    public void deselect(int pid) {
-        try {
-            ProcessItem processItem = processList.get(pid);
-            if (processItem != null) {
-                processItem.selected = false;
-                selections.remove(pid);
-                selectionLiveData.postValue(selections.size());
-            }
-        } catch (Exception ignore) {
+    public void deselect(@Nullable ProcessItem processItem) {
+        if (processItem != null) {
+            selectedItems.remove(processItem);
         }
+    }
+
+    public ArrayList<ProcessItem> getSelections() {
+        return new ArrayList<>(selectedItems);
+    }
+
+    @NonNull
+    public ArrayList<UserPackagePair> getSelectedPackagesWithUsers() {
+        ArrayList<UserPackagePair> userPackagePairs = new ArrayList<>();
+        for (ProcessItem processItem : selectedItems) {
+            if (processItem instanceof AppProcessItem) {
+                ApplicationInfo applicationInfo = ((AppProcessItem) processItem).packageInfo.applicationInfo;
+                userPackagePairs.add(new UserPackagePair(applicationInfo.packageName, Users.getUserHandle(applicationInfo.uid)));
+            }
+        }
+        return userPackagePairs;
     }
 
     public void clearSelections() {
-        for (int pid : selections) {
-            ProcessItem processItem = processList.get(pid);
-            if (processItem != null)
-                processItem.selected = false;
-        }
-        selections.clear();
-        selectionLiveData.postValue(selections.size());
+        selectedItems.clear();
     }
 }

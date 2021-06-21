@@ -7,6 +7,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -35,11 +36,18 @@ import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 @SuppressLint("RestrictedApi")
 public class MultiSelectionView extends MaterialCardView {
+    public interface OnSelectionChangeListener {
+        void onSelectionChange(int selectionCount);
+    }
+
     private final SelectionActionsView selectionActionsView;
     private final View cancelSelectionView;
     private final MaterialCheckBox selectAllView;
     private final TextView selectionCounter;
+    @Nullable
     private Adapter<?> adapter;
+    @Nullable
+    private OnSelectionChangeListener selectionChangeListener;
 
     public MultiSelectionView(Context context) {
         this(context, null);
@@ -102,6 +110,10 @@ public class MultiSelectionView extends MaterialCardView {
         setLayoutParams(params);
     }
 
+    public Menu getMenu() {
+        return selectionActionsView.getMenu();
+    }
+
 
     public void setAdapter(@NonNull Adapter<?> adapter) {
         this.adapter = adapter;
@@ -130,6 +142,10 @@ public class MultiSelectionView extends MaterialCardView {
         }
     }
 
+    public void cancel() {
+        cancelSelectionView.performClick();
+    }
+
     @UiThread
     public void hide() {
         Transition sharedAxis = new MaterialSharedAxis(MaterialSharedAxis.Y, false);
@@ -143,6 +159,10 @@ public class MultiSelectionView extends MaterialCardView {
 
     public void setOnItemSelectedListener(ReflowMenuViewWrapper.OnItemSelectedListener listener) {
         selectionActionsView.setOnItemSelectedListener(listener);
+    }
+
+    public void setOnSelectionChangeListener(OnSelectionChangeListener selectionChangeListener) {
+        this.selectionChangeListener = selectionChangeListener;
     }
 
     @SuppressLint("SetTextI18n")
@@ -162,6 +182,9 @@ public class MultiSelectionView extends MaterialCardView {
         }
         selectionCounter.setText(selectionCount + "/" + adapter.getTotalItemCount());
         selectAllView.setChecked(adapter.areAllSelected());
+        if (selectionChangeListener != null) {
+            selectionChangeListener.onSelectionChange(selectionCount);
+        }
     }
 
     public abstract static class Adapter<VH extends ViewHolder> extends RecyclerView.Adapter<VH> {
