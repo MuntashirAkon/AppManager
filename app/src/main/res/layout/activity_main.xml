@@ -27,34 +27,30 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/main_layout"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:layout_weight="1"
+        android:focusable="false"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/swipe_refresh"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/item_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            android:focusable="false"
+            android:clipToPadding="false"
+            tools:listitem="@layout/item_main" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/item_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scrollbars="none"
-                tools:listitem="@layout/item_main" />
-
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <io.github.muntashirakon.AppManager.types.selection.MultiSelectionView
         android:id="@+id/selection_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:focusable="false"
         app:menu="@menu/activity_main_selection_actions" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

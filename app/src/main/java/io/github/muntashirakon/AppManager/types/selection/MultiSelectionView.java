@@ -23,7 +23,6 @@ import androidx.transition.Transition;
 import androidx.transition.TransitionManager;
 
 import com.google.android.material.card.MaterialCardView;
-import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.internal.ThemeEnforcement;
 import com.google.android.material.transition.MaterialSharedAxis;
 
@@ -32,6 +31,7 @@ import java.lang.reflect.Field;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.types.reflow.ReflowMenuViewWrapper;
 import io.github.muntashirakon.AppManager.types.reflow.SelectionActionsView;
+import io.github.muntashirakon.AppManager.types.widget.CheckBox;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 @SuppressLint("RestrictedApi")
@@ -42,7 +42,7 @@ public class MultiSelectionView extends MaterialCardView {
 
     private final SelectionActionsView selectionActionsView;
     private final View cancelSelectionView;
-    private final MaterialCheckBox selectAllView;
+    private final CheckBox selectAllView;
     private final TextView selectionCounter;
     @Nullable
     private Adapter<?> adapter;
@@ -110,10 +110,18 @@ public class MultiSelectionView extends MaterialCardView {
         setLayoutParams(params);
     }
 
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        if (adapter != null) {
+            ViewGroup.MarginLayoutParams lp = (MarginLayoutParams) getLayoutParams();
+            adapter.setSelectionBottomPadding(getHeight() + lp.topMargin + lp.bottomMargin);
+        }
+    }
+
     public Menu getMenu() {
         return selectionActionsView.getMenu();
     }
-
 
     public void setAdapter(@NonNull Adapter<?> adapter) {
         this.adapter = adapter;
@@ -123,10 +131,8 @@ public class MultiSelectionView extends MaterialCardView {
             hide();
         });
         selectAllView.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (buttonView.isPressed()) {
-                if (isChecked) adapter.selectAll();
-                else adapter.clearSelections();
-            }
+            if (isChecked) adapter.selectAll();
+            else adapter.clearSelections();
         });
         adapter.setOnSelectionChangeListener(() -> updateCounter(false));
     }
@@ -138,7 +144,8 @@ public class MultiSelectionView extends MaterialCardView {
         setVisibility(VISIBLE);
         if (adapter != null) {
             adapter.setInSelectionMode(true);
-            adapter.setSelectionBottomMargin(getHeight());
+            ViewGroup.MarginLayoutParams lp = (MarginLayoutParams) getLayoutParams();
+            adapter.setSelectionBottomPadding(getHeight() + lp.topMargin + lp.bottomMargin);
         }
     }
 
@@ -153,7 +160,7 @@ public class MultiSelectionView extends MaterialCardView {
         setVisibility(GONE);
         if (adapter != null) {
             adapter.setInSelectionMode(false);
-            adapter.setSelectionBottomMargin(-1);
+            adapter.setSelectionBottomPadding(0);
         }
     }
 
@@ -181,7 +188,7 @@ public class MultiSelectionView extends MaterialCardView {
             if (getVisibility() != VISIBLE) show();
         }
         selectionCounter.setText(selectionCount + "/" + adapter.getTotalItemCount());
-        selectAllView.setChecked(adapter.areAllSelected());
+        selectAllView.setChecked(adapter.areAllSelected(), false);
         if (selectionChangeListener != null) {
             selectionChangeListener.onSelectionChange(selectionCount);
         }
@@ -192,11 +199,11 @@ public class MultiSelectionView extends MaterialCardView {
             void onSelectionChange();
         }
 
-        @Px
-        private int selectionBottomMargin;
         @Nullable
         private OnSelectionChangeListener selectionChangeListener;
         private boolean isInSelectionMode;
+        @Nullable
+        private RecyclerView recyclerView;
 
         public Adapter() {
             setHasStableIds(true);
@@ -271,48 +278,48 @@ public class MultiSelectionView extends MaterialCardView {
         }
 
         /**
-         * @param selectionBottomMargin Set {@code -1} to reset
+         * @param selectionBottomPadding Set {@code 0} to reset
          */
         @UiThread
-        private void setSelectionBottomMargin(@Px int selectionBottomMargin) {
-            this.selectionBottomMargin = selectionBottomMargin;
-            // Last view has to be reset
-            notifyItemChanged(getItemCount() - 1);
+        private void setSelectionBottomPadding(@Px int selectionBottomPadding) {
+            if (recyclerView == null) return;
+            if (recyclerView.getClipToPadding()) {
+                // Clip to padding must be disabled
+                recyclerView.setClipToPadding(false);
+            }
+            recyclerView.setPadding(recyclerView.getPaddingLeft(), recyclerView.getPaddingTop(),
+                    recyclerView.getPaddingRight(), selectionBottomPadding);
+        }
+
+        @CallSuper
+        @Override
+        public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+            super.onAttachedToRecyclerView(recyclerView);
+            this.recyclerView = recyclerView;
+        }
+
+        @CallSuper
+        @Override
+        public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
+            super.onDetachedFromRecyclerView(recyclerView);
+            this.recyclerView = null;
         }
 
         @CallSuper
         @Override
         public void onBindViewHolder(@NonNull VH holder, int position) {
+            // Set focus
+            holder.itemView.setNextFocusRightId(R.id.action_select_all);
             // Set selection background
             if (isSelected(position)) {
                 holder.itemView.setBackgroundResource(R.drawable.item_highlight);
             }
-            // Last item must have extended padding
-            if (selectionBottomMargin != -1 && position == getItemCount() - 1) {
-                holder.setBottomMargin(selectionBottomMargin);
-            } else holder.resetBottomMargin();
         }
     }
 
     public abstract static class ViewHolder extends RecyclerView.ViewHolder {
-        @Px
-        private final int defaultBottomMargin;
-
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            defaultBottomMargin = ((RecyclerView.LayoutParams) itemView.getLayoutParams()).bottomMargin;
-        }
-
-        void setBottomMargin(@Px int bottomMargin) {
-            RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) itemView.getLayoutParams();
-            layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, layoutParams.rightMargin, bottomMargin);
-        }
-
-        void resetBottomMargin() {
-            RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) itemView.getLayoutParams();
-            if (layoutParams.bottomMargin != defaultBottomMargin) {
-                layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, layoutParams.rightMargin, defaultBottomMargin);
-            }
         }
     }
 }

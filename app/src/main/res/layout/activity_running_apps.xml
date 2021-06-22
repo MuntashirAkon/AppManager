@@ -14,6 +14,7 @@
         android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:focusable="false"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <androidx.recyclerview.widget.RecyclerView
@@ -21,7 +22,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="none"
-            android:focusable="true"
+            android:focusable="false"
+            android:clipToPadding="false"
             tools:listitem="@layout/item_running_app" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
@@ -30,6 +32,7 @@
         android:id="@+id/selection_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:focusable="false"
         app:menu="@menu/activity_running_apps_popup_actions" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

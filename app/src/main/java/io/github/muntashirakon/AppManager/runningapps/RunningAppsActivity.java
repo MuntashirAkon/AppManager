@@ -294,6 +294,7 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
 
     @Override
     public void onSelectionChange(int selectionCount) {
+        if (selectionMenu == null) return;
         ArrayList<ProcessItem> selectedItems = mAdapter.getSelectedItems();
         MenuItem kill = selectionMenu.findItem(R.id.action_kill);
         MenuItem forceStop = selectionMenu.findItem(R.id.action_force_stop);
