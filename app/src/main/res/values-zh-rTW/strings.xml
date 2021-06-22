@@ -992,4 +992,14 @@
     <string name="wireless_debugging_not_supported">此平臺不支援無線偵錯。</string>
     <string name="wireless_debugging">無線偵錯</string>
     <string name="community">社群</string>
+    <string name="failed_to_prevent_background_run">無法防止 %1$s 在背景執行</string>
+    <string name="app_signing_signature_mismatch_for_data_only_app">由於簽名不相符而無法安裝應用程式。該應用程式在未清除其資料的情況下解除安裝。</string>
+    <plurals name="alert_failed_to_import_backups">
+        <item quantity="other">無法匯入 %1$d 備份</item>
+    </plurals>
+    <string name="import_from_tb">從鈦備份匯入</string>
+    <string name="import_from_oab_tb_msg">備份必須位於 %s。</string>
+    <string name="import_from_oab">從 OAndBackup 匯入</string>
+    <string name="pref_import_backups_msg">從 OAndBackup、鈦備份或 Swift Backup 匯入備份。</string>
+    <string name="pref_import_backups">匯入備份</string>
 </resources>

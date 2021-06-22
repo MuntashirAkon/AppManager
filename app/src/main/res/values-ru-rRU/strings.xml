@@ -260,7 +260,7 @@
     <string name="user_and_uid">Пользователь: <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
     <string name="clear_data">Очистить данные</string>
     <string name="backup_restore">Резервное копирование/восстановление</string>
-    <string name="disable_background">Предотвращает работу в фоне</string>
+    <string name="disable_background">Предотвратить фоновую работу</string>
     <string name="export_blocking_rules">Экспортировать правила блокировки</string>
     <plurals name="alert_failed_to_clear_data">
         <item quantity="one">Не удалось очистить данные %1$d приложения</item>
@@ -1110,7 +1110,7 @@
     <string name="app_signing_signature_mismatch_for_data_only_app">Не удалось установить приложение из-за несоответствия подписи. Приложение было удалено без очистки данных.</string>
     <string name="community">Сообщество</string>
     <string name="community_links">Telegram: https://t.me/AppManagerChannel
-\nTwitter: https://twitter.com/AppManagerNews</string>
+\nТвиттер: https://twitter.com/AppManagerNews</string>
     <plurals name="alert_failed_to_import_backups">
         <item quantity="one">Не удалось импортировать %1$d резервную копию</item>
         <item quantity="few">Не удалось импортировать %1$d резервных копии</item>

@@ -1005,4 +1005,12 @@
     <string name="rsa_modulus">Mô-đun</string>
     <string name="rsa_exponent">Người thực hiện</string>
     <string name="state_wake_kill">Dừng thức dậy</string>
+    <plurals name="alert_failed_to_import_backups">
+        <item quantity="other">Không thể nhập %1$d bản sao lưu</item>
+    </plurals>
+    <string name="import_from_tb">Nhập từ Titanium Backup</string>
+    <string name="import_from_oab_tb_msg">Bản sao lưu phải được đặt ở %s.</string>
+    <string name="import_from_oab">Nhập từ OAndBackup</string>
+    <string name="pref_import_backups_msg">Nhập bản sao lưu từ OAndBackup, Titanium Backup hoặc Swift Backup.</string>
+    <string name="pref_import_backups">Nhập bản sao lưu</string>
 </resources>
