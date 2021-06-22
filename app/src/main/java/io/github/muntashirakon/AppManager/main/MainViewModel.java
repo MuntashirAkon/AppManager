@@ -159,18 +159,19 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     @NonNull
-    public ArrayList<UserPackagePair> getSelectedPackagesWithUsers(boolean onlyForCurrentUser) {
+    public ArrayList<UserPackagePair> getSelectedPackagesWithUsers() {
         ArrayList<UserPackagePair> userPackagePairs = new ArrayList<>();
-        int currentUserHandle = Users.myUserId();
+        int myUserId = Users.myUserId();
+        int[] userIds = Users.getUsersIds();
         for (String packageName : selectedPackages.keySet()) {
             int[] userHandles = selectedPackages.get(packageName);
             if (userHandles == null || userHandles.length == 0) {
                 // Could be a backup only item
                 // Assign current user in it
-                userPackagePairs.add(new UserPackagePair(packageName, currentUserHandle));
+                userPackagePairs.add(new UserPackagePair(packageName, myUserId));
             } else {
                 for (int userHandle : userHandles) {
-                    if (onlyForCurrentUser && currentUserHandle != userHandle) continue;
+                    if (!ArrayUtils.contains(userIds, userHandle)) continue;
                     userPackagePairs.add(new UserPackagePair(packageName, userHandle));
                 }
             }

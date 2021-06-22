@@ -10,15 +10,18 @@ import android.os.Build;
 import android.os.IUserManager;
 import android.os.RemoteException;
 import android.os.UserHandle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
-import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
-import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
+import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 
 public final class Users {
     public static final String TAG = "Users";
@@ -58,7 +61,7 @@ public final class Users {
 
     @WorkerThread
     @Nullable
-    public static List<UserInfo> getUsers() {
+    public static List<UserInfo> getAllUsers() {
         if (userInfoList == null) {
             try {
                 IUserManager userManager = IUserManager.Stub.asInterface(ProxyBinder.getService(Context.USER_SERVICE));
@@ -77,26 +80,37 @@ public final class Users {
     }
 
     @WorkerThread
+    @Nullable
+    public static List<UserInfo> getUsers() {
+        getAllUsers();
+        if (userInfoList == null) return null;
+        int[] selectedUserIds = AppPref.getSelectedUsers();
+        List<UserInfo> users = new ArrayList<>();
+        for (UserInfo userInfo : userInfoList) {
+            if (selectedUserIds == null || ArrayUtils.contains(selectedUserIds, userInfo.id)) {
+                users.add(userInfo);
+            }
+        }
+        return users;
+    }
+
+    @WorkerThread
     @NonNull
     @UserIdInt
     public static int[] getUsersIds() {
-        getUsers();
-        if (userInfoList != null) {
-            List<Integer> users = new ArrayList<>();
-            for (UserInfo userInfo : userInfoList) {
-                try {
-                    users.add(userInfo.id);
-                } catch (Exception ignore) {
-                }
-            }
-            return ArrayUtils.convertToIntArray(users);
-        } else {
-            return new int[]{getCurrentUserHandle()};
+        getAllUsers();
+        if (userInfoList == null) {
+            return new int[]{myUserId()};
         }
+        int[] selectedUserIds = AppPref.getSelectedUsers();
+        List<Integer> users = new ArrayList<>();
+        for (UserInfo userInfo : userInfoList) {
+            if (selectedUserIds == null || ArrayUtils.contains(selectedUserIds, userInfo.id)) {
+                users.add(userInfo.id);
+            }
+        }
+        return ArrayUtils.convertToIntArray(users);
     }
-
-    @UserIdInt
-    private static Integer currentUserHandle = null;
 
     @UserIdInt
     public static int myUserId() {

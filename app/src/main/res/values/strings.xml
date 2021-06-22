@@ -925,7 +925,7 @@
     <string name="expiry_date_cannot_be_empty">Expiry date cannot be empty.</string>
     <string name="pref_installer_msg">Configure the behaviours of the app installer.</string>
     <string name="pref_import_backups">Import backups</string>
-    <string name="pref_import_backups_msg">Import backups from OAndBackup, Titanium Backup or Swift Backup.</string>
+    <string name="pref_import_backups_msg">Import backups from OAndBackup or Titanium Backup.</string>
     <string name="import_from_oab">Import from OAndBackup</string>
     <string name="import_from_oab_tb_msg">Backups must be located at %s.</string>
     <string name="import_from_tb">Import from Titanium Backup</string>
@@ -1076,4 +1076,6 @@
     <string name="help_uses_permissions_tab">Click on an item to <b>grant</b> or <b>revoke</b> it. Only <b>dangerous</b> and <b>development</b> permissions may be granted or revoked.</string>
     <string name="minimum_version">Min version: %d</string>
     <string name="added_to_queue">Added to queue</string>
+    <string name="pref_selected_users">Selected users</string>
+    <string name="pref_selected_users_msg">Restrict App Manager to work with the selected users only.</string>
 </resources>

@@ -34,6 +34,12 @@
         app:iconSpaceReserved="false" />
 
     <Preference
+        app:key="selected_users"
+        app:title="@string/pref_selected_users"
+        app:summary="@string/pref_selected_users_msg"
+        app:iconSpaceReserved="false" />
+
+    <Preference
         app:key="enabled_features"
         app:title="@string/enable_disable_features"
         app:summary="@string/pref_enable_disable_features_msg"
