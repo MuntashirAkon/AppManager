@@ -727,7 +727,6 @@
     <string name="cpu">CPU</string>
     <string name="users">Nutzer</string>
     <string name="languages">Sprachen</string>
-    <string name="available">Verfügbar</string>
     <string name="battery_capacity">Kapazität</string>
     <string name="memory">Speicher</string>
     <string name="vendor">Hersteller</string>
@@ -1043,4 +1042,9 @@
     <string name="import_from_oab">Importieren von OAndBackup</string>
     <string name="pref_import_backups_msg">Importieren Sie Sicherungen aus OAndBackup, Titanium Backup oder Swift Backup.</string>
     <string name="pref_import_backups">Sicherungen importieren</string>
+    <string name="added_to_queue">Zur Warteschlange hinzugefügt</string>
+    <string name="minimum_version">Minimale Version: %d</string>
+    <string name="help_uses_permissions_tab">Klicken Sie auf ein Element, um es <b>zu gewähren</b> oder <b>zu entziehen</b>. Nur die Berechtigungen <b>Gefahr</b> und <b>Entwicklung</b> können gewährt oder entzogen werden.</string>
+    <string name="help_permissions_tab">Diese Berechtigungen werden von dieser App festgelegt und können nicht widerrufen werden.</string>
+    <string name="help_app_ops_tab">Klicken Sie auf ein Element, um es zu <b>zulassen</b> oder <b>zu ignorieren</b>. Klicken Sie lange auf ein Element, um andere unterstützte Modi anzuzeigen.</string>
 </resources>
