@@ -5,7 +5,6 @@
     <string name="configurations">Konfigurációk</string>
     <string name="sort_by_shared_user_id">Megosztott felhasználói azonosító</string>
     <string name="no_feature">Nincsenek funkciók</string>
-    <string name="protection_level">Védelmi szint</string>
     <string name="group">Csoport</string>
     <string name="declared_permission">Engedélyek</string>
     <string name="write">Ír</string>

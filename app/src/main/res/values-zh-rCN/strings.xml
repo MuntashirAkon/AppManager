@@ -29,9 +29,7 @@
     <string name="declared_permission">权限</string>
     <string name="shared_libs">共享程序库</string>
     <string name="group">群组</string>
-    <string name="protection_level">保护等级</string>
     <string name="uses_feature">属性</string>
-    <string name="gles_ver">请求 OpenGL ES 版本</string>
     <string name="no_feature">无</string>
     <string name="sort_by_shared_user_id">共享的用户ID</string>
     <string name="shared_user_id">共享的用户ID</string>
@@ -695,7 +693,6 @@
     <string name="cpu">CPU</string>
     <string name="users">用户</string>
     <string name="languages">语言</string>
-    <string name="unavailable">不可用</string>
     <string name="available">可用</string>
     <string name="battery_capacity">容量</string>
     <string name="memory">运行内存</string>
@@ -826,9 +823,6 @@
     <string name="filter_apps_without_backups">无备份的应用</string>
     <string name="uninstalled_apps">已卸载应用</string>
     <string name="internal_data">内部数据</string>
-    <plurals name="items_selected">
-        <item quantity="other"><xliff:g id="selection_no" example="20">%1$d</xliff:g> 已选中</item>
-    </plurals>
     <string name="expiry_date_cannot_be_empty">到期日不能为空。</string>
     <string name="signing_key">签名密钥</string>
     <string name="failed_to_read_keystore">无法读取密钥库。</string>

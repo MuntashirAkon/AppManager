@@ -422,9 +422,7 @@
     <string name="shared_user_id">ID de utilizador partilhado</string>
     <string name="sort_by_shared_user_id">ID de utilizador partilhado</string>
     <string name="no_feature">Nenhum recurso</string>
-    <string name="gles_ver">Versão requerida do OpenGL ES</string>
     <string name="uses_feature">Recursos utilizados</string>
-    <string name="protection_level">Nível de proteção</string>
     <string name="group">Grupo</string>
     <string name="shared_libs">Bibliotecas partilhadas</string>
     <string name="declared_permission">Permissões</string>
@@ -457,7 +455,6 @@
     <string name="graphics">Gráficos</string>
     <string name="users">Utilizadores</string>
     <string name="languages">Idiomas</string>
-    <string name="unavailable">Não disponível</string>
     <string name="available">Disponível</string>
     <string name="battery_capacity">Capacidade</string>
     <string name="memory">Memória</string>
@@ -694,10 +691,6 @@
     <string name="restart_log_viewer_to_see_changes">Reinicie a janela do visualizador de registo para ver as alterações.</string>
     <string name="pref_log_viewer_msg">Configurar como os registos são exibidos.</string>
     <string name="log_viewer">Visualizador de registo</string>
-    <plurals name="items_selected">
-        <item quantity="one"><xliff:g id="selection_no" example="20">%1$d</xliff:g> selecionado</item>
-        <item quantity="other"><xliff:g id="selection_no" example="20">%1$d</xliff:g> selecionados</item>
-    </plurals>
     <string name="pref_installer_msg">Configurar comportamentos do instalador de apps.</string>
     <string name="expiry_date_cannot_be_empty">A data de validade não pode estar vazia.</string>
     <string name="signing_key">Assinando chave</string>

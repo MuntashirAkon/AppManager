@@ -29,9 +29,7 @@
     <string name="declared_permission">İzinler</string>
     <string name="shared_libs">Paylaşılan kütüphaneler</string>
     <string name="group">Grup</string>
-    <string name="protection_level">Güvenlik seviyesi</string>
     <string name="uses_feature">Kullanılan özellikler</string>
-    <string name="gles_ver">Gereken OpenGL ES sürümü</string>
     <string name="no_feature">Özellik yok</string>
     <string name="sort_by_shared_user_id">Paylaşılan kullanıcı kimliği</string>
     <string name="shared_user_id">Paylaşılan kullanıcı kimliği</string>
@@ -727,7 +725,6 @@
     <string name="cpu">CPU</string>
     <string name="users">Kullanıcılar</string>
     <string name="languages">Diller</string>
-    <string name="unavailable">Kullanılabilir değil</string>
     <string name="available">Kullanılabilir</string>
     <string name="battery_capacity">Kapasite</string>
     <string name="memory">Bellek</string>
@@ -857,10 +854,6 @@
     <string name="filter_apps_without_backups">Yedeği olmayan</string>
     <string name="uninstalled_apps">Kaldırılan uygulamalar</string>
     <string name="internal_data">Dahili veri</string>
-    <plurals name="items_selected">
-        <item quantity="one"><xliff:g id="selection_no" example="20">%1$d</xliff:g> seçildi</item>
-        <item quantity="other"><xliff:g id="selection_no" example="20">%1$d</xliff:g> seçildi</item>
-    </plurals>
     <string name="expiry_date_cannot_be_empty">Bitiş tarihi boş olamaz.</string>
     <string name="signing_key">İmzalama anahtarı</string>
     <string name="failed_to_read_keystore">KeyStore okunamadı.</string>

@@ -29,7 +29,6 @@
     <string name="declared_permission">Permisos</string>
     <string name="shared_libs">Bibliotecas compartidas</string>
     <string name="group">Grupo</string>
-    <string name="protection_level">Nivel de protección</string>
     <string name="no_feature">Sin funciones</string>
     <string name="sort_by_shared_user_id">ID de usuario compartido</string>
     <string name="shared_user_id">ID de usuario compartido</string>
@@ -663,7 +662,6 @@
     <string name="decimal_value">Valor decimal</string>
     <string name="integer_value">Valor de entero</string>
     <string name="long_integer_value">Valor de entero largo</string>
-    <string name="gles_ver">Req. OpenGL ES versión</string>
     <string name="set_custom_app_op">Configurar app op personalizada</string>
     <string name="resend_intent">Reenviar Intent</string>
     <string name="share">Compartir</string>
@@ -784,7 +782,6 @@
     <string name="cpu">CPU</string>
     <string name="users">Usuarios</string>
     <string name="languages">Idiomas</string>
-    <string name="unavailable">No disponible</string>
     <string name="available">Disponible</string>
     <string name="battery_capacity">Capacidad</string>
     <string name="memory">Memoria</string>
@@ -981,10 +978,6 @@
     <string name="log_level_error">Error</string>
     <string name="log_level_debug">Depuración</string>
     <string name="filename">Nombre de archivo</string>
-    <plurals name="items_selected">
-        <item quantity="one"><xliff:g id="selection_no" example="20">%1$d</xliff:g> seleccionado</item>
-        <item quantity="other"><xliff:g id="selection_no" example="20">%1$d</xliff:g> seleccionados</item>
-    </plurals>
     <string name="pref_show_timestamp_summary">Mostrar identificador de proceso y cronomarcador al expandir.</string>
     <string name="pref_log_write_period_summary">Al grabar, escribir en la tarjeta SD cada %1$d renglones.</string>
     <string name="pref_log_write_period_title">Período de escritura</string>

@@ -29,9 +29,7 @@
     <string name="declared_permission">Berechtigungen</string>
     <string name="shared_libs">Geteilte Bibliotheken</string>
     <string name="group">Gruppe</string>
-    <string name="protection_level">Schutz-Level</string>
     <string name="uses_feature">Benutzt Funktionalitäten</string>
-    <string name="gles_ver">Benötigte OpenGL ES-Version</string>
     <string name="no_feature">Keine Funktionalitäten</string>
     <string name="sort_by_shared_user_id">Geteilte Nutzer-ID</string>
     <string name="shared_user_id">Geteilte Nutzer-ID</string>
@@ -729,7 +727,6 @@
     <string name="cpu">CPU</string>
     <string name="users">Nutzer</string>
     <string name="languages">Sprachen</string>
-    <string name="unavailable">Nicht vorhanden</string>
     <string name="available">Verfügbar</string>
     <string name="battery_capacity">Kapazität</string>
     <string name="memory">Speicher</string>
@@ -907,10 +904,6 @@
     <string name="restart_log_viewer_to_see_changes">Starten Sie das Fenster des Log-Betrachters neu, um die Änderungen zu sehen.</string>
     <string name="log_viewer">Log-Betrachter</string>
     <string name="pref_log_viewer_msg">Konfigurieren Sie, wie Protokolle angezeigt werden.</string>
-    <plurals name="items_selected">
-        <item quantity="one"><xliff:g id="selection_no" example="20">%1$d</xliff:g> ausgewählt</item>
-        <item quantity="other"><xliff:g id="selection_no" example="20">%1$d</xliff:g> ausgewählt</item>
-    </plurals>
     <string name="pref_installer_msg">Konfigurieren Sie die Einstellungen für das App-Installationsprogramms.</string>
     <string name="expiry_date_cannot_be_empty">Das Verfallsdatum kann nicht leer sein.</string>
     <string name="signing_key">Signierschlüssel</string>

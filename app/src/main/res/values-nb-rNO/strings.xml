@@ -101,7 +101,6 @@
     <string name="shared_user_id">Delt bruker-ID</string>
     <string name="sort_by_shared_user_id">Delt bruker-ID</string>
     <string name="no_feature">Ingen funksjoner</string>
-    <string name="gles_ver">Påkrevd OpenGL ES-versjon</string>
     <string name="protection_level">Beskyttelsesnivå</string>
     <string name="group">Gruppe</string>
     <string name="shared_libs">Delte bibliotek</string>
@@ -547,7 +546,6 @@
     <string name="cpu">Prosessor</string>
     <string name="users">Brukere</string>
     <string name="languages">Språk</string>
-    <string name="unavailable">Utilgjengelig</string>
     <string name="available">Tilgjengelig</string>
     <string name="battery_capacity">Kapasitet</string>
     <string name="memory">Minne</string>
@@ -632,10 +630,6 @@
     <string name="failed_to_uninstall_updates">Kunne ikke avinstallere oppgraderinger for <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="abi_split_for_base_apk"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> kode for grunn-APK</string>
     <string name="unknown_split_for_base_apk"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> for grunn-APK</string>
-    <plurals name="items_selected">
-        <item quantity="one"><xliff:g id="selection_no" example="20"/> valgt</item>
-        <item quantity="other"><xliff:g id="selection_no" example="20"/> valgt</item>
-    </plurals>
     <string name="pref_enable_disable_features_msg">Skru på eller av funksjoner i App Manager.</string>
     <string name="enable_disable_features">Skru på/av funksjoner</string>
     <string name="ssaid">SSAID</string>

@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<resources>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources>
     <string name="uses_feature">사용한 기능</string>
-    <string name="protection_level">보호 수준</string>
     <string name="group">그룹</string>
     <string name="shared_libs">공유된 라이브러리</string>
     <string name="declared_permission">권한</string>

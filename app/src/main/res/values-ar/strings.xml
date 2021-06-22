@@ -124,9 +124,7 @@
     <string name="shared_user_id">معرف المستخدم المشترك</string>
     <string name="sort_by_shared_user_id">معرف المستخدم المشترك</string>
     <string name="no_feature">لا توجد ميزات</string>
-    <string name="gles_ver">مطلوب. إصدار OpenGL ES</string>
     <string name="uses_feature">المميزات المستخدمه</string>
-    <string name="protection_level">مستوى الحماية</string>
     <string name="group">المجموعة</string>
     <string name="shared_libs">المكتبات المشتركة</string>
     <string name="declared_permission">الصلاحيات</string>
@@ -672,14 +670,6 @@
         <item quantity="many">%d سيتم حذف الملف</item>
         <item quantity="other">%d سيتم حذف الملف</item>
     </plurals>
-    <plurals name="items_selected">
-        <item quantity="zero"><xliff:g id="selection_no" example="20"> %1$d </xliff:g> تم اختياره</item>
-        <item quantity="one"><xliff:g id="selection_no" example="20"> %1$d </xliff:g> تم اختياره</item>
-        <item quantity="two"><xliff:g id="selection_no" example="20"> %1$d </xliff:g> تم اختياره</item>
-        <item quantity="few"><xliff:g id="selection_no" example="20"> %1$d </xliff:g> تم اختيارهم</item>
-        <item quantity="many"><xliff:g id="selection_no" example="20"> %1$d </xliff:g> تم اختياره</item>
-        <item quantity="other"><xliff:g id="selection_no" example="20"> %1$d </xliff:g> تم اختياره</item>
-    </plurals>
     <plurals name="alert_failed_to_block_components">
         <item quantity="zero">تعذر حظر مكون التطبيق %1$d</item>
         <item quantity="one">تعذر حظر مكون التطبيق %1$d</item>
@@ -1113,7 +1103,6 @@
     <string name="cpu">المعالج</string>
     <string name="users">المستخدمين</string>
     <string name="languages">اللغات</string>
-    <string name="unavailable">غير متوفر</string>
     <string name="available">متاح</string>
     <string name="battery_capacity">السعة</string>
     <string name="memory">الذاكرة</string>

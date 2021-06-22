@@ -16,7 +16,6 @@
     <string name="patterns_allowed">Графічні ключі дозволено</string>
     <string name="declared_permission">Дозволи</string>
     <string name="group">Група</string>
-    <string name="protection_level">Рівень захисту</string>
     <string name="sort_by_sha">Підпис</string>
     <string name="signatures">Підписи</string>
     <string name="app_signing_no_signatures">Немає дійсних підписів</string>
@@ -611,7 +610,6 @@
     <string name="shared_user_id">Спільний ідентифікатор користувача</string>
     <string name="sort_by_shared_user_id">Спільний ідентифікатор користувача</string>
     <string name="no_feature">Немає функцій</string>
-    <string name="gles_ver">Запит. версія OpenGL ES</string>
     <string name="uses_feature">Використовує функції</string>
     <string name="shared_libs">Спільні бібліотеки</string>
     <string name="media_size">Медіа</string>
@@ -783,7 +781,6 @@
     <string name="cpu">ЦП</string>
     <string name="users">Користувачі</string>
     <string name="languages">Мови</string>
-    <string name="unavailable">Недоступно</string>
     <string name="available">Доступно</string>
     <string name="battery_capacity">Ємність</string>
     <string name="memory">Пам\'ять</string>
@@ -904,12 +901,6 @@
     <string name="specify_custom_name">Користувацький</string>
     <string name="verified_using_unreliable_hash">Перевірено за допомогою ненадійного хешу</string>
     <string name="internal_data">Внутрішні дані</string>
-    <plurals name="items_selected">
-        <item quantity="one"><xliff:g id="selection_no" example="20">%1$d</xliff:g> вибрано</item>
-        <item quantity="few"><xliff:g id="selection_no" example="20">%1$d</xliff:g> вибрано</item>
-        <item quantity="many"><xliff:g id="selection_no" example="20">%1$d</xliff:g> вибрано</item>
-        <item quantity="other"><xliff:g id="selection_no" example="20">%1$d</xliff:g> вибрано</item>
-    </plurals>
     <string name="pref_installer_msg">Налаштуйте поведінку встановника додатків.</string>
     <string name="expiry_date_cannot_be_empty">Дата закінчення терміну дії не може бути порожньою.</string>
     <string name="signing_key">Ключ підпису</string>

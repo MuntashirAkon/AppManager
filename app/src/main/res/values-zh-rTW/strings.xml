@@ -600,7 +600,6 @@
     <string name="cpu">中央處理器</string>
     <string name="users">使用者數</string>
     <string name="languages">語言</string>
-    <string name="unavailable">不可用</string>
     <string name="available">可用的</string>
     <string name="battery_capacity">電池容量</string>
     <string name="memory">記憶體</string>
@@ -801,9 +800,7 @@
     <string name="shared_user_id">共用的使用者ID</string>
     <string name="sort_by_shared_user_id">共用的使用者ID</string>
     <string name="no_feature">沒有功能</string>
-    <string name="gles_ver">要求的 OpenGL ES 版本</string>
     <string name="uses_feature">使用功能</string>
-    <string name="protection_level">防護等級</string>
     <string name="group">群組</string>
     <string name="shared_libs">共用資源庫</string>
     <string name="declared_permission">權限</string>
@@ -827,9 +824,6 @@
     <string name="require_no_permission">不需要任何權限</string>
     <string name="pref_log_viewer_msg">配置日誌顯示方式。</string>
     <string name="log_viewer">日誌檢視器</string>
-    <plurals name="items_selected">
-        <item quantity="other"><xliff:g id="selection_no" example="20">%1$d</xliff:g> 已選定</item>
-    </plurals>
     <string name="pref_installer_msg">配置應用安裝程式的行為。</string>
     <string name="expiry_date_cannot_be_empty">到期日期不能是空的。</string>
     <string name="signing_key">簽署金鑰</string>

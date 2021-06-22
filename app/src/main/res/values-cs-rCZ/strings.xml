@@ -29,7 +29,6 @@
     <string name="sort_by_shared_user_id">Sdílené ID uživatele</string>
     <string name="no_feature">Žádné funkce</string>
     <string name="uses_feature">Používá funkci</string>
-    <string name="protection_level">Úroveň ochrany</string>
     <string name="group">Skupina</string>
     <string name="shared_libs">Sdílené knihovny</string>
     <string name="declared_permission">Oprávnění</string>

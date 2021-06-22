@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<resources>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources>
     <string name="uninstall">إلغاء التثبيت</string>
     <string name="permissions">إستخدام الأذونات</string>
     <string name="require_no_permission">لا توجد أذونات مطلوبة</string>
@@ -28,9 +27,7 @@
     <string name="shared_user_id">رقم تعريف المستخدم المميز المشارك</string>
     <string name="sort_by_shared_user_id">ترتيب حسب رقم تعريف المستخدم المميز المشارك</string>
     <string name="no_feature">لايوجد مميزات</string>
-    <string name="gles_ver">طلب عرض مستوى تحديث واجهة برمجية تطبيق عرض رسومات openGL</string>
     <string name="uses_feature">مستخدم للمميزات</string>
-    <string name="protection_level">مستوى الحماية</string>
     <string name="group">مجموعة</string>
     <string name="shared_libs">مكتبات رئيسية و مشاركة مع الجميع</string>
     <string name="declared_permission">أذونات</string>

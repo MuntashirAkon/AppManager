@@ -177,7 +177,6 @@
     <string name="sort_by_app_label">Etichetta App</string>
     <string name="loading">Caricamento…</string>
     <string name="error">Errore</string>
-    <string name="protection_level">Livello di protezione</string>
     <string name="shared_libs">Librerie condivise</string>
     <string name="declared_permission">Permessi</string>
     <string name="patterns_allowed">Modelli abilitati</string>
@@ -350,7 +349,6 @@
     <string name="about">Informazioni</string>
     <string name="input_features">Inserisci impostazioni</string>
     <string name="no_feature">Nessun impostazione</string>
-    <string name="gles_ver">Rich. Versione OpenGL ES</string>
     <string name="uses_feature">Impostazioni Utente</string>
     <string name="soft_input">Modalità soft input</string>
     <string name="authority">Autorità</string>

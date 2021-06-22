@@ -30,9 +30,7 @@
     <string name="shared_user_id">ID người dùng được chia sẻ</string>
     <string name="sort_by_shared_user_id">ID người dùng được chia sẻ</string>
     <string name="no_feature">Không có tính năng</string>
-    <string name="gles_ver">Yêu cầu phiên bản OpenGL ES</string>
     <string name="uses_feature">Sử dụng các tính năng</string>
-    <string name="protection_level">Mức độ bảo vệ</string>
     <string name="group">Nhóm</string>
     <string name="shared_libs">Lib được chia sẻ</string>
     <string name="declared_permission">Quyền</string>
@@ -433,9 +431,6 @@
     <string name="failed_to_revoke_permission">Không thể thu hồi quyền</string>
     <string name="sort_by_component_name">Tên thành phần</string>
     <string name="block_trackers">Chặn trình theo dõi</string>
-    <plurals name="items_selected">
-        <item quantity="other">Đã chọn <xliff:g id="selection_no" example="20">%1$d</xliff:g></item>
-    </plurals>
     <string name="pref_installer_msg">Thiết lập hành vi của trình cài đặt ứng dụng.</string>
     <string name="expiry_date_cannot_be_empty">Ngày hết hạn không thể trống.</string>
     <string name="signing_key">Mã ký</string>
@@ -559,7 +554,6 @@
     <string name="pref_import_existing">Nhập các quy tắc đang tồn tại</string>
     <string name="backup_skip_signature_checks_description">Khôi phục các bản sao lưu xác minh mã kiểm tra thất bại hoặc có chữ ký APK khác với các bản sao lưu trước của chúng.</string>
     <string name="backup_multiple_description">Tạo một bản sao lưu <i>được đặt tên</i> riêng thay vì bản sao lưu cơ sở.</string>
-    <string name="unavailable">Không có sẵn</string>
     <string name="available">Có sẵn</string>
     <string name="battery_capacity">Dung lượng</string>
     <string name="memory">Bộ nhớ</string>

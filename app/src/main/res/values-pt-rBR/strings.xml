@@ -23,7 +23,6 @@
     <string name="patterns_allowed">Padrões permitidos</string>
     <string name="declared_permission">Permissões</string>
     <string name="group">Grupo</string>
-    <string name="protection_level">Nível de proteção</string>
     <string name="uses_feature">Funções utilizadas</string>
     <string name="no_feature">Nenhuma função</string>
     <string name="sort_by_sha">Assinatura</string>
@@ -435,7 +434,6 @@
     <string name="input_features">Inserir funções</string>
     <string name="shared_user_id">ID de Usuário Compartilhado</string>
     <string name="sort_by_shared_user_id">ID de Usuário compartilhado</string>
-    <string name="gles_ver">Versão requerida do OpenGL ES</string>
     <string name="shared_libs">Bibliotecas compartilhadas</string>
     <string name="flags">Flags</string>
     <string name="soft_input">Modo de entrada suave</string>
@@ -728,7 +726,6 @@
     <string name="cpu">CPU</string>
     <string name="users">Usuários</string>
     <string name="languages">Idiomas</string>
-    <string name="unavailable">Não disponível</string>
     <string name="available">Disponível</string>
     <string name="battery_capacity">Capacidade</string>
     <string name="memory">Memória RAM</string>
@@ -865,10 +862,6 @@
 \nCodeberg: https://codeberg.org/muntashir/AppManager</string>
     <string name="bouncy_castle_keystore">Bouncy Castle KeyStore (BKS)</string>
     <string name="input_key">Insira uma chave (em hexadecimal)</string>
-    <plurals name="items_selected">
-        <item quantity="one"><xliff:g id="selection_no" example="20">%1$d</xliff:g> selecionado</item>
-        <item quantity="other"><xliff:g id="selection_no" example="20">%1$d</xliff:g> selecionados</item>
-    </plurals>
     <string name="expiry_date_cannot_be_empty">A data de validade não pode estar vazia.</string>
     <string name="signing_key">Assinando chave</string>
     <string name="failed_to_read_keystore">Não foi possível ler a KeyStore.</string>

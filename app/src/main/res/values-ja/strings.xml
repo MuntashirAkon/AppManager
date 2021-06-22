@@ -29,9 +29,7 @@
     <string name="declared_permission">権限</string>
     <string name="shared_libs">共有ライブラリ</string>
     <string name="group">グループ</string>
-    <string name="protection_level">保護レベル</string>
     <string name="uses_feature">機能</string>
-    <string name="gles_ver">要求されているOpenGL ESバージョン</string>
     <string name="no_feature">機能は要求されていません</string>
     <string name="sort_by_shared_user_id">共有UID</string>
     <string name="shared_user_id">共有UID</string>
@@ -717,7 +715,6 @@
     <string name="vendor">ベンター</string>
     <string name="memory">メモリ</string>
     <string name="battery_capacity">容量</string>
-    <string name="available">利用可能</string>
     <string name="unavailable">利用不可</string>
     <string name="languages">言語</string>
     <string name="users">ユーザー</string>
@@ -852,9 +849,6 @@
     <string name="default_key_used">標準のキーが使用されます。</string>
     <string name="key_not_set">設定されていません</string>
     <string name="use_default">標準を使用</string>
-    <plurals name="items_selected">
-        <item quantity="other"><xliff:g id="selection_no" example="20">%1$d</xliff:g> 件を選択済み</item>
-    </plurals>
     <string name="expiry_date_cannot_be_empty">失効日は空白にできません。</string>
     <string name="signing_key">署名鍵</string>
     <string name="failed_to_read_keystore">キーストアの読み込みに失敗しました。</string>

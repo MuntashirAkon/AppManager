@@ -50,9 +50,7 @@
     <string name="shared_user_id">ID pengguna yang dibagikan</string>
     <string name="sort_by_shared_user_id">ID pengguna yang dibagikan</string>
     <string name="no_feature">Tidak ada fitur</string>
-    <string name="gles_ver">Memerlukan versi OpenGL ES</string>
     <string name="uses_feature">Menggunakan fitur</string>
-    <string name="protection_level">Tingkat proteksi</string>
     <string name="declared_permission">Perizinan</string>
     <string name="patterns_allowed">pola diperbolehkan</string>
     <string name="write">Tulis</string>
@@ -484,7 +482,6 @@
     <string name="cpu">CPU</string>
     <string name="users">Pengguna</string>
     <string name="languages">Bahasa</string>
-    <string name="unavailable">Tidak tersedia</string>
     <string name="available">Tersedia</string>
     <string name="battery_capacity">Kapasitas</string>
     <string name="memory">Penyimpanan</string>
@@ -824,9 +821,6 @@
     </plurals>
     <string name="unknown_op">Operasi Tidak Diketahui</string>
     <string name="internal_data">Data internal</string>
-    <plurals name="items_selected">
-        <item quantity="other"><xliff:g id="selection_no" example="20">%1$d</xliff:g>dipilih</item>
-    </plurals>
     <string name="pref_installer_msg">Konfigurasikan tingkah dari pemasang aplikasi.</string>
     <string name="expiry_date_cannot_be_empty">Tangal kadaluarsa tidak bisa kosong.</string>
     <string name="signing_key">Kunci tanda masuk/sign</string>
