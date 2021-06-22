@@ -21,7 +21,7 @@
             android:textSize="@dimen/title_font"
             android:textColor="?android:attr/textColorPrimary" />
 
-        <io.github.muntashirakon.AppManager.types.HyperlinkTextView
+        <io.github.muntashirakon.widget.HyperlinkTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/copyright_message"
@@ -51,7 +51,7 @@
             android:textSize="@dimen/title_font"
             android:textColor="?android:attr/textColorPrimary" />
 
-        <io.github.muntashirakon.AppManager.types.HyperlinkTextView
+        <io.github.muntashirakon.widget.HyperlinkTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/license_message"
@@ -110,7 +110,7 @@
             android:textSize="@dimen/title_font"
             android:textColor="?android:attr/textColorPrimary" />
 
-        <io.github.muntashirakon.AppManager.types.HyperlinkTextView
+        <io.github.muntashirakon.widget.HyperlinkTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/third_party_message"
@@ -124,7 +124,7 @@
             android:textSize="@dimen/title_font"
             android:textColor="?android:attr/textColorPrimary" />
 
-        <io.github.muntashirakon.AppManager.types.HyperlinkTextView
+        <io.github.muntashirakon.widget.HyperlinkTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/credits_message"

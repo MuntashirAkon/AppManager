@@ -83,6 +83,7 @@ dependencies {
     compileOnly project(path: ':hiddenapi')
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(path: ':libcoreui')
     implementation project(path: ':libapkparser')
     implementation project(path: ':libopenpgp')
     implementation project(path: ':libserver')

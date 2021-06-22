@@ -38,14 +38,15 @@ import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
 import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
-import io.github.muntashirakon.AppManager.types.reflow.ReflowMenuViewWrapper;
-import io.github.muntashirakon.AppManager.types.selection.MultiSelectionView;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.reflow.ReflowMenuViewWrapper;
+import io.github.muntashirakon.widget.MultiSelectionView;
 import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
 public class RunningAppsActivity extends BaseActivity implements MultiSelectionView.OnSelectionChangeListener,
-        ReflowMenuViewWrapper.OnItemSelectedListener, SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener {
+        ReflowMenuViewWrapper.OnItemSelectedListener, SearchView.OnQueryTextListener,
+        SwipeRefreshLayout.OnRefreshListener {
 
     @IntDef(value = {
             SORT_BY_PID,

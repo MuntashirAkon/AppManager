@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later
+include ':libcoreui'
 include ':docs'
 include ':libserver'
 include ':libopenpgp'

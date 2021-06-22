@@ -1,8 +1,0 @@
-<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<!-- NOTE: This is only done here because colorOnSurface in night theme causes crash -->
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:color="?attr/colorAccent" android:state_focused="true"/>
-    <item android:alpha="0.87" android:color="?android:attr/textColorPrimary" android:state_hovered="true"/>
-    <item android:alpha="0.12" android:color="?android:attr/textColorPrimary" android:state_enabled="false"/>
-    <item android:alpha="0.38" android:color="?android:attr/textColorPrimary"/>
-</selector>

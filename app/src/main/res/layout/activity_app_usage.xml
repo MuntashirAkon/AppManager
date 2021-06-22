@@ -60,7 +60,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <io.github.muntashirakon.AppManager.types.RecyclerViewWithEmptyView
+                    <io.github.muntashirakon.widget.RecyclerViewWithEmptyView
                         android:id="@+id/recycler_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

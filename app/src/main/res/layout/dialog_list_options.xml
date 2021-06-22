@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:text="@string/sort" />
 
-        <io.github.muntashirakon.AppManager.types.RadioGroupGridLayout
+        <io.github.muntashirakon.widget.RadioGroupGridLayout
             android:id="@+id/sort_options"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

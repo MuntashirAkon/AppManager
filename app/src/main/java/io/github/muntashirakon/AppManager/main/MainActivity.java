@@ -59,8 +59,6 @@ import io.github.muntashirakon.AppManager.settings.SettingsActivity;
 import io.github.muntashirakon.AppManager.sysconfig.SysConfigActivity;
 import io.github.muntashirakon.AppManager.types.ScrollableDialogBuilder;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
-import io.github.muntashirakon.AppManager.types.reflow.ReflowMenuViewWrapper;
-import io.github.muntashirakon.AppManager.types.selection.MultiSelectionView;
 import io.github.muntashirakon.AppManager.usage.AppUsageActivity;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -70,14 +68,15 @@ import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.StoragePermission;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.reflow.ReflowMenuViewWrapper;
+import io.github.muntashirakon.widget.MultiSelectionView;
 import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
-public class MainActivity extends BaseActivity implements
-        SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener,
-        ReflowMenuViewWrapper.OnItemSelectedListener {
+public class MainActivity extends BaseActivity implements SearchView.OnQueryTextListener,
+        SwipeRefreshLayout.OnRefreshListener, ReflowMenuViewWrapper.OnItemSelectedListener {
     private static final String PACKAGE_NAME_APK_UPDATER = "com.apkupdater";
     private static final String ACTIVITY_NAME_APK_UPDATER = "com.apkupdater.activity.MainActivity";
     private static final String PACKAGE_NAME_TERMUX = "com.termux";

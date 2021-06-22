@@ -28,7 +28,7 @@
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <io.github.muntashirakon.AppManager.types.selection.MultiSelectionView
+    <io.github.muntashirakon.widget.MultiSelectionView
         android:id="@+id/selection_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -1,0 +1,86 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="0"
+    android:orientation="vertical"
+    android:focusable="false">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:focusable="false">
+
+        <io.github.muntashirakon.widget.CheckBox
+            android:id="@+id/action_select_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:layout_gravity="start|center_vertical"
+            android:focusable="true"
+            android:clickable="true"
+            android:nextFocusRight="@id/action_cancel"
+            android:nextFocusDown="@id/selection_actions"
+            android:text="@android:string/selectAll"
+            android:textColor="@color/textColorPrimary"
+            android:textAppearance="@style/AppTheme.TextAppearance.Body.Small" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/selection_counter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:focusable="false"
+            android:gravity="center"
+            android:textColor="@color/textColorPrimary"
+            android:textAppearance="@style/AppTheme.TextAppearance.Body.Small"
+            tools:text="10/11" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/action_cancel"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:layout_gravity="end|center_vertical"
+            android:focusable="true"
+            android:clickable="true"
+            android:nextFocusLeft="@id/action_select_all"
+            android:nextFocusDown="@id/selection_actions"
+            android:text="@android:string/cancel"
+            android:textColor="@color/textColorPrimary"
+            android:textAppearance="@style/AppTheme.TextAppearance.Body.Small"
+            app:rippleColor="@color/semi_transparent"
+            app:icon="@drawable/ic_baseline_clear_24"
+            app:iconSize="@dimen/padding_medium"
+            app:iconTint="@color/textColorPrimary"
+            app:iconPadding="0dp" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <include layout="@layout/item_divider_horizontal" />
+
+    <io.github.muntashirakon.widget.MaxHeightScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="false"
+        android:paddingTop="@dimen/padding_very_small"
+        app:maxHeight="116dp">
+
+        <io.github.muntashirakon.widget.SelectionActionsView
+            android:id="@+id/selection_actions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:focusable="false"
+            android:nextFocusUp="@id/action_select_all"
+            app:itemIconTint="@color/text_color_primary_stateful"
+            app:itemTextColor="@color/text_color_primary_stateful" />
+
+    </io.github.muntashirakon.widget.MaxHeightScrollView>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

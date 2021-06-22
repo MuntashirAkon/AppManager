@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:alpha="0.2" android:color="@color/textColorPrimary" android:state_enabled="false" />
-    <item android:alpha="1.0" android:color="@color/textColorPrimary" />
-</selector>

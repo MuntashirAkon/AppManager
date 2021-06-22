@@ -1,0 +1,947 @@
+// SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later
+
+package io.github.muntashirakon.reflow;
+
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.drawable.Drawable;
+import android.util.AttributeSet;
+import android.util.SparseArray;
+import android.util.TypedValue;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.accessibility.AccessibilityNodeInfo;
+
+import androidx.annotation.Dimension;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.Px;
+import androidx.annotation.StyleRes;
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.appcompat.view.menu.MenuItemImpl;
+import androidx.appcompat.view.menu.MenuView;
+import androidx.core.util.Pools;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat.CollectionInfoCompat;
+import androidx.transition.AutoTransition;
+import androidx.transition.TransitionManager;
+import androidx.transition.TransitionSet;
+
+import com.google.android.material.animation.AnimationUtils;
+import com.google.android.material.badge.BadgeDrawable;
+import com.google.android.material.internal.FlowLayout;
+import com.google.android.material.internal.TextScale;
+import com.google.android.material.shape.MaterialShapeDrawable;
+import com.google.android.material.shape.ShapeAppearanceModel;
+
+import java.util.HashSet;
+
+import io.github.muntashirakon.libcoreui.R;
+import io.github.muntashirakon.utils.MotionUtils;
+
+/**
+ * Provides a view that will be use to render a menu view inside a {@link ReflowMenuViewWrapper}.
+ */
+// Copyright 2020 The Android Open Source Project
+@SuppressLint("RestrictedApi")
+public abstract class ReflowMenuView extends FlowLayout implements MenuView {
+
+    private static final int ITEM_POOL_SIZE = 5;
+    private static final int NO_PADDING = -1;
+
+    private static final int[] CHECKED_STATE_SET = {android.R.attr.state_checked};
+    private static final int[] DISABLED_STATE_SET = {-android.R.attr.state_enabled};
+
+    @NonNull
+    private final TransitionSet set;
+    @NonNull
+    private final OnClickListener onClickListener;
+    private final Pools.Pool<ReflowMenuItemView> itemPool = new Pools.SynchronizedPool<>(ITEM_POOL_SIZE);
+
+    @NonNull
+    private final SparseArray<OnTouchListener> onTouchListeners = new SparseArray<>(ITEM_POOL_SIZE);
+
+    @ReflowMenuViewWrapper.LabelVisibility
+    private int labelVisibilityMode;
+
+    @Nullable
+    private ReflowMenuItemView[] buttons;
+    private int selectedItemId = 0;
+    private int selectedItemPosition = 0;
+
+    @Nullable
+    private ColorStateList itemIconTint;
+    @Dimension
+    private int itemIconSize;
+    private ColorStateList itemTextColorFromUser;
+    @Nullable
+    private final ColorStateList itemTextColorDefault;
+    @StyleRes
+    private int itemTextAppearanceInactive;
+    @StyleRes
+    private int itemTextAppearanceActive;
+    private Drawable itemBackground;
+    private int itemBackgroundRes;
+    @NonNull
+    private SparseArray<BadgeDrawable> badgeDrawables = new SparseArray<>(ITEM_POOL_SIZE);
+    private int itemPaddingTop = NO_PADDING;
+    private int itemPaddingBottom = NO_PADDING;
+    private boolean itemActiveIndicatorEnabled;
+    private boolean itemActiveBackgroundEnabled;
+    private int itemActiveIndicatorWidth;
+    private int itemActiveIndicatorHeight;
+    private int itemActiveIndicatorMarginHorizontal;
+    private ShapeAppearanceModel itemActiveIndicatorShapeAppearance;
+    private ColorStateList itemActiveIndicatorColor;
+
+    private ReflowMenuPresenter presenter;
+    private MenuBuilder menu;
+
+    public ReflowMenuView(@NonNull Context context) {
+        this(context, null);
+
+    }
+
+    public ReflowMenuView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public ReflowMenuView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+
+        itemTextColorDefault = createDefaultColorStateList(android.R.attr.textColorSecondary);
+
+        onClickListener = v -> {
+            final ReflowMenuItemView itemView = (ReflowMenuItemView) v;
+            MenuItem item = itemView.getItemData();
+            if (!menu.performItemAction(item, presenter, 0)) {
+                item.setChecked(true);
+            }
+        };
+
+        set = new AutoTransition();
+        set.setOrdering(TransitionSet.ORDERING_TOGETHER);
+        set.setDuration(
+                MotionUtils.resolveThemeDuration(
+                        getContext(),
+                        R.attr.motionDurationLong1,
+                        getResources().getInteger(R.integer.material_motion_duration_long_1)));
+        set.setInterpolator(
+                MotionUtils.resolveThemeInterpolator(
+                        getContext(),
+                        R.attr.motionEasingStandard,
+                        AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR));
+        set.addTransition(new TextScale());
+
+        ViewCompat.setImportantForAccessibility(this, ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_YES);
+    }
+
+    @Override
+    public void initialize(@NonNull MenuBuilder menu) {
+        this.menu = menu;
+    }
+
+    @Override
+    public int getWindowAnimations() {
+        return 0;
+    }
+
+    @Override
+    public void onInitializeAccessibilityNodeInfo(@NonNull AccessibilityNodeInfo info) {
+        super.onInitializeAccessibilityNodeInfo(info);
+        AccessibilityNodeInfoCompat infoCompat = AccessibilityNodeInfoCompat.wrap(info);
+        infoCompat.setCollectionInfo(
+                CollectionInfoCompat.obtain(
+                        /* rowCount= */ 1,
+                        /* columnCount= */ menu.getVisibleItems().size(),
+                        /* hierarchical= */ false,
+                        /* selectionMode = */ CollectionInfoCompat.SELECTION_MODE_SINGLE));
+    }
+
+    @Override
+    public LayoutParams generateLayoutParams(AttributeSet attrs) {
+        return new LayoutParams(getContext(), attrs);
+    }
+
+    @Override
+    protected LayoutParams generateDefaultLayoutParams() {
+        return new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+    }
+
+    @Override
+    protected LayoutParams generateLayoutParams(ViewGroup.LayoutParams p) {
+        return new LayoutParams(p);
+    }
+
+    @Override
+    protected boolean checkLayoutParams(ViewGroup.LayoutParams p) {
+        return p instanceof LayoutParams;
+    }
+
+    public static class LayoutParams extends ViewGroup.MarginLayoutParams {
+
+        LayoutParams(Context c, AttributeSet attrs) {
+            super(c, attrs);
+        }
+
+        LayoutParams(int width, int height) {
+            super(width, height);
+        }
+
+        public LayoutParams(MarginLayoutParams source) {
+            super(source);
+        }
+
+        LayoutParams(ViewGroup.LayoutParams source) {
+            super(source);
+        }
+    }
+
+    /**
+     * Sets the tint which is applied to the menu items' icons.
+     *
+     * @param tint the tint to apply
+     */
+    public void setIconTintList(@Nullable ColorStateList tint) {
+        itemIconTint = tint;
+        if (buttons != null) {
+            for (ReflowMenuItemView item : buttons) {
+                item.setIconTintList(tint);
+            }
+        }
+    }
+
+    /**
+     * Returns the tint which is applied for the menu item labels.
+     *
+     * @return the ColorStateList that is used to tint menu items' icons
+     */
+    @Nullable
+    public ColorStateList getIconTintList() {
+        return itemIconTint;
+    }
+
+    /**
+     * Sets the size to provide for the menu item icons.
+     *
+     * <p>For best image resolution, use an icon with the same size set in this method.
+     *
+     * @param iconSize the size to provide for the menu item icons in pixels
+     */
+    public void setItemIconSize(@Dimension int iconSize) {
+        this.itemIconSize = iconSize;
+        if (buttons != null) {
+            for (ReflowMenuItemView item : buttons) {
+                item.setIconSize(iconSize);
+            }
+        }
+    }
+
+    /**
+     * Returns the size in pixels provided for the menu item icons.
+     */
+    @Dimension
+    public int getItemIconSize() {
+        return itemIconSize;
+    }
+
+    /**
+     * Sets the text color to be used for the menu item labels.
+     *
+     * @param color the ColorStateList used for menu item labels
+     */
+    public void setItemTextColor(@Nullable ColorStateList color) {
+        itemTextColorFromUser = color;
+        if (buttons != null) {
+            for (ReflowMenuItemView item : buttons) {
+                item.setTextColor(color);
+            }
+        }
+    }
+
+    /**
+     * Returns the text color used for menu item labels.
+     *
+     * @return the ColorStateList used for menu items labels
+     */
+    @Nullable
+    public ColorStateList getItemTextColor() {
+        return itemTextColorFromUser;
+    }
+
+    /**
+     * Sets the text appearance to be used for inactive menu item labels.
+     *
+     * @param textAppearanceRes the text appearance ID used for inactive menu item labels
+     */
+    public void setItemTextAppearanceInactive(@StyleRes int textAppearanceRes) {
+        this.itemTextAppearanceInactive = textAppearanceRes;
+        if (buttons != null) {
+            for (ReflowMenuItemView item : buttons) {
+                item.setTextAppearanceInactive(textAppearanceRes);
+                // Set the text color if the user has set it, since itemTextColorFromUser takes precedence
+                // over a color set in the text appearance.
+                if (itemTextColorFromUser != null) {
+                    item.setTextColor(itemTextColorFromUser);
+                }
+            }
+        }
+    }
+
+    /**
+     * Returns the text appearance used for inactive menu item labels.
+     *
+     * @return the text appearance ID used for inactive menu item labels
+     */
+    @StyleRes
+    public int getItemTextAppearanceInactive() {
+        return itemTextAppearanceInactive;
+    }
+
+    /**
+     * Sets the text appearance to be used for the active menu item label.
+     *
+     * @param textAppearanceRes the text appearance ID used for the active menu item label
+     */
+    public void setItemTextAppearanceActive(@StyleRes int textAppearanceRes) {
+        this.itemTextAppearanceActive = textAppearanceRes;
+        if (buttons != null) {
+            for (ReflowMenuItemView item : buttons) {
+                item.setTextAppearanceActive(textAppearanceRes);
+                // Set the text color if the user has set it, since itemTextColorFromUser takes precedence
+                // over a color set in the text appearance.
+                if (itemTextColorFromUser != null) {
+                    item.setTextColor(itemTextColorFromUser);
+                }
+            }
+        }
+    }
+
+    /**
+     * Returns the text appearance used for the active menu item label.
+     *
+     * @return the text appearance ID used for the active menu item label
+     */
+    @StyleRes
+    public int getItemTextAppearanceActive() {
+        return itemTextAppearanceActive;
+    }
+
+    /**
+     * Sets the resource ID to be used for item backgrounds.
+     *
+     * @param background the resource ID of the background
+     */
+    public void setItemBackgroundRes(int background) {
+        itemBackgroundRes = background;
+        if (buttons != null) {
+            for (ReflowMenuItemView item : buttons) {
+                item.setItemBackground(background);
+            }
+        }
+    }
+
+    /**
+     * Get the distance from the top of an item's icon/active indicator to the top of the navigation
+     * bar item.
+     */
+    @Px
+    public int getItemPaddingTop() {
+        return itemPaddingTop;
+    }
+
+    /**
+     * Set the distance from the top of an items icon/active indicator to the top of the navigation
+     * bar item.
+     */
+    public void setItemPaddingTop(@Px int paddingTop) {
+        itemPaddingTop = paddingTop;
+        if (buttons != null) {
+            for (ReflowMenuItemView item : buttons) {
+                item.setItemPaddingTop(paddingTop);
+            }
+        }
+    }
+
+    /**
+     * Get the distance from the bottom of an item's label to the bottom of the navigation bar item.
+     */
+    @Px
+    public int getItemPaddingBottom() {
+        return itemPaddingBottom;
+    }
+
+    /**
+     * Set the distance from the bottom of an item's label to the bottom of the navigation bar item.
+     */
+    public void setItemPaddingBottom(@Px int paddingBottom) {
+        itemPaddingBottom = paddingBottom;
+        if (buttons != null) {
+            for (ReflowMenuItemView item : buttons) {
+                item.setItemPaddingBottom(paddingBottom);
+            }
+        }
+    }
+
+    /**
+     * Returns whether or not an active indicator is enabled for the navigation bar.
+     *
+     * @return true if the active indicator is enabled.
+     */
+    public boolean getItemActiveIndicatorEnabled() {
+        return itemActiveIndicatorEnabled;
+    }
+
+    /**
+     * Set whether or not an active indicator is enabled for the navigation bar.
+     *
+     * @param enabled true if an active indicator should be shown.
+     */
+    public void setItemActiveIndicatorEnabled(boolean enabled) {
+        this.itemActiveIndicatorEnabled = enabled;
+        if (buttons != null) {
+            for (ReflowMenuItemView item : buttons) {
+                item.setActiveIndicatorEnabled(enabled);
+            }
+        }
+    }
+
+    /**
+     * Returns whether or not an active background is enabled for the navigation bar.
+     *
+     * @return true if the active background is enabled.
+     */
+    public boolean getItemActiveBackgroundEnabled() {
+        return itemActiveBackgroundEnabled;
+    }
+
+    /**
+     * Set whether or not an active background is enabled for the navigation bar.
+     *
+     * @param enabled true if an active background should be shown.
+     */
+    public void setItemActiveBackgroundEnabled(boolean enabled) {
+        this.itemActiveBackgroundEnabled = enabled;
+        if (buttons != null) {
+            for (ReflowMenuItemView item : buttons) {
+                item.setActiveBackgroundEnabled(enabled);
+            }
+        }
+    }
+
+    /**
+     * Get the width of the selected item's active indicator.
+     *
+     * @return The width, in pixels, of the active indicator.
+     */
+    @Px
+    public int getItemActiveIndicatorWidth() {
+        return itemActiveIndicatorWidth;
+    }
+
+    /**
+     * Set the width to be used for the selected item's active indicator.
+     *
+     * @param width The width, in pixels, of the active indicator.
+     */
+    public void setItemActiveIndicatorWidth(@Px int width) {
+        this.itemActiveIndicatorWidth = width;
+        if (buttons != null) {
+            for (ReflowMenuItemView item : buttons) {
+                item.setActiveIndicatorWidth(width);
+            }
+        }
+    }
+
+    /**
+     * Get the height of the selected item's active indicator.
+     *
+     * @return The height, in pixels, of the active indicator.
+     */
+    @Px
+    public int getItemActiveIndicatorHeight() {
+        return itemActiveIndicatorHeight;
+    }
+
+    /**
+     * Set the height to be used for the selected item's active indicator.
+     *
+     * @param height The height, in pixels, of the active indicator.
+     */
+    public void setItemActiveIndicatorHeight(@Px int height) {
+        this.itemActiveIndicatorHeight = height;
+        if (buttons != null) {
+            for (ReflowMenuItemView item : buttons) {
+                item.setActiveIndicatorHeight(height);
+            }
+        }
+    }
+
+    /**
+     * Get the margin that will be maintained at the start and end of the active indicator away from
+     * the edges of its parent container.
+     *
+     * @return The horizontal margin, in pixels.
+     */
+    @Px
+    public int getItemActiveIndicatorMarginHorizontal() {
+        return itemActiveIndicatorMarginHorizontal;
+    }
+
+    /**
+     * Set the horizontal margin that will be maintained at the start and end of the active indicator,
+     * making sure the indicator remains the given distance from the edge of its parent container.
+     *
+     * @param marginHorizontal The horizontal margin, in pixels.
+     */
+    public void setItemActiveIndicatorMarginHorizontal(@Px int marginHorizontal) {
+        itemActiveIndicatorMarginHorizontal = marginHorizontal;
+        if (buttons != null) {
+            for (ReflowMenuItemView item : buttons) {
+                item.setActiveIndicatorMarginHorizontal(marginHorizontal);
+            }
+        }
+    }
+
+    /**
+     * Get the {@link ShapeAppearanceModel} of the active indicator drawable.
+     *
+     * @return The {@link ShapeAppearanceModel} of the active indicator drawable.
+     */
+    @Nullable
+    public ShapeAppearanceModel getItemActiveIndicatorShapeAppearance() {
+        return itemActiveIndicatorShapeAppearance;
+    }
+
+    /**
+     * Set the {@link ShapeAppearanceModel} of the active indicator drawable.
+     *
+     * @param shapeAppearance The {@link ShapeAppearanceModel} of the active indicator drawable.
+     */
+    public void setItemActiveIndicatorShapeAppearance(
+            @Nullable ShapeAppearanceModel shapeAppearance) {
+        this.itemActiveIndicatorShapeAppearance = shapeAppearance;
+        if (buttons != null) {
+            for (ReflowMenuItemView item : buttons) {
+                item.setActiveIndicatorDrawable(createItemActiveIndicatorDrawable());
+            }
+        }
+    }
+
+    /**
+     * Get the color of the active indicator drawable.
+     *
+     * @return A {@link ColorStateList} used as the color of the active indicator.
+     */
+    @Nullable
+    public ColorStateList getItemActiveIndicatorColor() {
+        return itemActiveIndicatorColor;
+    }
+
+    /**
+     * Set the {@link ColorStateList} of the active indicator drawable.
+     *
+     * @param csl The {@link ColorStateList} used as the color of the active indicator.
+     */
+    public void setItemActiveIndicatorColor(@Nullable ColorStateList csl) {
+        this.itemActiveIndicatorColor = csl;
+        if (buttons != null) {
+            for (ReflowMenuItemView item : buttons) {
+                item.setActiveIndicatorDrawable(createItemActiveIndicatorDrawable());
+            }
+        }
+    }
+
+    /**
+     * Create a drawable using the {@code itemActiveIndicatorShapeAppearance} and {@code
+     * itemActiveIndicatorColor} to be used as an item's active indicator.
+     *
+     * <p>This method is called once per menu item so each item has a unique drawable instance which
+     * can be manipulated/animated independently.
+     *
+     * @return A drawable to be used as a menu item's active indicator.
+     */
+    @Nullable
+    private Drawable createItemActiveIndicatorDrawable() {
+        if (itemActiveIndicatorShapeAppearance != null && itemActiveIndicatorColor != null) {
+            MaterialShapeDrawable drawable =
+                    new MaterialShapeDrawable(itemActiveIndicatorShapeAppearance);
+            drawable.setFillColor(itemActiveIndicatorColor);
+            return drawable;
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the resource ID for the background of the menu items.
+     *
+     * @return the resource ID for the background
+     * @deprecated Use {@link #getItemBackground()} instead.
+     */
+    @Deprecated
+    public int getItemBackgroundRes() {
+        return itemBackgroundRes;
+    }
+
+    /**
+     * Sets the drawable to be used for item backgrounds.
+     *
+     * @param background the drawable of the background
+     */
+    public void setItemBackground(@Nullable Drawable background) {
+        itemBackground = background;
+        if (buttons != null) {
+            for (ReflowMenuItemView item : buttons) {
+                item.setItemBackground(background);
+            }
+        }
+    }
+
+    /**
+     * Returns the drawable for the background of the menu items.
+     *
+     * @return the drawable for the background
+     */
+    @Nullable
+    public Drawable getItemBackground() {
+        if (buttons != null && buttons.length > 0) {
+            // Return button background instead of itemBackground if possible, so that the correct
+            // drawable is returned if the background is set via #setItemBackgroundRes.
+            return buttons[0].getBackground();
+        } else {
+            return itemBackground;
+        }
+    }
+
+    /**
+     * Sets the navigation items' label visibility mode.
+     *
+     * <p>The label is either always shown, never shown, or only shown when activated. Also supports
+     * "auto" mode, which uses the item count to determine whether to show or hide the label.
+     *
+     * @param labelVisibilityMode mode which decides whether or not the label should be shown. Can be
+     *                            one of {@link ReflowMenuViewWrapper#LABEL_VISIBILITY_AUTO}, {@link
+     *                            ReflowMenuViewWrapper#LABEL_VISIBILITY_SELECTED}, {@link
+     *                            ReflowMenuViewWrapper#LABEL_VISIBILITY_LABELED}, or {@link
+     *                            ReflowMenuViewWrapper#LABEL_VISIBILITY_UNLABELED}
+     * @see #getLabelVisibilityMode()
+     */
+    public void setLabelVisibilityMode(@ReflowMenuViewWrapper.LabelVisibility int labelVisibilityMode) {
+        this.labelVisibilityMode = labelVisibilityMode;
+    }
+
+    /**
+     * Returns the current label visibility mode.
+     *
+     * @see #setLabelVisibilityMode(int)
+     */
+    public int getLabelVisibilityMode() {
+        return labelVisibilityMode;
+    }
+
+    /**
+     * Sets an {@link android.view.View.OnTouchListener} for the item view associated with the
+     * provided {@code menuItemId}.
+     */
+    @SuppressLint("ClickableViewAccessibility")
+    public void setItemOnTouchListener(int menuItemId, @Nullable OnTouchListener onTouchListener) {
+        if (onTouchListener == null) {
+            onTouchListeners.remove(menuItemId);
+        } else {
+            onTouchListeners.put(menuItemId, onTouchListener);
+        }
+        if (buttons != null) {
+            for (ReflowMenuItemView item : buttons) {
+                if (item.getItemData().getItemId() == menuItemId) {
+                    item.setOnTouchListener(onTouchListener);
+                }
+            }
+        }
+    }
+
+    @Nullable
+    public ColorStateList createDefaultColorStateList(int baseColorThemeAttr) {
+        final TypedValue value = new TypedValue();
+        if (!getContext().getTheme().resolveAttribute(baseColorThemeAttr, value, true)) {
+            return null;
+        }
+        ColorStateList baseColor = AppCompatResources.getColorStateList(getContext(), value.resourceId);
+        if (!getContext()
+                .getTheme()
+                .resolveAttribute(androidx.appcompat.R.attr.colorPrimary, value, true)) {
+            return null;
+        }
+        int colorPrimary = value.data;
+        int defaultColor = baseColor.getDefaultColor();
+        return new ColorStateList(
+                new int[][]{DISABLED_STATE_SET, CHECKED_STATE_SET, EMPTY_STATE_SET},
+                new int[]{
+                        baseColor.getColorForState(DISABLED_STATE_SET, defaultColor), colorPrimary, defaultColor
+                });
+    }
+
+    public void setPresenter(@NonNull ReflowMenuPresenter presenter) {
+        this.presenter = presenter;
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    public void buildMenuView() {
+        removeAllViews();
+        if (buttons != null) {
+            for (ReflowMenuItemView item : buttons) {
+                if (item != null) {
+                    itemPool.release(item);
+                    item.removeBadge();
+                }
+            }
+        }
+
+        if (menu.size() == 0) {
+            selectedItemId = 0;
+            selectedItemPosition = 0;
+            buttons = null;
+            return;
+        }
+        removeUnusedBadges();
+
+        buttons = new ReflowMenuItemView[menu.size()];
+        boolean shifting = isShifting(labelVisibilityMode, menu.getVisibleItems().size());
+        for (int i = 0; i < menu.size(); i++) {
+            presenter.setUpdateSuspended(true);
+            menu.getItem(i).setCheckable(true);
+            presenter.setUpdateSuspended(false);
+            ReflowMenuItemView child = getNewItem();
+            buttons[i] = child;
+            child.setIconTintList(itemIconTint);
+            child.setIconSize(itemIconSize);
+            // Set the text color the default, then look for another text color in order of precedence.
+            child.setTextColor(itemTextColorDefault);
+            child.setTextAppearanceInactive(itemTextAppearanceInactive);
+            child.setTextAppearanceActive(itemTextAppearanceActive);
+            child.setTextColor(itemTextColorFromUser);
+            if (itemPaddingTop != NO_PADDING) {
+                child.setItemPaddingTop(itemPaddingTop);
+            }
+            if (itemPaddingBottom != NO_PADDING) {
+                child.setItemPaddingBottom(itemPaddingBottom);
+            }
+            child.setActiveIndicatorWidth(itemActiveIndicatorWidth);
+            child.setActiveIndicatorHeight(itemActiveIndicatorHeight);
+            child.setActiveIndicatorMarginHorizontal(itemActiveIndicatorMarginHorizontal);
+            child.setActiveIndicatorDrawable(createItemActiveIndicatorDrawable());
+            child.setActiveIndicatorEnabled(itemActiveIndicatorEnabled);
+            child.setActiveBackgroundEnabled(itemActiveBackgroundEnabled);
+            if (itemBackground != null) {
+                child.setItemBackground(itemBackground);
+            } else {
+                child.setItemBackground(itemBackgroundRes);
+            }
+            child.setShifting(shifting);
+            child.setLabelVisibilityMode(labelVisibilityMode);
+            MenuItemImpl item = (MenuItemImpl) menu.getItem(i);
+            child.initialize(item, 0);
+            child.setItemPosition(i);
+            int itemId = item.getItemId();
+            child.setOnTouchListener(onTouchListeners.get(itemId));
+            child.setOnClickListener(onClickListener);
+            if (selectedItemId != Menu.NONE && itemId == selectedItemId) {
+                selectedItemPosition = i;
+            }
+            setBadgeIfNeeded(child);
+            addView(child);
+        }
+        selectedItemPosition = Math.min(menu.size() - 1, selectedItemPosition);
+        menu.getItem(selectedItemPosition).setChecked(true);
+    }
+
+    public void updateMenuView() {
+        if (menu == null || buttons == null) {
+            return;
+        }
+
+        final int menuSize = menu.size();
+        if (menuSize != buttons.length) {
+            // The size has changed. Rebuild menu view from scratch.
+            buildMenuView();
+            return;
+        }
+
+        int previousSelectedId = selectedItemId;
+
+        for (int i = 0; i < menuSize; i++) {
+            MenuItem item = menu.getItem(i);
+            if (item.isChecked()) {
+                selectedItemId = item.getItemId();
+                selectedItemPosition = i;
+            }
+        }
+        if (previousSelectedId != selectedItemId) {
+            // Note: this has to be called before ReflowMenuItemView#initialize().
+            TransitionManager.beginDelayedTransition(this, set);
+        }
+
+        boolean shifting = isShifting(labelVisibilityMode, menu.getVisibleItems().size());
+        for (int i = 0; i < menuSize; i++) {
+            presenter.setUpdateSuspended(true);
+            buttons[i].setLabelVisibilityMode(labelVisibilityMode);
+            buttons[i].setShifting(shifting);
+            buttons[i].initialize((MenuItemImpl) menu.getItem(i), 0);
+            presenter.setUpdateSuspended(false);
+        }
+    }
+
+    private ReflowMenuItemView getNewItem() {
+        ReflowMenuItemView item = itemPool.acquire();
+        if (item == null) {
+            item = createNavigationBarItemView(getContext());
+        }
+        return item;
+    }
+
+    public int getSelectedItemId() {
+        return selectedItemId;
+    }
+
+    protected boolean isShifting(@ReflowMenuViewWrapper.LabelVisibility int labelVisibilityMode, int childCount) {
+        return labelVisibilityMode == ReflowMenuViewWrapper.LABEL_VISIBILITY_AUTO
+                ? childCount > 3
+                : labelVisibilityMode == ReflowMenuViewWrapper.LABEL_VISIBILITY_SELECTED;
+    }
+
+    void tryRestoreSelectedItemId(int itemId) {
+        final int size = menu.size();
+        for (int i = 0; i < size; i++) {
+            MenuItem item = menu.getItem(i);
+            if (itemId == item.getItemId()) {
+                selectedItemId = itemId;
+                selectedItemPosition = i;
+                item.setChecked(true);
+                break;
+            }
+        }
+    }
+
+    SparseArray<BadgeDrawable> getBadgeDrawables() {
+        return badgeDrawables;
+    }
+
+    void setBadgeDrawables(SparseArray<BadgeDrawable> badgeDrawables) {
+        this.badgeDrawables = badgeDrawables;
+        if (buttons != null) {
+            for (ReflowMenuItemView itemView : buttons) {
+                itemView.setBadge(badgeDrawables.get(itemView.getId()));
+            }
+        }
+    }
+
+    @Nullable
+    public BadgeDrawable getBadge(int menuItemId) {
+        return badgeDrawables.get(menuItemId);
+    }
+
+    /**
+     * Creates an instance of {@link BadgeDrawable} if none exists. Initializes (if needed) and
+     * returns the associated instance of {@link BadgeDrawable}.
+     *
+     * @param menuItemId Id of the menu item.
+     * @return an instance of BadgeDrawable associated with {@code menuItemId}.
+     */
+    BadgeDrawable getOrCreateBadge(int menuItemId) {
+        validateMenuItemId(menuItemId);
+        BadgeDrawable badgeDrawable = badgeDrawables.get(menuItemId);
+        // Create an instance of BadgeDrawable if none were already initialized for this menu item.
+        if (badgeDrawable == null) {
+            badgeDrawable = BadgeDrawable.create(getContext());
+            badgeDrawables.put(menuItemId, badgeDrawable);
+        }
+        ReflowMenuItemView itemView = findItemView(menuItemId);
+        if (itemView != null) {
+            itemView.setBadge(badgeDrawable);
+        }
+        return badgeDrawable;
+    }
+
+    void removeBadge(int menuItemId) {
+        validateMenuItemId(menuItemId);
+        BadgeDrawable badgeDrawable = badgeDrawables.get(menuItemId);
+        ReflowMenuItemView itemView = findItemView(menuItemId);
+        if (itemView != null) {
+            itemView.removeBadge();
+        }
+        if (badgeDrawable != null) {
+            badgeDrawables.remove(menuItemId);
+        }
+    }
+
+    private void setBadgeIfNeeded(@NonNull ReflowMenuItemView child) {
+        int childId = child.getId();
+        if (!isValidId(childId)) {
+            // Child doesn't have a valid id, do not set any BadgeDrawable on the view.
+            return;
+        }
+
+        BadgeDrawable badgeDrawable = badgeDrawables.get(childId);
+        if (badgeDrawable != null) {
+            child.setBadge(badgeDrawable);
+        }
+    }
+
+    private void removeUnusedBadges() {
+        HashSet<Integer> activeKeys = new HashSet<>();
+        // Remove keys from badgeDrawables that don't have a corresponding value in the menu.
+        for (int i = 0; i < menu.size(); i++) {
+            activeKeys.add(menu.getItem(i).getItemId());
+        }
+
+        for (int i = 0; i < badgeDrawables.size(); i++) {
+            int key = badgeDrawables.keyAt(i);
+            if (!activeKeys.contains(key)) {
+                badgeDrawables.delete(key);
+            }
+        }
+    }
+
+    @Nullable
+    public ReflowMenuItemView findItemView(int menuItemId) {
+        validateMenuItemId(menuItemId);
+        if (buttons != null) {
+            for (ReflowMenuItemView itemView : buttons) {
+                if (itemView.getId() == menuItemId) {
+                    return itemView;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Returns reference to newly created {@link ReflowMenuItemView}.
+     */
+    @NonNull
+    protected abstract ReflowMenuItemView createNavigationBarItemView(@NonNull Context context);
+
+    protected int getSelectedItemPosition() {
+        return selectedItemPosition;
+    }
+
+    @Nullable
+    protected MenuBuilder getMenu() {
+        return menu;
+    }
+
+    private boolean isValidId(int viewId) {
+        return viewId != View.NO_ID;
+    }
+
+    private void validateMenuItemId(int viewId) {
+        if (!isValidId(viewId)) {
+            throw new IllegalArgumentException(viewId + " is not a valid view id");
+        }
+    }
+}

@@ -32,8 +32,8 @@ import java.util.List;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.profiles.ProfileManager;
 import io.github.muntashirakon.AppManager.types.AnyFilterArrayAdapter;
-import io.github.muntashirakon.AppManager.types.RadioGroupGridLayout;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.widget.RadioGroupGridLayout;
 
 public class ListOptions extends DialogFragment {
     public static final String TAG = "ListOptions";
