@@ -35,7 +35,7 @@ public class AppOpsService {
         if (!PermissionUtils.hasAppOpsPermission(context) && AppPref.isRootOrAdbEnabled()) {
             try {
                 PermissionCompat.grantPermission(context.getPackageName(), PermissionUtils.PERMISSION_GET_APP_OPS_STATS,
-                        Users.getCurrentUserHandle());
+                        Users.myUserId());
             } catch (RemoteException e) {
                 throw new RuntimeException("Couldn't connect to appOpsService locally", e);
             }

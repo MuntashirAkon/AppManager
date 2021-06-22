@@ -5,6 +5,7 @@ package io.github.muntashirakon.AppManager.users;
 import android.annotation.UserIdInt;
 import android.content.Context;
 import android.content.pm.UserInfo;
+import android.os.Binder;
 import android.os.Build;
 import android.os.IUserManager;
 import android.os.RemoteException;
@@ -62,10 +63,10 @@ public final class Users {
             try {
                 IUserManager userManager = IUserManager.Stub.asInterface(ProxyBinder.getService(Context.USER_SERVICE));
                 try {
-                    return userInfoList = userManager.getUsers(true);
+                    userInfoList = userManager.getUsers(true);
                 } catch (NoSuchMethodError e) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                        return userInfoList = userManager.getUsers(true, true, true);
+                        userInfoList = userManager.getUsers(true, true, true);
                     } else throw new SecurityException(e);
                 }
             } catch (RemoteException | SecurityException e) {
@@ -78,7 +79,7 @@ public final class Users {
     @WorkerThread
     @NonNull
     @UserIdInt
-    public static int[] getUsersHandles() {
+    public static int[] getUsersIds() {
         getUsers();
         if (userInfoList != null) {
             List<Integer> users = new ArrayList<>();
@@ -98,29 +99,13 @@ public final class Users {
     private static Integer currentUserHandle = null;
 
     @UserIdInt
-    public static int getCurrentUserHandle() {
-        if (currentUserHandle == null) {
-            if (MU_ENABLED) currentUserHandle = android.os.Binder.getCallingUid() / PER_USER_RANGE;
-            else currentUserHandle = 0;
-            // Another way
-//            try {
-//                @SuppressWarnings("JavaReflectionMemberAccess")
-//                Method myUserId = UserHandle.class.getMethod("myUserId");
-//                currentUserHandle = (int) myUserId.invoke(null);
-//            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-//                e.printStackTrace();
-//            }
-        }
-        return currentUserHandle;
+    public static int myUserId() {
+        return MU_ENABLED ? Binder.getCallingUid() / PER_USER_RANGE : 0;
     }
 
     @UserIdInt
-    public static int getUserHandle(int uid) {
-        if (MU_ENABLED) {
-            return uid / PER_USER_RANGE;
-        } else {
-            return USER_SYSTEM;
-        }
+    public static int getUserId(int uid) {
+        return MU_ENABLED ? uid / PER_USER_RANGE : USER_SYSTEM;
     }
 
     public static int getAppId(int uid) {

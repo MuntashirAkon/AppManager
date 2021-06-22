@@ -60,11 +60,11 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
     private final List<ApplicationItem> mAdapterList = new ArrayList<>();
     final ImageLoader imageLoader;
 
-    private static int mColorStopped;
-    private static int mColorOrange;
-    private static int mColorPrimary;
-    private static int mColorSecondary;
-    private static int mColorRed;
+    private final int mColorStopped;
+    private final int mColorOrange;
+    private final int mColorPrimary;
+    private final int mColorSecondary;
+    private final int mColorRed;
 
     MainRecyclerAdapter(@NonNull MainActivity activity) {
         super();

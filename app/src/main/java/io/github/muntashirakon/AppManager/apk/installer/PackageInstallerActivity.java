@@ -248,7 +248,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
                 return;
             }
         }
-        doLaunchInstallerService(Users.getCurrentUserHandle());
+        doLaunchInstallerService(Users.myUserId());
     }
 
     private void doLaunchInstallerService(int userHandle) {

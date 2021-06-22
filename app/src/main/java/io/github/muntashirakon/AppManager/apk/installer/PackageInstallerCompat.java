@@ -494,7 +494,7 @@ public final class PackageInstallerCompat {
     private PackageInstallerCompat(@UserIdInt int userHandle) {
         this.isPrivileged = LocalServer.isAMServiceAlive();
         this.allUsers = isPrivileged && userHandle == Users.USER_ALL;
-        this.userHandle = allUsers ? Users.getCurrentUserHandle() : userHandle;
+        this.userHandle = allUsers ? Users.myUserId() : userHandle;
         Log.d(TAG, "Installing for " + (allUsers ? "all users" : "user " + userHandle));
         if (isPrivileged) {
             this.installerPackageName = (String) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_INSTALLER_APP_STR);
@@ -791,7 +791,7 @@ public final class PackageInstallerCompat {
             if (userHandle == Users.USER_ALL) {
                 flags |= DELETE_ALL_USERS;
                 // Get correct user handle
-                int[] users = Users.getUsersHandles();
+                int[] users = Users.getUsersIds();
                 for (int user : users) {
                     try {
                         PackageManagerCompat.getPackageInfo(packageName, 0, user);

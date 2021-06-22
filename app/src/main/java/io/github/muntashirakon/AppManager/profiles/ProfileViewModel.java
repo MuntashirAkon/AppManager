@@ -5,7 +5,14 @@ package io.github.muntashirakon.AppManager.profiles;
 import android.app.Application;
 import android.os.RemoteException;
 
-import io.github.muntashirakon.AppManager.appops.AppOpsManager;
+import androidx.annotation.GuardedBy;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 import org.json.JSONException;
 
 import java.io.IOException;
@@ -14,13 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import androidx.annotation.GuardedBy;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.WorkerThread;
-import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
+import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
@@ -226,7 +227,7 @@ public class ProfileViewModel extends AndroidViewModel {
     @WorkerThread
     @NonNull
     public int[] getUsers() {
-        return profile.users == null ? Users.getUsersHandles() : profile.users;
+        return profile.users == null ? Users.getUsersIds() : profile.users;
     }
 
     public void setExportRules(@Nullable Integer flags) {

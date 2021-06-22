@@ -176,7 +176,7 @@ public class AppInfoViewModel extends AndroidViewModel {
         PackageInfo packageInfo = mainModel.getPackageInfo();
         String packageName = packageInfo.packageName;
         ApplicationInfo applicationInfo = packageInfo.applicationInfo;
-        int userHandle = Users.getUserHandle(applicationInfo.uid);
+        int userHandle = Users.getUserId(applicationInfo.uid);
         PackageManager pm = getApplication().getPackageManager();
         boolean isExternalApk = mainModel.getIsExternalApk();
         AppInfo appInfo = new AppInfo();

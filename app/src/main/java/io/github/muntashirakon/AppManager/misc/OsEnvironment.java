@@ -67,7 +67,7 @@ public final class OsEnvironment {
     private static final SparseArray<UserEnvironment> sUserEnvironmentCache = new SparseArray<>(2);
 
     static {
-        sCurrentUser = new UserEnvironment(Users.getCurrentUserHandle());
+        sCurrentUser = new UserEnvironment(Users.myUserId());
         sUserEnvironmentCache.put(sCurrentUser.mUserHandle, sCurrentUser);
     }
 

@@ -292,7 +292,7 @@ public class BatchOpsManager {
     private Result opImportBackups() {
         @ImportType
         int backupType = args.getInt(ARG_BACKUP_TYPE, ImportType.OAndBackup);
-        int userHandle = Users.getCurrentUserHandle();
+        int userHandle = Users.myUserId();
         File[] files = ConvertUtils.getRelevantImportFiles(backupType);
         if (files == null) return new Result(Collections.emptyList());
         final List<UserPackagePair> failedPkgList = new ArrayList<>();

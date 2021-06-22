@@ -90,7 +90,7 @@ public class AppUsageStatsManager {
         PackageUsageInfo packageUsageInfo = new PackageUsageInfo(packageName);
         packageUsageInfo.appLabel = PackageUtils.getPackageLabel(mPackageManager, packageName);
         UsageEvents events = UsageStatsManagerCompat.queryEvents(range.getStartTime(), range.getEndTime(),
-                Users.getCurrentUserHandle());
+                Users.myUserId());
         if (events == null) return packageUsageInfo;
         UsageEvents.Event event = new UsageEvents.Event();
         List<PackageUsageInfo.Entry> usEntries = new ArrayList<>();
@@ -134,7 +134,7 @@ public class AppUsageStatsManager {
         // Get events
         UsageUtils.TimeInterval interval = UsageUtils.getTimeInterval(usageInterval);
         UsageEvents events = UsageStatsManagerCompat.queryEvents(interval.getStartTime(), interval.getEndTime(),
-                Users.getCurrentUserHandle());
+                Users.myUserId());
         if (events == null) return Collections.emptyList();
         UsageEvents.Event event = new UsageEvents.Event();
         long startTime;

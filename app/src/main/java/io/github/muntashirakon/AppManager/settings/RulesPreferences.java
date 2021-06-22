@@ -36,7 +36,7 @@ public class RulesPreferences extends PreferenceFragmentCompat {
                 new Thread(() -> {
                     // Apply all rules immediately if GCB is true
                     synchronized (gcb) {
-                        ComponentsBlocker.applyAllRules(activity, Users.getCurrentUserHandle());
+                        ComponentsBlocker.applyAllRules(activity, Users.myUserId());
                     }
                 }).start();
             }
@@ -55,7 +55,7 @@ public class RulesPreferences extends PreferenceFragmentCompat {
                     .setPositiveButton(R.string.yes, (dialog, which) -> {
                         activity.progressIndicator.show();
                         new Thread(() -> {
-                            int[] userHandles = Users.getUsersHandles();
+                            int[] userHandles = Users.getUsersIds();
                             List<String> packages = ComponentUtils.getAllPackagesWithRules();
                             for (int userHandle : userHandles) {
                                 for (String packageName : packages) {
