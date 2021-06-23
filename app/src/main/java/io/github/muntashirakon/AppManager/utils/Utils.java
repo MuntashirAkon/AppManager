@@ -695,7 +695,7 @@ public class Utils {
 
     public static void relaunchApp(@NonNull FragmentActivity activity) {
         Intent intent = activity.getPackageManager().getLaunchIntentForPackage(activity.getPackageName());
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         activity.startActivity(intent);
         activity.finish();
     }
