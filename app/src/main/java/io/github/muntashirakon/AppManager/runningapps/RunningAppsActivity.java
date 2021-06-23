@@ -9,6 +9,7 @@ import android.view.View;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SearchView;
 import androidx.lifecycle.ViewModelProvider;
@@ -70,11 +71,15 @@ public class RunningAppsActivity extends BaseActivity implements
             R.id.action_sort_by_memory_usage,
     };
 
+    @Nullable
     private RunningAppsAdapter mAdapter;
+    @Nullable
     private LinearProgressIndicator mProgressIndicator;
+    @Nullable
     private SwipeRefreshLayout mSwipeRefresh;
     private MaterialTextView mCounterView;
 
+    @Nullable
     RunningAppsViewModel mModel;
     final ImageLoader imageLoader = new ImageLoader();
 
@@ -140,6 +145,8 @@ public class RunningAppsActivity extends BaseActivity implements
 
     @Override
     public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
+        if (mModel == null) return super.onPrepareOptionsMenu(menu);
+
         menu.findItem(sortOrderIds[mModel.getSortOrder()]).setChecked(true);
         int filter = mModel.getFilter();
         if ((filter & FILTER_APPS) != 0) {
@@ -156,13 +163,16 @@ public class RunningAppsActivity extends BaseActivity implements
         int id = item.getItemId();
         if (id == android.R.id.home) {
             finish();
-        } else if (id == R.id.action_toggle_kill) {
+            return true;
+        }
+        if (mModel == null) return true;
+        if (id == R.id.action_toggle_kill) {
             enableKillForSystem = !enableKillForSystem;
             AppPref.set(AppPref.PrefKey.PREF_ENABLE_KILL_FOR_SYSTEM_BOOL, enableKillForSystem);
             refresh();
         } else if (id == R.id.action_refresh) {
             refresh();
-        // Sort
+            // Sort
         } else if (id == R.id.action_sort_by_pid) {
             mModel.setSortOrder(SORT_BY_PID);
             item.setChecked(true);
@@ -193,8 +203,12 @@ public class RunningAppsActivity extends BaseActivity implements
         super.onStart();
         if (mModel != null) {
             mModel.getProcessLiveData().observe(this, processList -> {
-                mAdapter.setDefaultList();
-                mProgressIndicator.hide();
+                if (mAdapter != null) {
+                    mAdapter.setDefaultList();
+                }
+                if (mProgressIndicator != null) {
+                    mProgressIndicator.hide();
+                }
             });
             mModel.getSelection().observe(this, count -> mCounterView.setText(getResources()
                     .getQuantityString(R.plurals.items_selected, count, count)));
@@ -209,7 +223,9 @@ public class RunningAppsActivity extends BaseActivity implements
 
     @Override
     public void onRefresh() {
-        mSwipeRefresh.setRefreshing(false);
+        if (mSwipeRefresh != null) {
+            mSwipeRefresh.setRefreshing(false);
+        }
         refresh();
     }
 
@@ -226,11 +242,14 @@ public class RunningAppsActivity extends BaseActivity implements
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        mModel.setQuery(newText);
+        if (mModel != null) {
+            mModel.setQuery(newText);
+        }
         return true;
     }
 
     void refresh() {
+        if (mProgressIndicator == null || mModel == null) return;
         mProgressIndicator.show();
         mModel.loadProcesses();
     }
