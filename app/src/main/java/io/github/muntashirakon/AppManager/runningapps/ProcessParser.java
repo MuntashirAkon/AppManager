@@ -120,7 +120,7 @@ final class ProcessParser {
 
     private void getInstalledPackages() {
         List<PackageInfo> packageInfoList = new ArrayList<>();
-        for (int userHandle : Users.getUsersHandles()) {
+        for (int userHandle : Users.getUsersIds()) {
             try {
                 packageInfoList.addAll(PackageManagerCompat.getInstalledPackages(0, userHandle));
             } catch (Exception e) {

@@ -50,7 +50,7 @@ public class AppDetailsActivity extends BaseActivity {
         final String packageName = intent.getStringExtra(EXTRA_PACKAGE_NAME);
         final Uri apkUri = intent.getData();
         final String apkType = intent.getType();
-        final int userHandle = intent.getIntExtra(EXTRA_USER_HANDLE, Users.getCurrentUserHandle());
+        final int userHandle = intent.getIntExtra(EXTRA_USER_HANDLE, Users.myUserId());
         model.setUserHandle(userHandle);
         // Initialize tabs
         mTabTitleIds = getResources().obtainTypedArray(R.array.TAB_TITLES);

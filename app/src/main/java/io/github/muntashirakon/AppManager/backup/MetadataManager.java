@@ -185,8 +185,7 @@ public final class MetadataManager {
     }
 
     public static boolean hasBaseMetadata(String packageName) {
-        File backupPath = new File(BackupFiles.getPackagePath(packageName),
-                String.valueOf(Users.getCurrentUserHandle()));
+        File backupPath = new File(BackupFiles.getPackagePath(packageName), String.valueOf(Users.myUserId()));
         return new ProxyFile(backupPath, META_FILE).exists();
     }
 

@@ -5,6 +5,10 @@ package io.github.muntashirakon.AppManager.backup;
 import android.content.Context;
 import android.text.SpannableStringBuilder;
 
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.core.util.Pair;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
@@ -13,9 +17,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 
-import androidx.annotation.IntDef;
-import androidx.annotation.NonNull;
-import androidx.core.util.Pair;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -221,7 +222,7 @@ public final class BackupFlags {
                 }
                 backupFlags.add(BACKUP_MULTIPLE);
                 put(BACKUP_MULTIPLE, new Pair<>(R.string.backup_multiple, R.string.backup_multiple_description));
-                if (Users.getUsersHandles().length > 1) {
+                if (Users.getUsersIds().length > 1) {
                     // Display custom users only if multiple users present
                     backupFlags.add(BACKUP_CUSTOM_USERS);
                     put(BACKUP_CUSTOM_USERS, new Pair<>(R.string.backup_custom_users, R.string.backup_custom_users_description));
@@ -241,7 +242,7 @@ public final class BackupFlags {
             flags &= ~BACKUP_EXTRAS;
             flags &= ~BACKUP_RULES;
         }
-        if (Users.getUsersHandles().length == 1) {
+        if (Users.getUsersIds().length == 1) {
             flags &= ~BACKUP_CUSTOM_USERS;
         }
         return flags | BACKUP_EXCLUDE_CACHE;

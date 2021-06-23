@@ -107,7 +107,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
                 args.putInt(RulesTypeSelectionDialogFragment.ARG_MODE, RulesTypeSelectionDialogFragment.MODE_EXPORT);
                 args.putParcelable(RulesTypeSelectionDialogFragment.ARG_URI, uri);
                 args.putStringArrayList(RulesTypeSelectionDialogFragment.ARG_PKG, new ArrayList<>(mModel.getSelectedPackages().keySet()));
-                args.putIntArray(RulesTypeSelectionDialogFragment.ARG_USERS, Users.getUsersHandles());
+                args.putIntArray(RulesTypeSelectionDialogFragment.ARG_USERS, Users.getUsersIds());
                 dialogFragment.setArguments(args);
                 dialogFragment.show(getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
                 clearAndHandleSelection();
@@ -297,7 +297,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
             if (mModel != null) {
                 BackupDialogFragment backupDialogFragment = new BackupDialogFragment();
                 Bundle args = new Bundle();
-                args.putParcelableArrayList(BackupDialogFragment.ARG_PACKAGE_PAIRS, mModel.getSelectedPackagesWithUsers(false));
+                args.putParcelableArrayList(BackupDialogFragment.ARG_PACKAGE_PAIRS, mModel.getSelectedPackagesWithUsers());
                 backupDialogFragment.setArguments(args);
                 backupDialogFragment.setOnActionBeginListener(mode -> showProgressIndicator(true));
                 backupDialogFragment.setOnActionCompleteListener((mode, failedPackages) -> showProgressIndicator(false));
@@ -465,7 +465,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
         if (mModel == null) return;
         showProgressIndicator(true);
         Intent intent = new Intent(this, BatchOpsService.class);
-        BatchOpsManager.Result input = new BatchOpsManager.Result(mModel.getSelectedPackagesWithUsers(false));
+        BatchOpsManager.Result input = new BatchOpsManager.Result(mModel.getSelectedPackagesWithUsers());
         intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, input.getFailedPackages());
         intent.putIntegerArrayListExtra(BatchOpsService.EXTRA_OP_USERS, input.getAssociatedUserHandles());
         intent.putExtra(BatchOpsService.EXTRA_OP, op);

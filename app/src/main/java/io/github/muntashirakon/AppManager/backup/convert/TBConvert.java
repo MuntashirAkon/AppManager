@@ -87,7 +87,7 @@ public class TBConvert extends Convert {
     public TBConvert(@NonNull File propFile) {
         this.propFile = propFile;
         this.backupLocation = propFile.getParentFile();
-        this.userHandle = Users.getCurrentUserHandle();
+        this.userHandle = Users.myUserId();
         String dirtyName = propFile.getName();
         int idx = dirtyName.indexOf('-');
         if (idx == -1) this.packageName = null;
@@ -386,7 +386,7 @@ public class TBConvert extends Convert {
             sourceMetadata.backupTime = this.backupTime;
             sourceMetadata.crypto = CryptoUtils.MODE_NO_ENCRYPTION;  // We only support no encryption mode for TB backups
             sourceMetadata.apkName = this.packageName + "-" + prop.getProperty("app_apk_md5") + ".apk";
-            sourceMetadata.userHandle = Users.getCurrentUserHandle();
+            sourceMetadata.userHandle = Users.myUserId();
             // Compression type
             String compressionType = prop.getProperty("app_apk_codec");
             if ("GZIP".equals(compressionType)) {

@@ -44,7 +44,7 @@ public class ImportExportRulesDialogFragment extends DialogFragment {
     private static final String MIME_TSV = "text/tab-separated-values";
     private static final String MIME_XML = "text/xml";
 
-    private final int userHandle = Users.getCurrentUserHandle();
+    private final int userHandle = Users.myUserId();
     private SettingsActivity activity;
     private final ActivityResultLauncher<String> exportRules = registerForActivityResult(
             new ActivityResultContracts.CreateDocument(),
@@ -58,7 +58,7 @@ public class ImportExportRulesDialogFragment extends DialogFragment {
                 args.putInt(RulesTypeSelectionDialogFragment.ARG_MODE, RulesTypeSelectionDialogFragment.MODE_EXPORT);
                 args.putParcelable(RulesTypeSelectionDialogFragment.ARG_URI, uri);
                 args.putStringArrayList(RulesTypeSelectionDialogFragment.ARG_PKG, null);
-                args.putIntArray(RulesTypeSelectionDialogFragment.ARG_USERS, Users.getUsersHandles());
+                args.putIntArray(RulesTypeSelectionDialogFragment.ARG_USERS, Users.getUsersIds());
                 dialogFragment.setArguments(args);
                 dialogFragment.show(activity.getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
             });
@@ -74,7 +74,7 @@ public class ImportExportRulesDialogFragment extends DialogFragment {
                 args.putInt(RulesTypeSelectionDialogFragment.ARG_MODE, RulesTypeSelectionDialogFragment.MODE_IMPORT);
                 args.putParcelable(RulesTypeSelectionDialogFragment.ARG_URI, uri);
                 args.putStringArrayList(RulesTypeSelectionDialogFragment.ARG_PKG, null);
-                args.putIntArray(RulesTypeSelectionDialogFragment.ARG_USERS, Users.getUsersHandles());
+                args.putIntArray(RulesTypeSelectionDialogFragment.ARG_USERS, Users.getUsersIds());
                 dialogFragment.setArguments(args);
                 dialogFragment.show(activity.getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
             });
@@ -87,7 +87,7 @@ public class ImportExportRulesDialogFragment extends DialogFragment {
                 }
                 new Thread(() -> {
                     List<String> failedFiles = ExternalComponentsImporter.applyFromWatt(activity
-                            .getApplicationContext(), uris, Users.getUsersHandles());
+                            .getApplicationContext(), uris, Users.getUsersIds());
                     if (isDetached()) return;
                     activity.runOnUiThread(() -> {
                         if (failedFiles.size() == 0) {  // Not failed
@@ -113,7 +113,7 @@ public class ImportExportRulesDialogFragment extends DialogFragment {
                 }
                 new Thread(() -> {
                     List<String> failedFiles = ExternalComponentsImporter.applyFromBlocker(activity
-                            .getApplicationContext(), uris, Users.getUsersHandles());
+                            .getApplicationContext(), uris, Users.getUsersIds());
                     if (isDetached()) return;
                     activity.runOnUiThread(() -> {
                         if (failedFiles.size() == 0) {  // Not failed

@@ -109,7 +109,7 @@ public class RunningAppsViewModel extends AndroidViewModel {
     public void forceStop(@NonNull ApplicationInfo info) {
         executor.submit(() -> {
             try {
-                PackageManagerCompat.forceStopPackage(info.packageName, Users.getUserHandle(info.uid));
+                PackageManagerCompat.forceStopPackage(info.packageName, Users.getUserId(info.uid));
                 forceStopAppResult.postValue(new Pair<>(info, true));
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -274,7 +274,7 @@ public class RunningAppsViewModel extends AndroidViewModel {
         for (ProcessItem processItem : selectedItems) {
             if (processItem instanceof AppProcessItem) {
                 ApplicationInfo applicationInfo = ((AppProcessItem) processItem).packageInfo.applicationInfo;
-                userPackagePairs.add(new UserPackagePair(applicationInfo.packageName, Users.getUserHandle(applicationInfo.uid)));
+                userPackagePairs.add(new UserPackagePair(applicationInfo.packageName, Users.getUserId(applicationInfo.uid)));
             }
         }
         return userPackagePairs;

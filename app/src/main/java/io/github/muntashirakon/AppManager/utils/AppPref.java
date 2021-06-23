@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
@@ -14,6 +15,14 @@ import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
+
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.signing.SigSchemes;
@@ -25,13 +34,6 @@ import io.github.muntashirakon.AppManager.main.ListOptions;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runningapps.RunningAppsActivity;
 import io.github.muntashirakon.io.ProxyFile;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
 
 public class AppPref {
     private static final String PREF_NAME = "preferences";
@@ -95,6 +97,7 @@ public class AppPref {
         PREF_RUNNING_APPS_FILTER_FLAGS_INT,
         PREF_RUNNING_APPS_SORT_ORDER_INT,
 
+        PREF_SELECTED_USERS_STR,
         PREF_SIGNATURE_SCHEMES_INT,
         PREF_SHOW_DISCLAIMER_BOOL,
         ;
@@ -227,7 +230,32 @@ public class AppPref {
 
     @NonNull
     public static ProxyFile getAppManagerDirectory() {
-        return new ProxyFile((String) get(AppPref.PrefKey.PREF_BACKUP_VOLUME_STR), "AppManager");
+        return new ProxyFile(getString(PrefKey.PREF_BACKUP_VOLUME_STR), "AppManager");
+    }
+
+    @Nullable
+    public static int[] getSelectedUsers() {
+        if (!isRootOrAdbEnabled()) return null;
+        String usersStr = getString(PrefKey.PREF_SELECTED_USERS_STR);
+        if ("".equals(usersStr)) return null;
+        String[] usersSplitStr = usersStr.split(",");
+        int[] users = new int[usersSplitStr.length];
+        for (int i = 0; i < users.length; ++i) {
+            users[i] = Integer.decode(usersSplitStr[i]);
+        }
+        return users;
+    }
+
+    public static void setSelectedUsers(@Nullable int[] users) {
+        if (users == null || !isRootOrAdbEnabled()) {
+            set(PrefKey.PREF_SELECTED_USERS_STR, "");
+            return;
+        }
+        String[] userString = new String[users.length];
+        for (int i = 0; i < users.length; ++i) {
+            userString[i] = String.valueOf(users[i]);
+        }
+        set(PrefKey.PREF_SELECTED_USERS_STR, TextUtils.join(",", userString));
     }
 
     public static String getLanguage(Context context) {
@@ -381,6 +409,7 @@ public class AppPref {
             case PREF_OPEN_PGP_PACKAGE_STR:
             case PREF_OPEN_PGP_USER_ID_STR:
             case PREF_MAIN_WINDOW_FILTER_PROFILE_STR:
+            case PREF_SELECTED_USERS_STR:
                 return "";
             case PREF_MODE_OF_OPS_STR:
                 return Runner.MODE_AUTO;

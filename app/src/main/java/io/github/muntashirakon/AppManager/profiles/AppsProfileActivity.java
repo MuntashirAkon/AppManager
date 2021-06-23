@@ -150,7 +150,7 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
                 try {
                     ArrayList<Pair<CharSequence, ApplicationInfo>> itemPairs;
                     List<PackageInfo> packageInfoList = PackageManagerCompat.getInstalledPackages(
-                            PackageManager.GET_META_DATA, Users.getCurrentUserHandle());
+                            PackageManager.GET_META_DATA, Users.myUserId());
                     itemPairs = new ArrayList<>(packageInfoList.size());
                     for (PackageInfo info : packageInfoList) {
                         itemPairs.add(new Pair<>(pm.getApplicationLabel(info.applicationInfo), info.applicationInfo));

@@ -25,6 +25,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.core.content.pm.PermissionInfoCompat;
+import androidx.fragment.app.FragmentActivity;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -690,5 +691,12 @@ public class Utils {
             if (openFile.resolveActivityInfo(context.getPackageManager(), 0) != null)
                 context.startActivity(openFile);
         };
+    }
+
+    public static void relaunchApp(@NonNull FragmentActivity activity) {
+        Intent intent = activity.getPackageManager().getLaunchIntentForPackage(activity.getPackageName());
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        activity.startActivity(intent);
+        activity.finish();
     }
 }

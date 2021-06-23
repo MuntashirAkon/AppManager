@@ -178,7 +178,7 @@ public class BatchOpsService extends ForegroundService {
         ArrayList<Integer> userHandles = intent.getIntegerArrayListExtra(EXTRA_OP_USERS);
         if (userHandles == null) {
             userHandles = new ArrayList<>(packages.size());
-            for (String ignore : packages) userHandles.add(Users.getCurrentUserHandle());
+            for (String ignore : packages) userHandles.add(Users.myUserId());
         }
         if (op == BatchOpsManager.OP_NONE || packages == null) {
             sendResults(Activity.RESULT_CANCELED, null);

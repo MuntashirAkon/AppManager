@@ -57,6 +57,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
@@ -73,6 +75,7 @@ import io.github.muntashirakon.AppManager.types.ScrollableDialogBuilder;
 import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
@@ -103,6 +106,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
     @Runner.Mode
     private String currentMode;
     private MainPreferencesViewModel model;
+    private final ExecutorService executor = Executors.newFixedThreadPool(1);
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -196,10 +200,15 @@ public class MainPreferences extends PreferenceFragmentCompat {
                     .setPositiveButton(R.string.apply, (dialog, which) -> {
                         AppPref.set(AppPref.PrefKey.PREF_MODE_OF_OPS_STR, currentMode);
                         mode.setSummary(modes[MODE_NAMES.indexOf(currentMode)]);
-                        new Thread(() -> RunnerUtils.setModeOfOps(activity, true)).start();
+                        executor.submit(() -> RunnerUtils.setModeOfOps(activity, true));
                     })
                     .setNegativeButton(R.string.cancel, null)
                     .show();
+            return true;
+        });
+        Preference usersPref = Objects.requireNonNull(findPreference("selected_users"));
+        usersPref.setOnPreferenceClickListener(preference -> {
+            executor.submit(() -> model.loadAllUsers());
             return true;
         });
         // Enable/disable features
@@ -224,7 +233,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
         // About device
         ((Preference) Objects.requireNonNull(findPreference("about_device")))
                 .setOnPreferenceClickListener(preference -> {
-                    new Thread(() -> model.loadDeviceInfo(getDisplay())).start();
+                    executor.submit(() -> model.loadDeviceInfo(getDisplay()));
                     return true;
                 });
         // About
@@ -239,11 +248,47 @@ public class MainPreferences extends PreferenceFragmentCompat {
         // Changelog
         ((Preference) Objects.requireNonNull(findPreference("changelog")))
                 .setOnPreferenceClickListener(preference -> {
-                    model.loadChangeLog();
+                    executor.submit(() -> model.loadChangeLog());
                     return true;
                 });
 
         // Preference loaders
+        model.selectUsers().observe(this, users -> {
+            if (users == null) return;
+            int[] selectedUsers = AppPref.getSelectedUsers();
+            int[] userIds = new int[users.size()];
+            boolean[] choices = new boolean[users.size()];
+            Arrays.fill(choices, false);
+            CharSequence[] userInfo = new CharSequence[users.size()];
+            for (int i = 0; i < users.size(); ++i) {
+                userIds[i] = users.get(i).id;
+                userInfo[i] = userIds[i] + " (" + users.get(i).name + ")";
+                if (selectedUsers == null || ArrayUtils.contains(selectedUsers, userIds[i])) {
+                    choices[i] = true;
+                }
+            }
+            new MaterialAlertDialogBuilder(activity)
+                    .setTitle(R.string.pref_selected_users)
+                    .setMultiChoiceItems(userInfo, choices, (dialog, which, isChecked) -> choices[which] = isChecked)
+                    .setPositiveButton(R.string.save, (dialog, which) -> {
+                        List<Integer> selectedUserIds = new ArrayList<>(users.size());
+                        for (int i = 0; i < choices.length; ++i) {
+                            if (choices[i]) {
+                                selectedUserIds.add(userIds[i]);
+                            }
+                        }
+                        if (selectedUserIds.size() > 0) {
+                            AppPref.setSelectedUsers(ArrayUtils.convertToIntArray(selectedUserIds));
+                        } else AppPref.setSelectedUsers(null);
+                        Utils.relaunchApp(activity);
+                    })
+                    .setNegativeButton(R.string.cancel, null)
+                    .setNeutralButton(R.string.use_default, (dialog, which) -> {
+                        AppPref.setSelectedUsers(null);
+                        Utils.relaunchApp(activity);
+                    })
+                    .show();
+        });
         // Changelog
         model.getChangeLog().observe(this, changeLog -> new ScrollableDialogBuilder(activity, changeLog)
                 .linkifyAll()
@@ -258,7 +303,6 @@ public class MainPreferences extends PreferenceFragmentCompat {
             view.findViewById(android.R.id.checkbox).setVisibility(View.GONE);
             new FullscreenDialog(activity).setTitle(R.string.about_device).setView(view).show();
         });
-
         // Hide preferences for disabled features
         if (!FeatureController.isInstallerEnabled()) {
             ((Preference) Objects.requireNonNull(findPreference("installer"))).setVisible(false);
@@ -329,18 +373,28 @@ public class MainPreferences extends PreferenceFragmentCompat {
             ctx = application;
         }
 
+        private final MutableLiveData<List<UserInfo>> selectUsers = new MutableLiveData<>();
+
+        public LiveData<List<UserInfo>> selectUsers() {
+            return selectUsers;
+        }
+
+        @WorkerThread
+        public void loadAllUsers() {
+            selectUsers.postValue(Users.getAllUsers());
+        }
+
         private final MutableLiveData<CharSequence> changeLog = new MutableLiveData<>();
 
         public LiveData<CharSequence> getChangeLog() {
             return changeLog;
         }
 
+        @WorkerThread
         public void loadChangeLog() {
-            new Thread(() -> {
-                Spanned spannedChangelog = HtmlCompat.fromHtml(IOUtils.getContentFromAssets(ctx,
-                        "changelog.html"), HtmlCompat.FROM_HTML_MODE_COMPACT);
-                changeLog.postValue(spannedChangelog);
-            }).start();
+            Spanned spannedChangelog = HtmlCompat.fromHtml(IOUtils.getContentFromAssets(ctx,
+                    "changelog.html"), HtmlCompat.FROM_HTML_MODE_COMPACT);
+            changeLog.postValue(spannedChangelog);
         }
 
         private final MutableLiveData<CharSequence> deviceInfo = new MutableLiveData<>();
@@ -460,7 +514,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
             builder.append("\n").append(getTitleText(R.string.languages))
                     .append("\n").append(TextUtils.joinSpannable(", ", localeStrings))
                     .append("\n");
-            List<UserInfo> users = Users.getUsers();
+            List<UserInfo> users = Users.getAllUsers();
             if (users != null) {
                 // Users
                 builder.append("\n").append(getTitleText(R.string.users))
@@ -488,7 +542,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
                 }
             } else {
                 builder.append("\n").append(getTitleText(R.string.apps)).append("\n");
-                Pair<Integer, Integer> packageSizes = getPackageStats(Users.getCurrentUserHandle());
+                Pair<Integer, Integer> packageSizes = getPackageStats(Users.myUserId());
                 builder.append(getPrimaryText(R.string.total_size))
                         .append(String.valueOf(packageSizes.first + packageSizes.second)).append(", ")
                         .append(getPrimaryText(R.string.user))

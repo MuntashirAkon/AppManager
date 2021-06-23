@@ -44,6 +44,7 @@ import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
@@ -60,11 +61,11 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
     private final List<ApplicationItem> mAdapterList = new ArrayList<>();
     final ImageLoader imageLoader;
 
-    private static int mColorStopped;
-    private static int mColorOrange;
-    private static int mColorPrimary;
-    private static int mColorSecondary;
-    private static int mColorRed;
+    private final int mColorStopped;
+    private final int mColorOrange;
+    private final int mColorPrimary;
+    private final int mColorSecondary;
+    private final int mColorRed;
 
     MainRecyclerAdapter(@NonNull MainActivity activity) {
         super();
@@ -201,9 +202,6 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
             if (item.userHandles.length > 0) {
                 if (item.userHandles.length > 1) {
                     String[] userNames = new String[item.userHandles.length];
-                    for (int i = 0; i < item.userHandles.length; ++i) {
-                        userNames[i] = mActivity.getString(R.string.user_with_id, item.userHandles[i]);
-                    }
                     List<UserInfo> users = Users.getUsers();
                     if (users != null) {
                         for (UserInfo info : users) {
@@ -213,7 +211,11 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
                                 }
                             }
                         }
-                    }
+                    } else if (ArrayUtils.contains(item.userHandles, Users.myUserId())) {
+                        appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_USER_HANDLE, Users.myUserId());
+                        mActivity.startActivity(appDetailsIntent);
+                        return;
+                    } else return;
                     new MaterialAlertDialogBuilder(mActivity)
                             .setTitle(R.string.select_user)
                             .setItems(userNames, (dialog, which) -> {
@@ -224,6 +226,8 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
                             .setNegativeButton(R.string.cancel, null)
                             .show();
                 } else {
+                    int[] userHandles = Users.getUsersIds();
+                    if (!ArrayUtils.contains(userHandles, item.userHandles[0])) return;
                     appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_USER_HANDLE, item.userHandles[0]);
                     mActivity.startActivity(appDetailsIntent);
                 }

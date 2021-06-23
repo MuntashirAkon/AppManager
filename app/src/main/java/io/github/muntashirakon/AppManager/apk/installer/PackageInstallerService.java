@@ -59,7 +59,7 @@ public class PackageInstallerService extends ForegroundService {
         int apkFileKey = intent.getIntExtra(EXTRA_APK_FILE_KEY, -1);
         if (apkFileKey == -1) return;
         String appLabel = intent.getStringExtra(EXTRA_APP_LABEL);
-        int userHandle = intent.getIntExtra(EXTRA_USER_ID, Users.getCurrentUserHandle());
+        int userHandle = intent.getIntExtra(EXTRA_USER_ID, Users.myUserId());
         // Install package
         PackageInstallerCompat pi = PackageInstallerCompat.getNewInstance(userHandle);
         pi.setAppLabel(appLabel);

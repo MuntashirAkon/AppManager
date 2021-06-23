@@ -97,7 +97,7 @@ public class OABConvert extends Convert {
         this.backupLocation = backupLocation;
         // Last path component is the package name
         this.packageName = backupLocation.getName();
-        this.userHandle = Users.getCurrentUserHandle();
+        this.userHandle = Users.myUserId();
     }
 
     @Override
@@ -219,7 +219,7 @@ public class OABConvert extends Convert {
             }
             sourceMetadata.flags.addFlag(BackupFlags.BACKUP_CACHE);
         }
-        sourceMetadata.userHandle = Users.getCurrentUserHandle();
+        sourceMetadata.userHandle = Users.myUserId();
         sourceMetadata.dataDirs = ConvertUtils.getDataDirs(this.packageName, this.userHandle, sourceMetadata.flags
                 .backupInternalData(), sourceMetadata.flags.backupExternalData(), false);
         sourceMetadata.tarType = ConvertUtils.getTarTypeFromPref();

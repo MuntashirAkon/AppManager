@@ -96,7 +96,7 @@ public class LocalServer {
     private LocalServer() throws IOException {
         mLocalServerManager = LocalServerManager.getInstance();
         // Initialise necessary files and permissions
-        ServerConfig.init(getConfig().context, Users.getCurrentUserHandle());
+        ServerConfig.init(getConfig().context, Users.myUserId());
         // Check if am.jar is in the right place
         checkFile();
         // Start server if not already
