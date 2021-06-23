@@ -14,6 +14,7 @@ import android.view.View;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
@@ -84,13 +85,19 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
             R.id.action_sort_by_memory_usage,
     };
 
+    @Nullable
     private RunningAppsAdapter mAdapter;
+    @Nullable
     private LinearProgressIndicator mProgressIndicator;
+    @Nullable
     private SwipeRefreshLayout mSwipeRefresh;
+    @Nullable
     private MultiSelectionView multiSelectionView;
+    @Nullable
     private Menu selectionMenu;
     private boolean isAdbMode;
 
+    @Nullable
     RunningAppsViewModel mModel;
     final ImageLoader imageLoader = new ImageLoader();
     private final BroadcastReceiver mBatchOpsBroadCastReceiver = new BroadcastReceiver() {
@@ -173,6 +180,8 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
 
     @Override
     public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
+        if (mModel == null) return super.onPrepareOptionsMenu(menu);
+
         menu.findItem(sortOrderIds[mModel.getSortOrder()]).setChecked(true);
         int filter = mModel.getFilter();
         if ((filter & FILTER_APPS) != 0) {
@@ -189,13 +198,16 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
         int id = item.getItemId();
         if (id == android.R.id.home) {
             finish();
-        } else if (id == R.id.action_toggle_kill) {
+            return true;
+        }
+        if (mModel == null) return true;
+        if (id == R.id.action_toggle_kill) {
             enableKillForSystem = !enableKillForSystem;
             AppPref.set(AppPref.PrefKey.PREF_ENABLE_KILL_FOR_SYSTEM_BOOL, enableKillForSystem);
             refresh();
         } else if (id == R.id.action_refresh) {
             refresh();
-        // Sort
+            // Sort
         } else if (id == R.id.action_sort_by_pid) {
             mModel.setSortOrder(SORT_BY_PID);
             item.setChecked(true);
@@ -226,8 +238,12 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
         super.onStart();
         if (mModel != null) {
             mModel.getProcessLiveData().observe(this, processList -> {
-                mAdapter.setDefaultList(processList);
-                mProgressIndicator.hide();
+                if (mAdapter != null) {
+                    mAdapter.setDefaultList(processList);
+                }
+                if (mProgressIndicator != null) {
+                    mProgressIndicator.hide();
+                }
             });
         }
         isAdbMode = AppPref.isAdbEnabled();
@@ -248,7 +264,9 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
 
     @Override
     public void onRefresh() {
-        mSwipeRefresh.setRefreshing(false);
+        if (mSwipeRefresh != null) {
+            mSwipeRefresh.setRefreshing(false);
+        }
         refresh();
     }
 
@@ -265,12 +283,15 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        mModel.setQuery(newText);
+        if (mModel != null) {
+            mModel.setQuery(newText);
+        }
         return true;
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        if (mModel == null || mAdapter == null) return true;
         ArrayList<ProcessItem> selectedItems = mAdapter.getSelectedItems();
         int id = item.getItemId();
         if (id == R.id.action_kill) {
@@ -295,7 +316,7 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
 
     @Override
     public void onSelectionChange(int selectionCount) {
-        if (selectionMenu == null) return;
+        if (selectionMenu == null || mAdapter == null) return;
         ArrayList<ProcessItem> selectedItems = mAdapter.getSelectedItems();
         MenuItem kill = selectionMenu.findItem(R.id.action_kill);
         MenuItem forceStop = selectionMenu.findItem(R.id.action_force_stop);
@@ -324,14 +345,18 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
 
     private void handleBatchOp(@BatchOpsManager.OpType int op) {
         if (mModel == null) return;
-        mProgressIndicator.show();
+        if (mProgressIndicator != null) {
+            mProgressIndicator.show();
+        }
         Intent intent = new Intent(this, BatchOpsService.class);
         BatchOpsManager.Result input = new BatchOpsManager.Result(mModel.getSelectedPackagesWithUsers());
         intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, input.getFailedPackages());
         intent.putIntegerArrayListExtra(BatchOpsService.EXTRA_OP_USERS, input.getAssociatedUserHandles());
         intent.putExtra(BatchOpsService.EXTRA_OP, op);
         ContextCompat.startForegroundService(this, intent);
-        multiSelectionView.cancel();
+        if (multiSelectionView != null) {
+            multiSelectionView.cancel();
+        }
     }
 
     private void handleBatchOpWithWarning(@BatchOpsManager.OpType int op) {
@@ -344,6 +369,7 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
     }
 
     void refresh() {
+        if (mProgressIndicator == null || mModel == null) return;
         mProgressIndicator.show();
         mModel.loadProcesses();
     }
