@@ -725,7 +725,6 @@
     <string name="cpu">CPU</string>
     <string name="users">Kullanıcılar</string>
     <string name="languages">Diller</string>
-    <string name="available">Kullanılabilir</string>
     <string name="battery_capacity">Kapasite</string>
     <string name="memory">Bellek</string>
     <string name="vendor">Satıcı</string>
@@ -1042,4 +1041,9 @@
     <string name="import_from_oab">OAndBackup\'tan içe aktar</string>
     <string name="pref_import_backups_msg">OAndBackup, Titanium Backup veya Swift Backup\'tan yedekleri içe aktarın.</string>
     <string name="pref_import_backups">Yedekleri içe aktar</string>
+    <string name="added_to_queue">Sıraya eklendi</string>
+    <string name="minimum_version">Minimum sürüm: %d</string>
+    <string name="help_uses_permissions_tab"><b>Vermek</b> veya <b>iptal etmek</b> için bir öğeyi tıklayın. Yalnızca <b>tehlikeli</b> ve <b>geliştirme</b> izinleri verilebilir veya iptal edilebilir.</string>
+    <string name="help_permissions_tab">Bu izinler bu uygulama tarafından tanımlanır ve iptal edilemez.</string>
+    <string name="help_app_ops_tab"><b>İzin vermek</b> veya <b>yok saymak</b> için bir öğeyi tıklayın. Desteklenen diğer modları görmek için bir öğeye uzun tıklayın.</string>
 </resources>
