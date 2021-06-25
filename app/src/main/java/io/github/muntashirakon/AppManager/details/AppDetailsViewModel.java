@@ -131,7 +131,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         if (receiver != null) getApplication().unregisterReceiver(receiver);
         receiver = null;
         IOUtils.closeQuietly(apkFile);
-        executor.shutdown();
+        executor.shutdownNow();
     }
 
     @UiThread
@@ -723,7 +723,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @GuardedBy("blockerLocker")
     public void setIsPackageChanged() {
         setPackageInfo(true);
-        if (isExternalApk || executor.isShutdown()) return;
+        if (isExternalApk || executor.isShutdown() || executor.isTerminated()) return;
         executor.submit(() -> {
             synchronized (blockerLocker) {
                 try {
