@@ -715,7 +715,6 @@
     <string name="vendor">ベンター</string>
     <string name="memory">メモリ</string>
     <string name="battery_capacity">容量</string>
-    <string name="unavailable">利用不可</string>
     <string name="languages">言語</string>
     <string name="users">ユーザー</string>
     <string name="cpu">CPU</string>
@@ -975,7 +974,7 @@
     <string name="orientation_left_to_right">左から右（LTR方向）</string>
     <string name="orientation_follow_locale">言語設定に従う</string>
     <string name="pref_display_changes_msg">バージョン、トラッカー、コンポーネント、権限、署名、SDKなどの変更点を表示します。</string>
-    <string name="hidden">隠し</string>
+    <string name="hidden">隠匿</string>
     <string name="port_number_invalid">ポート番号が無効です。</string>
     <string name="port_number_empty">ポート番号が空白です。</string>
     <string name="adb_connect_port_number_description">ポート番号は<b>デバイス名</b>セクション下部の<b>IPアドレス&amp;ポート</b>内に記載されています。</string>
@@ -992,4 +991,25 @@
     <string name="no_changes">変更なし</string>
     <string name="pref_display_changes">変更を表示</string>
     <string name="suspended">休止中</string>
+    <string name="help_uses_permissions_tab">項目をタップして<b>許可</b>または<b>拒否</b>できます。<b>dangerous</b>及び<b>development</b>パーミッションのみ許可/拒否できます。</string>
+    <string name="help_permissions_tab">これらの権限はアプリ内部で定義されており、許可を取り消すことはできません。</string>
+    <string name="failed_to_prevent_background_run">%1$sのバックグラウンド実行を防止できませんでした</string>
+    <string name="fallback_to_no_root_mode_description">App Managerは、現在の動作モードを使用できませんでした。予期せぬ動作を避けるため、一時的に非Rootモードに切り替える必要があります。端末を再起動しても問題が解決しない場合は、この問題の報告を検討してください。</string>
+    <string name="fallback_to_no_root_mode">非Rootモードに切り替えますか？</string>
+    <string name="app_signing_signature_mismatch_for_data_only_app">署名が一致していないため、アプリをインストールできませんでした。このアプリはデータを保持したままアンインストールされています。</string>
+    <string name="added_to_queue">キューに追加されました</string>
+    <string name="minimum_version">最小バージョン:%d</string>
+    <string name="help_app_ops_tab">項目をタップして<b>許可</b>または<b>拒否</b>できます。長押しすることで他の対応するオプションが選択できます。</string>
+    <string name="unknown_net_policy">未知のネットポリシー(%1$s - %2$X)</string>
+    <plurals name="alert_failed_to_import_backups">
+        <item quantity="other">%1$d個のバックアップをインポートできませんでした</item>
+    </plurals>
+    <string name="import_from_tb">Titanium Backupからインポート</string>
+    <string name="import_from_oab_tb_msg">バックアップは%sに配置されている必要があります。</string>
+    <string name="import_from_oab">OAndBackupからインポート</string>
+    <string name="pref_import_backups_msg">OAndBackup、Titanium BackupまたはSwift Backupからバックアップファイルをインポートします</string>
+    <string name="pref_import_backups">バックアップをインポート</string>
+    <string name="community_links">Telegram: https://t.me/AppManagerChannel
+\nTwitter: https://twitter.com/AppManagerNews</string>
+    <string name="community">コミュニティ</string>
 </resources>
