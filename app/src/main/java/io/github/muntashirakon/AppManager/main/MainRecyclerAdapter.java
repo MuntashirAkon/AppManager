@@ -118,6 +118,17 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         }
     }
 
+    @GuardedBy("mAdapterList")
+    void selectAll() {
+        synchronized (mAdapterList) {
+            for (int i = 0; i < mAdapterList.size(); ++i) {
+                mAdapterList.set(i, mActivity.mModel.select(mAdapterList.get(i)));
+                notifyItemChanged(i);
+            }
+            mActivity.handleSelection();
+        }
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
