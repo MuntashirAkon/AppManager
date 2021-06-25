@@ -86,7 +86,11 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 mAdapterList.clear();
                 mAdapterList.addAll(list);
                 mSearchQuery = mActivity.mModel.getSearchQuery();
-                mActivity.runOnUiThread(this::notifyDataSetChanged);
+                mActivity.runOnUiThread(() -> {
+                    synchronized (mAdapterList) {
+                        notifyDataSetChanged();
+                    }
+                });
             }
         });
     }
@@ -106,20 +110,11 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 itemIds.add(itemId);
             }
             mActivity.runOnUiThread(() -> {
-                for (int id : itemIds) notifyItemChanged(id);
+                synchronized (mAdapterList) {
+                    for (int id : itemIds) notifyItemChanged(id);
+                }
             });
             mActivity.mModel.clearSelection();
-        }
-    }
-
-    @GuardedBy("mAdapterList")
-    void selectAll() {
-        synchronized (mAdapterList) {
-            for (int i = 0; i < mAdapterList.size(); ++i) {
-                mAdapterList.set(i, mActivity.mModel.select(mAdapterList.get(i)));
-                notifyItemChanged(i);
-            }
-            mActivity.handleSelection();
         }
     }
 
@@ -199,12 +194,14 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             // Long click listener: Select/deselect an app.
             // 1) Turn selection mode on if this is the first item in the selection list
             // 2) Select between last selection position and this position (inclusive) if selection mode is on
-            ApplicationItem lastSelectedItem = mActivity.mModel.getLastSelectedPackage();
-            int lastSelectedItemPosition = lastSelectedItem == null ? -1 : mAdapterList.indexOf(lastSelectedItem);
-            if (lastSelectedItemPosition >= 0) {
-                // Select from last selection to this selection
-                selectRange(lastSelectedItemPosition, position);
-            } else toggleSelection(item, position);
+            synchronized (mAdapterList) {
+                ApplicationItem lastSelectedItem = mActivity.mModel.getLastSelectedPackage();
+                int lastSelectedItemPosition = lastSelectedItem == null ? -1 : mAdapterList.indexOf(lastSelectedItem);
+                if (lastSelectedItemPosition >= 0) {
+                    // Select from last selection to this selection
+                    selectRange(lastSelectedItemPosition, position);
+                } else toggleSelection(item, position);
+            }
             return true;
         });
         holder.icon.setOnClickListener(v -> toggleSelection(item, position));
