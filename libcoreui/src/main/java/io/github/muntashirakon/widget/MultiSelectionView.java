@@ -240,7 +240,8 @@ public class MultiSelectionView extends MaterialCardView {
             isInSelectionMode = inSelectionMode;
         }
 
-        public final void toggleSelection(int position) {
+        @CallSuper
+        public void toggleSelection(int position) {
             if (isSelected(position)) {
                 deselect(position);
             } else select(position);
@@ -253,7 +254,8 @@ public class MultiSelectionView extends MaterialCardView {
             notifySelectionChange();
         }
 
-        public final void selectAll() {
+        @CallSuper
+        public void selectAll() {
             for (int position = 0; position < getItemCount(); ++position) {
                 select(position);
             }
@@ -261,7 +263,8 @@ public class MultiSelectionView extends MaterialCardView {
             notifySelectionChange();
         }
 
-        public final void selectRange(int firstPosition, int secondPosition) {
+        @CallSuper
+        public void selectRange(int firstPosition, int secondPosition) {
             int beginPosition = Math.min(firstPosition, secondPosition);
             int endPosition = Math.max(firstPosition, secondPosition);
             for (int position = beginPosition; position <= endPosition; ++position) {

@@ -89,8 +89,10 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
                 mAdapterList.addAll(list);
                 mSearchQuery = mActivity.mModel.getSearchQuery();
                 mActivity.runOnUiThread(() -> {
-                    notifyDataSetChanged();
-                    notifySelectionChange();
+                    synchronized (mAdapterList) {
+                        notifyDataSetChanged();
+                        notifySelectionChange();
+                    }
                 });
             }
         });
@@ -112,13 +114,16 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
                 itemIds.add(itemId);
             }
             mActivity.runOnUiThread(() -> {
-                for (int id : itemIds) notifyItemChanged(id);
+                synchronized (mAdapterList) {
+                    for (int id : itemIds) notifyItemChanged(id);
+                }
             });
             mActivity.mModel.clearSelection();
             super.clearSelections();
         }
     }
 
+    @GuardedBy("mAdapterList")
     @Override
     public void cancelSelection() {
         clearSelections();
@@ -136,9 +141,12 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
         return mActivity.mModel.getApplicationItemCount();
     }
 
+    @GuardedBy("mAdapterList")
     @Override
     protected boolean isSelected(int position) {
-        return mActivity.mModel.getSelectedPackages().containsKey(mAdapterList.get(position).packageName);
+        synchronized (mAdapterList) {
+            return mActivity.mModel.getSelectedPackages().containsKey(mAdapterList.get(position).packageName);
+        }
     }
 
     @GuardedBy("mAdapterList")
@@ -149,10 +157,35 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
         }
     }
 
+    @GuardedBy("mAdapterList")
     @Override
     protected void deselect(int position) {
         synchronized (mAdapterList) {
             mAdapterList.set(position, mActivity.mModel.deselect(mAdapterList.get(position)));
+        }
+    }
+
+    @GuardedBy("mAdapterList")
+    @Override
+    public void toggleSelection(int position) {
+        synchronized (mAdapterList) {
+            super.toggleSelection(position);
+        }
+    }
+
+    @GuardedBy("mAdapterList")
+    @Override
+    public void selectAll() {
+        synchronized (mAdapterList) {
+            super.selectAll();
+        }
+    }
+
+    @GuardedBy("mAdapterList")
+    @Override
+    public void selectRange(int firstPosition, int secondPosition) {
+        synchronized (mAdapterList) {
+            super.selectRange(firstPosition, secondPosition);
         }
     }
 
@@ -237,12 +270,14 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
             // Long click listener: Select/deselect an app.
             // 1) Turn selection mode on if this is the first item in the selection list
             // 2) Select between last selection position and this position (inclusive) if selection mode is on
-            ApplicationItem lastSelectedItem = mActivity.mModel.getLastSelectedPackage();
-            int lastSelectedItemPosition = lastSelectedItem == null ? -1 : mAdapterList.indexOf(lastSelectedItem);
-            if (lastSelectedItemPosition >= 0) {
-                // Select from last selection to this selection
-                selectRange(lastSelectedItemPosition, position);
-            } else toggleSelection(position);
+            synchronized (mAdapterList) {
+                ApplicationItem lastSelectedItem = mActivity.mModel.getLastSelectedPackage();
+                int lastSelectedItemPosition = lastSelectedItem == null ? -1 : mAdapterList.indexOf(lastSelectedItem);
+                if (lastSelectedItemPosition >= 0) {
+                    // Select from last selection to this selection
+                    selectRange(lastSelectedItemPosition, position);
+                } else toggleSelection(position);
+            }
             return true;
         });
         holder.icon.setOnClickListener(v -> toggleSelection(position));
