@@ -26,6 +26,7 @@ import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.GuardedBy;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -92,12 +93,9 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
     private LinearProgressIndicator mProgressIndicator;
     private SwipeRefreshLayout mSwipeRefresh;
     private AppUsageAdapter mAppUsageAdapter;
-    private List<PackageUsageInfo> packageUsageInfoList;
     private static long totalScreenTime;
     @IntervalType
     private int currentInterval = USAGE_TODAY;
-    @SortOrder
-    private int mSortBy;
     private final ImageLoader imageLoader = new ImageLoader();
     private final BetterActivityResult<String, Boolean> requestPerm = BetterActivityResult
             .registerForActivityResult(this, new ActivityResultContracts.RequestPermission());
@@ -145,8 +143,6 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-
-        mSortBy = SORT_BY_SCREEN_TIME;
     }
 
     @Override
@@ -188,7 +184,9 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(sSortMenuItemIdsMap[mSortBy]).setChecked(true);
+        if (mAppUsageAdapter != null) {
+            menu.findItem(sSortMenuItemIdsMap[mAppUsageAdapter.mSortBy]).setChecked(true);
+        }
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -223,46 +221,22 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
     }
 
     private void setSortBy(@SortOrder int sort) {
-        mSortBy = sort;
-        sortPackageUSList();
-        if (mAppUsageAdapter != null)
+        if (mAppUsageAdapter != null) {
+            mAppUsageAdapter.setSortBy(sort);
+            mAppUsageAdapter.sortPackageUSList();
             mAppUsageAdapter.notifyDataSetChanged();
-    }
-
-    private void sortPackageUSList() {
-        if (packageUsageInfoList == null) return;
-        Collections.sort(packageUsageInfoList, ((o1, o2) -> {
-            switch (mSortBy) {
-                case SORT_BY_APP_LABEL:
-                    return Collator.getInstance().compare(o1.appLabel, o2.appLabel);
-                case SORT_BY_LAST_USED:
-                    return -o1.lastUsageTime.compareTo(o2.lastUsageTime);
-                case SORT_BY_MOBILE_DATA:
-                    Long o1MData = o1.mobileData.first + o1.mobileData.second;
-                    Long o2MData = o2.mobileData.first + o2.mobileData.second;
-                    return -o1MData.compareTo(o2MData);
-                case SORT_BY_PACKAGE_NAME:
-                    return o1.packageName.compareToIgnoreCase(o2.packageName);
-                case SORT_BY_SCREEN_TIME:
-                    return -o1.screenTime.compareTo(o2.screenTime);
-                case SORT_BY_TIMES_OPENED:
-                    return -o1.timesOpened.compareTo(o2.timesOpened);
-                case SORT_BY_WIFI_DATA:
-                    Long o1WData = o1.wifiData.first + o1.wifiData.second;
-                    Long o2WData = o2.wifiData.first + o2.wifiData.second;
-                    return -o1WData.compareTo(o2WData);
-            }
-            return 0;
-        }));
+        }
     }
 
     private void getAppUsage() {
         mProgressIndicator.show();
         new Thread(() -> {
+            // TODO: 28/6/21 Replace with ViewModel
             int _try = 5; // try to get usage stat 5 times
+            List<PackageUsageInfo> packageUsageInfoList = new ArrayList<>();
             do {
                 try {
-                    packageUsageInfoList = AppUsageStatsManager.getInstance(this).getUsageStats(currentInterval);
+                    packageUsageInfoList.addAll(AppUsageStatsManager.getInstance(this).getUsageStats(currentInterval));
                 } catch (RemoteException e) {
                     Log.e("AppUsage", e);
                 }
@@ -270,7 +244,6 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
             totalScreenTime = 0;
             for (PackageUsageInfo appItem : packageUsageInfoList)
                 totalScreenTime += appItem.screenTime;
-            sortPackageUSList();
             runOnUiThread(() -> {
                 mAppUsageAdapter.setDefaultList(packageUsageInfoList);
                 setUsageSummary();
@@ -325,9 +298,12 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
     }
 
     static class AppUsageAdapter extends RecyclerView.Adapter<AppUsageAdapter.ViewHolder> {
+        @GuardedBy("mAdapterList")
         private final List<PackageUsageInfo> mAdapterList = new ArrayList<>();
         private final AppUsageActivity mActivity;
         private final PackageManager mPackageManager;
+        @SortOrder
+        private int mSortBy;
 
         private static class ViewHolder extends RecyclerView.ViewHolder {
             ImageView appIcon;
@@ -357,22 +333,62 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
         AppUsageAdapter(@NonNull AppUsageActivity activity) {
             mActivity = activity;
             mPackageManager = mActivity.getPackageManager();
+            mSortBy = SORT_BY_SCREEN_TIME;
         }
 
         void setDefaultList(List<PackageUsageInfo> list) {
-            mAdapterList.clear();
-            mAdapterList.addAll(list);
+            synchronized (mAdapterList) {
+                mAdapterList.clear();
+                mAdapterList.addAll(list);
+            }
+            sortPackageUSList();
             notifyDataSetChanged();
+        }
+
+        public void setSortBy(int sortBy) {
+            this.mSortBy = sortBy;
+        }
+
+        private void sortPackageUSList() {
+            synchronized (mAdapterList) {
+                Collections.sort(mAdapterList, ((o1, o2) -> {
+                    switch (mSortBy) {
+                        case SORT_BY_APP_LABEL:
+                            return Collator.getInstance().compare(o1.appLabel, o2.appLabel);
+                        case SORT_BY_LAST_USED:
+                            return -o1.lastUsageTime.compareTo(o2.lastUsageTime);
+                        case SORT_BY_MOBILE_DATA:
+                            Long o1MData = o1.mobileData.first + o1.mobileData.second;
+                            Long o2MData = o2.mobileData.first + o2.mobileData.second;
+                            return -o1MData.compareTo(o2MData);
+                        case SORT_BY_PACKAGE_NAME:
+                            return o1.packageName.compareToIgnoreCase(o2.packageName);
+                        case SORT_BY_SCREEN_TIME:
+                            return -o1.screenTime.compareTo(o2.screenTime);
+                        case SORT_BY_TIMES_OPENED:
+                            return -o1.timesOpened.compareTo(o2.timesOpened);
+                        case SORT_BY_WIFI_DATA:
+                            Long o1WData = o1.wifiData.first + o1.wifiData.second;
+                            Long o2WData = o2.wifiData.first + o2.wifiData.second;
+                            return -o1WData.compareTo(o2WData);
+                    }
+                    return 0;
+                }));
+            }
         }
 
         @Override
         public int getItemCount() {
-            return mAdapterList.size();
+            synchronized (mAdapterList) {
+                return mAdapterList.size();
+            }
         }
 
         @Override
         public long getItemId(int position) {
-            return Objects.hashCode(mAdapterList.get(position));
+            synchronized (mAdapterList) {
+                return Objects.hashCode(mAdapterList.get(position));
+            }
         }
 
         @NonNull
@@ -385,7 +401,10 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
         @SuppressLint("SetTextI18n")
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            final PackageUsageInfo packageUS = mAdapterList.get(position);
+            final PackageUsageInfo packageUS;
+            synchronized (mAdapterList) {
+                packageUS = mAdapterList.get(position);
+            }
             final int percentUsage = (int) (packageUS.screenTime * 100f / totalScreenTime);
             // Set label (or package name on failure)
             try {
