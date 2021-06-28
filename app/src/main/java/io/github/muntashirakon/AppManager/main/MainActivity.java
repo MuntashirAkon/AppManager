@@ -337,6 +337,8 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
             batchExportRules.launch(fileName);
         } else if (id == R.id.action_force_stop) {
             handleBatchOp(BatchOpsManager.OP_FORCE_STOP);
+        } else if (id == R.id.action_clear_cache) {
+            handleBatchOp(BatchOpsManager.OP_CLEAR_CACHE);
         } else if (id == R.id.action_uninstall) {
             handleBatchOpWithWarning(BatchOpsManager.OP_UNINSTALL);
         } else if (id == R.id.action_add_to_profile) {
