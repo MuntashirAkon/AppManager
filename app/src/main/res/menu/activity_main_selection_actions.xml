@@ -32,8 +32,12 @@
         android:icon="@drawable/ic_baseline_power_settings_new_24"
         app:showAsAction="never" />
     <item
+        android:id="@+id/action_clear_cache"
+        android:icon="@drawable/ic_delete_black_24dp"
+        android:title="@string/clear_cache" />
+    <item
         android:id="@+id/action_clear_data"
-        android:icon="@drawable/ic_refresh_black_24dp"
+        android:icon="@drawable/ic_delete_black_24dp"
         android:title="@string/clear_data" />
     <item
         android:id="@+id/action_save_apk"
