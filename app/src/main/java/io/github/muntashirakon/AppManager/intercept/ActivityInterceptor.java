@@ -434,6 +434,10 @@ public class ActivityInterceptor extends BaseActivity {
     }
 
     private void checkAndShowMatchingActivities() {
+        if (mutableIntent == null) {
+            // For whatever reason, mutable intent is null
+            return;
+        }
         PackageManager pm = getPackageManager();
         List<ResolveInfo> resolveInfo = pm.queryIntentActivities(mutableIntent, 0);
         if (resolveInfo.size() < 1) {
