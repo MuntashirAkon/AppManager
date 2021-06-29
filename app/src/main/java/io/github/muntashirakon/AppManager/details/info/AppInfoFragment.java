@@ -1108,7 +1108,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         // Set Aurora Store
         try {
             PackageInfo auroraInfo = mPackageManager.getPackageInfo(PACKAGE_NAME_AURORA_STORE, 0);
-            if (PackageInfoCompat.getLongVersionCode(auroraInfo) >= 36L || !auroraInfo.applicationInfo.enabled) {
+            if (PackageInfoCompat.getLongVersionCode(auroraInfo) == 36L || !auroraInfo.applicationInfo.enabled) {
                 // Aurora Store is disabled or the installed version has promotional apps
                 throw new PackageManager.NameNotFoundException();
             }
