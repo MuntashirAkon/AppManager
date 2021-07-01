@@ -400,7 +400,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     @WorkerThread
     @GuardedBy("blockerLocker")
-    public boolean setPermission(final AppDetailsPermissionItem permissionItem) {
+    public boolean togglePermission(final AppDetailsPermissionItem permissionItem) {
         if (isExternalApk) return false;
         int appOp = permissionItem.appOp;
         int uid = packageInfo.applicationInfo.uid;
