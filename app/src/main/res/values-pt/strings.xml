@@ -1003,8 +1003,8 @@
         <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> rastreadores com classes <xliff:g id="class_no" example="50">%2$d</xliff:g></item>
     </plurals>
     <plurals name="two_trackers_and_classes">
-        <item quantity="one">2 rastreadores com <xliff:g id="class_no" example="50">%1$d</xliff:g> classes</item>
-        <item quantity="other">2 rastreadores com <xliff:g id="class_no" example="50">%1$d</xliff:g> classes</item>
+        <item quantity="one">2 rastreadores com classes <xliff:g id="class_no" example="50">%1$d</xliff:g></item>
+        <item quantity="other">2 rastreadores com classes <xliff:g id="class_no" example="50">%1$d</xliff:g></item>
     </plurals>
     <string name="app_signing_signatures">Assinaturas</string>
     <string name="no_changes">Sem modificações</string>
