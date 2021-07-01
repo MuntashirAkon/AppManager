@@ -74,9 +74,9 @@
 
     <item
         android:id="@+id/menu_filters"
-        android:alphabeticShortcut="@string/title_filters"
+        android:alphabeticShortcut="@string/saved_filters"
         android:icon="@drawable/ic_filter_list_white_24dp"
-        android:title="@string/title_filters" />
+        android:title="@string/saved_filters" />
 
     <item
         android:id="@+id/menu_send_log_zip"
