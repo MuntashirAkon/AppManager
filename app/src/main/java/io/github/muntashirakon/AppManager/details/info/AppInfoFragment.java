@@ -244,6 +244,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 AppDetailsItem appDetailsItem = appDetailsItems.get(0);
                 mPackageInfo = (PackageInfo) appDetailsItem.vanillaItem;
                 mPackageName = appDetailsItem.name;
+                mInstalledPackageInfo = mainModel.getInstalledPackageInfo();
+                mApplicationInfo = mPackageInfo.applicationInfo;
                 // Set package name
                 packageNameView.setText(mPackageName);
                 packageNameView.setOnClickListener(v -> {
@@ -1385,9 +1387,6 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @WorkerThread
     private void loadPackageInfo() {
-        if (mainModel == null) return;  // Should never happen but checked anyway
-        mInstalledPackageInfo = mainModel.getInstalledPackageInfo();
-        mApplicationInfo = mPackageInfo.applicationInfo;
         // Set App Icon
         Drawable icon = mApplicationInfo.loadIcon(mPackageManager);
         runOnUiThread(() -> {
