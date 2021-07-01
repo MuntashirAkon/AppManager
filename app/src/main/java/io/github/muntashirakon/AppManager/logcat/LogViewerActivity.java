@@ -1031,7 +1031,10 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
                 List<LogLine> logLines = new ArrayList<>();
                 for (int lineNumber = 0, linesSize = lines.size(); lineNumber < linesSize; lineNumber++) {
                     String line = lines.get(lineNumber);
-                    logLines.add(LogLine.newLogLine(line, !mCollapsedMode, mFilterPattern));
+                    LogLine logLine = LogLine.newLogLine(line, !mCollapsedMode, mFilterPattern);
+                    if (logLine != null) {
+                        logLines.add(logLine);
+                    }
                     final int finalLineNumber = lineNumber;
                     runOnUiThread(() -> progressIndicator.setProgressCompat(finalLineNumber * 100 / linesSize, true));
                 }
@@ -1264,7 +1267,11 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
                         }
                     }
                     LogLine logLine = LogLine.newLogLine(line, !mCollapsedMode, mFilterPattern);
-                    if (!mReader.readyToRecord()) {
+                    if (logLine == null) {
+                        if (mReader.readyToRecord()) {
+                            publishProgress();
+                        }
+                    } else if (!mReader.readyToRecord()) {
                         // "ready to record" in this case means all the initial lines have been flushed from the reader
                         initialLines.add(logLine);
                         if (initialLines.size() > maxLines) {
@@ -1308,6 +1315,8 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
         @Override
         protected void onProgressUpdate(LogLine... values) {
             super.onProgressUpdate(values);
+
+            if (values == null) return;
 
             if (!mFirstLineReceived) {
                 mFirstLineReceived = true;

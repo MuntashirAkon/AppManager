@@ -180,7 +180,7 @@ public class LogcatRecordingService extends ForegroundService {
 
     private boolean checkLogLine(String line, SearchCriteria searchCriteria, int logLevel, String filterPattern) {
         LogLine logLine = LogLine.newLogLine(line, false, filterPattern);
-        return logLine.getLogLevel() >= logLevel && searchCriteria.matches(logLine);
+        return logLine != null && logLine.getLogLevel() >= logLevel && searchCriteria.matches(logLine);
     }
 
 
