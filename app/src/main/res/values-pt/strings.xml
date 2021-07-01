@@ -999,8 +999,8 @@
     <string name="one_click_ops">Operações em 1 Clique</string>
     <string name="user_with_id">Utilizador: <xliff:g id="user_id" example="0">%1$d</xliff:g></string>
     <plurals name="other_trackers_and_classes">
-        <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> rastreadores com <xliff:g id="class_no" example="50">%2$d</xliff:g> classes</item>
-        <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> rastreadores com <xliff:g id="class_no" example="50">%2$d</xliff:g> classes</item>
+        <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> rastreadores com classes <xliff:g id="class_no" example="50">%2$d</xliff:g></item>
+        <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> rastreadores com classes <xliff:g id="class_no" example="50">%2$d</xliff:g></item>
     </plurals>
     <plurals name="two_trackers_and_classes">
         <item quantity="one">2 rastreadores com <xliff:g id="class_no" example="50">%1$d</xliff:g> classes</item>
@@ -1035,7 +1035,7 @@
     <string name="import_from_tb">Importar de Titanium Backup</string>
     <string name="import_from_oab_tb_msg">As cópias de segurança devem estar em %s.</string>
     <string name="import_from_oab">Importar de OAndBackup</string>
-    <string name="pref_import_backups_msg">Importar cópias de segurança de OAndBackup, Titanium Backup ou Swift Backup.</string>
+    <string name="pref_import_backups_msg">Importar cópias de segurança de OAndBackup ou Titanium Backup.</string>
     <string name="pref_import_backups">Importar cópias de segurança</string>
     <string name="community_links">Telegram: https://t.me/AppManagerChannel
 \nTwitter: https://twitter.com/AppManagerNews</string>
@@ -1045,4 +1045,8 @@
     <string name="help_uses_permissions_tab">Clique num item para <b>conceder</b> ou <b>revogar</b>. Apenas as permissões <b>perigosas</b> e de <b>desenvolvimento</b> podem ser concedidas ou revogadas.</string>
     <string name="help_permissions_tab">Estas permissões são definidas por esta aplicação e não podem ser revogadas.</string>
     <string name="help_app_ops_tab">Clique num item para <b>permitir</b> ou <b>ignorar</b>. Clique longo sobre um item para ver outros modos suportados.</string>
+    <string name="saved_filters">Filtros guardados</string>
+    <string name="permission_flags">Bandeiras de permissão</string>
+    <string name="pref_selected_users_msg">Restringir o App Manager a trabalhar apenas com os utilizadores selecionados.</string>
+    <string name="pref_selected_users">Utilizadores selecionados</string>
 </resources>
