@@ -659,7 +659,7 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
                         .show());
 
                 AlertDialog alertDialog = new MaterialAlertDialogBuilder(LogViewerActivity.this)
-                        .setTitle(R.string.title_filters)
+                        .setTitle(R.string.saved_filters)
                         .setView(view)
                         .setNegativeButton(R.string.ok, null)
                         .show();
