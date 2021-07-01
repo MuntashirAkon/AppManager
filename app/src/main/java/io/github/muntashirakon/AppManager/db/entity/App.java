@@ -119,7 +119,7 @@ public class App implements Serializable {
         ApplicationInfo applicationInfo = packageInfo.applicationInfo;
         app.packageName = applicationInfo.packageName;
         app.uid = applicationInfo.uid;
-        app.userId = Users.getUserHandle(app.uid);
+        app.userId = Users.getUserId(app.uid);
         app.isInstalled = (applicationInfo.flags & ApplicationInfo.FLAG_INSTALLED) != 0
                 && applicationInfo.publicSourceDir != null && new File(applicationInfo.publicSourceDir).exists();
         app.flags = applicationInfo.flags;

@@ -75,7 +75,7 @@ public class ProfileViewModel extends AndroidViewModel {
             try {
                 ArrayList<Pair<CharSequence, ApplicationInfo>> itemPairs;
                 List<PackageInfo> packageInfoList = PackageManagerCompat.getInstalledPackages(
-                        PackageManager.GET_META_DATA, Users.getCurrentUserHandle());
+                        PackageManager.GET_META_DATA, Users.myUserId());
                 itemPairs = new ArrayList<>(packageInfoList.size());
                 for (PackageInfo info : packageInfoList) {
                     itemPairs.add(new Pair<>(pm.getApplicationLabel(info.applicationInfo), info.applicationInfo));
@@ -319,7 +319,7 @@ public class ProfileViewModel extends AndroidViewModel {
     @WorkerThread
     @NonNull
     public int[] getUsers() {
-        return profile.users == null ? Users.getUsersHandles() : profile.users;
+        return profile.users == null ? Users.getUsersIds() : profile.users;
     }
 
     public void setExportRules(@Nullable Integer flags) {

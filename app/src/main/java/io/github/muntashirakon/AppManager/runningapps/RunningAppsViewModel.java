@@ -98,7 +98,7 @@ public class RunningAppsViewModel extends AndroidViewModel {
     public void forceStop(@NonNull ApplicationInfo info) {
         executor.submit(() -> {
             try {
-                PackageManagerCompat.forceStopPackage(info.packageName, Users.getUserHandle(info.uid));
+                PackageManagerCompat.forceStopPackage(info.packageName, Users.getUserId(info.uid));
                 forceStopAppResult.postValue(new Pair<>(info, true));
             } catch (RemoteException e) {
                 e.printStackTrace();

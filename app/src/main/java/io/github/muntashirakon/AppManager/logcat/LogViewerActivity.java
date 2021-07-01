@@ -244,8 +244,7 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
         if (!PermissionUtils.hasPermission(this, Manifest.permission.READ_LOGS) && LocalServer.isAMServiceAlive()) {
             executor.submit(() -> {
                 try {
-                    PermissionCompat.grantPermission(getPackageName(), Manifest.permission.READ_LOGS,
-                            Users.getCurrentUserHandle());
+                    PermissionCompat.grantPermission(getPackageName(), Manifest.permission.READ_LOGS, Users.myUserId());
                 } catch (RemoteException e) {
                     Log.d(TAG, e.toString());
                 }

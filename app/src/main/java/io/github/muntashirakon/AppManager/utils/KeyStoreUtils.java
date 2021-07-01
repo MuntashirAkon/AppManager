@@ -2,16 +2,17 @@
 
 package io.github.muntashirakon.AppManager.utils;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.io.ProxyFile;
 
 public final class KeyStoreUtils {
     public static boolean hasKeyStore(int uid) {
-        ProxyFile keyStorePath = getKeyStorePath(Users.getUserHandle(uid));
+        ProxyFile keyStorePath = getKeyStorePath(Users.getUserId(uid));
         String[] fileNames = keyStorePath.list();
         if (fileNames != null) {
             String uidStr = uid + "_";
@@ -23,7 +24,7 @@ public final class KeyStoreUtils {
     }
 
     public static boolean hasMasterKey(int uid) {
-        return getMasterKey(Users.getUserHandle(uid)).exists();
+        return getMasterKey(Users.getUserId(uid)).exists();
     }
 
     @NonNull

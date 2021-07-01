@@ -48,7 +48,7 @@ public class AppOpsConfigProvider extends ContentProvider {
         checkCalling();
 
         try {
-            ServerConfig.init(ContextUtils.getDeContext(getContext()), Users.getCurrentUserHandle());
+            ServerConfig.init(ContextUtils.getDeContext(getContext()), Users.myUserId());
         } catch (IOException e) {
             e.printStackTrace();
             return null;

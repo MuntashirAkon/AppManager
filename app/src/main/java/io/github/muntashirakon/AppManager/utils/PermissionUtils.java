@@ -29,7 +29,7 @@ public final class PermissionUtils {
             if (LocalServer.isAMServiceAlive()) {
                 try {
                     PermissionCompat.grantPermission(context.getPackageName(), Manifest.permission.DUMP,
-                            Users.getCurrentUserHandle());
+                            Users.myUserId());
                     return true;
                 } catch (RemoteException e) {
                     e.printStackTrace();

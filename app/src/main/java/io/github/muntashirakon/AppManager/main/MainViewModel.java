@@ -159,7 +159,7 @@ public class MainViewModel extends AndroidViewModel {
     @NonNull
     public ArrayList<UserPackagePair> getSelectedPackagesWithUsers(boolean onlyForCurrentUser) {
         ArrayList<UserPackagePair> userPackagePairs = new ArrayList<>();
-        int currentUserHandle = Users.getCurrentUserHandle();
+        int currentUserHandle = Users.myUserId();
         for (String packageName : selectedPackages.keySet()) {
             int[] userHandles = selectedPackages.get(packageName);
             if (userHandles == null || userHandles.length == 0) {
@@ -568,7 +568,7 @@ public class MainViewModel extends AndroidViewModel {
     @WorkerThread
     @Nullable
     private ApplicationItem getNewApplicationItem(String packageName) {
-        int[] userHandles = Users.getUsersHandles();
+        int[] userHandles = Users.getUsersIds();
         ApplicationItem oldItem = null;
         for (int userHandle : userHandles) {
             try {

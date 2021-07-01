@@ -6,18 +6,11 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.system.Os;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.annotation.WorkerThread;
 import androidx.collection.SparseArrayCompat;
-import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.ipc.IPCUtils;
-import io.github.muntashirakon.AppManager.ipc.ps.ProcessEntry;
-import io.github.muntashirakon.AppManager.ipc.ps.Ps;
-import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
-import io.github.muntashirakon.AppManager.users.Users;
-import io.github.muntashirakon.AppManager.utils.Utils;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -26,6 +19,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+
+import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.ipc.IPCUtils;
+import io.github.muntashirakon.AppManager.ipc.ps.ProcessEntry;
+import io.github.muntashirakon.AppManager.ipc.ps.Ps;
+import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.AppManager.utils.Utils;
 
 @WorkerThread
 final class ProcessParser {
@@ -121,7 +123,7 @@ final class ProcessParser {
 
     private void getInstalledPackages() {
         List<PackageInfo> packageInfoList = new ArrayList<>();
-        for (int userHandle : Users.getUsersHandles()) {
+        for (int userHandle : Users.getUsersIds()) {
             try {
                 packageInfoList.addAll(PackageManagerCompat.getInstalledPackages(0, userHandle));
             } catch (Exception e) {

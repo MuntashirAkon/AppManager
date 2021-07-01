@@ -8,12 +8,13 @@ import android.content.Intent;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.main.MainActivity;
-import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.types.ForegroundService;
+import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 
 public class PackageInstallerService extends ForegroundService {
@@ -60,7 +61,7 @@ public class PackageInstallerService extends ForegroundService {
             // Set package name in the ongoing notification
             builder.setContentTitle(appLabel);
             notificationManager.notify(NOTIFICATION_ID, builder.build());
-            int userHandle = intent.getIntExtra(EXTRA_USER_ID, Users.getCurrentUserHandle());
+            int userHandle = intent.getIntExtra(EXTRA_USER_ID, Users.myUserId());
             // Install package
             PackageInstallerCompat pi = PackageInstallerCompat.getNewInstance(userHandle);
             pi.setAppLabel(appLabel);

@@ -488,7 +488,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
                 }
             } else {
                 builder.append("\n").append(getTitleText(R.string.apps)).append("\n");
-                Pair<Integer, Integer> packageSizes = getPackageStats(Users.getCurrentUserHandle());
+                Pair<Integer, Integer> packageSizes = getPackageStats(Users.myUserId());
                 builder.append(getPrimaryText(R.string.total_size))
                         .append(String.valueOf(packageSizes.first + packageSizes.second)).append(", ")
                         .append(getPrimaryText(R.string.user))

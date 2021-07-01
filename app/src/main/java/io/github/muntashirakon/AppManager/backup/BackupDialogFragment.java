@@ -12,25 +12,18 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
-import androidx.annotation.*;
+
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.UiThread;
+import androidx.annotation.WorkerThread;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
-import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
-import io.github.muntashirakon.AppManager.db.entity.App;
-import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.users.Users;
-import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
-import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
-import io.github.muntashirakon.AppManager.types.UserPackagePair;
-import io.github.muntashirakon.AppManager.utils.PackageUtils;
-import io.github.muntashirakon.AppManager.utils.StoragePermission;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -39,6 +32,19 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
+import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
+import io.github.muntashirakon.AppManager.db.entity.App;
+import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
+import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
+import io.github.muntashirakon.AppManager.types.UserPackagePair;
+import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.StoragePermission;
 
 public class BackupDialogFragment extends DialogFragment {
     public static final String TAG = "BackupDialogFragment";
@@ -205,7 +211,7 @@ public class BackupDialogFragment extends DialogFragment {
                     if (isDetached()) return;
                     new SearchableMultiChoiceDialogBuilder<>(activity, userHandles, userNames)
                             .setTitle(R.string.select_user)
-                            .setSelections(Collections.singletonList(Users.getCurrentUserHandle()))
+                            .setSelections(Collections.singletonList(Users.myUserId()))
                             .showSelectAll(false)
                             .setPositiveButton(R.string.ok, (dialog, which, selectedUsers) -> {
                                 List<UserPackagePair> newTargetPackages = new ArrayList<>();
@@ -308,7 +314,7 @@ public class BackupDialogFragment extends DialogFragment {
             AtomicInteger selectedItem = new AtomicInteger(-1);
             CharSequence[] readableBackupNames = new CharSequence[metadata.length];
             int choice = -1;
-            int currentUserHandle = Users.getCurrentUserHandle();
+            int currentUserHandle = Users.myUserId();
             for (int i = 0; i < backupNames.length; ++i) {
                 backupNames[i] = metadata[i].backupName;
                 if (BackupUtils.getShortBackupName(backupNames[i]) == null

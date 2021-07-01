@@ -491,7 +491,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
 
     public void blockUnblockTrackers(boolean block) {
         if (mainModel == null) return;
-        List<UserPackagePair> userPackagePairs = Collections.singletonList(new UserPackagePair(mPackageName, Users.getCurrentUserHandle()));
+        List<UserPackagePair> userPackagePairs = Collections.singletonList(new UserPackagePair(mPackageName, Users.myUserId()));
         executor.submit(() -> {
             List<UserPackagePair> failedPkgList = block ? ComponentUtils.blockTrackingComponents(userPackagePairs)
                     : ComponentUtils.unblockTrackingComponents(userPackagePairs);

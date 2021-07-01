@@ -67,7 +67,7 @@ public class RulesTypeSelectionDialogFragment extends DialogFragment {
         mPackages = args.getStringArrayList(ARG_PKG);
         mUri = (Uri) args.get(ARG_URI);
         userHandles = args.getIntArray(ARG_USERS);
-        if (userHandles == null) userHandles = new int[]{Users.getCurrentUserHandle()};
+        if (userHandles == null) userHandles = new int[]{Users.myUserId()};
         if (mUri == null) return super.onCreateDialog(savedInstanceState);
         final boolean[] checkedItems = new boolean[6];
         Arrays.fill(checkedItems, true);

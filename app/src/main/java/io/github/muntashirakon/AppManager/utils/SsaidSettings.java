@@ -48,7 +48,7 @@ public class SsaidSettings {
         HandlerThread thread = new HandlerThread("SSAID", Process.THREAD_PRIORITY_BACKGROUND);
         thread.start();
         int ssaidKey = SettingsState.makeKey(SETTINGS_TYPE_SSAID, 0);
-        File ssaidLocation = new ProxyFile(OsEnvironment.getUserSystemDirectory(Users.getUserHandle(uid)),
+        File ssaidLocation = new ProxyFile(OsEnvironment.getUserSystemDirectory(Users.getUserId(uid)),
                 "settings_ssaid.xml");
         try {
             if (ssaidLocation.canRead()) {
@@ -72,7 +72,7 @@ public class SsaidSettings {
 
     public boolean setSsaid(String ssaid) {
         try {
-            PackageManagerCompat.forceStopPackage(packageName, Users.getUserHandle(uid));
+            PackageManagerCompat.forceStopPackage(packageName, Users.getUserId(uid));
         } catch (Throwable e) {
             e.printStackTrace();
         }

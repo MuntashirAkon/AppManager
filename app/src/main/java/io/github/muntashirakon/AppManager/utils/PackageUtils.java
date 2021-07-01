@@ -124,7 +124,7 @@ public final class PackageUtils {
     @NonNull
     public static ArrayList<UserPackagePair> getUserPackagePairs(@NonNull List<ApplicationItem> applicationItems) {
         ArrayList<UserPackagePair> userPackagePairList = new ArrayList<>();
-        int currentUser = Users.getCurrentUserHandle();
+        int currentUser = Users.myUserId();
         for (ApplicationItem item : applicationItems) {
             if (item.userHandles != null) {
                 for (int userHandle : item.userHandles)
@@ -237,7 +237,7 @@ public final class PackageUtils {
                                                               @Nullable HashMap<String, MetadataManager.Metadata> backupMetadata) {
         List<App> newApps = new ArrayList<>();
         List<Integer> newAppHashes = new ArrayList<>();
-        int[] userHandles = Users.getUsersHandles();
+        int[] userHandles = Users.getUsersIds();
         for (int userHandle : userHandles) {
             List<PackageInfo> packageInfoList;
             try {
@@ -651,7 +651,7 @@ public final class PackageUtils {
                 dataDirs.add(applicationInfo.deviceProtectedDataDir);
             }
         }
-        int userHandle = Users.getUserHandle(applicationInfo.uid);
+        int userHandle = Users.getUserId(applicationInfo.uid);
         OsEnvironment.UserEnvironment ue = OsEnvironment.getUserEnvironment(userHandle);
         if (loadExternal) {
             ProxyFile[] externalFiles = ue.buildExternalStorageAppDataDirs(applicationInfo.packageName);
