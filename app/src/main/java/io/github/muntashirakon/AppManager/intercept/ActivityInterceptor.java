@@ -53,6 +53,7 @@ import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.types.TextInputDropdownDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 // Copyright 2012 Intrications
 public class ActivityInterceptor extends BaseActivity {
@@ -553,7 +554,7 @@ public class ActivityInterceptor extends BaseActivity {
                 }
             } catch (Throwable th) {
                 Log.e(TAG, th);
-                Toast.makeText(this, th.getClass().getName() + ": " + th.getMessage(), Toast.LENGTH_LONG).show();
+                UIUtils.displayLongToast(R.string.error_with_details, th.getClass().getName() + ": " + th.getMessage());
             }
         });
         // Reset Intent data on clicking the reset intent button
@@ -1042,7 +1043,12 @@ public class ActivityInterceptor extends BaseActivity {
                 Intent intent = new Intent(activity.mutableIntent);
                 intent.setClassName(info.packageName, activityName);
                 IntentCompat.removeFlags(intent, Intent.FLAG_ACTIVITY_FORWARD_RESULT);
-                activity.launcher.launch(intent);
+                try {
+                    activity.launcher.launch(intent);
+                } catch (Throwable th) {
+                    Log.e(TAG, th);
+                    UIUtils.displayLongToast(R.string.error_with_details, th.getClass().getName() + ": " + th.getMessage());
+                }
             });
         }
 

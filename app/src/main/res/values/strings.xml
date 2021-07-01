@@ -1071,4 +1071,5 @@
     <string name="minimum_version">Min version: %d</string>
     <string name="permission_flags">Permission flags</string>
     <string name="saved_filters">Saved filters</string>
+    <string name="error_with_details">Error: %s</string>
 </resources>
