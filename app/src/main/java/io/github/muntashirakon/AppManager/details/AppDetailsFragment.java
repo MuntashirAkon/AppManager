@@ -1300,9 +1300,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             holder.toggleSwitch.setVisibility(View.VISIBLE);
             // op granted
             holder.toggleSwitch.setChecked(opEntry.getMode() == AppOpsManager.MODE_ALLOWED);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                holder.toggleSwitch.setChecked(holder.toggleSwitch.isChecked() || opEntry.getMode() == AppOpsManager.MODE_FOREGROUND);
+            }
             holder.itemView.setOnClickListener(v -> {
                 boolean isChecked = !holder.toggleSwitch.isChecked();
-                holder.toggleSwitch.setChecked(isChecked);
                 executor.submit(() -> {
                     int opMode = isChecked ? AppOpsManager.MODE_ALLOWED : AppOpsManager.MODE_IGNORED;
                     if (mainModel != null && mainModel.setAppOp(opEntry.getOp(), opMode)) {
@@ -1399,9 +1401,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 holder.toggleSwitch.setVisibility(View.VISIBLE);
                 holder.toggleSwitch.setChecked(permissionItem.isGranted);
                 holder.itemView.setOnClickListener(v -> executor.submit(() -> {
-                    boolean isGranted = !holder.toggleSwitch.isChecked();
-                    holder.toggleSwitch.setChecked(isGranted);
-                    if (mainModel.setPermission(permissionItem)) {
+                    boolean isGranted = !permissionItem.isGranted;
+                    if (mainModel.togglePermission(permissionItem)) {
                         runOnUiThread(() -> set(index, permissionItem));
                         mainModel.setUsesPermission(permissionItem);
                     } else {
