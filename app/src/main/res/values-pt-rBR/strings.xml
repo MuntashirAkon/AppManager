@@ -929,7 +929,6 @@
     <string name="toast_invalid_selection">Seleção inválida. Por favor, tente de novo.</string>
     <string name="toast_invalid_level">Nome de nível inválido: %s</string>
     <string name="pref_display_limit_hint">Digite um número válido entre %1$d e %2$d.</string>
-    <string name="title_filters">Filtros</string>
     <string name="text_include_device_info">Incluir informações do dispositivo</string>
     <string name="text_filter_text">Texto do filtro</string>
     <string name="text_filter_ellipsis">Filtro…</string>

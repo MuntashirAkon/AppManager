@@ -655,7 +655,6 @@
     <string name="cpu">CPU</string>
     <string name="users">Utilisateurs</string>
     <string name="languages">Langages</string>
-    <string name="available">Disponible</string>
     <string name="battery_capacity">Capacité</string>
     <string name="memory">Mémoire</string>
     <string name="gles_version">Version GL ES</string>

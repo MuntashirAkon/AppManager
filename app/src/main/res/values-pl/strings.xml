@@ -513,7 +513,6 @@
     <string name="cpu">Procesor</string>
     <string name="users">Użytkownicy</string>
     <string name="languages">Języki</string>
-    <string name="available">Dostępne</string>
     <string name="battery_capacity">Pojemność</string>
     <string name="memory">Pamięć</string>
     <string name="gles_version">Wersja GL ES</string>

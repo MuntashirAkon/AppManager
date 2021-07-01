@@ -600,7 +600,6 @@
     <string name="cpu">中央處理器</string>
     <string name="users">使用者數</string>
     <string name="languages">語言</string>
-    <string name="available">可用的</string>
     <string name="battery_capacity">電池容量</string>
     <string name="memory">記憶體</string>
     <string name="vendor">分發</string>
@@ -903,7 +902,6 @@
     <string name="toast_invalid_selection">選擇無效。請再試一次。</string>
     <string name="toast_invalid_level">無效等級名稱：%s</string>
     <string name="pref_display_limit_hint">請輸入一個介於%1$d和%2$d之間的有效數字。</string>
-    <string name="title_filters">過濾器</string>
     <string name="text_include_device_info">包括設備資訊</string>
     <string name="text_filter_text">過濾文字</string>
     <string name="text_filter_ellipsis">篩選…</string>

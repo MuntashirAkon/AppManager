@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
     <string name="_lang_tag" translatable="false">in</string>
     <string name="uninstall">Hapus Pemasangan</string>
     <string name="permissions">Memerlukan Izin</string>
@@ -890,7 +890,6 @@
     <string name="toast_invalid_selection">Pilihan tidak valid. Silahkan coba lagi.</string>
     <string name="toast_invalid_level">Nama tingkat yang tidak valid: %s</string>
     <string name="pref_display_limit_hint">Silahkan masukkan sebuah nomor yang valid antara %1$d dan %2$d.</string>
-    <string name="title_filters">Filter</string>
     <string name="text_include_device_info">Termasuk informasi perangkat</string>
     <string name="text_filter_text">Teks filter</string>
     <string name="text_filter_ellipsis">Filter…</string>

@@ -680,7 +680,6 @@
     <string name="toast_invalid_selection">Lựa chọn không hợp lệ. Vui lòng thử lại.</string>
     <string name="toast_invalid_level">Tên cấp độ không hợp lệ: %s</string>
     <string name="pref_display_limit_hint" tools:ignore="PluralsCandidate">Vui lòng nhập một con số hợp lệ ở giữa %1$d và %2$d.</string>
-    <string name="title_filters">Bộ lọc</string>
     <string name="text_include_device_info">Bao gồm thông tin thiết bị</string>
     <string name="text_filter_text">Lọc văn bản</string>
     <string name="text_filter_ellipsis">Lọc…</string>
