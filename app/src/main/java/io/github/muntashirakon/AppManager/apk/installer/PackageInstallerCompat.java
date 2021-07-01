@@ -768,6 +768,7 @@ public final class PackageInstallerCompat {
         return false;
     }
 
+    @SuppressWarnings("deprecation")
     public static void uninstall(String packageName, @UserIdInt int userHandle, boolean keepData) throws Exception {
         IPackageInstaller pi = PackageManagerCompat.getPackageInstaller(AppManager.getIPackageManager());
         LocalIntentReceiver receiver = new LocalIntentReceiver();
@@ -805,9 +806,9 @@ public final class PackageInstallerCompat {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             pi.uninstall(new VersionedPackage(packageName, PackageManager.VERSION_CODE_HIGHEST),
                     null, flags, sender, userHandle);
-        } else {
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             pi.uninstall(packageName, null, flags, sender, userHandle);
-        }
+        } else pi.uninstall(packageName, flags, sender, userHandle);
         final Intent result = receiver.getResult();
         final int status = result.getIntExtra(PackageInstaller.EXTRA_STATUS, PackageInstaller.STATUS_FAILURE);
         if (status != PackageInstaller.STATUS_SUCCESS) {

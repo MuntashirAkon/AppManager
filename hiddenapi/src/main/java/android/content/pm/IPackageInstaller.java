@@ -43,9 +43,16 @@ public interface IPackageInstaller extends IInterface {
     void unregisterCallback(IPackageInstallerCallback callback) throws RemoteException;
 
     /**
+     * @deprecated Removed in Android M.
+     */
+    @Deprecated
+    void uninstall(String packageName, int flags, IntentSender statusReceiver, int userId) throws RemoteException;
+
+    /**
      * @deprecated Removed in Android O.
      */
     @Deprecated
+    @RequiresApi(Build.VERSION_CODES.M)
     void uninstall(String packageName, String callerPackageName, int flags,
                    IntentSender statusReceiver, int userId) throws RemoteException;
 
