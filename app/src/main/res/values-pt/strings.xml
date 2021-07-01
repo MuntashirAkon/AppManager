@@ -455,7 +455,6 @@
     <string name="graphics">Gráficos</string>
     <string name="users">Utilizadores</string>
     <string name="languages">Idiomas</string>
-    <string name="available">Disponível</string>
     <string name="battery_capacity">Capacidade</string>
     <string name="memory">Memória</string>
     <string name="manufacturer">Fabricante</string>
@@ -1042,4 +1041,9 @@
     <string name="community_links">Telegram: https://t.me/AppManagerChannel
 \nTwitter: https://twitter.com/AppManagerNews</string>
     <string name="community">Comunidade</string>
+    <string name="added_to_queue">Adicionado à fila</string>
+    <string name="minimum_version">Versão mínima: %d</string>
+    <string name="help_uses_permissions_tab">Clique num item para <b>conceder</b> ou <b>revogar</b>. Apenas as permissões <b>perigosas</b> e de <b>desenvolvimento</b> podem ser concedidas ou revogadas.</string>
+    <string name="help_permissions_tab">Estas permissões são definidas por esta aplicação e não podem ser revogadas.</string>
+    <string name="help_app_ops_tab">Clique num item para <b>permitir</b> ou <b>ignorar</b>. Clique longo sobre um item para ver outros modos suportados.</string>
 </resources>

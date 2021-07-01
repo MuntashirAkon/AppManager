@@ -693,7 +693,6 @@
     <string name="cpu">CPU</string>
     <string name="users">用户</string>
     <string name="languages">语言</string>
-    <string name="available">可用</string>
     <string name="battery_capacity">容量</string>
     <string name="memory">运行内存</string>
     <string name="vendor">厂商</string>
@@ -1008,4 +1007,9 @@
     <string name="import_from_oab">从 OAndBackup 导入</string>
     <string name="pref_import_backups_msg">从 OAndBackup、Titanium Backup 或 Swift Backup 导入备份。</string>
     <string name="pref_import_backups">导入备份</string>
+    <string name="added_to_queue">已添至队列</string>
+    <string name="minimum_version">最小版本: %d</string>
+    <string name="help_uses_permissions_tab">点击一个项目来<b>授予</b>或<b>撤销</b>它。只有<b>危险</b>和<b>开发</b>权限可被授予或撤销。</string>
+    <string name="help_permissions_tab">这些权限由该应用程序定义且无法撤销。</string>
+    <string name="help_app_ops_tab">点击项目以<b>允许</b>或<b>忽略</b>它。长按某个项目可查看其他支持的模式。</string>
 </resources>

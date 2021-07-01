@@ -1103,7 +1103,6 @@
     <string name="cpu">المعالج</string>
     <string name="users">المستخدمين</string>
     <string name="languages">اللغات</string>
-    <string name="available">متاح</string>
     <string name="battery_capacity">السعة</string>
     <string name="memory">الذاكرة</string>
     <string name="vendor">المورد</string>
@@ -1182,4 +1181,9 @@
     <string name="import_from_oab">الاستيراد من OAndBackup</string>
     <string name="pref_import_backups_msg">استيراد النسخ الاحتياطية من OAndBackup أو Titanium Backup أو Swift Backup.</string>
     <string name="pref_import_backups">استيراد النسخ الاحتياطية</string>
+    <string name="help_uses_permissions_tab">انقر على بند لمنح <b>منح</b> أو <b> رفض</b>.فقط <b> فقط خطيرة</b> و <b> تطويرية</b> أذونات يمكن أن يكون منحت أو ألغيت.</string>
+    <string name="added_to_queue">إضافة إلى قائمة الانتظار</string>
+    <string name="minimum_version">الإصدار الأدنى: %d</string>
+    <string name="help_permissions_tab">يحدد هذا التطبيق هذه الأذونات ولا يمكن إلغاؤها.</string>
+    <string name="help_app_ops_tab">انقر على عنصر <b> للسماح </b> أو <b> تجاهله </b>. انقر مطولاً على عنصر لرؤية الأوضاع المدعومة الأخرى.</string>
 </resources>

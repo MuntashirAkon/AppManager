@@ -554,7 +554,6 @@
     <string name="pref_import_existing">Nhập các quy tắc đang tồn tại</string>
     <string name="backup_skip_signature_checks_description">Khôi phục các bản sao lưu xác minh mã kiểm tra thất bại hoặc có chữ ký APK khác với các bản sao lưu trước của chúng.</string>
     <string name="backup_multiple_description">Tạo một bản sao lưu <i>được đặt tên</i> riêng thay vì bản sao lưu cơ sở.</string>
-    <string name="available">Có sẵn</string>
     <string name="battery_capacity">Dung lượng</string>
     <string name="memory">Bộ nhớ</string>
     <string name="vendor">Người tạo</string>
@@ -1007,4 +1006,9 @@
     <string name="import_from_oab">Nhập từ OAndBackup</string>
     <string name="pref_import_backups_msg">Nhập bản sao lưu từ OAndBackup, Titanium Backup hoặc Swift Backup.</string>
     <string name="pref_import_backups">Nhập bản sao lưu</string>
+    <string name="added_to_queue">Đã thêm vào hàng chờ</string>
+    <string name="minimum_version">Phiên bản tối thiểu: %d</string>
+    <string name="help_uses_permissions_tab">Nhấn vào một mục để <b>cấp</b> hoặc <b>thu hồi</b> nó. Chỉ có các quyền <b>nguy hiểm</b> và <b>phát triển</b> mới có thể được cấp hoặc thu hồi.</string>
+    <string name="help_permissions_tab">Các quyền này được ứng dụng này định nghĩa và không thể được thu hồi.</string>
+    <string name="help_app_ops_tab">Nhấn vào một mục để <b>cho phép</b> hoặc <b>bỏ qua</b> nó. Nhấn giữ một mục để thấy các chế độ được hỗ trợ khác.</string>
 </resources>
