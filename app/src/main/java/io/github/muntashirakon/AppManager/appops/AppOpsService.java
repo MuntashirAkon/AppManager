@@ -34,7 +34,9 @@ public class AppOpsService {
         Context context = AppManager.getContext();
         if (!PermissionUtils.hasAppOpsPermission(context) && AppPref.isRootOrAdbEnabled()) {
             try {
-                PermissionCompat.grantPermission(context.getPackageName(), PermissionUtils.PERMISSION_GET_APP_OPS_STATS,
+                PermissionCompat.grantPermission(
+                        context.getPackageName(),
+                        PermissionUtils.PERMISSION_GET_APP_OPS_STATS,
                         Users.myUserId());
             } catch (RemoteException e) {
                 throw new RuntimeException("Couldn't connect to appOpsService locally", e);
@@ -85,13 +87,12 @@ public class AppOpsService {
     }
 
     public void setMode(int op, int uid, String packageName, int mode) throws RemoteException {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (AppOpsManager.isMiuiOp(op) || Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            // Only package mode works in MIUI-only app ops and before Android M
+            appOpsService.setMode(op, uid, packageName, mode);
+        } else {
             // Set UID mode
             appOpsService.setUidMode(op, uid, mode);
-        }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
-            // Android 11 (R) doesn't support setting package mode
-            appOpsService.setMode(op, uid, packageName, mode);
         }
     }
 

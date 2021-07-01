@@ -1693,6 +1693,10 @@ public class AppOpsManager {
         }
     }
 
+    public static boolean isMiuiOp(int op) {
+        return op > MIUI_OP_START && op < MIUI_OP_END;
+    }
+
     /**
      * Retrieve the op switch that controls the given operation.
      */
