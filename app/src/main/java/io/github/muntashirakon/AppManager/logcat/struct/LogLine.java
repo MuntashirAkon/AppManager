@@ -5,10 +5,12 @@ package io.github.muntashirakon.AppManager.logcat.struct;
 import android.text.TextUtils;
 import android.util.Log;
 
-import io.github.muntashirakon.AppManager.logcat.reader.ScrubberUtils;
+import androidx.annotation.Nullable;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import io.github.muntashirakon.AppManager.logcat.reader.ScrubberUtils;
 
 
 // Copyright 2012 Nolan Lawson
@@ -39,8 +41,8 @@ public class LogLine {
 
     public static boolean omitSensitiveInfo = false;
 
+    @Nullable
     public static LogLine newLogLine(String originalLine, boolean expanded, String filterPattern) {
-
         LogLine logLine = new LogLine();
         logLine.setExpanded(expanded);
 
@@ -70,7 +72,7 @@ public class LogLine {
 
             String tagText = matcher.group(2);
             if (tagText.matches(filterPattern)) {
-                logLine.setLogLevel(convertCharToLogLevel('V'));
+                return null;
             }
 
             logLine.setTag(tagText);
