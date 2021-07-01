@@ -100,7 +100,7 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void onRefresh() {
         swipeRefresh.setRefreshing(false);
-        new Thread(() -> model.loadPackages()).start();
+        model.loadPackages();
     }
 
     public class AppsRecyclerAdapter extends RecyclerView.Adapter<AppsRecyclerAdapter.ViewHolder> {
