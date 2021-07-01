@@ -1111,7 +1111,7 @@
     <string name="pref_import_backups">Імпорт резервних копій</string>
     <string name="added_to_queue">Додано в чергу</string>
     <string name="minimum_version">Мінімальна версія: %d</string>
-    <string name="help_uses_permissions_tab">Натисніть на елемент, щоб &lt;b&gt;надати&lt;/b&gt; або &lt;b&gt;відкликати. Лише дозволи рівня &lt;b&gt;небезпечний&lt;/b&gt; та &lt;b&gt;розробка&lt;/b&gt; можуть бути надані або відкликані.</string>
+    <string name="help_uses_permissions_tab">Натисніть на елемент, щоб <b>надати</b> або <b>відкликати</b>. Лише дозволи рівня <b>небезпечний</b> та <b>розробка</b> можуть бути надані або відкликані.</string>
     <string name="help_permissions_tab">Ці дозволи визначаються цією програмою, і їх не можна відкликати.</string>
     <string name="help_app_ops_tab">Натисніть на елемент, щоб <b>дозволити</b> або <b>ігнорувати</b>. Натисніть і тримайте елемент, щоб побачити інші підтримувані режими.</string>
 </resources>
