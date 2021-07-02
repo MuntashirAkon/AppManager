@@ -326,12 +326,26 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
                     .setNeutralButton(R.string.unblock, (dialog, which) ->
                             handleBatchOp(BatchOpsManager.OP_UNBLOCK_TRACKERS))
                     .show();
-        } else if (id == R.id.action_clear_data) {
-            handleBatchOpWithWarning(BatchOpsManager.OP_CLEAR_DATA);
-        } else if (id == R.id.action_enable) {
-            handleBatchOp(BatchOpsManager.OP_ENABLE);
-        } else if (id == R.id.action_disable) {
-            handleBatchOpWithWarning(BatchOpsManager.OP_DISABLE);
+        } else if (id == R.id.action_clear_data_cache) {
+            new MaterialAlertDialogBuilder(this)
+                    .setTitle(R.string.clear)
+                    .setMessage(R.string.choose_what_to_do)
+                    .setPositiveButton(R.string.clear_cache, (dialog, which) ->
+                            handleBatchOp(BatchOpsManager.OP_CLEAR_CACHE))
+                    .setNegativeButton(R.string.cancel, null)
+                    .setNeutralButton(R.string.clear_data, (dialog, which) ->
+                            handleBatchOp(BatchOpsManager.OP_CLEAR_DATA))
+                    .show();
+        } else if (id == R.id.action_enable_disable) {
+            new MaterialAlertDialogBuilder(this)
+                    .setTitle(R.string.enable_disable)
+                    .setMessage(R.string.choose_what_to_do)
+                    .setPositiveButton(R.string.disable, (dialog, which) ->
+                            handleBatchOp(BatchOpsManager.OP_DISABLE))
+                    .setNegativeButton(R.string.cancel, null)
+                    .setNeutralButton(R.string.enable, (dialog, which) ->
+                            handleBatchOp(BatchOpsManager.OP_ENABLE))
+                    .show();
         } else if (id == R.id.action_disable_background) {
             new MaterialAlertDialogBuilder(this)
                     .setTitle(R.string.are_you_sure)
@@ -345,8 +359,6 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
             batchExportRules.launch(fileName);
         } else if (id == R.id.action_force_stop) {
             handleBatchOp(BatchOpsManager.OP_FORCE_STOP);
-        } else if (id == R.id.action_clear_cache) {
-            handleBatchOp(BatchOpsManager.OP_CLEAR_CACHE);
         } else if (id == R.id.action_uninstall) {
             handleBatchOpWithWarning(BatchOpsManager.OP_UNINSTALL);
         } else if (id == R.id.action_add_to_profile) {
