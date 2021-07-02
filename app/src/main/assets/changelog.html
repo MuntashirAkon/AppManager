@@ -1,14 +1,50 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 
+<h5>v2.6.2 (389) stable release:</h5>
+This patch release contains critical bug fixes for the back up/restore feature.<br/>
+&#x2022; <font color="#09868B">[Feature]</font> Added new batch operation: clear cache<br/>
+&#x2022; <font color="#09868B">[Feature]</font> Back up permission flags (restoring is not currently possible)<br/>
+&#x2022; <font color="#09868B">[Feature]</font> Display permission flags on long clicking on a supported permission item
+<br/>
+&#x2022; <font
+        color="#09868B">[Feature]</font> Improved uses features tab: Unavailable features have light-red color, unavailable but required features have dark-red color
+<br/>
+&#x2022; <font color="#09868B">[Feature]</font> Updated focusability in some pages to improve keyboard/remote navigation
+<br/>
+&#x2022; <font color="#09868B">[Feature]</font> Updated libraries and trackers<br/>
+&#x2022; <font color="red">[Fix]</font> Added backward compatibility for ADB over TCP<br/>
+&#x2022; <font color="red">[Fix]</font> Fixed filter out in log viewer<br/>
+&#x2022; <font color="red">[Fix]</font> Fixed MIUI-specific app ops issue in Android 11<br/>
+&#x2022; <font color="red">[Fix]</font> Fixed relative path issue in back up/restore<br/>
+&#x2022; <font color="red">[Fix]</font> Fixed returning the wrong manifest if the APK has multiple manifests<br/>
+&#x2022; <font color="red">[Fix]</font> Added workaround for Android KeyStore bug in older Android versions<br/>
+&#x2022; <font color="red">[Crash]</font> Display error message instead of crashing in the activity interceptor page
+<br/>
+&#x2022; <font color="red">[Crash]</font> Fixed random crashes in the app info page<br/>
+&#x2022; <font color="red">[Crash]</font> On trying to uninstall an app in Android Lollipop<br/>
+&#x2022; <font color="red">[Crash]</font> When configuring RSA encryption or signing info<br/>
+&#x2022; <font color="red">[Crash]</font> When a package has changed but the executor has been shutdown<br/>
+&#x2022; <font color="red">[Crash]</font> When a package has changed after exiting its app info page<br/>
+&#x2022; <font color="red">[Crash]</font> NPE on running apps page<br/>
+
+<h6>Note</h6>
+<p>
+    Aurora Store 4.0.6 reverted promotional apps, therefore, the support has been re-added.
+</p>
+
 <h5>v2.6.1 (387) stable release:</h5>
 This patch release contains bug fixes and minor features. It also provides fixes for a few security vulnerabilities.
 Therefore, it is recommended for all users. Crash-related fixes are annotated with <b>[Crash]</b>
-&#x2022; <b>New Feature:</b> Wireless debugging for Android 11. Due to licensing issues, ADB pairing couldn't be implemented. See notes below.<br />
-&#x2022; <b>Improvement:</b> Fixed various issues with mode of operations, especially ADB<br />
-&#x2022; <b>Improvement:</b> Fixed loading app list in some Android 6 devices<br />
-&#x2022; <b>Improvement:</b> Improved loading app icons<br />
-&#x2022; <b>Improvement:</b> Move from RestrictionBypass to HiddenApiBypass, saves more than 300 KB<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added more debloat profiles: Fujitsu, HTC, Korean and Japanese carriers, Tencent, Toshiba and Vivo. They are added from different sources and are not well-tested.<br />
+&#x2022; <b>New
+    Feature:</b> Wireless debugging for Android 11. Due to licensing issues, ADB pairing couldn't be implemented. See notes below.
+<br/>
+&#x2022; <b>Improvement:</b> Fixed various issues with mode of operations, especially ADB<br/>
+&#x2022; <b>Improvement:</b> Fixed loading app list in some Android 6 devices<br/>
+&#x2022; <b>Improvement:</b> Improved loading app icons<br/>
+&#x2022; <b>Improvement:</b> Move from RestrictionBypass to HiddenApiBypass, saves more than 300 KB<br/>
+&#x2022; <font
+        color="#09868B">[Feature]</font> Added more debloat profiles: Fujitsu, HTC, Korean and Japanese carriers, Tencent, Toshiba and Vivo. They are added from different sources and are not well-tested.
+<br/>
 &#x2022; <font color="#09868B">[Feature]</font> Added support for ADB via TLS-1.3<br />
 &#x2022; <font color="#09868B">[Feature]</font> Added date-time in the backup info dialog prompt<br />
 &#x2022; <font color="#09868B">[Feature]</font> Display APK verification status in the scanner page<br />
@@ -42,9 +78,10 @@ Therefore, it is recommended for all users. Crash-related fixes are annotated wi
 &#x2022; <font color="red">[Crash]</font> On trying to save logs in a zip file<br />
 &#x2022; <font color="red">[Crash]</font> When external storage is not available for writing logs<br />
 
-<h3>Notes</h3>
+<h6>Notes</h6>
 <p>
-    In order to use wireless debugging, first enable ADB over TCP as usual and select <b>Always allow from this computer</b>.
+    In order to use wireless debugging, first enable ADB over TCP as usual and select <b>Always allow from this
+    computer</b>.
     When App Manager is working on this mode, enable wireless debugging, and then, go to App Manager settings and
     change <b>Mode of Operations</b> to <i>Wireless Debugging</i>. At this point, App Manager should display a prompt
     where the port number from the wireless debugging window should be inserted. With this mode enabled,
@@ -53,7 +90,7 @@ Therefore, it is recommended for all users. Crash-related fixes are annotated wi
     wireless debugging until the next restart.
 </p>
 <p>
-    Aurora Store 4.0.5 (and later) have introduced promotional apps. As a result, we stopped supporting these versions.
+    Aurora Store 4.0.5 have introduced promotional apps. As a result, we stopped supporting these versions.
     You can still use the previous versions without issues.
 </p><br />
 

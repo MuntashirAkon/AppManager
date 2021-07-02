@@ -1,5 +1,0 @@
-F-Droid doesn't support extended changelog. Visit https://muntashirakon.github.io/AppManager/changelog.html or view in-app changelog for a more helpful changelog.
-- New features: Profiles, activity interceptor, signing APK, multi-user, APKM, crash reporter
-- New language: French
-- Android 11 support
-- Installer: choose install location, installer, APKM

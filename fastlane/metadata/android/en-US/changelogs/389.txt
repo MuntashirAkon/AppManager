@@ -1,0 +1,6 @@
+This patch release contains critical bug fixes for the back up/restore.
+- New batch ops: Clear cache
+- Backup permission flags
+- Improved: Uses features tab, permissions tabs, keyboard navigation
+- Updated trackers and libraries
+and other minor bug fixes.
