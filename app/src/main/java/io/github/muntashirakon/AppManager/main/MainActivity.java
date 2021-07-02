@@ -20,7 +20,6 @@ import android.view.View;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.UiThread;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
@@ -110,7 +109,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
                 args.putIntArray(RulesTypeSelectionDialogFragment.ARG_USERS, Users.getUsersIds());
                 dialogFragment.setArguments(args);
                 dialogFragment.show(getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
-                clearAndHandleSelection();
+                multiSelectionView.cancel();
             });
 
     private final BroadcastReceiver mBatchOpsBroadCastReceiver = new BroadcastReceiver() {
@@ -184,6 +183,15 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
                 actionBar.setSubtitle(R.string.packages);
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mAdapter != null && multiSelectionView != null && mAdapter.isInSelectionMode()) {
+            multiSelectionView.cancel();
+            return;
+        }
+        super.onBackPressed();
     }
 
     @Override
@@ -302,7 +310,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
                 backupDialogFragment.setOnActionBeginListener(mode -> showProgressIndicator(true));
                 backupDialogFragment.setOnActionCompleteListener((mode, failedPackages) -> showProgressIndicator(false));
                 backupDialogFragment.show(getSupportFragmentManager(), BackupDialogFragment.TAG);
-                clearAndHandleSelection();
+                multiSelectionView.cancel();
             }
         } else if (id == R.id.action_save_apk) {
             storagePermission.request(granted -> {
@@ -358,7 +366,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
                     .setTitle(R.string.add_to_profile)
                     .setNegativeButton(R.string.cancel, null)
                     .setPositiveButton(R.string.add, (dialog, which, selectedItems) -> {
-                        clearAndHandleSelection();
+                        multiSelectionView.cancel();
                         for (ProfileMetaManager metaManager : selectedItems) {
                             if (metaManager.profile != null) {
                                 try {
@@ -375,7 +383,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
                     })
                     .show();
         } else {
-            clearAndHandleSelection();
+            multiSelectionView.cancel();
             return false;
         }
         return true;
@@ -458,11 +466,6 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
         }
     }
 
-    @UiThread
-    private void clearAndHandleSelection() {
-        multiSelectionView.cancel();
-    }
-
     private void handleBatchOp(@BatchOpsManager.OpType int op) {
         if (mModel == null) return;
         showProgressIndicator(true);
@@ -472,7 +475,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
         intent.putIntegerArrayListExtra(BatchOpsService.EXTRA_OP_USERS, input.getAssociatedUserHandles());
         intent.putExtra(BatchOpsService.EXTRA_OP, op);
         ContextCompat.startForegroundService(this, intent);
-        clearAndHandleSelection();
+        multiSelectionView.cancel();
     }
 
     private void handleBatchOpWithWarning(@BatchOpsManager.OpType int op) {

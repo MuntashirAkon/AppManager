@@ -173,6 +173,15 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
     }
 
     @Override
+    public void onBackPressed() {
+        if (mAdapter != null && multiSelectionView != null && mAdapter.isInSelectionMode()) {
+            multiSelectionView.cancel();
+            return;
+        }
+        super.onBackPressed();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_running_apps_actions, menu);
         return super.onCreateOptionsMenu(menu);
