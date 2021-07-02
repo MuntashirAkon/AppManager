@@ -78,10 +78,9 @@ Clone and Build App Manager
 Create Bundled App
 ==================
 
-In order to create a bundled app in APKS format, build Android App Bundle (AAB)
-first.  Then run the following command::
+To create a bundled app in APKS format, run the following command::
 
-./scripts/aab_to_apks.sh preRelease
+  ./scripts/aab_to_apks.sh preRelease
 
 Replace ``prePelease`` with ``release`` or ``debug`` based on your
 requirements.  It will ask for KeyStore credentials interactively.
