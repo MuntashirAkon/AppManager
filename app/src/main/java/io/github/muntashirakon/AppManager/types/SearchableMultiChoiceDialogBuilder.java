@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckedTextView;
+import android.widget.CompoundButton;
 
 import androidx.annotation.ArrayRes;
 import androidx.annotation.NonNull;
@@ -21,6 +22,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -33,7 +35,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
-import io.github.muntashirakon.widget.CheckBox;
 import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
 public class SearchableMultiChoiceDialogBuilder<T> {
@@ -42,9 +43,10 @@ public class SearchableMultiChoiceDialogBuilder<T> {
     @NonNull
     private final MaterialAlertDialogBuilder builder;
     private final View searchBar;
-    private final CheckBox selectAll;
+    private final MaterialCheckBox selectAll;
     @NonNull
     private final SearchableRecyclerViewAdapter adapter;
+    private final CompoundButton.OnCheckedChangeListener selectAllListener;
 
     public interface OnClickListener<T> {
         void onClick(DialogInterface dialog, int which, @NonNull ArrayList<T> selectedItems);
@@ -88,13 +90,14 @@ public class SearchableMultiChoiceDialogBuilder<T> {
         builder = new MaterialAlertDialogBuilder(activity).setView(view);
         adapter = new SearchableRecyclerViewAdapter(itemNames, items);
         recyclerView.setAdapter(adapter);
-        selectAll.setOnCheckedChangeListener((buttonView, isChecked) -> {
+        selectAllListener = (buttonView, isChecked) -> {
             if (isChecked) {
                 adapter.selectAll();
             } else {
                 adapter.deselectAll();
             }
-        });
+        };
+        selectAll.setOnCheckedChangeListener(selectAllListener);
         if (items.size() < 2) {
             // No need to display select all if only one item is present
             selectAll.setVisibility(View.GONE);
@@ -179,7 +182,9 @@ public class SearchableMultiChoiceDialogBuilder<T> {
     }
 
     private void checkSelections() {
-        selectAll.setChecked(adapter.areAllSelected(), false);
+        selectAll.setOnCheckedChangeListener(null);
+        selectAll.setChecked(adapter.areAllSelected());
+        selectAll.setOnCheckedChangeListener(selectAllListener);
     }
 
     class SearchableRecyclerViewAdapter extends RecyclerView.Adapter<SearchableRecyclerViewAdapter.ViewHolder> {

@@ -28,7 +28,7 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <io.github.muntashirakon.widget.CheckBox
+    <com.google.android.material.checkbox.MaterialCheckBox
         android:id="@android:id/checkbox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
