@@ -1,0 +1,15 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".misc.HelpActivity">
+    <group android:menuCategory="container">
+
+        <item
+            android:id="@+id/action_search"
+            android:icon="@drawable/ic_search"
+            android:title="@string/search"
+            app:showAsAction="always" />
+
+    </group>
+</menu>

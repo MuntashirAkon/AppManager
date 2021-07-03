@@ -177,7 +177,7 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowCustomEnabled(true);
-            searchView = UIUtils.setupSearchView(this, actionBar, new SearchView.OnQueryTextListener() {
+            searchView = UIUtils.setupSearchView(actionBar, new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String query) {
                     return false;

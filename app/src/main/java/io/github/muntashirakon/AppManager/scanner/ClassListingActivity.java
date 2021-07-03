@@ -77,7 +77,7 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
         if (mActionBar != null) {
             mActionBar.setTitle(mAppName);
             mActionBar.setDisplayShowCustomEnabled(true);
-            UIUtils.setupSearchView(this, mActionBar, this);
+            UIUtils.setupSearchView(mActionBar, this);
         }
 
         trackerClassesOnly = false;

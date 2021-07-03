@@ -64,7 +64,7 @@ public class AppDetailsActivity extends BaseActivity {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowCustomEnabled(true);
-            searchView = UIUtils.setupSearchView(this, actionBar, null);
+            searchView = UIUtils.setupSearchView(actionBar, null);
         }
         FragmentManager fragmentManager = getSupportFragmentManager();
         viewPager = findViewById(R.id.pager);

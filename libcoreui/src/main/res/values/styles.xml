@@ -18,6 +18,7 @@
         <item name="appBarLayoutStyle">@style/AppTheme.AppBarLayout</item>
         <item name="materialAlertDialogTheme">@style/AppTheme.AlertDialog</item>
         <item name="materialCalendarTheme">@style/AppTheme.DatePicker</item>
+        <item name="searchViewStyle">@style/AppTheme.SearchView</item>
         <item name="bottomNavigationStyle">@style/AppTheme.BottomNavigationView</item>
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
@@ -170,5 +171,12 @@
         <item name="android:background">@drawable/spinner_rounded_border</item>
         <item name="android:paddingStart">@dimen/padding_small</item>
         <item name="android:paddingEnd">@dimen/padding_large</item>
+    </style>
+
+    <style name="AppTheme.SearchView" parent="Widget.AppCompat.SearchView">
+        <item name="queryBackground">@null</item>
+        <item name="closeIcon">@drawable/ic_baseline_clear_24</item>
+        <item name="searchIcon">@drawable/ic_search</item>
+        <item name="queryHint">@android:string/search_go</item>
     </style>
 </resources>

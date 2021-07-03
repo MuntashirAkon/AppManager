@@ -8,16 +8,41 @@ import android.os.Bundle;
 import android.os.RemoteException;
 import android.text.TextUtils;
 import android.util.Xml;
-import android.view.*;
-import android.widget.*;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
+
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlSerializer;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.runner.Runner;
@@ -25,24 +50,15 @@ import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.io.ProxyFile;
 import io.github.muntashirakon.io.ProxyInputStream;
 import io.github.muntashirakon.io.ProxyOutputStream;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlSerializer;
-
-import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
 
 public class SharedPrefsActivity extends BaseActivity implements
         SearchView.OnQueryTextListener, EditPrefItemFragment.InterfaceCommunicator {
     public static final String EXTRA_PREF_LOCATION = "EXTRA_PREF_LOCATION";
-    public static final String EXTRA_PREF_LABEL    = "EXTRA_PREF_LABEL";  // Optional
+    public static final String EXTRA_PREF_LABEL = "EXTRA_PREF_LABEL";  // Optional
 
-    public static final String TAG_ROOT    = "map";  // <map></map>
+    public static final String TAG_ROOT = "map";  // <map></map>
     public static final String TAG_BOOLEAN = "boolean";  // <boolean name="bool" value="true" />
-    public static final String TAG_FLOAT   = "float";  // <float name="float" value="12.3" />
+    public static final String TAG_FLOAT = "float";  // <float name="float" value="12.3" />
     public static final String TAG_INTEGER = "int";  // <int name="integer" value="123" />
     public static final String TAG_LONG    = "long";  // <long name="long" value="123456789" />
     public static final String TAG_STRING  = "string";  // <string name="string"></string> | <string name="string"><string></string></string>
@@ -71,7 +87,7 @@ public class SharedPrefsActivity extends BaseActivity implements
             actionBar.setTitle(appLabel != null ? appLabel : "Shared Preferences Viewer");
             actionBar.setSubtitle(fileName);
             actionBar.setDisplayShowCustomEnabled(true);
-            UIUtils.setupSearchView(this, actionBar, this);
+            UIUtils.setupSearchView(actionBar, this);
         }
         mProgressIndicator = findViewById(R.id.progress_linear);
         mProgressIndicator.setVisibilityAfterHide(View.GONE);

@@ -114,7 +114,7 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowCustomEnabled(true);
-            UIUtils.setupSearchView(this, actionBar, this);
+            UIUtils.setupSearchView(actionBar, this);
         }
         mModel = new ViewModelProvider(this).get(RunningAppsViewModel.class);
         mProgressIndicator = findViewById(R.id.progress_linear);

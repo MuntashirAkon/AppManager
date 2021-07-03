@@ -230,14 +230,10 @@ public class UIUtils {
     }
 
     @NonNull
-    public static SearchView setupSearchView(@NonNull Context context, @NonNull ActionBar actionBar,
+    public static SearchView setupSearchView(@NonNull ActionBar actionBar,
                                              @Nullable SearchView.OnQueryTextListener queryTextListener) {
         SearchView searchView = new SearchView(actionBar.getThemedContext());
         searchView.setOnQueryTextListener(queryTextListener);
-        searchView.setQueryHint(context.getString(R.string.search));
-        // Set images
-        ((ImageView) searchView.findViewById(androidx.appcompat.R.id.search_button)).setColorFilter(getAccentColor(context));
-        ((ImageView) searchView.findViewById(androidx.appcompat.R.id.search_close_btn)).setColorFilter(getAccentColor(context));
         // Set layout params
         ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);

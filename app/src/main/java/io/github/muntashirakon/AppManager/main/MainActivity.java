@@ -129,7 +129,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
         if (actionBar != null) {
             actionBar.setDisplayShowCustomEnabled(true);
             actionBar.setTitle(getString(R.string.loading));
-            mSearchView = UIUtils.setupSearchView(this, actionBar, this);
+            mSearchView = UIUtils.setupSearchView(actionBar, this);
         }
 
         mProgressIndicator = findViewById(R.id.progress_linear);
