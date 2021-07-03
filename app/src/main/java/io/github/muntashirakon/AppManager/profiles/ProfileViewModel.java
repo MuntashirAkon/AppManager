@@ -24,8 +24,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -35,6 +37,10 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.Utils;
+
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpNames;
 
 public class ProfileViewModel extends AndroidViewModel {
     private final Object profileLock = new Object();
@@ -363,16 +369,21 @@ public class ProfileViewModel extends AndroidViewModel {
             profile.appOps = null;
             return;
         }
-        int[] appOps = new int[appOpsStr.length];
-        for (int i = 0; i < appOps.length; ++i) {
-            if (appOpsStr[i].equals("*")) {
+        Set<Integer> selectedAppOps = new HashSet<>(appOpsStr.length);
+        List<Integer> appOpList = PackageUtils.getAppOps();
+        List<CharSequence> appOpNameList = Arrays.asList(getAppOpNames(appOpList));
+        for (CharSequence appOpStr : appOpsStr) {
+            if (appOpStr.equals("*")) {
                 // Wildcard found, ignore all app ops in favour of global wildcard
                 profile.appOps = new int[]{AppOpsManager.OP_NONE};
                 return;
             }
-            appOps[i] = Integer.parseInt(appOpsStr[i]);
+            try {
+                selectedAppOps.add(Utils.getIntegerFromString(appOpStr, appOpNameList, appOpList));
+            } catch (IllegalArgumentException ignore) {
+            }
         }
-        profile.appOps = appOps;
+        profile.appOps = selectedAppOps.size() == 0 ? null : ArrayUtils.convertToIntArray(selectedAppOps);
     }
 
     @Nullable
