@@ -212,6 +212,17 @@ public class MainActivity extends BaseActivity implements
     }
 
     @Override
+    public void onBackPressed() {
+        if (mBottomAppBar != null) {
+            if (mBottomAppBar.getVisibility() == View.VISIBLE) {
+                clearAndHandleSelection();
+                return;
+            }
+        }
+        super.onBackPressed();
+    }
+
+    @Override
     protected void onDestroy() {
         if (mAdapter != null) {
             mAdapter.imageLoader.close();
