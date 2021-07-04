@@ -508,6 +508,11 @@
             android:name=".logcat.RecordLogDialogActivity"
             android:exported="true"
             android:theme="@style/AppTheme.TransparentBackground" />
+        <activity
+            android:name=".fm.FmActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:taskAffinity="" />
 
         <service
             android:name=".apk.installer.PackageInstallerService"
@@ -556,5 +561,10 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
+        <provider
+            android:name=".fm.FmProvider"
+            android:authorities="${applicationId}.file"
+            android:exported="false"
+            android:grantUriPermissions="true"></provider>
     </application>
 </manifest>
