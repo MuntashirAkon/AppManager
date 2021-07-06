@@ -179,7 +179,7 @@ public final class RunnerUtils {
                 if (LocalServer.isAMServiceAlive()) {
                     // Don't bother detecting root/ADB
                     return;
-                } else if (LocalServer.isLocalServerAlive()) {
+                } else if (!Runner.MODE_NO_ROOT.equals(mode) && LocalServer.isLocalServerAlive()) {
                     // Remote server is running
                     LocalServer.getInstance();
                     return;
