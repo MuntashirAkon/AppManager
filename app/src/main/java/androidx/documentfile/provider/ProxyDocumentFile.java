@@ -20,7 +20,12 @@ public class ProxyDocumentFile extends DocumentFile {
 
     private File mFile;
 
-    public ProxyDocumentFile(@Nullable DocumentFile parent, File file) {
+    public ProxyDocumentFile(@NonNull File file) {
+        super(getParentDocumentFile(file));
+        mFile = file;
+    }
+
+    public ProxyDocumentFile(@Nullable DocumentFile parent, @NonNull File file) {
         super(parent);
         mFile = file;
     }
@@ -73,6 +78,10 @@ public class ProxyDocumentFile extends DocumentFile {
         } else {
             return getTypeForName(mFile.getName());
         }
+    }
+
+    public File getFile() {
+        return mFile;
     }
 
     @Override
@@ -173,5 +182,14 @@ public class ProxyDocumentFile extends DocumentFile {
             }
         }
         return success;
+    }
+
+    @Nullable
+    private static DocumentFile getParentDocumentFile(@NonNull File file) {
+        File parent = file.getParentFile();
+        if (parent != null) {
+            return new ProxyDocumentFile(parent);
+        }
+        return null;
     }
 }

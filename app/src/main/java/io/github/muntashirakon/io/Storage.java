@@ -29,13 +29,15 @@ import java.util.Objects;
  * Provide an interface to {@link File} and {@link DocumentFile} with basic functionalities.
  */
 public class Storage {
+    public static final String TAG = Storage.class.getSimpleName();
+
     private final Context context;
     @NonNull
     private final DocumentFile documentFile;
 
     public Storage(@NonNull Context context, @NonNull File fileLocation) {
         this.context = context;
-        this.documentFile = new ProxyDocumentFile(null, fileLocation);
+        this.documentFile = new ProxyDocumentFile(fileLocation);
     }
 
     public Storage(@NonNull Context context, @NonNull DocumentFile documentFile) {
@@ -51,7 +53,7 @@ public class Storage {
                 documentFile = DocumentFile.fromTreeUri(context, uri);
                 break;
             case ContentResolver.SCHEME_FILE:
-                documentFile = new ProxyDocumentFile(null, new ProxyFile(uri.getPath()));
+                documentFile = new ProxyDocumentFile(new ProxyFile(uri.getPath()));
                 break;
             default:
                 throw new IllegalArgumentException("Unsupported uri " + uri);
