@@ -61,6 +61,7 @@ public class LocalServer {
         }
     }
 
+    @WorkerThread
     public static boolean isAdbAvailable() {
         try {
             LocalServerManager manager = LocalServerManager.getInstance();

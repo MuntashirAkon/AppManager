@@ -3,12 +3,11 @@
 package io.github.muntashirakon.AppManager.runner;
 
 import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
 import android.os.RemoteException;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -24,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -33,6 +33,7 @@ import io.github.muntashirakon.AppManager.settings.MainPreferences;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 
 @SuppressWarnings("UnusedReturnValue")
 public final class RunnerUtils {
@@ -150,11 +151,11 @@ public final class RunnerUtils {
                 AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, true);
             }
             try {
-                LocalServer.getInstance();
+                LocalServer.restart();
                 if (!LocalServer.isAMServiceAlive()) {
                     throw new IOException("ADB not available");
                 }
-                new Handler(Looper.getMainLooper()).post(() -> UIUtils.displayShortToast(R.string.working_on_adb_mode));
+                UiThreadHandler.run(() -> UIUtils.displayShortToast(R.string.working_on_adb_mode));
             } catch (IOException | RemoteException e) {
                 Log.e("ADB", e);
                 AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
@@ -201,8 +202,7 @@ public final class RunnerUtils {
                         AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
                         AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, true);
                         CountDownLatch waitForConfig = new CountDownLatch(1);
-                        new Handler(Looper.getMainLooper()).post(() -> MainPreferences
-                                .displayAdbConnect(activity, waitForConfig));
+                        UiThreadHandler.run(() -> MainPreferences.displayAdbConnect(activity, waitForConfig));
                         waitForConfig.await(2, TimeUnit.MINUTES);
                         LocalServer.restart();
                         return;
@@ -215,11 +215,11 @@ public final class RunnerUtils {
                     // fallback to ADB over TCP
                 case Runner.MODE_ADB_OVER_TCP:
                     // Port is always 5555
+                    AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
+                    AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, true);
                     ServerConfig.setAdbPort(ServerConfig.DEFAULT_ADB_PORT);
                     LocalServer.updateConfig();
                     LocalServer.restart();
-                    AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
-                    AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, true);
                     return;
                 case Runner.MODE_NO_ROOT:
                     AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
@@ -228,7 +228,8 @@ public final class RunnerUtils {
         } catch (Exception e) {
             Log.e("ModeOfOps", e);
             CountDownLatch waitForInteraction = new CountDownLatch(1);
-            new Handler(Looper.getMainLooper()).post(() -> new MaterialAlertDialogBuilder(activity)
+            AtomicReference<AlertDialog> alertDialog = new AtomicReference<>();
+            UiThreadHandler.run(() -> alertDialog.set(new MaterialAlertDialogBuilder(activity)
                     .setTitle(R.string.fallback_to_no_root_mode)
                     .setMessage(R.string.fallback_to_no_root_mode_description)
                     .setPositiveButton(R.string.yes, (dialog, which) -> {
@@ -238,13 +239,16 @@ public final class RunnerUtils {
                     })
                     .setNegativeButton(R.string.no, (dialog, which) -> waitForInteraction.countDown())
                     .setCancelable(false)
-                    .show());
+                    .show()));
             try {
                 waitForInteraction.await(2, TimeUnit.MINUTES);
                 if (waitForInteraction.getCount() == 1) {
                     // Closed due to timeout: fallback to no-root by default
                     AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
                     AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
+                    UiThreadHandler.run(() -> {
+                        if (alertDialog.get() != null) alertDialog.get().dismiss();
+                    });
                 }
             } catch (InterruptedException ignore) {
             }
