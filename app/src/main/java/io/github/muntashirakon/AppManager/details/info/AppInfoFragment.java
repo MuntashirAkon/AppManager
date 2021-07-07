@@ -53,7 +53,6 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.collection.ArrayMap;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 import androidx.core.content.pm.PackageInfoCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -83,7 +82,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.github.muntashirakon.AppManager.BuildConfig;
+import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
@@ -96,6 +95,7 @@ import io.github.muntashirakon.AppManager.details.AppDetailsFragment;
 import io.github.muntashirakon.AppManager.details.AppDetailsViewModel;
 import io.github.muntashirakon.AppManager.details.ManifestViewerActivity;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
+import io.github.muntashirakon.AppManager.fm.FmProvider;
 import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
 import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -130,6 +130,7 @@ import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.io.ProxyFile;
+import io.github.muntashirakon.io.Storage;
 
 import static io.github.muntashirakon.AppManager.details.info.ListItem.LIST_ITEM_FLAG_MONOSPACE;
 import static io.github.muntashirakon.AppManager.utils.PermissionUtils.TERMUX_PERM_RUN_COMMAND;
@@ -330,13 +331,14 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             executor.submit(() -> {
                 try {
                     File tmpApkSource = ApkUtils.getSharableApkFile(mPackageInfo);
-                    runOnUiThread(() -> {
+                    UiThreadHandler.run(() -> {
+                        Context ctx = AppManager.getContext();
                         Intent intent = new Intent(Intent.ACTION_SEND)
                                 .setType("application/*")
-                                .putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(mActivity,
-                                        BuildConfig.APPLICATION_ID + ".provider", tmpApkSource))
+                                .putExtra(Intent.EXTRA_STREAM, FmProvider.getContentUri(new Storage(ctx, tmpApkSource)))
                                 .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        startActivity(Intent.createChooser(intent, getString(R.string.share_apk)));
+                        ctx.startActivity(Intent.createChooser(intent, ctx.getString(R.string.share_apk))
+                                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                     });
                 } catch (Exception e) {
                     Log.e(TAG, e);
@@ -1087,8 +1089,16 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 addToHorizontalLayout(R.string.databases, R.drawable.ic_assignment_black_24dp)
                         .setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
                                 .setTitle(R.string.databases)
-                                .setItems(databases2, (dialog, which) -> {
-                                    // TODO(10/9/20): Need a custom ContentProvider
+                                .setItems(databases2, (dialog, i) -> {
+                                    // TODO: 7/7/21 VACUUM the database before opening it
+                                    Context ctx = AppManager.getContext();
+                                    Storage dbPath = new Storage(ctx, databases.get(i));
+                                    Intent openFile = new Intent(Intent.ACTION_VIEW);
+                                    openFile.setDataAndType(FmProvider.getContentUri(dbPath), "application/vnd.sqlite3");
+                                    openFile.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                    if (openFile.resolveActivityInfo(ctx.getPackageManager(), 0) != null) {
+                                        ctx.startActivity(openFile);
+                                    }
                                 })
                                 .setNegativeButton(R.string.ok, null)
                                 .show());
@@ -1285,7 +1295,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     private ProxyFile[] getDatabases(@NonNull String sourceDir) {
         ProxyFile sharedPath = new ProxyFile(sourceDir, "databases");
-        return sharedPath.listFiles((dir, name) -> !name.endsWith("-journal"));
+        return sharedPath.listFiles((dir, name) -> !(name.endsWith("-journal")
+                || name.endsWith("-wal") || name.endsWith("-shm")));
     }
 
     @NonNull

@@ -53,8 +53,7 @@ public final class ApkUtils {
             SplitApkExporter.saveApks(packageInfo, tmpPublicSource);
         } else {
             // Regular apk
-            tmpPublicSource = new File(AppManager.getContext().getExternalCacheDir(), outputName + EXT_APK);
-            IOUtils.copy(new ProxyFile(packageInfo.applicationInfo.publicSourceDir), tmpPublicSource);
+            tmpPublicSource = new File(packageInfo.applicationInfo.publicSourceDir);
         }
         return tmpPublicSource;
     }
