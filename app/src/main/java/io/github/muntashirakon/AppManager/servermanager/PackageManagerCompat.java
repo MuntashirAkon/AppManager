@@ -61,14 +61,14 @@ public final class PackageManagerCompat {
     public @interface EnabledFlags {
     }
 
-    private static final int workingFlags = PackageManager.GET_META_DATA | PackageUtils.flagMatchUninstalled;
+    private static final int WORKING_FLAGS = PackageManager.GET_META_DATA | PackageUtils.flagMatchUninstalled;
 
     @WorkerThread
     public static List<PackageInfo> getInstalledPackages(int flags, @UserIdInt int userHandle)
             throws RemoteException {
-        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M && (flags & workingFlags) != 0) {
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M && (flags & ~WORKING_FLAGS) != 0) {
             // Need workaround
-            List<ApplicationInfo> applicationInfoList = getInstalledApplications(flags & workingFlags, userHandle);
+            List<ApplicationInfo> applicationInfoList = getInstalledApplications(flags & WORKING_FLAGS, userHandle);
             List<PackageInfo> packageInfoList = new ArrayList<>(applicationInfoList.size());
             for (int i = 0; i < applicationInfoList.size(); ++i) {
                 try {
