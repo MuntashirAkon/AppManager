@@ -28,7 +28,7 @@ import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.io.ProxyFile;
 import io.github.muntashirakon.io.Storage;
 
-// Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
+// Copyright 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
 // Modified from FileProvider.kt
 public class FmProvider extends ContentProvider {
     public static final String AUTHORITY = BuildConfig.APPLICATION_ID + ".file";
@@ -101,8 +101,14 @@ public class FmProvider extends ContentProvider {
                     values.add(path.length());
                     break;
                 case MediaStore.MediaColumns.DATA:
+                    String filePath;
+                    try {
+                        filePath = path.getFilePath();
+                    } catch (UnsupportedOperationException ignore) {
+                        continue;
+                    }
                     columns.add(column);
-                    values.add(path.getUri().getPath());
+                    values.add(filePath);
                     break;
                 // TODO: We should actually implement a DocumentsProvider since we are handling
                 //  ACTION_OPEN_DOCUMENT.
@@ -150,22 +156,7 @@ public class FmProvider extends ContentProvider {
     @Override
     public ParcelFileDescriptor openFile(@NonNull Uri uri, @NonNull String mode) throws FileNotFoundException {
         // ContentProvider has already checked granted permissions
-        Storage path = getFileProviderPath(uri);
-        int modeBits = ParcelFileDescriptor.parseMode(mode);
-        if (canOpenDirectly(path, modeBits)) {
-            return path.openFileDescriptor(mode);
-        }
-        throw new FileNotFoundException("Uri " + uri + " cannot be opened.");
-    }
-
-    private static boolean canOpenDirectly(Storage file, int mode) {
-        // TODO: 4/7/21 Handle proxy file
-        boolean readOnly = (mode & ParcelFileDescriptor.MODE_READ_ONLY) != 0;
-        boolean writeOnly = (mode & ParcelFileDescriptor.MODE_WRITE_ONLY) != 0;
-        boolean readWrite = (mode & ParcelFileDescriptor.MODE_READ_WRITE) != 0;
-        boolean needRead = readOnly || readWrite;
-        boolean needWrite = writeOnly || readWrite;
-        return !((needRead && !file.canRead()) || (needWrite && !file.canWrite()));
+        return getFileProviderPath(uri).openFileDescriptor(mode, callbackThread);
     }
 
     @NonNull

@@ -12,10 +12,11 @@ import android.system.Os;
 import android.system.StructStat;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import java.io.File;
 import java.util.ArrayList;
 
-import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.IAMService;
 import io.github.muntashirakon.AppManager.IRemoteFile;
 import io.github.muntashirakon.AppManager.IRemoteProcess;
@@ -23,7 +24,9 @@ import io.github.muntashirakon.AppManager.IRemoteShell;
 import io.github.muntashirakon.AppManager.ipc.ps.ProcessEntry;
 import io.github.muntashirakon.AppManager.ipc.ps.Ps;
 import io.github.muntashirakon.AppManager.server.common.IRootIPC;
+import io.github.muntashirakon.io.FileDescriptorImpl;
 import io.github.muntashirakon.io.FileStatus;
+import io.github.muntashirakon.io.IFileDescriptor;
 
 public class AMService extends RootService {
     static class IAMServiceImpl extends IAMService.Stub {
@@ -94,6 +97,15 @@ public class AMService extends RootService {
                 StructStat lstat = Os.lstat(path);
                 if (lstat == null) throw new ErrnoException("FStat returned null", 1);
                 return new FileStatus(lstat);
+            } catch (ErrnoException e) {
+                throw new RemoteException(e.getMessage());
+            }
+        }
+
+        @Override
+        public IFileDescriptor getFD(String path, String mode) throws RemoteException {
+            try {
+                return FileDescriptorImpl.getInstance(path, mode);
             } catch (ErrnoException e) {
                 throw new RemoteException(e.getMessage());
             }

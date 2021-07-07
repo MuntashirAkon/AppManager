@@ -6,6 +6,7 @@ import io.github.muntashirakon.AppManager.IRemoteFile;
 import io.github.muntashirakon.AppManager.IRemoteProcess;
 import io.github.muntashirakon.AppManager.IRemoteShell;
 import io.github.muntashirakon.io.FileStatus;
+import io.github.muntashirakon.io.IFileDescriptor;
 
 // Transact code starts from 3
 interface IAMService {
@@ -17,4 +18,5 @@ interface IAMService {
     void chown(in String path, in int uid, in int gid) = 8;
     FileStatus stat(in String path) = 9;
     FileStatus lstat(in String path) = 10;
+    IFileDescriptor getFD(in String path, in String mode) = 11;
 }

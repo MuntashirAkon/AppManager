@@ -48,6 +48,13 @@ import io.github.muntashirakon.io.ProxyFile;
 import io.github.muntashirakon.io.ProxyInputStream;
 import io.github.muntashirakon.io.ProxyOutputStream;
 
+import static android.system.OsConstants.O_APPEND;
+import static android.system.OsConstants.O_CREAT;
+import static android.system.OsConstants.O_RDONLY;
+import static android.system.OsConstants.O_RDWR;
+import static android.system.OsConstants.O_TRUNC;
+import static android.system.OsConstants.O_WRONLY;
+
 public final class IOUtils {
     public static final int DEFAULT_BUFFER_SIZE = 1024 * 50;
 
@@ -538,5 +545,38 @@ public final class IOUtils {
             Log.e("IOUtils", "Failed to apply mode 644 to " + file);
             throw new IOException(e);
         }
+    }
+
+    public static int translateModeStringToPosix(@NonNull String mode) {
+        // Sanity check for invalid chars
+        for (int i = 0; i < mode.length(); i++) {
+            switch (mode.charAt(i)) {
+                case 'r':
+                case 'w':
+                case 't':
+                case 'a':
+                    break;
+                default:
+                    throw new IllegalArgumentException("Bad mode: " + mode);
+            }
+        }
+
+        int res;
+        if (mode.startsWith("rw")) {
+            res = O_RDWR | O_CREAT;
+        } else if (mode.startsWith("w")) {
+            res = O_WRONLY | O_CREAT;
+        } else if (mode.startsWith("r")) {
+            res = O_RDONLY;
+        } else {
+            throw new IllegalArgumentException("Bad mode: " + mode);
+        }
+        if (mode.indexOf('t') != -1) {
+            res |= O_TRUNC;
+        }
+        if (mode.indexOf('a') != -1) {
+            res |= O_APPEND;
+        }
+        return res;
     }
 }
