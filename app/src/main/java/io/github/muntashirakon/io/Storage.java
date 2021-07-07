@@ -278,7 +278,7 @@ public class Storage {
     }
 
     @Nullable
-    public InputStream openInputStream() throws FileNotFoundException, RemoteException {
+    public InputStream openInputStream() throws IOException {
         if (documentFile instanceof ProxyDocumentFile) {
             File file = ((ProxyDocumentFile) documentFile).getFile();
             return new ProxyInputStream(file);
@@ -309,7 +309,7 @@ public class Storage {
 
         private StorageCallback(String path, String mode, HandlerThread thread) throws RemoteException {
             super(thread);
-            Log.e(TAG, "Mode: " + mode);
+            Log.d(TAG, "Mode: " + mode);
             try {
                 fd = IPCUtils.getAmService().getFD(path, mode);
             } catch (RemoteException e) {

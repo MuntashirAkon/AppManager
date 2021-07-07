@@ -342,7 +342,7 @@ public final class IOUtils {
         if (!file.exists() || file.isDirectory()) return emptyValue;
         try (InputStream inputStream = new ProxyInputStream(file)) {
             return getInputStreamContent(inputStream);
-        } catch (IOException | RemoteException e) {
+        } catch (IOException e) {
             if (!(e.getCause() instanceof ErrnoException)) {
                 // This isn't just another EACCESS exception
                 e.printStackTrace();

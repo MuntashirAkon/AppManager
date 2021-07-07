@@ -2,7 +2,6 @@
 
 package io.github.muntashirakon.AppManager;
 
-import io.github.muntashirakon.AppManager.IRemoteFileReader;
 import io.github.muntashirakon.AppManager.IRemoteFileWriter;
 
 interface IRemoteFile {
@@ -50,6 +49,5 @@ interface IRemoteFile {
 
     int compareTo(String pathname);
 
-    IRemoteFileReader getFileReader();
     IRemoteFileWriter getFileWriter();
 }

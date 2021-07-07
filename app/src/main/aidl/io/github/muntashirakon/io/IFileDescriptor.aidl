@@ -7,5 +7,8 @@ interface IFileDescriptor {
     int write(in byte[] b, int off, int len);
     void sync();
     int available();
+    long seek(long pos);
+    long getFilePointer();
+    long length();
     void close();
 }

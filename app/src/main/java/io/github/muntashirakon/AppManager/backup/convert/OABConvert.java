@@ -357,7 +357,7 @@ public class OABConvert extends Convert {
                 for (File file : newBackupFiles) {
                     checksum.add(file.getName(), DigestUtils.getHexDigest(destMetadata.checksumAlgo, file));
                 }
-            } catch (IOException | RemoteException e) {
+            } catch (IOException e) {
                 throw new BackupException("Backup failed for " + dataFile, e);
             }
         }

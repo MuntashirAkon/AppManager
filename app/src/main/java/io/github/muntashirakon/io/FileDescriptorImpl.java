@@ -54,7 +54,7 @@ public class FileDescriptorImpl extends IFileDescriptor.Stub {
         try {
             return Os.read(fd, b, off, len);
         } catch (ErrnoException | InterruptedIOException e) {
-            throw new RemoteException(e.getMessage());
+            return rethrowAsRemoteException(e);
         }
     }
 
@@ -63,7 +63,7 @@ public class FileDescriptorImpl extends IFileDescriptor.Stub {
         try {
             return Os.write(fd, b, off, len);
         } catch (ErrnoException | InterruptedIOException e) {
-            throw new RemoteException(e.getMessage());
+            return rethrowAsRemoteException(e);
         }
     }
 
@@ -72,20 +72,47 @@ public class FileDescriptorImpl extends IFileDescriptor.Stub {
         try {
             fd.sync();
         } catch (SyncFailedException e) {
-            throw new RemoteException(e.getMessage());
+            rethrowAsRemoteException(e);
         }
     }
 
     @Override
-    public int available() throws RemoteException {
+    public int available() {
         try {
             // On Android, available = total file size - current position
-            long currPos = Os.lseek(fd, 0, OsConstants.SEEK_CUR);
+            long currPos = getFilePointer();
             long size = Os.fstat(fd).st_size;
             return (int) (size - currPos);
-        } catch (ErrnoException ignore) {
+        } catch (ErrnoException | RemoteException ignore) {
         }
         return 0;
+    }
+
+    @Override
+    public long seek(long pos) throws RemoteException {
+        try {
+            return Os.lseek(fd, pos, OsConstants.SEEK_SET);
+        } catch (ErrnoException e) {
+            return rethrowAsRemoteException(e);
+        }
+    }
+
+    @Override
+    public long getFilePointer() throws RemoteException {
+        try {
+            return Os.lseek(fd, 0, OsConstants.SEEK_CUR);
+        } catch (ErrnoException e) {
+            return rethrowAsRemoteException(e);
+        }
+    }
+
+    @Override
+    public long length() throws RemoteException {
+        try {
+            return Os.fstat(fd).st_size;
+        } catch (ErrnoException e) {
+            return rethrowAsRemoteException(e);
+        }
     }
 
     @Override
@@ -93,12 +120,18 @@ public class FileDescriptorImpl extends IFileDescriptor.Stub {
         try {
             if (fd.valid()) Os.close(fd);
         } catch (ErrnoException e) {
-            throw new RemoteException(e.getMessage());
+            rethrowAsRemoteException(e);
         }
     }
 
     @Override
     protected void finalize() throws Throwable {
-        if (fd.valid()) Os.close(fd);
+        if (fd != null && fd.valid()) Os.close(fd);
+    }
+
+    private <T> T rethrowAsRemoteException(Exception e) throws RemoteException {
+        RemoteException re = new RemoteException(e.getMessage());
+        re.initCause(e);
+        throw re;
     }
 }

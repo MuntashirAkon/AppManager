@@ -253,7 +253,7 @@ public final class ComponentUtils {
                 try (InputStream inputStream = new ProxyInputStream(ifwRulesFile)) {
                     // Read rules
                     rules.putAll(readIFWRules(inputStream, packageName));
-                } catch (IOException | RemoteException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }

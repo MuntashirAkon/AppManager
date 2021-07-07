@@ -190,7 +190,7 @@ public class TBConvert extends Convert {
             } finally {
                 is.close();
             }
-        } catch (IOException | RemoteException e) {
+        } catch (IOException e) {
             baseApkFile.delete();
             throw new BackupException("Couldn't decompress " + sourceMetadata.apkName, e);
         }
@@ -366,7 +366,7 @@ public class TBConvert extends Convert {
                     checksum.add(file.getName(), DigestUtils.getHexDigest(destMetadata.checksumAlgo, file));
                 }
             }
-        } catch (IOException | RemoteException e) {
+        } catch (IOException e) {
             throw new BackupException("Could not backup data", e);
         }
     }
@@ -417,7 +417,7 @@ public class TBConvert extends Convert {
                 byte[] decodedBytes = Base64.decode(base64Icon, 0);
                 icon = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
             }
-        } catch (IOException | RemoteException e) {
+        } catch (IOException e) {
             throw new BackupException("Could not read the prop file", e);
         }
     }

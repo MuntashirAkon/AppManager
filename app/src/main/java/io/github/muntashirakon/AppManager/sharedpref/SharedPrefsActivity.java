@@ -236,7 +236,8 @@ public class SharedPrefsActivity extends BaseActivity implements
                 event = parser.nextTag();
             }
             rulesStream.close();
-        } catch (IOException | RemoteException | XmlPullParserException ignored) {}
+        } catch (IOException | XmlPullParserException ignored) {
+        }
         return prefs;
     }
 

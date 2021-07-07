@@ -122,7 +122,7 @@ public class SaveLogHelper {
                     truncated = true;
                 }
             }
-        } catch (IOException | RemoteException e) {
+        } catch (IOException e) {
             Log.e(TAG, e);
         }
         return new SavedLog(logLines, truncated);

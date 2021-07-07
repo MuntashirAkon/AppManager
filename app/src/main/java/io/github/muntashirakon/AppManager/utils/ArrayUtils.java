@@ -4,13 +4,12 @@ package io.github.muntashirakon.AppManager.utils;
 
 // Source: https://cs.android.com/android/platform/superproject/+/master:frameworks/base/core/java/com/android/internal/util/ArrayUtils.java
 
-import androidx.annotation.CheckResult;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import android.os.Build;
 import android.util.ArraySet;
 
+import androidx.annotation.CheckResult;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import java.io.File;
@@ -41,6 +40,26 @@ public class ArrayUtils {
     public static final File[] EMPTY_FILE = new File[0];
 
     private ArrayUtils() { /* cannot be instantiated */ }
+
+    /**
+     * Throws {@link ArrayIndexOutOfBoundsException} if the range is out of bounds.
+     *
+     * @param len    length of the array. Must be non-negative
+     * @param offset start index of the range. Must be non-negative
+     * @param count  length of the range. Must be non-negative
+     * @throws ArrayIndexOutOfBoundsException if the range from {@code offset} with length
+     *                                        {@code count} is out of bounds of the array
+     */
+    public static void throwsIfOutOfBounds(int len, int offset, int count) {
+        if (len < 0) {
+            throw new ArrayIndexOutOfBoundsException("Negative length: " + len);
+        }
+
+        if ((offset | count) < 0 || offset > len - count) {
+            throw new ArrayIndexOutOfBoundsException(
+                    "length=" + len + "; regionStart=" + offset + "; regionLength=" + count);
+        }
+    }
 
     /**
      * Checks if the beginnings of two byte arrays are equal.

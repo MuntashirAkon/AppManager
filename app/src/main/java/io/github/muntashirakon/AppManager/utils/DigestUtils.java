@@ -3,7 +3,6 @@
 package io.github.muntashirakon.AppManager.utils;
 
 import android.annotation.TargetApi;
-import android.os.RemoteException;
 import android.text.TextUtils;
 import android.util.Pair;
 
@@ -59,7 +58,7 @@ public class DigestUtils {
         for (File file : allFiles) {
             try (InputStream fileInputStream = new ProxyInputStream(file)) {
                 hashes.add(DigestUtils.getHexDigest(algo, fileInputStream));
-            } catch (IOException | RemoteException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
