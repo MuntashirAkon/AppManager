@@ -16,9 +16,11 @@ import java.io.SyncFailedException;
 
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 
+import static android.system.OsConstants.EISDIR;
 import static android.system.OsConstants.O_CREAT;
 import static android.system.OsConstants.S_IRWXG;
 import static android.system.OsConstants.S_IRWXU;
+import static android.system.OsConstants.S_ISDIR;
 
 public class FileDescriptorImpl extends IFileDescriptor.Stub {
     FileDescriptor fd;
@@ -47,6 +49,9 @@ public class FileDescriptorImpl extends IFileDescriptor.Stub {
 
     private FileDescriptorImpl(String filePath, int flags, int mode) throws ErrnoException {
         fd = Os.open(filePath, flags, mode);
+        if (S_ISDIR(Os.fstat(fd).st_mode)) {
+            throw new ErrnoException("open", EISDIR);
+        }
     }
 
     @Override

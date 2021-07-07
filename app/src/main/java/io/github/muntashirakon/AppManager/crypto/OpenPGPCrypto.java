@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.RemoteException;
 import android.os.SystemClock;
 
 import androidx.annotation.AnyThread;
@@ -193,8 +192,8 @@ public class OpenPGPCrypto implements Crypto {
                         IOUtils.deleteSilently(outputFilename);
                         return false;
                     }
-                } catch (IOException | RemoteException e) {
-                    Log.e(TAG, "Error: " + e.toString(), e);
+                } catch (IOException e) {
+                    Log.e(TAG, "Error: " + e.getMessage(), e);
                     return false;
                 }
                 // Delete unencrypted file

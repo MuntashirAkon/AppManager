@@ -5,7 +5,6 @@ package io.github.muntashirakon.AppManager.sharedpref;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.RemoteException;
 import android.text.TextUtils;
 import android.util.Xml;
 import android.view.LayoutInflater;
@@ -297,7 +296,7 @@ public class SharedPrefsActivity extends BaseActivity implements
             xmlFile.write(stringWriter.toString().getBytes());
             xmlFile.close();
             return Runner.runCommand(new String[]{"chmod", "0666", sharedPrefsFile.getAbsolutePath()}).isSuccessful();
-        } catch (IOException | RemoteException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return false;

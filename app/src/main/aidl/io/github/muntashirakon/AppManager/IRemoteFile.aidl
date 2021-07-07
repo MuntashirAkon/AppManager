@@ -2,8 +2,6 @@
 
 package io.github.muntashirakon.AppManager;
 
-import io.github.muntashirakon.AppManager.IRemoteFileWriter;
-
 interface IRemoteFile {
     // Only list the methods that are absolutely necessary
     boolean isAbsolute();
@@ -48,6 +46,4 @@ interface IRemoteFile {
     boolean setExecutable1(boolean executable);
 
     int compareTo(String pathname);
-
-    IRemoteFileWriter getFileWriter();
 }

@@ -5,7 +5,6 @@ package io.github.muntashirakon.io;
 import android.os.RemoteException;
 import android.system.ErrnoException;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 
 import java.io.File;
@@ -15,6 +14,9 @@ import java.io.InputStream;
 import io.github.muntashirakon.AppManager.ipc.IPCUtils;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.ExUtils;
+
+import static io.github.muntashirakon.AppManager.utils.ExUtils.rethrowAsIOException;
 
 public class ProxyInputStream extends InputStream {
     private final IFileDescriptor fd;
@@ -22,14 +24,15 @@ public class ProxyInputStream extends InputStream {
 
     @WorkerThread
     public ProxyInputStream(File file) throws IOException {
+        String mode = "r";
         try {
             if (file instanceof ProxyFile && LocalServer.isAMServiceAlive()) {
-                fd = IPCUtils.getAmService().getFD(file.getAbsolutePath(), "r");
+                fd = IPCUtils.getAmService().getFD(file.getAbsolutePath(), mode);
             } else {
-                fd = FileDescriptorImpl.getInstance(file.getAbsolutePath(), "r");
+                fd = FileDescriptorImpl.getInstance(file.getAbsolutePath(), mode);
             }
         } catch (ErrnoException | RemoteException e) {
-            throw ProxyInputStream.<IOException>rethrowAsIOException(e);
+            throw ExUtils.<IOException>rethrowAsIOException(e);
         }
     }
 
@@ -115,12 +118,5 @@ public class ProxyInputStream extends InputStream {
     @Override
     protected void finalize() throws Throwable {
         if (fd != null) fd.close();
-    }
-
-    private static <T> T rethrowAsIOException(@NonNull Throwable e) throws IOException {
-        IOException ioException = new IOException(e.getMessage());
-        //noinspection UnnecessaryInitCause
-        ioException.initCause(e);
-        throw ioException;
     }
 }

@@ -16,7 +16,6 @@ import java.util.List;
 
 import io.github.muntashirakon.AppManager.IAMService;
 import io.github.muntashirakon.AppManager.IRemoteFile;
-import io.github.muntashirakon.AppManager.IRemoteFileWriter;
 import io.github.muntashirakon.AppManager.ipc.IPCUtils;
 
 public class ProxyFile extends File {
@@ -264,16 +263,6 @@ public class ProxyFile extends File {
             return new File(getCanonicalPath());
         }
         return super.getCanonicalFile();
-    }
-
-    @NonNull
-    public IRemoteFileWriter getFileWriter() throws RemoteException {
-        if (isRemoteAlive()) {
-            //noinspection ConstantConditions
-            IRemoteFileWriter writer = file.getFileWriter();
-            if (writer == null) throw new RemoteException(getAbsolutePath() + ": Couldn't get remote file writer.");
-            return writer;
-        } else throw new RemoteException("Remote service isn't alive.");
     }
 
     private void getRemoteFile() {

@@ -207,7 +207,7 @@ class BackupOp implements Closeable {
             Bitmap bitmap = IOUtils.getBitmapFromDrawable(applicationInfo.loadIcon(pm));
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
             outputStream.flush();
-        } catch (IOException | RemoteException e) {
+        } catch (IOException e) {
             Log.w(TAG, "Could not back up icon.");
         }
     }
@@ -429,7 +429,7 @@ class BackupOp implements Closeable {
         try (OutputStream outputStream = new ProxyOutputStream(rulesFile);
              ComponentsBlocker cb = ComponentsBlocker.getInstance(packageName, userHandle)) {
             ComponentUtils.storeRules(outputStream, cb.getAll(), true);
-        } catch (IOException | RemoteException e) {
+        } catch (IOException e) {
             throw new BackupException("Rules backup is requested but encountered an error during fetching rules.", e);
         }
         if (!rulesFile.exists()) return;

@@ -443,7 +443,7 @@ public class TBConvert extends Convert {
         try (OutputStream outputStream = new ProxyOutputStream(iconFile)) {
             icon.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
             outputStream.flush();
-        } catch (IOException | RemoteException e) {
+        } catch (IOException e) {
             Log.w(TAG, "Could not back up icon.");
         }
     }

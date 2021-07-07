@@ -86,14 +86,14 @@ public class AtomicProxyFile {
 
         try {
             return new ProxyOutputStream(mNewName);
-        } catch (FileNotFoundException | RemoteException e) {
+        } catch (FileNotFoundException e) {
             File parent = mNewName.getParentFile();
             if (!parent.mkdirs()) {
                 throw new IOException("Failed to create directory for " + mNewName, e);
             }
             try {
                 return new ProxyOutputStream(mNewName);
-            } catch (FileNotFoundException | RemoteException e2) {
+            } catch (FileNotFoundException e2) {
                 throw new IOException("Failed to create new file " + mNewName, e2);
             }
         }
@@ -214,7 +214,7 @@ public class AtomicProxyFile {
             return true;
         } catch (IOException ignored) {
         }
-        return false;
+        return true;
     }
 
     private static void rename(@NonNull File source, @NonNull File target) {

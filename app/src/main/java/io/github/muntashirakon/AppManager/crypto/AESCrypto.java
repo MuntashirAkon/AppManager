@@ -2,8 +2,6 @@
 
 package io.github.muntashirakon.AppManager.crypto;
 
-import android.os.RemoteException;
-
 import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -160,8 +158,8 @@ public class AESCrypto implements Crypto {
                             IOUtils.copy(cipherIS, os);
                         }
                     }
-                } catch (IOException | RemoteException e) {
-                    Log.e(TAG, "Error: " + e.toString(), e);
+                } catch (IOException e) {
+                    Log.e(TAG, "Error: " + e.getMessage(), e);
                     return false;
                 }
                 // Delete unencrypted file

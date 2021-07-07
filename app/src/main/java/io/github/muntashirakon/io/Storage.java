@@ -269,7 +269,7 @@ public class Storage {
     }
 
     @Nullable
-    public OutputStream openOutputStream(@NonNull String mode) throws FileNotFoundException, RemoteException {
+    public OutputStream openOutputStream(@NonNull String mode) throws IOException {
         if (documentFile instanceof ProxyDocumentFile) {
             File file = ((ProxyDocumentFile) documentFile).getFile();
             return new ProxyOutputStream(file);

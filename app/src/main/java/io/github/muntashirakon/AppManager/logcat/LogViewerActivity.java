@@ -870,7 +870,7 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
                         try {
                             SaveLogHelper.saveZipFileAndThrow(this, uri, files);
                             UiThreadHandler.run(() -> UIUtils.displayShortToast(R.string.saved_successfully));
-                        } catch (IOException | RemoteException e) {
+                        } catch (IOException e) {
                             UiThreadHandler.run(() -> UIUtils.displayShortToast(R.string.saving_failed));
                         }
                     });

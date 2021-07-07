@@ -7,12 +7,10 @@ import android.os.RemoteException;
 import android.util.Log;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import aosp.libcore.util.EmptyArray;
 import io.github.muntashirakon.AppManager.IRemoteFile;
-import io.github.muntashirakon.AppManager.IRemoteFileWriter;
 
 import static io.github.muntashirakon.AppManager.ipc.RootService.TAG;
 
@@ -201,14 +199,5 @@ class RemoteFileImpl extends IRemoteFile.Stub {
     @Override
     public int compareTo(String pathname) {
         return file.compareTo(new File(pathname));
-    }
-
-    @Override
-    public IRemoteFileWriter getFileWriter() throws RemoteException {
-        try {
-            return new RemoteFileWriterImpl(file);
-        } catch (FileNotFoundException e) {
-            throw new RemoteException(e.getMessage());
-        }
     }
 }

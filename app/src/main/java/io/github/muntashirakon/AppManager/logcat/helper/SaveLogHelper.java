@@ -4,7 +4,6 @@ package io.github.muntashirakon.AppManager.logcat.helper;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.RemoteException;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 
@@ -15,7 +14,6 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -67,7 +65,7 @@ public class SaveLogHelper {
             }
             Log.d(TAG, "Saved temp file: " + tempFile);
             return tempFile;
-        } catch (FileNotFoundException | RemoteException e) {
+        } catch (IOException e) {
             Log.e(TAG, e);
             return null;
         }
@@ -155,7 +153,7 @@ public class SaveLogHelper {
             } else if (logString != null) {
                 out.print(logString);
             }
-        } catch (FileNotFoundException | RemoteException e) {
+        } catch (IOException e) {
             Log.e(TAG, e);
             return false;
         }
@@ -190,7 +188,7 @@ public class SaveLogHelper {
     }
 
     @NonNull
-    public static File saveTemporaryZipFile(String filename, List<File> files) throws IOException, RemoteException {
+    public static File saveTemporaryZipFile(String filename, List<File> files) throws IOException {
         File zipFile = new ProxyFile(getTempDirectory(), filename);
         try (ZipOutputStream output = new ZipOutputStream(new BufferedOutputStream(new ProxyOutputStream(zipFile), BUFFER))) {
             for (File file : files) {
@@ -206,7 +204,7 @@ public class SaveLogHelper {
     }
 
     public static void saveZipFileAndThrow(@NonNull Context context, @NonNull Uri uri, @NonNull List<File> files)
-            throws IOException, RemoteException {
+            throws IOException {
         OutputStream os = context.getContentResolver().openOutputStream(uri);
         if (os == null) throw new IOException("Could not open uri.");
         try (ZipOutputStream output = new ZipOutputStream(new BufferedOutputStream(os, BUFFER))) {
