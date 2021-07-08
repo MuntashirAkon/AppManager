@@ -129,8 +129,8 @@ import io.github.muntashirakon.AppManager.utils.SsaidSettings;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.ProxyFile;
-import io.github.muntashirakon.io.Storage;
 
 import static io.github.muntashirakon.AppManager.details.info.ListItem.LIST_ITEM_FLAG_MONOSPACE;
 import static io.github.muntashirakon.AppManager.utils.PermissionUtils.TERMUX_PERM_RUN_COMMAND;
@@ -335,7 +335,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         Context ctx = AppManager.getContext();
                         Intent intent = new Intent(Intent.ACTION_SEND)
                                 .setType("application/*")
-                                .putExtra(Intent.EXTRA_STREAM, FmProvider.getContentUri(new Storage(ctx, tmpApkSource)))
+                                .putExtra(Intent.EXTRA_STREAM, FmProvider.getContentUri(new Path(ctx, tmpApkSource)))
                                 .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                         ctx.startActivity(Intent.createChooser(intent, ctx.getString(R.string.share_apk))
                                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
@@ -1092,7 +1092,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                 .setItems(databases2, (dialog, i) -> {
                                     // TODO: 7/7/21 VACUUM the database before opening it
                                     Context ctx = AppManager.getContext();
-                                    Storage dbPath = new Storage(ctx, databases.get(i));
+                                    Path dbPath = new Path(ctx, databases.get(i));
                                     Intent openFile = new Intent(Intent.ACTION_VIEW);
                                     openFile.setDataAndType(FmProvider.getContentUri(dbPath), "application/vnd.sqlite3");
                                     openFile.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_GRANT_READ_URI_PERMISSION);

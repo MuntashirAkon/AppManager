@@ -25,8 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
+import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.ProxyFile;
-import io.github.muntashirakon.io.Storage;
 
 // Copyright 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
 // Modified from FileProvider.kt
@@ -34,7 +34,7 @@ public class FmProvider extends ContentProvider {
     public static final String AUTHORITY = BuildConfig.APPLICATION_ID + ".file";
 
     @NonNull
-    public static Uri getContentUri(@NonNull Storage path) {
+    public static Uri getContentUri(@NonNull Path path) {
         return new Uri.Builder()
                 .scheme(ContentResolver.SCHEME_CONTENT)
                 .authority(AUTHORITY)
@@ -82,7 +82,7 @@ public class FmProvider extends ContentProvider {
                         @Nullable String[] selectionArgs, @Nullable String sortOrder) {
         // ContentProvider has already checked granted permissions
         String[] projectionColumns = projection == null ? COLUMNS : projection;
-        Storage path;
+        Path path;
         try {
             path = getFileProviderPath(uri);
         } catch (FileNotFoundException e) {
@@ -160,14 +160,14 @@ public class FmProvider extends ContentProvider {
     }
 
     @NonNull
-    private Storage getFileProviderPath(@NonNull Uri uri) throws FileNotFoundException {
+    private Path getFileProviderPath(@NonNull Uri uri) throws FileNotFoundException {
         String uriPath = Uri.decode(uri.getPath());
         if (uriPath.startsWith("/")) {
             // File
-            return new Storage(getContext(), new ProxyFile(uriPath));
+            return new Path(getContext(), new ProxyFile(uriPath));
         } else {
             // Content provider
-            return new Storage(getContext(), Uri.parse(uriPath));
+            return new Path(getContext(), Uri.parse(uriPath));
         }
     }
 

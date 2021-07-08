@@ -7,32 +7,32 @@ import androidx.annotation.NonNull;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.utils.IOUtils;
-import io.github.muntashirakon.io.Storage;
+import io.github.muntashirakon.io.Path;
 
 public class FmItem implements Comparable<FmItem> {
     final String extension;
     final FileType type;
     final String name;
     @NonNull
-    final Storage path;
+    final Path path;
 
-    FmItem(@NonNull Storage storage) {
-        path = storage;
-        name = storage.getName();
+    FmItem(@NonNull Path path) {
+        this.path = path;
+        name = path.getName();
         extension = IOUtils.getExtension(name);
-        if (storage.isFile()) type = FileType.FILE;
-        else if (storage.isDirectory()) type = FileType.DIRECTORY;
-        else if (storage.isVirtual()) type = FileType.VIRTUAL;
+        if (path.isFile()) type = FileType.FILE;
+        else if (path.isDirectory()) type = FileType.DIRECTORY;
+        else if (path.isVirtual()) type = FileType.VIRTUAL;
         else type = FileType.UNKNOWN;
     }
 
-    FmItem(@NonNull String name, @NonNull Storage storage) {
-        path = storage;
+    FmItem(@NonNull String name, @NonNull Path path) {
+        this.path = path;
         this.name = name;
         extension = IOUtils.getExtension(name);
-        if (storage.isFile()) type = FileType.FILE;
-        else if (storage.isDirectory()) type = FileType.DIRECTORY;
-        else if (storage.isVirtual()) type = FileType.VIRTUAL;
+        if (path.isFile()) type = FileType.FILE;
+        else if (path.isDirectory()) type = FileType.DIRECTORY;
+        else if (path.isVirtual()) type = FileType.VIRTUAL;
         else type = FileType.UNKNOWN;
     }
 

@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import io.github.muntashirakon.io.Storage;
+import io.github.muntashirakon.io.Path;
 
 public class FmViewModel extends AndroidViewModel {
     private final ExecutorService executor = Executors.newFixedThreadPool(3);
@@ -33,20 +33,20 @@ public class FmViewModel extends AndroidViewModel {
     }
 
     public void loadFiles(File file) {
-        Storage storage = new Storage(getApplication(), file);
-        loadFiles(storage);
+        Path path = new Path(getApplication(), file);
+        loadFiles(path);
     }
 
-    public void loadFiles(Storage path) {
+    public void loadFiles(Path path) {
         executor.submit(() -> {
             if (!path.isDirectory()) return;
             List<FmItem> fmItems = new ArrayList<>();
-            Storage parentDir = path.getParentFile();
+            Path parentDir = path.getParentFile();
             if (parentDir != null) {
                 fmItems.add(new FmItem("..", parentDir));
             }
-            Storage[] children = path.listFiles();
-            for (Storage child : children) {
+            Path[] children = path.listFiles();
+            for (Path child : children) {
                 fmItems.add(new FmItem(child));
             }
             Collections.sort(fmItems);

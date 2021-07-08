@@ -92,7 +92,7 @@ import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.StoragePermission;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
-import io.github.muntashirakon.io.Storage;
+import io.github.muntashirakon.io.Path;
 import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
 import static io.github.muntashirakon.AppManager.logcat.LogViewerRecyclerAdapter.ViewHolder.CONTEXT_MENU_COPY_ID;
@@ -156,7 +156,7 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
             actionSendIntent.putExtra(Intent.EXTRA_TEXT, body);
         }
         if (attachment != null) {
-            actionSendIntent.putExtra(Intent.EXTRA_STREAM, FmProvider.getContentUri(new Storage(context, attachment)))
+            actionSendIntent.putExtra(Intent.EXTRA_STREAM, FmProvider.getContentUri(new Path(context, attachment)))
                     .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         }
         try {

@@ -38,24 +38,24 @@ import io.github.muntashirakon.AppManager.users.Users;
 /**
  * Provide an interface to {@link File} and {@link DocumentFile} with basic functionalities.
  */
-public class Storage {
-    public static final String TAG = Storage.class.getSimpleName();
+public class Path {
+    public static final String TAG = Path.class.getSimpleName();
 
     private final Context context;
     @NonNull
     private final DocumentFile documentFile;
 
-    public Storage(@NonNull Context context, @NonNull File fileLocation) {
+    public Path(@NonNull Context context, @NonNull File fileLocation) {
         this.context = context;
         this.documentFile = new ProxyDocumentFile(fileLocation);
     }
 
-    public Storage(@NonNull Context context, @NonNull DocumentFile documentFile) {
+    public Path(@NonNull Context context, @NonNull DocumentFile documentFile) {
         this.context = context;
         this.documentFile = documentFile;
     }
 
-    public Storage(@NonNull Context context, @NonNull Uri uri) throws FileNotFoundException {
+    public Path(@NonNull Context context, @NonNull Uri uri) throws FileNotFoundException {
         this.context = context;
         DocumentFile documentFile;
         switch (uri.getScheme()) {
@@ -72,7 +72,7 @@ public class Storage {
         this.documentFile = documentFile;
     }
 
-    public Storage(@NonNull Context context, @NonNull UriPermission uriPermission) throws FileNotFoundException {
+    public Path(@NonNull Context context, @NonNull UriPermission uriPermission) throws FileNotFoundException {
         this.context = context;
         DocumentFile documentFile = DocumentFile.fromTreeUri(context, uriPermission.getUri());
         if (documentFile == null)
@@ -131,9 +131,9 @@ public class Storage {
     }
 
     @Nullable
-    public Storage getParentFile() {
+    public Path getParentFile() {
         DocumentFile file = documentFile.getParentFile();
-        return file == null ? null : new Storage(context, file);
+        return file == null ? null : new Path(context, file);
     }
 
     @CheckResult
@@ -200,37 +200,37 @@ public class Storage {
     }
 
     @NonNull
-    public Storage[] listFiles() {
+    public Path[] listFiles() {
         DocumentFile[] ss = listDocumentFiles();
         int n = ss.length;
-        Storage[] fs = new Storage[n];
+        Path[] fs = new Path[n];
         for (int i = 0; i < n; i++) {
-            fs[i] = new Storage(context, ss[i]);
+            fs[i] = new Path(context, ss[i]);
         }
         return fs;
     }
 
     @NonNull
-    public Storage[] listFiles(@Nullable FileFilter filter) {
+    public Path[] listFiles(@Nullable FileFilter filter) {
         DocumentFile[] ss = listDocumentFiles();
-        ArrayList<Storage> files = new ArrayList<>();
+        ArrayList<Path> files = new ArrayList<>();
         for (DocumentFile s : ss) {
             if ((filter == null) || filter.accept(new File(s.getUri().getPath())))
-                files.add(new Storage(context, s));
+                files.add(new Path(context, s));
         }
-        return files.toArray(new Storage[0]);
+        return files.toArray(new Path[0]);
     }
 
     @NonNull
-    public Storage[] listFiles(@Nullable FilenameFilter filter) {
+    public Path[] listFiles(@Nullable FilenameFilter filter) {
         DocumentFile[] ss = listDocumentFiles();
-        ArrayList<Storage> files = new ArrayList<>();
+        ArrayList<Path> files = new ArrayList<>();
         File f = new File(documentFile.getUri().getPath());
         for (DocumentFile s : ss) {
             if ((filter == null) || filter.accept(f, s.getName()))
-                files.add(new Storage(context, s));
+                files.add(new Path(context, s));
         }
-        return files.toArray(new Storage[0]);
+        return files.toArray(new Path[0]);
     }
 
     public boolean canRead() {
@@ -271,8 +271,7 @@ public class Storage {
     @Nullable
     public OutputStream openOutputStream(@NonNull String mode) throws IOException {
         if (documentFile instanceof ProxyDocumentFile) {
-            File file = ((ProxyDocumentFile) documentFile).getFile();
-            return new ProxyOutputStream(file);
+            return new ProxyOutputStream(((ProxyDocumentFile) documentFile).getFile());
         }
         return context.getContentResolver().openOutputStream(documentFile.getUri(), mode);
     }
@@ -280,8 +279,7 @@ public class Storage {
     @Nullable
     public InputStream openInputStream() throws IOException {
         if (documentFile instanceof ProxyDocumentFile) {
-            File file = ((ProxyDocumentFile) documentFile).getFile();
-            return new ProxyInputStream(file);
+            return new ProxyInputStream(((ProxyDocumentFile) documentFile).getFile());
         }
         return context.getContentResolver().openInputStream(documentFile.getUri());
     }
@@ -294,9 +292,9 @@ public class Storage {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Storage)) return false;
-        Storage storage = (Storage) o;
-        return documentFile.getUri().equals(storage.documentFile.getUri());
+        if (!(o instanceof Path)) return false;
+        Path path = (Path) o;
+        return documentFile.getUri().equals(path.documentFile.getUri());
     }
 
     @Override
