@@ -156,7 +156,7 @@ public class FmProvider extends ContentProvider {
     @Override
     public ParcelFileDescriptor openFile(@NonNull Uri uri, @NonNull String mode) throws FileNotFoundException {
         // ContentProvider has already checked granted permissions
-        return getFileProviderPath(uri).openFileDescriptor(mode, callbackThread);
+        return getFileProviderPath(uri).openFileDescriptor(checkMode(mode), callbackThread);
     }
 
     @NonNull
@@ -169,5 +169,17 @@ public class FmProvider extends ContentProvider {
             // Content provider
             return new Storage(getContext(), Uri.parse(uriPath));
         }
+    }
+
+    @NonNull
+    private String checkMode(@NonNull String mode) {
+        // Add `t` flag if neither truncate nor append is supplied
+        if (mode.indexOf('w') != -1 && mode.indexOf('a') == -1) {
+            // w exists but a doesn't
+            if (mode.indexOf('t') == -1) {
+                return mode + 't';
+            }
+        }
+        return mode;
     }
 }
