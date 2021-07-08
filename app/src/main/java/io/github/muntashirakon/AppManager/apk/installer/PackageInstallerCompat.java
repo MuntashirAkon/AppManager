@@ -744,14 +744,14 @@ public final class PackageInstallerCompat {
         List<PackageInstaller.SessionInfo> sessionInfoList;
         try {
             sessionInfoList = packageInstaller.getMySessions(context.getPackageName(), userHandle).getList();
-        } catch (RemoteException e) {
-            Log.w(TAG, "CleanOldSessions: Could not get previous sessions.");
+        } catch (Throwable e) {
+            Log.w(TAG, "CleanOldSessions: Could not get previous sessions.", e);
             return;
         }
         for (PackageInstaller.SessionInfo sessionInfo : sessionInfoList) {
             try {
                 packageInstaller.abandonSession(sessionInfo.getSessionId());
-            } catch (RemoteException e) {
+            } catch (Throwable e) {
                 Log.w(TAG, "CleanOldSessions: Unable to abandon session", e);
             }
         }
