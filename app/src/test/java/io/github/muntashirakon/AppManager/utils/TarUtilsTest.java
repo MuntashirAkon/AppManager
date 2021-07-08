@@ -10,6 +10,8 @@ import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -25,6 +27,7 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
+@RunWith(RobolectricTestRunner.class)
 public class TarUtilsTest {
     private final ClassLoader classLoader = getClass().getClassLoader();
     private File testRoot;
@@ -107,8 +110,8 @@ public class TarUtilsTest {
     @Test
     public void testExtractTarGZipWithDirectoryAndMultipleFilters() throws Throwable {
         extractTest(tarGzFilesForExtractTest, testRoot, /* language=regexp */ new String[]{".*include\\.txt", "plain.*",
-                        "prefixed/.*"}, null, Arrays.asList("", "prefixed/", "prefixed/prefixed_include.txt",
-                        "prefixed/prefixed_exclude.txt", "plain.txt", "raw/", "raw/include.txt"));
+                "prefixed/.*"}, null, Arrays.asList("", "prefixed/", "prefixed/prefixed_include.txt",
+                "prefixed/prefixed_exclude.txt", "plain.txt", "raw/", "raw/include.txt"));
     }
 
     @Test

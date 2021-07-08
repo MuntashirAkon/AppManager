@@ -37,7 +37,7 @@ public class ProxyInputStream extends InputStream {
     }
 
     @WorkerThread
-    public ProxyInputStream(String file) throws IOException, RemoteException {
+    public ProxyInputStream(String file) throws IOException {
         this(new ProxyFile(file));
     }
 

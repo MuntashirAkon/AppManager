@@ -2,9 +2,9 @@
 
 package org.apache.commons.compress.archivers.tar;
 
-import android.os.RemoteException;
-
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -21,11 +21,12 @@ import io.github.muntashirakon.io.SplitOutputStream;
 
 import static org.junit.Assert.assertEquals;
 
+@RunWith(RobolectricTestRunner.class)
 public class TarArchiveOutputStreamTest {
     private final ClassLoader classLoader = getClass().getClassLoader();
 
     @Test
-    public void testTar() throws IOException, RemoteException {
+    public void testTar() throws IOException {
         List<File> fileList = new ArrayList<>();
         assert classLoader != null;
         fileList.add(new File(classLoader.getResource("AppManager_v2.5.22.apks.0").getFile()));
@@ -33,8 +34,8 @@ public class TarArchiveOutputStreamTest {
 
         // Always run tests using SplitOutputStream
         try (SplitOutputStream sot = new SplitOutputStream("/tmp/AppManager_v2.5.22.apks.tar", 1024 * 1024);
-        BufferedOutputStream bot = new BufferedOutputStream(sot);
-        TarArchiveOutputStream tot = new TarArchiveOutputStream(bot)) {
+             BufferedOutputStream bot = new BufferedOutputStream(sot);
+             TarArchiveOutputStream tot = new TarArchiveOutputStream(bot)) {
             for (File file : fileList) {
                 TarArchiveEntry tarEntry = new TarArchiveEntry(file, file.getName());
                 tot.putArchiveEntry(tarEntry);

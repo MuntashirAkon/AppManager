@@ -2,11 +2,11 @@
 
 package org.apache.commons.compress.compressors.gzip;
 
-import android.os.RemoteException;
-
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -24,11 +24,12 @@ import io.github.muntashirakon.io.SplitOutputStream;
 
 import static org.junit.Assert.assertEquals;
 
+@RunWith(RobolectricTestRunner.class)
 public class GzipCompressorOutputStreamTest {
     private final ClassLoader classLoader = getClass().getClassLoader();
 
     @Test
-    public void testTarGzip() throws IOException, RemoteException {
+    public void testTarGzip() throws IOException {
         List<File> fileList = new ArrayList<>();
         assert classLoader != null;
         fileList.add(new File(classLoader.getResource("AppManager_v2.5.22.apks.0").getFile()));
@@ -56,7 +57,7 @@ public class GzipCompressorOutputStreamTest {
     }
 
     @Test
-    public void testSplitTarGzip() throws IOException, RemoteException {
+    public void testSplitTarGzip() throws IOException {
         List<File> fileList = new ArrayList<>();
         assert classLoader != null;
         fileList.add(new File(classLoader.getResource("AppManager_v2.5.22.apks.0").getFile()));

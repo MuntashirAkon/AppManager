@@ -2,10 +2,10 @@
 
 package org.apache.commons.compress.archivers.tar;
 
-import android.os.RemoteException;
-
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -22,11 +22,12 @@ import io.github.muntashirakon.io.SplitInputStream;
 
 import static org.junit.Assert.assertEquals;
 
+@RunWith(RobolectricTestRunner.class)
 public class TarArchiveInputStreamTest {
     private final ClassLoader classLoader = getClass().getClassLoader();
 
     @Test
-    public void TestUnTar() throws IOException, RemoteException {
+    public void TestUnTar() throws IOException {
         List<File> fileList = new ArrayList<>();
         assert classLoader != null;
         fileList.add(new File(classLoader.getResource("AppManager_v2.5.22.apks.tar.0").getFile()));

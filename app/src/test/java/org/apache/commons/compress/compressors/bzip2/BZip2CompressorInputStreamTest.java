@@ -2,11 +2,11 @@
 
 package org.apache.commons.compress.compressors.bzip2;
 
-import android.os.RemoteException;
-
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -24,11 +24,12 @@ import io.github.muntashirakon.io.SplitInputStream;
 
 import static org.junit.Assert.assertEquals;
 
+@RunWith(RobolectricTestRunner.class)
 public class BZip2CompressorInputStreamTest {
     private final ClassLoader classLoader = getClass().getClassLoader();
 
     @Test
-    public void testUnTarBZip2() throws IOException, RemoteException {
+    public void testUnTarBZip2() throws IOException {
         assert classLoader != null;
         try (ProxyInputStream pis = new ProxyInputStream(new File(classLoader.getResource("AppManager_v2.5.22.apks.tar.bz2").getFile()));
              BufferedInputStream bis = new BufferedInputStream(pis);
@@ -67,7 +68,7 @@ public class BZip2CompressorInputStreamTest {
     }
 
     @Test
-    public void testSplitUnTarBZip2() throws IOException, RemoteException {
+    public void testSplitUnTarBZip2() throws IOException {
         List<File> fileList = new ArrayList<>();
         assert classLoader != null;
         fileList.add(new File(classLoader.getResource("AppManager_v2.5.22.apks.tar.bz2.0").getFile()));

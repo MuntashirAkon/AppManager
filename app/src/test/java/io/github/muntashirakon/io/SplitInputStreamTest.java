@@ -2,10 +2,10 @@
 
 package io.github.muntashirakon.io;
 
-import io.github.muntashirakon.AppManager.utils.DigestUtils;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -14,8 +14,12 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import io.github.muntashirakon.AppManager.utils.DigestUtils;
+import io.github.muntashirakon.AppManager.utils.IOUtils;
 
+import static org.junit.Assert.assertEquals;
+
+@RunWith(RobolectricTestRunner.class)
 public class SplitInputStreamTest {
     private final List<File> fileList = new ArrayList<>();
     private final ClassLoader classLoader = getClass().getClassLoader();

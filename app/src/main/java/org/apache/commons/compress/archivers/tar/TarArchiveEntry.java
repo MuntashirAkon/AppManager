@@ -447,17 +447,11 @@ public class TarArchiveEntry implements ArchiveEntry, TarConstants, EntryStreamO
             this.size = file.length();
         }
         // Setup file attributes
-        try {
-            FileStatus fstat = ProxyFiles.stat(file);
-            this.mode = fstat.st_mode;
-            this.userId = fstat.st_uid;
-            this.groupId = fstat.st_gid;
-            setModTime(fstat.st_mtime);
-        } catch (RuntimeException e) {
-            if (e.getMessage() == null || !e.getMessage().contains("mocked")) {
-                throw e;
-            }
-        }
+        FileStatus fstat = ProxyFiles.stat(file);
+        this.mode = fstat.st_mode;
+        this.userId = fstat.st_uid;
+        this.groupId = fstat.st_gid;
+        setModTime(fstat.st_mtime);
     }
 
     /**
