@@ -147,7 +147,7 @@
         <item quantity="many">%1$d часов</item>
         <item quantity="other">%1$d часов</item>
     </plurals>
-    <string name="usage_min">%1$d мин</string>
+    <string name="usage_min">%1$d мин.</string>
     <string name="usage_less_than_a_minute">Меньше минуты</string>
     <string name="go_back">Вернуться</string>
     <string name="go">Разрешить</string>
@@ -1039,8 +1039,8 @@
     <string name="checkbox_never_show_partial_select_help">Больше не показывать</string>
     <string name="add_filter_ellipsis">Добавить фильтр…</string>
     <string name="add_filter">Добавить фильтр</string>
-    <string name="log_level_fatal">Фатально</string>
-    <string name="log_level_warn">Предупреждение</string>
+    <string name="log_level_fatal">Fatal</string>
+    <string name="log_level_warn">Warn</string>
     <string name="log_level_verbose">Verbose</string>
     <string name="log_level_info">Info</string>
     <string name="log_level_error">Error</string>
