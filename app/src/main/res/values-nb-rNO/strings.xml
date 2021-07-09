@@ -619,7 +619,7 @@
     <string name="pref_export_msg">Eksporter blokkerings-regler innstilt innen App-manager til ekstern lagring.</string>
     <string name="reject_time">Avvis tid</string>
     <string name="accept_time">Godkjenn tid</string>
-    <string name="app_op_cannot_be_disabled">Denne app-operasjon kan ikke skurs av, en skrivebeskyttet app-op kan være avhengig av en annen app-op.</string>
+    <string name="app_op_cannot_be_disabled">Denne app-operasjonen kan ikke skrus av. (Antagelig avhenger én skrivebeskyttet app-op av en annen.)</string>
     <string name="toggle_kill_for_system_apps">Aktiver eller deaktiver tvungen avslutning av system-apper</string>
     <plurals name="alert_failed_to_disable_background">
         <item quantity="one">Kufnne ikke hindre ett program fra å kjøre i bakgrunnen</item>
@@ -914,4 +914,19 @@
     <string name="installer_error_session_commit">Kunne ikke sende inn APK-filene</string>
     <string name="community_links">Telegram: https://t.me/AppManagerChannel
 \nTwitter: https://twitter.com/AppManagerNews</string>
+    <string name="pref_display_changes">Vis endringer</string>
+    <plurals name="alert_failed_to_import_backups">
+        <item quantity="one">Kunne ikke importere %1$d sikkerhetskopi</item>
+        <item quantity="other">Kunne ikke importere %1$d sikkerhetskopier</item>
+    </plurals>
+    <string name="pref_log_write_period_title">Skriveperiode</string>
+    <string name="pref_selected_users">Valgte brukere</string>
+    <string name="added_to_queue">Lagt til i kø</string>
+    <string name="saved_filters">Lagrede filter</string>
+    <string name="permission_flags">Tilgangsflagg</string>
+    <string name="pref_default_log_level_title">Forvalgt loggføringsnivå</string>
+    <string name="import_from_tb">Importer fra Titanium Backup</string>
+    <string name="import_from_oab">Importer fra OAndBackup</string>
+    <string name="pref_import_backups">Importer sikkerhetskopier</string>
+    <string name="expiry_date_cannot_be_empty">Utløpsdato kan ikke stå tom.</string>
 </resources>

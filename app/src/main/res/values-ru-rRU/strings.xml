@@ -1109,11 +1109,15 @@
     <string name="import_from_tb">Импорт из Titanium Backup</string>
     <string name="import_from_oab_tb_msg">Резервные копии должны находиться в %s.</string>
     <string name="import_from_oab">Импорт из OAndBackup</string>
-    <string name="pref_import_backups_msg">Импорт резервных копий из OAndBackup, Titanium Backup или Swift Backup.</string>
+    <string name="pref_import_backups_msg">Импорт резервных копий из OAndBackup или Titanium Backup.</string>
     <string name="pref_import_backups">Импорт резервных копий</string>
     <string name="help_permissions_tab">Эти разрешения определяются этим приложением и не могут быть отозваны.</string>
     <string name="added_to_queue">Добавлено в очередь</string>
     <string name="minimum_version">Мин. версия: %d</string>
-    <string name="help_uses_permissions_tab">Нажмите на элемент, чтобы <b>предоставить</b> или <b>отозвать</b> . Только разрешения уровня <b>опасно</b> и <b>разработка</b> могут быть предоставлены или отозваны.</string>
-    <string name="help_app_ops_tab">Нажмите на элемент, чтобы <b>разрешить</b> или <b>игнорировать</b> его. Долгое нажатие позволяет увидеть другие поддерживаемые режимы.</string>
+    <string name="help_uses_permissions_tab">Нажмите на элемент, чтобы <b>предоставить</b> или <b>отозвать</b> разрешение. Только разрешения уровня <b>опасный</b> и <b>разработка</b> могут быть предоставлены или отозваны.</string>
+    <string name="help_app_ops_tab">Нажмите на элемент, чтобы установить режим <b>allow/разрешить</b> или <b>ignore/игнорировать</b>. Долгое нажатие позволяет увидеть другие поддерживаемые режимы.</string>
+    <string name="saved_filters">Сохраненные фильтры</string>
+    <string name="permission_flags">Флаги разрешений</string>
+    <string name="pref_selected_users_msg">Разрешить диспетчеру приложений работать только с выбранными пользователями.</string>
+    <string name="pref_selected_users">Выбранные пользователи</string>
 </resources>

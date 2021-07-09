@@ -1039,11 +1039,15 @@
     <string name="import_from_oab_tb_msg">Os backups devem estar localizados em %s.</string>
     <string name="import_from_tb">Importar do Titanium Backup</string>
     <string name="import_from_oab">Importar do OAndBackup</string>
-    <string name="pref_import_backups_msg">Importar backups do OAndBackup, Titanium Backup ou Swift Backup.</string>
+    <string name="pref_import_backups_msg">Importar backups do OAndBackup ou Titanium Backup.</string>
     <string name="pref_import_backups">Importar backups</string>
     <string name="help_app_ops_tab">Clique em um item para <b>permitir</b> ou <b>ignorar</b> ele. Aperte e segure em um item para ver outros modos suportados.</string>
     <string name="help_permissions_tab">Essas permissões são definidas por este aplicativo e não podem ser revogadas.</string>
     <string name="help_uses_permissions_tab">Clique em um item para <b>conceder</b> ou <b>revogar</b> ele. Somente permissões <b>perigosas</b> e de <b>desenvolvimento</b> podem ser concedidas ou revogadas.</string>
     <string name="minimum_version">Versão min: %d</string>
     <string name="added_to_queue">Adicionado à fila</string>
+    <string name="saved_filters">Filtros salvos</string>
+    <string name="permission_flags">Bandeiras de permissão</string>
+    <string name="pref_selected_users_msg">Restringir o App Manager a trabalhar apenas com os usuários selecionados.</string>
+    <string name="pref_selected_users">Usuários selecionados</string>
 </resources>

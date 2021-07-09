@@ -112,7 +112,7 @@
     <string name="sort_by_domain">تطبيقات المستخدم أولاً</string>
     <string name="sort_by_package_name">اسم الحزمة</string>
     <string name="sort_by_app_label">تسمية التطبيق</string>
-    <string name="loading">يحمل…</string>
+    <string name="loading">جار التحميل…</string>
     <string name="error">خطأ</string>
     <string name="manifest">البيان</string>
     <string name="input_features">ميزات الإدخال</string>
@@ -1178,11 +1178,15 @@
     <string name="import_from_tb">الاستيراد من Titanium Backup</string>
     <string name="import_from_oab_tb_msg">يجب أن تكون النسخ الاحتياطية موجودة في %s.</string>
     <string name="import_from_oab">الاستيراد من OAndBackup</string>
-    <string name="pref_import_backups_msg">استيراد النسخ الاحتياطية من OAndBackup أو Titanium Backup أو Swift Backup.</string>
+    <string name="pref_import_backups_msg">استيراد النسخ الاحتياطية من OAndBackup أو Titanium.</string>
     <string name="pref_import_backups">استيراد النسخ الاحتياطية</string>
     <string name="help_uses_permissions_tab">انقر على بند لمنح <b>منح</b> أو <b> رفض</b>.فقط <b> فقط خطيرة</b> و <b> تطويرية</b> أذونات يمكن أن يكون منحت أو ألغيت.</string>
     <string name="added_to_queue">إضافة إلى قائمة الانتظار</string>
     <string name="minimum_version">الإصدار الأدنى: %d</string>
     <string name="help_permissions_tab">يحدد هذا التطبيق هذه الأذونات ولا يمكن إلغاؤها.</string>
     <string name="help_app_ops_tab">انقر على عنصر <b> للسماح </b> أو <b> تجاهله </b>. انقر مطولاً على عنصر لرؤية الأوضاع المدعومة الأخرى.</string>
+    <string name="saved_filters">المرشحات المحفوظة</string>
+    <string name="permission_flags">إشارات الصلاحيات</string>
+    <string name="pref_selected_users_msg">تقييد مدير التطبيقات للعمل مع المستخدمين المحددين فقط.</string>
+    <string name="pref_selected_users">المستخدمون المحددون</string>
 </resources>
