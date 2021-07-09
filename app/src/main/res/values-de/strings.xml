@@ -1039,11 +1039,18 @@
     <string name="import_from_tb">Importieren aus Titanium Backup</string>
     <string name="import_from_oab_tb_msg">Die Sicherungen müssen sich unter %s befinden.</string>
     <string name="import_from_oab">Importieren von OAndBackup</string>
-    <string name="pref_import_backups_msg">Importieren Sie Sicherungen aus OAndBackup, Titanium Backup oder Swift Backup.</string>
+    <string name="pref_import_backups_msg">Importieren von Sicherungen aus OAndBackup oder Titanium Backup.</string>
     <string name="pref_import_backups">Sicherungen importieren</string>
     <string name="added_to_queue">Zur Warteschlange hinzugefügt</string>
     <string name="minimum_version">Minimale Version: %d</string>
     <string name="help_uses_permissions_tab">Klicken Sie auf ein Element, um es <b>zu gewähren</b> oder <b>zu entziehen</b>. Nur die Berechtigungen <b>Gefahr</b> und <b>Entwicklung</b> können gewährt oder entzogen werden.</string>
     <string name="help_permissions_tab">Diese Berechtigungen werden von dieser App festgelegt und können nicht widerrufen werden.</string>
     <string name="help_app_ops_tab">Klicken Sie auf ein Element, um es zu <b>zulassen</b> oder <b>zu ignorieren</b>. Klicken Sie lange auf ein Element, um andere unterstützte Modi anzuzeigen.</string>
+    <string name="path">Speicher</string>
+    <string name="enable_disable">Aktivieren/Deaktivieren</string>
+    <string name="error_with_details">Fehler: %s</string>
+    <string name="saved_filters">Gespeicherte Filter</string>
+    <string name="permission_flags">Berechtigungskennzeichen</string>
+    <string name="pref_selected_users_msg">Beschränken des App Manager auf die ausgewählten Benutzer.</string>
+    <string name="pref_selected_users">Ausgewählte Nutzer</string>
 </resources>
