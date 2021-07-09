@@ -1042,9 +1042,9 @@
     <string name="log_level_fatal">Fatal</string>
     <string name="log_level_warn">Warn</string>
     <string name="log_level_verbose">Verbose</string>
-    <string name="log_level_info">Инфа</string>
-    <string name="log_level_error">Ошибка</string>
-    <string name="log_level_debug">Отладка</string>
+    <string name="log_level_info">Info</string>
+    <string name="log_level_error">Error</string>
+    <string name="log_level_debug">Debug</string>
     <string name="filename">Имя файла</string>
     <string name="restart_log_viewer_to_see_changes">Перезапустите окно просмотра логов, чтобы увидеть изменения.</string>
     <string name="pref_log_viewer_msg">Настройка отображения логов.</string>
