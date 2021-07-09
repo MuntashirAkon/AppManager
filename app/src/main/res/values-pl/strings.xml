@@ -14,7 +14,7 @@
     <string name="user_app">Aplikacja użytkownika</string>
     <string name="system_app">Aplikacja systemowa</string>
     <string name="app_info">Informacje o aplikacji</string>
-    <string name="version_name_with_code">Wersja &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"version_name\" example=\"2.5.17\"&gt;</string>
+    <string name="version_name_with_code">Wersja <xliff:g id="version_name" example="2.5.17">%1$s</xliff:g> (<xliff:g id="version_code" example="365">%2$d</xliff:g>)</string>
     <string name="sort">Sortuj</string>
     <string name="system">Systemowe</string>
     <string name="sort_by_app_label">Etykieta aplikacji</string>
