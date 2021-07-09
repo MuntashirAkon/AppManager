@@ -1050,4 +1050,7 @@
     <string name="permission_flags">Bandeiras de permissão</string>
     <string name="pref_selected_users_msg">Restringir o App Manager a trabalhar apenas com os usuários selecionados.</string>
     <string name="pref_selected_users">Usuários selecionados</string>
+    <string name="path">Armazenamento</string>
+    <string name="enable_disable">Ativar/desativar</string>
+    <string name="error_with_details">Erro: %s</string>
 </resources>
