@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.rules;
 
+import android.content.Context;
 import android.os.RemoteException;
 
 import androidx.annotation.GuardedBy;
@@ -37,8 +38,8 @@ import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.uri.UriManager;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.ProxyFileReader;
-import io.github.muntashirakon.io.ProxyOutputStream;
 
 public class RulesStorageManager implements Closeable {
     @NonNull
@@ -247,7 +248,7 @@ public class RulesStorageManager implements Closeable {
     }
 
     @GuardedBy("entries")
-    protected void loadEntries(File file, boolean isExternal) throws IOException, RemoteException {
+    protected void loadEntries(Path file, boolean isExternal) throws IOException, RemoteException {
         String dataRow;
         try (BufferedReader TSVFile = new BufferedReader(new ProxyFileReader(file))) {
             while ((dataRow = TSVFile.readLine()) != null) {
@@ -271,7 +272,7 @@ public class RulesStorageManager implements Closeable {
 
     @WorkerThread
     @GuardedBy("entries")
-    public void commitExternal(File tsvRulesFile) {
+    public void commitExternal(Path tsvRulesFile) {
         try {
             saveEntries(tsvRulesFile, true);
         } catch (IOException | RemoteException ex) {
@@ -281,31 +282,31 @@ public class RulesStorageManager implements Closeable {
 
     @WorkerThread
     @GuardedBy("entries")
-    protected void saveEntries(File tsvRulesFile, boolean isExternal) throws IOException, RemoteException {
+    protected void saveEntries(Path tsvRulesFile, boolean isExternal) throws IOException, RemoteException {
         synchronized (entries) {
             if (entries.size() == 0) {
-                //noinspection ResultOfMethodCallIgnored
                 tsvRulesFile.delete();
                 return;
             }
-            try (OutputStream TSVFile = new ProxyOutputStream(tsvRulesFile)) {
+            try (OutputStream TSVFile = tsvRulesFile.openOutputStream()) {
                 ComponentUtils.storeRules(TSVFile, entries, isExternal);
             }
         }
     }
 
     @NonNull
-    public static File getConfDir() {
-        return new File(AppManager.getContext().getFilesDir(), "conf");
+    public static Path getConfDir() {
+        Context ctx = AppManager.getContext();
+        return new Path(ctx, new File(ctx.getFilesDir(), "conf"));
     }
 
     @NonNull
-    protected File getDesiredFile() throws FileNotFoundException {
-        File confDir = getConfDir();
-        if (!confDir.exists() && !confDir.mkdirs()) {
-            throw new FileNotFoundException("Can not get correct path to save ifw rules");
+    protected Path getDesiredFile() throws FileNotFoundException {
+        Path confDir = getConfDir();
+        if (!confDir.exists()) {
+            confDir.mkdirs();
         }
-        return new File(confDir, packageName + ".tsv");
+        return confDir.findFile(packageName + ".tsv");
     }
 
 }

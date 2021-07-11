@@ -48,7 +48,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -147,7 +146,8 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
     private final BetterActivityResult<String, Uri> saveLauncher = BetterActivityResult
             .registerForActivityResult(this, new ActivityResultContracts.CreateDocument());
 
-    public static void startChooser(Context context, String subject, String body, SendLogDetails.AttachmentType attachmentType, File attachment) {
+    public static void startChooser(Context context, String subject, String body,
+                                    SendLogDetails.AttachmentType attachmentType, Path attachment) {
         Intent actionSendIntent = new Intent(Intent.ACTION_SEND);
 
         actionSendIntent.setType(attachmentType.getMimeType());
@@ -156,7 +156,7 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
             actionSendIntent.putExtra(Intent.EXTRA_TEXT, body);
         }
         if (attachment != null) {
-            actionSendIntent.putExtra(Intent.EXTRA_STREAM, FmProvider.getContentUri(new Path(context, attachment)))
+            actionSendIntent.putExtra(Intent.EXTRA_STREAM, FmProvider.getContentUri(attachment))
                     .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         }
         try {
@@ -745,7 +745,7 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
     }
 
     private void displayDeleteSavedLogsDialog() {
-        List<File> logFiles = SaveLogHelper.getLogFiles();
+        List<Path> logFiles = SaveLogHelper.getLogFiles();
         if (logFiles.isEmpty()) {
             Toast.makeText(this, R.string.no_saved_logs, Toast.LENGTH_SHORT).show();
             return;
@@ -762,7 +762,7 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
                             .setMessage(getResources().getQuantityString(R.plurals.file_deletion_confirmation,
                                     deleteCount, deleteCount))
                             .setPositiveButton(android.R.string.ok, (dialog1, which1) -> {
-                                for (File selectedFile : selectedFiles) {
+                                for (Path selectedFile : selectedFiles) {
                                     SaveLogHelper.deleteLogIfExists(selectedFile.getName());
                                 }
                                 UIUtils.displayShortToast(R.string.deleted_successfully);
@@ -813,7 +813,7 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
         } else dialog = null;
         executor.submit(() -> {
             SendLogDetails sendLogDetails = new SendLogDetails();
-            List<File> files = saveLogDetails(includeDeviceInfo, includeDmesg);
+            List<Path> files = saveLogDetails(includeDeviceInfo, includeDmesg);
             sendLogDetails.setBody("");
             sendLogDetails.setSubject(getString(R.string.subject_log_report));
             // either zip up multiple files or just attach the one file
@@ -827,7 +827,7 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
                     break;
                 default: // 2 files - need to zip them up
                     try {
-                        File zipFile = SaveLogHelper.saveTemporaryZipFile(SaveLogHelper.createZipFilename(true), files);
+                        Path zipFile = SaveLogHelper.saveTemporaryZipFile(SaveLogHelper.createZipFilename(true), files);
                         sendLogDetails.setSubject(zipFile.getName());
                         sendLogDetails.setAttachmentType(SendLogDetails.AttachmentType.Zip);
                         sendLogDetails.setAttachment(zipFile);
@@ -859,7 +859,7 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
             dialog.setCancelable(false);
         } else dialog = null;
         executor.submit(() -> {
-            List<File> files = saveLogDetails(includeDeviceInfo, includeDmesg);
+            List<Path> files = saveLogDetails(includeDeviceInfo, includeDmesg);
             if (isDestroyed()) return;
             runOnUiThread(() -> {
                 if (dialog != null && dialog.isShowing()) {
@@ -883,26 +883,30 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
 
     @NonNull
     @WorkerThread
-    private List<File> saveLogDetails(boolean includeDeviceInfo, boolean includeDmesg) {
-        List<File> files = new ArrayList<>();
+    private List<Path> saveLogDetails(boolean includeDeviceInfo, boolean includeDmesg) {
+        List<Path> files = new ArrayList<>();
         SaveLogHelper.cleanTemp();
 
         if (mCurrentlyOpenLog != null) { // Use saved log file
-            files.add(SaveLogHelper.getFile(mCurrentlyOpenLog));
+            try {
+                files.add(SaveLogHelper.getFile(mCurrentlyOpenLog));
+            } catch (IOException e) {
+                Log.e(TAG, e);
+            }
         } else { // Create a temp file to hold the current, unsaved log
-            File tempLogFile = SaveLogHelper.saveTemporaryFile(SaveLogHelper.TEMP_LOG_FILENAME, null,
+            Path tempLogFile = SaveLogHelper.saveTemporaryFile(SaveLogHelper.TEMP_LOG_FILENAME, null,
                     getCurrentLogAsListOfStrings());
             files.add(tempLogFile);
         }
 
         if (includeDeviceInfo) {
             String deviceInfo = BuildHelper.getBuildInformationAsString();
-            File tempFile = SaveLogHelper.saveTemporaryFile(SaveLogHelper.TEMP_DEVICE_INFO_FILENAME, deviceInfo, null);
+            Path tempFile = SaveLogHelper.saveTemporaryFile(SaveLogHelper.TEMP_DEVICE_INFO_FILENAME, deviceInfo, null);
             files.add(tempFile);
         }
 
         if (includeDmesg) {
-            File tempDmsgFile = SaveLogHelper.saveTemporaryFile(SaveLogHelper.TEMP_DMESG_FILENAME, null,
+            Path tempDmsgFile = SaveLogHelper.saveTemporaryFile(SaveLogHelper.TEMP_DMESG_FILENAME, null,
                     Runner.runCommand(Runner.getRootInstance(), "dmesg").getOutputAsList());
             files.add(tempDmsgFile);
         }
@@ -995,7 +999,7 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
     }
 
     private void displayOpenLogFileDialog() {
-        List<File> logFiles = SaveLogHelper.getLogFiles();
+        List<Path> logFiles = SaveLogHelper.getLogFiles();
         if (logFiles.isEmpty()) {
             Toast.makeText(this, R.string.no_saved_logs, Toast.LENGTH_SHORT).show();
             return;
@@ -1026,7 +1030,13 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
 
                 // remove any lines at the beginning if necessary
                 final int maxLines = AppPref.getInt(AppPref.PrefKey.PREF_LOG_VIEWER_DISPLAY_LIMIT_INT);
-                SavedLog savedLog = SaveLogHelper.openLog(filename, maxLines);
+                SavedLog savedLog;
+                try {
+                    savedLog = SaveLogHelper.openLog(filename, maxLines);
+                } catch (IOException e) {
+                    Log.e(TAG, e);
+                    return Collections.emptyList();
+                }
                 List<String> lines = savedLog.getLogLines();
                 List<LogLine> logLines = new ArrayList<>();
                 for (int lineNumber = 0, linesSize = lines.size(); lineNumber < linesSize; lineNumber++) {

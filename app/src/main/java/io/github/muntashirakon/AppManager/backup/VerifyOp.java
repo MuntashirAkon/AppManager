@@ -3,13 +3,10 @@
 package io.github.muntashirakon.AppManager.backup;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
-import org.json.JSONException;
-
 import java.io.Closeable;
-import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,8 +15,7 @@ import io.github.muntashirakon.AppManager.crypto.Crypto;
 import io.github.muntashirakon.AppManager.crypto.CryptoException;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
-import io.github.muntashirakon.io.ProxyFile;
+import io.github.muntashirakon.io.Path;
 
 import static io.github.muntashirakon.AppManager.backup.BackupManager.DATA_PREFIX;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.KEYSTORE_PREFIX;
@@ -34,14 +30,14 @@ class VerifyOp implements Closeable {
     @NonNull
     private final MetadataManager.Metadata metadata;
     @NonNull
-    private final ProxyFile backupPath;
+    private final Path backupPath;
     @NonNull
     private final BackupFiles.BackupFile backupFile;
     @NonNull
     private final Crypto crypto;
     @NonNull
     private final BackupFiles.Checksum checksum;
-    private final List<File> decryptedFiles = new ArrayList<>();
+    private final List<Path> decryptedFiles = new ArrayList<>();
 
     VerifyOp(@NonNull MetadataManager metadataManager, @NonNull BackupFiles.BackupFile backupFile)
             throws BackupException {
@@ -51,7 +47,7 @@ class VerifyOp implements Closeable {
             metadataManager.readMetadata(this.backupFile);
             metadata = metadataManager.getMetadata();
             this.backupFlags = metadata.flags;
-        } catch (JSONException e) {
+        } catch (IOException e) {
             throw new BackupException("Could not read metadata. Possibly due to a malformed json file.", e);
         }
         // Setup crypto
@@ -63,9 +59,14 @@ class VerifyOp implements Closeable {
         } catch (CryptoException e) {
             throw new BackupException("Could not get crypto " + metadata.crypto, e);
         }
-        File checksumFile = this.backupFile.getChecksumFile(metadata.crypto);
+        Path checksumFile;
+        try {
+            checksumFile = this.backupFile.getChecksumFile(metadata.crypto);
+        } catch (IOException e) {
+            throw new BackupException("Could not get encrypted checksum.txt file.", e);
+        }
         // Decrypt checksum
-        if (!crypto.decrypt(new File[]{checksumFile})) {
+        if (!crypto.decrypt(new Path[]{checksumFile})) {
             throw new BackupException("Could not decrypt " + checksumFile.getName());
         }
         // Get checksums
@@ -78,7 +79,12 @@ class VerifyOp implements Closeable {
             throw new BackupException("Could not get checksums.", e);
         }
         // Verify metadata
-        File metadataFile = this.backupFile.getMetadataFile();
+        Path metadataFile;
+        try {
+            metadataFile = this.backupFile.getMetadataFile();
+        } catch (IOException e) {
+            throw new BackupException("Could not get metadata file.", e);
+        }
         String checksum = DigestUtils.getHexDigest(metadata.checksumAlgo, metadataFile);
         if (!checksum.equals(this.checksum.get(metadataFile.getName()))) {
             throw new BackupException("Could not verify metadata." +
@@ -92,9 +98,9 @@ class VerifyOp implements Closeable {
     public void close() {
         Log.d(TAG, "Close called");
         crypto.close();
-        for (File file : decryptedFiles) {
+        for (Path file : decryptedFiles) {
             Log.d(TAG, "Deleting " + file);
-            IOUtils.deleteSilently(new ProxyFile(file));
+            file.delete();
         }
     }
 
@@ -111,13 +117,13 @@ class VerifyOp implements Closeable {
     }
 
     private void verifyApkFiles() throws BackupException {
-        File[] backupSourceFiles = getSourceFiles(backupPath);
-        if (backupSourceFiles == null || backupSourceFiles.length == 0) {
+        Path[] backupSourceFiles = getSourceFiles(backupPath);
+        if (backupSourceFiles.length == 0) {
             // No APK files found
             throw new BackupException("Backup does not contain any APK files.");
         }
         String checksum;
-        for (File file : backupSourceFiles) {
+        for (Path file : backupSourceFiles) {
             checksum = DigestUtils.getHexDigest(metadata.checksumAlgo, file);
             if (!checksum.equals(this.checksum.get(file.getName()))) {
                 throw new BackupException("Could not verify APK files." +
@@ -129,12 +135,12 @@ class VerifyOp implements Closeable {
     }
 
     private void verifyKeyStore() throws BackupException {
-        File[] keyStoreFiles = getKeyStoreFiles(backupPath);
-        if (keyStoreFiles == null || keyStoreFiles.length == 0) {
+        Path[] keyStoreFiles = getKeyStoreFiles(backupPath);
+        if (keyStoreFiles.length == 0) {
             throw new BackupException("KeyStore files do not exist.");
         }
         String checksum;
-        for (File file : keyStoreFiles) {
+        for (Path file : keyStoreFiles) {
             checksum = DigestUtils.getHexDigest(metadata.checksumAlgo, file);
             if (!checksum.equals(this.checksum.get(file.getName()))) {
                 throw new BackupException("Could not verify KeyStore files." +
@@ -146,14 +152,14 @@ class VerifyOp implements Closeable {
     }
 
     private void verifyData() throws BackupException {
-        File[] dataFiles;
+        Path[] dataFiles;
         String checksum;
         for (int i = 0; i < metadata.dataDirs.length; ++i) {
             dataFiles = getDataFiles(backupPath, i);
-            if (dataFiles == null || dataFiles.length == 0) {
+            if (dataFiles.length == 0) {
                 throw new BackupException("No data files at index " + i + ".");
             }
-            for (File file : dataFiles) {
+            for (Path file : dataFiles) {
                 checksum = DigestUtils.getHexDigest(metadata.checksumAlgo, file);
                 if (!checksum.equals(this.checksum.get(file.getName()))) {
                     throw new BackupException("Could not verify data files at index " + i + "." +
@@ -166,47 +172,57 @@ class VerifyOp implements Closeable {
     }
 
     private void verifyExtras() throws BackupException {
-        File miscFile = backupFile.getMiscFile(metadata.crypto);
-        if (miscFile.exists()) {
-            String checksum = DigestUtils.getHexDigest(metadata.checksumAlgo, miscFile);
-            if (!checksum.equals(this.checksum.get(miscFile.getName()))) {
-                throw new BackupException("Could not verify extras." +
-                        "\nFile: " + miscFile.getName() +
-                        "\nFound: " + checksum +
-                        "\nRequired: " + this.checksum.get(miscFile.getName()));
-            }
-        } // else there are no permissions, just skip
+        Path miscFile;
+        try {
+            miscFile = backupFile.getMiscFile(metadata.crypto);
+        } catch (IOException ignore) {
+            // There are no permissions, just skip
+            return;
+        }
+        String checksum = DigestUtils.getHexDigest(metadata.checksumAlgo, miscFile);
+        if (!checksum.equals(this.checksum.get(miscFile.getName()))) {
+            throw new BackupException("Could not verify extras." +
+                    "\nFile: " + miscFile.getName() +
+                    "\nFound: " + checksum +
+                    "\nRequired: " + this.checksum.get(miscFile.getName()));
+        }
     }
 
     private void verifyRules() throws BackupException {
-        File rulesFile = backupFile.getRulesFile(metadata.crypto);
-        if (rulesFile.exists()) {
-            String checksum = DigestUtils.getHexDigest(metadata.checksumAlgo, rulesFile);
-            if (!checksum.equals(this.checksum.get(rulesFile.getName()))) {
-                throw new BackupException("Could not verify rules file." +
-                        "\nFile: " + rulesFile.getName() +
-                        "\nFound: " + checksum +
-                        "\nRequired: " + this.checksum.get(rulesFile.getName()));
+        Path rulesFile;
+        try {
+            rulesFile = backupFile.getRulesFile(metadata.crypto);
+        } catch (IOException e) {
+            if (metadata.hasRules) {
+                throw new BackupException("Rules file is missing.", e);
+            } else {
+                // There are no rules, just skip
+                return;
             }
-        } else if (metadata.hasRules) {
-            throw new BackupException("Rules file is missing.");
-        } // else there are no rules, just skip
+        }
+        String checksum = DigestUtils.getHexDigest(metadata.checksumAlgo, rulesFile);
+        if (!checksum.equals(this.checksum.get(rulesFile.getName()))) {
+            throw new BackupException("Could not verify rules file." +
+                    "\nFile: " + rulesFile.getName() +
+                    "\nFound: " + checksum +
+                    "\nRequired: " + this.checksum.get(rulesFile.getName()));
+        }
     }
 
-    @Nullable
-    private File[] getSourceFiles(@NonNull File backupPath) {
+    @NonNull
+    private Path[] getSourceFiles(@NonNull Path backupPath) {
         String mode = CryptoUtils.getExtension(metadata.crypto);
         return backupPath.listFiles((dir, name) -> name.startsWith(SOURCE_PREFIX) && name.endsWith(mode));
     }
 
-    @Nullable
-    private File[] getKeyStoreFiles(@NonNull File backupPath) {
+    @NonNull
+    private Path[] getKeyStoreFiles(@NonNull Path backupPath) {
         String mode = CryptoUtils.getExtension(metadata.crypto);
         return backupPath.listFiles((dir, name) -> name.startsWith(KEYSTORE_PREFIX) && name.endsWith(mode));
     }
 
-    @Nullable
-    private File[] getDataFiles(@NonNull File backupPath, int index) {
+    @NonNull
+    private Path[] getDataFiles(@NonNull Path backupPath, int index) {
         String mode = CryptoUtils.getExtension(metadata.crypto);
         final String dataPrefix = DATA_PREFIX + index;
         return backupPath.listFiles((dir, name) -> name.startsWith(dataPrefix) && name.endsWith(mode));

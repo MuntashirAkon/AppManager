@@ -16,8 +16,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import org.json.JSONException;
-
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -169,7 +168,7 @@ public class BackupTasksDialogFragment extends DialogFragment {
                                 if (!hash.equals(newHash)) changedDirs.add(dir);
                             }
                             // TODO: 23/4/21 Support delta backup
-                        } catch (JSONException ignore) {
+                        } catch (IOException ignore) {
                         }
                         applicationItems.add(item);
                         applicationLabels.add(new SpannableStringBuilder(UIUtils.getPrimaryText(activity,

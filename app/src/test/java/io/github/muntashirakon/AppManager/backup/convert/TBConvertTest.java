@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.backup.convert;
 
+import android.content.Context;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,10 +15,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.backup.BackupException;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.TarUtilsTest;
+import io.github.muntashirakon.io.Path;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -29,11 +33,12 @@ public class TBConvertTest {
     private static final String PACKAGE_NAME_APK = "ademar.textlauncher";
 
     private final ClassLoader classLoader = getClass().getClassLoader();
+    private final Context context = AppManager.getContext();
     private File backupLocation;
 
     @Before
     public void setUp() {
-        AppPref.set(AppPref.PrefKey.PREF_BACKUP_VOLUME_STR, "/tmp");
+        AppPref.set(AppPref.PrefKey.PREF_BACKUP_VOLUME_STR, "file:///tmp");
         IOUtils.deleteDir(new File("/tmp/AppManager"));
         assert classLoader != null;
         backupLocation = new File(classLoader.getResource(TBConvert.PATH_SUFFIX).getFile());
@@ -72,17 +77,17 @@ public class TBConvertTest {
                 "files/PersonalDNSFilter/FILTERHOSTS.TXT.DLD_CNT");
         Collections.sort(internalStorage);
         Collections.sort(externalStorage);
-        File propFile = new File(backupLocation, PACKAGE_NAME_FULL + "-20210529-164214.properties");
+        Path propFile = new Path(context, new File(backupLocation, PACKAGE_NAME_FULL + "-20210529-164214.properties"));
         TBConvert tbConvert = new TBConvert(propFile);
         tbConvert.convert();
-        File newBackupLocation = new File(new File(AppPref.getAppManagerDirectory(), PACKAGE_NAME_FULL), "0_TB");
+        Path newBackupLocation = AppPref.getAppManagerDirectory().findFile(PACKAGE_NAME_FULL).findFile("0_TB");
         // Verify source
         assertEquals(Collections.singletonList("base.apk"), TarUtilsTest.getFileNamesGZip(Collections.singletonList(
-                new File(newBackupLocation, "source.tar.gz.0"))));
-        List<String> files = TarUtilsTest.getFileNamesGZip(Collections.singletonList(new File(newBackupLocation, "data0.tar.gz.0")));
+                newBackupLocation.findFile("source.tar.gz.0"))));
+        List<String> files = TarUtilsTest.getFileNamesGZip(Collections.singletonList(newBackupLocation.findFile("data0.tar.gz.0")));
         Collections.sort(files);
         assertEquals(internalStorage, files);
-        files = TarUtilsTest.getFileNamesGZip(Collections.singletonList(new File(newBackupLocation, "data1.tar.gz.0")));
+        files = TarUtilsTest.getFileNamesGZip(Collections.singletonList(newBackupLocation.findFile("data1.tar.gz.0")));
         Collections.sort(files);
         assertEquals(externalStorage, files);
     }
@@ -94,17 +99,17 @@ public class TBConvertTest {
                 "shared_prefs/",
                 "shared_prefs/org.billthefarmer.editor_preferences.xml");
         Collections.sort(internalStorage);
-        File propFile = new File(backupLocation, PACKAGE_NAME_APK_INT + "-20210529-164210.properties");
+        Path propFile = new Path(context, new File(backupLocation, PACKAGE_NAME_APK_INT + "-20210529-164210.properties"));
         TBConvert tbConvert = new TBConvert(propFile);
         tbConvert.convert();
-        File newBackupLocation = new File(new File(AppPref.getAppManagerDirectory(), PACKAGE_NAME_APK_INT), "0_TB");
+        Path newBackupLocation = AppPref.getAppManagerDirectory().findFile(PACKAGE_NAME_APK_INT).findFile("0_TB");
         // Verify source
         assertEquals(Collections.singletonList("base.apk"), TarUtilsTest.getFileNamesGZip(Collections.singletonList(
-                new File(newBackupLocation, "source.tar.gz.0"))));
-        List<String> files = TarUtilsTest.getFileNamesGZip(Collections.singletonList(new File(newBackupLocation, "data0.tar.gz.0")));
+                newBackupLocation.findFile("source.tar.gz.0"))));
+        List<String> files = TarUtilsTest.getFileNamesGZip(Collections.singletonList(newBackupLocation.findFile("data0.tar.gz.0")));
         Collections.sort(files);
         assertEquals(internalStorage, files);
-        assertFalse(new File(newBackupLocation, "data1.tar.gz.0").exists());
+        assertFalse(newBackupLocation.hasFile("data1.tar.gz.0"));
     }
 
     @Test
@@ -115,28 +120,28 @@ public class TBConvertTest {
                 "shared_prefs/ca.cmetcalfe.locationshare_preferences.xml",
                 "shared_prefs/_has_set_default_values.xml");
         Collections.sort(internalStorage);
-        File propFile = new File(backupLocation, PACKAGE_NAME_INT + "-20210529-164219.properties");
+        Path propFile = new Path(context, new File(backupLocation, PACKAGE_NAME_INT + "-20210529-164219.properties"));
         TBConvert tbConvert = new TBConvert(propFile);
         tbConvert.convert();
-        File newBackupLocation = new File(new File(AppPref.getAppManagerDirectory(), PACKAGE_NAME_INT), "0_TB");
+        Path newBackupLocation = AppPref.getAppManagerDirectory().findFile(PACKAGE_NAME_INT).findFile("0_TB");
         // Verify source
-        List<String> files = TarUtilsTest.getFileNamesGZip(Collections.singletonList(new File(newBackupLocation, "data0.tar.gz.0")));
+        List<String> files = TarUtilsTest.getFileNamesGZip(Collections.singletonList(newBackupLocation.findFile("data0.tar.gz.0")));
         Collections.sort(files);
         assertEquals(internalStorage, files);
-        assertFalse(new File(newBackupLocation, "source.tar.gz.0").exists());
-        assertFalse(new File(newBackupLocation, "data1.tar.gz.0").exists());
+        assertFalse(newBackupLocation.hasFile("source.tar.gz.0"));
+        assertFalse(newBackupLocation.hasFile("data1.tar.gz.0"));
     }
 
     @Test
     public void convertApkOnlyTest() throws BackupException, IOException {
-        File propFile = new File(backupLocation, PACKAGE_NAME_APK + "-20210530-111646.properties");
+        Path propFile = new Path(context, new File(backupLocation, PACKAGE_NAME_APK + "-20210530-111646.properties"));
         TBConvert tbConvert = new TBConvert(propFile);
         tbConvert.convert();
-        File newBackupLocation = new File(new File(AppPref.getAppManagerDirectory(), PACKAGE_NAME_APK), "0_TB");
+        Path newBackupLocation = AppPref.getAppManagerDirectory().findFile(PACKAGE_NAME_APK).findFile("0_TB");
         // Verify source
         assertEquals(Collections.singletonList("base.apk"), TarUtilsTest.getFileNamesGZip(Collections.singletonList(
-                new File(newBackupLocation, "source.tar.gz.0"))));
-        assertFalse(new File(newBackupLocation, "data0.tar.gz.0").exists());
-        assertFalse(new File(newBackupLocation, "data1.tar.gz.0").exists());
+                newBackupLocation.findFile("source.tar.gz.0"))));
+        assertFalse(newBackupLocation.hasFile("data0.tar.gz.0"));
+        assertFalse(newBackupLocation.hasFile("data1.tar.gz.0"));
     }
 }

@@ -3,15 +3,14 @@
 package io.github.muntashirakon.AppManager.backup.convert;
 
 import android.annotation.SuppressLint;
-import android.os.RemoteException;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.android.apksig.ApkVerifier;
 import com.android.apksig.apk.ApkFormatException;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
@@ -20,6 +19,7 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.backup.BackupException;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
@@ -30,32 +30,32 @@ import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.TarUtils;
-import io.github.muntashirakon.io.ProxyFile;
-import io.github.muntashirakon.io.ProxyInputStream;
+import io.github.muntashirakon.io.Path;
 
 import static io.github.muntashirakon.AppManager.backup.MetadataManager.TAR_TYPES;
 
 public final class ConvertUtils {
     @NonNull
-    public static File getImportPath(@ImportType int backupType) {
-        String backupVolume = AppPref.getString(AppPref.PrefKey.PREF_BACKUP_VOLUME_STR);
+    public static Path getImportPath(@ImportType int backupType) throws FileNotFoundException {
+        // TODO: 9/7/21 Ask user to select folder
+        Path backupVolume = new Path(AppManager.getContext(), AppPref.getSelectedDirectory());
         switch (backupType) {
             case ImportType.OAndBackup:
-                return new ProxyFile(backupVolume, OABConvert.PATH_SUFFIX);
+                return backupVolume.findFile(OABConvert.PATH_SUFFIX);
             case ImportType.TitaniumBackup:
-                return new ProxyFile(backupVolume, TBConvert.PATH_SUFFIX);
+                return backupVolume.findFile(TBConvert.PATH_SUFFIX);
             default:
                 throw new IllegalArgumentException("Unsupported import type " + backupType);
         }
     }
 
-    @Nullable
-    public static File[] getRelevantImportFiles(@ImportType int backupType) {
+    @NonNull
+    public static Path[] getRelevantImportFiles(@ImportType int backupType) throws FileNotFoundException {
         return getRelevantImportFiles(backupType, getImportPath(backupType));
     }
 
     @NonNull
-    public static Convert getConversionUtil(@ImportType int backupType, File file) {
+    public static Convert getConversionUtil(@ImportType int backupType, Path file) {
         switch (backupType) {
             case ImportType.OAndBackup:
                 return new OABConvert(file);
@@ -66,12 +66,12 @@ public final class ConvertUtils {
         }
     }
 
-    @Nullable
-    public static File[] getRelevantImportFiles(@ImportType int backupType, File baseLocation) {
+    @NonNull
+    public static Path[] getRelevantImportFiles(@ImportType int backupType, Path baseLocation) {
         switch (backupType) {
             case ImportType.OAndBackup:
                 // Package directories
-                return baseLocation.listFiles(File::isDirectory);
+                return baseLocation.listFiles(Path::isDirectory);
             case ImportType.TitaniumBackup:
                 // Properties files
                 return baseLocation.listFiles((dir, name) -> name.endsWith(".properties"));
@@ -120,17 +120,16 @@ public final class ConvertUtils {
     }
 
     @NonNull
-    static String[] getChecksumsFromApk(File apkFile, @DigestUtils.Algorithm String algo)
-            throws IOException, RemoteException, ApkFormatException, NoSuchAlgorithmException,
-            CertificateEncodingException {
-        if (apkFile instanceof ProxyFile) {
-            // Since we can't directly work with ProxyFile, we need to cache it and read the signature
-            try (InputStream is = new ProxyInputStream(apkFile)) {
-                apkFile = IOUtils.getCachedFile(is);
-            }
-        } // else Work with the apk file directly
+    static String[] getChecksumsFromApk(Path apkFile, @DigestUtils.Algorithm String algo)
+            throws IOException, ApkFormatException, NoSuchAlgorithmException, CertificateEncodingException {
+        // Since we can't directly work with ProxyFile, we need to cache it and read the signature
+        // TODO: 10/7/21 Use ProxyRandomAccessFile when possible
+        File cachedFile;
+        try (InputStream is = apkFile.openInputStream()) {
+            cachedFile = IOUtils.getCachedFile(is);
+        }
         List<String> checksums = new ArrayList<>(1);
-        ApkVerifier verifier = new ApkVerifier.Builder(apkFile).build();
+        ApkVerifier verifier = new ApkVerifier.Builder(cachedFile).build();
         ApkVerifier.Result apkVerifierResult = verifier.verify();
         // Get signer certificates
         List<X509Certificate> certificates = apkVerifierResult.getSignerCertificates();

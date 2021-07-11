@@ -22,6 +22,7 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.rules.struct.RuleEntry;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.io.Path;
 
 /**
  * Rules importer is used to import internal rules to App Manager. Rules should only be imported
@@ -61,6 +62,29 @@ public class RulesImporter implements Closeable {
 
     public void addRulesFromUri(Uri uri) throws IOException {
         try (InputStream inputStream = mContext.getContentResolver().openInputStream(uri)) {
+            if (inputStream == null) throw new IOException("Content provider has crashed.");
+            try (BufferedReader TSVFile = new BufferedReader(new InputStreamReader(inputStream))) {
+                String dataRow;
+                while ((dataRow = TSVFile.readLine()) != null) {
+                    RuleEntry entry = RuleEntry.unflattenFromString(null, dataRow, true);
+                    // Parse complete, now add the row to CB
+                    for (int i = 0; i < userHandles.length; ++i) {
+                        if (mComponentsBlockers[i].get(entry.packageName) == null) {
+                            // Get a read-only instance, commit will be called manually
+                            mComponentsBlockers[i].put(entry.packageName, ComponentsBlocker.getInstance(entry.packageName, userHandles[i]));
+                        }
+                        if (mTypesToImport.contains(entry.type)) {
+                            //noinspection ConstantConditions Returned ComponentsBlocker will never be null here
+                            mComponentsBlockers[i].get(entry.packageName).addEntry(entry);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void addRulesFromPath(Path path) throws IOException {
+        try (InputStream inputStream = path.openInputStream()) {
             try (BufferedReader TSVFile = new BufferedReader(new InputStreamReader(inputStream))) {
                 String dataRow;
                 while ((dataRow = TSVFile.readLine()) != null) {

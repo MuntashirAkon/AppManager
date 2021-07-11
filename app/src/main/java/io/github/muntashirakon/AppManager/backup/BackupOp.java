@@ -17,10 +17,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 import androidx.core.content.pm.PermissionInfoCompat;
 
-import org.json.JSONException;
-
 import java.io.Closeable;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -58,8 +57,8 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.SsaidSettings;
 import io.github.muntashirakon.AppManager.utils.TarUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.ProxyFile;
-import io.github.muntashirakon.io.ProxyOutputStream;
 
 import static io.github.muntashirakon.AppManager.backup.BackupManager.CERT_PREFIX;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.DATA_PREFIX;
@@ -75,6 +74,8 @@ class BackupOp implements Closeable {
     static final String TAG = "BackupOp";
 
     @NonNull
+    private final Context context = AppManager.getContext();
+    @NonNull
     private final String packageName;
     @NonNull
     private final BackupFiles.BackupFile backupFile;
@@ -89,7 +90,7 @@ class BackupOp implements Closeable {
     @NonNull
     private final ApplicationInfo applicationInfo;
     @NonNull
-    private final ProxyFile tmpBackupPath;
+    private final Path tmpBackupPath;
     private final int userHandle;
     @NonNull
     private final Crypto crypto;
@@ -97,7 +98,7 @@ class BackupOp implements Closeable {
     private final BackupFiles.Checksum checksum;
     // We don't need privileged package manager here
     @NonNull
-    private final PackageManager pm = AppManager.getContext().getPackageManager();
+    private final PackageManager pm = context.getPackageManager();
 
     BackupOp(@NonNull String packageName, @NonNull MetadataManager metadataManager,
              @NonNull BackupFlags backupFlags, @NonNull BackupFiles.BackupFile backupFile,
@@ -146,12 +147,15 @@ class BackupOp implements Closeable {
         crypto.close();
     }
 
-    boolean runBackup() {
+    void runBackup() throws BackupException {
         // Fail backup if the app has items in Android KeyStore and backup isn't enabled
         if (backupFlags.backupData() && metadata.keyStore) {
             if (!(boolean) AppPref.get(AppPref.PrefKey.PREF_BACKUP_ANDROID_KEYSTORE_BOOL)) {
-                Log.e(TAG, "The app has keystore items and KeyStore backup isn't enabled.");
-                return backupFile.cleanup();
+                try {
+                    throw new BackupException("The app has keystore items and KeyStore backup isn't enabled.");
+                } finally {
+                    backupFile.cleanup();
+                }
             }
         }
         try {
@@ -170,8 +174,11 @@ class BackupOp implements Closeable {
             // Export rules
             if (metadata.hasRules) backupRules();
         } catch (BackupException e) {
-            Log.e(TAG, e.getMessage(), e);
-            return backupFile.cleanup();
+            try {
+                throw e;
+            } finally {
+                backupFile.cleanup();
+            }
         }
         // Set backup time
         metadata.backupTime = System.currentTimeMillis();
@@ -179,34 +186,61 @@ class BackupOp implements Closeable {
         metadataManager.setMetadata(metadata);
         try {
             metadataManager.writeMetadata(backupFile);
-        } catch (IOException | JSONException | RemoteException e) {
-            Log.e(TAG, "Failed to write metadata.", e);
-            return backupFile.cleanup();
+        } catch (IOException e) {
+            try {
+                throw new BackupException("Failed to write metadata.", e);
+            } finally {
+                backupFile.cleanup();
+            }
         }
         // Store checksum for metadata
-        checksum.add(MetadataManager.META_FILE, DigestUtils.getHexDigest(metadata.checksumAlgo, backupFile.getMetadataFile()));
+        try {
+            checksum.add(MetadataManager.META_FILE, DigestUtils.getHexDigest(metadata.checksumAlgo,
+                    backupFile.getMetadataFile()));
+        } catch (IOException e) {
+            try {
+                throw new BackupException("Failed to get meta.json");
+            } finally {
+                backupFile.cleanup();
+            }
+        }
         checksum.close();
         // Encrypt checksum
-        ProxyFile checksumFile = backupFile.getChecksumFile(CryptoUtils.MODE_NO_ENCRYPTION);
-        if (!crypto.encrypt(new ProxyFile[]{checksumFile})) {
-            Log.e(TAG, "Failed to encrypt " + checksumFile.getName());
-            return backupFile.cleanup();
+        try {
+            Path checksumFile = backupFile.getChecksumFile(CryptoUtils.MODE_NO_ENCRYPTION);
+            if (!crypto.encrypt(new Path[]{checksumFile})) {
+                try {
+                    throw new BackupException("Failed to encrypt " + checksumFile.getName());
+                } finally {
+                    backupFile.cleanup();
+                }
+            }
+        } catch (IOException e) {
+            try {
+                throw new BackupException("Failed to get checksum.txt");
+            } finally {
+                backupFile.cleanup();
+            }
         }
         // Replace current backup:
         // There's hardly any chance of getting a false here but checks are done anyway.
-        if (backupFile.commit()) {
-            return true;
+        if (!backupFile.commit()) {
+            try {
+                throw new BackupException("Unknown error occurred. This message should never be printed.");
+            } finally {
+                backupFile.cleanup();
+            }
         }
-        Log.e(TAG, "Unknown error occurred. This message should never be printed.");
-        return backupFile.cleanup();
     }
 
     private void backupIcon() {
-        final File iconFile = new ProxyFile(tmpBackupPath, ICON_FILE);
-        try (OutputStream outputStream = new ProxyOutputStream(iconFile)) {
-            Bitmap bitmap = IOUtils.getBitmapFromDrawable(applicationInfo.loadIcon(pm));
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-            outputStream.flush();
+        try {
+            Path iconFile = tmpBackupPath.createNewFile(ICON_FILE, null);
+            try (OutputStream outputStream = iconFile.openOutputStream()) {
+                Bitmap bitmap = IOUtils.getBitmapFromDrawable(applicationInfo.loadIcon(pm));
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+                outputStream.flush();
+            }
         } catch (IOException e) {
             Log.w(TAG, "Could not back up icon.");
         }
@@ -214,16 +248,17 @@ class BackupOp implements Closeable {
 
     private void backupApkFiles() throws BackupException {
         final File dataAppPath = OsEnvironment.getDataAppDirectory();
-        final File sourceFile = new ProxyFile(tmpBackupPath, SOURCE_PREFIX + getExt(metadata.tarType));
+        final String sourceBackupFilePrefix = SOURCE_PREFIX + getExt(metadata.tarType);
         String sourceDir = PackageUtils.getSourceDir(applicationInfo);
         if (dataAppPath.getAbsolutePath().equals(sourceDir)) {
             // Backup only the apk file (no split apk support for this type of apk)
-            sourceDir = new ProxyFile(sourceDir, metadata.apkName).getAbsolutePath();
+            sourceDir = new File(sourceDir, metadata.apkName).getAbsolutePath();
         }
-        File[] sourceFiles;
+        Path[] sourceFiles;
         try {
-            sourceFiles = TarUtils.create(metadata.tarType, new ProxyFile(sourceDir), sourceFile, /* language=regexp */
-                    new String[]{".*\\.apk"}, null, null, false).toArray(new File[0]);
+            sourceFiles = TarUtils.create(metadata.tarType, new Path(context, new File(sourceDir)), tmpBackupPath,
+                    sourceBackupFilePrefix, /* language=regexp */ new String[]{".*\\.apk"}, null, null,
+                    false).toArray(new Path[0]);
         } catch (Throwable th) {
             throw new BackupException("APK files backup is requested but no source directory has been backed up.", th);
         }
@@ -232,14 +267,14 @@ class BackupOp implements Closeable {
         }
         // Overwrite with the new files
         sourceFiles = crypto.getNewFiles();
-        for (File file : sourceFiles) {
+        for (Path file : sourceFiles) {
             checksum.add(file.getName(), DigestUtils.getHexDigest(metadata.checksumAlgo, file));
         }
     }
 
     private void backupData() throws BackupException {
-        File sourceFile;
-        File[] dataFiles;
+        String sourceBackupFilePrefix;
+        Path[] dataFiles;
         // Store file hash in a separate thread
         new Thread(() -> {
             for (String dir : metadata.dataDirs) {
@@ -250,11 +285,12 @@ class BackupOp implements Closeable {
             }
         }).start();
         for (int i = 0; i < metadata.dataDirs.length; ++i) {
-            sourceFile = new ProxyFile(tmpBackupPath, DATA_PREFIX + i + getExt(metadata.tarType));
+            sourceBackupFilePrefix = DATA_PREFIX + i + getExt(metadata.tarType);
             try {
-                dataFiles = TarUtils.create(metadata.tarType, new ProxyFile(metadata.dataDirs[i]), sourceFile,
-                        null, null, BackupUtils.getExcludeDirs(!backupFlags.backupCache(), null),
-                        false).toArray(new File[0]);
+                dataFiles = TarUtils.create(metadata.tarType, new Path(context, new ProxyFile(metadata.dataDirs[i])),
+                        tmpBackupPath, sourceBackupFilePrefix, null, null,
+                        BackupUtils.getExcludeDirs(!backupFlags.backupCache(), null), false)
+                        .toArray(new Path[0]);
             } catch (Throwable th) {
                 throw new BackupException("Failed to backup data directory at " + metadata.dataDirs[i], th);
             }
@@ -263,14 +299,14 @@ class BackupOp implements Closeable {
             }
             // Overwrite with the new files
             dataFiles = crypto.getNewFiles();
-            for (File file : dataFiles) {
+            for (Path file : dataFiles) {
                 checksum.add(file.getName(), DigestUtils.getHexDigest(metadata.checksumAlgo, file));
             }
         }
     }
 
     private void backupKeyStore() throws BackupException {  // Called only when the app has an keystore item
-        ProxyFile keyStorePath = KeyStoreUtils.getKeyStorePath(userHandle);
+        Path keyStorePath = new Path(context, KeyStoreUtils.getKeyStorePath(userHandle));
         ProxyFile masterKeyFile = KeyStoreUtils.getMasterKey(userHandle);
         if (masterKeyFile.exists()) {
             // Master key exists, so take it's checksum to verify it during the restore
@@ -278,9 +314,9 @@ class BackupOp implements Closeable {
                     IOUtils.getFileContent(masterKeyFile).getBytes()));
         }
         // Store the KeyStore files
-        File cachePath;
+        Path cachePath;
         try {
-            cachePath = IOUtils.getCachePath();
+            cachePath = new Path(context, IOUtils.getCachePath());
         } catch (IOException e) {
             throw new BackupException("Could not get cache path", e);
         }
@@ -290,7 +326,7 @@ class BackupOp implements Closeable {
             try {
                 String newFileName = Utils.replaceOnce(keyStoreFileName, String.valueOf(applicationInfo.uid),
                         String.valueOf(KEYSTORE_PLACEHOLDER));
-                IOUtils.copy(new ProxyFile(keyStorePath, keyStoreFileName), new ProxyFile(cachePath, newFileName));
+                IOUtils.copy(keyStorePath.findFile(keyStoreFileName), cachePath.findOrCreateFile(newFileName, null));
                 cachedKeyStoreFileNames.add(newFileName);
                 keyStoreFilters.add(Pattern.quote(newFileName));
             } catch (Throwable e) {
@@ -300,32 +336,40 @@ class BackupOp implements Closeable {
         if (cachedKeyStoreFileNames.size() == 0) {
             throw new BackupException("There were some KeyStore items but they couldn't be cached before taking a backup.");
         }
-        File keyStoreSavePath = new ProxyFile(tmpBackupPath, KEYSTORE_PREFIX + getExt(metadata.tarType));
-        File[] backedUpKeyStoreFiles;
+        String keyStorePrefix = KEYSTORE_PREFIX + getExt(metadata.tarType);
+        Path[] backedUpKeyStoreFiles;
         try {
-            backedUpKeyStoreFiles = TarUtils.create(metadata.tarType, cachePath, keyStoreSavePath,
-                    keyStoreFilters.toArray(new String[0]), null, null, false).toArray(new File[0]);
+            backedUpKeyStoreFiles = TarUtils.create(metadata.tarType, cachePath, tmpBackupPath, keyStorePrefix,
+                    keyStoreFilters.toArray(new String[0]), null, null, false)
+                    .toArray(new Path[0]);
         } catch (Throwable th) {
             throw new BackupException("Could not backup KeyStore item.", th);
         }
         // Remove cache
         for (String name : cachedKeyStoreFileNames) {
-            //noinspection ResultOfMethodCallIgnored
-            new ProxyFile(cachePath, name).delete();
+            try {
+                cachePath.findFile(name).delete();
+            } catch (FileNotFoundException ignore) {
+            }
         }
         if (!crypto.encrypt(backedUpKeyStoreFiles)) {
             throw new BackupException("Failed to encrypt " + Arrays.toString(backedUpKeyStoreFiles));
         }
         // Overwrite with the new files
         backedUpKeyStoreFiles = crypto.getNewFiles();
-        for (File file : backedUpKeyStoreFiles) {
+        for (Path file : backedUpKeyStoreFiles) {
             checksum.add(file.getName(), DigestUtils.getHexDigest(metadata.checksumAlgo, file));
         }
     }
 
     private void backupExtras() throws BackupException {
         PseudoRules rules = new PseudoRules(packageName, userHandle);
-        File miscFile = backupFile.getMiscFile(CryptoUtils.MODE_NO_ENCRYPTION);
+        Path miscFile;
+        try {
+            miscFile = backupFile.getMiscFile(CryptoUtils.MODE_NO_ENCRYPTION);
+        } catch (IOException e) {
+            throw new BackupException("Couldn't get misc.am.tsv", e);
+        }
         // Backup permissions
         @NonNull String[] permissions = ArrayUtils.defeatNullable(packageInfo.requestedPermissions);
         int[] permissionFlags = packageInfo.requestedPermissionsFlags;
@@ -415,30 +459,36 @@ class BackupOp implements Closeable {
         }
         rules.commitExternal(miscFile);
         if (!miscFile.exists()) return;
-        if (!crypto.encrypt(new File[]{miscFile})) {
+        if (!crypto.encrypt(new Path[]{miscFile})) {
             throw new BackupException("Failed to encrypt " + miscFile.getName());
         }
-        // Overwrite with the new file
-        miscFile = backupFile.getMiscFile(metadata.crypto);
-        // Store checksum
-        checksum.add(miscFile.getName(), DigestUtils.getHexDigest(metadata.checksumAlgo, miscFile));
+        try {
+            // Overwrite with the new file
+            miscFile = backupFile.getMiscFile(metadata.crypto);
+            // Store checksum
+            checksum.add(miscFile.getName(), DigestUtils.getHexDigest(metadata.checksumAlgo, miscFile));
+        } catch (IOException e) {
+            throw new BackupException("Couldn't get misc.am.tsv for generating checksum", e);
+        }
     }
 
     private void backupRules() throws BackupException {
-        File rulesFile = backupFile.getRulesFile(CryptoUtils.MODE_NO_ENCRYPTION);
-        try (OutputStream outputStream = new ProxyOutputStream(rulesFile);
-             ComponentsBlocker cb = ComponentsBlocker.getInstance(packageName, userHandle)) {
-            ComponentUtils.storeRules(outputStream, cb.getAll(), true);
+        try {
+            Path rulesFile = backupFile.getRulesFile(CryptoUtils.MODE_NO_ENCRYPTION);
+            try (OutputStream outputStream = rulesFile.openOutputStream();
+                 ComponentsBlocker cb = ComponentsBlocker.getInstance(packageName, userHandle)) {
+                ComponentUtils.storeRules(outputStream, cb.getAll(), true);
+            }
+            if (!rulesFile.exists()) return;
+            if (!crypto.encrypt(new Path[]{rulesFile})) {
+                throw new BackupException("Failed to encrypt " + rulesFile.getName());
+            }
+            // Overwrite with the new file
+            rulesFile = backupFile.getRulesFile(metadata.crypto);
+            // Store checksum
+            checksum.add(rulesFile.getName(), DigestUtils.getHexDigest(metadata.checksumAlgo, rulesFile));
         } catch (IOException e) {
             throw new BackupException("Rules backup is requested but encountered an error during fetching rules.", e);
         }
-        if (!rulesFile.exists()) return;
-        if (!crypto.encrypt(new File[]{rulesFile})) {
-            throw new BackupException("Failed to encrypt " + rulesFile.getName());
-        }
-        // Overwrite with the new file
-        rulesFile = backupFile.getRulesFile(metadata.crypto);
-        // Store checksum
-        checksum.add(rulesFile.getName(), DigestUtils.getHexDigest(metadata.checksumAlgo, rulesFile));
     }
 }

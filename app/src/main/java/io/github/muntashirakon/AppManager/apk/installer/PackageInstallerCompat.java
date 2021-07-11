@@ -62,8 +62,8 @@ import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
+import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.ProxyFile;
-import io.github.muntashirakon.io.ProxyInputStream;
 
 @SuppressLint("ShiftFlags")
 public final class PackageInstallerCompat {
@@ -551,15 +551,15 @@ public final class PackageInstallerCompat {
         }
     }
 
-    public boolean install(@NonNull File[] apkFiles, String packageName) {
+    public boolean install(@NonNull Path[] apkFiles, String packageName) {
         try {
             this.apkFile = null;
             this.packageName = packageName;
             initBroadcastReceiver();
             if (!openSession()) return false;
             // Write apk files
-            for (File apkFile : apkFiles) {
-                try (InputStream apkInputStream = new ProxyInputStream(apkFile);
+            for (Path apkFile : apkFiles) {
+                try (InputStream apkInputStream = apkFile.openInputStream();
                      OutputStream apkOutputStream = session.openWrite(apkFile.getName(), 0, apkFile.length())) {
                     IOUtils.copy(apkInputStream, apkOutputStream);
                     session.fsync(apkOutputStream);

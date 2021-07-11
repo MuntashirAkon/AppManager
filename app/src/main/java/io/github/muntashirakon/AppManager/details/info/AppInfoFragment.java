@@ -330,12 +330,12 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         } else if (itemId == R.id.action_share_apk) {
             executor.submit(() -> {
                 try {
-                    File tmpApkSource = ApkUtils.getSharableApkFile(mPackageInfo);
+                    Path tmpApkSource = ApkUtils.getSharableApkFile(mPackageInfo);
                     UiThreadHandler.run(() -> {
                         Context ctx = AppManager.getContext();
                         Intent intent = new Intent(Intent.ACTION_SEND)
                                 .setType("application/*")
-                                .putExtra(Intent.EXTRA_STREAM, FmProvider.getContentUri(new Path(ctx, tmpApkSource)))
+                                .putExtra(Intent.EXTRA_STREAM, FmProvider.getContentUri(tmpApkSource))
                                 .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                         ctx.startActivity(Intent.createChooser(intent, ctx.getString(R.string.share_apk))
                                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));

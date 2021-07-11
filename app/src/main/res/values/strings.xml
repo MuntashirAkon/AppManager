@@ -1082,4 +1082,6 @@
     <string name="error_with_details">Error: %s</string>
     <string name="enable_disable">Enable/disable</string>
     <string name="path">Storage</string>
+    <string name="notice">Notice</string>
+    <string name="notice_saf">Unlike the volumes, the selected directory will be used to store all the files related to App Manager, including saved APKs and backups. Storage Access Framework (SAF) is very slow, therefore, you should only use this option when others cannot be used.</string>
 </resources>

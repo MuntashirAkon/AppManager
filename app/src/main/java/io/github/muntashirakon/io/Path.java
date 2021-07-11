@@ -19,9 +19,7 @@ import androidx.documentfile.provider.DocumentFile;
 import androidx.documentfile.provider.ProxyDocumentFile;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileNotFoundException;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -33,7 +31,8 @@ import io.github.muntashirakon.AppManager.compat.StorageManagerCompat;
 import io.github.muntashirakon.AppManager.ipc.IPCUtils;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
-import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.AppManager.utils.ExUtils;
+import io.github.muntashirakon.AppManager.utils.IOUtils;
 
 /**
  * Provide an interface to {@link File} and {@link DocumentFile} with basic functionalities.
@@ -43,7 +42,7 @@ public class Path {
 
     private final Context context;
     @NonNull
-    private final DocumentFile documentFile;
+    private DocumentFile documentFile;
 
     public Path(@NonNull Context context, @NonNull File fileLocation) {
         this.context = context;
@@ -55,12 +54,16 @@ public class Path {
         this.documentFile = documentFile;
     }
 
-    public Path(@NonNull Context context, @NonNull Uri uri) throws FileNotFoundException {
+    public Path(@NonNull Context context, @NonNull Uri treeUri) throws FileNotFoundException {
+        this(context, treeUri, true);
+    }
+
+    public Path(@NonNull Context context, @NonNull Uri uri, boolean isTreeUri) throws FileNotFoundException {
         this.context = context;
         DocumentFile documentFile;
         switch (uri.getScheme()) {
             case ContentResolver.SCHEME_CONTENT:
-                documentFile = DocumentFile.fromTreeUri(context, uri);
+                documentFile = isTreeUri ? DocumentFile.fromTreeUri(context, uri) : DocumentFile.fromSingleUri(context, uri);
                 break;
             case ContentResolver.SCHEME_FILE:
                 documentFile = new ProxyDocumentFile(new ProxyFile(uri.getPath()));
@@ -88,14 +91,28 @@ public class Path {
         return documentFile.getUri();
     }
 
-    public String getFilePath() throws UnsupportedOperationException {
+    @Nullable
+    public File getFile() {
         if (documentFile instanceof ProxyDocumentFile) {
-            String path = documentFile.getUri().getPath();
-            if (path.startsWith("/storage/emulated/" + Users.myUserId())) {
-                return path;
-            }
+            return ((ProxyDocumentFile) documentFile).getFile();
         }
-        throw new UnsupportedOperationException("File cannot be accessed this way.");
+        return null;
+    }
+
+    @Nullable
+    public String getFilePath() {
+        if (documentFile instanceof ProxyDocumentFile) {
+            return documentFile.getUri().getPath();
+        }
+        return null;
+    }
+
+    @Nullable
+    public String getRealFilePath() throws IOException {
+        if (documentFile instanceof ProxyDocumentFile) {
+            return Objects.requireNonNull(getFile()).getCanonicalPath();
+        }
+        return null;
     }
 
     public String getType() {
@@ -112,7 +129,7 @@ public class Path {
         if (exists()) return true;
         if (documentFile instanceof ProxyDocumentFile) {
             try {
-                ((ProxyDocumentFile) documentFile).getFile().createNewFile();
+                Objects.requireNonNull(getFile()).createNewFile();
                 return true;
             } catch (IOException e) {
                 return false;
@@ -125,7 +142,26 @@ public class Path {
         }
     }
 
+    @NonNull
+    public Path createNewFile(@NonNull String displayName, @Nullable String mimeType) throws IOException {
+        if (mimeType == null) {
+            // Generic binary file
+            mimeType = "application/octet-stream";
+        }
+        DocumentFile file = documentFile.createFile(mimeType, displayName);
+        if (file == null)
+            throw new IOException("Could not create file named " + displayName + " with type " + mimeType);
+        return new Path(context, file);
+    }
+
     @CheckResult
+    @NonNull
+    public Path createNewDirectory(@NonNull String displayName) throws IOException {
+        DocumentFile file = documentFile.createDirectory(displayName);
+        if (file == null) throw new IOException("Could not create directory named " + displayName);
+        return new Path(context, file);
+    }
+
     public boolean delete() {
         return documentFile.delete();
     }
@@ -134,6 +170,33 @@ public class Path {
     public Path getParentFile() {
         DocumentFile file = documentFile.getParentFile();
         return file == null ? null : new Path(context, file);
+    }
+
+    public boolean hasFile(@NonNull String displayName) {
+        return documentFile.findFile(displayName) != null;
+    }
+
+    @NonNull
+    public Path findFile(@NonNull String displayName) throws FileNotFoundException {
+        DocumentFile file = documentFile.findFile(displayName);
+        if (file == null) throw new FileNotFoundException("Cannot find " + displayName);
+        return new Path(context, file);
+    }
+
+    public Path findOrCreateFile(@NonNull String displayName, @Nullable String mimeType) throws IOException {
+        DocumentFile file = documentFile.findFile(displayName);
+        if (file == null) {
+            return createNewFile(displayName, mimeType);
+        }
+        return new Path(context, file);
+    }
+
+    public Path findOrCreateDirectory(@NonNull String displayName) throws IOException {
+        DocumentFile file = documentFile.findFile(displayName);
+        if (file == null) {
+            return createNewDirectory(displayName);
+        }
+        return new Path(context, file);
     }
 
     @CheckResult
@@ -156,17 +219,132 @@ public class Path {
         return documentFile.isVirtual();
     }
 
-    public boolean mkdir() {
-        return true;
+    public boolean isSymbolicLink() throws IOException {
+        if (documentFile instanceof ProxyDocumentFile) {
+            try {
+                FileStatus lstat = ProxyFiles.lstat(Objects.requireNonNull(getFile()));
+                // https://github.com/win32ports/unistd_h/blob/master/unistd.h
+                return OsConstants.S_ISLNK(lstat.st_mode);
+            } catch (ErrnoException | RemoteException e) {
+                return ExUtils.rethrowAsIOException(e);
+            }
+        }
+        return false;
     }
 
-    public boolean mkdirs() {
-        return true;
+    public void mkdir() {
+        if (documentFile instanceof ProxyDocumentFile) {
+            ((ProxyDocumentFile) documentFile).getFile().mkdirs();
+        }
+        // For others, files are already created
     }
 
-    public boolean renameTo(@NonNull String name) {
-        // TODO: 9/2/21 Unreliable
-        return documentFile.renameTo(name);
+    public void mkdirs() {
+        if (documentFile instanceof ProxyDocumentFile) {
+            ((ProxyDocumentFile) documentFile).getFile().mkdirs();
+        }
+        // For others, files are already created
+    }
+
+    public boolean renameTo(@NonNull String displayName) {
+        return documentFile.renameTo(displayName);
+    }
+
+    /**
+     * Move the given path based on the following criteria:
+     * <ol>
+     *     <li>If both paths are physical (i.e. uses File API), use normal move behaviour
+     *     <li>If one of the paths are virtual, use special copy and delete operation
+     * </ol>
+     * <p>
+     * Move behavior is as follows:
+     * <ul>
+     *     <li>If both are files or directories, rename applies (destination file is cleared if exists)
+     *     <li>If target is a directory, move the file inside the directory
+     *     <li>If the target is a file, exception occurs
+     * </ul>
+     *
+     * @param path Target file/directory.
+     * @return {@code true} on success and {@code false} on failure
+     */
+    public boolean moveTo(@NonNull Path path) {
+        if (path.exists() && !path.canWrite()) {
+            // There's no point is attempting to move if the destination is read-only
+            return false;
+        }
+        if (documentFile instanceof ProxyDocumentFile && path.documentFile instanceof ProxyDocumentFile) {
+            // Try using the default option
+            File src = ((ProxyDocumentFile) documentFile).getFile();
+            File dst = ((ProxyDocumentFile) path.documentFile).getFile();
+            if (src.renameTo(dst)) return true;
+        }
+        Path srcParent = getParentFile();
+        Path dstParent = path.getParentFile();
+        if (srcParent != null && dstParent != null && srcParent.getUri().equals(dstParent.getUri())) {
+            // If both path are located in the same directory, rename them
+            return renameTo(path.getName());
+        }
+        if (isDirectory()) {
+            if (path.isDirectory()) { // Rename (copy and delete original)
+                // Make sure that parent exists and it is a directory
+                if (dstParent == null || !dstParent.isDirectory()) return false;
+                try {
+                    // Recreate path
+                    path.delete();
+                    Path newPath = dstParent.createNewDirectory(path.getName());
+                    // Copy all the directory items to the path
+                    copyDirectory(this, newPath);
+                    delete();
+                    documentFile = newPath.documentFile;
+                    return true;
+                } catch (IOException e) {
+                    return false;
+                }
+            } else {
+                // Current path is a directory but target is a file
+                return false;
+            }
+        } else {
+            Path newPath;
+            if (path.isDirectory()) {
+                // Move the file inside the directory
+                try {
+                    newPath = path.createNewFile(getName(), null);
+                } catch (IOException e) {
+                    return false;
+                }
+            } else {
+                // Rename the file
+                newPath = path;
+            }
+            try {
+                copyFile(this, newPath);
+                delete();
+                documentFile = newPath.documentFile;
+                return true;
+            } catch (IOException e) {
+                return false;
+            }
+        }
+    }
+
+    private static void copyFile(@NonNull Path src, @NonNull Path dst) throws IOException {
+        IOUtils.copy(src, dst);
+    }
+
+    // Copy directory content
+    private static void copyDirectory(@NonNull Path src, @NonNull Path dst) throws IOException {
+        if (!src.isDirectory() || !dst.isDirectory()) {
+            throw new IOException("Both source and destination have to be directory.");
+        }
+        for (Path file : src.listFiles()) {
+            if (file.isDirectory()) {
+                copyDirectory(file, dst.createNewDirectory(file.getName()));
+            } else {
+                Path newFile = dst.createNewFile(file.getName(), null);
+                copyFile(file, newFile);
+            }
+        }
     }
 
     public long lastModified() {
@@ -190,9 +368,8 @@ public class Path {
             return names;
         }
         List<Uri> v = new ArrayList<>();
-        File f = new File(documentFile.getUri().getPath());
         for (Uri name : names) {
-            if (filter.accept(f, name.getLastPathSegment())) {
+            if (filter.accept(this, name.getLastPathSegment())) {
                 v.add(name);
             }
         }
@@ -212,11 +389,12 @@ public class Path {
 
     @NonNull
     public Path[] listFiles(@Nullable FileFilter filter) {
-        DocumentFile[] ss = listDocumentFiles();
+        Path[] ss = listFiles();
         ArrayList<Path> files = new ArrayList<>();
-        for (DocumentFile s : ss) {
-            if ((filter == null) || filter.accept(new File(s.getUri().getPath())))
-                files.add(new Path(context, s));
+        for (Path s : ss) {
+            if ((filter == null) || filter.accept(s)) {
+                files.add(s);
+            }
         }
         return files.toArray(new Path[0]);
     }
@@ -225,9 +403,8 @@ public class Path {
     public Path[] listFiles(@Nullable FilenameFilter filter) {
         DocumentFile[] ss = listDocumentFiles();
         ArrayList<Path> files = new ArrayList<>();
-        File f = new File(documentFile.getUri().getPath());
         for (DocumentFile s : ss) {
-            if ((filter == null) || filter.accept(f, s.getName()))
+            if ((filter == null) || filter.accept(this, s.getName()))
                 files.add(new Path(context, s));
         }
         return files.toArray(new Path[0]);
@@ -245,7 +422,7 @@ public class Path {
     public ParcelFileDescriptor openFileDescriptor(@NonNull String mode, @NonNull HandlerThread callbackThread)
             throws FileNotFoundException {
         if (documentFile instanceof ProxyDocumentFile) {
-            File file = ((ProxyDocumentFile) documentFile).getFile();
+            File file = Objects.requireNonNull(getFile());
             int modeBits = ParcelFileDescriptor.parseMode(mode);
             if (file instanceof ProxyFile && LocalServer.isAMServiceAlive()) {
                 try {
@@ -268,20 +445,29 @@ public class Path {
         return context.getContentResolver().openFileDescriptor(documentFile.getUri(), mode);
     }
 
-    @Nullable
-    public OutputStream openOutputStream(@NonNull String mode) throws IOException {
-        if (documentFile instanceof ProxyDocumentFile) {
-            return new ProxyOutputStream(((ProxyDocumentFile) documentFile).getFile());
-        }
-        return context.getContentResolver().openOutputStream(documentFile.getUri(), mode);
+    public OutputStream openOutputStream() throws IOException {
+        return openOutputStream(false);
     }
 
-    @Nullable
+    @NonNull
+    public OutputStream openOutputStream(boolean append) throws IOException {
+        if (documentFile instanceof ProxyDocumentFile) {
+            return new ProxyOutputStream(Objects.requireNonNull(getFile()), append);
+        }
+        String mode = "w" + (append ? "a" : "t");
+        OutputStream os = context.getContentResolver().openOutputStream(documentFile.getUri(), mode);
+        if (os != null) return os;
+        throw new IOException("Content provider has crashed");
+    }
+
+    @NonNull
     public InputStream openInputStream() throws IOException {
         if (documentFile instanceof ProxyDocumentFile) {
-            return new ProxyInputStream(((ProxyDocumentFile) documentFile).getFile());
+            return new ProxyInputStream(Objects.requireNonNull(getFile()));
         }
-        return context.getContentResolver().openInputStream(documentFile.getUri());
+        InputStream is = context.getContentResolver().openInputStream(documentFile.getUri());
+        if (is != null) return is;
+        throw new IOException("Content provider has crashed");
     }
 
     @NonNull
@@ -300,6 +486,33 @@ public class Path {
     @Override
     public int hashCode() {
         return Objects.hash(documentFile.getUri());
+    }
+
+    @FunctionalInterface
+    public interface FilenameFilter {
+        /**
+         * Tests if a specified file should be included in a file list.
+         *
+         * @param dir  the directory in which the file was found.
+         * @param name the name of the file.
+         * @return <code>true</code> if and only if the name should be
+         * included in the file list; <code>false</code> otherwise.
+         */
+        boolean accept(Path dir, String name);
+    }
+
+    @FunctionalInterface
+    public interface FileFilter {
+
+        /**
+         * Tests whether or not the specified abstract pathname should be
+         * included in a pathname list.
+         *
+         * @param pathname The abstract pathname to be tested
+         * @return <code>true</code> if and only if <code>pathname</code>
+         * should be included
+         */
+        boolean accept(Path pathname);
     }
 
     private static class StorageCallback extends StorageManagerCompat.ProxyFileDescriptorCallbackCompat {

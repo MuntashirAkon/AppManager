@@ -13,7 +13,7 @@ import androidx.annotation.Nullable;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -37,9 +37,7 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
-import io.github.muntashirakon.io.ProxyFile;
-import io.github.muntashirakon.io.ProxyInputStream;
-import io.github.muntashirakon.io.ProxyOutputStream;
+import io.github.muntashirakon.io.Path;
 
 // Copyright 2012 Nolan Lawson
 public class SaveLogHelper {
@@ -53,18 +51,20 @@ public class SaveLogHelper {
     private static final int BUFFER = 0x1000; // 4K
 
     @Nullable
-    public static File saveTemporaryFile(String filename, CharSequence text, List<String> lines) {
-        File tempFile = new ProxyFile(getTempDirectory(), filename);
-        try (PrintStream out = new PrintStream(new BufferedOutputStream(new ProxyOutputStream(tempFile), BUFFER))) {
-            if (text != null) { // one big string
-                out.print(text);
-            } else { // multiple lines separated by newline
-                for (CharSequence line : lines) {
-                    out.println(line);
+    public static Path saveTemporaryFile(String filename, CharSequence text, List<String> lines) {
+        try {
+            Path tempFile = getTempDirectory().createNewFile(filename, null);
+            try (PrintStream out = new PrintStream(new BufferedOutputStream(tempFile.openOutputStream(), BUFFER))) {
+                if (text != null) { // one big string
+                    out.print(text);
+                } else { // multiple lines separated by newline
+                    for (CharSequence line : lines) {
+                        out.println(line);
+                    }
                 }
+                Log.d(TAG, "Saved temp file: " + tempFile);
+                return tempFile;
             }
-            Log.d(TAG, "Saved temp file: " + tempFile);
-            return tempFile;
         } catch (IOException e) {
             Log.e(TAG, e);
             return null;
@@ -72,19 +72,19 @@ public class SaveLogHelper {
     }
 
     @NonNull
-    public static File getFile(@NonNull String filename) {
-        return new ProxyFile(getSavedLogsDirectory(), filename);
+    public static Path getFile(@NonNull String filename) throws IOException {
+        return getSavedLogsDirectory().findFile(filename);
     }
 
     public static void deleteLogIfExists(String filename) {
-        File file = new ProxyFile(getSavedLogsDirectory(), filename);
-        if (file.exists()) {
-            file.delete();
+        try {
+            getSavedLogsDirectory().findFile(filename).delete();
+        } catch (IOException ignore) {
         }
     }
 
     @NonNull
-    public static CharSequence[] getFormattedFilenames(@NonNull Context context, @NonNull List<File> files) {
+    public static CharSequence[] getFormattedFilenames(@NonNull Context context, @NonNull List<Path> files) {
         CharSequence[] fileNames = new CharSequence[files.size()];
         DateFormat dateFormat = DateFormat.getDateTimeInstance();
         for (int i = 0; i < files.size(); ++i) {
@@ -96,23 +96,23 @@ public class SaveLogHelper {
     }
 
     @NonNull
-    public static List<File> getLogFiles() {
-        File logsDirectory = getSavedLogsDirectory();
-        File[] filesArray = logsDirectory.listFiles();
-        if (filesArray == null) {
+    public static List<Path> getLogFiles() {
+        try {
+            Path[] filesArray = getSavedLogsDirectory().listFiles();
+            List<Path> files = new ArrayList<>(Arrays.asList(filesArray));
+            Collections.sort(files, (o1, o2) -> Long.compare(o2.lastModified(), o1.lastModified()));
+            return files;
+        } catch (IOException e) {
             return Collections.emptyList();
         }
-        List<File> files = new ArrayList<>(Arrays.asList(filesArray));
-        Collections.sort(files, (o1, o2) -> Long.compare(o2.lastModified(), o1.lastModified()));
-        return files;
     }
 
     @NonNull
-    public static SavedLog openLog(@NonNull String filename, int maxLines) {
-        File logFile = new ProxyFile(getSavedLogsDirectory(), filename);
+    public static SavedLog openLog(@NonNull String filename, int maxLines) throws IOException {
+        Path logFile = getSavedLogsDirectory().findFile(filename);
         LinkedList<String> logLines = new LinkedList<>();
         boolean truncated = false;
-        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new ProxyInputStream(logFile)), BUFFER)) {
+        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(logFile.openInputStream()), BUFFER)) {
             while (bufferedReader.ready()) {
                 logLines.add(bufferedReader.readLine());
                 if (logLines.size() > maxLines) {
@@ -135,23 +135,17 @@ public class SaveLogHelper {
     }
 
     private static boolean saveLog(List<String> logLines, CharSequence logString, String filename) {
-        File newFile = new ProxyFile(getSavedLogsDirectory(), filename);
         try {
-            if (!newFile.exists()) {
-                newFile.createNewFile();
-            }
-        } catch (IOException e) {
-            Log.e(TAG, e);
-            return false;
-        }
-        try (PrintStream out = new PrintStream(new BufferedOutputStream(new ProxyOutputStream(newFile), BUFFER))) {
-            // Save a log as either a list of strings
-            if (logLines != null) {
-                for (CharSequence line : logLines) {
-                    out.println(line);
+            Path newFile = getSavedLogsDirectory().createNewFile(filename, null);
+            try (PrintStream out = new PrintStream(new BufferedOutputStream(newFile.openOutputStream(), BUFFER))) {
+                // Save a log as either a list of strings
+                if (logLines != null) {
+                    for (CharSequence line : logLines) {
+                        out.println(line);
+                    }
+                } else if (logString != null) {
+                    out.print(logString);
                 }
-            } else if (logString != null) {
-                out.print(logString);
             }
         } catch (IOException e) {
             Log.e(TAG, e);
@@ -161,26 +155,18 @@ public class SaveLogHelper {
     }
 
     @NonNull
-    public static File getTempDirectory() {
-        File tmpDir = BackupFiles.getTemporaryDirectory();
-        if (!tmpDir.exists()) {
-            tmpDir.mkdir();
-        }
-        return tmpDir;
+    private static Path getTempDirectory() throws IOException {
+        return BackupFiles.getTemporaryDirectory();
     }
 
     @NonNull
-    private static File getSavedLogsDirectory() {
-        File savedLogsDir = new ProxyFile(getAMDirectory(), SAVED_LOGS_DIR);
-        if (!savedLogsDir.exists()) {
-            savedLogsDir.mkdir();
-        }
-        return savedLogsDir;
+    private static Path getSavedLogsDirectory() throws IOException {
+        return getAMDirectory().findOrCreateDirectory(SAVED_LOGS_DIR);
     }
 
     @NonNull
-    private static File getAMDirectory() {
-        File amDir = AppPref.getAppManagerDirectory();
+    private static Path getAMDirectory() throws FileNotFoundException {
+        Path amDir = AppPref.getAppManagerDirectory();
         if (!amDir.exists()) {
             amDir.mkdir();
         }
@@ -188,12 +174,11 @@ public class SaveLogHelper {
     }
 
     @NonNull
-    public static File saveTemporaryZipFile(String filename, List<File> files) throws IOException {
-        File zipFile = new ProxyFile(getTempDirectory(), filename);
-        try (ZipOutputStream output = new ZipOutputStream(new BufferedOutputStream(new ProxyOutputStream(zipFile), BUFFER))) {
-            for (File file : files) {
-                ProxyInputStream fi = new ProxyInputStream(file);
-                try (BufferedInputStream input = new BufferedInputStream(fi, BUFFER)) {
+    public static Path saveTemporaryZipFile(String filename, @NonNull List<Path> files) throws IOException {
+        Path zipFile = getTempDirectory().createNewFile(filename, null);
+        try (ZipOutputStream output = new ZipOutputStream(new BufferedOutputStream(zipFile.openOutputStream(), BUFFER))) {
+            for (Path file : files) {
+                try (BufferedInputStream input = new BufferedInputStream(file.openInputStream(), BUFFER)) {
                     ZipEntry entry = new ZipEntry(file.getName());
                     output.putNextEntry(entry);
                     IOUtils.copy(input, output);
@@ -203,14 +188,13 @@ public class SaveLogHelper {
         return zipFile;
     }
 
-    public static void saveZipFileAndThrow(@NonNull Context context, @NonNull Uri uri, @NonNull List<File> files)
+    public static void saveZipFileAndThrow(@NonNull Context context, @NonNull Uri uri, @NonNull List<Path> files)
             throws IOException {
         OutputStream os = context.getContentResolver().openOutputStream(uri);
         if (os == null) throw new IOException("Could not open uri.");
         try (ZipOutputStream output = new ZipOutputStream(new BufferedOutputStream(os, BUFFER))) {
-            for (File file : files) {
-                ProxyInputStream fi = new ProxyInputStream(file);
-                try (BufferedInputStream input = new BufferedInputStream(fi, BUFFER)) {
+            for (Path file : files) {
+                try (BufferedInputStream input = new BufferedInputStream(file.openInputStream(), BUFFER)) {
                     ZipEntry entry = new ZipEntry(file.getName());
                     output.putNextEntry(entry);
                     IOUtils.copy(input, output);
@@ -261,10 +245,12 @@ public class SaveLogHelper {
     }
 
     public static void cleanTemp() {
-        File[] files = getTempDirectory().listFiles();
-        if (files == null) return;
-        for (File file : files) {
-            file.delete();
+        try {
+            Path[] files = getTempDirectory().listFiles();
+            for (Path file : files) {
+                file.delete();
+            }
+        } catch (Throwable ignore) {
         }
     }
 }

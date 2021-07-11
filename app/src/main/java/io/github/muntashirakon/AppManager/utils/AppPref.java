@@ -3,9 +3,11 @@
 package io.github.muntashirakon.AppManager.utils;
 
 import android.annotation.SuppressLint;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
+import android.net.Uri;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
@@ -16,6 +18,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Arrays;
@@ -33,7 +37,7 @@ import io.github.muntashirakon.AppManager.logcat.helper.LogcatHelper;
 import io.github.muntashirakon.AppManager.main.ListOptions;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runningapps.RunningAppsActivity;
-import io.github.muntashirakon.io.ProxyFile;
+import io.github.muntashirakon.io.Path;
 
 public class AppPref {
     private static final String PREF_NAME = "preferences";
@@ -229,8 +233,28 @@ public class AppPref {
     }
 
     @NonNull
-    public static ProxyFile getAppManagerDirectory() {
-        return new ProxyFile(getString(PrefKey.PREF_BACKUP_VOLUME_STR), "AppManager");
+    public static Path getAppManagerDirectory() throws FileNotFoundException {
+        Context ctx = getInstance().context;
+        Uri uri = getSelectedDirectory();
+        Path path;
+        if (uri.getScheme().equals(ContentResolver.SCHEME_FILE)) {
+            // Append AppManager
+            String newPath = uri.getPath() + File.separator + "AppManager";
+            path = new Path(ctx, new Uri.Builder().scheme(ContentResolver.SCHEME_FILE).path(newPath).build());
+        } else path = new Path(ctx, uri);
+        if (!path.exists()) path.mkdirs();
+        return path;
+    }
+
+    public static Uri getSelectedDirectory() {
+        String uriOrBareFile = getString(PrefKey.PREF_BACKUP_VOLUME_STR);
+        if (uriOrBareFile.startsWith("/")) {
+            // A good URI starts with file:// or content://, if not, migrate
+            Uri uri = new Uri.Builder().scheme(ContentResolver.SCHEME_FILE).path(uriOrBareFile).build();
+            set(PrefKey.PREF_BACKUP_VOLUME_STR, uri.toString());
+            return uri;
+        }
+        return Uri.parse(uriOrBareFile);
     }
 
     @Nullable
@@ -420,7 +444,7 @@ public class AppPref {
             case PREF_SIGNATURE_SCHEMES_INT:
                 return SigSchemes.SIG_SCHEME_V1 | SigSchemes.SIG_SCHEME_V2;
             case PREF_BACKUP_VOLUME_STR:
-                return Environment.getExternalStorageDirectory().getAbsolutePath();
+                return Uri.fromFile(Environment.getExternalStorageDirectory()).toString();
             case PREF_LOG_VIEWER_FILTER_PATTERN_STR:
                 return context.getString(R.string.pref_filter_pattern_default);
             case PREF_LOG_VIEWER_DISPLAY_LIMIT_INT:

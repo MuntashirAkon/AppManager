@@ -9,7 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
-import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -19,17 +20,20 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.logcat.helper.SaveLogHelper;
 import io.github.muntashirakon.io.FileStatus;
+import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.ProxyFile;
 import io.github.muntashirakon.io.ProxyFiles;
 
 public final class BackupUtils {
     @NonNull
-    private static List<String> getBackupPackages() {
-        File backupPath = BackupFiles.getBackupDirectory();
+    private static List<String> getBackupPackages() throws FileNotFoundException {
+        Path backupPath = BackupFiles.getBackupDirectory();
         List<String> packages;
-        String[] files = backupPath.list((dir, name) -> new ProxyFile(dir, name).isDirectory());
-        if (files != null) packages = new ArrayList<>(Arrays.asList(files));
-        else return new ArrayList<>();
+        Path[] files = backupPath.listFiles(Path::isDirectory);
+        packages = new ArrayList<>();
+        for (Path path : files) {
+            packages.add(path.getName());
+        }
         packages.remove(SaveLogHelper.SAVED_LOGS_DIR);
         packages.remove(BackupFiles.APK_SAVING_DIRECTORY);
         packages.remove(BackupFiles.TEMPORARY_DIRECTORY);
@@ -40,7 +44,7 @@ public final class BackupUtils {
 
     @WorkerThread
     @NonNull
-    public static HashMap<String, Backup> storeAllAndGetLatestBackupMetadata() {
+    public static HashMap<String, Backup> storeAllAndGetLatestBackupMetadata() throws IOException {
         HashMap<String, Backup> backupMetadata = new HashMap<>();
         HashMap<String, List<MetadataManager.Metadata>> allBackupMetadata = getAllMetadata();
         List<Backup> backups = new ArrayList<>();
@@ -63,7 +67,7 @@ public final class BackupUtils {
 
     @WorkerThread
     @Nullable
-    public static Backup storeAllAndGetLatestBackupMetadata(String packageName) {
+    public static Backup storeAllAndGetLatestBackupMetadata(String packageName) throws IOException {
         MetadataManager.Metadata[] allBackupMetadata = MetadataManager.getMetadata(packageName);
         List<Backup> backups = new ArrayList<>();
         Backup latestBackup = null;
@@ -98,7 +102,7 @@ public final class BackupUtils {
      */
     @WorkerThread
     @NonNull
-    public static HashMap<String, List<MetadataManager.Metadata>> getAllMetadata() {
+    public static HashMap<String, List<MetadataManager.Metadata>> getAllMetadata() throws IOException {
         HashMap<String, List<MetadataManager.Metadata>> backupMetadata = new HashMap<>();
         List<String> backupPackages = getBackupPackages();
         for (String dirtyPackageName : backupPackages) {

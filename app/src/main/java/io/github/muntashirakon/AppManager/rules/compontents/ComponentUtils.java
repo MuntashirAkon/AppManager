@@ -6,6 +6,7 @@ import android.annotation.UserIdInt;
 import android.content.ComponentName;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.RemoteException;
 import android.util.Xml;
 
@@ -16,7 +17,6 @@ import androidx.annotation.WorkerThread;
 
 import org.xmlpull.v1.XmlPullParser;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -41,6 +41,7 @@ import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.ProxyFile;
 import io.github.muntashirakon.io.ProxyInputStream;
 
@@ -187,12 +188,10 @@ public final class ComponentUtils {
     @NonNull
     public static List<String> getAllPackagesWithRules() {
         List<String> packages = new ArrayList<>();
-        File confDir = RulesStorageManager.getConfDir();
-        String[] names = confDir.list((dir, name) -> name.endsWith(".tsv"));
-        if (names != null) {
-            for (String name : names) {
-                packages.add(IOUtils.trimExtension(name));
-            }
+        Path confDir = RulesStorageManager.getConfDir();
+        Uri[] names = confDir.list((dir, name) -> name.endsWith(".tsv"));
+        for (Uri name : names) {
+            packages.add(IOUtils.trimExtension(name.getLastPathSegment()));
         }
         return packages;
     }

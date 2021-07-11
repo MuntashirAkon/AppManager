@@ -44,6 +44,7 @@ import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.usage.UsageUtils;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.MagiskUtils;
@@ -128,12 +129,16 @@ public class AppInfoViewModel extends AndroidViewModel {
         tagCloud.isMagiskHideEnabled = !mainModel.getIsExternalApk() && AppPref.isRootEnabled() && MagiskUtils.isHidden(packageName);
         tagCloud.hasKeyStoreItems = KeyStoreUtils.hasKeyStore(applicationInfo.uid);
         tagCloud.hasMasterKeyInKeyStore = KeyStoreUtils.hasMasterKey(applicationInfo.uid);
-        MetadataManager.Metadata[] metadata = MetadataManager.getMetadata(packageName);
-        CharSequence[] readableBackupNames = new CharSequence[metadata.length];
-        for (int i = 0; i < metadata.length; ++i) {
-            readableBackupNames[i] = metadata[i].toLocalizedString(getApplication());
+        try {
+            MetadataManager.Metadata[] metadata = MetadataManager.getMetadata(packageName);
+            CharSequence[] readableBackupNames = new CharSequence[metadata.length];
+            for (int i = 0; i < metadata.length; ++i) {
+                readableBackupNames[i] = metadata[i].toLocalizedString(getApplication());
+            }
+            tagCloud.readableBackupNames = readableBackupNames;
+        } catch (IOException e) {
+            tagCloud.readableBackupNames = ArrayUtils.emptyArray(CharSequence.class);
         }
-        tagCloud.readableBackupNames = readableBackupNames;
         if (!mainModel.getIsExternalApk() && PermissionUtils.hasDumpPermission()) {
             String targetString = "user," + packageName + "," + applicationInfo.uid;
             Runner.Result result = Runner.runCommand(new String[]{"dumpsys", "deviceidle", "whitelist"});

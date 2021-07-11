@@ -7,7 +7,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.RemoteException;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.format.Formatter;
@@ -40,19 +39,21 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
+import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.JSONUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.TarUtils;
-import io.github.muntashirakon.io.ProxyFile;
-import io.github.muntashirakon.io.ProxyOutputStream;
+import io.github.muntashirakon.io.Path;
 
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getTitleText;
 
 public final class MetadataManager {
+    public static final String TAG = MetadataManager.class.getSimpleName();
+
     public static final String META_FILE = "meta_v2.am.json";
     public static final String[] TAR_TYPES = new String[]{TarUtils.TAR_GZIP, TarUtils.TAR_BZIP2};
 
@@ -60,7 +61,7 @@ public final class MetadataManager {
     // All the attributes must be non-null
     public static class Metadata {
         public String backupName;  // This isn't part of the json file and for internal use only
-        public File backupPath;  // This isn't part of the json file and for internal use only
+        public Path backupPath;  // This isn't part of the json file and for internal use only
 
         public String label;  // label
         public String packageName;  // package_name
@@ -103,9 +104,8 @@ public final class MetadataManager {
 
         public Metadata(@NonNull Metadata metadata) {
             backupName = metadata.backupName;
-            if (metadata.backupPath != null) {
-                backupPath = new ProxyFile(metadata.backupPath);
-            }
+            backupPath = metadata.backupPath;
+
             label = metadata.label;
             packageName = metadata.packageName;
             versionName = metadata.versionName;
@@ -176,30 +176,38 @@ public final class MetadataManager {
     }
 
     public static boolean hasAnyMetadata(String packageName) {
-        for (File file : getBackupFiles(packageName)) {
-            if (new ProxyFile(file, META_FILE).exists()) {
-                return true;
+        try {
+            for (Path file : getBackupFiles(packageName)) {
+                if (file.hasFile(META_FILE)) {
+                    return true;
+                }
             }
+        } catch (IOException e) {
+            Log.e(TAG, e);
         }
         return false;
     }
 
     public static boolean hasBaseMetadata(String packageName) {
-        File backupPath = new File(BackupFiles.getPackagePath(packageName), String.valueOf(Users.myUserId()));
-        return new ProxyFile(backupPath, META_FILE).exists();
+        try {
+            return BackupFiles.getPackagePath(packageName, false).hasFile(String.valueOf(Users.myUserId()));
+        } catch (IOException e) {
+            Log.e(TAG, e);
+            return false;
+        }
     }
 
     @WorkerThread
     @NonNull
-    public static Metadata[] getMetadata(String packageName) {
-        File[] backupFiles = getBackupFiles(packageName);
+    public static Metadata[] getMetadata(String packageName) throws IOException {
+        Path[] backupFiles = getBackupFiles(packageName);
         List<Metadata> metadataList = new ArrayList<>(backupFiles.length);
-        for (File backupFile : backupFiles) {
+        for (Path backupFile : backupFiles) {
             try {
                 MetadataManager metadataManager = MetadataManager.getNewInstance();
-                metadataManager.readMetadata(new BackupFiles.BackupFile((ProxyFile) backupFile, false));
+                metadataManager.readMetadata(new BackupFiles.BackupFile(backupFile, false));
                 metadataList.add(metadataManager.getMetadata());
-            } catch (JSONException e) {
+            } catch (IOException e) {
                 Log.e("MetadataManager", e.getClass().getName() + ": " + e.getMessage());
             }
         }
@@ -207,9 +215,9 @@ public final class MetadataManager {
     }
 
     @NonNull
-    private static File[] getBackupFiles(String packageName) {
-        File[] backupFiles = BackupFiles.getPackagePath(packageName).listFiles(pathname -> new ProxyFile(pathname).isDirectory());
-        return ArrayUtils.defeatNullable(backupFiles);
+    private static Path[] getBackupFiles(String packageName) throws IOException {
+        Path[] backupFiles = BackupFiles.getPackagePath(packageName, false).listFiles(Path::isDirectory);
+        return ArrayUtils.defeatNullable(Path.class, backupFiles);
     }
 
     private Metadata metadata;
@@ -228,35 +236,38 @@ public final class MetadataManager {
     }
 
     @WorkerThread
-    synchronized public void readMetadata(@NonNull BackupFiles.BackupFile backupFile)
-            throws JSONException {
+    synchronized public void readMetadata(@NonNull BackupFiles.BackupFile backupFile) throws IOException {
         String metadata = IOUtils.getFileContent(backupFile.getMetadataFile());
-        if (TextUtils.isEmpty(metadata)) throw new JSONException("Empty JSON string");
-        JSONObject rootObject = new JSONObject(metadata);
-        this.metadata = new Metadata();
-        this.metadata.backupPath = backupFile.getBackupPath();
-        this.metadata.backupName = this.metadata.backupPath.getName();
-        this.metadata.label = rootObject.getString("label");
-        this.metadata.packageName = rootObject.getString("package_name");
-        this.metadata.versionName = rootObject.getString("version_name");
-        this.metadata.versionCode = rootObject.getLong("version_code");
-        this.metadata.dataDirs = JSONUtils.getArray(String.class, rootObject.getJSONArray("data_dirs"));
-        this.metadata.isSystem = rootObject.getBoolean("is_system");
-        this.metadata.isSplitApk = rootObject.getBoolean("is_split_apk");
-        this.metadata.splitConfigs = JSONUtils.getArray(String.class, rootObject.getJSONArray("split_configs"));
-        this.metadata.hasRules = rootObject.getBoolean("has_rules");
-        this.metadata.backupTime = rootObject.getLong("backup_time");
-        this.metadata.checksumAlgo = rootObject.getString("checksum_algo");
-        this.metadata.crypto = rootObject.getString("crypto");
-        readCrypto(rootObject);
-        this.metadata.version = rootObject.getInt("version");
-        this.metadata.apkName = rootObject.getString("apk_name");
-        this.metadata.instructionSet = rootObject.getString("instruction_set");
-        this.metadata.flags = new BackupFlags(rootObject.getInt("flags"));
-        this.metadata.userHandle = rootObject.getInt("user_handle");
-        this.metadata.tarType = rootObject.getString("tar_type");
-        this.metadata.keyStore = rootObject.getBoolean("key_store");
-        this.metadata.installer = JSONUtils.getString(rootObject, "installer", BuildConfig.APPLICATION_ID);
+        try {
+            if (TextUtils.isEmpty(metadata)) throw new JSONException("Empty JSON string");
+            JSONObject rootObject = new JSONObject(metadata);
+            this.metadata = new Metadata();
+            this.metadata.backupPath = backupFile.getBackupPath();
+            this.metadata.backupName = this.metadata.backupPath.getName();
+            this.metadata.label = rootObject.getString("label");
+            this.metadata.packageName = rootObject.getString("package_name");
+            this.metadata.versionName = rootObject.getString("version_name");
+            this.metadata.versionCode = rootObject.getLong("version_code");
+            this.metadata.dataDirs = JSONUtils.getArray(String.class, rootObject.getJSONArray("data_dirs"));
+            this.metadata.isSystem = rootObject.getBoolean("is_system");
+            this.metadata.isSplitApk = rootObject.getBoolean("is_split_apk");
+            this.metadata.splitConfigs = JSONUtils.getArray(String.class, rootObject.getJSONArray("split_configs"));
+            this.metadata.hasRules = rootObject.getBoolean("has_rules");
+            this.metadata.backupTime = rootObject.getLong("backup_time");
+            this.metadata.checksumAlgo = rootObject.getString("checksum_algo");
+            this.metadata.crypto = rootObject.getString("crypto");
+            readCrypto(rootObject);
+            this.metadata.version = rootObject.getInt("version");
+            this.metadata.apkName = rootObject.getString("apk_name");
+            this.metadata.instructionSet = rootObject.getString("instruction_set");
+            this.metadata.flags = new BackupFlags(rootObject.getInt("flags"));
+            this.metadata.userHandle = rootObject.getInt("user_handle");
+            this.metadata.tarType = rootObject.getString("tar_type");
+            this.metadata.keyStore = rootObject.getBoolean("key_store");
+            this.metadata.installer = JSONUtils.getString(rootObject, "installer", BuildConfig.APPLICATION_ID);
+        } catch (JSONException e) {
+            ExUtils.rethrowAsIOException(e);
+        }
     }
 
     private void readCrypto(JSONObject rootObj) throws JSONException {
@@ -276,11 +287,10 @@ public final class MetadataManager {
     }
 
     @WorkerThread
-    synchronized public void writeMetadata(@NonNull BackupFiles.BackupFile backupFile)
-            throws IOException, JSONException, RemoteException {
+    synchronized public void writeMetadata(@NonNull BackupFiles.BackupFile backupFile) throws IOException {
         if (metadata == null) throw new RuntimeException("Metadata is not set.");
-        File metadataFile = backupFile.getMetadataFile();
-        try (OutputStream outputStream = new ProxyOutputStream(metadataFile)) {
+        Path metadataFile = backupFile.getMetadataFile();
+        try (OutputStream outputStream = metadataFile.openOutputStream()) {
             JSONObject rootObject = new JSONObject();
             rootObject.put("label", metadata.label);
             rootObject.put("package_name", metadata.packageName);
@@ -306,6 +316,8 @@ public final class MetadataManager {
             rootObject.put("key_store", metadata.keyStore);
             rootObject.put("installer", metadata.installer);
             outputStream.write(rootObject.toString(4).getBytes());
+        } catch (JSONException e) {
+            ExUtils.rethrowAsIOException(e);
         }
     }
 

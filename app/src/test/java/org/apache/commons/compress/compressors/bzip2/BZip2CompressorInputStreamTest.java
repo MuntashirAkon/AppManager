@@ -2,6 +2,8 @@
 
 package org.apache.commons.compress.compressors.bzip2;
 
+import android.content.Context;
+
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.junit.Test;
@@ -16,8 +18,10 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.ProxyInputStream;
 import io.github.muntashirakon.io.ProxyOutputStream;
 import io.github.muntashirakon.io.SplitInputStream;
@@ -27,6 +31,7 @@ import static org.junit.Assert.assertEquals;
 @RunWith(RobolectricTestRunner.class)
 public class BZip2CompressorInputStreamTest {
     private final ClassLoader classLoader = getClass().getClassLoader();
+    private final Context context = AppManager.getContext();
 
     @Test
     public void testUnTarBZip2() throws IOException {
@@ -69,12 +74,12 @@ public class BZip2CompressorInputStreamTest {
 
     @Test
     public void testSplitUnTarBZip2() throws IOException {
-        List<File> fileList = new ArrayList<>();
+        List<Path> pathList = new ArrayList<>();
         assert classLoader != null;
-        fileList.add(new File(classLoader.getResource("AppManager_v2.5.22.apks.tar.bz2.0").getFile()));
-        fileList.add(new File(classLoader.getResource("AppManager_v2.5.22.apks.tar.bz2.1").getFile()));
+        pathList.add(new Path(context, new File(classLoader.getResource("AppManager_v2.5.22.apks.tar.bz2.0").getFile())));
+        pathList.add(new Path(context, new File(classLoader.getResource("AppManager_v2.5.22.apks.tar.bz2.1").getFile())));
 
-        try (SplitInputStream sis = new SplitInputStream(fileList);
+        try (SplitInputStream sis = new SplitInputStream(pathList);
              BufferedInputStream bis = new BufferedInputStream(sis);
              BZip2CompressorInputStream bZis = new BZip2CompressorInputStream(bis);
              TarArchiveInputStream tis = new TarArchiveInputStream(bZis)) {
@@ -91,7 +96,7 @@ public class BZip2CompressorInputStreamTest {
 
         // Check integrity
         List<String> expectedHashes = new ArrayList<>();
-        fileList.clear();
+        List<File> fileList = new ArrayList<>();
         fileList.add(new File(classLoader.getResource("AppManager_v2.5.22.apks.0").getFile()));
         fileList.add(new File(classLoader.getResource("AppManager_v2.5.22.apks.1").getFile()));
         for (File file : fileList) {

@@ -15,11 +15,12 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
+import java.io.FileNotFoundException;
+
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
-import io.github.muntashirakon.io.ProxyFile;
 import io.github.muntashirakon.widget.MultiSelectionView;
 import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
@@ -61,7 +62,12 @@ public class FmActivity extends BaseActivity implements SearchView.OnQueryTextLi
             progressIndicator.hide();
             adapter.setFmList(fmItems);
         });
-        model.loadFiles(new ProxyFile(AppPref.getString(AppPref.PrefKey.PREF_BACKUP_VOLUME_STR)));
+        try {
+            model.loadFiles(AppPref.getSelectedDirectory());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            finish();
+        }
     }
 
     @Override

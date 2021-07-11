@@ -5,7 +5,6 @@ package io.github.muntashirakon.io;
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -15,7 +14,7 @@ import java.util.List;
 public class SplitInputStream extends InputStream {
     private final List<InputStream> inputStreams;
     private int currentIndex = -1;
-    private final List<File> files;
+    private final List<Path> files;
 
     private final byte[] buf;
 
@@ -40,13 +39,13 @@ public class SplitInputStream extends InputStream {
     // 0 <= ~pos <= markBufCount (if pos < 0)
     // 0 <= markBufCount <= markLimit
 
-    public SplitInputStream(@NonNull List<File> files) {
+    public SplitInputStream(@NonNull List<Path> files) {
         this.files = files;
         this.inputStreams = new ArrayList<>(files.size());
         buf = new byte[1024 * 4];
     }
 
-    public SplitInputStream(@NonNull File[] files) {
+    public SplitInputStream(@NonNull Path[] files) {
         this(Arrays.asList(files));
     }
 
@@ -205,7 +204,7 @@ public class SplitInputStream extends InputStream {
                 return -1;
             } else if (currentIndex == -1) {
                 // Initialize a new stream
-                inputStreams.add(new ProxyInputStream(files.get(0)));
+                inputStreams.add(files.get(0).openInputStream());
                 ++currentIndex;
             }
             do {
@@ -213,7 +212,7 @@ public class SplitInputStream extends InputStream {
                 if (readCount <= 0) {
                     // This stream has been read completely, initialize new stream if available
                     if (currentIndex + 1 != files.size()) {
-                        inputStreams.add(new ProxyInputStream(files.get(currentIndex + 1)));
+                        inputStreams.add(files.get(currentIndex + 1).openInputStream());
                         ++currentIndex;
                     } else {
                         // Last stream reached

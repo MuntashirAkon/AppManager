@@ -3,13 +3,14 @@
 package io.github.muntashirakon.AppManager.fm;
 
 import android.app.Application;
+import android.net.Uri;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -32,8 +33,8 @@ public class FmViewModel extends AndroidViewModel {
         executor.shutdownNow();
     }
 
-    public void loadFiles(File file) {
-        Path path = new Path(getApplication(), file);
+    public void loadFiles(Uri uri) throws FileNotFoundException {
+        Path path = new Path(getApplication(), uri);
         loadFiles(path);
     }
 

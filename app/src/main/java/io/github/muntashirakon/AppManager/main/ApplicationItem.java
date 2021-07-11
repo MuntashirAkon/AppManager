@@ -19,8 +19,7 @@ import io.github.muntashirakon.AppManager.backup.BackupManager;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
-import io.github.muntashirakon.io.ProxyFile;
-import io.github.muntashirakon.io.ProxyInputStream;
+import io.github.muntashirakon.io.Path;
 
 /**
  * Stores an application info
@@ -137,9 +136,9 @@ public class ApplicationItem extends PackageItemInfo {
         }
         if (backup != null) {
             try {
-                ProxyFile iconFile = new ProxyFile(backup.getBackupPath(), BackupManager.ICON_FILE);
+                Path iconFile = backup.getBackupPath().findFile(BackupManager.ICON_FILE);
                 if (iconFile.exists()) {
-                    try (InputStream is = new ProxyInputStream(iconFile)) {
+                    try (InputStream is = iconFile.openInputStream()) {
                         return Drawable.createFromStream(is, name);
                     }
                 }

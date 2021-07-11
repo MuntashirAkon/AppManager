@@ -20,6 +20,7 @@ import android.provider.OpenableColumns;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -101,10 +102,8 @@ public class FmProvider extends ContentProvider {
                     values.add(path.length());
                     break;
                 case MediaStore.MediaColumns.DATA:
-                    String filePath;
-                    try {
-                        filePath = path.getFilePath();
-                    } catch (UnsupportedOperationException ignore) {
+                    String filePath = path.getFilePath();
+                    if (filePath == null || !new File(filePath).canRead()) {
                         continue;
                     }
                     columns.add(column);
@@ -167,7 +166,7 @@ public class FmProvider extends ContentProvider {
             return new Path(getContext(), new ProxyFile(uriPath));
         } else {
             // Content provider
-            return new Path(getContext(), Uri.parse(uriPath));
+            return new Path(getContext(), Uri.parse(uriPath), false);
         }
     }
 

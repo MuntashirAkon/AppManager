@@ -41,6 +41,7 @@ public class RulesExporter {
     public void saveRules(Uri uri) throws IOException {
         if (mPackagesToExport == null) mPackagesToExport = ComponentUtils.getAllPackagesWithRules();
         try (OutputStream outputStream = mContext.getContentResolver().openOutputStream(uri)) {
+            if (outputStream == null) throw new IOException("Content provider has crashed.");
             for (String packageName: mPackagesToExport) {
                 for (int userHandle : userHandles) {
                     // Get a read-only instance

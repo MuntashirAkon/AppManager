@@ -30,7 +30,6 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.EOFException;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -44,6 +43,7 @@ import java.util.zip.ZipEntry;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.ProxyFile;
 import io.github.muntashirakon.io.ProxyInputStream;
 import io.github.muntashirakon.io.ProxyOutputStream;
@@ -128,6 +128,14 @@ public final class IOUtils {
     }
 
     @WorkerThread
+    public static long copy(Path from, Path to) throws IOException {
+        try (InputStream in = from.openInputStream();
+             OutputStream out = to.openOutputStream()) {
+            return copy(in, out);
+        }
+    }
+
+    @WorkerThread
     public static long copy(InputStream inputStream, OutputStream outputStream) throws IOException {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             return FileUtils.copy(inputStream, outputStream);
@@ -162,7 +170,7 @@ public final class IOUtils {
     @WorkerThread
     @NonNull
     public static File saveZipFile(@NonNull InputStream zipInputStream, @NonNull File filePath)
-            throws IOException, RemoteException {
+            throws IOException {
         if (filePath.exists()) //noinspection ResultOfMethodCallIgnored
             filePath.delete();
         try (OutputStream outputStream = new ProxyOutputStream(filePath)) {
@@ -311,6 +319,32 @@ public final class IOUtils {
     }
 
     @AnyThread
+    public static long fileSize(@Nullable Path root) {
+        if (root == null) {
+            return 0;
+        }
+        if (root.isFile()) {
+            return root.length();
+        }
+        try {
+            if (root.isSymbolicLink()) {
+                return 0;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return 0;
+        }
+
+        long length = 0;
+        Path[] files = root.listFiles();
+        for (Path file : files) {
+            length += fileSize(file);
+        }
+
+        return length;
+    }
+
+    @AnyThread
     private static boolean isSymlink(@NonNull File file) throws IOException {
         File canon;
         File parentFile = file.getParentFile();
@@ -329,6 +363,12 @@ public final class IOUtils {
         return getFileContent(file, "");
     }
 
+    @WorkerThread
+    @NonNull
+    public static String getFileContent(@NonNull Path file) {
+        return getFileContent(file, "");
+    }
+
     /**
      * Read the full content of a file.
      *
@@ -341,6 +381,28 @@ public final class IOUtils {
     public static String getFileContent(@NonNull File file, @NonNull String emptyValue) {
         if (!file.exists() || file.isDirectory()) return emptyValue;
         try (InputStream inputStream = new ProxyInputStream(file)) {
+            return getInputStreamContent(inputStream);
+        } catch (IOException e) {
+            if (!(e.getCause() instanceof ErrnoException)) {
+                // This isn't just another EACCESS exception
+                e.printStackTrace();
+            }
+        }
+        return emptyValue;
+    }
+
+    /**
+     * Read the full content of a file.
+     *
+     * @param file       The file to be read
+     * @param emptyValue Empty value if no content has been found
+     * @return File content as string
+     */
+    @WorkerThread
+    @NonNull
+    public static String getFileContent(@NonNull Path file, @NonNull String emptyValue) {
+        if (!file.exists() || file.isDirectory()) return emptyValue;
+        try (InputStream inputStream = file.openInputStream()) {
             return getInputStreamContent(inputStream);
         } catch (IOException e) {
             if (!(e.getCause() instanceof ErrnoException)) {
@@ -373,7 +435,7 @@ public final class IOUtils {
     public static String getFileContent(@NonNull ContentResolver contentResolver, @NonNull Uri file)
             throws IOException {
         try (InputStream inputStream = contentResolver.openInputStream(file)) {
-            if (inputStream == null) throw new IOException("Failed to open " + file.toString());
+            if (inputStream == null) throw new IOException("Failed to open " + file);
             return getInputStreamContent(inputStream);
         }
     }
@@ -493,18 +555,7 @@ public final class IOUtils {
     }
 
     @WorkerThread
-    @NonNull
-    public static File getSharableFile(@NonNull File privateFile) throws IOException {
-        File tmpPublicSource = new File(AppManager.getContext().getExternalCacheDir(), privateFile.getName());
-        try (FileInputStream inputStream = new FileInputStream(privateFile);
-             FileOutputStream outputStream = new FileOutputStream(tmpPublicSource)) {
-            copy(inputStream, outputStream);
-        }
-        return tmpPublicSource;
-    }
-
-    @WorkerThread
-    public static long calculateFileCrc32(File file) throws IOException, RemoteException {
+    public static long calculateFileCrc32(File file) throws IOException {
         return calculateCrc32(new ProxyInputStream(file));
     }
 

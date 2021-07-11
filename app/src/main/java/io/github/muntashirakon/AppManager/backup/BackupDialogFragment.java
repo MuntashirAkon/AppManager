@@ -25,6 +25,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
@@ -43,6 +44,7 @@ import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuild
 import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.StoragePermission;
 
@@ -257,7 +259,12 @@ public class BackupDialogFragment extends DialogFragment {
             // Only a single package is requested, display a list of existing backups to
             // choose which of them are to be deleted
             // TODO(21/9/20): Replace with a custom alert dialog to display more info.
-            MetadataManager.Metadata[] metadata = MetadataManager.getMetadata(targetPackages.get(0).getPackageName());
+            MetadataManager.Metadata[] metadata;
+            try {
+                metadata = MetadataManager.getMetadata(targetPackages.get(0).getPackageName());
+            } catch (IOException e) {
+                metadata = ArrayUtils.emptyArray(MetadataManager.Metadata.class);
+            }
             String[] backupNames = new String[metadata.length];
             CharSequence[] readableBackupNames = new CharSequence[metadata.length];
             boolean[] choices = new boolean[metadata.length];
@@ -309,7 +316,12 @@ public class BackupDialogFragment extends DialogFragment {
             // Only a single package is requested, display a list of existing backups to
             // choose which one to restore
             // TODO(21/9/20): Replace with a custom alert dialog to display more info.
-            MetadataManager.Metadata[] metadata = MetadataManager.getMetadata(targetPackages.get(0).getPackageName());
+            MetadataManager.Metadata[] metadata;
+            try {
+                metadata = MetadataManager.getMetadata(targetPackages.get(0).getPackageName());
+            } catch (IOException e) {
+                metadata = ArrayUtils.emptyArray(MetadataManager.Metadata.class);
+            }
             String[] backupNames = new String[metadata.length];
             AtomicInteger selectedItem = new AtomicInteger(-1);
             CharSequence[] readableBackupNames = new CharSequence[metadata.length];

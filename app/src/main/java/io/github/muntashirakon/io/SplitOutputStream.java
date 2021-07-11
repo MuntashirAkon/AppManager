@@ -5,41 +5,34 @@ package io.github.muntashirakon.io;
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SplitOutputStream extends OutputStream {
-    private static final long MAX_BYTES_WRITTEN = 1024*1024*1024;  // 1GB
+    private static final long MAX_BYTES_WRITTEN = 1024 * 1024 * 1024;  // 1GB
 
-    private final List<ProxyOutputStream> outputStreams = new ArrayList<>(1);
-    private final List<File> files = new ArrayList<>(1);
+    private final List<OutputStream> outputStreams = new ArrayList<>(1);
+    private final List<Path> files = new ArrayList<>(1);
     private int currentIndex = -1;
     private long bytesWritten;
     private final long maxBytesPerFile;
-    private final String baseFile;
+    private final String baseName;
+    private final Path basePath;
 
-    public SplitOutputStream(@NonNull String baseFile) {
-        this(baseFile, MAX_BYTES_WRITTEN);
+    public SplitOutputStream(@NonNull Path basePath, @NonNull String baseName) {
+        this(basePath, baseName, MAX_BYTES_WRITTEN);
     }
 
-    public SplitOutputStream(@NonNull File baseFile) {
-        this(baseFile.getAbsolutePath());
-    }
-
-    public SplitOutputStream(@NonNull String baseFile, long maxBytesPerFile) {
-        this.baseFile = baseFile;
+    public SplitOutputStream(@NonNull Path basePath, @NonNull String baseName, long maxBytesPerFile) {
+        this.basePath = basePath;
+        this.baseName = baseName;
         this.maxBytesPerFile = maxBytesPerFile;
         this.bytesWritten = maxBytesPerFile;
     }
 
-    public SplitOutputStream(@NonNull File baseFile, long maxBytesPerFile) {
-        this(baseFile.getAbsolutePath(), maxBytesPerFile);
-    }
-
-    public List<File> getFiles() {
+    public List<Path> getFiles() {
         return files;
     }
 
@@ -70,7 +63,7 @@ public class SplitOutputStream extends OutputStream {
     @WorkerThread
     @Override
     public void flush() throws IOException {
-        for (ProxyOutputStream stream : outputStreams) {
+        for (OutputStream stream : outputStreams) {
             stream.flush();
         }
     }
@@ -78,7 +71,7 @@ public class SplitOutputStream extends OutputStream {
     @WorkerThread
     @Override
     public void close() throws IOException {
-        for (ProxyOutputStream stream : outputStreams) {
+        for (OutputStream stream : outputStreams) {
             stream.close();
         }
     }
@@ -87,20 +80,16 @@ public class SplitOutputStream extends OutputStream {
     private void checkCurrentStream(int nextBytesSize) throws IOException {
         if (bytesWritten + nextBytesSize > maxBytesPerFile) {
             // Need to create a new stream
-            try {
-                File newFile = getNextFile();
-                files.add(newFile);
-                outputStreams.add(new ProxyOutputStream(newFile));
-                ++currentIndex;
-                bytesWritten = 0;
-            } catch (Throwable th) {
-                throw new IOException(th);
-            }
+            Path newFile = getNextFile();
+            files.add(newFile);
+            outputStreams.add(newFile.openOutputStream());
+            ++currentIndex;
+            bytesWritten = 0;
         }
     }
 
     @NonNull
-    private File getNextFile() {
-        return new ProxyFile(baseFile + "." + (currentIndex + 1));
+    private Path getNextFile() throws IOException {
+        return basePath.createNewFile(baseName + "." + (currentIndex + 1), null);
     }
 }

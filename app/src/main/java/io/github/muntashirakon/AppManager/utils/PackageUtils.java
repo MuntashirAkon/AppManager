@@ -34,6 +34,7 @@ import com.android.apksig.ApkVerifier;
 import com.android.internal.util.TextUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.PublicKey;
@@ -234,12 +235,19 @@ public final class PackageUtils {
     }
 
     @WorkerThread
-    private static void updateInstalledOrBackedUpApplications(@NonNull Context context,
-                                                              boolean loadBackups) {
+    private static void updateInstalledOrBackedUpApplications(@NonNull Context context, boolean loadBackups) {
         HashMap<String, Backup> backups;
         if (loadBackups) {
-            backups = BackupUtils.storeAllAndGetLatestBackupMetadata();
-        } else backups = BackupUtils.getAllLatestBackupMetadataFromDb();
+            try {
+                backups = BackupUtils.storeAllAndGetLatestBackupMetadata();
+            } catch (IOException e) {
+                e.printStackTrace();
+                // Backups variable should always be non-null
+                backups = new HashMap<>(0);
+            }
+        } else {
+            backups = BackupUtils.getAllLatestBackupMetadataFromDb();
+        }
         // Interrupt thread on request
         if (Thread.currentThread().isInterrupted()) return;
 

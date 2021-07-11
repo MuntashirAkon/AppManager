@@ -23,7 +23,6 @@ import org.openintents.openpgp.OpenPgpError;
 import org.openintents.openpgp.util.OpenPgpApi;
 import org.openintents.openpgp.util.OpenPgpServiceConnection;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -38,11 +37,8 @@ import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
-import io.github.muntashirakon.io.ProxyFile;
-import io.github.muntashirakon.io.ProxyInputStream;
-import io.github.muntashirakon.io.ProxyOutputStream;
+import io.github.muntashirakon.io.Path;
 
 // Copyright 2018 jensstein
 public class OpenPGPCrypto implements Crypto {
@@ -55,9 +51,9 @@ public class OpenPGPCrypto implements Crypto {
 
     private OpenPgpServiceConnection service;
     private boolean successFlag, errorFlag;
-    private File[] files;
+    private Path[] files;
     @NonNull
-    private final List<File> newFiles = new ArrayList<>();
+    private final List<Path> newFiles = new ArrayList<>();
     private InputStream is;
     private OutputStream os;
     @NonNull
@@ -106,7 +102,7 @@ public class OpenPGPCrypto implements Crypto {
 
     @WorkerThread
     @Override
-    public boolean decrypt(@NonNull File[] files) {
+    public boolean decrypt(@NonNull Path[] files) {
         Intent intent = new Intent(OpenPgpApi.ACTION_DECRYPT_VERIFY);
         return handleFiles(intent, Cipher.DECRYPT_MODE, files);
     }
@@ -121,7 +117,7 @@ public class OpenPGPCrypto implements Crypto {
 
     @WorkerThread
     @Override
-    public boolean encrypt(@NonNull File[] filesList) {
+    public boolean encrypt(@NonNull Path[] filesList) {
         Intent intent = new Intent(OpenPgpApi.ACTION_ENCRYPT);
         intent.putExtra(OpenPgpApi.EXTRA_KEY_IDS, keyIds);
         return handleFiles(intent, Cipher.ENCRYPT_MODE, filesList);
@@ -137,7 +133,7 @@ public class OpenPGPCrypto implements Crypto {
     }
 
     @WorkerThread
-    private boolean handleFiles(Intent intent, int mode, @NonNull File[] filesList) {
+    private boolean handleFiles(Intent intent, int mode, @NonNull Path[] filesList) {
         isFileMode = true;
         if (!waitForServiceBound()) return false;
         is = null;
@@ -155,7 +151,7 @@ public class OpenPGPCrypto implements Crypto {
         if (!waitForServiceBound()) return false;
         this.is = is;
         this.os = os;
-        files = new File[0];
+        files = new Path[0];
         lastIntent = intent;
         lastMode = mode;
         return doAction(intent, mode, true);
@@ -174,22 +170,28 @@ public class OpenPGPCrypto implements Crypto {
     private boolean doActionForFiles(Intent intent, int mode, boolean waitForResult) {
         errorFlag = false;
         if (files.length > 0) {  // files is never null here
-            for (File file : files) {
-                File outputFilename;
+            for (Path inputPath : files) {
+                Path parent = inputPath.getParentFile();
+                if (parent == null) {
+                    Log.e(TAG, "Parent file cannot be null.");
+                    return false;
+                }
+                String outputFilename;
                 if (mode == Cipher.DECRYPT_MODE) {
-                    outputFilename = new ProxyFile(file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf(GPG_EXT)));
-                } else outputFilename = new ProxyFile(file.getAbsolutePath() + GPG_EXT);
-                newFiles.add(outputFilename);
-                Log.i(TAG, "Input: " + file + "\nOutput: " + outputFilename);
+                    outputFilename = inputPath.getName().substring(0, inputPath.getName().lastIndexOf(GPG_EXT));
+                } else outputFilename = inputPath.getName() + GPG_EXT;
                 try {
-                    InputStream is = new ProxyInputStream(file);
-                    OutputStream os = new ProxyOutputStream(outputFilename);
+                    Path outputPath = parent.createNewFile(outputFilename, null);
+                    newFiles.add(outputPath);
+                    Log.i(TAG, "Input: " + inputPath + "\nOutput: " + outputPath);
+                    InputStream is = inputPath.openInputStream();
+                    OutputStream os = inputPath.openOutputStream();
                     OpenPgpApi api = new OpenPgpApi(context, service.getService());
                     Intent result = api.executeApi(intent, is, os);
                     handler.post(() -> handleResult(result));
                     if (waitForResult) waitForResult();
                     if (errorFlag) {
-                        IOUtils.deleteSilently(outputFilename);
+                        outputPath.delete();
                         return false;
                     }
                 } catch (IOException e) {
@@ -198,8 +200,8 @@ public class OpenPGPCrypto implements Crypto {
                 }
                 // Delete unencrypted file
                 if (mode == Cipher.ENCRYPT_MODE) {
-                    if (!file.delete()) {
-                        Log.e(TAG, "Couldn't delete old file " + file);
+                    if (!inputPath.delete()) {
+                        Log.e(TAG, "Couldn't delete old file " + inputPath);
                         return false;
                     }
                 }
@@ -223,8 +225,8 @@ public class OpenPGPCrypto implements Crypto {
 
     @NonNull
     @Override
-    public File[] getNewFiles() {
-        return newFiles.toArray(new File[0]);
+    public Path[] getNewFiles() {
+        return newFiles.toArray(new Path[0]);
     }
 
     private void bind() {

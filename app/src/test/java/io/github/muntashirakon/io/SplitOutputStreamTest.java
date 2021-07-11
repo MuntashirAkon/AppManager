@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.io;
 
+import android.content.Context;
+
 import androidx.annotation.NonNull;
 
 import org.junit.After;
@@ -18,6 +20,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 
@@ -28,10 +31,12 @@ public class SplitOutputStreamTest {
     private SplitOutputStream splitOutputStream;
     private InputStream inputStream;
     private final ClassLoader classLoader = getClass().getClassLoader();
+    private final Context context = AppManager.getContext();
 
     @Before
     public void setUp() throws Exception {
-        splitOutputStream = new SplitOutputStream("/tmp/AppManager_v2.5.22.apks", 1024 * 1024);
+        Path tmpPath = new Path(context, new File("/tmp"));
+        splitOutputStream = new SplitOutputStream(tmpPath, "AppManager_v2.5.22.apks", 1024000);
         assert classLoader != null;
         File sampleFile = new File(classLoader.getResource("AppManager_v2.5.22.apks").getFile());
         inputStream = new FileInputStream(sampleFile);

@@ -25,6 +25,7 @@ import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
 
 import aosp.libcore.util.HexEncoding;
+import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.ProxyInputStream;
 
 public class DigestUtils {
@@ -57,6 +58,25 @@ public class DigestUtils {
         List<String> hashes = new ArrayList<>(allFiles.size());
         for (File file : allFiles) {
             try (InputStream fileInputStream = new ProxyInputStream(file)) {
+                hashes.add(DigestUtils.getHexDigest(algo, fileInputStream));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        if (hashes.size() == 0) return HexEncoding.encodeToString(new byte[0], false /* lowercase */);
+        if (hashes.size() == 1) return hashes.get(0);
+        String fullString = TextUtils.join("", hashes);
+        return getHexDigest(algo, fullString.getBytes());
+    }
+
+    @WorkerThread
+    @NonNull
+    public static String getHexDigest(@Algorithm String algo, @NonNull Path path) {
+        List<Path> allFiles = new ArrayList<>();
+        gatherFiles(allFiles, path);
+        List<String> hashes = new ArrayList<>(allFiles.size());
+        for (Path file : allFiles) {
+            try (InputStream fileInputStream = file.openInputStream()) {
                 hashes.add(DigestUtils.getHexDigest(algo, fileInputStream));
             } catch (IOException e) {
                 e.printStackTrace();
@@ -163,6 +183,21 @@ public class DigestUtils {
                 return;
             }
             for (File child : children) {
+                gatherFiles(files, child);
+            }
+        } else if (source.isFile()) {
+            // Not directory, add it
+            files.add(source);
+        } // else we don't support other type of files
+    }
+
+    static void gatherFiles(@NonNull List<Path> files, @NonNull Path source) {
+        if (source.isDirectory()) {
+            Path[] children = source.listFiles();
+            if (children.length == 0) {
+                return;
+            }
+            for (Path child : children) {
                 gatherFiles(files, child);
             }
         } else if (source.isFile()) {

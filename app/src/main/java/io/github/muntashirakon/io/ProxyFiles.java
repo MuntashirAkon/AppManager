@@ -53,10 +53,13 @@ public final class ProxyFiles {
      * @param uid  to apply through {@code chown}, or -1 to leave unchanged
      * @param gid  to apply through {@code chown}, or -1 to leave unchanged
      */
-    public static void setPermissions(File path, int mode, int uid, int gid) throws ErrnoException, RemoteException {
-        chmod(path, mode);
+    public static void setPermissions(@NonNull Path path, int mode, int uid, int gid)
+            throws ErrnoException, RemoteException {
+        File filePath = path.getFile();
+        if (filePath == null) return;
+        chmod(filePath, mode);
         if (uid >= 0 || gid >= 0) {
-            chown(path, uid, gid);
+            chown(filePath, uid, gid);
         }
     }
 

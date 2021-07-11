@@ -52,7 +52,7 @@ public class ProxyDocumentFile extends DocumentFile {
     @Nullable
     public DocumentFile createDirectory(@NonNull String displayName) {
         final File target = new ProxyFile(mFile, displayName);
-        if (target.isDirectory() || target.mkdir()) {
+        if (target.isDirectory() || target.mkdirs()) {
             return new ProxyDocumentFile(this, target);
         } else {
             return null;
@@ -148,6 +148,15 @@ public class ProxyDocumentFile extends DocumentFile {
         final File target = new ProxyFile(mFile.getParentFile(), displayName);
         if (mFile.renameTo(target)) {
             mFile = target;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean renameTo(@NonNull ProxyDocumentFile targetFile) {
+        if (mFile.renameTo(targetFile.mFile)) {
+            mFile = targetFile.mFile;
             return true;
         } else {
             return false;

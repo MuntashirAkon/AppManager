@@ -19,7 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
-import java.io.File;
+import java.io.FileNotFoundException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
@@ -52,6 +52,7 @@ import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.io.Path;
 
 @WorkerThread
 public class BatchOpsManager {
@@ -263,20 +264,20 @@ public class BatchOpsManager {
             for (UserPackagePair pair : userPackagePairs) {
                 executor.submit(() -> {
                     BackupManager backupManager = BackupManager.getNewInstance(pair, args.getInt(ARG_FLAGS));
-                    boolean hasFailed = true;
-                    switch (mode) {
-                        case BackupDialogFragment.MODE_BACKUP:
-                            hasFailed = !backupManager.backup(backupNames);
-                            break;
-                        case BackupDialogFragment.MODE_DELETE:
-                            hasFailed = !backupManager.deleteBackup(backupNames);
-                            break;
-                        case BackupDialogFragment.MODE_RESTORE:
-                            hasFailed = !backupManager.restore(backupNames);
-                            break;
-                    }
-                    if (hasFailed) {
-                        synchronized (BatchOpsManager.this) {
+                    try {
+                        switch (mode) {
+                            case BackupDialogFragment.MODE_BACKUP:
+                                backupManager.backup(backupNames);
+                                break;
+                            case BackupDialogFragment.MODE_DELETE:
+                                backupManager.deleteBackup(backupNames);
+                                break;
+                            case BackupDialogFragment.MODE_RESTORE:
+                                backupManager.restore(backupNames);
+                                break;
+                        }
+                    } catch (BackupException e) {
+                        synchronized (failedPackages) {
                             failedPackages.add(pair);
                         }
                     }
@@ -293,19 +294,25 @@ public class BatchOpsManager {
         @ImportType
         int backupType = args.getInt(ARG_BACKUP_TYPE, ImportType.OAndBackup);
         int userHandle = Users.myUserId();
-        File[] files = ConvertUtils.getRelevantImportFiles(backupType);
-        if (files == null) return new Result(Collections.emptyList());
+        Path[] files;
         final List<UserPackagePair> failedPkgList = new ArrayList<>();
+        try {
+            files = ConvertUtils.getRelevantImportFiles(backupType);
+        } catch (FileNotFoundException e) {
+            return new Result(failedPkgList);
+        }
         MultithreadedExecutor executor = MultithreadedExecutor.getNewInstance();
         try {
-            for (File file : files) {
+            for (Path file : files) {
                 executor.submit(() -> {
                     Convert convert = ConvertUtils.getConversionUtil(backupType, file);
                     try {
                         convert.convert();
                     } catch (BackupException e) {
                         Log.e(TAG, "Could not backup " + convert.getPackageName(), e);
-                        failedPkgList.add(new UserPackagePair(convert.getPackageName(), userHandle));
+                        synchronized (failedPkgList) {
+                            failedPkgList.add(new UserPackagePair(convert.getPackageName(), userHandle));
+                        }
                     }
                 });
             }

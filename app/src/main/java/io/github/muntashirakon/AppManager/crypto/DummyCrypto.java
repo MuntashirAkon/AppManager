@@ -2,19 +2,19 @@
 
 package io.github.muntashirakon.AppManager.crypto;
 
-import java.io.File;
+import androidx.annotation.NonNull;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import androidx.annotation.NonNull;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.io.Path;
 
 public class DummyCrypto implements Crypto {
-    File[] newFiles;
+    Path[] newFiles;
 
     @Override
-    public boolean encrypt(@NonNull File[] files) {
+    public boolean encrypt(@NonNull Path[] files) {
         // Have to return new files to be processed further
         newFiles = files;
         return true;
@@ -26,7 +26,7 @@ public class DummyCrypto implements Crypto {
     }
 
     @Override
-    public boolean decrypt(@NonNull File[] files) {
+    public boolean decrypt(@NonNull Path[] files) {
         // The new files will be deleted, so don't send
         newFiles = null;
         return true;
@@ -39,8 +39,8 @@ public class DummyCrypto implements Crypto {
 
     @NonNull
     @Override
-    public File[] getNewFiles() {
-        if (newFiles == null) return new File[0];
+    public Path[] getNewFiles() {
+        if (newFiles == null) return new Path[0];
         return newFiles;
     }
 

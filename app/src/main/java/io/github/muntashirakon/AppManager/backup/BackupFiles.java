@@ -2,15 +2,13 @@
 
 package io.github.muntashirakon.AppManager.backup;
 
-import android.os.RemoteException;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.Closeable;
-import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -18,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.io.ProxyFile;
+import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.ProxyFileReader;
 import io.github.muntashirakon.io.ProxyFileWriter;
 
@@ -33,128 +31,136 @@ public class BackupFiles {
     static final String NO_MEDIA = ".nomedia";
 
     @NonNull
-    public static ProxyFile getBackupDirectory() {
+    public static Path getBackupDirectory() throws FileNotFoundException {
         return AppPref.getAppManagerDirectory();
     }
 
     @NonNull
-    public static ProxyFile getTemporaryDirectory() {
-        return new ProxyFile(getBackupDirectory(), TEMPORARY_DIRECTORY);
+    public static Path getTemporaryDirectory() throws IOException {
+        return getBackupDirectory().findOrCreateDirectory(TEMPORARY_DIRECTORY);
     }
 
     @NonNull
-    public static ProxyFile getPackagePath(@NonNull String packageName) {
-        return new ProxyFile(getBackupDirectory(), packageName);
+    public static Path getPackagePath(@NonNull String packageName, boolean create) throws IOException {
+        if (create) {
+            return getBackupDirectory().findOrCreateDirectory(packageName);
+        } else return getBackupDirectory().findFile(packageName);
     }
 
     @NonNull
-    public static synchronized ProxyFile getTemporaryBackupPath() {
+    private static synchronized Path getTemporaryBackupPath() throws IOException {
+        // FIXME: 9/7/21 Temporary backup path should be in the package path in order to make it easy to rename it in SAF
+        Path tmpDir = getTemporaryDirectory();
         String tmpFilename = "backup_" + System.currentTimeMillis();
-        ProxyFile tmpFile = new ProxyFile(getTemporaryDirectory(), tmpFilename);
+        String newFilename = tmpFilename;
         int i = 0;
-        while (tmpFile.exists()) {
-            tmpFile = new ProxyFile(getTemporaryDirectory(), tmpFilename + "_" + (++i));
+        while (tmpDir.hasFile(newFilename)) {
+            newFilename = tmpFilename + "_" + (++i);
         }
-        //noinspection ResultOfMethodCallIgnored
-        tmpFile.mkdirs();
-        return tmpFile;
+        return tmpDir.findOrCreateDirectory(newFilename);
     }
 
     @NonNull
-    public static ProxyFile getApkBackupDirectory() {
-        return new ProxyFile(getBackupDirectory(), APK_SAVING_DIRECTORY);
+    public static Path getApkBackupDirectory() throws IOException {
+        return getBackupDirectory().findOrCreateDirectory(APK_SAVING_DIRECTORY);
     }
 
     public static void createNoMediaIfNotExists() throws IOException {
-        ProxyFile backupDirectory = getBackupDirectory();
-        ProxyFile noMediaFile = new ProxyFile(backupDirectory, NO_MEDIA);
-        if (noMediaFile.exists()) return;
-        if (!backupDirectory.exists()) {
-            backupDirectory.mkdirs();
+        Path backupDirectory = getBackupDirectory();
+        if (backupDirectory.hasFile(NO_MEDIA)) {
+            backupDirectory.createNewFile(NO_MEDIA, null);
         }
-        noMediaFile.createNewFile();
     }
 
     public static class BackupFile {
         @NonNull
-        private final ProxyFile backupPath;
+        private final Path backupPath;
         @NonNull
-        private final ProxyFile tmpBackupPath;
+        private final Path tmpBackupPath;
         private final boolean isTemporary;
 
-        public BackupFile(@NonNull ProxyFile backupPath, boolean hasTemporary) {
+        public BackupFile(@NonNull Path backupPath, boolean hasTemporary) throws IOException {
             this.backupPath = backupPath;
             this.isTemporary = hasTemporary;
             if (hasTemporary) {
-                //noinspection ResultOfMethodCallIgnored
                 backupPath.mkdirs();  // Create backup path if not exists
                 tmpBackupPath = getTemporaryBackupPath();
             } else tmpBackupPath = this.backupPath;
         }
 
         @NonNull
-        public ProxyFile getBackupPath() {
+        public Path getBackupPath() {
             return isTemporary ? tmpBackupPath : backupPath;
         }
 
         @NonNull
-        public ProxyFile getMetadataFile() {
-            return new ProxyFile(getBackupPath(), MetadataManager.META_FILE);
+        public Path getMetadataFile() throws IOException {
+            if (isTemporary) {
+                return getBackupPath().findOrCreateFile(MetadataManager.META_FILE, null);
+            } else return getBackupPath().findFile(MetadataManager.META_FILE);
         }
 
         @NonNull
-        public ProxyFile getChecksumFile(@CryptoUtils.Mode String mode) {
-            return new ProxyFile(getBackupPath(), CHECKSUMS_TXT + CryptoUtils.getExtension(mode));
+        public Path getChecksumFile(@CryptoUtils.Mode String mode) throws IOException {
+            if (isTemporary) {
+                return getBackupPath().findOrCreateFile(CHECKSUMS_TXT + CryptoUtils.getExtension(mode), null);
+            } else return getBackupPath().findFile(CHECKSUMS_TXT + CryptoUtils.getExtension(mode));
         }
 
         @NonNull
-        public ProxyFile getMiscFile(@CryptoUtils.Mode String mode) {
-            return new ProxyFile(getBackupPath(), MISC_TSV + CryptoUtils.getExtension(mode));
+        public Path getMiscFile(@CryptoUtils.Mode String mode) throws IOException {
+            if (isTemporary) {
+                return getBackupPath().findOrCreateFile(MISC_TSV + CryptoUtils.getExtension(mode), null);
+            } else return getBackupPath().findFile(MISC_TSV + CryptoUtils.getExtension(mode));
         }
 
         @NonNull
-        public ProxyFile getRulesFile(@CryptoUtils.Mode String mode) {
-            return new ProxyFile(getBackupPath(), RULES_TSV + CryptoUtils.getExtension(mode));
+        public Path getRulesFile(@CryptoUtils.Mode String mode) throws IOException {
+            if (isTemporary) {
+                return getBackupPath().findOrCreateFile(RULES_TSV + CryptoUtils.getExtension(mode), null);
+            } else return getBackupPath().findFile(RULES_TSV + CryptoUtils.getExtension(mode));
         }
 
         public void freeze() throws IOException {
-            getFreezeFile().createNewFile();
+            getBackupPath().createNewFile(FREEZE, null);
         }
 
-        public void unfreeze() {
+        public void unfreeze() throws FileNotFoundException {
             getFreezeFile().delete();
         }
 
         @SuppressWarnings("BooleanMethodIsAlwaysInverted")
         public boolean isFrozen() {
-            return getFreezeFile().exists();
+            try {
+                return getFreezeFile().exists();
+            } catch (IOException e) {
+                return false;
+            }
         }
 
         public boolean commit() {
             if (isTemporary) {
-                return delete() && tmpBackupPath.renameTo(backupPath);
+                return delete() && tmpBackupPath.moveTo(backupPath);
             }
             return true;
         }
 
-        public boolean cleanup() {
+        public void cleanup() {
             if (isTemporary) {
-                //noinspection ResultOfMethodCallIgnored
-                tmpBackupPath.forceDelete();
+                tmpBackupPath.delete();
             }
-            return false;
         }
 
         public boolean delete() {
             if (backupPath.exists()) {
-                return backupPath.forceDelete();
+                return backupPath.delete();
             }
             return true;  // The backup path doesn't exist anyway
         }
 
         @NonNull
-        private ProxyFile getFreezeFile() {
-            return new ProxyFile(getBackupPath(), FREEZE);
+        private Path getFreezeFile() throws FileNotFoundException {
+            return getBackupPath().findFile(FREEZE);
         }
     }
 
@@ -164,7 +170,7 @@ public class BackupFiles {
     @NonNull
     private final String[] backupNames;
     @NonNull
-    private final ProxyFile packagePath;
+    private final Path packagePath;
 
     /**
      * Create and handle {@link BackupFile}.
@@ -174,7 +180,7 @@ public class BackupFiles {
      * @param backupNames Name of the backups. If {@code null}, user handle will be used. If not
      *                    null, the backup names will have the format {@code userHandle_backupName}.
      */
-    public BackupFiles(@NonNull String packageName, int userHandle, @Nullable String[] backupNames) {
+    public BackupFiles(@NonNull String packageName, int userHandle, @Nullable String[] backupNames) throws IOException {
         this.packageName = packageName;
         this.userHandle = userHandle;
         if (backupNames == null) {
@@ -186,18 +192,22 @@ public class BackupFiles {
                 this.backupNames[i] = userHandle + "_" + backupNames[i].trim();
             }
         }
-        packagePath = getPackagePath(packageName);
+        packagePath = getPackagePath(packageName, true);
     }
 
-    public BackupFile[] getBackupPaths(boolean hasTemporary) {
+    public BackupFile[] getBackupPaths(boolean hasTemporary) throws IOException {
         BackupFile[] backupFiles = new BackupFile[backupNames.length];
         for (int i = 0; i < backupNames.length; ++i) {
-            backupFiles[i] = new BackupFile(new ProxyFile(packagePath, backupNames[i]), hasTemporary);
+            backupFiles[i] = new BackupFile(
+                    hasTemporary ?
+                            packagePath.findOrCreateDirectory(backupNames[i]) :
+                            packagePath.findFile(backupNames[i]),
+                    hasTemporary);
         }
         return backupFiles;
     }
 
-    BackupFile[] getFreshBackupPaths() {
+    BackupFile[] getFreshBackupPaths() throws IOException {
         BackupFile[] backupFiles = new BackupFile[backupNames.length];
         for (int i = 0; i < backupNames.length; ++i) {
             backupFiles[i] = new BackupFile(getFreshBackupPath(backupNames[i]), true);
@@ -205,13 +215,13 @@ public class BackupFiles {
         return backupFiles;
     }
 
-    private ProxyFile getFreshBackupPath(String backupName) {
-        ProxyFile file = new ProxyFile(packagePath, backupName);
+    private Path getFreshBackupPath(String backupName) throws IOException {
+        String newBackupName = backupName;
         int i = 0;
-        while (file.exists()) {
-            file = new ProxyFile(packagePath, backupName + "_" + (++i));
+        while (packagePath.hasFile(newBackupName)) {
+            newBackupName = backupName + "_" + (++i);
         }
-        return file;
+        return packagePath.findOrCreateDirectory(newBackupName);
     }
 
     public static class Checksum implements Closeable {
@@ -232,7 +242,7 @@ public class BackupFiles {
             return certChecksums.toArray(new String[0]);
         }
 
-        public Checksum(@NonNull File checksumFile, String mode) throws IOException, RemoteException {
+        public Checksum(@NonNull Path checksumFile, String mode) throws IOException {
             this.mode = mode;
             if ("w".equals(mode)) {
                 writer = new PrintWriter(new BufferedWriter(new ProxyFileWriter(checksumFile)));

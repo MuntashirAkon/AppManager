@@ -20,26 +20,26 @@ import io.github.muntashirakon.AppManager.ipc.IPCUtils;
 
 public class ProxyFile extends File {
     @Nullable
-    IRemoteFile file;
+    private final IRemoteFile file;
 
     public ProxyFile(@NonNull String pathname) {
         super(pathname);
-        getRemoteFile();
+        this.file = getRemoteFile();
     }
 
     public ProxyFile(@NonNull File file) {
         super(file.getAbsolutePath());
-        getRemoteFile();
+        this.file = getRemoteFile();
     }
 
     public ProxyFile(@Nullable String parent, @NonNull String child) {
         super(parent, child);
-        getRemoteFile();
+        this.file = getRemoteFile();
     }
 
     public ProxyFile(@Nullable File parent, @NonNull String child) {
         super(parent, child);
-        getRemoteFile();
+        this.file = getRemoteFile();
     }
 
     @Override
@@ -81,6 +81,12 @@ public class ProxyFile extends File {
     public boolean forceDelete() {
         if (isFile()) return super.delete();
         else return deleteDir(this);
+    }
+
+    @NonNull
+    @Override
+    public ProxyFile getAbsoluteFile() {
+        return new ProxyFile(super.getAbsoluteFile());
     }
 
     @Nullable
@@ -258,22 +264,60 @@ public class ProxyFile extends File {
 
     @NonNull
     @Override
-    public File getCanonicalFile() throws IOException {
+    public ProxyFile getCanonicalFile() throws IOException {
         if (isRemoteAlive()) {
-            return new File(getCanonicalPath());
+            return new ProxyFile(getCanonicalPath());
         }
-        return super.getCanonicalFile();
+        return new ProxyFile(super.getCanonicalFile());
     }
 
-    private void getRemoteFile() {
+    @Override
+    public boolean canRead() {
+        if (isRemoteAlive()) {
+            try {
+                //noinspection ConstantConditions
+                return file.canRead();
+            } catch (RemoteException ignore) {
+            }
+        }
+        return super.canRead();
+    }
+
+    @Override
+    public boolean canWrite() {
+        if (isRemoteAlive()) {
+            try {
+                //noinspection ConstantConditions
+                return file.canWrite();
+            } catch (RemoteException ignore) {
+            }
+        }
+        return super.canWrite();
+    }
+
+    @Override
+    public boolean canExecute() {
+        if (isRemoteAlive()) {
+            try {
+                //noinspection ConstantConditions
+                return file.canExecute();
+            } catch (RemoteException ignore) {
+            }
+        }
+        return super.canExecute();
+    }
+
+    @Nullable
+    private IRemoteFile getRemoteFile() {
         IAMService amService = IPCUtils.getService();
         if (amService != null) {
             try {
-                file = amService.getFile(getAbsolutePath());
+                return amService.getFile(getAbsolutePath());
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
         }
+        return null;
     }
 
     private boolean isRemoteAlive() {

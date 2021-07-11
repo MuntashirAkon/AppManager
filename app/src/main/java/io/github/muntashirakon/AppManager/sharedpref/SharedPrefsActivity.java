@@ -44,11 +44,9 @@ import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.ProxyFile;
-import io.github.muntashirakon.io.ProxyInputStream;
-import io.github.muntashirakon.io.ProxyOutputStream;
 
 public class SharedPrefsActivity extends BaseActivity implements
         SearchView.OnQueryTextListener, EditPrefItemFragment.InterfaceCommunicator {
@@ -64,7 +62,7 @@ public class SharedPrefsActivity extends BaseActivity implements
 
     public static final int REASONABLE_STR_SIZE = 200;
 
-    private ProxyFile mSharedPrefFile;
+    private Path mSharedPrefFile;
     private SharedPrefsListingAdapter mAdapter;
     private LinearProgressIndicator mProgressIndicator;
     private HashMap<String, Object> mSharedPrefMap;
@@ -79,7 +77,7 @@ public class SharedPrefsActivity extends BaseActivity implements
             finish();
             return;
         }
-        mSharedPrefFile = new ProxyFile(sharedPrefFile);
+        mSharedPrefFile = new Path(getApplicationContext(), new ProxyFile(sharedPrefFile));
         String fileName =  mSharedPrefFile.getName();
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -186,10 +184,10 @@ public class SharedPrefsActivity extends BaseActivity implements
 
     @WorkerThread
     @NonNull
-    private HashMap<String, Object> readSharedPref(ProxyFile sharedPrefsFile) {
+    private HashMap<String, Object> readSharedPref(@NonNull Path sharedPrefsFile) {
         HashMap<String, Object> prefs = new HashMap<>();
         try {
-            InputStream rulesStream = new ProxyInputStream(sharedPrefsFile);
+            InputStream rulesStream = sharedPrefsFile.openInputStream();
             XmlPullParser parser = Xml.newPullParser();
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             parser.setInput(rulesStream, null);
@@ -252,16 +250,16 @@ public class SharedPrefsActivity extends BaseActivity implements
     }
 
     @WorkerThread
-    private boolean writeSharedPref(ProxyFile sharedPrefsFile, @NonNull HashMap<String, Object> hashMap) {
+    private boolean writeSharedPref(@NonNull Path sharedPrefsFile, @NonNull HashMap<String, Object> hashMap) {
         try {
-            OutputStream xmlFile = new ProxyOutputStream(sharedPrefsFile);
+            OutputStream xmlFile = sharedPrefsFile.openOutputStream();
             XmlSerializer xmlSerializer = Xml.newSerializer();
             StringWriter stringWriter = new StringWriter();
             xmlSerializer.setOutput(stringWriter);
             xmlSerializer.startDocument("UTF-8", true);
             xmlSerializer.startTag("", TAG_ROOT);
             // Add values
-            for(String name: hashMap.keySet()) {
+            for (String name : hashMap.keySet()) {
                 Object value = hashMap.get(name);
                 if (value instanceof Boolean) {
                     xmlSerializer.startTag("", TAG_BOOLEAN);
@@ -295,7 +293,8 @@ public class SharedPrefsActivity extends BaseActivity implements
             xmlSerializer.flush();
             xmlFile.write(stringWriter.toString().getBytes());
             xmlFile.close();
-            return Runner.runCommand(new String[]{"chmod", "0666", sharedPrefsFile.getAbsolutePath()}).isSuccessful();
+            // TODO: 9/7/21 Investigate the state of permission (should be unchanged)
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
         }

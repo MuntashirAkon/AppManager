@@ -6,16 +6,14 @@ import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 
-import org.json.JSONException;
-
-import java.io.File;
+import java.io.IOException;
 
 import io.github.muntashirakon.AppManager.backup.BackupFiles;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.utils.TarUtils;
-import io.github.muntashirakon.io.ProxyFile;
+import io.github.muntashirakon.io.Path;
 
 @SuppressWarnings("NotNullFieldNotInitialized")
 @Entity(tableName = "backup", primaryKeys = {"backup_name", "package_name"})
@@ -77,13 +75,13 @@ public class Backup {
     }
 
     @NonNull
-    public File getBackupPath() {
-        return new ProxyFile(BackupFiles.getPackagePath(packageName), backupName);
+    public Path getBackupPath() throws IOException {
+        return BackupFiles.getPackagePath(packageName, false).findFile(backupName);
     }
 
-    public MetadataManager.Metadata getMetadata() throws JSONException {
+    public MetadataManager.Metadata getMetadata() throws IOException {
         MetadataManager metadataManager = MetadataManager.getNewInstance();
-        metadataManager.readMetadata(new BackupFiles.BackupFile((ProxyFile) getBackupPath(), false));
+        metadataManager.readMetadata(new BackupFiles.BackupFile(getBackupPath(), false));
         return metadataManager.getMetadata();
     }
 

@@ -2,13 +2,13 @@
 
 package io.github.muntashirakon.AppManager.logcat.struct;
 
-import java.io.File;
+import io.github.muntashirakon.io.Path;
 
 // Copyright 2012 Nolan Lawson
 public class SendLogDetails {
     private String subject;
     private String body;
-    private File attachment;
+    private Path attachment;
     private SendLogDetails.AttachmentType attachmentType;
 
     public String getSubject() {
@@ -27,11 +27,11 @@ public class SendLogDetails {
         this.body = body;
     }
 
-    public File getAttachment() {
+    public Path getAttachment() {
         return attachment;
     }
 
-    public void setAttachment(File attachment) {
+    public void setAttachment(Path attachment) {
         this.attachment = attachment;
     }
 

@@ -2,13 +2,17 @@
 
 package io.github.muntashirakon.AppManager.settings;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.annotation.UiThread;
@@ -43,7 +47,6 @@ import io.github.muntashirakon.AppManager.settings.crypto.RSACryptoSelectionDial
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.StorageUtils;
-import io.github.muntashirakon.io.ProxyFile;
 
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
@@ -60,7 +63,21 @@ public class BackupRestorePreferences extends PreferenceFragmentCompat {
 
     SettingsActivity activity;
     private int currentCompression;
-    private String backupVolume;
+    private Uri backupVolume;
+
+    private final ActivityResultLauncher<Intent> safOpen = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() != Activity.RESULT_OK) return;
+                Intent data = result.getData();
+                if (data == null) return;
+                Uri treeUri = data.getData();
+                if (treeUri == null) return;
+                int takeFlags = data.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                requireContext().getContentResolver().takePersistableUriPermission(treeUri, takeFlags);
+                this.backupVolume = treeUri;
+                AppPref.set(AppPref.PrefKey.PREF_BACKUP_VOLUME_STR, this.backupVolume.toString());
+            });
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -158,11 +175,11 @@ public class BackupRestorePreferences extends PreferenceFragmentCompat {
             return true;
         });
         // Backup volume
-        this.backupVolume = (String) AppPref.get(AppPref.PrefKey.PREF_BACKUP_VOLUME_STR);
+        this.backupVolume = AppPref.getSelectedDirectory();
         ((Preference) Objects.requireNonNull(findPreference("backup_volume")))
                 .setOnPreferenceClickListener(preference -> {
                     new Thread(() -> {
-                        ArrayMap<String, ProxyFile> storageLocations = StorageUtils.getAllStorageLocations(activity, false);
+                        ArrayMap<String, Uri> storageLocations = StorageUtils.getAllStorageLocations(activity, false);
                         if (storageLocations.size() == 0) {
                             activity.runOnUiThread(() -> {
                                 if (isDetached()) return;
@@ -173,14 +190,14 @@ public class BackupRestorePreferences extends PreferenceFragmentCompat {
                                         .show();
                             });
                         } else {
-                            ProxyFile[] backupVolumes = new ProxyFile[storageLocations.size()];
+                            Uri[] backupVolumes = new Uri[storageLocations.size()];
                             CharSequence[] backupVolumesStr = new CharSequence[storageLocations.size()];
                             AtomicInteger selectedIndex = new AtomicInteger(-1);
                             for (int i = 0; i < storageLocations.size(); ++i) {
                                 backupVolumes[i] = storageLocations.valueAt(i);
                                 backupVolumesStr[i] = new SpannableStringBuilder(storageLocations.keyAt(i)).append("\n")
-                                        .append(getSecondaryText(activity, getSmallerText(backupVolumes[i].getAbsolutePath())));
-                                if (backupVolumes[i].getAbsolutePath().equals(this.backupVolume)) {
+                                        .append(getSecondaryText(activity, getSmallerText(backupVolumes[i].getPath())));
+                                if (backupVolumes[i].equals(this.backupVolume)) {
                                     selectedIndex.set(i);
                                 }
                             }
@@ -189,12 +206,20 @@ public class BackupRestorePreferences extends PreferenceFragmentCompat {
                                 new MaterialAlertDialogBuilder(activity)
                                         .setTitle(R.string.backup_volume)
                                         .setSingleChoiceItems(backupVolumesStr, selectedIndex.get(), (dialog, which) -> {
-                                            this.backupVolume = backupVolumes[which].getAbsolutePath();
+                                            this.backupVolume = backupVolumes[which];
                                             selectedIndex.set(which);
                                         })
                                         .setNegativeButton(R.string.cancel, null)
                                         .setPositiveButton(R.string.save, (dialog, which) ->
-                                                AppPref.set(AppPref.PrefKey.PREF_BACKUP_VOLUME_STR, this.backupVolume))
+                                                AppPref.set(AppPref.PrefKey.PREF_BACKUP_VOLUME_STR, this.backupVolume.toString()))
+                                        .setNeutralButton(R.string.add_item, (dialog, which) ->
+                                                new MaterialAlertDialogBuilder(activity)
+                                                        .setTitle(R.string.notice)
+                                                        .setMessage(R.string.notice_saf)
+                                                        .setPositiveButton(R.string.go, (dialog1, which1) ->
+                                                                safOpen.launch(new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)))
+                                                        .setNeutralButton(R.string.cancel, null)
+                                                        .show())
                                         .show();
                             });
                         }
