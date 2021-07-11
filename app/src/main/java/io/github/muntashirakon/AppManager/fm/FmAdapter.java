@@ -53,7 +53,8 @@ public class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> 
         // Set icon
         if (item.type == FileType.DIRECTORY) {
             holder.icon.setImageResource(R.drawable.ic_folder_white_24dp);
-            holder.itemView.setOnClickListener(v -> fmActivity.model.loadFiles(item.path));
+            holder.itemView.setOnClickListener(v -> fmActivity.loadNewFragment(
+                    FmFragment.getNewInstance(item.path.getUri())));
         } else {
             holder.icon.setImageResource(R.drawable.ic_insert_drive_file_white_24dp);
             holder.itemView.setOnClickListener(v -> {
