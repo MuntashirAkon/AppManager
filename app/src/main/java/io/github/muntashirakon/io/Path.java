@@ -64,6 +64,23 @@ public class Path {
         switch (uri.getScheme()) {
             case ContentResolver.SCHEME_CONTENT:
                 documentFile = isTreeUri ? DocumentFile.fromTreeUri(context, uri) : DocumentFile.fromSingleUri(context, uri);
+                // For tree uri, the requested Uri is not always the same as the generated uri.
+                // So, make sure to navigate to the correct uri
+                if (isTreeUri && documentFile != null) {
+                    String diff = IOUtils.getRelativePath(uri.getPath(), documentFile.getUri().getPath(), File.separator);
+                    String[] files = diff.split("/");
+                    for (String file : files) {
+                        if (documentFile != null) {
+                            if (file.equals("..")) {
+                                // Tree uri doesn't always support go back
+                                DocumentFile parent = documentFile.getParentFile();
+                                if (parent != null) documentFile = parent;
+                                continue;
+                            }
+                            documentFile = documentFile.findFile(file);
+                        }
+                    }
+                }
                 break;
             case ContentResolver.SCHEME_FILE:
                 documentFile = new ProxyDocumentFile(new ProxyFile(uri.getPath()));
