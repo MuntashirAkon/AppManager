@@ -1,19 +1,4 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.profiles;
 
@@ -22,22 +7,23 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
+import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 
 public class ProfileManager {
@@ -103,7 +89,7 @@ public class ProfileManager {
         if (state == null) state = profile.state;
 
         if (profile.packages.length == 0) return;
-        int[] users = profile.users == null ? Users.getUsersHandles() : profile.users;
+        int[] users = profile.users == null ? Users.getUsersIds() : profile.users;
         List<UserPackagePair> userPackagePairs = new ArrayList<>();
         for (String packageName : profile.packages) {
             for (int user : users) {
@@ -178,7 +164,7 @@ public class ProfileManager {
             Bundle args = new Bundle();
             if (backupFlags.backupMultiple() && backupInfo.name != null) {
                 if (state.equals(ProfileMetaManager.STATE_OFF)) {
-                    args.putStringArray(BatchOpsManager.ARG_BACKUP_NAMES, new String[]{Users.getCurrentUserHandle() + '_' + backupInfo.name});
+                    args.putStringArray(BatchOpsManager.ARG_BACKUP_NAMES, new String[]{Users.myUserId() + '_' + backupInfo.name});
                 } else {
                     args.putStringArray(BatchOpsManager.ARG_BACKUP_NAMES, new String[]{backupInfo.name});
                 }

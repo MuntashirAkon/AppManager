@@ -1,28 +1,10 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.profiles;
 
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.RemoteException;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -41,32 +23,25 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
-import org.json.JSONException;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.details.LauncherIconCreator;
-import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
-import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
-public class AppsProfileActivity extends BaseActivity
-        implements BottomNavigationView.OnNavigationItemSelectedListener, ViewPager.OnPageChangeListener {
+public class AppsProfileActivity extends BaseActivity implements NavigationBarView.OnItemSelectedListener,
+        ViewPager.OnPageChangeListener {
     public static final String EXTRA_PROFILE_NAME = "prof";
     public static final String EXTRA_NEW_PROFILE_NAME = "new_prof";
     public static final String EXTRA_NEW_PROFILE = "new";
@@ -82,7 +57,7 @@ public class AppsProfileActivity extends BaseActivity
     public static final String ST_ADVANCED = "advanced";
 
     private ViewPager viewPager;
-    private BottomNavigationView bottomNavigationView;
+    private NavigationBarView bottomNavigationView;
     private MenuItem prevMenuItem;
     private final Fragment[] fragments = new Fragment[2];
     ProfileViewModel model;
@@ -145,58 +120,43 @@ public class AppsProfileActivity extends BaseActivity
         model = new ViewModelProvider(this).get(ProfileViewModel.class);
         model.setProfileName(profileName == null ? newProfileName : profileName, newProfile);
         if (newProfileName != null) {
-            new Thread(() -> {
-                model.loadProfile();
-                // Requested a new profile, clone profile
-                model.cloneProfile(newProfileName, isPreset, profileName);
-                runOnUiThread(() -> progressIndicator.hide());
-            }).start();
-        } else progressIndicator.hide();
+            // Requested a new profile, clone profile
+            model.loadAndCloneProfile(newProfileName, isPreset, profileName);
+        } else model.loadProfile();
         viewPager = findViewById(R.id.pager);
         viewPager.addOnPageChangeListener(this);
         viewPager.setAdapter(new ProfileFragmentPagerAdapter(getSupportFragmentManager()));
         bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setOnNavigationItemSelectedListener(this);
+        bottomNavigationView.setOnItemSelectedListener(this);
         fab.setOnClickListener(v -> {
             progressIndicator.show();
-            new Thread(() -> {
-                // List apps
-                PackageManager pm = getPackageManager();
-                try {
-                    ArrayList<Pair<CharSequence, ApplicationInfo>> itemPairs;
-                    List<PackageInfo> packageInfoList = PackageManagerCompat.getInstalledPackages(
-                            PackageManager.GET_META_DATA, Users.getCurrentUserHandle());
-                    itemPairs = new ArrayList<>(packageInfoList.size());
-                    for (PackageInfo info : packageInfoList) {
-                        itemPairs.add(new Pair<>(pm.getApplicationLabel(info.applicationInfo), info.applicationInfo));
-                    }
-                    Collections.sort(itemPairs, (o1, o2) -> o1.first.toString().compareToIgnoreCase(o2.first.toString()));
-                    ArrayList<String> items = new ArrayList<>(itemPairs.size());
-                    ArrayList<CharSequence> itemNames = new ArrayList<>(itemPairs.size());
-                    for (Pair<CharSequence, ApplicationInfo> itemPair : itemPairs) {
-                        items.add(itemPair.second.packageName);
-                        boolean isSystem = (itemPair.second.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
-                        itemNames.add(new SpannableStringBuilder(itemPair.first).append("\n")
-                                .append(UIUtils.getSmallerText(UIUtils.getSecondaryText(
-                                        this, getString(isSystem ? R.string.system
-                                                : R.string.user)))));
-                    }
-                    runOnUiThread(() -> {
-                        if (isDestroyed()) return;
-                        progressIndicator.hide();
-                        new SearchableMultiChoiceDialogBuilder<>(this, items, itemNames)
-                                .setSelections(model.getCurrentPackages())
-                                .setTitle(R.string.apps)
-                                .setPositiveButton(R.string.ok, (dialog, which, selectedItems) ->
-                                        new Thread(() -> model.setPackages(selectedItems)).start())
-                                .setNegativeButton(R.string.cancel, null)
-                                .show();
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }).start();
+            model.loadInstalledApps();
         });
+        // Observers
+        model.observeToast().observe(this, stringResAndIsFinish -> {
+            UIUtils.displayShortToast(stringResAndIsFinish.first);
+            if (stringResAndIsFinish.second) finish();
+        });
+        model.observeInstalledApps().observe(this, itemPairs -> {
+            ArrayList<String> items = new ArrayList<>(itemPairs.size());
+            ArrayList<CharSequence> itemNames = new ArrayList<>(itemPairs.size());
+            for (Pair<CharSequence, ApplicationInfo> itemPair : itemPairs) {
+                items.add(itemPair.second.packageName);
+                boolean isSystem = (itemPair.second.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
+                itemNames.add(new SpannableStringBuilder(itemPair.first).append("\n")
+                        .append(UIUtils.getSmallerText(UIUtils.getSecondaryText(
+                                this, getString(isSystem ? R.string.system
+                                        : R.string.user)))));
+            }
+            progressIndicator.hide();
+            new SearchableMultiChoiceDialogBuilder<>(this, items, itemNames)
+                    .setSelections(model.getCurrentPackages())
+                    .setTitle(R.string.apps)
+                    .setPositiveButton(R.string.ok, (d, i, selectedItems) -> model.setPackages(selectedItems))
+                    .setNegativeButton(R.string.cancel, null)
+                    .show();
+        });
+        model.observeProfileLoaded().observe(this, loaded -> progressIndicator.hide());
     }
 
     @Override
@@ -211,10 +171,7 @@ public class AppsProfileActivity extends BaseActivity
         if (id == android.R.id.home) {
             finish();
         } else if (id == R.id.action_apply) {
-            final String[] statesL = new String[]{
-                    getString(R.string.on),
-                    getString(R.string.off)
-            };
+            final String[] statesL = new String[]{getString(R.string.on), getString(R.string.off)};
             @ProfileMetaManager.ProfileState final List<String> states = Arrays.asList(ProfileMetaManager.STATE_ON, ProfileMetaManager.STATE_OFF);
             new MaterialAlertDialogBuilder(this)
                     .setTitle(R.string.profile_state)
@@ -228,28 +185,11 @@ public class AppsProfileActivity extends BaseActivity
                     .setOnDismissListener(dialog -> finish())
                     .show();
         } else if (id == R.id.action_save) {
-            new Thread(() -> {
-                try {
-                    model.save();
-                    runOnUiThread(() -> Toast.makeText(this, R.string.saved_successfully, Toast.LENGTH_SHORT).show());
-                } catch (IOException | JSONException | RemoteException e) {
-                    Log.e("AppsProfileActivity", "Error: " + e);
-                    runOnUiThread(() -> Toast.makeText(this, R.string.saving_failed, Toast.LENGTH_SHORT).show());
-                }
-            }).start();
+            model.save();
         } else if (id == R.id.action_discard) {
-            new Thread(() -> model.discard()).start();
+            model.discard();
         } else if (id == R.id.action_delete) {
-            new Thread(() -> {
-                if (model.delete()) {
-                    runOnUiThread(() -> {
-                        Toast.makeText(this, R.string.deleted_successfully, Toast.LENGTH_SHORT).show();
-                        finish();
-                    });
-                } else {
-                    runOnUiThread(() -> Toast.makeText(this, R.string.deletion_failed, Toast.LENGTH_SHORT).show());
-                }
-            }).start();
+            model.delete();
         } else if (id == R.id.action_duplicate) {
             new TextInputDialogBuilder(this, R.string.input_profile_name)
                     .setTitle(R.string.new_profile)
@@ -257,23 +197,17 @@ public class AppsProfileActivity extends BaseActivity
                     .setNegativeButton(R.string.cancel, null)
                     .setPositiveButton(R.string.go, (dialog, which, profName, isChecked) -> {
                         progressIndicator.show();
-                        if (!TextUtils.isEmpty(profName)) {
-                            if (getSupportActionBar() != null) {
-                                //noinspection ConstantConditions
-                                getSupportActionBar().setTitle(profName.toString());
-                            }
-                            new Thread(() -> {
-                                //noinspection ConstantConditions
-                                model.cloneProfile(profName.toString(), false, "");
-                                runOnUiThread(() -> {
-                                    Toast.makeText(this, R.string.the_operation_was_successful, Toast.LENGTH_SHORT).show();
-                                    progressIndicator.hide();
-                                });
-                            }).start();
-                        } else {
+                        if (TextUtils.isEmpty(profName)) {
                             progressIndicator.hide();
                             Toast.makeText(this, R.string.failed_to_duplicate_profile, Toast.LENGTH_SHORT).show();
+                            return;
                         }
+                        if (getSupportActionBar() != null) {
+                            //noinspection ConstantConditions
+                            getSupportActionBar().setTitle(profName.toString());
+                        }
+                        //noinspection ConstantConditions
+                        model.cloneProfile(profName.toString(), false, "");
                     })
                     .show();
         } else if (id == R.id.action_shortcut) {

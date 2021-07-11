@@ -1,24 +1,13 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.rules;
 
 import android.content.Context;
 import android.net.Uri;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
 
 import java.io.BufferedReader;
 import java.io.Closeable;
@@ -28,23 +17,21 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.StringTokenizer;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.WorkerThread;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
+import io.github.muntashirakon.AppManager.rules.struct.RuleEntry;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.io.Path;
 
 /**
  * Rules importer is used to import internal rules to App Manager. Rules should only be imported
  * from settings and app data restore sections (although can be exported from various places).
  * <br>
- * Format: <code>package_name component_name type [mode|is_applied|is_granted]</code>
+ * Format: <code>package_name component_name type mode|is_applied|is_granted</code>
  *
  * @see RulesExporter
+ * @see RuleType
  */
 public class RulesImporter implements Closeable {
     @NonNull
@@ -52,13 +39,13 @@ public class RulesImporter implements Closeable {
     @NonNull
     private final HashMap<String, ComponentsBlocker>[] mComponentsBlockers;
     @NonNull
-    private final List<RulesStorageManager.Type> mTypesToImport;
+    private final List<RuleType> mTypesToImport;
     @Nullable
     private List<String> mPackagesToImport;
     @NonNull
     private final int[] userHandles;
 
-    public RulesImporter(@NonNull List<RulesStorageManager.Type> typesToImport, @NonNull int[] userHandles) {
+    public RulesImporter(@NonNull List<RuleType> typesToImport, @NonNull int[] userHandles) {
         mContext = AppManager.getContext();
         if (userHandles.length <= 0) {
             throw new IllegalArgumentException("Input must contain one or more user handles");
@@ -75,38 +62,42 @@ public class RulesImporter implements Closeable {
 
     public void addRulesFromUri(Uri uri) throws IOException {
         try (InputStream inputStream = mContext.getContentResolver().openInputStream(uri)) {
+            if (inputStream == null) throw new IOException("Content provider has crashed.");
             try (BufferedReader TSVFile = new BufferedReader(new InputStreamReader(inputStream))) {
-                StringTokenizer tokenizer;
                 String dataRow;
-                String packageName;
                 while ((dataRow = TSVFile.readLine()) != null) {
-                    tokenizer = new StringTokenizer(dataRow, "\t");
-                    RulesStorageManager.Entry entry = new RulesStorageManager.Entry();
-                    if (tokenizer.hasMoreElements()) {
-                        packageName = tokenizer.nextElement().toString();
-                    } else throw new IOException("Malformed file.");
-                    if (tokenizer.hasMoreElements()) {
-                        entry.name = tokenizer.nextElement().toString();
-                    } else throw new IOException("Malformed file.");
-                    if (tokenizer.hasMoreElements()) {
-                        try {
-                            entry.type = RulesStorageManager.Type.valueOf(tokenizer.nextElement().toString());
-                        } catch (Exception e) {
-                            entry.type = RulesStorageManager.Type.UNKNOWN;
-                        }
-                    } else throw new IOException("Malformed file.");
-                    if (tokenizer.hasMoreElements()) {
-                        entry.extra = RulesStorageManager.getExtra(entry.type, tokenizer.nextElement().toString());
-                    } else throw new IOException("Malformed file.");
+                    RuleEntry entry = RuleEntry.unflattenFromString(null, dataRow, true);
                     // Parse complete, now add the row to CB
                     for (int i = 0; i < userHandles.length; ++i) {
-                        if (mComponentsBlockers[i].get(packageName) == null) {
+                        if (mComponentsBlockers[i].get(entry.packageName) == null) {
                             // Get a read-only instance, commit will be called manually
-                            mComponentsBlockers[i].put(packageName, ComponentsBlocker.getInstance(packageName, userHandles[i]));
+                            mComponentsBlockers[i].put(entry.packageName, ComponentsBlocker.getInstance(entry.packageName, userHandles[i]));
                         }
                         if (mTypesToImport.contains(entry.type)) {
                             //noinspection ConstantConditions Returned ComponentsBlocker will never be null here
-                            mComponentsBlockers[i].get(packageName).addEntry(entry);
+                            mComponentsBlockers[i].get(entry.packageName).addEntry(entry);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void addRulesFromPath(Path path) throws IOException {
+        try (InputStream inputStream = path.openInputStream()) {
+            try (BufferedReader TSVFile = new BufferedReader(new InputStreamReader(inputStream))) {
+                String dataRow;
+                while ((dataRow = TSVFile.readLine()) != null) {
+                    RuleEntry entry = RuleEntry.unflattenFromString(null, dataRow, true);
+                    // Parse complete, now add the row to CB
+                    for (int i = 0; i < userHandles.length; ++i) {
+                        if (mComponentsBlockers[i].get(entry.packageName) == null) {
+                            // Get a read-only instance, commit will be called manually
+                            mComponentsBlockers[i].put(entry.packageName, ComponentsBlocker.getInstance(entry.packageName, userHandles[i]));
+                        }
+                        if (mTypesToImport.contains(entry.type)) {
+                            //noinspection ConstantConditions Returned ComponentsBlocker will never be null here
+                            mComponentsBlockers[i].get(entry.packageName).addEntry(entry);
                         }
                     }
                 }

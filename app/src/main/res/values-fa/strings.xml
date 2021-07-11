@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="_lang_tag" translatable="false">fa</string>
     <string name="external_multiple_data_dir">دایرکتوری داده‌های خارجی <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
     <string name="external_data_dir">دایرکتوری داده های خارجی</string>
@@ -176,11 +176,11 @@
     <string name="cache_size">حافظه پنهان</string>
     <string name="data_size">داده‌ها</string>
     <string name="about">درباره</string>
-    <string name="data_usage_msg"/>
+    <string name="data_usage_msg">مصرف دیتا</string>
     <string name="data_transmitted">داده‌های منتقل شده</string>
     <string name="data_received">داده دریافت‌شده</string>
     <string name="sort_by_target_sdk">SDK هدف</string>
-    <string name="sort_by_domain">ابتدا برنامه کاربر</string>
+    <string name="sort_by_domain">برنامه های کاربر در ابتدای لیست</string>
     <string name="sort_by_package_name">نام بسته</string>
     <string name="sort_by_app_label">برچسب برنامه</string>
     <string name="loading">درحال بارگذاری…</string>
@@ -195,9 +195,7 @@
     <string name="shared_user_id">شناسه کاربر مشترک</string>
     <string name="sort_by_shared_user_id">شناسه کاربر مشترک</string>
     <string name="no_feature">بدون ویژگی</string>
-    <string name="gles_ver">درخواست نسخه GL ES</string>
     <string name="uses_feature">از امکانات استفاده می کند</string>
-    <string name="protection_level">سطح حفاظت</string>
     <string name="group">گروه</string>
     <string name="shared_libs">کتاب‌خانه های مشترک</string>
     <string name="declared_permission">مجوزها</string>
@@ -278,11 +276,7 @@
         <item quantity="one">نتوانست داده های %1$d برنامه را پاک کند</item>
         <item quantity="other">نتوانست داده های %1$d برنامه را پاک کند</item>
     </plurals>
-    <string name="community_links">کانال به‌روزرسانی: https://t.me/AppManagerChannel
-\nگروه پشتیبانی: https://t.me/AppManagerAndroid
-\nتوییتر: https://twitter.com/AMUpdateChannel</string>
     <string name="pref_import_existing">قوانین موجود را وارد کن</string>
-    <string name="community">انجمن تلگرام</string>
     <string name="source_code">کد منبع</string>
     <string name="update">به‌روزرسانی کن</string>
     <string name="install">نصب کن</string>
@@ -496,4 +490,5 @@
         <item quantity="other">نتوانست از %1$d برنامه پشتیبان بگیرد</item>
     </plurals>
     <string name="clear_data_from_uninstalled_apps_description">پاک کردن داده ها از برنامه هایی که با پرچم DONT_DELETE_DATA حذف شده‌اند</string>
+    <string name="app_signing_signatures">امضا</string>
 </resources>

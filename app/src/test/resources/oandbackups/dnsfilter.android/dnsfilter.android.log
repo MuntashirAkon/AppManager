@@ -1,0 +1,12 @@
+{
+    "label": "personalDNSfilter",
+    "versionName": "1.50.48.1",
+    "versionCode": 1504801,
+    "packageName": "dnsfilter.android",
+    "sourceDir": "\/data\/app\/dnsfilter.android-LIG5n-OC2yy5cwNzftJVNA==\/base.apk",
+    "dataDir": "\/data\/user\/0\/dnsfilter.android",
+    "lastBackupMillis": 1622312871474,
+    "isEncrypted": false,
+    "isSystem": false,
+    "backupMode": 3
+}

@@ -1,8 +1,8 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.struct.xml;
 
-/**
- * @author dongliu
- */
+// Copyright 2014 Liu Dong
 public class XmlNamespaceStartTag {
     private String prefix;
     private String uri;

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 package com.android.internal.app;
 
 import android.os.Build;
@@ -5,9 +7,9 @@ import android.os.IInterface;
 import android.os.Parcelable;
 import android.os.RemoteException;
 
-import java.util.List;
-
 import androidx.annotation.RequiresApi;
+
+import java.util.List;
 
 public interface IAppOpsService extends IInterface {
     int checkOperation(int code, int uid, String packageName) throws RemoteException;

@@ -1,70 +1,68 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.sharedpref;
 
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.RemoteException;
 import android.text.TextUtils;
 import android.util.Xml;
-import android.view.*;
-import android.widget.*;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
-import io.github.muntashirakon.AppManager.BaseActivity;
-import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.utils.UIUtils;
-import io.github.muntashirakon.io.ProxyFile;
-import io.github.muntashirakon.io.ProxyInputStream;
-import io.github.muntashirakon.io.ProxyOutputStream;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import io.github.muntashirakon.AppManager.BaseActivity;
+import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.ProxyFile;
+
 public class SharedPrefsActivity extends BaseActivity implements
         SearchView.OnQueryTextListener, EditPrefItemFragment.InterfaceCommunicator {
     public static final String EXTRA_PREF_LOCATION = "EXTRA_PREF_LOCATION";
-    public static final String EXTRA_PREF_LABEL    = "EXTRA_PREF_LABEL";  // Optional
+    public static final String EXTRA_PREF_LABEL = "EXTRA_PREF_LABEL";  // Optional
 
-    public static final String TAG_ROOT    = "map";  // <map></map>
+    public static final String TAG_ROOT = "map";  // <map></map>
     public static final String TAG_BOOLEAN = "boolean";  // <boolean name="bool" value="true" />
-    public static final String TAG_FLOAT   = "float";  // <float name="float" value="12.3" />
+    public static final String TAG_FLOAT = "float";  // <float name="float" value="12.3" />
     public static final String TAG_INTEGER = "int";  // <int name="integer" value="123" />
     public static final String TAG_LONG    = "long";  // <long name="long" value="123456789" />
     public static final String TAG_STRING  = "string";  // <string name="string"></string> | <string name="string"><string></string></string>
 
     public static final int REASONABLE_STR_SIZE = 200;
 
-    private ProxyFile mSharedPrefFile;
+    private Path mSharedPrefFile;
     private SharedPrefsListingAdapter mAdapter;
     private LinearProgressIndicator mProgressIndicator;
     private HashMap<String, Object> mSharedPrefMap;
@@ -79,14 +77,14 @@ public class SharedPrefsActivity extends BaseActivity implements
             finish();
             return;
         }
-        mSharedPrefFile = new ProxyFile(sharedPrefFile);
+        mSharedPrefFile = new Path(getApplicationContext(), new ProxyFile(sharedPrefFile));
         String fileName =  mSharedPrefFile.getName();
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle(appLabel != null ? appLabel : "Shared Preferences Viewer");
             actionBar.setSubtitle(fileName);
             actionBar.setDisplayShowCustomEnabled(true);
-            UIUtils.setupSearchView(this, actionBar, this);
+            UIUtils.setupSearchView(actionBar, this);
         }
         mProgressIndicator = findViewById(R.id.progress_linear);
         mProgressIndicator.setVisibilityAfterHide(View.GONE);
@@ -186,10 +184,10 @@ public class SharedPrefsActivity extends BaseActivity implements
 
     @WorkerThread
     @NonNull
-    private HashMap<String, Object> readSharedPref(ProxyFile sharedPrefsFile) {
+    private HashMap<String, Object> readSharedPref(@NonNull Path sharedPrefsFile) {
         HashMap<String, Object> prefs = new HashMap<>();
         try {
-            InputStream rulesStream = new ProxyInputStream(sharedPrefsFile);
+            InputStream rulesStream = sharedPrefsFile.openInputStream();
             XmlPullParser parser = Xml.newPullParser();
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             parser.setInput(rulesStream, null);
@@ -235,7 +233,8 @@ public class SharedPrefsActivity extends BaseActivity implements
                 event = parser.nextTag();
             }
             rulesStream.close();
-        } catch (IOException | RemoteException | XmlPullParserException ignored) {}
+        } catch (IOException | XmlPullParserException ignored) {
+        }
         return prefs;
     }
 
@@ -251,16 +250,16 @@ public class SharedPrefsActivity extends BaseActivity implements
     }
 
     @WorkerThread
-    private boolean writeSharedPref(ProxyFile sharedPrefsFile, @NonNull HashMap<String, Object> hashMap) {
+    private boolean writeSharedPref(@NonNull Path sharedPrefsFile, @NonNull HashMap<String, Object> hashMap) {
         try {
-            OutputStream xmlFile = new ProxyOutputStream(sharedPrefsFile);
+            OutputStream xmlFile = sharedPrefsFile.openOutputStream();
             XmlSerializer xmlSerializer = Xml.newSerializer();
             StringWriter stringWriter = new StringWriter();
             xmlSerializer.setOutput(stringWriter);
             xmlSerializer.startDocument("UTF-8", true);
             xmlSerializer.startTag("", TAG_ROOT);
             // Add values
-            for(String name: hashMap.keySet()) {
+            for (String name : hashMap.keySet()) {
                 Object value = hashMap.get(name);
                 if (value instanceof Boolean) {
                     xmlSerializer.startTag("", TAG_BOOLEAN);
@@ -294,8 +293,9 @@ public class SharedPrefsActivity extends BaseActivity implements
             xmlSerializer.flush();
             xmlFile.write(stringWriter.toString().getBytes());
             xmlFile.close();
-            return Runner.runCommand(new String[]{"chmod", "0666", sharedPrefsFile.getAbsolutePath()}).isSuccessful();
-        } catch (IOException | RemoteException e) {
+            // TODO: 9/7/21 Investigate the state of permission (should be unchanged)
+            return true;
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return false;

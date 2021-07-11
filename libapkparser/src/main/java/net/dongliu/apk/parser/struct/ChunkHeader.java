@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.struct;
 
 import net.dongliu.apk.parser.utils.Unsigned;
@@ -13,9 +15,8 @@ import net.dongliu.apk.parser.utils.Unsigned;
  *     uint32_t size;
  * }
  * </pre>
- *
- * @author dongliu
  */
+// Copyright 2014 Liu Dong
 public class ChunkHeader {
 
     // Type identifier for this chunk.  The meaning of this value depends

@@ -45,6 +45,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -399,7 +400,7 @@ public class XmlUtils {
         final int N = val.length;
         out.attribute(null, "num", Integer.toString(N));
 
-        out.text(HexEncoding.encodeToString(val).toLowerCase());
+        out.text(HexEncoding.encodeToString(val).toLowerCase(Locale.ROOT));
 
         out.endTag(null, "byte-array");
     }
@@ -1529,9 +1530,9 @@ public class XmlUtils {
             } else if (tagName.equals("long")) {
                 return Long.valueOf(parser.getAttributeValue(null, "value"));
             } else if (tagName.equals("float")) {
-                return new Float(parser.getAttributeValue(null, "value"));
+                return Float.valueOf(parser.getAttributeValue(null, "value"));
             } else if (tagName.equals("double")) {
-                return new Double(parser.getAttributeValue(null, "value"));
+                return Double.valueOf(parser.getAttributeValue(null, "value"));
             } else if (tagName.equals("boolean")) {
                 return Boolean.valueOf(parser.getAttributeValue(null, "value"));
             } else {

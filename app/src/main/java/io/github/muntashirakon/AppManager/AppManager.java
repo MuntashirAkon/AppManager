@@ -1,25 +1,11 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager;
 
 import android.app.Application;
 import android.content.Context;
 import android.content.pm.IPackageManager;
+import android.os.Build;
 import android.sun.security.provider.JavaKeyStoreProvider;
 
 import androidx.annotation.NonNull;
@@ -27,6 +13,8 @@ import androidx.room.Room;
 
 import com.topjohnwu.superuser.Shell;
 import com.yariksoffice.lingver.Lingver;
+
+import org.lsposed.hiddenapibypass.HiddenApiBypass;
 
 import java.security.Security;
 
@@ -64,7 +52,8 @@ public class AppManager extends Application {
     public static synchronized AMDatabase getDb() {
         if (db == null) {
             db = Room.databaseBuilder(getContext(), AMDatabase.class, "am")
-                    .addMigrations(AMDatabase.MIGRATION_1_2, AMDatabase.MIGRATION_2_3, AMDatabase.MIGRATION_3_4)
+                    .addMigrations(AMDatabase.MIGRATION_1_2, AMDatabase.MIGRATION_2_3, AMDatabase.MIGRATION_3_4,
+                            AMDatabase.MIGRATION_4_5)
                     .build();
         }
         return db;
@@ -89,5 +78,8 @@ public class AppManager extends Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            HiddenApiBypass.addHiddenApiExemptions("L");
+        }
     }
 }

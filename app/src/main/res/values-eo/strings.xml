@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="paths_and_directories">Vojoj kaj Dosierujoj</string>
     <string name="user_app">Uzanta aplikaĵo</string>
     <string name="system_app">Operaciuma aplikaĵo</string>
@@ -15,7 +15,6 @@
     <string name="sort_by_package_name">Pakaĵnomo</string>
     <string name="sort_by_app_label">Aplikaĵa prinoto</string>
     <string name="error">Eraro</string>
-    <string name="protection_level">Protekta nivelo</string>
     <string name="group">Grupo</string>
     <string name="launch_mode">Lanĉada reĝimo</string>
     <string name="launch">Lanĉi</string>

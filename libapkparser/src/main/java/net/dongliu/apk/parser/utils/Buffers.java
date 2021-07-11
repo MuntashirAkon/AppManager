@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.utils;
 
 import java.nio.Buffer;
@@ -6,9 +8,8 @@ import java.nio.ByteOrder;
 
 /**
  * utils method for byte buffer
- *
- * @author Liu Dong dongliu@live.cn
  */
+// Copyright 2014 Liu Dong
 public class Buffers {
 
     /**

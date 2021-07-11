@@ -1,26 +1,10 @@
-/*
- * Copyright (c) 2021 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.io;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -30,7 +14,7 @@ import java.util.List;
 public class SplitInputStream extends InputStream {
     private final List<InputStream> inputStreams;
     private int currentIndex = -1;
-    private final List<File> files;
+    private final List<Path> files;
 
     private final byte[] buf;
 
@@ -55,13 +39,13 @@ public class SplitInputStream extends InputStream {
     // 0 <= ~pos <= markBufCount (if pos < 0)
     // 0 <= markBufCount <= markLimit
 
-    public SplitInputStream(@NonNull List<File> files) {
+    public SplitInputStream(@NonNull List<Path> files) {
         this.files = files;
         this.inputStreams = new ArrayList<>(files.size());
         buf = new byte[1024 * 4];
     }
 
-    public SplitInputStream(@NonNull File[] files) {
+    public SplitInputStream(@NonNull Path[] files) {
         this(Arrays.asList(files));
     }
 
@@ -220,7 +204,7 @@ public class SplitInputStream extends InputStream {
                 return -1;
             } else if (currentIndex == -1) {
                 // Initialize a new stream
-                inputStreams.add(new ProxyInputStream(files.get(0)));
+                inputStreams.add(files.get(0).openInputStream());
                 ++currentIndex;
             }
             do {
@@ -228,7 +212,7 @@ public class SplitInputStream extends InputStream {
                 if (readCount <= 0) {
                     // This stream has been read completely, initialize new stream if available
                     if (currentIndex + 1 != files.size()) {
-                        inputStreams.add(new ProxyInputStream(files.get(currentIndex + 1)));
+                        inputStreams.add(files.get(currentIndex + 1).openInputStream());
                         ++currentIndex;
                     } else {
                         // Last stream reached

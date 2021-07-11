@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="error">Hiba</string>
     <string name="no_configurations">Nincsenek konfigurációk</string>
     <string name="configurations">Konfigurációk</string>
     <string name="sort_by_shared_user_id">Megosztott felhasználói azonosító</string>
     <string name="no_feature">Nincsenek funkciók</string>
-    <string name="protection_level">Védelmi szint</string>
     <string name="group">Csoport</string>
     <string name="declared_permission">Engedélyek</string>
     <string name="write">Ír</string>
@@ -17,4 +16,79 @@
     <string name="refresh">Frissítés</string>
     <string name="activities">Aktivitás</string>
     <string name="require_no_permission">Nincs szükség engedélyre</string>
+    <string name="no_service">Nincs szolgáltatás</string>
+    <string name="authority">Hatóság</string>
+    <string name="task_affinity">Feladat affinitás</string>
+    <string name="launch_mode">Indító mód</string>
+    <string name="no_providers">Nincs szolgáltató</string>
+    <string name="providers">Szolgáltatók</string>
+    <string name="no_receivers">Nincs fogadó</string>
+    <string name="receivers">Fogadók</string>
+    <string name="launch">Indítás</string>
+    <string name="permissions">Engedélyeket használ</string>
+    <string name="uninstall">Eltávolítás</string>
+    <plurals name="other_trackers_and_classes">
+        <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> nyomkövető a(z) <xliff:g id="class_no" example="50">%2$d</xliff:g> osztályokban</item>
+        <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> nyomkövető a(z) <xliff:g id="class_no" example="50">%2$d</xliff:g> osztályokban</item>
+    </plurals>
+    <plurals name="two_trackers_and_classes">
+        <item quantity="one">2 nyomkövető a(z) <xliff:g id="class_no" example="50">%1$d</xliff:g> osztályban</item>
+        <item quantity="other">2 nyomkövető a(z) <xliff:g id="class_no" example="50">%1$d</xliff:g> osztályokban</item>
+    </plurals>
+    <plurals name="tracker_and_classes">
+        <item quantity="one">1 nyomkövető a(z) <xliff:g id="class_no" example="50">%1$d</xliff:g> osztályban</item>
+        <item quantity="other">1 nyomkövető a(z) <xliff:g id="class_no" example="50">%1$d</xliff:g> osztályokban</item>
+    </plurals>
+    <string name="toggle_class_listing">Osztály listázó váltás</string>
+    <string name="class_viewer">Osztály betekintő</string>
+    <string name="word_wrap">Sortörés kapcsoló</string>
+    <string name="credits">Köszönet</string>
+    <string name="license">Licenc</string>
+    <string name="icon_picker">Ikon választó</string>
+    <string name="error_invalid_icon_format">Érvénytelen ikon formátum</string>
+    <string name="error_invalid_icon_resource">Érvénytelen ikon forrás</string>
+    <string name="insert_icon">Ikon beszúrás</string>
+    <string name="class_name">Osztály név</string>
+    <string name="package_name">Csomagnév</string>
+    <string name="shortcut_name">Parancsikon neve</string>
+    <string name="edit_shortcut">Parancsikon szerkesztés</string>
+    <string name="create_shortcut">Parancsikon létrehozás</string>
+    <string name="starting_activity">Kezdő tevékenység: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
+    <string name="error_verbose_pin_shortcut">A jelenlegi indító nem támogatja a PinShortcut-ot. Nem lehet létrehozni a linket.</string>
+    <string name="error_creating_shortcut">Parancsikon létrehozási hiba</string>
+    <string name="instructions">Utasítások</string>
+    <string name="empty_package_name">Üres csomagnév</string>
+    <string name="main_activity">Fő tevékenység</string>
+    <string name="user_id">Felh. azonosító</string>
+    <string name="installer_app">Telepítő app</string>
+    <string name="date_updated">Frissítés ideje</string>
+    <string name="date_installed">Telepítés dátuma</string>
+    <string name="more_info">Több infó</string>
+    <string name="sdk_flags">Zászlók</string>
+    <string name="sdk_max">Cél</string>
+    <string name="sdk_min">Min.</string>
+    <string name="data_dir">Adat könyvtár</string>
+    <string name="source_dir">Forrás könyvtár</string>
+    <string name="paths_and_directories">Útvonalak &amp; Könyvtárak</string>
+    <string name="user_app">Felhasználói app</string>
+    <string name="system_app">Rendszer app</string>
+    <string name="app_info">App infó</string>
+    <string name="version_name_with_code">Verzió <xliff:g id="version_name" example="2.5.17">%1$s</xliff:g> (<xliff:g id="version_code" example="365">%2$d</xliff:g>)</string>
+    <string name="sort">Rendez</string>
+    <string name="user">Felhasználó</string>
+    <string name="system">Rendszer</string>
+    <string name="app_not_installed">Az app nincs telepítve</string>
+    <string name="media_size">Média</string>
+    <string name="obb_size">Obb</string>
+    <string name="cache_size">Cache</string>
+    <string name="data_size">Adat</string>
+    <string name="about">Rólunk</string>
+    <string name="data_usage_msg">Adat használat</string>
+    <string name="data_transmitted">Továbbított adat</string>
+    <string name="data_received">Fogadott adat</string>
+    <string name="sort_by_target_sdk">Cél SDK</string>
+    <string name="sort_by_domain">Felh. appok előre</string>
+    <string name="sort_by_package_name">Csomagnév</string>
+    <string name="sort_by_app_label">App címke</string>
+    <string name="loading">Betöltés…</string>
 </resources>

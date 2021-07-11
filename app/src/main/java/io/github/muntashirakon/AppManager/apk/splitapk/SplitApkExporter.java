@@ -1,35 +1,17 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.apk.splitapk;
 
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.graphics.Bitmap;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
-import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
-import io.github.muntashirakon.io.ProxyFile;
-import io.github.muntashirakon.io.ProxyInputStream;
-import io.github.muntashirakon.io.ProxyOutputStream;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,6 +19,10 @@ import java.util.List;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
+import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.io.Path;
 
 /**
  * Used to generate app bundle with .apks extension. This file has all the apks as well as 3 other
@@ -49,8 +35,8 @@ import java.util.zip.ZipOutputStream;
  */
 public final class SplitApkExporter {
     @WorkerThread
-    public static void saveApks(PackageInfo packageInfo, File apksFile) throws Exception {
-        try (OutputStream outputStream = new ProxyOutputStream(apksFile);
+    public static void saveApks(PackageInfo packageInfo, Path apksFile) throws Exception {
+        try (OutputStream outputStream = apksFile.openOutputStream();
              ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream)) {
             zipOutputStream.setMethod(ZipOutputStream.DEFLATED);
             zipOutputStream.setLevel(Deflater.BEST_COMPRESSION);
@@ -111,7 +97,7 @@ public final class SplitApkExporter {
                 zipEntry.setCrc(IOUtils.calculateFileCrc32(apkFile));
                 zipEntry.setTime(apksMetadata.exportTimestamp);
                 zipOutputStream.putNextEntry(zipEntry);
-                try (ProxyInputStream apkInputStream = new ProxyInputStream(apkFile)) {
+                try (FileInputStream apkInputStream = new FileInputStream(apkFile)) {
                     IOUtils.copy(apkInputStream, zipOutputStream);
                 }
                 zipOutputStream.closeEntry();
@@ -123,10 +109,10 @@ public final class SplitApkExporter {
     private static List<File> getAllApkFiles(@NonNull PackageInfo packageInfo) {
         ApplicationInfo applicationInfo = packageInfo.applicationInfo;
         List<File> apkFiles = new ArrayList<>();
-        apkFiles.add(new ProxyFile(applicationInfo.publicSourceDir));
+        apkFiles.add(new File(applicationInfo.publicSourceDir));
         if (applicationInfo.splitPublicSourceDirs != null) {
             for (String splitPath : applicationInfo.splitPublicSourceDirs)
-                apkFiles.add(new ProxyFile(splitPath));
+                apkFiles.add(new File(splitPath));
         }
         return apkFiles;
     }

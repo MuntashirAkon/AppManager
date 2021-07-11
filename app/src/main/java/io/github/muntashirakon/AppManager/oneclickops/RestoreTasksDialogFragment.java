@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 package io.github.muntashirakon.AppManager.oneclickops;
 
 import android.annotation.SuppressLint;
@@ -6,20 +8,20 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.fragment.app.DialogFragment;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
-import io.github.muntashirakon.AppManager.backup.BackupUtils;
-import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.main.ApplicationItem;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -28,6 +30,7 @@ public class RestoreTasksDialogFragment extends DialogFragment {
     public static final String TAG = "RestoreTasksDialogFragment";
 
     private OneClickOpsActivity activity;
+    private final ExecutorService executor = Executors.newFixedThreadPool(2);
 
     @NonNull
     @Override
@@ -39,70 +42,70 @@ public class RestoreTasksDialogFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.dialog_restore_tasks, null);
         // Restore all apps
         view.findViewById(R.id.restore_all).setOnClickListener(v -> {
-            if (isDetached()) return;
             activity.mProgressIndicator.show();
-            new Thread(() -> {
-                if (isDetached()) return;
-                HashMap<String, MetadataManager.Metadata> backupMetadata = BackupUtils.getAllBackupMetadata();
+            executor.submit(() -> {
+                if (isDetached() || Thread.currentThread().isInterrupted()) return;
                 List<ApplicationItem> applicationItems = new ArrayList<>();
                 List<CharSequence> applicationLabels = new ArrayList<>();
-                for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), backupMetadata)) {
-                    if (isDetached()) return;
-                    if (item.metadata != null) {
+                for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), null, true)) {
+                    if (isDetached() || Thread.currentThread().isInterrupted()) return;
+                    if (item.backup != null) {
                         applicationItems.add(item);
                         applicationLabels.add(item.label);
                     }
                 }
-                if (isDetached()) return;
+                if (isDetached() || Thread.currentThread().isInterrupted()) return;
                 requireActivity().runOnUiThread(() -> runMultiChoiceDialog(applicationItems, applicationLabels));
-            }).start();
+            });
         });
         // Restore not installed
         view.findViewById(R.id.restore_not_installed).setOnClickListener(v -> {
-            if (isDetached()) return;
             activity.mProgressIndicator.show();
-            new Thread(() -> {
-                if (isDetached()) return;
-                HashMap<String, MetadataManager.Metadata> backupMetadata = BackupUtils.getAllBackupMetadata();
+            executor.submit(() -> {
+                if (isDetached() || Thread.currentThread().isInterrupted()) return;
                 List<ApplicationItem> applicationItems = new ArrayList<>();
                 List<CharSequence> applicationLabels = new ArrayList<>();
-                for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), backupMetadata)) {
-                    if (isDetached()) return;
-                    if (!item.isInstalled && item.metadata != null) {
+                for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), null, true)) {
+                    if (isDetached() || Thread.currentThread().isInterrupted()) return;
+                    if (!item.isInstalled && item.backup != null) {
                         applicationItems.add(item);
                         applicationLabels.add(item.label);
                     }
                 }
-                if (isDetached()) return;
+                if (isDetached() || Thread.currentThread().isInterrupted()) return;
                 requireActivity().runOnUiThread(() -> runMultiChoiceDialog(applicationItems, applicationLabels));
-            }).start();
+            });
         });
         // Restore latest versions only
         view.findViewById(R.id.restore_latest).setOnClickListener(v -> {
-            if (isDetached()) return;
             activity.mProgressIndicator.show();
-            new Thread(() -> {
-                if (isDetached()) return;
-                HashMap<String, MetadataManager.Metadata> backupMetadata = BackupUtils.getAllBackupMetadata();
+            executor.submit(() -> {
+                if (isDetached() || Thread.currentThread().isInterrupted()) return;
                 List<ApplicationItem> applicationItems = new ArrayList<>();
                 List<CharSequence> applicationLabels = new ArrayList<>();
-                for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), backupMetadata)) {
-                    if (isDetached()) return;
-                    if (item.isInstalled && item.metadata != null
-                            && item.versionCode < item.metadata.versionCode) {
+                for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), null, true)) {
+                    if (isDetached() || Thread.currentThread().isInterrupted()) return;
+                    if (item.isInstalled && item.backup != null
+                            && item.versionCode < item.backup.versionCode) {
                         applicationItems.add(item);
                         applicationLabels.add(item.label);
                     }
                 }
-                if (isDetached()) return;
+                if (isDetached() || Thread.currentThread().isInterrupted()) return;
                 requireActivity().runOnUiThread(() -> runMultiChoiceDialog(applicationItems, applicationLabels));
-            }).start();
+            });
         });
         return new MaterialAlertDialogBuilder(requireActivity())
                 .setView(view)
                 .setTitle(R.string.restore)
                 .setNegativeButton(R.string.cancel, null)
                 .create();
+    }
+
+    @Override
+    public void onDestroy() {
+        executor.shutdownNow();
+        super.onDestroy();
     }
 
     @UiThread

@@ -1,19 +1,4 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.backup;
 
@@ -27,26 +12,20 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
-import androidx.annotation.*;
+
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.UiThread;
+import androidx.annotation.WorkerThread;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
+
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
-import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
-import io.github.muntashirakon.AppManager.db.entity.App;
-import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.users.Users;
-import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
-import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
-import io.github.muntashirakon.AppManager.types.UserPackagePair;
-import io.github.muntashirakon.AppManager.utils.PackageUtils;
-import io.github.muntashirakon.AppManager.utils.StoragePermission;
-
+import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
@@ -54,6 +33,20 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
+import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
+import io.github.muntashirakon.AppManager.db.entity.App;
+import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
+import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
+import io.github.muntashirakon.AppManager.types.UserPackagePair;
+import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.StoragePermission;
 
 public class BackupDialogFragment extends DialogFragment {
     public static final String TAG = "BackupDialogFragment";
@@ -220,7 +213,7 @@ public class BackupDialogFragment extends DialogFragment {
                     if (isDetached()) return;
                     new SearchableMultiChoiceDialogBuilder<>(activity, userHandles, userNames)
                             .setTitle(R.string.select_user)
-                            .setSelections(Collections.singletonList(Users.getCurrentUserHandle()))
+                            .setSelections(Collections.singletonList(Users.myUserId()))
                             .showSelectAll(false)
                             .setPositiveButton(R.string.ok, (dialog, which, selectedUsers) -> {
                                 List<UserPackagePair> newTargetPackages = new ArrayList<>();
@@ -266,7 +259,12 @@ public class BackupDialogFragment extends DialogFragment {
             // Only a single package is requested, display a list of existing backups to
             // choose which of them are to be deleted
             // TODO(21/9/20): Replace with a custom alert dialog to display more info.
-            MetadataManager.Metadata[] metadata = MetadataManager.getMetadata(targetPackages.get(0).getPackageName());
+            MetadataManager.Metadata[] metadata;
+            try {
+                metadata = MetadataManager.getMetadata(targetPackages.get(0).getPackageName());
+            } catch (IOException e) {
+                metadata = ArrayUtils.emptyArray(MetadataManager.Metadata.class);
+            }
             String[] backupNames = new String[metadata.length];
             CharSequence[] readableBackupNames = new CharSequence[metadata.length];
             boolean[] choices = new boolean[metadata.length];
@@ -318,12 +316,17 @@ public class BackupDialogFragment extends DialogFragment {
             // Only a single package is requested, display a list of existing backups to
             // choose which one to restore
             // TODO(21/9/20): Replace with a custom alert dialog to display more info.
-            MetadataManager.Metadata[] metadata = MetadataManager.getMetadata(targetPackages.get(0).getPackageName());
+            MetadataManager.Metadata[] metadata;
+            try {
+                metadata = MetadataManager.getMetadata(targetPackages.get(0).getPackageName());
+            } catch (IOException e) {
+                metadata = ArrayUtils.emptyArray(MetadataManager.Metadata.class);
+            }
             String[] backupNames = new String[metadata.length];
             AtomicInteger selectedItem = new AtomicInteger(-1);
             CharSequence[] readableBackupNames = new CharSequence[metadata.length];
             int choice = -1;
-            int currentUserHandle = Users.getCurrentUserHandle();
+            int currentUserHandle = Users.myUserId();
             for (int i = 0; i < backupNames.length; ++i) {
                 backupNames[i] = metadata[i].backupName;
                 if (BackupUtils.getShortBackupName(backupNames[i]) == null

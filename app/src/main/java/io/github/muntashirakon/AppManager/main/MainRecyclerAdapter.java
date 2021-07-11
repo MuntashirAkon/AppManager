@@ -1,19 +1,4 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.main;
 
@@ -38,22 +23,13 @@ import android.widget.ImageView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
-import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity;
-import io.github.muntashirakon.AppManager.backup.MetadataManager;
-import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
-import io.github.muntashirakon.AppManager.types.IconLoaderThread;
-import io.github.muntashirakon.AppManager.users.Users;
-import io.github.muntashirakon.AppManager.utils.DateUtils;
-import io.github.muntashirakon.AppManager.utils.PackageUtils;
-import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -61,7 +37,20 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapter.ViewHolder>
+import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity;
+import io.github.muntashirakon.AppManager.db.entity.Backup;
+import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
+import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
+import io.github.muntashirakon.AppManager.settings.FeatureController;
+import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.DateUtils;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.widget.MultiSelectionView;
+
+public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecyclerAdapter.ViewHolder>
         implements SectionIndexer {
     static final String sections = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -70,25 +59,20 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     private String mSearchQuery;
     @GuardedBy("mAdapterList")
     private final List<ApplicationItem> mAdapterList = new ArrayList<>();
+    final ImageLoader imageLoader;
 
-    private static int mColorTransparent;
-    private static int mColorSemiTransparent;
-    private static int mColorHighlight;
-    private static int mColorDisabled;
-    private static int mColorStopped;
-    private static int mColorOrange;
-    private static int mColorPrimary;
-    private static int mColorSecondary;
-    private static int mColorRed;
+    private final int mColorStopped;
+    private final int mColorOrange;
+    private final int mColorPrimary;
+    private final int mColorSecondary;
+    private final int mColorRed;
 
     MainRecyclerAdapter(@NonNull MainActivity activity) {
+        super();
         mActivity = activity;
         mPackageManager = activity.getPackageManager();
+        imageLoader = new ImageLoader(mActivity.mModel.executor);
 
-        mColorTransparent = Color.TRANSPARENT;
-        mColorSemiTransparent = ContextCompat.getColor(mActivity, R.color.semi_transparent);
-        mColorHighlight = ContextCompat.getColor(mActivity, R.color.highlight);
-        mColorDisabled = ContextCompat.getColor(mActivity, R.color.disabled_user);
         mColorStopped = ContextCompat.getColor(mActivity, R.color.stopped);
         mColorOrange = ContextCompat.getColor(mActivity, R.color.orange);
         mColorPrimary = ContextCompat.getColor(mActivity, R.color.textColorPrimary);
@@ -98,19 +82,26 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     @GuardedBy("mAdapterList")
     void setDefaultList(List<ApplicationItem> list) {
-        new Thread(() -> {
+        if (mActivity.mModel == null) return;
+        mActivity.mModel.executor.submit(() -> {
             synchronized (mAdapterList) {
                 mAdapterList.clear();
                 mAdapterList.addAll(list);
                 mSearchQuery = mActivity.mModel.getSearchQuery();
-                mActivity.runOnUiThread(this::notifyDataSetChanged);
+                mActivity.runOnUiThread(() -> {
+                    synchronized (mAdapterList) {
+                        notifyDataSetChanged();
+                        notifySelectionChange();
+                    }
+                });
             }
-        }).start();
+        });
     }
 
     @GuardedBy("mAdapterList")
     @WorkerThread
-    void clearSelection() {
+    @Override
+    public void clearSelections() {
         if (mActivity.mModel == null) return;
         synchronized (mAdapterList) {
             final List<Integer> itemIds = new ArrayList<>();
@@ -123,21 +114,78 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 itemIds.add(itemId);
             }
             mActivity.runOnUiThread(() -> {
-                for (int id : itemIds) notifyItemChanged(id);
+                synchronized (mAdapterList) {
+                    for (int id : itemIds) notifyItemChanged(id);
+                }
             });
             mActivity.mModel.clearSelection();
+            super.clearSelections();
         }
     }
 
     @GuardedBy("mAdapterList")
-    @UiThread
-    void selectAll() {
+    @Override
+    public void cancelSelection() {
+        clearSelections();
+    }
+
+    @Override
+    public int getSelectedItemCount() {
+        if (mActivity.mModel == null) return 0;
+        return mActivity.mModel.getSelectedPackages().size();
+    }
+
+    @Override
+    protected int getTotalItemCount() {
+        if (mActivity.mModel == null) return 0;
+        return mActivity.mModel.getApplicationItemCount();
+    }
+
+    @GuardedBy("mAdapterList")
+    @Override
+    protected boolean isSelected(int position) {
         synchronized (mAdapterList) {
-            for (int i = 0; i < mAdapterList.size(); ++i) {
-                mAdapterList.set(i, mActivity.mModel.select(mAdapterList.get(i)));
-                notifyItemChanged(i);
-            }
-            mActivity.handleSelection();
+            return mActivity.mModel.getSelectedPackages().containsKey(mAdapterList.get(position).packageName);
+        }
+    }
+
+    @GuardedBy("mAdapterList")
+    @Override
+    protected void select(int position) {
+        synchronized (mAdapterList) {
+            mAdapterList.set(position, mActivity.mModel.select(mAdapterList.get(position)));
+        }
+    }
+
+    @GuardedBy("mAdapterList")
+    @Override
+    protected void deselect(int position) {
+        synchronized (mAdapterList) {
+            mAdapterList.set(position, mActivity.mModel.deselect(mAdapterList.get(position)));
+        }
+    }
+
+    @GuardedBy("mAdapterList")
+    @Override
+    public void toggleSelection(int position) {
+        synchronized (mAdapterList) {
+            super.toggleSelection(position);
+        }
+    }
+
+    @GuardedBy("mAdapterList")
+    @Override
+    public void selectAll() {
+        synchronized (mAdapterList) {
+            super.selectAll();
+        }
+    }
+
+    @GuardedBy("mAdapterList")
+    @Override
+    public void selectRange(int firstPosition, int secondPosition) {
+        synchronized (mAdapterList) {
+            super.selectRange(firstPosition, secondPosition);
         }
     }
 
@@ -151,8 +199,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     @GuardedBy("mAdapterList")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        // Cancel an existing icon loading operation
-        if (holder.iconLoader != null) holder.iconLoader.interrupt();
         final ApplicationItem item;
         synchronized (mAdapterList) {
             item = mAdapterList.get(position);
@@ -160,78 +206,85 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         // Add click listeners
         holder.itemView.setOnClickListener(v -> {
             // Click listener:
-            // 1) If the app is not installed:
+            // 1) If selection mode is on, select/deselect the current item instead of 2 & 3.
+            // 2) If the app is not installed:
             //    i.  Display a toast message saying that it's not installed if it's a backup-only app
             //    ii. Offer to install the app if it can be installed
-            // 2) If installed, load the App Details page
-            // 3) If selection mode is on, select/deselect the current item instead of 1 & 2.
-            if (mActivity.mModel.getSelectedPackages().size() == 0) {
-                if (!item.isInstalled) {
-                    try {
-                        @SuppressLint("WrongConstant")
-                        ApplicationInfo info = mPackageManager.getApplicationInfo(item.packageName, PackageUtils.flagMatchUninstalled);
-                        if (info.publicSourceDir != null) {
-                            Intent intent = new Intent(mActivity, PackageInstallerActivity.class);
-                            intent.setData(Uri.fromFile(new File(info.publicSourceDir)));
-                            mActivity.startActivity(intent);
-                        }
-                    } catch (PackageManager.NameNotFoundException ignore) {
+            // 3) If installed, load the App Details page
+            if (isInSelectionMode()) {
+                toggleSelection(position);
+                return;
+            }
+            if (!item.isInstalled) {
+                try {
+                    @SuppressLint("WrongConstant")
+                    ApplicationInfo info = mPackageManager.getApplicationInfo(item.packageName, PackageUtils.flagMatchUninstalled);
+                    if (info.publicSourceDir != null && new File(info.publicSourceDir).exists()
+                            && FeatureController.isInstallerEnabled()) {
+                        Intent intent = new Intent(mActivity, PackageInstallerActivity.class);
+                        intent.setData(Uri.fromFile(new File(info.publicSourceDir)));
+                        mActivity.startActivity(intent);
                     }
-                    Toast.makeText(mActivity, R.string.app_not_installed, Toast.LENGTH_SHORT).show();
-                } else {
-                    Intent appDetailsIntent = new Intent(mActivity, AppDetailsActivity.class);
-                    appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME, item.packageName);
-                    if (item.userHandles.length > 0) {
-                        if (item.userHandles.length > 1) {
-                            String[] userNames = new String[item.userHandles.length];
+                } catch (PackageManager.NameNotFoundException ignore) {
+                }
+                Toast.makeText(mActivity, R.string.app_not_installed, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Intent appDetailsIntent = new Intent(mActivity, AppDetailsActivity.class);
+            appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME, item.packageName);
+            if (item.userHandles.length > 0) {
+                if (item.userHandles.length > 1) {
+                    String[] userNames = new String[item.userHandles.length];
+                    List<UserInfo> users = Users.getUsers();
+                    if (users != null) {
+                        for (UserInfo info : users) {
                             for (int i = 0; i < item.userHandles.length; ++i) {
-                                userNames[i] = mActivity.getString(R.string.user_with_id, item.userHandles[i]);
-                            }
-                            List<UserInfo> users = Users.getUsers();
-                            if (users != null) {
-                                for (UserInfo info : users) {
-                                    for (int i = 0; i < item.userHandles.length; ++i) {
-                                        if (info.id == item.userHandles[i]) {
-                                            userNames[i] = info.name == null ? String.valueOf(info.id) : info.name;
-                                        }
-                                    }
+                                if (info.id == item.userHandles[i]) {
+                                    userNames[i] = info.name == null ? String.valueOf(info.id) : info.name;
                                 }
                             }
-                            new MaterialAlertDialogBuilder(mActivity)
-                                    .setTitle(R.string.select_user)
-                                    .setItems(userNames, (dialog, which) -> {
-                                        appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_USER_HANDLE, item.userHandles[which]);
-                                        mActivity.startActivity(appDetailsIntent);
-                                        dialog.dismiss();
-                                    })
-                                    .setNegativeButton(R.string.cancel, null)
-                                    .show();
-                        } else {
-                            appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_USER_HANDLE, item.userHandles[0]);
-                            mActivity.startActivity(appDetailsIntent);
                         }
-                    } else mActivity.startActivity(appDetailsIntent);
+                    } else if (ArrayUtils.contains(item.userHandles, Users.myUserId())) {
+                        appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_USER_HANDLE, Users.myUserId());
+                        mActivity.startActivity(appDetailsIntent);
+                        return;
+                    } else return;
+                    new MaterialAlertDialogBuilder(mActivity)
+                            .setTitle(R.string.select_user)
+                            .setItems(userNames, (dialog, which) -> {
+                                appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_USER_HANDLE, item.userHandles[which]);
+                                mActivity.startActivity(appDetailsIntent);
+                                dialog.dismiss();
+                            })
+                            .setNegativeButton(R.string.cancel, null)
+                            .show();
+                } else {
+                    int[] userHandles = Users.getUsersIds();
+                    if (!ArrayUtils.contains(userHandles, item.userHandles[0])) return;
+                    appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_USER_HANDLE, item.userHandles[0]);
+                    mActivity.startActivity(appDetailsIntent);
                 }
-            } else toggleSelection(item, position);
+            } else mActivity.startActivity(appDetailsIntent);
         });
         holder.itemView.setOnLongClickListener(v -> {
             // Long click listener: Select/deselect an app.
             // 1) Turn selection mode on if this is the first item in the selection list
             // 2) Select between last selection position and this position (inclusive) if selection mode is on
-            ApplicationItem lastSelectedItem = mActivity.mModel.getLastSelectedPackage();
-            int lastSelectedItemPosition = lastSelectedItem == null ? -1 : mAdapterList.indexOf(lastSelectedItem);
-            if (lastSelectedItemPosition >= 0) {
-                // Select from last selection to this selection
-                selectRange(lastSelectedItemPosition, position);
-            } else toggleSelection(item, position);
+            synchronized (mAdapterList) {
+                ApplicationItem lastSelectedItem = mActivity.mModel.getLastSelectedPackage();
+                int lastSelectedItemPosition = lastSelectedItem == null ? -1 : mAdapterList.indexOf(lastSelectedItem);
+                if (lastSelectedItemPosition >= 0) {
+                    // Select from last selection to this selection
+                    selectRange(lastSelectedItemPosition, position);
+                } else toggleSelection(position);
+            }
             return true;
         });
-        holder.icon.setOnClickListener(v -> toggleSelection(item, position));
-        // Alternate background colors: selected > disabled > regular
-        if (item.isSelected) holder.mainView.setBackgroundColor(mColorHighlight);
-        else if (item.isDisabled) holder.mainView.setBackgroundColor(mColorDisabled);
+        holder.icon.setOnClickListener(v -> toggleSelection(position));
+        // Alternate background colors: disabled > regular
+        if (item.isDisabled) holder.itemView.setBackgroundResource(R.drawable.item_disabled);
         else {
-            holder.mainView.setBackgroundColor(position % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
+            holder.itemView.setBackgroundResource(position % 2 == 0 ? R.drawable.item_semi_transparent : R.drawable.item_transparent);
         }
         // Add yellow star if the app is in debug mode
         holder.favorite_icon.setVisibility(item.debuggable ? View.VISIBLE : View.INVISIBLE);
@@ -279,8 +332,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             holder.sha.setVisibility(View.GONE);
         }
         // Load app icon
-        holder.iconLoader = new IconLoaderThread(holder.icon, item);
-        holder.iconLoader.start();
+        imageLoader.displayImage(item.packageName, item, holder.icon);
         // Set app label
         if (!TextUtils.isEmpty(mSearchQuery) && item.label.toLowerCase(Locale.ROOT).contains(mSearchQuery)) {
             // Highlight searched query
@@ -344,14 +396,14 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             holder.size.setTextColor(mColorOrange);
         } else holder.size.setTextColor(mColorSecondary);
         // Check for backup
-        if (item.metadata != null) {
+        if (item.backup != null) {
             holder.backupIndicator.setVisibility(View.VISIBLE);
             holder.backupInfo.setVisibility(View.VISIBLE);
             holder.backupInfoExt.setVisibility(View.VISIBLE);
             holder.backupIndicator.setText(R.string.backup);
             int indicatorColor;
             if (item.isInstalled) {
-                if (item.metadata.versionCode >= item.versionCode) {
+                if (item.backup.versionCode >= item.versionCode) {
                     // Up-to-date backup
                     indicatorColor = mColorStopped;
                 } else {
@@ -363,20 +415,20 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 indicatorColor = mColorRed;
             }
             holder.backupIndicator.setTextColor(indicatorColor);
-            MetadataManager.Metadata metadata = item.metadata;
+            Backup backup = item.backup;
             long days = TimeUnit.DAYS.convert(System.currentTimeMillis() -
-                    metadata.backupTime, TimeUnit.MILLISECONDS);
+                    backup.backupTime, TimeUnit.MILLISECONDS);
             holder.backupInfo.setText(String.format("%s: %s, %s %s",
                     mActivity.getString(R.string.latest_backup), mActivity.getResources()
                             .getQuantityString(R.plurals.usage_days, (int) days, days),
-                    mActivity.getString(R.string.version), metadata.versionName));
+                    mActivity.getString(R.string.version), backup.versionName));
             StringBuilder extBulder = new StringBuilder();
-            if (metadata.flags.backupApkFiles()) extBulder.append("apk");
-            if (metadata.flags.backupData()) {
+            if (backup.getFlags().backupApkFiles()) extBulder.append("apk");
+            if (backup.getFlags().backupData()) {
                 if (extBulder.length() > 0) extBulder.append("+");
                 extBulder.append("data");
             }
-            if (metadata.hasRules) {
+            if (backup.hasRules) {
                 if (extBulder.length() > 0) extBulder.append("+");
                 extBulder.append("rules");
             }
@@ -386,41 +438,14 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             holder.backupInfo.setVisibility(View.GONE);
             holder.backupInfoExt.setVisibility(View.GONE);
         }
-    }
-
-    @GuardedBy("mAdapterList")
-    @UiThread
-    public void toggleSelection(@NonNull ApplicationItem item, int position) {
-        synchronized (mAdapterList) {
-            if (mActivity.mModel.getSelectedPackages().containsKey(item.packageName)) {
-                mAdapterList.set(position, mActivity.mModel.deselect(item));
-            } else {
-                mAdapterList.set(position, mActivity.mModel.select(item));
-            }
-        }
-        notifyItemChanged(position);
-        mActivity.handleSelection();
-    }
-
-    @GuardedBy("mAdapterList")
-    @UiThread
-    public void selectRange(int firstPosition, int secondPosition) {
-        int beginPosition = Math.min(firstPosition, secondPosition);
-        int endPosition = Math.max(firstPosition, secondPosition);
-        synchronized (mAdapterList) {
-            for (int position = beginPosition; position <= endPosition; ++position) {
-                mAdapterList.set(position, mActivity.mModel.select(mAdapterList.get(position)));
-            }
-        }
-        notifyItemRangeChanged(beginPosition, endPosition - beginPosition + 1);
-        mActivity.handleSelection();
+        super.onBindViewHolder(holder, position);
     }
 
     @GuardedBy("mAdapterList")
     @Override
-    public long getItemId(int i) {
+    public long getItemId(int position) {
         synchronized (mAdapterList) {
-            return mAdapterList.get(i).hashCode();
+            return mAdapterList.get(position).hashCode();
         }
     }
 
@@ -461,8 +486,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         return sectionsArr;
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        View mainView;
+    static class ViewHolder extends MultiSelectionView.ViewHolder {
         ImageView icon;
         ImageView favorite_icon;
         TextView label;
@@ -477,11 +501,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         TextView backupIndicator;
         TextView backupInfo;
         TextView backupInfoExt;
-        IconLoaderThread iconLoader;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            mainView = itemView.findViewById(R.id.main_view);
             icon = itemView.findViewById(R.id.icon);
             favorite_icon = itemView.findViewById(R.id.favorite_icon);
             label = itemView.findViewById(R.id.label);

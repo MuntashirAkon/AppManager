@@ -1,26 +1,15 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.utils;
 
 import android.annotation.TargetApi;
-import android.os.RemoteException;
 import android.text.TextUtils;
 import android.util.Pair;
+
+import androidx.annotation.AnyThread;
+import androidx.annotation.NonNull;
+import androidx.annotation.StringDef;
+import androidx.annotation.WorkerThread;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,12 +22,10 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.CRC32;
+import java.util.zip.CheckedInputStream;
 
-import androidx.annotation.AnyThread;
-import androidx.annotation.NonNull;
-import androidx.annotation.StringDef;
-import androidx.annotation.WorkerThread;
 import aosp.libcore.util.HexEncoding;
+import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.ProxyInputStream;
 
 public class DigestUtils {
@@ -72,7 +59,26 @@ public class DigestUtils {
         for (File file : allFiles) {
             try (InputStream fileInputStream = new ProxyInputStream(file)) {
                 hashes.add(DigestUtils.getHexDigest(algo, fileInputStream));
-            } catch (IOException | RemoteException e) {
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        if (hashes.size() == 0) return HexEncoding.encodeToString(new byte[0], false /* lowercase */);
+        if (hashes.size() == 1) return hashes.get(0);
+        String fullString = TextUtils.join("", hashes);
+        return getHexDigest(algo, fullString.getBytes());
+    }
+
+    @WorkerThread
+    @NonNull
+    public static String getHexDigest(@Algorithm String algo, @NonNull Path path) {
+        List<Path> allFiles = new ArrayList<>();
+        gatherFiles(allFiles, path);
+        List<String> hashes = new ArrayList<>(allFiles.size());
+        for (Path file : allFiles) {
+            try (InputStream fileInputStream = file.openInputStream()) {
+                hashes.add(DigestUtils.getHexDigest(algo, fileInputStream));
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -110,10 +116,9 @@ public class DigestUtils {
         if (CRC32.equals(algo)) {
             java.util.zip.CRC32 crc32 = new CRC32();
             byte[] buffer = new byte[IOUtils.DEFAULT_BUFFER_SIZE];
-            int read;
-            try {
-                while ((read = stream.read(buffer)) > 0) {
-                    crc32.update(buffer, 0, read);
+            try (CheckedInputStream cis = new CheckedInputStream(stream, crc32)) {
+                //noinspection StatementWithEmptyBody
+                while (cis.read(buffer) >= 0) {
                 }
             } catch (IOException ignore) {
             }
@@ -178,6 +183,21 @@ public class DigestUtils {
                 return;
             }
             for (File child : children) {
+                gatherFiles(files, child);
+            }
+        } else if (source.isFile()) {
+            // Not directory, add it
+            files.add(source);
+        } // else we don't support other type of files
+    }
+
+    static void gatherFiles(@NonNull List<Path> files, @NonNull Path source) {
+        if (source.isDirectory()) {
+            Path[] children = source.listFiles();
+            if (children.length == 0) {
+                return;
+            }
+            for (Path child : children) {
                 gatherFiles(files, child);
             }
         } else if (source.isFile()) {

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser;
 
 import net.dongliu.apk.parser.bean.AdaptiveIcon;
@@ -54,9 +56,8 @@ import static java.lang.System.arraycopy;
 /**
  * Common Apk Parser methods.
  * This Class is not thread-safe.
- *
- * @author Liu Dong
  */
+// Copyright 2016 Liu Dong
 public abstract class AbstractApkFile implements Closeable {
     private DexClass[] dexClasses;
 

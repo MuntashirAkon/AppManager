@@ -1,19 +1,4 @@
-/*
- * Copyright (c) 2021 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.utils;
 
@@ -63,7 +48,7 @@ public class SsaidSettings {
         HandlerThread thread = new HandlerThread("SSAID", Process.THREAD_PRIORITY_BACKGROUND);
         thread.start();
         int ssaidKey = SettingsState.makeKey(SETTINGS_TYPE_SSAID, 0);
-        File ssaidLocation = new ProxyFile(OsEnvironment.getUserSystemDirectory(Users.getUserHandle(uid)),
+        File ssaidLocation = new ProxyFile(OsEnvironment.getUserSystemDirectory(Users.getUserId(uid)),
                 "settings_ssaid.xml");
         try {
             if (ssaidLocation.canRead()) {
@@ -72,8 +57,12 @@ public class SsaidSettings {
         } catch (SecurityException e) {
             throw new IOException(e);
         }
-        settingsState = new SettingsState(lock, ssaidLocation, ssaidKey,
-                SettingsState.MAX_BYTES_PER_APP_PACKAGE_UNLIMITED, thread.getLooper());
+        try {
+            settingsState = new SettingsState(lock, ssaidLocation, ssaidKey,
+                    SettingsState.MAX_BYTES_PER_APP_PACKAGE_UNLIMITED, thread.getLooper());
+        } catch (IllegalStateException e) {
+            throw new IOException(e);
+        }
     }
 
     @Nullable
@@ -83,7 +72,7 @@ public class SsaidSettings {
 
     public boolean setSsaid(String ssaid) {
         try {
-            PackageManagerCompat.forceStopPackage(packageName, Users.getUserHandle(uid));
+            PackageManagerCompat.forceStopPackage(packageName, Users.getUserId(uid));
         } catch (Throwable e) {
             e.printStackTrace();
         }

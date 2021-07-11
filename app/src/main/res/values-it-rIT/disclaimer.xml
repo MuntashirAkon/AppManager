@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources>
     <string name="disclaimer_header">DICHIARAZIONE DI NON RESPONSABILITÀ</string>
-    <string name="disclaimer_footer">© 2020 Muntashir Al-Islam</string>
+    <string name="disclaimer_footer">© 2020-2021 Muntashir Al-Islam</string>
     <string name="disclaimer_agree_forever">Non mostrare più</string>
     <string name="disclaimer_agree">Accetto</string>
     <string name="disclaimer_exit">Esci</string>

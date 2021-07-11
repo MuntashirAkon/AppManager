@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.struct.resource;
 
 import net.dongliu.apk.parser.struct.StringPool;
@@ -7,9 +9,7 @@ import net.dongliu.apk.parser.utils.ParseUtils;
 import java.nio.ByteBuffer;
 import java.util.Locale;
 
-/**
- * @author dongliu
- */
+// Copyright 2014 Liu Dong
 public class Type {
 
     private String name;

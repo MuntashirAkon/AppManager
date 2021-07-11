@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?><!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_storage"
+        android:icon="@drawable/ic_sd_storage_24"
+        android:title="@string/storage"
+        app:showAsAction="always" />
+
+</menu>

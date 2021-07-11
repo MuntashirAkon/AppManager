@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.parser;
 
 import net.dongliu.apk.parser.exception.ParserException;
@@ -19,9 +21,8 @@ import java.util.Set;
 /**
  * Android Binary XML format
  * see http://justanapplication.wordpress.com/category/android/android-binary-xml/
- *
- * @author dongliu
  */
+// Copyright 2014 Liu Dong
 public class BinaryXmlParser {
 
     /**

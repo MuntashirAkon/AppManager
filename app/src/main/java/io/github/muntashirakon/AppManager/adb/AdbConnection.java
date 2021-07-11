@@ -1,22 +1,4 @@
-/*
- * Copyright (c) 2021 Muntashir Al-Islam
- * Copyright (c) 2020 Sam Palmer
- * Copyright (c) 2016 Anton Tananaev
- * Copyright (c) 2013 Cameron Gutman
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: BSD-3-Clause AND GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.adb;
 
@@ -39,6 +21,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
+import javax.security.auth.DestroyFailedException;
 
 import io.github.muntashirakon.AppManager.crypto.ks.KeyPair;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -46,6 +29,7 @@ import io.github.muntashirakon.AppManager.logs.Log;
 /**
  * This class represents an ADB connection.
  */
+// Copyright 2013 Cameron Gutman
 public class AdbConnection implements Closeable {
     public static final String TAG = AdbConnection.class.getSimpleName();
 
@@ -230,7 +214,7 @@ public class AdbConnection implements Closeable {
 
                                     /* Tell it we're ready for more */
                                     waitingStream.sendReady();
-                                } else if (msg.command == AdbProtocol.CMD_CLSE) {
+                                } else { // if (msg.command == AdbProtocol.CMD_CLSE)
                                     /* He doesn't like us anymore :-( */
                                     conn.openStreams.remove(msg.arg1);
 
@@ -301,6 +285,8 @@ public class AdbConnection implements Closeable {
                             }
                             break;
                         }
+                        case AdbProtocol.CMD_OPEN:
+                        case AdbProtocol.CMD_SYNC:
                         default:
                             Log.e(TAG, String.format("Unrecognized command = 0x%x", msg.command));
                             /* Unrecognized packet, just drop it */
@@ -397,8 +383,9 @@ public class AdbConnection implements Closeable {
     public AdbStream open(String destination) throws UnsupportedEncodingException, IOException, InterruptedException {
         int localId = ++lastLocalId;
 
-        if (!connectAttempted)
+        if (!connectAttempted) {
             throw new IllegalStateException("connect() must be called first");
+        }
 
         waitForConnection(Long.MAX_VALUE, TimeUnit.MILLISECONDS);
 
@@ -418,8 +405,9 @@ public class AdbConnection implements Closeable {
         }
 
         /* Check if the open was rejected */
-        if (stream.isClosed())
+        if (stream.isClosed()) {
             throw new ConnectException("Stream open actively rejected by remote peer");
+        }
 
         /* We're fully setup now */
         return stream;
@@ -471,18 +459,23 @@ public class AdbConnection implements Closeable {
      */
     @Override
     public void close() throws IOException {
-        /* If the connection thread hasn't spawned yet, there's nothing to do */
-        if (connectionThread == null)
-            return;
+        // If the connection thread hasn't spawned yet, there's nothing to do
+        if (connectionThread == null) return;
 
-        /* Closing the socket will kick the connection thread */
+        // Closing the socket will kick the connection thread
         socket.close();
 
-        /* Wait for the connection thread to die */
+        // Wait for the connection thread to die
         connectionThread.interrupt();
         try {
             connectionThread.join();
         } catch (InterruptedException ignored) {
+        }
+
+        // Destroy keypair
+        try {
+            keyPair.destroy();
+        } catch (DestroyFailedException ignore) {
         }
     }
 

@@ -1,19 +1,4 @@
-/*
- * Copyright (C) 2021 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.ipc;
 
@@ -22,13 +7,10 @@ import android.os.RemoteException;
 import android.util.Log;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import aosp.libcore.util.EmptyArray;
 import io.github.muntashirakon.AppManager.IRemoteFile;
-import io.github.muntashirakon.AppManager.IRemoteFileReader;
-import io.github.muntashirakon.AppManager.IRemoteFileWriter;
 
 import static io.github.muntashirakon.AppManager.ipc.RootService.TAG;
 
@@ -217,23 +199,5 @@ class RemoteFileImpl extends IRemoteFile.Stub {
     @Override
     public int compareTo(String pathname) {
         return file.compareTo(new File(pathname));
-    }
-
-    @Override
-    public IRemoteFileReader getFileReader() throws RemoteException {
-        try {
-            return new RemoteFileReaderImpl(file);
-        } catch (FileNotFoundException e) {
-            throw new RemoteException(e.getMessage());
-        }
-    }
-
-    @Override
-    public IRemoteFileWriter getFileWriter() throws RemoteException {
-        try {
-            return new RemoteFileWriterImpl(file);
-        } catch (FileNotFoundException e) {
-            throw new RemoteException(e.getMessage());
-        }
     }
 }

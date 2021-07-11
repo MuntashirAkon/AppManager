@@ -1,19 +1,4 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.usage;
 
@@ -47,8 +32,9 @@ import java.util.List;
 import java.util.Map;
 
 import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.servermanager.UsageStatsManagerCompat;
+import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.NonNullUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
@@ -57,18 +43,6 @@ import static android.net.NetworkCapabilities.TRANSPORT_CELLULAR;
 import static android.net.NetworkCapabilities.TRANSPORT_WIFI;
 
 public class AppUsageStatsManager {
-    private static final String SYS_USAGE_STATS_SERVICE = "usagestats";
-
-    private static final String USAGE_STATS_SERVICE_NAME;
-
-    static {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            USAGE_STATS_SERVICE_NAME = Context.USAGE_STATS_SERVICE;
-        } else {
-            USAGE_STATS_SERVICE_NAME = SYS_USAGE_STATS_SERVICE;
-        }
-    }
-
     @Retention(RetentionPolicy.SOURCE)
     @IntDef(value = {
             TRANSPORT_CELLULAR,
@@ -101,8 +75,6 @@ public class AppUsageStatsManager {
     }
 
     @NonNull
-    private final IUsageStatsManager mUsageStatsManager;
-    @NonNull
     private final Context context;
     private final PackageManager mPackageManager;
 
@@ -110,7 +82,6 @@ public class AppUsageStatsManager {
     private AppUsageStatsManager(@NonNull Context context) {
         this.context = context;
         this.mPackageManager = context.getPackageManager();
-        this.mUsageStatsManager = IUsageStatsManager.Stub.asInterface(ProxyBinder.getService(USAGE_STATS_SERVICE_NAME));
     }
 
     public PackageUsageInfo getUsageStatsForPackage(@NonNull String packageName, @UsageUtils.IntervalType int usageInterval)
@@ -118,7 +89,8 @@ public class AppUsageStatsManager {
         UsageUtils.TimeInterval range = UsageUtils.getTimeInterval(usageInterval);
         PackageUsageInfo packageUsageInfo = new PackageUsageInfo(packageName);
         packageUsageInfo.appLabel = PackageUtils.getPackageLabel(mPackageManager, packageName);
-        UsageEvents events = mUsageStatsManager.queryEvents(range.getStartTime(), range.getEndTime(), context.getPackageName());
+        UsageEvents events = UsageStatsManagerCompat.queryEvents(range.getStartTime(), range.getEndTime(),
+                Users.myUserId());
         if (events == null) return packageUsageInfo;
         UsageEvents.Event event = new UsageEvents.Event();
         List<PackageUsageInfo.Entry> usEntries = new ArrayList<>();
@@ -161,8 +133,8 @@ public class AppUsageStatsManager {
         Map<String, Integer> accessCount = new HashMap<>();
         // Get events
         UsageUtils.TimeInterval interval = UsageUtils.getTimeInterval(usageInterval);
-        UsageEvents events = mUsageStatsManager.queryEvents(interval.getStartTime(), interval.getEndTime(),
-                context.getPackageName());
+        UsageEvents events = UsageStatsManagerCompat.queryEvents(interval.getStartTime(), interval.getEndTime(),
+                Users.myUserId());
         if (events == null) return Collections.emptyList();
         UsageEvents.Event event = new UsageEvents.Event();
         long startTime;
@@ -238,7 +210,7 @@ public class AppUsageStatsManager {
     }
 
     public static long getLastActivityTime(String packageName, @NonNull UsageUtils.TimeInterval interval) {
-        IUsageStatsManager usm = IUsageStatsManager.Stub.asInterface(ProxyBinder.getService(USAGE_STATS_SERVICE_NAME));
+        IUsageStatsManager usm = UsageStatsManagerCompat.getUsageStatsManager();
         try {
             UsageEvents events = usm.queryEvents(interval.getStartTime(), interval.getEndTime(), AppManager.getContext()
                     .getPackageName());
@@ -314,10 +286,10 @@ public class AppUsageStatsManager {
         NetworkStats.Bucket bucket = new NetworkStats.Bucket();
         long totalTx = 0;
         long totalRx = 0;
-        try {
-            for (int networkId = 0; networkId < 2; ++networkId) {
-                subscriberIds = getSubscriberIds(context, networkId);
-                for (String subscriberId : subscriberIds) {
+        for (int networkId = 0; networkId < 2; ++networkId) {
+            subscriberIds = getSubscriberIds(context, networkId);
+            for (String subscriberId : subscriberIds) {
+                try {
                     NetworkStats networkStats = nsm.querySummary(networkId, subscriberId,
                             range.getStartTime(), range.getEndTime());
                     if (networkStats == null) continue;
@@ -328,9 +300,9 @@ public class AppUsageStatsManager {
                             totalRx += bucket.getRxBytes();
                         }
                     }
+                } catch (RemoteException | IllegalStateException ignore) {
                 }
             }
-        } catch (RemoteException ignore) {
         }
         return new DataUsage(totalTx, totalRx);
     }
@@ -356,6 +328,10 @@ public class AppUsageStatsManager {
             TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
 
             List<SubscriptionInfo> subscriptionInfoList = sm.getActiveSubscriptionInfoList();
+            if (subscriptionInfoList == null) {
+                // No telephony services
+                return Collections.singletonList(null);
+            }
             List<String> subscriberIds = new ArrayList<>();
             for (SubscriptionInfo info : subscriptionInfoList) {
                 int subscriptionId = info.getSubscriptionId();

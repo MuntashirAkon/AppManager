@@ -1,19 +1,4 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.scanner;
 
@@ -21,24 +6,38 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.*;
-import android.widget.*;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.UiThread;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
+
 import com.android.internal.util.TextUtils;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
-import io.github.muntashirakon.AppManager.BaseActivity;
-import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.scanner.reflector.Reflector;
-import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import io.github.muntashirakon.AppManager.BaseActivity;
+import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.scanner.reflector.Reflector;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
+
+// Copyright 2015 Google, Inc.
 public class ClassListingActivity extends BaseActivity implements SearchView.OnQueryTextListener {
     public static final String EXTRA_APP_NAME = "EXTRA_APP_NAME";
 
@@ -78,7 +77,7 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
         if (mActionBar != null) {
             mActionBar.setTitle(mAppName);
             mActionBar.setDisplayShowCustomEnabled(true);
-            UIUtils.setupSearchView(this, mActionBar, this);
+            UIUtils.setupSearchView(mActionBar, this);
         }
 
         trackerClassesOnly = false;
@@ -129,6 +128,7 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
         }
     }
 
+    @UiThread
     private void setAdapterList() {
         if (!trackerClassesOnly) {
             mClassListingAdapter.setDefaultList(trackerClassList);
@@ -185,7 +185,8 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
         private Filter mFilter;
         private String mConstraint;
         private List<String> mDefaultList;
-        private List<String> mAdapterList;
+        @NonNull
+        private final List<String> mAdapterList = new ArrayList<>();
 
         private final int mColorTransparent;
         private final int mColorSemiTransparent;
@@ -199,9 +200,11 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
             mColorRed = ContextCompat.getColor(activity, R.color.red);
         }
 
-        void setDefaultList(List<String> list) {
+        @UiThread
+        void setDefaultList(@NonNull List<String> list) {
+            mAdapterList.clear();
+            mAdapterList.addAll(list);
             mDefaultList = list;
-            mAdapterList = list;
             if (!TextUtils.isEmpty(mConstraint)) {
                 getFilter().filter(mConstraint);
             }
@@ -210,7 +213,7 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
 
         @Override
         public int getCount() {
-            return mAdapterList == null ? 0 : mAdapterList.size();
+            return mAdapterList.size();
         }
 
         @Override
@@ -268,11 +271,12 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
 
                     @Override
                     protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                        mAdapterList.clear();
                         if (filterResults.values == null) {
-                            mAdapterList = mDefaultList;
+                            mAdapterList.addAll(mDefaultList);
                         } else {
                             //noinspection unchecked
-                            mAdapterList = (List<String>) filterResults.values;
+                            mAdapterList.addAll((List<String>) filterResults.values);
                         }
                         notifyDataSetChanged();
                     }

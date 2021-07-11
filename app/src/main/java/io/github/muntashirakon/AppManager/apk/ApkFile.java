@@ -1,19 +1,4 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.apk;
 
@@ -62,7 +47,6 @@ import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.apk.signing.SigSchemes;
 import io.github.muntashirakon.AppManager.apk.signing.Signer;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
@@ -89,7 +73,7 @@ public final class ApkFile implements AutoCloseable {
     private static final String ATTR_SPLIT = "split";
     private static final String ATTR_PACKAGE = "package";
     private static final String CONFIG_PREFIX = "config.";
-    private static final String OBB_DIR = "Android/obb";
+    public static final String OBB_DIR = "Android/obb";
 
     private static final String UN_APKM_PKG = "io.github.muntashirakon.unapkm";
 
@@ -430,43 +414,14 @@ public final class ApkFile implements AutoCloseable {
     }
 
     @WorkerThread
-    public boolean extractObb() {
-        if (!hasObb() || zipFile == null) return true;
-        try {
-            ProxyFile[] extDirs = OsEnvironment.buildExternalStoragePublicDirs();
-            ProxyFile writableExtDir = null;
-            for (ProxyFile extDir : extDirs) {
-                if (!extDir.exists()) {
-                    continue;
-                }
-                writableExtDir = extDir;
-                break;
+    public void extractObb(ProxyFile writableObbDir) throws IOException, RemoteException {
+        if (!hasObb() || zipFile == null) return;
+        for (ZipEntry obbEntry : obbFiles) {
+            String fileName = IOUtils.getFileNameFromZipEntry(obbEntry);
+            // Extract obb file to the destination directory
+            try (InputStream zipInputStream = zipFile.getInputStream(obbEntry)) {
+                IOUtils.saveZipFile(zipInputStream, writableObbDir, fileName);
             }
-            if (writableExtDir == null) throw new IOException("Couldn't find any writable Obb dir");
-            final ProxyFile writableObbDir = new ProxyFile(writableExtDir.getAbsolutePath() + "/" + OBB_DIR + "/" + packageName);
-            if (writableObbDir.exists()) {
-                ProxyFile[] oldObbFiles = writableObbDir.listFiles();
-                // Delete old files
-                if (oldObbFiles != null) {
-                    for (ProxyFile oldFile : oldObbFiles) {
-                        //noinspection ResultOfMethodCallIgnored
-                        oldFile.delete();
-                    }
-                }
-            } else {
-                if (!writableObbDir.mkdirs()) return false;
-            }
-            for (ZipEntry obbEntry : obbFiles) {
-                String fileName = IOUtils.getFileNameFromZipEntry(obbEntry);
-                // Extract obb file to the destination directory
-                try (InputStream zipInputStream = zipFile.getInputStream(obbEntry)) {
-                    IOUtils.saveZipFile(zipInputStream, writableObbDir, fileName);
-                }
-            }
-            return true;
-        } catch (IOException | RemoteException e) {
-            e.printStackTrace();
-            return false;
         }
     }
 

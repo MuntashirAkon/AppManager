@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
     <string name="_lang_tag" translatable="false">nb-NO</string>
     <string name="choose_language">Endre språk</string>
     <string name="auto">Automatisk</string>
@@ -15,7 +15,6 @@
     <string name="filter_apps_with_activities">Med aktiviteter</string>
     <string name="are_you_sure">Er du sikker\?</string>
     <string name="pref_remove_all_rules">Fjern alle regler</string>
-    <string name="website_message">https://muntashirakon.github.io/AppManager</string>
     <string name="website">Nettside</string>
     <string name="run_in_termux">Kjør i Termux</string>
     <string name="open_in_termux">Åpne i Termux</string>
@@ -102,8 +101,6 @@
     <string name="shared_user_id">Delt bruker-ID</string>
     <string name="sort_by_shared_user_id">Delt bruker-ID</string>
     <string name="no_feature">Ingen funksjoner</string>
-    <string name="gles_ver">Påkrevd OpenGL ES-versjon</string>
-    <string name="protection_level">Beskyttelsesnivå</string>
     <string name="group">Gruppe</string>
     <string name="shared_libs">Delte bibliotek</string>
     <string name="declared_permission">Tilganger</string>
@@ -197,7 +194,6 @@
     <string name="restore">Gjenopprett</string>
     <string name="block_components_dots">Blokker komponenter …</string>
     <string name="clear_cache">Tøm hurtiglager</string>
-    <string name="community">Telegram-gemenskap</string>
     <string name="source_code">Kildekode</string>
     <string name="changelog">Endringslogg</string>
     <string name="never_ask">Aldri spør</string>
@@ -325,9 +321,6 @@
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> installert</string>
     <string name="termux">Termux</string>
     <string name="pref_import_existing">Importer eksisterende regler</string>
-    <string name="community_links">Oppdateringskanal: https://t.me/AppManagerChannel
-\nBrukerstøttegruppe: https://t.me/AppManagerAndroid
-\nTwitter: https://twitter.com/AMUpdateChannel</string>
     <string name="update">Oppdater</string>
     <string name="install">Installer</string>
     <plurals name="no_of_trackers">
@@ -552,8 +545,6 @@
     <string name="cpu">Prosessor</string>
     <string name="users">Brukere</string>
     <string name="languages">Språk</string>
-    <string name="unavailable">Utilgjengelig</string>
-    <string name="available">Tilgjengelig</string>
     <string name="battery_capacity">Kapasitet</string>
     <string name="memory">Minne</string>
     <string name="no_of_cores">Kjerner</string>
@@ -628,19 +619,15 @@
     <string name="pref_export_msg">Eksporter blokkerings-regler innstilt innen App-manager til ekstern lagring.</string>
     <string name="reject_time">Avvis tid</string>
     <string name="accept_time">Godkjenn tid</string>
-    <string name="app_op_cannot_be_disabled">Denne app-operasjon kan ikke skurs av, en skrivebeskyttet app-op kan være avhengig av en annen app-op.</string>
+    <string name="app_op_cannot_be_disabled">Denne app-operasjonen kan ikke skrus av. (Antagelig avhenger én skrivebeskyttet app-op av en annen.)</string>
     <string name="toggle_kill_for_system_apps">Aktiver eller deaktiver tvungen avslutning av system-apper</string>
     <plurals name="alert_failed_to_disable_background">
-        <item quantity="one">Kunne ikke hindre ett program fra å kjøre i bakgrunnen</item>
+        <item quantity="one">Kufnne ikke hindre ett program fra å kjøre i bakgrunnen</item>
         <item quantity="other">Kunne ikke hindre %1$d programmer fra å kjøre i bakgrunnen</item>
     </plurals>
-    <string name="failed_to_uninstall_updates">Kunne ikke avinstallere oppgraderinger for <xliff:g id="app_name" example="App Manager"/>.</string>
+    <string name="failed_to_uninstall_updates">Kunne ikke avinstallere oppgraderinger for <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="abi_split_for_base_apk"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> kode for grunn-APK</string>
-    <string name="unknown_split_for_base_apk"><xliff:g id="split_name" example="some_split"/> for grunn-APK</string>
-    <plurals name="items_selected">
-        <item quantity="one"><xliff:g id="selection_no" example="20"/> valgt</item>
-        <item quantity="other"><xliff:g id="selection_no" example="20"/> valgt</item>
-    </plurals>
+    <string name="unknown_split_for_base_apk"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> for grunn-APK</string>
     <string name="pref_enable_disable_features_msg">Skru på eller av funksjoner i App Manager.</string>
     <string name="enable_disable_features">Skru på/av funksjoner</string>
     <string name="ssaid">SSAID</string>
@@ -815,7 +802,6 @@
     <string name="running_services">Kjørende tjenester</string>
     <string name="view_logs">Vis loggføring</string>
     <string name="share_log">Del</string>
-    <string name="title_filters">Filter</string>
     <string name="text_include_device_info">Inkluder enhetsinfo</string>
     <string name="text_filter_text">Filtertekst</string>
     <string name="text_filter_ellipsis">Filtrer …</string>
@@ -921,4 +907,26 @@
         <item quantity="one">Sikkerhetskopi finnes allerede. Er du sikker\?</item>
         <item quantity="other">Mer enn ett program har en sikkerhetskopi allerede. Er du sikker\?</item>
     </plurals>
+    <string name="no_changes">Ingen endringer</string>
+    <string name="pref_log_line_period_error">Skriv inn et heltall mellom 1 og 1000.</string>
+    <string name="pref_expanded_by_default_summary">Vis full loggtekst som forvalg.</string>
+    <string name="community">Gemenskap</string>
+    <string name="installer_error_session_commit">Kunne ikke sende inn APK-filene</string>
+    <string name="community_links">Telegram: https://t.me/AppManagerChannel
+\nTwitter: https://twitter.com/AppManagerNews</string>
+    <string name="pref_display_changes">Vis endringer</string>
+    <plurals name="alert_failed_to_import_backups">
+        <item quantity="one">Kunne ikke importere %1$d sikkerhetskopi</item>
+        <item quantity="other">Kunne ikke importere %1$d sikkerhetskopier</item>
+    </plurals>
+    <string name="pref_log_write_period_title">Skriveperiode</string>
+    <string name="pref_selected_users">Valgte brukere</string>
+    <string name="added_to_queue">Lagt til i kø</string>
+    <string name="saved_filters">Lagrede filter</string>
+    <string name="permission_flags">Tilgangsflagg</string>
+    <string name="pref_default_log_level_title">Forvalgt loggføringsnivå</string>
+    <string name="import_from_tb">Importer fra Titanium Backup</string>
+    <string name="import_from_oab">Importer fra OAndBackup</string>
+    <string name="pref_import_backups">Importer sikkerhetskopier</string>
+    <string name="expiry_date_cannot_be_empty">Utløpsdato kan ikke stå tom.</string>
 </resources>

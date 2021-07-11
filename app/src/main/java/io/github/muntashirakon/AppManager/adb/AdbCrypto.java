@@ -1,21 +1,4 @@
-/*
- * Copyright (c) 2021 Muntashir Al-Islam
- * Copyright (c) 2016 Anton Tananaev
- * Copyright (c) 2013 Cameron Gutman
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: BSD-3-Clause AND GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.adb;
 
@@ -34,6 +17,7 @@ import javax.crypto.Cipher;
 
 import io.github.muntashirakon.AppManager.crypto.ks.KeyPair;
 
+// Copyright 2013 Cameron Gutman
 class AdbCrypto {
     /**
      * The ADB RSA key length in bits
@@ -78,13 +62,13 @@ class AdbCrypto {
     /**
      * The RSA signature padding as a byte array
      */
-    public static byte[] SIGNATURE_PADDING;
+    public static byte[] RSA_SHA_PKCS1_SIGNATURE_PADDING;
 
     static {
-        SIGNATURE_PADDING = new byte[SIGNATURE_PADDING_AS_INT.length];
+        RSA_SHA_PKCS1_SIGNATURE_PADDING = new byte[SIGNATURE_PADDING_AS_INT.length];
 
-        for (int i = 0; i < SIGNATURE_PADDING.length; i++)
-            SIGNATURE_PADDING[i] = (byte) SIGNATURE_PADDING_AS_INT[i];
+        for (int i = 0; i < RSA_SHA_PKCS1_SIGNATURE_PADDING.length; i++)
+            RSA_SHA_PKCS1_SIGNATURE_PADDING[i] = (byte) SIGNATURE_PADDING_AS_INT[i];
     }
 
     /**
@@ -147,6 +131,7 @@ class AdbCrypto {
 
         /* The key is base64 encoded with a user@host suffix and terminated with a NUL */
         byte[] nameBytes = (' ' + name + '\u0000').getBytes(StandardCharsets.UTF_8);
+
         byte[] payload = new byte[convertedKey.length + nameBytes.length];
         System.arraycopy(convertedKey, 0, payload, 0, convertedKey.length);
         System.arraycopy(nameBytes, 0, payload, convertedKey.length, nameBytes.length);
@@ -163,7 +148,7 @@ class AdbCrypto {
     public static byte[] signAdbTokenPayload(@NonNull KeyPair keyPair, byte[] payload) throws GeneralSecurityException {
         Cipher c = Cipher.getInstance("RSA/ECB/NoPadding");
         c.init(Cipher.ENCRYPT_MODE, keyPair.getPrivateKey());
-        c.update(SIGNATURE_PADDING);
+        c.update(RSA_SHA_PKCS1_SIGNATURE_PADDING);
         return c.doFinal(payload);
     }
 

@@ -1,0 +1,12 @@
+{
+    "label": "Location Share",
+    "versionName": "1.4.1",
+    "versionCode": 8,
+    "packageName": "ca.cmetcalfe.locationshare",
+    "sourceDir": "\/data\/app\/ca.cmetcalfe.locationshare-VJ9qJEV-rAxJAdWynUa3VQ==\/base.apk",
+    "dataDir": "\/data\/user\/0\/ca.cmetcalfe.locationshare",
+    "lastBackupMillis": 1622312833717,
+    "isEncrypted": false,
+    "isSystem": false,
+    "backupMode": 2
+}

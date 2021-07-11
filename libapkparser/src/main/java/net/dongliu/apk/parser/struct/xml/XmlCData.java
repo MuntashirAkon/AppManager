@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.struct.xml;
 
 import net.dongliu.apk.parser.struct.ResourceValue;
@@ -5,9 +7,7 @@ import net.dongliu.apk.parser.struct.resource.ResourceTable;
 
 import java.util.Locale;
 
-/**
- * @author dongliu
- */
+// Copyright 2014 Liu Dong
 public class XmlCData {
 
     public static final String CDATA_START = "<![CDATA[";

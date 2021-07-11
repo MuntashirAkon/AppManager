@@ -1,27 +1,15 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.utils;
 
 import android.annotation.SuppressLint;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
+import android.net.Uri;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
@@ -29,6 +17,16 @@ import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
+
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.signing.SigSchemes;
@@ -39,14 +37,7 @@ import io.github.muntashirakon.AppManager.logcat.helper.LogcatHelper;
 import io.github.muntashirakon.AppManager.main.ListOptions;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runningapps.RunningAppsActivity;
-import io.github.muntashirakon.io.ProxyFile;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
+import io.github.muntashirakon.io.Path;
 
 public class AppPref {
     private static final String PREF_NAME = "preferences";
@@ -110,6 +101,7 @@ public class AppPref {
         PREF_RUNNING_APPS_FILTER_FLAGS_INT,
         PREF_RUNNING_APPS_SORT_ORDER_INT,
 
+        PREF_SELECTED_USERS_STR,
         PREF_SIGNATURE_SCHEMES_INT,
         PREF_SHOW_DISCLAIMER_BOOL,
         ;
@@ -241,8 +233,53 @@ public class AppPref {
     }
 
     @NonNull
-    public static ProxyFile getAppManagerDirectory() {
-        return new ProxyFile((String) get(AppPref.PrefKey.PREF_BACKUP_VOLUME_STR), "AppManager");
+    public static Path getAppManagerDirectory() throws FileNotFoundException {
+        Context ctx = getInstance().context;
+        Uri uri = getSelectedDirectory();
+        Path path;
+        if (uri.getScheme().equals(ContentResolver.SCHEME_FILE)) {
+            // Append AppManager
+            String newPath = uri.getPath() + File.separator + "AppManager";
+            path = new Path(ctx, new Uri.Builder().scheme(ContentResolver.SCHEME_FILE).path(newPath).build());
+        } else path = new Path(ctx, uri);
+        if (!path.exists()) path.mkdirs();
+        return path;
+    }
+
+    public static Uri getSelectedDirectory() {
+        String uriOrBareFile = getString(PrefKey.PREF_BACKUP_VOLUME_STR);
+        if (uriOrBareFile.startsWith("/")) {
+            // A good URI starts with file:// or content://, if not, migrate
+            Uri uri = new Uri.Builder().scheme(ContentResolver.SCHEME_FILE).path(uriOrBareFile).build();
+            set(PrefKey.PREF_BACKUP_VOLUME_STR, uri.toString());
+            return uri;
+        }
+        return Uri.parse(uriOrBareFile);
+    }
+
+    @Nullable
+    public static int[] getSelectedUsers() {
+        if (!isRootOrAdbEnabled()) return null;
+        String usersStr = getString(PrefKey.PREF_SELECTED_USERS_STR);
+        if ("".equals(usersStr)) return null;
+        String[] usersSplitStr = usersStr.split(",");
+        int[] users = new int[usersSplitStr.length];
+        for (int i = 0; i < users.length; ++i) {
+            users[i] = Integer.decode(usersSplitStr[i]);
+        }
+        return users;
+    }
+
+    public static void setSelectedUsers(@Nullable int[] users) {
+        if (users == null || !isRootOrAdbEnabled()) {
+            set(PrefKey.PREF_SELECTED_USERS_STR, "");
+            return;
+        }
+        String[] userString = new String[users.length];
+        for (int i = 0; i < users.length; ++i) {
+            userString[i] = String.valueOf(users[i]);
+        }
+        set(PrefKey.PREF_SELECTED_USERS_STR, TextUtils.join(",", userString));
     }
 
     public static String getLanguage(Context context) {
@@ -396,6 +433,7 @@ public class AppPref {
             case PREF_OPEN_PGP_PACKAGE_STR:
             case PREF_OPEN_PGP_USER_ID_STR:
             case PREF_MAIN_WINDOW_FILTER_PROFILE_STR:
+            case PREF_SELECTED_USERS_STR:
                 return "";
             case PREF_MODE_OF_OPS_STR:
                 return Runner.MODE_AUTO;
@@ -406,7 +444,7 @@ public class AppPref {
             case PREF_SIGNATURE_SCHEMES_INT:
                 return SigSchemes.SIG_SCHEME_V1 | SigSchemes.SIG_SCHEME_V2;
             case PREF_BACKUP_VOLUME_STR:
-                return Environment.getExternalStorageDirectory().getAbsolutePath();
+                return Uri.fromFile(Environment.getExternalStorageDirectory()).toString();
             case PREF_LOG_VIEWER_FILTER_PATTERN_STR:
                 return context.getString(R.string.pref_filter_pattern_default);
             case PREF_LOG_VIEWER_DISPLAY_LIMIT_INT:

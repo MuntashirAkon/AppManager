@@ -1,20 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (C) 2020 Muntashir Al-Islam
-  ~
-  ~ This program is free software: you can redistribute it and/or modify
-  ~ it under the terms of the GNU General Public License as published by
-  ~ the Free Software Foundation, either version 3 of the License, or
-  ~ (at your option) any later version.
-  ~
-  ~ This program is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~ GNU General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU General Public License
-  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="_lang_tag" translatable="false">bn-BD</string>
     <string name="uninstall">আনইনস্টল</string>
     <string name="require_no_permission">কোন অনুমতির প্রয়োজন নেই</string>
@@ -28,7 +13,6 @@
     <string name="patterns_allowed">অনুমোদিত প্যাটার্নস</string>
     <string name="declared_permission">অনুমতি</string>
     <string name="group">গ্রুপ</string>
-    <string name="protection_level">সুরক্ষা স্তর</string>
     <string name="no_feature">কোনো ফিচার্স নেই</string>
     <string name="error">Error</string>
     <string name="loading">লোড হচ্ছে…</string>
@@ -232,10 +216,6 @@
     <string name="install">ইনস্টল করুন</string>
     <string name="update">হালনাগাদ</string>
     <string name="source_code">সোর্স কোড</string>
-    <string name="community">টেলিগ্রাম কমিউনিটি</string>
-    <string name="community_links">আপডেট চ্যানেল: https://t.me/AppManagerChannel
-\nগ্রুপ: https://t.me/AppManagerAndroid
-\nটুইটার: https://twitter.com/AMUpdateChannel</string>
     <string name="clear_cache">ক্যাশে মুছুন</string>
     <string name="block_unblock_trackers_description">সকল ইনস্টলড থাকা অ্যাপ গুলো থেকে বিজ্ঞাপন এবং ট্র্যাকিং উপাদানগুলিকে ব্লক/আনব্লক করুন</string>
     <string name="clear_data_from_uninstalled_apps">আনইনস্টলড অ্যাপগুলো থেকে ডাটা মুছুন</string>
@@ -351,7 +331,6 @@
     <string name="import_failed">ইম্পোর্ট করতে ব্যর্থ!</string>
     <string name="shared_libs">শেয়ার্ড libs</string>
     <string name="configurations">কনফিগারেশন</string>
-    <string name="gles_ver">Req. GL ES সংস্করণ</string>
     <string name="read">রিড</string>
     <string name="task_affinity">টাস্ক অ্যাফিনিটি</string>
     <string name="launch_mode">লঞ্চ মোড</string>
@@ -382,7 +361,6 @@
     <string name="failed_to_extract_obb_files">Obb ফাইলগুলি এক্সট্র্যাক্ট করতে ব্যর্থ</string>
     <string name="backup_obb_media">Backup Obb</string>
     <string name="backup_apk_files">শুধু এপিকে</string>
-    <string name="website_message">https://muntashirakon.github.io/AppManager</string>
     <string name="no_matching_package_found">কোনো প্যাকেজের সাথে মিল পাওয়া যায়নি</string>
     <string name="skip_signature_checks">স্বাক্ষর চেকগুলি এড়িয়ে যান</string>
     <string name="backup_options">Backup Options</string>

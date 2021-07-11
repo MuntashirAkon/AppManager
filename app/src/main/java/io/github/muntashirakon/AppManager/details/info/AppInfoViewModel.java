@@ -1,19 +1,4 @@
-/*
- * Copyright (c) 2021 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.details.info;
 
@@ -45,8 +30,9 @@ import java.util.concurrent.Executors;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.details.AppDetailsViewModel;
-import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
+import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
+import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.servermanager.ApplicationInfoCompat;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
@@ -58,13 +44,13 @@ import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.usage.UsageUtils;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.MagiskUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.SsaidSettings;
-import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.io.ProxyFile;
 
 public class AppInfoViewModel extends AndroidViewModel {
@@ -116,10 +102,11 @@ public class AppInfoViewModel extends AndroidViewModel {
         String packageName = packageInfo.packageName;
         ApplicationInfo applicationInfo = packageInfo.applicationInfo;
         TagCloud tagCloud = new TagCloud();
-        HashMap<String, RulesStorageManager.Type> trackerComponents = ComponentUtils.getTrackerComponentsForPackageInfo(packageInfo);
+        HashMap<String, RuleType> trackerComponents = ComponentUtils.getTrackerComponentsForPackageInfo(packageInfo);
         tagCloud.trackerComponents = new ArrayList<>(trackerComponents.size());
         for (String component : trackerComponents.keySet()) {
-            tagCloud.trackerComponents.add(new RulesStorageManager.Entry(component, trackerComponents.get(component), RulesStorageManager.COMPONENT_TO_BE_BLOCKED));
+            tagCloud.trackerComponents.add(new ComponentRule(packageName, component, trackerComponents.get(component),
+                    ComponentRule.COMPONENT_TO_BE_BLOCKED));
         }
         tagCloud.isSystemApp = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
         tagCloud.isSystemlessPath = !mainModel.getIsExternalApk() && AppPref.isRootEnabled()
@@ -142,12 +129,16 @@ public class AppInfoViewModel extends AndroidViewModel {
         tagCloud.isMagiskHideEnabled = !mainModel.getIsExternalApk() && AppPref.isRootEnabled() && MagiskUtils.isHidden(packageName);
         tagCloud.hasKeyStoreItems = KeyStoreUtils.hasKeyStore(applicationInfo.uid);
         tagCloud.hasMasterKeyInKeyStore = KeyStoreUtils.hasMasterKey(applicationInfo.uid);
-        MetadataManager.Metadata[] metadata = MetadataManager.getMetadata(packageName);
-        CharSequence[] readableBackupNames = new CharSequence[metadata.length];
-        for (int i = 0; i < metadata.length; ++i) {
-            readableBackupNames[i] = metadata[i].toLocalizedString(getApplication());
+        try {
+            MetadataManager.Metadata[] metadata = MetadataManager.getMetadata(packageName);
+            CharSequence[] readableBackupNames = new CharSequence[metadata.length];
+            for (int i = 0; i < metadata.length; ++i) {
+                readableBackupNames[i] = metadata[i].toLocalizedString(getApplication());
+            }
+            tagCloud.readableBackupNames = readableBackupNames;
+        } catch (IOException e) {
+            tagCloud.readableBackupNames = ArrayUtils.emptyArray(CharSequence.class);
         }
-        tagCloud.readableBackupNames = readableBackupNames;
         if (!mainModel.getIsExternalApk() && PermissionUtils.hasDumpPermission()) {
             String targetString = "user," + packageName + "," + applicationInfo.uid;
             Runner.Result result = Runner.runCommand(new String[]{"dumpsys", "deviceidle", "whitelist"});
@@ -190,7 +181,7 @@ public class AppInfoViewModel extends AndroidViewModel {
         PackageInfo packageInfo = mainModel.getPackageInfo();
         String packageName = packageInfo.packageName;
         ApplicationInfo applicationInfo = packageInfo.applicationInfo;
-        int userHandle = Users.getUserHandle(applicationInfo.uid);
+        int userHandle = Users.getUserId(applicationInfo.uid);
         PackageManager pm = getApplication().getPackageManager();
         boolean isExternalApk = mainModel.getIsExternalApk();
         AppInfo appInfo = new AppInfo();
@@ -252,7 +243,7 @@ public class AppInfoViewModel extends AndroidViewModel {
                 e.printStackTrace();
             }
             // Set sizes
-            if (Utils.hasUsageStatsPermission(getApplication())) {
+            if (PermissionUtils.hasUsageStatsPermission(getApplication())) {
                 appInfo.sizeInfo = PackageUtils.getPackageSizeInfo(getApplication(), packageName, userHandle,
                         Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? applicationInfo.storageUuid : null);
             }
@@ -308,7 +299,7 @@ public class AppInfoViewModel extends AndroidViewModel {
     }
 
     public static class TagCloud {
-        public List<RulesStorageManager.Entry> trackerComponents;
+        public List<ComponentRule> trackerComponents;
         public boolean isSystemApp;
         public boolean isSystemlessPath;
         public boolean isUpdatedSystemApp;

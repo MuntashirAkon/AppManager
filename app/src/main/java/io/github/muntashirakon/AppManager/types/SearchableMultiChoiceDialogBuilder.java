@@ -1,19 +1,4 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.types;
 
@@ -25,18 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckedTextView;
-import android.widget.CompoundButton;
-
-import com.google.android.material.checkbox.MaterialCheckBox;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.textfield.TextInputEditText;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import androidx.annotation.ArrayRes;
 import androidx.annotation.NonNull;
@@ -47,8 +20,20 @@ import androidx.collection.ArraySet;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.textfield.TextInputEditText;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
+import io.github.muntashirakon.widget.CheckBox;
 import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
 public class SearchableMultiChoiceDialogBuilder<T> {
@@ -57,10 +42,9 @@ public class SearchableMultiChoiceDialogBuilder<T> {
     @NonNull
     private final MaterialAlertDialogBuilder builder;
     private final View searchBar;
-    private final MaterialCheckBox selectAll;
+    private final CheckBox selectAll;
     @NonNull
     private final SearchableRecyclerViewAdapter adapter;
-    private final CompoundButton.OnCheckedChangeListener selectAllListener;
 
     public interface OnClickListener<T> {
         void onClick(DialogInterface dialog, int which, @NonNull ArrayList<T> selectedItems);
@@ -104,18 +88,18 @@ public class SearchableMultiChoiceDialogBuilder<T> {
         builder = new MaterialAlertDialogBuilder(activity).setView(view);
         adapter = new SearchableRecyclerViewAdapter(itemNames, items);
         recyclerView.setAdapter(adapter);
-        selectAllListener = (buttonView, isChecked) -> {
+        selectAll.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 adapter.selectAll();
             } else {
                 adapter.deselectAll();
             }
-        };
-        selectAll.setOnCheckedChangeListener(selectAllListener);
+        });
         if (items.size() < 2) {
             // No need to display select all if only one item is present
             selectAll.setVisibility(View.GONE);
         }
+        checkSelections();
     }
 
     public SearchableMultiChoiceDialogBuilder<T> setSelections(@Nullable List<T> selectedItems) {
@@ -195,9 +179,7 @@ public class SearchableMultiChoiceDialogBuilder<T> {
     }
 
     private void checkSelections() {
-        selectAll.setOnCheckedChangeListener(null);
-        selectAll.setChecked(adapter.selectedItems.size() == adapter.items.size());
-        selectAll.setOnCheckedChangeListener(selectAllListener);
+        selectAll.setChecked(adapter.areAllSelected(), false);
     }
 
     class SearchableRecyclerViewAdapter extends RecyclerView.Adapter<SearchableRecyclerViewAdapter.ViewHolder> {
@@ -234,14 +216,17 @@ public class SearchableMultiChoiceDialogBuilder<T> {
                         filteredItems.add(i);
                     }
                 }
+                checkSelections();
+                notifyDataSetChanged();
             }
-            notifyDataSetChanged();
         }
 
         ArrayList<T> getSelectedItems() {
             ArrayList<T> selections = new ArrayList<>(notFoundItems);
-            for (int item : selectedItems) {
-                selections.add(items.get(item));
+            synchronized (selectedItems) {
+                for (int item : selectedItems) {
+                    selections.add(items.get(item));
+                }
             }
             return selections;
         }
@@ -251,24 +236,41 @@ public class SearchableMultiChoiceDialogBuilder<T> {
                 for (T item : selectedItems) {
                     int index = items.indexOf(item);
                     if (index != -1) {
-                        this.selectedItems.add(index);
+                        synchronized (this.selectedItems) {
+                            this.selectedItems.add(index);
+                        }
                     } else notFoundItems.add(item);
                 }
             }
         }
 
         void selectAll() {
-            for (int i = 0; i < items.size(); ++i) {
-                selectedItems.add(i);
+            synchronized (selectedItems) {
+                synchronized (filteredItems) {
+                    selectedItems.addAll(filteredItems);
+                    checkSelections();
+                    notifyDataSetChanged();
+                }
             }
-            checkSelections();
-            notifyDataSetChanged();
         }
 
         void deselectAll() {
-            selectedItems.clear();
-            checkSelections();
-            notifyDataSetChanged();
+            synchronized (selectedItems) {
+                synchronized (filteredItems) {
+                    //noinspection SlowAbstractSetRemoveAll
+                    selectedItems.removeAll(filteredItems);
+                    checkSelections();
+                    notifyDataSetChanged();
+                }
+            }
+        }
+
+        boolean areAllSelected() {
+            synchronized (selectedItems) {
+                synchronized (filteredItems) {
+                    return selectedItems.containsAll(filteredItems);
+                }
+            }
         }
 
         @NonNull
@@ -285,13 +287,18 @@ public class SearchableMultiChoiceDialogBuilder<T> {
             synchronized (filteredItems) {
                 index = filteredItems.get(position);
             }
-            final AtomicBoolean selected = new AtomicBoolean(selectedItems.contains(index));
+            final AtomicBoolean selected;
+            synchronized (selectedItems) {
+                selected = new AtomicBoolean(selectedItems.contains(index));
+            }
             holder.item.setText(itemNames.get(index));
             holder.item.setChecked(selected.get());
             holder.item.setOnClickListener(v -> {
-                if (selected.get()) {
-                    selectedItems.remove(index);
-                } else selectedItems.add(index);
+                synchronized (selectedItems) {
+                    if (selected.get()) {
+                        selectedItems.remove(index);
+                    } else selectedItems.add(index);
+                }
                 selected.set(!selected.get());
                 holder.item.setChecked(selected.get());
                 checkSelections();

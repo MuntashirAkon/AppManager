@@ -1,10 +1,10 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.struct.resource;
 
 import net.dongliu.apk.parser.struct.ResourceValue;
 
-/**
- * @author dongliu
- */
+// Copyright 2014 Liu Dong
 public class ResourceTableMap {
     // ...elided
     // ResTable_ref; unit32

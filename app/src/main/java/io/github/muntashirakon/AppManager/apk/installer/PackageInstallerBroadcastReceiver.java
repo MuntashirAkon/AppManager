@@ -1,19 +1,4 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.apk.installer;
 
@@ -26,6 +11,7 @@ import android.content.pm.PackageInstaller;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
+
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
@@ -61,7 +47,7 @@ class PackageInstallerBroadcastReceiver extends BroadcastReceiver {
             case PackageInstaller.STATUS_PENDING_USER_ACTION:
                 Log.d(TAG, "Requesting user confirmation...");
                 // Send broadcast first
-                Intent broadcastIntent2 = new Intent(AMPackageInstaller.ACTION_INSTALL_INTERACTION_BEGIN);
+                Intent broadcastIntent2 = new Intent(PackageInstallerCompat.ACTION_INSTALL_INTERACTION_BEGIN);
                 broadcastIntent2.putExtra(PackageInstaller.EXTRA_PACKAGE_NAME, packageName);
                 broadcastIntent2.putExtra(PackageInstaller.EXTRA_SESSION_ID, sessionId);
                 mContext.sendBroadcast(broadcastIntent2);
@@ -75,9 +61,9 @@ class PackageInstallerBroadcastReceiver extends BroadcastReceiver {
                 intent2.putExtra(PackageInstaller.EXTRA_SESSION_ID, sessionId);
                 intent2.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 // Delete intent: aborts the operation
-                Intent broadcastCancel = new Intent(AMPackageInstaller.ACTION_INSTALL_COMPLETED);
+                Intent broadcastCancel = new Intent(PackageInstallerCompat.ACTION_INSTALL_COMPLETED);
                 broadcastCancel.putExtra(PackageInstaller.EXTRA_PACKAGE_NAME, packageName);
-                broadcastCancel.putExtra(PackageInstaller.EXTRA_STATUS, AMPackageInstaller.STATUS_FAILURE_ABORTED);
+                broadcastCancel.putExtra(PackageInstaller.EXTRA_STATUS, PackageInstallerCompat.STATUS_FAILURE_ABORTED);
                 broadcastCancel.putExtra(PackageInstaller.EXTRA_SESSION_ID, sessionId);
                 // Ask user for permission
                 NotificationCompat.Builder builder = NotificationUtils.getHighPriorityNotificationBuilder(context)
@@ -95,10 +81,10 @@ class PackageInstallerBroadcastReceiver extends BroadcastReceiver {
                 break;
             case PackageInstaller.STATUS_SUCCESS:
                 Log.d(TAG, "Install success!");
-                AMPackageInstaller.sendCompletedBroadcast(packageName, AMPackageInstaller.STATUS_SUCCESS, sessionId);
+                PackageInstallerCompat.sendCompletedBroadcast(packageName, PackageInstallerCompat.STATUS_SUCCESS, sessionId);
                 break;
             default:
-                Intent broadcastError = new Intent(AMPackageInstaller.ACTION_INSTALL_COMPLETED);
+                Intent broadcastError = new Intent(PackageInstallerCompat.ACTION_INSTALL_COMPLETED);
                 broadcastError.putExtra(PackageInstaller.EXTRA_PACKAGE_NAME, packageName);
                 broadcastError.putExtra(PackageInstaller.EXTRA_OTHER_PACKAGE_NAME, intent.getStringExtra(PackageInstaller.EXTRA_OTHER_PACKAGE_NAME));
                 broadcastError.putExtra(PackageInstaller.EXTRA_STATUS, status);

@@ -1,23 +1,8 @@
-/*
- * Copyright (C) 2021 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.io;
 
-import android.os.RemoteException;
+import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 
 import java.io.File;
@@ -25,19 +10,19 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class ProxyFileReader  extends InputStreamReader {
+public class ProxyFileReader extends InputStreamReader {
     /**
      * Creates a new {@code ProxyFileReader}, given the name of the
      * file to read from.
      *
      * @param fileName the name of the file to read from
-     * @exception  FileNotFoundException  if the named file does not exist,
-     *                   is a directory rather than a regular file,
-     *                   or for some other reason cannot be opened for
-     *                   reading.
+     * @throws FileNotFoundException if the named file does not exist,
+     *                               is a directory rather than a regular file,
+     *                               or for some other reason cannot be opened for
+     *                               reading.
      */
     @WorkerThread
-    public ProxyFileReader(String fileName) throws IOException, RemoteException {
+    public ProxyFileReader(String fileName) throws IOException {
         super(new ProxyInputStream(new ProxyFile(fileName)));
     }
 
@@ -46,13 +31,28 @@ public class ProxyFileReader  extends InputStreamReader {
      * to read from.
      *
      * @param file the <tt>File</tt> to read from
-     * @exception  FileNotFoundException  if the file does not exist,
-     *                   is a directory rather than a regular file,
-     *                   or for some other reason cannot be opened for
-     *                   reading.
+     * @throws FileNotFoundException if the file does not exist,
+     *                               is a directory rather than a regular file,
+     *                               or for some other reason cannot be opened for
+     *                               reading.
      */
     @WorkerThread
-    public ProxyFileReader(File file) throws IOException, RemoteException {
+    public ProxyFileReader(File file) throws IOException {
         super(new ProxyInputStream(file));
+    }
+
+    /**
+     * Creates a new {@code ProxyFileReader}, given the <tt>File</tt>
+     * to read from.
+     *
+     * @param file the <tt>Path</tt> to read from
+     * @throws FileNotFoundException if the file does not exist,
+     *                               is a directory rather than a regular file,
+     *                               or for some other reason cannot be opened for
+     *                               reading.
+     */
+    @WorkerThread
+    public ProxyFileReader(@NonNull Path file) throws IOException {
+        super(file.openInputStream());
     }
 }

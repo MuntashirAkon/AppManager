@@ -1,31 +1,12 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.utils;
 
-import android.Manifest;
-import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ConfigurationInfo;
-import android.content.pm.FeatureInfo;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.content.pm.PermissionInfo;
 import android.content.pm.ServiceInfo;
 import android.content.pm.Signature;
@@ -44,6 +25,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.core.content.pm.PermissionInfoCompat;
+import androidx.fragment.app.FragmentActivity;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -83,26 +65,6 @@ import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 
 public class Utils {
     public static final String TERMUX_LOGIN_PATH = OsEnvironment.getDataDataDirectory() + "/com.termux/files/usr/bin/login";
-
-    @SuppressWarnings({"deprecation"})
-    public static boolean hasUsageStatsPermission(@NonNull Context context) {
-        AppOpsManager appOpsManager = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
-        assert appOpsManager != null;
-        final int mode;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            mode = appOpsManager.unsafeCheckOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS,
-                    android.os.Process.myUid(), context.getPackageName());
-        } else {
-            mode = appOpsManager.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS,
-                    android.os.Process.myUid(), context.getPackageName());
-        }
-        if (mode == AppOpsManager.MODE_DEFAULT
-                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return context.checkCallingOrSelfPermission(Manifest.permission.PACKAGE_USAGE_STATS)
-                    == PackageManager.PERMISSION_GRANTED;
-        }
-        return mode == AppOpsManager.MODE_ALLOWED;
-    }
 
     @NonNull
     public static String camelCaseToSpaceSeparatedString(@NonNull String str) {
@@ -435,11 +397,6 @@ public class Utils {
         return protectionLevel;
     }
 
-    @StringRes
-    public static int getFeatureFlags(int flags) {
-        return (flags == FeatureInfo.FLAG_REQUIRED) ? R.string.required : R.string._null;
-    }
-
     // FIXME Add translation support
     @NonNull
     public static String getInputFeaturesString(int flag) {
@@ -505,7 +462,6 @@ public class Utils {
 
     @NonNull
     public static String getGlEsVersion(int reqGlEsVersion) {
-        if (reqGlEsVersion == 0) return "1";
         int major = ((reqGlEsVersion & 0xffff0000) >> 16);
         int minor = reqGlEsVersion & 0x0000ffff;
         return major + "." + minor;
@@ -735,5 +691,12 @@ public class Utils {
             if (openFile.resolveActivityInfo(context.getPackageManager(), 0) != null)
                 context.startActivity(openFile);
         };
+    }
+
+    public static void relaunchApp(@NonNull FragmentActivity activity) {
+        Intent intent = activity.getPackageManager().getLaunchIntentForPackage(activity.getPackageName());
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        activity.startActivity(intent);
+        activity.finish();
     }
 }

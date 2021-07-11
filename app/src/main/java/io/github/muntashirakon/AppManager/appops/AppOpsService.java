@@ -1,19 +1,4 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.appops;
 
@@ -49,8 +34,10 @@ public class AppOpsService {
         Context context = AppManager.getContext();
         if (!PermissionUtils.hasAppOpsPermission(context) && AppPref.isRootOrAdbEnabled()) {
             try {
-                PermissionCompat.grantPermission(context.getPackageName(), PermissionUtils.PERMISSION_GET_APP_OPS_STATS,
-                        Users.getCurrentUserHandle());
+                PermissionCompat.grantPermission(
+                        context.getPackageName(),
+                        PermissionUtils.PERMISSION_GET_APP_OPS_STATS,
+                        Users.myUserId());
             } catch (RemoteException e) {
                 throw new RuntimeException("Couldn't connect to appOpsService locally", e);
             }
@@ -100,13 +87,12 @@ public class AppOpsService {
     }
 
     public void setMode(int op, int uid, String packageName, int mode) throws RemoteException {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (AppOpsManager.isMiuiOp(op) || Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            // Only package mode works in MIUI-only app ops and before Android M
+            appOpsService.setMode(op, uid, packageName, mode);
+        } else {
             // Set UID mode
             appOpsService.setUidMode(op, uid, mode);
-        }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
-            // Android 11 (R) doesn't support setting package mode
-            appOpsService.setMode(op, uid, packageName, mode);
         }
     }
 

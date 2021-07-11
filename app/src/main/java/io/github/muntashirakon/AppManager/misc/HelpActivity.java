@@ -1,19 +1,4 @@
-/*
- * Copyright (C) 2021 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.misc;
 
@@ -22,20 +7,29 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.appcompat.widget.SearchView;
+import androidx.transition.Transition;
+import androidx.transition.TransitionManager;
 import androidx.webkit.WebSettingsCompat;
 import androidx.webkit.WebViewClientCompat;
 import androidx.webkit.WebViewFeature;
+
+import com.google.android.material.transition.MaterialSharedAxis;
+
+import java.lang.reflect.Method;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BaseActivity;
@@ -43,7 +37,10 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 
 public class HelpActivity extends BaseActivity {
+    private LinearLayoutCompat container;
     private WebView webView;
+    private LinearLayoutCompat searchContainer;
+    private SearchView searchView;
     private static boolean firstTime = true;
 
     @Override
@@ -61,6 +58,7 @@ public class HelpActivity extends BaseActivity {
             finish();
             return;
         }
+        container = findViewById(R.id.container);
         // WebView has to be loaded dynamically to prevent in-app localization issue.
         webView = new WebView(AppManager.getContext());
         if (firstTime) {
@@ -78,14 +76,62 @@ public class HelpActivity extends BaseActivity {
         WebSettings webSettings = webView.getSettings();
         int nightModeFlags = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
         if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES) {
-            if(WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
+            if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
                 WebSettingsCompat.setForceDark(webSettings, WebSettingsCompat.FORCE_DARK_ON);
             }
-            if(WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK_STRATEGY)) {
+            if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK_STRATEGY)) {
                 WebSettingsCompat.setForceDarkStrategy(webSettings, WebSettingsCompat.DARK_STRATEGY_WEB_THEME_DARKENING_ONLY);
             }
         }
         webView.loadUrl("file:///android_res/raw/index.html");
+
+        searchContainer = findViewById(R.id.search_container);
+        Button nextButton = findViewById(R.id.next_button);
+        Button previousButton = findViewById(R.id.previous_button);
+        searchView = findViewById(R.id.search_bar);
+        searchView.findViewById(R.id.search_close_btn).setOnClickListener(v -> {
+            searchView.setQuery(null, false);
+            Transition sharedAxis = new MaterialSharedAxis(MaterialSharedAxis.Y, true);
+            TransitionManager.beginDelayedTransition(container, sharedAxis);
+            searchContainer.setVisibility(View.GONE);
+        });
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                webView.findAll(newText);
+                try {
+                    // Can't use getMethod() as it's a private method
+                    for (Method m : WebView.class.getDeclaredMethods()) {
+                        if (m.getName().equals("setFindIsUp")) {
+                            m.setAccessible(true);
+                            m.invoke(webView, true);
+                            break;
+                        }
+                    }
+                } catch (Exception ignored) {
+                }
+                return true;
+            }
+        });
+        nextButton.setOnClickListener(v -> webView.findNext(true));
+        previousButton.setOnClickListener(v -> webView.findNext(false));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.activity_help_actions, menu);
+        return true;
+    }
+
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        return true;
     }
 
     @Override
@@ -105,6 +151,18 @@ public class HelpActivity extends BaseActivity {
         int id = item.getItemId();
         if (id == android.R.id.home) {
             finish();
+        } else if (id == R.id.action_search) {
+            if (searchContainer.getVisibility() == View.VISIBLE) {
+                searchView.setQuery(null, false);
+                Transition sharedAxis = new MaterialSharedAxis(MaterialSharedAxis.Y, true);
+                TransitionManager.beginDelayedTransition(container, sharedAxis);
+                searchContainer.setVisibility(View.GONE);
+            } else {
+                Transition sharedAxis = new MaterialSharedAxis(MaterialSharedAxis.Y, false);
+                TransitionManager.beginDelayedTransition(container, sharedAxis);
+                searchContainer.setVisibility(View.VISIBLE);
+            }
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

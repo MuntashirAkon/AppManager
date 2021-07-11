@@ -1,38 +1,27 @@
-/*
- * Copyright (c) 2021 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.users;
 
 import android.annotation.UserIdInt;
 import android.content.Context;
 import android.content.pm.UserInfo;
+import android.os.Binder;
 import android.os.Build;
 import android.os.IUserManager;
 import android.os.RemoteException;
 import android.os.UserHandle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
-import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
-import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
+import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 
 public final class Users {
     public static final String TAG = "Users";
@@ -72,15 +61,15 @@ public final class Users {
 
     @WorkerThread
     @Nullable
-    public static List<UserInfo> getUsers() {
+    public static List<UserInfo> getAllUsers() {
         if (userInfoList == null) {
             try {
                 IUserManager userManager = IUserManager.Stub.asInterface(ProxyBinder.getService(Context.USER_SERVICE));
                 try {
-                    return userInfoList = userManager.getUsers(true);
+                    userInfoList = userManager.getUsers(true);
                 } catch (NoSuchMethodError e) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                        return userInfoList = userManager.getUsers(true, true, true);
+                        userInfoList = userManager.getUsers(true, true, true);
                     } else throw new SecurityException(e);
                 }
             } catch (RemoteException | SecurityException e) {
@@ -91,51 +80,46 @@ public final class Users {
     }
 
     @WorkerThread
+    @Nullable
+    public static List<UserInfo> getUsers() {
+        getAllUsers();
+        if (userInfoList == null) return null;
+        int[] selectedUserIds = AppPref.getSelectedUsers();
+        List<UserInfo> users = new ArrayList<>();
+        for (UserInfo userInfo : userInfoList) {
+            if (selectedUserIds == null || ArrayUtils.contains(selectedUserIds, userInfo.id)) {
+                users.add(userInfo);
+            }
+        }
+        return users;
+    }
+
+    @WorkerThread
     @NonNull
     @UserIdInt
-    public static int[] getUsersHandles() {
-        getUsers();
-        if (userInfoList != null) {
-            List<Integer> users = new ArrayList<>();
-            for (UserInfo userInfo : userInfoList) {
-                try {
-                    users.add(userInfo.id);
-                } catch (Exception ignore) {
-                }
+    public static int[] getUsersIds() {
+        getAllUsers();
+        if (userInfoList == null) {
+            return new int[]{myUserId()};
+        }
+        int[] selectedUserIds = AppPref.getSelectedUsers();
+        List<Integer> users = new ArrayList<>();
+        for (UserInfo userInfo : userInfoList) {
+            if (selectedUserIds == null || ArrayUtils.contains(selectedUserIds, userInfo.id)) {
+                users.add(userInfo.id);
             }
-            return ArrayUtils.convertToIntArray(users);
-        } else {
-            return new int[]{getCurrentUserHandle()};
         }
+        return ArrayUtils.convertToIntArray(users);
     }
 
     @UserIdInt
-    private static Integer currentUserHandle = null;
-
-    @UserIdInt
-    public static int getCurrentUserHandle() {
-        if (currentUserHandle == null) {
-            if (MU_ENABLED) currentUserHandle = android.os.Binder.getCallingUid() / PER_USER_RANGE;
-            else currentUserHandle = 0;
-            // Another way
-//            try {
-//                @SuppressWarnings("JavaReflectionMemberAccess")
-//                Method myUserId = UserHandle.class.getMethod("myUserId");
-//                currentUserHandle = (int) myUserId.invoke(null);
-//            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-//                e.printStackTrace();
-//            }
-        }
-        return currentUserHandle;
+    public static int myUserId() {
+        return MU_ENABLED ? Binder.getCallingUid() / PER_USER_RANGE : 0;
     }
 
     @UserIdInt
-    public static int getUserHandle(int uid) {
-        if (MU_ENABLED) {
-            return uid / PER_USER_RANGE;
-        } else {
-            return USER_SYSTEM;
-        }
+    public static int getUserId(int uid) {
+        return MU_ENABLED ? uid / PER_USER_RANGE : USER_SYSTEM;
     }
 
     public static int getAppId(int uid) {

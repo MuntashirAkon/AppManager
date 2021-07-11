@@ -1,21 +1,10 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.logs;
+
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -28,10 +17,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-import androidx.annotation.IntDef;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 
@@ -61,14 +49,14 @@ public class Log {
         INSTANCE = new Log();
     }
 
-    @NonNull
-    private final PrintWriter writer;
+    @Nullable
+    private PrintWriter writer;
+    private final ExecutorService executor = Executors.newFixedThreadPool(1);
 
     private Log() {
         try {
             writer = new PrintWriter(new BufferedWriter(new FileWriter(LOG_FILE)));
-        } catch (IOException e) {
-            throw new RuntimeException("Could not write to log file.", e);
+        } catch (IOException ignore) {
         }
     }
 
@@ -145,6 +133,8 @@ public class Log {
     }
 
     private static void println(@Level int level, @Nullable String tag, @Nullable String msg, @Nullable Throwable tr) {
+        if (INSTANCE.writer == null) return;
+
         StringBuilder sb = new StringBuilder();
         sb.append(DATE_FORMAT.format(new Date(System.currentTimeMillis()))).append(" ");
         switch (level) {
@@ -169,7 +159,8 @@ public class Log {
         }
         sb.append(tag == null ? "App Manager" : tag);
         if (msg != null) sb.append(": ").append(msg);
-        new Thread(() -> {
+
+        INSTANCE.executor.submit(() -> {
             synchronized (INSTANCE) {
                 INSTANCE.writer.println(sb);
                 if (tr != null) {
@@ -177,6 +168,6 @@ public class Log {
                 }
                 INSTANCE.writer.flush();
             }
-        }).start();
+        });
     }
 }

@@ -1,20 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (C) 2020 Muntashir Al-Islam
-  ~
-  ~ This program is free software: you can redistribute it and/or modify
-  ~ it under the terms of the GNU General Public License as published by
-  ~ the Free Software Foundation, either version 3 of the License, or
-  ~ (at your option) any later version.
-  ~
-  ~ This program is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~ GNU General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU General Public License
-  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
     <string name="_lang_tag" translatable="false">zh-TW</string>
     <string name="uninstall">解除安裝</string>
     <string name="permissions">使用權限</string>
@@ -41,8 +26,8 @@
     <plurals name="main_list_date_days">
         <item quantity="other"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> 天</item>
     </plurals>
-    <string name="tested_signatures_on_classes_and_time_taken">經過測試 <xliff:g id="signature_no" example="342">%1$d</xliff:g> signatures on <xliff:g id="class_no" example="6000">%2$d</xliff:g> classes.
-\n耗費的時間 <xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> 迭代).</string>
+    <string name="tested_signatures_on_classes_and_time_taken">在 <xliff:g id="class_no" example="6000"> %2$d </xliff:g> 類上測試 <xliff:g id="signature_no" example="342"> %1$d </xliff:g> 簽名。
+\n所佔用時間 <xliff:g id="time" example="10000"> %3$d </xliff:g> 毫秒 （<xliff:g id="iteration_no" example="100000"> %4$d </xliff:g> 反覆運算）。</string>
     <plurals name="other_trackers_and_classes">
         <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> 帶有 <xliff:g id="class_no" example="50"> %2$d </xliff:g> 類的追蹤器</item>
     </plurals>
@@ -275,7 +260,7 @@
     <string name="allow_routine_ops_msg">允許在常規操作中使用配置檔案</string>
     <string name="profile_state">設定檔狀態</string>
     <string name="allow_routine_ops">允許例行操作</string>
-    <string name="adb_over_tcp">透過TCP的ADB</string>
+    <string name="adb_over_tcp">透過 TCP 的 ADB</string>
     <string name="pref_mode_of_operations">操作模式</string>
     <string name="send_selected">傳送選擇</string>
     <string name="ecc">橢圓曲線密碼學</string>
@@ -520,10 +505,6 @@
     <string name="clear_data_from_uninstalled_apps">清除已解除安裝應用程式中的資料</string>
     <string name="deny_app_ops_description">為透過常量值標識的應用程式操作設定一種模式，即<tt> 63</tt> 或者<tt> RUN_IN_BACKGROUND</tt></string>
     <string name="clear_cache">清除快取</string>
-    <string name="community_links">更新頻道：https://t.me/AppManagerChannel
-\n支援小組：https://t.me/AppManagerAndroid
-\nTwitter：https://twitter.com/AMUpdateChannel</string>
-    <string name="community">Telegram 社群</string>
     <string name="update">更新</string>
     <string name="install">安裝</string>
     <plurals name="no_of_components">
@@ -619,8 +600,6 @@
     <string name="cpu">中央處理器</string>
     <string name="users">使用者數</string>
     <string name="languages">語言</string>
-    <string name="unavailable">不可用</string>
-    <string name="available">可用的</string>
     <string name="battery_capacity">電池容量</string>
     <string name="memory">記憶體</string>
     <string name="vendor">分發</string>
@@ -758,16 +737,20 @@
     <string name="word_wrap">切換自動換行</string>
     <string name="credits_message">向以下開放原始碼專案的協作者致謝
 \n- The Android Open Source Project
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
-\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
-\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
+\n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
+\n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
+\n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a>
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
-\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
-\n原創 logo 致謝： <a href="https://github.com/Atrate">Atrate</a>. </string>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
+\n原創 logo 致謝: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="credits">致謝</string>
     <string name="third_party">第三方資源庫和圖示</string>
     <string name="license">授權條款</string>
@@ -816,9 +799,7 @@
     <string name="shared_user_id">共用的使用者ID</string>
     <string name="sort_by_shared_user_id">共用的使用者ID</string>
     <string name="no_feature">沒有功能</string>
-    <string name="gles_ver">要求的 OpenGL ES 版本</string>
     <string name="uses_feature">使用功能</string>
-    <string name="protection_level">防護等級</string>
     <string name="group">群組</string>
     <string name="shared_libs">共用資源庫</string>
     <string name="declared_permission">權限</string>
@@ -842,9 +823,6 @@
     <string name="require_no_permission">不需要任何權限</string>
     <string name="pref_log_viewer_msg">配置日誌顯示方式。</string>
     <string name="log_viewer">日誌檢視器</string>
-    <plurals name="items_selected">
-        <item quantity="other"><xliff:g id="selection_no" example="20">%1$d</xliff:g> 已選定</item>
-    </plurals>
     <string name="pref_installer_msg">配置應用安裝程式的行為。</string>
     <string name="expiry_date_cannot_be_empty">到期日期不能是空的。</string>
     <string name="signing_key">簽署金鑰</string>
@@ -924,7 +902,6 @@
     <string name="toast_invalid_selection">選擇無效。請再試一次。</string>
     <string name="toast_invalid_level">無效等級名稱：%s</string>
     <string name="pref_display_limit_hint">請輸入一個介於%1$d和%2$d之間的有效數字。</string>
-    <string name="title_filters">過濾器</string>
     <string name="text_include_device_info">包括設備資訊</string>
     <string name="text_filter_text">過濾文字</string>
     <string name="text_filter_ellipsis">篩選…</string>
@@ -996,5 +973,25 @@
     <string name="netpolicy_reject_background_data">拒絕背景資料</string>
     <string name="netpolicy_disable_network_access">停用網路存取</string>
     <string name="netpolicy_reject_cellular_data">拒絕行動網路</string>
-    <string name="unknown_netpolicy">未知的網路政策 （%s）</string>
+    <string name="fallback_to_no_root_mode_description">App Manager 無法使用目前的操作模式。為了避免隨機行為，您應該暫時切換到無 root 模式。如果重新啟動裝置後問題未修復，請考慮向開發者傳送錯誤報告。</string>
+    <string name="fallback_to_no_root_mode">返回至無 Root 模式？</string>
+    <string name="unknown_net_policy">未知的網路政策 （%1$s - %2$X）</string>
+    <string name="port_number_invalid">無效埠編號。</string>
+    <string name="port_number_empty">埠編號為空。</string>
+    <string name="adb_connect_port_number_description">埠編號位於 <b> IP 位址 &amp; 連接埠 </b> 部分下方 <b> 裝置名稱 </b> 部分正下方。</string>
+    <string name="port_number">連接埠</string>
+    <string name="adb_connect">連線</string>
+    <string name="wireless_debugging_not_supported">此平臺不支援無線偵錯。</string>
+    <string name="wireless_debugging">無線偵錯</string>
+    <string name="community">社群</string>
+    <string name="failed_to_prevent_background_run">無法防止 %1$s 在背景執行</string>
+    <string name="app_signing_signature_mismatch_for_data_only_app">由於簽名不相符而無法安裝應用程式。該應用程式在未清除其資料的情況下解除安裝。</string>
+    <plurals name="alert_failed_to_import_backups">
+        <item quantity="other">無法匯入 %1$d 備份</item>
+    </plurals>
+    <string name="import_from_tb">從鈦備份匯入</string>
+    <string name="import_from_oab_tb_msg">備份必須位於 %s。</string>
+    <string name="import_from_oab">從 OAndBackup 匯入</string>
+    <string name="pref_import_backups_msg">從 OAndBackup、鈦備份或 Swift Backup 匯入備份。</string>
+    <string name="pref_import_backups">匯入備份</string>
 </resources>

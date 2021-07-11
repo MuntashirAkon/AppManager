@@ -1,21 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (C) 2020 Muntashir Al-Islam
-  ~
-  ~ This program is free software: you can redistribute it and/or modify
-  ~ it under the terms of the GNU General Public License as published by
-  ~ the Free Software Foundation, either version 3 of the License, or
-  ~ (at your option) any later version.
-  ~
-  ~ This program is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~ GNU General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU General Public License
-  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  -->
-
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -30,6 +14,7 @@
         android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:focusable="false"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <androidx.recyclerview.widget.RecyclerView
@@ -37,31 +22,17 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="none"
+            android:focusable="false"
+            android:clipToPadding="false"
             tools:listitem="@layout/item_running_app" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <com.google.android.material.bottomappbar.BottomAppBar
-        android:id="@+id/bottom_appbar"
+    <io.github.muntashirakon.widget.MultiSelectionView
+        android:id="@+id/selection_view"
         android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
-        android:layout_gravity="bottom"
-        android:theme="@style/AppTheme.BottomAppBar"
-        android:visibility="gone"
-        app:menu="@menu/activity_running_apps_selection_actions"
-        app:navigationIcon="@drawable/ic_baseline_clear_24">
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/bottom_appbar_counter"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:textSize="20sp"
-            android:textColor="?android:attr/textColorPrimary"
-            android:ellipsize="marquee"
-            tools:text="@tools:sample/lorem[4]"
-            android:singleLine="true" />
-
-    </com.google.android.material.bottomappbar.BottomAppBar>
+        android:layout_height="wrap_content"
+        android:focusable="false"
+        app:menu="@menu/activity_running_apps_popup_actions" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

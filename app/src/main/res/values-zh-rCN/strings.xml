@@ -1,20 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (C) 2020 Muntashir Al-Islam
-  ~
-  ~ This program is free software: you can redistribute it and/or modify
-  ~ it under the terms of the GNU General Public License as published by
-  ~ the Free Software Foundation, either version 3 of the License, or
-  ~ (at your option) any later version.
-  ~
-  ~ This program is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~ GNU General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU General Public License
-  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
     <string name="_lang_tag" translatable="false">zh-CN</string>
     <string name="uninstall">卸载</string>
     <string name="permissions">系统预定义权限</string>
@@ -44,9 +29,7 @@
     <string name="declared_permission">权限</string>
     <string name="shared_libs">共享程序库</string>
     <string name="group">群组</string>
-    <string name="protection_level">保护等级</string>
     <string name="uses_feature">属性</string>
-    <string name="gles_ver">请求 OpenGL ES 版本</string>
     <string name="no_feature">无</string>
     <string name="sort_by_shared_user_id">共享的用户ID</string>
     <string name="shared_user_id">共享的用户ID</string>
@@ -111,21 +94,25 @@
     <string name="credits">鸣谢</string>
     <string name="credits_message">致谢下列项目的作者
 \n- The Android Open Source Project
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
-\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
-\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
+\n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
+\n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
+\n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a>
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
-\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
-\n原始图标致谢：<a href="https://github.com/Atrate">Atrate</a>. </string>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
+\nOriginal logo credit: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="word_wrap">自动换行</string>
     <string name="class_viewer">类查看器</string>
     <string name="toggle_class_listing">切换类列表</string>
-    <string name="tested_signatures_on_classes_and_time_taken">测试了 <xliff:g id="signature_no" example="342">%1$d</xliff:g> 个签名在 <xliff:g id="class_no" example="6000">%2$d</xliff:g> 个 classes 上.
-\n所花时间 <xliff:g id="time" example="10000">%3$d</xliff:g> 毫秒(<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> 迭代器).</string>
+    <string name="tested_signatures_on_classes_and_time_taken">测试了 <xliff:g id="signature_no" example="342">%1$d</xliff:g> 特征码于<xliff:g id="class_no" example="6000">%2$d</xliff:g> 个 classes。
+\n耗费时间 <xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> 迭代)。</string>
     <string name="found_trackers">已找到追踪器:</string>
     <string name="tracker_details">追踪器详细信息</string>
     <string name="tracker_classes">追踪器类</string>
@@ -336,10 +323,6 @@
     <string name="install">安装</string>
     <string name="update">升级</string>
     <string name="source_code">源代码</string>
-    <string name="community">Telegram 社区</string>
-    <string name="community_links">更新频道: https://t.me/AppManagerChannel
-\n支持小组: https://t.me/AppManagerAndroid
-\n推特: https://twitter.com/AMUpdateChannel</string>
     <string name="pref_import_existing">导入现有规则</string>
     <string name="pref_import_existing_msg">将被其他应用禁用的组件添加到应用管理器。 使用此工具时要小心，因为可能有许多误报。 只选择您确定的应用。</string>
     <string name="clear_cache">清除缓存</string>
@@ -418,7 +401,6 @@
     <string name="open_in_termux">在 Termux 中打开</string>
     <string name="run_in_termux">在 Termux 中运行</string>
     <string name="website">网址</string>
-    <string name="website_message">https://muntashirakon.github.io/AppManager</string>
     <string name="pref_remove_all_rules">删除所有规则</string>
     <string name="pref_remove_all_rules_msg">权限已被授予，app ops 和组件将回到它们的默认值。</string>
     <string name="are_you_sure">您确定吗？</string>
@@ -711,8 +693,6 @@
     <string name="cpu">CPU</string>
     <string name="users">用户</string>
     <string name="languages">语言</string>
-    <string name="unavailable">不可用</string>
-    <string name="available">可用</string>
     <string name="battery_capacity">容量</string>
     <string name="memory">运行内存</string>
     <string name="vendor">厂商</string>
@@ -751,7 +731,7 @@
     <string name="density">密度</string>
     <string name="screen">屏幕</string>
     <string name="hardware">硬件</string>
-    <string name="permissive">Permissive</string>
+    <string name="permissive">被动</string>
     <string name="enforcing">Enforcing</string>
     <string name="failed_to_enable_magisk_hide">无法启用 MagiskHide</string>
     <string name="enable_magisk_hide">启用 MagiskHide</string>
@@ -842,9 +822,6 @@
     <string name="filter_apps_without_backups">无备份的应用</string>
     <string name="uninstalled_apps">已卸载应用</string>
     <string name="internal_data">内部数据</string>
-    <plurals name="items_selected">
-        <item quantity="other"><xliff:g id="selection_no" example="20">%1$d</xliff:g> 已选中</item>
-    </plurals>
     <string name="expiry_date_cannot_be_empty">到期日不能为空。</string>
     <string name="signing_key">签名密钥</string>
     <string name="failed_to_read_keystore">无法读取密钥库。</string>
@@ -958,7 +935,6 @@
     <string name="toast_invalid_selection">无效选择。请重试。</string>
     <string name="toast_invalid_level">无效的级别名称：%s</string>
     <string name="pref_display_limit_hint">请输入一个 %1$d 和 %2$d 之间的有效数字。</string>
-    <string name="title_filters">过滤器</string>
     <string name="text_include_device_info">包含设备信息</string>
     <string name="text_filter_text">过滤器文本</string>
     <string name="text_filter_ellipsis">过滤器…</string>
@@ -1007,5 +983,36 @@
     <string name="netpolicy_reject_cellular_data">拒绝移动网络数据</string>
     <string name="netpolicy_allow_background_data">启用数据节省器时允许后台数据</string>
     <string name="netpolicy_reject_background_data">拒绝后台数据</string>
-    <string name="unknown_netpolicy">未知的 netpolicy (%s)</string>
+    <string name="port_number_invalid">无效的端口号。</string>
+    <string name="port_number_empty">端口号为空。</string>
+    <string name="adb_connect_port_number_description">端口号位于 <b>IP地址&amp;端口</b>部分，这部分在<b>设备名称</b>部分的下方。</string>
+    <string name="port_number">端口</string>
+    <string name="adb_connect">连接</string>
+    <string name="wireless_debugging_not_supported">此平台不支持无线调试。</string>
+    <string name="wireless_debugging">无线调试</string>
+    <string name="unknown_net_policy">未知的 netpolicy (%1$s - %2$X)</string>
+    <string name="fallback_to_no_root_mode_description">App Manager 无法使用当前的操作模式。 为了避免出现随机行为，你应该暂时切换到非 root 模式。 重新启动设备后，如果问题仍未解决，请考虑报告此问题。</string>
+    <string name="fallback_to_no_root_mode">退回到非 root 模式吗？</string>
+    <string name="failed_to_prevent_background_run">无法防止 %1$s 在后台运行</string>
+    <string name="app_signing_signature_mismatch_for_data_only_app">由于签名不匹配，无法安装应用程序。该应用程序已被卸载，但没有清除数据。</string>
+    <string name="community_links">Telegram 群: https://t.me/AppManagerChannel
+\nTwitter: https://twitter.com/AppManagerNews</string>
+    <string name="community">社区</string>
+    <plurals name="alert_failed_to_import_backups">
+        <item quantity="other">无法导入 %1$d 个备份</item>
+    </plurals>
+    <string name="import_from_tb">从 Titanium Backup 导入</string>
+    <string name="import_from_oab_tb_msg">备份必须位于 %s。</string>
+    <string name="import_from_oab">从 OAndBackup 导入</string>
+    <string name="pref_import_backups_msg">从 OAndBackup 或 Titanium Backup 导入备份。</string>
+    <string name="pref_import_backups">导入备份</string>
+    <string name="added_to_queue">已添至队列</string>
+    <string name="minimum_version">最小版本: %d</string>
+    <string name="help_uses_permissions_tab">点击一个项目来<b>授予</b>或<b>撤销</b>它。只有<b>危险</b>和<b>开发</b>权限可被授予或撤销。</string>
+    <string name="help_permissions_tab">这些权限由该应用程序定义且无法撤销。</string>
+    <string name="help_app_ops_tab">点击项目以<b>允许</b>或<b>忽略</b>它。长按某个项目可查看其他支持的模式。</string>
+    <string name="saved_filters">已保存的过滤器</string>
+    <string name="permission_flags">权限标记</string>
+    <string name="pref_selected_users_msg">限制 App Manager 仅与选定的用户一起工作。</string>
+    <string name="pref_selected_users">选中的用户</string>
 </resources>

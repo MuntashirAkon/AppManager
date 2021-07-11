@@ -1,27 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (C) 2020 Muntashir Al-Islam
-  ~
-  ~ This program is free software: you can redistribute it and/or modify
-  ~ it under the terms of the GNU General Public License as published by
-  ~ the Free Software Foundation, either version 3 of the License, or
-  ~ (at your option) any later version.
-  ~
-  ~ This program is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~ GNU General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU General Public License
-  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  -->
-
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -30,20 +14,20 @@
         android:paddingEnd="@dimen/padding_medium"
         android:paddingBottom="@dimen/padding_very_small">
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/app_name"
             android:textSize="@dimen/title_font"
             android:textColor="?android:attr/textColorPrimary" />
 
-        <io.github.muntashirakon.AppManager.types.HyperlinkTextView
+        <io.github.muntashirakon.widget.HyperlinkTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/copyright_message"
             android:textSize="@dimen/subtitle_font" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding_medium"
@@ -51,7 +35,7 @@
             android:textSize="@dimen/title_font"
             android:textColor="?android:attr/textColorPrimary" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/version"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -59,7 +43,7 @@
             android:textIsSelectable="true"
             tools:text="@tools:sample/lorem[2]" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding_medium"
@@ -67,13 +51,13 @@
             android:textSize="@dimen/title_font"
             android:textColor="?android:attr/textColorPrimary" />
 
-        <io.github.muntashirakon.AppManager.types.HyperlinkTextView
+        <io.github.muntashirakon.widget.HyperlinkTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/license_message"
             android:textSize="@dimen/subtitle_font" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding_medium"
@@ -81,14 +65,14 @@
             android:textSize="@dimen/title_font"
             android:textColor="?android:attr/textColorPrimary" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/website_message"
             android:autoLink="web"
             android:textSize="@dimen/subtitle_font" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding_medium"
@@ -96,14 +80,14 @@
             android:textSize="@dimen/title_font"
             android:textColor="?android:attr/textColorPrimary" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/source_code_links"
             android:textSize="@dimen/subtitle_font"
             android:autoLink="web" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding_medium"
@@ -111,14 +95,14 @@
             android:textSize="@dimen/title_font"
             android:textColor="?android:attr/textColorPrimary" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/community_links"
             android:textSize="@dimen/subtitle_font"
             android:autoLink="web" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding_medium"
@@ -126,13 +110,13 @@
             android:textSize="@dimen/title_font"
             android:textColor="?android:attr/textColorPrimary" />
 
-        <io.github.muntashirakon.AppManager.types.HyperlinkTextView
+        <io.github.muntashirakon.widget.HyperlinkTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/third_party_message"
             android:textSize="@dimen/subtitle_font" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding_medium"
@@ -140,12 +124,12 @@
             android:textSize="@dimen/title_font"
             android:textColor="?android:attr/textColorPrimary" />
 
-        <io.github.muntashirakon.AppManager.types.HyperlinkTextView
+        <io.github.muntashirakon.widget.HyperlinkTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/credits_message"
             android:textSize="@dimen/subtitle_font" />
 
-    </LinearLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 </ScrollView>

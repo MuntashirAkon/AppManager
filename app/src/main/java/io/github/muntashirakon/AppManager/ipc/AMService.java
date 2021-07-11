@@ -1,19 +1,4 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.ipc;
 
@@ -27,10 +12,11 @@ import android.system.Os;
 import android.system.StructStat;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import java.io.File;
 import java.util.ArrayList;
 
-import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.IAMService;
 import io.github.muntashirakon.AppManager.IRemoteFile;
 import io.github.muntashirakon.AppManager.IRemoteProcess;
@@ -38,7 +24,9 @@ import io.github.muntashirakon.AppManager.IRemoteShell;
 import io.github.muntashirakon.AppManager.ipc.ps.ProcessEntry;
 import io.github.muntashirakon.AppManager.ipc.ps.Ps;
 import io.github.muntashirakon.AppManager.server.common.IRootIPC;
+import io.github.muntashirakon.io.FileDescriptorImpl;
 import io.github.muntashirakon.io.FileStatus;
+import io.github.muntashirakon.io.IFileDescriptor;
 
 public class AMService extends RootService {
     static class IAMServiceImpl extends IAMService.Stub {
@@ -109,6 +97,15 @@ public class AMService extends RootService {
                 StructStat lstat = Os.lstat(path);
                 if (lstat == null) throw new ErrnoException("FStat returned null", 1);
                 return new FileStatus(lstat);
+            } catch (ErrnoException e) {
+                throw new RemoteException(e.getMessage());
+            }
+        }
+
+        @Override
+        public IFileDescriptor getFD(String path, String mode) throws RemoteException {
+            try {
+                return FileDescriptorImpl.getInstance(path, mode);
             } catch (ErrnoException e) {
                 throw new RemoteException(e.getMessage());
             }

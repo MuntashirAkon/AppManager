@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?><!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<resources>
+    <dimen name="padding_very_large">32dp</dimen>
+    <dimen name="padding_large">24dp</dimen>
+    <dimen name="padding_medium">16dp</dimen>
+    <dimen name="padding_small">8dp</dimen>
+    <dimen name="padding_very_small">4dp</dimen>
+
+    <dimen name="font_size_larger">16sp</dimen>
+    <dimen name="font_size_large">14sp</dimen>
+    <dimen name="font_size_medium">12sp</dimen>
+    <dimen name="font_size_small">10sp</dimen>
+    <dimen name="font_size_smaller">9sp</dimen>
+</resources>

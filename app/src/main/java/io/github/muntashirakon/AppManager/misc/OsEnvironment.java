@@ -1,25 +1,14 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.misc;
 
+import android.annotation.UserIdInt;
 import android.os.storage.StorageManager;
 import android.os.storage.StorageVolume;
 import android.text.TextUtils;
+import android.util.SparseArray;
+
+import androidx.annotation.NonNull;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -29,7 +18,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.io.ProxyFile;
@@ -73,24 +61,34 @@ public final class OsEnvironment {
     private static final ProxyFile DIR_SYSTEM_EXT_ROOT = getDirectory(ENV_SYSTEM_EXT_ROOT, "/system_ext");
     private static final ProxyFile DIR_APEX_ROOT = getDirectory(ENV_APEX_ROOT, "/apex");
 
-    private static UserEnvironment sCurrentUser;
+    private static final UserEnvironment sCurrentUser;
     private static boolean sUserRequired;
 
+    private static final SparseArray<UserEnvironment> sUserEnvironmentCache = new SparseArray<>(2);
+
     static {
-        initForCurrentUser();
+        sCurrentUser = new UserEnvironment(Users.myUserId());
+        sUserEnvironmentCache.put(sCurrentUser.mUserHandle, sCurrentUser);
     }
 
-    public static void initForCurrentUser() {
-        sCurrentUser = new UserEnvironment(Users.getCurrentUserHandle());
+    @NonNull
+    public static UserEnvironment getUserEnvironment(@UserIdInt int userHandle) {
+        UserEnvironment ue = sUserEnvironmentCache.get(userHandle);
+        if (ue != null) return ue;
+        ue = new UserEnvironment(userHandle);
+        sUserEnvironmentCache.put(userHandle, ue);
+        return ue;
     }
 
     public static class UserEnvironment {
+        @UserIdInt
         private final int mUserHandle;
 
-        public UserEnvironment(int userHandle) {
+        public UserEnvironment(@UserIdInt int userHandle) {
             mUserHandle = userHandle;
         }
 
+        @NonNull
         public ProxyFile[] getExternalDirs() {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                 // The reflection calls cannot be hidden since they are called internally by the
@@ -123,6 +121,7 @@ public final class OsEnvironment {
                 // Device has emulated storage; external storage paths should have
                 // userId burned into them.
                 final String rawUserId = Integer.toString(mUserHandle);
+                //noinspection ConstantConditions
                 final File emulatedTargetBase = new File(rawEmulatedTarget);
 
                 // /storage/emulated/0
@@ -134,6 +133,7 @@ public final class OsEnvironment {
                     rawExternalStorage = "/storage/sdcard0";
                 }
                 // /storage/sdcard0
+                //noinspection ConstantConditions
                 externalForApp.add(new ProxyFile(rawExternalStorage));
             }
             return externalForApp.toArray(new ProxyFile[0]);

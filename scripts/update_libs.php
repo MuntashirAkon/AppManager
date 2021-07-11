@@ -1,28 +1,13 @@
 #!/usr/bin/env php
 <?php
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+/* SPDX-License-Identifier: GPL-3.0-or-later */
 
 // Example usage: php ./scripts/update_libs.php > ./app/src/main/res/values/libs.xml
 
-define('LIB_RADAR', 'https://gitlab.com/IzzyOnDroid/repo/-/raw/master/lib/libradar.txt');
-define('LIB_RADAR_WILD', 'https://gitlab.com/IzzyOnDroid/repo/-/raw/master/lib/libradar_wild.txt');
-define('LIB_SMALI', 'https://gitlab.com/IzzyOnDroid/repo/-/raw/master/lib/libsmali.txt');
-define('AM_LIB_SMALI', './libs/libsmali.txt');
+const LIB_RADAR = 'https://gitlab.com/IzzyOnDroid/repo/-/raw/master/lib/libradar.txt';
+const LIB_RADAR_WILD = 'https://gitlab.com/IzzyOnDroid/repo/-/raw/master/lib/libradar_wild.txt';
+const LIB_SMALI = 'https://gitlab.com/IzzyOnDroid/repo/-/raw/master/lib/libsmali.txt';
+const AM_LIB_SMALI = './libs/libsmali.txt';
 
 $libs_info = array();
 
@@ -49,23 +34,7 @@ function printf_AM() {
     global $libs_info;
     echo <<<EOF
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (C) 2020 Muntashir Al-Islam
-  ~
-  ~ This program is free software: you can redistribute it and/or modify
-  ~ it under the terms of the GNU General Public License as published by
-  ~ the Free Software Foundation, either version 3 of the License, or
-  ~ (at your option) any later version.
-  ~
-  ~ This program is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~ GNU General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU General Public License
-  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  -->
-
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <resources>
     <array name="lib_signatures">
 

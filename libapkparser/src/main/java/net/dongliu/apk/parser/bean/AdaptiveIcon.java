@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.bean;
 
 import java.io.Serializable;
@@ -5,6 +7,7 @@ import java.io.Serializable;
 /**
  * Android adaptive icon, from android 8.0
  */
+// Copyright 2018 Liu Dong
 public class AdaptiveIcon implements IconFace, Serializable {
     private static final long serialVersionUID = 4185750290211529320L;
     private final Icon foreground;

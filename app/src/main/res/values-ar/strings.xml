@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
     <string name="_lang_tag" translatable="false">ar</string>
     <string name="app_signing_install_without_data_loss">إذا قمت بإيقاف تشغيل التحقق من التوقيع ، يمكنك استخدام خيار <b> تثبيت </b> فقط لتثبيت التطبيق دون فقدان البيانات.</string>
     <string name="ssaid_info">SSAID (<tt>Settings.Secure.ANDROID_ID</tt>) هو معرف جهاز معين لكل تطبيق (من Android 8 \"Oreo\" فصاعدا). يتم استخدامه على نطاق واسع من قبل التطبيقات لتتبع المستخدمين.</string>
@@ -42,23 +42,27 @@
     <string name="tracker_classes">فئات التتبع</string>
     <string name="tracker_details">تفاصيل برمجيات التتبع</string>
     <string name="found_trackers">برمجيات التتبع التي تم العثور عليها:</string>
-    <string name="tested_signatures_on_classes_and_time_taken">اختبرت <xliff:g id="signature_no" example="342"> %1$d</xliff:g> تواقيع على <xliff:g id="class_no" example="6000"> %2$d </xliff:g> أصناف.
-\nالوقت الذي استغرق <xliff:g id="time" example="10000"> %3$d </xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d </xliff:g> التكرار).</string>
+    <string name="tested_signatures_on_classes_and_time_taken">تم اختبار <xliff:g id="signature_no" example="342">%1$d</xliff:g> التوقيعات على <xliff:g id="class_no" example="6000">%2$d</xliff:g> الفئات.
+\nالوقت الذي استغرق <xliff:g id="time" example="10000">%3$d</xliff:g> مللي ثانية (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> التكرارات).</string>
     <string name="toggle_class_listing">تبديل قائمة الفصل</string>
     <string name="class_viewer">عارض الفصل</string>
     <string name="word_wrap">تفعيل التفاف النص</string>
     <string name="credits_message">لمؤلفي
 \n- مشروع Android مفتوح المصدر
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info"> معلومات عن حزمة التطبيقات </a>
 \n- <a href="https://github.com/butzist/ActivityLauncher"> مشغل النشاط </a>
-\n- <a href="https://github.com/billthefarmer/editor"> المحرر </a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info"> معلومات عن حزم التطبيقات </a>
 \n- <a href="https://github.com/zhaobao/AppsMonitor"> AppsMonitor </a>
-\n- <a href="https://github.com/tuyafeng/Watt"> واط </a>
 \n- <a href="https://github.com/8enet/AppOpsX"> AppOpsX </a>
+\n- <a href="https://github.com/billthefarmer/editor"> محرر </a>
+\n- <a href="https://github.com/k3b/intent-intercept"> اعتراض النية </a>
+\n- <a href="https://github.com/pluscubed/matlog"> مات لوغ </a>
+\n- <a href="https://github.com/matrix-org/matrix-android-sdk"> Matrix Android SDK </a>
+\n- <a href="https://github.com/jensstein/oandbackup"> OAndBackup </a>
+\n- <a href="https://github.com/open-keychain/open-keychain"> Open Keychain </a>
 \n- <a href="https://github.com/Aefyr/SAI"> الديوان </a>
 \n- <a href="https://github.com/RikkaApps/Shizuku"> شيزوكو </a>
-\n- <a href="https://github.com/pluscubed/matlog"> MatLog </a>
-\nمصدر الشعار الأصلي: <a href="https://github.com/Atrate"> Atrate </a>. </string>
+\n- <a href="https://github.com/tuyafeng/Watt"> واط </a>
+\nمصدر الشعار الأصلي: <a href="https://github.com/Atrate"> أتراتي </a>. </string>
     <string name="credits">الإشادات</string>
     <string name="third_party">مكتبات وأيقونات الطرف الثالث</string>
     <string name="license">الرخصة</string>
@@ -108,7 +112,7 @@
     <string name="sort_by_domain">تطبيقات المستخدم أولاً</string>
     <string name="sort_by_package_name">اسم الحزمة</string>
     <string name="sort_by_app_label">تسمية التطبيق</string>
-    <string name="loading">يحمل…</string>
+    <string name="loading">جار التحميل…</string>
     <string name="error">خطأ</string>
     <string name="manifest">البيان</string>
     <string name="input_features">ميزات الإدخال</string>
@@ -120,9 +124,7 @@
     <string name="shared_user_id">معرف المستخدم المشترك</string>
     <string name="sort_by_shared_user_id">معرف المستخدم المشترك</string>
     <string name="no_feature">لا توجد ميزات</string>
-    <string name="gles_ver">مطلوب. إصدار OpenGL ES</string>
     <string name="uses_feature">المميزات المستخدمه</string>
-    <string name="protection_level">مستوى الحماية</string>
     <string name="group">المجموعة</string>
     <string name="shared_libs">المكتبات المشتركة</string>
     <string name="declared_permission">الصلاحيات</string>
@@ -308,10 +310,6 @@
     <string name="block_unblock_trackers_description">حظر أو إلغاء حظر الإعلانات ومكونات التتبع في جميع التطبيقات المثبتة</string>
     <string name="clear_cache">مسح التخزين المؤقت</string>
     <string name="pref_import_existing">استيراد القواعد الموجودة</string>
-    <string name="community_links">قناة التحديث : https://t.me/AppManagerChannel
-\nمجموعة الدعم: https://t.me/AppManagerAndroid
-\nتويتر: https://twitter.com/AMUpdateChannel</string>
-    <string name="community">مجتمع تيليجرام</string>
     <string name="source_code_links">جيثب: https://github.com/MuntashirAkon/AppManager
 \nجيت لاب: https://gitlab.com/muntashir/AppManager
 \nالنهوض: https://0xacab.org/muntashir/AppManager
@@ -382,7 +380,7 @@
     <string name="clear_data">مسح البيانات</string>
     <string name="user_and_uid">المستخدم: <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
     <string name="user_with_id">المستخدم: <xliff:g id="user_id" example="0">%1$d</xliff:g></string>
-    <string name="memory_virtual_memory">الذاكرة: %1$s، الذاكرة الظاهرية: %2$s</string>
+    <string name="memory_virtual_memory">ذاكرة: %1$s، الذاكرة الظاهرية: %2$s</string>
     <string name="pid_and_ppid">معرّف العملية: %1$d ، معرّف العملية الأصل: %2$d</string>
     <string name="disable_background_run">منع التشغيل في الخلفية</string>
     <string name="kill_process">قتل</string>
@@ -481,7 +479,7 @@
     <string name="new_profile">ملف تعريف جديد</string>
     <string name="input_profile_name_description">لا يمكن أن يحتوي اسم ملف التعريف على أية مسافات.</string>
     <string name="input_profile_name">إسم الوضع</string>
-    <string name="un_apkm">UnApkm</string>
+    <string name="un_apkm">UnApkm تحزيم</string>
     <string name="in_progress">قيد التقدم</string>
     <string name="conversion_failed">فشل التحويل.</string>
     <string name="select_apk">حدد APK</string>
@@ -607,7 +605,6 @@
     <string name="text_filter_ellipsis">المُرشح…</string>
     <string name="text_filter_text">تصفية النص</string>
     <string name="text_include_device_info">قم بتضمين معلومات الجهاز</string>
-    <string name="title_filters">المرشحات</string>
     <string name="pref_display_limit_hint">يرجى إدخال رقم صالح بين %1$d و %2$d.</string>
     <string name="toast_invalid_level">اسم مستوى غير صالح: %s</string>
     <string name="toast_invalid_selection">اختيار غير صحيح. حاول مرة اخرى.</string>
@@ -671,14 +668,6 @@
         <item quantity="few">%d سيتم حذف الملفات</item>
         <item quantity="many">%d سيتم حذف الملف</item>
         <item quantity="other">%d سيتم حذف الملف</item>
-    </plurals>
-    <plurals name="items_selected">
-        <item quantity="zero"><xliff:g id="selection_no" example="20"> %1$d </xliff:g> تم اختياره</item>
-        <item quantity="one"><xliff:g id="selection_no" example="20"> %1$d </xliff:g> تم اختياره</item>
-        <item quantity="two"><xliff:g id="selection_no" example="20"> %1$d </xliff:g> تم اختياره</item>
-        <item quantity="few"><xliff:g id="selection_no" example="20"> %1$d </xliff:g> تم اختيارهم</item>
-        <item quantity="many"><xliff:g id="selection_no" example="20"> %1$d </xliff:g> تم اختياره</item>
-        <item quantity="other"><xliff:g id="selection_no" example="20"> %1$d </xliff:g> تم اختياره</item>
     </plurals>
     <plurals name="alert_failed_to_block_components">
         <item quantity="zero">تعذر حظر مكون التطبيق %1$d</item>
@@ -1113,8 +1102,6 @@
     <string name="cpu">المعالج</string>
     <string name="users">المستخدمين</string>
     <string name="languages">اللغات</string>
-    <string name="unavailable">غير متوفر</string>
-    <string name="available">متاح</string>
     <string name="battery_capacity">السعة</string>
     <string name="memory">الذاكرة</string>
     <string name="vendor">المورد</string>
@@ -1165,5 +1152,41 @@
     <string name="netpolicy_reject_cellular_data">رفض البيانات الخلوية</string>
     <string name="netpolicy_allow_background_data">السماح ببيانات الخلفية عند تشغيل \"توفير البيانات\"</string>
     <string name="netpolicy_reject_background_data">ارفض بيانات الخلفية</string>
-    <string name="unknown_netpolicy">سياسة انترنت غير معروفة (%s)</string>
+    <string name="port_number_invalid">رقم المنفذ غير صحيح.</string>
+    <string name="port_number_empty">رقم المنفذ فارغ.</string>
+    <string name="adb_connect_port_number_description">يوجد رقم المنفذ أسفل قسم <b> عنوان IP &amp; المنفذ </b> أسفل قسم <b> اسم الجهاز </b> مباشرةً.</string>
+    <string name="port_number">المنفذ</string>
+    <string name="adb_connect">اتصال</string>
+    <string name="wireless_debugging_not_supported">التصحيح اللاسلكي غير مدعوم في هذا النظام الأساسي.</string>
+    <string name="wireless_debugging">التصحيح اللاسلكي</string>
+    <string name="unknown_net_policy">سياسة شبكة غير معروفة (%1$s - %2$X)</string>
+    <string name="fallback_to_no_root_mode_description">مدير التطبيق لا يمكن استخدام طريقة التشغيل الحالية .لتجنب السلوك العشوائي ، يجب التبديل إلى وضع الجذر مؤقتا .إذا كانت المشكلة لم تحل بعد إعادة تشغيل الجهاز ، الرجاء ارفاق تقرير بالمشكلة.</string>
+    <string name="fallback_to_no_root_mode">العودة إلى الوضع بدون صلاحية الجذر ؟</string>
+    <string name="failed_to_prevent_background_run">تعذر منع %1$s من العمل في الخلفية</string>
+    <string name="app_signing_signature_mismatch_for_data_only_app">تعذر تثبيت التطبيق بسبب عدم تطابق التوقيع. تم إلغاء تثبيت التطبيق دون مسح بياناته.</string>
+    <string name="community_links">تيلجرام: https://t.me/AppManagerChannel
+\nتويتر: https://twitter.com/AppManagerNews</string>
+    <string name="community">المجتمع</string>
+    <plurals name="alert_failed_to_import_backups">
+        <item quantity="zero">تعذر استيراد %1$d نسخة احتياطية</item>
+        <item quantity="one">تعذر استيراد %1$d نسخة احتياطية</item>
+        <item quantity="two">تعذر استيراد %1$d نسخة احتياطية</item>
+        <item quantity="few">تعذر استيراد %1$d نسخة احتياطية</item>
+        <item quantity="many">تعذر استيراد %1$d نسخ احتياطية</item>
+        <item quantity="other">تعذر استيراد %1$d نسخة احتياطية</item>
+    </plurals>
+    <string name="import_from_tb">الاستيراد من Titanium Backup</string>
+    <string name="import_from_oab_tb_msg">يجب أن تكون النسخ الاحتياطية موجودة في %s.</string>
+    <string name="import_from_oab">الاستيراد من OAndBackup</string>
+    <string name="pref_import_backups_msg">استيراد النسخ الاحتياطية من OAndBackup أو Titanium.</string>
+    <string name="pref_import_backups">استيراد النسخ الاحتياطية</string>
+    <string name="help_uses_permissions_tab">انقر على بند لمنح <b>منح</b> أو <b> رفض</b>.فقط <b> فقط خطيرة</b> و <b> تطويرية</b> أذونات يمكن أن يكون منحت أو ألغيت.</string>
+    <string name="added_to_queue">إضافة إلى قائمة الانتظار</string>
+    <string name="minimum_version">الإصدار الأدنى: %d</string>
+    <string name="help_permissions_tab">يحدد هذا التطبيق هذه الأذونات ولا يمكن إلغاؤها.</string>
+    <string name="help_app_ops_tab">انقر على عنصر <b> للسماح </b> أو <b> تجاهله </b>. انقر مطولاً على عنصر لرؤية الأوضاع المدعومة الأخرى.</string>
+    <string name="saved_filters">المرشحات المحفوظة</string>
+    <string name="permission_flags">إشارات الصلاحيات</string>
+    <string name="pref_selected_users_msg">تقييد مدير التطبيقات للعمل مع المستخدمين المحددين فقط.</string>
+    <string name="pref_selected_users">المستخدمون المحددون</string>
 </resources>

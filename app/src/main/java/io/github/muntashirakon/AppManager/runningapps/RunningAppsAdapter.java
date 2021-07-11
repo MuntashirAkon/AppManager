@@ -1,26 +1,9 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.runningapps;
 
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
-import android.graphics.Color;
-import android.os.RemoteException;
 import android.text.TextUtils;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
@@ -30,72 +13,65 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.util.Locale;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
 import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
-import io.github.muntashirakon.AppManager.users.Users;
-import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
-import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
-import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.widget.MultiSelectionView;
 
-public class RunningAppsAdapter extends RecyclerView.Adapter<RunningAppsAdapter.ViewHolder> {
+public class RunningAppsAdapter extends MultiSelectionView.Adapter<RunningAppsAdapter.ViewHolder> {
     private final RunningAppsActivity mActivity;
     private final RunningAppsViewModel mModel;
+    private final int mColorRed;
+    private final ArrayList<ProcessItem> processItems = new ArrayList<>();
     private boolean isAdbMode = false;
 
-    private final int mColorTransparent;
-    private final int mColorSemiTransparent;
-    private final int mColorRed;
-    private final int mColorSelection;
 
     RunningAppsAdapter(@NonNull RunningAppsActivity activity) {
+        super();
         mActivity = activity;
         mModel = activity.mModel;
-
-        mColorTransparent = Color.TRANSPARENT;
-        mColorSemiTransparent = ContextCompat.getColor(activity, R.color.semi_transparent);
         mColorRed = ContextCompat.getColor(activity, R.color.red);
-        mColorSelection = ContextCompat.getColor(activity, R.color.highlight);
     }
 
-    void setDefaultList() {
+    void setDefaultList(List<ProcessItem> processItems) {
         isAdbMode = AppPref.isAdbEnabled();
+        this.processItems.clear();
+        this.processItems.addAll(processItems);
         notifyDataSetChanged();
+        notifySelectionChange();
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_running_app, parent, false);
-        return new RunningAppsAdapter.ViewHolder(view);
+        return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        @NonNull ProcessItem processItem = mModel.getProcessItem(position);
+        ProcessItem processItem = processItems.get(position);
         ApplicationInfo applicationInfo;
         if (processItem instanceof AppProcessItem) {
             applicationInfo = ((AppProcessItem) processItem).packageInfo.applicationInfo;
         } else applicationInfo = null;
         String processName = processItem.name;
         // Load icon
-        holder.iconLoader = new IconLoaderThread(holder.icon, applicationInfo);
-        holder.iconLoader.start();
+        mActivity.imageLoader.displayImage(processName, applicationInfo, holder.icon);
         // Set process name
         if (mModel.getQuery() != null && processName.toLowerCase(Locale.ROOT).contains(mModel.getQuery())) {
             // Highlight searched query
@@ -129,15 +105,9 @@ public class RunningAppsAdapter extends RecyclerView.Adapter<RunningAppsAdapter.
             Menu menu = popupMenu.getMenu();
             // Set kill
             MenuItem killItem = menu.findItem(R.id.action_kill);
-            if ((processItem.pid >= 10000 || RunningAppsActivity.enableKillForSystem) && !isAdbMode) {
+            if ((processItem.uid >= 10000 || mActivity.enableKillForSystem) && !isAdbMode) {
                 killItem.setVisible(true).setOnMenuItemClickListener(item -> {
-                    new Thread(() -> {
-                        if (Runner.runCommand(new String[]{"kill", "-9", String.valueOf(processItem.pid)}).isSuccessful()) {
-                            mActivity.runOnUiThread(mActivity::refresh);
-                        } else {
-                            mActivity.runOnUiThread(() -> Toast.makeText(mActivity, mActivity.getString(R.string.failed_to_stop, processName), Toast.LENGTH_LONG).show());
-                        }
-                    }).start();
+                    mModel.killProcess(processItem);
                     return true;
                 });
             } else killItem.setVisible(false);
@@ -158,74 +128,88 @@ public class RunningAppsAdapter extends RecyclerView.Adapter<RunningAppsAdapter.
             MenuItem bgItem = menu.findItem(R.id.action_disable_background);
             if (applicationInfo != null) {
                 forceStopItem.setVisible(true).setOnMenuItemClickListener(item -> {
-                    new Thread(() -> {
-                        try {
-                            PackageManagerCompat.forceStopPackage(applicationInfo.packageName, Users.getUserHandle(applicationInfo.uid));
-                            mActivity.runOnUiThread(mActivity::refresh);
-                        } catch (RemoteException|SecurityException e) {
-                            e.printStackTrace();
-                            mActivity.runOnUiThread(() -> Toast.makeText(mActivity, mActivity.getString(R.string.failed_to_stop, processName), Toast.LENGTH_LONG).show());
-                        }
-                    }).start();
+                    mModel.forceStop(applicationInfo);
                     return true;
                 });
-                new Thread(() -> {
-                    final AtomicInteger mode = new AtomicInteger(AppOpsManager.MODE_DEFAULT);
-                    final int userHandle = Users.getUserHandle(applicationInfo.uid);
-                    try {
-                        mode.set(new AppOpsService().checkOperation(AppOpsManager.OP_RUN_IN_BACKGROUND, applicationInfo.uid, applicationInfo.packageName));
-                    } catch (Exception ignore) {
-                    }
-                    mActivity.runOnUiThread(() -> {
-                        if (mode.get() != AppOpsManager.MODE_IGNORED) {
-                            bgItem.setVisible(true).setOnMenuItemClickListener(item -> {
-                                new Thread(() -> {
-                                    try {
-                                        new AppOpsService().setMode(AppOpsManager.OP_RUN_IN_BACKGROUND,
-                                                applicationInfo.uid, applicationInfo.packageName, AppOpsManager.MODE_IGNORED);
-                                        try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(applicationInfo.packageName, userHandle)) {
-                                            cb.setAppOp(String.valueOf(AppOpsManager.OP_RUN_IN_BACKGROUND), AppOpsManager.MODE_IGNORED);
-                                        }
-                                        mActivity.runOnUiThread(mActivity::refresh);
-                                    } catch (Exception e) {
-                                        mActivity.runOnUiThread(() -> Toast.makeText(mActivity, mActivity.getString(R.string.failed_to_disable_op), Toast.LENGTH_LONG).show());
-                                    }
-                                }).start();
-                                return true;
-                            });
-                        } else bgItem.setVisible(false);
-                        // Display popup menu
-                        popupMenu.show();
+                int mode = AppOpsManager.MODE_DEFAULT;
+                try {
+                    mode = new AppOpsService().checkOperation(AppOpsManager.OP_RUN_IN_BACKGROUND, applicationInfo.uid, applicationInfo.packageName);
+                } catch (Exception ignore) {
+                }
+                if (mode != AppOpsManager.MODE_IGNORED && mode != AppOpsManager.MODE_ERRORED) {
+                    bgItem.setVisible(true).setOnMenuItemClickListener(item -> {
+                        mModel.preventBackgroundRun(applicationInfo);
+                        return true;
                     });
-                }).start();
+                } else bgItem.setVisible(false);
             } else {
                 forceStopItem.setVisible(false);
                 bgItem.setVisible(false);
-                // Show popup menu without hesitation
-                popupMenu.show();
             }
+            // Display popup menu
+            popupMenu.show();
         });
         // Set background colors
-        holder.itemView.setBackgroundColor(position % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
-        if (processItem.selected) holder.itemView.setBackgroundColor(mColorSelection);
+        holder.itemView.setBackgroundResource(position % 2 == 0 ? R.drawable.item_semi_transparent : R.drawable.item_transparent);
         // Set selections
-        holder.icon.setOnClickListener(v -> {
-            if (processItem.selected) mModel.deselect(processItem.pid);
-            else mModel.select(processItem.pid);
-        });
+        holder.icon.setOnClickListener(v -> toggleSelection(position));
+        super.onBindViewHolder(holder, position);
     }
 
     @Override
     public long getItemId(int position) {
-        return position;
+        return processItems.get(position).hashCode();
+    }
+
+    @Override
+    protected void select(int position) {
+        mModel.select(processItems.get(position));
+    }
+
+    @Override
+    protected void deselect(int position) {
+        mModel.deselect(processItems.get(position));
+    }
+
+    @Override
+    protected boolean isSelected(int position) {
+        return mModel.isSelected(processItems.get(position));
+    }
+
+    @Override
+    protected void cancelSelection() {
+        mModel.clearSelections();
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public void clearSelections() {
+        mModel.clearSelections();
+        notifyDataSetChanged();
+        super.clearSelections();
+    }
+
+    @NonNull
+    public ArrayList<ProcessItem> getSelectedItems() {
+        return mModel.getSelections();
+    }
+
+    @Override
+    protected int getSelectedItemCount() {
+        return mModel.getSelectionCount();
+    }
+
+    @Override
+    protected int getTotalItemCount() {
+        return mModel.getTotalCount();
     }
 
     @Override
     public int getItemCount() {
-        return mModel.getCount();
+        return processItems.size();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends MultiSelectionView.ViewHolder {
         ImageView icon;
         ImageView more;
         TextView processName;
@@ -234,7 +218,6 @@ public class RunningAppsAdapter extends RecyclerView.Adapter<RunningAppsAdapter.
         TextView memoryUsage;
         TextView userAndStateInfo;
         TextView selinuxContext;
-        IconLoaderThread iconLoader;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

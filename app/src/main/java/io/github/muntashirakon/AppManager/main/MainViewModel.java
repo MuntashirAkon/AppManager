@@ -1,19 +1,4 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.main;
 
@@ -36,9 +21,18 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import java.text.Collator;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.backup.BackupUtils;
-import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.db.entity.App;
 import io.github.muntashirakon.AppManager.ipc.IPCUtils;
@@ -52,11 +46,9 @@ import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
-
-import java.text.Collator;
-import java.util.*;
 
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfo;
@@ -75,9 +67,9 @@ public class MainViewModel extends AndroidViewModel {
     @Nullable
     private String mFilterProfileName;
     private String searchQuery;
-    private HashMap<String, MetadataManager.Metadata> backupMetadata;
     private final Map<String, int[]> selectedPackages = new HashMap<>();
     private final ArrayList<ApplicationItem> selectedApplicationItems = new ArrayList<>();
+    final MultithreadedExecutor executor = MultithreadedExecutor.getNewInstance();
 
     public MainViewModel(@NonNull Application application) {
         super(application);
@@ -95,6 +87,10 @@ public class MainViewModel extends AndroidViewModel {
     @Nullable
     private MutableLiveData<List<ApplicationItem>> applicationItemsLiveData;
     final private List<ApplicationItem> applicationItems = new ArrayList<>();
+
+    public int getApplicationItemCount() {
+        return applicationItems.size();
+    }
 
     @NonNull
     public LiveData<List<ApplicationItem>> getApplicationItems() {
@@ -163,18 +159,19 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     @NonNull
-    public ArrayList<UserPackagePair> getSelectedPackagesWithUsers(boolean onlyForCurrentUser) {
+    public ArrayList<UserPackagePair> getSelectedPackagesWithUsers() {
         ArrayList<UserPackagePair> userPackagePairs = new ArrayList<>();
-        int currentUserHandle = Users.getCurrentUserHandle();
+        int myUserId = Users.myUserId();
+        int[] userIds = Users.getUsersIds();
         for (String packageName : selectedPackages.keySet()) {
             int[] userHandles = selectedPackages.get(packageName);
             if (userHandles == null || userHandles.length == 0) {
                 // Could be a backup only item
                 // Assign current user in it
-                userPackagePairs.add(new UserPackagePair(packageName, currentUserHandle));
+                userPackagePairs.add(new UserPackagePair(packageName, myUserId));
             } else {
                 for (int userHandle : userHandles) {
-                    if (onlyForCurrentUser && currentUserHandle != userHandle) continue;
+                    if (!ArrayUtils.contains(userIds, userHandle)) continue;
                     userPackagePairs.add(new UserPackagePair(packageName, userHandle));
                 }
             }
@@ -192,7 +189,7 @@ public class MainViewModel extends AndroidViewModel {
 
     public void setSearchQuery(String searchQuery) {
         this.searchQuery = searchQuery;
-        new Thread(this::filterItemsByFlags).start();
+        executor.submit(this::filterItemsByFlags);
     }
 
     public int getSortBy() {
@@ -200,10 +197,10 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     public void setSortReverse(boolean sortReverse) {
-        new Thread(() -> {
+        executor.submit(() -> {
             sortApplicationList(mSortBy, mSortReverse);
             filterItemsByFlags();
-        }).start();
+        });
         mSortReverse = sortReverse;
         AppPref.set(AppPref.PrefKey.PREF_MAIN_WINDOW_SORT_REVERSE_BOOL, mSortReverse);
     }
@@ -214,10 +211,10 @@ public class MainViewModel extends AndroidViewModel {
 
     public void setSortBy(int sortBy) {
         if (mSortBy != sortBy) {
-            new Thread(() -> {
+            executor.submit(() -> {
                 sortApplicationList(sortBy, mSortReverse);
                 filterItemsByFlags();
-            }).start();
+            });
         }
         mSortBy = sortBy;
         AppPref.set(AppPref.PrefKey.PREF_MAIN_WINDOW_SORT_ORDER_INT, mSortBy);
@@ -230,13 +227,13 @@ public class MainViewModel extends AndroidViewModel {
     public void addFilterFlag(@ListOptions.Filter int filterFlag) {
         mFilterFlags |= filterFlag;
         AppPref.set(AppPref.PrefKey.PREF_MAIN_WINDOW_FILTER_FLAGS_INT, mFilterFlags);
-        new Thread(this::filterItemsByFlags).start();
+        executor.submit(this::filterItemsByFlags);
     }
 
     public void removeFilterFlag(@ListOptions.Filter int filterFlag) {
         mFilterFlags &= ~filterFlag;
         AppPref.set(AppPref.PrefKey.PREF_MAIN_WINDOW_FILTER_FLAGS_INT, mFilterFlags);
-        new Thread(this::filterItemsByFlags).start();
+        executor.submit(this::filterItemsByFlags);
     }
 
     public void setFilterProfileName(@Nullable String filterProfileName) {
@@ -245,7 +242,7 @@ public class MainViewModel extends AndroidViewModel {
         } else if (mFilterProfileName.equals(filterProfileName)) return;
         mFilterProfileName = filterProfileName;
         AppPref.set(AppPref.PrefKey.PREF_MAIN_WINDOW_FILTER_PROFILE_STR, filterProfileName == null ? "" : filterProfileName);
-        new Thread(this::filterItemsByFlags).start();
+        executor.submit(this::filterItemsByFlags);
     }
 
     public String getFilterProfileName() {
@@ -261,10 +258,9 @@ public class MainViewModel extends AndroidViewModel {
 
     @GuardedBy("applicationItems")
     public void loadApplicationItems() {
-        new Thread(() -> {
-            backupMetadata = BackupUtils.getAllBackupMetadata();
-            List<ApplicationItem> updatedApplicationItems = PackageUtils.getInstalledOrBackedUpApplicationsFromDb(
-                    getApplication(), backupMetadata);
+        executor.submit(() -> {
+            List<ApplicationItem> updatedApplicationItems = PackageUtils
+                    .getInstalledOrBackedUpApplicationsFromDb(getApplication(), executor, true);
             synchronized (applicationItems) {
                 applicationItems.clear();
                 applicationItems.addAll(updatedApplicationItems);
@@ -275,7 +271,7 @@ public class MainViewModel extends AndroidViewModel {
                 sortApplicationList(mSortBy, mSortReverse);
                 filterItemsByFlags();
             }
-        }).start();
+        });
     }
 
     private void filterItemsByQuery(@NonNull List<ApplicationItem> applicationItems) {
@@ -338,9 +334,9 @@ public class MainViewModel extends AndroidViewModel {
                         continue;
                     }
                     // Filter backups
-                    if ((mFilterFlags & ListOptions.FILTER_APPS_WITH_BACKUPS) != 0 && item.metadata == null) {
+                    if ((mFilterFlags & ListOptions.FILTER_APPS_WITH_BACKUPS) != 0 && item.backup == null) {
                         continue;
-                    } else if ((mFilterFlags & ListOptions.FILTER_APPS_WITHOUT_BACKUPS) != 0 && item.metadata != null) {
+                    } else if ((mFilterFlags & ListOptions.FILTER_APPS_WITHOUT_BACKUPS) != 0 && item.backup != null) {
                         continue;
                     }
                     // Filter rests
@@ -439,7 +435,7 @@ public class MainViewModel extends AndroidViewModel {
                     case ListOptions.SORT_BY_DISABLED_APP:
                         return -mode * Boolean.compare(o1.isDisabled, o2.isDisabled);
                     case ListOptions.SORT_BY_BACKUP:
-                        return -mode * Boolean.compare(o1.metadata != null, o2.metadata != null);
+                        return -mode * Boolean.compare(o1.backup != null, o2.backup != null);
                     case ListOptions.SORT_BY_LAST_ACTION:
                         return -mode * o1.lastActionTime.compareTo(o2.lastActionTime);
                     case ListOptions.SORT_BY_TRACKERS:
@@ -529,7 +525,7 @@ public class MainViewModel extends AndroidViewModel {
         synchronized (applicationItems) {
             ApplicationItem item = getApplicationItemFromApplicationItems(packageName);
             if (item != null) {
-                if (item.metadata == null) {
+                if (item.backup == null) {
                     applicationItems.remove(item);
                     for (int userHandle : item.userHandles) {
                         AppManager.getDb().appDao().delete(item.packageName, userHandle);
@@ -574,7 +570,7 @@ public class MainViewModel extends AndroidViewModel {
     @WorkerThread
     @Nullable
     private ApplicationItem getNewApplicationItem(String packageName) {
-        int[] userHandles = Users.getUsersHandles();
+        int[] userHandles = Users.getUsersIds();
         ApplicationItem oldItem = null;
         for (int userHandle : userHandles) {
             try {
@@ -595,7 +591,7 @@ public class MainViewModel extends AndroidViewModel {
                 }
                 item.versionName = packageInfo.versionName;
                 item.versionCode = PackageInfoCompat.getLongVersionCode(packageInfo);
-                item.metadata = BackupUtils.getBackupInfo(packageName);
+                item.backup = BackupUtils.storeAllAndGetLatestBackupMetadata(packageName);
                 item.flags = applicationInfo.flags;
                 item.uid = applicationInfo.uid;
                 item.sharedUserId = packageInfo.sharedUserId;
@@ -653,7 +649,7 @@ public class MainViewModel extends AndroidViewModel {
                 item.packageName = app.packageName;
                 item.versionName = app.versionName;
                 item.versionCode = app.versionCode;
-                item.metadata = BackupUtils.getBackupInfo(packageName);
+                item.backup = BackupUtils.storeAllAndGetLatestBackupMetadata(packageName);
                 item.flags = app.flags;
                 item.uid = app.uid;
                 item.sharedUserId = app.sharedUserId;
@@ -703,6 +699,7 @@ public class MainViewModel extends AndroidViewModel {
     @Override
     protected void onCleared() {
         if (mPackageObserver != null) getApplication().unregisterReceiver(mPackageObserver);
+        executor.shutdownNow();
         super.onCleared();
     }
 

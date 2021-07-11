@@ -1,19 +1,4 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.apk.whatsnew;
 
@@ -25,6 +10,10 @@ import android.content.pm.PackageManager;
 import android.content.pm.PermissionInfo;
 import android.os.Build;
 
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.core.content.pm.PackageInfoCompat;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
@@ -34,13 +23,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import androidx.annotation.IntDef;
-import androidx.annotation.NonNull;
-import androidx.core.content.pm.PackageInfoCompat;
-
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
+import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -112,8 +97,8 @@ public class ApkWhatsNewFinder {
             };
         } else changes[VERSION_INFO] = ArrayUtils.emptyArray(Change.class);
         // Tracker info
-        HashMap<String, RulesStorageManager.Type> newPkgComponents = PackageUtils.collectComponentClassNames(newPkgInfo);
-        HashMap<String, RulesStorageManager.Type> oldPkgComponents = PackageUtils.collectComponentClassNames(oldPkgInfo);
+        HashMap<String, RuleType> newPkgComponents = PackageUtils.collectComponentClassNames(newPkgInfo);
+        HashMap<String, RuleType> oldPkgComponents = PackageUtils.collectComponentClassNames(oldPkgInfo);
         List<Change> componentChanges = new ArrayList<>();
         componentChanges.add(new Change(CHANGE_INFO, componentInfo[COMPONENT_INFO]));
         componentChanges.addAll(findChanges(newPkgComponents.keySet(), oldPkgComponents.keySet()));

@@ -1,19 +1,4 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.batchops;
 
@@ -34,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
+import java.io.FileNotFoundException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
@@ -50,7 +36,11 @@ import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.appops.AppOpsUtils;
 import io.github.muntashirakon.AppManager.appops.OpEntry;
 import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
+import io.github.muntashirakon.AppManager.backup.BackupException;
 import io.github.muntashirakon.AppManager.backup.BackupManager;
+import io.github.muntashirakon.AppManager.backup.convert.Convert;
+import io.github.muntashirakon.AppManager.backup.convert.ConvertUtils;
+import io.github.muntashirakon.AppManager.backup.convert.ImportType;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
@@ -58,9 +48,11 @@ import io.github.muntashirakon.AppManager.rules.compontents.ExternalComponentsIm
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
+import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.io.Path;
 
 @WorkerThread
 public class BatchOpsManager {
@@ -95,6 +87,10 @@ public class BatchOpsManager {
      * {@link #OP_BLOCK_COMPONENTS} and {@link #OP_UNBLOCK_COMPONENTS}.
      */
     public static final String ARG_SIGNATURES = "signatures";
+    /**
+     * {@link Integer} value, one of the {@link ImportType}s. To be used with {@link #OP_IMPORT_BACKUPS}.
+     */
+    public static final String ARG_BACKUP_TYPE = "backup_type";
 
     @IntDef(value = {
             OP_NONE,
@@ -110,6 +106,7 @@ public class BatchOpsManager {
             OP_ENABLE,
             OP_EXPORT_RULES,
             OP_FORCE_STOP,
+            OP_IMPORT_BACKUPS,
             OP_SET_APP_OPS,
             OP_GRANT_PERMISSIONS,
             OP_RESTORE_BACKUP,
@@ -142,6 +139,7 @@ public class BatchOpsManager {
     public static final int OP_CLEAR_CACHE = 16;
     public static final int OP_GRANT_PERMISSIONS = 17;
     public static final int OP_REVOKE_PERMISSIONS = 18;
+    public static final int OP_IMPORT_BACKUPS = 19;
 
     private final Handler handler;
 
@@ -220,6 +218,8 @@ public class BatchOpsManager {
                 return opGrantOrRevokePermissions(true);
             case OP_REVOKE_PERMISSIONS:
                 return opGrantOrRevokePermissions(false);
+            case OP_IMPORT_BACKUPS:
+                return opImportBackups();
             case OP_NONE:
                 break;
         }
@@ -264,20 +264,20 @@ public class BatchOpsManager {
             for (UserPackagePair pair : userPackagePairs) {
                 executor.submit(() -> {
                     BackupManager backupManager = BackupManager.getNewInstance(pair, args.getInt(ARG_FLAGS));
-                    boolean hasFailed = true;
-                    switch (mode) {
-                        case BackupDialogFragment.MODE_BACKUP:
-                            hasFailed = !backupManager.backup(backupNames);
-                            break;
-                        case BackupDialogFragment.MODE_DELETE:
-                            hasFailed = !backupManager.deleteBackup(backupNames);
-                            break;
-                        case BackupDialogFragment.MODE_RESTORE:
-                            hasFailed = !backupManager.restore(backupNames);
-                            break;
-                    }
-                    if (hasFailed) {
-                        synchronized (BatchOpsManager.this) {
+                    try {
+                        switch (mode) {
+                            case BackupDialogFragment.MODE_BACKUP:
+                                backupManager.backup(backupNames);
+                                break;
+                            case BackupDialogFragment.MODE_DELETE:
+                                backupManager.deleteBackup(backupNames);
+                                break;
+                            case BackupDialogFragment.MODE_RESTORE:
+                                backupManager.restore(backupNames);
+                                break;
+                        }
+                    } catch (BackupException e) {
+                        synchronized (failedPackages) {
                             failedPackages.add(pair);
                         }
                     }
@@ -287,6 +287,39 @@ public class BatchOpsManager {
         }
         executor.awaitCompletion();
         return lastResult = new Result(failedPackages);
+    }
+
+    @NonNull
+    private Result opImportBackups() {
+        @ImportType
+        int backupType = args.getInt(ARG_BACKUP_TYPE, ImportType.OAndBackup);
+        int userHandle = Users.myUserId();
+        Path[] files;
+        final List<UserPackagePair> failedPkgList = new ArrayList<>();
+        try {
+            files = ConvertUtils.getRelevantImportFiles(backupType);
+        } catch (FileNotFoundException e) {
+            return new Result(failedPkgList);
+        }
+        MultithreadedExecutor executor = MultithreadedExecutor.getNewInstance();
+        try {
+            for (Path file : files) {
+                executor.submit(() -> {
+                    Convert convert = ConvertUtils.getConversionUtil(backupType, file);
+                    try {
+                        convert.convert();
+                    } catch (BackupException e) {
+                        Log.e(TAG, "Could not backup " + convert.getPackageName(), e);
+                        synchronized (failedPkgList) {
+                            failedPkgList.add(new UserPackagePair(convert.getPackageName(), userHandle));
+                        }
+                    }
+                });
+            }
+        } catch (Throwable ignore) {
+        }
+        executor.awaitCompletion();
+        return new Result(failedPkgList);
     }
 
     private Result opBlockComponents() {
@@ -361,7 +394,7 @@ public class BatchOpsManager {
         }
         for (UserPackagePair pair : appliedPackages) {
             try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserHandle())) {
-                cb.setAppOp(String.valueOf(AppOpsManager.OP_RUN_IN_BACKGROUND), AppOpsManager.MODE_IGNORED);
+                cb.setAppOp(AppOpsManager.OP_RUN_IN_BACKGROUND, AppOpsManager.MODE_IGNORED);
             }
         }
         return new Result(failedPackages);

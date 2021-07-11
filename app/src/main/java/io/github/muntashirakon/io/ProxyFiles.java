@@ -1,19 +1,4 @@
-/*
- * Copyright (c) 2021 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.io;
 
@@ -68,10 +53,13 @@ public final class ProxyFiles {
      * @param uid  to apply through {@code chown}, or -1 to leave unchanged
      * @param gid  to apply through {@code chown}, or -1 to leave unchanged
      */
-    public static void setPermissions(File path, int mode, int uid, int gid) throws ErrnoException, RemoteException {
-        chmod(path, mode);
+    public static void setPermissions(@NonNull Path path, int mode, int uid, int gid)
+            throws ErrnoException, RemoteException {
+        File filePath = path.getFile();
+        if (filePath == null) return;
+        chmod(filePath, mode);
         if (uid >= 0 || gid >= 0) {
-            chown(path, uid, gid);
+            chown(filePath, uid, gid);
         }
     }
 

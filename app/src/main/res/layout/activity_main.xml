@@ -1,22 +1,5 @@
-<!--
-  ~ Copyright (C) 2020 Muntashir Al-Islam
-  ~
-  ~ This program is free software: you can redistribute it and/or modify
-  ~ it under the terms of the GNU General Public License as published by
-  ~ the Free Software Foundation, either version 3 of the License, or
-  ~ (at your option) any later version.
-  ~
-  ~ This program is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~ GNU General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU General Public License
-  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  -->
-
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later -->
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -44,49 +27,30 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/main_layout"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="?attr/actionBarSize"
-        android:orientation="vertical"
+        android:layout_weight="1"
+        android:focusable="false"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/swipe_refresh"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/item_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scrollbars="none"
-                tools:listitem="@layout/item_main" />
-
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
-    <com.google.android.material.bottomappbar.BottomAppBar
-        android:id="@+id/bottom_appbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        app:navigationIcon="@drawable/ic_baseline_clear_24"
-        app:menu="@menu/activity_main_selection_actions"
-        style="@style/AppTheme.BottomAppBar"
-        android:layout_gravity="bottom">
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/bottom_appbar_counter"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/item_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:textSize="20sp"
-            android:textColor="?android:attr/textColorPrimary"
-            android:ellipsize="marquee"
-            tools:text="@tools:sample/lorem[4]" />
+            android:scrollbars="none"
+            android:focusable="false"
+            android:clipToPadding="false"
+            tools:listitem="@layout/item_main" />
 
-    </com.google.android.material.bottomappbar.BottomAppBar>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <io.github.muntashirakon.widget.MultiSelectionView
+        android:id="@+id/selection_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="false"
+        app:menu="@menu/activity_main_selection_actions" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

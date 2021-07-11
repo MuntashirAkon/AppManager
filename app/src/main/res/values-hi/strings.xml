@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="_lang_tag" translatable="false">hi</string>
     <string name="deny_app_ops_description">कांस्टेंट वैल्यू द्वारा पहचाने गए ऐप ऑपरेशंस को अस्वीकार करें, यानी 63 का मतलब है RUN_IN_BACKGROUND</string>
     <string name="block_components_description">दिए गए हस्ताक्षर द्वारा पहचाने गए सभी कंपोनेंट को ब्लॉक करें</string>
@@ -8,10 +8,6 @@
     <string name="clear_cache">कैश साफ़ करें</string>
     <string name="pref_import_existing_msg">ऐप मैनेजर में अन्य ऐप्स द्वारा बंद किए कंपोनेंट जोड़ें। इस टूल का उपयोग करते समय सावधान रहें क्योंकि कई झूठी सकारात्मक हो सकती हैं। केवल उन्हीं ऐप्लिकेशन को चुनें जिनके बारे में आप कुछ निश्चित हैं</string>
     <string name="pref_import_existing">मौजूदा रूल्स को आयात करें</string>
-    <string name="community_links">अपडेट चैनल: https://t.me/AppManagerChannel
-\nसहायता समूह: https://t.me/AppManagerAndroid
-\nट्विटर: https://twitter.com/AMUpdateChannel</string>
-    <string name="community">टेलीग्राम समुदाय</string>
     <string name="source_code">सोर्स कोड</string>
     <string name="update">अपडेट</string>
     <string name="install">इनस्टॉल करें</string>
@@ -116,7 +112,7 @@
     <string name="the_import_was_successful">आयात सफल हुआ</string>
     <string name="pref_import_blocker">ब्लॉकर से आयात करें</string>
     <string name="pref_import_watt">वाट से आयात करें</string>
-    <string name="pref_import_export_blocking_rules_msg">रूल्स का आयात/निर्यात करें, बाहरी रूल्स का वाट और ब्लॉकर से आयात करें</string>
+    <string name="pref_import_export_blocking_rules_msg">रूल्स का आयात/निर्यात करें, बाहरी रूल्स का वाट और ब्लॉकर से आयात करें।</string>
     <string name="pref_import_export_blocking_rules">ब्लॉकिंग रूल्स का आयात/निर्यात</string>
     <string name="sort_by_mobile_data">मोबाइल डेटा</string>
     <string name="sort_by_times_opened">कितनी बार खोला</string>
@@ -135,7 +131,7 @@
     <string name="only_works_in_root_mode">केवल रुट मोड में काम करता है</string>
     <string name="app_settings">सेटिंग्स</string>
     <string name="usage_access">इस्तेमाल का एक्सेस</string>
-    <string name="pref_global_blocking_enabled_msg">आप एप्लिकेशन को ब्लॉक किए बिना किसी भी एप्लिकेशन के किसी भी कंपोनेंट को ब्लॉक कर सकते हैं</string>
+    <string name="pref_global_blocking_enabled_msg">आप एप्लिकेशन को ब्लॉक किए बिना किसी भी एप्लिकेशन के किसी भी कंपोनेंट को ब्लॉक कर सकते हैं।</string>
     <string name="pref_global_blocking_enabled">ग्लोबल कंपोनेंट ब्लॉकिंग</string>
     <string name="str_logo">लोगो</string>
     <string name="rules_not_applied">रूल्स लागू नहीं हैं</string>
@@ -288,7 +284,7 @@
     <string name="cache_size">कैश</string>
     <string name="data_size">डेटा</string>
     <string name="about">ऐप के बारे में</string>
-    <string name="data_usage_msg">पिछले बूट के बाद से डेटा का उपयोग</string>
+    <string name="data_usage_msg">डेटा का उपयोग</string>
     <string name="data_transmitted">प्रेषित डेटा</string>
     <string name="data_received">प्राप्त डेटा</string>
     <string name="sort_by_target_sdk">टार्गेट एसडीके</string>
@@ -307,9 +303,7 @@
     <string name="shared_user_id">साझा यूजर आईडी</string>
     <string name="sort_by_shared_user_id">साझा यूजर आईडी</string>
     <string name="no_feature">कोई फ़ीचर नहीं</string>
-    <string name="gles_ver">अपेक्षित GL ES संस्करण</string>
     <string name="uses_feature">फीचर्स उपयोग</string>
-    <string name="protection_level">सुरक्षा स्तर</string>
     <string name="group">समूह</string>
     <string name="shared_libs">साझा लाइब्रेरीज़</string>
     <string name="declared_permission">अनुमतियाँ</string>
@@ -378,7 +372,7 @@
     <string name="refresh">रीफ़्रेश करें</string>
     <string name="launch">प्रारंभ करें</string>
     <string name="activities">एक्टिविटी</string>
-    <string name="require_no_permission">किसी भी अनुमति की आवश्यकता नहीं</string>
+    <string name="require_no_permission">अनुमति की आवश्यकता नहीं</string>
     <string name="permissions">अनुमतियों का उपयोग</string>
     <string name="uninstall">अनइंस्टॉल करें</string>
     <string name="app_signing_install_without_data_loss">यदि आपने सिग्नेचर वेरिफिकेशन बंद कर रखा है, तो आप बिना डेटा खोए ऐप इंस्टॉल करने के लिए <b>केवल इंस्टॉल</b> विकल्प का उपयोग कर सकते हैं।</string>
@@ -632,8 +626,6 @@
     <string name="cpu">सीपीयू</string>
     <string name="users">यूज़र्स</string>
     <string name="languages">भाषाएँ</string>
-    <string name="unavailable">अनुपलब्ध</string>
-    <string name="available">उपलब्ध</string>
     <string name="battery_capacity">क्षमता</string>
     <string name="memory">मेमोरी</string>
     <string name="vendor">वेंडर</string>
@@ -772,4 +764,6 @@
     <string name="backup_obb_media_description">ओबीबी और मीडिया फ़ोल्डर्स बैकअप करें।</string>
     <string name="backup_external_data_description">बाहरी डेटा फ़ोल्डर्स का बैकअप करें। इसको काम करने के लिए <b> डेटा </b> चयनित होना अनिवार्य है।</string>
     <string name="backup_internal_data_description">डेटा फ़ोल्डर्स बैकअप करें। अगर चयनित किया तो इंटरनल डेटा फ़ोल्डर्स को भी बैकअप किया जाएगा।</string>
+    <string name="user_with_id">यूजर: <xliff:g id="user_id" example="0">%1$d</xliff:g></string>
+    <string name="app_signing_signatures">हस्ताक्षर</string>
 </resources>

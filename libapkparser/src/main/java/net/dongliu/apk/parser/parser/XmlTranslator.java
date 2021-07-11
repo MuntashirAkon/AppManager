@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.parser;
 
 import net.dongliu.apk.parser.struct.xml.*;
@@ -7,9 +9,8 @@ import java.util.List;
 
 /**
  * trans to xml text when parse binary xml file.
- *
- * @author dongliu
  */
+// Copyright 2014 Liu Dong
 public class XmlTranslator implements XmlStreamer {
     private StringBuilder sb;
     private int shift = 0;

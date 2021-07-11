@@ -1,24 +1,13 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: MIT AND GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.servermanager;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
+
+import androidx.annotation.AnyThread;
+import androidx.annotation.NonNull;
+import androidx.annotation.WorkerThread;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -30,16 +19,18 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.security.SecureRandom;
 
-import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.server.common.ConfigParam;
 import io.github.muntashirakon.AppManager.server.common.Constants;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
+// Copyright 2016 Zheng Li
 @SuppressWarnings("ResultOfMethodCallIgnored")
 class AssetsUtils {
-    public static void copyFile(@NonNull Context context, String fileName, File destFile, boolean force) {
+    @WorkerThread
+    public static void copyFile(@NonNull Context context, String fileName, File destFile, boolean force)
+            throws IOException {
         try (AssetFileDescriptor openFd = context.getAssets().openFd(fileName)) {
             if (force) {
                 destFile.delete();
@@ -64,12 +55,11 @@ class AssetsUtils {
                 fos.getFD().sync();
             }
             IOUtils.chmod644(destFile);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
-    static void writeScript(@NonNull LocalServer.Config config) {
+    @WorkerThread
+    static void writeScript(@NonNull LocalServer.Config config) throws IOException {
         try (AssetFileDescriptor openFd = config.context.getAssets().openFd(ServerConfig.EXECUTABLE_FILE_NAME);
              FileInputStream fdInputStream = openFd.createInputStream();
              InputStreamReader inputStreamReader = new InputStreamReader(fdInputStream);
@@ -109,11 +99,10 @@ class AssetsUtils {
                 bw.flush();
             }
             IOUtils.chmod644(destFile);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
+    @AnyThread
     @NonNull
     static String generateToken() {
         SecureRandom secureRandom = new SecureRandom();

@@ -1,88 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (C) 2020 Muntashir Al-Islam
-  ~
-  ~ This program is free software: you can redistribute it and/or modify
-  ~ it under the terms of the GNU General Public License as published by
-  ~ the Free Software Foundation, either version 3 of the License, or
-  ~ (at your option) any later version.
-  ~
-  ~ This program is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~ GNU General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU General Public License
-  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  -->
-
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clickable="true"
+    android:orientation="horizontal"
     android:focusable="true"
-    android:foreground="?android:attr/selectableItemBackground"
-    app:cardBackgroundColor="@android:color/transparent"
-    app:cardCornerRadius="0dp"
-    app:cardElevation="0dp">
+    android:background="@drawable/item_transparent"
+    android:paddingStart="@dimen/padding_medium"
+    android:paddingTop="@dimen/padding_small"
+    android:paddingEnd="@dimen/padding_small"
+    android:paddingBottom="@dimen/padding_medium">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/item_icon"
+        android:layout_width="@dimen/icon_size"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="@dimen/padding_medium"
+        android:layout_weight="0"
+        android:focusable="false"
+        tools:ignore="ContentDescription"
+        tools:srcCompat="@tools:sample/avatars" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/item_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:paddingStart="@dimen/padding_medium"
-        android:paddingTop="@dimen/padding_small"
-        android:paddingEnd="@dimen/padding_small"
-        android:paddingBottom="@dimen/padding_medium">
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/item_icon"
-            android:layout_width="@dimen/icon_size"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="@dimen/padding_medium"
-            android:layout_weight="0"
-            tools:ignore="ContentDescription"
-            tools:srcCompat="@tools:sample/avatars" />
-
-        <androidx.appcompat.widget.LinearLayoutCompat
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/item_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="@dimen/title_font"
+            android:focusable="false"
+            tools:text="@tools:sample/lorem" />
 
-            <TextView
-                android:id="@+id/item_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="?android:attr/textColorPrimary"
-                android:textSize="@dimen/title_font"
-                tools:text="@tools:sample/lorem" />
-
-            <TextView
-                android:id="@+id/item_subtitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/subtitle_font"
-                tools:text="@tools:sample/lorem" />
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/item_open"
-            style="@android:style/Widget.Material.ImageButton"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_gravity="center"
-            android:layout_marginStart="@dimen/padding_medium"
-            android:layout_weight="0"
-            android:background="?attr/selectableItemBackground"
-            app:icon="@drawable/ic_open_in_new_black_24dp"
-            app:iconGravity="textTop"
-            app:iconPadding="0dp"
-            tools:ignore="UnusedAttribute" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/item_subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/subtitle_font"
+            android:focusable="false"
+            android:nextFocusRight="@id/item_open"
+            tools:text="@tools:sample/lorem" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-</androidx.cardview.widget.CardView>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/item_open"
+        style="@android:style/Widget.Material.ImageButton"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="@dimen/padding_medium"
+        android:layout_weight="0"
+        android:background="@drawable/item_transparent"
+        android:focusable="true"
+        android:nextFocusLeft="@id/item_subtitle"
+        app:icon="@drawable/ic_open_in_new_black_24dp"
+        app:iconGravity="textTop"
+        app:iconPadding="0dp" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

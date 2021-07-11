@@ -1,8 +1,8 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.struct.resource;
 
-/**
- * @author dongliu
- */
+// Copyright 2014 Liu Dong
 public class TypeSpec {
 
     private long[] entryFlags;

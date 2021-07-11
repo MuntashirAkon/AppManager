@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 package io.github.muntashirakon.AppManager.types;
 
 import android.app.Service;
@@ -12,11 +13,17 @@ import android.os.Process;
 
 import androidx.annotation.CallSuper;
 import androidx.annotation.Nullable;
+import androidx.annotation.UiThread;
+import androidx.annotation.WorkerThread;
+
+import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 
 public abstract class ForegroundService extends Service {
     private final String name;
+    @SuppressWarnings("FieldCanBeLocal")
     private Looper serviceLooper;
     private ServiceHandler serviceHandler;
+    private volatile boolean isWorking = false;
 
     // Handler that receives messages from the thread
     private final class ServiceHandler extends Handler {
@@ -26,13 +33,20 @@ public abstract class ForegroundService extends Service {
 
         @Override
         public void handleMessage(Message msg) {
-            onHandleIntent(msg.getData().getParcelable("intent"));
-            stopSelf(msg.arg1);
+            Intent intent = msg.getData().getParcelable("intent");
+            UiThreadHandler.run(() -> onStartIntent(intent));
+            onHandleIntent(intent);
+            // It works because of Handler uses FIFO
+            stopSelfResult(msg.arg1);
         }
     }
 
     protected ForegroundService(String name) {
         this.name = name;
+    }
+
+    public final boolean isWorking() {
+        return isWorking;
     }
 
     @Override
@@ -45,7 +59,13 @@ public abstract class ForegroundService extends Service {
 
     @CallSuper
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
+        // TODO: 15/6/21 Make it final, extended classes shouldn't need to use it
+        if (isWorking) {
+            // Service already running
+            onQueued(intent);
+        }
+        isWorking = true;
         Message msg = serviceHandler.obtainMessage();
         msg.arg1 = startId;
         Bundle args = new Bundle();
@@ -55,7 +75,38 @@ public abstract class ForegroundService extends Service {
         return START_NOT_STICKY;
     }
 
+    @CallSuper
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        serviceLooper.quitSafely();
+    }
+
+    /**
+     * The work to be performed.
+     *
+     * @param intent The intent sent by {@link android.content.Context#startService(Intent)}
+     */
+    @WorkerThread
     protected abstract void onHandleIntent(@Nullable Intent intent);
+
+    /**
+     * The service is running and a new intent has been queued.
+     *
+     * @param intent The new intent that has been queued
+     */
+    @UiThread
+    protected void onQueued(@Nullable Intent intent) {
+    }
+
+    /**
+     * An intent is being processed. Called right before {@link #onHandleIntent(Intent)}.
+     *
+     * @param intent The intent to be processed.
+     */
+    @UiThread
+    protected void onStartIntent(@Nullable Intent intent) {
+    }
 
     @Override
     public IBinder onBind(Intent intent) {

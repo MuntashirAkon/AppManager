@@ -1,19 +1,4 @@
-/*
- * Copyright (C) 2021 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.servermanager;
 
@@ -31,6 +16,7 @@ import android.content.pm.ProviderInfo;
 import android.content.pm.ServiceInfo;
 import android.os.Build;
 import android.os.RemoteException;
+import android.os.SystemClock;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -75,22 +61,21 @@ public final class PackageManagerCompat {
     public @interface EnabledFlags {
     }
 
-    private static final int workingFlags = PackageManager.GET_META_DATA | PackageUtils.flagMatchUninstalled;
+    private static final int WORKING_FLAGS = PackageManager.GET_META_DATA | PackageUtils.flagMatchUninstalled;
 
     @WorkerThread
     public static List<PackageInfo> getInstalledPackages(int flags, @UserIdInt int userHandle)
             throws RemoteException {
-        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M && (flags & workingFlags) != 0) {
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M && (flags & ~WORKING_FLAGS) != 0) {
             // Need workaround
-            List<ApplicationInfo> applicationInfoList = getInstalledApplications(flags & workingFlags, userHandle);
+            List<ApplicationInfo> applicationInfoList = getInstalledApplications(flags & WORKING_FLAGS, userHandle);
             List<PackageInfo> packageInfoList = new ArrayList<>(applicationInfoList.size());
             for (int i = 0; i < applicationInfoList.size(); ++i) {
                 try {
                     packageInfoList.add(getPackageInfo(applicationInfoList.get(i).packageName, flags, userHandle));
                     if (i % 100 == 0) {
                         // Prevent DeadObjectException
-                        //noinspection BusyWait
-                        Thread.sleep(300);
+                        SystemClock.sleep(300);
                     }
                 } catch (Exception e) {
                     throw new RemoteException(e.getMessage());
@@ -202,8 +187,8 @@ public final class PackageManagerCompat {
             pm.clearApplicationUserData(packageName, new IPackageDataObserver.Stub() {
                 @Override
                 public void onRemoveCompleted(String packageName, boolean succeeded) {
-                    dataClearWatcher.countDown();
                     isSuccess.set(succeeded);
+                    dataClearWatcher.countDown();
                 }
             }, userId);
             dataClearWatcher.await();

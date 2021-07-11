@@ -1,10 +1,10 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.parser;
 
 import net.dongliu.apk.parser.struct.xml.*;
 
-/**
- * @author dongliu
- */
+// Copyright 2014 Liu Dong
 public class CompositeXmlStreamer implements XmlStreamer {
 
     public XmlStreamer[] xmlStreamers;

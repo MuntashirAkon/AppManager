@@ -1,19 +1,4 @@
-/*
- * Copyright (C) 2021 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.io;
 
@@ -31,32 +16,30 @@ import java.util.List;
 
 import io.github.muntashirakon.AppManager.IAMService;
 import io.github.muntashirakon.AppManager.IRemoteFile;
-import io.github.muntashirakon.AppManager.IRemoteFileReader;
-import io.github.muntashirakon.AppManager.IRemoteFileWriter;
 import io.github.muntashirakon.AppManager.ipc.IPCUtils;
 
 public class ProxyFile extends File {
     @Nullable
-    IRemoteFile file;
+    private final IRemoteFile file;
 
     public ProxyFile(@NonNull String pathname) {
         super(pathname);
-        getRemoteFile();
+        this.file = getRemoteFile();
     }
 
     public ProxyFile(@NonNull File file) {
         super(file.getAbsolutePath());
-        getRemoteFile();
+        this.file = getRemoteFile();
     }
 
     public ProxyFile(@Nullable String parent, @NonNull String child) {
         super(parent, child);
-        getRemoteFile();
+        this.file = getRemoteFile();
     }
 
     public ProxyFile(@Nullable File parent, @NonNull String child) {
         super(parent, child);
-        getRemoteFile();
+        this.file = getRemoteFile();
     }
 
     @Override
@@ -98,6 +81,12 @@ public class ProxyFile extends File {
     public boolean forceDelete() {
         if (isFile()) return super.delete();
         else return deleteDir(this);
+    }
+
+    @NonNull
+    @Override
+    public ProxyFile getAbsoluteFile() {
+        return new ProxyFile(super.getAbsoluteFile());
     }
 
     @Nullable
@@ -275,42 +264,60 @@ public class ProxyFile extends File {
 
     @NonNull
     @Override
-    public File getCanonicalFile() throws IOException {
+    public ProxyFile getCanonicalFile() throws IOException {
         if (isRemoteAlive()) {
-            return new File(getCanonicalPath());
+            return new ProxyFile(getCanonicalPath());
         }
-        return super.getCanonicalFile();
+        return new ProxyFile(super.getCanonicalFile());
     }
 
-    @NonNull
-    public IRemoteFileReader getFileReader() throws RemoteException {
+    @Override
+    public boolean canRead() {
         if (isRemoteAlive()) {
-            //noinspection ConstantConditions
-            IRemoteFileReader reader = file.getFileReader();
-            if (reader == null) throw new RemoteException(getAbsolutePath() + ": Couldn't get remote file reader");
-            return reader;
-        } else throw new RemoteException("Remote service isn't alive.");
+            try {
+                //noinspection ConstantConditions
+                return file.canRead();
+            } catch (RemoteException ignore) {
+            }
+        }
+        return super.canRead();
     }
 
-    @NonNull
-    public IRemoteFileWriter getFileWriter() throws RemoteException {
+    @Override
+    public boolean canWrite() {
         if (isRemoteAlive()) {
-            //noinspection ConstantConditions
-            IRemoteFileWriter writer = file.getFileWriter();
-            if (writer == null) throw new RemoteException(getAbsolutePath() + ": Couldn't get remote file writer.");
-            return writer;
-        } else throw new RemoteException("Remote service isn't alive.");
+            try {
+                //noinspection ConstantConditions
+                return file.canWrite();
+            } catch (RemoteException ignore) {
+            }
+        }
+        return super.canWrite();
     }
 
-    private void getRemoteFile() {
+    @Override
+    public boolean canExecute() {
+        if (isRemoteAlive()) {
+            try {
+                //noinspection ConstantConditions
+                return file.canExecute();
+            } catch (RemoteException ignore) {
+            }
+        }
+        return super.canExecute();
+    }
+
+    @Nullable
+    private IRemoteFile getRemoteFile() {
         IAMService amService = IPCUtils.getService();
         if (amService != null) {
             try {
-                file = amService.getFile(getAbsolutePath());
+                return amService.getFile(getAbsolutePath());
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
         }
+        return null;
     }
 
     private boolean isRemoteAlive() {

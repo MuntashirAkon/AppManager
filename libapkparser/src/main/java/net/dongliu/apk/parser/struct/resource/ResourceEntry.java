@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.struct.resource;
 
 import net.dongliu.apk.parser.struct.ResourceValue;
@@ -9,9 +11,8 @@ import androidx.annotation.Nullable;
 /**
  * A Resource entry specifies the key (name) of the Resource.
  * It is immediately followed by the value of that Resource.
- *
- * @author dongliu
  */
+// Copyright 2014 Liu Dong
 public class ResourceEntry {
     // Number of bytes in this structure. uint16_t
     private int size;

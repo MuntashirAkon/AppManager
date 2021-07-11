@@ -1,20 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (C) 2020 Muntashir Al-Islam
-  ~
-  ~ This program is free software: you can redistribute it and/or modify
-  ~ it under the terms of the GNU General Public License as published by
-  ~ the Free Software Foundation, either version 3 of the License, or
-  ~ (at your option) any later version.
-  ~
-  ~ This program is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~ GNU General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU General Public License
-  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
     <string name="_lang_tag" translatable="false">de</string>
     <string name="uninstall">Deinstallieren</string>
     <string name="permissions">Verwendet Berechtigungen</string>
@@ -44,9 +29,7 @@
     <string name="declared_permission">Berechtigungen</string>
     <string name="shared_libs">Geteilte Bibliotheken</string>
     <string name="group">Gruppe</string>
-    <string name="protection_level">Schutz-Level</string>
     <string name="uses_feature">Benutzt Funktionalitäten</string>
-    <string name="gles_ver">Benötigte OpenGL ES-Version</string>
     <string name="no_feature">Keine Funktionalitäten</string>
     <string name="sort_by_shared_user_id">Geteilte Nutzer-ID</string>
     <string name="shared_user_id">Geteilte Nutzer-ID</string>
@@ -111,21 +94,25 @@
     <string name="credits">Danksagungen</string>
     <string name="credits_message">Dieses Projekt baut auf folgenden Projekten auf:
 \n- The Android Open Source Project
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
-\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
-\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
-\n- <a href="https://github.com/Aefyr/SAI">SAI</a>
-\n- <a href="https://github.com/RikkaApps/Shizuku"> Shizuku</a>
+\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
 \n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
-\nLogo von <a href="https://github.com/Atrate">Atrate</a>. </string>
+\n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
+\n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
+\n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a>
+\n- <a href="https://github.com/Aefyr/SAI">SAI</a>
+\n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
+\nCopyright für das Original-Logo: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="word_wrap">Zeilenumbruch ein-/ausschalten</string>
     <string name="class_viewer">Klassen-Betrachter</string>
     <string name="toggle_class_listing">Auflisten von Klassen ein-/ausschalten</string>
-    <string name="tested_signatures_on_classes_and_time_taken">Getestete <xliff:g id="signature_no" example="342">%1$d</xliff:g> Signaturen von <xliff:g id="class_no" example="6000">%2$d</xliff:g> Klassen.
-\nDauer: <xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> Durchläufe).</string>
+    <string name="tested_signatures_on_classes_and_time_taken">Geprüfte <xliff:g id="signature_no" example="342">%1$d</xliff:g> Signaturen auf <xliff:g id="class_no" example="6000">%2$d</xliff:g> Klassen.
+\nBenötigte Zeit der <xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> Durchläufe).</string>
     <string name="found_trackers">Gefundene Verfolger:</string>
     <string name="tracker_details">Verfolger-Details</string>
     <string name="tracker_classes">Verfolger-Klassen</string>
@@ -349,10 +336,6 @@
     <string name="install">Installieren</string>
     <string name="update">Aktualisieren</string>
     <string name="source_code">Quellcode</string>
-    <string name="community">Telegram-Gemeinschaft</string>
-    <string name="community_links">Telegram-Update-Channel: https://t.me/AppManagerChannel
-\nHilfe-Gruppe (auf Englisch): https://t.me/AppManagerAndroid
-\nTwitter: https://twitter.com/AMUpdateChannel</string>
     <string name="pref_import_existing">Existierende Regeln importieren</string>
     <string name="pref_import_existing_msg">Hinzufügen von Komponenten zum App Manager, die von anderen Anwendungen deaktiviert wurden. Seien Sie bei der Verwendung dieses Tools vorsichtig, da es viele Fehlalarme geben kann. Wählen Sie nur die Anwendungen aus, bei denen Sie sich sicher sind.</string>
     <string name="clear_cache">Cache leeren</string>
@@ -434,7 +417,6 @@
     <string name="open_in_termux">In Termux öffnen</string>
     <string name="run_in_termux">In Termux ausführen</string>
     <string name="website">Webseite</string>
-    <string name="website_message">https://muntashirakon.github.io/AppManager</string>
     <string name="pref_remove_all_rules">Alle Regeln entfernen</string>
     <string name="pref_remove_all_rules_msg">Berechtigungen werden erteilt, Anwendungen und Komponenten werden auf ihre Standardwerte zurückgesetzt.</string>
     <string name="are_you_sure">Bist du Dir sicher?</string>
@@ -745,8 +727,6 @@
     <string name="cpu">CPU</string>
     <string name="users">Nutzer</string>
     <string name="languages">Sprachen</string>
-    <string name="unavailable">Nicht vorhanden</string>
-    <string name="available">Verfügbar</string>
     <string name="battery_capacity">Kapazität</string>
     <string name="memory">Speicher</string>
     <string name="vendor">Hersteller</string>
@@ -772,7 +752,7 @@
     <string name="backup_rules_description">Im App Manager konfigurierte Regeln sichern.</string>
     <string name="backup_extras_description">Sichern Sie App-Berechtigungen, Batteriespar- und Datennutzungsoptionen, MagiskHide-Status, SSAID usw.</string>
     <string name="backup_extras">Zusätze</string>
-    <string name="backup_cache_description">Die Ordner <b>cache</b>, <b>no_cache</b> und <b>no_backup</b> werden nicht gesichert.</string>
+    <string name="backup_cache_description">Die Ordner <b>cache</b>, <b>no_cache</b> und <b>no_backup</b> werden gesichert.</string>
     <string name="backup_obb_media_description">Sichern der OBB- und Medienordner.</string>
     <string name="backup_external_data_description">Sichern Sie die externen Datenordner.</string>
     <string name="backup_internal_data_description">Sichern Sie die Datenordner. Wenn diese Option ausgewählt ist, werden die internen Datenordner standardmäßig gesichert.</string>
@@ -923,10 +903,6 @@
     <string name="restart_log_viewer_to_see_changes">Starten Sie das Fenster des Log-Betrachters neu, um die Änderungen zu sehen.</string>
     <string name="log_viewer">Log-Betrachter</string>
     <string name="pref_log_viewer_msg">Konfigurieren Sie, wie Protokolle angezeigt werden.</string>
-    <plurals name="items_selected">
-        <item quantity="one"><xliff:g id="selection_no" example="20">%1$d</xliff:g> ausgewählt</item>
-        <item quantity="other"><xliff:g id="selection_no" example="20">%1$d</xliff:g> ausgewählt</item>
-    </plurals>
     <string name="pref_installer_msg">Konfigurieren Sie die Einstellungen für das App-Installationsprogramms.</string>
     <string name="expiry_date_cannot_be_empty">Das Verfallsdatum kann nicht leer sein.</string>
     <string name="signing_key">Signierschlüssel</string>
@@ -1014,7 +990,6 @@
     <string name="toast_invalid_selection">Ungültige Auswahl. Bitte nochmals versuchen.</string>
     <string name="toast_invalid_level">Ungültiger Level-Name: %s</string>
     <string name="pref_display_limit_hint">Bitte eine gültige Zahl zwischen %1$d und %2$d eingeben.</string>
-    <string name="title_filters">Filter</string>
     <string name="text_include_device_info">Geräteinformationen mit einschließen</string>
     <string name="text_filter_text">Text filtern</string>
     <string name="text_filter_ellipsis">Filter…</string>
@@ -1042,5 +1017,33 @@
     <string name="netpolicy_reject_cellular_data">Mobilfunkdaten ablehnen</string>
     <string name="netpolicy_allow_background_data">Hintergrunddaten zulassen, wenn der Datensparer eingeschaltet ist</string>
     <string name="netpolicy_reject_background_data">Hintergrunddaten verwerfen</string>
-    <string name="unknown_netpolicy">Unbekannte Netzrichtlinie (%s)</string>
+    <string name="port_number_invalid">Ungültige Portnummer.</string>
+    <string name="port_number_empty">Die Portnummer ist leer.</string>
+    <string name="adb_connect_port_number_description">Die Portnummer befindet sich unter dem <b>IP-Adresse &amp; Port</b>-Abschnitt direkt unter dem Abschnitt <b>Gerätenamen</b>.</string>
+    <string name="port_number">Port</string>
+    <string name="adb_connect">Anschließen</string>
+    <string name="wireless_debugging_not_supported">Fehlersucher über Funk wird auf dieser Plattform nicht unterstützt.</string>
+    <string name="wireless_debugging">Fehlersuche über WLAN</string>
+    <string name="unknown_net_policy">Unbekannte Netz-Richtlinie (%1$s - %2$X)</string>
+    <string name="fallback_to_no_root_mode_description">Der App Manager konnte die aktuelle Betriebsart nicht verwenden. Um zufälliges Verhalten zu vermeiden, sollten Sie vorübergehend in den No-Root-Modus wechseln. Ziehen Sie eine Fehlermeldung in Betracht, wenn das Problem nach einem Neustart des Geräts nicht behoben ist.</string>
+    <string name="fallback_to_no_root_mode">Fallback zum No-Root-Modus\?</string>
+    <string name="failed_to_prevent_background_run">Konnte nicht verhindern, dass %1$s im Hintergrund läuft</string>
+    <string name="app_signing_signature_mismatch_for_data_only_app">Konnte die App aufgrund von Signaturfehlern nicht installieren. Die App wurde deinstalliert, ohne ihre Daten zu löschen.</string>
+    <string name="community">Gemeinschaft</string>
+    <string name="community_links">Telegram: https://t.me/AppManagerChannel
+\nTwitter: https://twitter.com/AppManagerNews</string>
+    <plurals name="alert_failed_to_import_backups">
+        <item quantity="one">Konnte %1$d Sicherung nicht importieren</item>
+        <item quantity="other">Konnte %1$d Sicherung en nicht importieren</item>
+    </plurals>
+    <string name="import_from_tb">Importieren aus Titanium Backup</string>
+    <string name="import_from_oab_tb_msg">Die Sicherungen müssen sich unter %s befinden.</string>
+    <string name="import_from_oab">Importieren von OAndBackup</string>
+    <string name="pref_import_backups_msg">Importieren Sie Sicherungen aus OAndBackup, Titanium Backup oder Swift Backup.</string>
+    <string name="pref_import_backups">Sicherungen importieren</string>
+    <string name="added_to_queue">Zur Warteschlange hinzugefügt</string>
+    <string name="minimum_version">Minimale Version: %d</string>
+    <string name="help_uses_permissions_tab">Klicken Sie auf ein Element, um es <b>zu gewähren</b> oder <b>zu entziehen</b>. Nur die Berechtigungen <b>Gefahr</b> und <b>Entwicklung</b> können gewährt oder entzogen werden.</string>
+    <string name="help_permissions_tab">Diese Berechtigungen werden von dieser App festgelegt und können nicht widerrufen werden.</string>
+    <string name="help_app_ops_tab">Klicken Sie auf ein Element, um es zu <b>zulassen</b> oder <b>zu ignorieren</b>. Klicken Sie lange auf ein Element, um andere unterstützte Modi anzuzeigen.</string>
 </resources>

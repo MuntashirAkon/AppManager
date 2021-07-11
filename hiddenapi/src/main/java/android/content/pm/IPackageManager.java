@@ -1,19 +1,4 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY throws RemoteException; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: Apache-2.0
 
 package android.content.pm;
 
@@ -21,6 +6,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
+import android.content.pm.permission.SplitPermissionInfoParcelable;
 import android.graphics.Bitmap;
 import android.os.BaseBundle;
 import android.os.Binder;
@@ -31,11 +17,11 @@ import android.os.IInterface;
 import android.os.PersistableBundle;
 import android.os.RemoteException;
 
-import java.util.List;
-import java.util.Map;
-
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+
+import java.util.List;
+import java.util.Map;
 
 public interface IPackageManager extends IInterface {
     @RequiresApi(Build.VERSION_CODES.N)
@@ -1271,6 +1257,9 @@ public interface IPackageManager extends IInterface {
 
     @RequiresApi(Build.VERSION_CODES.Q)
     void notifyPackagesReplacedReceived(String[] packages) throws RemoteException;
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    List<SplitPermissionInfoParcelable> getSplitPermissions();
 
     abstract class Stub extends Binder implements IPackageManager {
         public static IPackageManager asInterface(IBinder binder) {

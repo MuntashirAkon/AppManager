@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.struct.resource;
 
 import net.dongliu.apk.parser.struct.StringPool;
@@ -11,9 +13,8 @@ import androidx.annotation.Nullable;
 
 /**
  * Resource packge.
- *
- * @author dongliu
  */
+// Copyright 2014 Liu Dong
 public class ResourcePackage {
     // the packageName
     private String name;

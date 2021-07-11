@@ -1,19 +1,4 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later
 
 apply plugin: 'com.android.application'
 
@@ -25,8 +10,13 @@ android {
         applicationId 'io.github.muntashirakon.AppManager'
         minSdkVersion rootProject.ext.minSdk
         targetSdkVersion rootProject.ext.targetSdk
-        versionCode 386
+        versionCode 390
         versionName "2.7.0"
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
     }
 
     signingConfigs {
@@ -46,6 +36,7 @@ android {
         }
         preRelease {
             minifyEnabled false
+            applicationIdSuffix '.pre'
             versionNameSuffix '-PRE'
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             resValue "string", "app_name", "AM Pre-release"
@@ -78,12 +69,21 @@ android {
     aaptOptions {
         noCompress 'jar', 'sh'
     }
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
+    sourceSets {
+        androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
+    }
 }
 
 dependencies {
     compileOnly project(path: ':hiddenapi')
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(path: ':libcoreui')
     implementation project(path: ':libapkparser')
     implementation project(path: ':libopenpgp')
     implementation project(path: ':libserver')
@@ -95,7 +95,7 @@ dependencies {
     implementation 'com.github.MuntashirAkon:sun-security-android:1.1'
     implementation 'org.bouncycastle:bcprov-jdk15on:1.68'
 
-    implementation 'com.google.android.material:material:1.4.0-alpha02'
+    implementation "com.google.android.material:material:${material_version}"
     implementation "androidx.appcompat:appcompat:${appcompat_version}"
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01'
     implementation 'androidx.preference:preference:1.1.1'
@@ -107,17 +107,17 @@ dependencies {
 
     implementation "com.github.topjohnwu.libsu:core:${libsu_version}"
 
-//    implementation 'me.weishu:free_reflection:3.0.1'
-    implementation 'com.github.ChickenHook:RestrictionBypass:2.2'
-    implementation 'com.github.zhanghai:AndroidFastScroll:v1.1.5'
+    implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:2.0'
+    implementation 'me.zhanghai.android.fastscroll:library:1.1.6'
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
 
     // Espresso UI Testing
-    androidTestImplementation "com.android.support.test.espresso:espresso-core:3.0.2"
+//    androidTestImplementation "com.android.support.test.espresso:espresso-core:3.0.2"
     // Optional if you need to detect intents.
-    androidTestImplementation "com.android.support.test.espresso:espresso-intents:3.0.2"
+//    androidTestImplementation "com.android.support.test.espresso:espresso-intents:3.0.2"
 
-    testImplementation 'junit:junit:4.13.1'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.robolectric:robolectric:4.4'
 }
 
 preBuild.dependsOn ":server:build"

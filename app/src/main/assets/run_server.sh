@@ -1,4 +1,5 @@
 #!/system/bin/sh
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 if [[ $# -lt 2 ]]; then
     echo "USAGE: ./run_server.sh <path|port> <token>"

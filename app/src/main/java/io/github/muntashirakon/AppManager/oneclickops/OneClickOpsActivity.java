@@ -1,19 +1,4 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.oneclickops;
 
@@ -26,10 +11,15 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.text.SpannableStringBuilder;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.collection.ArraySet;
+import androidx.core.content.ContextCompat;
 
 import com.android.internal.util.TextUtils;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -43,24 +33,25 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import androidx.annotation.NonNull;
-import androidx.collection.ArraySet;
-import androidx.core.content.ContextCompat;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
-import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
+import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
 import io.github.muntashirakon.AppManager.types.TextInputDropdownDialogBuilder;
+import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.ListItemCreator;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
@@ -114,14 +105,14 @@ public class OneClickOpsActivity extends BaseActivity {
         mItemCreator.addItemWithTitleSubtitle(getString(R.string.set_mode_for_app_ops_dots),
                 getString(R.string.deny_app_ops_description))
                 .setOnClickListener(v -> blockAppOps());
-            mItemCreator.addItemWithTitleSubtitle(getText(R.string.back_up),
-                    getText(R.string.backup_msg)).setOnClickListener(v ->
-                    new BackupTasksDialogFragment().show(getSupportFragmentManager(),
-                            BackupTasksDialogFragment.TAG));
-            mItemCreator.addItemWithTitleSubtitle(getText(R.string.restore),
-                    getText(R.string.restore_msg)).setOnClickListener(v ->
-                    new RestoreTasksDialogFragment().show(getSupportFragmentManager(),
-                            RestoreTasksDialogFragment.TAG));
+        mItemCreator.addItemWithTitleSubtitle(getText(R.string.back_up),
+                getText(R.string.backup_msg)).setOnClickListener(v ->
+                new BackupTasksDialogFragment().show(getSupportFragmentManager(),
+                        BackupTasksDialogFragment.TAG));
+        mItemCreator.addItemWithTitleSubtitle(getText(R.string.restore),
+                getText(R.string.restore_msg)).setOnClickListener(v ->
+                new RestoreTasksDialogFragment().show(getSupportFragmentManager(),
+                        RestoreTasksDialogFragment.TAG));
         if (BuildConfig.DEBUG) {
             mItemCreator.addItemWithTitleSubtitle(getString(R.string.clear_data_from_uninstalled_apps),
                     getString(R.string.clear_data_from_uninstalled_apps_description))
@@ -152,17 +143,21 @@ public class OneClickOpsActivity extends BaseActivity {
         executor.submit(() -> {
             final List<ItemCount> trackerCounts = new ArrayList<>();
             ItemCount trackerCount;
-            for (PackageInfo packageInfo : getPackageManager().getInstalledPackages(
-                    PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS
-                    | PackageManager.GET_PROVIDERS | flagDisabledComponents
-                    | PackageManager.GET_URI_PERMISSION_PATTERNS
-                    | PackageManager.GET_SERVICES)) {
-                if (Thread.currentThread().isInterrupted()) return;
-                ApplicationInfo applicationInfo = packageInfo.applicationInfo;
-                if (!systemApps && (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0)
-                    continue;
-                trackerCount = ComponentUtils.getTrackerCountForApp(packageInfo);
-                if (trackerCount.count > 0) trackerCounts.add(trackerCount);
+            try {
+                for (PackageInfo packageInfo : PackageManagerCompat.getInstalledPackages(
+                        PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | flagDisabledComponents
+                                | PackageManager.GET_PROVIDERS | PackageManager.GET_SERVICES, Users.myUserId())) {
+                    if (Thread.currentThread().isInterrupted()) return;
+                    ApplicationInfo applicationInfo = packageInfo.applicationInfo;
+                    if (!systemApps && (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0)
+                        continue;
+                    trackerCount = ComponentUtils.getTrackerCountForApp(packageInfo);
+                    if (trackerCount.count > 0) trackerCounts.add(trackerCount);
+                }
+            } catch (RemoteException e) {
+                Log.e("OCOA", e);
+                UiThreadHandler.run(() -> UIUtils.displayShortToast(R.string.failed_to_fetch_package_info));
+                return;
             }
             if (!trackerCounts.isEmpty()) {
                 final ArrayList<String> trackerPackages = new ArrayList<>();
@@ -234,7 +229,7 @@ public class OneClickOpsActivity extends BaseActivity {
                             ItemCount componentCount = new ItemCount();
                             componentCount.packageName = applicationInfo.packageName;
                             componentCount.packageLabel = applicationInfo.loadLabel(getPackageManager()).toString();
-                            componentCount.count = PackageUtils.getFilteredComponents(applicationInfo.packageName, Users.getCurrentUserHandle(), signatures).size();
+                            componentCount.count = PackageUtils.getFilteredComponents(applicationInfo.packageName, Users.myUserId(), signatures).size();
                             if (componentCount.count > 0) componentCounts.add(componentCount);
                         }
                         if (!componentCounts.isEmpty()) {
@@ -335,7 +330,7 @@ public class OneClickOpsActivity extends BaseActivity {
                             AppOpCount appOpCount = new AppOpCount();
                             appOpCount.packageName = applicationInfo.packageName;
                             appOpCount.packageLabel = applicationInfo.loadLabel(getPackageManager()).toString();
-                            appOpCount.appOps = PackageUtils.getFilteredAppOps(applicationInfo.packageName, Users.getCurrentUserHandle(), appOpList, mode);
+                            appOpCount.appOps = PackageUtils.getFilteredAppOps(applicationInfo.packageName, Users.myUserId(), appOpList, mode);
                             appOpCount.count = appOpCount.appOps.size();
                             if (appOpCount.count > 0) appOpCounts.add(appOpCount);
                         }

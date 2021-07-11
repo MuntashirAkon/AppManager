@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: WTFPL AND GPL-3.0-or-later -->
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:foreground="?selectableItemBackground"
+    android:focusable="true"
+    android:background="@drawable/item_transparent"
     android:orientation="horizontal">
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/log_level_text"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -37,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/timestamp_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -48,7 +50,7 @@
                 tools:text="@tools:sample/date/ddmmyy"
                 tools:ignore="RtlSymmetry,SmallSp" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/pid_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -61,7 +63,7 @@
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tag_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -71,7 +73,7 @@
             android:typeface="monospace"
             tools:text="SomeActivity" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/log_output_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

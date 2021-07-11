@@ -1,26 +1,13 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.runningapps;
 
 import androidx.annotation.NonNull;
 
+import java.util.Objects;
+
 public class ProcessItem {
-    public int pid;
+    public final int pid;
     public int ppid;
     public long rss;
     public long vsz;
@@ -35,7 +22,9 @@ public class ProcessItem {
      */
     public String context;
 
-    public boolean selected = false;
+    public ProcessItem(int pid) {
+        this.pid = pid;
+    }
 
     @Override
     @NonNull
@@ -52,5 +41,18 @@ public class ProcessItem {
                 ", name='" + name + '\'' +
                 ", context='" + context + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ProcessItem)) return false;
+        ProcessItem that = (ProcessItem) o;
+        return pid == that.pid;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pid);
     }
 }

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.struct.resource;
 
 import android.util.SparseArray;
@@ -12,9 +14,8 @@ import androidx.annotation.NonNull;
 
 /**
  * The apk resource table
- *
- * @author dongliu
  */
+// Copyright 2014 Liu Dong
 public class ResourceTable {
     private Map<Short, ResourcePackage> packageMap = new HashMap<>();
     private StringPool stringPool;

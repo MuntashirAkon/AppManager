@@ -1,24 +1,13 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.backup;
 
 import android.content.Context;
 import android.text.SpannableStringBuilder;
+
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.core.util.Pair;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -28,9 +17,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 
-import androidx.annotation.IntDef;
-import androidx.annotation.NonNull;
-import androidx.core.util.Pair;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -236,7 +222,7 @@ public final class BackupFlags {
                 }
                 backupFlags.add(BACKUP_MULTIPLE);
                 put(BACKUP_MULTIPLE, new Pair<>(R.string.backup_multiple, R.string.backup_multiple_description));
-                if (Users.getUsersHandles().length > 1) {
+                if (Users.getUsersIds().length > 1) {
                     // Display custom users only if multiple users present
                     backupFlags.add(BACKUP_CUSTOM_USERS);
                     put(BACKUP_CUSTOM_USERS, new Pair<>(R.string.backup_custom_users, R.string.backup_custom_users_description));
@@ -256,7 +242,7 @@ public final class BackupFlags {
             flags &= ~BACKUP_EXTRAS;
             flags &= ~BACKUP_RULES;
         }
-        if (Users.getUsersHandles().length == 1) {
+        if (Users.getUsersIds().length == 1) {
             flags &= ~BACKUP_CUSTOM_USERS;
         }
         return flags | BACKUP_EXCLUDE_CACHE;

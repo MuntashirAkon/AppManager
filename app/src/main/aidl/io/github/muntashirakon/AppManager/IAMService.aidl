@@ -1,19 +1,4 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager;
 
@@ -21,6 +6,7 @@ import io.github.muntashirakon.AppManager.IRemoteFile;
 import io.github.muntashirakon.AppManager.IRemoteProcess;
 import io.github.muntashirakon.AppManager.IRemoteShell;
 import io.github.muntashirakon.io.FileStatus;
+import io.github.muntashirakon.io.IFileDescriptor;
 
 // Transact code starts from 3
 interface IAMService {
@@ -32,4 +18,5 @@ interface IAMService {
     void chown(in String path, in int uid, in int gid) = 8;
     FileStatus stat(in String path) = 9;
     FileStatus lstat(in String path) = 10;
+    IFileDescriptor getFD(in String path, in String mode) = 11;
 }

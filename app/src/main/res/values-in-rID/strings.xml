@@ -1,20 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (C) 2020 Muntashir Al-Islam
-  ~
-  ~ This program is free software: you can redistribute it and/or modify
-  ~ it under the terms of the GNU General Public License as published by
-  ~ the Free Software Foundation, either version 3 of the License, or
-  ~ (at your option) any later version.
-  ~
-  ~ This program is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~ GNU General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU General Public License
-  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
+    <string name="_lang_tag" translatable="false">in</string>
     <string name="uninstall">Hapus Pemasangan</string>
     <string name="permissions">Memerlukan Izin</string>
     <string name="require_no_permission">Tidak memerlukan izin</string>
@@ -65,9 +51,7 @@
     <string name="shared_user_id">ID pengguna yang dibagikan</string>
     <string name="sort_by_shared_user_id">ID pengguna yang dibagikan</string>
     <string name="no_feature">Tidak ada fitur</string>
-    <string name="gles_ver">Memerlukan versi OpenGL ES</string>
     <string name="uses_feature">Menggunakan fitur</string>
-    <string name="protection_level">Tingkat proteksi</string>
     <string name="declared_permission">Perizinan</string>
     <string name="patterns_allowed">pola diperbolehkan</string>
     <string name="write">Tulis</string>
@@ -203,8 +187,8 @@
     <string name="tracker_classes">Class tracker</string>
     <string name="tracker_details">Rincian tracker</string>
     <string name="found_trackers">Tracker ditemukan:</string>
-    <string name="tested_signatures_on_classes_and_time_taken">Diperiksa <xliff:g id="signature_no" example="342">%1$d</xliff:g> tanda pada <xliff:g id="class_no" example="6000">%2$d</xliff:g> class.
-\nWaktu terambil <xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> pengulangan).</string>
+    <string name="tested_signatures_on_classes_and_time_taken">Telah diuji tanda tangan <xliff:g id="signature_no" example="342">%1$d</xliff:g> pada kelas <xliff:g id="class_no" example="6000">%2$d</xliff:g>.
+\nWaktu terpakai <xliff:g id="time" example="10000">%3$d</xliff:g> milidetik (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> pengualngan).</string>
     <plurals name="other_trackers_and_classes">
         <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> tracker dengan <xliff:g id="class_no" example="50">%2$d</xliff:g> class</item>
     </plurals>
@@ -217,18 +201,22 @@
     <string name="toggle_class_listing">Alihkan Pendaftar Class</string>
     <string name="class_viewer">Peninjau Class</string>
     <string name="word_wrap">alihkan word wrap</string>
-    <string name="credits_message">Kepada pemilik dari
+    <string name="credits_message">Kepada pembuat/pemilik dari
 \n- Proyek Android Sumber Terbuka
+\n- <a href="https://github.com/butzist/ActivityLauncher">Peluncur Aktivfitas</a>
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Informasi Apps_packages</a>
-\n- <a href="https://github.com/butzist/ActivityLauncher">Peluncur Aktifitas</a>
-\n- <a href="https://github.com/billthefarmer/editor">Penyunting</a>
-\n- <a href="https://github.com/zhaobao/AppsMonitor">MonitorApps</a>
-\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
+\n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
+\n- <a href="https://github.com/matrix-org/matrix-android-sdk">SDK Android Matrix</a>
+\n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
+\n- <a href="https://github.com/open-keychain/open-keychain">Keychain Sumber Terbuka</a>
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
-\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
-\nHak Cipta logo asli: <a href="https://github.com/Atrate">Atrate</a>. </string>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
+\nKarya Logo Asli: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="credits">Pembuat</string>
     <string name="third_party">Pustakaan dan Ikon Pihak-Ketiga</string>
     <string name="license">Lisensi</string>
@@ -495,8 +483,6 @@
     <string name="cpu">CPU</string>
     <string name="users">Pengguna</string>
     <string name="languages">Bahasa</string>
-    <string name="unavailable">Tidak tersedia</string>
-    <string name="available">Tersedia</string>
     <string name="battery_capacity">Kapasitas</string>
     <string name="memory">Penyimpanan</string>
     <string name="vendor">Penjaja</string>
@@ -810,10 +796,6 @@
     <string name="clear_cache">Kosongkan Cache</string>
     <string name="pref_import_existing_msg">Tambahkan komponen yang dinonaktifkan oleh aplikasi lain ke App Manager. Hati-hati saat menggunakan alat ini karena ada banyak false-positif. Pilih hanya aplikasi yang Anda pasti.</string>
     <string name="pref_import_existing">Impor aturan yang ada</string>
-    <string name="community_links">Kanal Pembaruan: https://t.me/AppManagerChannel
-\nSupport Grup: https://t.me/AppManagerAndroid
-\nTwitter: https://twitter.com/AMUpdateChannel</string>
-    <string name="community">Komunitas Telegram</string>
     <string name="source_code">Kode Sumber</string>
     <string name="update">Pembaruan</string>
     <string name="install">Pasang</string>
@@ -839,9 +821,6 @@
     </plurals>
     <string name="unknown_op">Operasi Tidak Diketahui</string>
     <string name="internal_data">Data internal</string>
-    <plurals name="items_selected">
-        <item quantity="other"><xliff:g id="selection_no" example="20">%1$d</xliff:g>dipilih</item>
-    </plurals>
     <string name="pref_installer_msg">Konfigurasikan tingkah dari pemasang aplikasi.</string>
     <string name="expiry_date_cannot_be_empty">Tangal kadaluarsa tidak bisa kosong.</string>
     <string name="signing_key">Kunci tanda masuk/sign</string>
@@ -911,7 +890,6 @@
     <string name="toast_invalid_selection">Pilihan tidak valid. Silahkan coba lagi.</string>
     <string name="toast_invalid_level">Nama tingkat yang tidak valid: %s</string>
     <string name="pref_display_limit_hint">Silahkan masukkan sebuah nomor yang valid antara %1$d dan %2$d.</string>
-    <string name="title_filters">Filter</string>
     <string name="text_include_device_info">Termasuk informasi perangkat</string>
     <string name="text_filter_text">Teks filter</string>
     <string name="text_filter_ellipsis">Filter…</string>
@@ -1004,5 +982,32 @@
     <string name="netpolicy_reject_cellular_data">Tolak data seluler</string>
     <string name="netpolicy_allow_background_data">Izinkan data di latar belakang saat Penghemat Data aktif</string>
     <string name="netpolicy_reject_background_data">Tolak data di latar belakang</string>
-    <string name="unknown_netpolicy">Kebijakan net tidak dikenal (%s)</string>
+    <string name="wireless_debugging_not_supported">Debug nirkabel tidak didukung dalam platform ini.</string>
+    <string name="wireless_debugging">Debug nirkabel</string>
+    <string name="port_number_invalid">Nomor port tidak valid.</string>
+    <string name="port_number_empty">Nomor port kosong.</string>
+    <string name="adb_connect_port_number_description">Nomor port terdapat dibawah bagian <b>Alamat IP &amp; port</b> tepat dibawah bagian <b>Nama perangkat</b>.</string>
+    <string name="port_number">Port</string>
+    <string name="adb_connect">Hbungkan</string>
+    <string name="unknown_net_policy">Netpolicy yang tidak dikenal (%1$s - %2$X)</string>
+    <string name="fallback_to_no_root_mode_description">App Manager tidak dapat menggunakan mode operasi saat ini. Untuk menghindari perilaku acak, Anda harus beralih sementara ke mode no-root. Pertimbangkan untuk melaporkannya jika masalah tidak selesai/diperbaiki setelah memulai ulang perangkat.</string>
+    <string name="fallback_to_no_root_mode">Kembalikan ke mode no-root\?</string>
+    <string name="app_signing_signature_mismatch_for_data_only_app">Tidak dapat memasang aplikasi dikarenakan ketidakcocokan tanda tangan. Aplikasi dicopot tanpa membersihkan datanya.</string>
+    <string name="failed_to_prevent_background_run">Tidak dapat mencegah %1$s untuk berjalan di latar belakang</string>
+    <string name="community_links">Telegram: https://t.me/AppManagerChannel
+\nTwitter: https://twitter.com/AppManagerNews</string>
+    <string name="community">Komunitas</string>
+    <plurals name="alert_failed_to_import_backups">
+        <item quantity="other">Tidak dapat mengimpor %1$d cadangan</item>
+    </plurals>
+    <string name="import_from_tb">Impor dari Titanium Backup</string>
+    <string name="import_from_oab_tb_msg">Cadangan harus berlokasi di %s.</string>
+    <string name="import_from_oab">Impor dari OAndBackup</string>
+    <string name="pref_import_backups_msg">Impor cadangan dari OAndBAckup, Titanium Backup atau Swift Backup.</string>
+    <string name="pref_import_backups">Impor cadangan</string>
+    <string name="minimum_version">Versi minimum: %d</string>
+    <string name="help_permissions_tab">Perizinan ini ditetapkan oleh aplikasi ini dan tidak dapat dicabut izin nya.</string>
+    <string name="help_uses_permissions_tab">Klik pada sebuah item untuk <b>mengabulkan</b> atau <b>mencabut</b> izin nya. Hanya perizinan yang <b>berbahaya</b> dan <b>pengembangan</b> yang dapat dikabulkan atau dicabut izin.</string>
+    <string name="help_app_ops_tab">Klik pada sebuah item untuk <b>mengizinkan</b> atau <b>imengabaikan</b> nya. Klik lama pada sebuah item untuk melihat mode yang didukung lainnya.</string>
+    <string name="added_to_queue">Ditambahkan ke antreran</string>
 </resources>

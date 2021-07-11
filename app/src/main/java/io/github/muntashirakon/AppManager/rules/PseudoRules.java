@@ -1,16 +1,20 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 package io.github.muntashirakon.AppManager.rules;
 
-import android.content.Context;
+import android.os.RemoteException;
+
+import androidx.annotation.NonNull;
 
 import java.io.File;
 import java.io.IOException;
 
-import android.os.RemoteException;
-import androidx.annotation.NonNull;
+import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.io.Path;
 
 public class PseudoRules extends RulesStorageManager {
-    public PseudoRules(@NonNull Context context, @NonNull String packageName, int userHandle) {
-        super(context, packageName, userHandle);
+    public PseudoRules(@NonNull String packageName, int userHandle) {
+        super(packageName, userHandle);
         setReadOnly();
     }
 
@@ -19,17 +23,18 @@ public class PseudoRules extends RulesStorageManager {
         // Do nothing
     }
 
-    public void loadExternalEntries(File file) throws IOException, RemoteException {
+    public void loadExternalEntries(Path file) throws IOException, RemoteException {
         super.loadEntries(file, true);
     }
 
     /**
      * No rules will be loaded
+     *
      * @return /dev/null
      */
     @NonNull
     @Override
-    protected File getDesiredFile() {
-        return new File("/dev/null");
+    protected Path getDesiredFile() {
+        return new Path(AppManager.getContext(), new File("/dev/null"));
     }
 }

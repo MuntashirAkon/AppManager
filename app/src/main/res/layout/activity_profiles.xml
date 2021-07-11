@@ -1,21 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (C) 2020 Muntashir Al-Islam
-  ~
-  ~ This program is free software: you can redistribute it and/or modify
-  ~ it under the terms of the GNU General Public License as published by
-  ~ the Free Software Foundation, either version 3 of the License, or
-  ~ (at your option) any later version.
-  ~
-  ~ This program is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~ GNU General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU General Public License
-  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  -->
-
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -37,7 +21,7 @@
             android:layout_height="match_parent"
             tools:listitem="@layout/item_shared_pref" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@android:id/empty"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -55,6 +39,7 @@
         android:src="@drawable/ic_baseline_add_24"
         style="@style/AppTheme.FloatingActionButton"
         android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/padding_medium" />
+        android:layout_margin="@dimen/padding_medium"
+        android:contentDescription="@string/new_profile" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

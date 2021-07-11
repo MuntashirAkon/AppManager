@@ -1,22 +1,8 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.utils;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Typeface;
@@ -37,18 +23,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import android.widget.Toast;
-import androidx.annotation.*;
+
+import androidx.annotation.Dimension;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.PluralsRes;
+import androidx.annotation.Px;
+import androidx.annotation.StringRes;
+import androidx.annotation.UiThread;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
+
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.Locale;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentActivity;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 
@@ -60,9 +53,10 @@ public class UIUtils {
                                                int color) {
         Spannable spannable = sSpannableFactory.newSpannable(text);
         int start = text.toLowerCase(Locale.ROOT).indexOf(constraint);
+        if (start == -1) return spannable;
         int end = start + constraint.length();
-        spannable.setSpan(new BackgroundColorSpan(color), start, end,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        if (end > text.length()) return spannable;
+        spannable.setSpan(new BackgroundColorSpan(color), start, end, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
         return spannable;
     }
 
@@ -165,23 +159,32 @@ public class UIUtils {
         return context.getResources().getDimensionPixelSize(R.dimen.subtitle_font);
     }
 
+    @Px
     public static int dpToPx(@NonNull Context context, int dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
                 context.getResources().getDisplayMetrics());
     }
 
+    @Px
     public static int dpToPx(@NonNull Context context, float dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
     }
 
+    @Px
     public static int spToPx(@NonNull Context context, float sp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, context.getResources().getDisplayMetrics());
+    }
+
+    @Dimension
+    public static int pxToDp(@NonNull Context context, int pixel) {
+        return (int) ((float) pixel / context.getResources().getDisplayMetrics().density);
     }
 
     @UiThread
     @NonNull
     public static View getDialogTitle(@NonNull FragmentActivity activity, @NonNull CharSequence title,
                                       @Nullable Drawable drawable, @Nullable CharSequence subtitle) {
+        @SuppressLint("InflateParams")
         View appLabelWithVersionView = activity.getLayoutInflater().inflate(R.layout.dialog_title_with_icon, null);
         ImageView iv = appLabelWithVersionView.findViewById(R.id.icon);
         if (drawable != null) {
@@ -227,14 +230,10 @@ public class UIUtils {
     }
 
     @NonNull
-    public static SearchView setupSearchView(@NonNull Context context, @NonNull ActionBar actionBar,
+    public static SearchView setupSearchView(@NonNull ActionBar actionBar,
                                              @Nullable SearchView.OnQueryTextListener queryTextListener) {
         SearchView searchView = new SearchView(actionBar.getThemedContext());
         searchView.setOnQueryTextListener(queryTextListener);
-        searchView.setQueryHint(context.getString(R.string.search));
-        // Set images
-        ((ImageView) searchView.findViewById(androidx.appcompat.R.id.search_button)).setColorFilter(getAccentColor(context));
-        ((ImageView) searchView.findViewById(androidx.appcompat.R.id.search_close_btn)).setColorFilter(getAccentColor(context));
         // Set layout params
         ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);

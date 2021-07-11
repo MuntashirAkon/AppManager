@@ -1,10 +1,11 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.exception;
 
 /**
- * throwed when parse failed.
- *
- * @author dongliu
+ * thrown when parse failed.
  */
+// Copyright 2014 Liu Dong
 public class ParserException extends RuntimeException {
     public ParserException(String msg) {
         super(msg);

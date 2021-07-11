@@ -1,12 +1,12 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.struct.resource;
 
 import net.dongliu.apk.parser.struct.ChunkHeader;
 import net.dongliu.apk.parser.struct.ChunkType;
 import net.dongliu.apk.parser.utils.Unsigned;
 
-/**
- * @author dongliu
- */
+// Copyright 2014 Liu Dong
 public class TypeHeader extends ChunkHeader {
 
     public static final long NO_ENTRY = 0xFFFFFFFFL;

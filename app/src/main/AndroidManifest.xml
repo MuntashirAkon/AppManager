@@ -1,21 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (C) 2020 Muntashir Al-Islam
-  ~
-  ~ This program is free software: you can redistribute it and/or modify
-  ~ it under the terms of the GNU General Public License as published by
-  ~ the Free Software Foundation, either version 3 of the License, or
-  ~ (at your option) any later version.
-  ~
-  ~ This program is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~ GNU General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU General Public License
-  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  -->
-
+<!-- SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="io.github.muntashirakon.AppManager"
@@ -121,6 +104,7 @@
         </activity>
         <activity
             android:name=".main.MainActivity"
+            android:exported="true"
             android:icon="@mipmap/ic_launcher"
             android:roundIcon="@mipmap/ic_launcher_round">
             <intent-filter>
@@ -522,9 +506,17 @@
         </activity>
         <activity
             android:name=".logcat.RecordLogDialogActivity"
+            android:exported="true"
             android:theme="@style/AppTheme.TransparentBackground" />
+        <activity
+            android:name=".fm.FmActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:taskAffinity="" />
 
-        <service android:name=".apk.installer.PackageInstallerService" />
+        <service
+            android:name=".apk.installer.PackageInstallerService"
+            android:exported="false" />
         <service
             android:name=".batchops.BatchOpsService"
             android:exported="false" />
@@ -538,7 +530,9 @@
             android:name=".logcat.CrazyLoggerService"
             android:exported="false" />
 
-        <receiver android:name=".logcat.RecordingWidgetProvider">
+        <receiver
+            android:name=".logcat.RecordingWidgetProvider"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <data android:scheme="log_viewer_widget" />
@@ -559,13 +553,9 @@
         </receiver>
 
         <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.provider"
+            android:name=".fm.FmProvider"
+            android:authorities="${applicationId}.file"
             android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths" />
-        </provider>
+            android:grantUriPermissions="true"></provider>
     </application>
 </manifest>

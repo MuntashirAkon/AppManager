@@ -1,30 +1,15 @@
-/*
- * Copyright (C) 2006 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// SPDX-License-Identifier: Apache-2.0
 
 package io.github.muntashirakon.AppManager.utils;
 
 // Source: https://cs.android.com/android/platform/superproject/+/master:frameworks/base/core/java/com/android/internal/util/ArrayUtils.java
 
-import androidx.annotation.CheckResult;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import android.os.Build;
 import android.util.ArraySet;
 
+import androidx.annotation.CheckResult;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import java.io.File;
@@ -55,6 +40,26 @@ public class ArrayUtils {
     public static final File[] EMPTY_FILE = new File[0];
 
     private ArrayUtils() { /* cannot be instantiated */ }
+
+    /**
+     * Throws {@link ArrayIndexOutOfBoundsException} if the range is out of bounds.
+     *
+     * @param len    length of the array. Must be non-negative
+     * @param offset start index of the range. Must be non-negative
+     * @param count  length of the range. Must be non-negative
+     * @throws ArrayIndexOutOfBoundsException if the range from {@code offset} with length
+     *                                        {@code count} is out of bounds of the array
+     */
+    public static void throwsIfOutOfBounds(int len, int offset, int count) {
+        if (len < 0) {
+            throw new ArrayIndexOutOfBoundsException("Negative length: " + len);
+        }
+
+        if ((offset | count) < 0 || offset > len - count) {
+            throw new ArrayIndexOutOfBoundsException(
+                    "length=" + len + "; regionStart=" + offset + "; regionLength=" + count);
+        }
+    }
 
     /**
      * Checks if the beginnings of two byte arrays are equal.
@@ -286,12 +291,12 @@ public class ArrayUtils {
         return convertToIntArray(new ArrayList<>(set));
     }
 
-    public static @Nullable
-    long[] convertToLongArray(@Nullable int[] intArray) {
+    @Nullable
+    public static long[] convertToLongArray(@Nullable int[] intArray) {
         if (intArray == null) return null;
         long[] array = new long[intArray.length];
         for (int i = 0; i < intArray.length; i++) {
-            array[i] = (long) intArray[i];
+            array[i] = intArray[i];
         }
         return array;
     }
@@ -363,8 +368,8 @@ public class ArrayUtils {
      * Removes value from given array if present, providing set-like behavior.
      */
     @SuppressWarnings("unchecked")
-    public static @Nullable
-    <T> T[] removeElement(Class<T> kind, @Nullable T[] array, T element) {
+    @Nullable
+    public static <T> T[] removeElement(Class<T> kind, @Nullable T[] array, T element) {
         if (array != null) {
             if (!contains(array, element)) return array;
             final int length = array.length;
@@ -386,9 +391,9 @@ public class ArrayUtils {
     /**
      * Adds value to given array.
      */
-    public static @NonNull
-    int[] appendInt(@Nullable int[] cur, int val,
-                    boolean allowDuplicates) {
+    @NonNull
+    public static int[] appendInt(@Nullable int[] cur, int val,
+                                  boolean allowDuplicates) {
         if (cur == null) {
             return new int[]{val};
         }
@@ -410,16 +415,16 @@ public class ArrayUtils {
      * Adds value to given array if not already present, providing set-like
      * behavior.
      */
-    public static @NonNull
-    int[] appendInt(@Nullable int[] cur, int val) {
+    @NonNull
+    public static int[] appendInt(@Nullable int[] cur, int val) {
         return appendInt(cur, val, false);
     }
 
     /**
      * Removes value from given array if present, providing set-like behavior.
      */
-    public static @Nullable
-    int[] removeInt(@Nullable int[] cur, int val) {
+    @Nullable
+    public static int[] removeInt(@Nullable int[] cur, int val) {
         if (cur == null) {
             return null;
         }
@@ -442,8 +447,8 @@ public class ArrayUtils {
     /**
      * Removes value from given array if present, providing set-like behavior.
      */
-    public static @Nullable
-    String[] removeString(@Nullable String[] cur, String val) {
+    @Nullable
+    public static String[] removeString(@Nullable String[] cur, String val) {
         if (cur == null) {
             return null;
         }
@@ -467,9 +472,9 @@ public class ArrayUtils {
      * Adds value to given array if not already present, providing set-like
      * behavior.
      */
-    public static @NonNull
-    long[] appendLong(@Nullable long[] cur, long val,
-                      boolean allowDuplicates) {
+    @NonNull
+    public static long[] appendLong(@Nullable long[] cur, long val,
+                                    boolean allowDuplicates) {
         if (cur == null) {
             return new long[]{val};
         }
@@ -491,16 +496,16 @@ public class ArrayUtils {
      * Adds value to given array if not already present, providing set-like
      * behavior.
      */
-    public static @NonNull
-    long[] appendLong(@Nullable long[] cur, long val) {
+    @NonNull
+    public static long[] appendLong(@Nullable long[] cur, long val) {
         return appendLong(cur, val, false);
     }
 
     /**
      * Removes value from given array if present, providing set-like behavior.
      */
-    public static @Nullable
-    long[] removeLong(@Nullable long[] cur, long val) {
+    @Nullable
+    public static long[] removeLong(@Nullable long[] cur, long val) {
         if (cur == null) {
             return null;
         }
@@ -520,33 +525,33 @@ public class ArrayUtils {
         return cur;
     }
 
-    public static @Nullable
-    long[] cloneOrNull(@Nullable long[] array) {
+    @Nullable
+    public static long[] cloneOrNull(@Nullable long[] array) {
         return (array != null) ? array.clone() : null;
     }
 
     /**
      * Clones an array or returns null if the array is null.
      */
-    public static @Nullable
-    <T> T[] cloneOrNull(@Nullable T[] array) {
+    @Nullable
+    public static <T> T[] cloneOrNull(@Nullable T[] array) {
         return (array != null) ? array.clone() : null;
     }
 
-    public static @Nullable
-    <T> HashSet<T> cloneOrNull(@Nullable HashSet<T> array) {
+    @Nullable
+    public static <T> HashSet<T> cloneOrNull(@Nullable HashSet<T> array) {
         return (array != null) ? new HashSet<>(array) : null;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public static @Nullable
-    <T> ArraySet<T> cloneOrNull(@Nullable ArraySet<T> array) {
+    @Nullable
+    public static <T> ArraySet<T> cloneOrNull(@Nullable ArraySet<T> array) {
         return (array != null) ? new ArraySet<>(array) : null;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public static @NonNull
-    <T> ArraySet<T> add(@Nullable ArraySet<T> cur, T val) {
+    @NonNull
+    public static <T> ArraySet<T> add(@Nullable ArraySet<T> cur, T val) {
         if (cur == null) {
             cur = new ArraySet<>();
         }
@@ -554,8 +559,8 @@ public class ArrayUtils {
         return cur;
     }
 
-    public static @Nullable
-    <T> ArraySet<T> remove(@Nullable ArraySet<T> cur, T val) {
+    @Nullable
+    public static <T> ArraySet<T> remove(@Nullable ArraySet<T> cur, T val) {
         if (cur == null) {
             return null;
         }
@@ -567,8 +572,8 @@ public class ArrayUtils {
         }
     }
 
-    public static @NonNull
-    <T> ArrayList<T> add(@Nullable ArrayList<T> cur, T val) {
+    @NonNull
+    public static <T> ArrayList<T> add(@Nullable ArrayList<T> cur, T val) {
         if (cur == null) {
             cur = new ArrayList<>();
         }
@@ -576,8 +581,8 @@ public class ArrayUtils {
         return cur;
     }
 
-    public static @Nullable
-    <T> ArrayList<T> remove(@Nullable ArrayList<T> cur, T val) {
+    @Nullable
+    public static <T> ArrayList<T> remove(@Nullable ArrayList<T> cur, T val) {
         if (cur == null) {
             return null;
         }
@@ -593,8 +598,8 @@ public class ArrayUtils {
         return cur != null && cur.contains(val);
     }
 
-    public static @Nullable
-    <T> T[] trimToSize(@Nullable T[] array, int size) {
+    @Nullable
+    public static <T> T[] trimToSize(@Nullable T[] array, int size) {
         if (array == null || size == 0) {
             return null;
         } else if (array.length == size) {
@@ -612,13 +617,14 @@ public class ArrayUtils {
         if (a == b) {
             return true;
         }
-
-        final int sizeA = a.size();
-        final int sizeB = b.size();
-        if (a == null || b == null || sizeA != sizeB) {
+        if (a == null || b == null) {
             return false;
         }
-
+        final int sizeA = a.size();
+        final int sizeB = b.size();
+        if (sizeA != sizeB) {
+            return false;
+        }
         boolean diff = false;
         for (int i = 0; i < sizeA && !diff; i++) {
             diff |= a.get(i) != b.get(i);
@@ -672,19 +678,24 @@ public class ArrayUtils {
         return size - leftIdx;
     }
 
-    public static @NonNull
-    int[] defeatNullable(@Nullable int[] val) {
+    @NonNull
+    public static int[] defeatNullable(@Nullable int[] val) {
         return (val != null) ? val : EmptyArray.INT;
     }
 
-    public static @NonNull
-    String[] defeatNullable(@Nullable String[] val) {
+    @NonNull
+    public static String[] defeatNullable(@Nullable String[] val) {
         return (val != null) ? val : EmptyArray.STRING;
     }
 
-    public static @NonNull
-    File[] defeatNullable(@Nullable File[] val) {
+    @NonNull
+    public static File[] defeatNullable(@Nullable File[] val) {
         return (val != null) ? val : EMPTY_FILE;
+    }
+
+    @NonNull
+    public static <T> T[] defeatNullable(Class<T> clazz, @Nullable T[] val) {
+        return (val != null) ? val : emptyArray(clazz);
     }
 
     /**
@@ -741,8 +752,8 @@ public class ArrayUtils {
      * condition {@code predicate} is true, or null if there is no such element
      */
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public static @Nullable
-    <T> T find(@Nullable T[] items, @NonNull Predicate<T> predicate) {
+    @Nullable
+    public static <T> T find(@Nullable T[] items, @NonNull Predicate<T> predicate) {
         if (isEmpty(items)) return null;
         for (final T item : items) {
             if (predicate.test(item)) return item;
@@ -776,8 +787,8 @@ public class ArrayUtils {
         }
     }
 
-    public static @Nullable
-    <T> T firstOrNull(@NonNull T[] items) {
+    @Nullable
+    public static <T> T firstOrNull(@NonNull T[] items) {
         return items.length > 0 ? items[0] : null;
     }
 }

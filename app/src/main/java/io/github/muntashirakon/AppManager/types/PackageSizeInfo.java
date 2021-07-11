@@ -1,28 +1,21 @@
-/*
- * Copyright (c) 2021 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.types;
 
+import android.annotation.UserIdInt;
 import android.app.usage.StorageStats;
 import android.content.pm.PackageStats;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.annotation.WorkerThread;
+
+import java.io.File;
+
+import io.github.muntashirakon.AppManager.misc.OsEnvironment;
+import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.io.ProxyFile;
 
 public class PackageSizeInfo {
     public final String packageName;
@@ -42,18 +35,39 @@ public class PackageSizeInfo {
         mediaSize = packageStats.externalMediaSize;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public PackageSizeInfo(@NonNull String packageName, @NonNull StorageStats storageStats) {
+    @RequiresApi(Build.VERSION_CODES.O)
+    @WorkerThread
+    public PackageSizeInfo(@NonNull String packageName, @NonNull StorageStats storageStats, @UserIdInt int userHandle) {
         this.packageName = packageName;
         cacheSize = storageStats.getCacheBytes();
         codeSize = storageStats.getAppBytes();
         dataSize = storageStats.getDataBytes() - cacheSize;
-        // TODO(24/1/21): List obb and media size
-        mediaSize = 0L;
-        obbSize = 0L;
+        OsEnvironment.UserEnvironment ue = OsEnvironment.getUserEnvironment(userHandle);
+        mediaSize = getMediaSizeInternal(ue);
+        obbSize = getObbSizeInternal(ue);
     }
 
     public long getTotalSize() {
         return codeSize + dataSize + cacheSize + mediaSize + obbSize;
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private long getMediaSizeInternal(@NonNull OsEnvironment.UserEnvironment ue) {
+        ProxyFile[] files = ue.buildExternalStorageAppMediaDirs(packageName);
+        long size = 0L;
+        for (File file : files) {
+            if (file.exists()) size += IOUtils.fileSize(file);
+        }
+        return size;
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private long getObbSizeInternal(@NonNull OsEnvironment.UserEnvironment ue) {
+        ProxyFile[] files = ue.buildExternalStorageAppObbDirs(packageName);
+        long size = 0L;
+        for (File file : files) {
+            if (file.exists()) size += IOUtils.fileSize(file);
+        }
+        return size;
     }
 }

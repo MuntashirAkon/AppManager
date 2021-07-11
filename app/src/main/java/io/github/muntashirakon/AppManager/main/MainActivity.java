@@ -1,19 +1,4 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.main;
 
@@ -34,15 +19,9 @@ import android.view.View;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
-import androidx.annotation.UiThread;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.view.menu.MenuBuilder;
-import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.text.HtmlCompat;
 import androidx.lifecycle.ViewModelProvider;
@@ -50,11 +29,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
-import com.google.android.material.textview.MaterialTextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -90,14 +67,15 @@ import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.StoragePermission;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.reflow.ReflowMenuViewWrapper;
+import io.github.muntashirakon.widget.MultiSelectionView;
 import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
-public class MainActivity extends BaseActivity implements
-        SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener,
-        Toolbar.OnMenuItemClickListener {
+public class MainActivity extends BaseActivity implements SearchView.OnQueryTextListener,
+        SwipeRefreshLayout.OnRefreshListener, ReflowMenuViewWrapper.OnItemSelectedListener {
     private static final String PACKAGE_NAME_APK_UPDATER = "com.apkupdater";
     private static final String ACTIVITY_NAME_APK_UPDATER = "com.apkupdater.activity.MainActivity";
     private static final String PACKAGE_NAME_TERMUX = "com.termux";
@@ -109,11 +87,7 @@ public class MainActivity extends BaseActivity implements
     private SearchView mSearchView;
     private LinearProgressIndicator mProgressIndicator;
     private SwipeRefreshLayout mSwipeRefresh;
-    private BottomAppBar mBottomAppBar;
-    private MaterialTextView mBottomAppBarCounter;
-    private LinearLayoutCompat mMainLayout;
-    private CoordinatorLayout.LayoutParams mLayoutParamsSelection;
-    private CoordinatorLayout.LayoutParams mLayoutParamsTypical;
+    private MultiSelectionView multiSelectionView;
     private MenuItem appUsageMenu;
     private MenuItem runningAppsMenu;
     private MenuItem logViewerMenu;
@@ -132,10 +106,10 @@ public class MainActivity extends BaseActivity implements
                 args.putInt(RulesTypeSelectionDialogFragment.ARG_MODE, RulesTypeSelectionDialogFragment.MODE_EXPORT);
                 args.putParcelable(RulesTypeSelectionDialogFragment.ARG_URI, uri);
                 args.putStringArrayList(RulesTypeSelectionDialogFragment.ARG_PKG, new ArrayList<>(mModel.getSelectedPackages().keySet()));
-                args.putIntArray(RulesTypeSelectionDialogFragment.ARG_USERS, Users.getUsersHandles());
+                args.putIntArray(RulesTypeSelectionDialogFragment.ARG_USERS, Users.getUsersIds());
                 dialogFragment.setArguments(args);
                 dialogFragment.show(getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
-                clearAndHandleSelection();
+                multiSelectionView.cancel();
             });
 
     private final BroadcastReceiver mBatchOpsBroadCastReceiver = new BroadcastReceiver() {
@@ -155,30 +129,17 @@ public class MainActivity extends BaseActivity implements
         if (actionBar != null) {
             actionBar.setDisplayShowCustomEnabled(true);
             actionBar.setTitle(getString(R.string.loading));
-            mSearchView = UIUtils.setupSearchView(this, actionBar, this);
+            mSearchView = UIUtils.setupSearchView(actionBar, this);
         }
 
         mProgressIndicator = findViewById(R.id.progress_linear);
         mProgressIndicator.setVisibilityAfterHide(View.GONE);
         RecyclerView recyclerView = findViewById(R.id.item_list);
         mSwipeRefresh = findViewById(R.id.swipe_refresh);
-        mBottomAppBar = findViewById(R.id.bottom_appbar);
-        mBottomAppBarCounter = findViewById(R.id.bottom_appbar_counter);
-        mMainLayout = findViewById(R.id.main_layout);
 
         mSwipeRefresh.setColorSchemeColors(UIUtils.getAccentColor(this));
         mSwipeRefresh.setProgressBackgroundColorSchemeColor(UIUtils.getPrimaryColor(this));
         mSwipeRefresh.setOnRefreshListener(this);
-
-        int margin = UIUtils.dpToPx(this, 56);
-        mLayoutParamsSelection = new CoordinatorLayout.LayoutParams(
-                CoordinatorLayout.LayoutParams.MATCH_PARENT,
-                CoordinatorLayout.LayoutParams.MATCH_PARENT);
-        mLayoutParamsSelection.setMargins(0, margin, 0, margin);
-        mLayoutParamsTypical = new CoordinatorLayout.LayoutParams(
-                CoordinatorLayout.LayoutParams.MATCH_PARENT,
-                CoordinatorLayout.LayoutParams.MATCH_PARENT);
-        mLayoutParamsTypical.setMargins(0, margin, 0, 0);
 
         mAdapter = new MainRecyclerAdapter(MainActivity.this);
         mAdapter.setHasStableIds(true);
@@ -187,6 +148,10 @@ public class MainActivity extends BaseActivity implements
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(mAdapter);
         new FastScrollerBuilder(recyclerView).useMd2Style().build();
+        multiSelectionView = findViewById(R.id.selection_view);
+        multiSelectionView.setOnItemSelectedListener(this);
+        multiSelectionView.setAdapter(mAdapter);
+        multiSelectionView.updateCounter(true);
 
         if ((boolean) AppPref.get(AppPref.PrefKey.PREF_SHOW_DISCLAIMER_BOOL)) {
             @SuppressLint("InflateParams")
@@ -208,13 +173,6 @@ public class MainActivity extends BaseActivity implements
             checkAppUpdate();
         }
 
-        Menu menu = mBottomAppBar.getMenu();
-        if (menu instanceof MenuBuilder) {
-            ((MenuBuilder) menu).setOptionalIconsVisible(true);
-        }
-        mBottomAppBar.setNavigationOnClickListener(v -> clearAndHandleSelection());
-        mBottomAppBar.setOnMenuItemClickListener(this);
-        handleSelection();
         // Set observer
         mModel.getApplicationItems().observe(this, applicationItems -> {
             if (mAdapter != null) mAdapter.setDefaultList(applicationItems);
@@ -225,6 +183,23 @@ public class MainActivity extends BaseActivity implements
                 actionBar.setSubtitle(R.string.packages);
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mAdapter != null && multiSelectionView != null && mAdapter.isInSelectionMode()) {
+            multiSelectionView.cancel();
+            return;
+        }
+        super.onBackPressed();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (mAdapter != null) {
+            mAdapter.imageLoader.close();
+        }
+        super.onDestroy();
     }
 
     @Override
@@ -324,20 +299,18 @@ public class MainActivity extends BaseActivity implements
     }
 
     @Override
-    public boolean onMenuItemClick(@NonNull MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_select_all) {
-            mAdapter.selectAll();
-        } else if (id == R.id.action_backup) {
+        if (id == R.id.action_backup) {
             if (mModel != null) {
                 BackupDialogFragment backupDialogFragment = new BackupDialogFragment();
                 Bundle args = new Bundle();
-                args.putParcelableArrayList(BackupDialogFragment.ARG_PACKAGE_PAIRS, mModel.getSelectedPackagesWithUsers(false));
+                args.putParcelableArrayList(BackupDialogFragment.ARG_PACKAGE_PAIRS, mModel.getSelectedPackagesWithUsers());
                 backupDialogFragment.setArguments(args);
                 backupDialogFragment.setOnActionBeginListener(mode -> showProgressIndicator(true));
                 backupDialogFragment.setOnActionCompleteListener((mode, failedPackages) -> showProgressIndicator(false));
                 backupDialogFragment.show(getSupportFragmentManager(), BackupDialogFragment.TAG);
-                clearAndHandleSelection();
+                multiSelectionView.cancel();
             }
         } else if (id == R.id.action_save_apk) {
             storagePermission.request(granted -> {
@@ -353,12 +326,26 @@ public class MainActivity extends BaseActivity implements
                     .setNeutralButton(R.string.unblock, (dialog, which) ->
                             handleBatchOp(BatchOpsManager.OP_UNBLOCK_TRACKERS))
                     .show();
-        } else if (id == R.id.action_clear_data) {
-            handleBatchOpWithWarning(BatchOpsManager.OP_CLEAR_DATA);
-        } else if (id == R.id.action_enable) {
-            handleBatchOp(BatchOpsManager.OP_ENABLE);
-        } else if (id == R.id.action_disable) {
-            handleBatchOpWithWarning(BatchOpsManager.OP_DISABLE);
+        } else if (id == R.id.action_clear_data_cache) {
+            new MaterialAlertDialogBuilder(this)
+                    .setTitle(R.string.clear)
+                    .setMessage(R.string.choose_what_to_do)
+                    .setPositiveButton(R.string.clear_cache, (dialog, which) ->
+                            handleBatchOp(BatchOpsManager.OP_CLEAR_CACHE))
+                    .setNegativeButton(R.string.cancel, null)
+                    .setNeutralButton(R.string.clear_data, (dialog, which) ->
+                            handleBatchOp(BatchOpsManager.OP_CLEAR_DATA))
+                    .show();
+        } else if (id == R.id.action_enable_disable) {
+            new MaterialAlertDialogBuilder(this)
+                    .setTitle(R.string.enable_disable)
+                    .setMessage(R.string.choose_what_to_do)
+                    .setPositiveButton(R.string.disable, (dialog, which) ->
+                            handleBatchOp(BatchOpsManager.OP_DISABLE))
+                    .setNegativeButton(R.string.cancel, null)
+                    .setNeutralButton(R.string.enable, (dialog, which) ->
+                            handleBatchOp(BatchOpsManager.OP_ENABLE))
+                    .show();
         } else if (id == R.id.action_disable_background) {
             new MaterialAlertDialogBuilder(this)
                     .setTitle(R.string.are_you_sure)
@@ -391,7 +378,7 @@ public class MainActivity extends BaseActivity implements
                     .setTitle(R.string.add_to_profile)
                     .setNegativeButton(R.string.cancel, null)
                     .setPositiveButton(R.string.add, (dialog, which, selectedItems) -> {
-                        clearAndHandleSelection();
+                        multiSelectionView.cancel();
                         for (ProfileMetaManager metaManager : selectedItems) {
                             if (metaManager.profile != null) {
                                 try {
@@ -408,7 +395,7 @@ public class MainActivity extends BaseActivity implements
                     })
                     .show();
         } else {
-            clearAndHandleSelection();
+            multiSelectionView.cancel();
             return false;
         }
         return true;
@@ -424,6 +411,7 @@ public class MainActivity extends BaseActivity implements
     @Override
     protected void onStart() {
         super.onStart();
+
         // Set filter
         if (mModel != null && mSearchView != null && !TextUtils.isEmpty(mModel.getSearchQuery())) {
             mSearchView.setIconified(false);
@@ -474,7 +462,7 @@ public class MainActivity extends BaseActivity implements
         if (Utils.isAppUpdated()) {
             // Clean old am.jar
             IOUtils.deleteSilently(ServerConfig.getDestJarFile());
-            new Thread(() -> {
+            mModel.executor.submit(() -> {
                 final Spanned spannedChangelog = HtmlCompat.fromHtml(IOUtils.getContentFromAssets(this, "changelog.html"), HtmlCompat.FROM_HTML_MODE_COMPACT);
                 runOnUiThread(() ->
                         new ScrollableDialogBuilder(this, spannedChangelog)
@@ -485,30 +473,8 @@ public class MainActivity extends BaseActivity implements
                                     Intent helpIntent = new Intent(this, HelpActivity.class);
                                     startActivity(helpIntent);
                                 }).show());
-            }).start();
+            });
             AppPref.set(AppPref.PrefKey.PREF_LAST_VERSION_CODE_LONG, (long) BuildConfig.VERSION_CODE);
-        }
-    }
-
-    @AnyThread
-    private void clearAndHandleSelection() {
-        new Thread(() -> {
-            if (mAdapter != null) mAdapter.clearSelection();
-            runOnUiThread(this::handleSelection);
-        }).start();
-    }
-
-    @UiThread
-    void handleSelection() {
-        if (mModel == null || mModel.getSelectedPackages().size() == 0) {
-            mBottomAppBar.setVisibility(View.GONE);
-            mMainLayout.setLayoutParams(mLayoutParamsTypical);
-            new Thread(() -> mAdapter.clearSelection()).start();
-        } else {
-            mBottomAppBar.setVisibility(View.VISIBLE);
-            mBottomAppBarCounter.setText(getResources().getQuantityString(R.plurals.items_selected,
-                    mModel.getSelectedPackages().size(), mModel.getSelectedPackages().size()));
-            mMainLayout.setLayoutParams(mLayoutParamsSelection);
         }
     }
 
@@ -516,12 +482,12 @@ public class MainActivity extends BaseActivity implements
         if (mModel == null) return;
         showProgressIndicator(true);
         Intent intent = new Intent(this, BatchOpsService.class);
-        BatchOpsManager.Result input = new BatchOpsManager.Result(mModel.getSelectedPackagesWithUsers(false));
+        BatchOpsManager.Result input = new BatchOpsManager.Result(mModel.getSelectedPackagesWithUsers());
         intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, input.getFailedPackages());
         intent.putIntegerArrayListExtra(BatchOpsService.EXTRA_OP_USERS, input.getAssociatedUserHandles());
         intent.putExtra(BatchOpsService.EXTRA_OP, op);
         ContextCompat.startForegroundService(this, intent);
-        clearAndHandleSelection();
+        multiSelectionView.cancel();
     }
 
     private void handleBatchOpWithWarning(@BatchOpsManager.OpType int op) {

@@ -1,19 +1,4 @@
-/*
- * Copyright (c) 2021 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.io;
 
@@ -101,14 +86,14 @@ public class AtomicProxyFile {
 
         try {
             return new ProxyOutputStream(mNewName);
-        } catch (FileNotFoundException | RemoteException e) {
+        } catch (FileNotFoundException e) {
             File parent = mNewName.getParentFile();
             if (!parent.mkdirs()) {
                 throw new IOException("Failed to create directory for " + mNewName, e);
             }
             try {
                 return new ProxyOutputStream(mNewName);
-            } catch (FileNotFoundException | RemoteException e2) {
+            } catch (FileNotFoundException e2) {
                 throw new IOException("Failed to create new file " + mNewName, e2);
             }
         }
@@ -229,7 +214,7 @@ public class AtomicProxyFile {
             return true;
         } catch (IOException ignored) {
         }
-        return false;
+        return true;
     }
 
     private static void rename(@NonNull File source, @NonNull File target) {

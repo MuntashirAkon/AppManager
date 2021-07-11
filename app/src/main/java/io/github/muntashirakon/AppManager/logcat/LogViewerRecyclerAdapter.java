@@ -1,25 +1,8 @@
-/*
- * Copyright (c) 2021 Muntashir Al-Islam
- * Copyright (C) 2006 The Android Open Source Project
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: WTFPL AND GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.logcat;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -47,6 +30,7 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
+// Copyright 2012 Nolan Lawson
 public class LogViewerRecyclerAdapter extends RecyclerView.Adapter<LogViewerRecyclerAdapter.ViewHolder>
         implements Filterable {
     public static final String TAG = LogViewerRecyclerAdapter.class.getSimpleName();
@@ -120,18 +104,9 @@ public class LogViewerRecyclerAdapter extends RecyclerView.Adapter<LogViewerRecy
 
     private int logLevelLimit = AppPref.getInt(AppPref.PrefKey.PREF_LOG_VIEWER_DEFAULT_LOG_LEVEL_INT);
 
-    private static int mColorTransparent;
-    private static int mColorSemiTransparent;
-    private static int mColorHighlight;
-
-    public LogViewerRecyclerAdapter(LogViewerActivity activity) {
+    public LogViewerRecyclerAdapter() {
         mObjects = new ArrayList<>();
-
         setHasStableIds(true);
-
-        mColorTransparent = Color.TRANSPARENT;
-        mColorSemiTransparent = ContextCompat.getColor(activity, R.color.semi_transparent);
-        mColorHighlight = ContextCompat.getColor(activity, R.color.highlight);
     }
 
 
@@ -289,8 +264,8 @@ public class LogViewerRecyclerAdapter extends RecyclerView.Adapter<LogViewerRecy
         t.setVisibility(logLine.getLogLevel() == -1 ? View.GONE : View.VISIBLE);
 
         View contentView = holder.itemView.findViewById(R.id.log_content);
-        contentView.setBackgroundColor(logLine.isHighlighted() ? mColorHighlight : (position % 2 == 0 ?
-                mColorSemiTransparent : mColorTransparent));
+        contentView.setBackgroundResource(logLine.isHighlighted() ? R.drawable.item_highlight : (position % 2 == 0 ?
+                R.drawable.item_semi_transparent : R.drawable.item_transparent));
 
         //OUTPUT TEXT VIEW
         TextView output = holder.output;

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: BSD-2-Clause
+
 package net.dongliu.apk.parser.parser;
 
 import net.dongliu.apk.parser.struct.xml.XmlNamespaceEndTag;
@@ -9,9 +11,8 @@ import java.util.List;
 
 /**
  * the xml file's namespaces.
- *
- * @author dongliu
  */
+// Copyright 2014 Liu Dong
 class XmlNamespaces {
 
     private List<XmlNamespace> namespaces;

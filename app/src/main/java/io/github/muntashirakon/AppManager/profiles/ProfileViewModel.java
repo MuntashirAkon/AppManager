@@ -1,53 +1,97 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.profiles;
 
 import android.app.Application;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.RemoteException;
 
-import io.github.muntashirakon.AppManager.appops.AppOpsManager;
+import androidx.annotation.AnyThread;
+import androidx.annotation.GuardedBy;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
+import androidx.core.util.Pair;
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-import androidx.annotation.GuardedBy;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.WorkerThread;
-import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
+import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.Utils;
+
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpNames;
 
 public class ProfileViewModel extends AndroidViewModel {
     private final Object profileLock = new Object();
+    private final ExecutorService executor = Executors.newFixedThreadPool(2);
+    private final MutableLiveData<Pair<Integer, Boolean>> toast = new MutableLiveData<>();
+    private final MutableLiveData<ArrayList<Pair<CharSequence, ApplicationInfo>>> installedApps = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> profileLoaded = new MutableLiveData<>();
     @GuardedBy("profileLock")
     private String profileName;
     private boolean isNew;
 
     public ProfileViewModel(@NonNull Application application) {
         super(application);
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        executor.shutdown();
+    }
+
+    public LiveData<Pair<Integer, Boolean>> observeToast() {
+        return toast;
+    }
+
+    public LiveData<ArrayList<Pair<CharSequence, ApplicationInfo>>> observeInstalledApps() {
+        return installedApps;
+    }
+
+    public LiveData<Boolean> observeProfileLoaded() {
+        return profileLoaded;
+    }
+
+    @AnyThread
+    public void loadInstalledApps() {
+        executor.submit(() -> {
+            PackageManager pm = getApplication().getPackageManager();
+            try {
+                ArrayList<Pair<CharSequence, ApplicationInfo>> itemPairs;
+                List<PackageInfo> packageInfoList = PackageManagerCompat.getInstalledPackages(
+                        PackageManager.GET_META_DATA, Users.myUserId());
+                itemPairs = new ArrayList<>(packageInfoList.size());
+                for (PackageInfo info : packageInfoList) {
+                    itemPairs.add(new Pair<>(pm.getApplicationLabel(info.applicationInfo), info.applicationInfo));
+                }
+                Collections.sort(itemPairs, (o1, o2) -> o1.first.toString().compareToIgnoreCase(o2.first.toString()));
+                installedApps.postValue(itemPairs);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     @GuardedBy("profileLock")
@@ -67,9 +111,17 @@ public class ProfileViewModel extends AndroidViewModel {
     @GuardedBy("profileLock")
     private ProfileMetaManager profileMetaManager;
 
+    @AnyThread
+    public void loadProfile() {
+        executor.submit(() -> {
+            loadProfileInternal();
+            profileLoaded.postValue(profileMetaManager == null);
+        });
+    }
+
     @WorkerThread
     @GuardedBy("profileLock")
-    public void loadProfile() {
+    private void loadProfileInternal() {
         synchronized (profileLock) {
             profileMetaManager = new ProfileMetaManager(profileName);
             profile = profileMetaManager.profile;
@@ -79,7 +131,7 @@ public class ProfileViewModel extends AndroidViewModel {
 
     @WorkerThread
     @GuardedBy("profileLock")
-    public void cloneProfile(String profileName, boolean isPreset, String oldProfileName) {
+    public void cloneProfileInternal(String profileName, boolean isPreset, String oldProfileName) {
         setProfileName(profileName, true);
         synchronized (profileLock) {
             if (isPreset) {
@@ -100,9 +152,28 @@ public class ProfileViewModel extends AndroidViewModel {
         }
     }
 
+    @AnyThread
+    public void cloneProfile(String profileName, boolean isPreset, String oldProfileName) {
+        executor.submit(() -> {
+            if (profileMetaManager == null) loadProfileInternal();
+            cloneProfileInternal(profileName, isPreset, oldProfileName);
+            toast.postValue(new Pair<>(R.string.done, false));
+            profileLoaded.postValue(profileMetaManager == null);
+        });
+    }
+
+    @AnyThread
+    public void loadAndCloneProfile(String profileName, boolean isPreset, String oldProfileName) {
+        executor.submit(() -> {
+            if (profileMetaManager == null) loadProfileInternal();
+            cloneProfileInternal(profileName, isPreset, oldProfileName);
+            profileLoaded.postValue(profileMetaManager == null);
+        });
+    }
+
     private MutableLiveData<ArrayList<String>> packagesLiveData;
 
-    @WorkerThread
+    @AnyThread
     @GuardedBy("profileLock")
     public void setPackages(@NonNull List<String> packages) {
         synchronized (profileLock) {
@@ -120,37 +191,49 @@ public class ProfileViewModel extends AndroidViewModel {
         }
     }
 
-    @WorkerThread
+    @AnyThread
     @GuardedBy("profileLock")
-    public void save() throws IOException, JSONException, RemoteException {
-        synchronized (profileLock) {
-            profileMetaManager.profile = profile;
-            profileMetaManager.writeProfile();
-        }
+    public void save() {
+        executor.submit(() -> {
+            synchronized (profileLock) {
+                profileMetaManager.profile = profile;
+                try {
+                    profileMetaManager.writeProfile();
+                    toast.postValue(new Pair<>(R.string.saved_successfully, false));
+                } catch (IOException | JSONException | RemoteException e) {
+                    e.printStackTrace();
+                    toast.postValue(new Pair<>(R.string.saving_failed, false));
+                }
+            }
+        });
     }
 
-    @WorkerThread
-    @GuardedBy("profileLock")
+    @AnyThread
     public void discard() {
-        synchronized (profileLock) {
-            loadProfile();
-            loadPackages();
-        }
+        executor.submit(() -> {
+            synchronized (profileLock) {
+                loadProfileInternal();
+                loadPackages();
+            }
+        });
     }
 
-    @WorkerThread
-    @GuardedBy("profileLock")
-    public boolean delete() {
-        synchronized (profileLock) {
-            return profileMetaManager.deleteProfile();
-        }
+    @AnyThread
+    public void delete() {
+        executor.submit(() -> {
+            synchronized (profileLock) {
+                if (profileMetaManager.deleteProfile()) {
+                    toast.postValue(new Pair<>(R.string.deleted_successfully, true));
+                } else toast.postValue(new Pair<>(R.string.deletion_failed, false));
+            }
+        });
     }
 
     @NonNull
     public LiveData<ArrayList<String>> getPackages() {
         if (packagesLiveData == null) {
             packagesLiveData = new MutableLiveData<>();
-            new Thread(this::loadPackages).start();
+            loadPackages();
         }
         return packagesLiveData;
     }
@@ -159,13 +242,14 @@ public class ProfileViewModel extends AndroidViewModel {
         return new ArrayList<>(Arrays.asList(profile.packages));
     }
 
-    @WorkerThread
-    @GuardedBy("profileLock")
+    @AnyThread
     public void loadPackages() {
-        synchronized (profileLock) {
-            if (profileMetaManager == null) loadProfile();
-            packagesLiveData.postValue(new ArrayList<>(Arrays.asList(profile.packages)));
-        }
+        executor.submit(() -> {
+            synchronized (profileLock) {
+                if (profileMetaManager == null) loadProfileInternal();
+                packagesLiveData.postValue(new ArrayList<>(Arrays.asList(profile.packages)));
+            }
+        });
     }
 
     public void putBoolean(@NonNull String key, boolean value) {
@@ -241,7 +325,7 @@ public class ProfileViewModel extends AndroidViewModel {
     @WorkerThread
     @NonNull
     public int[] getUsers() {
-        return profile.users == null ? Users.getUsersHandles() : profile.users;
+        return profile.users == null ? Users.getUsersIds() : profile.users;
     }
 
     public void setExportRules(@Nullable Integer flags) {
@@ -285,16 +369,21 @@ public class ProfileViewModel extends AndroidViewModel {
             profile.appOps = null;
             return;
         }
-        int[] appOps = new int[appOpsStr.length];
-        for (int i = 0; i < appOps.length; ++i) {
-            if (appOpsStr[i].equals("*")) {
+        Set<Integer> selectedAppOps = new HashSet<>(appOpsStr.length);
+        List<Integer> appOpList = PackageUtils.getAppOps();
+        List<CharSequence> appOpNameList = Arrays.asList(getAppOpNames(appOpList));
+        for (CharSequence appOpStr : appOpsStr) {
+            if (appOpStr.equals("*")) {
                 // Wildcard found, ignore all app ops in favour of global wildcard
                 profile.appOps = new int[]{AppOpsManager.OP_NONE};
                 return;
             }
-            appOps[i] = Integer.parseInt(appOpsStr[i]);
+            try {
+                selectedAppOps.add(Utils.getIntegerFromString(appOpStr, appOpNameList, appOpList));
+            } catch (IllegalArgumentException ignore) {
+            }
         }
-        profile.appOps = appOps;
+        profile.appOps = selectedAppOps.size() == 0 ? null : ArrayUtils.convertToIntArray(selectedAppOps);
     }
 
     @Nullable

@@ -1,20 +1,4 @@
-/*
- * Copyright (c) 2021 Muntashir Al-Islam
- * Copyright (c) 2018 New Vector Ltd
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: Apache-2.0 AND GPL-3-or-later
 
 package io.github.muntashirakon.AppManager.crypto.ks;
 
@@ -31,7 +15,6 @@ import androidx.annotation.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.math.BigInteger;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -49,9 +32,9 @@ import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.RSAKeyGenParameterSpec;
 import java.util.Calendar;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
-import javax.crypto.CipherOutputStream;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
@@ -59,10 +42,12 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import javax.security.auth.DestroyFailedException;
 import javax.security.auth.x500.X500Principal;
 
 import io.github.muntashirakon.AppManager.logs.Log;
 
+// Copyright 2018 New Vector Ltd
 public class CompatUtil {
     private static final String TAG = CompatUtil.class.getSimpleName();
     private static final String ANDROID_KEY_STORE_PROVIDER = "AndroidKeyStore";
@@ -90,7 +75,7 @@ public class CompatUtil {
      *
      * @param context the context holding the application shared preferences
      */
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"deprecation", "InlinedApi"})
     private static synchronized SecretKeyAndVersion getAesGcmLocalProtectionKey(@NonNull Context context)
             throws KeyStoreException, CertificateException, NoSuchAlgorithmException, IOException,
             NoSuchProviderException, InvalidAlgorithmParameterException, NoSuchPaddingException,
@@ -122,13 +107,12 @@ public class CompatUtil {
                         Log.i(TAG, "Generating AES key with keystore");
                         final KeyGenerator generator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES,
                                 ANDROID_KEY_STORE_PROVIDER);
-                        generator.init(
-                                new KeyGenParameterSpec.Builder(AES_LOCAL_PROTECTION_KEY_ALIAS,
-                                        KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT)
-                                        .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
-                                        .setKeySize(AES_GCM_KEY_SIZE_IN_BITS)
-                                        .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
-                                        .build());
+                        generator.init(new KeyGenParameterSpec.Builder(AES_LOCAL_PROTECTION_KEY_ALIAS,
+                                KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT)
+                                .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
+                                .setKeySize(AES_GCM_KEY_SIZE_IN_BITS)
+                                .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
+                                .build());
                         key = generator.generateKey();
 
                         sharedPreferences.edit()
@@ -148,14 +132,14 @@ public class CompatUtil {
                     end.add(Calendar.YEAR, 10);
 
                     generator.initialize(new KeyPairGeneratorSpec.Builder(context)
-                                    .setAlgorithmParameterSpec(new RSAKeyGenParameterSpec(2048,
-                                            RSAKeyGenParameterSpec.F4))
-                                    .setAlias(RSA_WRAP_LOCAL_PROTECTION_KEY_ALIAS)
-                                    .setSubject(new X500Principal("CN=App Manager"))
-                                    .setStartDate(start.getTime())
-                                    .setEndDate(end.getTime())
-                                    .setSerialNumber(BigInteger.ONE)
-                                    .build());
+                            .setAlgorithmParameterSpec(new RSAKeyGenParameterSpec(2048,
+                                    RSAKeyGenParameterSpec.F4))
+                            .setAlias(RSA_WRAP_LOCAL_PROTECTION_KEY_ALIAS)
+                            .setSubject(new X500Principal("CN=App Manager"))
+                            .setStartDate(start.getTime())
+                            .setEndDate(end.getTime())
+                            .setSerialNumber(BigInteger.ONE)
+                            .build());
                     final KeyPair keyPair = generator.generateKeyPair();
 
                     Log.i(TAG, "Generating wrapped AES key");
@@ -218,16 +202,16 @@ public class CompatUtil {
     }
 
     /**
-     * Create a CipherOutputStream instance.
+     * Encrypt the given data
      *
-     * @param out     The output stream
-     * @param context The context holding the application shared preferences
+     * @param unencryptedData The data to be encrypted
+     * @param context         The context holding the application shared preferences
      */
     @NonNull
-    public static CipherOutputStream createCipherOutputStream(@NonNull OutputStream out, @NonNull Context context)
-            throws IOException, CertificateException, NoSuchAlgorithmException,
-            UnrecoverableKeyException, InvalidKeyException, InvalidAlgorithmParameterException,
-            NoSuchPaddingException, NoSuchProviderException, KeyStoreException, IllegalBlockSizeException {
+    public static AesEncryptedData getEncryptedData(@NonNull byte[] unencryptedData, @NonNull Context context)
+            throws InvalidAlgorithmParameterException, UnrecoverableKeyException, NoSuchPaddingException,
+            IllegalBlockSizeException, CertificateException, KeyStoreException, NoSuchAlgorithmException,
+            IOException, NoSuchProviderException, InvalidKeyException, BadPaddingException, DestroyFailedException {
         final SecretKeyAndVersion keyAndVersion = getAesGcmLocalProtectionKey(context);
         if (keyAndVersion == null || keyAndVersion.getSecretKey() == null) {
             throw new KeyStoreException();
@@ -237,7 +221,7 @@ public class CompatUtil {
         byte[] iv;
 
         if (keyAndVersion.getAndroidVersionWhenTheKeyHasBeenGenerated() >= Build.VERSION_CODES.M) {
-            cipher.init(Cipher.ENCRYPT_MODE, keyAndVersion.getSecretKey());
+            cipher.init(Cipher.ENCRYPT_MODE, keyAndVersion.getSecretKey(), getPrng());
             iv = cipher.getIV();
         } else {
             iv = new byte[AES_GCM_IV_LENGTH];
@@ -249,10 +233,9 @@ public class CompatUtil {
             throw new InvalidAlgorithmParameterException("Invalid IV length " + iv.length);
         }
 
-        out.write((byte) iv.length);
-        out.write(iv);
-
-        return new CipherOutputStream(out, cipher);
+        byte[] encryptedData = cipher.doFinal(unencryptedData);
+        SecretKeyCompat.destroy(keyAndVersion.getSecretKey());
+        return new AesEncryptedData(iv, encryptedData);
     }
 
     /**

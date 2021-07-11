@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="_lang_tag" translatable="false">fr</string>
     <string name="uninstall">Désinstaller</string>
     <string name="cache_size">Cache</string>
@@ -25,7 +25,6 @@
     <string name="sort_by_shared_user_id">Identifiant utilisateur partagé</string>
     <string name="no_feature">Aucune fonctionnalité</string>
     <string name="uses_feature">Utilise les fonctionnalités</string>
-    <string name="protection_level">Niveau de protection</string>
     <string name="group">Groupe</string>
     <string name="shared_libs">Bibliothèques partagées</string>
     <string name="declared_permission">Autorisations</string>
@@ -340,10 +339,6 @@
     <string name="block_unblock_trackers_description">Bloquer ou débloquer les composants de publicité et de suivi dans toutes les applications installées</string>
     <string name="clear_cache">Effacer le cache</string>
     <string name="pref_import_existing">Importer des règles existantes</string>
-    <string name="community_links">Salon d\'information : https://t.me/AppManagerChannel
-\nGroupe d\'entraide : https://t.me/AppManagerAndroid
-\nTwitter : https://twitter.com/AMUpdateChannel</string>
-    <string name="community">Communauté Télégram</string>
     <string name="source_code">Code source</string>
     <string name="update">Mettre à jour</string>
     <string name="install">Installer</string>
@@ -607,14 +602,13 @@
     <string name="system">Système</string>
     <string name="app_not_installed">Application non installée</string>
     <string name="media_size">Média</string>
-    <string name="app_op_cannot_be_disabled">Cette application ne peut pas être désactivée. (Il est possible qu\'une application en lecture seule dépende d\'une autre).</string>
+    <string name="app_op_cannot_be_disabled">Cette application ne peut pas être désactivée. (Il est possible qu\'une application en lecture seule dépende d\'une autre.)</string>
     <string name="external_data_dir">Répertoire de données externes</string>
     <string name="dev_protected_data_dir">Répertoire de données protégé par l\'appareil</string>
     <string name="pref_global_blocking_enabled_msg">Permet de bloquer tout composant d\'une application sans la bloquer directement.</string>
     <string name="pref_global_blocking_enabled">Blocage instantané des composants</string>
     <string name="failed_to_disable_op">Impossible de désactiver l\'autorisation demandée</string>
     <string name="failed_to_enable_op">Impossible d\'activer l\'autorisation demandée</string>
-    <string name="gles_ver">Version OpenGL ES req.</string>
     <string name="ago">il y a</string>
     <string name="reject_time">Temps de re</string>
     <string name="accept_time">Temps d\'acceptation</string>
@@ -661,8 +655,6 @@
     <string name="cpu">CPU</string>
     <string name="users">Utilisateurs</string>
     <string name="languages">Langages</string>
-    <string name="unavailable">Indisponible</string>
-    <string name="available">Disponible</string>
     <string name="battery_capacity">Capacité</string>
     <string name="memory">Mémoire</string>
     <string name="gles_version">Version GL ES</string>
@@ -701,4 +693,9 @@
     <string name="input_app_ops_description_profile">Saisissez les noms ou les constantes d\'opérations d\'application avec des espaces, par exemple <tt>WAKE_LOCK 63 72 CAMERA</tt>. Utilisez <tt>*</tt> pour appliquer toutes les opérations d\'application configurées.</string>
     <string name="input_app_ops_description">Saisissez les noms ou les constantes d\'opérations d\'application avec des espaces, par exemple <tt>WAKE_LOCK 63 72 CAMERA</tt></string>
     <string name="deny_app_ops_description">Définir un mode pour les opérations de l\'application identifiées par les valeurs constante, par exemple <tt>63</tt> ou <tt>RUN_IN_BACKGROUND</tt></string>
+    <string name="pref_remove_all_rules_msg">Les autorisations seront accordées, les opérations et les composants de l\'application retrouveront leurs valeurs par défaut.</string>
+    <plurals name="app_signing_signature_schemes_pl">
+        <item quantity="one">Schéma de signature</item>
+        <item quantity="other">Schémas de signature</item>
+    </plurals>
 </resources>

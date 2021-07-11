@@ -1,24 +1,8 @@
-/*
- * Copyright (c) 2021 Muntashir Al-Islam
- * Copyright (c) 2020 Sam Palmer
- * Copyright (c) 2016 Anton Tananaev
- * Copyright (c) 2013 Cameron Gutman
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: BSD-3-Clause AND GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.adb;
+
+import androidx.annotation.NonNull;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -29,9 +13,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * This class abstracts the underlying ADB streams
- *
- * @author Cameron Gutman
  */
+// Copyright 2013 Cameron Gutman
 public class AdbStream implements Closeable {
 
     /**
@@ -103,7 +86,7 @@ public class AdbStream implements Closeable {
      * @throws IOException If the connection fails while sending the packet
      */
     void sendReady() throws IOException {
-        /* Generate and send a READY packet */
+        // Generate and send a READY packet
         byte[] packet = AdbProtocol.generateReady(localId, remoteId);
 
         synchronized (adbConn.lock) {
@@ -132,15 +115,15 @@ public class AdbStream implements Closeable {
      * Called by the connection thread to notify that the stream was closed by the peer.
      */
     void notifyClose(boolean closedByPeer) {
-        /* We don't call close() because it sends another CLOSE */
+        // We don't call close() because it sends another CLOSE
         if (closedByPeer && !readQueue.isEmpty()) {
-            /* The remote peer closed the stream but we haven't finished reading the remaining data */
+            // The remote peer closed the stream but we haven't finished reading the remaining data
             pendingClose = true;
         } else {
             isClosed = true;
         }
 
-        /* Unwait readers and writers */
+        // Unwait readers and writers
         synchronized (this) {
             notifyAll();
         }
@@ -160,7 +143,7 @@ public class AdbStream implements Closeable {
         byte[] data;
 
         synchronized (readQueue) {
-            /* Wait for the connection to close or data to be received */
+            // Wait for the connection to close or data to be received
             while ((data = readQueue.poll()) == null && !isClosed) {
                 readQueue.wait();
             }
@@ -170,7 +153,7 @@ public class AdbStream implements Closeable {
             }
 
             if (pendingClose && readQueue.isEmpty()) {
-                /* The peer closed the stream, and we've finished reading the stream data, so this stream is finished */
+                // The peer closed the stream, and we've finished reading the stream data, so this stream is finished
                 isClosed = true;
             }
         }
@@ -185,8 +168,8 @@ public class AdbStream implements Closeable {
      * @throws IOException          If the stream fails while sending data
      * @throws InterruptedException If we are unable to wait to send data
      */
-    public void write(String payload) throws IOException, InterruptedException {
-        /* ADB needs null-terminated strings */
+    public void write(@NonNull String payload) throws IOException, InterruptedException {
+        // ADB needs null-terminated strings
         write(payload.getBytes(StandardCharsets.UTF_8), false);
         write(new byte[]{0}, true);
     }
@@ -212,16 +195,17 @@ public class AdbStream implements Closeable {
      */
     public void write(byte[] payload, boolean flush) throws IOException, InterruptedException {
         synchronized (this) {
-            /* Make sure we're ready for a write */
-            while (!isClosed && !writeReady.compareAndSet(true, false))
+            // Make sure we're ready for a write
+            while (!isClosed && !writeReady.compareAndSet(true, false)) {
                 wait();
+            }
 
             if (isClosed) {
                 throw new IOException("Stream closed");
             }
         }
 
-        /* Generate a WRITE packet and send it */
+        // Generate a WRITE packet and send it
         byte[] packet = AdbProtocol.generateWrite(localId, remoteId, payload);
 
         synchronized (adbConn.lock) {
@@ -241,11 +225,11 @@ public class AdbStream implements Closeable {
     @Override
     public void close() throws IOException {
         synchronized (this) {
-            /* This may already be closed by the remote host */
+            // This may already be closed by the remote host
             if (isClosed)
                 return;
 
-            /* Notify readers/writers that we've closed */
+            // Notify readers/writers that we've closed
             notifyClose(false);
         }
 

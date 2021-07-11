@@ -1,26 +1,13 @@
-/*
- * Copyright (c) 2021 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.io;
 
-import io.github.muntashirakon.AppManager.utils.DigestUtils;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import android.content.Context;
+
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,23 +16,29 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.utils.DigestUtils;
+import io.github.muntashirakon.AppManager.utils.IOUtils;
 
+import static org.junit.Assert.assertEquals;
+
+@RunWith(RobolectricTestRunner.class)
 public class SplitInputStreamTest {
-    private final List<File> fileList = new ArrayList<>();
+    private final List<Path> fileList = new ArrayList<>();
     private final ClassLoader classLoader = getClass().getClassLoader();
+    private final Context context = AppManager.getContext();
 
     @Before
     public void setUp() {
         assert classLoader != null;
-        fileList.add(new File(classLoader.getResource("AppManager_v2.5.22.apks.0").getFile()));
-        fileList.add(new File(classLoader.getResource("AppManager_v2.5.22.apks.1").getFile()));
-        fileList.add(new File(classLoader.getResource("AppManager_v2.5.22.apks.2").getFile()));
-        fileList.add(new File(classLoader.getResource("AppManager_v2.5.22.apks.3").getFile()));
-        fileList.add(new File(classLoader.getResource("AppManager_v2.5.22.apks.4").getFile()));
-        fileList.add(new File(classLoader.getResource("AppManager_v2.5.22.apks.5").getFile()));
-        fileList.add(new File(classLoader.getResource("AppManager_v2.5.22.apks.6").getFile()));
-        fileList.add(new File(classLoader.getResource("AppManager_v2.5.22.apks.7").getFile()));
+        fileList.add(new Path(context, new File(classLoader.getResource("AppManager_v2.5.22.apks.0").getFile())));
+        fileList.add(new Path(context, new File(classLoader.getResource("AppManager_v2.5.22.apks.1").getFile())));
+        fileList.add(new Path(context, new File(classLoader.getResource("AppManager_v2.5.22.apks.2").getFile())));
+        fileList.add(new Path(context, new File(classLoader.getResource("AppManager_v2.5.22.apks.3").getFile())));
+        fileList.add(new Path(context, new File(classLoader.getResource("AppManager_v2.5.22.apks.4").getFile())));
+        fileList.add(new Path(context, new File(classLoader.getResource("AppManager_v2.5.22.apks.5").getFile())));
+        fileList.add(new Path(context, new File(classLoader.getResource("AppManager_v2.5.22.apks.6").getFile())));
+        fileList.add(new Path(context, new File(classLoader.getResource("AppManager_v2.5.22.apks.7").getFile())));
     }
 
     @Test

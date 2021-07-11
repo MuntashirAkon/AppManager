@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-
+<!-- SPDX-License-Identifier: WTFPL -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,22 +7,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:layout_centerInParent="true"
         android:contentDescription="@string/app_name"
         android:src="@mipmap/ic_launcher"
         app:tint="#8f312f"
-        android:tintMode="multiply"/>
+        android:tintMode="multiply" />
 
-    <LinearLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:layout_centerInParent="true"
         android:gravity="end|bottom">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/record_badge_image_view"
             android:layout_width="16dp"
             android:layout_height="16dp"
@@ -32,9 +32,9 @@
             app:srcCompat="@drawable/ic_record_white_24dp"
             tools:visibility="visible" />
 
-    </LinearLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/widget_subtext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

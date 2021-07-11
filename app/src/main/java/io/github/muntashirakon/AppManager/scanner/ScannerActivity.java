@@ -1,31 +1,12 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.scanner;
 
-import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
@@ -40,16 +21,19 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.IntRange;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.collection.ArrayMap;
+import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.android.internal.util.TextUtils;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
+import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -57,12 +41,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import androidx.annotation.IntRange;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.collection.ArrayMap;
-import androidx.core.content.ContextCompat;
-import androidx.lifecycle.ViewModelProvider;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.StaticDataset;
@@ -75,11 +53,13 @@ import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuild
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getPrimaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
+// Copyright 2015 Google, Inc.
 public class ScannerActivity extends BaseActivity {
     public static final String EXTRA_IS_EXTERNAL = "is_external";
 
@@ -106,10 +86,6 @@ public class ScannerActivity extends BaseActivity {
         IOUtils.deleteDir(new File(getCacheDir().getParent(), APP_DEX));
         IOUtils.deleteDir(getCodeCacheDir());
         IOUtils.closeQuietly(fd);
-        if (apkFile != null && !apkFile.getAbsolutePath().startsWith("/data/app/")) {
-            // Only attempt to delete the apk file if it's cached
-            IOUtils.deleteSilently(apkFile);
-        }
         IOUtils.closeQuietly(dexClasses);
         // Empty static vars
         // This works because ClassListingActivity opens on top of ScannerActivity
@@ -165,98 +141,75 @@ public class ScannerActivity extends BaseActivity {
             return;
         }
 
-        // A new thread to load all summary
+        model.loadSummary(apkFile, apkUri);
+
+        model.getApkChecksums().observe(this, checksums -> {
+            SpannableStringBuilder sb = new SpannableStringBuilder(apkUri.toString()).append("\n");
+            sb.append(getPrimaryText(this, getString(R.string.checksums)));
+            for (Pair<String, String> digest : checksums) {
+                sb.append("\n").append(getPrimaryText(this, digest.first + ": ")).append(digest.second);
+            }
+            ((TextView) findViewById(R.id.apk_title)).setText(R.string.source_dir);
+            ((TextView) findViewById(R.id.apk_description)).setText(sb);
+        });
+        model.getPackageInfo().observe(this, packageInfo -> {
+            if (packageInfo != null) {
+                String archiveFilePath = model.getApkFile().getAbsolutePath();
+                mPackageName = packageInfo.packageName;
+                final ApplicationInfo applicationInfo = packageInfo.applicationInfo;
+                applicationInfo.publicSourceDir = archiveFilePath;
+                applicationInfo.sourceDir = archiveFilePath;
+                mAppName = applicationInfo.loadLabel(getPackageManager());
+                if (mActionBar != null) {
+                    mActionBar.setTitle(mAppName);
+                    mActionBar.setSubtitle(R.string.scanner);
+                }
+            } else {
+                Toast.makeText(this, R.string.failed_to_fetch_package_info, Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
+        model.getApkVerifierResult().observe(this, result -> {
+            TextView checksumDescription = findViewById(R.id.checksum_description);
+            SpannableStringBuilder builder = new SpannableStringBuilder();
+            builder.append(PackageUtils.getApkVerifierInfo(result, this));
+            List<X509Certificate> certificates = result.getSignerCertificates();
+            if (certificates != null && certificates.size() > 0) {
+                builder.append(getCertificateInfo(certificates));
+            }
+            checksumDescription.setText(builder);
+        });
+        model.getAllClasses().observe(this, allClasses -> {
+            dexClasses = model.getDexClasses();
+            classListAll = allClasses;
+            ((TextView) findViewById(R.id.classes_title)).setText(getResources().getQuantityString(R.plurals.classes,
+                    classListAll.size(), classListAll.size()));
+            findViewById(R.id.classes).setOnClickListener(v -> {
+                Intent intent1 = new Intent(this, ClassListingActivity.class);
+                intent1.putExtra(ClassListingActivity.EXTRA_APP_NAME, mAppName);
+                startActivity(intent1);
+            });
+        });
+        // Fetch tracker info
         new Thread(() -> {
+            model.waitForAllClasses();
             Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
             try {
-                // Test if this path is readable
-                if (!apkFile.exists() || !apkFile.canRead()) {
-                    // Not readable, cache the file
-                    try (InputStream uriStream = getContentResolver().openInputStream(apkUri)) {
-                        apkFile = IOUtils.getCachedFile(uriStream);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                // Generate apk checksums
-                new Thread(() -> {
-                    try {
-                        Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-                        Pair<String, String>[] digests = DigestUtils.getDigests(apkFile);
-                        SpannableStringBuilder sb = new SpannableStringBuilder(apkUri.toString()).append("\n");
-                        sb.append(getPrimaryText(this, getString(R.string.checksums)));
-                        for (Pair<String, String> digest : digests) {
-                            sb.append("\n").append(getPrimaryText(this, digest.first + ": ")).append(digest.second);
-                        }
-                        runOnUiThread(() -> {
-                            ((TextView) findViewById(R.id.apk_title)).setText(R.string.source_dir);
-                            ((TextView) findViewById(R.id.apk_description)).setText(sb);
-                        });
-                    } catch (Exception e) {
-                        // ODEX, need to see how to handle
-                        e.printStackTrace();
-                    }
-                }).start();
-                final PackageManager pm = getApplicationContext().getPackageManager();
-                final String archiveFilePath = apkFile.getAbsolutePath();
-                @SuppressLint("WrongConstant") final PackageInfo packageInfo = pm.getPackageArchiveInfo(archiveFilePath, 64);
-                // Fetch signature
-                new Thread(() -> {
-                    if (packageInfo != null) {
-                        Spannable certInfo = getCertificateInfo(packageInfo);
-                        runOnUiThread(() -> ((TextView) findViewById(R.id.checksum_description)).setText(certInfo));
-                        mPackageName = packageInfo.packageName;
-                        final ApplicationInfo applicationInfo = packageInfo.applicationInfo;
-                        applicationInfo.publicSourceDir = archiveFilePath;
-                        applicationInfo.sourceDir = archiveFilePath;
-                        mAppName = applicationInfo.loadLabel(pm);
-                        runOnUiThread(() -> {
-                            if (mActionBar != null) {
-                                mActionBar.setTitle(mAppName);
-                                mActionBar.setSubtitle(R.string.scanner);
-                            }
-                        });
-                    } else {
-                        runOnUiThread(() -> {
-                            Toast.makeText(this, R.string.failed_to_fetch_package_info, Toast.LENGTH_SHORT).show();
-                            finish();
-                        });
-                    }
-                }).start();
-                // Load classes
-                dexClasses = new DexClasses(this, apkFile);
-                classListAll = dexClasses.getClassNames();
-                runOnUiThread(() -> {
-                    ((TextView) findViewById(R.id.classes_title)).setText(getResources().getQuantityString(R.plurals.classes, classListAll.size(), classListAll.size()));
-                    findViewById(R.id.classes).setOnClickListener(v -> {
-                        Intent intent1 = new Intent(this, ClassListingActivity.class);
-                        intent1.putExtra(ClassListingActivity.EXTRA_APP_NAME, mAppName);
-                        startActivity(intent1);
-                    });
-                });
-                // Fetch tracker info
-                new Thread(() -> {
-                    try {
-                        Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-                        setTrackerInfo();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }).start();
-                // Fetch library info
-                new Thread(() -> {
-                    try {
-                        Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-                        setLibraryInfo();
-                        // Progress is dismissed here because this will take the largest time
-                        runOnUiThread(() -> showProgress(false));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }).start();
+                setTrackerInfo();
             } catch (Exception e) {
                 e.printStackTrace();
-                finishAffinity();
+            }
+        }).start();
+        // Fetch library info
+        new Thread(() -> {
+            model.waitForAllClasses();
+            Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+            try {
+                setLibraryInfo();
+                // Progress is dismissed here because this will take the largest time
+                runOnUiThread(() -> showProgress(false));
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }).start();
     }
@@ -306,7 +259,7 @@ public class ScannerActivity extends BaseActivity {
         long t_start, t_end;
         t_start = System.currentTimeMillis();
         // Iterate over all classes
-        for (String className : classListAll) {
+        for (String className : model.getClassListAll()) {
             if (className.length() > 8 && className.contains(".")) {
                 // Iterate over all signatures to match the class name
                 // This is a greedy algorithm, only matches the first item
@@ -406,7 +359,7 @@ public class ScannerActivity extends BaseActivity {
         @IntRange(from = 0)
         int totalLibsFound = 0;
         // Iterate over all classes
-        for (String className : classListAll) {
+        for (String className : model.getClassListAll()) {
             if (className.length() > 8 && className.contains(".")) {
                 boolean matched = false;
                 // Iterate over all signatures to match the class name
@@ -494,15 +447,10 @@ public class ScannerActivity extends BaseActivity {
     }
 
     @NonNull
-    private Spannable getCertificateInfo(@NonNull PackageInfo p) {
-        Signature[] signatures = p.signatures;
+    private Spannable getCertificateInfo(@NonNull List<X509Certificate> certificates) {
         SpannableStringBuilder builder = new SpannableStringBuilder();
-        X509Certificate cert;
-        byte[] certBytes;
-        for (Signature signature : signatures) {
-            certBytes = signature.toByteArray();
-            try (InputStream is = new ByteArrayInputStream(certBytes)) {
-                cert = (X509Certificate) CertificateFactory.getInstance("X.509").generateCertificate(is);
+        for (X509Certificate cert : certificates) {
+            try {
                 if (builder.length() > 0) builder.append("\n\n");
                 builder.append(getPrimaryText(this, getString(R.string.issuer) + ": "))
                         .append(cert.getIssuerX500Principal().getName()).append("\n")
@@ -510,11 +458,13 @@ public class ScannerActivity extends BaseActivity {
                         .append(cert.getSigAlgName()).append("\n");
                 // Checksums
                 builder.append(getPrimaryText(this, getString(R.string.checksums)));
-                Pair<String, String>[] digests = DigestUtils.getDigests(certBytes);
+                Pair<String, String>[] digests = DigestUtils.getDigests(cert.getEncoded());
                 for (Pair<String, String> digest : digests) {
                     builder.append("\n").append(getPrimaryText(this, digest.first + ": ")).append(digest.second);
                 }
-            } catch (IOException | CertificateException ignore) {}
+            } catch (CertificateEncodingException e) {
+                e.printStackTrace();
+            }
         }
         return builder;
     }

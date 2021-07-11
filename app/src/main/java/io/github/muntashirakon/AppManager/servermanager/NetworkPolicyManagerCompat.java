@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 package io.github.muntashirakon.AppManager.servermanager;
 
 import android.content.Context;
@@ -12,6 +14,8 @@ import androidx.collection.ArrayMap;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
@@ -75,8 +79,8 @@ public class NetworkPolicyManagerCompat {
         if (policies > 0) {
             for (int policy : networkPolicies.keySet()) {
                 if ((policies & policy) != 0) {
-                    readablePolicies.put(policy, context.getString(R.string.unknown_netpolicy,
-                            networkPolicies.get(policy)));
+                    readablePolicies.put(policy, context.getString(R.string.unknown_net_policy,
+                            networkPolicies.get(policy), policy));
                 }
             }
             // Put known policies
@@ -109,31 +113,45 @@ public class NetworkPolicyManagerCompat {
     @NonNull
     public static ArrayMap<Integer, String> getAllReadablePolicies(@NonNull Context context) {
         ArrayMap<Integer, String> readablePolicies = new ArrayMap<>();
+        List<Integer> visitedPolicies = new ArrayList<>();
         if (networkPolicies.containsKey(NetworkPolicyManager.POLICY_NONE)) {
             readablePolicies.put(NetworkPolicyManager.POLICY_NONE, context.getString(R.string.none));
+            visitedPolicies.add(NetworkPolicyManager.POLICY_NONE);
         }
         if (networkPolicies.containsKey(NetworkPolicyManager.POLICY_REJECT_METERED_BACKGROUND)) {
             readablePolicies.put(NetworkPolicyManager.POLICY_REJECT_METERED_BACKGROUND,
                     context.getString(R.string.netpolicy_reject_background_data));
+            visitedPolicies.add(NetworkPolicyManager.POLICY_REJECT_METERED_BACKGROUND);
         }
         if (networkPolicies.containsKey(NetworkPolicyManager.POLICY_ALLOW_METERED_BACKGROUND)) {
             readablePolicies.put(NetworkPolicyManager.POLICY_ALLOW_METERED_BACKGROUND,
                     context.getString(R.string.netpolicy_allow_background_data));
+            visitedPolicies.add(NetworkPolicyManager.POLICY_ALLOW_METERED_BACKGROUND);
         }
         if (networkPolicies.containsValue("POLICY_REJECT_ON_DATA")
                 || networkPolicies.containsValue("POLICY_REJECT_CELLULAR")) {
             readablePolicies.put(POLICY_REJECT_CELLULAR, context.getString(R.string.netpolicy_reject_cellular_data));
+            visitedPolicies.add(POLICY_REJECT_CELLULAR);
         }
         if (networkPolicies.containsValue("POLICY_REJECT_ON_VPN")
                 || networkPolicies.containsValue("POLICY_REJECT_VPN")) {
             readablePolicies.put(POLICY_REJECT_VPN, context.getString(R.string.netpolicy_reject_vpn_data));
+            visitedPolicies.add(POLICY_REJECT_VPN);
         }
         if (networkPolicies.containsValue("POLICY_REJECT_ON_WLAN")
                 || networkPolicies.containsValue("POLICY_REJECT_WIFI")) {
             readablePolicies.put(POLICY_REJECT_WIFI, context.getString(R.string.netpolicy_reject_wifi_data));
+            visitedPolicies.add(POLICY_REJECT_WIFI);
         }
         if (networkPolicies.containsValue("POLICY_NETWORK_ISOLATED") || networkPolicies.containsValue("POLICY_REJECT_ALL")) {
             readablePolicies.put(POLICY_REJECT_ALL, context.getString(R.string.netpolicy_disable_network_access));
+            visitedPolicies.add(POLICY_REJECT_ALL);
+        }
+        for (int i = 0; i < networkPolicies.size(); ++i) {
+            if (!visitedPolicies.contains(networkPolicies.keyAt(i))) {
+                readablePolicies.put(networkPolicies.keyAt(i), context.getString(R.string.unknown_net_policy,
+                        networkPolicies.valueAt(i), networkPolicies.keyAt(i)));
+            }
         }
         return readablePolicies;
     }

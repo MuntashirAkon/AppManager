@@ -1,19 +1,4 @@
-/*
- * Copyright (C) 2020 Muntashir Al-Islam
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.utils;
 
@@ -45,7 +30,6 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.EOFException;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -54,14 +38,23 @@ import java.io.OutputStream;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.util.Arrays;
+import java.util.regex.Pattern;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.ProxyFile;
 import io.github.muntashirakon.io.ProxyInputStream;
 import io.github.muntashirakon.io.ProxyOutputStream;
+
+import static android.system.OsConstants.O_APPEND;
+import static android.system.OsConstants.O_CREAT;
+import static android.system.OsConstants.O_RDONLY;
+import static android.system.OsConstants.O_RDWR;
+import static android.system.OsConstants.O_TRUNC;
+import static android.system.OsConstants.O_WRONLY;
 
 public final class IOUtils {
     public static final int DEFAULT_BUFFER_SIZE = 1024 * 50;
@@ -136,6 +129,14 @@ public final class IOUtils {
     }
 
     @WorkerThread
+    public static long copy(Path from, Path to) throws IOException {
+        try (InputStream in = from.openInputStream();
+             OutputStream out = to.openOutputStream()) {
+            return copy(in, out);
+        }
+    }
+
+    @WorkerThread
     public static long copy(InputStream inputStream, OutputStream outputStream) throws IOException {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             return FileUtils.copy(inputStream, outputStream);
@@ -170,7 +171,7 @@ public final class IOUtils {
     @WorkerThread
     @NonNull
     public static File saveZipFile(@NonNull InputStream zipInputStream, @NonNull File filePath)
-            throws IOException, RemoteException {
+            throws IOException {
         if (filePath.exists()) //noinspection ResultOfMethodCallIgnored
             filePath.delete();
         try (OutputStream outputStream = new ProxyOutputStream(filePath)) {
@@ -319,6 +320,32 @@ public final class IOUtils {
     }
 
     @AnyThread
+    public static long fileSize(@Nullable Path root) {
+        if (root == null) {
+            return 0;
+        }
+        if (root.isFile()) {
+            return root.length();
+        }
+        try {
+            if (root.isSymbolicLink()) {
+                return 0;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return 0;
+        }
+
+        long length = 0;
+        Path[] files = root.listFiles();
+        for (Path file : files) {
+            length += fileSize(file);
+        }
+
+        return length;
+    }
+
+    @AnyThread
     private static boolean isSymlink(@NonNull File file) throws IOException {
         File canon;
         File parentFile = file.getParentFile();
@@ -337,6 +364,12 @@ public final class IOUtils {
         return getFileContent(file, "");
     }
 
+    @WorkerThread
+    @NonNull
+    public static String getFileContent(@NonNull Path file) {
+        return getFileContent(file, "");
+    }
+
     /**
      * Read the full content of a file.
      *
@@ -350,7 +383,29 @@ public final class IOUtils {
         if (!file.exists() || file.isDirectory()) return emptyValue;
         try (InputStream inputStream = new ProxyInputStream(file)) {
             return getInputStreamContent(inputStream);
-        } catch (IOException | RemoteException e) {
+        } catch (IOException e) {
+            if (!(e.getCause() instanceof ErrnoException)) {
+                // This isn't just another EACCESS exception
+                e.printStackTrace();
+            }
+        }
+        return emptyValue;
+    }
+
+    /**
+     * Read the full content of a file.
+     *
+     * @param file       The file to be read
+     * @param emptyValue Empty value if no content has been found
+     * @return File content as string
+     */
+    @WorkerThread
+    @NonNull
+    public static String getFileContent(@NonNull Path file, @NonNull String emptyValue) {
+        if (!file.exists() || file.isDirectory()) return emptyValue;
+        try (InputStream inputStream = file.openInputStream()) {
+            return getInputStreamContent(inputStream);
+        } catch (IOException e) {
             if (!(e.getCause() instanceof ErrnoException)) {
                 // This isn't just another EACCESS exception
                 e.printStackTrace();
@@ -381,7 +436,7 @@ public final class IOUtils {
     public static String getFileContent(@NonNull ContentResolver contentResolver, @NonNull Uri file)
             throws IOException {
         try (InputStream inputStream = contentResolver.openInputStream(file)) {
-            if (inputStream == null) throw new IOException("Failed to open " + file.toString());
+            if (inputStream == null) throw new IOException("Failed to open " + file);
             return getInputStreamContent(inputStream);
         }
     }
@@ -478,6 +533,19 @@ public final class IOUtils {
 
     @AnyThread
     @NonNull
+    public static File getTempFile(String name) throws IOException {
+        File extDir = AppManager.getContext().getExternalFilesDir("cache");
+        if (extDir == null) throw new FileNotFoundException("External storage not available.");
+        if (!extDir.exists() && !extDir.mkdirs()) {
+            throw new IOException("Cannot create cache directory in the external storage.");
+        }
+        File newFile = new File(extDir, name);
+        if (newFile.exists()) newFile.delete();
+        return newFile;
+    }
+
+    @AnyThread
+    @NonNull
     public static File getCachePath() throws IOException {
         File extDir = AppManager.getContext().getExternalFilesDir("cache");
         if (extDir == null) throw new FileNotFoundException("External storage not available.");
@@ -487,58 +555,8 @@ public final class IOUtils {
         return extDir;
     }
 
-    public static Drawable cacheIcon(String name, InputStream inputStream) throws IOException {
-        File iconFile = new File(getIconCachePath(), name + ".png");
-        try (OutputStream os = new FileOutputStream(iconFile)) {
-            copy(inputStream, os);
-        }
-        return getCachedIcon(name);
-    }
-
-    public static Drawable cacheIcon(String name, Drawable drawable) throws IOException {
-        File iconFile = new File(getIconCachePath(), name + ".png");
-        try (OutputStream os = new FileOutputStream(iconFile)) {
-            Bitmap bitmap = IOUtils.getBitmapFromDrawable(drawable);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, os);
-            os.flush();
-        }
-        return drawable;
-    }
-
-    public static Drawable getCachedIcon(String name) throws IOException {
-        File iconFile = new File(getIconCachePath(), name + ".png");
-        if (iconFile.exists()) {
-            return Drawable.createFromStream(new FileInputStream(iconFile), name);
-        } else {
-            throw new FileNotFoundException("Icon for " + name + " doesn't exist");
-        }
-    }
-
-    @AnyThread
-    @NonNull
-    public static File getIconCachePath() throws IOException {
-        if (AppManager.getContext().getExternalCacheDir() == null)
-            throw new FileNotFoundException("External storage not available.");
-        File extDir = new File(AppManager.getContext().getExternalCacheDir(), "icons");
-        if (!extDir.exists() && !extDir.mkdirs()) {
-            throw new IOException("Cannot create cache directory in the external storage.");
-        }
-        return extDir;
-    }
-
     @WorkerThread
-    @NonNull
-    public static File getSharableFile(@NonNull File privateFile) throws IOException {
-        File tmpPublicSource = new File(AppManager.getContext().getExternalCacheDir(), privateFile.getName());
-        try (FileInputStream inputStream = new FileInputStream(privateFile);
-             FileOutputStream outputStream = new FileOutputStream(tmpPublicSource)) {
-            copy(inputStream, outputStream);
-        }
-        return tmpPublicSource;
-    }
-
-    @WorkerThread
-    public static long calculateFileCrc32(File file) throws IOException, RemoteException {
+    public static long calculateFileCrc32(File file) throws IOException {
         return calculateCrc32(new ProxyInputStream(file));
     }
 
@@ -579,5 +597,63 @@ public final class IOUtils {
             Log.e("IOUtils", "Failed to apply mode 644 to " + file);
             throw new IOException(e);
         }
+    }
+
+    public static int translateModeStringToPosix(@NonNull String mode) {
+        // Sanity check for invalid chars
+        for (int i = 0; i < mode.length(); i++) {
+            switch (mode.charAt(i)) {
+                case 'r':
+                case 'w':
+                case 't':
+                case 'a':
+                    break;
+                default:
+                    throw new IllegalArgumentException("Bad mode: " + mode);
+            }
+        }
+
+        int res;
+        if (mode.startsWith("rw")) {
+            res = O_RDWR | O_CREAT;
+        } else if (mode.startsWith("w")) {
+            res = O_WRONLY | O_CREAT;
+        } else if (mode.startsWith("r")) {
+            res = O_RDONLY;
+        } else {
+            throw new IllegalArgumentException("Bad mode: " + mode);
+        }
+        if (mode.indexOf('t') != -1) {
+            res |= O_TRUNC;
+        }
+        if (mode.indexOf('a') != -1) {
+            res |= O_APPEND;
+        }
+        return res;
+    }
+
+    @NonNull
+    public static String getRelativePath(@NonNull String targetPath, @NonNull String baseDir, @NonNull String separator) {
+        String[] base = baseDir.split(Pattern.quote(separator));
+        String[] target = targetPath.split(Pattern.quote(separator));
+
+        // Count common elements and their length
+        int commonCount = 0, commonLength = 0, maxCount = Math.min(target.length, base.length);
+        while (commonCount < maxCount) {
+            String targetElement = target[commonCount];
+            if (!targetElement.equals(base[commonCount])) break;
+            commonCount++;
+            commonLength += targetElement.length() + 1; // Directory name length plus slash
+        }
+        if (commonCount == 0) return targetPath; // No common path element
+
+        int targetLength = targetPath.length();
+        int dirsUp = base.length - commonCount;
+        StringBuilder relative = new StringBuilder(dirsUp * 3 + targetLength - commonLength + 1);
+        for (int i = 0; i < dirsUp; i++) {
+            relative.append("..").append(separator);
+        }
+        if (commonLength < targetLength) relative.append(targetPath.substring(commonLength));
+        return relative.toString();
     }
 }
