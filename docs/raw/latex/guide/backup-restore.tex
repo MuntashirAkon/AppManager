@@ -1,5 +1,6 @@
 % SPDX-License-Identifier: GPL-3.0-or-later OR CC-BY-SA-4.0
-\section{Back up/Restore}\label{sec:backup-restore}
+\section{Back up/Restore}\label{sec:backup-restore} %%##guide_backuprestore-section==title>>
+%%!!guide_backuprestore-section<<
 App Manager has a modern, advanced and easy-to-use backup/restore system implemented from the scratch.
 This is probably the only app that has the ability to restore not only the app or its data but also permissions and
 rules that you've configured within App Manager.
@@ -9,8 +10,10 @@ You can also choose to back up an app multiple times (with custom names) or for 
     \item \hyperref[subsec:1-click-back-up]{1-Click Ops: Back up}
     \item \hyperref[subsec:1-click-restore]{1-Click Ops: Restore}
 \end{amseealso}
+%%!!>>
 
-\subsection{Location}\label{subsec:backup-location}
+\subsection{Location}\label{subsec:backup-location} %%##guide_backuprestore-location==title>>
+%%!!guide_backuprestore-location<<
 Back up/restore is a part of \hyperref[subsec:batch-operations]{batch operations}.
 It is also located inside the \hyperref[subsubsec:app-info-options-menu]{options menu} in the
 \hyperref[subsec:app-info-tab]{App Info tab}.
@@ -23,8 +26,10 @@ will be located at the \texttt{AppManager} folder in the selected volume.
     If one or more selected apps do not have any backup, the \textbf{Restore} and \textbf{Delete Backup} options will
     not be displayed.
 \end{tip}
+%%!!>>
 
-\subsection{Backup Options}\label{subsec:backup-restore-backup-options}
+\subsection{Backup Options}\label{subsec:backup-restore-backup-options} %%##guide_backuprestore-options==title>>
+%%!!guide_backuprestore-options<<
 Backup options (internally known as backup flags) let you customise the backups on the fly.
 However, the customisations will not be remembered for the future backups.
 If you want to customise this dialog, use \hyperref[subsubsec:settings-backup-options]{Backup Options} in the \hyperref[sec:settings-page]{Settings page}.
@@ -88,13 +93,17 @@ A complete description of the backup options is given below:
 \end{itemize}
 
 \seealsoinline{\hyperref[subsubsec:settings-encryption]{Settings: Encryption}}
+%%!!>>
 
-\subsection{Backup}\label{subsec:backup-restore-backup}
+\subsection{Backup}\label{subsec:backup-restore-backup} %%##guide_backuprestore-backup==title>>
+%%!!guide_backuprestore-backup<<
 Backup respects all the backup options except \textbf{Skip signature checks}.
 If base backups (i.e., backups that don't have the \textbf{Backup Multiple} option) already exist, you will get a warning as the backups will be overwritten.
 If \textbf{Backup Multiple} is set, you have an option to input the backup name, or you can leave it blank to use the current date-time.
+%%!!>>
 
-\subsection{Restore}\label{subsec:backup-restore-restore}
+\subsection{Restore}\label{subsec:backup-restore-restore} %%##guide_backuprestore-restore==title>>
+%%!!guide_backuprestore-restore<<
 Restore respects all the backup options and will fail if \textbf{APK files} option is set, but the backup doesn't
 contain such backups or in other cases, if the app isn't installed.
 When restoring backups for multiple packages, you can only restore the base backups (see \hyperref[subsec:backup-restore-backup]{backup} section for an explanation).
@@ -104,7 +113,10 @@ If \textbf{All users} option is set, AM will restore the selected backup for all
 \begin{tip}{Notice}
     Apps that use storage access framework (SAF), SSAID or Android KeyStore works properly only after an immediate restart.
 \end{tip}
+%%!!>>
 
-\subsection{Delete Backup}\label{subsec:backup-restore-delete-backup}
+\subsection{Delete Backup}\label{subsec:backup-restore-delete-backup} %%##guide_backuprestore-delete==title>>
+%%!!guide_backuprestore-delete<<
 Delete backup only respects \textbf{All users} option and when it is selected, only the base backups for all users will be deleted with a prompt.
 When deleting backups for a single package, another dialog will be displayed where you can select the backups to delete.
+%%!!>>
