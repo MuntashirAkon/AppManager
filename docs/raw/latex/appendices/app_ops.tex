@@ -1,6 +1,6 @@
-\chapter{App Ops}\label{ch:app-ops} %%##appendices_appops-chapter==title>>
-\section{Background}\label{sec:app-ops-background} %%##appendices_appops-background==title>>
-%%!!appendices_appops-background<<
+% SPDX-License-Identifier: GPL-3.0-or-later OR CC-BY-SA-4.0
+\chapter{App Ops}\label{ch:app-ops}
+\section{Background}\label{sec:app-ops-background}
 \textbf{App Ops} (short hand for \textbf{Application Operations}) are used by Android system (since Android 4.3) to
 control application permissions. The user \emph{can} control some permissions, but only the permissions that are considered
 dangerous (and Google thinks knowing your phone number isn't a dangerous thing). So, app ops seems to be the one we need
@@ -17,18 +17,17 @@ support disabling permissions via app ops. The best one to my knowledge is
 \href{https://github.com/8enet/AppOpsX}{AppOpsX}. The main (visible) difference between my app (AppManager) and this
 app is that the latter also provides you the ability to revoke internet permissions (by writing ip tables). One crucial
 problem that I faced during the development of the app ops API is the lack of documentation in English language.
-%%!!>>
 
-\section{Introduction to App Ops}\label{sec:introduction-to-app-ops} %%##appendices_appops-introduction==title>>
+\section{Introduction to App Ops}\label{sec:introduction-to-app-ops}
 
 \begin{figure}[ht]
     \centering
     \includegraphics[width=10cm]{./images/appops}
-    \caption{How app ops work} %%##appendices_appops-howappopswork==title>>
+    \caption{How app ops work}
     \label{fig:appops}
 \end{figure}
-%%!!appendices_appops-introduction<<
-Figure \hyperref[fig:appops]{1} describes the process of changing and processing permission.
+
+\fref{fig:appops} describes the process of changing and processing permission.
 \hyperref[sec:appopsmanager]{AppOpsManager} can be used to manage permissions in Settings app. \textbf{AppOpsManager} is
 also useful in determining if a certain permission (or operation) is granted to the application. Most of the methods of
 \textbf{AppOpsManager} are accessible to the user app but unlike a system app, it can only be used to check permissions
@@ -40,7 +39,7 @@ structures such as \hyperref[subsec:package-ops]{PackageOps} and \textbf{OpEntry
 \textbf{OpEntry} for a package, and \textbf{OpEntry}, as the name suggests, describes each operation.
 
 \texttt{AppOpService} is completely hidden from a user application but accessible to the system applications.
-As it can be seen in Figure \hyperref[fig:appops]{1}, this is the class that does the actual management stuff.
+As it can be seen in \fref{fig:appops}, this is the class that does the actual management stuff.
 It contains data structures such as \textbf{Ops} to store basic package info and \textbf{Op} which is similar to
 \textbf{OpEntry} of \textbf{AppOpsManager}.
 It also has \textbf{Shell} which is actually the source code of the \hyperref[sec:appops-cli]{\textit{appops} command line tool}.
@@ -48,24 +47,19 @@ It writes configurations to or read configurations from \hyperref[sec:appops-xml
 System services calls \textbf{AppOpsService} to find out what an application is allowed and what is not allowed to perform,
 and \textbf{AppOpsService} determines these permissions by parsing \texttt{/data/system/appops.xml}. If no custom values
 are present in \textit{appops.xml}, it returns the default mode available in \textbf{AppOpsManager}.
-%%!!>>
 
-\section{AppOpsManager}\label{sec:appopsmanager} %%##appendices_appops-appopsmanager==title>>
-%%!!appendices_appops-appopsmanager<<
+\section{AppOpsManager}\label{sec:appopsmanager}
 \href{https://android.googlesource.com/platform/frameworks/base/+/master/core/java/android/app/AppOpsManager.java}{AppOpsManager}
 stands for application operations manager. It consists of various constants and classes to modify app operations.
 
 \seealsoinline{\href{https://developer.android.com/reference/android/app/AppOpsManager}{AppOpsManager documentation}}
-%%!!>>
 
-\subsection{\texttt{OP\_*} Constants}\label{subsec:op-constants} %%##appendices_appops-op-constants==title>>
-%%!!appendices_appops-op-constants_1<<
+\subsection{\texttt{OP\_*} Constants}\label{subsec:op-constants}
 \texttt{OP\_*} are the integer constants starting from \texttt{0}. \texttt{OP\_NONE} implies that no operations are
 specified whereas \texttt{\_NUM\_OP} denotes the number of operations defined in \texttt{OP\_*} prefix. While they
 denote each operation, the operations are not necessarily unique. In fact, there are many operations that are actually
 a single operation denoted by multiple \texttt{OP\_*} constant (possibly for future use). Vendors may define their own
 op based on their requirements. MIUI is one of the vendors who are known to do that.
-%%!!>>
 
 \begin{listing}[ht]
     \begin{minted}[frame=lines]{java}
@@ -80,11 +74,10 @@ public static final int OP_ACCESS_MEDIA_LOCATION = 90;
 public static final int OP_ACTIVATE_PLATFORM_VPN = 91;
 public static final int _NUM_OP = 92;
     \end{minted}
-    \caption{Sneak-peek of \texttt{OP\_*}} %%##appendices_appops-sneakpeekopconstants==title>>
+    \caption{Sneak-peek of \texttt{OP\_*}}
     \label{lst:op-constants}
 \end{listing}
 
-%%!!appendices_appops-op-constants_2<<
 Whether an operation is unique is defined by \texttt{sOpToSwitch}.
 It maps each operation to another operation or to itself (if it's a unique operation).
 For instance, \texttt{OP\_FINE\_LOCATION} and \texttt{OP\_GPS} are mapped to \texttt{OP\_COARSE\_LOCATION}.
@@ -103,10 +96,8 @@ As described in the previous section, operations that are configured for an app 
 \hyperref[sec:appops-xml]{\texttt{/data/system/appops.xml}}.
 If an operation is not configured, then whether system will allow that operation is determined from \texttt{sOpDefaultMode}.
 It lists the \textit{default mode} for each operation.
-%%!!>>
 
-\subsection{\texttt{MODE\_*} Constants}\label{subsec:mode-constants} %%##appendices_appops-mode-constants==title>>
-%%!!appendices_appops-mode-constants<<
+\subsection{\texttt{MODE\_*} Constants}\label{subsec:mode-constants}
 \texttt{MODE\_*} constants also integer constants starting from \texttt{0}. These constants are assigned to each
 operation describing whether an app is authorised to perform that operation. These modes usually have associated names
 such as \textbf{allow} for \texttt{MODE\_ALLOWED}, \textbf{ignore} for \texttt{MODE\_IGNORED}, \textbf{deny} for
@@ -124,13 +115,10 @@ for \texttt{MODE\_FOREGROUND}.
     This mode was added in Android 10
     \item \textbf{\texttt{MODE\_ASK}.} This is a custom mode used by MIUI whose uses are unknown.
 \end{enumerate}
-%%!!>>
 
-\subsection{PackageOps}\label{subsec:package-ops} %%##appendices_appops-packageops==title>>
-%%!!appendices_appops-packageops_1<<
+\subsection{PackageOps}\label{subsec:package-ops}
 \textbf{AppOpsManager.PackageOps} is a data structure to store all the \textbf{OpEntry} for a package. In simple terms,
 it stores all the customised operations for a package.
-%%!!>>
 
 \begin{listing}[H]
     \begin{minted}[frame=lines]{java}
@@ -141,19 +129,15 @@ public static class PackageOps implements Parcelable {
     ...
 }
     \end{minted}
-    \caption{Class \texttt{PackageOps}} %%##appendices_appops-classpackageops==title>>
+    \caption{Class \texttt{PackageOps}}
     \label{lst:package-ops-class}
 \end{listing}
 
-%%!!appendices_appops-packageops_2<<
-As can be seen in Listing \hyperref[cb12]{2}, it stores all \textbf{OpEntry} for a package as well as the
+As can be seen in \Lref{lst:package-ops-class}, it stores all \textbf{OpEntry} for a package as well as the
 corresponding package name and its kernel user ID\@.
-%%!!>>
 
-\subsection{OpEntry}\label{subsec:opentry} %%##appendices_appops-opentry==title>>
-%%!!appendices_appops-opentry_1<<
+\subsection{OpEntry}\label{subsec:opentry}
 \textbf{AppOpsManager.OpEntry} is a data structure that stores a single operation for any package.
-%%!!>>
 
 \begin{listing}[H]
     \begin{minted}[frame=lines]{java}
@@ -169,10 +153,9 @@ public static final class OpEntry implements Parcelable {
     ...
 }
     \end{minted}
-    \caption{Class \texttt{OpEntry}} %%##appendices_appops-classopentry==title>>
+    \caption{Class \texttt{OpEntry}}
     \label{lst:class-op-entry}
 \end{listing}
-%%!!appendices_appops-opentry_2<<
 Here:
 \begin{itemize}
     \item \texttt{mOp}: Denotes one of the \hyperref[subsec:op-constants]{\texttt{OP\_*} constants}
@@ -186,18 +169,16 @@ Here:
     \item \texttt{mProxyUids}: No documentation found
     \item \texttt{mProxyPackageNames:} No documentation found
 \end{itemize}
-%%!!>>
 
-\subsection{Usage}\label{subsec:usage} %%##appendices_appops-usage==title>>
+\subsection{Usage}\label{subsec:usage}
 TODO
 
-\section{AppOpsService}\label{sec:appopsservice} %%##appendices_appops-appopsservice==title>>
+\section{AppOpsService}\label{sec:appopsservice}
 TODO
 
-\section{appops.xml}\label{sec:appops-xml} %%##appendices_appops-appopsxml==title>>
-%%!!appendices_appops-appopsxml_1<<
+\section{appops.xml}\label{sec:appops-xml}
+
 Latest \texttt{appops.xml} has the following format: (This DTD is made by me and by no means perfect, has compatibility issues.)
-%%!!>>
 
 \begin{Verbatim}
 <!DOCTYPE app-ops [
@@ -232,7 +213,7 @@ pu CDATA #IMPLIED>
 
 ]>
 \end{Verbatim}
-%%!!appendices_appops-appopsxml_2<<
+
 The instruction below follows the exact order given above:
 \begin{itemize}
     \item \texttt{app-ops}: The root element. It can contain any number of \texttt{pkg} or package \texttt{uid}
@@ -275,14 +256,12 @@ The instruction below follows the exact order given above:
 
 This definition can be found at
 \href{https://android.googlesource.com/platform/frameworks/base/+/master/services/core/java/com/android/server/appop/AppOpsService.java}{AppOpsService}.
-%%!!>>
 
-\section{Command Line Interface}\label{sec:appops-cli}%%##appendices_appops-appopscli==title>>
-%%!!appendices_appops-appopscli<<
+\section{Command Line Interface}\label{sec:appops-cli}
 \texttt{appops} or \texttt{cmd appops} (on latest versions) can be accessible via ADB or root. This is an easier method
 to get or update any operation for a package (provided the package name is known). The help page of this command is
 self-explanatory:
-%%!!>>
+
 \begin{Verbatim}
 AppOps service (appops) commands:
 help

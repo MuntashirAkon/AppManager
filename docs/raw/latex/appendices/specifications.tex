@@ -1,8 +1,8 @@
-\chapter{Specifications}\label{ch:specifications} %%##appendices_specifications-chapter==title>>
+% SPDX-License-Identifier: GPL-3.0-or-later OR CC-BY-SA-4.0
+\chapter{Specifications}\label{ch:specifications}
 
-\section{Rules Specification}\label{sec:rules-specification} %%##appendices_specifications-rules-specification==title>>
-\subsection{Background} %%##appendices_specifications-background==title>>
-%%!!appendices_specifications-background<<
+\section{Rules Specification}\label{sec:rules-specification}
+\subsection{Background}
 AM currently supports blocking activities, broadcast receivers, content providers, services, app ops and permissions,
 and in future I may add more blocking options. In order to add more portability, it is necessary to import/export all
 these data.
@@ -12,12 +12,10 @@ with each file having the name of the package and a \texttt{.tsv} extension. The
 by the \texttt{RulesStorageManager} class. Due to this abstraction, it should be easier to switch to database or
 encrypted database systems in future without changing the design of the entire project. Currently, All configuration
 files are stored at \texttt{/data/data/io.github.muntashirakon.AppManager/Files/conf}.
-%%!!>>
 
-\subsection{Rules File Format} %%##appendices_specifications-rulesfileformat==title>>
+\subsection{Rules File Format}
 
-\subsubsection{Internal} %%##appendices_specifications-internal==title>>
-%%!!appendices_specifications-internal<<
+\subsubsection{Internal}
 The format below is used internally within App Manager and is \textit{not compatible with the external format.}
 \begin{Verbatim}
     <name> <type> <mode>|<component_status>|<is_granted>
@@ -37,10 +35,8 @@ Here:
     \end{itemize}
     \item \texttt{<is\_granted>} -- (For permissions) Whether the permission is granted or revoked
 \end{itemize}
-%%!!>>
 
-\subsubsection{External} %%##appendices_specifications-external==title>>
-%%!!appendices_specifications-external<<
+\subsubsection{External}
 External format is used for importing or exporting rules in App Manager.
 \begin{Verbatim}
     <package_name> <component_name> <type> <mode>|<component_status>|<is_granted>
@@ -51,4 +47,3 @@ This the format is essentially the same as above except for the first item which
     The exported rules have a different format than the internal one and should not be copied directly to the
     \textbf{conf} folder.
 \end{danger}
-%%!!>>
