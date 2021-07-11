@@ -144,6 +144,14 @@ public class Path {
 
     @NonNull
     public Path createNewFile(@NonNull String displayName, @Nullable String mimeType) throws IOException {
+        if (hasFile(displayName)) {
+            Path path = findFile(displayName);
+            if (path.isDirectory()) {
+                throw new IOException("Directory cannot be converted to file");
+            }
+            // Delete the file if it exists
+            path.delete();
+        }
         if (mimeType == null) {
             // Generic binary file
             mimeType = "application/octet-stream";
@@ -163,7 +171,8 @@ public class Path {
     }
 
     public boolean delete() {
-        return documentFile.delete();
+        documentFile.delete();
+        return !exists();
     }
 
     @Nullable
