@@ -1,5 +1,6 @@
-\chapter{Introduction}\label{ch:introduction} %%##intro_main-introduction==title>>
-%%!!intro_main-introduction<<
+% SPDX-License-Identifier: GPL-3.0-or-later OR CC-BY-SA-4.0
+\chapter{Introduction}\label{ch:introduction}
+
 App Manager is an advanced package manager for Android. It offers many features and consequently, it requires a user
 manual to assist its users with features that it offers. This document acts as a user manual for App Manager in the
 sense that it contains the description of every feature that App Manager has to offer. The document can be considered as
@@ -9,11 +10,9 @@ if possible. There might be other unofficial or third-party resources such as bl
 While these resources might be useful for many people, they may not be up-to-date. In case any deviations are detected
 in App Manager from this document, they should be reported in the
 \href{https://github.com/MuntashirAkon/AppManager/issues}{App Manager issue tracker}.
-%%!!>>
 
 
-\section{Terminologies}\label{sec:terminologies} %%##intro_main-terminologies==title>>
-%%!!intro_main-terminologies<<
+\section{Terminologies}\label{sec:terminologies}
 \begin{itemize}
     \item \textbf{AM} --- Short name for App Manager
     \item \textbf{AoT} --- Short form of ADB over TCP
@@ -30,17 +29,13 @@ in App Manager from this document, they should be reported in the
     profiling, identification, ads, location, etc. Thus, they are not equal in functions. There is no distinction or
     bias between open source and closed source libraries.
 \end{itemize}
-%%!!>>
 
-\section{Supported Versions}\label{sec:supported-versions} %%##intro_main-supportedversions==title>>
-%%!!intro_main-supportedversions<<
+\section{Supported Versions}\label{sec:supported-versions}
 Currently supported versions are v2.5.20 (stable), v2.5.23 (pre-release) and v2.5.24 (debug release).
-%%!!>>
 
-\section{Official Sources}\label{sec:official-sources} %%##intro_main-officialsources==title>>
+\section{Official Sources}\label{sec:official-sources}
 
-\subsection{Binary Distribution Sources}\label{subsec:binary-distribution-sources} %%##intro_main-binsources==title>>
-%%!!intro_main-binsources<<
+\subsection{Binary Distribution Sources}\label{subsec:binary-distribution-sources}
 App Manager is distributed using the following sources. Unofficial sources may distribute modified versions of App
 Manager, and none but you shall be responsible for the consequences of using such distributions.
 \begin{enumerate}
@@ -55,13 +50,10 @@ Manager, and none but you shall be responsible for the consequences of using suc
     \textit{Normal releases:} \url{https://t.me/AppManagerChannel}\\
     \textit{Debug releases:} \url{https://t.me/AppManagerDebug}
 \end{enumerate}
-%%!!>>
 
-\subsection{Links to Source Code}\label{subsec:links-to-source-code} %%##intro_main-sourcecodelinks==title>>
-%%!!intro_main-sourcecodelinks<<
+\subsection{Links to Source Code}\label{subsec:links-to-source-code}
 All but GitHub are the mirror links. The tags should always be up-to-date, but the master branch is not guaranteed to be
 up-to-date. If the target is to clone the master branch, use the GitHub link instead of the others.
-%%!!>>
 \begin{enumerate}
     \item GitHub: \url{https://github.com/MuntashirAkon/AppManager}
     \item GitLab: \url{https://gitlab.com/muntashir/AppManager}
@@ -69,8 +61,7 @@ up-to-date. If the target is to clone the master branch, use the GitHub link ins
     \item Riseup: \url{https://0xacab.org/muntashir/AppManager}
 \end{enumerate}
 
-\subsection{Translations}\label{subsec:translations} %%##intro_main-translations==title>>
-%%!!intro_main-translations<<
+\subsection{Translations}\label{subsec:translations}
 App Manager does not accept translations directly via pull/merge requests. Translations are managed both automatically
 and manually depending on the context.
 \begin{itemize}
@@ -79,22 +70,16 @@ and manually depending on the context.
     \item App Manager user manual are hosted in Crowdin.\\
     \textit{Link:} \url{https://crwd.in/app-manager-docs}
 \end{itemize}
-%%!!>>
 
-\section{Contributing}\label{sec:contributing} %%##intro_main-contributing==title>>
-%%!!intro_main-contributing<<
+\section{Contributing}\label{sec:contributing}
 There are multiple ways a user can contribute such as creating helpful issues, attending discussions, improving
 documentations and translations, adding unrecognised libraries or trackers, reviewing the source code as well as
 reporting security vulnerabilities.
-%%!!>>
 
-\subsection{Build Instructions}\label{sec:build-instructions} %%##intro_main-buiding==title>>
-%%!!intro_main-buiding<<
+\subsection{Build Instructions}\label{sec:build-instructions}
 Build instructions are available in the README file of the root directory of the source.
-%%!!>>
 
-\subsection{Submitting patches}\label{subsec:submitting-patches} %%##intro_main-submitpatches==title>>
-%%!!intro_main-submitpatches<<
+\subsection{Submitting patches}\label{subsec:submitting-patches}
 Repositories located in sites other than GitHub are currently considered mirrors and pull/merge requests submitted there
 will not be accepted. Instead, patches (as .patch files) can be submitted via email attachments. Make sure to sign-off
 your commits.
@@ -108,35 +93,27 @@ your commits.
     In case of submitting patches via email, the whole conversation may be publicly accessible in the future. So, do not
     include any personally identifiable information (PII) other than your name or email address.
 \end{warning}
-%%!!>>
 
-\section{Donation \& Funding}\label{sec:donation-&-funding} %%##intro_main-donation==title>>
-%%!!intro_main-donation_1<<
+\section{Donation \& Funding}\label{sec:donation-&-funding}
 \emph{Donation or purchase is not a requirement in order to use App Manager.} While App Manager does not support any
 purchases, donations can be sent to the author of App Manager using one of the following Bitcoin addresses as a tribute:
-%%!!>>
 \begin{Verbatim}[label={verb:btc-donation}]
     33TDkWVv5EgwfKGJk7YaS2Ev1CBzBP9Sav
     38bzvWDD99dJhXg9tC4yQEnGdnAKPtwSXG
     3FHTxPoYa92dNJK6pkhwyVkMG8Vv3VpGpg
 \end{Verbatim}
 
-%%!!intro_main-donation_2<<
 By sending BTC, the sender agrees that he/she/they shall not make the transaction information public i.e.\ the
 transaction will remain anonymous, nor shall he/she/they use it as a leverage to prioritise his/her/their requested
 features. Feature requests do not require any bounties or donations, and they are prioritised according to the authors'
 preferences.
 
 \emph{App Manager is open for funding/grants.} Representatives of the interested organizations can contact the author
-directly using the options given in §\cref{sec:contact}.
-%%!!>>
+directly using the options given in \Sref{sec:contact}.
 
-\section{Contact}\label{sec:contact} %%##intro_main-contact==title>>
-%%!!intro_main-contact<<
+\section{Contact}\label{sec:contact}
 Muntashir Al-Islam\footnote{You can also address me as ``Muntashir Akon''}\\
 Email: \href{mailto:muntashirakon@riseup.net}{muntashirakon [at] riseup [dot] net}\\
 Key Fingerprint: \texttt{7bad37c2981e41f8f6abea7f58f0b4f26c346fce}\\
 GitHub: \url{https://github.com/MuntashirAkon}\\
 Twitter: \url{https://twitter.com/Muntashir}
-%%!!>>
-
