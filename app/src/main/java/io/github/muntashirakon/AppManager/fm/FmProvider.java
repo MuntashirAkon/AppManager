@@ -36,10 +36,12 @@ public class FmProvider extends ContentProvider {
 
     @NonNull
     public static Uri getContentUri(@NonNull Path path) {
+        Uri uri = path.getUri();
         return new Uri.Builder()
                 .scheme(ContentResolver.SCHEME_CONTENT)
                 .authority(AUTHORITY)
-                .path(path.getUri().getEncodedPath())
+                .path((Uri.encode(uri.getScheme().equals(ContentResolver.SCHEME_CONTENT) ? "!" + uri.getAuthority() : "")
+                        + path.getUri().getPath()))
                 .build();
     }
 
@@ -161,12 +163,12 @@ public class FmProvider extends ContentProvider {
     @NonNull
     private Path getFileProviderPath(@NonNull Uri uri) throws FileNotFoundException {
         String uriPath = Uri.decode(uri.getPath());
-        if (uriPath.startsWith("/")) {
+        if (!uriPath.startsWith("/!")) {
             // File
             return new Path(getContext(), new ProxyFile(uriPath));
         } else {
             // Content provider
-            return new Path(getContext(), Uri.parse(uriPath), false);
+            return new Path(getContext(), Uri.parse(uriPath.replaceFirst("/!", "content://")));
         }
     }
 
