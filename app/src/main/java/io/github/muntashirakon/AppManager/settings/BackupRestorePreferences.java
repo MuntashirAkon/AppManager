@@ -216,8 +216,13 @@ public class BackupRestorePreferences extends PreferenceFragmentCompat {
                                                 new MaterialAlertDialogBuilder(activity)
                                                         .setTitle(R.string.notice)
                                                         .setMessage(R.string.notice_saf)
-                                                        .setPositiveButton(R.string.go, (dialog1, which1) ->
-                                                                safOpen.launch(new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)))
+                                                        .setPositiveButton(R.string.go, (dialog1, which1) -> {
+                                                            Intent safIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
+                                                                    .putExtra("android.content.extra.SHOW_ADVANCED", true)
+                                                                    .putExtra("android.content.extra.FANCY", true)
+                                                                    .putExtra("android.content.extra.SHOW_FILESIZE", true);
+                                                            safOpen.launch(safIntent);
+                                                        })
                                                         .setNeutralButton(R.string.cancel, null)
                                                         .show())
                                         .show();

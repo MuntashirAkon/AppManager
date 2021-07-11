@@ -34,8 +34,9 @@ public class ProxyDocumentFile extends DocumentFile {
     @Nullable
     public DocumentFile createFile(@NonNull String mimeType, @NonNull String displayName) {
         // Tack on extension when valid MIME type provided
-        final String extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
-        if (extension != null) {
+        String extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
+        if (extension != null && !mimeType.equals("application/octet-stream")) {
+            // application/octet-stream is an special mime that needs on extension
             displayName += "." + extension;
         }
         final File target = new ProxyFile(mFile, displayName);
@@ -128,6 +129,16 @@ public class ProxyDocumentFile extends DocumentFile {
     @Override
     public boolean exists() {
         return mFile.exists();
+    }
+
+    @Nullable
+    @Override
+    public DocumentFile findFile(@NonNull String displayName) {
+        File file;
+        if (mFile instanceof ProxyFile) {
+            file = new ProxyFile(mFile, displayName);
+        } else file = new File(mFile, displayName);
+        return file.exists() ? new ProxyDocumentFile(this, file) : null;
     }
 
     @NonNull
