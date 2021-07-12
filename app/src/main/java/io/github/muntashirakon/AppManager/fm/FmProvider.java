@@ -19,15 +19,16 @@ import android.provider.OpenableColumns;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.io.Path;
-import io.github.muntashirakon.io.ProxyFile;
 
 // Copyright 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
 // Modified from FileProvider.kt
@@ -36,12 +37,17 @@ public class FmProvider extends ContentProvider {
 
     @NonNull
     public static Uri getContentUri(@NonNull Path path) {
-        Uri uri = path.getUri();
+        return getContentUri(path.getUri());
+    }
+
+    @VisibleForTesting
+    @NonNull
+    static Uri getContentUri(@NonNull Uri uri) {
         return new Uri.Builder()
                 .scheme(ContentResolver.SCHEME_CONTENT)
                 .authority(AUTHORITY)
                 .path((Uri.encode(uri.getScheme().equals(ContentResolver.SCHEME_CONTENT) ? "!" + uri.getAuthority() : "")
-                        + path.getUri().getPath()))
+                        + uri.getPath()))
                 .build();
     }
 
@@ -161,14 +167,20 @@ public class FmProvider extends ContentProvider {
     }
 
     @NonNull
-    private Path getFileProviderPath(@NonNull Uri uri) throws FileNotFoundException {
+    private static Path getFileProviderPath(@NonNull Uri uri) throws FileNotFoundException {
+        return new Path(AppManager.getContext(), getFileProviderPathInternal(uri));
+    }
+
+    @VisibleForTesting
+    @NonNull
+    static Uri getFileProviderPathInternal(@NonNull Uri uri) {
         String uriPath = Uri.decode(uri.getPath());
-        if (!uriPath.startsWith("/!")) {
-            // File
-            return new Path(getContext(), new ProxyFile(uriPath));
-        } else {
+        if (uriPath.startsWith("/!")) {
             // Content provider
-            return new Path(getContext(), Uri.parse(uriPath.replaceFirst("/!", "content://")));
+            return Uri.parse(uriPath.replaceFirst("/!", "content://"));
+        } else {
+            // File
+            return Uri.parse("file://" + uriPath);
         }
     }
 
