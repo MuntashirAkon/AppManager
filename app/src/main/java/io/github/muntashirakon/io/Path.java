@@ -273,6 +273,10 @@ public class Path {
     }
 
     public boolean renameTo(@NonNull String displayName) {
+        if (displayName.contains(File.separator)) {
+            // display name must belong to the same directory.
+            return false;
+        }
         return documentFile.renameTo(displayName);
     }
 
@@ -302,11 +306,14 @@ public class Path {
             // Try using the default option
             File src = ((ProxyDocumentFile) documentFile).getFile();
             File dst = ((ProxyDocumentFile) path.documentFile).getFile();
-            if (src.renameTo(dst)) return true;
+            if (src.renameTo(dst)) {
+                documentFile = path.documentFile;
+                return true;
+            }
         }
         Path srcParent = getParentFile();
         Path dstParent = path.getParentFile();
-        if (srcParent != null && dstParent != null && srcParent.getUri().equals(dstParent.getUri())) {
+        if (!path.isDirectory() && srcParent != null && srcParent.equals(dstParent)) {
             // If both path are located in the same directory, rename them
             return renameTo(path.getName());
         }
