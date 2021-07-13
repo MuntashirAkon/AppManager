@@ -93,6 +93,7 @@ public final class PackageUtils {
     public static final File PACKAGE_STAGING_DIRECTORY = new File("/data/local/tmp");
 
     public static final int flagSigningInfo;
+    public static final int flagSigningInfoApk;
     public static final int flagDisabledComponents;
     public static final int flagMatchUninstalled;
 
@@ -102,6 +103,12 @@ public final class PackageUtils {
         } else {
             //noinspection deprecation
             flagSigningInfo = PackageManager.GET_SIGNATURES;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            flagSigningInfoApk = PackageManager.GET_SIGNING_CERTIFICATES;
+        } else {
+            //noinspection deprecation
+            flagSigningInfoApk = PackageManager.GET_SIGNATURES;
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             flagDisabledComponents = PackageManager.MATCH_DISABLED_COMPONENTS;
@@ -379,8 +386,8 @@ public final class PackageUtils {
         try {
             PackageInfo packageInfo = PackageManagerCompat.getPackageInfo(packageName,
                     PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
-                            | flagDisabledComponents | flagMatchUninstalled | PackageManager.GET_URI_PERMISSION_PATTERNS
-                            | PackageManager.GET_SERVICES, userHandle);
+                            | flagDisabledComponents | flagMatchUninstalled | PackageManager.GET_SERVICES,
+                    userHandle);
             return collectComponentClassNames(packageInfo);
         } catch (Throwable e) {
             e.printStackTrace();
