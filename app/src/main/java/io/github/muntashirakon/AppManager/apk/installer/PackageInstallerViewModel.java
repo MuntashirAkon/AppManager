@@ -36,6 +36,7 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagMatchUninstalled;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfo;
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfoApk;
 
 public class PackageInstallerViewModel extends AndroidViewModel {
     private final PackageManager packageManager;
@@ -163,16 +164,14 @@ public class PackageInstallerViewModel extends AndroidViewModel {
     }
 
     @WorkerThread
-    @SuppressWarnings("deprecation")
     @NonNull
     private PackageInfo loadNewPackageInfo() throws PackageManager.NameNotFoundException, IOException, RemoteException {
         String apkPath = apkFile.getBaseEntry().getSignedFile(getApplication()).getAbsolutePath();
         @SuppressLint("WrongConstant")
         PackageInfo packageInfo = packageManager.getPackageArchiveInfo(apkPath, PackageManager.GET_PERMISSIONS
                 | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
-                | PackageManager.GET_SERVICES | PackageManager.GET_URI_PERMISSION_PATTERNS
-                | flagDisabledComponents | PackageManager.GET_SIGNATURES | PackageManager.GET_CONFIGURATIONS
-                | PackageManager.GET_SHARED_LIBRARY_FILES);
+                | PackageManager.GET_SERVICES | flagDisabledComponents | flagSigningInfoApk
+                | PackageManager.GET_CONFIGURATIONS | PackageManager.GET_SHARED_LIBRARY_FILES);
         if (packageInfo == null) {
             throw new PackageManager.NameNotFoundException("Package cannot be parsed.");
         }
@@ -187,9 +186,8 @@ public class PackageInstallerViewModel extends AndroidViewModel {
         @SuppressLint("WrongConstant")
         PackageInfo packageInfo = packageManager.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS
                 | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
-                | PackageManager.GET_SERVICES | PackageManager.GET_URI_PERMISSION_PATTERNS | flagDisabledComponents
-                | flagSigningInfo | flagMatchUninstalled | PackageManager.GET_CONFIGURATIONS
-                | PackageManager.GET_SHARED_LIBRARY_FILES);
+                | PackageManager.GET_SERVICES | flagDisabledComponents | flagSigningInfo | flagMatchUninstalled
+                | PackageManager.GET_CONFIGURATIONS | PackageManager.GET_SHARED_LIBRARY_FILES);
         if (packageInfo == null) throw new PackageManager.NameNotFoundException("Package not found.");
         return packageInfo;
     }
