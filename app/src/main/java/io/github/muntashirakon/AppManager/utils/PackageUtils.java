@@ -32,11 +32,13 @@ import androidx.annotation.WorkerThread;
 import androidx.core.content.ContextCompat;
 
 import com.android.apksig.ApkVerifier;
+import com.android.apksig.apk.ApkFormatException;
 import com.android.internal.util.TextUtils;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateExpiredException;
@@ -90,6 +92,8 @@ import static io.github.muntashirakon.AppManager.utils.UIUtils.getPrimaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getTitleText;
 
 public final class PackageUtils {
+    public static final String TAG = PackageUtils.class.getSimpleName();
+
     public static final File PACKAGE_STAGING_DIRECTORY = new File("/data/local/tmp");
 
     public static final int flagSigningInfo;
@@ -155,7 +159,7 @@ public final class PackageUtils {
         List<App> apps = AppManager.getDb().appDao().getAll();
         if (apps.size() == 0) {
             // Load app list for the first time
-            Log.d("PackageUtils", "Loading apps for the first time.");
+            Log.d(TAG, "Loading apps for the first time.");
             updateInstalledOrBackedUpApplications(context, backupMetadata);
             apps = AppManager.getDb().appDao().getAll();
         } else {
@@ -252,7 +256,7 @@ public final class PackageUtils {
                         | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
                         | PackageManager.GET_SERVICES | flagDisabledComponents | flagMatchUninstalled, userHandle);
             } catch (Exception e) {
-                Log.e("PackageUtils", "Could not retrieve package info list for user " + userHandle, e);
+                Log.e(TAG, "Could not retrieve package info list for user " + userHandle, e);
                 continue;
             }
             ApplicationInfo applicationInfo;
@@ -362,7 +366,7 @@ public final class PackageUtils {
                 });
                 waitForStats.await(5, TimeUnit.SECONDS);
             } catch (RemoteException | InterruptedException e) {
-                Log.e("PackageUtils", e);
+                Log.e(TAG, e);
             }
         } else {
             try {
@@ -375,7 +379,7 @@ public final class PackageUtils {
                         userHandle, context.getPackageName());
                 packageSizeInfo.set(new PackageSizeInfo(packageName, storageStats, userHandle));
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | RemoteException e) {
-                Log.e("PackageUtils", e);
+                Log.e(TAG, e);
             }
         }
         return packageSizeInfo.get();
@@ -741,17 +745,55 @@ public final class PackageUtils {
         return appOpNames;
     }
 
+    @SuppressWarnings("deprecation")
     @Nullable
     public static Signature[] getSigningInfo(@NonNull PackageInfo packageInfo, boolean isExternal) {
-        if (!isExternal && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            SigningInfo signingInfo = packageInfo.signingInfo;
-            if (signingInfo == null) return null;
-            return signingInfo.hasMultipleSigners() ? signingInfo.getApkContentsSigners()
-                    : signingInfo.getSigningCertificateHistory();
-        } else {
-            //noinspection deprecation
-            return packageInfo.signatures;
+        if (!isExternal || Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                SigningInfo signingInfo = packageInfo.signingInfo;
+                if (signingInfo == null) {
+                    if (!isExternal) {
+                        return null;
+                    } // else Could be a false-negative
+                } else return signingInfo.hasMultipleSigners() ? signingInfo.getApkContentsSigners()
+                        : signingInfo.getSigningCertificateHistory();
+            }
         }
+        // Is an external app
+        if (packageInfo.signatures == null) {
+            // Could be a false-negative, try with apksig library
+            String apkPath = packageInfo.applicationInfo.publicSourceDir;
+            if (apkPath != null) {
+                Log.w(TAG, "getSigningInfo: Using fallback method");
+                return packageInfo.signatures = getSigningInfo(new File(apkPath));
+            }
+        }
+        return packageInfo.signatures;
+    }
+
+    @Nullable
+    public static Signature[] getSigningInfo(@NonNull File apkFile) {
+        ApkVerifier.Builder builder = new ApkVerifier.Builder(apkFile);
+        ApkVerifier apkVerifier = builder.build();
+        ApkVerifier.Result apkVerifierResult;
+        try {
+            apkVerifierResult = apkVerifier.verify();
+        } catch (IOException | ApkFormatException | NoSuchAlgorithmException e) {
+            Log.e(TAG, e);
+            return null;
+        }
+        // Get signer certificates
+        List<X509Certificate> certificates = apkVerifierResult.getSignerCertificates();
+        if (certificates == null || certificates.size() == 0) return null;
+        List<Signature> signatures = new ArrayList<>(certificates.size());
+        for (X509Certificate certificate : certificates) {
+            try {
+                signatures.add(new Signature(certificate.getEncoded()));
+            } catch (CertificateEncodingException e) {
+                return signatures.toArray(new Signature[0]);
+            }
+        }
+        return signatures.toArray(new Signature[0]);
     }
 
     @NonNull
