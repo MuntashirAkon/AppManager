@@ -523,13 +523,13 @@ public class AppDetailsViewModel extends AndroidViewModel {
         return isSuccessful;
     }
 
-    private AppOpsService mAppOpsService;
+    @NonNull
+    private final AppOpsService mAppOpsService = new AppOpsService();
 
     @WorkerThread
     @GuardedBy("blockerLocker")
     public boolean setAppOp(int op, int mode) {
         if (isExternalApk) return false;
-        if (mAppOpsService == null) mAppOpsService = new AppOpsService();
         try {
             // Set mode
             mAppOpsService.setMode(op, packageInfo.applicationInfo.uid, packageName, mode);
@@ -554,27 +554,25 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @GuardedBy("blockerLocker")
     public boolean resetAppOps() {
         if (isExternalApk) return false;
-        if (mAppOpsService != null) {
-            try {
-                mAppOpsService.resetAllModes(userHandle, packageName);
-                executor.submit(this::loadAppOps);
-                // Save values to the blocking rules
-                executor.submit(() -> {
-                    synchronized (blockerLocker) {
-                        waitForBlockerOrExit();
-                        List<AppOpRule> appOpEntries = blocker.getAll(AppOpRule.class);
-                        blocker.setMutable();
-                        for (AppOpRule entry : appOpEntries)
-                            blocker.removeEntry(entry);
-                        blocker.commit();
-                        blocker.setReadOnly();
-                        blockerLocker.notifyAll();
-                    }
-                });
-                return true;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        try {
+            mAppOpsService.resetAllModes(userHandle, packageName);
+            executor.submit(this::loadAppOps);
+            // Save values to the blocking rules
+            executor.submit(() -> {
+                synchronized (blockerLocker) {
+                    waitForBlockerOrExit();
+                    List<AppOpRule> appOpEntries = blocker.getAll(AppOpRule.class);
+                    blocker.setMutable();
+                    for (AppOpRule entry : appOpEntries)
+                        blocker.removeEntry(entry);
+                    blocker.commit();
+                    blocker.setReadOnly();
+                    blockerLocker.notifyAll();
+                }
+            });
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return false;
     }
@@ -588,7 +586,6 @@ public class AppDetailsViewModel extends AndroidViewModel {
         String permName;
         final List<Integer> opItems = new ArrayList<>();
         boolean isSuccessful = true;
-        if (mAppOpsService == null) mAppOpsService = new AppOpsService();
         for (int i = 0; i < appOpItems.size(); ++i) {
             appDetailsItem = appOpItems.get(i);
             opEntry = (OpEntry) appDetailsItem.vanillaItem;
@@ -1123,7 +1120,6 @@ public class AppDetailsViewModel extends AndroidViewModel {
         }
         if (!isExternalApk && (AppPref.isRootOrAdbEnabled()
                 || PermissionUtils.hasAppOpsPermission(getApplication()))) {
-            if (mAppOpsService == null) mAppOpsService = new AppOpsService();
             try {
                 int uid = packageInfo.applicationInfo.uid;
                 List<OpEntry> opEntries = new ArrayList<>(AppOpsUtils.getChangedAppOps(mAppOpsService, packageName, uid));
