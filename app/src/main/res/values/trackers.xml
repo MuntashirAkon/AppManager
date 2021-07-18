@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<?xml version="1.0" encoding="utf-8"?><!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <resources>
     <string-array name="tracker_signatures">
         <item>com.databerries.</item>
@@ -279,6 +278,7 @@
         <item>org.mozilla.gecko.telemetry</item>
         <item>mozilla.telemetry.glean.</item>
         <item>net.nend.android</item>
+        <item>net.nend.unity.</item>
         <item>com.pusher.client.</item>
         <item>tv.freewheel.ad.</item>
         <item>com.tnkfactory.ad</item>
@@ -624,6 +624,7 @@
         <item>cat.ereza.customactivityoncrash</item>
         <item>com.thinkyeah.common.</item>
         <item>com.databox.</item>
+        <item>com.datadoghq</item>
         <item>com.incross.dawin</item>
         <item>com.locationvalue.</item>
         <item>io.palaima.debugdrawer.</item>
@@ -911,12 +912,13 @@
         <item>com.mfine.sdk.capp.</item>
         <item>com.fineapptech.finead.</item>
         <item>com.frogermcs.activityframemetrics</item>
+        <item>jp.co.imobile.sdkads.android.</item>
         <item>com.mtraction.mtractioninapptracker.</item>
         <item>com.netmera.</item>
         <item>jp.pinable.ssbp.</item>
         <item>com.tabtale</item>
     </string-array>
-<string-array name="tracker_names">
+    <string-array name="tracker_names">
         <item>Teemo</item>
         <item>Teemo</item>
         <item>FidZup</item>
@@ -1194,6 +1196,7 @@
         <item>Mozilla Telemetry</item>
         <item>Mozilla Telemetry</item>
         <item>nend</item>
+        <item>nend</item>
         <item>Pusher</item>
         <item>FreeWheel</item>
         <item>TNK Factory</item>
@@ -1371,7 +1374,7 @@
         <item>X-Mode</item>
         <item>OneAudience</item>
         <item>OpenBack</item>
-    <item>PredicIO</item>
+        <item>PredicIO</item>
         <item>PredicIO</item>
         <item>AdLocus</item>
         <item>Adcenix</item>
@@ -1407,79 +1410,79 @@
         <item>Tappx</item>
         <item>ThinkingData Analytics</item>
         <item>VKontakte SDK</item>
-    <item>VKontakte SDK</item>
-    <item>Virgo Mobile</item>
-    <item>Zoho Analytics</item>
-    <item>fineboost</item>
-    <item>Acuant</item>
-    <item>Anvato (A Google Company)</item>
-    <item>Blesh</item>
-    <item>Bluecats</item>
-    <item>CoolaData</item>
-    <item>FLUZO</item>
-    <item>Facebook Flipper</item>
-    <item>GPShopper</item>
-    <item>IndoorAtlas</item>
-    <item>Janrain</item>
-    <item>Janrain</item>
-    <item>Janrain</item>
-    <item>MOCA</item>
-    <item>Point Inside</item>
-    <item>Proximi.io</item>
-    <item>ScoreLoop</item>
-    <item>Alooma</item>
-    <item>Analytics by NPAW (Youbora Suite)</item>
-    <item>Beintoo</item>
-    <item>Bolts</item>
-    <item>Cedexis Radar</item>
-    <item>Cifrasoft</item>
-    <item>Flowsense</item>
-    <item>Geniee</item>
-    <item>Huq Sourcekit</item>
-    <item>Insider</item>
-    <item>Mopinion</item>
-    <item>OfferToro</item>
-    <item>OpenTelemetry (OpenCensus, OpenTracing)</item>
-    <item>OpenTelemetry (OpenCensus, OpenTracing)</item>
-    <item>Snapchat Login Kit</item>
-    <item>Zendrive</item>
-    <item>fullstory</item>
-    <item>fullstory</item>
-    <item>fullstory</item>
-    <item>fullstory</item>
-    <item>fullstory</item>
-    <item>fullstory</item>
-    <item>Pendo</item>
-    <item>Pendo</item>
-    <item>Plexure</item>
-    <item>Swirl</item>
-    <item>Treasure Data</item>
-    <item>²39Geopla</item>
-    <item>²3bitter Beacon</item>
-    <item>²ACRA</item>
-    <item>²ACRA</item>
-    <item>²ADOP</item>
-    <item>²AIHelp</item>
-    <item>²AIHelp</item>
-    <item>²APICloud</item>
-    <item>²AWS Kinesis</item>
-    <item>²AWS Kinesis</item>
-    <item>²Acrarium</item>
-    <item>²Ad2</item>
-    <item>²Ad4Game</item>
-    <item>²AdFlex</item>
-    <item>²AdGateMedia</item>
-    <item>²AdGem</item>
-    <item>²AdMarvel</item>
-    <item>²AdTech</item>
-    <item>²AdTheorent</item>
-    <item>²AdTiming</item>
+        <item>VKontakte SDK</item>
+        <item>Virgo Mobile</item>
+        <item>Zoho Analytics</item>
+        <item>fineboost</item>
+        <item>Acuant</item>
+        <item>Anvato (A Google Company)</item>
+        <item>Blesh</item>
+        <item>Bluecats</item>
+        <item>CoolaData</item>
+        <item>FLUZO</item>
+        <item>Facebook Flipper</item>
+        <item>GPShopper</item>
+        <item>IndoorAtlas</item>
+        <item>Janrain</item>
+        <item>Janrain</item>
+        <item>Janrain</item>
+        <item>MOCA</item>
+        <item>Point Inside</item>
+        <item>Proximi.io</item>
+        <item>ScoreLoop</item>
+        <item>Alooma</item>
+        <item>Analytics by NPAW (Youbora Suite)</item>
+        <item>Beintoo</item>
+        <item>Bolts</item>
+        <item>Cedexis Radar</item>
+        <item>Cifrasoft</item>
+        <item>Flowsense</item>
+        <item>Geniee</item>
+        <item>Huq Sourcekit</item>
+        <item>Insider</item>
+        <item>Mopinion</item>
+        <item>OfferToro</item>
+        <item>OpenTelemetry (OpenCensus, OpenTracing)</item>
+        <item>OpenTelemetry (OpenCensus, OpenTracing)</item>
+        <item>Snapchat Login Kit</item>
+        <item>Zendrive</item>
+        <item>fullstory</item>
+        <item>fullstory</item>
+        <item>fullstory</item>
+        <item>fullstory</item>
+        <item>fullstory</item>
+        <item>fullstory</item>
+        <item>Pendo</item>
+        <item>Pendo</item>
+        <item>Plexure</item>
+        <item>Swirl</item>
+        <item>Treasure Data</item>
+        <item>²39Geopla</item>
+        <item>²3bitter Beacon</item>
+        <item>²ACRA</item>
+        <item>²ACRA</item>
+        <item>²ADOP</item>
+        <item>²AIHelp</item>
+        <item>²AIHelp</item>
+        <item>²APICloud</item>
+        <item>²AWS Kinesis</item>
+        <item>²AWS Kinesis</item>
+        <item>²Acrarium</item>
+        <item>²Ad2</item>
+        <item>²Ad4Game</item>
+        <item>²AdFlex</item>
+        <item>²AdGateMedia</item>
+        <item>²AdGem</item>
+        <item>²AdMarvel</item>
+        <item>²AdTech</item>
+        <item>²AdTheorent</item>
+        <item>²AdTiming</item>
         <item>²AdTiming</item>
         <item>²AdTrial</item>
         <item>²AdWhirl (AdMob)</item>
         <item>²Adchina</item>
         <item>²Adflake</item>
-    <item>²Adjust Unbotify</item>
+        <item>²Adjust Unbotify</item>
         <item>²Adscend Media</item>
         <item>²Adscend Media</item>
         <item>²Advangelists</item>
@@ -1504,7 +1507,7 @@
         <item>²Alibaba analytics</item>
         <item>²Alibaba analytics</item>
         <item>²Alipay SDK</item>
-    <item>²Amber Weather Ad SDK</item>
+        <item>²Amber Weather Ad SDK</item>
         <item>²Anet channel library</item>
         <item>²Anzu</item>
         <item>²App Samurai</item>
@@ -1539,6 +1542,7 @@
         <item>²Custom Activity On Crash</item>
         <item>²DaoCheng(Thinkyeah)</item>
         <item>²Databox</item>
+        <item>²Datadog</item>
         <item>²Dawin</item>
         <item>²DearOne(LocationValue)</item>
         <item>²DebugDrawer</item>
@@ -1573,7 +1577,7 @@
         <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
         <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
         <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
-    <item>²Gamania Beanfun</item>
+        <item>²Gamania Beanfun</item>
         <item>²Game Sparks</item>
         <item>²GeoUniq (Cloud4Win)</item>
         <item>²Google Cloud Audit</item>
@@ -1609,62 +1613,62 @@
         <item>²Intrasonics</item>
         <item>²IntroMi</item>
         <item>²KARTE</item>
-    <item>²Kakao AD SDK</item>
+        <item>²Kakao AD SDK</item>
         <item>²KakaoTalk Link</item>
         <item>²Komli Mobile (ZestAdz)</item>
         <item>²LeadBolt</item>
         <item>²LeadBolt</item>
         <item>²LeadBolt</item>
-    <item>²LotaData</item>
-    <item>²Madhouse</item>
-    <item>²Malverting/Adfrauds</item>
-    <item>²Malverting/Adfrauds</item>
-    <item>²Malverting/Adfrauds</item>
-    <item>²Malverting/Adfrauds</item>
-    <item>²Malverting/Adfrauds</item>
-    <item>²Malverting/Adfrauds</item>
-    <item>²Malverting/Adfrauds</item>
-    <item>²Malverting/Adfrauds</item>
-    <item>²Malverting/Adfrauds</item>
-    <item>²Malverting/Adfrauds</item>
-    <item>²Malverting/Adfrauds</item>
-    <item>²Malverting/Adfrauds</item>
-    <item>²Malverting/Adfrauds</item>
-    <item>²Malverting/Adfrauds</item>
-    <item>²Malverting/Adfrauds</item>
-    <item>²Malverting/Adfrauds</item>
-    <item>²Malverting/Adfrauds</item>
-    <item>²Malverting/Adfrauds</item>
-    <item>²Malverting/Adfrauds#2</item>
-    <item>²Malverting/Adfrauds#2</item>
-    <item>²Malverting/Adfrauds#2</item>
-    <item>²Malverting/Adfrauds#2</item>
-    <item>²Malverting/Adfrauds#2</item>
-    <item>²Malverting/Adfrauds#2</item>
-    <item>²Malverting/Adfrauds#2</item>
-    <item>²Malverting/Adfrauds#2</item>
-    <item>²Malverting/Adfrauds#2</item>
-    <item>²Malverting/Adfrauds#2</item>
-    <item>²Marketo (an Adobe Company)</item>
-    <item>²Mezzomedia AD Platform</item>
-    <item>²Mezzomedia AD Platform</item>
-    <item>²Mezzomedia AD Platform</item>
-    <item>²Mezzomedia AD Platform</item>
-    <item>²Mobclick</item>
-    <item>²Mobiquity Networks</item>
-    <item>²Moblin</item>
-    <item>²Mobon SDK</item>
-    <item>²Mofiler</item>
-    <item>²Mojise</item>
-    <item>²Morgoo Packer</item>
-    <item>²Mozilla Crashreport</item>
-    <item>²NetVelocity Passive SDK</item>
-    <item>²NetVelocity Passive SDK</item>
-    <item>²NewsPic</item>
-    <item>²Ninja Metics</item>
-    <item>²Noah Pass</item>
-    <item>²NoxMobi(AiAdMobi)</item>
-    <item>²ONEstore</item>
+        <item>²LotaData</item>
+        <item>²Madhouse</item>
+        <item>²Malverting/Adfrauds</item>
+        <item>²Malverting/Adfrauds</item>
+        <item>²Malverting/Adfrauds</item>
+        <item>²Malverting/Adfrauds</item>
+        <item>²Malverting/Adfrauds</item>
+        <item>²Malverting/Adfrauds</item>
+        <item>²Malverting/Adfrauds</item>
+        <item>²Malverting/Adfrauds</item>
+        <item>²Malverting/Adfrauds</item>
+        <item>²Malverting/Adfrauds</item>
+        <item>²Malverting/Adfrauds</item>
+        <item>²Malverting/Adfrauds</item>
+        <item>²Malverting/Adfrauds</item>
+        <item>²Malverting/Adfrauds</item>
+        <item>²Malverting/Adfrauds</item>
+        <item>²Malverting/Adfrauds</item>
+        <item>²Malverting/Adfrauds</item>
+        <item>²Malverting/Adfrauds</item>
+        <item>²Malverting/Adfrauds#2</item>
+        <item>²Malverting/Adfrauds#2</item>
+        <item>²Malverting/Adfrauds#2</item>
+        <item>²Malverting/Adfrauds#2</item>
+        <item>²Malverting/Adfrauds#2</item>
+        <item>²Malverting/Adfrauds#2</item>
+        <item>²Malverting/Adfrauds#2</item>
+        <item>²Malverting/Adfrauds#2</item>
+        <item>²Malverting/Adfrauds#2</item>
+        <item>²Malverting/Adfrauds#2</item>
+        <item>²Marketo (an Adobe Company)</item>
+        <item>²Mezzomedia AD Platform</item>
+        <item>²Mezzomedia AD Platform</item>
+        <item>²Mezzomedia AD Platform</item>
+        <item>²Mezzomedia AD Platform</item>
+        <item>²Mobclick</item>
+        <item>²Mobiquity Networks</item>
+        <item>²Moblin</item>
+        <item>²Mobon SDK</item>
+        <item>²Mofiler</item>
+        <item>²Mojise</item>
+        <item>²Morgoo Packer</item>
+        <item>²Mozilla Crashreport</item>
+        <item>²NetVelocity Passive SDK</item>
+        <item>²NetVelocity Passive SDK</item>
+        <item>²NewsPic</item>
+        <item>²Ninja Metics</item>
+        <item>²Noah Pass</item>
+        <item>²NoxMobi(AiAdMobi)</item>
+        <item>²ONEstore</item>
         <item>²Ogury</item>
         <item>²Ogury</item>
         <item>²Ogury</item>
@@ -1686,7 +1690,7 @@
         <item>²Pinterest</item>
         <item>²PlayFab java</item>
         <item>²Playtestcloud</item>
-    <item>²Plleti</item>
+        <item>²Plleti</item>
         <item>²Pontiflex</item>
         <item>²Profile Passport</item>
         <item>²Profile Passport</item>
@@ -1710,7 +1714,7 @@
         <item>²SaySo Rewards</item>
         <item>²SaySo Rewards</item>
         <item>²Sentry</item>
-    <item>²Sentry</item>
+        <item>²Sentry</item>
         <item>²Sino Weibo SDK</item>
         <item>²Situm SDK</item>
         <item>²Skillz Android Unity</item>
@@ -1764,71 +1768,72 @@
         <item>²Umeng Push SDK</item>
         <item>²Umeng Push SDK</item>
         <item>²Unknown Trackers</item>
-    <item>²Unknown Trackers</item>
-    <item>²Unknown Trackers</item>
-    <item>²Unknown Trackers</item>
-    <item>²Unknown Trackers</item>
-    <item>²Unknown Trackers</item>
-    <item>²Unknown Trackers</item>
-    <item>²Unknown Trackers</item>
-    <item>²Unknown Trackers</item>
-    <item>²Unknown Trackers</item>
-    <item>²Unknown Trackers</item>
-    <item>²Unknown Trackers</item>
-    <item>²Unknown Trackers</item>
-    <item>²Unknown Trackers</item>
-    <item>²Unknown Trackers</item>
-    <item>²Unknown Trackers</item>
-    <item>²Unknown Trackers</item>
-    <item>²Unknown Trackers</item>
-    <item>²Usabilla by Salesforce</item>
-    <item>²UserExperior</item>
-    <item>²VServ</item>
-    <item>²Vdopia</item>
-    <item>²Vdopia</item>
-    <item>²Veloxity</item>
-    <item>²Vivo Push SDK</item>
-    <item>²Vodafone NetPerform</item>
-    <item>²WalkMe/Abbi.io</item>
-    <item>²WalkMe/Abbi.io</item>
-    <item>²WalkMe/Abbi.io</item>
-    <item>²Wannads</item>
-    <item>²WapStart.Plus1</item>
-    <item>²Weibo DeviceID</item>
-    <item>²WonderPush</item>
-    <item>²Woopra</item>
-    <item>²Woorlds</item>
-    <item>²Xiaomi Push Service</item>
-    <item>²Xiaomi Push Service</item>
-    <item>²Yahoo!Japan DataShare</item>
-    <item>²Yahoo!Japan DataShare</item>
-    <item>²Yahoo!Japan DataShare</item>
-    <item>²Yahoo!Japan DataShare</item>
-    <item>²Yahoo!Japan DataShare</item>
-    <item>²Yahoo!Japan DataShare</item>
+        <item>²Unknown Trackers</item>
+        <item>²Unknown Trackers</item>
+        <item>²Unknown Trackers</item>
+        <item>²Unknown Trackers</item>
+        <item>²Unknown Trackers</item>
+        <item>²Unknown Trackers</item>
+        <item>²Unknown Trackers</item>
+        <item>²Unknown Trackers</item>
+        <item>²Unknown Trackers</item>
+        <item>²Unknown Trackers</item>
+        <item>²Unknown Trackers</item>
+        <item>²Unknown Trackers</item>
+        <item>²Unknown Trackers</item>
+        <item>²Unknown Trackers</item>
+        <item>²Unknown Trackers</item>
+        <item>²Unknown Trackers</item>
+        <item>²Unknown Trackers</item>
+        <item>²Usabilla by Salesforce</item>
+        <item>²UserExperior</item>
+        <item>²VServ</item>
+        <item>²Vdopia</item>
+        <item>²Vdopia</item>
+        <item>²Veloxity</item>
+        <item>²Vivo Push SDK</item>
+        <item>²Vodafone NetPerform</item>
+        <item>²WalkMe/Abbi.io</item>
+        <item>²WalkMe/Abbi.io</item>
+        <item>²WalkMe/Abbi.io</item>
+        <item>²Wannads</item>
+        <item>²WapStart.Plus1</item>
+        <item>²Weibo DeviceID</item>
+        <item>²WonderPush</item>
+        <item>²Woopra</item>
+        <item>²Woorlds</item>
+        <item>²Xiaomi Push Service</item>
+        <item>²Xiaomi Push Service</item>
+        <item>²Yahoo!Japan DataShare</item>
+        <item>²Yahoo!Japan DataShare</item>
+        <item>²Yahoo!Japan DataShare</item>
+        <item>²Yahoo!Japan DataShare</item>
+        <item>²Yahoo!Japan DataShare</item>
+        <item>²Yahoo!Japan DataShare</item>
         <item>²Yext</item>
         <item>²Yoadx</item>
         <item>²Yougoodtech</item>
         <item>²Yougoodtech</item>
         <item>²Youmi</item>
-    <item>²Zendesk</item>
-    <item>²Zenjoy</item>
-    <item>²Zucks</item>
-    <item>²adboost</item>
-    <item>²appPlant</item>
-    <item>²appTV</item>
-    <item>²appgeneration</item>
-    <item>²ayeT-Studios</item>
-    <item>²beaconstac/NearBee (MobStac Inc.)</item>
-    <item>²deploygate</item>
-    <item>²fineapptech</item>
-    <item>²fineapptech</item>
-    <item>²fineapptech</item>
-    <item>²fineapptech</item>
-    <item>²froger_mcs</item>
-    <item>²mTraction (mFaaS)</item>
-    <item>²netmera</item>
-    <item>²pinable</item>
-    <item>²tabtale</item>
-</string-array>
+        <item>²Zendesk</item>
+        <item>²Zenjoy</item>
+        <item>²Zucks</item>
+        <item>²adboost</item>
+        <item>²appPlant</item>
+        <item>²appTV</item>
+        <item>²appgeneration</item>
+        <item>²ayeT-Studios</item>
+        <item>²beaconstac/NearBee (MobStac Inc.)</item>
+        <item>²deploygate</item>
+        <item>²fineapptech</item>
+        <item>²fineapptech</item>
+        <item>²fineapptech</item>
+        <item>²fineapptech</item>
+        <item>²froger_mcs</item>
+        <item>²i-mobile</item>
+        <item>²mTraction (mFaaS)</item>
+        <item>²netmera</item>
+        <item>²pinable</item>
+        <item>²tabtale</item>
+    </string-array>
 </resources>
