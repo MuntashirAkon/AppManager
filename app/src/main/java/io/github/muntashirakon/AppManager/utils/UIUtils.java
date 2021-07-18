@@ -243,6 +243,11 @@ public class UIUtils {
     }
 
     @UiThread
+    public static void displayLongToast(CharSequence message) {
+        Toast.makeText(AppManager.getContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+    @UiThread
     public static void displayLongToast(@StringRes int res) {
         Toast.makeText(AppManager.getContext(), res, Toast.LENGTH_LONG).show();
     }
