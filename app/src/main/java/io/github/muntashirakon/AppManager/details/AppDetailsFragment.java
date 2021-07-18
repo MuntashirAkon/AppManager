@@ -956,9 +956,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     try {
                         ActivityManagerCompat.startActivity(mActivity, intent, mainModel.getUserHandle());
-                    } catch (RemoteException e) {
-                        e.printStackTrace();
-                        Toast.makeText(mActivity, e.toString(), Toast.LENGTH_LONG).show();
+                    } catch (Throwable e) {
+                        UIUtils.displayLongToast(e.getLocalizedMessage());
                     }
                 });
             }
