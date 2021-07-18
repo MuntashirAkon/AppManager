@@ -35,4 +35,7 @@ public interface BackupDao {
 
     @Query("DELETE FROM backup WHERE package_name = :packageName AND backup_name = :backupName")
     void delete(String packageName, String backupName);
+
+    @Query("DELETE FROM backup WHERE 1")
+    void deleteAll();
 }

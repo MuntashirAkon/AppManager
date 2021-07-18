@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.db.dao.BackupDao;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.logcat.helper.SaveLogHelper;
 import io.github.muntashirakon.io.FileStatus;
@@ -61,7 +62,9 @@ public final class BackupUtils {
             }
             backupMetadata.put(latestBackup.packageName, latestBackup);
         }
-        AppManager.getDb().backupDao().insert(backups);
+        BackupDao backupDao = AppManager.getDb().backupDao();
+        backupDao.deleteAll();
+        backupDao.insert(backups);
         return backupMetadata;
     }
 

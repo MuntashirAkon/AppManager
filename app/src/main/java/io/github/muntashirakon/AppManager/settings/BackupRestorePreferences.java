@@ -31,6 +31,7 @@ import java.util.Collections;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
@@ -46,6 +47,7 @@ import io.github.muntashirakon.AppManager.settings.crypto.OpenPgpKeySelectionDia
 import io.github.muntashirakon.AppManager.settings.crypto.RSACryptoSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.StorageUtils;
 
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
@@ -210,8 +212,11 @@ public class BackupRestorePreferences extends PreferenceFragmentCompat {
                                             selectedIndex.set(which);
                                         })
                                         .setNegativeButton(R.string.cancel, null)
-                                        .setPositiveButton(R.string.save, (dialog, which) ->
-                                                AppPref.set(AppPref.PrefKey.PREF_BACKUP_VOLUME_STR, this.backupVolume.toString()))
+                                        .setPositiveButton(R.string.save, (dialog, which) -> {
+                                            AppPref.set(AppPref.PrefKey.PREF_BACKUP_VOLUME_STR, this.backupVolume.toString());
+                                            new Thread(() -> PackageUtils.updateInstalledOrBackedUpApplications(
+                                                    AppManager.getContext(), true)).start();
+                                        })
                                         .setNeutralButton(R.string.add_item, (dialog, which) ->
                                                 new MaterialAlertDialogBuilder(activity)
                                                         .setTitle(R.string.notice)

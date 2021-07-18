@@ -246,7 +246,7 @@ public final class PackageUtils {
     }
 
     @WorkerThread
-    private static void updateInstalledOrBackedUpApplications(@NonNull Context context, boolean loadBackups) {
+    public static void updateInstalledOrBackedUpApplications(@NonNull Context context, boolean loadBackups) {
         HashMap<String, Backup> backups;
         if (loadBackups) {
             try {
