@@ -28,3 +28,4 @@
 {"id":"\/com\/paypal\/android\/sdk\/payments\/","path":"\/com\/paypal\/android\/sdk\/payments\/","name":"Paypal Android SDK","type":"Development Aid","perms":"","url":"https:\/\/github.com\/paypal\/PayPal-Android-SDK"}
 {"id":"\/com\/amazonaws\/services\/s3\/","path":"\/com\/amazonaws\/services\/s3\/","name":"Amazon S3","type":"Development Aid","perms":"","url":"https:\/\/docs.aws.amazon.com\/AWSJavaSDK\/latest\/javadoc\/com\/amazonaws\/services\/s3\/package-summary.html"}
 {"id":"\/com\/alipay\/mobile\/framework","path":"\/com\/alipay\/mobile\/framework","name":"Alipay","type":"Payment","perms":"","url":"http:\/\/www.alipay.com"}
+{"id":"\/sun\/misc\/Unsafe","path":"\/sun\/misc\/Unsafe","name":"Java Unsafe","type":"Utility","perms":"","url":"http:\/\/mishadoff.github.io\/blog\/java-magic-part-4-sun-dot-misc-dot-unsafe\/"}
