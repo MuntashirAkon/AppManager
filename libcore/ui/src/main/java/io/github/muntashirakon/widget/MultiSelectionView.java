@@ -28,9 +28,11 @@ import com.google.android.material.transition.MaterialSharedAxis;
 
 import java.lang.reflect.Field;
 
-import io.github.muntashirakon.libcoreui.R;
 import io.github.muntashirakon.reflow.ReflowMenuViewWrapper;
+import io.github.muntashirakon.ui.R;
 import io.github.muntashirakon.utils.UiUtils;
+
+import static com.google.android.material.R.style.Widget_MaterialComponents_CardView;
 
 @SuppressLint("RestrictedApi")
 public class MultiSelectionView extends MaterialCardView {
@@ -69,7 +71,7 @@ public class MultiSelectionView extends MaterialCardView {
 
         // Custom attributes
         TintTypedArray attributes = ThemeEnforcement.obtainTintedStyledAttributes(context, attrs,
-                R.styleable.MultiSelectionView, defStyleAttr, R.style.Widget_MaterialComponents_CardView);
+                R.styleable.MultiSelectionView, defStyleAttr, Widget_MaterialComponents_CardView);
 
         // Set styles
         @Px

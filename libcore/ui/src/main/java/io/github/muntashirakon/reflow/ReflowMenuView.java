@@ -41,7 +41,7 @@ import com.google.android.material.shape.ShapeAppearanceModel;
 
 import java.util.HashSet;
 
-import io.github.muntashirakon.libcoreui.R;
+import io.github.muntashirakon.ui.R;
 import io.github.muntashirakon.utils.MotionUtils;
 
 /**

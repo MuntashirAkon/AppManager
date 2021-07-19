@@ -46,7 +46,7 @@ import com.google.android.material.shape.ShapeAppearanceModel;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-import io.github.muntashirakon.libcoreui.R;
+import io.github.muntashirakon.ui.R;
 
 import static com.google.android.material.theme.overlay.MaterialThemeOverlay.wrap;
 

@@ -7,7 +7,7 @@ import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.widget.ScrollView;
 
-import io.github.muntashirakon.libcoreui.R;
+import io.github.muntashirakon.ui.R;
 import io.github.muntashirakon.utils.UiUtils;
 
 // Copyright 2016 Bumsoo Kim
