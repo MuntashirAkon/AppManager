@@ -14,7 +14,7 @@ import androidx.annotation.WorkerThread;
 import java.io.File;
 
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.ProxyFile;
 
 public class PackageSizeInfo {
@@ -56,7 +56,7 @@ public class PackageSizeInfo {
         ProxyFile[] files = ue.buildExternalStorageAppMediaDirs(packageName);
         long size = 0L;
         for (File file : files) {
-            if (file.exists()) size += IOUtils.fileSize(file);
+            if (file.exists()) size += FileUtils.fileSize(file);
         }
         return size;
     }
@@ -66,7 +66,7 @@ public class PackageSizeInfo {
         ProxyFile[] files = ue.buildExternalStorageAppObbDirs(packageName);
         long size = 0L;
         for (File file : files) {
-            if (file.exists()) size += IOUtils.fileSize(file);
+            if (file.exists()) size += FileUtils.fileSize(file);
         }
         return size;
     }

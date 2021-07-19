@@ -40,7 +40,7 @@ import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.JSONUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -141,7 +141,7 @@ public final class MetadataManager {
 
         public long getBackupSize() {
             if (backupPath == null) return 0L;
-            return IOUtils.fileSize(backupPath);
+            return FileUtils.fileSize(backupPath);
         }
 
         @WorkerThread
@@ -237,7 +237,7 @@ public final class MetadataManager {
 
     @WorkerThread
     synchronized public void readMetadata(@NonNull BackupFiles.BackupFile backupFile) throws IOException {
-        String metadata = IOUtils.getFileContent(backupFile.getMetadataFile());
+        String metadata = FileUtils.getFileContent(backupFile.getMetadataFile());
         try {
             if (TextUtils.isEmpty(metadata)) throw new JSONException("Empty JSON string");
             JSONObject rootObject = new JSONObject(metadata);

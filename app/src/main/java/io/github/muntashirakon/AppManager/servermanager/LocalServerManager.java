@@ -28,7 +28,7 @@ import io.github.muntashirakon.AppManager.server.common.CallerResult;
 import io.github.muntashirakon.AppManager.server.common.DataTransmission;
 import io.github.muntashirakon.AppManager.server.common.ParcelableUtil;
 import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 
 // Copyright 2016 Zheng Li
 class LocalServerManager {
@@ -110,7 +110,7 @@ class LocalServerManager {
      */
     @AnyThread
     void closeSession() {
-        IOUtils.closeQuietly(mSession);
+        FileUtils.closeQuietly(mSession);
         mSession = null;
     }
 
@@ -118,8 +118,8 @@ class LocalServerManager {
      * Stop ADB and then close client session
      */
     void stop() {
-        IOUtils.closeQuietly(adbStream);
-        IOUtils.closeQuietly(mSession);
+        FileUtils.closeQuietly(adbStream);
+        FileUtils.closeQuietly(mSession);
         adbStream = null;
         mSession = null;
     }

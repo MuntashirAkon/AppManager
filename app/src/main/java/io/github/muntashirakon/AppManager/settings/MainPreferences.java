@@ -76,7 +76,7 @@ import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -392,7 +392,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
 
         @WorkerThread
         public void loadChangeLog() {
-            Spanned spannedChangelog = HtmlCompat.fromHtml(IOUtils.getContentFromAssets(ctx,
+            Spanned spannedChangelog = HtmlCompat.fromHtml(FileUtils.getContentFromAssets(ctx,
                     "changelog.html"), HtmlCompat.FROM_HTML_MODE_COMPACT);
             changeLog.postValue(spannedChangelog);
         }

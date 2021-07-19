@@ -63,7 +63,7 @@ import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.StoragePermission;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -461,9 +461,9 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
     private void checkAppUpdate() {
         if (Utils.isAppUpdated()) {
             // Clean old am.jar
-            IOUtils.deleteSilently(ServerConfig.getDestJarFile());
+            FileUtils.deleteSilently(ServerConfig.getDestJarFile());
             mModel.executor.submit(() -> {
-                final Spanned spannedChangelog = HtmlCompat.fromHtml(IOUtils.getContentFromAssets(this, "changelog.html"), HtmlCompat.FROM_HTML_MODE_COMPACT);
+                final Spanned spannedChangelog = HtmlCompat.fromHtml(FileUtils.getContentFromAssets(this, "changelog.html"), HtmlCompat.FROM_HTML_MODE_COMPACT);
                 runOnUiThread(() ->
                         new ScrollableDialogBuilder(this, spannedChangelog)
                                 .linkifyAll()

@@ -22,7 +22,7 @@ import java.util.List;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 
 import static org.junit.Assert.assertEquals;
 
@@ -50,7 +50,7 @@ public class SplitOutputStreamTest {
 
     @Test
     public void write() throws IOException {
-        IOUtils.copy(inputStream, splitOutputStream);
+        FileUtils.copy(inputStream, splitOutputStream);
         List<String> expectedHashes = getExpectedHashes();
         List<String> actualHashes = getActualHashes();
         assertEquals(expectedHashes, actualHashes);

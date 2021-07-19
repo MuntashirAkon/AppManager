@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.ProxyInputStream;
 import io.github.muntashirakon.io.SplitInputStream;
@@ -53,7 +53,7 @@ public class TarArchiveOutputStreamTest {
                 TarArchiveEntry tarEntry = new TarArchiveEntry(file, file.getName());
                 tot.putArchiveEntry(tarEntry);
                 try (InputStream is = new ProxyInputStream(file)) {
-                    IOUtils.copy(is, tot);
+                    FileUtils.copy(is, tot);
                 }
                 tot.closeArchiveEntry();
             }
@@ -96,7 +96,7 @@ public class TarArchiveOutputStreamTest {
                 TarArchiveEntry tarEntry = new TarArchiveEntry(file, file.getName());
                 tot.putArchiveEntry(tarEntry);
                 try (InputStream is = new ProxyInputStream(file)) {
-                    IOUtils.copy(is, tot);
+                    FileUtils.copy(is, tot);
                 }
                 tot.closeArchiveEntry();
             }

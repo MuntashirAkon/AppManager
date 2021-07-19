@@ -29,7 +29,7 @@ import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager;
 import io.github.muntashirakon.AppManager.crypto.ks.SecretKeyCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.Path;
 
 public class AESCrypto implements Crypto {
@@ -105,7 +105,7 @@ public class AESCrypto implements Crypto {
         cipher.init(true, spec);
         // Convert unencrypted stream to encrypted stream
         try (OutputStream cipherOS = new CipherOutputStream(encryptedStream, cipher)) {
-            IOUtils.copy(unencryptedStream, cipherOS);
+            FileUtils.copy(unencryptedStream, cipherOS);
         }
     }
 
@@ -123,7 +123,7 @@ public class AESCrypto implements Crypto {
         cipher.init(false, spec);
         // Convert encrypted stream to unencrypted stream
         try (InputStream cipherIS = new CipherInputStream(encryptedStream, cipher)) {
-            IOUtils.copy(cipherIS, unencryptedStream);
+            FileUtils.copy(cipherIS, unencryptedStream);
         }
     }
 
@@ -155,11 +155,11 @@ public class AESCrypto implements Crypto {
                          OutputStream os = outputPath.openOutputStream()) {
                         if (forEncryption) {
                             try (OutputStream cipherOS = new CipherOutputStream(os, cipher)) {
-                                IOUtils.copy(is, cipherOS);
+                                FileUtils.copy(is, cipherOS);
                             }
                         } else {  // Cipher.DECRYPT_MODE
                             try (InputStream cipherIS = new CipherInputStream(is, cipher)) {
-                                IOUtils.copy(cipherIS, os);
+                                FileUtils.copy(cipherIS, os);
                             }
                         }
                     }

@@ -22,8 +22,9 @@ import java.security.SecureRandom;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.server.common.ConfigParam;
 import io.github.muntashirakon.AppManager.server.common.Constants;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.io.IoUtils;
 
 // Copyright 2016 Zheng Li
 @SuppressWarnings("ResultOfMethodCallIgnored")
@@ -46,7 +47,7 @@ class AssetsUtils {
 
             try (FileInputStream open = openFd.createInputStream();
                  FileOutputStream fos = new FileOutputStream(destFile)) {
-                byte[] buff = new byte[IOUtils.DEFAULT_BUFFER_SIZE];
+                byte[] buff = new byte[IoUtils.DEFAULT_BUFFER_SIZE];
                 int len;
                 while ((len = open.read(buff)) != -1) {
                     fos.write(buff, 0, len);
@@ -54,7 +55,7 @@ class AssetsUtils {
                 fos.flush();
                 fos.getFD().sync();
             }
-            IOUtils.chmod644(destFile);
+            FileUtils.chmod644(destFile);
         }
     }
 
@@ -98,7 +99,7 @@ class AssetsUtils {
                 }
                 bw.flush();
             }
-            IOUtils.chmod644(destFile);
+            FileUtils.chmod644(destFile);
         }
     }
 

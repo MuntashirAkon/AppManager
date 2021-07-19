@@ -21,7 +21,7 @@ import java.util.List;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.rules.struct.RuleEntry;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.Path;
 
 /**
@@ -145,7 +145,7 @@ public class RulesImporter implements Closeable {
         // When #setPackagesToImport(List<String>) is used, ComponentBlocker can be null
         for (int i = 0; i < userHandles.length; ++i) {
             for (ComponentsBlocker cb : mComponentsBlockers[i].values()) {
-                IOUtils.closeQuietly(cb);
+                FileUtils.closeQuietly(cb);
             }
         }
     }

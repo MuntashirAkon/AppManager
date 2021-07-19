@@ -29,7 +29,7 @@ import io.github.muntashirakon.AppManager.rules.struct.RuleEntry;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.io.AtomicProxyFile;
 import io.github.muntashirakon.io.ProxyFile;
@@ -165,7 +165,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
         if (packageNamesWithTSVExt != null) {
             // Apply rules
             for (String packageNameWithTSVExt : packageNamesWithTSVExt) {
-                try (ComponentsBlocker cb = getMutableInstance(IOUtils.trimExtension(packageNameWithTSVExt), userHandle)) {
+                try (ComponentsBlocker cb = getMutableInstance(FileUtils.trimExtension(packageNameWithTSVExt), userHandle)) {
                     cb.applyRules(true);
                 }
             }

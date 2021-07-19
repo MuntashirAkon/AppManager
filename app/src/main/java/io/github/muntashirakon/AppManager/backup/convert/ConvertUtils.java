@@ -28,7 +28,7 @@ import io.github.muntashirakon.AppManager.crypto.CryptoException;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.TarUtils;
 import io.github.muntashirakon.io.Path;
 
@@ -126,7 +126,7 @@ public final class ConvertUtils {
         // TODO: 10/7/21 Use ProxyRandomAccessFile when possible
         File cachedFile;
         try (InputStream is = apkFile.openInputStream()) {
-            cachedFile = IOUtils.getCachedFile(is);
+            cachedFile = FileUtils.getCachedFile(is);
         }
         List<String> checksums = new ArrayList<>(1);
         ApkVerifier verifier = new ApkVerifier.Builder(cachedFile).build();

@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.net.Inet4Address;
 
 import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 
 // Copyright 2016 Zheng Li
 public final class ServerConfig {
@@ -46,7 +46,7 @@ public final class ServerConfig {
         }
 
         // Set folder permission
-        IOUtils.chmod711(internalStorage);
+        FileUtils.chmod711(internalStorage);
 
         destJarFile = new File(internalStorage, JAR_NAME);
         destExecFile = new File(internalStorage, EXECUTABLE_FILE_NAME);

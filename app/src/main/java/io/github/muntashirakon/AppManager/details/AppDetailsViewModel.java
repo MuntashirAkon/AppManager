@@ -71,7 +71,7 @@ import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
 import io.github.muntashirakon.AppManager.types.PackageChangeReceiver;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 
 import static io.github.muntashirakon.AppManager.appops.AppOpsManager.OP_NONE;
@@ -131,7 +131,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         });
         if (receiver != null) getApplication().unregisterReceiver(receiver);
         receiver = null;
-        IOUtils.closeQuietly(apkFile);
+        FileUtils.closeQuietly(apkFile);
         executor.shutdownNow();
     }
 

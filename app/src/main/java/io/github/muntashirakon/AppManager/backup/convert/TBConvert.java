@@ -40,7 +40,7 @@ import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.TarUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.SplitOutputStream;
@@ -169,7 +169,7 @@ public class TBConvert extends Convert {
         // Decompress APK file
         Path baseApkFile;
         try {
-            baseApkFile = new Path(context, IOUtils.getTempFile(destMetadata.apkName));
+            baseApkFile = new Path(context, FileUtils.getTempFile(destMetadata.apkName));
         } catch (IOException e) {
             throw new BackupException("Couldn't create temporary file to decompress APK file", e);
         }
@@ -186,7 +186,7 @@ public class TBConvert extends Convert {
             }
             try (OutputStream fos = baseApkFile.openOutputStream()) {
                 // The whole file is the APK
-                IOUtils.copy(is, fos);
+                FileUtils.copy(is, fos);
             } finally {
                 is.close();
             }
@@ -227,7 +227,7 @@ public class TBConvert extends Convert {
     private void backupData() throws BackupException {
         Path dataFile;
         try {
-            dataFile = getDataFile(IOUtils.trimExtension(this.propFile.getName()), sourceMetadata.tarType);
+            dataFile = getDataFile(FileUtils.trimExtension(this.propFile.getName()), sourceMetadata.tarType);
         } catch (FileNotFoundException e) {
             throw new BackupException("Could not get data file", e);
         }
@@ -309,11 +309,11 @@ public class TBConvert extends Convert {
                 if (!inTarEntry.isDirectory() && !inTarEntry.isSymbolicLink()) {
                     if (isExternal) {
                         if (extTos != null) {
-                            IOUtils.copy(tis, extTos);
+                            FileUtils.copy(tis, extTos);
                         }
                     } else {
                         if (intTos != null) {
-                            IOUtils.copy(tis, intTos);
+                            FileUtils.copy(tis, intTos);
                         }
                     }
                 }
@@ -403,7 +403,7 @@ public class TBConvert extends Convert {
             // Flags
             sourceMetadata.flags = new BackupFlags(BackupFlags.BACKUP_MULTIPLE);
             try {
-                getDataFile(IOUtils.trimExtension(this.propFile.getName()), sourceMetadata.tarType);
+                getDataFile(FileUtils.trimExtension(this.propFile.getName()), sourceMetadata.tarType);
                 // No error = data file exists
                 sourceMetadata.flags.addFlag(BackupFlags.BACKUP_INT_DATA);
                 if ("1".equals(prop.getProperty("has_external_data"))) {

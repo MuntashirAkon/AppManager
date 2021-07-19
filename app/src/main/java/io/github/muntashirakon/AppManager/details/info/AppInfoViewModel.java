@@ -45,7 +45,7 @@ import io.github.muntashirakon.AppManager.usage.UsageUtils;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.MagiskUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -289,10 +289,10 @@ public class AppInfoViewModel extends AndroidViewModel {
             File txFile = new ProxyFile(uidStatsDir, UID_STATS_TX);
             File rxFile = new ProxyFile(uidStatsDir, UID_STATS_RX);
             if (txFile.exists()) {
-                tx = Long.parseLong(IOUtils.getFileContent(txFile, "0").trim());
+                tx = Long.parseLong(FileUtils.getFileContent(txFile, "0").trim());
             }
             if (rxFile.exists()) {
-                rx = Long.parseLong(IOUtils.getFileContent(rxFile, "0").trim());
+                rx = Long.parseLong(FileUtils.getFileContent(rxFile, "0").trim());
             }
         }
         return new AppUsageStatsManager.DataUsage(tx, rx);

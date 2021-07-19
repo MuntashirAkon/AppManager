@@ -39,7 +39,7 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.TarUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.SplitOutputStream;
@@ -172,7 +172,7 @@ public class OABConvert extends Convert {
     private void readLogFile() throws BackupException {
         try {
             Path logFile = backupLocation.findFile(packageName + ".log");
-            String jsonString = IOUtils.getFileContent(logFile);
+            String jsonString = FileUtils.getFileContent(logFile);
             if (TextUtils.isEmpty(jsonString)) throw new JSONException("Empty JSON string.");
             JSONObject jsonObject = new JSONObject(jsonString);
             sourceMetadata.label = jsonObject.getString("label");
@@ -334,9 +334,9 @@ public class OABConvert extends Convert {
                         File tmpFile = null;
                         if (!zipEntry.isDirectory()) {
                             // We need to use a temporary file
-                            tmpFile = IOUtils.getTempFile();
+                            tmpFile = FileUtils.getTempFile();
                             try (OutputStream fos = new FileOutputStream(tmpFile)) {
-                                IOUtils.copy(zis, fos);
+                                FileUtils.copy(zis, fos);
                             } catch (Throwable th) {
                                 tmpFile.delete();
                                 throw th;
@@ -353,7 +353,7 @@ public class OABConvert extends Convert {
                         if (tmpFile != null) {
                             // Copy from the temporary file
                             try (FileInputStream fis = new FileInputStream(tmpFile)) {
-                                IOUtils.copy(fis, tos);
+                                FileUtils.copy(fis, tos);
                             } finally {
                                 tmpFile.delete();
                             }

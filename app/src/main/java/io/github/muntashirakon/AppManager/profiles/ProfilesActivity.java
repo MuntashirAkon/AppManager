@@ -19,6 +19,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
@@ -33,19 +41,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.widget.PopupMenu;
-import androidx.core.content.ContextCompat;
-import androidx.lifecycle.ViewModelProvider;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.details.LauncherIconCreator;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 public class ProfilesActivity extends BaseActivity {
@@ -85,10 +86,10 @@ public class ProfilesActivity extends BaseActivity {
                 }
                 try {
                     // Verify
-                    String fileName = IOUtils.getFileName(getContentResolver(), uri);
+                    String fileName = FileUtils.getFileName(getContentResolver(), uri);
                     if (fileName == null) throw new IOException("File name cannot be empty.");
-                    fileName = IOUtils.trimExtension(fileName);
-                    String fileContent = IOUtils.getFileContent(getContentResolver(), uri);
+                    fileName = FileUtils.trimExtension(fileName);
+                    String fileContent = FileUtils.getFileContent(getContentResolver(), uri);
                     ProfileMetaManager manager = ProfileMetaManager.fromJSONString(fileName, fileContent);
                     // Save
                     manager.writeProfile();

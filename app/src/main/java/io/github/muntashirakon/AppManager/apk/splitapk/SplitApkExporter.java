@@ -21,7 +21,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.DigestUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
+import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
 
 /**
@@ -58,7 +60,7 @@ public final class SplitApkExporter {
             ZipEntry metaV2ZipEntry = new ZipEntry(ApksMetadata.META_V2_FILE);
             metaV2ZipEntry.setMethod(ZipEntry.DEFLATED);
             metaV2ZipEntry.setSize(metaV2.length);
-            metaV2ZipEntry.setCrc(IOUtils.calculateBytesCrc32(metaV2));
+            metaV2ZipEntry.setCrc(DigestUtils.calculateCrc32(metaV2));
             metaV2ZipEntry.setTime(apksMetadata.exportTimestamp);
             zipOutputStream.putNextEntry(metaV2ZipEntry);
             zipOutputStream.write(metaV2);
@@ -69,21 +71,21 @@ public final class SplitApkExporter {
             ZipEntry metaV1ZipEntry = new ZipEntry(ApksMetadata.META_V1_FILE);
             metaV1ZipEntry.setMethod(ZipEntry.DEFLATED);
             metaV1ZipEntry.setSize(metaV1.length);
-            metaV1ZipEntry.setCrc(IOUtils.calculateBytesCrc32(metaV1));
+            metaV1ZipEntry.setCrc(DigestUtils.calculateCrc32(metaV1));
             metaV1ZipEntry.setTime(apksMetadata.exportTimestamp);
             zipOutputStream.putNextEntry(metaV1ZipEntry);
             zipOutputStream.write(metaV1);
             zipOutputStream.closeEntry();
 
             // Add icon
-            Bitmap bitmap = IOUtils.getBitmapFromDrawable(packageInfo.applicationInfo.loadIcon(AppManager.getContext().getPackageManager()));
+            Bitmap bitmap = FileUtils.getBitmapFromDrawable(packageInfo.applicationInfo.loadIcon(AppManager.getContext().getPackageManager()));
             ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, pngOutputStream);
             byte[] pngIcon = pngOutputStream.toByteArray();
             ZipEntry pngZipEntry = new ZipEntry(ApksMetadata.ICON_FILE);
             pngZipEntry.setMethod(ZipEntry.DEFLATED);
             pngZipEntry.setSize(pngIcon.length);
-            pngZipEntry.setCrc(IOUtils.calculateBytesCrc32(pngIcon));
+            pngZipEntry.setCrc(DigestUtils.calculateCrc32(pngIcon));
             pngZipEntry.setTime(apksMetadata.exportTimestamp);
             zipOutputStream.putNextEntry(pngZipEntry);
             zipOutputStream.write(pngIcon);
@@ -94,11 +96,11 @@ public final class SplitApkExporter {
                 ZipEntry zipEntry = new ZipEntry(apkFile.getName());
                 zipEntry.setMethod(ZipEntry.DEFLATED);
                 zipEntry.setSize(apkFile.length());
-                zipEntry.setCrc(IOUtils.calculateFileCrc32(apkFile));
+                zipEntry.setCrc(DigestUtils.calculateCrc32(apkFile));
                 zipEntry.setTime(apksMetadata.exportTimestamp);
                 zipOutputStream.putNextEntry(zipEntry);
                 try (FileInputStream apkInputStream = new FileInputStream(apkFile)) {
-                    IOUtils.copy(apkInputStream, zipOutputStream);
+                    IoUtils.copy(apkInputStream, zipOutputStream);
                 }
                 zipOutputStream.closeEntry();
             }

@@ -11,8 +11,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
-import android.os.FileUtils;
 import android.os.ParcelFileDescriptor;
 import android.os.RemoteException;
 import android.provider.OpenableColumns;
@@ -27,8 +25,6 @@ import androidx.annotation.WorkerThread;
 import com.android.internal.util.TextUtils;
 
 import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.EOFException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -37,27 +33,19 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
-import java.util.Arrays;
 import java.util.regex.Pattern;
-import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.ProxyFile;
 import io.github.muntashirakon.io.ProxyInputStream;
 import io.github.muntashirakon.io.ProxyOutputStream;
 
-import static android.system.OsConstants.O_APPEND;
-import static android.system.OsConstants.O_CREAT;
-import static android.system.OsConstants.O_RDONLY;
-import static android.system.OsConstants.O_RDWR;
-import static android.system.OsConstants.O_TRUNC;
-import static android.system.OsConstants.O_WRONLY;
-
-public final class IOUtils {
-    public static final int DEFAULT_BUFFER_SIZE = 1024 * 50;
+public final class FileUtils {
+    public static final String TAG = FileUtils.class.getSimpleName();
 
     @AnyThread
     public static boolean isInputFileZip(@NonNull ContentResolver cr, Uri uri) throws IOException {
@@ -78,85 +66,14 @@ public final class IOUtils {
         }
     }
 
-    /**
-     * Get byte array from an InputStream most efficiently.
-     * Taken from sun.misc.IOUtils
-     *
-     * @param is      InputStream
-     * @param length  Length of the buffer, -1 to read the whole stream
-     * @param readAll Whether to read the whole stream
-     * @return Desired byte array
-     * @throws IOException If maximum capacity exceeded.
-     */
-    @WorkerThread
-    public static byte[] readFully(InputStream is, int length, boolean readAll)
-            throws IOException {
-        byte[] output = {};
-        if (length == -1) length = Integer.MAX_VALUE;
-        int pos = 0;
-        while (pos < length) {
-            int bytesToRead;
-            if (pos >= output.length) {
-                bytesToRead = Math.min(length - pos, output.length + 1024);
-                if (output.length < pos + bytesToRead) {
-                    output = Arrays.copyOf(output, pos + bytesToRead);
-                }
-            } else {
-                bytesToRead = output.length - pos;
-            }
-            int cc = is.read(output, pos, bytesToRead);
-            if (cc < 0) {
-                if (readAll && length != Integer.MAX_VALUE) {
-                    throw new EOFException("Detect premature EOF");
-                } else {
-                    if (output.length != pos) {
-                        output = Arrays.copyOf(output, pos);
-                    }
-                    break;
-                }
-            }
-            pos += cc;
-        }
-        return output;
-    }
-
-    @WorkerThread
-    public static long copy(File from, File to) throws IOException, RemoteException {
-        try (InputStream in = new ProxyInputStream(from);
-             OutputStream out = new ProxyOutputStream(to)) {
-            return copy(in, out);
-        }
-    }
-
     @WorkerThread
     public static long copy(Path from, Path to) throws IOException {
-        try (InputStream in = from.openInputStream();
-             OutputStream out = to.openOutputStream()) {
-            return copy(in, out);
-        }
+        return IoUtils.copy(from, to);
     }
 
     @WorkerThread
     public static long copy(InputStream inputStream, OutputStream outputStream) throws IOException {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            return FileUtils.copy(inputStream, outputStream);
-        } else {
-            long count = copyLarge(inputStream, outputStream);
-            if (count > Integer.MAX_VALUE) return -1;
-            return count;
-        }
-    }
-
-    @WorkerThread
-    private static long copyLarge(@NonNull InputStream inputStream, OutputStream outputStream) throws IOException {
-        byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
-        long count = 0;
-        int n;
-        while ((n = inputStream.read(buffer)) > 0) {
-            outputStream.write(buffer, 0, n);
-            count += n;
-        }
-        return count;
+        return IoUtils.copy(inputStream, outputStream);
     }
 
     @WorkerThread
@@ -175,7 +92,7 @@ public final class IOUtils {
         if (filePath.exists()) //noinspection ResultOfMethodCallIgnored
             filePath.delete();
         try (OutputStream outputStream = new ProxyOutputStream(filePath)) {
-            copy(zipInputStream, outputStream);
+            IoUtils.copy(zipInputStream, outputStream);
         }
         return filePath;
     }
@@ -269,7 +186,7 @@ public final class IOUtils {
         try {
             closeable.close();
         } catch (Exception e) {
-            Log.w("IOUtils", String.format("Unable to close %s", closeable.getClass().getCanonicalName()), e);
+            Log.w(TAG, String.format("Unable to close %s", closeable.getClass().getCanonicalName()), e);
         }
     }
 
@@ -277,7 +194,7 @@ public final class IOUtils {
     public static void deleteSilently(@Nullable File file) {
         if (file == null || !file.exists()) return;
         if (!file.delete()) {
-            Log.w("IOUtils", String.format("Unable to delete %s", file.getAbsoluteFile()));
+            Log.w(TAG, String.format("Unable to delete %s", file.getAbsoluteFile()));
         }
     }
 
@@ -417,7 +334,7 @@ public final class IOUtils {
     @WorkerThread
     @NonNull
     private static String getInputStreamContent(@NonNull InputStream inputStream) throws IOException {
-        return new String(readFully(inputStream, -1, true), Charset.defaultCharset());
+        return new String(IoUtils.readFully(inputStream, -1, true), Charset.defaultCharset());
     }
 
     @WorkerThread
@@ -493,7 +410,7 @@ public final class IOUtils {
         try (AssetFileDescriptor openFd = context.getAssets().openFd(fileName)) {
             try (InputStream open = openFd.createInputStream();
                  FileOutputStream fos = new FileOutputStream(destFile)) {
-                copy(open, fos);
+                IoUtils.copy(open, fos);
                 fos.flush();
                 fos.getFD().sync();
             }
@@ -507,7 +424,7 @@ public final class IOUtils {
     public static File getCachedFile(InputStream inputStream) throws IOException {
         File tempFile = getTempFile();
         try (OutputStream outputStream = new FileOutputStream(tempFile)) {
-            copy(inputStream, outputStream);
+            IoUtils.copy(inputStream, outputStream);
         }
         return tempFile;
     }
@@ -555,36 +472,12 @@ public final class IOUtils {
         return extDir;
     }
 
-    @WorkerThread
-    public static long calculateFileCrc32(File file) throws IOException {
-        return calculateCrc32(new ProxyInputStream(file));
-    }
-
-    @AnyThread
-    public static long calculateBytesCrc32(byte[] bytes) throws IOException {
-        return calculateCrc32(new ByteArrayInputStream(bytes));
-    }
-
-    @AnyThread
-    public static long calculateCrc32(InputStream inputStream) throws IOException {
-        try (InputStream in = inputStream) {
-            CRC32 crc32 = new CRC32();
-            byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
-            int read;
-
-            while ((read = in.read(buffer)) > 0)
-                crc32.update(buffer, 0, read);
-
-            return crc32.getValue();
-        }
-    }
-
     @AnyThread
     public static void chmod711(@NonNull File file) throws IOException {
         try {
             Os.chmod(file.getAbsolutePath(), 457);
         } catch (ErrnoException e) {
-            Log.e("IOUtils", "Failed to apply mode 711 to " + file);
+            Log.e(TAG, "Failed to apply mode 711 to " + file);
             throw new IOException(e);
         }
     }
@@ -594,42 +487,9 @@ public final class IOUtils {
         try {
             Os.chmod(file.getAbsolutePath(), 420);
         } catch (ErrnoException e) {
-            Log.e("IOUtils", "Failed to apply mode 644 to " + file);
+            Log.e(TAG, "Failed to apply mode 644 to " + file);
             throw new IOException(e);
         }
-    }
-
-    public static int translateModeStringToPosix(@NonNull String mode) {
-        // Sanity check for invalid chars
-        for (int i = 0; i < mode.length(); i++) {
-            switch (mode.charAt(i)) {
-                case 'r':
-                case 'w':
-                case 't':
-                case 'a':
-                    break;
-                default:
-                    throw new IllegalArgumentException("Bad mode: " + mode);
-            }
-        }
-
-        int res;
-        if (mode.startsWith("rw")) {
-            res = O_RDWR | O_CREAT;
-        } else if (mode.startsWith("w")) {
-            res = O_WRONLY | O_CREAT;
-        } else if (mode.startsWith("r")) {
-            res = O_RDONLY;
-        } else {
-            throw new IllegalArgumentException("Bad mode: " + mode);
-        }
-        if (mode.indexOf('t') != -1) {
-            res |= O_TRUNC;
-        }
-        if (mode.indexOf('a') != -1) {
-            res |= O_APPEND;
-        }
-        return res;
     }
 
     @NonNull

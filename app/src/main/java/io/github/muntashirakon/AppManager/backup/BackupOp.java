@@ -50,7 +50,7 @@ import io.github.muntashirakon.AppManager.uri.UriManager;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.MagiskUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -237,7 +237,7 @@ class BackupOp implements Closeable {
         try {
             Path iconFile = tmpBackupPath.createNewFile(ICON_FILE, null);
             try (OutputStream outputStream = iconFile.openOutputStream()) {
-                Bitmap bitmap = IOUtils.getBitmapFromDrawable(applicationInfo.loadIcon(pm));
+                Bitmap bitmap = FileUtils.getBitmapFromDrawable(applicationInfo.loadIcon(pm));
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
                 outputStream.flush();
             }
@@ -311,12 +311,12 @@ class BackupOp implements Closeable {
         if (masterKeyFile.exists()) {
             // Master key exists, so take it's checksum to verify it during the restore
             checksum.add(MASTER_KEY, DigestUtils.getHexDigest(metadata.checksumAlgo,
-                    IOUtils.getFileContent(masterKeyFile).getBytes()));
+                    FileUtils.getFileContent(masterKeyFile).getBytes()));
         }
         // Store the KeyStore files
         Path cachePath;
         try {
-            cachePath = new Path(context, IOUtils.getCachePath());
+            cachePath = new Path(context, FileUtils.getCachePath());
         } catch (IOException e) {
             throw new BackupException("Could not get cache path", e);
         }
@@ -326,7 +326,7 @@ class BackupOp implements Closeable {
             try {
                 String newFileName = Utils.replaceOnce(keyStoreFileName, String.valueOf(applicationInfo.uid),
                         String.valueOf(KEYSTORE_PLACEHOLDER));
-                IOUtils.copy(keyStorePath.findFile(keyStoreFileName), cachePath.findOrCreateFile(newFileName, null));
+                FileUtils.copy(keyStorePath.findFile(keyStoreFileName), cachePath.findOrCreateFile(newFileName, null));
                 cachedKeyStoreFileNames.add(newFileName);
                 keyStoreFilters.add(Pattern.quote(newFileName));
             } catch (Throwable e) {

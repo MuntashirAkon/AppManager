@@ -15,6 +15,8 @@ import android.os.Debug;
 import android.os.IBinder;
 import android.os.RemoteException;
 
+import androidx.annotation.NonNull;
+
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -26,7 +28,6 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 
-import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.adb.AdbShell;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -34,7 +35,7 @@ import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.server.common.IRootIPC;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 
 import static io.github.muntashirakon.AppManager.ipc.RootService.TAG;
 import static io.github.muntashirakon.AppManager.ipc.RootService.serialExecutor;
@@ -67,13 +68,13 @@ class IPCClient implements IBinder.DeathRecipient, Closeable {
         Context contextDe = ContextUtils.getDeContext(context);
         File internalStorage = contextDe.getFilesDir().getParentFile();
         assert internalStorage != null;
-        IOUtils.chmod711(internalStorage);
+        FileUtils.chmod711(internalStorage);
         File mainJar = new File(internalStorage, "main.jar");
         try (InputStream in = context.getResources().getAssets().open("main.jar");
              OutputStream out = new FileOutputStream(mainJar)) {
-            IOUtils.copy(in, out);
+            FileUtils.copy(in, out);
         }
-        IOUtils.chmod644(mainJar);
+        FileUtils.chmod644(mainJar);
         return mainJar;
     }
 

@@ -6,7 +6,11 @@ import android.content.Context;
 import android.os.RemoteException;
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringDef;
 import androidx.annotation.WorkerThread;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,13 +24,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.StringDef;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.JSONUtils;
 import io.github.muntashirakon.io.ProxyOutputStream;
 
@@ -100,7 +101,7 @@ public class ProfileMetaManager {
                                                 @NonNull String presetName)
             throws JSONException {
         ProfileMetaManager profileMetaManager = new ProfileMetaManager(profileName);
-        String fileContents = IOUtils.getContentFromAssets(AppManager.getContext(), "profiles/" + presetName + ".am.json");
+        String fileContents = FileUtils.getContentFromAssets(AppManager.getContext(), "profiles/" + presetName + ".am.json");
         profileMetaManager.readProfile(fileContents);
         return profileMetaManager;
     }
@@ -135,7 +136,7 @@ public class ProfileMetaManager {
         if (packages != null) this.profile = new Profile(profileName, packages);
         if (getProfilePath().exists()) {
             try {
-                readProfile(IOUtils.getFileContent(getProfilePath()));
+                readProfile(FileUtils.getFileContent(getProfilePath()));
             } catch (JSONException e) {
                 e.printStackTrace();
             }

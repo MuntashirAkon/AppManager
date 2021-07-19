@@ -52,7 +52,7 @@ import io.github.muntashirakon.AppManager.types.ScrollableDialogBuilder;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
@@ -83,10 +83,10 @@ public class ScannerActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        IOUtils.deleteDir(new File(getCacheDir().getParent(), APP_DEX));
-        IOUtils.deleteDir(getCodeCacheDir());
-        IOUtils.closeQuietly(fd);
-        IOUtils.closeQuietly(dexClasses);
+        FileUtils.deleteDir(new File(getCacheDir().getParent(), APP_DEX));
+        FileUtils.deleteDir(getCodeCacheDir());
+        FileUtils.closeQuietly(fd);
+        FileUtils.closeQuietly(dexClasses);
         // Empty static vars
         // This works because ClassListingActivity opens on top of ScannerActivity
         classListAll = null;
@@ -127,7 +127,7 @@ public class ScannerActivity extends BaseActivity {
                 if (fd == null) {
                     throw new FileNotFoundException("FileDescription cannot be null");
                 }
-                apkFile = IOUtils.getFileFromFd(fd);
+                apkFile = FileUtils.getFileFromFd(fd);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }

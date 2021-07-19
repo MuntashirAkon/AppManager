@@ -120,7 +120,7 @@ import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.BetterActivityResult;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.MagiskUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -461,7 +461,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         if (outputStream == null) {
                             throw new IOException("Unable to open output stream.");
                         }
-                        Bitmap bitmap = IOUtils.getBitmapFromDrawable(mApplicationInfo.loadIcon(mPackageManager));
+                        Bitmap bitmap = FileUtils.getBitmapFromDrawable(mApplicationInfo.loadIcon(mPackageManager));
                         bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
                         outputStream.flush();
                         displayShortToast(R.string.saved_successfully);
@@ -532,7 +532,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @Override
     public void onDestroy() {
         if (mActivity != null) {
-            IOUtils.deleteDir(mActivity.getExternalCacheDir());
+            FileUtils.deleteDir(mActivity.getExternalCacheDir());
         }
         super.onDestroy();
     }

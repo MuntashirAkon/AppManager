@@ -32,7 +32,7 @@ import io.github.muntashirakon.AppManager.ipc.IPCUtils;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 
 /**
  * Provide an interface to {@link File} and {@link DocumentFile} with basic functionalities.
@@ -67,7 +67,7 @@ public class Path {
                 // For tree uri, the requested Uri is not always the same as the generated uri.
                 // So, make sure to navigate to the correct uri
                 if (isTreeUri && documentFile != null) {
-                    String diff = IOUtils.getRelativePath(uri.getPath(), documentFile.getUri().getPath(), File.separator);
+                    String diff = FileUtils.getRelativePath(uri.getPath(), documentFile.getUri().getPath(), File.separator);
                     String[] files = diff.split("/");
                     for (String file : files) {
                         if (documentFile != null) {
@@ -362,7 +362,7 @@ public class Path {
     }
 
     private static void copyFile(@NonNull Path src, @NonNull Path dst) throws IOException {
-        IOUtils.copy(src, dst);
+        FileUtils.copy(src, dst);
     }
 
     // Copy directory content

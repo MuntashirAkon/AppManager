@@ -28,7 +28,8 @@ import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.apk.splitapk.SplitApkExporter;
 import io.github.muntashirakon.AppManager.backup.BackupFiles;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
+import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
 
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagMatchUninstalled;
@@ -45,7 +46,7 @@ public final class ApkUtils {
         ApplicationInfo info = packageInfo.applicationInfo;
         Context ctx = AppManager.getContext();
         PackageManager pm = ctx.getPackageManager();
-        String outputName = IOUtils.getSanitizedFileName(info.loadLabel(pm).toString() + "_" +
+        String outputName = FileUtils.getSanitizedFileName(info.loadLabel(pm).toString() + "_" +
                 packageInfo.versionName, false);
         if (outputName == null) outputName = info.packageName;
         Path tmpPublicSource;
@@ -80,7 +81,7 @@ public final class ApkUtils {
             PackageManager pm = ctx.getPackageManager();
             PackageInfo packageInfo = PackageManagerCompat.getPackageInfo(packageName, flagMatchUninstalled, userHandle);
             ApplicationInfo info = packageInfo.applicationInfo;
-            String outputName = IOUtils.getSanitizedFileName(info.loadLabel(pm).toString() + "_" +
+            String outputName = FileUtils.getSanitizedFileName(info.loadLabel(pm).toString() + "_" +
                     packageInfo.versionName, false);
             if (outputName == null) outputName = packageName;
             Path apkFile;
@@ -91,7 +92,7 @@ public final class ApkUtils {
             } else {
                 // Regular apk
                 apkFile = backupPath.createNewFile(outputName + EXT_APK, null);
-                IOUtils.copy(new Path(ctx, new File(info.publicSourceDir)), apkFile);
+                FileUtils.copy(new Path(ctx, new File(info.publicSourceDir)), apkFile);
             }
             return true;
         } catch (Exception e) {
@@ -116,7 +117,7 @@ public final class ApkUtils {
                 }
                 try (InputStream zipInputStream = zipFile.getInputStream(zipEntry)) {
                     ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-                    byte[] buf = new byte[IOUtils.DEFAULT_BUFFER_SIZE];
+                    byte[] buf = new byte[IoUtils.DEFAULT_BUFFER_SIZE];
                     int n;
                     while (-1 != (n = zipInputStream.read(buf))) {
                         buffer.write(buf, 0, n);
@@ -133,11 +134,11 @@ public final class ApkUtils {
         try (ZipInputStream zipInputStream = new ZipInputStream(new BufferedInputStream(apkInputStream))) {
             ZipEntry zipEntry;
             while ((zipEntry = zipInputStream.getNextEntry()) != null) {
-                if (!IOUtils.getLastPathComponent(zipEntry.getName()).equals(MANIFEST_FILE)) {
+                if (!FileUtils.getLastPathComponent(zipEntry.getName()).equals(MANIFEST_FILE)) {
                     continue;
                 }
                 ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-                byte[] buf = new byte[IOUtils.DEFAULT_BUFFER_SIZE];
+                byte[] buf = new byte[IoUtils.DEFAULT_BUFFER_SIZE];
                 int n;
                 while (-1 != (n = zipInputStream.read(buf))) {
                     buffer.write(buf, 0, n);
@@ -146,12 +147,12 @@ public final class ApkUtils {
             }
         }
         // This could be due to a Zip error, try caching the APK
-        File cachedApk = IOUtils.getCachedFile(apkInputStream);
+        File cachedApk = FileUtils.getCachedFile(apkInputStream);
         ByteBuffer byteBuffer;
         try {
             byteBuffer = getManifestFromApk(cachedApk);
         } finally {
-            IOUtils.deleteSilently(cachedApk);
+            FileUtils.deleteSilently(cachedApk);
         }
         return byteBuffer;
     }

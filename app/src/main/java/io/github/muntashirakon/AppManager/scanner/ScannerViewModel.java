@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 
 
@@ -57,7 +57,7 @@ public class ScannerViewModel extends AndroidViewModel {
         executor.shutdownNow();
         if (apkFile != null && !apkFile.getAbsolutePath().startsWith("/data/app/")) {
             // Only attempt to delete the apk file if it's cached
-            IOUtils.deleteSilently(apkFile);
+            FileUtils.deleteSilently(apkFile);
         }
     }
 
@@ -127,7 +127,7 @@ public class ScannerViewModel extends AndroidViewModel {
         if (!apkFile.exists() || !apkFile.canRead()) {
             // Not readable, cache the file
             try (InputStream uriStream = getApplication().getContentResolver().openInputStream(apkUri)) {
-                apkFile = IOUtils.getCachedFile(uriStream);
+                apkFile = FileUtils.getCachedFile(uriStream);
             } catch (IOException e) {
                 e.printStackTrace();
             }

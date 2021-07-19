@@ -103,7 +103,7 @@ public final class TarUtils {
                         tos.putArchiveEntry(tarEntry);
                         if (!file.isDirectory()) {
                             try (InputStream is = file.openInputStream()) {
-                                IOUtils.copy(is, tos);
+                                FileUtils.copy(is, tos);
                             }
                         }
                     }
@@ -175,7 +175,7 @@ public final class TarUtils {
                         }
                         if (!entry.isDirectory()) {
                             try (OutputStream os = file.openOutputStream()) {
-                                IOUtils.copy(tis, os);
+                                FileUtils.copy(tis, os);
                             }
                         }
                     }
@@ -282,7 +282,7 @@ public final class TarUtils {
     static String getRelativePath(@NonNull Path file, @NonNull Path basePath, @NonNull String separator) {
         String baseDir = basePath.getUri().getPath() + (basePath.isDirectory() ? separator : "");
         String targetPath = file.getUri().getPath() + (file.isDirectory() ? separator : "");
-        return IOUtils.getRelativePath(targetPath, baseDir, separator);
+        return FileUtils.getRelativePath(targetPath, baseDir, separator);
     }
 
     @VisibleForTesting
@@ -290,6 +290,6 @@ public final class TarUtils {
     static String getRelativePath(@NonNull File file, @NonNull File basePath, @NonNull String separator) {
         String baseDir = basePath.toURI().getPath();
         String targetPath = file.toURI().getPath();
-        return IOUtils.getRelativePath(targetPath, baseDir, separator);
+        return FileUtils.getRelativePath(targetPath, baseDir, separator);
     }
 }

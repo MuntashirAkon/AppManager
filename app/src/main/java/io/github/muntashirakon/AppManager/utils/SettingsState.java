@@ -33,6 +33,7 @@ import java.util.Set;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.io.AtomicProxyFile;
+import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.ProxyFile;
 import io.github.muntashirakon.io.ProxyInputStream;
 import io.github.muntashirakon.io.ProxyOutputStream;
@@ -737,7 +738,7 @@ public final class SettingsState {
                 }
                 destination.failWrite(out);
             } finally {
-                IOUtils.closeQuietly(out);
+                IoUtils.closeQuietly(out);
             }
         }
 
@@ -891,7 +892,7 @@ public final class SettingsState {
         if (parseStateFromXmlStreamLocked(in)) {
             // Parsed state from fallback file. Restore original file with fallback file
             try {
-                IOUtils.copy(statePersistFallbackFile, mStatePersistFile);
+                IoUtils.copy(statePersistFallbackFile, mStatePersistFile);
             } catch (IOException | RemoteException ignored) {
                 // Failed to copy, but it's okay because we already parsed states from fallback file
             }
@@ -912,7 +913,7 @@ public final class SettingsState {
         } catch (XmlPullParserException | IOException e) {
             return false;
         } finally {
-            IOUtils.closeQuietly(in);
+            IoUtils.closeQuietly(in);
         }
     }
 

@@ -25,7 +25,7 @@ import java.util.Collections;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.ProxyInputStream;
 import io.github.muntashirakon.io.SplitInputStream;
@@ -55,7 +55,7 @@ public class GzipCompressorOutputStreamTest {
                 TarArchiveEntry tarEntry = new TarArchiveEntry(file, file.getName());
                 tos.putArchiveEntry(tarEntry);
                 try (InputStream is = new ProxyInputStream(file)) {
-                    IOUtils.copy(is, tos);
+                    FileUtils.copy(is, tos);
                 }
                 tos.closeArchiveEntry();
             }
@@ -98,7 +98,7 @@ public class GzipCompressorOutputStreamTest {
                 TarArchiveEntry tarEntry = new TarArchiveEntry(file, file.getName());
                 tos.putArchiveEntry(tarEntry);
                 try (InputStream is = new ProxyInputStream(file)) {
-                    IOUtils.copy(is, tos);
+                    FileUtils.copy(is, tos);
                 }
                 tos.closeArchiveEntry();
             }

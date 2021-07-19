@@ -18,7 +18,7 @@ import java.util.Set;
 import dalvik.system.DexClassLoader;
 import dalvik.system.DexFile;
 import io.github.muntashirakon.AppManager.scanner.reflector.Reflector;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 
 public class DexClasses implements Closeable {
     private final ClassLoader loader;
@@ -30,7 +30,7 @@ public class DexClasses implements Closeable {
         this.loader = new DexClassLoader(apkFile.getAbsolutePath(),
                 optimizedDexFilePath.getAbsolutePath(), null,
                 ctx.getClassLoader().getParent());
-        IOUtils.deleteSilently(optimizedDexFilePath);
+        FileUtils.deleteSilently(optimizedDexFilePath);
         // Load dexClass
         File optimizedFile = null;
         try {
@@ -40,7 +40,7 @@ public class DexClasses implements Closeable {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            IOUtils.deleteSilently(optimizedFile);
+            FileUtils.deleteSilently(optimizedFile);
         }
     }
 

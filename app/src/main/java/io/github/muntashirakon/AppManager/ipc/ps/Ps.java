@@ -16,7 +16,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 
 /**
  * This is a generic Java-way of parsing processes from /proc. This is a work in progress and by no means perfect. To
@@ -209,23 +209,23 @@ public class Ps {
                 ProcItem procItem = new ProcItem();
                 // Parse stat
                 File statFile = new File(pidFile, STAT);
-                procItem.stat = IOUtils.getFileContent(statFile).split("\\s");
+                procItem.stat = FileUtils.getFileContent(statFile).split("\\s");
                 if (procItem.stat.length != STAT_COUNT) continue;
                 // Parse statm
                 File memStatFile = new File(pidFile, MEM_STAT);
-                procItem.memStat = IOUtils.getFileContent(memStatFile).split("\\s");
+                procItem.memStat = FileUtils.getFileContent(memStatFile).split("\\s");
                 if (procItem.memStat.length != MEM_STAT_COUNT) continue;
                 // Parse status
                 File statusFile = new File(pidFile, STATUS);
-                for (String line : IOUtils.getFileContent(statusFile).split("\\n")) {
+                for (String line : FileUtils.getFileContent(statusFile).split("\\n")) {
                     int idxOfColon = line.indexOf(':');
                     if (idxOfColon != -1) {
                         procItem.status.put(line.substring(0, idxOfColon), line.substring(idxOfColon + 1).trim());
                     }
                 }
-                procItem.name = IOUtils.getFileContent(new File(pidFile, NAME)).trim();
-                procItem.sepol = IOUtils.getFileContent(new File(pidFile, SEPOL)).trim();
-                procItem.wchan = IOUtils.getFileContent(new File(pidFile, WCHAN)).trim();
+                procItem.name = FileUtils.getFileContent(new File(pidFile, NAME)).trim();
+                procItem.sepol = FileUtils.getFileContent(new File(pidFile, SEPOL)).trim();
+                procItem.wchan = FileUtils.getFileContent(new File(pidFile, WCHAN)).trim();
                 processEntries.add(newProcess(procItem));
             }
         }

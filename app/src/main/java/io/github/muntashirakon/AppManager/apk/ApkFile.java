@@ -49,7 +49,7 @@ import io.github.muntashirakon.AppManager.apk.signing.Signer;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.io.ProxyFile;
 import io.github.muntashirakon.unapkm.api.UnApkm;
@@ -166,11 +166,11 @@ public final class ApkFile implements AutoCloseable {
         if (mimeType == null || !SUPPORTED_MIMES.contains(mimeType)) {
             Log.e(TAG, "Invalid mime: " + mimeType);
             // Check extension
-            String name = IOUtils.getFileName(cr, apkUri);
+            String name = FileUtils.getFileName(cr, apkUri);
             if (name == null) {
                 throw new ApkFileException("Could not extract package name from the URI.");
             }
-            extension = IOUtils.getExtension(name).toLowerCase(Locale.ROOT);
+            extension = FileUtils.getExtension(name).toLowerCase(Locale.ROOT);
             if (!SUPPORTED_EXTENSIONS.contains(extension)) {
                 throw new ApkFileException("Invalid package extension.");
             }
@@ -183,7 +183,7 @@ public final class ApkFile implements AutoCloseable {
         }
         if (extension.equals("apkm")) {
             try {
-                if (IOUtils.isInputFileZip(cr, apkUri)) {
+                if (FileUtils.isInputFileZip(cr, apkUri)) {
                     // DRM-free APKM file, mark it as APKS
                     // FIXME(#227): Give it a special name and verify integrity
                     extension = "apks";
@@ -196,7 +196,7 @@ public final class ApkFile implements AutoCloseable {
         if (extension.equals("apkm")) {
             // Convert to APKS
             try {
-                this.cacheFilePath = IOUtils.getTempFile();
+                this.cacheFilePath = FileUtils.getTempFile();
                 try (ParcelFileDescriptor inputFD = cr.openFileDescriptor(apkUri, "r");
                      OutputStream outputStream = new FileOutputStream(this.cacheFilePath)) {
                     if (inputFD == null) {
@@ -222,11 +222,11 @@ public final class ApkFile implements AutoCloseable {
                 Log.e(TAG, e);
             }
             if (this.fd != null) {
-                this.cacheFilePath = IOUtils.getFileFromFd(fd);
+                this.cacheFilePath = FileUtils.getFileFromFd(fd);
                 if (!this.cacheFilePath.canRead()) {
                     // Cache manually
                     try (InputStream is = cr.openInputStream(apkUri)) {
-                        this.cacheFilePath = IOUtils.getCachedFile(is);
+                        this.cacheFilePath = FileUtils.getCachedFile(is);
                     } catch (IOException e) {
                         throw new ApkFileException("Could not cache the input file.");
                     }
@@ -234,7 +234,7 @@ public final class ApkFile implements AutoCloseable {
             } else {
                 // Cache manually
                 try (InputStream is = cr.openInputStream(apkUri)) {
-                    this.cacheFilePath = IOUtils.getCachedFile(is);
+                    this.cacheFilePath = FileUtils.getCachedFile(is);
                 } catch (IOException | SecurityException e) {
                     throw new ApkFileException("Could not cache the input file.");
                 }
@@ -268,7 +268,7 @@ public final class ApkFile implements AutoCloseable {
             while (zipEntries.hasMoreElements()) {
                 ZipEntry zipEntry = zipEntries.nextElement();
                 if (zipEntry.isDirectory()) continue;
-                String fileName = IOUtils.getFileNameFromZipEntry(zipEntry);
+                String fileName = FileUtils.getFileNameFromZipEntry(zipEntry);
                 if (fileName.endsWith(".apk")) {
                     try (InputStream zipInputStream = zipFile.getInputStream(zipEntry)) {
                         // Get manifest attributes
@@ -299,7 +299,7 @@ public final class ApkFile implements AutoCloseable {
                     obbFiles.add(zipEntry);
                 } else if (fileName.endsWith(".idsig")) {
                     try {
-                        idsigFile = IOUtils.saveZipFile(zipFile.getInputStream(zipEntry), getCachePath(), IDSIG_FILE);
+                        idsigFile = FileUtils.saveZipFile(zipFile.getInputStream(zipEntry), getCachePath(), IDSIG_FILE);
                     } catch (IOException | RemoteException e) {
                         throw new ApkFileException(e);
                     }
@@ -334,7 +334,7 @@ public final class ApkFile implements AutoCloseable {
             if (apks == null) throw new ApkFileException("No apk files found");
             String fileName;
             for (File apk : apks) {
-                fileName = IOUtils.getLastPathComponent(apk.getAbsolutePath());
+                fileName = FileUtils.getLastPathComponent(apk.getAbsolutePath());
                 // Get manifest attributes
                 HashMap<String, String> manifestAttrs;
                 try {
@@ -417,10 +417,10 @@ public final class ApkFile implements AutoCloseable {
     public void extractObb(ProxyFile writableObbDir) throws IOException, RemoteException {
         if (!hasObb() || zipFile == null) return;
         for (ZipEntry obbEntry : obbFiles) {
-            String fileName = IOUtils.getFileNameFromZipEntry(obbEntry);
+            String fileName = FileUtils.getFileNameFromZipEntry(obbEntry);
             // Extract obb file to the destination directory
             try (InputStream zipInputStream = zipFile.getInputStream(obbEntry)) {
-                IOUtils.saveZipFile(zipInputStream, writableObbDir, fileName);
+                FileUtils.saveZipFile(zipInputStream, writableObbDir, fileName);
             }
         }
     }
@@ -448,11 +448,11 @@ public final class ApkFile implements AutoCloseable {
         for (Entry entry : entries) {
             entry.close();
         }
-        IOUtils.closeQuietly(zipFile);
-        IOUtils.closeQuietly(fd);
-        IOUtils.deleteSilently(idsigFile);
+        FileUtils.closeQuietly(zipFile);
+        FileUtils.closeQuietly(fd);
+        FileUtils.deleteSilently(idsigFile);
         if (!cacheFilePath.getAbsolutePath().startsWith("/data/app")) {
-            IOUtils.deleteSilently(cacheFilePath);
+            FileUtils.deleteSilently(cacheFilePath);
         }
         // Ensure that entries are not accessible if accidentally accessed
         entries.clear();
@@ -602,7 +602,7 @@ public final class ApkFile implements AutoCloseable {
         @NonNull
         public String getFileName() {
             if (cachedFile != null && cachedFile.exists()) return cachedFile.getName();
-            if (zipEntry != null) return IOUtils.getFileNameFromZipEntry(zipEntry);
+            if (zipEntry != null) return FileUtils.getFileNameFromZipEntry(zipEntry);
             if (source != null && source.exists()) return source.getName();
             else throw new RuntimeException("Neither zipEntry nor source is defined.");
         }
@@ -621,12 +621,12 @@ public final class ApkFile implements AutoCloseable {
                 // Return original/real file if signing is not requested
                 return realFile;
             }
-            signedFile = IOUtils.getTempFile();
+            signedFile = FileUtils.getTempFile();
             SigSchemes sigSchemes = SigSchemes.fromPref();
             try {
                 Signer signer = Signer.getInstance(sigSchemes, context);
                 if (signer.isV4SchemeEnabled()) {
-                    idsigFile = IOUtils.getTempFile();
+                    idsigFile = FileUtils.getTempFile();
                     signer.setIdsigFile(idsigFile);
                 }
                 if (signer.sign(realFile, signedFile, -1)) {
@@ -655,12 +655,12 @@ public final class ApkFile implements AutoCloseable {
 
         @Override
         public void close() {
-            IOUtils.deleteSilently(cachedFile);
-            IOUtils.deleteSilently(idsigFile);
-            IOUtils.deleteSilently(signedFile);
+            FileUtils.deleteSilently(cachedFile);
+            FileUtils.deleteSilently(idsigFile);
+            FileUtils.deleteSilently(signedFile);
             if (source != null && !source.getAbsolutePath().startsWith("/proc/self")
                     && !source.getAbsolutePath().startsWith("/data/app")) {
-                IOUtils.deleteSilently(source);
+                FileUtils.deleteSilently(source);
             }
         }
 
@@ -677,10 +677,10 @@ public final class ApkFile implements AutoCloseable {
             if (source != null && source.canRead() && !source.getAbsolutePath().startsWith("/proc/self")) return source;
             if (cachedFile != null) {
                 if (cachedFile.canRead()) return cachedFile;
-                else IOUtils.deleteSilently(cachedFile);
+                else FileUtils.deleteSilently(cachedFile);
             }
             try (InputStream is = getRealInputStream()) {
-                return cachedFile = IOUtils.saveZipFile(is, getCachePath(), name);
+                return cachedFile = FileUtils.saveZipFile(is, getCachePath(), name);
             }
         }
 

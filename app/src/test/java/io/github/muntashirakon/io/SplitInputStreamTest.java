@@ -18,7 +18,7 @@ import java.util.List;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 
 import static org.junit.Assert.assertEquals;
 
@@ -46,7 +46,7 @@ public class SplitInputStreamTest {
         File file = new File("/tmp/AppManager_v2.5.22.apks");
         try (SplitInputStream splitInputStream = new SplitInputStream(fileList);
              OutputStream outputStream = new FileOutputStream(file)) {
-            IOUtils.copy(splitInputStream, outputStream);
+            FileUtils.copy(splitInputStream, outputStream);
         }
         assert classLoader != null;
         String expectedHash = DigestUtils.getHexDigest(DigestUtils.SHA_256, new File(classLoader.getResource("AppManager_v2.5.22.apks").getFile()));

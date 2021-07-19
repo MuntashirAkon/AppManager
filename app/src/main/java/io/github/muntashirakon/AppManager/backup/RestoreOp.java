@@ -44,7 +44,7 @@ import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
 import io.github.muntashirakon.AppManager.uri.UriManager;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.MagiskUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -198,7 +198,7 @@ class RestoreOp implements Closeable {
             throw new BackupException("Master key exists but it didn't exist when the backup was made.");
         }
         String newChecksum = DigestUtils.getHexDigest(metadata.checksumAlgo,
-                IOUtils.getFileContent(masterKey).getBytes());
+                FileUtils.getFileContent(masterKey).getBytes());
         if (!newChecksum.equals(oldChecksum)) {
             throw new BackupException("Checksums for master key did not match.");
         }

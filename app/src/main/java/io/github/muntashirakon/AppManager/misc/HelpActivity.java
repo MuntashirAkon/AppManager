@@ -34,7 +34,7 @@ import java.lang.reflect.Method;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 
 public class HelpActivity extends BaseActivity {
     private LinearLayoutCompat container;
@@ -51,7 +51,7 @@ public class HelpActivity extends BaseActivity {
         if (actionBar != null) actionBar.setTitle(R.string.instructions);
         findViewById(R.id.progress_linear).setVisibility(View.GONE);
         // Check if docs are available
-        if (IOUtils.getRawDataId(this, "index") == 0) {
+        if (FileUtils.getRawDataId(this, "index") == 0) {
             // Docs split not installed
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.website_message)));
             startActivity(intent);

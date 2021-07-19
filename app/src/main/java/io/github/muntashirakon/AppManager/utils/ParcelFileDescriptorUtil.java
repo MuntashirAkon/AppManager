@@ -5,11 +5,13 @@ package io.github.muntashirakon.AppManager.utils;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import androidx.annotation.NonNull;
+import io.github.muntashirakon.io.IoUtils;
 
 // Copyright 2013 Florian Schmaus
 public class ParcelFileDescriptorUtil {
@@ -63,7 +65,7 @@ public class ParcelFileDescriptorUtil {
 
         @Override
         public void run() {
-            byte[] buf = new byte[IOUtils.DEFAULT_BUFFER_SIZE];
+            byte[] buf = new byte[IoUtils.DEFAULT_BUFFER_SIZE];
             int len;
 
             try {

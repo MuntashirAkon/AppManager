@@ -57,11 +57,11 @@ import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
+import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.ProxyFile;
 
@@ -531,7 +531,7 @@ public final class PackageInstallerCompat {
             for (ApkFile.Entry entry : selectedEntries) {
                 try (InputStream apkInputStream = entry.getSignedInputStream(context);
                      OutputStream apkOutputStream = session.openWrite(entry.getFileName(), 0, entry.getFileSize())) {
-                    IOUtils.copy(apkInputStream, apkOutputStream);
+                    IoUtils.copy(apkInputStream, apkOutputStream);
                     session.fsync(apkOutputStream);
                     Log.d(TAG, "Install: copied entry " + entry.name);
                 } catch (IOException | RemoteException e) {
@@ -561,7 +561,7 @@ public final class PackageInstallerCompat {
             for (Path apkFile : apkFiles) {
                 try (InputStream apkInputStream = apkFile.openInputStream();
                      OutputStream apkOutputStream = session.openWrite(apkFile.getName(), 0, apkFile.length())) {
-                    IOUtils.copy(apkInputStream, apkOutputStream);
+                    IoUtils.copy(apkInputStream, apkOutputStream);
                     session.fsync(apkOutputStream);
                 } catch (IOException e) {
                     sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_WRITE, sessionId);

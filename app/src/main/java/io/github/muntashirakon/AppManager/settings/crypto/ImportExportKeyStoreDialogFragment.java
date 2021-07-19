@@ -25,7 +25,7 @@ import java.io.OutputStream;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 import static io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager.AM_KEYSTORE_FILE;
@@ -44,7 +44,7 @@ public class ImportExportKeyStoreDialogFragment extends DialogFragment {
                     try (InputStream is = new FileInputStream(AM_KEYSTORE_FILE);
                          OutputStream os = activity.getContentResolver().openOutputStream(uri)) {
                         if (os == null) throw new IOException("Unable to open URI");
-                        IOUtils.copy(is, os);
+                        FileUtils.copy(is, os);
                         activity.runOnUiThread(() -> {
                             UIUtils.displayShortToast(R.string.done);
                             dismiss();
@@ -75,7 +75,7 @@ public class ImportExportKeyStoreDialogFragment extends DialogFragment {
                             try (InputStream is = activity.getContentResolver().openInputStream(uri);
                                  OutputStream os = new FileOutputStream(AM_KEYSTORE_FILE)) {
                                 if (is == null) throw new IOException("Unable to open URI");
-                                IOUtils.copy(is, os);
+                                FileUtils.copy(is, os);
                                 KeyStoreManager.reloadKeyStore();
                                 // TODO: 21/4/21 Only import the keys that we use instead of replacing the entire keystore
                                 activity.runOnUiThread(() -> {

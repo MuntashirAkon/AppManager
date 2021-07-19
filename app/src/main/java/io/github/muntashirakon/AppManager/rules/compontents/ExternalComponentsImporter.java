@@ -32,7 +32,7 @@ import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
@@ -99,7 +99,7 @@ public class ExternalComponentsImporter {
                                                 int[] userHandles) {
         List<String> failedFiles = new ArrayList<>();
         for (Uri uri : uriList) {
-            String filename = IOUtils.getFileName(context.getContentResolver(), uri);
+            String filename = FileUtils.getFileName(context.getContentResolver(), uri);
             try {
                 if (filename == null) {
                     throw new FileNotFoundException("The requested content is not found.");
@@ -120,13 +120,13 @@ public class ExternalComponentsImporter {
     public static List<String> applyFromWatt(@NonNull Context context, @NonNull List<Uri> uriList, int[] userHandles) {
         List<String> failedFiles = new ArrayList<>();
         for (Uri uri : uriList) {
-            String filename = IOUtils.getFileName(context.getContentResolver(), uri);
+            String filename = FileUtils.getFileName(context.getContentResolver(), uri);
             try {
                 if (filename == null) {
                     throw new FileNotFoundException("The requested content is not found.");
                 }
                 for (int userHandle : userHandles) {
-                    applyFromWatt(context, IOUtils.trimExtension(filename), uri, userHandle);
+                    applyFromWatt(context, FileUtils.trimExtension(filename), uri, userHandle);
                 }
             } catch (IOException e) {
                 failedFiles.add(filename == null ? uri.toString() : filename);
@@ -168,7 +168,7 @@ public class ExternalComponentsImporter {
     @WorkerThread
     @SuppressLint("WrongConstant")
     private static void applyFromBlocker(@NonNull Context context, Uri uri, int userHandle) throws Exception {
-        String jsonString = IOUtils.getFileContent(context.getContentResolver(), uri);
+        String jsonString = FileUtils.getFileContent(context.getContentResolver(), uri);
         HashMap<String, HashMap<String, RuleType>> packageComponents = new HashMap<>();
         HashMap<String, PackageInfo> packageInfoList = new HashMap<>();
         JSONObject jsonObject = new JSONObject(jsonString);

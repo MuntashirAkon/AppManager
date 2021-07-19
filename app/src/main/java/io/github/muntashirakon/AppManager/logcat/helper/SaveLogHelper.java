@@ -35,7 +35,7 @@ import io.github.muntashirakon.AppManager.backup.BackupFiles;
 import io.github.muntashirakon.AppManager.logcat.struct.SavedLog;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.io.Path;
 
@@ -181,7 +181,7 @@ public class SaveLogHelper {
                 try (BufferedInputStream input = new BufferedInputStream(file.openInputStream(), BUFFER)) {
                     ZipEntry entry = new ZipEntry(file.getName());
                     output.putNextEntry(entry);
-                    IOUtils.copy(input, output);
+                    FileUtils.copy(input, output);
                 }
             }
         }
@@ -197,7 +197,7 @@ public class SaveLogHelper {
                 try (BufferedInputStream input = new BufferedInputStream(file.openInputStream(), BUFFER)) {
                     ZipEntry entry = new ZipEntry(file.getName());
                     output.putNextEntry(entry);
-                    IOUtils.copy(input, output);
+                    FileUtils.copy(input, output);
                 }
             }
         }

@@ -69,7 +69,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.io.IoUtils;
 
 public class KeyStoreUtils {
     @NonNull
@@ -135,7 +135,7 @@ public class KeyStoreUtils {
         PrivateKey privateKey;
         X509Certificate cert;
         try (InputStream pk = cr.openInputStream(keyPath)) {
-            byte[] data = IOUtils.readFully(pk, -1, true);
+            byte[] data = IoUtils.readFully(pk, -1, true);
             spec = new PKCS8EncodedKeySpec(data);
         }
         try (InputStream cer = cr.openInputStream(certPath)) {

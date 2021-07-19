@@ -44,9 +44,9 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.io.IoUtils;
 
 public class KeyStoreManager {
     public static final String TAG = "KSManager";
@@ -266,7 +266,7 @@ public class KeyStoreManager {
         byte[] encryptedBytes = Base64.decode(encryptedPass, Base64.NO_WRAP);
         try (ByteArrayInputStream bis = new ByteArrayInputStream(encryptedBytes);
              CipherInputStream cipherInputStream = CompatUtil.createCipherInputStream(bis, AppManager.getContext())) {
-            return Utils.bytesToChars(IOUtils.readFully(cipherInputStream, -1, true));
+            return Utils.bytesToChars(IoUtils.readFully(cipherInputStream, -1, true));
         } catch (Exception e) {
             Log.e("KS", "Could not get decrypted password for " + encryptedPass, e);
         }

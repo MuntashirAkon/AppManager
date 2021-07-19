@@ -14,8 +14,6 @@ import java.io.FileDescriptor;
 import java.io.InterruptedIOException;
 import java.io.SyncFailedException;
 
-import io.github.muntashirakon.AppManager.utils.IOUtils;
-
 import static android.system.OsConstants.EISDIR;
 import static android.system.OsConstants.O_CREAT;
 import static android.system.OsConstants.S_IRWXG;
@@ -28,7 +26,7 @@ public class FileDescriptorImpl extends IFileDescriptor.Stub {
     @NonNull
     public static IFileDescriptor getInstance(@NonNull String path, @NonNull String mode) throws ErrnoException {
         File file = new File(path);
-        int flags = IOUtils.translateModeStringToPosix(mode);
+        int flags = IoUtils.translateModeStringToPosix(mode);
         int fileMode = S_IRWXU | S_IRWXG;
         if (file.exists()) {
             try {

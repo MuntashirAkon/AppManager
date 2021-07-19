@@ -18,7 +18,7 @@ import java.util.List;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.backup.BackupException;
 import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.TarUtilsTest;
 import io.github.muntashirakon.io.Path;
 
@@ -39,7 +39,7 @@ public class TBConvertTest {
     @Before
     public void setUp() {
         AppPref.set(AppPref.PrefKey.PREF_BACKUP_VOLUME_STR, "file:///tmp");
-        IOUtils.deleteDir(new File("/tmp/AppManager"));
+        FileUtils.deleteDir(new File("/tmp/AppManager"));
         assert classLoader != null;
         backupLocation = new File(classLoader.getResource(TBConvert.PATH_SUFFIX).getFile());
     }

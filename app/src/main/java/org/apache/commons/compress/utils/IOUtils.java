@@ -3,15 +3,24 @@
 package org.apache.commons.compress.utils;
 
 import android.os.RemoteException;
-import io.github.muntashirakon.io.ProxyInputStream;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
+import java.io.EOFException;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
 
+import io.github.muntashirakon.AppManager.utils.FileUtils;
+import io.github.muntashirakon.io.ProxyInputStream;
+
 /**
  * Utility functions
- * @Immutable (has mutable data but it is write-only)
+ *
+ * @Immutable (has mutable data but it is write - only)
  */
 // Copyright 2008 Torsten Curdt
 public final class IOUtils {
@@ -252,7 +261,7 @@ public final class IOUtils {
      */
     public static void copy(final File sourceFile, final OutputStream outputStream) throws IOException, RemoteException {
         try (ProxyInputStream fis = new ProxyInputStream(sourceFile)) {
-            io.github.muntashirakon.AppManager.utils.IOUtils.copy(fis, outputStream);
+            FileUtils.copy(fis, outputStream);
         }
     }
 }

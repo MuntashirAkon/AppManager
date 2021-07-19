@@ -12,7 +12,10 @@ import android.util.ArrayMap;
 import android.util.SparseArray;
 import android.util.Xml;
 
+import androidx.annotation.IntRange;
+import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
+
 import com.android.internal.util.TextUtils;
 import com.android.internal.util.XmlUtils;
 
@@ -28,13 +31,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import androidx.annotation.IntRange;
-import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.misc.SystemProperties;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.ProxyFile;
 
 /**
@@ -639,7 +640,7 @@ public class SystemConfig {
     }
 
     private void readPermissionsFromXml(ProxyFile permFile, int permissionFlag) {
-        StringReader permReader = new StringReader(IOUtils.getFileContent(permFile));
+        StringReader permReader = new StringReader(FileUtils.getFileContent(permFile));
         Log.i(TAG, "Reading permissions from " + permFile);
 
 //        final boolean lowRam = ActivityManager.isLowRamDeviceStatic();
@@ -1253,7 +1254,7 @@ public class SystemConfig {
         } catch (XmlPullParserException | IOException e) {
             Log.w(TAG, "Got exception parsing permissions.", e);
         } finally {
-            IOUtils.closeQuietly(permReader);
+            FileUtils.closeQuietly(permReader);
         }
 
         // Some devices can be field-converted to FBE, so offer to splice in
