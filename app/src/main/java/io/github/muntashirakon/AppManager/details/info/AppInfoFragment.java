@@ -43,6 +43,7 @@ import androidx.annotation.AnyThread;
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.GuardedBy;
+import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -861,14 +862,13 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             if (isRootEnabled || isAdbEnabled) {
                 if (mApplicationInfo.enabled) {
                     addToHorizontalLayout(R.string.disable, R.drawable.ic_block_black_24dp).setOnClickListener(v -> {
-                        try {
-                            PackageManagerCompat.setApplicationEnabledSetting(mPackageName,
-                                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER,
-                                    0, mainModel.getUserHandle());
-                        } catch (RemoteException | SecurityException e) {
-                            Log.e(TAG, e);
-                            displayLongToast(R.string.failed_to_disable, mPackageLabel);
-                        }
+                        if (BuildConfig.APPLICATION_ID.equals(mPackageName)) {
+                            new MaterialAlertDialogBuilder(mActivity)
+                                    .setMessage(R.string.are_you_sure)
+                                    .setPositiveButton(R.string.yes, (d, w) -> disable())
+                                    .setNegativeButton(R.string.no, null)
+                                    .show();
+                        } else disable();
                     });
                 }
             }
@@ -1404,6 +1404,18 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         });
         model.loadAppInfo();
         runOnUiThread(() -> showProgressIndicator(false));
+    }
+
+    @MainThread
+    private void disable() {
+        try {
+            PackageManagerCompat.setApplicationEnabledSetting(mPackageName,
+                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER,
+                    0, mainModel.getUserHandle());
+        } catch (RemoteException | SecurityException e) {
+            Log.e(TAG, e);
+            displayLongToast(R.string.failed_to_disable, mPackageLabel);
+        }
     }
 
     /**
