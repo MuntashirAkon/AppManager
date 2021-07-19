@@ -511,6 +511,7 @@
         <activity
             android:name=".fm.FmActivity"
             android:exported="true"
+            android:label="@string/files"
             android:launchMode="singleTop"
             android:taskAffinity="" />
 
@@ -556,6 +557,6 @@
             android:name=".fm.FmProvider"
             android:authorities="${applicationId}.file"
             android:exported="false"
-            android:grantUriPermissions="true"></provider>
+            android:grantUriPermissions="true" />
     </application>
 </manifest>
