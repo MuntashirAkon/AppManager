@@ -431,4 +431,8 @@
         <item quantity="one">১টি ট্র্যাকার এবং <xliff:g id="class_no" example="50">%1$d</xliff:g>টি ক্লাস</item>
         <item quantity="other">১টি ট্র্যাকার এবং <xliff:g id="class_no" example="50">%1$d</xliff:g>টি ক্লাস</item>
     </plurals>
+    <string name="pref_compression_method">সংকোচন পদ্ধতি</string>
+    <string name="rules">বিধি গুলো</string>
+    <string name="size">আকার</string>
+    <string name="app_signing_signatures">সাক্ষর</string>
 </resources>
