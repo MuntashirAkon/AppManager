@@ -224,8 +224,8 @@ public class RunningAppsViewModel extends AndroidViewModel {
         Collections.sort(filteredProcessList, (o1, o2) -> Integer.compare(o1.pid, o2.pid));
         if (sortOrder != RunningAppsActivity.SORT_BY_PID) {
             Collections.sort(filteredProcessList, (o1, o2) -> {
-                ProcessItem p1 = Objects.requireNonNull(processList.get(o1.pid));
-                ProcessItem p2 = Objects.requireNonNull(processList.get(o2.pid));
+                ProcessItem p1 = Objects.requireNonNull(o1);
+                ProcessItem p2 = Objects.requireNonNull(o2);
                 switch (sortOrder) {
                     case RunningAppsActivity.SORT_BY_APPS_FIRST:
                         return -Boolean.compare(p1 instanceof AppProcessItem, p2 instanceof AppProcessItem);
