@@ -69,7 +69,7 @@
     <string name="running">चल रहे</string>
     <string name="mode">मोड</string>
     <string name="permission_name">अनुमति नाम</string>
-    <string name="app_op_cannot_be_disabled">इस ऐप ऑप को बंद नहीं किया जा सकता, संभवतः एक रीड-ओनली ऐप ऑप है जो अन्य ऐप ऑप पर निर्भर है।</string>
+    <string name="app_op_cannot_be_disabled">इस ऐप ऑप को बंद नहीं किया जा सकता, संभव हैं कि रीड-ओनली ऐप ऑप है जो अन्य ऐप ऑप पर निर्भर है।</string>
     <string name="toggle_kill_for_system_apps">टॉगल किल सिस्टम एप्स</string>
     <plurals name="alert_failed_to_force_stop">
         <item quantity="one">%1$d ऐप को जबरदस्ती बंद नहीं किया जा सका</item>
@@ -93,13 +93,13 @@
         <item quantity="other">%1$d ऐप्स से डेटा नहीं मिटा सका</item>
     </plurals>
     <string name="export_blocking_rules">ब्लॉकिंग रूल्स को निर्यात करें</string>
-    <string name="disable_background">बैकग्राउंड में चलना बंद करें</string>
+    <string name="disable_background">बैकग्राउंड में चलने ना दे</string>
     <string name="backup_restore">बैकअप/रिस्टोर</string>
     <string name="clear_data">डाटा मिटायें</string>
     <string name="user_and_uid">यूज़र: <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
     <string name="memory_virtual_memory">मेमोरी: %1$s, वर्चुअल मेमोरी: %2$s</string>
     <string name="pid_and_ppid">प्रोसेस आईडी: %1$d, पैरेंट प्रोसेस आईडी: %2$d</string>
-    <string name="disable_background_run">बैकग्राउंड में चलना बंद करें</string>
+    <string name="disable_background_run">बैकग्राउंड में चलना ना दे</string>
     <string name="kill_process">जबरदस्ती रोकें</string>
     <string name="running_apps">चल रहे ऐप</string>
     <string name="store">स्टोर</string>
@@ -766,4 +766,7 @@
     <string name="backup_internal_data_description">डेटा फ़ोल्डर्स बैकअप करें। अगर चयनित किया तो इंटरनल डेटा फ़ोल्डर्स को भी बैकअप किया जाएगा।</string>
     <string name="user_with_id">यूजर: <xliff:g id="user_id" example="0">%1$d</xliff:g></string>
     <string name="app_signing_signatures">हस्ताक्षर</string>
+    <string name="pref_default_log_level_summary">लॉग स्तर स्टार्टअप पर, फाइलें खोलते समय और रिकॉर्डिंग करते समय</string>
+    <string name="pref_cat_configuration">व्यवस्था का प्रारूप</string>
+    <string name="pref_cat_appearance">दिखावट</string>
 </resources>

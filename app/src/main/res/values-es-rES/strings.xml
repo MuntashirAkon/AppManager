@@ -1026,9 +1026,15 @@
     <string name="pref_default_log_level_summary">Nivel de registro al inicio, al abrir archivos y al grabar.</string>
     <string name="open">Abierto</string>
     <string name="import_from_oab">Importar desde OAndBackup</string>
-    <string name="pref_import_backups_msg">Importar backups desde OAndBackup, Titanium Backup o Swift Backup.</string>
+    <string name="pref_import_backups_msg">Importar backups desde OAndBackup o Titanium Backup.</string>
     <string name="pref_import_backups">Importar backups</string>
     <string name="community_links">Telegram: https://t.me/AppManagerChannel
 \nTwitter: https://twitter.com/AppManagerNews</string>
     <string name="community">Comunidad</string>
+    <plurals name="alert_failed_to_import_backups">
+        <item quantity="one">No se pudo importar %1$d backup</item>
+        <item quantity="other">No se pudieron importar %1$d backups</item>
+    </plurals>
+    <string name="import_from_tb">Importar desde Titanium Backup</string>
+    <string name="import_from_oab_tb_msg">Los backups deben estar ubicados en %s.</string>
 </resources>

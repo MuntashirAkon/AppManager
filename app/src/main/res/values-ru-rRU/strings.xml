@@ -876,7 +876,7 @@
     <string name="add">Добавить</string>
     <string name="add_to_profile">Добавить в профиль</string>
     <string name="initializing">Инициализация…</string>
-    <string name="choose_what_to_do">Выберите, что делать.</string>
+    <string name="choose_what_to_do">Выберите действие.</string>
     <string name="enable_battery_optimization">Включить экономию заряда батареи\?</string>
     <string name="battery_optimization">Экономия заряда батареи</string>
     <string name="no_battery_optimization">Без оптимизации энергопотребления</string>
@@ -1042,9 +1042,9 @@
     <string name="log_level_fatal">Fatal</string>
     <string name="log_level_warn">Warn</string>
     <string name="log_level_verbose">Verbose</string>
-    <string name="log_level_info">Инфа</string>
-    <string name="log_level_error">Ошибка</string>
-    <string name="log_level_debug">Отладка</string>
+    <string name="log_level_info">Info</string>
+    <string name="log_level_error">Error</string>
+    <string name="log_level_debug">Debug</string>
     <string name="filename">Имя файла</string>
     <string name="restart_log_viewer_to_see_changes">Перезапустите окно просмотра логов, чтобы увидеть изменения.</string>
     <string name="pref_log_viewer_msg">Настройка отображения логов.</string>
@@ -1120,4 +1120,7 @@
     <string name="permission_flags">Флаги разрешений</string>
     <string name="pref_selected_users_msg">Разрешить диспетчеру приложений работать только с выбранными пользователями.</string>
     <string name="pref_selected_users">Выбранные пользователи</string>
+    <string name="path">Накопитель</string>
+    <string name="enable_disable">Включение/отключение</string>
+    <string name="error_with_details">Ошибка: %s</string>
 </resources>
