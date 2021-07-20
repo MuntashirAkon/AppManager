@@ -1052,4 +1052,8 @@
     <string name="pref_selected_users">Usuários selecionados</string>
     <string name="enable_disable">Ativar/desativar</string>
     <string name="error_with_details">Erro: %s</string>
+    <string name="files">Arquivos</string>
+    <string name="storage">Armazenamento</string>
+    <string name="notice_saf">Ao contrário dos volumes, o diretório selecionado será usado para armazenar todos os arquivos relacionados ao App Manager, incluindo APKs salvos e backups. O SAF (Storage Access Framework) é muito lento, portanto, você só deve usar essa opção quando outras não puderem ser usadas.</string>
+    <string name="notice">Perceba</string>
 </resources>
