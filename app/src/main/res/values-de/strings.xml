@@ -1046,7 +1046,6 @@
     <string name="help_uses_permissions_tab">Klicken Sie auf ein Element, um es <b>zu gewähren</b> oder <b>zu entziehen</b>. Nur die Berechtigungen <b>Gefahr</b> und <b>Entwicklung</b> können gewährt oder entzogen werden.</string>
     <string name="help_permissions_tab">Diese Berechtigungen werden von dieser App festgelegt und können nicht widerrufen werden.</string>
     <string name="help_app_ops_tab">Klicken Sie auf ein Element, um es zu <b>zulassen</b> oder <b>zu ignorieren</b>. Klicken Sie lange auf ein Element, um andere unterstützte Modi anzuzeigen.</string>
-    <string name="path">Speicher</string>
     <string name="enable_disable">Aktivieren/Deaktivieren</string>
     <string name="error_with_details">Fehler: %s</string>
     <string name="saved_filters">Gespeicherte Filter</string>

@@ -1011,7 +1011,6 @@
     <string name="community_links">Telegram: https://t.me/AppManagerChannel
 \nTwitter: https://twitter.com/AppManagerNews</string>
     <string name="community">コミュニティ</string>
-    <string name="path">ストレージ</string>
     <string name="enable_disable">有効化/無効化</string>
     <string name="error_with_details">エラー:%s</string>
     <string name="saved_filters">保存されたフィルタ</string>

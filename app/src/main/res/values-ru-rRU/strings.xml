@@ -1120,7 +1120,6 @@
     <string name="permission_flags">Флаги разрешений</string>
     <string name="pref_selected_users_msg">Разрешить диспетчеру приложений работать только с выбранными пользователями.</string>
     <string name="pref_selected_users">Выбранные пользователи</string>
-    <string name="path">Накопитель</string>
     <string name="enable_disable">Включение/отключение</string>
     <string name="error_with_details">Ошибка: %s</string>
 </resources>

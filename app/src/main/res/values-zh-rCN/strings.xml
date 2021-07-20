@@ -1015,7 +1015,6 @@
     <string name="permission_flags">权限标记</string>
     <string name="pref_selected_users_msg">限制 App Manager 仅与选定的用户一起工作。</string>
     <string name="pref_selected_users">选中的用户</string>
-    <string name="path">存储</string>
     <string name="enable_disable">启用/禁用</string>
     <string name="error_with_details">错误: %s</string>
 </resources>

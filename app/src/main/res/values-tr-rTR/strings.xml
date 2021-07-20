@@ -1049,7 +1049,6 @@
     <string name="permission_flags">İzin işaretleri</string>
     <string name="pref_selected_users_msg">App Manager\'i yalnızca seçilen kullanıcılarla çalışacak şekilde kısıtlayın.</string>
     <string name="pref_selected_users">Seçilen kullanıcılar</string>
-    <string name="path">Depolama</string>
     <string name="enable_disable">Etkinleştir/devre dışı bırak</string>
     <string name="error_with_details">Hata: %s</string>
 </resources>
