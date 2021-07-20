@@ -241,7 +241,7 @@
     <string name="installer_error_blocked">Installation bloquée par <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
     <string name="installer_error_blocked_device">appareil</string>
     <string name="installer_error_aborted">Échec de l\'installation, soit elle a été annulée, soit la sessions s\'est fermée de manière innattendue</string>
-    <string name="filter_apps_with_activities">Applications avec des activités</string>
+    <string name="filter_apps_with_activities">Avec des activités</string>
     <string name="are_you_sure">Êtes-vous sûr \?</string>
     <string name="pref_remove_all_rules">Supprimer toutes les règles</string>
     <string name="website">Site Web</string>
@@ -708,4 +708,7 @@
     <string name="record_log">Journaux d\'enregistrement</string>
     <string name="default_key_used">Valeur par défaut utilisée.</string>
     <string name="disable_background_run_description">Paramètre le mode <i>Ignore</i> pour les opérations d\'application suivantes : <tt>RUN_IN_BACKGROUND</tt> (depuis Android 7.0) et <tt>RUN_ANY_IN_BACKGROUND</tt> (depuis Android 9).</string>
+    <string name="community_links">Telegram : https://t.me/AppManagerChannel
+\nTwitter : https://twitter.com/AppManagerNews</string>
+    <string name="community">Communauté</string>
 </resources>
