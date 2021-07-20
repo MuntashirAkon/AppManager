@@ -704,4 +704,8 @@
         <item quantity="other">Schémas de signature</item>
     </plurals>
     <string name="orientation_sensor_landscape">Le paysage des capteurs</string>
+    <string name="text_include_device_info">Include les informations de l\'appareil</string>
+    <string name="record_log">Journaux d\'enregistrement</string>
+    <string name="default_key_used">Valeur par défaut utilisée.</string>
+    <string name="disable_background_run_description">Paramètre le mode <i>Ignore</i> pour les opérations d\'application suivantes : <tt>RUN_IN_BACKGROUND</tt> (depuis Android 7.0) et <tt>RUN_ANY_IN_BACKGROUND</tt> (depuis Android 9).</string>
 </resources>
