@@ -51,7 +51,7 @@ public class SsaidSettings {
         File ssaidLocation = new ProxyFile(OsEnvironment.getUserSystemDirectory(Users.getUserId(uid)),
                 "settings_ssaid.xml");
         try {
-            if (ssaidLocation.canRead()) {
+            if (!ssaidLocation.canRead()) {
                 throw new IOException("settings_ssaid.xml is inaccessible.");
             }
         } catch (SecurityException e) {
