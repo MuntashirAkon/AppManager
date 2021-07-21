@@ -1106,11 +1106,14 @@
     <string name="import_from_tb">Імпорт з Titanium Backup</string>
     <string name="import_from_oab_tb_msg">Резервні копії повинні бути розташовані у %s.</string>
     <string name="import_from_oab">Імпорт із OAndBackup</string>
-    <string name="pref_import_backups_msg">Імпорт резервних копій з OAndBackup, Titanium Backup або Swift Backup.</string>
+    <string name="pref_import_backups_msg">Імпорт резервних копій з OAndBackup абоTitanium Backup.</string>
     <string name="pref_import_backups">Імпорт резервних копій</string>
     <string name="added_to_queue">Додано в чергу</string>
     <string name="minimum_version">Мінімальна версія: %d</string>
     <string name="help_uses_permissions_tab">Натисніть на елемент, щоб <b>надати</b> або <b>відкликати</b>. Лише дозволи рівня <b>небезпечний</b> та <b>розробка</b> можуть бути надані або відкликані.</string>
     <string name="help_permissions_tab">Ці дозволи визначаються цією програмою, і їх не можна відкликати.</string>
     <string name="help_app_ops_tab">Натисніть на елемент, щоб <b>дозволити</b> або <b>ігнорувати</b>. Натисніть і тримайте елемент, щоб побачити інші підтримувані режими.</string>
+    <string name="permission_flags">Прапорці дозволів</string>
+    <string name="pref_selected_users_msg">Обмежити роботу App Manager лише з вибраними користувачами.</string>
+    <string name="pref_selected_users">Вибрані користувачі</string>
 </resources>
