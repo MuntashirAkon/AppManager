@@ -1073,4 +1073,7 @@
     <string name="saved_filters">Saved filters</string>
     <string name="error_with_details">Error: %s</string>
     <string name="enable_disable">Enable/disable</string>
+    <string name="keystore_password_info">The following is the App Manager KeyStore password. Please store it in a secure place if you\'re going to back up/restore App Manager KeyStore. <b>This message will not be displayed again.</b></string>
+    <string name="keystore_pass_cannot_be_empty">KeyStore password cannot be empty.</string>
+    <string name="invalid_password">Invalid password, try again.</string>
 </resources>

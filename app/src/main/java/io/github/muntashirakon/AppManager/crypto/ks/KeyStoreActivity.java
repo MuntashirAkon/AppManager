@@ -21,12 +21,12 @@ import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
+/**
+ * @deprecated Kept for migratory purposes only, deprecated since v2.6.3. To be removed in v3.0.0.
+ */
+@Deprecated
 public class KeyStoreActivity extends AppCompatActivity {
-    public static final String EXTRA_TYPE = "type";
     public static final String EXTRA_ALIAS = "key";
-
-    public static final int TYPE_KS = 1;
-    public static final int TYPE_ALIAS = 2;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,49 +41,25 @@ public class KeyStoreActivity extends AppCompatActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        int type = intent.getIntExtra(EXTRA_TYPE, TYPE_KS);
         String alias = intent.getStringExtra(EXTRA_ALIAS);
         if (alias == null) {
             finish();
             return;
         }
-        AlertDialog ksDialog;
-        if (type == TYPE_KS) {
-            ksDialog = new TextInputDialogBuilder(this, R.string.input_keystore_pass)
-                    .setTitle(R.string.input_keystore_pass)
-                    .setHelperText(R.string.input_keystore_pass_description)
-                    .setPositiveButton(R.string.ok, (dialog, which, inputText, isChecked) -> {
-                        if (!TextUtils.isEmpty(inputText)) {
-                            // Keystore password can't be null
-                            savePass(alias, inputText, false);
-                        }
-                    })
-                    .create();
-        } else if (type == TYPE_ALIAS) {
-            ksDialog = new TextInputDialogBuilder(this, getString(R.string.input_keystore_alias_pass, alias))
-                    .setTitle(getString(R.string.input_keystore_alias_pass, alias))
-                    .setHelperText(getString(R.string.input_keystore_alias_pass_description, alias))
-                    .setPositiveButton(R.string.ok, (dialog, which, inputText, isChecked) ->
-                            savePass(KeyStoreManager.getPrefAlias(alias), inputText, true)
-                    ).create();
-        } else {
-            finish();
-            return;
-        }
+        AlertDialog ksDialog = new TextInputDialogBuilder(this, getString(R.string.input_keystore_alias_pass, alias))
+                .setTitle(getString(R.string.input_keystore_alias_pass, alias))
+                .setHelperText(getString(R.string.input_keystore_alias_pass_description, alias))
+                .setPositiveButton(R.string.ok, (dialog, which, inputText, isChecked) ->
+                        savePass(KeyStoreManager.getPrefAlias(alias), inputText)
+                ).create();
         ksDialog.setCancelable(false);
         ksDialog.setOnDismissListener(dialog -> finish());
         ksDialog.show();
     }
 
-    private void savePass(@NonNull String prefKey, @Nullable Editable rawPassword, boolean isAlias) {
+    private void savePass(@NonNull String prefKey, @Nullable Editable rawPassword) {
         char[] password;
         if (TextUtils.isEmpty(rawPassword)) {
-            // Only applicable for alias
-            if (!isAlias) {
-                Log.e(KeyStoreManager.TAG, "Could not set KeyStore password because its empty");
-                sendBroadcast(new Intent(KeyStoreManager.ACTION_KS_INTERACTION_END));
-                return;
-            }
             try {
                 password = KeyStoreManager.getInstance().getAmKeyStorePassword();
             } catch (Exception e) {

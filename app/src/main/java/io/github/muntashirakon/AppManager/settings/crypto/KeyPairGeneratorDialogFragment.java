@@ -4,7 +4,6 @@ package io.github.muntashirakon.AppManager.settings.crypto;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
@@ -33,14 +32,13 @@ import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
-import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class KeyPairGeneratorDialogFragment extends DialogFragment {
     public static final String TAG = "KeyPairGeneratorDialogFragment";
     public static final List<Integer> SUPPORTED_RSA_KEY_SIZES = Arrays.asList(2048, 4096);
 
     public interface OnGenerateListener {
-        void onGenerate(@Nullable char[] password, @Nullable KeyPair keyPair);
+        void onGenerate(@Nullable KeyPair keyPair);
     }
 
     private OnGenerateListener listener;
@@ -70,7 +68,6 @@ public class KeyPairGeneratorDialogFragment extends DialogFragment {
                 keySize = 2048;
             }
         });
-        EditText passwordView = view.findViewById(R.id.key_password);
         EditText expiryDate = view.findViewById(R.id.expiry_date);
         expiryDate.setKeyListener(null);
         expiryDate.setOnFocusChangeListener((v, hasFocus) -> {
@@ -96,15 +93,6 @@ public class KeyPairGeneratorDialogFragment extends DialogFragment {
             Button generateButton = dialog1.getButton(AlertDialog.BUTTON_POSITIVE);
             generateButton.setOnClickListener(v -> new Thread(() -> {
                 AtomicReference<KeyPair> keyPair = new AtomicReference<>(null);
-                char[] pass;
-                // Get password
-                Editable password = passwordView.getText();
-                if (!TextUtils.isEmpty(password)) {
-                    pass = new char[password.length()];
-                    password.getChars(0, password.length(), pass, 0);
-                } else {
-                    pass = null;
-                }
                 String formattedSubject = getFormattedSubject(commonName.getText().toString(),
                         orgUnit.getText().toString(), orgName.getText().toString(),
                         locality.getText().toString(), state.getText().toString(),
@@ -124,8 +112,7 @@ public class KeyPairGeneratorDialogFragment extends DialogFragment {
                 } finally {
                     if (!isDetached()) {
                         activity.runOnUiThread(() -> {
-                            if (listener != null) listener.onGenerate(pass, keyPair.get());
-                            else if (pass != null) Utils.clearChars(pass);
+                            if (listener != null) listener.onGenerate(keyPair.get());
                             dialog.dismiss();
                         });
                     }

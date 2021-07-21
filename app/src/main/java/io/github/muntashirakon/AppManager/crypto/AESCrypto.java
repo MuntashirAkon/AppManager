@@ -62,7 +62,7 @@ public class AESCrypto implements Crypto {
         if (parentMode.equals(CryptoUtils.MODE_AES)) {
             try {
                 KeyStoreManager keyStoreManager = KeyStoreManager.getInstance();
-                this.secretKey = keyStoreManager.getSecretKey(AES_KEY_ALIAS, null);
+                this.secretKey = keyStoreManager.getSecretKey(AES_KEY_ALIAS);
                 if (this.secretKey == null) {
                     throw new CryptoException("No SecretKey with alias " + AES_KEY_ALIAS);
                 }

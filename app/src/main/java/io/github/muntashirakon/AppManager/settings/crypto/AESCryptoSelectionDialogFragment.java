@@ -84,7 +84,7 @@ public class AESCryptoSelectionDialogFragment extends DialogFragment {
                 }
                 SecretKey secretKey = new SecretKeySpec(keyBytes, "AES");
                 try {
-                    keyStoreManager.addSecretKey(AES_KEY_ALIAS, secretKey, null, true);
+                    keyStoreManager.addSecretKey(AES_KEY_ALIAS, secretKey, true);
                     AppPref.set(AppPref.PrefKey.PREF_ENCRYPTION_STR, CryptoUtils.MODE_AES);
                 } catch (Exception e) {
                     Log.e(TAG, e);
@@ -123,7 +123,7 @@ public class AESCryptoSelectionDialogFragment extends DialogFragment {
         new Thread(() -> {
             try {
                 keyStoreManager = KeyStoreManager.getInstance();
-                SecretKey secretKey = keyStoreManager.getSecretKey(AES_KEY_ALIAS, null);
+                SecretKey secretKey = keyStoreManager.getSecretKey(AES_KEY_ALIAS);
                 if (secretKey != null) {
                     keyChars = HexEncoding.encode(secretKey.getEncoded());
                     try {

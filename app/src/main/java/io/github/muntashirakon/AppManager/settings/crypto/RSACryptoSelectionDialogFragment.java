@@ -34,7 +34,6 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.types.ScrollableDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
-import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class RSACryptoSelectionDialogFragment extends DialogFragment {
     public static final String TAG = "RSACryptoSelectionDialogFragment";
@@ -105,14 +104,12 @@ public class RSACryptoSelectionDialogFragment extends DialogFragment {
                 Bundle args = new Bundle();
                 args.putString(KeyPairImporterDialogFragment.EXTRA_ALIAS, targetAlias);
                 fragment.setArguments(args);
-                fragment.setOnKeySelectedListener((password, keyPair) -> model.addKeyPair(targetAlias, allowDefault,
-                        password, keyPair));
+                fragment.setOnKeySelectedListener(keyPair -> model.addKeyPair(targetAlias, allowDefault, keyPair));
                 fragment.show(getParentFragmentManager(), KeyPairImporterDialogFragment.TAG);
             });
             generateButton.setOnClickListener(v -> {
                 KeyPairGeneratorDialogFragment fragment = new KeyPairGeneratorDialogFragment();
-                fragment.setOnGenerateListener((password, keyPair) -> model.addKeyPair(targetAlias, allowDefault,
-                        password, keyPair));
+                fragment.setOnGenerateListener(keyPair -> model.addKeyPair(targetAlias, allowDefault, keyPair));
                 fragment.show(getParentFragmentManager(), KeyPairGeneratorDialogFragment.TAG);
             });
         });
@@ -188,15 +185,14 @@ public class RSACryptoSelectionDialogFragment extends DialogFragment {
         }
 
         @AnyThread
-        private void addKeyPair(String targetAlias, boolean allowDefault, @Nullable char[] password, @Nullable KeyPair keyPair) {
+        private void addKeyPair(String targetAlias, boolean allowDefault, @Nullable KeyPair keyPair) {
             executor.submit(() -> {
                 try {
                     if (keyPair == null) {
                         throw new Exception("Keypair can't be null.");
                     }
                     KeyStoreManager keyStoreManager = KeyStoreManager.getInstance();
-                    keyStoreManager.addKeyPair(targetAlias, keyPair, password, true);
-                    if (password != null) Utils.clearChars(password);
+                    keyStoreManager.addKeyPair(targetAlias, keyPair, true);
                     status.postValue(new Pair<>(R.string.done, false));
                     keyPairUpdated(targetAlias);
                     CharSequence info = getSigningInfo(targetAlias, allowDefault);
@@ -204,8 +200,6 @@ public class RSACryptoSelectionDialogFragment extends DialogFragment {
                 } catch (Exception e) {
                     Log.e(TAG, e);
                     status.postValue(new Pair<>(R.string.failed_to_save_key, true));
-                } finally {
-                    if (password != null) Utils.clearChars(password);
                 }
             });
         }
@@ -216,7 +210,7 @@ public class RSACryptoSelectionDialogFragment extends DialogFragment {
             try {
                 KeyStoreManager keyStoreManager = KeyStoreManager.getInstance();
                 if (keyStoreManager.containsKey(targetAlias)) {
-                    return keyStoreManager.getKeyPair(targetAlias, null);
+                    return keyStoreManager.getKeyPair(targetAlias);
                 }
             } catch (Exception e) {
                 Log.e(TAG, e);

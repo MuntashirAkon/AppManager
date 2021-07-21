@@ -56,7 +56,7 @@ public class RSACrypto extends AESCrypto {
         KeyPair keyPair;
         try {
             KeyStoreManager keyStoreManager = KeyStoreManager.getInstance();
-            keyPair = keyStoreManager.getKeyPair(RSA_KEY_ALIAS, null);
+            keyPair = keyStoreManager.getKeyPair(RSA_KEY_ALIAS);
             if (keyPair == null) {
                 throw new CryptoException("No KeyPair with alias " + RSA_KEY_ALIAS);
             }
@@ -80,7 +80,7 @@ public class RSACrypto extends AESCrypto {
         KeyPair keyPair;
         try {
             KeyStoreManager keyStoreManager = KeyStoreManager.getInstance();
-            keyPair = keyStoreManager.getKeyPair(RSA_KEY_ALIAS, null);
+            keyPair = keyStoreManager.getKeyPair(RSA_KEY_ALIAS);
             if (keyPair == null) {
                 throw new CryptoException("No KeyPair with alias " + RSA_KEY_ALIAS);
             }

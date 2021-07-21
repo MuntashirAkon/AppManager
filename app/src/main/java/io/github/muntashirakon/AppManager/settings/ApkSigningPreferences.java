@@ -79,7 +79,7 @@ public class ApkSigningPreferences extends PreferenceFragmentCompat {
         try {
             KeyStoreManager keyStoreManager = KeyStoreManager.getInstance();
             if (keyStoreManager.containsKey(Signer.SIGNING_KEY_ALIAS)) {
-                KeyPair keyPair = keyStoreManager.getKeyPair(Signer.SIGNING_KEY_ALIAS, null);
+                KeyPair keyPair = keyStoreManager.getKeyPair(Signer.SIGNING_KEY_ALIAS);
                 if (keyPair != null) {
                     Certificate certificate = keyPair.getCertificate();
                     String hash = DigestUtils.getHexDigest(DigestUtils.SHA_256, certificate.getEncoded());
