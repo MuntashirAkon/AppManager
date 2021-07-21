@@ -1,10 +1,13 @@
 % SPDX-License-Identifier: GPL-3.0-or-later OR CC-BY-SA-4.0
-\section{Miscellanea}\label{sec:faq:miscellanea}
+\section{Miscellanea}\label{sec:faq:miscellanea} %%##faq_misc-section==title>>
 
-\subsection{I don't use root/ADB. Am I completely safe from any harms?}
+\subsection{I don't use root/ADB. Am I completely safe from any harms?} %%##faq_appcomponents-idontuserootadb==title>>
+%%!!faq_appcomponents-idontuserootadb<<
 Yes. AM cannot modify any system settings without root or ADB over TCP\@.
+%%!!>>
 
-\subsection{Why does AM have the INTERNET permission when it doesn't connect to the Internet?}
+\subsection{Why does AM have the INTERNET permission when it doesn't connect to the Internet?} %%##faq_appcomponents-internet==title>>
+%%!!faq_appcomponents-internet<<
 AM uses the INTERNET permission for the following reasons:
 \begin{enumerate}
     \item \textbf{To provide ADB over TCP support for the non-root users.} ADB over TCP is a custom network protocol
@@ -15,11 +18,15 @@ AM uses the INTERNET permission for the following reasons:
     code remotely from the app. Now, there are alternative ways to communicate with a remote service. Currently, they
     are under consideration.
 \end{enumerate}
+%%!!>>
 
-\subsection{How are the trackers and libraries are updated?}
+\subsection{How are the trackers and libraries are updated?} %%##faq_appcomponents-howtrackerupdate==title>>
+%%!!faq_appcomponents-howtrackerupdate<<
 Trackers and libraries are updated manually before making a new release.
+%%!!>>
 
-\subsection{Any plans for Shizuku?}
+\subsection{Any plans for Shizuku?} %%##faq_appcomponents-shizuku==title>>
+%%!!faq_appcomponents-shizuku<<
 App Manager's use of hidden API and privileged code execution is now much more complex and cannot be integrated with
 other third party apps such as \href{https://shizuku.rikka.app}{Shizuku}. Here are some reasons for not considering
 Shizuku (which now has Apache 2.0 license) for App Manager:
@@ -30,8 +37,10 @@ Shizuku (which now has Apache 2.0 license) for App Manager:
     \item Relying on a third-party app for the major functionalities is not a good design choice
     \item Integration of Shizuku will increase the complexity of App Manager.
 \end{enumerate}
+%%!!>>
 
-\subsection{What are bloatware and how to remove them?}\label{subsec:faq:what-are-bloatware}
+\subsection{What are bloatware and how to remove them?}\label{subsec:faq:what-are-bloatware} %%##faq_appcomponents-bloatware==title>>
+%%!!faq_appcomponents-bloatware
 Bloatware are the unnecessary apps supplied by the vendor or OEM and are usually system apps. These apps are often used
 to track users and collect user data which they might sell for profits. System apps do not need to request any
 permission in order to access device info, contacts and messaging data, and other usage info such as your phone usage
@@ -69,3 +78,4 @@ a proprietary Android operating system.
     In most cases, you cannot completely debloat your device. Therefore, it is recommended that you use a custom ROM
     free from bloatware such as Graphene OS, Lineage OS or their derivatives.
 \end{warning}
+%%!!>>
