@@ -711,4 +711,6 @@
     <string name="community_links">Telegram : https://t.me/AppManagerChannel
 \nTwitter : https://twitter.com/AppManagerNews</string>
     <string name="community">Communauté</string>
+    <string name="pref_selected_users_msg">Restreindre l\'utilisation d\'App Manager aux seuls utilisateurs sélectionnés</string>
+    <string name="toast_started_select_partial">Sélection Partielle activés</string>
 </resources>
