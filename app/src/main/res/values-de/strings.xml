@@ -1052,4 +1052,7 @@
     <string name="permission_flags">Berechtigungskennzeichen</string>
     <string name="pref_selected_users_msg">Beschränken des App Manager auf die ausgewählten Benutzer.</string>
     <string name="pref_selected_users">Ausgewählte Nutzer</string>
+    <string name="files">Dateien</string>
+    <string name="storage">Speicher</string>
+    <string name="notice_saf">Im Gegensatz zu den Laufwerken wird das ausgewählte Verzeichnis zum Speichern aller mit dem App Manager verbundenen Dateien verwendet, einschließlich gespeicherter APKs und Backups. Das Storage Access Framework (SAF) ist sehr langsam, daher sollte diese Option nur verwendet werden, wenn keine andere zur Verfügung steht.</string>
 </resources>
