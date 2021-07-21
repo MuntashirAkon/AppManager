@@ -20,12 +20,12 @@ public class AdbConnectionManager {
     @NonNull
     private static KeyPair getAdbKeyPair() throws Exception {
         KeyStoreManager keyStoreManager = KeyStoreManager.getInstance();
-        KeyPair keyPair = keyStoreManager.getKeyPairNoThrow(ADB_KEY_ALIAS, null);
+        KeyPair keyPair = keyStoreManager.getKeyPairNoThrow(ADB_KEY_ALIAS);
         if (keyPair == null) {
             String subject = "CN=App Manager";
             keyPair = KeyStoreUtils.generateRSAKeyPair(subject, AdbCrypto.KEY_LENGTH_BITS,
                     System.currentTimeMillis() + 86400000);
-            keyStoreManager.addKeyPair(ADB_KEY_ALIAS, keyPair, null, true);
+            keyStoreManager.addKeyPair(ADB_KEY_ALIAS, keyPair, true);
         }
         return keyPair;
     }

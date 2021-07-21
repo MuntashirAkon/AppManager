@@ -40,7 +40,7 @@ public class KeyPairImporterDialogFragment extends DialogFragment {
     public static final String EXTRA_ALIAS = "alias";
 
     public interface OnKeySelectedListener {
-        void onKeySelected(@Nullable char[] password, @Nullable KeyPair keyPair);
+        void onKeySelected(@Nullable KeyPair keyPair);
     }
 
     @Nullable
@@ -85,9 +85,6 @@ public class KeyPairImporterDialogFragment extends DialogFragment {
                 ksLocationOrPem.setText(result.toString());
             }
         }));
-        TextInputLayout ksAliasPassLayout = view.findViewById(R.id.alias_pass_layout);
-        ksAliasPassLayout.setHelperText(getString(R.string.input_keystore_alias_pass_description, targetAlias));
-        EditText ksAliasPass = view.findViewById(R.id.alias_pass);
         keyTypeSpinner.setAdapter(ArrayAdapter.createFromResource(activity, R.array.crypto_import_types,
                 R.layout.support_simple_spinner_dropdown_item));
         keyTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -141,7 +138,6 @@ public class KeyPairImporterDialogFragment extends DialogFragment {
             Button okButton = dialog1.getButton(AlertDialog.BUTTON_POSITIVE);
             okButton.setOnClickListener(v -> {
                 if (listener == null) return;
-                char[] targetPassword = Utils.getChars(ksAliasPass.getText());
                 if (keyType == 3) {
                     // PKCS #8 and PEM
                     try {
@@ -149,10 +145,10 @@ public class KeyPairImporterDialogFragment extends DialogFragment {
                             throw new Exception("PK8 or PEM can't be null.");
                         }
                         KeyPair keyPair = KeyStoreUtils.getKeyPair(activity, pk8File, ksOrPemFile);
-                        listener.onKeySelected(targetPassword, keyPair);
+                        listener.onKeySelected(keyPair);
                     } catch (Exception e) {
                         Log.e(TAG, e);
-                        listener.onKeySelected(null, null);
+                        listener.onKeySelected(null);
                     }
                     dialog.dismiss();
                 } else {
@@ -186,10 +182,10 @@ public class KeyPairImporterDialogFragment extends DialogFragment {
                                         try {
                                             KeyPair keyPair = KeyStoreUtils.getKeyPair(activity, ksOrPemFile, keyType,
                                                     aliasName, ksPassword, aliasPassword);
-                                            listener.onKeySelected(targetPassword, keyPair);
+                                            listener.onKeySelected(keyPair);
                                         } catch (Exception e) {
                                             Log.e(TAG, e);
-                                            listener.onKeySelected(null, null);
+                                            listener.onKeySelected(null);
                                         }
                                         activity.runOnUiThread(dialog::dismiss);
                                     }).start();

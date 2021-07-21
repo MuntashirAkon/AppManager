@@ -1085,4 +1085,7 @@
     <string name="notice_saf">Unlike the volumes, the selected directory will be used to store all the files related to App Manager, including saved APKs and backups. Storage Access Framework (SAF) is very slow, therefore, you should only use this option when others cannot be used.</string>
     <string name="storage">Storage</string>
     <string name="files">Files</string>
+    <string name="keystore_password_info">The following is the App Manager KeyStore password. Please store it in a secure place if you\'re going to back up/restore App Manager KeyStore. <b>This message will not be displayed again.</b></string>
+    <string name="keystore_pass_cannot_be_empty">KeyStore password cannot be empty.</string>
+    <string name="invalid_password">Invalid password, try again.</string>
 </resources>

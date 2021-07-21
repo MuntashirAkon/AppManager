@@ -43,7 +43,7 @@ public class Signer {
             KeyPair signingKey;
             if (!manager.containsKey(SIGNING_KEY_ALIAS)) {
                 signingKey = KeyStoreUtils.loadDefaultKey(context);
-            } else signingKey = manager.getKeyPair(SIGNING_KEY_ALIAS, null);
+            } else signingKey = manager.getKeyPair(SIGNING_KEY_ALIAS);
             if (signingKey == null) {
                 throw new KeyStoreException("Alias " + SIGNING_KEY_ALIAS + " does not exist in KeyStore.");
             }

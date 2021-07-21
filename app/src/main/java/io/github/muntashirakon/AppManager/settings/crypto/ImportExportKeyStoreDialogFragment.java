@@ -22,6 +22,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager;
@@ -76,6 +78,14 @@ public class ImportExportKeyStoreDialogFragment extends DialogFragment {
                                  OutputStream os = new FileOutputStream(AM_KEYSTORE_FILE)) {
                                 if (is == null) throw new IOException("Unable to open URI");
                                 FileUtils.copy(is, os);
+                                if (KeyStoreManager.hasKeyStorePassword()) {
+                                    CountDownLatch waitForKs = new CountDownLatch(1);
+                                    KeyStoreManager.inputKeyStorePassword(activity, waitForKs::countDown);
+                                    waitForKs.await(2, TimeUnit.MINUTES);
+                                    if (waitForKs.getCount() == 1) {
+                                        throw new Exception();
+                                    }
+                                }
                                 KeyStoreManager.reloadKeyStore();
                                 // TODO: 21/4/21 Only import the keys that we use instead of replacing the entire keystore
                                 activity.runOnUiThread(() -> {

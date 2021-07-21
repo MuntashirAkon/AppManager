@@ -39,27 +39,6 @@
             style="@style/AppTheme.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/input_key_password"
-            android:layout_marginTop="@dimen/padding_small"
-            app:hintAnimationEnabled="true"
-            app:hintEnabled="true">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/key_password"
-                style="@style/TextAppearance.MaterialComponents.Subtitle1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:importantForAutofill="no"
-                android:inputType="text"
-                tools:text="@tools:sample/date/ddmmyy" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/AppTheme.TextInputLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:hint="@string/expiry_date"
             android:layout_marginTop="@dimen/padding_small"
             app:hintAnimationEnabled="true"
