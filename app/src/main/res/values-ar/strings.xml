@@ -1191,4 +1191,8 @@
     <string name="pref_selected_users">المستخدمون المحددون</string>
     <string name="enable_disable">تمكين/تعطيل</string>
     <string name="error_with_details">خطأ: %s</string>
+    <string name="files">الملفات</string>
+    <string name="storage">التخزين</string>
+    <string name="notice_saf">على عكس وحدات التخزين، سيتم استخدام الدليل المحدد لتخزين كافة الملفات المتعلقة ب App Manager، بما في ذلك APKs المحفوظة والنسخ الاحتياطية. إطار عمل الوصول إلى التخزين (SAF) بطيء جدا، لذلك، يجب عليك فقط استخدام هذا الخيار عندما لا يمكن استخدام الآخرين.</string>
+    <string name="notice">تنويه</string>
 </resources>
