@@ -4,7 +4,6 @@ package io.github.muntashirakon.AppManager.settings.crypto;
 
 import android.app.Application;
 import android.app.Dialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.widget.Button;
 
@@ -74,8 +73,8 @@ public class RSACryptoSelectionDialogFragment extends DialogFragment {
             if (listener == null) return;
             listener.keyPairUpdated(updatedKeyPair.first, updatedKeyPair.second);
         });
-        model.observeSigningInfo().observe(this, signingInfo -> {
-            if (builder != null) builder.setMessage(signingInfo);
+        model.observeSigningInfo().observe(this, keyPair -> {
+            if (builder != null) builder.setMessage(getSigningInfo(keyPair));
         });
     }
 
@@ -93,7 +92,7 @@ public class RSACryptoSelectionDialogFragment extends DialogFragment {
                         model.addDefaultKeyPair(targetAlias);
                     }
                 });
-        Objects.requireNonNull(model).loadSigningInfo(targetAlias, allowDefault);
+        Objects.requireNonNull(model).loadSigningInfo(targetAlias);
         AlertDialog dialog = Objects.requireNonNull(builder).create();
         dialog.setOnShowListener(dialog3 -> {
             AlertDialog dialog1 = (AlertDialog) dialog3;
@@ -104,16 +103,27 @@ public class RSACryptoSelectionDialogFragment extends DialogFragment {
                 Bundle args = new Bundle();
                 args.putString(KeyPairImporterDialogFragment.EXTRA_ALIAS, targetAlias);
                 fragment.setArguments(args);
-                fragment.setOnKeySelectedListener(keyPair -> model.addKeyPair(targetAlias, allowDefault, keyPair));
+                fragment.setOnKeySelectedListener(keyPair -> model.addKeyPair(targetAlias, keyPair));
                 fragment.show(getParentFragmentManager(), KeyPairImporterDialogFragment.TAG);
             });
             generateButton.setOnClickListener(v -> {
                 KeyPairGeneratorDialogFragment fragment = new KeyPairGeneratorDialogFragment();
-                fragment.setOnGenerateListener(keyPair -> model.addKeyPair(targetAlias, allowDefault, keyPair));
+                fragment.setOnGenerateListener(keyPair -> model.addKeyPair(targetAlias, keyPair));
                 fragment.show(getParentFragmentManager(), KeyPairGeneratorDialogFragment.TAG);
             });
         });
         return dialog;
+    }
+
+    private CharSequence getSigningInfo(@Nullable KeyPair keyPair) {
+        if (keyPair != null) {
+            try {
+                return PackageUtils.getSigningCertificateInfo(requireActivity(), (X509Certificate) keyPair.getCertificate());
+            } catch (CertificateEncodingException e) {
+                return getString(R.string.failed_to_load_key);
+            }
+        }
+        return getString(allowDefault ? R.string.default_key_used : R.string.key_not_set);
     }
 
     public static class RSACryptoSelectionViewModel extends AndroidViewModel {
@@ -121,7 +131,7 @@ public class RSACryptoSelectionDialogFragment extends DialogFragment {
         // StringRes, isLongToast
         private final MutableLiveData<Pair<Integer, Boolean>> status = new MutableLiveData<>();
         private final MutableLiveData<Pair<KeyPair, byte[]>> keyUpdated = new MutableLiveData<>();
-        private final MutableLiveData<CharSequence> signingInfo = new MutableLiveData<>();
+        private final MutableLiveData<KeyPair> signingInfo = new MutableLiveData<>();
 
         public RSACryptoSelectionViewModel(@NonNull Application application) {
             super(application);
@@ -141,30 +151,13 @@ public class RSACryptoSelectionDialogFragment extends DialogFragment {
             return keyUpdated;
         }
 
-        public LiveData<CharSequence> observeSigningInfo() {
+        public LiveData<KeyPair> observeSigningInfo() {
             return signingInfo;
         }
 
         @AnyThread
-        public void loadSigningInfo(String targetAlias, boolean allowDefault) {
-            executor.submit(() -> {
-                CharSequence info = getSigningInfo(targetAlias, allowDefault);
-                signingInfo.postValue(info);
-            });
-        }
-
-        @WorkerThread
-        private CharSequence getSigningInfo(String targetAlias, boolean allowDefault) {
-            Context ctx = getApplication();
-            KeyPair keyPair = getKeyPair(targetAlias);
-            if (keyPair != null) {
-                try {
-                    return PackageUtils.getSigningCertificateInfo(ctx, (X509Certificate) keyPair.getCertificate());
-                } catch (CertificateEncodingException e) {
-                    return ctx.getString(R.string.failed_to_load_key);
-                }
-            }
-            return ctx.getString(allowDefault ? R.string.default_key_used : R.string.key_not_set);
+        public void loadSigningInfo(String targetAlias) {
+            executor.submit(() -> signingInfo.postValue(getKeyPair(targetAlias)));
         }
 
         @AnyThread
@@ -185,7 +178,7 @@ public class RSACryptoSelectionDialogFragment extends DialogFragment {
         }
 
         @AnyThread
-        private void addKeyPair(String targetAlias, boolean allowDefault, @Nullable KeyPair keyPair) {
+        private void addKeyPair(String targetAlias, @Nullable KeyPair keyPair) {
             executor.submit(() -> {
                 try {
                     if (keyPair == null) {
@@ -195,8 +188,7 @@ public class RSACryptoSelectionDialogFragment extends DialogFragment {
                     keyStoreManager.addKeyPair(targetAlias, keyPair, true);
                     status.postValue(new Pair<>(R.string.done, false));
                     keyPairUpdated(targetAlias);
-                    CharSequence info = getSigningInfo(targetAlias, allowDefault);
-                    signingInfo.postValue(info);
+                    signingInfo.postValue(getKeyPair(targetAlias));
                 } catch (Exception e) {
                     Log.e(TAG, e);
                     status.postValue(new Pair<>(R.string.failed_to_save_key, true));

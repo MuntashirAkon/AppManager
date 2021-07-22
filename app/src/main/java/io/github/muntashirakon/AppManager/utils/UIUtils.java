@@ -74,6 +74,26 @@ public class UIUtils {
     }
 
     @NonNull
+    public static Spannable getPrimaryText(@NonNull Context context, @StringRes int strRes) {
+        return getPrimaryText(context, context.getText(strRes));
+    }
+
+    @NonNull
+    public static Spannable getStyledKeyValue(@NonNull Context context, @StringRes int keyRes, CharSequence value) {
+        return getStyledKeyValue(context, context.getText(keyRes), value);
+    }
+
+    @NonNull
+    public static Spannable getStyledKeyValue(@NonNull Context context, CharSequence key, CharSequence value) {
+        return getStyledKeyValue(context, key, value, ": ");
+    }
+
+    @NonNull
+    public static Spannable getStyledKeyValue(@NonNull Context context, CharSequence key, CharSequence value, CharSequence separator) {
+        return new SpannableStringBuilder(getPrimaryText(context, new SpannableStringBuilder(key).append(separator))).append(value);
+    }
+
+    @NonNull
     public static Spannable getSecondaryText(@NonNull Context context, @NonNull CharSequence text) {
         return getColoredText(text, getTextColorSecondary(context));
     }
@@ -84,6 +104,11 @@ public class UIUtils {
         spannable.setSpan(new AbsoluteSizeSpan(getTitleSize(context)), 0, spannable.length(),
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return getColoredText(spannable, getTextColorPrimary(context));
+    }
+
+    @NonNull
+    public static Spannable getTitleText(Context context, @StringRes int strRes) {
+        return getTitleText(context, context.getText(strRes));
     }
 
     @NonNull

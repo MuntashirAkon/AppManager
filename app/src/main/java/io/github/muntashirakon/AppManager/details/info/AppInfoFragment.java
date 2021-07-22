@@ -744,10 +744,14 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         .setNegativeButton(R.string.close, null)
                         .show());
             }
-            if (tagCloud.readableBackupNames.length > 0) {
+            if (tagCloud.backups.length > 0) {
+                CharSequence[] backupNames = new CharSequence[tagCloud.backups.length];
+                for (int i = 0; i < tagCloud.backups.length; ++i) {
+                    backupNames[i] = tagCloud.backups[i].toLocalizedString(mActivity);
+                }
                 addChip(R.string.backup).setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
                         .setTitle(R.string.backup)
-                        .setItems(tagCloud.readableBackupNames, null)
+                        .setItems(backupNames, null)
                         .setNegativeButton(R.string.close, null)
                         .show());
             }
