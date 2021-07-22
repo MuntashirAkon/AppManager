@@ -128,12 +128,7 @@ public class AppInfoViewModel extends AndroidViewModel {
         tagCloud.isMagiskHideEnabled = !mainModel.getIsExternalApk() && AppPref.isRootEnabled() && MagiskUtils.isHidden(packageName);
         tagCloud.hasKeyStoreItems = KeyStoreUtils.hasKeyStore(applicationInfo.uid);
         tagCloud.hasMasterKeyInKeyStore = KeyStoreUtils.hasMasterKey(applicationInfo.uid);
-        MetadataManager.Metadata[] metadata = MetadataManager.getMetadata(packageName);
-        CharSequence[] readableBackupNames = new CharSequence[metadata.length];
-        for (int i = 0; i < metadata.length; ++i) {
-            readableBackupNames[i] = metadata[i].toLocalizedString(getApplication());
-        }
-        tagCloud.readableBackupNames = readableBackupNames;
+        tagCloud.backups = MetadataManager.getMetadata(packageName);
         if (!mainModel.getIsExternalApk() && PermissionUtils.hasDumpPermission()) {
             String targetString = "user," + packageName + "," + applicationInfo.uid;
             Runner.Result result = Runner.runCommand(new String[]{"dumpsys", "deviceidle", "whitelist"});
@@ -311,7 +306,7 @@ public class AppInfoViewModel extends AndroidViewModel {
         public boolean isMagiskHideEnabled;
         public boolean hasKeyStoreItems;
         public boolean hasMasterKeyInKeyStore;
-        public CharSequence[] readableBackupNames;
+        public MetadataManager.Metadata[] backups;
         public boolean isBatteryOptimized;
         public int netPolicies;
         @Nullable

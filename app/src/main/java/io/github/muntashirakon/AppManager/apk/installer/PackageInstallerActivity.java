@@ -4,6 +4,7 @@ package io.github.muntashirakon.AppManager.apk.installer;
 
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageInstaller;
 import android.content.pm.PackageManager;
 import android.content.pm.UserInfo;
@@ -116,7 +117,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
                     new MaterialAlertDialogBuilder(this)
                             .setCancelable(false)
                             .setCustomTitle(getDialogTitle(this, model.getAppLabel(), model.getAppIcon(),
-                                    model.getVersionWithTrackers()))
+                                    getVersionInfoWithTrackers(newPackageInfo)))
                             .setMessage(R.string.install_app_message)
                             .setPositiveButton(R.string.install, (dialog, which) -> install())
                             .setNegativeButton(R.string.cancel, (dialog, which) -> triggerCancel())
@@ -159,7 +160,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
             new MaterialAlertDialogBuilder(this)
                     .setCancelable(false)
                     .setCustomTitle(getDialogTitle(this, model.getAppLabel(), model.getAppIcon(),
-                            model.getVersionWithTrackers()))
+                            getVersionInfoWithTrackers(model.getNewPackageInfo())))
                     .setMessage(R.string.install_app_message)
                     .setPositiveButton(actionName, (dialog, which) -> triggerInstall())
                     .setNegativeButton(R.string.cancel, (dialog, which) -> triggerCancel())
@@ -201,7 +202,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
             args.putInt(SplitApkChooser.EXTRA_APK_FILE_KEY, model.getApkFileKey());
             args.putString(SplitApkChooser.EXTRA_ACTION_NAME, getString(actionName));
             args.putParcelable(SplitApkChooser.EXTRA_APP_INFO, model.getNewPackageInfo().applicationInfo);
-            args.putString(SplitApkChooser.EXTRA_VERSION_INFO, model.getVersionWithTrackers());
+            args.putString(SplitApkChooser.EXTRA_VERSION_INFO, getVersionInfoWithTrackers(model.getNewPackageInfo()));
             splitApkChooser.setArguments(args);
             splitApkChooser.setCancelable(false);
             splitApkChooser.setOnTriggerInstall(new SplitApkChooser.InstallInterface() {
@@ -316,7 +317,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
 
         new MaterialAlertDialogBuilder(PackageInstallerActivity.this)
                 .setCustomTitle(getDialogTitle(PackageInstallerActivity.this, model.getAppLabel(),
-                        model.getAppIcon(), model.getVersionWithTrackers()))
+                        model.getAppIcon(), getVersionInfoWithTrackers(model.getNewPackageInfo())))
                 .setMessage(builder)
                 .setPositiveButton(R.string.yes, (dialog, which) -> {
                     // Uninstall and then install again
@@ -348,6 +349,18 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
     @Override
     public void triggerCancel() {
         finish();
+    }
+
+    @NonNull
+    private String getVersionInfoWithTrackers(@NonNull final PackageInfo newPackageInfo) {
+        long newVersionCode = PackageInfoCompat.getLongVersionCode(newPackageInfo);
+        String newVersionName = newPackageInfo.versionName;
+        int trackers = model.getTrackerCount();
+        StringBuilder sb = new StringBuilder(getString(R.string.version_name_with_code, newVersionName, newVersionCode));
+        if (trackers > 0) {
+            sb.append(", ").append(getResources().getQuantityString(R.plurals.no_of_trackers, trackers, trackers));
+        }
+        return sb.toString();
     }
 }
 

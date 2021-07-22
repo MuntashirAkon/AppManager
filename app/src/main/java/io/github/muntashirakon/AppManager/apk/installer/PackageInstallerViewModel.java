@@ -7,7 +7,6 @@ import android.app.Application;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.UserInfo;
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.RemoteException;
@@ -16,7 +15,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
-import androidx.core.content.pm.PackageInfoCompat;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -26,7 +24,6 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
@@ -47,11 +44,11 @@ public class PackageInstallerViewModel extends AndroidViewModel {
     private String packageName;
     private String appLabel;
     private Drawable appIcon;
-    private String versionWithTrackers;
     private boolean closeApkFile = true;
     private boolean isSignatureDifferent = false;
     @Nullable
     private List<UserInfo> users;
+    private int trackerCount;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public PackageInstallerViewModel(@NonNull Application application) {
@@ -86,7 +83,7 @@ public class PackageInstallerViewModel extends AndroidViewModel {
                 }
                 appLabel = packageManager.getApplicationLabel(newPackageInfo.applicationInfo).toString();
                 appIcon = packageManager.getApplicationIcon(newPackageInfo.applicationInfo);
-                versionWithTrackers = loadVersionInfoWithTrackers();
+                trackerCount = ComponentUtils.getTrackerComponentsForPackageInfo(newPackageInfo).size();
                 if (newPackageInfo != null && installedPackageInfo != null) {
                     isSignatureDifferent = PackageUtils.isSignatureDifferent(newPackageInfo, installedPackageInfo);
                 }
@@ -124,8 +121,8 @@ public class PackageInstallerViewModel extends AndroidViewModel {
         return apkFile;
     }
 
-    public String getVersionWithTrackers() {
-        return versionWithTrackers;
+    public int getTrackerCount() {
+        return trackerCount;
     }
 
     public int getApkFileKey() {
@@ -147,20 +144,6 @@ public class PackageInstallerViewModel extends AndroidViewModel {
     @Nullable
     public List<UserInfo> getUsers() {
         return users;
-    }
-
-    @WorkerThread
-    @NonNull
-    private String loadVersionInfoWithTrackers() {
-        Resources res = getApplication().getResources();
-        long newVersionCode = PackageInfoCompat.getLongVersionCode(newPackageInfo);
-        String newVersionName = newPackageInfo.versionName;
-        int trackers = ComponentUtils.getTrackerComponentsForPackageInfo(newPackageInfo).size();
-        StringBuilder sb = new StringBuilder(res.getString(R.string.version_name_with_code, newVersionName, newVersionCode));
-        if (trackers > 0) {
-            sb.append(", ").append(res.getQuantityString(R.plurals.no_of_trackers, trackers, trackers));
-        }
-        return sb.toString();
     }
 
     @WorkerThread
