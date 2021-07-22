@@ -43,11 +43,12 @@ import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.io.ProxyFileReader;
+import io.github.muntashirakon.util.LocalizedString;
 
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getStyledKeyValue;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getTitleText;
 
-public class DeviceInfo2 {
+public class DeviceInfo2 implements LocalizedString {
     public final String osVersion = Build.VERSION.RELEASE;
     public final String bootloader = Build.BOOTLOADER;
     public final String vm = getVmVersion();
@@ -143,7 +144,9 @@ public class DeviceInfo2 {
         features = pm.getSystemAvailableFeatures();
     }
 
-    public CharSequence toLocalisedString(@NonNull Context ctx) {
+    @Override
+    @NonNull
+    public CharSequence toLocalizedString(@NonNull Context ctx) {
         SpannableStringBuilder builder = new SpannableStringBuilder();
         // Android platform info
         builder.append(getStyledKeyValue(ctx, R.string.os_version, osVersion)).append("\n")

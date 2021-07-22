@@ -8,7 +8,7 @@ import android.util.AttributeSet;
 import android.widget.ScrollView;
 
 import io.github.muntashirakon.ui.R;
-import io.github.muntashirakon.utils.UiUtils;
+import io.github.muntashirakon.util.UiUtils;
 
 // Copyright 2016 Bumsoo Kim
 public class MaxHeightScrollView extends ScrollView {

@@ -278,7 +278,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
         model.getDeviceInfo().observe(this, deviceInfo -> {
             @SuppressLint("InflateParams")
             View view = getLayoutInflater().inflate(R.layout.dialog_scrollable_text_view, null);
-            ((TextView) view.findViewById(android.R.id.content)).setText(deviceInfo.toLocalisedString(activity));
+            ((TextView) view.findViewById(android.R.id.content)).setText(deviceInfo.toLocalizedString(activity));
             view.findViewById(android.R.id.checkbox).setVisibility(View.GONE);
             new FullscreenDialog(activity).setTitle(R.string.about_device).setView(view).show();
         });

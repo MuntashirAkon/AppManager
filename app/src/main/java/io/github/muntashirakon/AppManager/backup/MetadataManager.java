@@ -46,6 +46,7 @@ import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.TarUtils;
 import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.util.LocalizedString;
 
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
@@ -59,7 +60,7 @@ public final class MetadataManager {
 
     // For an extended documentation, see https://github.com/MuntashirAkon/AppManager/issues/30
     // All the attributes must be non-null
-    public static class Metadata {
+    public static class Metadata implements LocalizedString {
         public String backupName;  // This isn't part of the json file and for internal use only
         public Path backupPath;  // This isn't part of the json file and for internal use only
 
@@ -144,8 +145,10 @@ public final class MetadataManager {
             return FileUtils.fileSize(backupPath);
         }
 
+        @Override
+        @NonNull
         @WorkerThread
-        public CharSequence toLocalizedString(Context context) {
+        public CharSequence toLocalizedString(@NonNull Context context) {
             String shortName = BackupUtils.getShortBackupName(backupName);
             CharSequence titleText = shortName == null ? context.getText(R.string.base_backup) : shortName;
 

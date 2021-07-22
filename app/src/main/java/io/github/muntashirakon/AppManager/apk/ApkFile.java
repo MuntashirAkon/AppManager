@@ -53,6 +53,7 @@ import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.io.ProxyFile;
 import io.github.muntashirakon.unapkm.api.UnApkm;
+import io.github.muntashirakon.util.LocalizedString;
 
 import static io.github.muntashirakon.AppManager.apk.ApkUtils.getDensityFromName;
 import static io.github.muntashirakon.AppManager.apk.ApkUtils.getManifestAttributes;
@@ -65,7 +66,7 @@ public final class ApkFile implements AutoCloseable {
     public static final String TAG = "ApkFile";
 
     private static final String IDSIG_FILE = "Signature.idsig";
-    private static final String ANDROID_XML_NAMESPACE = "http://schemas.android.com/apk/res/android";
+    private static final String ANDROID_XML_NAMESPACE = "http" + "://schemas.android.com/apk/res/android";
     private static final String ATTR_IS_FEATURE_SPLIT = ANDROID_XML_NAMESPACE + ":isFeatureSplit";
     private static final String ATTR_IS_SPLIT_REQUIRED = ANDROID_XML_NAMESPACE + ":isSplitRequired";
     private static final String ATTR_ISOLATED_SPLIT = ANDROID_XML_NAMESPACE + ":isolatedSplits";
@@ -470,7 +471,7 @@ public final class ApkFile implements AutoCloseable {
         return destDir;
     }
 
-    public class Entry implements AutoCloseable {
+    public class Entry implements AutoCloseable, LocalizedString {
         /**
          * Name of the file, for split apk, name of the split instead
          */
@@ -719,7 +720,9 @@ public final class ApkFile implements AutoCloseable {
             throw new RuntimeException("Attempt to fetch Locale for invalid apk");
         }
 
-        public CharSequence toLocalizedString(Context context) {
+        @Override
+        @NonNull
+        public CharSequence toLocalizedString(@NonNull Context context) {
             CharSequence localizedString = toShortLocalizedString(context);
             SpannableStringBuilder builder = new SpannableStringBuilder()
                     .append(context.getString(R.string.size)).append(": ")

@@ -44,7 +44,7 @@ import com.google.android.material.badge.BadgeUtils;
 import com.google.android.material.card.MaterialCardView;
 
 import io.github.muntashirakon.ui.R;
-import io.github.muntashirakon.utils.MotionUtils;
+import io.github.muntashirakon.util.MotionUtils;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later
 
-package io.github.muntashirakon.utils;
+package io.github.muntashirakon.util;
 
 import android.animation.TimeInterpolator;
 import android.annotation.SuppressLint;

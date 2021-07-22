@@ -42,7 +42,7 @@ import com.google.android.material.shape.ShapeAppearanceModel;
 import java.util.HashSet;
 
 import io.github.muntashirakon.ui.R;
-import io.github.muntashirakon.utils.MotionUtils;
+import io.github.muntashirakon.util.MotionUtils;
 
 /**
  * Provides a view that will be use to render a menu view inside a {@link ReflowMenuViewWrapper}.

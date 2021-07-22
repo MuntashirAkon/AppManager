@@ -30,7 +30,7 @@ import java.lang.reflect.Field;
 
 import io.github.muntashirakon.reflow.ReflowMenuViewWrapper;
 import io.github.muntashirakon.ui.R;
-import io.github.muntashirakon.utils.UiUtils;
+import io.github.muntashirakon.util.UiUtils;
 
 import static com.google.android.material.R.style.Widget_MaterialComponents_CardView;
 
