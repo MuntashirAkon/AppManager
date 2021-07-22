@@ -1051,4 +1051,7 @@
     <string name="pref_selected_users">Seçilen kullanıcılar</string>
     <string name="enable_disable">Etkinleştir/devre dışı bırak</string>
     <string name="error_with_details">Hata: %s</string>
+    <string name="notice_saf">Birimlerin aksine, seçilen dizin, kaydedilmiş APK\'lar ve yedekler dahil olmak üzere Uygulama Yöneticisi ile ilgili tüm dosyaları depolamak için kullanılacaktır. Depolama Erişim Sistemi (SAF) çok yavaştır, bu nedenle bu seçeneği yalnızca diğerleri kullanılamadığında kullanmalısınız.</string>
+    <string name="files">Dosyalar</string>
+    <string name="storage">Depolama</string>
 </resources>
