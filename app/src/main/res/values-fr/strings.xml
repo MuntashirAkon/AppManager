@@ -26,7 +26,6 @@
     <string name="sort_by_shared_user_id">Identifiant utilisateur partagé</string>
     <string name="no_feature">Aucune fonctionnalité</string>
     <string name="uses_feature">Utilise les fonctionnalités</string>
-    <string name="protection_level">Niveau de protection</string>
     <string name="group">Groupe</string>
     <string name="shared_libs">Bibliothèques partagées</string>
     <string name="declared_permission">Autorisations</string>
@@ -611,7 +610,6 @@
     <string name="pref_global_blocking_enabled">Blocage instantané des composants</string>
     <string name="failed_to_disable_op">Impossible de désactiver l\'autorisation demandée</string>
     <string name="failed_to_enable_op">Impossible d\'activer l\'autorisation demandée</string>
-    <string name="gles_ver">Version OpenGL ES req.</string>
     <string name="ago">il y a</string>
     <string name="reject_time">Temps de re</string>
     <string name="accept_time">Temps d\'acceptation</string>
@@ -658,8 +656,6 @@
     <string name="cpu">CPU</string>
     <string name="users">Utilisateurs</string>
     <string name="languages">Langages</string>
-    <string name="unavailable">Indisponible</string>
-    <string name="available">Disponible</string>
     <string name="battery_capacity">Capacité</string>
     <string name="memory">Mémoire</string>
     <string name="gles_version">Version GL ES</string>

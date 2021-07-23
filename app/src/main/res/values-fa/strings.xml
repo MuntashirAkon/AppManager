@@ -196,9 +196,7 @@
     <string name="shared_user_id">شناسه کاربر مشترک</string>
     <string name="sort_by_shared_user_id">شناسه کاربر مشترک</string>
     <string name="no_feature">بدون ویژگی</string>
-    <string name="gles_ver">درخواست نسخه GL ES</string>
     <string name="uses_feature">از امکانات استفاده می کند</string>
-    <string name="protection_level">سطح حفاظت</string>
     <string name="group">گروه</string>
     <string name="shared_libs">کتاب‌خانه های مشترک</string>
     <string name="declared_permission">مجوزها</string>

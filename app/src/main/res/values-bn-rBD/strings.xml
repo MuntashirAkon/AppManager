@@ -14,7 +14,6 @@
     <string name="patterns_allowed">অনুমোদিত প্যাটার্নস</string>
     <string name="declared_permission">অনুমতি</string>
     <string name="group">গ্রুপ</string>
-    <string name="protection_level">সুরক্ষা স্তর</string>
     <string name="no_feature">কোনো ফিচার্স নেই</string>
     <string name="error">Error</string>
     <string name="loading">লোড হচ্ছে…</string>
@@ -333,7 +332,6 @@
     <string name="import_failed">ইম্পোর্ট করতে ব্যর্থ!</string>
     <string name="shared_libs">শেয়ার্ড libs</string>
     <string name="configurations">কনফিগারেশন</string>
-    <string name="gles_ver">Req. GL ES সংস্করণ</string>
     <string name="read">রিড</string>
     <string name="task_affinity">টাস্ক অ্যাফিনিটি</string>
     <string name="launch_mode">লঞ্চ মোড</string>

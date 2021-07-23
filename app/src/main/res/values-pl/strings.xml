@@ -14,7 +14,7 @@
     <string name="user_app">Aplikacja użytkownika</string>
     <string name="system_app">Aplikacja systemowa</string>
     <string name="app_info">Informacje o aplikacji</string>
-    <string name="version_name_with_code">Wersja &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"version_name\" example=\"2.5.17\"&gt;</string>
+    <string name="version_name_with_code">Wersja <xliff:g id="version_name" example="2.5.17">%1$s</xliff:g> (<xliff:g id="version_code" example="365">%2$d</xliff:g>)</string>
     <string name="sort">Sortuj</string>
     <string name="system">Systemowe</string>
     <string name="sort_by_app_label">Etykieta aplikacji</string>
@@ -29,9 +29,7 @@
     <string name="shared_user_id">Współdzielony identyfikator użytkownika</string>
     <string name="sort_by_shared_user_id">Współdzielony identyfikator użytkownika</string>
     <string name="no_feature">Brak funkcji</string>
-    <string name="gles_ver">Wymagana wersja OpenGL ES</string>
     <string name="uses_feature">Korzysta z funkcji</string>
-    <string name="protection_level">Poziom ochrony</string>
     <string name="group">Grupa</string>
     <string name="shared_libs">Współdzielone biblioteki</string>
     <string name="declared_permission">Uprawnienia</string>
@@ -515,8 +513,6 @@
     <string name="cpu">Procesor</string>
     <string name="users">Użytkownicy</string>
     <string name="languages">Języki</string>
-    <string name="unavailable">Niedostępne</string>
-    <string name="available">Dostępne</string>
     <string name="battery_capacity">Pojemność</string>
     <string name="memory">Pamięć</string>
     <string name="gles_version">Wersja GL ES</string>

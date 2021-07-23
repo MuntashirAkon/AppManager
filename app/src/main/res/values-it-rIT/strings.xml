@@ -165,7 +165,7 @@
     <string name="source_dir">Percorso sorgente</string>
     <string name="paths_and_directories">Percorso e Directory</string>
     <string name="app_info">Informazioni applicazione</string>
-    <string name="version_name_with_code">Versione <xliff:g id="version_name" example="2.5.17">%1$s</xliff:g><xliff:g id="version_code" example="365">%2$d</xliff:g></string>
+    <string name="version_name_with_code">Versione <xliff:g id="version_name" example="2.5.17">%1$s</xliff:g> (<xliff:g id="version_code" example="365">%2$d</xliff:g>)</string>
     <string name="sort">Evidenzia</string>
     <string name="user">Utente</string>
     <string name="system">Sistema</string>
@@ -178,7 +178,6 @@
     <string name="sort_by_app_label">Etichetta App</string>
     <string name="loading">Caricamento…</string>
     <string name="error">Errore</string>
-    <string name="protection_level">Livello di protezione</string>
     <string name="shared_libs">Librerie condivise</string>
     <string name="declared_permission">Permessi</string>
     <string name="patterns_allowed">Modelli abilitati</string>
@@ -346,7 +345,6 @@
     <string name="about">Informazioni</string>
     <string name="input_features">Inserisci impostazioni</string>
     <string name="no_feature">Nessun impostazione</string>
-    <string name="gles_ver">Rich. Versione OpenGL ES</string>
     <string name="uses_feature">Impostazioni Utente</string>
     <string name="soft_input">Modalità soft input</string>
     <string name="authority">Autorità</string>

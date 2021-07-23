@@ -101,8 +101,6 @@
     <string name="shared_user_id">Delt bruker-ID</string>
     <string name="sort_by_shared_user_id">Delt bruker-ID</string>
     <string name="no_feature">Ingen funksjoner</string>
-    <string name="gles_ver">Påkrevd OpenGL ES-versjon</string>
-    <string name="protection_level">Beskyttelsesnivå</string>
     <string name="group">Gruppe</string>
     <string name="shared_libs">Delte bibliotek</string>
     <string name="declared_permission">Tilganger</string>
@@ -547,8 +545,6 @@
     <string name="cpu">Prosessor</string>
     <string name="users">Brukere</string>
     <string name="languages">Språk</string>
-    <string name="unavailable">Utilgjengelig</string>
-    <string name="available">Tilgjengelig</string>
     <string name="battery_capacity">Kapasitet</string>
     <string name="memory">Minne</string>
     <string name="no_of_cores">Kjerner</string>
@@ -810,7 +806,6 @@
     <string name="running_services">Kjørende tjenester</string>
     <string name="view_logs">Vis loggføring</string>
     <string name="share_log">Del</string>
-    <string name="title_filters">Filter</string>
     <string name="text_include_device_info">Inkluder enhetsinfo</string>
     <string name="text_filter_text">Filtertekst</string>
     <string name="text_filter_ellipsis">Filtrer …</string>

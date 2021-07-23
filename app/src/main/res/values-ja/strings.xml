@@ -29,9 +29,7 @@
     <string name="declared_permission">権限</string>
     <string name="shared_libs">共有ライブラリ</string>
     <string name="group">グループ</string>
-    <string name="protection_level">保護レベル</string>
     <string name="uses_feature">機能</string>
-    <string name="gles_ver">要求されているOpenGL ESバージョン</string>
     <string name="no_feature">機能は要求されていません</string>
     <string name="sort_by_shared_user_id">共有UID</string>
     <string name="shared_user_id">共有UID</string>
@@ -717,8 +715,6 @@
     <string name="vendor">ベンター</string>
     <string name="memory">メモリ</string>
     <string name="battery_capacity">容量</string>
-    <string name="available">利用可能</string>
-    <string name="unavailable">利用不可</string>
     <string name="languages">言語</string>
     <string name="users">ユーザー</string>
     <string name="cpu">CPU</string>
@@ -960,7 +956,6 @@
     <string name="text_include_device_info">デバイス情報を含める</string>
     <string name="save_log_zip">ZIPで保存</string>
     <string name="share_log">共有</string>
-    <string name="title_filters">フィルタ</string>
     <string name="widget_recording_in_progress">記録中…</string>
     <string name="start_recording_log">記録を開始</string>
     <string name="file">ファイル</string>

@@ -124,9 +124,7 @@
     <string name="shared_user_id">معرف المستخدم المشترك</string>
     <string name="sort_by_shared_user_id">معرف المستخدم المشترك</string>
     <string name="no_feature">لا توجد ميزات</string>
-    <string name="gles_ver">مطلوب. إصدار OpenGL ES</string>
     <string name="uses_feature">المميزات المستخدمه</string>
-    <string name="protection_level">مستوى الحماية</string>
     <string name="group">المجموعة</string>
     <string name="shared_libs">المكتبات المشتركة</string>
     <string name="declared_permission">الصلاحيات</string>
@@ -607,7 +605,6 @@
     <string name="text_filter_ellipsis">المُرشح…</string>
     <string name="text_filter_text">تصفية النص</string>
     <string name="text_include_device_info">قم بتضمين معلومات الجهاز</string>
-    <string name="title_filters">المرشحات</string>
     <string name="pref_display_limit_hint">يرجى إدخال رقم صالح بين %1$d و %2$d.</string>
     <string name="toast_invalid_level">اسم مستوى غير صالح: %s</string>
     <string name="toast_invalid_selection">اختيار غير صحيح. حاول مرة اخرى.</string>
@@ -1113,8 +1110,6 @@
     <string name="cpu">المعالج</string>
     <string name="users">المستخدمين</string>
     <string name="languages">اللغات</string>
-    <string name="unavailable">غير متوفر</string>
-    <string name="available">متاح</string>
     <string name="battery_capacity">السعة</string>
     <string name="memory">الذاكرة</string>
     <string name="vendor">المورد</string>

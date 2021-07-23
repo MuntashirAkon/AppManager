@@ -303,9 +303,7 @@
     <string name="shared_user_id">साझा यूजर आईडी</string>
     <string name="sort_by_shared_user_id">साझा यूजर आईडी</string>
     <string name="no_feature">कोई फ़ीचर नहीं</string>
-    <string name="gles_ver">अपेक्षित GL ES संस्करण</string>
     <string name="uses_feature">फीचर्स उपयोग</string>
-    <string name="protection_level">सुरक्षा स्तर</string>
     <string name="group">समूह</string>
     <string name="shared_libs">साझा लाइब्रेरीज़</string>
     <string name="declared_permission">अनुमतियाँ</string>
@@ -628,8 +626,6 @@
     <string name="cpu">सीपीयू</string>
     <string name="users">यूज़र्स</string>
     <string name="languages">भाषाएँ</string>
-    <string name="unavailable">अनुपलब्ध</string>
-    <string name="available">उपलब्ध</string>
     <string name="battery_capacity">क्षमता</string>
     <string name="memory">मेमोरी</string>
     <string name="vendor">वेंडर</string>

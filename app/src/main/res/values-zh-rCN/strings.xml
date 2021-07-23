@@ -29,9 +29,7 @@
     <string name="declared_permission">权限</string>
     <string name="shared_libs">共享程序库</string>
     <string name="group">群组</string>
-    <string name="protection_level">保护等级</string>
     <string name="uses_feature">属性</string>
-    <string name="gles_ver">请求 OpenGL ES 版本</string>
     <string name="no_feature">无</string>
     <string name="sort_by_shared_user_id">共享的用户ID</string>
     <string name="shared_user_id">共享的用户ID</string>
@@ -695,8 +693,6 @@
     <string name="cpu">CPU</string>
     <string name="users">用户</string>
     <string name="languages">语言</string>
-    <string name="unavailable">不可用</string>
-    <string name="available">可用</string>
     <string name="battery_capacity">容量</string>
     <string name="memory">运行内存</string>
     <string name="vendor">厂商</string>
@@ -942,7 +938,6 @@
     <string name="toast_invalid_selection">无效选择。请重试。</string>
     <string name="toast_invalid_level">无效的级别名称：%s</string>
     <string name="pref_display_limit_hint">请输入一个 %1$d 和 %2$d 之间的有效数字。</string>
-    <string name="title_filters">过滤器</string>
     <string name="text_include_device_info">包含设备信息</string>
     <string name="text_filter_text">过滤器文本</string>
     <string name="text_filter_ellipsis">过滤器…</string>

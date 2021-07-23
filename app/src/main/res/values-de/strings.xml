@@ -29,9 +29,7 @@
     <string name="declared_permission">Berechtigungen</string>
     <string name="shared_libs">Geteilte Bibliotheken</string>
     <string name="group">Gruppe</string>
-    <string name="protection_level">Schutz-Level</string>
     <string name="uses_feature">Benutzt Funktionalitäten</string>
-    <string name="gles_ver">Benötigte OpenGL ES-Version</string>
     <string name="no_feature">Keine Funktionalitäten</string>
     <string name="sort_by_shared_user_id">Geteilte Nutzer-ID</string>
     <string name="shared_user_id">Geteilte Nutzer-ID</string>
@@ -729,8 +727,6 @@
     <string name="cpu">CPU</string>
     <string name="users">Nutzer</string>
     <string name="languages">Sprachen</string>
-    <string name="unavailable">Nicht vorhanden</string>
-    <string name="available">Verfügbar</string>
     <string name="battery_capacity">Kapazität</string>
     <string name="memory">Speicher</string>
     <string name="vendor">Hersteller</string>
@@ -998,7 +994,6 @@
     <string name="toast_invalid_selection">Ungültige Auswahl. Bitte nochmals versuchen.</string>
     <string name="toast_invalid_level">Ungültiger Level-Name: %s</string>
     <string name="pref_display_limit_hint">Bitte eine gültige Zahl zwischen %1$d und %2$d eingeben.</string>
-    <string name="title_filters">Filter</string>
     <string name="text_include_device_info">Geräteinformationen mit einschließen</string>
     <string name="text_filter_text">Text filtern</string>
     <string name="text_filter_ellipsis">Filter…</string>
