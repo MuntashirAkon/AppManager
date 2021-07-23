@@ -40,6 +40,7 @@ import io.github.muntashirakon.AppManager.ipc.ps.ProcessEntry;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.profiles.ProfileMetaManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
+import io.github.muntashirakon.AppManager.runningapps.ProcessParser;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.PackageChangeReceiver;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
@@ -374,7 +375,7 @@ public class MainViewModel extends AndroidViewModel {
                 List<ProcessEntry> processEntries = (List<ProcessEntry>) IPCUtils.getServiceSafe().getRunningProcesses();
                 List<String> processNames = new ArrayList<>();
                 for (ProcessEntry entry : processEntries) {
-                    processNames.add(entry.name);
+                    processNames.add(ProcessParser.getSupposedPackageName(entry.name));
                 }
                 for (int i = 0; i < applicationItems.size(); ++i) {
                     ApplicationItem applicationItem = applicationItems.get(i);
