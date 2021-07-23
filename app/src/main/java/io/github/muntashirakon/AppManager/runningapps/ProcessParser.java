@@ -91,16 +91,17 @@ final class ProcessParser {
     }
 
     @NonNull
-    private ProcessItem parseProcess(ProcessEntry processEntry) {
-        String processName = processEntry.name;
+    private ProcessItem parseProcess(@NonNull ProcessEntry processEntry) {
+        String processName = getSupposedPackageName(processEntry.name);
         ProcessItem processItem;
         if (installedPackages.containsKey(processName)) {
             @NonNull PackageInfo packageInfo = Objects.requireNonNull(installedPackages.get(processName));
             processItem = new AppProcessItem(processEntry.pid, packageInfo);
-            processItem.name = pm.getApplicationLabel(packageInfo.applicationInfo).toString();
+            processItem.name = pm.getApplicationLabel(packageInfo.applicationInfo).toString()
+                    + getProcessName(processEntry.name);
         } else {
             processItem = new ProcessItem(processEntry.pid);
-            processItem.name = processName;
+            processItem.name = processEntry.name;
         }
         processItem.context = processEntry.seLinuxPolicy;
         processItem.ppid = processEntry.ppid;
@@ -160,5 +161,23 @@ final class ProcessParser {
         }
         uidNameCache.put(uid, username);
         return username;
+    }
+
+    @NonNull
+    private static String getSupposedPackageName(@NonNull String processName) {
+        if (!processName.contains(":")) {
+            return processName;
+        }
+        int colonIdx = processName.indexOf(':');
+        return processName.substring(0, colonIdx);
+    }
+
+    @NonNull
+    private static String getProcessName(@NonNull String processName) {
+        if (!processName.contains(":")) {
+            return "";
+        }
+        int colonIdx = processName.indexOf(':');
+        return processName.substring(colonIdx);
     }
 }
