@@ -863,7 +863,13 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             final Intent launchIntentForPackage = mPackageManager.getLaunchIntentForPackage(mPackageName);
             if (launchIntentForPackage != null) {
                 addToHorizontalLayout(R.string.launch_app, R.drawable.ic_open_in_new_black_24dp)
-                        .setOnClickListener(v -> startActivity(launchIntentForPackage));
+                        .setOnClickListener(v -> {
+                            try {
+                                startActivity(launchIntentForPackage);
+                            } catch (Throwable th) {
+                                UIUtils.displayLongToast(th.getLocalizedMessage());
+                            }
+                        });
             }
             // Set disable
             if (isRootEnabled || isAdbEnabled) {
