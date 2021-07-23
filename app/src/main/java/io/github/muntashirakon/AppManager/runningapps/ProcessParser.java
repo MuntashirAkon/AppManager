@@ -30,7 +30,7 @@ import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 @WorkerThread
-final class ProcessParser {
+public final class ProcessParser {
     private final Context context;
     private final PackageManager pm;
     private HashMap<String, PackageInfo> installedPackages;
@@ -164,7 +164,7 @@ final class ProcessParser {
     }
 
     @NonNull
-    private static String getSupposedPackageName(@NonNull String processName) {
+    public static String getSupposedPackageName(@NonNull String processName) {
         if (!processName.contains(":")) {
             return processName;
         }
