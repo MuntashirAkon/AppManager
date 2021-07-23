@@ -708,6 +708,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         textView4 = itemView.findViewById(R.id.launchMode);
                         textView5 = itemView.findViewById(R.id.orientation);
                         textView6 = itemView.findViewById(R.id.softInput);
+                        textView7 = itemView.findViewById(R.id.process_name);
                         launchBtn = itemView.findViewById(R.id.launch);
                         blockBtn = itemView.findViewById(R.id.block_component);
                         createBtn = itemView.findViewById(R.id.create_shortcut_btn);
@@ -718,6 +719,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         imageView = itemView.findViewById(R.id.icon);
                         textView2 = itemView.findViewById(R.id.name);
                         textView3 = itemView.findViewById(R.id.orientation);
+                        textView7 = itemView.findViewById(R.id.process_name);
                         launchBtn = itemView.findViewById(R.id.launch);
                         blockBtn = itemView.findViewById(R.id.block_component);
                         itemView.findViewById(R.id.taskAffinity).setVisibility(View.GONE);
@@ -735,6 +737,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         textView4 = itemView.findViewById(R.id.launchMode);
                         textView5 = itemView.findViewById(R.id.orientation);
                         textView6 = itemView.findViewById(R.id.softInput);
+                        textView7 = itemView.findViewById(R.id.process_name);
                         blockBtn = itemView.findViewById(R.id.block_component);
                         itemView.findViewById(R.id.launch).setVisibility(View.GONE);
                         itemView.findViewById(R.id.create_shortcut_btn).setVisibility(View.GONE);
@@ -748,6 +751,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         textView4 = itemView.findViewById(R.id.orientation);
                         textView5 = itemView.findViewById(R.id.softInput);
                         textView6 = itemView.findViewById(R.id.taskAffinity);
+                        textView7 = itemView.findViewById(R.id.process_name);
                         blockBtn = itemView.findViewById(R.id.block_component);
                         itemView.findViewById(R.id.launch).setVisibility(View.GONE);
                         itemView.findViewById(R.id.create_shortcut_btn).setVisibility(View.GONE);
@@ -942,6 +946,13 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             launch.setText(activityLabel.equals(appLabel) || TextUtils.isEmpty(activityLabel) ?
                     Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(activityInfo.name))
                     : activityLabel);
+            // Process name
+            String processName = activityInfo.processName;
+            if (!processName.equals(mPackageName)) {
+                holder.textView7.setVisibility(View.VISIBLE);
+                holder.textView7.setText(String.format(Locale.ROOT, "%s: %s",
+                        getString(R.string.process_name), processName));
+            } else holder.textView7.setVisibility(View.GONE);
             boolean isExported = activityInfo.exported;
             // An activity is allowed to launch only if it's
             // 1) Not from an external APK
@@ -1034,6 +1045,13 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             holder.textView3.setText(String.format(Locale.ROOT, "%s\n%s",
                     Utils.getServiceFlagsString(serviceInfo.flags),
                     (serviceInfo.permission != null ? serviceInfo.permission : "")));
+            // Process name
+            String processName = serviceInfo.processName;
+            if (!processName.equals(mPackageName)) {
+                holder.textView7.setVisibility(View.VISIBLE);
+                holder.textView7.setText(String.format(Locale.ROOT, "%s: %s",
+                        getString(R.string.process_name), processName));
+            } else holder.textView7.setVisibility(View.GONE);
             // A service is allowed to launch only if it's
             // 1) Not from an external APK
             // 2) Root enabled or the service is exportable without any permission
@@ -1105,6 +1123,13 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             // SoftInput
             holder.textView6.setText(String.format(Locale.ROOT, "%s: %s",
                     getString(R.string.soft_input), Utils.getSoftInputString(activityInfo.softInputMode)));
+            // Process name
+            String processName = activityInfo.processName;
+            if (!processName.equals(mPackageName)) {
+                holder.textView7.setVisibility(View.VISIBLE);
+                holder.textView7.setText(String.format(Locale.ROOT, "%s: %s",
+                        getString(R.string.process_name), processName));
+            } else holder.textView7.setVisibility(View.GONE);
             // Blocking
             if (isRootEnabled && !isExternalApk) {
                 if (appDetailsItem.isBlocked) {
@@ -1181,6 +1206,13 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 holder.textView2.setText(providerName.startsWith(mPackageName) ?
                         providerName.replaceFirst(mPackageName, "") : providerName);
             }
+            // Process name
+            String processName = providerInfo.processName;
+            if (!processName.equals(mPackageName)) {
+                holder.textView7.setVisibility(View.VISIBLE);
+                holder.textView7.setText(String.format(Locale.ROOT, "%s: %s",
+                        getString(R.string.process_name), processName));
+            } else holder.textView7.setVisibility(View.GONE);
             // Blocking
             if (isRootEnabled && !isExternalApk) {
                 if (appDetailsItem.isBlocked) {

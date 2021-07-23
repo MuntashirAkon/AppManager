@@ -98,6 +98,16 @@
                 tools:text="@tools:sample/lorem"
                 tools:ignore="SmallSp" />
 
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/process_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textIsSelectable="true"
+                android:textSize="9sp"
+                android:visibility="gone"
+                tools:text="@tools:sample/lorem"
+                tools:ignore="SmallSp" />
+
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <com.google.android.material.button.MaterialButton

@@ -817,7 +817,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                         PackageManager.GET_PERMISSIONS | PackageManager.GET_ACTIVITIES | flagDisabledComponents
                                 | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS | flagMatchUninstalled
                                 | PackageManager.GET_SERVICES | PackageManager.GET_CONFIGURATIONS | flagSigningInfo
-                                | PackageManager.GET_SHARED_LIBRARY_FILES,
+                                | PackageManager.GET_SHARED_LIBRARY_FILES | PackageManager.GET_URI_PERMISSION_PATTERNS,
                         userHandle);
                 if (!new File(installedPackageInfo.applicationInfo.publicSourceDir).exists()) {
                     throw new ApkFile.ApkFileException("App not installed. It only has data.");
@@ -833,7 +833,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 packageInfo = mPackageManager.getPackageArchiveInfo(apkPath, PackageManager.GET_PERMISSIONS
                         | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
                         | PackageManager.GET_SERVICES | flagDisabledComponents | flagSigningInfoApk
-                        | PackageManager.GET_CONFIGURATIONS | PackageManager.GET_SHARED_LIBRARY_FILES);
+                        | PackageManager.GET_CONFIGURATIONS | PackageManager.GET_SHARED_LIBRARY_FILES
+                        | PackageManager.GET_URI_PERMISSION_PATTERNS);
                 if (packageInfo == null) {
                     throw new PackageManager.NameNotFoundException("Package cannot be parsed");
                 }
