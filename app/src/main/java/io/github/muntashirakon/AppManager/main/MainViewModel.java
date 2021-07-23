@@ -374,7 +374,7 @@ public class MainViewModel extends AndroidViewModel {
                 List<ProcessEntry> processEntries = (List<ProcessEntry>) IPCUtils.getServiceSafe().getRunningProcesses();
                 List<String> processNames = new ArrayList<>();
                 for (ProcessEntry entry : processEntries) {
-                    processNames.add(entry.name);
+                    processNames.add(entry.name.contains(":") ? entry.name.split(":")[0] : entry.name);
                 }
                 for (int i = 0; i < applicationItems.size(); ++i) {
                     ApplicationItem applicationItem = applicationItems.get(i);
