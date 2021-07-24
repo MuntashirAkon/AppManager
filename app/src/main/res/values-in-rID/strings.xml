@@ -60,7 +60,7 @@
     <string name="no_service">Tidak ada layanan</string>
     <string name="service">Layanan</string>
     <string name="authority">Wewenang</string>
-    <string name="sort_by_last_update">Pembaharuan terakhir</string>
+    <string name="sort_by_last_update">Terakhir di perbaharui</string>
     <string name="launch_mode">Mode peluncuran</string>
     <string name="no_providers">Tidak ada penyedia</string>
     <string name="providers">Penyedia</string>
@@ -241,7 +241,7 @@
     <string name="shared_libs">Libs berbagi</string>
     <string name="path_permissions">Perizinan path</string>
     <string name="grant_uri_permission">Perbolehkan perizinan UI</string>
-    <string name="flags">Bendera</string>
+    <string name="flags">Tanda</string>
     <string name="soft_input">Mode masukan lunak</string>
     <string name="task_affinity">Afinitas Tugas</string>
     <string name="only_works_in_root_mode">Hanya bekerja pada mode root</string>
@@ -1012,11 +1012,12 @@
     <string name="added_to_queue">Ditambahkan ke antreran</string>
     <string name="pref_selected_users_msg">Batasi App Manager untuk bekerja dengan pengguna terpilih saja.</string>
     <string name="pref_selected_users">Pengguna yang dipilih</string>
-    <string name="permission_flags">Bendera perizinan</string>
+    <string name="permission_flags">Bendera izin</string>
     <string name="files">Dokumen</string>
     <string name="storage">Penyimpanan</string>
     <string name="notice">Pemberitahuan</string>
     <string name="enable_disable">Aktifkan/nonaktifkan</string>
     <string name="error_with_details">Eror:%s</string>
     <string name="saved_filters">Filter tersimpan</string>
+    <string name="notice_saf">Tidak seperti volume, direktori yang dipilih akan digunakan untuk menyimpan seluruh file yang berhubungan dengan App Manager, termasuk APK yang disimpan dan backup. Storage Access Framework (SAF) sangat lambat, untuk itu, anda sebaiknya hanya menggunakan opsi ini ketika yang lain tidak dapat digunakan.</string>
 </resources>
