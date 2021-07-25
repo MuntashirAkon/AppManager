@@ -15,6 +15,7 @@ import android.content.pm.PermissionInfo;
 import android.content.pm.ProviderInfo;
 import android.content.pm.ServiceInfo;
 import android.os.Build;
+import android.os.DeadObjectException;
 import android.os.RemoteException;
 import android.os.SystemClock;
 
@@ -26,6 +27,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -96,63 +98,67 @@ public final class PackageManagerCompat {
     public static PackageInfo getPackageInfo(String packageName, int flags, @UserIdInt int userHandle)
             throws RemoteException, PackageManager.NameNotFoundException {
         IPackageManager pm = AppManager.getIPackageManager();
-        PackageInfo info = pm.getPackageInfo(packageName, flags, userHandle);
-        if (info == null) {
-            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {
-                // The app might not be loaded properly due parcel size limit, try to load components separately.
-                ActivityInfo[] activities = null;
-                if ((flags & PackageManager.GET_ACTIVITIES) != 0) {
-                    int newFlags = flags & ~(PackageManager.GET_SERVICES | PackageManager.GET_PROVIDERS
-                            | PackageManager.GET_RECEIVERS | PackageManager.GET_PERMISSIONS);
-                    PackageInfo info1 = pm.getPackageInfo(packageName, newFlags, userHandle);
-                    if (info1 != null) activities = info1.activities;
-                    flags &= ~PackageManager.GET_ACTIVITIES;
-                }
-                ServiceInfo[] services = null;
-                if ((flags & PackageManager.GET_SERVICES) != 0) {
-                    int newFlags = flags & ~(PackageManager.GET_ACTIVITIES | PackageManager.GET_PROVIDERS
-                            | PackageManager.GET_RECEIVERS | PackageManager.GET_PERMISSIONS);
-                    PackageInfo info1 = pm.getPackageInfo(packageName, newFlags, userHandle);
-                    if (info1 != null) services = info1.services;
-                    flags &= ~PackageManager.GET_SERVICES;
-                }
-                ProviderInfo[] providers = null;
-                if ((flags & PackageManager.GET_PROVIDERS) != 0) {
-                    int newFlags = flags & ~(PackageManager.GET_ACTIVITIES | PackageManager.GET_SERVICES
-                            | PackageManager.GET_RECEIVERS | PackageManager.GET_PERMISSIONS);
-                    PackageInfo info1 = pm.getPackageInfo(packageName, newFlags, userHandle);
-                    if (info1 != null) providers = info1.providers;
-                    flags &= ~PackageManager.GET_PROVIDERS;
-                }
-                ActivityInfo[] receivers = null;
-                if ((flags & PackageManager.GET_RECEIVERS) != 0) {
-                    int newFlags = flags & ~(PackageManager.GET_ACTIVITIES | PackageManager.GET_SERVICES
-                            | PackageManager.GET_PROVIDERS | PackageManager.GET_PERMISSIONS);
-                    PackageInfo info1 = pm.getPackageInfo(packageName, newFlags, userHandle);
-                    if (info1 != null) receivers = info1.receivers;
-                    flags &= ~PackageManager.GET_RECEIVERS;
-                }
-                PermissionInfo[] permissions = null;
-                if ((flags & PackageManager.GET_PERMISSIONS) != 0) {
-                    int newFlags = flags & ~(PackageManager.GET_ACTIVITIES | PackageManager.GET_SERVICES
-                            | PackageManager.GET_PROVIDERS | PackageManager.GET_RECEIVERS);
-                    PackageInfo info1 = pm.getPackageInfo(packageName, newFlags, userHandle);
-                    if (info1 != null) permissions = info1.permissions;
-                    flags &= ~PackageManager.GET_PERMISSIONS;
-                }
-                info = pm.getPackageInfo(packageName, flags, userHandle);
-                info.activities = activities;
-                info.services = services;
-                info.providers = providers;
-                info.receivers = receivers;
-                info.permissions = permissions;
-                if (info != null) {
-                    return info;
-                }
-            }
-            throw new PackageManager.NameNotFoundException(packageName + " not found.");
+        PackageInfo info = null;
+        try {
+            info = pm.getPackageInfo(packageName, flags, userHandle);
+        } catch (DeadObjectException ignore) {
         }
-        return info;
+        if (info == null) {
+            // The app might not be loaded properly due parcel size limit, try to load components separately.
+            // first check the existence of the package
+            int strippedFlags = flags & ~(PackageManager.GET_ACTIVITIES | PackageManager.GET_SERVICES
+                    | PackageManager.GET_PROVIDERS | PackageManager.GET_RECEIVERS | PackageManager.GET_PERMISSIONS);
+            info = pm.getPackageInfo(packageName, strippedFlags, userHandle);
+            if (info == null) {
+                // At this point, it should either return package info or throw RemoteException.
+                // Returning null denotes that it failed again even after the major flags have been stripped.
+                throw new IllegalStateException(String.format("Could not retrieve info for package %s with flags 0x%X",
+                        packageName, strippedFlags));
+            }
+            // Load info for major flags
+            ActivityInfo[] activities = null;
+            if ((flags & PackageManager.GET_ACTIVITIES) != 0) {
+                int newFlags = flags & ~(PackageManager.GET_SERVICES | PackageManager.GET_PROVIDERS
+                        | PackageManager.GET_RECEIVERS | PackageManager.GET_PERMISSIONS);
+                PackageInfo info1 = pm.getPackageInfo(packageName, newFlags, userHandle);
+                if (info1 != null) activities = info1.activities;
+            }
+            ServiceInfo[] services = null;
+            if ((flags & PackageManager.GET_SERVICES) != 0) {
+                int newFlags = flags & ~(PackageManager.GET_ACTIVITIES | PackageManager.GET_PROVIDERS
+                        | PackageManager.GET_RECEIVERS | PackageManager.GET_PERMISSIONS);
+                PackageInfo info1 = pm.getPackageInfo(packageName, newFlags, userHandle);
+                if (info1 != null) services = info1.services;
+            }
+            ProviderInfo[] providers = null;
+            if ((flags & PackageManager.GET_PROVIDERS) != 0) {
+                int newFlags = flags & ~(PackageManager.GET_ACTIVITIES | PackageManager.GET_SERVICES
+                        | PackageManager.GET_RECEIVERS | PackageManager.GET_PERMISSIONS);
+                PackageInfo info1 = pm.getPackageInfo(packageName, newFlags, userHandle);
+                if (info1 != null) providers = info1.providers;
+            }
+            ActivityInfo[] receivers = null;
+            if ((flags & PackageManager.GET_RECEIVERS) != 0) {
+                int newFlags = flags & ~(PackageManager.GET_ACTIVITIES | PackageManager.GET_SERVICES
+                        | PackageManager.GET_PROVIDERS | PackageManager.GET_PERMISSIONS);
+                PackageInfo info1 = pm.getPackageInfo(packageName, newFlags, userHandle);
+                if (info1 != null) receivers = info1.receivers;
+            }
+            PermissionInfo[] permissions = null;
+            if ((flags & PackageManager.GET_PERMISSIONS) != 0) {
+                int newFlags = flags & ~(PackageManager.GET_ACTIVITIES | PackageManager.GET_SERVICES
+                        | PackageManager.GET_PROVIDERS | PackageManager.GET_RECEIVERS);
+                PackageInfo info1 = pm.getPackageInfo(packageName, newFlags, userHandle);
+                if (info1 != null) permissions = info1.permissions;
+            }
+            info.activities = activities;
+            info.services = services;
+            info.providers = providers;
+            info.receivers = receivers;
+            info.permissions = permissions;
+        }
+        // Info should never be null here but it's checked anyway.
+        return Objects.requireNonNull(info);
     }
 
     @NonNull
