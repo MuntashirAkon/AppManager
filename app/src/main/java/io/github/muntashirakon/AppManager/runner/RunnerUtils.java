@@ -160,11 +160,11 @@ public final class RunnerUtils {
                 Log.e("ADB", e);
                 AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
             }
-        } else {
+        } else {  // Root is available
             AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, true);
             try {
-                LocalServer.launchAmService();
-            } catch (RemoteException e) {
+                LocalServer.restart();
+            } catch (RemoteException | IOException e) {
                 Log.e("ROOT", e);
                 AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
             }
