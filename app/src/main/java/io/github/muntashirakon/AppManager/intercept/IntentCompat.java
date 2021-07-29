@@ -12,10 +12,46 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
-import static io.github.muntashirakon.AppManager.intercept.AddIntentExtraFragment.*;
+import static io.github.muntashirakon.AppManager.intercept.AddIntentExtraFragment.ExtraItem;
+import static io.github.muntashirakon.AppManager.intercept.AddIntentExtraFragment.TYPE_BOOLEAN;
+import static io.github.muntashirakon.AppManager.intercept.AddIntentExtraFragment.TYPE_COMPONENT_NAME;
+import static io.github.muntashirakon.AppManager.intercept.AddIntentExtraFragment.TYPE_FLOAT;
+import static io.github.muntashirakon.AppManager.intercept.AddIntentExtraFragment.TYPE_FLOAT_AL;
+import static io.github.muntashirakon.AppManager.intercept.AddIntentExtraFragment.TYPE_FLOAT_ARR;
+import static io.github.muntashirakon.AppManager.intercept.AddIntentExtraFragment.TYPE_INTEGER;
+import static io.github.muntashirakon.AppManager.intercept.AddIntentExtraFragment.TYPE_INT_AL;
+import static io.github.muntashirakon.AppManager.intercept.AddIntentExtraFragment.TYPE_INT_ARR;
+import static io.github.muntashirakon.AppManager.intercept.AddIntentExtraFragment.TYPE_LONG;
+import static io.github.muntashirakon.AppManager.intercept.AddIntentExtraFragment.TYPE_LONG_AL;
+import static io.github.muntashirakon.AppManager.intercept.AddIntentExtraFragment.TYPE_LONG_ARR;
+import static io.github.muntashirakon.AppManager.intercept.AddIntentExtraFragment.TYPE_NULL;
+import static io.github.muntashirakon.AppManager.intercept.AddIntentExtraFragment.TYPE_STRING;
+import static io.github.muntashirakon.AppManager.intercept.AddIntentExtraFragment.TYPE_STRING_AL;
+import static io.github.muntashirakon.AppManager.intercept.AddIntentExtraFragment.TYPE_STRING_ARR;
+import static io.github.muntashirakon.AppManager.intercept.AddIntentExtraFragment.TYPE_URI;
+import static io.github.muntashirakon.AppManager.intercept.AddIntentExtraFragment.Type;
 
 public class IntentCompat {
+    @Nullable
+    public static Uri getDataUri(@NonNull Intent intent) {
+        if (Intent.ACTION_SEND.equals(intent.getAction())) {
+            return intent.getParcelableExtra(Intent.EXTRA_STREAM);
+        }
+        return intent.getData();
+    }
+
+    @Nullable
+    public static List<Uri> getDataUris(@NonNull Intent intent) {
+        if (Intent.ACTION_SEND.equals(intent.getAction())) {
+            return Collections.singletonList(intent.getParcelableExtra(Intent.EXTRA_STREAM));
+        } else if (Intent.ACTION_SEND_MULTIPLE.equals(intent.getAction())) {
+            return intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
+        }
+        return Collections.singletonList(intent.getData());
+    }
+
     public static void removeFlags(@NonNull Intent intent, int flags) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             intent.removeFlags(flags);

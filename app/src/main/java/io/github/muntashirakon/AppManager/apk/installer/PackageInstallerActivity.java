@@ -37,6 +37,7 @@ import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.splitapk.SplitApkChooser;
 import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
+import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -92,7 +93,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
             onNewIntent(intent);
             return;
         }
-        final Uri apkUri = intent.getData();
+        final Uri apkUri = IntentCompat.getDataUri(intent);
         int apkFileKey = intent.getIntExtra(EXTRA_APK_FILE_KEY, -1);
         if (apkUri == null && apkFileKey == -1) {
             triggerCancel();

@@ -25,6 +25,7 @@ import com.google.android.material.tabs.TabLayout;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.details.info.AppInfoFragment;
+import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
@@ -48,7 +49,7 @@ public class AppDetailsActivity extends BaseActivity {
         Intent intent = getIntent();
         // Check for package name
         final String packageName = intent.getStringExtra(EXTRA_PACKAGE_NAME);
-        final Uri apkUri = intent.getData();
+        final Uri apkUri = IntentCompat.getDataUri(intent);
         final String apkType = intent.getType();
         final int userHandle = intent.getIntExtra(EXTRA_USER_HANDLE, Users.myUserId());
         model.setUserHandle(userHandle);
