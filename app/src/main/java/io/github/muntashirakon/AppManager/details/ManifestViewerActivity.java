@@ -3,6 +3,7 @@
 package io.github.muntashirakon.AppManager.details;
 
 import android.annotation.SuppressLint;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -22,6 +23,7 @@ import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import net.dongliu.apk.parser.ApkParser;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Locale;
@@ -37,6 +39,7 @@ import androidx.core.content.ContextCompat;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
+import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -91,7 +94,7 @@ public class ManifestViewerActivity extends BaseActivity {
         mProgressIndicator = findViewById(R.id.progress_linear);
         mProgressIndicator.setVisibilityAfterHide(View.GONE);
         final Intent intent = getIntent();
-        final Uri packageUri = intent.getData();
+        final Uri packageUri = IntentCompat.getDataUri(intent);
         packageName = intent.getStringExtra(EXTRA_PACKAGE_NAME);
         if (packageUri == null && packageName == null) {
             showErrorAndFinish();
@@ -101,7 +104,8 @@ public class ManifestViewerActivity extends BaseActivity {
         if (packageUri != null) {
             new Thread(() -> {
                 PackageInfo packageInfo = null;
-                if (intent.getAction() != null && intent.getAction().equals(Intent.ACTION_VIEW)) {
+                archiveFilePath = packageUri.getPath();
+                if (packageUri.getScheme().equals(ContentResolver.SCHEME_CONTENT) || !new File(archiveFilePath).canRead()) {
                     try {
                         int key = ApkFile.createInstance(packageUri, intent.getType());
                         apkFile = ApkFile.getInstance(key);
@@ -111,7 +115,7 @@ public class ManifestViewerActivity extends BaseActivity {
                         runOnUiThread(this::showErrorAndFinish);
                         return;
                     }
-                } else archiveFilePath = packageUri.getPath();
+                }
                 if (archiveFilePath != null)
                     packageInfo = pm.getPackageArchiveInfo(archiveFilePath, 0);
                 if (packageInfo != null) {

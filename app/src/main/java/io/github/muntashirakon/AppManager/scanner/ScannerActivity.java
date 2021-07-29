@@ -45,6 +45,7 @@ import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity;
+import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.types.EmptySpan;
 import io.github.muntashirakon.AppManager.types.NumericSpan;
@@ -114,7 +115,7 @@ public class ScannerActivity extends BaseActivity {
         mProgressIndicator.setVisibilityAfterHide(View.GONE);
         showProgress(true);
 
-        apkUri = intent.getData();
+        apkUri = IntentCompat.getDataUri(intent);
         if (apkUri == null) {
             Toast.makeText(this, getString(R.string.error), Toast.LENGTH_LONG).show();
             finish();
