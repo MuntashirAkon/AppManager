@@ -150,7 +150,7 @@ public final class ApkFile implements AutoCloseable {
     @NonNull
     private final List<ZipEntry> obbFiles = new ArrayList<>();
     @NonNull
-    private File cacheFilePath;
+    private final File cacheFilePath;
     @Nullable
     private ParcelFileDescriptor fd;
     @Nullable
@@ -221,24 +221,15 @@ public final class ApkFile implements AutoCloseable {
             } catch (SecurityException e) {
                 Log.e(TAG, e);
             }
-            if (this.fd != null) {
-                this.cacheFilePath = IOUtils.getFileFromFd(fd);
-                if (!this.cacheFilePath.canRead()) {
-                    // Cache manually
-                    try (InputStream is = cr.openInputStream(apkUri)) {
-                        this.cacheFilePath = IOUtils.getCachedFile(is);
-                    } catch (IOException e) {
-                        throw new ApkFileException("Could not cache the input file.");
-                    }
-                }
-            } else {
+            File cacheFilePath = this.fd != null ? IOUtils.getFileFromFd(fd) : null;
+            if (cacheFilePath == null || !cacheFilePath.canRead()) {
                 // Cache manually
                 try (InputStream is = cr.openInputStream(apkUri)) {
                     this.cacheFilePath = IOUtils.getCachedFile(is);
-                } catch (IOException | SecurityException e) {
-                    throw new ApkFileException("Could not cache the input file.");
+                } catch (IOException e) {
+                    throw new ApkFileException("Could not cache the input file.", e);
                 }
-            }
+            } else this.cacheFilePath = cacheFilePath;
         }
         String packageName = null;
         // Check for splits
