@@ -63,7 +63,8 @@ public class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> 
                 Intent openFile = new Intent(Intent.ACTION_VIEW);
                 openFile.setDataAndType(FmProvider.getContentUri(item.path), item.path.getType());
                 openFile.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_GRANT_READ_URI_PERMISSION
-                        | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                        | Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION
+                        | Intent.FLAG_GRANT_PREFIX_URI_PERMISSION);
                 if (openFile.resolveActivityInfo(fmActivity.getPackageManager(), 0) != null) {
                     fmActivity.startActivity(openFile);
                 }
