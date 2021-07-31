@@ -234,7 +234,10 @@ public final class TarUtils {
                     || (isUnderFilter(pathname, basePath, filters) && !willExclude(pathname, basePath, exclude)));
             if (children.length == 0) {
                 // No child has matched, delete this directory
-                source.delete();
+                if (!basePath.equals(source)) {
+                    // Only delete if the source is not the base path
+                    source.delete();
+                }
                 // Create this directory again if it matches one of the filters
                 if (isUnderFilter(source, basePath, filters) && !willExclude(source, basePath, exclude)) {
                     source.mkdirs();
