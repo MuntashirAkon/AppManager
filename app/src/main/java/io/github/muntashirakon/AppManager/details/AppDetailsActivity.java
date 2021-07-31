@@ -91,7 +91,7 @@ public class AppDetailsActivity extends BaseActivity {
                         return;
                     }
                     // Load tabs for the first time
-                    for (int i = 0; i < mTabTitleIds.length(); ++i) model.load(i);
+//                    for (int i = 0; i < mTabTitleIds.length(); ++i) model.load(i);
                     // Set title
                     ApplicationInfo applicationInfo = packageInfo.applicationInfo;
                     // Set title as the package label
