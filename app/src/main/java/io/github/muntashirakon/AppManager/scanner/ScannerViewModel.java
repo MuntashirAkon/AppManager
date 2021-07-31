@@ -30,7 +30,6 @@ import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 
-
 public class ScannerViewModel extends AndroidViewModel {
     private File apkFile;
     private Uri apkUri;
@@ -40,7 +39,6 @@ public class ScannerViewModel extends AndroidViewModel {
     private List<String> libClassList = new ArrayList<>();
 
     private CountDownLatch waitForFile;
-    private CountDownLatch waitForAllClasses;
     private final MultithreadedExecutor executor = MultithreadedExecutor.getNewInstance();
     private final MutableLiveData<Pair<String, String>[]> apkChecksums = new MutableLiveData<>();
     private final MutableLiveData<ApkVerifier.Result> apkVerifierResult = new MutableLiveData<>();
@@ -66,7 +64,6 @@ public class ScannerViewModel extends AndroidViewModel {
         this.apkFile = apkFile;
         this.apkUri = apkUri;
         waitForFile = new CountDownLatch(1);
-        waitForAllClasses = new CountDownLatch(1);
         // Cache files
         executor.submit(() -> {
             Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
@@ -85,11 +82,7 @@ public class ScannerViewModel extends AndroidViewModel {
         // Load all classes
         executor.submit(() -> {
             Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-            try {
-                loadAllClasses();
-            } finally {
-                waitForAllClasses.countDown();
-            }
+            loadAllClasses();
         });
     }
 
@@ -172,15 +165,6 @@ public class ScannerViewModel extends AndroidViewModel {
     public void waitForFile() {
         try {
             waitForFile.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @WorkerThread
-    public void waitForAllClasses() {
-        try {
-            waitForAllClasses.await();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
