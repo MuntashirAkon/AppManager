@@ -37,12 +37,18 @@ public class ProxyOutputStream extends OutputStream {
     public ProxyOutputStream(File file, boolean append) throws IOException {
         String mode = "w" + (append ? "a" : "t");
         try {
+            if (file == null || (file.exists() && !file.canWrite())) {
+                throw new IOException("The file cannot be opened for writing.");
+            }
             if (file instanceof ProxyFile && LocalServer.isAMServiceAlive()) {
                 fd = IPCUtils.getAmService().getFD(file.getAbsolutePath(), mode);
+                if (fd == null) {
+                    throw new IOException("Returned no file descriptor from the remote service.");
+                }
             } else {
                 fd = FileDescriptorImpl.getInstance(file.getAbsolutePath(), mode);
             }
-        } catch (ErrnoException | RemoteException e) {
+        } catch (ErrnoException | RemoteException | SecurityException e) {
             throw ExUtils.<IOException>rethrowAsIOException(e);
         }
     }

@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.collection.ArrayMap;
 import androidx.core.content.ContextCompat;
@@ -45,6 +46,7 @@ import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity;
+import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.types.EmptySpan;
 import io.github.muntashirakon.AppManager.types.NumericSpan;
@@ -74,6 +76,7 @@ public class ScannerActivity extends BaseActivity {
     private CharSequence mAppName;
     private ActionBar mActionBar;
     private LinearProgressIndicator mProgressIndicator;
+    @Nullable
     private String mPackageName;
     private ParcelFileDescriptor fd;
     private File apkFile;
@@ -114,7 +117,7 @@ public class ScannerActivity extends BaseActivity {
         mProgressIndicator.setVisibilityAfterHide(View.GONE);
         showProgress(true);
 
-        apkUri = intent.getData();
+        apkUri = IntentCompat.getDataUri(intent);
         if (apkUri == null) {
             Toast.makeText(this, getString(R.string.error), Toast.LENGTH_LONG).show();
             finish();
@@ -189,29 +192,27 @@ public class ScannerActivity extends BaseActivity {
                 intent1.putExtra(ClassListingActivity.EXTRA_APP_NAME, mAppName);
                 startActivity(intent1);
             });
+            // Fetch tracker info
+            new Thread(() -> {
+                Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+                try {
+                    setTrackerInfo();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }).start();
+            // Fetch library info
+            new Thread(() -> {
+                Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+                try {
+                    setLibraryInfo();
+                    // Progress is dismissed here because this will take the largest time
+                    runOnUiThread(() -> showProgress(false));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }).start();
         });
-        // Fetch tracker info
-        new Thread(() -> {
-            model.waitForAllClasses();
-            Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-            try {
-                setTrackerInfo();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }).start();
-        // Fetch library info
-        new Thread(() -> {
-            model.waitForAllClasses();
-            Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-            try {
-                setLibraryInfo();
-                // Progress is dismissed here because this will take the largest time
-                runOnUiThread(() -> showProgress(false));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }).start();
     }
 
     @Override
@@ -328,23 +329,27 @@ public class ScannerActivity extends BaseActivity {
             ((TextView) findViewById(R.id.tracker_title)).setText(coloredSummary);
             ((TextView) findViewById(R.id.tracker_description)).setText(builder);
             if (finalTotalTrackersFound == 0) return;
-            findViewById(R.id.tracker).setOnClickListener(v ->
-                    new ScrollableDialogBuilder(this, getOrderedList(foundTrackerInfo))
-                            .setTitle(R.string.tracker_details)
-                            .setPositiveButton(R.string.ok, null)
-                            .setNegativeButton(R.string.copy, (dialog, which, isChecked) -> {
-                                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                                ClipData clip = ClipData.newPlainText(getString(R.string.signatures), TextUtils.join("\n", foundTrackerInfo));
-                                clipboard.setPrimaryClip(clip);
-                            })
-                            .setNeutralButton(R.string.exodus_link, (dialog, which, isChecked) -> {
-                                Uri exodus_link = Uri.parse(String.format("https://reports.exodus-privacy.eu.org/en/reports/%s/latest/", mPackageName));
-                                Intent intent = new Intent(Intent.ACTION_VIEW, exodus_link);
-                                if (intent.resolveActivity(getPackageManager()) != null) {
-                                    startActivity(intent);
-                                }
-                            })
-                            .show());
+            findViewById(R.id.tracker).setOnClickListener(v -> {
+                ScrollableDialogBuilder builder1 = new ScrollableDialogBuilder(this, getOrderedList(foundTrackerInfo))
+                        .setTitle(R.string.tracker_details)
+                        .setPositiveButton(R.string.ok, null)
+                        .setNegativeButton(R.string.copy, (dialog, which, isChecked) -> {
+                            ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                            ClipData clip = ClipData.newPlainText(getString(R.string.signatures), TextUtils.join("\n", foundTrackerInfo));
+                            clipboard.setPrimaryClip(clip);
+                        });
+                if (mPackageName != null) {
+                    builder1.setNeutralButton(R.string.exodus_link, (dialog, which, isChecked) -> {
+                        Uri exodus_link = Uri.parse(String.format(
+                                "https://reports.exodus-privacy.eu.org/en/reports/%s/latest/", mPackageName));
+                        Intent intent = new Intent(Intent.ACTION_VIEW, exodus_link);
+                        if (intent.resolveActivity(getPackageManager()) != null) {
+                            startActivity(intent);
+                        }
+                    });
+                }
+                builder1.show();
+            });
         });
     }
 
@@ -377,7 +382,7 @@ public class ScannerActivity extends BaseActivity {
                     }
                 }
                 // Add the class to the missing libs list if it doesn't match the filters
-                if (!matched && !className.startsWith(mPackageName) && !className.matches(SIG_TO_IGNORE)) {
+                if (!matched && (mPackageName != null && !className.startsWith(mPackageName)) && !className.matches(SIG_TO_IGNORE)) {
                     missingLibs.add(className);
                 }
             }

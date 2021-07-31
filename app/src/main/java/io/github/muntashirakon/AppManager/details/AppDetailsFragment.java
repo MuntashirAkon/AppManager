@@ -948,7 +948,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     : activityLabel);
             // Process name
             String processName = activityInfo.processName;
-            if (!processName.equals(mPackageName)) {
+            if (processName != null && !processName.equals(mPackageName)) {
                 holder.textView7.setVisibility(View.VISIBLE);
                 holder.textView7.setText(String.format(Locale.ROOT, "%s: %s",
                         getString(R.string.process_name), processName));
@@ -1047,7 +1047,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     (serviceInfo.permission != null ? serviceInfo.permission : "")));
             // Process name
             String processName = serviceInfo.processName;
-            if (!processName.equals(mPackageName)) {
+            if (processName != null && !processName.equals(mPackageName)) {
                 holder.textView7.setVisibility(View.VISIBLE);
                 holder.textView7.setText(String.format(Locale.ROOT, "%s: %s",
                         getString(R.string.process_name), processName));
@@ -1125,7 +1125,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     getString(R.string.soft_input), Utils.getSoftInputString(activityInfo.softInputMode)));
             // Process name
             String processName = activityInfo.processName;
-            if (!processName.equals(mPackageName)) {
+            if (processName != null && !processName.equals(mPackageName)) {
                 holder.textView7.setVisibility(View.VISIBLE);
                 holder.textView7.setText(String.format(Locale.ROOT, "%s: %s",
                         getString(R.string.process_name), processName));
@@ -1208,7 +1208,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             }
             // Process name
             String processName = providerInfo.processName;
-            if (!processName.equals(mPackageName)) {
+            if (processName != null && !processName.equals(mPackageName)) {
                 holder.textView7.setVisibility(View.VISIBLE);
                 holder.textView7.setText(String.format(Locale.ROOT, "%s: %s",
                         getString(R.string.process_name), processName));

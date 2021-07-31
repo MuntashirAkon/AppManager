@@ -290,11 +290,13 @@ class RestoreOp implements Closeable {
         PackageInstallerCompat packageInstaller = PackageInstallerCompat.getNewInstance(userHandle, metadata.installer);
         // We don't need to display install completed message
         packageInstaller.setShowCompletedMessage(false);
-        if (!packageInstaller.install(allApks, packageName)) {
-            deleteFiles(allApks);
-            throw new BackupException("A (re)install was necessary but couldn't perform it.");
+        try {
+            if (!packageInstaller.install(allApks, packageName)) {
+                throw new BackupException("A (re)install was necessary but couldn't perform it.");
+            }
+        } finally {
+            deleteFiles(allApks);  // Clean up apk files
         }
-        deleteFiles(allApks);  // Clean up apk files
         // Get package info, again
         try {
             packageInfo = PackageManagerCompat.getPackageInfo(packageName, PackageUtils.flagSigningInfo, userHandle);

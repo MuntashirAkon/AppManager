@@ -8,6 +8,7 @@ import android.system.ErrnoException;
 import androidx.annotation.WorkerThread;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -26,12 +27,18 @@ public class ProxyInputStream extends InputStream {
     public ProxyInputStream(File file) throws IOException {
         String mode = "r";
         try {
+            if (file == null || (file.exists() && !file.canRead())) {
+                throw new FileNotFoundException("The file cannot be opened for reading.");
+            }
             if (file instanceof ProxyFile && LocalServer.isAMServiceAlive()) {
                 fd = IPCUtils.getAmService().getFD(file.getAbsolutePath(), mode);
+                if (fd == null) {
+                    throw new IOException("Returned no file descriptor from the remote service");
+                }
             } else {
                 fd = FileDescriptorImpl.getInstance(file.getAbsolutePath(), mode);
             }
-        } catch (ErrnoException | RemoteException e) {
+        } catch (ErrnoException | RemoteException | SecurityException e) {
             throw ExUtils.<IOException>rethrowAsIOException(e);
         }
     }
