@@ -91,7 +91,7 @@ public class AppDetailsActivity extends BaseActivity {
                         return;
                     }
                     // Load tabs for the first time
-                    //for (int i = 0; i < mTabTitleIds.length(); ++i) model.load(i);
+                    if(model.getIsExternalApk()) for (int i = 0; i < mTabTitleIds.length(); ++i) model.load(i);
                     // Set title
                     ApplicationInfo applicationInfo = packageInfo.applicationInfo;
                     // Set title as the package label
@@ -128,7 +128,8 @@ public class AppDetailsActivity extends BaseActivity {
     private void loadTabs() {
         @AppDetailsFragment.Property int id = viewPager.getCurrentItem();
         Log.e("ADA - " + mTabTitleIds.getText(id), "isPackageChanged called");
-        for (int i = 0; i < mTabTitleIds.length(); ++i) model.load(i);
+        if (model.getIsExternalApk()) model.load(AppDetailsFragment.APP_INFO);
+        else for (int i = 0; i < mTabTitleIds.length(); ++i) model.load(i);
     }
 
     // For tab layout
