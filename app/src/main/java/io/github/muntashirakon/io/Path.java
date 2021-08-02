@@ -161,29 +161,50 @@ public class Path {
 
     @NonNull
     public Path createNewFile(@NonNull String displayName, @Nullable String mimeType) throws IOException {
-        if (hasFile(displayName)) {
-            Path path = findFile(displayName);
-            if (path.isDirectory()) {
-                throw new IOException("Directory cannot be converted to file");
-            }
-            // Delete the file if it exists
-            path.delete();
-        }
-        if (mimeType == null) {
-            // Generic binary file
-            mimeType = "application/octet-stream";
-        }
-        DocumentFile file = documentFile.createFile(mimeType, displayName);
-        if (file == null)
-            throw new IOException("Could not create file named " + displayName + " with type " + mimeType);
-        return new Path(context, file);
+        return createNewFileInternal(context, documentFile, displayName, mimeType);
     }
 
     @CheckResult
     @NonNull
     public Path createNewDirectory(@NonNull String displayName) throws IOException {
+        displayName = normalizeFilename(displayName);
         DocumentFile file = documentFile.createDirectory(displayName);
         if (file == null) throw new IOException("Could not create directory named " + displayName);
+        return new Path(context, file);
+    }
+
+    public Path createNewFileRecursive(@NonNull String displayName, @Nullable String mimeType) throws IOException {
+        displayName = normalizeFilename(displayName);
+        String[] names = displayName.split("/");
+        DocumentFile file = documentFile;
+        int dirCount = names.length - 1;
+        for (int i = 0; i < dirCount; ++i) {
+            DocumentFile t = file.findFile(names[i]);
+            if (t == null) t = file.createDirectory(names[i]);
+            else if (!t.isDirectory()) throw new IOException(names[i] + " exists and it is not a directory.");
+            file = t;
+            if (file == null) throw new IOException("Could not create directory named " + names[i]);
+        }
+        return createNewFileInternal(context, file, displayName, mimeType);
+    }
+
+    @CheckResult
+    @NonNull
+    public Path createDirectories(@NonNull String displayName) throws IOException {
+        displayName = normalizeFilename(displayName);
+        String[] dirNames = displayName.split("/");
+        DocumentFile file = documentFile;
+        for (String dirName : dirNames) {
+            DocumentFile t = file.findFile(dirName);
+            if (t == null) t = file.createDirectory(dirName);
+            else if (!t.isDirectory()) {
+                throw new IOException(dirName + " exists and it is not a directory.");
+            }
+            if (t == null) {
+                throw new IOException("Could not create directory named " + dirName);
+            }
+            file = t;
+        }
         return new Path(context, file);
     }
 
@@ -199,17 +220,19 @@ public class Path {
     }
 
     public boolean hasFile(@NonNull String displayName) {
-        return documentFile.findFile(displayName) != null;
+        return documentFile.findFile(normalizeFilename(displayName)) != null;
     }
 
     @NonNull
     public Path findFile(@NonNull String displayName) throws FileNotFoundException {
+        displayName = normalizeFilename(displayName);
         DocumentFile file = documentFile.findFile(displayName);
-        if (file == null) throw new FileNotFoundException("Cannot find " + displayName);
+        if (file == null) throw new FileNotFoundException("Cannot find " + this + File.separatorChar + displayName);
         return new Path(context, file);
     }
 
     public Path findOrCreateFile(@NonNull String displayName, @Nullable String mimeType) throws IOException {
+        displayName = normalizeFilename(displayName);
         DocumentFile file = documentFile.findFile(displayName);
         if (file == null) {
             return createNewFile(displayName, mimeType);
@@ -218,6 +241,7 @@ public class Path {
     }
 
     public Path findOrCreateDirectory(@NonNull String displayName) throws IOException {
+        displayName = normalizeFilename(displayName);
         DocumentFile file = documentFile.findFile(displayName);
         if (file == null) {
             return createNewDirectory(displayName);
@@ -273,6 +297,7 @@ public class Path {
     }
 
     public boolean renameTo(@NonNull String displayName) {
+        displayName = normalizeFilename(displayName);
         if (displayName.contains(File.separator)) {
             // display name must belong to the same directory.
             return false;
@@ -508,6 +533,12 @@ public class Path {
         return documentFile.listFiles();
     }
 
+    @NonNull
+    @Override
+    public String toString() {
+        return getUri().toString();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -546,6 +577,37 @@ public class Path {
          * should be included
          */
         boolean accept(Path pathname);
+    }
+
+    @NonNull
+    private static Path createNewFileInternal(@NonNull Context context,
+                                              @NonNull DocumentFile documentFile,
+                                              @NonNull String displayName,
+                                              @Nullable String mimeType) throws IOException {
+        displayName = normalizeFilename(displayName);
+        DocumentFile f = documentFile.findFile(displayName);
+        if (f != null) {
+            if (f.isDirectory()) {
+                throw new IOException("Directory cannot be converted to file");
+            }
+            // Delete the file if it exists
+            f.delete();
+        }
+        if (mimeType == null) {
+            // Generic binary file
+            mimeType = "application/octet-stream";
+        }
+        DocumentFile file = documentFile.createFile(mimeType, displayName);
+        if (file == null) {
+            throw new IOException("Could not create file named " + displayName + " with type " + mimeType);
+        }
+        return new Path(context, file);
+    }
+
+    @NonNull
+    private static String normalizeFilename(@NonNull String filename) {
+        // Filename can contain `./` prefix which has to be removed
+        return filename.startsWith("./") ? filename.substring(2) : filename;
     }
 
     private static class StorageCallback extends StorageManagerCompat.ProxyFileDescriptorCallbackCompat {

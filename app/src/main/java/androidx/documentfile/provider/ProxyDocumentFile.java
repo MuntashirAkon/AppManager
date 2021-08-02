@@ -53,7 +53,7 @@ public class ProxyDocumentFile extends DocumentFile {
     @Nullable
     public DocumentFile createDirectory(@NonNull String displayName) {
         final File target = new ProxyFile(mFile, displayName);
-        if (target.isDirectory() || target.mkdirs()) {
+        if (target.isDirectory() || target.mkdir()) {
             return new ProxyDocumentFile(this, target);
         } else {
             return null;
