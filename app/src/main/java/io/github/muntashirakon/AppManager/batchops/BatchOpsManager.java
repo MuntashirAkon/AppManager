@@ -277,6 +277,7 @@ public class BatchOpsManager {
                                 break;
                         }
                     } catch (BackupException e) {
+                        Log.e(TAG, e);
                         synchronized (failedPackages) {
                             failedPackages.add(pair);
                         }

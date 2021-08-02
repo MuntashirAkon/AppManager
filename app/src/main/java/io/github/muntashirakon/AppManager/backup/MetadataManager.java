@@ -39,7 +39,6 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
-import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.JSONUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
@@ -211,7 +210,7 @@ public final class MetadataManager {
                 metadataManager.readMetadata(new BackupFiles.BackupFile(backupFile, false));
                 metadataList.add(metadataManager.getMetadata());
             } catch (IOException e) {
-                Log.e("MetadataManager", e.getClass().getName() + ": " + e.getMessage());
+                Log.e("MetadataManager", e);
             }
         }
         return metadataList.toArray(new Metadata[0]);
@@ -242,7 +241,9 @@ public final class MetadataManager {
     synchronized public void readMetadata(@NonNull BackupFiles.BackupFile backupFile) throws IOException {
         String metadata = FileUtils.getFileContent(backupFile.getMetadataFile());
         try {
-            if (TextUtils.isEmpty(metadata)) throw new JSONException("Empty JSON string");
+            if (TextUtils.isEmpty(metadata)) {
+                throw new JSONException("Empty JSON string for path " + backupFile.getBackupPath());
+            }
             JSONObject rootObject = new JSONObject(metadata);
             this.metadata = new Metadata();
             this.metadata.backupPath = backupFile.getBackupPath();
@@ -269,7 +270,7 @@ public final class MetadataManager {
             this.metadata.keyStore = rootObject.getBoolean("key_store");
             this.metadata.installer = JSONUtils.getString(rootObject, "installer", BuildConfig.APPLICATION_ID);
         } catch (JSONException e) {
-            ExUtils.rethrowAsIOException(e);
+            throw new IOException(e.getMessage() + " for path " + backupFile.getBackupPath());
         }
     }
 
@@ -291,7 +292,9 @@ public final class MetadataManager {
 
     @WorkerThread
     synchronized public void writeMetadata(@NonNull BackupFiles.BackupFile backupFile) throws IOException {
-        if (metadata == null) throw new RuntimeException("Metadata is not set.");
+        if (metadata == null) {
+            throw new RuntimeException("Metadata not set for path " + backupFile.getBackupPath());
+        }
         Path metadataFile = backupFile.getMetadataFile();
         try (OutputStream outputStream = metadataFile.openOutputStream()) {
             JSONObject rootObject = new JSONObject();
@@ -320,7 +323,7 @@ public final class MetadataManager {
             rootObject.put("installer", metadata.installer);
             outputStream.write(rootObject.toString(4).getBytes());
         } catch (JSONException e) {
-            ExUtils.rethrowAsIOException(e);
+            throw new IOException(e.getMessage() + " for path " + backupFile.getBackupPath());
         }
     }
 
