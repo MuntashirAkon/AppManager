@@ -181,11 +181,15 @@ public class Path {
         for (int i = 0; i < dirCount; ++i) {
             DocumentFile t = file.findFile(names[i]);
             if (t == null) t = file.createDirectory(names[i]);
-            else if (!t.isDirectory()) throw new IOException(names[i] + " exists and it is not a directory.");
+            else if (!t.isDirectory()) {
+                throw new IOException(names[i] + " exists and it is not a directory.");
+            }
+            if (t == null) {
+                throw new IOException("Could not create directory " + this + File.separatorChar + names[i]);
+            }
             file = t;
-            if (file == null) throw new IOException("Could not create directory named " + names[i]);
         }
-        return createNewFileInternal(context, file, displayName, mimeType);
+        return createNewFileInternal(context, file, names[dirCount], mimeType);
     }
 
     @CheckResult
@@ -201,7 +205,7 @@ public class Path {
                 throw new IOException(dirName + " exists and it is not a directory.");
             }
             if (t == null) {
-                throw new IOException("Could not create directory named " + dirName);
+                throw new IOException("Could not create directory " + this + File.separatorChar + dirName);
             }
             file = t;
         }
@@ -282,18 +286,30 @@ public class Path {
         return false;
     }
 
-    public void mkdir() {
+    public boolean mkdir() {
+        if (exists()) return true;
         if (documentFile instanceof ProxyDocumentFile) {
-            ((ProxyDocumentFile) documentFile).getFile().mkdirs();
+            return ((ProxyDocumentFile) documentFile).getFile().mkdir();
+        } else {
+            DocumentFile parent = documentFile.getParentFile();
+            if (parent != null) {
+                DocumentFile thisFile = parent.createDirectory(getName());
+                if (thisFile != null) {
+                    documentFile = thisFile;
+                    return true;
+                }
+            }
         }
-        // For others, files are already created
+        return false;
     }
 
-    public void mkdirs() {
+    public boolean mkdirs() {
+        if (exists()) return true;
         if (documentFile instanceof ProxyDocumentFile) {
-            ((ProxyDocumentFile) documentFile).getFile().mkdirs();
+            return ((ProxyDocumentFile) documentFile).getFile().mkdirs();
         }
-        // For others, files are already created
+        // For others, directory can't be created recursively as parent must exist
+        return mkdir();
     }
 
     public boolean renameTo(@NonNull String displayName) {
@@ -599,7 +615,7 @@ public class Path {
         }
         DocumentFile file = documentFile.createFile(mimeType, displayName);
         if (file == null) {
-            throw new IOException("Could not create file named " + displayName + " with type " + mimeType);
+            throw new IOException("Could not create " + documentFile.getUri() + File.separatorChar + displayName + " with type " + mimeType);
         }
         return new Path(context, file);
     }

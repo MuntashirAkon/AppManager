@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -64,6 +65,12 @@ public class TarUtilsTest {
         }
         tarGzFilesForExtractTest = TarUtils.create(TarUtils.TAR_GZIP, testRoot, tmpRoot, "am_ex.tar.gz",
                 null, null, null, false).toArray(new Path[0]);
+    }
+
+    @After
+    public void tearDown() {
+        testRoot.delete();
+        tarGzFilesForExtractTest[0].delete();
     }
 
     @Test
