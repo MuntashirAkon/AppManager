@@ -145,7 +145,11 @@ public final class TarUtils {
                 String realDestPath = dest.getCanonicalFile().toURI().getPath();
                 TarArchiveEntry entry;
                 while ((entry = tis.getNextEntry()) != null) {
-                    File file = new ProxyFile(dest, entry.getName());
+                    String entryName = entry.getName();
+                    if (entryName.startsWith("./")) {
+                        entryName = entryName.substring(2);
+                    }
+                    File file = new ProxyFile(dest, entryName);
                     if (!entry.isDirectory() && (!isUnderFilter(file, dest, filters)
                             || willExclude(file, dest, exclude))) {
                         // Unlike create, there's no efficient way to detect if a directory contains any filters.
