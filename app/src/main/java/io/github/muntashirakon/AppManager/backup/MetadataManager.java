@@ -182,7 +182,7 @@ public final class MetadataManager {
     synchronized public void readMetadata(@NonNull BackupFiles.BackupFile backupFile)
             throws JSONException {
         String metadata = IOUtils.getFileContent(backupFile.getMetadataFile());
-        if (TextUtils.isEmpty(metadata)) throw new JSONException("Empty JSON string");
+        if (TextUtils.isEmpty(metadata)) throw new JSONException("Empty JSON string for path " + backupFile.getBackupPath());
         JSONObject rootObject = new JSONObject(metadata);
         this.metadata = new Metadata();
         this.metadata.backupPath = backupFile.getBackupPath();
@@ -229,7 +229,7 @@ public final class MetadataManager {
     @WorkerThread
     synchronized public void writeMetadata(@NonNull BackupFiles.BackupFile backupFile)
             throws IOException, JSONException, RemoteException {
-        if (metadata == null) throw new RuntimeException("Metadata is not set.");
+        if (metadata == null) throw new RuntimeException("Metadata is not set for path " + backupFile.getBackupPath());
         File metadataFile = backupFile.getMetadataFile();
         try (OutputStream outputStream = new ProxyOutputStream(metadataFile)) {
             JSONObject rootObject = new JSONObject();
