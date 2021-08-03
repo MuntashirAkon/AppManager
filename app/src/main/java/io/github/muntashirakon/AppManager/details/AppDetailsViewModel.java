@@ -18,7 +18,6 @@ import android.content.pm.ServiceInfo;
 import android.content.pm.UserInfo;
 import android.net.Uri;
 import android.os.Build;
-import android.os.DeadSystemException;
 import android.os.RemoteException;
 import android.text.TextUtils;
 
@@ -47,7 +46,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -81,6 +79,8 @@ import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningI
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfoApk;
 
 public class AppDetailsViewModel extends AndroidViewModel {
+    public static final String TAG = AppDetailsViewModel.class.getSimpleName();
+
     private final PackageManager mPackageManager;
     private PackageInfo packageInfo;
     private PackageInfo installedPackageInfo;
@@ -478,32 +478,36 @@ public class AppDetailsViewModel extends AndroidViewModel {
         AppDetailsPermissionItem permissionItem;
         List<AppDetailsPermissionItem> revokedPermissions = new ArrayList<>();
         boolean isSuccessful = true;
-        for (int i = 0; i < usesPermissionItems.size(); ++i) {
-            permissionItem = usesPermissionItems.get(i);
-            if (permissionItem.isDangerous && permissionItem.isGranted) {
-                try {
-                    PermissionCompat.revokePermission(packageName, permissionItem.name, userHandle);
-                    // Check if review is required and disable it
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && (permissionItem.permissionFlags
-                            & PermissionCompat.FLAG_PERMISSION_REVIEW_REQUIRED) != 0) {
+        synchronized (usesPermissionItems) {
+            for (int i = 0; i < usesPermissionItems.size(); ++i) {
+                permissionItem = usesPermissionItems.get(i);
+                if (permissionItem.isDangerous && permissionItem.isGranted) {
+                    try {
+                        PermissionCompat.revokePermission(packageName, permissionItem.name, userHandle);
+                        // Check if review is required and disable it
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && (permissionItem.permissionFlags
+                                & PermissionCompat.FLAG_PERMISSION_REVIEW_REQUIRED) != 0) {
+                            try {
+                                PermissionCompat.updatePermissionFlags(permissionItem.name, packageName,
+                                        PermissionCompat.FLAG_PERMISSION_REVIEW_REQUIRED, 0, PermissionCompat
+                                                .getCheckAdjustPolicyFlagPermission(packageInfo.applicationInfo),
+                                        userHandle);
+                            } catch (RemoteException ignore) {
+                            }
+                        }
+                        permissionItem.isGranted = false;
                         try {
-                            PermissionCompat.updatePermissionFlags(permissionItem.name, packageName,
-                                    PermissionCompat.FLAG_PERMISSION_REVIEW_REQUIRED, 0, PermissionCompat
-                                            .getCheckAdjustPolicyFlagPermission(packageInfo.applicationInfo), userHandle);
+                            permissionItem.permissionFlags = PermissionCompat.getPermissionFlags(permissionItem.name,
+                                    packageName, userHandle);
                         } catch (RemoteException ignore) {
                         }
+                        usesPermissionItems.set(i, permissionItem);
+                        revokedPermissions.add(permissionItem);
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                        isSuccessful = false;
+                        break;
                     }
-                    permissionItem.isGranted = false;
-                    try {
-                        permissionItem.permissionFlags = PermissionCompat.getPermissionFlags(permissionItem.name, packageName, userHandle);
-                    } catch (RemoteException ignore) {
-                    }
-                    usesPermissionItems.set(i, permissionItem);
-                    revokedPermissions.add(permissionItem);
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                    isSuccessful = false;
-                    break;
                 }
             }
         }
@@ -824,10 +828,6 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 }
             } catch (Throwable e) {
                 installedPackageInfo = null;
-                e.printStackTrace();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && e instanceof DeadSystemException) {
-                    throw (DeadSystemException) e;
-                }
             }
             if (isExternalApk) {
                 packageInfo = mPackageManager.getPackageArchiveInfo(apkPath, PackageManager.GET_PERMISSIONS
@@ -853,14 +853,10 @@ public class AppDetailsViewModel extends AndroidViewModel {
         } catch (PackageManager.NameNotFoundException e) {
             isPackageExistLiveData.postValue(isPackageExist = false);
         } catch (Throwable e) {
-            e.printStackTrace();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && e instanceof DeadSystemException) {
-                // For some packages this exception might occur
-                setPackageInfo(false);
-                return;
-            }
+            Log.e(TAG, e);
+        } finally {
+            isPackageChanged.postValue(true);
         }
-        isPackageChanged.postValue(true);
     }
 
     @WorkerThread
@@ -1194,7 +1190,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     @NonNull
     private final MutableLiveData<List<AppDetailsItem>> usesPermissions = new MutableLiveData<>();
-    private CopyOnWriteArrayList<AppDetailsPermissionItem> usesPermissionItems;
+    private final ArrayList<AppDetailsPermissionItem> usesPermissionItems = new ArrayList<>();
 
     @UiThread
     private LiveData<List<AppDetailsItem>> getUsesPermissions() {
@@ -1207,11 +1203,13 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @WorkerThread
     public void setUsesPermission(AppDetailsPermissionItem appDetailsPermissionItem) {
         AppDetailsPermissionItem permissionItem;
-        for (int i = 0; i < usesPermissionItems.size(); ++i) {
-            permissionItem = usesPermissionItems.get(i);
-            if (permissionItem.name.equals(appDetailsPermissionItem.name)) {
-                usesPermissionItems.set(i, appDetailsPermissionItem);
-                break;
+        synchronized (usesPermissionItems) {
+            for (int i = 0; i < usesPermissionItems.size(); ++i) {
+                permissionItem = usesPermissionItems.get(i);
+                if (permissionItem.name.equals(appDetailsPermissionItem.name)) {
+                    usesPermissionItems.set(i, appDetailsPermissionItem);
+                    break;
+                }
             }
         }
     }
@@ -1220,9 +1218,9 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @WorkerThread
     private void loadUsesPermissions() {
         List<AppDetailsItem> appDetailsItems = new ArrayList<>();
-        if (usesPermissionItems == null) {
-            usesPermissionItems = new CopyOnWriteArrayList<>();
-        } else usesPermissionItems.clear();
+        synchronized (usesPermissionItems) {
+            usesPermissionItems.clear();
+        }
         if (getPackageInfo() == null || packageInfo.requestedPermissions == null) {
             // No requested permissions
             usesPermissions.postValue(appDetailsItems);
@@ -1262,16 +1260,20 @@ public class AppDetailsViewModel extends AndroidViewModel {
                         e.printStackTrace();
                     }
                 }
-                usesPermissionItems.add(appDetailsItem);
+                synchronized (usesPermissionItems) {
+                    usesPermissionItems.add(appDetailsItem);
+                }
             } catch (PackageManager.NameNotFoundException ignore) {
             }
         }
         // Filter items
-        if (!TextUtils.isEmpty(searchQuery)) {
-            for (AppDetailsPermissionItem appDetailsItem : usesPermissionItems)
-                if (appDetailsItem.name.toLowerCase(Locale.ROOT).contains(searchQuery))
-                    appDetailsItems.add(appDetailsItem);
-        } else appDetailsItems.addAll(usesPermissionItems);
+        synchronized (usesPermissionItems) {
+            if (!TextUtils.isEmpty(searchQuery)) {
+                for (AppDetailsPermissionItem appDetailsItem : usesPermissionItems)
+                    if (appDetailsItem.name.toLowerCase(Locale.ROOT).contains(searchQuery))
+                        appDetailsItems.add(appDetailsItem);
+            } else appDetailsItems.addAll(usesPermissionItems);
+        }
         Collections.sort(appDetailsItems, (o1, o2) -> {
             switch (sortOrderPermissions) {
                 case AppDetailsFragment.SORT_BY_NAME:
