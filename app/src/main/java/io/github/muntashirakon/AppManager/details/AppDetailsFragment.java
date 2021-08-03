@@ -326,13 +326,16 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
 
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
-        if (mainModel == null || isExternalApk) return;
+        if (mainModel == null || mainModel.getIsExternalApk()) {
+            return;
+        }
         if (neededProperty == APP_INFO) super.onPrepareOptionsMenu(menu);
         else if (neededProperty <= PROVIDERS) {
             if (AppPref.isRootEnabled())
                 menu.findItem(sSortMenuItemIdsMap[mainModel.getSortOrder(neededProperty)]).setChecked(true);
-        } else if (neededProperty <= USES_PERMISSIONS)
+        } else if (neededProperty <= USES_PERMISSIONS) {
             menu.findItem(sSortMenuItemIdsMap[mainModel.getSortOrder(neededProperty)]).setChecked(true);
+        }
     }
 
     @Override
@@ -527,6 +530,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     }
 
     private void refreshDetails() {
+        if (isExternalApk) return;
         showProgressIndicator(true);
         if (mainModel == null) {
             mainModel = mActivity.model;
