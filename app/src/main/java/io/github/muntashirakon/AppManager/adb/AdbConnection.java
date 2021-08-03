@@ -351,7 +351,8 @@ public class AdbConnection implements Closeable {
      *                                          and the peer rejects the first authentication attempt, which indicates that the peer has
      *                                          not saved our public key from a previous connection
      */
-    public boolean connect(long timeout, TimeUnit unit, boolean throwOnUnauthorised) throws IOException, InterruptedException, AdbAuthenticationFailedException {
+    public boolean connect(long timeout, @NonNull TimeUnit unit, boolean throwOnUnauthorised)
+            throws IOException, InterruptedException, AdbAuthenticationFailedException {
         if (connected)
             throw new IllegalStateException("Already connected");
 
@@ -380,6 +381,7 @@ public class AdbConnection implements Closeable {
      * @throws IOException                  If the stream fails while sending the packet
      * @throws InterruptedException         If we are unable to wait for the connection to finish
      */
+    @NonNull
     public AdbStream open(String destination) throws UnsupportedEncodingException, IOException, InterruptedException {
         int localId = ++lastLocalId;
 
@@ -413,7 +415,7 @@ public class AdbConnection implements Closeable {
         return stream;
     }
 
-    private boolean waitForConnection(long timeout, TimeUnit unit) throws InterruptedException, IOException {
+    private boolean waitForConnection(long timeout, @NonNull TimeUnit unit) throws InterruptedException, IOException {
         synchronized (this) {
             /* Block if a connection is pending, but not yet complete */
             long timeoutEndMillis = System.currentTimeMillis() + unit.toMillis(timeout);
