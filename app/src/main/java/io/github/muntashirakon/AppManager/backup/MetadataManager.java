@@ -240,10 +240,10 @@ public final class MetadataManager {
     @WorkerThread
     synchronized public void readMetadata(@NonNull BackupFiles.BackupFile backupFile) throws IOException {
         String metadata = FileUtils.getFileContent(backupFile.getMetadataFile());
+        if (TextUtils.isEmpty(metadata)) {
+            throw new IOException("Empty JSON string for path " + backupFile.getBackupPath());
+        }
         try {
-            if (TextUtils.isEmpty(metadata)) {
-                throw new JSONException("Empty JSON string for path " + backupFile.getBackupPath());
-            }
             JSONObject rootObject = new JSONObject(metadata);
             this.metadata = new Metadata();
             this.metadata.backupPath = backupFile.getBackupPath();
