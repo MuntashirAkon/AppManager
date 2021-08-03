@@ -948,9 +948,10 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             Button launch = holder.launchBtn;
             String appLabel = activityInfo.applicationInfo.loadLabel(mPackageManager).toString();
             String activityLabel = activityInfo.loadLabel(mPackageManager).toString();
-            launch.setText(activityLabel.equals(appLabel) || TextUtils.isEmpty(activityLabel) ?
+            String label = activityLabel.equals(appLabel) || TextUtils.isEmpty(activityLabel) ?
                     Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(activityInfo.name))
-                    : activityLabel);
+                    : activityLabel;
+            launch.setText(label);
             // Process name
             String processName = activityInfo.processName;
             if (processName != null && !processName.equals(mPackageName)) {
@@ -988,9 +989,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         return true;
                     });
                 }
-                holder.createBtn.setOnClickListener(v -> LauncherIconCreator.createLauncherIcon(mActivity,
-                        activityInfo, activityInfo.loadLabel(mPackageManager).toString(),
-                        activityInfo.loadIcon(mPackageManager)));
+                holder.createBtn.setOnClickListener(v -> LauncherIconCreator.createLauncherIcon(mActivity, activityInfo,
+                        label, activityInfo.loadIcon(mPackageManager)));
                 holder.editBtn.setOnClickListener(v -> {
                     DialogFragment dialog = new EditShortcutDialogFragment();
                     Bundle args = new Bundle();
