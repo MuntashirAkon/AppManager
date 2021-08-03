@@ -183,7 +183,9 @@ class LocalServerManager {
         return "sh " + ServerConfig.getExecPath() + " " + ServerConfig.getLocalServerPort() + " " + ServerConfig.getLocalToken();
     }
 
+    @Nullable
     private AdbConnection connection;
+    @Nullable
     private AdbStream adbStream;
 
     void tryAdb() throws Exception {
@@ -211,6 +213,7 @@ class LocalServerManager {
 
         // Logging thread
         new Thread(() -> {
+            if (adbStream == null) return;
             LineReader reader;
             StringBuilder sb = new StringBuilder();
             try {
