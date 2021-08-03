@@ -530,12 +530,13 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     }
 
     private void refreshDetails() {
-        if (isExternalApk) return;
+        if (mainModel == null || isExternalApk) return;
         showProgressIndicator(true);
-        if (mainModel == null) {
-            mainModel = mActivity.model;
-        }
-        mainModel.setIsPackageChanged();
+        executor.submit(() -> {
+            if (mainModel != null) {
+                mainModel.setIsPackageChanged();
+            }
+        });
     }
 
     /**
