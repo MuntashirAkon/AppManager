@@ -827,6 +827,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     throw new ApkFile.ApkFileException("App not installed. It only has data.");
                 }
             } catch (Throwable e) {
+                Log.e(TAG, e);
                 installedPackageInfo = null;
             }
             if (isExternalApk) {
@@ -851,6 +852,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
             }
             isPackageExistLiveData.postValue(isPackageExist = true);
         } catch (PackageManager.NameNotFoundException e) {
+            Log.e(TAG, e);
             isPackageExistLiveData.postValue(isPackageExist = false);
         } catch (Throwable e) {
             Log.e(TAG, e);
