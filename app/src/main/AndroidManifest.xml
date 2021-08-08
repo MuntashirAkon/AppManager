@@ -321,6 +321,7 @@
                 <action android:name="android.intent.action.PICK" />
                 <action android:name="android.intent.action.GET_CONTENT" />
                 <action android:name="android.intent.action.INSERT" />
+                <action android:name="android.intent.action.INSERT_OR_EDIT" />
                 <!-- Used by camera to view photo taken -->
                 <action android:name="com.android.camera.action.REVIEW" />
 
@@ -336,6 +337,7 @@
                 <action android:name="android.intent.action.PICK" />
                 <action android:name="android.intent.action.GET_CONTENT" />
                 <action android:name="android.intent.action.INSERT" />
+                <action android:name="android.intent.action.INSERT_OR_EDIT" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
@@ -347,6 +349,7 @@
                 <action android:name="android.intent.action.PICK" />
                 <action android:name="android.intent.action.GET_CONTENT" />
                 <action android:name="android.intent.action.INSERT" />
+                <action android:name="android.intent.action.INSERT_OR_EDIT" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
@@ -387,6 +390,7 @@
                 <action android:name="android.intent.action.PICK" />
                 <action android:name="android.intent.action.GET_CONTENT" />
                 <action android:name="android.intent.action.INSERT" />
+                <action android:name="android.intent.action.INSERT_OR_EDIT" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
@@ -512,6 +516,19 @@
                 <data android:scheme="file" />
                 <data android:scheme="package" />
                 <data android:mimeType="application/vnd.android.package-archive" />
+            </intent-filter>
+            <!-- Camera -->
+            <intent-filter tools:ignore="AppLinkUrlError">
+                <action android:name="android.media.action.IMAGE_CAPTURE" />
+                <action android:name="android.media.action.IMAGE_CAPTURE_SECURE" />
+                <action android:name="android.media.action.STILL_IMAGE_CAMERA" />
+                <action android:name="android.media.action.STILL_IMAGE_CAMERA_SECURE" />
+                <action android:name="android.media.action.VIDEO_CAMERA" />
+                <action android:name="android.media.action.VIDEO_CAPTURE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.VOICE" />
             </intent-filter>
         </activity>
         <activity
