@@ -1006,7 +1006,7 @@
     <string name="import_from_tb">Titanium Backupからインポート</string>
     <string name="import_from_oab_tb_msg">バックアップは%sに配置されている必要があります。</string>
     <string name="import_from_oab">OAndBackupからインポート</string>
-    <string name="pref_import_backups_msg">OAndBackup、Titanium BackupまたはSwift Backupからバックアップファイルをインポートします</string>
+    <string name="pref_import_backups_msg">OAndBackupまたはTitanium Backupからバックアップファイルをインポートします</string>
     <string name="pref_import_backups">バックアップをインポート</string>
     <string name="community_links">Telegram: https://t.me/AppManagerChannel
 \nTwitter: https://twitter.com/AppManagerNews</string>
@@ -1017,4 +1017,8 @@
     <string name="permission_flags">権限フラグ</string>
     <string name="pref_selected_users_msg">App Managerは選択されたユーザーにのみ動作するようになります。</string>
     <string name="pref_selected_users">ユーザーの選択</string>
+    <string name="notice">通知</string>
+    <string name="notice_saf">選択したディレクトリには、保存されたAPKやバックアップなど、App Managerに関連するすべてのファイルが保存されます。Storage Access Framework（SAF）は非常に低速であるため、他のオプションが使用できない場合にのみこのオプションを使用してください。</string>
+    <string name="files">ファイル</string>
+    <string name="storage">ストレージ</string>
 </resources>
