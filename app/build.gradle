@@ -86,7 +86,7 @@ dependencies {
     implementation 'com.github.MuntashirAkon:apksig-android:178a05e4c9'
     implementation 'com.github.MuntashirAkon:unapkm-android:1.2'
     implementation 'com.github.MuntashirAkon:sun-security-android:1.1'
-    implementation 'org.bouncycastle:bcprov-jdk15on:1.68'
+    implementation 'org.bouncycastle:bcprov-jdk15on:1.69'
 
     implementation "com.google.android.material:material:${material_version}"
     implementation "androidx.appcompat:appcompat:${appcompat_version}"
@@ -101,7 +101,7 @@ dependencies {
     implementation "com.github.topjohnwu.libsu:core:${libsu_version}"
 
     implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:2.0'
-    implementation 'me.zhanghai.android.fastscroll:library:1.1.6'
+    implementation 'me.zhanghai.android.fastscroll:library:1.1.7'
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
 
     // Espresso UI Testing
@@ -110,7 +110,7 @@ dependencies {
 //    androidTestImplementation "com.android.support.test.espresso:espresso-intents:3.0.2"
 
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.robolectric:robolectric:4.4'
+    testImplementation 'org.robolectric:robolectric:4.6.1'
 }
 
 preBuild.dependsOn ":server:build"
