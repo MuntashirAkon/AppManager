@@ -82,7 +82,6 @@ android {
 dependencies {
     compileOnly project(path: ':hiddenapi')
 
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(path: ':libcore:ui')
     implementation project(path: ':libapkparser')
     implementation project(path: ':libopenpgp')
@@ -93,6 +92,7 @@ dependencies {
     implementation 'com.github.MuntashirAkon:apksig-android:178a05e4c9'
     implementation 'com.github.MuntashirAkon:unapkm-android:1.2'
     implementation 'com.github.MuntashirAkon:sun-security-android:1.1'
+    implementation 'com.github.MuntashirAkon:spake2-java:0.9.0'
     implementation 'org.bouncycastle:bcprov-jdk15on:1.69'
 
     implementation "com.google.android.material:material:${material_version}"

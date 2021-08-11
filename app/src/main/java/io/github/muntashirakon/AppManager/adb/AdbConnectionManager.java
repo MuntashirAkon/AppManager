@@ -2,9 +2,13 @@
 
 package io.github.muntashirakon.AppManager.adb;
 
+import android.os.Build;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.annotation.WorkerThread;
+
+import java.nio.charset.StandardCharsets;
 
 import io.github.muntashirakon.AppManager.crypto.ks.KeyPair;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager;
@@ -38,5 +42,14 @@ public class AdbConnectionManager {
         // Connect to ADB
         adbConnection.connect();
         return adbConnection;
+    }
+
+    @RequiresApi(Build.VERSION_CODES.R)
+    public static boolean pair(@NonNull String host, int port, @NonNull String pairingCode) throws Exception {
+        KeyPair keyPair = getAdbKeyPair();
+        try (PairingConnectionCtx pairingClient = new PairingConnectionCtx(host, port,
+                pairingCode.getBytes(StandardCharsets.UTF_8), keyPair)) {
+            return pairingClient.start();
+        }
     }
 }

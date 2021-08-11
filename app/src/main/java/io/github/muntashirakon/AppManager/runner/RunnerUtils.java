@@ -202,7 +202,7 @@ public final class RunnerUtils {
                         AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
                         AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, true);
                         CountDownLatch waitForConfig = new CountDownLatch(1);
-                        UiThreadHandler.run(() -> MainPreferences.displayAdbConnect(activity, waitForConfig));
+                        UiThreadHandler.run(() -> MainPreferences.configureWirelessDebugging(activity, waitForConfig));
                         waitForConfig.await(2, TimeUnit.MINUTES);
                         LocalServer.restart();
                         return;

@@ -7,11 +7,13 @@ import android.app.Application;
 import android.content.pm.UserInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.Spanned;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
 import androidx.appcompat.app.AlertDialog;
@@ -44,6 +46,7 @@ import java.util.concurrent.Executors;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.adb.AdbConnectionManager;
 import io.github.muntashirakon.AppManager.misc.DeviceInfo2;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
@@ -53,12 +56,14 @@ import io.github.muntashirakon.AppManager.settings.crypto.ImportExportKeyStoreDi
 import io.github.muntashirakon.AppManager.types.FullscreenDialog;
 import io.github.muntashirakon.AppManager.types.ScrollableDialogBuilder;
 import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
+import io.github.muntashirakon.AppManager.types.TextInputDropdownDialogBuilder;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class MainPreferences extends PreferenceFragmentCompat {
@@ -302,6 +307,61 @@ public class MainPreferences extends PreferenceFragmentCompat {
             } else localesL[i] = locale.getDisplayName(locale);
         }
         return localesL;
+    }
+
+    @RequiresApi(Build.VERSION_CODES.R)
+    @UiThread
+    public static void configureWirelessDebugging(FragmentActivity activity, CountDownLatch waitForConfig) {
+        new MaterialAlertDialogBuilder(activity)
+                .setTitle(R.string.wireless_debugging)
+                .setMessage(R.string.choose_what_to_do)
+                .setCancelable(false)
+                .setPositiveButton(R.string.adb_connect, (dialog1, which1) -> displayAdbConnect(activity, waitForConfig))
+                .setNeutralButton(R.string.adb_pair, (dialog1, which1) -> {
+                    TextInputDropdownDialogBuilder builder = new TextInputDropdownDialogBuilder(activity,
+                            R.string.adb_wifi_paring_code);
+                    builder.setTitle(R.string.wireless_debugging)
+                            .setAuxiliaryInput(R.string.port_number, null, null, null, true)
+                            .setPositiveButton(R.string.ok, (dialog, which, pairingCode, isChecked) -> {
+                                Editable portString = builder.getAuxiliaryInput();
+                                if (TextUtils.isEmpty(pairingCode) || TextUtils.isEmpty(portString)) {
+                                    UIUtils.displayShortToast(R.string.port_number_pairing_code_empty);
+                                    waitForConfig.countDown();
+                                    return;
+                                }
+                                int port;
+                                try {
+                                    port = Integer.decode(portString.toString().trim());
+                                } catch (NumberFormatException e) {
+                                    UIUtils.displayShortToast(R.string.port_number_invalid);
+                                    waitForConfig.countDown();
+                                    return;
+                                }
+                                new Thread(() -> {
+                                    try {
+                                        if (!AdbConnectionManager.pair(ServerConfig.getAdbHost(), port,
+                                                pairingCode.toString().trim())) {
+                                            throw new Exception("Pairing failed.");
+                                        }
+                                        UiThreadHandler.run(() -> {
+                                            UIUtils.displayShortToast(R.string.paired_successfully);
+                                            if (!activity.isDestroyed()) displayAdbConnect(activity, waitForConfig);
+                                            else waitForConfig.countDown();
+                                        });
+                                    } catch (Exception e) {
+                                        UiThreadHandler.run(() -> UIUtils.displayShortToast(R.string.failed));
+                                        waitForConfig.countDown();
+                                        e.printStackTrace();
+                                    }
+                                }).start();
+                            })
+                            .setNegativeButton(R.string.cancel, (dialog, which, inputText, isChecked) -> waitForConfig.countDown());
+                    AlertDialog dialog = builder.create();
+                    dialog.setCancelable(false);
+                    dialog.show();
+                })
+                .setNegativeButton(R.string.cancel, (dialog, which) -> waitForConfig.countDown())
+                .show();
     }
 
     @UiThread

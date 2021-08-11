@@ -1088,4 +1088,8 @@
     <string name="keystore_password_info">The following is the App Manager KeyStore password. Please store it in a secure place if you\'re going to back up/restore App Manager KeyStore. <b>This message will not be displayed again.</b></string>
     <string name="keystore_pass_cannot_be_empty">KeyStore password cannot be empty.</string>
     <string name="invalid_password">Invalid password, try again.</string>
+    <string name="adb_wifi_paring_code">Wi-Fi pairing code</string>
+    <string name="adb_pair">Pair</string>
+    <string name="port_number_pairing_code_empty">Empty port number or pairing code.</string>
+    <string name="paired_successfully">Paired.</string>
 </resources>
