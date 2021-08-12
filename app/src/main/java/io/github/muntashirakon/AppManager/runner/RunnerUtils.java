@@ -229,17 +229,22 @@ public final class RunnerUtils {
             Log.e("ModeOfOps", e);
             CountDownLatch waitForInteraction = new CountDownLatch(1);
             AtomicReference<AlertDialog> alertDialog = new AtomicReference<>();
-            UiThreadHandler.run(() -> alertDialog.set(new MaterialAlertDialogBuilder(activity)
-                    .setTitle(R.string.fallback_to_no_root_mode)
-                    .setMessage(R.string.fallback_to_no_root_mode_description)
-                    .setPositiveButton(R.string.yes, (dialog, which) -> {
-                        AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
-                        AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
-                        waitForInteraction.countDown();
-                    })
-                    .setNegativeButton(R.string.no, (dialog, which) -> waitForInteraction.countDown())
-                    .setCancelable(false)
-                    .show()));
+            UiThreadHandler.run(() -> {
+                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(activity)
+                        .setTitle(R.string.fallback_to_no_root_mode)
+                        .setMessage(R.string.fallback_to_no_root_mode_description)
+                        .setPositiveButton(R.string.yes, (dialog, which) -> {
+                            AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
+                            AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
+                            waitForInteraction.countDown();
+                        })
+                        .setNegativeButton(R.string.no, (dialog, which) -> waitForInteraction.countDown())
+                        .setCancelable(false);
+                try {
+                    alertDialog.set(builder.show());
+                } catch (Throwable ignore) {
+                }
+            });
             try {
                 waitForInteraction.await(2, TimeUnit.MINUTES);
                 if (waitForInteraction.getCount() == 1) {
@@ -247,7 +252,10 @@ public final class RunnerUtils {
                     AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
                     AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
                     UiThreadHandler.run(() -> {
-                        if (alertDialog.get() != null) alertDialog.get().dismiss();
+                        try {
+                            if (alertDialog.get() != null) alertDialog.get().dismiss();
+                        } catch (Throwable ignore) {
+                        }
                     });
                 }
             } catch (InterruptedException ignore) {
