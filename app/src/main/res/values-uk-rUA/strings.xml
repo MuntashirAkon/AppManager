@@ -751,7 +751,7 @@
     <string name="pref_backup_android_keystore_msg">Не всі програми працюватимуть після відновлення. Відновлення сховища ключів не працює на більшості пристроїв.</string>
     <string name="pref_backup_android_keystore">Резервне копіювання додатків зі сховищем ключів Android</string>
     <string name="keep_data_and_app_signing_signatures">Зберегти дані і підписи</string>
-    <string name="this_action_cannot_be_undone">Цю операцію неможливо відмінити.</string>
+    <string name="this_action_cannot_be_undone">Цю операцію неможливо скасувати.</string>
     <string name="filter_apps_with_splits">Додатки з сплітами</string>
     <string name="battery">Акумулятор</string>
     <string name="value">Значення</string>
