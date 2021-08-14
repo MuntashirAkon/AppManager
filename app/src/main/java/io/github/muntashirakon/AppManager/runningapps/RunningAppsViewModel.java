@@ -76,9 +76,11 @@ public class RunningAppsViewModel extends AndroidViewModel {
                 ProcessItem processItem = processList.get(pid);
                 if (processItem != null) processItem.selected = false;
             }
-            originalProcessList.clear();
-            originalProcessList.addAll(new ArrayList<>(processList.keySet()));
-            filterAndSort();
+            synchronized (originalProcessList) {
+                originalProcessList.clear();
+                originalProcessList.addAll(new ArrayList<>(processList.keySet()));
+                filterAndSort();
+            }
         });
     }
 
