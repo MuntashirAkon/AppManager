@@ -490,6 +490,7 @@ public final class PackageUtils {
         return disabledComponents;
     }
 
+    @SuppressLint("SwitchIntDef")
     public static boolean isComponentDisabledByUser(@NonNull PackageManager pm, @NonNull String packageName, @NonNull String componentClassName) {
         ComponentName componentName = new ComponentName(packageName, componentClassName);
         switch (pm.getComponentEnabledSetting(componentName)) {
@@ -590,7 +591,7 @@ public final class PackageUtils {
     public static int getPidForPackage(String packageName, int uid) {
         try {
             @SuppressWarnings("unchecked")
-            List<ProcessEntry> processItems = (List<ProcessEntry>) IPCUtils.getAmService().getRunningProcesses();
+            List<ProcessEntry> processItems = (List<ProcessEntry>) IPCUtils.getAmService().getRunningProcesses().getList();
             for (ProcessEntry entry : processItems) {
                 if (entry.name.equals(packageName) && entry.users.fsUid == uid) return entry.pid;
             }

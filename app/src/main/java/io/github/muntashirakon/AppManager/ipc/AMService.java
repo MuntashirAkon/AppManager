@@ -15,8 +15,8 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import java.io.File;
-import java.util.ArrayList;
 
+import aosp.android.content.pm.ParceledListSlice;
 import io.github.muntashirakon.AppManager.IAMService;
 import io.github.muntashirakon.AppManager.IRemoteFile;
 import io.github.muntashirakon.AppManager.IRemoteProcess;
@@ -56,10 +56,10 @@ public class AMService extends RootService {
         }
 
         @Override
-        public ArrayList<ProcessEntry> getRunningProcesses() {
+        public ParceledListSlice<ProcessEntry> getRunningProcesses() {
             Ps ps = new Ps();
             ps.loadProcesses();
-            return ps.getProcesses();
+            return new ParceledListSlice<>(ps.getProcesses());
         }
 
         @Override

@@ -70,9 +70,11 @@ public class RunningAppsViewModel extends AndroidViewModel {
     @AnyThread
     public void loadProcesses() {
         executor.submit(() -> {
-            processList.clear();
-            processList.addAll(new ProcessParser().parse());
-            filterAndSort();
+            synchronized (processList) {
+                processList.clear();
+                processList.addAll(new ProcessParser().parse());
+                filterAndSort();
+            }
         });
     }
 

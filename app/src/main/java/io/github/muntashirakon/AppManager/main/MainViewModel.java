@@ -372,7 +372,7 @@ public class MainViewModel extends AndroidViewModel {
     private void loadRunningApps() {
         synchronized (applicationItems) {
             try {
-                List<ProcessEntry> processEntries = (List<ProcessEntry>) IPCUtils.getServiceSafe().getRunningProcesses();
+                List<ProcessEntry> processEntries = (List<ProcessEntry>) IPCUtils.getServiceSafe().getRunningProcesses().getList();
                 List<String> processNames = new ArrayList<>();
                 for (ProcessEntry entry : processEntries) {
                     processNames.add(ProcessParser.getSupposedPackageName(entry.name));

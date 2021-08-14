@@ -59,7 +59,7 @@ public final class ProcessParser {
     List<ProcessItem> parse() {
         List<ProcessItem> processItems = new ArrayList<>();
         try {
-            List<ProcessEntry> processEntries = (List<ProcessEntry>) IPCUtils.getServiceSafe().getRunningProcesses();
+            List<ProcessEntry> processEntries = (List<ProcessEntry>) IPCUtils.getServiceSafe().getRunningProcesses().getList();
             for (ProcessEntry processEntry : processEntries) {
                 if (processEntry.seLinuxPolicy.contains(":kernel:")) continue;
                 try {
