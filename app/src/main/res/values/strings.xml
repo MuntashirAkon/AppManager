@@ -100,6 +100,7 @@
     <string name="third_party_message" translatable="false">-
         <a href="https://github.com/tananaev/adblib">ADB Library</a> (BSD-3-Clause)
         \n- <a href="https://github.com/zhanghai/AndroidFastScroll">AndroidFastScroll</a> (Apache 2.0)
+        \n- <a href="https://github.com/LSPosed/AndroidHiddenApiBypass">AndroidHiddenApiBypass</a> (Apache 2.0)
         \n- <a href="https://github.com/MuntashirAkon/apk-parser">APK-parser</a> (BSD-2-Clause)
         \n- <a href="https://github.com/MuntashirAkon/apksig-android">apksig for android</a> (Apache 2.0)
         \n- <a href="https://github.com/bcgit/bc-java">Bouncy Castle</a> (MIT)
@@ -110,7 +111,7 @@
         \n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a> (MIT)
         \n- <a href="https://github.com/material-components/material-components-android">Material Components</a> (Apache 2.0)
         \n- <a href="https://github.com/google/material-design-icons">Material Design Icons</a> (Apache 2.0)
-        \n- <a href="https://github.com/ChickenHook/RestrictionBypass">RestrictionBypass</a> (Apachhe 2.0)
+        \n- <a href="https://github.com/MuntashirAkon/spake2-java">SPAKE2 for Java</a> (GPLv3.0)
         \n- <a href="https://github.com/MuntashirAkon/sun-security-android">sun.security for Android</a> (GPL-2.0 \"Classpath Exception\")
         \n- <a href="https://github.com/MuntashirAkon/unapkm-android">UnAPKM Android</a> (Apache 2.0)
     </string>
@@ -123,6 +124,7 @@
         \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
         \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
         \n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+        \n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
         \n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
         \n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
         \n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
