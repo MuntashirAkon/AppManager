@@ -15,6 +15,8 @@ import android.os.Debug;
 import android.os.IBinder;
 import android.os.RemoteException;
 
+import androidx.annotation.NonNull;
+
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -26,7 +28,6 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 
-import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.adb.AdbShell;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -202,7 +203,7 @@ class IPCClient implements IBinder.DeathRecipient, Closeable {
         File mainJar = dumpMainJar(context);
         File stagingJar = new File(PACKAGE_STAGING_DIRECTORY, "main.jar");
         return (PackageUtils.ensurePackageStagingDirectoryCommand() +
-                String.format("cp %s %s && ", mainJar, PACKAGE_STAGING_DIRECTORY) +
+                String.format(" && cp %s %s && ", mainJar, PACKAGE_STAGING_DIRECTORY) +
                 String.format("chmod 755 %s && chown shell:shell %s && ", stagingJar, stagingJar) +
                 String.format("(CLASSPATH=%s /system/bin/app_process %s /system/bin %s %s %s)&",
                         stagingJar, debugParams, IPCMAIN_CLASSNAME, serviceName.flattenToString(),
