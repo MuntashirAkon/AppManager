@@ -12,7 +12,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.muntashirakon.io.IoUtils;
+import io.github.muntashirakon.AppManager.utils.IOUtils;
 
 /**
  * Transfer a large list of Parcelable objects across an IPC.  Splits into
@@ -29,7 +29,7 @@ abstract class BaseParceledListSlice<T> implements Parcelable {
     private static final String TAG = "ParceledListSlice";
     private static final boolean DEBUG = false;
 
-    private static final int MAX_IPC_SIZE = IoUtils.DEFAULT_BUFFER_SIZE;
+    private static final int MAX_IPC_SIZE = IOUtils.DEFAULT_BUFFER_SIZE;
 
     private final List<T> mList;
 
