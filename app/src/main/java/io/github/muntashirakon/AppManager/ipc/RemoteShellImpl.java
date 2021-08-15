@@ -6,8 +6,7 @@ import android.os.ParcelFileDescriptor;
 
 import com.topjohnwu.superuser.Shell;
 
-import java.util.List;
-
+import aosp.android.content.pm.StringParceledListSlice;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.IRemoteShell;
 import io.github.muntashirakon.AppManager.IShellResult;
@@ -41,13 +40,13 @@ class RemoteShellImpl extends IRemoteShell.Stub {
         Shell.Result result = job.exec();
         return new IShellResult.Stub() {
             @Override
-            public List<String> getStdout() {
-                return result.getOut();
+            public StringParceledListSlice getStdout() {
+                return new StringParceledListSlice(result.getOut());
             }
 
             @Override
-            public List<String> getStderr() {
-                return result.getErr();
+            public StringParceledListSlice getStderr() {
+                return new StringParceledListSlice(result.getErr());
             }
 
             @Override

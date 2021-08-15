@@ -2,9 +2,11 @@
 
 package io.github.muntashirakon.AppManager;
 
+import aosp.android.content.pm.StringParceledListSlice;
+
 interface IShellResult {
-    List<String> getStdout();
-    List<String> getStderr();
+    StringParceledListSlice getStdout();
+    StringParceledListSlice getStderr();
     int getExitCode();
     boolean isSuccessful();
 }
