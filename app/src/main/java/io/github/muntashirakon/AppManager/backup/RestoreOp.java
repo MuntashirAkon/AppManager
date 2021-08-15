@@ -47,6 +47,7 @@ import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
 import io.github.muntashirakon.AppManager.types.FreshFile;
 import io.github.muntashirakon.AppManager.uri.UriManager;
+import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
@@ -247,6 +248,13 @@ class RestoreOp implements Closeable {
             }
         }
         // Setup package staging directory
+        if (AppPref.isRootOrAdbEnabled()) {
+            try {
+                PackageUtils.ensurePackageStagingDirectoryPrivileged();
+            } catch (Exception e) {
+                throw new BackupException("Could not ensure the existence of /data/local/tmp", e);
+            }
+        }
         File packageStagingDirectory;
         if (new ProxyFile(PackageUtils.PACKAGE_STAGING_DIRECTORY).exists()) {
             packageStagingDirectory = PackageUtils.PACKAGE_STAGING_DIRECTORY;

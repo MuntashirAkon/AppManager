@@ -21,6 +21,7 @@ import android.content.pm.SigningInfo;
 import android.os.Build;
 import android.os.RemoteException;
 import android.os.storage.StorageManager;
+import android.system.ErrnoException;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.util.Pair;
@@ -85,7 +86,9 @@ import io.github.muntashirakon.AppManager.types.PackageChangeReceiver;
 import io.github.muntashirakon.AppManager.types.PackageSizeInfo;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.io.FileStatus;
 import io.github.muntashirakon.io.ProxyFile;
+import io.github.muntashirakon.io.ProxyFiles;
 
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getBoldString;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getColoredText;
@@ -971,5 +974,31 @@ public final class PackageUtils {
         // If there are errors, no certificate info will be loaded
         builder.append(TextUtils.joinSpannable("\n", errors)).append("\n");
         return builder;
+    }
+
+    public static void ensurePackageStagingDirectoryPrivileged() throws ErrnoException, RemoteException {
+        File psd = new ProxyFile(PACKAGE_STAGING_DIRECTORY);
+        if (!psd.isDirectory()) {
+            // Recreate directory
+            File parent = psd.getParentFile();
+            if (parent == null) throw new IllegalStateException("Parent should be /data/local");
+            if (psd.exists()) psd.delete();
+            psd.mkdir();
+        }
+        // Change permission
+        FileStatus stat = ProxyFiles.stat(psd);
+        if ((stat.st_mode & 0x1FF) != 0711) {
+            ProxyFiles.chmod(psd, 0711);
+        }
+        // Change UID, GID
+        if (stat.st_uid != 2000 || stat.st_gid != 2000) {
+            ProxyFiles.chown(psd, 2000, 2000);
+        }
+    }
+
+    @NonNull
+    public static String ensurePackageStagingDirectoryCommand() {
+        String psd = PACKAGE_STAGING_DIRECTORY.getAbsolutePath();
+        return String.format("( [ -d  %s ] || ( rm %s; mkdir %s && chmod 771 %s && chown 2000:2000 %s ) )", psd, psd, psd, psd, psd);
     }
 }
