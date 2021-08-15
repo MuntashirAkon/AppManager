@@ -1,5 +1,27 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 
+<h5>v2.6.3 (392) stable release:</h5>
+This patch release contains bug fixes for ADB mode and back up/restore.<br/>
+&#x2022; <b>[1-Click Ops]</b> Fixed missing applications<br/>
+&#x2022;
+<b>[ADB]</b> Eliminated the need for entering a KeyStore password. For the first time at startup or every time data is cleared from App Manager, a new Keystore password will be generated and the user will be asked to note down the password
+<br/>
+&#x2022; <b>[App Details]</b> Display process name in the components tabs, fixed displaying duplicate permissions<br/>
+&#x2022; <b>[App Info]</b> Display warning if App Manager is being disabled, fixed freezing on pressing refresh<br/>
+&#x2022; <b>[Backup]</b> Fixed extracting tar files backed up before v2.5.23<br/>
+&#x2022; <b>[Batch Ops]</b> Merged enable/disable apps and clear cache/data<br/>
+&#x2022; <b>[Installer]</b> Added fallback method for checking signing keys and fixed various crashes<br/>
+&#x2022; <b>[Interceptor]</b> Added camera actions<br/>
+&#x2022; <b>[Main]</b> Cancel selection on pressing the back button if the selection mode is active<br/>
+&#x2022; <b>[Running
+    Apps]</b> Fixed displaying apps running in another processes, filtering issues and returning empty list on quick refresh
+<br/>
+&#x2022; Added support for opening apps via <code>ACTION_SEND</code> i.e. file sharing<br/>
+&#x2022; Fixed random crashes during and after app initialization<br/>
+&#x2022; Fixed &ldquo;select all&rdquo; button behaviour to select only the currently filtered items instead of all items
+<br/>
+&#x2022; Fixed day/night theming issues in various places<br/>
+
 <h5>v2.6.2 (389) stable release:</h5>
 This patch release contains critical bug fixes for the back up/restore feature.<br/>
 &#x2022; <font color="#09868B">[Feature]</font> Added new batch operation: clear cache<br/>

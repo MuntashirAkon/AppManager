@@ -1,0 +1,10 @@
+F-Droid doesn't support extended changelog. In-app changelog offers a more detailed changelog.
+
+- ADB: Eliminated the need for entering a KeyStore password. For the first time at startup or every time data is cleared from App Manager, a new Keystore password will be generated and the user will be asked to note down the password
+- Backup: Fixed extracting tar files backed up before v2.5.23
+- App Details: Display process name in the components tabs
+- App Info: Display warning if App Manager is being disabled
+- Batch Ops: Merged enable/disable apps and clear cache/data
+- Interceptor: Added camera actions
+
+and various other fixes and improvements.
