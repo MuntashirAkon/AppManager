@@ -20,6 +20,8 @@
         <item>com.widespace.</item>
         <item>com.appnexus.opensdk.</item>
         <item>com.localytics.android.</item>
+        <item>com.localytics.androidx</item>
+        <item>com.localytics.react.</item>
         <item>com.appboy</item>
         <item>com.mparticle</item>
         <item>com.sam4mobile.</item>
@@ -61,6 +63,7 @@
         <item>com.facebook.audiencenetwork</item>
         <item>com.google.android.apps.analytics.</item>
         <item>com.google.android.gms.analytics.</item>
+        <item>com.google.analytics.</item>
         <item>com.google.firebase.analytics.</item>
         <item>com.google.android.gms.measurement.</item>
         <item>com.google.firebase.firebase_analytics</item>
@@ -173,6 +176,7 @@
         <item>com.webtrends.mobile.analytics.</item>
         <item>com.webtrends.mobile.android</item>
         <item>com.newrelic.agent.</item>
+        <item>com.newrelic.mobile.</item>
         <item>io.appanalytics.sdk</item>
         <item>com.applause.android.</item>
         <item>com.quantcast.measurement.service.</item>
@@ -203,6 +207,7 @@
         <item>com.kakao.adfit.</item>
         <item>com.adform.sdk.</item>
         <item>jp.tjkapp.adfurikunsdk.</item>
+        <item>com.glossomads.sdk.</item>
         <item>com.mobvista.</item>
         <item>com.placed.client</item>
         <item>com.adotmob</item>
@@ -698,6 +703,8 @@
         <item>com.kakao.ad.</item>
         <item>com.kakao.kakaolink</item>
         <item>com.zestadz.android.</item>
+        <item>com.linecorp.line.admolin</item>
+        <item>com.five_corp.ad.</item>
         <item>com.apptracker.android.</item>
         <item>com.pad.android.xappad.</item>
         <item>com.Leadbolt.</item>
@@ -806,6 +813,7 @@
         <item>com.snap.adkit</item>
         <item>com.snap.appadskit</item>
         <item>com.ansca.corona</item>
+        <item>com.soundhound.android.adverts</item>
         <item>com.spoteer.arc.</item>
         <item>com.spotify.mobile.android.ads.</item>
         <item>com.spotify.music.features.ads.</item>
@@ -938,6 +946,8 @@
         <item>Widespace</item>
         <item>AppNexus</item>
         <item>Localytics</item>
+        <item>Localytics</item>
+        <item>Localytics</item>
         <item>Braze (formerly Appboy)</item>
         <item>mParticle</item>
         <item>S4M</item>
@@ -977,6 +987,7 @@
         <item>OpenLocate</item>
         <item>TagCommander (Commanders Act.)</item>
         <item>Facebook Audience</item>
+        <item>Google Analytics</item>
         <item>Google Analytics</item>
         <item>Google Analytics</item>
         <item>Google Firebase Analytics</item>
@@ -1091,6 +1102,7 @@
         <item>Webtrends</item>
         <item>Webtrends</item>
         <item>New Relic</item>
+        <item>New Relic</item>
         <item>AppAnalytics</item>
         <item>Applause</item>
         <item>Quantcast</item>
@@ -1120,6 +1132,7 @@
         <item>Apteligent by VMWare (formerly Crittercism)</item>
         <item>AdFit (Daum)</item>
         <item>Adform</item>
+        <item>Adfurikun</item>
         <item>Adfurikun</item>
         <item>Mobvista</item>
         <item>Placed</item>
@@ -1616,6 +1629,8 @@
         <item>²Kakao AD SDK</item>
         <item>²KakaoTalk Link</item>
         <item>²Komli Mobile (ZestAdz)</item>
+        <item>²LINE Admolin</item>
+        <item>²LINE Ads Five</item>
         <item>²LeadBolt</item>
         <item>²LeadBolt</item>
         <item>²LeadBolt</item>
@@ -1724,6 +1739,7 @@
         <item>²Snap Ad Kit</item>
         <item>²Snap Ad Kit</item>
         <item>²Solar2D (Corona)</item>
+        <item>²SoundHaund Adverts</item>
         <item>²Spoteer Arc</item>
         <item>²Spotify Advertising</item>
         <item>²Spotify Advertising</item>
