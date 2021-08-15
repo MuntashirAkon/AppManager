@@ -4,17 +4,17 @@ package io.github.muntashirakon.AppManager.runner;
 
 import android.os.RemoteException;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.WorkerThread;
+
 import java.io.IOException;
 import java.io.InputStream;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.WorkerThread;
 import io.github.muntashirakon.AppManager.IAMService;
 import io.github.muntashirakon.AppManager.IRemoteShell;
 import io.github.muntashirakon.AppManager.IShellResult;
 import io.github.muntashirakon.AppManager.ipc.IPCUtils;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.utils.ParcelFileDescriptorUtil;
 
 class AdbShellRunner extends Runner {
@@ -30,7 +30,7 @@ class AdbShellRunner extends Runner {
             }
             IShellResult result = shell.exec();
             clear();
-            return new Result(result.getStdout(), result.getStderr(), result.getExitCode());
+            return new Result(result.getStdout().getList(), result.getStderr().getList(), result.getExitCode());
         } catch (RemoteException | IOException e) {
             Log.e("AdbShellRunner", e);
             return new Result();
