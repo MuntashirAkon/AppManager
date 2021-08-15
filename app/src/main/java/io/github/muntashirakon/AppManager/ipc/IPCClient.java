@@ -36,6 +36,7 @@ import io.github.muntashirakon.AppManager.server.common.IRootIPC;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 import static io.github.muntashirakon.AppManager.ipc.RootService.TAG;
 import static io.github.muntashirakon.AppManager.ipc.RootService.serialExecutor;
@@ -201,7 +202,8 @@ class IPCClient implements IBinder.DeathRecipient, Closeable {
             throws IOException {
         File mainJar = dumpMainJar(context);
         File stagingJar = new File(PACKAGE_STAGING_DIRECTORY, "main.jar");
-        return (String.format("cp %s %s && ", mainJar, PACKAGE_STAGING_DIRECTORY) +
+        return (PackageUtils.ensurePackageStagingDirectoryCommand() +
+                String.format("cp %s %s && ", mainJar, PACKAGE_STAGING_DIRECTORY) +
                 String.format("chmod 755 %s && chown shell:shell %s && ", stagingJar, stagingJar) +
                 String.format("(CLASSPATH=%s /system/bin/app_process %s /system/bin %s %s %s)&",
                         stagingJar, debugParams, IPCMAIN_CLASSNAME, serviceName.flattenToString(),
