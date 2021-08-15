@@ -180,9 +180,12 @@ public final class RunnerUtils {
                     // Don't bother detecting root/ADB
                     return;
                 } else if (!Runner.MODE_NO_ROOT.equals(mode) && LocalServer.isLocalServerAlive()) {
-                    // Remote server is running
-                    LocalServer.getInstance();
-                    return;
+                    try {
+                        // Remote server is running
+                        LocalServer.getInstance();
+                        return;
+                    } catch (Exception ignore) {
+                    }
                 }
             }
             switch (mode) {
