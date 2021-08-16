@@ -6,7 +6,9 @@ import android.annotation.SuppressLint;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
 
+import androidx.core.util.Pair;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
@@ -14,6 +16,7 @@ import androidx.preference.SwitchPreferenceCompat;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -23,6 +26,9 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagMatchUninstalled;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getPrimaryText;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
 public class InstallerPreferences extends PreferenceFragmentCompat {
     private static final int[] installLocationNames = new int[]{
@@ -82,12 +88,21 @@ public class InstallerPreferences extends PreferenceFragmentCompat {
                             // List apps
                             @SuppressLint("WrongConstant")
                             List<PackageInfo> packageInfoList = pm.getInstalledPackages(flagMatchUninstalled);
-                            ArrayList<String> items = new ArrayList<>(packageInfoList.size());
-                            ArrayList<CharSequence> itemNames = new ArrayList<>(packageInfoList.size());
+                            ArrayList<Pair<CharSequence, String>> appInfo = new ArrayList<>(packageInfoList.size());
                             for (PackageInfo info : packageInfoList) {
                                 if (isDetached()) return;
-                                items.add(info.packageName);
-                                itemNames.add(info.applicationInfo.loadLabel(pm));
+                                appInfo.add(new Pair<>(info.applicationInfo.loadLabel(pm), info.packageName));
+                            }
+                            Collections.sort(appInfo, (o1, o2) -> {
+                                return o1.first.toString().compareTo(o2.first.toString());
+                            });
+                            ArrayList<String> items = new ArrayList<>(packageInfoList.size());
+                            ArrayList<CharSequence> itemNames = new ArrayList<>(packageInfoList.size());
+                            for (Pair<CharSequence, String> pair : appInfo) {
+                                if (isDetached()) return;
+                                items.add(pair.second);
+                                itemNames.add(new SpannableStringBuilder(getPrimaryText(activity, pair.first))
+                                        .append("\n").append(getSecondaryText(activity, getSmallerText(pair.second))));
                             }
                             int selectedApp = itemNames.indexOf(installerApp);
                             activity.runOnUiThread(() -> {
