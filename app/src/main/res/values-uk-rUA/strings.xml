@@ -245,15 +245,15 @@
     </plurals>
     <plurals name="alert_failed_to_enable">
         <item quantity="one">Не вдалося ввімкнути застосунок %1$dНе вдалося ввімкнути застосунки %1$dНе вдалося ввімкнути застосунки %1$d</item>
-        <item quantity="few"></item>
-        <item quantity="many"></item>
-        <item quantity="other"></item>
+        <item quantity="few"/>
+        <item quantity="many"/>
+        <item quantity="other"/>
     </plurals>
     <plurals name="alert_failed_to_block_components">
         <item quantity="one">Не вдалося заблокувати компоненти в застосунку %1$dНе вдалося заблокувати компоненти в застосунках %1$dНе вдалося заблокувати компоненти в застосунках %1$d</item>
-        <item quantity="few"></item>
-        <item quantity="many"></item>
-        <item quantity="other"></item>
+        <item quantity="few"/>
+        <item quantity="many"/>
+        <item quantity="other"/>
     </plurals>
     <plurals name="alert_failed_to_delete_backup">
         <item quantity="one">Не вдалося видалити резервну копію %1$d</item>
@@ -263,21 +263,21 @@
     </plurals>
     <plurals name="alert_failed_to_restore">
         <item quantity="one">Не вдалося відновити застосунок %1$dНе вдалося відновити застосунки %1$dНе вдалося відновити застосунки %1$d</item>
-        <item quantity="few"></item>
-        <item quantity="many"></item>
-        <item quantity="other"></item>
+        <item quantity="few"/>
+        <item quantity="many"/>
+        <item quantity="other"/>
     </plurals>
     <plurals name="alert_failed_to_backup">
         <item quantity="one">Не вдалося зробити резервну копію застосунку %1$dНе вдалося зробити резервну копію застосунків %1$dНе вдалося зробити резервну копію застосунків %1$d</item>
-        <item quantity="few"></item>
-        <item quantity="many"></item>
-        <item quantity="other"></item>
+        <item quantity="few"/>
+        <item quantity="many"/>
+        <item quantity="other"/>
     </plurals>
     <plurals name="failed_to_backup_some_apk_files">
         <item quantity="one">Не вдалося зробити резервну копію застосунку %1$dНе вдалося зробити резервну копію застосунків %1$dНе вдалося зробити резервну копію застосунків %1$d</item>
-        <item quantity="few"></item>
-        <item quantity="many"></item>
-        <item quantity="other"></item>
+        <item quantity="few"/>
+        <item quantity="many"/>
+        <item quantity="other"/>
     </plurals>
     <string name="backup_options">Параметри резервного копіювання</string>
     <string name="delete_backup">Видалити резервну копію</string>
@@ -331,9 +331,9 @@
     <string name="failed_to_grant_permission">Не вдалося надати дозвіл</string>
     <plurals name="alert_failed_to_disable_trackers">
         <item quantity="one">Не вдалося вимкнути трекери в застосунку %1$dНе вдалося вимкнути трекери в застосунках %1$dНе вдалося вимкнути трекери в застосунках %1$d</item>
-        <item quantity="few"></item>
-        <item quantity="many"></item>
-        <item quantity="other"></item>
+        <item quantity="few"/>
+        <item quantity="many"/>
+        <item quantity="other"/>
     </plurals>
     <string name="deny_dangerous_permissions">Заборонити небезпечні дозволи</string>
     <string name="sort_by_dangerous_permissions">Спочатку небезпечні</string>
@@ -370,34 +370,34 @@
     <string name="toggle_kill_for_system_apps">Перемикач вбивства системних застосунків</string>
     <plurals name="alert_failed_to_force_stop">
         <item quantity="one">Не вдалося примусово зупинити застосунок %1$dНе вдалося примусово зупинити застосунки %1$dНе вдалося примусово зупинити застосунки%1$d</item>
-        <item quantity="few"></item>
-        <item quantity="many"></item>
-        <item quantity="other"></item>
+        <item quantity="few"/>
+        <item quantity="many"/>
+        <item quantity="other"/>
     </plurals>
     <string name="the_operation_was_successful">Завершено</string>
     <plurals name="alert_failed_to_disable_background">
         <item quantity="one">Не вдалося запобігти роботу у фоновому режимі застосунку %1$dНе вдалося запобігти роботу у фоновому режимі застосункам %1$dНе вдалося запобігти роботу у фоновому режимі застосункам %1$d</item>
-        <item quantity="few"></item>
-        <item quantity="many"></item>
-        <item quantity="other"></item>
+        <item quantity="few"/>
+        <item quantity="many"/>
+        <item quantity="other"/>
     </plurals>
     <plurals name="alert_failed_to_uninstall">
         <item quantity="one">Не вдалося видалити застосунок %1$dНе вдалося видалити застосунки %1$dНе вдалося видалити застосунки %1$d</item>
-        <item quantity="few"></item>
-        <item quantity="many"></item>
-        <item quantity="other"></item>
+        <item quantity="few"/>
+        <item quantity="many"/>
+        <item quantity="other"/>
     </plurals>
     <plurals name="alert_failed_to_disable">
         <item quantity="one">Не вдалося вимкнути застосунок %1$dНе вдалося вимкнути застосунки %1$dНе вдалося вимкнути застосунки %1$d</item>
-        <item quantity="few"></item>
-        <item quantity="many"></item>
-        <item quantity="other"></item>
+        <item quantity="few"/>
+        <item quantity="many"/>
+        <item quantity="other"/>
     </plurals>
     <plurals name="alert_failed_to_clear_data">
         <item quantity="one">Не вдалося очистити дані застосунку %1$dНе вдалося очистити дані застосунків %1$dНе вдалося очистити дані застосунків %1$d</item>
-        <item quantity="few"></item>
-        <item quantity="many"></item>
-        <item quantity="other"></item>
+        <item quantity="few"/>
+        <item quantity="many"/>
+        <item quantity="other"/>
     </plurals>
     <string name="export_blocking_rules">Експорт правил блокування</string>
     <string name="disable_background">Запобігання фонових операцій</string>
@@ -475,9 +475,9 @@
     <string name="installer_error_conflict">Не вдається встановити застосунок, оскільки встановлений вже має цю назву пакета</string>
     <plurals name="alert_failed_to_unblock_trackers">
         <item quantity="one">Не вдалося розблокувати трекери в застосунку %1$dНе вдалося розблокувати трекери в застосунках %1$dНе вдалося розблокувати трекери в застосунках %1$d</item>
-        <item quantity="few"></item>
-        <item quantity="many"></item>
-        <item quantity="other"></item>
+        <item quantity="few"/>
+        <item quantity="many"/>
+        <item quantity="other"/>
     </plurals>
     <string name="clear_data_from_uninstalled_apps">Очистити дані видалених застосунків</string>
     <string name="block_components_dots">Блокування компонентів …</string>
@@ -575,6 +575,7 @@
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
 \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
 \n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
 \n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
 \n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
 \n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
@@ -1125,4 +1126,11 @@
     <string name="saved_filters">Збережені фільтри</string>
     <string name="community_links">Telegram: https://t.me/AppManagerChannel
 \nTwitter: https://twitter.com/AppManagerNews</string>
+    <string name="paired_successfully">Сполучено.</string>
+    <string name="port_number_pairing_code_empty">Пустий номер порту або код сполучення.</string>
+    <string name="adb_pair">Сполука</string>
+    <string name="adb_wifi_paring_code">Код сполучення Wi-Fi</string>
+    <string name="invalid_password">Недійсний пароль, повторіть спробу.</string>
+    <string name="keystore_pass_cannot_be_empty">Пароль KeyStore не може бути порожнім.</string>
+    <string name="keystore_password_info">Нижче наведено пароль Менеджера застосунків KeyStore. Збережіть його в захищеному місці, якщо ви збираєтеся створити резервну копію/відновити KeyStore App Manager. <b> Це повідомлення більше не відображатиметься. </b></string>
 </resources>
