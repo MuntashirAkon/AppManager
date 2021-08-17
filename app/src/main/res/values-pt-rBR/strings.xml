@@ -79,7 +79,7 @@
     <string name="license">Licença</string>
     <string name="third_party">Bibliotecas e Ícones de terceiros</string>
     <string name="credits">Créditos</string>
-    <string name="credits_message">Para os autores do
+    <string name="credits_message">Aos autores de
 \n- The Android Open Source Project
 \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
@@ -87,6 +87,7 @@
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
 \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
 \n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
 \n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
 \n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
 \n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
@@ -94,7 +95,7 @@
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
 \n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
-\nCrédito do logo original: <a href="https://github.com/Atrate">Atrate</a>. </string>
+\nOriginal logo credit: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="word_wrap">Alternar quebra de palavra</string>
     <string name="class_viewer">Visualizador de Classe</string>
     <string name="toggle_class_listing">Alternar Lista de Classes</string>
@@ -1056,4 +1057,11 @@
     <string name="storage">Armazenamento</string>
     <string name="notice_saf">Ao contrário dos volumes, o diretório selecionado será usado para armazenar todos os arquivos relacionados ao App Manager, incluindo APKs salvos e backups. O SAF (Storage Access Framework) é muito lento, portanto, você só deve usar essa opção quando outras não puderem ser usadas.</string>
     <string name="notice">Perceba</string>
+    <string name="paired_successfully">Pareado.</string>
+    <string name="port_number_pairing_code_empty">Número da porta ou código de pareamento vazio.</string>
+    <string name="adb_pair">Parear</string>
+    <string name="adb_wifi_paring_code">Código de pareamento Wi-Fi</string>
+    <string name="invalid_password">Senha inválida, tente novamente.</string>
+    <string name="keystore_pass_cannot_be_empty">A senha do KeyStore não pode estar vazia.</string>
+    <string name="keystore_password_info">A seguir está a senha do KeyStore do App Manager. Guarde-a em um local seguro se for fazer backup / restaurar a KeyStore do App Manager. <b>Esta mensagem não será exibida novamente.</b></string>
 </resources>
