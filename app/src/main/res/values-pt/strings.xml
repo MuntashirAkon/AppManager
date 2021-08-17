@@ -290,6 +290,7 @@
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
 \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
 \n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
 \n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
 \n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
 \n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
@@ -297,7 +298,7 @@
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
 \n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
-\nCréditos do logo original: <a href="https://github.com/Atrate">Atrate</a>. </string>
+\nCréditos do logótipo original: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="credits">Méritos</string>
     <string name="third_party">Bibliotecas e Ícones de terceiros</string>
     <string name="license">Licença</string>
@@ -1055,4 +1056,11 @@
     <string name="storage">Armazenamento</string>
     <string name="notice_saf">Ao contrário dos volumes, o diretório selecionado será usado para armazenar todos os ficheiros relacionados com o App Manager, incluindo APKs e cópias de segurança guardadas. O Storage Access Framework (SAF) é muito lento, por isso só deve usar esta opção quando outras não puderem ser usadas.</string>
     <string name="notice">Aviso</string>
+    <string name="paired_successfully">Pareado.</string>
+    <string name="port_number_pairing_code_empty">Número da porta ou código de pareamento vazio.</string>
+    <string name="adb_pair">Parear</string>
+    <string name="adb_wifi_paring_code">Código de pareamento Wi-Fi</string>
+    <string name="invalid_password">Palavra-passe inválida, tente novamente.</string>
+    <string name="keystore_pass_cannot_be_empty">A palavra-passe da KeyStore não pode estar vazia.</string>
+    <string name="keystore_password_info">Segue-se a palavra-passe da App Manager KeyStore. Por favor guarde-a num local seguro se fizer uma cópia de segurança/restaurar a App Manager KeyStore. <b>Esta mensagem não será mostrada novamente.</b></string>
 </resources>
