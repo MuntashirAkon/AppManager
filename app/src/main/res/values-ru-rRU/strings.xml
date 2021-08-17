@@ -1122,4 +1122,8 @@
     <string name="pref_selected_users">Выбранные пользователи</string>
     <string name="enable_disable">Включение/отключение</string>
     <string name="error_with_details">Ошибка: %s</string>
+    <string name="files">Файлы</string>
+    <string name="storage">Хранилище</string>
+    <string name="notice_saf">В отличие от томов, выбранный каталог будет использоваться для хранения всех файлов, связанных с App Manager, включая сохраненные APK и резервные копии. Storage Access Framework (SAF) работает очень медленно, поэтому вы должны использовать этот вариант только тогда, когда другие не могут быть использованы.</string>
+    <string name="notice">Уведомление</string>
 </resources>

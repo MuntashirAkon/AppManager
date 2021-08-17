@@ -1037,4 +1037,23 @@
     </plurals>
     <string name="import_from_tb">Importar desde Titanium Backup</string>
     <string name="import_from_oab_tb_msg">Los backups deben estar ubicados en %s.</string>
+    <string name="notice_saf">A diferencia de los volúmenes, el directorio escogido se usará para almacenar todos los archivos relacionados con App Manager, incluyendo APKs y respaldos guardados. Storage Access Framework (SAF) es muy lento, por lo cual se recomienda usar esta opción solo cuando otras no puedan ser utilizadas.</string>
+    <string name="help_uses_permissions_tab">Presiona en un elemento para <b>conceder</b> o <b>revocar</b>. Solo permisos de <b>peligrosidad</b> y de <b>desarrollo</b> se pueden conceder o revocar.</string>
+    <string name="help_permissions_tab">Estos permisos están definidos por esta aplicación y no pueden ser revocados.</string>
+    <string name="help_app_ops_tab">Presiona en un elemento para <b>permitir</b> o <b>ignorar</b>. Presiona sostenidamente en un elemento para ver otros modos soportados.</string>
+    <string name="fallback_to_no_root_mode_description">App Manager no ha podido utilizar el modo de operación actual. Para evitar comportamientos indeseados, se recomienda cambiar temporalmente al modo no-root. Considere la posibilidad de reportar el problema si no se soluciona tras reiniciar el dispositivo.</string>
+    <string name="fallback_to_no_root_mode">¿Regresar a modo no-root\?</string>
+    <string name="minimum_version">Versión min.: %d</string>
+    <string name="added_to_queue">Añadido a la cola</string>
+    <string name="pref_selected_users">Usuarios seleccionados</string>
+    <string name="pref_selected_users_msg">Restringe App Manager para que funcione sólo con los usuarios seleccionados.</string>
+    <string name="permission_flags">Marcas de permiso</string>
+    <string name="enable_disable">Activar/desactivar</string>
+    <string name="error_with_details">Error: %s</string>
+    <string name="saved_filters">Filtros guardados</string>
+    <string name="notice">Aviso</string>
+    <string name="files">Archivos</string>
+    <string name="storage">Almacenamiento</string>
+    <string name="failed_to_prevent_background_run">No se pudo prevenir a %1$s de correr en segundo plano</string>
+    <string name="saf">SAF</string>
 </resources>

@@ -241,7 +241,7 @@
     <string name="installer_error_blocked">Installation bloquée par <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
     <string name="installer_error_blocked_device">appareil</string>
     <string name="installer_error_aborted">Échec de l\'installation, soit elle a été annulée, soit la sessions s\'est fermée de manière innattendue</string>
-    <string name="filter_apps_with_activities">Applications avec des activités</string>
+    <string name="filter_apps_with_activities">Avec des activités</string>
     <string name="are_you_sure">Êtes-vous sûr \?</string>
     <string name="pref_remove_all_rules">Supprimer toutes les règles</string>
     <string name="website">Site Web</string>
@@ -704,4 +704,50 @@
         <item quantity="other">Schémas de signature</item>
     </plurals>
     <string name="orientation_sensor_landscape">Le paysage des capteurs</string>
+    <string name="text_include_device_info">Include les informations de l\'appareil</string>
+    <string name="record_log">Journaux d\'enregistrement</string>
+    <string name="default_key_used">Valeur par défaut utilisée.</string>
+    <string name="disable_background_run_description">Paramètre le mode <i>Ignore</i> pour les opérations d\'application suivantes : <tt>RUN_IN_BACKGROUND</tt> (depuis Android 7.0) et <tt>RUN_ANY_IN_BACKGROUND</tt> (depuis Android 9).</string>
+    <string name="community_links">Telegram : https://t.me/AppManagerChannel
+\nTwitter : https://twitter.com/AppManagerNews</string>
+    <string name="community">Communauté</string>
+    <string name="pref_selected_users_msg">Restreindre l\'utilisation d\'App Manager aux seuls utilisateurs sélectionnés</string>
+    <string name="toast_started_select_partial">Sélection Partielle activés</string>
+    <string name="backup_extras_description">Sauvegarder les autorisations des applications, les options d\'économie de batterie et d\'utilisation des données, l\'état de MagiskHide, SSAID, etc.</string>
+    <string name="backup_extras">Extras</string>
+    <string name="backup_cache_description">Sauvegarder les dossiers <b>cache</b>, <b>no_cache</b> et <b>no_backup</b>.</string>
+    <string name="backup_obb_media_description">Sauvegarder les dossiers OBB et média.</string>
+    <string name="backup_external_data_description">Sauvegarder les dossiers de données externes.</string>
+    <string name="backup_internal_data_description">Sauvegarder les dossiers de données internes.</string>
+    <string name="backup_apk_files_description">Sauvegarde des fichiers APK depuis le répertoire source, y compris les fragments.</string>
+    <string name="pref_about_device_msg">Informations de base sur l\'appareil, notamment le système Android, le processeur, le processeur graphique, la mémoire vive, la batterie, etc.</string>
+    <string name="magisk_hide_enabled">MagiskHide</string>
+    <string name="pref_backup_android_keystore_msg">Toutes les applications ne fonctionnent pas après avoir été restaurées. La restauration du KeyStore ne fonctionne pas sur la plupart des appareils.</string>
+    <string name="keep_data_and_app_signing_signatures">Conserver les données et les signatures</string>
+    <string name="this_action_cannot_be_undone">Cette action ne peut être annulée.</string>
+    <string name="input_keystore_alias_pass_msg">Tapez ici pour fournir le mot de passe pour %1$s</string>
+    <string name="input_keystore_alias_pass_description">Insérer le mot de passe pour l\'alias <b>%1$s</b>. Vous pouvez laisser ce champ vide si le mot de passe est le même que celui du KeyStore.</string>
+    <string name="input_keystore_alias_pass">Mot de passe pour l\'alias <b>%1$s</b></string>
+    <string name="input_keystore_pass_msg">Tapez ici pour entrer le mot de passe KeyStore</string>
+    <string name="input_keystore_pass_description">Entrer le mot de passe du Keystore du gestionnaire d\'applications. Si vous voyez ceci pour la première fois, veuillez utiliser un générateur de mot de passe pour générer un mot de passe et le sauvegarder dans un endroit sûr avant de l\'insérer ici.</string>
+    <string name="input_keystore_pass">Entrer le mot de passe du KeyStore</string>
+    <string name="not_verified">Non vérifié</string>
+    <string name="verified">Vérifié</string>
+    <string name="pref_signature_schemes_msg">Il faut choisir au moins les schémas v1 et v2 pour une plus grande compatibilité. Le schéma v4 nécessite v2 ou v3.</string>
+    <string name="v4_scheme">schéma v4 (depuis Android 11)</string>
+    <string name="v3_scheme">schéma v3 (depuis Android 9)</string>
+    <string name="v2_scheme">schéma v2 (depuis Android 7.0)</string>
+    <string name="v1_scheme">schéma v1 (depuis Android 1.0)</string>
+    <string name="pref_apk_signing_msg">Définir les schémas de signature, la clé de signature personnalisée, etc.</string>
+    <string name="apk_signing">Signature de l\'APK</string>
+    <string name="pref_sign_apk_msg">Signer les fichiers APK avant de les installer.</string>
+    <string name="pref_sign_apk">Signer l\'APK</string>
+    <string name="allow_routine_ops_msg">Permettre l\'utilisation du profil dans les opérations de routine</string>
+    <string name="send_selected">Envoyer la sélection</string>
+    <string name="issued_date">Date d\'émission</string>
+    <string name="issuer">Émetteur</string>
+    <string name="state_waking">Réveil</string>
+    <string name="state_trace_stop">Arrêt du traçage</string>
+    <string name="orientation_no_sensor">Aucun capteur</string>
+    <string name="backup_rules_description">Sauvegarder les règles configurées dans App Manager.</string>
 </resources>

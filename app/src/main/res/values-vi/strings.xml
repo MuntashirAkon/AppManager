@@ -1016,4 +1016,8 @@
     <string name="pref_selected_users">Người dùng đã chọn</string>
     <string name="enable_disable">Bật/tắt</string>
     <string name="error_with_details">Lỗi: %s</string>
+    <string name="files">Tệp</string>
+    <string name="storage">Bộ nhớ</string>
+    <string name="notice_saf">Không giống các kho, thư mục được chọn sẽ được sử dụng để lưu trữ tất cả tệp liên quan đến App Manager, bao gồm cả các tệp APK đã lưu và các bản sao lưu. Storage Access Framework (SAF) rất là chậm, do đó bạn chỉ nên sử dụng tùy chọn này khi những tùy chọn khác không thể sử dụng được.</string>
+    <string name="notice">Thông báo</string>
 </resources>

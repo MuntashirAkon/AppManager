@@ -1017,4 +1017,8 @@
     <string name="pref_selected_users">选中的用户</string>
     <string name="enable_disable">启用/禁用</string>
     <string name="error_with_details">错误: %s</string>
+    <string name="files">文件</string>
+    <string name="storage">存储</string>
+    <string name="notice_saf">与卷不同，所选目录将用于存储与App Manager相关的所有文件，包括保存的APK和备份。存储访问框架(Storage Access Framework, SAF)非常慢，因此，您应该只在其他选项无法使用时使用此选项。</string>
+    <string name="notice">通知</string>
 </resources>
