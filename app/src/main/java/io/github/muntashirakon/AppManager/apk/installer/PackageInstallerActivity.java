@@ -28,6 +28,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.File;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -58,9 +59,19 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
                 broadcastIntent.putExtra(PackageInstaller.EXTRA_PACKAGE_NAME, packageName);
                 broadcastIntent.putExtra(PackageInstaller.EXTRA_SESSION_ID, sessionId);
                 getApplicationContext().sendBroadcast(broadcastIntent);
-                triggerCancel();
+                if (!hasNext()) {
+                    // No APKs left, this maybe a solo call
+                    finish();
+                } // else let the original activity decide what to do
             });
 
+    @SuppressWarnings("FieldCanBeLocal") // Cannot be local
+    @Nullable
+    private List<Uri> apkUris;
+    @Nullable
+    private Iterator<Uri> uriIterator;
+    @Nullable
+    private String mimeType;
     private int actionName;
     private FragmentManager fm;
     private AlertDialog progressDialog;
@@ -92,17 +103,22 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
             onNewIntent(intent);
             return;
         }
-        final Uri apkUri = IntentCompat.getDataUri(intent);
-        int apkFileKey = intent.getIntExtra(EXTRA_APK_FILE_KEY, -1);
-        if (apkUri == null && apkFileKey == -1) {
-            triggerCancel();
-            return;
-        }
         model = new ViewModelProvider(this).get(PackageInstallerViewModel.class);
         progressDialog = UIUtils.getProgressDialog(this, getText(R.string.loading));
         fm = getSupportFragmentManager();
         progressDialog.show();
-        model.getPackageInfo(apkFileKey, apkUri, intent.getType()).observe(this, newPackageInfo -> {
+        mimeType = intent.getType();
+        apkUris = IntentCompat.getDataUris(intent);
+        if (apkUris != null) uriIterator = apkUris.listIterator();
+        int apkFileKey = intent.getIntExtra(EXTRA_APK_FILE_KEY, -1);
+        if (apkFileKey != -1) {
+            model.getPackageInfo(apkFileKey);
+            // If URIs are supplied, they will also be read
+        } else {
+            // Only URIs may be supplied
+            goToNext();
+        }
+        model.packageInfoLiveData().observe(this, newPackageInfo -> {
             progressDialog.dismiss();
             if (newPackageInfo == null) {
                 UIUtils.displayLongToast(R.string.failed_to_fetch_package_info);
@@ -125,7 +141,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
                             .show();
                 }
             } else {
-                // App is installed or the app is uninstalled without clearing data or the app is uninstalled
+                // App is installed or the app is uninstalled without clearing data or the app is uninstalled,
                 // but it's a system app
                 long installedVersionCode = PackageInfoCompat.getLongVersionCode(model.getInstalledPackageInfo());
                 long thisVersionCode = PackageInfoCompat.getLongVersionCode(newPackageInfo);
@@ -280,7 +296,10 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
             } catch (Exception e) {
                 e.printStackTrace();
                 PackageInstallerCompat.sendCompletedBroadcast(packageName, PackageInstallerCompat.STATUS_FAILURE_INCOMPATIBLE_ROM, sessionId);
-                triggerCancel();
+                if (!hasNext()) {
+                    // No APKs left, this maybe a solo call
+                    finish();
+                } // else let the original activity decide what to do
             }
         }
     }
@@ -349,7 +368,23 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
 
     @Override
     public void triggerCancel() {
-        finish();
+        goToNext();
+    }
+
+    /**
+     * Closes the current APK and start the next
+     */
+    private void goToNext() {
+        if (hasNext()) {
+            //noinspection ConstantConditions Checked earlier
+            model.getPackageInfo(uriIterator.next(), mimeType);
+        } else {
+            finish();
+        }
+    }
+
+    private boolean hasNext() {
+        return uriIterator != null && uriIterator.hasNext();
     }
 
     @NonNull
