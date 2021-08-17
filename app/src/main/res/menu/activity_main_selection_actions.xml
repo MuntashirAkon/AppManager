@@ -35,6 +35,10 @@
         android:title="@string/block_unblock_trackers"
         android:icon="@drawable/ic_block_black_24dp" />
     <item
+        android:id="@+id/action_net_policy"
+        android:title="@string/net_policy"
+        android:icon="@drawable/ic_assignment_black_24dp" />
+    <item
         android:id="@+id/action_export_blocking_rules"
         android:title="@string/export_blocking_rules"
         android:icon="@drawable/ic_open_in_new_black_24dp" />

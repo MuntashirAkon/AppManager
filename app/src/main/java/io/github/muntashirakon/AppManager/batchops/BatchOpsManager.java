@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageManager;
 import android.content.pm.PackageManager;
+import android.net.NetworkPolicyManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -45,6 +46,8 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.rules.compontents.ExternalComponentsImporter;
+import io.github.muntashirakon.AppManager.servermanager.NetworkPolicyManagerCompat;
+import io.github.muntashirakon.AppManager.servermanager.NetworkPolicyManagerCompat.NetPolicy;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
@@ -92,6 +95,11 @@ public class BatchOpsManager {
      */
     public static final String ARG_BACKUP_TYPE = "backup_type";
 
+    /**
+     * {@link Integer} value. One of the {@link NetPolicy network policies}. To be used with {@link #OP_NET_POLICY}.
+     */
+    public static final String ARG_NET_POLICIES = "net_policies";
+
     @IntDef(value = {
             OP_NONE,
             OP_BACKUP_APK,
@@ -107,6 +115,7 @@ public class BatchOpsManager {
             OP_EXPORT_RULES,
             OP_FORCE_STOP,
             OP_IMPORT_BACKUPS,
+            OP_NET_POLICY,
             OP_SET_APP_OPS,
             OP_GRANT_PERMISSIONS,
             OP_RESTORE_BACKUP,
@@ -140,6 +149,7 @@ public class BatchOpsManager {
     public static final int OP_GRANT_PERMISSIONS = 17;
     public static final int OP_REVOKE_PERMISSIONS = 18;
     public static final int OP_IMPORT_BACKUPS = 19;
+    public static final int OP_NET_POLICY = 20;
 
     private final Handler handler;
 
@@ -220,6 +230,8 @@ public class BatchOpsManager {
                 return opGrantOrRevokePermissions(false);
             case OP_IMPORT_BACKUPS:
                 return opImportBackups();
+            case OP_NET_POLICY:
+                return opNetPolicy();
             case OP_NONE:
                 break;
         }
@@ -447,6 +459,21 @@ public class BatchOpsManager {
         for (UserPackagePair pair : userPackagePairs) {
             try {
                 PackageManagerCompat.forceStopPackage(pair.getPackageName(), pair.getUserHandle());
+            } catch (Throwable e) {
+                Log.e(TAG, e);
+                failedPackages.add(pair);
+            }
+        }
+        return lastResult = new Result(failedPackages);
+    }
+
+    private Result opNetPolicy() {
+        List<UserPackagePair> failedPackages = new ArrayList<>();
+        int netPolicies = args.getInt(ARG_NET_POLICIES, NetworkPolicyManager.POLICY_NONE);
+        for (UserPackagePair pair : userPackagePairs) {
+            try {
+                int uid = PackageUtils.getAppUid(pair);
+                NetworkPolicyManagerCompat.setUidPolicy(uid, netPolicies);
             } catch (Throwable e) {
                 Log.e(TAG, e);
                 failedPackages.add(pair);

@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.net.NetworkPolicyManager;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -20,8 +21,10 @@ import android.view.View;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SearchView;
+import androidx.collection.ArrayMap;
 import androidx.core.content.ContextCompat;
 import androidx.core.text.HtmlCompat;
 import androidx.lifecycle.ViewModelProvider;
@@ -37,6 +40,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.BuildConfig;
@@ -52,6 +56,7 @@ import io.github.muntashirakon.AppManager.profiles.ProfileMetaManager;
 import io.github.muntashirakon.AppManager.profiles.ProfilesActivity;
 import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.runningapps.RunningAppsActivity;
+import io.github.muntashirakon.AppManager.servermanager.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.SettingsActivity;
@@ -354,6 +359,29 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
                             handleBatchOp(BatchOpsManager.OP_DISABLE_BACKGROUND))
                     .setNegativeButton(R.string.no, null)
                     .show();
+        } else if (id == R.id.action_net_policy) {
+            ArrayMap<Integer, String> netPolicyMap = NetworkPolicyManagerCompat.getAllReadablePolicies(this);
+            int[] polices = new int[netPolicyMap.size()];
+            String[] policyStrings = new String[netPolicyMap.size()];
+            AtomicInteger selectedPolicies = new AtomicInteger(NetworkPolicyManager.POLICY_NONE);
+            for (int i = 0; i < netPolicyMap.size(); ++i) {
+                polices[i] = netPolicyMap.keyAt(i);
+                policyStrings[i] = netPolicyMap.valueAt(i);
+            }
+            new MaterialAlertDialogBuilder(this)
+                    .setTitle(R.string.net_policy)
+                    .setMultiChoiceItems(policyStrings, null, (dialog, which, isChecked) -> {
+                        int currentPolicies = selectedPolicies.get();
+                        if (isChecked) selectedPolicies.set(currentPolicies | polices[which]);
+                        else selectedPolicies.set(currentPolicies & ~polices[which]);
+                    })
+                    .setNegativeButton(R.string.cancel, null)
+                    .setPositiveButton(R.string.apply, (dialog, which) -> {
+                        Bundle args = new Bundle();
+                        args.putInt(BatchOpsManager.ARG_NET_POLICIES, selectedPolicies.get());
+                        handleBatchOp(BatchOpsManager.OP_NET_POLICY, args);
+                    })
+                    .show();
         } else if (id == R.id.action_export_blocking_rules) {
             @SuppressLint("SimpleDateFormat") final String fileName = "app_manager_rules_export-" + DateUtils.formatDateTime(System.currentTimeMillis()) + ".am.tsv";
             batchExportRules.launch(fileName);
@@ -479,6 +507,10 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
     }
 
     private void handleBatchOp(@BatchOpsManager.OpType int op) {
+        handleBatchOp(op, null);
+    }
+
+    private void handleBatchOp(@BatchOpsManager.OpType int op, @Nullable Bundle args) {
         if (mModel == null) return;
         showProgressIndicator(true);
         Intent intent = new Intent(this, BatchOpsService.class);
@@ -486,6 +518,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
         intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, input.getFailedPackages());
         intent.putIntegerArrayListExtra(BatchOpsService.EXTRA_OP_USERS, input.getAssociatedUserHandles());
         intent.putExtra(BatchOpsService.EXTRA_OP, op);
+        intent.putExtra(BatchOpsService.EXTRA_OP_EXTRA_ARGS, args);
         ContextCompat.startForegroundService(this, intent);
         multiSelectionView.cancel();
     }
