@@ -50,19 +50,20 @@
     <string name="credits_message">لمؤلفي
 \n- مشروع Android مفتوح المصدر
 \n- <a href="https://github.com/butzist/ActivityLauncher"> مشغل النشاط </a>
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info"> معلومات عن حزم التطبيقات </a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info"> معلومات عن حزمة التطبيقات </a>
 \n- <a href="https://github.com/zhaobao/AppsMonitor"> AppsMonitor </a>
 \n- <a href="https://github.com/8enet/AppOpsX"> AppOpsX </a>
 \n- <a href="https://github.com/billthefarmer/editor"> محرر </a>
-\n- <a href="https://github.com/k3b/intent-intercept"> اعتراض النية </a>
-\n- <a href="https://github.com/pluscubed/matlog"> مات لوغ </a>
+\n- <a href="https://github.com/k3b/intent-intercept"> Intent Intercept </a>
+\n- <a href="https://github.com/zhanghai/MaterialFiles"> Material Files </a>
+\n- <a href="https://github.com/pluscubed/matlog"> MatLog </a>
 \n- <a href="https://github.com/matrix-org/matrix-android-sdk"> Matrix Android SDK </a>
 \n- <a href="https://github.com/jensstein/oandbackup"> OAndBackup </a>
 \n- <a href="https://github.com/open-keychain/open-keychain"> Open Keychain </a>
-\n- <a href="https://github.com/Aefyr/SAI"> الديوان </a>
-\n- <a href="https://github.com/RikkaApps/Shizuku"> شيزوكو </a>
-\n- <a href="https://github.com/tuyafeng/Watt"> واط </a>
-\nمصدر الشعار الأصلي: <a href="https://github.com/Atrate"> أتراتي </a>. </string>
+\n- <a href="https://github.com/Aefyr/SAI"> SAI </a>
+\n- <a href="https://github.com/RikkaApps/Shizuku"> Shizuku </a>
+\n- <a href="https://github.com/tuyafeng/Watt"> Watt </a>
+\nمصدر الشعار الأصلي: <a href="https://github.com/Atrate"> Atrate </a>. </string>
     <string name="credits">الإشادات</string>
     <string name="third_party">مكتبات وأيقونات الطرف الثالث</string>
     <string name="license">الرخصة</string>
@@ -82,7 +83,7 @@
     <string name="empty_package_name">اسم الحزمة فارغ</string>
     <string name="main_activity">النشاط الرئيسي</string>
     <string name="user_id">معرف المستخدم</string>
-    <string name="installer_app">تم تثبيته بواسطة</string>
+    <string name="installer_app">مثبت بواسطة</string>
     <string name="date_updated">تاريخ التحديث</string>
     <string name="date_installed">تاريخ التثبيت</string>
     <string name="more_info">مزيد من المعلومات</string>
@@ -1195,4 +1196,11 @@
     <string name="storage">التخزين</string>
     <string name="notice_saf">على عكس وحدات التخزين، سيتم استخدام الدليل المحدد لتخزين كافة الملفات المتعلقة ب App Manager، بما في ذلك APKs المحفوظة والنسخ الاحتياطية. إطار عمل الوصول إلى التخزين (SAF) بطيء جدا، لذلك، يجب عليك فقط استخدام هذا الخيار عندما لا يمكن استخدام الآخرين.</string>
     <string name="notice">تنويه</string>
+    <string name="paired_successfully">مقترن.</string>
+    <string name="port_number_pairing_code_empty">رقم المنفذ أو رمز الاقتران فارغ.</string>
+    <string name="adb_pair">إقتران</string>
+    <string name="adb_wifi_paring_code">رمز اقتران Wi-Fi</string>
+    <string name="invalid_password">كلمة مرور غير صالحة، حاول مرة أخرى.</string>
+    <string name="keystore_pass_cannot_be_empty">لا يمكن أن تكون كلمة مرور سجل المفاتيح فارغة.</string>
+    <string name="keystore_password_info">فيما يلي كلمة مرور سجل المفاتيح لمدير التطبيقات. يرجى تخزينه في مكان آمن إذا كنت تريد إجراء نسخة احتياطية / استعادة مدير التطبيقات KeyStore. <b> لن يتم عرض هذه الرسالة مرة أخرى. </b></string>
 </resources>
