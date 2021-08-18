@@ -30,10 +30,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.ShareActionProvider;
 import androidx.collection.SparseArrayCompat;
 import androidx.core.util.Pair;
-import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -66,8 +64,6 @@ public class ActivityInterceptor extends BaseActivity {
     public static final String EXTRA_CLASS_NAME = BuildConfig.APPLICATION_ID + ".intent.extra.CLASS_NAME";
 
     private static final String INTENT_EDITED = "intent_edited";
-    private static final String NEWLINE = "\n";
-    private static final String BLANK = " ";
 
     private static final SparseArrayCompat<String> INTENT_FLAG_TO_STRING = new SparseArrayCompat<String>() {
         {
@@ -196,12 +192,6 @@ public class ActivityInterceptor extends BaseActivity {
         }
     };
 
-    private static final String NEWSEGMENT = NEWLINE + "------------" + NEWLINE;
-
-    private static final String BOLD_START = "<b><u>";
-    private static final String BOLD_END_BLANK = "</u></b>" + BLANK;
-    private static final String BOLD_END_NL = "</u></b>" + NEWLINE;
-
     private abstract class IntentUpdateTextWatcher implements TextWatcher {
         private final TextView textView;
 
@@ -238,8 +228,6 @@ public class ActivityInterceptor extends BaseActivity {
         public void afterTextChanged(Editable s) {
         }
     }
-
-    private ShareActionProvider shareActionProvider;
 
     private MaterialAutoCompleteTextView action;
     private MaterialAutoCompleteTextView data;
@@ -323,20 +311,24 @@ public class ActivityInterceptor extends BaseActivity {
                 updateSubtitle(requestedComponent);
             }
         }
-        // Store the Intent
-        storeOriginalIntent(intent);
         // Whether the Intent was edited
         final boolean isVisible = savedInstanceState != null && savedInstanceState.getBoolean(INTENT_EDITED);
-        // Load Intent data
-        showInitialIntent(isVisible);
-        // Save Intent data to history
-        if (mHistory != null && requestedComponent == null) mHistory.saveHistory();
+        init(intent, isVisible);
     }
 
     @Override
     protected void onDestroy() {
         imageLoader.close();
         super.onDestroy();
+    }
+
+    private void init(Intent intent, boolean isEdited) {
+        // Store the Intent
+        storeOriginalIntent(intent);
+        // Load Intent data
+        showInitialIntent(isEdited);
+        // Save Intent data to history
+        if (mHistory != null && requestedComponent == null) mHistory.saveHistory();
     }
 
     private void storeOriginalIntent(Intent intent) {
@@ -685,6 +677,22 @@ public class ActivityInterceptor extends BaseActivity {
     private void copyIntentDetails() {
         ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
         clipboard.setPrimaryClip(ClipData.newPlainText("Intent Details", getIntentDetailsString()));
+        UIUtils.displayShortToast(R.string.copied_to_clipboard);
+    }
+
+    private void pasteIntentDetails() {
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+        ClipData clipData = clipboard.getPrimaryClip();
+        if (clipData == null) return;
+        for (int i = 0; i < clipData.getItemCount(); ++i) {
+            ClipData.Item item = clipData.getItemAt(i);
+            Intent intent = IntentCompat.unflattenFromString(item.getText().toString());
+            if (intent != null) {
+                requestedComponent = null;
+                init(intent, false);
+                break;
+            }
+        }
     }
 
     private void refreshUI() {
@@ -698,10 +706,6 @@ public class ActivityInterceptor extends BaseActivity {
         }
         updateTitle(mutableIntent.getPackage());
         updateSubtitle(mutableIntent.getComponent());
-        if (shareActionProvider != null) {
-            Intent share = createShareIntent();
-            shareActionProvider.setShareIntent(share);
-        }
     }
 
     @NonNull
@@ -714,141 +718,40 @@ public class ActivityInterceptor extends BaseActivity {
 
     @NonNull
     private String getIntentDetailsString() {
-        StringBuilder result = new StringBuilder();
-
-        result.append(getUri(mutableIntent)).append(NEWSEGMENT);
-
-        appendIntentDetails(result, mutableIntent, true).append(NEWSEGMENT);
-
         PackageManager pm = getPackageManager();
         List<ResolveInfo> resolveInfo = pm.queryIntentActivities(mutableIntent, 0);
-
         int numberOfMatchingActivities = resolveInfo.size();
 
-        appendHeader(result, R.string.matching_activities);
-        if (numberOfMatchingActivities < 1) {
-            appendHeader(result, R.string.no_content);
-        } else {
-            for (ResolveInfo info : resolveInfo) {
-                ActivityInfo activityinfo = info.activityInfo;
-                result.append("* ").append(activityinfo.loadLabel(pm))
-                        .append(" (")
-                        .append(activityinfo.packageName)
-                        .append(" - ")
-                        .append(activityinfo.name)
-                        .append(")\n");
-            }
+        StringBuilder result = new StringBuilder();
+        // At least 1 tab have to be present in each non-empty line
+        result.append("URI\t").append(getUri(mutableIntent)).append("\n\n");
+        result.append(IntentCompat.flattenToString(mutableIntent)).append("\n");
+        result.append("MATCHING ACTIVITIES\t").append(numberOfMatchingActivities).append("\n");
+        int spaceCount = String.valueOf(numberOfMatchingActivities).length();
+        StringBuilder spaces = new StringBuilder();
+        while ((spaceCount--) != 0) spaces.append(" ");
+        for (int i = 0; i < numberOfMatchingActivities; ++i) {
+            ActivityInfo activityinfo = resolveInfo.get(i).activityInfo;
+            result.append(i).append("\tLABEL  \t").append(activityinfo.loadLabel(pm)).append("\n");
+            result.append(spaces).append("\tNAME   \t").append(activityinfo.name).append("\n");
+            result.append(spaces).append("\tPACKAGE\t").append(activityinfo.packageName).append("\n");
         }
 
         // Add activity results
         if (this.lastResultCode != null) {
-            result.append(NEWSEGMENT);
-            appendHeader(result, R.string.activity_result);
-            appendNameValue(result, R.string.result_code, this.lastResultCode);
-
+            result.append("\n");
+            result.append("ACTIVITY RESULT\t").append(this.lastResultCode).append("\n");
             if (this.lastResultIntent != null) {
-                appendIntentDetails(result, lastResultIntent, false);
+                result.append(IntentCompat.describeIntent(this.lastResultIntent, "RESULT"));
             }
         }
 
         return result.toString();
     }
 
-    private StringBuilder appendIntentDetails(StringBuilder result, Intent intent, boolean detailed) {
-        if (detailed) appendNameValue(result, R.string.action, intent.getAction());
-
-        appendNameValue(result, R.string.data, intent.getData());
-        appendNameValue(result, R.string.mime_type, intent.getType());
-        appendNameValue(result, R.string.uri, getUri(intent));
-
-        Set<String> categories = intent.getCategories();
-        if ((categories != null) && (categories.size() > 0)) {
-            appendHeader(result, R.string.category);
-            for (String category : categories) {
-                result.append(category).append(NEWLINE);
-            }
-        }
-
-        if (detailed) {
-            appendHeader(result, R.string.flags);
-            ArrayList<String> flagsStrings = getFlags();
-            if (!flagsStrings.isEmpty()) {
-                for (String thisFlagString : flagsStrings) {
-                    result.append(thisFlagString).append(NEWLINE);
-                }
-            } else {
-                result.append(getString(R.string.none)).append(NEWLINE);
-            }
-        }
-
-        try {
-            Bundle intentBundle = intent.getExtras();
-            if (intentBundle != null) {
-                Set<String> keySet = intentBundle.keySet();
-                appendHeader(result, R.string.extras);
-                int count = 0;
-
-                for (String key : keySet) {
-                    count++;
-                    Object thisObject = intentBundle.get(key);
-                    if (thisObject == null) continue;
-                    result.append(count).append(BLANK);
-                    String thisClass = thisObject.getClass().getName();
-                    result.append(getString(R.string.class_name)).append(BLANK)
-                            .append(thisClass).append(NEWLINE);
-                    result.append(getString(R.string.key_name)).append(BLANK)
-                            .append(key).append(NEWLINE);
-
-                    if (thisObject instanceof String || thisObject instanceof Long
-                            || thisObject instanceof Integer
-                            || thisObject instanceof Boolean
-                            || thisObject instanceof Uri) {
-                        result.append(getString(R.string.value)).append(BLANK)
-                                .append(thisObject)
-                                .append(NEWLINE);
-                    } else if (thisObject instanceof ArrayList) {
-                        result.append(getString(R.string.value)).append(NEWLINE);
-                        ArrayList<?> thisArrayList = (ArrayList<?>) thisObject;
-                        for (Object thisArrayListObject : thisArrayList) {
-                            result.append(thisArrayListObject.toString()).append(NEWLINE);
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
-            result.append(getString(R.string.extras)).append(NEWLINE);
-            result.append(getString(R.string.error)).append(NEWLINE);
-            e.printStackTrace();
-        }
-        return result;
-    }
-
-    private void appendNameValue(StringBuilder result, int keyId, Object value) {
-        if (value != null) {
-            result.append(BOLD_START).append(getString(keyId)).append(BOLD_END_BLANK)
-                    .append(value).append(NEWLINE);
-        }
-    }
-
-    private void appendHeader(@NonNull StringBuilder result, int keyId) {
-        result.append(BOLD_START).append(getString(keyId)).append(BOLD_END_NL);
-    }
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_activity_interceptor_actions, menu);
-        MenuItem actionItem = menu.findItem(R.id.action_share);
-
-        shareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(actionItem);
-
-        if (shareActionProvider == null) {
-            shareActionProvider = new ShareActionProvider(this);
-            MenuItemCompat.setActionProvider(actionItem, shareActionProvider);
-        }
-
-        shareActionProvider.setShareHistoryFileName(ShareActionProvider.DEFAULT_SHARE_HISTORY_FILE_NAME);
-        refreshUI();
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -860,6 +763,9 @@ public class ActivityInterceptor extends BaseActivity {
             return true;
         } else if (id == R.id.action_copy) {
             copyIntentDetails();
+            return true;
+        } else if (id == R.id.action_paste) {
+            pasteIntentDetails();
             return true;
         }
         return super.onOptionsItemSelected(item);
