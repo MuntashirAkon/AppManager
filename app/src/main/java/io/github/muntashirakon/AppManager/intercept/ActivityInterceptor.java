@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -36,7 +37,6 @@ import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.internal.util.TextUtils;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputEditText;
@@ -245,6 +245,8 @@ public class ActivityInterceptor extends BaseActivity {
     private MaterialAutoCompleteTextView data;
     private MaterialAutoCompleteTextView type;
     private MaterialAutoCompleteTextView uri;
+    private MaterialAutoCompleteTextView packageName;
+    private MaterialAutoCompleteTextView className;
     private TextInputEditText id;
 
     private HistoryEditText mHistory = null;
@@ -301,29 +303,24 @@ public class ActivityInterceptor extends BaseActivity {
         findViewById(R.id.progress_linear).setVisibility(View.GONE);
         // Get Intent
         Intent intent = getIntent();
+        intent.setPackage(null);
+        intent.setComponent(null);
         // Get ComponentName if set
-        String pkgName = null;
-        String className = null;
+        String pkgName;
         if (intent.hasExtra(EXTRA_PACKAGE_NAME)) {
             pkgName = intent.getStringExtra(EXTRA_PACKAGE_NAME);
             intent.removeExtra(EXTRA_PACKAGE_NAME);
-        }
+            intent.setPackage(pkgName);
+            updateTitle(pkgName);
+        } else pkgName = null;
         if (intent.hasExtra(EXTRA_CLASS_NAME)) {
+            String className;
             className = intent.getStringExtra(EXTRA_CLASS_NAME);
             intent.removeExtra(EXTRA_CLASS_NAME);
-        }
-        if (pkgName != null && className != null) {
-            requestedComponent = new ComponentName(pkgName, className);
-            ActionBar actionBar = getSupportActionBar();
-            if (actionBar != null) {
-                PackageManager pm = getPackageManager();
-                actionBar.setTitle(PackageUtils.getPackageLabel(pm, pkgName));
-                try {
-                    ActivityInfo info = pm.getActivityInfo(requestedComponent, 0);
-                    actionBar.setSubtitle(info.loadLabel(pm));
-                } catch (PackageManager.NameNotFoundException e) {
-                    actionBar.setSubtitle(className);
-                }
+            if (pkgName != null && className != null) {
+                requestedComponent = new ComponentName(pkgName, className);
+                intent.setComponent(requestedComponent);
+                updateSubtitle(requestedComponent);
             }
         }
         // Store the Intent
@@ -368,8 +365,6 @@ public class ActivityInterceptor extends BaseActivity {
     private void showInitialIntent(boolean isVisible) {
         mutableIntent = cloneIntent(this.originalIntent);
 
-        mutableIntent.setComponent(null);
-
         setupVariables();
 
         setupTextWatchers();
@@ -398,6 +393,32 @@ public class ActivityInterceptor extends BaseActivity {
         refreshUI();
     }
 
+    private void updateTitle(@Nullable String packageName) {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            if (packageName != null) {
+                actionBar.setTitle(PackageUtils.getPackageLabel(getPackageManager(), packageName));
+            } else actionBar.setTitle(R.string.interceptor);
+        }
+    }
+
+    private void updateSubtitle(@Nullable ComponentName cn) {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            PackageManager pm = getPackageManager();
+            if (cn == null) {
+                actionBar.setSubtitle(null);
+                return;
+            }
+            try {
+                ActivityInfo info = pm.getActivityInfo(cn, 0);
+                actionBar.setSubtitle(info.loadLabel(pm));
+            } catch (PackageManager.NameNotFoundException e) {
+                actionBar.setSubtitle(cn.getClassName());
+            }
+        }
+    }
+
     @NonNull
     private List<Pair<String, Object>> getExtras() {
         List<Pair<String, Object>> extras = new ArrayList<>();
@@ -422,6 +443,11 @@ public class ActivityInterceptor extends BaseActivity {
             data.setText(mutableIntent.getDataString());
         }
         if (textViewToIgnore != type) type.setText(mutableIntent.getType());
+        if (textViewToIgnore != packageName) packageName.setText(mutableIntent.getPackage());
+        if (textViewToIgnore != className) {
+            ComponentName cn = mutableIntent.getComponent();
+            className.setText(cn != null ? cn.getClassName() : null);
+        }
         if (textViewToIgnore != uri) uri.setText(getUri(mutableIntent));
         if (textViewToIgnore != id) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -466,12 +492,14 @@ public class ActivityInterceptor extends BaseActivity {
         data = findViewById(R.id.data_edit);
         type = findViewById(R.id.type_edit);
         uri = findViewById(R.id.uri_edit);
+        packageName = findViewById(R.id.package_edit);
+        className = findViewById(R.id.class_edit);
         id = findViewById(R.id.type_id);
-        TextInputLayout idLayout = findViewById(R.id.type_id_layout);
 
-        mHistory = new HistoryEditText(this, action, data, type, uri);
+        mHistory = new HistoryEditText(this, action, data, type, uri, packageName, className);
 
         // Setup identifier
+        TextInputLayout idLayout = findViewById(R.id.type_id_layout);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             idLayout.setEndIconOnClickListener(v -> id.setText(UUID.randomUUID().toString()));
         } else idLayout.setVisibility(View.GONE);
@@ -484,6 +512,7 @@ public class ActivityInterceptor extends BaseActivity {
                         .setNegativeButton(R.string.cancel, null)
                         .setPositiveButton(R.string.ok, (dialog, which, inputText, isChecked) -> {
                             if (!TextUtils.isEmpty(inputText)) {
+                                //noinspection ConstantConditions
                                 mutableIntent.addCategory(inputText.toString().trim());
                                 categoriesAdapter.setDefaultList(mutableIntent.getCategories());
                                 showTextViewIntentData(null);
@@ -564,10 +593,7 @@ public class ActivityInterceptor extends BaseActivity {
             try {
                 if (requestedComponent == null) {
                     launcher.launch(Intent.createChooser(mutableIntent, resendIntentButton.getText()));
-                } else {
-                    mutableIntent.setComponent(requestedComponent);
-                    launcher.launch(mutableIntent);
-                }
+                } else launcher.launch(mutableIntent);
             } catch (Throwable th) {
                 Log.e(TAG, th);
                 UIUtils.displayLongToast(R.string.error_with_details, th.getClass().getName() + ": " + th.getMessage());
@@ -605,6 +631,33 @@ public class ActivityInterceptor extends BaseActivity {
                 mutableIntent.setDataAndType(Uri.parse(dataString), modifiedContent);
             }
         });
+        packageName.addTextChangedListener(new IntentUpdateTextWatcher(packageName) {
+            @Override
+            protected void onUpdateIntent(String modifiedContent) {
+                mutableIntent.setPackage(TextUtils.isEmpty(modifiedContent) ? null : modifiedContent);
+            }
+        });
+        className.addTextChangedListener(new IntentUpdateTextWatcher(className) {
+            @Override
+            protected void onUpdateIntent(String modifiedContent) {
+                String packageName = mutableIntent.getPackage();
+                if (packageName == null) {
+                    UIUtils.displayShortToast(R.string.set_package_name_first);
+                    areTextWatchersActive = false;
+                    className.setText(null);
+                    areTextWatchersActive = true;
+                    return;
+                }
+                if (TextUtils.isEmpty(modifiedContent)) {
+                    requestedComponent = null;
+                    mutableIntent.setComponent(null);
+                } else {
+                    requestedComponent = new ComponentName(packageName, (modifiedContent.startsWith(".") ?
+                            packageName : "") + modifiedContent);
+                    mutableIntent.setComponent(requestedComponent);
+                }
+            }
+        });
         uri.addTextChangedListener(new IntentUpdateTextWatcher(uri) {
             @Override
             protected void onUpdateIntent(String modifiedContent) {
@@ -638,7 +691,13 @@ public class ActivityInterceptor extends BaseActivity {
         if (requestedComponent == null) {
             // Since no explicit component requested, display matching activities
             checkAndShowMatchingActivities();
+        } else {
+            // Hide matching activities since specific component requested
+            activitiesHeader.setVisibility(View.GONE);
+            resendIntentButton.setEnabled(true);
         }
+        updateTitle(mutableIntent.getPackage());
+        updateSubtitle(mutableIntent.getComponent());
         if (shareActionProvider != null) {
             Intent share = createShareIntent();
             shareActionProvider.setShareIntent(share);

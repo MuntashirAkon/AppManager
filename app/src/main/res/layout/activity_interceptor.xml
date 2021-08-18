@@ -90,6 +90,48 @@
 				</com.google.android.material.textfield.TextInputLayout>
 
 				<com.google.android.material.textfield.TextInputLayout
+					style="@style/AppTheme.TextInputLayout.ExposedDropdownMenu"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:hint="@string/package_name"
+					android:paddingStart="@dimen/padding_medium"
+					android:paddingEnd="@dimen/padding_medium"
+					app:hintAnimationEnabled="true"
+					app:hintEnabled="true">
+
+					<com.google.android.material.textfield.MaterialAutoCompleteTextView
+						android:id="@+id/package_edit"
+						style="@style/AppTheme.TextAppearance.Input"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:inputType="textNoSuggestions"
+						android:maxLines="1"
+						tools:text="@tools:sample/full_names" />
+
+				</com.google.android.material.textfield.TextInputLayout>
+
+				<com.google.android.material.textfield.TextInputLayout
+					style="@style/AppTheme.TextInputLayout.ExposedDropdownMenu"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:hint="@string/class_name"
+					android:paddingStart="@dimen/padding_medium"
+					android:paddingEnd="@dimen/padding_medium"
+					app:hintAnimationEnabled="true"
+					app:hintEnabled="true">
+
+					<com.google.android.material.textfield.MaterialAutoCompleteTextView
+						android:id="@+id/class_edit"
+						style="@style/AppTheme.TextAppearance.Input"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:inputType="textNoSuggestions"
+						android:maxLines="1"
+						tools:text="@tools:sample/full_names" />
+
+				</com.google.android.material.textfield.TextInputLayout>
+
+				<com.google.android.material.textfield.TextInputLayout
 					android:id="@+id/type_id_layout"
 					style="@style/AppTheme.TextInputLayout"
 					android:layout_width="match_parent"
