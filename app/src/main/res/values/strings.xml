@@ -1094,4 +1094,5 @@
     <string name="adb_pair">Pair</string>
     <string name="port_number_pairing_code_empty">Empty port number or pairing code.</string>
     <string name="paired_successfully">Paired.</string>
+    <string name="identifier">Identifier</string>
 </resources>
