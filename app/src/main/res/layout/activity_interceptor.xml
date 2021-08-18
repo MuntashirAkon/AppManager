@@ -41,7 +41,8 @@
 						style="@style/AppTheme.TextAppearance.Input"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
-						android:inputType="textNoSuggestions|textMultiLine"
+						android:inputType="textNoSuggestions"
+						android:maxLines="1"
 						tools:text="@tools:sample/full_names" />
 
 				</com.google.android.material.textfield.TextInputLayout>
@@ -62,6 +63,7 @@
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:inputType="textNoSuggestions|textMultiLine"
+						android:maxLines="3"
 						tools:text="@tools:sample/full_names" />
 
 				</com.google.android.material.textfield.TextInputLayout>
@@ -81,7 +83,32 @@
 						style="@style/AppTheme.TextAppearance.Input"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
-						android:inputType="textNoSuggestions|textMultiLine"
+						android:inputType="textNoSuggestions"
+						android:maxLines="1"
+						tools:text="@tools:sample/full_names" />
+
+				</com.google.android.material.textfield.TextInputLayout>
+
+				<com.google.android.material.textfield.TextInputLayout
+					android:id="@+id/type_id_layout"
+					style="@style/AppTheme.TextInputLayout"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:hint="@string/identifier"
+					android:paddingStart="@dimen/padding_medium"
+					android:paddingEnd="@dimen/padding_medium"
+					app:endIconMode="custom"
+					app:endIconDrawable="@drawable/ic_baseline_autorenew_24"
+					app:hintAnimationEnabled="true"
+					app:hintEnabled="true">
+
+					<com.google.android.material.textfield.TextInputEditText
+						android:id="@+id/type_id"
+						style="@style/AppTheme.TextAppearance.Input"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:inputType="textNoSuggestions"
+						android:maxLines="1"
 						tools:text="@tools:sample/full_names" />
 
 				</com.google.android.material.textfield.TextInputLayout>
@@ -102,6 +129,7 @@
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:inputType="textNoSuggestions|textMultiLine"
+						android:maxLines="5"
 						tools:text="@tools:sample/full_names" />
 
 				</com.google.android.material.textfield.TextInputLayout>
@@ -121,6 +149,7 @@
 						android:layout_height="wrap_content"
 						android:layout_gravity="center_vertical"
 						android:layout_weight="1"
+						android:focusable="false"
 						android:text="@string/category"
 						android:textAllCaps="true"
 						android:textColor="@color/colorAccent" />
@@ -131,6 +160,7 @@
 						android:layout_height="30dp"
 						android:layout_weight="0"
 						android:background="?selectableItemBackgroundBorderless"
+						android:focusable="true"
 						app:icon="@drawable/ic_baseline_add_24"
 						app:iconGravity="textTop"
 						app:iconPadding="0dp" />
@@ -158,6 +188,7 @@
 						android:layout_height="wrap_content"
 						android:layout_gravity="center_vertical"
 						android:layout_weight="1"
+						android:focusable="false"
 						android:text="@string/flags"
 						android:textAllCaps="true"
 						android:textColor="@color/colorAccent" />
@@ -168,6 +199,7 @@
 						android:layout_height="30dp"
 						android:layout_weight="0"
 						android:background="?selectableItemBackgroundBorderless"
+						android:focusable="true"
 						app:icon="@drawable/ic_baseline_add_24"
 						app:iconGravity="textTop"
 						app:iconPadding="0dp" />
@@ -195,6 +227,7 @@
 						android:layout_height="wrap_content"
 						android:layout_gravity="center_vertical"
 						android:layout_weight="1"
+						android:focusable="false"
 						android:text="@string/extras"
 						android:textAllCaps="true"
 						android:textColor="@color/colorAccent" />
@@ -205,6 +238,7 @@
 						android:layout_height="30dp"
 						android:layout_weight="0"
 						android:background="?selectableItemBackgroundBorderless"
+						android:focusable="true"
 						app:icon="@drawable/ic_baseline_add_24"
 						app:iconGravity="textTop"
 						app:iconPadding="0dp" />
@@ -224,6 +258,7 @@
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:layout_marginTop="@dimen/padding_small"
+					android:focusable="false"
 					android:paddingStart="@dimen/padding_medium"
 					android:paddingEnd="@dimen/padding_medium"
 					android:text="@string/matching_activities"

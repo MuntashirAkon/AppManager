@@ -39,12 +39,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.internal.util.TextUtils;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.BuildConfig;
@@ -242,6 +245,7 @@ public class ActivityInterceptor extends BaseActivity {
     private MaterialAutoCompleteTextView data;
     private MaterialAutoCompleteTextView type;
     private MaterialAutoCompleteTextView uri;
+    private TextInputEditText id;
 
     private HistoryEditText mHistory = null;
 
@@ -419,6 +423,11 @@ public class ActivityInterceptor extends BaseActivity {
         }
         if (textViewToIgnore != type) type.setText(mutableIntent.getType());
         if (textViewToIgnore != uri) uri.setText(getUri(mutableIntent));
+        if (textViewToIgnore != id) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                id.setText(mutableIntent.getIdentifier());
+            }
+        }
         areTextWatchersActive = true;
     }
 
@@ -457,8 +466,15 @@ public class ActivityInterceptor extends BaseActivity {
         data = findViewById(R.id.data_edit);
         type = findViewById(R.id.type_edit);
         uri = findViewById(R.id.uri_edit);
+        id = findViewById(R.id.type_id);
+        TextInputLayout idLayout = findViewById(R.id.type_id_layout);
 
         mHistory = new HistoryEditText(this, action, data, type, uri);
+
+        // Setup identifier
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            idLayout.setEndIconOnClickListener(v -> id.setText(UUID.randomUUID().toString()));
+        } else idLayout.setVisibility(View.GONE);
 
         // Setup categories
         findViewById(R.id.intent_categories_add_btn).setOnClickListener(v ->
@@ -596,6 +612,14 @@ public class ActivityInterceptor extends BaseActivity {
                 mutableIntent = cloneIntent(modifiedContent);
                 // this time must update all content since extras/flags may have been changed
                 showAllIntentData(uri);
+            }
+        });
+        id.addTextChangedListener(new IntentUpdateTextWatcher(id) {
+            @Override
+            protected void onUpdateIntent(String modifiedContent) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    mutableIntent.setIdentifier(modifiedContent);
+                }
             }
         });
     }
