@@ -1126,4 +1126,11 @@
     <string name="storage">Хранилище</string>
     <string name="notice_saf">В отличие от томов, выбранный каталог будет использоваться для хранения всех файлов, связанных с App Manager, включая сохраненные APK и резервные копии. Storage Access Framework (SAF) работает очень медленно, поэтому вы должны использовать этот вариант только тогда, когда другие не могут быть использованы.</string>
     <string name="notice">Уведомление</string>
+    <string name="keystore_password_info">Ниже приведен пароль App Manager KeyStore. Пожалуйста, храните его в надежном месте, если вы собираетесь делать резервное копирование/восстановление App Manager KeyStore. <b>Это сообщение не будет отображаться снова.</b></string>
+    <string name="paired_successfully">Подключено.</string>
+    <string name="port_number_pairing_code_empty">Номер порта или код подключения пуст.</string>
+    <string name="adb_pair">Подключить</string>
+    <string name="adb_wifi_paring_code">Код подключения Wi-Fi</string>
+    <string name="invalid_password">Неправильный пароль, попробуйте ещё раз.</string>
+    <string name="keystore_pass_cannot_be_empty">Пароль KeyStore не может быть пустым.</string>
 </resources>
