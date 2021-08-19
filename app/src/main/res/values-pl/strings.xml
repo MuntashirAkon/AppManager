@@ -845,4 +845,20 @@
 \nGitLab:https://gitlab.com/muntashir/AppManager
 \nRiseup:https://0xacab.org/muntashir/AppManager
 \nCodeberg:https://codeberg.org/muntashir/AppManager</string>
+    <string name="subject">Temat</string>
+    <string name="state_foreground">Procesy w tle</string>
+    <string name="state_locked_memory">Pamięć zablokowana</string>
+    <string name="state_device_io">I/O urządzenia</string>
+    <string name="touchscreen_finger">Palec</string>
+    <string name="touchscreen_no_touch">Blokada dotyku</string>
+    <string name="navigation_wheel">Nawigacja</string>
+    <string name="orientation_user_portrait">Orientacja pionowa użytkownika</string>
+    <string name="orientation_user_landscape">Orientacja pozioma użytkownika</string>
+    <string name="orientation_sensor_portrait">Orientacja pionowa ekranu</string>
+    <string name="orientation_sensor_landscape">Orientacja pozioma ekranu</string>
+    <string name="orientation_full_user">Pełny dostęp</string>
+    <string name="orientation_full_sensor">Wszystkie czujniki</string>
+    <string name="launch_mode_multiple">Wiele</string>
+    <string name="package_installer">Pakiet instalacyjny</string>
+    <string name="paired_successfully">Sparowany.</string>
 </resources>
