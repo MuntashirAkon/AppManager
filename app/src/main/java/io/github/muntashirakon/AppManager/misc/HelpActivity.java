@@ -3,6 +3,7 @@
 package io.github.muntashirakon.AppManager.misc;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
@@ -39,7 +40,8 @@ public class HelpActivity extends BaseActivity {
         if (actionBar != null) actionBar.setTitle(R.string.instructions);
         findViewById(R.id.progress_linear).setVisibility(View.GONE);
         // Check if docs are available
-        if (IOUtils.getRawDataId(this, "index") == 0) {
+        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_WEBVIEW)
+                || IOUtils.getRawDataId(this, "index") == 0) {
             // Docs split not installed
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.website_message)));
             startActivity(intent);
