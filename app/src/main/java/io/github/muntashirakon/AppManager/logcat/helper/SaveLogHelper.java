@@ -76,7 +76,8 @@ public class SaveLogHelper {
         return getSavedLogsDirectory().findFile(filename);
     }
 
-    public static void deleteLogIfExists(String filename) {
+    public static void deleteLogIfExists(@Nullable String filename) {
+        if (filename == null) return;
         try {
             getSavedLogsDirectory().findFile(filename).delete();
         } catch (IOException ignore) {
