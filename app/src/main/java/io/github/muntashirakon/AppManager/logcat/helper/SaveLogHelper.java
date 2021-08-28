@@ -78,7 +78,8 @@ public class SaveLogHelper {
         return new ProxyFile(getSavedLogsDirectory(), filename);
     }
 
-    public static void deleteLogIfExists(String filename) {
+    public static void deleteLogIfExists(@Nullable String filename) {
+        if (filename == null) return;
         File file = new ProxyFile(getSavedLogsDirectory(), filename);
         if (file.exists()) {
             file.delete();
