@@ -52,6 +52,7 @@ import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.servermanager.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.types.TextInputDropdownDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
@@ -62,6 +63,10 @@ public class ActivityInterceptor extends BaseActivity {
 
     public static final String EXTRA_PACKAGE_NAME = BuildConfig.APPLICATION_ID + ".intent.extra.PACKAGE_NAME";
     public static final String EXTRA_CLASS_NAME = BuildConfig.APPLICATION_ID + ".intent.extra.CLASS_NAME";
+    // TODO(29/8/21): Enable getting activity result for activities launched with root
+    public static final String EXTRA_ROOT = BuildConfig.APPLICATION_ID + ".intent.extra.ROOT";
+    // Root only
+    public static final String EXTRA_USER_HANDLE = BuildConfig.APPLICATION_ID + ".intent.extra.USER_HANDLE";
 
     private static final String INTENT_EDITED = "intent_edited";
 
@@ -262,6 +267,9 @@ public class ActivityInterceptor extends BaseActivity {
     @Nullable
     private ComponentName requestedComponent;
 
+    private boolean isRoot;
+    private int userHandle;
+
     private Integer lastResultCode = null;
     private Intent lastResultIntent = null;
 
@@ -291,6 +299,10 @@ public class ActivityInterceptor extends BaseActivity {
         findViewById(R.id.progress_linear).setVisibility(View.GONE);
         // Get Intent
         Intent intent = getIntent();
+        isRoot = intent.getBooleanExtra(EXTRA_ROOT, false);
+        userHandle = intent.getIntExtra(EXTRA_USER_HANDLE, 0);
+        intent.removeExtra(EXTRA_ROOT);
+        intent.removeExtra(EXTRA_USER_HANDLE);
         intent.setPackage(null);
         intent.setComponent(null);
         // Get ComponentName if set
@@ -585,7 +597,11 @@ public class ActivityInterceptor extends BaseActivity {
             try {
                 if (requestedComponent == null) {
                     launcher.launch(Intent.createChooser(mutableIntent, resendIntentButton.getText()));
-                } else launcher.launch(mutableIntent);
+                } else {
+                    if (isRoot) { // launch with root
+                        ActivityManagerCompat.startActivity(this, mutableIntent, userHandle);
+                    } else launcher.launch(mutableIntent);
+                }
             } catch (Throwable th) {
                 Log.e(TAG, th);
                 UIUtils.displayLongToast(R.string.error_with_details, th.getClass().getName() + ": " + th.getMessage());
@@ -967,6 +983,7 @@ public class ActivityInterceptor extends BaseActivity {
             holder.subtitle.setTextIsSelectable(true);
             holder.actionIcon.setOnClickListener(v -> {
                 activity.mutableIntent.removeExtra(extraItem.first);
+                activity.showTextViewIntentData(null);
                 extras.remove(position);
                 notifyDataSetChanged();
             });
