@@ -931,7 +931,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     startActivity(uninstallIntent);
                 }
             });
-            // Enable/disable app (root only)
+            // Enable/disable app (root/ADB only)
             if (isRootEnabled || isAdbEnabled) {
                 if (!mApplicationInfo.enabled) {
                     // Enable app
@@ -979,7 +979,16 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                 runOnUiThread(this::refreshDetails);
                             }
                         }));
-            }  // End root only
+            } else {
+                // Display Android settings button
+                addToHorizontalLayout(R.string.view_in_settings, R.drawable.ic_info_outline_black_24dp)
+                        .setOnClickListener(v -> {
+                            Intent infoIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                            infoIntent.addCategory(Intent.CATEGORY_DEFAULT);
+                            infoIntent.setData(Uri.parse("package:" + mPackageName));
+                            startActivity(infoIntent);
+                        });
+            }
         } else if (FeatureController.isInstallerEnabled()) {
             if (mInstalledPackageInfo == null) {
                 // App not installed
