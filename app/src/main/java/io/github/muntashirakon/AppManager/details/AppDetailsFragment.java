@@ -977,18 +977,22 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         UIUtils.displayLongToast(e.getLocalizedMessage());
                     }
                 });
-            }
-            if (canLaunch && isExported) {
                 if (FeatureController.isInterceptorEnabled()) {
+                    boolean needRoot = isRootEnabled && (!isExported || (activityInfo.permission != null
+                            && ContextCompat.checkSelfPermission(mActivity, activityInfo.permission)
+                            != PackageManager.PERMISSION_GRANTED));
                     launch.setOnLongClickListener(v -> {
-                        // TODO(17/12/20): Add support for root/multiple user
                         Intent intent = new Intent(mActivity, ActivityInterceptor.class);
                         intent.putExtra(ActivityInterceptor.EXTRA_PACKAGE_NAME, mPackageName);
                         intent.putExtra(ActivityInterceptor.EXTRA_CLASS_NAME, activityName);
+                        intent.putExtra(ActivityInterceptor.EXTRA_USER_HANDLE, mainModel.getUserHandle());
+                        intent.putExtra(ActivityInterceptor.EXTRA_ROOT, needRoot);
                         startActivity(intent);
                         return true;
                     });
                 }
+            }
+            if (canLaunch && isExported) {
                 holder.createBtn.setOnClickListener(v -> LauncherIconCreator.createLauncherIcon(mActivity, activityInfo,
                         label, activityInfo.loadIcon(mPackageManager)));
                 holder.editBtn.setOnClickListener(v -> {
