@@ -372,12 +372,15 @@ public class MainViewModel extends AndroidViewModel {
             try {
                 List<ProcessEntry> processEntries = (List<ProcessEntry>) IPCUtils.getServiceSafe().getRunningProcesses().getList();
                 List<String> processNames = new ArrayList<>();
+                List<Integer> processUids = new ArrayList<>();
                 for (ProcessEntry entry : processEntries) {
                     processNames.add(ProcessParser.getSupposedPackageName(entry.name));
+                    processUids.add(entry.users.fsUid);
                 }
                 for (int i = 0; i < applicationItems.size(); ++i) {
                     ApplicationItem applicationItem = applicationItems.get(i);
-                    applicationItem.isRunning = processNames.contains(applicationItem.packageName);
+                    applicationItem.isRunning = processNames.contains(applicationItem.packageName)
+                            || processUids.contains(applicationItem.uid);
                     applicationItems.set(i, applicationItem);
                 }
             } catch (Throwable th) {
