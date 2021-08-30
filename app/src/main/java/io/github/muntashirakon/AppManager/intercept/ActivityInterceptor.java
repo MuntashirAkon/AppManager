@@ -36,6 +36,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -45,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.UUID;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
@@ -54,6 +56,8 @@ import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.servermanager.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.types.TextInputDropdownDialogBuilder;
+import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
@@ -300,7 +304,7 @@ public class ActivityInterceptor extends BaseActivity {
         // Get Intent
         Intent intent = getIntent();
         isRoot = intent.getBooleanExtra(EXTRA_ROOT, false);
-        userHandle = intent.getIntExtra(EXTRA_USER_HANDLE, 0);
+        userHandle = intent.getIntExtra(EXTRA_USER_HANDLE, Users.myUserId());
         intent.removeExtra(EXTRA_ROOT);
         intent.removeExtra(EXTRA_USER_HANDLE);
         intent.setPackage(null);
@@ -500,8 +504,37 @@ public class ActivityInterceptor extends BaseActivity {
         className = findViewById(R.id.class_edit);
         id = findViewById(R.id.type_id);
 
+        // Others
+        TextInputEditText userIdEdit = findViewById(R.id.user_id_edit);
+        MaterialCheckBox useRootCheckBox = findViewById(R.id.use_root);
+
         mHistory = new HistoryEditText(this, action, data, type, uri, packageName, className);
 
+        // Setup user ID edit
+        userIdEdit.setText(String.valueOf(userHandle));
+        userIdEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s == null) return;
+                try {
+                    userHandle = Integer.decode(s.toString());
+                } catch (Throwable ignore) {
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+        userIdEdit.setEnabled(AppPref.isRootOrAdbEnabled());
+        // Setup root
+        useRootCheckBox.setChecked(isRoot);
+        useRootCheckBox.setVisibility(AppPref.isRootEnabled() ? View.VISIBLE : View.GONE);
+        useRootCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> isRoot = isChecked);
         // Setup identifier
         TextInputLayout idLayout = findViewById(R.id.type_id_layout);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -600,7 +633,12 @@ public class ActivityInterceptor extends BaseActivity {
                 } else {
                     if (isRoot) { // launch with root
                         ActivityManagerCompat.startActivity(this, mutableIntent, userHandle);
-                    } else launcher.launch(mutableIntent);
+                    } else if (userHandle != Users.myUserId() && AppPref.isRootOrAdbEnabled()) {
+                        ActivityManagerCompat.startActivity(this, mutableIntent, userHandle);
+                    } else {
+                        mutableIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        launcher.launch(mutableIntent);
+                    }
                 }
             } catch (Throwable th) {
                 Log.e(TAG, th);
@@ -702,7 +740,29 @@ public class ActivityInterceptor extends BaseActivity {
         if (clipData == null) return;
         for (int i = 0; i < clipData.getItemCount(); ++i) {
             ClipData.Item item = clipData.getItemAt(i);
-            Intent intent = IntentCompat.unflattenFromString(item.getText().toString());
+            String text = item.getText().toString();
+            String[] lines = text.split("\n");
+            isRoot = false;
+            userHandle = Users.myUserId();
+            int parseCount = 0;
+            for (String line : lines) {
+                if (TextUtils.isEmpty(line)) continue;
+                StringTokenizer tokenizer = new StringTokenizer(line, "\t");
+                switch (tokenizer.nextToken()) {
+                    case "ROOT":
+                        isRoot = AppPref.isRootEnabled() && Boolean.parseBoolean(tokenizer.nextToken());
+                        ++parseCount;
+                        break;
+                    case "USER":
+                        if (AppPref.isRootOrAdbEnabled()) {
+                            userHandle = Integer.decode(tokenizer.nextToken());
+                        }
+                        ++parseCount;
+                        break;
+                }
+                if (parseCount == 2) break;
+            }
+            Intent intent = IntentCompat.unflattenFromString(text);
             if (intent != null) {
                 requestedComponent = null;
                 init(intent, false);
@@ -740,7 +800,10 @@ public class ActivityInterceptor extends BaseActivity {
 
         StringBuilder result = new StringBuilder();
         // At least 1 tab have to be present in each non-empty line
-        result.append("URI\t").append(getUri(mutableIntent)).append("\n\n");
+        result.append("URI\t").append(getUri(mutableIntent)).append("\n");
+        if (isRoot) result.append("ROOT\t").append(isRoot).append("\n");
+        if (userHandle != Users.myUserId()) result.append("USER\t").append(userHandle).append("\n");
+        result.append("\n");
         result.append(IntentCompat.flattenToString(mutableIntent)).append("\n");
         result.append("MATCHING ACTIVITIES\t").append(numberOfMatchingActivities).append("\n");
         int spaceCount = String.valueOf(numberOfMatchingActivities).length();

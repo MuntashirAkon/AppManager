@@ -1079,4 +1079,5 @@
     <string name="identifier">Identifier</string>
     <string name="set_package_name_first">Set package name first!</string>
     <string name="paste">Paste</string>
+    <string name="user_root">Use root</string>
 </resources>
