@@ -131,6 +131,41 @@
 
 				</com.google.android.material.textfield.TextInputLayout>
 
+				<androidx.appcompat.widget.LinearLayoutCompat
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:orientation="horizontal"
+					android:paddingStart="@dimen/padding_medium"
+					android:paddingEnd="@dimen/padding_medium">
+
+					<com.google.android.material.textfield.TextInputLayout
+						style="@style/AppTheme.TextInputLayout"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_weight="1"
+						android:hint="@string/user_id"
+						app:hintAnimationEnabled="true"
+						app:hintEnabled="true">
+
+						<com.google.android.material.textfield.TextInputEditText
+							android:id="@+id/user_id_edit"
+							style="@style/AppTheme.TextAppearance.Input"
+							android:layout_width="match_parent"
+							android:layout_height="wrap_content"
+							android:inputType="textNoSuggestions"
+							android:maxLines="1"
+							tools:text="@tools:sample/full_names" />
+
+					</com.google.android.material.textfield.TextInputLayout>
+
+					<com.google.android.material.checkbox.MaterialCheckBox
+						android:id="@+id/use_root"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="@string/user_root" />
+
+				</androidx.appcompat.widget.LinearLayoutCompat>
+
 				<com.google.android.material.textfield.TextInputLayout
 					android:id="@+id/type_id_layout"
 					style="@style/AppTheme.TextInputLayout"
