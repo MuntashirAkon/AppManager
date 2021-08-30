@@ -142,9 +142,17 @@ public final class ProcessParser {
             installedPackages.put(info.packageName, info);
         }
         installedUids = new HashMap<>(packageInfoList.size());
+        List<Integer> duplicateUids = new ArrayList<>();
         for (PackageInfo info : packageInfoList) {
-            installedUids.put(info.applicationInfo.uid, info);
+            int uid = info.applicationInfo.uid;
+            if (installedUids.containsKey(uid)) {
+                // A shared user ID (other way to check user ID will not work since we're only interested in
+                // duplicate values)
+                duplicateUids.add(uid);
+            } else installedUids.put(uid, info);
         }
+        // Remove duplicate UIDs as they might create collisions
+        for (int uid : duplicateUids) installedUids.remove(uid);
     }
 
     private static final SparseArrayCompat<String> uidNameCache = new SparseArrayCompat<>(150);

@@ -26,10 +26,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.backup.BackupUtils;
@@ -371,8 +373,8 @@ public class MainViewModel extends AndroidViewModel {
         synchronized (applicationItems) {
             try {
                 List<ProcessEntry> processEntries = (List<ProcessEntry>) IPCUtils.getServiceSafe().getRunningProcesses().getList();
-                List<String> processNames = new ArrayList<>();
-                List<Integer> processUids = new ArrayList<>();
+                List<String> processNames = new ArrayList<>(processEntries.size());
+                Set<Integer> processUids = new HashSet<>(processEntries.size());
                 for (ProcessEntry entry : processEntries) {
                     processNames.add(ProcessParser.getSupposedPackageName(entry.name));
                     processUids.add(entry.users.fsUid);
