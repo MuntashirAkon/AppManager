@@ -34,6 +34,7 @@ public final class ProcessParser {
     private final Context context;
     private final PackageManager pm;
     private HashMap<String, PackageInfo> installedPackages;
+    private HashMap<Integer, PackageInfo> installedUids;
 
     ProcessParser() {
         context = AppManager.getContext();
@@ -45,6 +46,7 @@ public final class ProcessParser {
     ProcessParser(boolean isUnitTest) {
         if (isUnitTest) {
             installedPackages = new HashMap<>();
+            installedUids = new HashMap<>();
             pm = null;
             context = null;
         } else {
@@ -99,6 +101,10 @@ public final class ProcessParser {
             processItem = new AppProcessItem(processEntry.pid, packageInfo);
             processItem.name = pm.getApplicationLabel(packageInfo.applicationInfo).toString()
                     + getProcessName(processEntry.name);
+        } else if (installedUids.containsKey(processEntry.users.fsUid)) {
+            @NonNull PackageInfo packageInfo = Objects.requireNonNull(installedUids.get(processEntry.users.fsUid));
+            processItem = new AppProcessItem(processEntry.pid, packageInfo);
+            processItem.name = pm.getApplicationLabel(packageInfo.applicationInfo).toString() + ":" + processEntry.name;
         } else {
             processItem = new ProcessItem(processEntry.pid);
             processItem.name = processEntry.name;
@@ -131,6 +137,10 @@ public final class ProcessParser {
         installedPackages = new HashMap<>(packageInfoList.size());
         for (PackageInfo info : packageInfoList) {
             installedPackages.put(info.packageName, info);
+        }
+        installedUids = new HashMap<>(packageInfoList.size());
+        for (PackageInfo info : packageInfoList) {
+            installedUids.put(info.applicationInfo.uid, info);
         }
     }
 
