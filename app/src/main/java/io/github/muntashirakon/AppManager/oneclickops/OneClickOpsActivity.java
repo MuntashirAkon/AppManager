@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.IPackageDataObserver;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.BuildConfig;
@@ -39,6 +41,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
+import io.github.muntashirakon.AppManager.compat.StorageManagerCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
@@ -86,7 +89,7 @@ public class OneClickOpsActivity extends BaseActivity {
 
     private void setItems() {
         mItemCreator.addItemWithTitleSubtitle(getString(R.string.block_unblock_trackers),
-                getString(R.string.block_unblock_trackers_description))
+                        getString(R.string.block_unblock_trackers_description))
                 .setOnClickListener(v -> {
                     if (!AppPref.isRootEnabled()) {
                         Toast.makeText(this, R.string.only_works_in_root_mode, Toast.LENGTH_SHORT).show();
@@ -100,10 +103,10 @@ public class OneClickOpsActivity extends BaseActivity {
                             .show();
                 });
         mItemCreator.addItemWithTitleSubtitle(getString(R.string.block_components_dots),
-                getString(R.string.block_components_description))
+                        getString(R.string.block_components_description))
                 .setOnClickListener(v -> blockComponents());
         mItemCreator.addItemWithTitleSubtitle(getString(R.string.set_mode_for_app_ops_dots),
-                getString(R.string.deny_app_ops_description))
+                        getString(R.string.deny_app_ops_description))
                 .setOnClickListener(v -> blockAppOps());
         mItemCreator.addItemWithTitleSubtitle(getText(R.string.back_up),
                 getText(R.string.backup_msg)).setOnClickListener(v ->
@@ -115,12 +118,15 @@ public class OneClickOpsActivity extends BaseActivity {
                         RestoreTasksDialogFragment.TAG));
         if (BuildConfig.DEBUG) {
             mItemCreator.addItemWithTitleSubtitle(getString(R.string.clear_data_from_uninstalled_apps),
-                    getString(R.string.clear_data_from_uninstalled_apps_description))
+                            getString(R.string.clear_data_from_uninstalled_apps_description))
                     .setOnClickListener(v -> clearData());
             mItemCreator.addItemWithTitleSubtitle(getString(R.string.clear_app_cache),
-                    getString(R.string.clear_app_cache_description))
+                            getString(R.string.clear_app_cache_description))
                     .setOnClickListener(v -> clearAppCache());
         }
+        mItemCreator.addItemWithTitleSubtitle(getString(R.string.trim_caches_in_all_apps),
+                        getString(R.string.trim_caches_in_all_apps_description))
+                .setOnClickListener(v -> trimCaches());
         mProgressIndicator.hide();
     }
 
@@ -394,6 +400,41 @@ public class OneClickOpsActivity extends BaseActivity {
         Toast.makeText(this, "Not implemented yet.", Toast.LENGTH_SHORT).show();
     }
 
+    private void trimCaches() {
+        if (!AppPref.isRootOrAdbEnabled()) {
+            Toast.makeText(this, R.string.only_works_in_root_or_adb_mode, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.trim_caches_in_all_apps)
+                .setMessage(R.string.are_you_sure)
+                .setNegativeButton(R.string.no, null)
+                .setPositiveButton(R.string.yes, (dialog, which) -> executor.submit(() -> {
+                    AtomicBoolean isSuccessful = new AtomicBoolean(true);
+                    long size = 1024L * 1024L * 1024L * 1024L;  // 1 TB
+                    final ClearDataObserver obs = new ClearDataObserver();
+                    try {
+                        // TODO: 30/8/21 Iterate all volumes?
+                        PackageManagerCompat.freeStorageAndNotify(null /* internal */, size,
+                                StorageManagerCompat.FLAG_ALLOCATE_DEFY_ALL_RESERVED, obs);
+                    } catch (RemoteException e) {
+                        isSuccessful.set(false);
+                    }
+                    synchronized (obs) {
+                        while (!obs.finished) {
+                            try {
+                                obs.wait();
+                            } catch (InterruptedException ignore) {
+                            }
+                        }
+                    }
+                    UiThreadHandler.run(() -> {
+                        UIUtils.displayShortToast(isSuccessful.get() ? R.string.done : R.string.failed);
+                    });
+                }))
+                .show();
+    }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -416,5 +457,19 @@ public class OneClickOpsActivity extends BaseActivity {
             appOpNames.add(AppOpsManager.opToName(appOp));
         }
         return appOpNames;
+    }
+
+    static class ClearDataObserver extends IPackageDataObserver.Stub {
+        boolean finished;
+        boolean result;
+
+        @Override
+        public void onRemoveCompleted(String packageName, boolean succeeded) {
+            synchronized (this) {
+                finished = true;
+                result = succeeded;
+                notifyAll();
+            }
+        }
     }
 }

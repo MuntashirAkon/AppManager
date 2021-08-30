@@ -21,6 +21,7 @@ import android.os.SystemClock;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
 import java.lang.annotation.Retention;
@@ -32,6 +33,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.compat.StorageManagerCompat;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
@@ -235,5 +237,21 @@ public final class PackageManagerCompat {
     @NonNull
     public static IPackageInstaller getPackageInstaller(@NonNull IPackageManager pm) throws RemoteException {
         return IPackageInstaller.Stub.asInterface(new ProxyBinder(pm.getPackageInstaller().asBinder()));
+    }
+
+    @SuppressWarnings("deprecation")
+    public static void freeStorageAndNotify(@Nullable String volumeUuid,
+                                            long freeStorageSize,
+                                            @StorageManagerCompat.AllocateFlags int storageFlags,
+                                            IPackageDataObserver observer)
+            throws RemoteException {
+        IPackageManager pm = AppManager.getIPackageManager();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            pm.freeStorageAndNotify(volumeUuid, freeStorageSize, storageFlags, observer);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            pm.freeStorageAndNotify(volumeUuid, freeStorageSize, observer);
+        } else {
+            pm.freeStorageAndNotify(freeStorageSize, observer);
+        }
     }
 }

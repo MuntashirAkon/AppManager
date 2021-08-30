@@ -1098,4 +1098,6 @@
     <string name="set_package_name_first">Set package name first!</string>
     <string name="paste">Paste</string>
     <string name="user_root">Use root</string>
+    <string name="trim_caches_in_all_apps">Trim caches in all apps</string>
+    <string name="trim_caches_in_all_apps_description">Deletes cache files from all applications, including android system</string>
 </resources>
