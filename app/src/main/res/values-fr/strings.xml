@@ -217,7 +217,7 @@
     <string name="obb_files_extracted_successfully">Fichiers OBB extraits</string>
     <string name="failed_to_extract_obb_files">Impossible d\'extraire les fichiers OBB</string>
     <string name="backup_obb_media">OBB et Médias</string>
-    <string name="backup_apk_files">APK seul</string>
+    <string name="backup_apk_files">Fichiers APK</string>
     <string name="installer_error_session_abandon">Impossible d\'abandonner la session d\'installation</string>
     <string name="installer_error_session_commit">Impossible de valider les fichiers APK</string>
     <string name="installer_error_session_write">Impossible d\'écrire dans la session d\'installation</string>
