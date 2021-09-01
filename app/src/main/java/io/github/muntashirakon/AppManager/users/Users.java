@@ -107,6 +107,11 @@ public final class Users {
         return MU_ENABLED ? uid / PER_USER_RANGE : USER_SYSTEM;
     }
 
+    @UserIdInt
+    public static int getUid(int userId, int appId) {
+        return userId * PER_USER_RANGE + appId;
+    }
+
     public static int getAppId(int uid) {
         return uid % PER_USER_RANGE;
     }

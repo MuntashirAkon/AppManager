@@ -3,6 +3,7 @@
 package io.github.muntashirakon.AppManager.servermanager;
 
 import android.annotation.UserIdInt;
+import android.app.ActivityManager;
 import android.app.ActivityManagerNative;
 import android.app.IActivityManager;
 import android.content.ComponentName;
@@ -15,11 +16,25 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
+
+import com.android.internal.util.TextUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.runner.Runner;
+import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 
 public final class ActivityManagerCompat {
     public static final String SHELL_PACKAGE_NAME = "com.android.shell";
@@ -91,12 +106,124 @@ public final class ActivityManagerCompat {
         }
     }
 
+    public static List<ActivityManager.RunningServiceInfo> getRunningServices(String packageName, @UserIdInt int userId) {
+        List<ActivityManager.RunningServiceInfo> res = new ArrayList<>();
+        List<ActivityManager.RunningServiceInfo> runningServices;
+        if (!AppPref.isRootOrAdbEnabled()) {
+            // Fetch running services using DUMP permission if root/ADB is disabled
+            runningServices = getRunningServicesUsingDumpSys(packageName);
+        } else {
+            try {
+                runningServices = getActivityManager().getServices(100, 0);
+            } catch (RemoteException e) {
+                return res;
+            }
+        }
+        for (ActivityManager.RunningServiceInfo info : runningServices) {
+            if (info.service.getPackageName().equals(packageName) && userId == Users.getUserId(info.uid)) {
+                res.add(info);
+            }
+        }
+        return res;
+    }
+
     public static IActivityManager getActivityManager() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             return IActivityManager.Stub.asInterface(ProxyBinder.getService(Context.ACTIVITY_SERVICE));
         } else {
             return ActivityManagerNative.asInterface(ProxyBinder.getService(Context.ACTIVITY_SERVICE));
         }
+    }
+
+    @SuppressWarnings("RegExpRedundantEscape")
+    private static final Pattern SERVICE_RECORD_REGEX = Pattern.compile("\\* ServiceRecord\\{[0-9a-f]+ u(\\d+) ([^\\}]+)\\}");
+    @SuppressWarnings("RegExpRedundantEscape")
+    private static final Pattern PROCESS_RECORD_REGEX = Pattern.compile("app=ProcessRecord\\{[0-9a-f]+ (\\d+):([^/]+)/([^\\}]+)\\}");
+
+    @NonNull
+    private static List<ActivityManager.RunningServiceInfo> getRunningServicesUsingDumpSys(String packageName) {
+        List<ActivityManager.RunningServiceInfo> runningServices = new ArrayList<>();
+        if (!PermissionUtils.hasDumpPermission()) return runningServices;
+        Runner.Result result = Runner.runCommand(new String[]{"dumpsys", "activity", "services", "-p", packageName});
+        if (!result.isSuccessful()) return runningServices;
+        List<String> serviceDump = result.getOutputAsList(1);
+        return parseRunningServices(serviceDump);
+    }
+
+    @VisibleForTesting
+    @NonNull
+    static List<ActivityManager.RunningServiceInfo> parseRunningServices(@NonNull List<String> serviceDump) {
+        List<ActivityManager.RunningServiceInfo> runningServices = new ArrayList<>();
+        Matcher srMatcher;
+        Matcher prMatcher;
+        ComponentName service;
+        String line;
+        ListIterator<String> it = serviceDump.listIterator();
+        if (!it.hasNext()) return runningServices;
+        srMatcher = SERVICE_RECORD_REGEX.matcher(it.next());
+        while (it.hasNext()) { // hasNext check doesn't omit anything since we'd still have to check for ProcessRecord
+            if (!srMatcher.find(0)) {
+                // No matches found, check the next line
+                srMatcher = SERVICE_RECORD_REGEX.matcher(it.next());
+                continue;
+            }
+            // Matches found
+            String userId = srMatcher.group(1);
+            String serviceName = srMatcher.group(2);
+            if (userId == null || serviceName == null) {
+                // Criteria didn't match
+                srMatcher = SERVICE_RECORD_REGEX.matcher(it.next());
+                continue;
+            }
+            // This is actually the short process name, original service name is under intent (in the next line)
+            int i = serviceName.indexOf(':');
+            service = ComponentName.unflattenFromString(i == -1 ? serviceName : serviceName.substring(0, i));
+            line = it.next();
+            srMatcher = SERVICE_RECORD_REGEX.matcher(line);
+            while (it.hasNext()) {
+                if (srMatcher.find(0)) {
+                    // found next ServiceRecord, no need to continue the search for ProcessRecord
+                    break;
+                }
+                prMatcher = PROCESS_RECORD_REGEX.matcher(line);
+                if (!prMatcher.find(0)) {
+                    // Process didn't match, find next line
+                    line = it.next();
+                    srMatcher = SERVICE_RECORD_REGEX.matcher(line);
+                    continue;
+                }
+                // Found a ProcessRecord
+                String pid = prMatcher.group(1);
+                String processName = prMatcher.group(2);
+                String userInfo = prMatcher.group(3);
+                if (pid != null && processName != null && userInfo != null) {
+                    ActivityManager.RunningServiceInfo info = new ActivityManager.RunningServiceInfo();
+                    info.pid = Integer.decode(pid);
+                    info.process = processName;
+                    info.service = service;
+                    // UID
+                    if (TextUtils.isDigitsOnly(userInfo)) {  // UID < 10000
+                        info.uid = Integer.decode(userInfo);
+                    } else if (userInfo.startsWith("u")) {  // u<USER_ID>(a|s)<APP_ID>[i<ISOLATION_ID>]
+                        userInfo = userInfo.substring(("u" + userId).length()); // u<USER_ID> removed
+                        int iIdx = userInfo.indexOf('i');
+                        int iIndex = iIdx == -1 ? userInfo.length() : iIdx;
+                        if (userInfo.startsWith("a")) {
+                            // User app
+                            info.uid = Users.getUid(Integer.decode(userId), 10_000 + Integer.decode(userInfo.substring(1, iIndex)));
+                        } else if (userInfo.startsWith("s")) {
+                            // System app
+                            info.uid = Users.getUid(Integer.decode(userId), Integer.decode(userInfo.substring(1, iIndex)));
+                        } else throw new IllegalStateException("No valid UID info found in ProcessRecord");
+                    } else throw new IllegalStateException("Invalid user info section in ProcessRecord");
+                    // TODO: 1/9/21 Parse others
+                    runningServices.add(info);
+                }
+                line = it.next();
+                srMatcher = SERVICE_RECORD_REGEX.matcher(line);
+            }
+        }
+        return runningServices;
     }
 
     final static class IntentReceiver extends IIntentReceiver.Stub {
