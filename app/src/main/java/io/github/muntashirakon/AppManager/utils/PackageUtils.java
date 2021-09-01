@@ -61,8 +61,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
@@ -71,9 +69,7 @@ import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.backup.BackupUtils;
 import io.github.muntashirakon.AppManager.db.entity.App;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
-import io.github.muntashirakon.AppManager.ipc.IPCUtils;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
-import io.github.muntashirakon.AppManager.ipc.ps.ProcessEntry;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.main.ApplicationItem;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
@@ -132,10 +128,6 @@ public final class PackageUtils {
             flagMatchUninstalled = PackageManager.GET_UNINSTALLED_PACKAGES;
         }
     }
-
-    @SuppressWarnings("RegExpRedundantEscape")
-    private static final Pattern SERVICE_REGEX = Pattern.compile("ServiceRecord\\{[0-9a-f]+ u(\\d+) ([^\\}]+)\\}");
-    private static final String SERVICE_NOTHING = "(nothing)";
 
     @NonNull
     public static ArrayList<UserPackagePair> getUserPackagePairs(@NonNull List<ApplicationItem> applicationItems) {
@@ -513,94 +505,6 @@ public final class PackageUtils {
             throws PackageManager.NameNotFoundException, RemoteException {
         PackageInfo info = PackageManagerCompat.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS, userHandle);
         return info.requestedPermissions;
-    }
-
-    @NonNull
-    public static List<ComponentName> getRunningServicesForPackage(String packageName, @UserIdInt int userHandle) {
-        List<ComponentName> runningServices = new ArrayList<>();
-        if (!PermissionUtils.hasDumpPermission()) return runningServices;
-        Runner.Result result = Runner.runCommand(new String[]{"dumpsys", "activity", "services", "-p", packageName});
-        if (result.isSuccessful()) {
-            List<String> serviceDump = result.getOutputAsList(1);
-            Matcher matcher;
-            ComponentName service;
-            String line;
-            ListIterator<String> it = serviceDump.listIterator();
-            if (it.hasNext()) {
-                matcher = SERVICE_REGEX.matcher(it.next());
-                while (it.hasNext()) {
-                    if (matcher.find(0)) {
-                        String userId = matcher.group(1);
-                        String serviceName = matcher.group(2);
-                        if (userId == null || serviceName == null || Integer.decode(userId) != userHandle) {
-                            matcher = SERVICE_REGEX.matcher(it.next());
-                            continue;
-                        }
-                        service = ComponentName.unflattenFromString(serviceName);
-                        line = it.next();
-                        matcher = SERVICE_REGEX.matcher(line);
-                        while (it.hasNext()) {
-                            if (matcher.find(0)) break;
-                            if (line.contains("app=ProcessRecord{")) {
-                                runningServices.add(service);
-                                break;
-                            }
-                            line = it.next();
-                            matcher = SERVICE_REGEX.matcher(line);
-                        }
-                    } else matcher = SERVICE_REGEX.matcher(it.next());
-                }
-            }
-        }
-        return runningServices;
-    }
-
-    public static boolean hasRunningServices(String packageName) {
-        if (!PermissionUtils.hasDumpPermission()) return false;
-        Runner.Result result = Runner.runCommand(Runner.getUserInstance(), new String[]{"dumpsys", "activity", "services", "-p", packageName});
-        if (result.isSuccessful()) {
-            List<String> serviceDump = result.getOutputAsList(1);
-            if (serviceDump.size() == 1 && SERVICE_NOTHING.equals(serviceDump.get(0).trim())) {
-                return false;
-            }
-            Matcher matcher;
-            String service, line;
-            ListIterator<String> it = serviceDump.listIterator();
-            if (it.hasNext()) {
-                line = it.next();
-                if ("Last ANR service:".equals(line.trim())) return false;
-                matcher = SERVICE_REGEX.matcher(line);
-                while (it.hasNext()) {
-                    if (matcher.find(0)) {
-                        service = matcher.group(1);
-                        line = it.next();
-                        if ("Last ANR service:".equals(line.trim())) break;
-                        matcher = SERVICE_REGEX.matcher(line);
-                        while (it.hasNext()) {
-                            if (matcher.find(0)) break;
-                            if (line.contains("app=ProcessRecord{")) {
-                                if (service != null) return true;
-                            }
-                            line = it.next();
-                            matcher = SERVICE_REGEX.matcher(line);
-                        }
-                    } else matcher = SERVICE_REGEX.matcher(it.next());
-                }
-            }
-        }
-        return false;
-    }
-
-    public static int getPidForPackage(String packageName, int uid) {
-        try {
-            @SuppressWarnings("unchecked")
-            List<ProcessEntry> processItems = (List<ProcessEntry>) IPCUtils.getAmService().getRunningProcesses().getList();
-            for (ProcessEntry entry : processItems) {
-                if (entry.name.equals(packageName) && entry.users.fsUid == uid) return entry.pid;
-            }
-        } catch (Throwable ignore) {
-        }
-        return 0;
     }
 
     @NonNull

@@ -2,8 +2,8 @@
 
 package io.github.muntashirakon.AppManager.details.info;
 
+import android.app.ActivityManager;
 import android.app.Application;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -34,6 +34,7 @@ import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
 import io.github.muntashirakon.AppManager.runner.Runner;
+import io.github.muntashirakon.AppManager.servermanager.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.servermanager.ApplicationInfoCompat;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.NetworkPolicyManagerCompat;
@@ -118,7 +119,7 @@ public class AppInfoViewModel extends AndroidViewModel {
         tagCloud.isTestOnly = (applicationInfo.flags & ApplicationInfo.FLAG_TEST_ONLY) != 0;
         tagCloud.hasCode = (applicationInfo.flags & ApplicationInfo.FLAG_HAS_CODE) != 0;
         tagCloud.hasRequestedLargeHeap = (applicationInfo.flags & ApplicationInfo.FLAG_LARGE_HEAP) != 0;
-        tagCloud.runningServices = PackageUtils.getRunningServicesForPackage(packageName, mainModel.getUserHandle());
+        tagCloud.runningServices = ActivityManagerCompat.getRunningServices(packageName, mainModel.getUserHandle());
         tagCloud.isForceStopped = (applicationInfo.flags & ApplicationInfo.FLAG_STOPPED) != 0;
         tagCloud.isAppEnabled = applicationInfo.enabled;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -303,7 +304,7 @@ public class AppInfoViewModel extends AndroidViewModel {
         public boolean isTestOnly;
         public boolean hasCode;
         public boolean hasRequestedLargeHeap;
-        public List<ComponentName> runningServices;
+        public List<ActivityManager.RunningServiceInfo> runningServices;
         public boolean isForceStopped;
         public boolean isAppEnabled;
         public boolean isAppHidden;

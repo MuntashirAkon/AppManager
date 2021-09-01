@@ -651,7 +651,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         private String mConstraint;
         private Boolean isRootEnabled = true;
         private Boolean isADBEnabled = true;
-        private List<ComponentName> runningServices;
+        @NonNull
+        private final List<ActivityManager.RunningServiceInfo> runningServices = new ArrayList<>();
 
         AppDetailsRecyclerAdapter() {
             mAdapterList = new ArrayList<>();
@@ -668,7 +669,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             notifyDataSetChanged();
             executor.submit(() -> {
                 if (requestedProperty == SERVICES && (isRootEnabled || isADBEnabled) && !isExternalApk) {
-                    runningServices = PackageUtils.getRunningServicesForPackage(mPackageName, mainModel.getUserHandle());
+                    runningServices.clear();
+                    runningServices.addAll(ActivityManagerCompat.getRunningServices(mPackageName, mainModel.getUserHandle()));
                 }
             });
         }
@@ -1029,9 +1031,14 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             final AppDetailsComponentItem appDetailsItem = (AppDetailsComponentItem) mAdapterList.get(index);
             final ServiceInfo serviceInfo = (ServiceInfo) appDetailsItem.vanillaItem;
             final boolean isDisabled = !isExternalApk && isComponentDisabled(mPackageManager, serviceInfo);
+            boolean isRunning = false;
+            for (ActivityManager.RunningServiceInfo info : runningServices) {
+                if (info.service.getClassName().equals(serviceInfo.name)) {
+                    isRunning = true;
+                }
+            }
             // Background color: regular < tracker < disabled < blocked < running
-            if (runningServices != null && runningServices.contains(new ComponentName(serviceInfo.packageName,
-                    serviceInfo.name))) view.setBackgroundResource(R.drawable.item_running);
+            if (isRunning) view.setBackgroundResource(R.drawable.item_running);
             else if (!isExternalApk && appDetailsItem.isBlocked) view.setBackgroundResource(R.drawable.item_red);
             else if (isDisabled) view.setBackgroundResource(R.drawable.item_disabled);
             else if (appDetailsItem.isTracker) view.setBackgroundResource(R.drawable.item_tracker);

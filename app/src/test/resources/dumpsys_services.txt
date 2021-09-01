@@ -1,0 +1,103 @@
+ACTIVITY MANAGER SERVICES (dumpsys activity services)
+  User 0 active services:
+  * ServiceRecord{1938575 u0 org.bromite.bromite/org.chromium.content.app.SandboxedProcessService0:1}
+    intent={cmp=org.bromite.bromite/org.chromium.content.app.SandboxedProcessService0}
+    packageName=org.bromite.bromite
+    processName=org.bromite.bromite:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:1
+    permission=org.bromite.bromite.permission.CHILD_SERVICE
+    baseDir=/data/app/~~PLFMxs20ci87ThmrNHElNw==/org.bromite.bromite-inrEzXw9ApNPhQ1AEFw9DQ==/base.apk
+    dataDir=/data/user/0/org.bromite.bromite
+    app=ProcessRecord{8345513 6072:org.bromite.bromite:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:1/u0a143i-9000}
+    isolatedProc=ProcessRecord{8345513 6072:org.bromite.bromite:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:1/u0a143i-9000}
+    allowWhileInUsePermissionInFgs=true
+    recentCallingPackage=org.bromite.bromite
+    createTime=-29m50s704ms startingBgTimeout=--
+    lastActivity=-29m50s153ms restartTime=-29m50s249ms createdFromFg=true
+    Bindings:
+    * IntentBindRecord{8194875 CREATE}:
+      intent={cmp=org.bromite.bromite/org.chromium.content.app.SandboxedProcessService0}
+      binder=android.os.BinderProxy@655b00a
+      requested=true received=true hasBound=true doRebind=false
+      * Client AppBindRecord{fdb307b ProcessRecord{3b8ec3d 4531:org.bromite.bromite/u0a143}}
+        Per-process Connections:
+          ConnectionRecord{42aa0dc u0 CR WPRI org.bromite.bromite/org.chromium.content.app.SandboxedProcessService0:1:@8866949}
+          ConnectionRecord{cc5424e u0 CR WPRI org.bromite.bromite/org.chromium.content.app.SandboxedProcessService0:1:@8866949}
+    All Connections:
+      ConnectionRecord{cc5424e u0 CR WPRI org.bromite.bromite/org.chromium.content.app.SandboxedProcessService0:1:@8866949}
+      ConnectionRecord{42aa0dc u0 CR WPRI org.bromite.bromite/org.chromium.content.app.SandboxedProcessService0:1:@8866949}
+
+  * ServiceRecord{bf7a90a u0 org.bromite.bromite/org.chromium.content.app.SandboxedProcessService0:2}
+    intent={cmp=org.bromite.bromite/org.chromium.content.app.SandboxedProcessService0}
+    packageName=org.bromite.bromite
+    processName=org.bromite.bromite:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:2
+    permission=org.bromite.bromite.permission.CHILD_SERVICE
+    baseDir=/data/app/~~PLFMxs20ci87ThmrNHElNw==/org.bromite.bromite-inrEzXw9ApNPhQ1AEFw9DQ==/base.apk
+    dataDir=/data/user/0/org.bromite.bromite
+    app=ProcessRecord{4d51080 6082:org.bromite.bromite:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:2/u0a143i-8999}
+    isolatedProc=ProcessRecord{4d51080 6082:org.bromite.bromite:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:2/u0a143i-8999}
+    allowWhileInUsePermissionInFgs=true
+    recentCallingPackage=org.bromite.bromite
+    createTime=-29m50s372ms startingBgTimeout=--
+    lastActivity=-3s512ms restartTime=-29m50s234ms createdFromFg=true
+    Bindings:
+    * IntentBindRecord{33b4e98 CREATE}:
+      intent={cmp=org.bromite.bromite/org.chromium.content.app.SandboxedProcessService0}
+      binder=android.os.BinderProxy@3c2f6f1
+      requested=true received=true hasBound=true doRebind=false
+      * Client AppBindRecord{a6c2d6 ProcessRecord{3b8ec3d 4531:org.bromite.bromite/u0a143}}
+        Per-process Connections:
+          ConnectionRecord{991d1d7 u0 CR org.bromite.bromite/org.chromium.content.app.SandboxedProcessService0:2:@4fecd56}
+          ConnectionRecord{b3e250f u0 CR WPRI org.bromite.bromite/org.chromium.content.app.SandboxedProcessService0:2:@cbf36b9}
+          ConnectionRecord{c2cdafe u0 CR WPRI org.bromite.bromite/org.chromium.content.app.SandboxedProcessService0:2:@cbf36b9}
+    All Connections:
+      ConnectionRecord{991d1d7 u0 CR org.bromite.bromite/org.chromium.content.app.SandboxedProcessService0:2:@4fecd56}
+      ConnectionRecord{c2cdafe u0 CR WPRI org.bromite.bromite/org.chromium.content.app.SandboxedProcessService0:2:@cbf36b9}
+      ConnectionRecord{b3e250f u0 CR WPRI org.bromite.bromite/org.chromium.content.app.SandboxedProcessService0:2:@cbf36b9}
+
+  * ServiceRecord{c74e913 u0 org.bromite.bromite/org.chromium.content.app.PrivilegedProcessService0}
+    intent={cmp=org.bromite.bromite/org.chromium.content.app.PrivilegedProcessService0}
+    packageName=org.bromite.bromite
+    processName=org.bromite.bromite:privileged_process0
+    permission=org.bromite.bromite.permission.CHILD_SERVICE
+    baseDir=/data/app/~~PLFMxs20ci87ThmrNHElNw==/org.bromite.bromite-inrEzXw9ApNPhQ1AEFw9DQ==/base.apk
+    dataDir=/data/user/0/org.bromite.bromite
+    app=ProcessRecord{5b57123 4604:org.bromite.bromite:privileged_process0/u0a143}
+    allowWhileInUsePermissionInFgs=false
+    recentCallingPackage=org.bromite.bromite
+    createTime=-1h4m5s139ms startingBgTimeout=--
+    lastActivity=-43m28s726ms restartTime=-43m28s726ms createdFromFg=false
+    Bindings:
+    * IntentBindRecord{de25957 CREATE}:
+      intent={cmp=org.bromite.bromite/org.chromium.content.app.PrivilegedProcessService0}
+      binder=android.os.BinderProxy@e2bc44
+      requested=true received=true hasBound=true doRebind=false
+      * Client AppBindRecord{67f112d ProcessRecord{3b8ec3d 4531:org.bromite.bromite/u0a143}}
+        Per-process Connections:
+          ConnectionRecord{8336a52 u0 CR IMP org.bromite.bromite/org.chromium.content.app.PrivilegedProcessService0:@c9bdedd}
+          ConnectionRecord{f7c8bd9 u0 CR WPRI org.bromite.bromite/org.chromium.content.app.PrivilegedProcessService0:@acc0620}
+    All Connections:
+      ConnectionRecord{f7c8bd9 u0 CR WPRI org.bromite.bromite/org.chromium.content.app.PrivilegedProcessService0:@acc0620}
+      ConnectionRecord{8336a52 u0 CR IMP org.bromite.bromite/org.chromium.content.app.PrivilegedProcessService0:@c9bdedd}
+
+  Connection bindings to services:
+  * ConnectionRecord{991d1d7 u0 CR org.bromite.bromite/org.chromium.content.app.SandboxedProcessService0:2:@4fecd56}
+    binding=AppBindRecord{a6c2d6 org.bromite.bromite/org.chromium.content.app.SandboxedProcessService0:2:org.bromite.bromite}
+    conn=android.os.BinderProxy@4fecd56 flags=0x1
+  * ConnectionRecord{cc5424e u0 CR WPRI org.bromite.bromite/org.chromium.content.app.SandboxedProcessService0:1:@8866949}
+    binding=AppBindRecord{fdb307b org.bromite.bromite/org.chromium.content.app.SandboxedProcessService0:1:org.bromite.bromite}
+    conn=android.os.BinderProxy@8866949 flags=0x21
+  * ConnectionRecord{42aa0dc u0 CR WPRI org.bromite.bromite/org.chromium.content.app.SandboxedProcessService0:1:@8866949}
+    binding=AppBindRecord{fdb307b org.bromite.bromite/org.chromium.content.app.SandboxedProcessService0:1:org.bromite.bromite}
+    conn=android.os.BinderProxy@8866949 flags=0x21
+  * ConnectionRecord{f7c8bd9 u0 CR WPRI org.bromite.bromite/org.chromium.content.app.PrivilegedProcessService0:@acc0620}
+    binding=AppBindRecord{67f112d org.bromite.bromite/org.chromium.content.app.PrivilegedProcessService0:org.bromite.bromite}
+    conn=android.os.BinderProxy@acc0620 flags=0x21
+  * ConnectionRecord{8336a52 u0 CR IMP org.bromite.bromite/org.chromium.content.app.PrivilegedProcessService0:@c9bdedd}
+    binding=AppBindRecord{67f112d org.bromite.bromite/org.chromium.content.app.PrivilegedProcessService0:org.bromite.bromite}
+    conn=android.os.BinderProxy@c9bdedd flags=0x41
+  * ConnectionRecord{c2cdafe u0 CR WPRI org.bromite.bromite/org.chromium.content.app.SandboxedProcessService0:2:@cbf36b9}
+    binding=AppBindRecord{a6c2d6 org.bromite.bromite/org.chromium.content.app.SandboxedProcessService0:2:org.bromite.bromite}
+    conn=android.os.BinderProxy@cbf36b9 flags=0x21
+  * ConnectionRecord{b3e250f u0 CR WPRI org.bromite.bromite/org.chromium.content.app.SandboxedProcessService0:2:@cbf36b9}
+    binding=AppBindRecord{a6c2d6 org.bromite.bromite/org.chromium.content.app.SandboxedProcessService0:2:org.bromite.bromite}
+    conn=android.os.BinderProxy@cbf36b9 flags=0x21

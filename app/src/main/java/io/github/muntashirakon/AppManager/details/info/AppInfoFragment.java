@@ -673,17 +673,21 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 addChip(R.string.running, R.color.running).setOnClickListener(v -> {
                     mProgressIndicator.show();
                     executor.submit(() -> {
-                        int pid = FeatureController.isLogViewerEnabled() ? PackageUtils.getPidForPackage(mPackageName,
-                                mApplicationInfo.uid) : 0;
                         CharSequence[] runningServices = new CharSequence[tagCloud.runningServices.size()];
                         for (int i = 0; i < runningServices.length; ++i) {
-                            runningServices[i] = tagCloud.runningServices.get(i).getClassName();
+                            runningServices[i] = tagCloud.runningServices.get(i).process;
                         }
                         runOnUiThread(() -> {
                             mProgressIndicator.hide();
                             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(mActivity)
                                     .setTitle(R.string.running_services)
-                                    .setItems(runningServices, null)
+                                    .setItems(runningServices, (dialog, which) -> {
+                                        Intent logViewerIntent = new Intent(mActivity.getApplicationContext(), LogViewerActivity.class)
+                                                .setAction(LogViewerActivity.ACTION_LAUNCH)
+                                                .putExtra(LogViewerActivity.EXTRA_FILTER, SearchCriteria.PID_KEYWORD + tagCloud.runningServices.get(which).pid)
+                                                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        mActivity.startActivity(logViewerIntent);
+                                    })
                                     .setPositiveButton(R.string.force_stop, (dialog, which) -> executor.submit(() -> {
                                         try {
                                             PackageManagerCompat.forceStopPackage(mPackageName, mainModel.getUserHandle());
@@ -694,15 +698,6 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                         }
                                     }))
                                     .setNegativeButton(R.string.close, null);
-                            if (pid != 0) {
-                                builder.setNeutralButton(R.string.view_logs, (dialog, which) -> {
-                                    Intent logViewerIntent = new Intent(mActivity.getApplicationContext(), LogViewerActivity.class)
-                                            .setAction(LogViewerActivity.ACTION_LAUNCH)
-                                            .putExtra(LogViewerActivity.EXTRA_FILTER, SearchCriteria.PID_KEYWORD + pid)
-                                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    mActivity.startActivity(logViewerIntent);
-                                });
-                            }
                             builder.show();
                         });
                     });
