@@ -1024,7 +1024,7 @@
     <string name="manage_saved_logs">Управление сохраненными логами</string>
     <string name="log_saved">Лог сохранен.</string>
     <string name="log_recording_started">Началась запись лога.</string>
-    <string name="log_level">Уровень лога</string>
+    <string name="log_level">Уровень журнала активности</string>
     <string name="log_cleared">Логи очищены</string>
     <string name="filter_choice_tag">Тег</string>
     <string name="filter_choice_pid">PID</string>
