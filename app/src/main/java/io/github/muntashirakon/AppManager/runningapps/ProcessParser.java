@@ -5,7 +5,9 @@ package io.github.muntashirakon.AppManager.runningapps;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.system.Os;
+import android.system.ErrnoException;
+import android.system.OsHidden;
+import android.system.StructPasswd;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
@@ -13,8 +15,6 @@ import androidx.annotation.WorkerThread;
 import androidx.collection.SparseArrayCompat;
 
 import java.io.File;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -154,25 +154,14 @@ public final class ProcessParser {
 
     private static final SparseArrayCompat<String> uidNameCache = new SparseArrayCompat<>(150);
 
-    @SuppressWarnings("JavaReflectionMemberAccess")
     @NonNull
     private static String getNameForUid(int uid) {
         String username = uidNameCache.get(uid);
         if (username != null) return username;
         try {
-            Method getpwuid = Os.class.getMethod("getpwuid", int.class);
-            if (!getpwuid.isAccessible()) {
-                getpwuid.setAccessible(true);
-            }
-            Object passwd = getpwuid.invoke(null, uid);  // StructPasswd
-            if (passwd != null) {
-                Field pw_name = passwd.getClass().getDeclaredField("pw_name");
-                if (!pw_name.isAccessible()) {
-                    pw_name.setAccessible(true);
-                }
-                username = (String) pw_name.get(passwd);
-            }
-        } catch (Exception ignored) {
+            StructPasswd passwd = OsHidden.getpwuid(uid);
+            username = passwd.pw_name;
+        } catch (ErrnoException ignored) {
         }
         if (username == null) {
             username = String.valueOf(uid);
