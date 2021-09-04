@@ -23,6 +23,7 @@ import androidx.annotation.VisibleForTesting;
 import com.android.internal.util.TextUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.regex.Matcher;
@@ -128,17 +129,14 @@ public final class ActivityManagerCompat {
     }
 
     public static List<ActivityManager.RunningAppProcessInfo> getRunningAppProcesses() {
-        List<ActivityManager.RunningAppProcessInfo> res = new ArrayList<>();
-        if (AppPref.isRootOrAdbEnabled()) {
-            try {
-                res = getActivityManager().getRunningAppProcesses();
-            } catch (RemoteException e) {
-                return res;
-            }
+        try {
+            return getActivityManager().getRunningAppProcesses();
+        } catch (RemoteException e) {
+            return Collections.emptyList();
         }
-        return res;
     }
 
+    @SuppressWarnings("deprecation")
     public static IActivityManager getActivityManager() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             return IActivityManager.Stub.asInterface(ProxyBinder.getService(Context.ACTIVITY_SERVICE));

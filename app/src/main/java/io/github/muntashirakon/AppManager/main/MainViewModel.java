@@ -28,10 +28,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.backup.BackupUtils;
@@ -367,23 +369,20 @@ public class MainViewModel extends AndroidViewModel {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @GuardedBy("applicationItems")
     private void loadRunningApps() {
         synchronized (applicationItems) {
             try {
-                List<ActivityManager.RunningAppProcessInfo> runningAppProcessInfos = ActivityManagerCompat.getRunningAppProcesses();
-                List<String> runningPackages = new ArrayList<>();
-                for (ActivityManager.RunningAppProcessInfo runningAppProcessInfo : runningAppProcessInfos) {
-                    for (int i = 0; i < runningAppProcessInfo.pkgList.length; i++) {
-                        if (!runningPackages.contains(runningAppProcessInfo.pkgList[i])) {
-                            runningPackages.add(runningAppProcessInfo.pkgList[i]);
-                        }
-                    }
+                List<ActivityManager.RunningAppProcessInfo> runningAppProcessInfoList;
+                runningAppProcessInfoList = ActivityManagerCompat.getRunningAppProcesses();
+                Set<String> runningPackages = new HashSet<>();
+                for (ActivityManager.RunningAppProcessInfo runningAppProcessInfo : runningAppProcessInfoList) {
+                    Collections.addAll(runningPackages, runningAppProcessInfo.pkgList);
                 }
-                for (int i = 0; i < applicationItems.size(); i++) {
+                for (int i = 0; i < applicationItems.size(); ++i) {
                     ApplicationItem applicationItem = applicationItems.get(i);
-                    applicationItem.isRunning = applicationItem.isInstalled && runningPackages.contains(applicationItem.packageName);
+                    applicationItem.isRunning = applicationItem.isInstalled
+                            && runningPackages.contains(applicationItem.packageName);
                     applicationItems.set(i, applicationItem);
                 }
             } catch (Throwable th) {
