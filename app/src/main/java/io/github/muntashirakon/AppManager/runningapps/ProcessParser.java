@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.runningapps;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -25,6 +26,7 @@ import io.github.muntashirakon.AppManager.ipc.IPCUtils;
 import io.github.muntashirakon.AppManager.ipc.ps.ProcessEntry;
 import io.github.muntashirakon.AppManager.ipc.ps.Ps;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.servermanager.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -35,6 +37,7 @@ public final class ProcessParser {
     private final PackageManager pm;
     private HashMap<String, PackageInfo> installedPackages;
     private HashMap<Integer, PackageInfo> installedUids;
+    private final HashMap<Integer, ActivityManager.RunningAppProcessInfo> runningAppProcesses = new HashMap<>(50);
 
     ProcessParser() {
         context = AppManager.getContext();
@@ -65,7 +68,7 @@ public final class ProcessParser {
             for (ProcessEntry processEntry : processEntries) {
                 if (processEntry.seLinuxPolicy.contains(":kernel:")) continue;
                 try {
-                    processItems.add(parseProcess(processEntry));
+                    processItems.addAll(parseProcess(processEntry));
                 } catch (Exception ignore) {
                 }
             }
@@ -84,7 +87,7 @@ public final class ProcessParser {
         List<ProcessEntry> processEntries = ps.getProcesses();
         for (ProcessEntry processEntry : processEntries) {
             try {
-                ProcessItem processItem = parseProcess(processEntry);
+                ProcessItem processItem = parseProcess(processEntry).get(0);
                 processItems.put(processItem.pid, processItem);
             } catch (Exception ignore) {
             }
@@ -93,36 +96,57 @@ public final class ProcessParser {
     }
 
     @NonNull
-    private ProcessItem parseProcess(@NonNull ProcessEntry processEntry) {
+    private List<ProcessItem> parseProcess(@NonNull ProcessEntry processEntry) {
         String processName = getSupposedPackageName(processEntry.name);
-        ProcessItem processItem;
-        if (installedPackages.containsKey(processName)) {
+        List<ProcessItem> processItems = new ArrayList<>(1);
+        if (runningAppProcesses.containsKey(processEntry.pid)) {
+            //noinspection ConstantConditions
+            String[] pkgList = runningAppProcesses.get(processEntry.pid).pkgList;
+            if (pkgList != null && pkgList.length > 0) {
+                for (String pkgName : pkgList) {
+                    @NonNull PackageInfo packageInfo = Objects.requireNonNull(installedPackages.get(pkgName));
+                    ProcessItem processItem = new AppProcessItem(processEntry.pid, packageInfo);
+                    processItem.name = pm.getApplicationLabel(packageInfo.applicationInfo).toString()
+                            + getProcessName(processEntry.name);
+                    processItems.add(processItem);
+                }
+            } else {
+                ProcessItem processItem = new ProcessItem(processEntry.pid);
+                processItem.name = processEntry.name;
+                processItems.add(processItem);
+            }
+        } else if (installedPackages.containsKey(processName)) {
             @NonNull PackageInfo packageInfo = Objects.requireNonNull(installedPackages.get(processName));
-            processItem = new AppProcessItem(processEntry.pid, packageInfo);
+            ProcessItem processItem = new AppProcessItem(processEntry.pid, packageInfo);
             processItem.name = pm.getApplicationLabel(packageInfo.applicationInfo).toString()
                     + getProcessName(processEntry.name);
+            processItems.add(processItem);
         } else if (installedUids.containsKey(processEntry.users.fsUid)) {
             @NonNull PackageInfo packageInfo = Objects.requireNonNull(installedUids.get(processEntry.users.fsUid));
-            processItem = new AppProcessItem(processEntry.pid, packageInfo);
+            ProcessItem processItem = new AppProcessItem(processEntry.pid, packageInfo);
             processItem.name = pm.getApplicationLabel(packageInfo.applicationInfo).toString() + ":" + processEntry.name;
+            processItems.add(processItem);
         } else {
-            processItem = new ProcessItem(processEntry.pid);
+            ProcessItem processItem = new ProcessItem(processEntry.pid);
             processItem.name = processEntry.name;
+            processItems.add(processItem);
         }
-        processItem.context = processEntry.seLinuxPolicy;
-        processItem.ppid = processEntry.ppid;
-        processItem.rss = processEntry.residentSetSize;
-        processItem.vsz = processEntry.virtualMemorySize;
-        processItem.uid = processEntry.users.fsUid;
-        processItem.user = getNameForUid(processEntry.users.fsUid);
-        if (context == null) {
-            processItem.state = processEntry.processState;
-            processItem.state_extra = processEntry.processStatePlus;
-        } else {
-            processItem.state = context.getString(Utils.getProcessStateName(processEntry.processState));
-            processItem.state_extra = context.getString(Utils.getProcessStateExtraName(processEntry.processStatePlus));
+        for (ProcessItem processItem : processItems) {
+            processItem.context = processEntry.seLinuxPolicy;
+            processItem.ppid = processEntry.ppid;
+            processItem.rss = processEntry.residentSetSize;
+            processItem.vsz = processEntry.virtualMemorySize;
+            processItem.uid = processEntry.users.fsUid;
+            processItem.user = getNameForUid(processEntry.users.fsUid);
+            if (context == null) {
+                processItem.state = processEntry.processState;
+                processItem.state_extra = processEntry.processStatePlus;
+            } else {
+                processItem.state = context.getString(Utils.getProcessStateName(processEntry.processState));
+                processItem.state_extra = context.getString(Utils.getProcessStateExtraName(processEntry.processStatePlus));
+            }
         }
-        return processItem;
+        return processItems;
     }
 
     private void getInstalledPackages() {
@@ -150,6 +174,10 @@ public final class ProcessParser {
         }
         // Remove duplicate UIDs as they might create collisions
         for (int uid : duplicateUids) installedUids.remove(uid);
+        List<ActivityManager.RunningAppProcessInfo> runningAppProcesses = ActivityManagerCompat.getRunningAppProcesses();
+        for (ActivityManager.RunningAppProcessInfo info : runningAppProcesses) {
+            this.runningAppProcesses.put(info.pid, info);
+        }
     }
 
     private static final SparseArrayCompat<String> uidNameCache = new SparseArrayCompat<>(150);
