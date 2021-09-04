@@ -5,6 +5,8 @@ package android.app;
 import android.os.Binder;
 import android.os.IBinder;
 
+import misc.utils.HiddenUtil;
+
 /**
  * @deprecated Since Android O
  */
@@ -17,6 +19,6 @@ public abstract class ActivityManagerNative extends Binder implements IActivityM
      */
     @Deprecated
     static public IActivityManager asInterface(IBinder obj) {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE(obj);
     }
 }

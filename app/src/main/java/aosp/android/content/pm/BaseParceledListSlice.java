@@ -9,6 +9,8 @@ import android.os.Parcelable;
 import android.os.RemoteException;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -158,7 +160,7 @@ abstract class BaseParceledListSlice<T> implements Parcelable {
                 dest.writeInt(0);
                 Binder retriever = new Binder() {
                     @Override
-                    protected boolean onTransact(int code, Parcel data, Parcel reply, int flags)
+                    protected boolean onTransact(int code, @NonNull Parcel data, Parcel reply, int flags)
                             throws RemoteException {
                         if (code != FIRST_CALL_TRANSACTION) {
                             return super.onTransact(code, data, reply, flags);

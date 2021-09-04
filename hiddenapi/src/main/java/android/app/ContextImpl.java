@@ -6,9 +6,11 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.UserHandle;
 
+import misc.utils.HiddenUtil;
+
 public abstract class ContextImpl extends Context {
     public Context createPackageContextAsUser(String packageName, int flags, UserHandle user)
             throws PackageManager.NameNotFoundException {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE();
     }
 }

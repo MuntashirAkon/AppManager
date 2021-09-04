@@ -3,10 +3,11 @@
 package android.system;
 
 import dev.rikka.tools.refine.RefineAs;
+import misc.utils.HiddenUtil;
 
 @RefineAs(Os.class)
 public class OsHidden {
     public static StructPasswd getpwuid(int uid) throws ErrnoException {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE(uid);
     }
 }

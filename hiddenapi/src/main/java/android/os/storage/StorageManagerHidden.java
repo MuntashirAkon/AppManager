@@ -11,6 +11,7 @@ import androidx.annotation.RequiresApi;
 import java.util.UUID;
 
 import dev.rikka.tools.refine.RefineAs;
+import misc.utils.HiddenUtil;
 
 @RefineAs(StorageManager.class)
 public class StorageManagerHidden {
@@ -22,22 +23,22 @@ public class StorageManagerHidden {
      */
     @Nullable // @NonNull since Android 6 (M)
     public StorageVolume[] getVolumeList() {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE();
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
     @NonNull
     public static StorageVolume[] getVolumeList(int userId, int flags) {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE(userId, flags);
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     public static UUID convert(String uuid) {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE(uuid);
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     public static String convert(UUID storageUuid) {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE(storageUuid);
     }
 }

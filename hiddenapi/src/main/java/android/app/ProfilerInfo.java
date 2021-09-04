@@ -5,6 +5,8 @@ package android.app;
 import android.os.ParcelFileDescriptor;
 import android.os.Parcelable;
 
+import misc.utils.HiddenUtil;
+
 /**
  * System private API for passing profiler settings.
  */
@@ -35,7 +37,7 @@ public class ProfilerInfo implements Parcelable {
     public final String agent;
 
     /**
-     * Whether the {@link agent} should be attached early (before bind-application) or during
+     * Whether the {@link #agent} should be attached early (before bind-application) or during
      * bind-application. Agents attached prior to binding cannot be loaded from the app's APK
      * directly and must be given as an absolute path (or available in the default LD_LIBRARY_PATH).
      * Agents attached during bind-application will miss early setup (e.g., resource initialization
@@ -45,21 +47,22 @@ public class ProfilerInfo implements Parcelable {
 
     public ProfilerInfo(String filename, ParcelFileDescriptor fd, int interval, boolean autoStop,
             boolean streaming, String agent, boolean attachAgentDuringBind) {
+        HiddenUtil.throwUOE(filename, fd, interval, autoStop, streaming, agent, attachAgentDuringBind);
         throw new UnsupportedOperationException();
     }
 
     /**
      * Return a new ProfilerInfo instance, with fields populated from this object,
-     * and {@link agent} and {@link attachAgentDuringBind} as given.
+     * and {@link #agent} and {@link #attachAgentDuringBind} as given.
      */
     public ProfilerInfo setAgent(String agent, boolean attachAgentDuringBind) {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE(agent, attachAgentDuringBind);
     }
 
     /**
      * Close profileFd, if it is open. The field will be null after a call to this function.
      */
     public void closeFd() {
-        throw new UnsupportedOperationException();
+        HiddenUtil.throwUOE();
     }
 }

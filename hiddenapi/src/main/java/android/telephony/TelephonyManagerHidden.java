@@ -5,6 +5,7 @@ package android.telephony;
 import android.annotation.Nullable;
 
 import dev.rikka.tools.refine.RefineAs;
+import misc.utils.HiddenUtil;
 
 @RefineAs(TelephonyManager.class)
 public class TelephonyManagerHidden {
@@ -20,6 +21,6 @@ public class TelephonyManagerHidden {
      */
     @Nullable
     public String getSubscriberId(long subId) {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE(subId);
     }
 }

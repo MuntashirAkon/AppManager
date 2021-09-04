@@ -9,32 +9,12 @@ import androidx.annotation.NonNull;
 
 import java.util.List;
 
+import misc.utils.HiddenUtil;
+
 /**
  * Parcelable version of {@link android.permission.PermissionManager.SplitPermissionInfo}
  */
 public class SplitPermissionInfoParcelable implements Parcelable {
-    /**
-     * The permission that is split.
-     */
-    @NonNull
-    private final String mSplitPermission;
-
-    /**
-     * The permissions that are added.
-     */
-    @NonNull
-    private final List<String> mNewPermissions;
-
-    /**
-     * The target API level when the permission was split.
-     */
-    @IntRange(from = 0)
-    private final int mTargetSdk;
-
-    private void onConstructed() {
-        throw new UnsupportedOperationException();
-    }
-
     /**
      * Creates a new SplitPermissionInfoParcelable.
      *
@@ -46,29 +26,30 @@ public class SplitPermissionInfoParcelable implements Parcelable {
             @NonNull String splitPermission,
             @NonNull List<String> newPermissions,
             @IntRange(from = 0) int targetSdk) {
-        throw new UnsupportedOperationException();
+        HiddenUtil.throwUOE(splitPermission, newPermissions, targetSdk);
     }
 
     /**
      * The permission that is split.
      */
-    public @NonNull String getSplitPermission() {
-        throw new UnsupportedOperationException();
+    @NonNull
+    public String getSplitPermission() {
+        return HiddenUtil.throwUOE();
     }
 
     /**
      * The permissions that are added.
      */
-    public @NonNull
-    List<String> getNewPermissions() {
-        throw new UnsupportedOperationException();
+    @NonNull
+    public List<String> getNewPermissions() {
+        return HiddenUtil.throwUOE();
     }
 
     /**
      * The target API level when the permission was split.
      */
-    public @IntRange(from = 0)
-    int getTargetSdk() {
-        throw new UnsupportedOperationException();
+    @IntRange(from = 0)
+    public int getTargetSdk() {
+        return HiddenUtil.throwUOE();
     }
 }

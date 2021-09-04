@@ -6,6 +6,7 @@ import android.annotation.AppIdInt;
 import android.annotation.UserIdInt;
 
 import dev.rikka.tools.refine.RefineAs;
+import misc.utils.HiddenUtil;
 
 @RefineAs(UserHandle.class)
 public class UserHandleHidden implements Parcelable {
@@ -26,14 +27,14 @@ public class UserHandleHidden implements Parcelable {
      */
     @UserIdInt
     public static int getUserId(int uid) {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE(uid);
     }
 
     /**
      * Returns the uid that is composed from the userId and the appId.
      */
     public static int getUid(@UserIdInt int userId, @AppIdInt int appId) {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE(userId, appId);
     }
 
     /**
@@ -41,7 +42,7 @@ public class UserHandleHidden implements Parcelable {
      */
     public static @AppIdInt
     int getAppId(int uid) {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE(uid);
     }
 
     /**
@@ -51,6 +52,6 @@ public class UserHandleHidden implements Parcelable {
      */
     @UserIdInt
     public static int myUserId() {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE();
     }
 }

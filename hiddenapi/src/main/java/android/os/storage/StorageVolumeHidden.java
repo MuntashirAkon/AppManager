@@ -7,14 +7,15 @@ import android.os.Parcelable;
 import java.io.File;
 
 import dev.rikka.tools.refine.RefineAs;
+import misc.utils.HiddenUtil;
 
 @RefineAs(StorageVolume.class)
 public final class StorageVolumeHidden implements Parcelable {
     public File getPathFile() {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE();
     }
 
     public String getUserLabel() {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE();
     }
 }

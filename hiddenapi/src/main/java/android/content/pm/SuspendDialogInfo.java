@@ -9,13 +9,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 
+import misc.utils.HiddenUtil;
+
 public final class SuspendDialogInfo implements Parcelable {
     /**
      * @return the resource id of the icon to be used with the dialog
      */
     @DrawableRes
     public int getIconResId() {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE();
     }
 
     /**
@@ -23,7 +25,7 @@ public final class SuspendDialogInfo implements Parcelable {
      */
     @StringRes
     public int getTitleResId() {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE();
     }
 
     /**
@@ -31,7 +33,7 @@ public final class SuspendDialogInfo implements Parcelable {
      */
     @StringRes
     public int getDialogMessageResId() {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE();
     }
 
     /**
@@ -40,7 +42,7 @@ public final class SuspendDialogInfo implements Parcelable {
      */
     @Nullable
     public String getDialogMessage() {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE();
     }
 
     /**
@@ -48,11 +50,11 @@ public final class SuspendDialogInfo implements Parcelable {
      */
     @StringRes
     public int getNeutralButtonTextResId() {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE();
     }
 
     SuspendDialogInfo(Builder b) {
-        throw new UnsupportedOperationException();
+        HiddenUtil.throwUOE(b);
     }
 
     /**
@@ -67,7 +69,7 @@ public final class SuspendDialogInfo implements Parcelable {
          */
         @NonNull
         public Builder setIcon(@DrawableRes int resId) {
-            throw new UnsupportedOperationException();
+            return HiddenUtil.throwUOE(resId);
         }
 
         /**
@@ -79,7 +81,7 @@ public final class SuspendDialogInfo implements Parcelable {
          */
         @NonNull
         public Builder setTitle(@StringRes int resId) {
-            throw new UnsupportedOperationException();
+            return HiddenUtil.throwUOE(resId);
         }
 
         /**
@@ -97,7 +99,7 @@ public final class SuspendDialogInfo implements Parcelable {
          */
         @NonNull
         public Builder setMessage(@NonNull String message) {
-            throw new UnsupportedOperationException();
+            return HiddenUtil.throwUOE(message);
         }
 
         /**
@@ -116,7 +118,7 @@ public final class SuspendDialogInfo implements Parcelable {
          */
         @NonNull
         public Builder setMessage(@StringRes int resId) {
-            throw new UnsupportedOperationException();
+            return HiddenUtil.throwUOE(resId);
         }
 
         /**
@@ -129,7 +131,7 @@ public final class SuspendDialogInfo implements Parcelable {
          */
         @NonNull
         public Builder setNeutralButtonText(@StringRes int resId) {
-            throw new UnsupportedOperationException();
+            return HiddenUtil.throwUOE(resId);
         }
 
         /**
@@ -139,7 +141,7 @@ public final class SuspendDialogInfo implements Parcelable {
          */
         @NonNull
         public SuspendDialogInfo build() {
-            throw new UnsupportedOperationException();
+            return HiddenUtil.throwUOE();
         }
     }
 }

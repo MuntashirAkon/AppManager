@@ -5,6 +5,8 @@ package android.content.pm;
 import android.os.IBinder;
 import android.os.Parcelable;
 
+import misc.utils.HiddenUtil;
+
 /**
  * Represents a {@code KeySet} that has been declared in the AndroidManifest.xml
  * file for the application.  A {@code KeySet} can be used explicitly to
@@ -12,10 +14,10 @@ import android.os.Parcelable;
  */
 public class KeySet implements Parcelable {
     public KeySet(IBinder token) {
-        throw new UnsupportedOperationException();
+        HiddenUtil.throwUOE(token);
     }
 
     public IBinder getToken() {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE();
     }
 }

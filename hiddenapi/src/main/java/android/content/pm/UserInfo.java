@@ -8,6 +8,8 @@ import android.os.UserHandle;
 
 import androidx.annotation.RequiresApi;
 
+import misc.utils.HiddenUtil;
+
 /**
  * Per-user information.
  */
@@ -107,57 +109,57 @@ public class UserInfo implements Parcelable {
     public boolean guestToRemove;
 
     public boolean isPrimary() {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE();
     }
 
     public boolean isAdmin() {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE();
     }
 
     public boolean isGuest() {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE();
     }
 
     public boolean isRestricted() {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE();
     }
 
     public boolean isManagedProfile() {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE();
     }
 
     public boolean isEnabled() {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE();
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
     public boolean isQuietModeEnabled() {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE();
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
     public boolean isEphemeral() {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE();
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
     public boolean isInitialized() {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE();
     }
 
     @RequiresApi(Build.VERSION_CODES.N_MR1)
     public boolean isDemo() {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE();
     }
 
     /**
      * @return true if this user can be switched to.
      **/
     public boolean supportsSwitchTo() {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE();
     }
 
     public UserHandle getUserHandle() {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE();
     }
 }

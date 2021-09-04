@@ -4,9 +4,11 @@ package android.content;
 
 import android.os.Parcelable;
 
+import misc.utils.HiddenUtil;
+
 public final class ComponentName implements Parcelable, Cloneable, Comparable<ComponentName> {
     @Override
     public int compareTo(ComponentName o) {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE(o);
     }
 }

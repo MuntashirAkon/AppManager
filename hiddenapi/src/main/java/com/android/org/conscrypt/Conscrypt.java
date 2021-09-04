@@ -7,6 +7,8 @@ import androidx.annotation.RequiresApi;
 import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLSocket;
 
+import misc.utils.HiddenUtil;
+
 @RequiresApi(Build.VERSION_CODES.R)
 public final class Conscrypt {
     /**
@@ -24,6 +26,6 @@ public final class Conscrypt {
      */
     public static byte[] exportKeyingMaterial(SSLSocket socket, String label, byte[] context,
                                               int length) throws SSLException {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE(socket, label, context, length);
     }
 }

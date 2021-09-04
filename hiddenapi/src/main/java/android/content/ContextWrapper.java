@@ -2,8 +2,10 @@
 
 package android.content;
 
+import misc.utils.HiddenUtil;
+
 public class ContextWrapper extends Context {
     public ContextWrapper(Context base) {
-        throw new UnsupportedOperationException();
+        HiddenUtil.throwUOE(base);
     }
 }

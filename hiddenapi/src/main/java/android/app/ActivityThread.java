@@ -5,35 +5,38 @@ package android.app;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageManager;
 
+import misc.utils.HiddenUtil;
+
 public class ActivityThread {
     public static IPackageManager getPackageManager() {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE();
     }
 
     public static ActivityThread systemMain() {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE();
     }
 
     public static ActivityThread currentActivityThread() {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE();
     }
 
     public static Application currentApplication() {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE();
     }
 
     public static String currentProcessName() {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE();
     }
 
     public ContextImpl getSystemContext() {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE();
     }
 
     public IApplicationThread getApplicationThread() {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE();
     }
 
     public void installSystemApplicationInfo(ApplicationInfo info, ClassLoader classLoader) {
+        HiddenUtil.throwUOE(info, classLoader);
     }
 }

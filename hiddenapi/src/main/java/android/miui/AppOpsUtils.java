@@ -2,9 +2,11 @@
 
 package android.miui;
 
+import misc.utils.HiddenUtil;
+
 // This is a MIUI specific API
 public class AppOpsUtils {
     public static boolean isXOptMode() {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE();
     }
 }

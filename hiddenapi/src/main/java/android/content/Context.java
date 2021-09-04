@@ -5,10 +5,11 @@ package android.content;
 import android.content.pm.PackageManager;
 import android.os.UserHandle;
 
-public class Context {
+import misc.utils.HiddenUtil;
 
+public class Context {
     public Context createPackageContextAsUser(String packageName, int flags, UserHandle user)
             throws PackageManager.NameNotFoundException {
-        throw new RuntimeException();
+        return HiddenUtil.throwUOE();
     }
 }

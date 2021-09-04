@@ -17,11 +17,13 @@ import android.os.ServiceManager;
 import android.os.SystemClock;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+
 import java.io.File;
 import java.lang.reflect.Constructor;
 
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import io.github.muntashirakon.AppManager.server.common.IRootIPC;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
@@ -109,7 +111,7 @@ class IPCServer extends IRootIPC.Stub implements IBinder.DeathRecipient {
     }
 
     @Override
-    public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+    public boolean onTransact(int code, @NonNull Parcel data, Parcel reply, int flags) throws RemoteException {
         // Small trick for stopping the service without going through AIDL
         if (code == LAST_CALL_TRANSACTION - 1) {
             stop();

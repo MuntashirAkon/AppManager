@@ -5,6 +5,8 @@ package android.os;
 import android.annotation.NonNull;
 import android.annotation.Nullable;
 
+import misc.utils.HiddenUtil;
+
 public class SystemProperties {
     /**
      * Get the String value for the given {@code key}.
@@ -13,7 +15,7 @@ public class SystemProperties {
      * @return an empty string if the {@code key} isn't found
      */
     public static String get(@NonNull String key) {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE(key);
     }
 
     /**
@@ -26,6 +28,6 @@ public class SystemProperties {
      */
     @NonNull
     public static String get(@NonNull String key, @Nullable String def) {
-        throw new UnsupportedOperationException();
+        return HiddenUtil.throwUOE(key, def);
     }
 }
