@@ -127,6 +127,18 @@ public final class ActivityManagerCompat {
         return res;
     }
 
+    public static List<ActivityManager.RunningAppProcessInfo> getRunningAppProcesses() {
+        List<ActivityManager.RunningAppProcessInfo> res = new ArrayList<>();
+        if (AppPref.isRootOrAdbEnabled()) {
+            try {
+                res = getActivityManager().getRunningAppProcesses();
+            } catch (RemoteException e) {
+                return res;
+            }
+        }
+        return res;
+    }
+
     public static IActivityManager getActivityManager() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             return IActivityManager.Stub.asInterface(ProxyBinder.getService(Context.ACTIVITY_SERVICE));
