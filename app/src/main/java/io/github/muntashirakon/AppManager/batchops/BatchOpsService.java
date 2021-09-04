@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.UserHandleHidden;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,7 +25,6 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.main.MainActivity;
 import io.github.muntashirakon.AppManager.misc.AlertDialogActivity;
 import io.github.muntashirakon.AppManager.types.ForegroundService;
-import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 
 public class BatchOpsService extends ForegroundService {
@@ -178,7 +178,7 @@ public class BatchOpsService extends ForegroundService {
         ArrayList<Integer> userHandles = intent.getIntegerArrayListExtra(EXTRA_OP_USERS);
         if (userHandles == null) {
             userHandles = new ArrayList<>(packages.size());
-            for (String ignore : packages) userHandles.add(Users.myUserId());
+            for (String ignore : packages) userHandles.add(UserHandleHidden.myUserId());
         }
         if (op == BatchOpsManager.OP_NONE || packages == null) {
             sendResults(Activity.RESULT_CANCELED, null);

@@ -5,11 +5,10 @@ package io.github.muntashirakon.AppManager.users;
 import android.annotation.UserIdInt;
 import android.content.Context;
 import android.content.pm.UserInfo;
-import android.os.Binder;
 import android.os.Build;
 import android.os.IUserManager;
 import android.os.RemoteException;
-import android.os.UserHandle;
+import android.os.UserHandleHidden;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,38 +25,7 @@ import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 public final class Users {
     public static final String TAG = "Users";
 
-    @UserIdInt
-    public static final int USER_ALL = -1;
-    @UserIdInt
-    public static final int USER_NULL = -10000;
-    @UserIdInt
-    public static final int USER_SYSTEM = 0;
-
-    public static final boolean MU_ENABLED;
-    public static final int PER_USER_RANGE;
-
     public static List<UserInfo> userInfoList;
-
-    static {
-        boolean muEnabled = true;
-        int perUserRange = 100000;
-        try {
-            // using reflection to get id of calling user since method getCallingUserId of UserHandle is hidden
-            // https://github.com/android/platform_frameworks_base/blob/master/core/java/android/os/UserHandle.java#L123
-            //noinspection JavaReflectionMemberAccess
-            muEnabled = UserHandle.class.getField("MU_ENABLED").getBoolean(null);
-        } catch (IllegalAccessException | NoSuchFieldException e) {
-            Log.e(TAG, "Could not get UserHandle#MU_ENABLED", e);
-        }
-        try {
-            //noinspection JavaReflectionMemberAccess
-            perUserRange = UserHandle.class.getField("PER_USER_RANGE").getInt(null);
-        } catch (IllegalAccessException | NoSuchFieldException e) {
-            Log.e(TAG, "Could not get UserHandle#PER_USER_RANGE", e);
-        }
-        MU_ENABLED = muEnabled;
-        PER_USER_RANGE = perUserRange;
-    }
 
     @WorkerThread
     @Nullable
@@ -100,7 +68,7 @@ public final class Users {
     public static int[] getUsersIds() {
         getAllUsers();
         if (userInfoList == null) {
-            return new int[]{myUserId()};
+            return new int[]{UserHandleHidden.myUserId()};
         }
         int[] selectedUserIds = AppPref.getSelectedUsers();
         List<Integer> users = new ArrayList<>();
@@ -110,24 +78,5 @@ public final class Users {
             }
         }
         return ArrayUtils.convertToIntArray(users);
-    }
-
-    @UserIdInt
-    public static int myUserId() {
-        return MU_ENABLED ? Binder.getCallingUid() / PER_USER_RANGE : 0;
-    }
-
-    @UserIdInt
-    public static int getUserId(int uid) {
-        return MU_ENABLED ? uid / PER_USER_RANGE : USER_SYSTEM;
-    }
-
-    @UserIdInt
-    public static int getUid(int userId, int appId) {
-        return userId * PER_USER_RANGE + appId;
-    }
-
-    public static int getAppId(int uid) {
-        return uid % PER_USER_RANGE;
     }
 }

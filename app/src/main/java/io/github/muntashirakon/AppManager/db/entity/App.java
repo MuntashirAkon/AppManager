@@ -5,6 +5,7 @@ package io.github.muntashirakon.AppManager.db.entity;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
+import android.os.UserHandleHidden;
 import android.util.Pair;
 
 import androidx.annotation.NonNull;
@@ -19,7 +20,6 @@ import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
-import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 @SuppressWarnings("NotNullFieldNotInitialized")
@@ -29,7 +29,7 @@ public class App implements Serializable {
     @NonNull
     public String packageName;
 
-    @ColumnInfo(name = "user_id", defaultValue = "" + Users.USER_NULL)
+    @ColumnInfo(name = "user_id", defaultValue = "" + UserHandleHidden.USER_NULL)
     public int userId;
 
     @ColumnInfo(name = "label")
@@ -119,7 +119,7 @@ public class App implements Serializable {
         ApplicationInfo applicationInfo = packageInfo.applicationInfo;
         app.packageName = applicationInfo.packageName;
         app.uid = applicationInfo.uid;
-        app.userId = Users.getUserId(app.uid);
+        app.userId = UserHandleHidden.getUserId(app.uid);
         app.isInstalled = (applicationInfo.flags & ApplicationInfo.FLAG_INSTALLED) != 0
                 && applicationInfo.publicSourceDir != null && new File(applicationInfo.publicSourceDir).exists();
         app.flags = applicationInfo.flags;

@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.RemoteException;
+import android.os.UserHandleHidden;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -83,7 +84,6 @@ import io.github.muntashirakon.AppManager.settings.SettingsActivity;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
 import io.github.muntashirakon.AppManager.types.TextInputDropdownDialogBuilder;
-import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.BetterActivityResult;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
@@ -245,7 +245,8 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
         if (!PermissionUtils.hasPermission(this, Manifest.permission.READ_LOGS) && LocalServer.isAMServiceAlive()) {
             executor.submit(() -> {
                 try {
-                    PermissionCompat.grantPermission(getPackageName(), Manifest.permission.READ_LOGS, Users.myUserId());
+                    PermissionCompat.grantPermission(getPackageName(), Manifest.permission.READ_LOGS,
+                            UserHandleHidden.myUserId());
                 } catch (RemoteException e) {
                     Log.d(TAG, e.toString());
                 }

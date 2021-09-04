@@ -7,6 +7,7 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Parcelable;
 import android.os.RemoteException;
+import android.os.UserHandleHidden;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,12 +18,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import dev.rikka.tools.refine.Refine;
 import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.appops.reflector.ReflectUtils;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
-import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 
@@ -37,7 +37,7 @@ public class AppOpsService {
                 PermissionCompat.grantPermission(
                         context.getPackageName(),
                         PermissionUtils.PERMISSION_GET_APP_OPS_STATS,
-                        Users.myUserId());
+                        UserHandleHidden.myUserId());
             } catch (RemoteException e) {
                 throw new RuntimeException("Couldn't connect to appOpsService locally", e);
             }
@@ -78,8 +78,8 @@ public class AppOpsService {
         List<Parcelable> opsForPackage = appOpsService.getPackagesForOps(ops);
         List<PackageOps> packageOpsList = new ArrayList<>();
         if (opsForPackage != null) {
-            for (Object o : opsForPackage) {
-                PackageOps packageOps = ReflectUtils.opsConvert(o);
+            for (Parcelable o : opsForPackage) {
+                PackageOps packageOps = AppOpsUtils.opsConvert(Refine.unsafeCast(o));
                 packageOpsList.add(packageOps);
             }
         }
@@ -106,7 +106,7 @@ public class AppOpsService {
                                                        @Nullable final List<Parcelable> opsForPackage) {
         if (opsForPackage != null) {
             for (Parcelable o : opsForPackage) {
-                PackageOps packageOps = ReflectUtils.opsConvert(o);
+                PackageOps packageOps = AppOpsUtils.opsConvert(Refine.unsafeCast(o));
                 for (OpEntry opEntry : packageOps.getOps()) {
                     if (!opEntries.contains(opEntry)) {
                         opEntries.add(opEntry);

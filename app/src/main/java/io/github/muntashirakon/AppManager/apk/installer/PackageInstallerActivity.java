@@ -11,6 +11,7 @@ import android.content.pm.UserInfo;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.UserHandleHidden;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.RelativeSizeSpan;
@@ -40,7 +41,6 @@ import io.github.muntashirakon.AppManager.apk.splitapk.SplitApkChooser;
 import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.StoragePermission;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
@@ -248,14 +248,14 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
                 String[] userNames = new String[users.size() + 1];
                 int[] userHandles = new int[users.size() + 1];
                 userNames[0] = getString(R.string.backup_all_users);
-                userHandles[0] = Users.USER_ALL;
+                userHandles[0] = UserHandleHidden.USER_ALL;
                 int i = 1;
                 for (UserInfo info : users) {
                     userNames[i] = info.name == null ? String.valueOf(info.id) : info.name;
                     userHandles[i] = info.id;
                     ++i;
                 }
-                AtomicInteger userHandle = new AtomicInteger(Users.USER_ALL);
+                AtomicInteger userHandle = new AtomicInteger(UserHandleHidden.USER_ALL);
                 new MaterialAlertDialogBuilder(this)
                         .setCancelable(false)
                         .setTitle(R.string.select_user)
@@ -267,7 +267,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
                 return;
             }
         }
-        doLaunchInstallerService(Users.myUserId());
+        doLaunchInstallerService(UserHandleHidden.myUserId());
     }
 
     private void doLaunchInstallerService(int userHandle) {
@@ -346,7 +346,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
                         // User must be all
                         try {
                             PackageInstallerCompat.uninstall(model.getPackageName(),
-                                    Users.USER_ALL, false);
+                                    UserHandleHidden.USER_ALL, false);
                             install();
                         } catch (Exception e) {
                             e.printStackTrace();

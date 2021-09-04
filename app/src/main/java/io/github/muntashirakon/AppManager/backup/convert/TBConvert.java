@@ -5,6 +5,7 @@ package io.github.muntashirakon.AppManager.backup.convert;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.UserHandleHidden;
 import android.util.Base64;
 
 import androidx.annotation.NonNull;
@@ -36,7 +37,6 @@ import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.crypto.Crypto;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
@@ -86,7 +86,7 @@ public class TBConvert extends Convert {
     public TBConvert(@NonNull Path propFile) {
         this.propFile = propFile;
         this.backupLocation = propFile.getParentFile();
-        this.userHandle = Users.myUserId();
+        this.userHandle = UserHandleHidden.myUserId();
         String dirtyName = propFile.getName();
         int idx = dirtyName.indexOf('-');
         if (idx == -1) this.packageName = null;
@@ -392,7 +392,7 @@ public class TBConvert extends Convert {
             sourceMetadata.backupTime = this.backupTime;
             sourceMetadata.crypto = CryptoUtils.MODE_NO_ENCRYPTION;  // We only support no encryption mode for TB backups
             sourceMetadata.apkName = this.packageName + "-" + prop.getProperty("app_apk_md5") + ".apk";
-            sourceMetadata.userHandle = Users.myUserId();
+            sourceMetadata.userHandle = UserHandleHidden.myUserId();
             // Compression type
             String compressionType = prop.getProperty("app_apk_codec");
             if ("GZIP".equals(compressionType)) {

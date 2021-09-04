@@ -7,6 +7,7 @@ import android.content.pm.Signature;
 import android.os.Build;
 import android.os.HandlerThread;
 import android.os.Process;
+import android.os.UserHandleHidden;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,7 +27,6 @@ import javax.crypto.spec.SecretKeySpec;
 import aosp.libcore.util.HexEncoding;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
-import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.io.ProxyFile;
 
 import static io.github.muntashirakon.AppManager.utils.SettingsState.SETTINGS_TYPE_SSAID;
@@ -48,7 +48,7 @@ public class SsaidSettings {
         HandlerThread thread = new HandlerThread("SSAID", Process.THREAD_PRIORITY_BACKGROUND);
         thread.start();
         int ssaidKey = SettingsState.makeKey(SETTINGS_TYPE_SSAID, 0);
-        File ssaidLocation = new ProxyFile(OsEnvironment.getUserSystemDirectory(Users.getUserId(uid)),
+        File ssaidLocation = new ProxyFile(OsEnvironment.getUserSystemDirectory(UserHandleHidden.getUserId(uid)),
                 "settings_ssaid.xml");
         try {
             if (!ssaidLocation.canRead()) {
@@ -72,7 +72,7 @@ public class SsaidSettings {
 
     public boolean setSsaid(String ssaid) {
         try {
-            PackageManagerCompat.forceStopPackage(packageName, Users.getUserId(uid));
+            PackageManagerCompat.forceStopPackage(packageName, UserHandleHidden.getUserId(uid));
         } catch (Throwable e) {
             e.printStackTrace();
         }

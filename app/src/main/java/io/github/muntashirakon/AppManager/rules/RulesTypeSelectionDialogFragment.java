@@ -5,6 +5,7 @@ package io.github.muntashirakon.AppManager.rules;
 import android.app.Dialog;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.UserHandleHidden;
 import android.widget.Toast;
 
 import androidx.annotation.IntDef;
@@ -24,7 +25,6 @@ import java.util.List;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.settings.SettingsActivity;
-import io.github.muntashirakon.AppManager.users.Users;
 
 public class RulesTypeSelectionDialogFragment extends DialogFragment {
     public static final String TAG = "RulesTypeSelectionDialogFragment";
@@ -67,7 +67,7 @@ public class RulesTypeSelectionDialogFragment extends DialogFragment {
         mPackages = args.getStringArrayList(ARG_PKG);
         mUri = (Uri) args.get(ARG_URI);
         userHandles = args.getIntArray(ARG_USERS);
-        if (userHandles == null) userHandles = new int[]{Users.myUserId()};
+        if (userHandles == null) userHandles = new int[]{UserHandleHidden.myUserId()};
         if (mUri == null) return super.onCreateDialog(savedInstanceState);
         final boolean[] checkedItems = new boolean[6];
         Arrays.fill(checkedItems, true);

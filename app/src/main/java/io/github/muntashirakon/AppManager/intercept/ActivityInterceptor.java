@@ -12,6 +12,7 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.UserHandleHidden;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -56,7 +57,6 @@ import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.servermanager.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.types.TextInputDropdownDialogBuilder;
-import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
@@ -304,7 +304,7 @@ public class ActivityInterceptor extends BaseActivity {
         // Get Intent
         Intent intent = getIntent();
         isRoot = intent.getBooleanExtra(EXTRA_ROOT, false);
-        userHandle = intent.getIntExtra(EXTRA_USER_HANDLE, Users.myUserId());
+        userHandle = intent.getIntExtra(EXTRA_USER_HANDLE, UserHandleHidden.myUserId());
         intent.removeExtra(EXTRA_ROOT);
         intent.removeExtra(EXTRA_USER_HANDLE);
         intent.setPackage(null);
@@ -633,7 +633,7 @@ public class ActivityInterceptor extends BaseActivity {
                 } else {
                     if (isRoot) { // launch with root
                         ActivityManagerCompat.startActivity(this, mutableIntent, userHandle);
-                    } else if (userHandle != Users.myUserId() && AppPref.isRootOrAdbEnabled()) {
+                    } else if (userHandle != UserHandleHidden.myUserId() && AppPref.isRootOrAdbEnabled()) {
                         ActivityManagerCompat.startActivity(this, mutableIntent, userHandle);
                     } else {
                         mutableIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -743,7 +743,7 @@ public class ActivityInterceptor extends BaseActivity {
             String text = item.getText().toString();
             String[] lines = text.split("\n");
             isRoot = false;
-            userHandle = Users.myUserId();
+            userHandle = UserHandleHidden.myUserId();
             int parseCount = 0;
             for (String line : lines) {
                 if (TextUtils.isEmpty(line)) continue;
@@ -802,7 +802,9 @@ public class ActivityInterceptor extends BaseActivity {
         // At least 1 tab have to be present in each non-empty line
         result.append("URI\t").append(getUri(mutableIntent)).append("\n");
         if (isRoot) result.append("ROOT\t").append(isRoot).append("\n");
-        if (userHandle != Users.myUserId()) result.append("USER\t").append(userHandle).append("\n");
+        if (userHandle != UserHandleHidden.myUserId()) {
+            result.append("USER\t").append(userHandle).append("\n");
+        }
         result.append("\n");
         result.append(IntentCompat.flattenToString(mutableIntent)).append("\n");
         result.append("MATCHING ACTIVITIES\t").append(numberOfMatchingActivities).append("\n");

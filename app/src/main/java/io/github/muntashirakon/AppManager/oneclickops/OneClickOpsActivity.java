@@ -13,6 +13,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.os.UserHandleHidden;
 import android.text.SpannableStringBuilder;
 import android.view.MenuItem;
 import android.view.View;
@@ -48,7 +49,6 @@ import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
 import io.github.muntashirakon.AppManager.types.TextInputDropdownDialogBuilder;
-import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.ListItemCreator;
@@ -152,7 +152,8 @@ public class OneClickOpsActivity extends BaseActivity {
             try {
                 for (PackageInfo packageInfo : PackageManagerCompat.getInstalledPackages(
                         PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | flagDisabledComponents
-                                | PackageManager.GET_PROVIDERS | PackageManager.GET_SERVICES, Users.myUserId())) {
+                                | PackageManager.GET_PROVIDERS | PackageManager.GET_SERVICES,
+                        UserHandleHidden.myUserId())) {
                     if (Thread.currentThread().isInterrupted()) return;
                     ApplicationInfo applicationInfo = packageInfo.applicationInfo;
                     if (!systemApps && (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0)
@@ -235,7 +236,8 @@ public class OneClickOpsActivity extends BaseActivity {
                             ItemCount componentCount = new ItemCount();
                             componentCount.packageName = applicationInfo.packageName;
                             componentCount.packageLabel = applicationInfo.loadLabel(getPackageManager()).toString();
-                            componentCount.count = PackageUtils.getFilteredComponents(applicationInfo.packageName, Users.myUserId(), signatures).size();
+                            componentCount.count = PackageUtils.getFilteredComponents(applicationInfo.packageName,
+                                    UserHandleHidden.myUserId(), signatures).size();
                             if (componentCount.count > 0) componentCounts.add(componentCount);
                         }
                         if (!componentCounts.isEmpty()) {
@@ -336,7 +338,8 @@ public class OneClickOpsActivity extends BaseActivity {
                             AppOpCount appOpCount = new AppOpCount();
                             appOpCount.packageName = applicationInfo.packageName;
                             appOpCount.packageLabel = applicationInfo.loadLabel(getPackageManager()).toString();
-                            appOpCount.appOps = PackageUtils.getFilteredAppOps(applicationInfo.packageName, Users.myUserId(), appOpList, mode);
+                            appOpCount.appOps = PackageUtils.getFilteredAppOps(applicationInfo.packageName,
+                                    UserHandleHidden.myUserId(), appOpList, mode);
                             appOpCount.count = appOpCount.appOps.size();
                             if (appOpCount.count > 0) appOpCounts.add(appOpCount);
                         }

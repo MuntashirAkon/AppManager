@@ -5,6 +5,7 @@ package io.github.muntashirakon.AppManager.servermanager;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.RemoteException;
+import android.os.UserHandleHidden;
 
 import androidx.annotation.AnyThread;
 import androidx.annotation.GuardedBy;
@@ -22,7 +23,6 @@ import io.github.muntashirakon.AppManager.ipc.IPCUtils;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.server.common.Caller;
 import io.github.muntashirakon.AppManager.server.common.CallerResult;
-import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 
@@ -97,7 +97,7 @@ public class LocalServer {
     private LocalServer() throws IOException {
         mLocalServerManager = LocalServerManager.getInstance();
         // Initialise necessary files and permissions
-        ServerConfig.init(getConfig().context, Users.myUserId());
+        ServerConfig.init(getConfig().context, UserHandleHidden.myUserId());
         // Check if am.jar is in the right place
         checkFile();
         // Start server if not already

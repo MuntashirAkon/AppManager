@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.UserInfo;
 import android.os.Bundle;
+import android.os.UserHandleHidden;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -213,7 +214,7 @@ public class BackupDialogFragment extends DialogFragment {
                     if (isDetached()) return;
                     new SearchableMultiChoiceDialogBuilder<>(activity, userHandles, userNames)
                             .setTitle(R.string.select_user)
-                            .setSelections(Collections.singletonList(Users.myUserId()))
+                            .setSelections(Collections.singletonList(UserHandleHidden.myUserId()))
                             .showSelectAll(false)
                             .setPositiveButton(R.string.ok, (dialog, which, selectedUsers) -> {
                                 List<UserPackagePair> newTargetPackages = new ArrayList<>();
@@ -326,7 +327,7 @@ public class BackupDialogFragment extends DialogFragment {
             AtomicInteger selectedItem = new AtomicInteger(-1);
             CharSequence[] readableBackupNames = new CharSequence[metadata.length];
             int choice = -1;
-            int currentUserHandle = Users.myUserId();
+            int currentUserHandle = UserHandleHidden.myUserId();
             for (int i = 0; i < backupNames.length; ++i) {
                 backupNames[i] = metadata[i].backupName;
                 if (BackupUtils.getShortBackupName(backupNames[i]) == null

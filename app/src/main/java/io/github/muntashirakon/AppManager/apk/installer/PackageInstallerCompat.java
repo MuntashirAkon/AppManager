@@ -24,6 +24,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.os.UserHandleHidden;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -493,8 +494,8 @@ public final class PackageInstallerCompat {
 
     private PackageInstallerCompat(@UserIdInt int userHandle) {
         this.isPrivileged = LocalServer.isAMServiceAlive();
-        this.allUsers = isPrivileged && userHandle == Users.USER_ALL;
-        this.userHandle = allUsers ? Users.myUserId() : userHandle;
+        this.allUsers = isPrivileged && userHandle == UserHandleHidden.USER_ALL;
+        this.userHandle = allUsers ? UserHandleHidden.myUserId() : userHandle;
         Log.d(TAG, "Installing for " + (allUsers ? "all users" : "user " + userHandle));
         if (isPrivileged) {
             this.installerPackageName = (String) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_INSTALLER_APP_STR);
@@ -775,7 +776,7 @@ public final class PackageInstallerCompat {
         IntentSender sender = receiver.getIntentSender();
         boolean isPrivileged = LocalServer.isAMServiceAlive();
         int flags = 0;
-        if (!isPrivileged || userHandle != Users.USER_ALL) {
+        if (!isPrivileged || userHandle != UserHandleHidden.USER_ALL) {
             PackageInfo info = PackageManagerCompat.getPackageInfo(packageName, 0, userHandle);
             final boolean isSystem = (info.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
             // If we are being asked to delete a system app for just one
@@ -789,7 +790,7 @@ public final class PackageInstallerCompat {
             if (keepData) {
                 flags |= DELETE_KEEP_DATA;
             }
-            if (userHandle == Users.USER_ALL) {
+            if (userHandle == UserHandleHidden.USER_ALL) {
                 flags |= DELETE_ALL_USERS;
                 // Get correct user handle
                 int[] users = Users.getUsersIds();

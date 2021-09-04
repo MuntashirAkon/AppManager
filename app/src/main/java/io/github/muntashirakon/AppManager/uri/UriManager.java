@@ -4,15 +4,12 @@ package io.github.muntashirakon.AppManager.uri;
 
 import android.net.Uri;
 import android.os.RemoteException;
+import android.os.UserHandleHidden;
 import android.util.Xml;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.misc.OsEnvironment;
-import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.users.Users;
-import io.github.muntashirakon.io.AtomicProxyFile;
-import io.github.muntashirakon.io.ProxyOutputStream;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
@@ -21,9 +18,24 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
+import java.util.StringTokenizer;
 
-import static com.android.internal.util.XmlUtils.*;
+import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.misc.OsEnvironment;
+import io.github.muntashirakon.AppManager.runner.Runner;
+import io.github.muntashirakon.io.AtomicProxyFile;
+import io.github.muntashirakon.io.ProxyOutputStream;
+
+import static com.android.internal.util.XmlUtils.readBooleanAttribute;
+import static com.android.internal.util.XmlUtils.readIntAttribute;
+import static com.android.internal.util.XmlUtils.readLongAttribute;
+import static com.android.internal.util.XmlUtils.writeBooleanAttribute;
+import static com.android.internal.util.XmlUtils.writeIntAttribute;
+import static com.android.internal.util.XmlUtils.writeLongAttribute;
 import static org.xmlpull.v1.XmlPullParser.END_DOCUMENT;
 import static org.xmlpull.v1.XmlPullParser.START_TAG;
 
@@ -125,9 +137,8 @@ public class UriManager {
                     if (TAG_URI_GRANT.equals(tag)) {
                         final int sourceUserId;
                         final int targetUserId;
-                        final int userHandle = readIntAttribute(in,
-                                ATTR_USER_HANDLE, Users.USER_NULL);
-                        if (userHandle != Users.USER_NULL) {
+                        final int userHandle = readIntAttribute(in, ATTR_USER_HANDLE, UserHandleHidden.USER_NULL);
+                        if (userHandle != UserHandleHidden.USER_NULL) {
                             // For backwards compatibility.
                             sourceUserId = userHandle;
                             targetUserId = userHandle;

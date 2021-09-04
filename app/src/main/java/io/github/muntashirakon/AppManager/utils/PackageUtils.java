@@ -20,7 +20,8 @@ import android.content.pm.Signature;
 import android.content.pm.SigningInfo;
 import android.os.Build;
 import android.os.RemoteException;
-import android.os.storage.StorageManager;
+import android.os.UserHandleHidden;
+import android.os.storage.StorageManagerHidden;
 import android.system.ErrnoException;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -37,8 +38,6 @@ import com.android.internal.util.TextUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.cert.CertificateEncodingException;
@@ -132,7 +131,7 @@ public final class PackageUtils {
     @NonNull
     public static ArrayList<UserPackagePair> getUserPackagePairs(@NonNull List<ApplicationItem> applicationItems) {
         ArrayList<UserPackagePair> userPackagePairList = new ArrayList<>();
-        int currentUser = Users.myUserId();
+        int currentUser = UserHandleHidden.myUserId();
         for (ApplicationItem item : applicationItems) {
             if (item.userHandles != null) {
                 for (int userHandle : item.userHandles)
@@ -387,13 +386,11 @@ public final class PackageUtils {
             try {
                 IStorageStatsManager storageStatsManager = IStorageStatsManager.Stub.asInterface(ProxyBinder
                         .getService(Context.STORAGE_STATS_SERVICE));
-                @SuppressWarnings("JavaReflectionMemberAccess")
-                Method getPackageSizeInfo = StorageManager.class.getMethod("convert", UUID.class);
-                String uuidString = (String) getPackageSizeInfo.invoke(null, storageUuid);
+                String uuidString = StorageManagerHidden.convert(storageUuid);
                 StorageStats storageStats = storageStatsManager.queryStatsForPackage(uuidString, packageName,
                         userHandle, context.getPackageName());
                 packageSizeInfo.set(new PackageSizeInfo(packageName, storageStats, userHandle));
-            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | RemoteException e) {
+            } catch (RemoteException e) {
                 Log.e(TAG, e);
             }
         }
@@ -590,7 +587,7 @@ public final class PackageUtils {
                 dataDirs.add(applicationInfo.deviceProtectedDataDir);
             }
         }
-        int userHandle = Users.getUserId(applicationInfo.uid);
+        int userHandle = UserHandleHidden.getUserId(applicationInfo.uid);
         OsEnvironment.UserEnvironment ue = OsEnvironment.getUserEnvironment(userHandle);
         if (loadExternal) {
             ProxyFile[] externalFiles = ue.buildExternalStorageAppDataDirs(applicationInfo.packageName);

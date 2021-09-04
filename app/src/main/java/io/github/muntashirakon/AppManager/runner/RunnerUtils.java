@@ -4,6 +4,7 @@ package io.github.muntashirakon.AppManager.runner;
 
 import android.os.Build;
 import android.os.RemoteException;
+import android.os.UserHandleHidden;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
@@ -30,7 +31,6 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.AppManager.settings.MainPreferences;
-import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
@@ -103,14 +103,15 @@ public final class RunnerUtils {
 
     @NonNull
     public static Runner.Result uninstallPackageUpdate(String packageName, int userHandle, boolean keepData) {
-        String cmd = String.format(keepData ? CMD_UNINSTALL_PACKAGE : CMD_UNINSTALL_PACKAGE_WITH_DATA, userHandleToUser(Users.USER_ALL), packageName) + " && "
+        String cmd = String.format(keepData ? CMD_UNINSTALL_PACKAGE : CMD_UNINSTALL_PACKAGE_WITH_DATA,
+                userHandleToUser(UserHandleHidden.USER_ALL), packageName) + " && "
                 + String.format(CMD_INSTALL_EXISTING_PACKAGE, userHandleToUser(userHandle), packageName);
         return Runner.runCommand(cmd);
     }
 
     @NonNull
     public static String userHandleToUser(int userHandle) {
-        if (userHandle == Users.USER_ALL) return "all";
+        if (userHandle == UserHandleHidden.USER_ALL) return "all";
         else return String.valueOf(userHandle);
     }
 

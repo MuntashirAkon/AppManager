@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later
 
 apply plugin: 'com.android.application'
+apply plugin: 'dev.rikka.tools.refine.gradle-plugin'
 
 android {
     compileSdkVersion rootProject.ext.compileSdk
@@ -108,6 +109,8 @@ dependencies {
     implementation "com.github.topjohnwu.libsu:core:${libsu_version}"
 
     implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:2.0'
+    implementation "dev.rikka.tools.refine:runtime:2.0.0"
+
     implementation 'me.zhanghai.android.fastscroll:library:1.1.7'
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
 

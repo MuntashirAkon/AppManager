@@ -7,6 +7,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.UserHandleHidden;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -27,7 +28,6 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.details.info.AppInfoFragment;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 public class AppDetailsActivity extends BaseActivity {
@@ -51,7 +51,7 @@ public class AppDetailsActivity extends BaseActivity {
         final String packageName = intent.getStringExtra(EXTRA_PACKAGE_NAME);
         final Uri apkUri = IntentCompat.getDataUri(intent);
         final String apkType = intent.getType();
-        final int userHandle = intent.getIntExtra(EXTRA_USER_HANDLE, Users.myUserId());
+        final int userHandle = intent.getIntExtra(EXTRA_USER_HANDLE, UserHandleHidden.myUserId());
         model.setUserHandle(userHandle);
         // Initialize tabs
         mTabTitleIds = getResources().obtainTypedArray(R.array.TAB_TITLES);

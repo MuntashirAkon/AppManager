@@ -9,6 +9,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Handler;
+import android.os.UserHandleHidden;
 import android.text.TextUtils;
 import android.util.Pair;
 
@@ -164,7 +165,7 @@ public class MainViewModel extends AndroidViewModel {
     @NonNull
     public ArrayList<UserPackagePair> getSelectedPackagesWithUsers() {
         ArrayList<UserPackagePair> userPackagePairs = new ArrayList<>();
-        int myUserId = Users.myUserId();
+        int myUserId = UserHandleHidden.myUserId();
         int[] userIds = Users.getUsersIds();
         for (String packageName : selectedPackages.keySet()) {
             int[] userHandles = selectedPackages.get(packageName);

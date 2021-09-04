@@ -39,7 +39,6 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<RunningAppsAd
     private final ArrayList<ProcessItem> processItems = new ArrayList<>();
     private boolean isAdbMode = false;
 
-
     RunningAppsAdapter(@NonNull RunningAppsActivity activity) {
         super();
         mActivity = activity;

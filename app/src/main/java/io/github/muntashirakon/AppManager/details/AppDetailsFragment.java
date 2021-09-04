@@ -20,6 +20,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.PatternMatcher;
 import android.os.RemoteException;
+import android.os.UserHandleHidden;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.util.SparseArray;
@@ -80,7 +81,6 @@ import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.types.TextInputDropdownDialogBuilder;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
-import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
@@ -494,7 +494,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
 
     public void blockUnblockTrackers(boolean block) {
         if (mainModel == null) return;
-        List<UserPackagePair> userPackagePairs = Collections.singletonList(new UserPackagePair(mPackageName, Users.myUserId()));
+        List<UserPackagePair> userPackagePairs = Collections.singletonList(new UserPackagePair(mPackageName, UserHandleHidden.myUserId()));
         executor.submit(() -> {
             List<UserPackagePair> failedPkgList = block ? ComponentUtils.blockTrackingComponents(userPackagePairs)
                     : ComponentUtils.unblockTrackingComponents(userPackagePairs);

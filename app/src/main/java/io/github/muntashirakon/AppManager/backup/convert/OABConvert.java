@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.backup.convert;
 
+import android.os.UserHandleHidden;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -34,7 +35,6 @@ import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.crypto.Crypto;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
@@ -97,7 +97,7 @@ public class OABConvert extends Convert {
         this.backupLocation = backupLocation;
         // Last path component is the package name
         this.packageName = backupLocation.getName();
-        this.userHandle = Users.myUserId();
+        this.userHandle = UserHandleHidden.myUserId();
     }
 
     @Override
@@ -217,7 +217,7 @@ public class OABConvert extends Convert {
                 }
                 sourceMetadata.flags.addFlag(BackupFlags.BACKUP_CACHE);
             }
-            sourceMetadata.userHandle = Users.myUserId();
+            sourceMetadata.userHandle = UserHandleHidden.myUserId();
             sourceMetadata.dataDirs = ConvertUtils.getDataDirs(this.packageName, this.userHandle, sourceMetadata.flags
                     .backupInternalData(), sourceMetadata.flags.backupExternalData(), false);
             sourceMetadata.tarType = ConvertUtils.getTarTypeFromPref();

@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.UserHandleHidden;
 
 import androidx.annotation.CheckResult;
 import androidx.annotation.IntDef;
@@ -51,7 +52,6 @@ import io.github.muntashirakon.AppManager.servermanager.NetworkPolicyManagerComp
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
-import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -306,7 +306,7 @@ public class BatchOpsManager {
     private Result opImportBackups() {
         @ImportType
         int backupType = args.getInt(ARG_BACKUP_TYPE, ImportType.OAndBackup);
-        int userHandle = Users.myUserId();
+        int userHandle = UserHandleHidden.myUserId();
         Path[] files;
         final List<UserPackagePair> failedPkgList = new ArrayList<>();
         try {

@@ -6,10 +6,10 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.SparseArray;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.annotation.NonNull;
 
 public class PackageOps implements Parcelable {
     private final String mPackageName;
@@ -17,7 +17,7 @@ public class PackageOps implements Parcelable {
     private final List<OpEntry> mEntries;
     private SparseArray<OpEntry> mSparseEntries = null;
 
-    public PackageOps(String packageName, int uid, List<OpEntry> entries) {
+    /* package */ PackageOps(String packageName, int uid, List<OpEntry> entries) {
         mPackageName = packageName;
         mUid = uid;
         mEntries = entries;

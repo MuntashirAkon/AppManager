@@ -1,36 +1,23 @@
 // SPDX-License-Identifier: MIT AND GPL-3.0-or-later
 
-package io.github.muntashirakon.AppManager.appops.reflector;
+package io.github.muntashirakon.AppManager.utils;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import io.github.muntashirakon.AppManager.appops.OpEntry;
-import io.github.muntashirakon.AppManager.appops.PackageOps;
-import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 
 // Copyright 2017 Zheng Li
 @SuppressWarnings("rawtypes")
-public class ReflectUtils {
+public class ReflectionUtils {
     private static final Map<String, Field> sFieldCache = new HashMap<>();
     private static final Map<String, Method> sMethodCache = new HashMap<>();
 
-    @NonNull
-    public static PackageOps opsConvert(Object object) {
-        PackageOpsConverter converter = new PackageOpsConverter(object);
-        String packageName = converter.getPackageName();
-        int uid = converter.getUid();
-        List<OpEntry> entries = converter.getOpEntries();
-        return new PackageOps(packageName, uid, entries);
-    }
-
     @Nullable
-    static Object getFieldValue(Object obj, String fieldName) {
+    public static Object getFieldValue(Object obj, String fieldName) {
         Field field = sFieldCache.get(fieldName);
         if (field == null) {
             try {
@@ -57,7 +44,7 @@ public class ReflectUtils {
 
     @SuppressWarnings("unchecked")
     @Nullable
-    static Object invokeObjectMethod(@NonNull Object object, @NonNull String methodName,
+    public static Object invokeObjectMethod(@NonNull Object object, @NonNull String methodName,
                                             @Nullable Class[] paramsTypes,
                                             @Nullable Object[] params) {
         StringBuilder sb = new StringBuilder(methodName);

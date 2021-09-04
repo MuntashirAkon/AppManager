@@ -5,6 +5,7 @@ package io.github.muntashirakon.AppManager.profiles;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.UserHandleHidden;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -164,7 +165,8 @@ public class ProfileManager {
             Bundle args = new Bundle();
             if (backupFlags.backupMultiple() && backupInfo.name != null) {
                 if (state.equals(ProfileMetaManager.STATE_OFF)) {
-                    args.putStringArray(BatchOpsManager.ARG_BACKUP_NAMES, new String[]{Users.myUserId() + '_' + backupInfo.name});
+                    args.putStringArray(BatchOpsManager.ARG_BACKUP_NAMES, new String[]{UserHandleHidden.myUserId()
+                            + '_' + backupInfo.name});
                 } else {
                     args.putStringArray(BatchOpsManager.ARG_BACKUP_NAMES, new String[]{backupInfo.name});
                 }

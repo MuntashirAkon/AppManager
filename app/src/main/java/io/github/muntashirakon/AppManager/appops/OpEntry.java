@@ -5,10 +5,11 @@ package io.github.muntashirakon.AppManager.appops;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.Objects;
-
 import androidx.annotation.NonNull;
 
+import java.util.Objects;
+
+// FIXME: 3/9/21 Merge with OpEntryCompat
 public class OpEntry implements Parcelable {
     private final int mOp;
     private final int mMode;
@@ -19,8 +20,7 @@ public class OpEntry implements Parcelable {
     private final boolean mRunning;
     private final String mProxyPackageName;
 
-    public OpEntry(int op, int mode, long time, long rejectTime, long duration,
-                   int proxyUid, String proxyPackage) {
+    public OpEntry(int op, int mode, long time, long rejectTime, long duration, int proxyUid, String proxyPackage) {
         mOp = op;
         mMode = mode;
         mTimes = time;

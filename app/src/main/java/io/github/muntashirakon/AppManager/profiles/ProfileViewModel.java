@@ -7,6 +7,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.RemoteException;
+import android.os.UserHandleHidden;
 
 import androidx.annotation.AnyThread;
 import androidx.annotation.GuardedBy;
@@ -81,7 +82,7 @@ public class ProfileViewModel extends AndroidViewModel {
             try {
                 ArrayList<Pair<CharSequence, ApplicationInfo>> itemPairs;
                 List<PackageInfo> packageInfoList = PackageManagerCompat.getInstalledPackages(
-                        PackageManager.GET_META_DATA, Users.myUserId());
+                        PackageManager.GET_META_DATA, UserHandleHidden.myUserId());
                 itemPairs = new ArrayList<>(packageInfoList.size());
                 for (PackageInfo info : packageInfoList) {
                     itemPairs.add(new Pair<>(pm.getApplicationLabel(info.applicationInfo), info.applicationInfo));

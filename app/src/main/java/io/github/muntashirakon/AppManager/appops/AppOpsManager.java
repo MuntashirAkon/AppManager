@@ -4,6 +4,7 @@ package io.github.muntashirakon.AppManager.appops;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AppOpsManagerHidden;
 import android.os.Build;
 import android.os.UserManager;
 
@@ -227,6 +228,12 @@ public class AppOpsManager {
      */
     public static final int OP_FLAG_UNTRUSTED_PROXIED = 1 << 4;
 
+    public static final int OP_FLAGS_ALL = OP_FLAG_SELF
+            | OP_FLAG_TRUSTED_PROXY
+            | OP_FLAG_UNTRUSTED_PROXY
+            | OP_FLAG_TRUSTED_PROXIED
+            | OP_FLAG_UNTRUSTED_PROXIED;
+
     // when adding one of these:
     //  - increment _NUM_OP
     //  - define an OPSTR_* constant (marked as @SystemApi)
@@ -348,7 +355,7 @@ public class AppOpsManager {
     public static final int OP_COARSE_LOCATION_SOURCE = 109;
     public static final int OP_MANAGE_MEDIA = 110;
     public static final int OP_BLUETOOTH_CONNECT = 111;
-    public static final int _NUM_OP;  // fetched using reflection
+    public static final int _NUM_OP = AppOpsManagerHidden._NUM_OP;
 
     // MIUI app ops taken from framework.jar
     public static final int MIUI_OP_START = 10000;
@@ -1639,16 +1646,6 @@ public class AppOpsManager {
     public static int[] sOpsWithNoPerm;
 
     static {
-        // Get _NUM_OP
-        int numOp = 112;  // Should be the same as the latest _NUM_OP
-        try {
-            //noinspection JavaReflectionMemberAccess
-            numOp = android.app.AppOpsManager.class.getField("_NUM_OP").getInt(null);
-        } catch (IllegalAccessException | NoSuchFieldException e) {
-            e.printStackTrace();
-        }
-        _NUM_OP = numOp;
-
         // Checks
         if (sOpToSwitch.length < _NUM_OP) {
             throw new IllegalStateException("sOpToSwitch length " + sOpToSwitch.length + " should be " + _NUM_OP);
@@ -1740,6 +1737,7 @@ public class AppOpsManager {
     /**
      * Retrieve the permission associated with an operation, or null if there is not one.
      */
+    @Nullable
     public static String opToPermission(int op) {
         return sOpPerms[op];
     }
@@ -1786,7 +1784,7 @@ public class AppOpsManager {
         if (op > OP_NONE && op < _NUM_OP) {
             return sOpDefaultMode[op];
         }
-        return op;
+        return MODE_DEFAULT;
     }
 
     /**

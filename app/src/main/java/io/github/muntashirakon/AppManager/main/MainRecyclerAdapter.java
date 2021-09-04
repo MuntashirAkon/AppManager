@@ -12,6 +12,7 @@ import android.content.pm.UserInfo;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
+import android.os.UserHandleHidden;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -244,8 +245,8 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
                                 }
                             }
                         }
-                    } else if (ArrayUtils.contains(item.userHandles, Users.myUserId())) {
-                        appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_USER_HANDLE, Users.myUserId());
+                    } else if (ArrayUtils.contains(item.userHandles, UserHandleHidden.myUserId())) {
+                        appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_USER_HANDLE, UserHandleHidden.myUserId());
                         mActivity.startActivity(appDetailsIntent);
                         return;
                     } else return;

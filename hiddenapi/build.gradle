@@ -10,4 +10,5 @@ java {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "androidx.annotation:annotation:${annotation_version}"
+    implementation "dev.rikka.tools.refine:annotation:2.0.0"
 }

@@ -3,6 +3,7 @@
 package io.github.muntashirakon.AppManager.settings;
 
 import android.os.Bundle;
+import android.os.UserHandleHidden;
 import android.widget.Toast;
 
 import androidx.preference.Preference;
@@ -36,7 +37,7 @@ public class RulesPreferences extends PreferenceFragmentCompat {
                 new Thread(() -> {
                     // Apply all rules immediately if GCB is true
                     synchronized (gcb) {
-                        ComponentsBlocker.applyAllRules(activity, Users.myUserId());
+                        ComponentsBlocker.applyAllRules(activity, UserHandleHidden.myUserId());
                     }
                 }).start();
             }

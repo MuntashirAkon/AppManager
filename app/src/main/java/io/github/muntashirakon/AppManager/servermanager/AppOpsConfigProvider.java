@@ -10,13 +10,13 @@ import android.database.MatrixCursor;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Process;
+import android.os.UserHandleHidden;
 
 import androidx.annotation.NonNull;
 
 import java.io.IOException;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
-import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 
 // Copyright 2017 Zheng Li
@@ -48,7 +48,7 @@ public class AppOpsConfigProvider extends ContentProvider {
         checkCalling();
 
         try {
-            ServerConfig.init(ContextUtils.getDeContext(getContext()), Users.myUserId());
+            ServerConfig.init(ContextUtils.getDeContext(getContext()), UserHandleHidden.myUserId());
         } catch (IOException e) {
             e.printStackTrace();
             return null;

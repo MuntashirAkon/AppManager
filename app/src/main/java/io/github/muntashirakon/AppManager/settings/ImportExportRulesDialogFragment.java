@@ -8,6 +8,7 @@ import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.UserHandleHidden;
 import android.text.SpannableStringBuilder;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,7 +45,7 @@ public class ImportExportRulesDialogFragment extends DialogFragment {
     private static final String MIME_TSV = "text/tab-separated-values";
     private static final String MIME_XML = "text/xml";
 
-    private final int userHandle = Users.myUserId();
+    private final int userHandle = UserHandleHidden.myUserId();
     private SettingsActivity activity;
     private final ActivityResultLauncher<String> exportRules = registerForActivityResult(
             new ActivityResultContracts.CreateDocument(),

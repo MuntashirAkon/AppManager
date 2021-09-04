@@ -7,6 +7,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.UserHandleHidden;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.format.Formatter;
@@ -34,7 +35,6 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.VMRuntime;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
-import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
@@ -192,7 +192,7 @@ public final class MetadataManager {
 
     public static boolean hasBaseMetadata(String packageName) {
         try {
-            return BackupFiles.getPackagePath(packageName, false).hasFile(String.valueOf(Users.myUserId()));
+            return BackupFiles.getPackagePath(packageName, false).hasFile(String.valueOf(UserHandleHidden.myUserId()));
         } catch (IOException e) {
             Log.e(TAG, e);
             return false;

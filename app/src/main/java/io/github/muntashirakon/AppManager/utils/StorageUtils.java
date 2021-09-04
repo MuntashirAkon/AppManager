@@ -5,26 +5,28 @@ package io.github.muntashirakon.AppManager.utils;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
-import android.os.storage.StorageManager;
 import android.os.storage.StorageVolume;
+import android.os.storage.StorageVolumeHidden;
 import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import androidx.collection.ArrayMap;
 import androidx.core.content.ContextCompat;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
+import dev.rikka.tools.refine.Refine;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.compat.StorageManagerCompat;
+import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.io.ProxyFile;
 import io.github.muntashirakon.io.ProxyFileReader;
 
@@ -109,20 +111,26 @@ public class StorageUtils {
      * Get storages via StorageManager & reflection hacks, probably never works
      */
     private static void retrieveStorageManager(Context context, Map<String, Uri> storageLocations) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            StorageManager storage = (StorageManager) context.getSystemService(Context.STORAGE_SERVICE);
+        Set<StorageVolume> storageVolumes = new HashSet<>();
+        int[] users = Users.getUsersIds();
+        for (int user : users) {
             try {
-                for (StorageVolume volume : storage.getStorageVolumes()) {
-                    // reflection attack to get volumes
-                    File dir = callReflectionFunction(volume, "getPathFile");
-                    if (dir == null) continue;
-                    String label = callReflectionFunction(volume, "getUserLabel");
-                    addStorage(label, new ProxyFile(dir), storageLocations);
-                }
-                Log.d(TAG, "used storagemanager");
-            } catch (Exception e) {
-                Log.w(TAG, "error during storage retrieval", e);
+                // TODO: Fetch volume info using "mount" service
+                storageVolumes.addAll(Arrays.asList(StorageManagerCompat.getVolumeList(context, user, 0)));
+            } catch (SecurityException ignore) {
             }
+        }
+        try {
+            for (@NonNull StorageVolume volume : storageVolumes) {
+                StorageVolumeHidden vol = Refine.unsafeCast(volume);
+                File dir = vol.getPathFile();
+                if (dir == null) continue;
+                String label = vol.getUserLabel();
+                addStorage(label, new ProxyFile(dir), storageLocations);
+            }
+            Log.d(TAG, "used storagemanager");
+        } catch (Exception e) {
+            Log.w(TAG, "error during storage retrieval", e);
         }
     }
 
@@ -147,18 +155,5 @@ public class StorageUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * Reflection helper function, to invoke private functions
-     */
-    @Nullable
-    private static <T> T callReflectionFunction(@NonNull Object obj, @NonNull String function)
-            throws ClassCastException, InvocationTargetException, IllegalAccessException, NoSuchMethodException {
-        Method method = obj.getClass().getDeclaredMethod(function);
-        method.setAccessible(true);
-        Object r = method.invoke(obj);
-        //noinspection unchecked
-        return (T) r;
     }
 }

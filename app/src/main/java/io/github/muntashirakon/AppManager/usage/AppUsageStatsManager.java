@@ -12,9 +12,11 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.RemoteException;
+import android.os.UserHandleHidden;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
+import android.telephony.TelephonyManagerHidden;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -24,17 +26,17 @@ import androidx.core.util.Pair;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
+import dev.rikka.tools.refine.Refine;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.servermanager.UsageStatsManagerCompat;
-import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.NonNullUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
@@ -90,7 +92,7 @@ public class AppUsageStatsManager {
         PackageUsageInfo packageUsageInfo = new PackageUsageInfo(packageName);
         packageUsageInfo.appLabel = PackageUtils.getPackageLabel(mPackageManager, packageName);
         UsageEvents events = UsageStatsManagerCompat.queryEvents(range.getStartTime(), range.getEndTime(),
-                Users.myUserId());
+                UserHandleHidden.myUserId());
         if (events == null) return packageUsageInfo;
         UsageEvents.Event event = new UsageEvents.Event();
         List<PackageUsageInfo.Entry> usEntries = new ArrayList<>();
@@ -134,7 +136,7 @@ public class AppUsageStatsManager {
         // Get events
         UsageUtils.TimeInterval interval = UsageUtils.getTimeInterval(usageInterval);
         UsageEvents events = UsageStatsManagerCompat.queryEvents(interval.getStartTime(), interval.getEndTime(),
-                Users.myUserId());
+                UserHandleHidden.myUserId());
         if (events == null) return Collections.emptyList();
         UsageEvents.Event event = new UsageEvents.Event();
         long startTime;
@@ -325,7 +327,8 @@ public class AppUsageStatsManager {
         try {
             SubscriptionManager sm = (SubscriptionManager) context.getSystemService(Context
                     .TELEPHONY_SUBSCRIPTION_SERVICE);
-            TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            TelephonyManager tm = (TelephonyManager) Objects.requireNonNull(context.getSystemService(Context
+                    .TELEPHONY_SERVICE));
 
             List<SubscriptionInfo> subscriptionInfoList = sm.getActiveSubscriptionInfoList();
             if (subscriptionInfoList == null) {
@@ -336,9 +339,7 @@ public class AppUsageStatsManager {
             for (SubscriptionInfo info : subscriptionInfoList) {
                 int subscriptionId = info.getSubscriptionId();
                 try {
-                    @SuppressWarnings("JavaReflectionMemberAccess")
-                    Method getSubscriberId = TelephonyManager.class.getMethod("getSubscriberId", int.class);
-                    String subscriberId = (String) getSubscriberId.invoke(tm, subscriptionId);
+                    String subscriberId = Refine.<TelephonyManagerHidden>unsafeCast(tm).getSubscriberId(subscriptionId);
                     subscriberIds.add(subscriberId);
                 } catch (Exception e) {
                     try {

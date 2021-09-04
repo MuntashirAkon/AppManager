@@ -3,23 +3,24 @@
 package io.github.muntashirakon.AppManager.misc;
 
 import android.annotation.UserIdInt;
-import android.os.storage.StorageManager;
+import android.os.UserHandleHidden;
+import android.os.storage.StorageManagerHidden;
 import android.os.storage.StorageVolume;
+import android.os.storage.StorageVolumeHidden;
 import android.text.TextUtils;
 import android.util.SparseArray;
 
 import androidx.annotation.NonNull;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
+import dev.rikka.tools.refine.Refine;
+import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.compat.StorageManagerCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.io.ProxyFile;
 
 // Keep this in sync with https://cs.android.com/android/platform/superproject/+/master:frameworks/base/core/java/android/os/Environment.java
@@ -67,7 +68,7 @@ public final class OsEnvironment {
     private static final SparseArray<UserEnvironment> sUserEnvironmentCache = new SparseArray<>(2);
 
     static {
-        sCurrentUser = new UserEnvironment(Users.myUserId());
+        sCurrentUser = new UserEnvironment(UserHandleHidden.myUserId());
         sUserEnvironmentCache.put(sCurrentUser.mUserHandle, sCurrentUser);
     }
 
@@ -91,28 +92,19 @@ public final class OsEnvironment {
         @NonNull
         public ProxyFile[] getExternalDirs() {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                // The reflection calls cannot be hidden since they are called internally by the
-                // system. The alternative is to parse the Context.getExternalCacheDirs(). Some
-                // results could be null even though StorageVolume is not null.
-                try {
-                    @SuppressWarnings("JavaReflectionMemberAccess")
-                    Method getVolumeList = StorageManager.class.getMethod("getVolumeList", int.class, int.class);
-                    final @NonNull StorageVolume[] volumes = (StorageVolume[]) Objects.requireNonNull(getVolumeList.invoke(null, mUserHandle, 1 << 8 /* FLAG_FOR_WRITE */));
-                    Log.e(TAG, Arrays.toString(volumes));
-                    final List<ProxyFile> files = new ArrayList<>();
-                    File tmpFile;
-                    for (StorageVolume volume : volumes) {
-                        @SuppressWarnings("JavaReflectionMemberAccess")
-                        Method getPathFile = StorageVolume.class.getMethod("getPathFile");
-                        tmpFile = (File) getPathFile.invoke(volume);
-                        if (tmpFile != null) {
-                            files.add(new ProxyFile(tmpFile.getAbsolutePath()));
-                        }
+                final StorageVolume[] volumes = StorageManagerCompat.getVolumeList(AppManager.getContext(),
+                        mUserHandle, StorageManagerHidden.FLAG_FOR_WRITE);
+                Log.e(TAG, Arrays.toString(volumes));
+                final List<ProxyFile> files = new ArrayList<>();
+                File tmpFile;
+                for (@NonNull StorageVolume volume : volumes) {
+                    StorageVolumeHidden vol = Refine.unsafeCast(volume);
+                    tmpFile = vol.getPathFile();
+                    if (tmpFile != null) {
+                        files.add(new ProxyFile(tmpFile.getAbsolutePath()));
                     }
-                    return files.toArray(new ProxyFile[0]);
-                } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-                    e.printStackTrace();
                 }
+                return files.toArray(new ProxyFile[0]);
             }
             String rawExternalStorage = System.getenv(ENV_EXTERNAL_STORAGE);
             String rawEmulatedTarget = System.getenv("EMULATED_STORAGE_TARGET");

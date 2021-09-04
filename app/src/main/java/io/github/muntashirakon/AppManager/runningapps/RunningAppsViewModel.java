@@ -6,6 +6,7 @@ import android.app.Application;
 import android.content.pm.ApplicationInfo;
 import android.os.Build;
 import android.os.RemoteException;
+import android.os.UserHandleHidden;
 import android.text.TextUtils;
 
 import androidx.annotation.AnyThread;
@@ -30,7 +31,6 @@ import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
-import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 
@@ -111,7 +111,7 @@ public class RunningAppsViewModel extends AndroidViewModel {
     public void forceStop(@NonNull ApplicationInfo info) {
         executor.submit(() -> {
             try {
-                PackageManagerCompat.forceStopPackage(info.packageName, Users.getUserId(info.uid));
+                PackageManagerCompat.forceStopPackage(info.packageName, UserHandleHidden.getUserId(info.uid));
                 forceStopAppResult.postValue(new Pair<>(info, true));
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -276,7 +276,8 @@ public class RunningAppsViewModel extends AndroidViewModel {
         for (ProcessItem processItem : selectedItems) {
             if (processItem instanceof AppProcessItem) {
                 ApplicationInfo applicationInfo = ((AppProcessItem) processItem).packageInfo.applicationInfo;
-                userPackagePairs.add(new UserPackagePair(applicationInfo.packageName, Users.getUserId(applicationInfo.uid)));
+                userPackagePairs.add(new UserPackagePair(applicationInfo.packageName,
+                        UserHandleHidden.getUserId(applicationInfo.uid)));
             }
         }
         return userPackagePairs;

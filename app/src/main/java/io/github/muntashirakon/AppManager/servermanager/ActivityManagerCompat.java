@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.os.UserHandleHidden;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,7 +33,6 @@ import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 
@@ -120,7 +120,7 @@ public final class ActivityManagerCompat {
             }
         }
         for (ActivityManager.RunningServiceInfo info : runningServices) {
-            if (info.service.getPackageName().equals(packageName) && userId == Users.getUserId(info.uid)) {
+            if (info.service.getPackageName().equals(packageName) && userId == UserHandleHidden.getUserId(info.uid)) {
                 res.add(info);
             }
         }
@@ -210,10 +210,10 @@ public final class ActivityManagerCompat {
                         int iIndex = iIdx == -1 ? userInfo.length() : iIdx;
                         if (userInfo.startsWith("a")) {
                             // User app
-                            info.uid = Users.getUid(Integer.decode(userId), 10_000 + Integer.decode(userInfo.substring(1, iIndex)));
+                            info.uid = UserHandleHidden.getUid(Integer.decode(userId), 10_000 + Integer.decode(userInfo.substring(1, iIndex)));
                         } else if (userInfo.startsWith("s")) {
                             // System app
-                            info.uid = Users.getUid(Integer.decode(userId), Integer.decode(userInfo.substring(1, iIndex)));
+                            info.uid = UserHandleHidden.getUid(Integer.decode(userId), Integer.decode(userInfo.substring(1, iIndex)));
                         } else throw new IllegalStateException("No valid UID info found in ProcessRecord");
                     } else throw new IllegalStateException("Invalid user info section in ProcessRecord");
                     // TODO: 1/9/21 Parse others

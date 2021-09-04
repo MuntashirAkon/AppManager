@@ -2,17 +2,18 @@
 
 package io.github.muntashirakon.AppManager.utils;
 
+import android.os.UserHandleHidden;
+
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.io.ProxyFile;
 
 public final class KeyStoreUtils {
     public static boolean hasKeyStore(int uid) {
-        ProxyFile keyStorePath = getKeyStorePath(Users.getUserId(uid));
+        ProxyFile keyStorePath = getKeyStorePath(UserHandleHidden.getUserId(uid));
         String[] fileNames = keyStorePath.list();
         if (fileNames != null) {
             String uidStr = uid + "_";
@@ -24,7 +25,7 @@ public final class KeyStoreUtils {
     }
 
     public static boolean hasMasterKey(int uid) {
-        return getMasterKey(Users.getUserId(uid)).exists();
+        return getMasterKey(UserHandleHidden.getUserId(uid)).exists();
     }
 
     @NonNull

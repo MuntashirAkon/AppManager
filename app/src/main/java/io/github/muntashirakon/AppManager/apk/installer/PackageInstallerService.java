@@ -5,6 +5,7 @@ package io.github.muntashirakon.AppManager.apk.installer;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.os.UserHandleHidden;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -15,7 +16,6 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.main.MainActivity;
 import io.github.muntashirakon.AppManager.types.ForegroundService;
-import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 
 public class PackageInstallerService extends ForegroundService {
@@ -59,7 +59,7 @@ public class PackageInstallerService extends ForegroundService {
         int apkFileKey = intent.getIntExtra(EXTRA_APK_FILE_KEY, -1);
         if (apkFileKey == -1) return;
         String appLabel = intent.getStringExtra(EXTRA_APP_LABEL);
-        int userHandle = intent.getIntExtra(EXTRA_USER_ID, Users.myUserId());
+        int userHandle = intent.getIntExtra(EXTRA_USER_ID, UserHandleHidden.myUserId());
         // Install package
         PackageInstallerCompat pi = PackageInstallerCompat.getNewInstance(userHandle);
         pi.setAppLabel(appLabel);

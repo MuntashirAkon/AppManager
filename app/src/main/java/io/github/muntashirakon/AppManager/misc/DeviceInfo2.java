@@ -11,6 +11,7 @@ import android.content.pm.IPackageManager;
 import android.content.pm.PackageManager;
 import android.content.pm.UserInfo;
 import android.os.Build;
+import android.os.UserHandleHidden;
 import android.text.SpannableStringBuilder;
 import android.text.format.Formatter;
 import android.util.DisplayMetrics;
@@ -138,7 +139,7 @@ public class DeviceInfo2 implements LocalizedString {
                 userPackages.put(info.id, getPackageStats(info.id));
             }
         } else {
-            int myId = Users.myUserId();
+            int myId = UserHandleHidden.myUserId();
             userPackages.put(myId, getPackageStats(myId));
         }
         features = pm.getSystemAvailableFeatures();
@@ -246,7 +247,7 @@ public class DeviceInfo2 implements LocalizedString {
             }
         } else {
             builder.append("\n").append(getTitleText(ctx, R.string.apps)).append("\n");
-            Pair<Integer, Integer> packageSizes = userPackages.get(Users.myUserId());
+            Pair<Integer, Integer> packageSizes = userPackages.get(UserHandleHidden.myUserId());
             if (packageSizes != null) {
                 builder.append(getStyledKeyValue(ctx, R.string.total_size,
                         String.valueOf(packageSizes.first + packageSizes.second))).append(", ")
