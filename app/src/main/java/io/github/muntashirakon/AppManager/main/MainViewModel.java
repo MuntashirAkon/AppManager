@@ -384,8 +384,9 @@ public class MainViewModel extends AndroidViewModel {
                 }
                 for (int i = 0; i < applicationItems.size(); ++i) {
                     ApplicationItem applicationItem = applicationItems.get(i);
-                    applicationItem.isRunning = processNames.contains(applicationItem.packageName)
-                            || processUids.contains(applicationItem.uid);
+                    applicationItem.isRunning = applicationItem.isInstalled
+                            && (processNames.contains(applicationItem.packageName)
+                            || (applicationItem.sharedUserId == null && processUids.contains(applicationItem.uid)));
                     applicationItems.set(i, applicationItem);
                 }
             } catch (Throwable th) {
