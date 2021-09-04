@@ -3,6 +3,7 @@
 package io.github.muntashirakon.AppManager.main;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -28,23 +29,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.backup.BackupUtils;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.db.entity.App;
-import io.github.muntashirakon.AppManager.ipc.IPCUtils;
-import io.github.muntashirakon.AppManager.ipc.ps.ProcessEntry;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.profiles.ProfileMetaManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
-import io.github.muntashirakon.AppManager.runningapps.ProcessParser;
+import io.github.muntashirakon.AppManager.servermanager.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.PackageChangeReceiver;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
@@ -378,18 +375,18 @@ public class MainViewModel extends AndroidViewModel {
     private void loadRunningApps() {
         synchronized (applicationItems) {
             try {
-                List<ProcessEntry> processEntries = (List<ProcessEntry>) IPCUtils.getServiceSafe().getRunningProcesses().getList();
-                List<String> processNames = new ArrayList<>(processEntries.size());
-                Set<Integer> processUids = new HashSet<>(processEntries.size());
-                for (ProcessEntry entry : processEntries) {
-                    processNames.add(ProcessParser.getSupposedPackageName(entry.name));
-                    processUids.add(entry.users.fsUid);
+                List<ActivityManager.RunningAppProcessInfo> runningAppProcessInfos = ActivityManagerCompat.getRunningAppProcesses();
+                List<String> runningPackages = new ArrayList<>();
+                for (ActivityManager.RunningAppProcessInfo runningAppProcessInfo : runningAppProcessInfos) {
+                    for (int i = 0; i < runningAppProcessInfo.pkgList.length; i++) {
+                        if (!runningPackages.contains(runningAppProcessInfo.pkgList[i])) {
+                            runningPackages.add(runningAppProcessInfo.pkgList[i]);
+                        }
+                    }
                 }
-                for (int i = 0; i < applicationItems.size(); ++i) {
+                for (int i = 0; i < applicationItems.size(); i++) {
                     ApplicationItem applicationItem = applicationItems.get(i);
-                    applicationItem.isRunning = applicationItem.isInstalled
-                            && (processNames.contains(applicationItem.packageName)
-                            || (applicationItem.sharedUserId == null && processUids.contains(applicationItem.uid)));
+                    applicationItem.isRunning = applicationItem.isInstalled && runningPackages.contains(applicationItem.packageName);
                     applicationItems.set(i, applicationItem);
                 }
             } catch (Throwable th) {
