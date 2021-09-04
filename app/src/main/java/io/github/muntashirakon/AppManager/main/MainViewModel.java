@@ -13,6 +13,7 @@ import android.os.UserHandleHidden;
 import android.text.TextUtils;
 import android.util.Pair;
 
+import androidx.annotation.AnyThread;
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -253,10 +254,11 @@ public class MainViewModel extends AndroidViewModel {
         return mFilterProfileName;
     }
 
+    @AnyThread
     public void onResume() {
         if ((mFilterFlags & ListOptions.FILTER_RUNNING_APPS) != 0) {
             // Reload filters to get running apps again
-            filterItemsByFlags();
+            executor.submit(this::filterItemsByFlags);
         }
     }
 
@@ -291,6 +293,7 @@ public class MainViewModel extends AndroidViewModel {
         });
     }
 
+    @WorkerThread
     @GuardedBy("applicationItems")
     private void filterItemsByFlags() {
         synchronized (applicationItems) {
