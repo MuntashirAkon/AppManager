@@ -197,9 +197,7 @@ public class ListOptions extends DialogFragment {
             flags.put(FILTER_APPS_WITH_ACTIVITIES, R.string.filter_apps_with_activities);
             flags.put(FILTER_APPS_WITH_BACKUPS, R.string.filter_apps_with_backups);
             flags.put(FILTER_APPS_WITHOUT_BACKUPS, R.string.filter_apps_without_backups);
-            if (AppPref.isRootOrAdbEnabled()) {
-                flags.put(FILTER_RUNNING_APPS, R.string.filter_running_apps);
-            }
+            flags.put(FILTER_RUNNING_APPS, R.string.filter_running_apps);
             flags.put(FILTER_APPS_WITH_SPLITS, R.string.filter_apps_with_splits);
             flags.put(FILTER_INSTALLED_APPS, R.string.installed_apps);
             flags.put(FILTER_UNINSTALLED_APPS, R.string.uninstalled_apps);
