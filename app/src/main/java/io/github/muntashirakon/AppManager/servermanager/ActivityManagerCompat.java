@@ -129,11 +129,18 @@ public final class ActivityManagerCompat {
     }
 
     public static List<ActivityManager.RunningAppProcessInfo> getRunningAppProcesses() {
-        try {
-            return getActivityManager().getRunningAppProcesses();
-        } catch (RemoteException e) {
-            return Collections.emptyList();
+        List<ActivityManager.RunningAppProcessInfo> runningAppProcessInfos;
+        if (!AppPref.isRootOrAdbEnabled()) {
+            //Fetch running app process using DUMP permission if root/ADB is disabled
+            runningAppProcessInfos = getRunningAppProcessesUsingDumpSys();
+        } else {
+            try {
+                runningAppProcessInfos = getActivityManager().getRunningAppProcesses();
+            } catch (RemoteException e) {
+                return Collections.emptyList();
+            }
         }
+        return runningAppProcessInfos;
     }
 
     @SuppressWarnings("deprecation")
@@ -143,6 +150,80 @@ public final class ActivityManagerCompat {
         } else {
             return ActivityManagerNative.asInterface(ProxyBinder.getService(Context.ACTIVITY_SERVICE));
         }
+    }
+
+    @SuppressWarnings("RegExpRedundantEscape")
+    private static final Pattern APP_PROCESS_REGEX = Pattern.compile("\\*[A-Z]+\\* UID (\\d+) ProcessRecord\\{[0-9a-f]+ (\\d+):([^/]+)/[^\\}]+\\}");
+    private static final Pattern PKG_LIST_REGEX = Pattern.compile("packageList=\\{([^/]+)\\}");
+
+    @NonNull
+    private static List<ActivityManager.RunningAppProcessInfo> getRunningAppProcessesUsingDumpSys() {
+        List<ActivityManager.RunningAppProcessInfo> runningAppProcessInfos = new ArrayList<>();
+        if (!PermissionUtils.hasDumpPermission()) return runningAppProcessInfos;
+        Runner.Result result = Runner.runCommand(new String[]{"dumpsys", "activity", "processes"});
+        if (!result.isSuccessful()) return runningAppProcessInfos;
+        List<String> appProcessDump = result.getOutputAsList(1);
+        return parseRunningAppProcesses(appProcessDump);
+    }
+
+    @VisibleForTesting
+    @NonNull
+    static List<ActivityManager.RunningAppProcessInfo> parseRunningAppProcesses(@NonNull List<String> appProcessesDump) {
+        List<ActivityManager.RunningAppProcessInfo> runningAppProcessInfos = new ArrayList<>();
+        Matcher aprMatcher;
+        Matcher pkgrMatcher;
+        String line;
+        ListIterator<String> it = appProcessesDump.listIterator();
+        if (!it.hasNext()) return runningAppProcessInfos;
+        aprMatcher = APP_PROCESS_REGEX.matcher(it.next());
+        while (it.hasNext()) {
+            if (!aprMatcher.find(0)) {
+                // No matches found, check the next line
+                aprMatcher = APP_PROCESS_REGEX.matcher(it.next());
+                continue;
+            }
+            // Matches found
+            String uid = aprMatcher.group(1);
+            String pid = aprMatcher.group(2);
+            String processName = aprMatcher.group(3);
+            if (uid == null || pid == null || processName == null) {
+                // Criteria didn't match
+                aprMatcher = APP_PROCESS_REGEX.matcher(it.next());
+                continue;
+            }
+            line = it.next();
+            aprMatcher = APP_PROCESS_REGEX.matcher(line);
+            while (it.hasNext()) {
+                if (aprMatcher.find(0)) {
+                    // found next ProcessRecord, no need to continue the search for pkgList
+                    break;
+                }
+                pkgrMatcher = PKG_LIST_REGEX.matcher(line);
+                if (!pkgrMatcher.find(0)) {
+                    // Process didn't match, find next line
+                    line = it.next();
+                    aprMatcher = APP_PROCESS_REGEX.matcher(line);
+                    continue;
+                }
+                // Found a pkgList
+                String pkgList = pkgrMatcher.group(1);
+                if (pkgList != null) {
+                    ActivityManager.RunningAppProcessInfo info = new ActivityManager.RunningAppProcessInfo();
+                    info.uid = Integer.decode(uid);
+                    info.pid = Integer.decode(pid);
+                    info.processName = processName;
+                    String split[] = pkgList.split(", ");
+                    info.pkgList = new String[split.length];
+                    for (int i = 0; i < split.length; ++i) {
+                        info.pkgList[i] = split[i];
+                    }
+                    runningAppProcessInfos.add(info);
+                }
+                line = it.next();
+                aprMatcher = APP_PROCESS_REGEX.matcher(line);
+            }
+        }
+        return runningAppProcessInfos;
     }
 
     @SuppressWarnings("RegExpRedundantEscape")

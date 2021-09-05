@@ -1,0 +1,450 @@
+ACTIVITY MANAGER RUNNING PROCESSES (dumpsys activity processes)
+  All known processes:
+  *PERS* UID 10213 ProcessRecord{33f9d74 22828:com.qualcomm.qti.services.systemhelper:systemhelper_service/u0a213}
+    user #0 uid=10213 gids={50213, 20213, 9997, 99909997}
+    mRequiredAbi=arm64-v8a instructionSet=arm64
+    dir=/system_ext/app/com.qualcomm.qti.services.systemhelper/com.qualcomm.qti.services.systemhelper.apk publicDir=/system_ext/app/com.qualcomm.qti.services.systemhelper/com.qualcomm.qti.services.systemhelper.apk data=/data/user/0/com.qualcomm.qti.services.systemhelper
+    packageList={com.qualcomm.qti.services.systemhelper}
+    compat={440dpi}
+    thread=android.app.IApplicationThread$Stub$Proxy@e1cef6d
+    pid=22828 starting=false
+    lastActivityTime=-1d7h27m37s717ms lastPssTime=-33s713ms pssStatType=2 nextPssTime=+59m26s35ms
+    lastPss=6.8MB lastSwapPss=4.9MB lastCachedPss=0.00 lastCachedSwapPss=0.00 lastRss=74MB
+    procStateMemTracker: best=0 (0=0 3.18038239E12x)
+    adjSeq=132374 lruSeq=194
+    oom adj: max=-800 procState: max=20 curRaw=-800 setRaw=-800 cur=-800 set=-800
+    lastCompactTime=132620905 lastCompactAction=3
+    mCurSchedGroup=2 setSchedGroup=2 systemNoUi=true trimMemoryLevel=0
+    curProcState=0 mRepProcState=0 pssProcState=0 setProcState=0 lastStateTime=-1d13h8m2s482ms
+    curCapability=LCM setCapability=LCM
+    cached=false empty=false
+    notCachedSinceIdle=true initialIdlePss=5460
+    reportedInteraction=true time=-1h38m33s429ms
+    persistent=true removed=false
+    startSeq=312
+    mountMode=DEFAULT
+    lastRequestedGc=-17h12m28s726ms lastLowMemory=-17h15m9s60ms reportLowMemory=false
+    callerPackage=android
+     Configuration={1.0 452mcc4mnc [en_US] ldltr sw392dp w392dp h827dp 440dpi nrml long hdr widecg port night finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 1080, 2400) mAppBounds=Rect(0, 0 - 1080, 2356) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0 mEnableMaglevButton=false mMaglevButtonType=0 mMaglevButtonWidth=0 mMaglevButtonOffset=0 mGameWindow=false mFreeformInBackground=false} s.15889 themeChanged=0 themeChangedFlags=0 extraData = Bundle[{}]}
+     OverrideConfiguration={0.0 ?mcc?mnc ?localeList ?layoutDir ?swdp ?wdp ?hdp ?density ?lsize ?long ?ldr ?wideColorGamut ?orien ?uimode ?night ?touch ?keyb/?/? ?nav/? winConfig={ mBounds=Rect(0, 0 - 0, 0) mAppBounds=null mWindowingMode=undefined mDisplayWindowingMode=undefined mActivityType=undefined mAlwaysOnTop=undefined mRotation=undefined mEnableMaglevButton=false mMaglevButtonType=0 mMaglevButtonWidth=0 mMaglevButtonOffset=0 mGameWindow=false mFreeformInBackground=false} themeChanged=0 themeChangedFlags=0 extraData = Bundle[{}]}
+     mLastReportedConfiguration={1.0 452mcc4mnc [en_US] ldltr sw392dp w392dp h827dp 440dpi nrml long hdr widecg port night finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 1080, 2400) mAppBounds=Rect(0, 0 - 1080, 2356) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0 mEnableMaglevButton=false mMaglevButtonType=0 mMaglevButtonWidth=0 mMaglevButtonOffset=0 mGameWindow=false mFreeformInBackground=false} s.15889 themeChanged=0 themeChangedFlags=0 extraData = Bundle[{}]}
+    Services:
+      - ServiceRecord{8ba7e5f u0 com.qualcomm.qti.services.systemhelper/.SysHelperService}
+    Receivers:
+      - ReceiverList{5b2a32 22828 com.qualcomm.qti.services.systemhelper:systemhelper_service/10213/u0 remote:a4d323d}
+      - ReceiverList{39aafe7 22828 com.qualcomm.qti.services.systemhelper:systemhelper_service/10213/u0 remote:7e719a6}
+      - ReceiverList{4dfb539 22828 com.qualcomm.qti.services.systemhelper:systemhelper_service/10213/u0 remote:8467900}
+  *APP* UID 10262 ProcessRecord{cb3c4f8 13763:org.mozilla.fenix:tab6/u0a262}
+    user #0 uid=10262 gids={3003, 50262, 20262, 9997, 99909997}
+    mRequiredAbi=arm64-v8a instructionSet=arm64
+    class=org.mozilla.fenix.FenixApplication
+    dir=/data/app/~~TA9UsdKk_SIyGkRtDG8ndQ==/org.mozilla.fenix-Qy07q25EhcPxIHC6H-jW0Q==/base.apk publicDir=/data/app/~~TA9UsdKk_SIyGkRtDG8ndQ==/org.mozilla.fenix-Qy07q25EhcPxIHC6H-jW0Q==/base.apk data=/data/user/0/org.mozilla.fenix
+    packageList={org.mozilla.fenix}
+    compat={440dpi}
+    thread=android.app.IApplicationThread$Stub$Proxy@c474e28
+    pid=13763 starting=false
+    lastActivityTime=-34s880ms lastPssTime=-41s202ms pssStatType=0 nextPssTime=-14s884ms
+    lastPss=0.00 lastSwapPss=0.00 lastCachedPss=0.00 lastCachedSwapPss=0.00 lastRss=0.00
+    procStateMemTracker: best=4 () / pending state=4 highest=4 1.0x
+    adjSeq=132374 lruSeq=20094
+    oom adj: max=1001 procState: max=20 curRaw=900 setRaw=900 cur=900 set=900
+    lastCompactTime=133676185 lastCompactAction=2
+    mCurSchedGroup=0 setSchedGroup=0 systemNoUi=false trimMemoryLevel=0
+    curProcState=17 mRepProcState=17 pssProcState=20 setProcState=17 lastStateTime=-34s884ms
+    curCapability=--- setCapability=---
+    cached=true empty=true
+    hasClientActivities=true foregroundActivities=false (rep=false)
+    startSeq=1289
+    mountMode=DEFAULT
+    lastCpuTime=0 whenUnimportant=-34s884ms
+    lastRequestedGc=-41s177ms lastLowMemory=-41s177ms reportLowMemory=false
+    callerPackage=org.mozilla.fenix
+     Configuration={1.0 452mcc4mnc [en_US] ldltr sw392dp w392dp h827dp 440dpi nrml long hdr widecg port night finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 1080, 2400) mAppBounds=Rect(0, 0 - 1080, 2356) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0 mEnableMaglevButton=false mMaglevButtonType=0 mMaglevButtonWidth=0 mMaglevButtonOffset=0 mGameWindow=false mFreeformInBackground=false} s.15880 themeChanged=0 themeChangedFlags=0 extraData = Bundle[{}]}
+     OverrideConfiguration={0.0 ?mcc?mnc ?localeList ?layoutDir ?swdp ?wdp ?hdp ?density ?lsize ?long ?ldr ?wideColorGamut ?orien ?uimode ?night ?touch ?keyb/?/? ?nav/? winConfig={ mBounds=Rect(0, 0 - 0, 0) mAppBounds=null mWindowingMode=undefined mDisplayWindowingMode=undefined mActivityType=undefined mAlwaysOnTop=undefined mRotation=undefined mEnableMaglevButton=false mMaglevButtonType=0 mMaglevButtonWidth=0 mMaglevButtonOffset=0 mGameWindow=false mFreeformInBackground=false} themeChanged=0 themeChangedFlags=0 extraData = Bundle[{}]}
+     mLastReportedConfiguration={1.0 452mcc4mnc [en_US] ldltr sw392dp w392dp h827dp 440dpi nrml long hdr widecg port night finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 1080, 2400) mAppBounds=Rect(0, 0 - 1080, 2356) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0 mEnableMaglevButton=false mMaglevButtonType=0 mMaglevButtonWidth=0 mMaglevButtonOffset=0 mGameWindow=false mFreeformInBackground=false} s.15880 themeChanged=0 themeChangedFlags=0 extraData = Bundle[{}]}
+    Services:
+      - ServiceRecord{664a3d3 u0 org.mozilla.fenix/org.mozilla.gecko.process.GeckoChildProcessServices$tab6}
+  *PERS* UID 1000 ProcessRecord{8c8ff5d 1879:system/1000}
+    user #0 uid=1000 gids={}
+    mRequiredAbi=null instructionSet=null
+    dir=/system/framework/framework-res.apk publicDir=/system/framework/framework-res.apk data=/data/system
+    packageList={com.android.networkstack.inprocess, android, com.android.service.settingsobserver, com.android.providers.settings, com.android.server.telecom, com.android.networkstack.tethering.inprocess}
+    compat=null
+    thread=android.app.ActivityThread$ApplicationThread@4d208a1
+    pid=1879 starting=false
+    lastActivityTime=-41s277ms lastPssTime=-33s664ms pssStatType=2 nextPssTime=+59m26s31ms
+    lastPss=287MB lastSwapPss=4.5MB lastCachedPss=0.00 lastCachedSwapPss=0.00 lastRss=489MB
+    procStateMemTracker: best=0 (0=0 3.18038239E12x)
+    adjSeq=132374 lruSeq=1
+    oom adj: max=-900 procState: max=20 curRaw=-900 setRaw=-900 cur=-900 set=-900
+    lastCompactTime=0 lastCompactAction=0
+    mCurSchedGroup=3 setSchedGroup=3 systemNoUi=true trimMemoryLevel=0
+    curProcState=0 mRepProcState=0 pssProcState=0 setProcState=0 lastStateTime=-1d13h8m18s462ms
+    curCapability=LCM setCapability=LCM
+    cached=false empty=false
+    notCachedSinceIdle=true initialIdlePss=256020
+    reportedInteraction=true time=-52m30s486ms
+    persistent=true removed=false
+    startSeq=0
+    mountMode=NONE
+    lastRequestedGc=-17h15m1s105ms lastLowMemory=-17h15m9s64ms reportLowMemory=false
+     Configuration={1.0 452mcc4mnc [en_US] ldltr sw392dp w392dp h827dp 440dpi nrml long hdr widecg port night finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 1080, 2400) mAppBounds=Rect(0, 0 - 1080, 2356) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0 mEnableMaglevButton=false mMaglevButtonType=0 mMaglevButtonWidth=0 mMaglevButtonOffset=0 mGameWindow=false mFreeformInBackground=false} s.15938 themeChanged=0 themeChangedFlags=0 extraData = Bundle[{}]}
+     OverrideConfiguration={0.0 ?mcc?mnc ?localeList ?layoutDir ?swdp ?wdp ?hdp ?density ?lsize ?long ?ldr ?wideColorGamut ?orien ?uimode ?night ?touch ?keyb/?/? ?nav/? winConfig={ mBounds=Rect(0, 0 - 0, 0) mAppBounds=null mWindowingMode=undefined mDisplayWindowingMode=undefined mActivityType=undefined mAlwaysOnTop=undefined mRotation=undefined mEnableMaglevButton=false mMaglevButtonType=0 mMaglevButtonWidth=0 mMaglevButtonOffset=0 mGameWindow=false mFreeformInBackground=false} themeChanged=0 themeChangedFlags=0 extraData = Bundle[{}]}
+     mLastReportedConfiguration={1.0 452mcc4mnc [en_US] ldltr sw392dp w392dp h827dp 440dpi nrml long hdr widecg port night finger -keyb/v/h -nav/h winConfig={ mBounds=Rect(0, 0 - 1080, 2400) mAppBounds=Rect(0, 0 - 1080, 2356) mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0 mEnableMaglevButton=false mMaglevButtonType=0 mMaglevButtonWidth=0 mMaglevButtonOffset=0 mGameWindow=false mFreeformInBackground=false} s.15938 themeChanged=0 themeChangedFlags=0 extraData = Bundle[{}]}
+    Services:
+      - ServiceRecord{2bfefdd u0 com.android.networkstack.inprocess/com.android.server.NetworkStackService}
+      - ServiceRecord{4fe5d5c u0 com.android.server.telecom/.components.BluetoothPhoneService}
+      - ServiceRecord{8ebd1e1 u0 com.android.service.settingsobserver/.SettingsXmlObserverService}
+      - ServiceRecord{a64d3a4 u0 com.android.server.telecom/.components.TelecomService}
+      - ServiceRecord{e6a1e11 u0 com.android.networkstack.tethering.inprocess/com.android.networkstack.tethering.TetheringService}
+    Connections:
+      - ConnectionRecord{1627b4 u0 CR IMP com.android.networkstack.inprocess/com.android.server.NetworkStackService:@4bb8c87}
+      - ConnectionRecord{10d1ffd u0 CR FGS android.ext.services/.autofill.InlineSuggestionRenderServiceImpl:@6d78454}
+      - ConnectionRecord{16633ed u0 CR !FG IMPB !VIS rkr.simplekeyboard.inputmethod/.latin.LatinIME:@7b9b204}
+      - ConnectionRecord{2a17472 u0 CR FGSA CAPS DEAD com.camel.corp.universalcopy/.UniversalCopyService:@e713d7d}
+      - ConnectionRecord{41360d8 u0 CR FGS LACT SLTA UI CAPS rkr.simplekeyboard.inputmethod/.latin.LatinIME:@e1b23bb}
+      - ConnectionRecord{4692740 u0 CR FGS android.ext.services/com.android.textclassifier.DefaultTextClassifierService:@e3be2c3}
+      - ConnectionRecord{59f8060 u0 CR FGS com.android.systemui/.screenshot.TakeScreenshotService:@49d6c63}
+      - ConnectionRecord{6ea0d07 u0 CR IMP com.android.providers.media.module/com.android.providers.media.fuse.ExternalStorageServiceImpl:@cd33746}
+      - ConnectionRecord{6eb77cf u0 CR com.android.systemui/.keyguard.KeyguardService:@4eff02e}
+      - ConnectionRecord{73ed051 u0 CR FGSA CAPS com.asdoi.quicktiles/com.asdoi.quicksettings.utils.CustomAccessibilityService:@a033178}
+      - ConnectionRecord{8de06aa u0 CR FGS com.miui.notification/.NotificationListener:@9085595}
+      - ConnectionRecord{9647c96 u0 CR FGS android.ext.services/.autofill.InlineSuggestionRenderServiceImpl:@be07fb1}
+      - ConnectionRecord{9d398cc u0 CR com.miui.daemon/.performance.MiuiPerfService:@da232ff}
+      - ConnectionRecord{a3c8543 u0 CR FGS !PRCP com.blackshark.barrage/.service.NotificationMonitorService:@c17baf2}
+      - ConnectionRecord{aaa3867 u0 CR FGS android.ext.services/.autofill.InlineSuggestionRenderServiceImpl:@7d57426}
+      - ConnectionRecord{b651596 u0 CR com.miui.daemon/.performance.SysoptService:@38fdcb1}
+      - ConnectionRecord{bd2043b u0 CR FGSA UI CAPS com.miui.miwallpaper/.wallpaperservice.ImageWallpaper:@8d87aca}
+      - ConnectionRecord{c2780c9 u0 CR FGS android.ext.services/.autofill.InlineSuggestionRenderServiceImpl:@a86f8d0}
+      - ConnectionRecord{c97d697 u0 CR !FG !VIS com.xiaomi.location.fused/.FusedLocationService:@b7aed16}
+      - ConnectionRecord{ddc8696 u0 CR FGSA CAPS com.android.settings/.accessibility.accessibilitymenu.AccessibilityMenuService:@a6a71b1}
+      - ConnectionRecord{e0ab237 u0 CR IMP FGS com.android.server.telecom/.components.TelecomService:@4077336}
+      - ConnectionRecord{e381e38 u0 CR IMP com.android.networkstack.tethering.inprocess/com.android.networkstack.tethering.TetheringService:@2d0fa9b}
+      - ConnectionRecord{e67fc44 u0 CR com.miui.wmsvc/.WMService:@5349957}
+      - ConnectionRecord{f63cc22 u0 CR FGS android.ext.services/.autofill.InlineSuggestionRenderServiceImpl:@bcc65ed}
+      - ConnectionRecord{fd375c8 u0 CR FGSA UI CAPS com.miui.miwallpaper/.wallpaperservice.ImageWallpaper:@58bb66b}
+    Published Providers:
+      - com.android.providers.settings.SettingsProvider
+        -> ContentProviderRecord{fdc0c3a u0 com.android.providers.settings/.SettingsProvider}
+      - com.android.server.textclassifier.IconsContentProvider
+        -> ContentProviderRecord{714fa53 u0 android/com.android.server.textclassifier.IconsContentProvider}
+    Connected Providers:
+      - 53c80ac/com.miui.securitycenter/.provider.SecurityCenterProvider->1879:system/1000 s1/1 u0/0 +3d3h10m26s961ms
+      - 49a4e4a/com.miui.securitycenter/com.miui.idprovider.IdProvider->1879:system/1000 s0/0 u1/1 +3d2h42m23s426ms
+      - 12837bc/com.android.systemui/.keyguard.KeyguardSliceProvider->1879:system/1000 s0/0 u1/1 +3d0h7m14s589ms
+      - 7247cc0/com.miui.securitycenter/com.miui.antispam.db.AntiSpamProvider->1879:system/1000 s0/0 u1/1 +2d23h27m34s346ms
+    Receivers:
+      - ReceiverList{3df68 1879 system/1000/u0 local:e3b428b}
+      - ReceiverList{5f838 1879 system/1000/u-1 local:a25fc9b}
+      - ReceiverList{da249 1879 system/1000/u-1 local:a92b050}
+      - ReceiverList{2645e8 1879 system/1000/u0 local:265330b}
+      - ReceiverList{2eadde 1879 system/1000/u0 local:1eb0919}
+      - ReceiverList{36410a 1879 system/1000/u-1 local:bcd7d75}
+      - ReceiverList{421d39 1879 system/1000/u0 local:3918100}
+      - ReceiverList{56cd11 1879 system/1000/u0 local:c3e2938}
+      - ReceiverList{5d9817 1879 system/1000/u0 local:6a0c496}
+      - ReceiverList{68ac27 1879 system/1000/u0 local:5fa5ee6}
+      - ReceiverList{763d25 1879 system/1000/u0 local:afbbd1c}
+      - ReceiverList{9ea1bc 1879 system/1000/u-1 local:26109af}
+      - ReceiverList{acaaf2 1879 system/1000/u0 local:6653dfd}
+      - ReceiverList{babd4d 1879 system/1000/u0 local:48f04e4}
+      - ReceiverList{c21837 1879 system/1000/u0 local:704b136}
+      - ReceiverList{cb73ca 1879 system/1000/u-1 local:900c335}
+      - ReceiverList{dc556c 1879 system/1000/u999 local:8db7e1f}
+      - ReceiverList{ea11c2 1879 system/1000/u0 local:84fbe0d}
+      - ReceiverList{f7a195 1879 system/1000/u0 local:a2b2d4c}
+      - ReceiverList{10727bf 1879 system/1000/u-1 local:cda9de}
+      - ReceiverList{118b357 1879 system/1000/u0 local:3b644d6}
+      - ReceiverList{125df8c 1879 system/1000/u0 local:8ca5cbf}
+      - ReceiverList{133719f 1879 system/1000/u0 local:cf76f3e}
+      - ReceiverList{13579be 1879 system/1000/u-1 local:ba01879}
+      - ReceiverList{150b9a2 1879 system/1000/u0 local:dca996d}
+      - ReceiverList{1544e2a 1879 system/1000/u0 local:ed50b15}
+      - ReceiverList{1672d77 1879 system/1000/u-1 local:de7d376}
+      - ReceiverList{1739650 1879 system/1000/u0 local:9dd6413}
+      - ReceiverList{17afea4 1879 system/1000/u-1 local:642a937}
+      - ReceiverList{1b1ac38 1879 system/1000/u0 local:520009b}
+      - ReceiverList{1baf58f 1879 system/1000/u0 local:fbccee}
+      - ReceiverList{1bb95cd 1879 system/1000/u0 local:521ef64}
+      - ReceiverList{1c6fb0f 1879 system/1000/u0 local:846786e}
+      - ReceiverList{1f1a292 1879 system/1000/u-1 local:88ad01d}
+      - ReceiverList{1fab7e3 1879 system/1000/u0 local:83a9412}
+      - ReceiverList{1fc0b3b 1879 system/1000/u0 local:ada3dca}
+      - ReceiverList{1fe6482 1879 system/1000/u0 local:a0aa3cd}
+      - ReceiverList{200e738 1879 system/1000/u999 local:28b479b}
+      - ReceiverList{2013380 1879 system/1000/u-1 local:8b77803}
+      - ReceiverList{2449c28 1879 system/1000/u0 local:5c9fa4b}
+      - ReceiverList{24f19ae 1879 system/1000/u0 local:4fd8229}
+      - ReceiverList{26215d8 1879 system/1000/u0 local:4f8cbb}
+      - ReceiverList{27c1243 1879 system/1000/u0 local:8995bf2}
+      - ReceiverList{28293bd 1879 system/1000/u0 local:12f6f14}
+      - ReceiverList{28355de 1879 system/1000/u-1 local:b895119}
+      - ReceiverList{284c840 1879 system/1000/u-1 local:4ed67c3}
+      - ReceiverList{293d06e 1879 system/1000/u-1 local:49bdbe9}
+      - ReceiverList{2a245da 1879 system/1000/u-1 local:3265385}
+      - ReceiverList{2a7c31b 1879 system/1000/u0 local:144692a}
+      - ReceiverList{2bd7147 1879 system/1000/u0 local:6808486}
+      - ReceiverList{2cd0d72 1879 system/1000/u0 local:6179a7d}
+      - ReceiverList{2ed4ba0 1879 system/1000/u0 local:f225ca3}
+      - ReceiverList{31a11ba 1879 system/1000/u0 local:f7062e5}
+      - ReceiverList{32cbc48 1879 system/1000/u0 local:dfc06eb}
+      - ReceiverList{32e512c 1879 system/1000/u-1 local:30d10df}
+      - ReceiverList{33246ce 1879 system/1000/u0 local:52aafc9}
+      - ReceiverList{349c5ae 1879 system/1000/u0 local:fc75e29}
+      - ReceiverList{3518000 1879 system/1000/u0 local:c1f2683}
+      - ReceiverList{352a6b3 1879 system/1000/u0 local:c74bc22}
+      - ReceiverList{362e0af 1879 system/1000/u0 local:731f08e}
+      - ReceiverList{3649f03 1879 system/1000/u0 local:44d23b2}
+      - ReceiverList{375412a 1879 system/1000/u0 local:fe5ea15}
+      - ReceiverList{3770b03 1879 system/1000/u0 local:b5bfb2}
+      - ReceiverList{38a2b7f 1879 system/1000/u0 local:8af649e}
+      - ReceiverList{3b9bf19 1879 system/1000/u0 local:e3cfe60}
+      - ReceiverList{3bb6110 1879 system/1000/u-1 local:c0ea1d3}
+      - ReceiverList{3bf6c54 1879 system/1000/u0 local:227fa7}
+      - ReceiverList{3c4819b 1879 system/1000/u-1 local:efb11aa}
+      - ReceiverList{3c78282 1879 system/1000/u-1 local:aed79cd}
+      - ReceiverList{3db86bb 1879 system/1000/u0 local:de4774a}
+      - ReceiverList{3e2a9f3 1879 system/1000/u0 local:181c462}
+      - ReceiverList{42a30f0 1879 system/1000/u0 local:9794533}
+      - ReceiverList{4432ad7 1879 system/1000/u-1 local:aa9ea56}
+      - ReceiverList{44c314e 1879 system/1000/u0 local:527b449}
+      - ReceiverList{44f0354 1879 system/1000/u0 local:76612a7}
+      - ReceiverList{46534a5 1879 system/1000/u0 local:f5e29c}
+      - ReceiverList{46ce5e4 1879 system/1000/u0 local:c3aa577}
+      - ReceiverList{473b289 1879 system/1000/u-1 local:601d990}
+      - ReceiverList{489e66b 1879 system/1000/u0 local:ab6c7ba}
+      - ReceiverList{48aefac 1879 system/1000/u0 local:c97195f}
+      - ReceiverList{4a6c11b 1879 system/1000/u-1 local:c089f2a}
+      - ReceiverList{4aae80b 1879 system/1000/u-1 local:da4bda}
+      - ReceiverList{4bb0a01 1879 system/1000/u0 local:52a83e8}
+      - ReceiverList{4bb4ef3 1879 system/1000/u0 local:371dd62}
+      - ReceiverList{4c0546f 1879 system/1000/u0 local:11db4e}
+      - ReceiverList{4d71d45 1879 system/1000/u0 local:a1189bc}
+      - ReceiverList{4d91a3d 1879 system/1000/u0 local:d49ff94}
+      - ReceiverList{4eda4a8 1879 system/1000/u0 local:1c7d4cb}
+      - ReceiverList{51080db 1879 system/1000/u0 local:a8685ea}
+      - ReceiverList{514b6d2 1879 system/1000/u0 local:b388d5d}
+      - ReceiverList{5443d9a 1879 system/1000/u0 local:53a5245}
+      - ReceiverList{544863a 1879 system/1000/u-1 local:3a1d965}
+      - ReceiverList{54db6bf 1879 system/1000/u0 local:ce914de}
+      - ReceiverList{552544f 1879 system/1000/u0 local:86e6eae}
+      - ReceiverList{57a25f3 1879 system/1000/u0 local:d19b062}
+      - ReceiverList{5840382 1879 system/1000/u0 local:db75ecd}
+      - ReceiverList{58bc8f5 1879 system/1000/u0 local:d23d62c}
+      - ReceiverList{5921da8 1879 system/1000/u0 local:ebe91cb}
+      - ReceiverList{59c3b51 1879 system/1000/u-1 local:9176878}
+      - ReceiverList{5a02c02 1879 system/1000/u0 local:680d94d}
+      - ReceiverList{5a9e3c3 1879 system/1000/u0 local:e7d8372}
+      - ReceiverList{5c273a2 1879 system/1000/u-1 local:e66fb6d}
+      - ReceiverList{5d1bdd9 1879 system/1000/u-1 local:14ec020}
+      - ReceiverList{5d5b844 1879 system/1000/u0 local:b13c557}
+      - ReceiverList{5e36c7f 1879 system/1000/u0 local:d91099e}
+      - ReceiverList{60293b5 1879 system/1000/u0 local:ce013ec}
+      - ReceiverList{6048a52 1879 system/1000/u0 local:87d7edd}
+      - ReceiverList{60607ac 1879 system/1000/u0 local:92f915f}
+      - ReceiverList{61e4f0a 1879 system/1000/u0 local:3350375}
+      - ReceiverList{636fbb2 1879 system/1000/u0 local:8d759bd}
+      - ReceiverList{6635a01 1879 system/1000/u0 local:e0213e8}
+      - ReceiverList{66806d6 1879 system/1000/u-1 local:66ecaf1}
+      - ReceiverList{66e08b1 1879 system/1000/u0 local:dc48f58}
+      - ReceiverList{68ada55 1879 system/1000/u-1 local:518d10c}
+      - ReceiverList{697e30a 1879 system/1000/u0 local:2086775}
+      - ReceiverList{6986f31 1879 system/1000/u0 local:d167fd8}
+      - ReceiverList{6b1e74f 1879 system/1000/u0 local:a146dae}
+      - ReceiverList{6c3cf73 1879 system/1000/u0 local:b420fe2}
+      - ReceiverList{6ccbcf9 1879 system/1000/u0 local:aa7c7c0}
+      - ReceiverList{6e20fb2 1879 system/1000/u0 local:bb23dbd}
+      - ReceiverList{6e33845 1879 system/1000/u0 local:8a130bc}
+      - ReceiverList{6fb5bab 1879 system/1000/u0 local:35bc9fa}
+      - ReceiverList{710637a 1879 system/1000/u-1 local:69e3a5}
+      - ReceiverList{71dfce8 1879 system/1000/u0 local:61d660b}
+      - ReceiverList{71e4799 1879 system/1000/u-1 local:2b458e0}
+      - ReceiverList{729b7f5 1879 system/1000/u0 local:1d8212c}
+      - ReceiverList{73cf99e 1879 system/1000/u-1 local:7d82bd9}
+      - ReceiverList{757213c 1879 system/1000/u0 local:9b5d72f}
+      - ReceiverList{76e6f72 1879 system/1000/u-1 local:b9447d}
+      - ReceiverList{77554f4 1879 system/1000/u0 local:f1226c7}
+      - ReceiverList{78c4aa7 1879 system/1000/u0 local:4076766}
+      - ReceiverList{78e673c 1879 system/1000/u-1 local:2c6752f}
+      - ReceiverList{7932fb5 1879 system/1000/u0 local:6219fec}
+      - ReceiverList{79407e1 1879 system/1000/u0 local:cb34d48}
+      - ReceiverList{7975e95 1879 system/1000/u-1 local:eafbe4c}
+      - ReceiverList{798f6aa 1879 system/1000/u0 local:3190595}
+      - ReceiverList{7b0fd99 1879 system/1000/u0 local:fa826e0}
+      - ReceiverList{7ba5c89 1879 system/1000/u0 local:8f0eb90}
+      - ReceiverList{7cfa96b 1879 system/1000/u0 local:a3db6ba}
+      - ReceiverList{7e2c5ff 1879 system/1000/u0 local:bf7d91e}
+      - ReceiverList{7e53e58 1879 system/1000/u0 local:7bc073b}
+      - ReceiverList{7e6a06d 1879 system/1000/u0 local:47e0084}
+      - ReceiverList{7ec68bd 1879 system/1000/u0 local:7777814}
+      - ReceiverList{80dad2c 1879 system/1000/u0 local:4a05cdf}
+      - ReceiverList{82ade71 1879 system/1000/u0 local:d3c2418}
+      - ReceiverList{82ade8d 1879 system/1000/u-1 local:991e324}
+      - ReceiverList{8360eca 1879 system/1000/u0 local:558ea35}
+      - ReceiverList{84f76d5 1879 system/1000/u0 local:bd40f8c}
+      - ReceiverList{8536054 1879 system/1000/u0 local:37dc3a7}
+      - ReceiverList{856c55d 1879 system/1000/u-1 local:414e334}
+      - ReceiverList{85e1041 1879 system/1000/u0 local:f78bb28}
+      - ReceiverList{860256e 1879 system/1000/u0 local:d4064e9}
+      - ReceiverList{8636e1e 1879 system/1000/u0 local:975a259}
+      - ReceiverList{86be266 1879 system/1000/u-1 local:7919ac1}
+      - ReceiverList{871ddef 1879 system/1000/u0 local:bd59ace}
+      - ReceiverList{875f21a 1879 system/1000/u0 local:90808c5}
+      - ReceiverList{886b023 1879 system/1000/u0 local:964552}
+      - ReceiverList{89072a3 1879 system/1000/u0 local:87b81d2}
+      - ReceiverList{8993224 1879 system/1000/u0 local:5f37ab7}
+      - ReceiverList{89ba089 1879 system/1000/u0 local:f3cbf90}
+      - ReceiverList{8a02c92 1879 system/1000/u0 local:e15421d}
+      - ReceiverList{8a3d0d9 1879 system/1000/u0 local:a13f20}
+      - ReceiverList{8b07025 1879 system/1000/u0 local:1c2dc1c}
+      - ReceiverList{8b34075 1879 system/1000/u0 local:1e87bac}
+      - ReceiverList{8cdf839 1879 system/1000/u0 local:7c7e800}
+      - ReceiverList{8d0ed62 1879 system/1000/u0 local:8a0442d}
+      - ReceiverList{8d5ad35 1879 system/1000/u-1 local:11a36c}
+      - ReceiverList{8fcdd16 1879 system/1000/u0 local:141231}
+      - ReceiverList{9103e25 1879 system/1000/u0 local:7a9221c}
+      - ReceiverList{913dafa 1879 system/1000/u0 local:5fa8925}
+      - ReceiverList{91520fe 1879 system/1000/u0 local:2a4d4b9}
+      - ReceiverList{9183b8d 1879 system/1000/u-1 local:969424}
+      - ReceiverList{919c3ae 1879 system/1000/u-1 local:7009429}
+      - ReceiverList{91e0a5c 1879 system/1000/u-1 local:d5030cf}
+      - ReceiverList{91f26da 1879 system/1000/u0 local:df61885}
+      - ReceiverList{9243d50 1879 system/1000/u0 local:adc4713}
+      - ReceiverList{92a926d 1879 system/1000/u-1 local:5727a84}
+      - ReceiverList{92fe500 1879 system/1000/u-1 local:93ff83}
+      - ReceiverList{931f2fe 1879 system/1000/u-1 local:4c9aeb9}
+      - ReceiverList{9378cf6 1879 system/1000/u-1 local:f8e1591}
+      - ReceiverList{9387003 1879 system/1000/u0 local:ab998b2}
+      - ReceiverList{9397962 1879 system/1000/u0 local:663802d}
+      - ReceiverList{93a99b8 1879 system/1000/u0 local:1aa341b}
+      - ReceiverList{947685c 1879 system/1000/u-1 local:4ec46cf}
+      - ReceiverList{95db2c4 1879 system/1000/u-1 local:92d19d7}
+      - ReceiverList{95f4a97 1879 system/1000/u999 local:1a7b116}
+      - ReceiverList{96034f2 1879 system/1000/u0 local:ee8affd}
+      - ReceiverList{9756ef8 1879 system/1000/u0 local:5e2165b}
+      - ReceiverList{97722ba 1879 system/1000/u0 local:9c317e5}
+      - ReceiverList{9ae383c 1879 system/1000/u-1 local:72eea2f}
+      - ReceiverList{9b38e89 1879 system/1000/u0 local:327a590}
+      - ReceiverList{9bc2d5c 1879 system/1000/u-1 local:d4ffcf}
+      - ReceiverList{9d6b829 1879 system/1000/u-1 local:cdcf1b0}
+      - ReceiverList{9d9e69e 1879 system/1000/u0 local:250acd9}
+      - ReceiverList{9eb7ec3 1879 system/1000/u-1 local:8a8aa72}
+      - ReceiverList{9f575f7 1879 system/1000/u0 local:f17edf6}
+      - ReceiverList{9fa7f02 1879 system/1000/u0 local:354984d}
+      - ReceiverList{9fb9126 1879 system/1000/u0 local:36bcc81}
+      - ReceiverList{a063bfc 1879 system/1000/u0 local:b19a4ef}
+      - ReceiverList{a072e4f 1879 system/1000/u0 local:1e670ae}
+      - ReceiverList{a0f7e07 1879 system/1000/u0 local:253cc46}
+      - ReceiverList{a3df0ad 1879 system/1000/u0 local:5db69c4}
+      - ReceiverList{a42aaa6 1879 system/1000/u0 local:1615c01}
+      - ReceiverList{a54981d 1879 system/1000/u0 local:a6f48f4}
+      - ReceiverList{a5d9922 1879 system/1000/u0 local:48946ed}
+      - ReceiverList{a61b5ac 1879 system/1000/u-1 local:815375f}
+      - ReceiverList{a62a1d9 1879 system/1000/u999 local:3c4b420}
+      - ReceiverList{a73db66 1879 system/1000/u0 local:749d7c1}
+      - ReceiverList{a8110d0 1879 system/1000/u-1 local:2223893}
+      - ReceiverList{a879b80 1879 system/1000/u0 local:f368003}
+      - ReceiverList{a8d71b7 1879 system/1000/u0 local:ce780b6}
+      - ReceiverList{aa5ea26 1879 system/1000/u0 local:753e981}
+      - ReceiverList{acd453d 1879 system/1000/u0 local:d17f694}
+      - ReceiverList{ace99d9 1879 system/1000/u-1 local:3058c20}
+      - ReceiverList{ad49cbd 1879 system/1000/u0 local:8cffc14}
+      - ReceiverList{af78b5e 1879 system/1000/u-1 local:7feec99}
+      - ReceiverList{b10ae48 1879 system/1000/u-1 local:c1080eb}
+      - ReceiverList{b19c962 1879 system/1000/u0 local:d53102d}
+      - ReceiverList{b19f3af 1879 system/1000/u-1 local:bdd6f8e}
+      - ReceiverList{b1cf51a 1879 system/1000/u0 local:fad37c5}
+      - ReceiverList{b252691 1879 system/1000/u0 local:f4daf1b}
+      - ReceiverList{b45081f 1879 system/1000/u0 local:d8f4fbe}
+      - ReceiverList{b4b880e 1879 system/1000/u-1 local:d472e09}
+      - ReceiverList{b4d7b9b 1879 system/1000/u0 local:f83b3aa}
+      - ReceiverList{b4de3ff 1879 system/1000/u-1 local:7c4af1e}
+      - ReceiverList{b4f4553 1879 system/1000/u0 local:a5c3142}
+      - ReceiverList{b56aa83 1879 system/1000/u0 local:6da2d32}
+      - ReceiverList{b5d74fe 1879 system/1000/u0 local:249f8b9}
+      - ReceiverList{b5ecb32 1879 system/1000/u0 local:86b73d}
+      - ReceiverList{b63bf5b 1879 system/1000/u0 local:e3dae6a}
+      - ReceiverList{b8548e6 1879 system/1000/u0 local:42e8b41}
+      - ReceiverList{ba2003b 1879 system/1000/u-1 local:e3ae6ca}
+      - ReceiverList{badd362 1879 system/1000/u0 local:6e9022d}
+      - ReceiverList{bb387bb 1879 system/1000/u0 local:807dc4a}
+      - ReceiverList{bc9f189 1879 system/1000/u0 local:dddb490}
+      - ReceiverList{be56b99 1879 system/1000/u0 local:7518ce0}
+      - ReceiverList{bf8c1c9 1879 system/1000/u0 local:7c09dd0}
+      - ReceiverList{c131528 1879 system/1000/u-1 local:e52b74b}
+      - ReceiverList{c17de7c 1879 system/1000/u0 local:aba416f}
+      - ReceiverList{c25452e 1879 system/1000/u-1 local:feb2ba9}
+      - ReceiverList{c288c5d 1879 system/1000/u-1 local:6856634}
+      - ReceiverList{c2e9f29 1879 system/1000/u0 local:99814b0}
+      - ReceiverList{c391c26 1879 system/1000/u0 local:74ca381}
+      - ReceiverList{c58182a 1879 system/1000/u0 local:bc1bd15}
+      - ReceiverList{c5b7214 1879 system/1000/u0 local:6b80467}
+      - ReceiverList{c67b48f 1879 system/1000/u0 local:17827ee}
+      - ReceiverList{c719be7 1879 system/1000/u0 local:b5635a6}
+      - ReceiverList{c829f04 1879 system/1000/u-1 local:5dd0f17}
+      - ReceiverList{c82e149 1879 system/1000/u-1 local:ca98b50}
+      - ReceiverList{c83c77c 1879 system/1000/u0 local:5302e6f}
+      - ReceiverList{c894fa9 1879 system/1000/u-1 local:9e53730}
+      - ReceiverList{c92ae6d 1879 system/1000/u0 local:b398684}
+      - ReceiverList{c98fbd5 1879 system/1000/u0 local:6ec888c}
+      - ReceiverList{ca17f06 1879 system/1000/u-1 local:71f45e1}
+      - ReceiverList{caa9ba2 1879 system/1000/u-1 local:cb6c36d}
+      - ReceiverList{d0a2394 1879 system/1000/u-1 local:e148be7}
+      - ReceiverList{d0b095e 1879 system/1000/u0 local:c59a299}
+      - ReceiverList{d43f933 1879 system/1000/u0 local:de5c8a2}
+      - ReceiverList{d494c90 1879 system/1000/u0 local:7bb0b53}
+      - ReceiverList{d557223 1879 system/1000/u0 local:43ecf52}
+      - ReceiverList{d5e7e47 1879 system/1000/u0 local:3f9a586}
+      - ReceiverList{d68d3dd 1879 system/1000/u0 local:2041bb4}
+      - ReceiverList{d708eba 1879 system/1000/u0 local:d4eb3e5}
+      - ReceiverList{d7419b5 1879 system/1000/u0 local:8abf1ec}
+      - ReceiverList{d84b7c6 1879 system/1000/u-1 local:89ce9a1}
+      - ReceiverList{d920456 1879 system/1000/u0 local:7344e71}
+      - ReceiverList{d959216 1879 system/1000/u0 local:b7a7b31}
+      - ReceiverList{daa687e 1879 system/1000/u0 local:5ac8a39}
+      - ReceiverList{db65434 1879 system/1000/u-1 local:6469b07}
+      - ReceiverList{dc84ace 1879 system/1000/u-1 local:c0643c9}
+      - ReceiverList{dcf07f9 1879 system/1000/u0 local:c685ec0}
+      - ReceiverList{dda51d6 1879 system/1000/u0 local:45f61f1}
+      - ReceiverList{e12d2e3 1879 system/1000/u0 local:1863b12}
+      - ReceiverList{e1b334e 1879 system/1000/u-1 local:ca97e49}
+      - ReceiverList{e20d326 1879 system/1000/u0 local:bb4d681}
+      - ReceiverList{e24fa8d 1879 system/1000/u0 local:8f2ef24}
+      - ReceiverList{e2c0763 1879 system/1000/u0 local:f297192}
+      - ReceiverList{e3e5fe4 1879 system/1000/u0 local:ddc777}
+      - ReceiverList{e518bb9 1879 system/1000/u0 local:4979980}
+      - ReceiverList{e54e5d5 1879 system/1000/u0 local:fddda8c}
+      - ReceiverList{e56a0bd 1879 system/1000/u0 local:8c79014}
+      - ReceiverList{e5925d6 1879 system/1000/u0 local:70505f1}
+      - ReceiverList{e61735f 1879 system/1000/u0 local:f795ffe}
+      - ReceiverList{e7b5a20 1879 system/1000/u-1 local:ffd9523}
+      - ReceiverList{e8f4905 1879 system/1000/u0 local:da40c7c}
+      - ReceiverList{ea4cdee 1879 system/1000/u0 local:1845f69}
+      - ReceiverList{eaf7048 1879 system/1000/u-1 local:7c90aeb}
+      - ReceiverList{ed9d669 1879 system/1000/u0 local:1ca0f0}
+      - ReceiverList{eeb8a14 1879 system/1000/u0 local:7997c67}
+      - ReceiverList{efa261d 1879 system/1000/u0 local:71a4ef4}
+      - ReceiverList{f00f6c1 1879 system/1000/u0 local:9d52ba8}
+      - ReceiverList{f10cf49 1879 system/1000/u-1 local:6227150}
+      - ReceiverList{f162017 1879 system/1000/u0 local:2466c96}
+      - ReceiverList{f39ceee 1879 system/1000/u-1 local:d38c469}
+      - ReceiverList{f3e7018 1879 system/1000/u0 local:257e7fb}
+      - ReceiverList{f407081 1879 system/1000/u0 local:3637468}
+      - ReceiverList{f5b52d4 1879 system/1000/u0 local:3bbf027}
+      - ReceiverList{f60290d 1879 system/1000/u-1 local:37bc7a4}
+      - ReceiverList{f7aa8a4 1879 system/1000/u0 local:72ebb37}
+      - ReceiverList{f7dc211 1879 system/1000/u0 local:683d238}
+      - ReceiverList{f7e45f6 1879 system/1000/u0 local:6481291}
+      - ReceiverList{f808e8a 1879 system/1000/u0 local:ac290f5}
+      - ReceiverList{f81b562 1879 system/1000/u0 local:bf72c2d}
+      - ReceiverList{f920787 1879 system/1000/u0 local:8c8bc6}
+      - ReceiverList{fadc9c8 1879 system/1000/u0 local:5cada6b}
+      - ReceiverList{fb2034d 1879 system/1000/u-1 local:f5fa2e4}
+      - ReceiverList{fb47d60 1879 system/1000/u0 local:8243d63}
+      - ReceiverList{fc22ea5 1879 system/1000/u0 local:22849c}
+      - ReceiverList{fc4e930 1879 system/1000/u-1 local:ae6b673}
+      - ReceiverList{fd3bada 1879 system/1000/u0 local:b107c85}
+      - ReceiverList{fdeb606 1879 system/1000/u0 local:ec2f8e1}
+      - ReceiverList{fe4cc06 1879 system/1000/u0 local:d5ba6e1}
+      - ReceiverList{fe9064e 1879 system/1000/u0 local:e8ebd49}
+      - ReceiverList{ff23367 1879 system/1000/u0 local:3a47b26}
