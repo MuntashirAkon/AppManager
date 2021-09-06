@@ -107,19 +107,24 @@ public final class ActivityManagerCompat {
         }
     }
 
+    @NonNull
     public static List<ActivityManager.RunningServiceInfo> getRunningServices(String packageName, @UserIdInt int userId) {
-        List<ActivityManager.RunningServiceInfo> res = new ArrayList<>();
         List<ActivityManager.RunningServiceInfo> runningServices;
-        if (!AppPref.isRootOrAdbEnabled()) {
-            // Fetch running services using DUMP permission if root/ADB is disabled
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && !AppPref.isRootOrAdbEnabled()
+                && PermissionUtils.hasDumpPermission()) {
+            // Fetch running services by parsing dumpsys output if root/ADB is disabled
+            // and android.permission.DUMP is granted
             runningServices = getRunningServicesUsingDumpSys(packageName);
         } else {
+            // For no-root, this returns services running in the current UID since Android M
             try {
                 runningServices = getActivityManager().getServices(100, 0);
             } catch (RemoteException e) {
-                return res;
+                return Collections.emptyList();
             }
         }
+        List<ActivityManager.RunningServiceInfo> res = new ArrayList<>();
         for (ActivityManager.RunningServiceInfo info : runningServices) {
             if (info.service.getPackageName().equals(packageName) && userId == Users.getUserId(info.uid)) {
                 res.add(info);
@@ -129,10 +134,14 @@ public final class ActivityManagerCompat {
     }
 
     public static List<ActivityManager.RunningAppProcessInfo> getRunningAppProcesses() {
-        if (!AppPref.isRootOrAdbEnabled()) {
-            // Fetch running app process using DUMP permission if root/ADB is disabled
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && !AppPref.isRootOrAdbEnabled()
+                && PermissionUtils.hasDumpPermission()) {
+            // Fetch running app processes by parsing dumpsys output if root/ADB is disabled
+            // and android.permission.DUMP is granted
             return getRunningAppProcessesUsingDumpSys();
         } else {
+            // For no-root, this returns app processes running in the current UID since Android M
             try {
                 return getActivityManager().getRunningAppProcesses();
             } catch (RemoteException e) {
@@ -152,12 +161,12 @@ public final class ActivityManagerCompat {
 
     @SuppressWarnings("RegExpRedundantEscape")
     private static final Pattern APP_PROCESS_REGEX = Pattern.compile("\\*[A-Z]+\\* UID (\\d+) ProcessRecord\\{[0-9a-f]+ (\\d+):([^/]+)/[^\\}]+\\}");
+    @SuppressWarnings("RegExpRedundantEscape")
     private static final Pattern PKG_LIST_REGEX = Pattern.compile("packageList=\\{([^/]+)\\}");
 
     @NonNull
     private static List<ActivityManager.RunningAppProcessInfo> getRunningAppProcessesUsingDumpSys() {
         List<ActivityManager.RunningAppProcessInfo> runningAppProcessInfos = new ArrayList<>();
-        if (!PermissionUtils.hasDumpPermission()) return runningAppProcessInfos;
         Runner.Result result = Runner.runCommand(new String[]{"dumpsys", "activity", "processes"});
         if (!result.isSuccessful()) return runningAppProcessInfos;
         List<String> appProcessDump = result.getOutputAsList(1);
@@ -210,11 +219,9 @@ public final class ActivityManagerCompat {
                     info.uid = Integer.decode(uid);
                     info.pid = Integer.decode(pid);
                     info.processName = processName;
-                    String split[] = pkgList.split(", ");
+                    String[] split = pkgList.split(", ");
                     info.pkgList = new String[split.length];
-                    for (int i = 0; i < split.length; ++i) {
-                        info.pkgList[i] = split[i];
-                    }
+                    System.arraycopy(split, 0, info.pkgList, 0, split.length);
                     runningAppProcessInfos.add(info);
                 }
                 line = it.next();
@@ -232,7 +239,6 @@ public final class ActivityManagerCompat {
     @NonNull
     private static List<ActivityManager.RunningServiceInfo> getRunningServicesUsingDumpSys(String packageName) {
         List<ActivityManager.RunningServiceInfo> runningServices = new ArrayList<>();
-        if (!PermissionUtils.hasDumpPermission()) return runningServices;
         Runner.Result result = Runner.runCommand(new String[]{"dumpsys", "activity", "services", "-p", packageName});
         if (!result.isSuccessful()) return runningServices;
         List<String> serviceDump = result.getOutputAsList(1);
