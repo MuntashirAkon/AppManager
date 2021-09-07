@@ -8,15 +8,13 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.view.View;
 import android.widget.RemoteViews;
 
 import androidx.annotation.NonNull;
 
+import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logcat.LogcatRecordingService;
 import io.github.muntashirakon.AppManager.logcat.RecordingWidgetProvider;
-
-import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
 
 // Copyright 2012 Nolan Lawson
@@ -57,8 +55,6 @@ public class WidgetHelper {
         CharSequence subtext = context.getText(serviceRunning ? R.string.widget_recording_in_progress :
                 R.string.widget_start_recording);
         updateViews.setTextViewText(R.id.widget_subtext, subtext);
-        // if service not running, don't show the "recording" icon
-        updateViews.setViewVisibility(R.id.record_badge_image_view, serviceRunning ? View.VISIBLE : View.INVISIBLE);
         PendingIntent pendingIntent = getPendingIntent(context, appWidgetId);
         updateViews.setOnClickPendingIntent(R.id.clickable_linear_layout, pendingIntent);
         manager.updateAppWidget(appWidgetId, updateViews);
