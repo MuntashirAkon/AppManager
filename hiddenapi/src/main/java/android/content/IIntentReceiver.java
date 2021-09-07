@@ -13,7 +13,7 @@ public interface IIntentReceiver extends IInterface {
                         boolean sticky, int sendingUser);
 
     abstract class Stub extends Binder implements IIntentReceiver {
-        public static IIntentSender asInterface(android.os.IBinder obj) {
+        public static IIntentReceiver asInterface(android.os.IBinder obj) {
             throw new UnsupportedOperationException();
         }
 

@@ -18,7 +18,6 @@ import misc.utils.HiddenUtil;
 public class AppOpsManagerHidden {
     public static int _NUM_OP;
 
-    @RefineAs(AppOpsManager.PackageOps.class)
     public static class PackageOps implements Parcelable {
         @NonNull
         public String getPackageName() {
@@ -35,7 +34,6 @@ public class AppOpsManagerHidden {
         }
     }
 
-    @RefineAs(AppOpsManager.OpEntry.class)
     public static class OpEntry implements Parcelable {
         public int getOp() {
             return HiddenUtil.throwUOE();
