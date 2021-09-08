@@ -296,8 +296,6 @@ class RestoreOp implements Closeable {
         }
         // A normal update will do it now
         PackageInstallerCompat packageInstaller = PackageInstallerCompat.getNewInstance(userHandle, metadata.installer);
-        // We don't need to display install completed message
-        packageInstaller.setShowCompletedMessage(false);
         try {
             if (!packageInstaller.install(allApks, packageName)) {
                 throw new BackupException("A (re)install was necessary but couldn't perform it.");

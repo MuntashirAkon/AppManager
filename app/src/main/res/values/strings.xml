@@ -414,7 +414,6 @@
     </plurals>
     <string name="termux">Termux</string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> installed</string>
-    <string name="failed_to_install_package_name">Could not install <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
     <string name="filter">Filter</string>
     <string name="filter_user_apps">User apps</string>
     <string name="filter_system_apps">System apps</string>
@@ -530,7 +529,7 @@
     <string name="reinstall">Reinstall</string>
     <string name="unblock_trackers">Unblock trackers</string>
     <string name="package_installer">Package Installer</string>
-    <string name="install_in_progress">Install in progress</string>
+    <string name="install_in_progress">Installing…</string>
     <string name="installer_error_security">Could not access APK files</string>
     <string name="installer_error_session_create">Could not create an installer session</string>
     <string name="installer_error_session_write">Could not write to the installer session</string>
@@ -1101,4 +1100,8 @@
     <string name="user_root">Use root</string>
     <string name="trim_caches_in_all_apps">Trim caches in all apps</string>
     <string name="trim_caches_in_all_apps_description">Deletes cache files from all applications, including android system</string>
+    <string name="background">Background</string>
+    <string name="staging_apk_files">Staging…</string>
+    <string name="installer_app_installed">App installed</string>
+    <string name="next">Next</string>
 </resources>

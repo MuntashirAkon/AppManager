@@ -2,7 +2,9 @@
 
 package io.github.muntashirakon.AppManager.apk.installer;
 
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageInstaller;
@@ -11,10 +13,13 @@ import android.content.pm.UserInfo;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.os.UserHandleHidden;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.RelativeSizeSpan;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -28,6 +33,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.topjohnwu.superuser.internal.UiThreadHandler;
 
 import java.io.File;
 import java.util.Iterator;
@@ -41,10 +47,26 @@ import io.github.muntashirakon.AppManager.apk.splitapk.SplitApkChooser;
 import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.types.ForegroundService;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.StoragePermission;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.AppManager.utils.Utils;
 
+import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_ABORTED;
+import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_BLOCKED;
+import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_CONFLICT;
+import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_INCOMPATIBLE;
+import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_INCOMPATIBLE_ROM;
+import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_INVALID;
+import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_SECURITY;
+import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_SESSION_ABANDON;
+import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_SESSION_COMMIT;
+import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_SESSION_CREATE;
+import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_SESSION_WRITE;
+import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_STORAGE;
+import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_SUCCESS;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getDialogTitle;
 
 public class PackageInstallerActivity extends BaseActivity implements WhatsNewDialogFragment.InstallInterface {
@@ -53,6 +75,10 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
 
     private int sessionId = -1;
     private String packageName;
+    /**
+     * Whether this activity is currently dealing with an apk
+     */
+    private boolean isDealingWithApk = false;
     private final ActivityResultLauncher<Intent> confirmIntentLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 // User did some interaction and the installer screen is closed now
@@ -60,7 +86,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
                 broadcastIntent.putExtra(PackageInstaller.EXTRA_PACKAGE_NAME, packageName);
                 broadcastIntent.putExtra(PackageInstaller.EXTRA_SESSION_ID, sessionId);
                 getApplicationContext().sendBroadcast(broadcastIntent);
-                if (!hasNext()) {
+                if (!hasNext() && !isDealingWithApk) {
                     // No APKs left, this maybe a solo call
                     finish();
                 } // else let the original activity decide what to do
@@ -76,7 +102,11 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
     private int actionName;
     private FragmentManager fm;
     private AlertDialog progressDialog;
+    @Nullable
+    private AlertDialog installProgressDialog;
     private PackageInstallerViewModel model;
+    @Nullable
+    private PackageInstallerService service;
     private final StoragePermission storagePermission = StoragePermission.init(this);
     private final ActivityResultLauncher<Intent> uninstallIntentLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -85,12 +115,22 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
                     // No need for user handle since it is only applicable for the current user (no-root)
                     getPackageManager().getPackageInfo(model.getPackageName(), 0);
                     // The package is still installed meaning that the app uninstall wasn't successful
-                    UIUtils.displayLongToast(R.string.failed_to_install_package_name, model.getAppLabel());
-                    triggerCancel();
+                    getInstallationFinishedDialog(STATUS_FAILURE_CONFLICT, null).show();
                 } catch (PackageManager.NameNotFoundException e) {
                     install();
                 }
             });
+    private final ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            PackageInstallerActivity.this.service = ((ForegroundService.Binder) service).getService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            service = null;
+        }
+    };
 
     @Override
     protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
@@ -105,7 +145,13 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
             return;
         }
         model = new ViewModelProvider(this).get(PackageInstallerViewModel.class);
-        progressDialog = UIUtils.getProgressDialog(this, getText(R.string.loading));
+        if (!bindService(
+                new Intent(this, PackageInstallerService.class),
+                serviceConnection,
+                BIND_AUTO_CREATE)) {
+            throw new RuntimeException("Unable to bind PackageInstallerService");
+        }
+        progressDialog = getParsingProgressDialog();
         fm = getSupportFragmentManager();
         progressDialog.show();
         mimeType = intent.getType();
@@ -166,6 +212,14 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
                 }
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (service != null) {
+            unbindService(serviceConnection);
+        }
+        super.onDestroy();
     }
 
     @UiThread
@@ -278,7 +332,15 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
         intent.putExtra(PackageInstallerService.EXTRA_CLOSE_APK_FILE, model.isCloseApkFile());
         ContextCompat.startForegroundService(this, intent);
         model.setCloseApkFile(false);
-        triggerCancel();
+        setInstallFinishedListener();
+        if (service != null) {
+            installProgressDialog = getInstallationProgressDialog(!Utils.canDisplayNotification(this));
+            installProgressDialog.show();
+        } else {
+            // For some reason, the service is empty
+            // Install next app instead
+            goToNext();
+        }
     }
 
     @Override
@@ -297,7 +359,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
             } catch (Exception e) {
                 e.printStackTrace();
                 PackageInstallerCompat.sendCompletedBroadcast(packageName, PackageInstallerCompat.STATUS_FAILURE_INCOMPATIBLE_ROM, sessionId);
-                if (!hasNext()) {
+                if (!hasNext() && !isDealingWithApk) {
                     // No APKs left, this maybe a solo call
                     finish();
                 } // else let the original activity decide what to do
@@ -377,9 +439,12 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
      */
     private void goToNext() {
         if (hasNext()) {
+            isDealingWithApk = true;
+            progressDialog.show();
             //noinspection ConstantConditions Checked earlier
             model.getPackageInfo(uriIterator.next(), mimeType);
         } else {
+            isDealingWithApk = false;
             finish();
         }
     }
@@ -399,6 +464,127 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
             sb.append(", ").append(res.getQuantityString(R.plurals.no_of_trackers, trackers, trackers));
         }
         return sb.toString();
+    }
+
+    @NonNull
+    public AlertDialog getInstallationProgressDialog(boolean enableBackgroundService) {
+        View view = getLayoutInflater().inflate(R.layout.dialog_progress2, null);
+        TextView tv = view.findViewById(android.R.id.text1);
+        tv.setText(R.string.install_in_progress);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this)
+                .setCustomTitle(getDialogTitle(this, model.getAppLabel(), model.getAppIcon(),
+                        getVersionInfoWithTrackers(model.getNewPackageInfo())))
+                .setCancelable(false)
+                .setView(view);
+        if (enableBackgroundService) {
+            builder.setPositiveButton(R.string.background, (dialog, which) -> {
+                unsetInstallFinishedListener();
+                dialog.dismiss();
+                goToNext();
+            });
+        }
+        return builder.create();
+    }
+
+    @NonNull
+    public AlertDialog getInstallationFinishedDialog(int result, @Nullable String blockingPackage) {
+        View view = getLayoutInflater().inflate(R.layout.dialog_scrollable_text_view, null);
+        view.findViewById(android.R.id.checkbox).setVisibility(View.GONE);
+        TextView tv = view.findViewById(android.R.id.content);
+        tv.setText(getStringFromStatus(result, blockingPackage));
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this)
+                .setCustomTitle(getDialogTitle(this, model.getAppLabel(), model.getAppIcon(),
+                        getVersionInfoWithTrackers(model.getNewPackageInfo())))
+                .setView(view)
+                .setCancelable(false)
+                .setNegativeButton(hasNext() ? R.string.next : R.string.close, (dialog, which) -> {
+                    dialog.dismiss();
+                    goToNext();
+                });
+        if (result == STATUS_SUCCESS) {
+            Intent intent = getPackageManager().getLaunchIntentForPackage(packageName);
+            if (intent != null) {
+                builder.setPositiveButton(R.string.open, (dialog, which) -> {
+                    dialog.dismiss();
+                    startActivity(intent);
+                    goToNext();
+                });
+            }
+        }
+        return builder.create();
+    }
+
+    @NonNull
+    public AlertDialog getParsingProgressDialog() {
+        View view = getLayoutInflater().inflate(R.layout.dialog_progress2, null);
+        TextView tv = view.findViewById(android.R.id.text1);
+        tv.setText(R.string.staging_apk_files);
+        return new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string._undefined)
+                .setIcon(R.drawable.ic_baseline_get_app_24)
+                .setCancelable(false)
+                .setNegativeButton(R.string.cancel, (dialog, which) -> {
+                    dialog.dismiss();
+                    goToNext();
+                })
+                .setView(view)
+                .create();
+    }
+
+    @NonNull
+    private String getStringFromStatus(@PackageInstallerCompat.Status int status,
+                                       @Nullable String blockingPackage) {
+        switch (status) {
+            case STATUS_SUCCESS:
+                return getString(R.string.installer_app_installed);
+            case STATUS_FAILURE_ABORTED:
+                return getString(R.string.installer_error_aborted);
+            case STATUS_FAILURE_BLOCKED:
+                String blocker = getString(R.string.installer_error_blocked_device);
+                if (blockingPackage != null) {
+                    blocker = PackageUtils.getPackageLabel(getPackageManager(), blockingPackage);
+                }
+                return getString(R.string.installer_error_blocked, blocker);
+            case STATUS_FAILURE_CONFLICT:
+                return getString(R.string.installer_error_conflict);
+            case STATUS_FAILURE_INCOMPATIBLE:
+                return getString(R.string.installer_error_incompatible);
+            case STATUS_FAILURE_INVALID:
+                return getString(R.string.installer_error_bad_apks);
+            case STATUS_FAILURE_STORAGE:
+                return getString(R.string.installer_error_storage);
+            case STATUS_FAILURE_SECURITY:
+                return getString(R.string.installer_error_security);
+            case STATUS_FAILURE_SESSION_CREATE:
+                return getString(R.string.installer_error_session_create);
+            case STATUS_FAILURE_SESSION_WRITE:
+                return getString(R.string.installer_error_session_write);
+            case STATUS_FAILURE_SESSION_COMMIT:
+                return getString(R.string.installer_error_session_commit);
+            case STATUS_FAILURE_SESSION_ABANDON:
+                return getString(R.string.installer_error_session_abandon);
+            case STATUS_FAILURE_INCOMPATIBLE_ROM:
+                return getString(R.string.installer_error_lidl_rom);
+        }
+        return getString(R.string.installer_error_generic);
+    }
+
+    public void setInstallFinishedListener() {
+        if (service != null) {
+            service.setOnInstallFinished((packageName, status, blockingPackage) -> UiThreadHandler.run(() -> {
+                if (isFinishing()) return;
+                if (installProgressDialog != null) {
+                    installProgressDialog.hide();
+                }
+                getInstallationFinishedDialog(status, blockingPackage).show();
+            }));
+        }
+    }
+
+    public void unsetInstallFinishedListener() {
+        if (service != null) {
+            service.setOnInstallFinished(null);
+        }
     }
 }
 
