@@ -2,18 +2,19 @@
 
 package io.github.muntashirakon.AppManager.utils;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ConfigurationInfo;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.pm.PermissionInfo;
 import android.content.pm.ServiceInfo;
 import android.content.pm.Signature;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Parcel;
 import android.text.GetChars;
 import android.text.TextUtils;
 import android.util.Pair;
@@ -61,6 +62,9 @@ import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
+
+import static android.app.ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND;
+import static android.app.ActivityManager.RunningAppProcessInfo.IMPORTANCE_VISIBLE;
 
 public class Utils {
     public static final String TERMUX_LOGIN_PATH = OsEnvironment.getDataDataDirectory() + "/com.termux/files/usr/bin/login";
@@ -668,12 +672,19 @@ public class Utils {
         }
     }
 
-    public static void writeBoolean(boolean b, @NonNull Parcel dest) {
-        dest.writeInt(b ? 1 : 0);
+    public static boolean isTv(@NonNull Context context) {
+        return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_LEANBACK);
     }
 
-    public static boolean readBoolean(@NonNull Parcel in) {
-        return in.readInt() != 0;
+    public static boolean canDisplayNotification(@NonNull Context context) {
+        // Notifications can be displayed in all supported devices except Android TV (O+)
+        return Build.VERSION.SDK_INT < Build.VERSION_CODES.O || !isTv(context);
+    }
+
+    public static boolean isAppInForeground() {
+        ActivityManager.RunningAppProcessInfo appProcessInfo = new ActivityManager.RunningAppProcessInfo();
+        ActivityManager.getMyMemoryState(appProcessInfo);
+        return (appProcessInfo.importance == IMPORTANCE_FOREGROUND || appProcessInfo.importance == IMPORTANCE_VISIBLE);
     }
 
     public static int getTotalCores() {

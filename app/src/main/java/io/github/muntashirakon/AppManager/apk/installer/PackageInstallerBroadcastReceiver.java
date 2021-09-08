@@ -17,6 +17,7 @@ import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
+import io.github.muntashirakon.AppManager.utils.Utils;
 
 class PackageInstallerBroadcastReceiver extends BroadcastReceiver {
     public static final String TAG = "PIReceiver";
@@ -60,24 +61,29 @@ class PackageInstallerBroadcastReceiver extends BroadcastReceiver {
                 intent2.putExtra(PackageInstaller.EXTRA_PACKAGE_NAME, packageName);
                 intent2.putExtra(PackageInstaller.EXTRA_SESSION_ID, sessionId);
                 intent2.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                // Delete intent: aborts the operation
-                Intent broadcastCancel = new Intent(PackageInstallerCompat.ACTION_INSTALL_COMPLETED);
-                broadcastCancel.putExtra(PackageInstaller.EXTRA_PACKAGE_NAME, packageName);
-                broadcastCancel.putExtra(PackageInstaller.EXTRA_STATUS, PackageInstallerCompat.STATUS_FAILURE_ABORTED);
-                broadcastCancel.putExtra(PackageInstaller.EXTRA_SESSION_ID, sessionId);
-                // Ask user for permission
-                NotificationCompat.Builder builder = NotificationUtils.getHighPriorityNotificationBuilder(context)
-                        .setAutoCancel(true)
-                        .setDefaults(Notification.DEFAULT_ALL)
-                        .setWhen(System.currentTimeMillis())
-                        .setSmallIcon(R.drawable.ic_launcher_foreground)
-                        .setTicker(appLabel)
-                        .setContentTitle(appLabel)
-                        .setSubText(context.getString(R.string.package_installer))
-                        .setContentText(context.getString(R.string.confirm_installation))
-                        .setContentIntent(PendingIntent.getActivity(context, 0, intent2, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_UPDATE_CURRENT))
-                        .setDeleteIntent(PendingIntent.getBroadcast(context, 0, broadcastCancel, PendingIntent.FLAG_UPDATE_CURRENT));
-                NotificationUtils.displayHighPriorityNotification(context, builder.build());
+                if (Utils.isAppInForeground()) {
+                    // Open activity directly
+                    context.startActivity(intent2);
+                } else {
+                    // Delete intent: aborts the operation
+                    Intent broadcastCancel = new Intent(PackageInstallerCompat.ACTION_INSTALL_COMPLETED);
+                    broadcastCancel.putExtra(PackageInstaller.EXTRA_PACKAGE_NAME, packageName);
+                    broadcastCancel.putExtra(PackageInstaller.EXTRA_STATUS, PackageInstallerCompat.STATUS_FAILURE_ABORTED);
+                    broadcastCancel.putExtra(PackageInstaller.EXTRA_SESSION_ID, sessionId);
+                    // Ask user for permission
+                    NotificationCompat.Builder builder = NotificationUtils.getHighPriorityNotificationBuilder(context)
+                            .setAutoCancel(true)
+                            .setDefaults(Notification.DEFAULT_ALL)
+                            .setWhen(System.currentTimeMillis())
+                            .setSmallIcon(R.drawable.ic_launcher_foreground)
+                            .setTicker(appLabel)
+                            .setContentTitle(appLabel)
+                            .setSubText(context.getString(R.string.package_installer))
+                            .setContentText(context.getString(R.string.confirm_installation))
+                            .setContentIntent(PendingIntent.getActivity(context, 0, intent2, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_UPDATE_CURRENT))
+                            .setDeleteIntent(PendingIntent.getBroadcast(context, 0, broadcastCancel, PendingIntent.FLAG_UPDATE_CURRENT));
+                    NotificationUtils.displayHighPriorityNotification(context, builder.build());
+                }
                 break;
             case PackageInstaller.STATUS_SUCCESS:
                 Log.d(TAG, "Install success!");

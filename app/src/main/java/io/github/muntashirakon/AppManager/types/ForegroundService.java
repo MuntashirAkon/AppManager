@@ -12,10 +12,19 @@ import android.os.Message;
 import android.os.Process;
 
 import androidx.annotation.CallSuper;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public abstract class ForegroundService extends Service {
+    public class Binder extends android.os.Binder {
+        @SuppressWarnings("unchecked")
+        public <T extends ForegroundService> T getService() {
+            return (T) ForegroundService.this;
+        }
+    }
+
     private final String name;
+    private final IBinder binder = new Binder();
     @SuppressWarnings("FieldCanBeLocal")
     private Looper serviceLooper;
     private ServiceHandler serviceHandler;
@@ -59,8 +68,9 @@ public abstract class ForegroundService extends Service {
 
     protected abstract void onHandleIntent(@Nullable Intent intent);
 
+    @NonNull
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return binder;
     }
 }

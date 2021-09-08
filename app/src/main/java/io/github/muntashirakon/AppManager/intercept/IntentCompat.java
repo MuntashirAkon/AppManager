@@ -54,7 +54,9 @@ public class IntentCompat {
         } else if (Intent.ACTION_SEND_MULTIPLE.equals(intent.getAction())) {
             return intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
         }
-        return Collections.singletonList(intent.getData());
+        Uri data = intent.getData();
+        if (data == null) return null;
+        return Collections.singletonList(data);
     }
 
     public static void removeFlags(@NonNull Intent intent, int flags) {
