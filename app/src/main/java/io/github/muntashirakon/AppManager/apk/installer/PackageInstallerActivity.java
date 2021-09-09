@@ -114,7 +114,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
                     // No need for user handle since it is only applicable for the current user (no-root)
                     getPackageManager().getPackageInfo(model.getPackageName(), 0);
                     // The package is still installed meaning that the app uninstall wasn't successful
-                    getInstallationFinishedDialog(STATUS_FAILURE_CONFLICT, null).show();
+                    getInstallationFinishedDialog(model.getPackageName(), STATUS_FAILURE_CONFLICT, null).show();
                 } catch (PackageManager.NameNotFoundException e) {
                     install();
                 }
@@ -333,7 +333,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
         model.setCloseApkFile(false);
         setInstallFinishedListener();
         if (service != null) {
-            installProgressDialog = getInstallationProgressDialog(!Utils.canDisplayNotification(this));
+            installProgressDialog = getInstallationProgressDialog(Utils.canDisplayNotification(this));
             installProgressDialog.show();
         } else {
             // For some reason, the service is empty
@@ -486,7 +486,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
     }
 
     @NonNull
-    public AlertDialog getInstallationFinishedDialog(int result, @Nullable String blockingPackage) {
+    public AlertDialog getInstallationFinishedDialog(String packageName, int result, @Nullable String blockingPackage) {
         View view = getLayoutInflater().inflate(R.layout.dialog_scrollable_text_view, null);
         view.findViewById(android.R.id.checkbox).setVisibility(View.GONE);
         TextView tv = view.findViewById(android.R.id.content);
@@ -575,7 +575,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
                 if (installProgressDialog != null) {
                     installProgressDialog.hide();
                 }
-                getInstallationFinishedDialog(status, blockingPackage).show();
+                getInstallationFinishedDialog(packageName, status, blockingPackage).show();
             });
         }
     }
