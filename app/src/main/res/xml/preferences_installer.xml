@@ -27,6 +27,12 @@
         app:iconSpaceReserved="false" />
 
     <SwitchPreferenceCompat
+        app:key="installer_block_trackers"
+        app:title="@string/block_trackers"
+        app:summary="@string/pref_block_trackers_msg"
+        app:iconSpaceReserved="false" />
+
+    <SwitchPreferenceCompat
         app:key="installer_display_changes"
         app:title="@string/pref_display_changes"
         app:summary="@string/pref_display_changes_msg"

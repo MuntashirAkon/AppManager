@@ -31,7 +31,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.topjohnwu.superuser.internal.UiThreadHandler;
 
 import java.io.File;
 import java.util.Iterator;
@@ -569,13 +568,13 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
 
     public void setInstallFinishedListener() {
         if (service != null) {
-            service.setOnInstallFinished((packageName, status, blockingPackage) -> UiThreadHandler.run(() -> {
+            service.setOnInstallFinished((packageName, status, blockingPackage) -> {
                 if (isFinishing()) return;
                 if (installProgressDialog != null) {
                     installProgressDialog.hide();
                 }
                 getInstallationFinishedDialog(status, blockingPackage).show();
-            }));
+            });
         }
     }
 
