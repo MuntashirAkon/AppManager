@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?><!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical|start"
+    android:paddingStart="?attr/dialogPreferredPadding"
+    android:paddingEnd="?attr/dialogPreferredPadding"
+    android:paddingTop="18dp">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/icon"
+        style="?attr/materialAlertDialogTitleIconStyle"
+        android:layout_width="32dip"
+        android:layout_height="32dip"
+        android:layout_marginEnd="8dip"
+        android:layout_weight="0"
+        android:scaleType="fitCenter"
+        tools:srcCompat="@drawable/ic_keyboard_backspace_black_24dp" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/title"
+            android:ellipsize="end"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="viewStart"
+            style="?attr/materialAlertDialogTitleTextStyle"
+            android:textSize="16sp"
+            android:textColor="@color/textColorPrimary"
+            android:textStyle="bold"
+            tools:text="Dialog Title" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/subtitle"
+            android:ellipsize="end"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="viewStart"
+            style="?attr/materialAlertDialogTitleTextStyle"
+            android:textSize="10sp"
+            android:textColor="@color/textColorSecondary"
+            tools:text="Dialog Subtitle"
+            tools:ignore="SmallSp" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/icon_2"
+        style="?attr/materialAlertDialogTitleIconStyle"
+        android:layout_width="24dip"
+        android:layout_height="24dip"
+        android:layout_weight="0"
+        android:layout_marginStart="8dip"
+        android:scaleType="fitCenter"
+        android:background="?android:selectableItemBackgroundBorderless"
+        tools:srcCompat="@drawable/ic_more_vert_black_24dp" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

@@ -2,7 +2,6 @@
 
 package io.github.muntashirakon.AppManager.utils;
 
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Typeface;
@@ -37,6 +36,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.dialog.DialogTitleBuilder;
 
 public class UIUtils {
     static final Spannable.Factory sSpannableFactory = Spannable.Factory.getInstance();
@@ -194,20 +194,7 @@ public class UIUtils {
     @NonNull
     public static View getDialogTitle(@NonNull FragmentActivity activity, @NonNull CharSequence title,
                                       @Nullable Drawable drawable, @Nullable CharSequence subtitle) {
-        @SuppressLint("InflateParams")
-        View appLabelWithVersionView = activity.getLayoutInflater().inflate(R.layout.dialog_title_with_icon, null);
-        ImageView iv = appLabelWithVersionView.findViewById(R.id.icon);
-        if (drawable != null) {
-            iv.setImageDrawable(drawable);
-        } else {
-            iv.setVisibility(View.GONE);
-        }
-        SpannableStringBuilder fullTitle = new SpannableStringBuilder(getBoldString(getTitleText(activity, title)));
-        if (subtitle != null) {
-            fullTitle.append("\n").append(getSmallerText(getSecondaryText(activity, subtitle)));
-        }
-        ((TextView) appLabelWithVersionView.findViewById(R.id.title)).setText(fullTitle);
-        return appLabelWithVersionView;
+        return new DialogTitleBuilder(activity).setTitle(title).setSubtitle(subtitle).setStartIcon(drawable).build();
     }
 
     @NonNull

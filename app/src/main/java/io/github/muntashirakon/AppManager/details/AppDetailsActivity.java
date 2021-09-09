@@ -28,15 +28,18 @@ import io.github.muntashirakon.AppManager.details.info.AppInfoFragment;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.AppManager.main.MainActivity;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 public class AppDetailsActivity extends BaseActivity {
     public static final String EXTRA_PACKAGE_NAME = "pkg";
     public static final String EXTRA_USER_HANDLE = "user";
+    public static final String EXTRA_BACK_TO_MAIN = "main";
 
     public AppDetailsViewModel model;
     public SearchView searchView;
     public ViewPager viewPager;
+    public boolean backToMainPage;
 
     private TypedArray mTabTitleIds;
     private Fragment[] fragments;
@@ -47,6 +50,7 @@ public class AppDetailsActivity extends BaseActivity {
         setSupportActionBar(findViewById(R.id.toolbar));
         model = new ViewModelProvider(this).get(AppDetailsViewModel.class);
         Intent intent = getIntent();
+        backToMainPage = intent.getBooleanExtra(EXTRA_BACK_TO_MAIN, false);
         // Check for package name
         final String packageName = intent.getStringExtra(EXTRA_PACKAGE_NAME);
         final Uri apkUri = IntentCompat.getDataUri(intent);
@@ -119,6 +123,10 @@ public class AppDetailsActivity extends BaseActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         final int id = item.getItemId();
         if (id == android.R.id.home) {
+            if (backToMainPage) {
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+            }
             finish();
             return true;
         }
