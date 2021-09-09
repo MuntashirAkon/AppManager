@@ -46,6 +46,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -105,6 +106,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     private String searchQuery;
     private boolean waitForBlocker;
     private boolean isExternalApk = false;
+    private final CountDownLatch packageInfoWatcher = new CountDownLatch(1);
 
     public AppDetailsViewModel(@NonNull Application application) {
         super(application);
@@ -146,11 +148,16 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 apkFileKey = ApkFile.createInstance(packageUri, type);
                 apkFile = ApkFile.getInstance(apkFileKey);
                 setPackageName(apkFile.getPackageName());
-                apkPath = apkFile.getBaseEntry().getRealCachedFile().getAbsolutePath();
+                File cachedApkFile = apkFile.getBaseEntry().getRealCachedFile();
+                if (!cachedApkFile.canRead()) throw new Exception("Cannot read " + cachedApkFile);
+                apkPath = cachedApkFile.getAbsolutePath();
+                setPackageInfo(false);
                 packageInfoLiveData.postValue(getPackageInfo());
             } catch (Throwable th) {
                 Log.e("ADVM", "Could not fetch package info.", th);
                 packageInfoLiveData.postValue(null);
+            } finally {
+                packageInfoWatcher.countDown();
             }
         });
         return packageInfoLiveData;
@@ -165,14 +172,18 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 Log.d("ADVM", "Package name is being set");
                 isExternalApk = false;
                 setPackageName(packageName);
-                if (getPackageInfo() == null) throw new ApkFile.ApkFileException("Package not installed.");
                 // TODO: 23/5/21 The app could be “data only”
-                apkFileKey = ApkFile.createInstance(getPackageInfo().applicationInfo);
+                setPackageInfo(false);
+                PackageInfo pi = getPackageInfo();
+                if (pi == null) throw new ApkFile.ApkFileException("Package not installed.");
+                apkFileKey = ApkFile.createInstance(pi.applicationInfo);
                 apkFile = ApkFile.getInstance(apkFileKey);
-                packageInfoLiveData.postValue(getPackageInfo());
+                packageInfoLiveData.postValue(pi);
             } catch (Throwable th) {
                 Log.e("ADVM", "Could not fetch package info.", th);
                 packageInfoLiveData.postValue(null);
+            } finally {
+                packageInfoWatcher.countDown();
             }
         });
         return packageInfoLiveData;
@@ -860,14 +871,19 @@ public class AppDetailsViewModel extends AndroidViewModel {
     }
 
     @WorkerThread
-    public PackageInfo getPackageInfo() {
-        if (packageInfo == null) setPackageInfo(false);
+    @Nullable
+    private PackageInfo getPackageInfoInternal() {
+        try {
+            packageInfoWatcher.await();
+        } catch (InterruptedException e) {
+            return null;
+        }
         return packageInfo;
     }
 
     @AnyThread
     @Nullable
-    public PackageInfo getPackageInfoSafe() {
+    public PackageInfo getPackageInfo() {
         return packageInfo;
     }
 
@@ -910,7 +926,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     @WorkerThread
     private void loadAppInfo() {
-        getPackageInfo();
+        getPackageInfoInternal();
         if (packageInfo == null) {
             appInfo.postValue(null);
             return;
@@ -936,7 +952,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @GuardedBy("blockerLocker")
     private void loadActivities() {
         List<AppDetailsItem> appDetailsItems = new ArrayList<>();
-        if (getPackageInfo() == null || packageInfo.activities == null) {
+        if (getPackageInfoInternal() == null || packageInfo.activities == null) {
             activities.postValue(appDetailsItems);
             return;
         }
@@ -971,7 +987,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @GuardedBy("blockerLocker")
     private void loadServices() {
         List<AppDetailsItem> appDetailsItems = new ArrayList<>();
-        if (getPackageInfo() == null || packageInfo.services == null) {
+        if (getPackageInfoInternal() == null || packageInfo.services == null) {
             // There are no services
             services.postValue(appDetailsItems);
             return;
@@ -1008,7 +1024,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @GuardedBy("blockerLocker")
     private void loadReceivers() {
         List<AppDetailsItem> appDetailsItems = new ArrayList<>();
-        if (getPackageInfo() == null || packageInfo.receivers == null) {
+        if (getPackageInfoInternal() == null || packageInfo.receivers == null) {
             // There are no receivers
             receivers.postValue(appDetailsItems);
             return;
@@ -1045,7 +1061,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @GuardedBy("blockerLocker")
     private void loadProviders() {
         List<AppDetailsItem> appDetailsItems = new ArrayList<>();
-        if (getPackageInfo() == null || packageInfo.providers == null) {
+        if (getPackageInfoInternal() == null || packageInfo.providers == null) {
             // There are no providers
             providers.postValue(appDetailsItems);
             return;
@@ -1221,7 +1237,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         synchronized (usesPermissionItems) {
             usesPermissionItems.clear();
         }
-        if (getPackageInfo() == null || packageInfo.requestedPermissions == null) {
+        if (getPackageInfoInternal() == null || packageInfo.requestedPermissions == null) {
             // No requested permissions
             usesPermissions.postValue(appDetailsItems);
             return;
@@ -1291,7 +1307,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @WorkerThread
     public List<String> getRawPermissions() {
         List<String> rawPermissions = new ArrayList<>();
-        if (getPackageInfo() != null && packageInfo.requestedPermissions != null) {
+        if (getPackageInfoInternal() != null && packageInfo.requestedPermissions != null) {
             rawPermissions.addAll(Arrays.asList(packageInfo.requestedPermissions));
         }
         return rawPermissions;
@@ -1311,7 +1327,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @WorkerThread
     private void loadPermissions() {
         List<AppDetailsItem> appDetailsItems = new ArrayList<>();
-        if (getPackageInfo() == null || packageInfo.permissions == null) {
+        if (getPackageInfoInternal() == null || packageInfo.permissions == null) {
             // No custom permissions
             permissions.postValue(appDetailsItems);
             return;
@@ -1343,7 +1359,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @WorkerThread
     private void loadFeatures() {
         List<AppDetailsItem> appDetailsItems = new ArrayList<>();
-        if (getPackageInfo() == null || packageInfo.reqFeatures == null) {
+        if (getPackageInfoInternal() == null || packageInfo.reqFeatures == null) {
             // No required features
             features.postValue(appDetailsItems);
             return;
@@ -1374,7 +1390,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @WorkerThread
     private void loadConfigurations() {
         List<AppDetailsItem> appDetailsItems = new ArrayList<>();
-        if (getPackageInfo() == null || packageInfo.configPreferences != null) {
+        if (getPackageInfoInternal() == null || packageInfo.configPreferences != null) {
             for (ConfigurationInfo configurationInfo : packageInfo.configPreferences) {
                 AppDetailsItem appDetailsItem = new AppDetailsItem(configurationInfo);
                 appDetailsItems.add(appDetailsItem);
@@ -1457,7 +1473,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @WorkerThread
     private void loadSharedLibraries() {
         List<AppDetailsItem> appDetailsItems = new ArrayList<>();
-        if (getPackageInfo() == null) {
+        if (getPackageInfoInternal() == null) {
             sharedLibraries.postValue(appDetailsItems);
             return;
         }

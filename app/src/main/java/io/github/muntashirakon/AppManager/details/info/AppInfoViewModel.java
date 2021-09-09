@@ -90,8 +90,10 @@ public class AppInfoViewModel extends AndroidViewModel {
     @WorkerThread
     public void loadPackageLabel() {
         if (mainModel != null) {
-            packageLabel.postValue(mainModel.getPackageInfo().applicationInfo.loadLabel(getApplication()
-                    .getPackageManager()));
+            PackageInfo pi = mainModel.getPackageInfo();
+            if (pi != null) {
+                packageLabel.postValue(pi.applicationInfo.loadLabel(getApplication().getPackageManager()));
+            }
         }
     }
 
@@ -99,6 +101,7 @@ public class AppInfoViewModel extends AndroidViewModel {
     public void loadTagCloud() {
         if (mainModel == null) return;
         PackageInfo packageInfo = mainModel.getPackageInfo();
+        if (packageInfo == null) return;
         String packageName = packageInfo.packageName;
         ApplicationInfo applicationInfo = packageInfo.applicationInfo;
         TagCloud tagCloud = new TagCloud();
@@ -170,6 +173,7 @@ public class AppInfoViewModel extends AndroidViewModel {
     public void loadAppInfo() {
         if (mainModel == null) return;
         PackageInfo packageInfo = mainModel.getPackageInfo();
+        if (packageInfo == null) return;
         String packageName = packageInfo.packageName;
         ApplicationInfo applicationInfo = packageInfo.applicationInfo;
         int userHandle = Users.getUserId(applicationInfo.uid);

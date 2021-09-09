@@ -224,21 +224,10 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         mTagCloud = view.findViewById(R.id.tag_cloud);
         labelView = view.findViewById(R.id.label);
         packageNameView = view.findViewById(R.id.packageName);
-        mPackageName = mainModel.getPackageName();
         iconView = view.findViewById(R.id.icon);
         versionView = view.findViewById(R.id.version);
-        isExternalApk = mainModel.getIsExternalApk();
-        // Set adapter only after package info is loaded
-        executor.submit(() -> {
-            mPackageName = mainModel.getPackageName();
-            if (mPackageName == null) {
-                mainModel.setPackageInfo(false);
-                mPackageName = mainModel.getPackageName();
-            }
-            isExternalApk = mainModel.getIsExternalApk();
-            adapter = new AppInfoRecyclerAdapter(mActivity);
-            runOnUiThread(() -> recyclerView.setAdapter(adapter));
-        });
+        adapter = new AppInfoRecyclerAdapter(mActivity);
+        recyclerView.setAdapter(adapter);
         // Set observer
         mainModel.get(AppDetailsFragment.APP_INFO).observe(getViewLifecycleOwner(), appDetailsItems -> {
             if (appDetailsItems != null && !appDetailsItems.isEmpty() && mainModel.isPackageExist()) {
@@ -246,6 +235,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 mPackageInfo = (PackageInfo) appDetailsItem.vanillaItem;
                 mPackageName = appDetailsItem.name;
                 mInstalledPackageInfo = mainModel.getInstalledPackageInfo();
+                isExternalApk = mainModel.getIsExternalApk();
                 mApplicationInfo = mPackageInfo.applicationInfo;
                 // Set package name
                 packageNameView.setText(mPackageName);

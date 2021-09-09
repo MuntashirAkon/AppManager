@@ -94,7 +94,7 @@ public class AppDetailsActivity extends BaseActivity {
                     ApplicationInfo applicationInfo = packageInfo.applicationInfo;
                     // Set title as the package label
                     setTitle(applicationInfo.loadLabel(getPackageManager()));
-                    // Set subtitle as the user name if more than one user exists
+                    // Set subtitle as the username if more than one user exists
                     model.getUserInfo().observe(this, userInfo -> getSupportActionBar()
                             .setSubtitle(getString(R.string.user_profile_with_id, userInfo.name, userInfo.id)));
                 });
