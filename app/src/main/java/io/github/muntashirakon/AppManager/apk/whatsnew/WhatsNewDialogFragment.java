@@ -13,12 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -29,13 +23,21 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 public class WhatsNewDialogFragment extends DialogFragment {
     public static final String TAG = "WhatsNewDialogFragment";
     public static final String ARG_NEW_PKG_INFO = "ARG_NEW_PKG_INFO";
     public static final String ARG_OLD_PKG_INFO = "ARG_OLD_PKG_INFO";
     public static final String ARG_INSTALL_NAME = "ARG_INSTALL_NAME";
+    public static final String ARG_VERSION_INFO = "ARG_VERSION_INFO";
 
     public interface InstallInterface {
         void triggerInstall();
@@ -57,9 +59,10 @@ public class WhatsNewDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         activity = requireActivity();
-        newPkgInfo = (PackageInfo) requireArguments().get(ARG_NEW_PKG_INFO);
-        oldPkgInfo = (PackageInfo) requireArguments().get(ARG_OLD_PKG_INFO);
+        newPkgInfo = requireArguments().getParcelable(ARG_NEW_PKG_INFO);
+        oldPkgInfo = requireArguments().getParcelable(ARG_OLD_PKG_INFO);
         final String installName = requireArguments().getString(ARG_INSTALL_NAME);
+        String versionInfo = requireArguments().getString(ARG_VERSION_INFO);
         LayoutInflater inflater = LayoutInflater.from(activity);
         if (inflater == null) return super.onCreateDialog(savedInstanceState);
         View view = inflater.inflate(R.layout.dialog_whats_new, null);
@@ -85,8 +88,10 @@ public class WhatsNewDialogFragment extends DialogFragment {
                 .setView(view);
         if (installInterface != null) {
             PackageManager pm = activity.getPackageManager();
-            builder.setTitle(pm.getApplicationLabel(newPkgInfo.applicationInfo))
-                    .setIcon(pm.getApplicationIcon(newPkgInfo.applicationInfo))
+            builder.setCustomTitle(UIUtils.getDialogTitle(requireActivity(),
+                            pm.getApplicationLabel(newPkgInfo.applicationInfo),
+                            pm.getApplicationIcon(newPkgInfo.applicationInfo),
+                            versionInfo))
                     .setNegativeButton(R.string.cancel, (dialog, which) -> installInterface.triggerCancel())
                     .setPositiveButton(installName, (dialog, which) -> installInterface.triggerInstall());
         } else builder.setNegativeButton(R.string.ok, null);

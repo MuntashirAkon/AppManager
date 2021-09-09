@@ -44,6 +44,7 @@ import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.splitapk.SplitApkChooser;
 import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
+import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.types.ForegroundService;
@@ -52,6 +53,7 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.StoragePermission;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.dialog.DialogTitleBuilder;
 
 import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_ABORTED;
 import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_BLOCKED;
@@ -244,6 +246,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
         args.putParcelable(WhatsNewDialogFragment.ARG_NEW_PKG_INFO, model.getNewPackageInfo());
         args.putParcelable(WhatsNewDialogFragment.ARG_OLD_PKG_INFO, model.getInstalledPackageInfo());
         args.putString(WhatsNewDialogFragment.ARG_INSTALL_NAME, getString(actionName));
+        args.putString(WhatsNewDialogFragment.ARG_VERSION_INFO, getVersionInfoWithTrackers(model.getNewPackageInfo()));
         WhatsNewDialogFragment dialogFragment = new WhatsNewDialogFragment();
         dialogFragment.setCancelable(false);
         dialogFragment.setArguments(args);
@@ -504,21 +507,35 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
     @NonNull
     public AlertDialog getInstallationFinishedDialog(String packageName,
                                                      CharSequence message,
-                                                     boolean displayOpen) {
+                                                     boolean displayOpenAndAppInfo) {
         View view = getLayoutInflater().inflate(R.layout.dialog_scrollable_text_view, null);
         view.findViewById(android.R.id.checkbox).setVisibility(View.GONE);
         TextView tv = view.findViewById(android.R.id.content);
         tv.setText(message);
+        DialogTitleBuilder title = new DialogTitleBuilder(this)
+                .setTitle(model.getAppLabel())
+                .setSubtitle(getVersionInfoWithTrackers(model.getNewPackageInfo()))
+                .setStartIcon(model.getAppIcon());
+        if (displayOpenAndAppInfo) {
+            title.setEndIcon(R.drawable.ic_info_outline_black_24dp, v -> {
+                Intent appDetailsIntent = new Intent(this, AppDetailsActivity.class);
+                appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME, packageName);
+                // FIXME: 9/9/21 Use the first user ID instead of the current user ID
+                appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_USER_HANDLE, UserHandleHidden.myUserId());
+                appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_BACK_TO_MAIN, true);
+                appDetailsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(appDetailsIntent);
+            });
+        }
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this)
-                .setCustomTitle(getDialogTitle(this, model.getAppLabel(), model.getAppIcon(),
-                        getVersionInfoWithTrackers(model.getNewPackageInfo())))
+                .setCustomTitle(title.build())
                 .setView(view)
                 .setCancelable(false)
                 .setNegativeButton(hasNext() ? R.string.next : R.string.close, (dialog, which) -> {
                     dialog.dismiss();
                     goToNext();
                 });
-        if (displayOpen) {
+        if (displayOpenAndAppInfo) {
             Intent intent = getPackageManager().getLaunchIntentForPackage(packageName);
             if (intent != null) {
                 builder.setPositiveButton(R.string.open, (dialog, which) -> {
