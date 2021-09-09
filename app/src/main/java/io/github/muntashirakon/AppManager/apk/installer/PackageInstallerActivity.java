@@ -204,8 +204,10 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
                     if (AppPref.isRootOrAdbEnabled()) {
                         displayWhatsNewDialog();
                     } else {
-                        UIUtils.displayLongToast(R.string.downgrade_not_possible);
-                        triggerCancel();
+                        getInstallationFinishedDialog(
+                                model.getPackageName(),
+                                getString(R.string.downgrade_not_possible),
+                                false).show();
                     }
                 }
             }
@@ -377,14 +379,18 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
         ApplicationInfo info = model.getInstalledPackageInfo().applicationInfo;  // Installed package info is never null here.
         if ((info.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
             // Cannot reinstall a system app with a different signature
-            UIUtils.displayLongToast(R.string.app_signing_signature_mismatch_for_system_apps);
-            triggerCancel();
+            getInstallationFinishedDialog(
+                    model.getPackageName(),
+                    getString(R.string.app_signing_signature_mismatch_for_system_apps),
+                    false).show();
             return;
         }
-        if (!new File(info.publicSourceDir).exists()) {
+        if (info.publicSourceDir == null || !new File(info.publicSourceDir).exists()) {
             // Cannot reinstall an uninstalled app
-            UIUtils.displayLongToast(R.string.app_signing_signature_mismatch_for_data_only_app);
-            triggerCancel();
+            getInstallationFinishedDialog(
+                    model.getPackageName(),
+                    getString(R.string.app_signing_signature_mismatch_for_data_only_app),
+                    false).show();
             return;
         }
         // Offer user to uninstall and then install the app again
@@ -410,8 +416,10 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
                             install();
                         } catch (Exception e) {
                             e.printStackTrace();
-                            UIUtils.displayLongToast(R.string.failed_to_uninstall, model.getAppLabel());
-                            triggerCancel();
+                            getInstallationFinishedDialog(
+                                    model.getPackageName(),
+                                    getString(R.string.failed_to_uninstall_app),
+                                    false).show();
                         }
                     } else {
                         // Uninstall using service, not guaranteed to work
@@ -485,10 +493,20 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
 
     @NonNull
     public AlertDialog getInstallationFinishedDialog(String packageName, int result, @Nullable String blockingPackage) {
+        return getInstallationFinishedDialog(
+                packageName,
+                getStringFromStatus(result, blockingPackage),
+                result == STATUS_SUCCESS);
+    }
+
+    @NonNull
+    public AlertDialog getInstallationFinishedDialog(String packageName,
+                                                     CharSequence message,
+                                                     boolean displayOpen) {
         View view = getLayoutInflater().inflate(R.layout.dialog_scrollable_text_view, null);
         view.findViewById(android.R.id.checkbox).setVisibility(View.GONE);
         TextView tv = view.findViewById(android.R.id.content);
-        tv.setText(getStringFromStatus(result, blockingPackage));
+        tv.setText(message);
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this)
                 .setCustomTitle(getDialogTitle(this, model.getAppLabel(), model.getAppIcon(),
                         getVersionInfoWithTrackers(model.getNewPackageInfo())))
@@ -498,7 +516,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
                     dialog.dismiss();
                     goToNext();
                 });
-        if (result == STATUS_SUCCESS) {
+        if (displayOpen) {
             Intent intent = getPackageManager().getLaunchIntentForPackage(packageName);
             if (intent != null) {
                 builder.setPositiveButton(R.string.open, (dialog, which) -> {
