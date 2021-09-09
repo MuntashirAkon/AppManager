@@ -93,9 +93,7 @@ public class InstallerPreferences extends PreferenceFragmentCompat {
                                 if (isDetached()) return;
                                 appInfo.add(new Pair<>(info.applicationInfo.loadLabel(pm), info.packageName));
                             }
-                            Collections.sort(appInfo, (o1, o2) -> {
-                                return o1.first.toString().compareTo(o2.first.toString());
-                            });
+                            Collections.sort(appInfo, (o1, o2) -> o1.first.toString().compareTo(o2.first.toString()));
                             ArrayList<String> items = new ArrayList<>(packageInfoList.size());
                             ArrayList<CharSequence> itemNames = new ArrayList<>(packageInfoList.size());
                             for (Pair<CharSequence, String> pair : appInfo) {
@@ -146,5 +144,9 @@ public class InstallerPreferences extends PreferenceFragmentCompat {
         // Display changes
         ((SwitchPreferenceCompat) Objects.requireNonNull(findPreference("installer_display_changes")))
                 .setChecked((boolean) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_DISPLAY_CHANGES_BOOL));
+        // Block trackers
+        SwitchPreferenceCompat blockTrackersPref = Objects.requireNonNull(findPreference("installer_block_trackers"));
+        blockTrackersPref.setVisible(AppPref.isRootEnabled());
+        blockTrackersPref.setChecked((boolean) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_BLOCK_TRACKERS_BOOL));
     }
 }

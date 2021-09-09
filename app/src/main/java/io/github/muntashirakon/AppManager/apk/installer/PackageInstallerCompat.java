@@ -410,8 +410,10 @@ public final class PackageInstallerCompat {
     public static final int DELETE_CHATTY = 0x80000000;
 
     public interface OnInstallListener {
+        @WorkerThread
         void onStartInstall(int sessionId, String packageName);
 
+        @WorkerThread
         void onFinishedInstall(int sessionId, String packageName, int result, @Nullable String blockingPackage);
     }
 

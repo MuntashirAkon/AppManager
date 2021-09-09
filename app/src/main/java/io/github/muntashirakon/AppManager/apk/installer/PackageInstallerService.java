@@ -9,16 +9,23 @@ import android.os.UserHandleHidden;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.UiThread;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+
+import java.util.Collections;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.main.MainActivity;
+import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.types.ForegroundService;
+import io.github.muntashirakon.AppManager.types.UserPackagePair;
+import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 
 import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_ABORTED;
 import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_BLOCKED;
@@ -43,6 +50,7 @@ public class PackageInstallerService extends ForegroundService {
     public static final int NOTIFICATION_ID = 3;
 
     public interface OnInstallFinished {
+        @UiThread
         void onFinished(String packageName, int status, @Nullable String blockingPackage);
     }
 
@@ -95,8 +103,15 @@ public class PackageInstallerService extends ForegroundService {
 
             @Override
             public void onFinishedInstall(int sessionId, String packageName, int result, @Nullable String blockingPackage) {
+                // Block trackers if requested
+                if (result == STATUS_SUCCESS
+                        && AppPref.isRootEnabled()
+                        && AppPref.getBoolean(AppPref.PrefKey.PREF_INSTALLER_BLOCK_TRACKERS_BOOL)) {
+                    ComponentUtils.blockTrackingComponents(Collections.singletonList(
+                            new UserPackagePair(packageName, userHandle)));
+                }
                 if (onInstallFinished != null) {
-                    onInstallFinished.onFinished(packageName, result, blockingPackage);
+                    UiThreadHandler.run(() -> onInstallFinished.onFinished(packageName, result, blockingPackage));
                 } else sendNotification(result, appLabel, blockingPackage);
             }
         });
