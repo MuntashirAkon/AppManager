@@ -224,6 +224,7 @@
     <string name="view_in_settings">View in Settings</string>
     <string name="uninstall_app_message">Do you want to uninstall this app?</string>
     <string name="failed_to_uninstall">Could not uninstall <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="failed_to_uninstall_app">Uninstallation failed</string>
     <string name="uninstalled_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> has been uninstalled.</string>
     <string name="uninstall_system_app_message">This is a system app. Are you sure want to uninstall this app?</string>
     <string name="stopped">Stopped</string>
