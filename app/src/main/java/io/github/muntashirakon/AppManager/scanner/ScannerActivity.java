@@ -124,7 +124,7 @@ public class ScannerActivity extends BaseActivity {
             return;
         }
 
-        if (intent.getAction() != null && intent.getAction().equals(Intent.ACTION_VIEW)) {
+        if (Intent.ACTION_VIEW.equals(intent.getAction())) {
             try {
                 fd = getContentResolver().openFileDescriptor(apkUri, "r");
                 if (fd == null) {

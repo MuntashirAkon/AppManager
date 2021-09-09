@@ -32,6 +32,7 @@ import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 
 public class ScannerViewModel extends AndroidViewModel {
     private File apkFile;
+    private boolean cached;
     private Uri apkUri;
     private DexClasses dexClasses;
     private List<String> classListAll;
@@ -53,7 +54,7 @@ public class ScannerViewModel extends AndroidViewModel {
     protected void onCleared() {
         super.onCleared();
         executor.shutdownNow();
-        if (apkFile != null && !apkFile.getAbsolutePath().startsWith("/data/app/")) {
+        if (cached && apkFile != null) {
             // Only attempt to delete the apk file if it's cached
             IOUtils.deleteSilently(apkFile);
         }
@@ -61,6 +62,7 @@ public class ScannerViewModel extends AndroidViewModel {
 
     @AnyThread
     public void loadSummary(File apkFile, Uri apkUri) {
+        cached = false;
         this.apkFile = apkFile;
         this.apkUri = apkUri;
         waitForFile = new CountDownLatch(1);
@@ -120,7 +122,8 @@ public class ScannerViewModel extends AndroidViewModel {
         if (!apkFile.exists() || !apkFile.canRead()) {
             // Not readable, cache the file
             try (InputStream uriStream = getApplication().getContentResolver().openInputStream(apkUri)) {
-                apkFile = IOUtils.getCachedFile(uriStream);
+                apkFile = FileUtils.getCachedFile(uriStream);
+                cached = true;
             } catch (IOException e) {
                 e.printStackTrace();
             }
