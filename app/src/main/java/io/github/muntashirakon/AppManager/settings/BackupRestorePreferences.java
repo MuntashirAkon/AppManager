@@ -30,6 +30,7 @@ import java.io.File;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
@@ -49,6 +50,7 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.StorageUtils;
+import io.github.muntashirakon.dialog.DialogTitleBuilder;
 
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
@@ -70,15 +72,19 @@ public class BackupRestorePreferences extends PreferenceFragmentCompat {
     private final ActivityResultLauncher<Intent> safOpen = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
-                if (result.getResultCode() != Activity.RESULT_OK) return;
-                Intent data = result.getData();
-                if (data == null) return;
-                Uri treeUri = data.getData();
-                if (treeUri == null) return;
-                int takeFlags = data.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                requireContext().getContentResolver().takePersistableUriPermission(treeUri, takeFlags);
-                // Display backup volumes again
-                displayVolumeSelectionDialog();
+                try {
+                    if (result.getResultCode() != Activity.RESULT_OK) return;
+                    Intent data = result.getData();
+                    if (data == null) return;
+                    Uri treeUri = data.getData();
+                    if (treeUri == null) return;
+                    int takeFlags = data.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION
+                            | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                    requireContext().getContentResolver().takePersistableUriPermission(treeUri, takeFlags);
+                } finally {
+                    // Display backup volumes again
+                    displayVolumeSelectionDialog();
+                }
             });
 
     @Override
@@ -226,23 +232,34 @@ public class BackupRestorePreferences extends PreferenceFragmentCompat {
     }
 
     private void displayVolumeSelectionDialog() {
+        AtomicReference<AlertDialog> alertDialog = new AtomicReference<>(null);
+        DialogTitleBuilder titleBuilder = new DialogTitleBuilder(activity)
+                .setTitle(R.string.backup_volume)
+                .setSubtitle(R.string.backup_volume_dialog_description)
+                .setStartIcon(R.drawable.ic_sd_storage_24)
+                .setEndIcon(R.drawable.ic_baseline_add_24, v -> new MaterialAlertDialogBuilder(activity)
+                        .setTitle(R.string.notice)
+                        .setMessage(R.string.notice_saf)
+                        .setPositiveButton(R.string.go, (dialog1, which1) -> {
+                            if (alertDialog.get() != null) alertDialog.get().dismiss();
+                            Intent safIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
+                                    .putExtra("android.content.extra.SHOW_ADVANCED", true)
+                                    .putExtra("android.content.extra.FANCY", true)
+                                    .putExtra("android.content.extra.SHOW_FILESIZE", true);
+                            safOpen.launch(safIntent);
+                        })
+                        .setNeutralButton(R.string.cancel, null)
+                        .show());
         new Thread(() -> {
             ArrayMap<String, Uri> storageLocations = StorageUtils.getAllStorageLocations(activity, false);
             if (storageLocations.size() == 0) {
                 activity.runOnUiThread(() -> {
                     if (isDetached()) return;
-                    new MaterialAlertDialogBuilder(activity)
-                            .setTitle(R.string.backup_volume)
+                    alertDialog.set(new MaterialAlertDialogBuilder(activity)
+                            .setCustomTitle(titleBuilder.build())
                             .setMessage(R.string.no_volumes_found)
                             .setNegativeButton(R.string.ok, null)
-                            .setNeutralButton(R.string.add_item, (dialog, which) -> {
-                                Intent safIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
-                                        .putExtra("android.content.extra.SHOW_ADVANCED", true)
-                                        .putExtra("android.content.extra.FANCY", true)
-                                        .putExtra("android.content.extra.SHOW_FILESIZE", true);
-                                safOpen.launch(safIntent);
-                            })
-                            .show();
+                            .show());
                 });
             } else {
                 Uri[] backupVolumes = new Uri[storageLocations.size()];
@@ -258,8 +275,8 @@ public class BackupRestorePreferences extends PreferenceFragmentCompat {
                 }
                 activity.runOnUiThread(() -> {
                     if (isDetached()) return;
-                    new MaterialAlertDialogBuilder(activity)
-                            .setTitle(R.string.backup_volume)
+                    alertDialog.set(new MaterialAlertDialogBuilder(activity)
+                            .setCustomTitle(titleBuilder.build())
                             .setSingleChoiceItems(backupVolumesStr, selectedIndex.get(), (dialog, which) -> {
                                 this.backupVolume = backupVolumes[which];
                                 selectedIndex.set(which);
@@ -270,20 +287,7 @@ public class BackupRestorePreferences extends PreferenceFragmentCompat {
                                 new Thread(() -> PackageUtils.updateInstalledOrBackedUpApplications(
                                         AppManager.getContext(), true)).start();
                             })
-                            .setNeutralButton(R.string.add_item, (dialog, which) ->
-                                    new MaterialAlertDialogBuilder(activity)
-                                            .setTitle(R.string.notice)
-                                            .setMessage(R.string.notice_saf)
-                                            .setPositiveButton(R.string.go, (dialog1, which1) -> {
-                                                Intent safIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
-                                                        .putExtra("android.content.extra.SHOW_ADVANCED", true)
-                                                        .putExtra("android.content.extra.FANCY", true)
-                                                        .putExtra("android.content.extra.SHOW_FILESIZE", true);
-                                                safOpen.launch(safIntent);
-                                            })
-                                            .setNeutralButton(R.string.cancel, null)
-                                            .show())
-                            .show();
+                            .show());
                 });
             }
         }).start();

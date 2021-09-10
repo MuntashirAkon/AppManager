@@ -1086,6 +1086,7 @@
     <string name="enable_disable">Enable/disable</string>
     <string name="notice">Notice</string>
     <string name="notice_saf">Unlike the volumes, the selected directory will be used to store all the files related to App Manager, including saved APKs and backups. Storage Access Framework (SAF) is very slow, therefore, you should only use this option when others cannot be used.</string>
+    <string name="backup_volume_dialog_description">Volumes with <tt>/tree</tt> prefix are folders selected using Storage Access Framework (SAF). Except these folders, the default directory for App Manager is a subfolder named <tt>AppManager</tt>.</string>
     <string name="storage">Storage</string>
     <string name="files">Files</string>
     <string name="keystore_password_info">The following is the App Manager KeyStore password. Please store it in a secure place if you\'re going to back up/restore App Manager KeyStore. <b>This message will not be displayed again.</b></string>
