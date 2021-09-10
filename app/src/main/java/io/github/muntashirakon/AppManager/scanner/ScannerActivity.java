@@ -46,6 +46,7 @@ import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity;
+import io.github.muntashirakon.AppManager.fm.FmProvider;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.types.EmptySpan;
@@ -81,7 +82,6 @@ public class ScannerActivity extends BaseActivity {
     @Nullable
     private String mPackageName;
     private ParcelFileDescriptor fd;
-    private File apkFile;
     private Uri apkUri;
     private boolean isExternalApk;
     private ScannerViewModel model;
@@ -126,24 +126,22 @@ public class ScannerActivity extends BaseActivity {
             return;
         }
 
+        File apkFile = null;
         if (Intent.ACTION_VIEW.equals(intent.getAction())) {
-            try {
-                fd = getContentResolver().openFileDescriptor(apkUri, "r");
-                if (fd == null) {
-                    throw new FileNotFoundException("FileDescription cannot be null");
+            if (!FmProvider.AUTHORITY.equals(apkUri.getAuthority())) {
+                try {
+                    fd = getContentResolver().openFileDescriptor(apkUri, "r");
+                    if (fd == null) {
+                        throw new FileNotFoundException("FileDescription cannot be null");
+                    }
+                    apkFile = FileUtils.getFileFromFd(fd);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
                 }
-                apkFile = FileUtils.getFileFromFd(fd);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
             }
         } else {
             String path = apkUri.getPath();
             if (path != null) apkFile = new File(path);
-        }
-        if (apkFile == null) {
-            Toast.makeText(this, getString(R.string.error), Toast.LENGTH_LONG).show();
-            finish();
-            return;
         }
 
         model.loadSummary(apkFile, apkUri);

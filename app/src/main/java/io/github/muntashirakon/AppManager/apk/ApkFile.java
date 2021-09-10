@@ -46,6 +46,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.apk.signing.SigSchemes;
 import io.github.muntashirakon.AppManager.apk.signing.Signer;
+import io.github.muntashirakon.AppManager.fm.FmProvider;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
@@ -211,16 +212,18 @@ public final class ApkFile implements AutoCloseable {
             }
         } else {
             // Open file descriptor
-            try {
-                ParcelFileDescriptor fd = cr.openFileDescriptor(apkUri, "r");
-                if (fd == null) {
-                    throw new FileNotFoundException("Could not get file descriptor from the Uri");
+            if (!FmProvider.AUTHORITY.equals(apkUri.getAuthority())) {
+                try {
+                    ParcelFileDescriptor fd = cr.openFileDescriptor(apkUri, "r");
+                    if (fd == null) {
+                        throw new FileNotFoundException("Could not get file descriptor from the Uri");
+                    }
+                    this.fd = fd;
+                } catch (FileNotFoundException e) {
+                    throw new ApkFileException(e);
+                } catch (SecurityException e) {
+                    Log.e(TAG, e);
                 }
-                this.fd = fd;
-            } catch (FileNotFoundException e) {
-                throw new ApkFileException(e);
-            } catch (SecurityException e) {
-                Log.e(TAG, e);
             }
             File cacheFilePath = this.fd != null ? FileUtils.getFileFromFd(fd) : null;
             if (cacheFilePath == null || !cacheFilePath.canRead()) {
@@ -454,7 +457,7 @@ public final class ApkFile implements AutoCloseable {
 
     @NonNull
     private File getCachePath() {
-        File destDir = AppManager.getContext().getExternalFilesDir("apks");
+        File destDir = AppManager.getContext().getExternalCacheDir();
         if (destDir == null || !Environment.getExternalStorageState(destDir).equals(Environment.MEDIA_MOUNTED))
             throw new RuntimeException("External media not present");
         if (!destDir.exists()) //noinspection ResultOfMethodCallIgnored

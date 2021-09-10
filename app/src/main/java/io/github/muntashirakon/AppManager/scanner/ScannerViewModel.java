@@ -10,6 +10,7 @@ import android.util.Pair;
 
 import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -61,7 +62,7 @@ public class ScannerViewModel extends AndroidViewModel {
     }
 
     @AnyThread
-    public void loadSummary(File apkFile, Uri apkUri) {
+    public void loadSummary(@Nullable File apkFile, @NonNull Uri apkUri) {
         cached = false;
         this.apkFile = apkFile;
         this.apkUri = apkUri;
@@ -119,7 +120,7 @@ public class ScannerViewModel extends AndroidViewModel {
     @WorkerThread
     private void cacheFileIfRequired() {
         // Test if this path is readable
-        if (!apkFile.exists() || !apkFile.canRead()) {
+        if (this.apkFile == null || !apkFile.canRead()) {
             // Not readable, cache the file
             try (InputStream uriStream = getApplication().getContentResolver().openInputStream(apkUri)) {
                 apkFile = FileUtils.getCachedFile(uriStream);
