@@ -4,12 +4,9 @@ package io.github.muntashirakon.AppManager.types;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
+import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.view.View;
-
-import com.google.android.material.checkbox.MaterialCheckBox;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.textview.MaterialTextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,6 +14,11 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.text.util.LinkifyCompat;
 import androidx.fragment.app.FragmentActivity;
+
+import com.google.android.material.checkbox.MaterialCheckBox;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.textview.MaterialTextView;
+
 import io.github.muntashirakon.AppManager.R;
 
 public class ScrollableDialogBuilder {
@@ -51,6 +53,11 @@ public class ScrollableDialogBuilder {
         this(activity, activity.getText(inputTextLabel));
     }
 
+    public ScrollableDialogBuilder setTitle(@Nullable View title) {
+        builder.setCustomTitle(title);
+        return this;
+    }
+
     public ScrollableDialogBuilder setTitle(@Nullable CharSequence title) {
         builder.setTitle(title);
         return this;
@@ -76,12 +83,17 @@ public class ScrollableDialogBuilder {
         return this;
     }
 
-    public ScrollableDialogBuilder linkify(@LinkifyCompat.LinkifyMask int mask){
+    public ScrollableDialogBuilder enableAnchors() {
+        this.message.setMovementMethod(LinkMovementMethod.getInstance());
+        return this;
+    }
+
+    public ScrollableDialogBuilder linkify(@LinkifyCompat.LinkifyMask int mask) {
         LinkifyCompat.addLinks(message, mask);
         return this;
     }
 
-    public ScrollableDialogBuilder linkifyAll(){
+    public ScrollableDialogBuilder linkifyAll() {
         return linkify(Linkify.ALL);
     }
 

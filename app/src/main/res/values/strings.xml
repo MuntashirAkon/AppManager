@@ -250,6 +250,7 @@
     <string name="only_works_in_root_mode">Only works in root mode</string>
     <string name="usage_yesterday">Yesterday</string>
     <string name="exodus_link">\u03b5xodus Link</string>
+    <string name="second_degree_tracker_note">² prefix indicates that the trackers are in the <a href="https://etip.exodus-privacy.eu.org/">ETIP stand-by list</a> i.e. whether they are actual trackers are still being investigated.</string>
     <string name="sort_by_disabled_app">Disabled first</string>
     <string name="sort_by_blocked_components">Blocked first</string>
     <string name="external_data_dir">External Data Directory</string>

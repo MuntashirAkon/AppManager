@@ -38,6 +38,10 @@ public class DialogTitleBuilder {
     private Drawable endIcon;
     @Nullable
     private View.OnClickListener endIconClickListener;
+    @StringRes
+    private int endIconContentDescriptionRes;
+    @Nullable
+    private CharSequence endIconContentDescription;
 
     public DialogTitleBuilder(@NonNull Context context) {
         this.context = context;
@@ -85,6 +89,16 @@ public class DialogTitleBuilder {
         return this;
     }
 
+    public DialogTitleBuilder setEndIconContentDescription(@Nullable CharSequence endIconContentDescription) {
+        this.endIconContentDescription = endIconContentDescription;
+        return this;
+    }
+
+    public DialogTitleBuilder setEndIconContentDescription(@StringRes int endIconContentDescriptionRes) {
+        this.endIconContentDescriptionRes = endIconContentDescriptionRes;
+        return this;
+    }
+
     public View build() {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         @SuppressLint("InflateParams")
@@ -108,7 +122,14 @@ public class DialogTitleBuilder {
         if (this.endIcon == null && this.endIconRes == 0) endIcon.setVisibility(View.GONE);
         else if (this.endIcon != null) endIcon.setImageDrawable(this.endIcon);
         else endIcon.setImageResource(this.endIconRes);
-        if (this.endIconClickListener != null) endIcon.setOnClickListener(this.endIconClickListener);
+        if (this.endIconClickListener != null) {
+            endIcon.setOnClickListener(this.endIconClickListener);
+        }
+        if (this.endIconContentDescription != null) {
+            endIcon.setContentDescription(this.endIconContentDescription);
+        } else if (this.endIconContentDescriptionRes != 0) {
+            endIcon.setContentDescription(context.getText(this.endIconContentDescriptionRes));
+        }
         return v;
     }
 }

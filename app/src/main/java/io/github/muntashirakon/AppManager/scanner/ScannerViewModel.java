@@ -122,7 +122,7 @@ public class ScannerViewModel extends AndroidViewModel {
         if (!apkFile.exists() || !apkFile.canRead()) {
             // Not readable, cache the file
             try (InputStream uriStream = getApplication().getContentResolver().openInputStream(apkUri)) {
-                apkFile = FileUtils.getCachedFile(uriStream);
+                apkFile = IOUtils.getCachedFile(uriStream);
                 cached = true;
             } catch (IOException e) {
                 e.printStackTrace();
