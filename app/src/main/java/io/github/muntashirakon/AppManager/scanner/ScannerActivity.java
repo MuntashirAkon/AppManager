@@ -57,7 +57,9 @@ import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.dialog.DialogTitleBuilder;
 
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getMonospacedText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getPrimaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
@@ -150,7 +152,8 @@ public class ScannerActivity extends BaseActivity {
             SpannableStringBuilder sb = new SpannableStringBuilder(apkUri.toString()).append("\n");
             sb.append(getPrimaryText(this, getString(R.string.checksums)));
             for (Pair<String, String> digest : checksums) {
-                sb.append("\n").append(getPrimaryText(this, digest.first + ": ")).append(digest.second);
+                sb.append("\n").append(getPrimaryText(this, digest.first + ": "))
+                        .append(getMonospacedText(digest.second));
             }
             ((TextView) findViewById(R.id.apk_title)).setText(R.string.source_dir);
             ((TextView) findViewById(R.id.apk_description)).setText(sb);
@@ -278,6 +281,7 @@ public class ScannerActivity extends BaseActivity {
         t_end = System.currentTimeMillis();
         long totalTimeTaken = t_end - t_start;
         Map<String, SpannableStringBuilder> foundTrackerInfoMap = new ArrayMap<>();
+        final boolean[] hasSecondDegree = new boolean[]{false};
         // Iterate over signatures again but this time list only the found ones.
         for (int i = 0; i < trackerSignatures.length; i++) {
             if (signaturesFound[i]) {
@@ -287,8 +291,12 @@ public class ScannerActivity extends BaseActivity {
                             .append(getPrimaryText(this, trackerNames[i])));
                 }
                 //noinspection ConstantConditions Never null here
-                foundTrackerInfoMap.get(trackerNames[i]).append("\n").append(trackerSignatures[i])
+                foundTrackerInfoMap.get(trackerNames[i]).append("\n")
+                        .append(getMonospacedText(trackerSignatures[i]))
                         .append(getSmallerText(" (" + signatureCount[i] + ")"));
+                if (!hasSecondDegree[0]) {
+                    hasSecondDegree[0] = trackerNames[i].startsWith("²");
+                }
             }
         }
         Set<String> foundTrackerNames = foundTrackerInfoMap.keySet();
@@ -330,25 +338,35 @@ public class ScannerActivity extends BaseActivity {
             ((TextView) findViewById(R.id.tracker_description)).setText(builder);
             if (finalTotalTrackersFound == 0) return;
             findViewById(R.id.tracker).setOnClickListener(v -> {
-                ScrollableDialogBuilder builder1 = new ScrollableDialogBuilder(this, getOrderedList(foundTrackerInfo))
+                DialogTitleBuilder titleBuilder = new DialogTitleBuilder(this)
                         .setTitle(R.string.tracker_details)
+                        .setSubtitle(summary);
+                if (mPackageName != null) {
+                    titleBuilder.setEndIcon(R.drawable.ic_exodusprivacy, v1 -> {
+                                Uri exodus_link = Uri.parse(String.format(
+                                        "https://reports.exodus-privacy.eu.org/en/reports/%s/latest/", mPackageName));
+                                Intent intent = new Intent(Intent.ACTION_VIEW, exodus_link);
+                                if (intent.resolveActivity(getPackageManager()) != null) {
+                                    startActivity(intent);
+                                }
+                            })
+                            .setEndIconContentDescription(R.string.exodus_link);
+                }
+                Spanned trackerList = getOrderedList(foundTrackerInfo);
+                new ScrollableDialogBuilder(this, hasSecondDegree[0] ?
+                        new SpannableStringBuilder(trackerList)
+                                .append("\n\n")
+                                .append(getSmallerText(getText(R.string.second_degree_tracker_note)))
+                        : trackerList)
+                        .setTitle(titleBuilder.build())
+                        .enableAnchors()
                         .setPositiveButton(R.string.ok, null)
-                        .setNegativeButton(R.string.copy, (dialog, which, isChecked) -> {
+                        .setNeutralButton(R.string.copy, (dialog, which, isChecked) -> {
                             ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                             ClipData clip = ClipData.newPlainText(getString(R.string.signatures), TextUtils.join("\n", foundTrackerInfo));
                             clipboard.setPrimaryClip(clip);
-                        });
-                if (mPackageName != null) {
-                    builder1.setNeutralButton(R.string.exodus_link, (dialog, which, isChecked) -> {
-                        Uri exodus_link = Uri.parse(String.format(
-                                "https://reports.exodus-privacy.eu.org/en/reports/%s/latest/", mPackageName));
-                        Intent intent = new Intent(Intent.ACTION_VIEW, exodus_link);
-                        if (intent.resolveActivity(getPackageManager()) != null) {
-                            startActivity(intent);
-                        }
-                    });
-                }
-                builder1.show();
+                        })
+                        .show();
             });
         });
     }
@@ -382,7 +400,9 @@ public class ScannerActivity extends BaseActivity {
                     }
                 }
                 // Add the class to the missing libs list if it doesn't match the filters
-                if (!matched && (mPackageName != null && !className.startsWith(mPackageName)) && !className.matches(SIG_TO_IGNORE)) {
+                if (!matched
+                        && (mPackageName != null && !className.startsWith(mPackageName))
+                        && !className.matches(SIG_TO_IGNORE)) {
                     missingLibs.add(className);
                 }
             }
@@ -399,7 +419,8 @@ public class ScannerActivity extends BaseActivity {
                             .append(getSmallerText(" (" + libTypes[i] + ")")));
                 }
                 //noinspection ConstantConditions Never null here
-                foundLibInfoMap.get(libNames[i]).append("\n").append(libSignatures[i])
+                foundLibInfoMap.get(libNames[i]).append("\n")
+                        .append(getMonospacedText(libSignatures[i]))
                         .append(getSmallerText(" (" + signatureCount[i] + ")"));
             }
         }
@@ -420,7 +441,10 @@ public class ScannerActivity extends BaseActivity {
             if (finalTotalLibsFound == 0) return;
             findViewById(R.id.libs).setOnClickListener(v ->
                     new ScrollableDialogBuilder(this, getOrderedList(foundLibInfo))
-                            .setTitle(R.string.lib_details)
+                            .setTitle(new DialogTitleBuilder(this)
+                                    .setTitle(R.string.lib_details)
+                                    .setSubtitle(summary)
+                                    .build())
                             .setNegativeButton(R.string.ok, null)
                             .setNeutralButton(R.string.copy, (dialog, which, isChecked) -> {
                                 ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
@@ -465,7 +489,9 @@ public class ScannerActivity extends BaseActivity {
                 builder.append(getPrimaryText(this, getString(R.string.checksums)));
                 Pair<String, String>[] digests = DigestUtils.getDigests(cert.getEncoded());
                 for (Pair<String, String> digest : digests) {
-                    builder.append("\n").append(getPrimaryText(this, digest.first + ": ")).append(digest.second);
+                    builder.append("\n")
+                            .append(getPrimaryText(this, digest.first + ": "))
+                            .append(getMonospacedText(digest.second));
                 }
             } catch (CertificateEncodingException e) {
                 e.printStackTrace();

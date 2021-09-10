@@ -14,6 +14,7 @@ import android.text.style.BackgroundColorSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
+import android.text.style.TypefaceSpan;
 import android.text.style.UnderlineSpan;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
@@ -63,7 +64,15 @@ public class UIUtils {
     public static Spannable getColoredText(@NonNull CharSequence text, int color) {
         Spannable spannable = charSequenceToSpannable(text);
         spannable.setSpan(new ForegroundColorSpan(color), 0, spannable.length(),
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+        return spannable;
+    }
+
+    @NonNull
+    public static Spannable getMonospacedText(@NonNull CharSequence text) {
+        Spannable spannable = charSequenceToSpannable(text);
+        spannable.setSpan(new TypefaceSpan("monospace"), 0, spannable.length(),
+                Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
         return spannable;
     }
 
@@ -88,8 +97,12 @@ public class UIUtils {
     }
 
     @NonNull
-    public static Spannable getStyledKeyValue(@NonNull Context context, CharSequence key, CharSequence value, CharSequence separator) {
-        return new SpannableStringBuilder(getPrimaryText(context, new SpannableStringBuilder(key).append(separator))).append(value);
+    public static Spannable getStyledKeyValue(@NonNull Context context,
+                                              CharSequence key,
+                                              CharSequence value,
+                                              CharSequence separator) {
+        return new SpannableStringBuilder(getPrimaryText(context, new SpannableStringBuilder(key).append(separator)))
+                .append(value);
     }
 
     @NonNull
@@ -101,7 +114,7 @@ public class UIUtils {
     public static Spannable getTitleText(Context context, @NonNull CharSequence text) {
         Spannable spannable = charSequenceToSpannable(text);
         spannable.setSpan(new AbsoluteSizeSpan(getTitleSize(context)), 0, spannable.length(),
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         return getColoredText(spannable, getTextColorPrimary(context));
     }
 
@@ -114,31 +127,28 @@ public class UIUtils {
     public static Spannable getSmallerText(@NonNull CharSequence text) {
         Spannable spannable = charSequenceToSpannable(text);
         spannable.setSpan(new RelativeSizeSpan(.8f), 0, spannable.length(),
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         return spannable;
     }
 
     @NonNull
     public static Spannable getUnderlinedString(@NonNull CharSequence text) {
         Spannable spannable = charSequenceToSpannable(text);
-        spannable.setSpan(new UnderlineSpan(), 0, spannable.length(),
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new UnderlineSpan(), 0, spannable.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         return spannable;
     }
 
     @NonNull
     public static Spannable getBoldString(@NonNull CharSequence text) {
         Spannable spannable = charSequenceToSpannable(text);
-        spannable.setSpan(new StyleSpan(Typeface.BOLD), 0, spannable.length(),
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new StyleSpan(Typeface.BOLD), 0, spannable.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         return spannable;
     }
 
     @NonNull
     public static Spannable getItalicString(@NonNull CharSequence text) {
         Spannable ss = sSpannableFactory.newSpannable(text);
-        ss.setSpan(new StyleSpan(Typeface.ITALIC), 0, ss.length(),
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ss.setSpan(new StyleSpan(Typeface.ITALIC), 0, ss.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         return ss;
     }
 

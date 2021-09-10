@@ -8,9 +8,10 @@ import android.text.method.MovementMethod;
 import android.util.AttributeSet;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatTextView;
 
-public class HyperlinkTextView extends AppCompatTextView {
+import com.google.android.material.textview.MaterialTextView;
+
+public class HyperlinkTextView extends MaterialTextView {
     public HyperlinkTextView(Context context) {
         super(context);
     }

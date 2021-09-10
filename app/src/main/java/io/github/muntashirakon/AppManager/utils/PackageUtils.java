@@ -88,6 +88,7 @@ import io.github.muntashirakon.io.ProxyFiles;
 
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getBoldString;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getColoredText;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getMonospacedText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getPrimaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getTitleText;
 
@@ -785,12 +786,15 @@ public final class PackageUtils {
         }
         builder.append("\n")
                 .append(getPrimaryText(ctx, ctx.getString(R.string.serial_no) + ": "))
-                .append(Utils.bytesToHex(certificate.getSerialNumber().toByteArray())).append("\n");
+                .append(getMonospacedText(Utils.bytesToHex(certificate.getSerialNumber().toByteArray())))
+                .append("\n");
         // Checksums
         builder.append(getTitleText(ctx, ctx.getString(R.string.checksums))).append("\n");
         Pair<String, String>[] digests = DigestUtils.getDigests(certBytes);
         for (Pair<String, String> digest : digests) {
-            builder.append(getPrimaryText(ctx, digest.first + ": ")).append(digest.second).append("\n");
+            builder.append(getPrimaryText(ctx, digest.first + ": "))
+                    .append(getMonospacedText(digest.second))
+                    .append("\n");
         }
         // Signature
         builder.append(getTitleText(ctx, ctx.getString(R.string.app_signing_signature)))
@@ -800,7 +804,7 @@ public final class PackageUtils {
                 .append(getPrimaryText(ctx, "OID: "))
                 .append(certificate.getSigAlgOID()).append("\n")
                 .append(getPrimaryText(ctx, ctx.getString(R.string.app_signing_signature) + ": "))
-                .append(Utils.bytesToHex(certificate.getSignature())).append("\n");
+                .append(getMonospacedText(Utils.bytesToHex(certificate.getSignature()))).append("\n");
         // Public key used by Google: https://github.com/google/conscrypt
         // 1. X509PublicKey (PublicKey)
         // 2. OpenSSLRSAPublicKey (RSAPublicKey)
@@ -818,7 +822,7 @@ public final class PackageUtils {
                     .append(getPrimaryText(ctx, ctx.getString(R.string.rsa_exponent) + ": "))
                     .append(rsaPublicKey.getPublicExponent().toString()).append("\n")
                     .append(getPrimaryText(ctx, ctx.getString(R.string.rsa_modulus) + ": "))
-                    .append(Utils.bytesToHex(rsaPublicKey.getModulus().toByteArray()));
+                    .append(getMonospacedText(Utils.bytesToHex(rsaPublicKey.getModulus().toByteArray())));
         } else if (publicKey instanceof ECPublicKey) {
             ECPublicKey ecPublicKey = (ECPublicKey) publicKey;
             builder.append("\n")
@@ -834,7 +838,7 @@ public final class PackageUtils {
             for (String oid : critSet) {
                 builder.append("\n- ")
                         .append(getPrimaryText(ctx, oid + ": "))
-                        .append(Utils.bytesToHex(certificate.getExtensionValue(oid)));
+                        .append(getMonospacedText(Utils.bytesToHex(certificate.getExtensionValue(oid))));
             }
         }
         Set<String> nonCritSet = certificate.getNonCriticalExtensionOIDs();
@@ -843,7 +847,7 @@ public final class PackageUtils {
             for (String oid : nonCritSet) {
                 builder.append("\n- ")
                         .append(getPrimaryText(ctx, oid + ": "))
-                        .append(Utils.bytesToHex(certificate.getExtensionValue(oid)));
+                        .append(getMonospacedText(Utils.bytesToHex(certificate.getExtensionValue(oid))));
             }
         }
         return builder;
