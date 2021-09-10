@@ -24,6 +24,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.Utils;
 
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagMatchUninstalled;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getPrimaryText;
@@ -148,5 +149,9 @@ public class InstallerPreferences extends PreferenceFragmentCompat {
         SwitchPreferenceCompat blockTrackersPref = Objects.requireNonNull(findPreference("installer_block_trackers"));
         blockTrackersPref.setVisible(AppPref.isRootEnabled());
         blockTrackersPref.setChecked((boolean) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_BLOCK_TRACKERS_BOOL));
+        // Running installer in the background
+        SwitchPreferenceCompat backgroundPref = Objects.requireNonNull(findPreference("installer_always_on_background"));
+        backgroundPref.setVisible(Utils.canDisplayNotification(activity));
+        backgroundPref.setChecked((boolean) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_ALWAYS_ON_BACKGROUND_BOOL));
     }
 }

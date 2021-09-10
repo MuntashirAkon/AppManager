@@ -38,4 +38,10 @@
         app:summary="@string/pref_display_changes_msg"
         app:iconSpaceReserved="false" />
 
+    <SwitchPreferenceCompat
+        app:key="installer_always_on_background"
+        app:title="@string/pref_always_on_background"
+        app:summary="@string/pref_always_on_background_msg"
+        app:iconSpaceReserved="false" />
+
 </PreferenceScreen>

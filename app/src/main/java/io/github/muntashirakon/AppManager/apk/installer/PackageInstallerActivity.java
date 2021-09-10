@@ -329,6 +329,9 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
     }
 
     private void doLaunchInstallerService(int userHandle) {
+        boolean canDisplayNotification = Utils.canDisplayNotification(this);
+        boolean alwaysOnBackground = canDisplayNotification &&
+                AppPref.getBoolean(AppPref.PrefKey.PREF_INSTALLER_ALWAYS_ON_BACKGROUND_BOOL);
         Intent intent = new Intent(this, PackageInstallerService.class);
         intent.putExtra(PackageInstallerService.EXTRA_APK_FILE_KEY, model.getApkFileKey());
         intent.putExtra(PackageInstallerService.EXTRA_APP_LABEL, model.getAppLabel());
@@ -336,11 +339,12 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
         intent.putExtra(PackageInstallerService.EXTRA_CLOSE_APK_FILE, model.isCloseApkFile());
         ContextCompat.startForegroundService(this, intent);
         model.setCloseApkFile(false);
-        setInstallFinishedListener();
-        if (service != null) {
-            installProgressDialog = getInstallationProgressDialog(Utils.canDisplayNotification(this));
+        if (!alwaysOnBackground && service != null) {
+            setInstallFinishedListener();
+            installProgressDialog = getInstallationProgressDialog(canDisplayNotification);
             installProgressDialog.show();
         } else {
+            unsetInstallFinishedListener();
             // For some reason, the service is empty
             // Install next app instead
             goToNext();
