@@ -48,6 +48,7 @@ import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.StoragePermission;
+import io.github.muntashirakon.dialog.DialogTitleBuilder;
 
 public class BackupDialogFragment extends DialogFragment {
     public static final String TAG = "BackupDialogFragment";
@@ -137,10 +138,18 @@ public class BackupDialogFragment extends DialogFragment {
             }
         }
 
+        CharSequence title = targetPackages.size() == 1 ? PackageUtils.getPackageLabel(activity
+                .getPackageManager(), targetPackages.get(0).getPackageName()) : getString(R.string.backup_options);
+        DialogTitleBuilder titleBuilder = new DialogTitleBuilder(activity).setTitle(title);
+        if ((customModes & MODE_DELETE) != 0 && baseBackupCount == targetPackages.size()) {
+            titleBuilder.setEndIcon(R.drawable.ic_delete_black_24dp, v -> {
+                mode = MODE_DELETE;
+                new Thread(this::handleCustomUsers).start();
+            });
+            titleBuilder.setEndIconContentDescription(R.string.delete_backup);
+        }
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(activity)
-                .setTitle(targetPackages.size() == 1 ? PackageUtils.getPackageLabel(activity
-                        .getPackageManager(), targetPackages.get(0).getPackageName())
-                        : getString(R.string.backup_options))
+                .setCustomTitle(titleBuilder.build())
                 .setMultiChoiceItems(BackupFlags.getFormattedFlagNames(activity),
                         flags.flagsToCheckedItems(),
                         (dialog, index, isChecked) -> {
@@ -148,14 +157,12 @@ public class BackupDialogFragment extends DialogFragment {
                             else flags.removeFlag(BackupFlags.backupFlags.get(index));
                         })
                 .setPositiveButton(R.string.backup, null)
-                .setNegativeButton(R.string.restore, null)
-                .setNeutralButton(R.string.delete_backup, null);
+                .setNegativeButton(R.string.restore, null);
         AlertDialog alertDialog = builder.create();
         alertDialog.setOnShowListener(dialog -> {
             AlertDialog dialog1 = (AlertDialog) dialog;
             Button positiveButton = dialog1.getButton(AlertDialog.BUTTON_POSITIVE);
             Button negativeButton = dialog1.getButton(AlertDialog.BUTTON_NEGATIVE);
-            Button neutralButton = dialog1.getButton(AlertDialog.BUTTON_NEUTRAL);
             if ((customModes & MODE_BACKUP) != 0) {
                 positiveButton.setOnClickListener(v -> {
                     mode = MODE_BACKUP;
@@ -183,14 +190,6 @@ public class BackupDialogFragment extends DialogFragment {
                 });
             } else {
                 negativeButton.setVisibility(View.GONE);
-            }
-            if ((customModes & MODE_DELETE) != 0 && baseBackupCount == targetPackages.size()) {
-                neutralButton.setOnClickListener(v -> {
-                    mode = MODE_DELETE;
-                    new Thread(this::handleCustomUsers).start();
-                });
-            } else {
-                neutralButton.setVisibility(View.GONE);
             }
         });
         return alertDialog;
