@@ -12,6 +12,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.os.FileUtils;
 import android.os.ParcelFileDescriptor;
 import android.os.RemoteException;
@@ -453,23 +454,15 @@ public final class IOUtils {
     @AnyThread
     @NonNull
     public static File getTempFile() throws IOException {
-        File extDir = AppManager.getContext().getExternalFilesDir("cache");
-        if (extDir == null) throw new FileNotFoundException("External storage not available.");
-        if (!extDir.exists() && !extDir.mkdirs()) {
-            throw new IOException("Cannot create cache directory in the external storage.");
-        }
-        return File.createTempFile("file_" + System.currentTimeMillis(), ".cached", extDir);
+        return File.createTempFile("file_" + System.currentTimeMillis(), ".cached", getCachePath());
     }
 
     @AnyThread
     @NonNull
-    public static File getCachePath() throws IOException {
-        File extDir = AppManager.getContext().getExternalFilesDir("cache");
-        if (extDir == null) throw new FileNotFoundException("External storage not available.");
-        if (!extDir.exists() && !extDir.mkdirs()) {
-            throw new IOException("Cannot create cache directory in the external storage.");
-        }
-        return extDir;
+    public static File getTempFile(String name) throws IOException {
+        File newFile = new File(getCachePath(), name);
+        if (newFile.exists()) newFile.delete();
+        return newFile;
     }
 
     @WorkerThread
@@ -505,6 +498,18 @@ public final class IOUtils {
 
             return crc32.getValue();
         }
+    }
+
+    @AnyThread
+    @NonNull
+    public static File getCachePath() throws IOException {
+        File extDir = AppManager.getContext().getExternalCacheDir();
+        if (extDir == null || !Environment.getExternalStorageState(extDir).equals(Environment.MEDIA_MOUNTED))
+            throw new FileNotFoundException("External media not present");
+        if (!extDir.exists() && !extDir.mkdirs()) {
+            throw new IOException("Cannot create cache directory in the external storage.");
+        }
+        return extDir;
     }
 
     @AnyThread

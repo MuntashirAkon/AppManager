@@ -518,14 +518,6 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         super.onDetach();
     }
 
-    @Override
-    public void onDestroy() {
-        if (mActivity != null) {
-            IOUtils.deleteDir(mActivity.getExternalCacheDir());
-        }
-        super.onDestroy();
-    }
-
     private void openInTermux() {
         runWithTermux(new String[]{"su", "-", String.valueOf(mApplicationInfo.uid)});
     }
