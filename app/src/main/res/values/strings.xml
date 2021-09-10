@@ -1088,4 +1088,6 @@
     <string name="installer_app_installed">App installed</string>
     <string name="next">Next</string>
     <string name="pref_block_trackers_msg">Block tracking components after installing an app using App Manager.</string>
+    <string name="pref_always_on_background">Install in the background</string>
+    <string name="pref_always_on_background_msg">Always install apps in the background and display a notification when finished.</string>
 </resources>
