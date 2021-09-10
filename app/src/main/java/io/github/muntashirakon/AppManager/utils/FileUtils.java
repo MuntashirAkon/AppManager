@@ -456,10 +456,15 @@ public final class FileUtils {
     @NonNull
     public static File getCachePath() throws IOException {
         File extDir = AppManager.getContext().getExternalCacheDir();
-        if (extDir == null || !Environment.getExternalStorageState(extDir).equals(Environment.MEDIA_MOUNTED))
-            throw new FileNotFoundException("External media not present");
+        if (extDir == null) {
+            throw new FileNotFoundException("External storage unavailable.");
+        }
         if (!extDir.exists() && !extDir.mkdirs()) {
             throw new IOException("Cannot create cache directory in the external storage.");
+        }
+        String storageState = Environment.getExternalStorageState(extDir);
+        if (storageState != null && !Environment.MEDIA_MOUNTED.equals(storageState)) {
+            throw new FileNotFoundException("External media not present");
         }
         return extDir;
     }
