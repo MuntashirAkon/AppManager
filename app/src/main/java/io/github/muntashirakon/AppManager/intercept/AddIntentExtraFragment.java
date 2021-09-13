@@ -8,20 +8,27 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
+
 import com.android.internal.util.TextUtils;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import io.github.muntashirakon.AppManager.R;
 
 import java.io.Serializable;
+
+import io.github.muntashirakon.AppManager.R;
 
 import static io.github.muntashirakon.AppManager.intercept.IntentCompat.parseExtraValue;
 
@@ -59,6 +66,8 @@ public class AddIntentExtraFragment extends DialogFragment {
             TYPE_STRING_ARR,
             TYPE_STRING_AL,
             TYPE_URI,
+            TYPE_URI_ARR,
+            TYPE_URI_AL,
     })
     public @interface Type {
     }
@@ -79,8 +88,10 @@ public class AddIntentExtraFragment extends DialogFragment {
     public static final int TYPE_STRING_ARR = 13;
     public static final int TYPE_STRING_AL = 14;
     public static final int TYPE_URI = 15;
+    public static final int TYPE_URI_ARR = 16;
+    public static final int TYPE_URI_AL = 17;
 
-    private static final int TYPE_COUNT = 16;
+    private static final int TYPE_COUNT = 18;
 
     @Nullable
     private OnSaveListener onSaveListener;
@@ -173,6 +184,8 @@ public class AddIntentExtraFragment extends DialogFragment {
         mLayoutTypes[TYPE_STRING_ARR] = view.findViewById(R.id.layout_string);
         mLayoutTypes[TYPE_STRING_AL] = view.findViewById(R.id.layout_string);
         mLayoutTypes[TYPE_URI] = view.findViewById(R.id.layout_string);
+        mLayoutTypes[TYPE_URI_ARR] = view.findViewById(R.id.layout_string);
+        mLayoutTypes[TYPE_URI_AL] = view.findViewById(R.id.layout_string);
         // Set views
         mValues[TYPE_BOOLEAN] = view.findViewById(R.id.input_bool);
         mValues[TYPE_COMPONENT_NAME] = view.findViewById(R.id.input_string);
@@ -190,6 +203,8 @@ public class AddIntentExtraFragment extends DialogFragment {
         mValues[TYPE_STRING_ARR] = view.findViewById(R.id.input_string);
         mValues[TYPE_STRING_AL] = view.findViewById(R.id.input_string);
         mValues[TYPE_URI] = view.findViewById(R.id.input_string);
+        mValues[TYPE_URI_ARR] = view.findViewById(R.id.input_string);
+        mValues[TYPE_URI_AL] = view.findViewById(R.id.input_string);
         // Key name
         TextInputEditText editKeyName = view.findViewById(R.id.key_name);
         if (extraItem != null) {

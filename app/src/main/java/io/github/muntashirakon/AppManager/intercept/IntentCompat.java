@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -36,6 +37,8 @@ import static io.github.muntashirakon.AppManager.intercept.AddIntentExtraFragmen
 import static io.github.muntashirakon.AppManager.intercept.AddIntentExtraFragment.TYPE_STRING_AL;
 import static io.github.muntashirakon.AppManager.intercept.AddIntentExtraFragment.TYPE_STRING_ARR;
 import static io.github.muntashirakon.AppManager.intercept.AddIntentExtraFragment.TYPE_URI;
+import static io.github.muntashirakon.AppManager.intercept.AddIntentExtraFragment.TYPE_URI_AL;
+import static io.github.muntashirakon.AppManager.intercept.AddIntentExtraFragment.TYPE_URI_ARR;
 import static io.github.muntashirakon.AppManager.intercept.AddIntentExtraFragment.Type;
 
 public class IntentCompat {
@@ -80,6 +83,28 @@ public class IntentCompat {
                 return Integer.decode(rawValue);
             case TYPE_URI:
                 return Uri.parse(rawValue);
+            case TYPE_URI_ARR: {
+                // Split on commas unless they are preceded by an escape.
+                // The escape character must be escaped for the string and
+                // again for the regex, thus four escape characters become one.
+                String[] strings = rawValue.split("(?<!\\\\),");
+                Uri[] list = new Uri[strings.length];
+                for (int i = 0; i < list.length; ++i) {
+                    list[i] = Uri.parse(strings[i]);
+                }
+                return list;
+            }
+            case TYPE_URI_AL: {
+                // Split on commas unless they are preceded by an escape.
+                // The escape character must be escaped for the string and
+                // again for the regex, thus four escape characters become one.
+                String[] strings = rawValue.split("(?<!\\\\),");
+                List<Uri> list = new ArrayList<>(strings.length);
+                for (String s : strings) {
+                    list.add(Uri.parse(s));
+                }
+                return list;
+            }
             case TYPE_COMPONENT_NAME:
                 ComponentName cn = ComponentName.unflattenFromString(rawValue);
                 if (cn == null) {
@@ -224,6 +249,14 @@ public class IntentCompat {
                 sb.append(",").append(list[i].replace(",", "\\,"));
             }
             return new Pair<>(TYPE_STRING_ARR, sb.toString());
+        } else if (object instanceof Uri[]) {
+            StringBuilder sb = new StringBuilder();
+            Uri[] list = (Uri[]) object;
+            if (list.length >= 1) sb.append(list[0].toString().replace(",", "\\,"));
+            for (int i = 1; i < list.length; ++i) {
+                sb.append(",").append(list[i].toString().replace(",", "\\,"));
+            }
+            return new Pair<>(TYPE_URI_ARR, sb.toString());
         } else if (object instanceof List) {
             @SuppressWarnings("rawtypes")
             List list = (List) object;
@@ -261,6 +294,13 @@ public class IntentCompat {
                     sb.append(",").append(((String) list.get(i)).replace(",", "\\,"));
                 }
                 return new Pair<>(TYPE_STRING_AL, sb.toString());
+            } else if (item instanceof Uri) {
+                StringBuilder sb = new StringBuilder();
+                sb.append(item.toString().replace(",", "\\,"));
+                for (int i = 1; i < list.size(); ++i) {
+                    sb.append(",").append(list.get(i).toString().replace(",", "\\,"));
+                }
+                return new Pair<>(TYPE_URI_AL, sb.toString());
             }
         }
         return null;
@@ -274,9 +314,6 @@ public class IntentCompat {
             case TYPE_BOOLEAN:
                 intent.putExtra(extraItem.keyName, (boolean) extraItem.keyValue);
                 break;
-            case TYPE_COMPONENT_NAME:
-                intent.putExtra(extraItem.keyName, (ComponentName) extraItem.keyValue);
-                break;
             case TYPE_FLOAT:
                 intent.putExtra(extraItem.keyName, (float) extraItem.keyValue);
                 break;
@@ -284,6 +321,7 @@ public class IntentCompat {
             case TYPE_STRING_AL:
             case TYPE_LONG_AL:
             case TYPE_INT_AL:
+            case TYPE_URI_AL:
                 intent.putExtra(extraItem.keyName, (ArrayList<?>) extraItem.keyValue);
                 break;
             case TYPE_FLOAT_ARR:
@@ -310,8 +348,12 @@ public class IntentCompat {
             case TYPE_STRING_ARR:
                 intent.putExtra(extraItem.keyName, (String[]) extraItem.keyValue);
                 break;
+            case TYPE_COMPONENT_NAME:
             case TYPE_URI:
-                intent.putExtra(extraItem.keyName, (Uri) extraItem.keyValue);
+                intent.putExtra(extraItem.keyName, (Parcelable) extraItem.keyValue);
+                break;
+            case TYPE_URI_ARR:
+                intent.putExtra(extraItem.keyName, (Parcelable[]) extraItem.keyValue);
                 break;
         }
     }
