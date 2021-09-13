@@ -7,6 +7,7 @@ import android.system.ErrnoException;
 import android.system.Os;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
 import java.io.File;
@@ -26,7 +27,7 @@ public final class ProxyFiles {
         return new FileStatus(Os.stat(path.getAbsolutePath()));
     }
 
-    @NonNull
+    @Nullable
     public static FileStatus lstat(@NonNull File path) throws ErrnoException, RemoteException {
         if (path instanceof ProxyFile && LocalServer.isAMServiceAlive()) {
             return IPCUtils.getAmService().lstat(path.getAbsolutePath());
