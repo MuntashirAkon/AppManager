@@ -62,6 +62,7 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
+import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -90,6 +91,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
     @Runner.Mode
     private String currentMode;
     private MainPreferencesViewModel model;
+    private int threadCount;
     private final ExecutorService executor = Executors.newFixedThreadPool(1);
 
     @Override
@@ -207,6 +209,26 @@ public class MainPreferences extends PreferenceFragmentCompat {
                             .show();
                     return true;
                 });
+        Preference threadCountPref = Objects.requireNonNull(findPreference("thread_count"));
+        threadCount = MultithreadedExecutor.getThreadCount();
+        threadCountPref.setSummary(getResources().getQuantityString(R.plurals.pref_thread_count_msg, threadCount, threadCount));
+        threadCountPref.setOnPreferenceClickListener(preference -> {
+            new TextInputDialogBuilder(activity, null)
+                    .setTitle(R.string.pref_thread_count)
+                    .setHelperText(getString(R.string.pref_thread_count_hint, Utils.getTotalCores()))
+                    .setInputText(String.valueOf(threadCount))
+                    .setNegativeButton(R.string.cancel, null)
+                    .setPositiveButton(R.string.save, (dialog, which, inputText, isChecked) -> {
+                        if (inputText != null && TextUtils.isDigitsOnly(inputText)) {
+                            int c = Integer.decode(inputText.toString());
+                            AppPref.set(AppPref.PrefKey.PREF_CONCURRENCY_THREAD_COUNT_INT, c);
+                            threadCount = MultithreadedExecutor.getThreadCount();
+                            threadCountPref.setSummary(getResources().getQuantityString(R.plurals.pref_thread_count_msg, threadCount, threadCount));
+                        }
+                    })
+                    .show();
+            return true;
+        });
         // Import/export App Manager's KeyStore
         ((Preference) Objects.requireNonNull(findPreference("import_export_keystore")))
                 .setOnPreferenceClickListener(preference -> {

@@ -56,16 +56,20 @@ public class AppPref {
         PREF_APP_OP_SORT_ORDER_INT,
         PREF_APP_THEME_INT,
 
-        PREF_BACKUP_COMPRESSION_METHOD_STR,
-        PREF_BACKUP_VOLUME_STR,
-        PREF_BACKUP_FLAGS_INT,
         PREF_BACKUP_ANDROID_KEYSTORE_BOOL,
+        PREF_BACKUP_COMPRESSION_METHOD_STR,
+        PREF_BACKUP_FLAGS_INT,
+        PREF_BACKUP_VOLUME_STR,
 
-        PREF_ENABLED_FEATURES_INT,
         PREF_COMPONENTS_SORT_ORDER_INT,
+        /**
+         * 1 - total cores. 0 = Total cores.
+         */
+        PREF_CONCURRENCY_THREAD_COUNT_INT,
         PREF_CUSTOM_LOCALE_STR,
         PREF_ENABLE_KILL_FOR_SYSTEM_BOOL,
         PREF_ENABLE_SCREEN_LOCK_BOOL,
+        PREF_ENABLED_FEATURES_INT,
         PREF_ENCRYPTION_STR,
         PREF_GLOBAL_BLOCKING_ENABLED_BOOL,
 
@@ -412,6 +416,8 @@ public class AppPref {
             case PREF_LOG_VIEWER_SHOW_PID_TID_TIMESTAMP_BOOL:
             case PREF_INSTALLER_DISPLAY_CHANGES_BOOL:
                 return true;
+            case PREF_CONCURRENCY_THREAD_COUNT_INT:
+                return 0;
             case PREF_LAST_VERSION_CODE_LONG:
                 return 0L;
             case PREF_ENABLED_FEATURES_INT:
