@@ -58,5 +58,13 @@ that such emails may be publicly accessible in future.  GitHub pull requests
 will be merged manually using the corresponding patches.  As a result, GitHub
 may falsely mark them *closed* instead of *merged*.
 
+**Warning.** Every commit made by other users are thoroughly examined with the
+exception of commits made through Weblate.  So, if it is found that you are
+abusing the Weblate platform, you will be blocked on Weblate without a warning,
+and ALL your contributions to this project shall be removed.  This is a hobby
+project, and like any hobby, I want to make things neat and clean.  Existing
+contributors are also encouraged to report any abuse.  Your identity shall be
+kept secret.
+
 .. _Linux documentations: https://github.com/torvalds/linux/blob/master/Documentation/process/license-rules.rst
 .. _commit message conventions: https://git.wiki.kernel.org/index.php/CommitMessageConventions
