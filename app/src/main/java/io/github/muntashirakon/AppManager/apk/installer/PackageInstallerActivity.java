@@ -204,14 +204,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
                 } else {
                     // Downgrade
                     actionName = R.string.downgrade;
-                    if (AppPref.isRootOrAdbEnabled()) {
-                        displayWhatsNewDialog();
-                    } else {
-                        getInstallationFinishedDialog(
-                                model.getPackageName(),
-                                getString(R.string.downgrade_not_possible),
-                                false).show();
-                    }
+                    displayWhatsNewDialog();
                 }
             }
         });
@@ -378,6 +371,28 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
     @UiThread
     @Override
     public void triggerInstall() {
+        long installedVersionCode = PackageInfoCompat.getLongVersionCode(model.getInstalledPackageInfo());
+        long thisVersionCode = PackageInfoCompat.getLongVersionCode(model.getNewPackageInfo());
+        if (installedVersionCode > thisVersionCode && !AppPref.isRootOrAdbEnabled()) {
+            // Need to uninstall and install again
+            SpannableStringBuilder builder = new SpannableStringBuilder()
+                    .append(getString(R.string.do_you_want_to_uninstall_and_install)).append(" ")
+                    .append(UIUtils.getItalicString(getString(R.string.app_data_will_be_lost)))
+                    .append("\n\n");
+
+            new MaterialAlertDialogBuilder(PackageInstallerActivity.this)
+                    .setCustomTitle(getDialogTitle(PackageInstallerActivity.this, model.getAppLabel(),
+                            model.getAppIcon(), getVersionInfoWithTrackers(model.getNewPackageInfo())))
+                    .setMessage(builder)
+                    .setPositiveButton(R.string.yes, (dialog, which) -> {
+                        // Uninstall and then install again
+                        reinstall();
+                    })
+                    .setNegativeButton(R.string.no, (dialog, which) -> triggerCancel())
+                    .setCancelable(false)
+                    .show();
+            return;
+        }
         if (!model.isSignatureDifferent()) {
             // Signature is either matched or the app isn't installed
             install();
@@ -408,7 +423,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
                 .append("\n\n");
         int start = builder.length();
         builder.append(getText(R.string.app_signing_install_without_data_loss));
-        builder.setSpan(new RelativeSizeSpan(0.8f), start, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        builder.setSpan(new RelativeSizeSpan(0.8f), start, builder.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 
         new MaterialAlertDialogBuilder(PackageInstallerActivity.this)
                 .setCustomTitle(getDialogTitle(PackageInstallerActivity.this, model.getAppLabel(),
@@ -416,26 +431,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
                 .setMessage(builder)
                 .setPositiveButton(R.string.yes, (dialog, which) -> {
                     // Uninstall and then install again
-                    if (AppPref.isRootOrAdbEnabled()) {
-                        // User must be all
-                        try {
-                            PackageInstallerCompat.uninstall(model.getPackageName(),
-                                    UserHandleHidden.USER_ALL, false);
-                            install();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            getInstallationFinishedDialog(
-                                    model.getPackageName(),
-                                    getString(R.string.failed_to_uninstall_app),
-                                    false).show();
-                        }
-                    } else {
-                        // Uninstall using service, not guaranteed to work
-                        // since it only uninstalls for the current user
-                        Intent intent = new Intent(Intent.ACTION_DELETE);
-                        intent.setData(Uri.parse("package:" + model.getPackageName()));
-                        uninstallIntentLauncher.launch(intent);
-                    }
+                    reinstall();
                 })
                 .setNegativeButton(R.string.no, (dialog, which) -> triggerCancel())
                 .setNeutralButton(R.string.only_install, (dialog, which) -> install())
@@ -446,6 +442,29 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
     @Override
     public void triggerCancel() {
         goToNext();
+    }
+
+    private void reinstall() {
+        if (AppPref.isRootOrAdbEnabled()) {
+            // User must be all
+            try {
+                PackageInstallerCompat.uninstall(model.getPackageName(),
+                        UserHandleHidden.USER_ALL, false);
+                install();
+            } catch (Exception e) {
+                e.printStackTrace();
+                getInstallationFinishedDialog(
+                        model.getPackageName(),
+                        getString(R.string.failed_to_uninstall_app),
+                        false).show();
+            }
+        } else {
+            // Uninstall using service, not guaranteed to work
+            // since it only uninstalls for the current user
+            Intent intent = new Intent(Intent.ACTION_DELETE);
+            intent.setData(Uri.parse("package:" + model.getPackageName()));
+            uninstallIntentLauncher.launch(intent);
+        }
     }
 
     /**
