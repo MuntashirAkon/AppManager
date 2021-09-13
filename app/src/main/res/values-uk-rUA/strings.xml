@@ -121,7 +121,7 @@
     <string name="state_locked_memory">Заблокована пам\'ять</string>
     <string name="state_low_priority">Низький пріоритет</string>
     <string name="state_high_priority">Високий пріоритет</string>
-    <string name="state_unknown">Невідомий</string>
+    <string name="state_unknown">Unknown</string>
     <string name="state_idle">Очікування</string>
     <string name="state_zombie">Зомбі</string>
     <string name="state_dead">Мертвий</string>
@@ -189,7 +189,7 @@
     <string name="installer_error_incompatible">Додаток несумісний з цим пристроєм</string>
     <string name="installer_error_blocked">Встановленя заблоковано <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
     <string name="installer_error_blocked_device">пристрій</string>
-    <string name="installer_error_aborted">Помилка встановлення, оскільки воно було скасовано або несподівано закрито сеанс</string>
+    <string name="installer_error_aborted">Помилка встановлення, оскільки воно було скасовано або сеанс було несподівано закрито</string>
     <string name="filter_apps_with_activities">Додатки з activities</string>
     <string name="are_you_sure">Ви впевнені\?</string>
     <string name="pref_remove_all_rules">Видалити всі правила</string>
@@ -493,7 +493,7 @@
     <string name="require_no_permission">Не вимагає дозволів</string>
     <string name="required">Вимагається</string>
     <string name="subject">Тема</string>
-    <string name="state_waking">Пробудження</string>
+    <string name="state_waking">Waking</string>
     <string name="state_trace_stop">Трасування зупинки</string>
     <string name="sdk_flags">Прапорці</string>
     <string name="flags">Прапорці</string>
@@ -813,7 +813,7 @@
         <item quantity="many">%1$d компонентів</item>
         <item quantity="other">%1$d компонентів</item>
     </plurals>
-    <string name="disable_background_run_description">Установленя режиму <i>ignore</i> для app ops: <tt>RUN_IN_BACKGROUND</tt> (з Android7.0) і <tt>RUN_ANY_IN_BACKGROUND</tt> (з Android 9).</string>
+    <string name="disable_background_run_description">Встановленя режиму <i>ignore</i> для app ops: <tt>RUN_IN_BACKGROUND</tt> (з Android7.0) і <tt>RUN_ANY_IN_BACKGROUND</tt> (з Android 9).</string>
     <string name="set_mode_for_app_ops_dots">Установити режим для app ops…</string>
     <plurals name="alert_failed_to_set_app_ops">
         <item quantity="one">Не вдалося встановити app ops для %1$d додатка</item>
@@ -855,7 +855,7 @@
     <string name="backup_apps_with_changes_msg">Повторити резервне копіювання додатків, які змінилися після останнього резервного копіювання. Вони включають зміни в розмірі, версії, часі останнього запуску.</string>
     <string name="backup_apps_with_changes">Резервне копіювання додатків із змінами</string>
     <string name="redo_existing_backups_msg">Повторити резервне копіювання встановлених додатків з попередніми резервними копіями.</string>
-    <string name="redo_existing_backups">Повторити наявні резервні копії</string>
+    <string name="redo_existing_backups">Повторно створити наявні резервні копії</string>
     <string name="verify_and_redo_backups_msg">Перевірка ціліснісності попередніх резервних копій та повторне резервне копіювання тих, котрі не пройшли перевірку цілісності.</string>
     <string name="verify_and_redo_backups">Перевірка та повторне створення резервних копій</string>
     <string name="backup_apps_without_backups_msg">Резервне копіювання додатків без попередніх резервних копій.</string>
@@ -936,7 +936,7 @@
     <string name="gles_version">Версія OpenGL ES</string>
     <string name="input_keystore_alias_pass_msg">Натисніть тут, щоб вказати пароль для %1$s</string>
     <string name="app_signing_signatures">Підписи</string>
-    <string name="pref_log_write_period_title">Період записування</string>
+    <string name="pref_log_write_period_title">Період запису</string>
     <string name="pref_log_write_period_summary">Під час запису записувати на SD-карту кожні %1$d рядків.</string>
     <string name="pref_log_line_period_error">Введіть ціле число від 1 до 1000.</string>
     <string name="pref_expanded_by_default_title">Розгорнути за замовчуванням</string>
@@ -1000,8 +1000,8 @@
     <string name="share_log">Поділитись</string>
     <string name="save_log_zip">Зберегти zip</string>
     <string name="text_include_dmesg">Включити журнал ядра</string>
-    <string name="omit_sensitive_info_summary">Пропускати особисті дані, наприклад мережеві адреси, номери телефонів або електронну пошту.</string>
-    <string name="omit_sensitive_info">Пропустити особисті дані</string>
+    <string name="omit_sensitive_info_summary">Пропускати конфіденційну інформацію, наприклад веб-адреси, номери телефонів або електронну пошту.</string>
+    <string name="omit_sensitive_info">Пропустити конфіденційну інформацію</string>
     <string name="undo">Повернути</string>
     <string name="pause_unpause">Відтворення/пауза</string>
     <string name="collapse_all">Згорнути все</string>
@@ -1056,7 +1056,7 @@
     <string name="dsa_affine_y">Аффінна координата y</string>
     <string name="dsa_affine_x">Аффінна координата x</string>
     <string name="magisk_hide_enabled">MagiskHide</string>
-    <string name="state_wake_kill">Вимкнути пробудження</string>
+    <string name="state_wake_kill">Wake kill</string>
     <string name="netpolicy_disable_network_access">Заборонити передачу даних</string>
     <string name="netpolicy_reject_wifi_data">Заборонити Wi-Fi передачу</string>
     <string name="netpolicy_reject_vpn_data">Заборонити VPN передачу</string>
@@ -1072,12 +1072,12 @@
     <string name="suspended">Призупинено</string>
     <string name="saf">SAF</string>
     <string name="filter_choice_pid">PID</string>
-    <string name="log_level_fatal">Фатальна помилка</string>
-    <string name="log_level_warn">Застереження</string>
-    <string name="log_level_verbose">Докладний лог</string>
-    <string name="log_level_info">Дані</string>
-    <string name="log_level_error">Помилка</string>
-    <string name="log_level_debug">Налагодження</string>
+    <string name="log_level_fatal">Fatal</string>
+    <string name="log_level_warn">Warn</string>
+    <string name="log_level_verbose">Verbose</string>
+    <string name="log_level_info">Info</string>
+    <string name="log_level_error">Error</string>
+    <string name="log_level_debug">Debug</string>
     <string name="pkcs12_keystore">PKCS #12 KeyStore (P12)</string>
     <string name="bouncy_castle_keystore">Bouncy Castle KeyStore (BKS)</string>
     <string name="java_keystore">Java KeyStore (JKS)</string>
