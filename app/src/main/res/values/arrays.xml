@@ -60,6 +60,8 @@
         <item>@string/type_string_array</item>
         <item>@string/type_string_array_list</item>
         <item>@string/type_uri</item>
+        <item>@string/type_uri_array</item>
+        <item>@string/type_uri_array_list</item>
     </string-array>
     <string-array name="usage_interval_dropdown_list">
         <item>@string/usage_today</item>

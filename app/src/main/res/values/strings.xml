@@ -1109,4 +1109,6 @@
     <string name="pref_block_trackers_msg">Block tracking components after installing an app using App Manager.</string>
     <string name="pref_always_on_background">Install in the background</string>
     <string name="pref_always_on_background_msg">Always install apps in the background and display a notification when finished.</string>
+    <string name="type_uri_array">Array of URIs</string>
+    <string name="type_uri_array_list">List of URIs</string>
 </resources>
