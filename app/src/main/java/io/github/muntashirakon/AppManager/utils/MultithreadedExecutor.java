@@ -42,13 +42,13 @@ public class MultithreadedExecutor implements ExecutorService {
     private ExecutorService executor;
 
     private MultithreadedExecutor() {
-        executor = Executors.newFixedThreadPool(Utils.getTotalCores());
+        executor = Executors.newFixedThreadPool(getThreadCount());
     }
 
     private void renew() {
         if (executor.isTerminated()) {
             // TODO: 26/5/21 Find a better way to recreate an executor
-            executor = Executors.newFixedThreadPool(Utils.getTotalCores());
+            executor = Executors.newFixedThreadPool(getThreadCount());
         }
     }
 
@@ -131,5 +131,12 @@ public class MultithreadedExecutor implements ExecutorService {
     @Override
     public void execute(Runnable command) {
         executor.execute(command);
+    }
+
+    public static int getThreadCount() {
+        int configuredCount = AppPref.getInt(AppPref.PrefKey.PREF_CONCURRENCY_THREAD_COUNT_INT);
+        int totalCores = Utils.getTotalCores();
+        if (configuredCount <= 0 || configuredCount > totalCores) return totalCores;
+        return configuredCount;
     }
 }

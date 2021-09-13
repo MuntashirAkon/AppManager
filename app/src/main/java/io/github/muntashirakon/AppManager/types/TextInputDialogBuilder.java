@@ -7,16 +7,17 @@ import android.content.DialogInterface;
 import android.text.Editable;
 import android.view.View;
 
-import com.google.android.material.checkbox.MaterialCheckBox;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentActivity;
+
+import com.google.android.material.checkbox.MaterialCheckBox;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+
 import io.github.muntashirakon.AppManager.R;
 
 public class TextInputDialogBuilder {
@@ -36,7 +37,7 @@ public class TextInputDialogBuilder {
     }
 
     @SuppressLint("InflateParams")
-    public TextInputDialogBuilder(@NonNull FragmentActivity activity, @NonNull CharSequence inputTextLabel) {
+    public TextInputDialogBuilder(@NonNull FragmentActivity activity, @Nullable CharSequence inputTextLabel) {
         this.activity = activity;
         View view = activity.getLayoutInflater().inflate(R.layout.dialog_text_input, null);
         this.textInputLayout = view.findViewById(android.R.id.text1);

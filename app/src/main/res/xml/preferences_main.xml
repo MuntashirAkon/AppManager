@@ -74,10 +74,16 @@
         android:fragment="io.github.muntashirakon.AppManager.settings.RulesPreferences"
         app:iconSpaceReserved="false" />
 
+    <Preference
+        app:key="thread_count"
+        app:title="@string/pref_thread_count"
+        tools:summary="Execute at most 5 operations in parallel"
+        app:iconSpaceReserved="false" />
+
     <PreferenceCategory
         app:key="other_category"
         app:title="@string/other"
-        app:iconSpaceReserved="false" >
+        app:iconSpaceReserved="false">
 
         <Preference
             app:key="import_export_keystore"
