@@ -13,7 +13,7 @@
     <string name="installer_error_session_write">Não foi possível gravar na sessão de instalação</string>
     <string name="installer_error_session_create">Uma sessão de instalação não pôde ser criada</string>
     <string name="installer_error_security">Não foi possível acessar os ficheiros APK</string>
-    <string name="install_in_progress">Instalação em andamento</string>
+    <string name="install_in_progress">A instalar…</string>
     <string name="package_installer">Instalador de pacotes</string>
     <string name="unblock_trackers">Desbloquear rastreadores</string>
     <string name="reinstall">Reinstalar</string>
@@ -1078,4 +1078,12 @@
     <string name="staging_apk_files">Aguardando arquivos de aplicativo…</string>
     <string name="background">Segundo plano</string>
     <string name="trim_caches_in_all_apps_description">Deleta arquivos cache de todas as aplicações, incluindo sistema android</string>
+    <string name="trim_caches_in_all_apps">Ajustar caches em todas as aplicações</string>
+    <string name="user_root">Usar root</string>
+    <string name="paste">Colar</string>
+    <string name="set_package_name_first">Defina primeiro o nome do pacote!</string>
+    <string name="identifier">Identificador</string>
+    <string name="backup_volume_dialog_description">Volumes com o prefixo <tt>/tree</tt> são pastas selecionadas usando o Storage Access Framework (SAF). Excetuando estas pastas, o diretório padrão do App Manager é uma subpasta chamada <tt>AppManager</tt>.</string>
+    <string name="second_degree_tracker_note">O prefixo ² indica que os rastreadores estão na <a href="https://etip.exodus-privacy.eu.org/">Lista de espera ETIP</a>, ou seja, se eles são rastreadores reais então ainda estão a ser investigados.</string>
+    <string name="failed_to_uninstall_app">A desinstalação falhou</string>
 </resources>
