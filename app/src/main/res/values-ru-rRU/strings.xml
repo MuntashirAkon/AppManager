@@ -484,7 +484,7 @@
     <string name="reinstall">Переустановить</string>
     <string name="unblock_trackers">Разблокировать трекеры</string>
     <string name="package_installer">Установщик пакетов</string>
-    <string name="install_in_progress">Выполняется установка</string>
+    <string name="install_in_progress">Установка…</string>
     <string name="installer_error_security">Нет доступа к файлам APK</string>
     <string name="installer_error_session_create">Не удалось создать сеанс установщика</string>
     <string name="installer_error_session_write">Не удалось записать в сеанс установщика</string>
@@ -531,8 +531,8 @@
     <string name="launch_mode_single_task">Одна задача</string>
     <string name="launch_mode_single_instance">Единичный экземпляр</string>
     <string name="launch_mode_multiple">Несколько</string>
-    <string name="locale_split_for_base_apk"><xliff:g id="split_name" example="English">%1$s</xliff:g> локаль для базового APK</string>
-    <string name="locale_split_for_feature"><xliff:g id="split_name" example="English">%1$s</xliff:g> локаль для <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <string name="locale_split_for_base_apk"><xliff:g id="split_name" example="English">%1$s</xliff:g> язык для базового APK</string>
+    <string name="locale_split_for_feature"><xliff:g id="split_name" example="English">%1$s</xliff:g> язык для <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
     <string name="abi_split_for_base_apk"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> код для базового APK</string>
     <string name="abi_split_for_feature"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> код для <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
     <string name="density_split_for_base_apk"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) ресурсы для базового APK</string>
@@ -1062,7 +1062,7 @@
     <string name="pref_rules_msg">Мгновенная блокировка, импорт/экспорт/удаление правил и т. д.</string>
     <string name="orientation_right_to_left">Справа налево</string>
     <string name="orientation_left_to_right">Слева направо</string>
-    <string name="orientation_follow_locale">В соответствии с локалью</string>
+    <string name="orientation_follow_locale">В соответствии с языком</string>
     <string name="pref_layout_orientation">Ориентация макета</string>
     <plurals name="file_deletion_confirmation">
         <item quantity="one">%d файл будет удален</item>
@@ -1132,4 +1132,33 @@
     <string name="adb_wifi_paring_code">Код подключения Wi-Fi</string>
     <string name="invalid_password">Неправильный пароль, попробуйте ещё раз.</string>
     <string name="keystore_pass_cannot_be_empty">Пароль хранилища ключей не может быть пустым.</string>
+    <string name="background">Фоновый режим</string>
+    <string name="running_services_logcat_hint">Нажмите на элемент, чтобы открыть средство просмотра журнала с соответствующим идентификатором процесса в качестве фильтра по умолчанию.</string>
+    <string name="pid">ID процесса</string>
+    <plurals name="pref_thread_count_msg">
+        <item quantity="one">Параллельное выполнение не более %1$d операции</item>
+        <item quantity="few">Параллельное выполнение не более %1$d операций</item>
+        <item quantity="many">Параллельное выполнение не более %1$d операций</item>
+        <item quantity="other">Параллельное выполнение не более %1$d операций</item>
+    </plurals>
+    <string name="pref_thread_count_hint">Значение должно быть от 0 до %1$d, где 0 означает <i>максимальное количество операций в данный момент времени</i>.</string>
+    <string name="pref_thread_count">Параллельное выполнение</string>
+    <string name="type_uri_array_list">Список URI</string>
+    <string name="type_uri_array">Массив URI</string>
+    <string name="pref_always_on_background_msg">Всегда устанавливать приложения в фоновом режиме и выводить уведомление по завершении установки.</string>
+    <string name="pref_always_on_background">Установить в фоновом режиме</string>
+    <string name="pref_block_trackers_msg">Блокирование компонентов-трекеров после установки приложения через App Manager.</string>
+    <string name="next">Следующий</string>
+    <string name="installer_app_installed">Приложение установлено</string>
+    <string name="staging_apk_files">Постановка…</string>
+    <string name="trim_caches_in_all_apps_description">Удаление кеш файлов со всех приложений, включая систему Android</string>
+    <string name="trim_caches_in_all_apps">Очистка кэша во всех приложениях</string>
+    <string name="user_root">Использовать root</string>
+    <string name="paste">Вставить</string>
+    <string name="set_package_name_first">Сначала установите имя пакета!</string>
+    <string name="identifier">Идентификатор</string>
+    <string name="backup_volume_dialog_description">Тома с префиксом <tt>/tree</tt> - это папки, выбранные с помощью Storage Access Framework (SAF). Кроме этих папок, каталог по умолчанию для App Manager - это подпапка с именем <tt>AppManager</tt>.</string>
+    <string name="second_degree_tracker_note">² префикс указывает на то, что трекеры находятся в <a href="https://etip.exodus-privacy.eu.org/">
+\nРезервный список ETIP</a>, т. е. являются ли они настоящими трекерами, все еще исследуется.</string>
+    <string name="failed_to_uninstall_app">Не получилось удалить</string>
 </resources>
