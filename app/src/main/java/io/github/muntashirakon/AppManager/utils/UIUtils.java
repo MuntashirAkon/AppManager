@@ -87,7 +87,7 @@ public class UIUtils {
 
     @NonNull
     public static Spannable getStyledKeyValue(@NonNull Context context, CharSequence key, CharSequence value) {
-        return getStyledKeyValue(context, key, value, ": ");
+        return getStyledKeyValue(context, key, value, LangUtils.getSeparatorString());
     }
 
     @NonNull
