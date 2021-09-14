@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -26,7 +25,6 @@ import androidx.preference.SwitchPreferenceCompat;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import java.io.File;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -38,8 +36,6 @@ import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.backup.convert.ImportType;
-import io.github.muntashirakon.AppManager.backup.convert.OABConvert;
-import io.github.muntashirakon.AppManager.backup.convert.TBConvert;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.crypto.RSACrypto;
@@ -68,8 +64,14 @@ public class BackupRestorePreferences extends PreferenceFragmentCompat {
     private SettingsActivity activity;
     private int currentCompression;
     private Uri backupVolume;
+    @ImportType
+    private int importType;
 
-    private final ActivityResultLauncher<Intent> safOpen = registerForActivityResult(
+    private final Intent safIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
+            .putExtra("android.content.extra.SHOW_ADVANCED", true)
+            .putExtra("android.content.extra.FANCY", true)
+            .putExtra("android.content.extra.SHOW_FILESIZE", true);
+    private final ActivityResultLauncher<Intent> safSelectBackupVolume = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 try {
@@ -85,6 +87,16 @@ public class BackupRestorePreferences extends PreferenceFragmentCompat {
                     // Display backup volumes again
                     displayVolumeSelectionDialog();
                 }
+            });
+    private final ActivityResultLauncher<Intent> safSelectImportDirectory = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() != Activity.RESULT_OK) return;
+                Intent data = result.getData();
+                if (data == null) return;
+                Uri treeUri = data.getData();
+                if (treeUri == null) return;
+                startImportOperation(importType, treeUri);
             });
 
     @Override
@@ -193,24 +205,28 @@ public class BackupRestorePreferences extends PreferenceFragmentCompat {
         ((Preference) Objects.requireNonNull(findPreference("import_backups")))
                 .setOnPreferenceClickListener(preference -> {
                     View view = getLayoutInflater().inflate(R.layout.dialog_import_external_backups, null);
-                    String backupVolume = AppPref.getString(AppPref.PrefKey.PREF_BACKUP_VOLUME_STR) + File.separator;
-                    ((TextView) view.findViewById(R.id.import_from_oab_msg)).setText(
-                            getString(R.string.import_from_oab_tb_msg, backupVolume + OABConvert.PATH_SUFFIX));
-                    ((TextView) view.findViewById(R.id.import_from_tb_msg)).setText(
-                            getString(R.string.import_from_oab_tb_msg, backupVolume + TBConvert.PATH_SUFFIX));
-
                     AlertDialog alertDialog = new MaterialAlertDialogBuilder(activity)
-                            .setTitle(R.string.pref_import_backups)
+                            .setCustomTitle(new DialogTitleBuilder(activity)
+                                    .setTitle(R.string.pref_import_backups)
+                                    .setSubtitle(R.string.pref_import_backups_hint)
+                                    .build())
                             .setView(view)
                             .setNegativeButton(R.string.close, null)
                             .show();
                     // Set listeners
                     view.findViewById(R.id.import_from_oab).setOnClickListener(v -> {
-                        startImportOperation(ImportType.OAndBackup);
+                        importType = ImportType.OAndBackup;
+                        safSelectImportDirectory.launch(safIntent);
                         alertDialog.dismiss();
                     });
                     view.findViewById(R.id.import_from_tb).setOnClickListener(v -> {
-                        startImportOperation(ImportType.TitaniumBackup);
+                        importType = ImportType.TitaniumBackup;
+                        safSelectImportDirectory.launch(safIntent);
+                        alertDialog.dismiss();
+                    });
+                    view.findViewById(R.id.import_from_sb).setOnClickListener(v -> {
+                        importType = ImportType.SwiftBackup;
+                        safSelectImportDirectory.launch(safIntent);
                         alertDialog.dismiss();
                     });
                     return true;
@@ -218,7 +234,7 @@ public class BackupRestorePreferences extends PreferenceFragmentCompat {
     }
 
     @UiThread
-    private void startImportOperation(@ImportType int backupType) {
+    private void startImportOperation(@ImportType int backupType, Uri uri) {
         // Start batch ops service
         Intent intent = new Intent(activity, BatchOpsService.class);
         BatchOpsManager.Result input = new BatchOpsManager.Result(Collections.emptyList());
@@ -227,6 +243,7 @@ public class BackupRestorePreferences extends PreferenceFragmentCompat {
         intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_IMPORT_BACKUPS);
         Bundle args = new Bundle();
         args.putInt(BatchOpsManager.ARG_BACKUP_TYPE, backupType);
+        args.putParcelable(BatchOpsManager.ARG_URI, uri);
         intent.putExtra(BatchOpsService.EXTRA_OP_EXTRA_ARGS, args);
         ContextCompat.startForegroundService(activity, intent);
     }
@@ -242,11 +259,7 @@ public class BackupRestorePreferences extends PreferenceFragmentCompat {
                         .setMessage(R.string.notice_saf)
                         .setPositiveButton(R.string.go, (dialog1, which1) -> {
                             if (alertDialog.get() != null) alertDialog.get().dismiss();
-                            Intent safIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
-                                    .putExtra("android.content.extra.SHOW_ADVANCED", true)
-                                    .putExtra("android.content.extra.FANCY", true)
-                                    .putExtra("android.content.extra.SHOW_FILESIZE", true);
-                            safOpen.launch(safIntent);
+                            safSelectBackupVolume.launch(safIntent);
                         })
                         .setNeutralButton(R.string.cancel, null)
                         .show());

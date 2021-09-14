@@ -928,9 +928,8 @@
     <string name="expiry_date_cannot_be_empty">Expiry date cannot be empty.</string>
     <string name="pref_installer_msg">Configure the behaviours of the app installer.</string>
     <string name="pref_import_backups">Import backups</string>
-    <string name="pref_import_backups_msg">Import backups from OAndBackup or Titanium Backup.</string>
+    <string name="pref_import_backups_msg">Import backups from OAndBackup, Swift Backup (3.0–3.2) or Titanium Backup.</string>
     <string name="import_from_oab">Import from OAndBackup</string>
-    <string name="import_from_oab_tb_msg">Backups must be located at %s.</string>
     <string name="import_from_tb">Import from Titanium Backup</string>
     <string name="log_viewer">Log Viewer</string>
     <string name="pref_log_viewer_msg">Configure how logs are displayed.</string>
@@ -1119,4 +1118,6 @@
     </plurals>
     <string name="pid">Process ID</string>
     <string name="running_services_logcat_hint">Click on an item to open the log viewer with the corresponding process ID as the default filter.</string>
+    <string name="import_from_sb">Import from Swift Backup 3.0 – 3.2</string>
+    <string name="pref_import_backups_hint">Select a directory containing the backup files (Swift Backup/Titanium Backup) or directories (OAndBackup)</string>
 </resources>

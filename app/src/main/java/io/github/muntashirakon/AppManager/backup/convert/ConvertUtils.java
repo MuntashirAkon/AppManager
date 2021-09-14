@@ -3,6 +3,7 @@
 package io.github.muntashirakon.AppManager.backup.convert;
 
 import android.annotation.SuppressLint;
+import android.net.Uri;
 
 import androidx.annotation.NonNull;
 
@@ -36,22 +37,8 @@ import static io.github.muntashirakon.AppManager.backup.MetadataManager.TAR_TYPE
 
 public final class ConvertUtils {
     @NonNull
-    public static Path getImportPath(@ImportType int backupType) throws FileNotFoundException {
-        // TODO: 9/7/21 Ask user to select folder
-        Path backupVolume = new Path(AppManager.getContext(), AppPref.getSelectedDirectory());
-        switch (backupType) {
-            case ImportType.OAndBackup:
-                return backupVolume.findFile(OABConvert.PATH_SUFFIX);
-            case ImportType.TitaniumBackup:
-                return backupVolume.findFile(TBConvert.PATH_SUFFIX);
-            default:
-                throw new IllegalArgumentException("Unsupported import type " + backupType);
-        }
-    }
-
-    @NonNull
-    public static Path[] getRelevantImportFiles(@ImportType int backupType) throws FileNotFoundException {
-        return getRelevantImportFiles(backupType, getImportPath(backupType));
+    public static Path[] getRelevantImportFiles(@NonNull Uri uri, @ImportType int backupType) throws FileNotFoundException {
+        return getRelevantImportFiles(backupType, new Path(AppManager.getContext(), uri));
     }
 
     @NonNull
@@ -61,6 +48,8 @@ public final class ConvertUtils {
                 return new OABConvert(file);
             case ImportType.TitaniumBackup:
                 return new TBConvert(file);
+            case ImportType.SwiftBackup:
+                return new SBConvert(file);
             default:
                 throw new IllegalArgumentException("Unsupported import type " + backupType);
         }
@@ -75,6 +64,9 @@ public final class ConvertUtils {
             case ImportType.TitaniumBackup:
                 // Properties files
                 return baseLocation.listFiles((dir, name) -> name.endsWith(".properties"));
+            case ImportType.SwiftBackup:
+                // XML files
+                return baseLocation.listFiles((dir, name) -> name.endsWith(".xml"));
             default:
                 throw new IllegalArgumentException("Unsupported import type " + backupType);
         }

@@ -9,6 +9,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageManager;
 import android.content.pm.PackageManager;
 import android.net.NetworkPolicyManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,6 +30,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
@@ -94,6 +96,10 @@ public class BatchOpsManager {
      * {@link Integer} value, one of the {@link ImportType}s. To be used with {@link #OP_IMPORT_BACKUPS}.
      */
     public static final String ARG_BACKUP_TYPE = "backup_type";
+    /**
+     * {@link String} value, {@link String} representation of {@link Uri}. To be used with {@link #OP_IMPORT_BACKUPS}.
+     */
+    public static final String ARG_URI = "uri";
 
     /**
      * {@link Integer} value. One of the {@link NetPolicy network policies}. To be used with {@link #OP_NET_POLICY}.
@@ -306,11 +312,12 @@ public class BatchOpsManager {
     private Result opImportBackups() {
         @ImportType
         int backupType = args.getInt(ARG_BACKUP_TYPE, ImportType.OAndBackup);
+        Uri uri = Objects.requireNonNull(args.getParcelable(ARG_URI));
         int userHandle = UserHandleHidden.myUserId();
         Path[] files;
         final List<UserPackagePair> failedPkgList = new ArrayList<>();
         try {
-            files = ConvertUtils.getRelevantImportFiles(backupType);
+            files = ConvertUtils.getRelevantImportFiles(uri, backupType);
         } catch (FileNotFoundException e) {
             return new Result(failedPkgList);
         }
