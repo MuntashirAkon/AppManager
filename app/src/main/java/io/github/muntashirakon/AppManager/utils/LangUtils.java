@@ -6,13 +6,16 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 
-import java.util.IllformedLocaleException;
-import java.util.Locale;
-
 import androidx.annotation.NonNull;
 import androidx.collection.ArrayMap;
 import androidx.core.os.ConfigurationCompat;
 import androidx.core.os.LocaleListCompat;
+
+import com.yariksoffice.lingver.Lingver;
+
+import java.util.IllformedLocaleException;
+import java.util.Locale;
+
 import io.github.muntashirakon.AppManager.R;
 
 public final class LangUtils {
@@ -67,5 +70,11 @@ public final class LangUtils {
         } catch (IllformedLocaleException ignore) {
         }
         return false;
+    }
+
+    @NonNull
+    public static String getSeparatorString() {
+        if (Lingver.getInstance().getLanguage().equals("fr")) return " : ";
+        return ": ";
     }
 }
