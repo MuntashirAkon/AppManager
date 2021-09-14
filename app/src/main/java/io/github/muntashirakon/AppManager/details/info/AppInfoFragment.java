@@ -130,6 +130,8 @@ import io.github.muntashirakon.AppManager.utils.SsaidSettings;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.dialog.DialogTitleBuilder;
+import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.ProxyFile;
 
 import static io.github.muntashirakon.AppManager.details.info.ListItem.LIST_ITEM_FLAG_MONOSPACE;
@@ -137,8 +139,10 @@ import static io.github.muntashirakon.AppManager.utils.PermissionUtils.TERMUX_PE
 import static io.github.muntashirakon.AppManager.utils.PermissionUtils.hasDumpPermission;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.displayLongToast;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.displayShortToast;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getBoldString;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getStyledKeyValue;
 import static io.github.muntashirakon.AppManager.utils.Utils.openAsFolderInFM;
 
 public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
@@ -654,20 +658,33 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     executor.submit(() -> {
                         CharSequence[] runningServices = new CharSequence[tagCloud.runningServices.size()];
                         for (int i = 0; i < runningServices.length; ++i) {
-                            runningServices[i] = tagCloud.runningServices.get(i).process;
+                            runningServices[i] = new SpannableStringBuilder()
+                                    .append(getBoldString(tagCloud.runningServices.get(i).service.getShortClassName()))
+                                    .append("\n")
+                                    .append(getSmallerText(new SpannableStringBuilder()
+                                            .append(getStyledKeyValue(mActivity, R.string.process_name,
+                                                    tagCloud.runningServices.get(i).process)).append("\n")
+                                            .append(getStyledKeyValue(mActivity, R.string.pid,
+                                                    String.valueOf(tagCloud.runningServices.get(i).pid)))));
+                        }
+                        DialogTitleBuilder titleBuilder = new DialogTitleBuilder(mActivity)
+                                .setTitle(R.string.running_services);
+                        if (PermissionUtils.hasDumpPermission() && FeatureController.isLogViewerEnabled()) {
+                            titleBuilder.setSubtitle(R.string.running_services_logcat_hint);
                         }
                         runOnUiThread(() -> {
                             mProgressIndicator.hide();
                             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(mActivity)
-                                    .setTitle(R.string.running_services)
+                                    .setCustomTitle(titleBuilder.build())
                                     .setItems(runningServices, (dialog, which) -> {
+                                        if (!FeatureController.isLogViewerEnabled()) return;
                                         Intent logViewerIntent = new Intent(mActivity.getApplicationContext(), LogViewerActivity.class)
                                                 .setAction(LogViewerActivity.ACTION_LAUNCH)
                                                 .putExtra(LogViewerActivity.EXTRA_FILTER, SearchCriteria.PID_KEYWORD + tagCloud.runningServices.get(which).pid)
                                                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                         mActivity.startActivity(logViewerIntent);
                                     })
-                                    .setPositiveButton(R.string.force_stop, (dialog, which) -> executor.submit(() -> {
+                                    .setNeutralButton(R.string.force_stop, (dialog, which) -> executor.submit(() -> {
                                         try {
                                             PackageManagerCompat.forceStopPackage(mPackageName, mainModel.getUserHandle());
                                             runOnUiThread(this::refreshDetails);
