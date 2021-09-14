@@ -223,7 +223,7 @@
     <string name="installer_error_session_write">تعذر الكتابة إلى جلسة المثبت</string>
     <string name="installer_error_session_create">تعذر إنشاء جلسة المثبت</string>
     <string name="installer_error_security">تعذر الوصول إلى ملفات APK</string>
-    <string name="install_in_progress">التثبيت قيد التقدم</string>
+    <string name="install_in_progress">جارٍ التثبيت…</string>
     <string name="package_installer">مثبت الحزمة</string>
     <string name="unblock_trackers">إلغاء حظر أجهزة المتعقبين</string>
     <string name="reinstall">اعادة التثبيت</string>
@@ -1201,4 +1201,34 @@
     <string name="invalid_password">كلمة مرور غير صالحة، حاول مرة أخرى.</string>
     <string name="keystore_pass_cannot_be_empty">لا يمكن أن تكون كلمة مرور سجل المفاتيح فارغة.</string>
     <string name="keystore_password_info">فيما يلي كلمة مرور سجل المفاتيح لمدير التطبيقات. يرجى تخزينه في مكان آمن إذا كنت تريد إجراء نسخة احتياطية / استعادة مدير التطبيقات KeyStore. <b> لن يتم عرض هذه الرسالة مرة أخرى. </b></string>
+    <plurals name="pref_thread_count_msg">
+        <item quantity="zero">قم بتنفيذ على الاقل %1$d عملية او أكثر بالتوازي</item>
+        <item quantity="one">قم بتنفيذ على الاقل %1$d عملية او أكثر بالتوازي</item>
+        <item quantity="two">قم بتنفيذ على الاقل %1$d عملية او أكثر بالتوازي</item>
+        <item quantity="few">قم بتنفيذ على الاقل %1$d عمليات او أكثر بالتوازي</item>
+        <item quantity="many">قم بتنفيذ على الاقل %1$d عمليات او أكثر بالتوازي</item>
+        <item quantity="other">قم بتنفيذ على الاقل %1$d عمليات او أكثر بالتوازي</item>
+    </plurals>
+    <string name="running_services_logcat_hint">انقر فوق عنصر لفتح عارض السجل مع معرف العملية المطابقة كعامل تصفية افتراضي.</string>
+    <string name="pid">معرف العملية</string>
+    <string name="pref_thread_count_hint">يجب أن تكون القيمة بين 0 إلى %1$d حيث تعني 0 <i> الحد الأقصى لعدد العمليات في الوقت المحدد </i>.</string>
+    <string name="pref_thread_count">التنفيذ الموازي</string>
+    <string name="type_uri_array_list">قائمة URIs</string>
+    <string name="type_uri_array">مجموعة من عناوين URIs</string>
+    <string name="pref_always_on_background_msg">قم دائما بتثبيت التطبيقات في الخلفية وعرض تنبيه عند الانتهاء.</string>
+    <string name="pref_always_on_background">تثبيت في الخلفية</string>
+    <string name="pref_block_trackers_msg">حظر مكونات التتبع بعد تثبيت تطبيق باستخدام إدارة التطبيقات.</string>
+    <string name="next">التالي</string>
+    <string name="installer_app_installed">تم تثبيت التطبيق</string>
+    <string name="staging_apk_files">يجهز …</string>
+    <string name="background">الخلفية</string>
+    <string name="trim_caches_in_all_apps_description">حذف ملفات ذاكرة التخزين المؤقت من جميع التطبيقات، بما في ذلك نظام أندرويد</string>
+    <string name="trim_caches_in_all_apps">تقليم ذاكرة التخزين المؤقت في جميع التطبيقات</string>
+    <string name="user_root">استخدم الجذر</string>
+    <string name="paste">لصق</string>
+    <string name="set_package_name_first">تعيين اسم الحزمة أولا!</string>
+    <string name="identifier">المعرف</string>
+    <string name="backup_volume_dialog_description">وحدات التخزين ذات <tt>/tree </tt> بادئة هي المجلدات المحددة باستخدام إطار الوصول التخزين (SAF). باستثناء هذه المجلدات، الدليل الافتراضي لإدارة التطبيقات هو مجلد فرعي يسمى <tt>AppManager </tt>.</string>
+    <string name="second_degree_tracker_note">تشير البادئة ² إلى أن المتعقبات موجودة في <a href="https://etip.exodus-privacy.eu.org/"> قائمة ETIP الاحتياطية </a> أي ما إذا كانت متتبعات فعلية لا تزال قيد التحقيق.</string>
+    <string name="failed_to_uninstall_app">فشل إلغاء التثبيت</string>
 </resources>
