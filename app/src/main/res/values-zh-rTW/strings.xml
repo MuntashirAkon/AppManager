@@ -1015,4 +1015,28 @@
     <string name="port_number_pairing_code_empty">連接埠或配對碼為空。</string>
     <string name="paired_successfully">已配對。</string>
     <string name="pem_and_pk8">PEM 與 PKCS #8 (PK8)</string>
+    <string name="pref_block_trackers_msg">使用App Manager安裝應用後封鎖跟蹤元件。</string>
+    <string name="running_services_logcat_hint">按兩下項目以相應的流程ID作為預設篩選器打開日誌查看器。</string>
+    <string name="pid">處理程序 ID</string>
+    <plurals name="pref_thread_count_msg">
+        <item quantity="other">最多同時執行 %1$d 操作</item>
+    </plurals>
+    <string name="pref_thread_count_hint">值必須在 0 到 %1$d 之間，其中 0 表示給定時間 <i> 最大操作次數 </i>。</string>
+    <string name="pref_thread_count">並行執行</string>
+    <string name="type_uri_array">URI 數組</string>
+    <string name="pref_always_on_background_msg">始終在後台安裝應用程式並在完成時顯示通知。</string>
+    <string name="pref_always_on_background">在後台安裝</string>
+    <string name="next">下頁</string>
+    <string name="installer_app_installed">應用程式已安裝</string>
+    <string name="staging_apk_files">儲存中…</string>
+    <string name="background">背景</string>
+    <string name="trim_caches_in_all_apps_description">從所有應用程式中刪除快取檔案，包括 android 系統</string>
+    <string name="trim_caches_in_all_apps">修剪所有應用程式中的快取</string>
+    <string name="user_root">使用 Root</string>
+    <string name="paste">貼上</string>
+    <string name="set_package_name_first">先設定套件名稱！</string>
+    <string name="identifier">識別碼</string>
+    <string name="backup_volume_dialog_description">帶有 <tt>/tree</tt> 前綴的卷宗是使用儲存存取框架 (SAF) 選擇的資料夾。除了這些資料夾，App Manager 的預設目錄是一個名為 <tt>AppManager</tt> 的子資料夾。</string>
+    <string name="second_degree_tracker_note">² 前綴表示追蹤器在 <a href="https://etip.exodus-privacy.eu.org/">ETIP 備用清單 </a> 中，即它們是否實際爲追蹤器仍在調查中。</string>
+    <string name="failed_to_uninstall_app">解除安裝失敗</string>
 </resources>
