@@ -56,13 +56,14 @@ public final class TarUtils {
      * Create a tar file using the given compression method and split it into multiple files based
      * on the supplied split size.
      *
-     * @param type        Compression type
-     * @param source      Source directory
-     * @param dest        Destination directory with file name as prefix (.0, .1, etc. are added at the end)
-     * @param filters     A list of mutually exclusive regex filters
-     * @param splitSize   Size of the split, {@link #DEFAULT_SPLIT_SIZE} will be used if null is supplied
-     * @param exclude     A list of mutually exclusive regex patterns to be excluded
-     * @param followLinks Whether to follow the links
+     * @param type           Compression type
+     * @param source         Source directory
+     * @param dest           Destination directory
+     * @param destFilePrefix filename as a prefix (.0, .1, etc. are added at the end)
+     * @param filters        A list of mutually exclusive regex filters
+     * @param splitSize      Size of the split, {@link #DEFAULT_SPLIT_SIZE} will be used if null is supplied
+     * @param exclude        A list of mutually exclusive regex patterns to be excluded
+     * @param followLinks    Whether to follow the links
      * @return List of added files
      */
     @WorkerThread

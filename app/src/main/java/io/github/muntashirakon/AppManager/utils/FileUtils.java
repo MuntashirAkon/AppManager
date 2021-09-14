@@ -446,6 +446,12 @@ public final class FileUtils {
 
     @AnyThread
     @NonNull
+    public static Path getTempPath(Context context, String name) throws IOException {
+        return new Path(context, getTempFile(name));
+    }
+
+    @AnyThread
+    @NonNull
     public static File getTempFile(String name) throws IOException {
         File newFile = new File(getCachePath(), name);
         if (newFile.exists()) newFile.delete();
