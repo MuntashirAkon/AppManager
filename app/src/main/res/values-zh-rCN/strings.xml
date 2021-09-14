@@ -92,7 +92,7 @@
     <string name="license">许可协议</string>
     <string name="third_party">第三方库和图标</string>
     <string name="credits">鸣谢</string>
-    <string name="credits_message">致谢下列项目的作者
+    <string name="credits_message">致谢下列项目作者：
 \n- The Android Open Source Project
 \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
@@ -100,6 +100,7 @@
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
 \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
 \n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
 \n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
 \n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
 \n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
@@ -1021,4 +1022,11 @@
     <string name="storage">存储</string>
     <string name="notice_saf">与卷不同，所选目录将用于存储与App Manager相关的所有文件，包括保存的APK和备份。存储访问框架(Storage Access Framework, SAF)非常慢，因此，您应该只在其他选项无法使用时使用此选项。</string>
     <string name="notice">通知</string>
+    <string name="paired_successfully">已配对。</string>
+    <string name="port_number_pairing_code_empty">空端口号或配对代码。</string>
+    <string name="adb_pair">配对</string>
+    <string name="adb_wifi_paring_code">Wi-Fi 配对码</string>
+    <string name="invalid_password">密码无效，请重试。</string>
+    <string name="keystore_pass_cannot_be_empty">KeyStore 密码不能为空。</string>
+    <string name="keystore_password_info">以下是 App Manager KeyStore 密码。如果您要备份/恢复 App Manager KeyStore，请将其存储在一个安全的地方。<b>此信息将不再显示。</b></string>
 </resources>

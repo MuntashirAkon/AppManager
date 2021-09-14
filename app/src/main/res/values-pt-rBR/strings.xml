@@ -2,8 +2,8 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
     <string name="_lang_tag" translatable="false">pt-BR</string>
     <string name="uninstall">Desinstalar</string>
-    <string name="permissions">Permissões utilizadas</string>
-    <string name="require_no_permission">Nenhuma permissão necessária</string>
+    <string name="permissions">Uso das permissões</string>
+    <string name="require_no_permission">Sem permissões exigidas</string>
     <string name="activities">Atividades</string>
     <string name="launch">Iniciar</string>
     <string name="refresh">Atualizar</string>
@@ -65,7 +65,7 @@
     <string name="empty_package_name">Nome do pacote vazio</string>
     <string name="instructions">Instruções</string>
     <string name="error_creating_shortcut">Erro ao criar atalho</string>
-    <string name="error_verbose_pin_shortcut">O launcher atual não suporta PinShortcut. Não foi possível criar o atalho.</string>
+    <string name="error_verbose_pin_shortcut">O launcher atual não aceita PinShortcut. Não foi possível criar o atalho.</string>
     <string name="starting_activity">Iniciando atividade: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="create_shortcut">Criar Atalho</string>
     <string name="edit_shortcut">Editar Atalho</string>
@@ -79,7 +79,7 @@
     <string name="license">Licença</string>
     <string name="third_party">Bibliotecas e Ícones de terceiros</string>
     <string name="credits">Créditos</string>
-    <string name="credits_message">Para os autores do
+    <string name="credits_message">Aos autores de
 \n- The Android Open Source Project
 \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
@@ -87,6 +87,7 @@
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
 \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
 \n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
 \n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
 \n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
 \n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
@@ -94,7 +95,7 @@
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
 \n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
-\nCrédito do logo original: <a href="https://github.com/Atrate">Atrate</a>. </string>
+\nOriginal logo credit: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="word_wrap">Alternar quebra de palavra</string>
     <string name="class_viewer">Visualizador de Classe</string>
     <string name="toggle_class_listing">Alternar Lista de Classes</string>
@@ -216,7 +217,7 @@
     <string name="store">Loja</string>
     <string name="running_apps">Aplicativos em Execução</string>
     <string name="kill_process">Encerrar</string>
-    <string name="disable_background_run">Impedir a operação em segundo plano</string>
+    <string name="disable_background_run">Deter a operação em segundo plano</string>
     <string name="pid_and_ppid">ID do processo: %1$d; ID do processo principal: %2$d</string>
     <string name="memory_virtual_memory">Memória: %1$s, Memória Virtual: %2$s</string>
     <string name="user_and_uid">Usuário: <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
@@ -237,8 +238,8 @@
         <item quantity="other">%1$d aplicativos não puderam ser desinstalados</item>
     </plurals>
     <plurals name="alert_failed_to_disable_background">
-        <item quantity="one">%1$d aplicativo não pôde ser impedido de rodar em segundo plano</item>
-        <item quantity="other">%1$d aplicativos não puderam ser impedidos de rodar em segundo plano</item>
+        <item quantity="one">Inapto de deter %1$d aplicativo de executar em segundo plano</item>
+        <item quantity="other">Inapto de deter %1$d aplicativos de executar em segundo plano</item>
     </plurals>
     <string name="the_operation_was_successful">Feito</string>
     <plurals name="alert_failed_to_force_stop">
@@ -388,7 +389,7 @@
     <string name="run_in_termux">Executar no Termux</string>
     <string name="website">Site</string>
     <string name="pref_remove_all_rules">Remover todas as regras</string>
-    <string name="pref_remove_all_rules_msg">As permissões serão concedidas, as operações de aplicativo e os componentes retornarão aos seus valores padrão.</string>
+    <string name="pref_remove_all_rules_msg">As permissões serão concedidas, as operações de aplicativo e os componentes voltarão a seus valores padrão.</string>
     <string name="are_you_sure">Tem certeza?</string>
     <string name="filter_apps_with_activities">Com atividades</string>
     <string name="toggle_default_app_ops">Alternar operações de aplicativo padrões</string>
@@ -578,7 +579,7 @@
     <string name="keyboard_12_keys">12 teclas</string>
     <string name="keyboard_qwerty">QWERTY</string>
     <string name="_undefined">Indefinido</string>
-    <string name="required">Necessário</string>
+    <string name="required">Exigido</string>
     <string name="orientation_user_portrait">Retrato, seguindo o usuário</string>
     <string name="orientation_user_landscape">Paisagem, seguindo o usuário</string>
     <string name="orientation_sensor">Sensor</string>
@@ -694,7 +695,7 @@
         <item quantity="one">Esquema de assinatura</item>
         <item quantity="other">Esquemas de assinatura</item>
     </plurals>
-    <string name="input_keystore_pass_description">Digite a senha do KeyStore do App Manager. Se você estiver vendo isso pela primeira vez, use um gerador de senhas para gerar uma senha e salve ela em um lugar seguro antes de inseri-la aqui.</string>
+    <string name="input_keystore_pass_description">Insere a senha do KeyStore do App Manager. Se é tua primeira vez vendo isto, use um gerador de senha para gerar uma e salve-a num lugar seguro antes de inseri-la aqui.</string>
     <string name="input_keystore_alias_pass_description">Insirir senha para o alias <b>%1$s</b>. Você pode deixar isso vazio se a senha for a mesma da senha do KeyStore.</string>
     <string name="input_keystore_alias_pass">Senha para alias <b>%1$s</b></string>
     <string name="input_keystore_pass_msg">Toque aqui para digitar a senha do KeyStore</string>
@@ -1027,7 +1028,7 @@
     <string name="unknown_net_policy">Política de rede desconhecida (%1$s - %2$X)</string>
     <string name="fallback_to_no_root_mode_description">O App Manager não pôde usar o modo de operação atual. Para evitar comportamentos aleatórios, você deve mudar temporariamente para o modo sem root. Considere reportá-lo se o problema não for corrigido após a reinicialização do dispositivo.</string>
     <string name="fallback_to_no_root_mode">Recuar ao modo sem root\?</string>
-    <string name="failed_to_prevent_background_run">Não foi possível impedir que %1$s funcionasse em segundo plano</string>
+    <string name="failed_to_prevent_background_run">Inapto de deter %1$s de executar em segundo plano</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">Não foi possível instalar o aplicativo devido ao descompasso de assinatura. O aplicativo foi desinstalado sem limpar seus dados.</string>
     <string name="community_links">Telegram: https://t.me/AppManagerChannel
 \nTwitter: https://twitter.com/AppManagerNews</string>
@@ -1041,9 +1042,9 @@
     <string name="import_from_oab">Importar do OAndBackup</string>
     <string name="pref_import_backups_msg">Importar backups do OAndBackup ou Titanium Backup.</string>
     <string name="pref_import_backups">Importar backups</string>
-    <string name="help_app_ops_tab">Clique em um item para <b>permitir</b> ou <b>ignorar</b> ele. Aperte e segure em um item para ver outros modos suportados.</string>
+    <string name="help_app_ops_tab">Clique num item para o <b>permitir</b> ou <b>ignorar</b>. Aperte e segure num item para ver outros modos oferecidos.</string>
     <string name="help_permissions_tab">Essas permissões são definidas por este aplicativo e não podem ser revogadas.</string>
-    <string name="help_uses_permissions_tab">Clique em um item para <b>conceder</b> ou <b>revogar</b> ele. Somente permissões <b>perigosas</b> e de <b>desenvolvimento</b> podem ser concedidas ou revogadas.</string>
+    <string name="help_uses_permissions_tab">Clique num item para o <b>conceder</b> ou <b>revogar</b> . Apenas permissões <b>perigosas</b> e de <b>desenvolvimento</b> podem ser concedidas ou revogadas.</string>
     <string name="minimum_version">Versão min: %d</string>
     <string name="added_to_queue">Adicionado à fila</string>
     <string name="saved_filters">Filtros salvos</string>
@@ -1056,4 +1057,11 @@
     <string name="storage">Armazenamento</string>
     <string name="notice_saf">Ao contrário dos volumes, o diretório selecionado será usado para armazenar todos os arquivos relacionados ao App Manager, incluindo APKs salvos e backups. O SAF (Storage Access Framework) é muito lento, portanto, você só deve usar essa opção quando outras não puderem ser usadas.</string>
     <string name="notice">Perceba</string>
+    <string name="paired_successfully">Pareado.</string>
+    <string name="port_number_pairing_code_empty">Número da porta ou código de pareamento vazio.</string>
+    <string name="adb_pair">Parear</string>
+    <string name="adb_wifi_paring_code">Código de pareamento Wi-Fi</string>
+    <string name="invalid_password">Senha inválida, tente novamente.</string>
+    <string name="keystore_pass_cannot_be_empty">A senha do KeyStore não pode estar vazia.</string>
+    <string name="keystore_password_info">Esta é a senha do KeyStore do App Manager. Guarde-a num local seguro se fizer backup/restaurar a KeyStore do App Manager. <b>Esta mensagem não voltará a exibir-se.</b></string>
 </resources>

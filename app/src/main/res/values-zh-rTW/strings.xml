@@ -1009,4 +1009,12 @@
     <string name="notice_saf">與卷不同，所選目錄將用於儲存與 App Manager相關的所有檔案，包括已儲存的 APK 和備份。儲存空間存取框架 （SAF） 非常緩慢，因此，您只能在無法使用其他選項時使用此選項。</string>
     <string name="storage">儲存空間</string>
     <string name="files">檔案</string>
+    <string name="keystore_password_info">以下是 App Manager KeyStore 密碼。如果您要備份/還原 App Manager KeyStore，請將其存放在安全的地方。 <b>此訊息將不再顯示。</b></string>
+    <string name="keystore_pass_cannot_be_empty">KeyStore 密碼不能為空。</string>
+    <string name="invalid_password">密碼無效，請再試一次。</string>
+    <string name="adb_wifi_paring_code">Wi-Fi 配對碼</string>
+    <string name="adb_pair">配對</string>
+    <string name="port_number_pairing_code_empty">連接埠或配對碼為空。</string>
+    <string name="paired_successfully">已配對。</string>
+    <string name="pem_and_pk8">PEM 與 PKCS #8 (PK8)</string>
 </resources>

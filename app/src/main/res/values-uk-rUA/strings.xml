@@ -44,7 +44,7 @@
     </plurals>
     <string name="input_app_ops_description">Введіть імена та/або константи app op із пробілами, наприклад <tt>WAKE_LOCK 63 72 CAMERA</tt> тощо.</string>
     <string name="input_app_ops">Введення app ops</string>
-    <string name="external_apk_no_app_op">Зовнішній файл .apk не має жодних операцій з застосунками</string>
+    <string name="external_apk_no_app_op">Зовнішній файл .apk не має жодних операцій з додатками</string>
     <string name="failed_to_deny_dangerous_app_ops">Не вдалося відкликати всі небезпечні app ops</string>
     <string name="failed_to_reset_app_ops">Не вдалося провести скидання app ops</string>
     <string name="sort_by_app_ops_values">Значення app ops</string>
@@ -56,10 +56,10 @@
     <string name="app_ops">App Ops</string>
     <string name="sys_config">Конфігурація системи</string>
     <string name="only_install">Лише встановити</string>
-    <string name="app_signing_install_without_data_loss">Якщо ви вимкнули перевірку підпису, ви можете використовувати опцію <b>Лише встановити</b>, для встановлення застосунку без втрати даних.</string>
-    <string name="app_data_will_be_lost">Існуючі дані буде втрачено.</string>
-    <string name="app_signing_signature_mismatch_for_system_apps">Не вдалося встановити застосунок, оскільки встановлений застосунок є системним, з іншим підписом.</string>
-    <string name="do_you_want_to_uninstall_and_install">Ви хочете видалити і знову встановити застосунок \?</string>
+    <string name="app_signing_install_without_data_loss">Якщо ви вимкнули перевірку підпису, ви можете використовувати опцію <b>Лише встановити</b>, для встановлення додатку без втрати даних.</string>
+    <string name="app_data_will_be_lost">Існуючі дані будуть втрачені.</string>
+    <string name="app_signing_signature_mismatch_for_system_apps">Не вдалося встановити додаток, оскільки встановлений додаток є системним, з іншим підписом.</string>
+    <string name="do_you_want_to_uninstall_and_install">Ви хочете видалити і знову встановити додаток \?</string>
     <string name="packages">пакети</string>
     <string name="onboard">Доступні</string>
     <string name="usage_access_not_supported">Не вдалося запросити доступ до використання, оскільки відповідна сторінка налаштувань не існує.</string>
@@ -97,7 +97,7 @@
     <string name="sort_by_process_name">Ім\'я процесу</string>
     <string name="sort_by_process_id">Ідентифікатор процесу</string>
     <string name="filter_apps">Додатки</string>
-    <string name="no_apps">Немає застосунків</string>
+    <string name="no_apps">Немає додатків</string>
     <string name="apps">Додатки</string>
     <string name="routine_ops">Регулярні операції</string>
     <string name="apply_now">Застосувати зараз…</string>
@@ -106,7 +106,7 @@
     <string name="presets">Пресети</string>
     <string name="profiles">Профілі</string>
     <string name="open_pgp_provider">Постачальник OpenPGP</string>
-    <string name="systemless_app">Позасистемний застосунок</string>
+    <string name="systemless_app">Позасистемний додаток</string>
     <string name="cancel">Скасувати</string>
     <string name="ok">ОК</string>
     <string name="input_backup_name_description">Ім\'я резервної копії не повинно починатися з цифри і не повинно містити пробілів. Залиште поле порожнім, якщо ви хочете використовувати поточну дату-час.</string>
@@ -121,7 +121,7 @@
     <string name="state_locked_memory">Заблокована пам\'ять</string>
     <string name="state_low_priority">Низький пріоритет</string>
     <string name="state_high_priority">Високий пріоритет</string>
-    <string name="state_unknown">Невідомий</string>
+    <string name="state_unknown">Unknown</string>
     <string name="state_idle">Очікування</string>
     <string name="state_zombie">Зомбі</string>
     <string name="state_dead">Мертвий</string>
@@ -176,7 +176,7 @@
     <string name="package_installer">Інсталятор пакетів</string>
     <string name="unblock_trackers">Розблокування трекерів</string>
     <string name="reinstall">Перевстановлення</string>
-    <string name="install_app_message">Ви хочете встановити цей застосунок\?</string>
+    <string name="install_app_message">Ви хочете встановити цей додаток\?</string>
     <string name="try_again">Спробуйте ще раз</string>
     <string name="full_stop_tap_to_see_details">. Торкніться, щоб переглянути деталі.</string>
     <string name="operation_running">Операція запущена…</string>
@@ -184,12 +184,12 @@
     <string name="failed_to_fetch_package_info">Не вдалося отримати відомості про пакет</string>
     <string name="installer_error_lidl_rom">Ваша прошивка несумісна з без-ROOT-овим інсталятором.</string>
     <string name="installer_error_generic">Помилка встановлення</string>
-    <string name="installer_error_storage">Недостатньо місця для встановлення застосунку</string>
+    <string name="installer_error_storage">Недостатньо місця для встановлення додатку</string>
     <string name="installer_error_bad_apks">Вибрано пошкоджені файли .apk</string>
-    <string name="installer_error_incompatible">Застосунок несумісний з цим пристроєм</string>
-    <string name="installer_error_blocked">Установленя заблоковано <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
+    <string name="installer_error_incompatible">Додаток несумісний з цим пристроєм</string>
+    <string name="installer_error_blocked">Встановленя заблоковано <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
     <string name="installer_error_blocked_device">пристрій</string>
-    <string name="installer_error_aborted">Помилка встановлення, оскільки воно було скасовано або несподівано закрито сеанс</string>
+    <string name="installer_error_aborted">Помилка встановлення, оскільки воно було скасовано або сеанс було несподівано закрито</string>
     <string name="filter_apps_with_activities">Додатки з activities</string>
     <string name="are_you_sure">Ви впевнені\?</string>
     <string name="pref_remove_all_rules">Видалити всі правила</string>
@@ -197,13 +197,13 @@
     <string name="run_in_termux">Запустити в Termux</string>
     <string name="open_in_termux">Відкрити в Termux</string>
     <string name="export_icon">Витягти іконку</string>
-    <string name="no_matching_package_found">Не вдалося знайти такий застосунок</string>
+    <string name="no_matching_package_found">Не вдалося знайти такий додаток</string>
     <string name="block_unblock_trackers">Заблокувати/розблокувати трекери</string>
     <string name="unblock">Розблокувати</string>
     <string name="block">Блокувати</string>
     <string name="clear">Очистити</string>
     <string name="failed_packages">Збійні пакети</string>
-    <string name="deny_app_ops_description">Установити режим операцій програм, визначені константами, наприклад <tt>63</tt> або <tt>RUN_IN_BACKGROUND</tt></string>
+    <string name="deny_app_ops_description">Встановити режим операцій програм, визначені константами, наприклад <tt>63</tt> або <tt>RUN_IN_BACKGROUND</tt></string>
     <string name="manifest_viewer">Переглядач маніфесту</string>
     <string name="never_ask">Не запитувати</string>
     <string name="unknown_op">Невідома операція</string>
@@ -213,7 +213,7 @@
     <string name="keyboard_type">Тип клавіатури</string>
     <string name="reject_time">Час відхилення</string>
     <string name="accept_time">Час підтвердження</string>
-    <string name="pref_global_blocking_enabled_msg">Дозволяє блокувати будь-який компонент будь-якого застосунку, не вмикаючи явно блокування застосунку.</string>
+    <string name="pref_global_blocking_enabled_msg">Дозволяє блокувати будь-який компонент будь-якого додатку, не вмикаючи явно блокування додатку.</string>
     <string name="rules_not_applied">Правила не застосовані</string>
     <string name="error_evaluating_input">Не вдалося оцінити вхідні дані</string>
     <string name="shared_prefs">Спільні налаштування</string>
@@ -231,29 +231,29 @@
     <string name="path_permissions">Шляхи дозволів</string>
     <string name="authority">Права</string>
     <string name="restore">Відновити</string>
-    <string name="clear_data_message">Ви впевнені, що хочете очистити дані цього застосунку\?</string>
+    <string name="clear_data_message">Ви впевнені, що хочете очистити дані цього додатка\?</string>
     <string name="skip_signature_checks">Пропустити перевірку підписів</string>
     <string name="yes">Так</string>
     <string name="no">Ні</string>
-    <string name="apply_to_system_apps_question">Застосувати до системних застосунків теж\? Виберіть \"Ні\", якщо не впевнені.</string>
-    <string name="apply_to_system_apps">Застосувати до системних застосунків</string>
+    <string name="apply_to_system_apps_question">Застосувати до системних додатків теж\? Виберіть \"Ні\", якщо не впевнені.</string>
+    <string name="apply_to_system_apps">Застосувати до системних додатків</string>
     <plurals name="backup_exists_are_you_sure">
         <item quantity="one">Резервна копія існує. Ви впевнені\?</item>
-        <item quantity="few">Резервні копії існують. Ви впевнені\?</item>
-        <item quantity="many">Резервні копії існують. Ви впевнені\?</item>
-        <item quantity="other">Резервні копії існують. Ви впевнені\?</item>
+        <item quantity="few">Більше одного додатка вже має резервну копію. Ви впевнені\?</item>
+        <item quantity="many">Більше одного додатка вже має резервну копію. Ви впевнені\?</item>
+        <item quantity="other">Більше одного додатка вже має резервну копію. Ви впевнені\?</item>
     </plurals>
     <plurals name="alert_failed_to_enable">
-        <item quantity="one">Не вдалося ввімкнути застосунок %1$dНе вдалося ввімкнути застосунки %1$dНе вдалося ввімкнути застосунки %1$d</item>
-        <item quantity="few"></item>
-        <item quantity="many"></item>
-        <item quantity="other"></item>
+        <item quantity="one">Не вдалося ввімкнути %1$d додаток</item>
+        <item quantity="few">Не вдалося ввімкнути %1$d додатки</item>
+        <item quantity="many">Не вдалося ввімкнути %1$d додатків</item>
+        <item quantity="other">Не вдалося ввімкнути %1$d додатків</item>
     </plurals>
     <plurals name="alert_failed_to_block_components">
-        <item quantity="one">Не вдалося заблокувати компоненти в застосунку %1$dНе вдалося заблокувати компоненти в застосунках %1$dНе вдалося заблокувати компоненти в застосунках %1$d</item>
-        <item quantity="few"></item>
-        <item quantity="many"></item>
-        <item quantity="other"></item>
+        <item quantity="one">Не вдалося заблокувати компоненти в %1$d додатку</item>
+        <item quantity="few">Не вдалося заблокувати компоненти в %1$d додатках</item>
+        <item quantity="many">Не вдалося заблокувати компоненти в %1$d додатках</item>
+        <item quantity="other">Не вдалося заблокувати компоненти в %1$d додатках</item>
     </plurals>
     <plurals name="alert_failed_to_delete_backup">
         <item quantity="one">Не вдалося видалити резервну копію %1$d</item>
@@ -262,22 +262,22 @@
         <item quantity="other">Не вдалося видалити резервні копії %1$d</item>
     </plurals>
     <plurals name="alert_failed_to_restore">
-        <item quantity="one">Не вдалося відновити застосунок %1$dНе вдалося відновити застосунки %1$dНе вдалося відновити застосунки %1$d</item>
-        <item quantity="few"></item>
-        <item quantity="many"></item>
-        <item quantity="other"></item>
+        <item quantity="one">Не вдалося відновити %1$d додаток</item>
+        <item quantity="few">Не вдалося відновити %1$d додатки</item>
+        <item quantity="many">Не вдалося відновити %1$d додатків</item>
+        <item quantity="other">Не вдалося відновити %1$d додатків</item>
     </plurals>
     <plurals name="alert_failed_to_backup">
-        <item quantity="one">Не вдалося зробити резервну копію застосунку %1$dНе вдалося зробити резервну копію застосунків %1$dНе вдалося зробити резервну копію застосунків %1$d</item>
-        <item quantity="few"></item>
-        <item quantity="many"></item>
-        <item quantity="other"></item>
+        <item quantity="one">Не вдалося зробити резервну копію %1$d додатка</item>
+        <item quantity="few">Не вдалося зробити резервну копію %1$d додатків</item>
+        <item quantity="many">Не вдалося зробити резервну копію %1$d додатків</item>
+        <item quantity="other">Не вдалося зробити резервну копію %1$d додатків</item>
     </plurals>
     <plurals name="failed_to_backup_some_apk_files">
-        <item quantity="one">Не вдалося зробити резервну копію застосунку %1$dНе вдалося зробити резервну копію застосунків %1$dНе вдалося зробити резервну копію застосунків %1$d</item>
-        <item quantity="few"></item>
-        <item quantity="many"></item>
-        <item quantity="other"></item>
+        <item quantity="one">Не вдалося зробити резервну копію %1$d додатка</item>
+        <item quantity="few">Не вдалося зробити резервну копію %1$d додатків</item>
+        <item quantity="many">Не вдалося зробити резервну копію %1$d додатків</item>
+        <item quantity="other">Не вдалося зробити резервну копію %1$d додатків</item>
     </plurals>
     <string name="backup_options">Параметри резервного копіювання</string>
     <string name="delete_backup">Видалити резервну копію</string>
@@ -291,11 +291,11 @@
     <string name="components">Компоненти</string>
     <string name="trackers">Трекери</string>
     <string name="installed_version">Установлена версія</string>
-    <string name="filter_disabled_apps">Вимкнені застосунки</string>
+    <string name="filter_disabled_apps">Вимкнені додатки</string>
     <string name="select_all">Вибрати все</string>
     <string name="filter_apps_with_rules">Додатки з правилами</string>
-    <string name="filter_system_apps">Системні застосунки</string>
-    <string name="filter_user_apps">Користувацькі застосунки</string>
+    <string name="filter_system_apps">Системні додатки</string>
+    <string name="filter_user_apps">Користувацькі додатки</string>
     <string name="filter">Фільтр</string>
     <string name="failed_to_install_package_name">Не вдалося встановити <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> встановлено</string>
@@ -306,13 +306,13 @@
     <string name="input_signatures_description">Ввести підписи з пробілами, наприклад <tt>com.facebook org.app2 com.app3</tt> тощо.</string>
     <string name="input_signatures">Введення підписів</string>
     <string name="no_tracker_found">Не знайдено жодного трекера</string>
-    <string name="clear_app_cache_description">Очищення кешу всіх застосунків</string>
-    <string name="clear_app_cache">Очищення кешу застосунків</string>
-    <string name="clear_data_from_uninstalled_apps_description">Очистити дані видалених застосунків, котрі відмічені прапорцем <tt>DONT_DELETE_DATA</tt></string>
+    <string name="clear_app_cache_description">Очищення кешу всіх додатків</string>
+    <string name="clear_app_cache">Очищення кешу додатків</string>
+    <string name="clear_data_from_uninstalled_apps_description">Очистити дані видалених додатків, котрі відмічені прапорцем <tt>DONT_DELETE_DATA</tt></string>
     <string name="block_components_description">Блокувати всі компоненти, визначені заданими підписами</string>
-    <string name="block_unblock_trackers_description">Блокування або розблокування реклами і компонентів трекерів в усіх встановлених застосунках</string>
+    <string name="block_unblock_trackers_description">Блокування або розблокування реклами і компонентів трекерів в усіх встановлених додатках</string>
     <string name="clear_cache">Очистити кеш</string>
-    <string name="pref_import_existing_msg">Додавайте компоненти, вимкнені іншими програмами, до App Manager. Будьте обережні при використанні цього інструменту, оскільки може бути багато помилкових позитивних результатів. Виберіть лише програми, в котрих ви впевнені.</string>
+    <string name="pref_import_existing_msg">Додати до App Manager компоненти, вимкнені іншими додатками. Будьте обережні при використанні цього інструменту, оскільки може бути багато помилково-позитивних результатів. Виберіть лише додатки, в котрих ви впевнені.</string>
     <string name="pref_import_existing">Імпорт існуючих правил</string>
     <string name="source_code">Вихідний код</string>
     <string name="update">Оновлення</string>
@@ -330,10 +330,10 @@
     <string name="failed_to_revoke_permission">Не вдалося відкликати дозвіл</string>
     <string name="failed_to_grant_permission">Не вдалося надати дозвіл</string>
     <plurals name="alert_failed_to_disable_trackers">
-        <item quantity="one">Не вдалося вимкнути трекери в застосунку %1$dНе вдалося вимкнути трекери в застосунках %1$dНе вдалося вимкнути трекери в застосунках %1$d</item>
-        <item quantity="few"></item>
-        <item quantity="many"></item>
-        <item quantity="other"></item>
+        <item quantity="one">Не вдалося вимкнути трекери в %1$d додатку</item>
+        <item quantity="few">Не вдалося вимкнути трекери в %1$d додатках</item>
+        <item quantity="many">Не вдалося вимкнути трекери в %1$d додатках</item>
+        <item quantity="other">Не вдалося вимкнути трекери в %1$d додатках</item>
     </plurals>
     <string name="deny_dangerous_permissions">Заборонити небезпечні дозволи</string>
     <string name="sort_by_dangerous_permissions">Спочатку небезпечні</string>
@@ -343,13 +343,13 @@
     <string name="block_trackers">Блокувати трекери</string>
     <string name="sort_by_wifi_data">Дані Wi-Fi</string>
     <string name="version">Версія</string>
-    <string name="pref_about_msg">Версія App Manager, ліцензія, автори тощо.</string>
+    <string name="pref_about_msg">Версія App Manager, ліцензія, подяки, тощо.</string>
     <string name="apply">Застосувати</string>
     <string name="select_theme">Тема</string>
     <string name="night">Ніч</string>
     <string name="day">День</string>
     <string name="battery_mode">Режим батареї</string>
-    <string name="pref_app_theme">Тема застосунку</string>
+    <string name="pref_app_theme">Тема додатку</string>
     <string name="pref_import_blocker_msg">Імпорт правил блокування з Blocker, кожен файл містить правила для одного пакета.</string>
     <string name="pref_import_watt_msg">Імпортуйте правила блокування з Watt, кожен файл, що містить правила для однієї назви пакета як <tt>packagename.xml</tt> тощо.</string>
     <string name="pref_import_msg">Імпортуйте раніше експортовані правила блокування з App Manager.</string>
@@ -367,37 +367,37 @@
     <string name="running">Запущено</string>
     <string name="mode">Режим</string>
     <string name="permission_name">Ім\'я дозволу</string>
-    <string name="toggle_kill_for_system_apps">Перемикач вбивства системних застосунків</string>
+    <string name="toggle_kill_for_system_apps">Перемикач вбивства системних додатків</string>
     <plurals name="alert_failed_to_force_stop">
-        <item quantity="one">Не вдалося примусово зупинити застосунок %1$dНе вдалося примусово зупинити застосунки %1$dНе вдалося примусово зупинити застосунки%1$d</item>
-        <item quantity="few"></item>
-        <item quantity="many"></item>
-        <item quantity="other"></item>
+        <item quantity="one">Не вдалося примусово зупинити %1$d додаток</item>
+        <item quantity="few">Не вдалося примусово зупинити %1$d додатки</item>
+        <item quantity="many">Не вдалося примусово зупинити %1$d додатків</item>
+        <item quantity="other">Не вдалося примусово зупинити %1$d додатків</item>
     </plurals>
     <string name="the_operation_was_successful">Завершено</string>
     <plurals name="alert_failed_to_disable_background">
-        <item quantity="one">Не вдалося запобігти роботу у фоновому режимі застосунку %1$dНе вдалося запобігти роботу у фоновому режимі застосункам %1$dНе вдалося запобігти роботу у фоновому режимі застосункам %1$d</item>
-        <item quantity="few"></item>
-        <item quantity="many"></item>
-        <item quantity="other"></item>
+        <item quantity="one">Не вдалося запобігти роботу в фоновому режимі %1$s додатку</item>
+        <item quantity="few">Не вдалося запобігти роботу в фоновому режимі %1$s додаткам</item>
+        <item quantity="many">Не вдалося запобігти роботу в фоновому режимі %1$s додаткам</item>
+        <item quantity="other">Не вдалося запобігти роботу в фоновому режимі %1$s додаткам</item>
     </plurals>
     <plurals name="alert_failed_to_uninstall">
-        <item quantity="one">Не вдалося видалити застосунок %1$dНе вдалося видалити застосунки %1$dНе вдалося видалити застосунки %1$d</item>
-        <item quantity="few"></item>
-        <item quantity="many"></item>
-        <item quantity="other"></item>
+        <item quantity="one">Не вдалося видалити %1$d додаток</item>
+        <item quantity="few">Не вдалося видалити %1$d додатки</item>
+        <item quantity="many">Не вдалося видалити %1$d додатків</item>
+        <item quantity="other">Не вдалося видалити %1$d додатків</item>
     </plurals>
     <plurals name="alert_failed_to_disable">
-        <item quantity="one">Не вдалося вимкнути застосунок %1$dНе вдалося вимкнути застосунки %1$dНе вдалося вимкнути застосунки %1$d</item>
-        <item quantity="few"></item>
-        <item quantity="many"></item>
-        <item quantity="other"></item>
+        <item quantity="one">Не вдалося вимкнути %1$d додаток</item>
+        <item quantity="few">Не вдалося вимкнути %1$d додатки</item>
+        <item quantity="many">Не вдалося вимкнути %1$d додатків</item>
+        <item quantity="other">Не вдалося вимкнути %1$d додатків</item>
     </plurals>
     <plurals name="alert_failed_to_clear_data">
-        <item quantity="one">Не вдалося очистити дані застосунку %1$dНе вдалося очистити дані застосунків %1$dНе вдалося очистити дані застосунків %1$d</item>
-        <item quantity="few"></item>
-        <item quantity="many"></item>
-        <item quantity="other"></item>
+        <item quantity="one">Не вдалося очистити дані %1$d додатку</item>
+        <item quantity="few">Не вдалося очистити дані %1$d додатків</item>
+        <item quantity="many">Не вдалося очистити дані %1$d додатків</item>
+        <item quantity="other">Не вдалося очистити дані %1$d додатків</item>
     </plurals>
     <string name="export_blocking_rules">Експорт правил блокування</string>
     <string name="disable_background">Запобігання фонових операцій</string>
@@ -440,7 +440,7 @@
     <string name="usage_access">Доступ до статистики використання</string>
     <string name="pref_global_blocking_enabled">Миттєве блокування компонентів</string>
     <string name="str_logo">Логотип</string>
-    <string name="app_size">Застосунок</string>
+    <string name="app_size">Додаток</string>
     <string name="total_size">Всього</string>
     <string name="storage_and_cache">Сховище і кеш</string>
     <string name="failed_to_stop">Не вдалося зупинити <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
@@ -450,10 +450,10 @@
     <string name="enable">Ввімкнути</string>
     <string name="disable">Вимкнути</string>
     <string name="stopped">Зупинено</string>
-    <string name="uninstall_system_app_message">Це системний застосунок. Ви впевнені, що хочете видалити його\?</string>
+    <string name="uninstall_system_app_message">Це системний додаток. Ви впевнені, що хочете видалити його\?</string>
     <string name="uninstalled_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> видалено.</string>
     <string name="failed_to_uninstall">Не вдалося видалити <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
-    <string name="uninstall_app_message">Видалити цей застосунок\?</string>
+    <string name="uninstall_app_message">Видалити цей додаток\?</string>
     <string name="view_in_settings">Переглянути в налаштуваннях</string>
     <string name="no_content">Немає вмісту</string>
     <string name="no_usage_in_this_time_range">Немає використання в цьому часовому діапазоні</string>
@@ -472,14 +472,14 @@
     <string name="decimal_value">Десяткове значення</string>
     <string name="expiry_date">Придатний до</string>
     <string name="orientation_user_portrait">Вертикальна, користувацька</string>
-    <string name="installer_error_conflict">Не вдається встановити застосунок, оскільки встановлений вже має цю назву пакета</string>
+    <string name="installer_error_conflict">Не вдається встановити додаток, оскільки встановлений вже має цю назву пакета</string>
     <plurals name="alert_failed_to_unblock_trackers">
-        <item quantity="one">Не вдалося розблокувати трекери в застосунку %1$dНе вдалося розблокувати трекери в застосунках %1$dНе вдалося розблокувати трекери в застосунках %1$d</item>
-        <item quantity="few"></item>
-        <item quantity="many"></item>
-        <item quantity="other"></item>
+        <item quantity="one">Не вдалося розблокувати трекери в %1$d додатку</item>
+        <item quantity="few">Не вдалося розблокувати трекери в %1$d додатках</item>
+        <item quantity="many">Не вдалося розблокувати трекери в %1$d додатках</item>
+        <item quantity="other">Не вдалося розблокувати трекери в %1$d додатках</item>
     </plurals>
-    <string name="clear_data_from_uninstalled_apps">Очистити дані видалених застосунків</string>
+    <string name="clear_data_from_uninstalled_apps">Очистити дані видалених додатків</string>
     <string name="block_components_dots">Блокування компонентів …</string>
     <string name="follow_system">Як в системі</string>
     <string name="pid_and_ppid">Ідентифікатор процесу: %1$d, ідентифікатор батьківського процесу: %2$d</string>
@@ -488,12 +488,12 @@
     <string name="debuggable">Налагоджується</string>
     <string name="error_invalid_icon_format">Пошкоджений формат іконки</string>
     <string name="error_invalid_icon_resource">Пошкоджений ресурс іконки</string>
-    <string name="installer_app">Установник застосунків</string>
+    <string name="installer_app">Встановник додатків</string>
     <string name="sort_by_package_name">Ім’я пакету</string>
     <string name="require_no_permission">Не вимагає дозволів</string>
     <string name="required">Вимагається</string>
     <string name="subject">Тема</string>
-    <string name="state_waking">Пробудження</string>
+    <string name="state_waking">Waking</string>
     <string name="state_trace_stop">Трасування зупинки</string>
     <string name="sdk_flags">Прапорці</string>
     <string name="flags">Прапорці</string>
@@ -530,7 +530,7 @@
     <string name="menu_remove_rules">Видалити правила</string>
     <string name="failed_to_extract_apk_file">Не вдалося видобути файл APK</string>
     <string name="share_apk">Поділитися APK</string>
-    <string name="grant_usage_acess_message">Використовується для відображення відомостей про використання застосунку.</string>
+    <string name="grant_usage_acess_message">Використовується для відображення інформації про використання додатка.</string>
     <string name="grant_usage_access">Надати доступ до статистики використання</string>
     <string name="go">Далі</string>
     <string name="go_back">← Назад</string>
@@ -557,7 +557,7 @@
     <string name="usage_7_days">За останні 7 днів</string>
     <string name="usage_today">Сьогодні</string>
     <string name="usage_weekly">Щотижня</string>
-    <string name="app_usage">Використання застосунків</string>
+    <string name="app_usage">Використання додатків</string>
     <string name="no_tracker_class">Немає класів трекера</string>
     <string name="no_shared_libs">Немає спільних бібліотек</string>
     <string name="all_classes">Всі класи</string>
@@ -575,6 +575,7 @@
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
 \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
 \n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
 \n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
 \n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
 \n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
@@ -598,14 +599,14 @@
     <string name="source_dir">Каталог-джерело</string>
     <string name="data_dir">Каталоги даних</string>
     <string name="paths_and_directories">Шлях і каталоги</string>
-    <string name="user_app">Застосунок користувача</string>
-    <string name="system_app">Системний застосунок</string>
-    <string name="app_info">Про застосунок</string>
+    <string name="user_app">Додаток користувача</string>
+    <string name="system_app">Системний додаток</string>
+    <string name="app_info">Про додаток</string>
     <string name="version_name_with_code">Версія <xliff:g id="version_name" example="2.5.17">%1$s</xliff:g> (<xliff:g id="version_code" example="365">%2$d</xliff:g>)</string>
     <string name="sort">Сортування</string>
     <string name="user">Користувацькі</string>
     <string name="system">Системні</string>
-    <string name="app_not_installed">Застосунок не встановлено</string>
+    <string name="app_not_installed">Додаток не встановлено</string>
     <string name="input_features">Функції введення</string>
     <string name="shared_user_id">Спільний ідентифікатор користувача</string>
     <string name="sort_by_shared_user_id">Спільний ідентифікатор користувача</string>
@@ -618,8 +619,8 @@
     <string name="data_transmitted">Даних відправлено</string>
     <string name="data_received">Даних отримано</string>
     <string name="sort_by_target_sdk">Цільова SDK</string>
-    <string name="sort_by_domain">Спочатку користувацькі застосунки</string>
-    <string name="sort_by_app_label">Назва застосунку</string>
+    <string name="sort_by_domain">Спочатку користувацькі додатки</string>
+    <string name="sort_by_app_label">Назва додатку</string>
     <string name="no_configurations">Немає конфігурацій</string>
     <string name="grant_uri_permission">Надати дозволи URI</string>
     <string name="orientation">Орієнтація</string>
@@ -684,7 +685,7 @@
     <string name="pref_encryption_msg">Шифрування резервних копій.</string>
     <string name="encryption">Шифрування</string>
     <string name="select_user">Виберіть користувача</string>
-    <string name="pref_show_users_in_installer_msg">Відображення списку користувачів, котрих потрібно вибрати перед встановленям зовнішнього застосунку. Потрібен ROOT або ADB.</string>
+    <string name="pref_show_users_in_installer_msg">Відображення списку користувачів, котрих потрібно вибрати перед встановленям зовнішнього додатка. Потрібен ROOT або ADB.</string>
     <string name="pref_show_users_in_installer">Показати користувачів у програмі встановлення</string>
     <string name="failed_to_duplicate_profile">Не вдалося дублювати профіль</string>
     <string name="user_profile_with_id">Профіль: %1$s (%2$d)</string>
@@ -694,11 +695,11 @@
     <string name="adb_over_tcp">ADB через TCP</string>
     <string name="pref_mode_of_operations">Режим роботи</string>
     <string name="send_selected">Надіслати вибране</string>
-    <string name="profile_block_trackers_msg">Блокування трекерів в застосунках</string>
-    <string name="profile_clear_data_msg">Очищення даних застосунків</string>
-    <string name="profile_clear_cache_msg">Очищення кешу застосунків</string>
-    <string name="profile_force_stop_msg">Примусова зупинка застосунків</string>
-    <string name="profile_disable_msg">Вимкненя або увімкнення застосунків, залежно від значення стану</string>
+    <string name="profile_block_trackers_msg">Блокування трекерів в додатках</string>
+    <string name="profile_clear_data_msg">Очищення даних додатків</string>
+    <string name="profile_clear_cache_msg">Очищення кешу додатків</string>
+    <string name="profile_force_stop_msg">Примусова зупинка додатків</string>
+    <string name="profile_disable_msg">Вимкненя або увімкнення додатків, залежно від значення стану</string>
     <string name="install_location">Місце встановлення</string>
     <string name="installer">Інсталятор</string>
     <string name="comment">Коментар</string>
@@ -748,8 +749,8 @@
     <string name="input_permissions_description">Введення дозволів з пробілами, наприклад <tt>com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION</tt> тощо. Використайте <tt>*</tt> щоб застосувати до всіх дозволів.</string>
     <string name="input_permissions">Введення дозволів</string>
     <string name="no_app_ops_permission">Немає дозволу на відображення app ops</string>
-    <string name="pref_backup_android_keystore_msg">Не всі програми працюватимуть після відновлення. Відновлення сховища ключів не працює на більшості пристроїв.</string>
-    <string name="pref_backup_android_keystore">Резервне копіювання застосунків зі сховищем ключів Android</string>
+    <string name="pref_backup_android_keystore_msg">Не всі додатки працюватимуть після відновлення. Відновлення сховища ключів не працює на більшості пристроїв.</string>
+    <string name="pref_backup_android_keystore">Резервне копіювання додатків зі сховищем ключів Android</string>
     <string name="keep_data_and_app_signing_signatures">Зберегти дані і підписи</string>
     <string name="this_action_cannot_be_undone">Цю операцію неможливо скасувати.</string>
     <string name="filter_apps_with_splits">Додатки з сплітами</string>
@@ -769,7 +770,7 @@
     <string name="backup_skip_signature_checks_description">Відновлення резервних копій, котрі не працюють через помилку перевірки контрольної суми або мають інший підпис APK, ніж підпис резервної копії.</string>
     <string name="backup_multiple_description">Використовувати особливе <i>найменування</i> резервної копії, замість базового.</string>
     <string name="backup_rules_description">Резервне копіювання правил, налаштованих в App Manager.</string>
-    <string name="backup_extras_description">Резервне копіювання дозволів застосунків, економії заряду, опцій використання даних, стану MagiskHide, SSAID, тощо.</string>
+    <string name="backup_extras_description">Резервне копіювання дозволів, економії заряду, опцій використання даних, стану MagiskHide, SSAID, тощо.</string>
     <string name="backup_extras">Додатково</string>
     <string name="backup_cache_description">Резервне копіювання папок <b>cache</b>, <b>no_cache</b> та <b>no_backup</b>.</string>
     <string name="backup_obb_media_description">Резервне копіювання файлів OBB та папок медіа.</string>
@@ -812,13 +813,13 @@
         <item quantity="many">%1$d компонентів</item>
         <item quantity="other">%1$d компонентів</item>
     </plurals>
-    <string name="disable_background_run_description">Установленя режиму <i>ignore</i> для app ops: <tt>RUN_IN_BACKGROUND</tt> (з Android7.0) і <tt>RUN_ANY_IN_BACKGROUND</tt> (з Android 9).</string>
+    <string name="disable_background_run_description">Встановленя режиму <i>ignore</i> для app ops: <tt>RUN_IN_BACKGROUND</tt> (з Android7.0) і <tt>RUN_ANY_IN_BACKGROUND</tt> (з Android 9).</string>
     <string name="set_mode_for_app_ops_dots">Установити режим для app ops…</string>
     <plurals name="alert_failed_to_set_app_ops">
-        <item quantity="one">Не вдалося встановити app ops для %1$d програми</item>
-        <item quantity="few">Не вдалося встановити app ops для %1$d програм</item>
-        <item quantity="many">Не вдалося встановити app ops для %1$d програм</item>
-        <item quantity="other">Не вдалося встановити app ops для %1$d програм</item>
+        <item quantity="one">Не вдалося встановити app ops для %1$d додатка</item>
+        <item quantity="few">Не вдалося встановити app ops для %1$d додатків</item>
+        <item quantity="many">Не вдалося встановити app ops для %1$d додатків</item>
+        <item quantity="other">Не вдалося встановити app ops для %1$d додатків</item>
     </plurals>
     <string name="backup_custom_users_description">Виконувати резервне копіювання лише для вказаних користувачів</string>
     <string name="encrypted">Зашифровано</string>
@@ -827,7 +828,7 @@
     <string name="pref_backup_volume_msg">Виберіть том або диск, на якому будуть зберігатися резервні копії.</string>
     <string name="backup_volume">Том резервного копіювання</string>
     <string name="pref_backup_restore_msg">Налаштування резервного копіювання/відновлення.</string>
-    <string name="set_app_op_mode">Установити режим роботи застосунку</string>
+    <string name="set_app_op_mode">Встановити режим роботи додатка</string>
     <string name="list_options">Параметри списку</string>
     <string name="reverse">Зворотний</string>
     <string name="os_version">Версія ОС</string>
@@ -843,29 +844,29 @@
     <string name="internal_storage">Внутрішня пам’ять</string>
     <string name="back_up">Резервне копіювання</string>
     <string name="drm_free_apkm_msg">Файл APKM не має DRM, не потрібно конвертувати його в APKS.</string>
-    <string name="restore_msg">Відновлення програм із даними</string>
-    <string name="backup_msg">Резервне копіювання програм із даними</string>
-    <string name="restore_latest_msg">Відновлення вже встановлених програм, коди версій котрих вищий, ніж код встановлених.</string>
+    <string name="restore_msg">Відновлення додатків із даними</string>
+    <string name="backup_msg">Резервне копіювання додатків із даними</string>
+    <string name="restore_latest_msg">Відновлення вже встановлених додатків, коди версій котрих вищий, ніж код встановлених.</string>
     <string name="restore_latest">Відновлення останніх резервних копій</string>
-    <string name="restore_not_installed_msg">Відновлення базової резервної копії програм, котрі наразі не встановлено.</string>
-    <string name="restore_not_installed">Відновити невстановлені програми</string>
-    <string name="restore_all_msg">Відновити базову резервну копію з усіх резервних копій програм.</string>
-    <string name="restore_all">Відновлення всіх програм</string>
-    <string name="backup_apps_with_changes_msg">Повторити резервне копіювання програм, які змінилися після останнього резервного копіювання. Вони включають зміни в розмірі, версії, часі останнього запуску.</string>
-    <string name="backup_apps_with_changes">Резервне копіювання програм із змінами</string>
-    <string name="redo_existing_backups_msg">Повторити резервне копіювання встановлених програм з попередніми резервними копіями.</string>
-    <string name="redo_existing_backups">Повторити наявні резервні копії</string>
+    <string name="restore_not_installed_msg">Відновлення базової резервної копії не встановленних додатків.</string>
+    <string name="restore_not_installed">Відновити невстановлені додатки</string>
+    <string name="restore_all_msg">Відновити базову резервну копію з усіх резервних копій додатків.</string>
+    <string name="restore_all">Відновлення всіх додатків</string>
+    <string name="backup_apps_with_changes_msg">Повторити резервне копіювання додатків, які змінилися після останнього резервного копіювання. Вони включають зміни в розмірі, версії, часі останнього запуску.</string>
+    <string name="backup_apps_with_changes">Резервне копіювання додатків із змінами</string>
+    <string name="redo_existing_backups_msg">Повторити резервне копіювання встановлених додатків з попередніми резервними копіями.</string>
+    <string name="redo_existing_backups">Повторно створити наявні резервні копії</string>
     <string name="verify_and_redo_backups_msg">Перевірка ціліснісності попередніх резервних копій та повторне резервне копіювання тих, котрі не пройшли перевірку цілісності.</string>
     <string name="verify_and_redo_backups">Перевірка та повторне створення резервних копій</string>
-    <string name="backup_apps_without_backups_msg">Резервне копіювання програм без попередніх резервних копій.</string>
-    <string name="backup_apps_without_backups">Резервне копіювання програм без резервних копій</string>
-    <string name="backup_all_apps_msg">Резервне копіювання всіх встановлених програм.</string>
-    <string name="backup_all_apps">Резервне копіювання всіх програм</string>
+    <string name="backup_apps_without_backups_msg">Резервне копіювання додатків без попередніх резервних копій.</string>
+    <string name="backup_apps_without_backups">Резервне копіювання додатків без резервних копій</string>
+    <string name="backup_all_apps_msg">Резервне копіювання всіх встановлених додатків.</string>
+    <string name="backup_all_apps">Резервне копіювання всіх додатків</string>
     <string name="app_signing_signature_schemes">Схема підпису</string>
     <string name="restart_to_reflect_changes">Вам потрібно негайно перезапустити пристрій, щоб відобразити зміни.</string>
     <string name="failed_to_change_ssaid">Не вдалося змінити SSAID</string>
     <string name="copied_to_clipboard">Скопійовано до буфера обміну.</string>
-    <string name="ssaid_info">SSAID (<tt>Settings.Secure.ANDROID_ID</tt>) - це ідентифікатор пристрою, призначений кожному застосунку (з Android Oreo і вище). Він широко використовується застосунками для відстеження користувачів.</string>
+    <string name="ssaid_info">SSAID (<tt>Settings.Secure.ANDROID_ID</tt>) - це ідентифікатор пристрою, призначений кожному додатку (з Android Oreo і вище). Він широко використовується додатками для відстеження користувачів.</string>
     <string name="net_policy">Політика мережі</string>
     <string name="has_net_policy">Політика мережі</string>
     <string name="type_string_array_list">Список рядків</string>
@@ -888,19 +889,19 @@
     <string name="last_actions">Останні дії</string>
     <string name="pref_enable_disable_features_msg">Увімкніть або вимкніть функції в App Manager.</string>
     <string name="enable_disable_features">Увімкнути/вимкнути функції</string>
-    <string name="installed_apps">Установлені застосунки</string>
+    <string name="installed_apps">Встановлені додатки</string>
     <string name="backup_custom_users">Вибір користувачів</string>
     <string name="isolated">Ізольовано</string>
     <string name="working_on_adb_mode">Робота в режимі ADB</string>
-    <string name="screen_lock_not_enabled">Виберіть блокування екрана в налаштуваннях Android або очистіть дані застосунку.</string>
-    <string name="input_app_ops_description_profile">Введіть імена та/або константи застосунків із пробілами, наприклад <tt>WAKE_LOCK 63 72 КАМЕРА</tt> тощо. Використовуйте <tt>*</tt>, щоб застосувати до всіх налаштованих app ops.</string>
-    <string name="installer_app_message">Натисніть <b>вибрати</b> для використання одного з встановлених застосунків, або натисніть <b>користувацький</b>, щоб вказати власне ім\'я пакета.</string>
+    <string name="screen_lock_not_enabled">Виберіть блокування екрана в налаштуваннях Android або очистіть дані додатку.</string>
+    <string name="input_app_ops_description_profile">Введіть імена та/або константи додатків із пробілами, наприклад <tt>WAKE_LOCK 63 72 КАМЕРА</tt> тощо. Використовуйте <tt>*</tt>, щоб застосувати до всіх налаштованих app ops.</string>
+    <string name="installer_app_message">Натисніть <b>вибрати</b> для використання одного з встановлених додатків, або натисніть <b>користувацький</b>, щоб вказати власне ім\'я пакета.</string>
     <string name="filter_apps_without_backups">Додатки без резервних копій</string>
-    <string name="uninstalled_apps">Видалені застосунки</string>
+    <string name="uninstalled_apps">Видалені додатки</string>
     <string name="specify_custom_name">Користувацький</string>
     <string name="verified_using_unreliable_hash">Перевірено за допомогою ненадійного хешу</string>
     <string name="internal_data">Внутрішні дані</string>
-    <string name="pref_installer_msg">Налаштуйте поведінку встановника застосунків.</string>
+    <string name="pref_installer_msg">Налаштуйте поведінку встановника додатків.</string>
     <string name="expiry_date_cannot_be_empty">Дата закінчення терміну дії не може бути порожньою.</string>
     <string name="signing_key">Ключ підпису</string>
     <string name="failed_to_read_keystore">Не вдалося прочитати сховище ключів.</string>
@@ -935,7 +936,7 @@
     <string name="gles_version">Версія OpenGL ES</string>
     <string name="input_keystore_alias_pass_msg">Натисніть тут, щоб вказати пароль для %1$s</string>
     <string name="app_signing_signatures">Підписи</string>
-    <string name="pref_log_write_period_title">Період записування</string>
+    <string name="pref_log_write_period_title">Період запису</string>
     <string name="pref_log_write_period_summary">Під час запису записувати на SD-карту кожні %1$d рядків.</string>
     <string name="pref_log_line_period_error">Введіть ціле число від 1 до 1000.</string>
     <string name="pref_expanded_by_default_title">Розгорнути за замовчуванням</string>
@@ -999,8 +1000,8 @@
     <string name="share_log">Поділитись</string>
     <string name="save_log_zip">Зберегти zip</string>
     <string name="text_include_dmesg">Включити журнал ядра</string>
-    <string name="omit_sensitive_info_summary">Пропускати особисті дані, наприклад мережеві адреси, номери телефонів або електронну пошту.</string>
-    <string name="omit_sensitive_info">Пропустити особисті дані</string>
+    <string name="omit_sensitive_info_summary">Пропускати конфіденційну інформацію, наприклад веб-адреси, номери телефонів або електронну пошту.</string>
+    <string name="omit_sensitive_info">Пропустити конфіденційну інформацію</string>
     <string name="undo">Повернути</string>
     <string name="pause_unpause">Відтворення/пауза</string>
     <string name="collapse_all">Згорнути все</string>
@@ -1048,14 +1049,14 @@
 \nRiseup: https://0xacab.org/muntashir/AppManager
 \nCodeberg: https://codeberg.org/muntashir/AppManager</string>
     <string name="apk_updater">APK Updater</string>
-    <string name="enforcing">Примусово</string>
+    <string name="enforcing">Enforcing</string>
     <string name="uri">URI</string>
     <string name="rsa">RSA</string>
     <string name="aes">AES</string>
     <string name="dsa_affine_y">Аффінна координата y</string>
     <string name="dsa_affine_x">Аффінна координата x</string>
     <string name="magisk_hide_enabled">MagiskHide</string>
-    <string name="state_wake_kill">Вимкнути пробудження</string>
+    <string name="state_wake_kill">Wake kill</string>
     <string name="netpolicy_disable_network_access">Заборонити передачу даних</string>
     <string name="netpolicy_reject_wifi_data">Заборонити Wi-Fi передачу</string>
     <string name="netpolicy_reject_vpn_data">Заборонити VPN передачу</string>
@@ -1071,17 +1072,17 @@
     <string name="suspended">Призупинено</string>
     <string name="saf">SAF</string>
     <string name="filter_choice_pid">PID</string>
-    <string name="log_level_fatal">Фатальна помилка</string>
-    <string name="log_level_warn">Застереження</string>
-    <string name="log_level_verbose">Докладний лог</string>
-    <string name="log_level_info">Дані</string>
-    <string name="log_level_error">Помилка</string>
-    <string name="log_level_debug">Налагодження</string>
+    <string name="log_level_fatal">Fatal</string>
+    <string name="log_level_warn">Warn</string>
+    <string name="log_level_verbose">Verbose</string>
+    <string name="log_level_info">Info</string>
+    <string name="log_level_error">Error</string>
+    <string name="log_level_debug">Debug</string>
     <string name="pkcs12_keystore">PKCS #12 KeyStore (P12)</string>
     <string name="bouncy_castle_keystore">Bouncy Castle KeyStore (BKS)</string>
     <string name="java_keystore">Java KeyStore (JKS)</string>
     <string name="bootloader">Bootloader</string>
-    <string name="permissive">Дозволено</string>
+    <string name="permissive">Permissive</string>
     <string name="ssaid">SSAID</string>
     <string name="type_uri">URI</string>
     <string name="port_number_invalid">Недійсний номер порту.</string>
@@ -1094,8 +1095,8 @@
     <string name="fallback_to_no_root_mode_description">App Manager не вдалося використати поточний режим роботи. Щоб уникнути непередбачуваної поведінки, вам слід тимчасово перейти до режиму без-root. Якщо проблема не вирішиться після перезавантаження пристрою, повідомте розробника.</string>
     <string name="fallback_to_no_root_mode">Повернутись до режиму без root\?</string>
     <string name="unknown_net_policy">Невідома мережна політика (%1$s - %2$X)</string>
-    <string name="failed_to_prevent_background_run">Не вдалося запобігти роботу в фоновому режимі застосунку %1$s</string>
-    <string name="app_signing_signature_mismatch_for_data_only_app">Не вдалося встановити застосунок через невідповідність підпису. Застосунок було видалено без очищення даних.</string>
+    <string name="failed_to_prevent_background_run">Не вдалося запобігти роботу в фоновому режимі додатку %1$s</string>
+    <string name="app_signing_signature_mismatch_for_data_only_app">Не вдалося встановити додаток через невідповідність підпису. Додаток було видалено без очищення даних.</string>
     <string name="community">Спільнота</string>
     <plurals name="alert_failed_to_import_backups">
         <item quantity="one">Не вдалося імпортувати %1$d резервну копію</item>
@@ -1125,4 +1126,11 @@
     <string name="saved_filters">Збережені фільтри</string>
     <string name="community_links">Telegram: https://t.me/AppManagerChannel
 \nTwitter: https://twitter.com/AppManagerNews</string>
+    <string name="paired_successfully">Сполучено.</string>
+    <string name="port_number_pairing_code_empty">Порожній номер порту або код сполучення.</string>
+    <string name="adb_pair">Сполука</string>
+    <string name="adb_wifi_paring_code">Код сполучення Wi-Fi</string>
+    <string name="invalid_password">Недійсний пароль, повторіть спробу.</string>
+    <string name="keystore_pass_cannot_be_empty">Пароль сховища ключів не може бути порожнім.</string>
+    <string name="keystore_password_info">Нижче наведено пароль сховища ключів App Manager. Збережіть його в захищеному місці, якщо ви збираєтеся створити резервну копію/відновлювати сховище ключів App Manager. <b>Це повідомлення більше не відображатиметься.</b></string>
 </resources>

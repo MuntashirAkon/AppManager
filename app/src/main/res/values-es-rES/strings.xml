@@ -49,6 +49,7 @@
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
 \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
 \n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
 \n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
 \n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
 \n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
@@ -60,8 +61,8 @@
     <string name="word_wrap">Alternar ajuste de texto</string>
     <string name="touchscreen">Pantalla táctil</string>
     <string name="navigation">Navegación</string>
-    <string name="export_failed">¡Falló la exportación!</string>
-    <string name="import_failed">¡Falló la importación!</string>
+    <string name="export_failed">Falló la exportación.</string>
+    <string name="import_failed">Falló la importación.</string>
     <string name="export_options">Exportar opciones</string>
     <string name="import_options">Importar opciones</string>
     <string name="pref_export">Exportar</string>
@@ -75,8 +76,8 @@
     <string name="clear_data">Limpiar datos</string>
     <string name="user_and_uid">Usuario: <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
     <string name="disable_background_run">Evitar la operación en segundo plano</string>
-    <string name="kill_process">Matar</string>
-    <string name="running_apps">Aplicaciones ejecutándose</string>
+    <string name="kill_process">Forzar finalización</string>
+    <string name="running_apps">Aplicaciones en ejecución</string>
     <string name="the_export_was_successful">Exportado</string>
     <string name="the_import_was_successful">Importado</string>
     <string name="pref_import_blocker">Importar desde Blocker</string>
@@ -252,7 +253,7 @@
     <string name="launch_mode_single_task">Única tarea</string>
     <string name="launch_mode_single_instance">Única instancia</string>
     <string name="launch_mode_multiple">Múltiple</string>
-    <string name="base_apk">APKBase</string>
+    <string name="base_apk">APK de base</string>
     <string name="choose_language">Cambiar idioma</string>
     <string name="auto">Automático</string>
     <string name="pref_app_language">Idioma</string>
@@ -405,8 +406,8 @@
         <item quantity="one">No se pudo limpiar datos desde %1$d app</item>
         <item quantity="other">No se pudo limpiar datos desde %1$d apps</item>
     </plurals>
-    <string name="backup_restore">Respaldar/Restaurar</string>
-    <string name="memory_virtual_memory">Memoria: %1$s, Memoria virtual: %2$s</string>
+    <string name="backup_restore">Respaldo/restauración</string>
+    <string name="memory_virtual_memory">Memoria: %1$s, memoria virtual: %2$s</string>
     <plurals name="failed_to_import_files">
         <item quantity="one">No se pudo importar %1$d archivo.</item>
         <item quantity="other">No se pudo importar %1$d archivos.</item>
@@ -465,10 +466,10 @@
     </plurals>
     <string name="launch_mode_single_top">Parte superior</string>
     <string name="installer_error_lidl_rom">Su ROM no es compatible con Rootless Installer.</string>
-    <string name="reject_time">Rechazar la hora</string>
-    <string name="accept_time">Aceptar la hora</string>
+    <string name="reject_time">Tiempo de rechazo</string>
+    <string name="accept_time">Tiempo de aceptación</string>
     <string name="toggle_kill_for_system_apps">Cambiar las aplicaciones matadas del sistema</string>
-    <string name="pid_and_ppid">ID del proceso: %1$d, ID del proceso parental: %2$d</string>
+    <string name="pid_and_ppid">Id. de proceso: %1$d, id. de proceso primario: %2$d</string>
     <plurals name="no_of_times_opened">
         <item quantity="one">%1$d vez</item>
         <item quantity="other">%1$d veces</item>
@@ -733,32 +734,32 @@
     <string name="restore_not_installed">Restaurar aplicaciones no instaladas</string>
     <string name="restore_all_msg">Restaurar la copia de base de todas las aplicaciones respaldadas.</string>
     <string name="restore_all">Restaurar todas las aplicaciones</string>
-    <string name="backup_apps_with_changes_msg">Rehacer los backups de las aplicaciones con los cambios desde la última copia de seguridad. Incluyen cambios en el tamaño, la versión, la última hora de lanzamiento.</string>
+    <string name="backup_apps_with_changes_msg">Rehacer las copias de respaldo de las aplicaciones con los cambios desde la última copia. Incluyen cambios en el tamaño, la versión, la última hora de inicio.</string>
     <string name="backup_apps_with_changes">Respaldo de aplicaciones con cambios</string>
-    <string name="redo_existing_backups_msg">Rehacer backup para aplicaciones instaladas sin previas copias de seguridad.</string>
-    <string name="redo_existing_backups">Rehacer backups existentes</string>
+    <string name="redo_existing_backups_msg">Rehacer copia de respaldo para aplicaciones instaladas sin copias previas.</string>
+    <string name="redo_existing_backups">Rehacer copias existentes</string>
     <string name="verify_and_redo_backups_msg">Verificar la integridad de los respaldos anteriores y rehacer las copias de seguridad en las que falle el control de integridad.</string>
-    <string name="verify_and_redo_backups">Verificar y rehacer los backups</string>
+    <string name="verify_and_redo_backups">Verificar y rehacer copias de respaldo</string>
     <string name="backup_apps_without_backups_msg">Respaldo de aplicaciones sin ninguna copia de seguridad previa.</string>
     <string name="backup_apps_without_backups">Respaldo de aplicaciones sin copias de seguridad</string>
     <string name="backup_all_apps_msg">Respaldo de todas las aplicaciones instaladas.</string>
     <string name="backup_all_apps">Respaldo de todas las apps</string>
-    <string name="backup_custom_users_description">Realizar backups sólo para los usuarios especificados</string>
+    <string name="backup_custom_users_description">Realizar copias solo para los usuarios especificados</string>
     <string name="backup_custom_users">Usuarios personalizados</string>
-    <string name="bootloader">Bootloader</string>
-    <string name="encrypted">Encriptado</string>
-    <string name="unencrypted">Sin encriptación</string>
-    <string name="no_volumes_found">No pude encontrar ningún volumen con permiso de escritura.</string>
-    <string name="pref_backup_volume_msg">Seleccionar el volumen o el disco donde se almacenarán los backups.</string>
-    <string name="backup_volume">Volumen del Backup</string>
-    <string name="pref_backup_restore_msg">Personalizar Backup/Restore.</string>
+    <string name="bootloader">Gestor de arranque</string>
+    <string name="encrypted">Cifrado</string>
+    <string name="unencrypted">Sin cifrado</string>
+    <string name="no_volumes_found">No se pudo encontrar ningún volumen con permiso de escritura.</string>
+    <string name="pref_backup_volume_msg">Seleccione el volumen o el disco donde se almacenarán las copias.</string>
+    <string name="backup_volume">Volumen de copia de respaldo</string>
+    <string name="pref_backup_restore_msg">Personalizar copia de respaldo/restauración.</string>
     <string name="disable_background_run_description">Establece el modo <i>ignorar</i> para las siguientes aplicaciones: <tt>RUN_IN_BACKGROUND</tt> (del Androide 7.0) y <tt>RUN_ANY_IN_BACKGROUND</tt> (desde Android 9).</string>
-    <string name="failed_to_enable_magisk_hide">No se pudo habilitar MagiskHide</string>
-    <string name="enable_magisk_hide">Habilitar MagiskHide</string>
-    <string name="failed_to_disable_magisk_hide">No se pudo deshabilitar MagiskHide</string>
-    <string name="disable_magisk_hide">Deshabilitar MagiskHide\?</string>
-    <string name="window_size">Tamaño de la ventana</string>
-    <string name="refresh_rate">Ratio de refresco</string>
+    <string name="failed_to_enable_magisk_hide">No se pudo activar MagiskHide</string>
+    <string name="enable_magisk_hide">Activar MagiskHide</string>
+    <string name="failed_to_disable_magisk_hide">No se pudo desactivar MagiskHide</string>
+    <string name="disable_magisk_hide">¿Quiere desactivar MagiskHide\?</string>
+    <string name="window_size">Tamaño de ventana</string>
+    <string name="refresh_rate">Tasa de actualización</string>
     <string name="scaling_factor">Factor de escalada</string>
     <string name="size">Tamaño</string>
     <string name="density">Densidad</string>
@@ -1017,34 +1018,34 @@
     <string name="port_number_invalid">Número de puerto no válido.</string>
     <string name="unknown_net_policy">Directiva de red desconocida (%1$s - %2$X)</string>
     <string name="pref_buffer_title">Buffer de registros</string>
-    <string name="dialog_partial_select_explanation">1. Selecciona la <b>primera</b> linea.
-\n2. Luego selecciona la <b>ultima</b> linea.</string>
-    <string name="app_signing_signature_mismatch_for_data_only_app">No pudimos instalar la aplicación debido a la discrepancia de firma. La aplicación fue desinstalada sin borrar sus datos.</string>
+    <string name="dialog_partial_select_explanation">1. Seleccione la <b>primera</b> línea.
+\n2. Luego seleccione la <b>última</b> línea.</string>
+    <string name="app_signing_signature_mismatch_for_data_only_app">No se pudo instalar la aplicación a causa de una discrepancia en las firmas. Se desinstaló sin vaciarle los datos.</string>
     <string name="failed">Fallido</string>
     <string name="pref_filter_pattern_title">Filtrar etiquetas</string>
     <string name="pref_filter_pattern_summary">Filtrar las siguientes etiquetas seleccionadas de los registros.</string>
     <string name="pref_default_log_level_summary">Nivel de registro al inicio, al abrir archivos y al grabar.</string>
     <string name="open">Abierto</string>
     <string name="import_from_oab">Importar desde OAndBackup</string>
-    <string name="pref_import_backups_msg">Importar backups desde OAndBackup o Titanium Backup.</string>
-    <string name="pref_import_backups">Importar backups</string>
+    <string name="pref_import_backups_msg">Importe copias de respaldo desde OAndBackup o Titanium Backup.</string>
+    <string name="pref_import_backups">Importar copias de respaldo</string>
     <string name="community_links">Telegram: https://t.me/AppManagerChannel
 \nTwitter: https://twitter.com/AppManagerNews</string>
     <string name="community">Comunidad</string>
     <plurals name="alert_failed_to_import_backups">
-        <item quantity="one">No se pudo importar %1$d backup</item>
-        <item quantity="other">No se pudieron importar %1$d backups</item>
+        <item quantity="one">No se pudo importar %1$d copia de respaldo</item>
+        <item quantity="other">No se pudieron importar %1$d copias de respaldo</item>
     </plurals>
     <string name="import_from_tb">Importar desde Titanium Backup</string>
-    <string name="import_from_oab_tb_msg">Los backups deben estar ubicados en %s.</string>
+    <string name="import_from_oab_tb_msg">Las copias de respaldo deben ubicarse en %s.</string>
     <string name="notice_saf">A diferencia de los volúmenes, el directorio escogido se usará para almacenar todos los archivos relacionados con App Manager, incluyendo APKs y respaldos guardados. Storage Access Framework (SAF) es muy lento, por lo cual se recomienda usar esta opción solo cuando otras no puedan ser utilizadas.</string>
-    <string name="help_uses_permissions_tab">Presiona en un elemento para <b>conceder</b> o <b>revocar</b>. Solo permisos de <b>peligrosidad</b> y de <b>desarrollo</b> se pueden conceder o revocar.</string>
-    <string name="help_permissions_tab">Estos permisos están definidos por esta aplicación y no pueden ser revocados.</string>
-    <string name="help_app_ops_tab">Presiona en un elemento para <b>permitir</b> o <b>ignorar</b>. Presiona sostenidamente en un elemento para ver otros modos soportados.</string>
+    <string name="help_uses_permissions_tab">Pulse en un elemento para <b>concederlo</b> o <b>revocarlo</b>. Solo los permisos <b>peligrosos</b> y <b>de desarrollo</b> se pueden conceder o revocar.</string>
+    <string name="help_permissions_tab">Estos permisos los define esta aplicación y no pueden revocarse.</string>
+    <string name="help_app_ops_tab">Pulse en un elemento para <b>permitirlo</b> o <b>ignorarlo</b>. Mantenga pulsado el elemento para ver otros modos admitidos.</string>
     <string name="fallback_to_no_root_mode_description">App Manager no ha podido utilizar el modo de operación actual. Para evitar comportamientos indeseados, se recomienda cambiar temporalmente al modo no-root. Considere la posibilidad de reportar el problema si no se soluciona tras reiniciar el dispositivo.</string>
     <string name="fallback_to_no_root_mode">¿Regresar a modo no-root\?</string>
-    <string name="minimum_version">Versión min.: %d</string>
-    <string name="added_to_queue">Añadido a la cola</string>
+    <string name="minimum_version">Versión mín.: %d</string>
+    <string name="added_to_queue">Se añadió a la cola</string>
     <string name="pref_selected_users">Usuarios seleccionados</string>
     <string name="pref_selected_users_msg">Restringe App Manager para que funcione sólo con los usuarios seleccionados.</string>
     <string name="permission_flags">Marcas de permiso</string>
@@ -1054,6 +1055,13 @@
     <string name="notice">Aviso</string>
     <string name="files">Archivos</string>
     <string name="storage">Almacenamiento</string>
-    <string name="failed_to_prevent_background_run">No se pudo prevenir a %1$s de correr en segundo plano</string>
+    <string name="failed_to_prevent_background_run">No se pudo evitar que %1$s se ejecutase en segundo plano</string>
     <string name="saf">SAF</string>
+    <string name="paired_successfully">Emparejado.</string>
+    <string name="port_number_pairing_code_empty">El número de puerto o el código de emparejamiento está vacío.</string>
+    <string name="adb_wifi_paring_code">Código de emparejamiento de wifi</string>
+    <string name="keystore_password_info">Esta es la contraseña del Almacén de claves del Gestor de aplicaciones. Guárdela en un lugar seguro si va a crear o restaurar copias de respaldo del Almacén de claves. <b>Este mensaje no volverá a aparecer.</b></string>
+    <string name="keystore_pass_cannot_be_empty">La contraseña del almacén de claves no puede quedar vacía.</string>
+    <string name="invalid_password">La contraseña no es válida. Vuelva a intentarlo.</string>
+    <string name="adb_pair">Emparejar</string>
 </resources>

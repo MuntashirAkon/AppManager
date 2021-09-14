@@ -567,6 +567,7 @@
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
 \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
 \n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n<a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
 \n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
 \n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
 \n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
@@ -1055,4 +1056,11 @@
     <string name="files">Dosyalar</string>
     <string name="storage">Depolama</string>
     <string name="notice">Dikkat</string>
+    <string name="paired_successfully">Eşleştirildi.</string>
+    <string name="port_number_pairing_code_empty">Boş bağlantı noktası numarası veya eşleştirme kodu.</string>
+    <string name="adb_pair">Eşleştir</string>
+    <string name="adb_wifi_paring_code">Wi-Fi eşleştirme kodu</string>
+    <string name="invalid_password">Geçersiz parola, tekrar deneyin.</string>
+    <string name="keystore_pass_cannot_be_empty">KeyStore parolası boş olamaz.</string>
+    <string name="keystore_password_info">Aşağıdaki, App Manager KeyStore parolasıdır. App Manager KeyStore\'u yedekleyecek/geri yükleyecekseniz lütfen güvenli bir yerde saklayın. <b>Bu mesaj tekrar görüntülenmeyecek.</b></string>
 </resources>

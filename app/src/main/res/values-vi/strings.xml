@@ -399,6 +399,7 @@
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
 \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
 \n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
 \n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
 \n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
 \n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
@@ -1020,4 +1021,11 @@
     <string name="storage">Bộ nhớ</string>
     <string name="notice_saf">Không giống các kho, thư mục được chọn sẽ được sử dụng để lưu trữ tất cả tệp liên quan đến App Manager, bao gồm cả các tệp APK đã lưu và các bản sao lưu. Storage Access Framework (SAF) rất là chậm, do đó bạn chỉ nên sử dụng tùy chọn này khi những tùy chọn khác không thể sử dụng được.</string>
     <string name="notice">Thông báo</string>
+    <string name="paired_successfully">Đã ghép đôi.</string>
+    <string name="port_number_pairing_code_empty">Số cổng hoặc mã ghép đôi trống.</string>
+    <string name="adb_pair">Ghép đôi</string>
+    <string name="adb_wifi_paring_code">Mã ghép đôi Wi-Fi</string>
+    <string name="invalid_password">Mật khẩu không hợp lệ, hãy thử lại.</string>
+    <string name="keystore_pass_cannot_be_empty">Mật khẩu KeyStore không thể trống.</string>
+    <string name="keystore_password_info">Đây là mật khẩu KeyStore của App Manager. Vui lòng lưu trữ nó ở một nơi bảo mật nếu bạn có kế hoạch sao lưu/khôi phục KeyStore của App Manager. <b>Thông báo này sẽ không được hiển thị lại.</b></string>
 </resources>

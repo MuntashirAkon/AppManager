@@ -100,6 +100,7 @@
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
 \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
 \n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
 \n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
 \n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
 \n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
@@ -1056,4 +1057,11 @@
     <string name="storage">Speicher</string>
     <string name="notice_saf">Im Gegensatz zu den Laufwerken wird das ausgewählte Verzeichnis zum Speichern aller mit dem App Manager verbundenen Dateien verwendet, einschließlich gespeicherter APKs und Backups. Das Storage Access Framework (SAF) ist sehr langsam, daher sollte diese Option nur verwendet werden, wenn keine andere zur Verfügung steht.</string>
     <string name="notice">Benachrichtigung</string>
+    <string name="paired_successfully">Gekoppelt.</string>
+    <string name="adb_wifi_paring_code">WiFi-pairing Code</string>
+    <string name="port_number_pairing_code_empty">Leere Port-Nummer oder Pairing-Code.</string>
+    <string name="adb_pair">Paar</string>
+    <string name="invalid_password">Ungültiges Passwort, versuchen Sie es erneut.</string>
+    <string name="keystore_pass_cannot_be_empty">Das KeyStore-Passwort darf nicht leer sein.</string>
+    <string name="keystore_password_info">Nachfolgend finden Sie das Passwort für den App Manager KeyStore. Bitte bewahren Sie es an einem sicheren Ort auf, wenn Sie den App Manager KeyStore sichern/ wiederherstellen möchten. <b>Diese Meldung wird nicht mehr angezeigt.</b></string>
 </resources>
