@@ -1062,4 +1062,30 @@
     <string name="invalid_password">Ungültiges Passwort, versuchen Sie es erneut.</string>
     <string name="keystore_pass_cannot_be_empty">Das KeyStore-Passwort darf nicht leer sein.</string>
     <string name="keystore_password_info">Nachfolgend finden Sie das Passwort für den App Manager KeyStore. Bitte bewahren Sie es an einem sicheren Ort auf, wenn Sie den App Manager KeyStore sichern/ wiederherstellen möchten. <b>Diese Meldung wird nicht mehr angezeigt.</b></string>
+    <string name="running_services_logcat_hint">Klicken Sie auf ein Element, um die Protokollanzeige mit der entsprechenden Prozess-ID als Standardfilter zu öffnen.</string>
+    <string name="pid">Prozess-ID</string>
+    <plurals name="pref_thread_count_msg">
+        <item quantity="one">Höchstens %1$d Operation parallel ausführen</item>
+        <item quantity="other">Höchstens %1$d Operationen parallel ausführen</item>
+    </plurals>
+    <string name="pref_thread_count_hint">Der Wert muss zwischen 0 und %1$d liegen, wobei 0 die <i>maximale Anzahl von Operationen zum gegebenen Zeitpunkt</i> bedeutet.</string>
+    <string name="pref_thread_count">Parallele Ausführung</string>
+    <string name="type_uri_array_list">Liste der URIs</string>
+    <string name="type_uri_array">Array von URIs</string>
+    <string name="pref_always_on_background_msg">Installieren Sie Anwendungen immer im Hintergrund. Eine Benachrichtigung zeigt an, wenn sie fertig sind.</string>
+    <string name="pref_always_on_background">Installieren im Hintergrund</string>
+    <string name="pref_block_trackers_msg">Blockieren Sie nach der Installation einer App Tracking-Komponenten mit dem App-Manager.</string>
+    <string name="next">Nächster</string>
+    <string name="installer_app_installed">App ist installiert</string>
+    <string name="staging_apk_files">Ausführen…</string>
+    <string name="background">Hintergrund</string>
+    <string name="trim_caches_in_all_apps_description">Löscht Cache-Dateien von allen Anwendungen, einschließlich des Android-Systems</string>
+    <string name="trim_caches_in_all_apps">Caches in allen Anwendungen reduzieren</string>
+    <string name="user_root">Root verwenden</string>
+    <string name="paste">Einfügen</string>
+    <string name="set_package_name_first">Legen Sie zuerst den Paketnamen fest!</string>
+    <string name="identifier">Kennung</string>
+    <string name="backup_volume_dialog_description">Laufwerke mit dem Präfix <tt>/Baum</tt> sind Ordner, die mit dem Storage Access Framework (SAF) ausgewählt werden. Außer diesen Ordnern ist das Standardverzeichnis für App Manager ein Unterordner namens <tt>AppManager</tt>.</string>
+    <string name="second_degree_tracker_note">² Das Präfix zeigt an, dass die Tracker in der <a href="https://etip.exodus-privacy.eu.org/">ETIP-Bereitschaftsliste</a> stehen, d. h. es wird noch untersucht, ob es sich tatsächlich um Tracker handelt.</string>
+    <string name="failed_to_uninstall_app">Deinstallation fehlgeschlagen</string>
 </resources>
