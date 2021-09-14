@@ -1117,4 +1117,6 @@
         <item quantity="one">Execute at most %1$d operation in parallel</item>
         <item quantity="other">Execute at most %1$d operations in parallel</item>
     </plurals>
+    <string name="pid">Process ID</string>
+    <string name="running_services_logcat_hint">Click on an item to open the log viewer with the corresponding process ID as the default filter.</string>
 </resources>
