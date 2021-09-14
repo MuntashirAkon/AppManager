@@ -927,4 +927,11 @@
     <string name="import_from_oab">Importer fra OAndBackup</string>
     <string name="pref_import_backups">Importer sikkerhetskopier</string>
     <string name="expiry_date_cannot_be_empty">Utløpsdato kan ikke stå tom.</string>
+    <string name="pid">Prosess-ID</string>
+    <string name="pref_always_on_background">Installer i bakgrunnen</string>
+    <string name="next">Neste</string>
+    <string name="port_number_invalid">Ugyldig portnummer.</string>
+    <string name="netpolicy_disable_network_access">Skru av nettverkstilgang</string>
+    <string name="netpolicy_reject_wifi_data">Avslå Wi-Fi-data</string>
+    <string name="netpolicy_reject_vpn_data">Avslå VPN-data</string>
 </resources>
