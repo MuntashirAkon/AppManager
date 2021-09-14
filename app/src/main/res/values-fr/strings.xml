@@ -161,7 +161,6 @@
     <string name="ok">OK</string>
     <string name="input_backup_name_description">Le nom de la sauvegarde ne doit ni commencer par un chiffre ni contenir d\'espaces. Laissez-le vide si vous souhaitez utiliser la date et l\'heure actuelles.</string>
     <string name="input_backup_name">Nom de la sauvegarde</string>
-    <string name="downgrade_not_possible">La rétrogradation est impossible sans root ou ADB</string>
     <string name="downgrade">Rétrograder</string>
     <string name="process_state_with_extra">État : <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g> (<xliff:g id="state_extra" example="High priority">%2$s</xliff:g>)</string>
     <string name="process_state">État : <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g></string>
@@ -321,7 +320,6 @@
     <string name="filter_apps_with_rules">Applications avec des règles</string>
     <string name="filter_system_apps">Applications système</string>
     <string name="filter_user_apps">Applications utilisateur</string>
-    <string name="failed_to_install_package_name">Impossible d\'installer <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> installé</string>
     <string name="termux">Termux</string>
     <string name="only_works_in_root_or_adb_mode">Fonctionne uniquement en mode root ou ADB</string>

@@ -349,7 +349,6 @@
     </plurals>
     <string name="termux">Termux 终端模拟器</string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> 已安装</string>
-    <string name="failed_to_install_package_name">无法安装<xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
     <string name="filter">筛选器</string>
     <string name="filter_user_apps">用户应用</string>
     <string name="filter_system_apps">系统应用</string>
@@ -478,7 +477,6 @@
     <string name="ok">好</string>
     <string name="input_backup_name_description">备份文件名称不应以数字开头，也不应包含任何空格。如果您想使用当前日期时间格式的命名，请将其保留为空。</string>
     <string name="input_backup_name">备份名称</string>
-    <string name="downgrade_not_possible">降级操作需要 root 模式或 adb 模式</string>
     <string name="downgrade">降级</string>
     <string name="process_state_with_extra">状态: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g> (<xliff:g id="state_extra" example="High priority">%2$s</xliff:g>)</string>
     <string name="process_state">状态: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g></string>

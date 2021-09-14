@@ -652,7 +652,6 @@
     <string name="ok">Oke</string>
     <string name="input_backup_name_description">Nama cadangan tidak boleh dimulai dengan digit atau harus mengandung spasi. Biarkan kosong jika Anda ingin menggunakan waktu tanggal saat ini.</string>
     <string name="input_backup_name">Nama cadangan</string>
-    <string name="downgrade_not_possible">Downgrade tidak mungkin tanpa root atau ADB</string>
     <string name="process_state">Status: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g></string>
     <string name="state_session_leader">Pemimpin sesi</string>
     <string name="state_locked_memory">Memori yang terkunci</string>
@@ -773,7 +772,6 @@
     <string name="filter_system_apps">Aplikasi Sistem</string>
     <string name="filter_user_apps">Aplikasi Pengguna</string>
     <string name="filter">Filter</string>
-    <string name="failed_to_install_package_name">Tidak dapat memasang <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> terpasang</string>
     <string name="termux">Termux</string>
     <plurals name="no_of_splits">

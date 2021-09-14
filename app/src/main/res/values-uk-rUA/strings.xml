@@ -111,7 +111,6 @@
     <string name="ok">ОК</string>
     <string name="input_backup_name_description">Ім\'я резервної копії не повинно починатися з цифри і не повинно містити пробілів. Залиште поле порожнім, якщо ви хочете використовувати поточну дату-час.</string>
     <string name="input_backup_name">Ім\'я резервної копії</string>
-    <string name="downgrade_not_possible">Пониження версії неможливе без ROOT або ADB</string>
     <string name="downgrade">Понизити версію</string>
     <string name="process_state_with_extra">Стан: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g> (<xliff:g id="state_extra" example="High priority">%2$s</xliff:g>)</string>
     <string name="process_state">Стан: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g></string>
@@ -297,7 +296,6 @@
     <string name="filter_system_apps">Системні додатки</string>
     <string name="filter_user_apps">Користувацькі додатки</string>
     <string name="filter">Фільтр</string>
-    <string name="failed_to_install_package_name">Не вдалося встановити <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> встановлено</string>
     <string name="termux">Termux</string>
     <string name="failed_to_parse_some_numbers">Не вдалося проаналізувати деякі цифри</string>

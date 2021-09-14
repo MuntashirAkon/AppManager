@@ -329,7 +329,6 @@
         <item quantity="other">%1$d divisões</item>
     </plurals>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> instalado</string>
-    <string name="failed_to_install_package_name"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> não pôde ser instalado</string>
     <string name="filter">Filtrar</string>
     <string name="filter_user_apps">Aplicativos do usuário</string>
     <string name="filter_system_apps">Aplicativos do sistema</string>
@@ -539,7 +538,6 @@
     <string name="input_backup_name_description">O nome do backup não deve começar com um dígito nem deve conter qualquer espaço. Deixe-o vazio se quiser usar a data-hora atual.</string>
     <string name="input_backup_name">Nome do backup</string>
     <string name="downgrade">Downgrade</string>
-    <string name="downgrade_not_possible">Não é possível fazer o downgrade sem root ou ADB</string>
     <string name="process_state_with_extra">Estado: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g> (<xliff:g id="state_extra" example="High priority">%2$s</xliff:g>)</string>
     <string name="process_state">Estado: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g></string>
     <string name="state_foreground">Primeiro plano</string>

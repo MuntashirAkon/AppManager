@@ -150,7 +150,6 @@
     <string name="process_state">Stan: %s</string>
     <string name="process_state_with_extra">Stan: %s (%s)</string>
     <string name="downgrade">Zmiana wersji na starszą</string>
-    <string name="downgrade_not_possible">Zmiana wersji na niższą nie jest możliwa bez roota bądź ADB</string>
     <string name="input_backup_name">Nazwa kopii zapasowej</string>
     <string name="input_backup_name_description">Nazwa kopii zapasowej nie powinna zaczynać się od cyfry ani zawierać spacji. Pozostaw to pole puste, jeśli chcesz używać bieżącej daty i godziny.</string>
     <string name="ok">OK</string>
@@ -246,7 +245,6 @@
     <string name="select_all">Zaznacz wszystko</string>
     <string name="filter_apps_with_rules">Aplikacje z regułami</string>
     <string name="filter_system_apps">Aplikacje systemowe</string>
-    <string name="failed_to_install_package_name">Nie można było zainstalować %s</string>
     <string name="cache">Wyklucz pamięć podręczną</string>
     <string name="blocking_rules">Reguły blokowania</string>
     <string name="whats_new">Co nowego</string>

@@ -391,7 +391,6 @@
     </plurals>
     <string name="termux">Termux</string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> установлено</string>
-    <string name="failed_to_install_package_name">Не удалось установить <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
     <string name="filter">Фильтр</string>
     <string name="filter_user_apps">Пользовательские приложения</string>
     <string name="filter_system_apps">Системные приложения</string>
@@ -553,7 +552,6 @@
     <string name="presets">Предустановки</string>
     <string name="open_pgp_provider">Поставщик OpenPGP</string>
     <string name="input_backup_name_description">Имя резервной копии не должно начинаться с цифры и содержать пробелы. Оставьте это поле пустым, если хотите использовать текущую дату и время.</string>
-    <string name="downgrade_not_possible">Понижение версии невозможно без ROOT или ADB</string>
     <string name="downgrade">Понизить</string>
     <string name="process_state_with_extra">Состояние: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g> (<xliff:g id="state_extra" example="High priority">%2$s</xliff:g>)</string>
     <string name="process_state">Состояние: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g></string>

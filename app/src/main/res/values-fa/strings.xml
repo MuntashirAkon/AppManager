@@ -362,7 +362,6 @@
     <string name="filter_system_apps">برنامه‌های سیستم</string>
     <string name="filter_user_apps">برنامه‌های کاربر</string>
     <string name="filter">صافی</string>
-    <string name="failed_to_install_package_name">نمی تواند <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> را نصب کند</string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager"> %1$s </xliff:g> نصب شده</string>
     <string name="termux">ترماکس</string>
     <plurals name="no_of_splits">

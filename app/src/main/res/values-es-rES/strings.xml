@@ -330,7 +330,6 @@
     <string name="filter_system_apps">Aplicaciones del sistema</string>
     <string name="filter_user_apps">Aplicaciones de usuario</string>
     <string name="filter">Filtro</string>
-    <string name="failed_to_install_package_name">No se pudo instalar <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
     <string name="package_name_is_installed_successfully">Se instaló <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
     <string name="termux">Termux</string>
     <string name="failed_to_parse_some_numbers">No se pudo analizar algunos números</string>
@@ -569,7 +568,6 @@
     <string name="ok">Aceptar</string>
     <string name="input_backup_name_description">El nombre del respaldo no debe empezar con un dígito ni debe contener ningún espacio. Déjelo vacío si quiere usar la fecha y hora actuales.</string>
     <string name="input_backup_name">Nombre del respaldo</string>
-    <string name="downgrade_not_possible">No es posible desactualizar sin «root» o ADB</string>
     <string name="downgrade">Desactualizar</string>
     <string name="process_state_with_extra">Estado: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g> (<xliff:g id="state_extra" example="High priority">%2$s</xliff:g>)</string>
     <string name="process_state">Estado: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g></string>

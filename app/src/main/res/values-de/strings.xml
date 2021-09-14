@@ -363,7 +363,6 @@
     </plurals>
     <string name="termux">Termux</string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> ist installiert</string>
-    <string name="failed_to_install_package_name">Installation von <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> nicht möglich</string>
     <string name="filter">Filter</string>
     <string name="filter_user_apps">Benutzer-Anwendungen</string>
     <string name="filter_system_apps">System-Anwendungen</string>
@@ -518,7 +517,6 @@
     <string name="ok">okay</string>
     <string name="input_backup_name_description">Die Bezeichnung der Sicherung sollte weder mit einer Ziffer beginnen, noch ein Leerzeichen enthalten. Lassen Sie es leer, wenn Sie das aktuelle Datum und die aktuelle Uhrzeit verwenden möchten.</string>
     <string name="input_backup_name">Bezeichnung der Sicherung</string>
-    <string name="downgrade_not_possible">Ein Downgrade ist ohne Root oder ADB nicht möglich</string>
     <string name="downgrade">Zurückstufen</string>
     <string name="process_state_with_extra">Zustand: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g> (<xliff:g id="state_extra" example="High priority">%2$s</xliff:g>)</string>
     <string name="process_state">Zustand: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g></string>

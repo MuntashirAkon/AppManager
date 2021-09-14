@@ -365,7 +365,6 @@
     </plurals>
     <string name="termux">Termux</string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> インストール済み</string>
-    <string name="failed_to_install_package_name"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> をインストールできませんでした</string>
     <string name="filter">フィルタ</string>
     <string name="filter_user_apps">ユーザーアプリ</string>
     <string name="filter_system_apps">システムアプリ</string>
@@ -541,7 +540,6 @@
     <string name="process_state">状態: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g></string>
     <string name="process_state_with_extra">状態: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g> (<xliff:g id="state_extra" example="High priority">%2$s</xliff:g>)</string>
     <string name="downgrade">ダウングレード</string>
-    <string name="downgrade_not_possible">ダウングレードはRootまたはADBが必須です</string>
     <string name="input_backup_name">バックアップ名</string>
     <string name="input_backup_name_description">バックアップ名は数字や空白文字で始められません。項目を空にすると現在時刻が使用されます。</string>
     <string name="ok">OK</string>

@@ -280,7 +280,6 @@
     <string name="cancel">Avbryt</string>
     <string name="ok">OK</string>
     <string name="input_backup_name">Sikkerhetskopinavn</string>
-    <string name="downgrade_not_possible">Nedgradering er ikke mulig uten rot-tilgang eller ADB</string>
     <string name="downgrade">Nedgrader</string>
     <string name="process_state_with_extra">Tilstand: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g> (<xliff:g id="state_extra" example="High priority">%2$s</xliff:g>)</string>
     <string name="process_state">Tilstand: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g></string>
@@ -317,7 +316,6 @@
         <item quantity="other">Kunne ikke sikkerhetskopiere %1$d programmer</item>
     </plurals>
     <string name="backup_options">Sikkerhetskopieringsinnstillinger</string>
-    <string name="failed_to_install_package_name">Kunne ikke installere <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> installert</string>
     <string name="termux">Termux</string>
     <string name="pref_import_existing">Importer eksisterende regler</string>

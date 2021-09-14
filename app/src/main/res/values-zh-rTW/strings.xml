@@ -91,7 +91,6 @@
         <item quantity="other">Could not back up%1$d app</item>
     </plurals>
     <string name="backup">備份</string>
-    <string name="failed_to_install_package_name">無法安裝 <xliff:g id="app_name" example="App Manager"> %1$s </xliff:g></string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> 已安裝</string>
     <string name="block_components_description">封鎖由給定簽名識別的所有元件</string>
     <string name="block_components_dots">封鎖元件…</string>
@@ -350,7 +349,6 @@
     <string name="ok">好的</string>
     <string name="input_backup_name_description">備份名稱不能以數字開頭，也不能包含任何空格。如果要使用目前日期時間，請將其保留為空。</string>
     <string name="input_backup_name">備份名稱</string>
-    <string name="downgrade_not_possible">如果沒有root或ADB，則無法進行降級</string>
     <string name="downgrade">降級</string>
     <string name="state_multithreaded">多線程</string>
     <string name="state_foreground">前景</string>

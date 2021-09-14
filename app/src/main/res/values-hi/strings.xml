@@ -330,7 +330,6 @@
     <string name="filter_system_apps">सिस्टम ऐप्स</string>
     <string name="filter_user_apps">यूज़र ऐप्स</string>
     <string name="filter">फ़िल्टर</string>
-    <string name="failed_to_install_package_name"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> को इंस्टॉल नहीं कर सके</string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> इंस्टॉल पूर्ण हुआ</string>
     <string name="termux">टर्मक्स</string>
     <plurals name="no_of_splits">
@@ -440,7 +439,6 @@
     <string name="ok">ठीक है</string>
     <string name="input_backup_name_description">बैकअप नाम एक अंक से शुरू नहीं होना चाहिए और न ही इसमें कोई रिक्त स्थान होना चाहिए। यदि आप वर्तमान तिथि-समय का उपयोग करना चाहते हैं तो इसे खाली छोड़ दें।</string>
     <string name="input_backup_name">बैकअप नाम</string>
-    <string name="downgrade_not_possible">डाउनग्रेड रूट या एडीबी के बिना संभव नहीं है</string>
     <string name="downgrade">डाउनग्रेड</string>
     <string name="process_state_with_extra">स्तिथि: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g> (<xliff:g id="state_extra" example="High priority">%2$s</xliff:g>)</string>
     <string name="process_state">स्तिथि: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g></string>
