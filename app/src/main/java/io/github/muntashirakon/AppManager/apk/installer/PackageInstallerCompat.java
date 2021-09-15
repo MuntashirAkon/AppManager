@@ -54,6 +54,7 @@ import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 import io.github.muntashirakon.io.ProxyFile;
@@ -562,7 +563,7 @@ public final class PackageInstallerCompat {
                      OutputStream apkOutputStream = session.openWrite(apkFile.getName(), 0, apkFile.length())) {
                     IOUtils.copy(apkInputStream, apkOutputStream);
                     session.fsync(apkOutputStream);
-                } catch (IOException e) {
+                } catch (IOException | RemoteException e) {
                     callFinish(STATUS_FAILURE_SESSION_WRITE);
                     Log.e(TAG, "Install: Cannot copy files to session.", e);
                     return abandon();

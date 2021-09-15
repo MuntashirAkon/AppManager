@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import io.github.muntashirakon.io.IoUtils;
+import io.github.muntashirakon.AppManager.utils.IOUtils;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -58,7 +58,7 @@ public class ActivityManagerCompatTest {
         });
         Collections.sort(expectedRunningAppProcesses, (o1, o2) -> Integer.compare(o1.pid, o2.pid));
         try (InputStream is = new FileInputStream(dumpSysFile)) {
-            byte[] allBytes = IoUtils.readFully(is, -1, true);
+            byte[] allBytes = IOUtils.readFully(is, -1, true);
             String s = new String(allBytes);
             List<String> sysDump = Arrays.asList(s.split("\n"));
             List<ActivityManager.RunningAppProcessInfo> actualRunningAppProcess = ActivityManagerCompat.parseRunningAppProcesses(sysDump);
@@ -115,7 +115,7 @@ public class ActivityManagerCompatTest {
         });
         Collections.sort(expectedRunningServices, (o1, o2) -> Integer.compare(o1.pid, o2.pid));
         try (InputStream is = new FileInputStream(dumpSysFile)) {
-            byte[] allBytes = IoUtils.readFully(is, -1, true);
+            byte[] allBytes = IOUtils.readFully(is, -1, true);
             String s = new String(allBytes);
             List<String> sysDump = Arrays.asList(s.split("\n"));
             List<ActivityManager.RunningServiceInfo> actualRunningServices = ActivityManagerCompat.parseRunningServices(sysDump);

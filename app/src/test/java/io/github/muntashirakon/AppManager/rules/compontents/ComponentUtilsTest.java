@@ -7,7 +7,6 @@ package io.github.muntashirakon.AppManager.rules.compontents;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,14 +14,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 
-import io.github.muntashirakon.AppManager.TestApplication;
 import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.io.ProxyFile;
 
 import static org.junit.Assert.assertEquals;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(application = TestApplication.class)
 public class ComponentUtilsTest {
     private final ClassLoader classLoader = getClass().getClassLoader();
 
