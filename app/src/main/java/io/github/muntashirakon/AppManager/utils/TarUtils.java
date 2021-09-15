@@ -57,7 +57,7 @@ public final class TarUtils {
      * on the supplied split size.
      *
      * @param type           Compression type
-     * @param source         Source directory
+     * @param source         Source directory/file
      * @param dest           Destination directory
      * @param destFilePrefix filename as a prefix (.0, .1, etc. are added at the end)
      * @param filters        A list of mutually exclusive regex filters

@@ -446,16 +446,14 @@ public final class FileUtils {
 
     @AnyThread
     @NonNull
-    public static Path getTempPath(Context context, String name) throws IOException {
-        return new Path(context, getTempFile(name));
-    }
-
-    @AnyThread
-    @NonNull
-    public static File getTempFile(String name) throws IOException {
-        File newFile = new File(getCachePath(), name);
-        if (newFile.exists()) newFile.delete();
-        return newFile;
+    public static Path getTempPath(Context context, String relativeDir, String filename) throws IOException {
+        File newDir = new File(getCachePath() + File.separator + relativeDir);
+        int i = 1;
+        while (newDir.exists()) {
+            newDir = new File(getCachePath() + File.separator + (relativeDir + "_" + i));
+        }
+        newDir.mkdirs();
+        return new Path(context, new File(newDir, filename));
     }
 
     @AnyThread

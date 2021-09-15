@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Properties;
 
 import io.github.muntashirakon.AppManager.AppManager;
@@ -169,7 +170,7 @@ public class TBConverter extends Converter {
         // Decompress APK file
         Path baseApkFile;
         try {
-            baseApkFile = new Path(context, FileUtils.getTempFile(destMetadata.apkName));
+            baseApkFile = FileUtils.getTempPath(context, packageName, destMetadata.apkName);
         } catch (IOException e) {
             throw new BackupException("Couldn't create temporary file to decompress APK file", e);
         }
@@ -181,7 +182,7 @@ public class TBConverter extends Converter {
             } else if (TAR_BZIP2.equals(sourceMetadata.tarType)) {
                 is = new BZip2CompressorInputStream(bis, true);
             } else {
-                baseApkFile.delete();
+                Objects.requireNonNull(baseApkFile.getParentFile()).delete();
                 throw new BackupException("Invalid source compression type: " + sourceMetadata.tarType);
             }
             try (OutputStream fos = baseApkFile.openOutputStream()) {
@@ -191,7 +192,7 @@ public class TBConverter extends Converter {
                 is.close();
             }
         } catch (IOException e) {
-            baseApkFile.delete();
+            Objects.requireNonNull(baseApkFile.getParentFile()).delete();
             throw new BackupException("Couldn't decompress " + sourceMetadata.apkName, e);
         }
         // Get certificate checksums
@@ -212,7 +213,7 @@ public class TBConverter extends Converter {
         } catch (Throwable th) {
             throw new BackupException("APK files backup is requested but no APK files have been backed up.", th);
         } finally {
-            baseApkFile.delete();
+            Objects.requireNonNull(baseApkFile.getParentFile()).delete();
         }
         if (!crypto.encrypt(sourceFiles)) {
             throw new BackupException("Failed to encrypt " + Arrays.toString(sourceFiles));

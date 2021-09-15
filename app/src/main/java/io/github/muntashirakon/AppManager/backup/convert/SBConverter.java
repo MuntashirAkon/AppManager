@@ -151,14 +151,7 @@ public class SBConverter extends Converter {
                 crypto.close();
                 throw new BackupException(th.getClass().getName(), th);
             } finally {
-                cachedApk.delete();
-                // delete splits
-                for (String splitName : sourceMetadata.splitConfigs) {
-                    try {
-                        FileUtils.getTempFile(splitName).delete();
-                    } catch (IOException ignore) {
-                    }
-                }
+                Objects.requireNonNull(cachedApk.getParentFile()).delete();
             }
             return;
         }
@@ -280,7 +273,7 @@ public class SBConverter extends Converter {
     @SuppressLint("WrongConstant")
     private void generateMetadata() throws BackupException {
         try (InputStream pis = getApkFile().openInputStream()) {
-            cachedApk = FileUtils.getTempPath(context, "base.apk");
+            cachedApk = FileUtils.getTempPath(context, packageName, "base.apk");
             try (OutputStream fos = cachedApk.openOutputStream()) {
                 FileUtils.copy(pis, fos);
             }
@@ -388,8 +381,8 @@ public class SBConverter extends Converter {
                 if (zipEntry.isDirectory()) continue;
                 String splitName = new File(zipEntry.getName()).getName();
                 splits.add(splitName);
-                File file = FileUtils.getTempFile(splitName);
-                try (FileOutputStream fos = new FileOutputStream(file)) {
+                Path file = Objects.requireNonNull(cachedApk.getParentFile()).findOrCreateFile(splitName, null);
+                try (OutputStream fos = file.openOutputStream()) {
                     FileUtils.copy(zis, fos);
                 } catch (IOException e) {
                     file.delete();
@@ -402,14 +395,14 @@ public class SBConverter extends Converter {
 
     private void backupIcon() {
         try {
-            Path iconFile = tmpBackupPath.findFile(ICON_FILE);
+            Path iconFile = tmpBackupPath.findOrCreateFile(ICON_FILE, null);
             try (OutputStream outputStream = iconFile.openOutputStream()) {
                 Bitmap bitmap = FileUtils.getBitmapFromDrawable(packageInfo.applicationInfo.loadIcon(pm));
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
                 outputStream.flush();
             }
-        } catch (IOException e) {
-            Log.w(TAG, "Could not back up icon.");
+        } catch (Throwable th) {
+            Log.w(TAG, "Could not back up icon.", th);
         }
     }
 }
