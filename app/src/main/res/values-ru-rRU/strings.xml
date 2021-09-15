@@ -280,7 +280,7 @@
         <item quantity="other">Не удалось удалить %1$d приложений</item>
     </plurals>
     <plurals name="alert_failed_to_disable_background">
-        <item quantity="one">Не удалось предотвратить работу в фоне для%1$d приложения</item>
+        <item quantity="one">Не удалось предотвратить работу в фоне для %1$d приложения</item>
         <item quantity="few">Не удалось предотвратить работу в фоне для %1$d приложений</item>
         <item quantity="many">Не удалось предотвратить работу в фоне для %1$d приложений</item>
         <item quantity="other">Не удалось предотвратить работу в фоне для %1$d приложений</item>
@@ -338,10 +338,10 @@
     <string name="sort_by_tracker_components">Сначала трекеры</string>
     <string name="unknown_op">Неизвестная операция</string>
     <plurals name="alert_failed_to_disable_trackers">
-        <item quantity="one">Не удалось отключить трекеры %1$d приложения</item>
-        <item quantity="few">Не удалось отключить трекеры %1$d приложений</item>
-        <item quantity="many">Не удалось отключить трекеры %1$d приложений</item>
-        <item quantity="other">Не удалось отключить трекеры %1$d приложений</item>
+        <item quantity="one">Не удалось отключить трекеры в %1$d приложении</item>
+        <item quantity="few">Не удалось отключить трекеры в %1$d приложениях</item>
+        <item quantity="many">Не удалось отключить трекеры в %1$d приложениях</item>
+        <item quantity="other">Не удалось отключить трекеры в %1$d приложениях</item>
     </plurals>
     <string name="failed_to_grant_permission">Не удалось предоставить разрешение</string>
     <string name="failed_to_revoke_permission">Не удалось отозвать разрешение</string>
@@ -435,10 +435,10 @@
         <item quantity="other">Не удалось удалить %1$d резервных копий</item>
     </plurals>
     <plurals name="alert_failed_to_unblock_trackers">
-        <item quantity="one">Не удалось разблокировать трекеры %1$d приложения</item>
-        <item quantity="few">Не удалось разблокировать трекеры %1$d приложений</item>
-        <item quantity="many">Не удалось разблокировать трекеры %1$d приложений</item>
-        <item quantity="other">Не удалось разблокировать трекеры %1$d приложений</item>
+        <item quantity="one">Не удалось разблокировать трекеры в %1$d приложении</item>
+        <item quantity="few">Не удалось разблокировать трекеры в %1$d приложениях</item>
+        <item quantity="many">Не удалось разблокировать трекеры в %1$d приложениях</item>
+        <item quantity="other">Не удалось разблокировать трекеры в %1$d приложениях</item>
     </plurals>
     <plurals name="alert_failed_to_block_components">
         <item quantity="one">Не удалось заблокировать компоненты %1$d приложения</item>
@@ -542,7 +542,7 @@
     <string name="split_feature_name">Функции: <xliff:g id="feature_name" example="Visualizer">%1$s</xliff:g></string>
     <string name="base_apk">Базовый APK</string>
     <plurals name="alert_failed_to_enable">
-        <item quantity="one">Не удалось включить%1$d приложение</item>
+        <item quantity="one">Не удалось включить %1$d приложение</item>
         <item quantity="few">Не удалось включить %1$d приложения</item>
         <item quantity="many">Не удалось включить %1$d приложений</item>
         <item quantity="other">Не удалось включить %1$d приложений</item>
@@ -1132,9 +1132,9 @@
     <string name="adb_wifi_paring_code">Код подключения Wi-Fi</string>
     <string name="invalid_password">Неправильный пароль, попробуйте ещё раз.</string>
     <string name="keystore_pass_cannot_be_empty">Пароль хранилища ключей не может быть пустым.</string>
-    <string name="background">Фоновый режим</string>
-    <string name="running_services_logcat_hint">Нажмите на элемент, чтобы открыть средство просмотра журнала с соответствующим идентификатором процесса в качестве фильтра по умолчанию.</string>
-    <string name="pid">ID процесса</string>
+    <string name="background">В фоне</string>
+    <string name="running_services_logcat_hint">Нажмите на элемент, чтобы открыть \"Просмотр логов\", используя соответствующий идентификатор процесса в качестве фильтра по умолчанию.</string>
+    <string name="pid">Идентификатор процесса</string>
     <plurals name="pref_thread_count_msg">
         <item quantity="one">Параллельное выполнение не более %1$d операции</item>
         <item quantity="few">Параллельное выполнение не более %1$d операций</item>
@@ -1147,18 +1147,17 @@
     <string name="type_uri_array">Массив URI</string>
     <string name="pref_always_on_background_msg">Всегда устанавливать приложения в фоновом режиме и выводить уведомление по завершении установки.</string>
     <string name="pref_always_on_background">Установить в фоновом режиме</string>
-    <string name="pref_block_trackers_msg">Блокирование компонентов-трекеров после установки приложения через App Manager.</string>
+    <string name="pref_block_trackers_msg">Блокирование компонентов трекеров после установки приложения через App Manager.</string>
     <string name="next">Следующий</string>
     <string name="installer_app_installed">Приложение установлено</string>
-    <string name="staging_apk_files">Постановка…</string>
+    <string name="staging_apk_files">Подготовка…</string>
     <string name="trim_caches_in_all_apps_description">Удаление кеш файлов со всех приложений, включая систему Android</string>
     <string name="trim_caches_in_all_apps">Очистка кэша во всех приложениях</string>
     <string name="user_root">Использовать root</string>
     <string name="paste">Вставить</string>
     <string name="set_package_name_first">Сначала установите имя пакета!</string>
     <string name="identifier">Идентификатор</string>
-    <string name="backup_volume_dialog_description">Тома с префиксом <tt>/tree</tt> - это папки, выбранные с помощью Storage Access Framework (SAF). Кроме этих папок, каталог по умолчанию для App Manager - это подпапка с именем <tt>AppManager</tt>.</string>
-    <string name="second_degree_tracker_note">² префикс указывает на то, что трекеры находятся в <a href="https://etip.exodus-privacy.eu.org/">
-\nРезервный список ETIP</a>, т. е. являются ли они настоящими трекерами, все еще исследуется.</string>
+    <string name="backup_volume_dialog_description">Тома с префиксом <tt>/tree</tt> это папки, выбранные с помощью Storage Access Framework (SAF). Кроме этих папок, каталог по умолчанию для App Manager это подпапка с именем <tt>AppManager</tt>.</string>
+    <string name="second_degree_tracker_note">² префикс указывает на то, что трекеры находятся в списке ожидания <a href="https://etip.exodus-privacy.eu.org/"> ETIP</a>, т. е. являются ли они настоящими трекерами, все еще исследуется.</string>
     <string name="failed_to_uninstall_app">Не получилось удалить</string>
 </resources>
