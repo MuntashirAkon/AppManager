@@ -23,7 +23,7 @@
     <string name="manifest">Маніфест</string>
     <string name="error">Помилка</string>
     <string name="loading">Завантаження…</string>
-    <string name="about">Про застосунок</string>
+    <string name="about">Про додаток</string>
     <string name="cache_size">Кеш</string>
     <string name="obb_size">Obb</string>
     <string name="instructions">Інструкції</string>
@@ -171,7 +171,7 @@
     <string name="installer_error_session_write">Не вдалося записати до сеансу програми встановлення</string>
     <string name="installer_error_session_create">Не вдалося створити сеанс програми встановлення</string>
     <string name="installer_error_security">Не вдається отримати доступ до файлів .apk</string>
-    <string name="install_in_progress">Триває встановлення</string>
+    <string name="install_in_progress">Встановлення…</string>
     <string name="package_installer">Інсталятор пакетів</string>
     <string name="unblock_trackers">Розблокування трекерів</string>
     <string name="reinstall">Перевстановлення</string>
@@ -255,10 +255,10 @@
         <item quantity="other">Не вдалося заблокувати компоненти в %1$d додатках</item>
     </plurals>
     <plurals name="alert_failed_to_delete_backup">
-        <item quantity="one">Не вдалося видалити резервну копію %1$d</item>
-        <item quantity="few">Не вдалося видалити резервні копії %1$d</item>
-        <item quantity="many">Не вдалося видалити резервні копії %1$d</item>
-        <item quantity="other">Не вдалося видалити резервні копії %1$d</item>
+        <item quantity="one">Не вдалося видалити %1$d резервну копію</item>
+        <item quantity="few">Не вдалося видалити %1$d резервні копії</item>
+        <item quantity="many">Не вдалося видалити %1$d резервні копії</item>
+        <item quantity="other">Не вдалося видалити %1$d резервні копії</item>
     </plurals>
     <plurals name="alert_failed_to_restore">
         <item quantity="one">Не вдалося відновити %1$d додаток</item>
@@ -374,10 +374,10 @@
     </plurals>
     <string name="the_operation_was_successful">Завершено</string>
     <plurals name="alert_failed_to_disable_background">
-        <item quantity="one">Не вдалося запобігти роботу в фоновому режимі %1$s додатку</item>
-        <item quantity="few">Не вдалося запобігти роботу в фоновому режимі %1$s додаткам</item>
-        <item quantity="many">Не вдалося запобігти роботу в фоновому режимі %1$s додаткам</item>
-        <item quantity="other">Не вдалося запобігти роботу в фоновому режимі %1$s додаткам</item>
+        <item quantity="one">Не вдалося запобігти роботу в фоновому режимі %1$d додатку</item>
+        <item quantity="few">Не вдалося запобігти роботу в фоновому режимі %1$d додаткам</item>
+        <item quantity="many">Не вдалося запобігти роботу в фоновому режимі %1$d додаткам</item>
+        <item quantity="other">Не вдалося запобігти роботу в фоновому режимі %1$d додаткам</item>
     </plurals>
     <plurals name="alert_failed_to_uninstall">
         <item quantity="one">Не вдалося видалити %1$d додаток</item>
@@ -942,7 +942,7 @@
     <string name="pref_filter_pattern_title">Відфільтруйте теги</string>
     <string name="pref_filter_pattern_summary">Відфільтрувати вибрані теги в логах.</string>
     <string name="pref_display_limit_title">Ліміт відображення логу</string>
-    <string name="pref_display_limit_summary">Відображення лише останніх %1$d логів, щоб уникнути помилок переповнення пам\'яті.</string>
+    <string name="pref_display_limit_summary">Відображати лише останні %1$d логів, щоб уникнути помилок переповнення пам\'яті.</string>
     <string name="pref_default_log_level_title">Рівень логу за замовчуванням</string>
     <string name="pref_default_log_level_summary">Рівень логу під час запуску, під час відкриття файлів та під час запису.</string>
     <string name="pref_cat_configuration">Налаштування</string>
@@ -1131,4 +1131,32 @@
     <string name="invalid_password">Недійсний пароль, повторіть спробу.</string>
     <string name="keystore_pass_cannot_be_empty">Пароль сховища ключів не може бути порожнім.</string>
     <string name="keystore_password_info">Нижче наведено пароль сховища ключів App Manager. Збережіть його в захищеному місці, якщо ви збираєтеся створити резервну копію/відновлювати сховище ключів App Manager. <b>Це повідомлення більше не відображатиметься.</b></string>
+    <string name="staging_apk_files">Підготовка…</string>
+    <string name="running_services_logcat_hint">Натисніть на елемент, щоб відкрити \"Перегляд логів\", використовуючи відповідний ідентифікатор процесу в ролі фільтра за замовчуванням.</string>
+    <string name="pid">Ідентифікатор процесу</string>
+    <plurals name="pref_thread_count_msg">
+        <item quantity="one">Виконувати не більше %1$d операції паралельно</item>
+        <item quantity="few">Виконувати не більше %1$d операцій паралельно</item>
+        <item quantity="many">Виконувати не більше %1$d операцій паралельно</item>
+        <item quantity="other">Виконувати не більше %1$d операцій паралельно</item>
+    </plurals>
+    <string name="pref_thread_count_hint">Значення має бути від 0 до %1$d, де 0 означає <i>максимальна кількість операцій у даний час</i>.</string>
+    <string name="pref_thread_count">Паралельне виконання</string>
+    <string name="type_uri_array_list">Список URI</string>
+    <string name="type_uri_array">Масив URI</string>
+    <string name="pref_always_on_background_msg">Завжди встановлювати додатки у фоновому режимі та відображати сповіщення по завершенні процесу.</string>
+    <string name="pref_always_on_background">Встановити у фоновому режимі</string>
+    <string name="pref_block_trackers_msg">Блокування трекерів після встановлення додатку за допомогою App Manager.</string>
+    <string name="next">Далі</string>
+    <string name="installer_app_installed">Додаток встановлено</string>
+    <string name="background">Фон</string>
+    <string name="trim_caches_in_all_apps_description">Видаляє файли кеш усіх додатків, включаючи систему Android</string>
+    <string name="trim_caches_in_all_apps">Видалення кеш у всіх додатках</string>
+    <string name="user_root">Використовувати root</string>
+    <string name="paste">Вставити</string>
+    <string name="set_package_name_first">Спочатку встановіть назву пакета!</string>
+    <string name="identifier">Ідентифікатор</string>
+    <string name="backup_volume_dialog_description">Томи з префіксом <tt>/tree</tt> є папками, вибраними за допомогою Storage Access Framework (SAF). За винятком цих папок, каталог за замовчуванням для App Manager є підпапкою з назвою <tt>AppManager</tt>.</string>
+    <string name="second_degree_tracker_note">Префікс ² вказує на те, що трекери знаходяться в списку очікування <a href="https://etip.exodus-privacy.eu.org/">ETIP</a>, тобто чи є вони фактичними трекерами, все ще досліджується.</string>
+    <string name="failed_to_uninstall_app">Не вдалося видалити</string>
 </resources>
