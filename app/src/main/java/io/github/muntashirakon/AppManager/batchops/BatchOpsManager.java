@@ -42,8 +42,8 @@ import io.github.muntashirakon.AppManager.appops.OpEntry;
 import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
 import io.github.muntashirakon.AppManager.backup.BackupException;
 import io.github.muntashirakon.AppManager.backup.BackupManager;
-import io.github.muntashirakon.AppManager.backup.convert.Convert;
 import io.github.muntashirakon.AppManager.backup.convert.ConvertUtils;
+import io.github.muntashirakon.AppManager.backup.convert.Converter;
 import io.github.muntashirakon.AppManager.backup.convert.ImportType;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
@@ -325,13 +325,13 @@ public class BatchOpsManager {
         try {
             for (Path file : files) {
                 executor.submit(() -> {
-                    Convert convert = ConvertUtils.getConversionUtil(backupType, file);
+                    Converter converter = ConvertUtils.getConversionUtil(backupType, file);
                     try {
-                        convert.convert();
+                        converter.convert();
                     } catch (BackupException e) {
-                        Log.e(TAG, "Could not backup " + convert.getPackageName(), e);
+                        Log.e(TAG, "Could not backup " + converter.getPackageName(), e);
                         synchronized (failedPkgList) {
-                            failedPkgList.add(new UserPackagePair(convert.getPackageName(), userHandle));
+                            failedPkgList.add(new UserPackagePair(converter.getPackageName(), userHandle));
                         }
                     }
                 });

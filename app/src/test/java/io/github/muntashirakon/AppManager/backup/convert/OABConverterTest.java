@@ -26,7 +26,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 @RunWith(RobolectricTestRunner.class)
-public class OABConvertTest {
+public class OABConverterTest {
     private static final String PACKAGE_NAME_FULL = "dnsfilter.android";
     private static final String PACKAGE_NAME_APK_INT = "org.billthefarmer.editor";
     private static final String PACKAGE_NAME_INT = "ca.cmetcalfe.locationshare";
@@ -69,9 +69,9 @@ public class OABConvertTest {
         Collections.sort(internalStorage);
         Collections.sort(externalStorage);
         assert classLoader != null;
-        Path backupLocation = new Path(context, new File(classLoader.getResource(OABConvert.PATH_SUFFIX).getFile()))
+        Path backupLocation = new Path(context, new File(classLoader.getResource(OABConverter.PATH_SUFFIX).getFile()))
                 .findFile(PACKAGE_NAME_FULL);
-        OABConvert oabConvert = new OABConvert(backupLocation);
+        OABConverter oabConvert = new OABConverter(backupLocation);
         oabConvert.convert();
         Path newBackupLocation = AppPref.getAppManagerDirectory().findFile(PACKAGE_NAME_FULL).findFile("0_OAndBackup");
         // Verify source
@@ -90,9 +90,9 @@ public class OABConvertTest {
     public void convertApkInternalStorageTest() throws BackupException, IOException {
         final List<String> internalStorage = Collections.singletonList("shared_prefs/org.billthefarmer.editor_preferences.xml");
         assert classLoader != null;
-        Path backupLocation = new Path(context, new File(classLoader.getResource(OABConvert.PATH_SUFFIX).getFile()))
+        Path backupLocation = new Path(context, new File(classLoader.getResource(OABConverter.PATH_SUFFIX).getFile()))
                 .findFile(PACKAGE_NAME_APK_INT);
-        OABConvert oabConvert = new OABConvert(backupLocation);
+        OABConverter oabConvert = new OABConverter(backupLocation);
         oabConvert.convert();
         Path newBackupLocation = AppPref.getAppManagerDirectory().findFile(PACKAGE_NAME_APK_INT).findFile("0_OAndBackup");
         // Verify source
@@ -109,9 +109,9 @@ public class OABConvertTest {
         final List<String> internalStorage = Arrays.asList("shared_prefs/ca.cmetcalfe.locationshare_preferences.xml",
                 "shared_prefs/_has_set_default_values.xml");
         assert classLoader != null;
-        Path backupLocation = new Path(context, new File(classLoader.getResource(OABConvert.PATH_SUFFIX).getFile()))
+        Path backupLocation = new Path(context, new File(classLoader.getResource(OABConverter.PATH_SUFFIX).getFile()))
                 .findFile(PACKAGE_NAME_INT);
-        OABConvert oabConvert = new OABConvert(backupLocation);
+        OABConverter oabConvert = new OABConverter(backupLocation);
         oabConvert.convert();
         Path newBackupLocation = AppPref.getAppManagerDirectory().findFile(PACKAGE_NAME_INT).findFile("0_OAndBackup");
         // Verify source
@@ -125,9 +125,9 @@ public class OABConvertTest {
     @Test
     public void convertApkOnlyTest() throws BackupException, IOException {
         assert classLoader != null;
-        Path backupLocation = new Path(context, new File(classLoader.getResource(OABConvert.PATH_SUFFIX).getFile()))
+        Path backupLocation = new Path(context, new File(classLoader.getResource(OABConverter.PATH_SUFFIX).getFile()))
                 .findFile(PACKAGE_NAME_APK);
-        OABConvert oabConvert = new OABConvert(backupLocation);
+        OABConverter oabConvert = new OABConverter(backupLocation);
         oabConvert.convert();
         Path newBackupLocation = AppPref.getAppManagerDirectory().findFile(PACKAGE_NAME_APK).findFile("0_OAndBackup");
         // Verify source

@@ -54,8 +54,8 @@ import static io.github.muntashirakon.AppManager.utils.TarUtils.DEFAULT_SPLIT_SI
 import static io.github.muntashirakon.AppManager.utils.TarUtils.TAR_BZIP2;
 import static io.github.muntashirakon.AppManager.utils.TarUtils.TAR_GZIP;
 
-public class TBConvert extends Convert {
-    public static final String TAG = TBConvert.class.getSimpleName();
+public class TBConverter extends Converter {
+    public static final String TAG = TBConverter.class.getSimpleName();
 
     public static final String PATH_SUFFIX = "TitaniumBackup";
 
@@ -83,7 +83,7 @@ public class TBConvert extends Convert {
      *
      * @param propFile Location to the properties file e.g. {@code /sdcard/TitaniumBackup/package.name-YYYYMMDD-HHMMSS.properties}
      */
-    public TBConvert(@NonNull Path propFile) {
+    public TBConverter(@NonNull Path propFile) {
         this.propFile = propFile;
         this.backupLocation = propFile.getParentFile();
         this.userHandle = UserHandleHidden.myUserId();

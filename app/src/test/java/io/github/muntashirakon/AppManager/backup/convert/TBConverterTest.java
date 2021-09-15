@@ -26,7 +26,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 @RunWith(RobolectricTestRunner.class)
-public class TBConvertTest {
+public class TBConverterTest {
     private static final String PACKAGE_NAME_FULL = "dnsfilter.android";
     private static final String PACKAGE_NAME_APK_INT = "org.billthefarmer.editor";
     private static final String PACKAGE_NAME_INT = "ca.cmetcalfe.locationshare";
@@ -41,7 +41,7 @@ public class TBConvertTest {
         AppPref.set(AppPref.PrefKey.PREF_BACKUP_VOLUME_STR, "file:///tmp");
         FileUtils.deleteDir(new File("/tmp/AppManager"));
         assert classLoader != null;
-        backupLocation = new File(classLoader.getResource(TBConvert.PATH_SUFFIX).getFile());
+        backupLocation = new File(classLoader.getResource(TBConverter.PATH_SUFFIX).getFile());
     }
 
     @Test
@@ -78,7 +78,7 @@ public class TBConvertTest {
         Collections.sort(internalStorage);
         Collections.sort(externalStorage);
         Path propFile = new Path(context, new File(backupLocation, PACKAGE_NAME_FULL + "-20210529-164214.properties"));
-        TBConvert tbConvert = new TBConvert(propFile);
+        TBConverter tbConvert = new TBConverter(propFile);
         tbConvert.convert();
         Path newBackupLocation = AppPref.getAppManagerDirectory().findFile(PACKAGE_NAME_FULL).findFile("0_TB");
         // Verify source
@@ -100,7 +100,7 @@ public class TBConvertTest {
                 "shared_prefs/org.billthefarmer.editor_preferences.xml");
         Collections.sort(internalStorage);
         Path propFile = new Path(context, new File(backupLocation, PACKAGE_NAME_APK_INT + "-20210529-164210.properties"));
-        TBConvert tbConvert = new TBConvert(propFile);
+        TBConverter tbConvert = new TBConverter(propFile);
         tbConvert.convert();
         Path newBackupLocation = AppPref.getAppManagerDirectory().findFile(PACKAGE_NAME_APK_INT).findFile("0_TB");
         // Verify source
@@ -121,7 +121,7 @@ public class TBConvertTest {
                 "shared_prefs/_has_set_default_values.xml");
         Collections.sort(internalStorage);
         Path propFile = new Path(context, new File(backupLocation, PACKAGE_NAME_INT + "-20210529-164219.properties"));
-        TBConvert tbConvert = new TBConvert(propFile);
+        TBConverter tbConvert = new TBConverter(propFile);
         tbConvert.convert();
         Path newBackupLocation = AppPref.getAppManagerDirectory().findFile(PACKAGE_NAME_INT).findFile("0_TB");
         // Verify source
@@ -135,7 +135,7 @@ public class TBConvertTest {
     @Test
     public void convertApkOnlyTest() throws BackupException, IOException {
         Path propFile = new Path(context, new File(backupLocation, PACKAGE_NAME_APK + "-20210530-111646.properties"));
-        TBConvert tbConvert = new TBConvert(propFile);
+        TBConverter tbConvert = new TBConverter(propFile);
         tbConvert.convert();
         Path newBackupLocation = AppPref.getAppManagerDirectory().findFile(PACKAGE_NAME_APK).findFile("0_TB");
         // Verify source

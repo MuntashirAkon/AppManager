@@ -42,14 +42,14 @@ public final class ConvertUtils {
     }
 
     @NonNull
-    public static Convert getConversionUtil(@ImportType int backupType, Path file) {
+    public static Converter getConversionUtil(@ImportType int backupType, Path file) {
         switch (backupType) {
             case ImportType.OAndBackup:
-                return new OABConvert(file);
+                return new OABConverter(file);
             case ImportType.TitaniumBackup:
-                return new TBConvert(file);
+                return new TBConverter(file);
             case ImportType.SwiftBackup:
-                return new SBConvert(file);
+                return new SBConverter(file);
             default:
                 throw new IllegalArgumentException("Unsupported import type " + backupType);
         }
