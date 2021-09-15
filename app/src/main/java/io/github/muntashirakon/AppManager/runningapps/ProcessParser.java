@@ -105,7 +105,8 @@ public final class ProcessParser {
                     + getProcessName(processEntry.name);
         } else if (installedUids.containsKey(processEntry.users.fsUid)) {
             @NonNull PackageInfo packageInfo = Objects.requireNonNull(installedUids.get(processEntry.users.fsUid));
-            processItem = new AppProcessItem(processEntry.pid, packageInfo);
+            processItem = new AppProcessItem();
+            ((AppProcessItem) processItem).packageInfo = packageInfo;
             processItem.name = pm.getApplicationLabel(packageInfo.applicationInfo).toString() + ":" + processEntry.name;
         } else {
             processItem = new ProcessItem();
