@@ -61,8 +61,8 @@
     <string name="word_wrap">Alternar ajuste de texto</string>
     <string name="touchscreen">Pantalla táctil</string>
     <string name="navigation">Navegación</string>
-    <string name="export_failed">Falló la exportación.</string>
-    <string name="import_failed">Falló la importación.</string>
+    <string name="export_failed">¡Exportación fallida!</string>
+    <string name="import_failed">¡Importación fallida!</string>
     <string name="export_options">Exportar opciones</string>
     <string name="import_options">Importar opciones</string>
     <string name="pref_export">Exportar</string>
@@ -359,7 +359,7 @@
     <string name="manifest_viewer">Visor de manifiestos</string>
     <string name="external_apk_no_app_op">El APK externo no tiene ninguna operación de aplicación</string>
     <string name="changelog">Lista de cambios</string>
-    <string name="one_click_ops">1-Click Ops</string>
+    <string name="one_click_ops">Operaciones de 1-Click</string>
     <string name="never_ask">No volver a preguntar</string>
     <string name="launch_app">Lanzar</string>
     <string name="failed_to_deny_dangerous_app_ops">No se pudieron revocar todas las app ops peligrosas</string>
@@ -830,7 +830,7 @@
     <string name="type_int_array">Matriz de enteros</string>
     <string name="type_component_name">Nombre del componente</string>
     <string name="type_null">Sin valor</string>
-    <string name="screen_lock_msg">Bloquear el gestor de aplicaciones usando el bloqueo de pantalla de Android</string>
+    <string name="screen_lock_msg">Bloquear App Manager usando el bloqueo de pantalla de Android</string>
     <string name="screen_lock">Bloqueo de pantalla</string>
     <string name="unlock_app_manager">Desbloquear gestor de aplicaciones</string>
     <string name="sd_card">Tarjeta SD</string>
@@ -1036,7 +1036,7 @@
     </plurals>
     <string name="import_from_tb">Importar desde Titanium Backup</string>
     <string name="import_from_oab_tb_msg">Las copias de respaldo deben ubicarse en %s.</string>
-    <string name="notice_saf">A diferencia de los volúmenes, el directorio escogido se usará para almacenar todos los archivos relacionados con App Manager, incluyendo APKs y respaldos guardados. Storage Access Framework (SAF) es muy lento, por lo cual se recomienda usar esta opción solo cuando otras no puedan ser utilizadas.</string>
+    <string name="notice_saf">A diferencia de los volúmenes, el directorio escogido se usará para almacenar todos los archivos relacionados con App Manager, incluyendo APKs y respaldos guardados. El framework de acceso al almacenamiento (SAF) es muy lento, por lo cual se recomienda usar esta opción solo cuando otras no puedan ser utilizadas.</string>
     <string name="help_uses_permissions_tab">Pulse en un elemento para <b>concederlo</b> o <b>revocarlo</b>. Solo los permisos <b>peligrosos</b> y <b>de desarrollo</b> se pueden conceder o revocar.</string>
     <string name="help_permissions_tab">Estos permisos los define esta aplicación y no pueden revocarse.</string>
     <string name="help_app_ops_tab">Pulse en un elemento para <b>permitirlo</b> o <b>ignorarlo</b>. Mantenga pulsado el elemento para ver otros modos admitidos.</string>
@@ -1087,4 +1087,5 @@
     <string name="identifier">Identificador</string>
     <string name="second_degree_tracker_note">² prefijo indica que los rastreadores están en la <a href="https://etip.exodus-privacy.eu.org/">lista de espera de ETIP</a> p. ej. todavía se está investigando si son en realidad rastreadores.</string>
     <string name="failed_to_uninstall_app">Desinstalación fallida</string>
+    <string name="backup_volume_dialog_description">Volúmenes con prefijo <tt>tree</tt> son carpetas seleccionadas mediante el framework de acceso al almacenamiento (SAF). Exceptuando estas carpetas, el directorio por defecto para App Manager es una subcarpeta llamada <tt>AppManager</tt>.</string>
 </resources>
