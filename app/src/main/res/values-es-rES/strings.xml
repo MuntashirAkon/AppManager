@@ -266,7 +266,7 @@
     <string name="installer_error_session_abandon">No se pudo abandonar la sesión del instalador</string>
     <string name="installer_error_session_create">No se pudo crear una sesión de instalación</string>
     <string name="installer_error_security">No se pudo acceder a los archivos APK</string>
-    <string name="install_in_progress">Instalación en progreso</string>
+    <string name="install_in_progress">Instalando…</string>
     <string name="package_installer">Instalador de paquetes</string>
     <string name="unblock_trackers">Desbloquear rastreadores</string>
     <string name="reinstall">Reinstalar</string>
@@ -1062,4 +1062,29 @@
     <string name="keystore_pass_cannot_be_empty">La contraseña del almacén de claves no puede quedar vacía.</string>
     <string name="invalid_password">La contraseña no es válida. Vuelva a intentarlo.</string>
     <string name="adb_pair">Emparejar</string>
+    <string name="running_services_logcat_hint">Pulsa en un ítem para abrir el visor de registro con el ID del proceso correspondiente como filtro por defecto.</string>
+    <string name="pid">ID del proceso</string>
+    <plurals name="pref_thread_count_msg">
+        <item quantity="one">Ejecutar como máximo %1$d operación en paralelo</item>
+        <item quantity="other">Ejecutar como máximo %1$d operaciones en paralelo</item>
+    </plurals>
+    <string name="pref_thread_count_hint">El valor debe estar entre 0 y %1$d donde 0 significa <i>número máximo de operaciones en un momento dado</i>.</string>
+    <string name="pref_thread_count">Ejecución paralela</string>
+    <string name="type_uri_array_list">Lista de URIs</string>
+    <string name="type_uri_array">Matriz de URIs</string>
+    <string name="pref_always_on_background_msg">Siempre instalar aplicaciones en segundo plano y mostrar una notificación al terminar.</string>
+    <string name="pref_always_on_background">Instalar en segundo plano</string>
+    <string name="pref_block_trackers_msg">Bloquear componentes de rastreo al instalar una aplicación a través de App Manager.</string>
+    <string name="next">Siguiente</string>
+    <string name="installer_app_installed">Aplicación instalada</string>
+    <string name="staging_apk_files">Preparando…</string>
+    <string name="background">Segundo plano</string>
+    <string name="trim_caches_in_all_apps_description">Borrar archivos de antememoria de todas las aplicaciones, incluyendo los del sistema Android</string>
+    <string name="trim_caches_in_all_apps">Recortar antememoria en todas las aplicaciones</string>
+    <string name="user_root">Usar root</string>
+    <string name="paste">Pegar</string>
+    <string name="set_package_name_first">¡Elija un nombre para el paquete primero!</string>
+    <string name="identifier">Identificador</string>
+    <string name="second_degree_tracker_note">² prefijo indica que los rastreadores están en la <a href="https://etip.exodus-privacy.eu.org/">lista de espera de ETIP</a> p. ej. todavía se está investigando si son en realidad rastreadores.</string>
+    <string name="failed_to_uninstall_app">Desinstalación fallida</string>
 </resources>
