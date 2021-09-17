@@ -499,7 +499,7 @@
     <string name="installer_error_session_write">Không thể ghi vào phiên làm việc của trình cài đặt</string>
     <string name="installer_error_session_create">Không thể tạo một phiên làm việc của trình cài đặt</string>
     <string name="installer_error_security">Không thể truy cập các tệp APK</string>
-    <string name="install_in_progress">Đang cài đặt</string>
+    <string name="install_in_progress">Đang cài đặt…</string>
     <string name="package_installer">Trình cài đặt gói</string>
     <string name="unblock_trackers">Bỏ chặn trình theo dõi</string>
     <string name="reinstall">Cài đặt lại</string>
@@ -1026,4 +1026,29 @@
     <string name="invalid_password">Mật khẩu không hợp lệ, hãy thử lại.</string>
     <string name="keystore_pass_cannot_be_empty">Mật khẩu KeyStore không thể trống.</string>
     <string name="keystore_password_info">Đây là mật khẩu KeyStore của App Manager. Vui lòng lưu trữ nó ở một nơi bảo mật nếu bạn có kế hoạch sao lưu/khôi phục KeyStore của App Manager. <b>Thông báo này sẽ không được hiển thị lại.</b></string>
+    <string name="running_services_logcat_hint">Nhấn vào một mục để mở trình xem nhật ký với ID tiến trình tương ứng là bộ lọc mặc định.</string>
+    <string name="pid">ID tiến trình</string>
+    <plurals name="pref_thread_count_msg">
+        <item quantity="other">Thực thi tối đa %1$d hoạt động song song</item>
+    </plurals>
+    <string name="pref_thread_count_hint">Giá trị phải ở giữa 0 và %1$d, 0 có nghĩa là <i>số hoạt động tối đa tại một thời điểm</i>.</string>
+    <string name="pref_thread_count">Thực thi song song</string>
+    <string name="type_uri_array_list">Danh sách các URI</string>
+    <string name="type_uri_array">Mảng các URI</string>
+    <string name="pref_always_on_background_msg">Luôn cài đặt ứng dụng trong nền và hiển thị thông báo khi hoàn tất.</string>
+    <string name="pref_always_on_background">Cài đặt trong nền</string>
+    <string name="pref_block_trackers_msg">Chặn các thành phần theo dõi sau khi cài đặt một ứng dụng bằng App Manager.</string>
+    <string name="next">Tiếp</string>
+    <string name="installer_app_installed">Đã cài đặt ứng dụng</string>
+    <string name="staging_apk_files">Đang chuẩn bị…</string>
+    <string name="background">Nền</string>
+    <string name="trim_caches_in_all_apps_description">Xóa các tệp bộ nhớ đệm khỏi tất cả ứng dụng, bao gồm cả hệ thống Android</string>
+    <string name="trim_caches_in_all_apps">Xóa bớt bộ nhớ đệm trong tất cả ứng dụng</string>
+    <string name="user_root">Sử dụng root</string>
+    <string name="paste">Dán</string>
+    <string name="set_package_name_first">Hãy đặt tên gói trước tiên!</string>
+    <string name="identifier">Định danh</string>
+    <string name="backup_volume_dialog_description">Các kho có tiền tố <tt>/tree</tt> là các thư mục được chọn bằng Storage Access Framework (SAF). Trừ các thư mục đó ra, thư mục mặc định của App Manager là một thư mục con có tên là <tt>AppManager</tt>.</string>
+    <string name="second_degree_tracker_note">Tiền tố ² có nghĩa là trình theo dõi đang ở trong <a href="https://etip.exodus-privacy.eu.org/">danh sách chờ của ETIP</a>, vd: việc chúng có phải là trình theo dõi thật hay không vẫn đang được điều tra.</string>
+    <string name="failed_to_uninstall_app">Gỡ cài đặt thất bại</string>
 </resources>
