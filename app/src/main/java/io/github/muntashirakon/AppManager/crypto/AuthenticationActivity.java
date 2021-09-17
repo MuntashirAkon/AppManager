@@ -50,16 +50,8 @@ public class AuthenticationActivity extends AppCompatActivity {
         AlertDialog ksDialog;
         // Handle KeyStore
         if (KeyStoreManager.hasKeyStorePassword()) {
-            if (Utils.isAppInstalled() || Utils.isAppUpdated()) {
-                // We already have a working keystore password
-                try {
-                    char[] password = KeyStoreManager.getInstance().getAmKeyStorePassword();
-                    ksDialog = KeyStoreManager.displayKeyStorePassword(this, password, waitForKS::countDown);
-                } catch (Exception e) {
-                    Log.e(TAG, e);
-                    ksDialog = null;
-                }
-            } else ksDialog = null;
+            // Do nothing
+            ksDialog = null;
         } else if (KeyStoreManager.hasKeyStore()) {
             // We have a keystore but not a working password, input a password (probably due to system restore)
             ksDialog = KeyStoreManager.inputKeyStorePassword(this, waitForKS::countDown);

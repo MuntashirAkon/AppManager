@@ -1,0 +1,3 @@
+This patch release contains bug fixes and feature improvements for the app installer and activity interceptor.
+This also fixes the caching issues where the files were erroneously cached in the “files” directory instead of the “cache” directory.
+F-Droid doesn't support extended changelog. View in-app changelog for a more helpful and detailed changelog.

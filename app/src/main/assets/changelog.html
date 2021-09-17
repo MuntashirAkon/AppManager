@@ -1,5 +1,31 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 
+<h5>v2.6.4 (394) stable release:</h5>
+This patch release contains bug fixes and feature improvements for the app installer and activity interceptor. This also fixes the caching issues where the files were erroneously cached in the “files” directory instead of the “cache” directory.
+<br/>
+&#x2022; <b>[1-Click Ops]</b> Added “trim caches from all apps” option<br/>
+&#x2022; <b>[Activity
+    Interceptor]</b> Added options to copy/paste intents, added fields to insert identifier (Android Q+), class and package name, allowed opening intent via root, added two new extra types: Array of URI and List of URI
+<br/>
+&#x2022; <b>[App
+    Details]</b> Enabled opening non-exported activity via Activity Interceptor (via root), included “View in Settings” as a horizontal button if root/ADB is not available, improved “running apps” dialog
+<br/>
+&#x2022; <b>[Docs]</b> Open docs URL if Android WebView is unavailable<br/>
+&#x2022;
+<b>[Installer]</b> Added support for installing multiple apps at the same time via the share option in any file manager, added option to block trackers after installing an app, enabled downgrading in no-root mode, improved loading dialog, displays app info icon when installation is completed
+<br/>
+&#x2022; <b>[Log Viewer]</b> Fixed log recording widget and other crashes<br/>
+&#x2022; <b>[Locale]</b> Fixed punctuation issues in French<br/>
+&#x2022; <b>[Main]</b> Enabled running apps filter in non-root mode, fixed freezing issue, <br/>
+&#x2022; <b>[Running Apps]</b> Fixed detecting running apps<br/>
+&#x2022;
+<b>[Scanner]</b> Prevent deleting APK files which aren't cached in the scanner page, display a footnote for second degree trackers in tracker details dialog
+<br/>
+&#x2022;
+<b>[Settings]</b> Sorted app list by the app label (or app name) in the app installer selection dialog, added option to run installer always in the background, added the option to limit the number of parallel operations (useful for low-end devices)
+<br/>
+<br/>
+
 <h5>v2.6.3 (392) stable release:</h5>
 This patch release contains bug fixes for ADB mode and back up/restore.<br/>
 &#x2022; <b>[1-Click Ops]</b> Fixed missing applications<br/>
