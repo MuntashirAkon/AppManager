@@ -1061,7 +1061,7 @@
     <string name="invalid_password">Palavra-passe inválida, tente novamente.</string>
     <string name="keystore_pass_cannot_be_empty">A palavra-passe da KeyStore não pode estar vazia.</string>
     <string name="keystore_password_info">Segue-se a palavra-passe da App Manager KeyStore. Por favor guarde-a num local seguro se fizer uma cópia de segurança/restaurar a App Manager KeyStore. <b>Esta mensagem não será mostrada novamente.</b></string>
-    <string name="type_uri_array_list">Listar URLs</string>
+    <string name="type_uri_array_list">Lista de URLs</string>
     <string name="pref_block_trackers_msg">Bloqueia os componentes de rastreio após instalar um Aplicativo usando o gerenciador.</string>
     <string name="running_services_logcat_hint">Clique em um item para abrir a tela de registro com o ID de processo correspondente como filtro principal.</string>
     <string name="pid">ID do processo</string>
@@ -1086,4 +1086,5 @@
     <string name="backup_volume_dialog_description">Volumes com o prefixo <tt>/tree</tt> são pastas selecionadas usando o Storage Access Framework (SAF). Excetuando estas pastas, o diretório padrão do App Manager é uma subpasta chamada <tt>AppManager</tt>.</string>
     <string name="second_degree_tracker_note">O prefixo ² indica que os rastreadores estão na <a href="https://etip.exodus-privacy.eu.org/">Lista de espera ETIP</a>, ou seja, se eles são rastreadores reais então ainda estão a ser investigados.</string>
     <string name="failed_to_uninstall_app">A desinstalação falhou</string>
+    <string name="type_uri_array">Matriz de URIs</string>
 </resources>
