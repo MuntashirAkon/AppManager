@@ -45,8 +45,8 @@ import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.types.ForegroundService;
+import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.StoragePermission;
@@ -447,8 +447,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
         if (AppPref.isRootOrAdbEnabled()) {
             // User must be all
             try {
-                PackageInstallerCompat.uninstall(model.getPackageName(),
-                        UserHandleHidden.USER_ALL, false);
+                PackageInstallerCompat.uninstall(model.getPackageName(), Users.USER_ALL, false);
                 install();
             } catch (Exception e) {
                 e.printStackTrace();

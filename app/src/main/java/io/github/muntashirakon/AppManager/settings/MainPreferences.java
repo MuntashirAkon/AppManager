@@ -54,6 +54,7 @@ import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class MainPreferences extends PreferenceFragmentCompat {
     private static final List<Integer> THEME_CONST = Arrays.asList(
@@ -80,7 +81,6 @@ public class MainPreferences extends PreferenceFragmentCompat {
     private String currentMode;
     private MainPreferencesViewModel model;
     private int threadCount;
-    private final ExecutorService executor = Executors.newFixedThreadPool(1);
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
