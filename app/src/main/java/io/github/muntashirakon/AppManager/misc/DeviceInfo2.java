@@ -234,7 +234,7 @@ public class DeviceInfo2 {
                 Pair<Integer, Integer> packageSizes = userPackages.get(user.id);
                 if (packageSizes == null) continue;
                 if (packageSizes.first + packageSizes.second == 0) continue;
-                builder.append(getStyledKeyValue(ctx, R.string.user, user.name)).append("\n   ")
+                builder.append(getStyledKeyValue(ctx, R.string.user, user.name + " (" + user.id + ")")).append("\n   ")
                         .append(getStyledKeyValue(ctx, R.string.total_size,
                                 String.valueOf(packageSizes.first + packageSizes.second))).append(", ")
                         .append(getStyledKeyValue(ctx, R.string.user, String.valueOf(packageSizes.first))).append(", ")
