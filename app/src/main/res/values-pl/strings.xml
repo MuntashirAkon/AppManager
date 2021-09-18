@@ -513,7 +513,7 @@
     <string name="languages">Języki</string>
     <string name="battery_capacity">Pojemność</string>
     <string name="memory">Pamięć</string>
-    <string name="gles_version">Wersja GL ES</string>
+    <string name="gles_version">Wersja OpenGL ES</string>
     <string name="no_of_cores">Rdzenie</string>
     <string name="support_architectures">Obsługiwane architektury</string>
     <string name="security_providers">Dostawcy zabezpieczeń</string>
@@ -635,7 +635,7 @@
     <string name="pref_backup_android_keystore">Twórz kopie zapasowe aplikacji używających Android KeyStore</string>
     <string name="backup_multiple_description">Użyj oddzielnej nazwanej kopii zapasowej zamiast podstawowej kopii zapasowej.</string>
     <string name="backup_rules_description">Utwórz kopię zapasową reguł skonfigurowanych w App Manager.</string>
-    <string name="backup_external_data_description">Utwórz kopię zapasową zewnętrznych folderów danych. Aby funkcja działała, musi być wybrana opcja <b>Dane</b>.</string>
+    <string name="backup_external_data_description">Utwórz kopię zapasową zewnętrznych folderów danych.</string>
     <string name="backup_apk_files_description">Utwórz kopię zapasową tylko plików APK z katalogu źródłowego. <b>Źródło</b> musi być wybrane, aby to zadziałało.</string>
     <string name="vendor">Producent</string>
     <string name="set_custom_app_op">Ustaw niestandardową app op</string>
@@ -812,7 +812,7 @@
     <string name="input_keystore_alias_pass_description">Wprowadź hasło dla aliasu <b>%1$s</b>. Możesz pozostawić to pole puste, jeśli hasło jest takie samo jak hasło KeyStore.</string>
     <string name="input_keystore_alias_pass">Hasło dla aliasu <b>%1$s</b></string>
     <string name="tap_to_see_details">Naciśnij, aby zobaczyć szczegóły</string>
-    <string name="backup_apps_with_changes">Stwórz kopie zapasowe aplikacji z wprowadzonymi zmianami</string>
+    <string name="backup_apps_with_changes">"Stwórz kopie zapasowe aplikacji z  zmianami"</string>
     <string name="isolated">Odizolowana</string>
     <string name="reverse">Odwrócona</string>
     <string name="sort_by_backup">Najpierw z wykonanymi kopiami</string>
@@ -859,4 +859,32 @@
     <string name="launch_mode_multiple">Wiele</string>
     <string name="package_installer">Pakiet instalacyjny</string>
     <string name="paired_successfully">Sparowany.</string>
+    <string name="pid">Identyfikator procesu</string>
+    <plurals name="pref_thread_count_msg">
+        <item quantity="one">Wykonaj co najwyżej %1$d operacje równolegle</item>
+        <item quantity="few">Wykonaj co najwyżej %1$d operacji równolegle</item>
+        <item quantity="many"></item>
+        <item quantity="other"></item>
+    </plurals>
+    <string name="pref_thread_count_hint">Wartość musi być pomiędzy 0 a %1$d gdzie 0 znaczy &lt;i&gt; maksymalnej liczby operacji w danym czasie&lt;i&gt;.</string>
+    <string name="pref_thread_count">Wykonanie równoległe</string>
+    <string name="type_uri_array_list">Lista URIs</string>
+    <string name="type_uri_array">Tablica URIs</string>
+    <string name="pref_always_on_background_msg">Zawsze instaluj aplikacje w tle i wyświetl powiadomienia po skończeniu.</string>
+    <string name="pref_always_on_background">Instaluj w tle</string>
+    <string name="pref_block_trackers_msg">Zablokuj komponenty śledzenia po zainstalowaniu aplikacji za pomocą Menedżera aplikacji.</string>
+    <string name="next">Następny</string>
+    <string name="installer_app_installed">Aplikacja zainstalowana</string>
+    <string name="staging_apk_files">Inscenizacja…</string>
+    <string name="background">Tło</string>
+    <string name="type_int_array">Tablica liczb całkowitych</string>
+    <string name="back_up">Kopia zapasowa</string>
+    <string name="restore_latest_msg">Przywróć już zainstalowane aplikacje których kody wersji są wyższe niż zainstalowany kod wersji</string>
+    <string name="enforcing">Wymuszanie</string>
+    <string name="backup_extras">Dodatki</string>
+    <string name="board_name">Tablica</string>
+    <string name="extras">Dodatki</string>
+    <string name="filter_apps_with_splits">Z podziałami</string>
+    <string name="input_keystore_pass_description">Wprowadź hasło KeyStore. Jeżeli widzisz to po raz pierwszy, proszę użyj generator hasła i zapisz je w bezpiecznym miejscu przed wpisaniem go tutaj.</string>
+    <string name="copy">Kopiuj</string>
 </resources>
