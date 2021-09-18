@@ -2,12 +2,14 @@
 
 package io.github.muntashirakon.AppManager.usage;
 
+import android.annotation.UserIdInt;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,49 +17,52 @@ import io.github.muntashirakon.AppManager.utils.DateUtils;
 
 public class PackageUsageInfo implements Parcelable {
     @NonNull
-    public String packageName;
+    public final String packageName;
+    @UserIdInt
+    public final int userId;
     public String appLabel;
-    public Long screenTime = 0L;
-    public Long lastUsageTime = 0L;
-    public Integer timesOpened = 0;
+    public long screenTime = 0L;
+    public long lastUsageTime = 0L;
+    public int timesOpened = 0;
     public AppUsageStatsManager.DataUsage mobileData;
     public AppUsageStatsManager.DataUsage wifiData;
     @Nullable
     public List<Entry> entries;
 
-    public PackageUsageInfo(@NonNull String packageName) {
+    public PackageUsageInfo(@NonNull String packageName, @UserIdInt int userId) {
         this.packageName = packageName;
+        this.userId = userId;
     }
 
     protected PackageUsageInfo(@NonNull Parcel in) {
         packageName = Objects.requireNonNull(in.readString());
+        userId = in.readInt();
         appLabel = in.readString();
-        screenTime = in.readByte() == 0 ? 0L : in.readLong();
-        lastUsageTime = in.readByte() == 0 ? 0L : in.readLong();
-        timesOpened = in.readByte() == 0 ? 0 : in.readInt();
+        screenTime = in.readLong();
+        lastUsageTime = in.readLong();
+        timesOpened = in.readInt();
+        mobileData = in.readParcelable(AppUsageStatsManager.DataUsage.class.getClassLoader());
+        wifiData = in.readParcelable(AppUsageStatsManager.DataUsage.class.getClassLoader());
+        int size = in.readInt();
+        if (size != 0) {
+            entries = new ArrayList<>(size);
+            in.readList(entries, Entry.class.getClassLoader());
+        }
     }
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeString(packageName);
+        dest.writeInt(userId);
         dest.writeString(appLabel);
-        if (screenTime == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeLong(screenTime);
-        }
-        if (lastUsageTime == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeLong(lastUsageTime);
-        }
-        if (timesOpened == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeInt(timesOpened);
+        dest.writeLong(screenTime);
+        dest.writeLong(lastUsageTime);
+        dest.writeInt(timesOpened);
+        dest.writeParcelable(mobileData, flags);
+        dest.writeParcelable(wifiData, flags);
+        dest.writeInt(entries == null ? 0 : entries.size());
+        if (entries != null) {
+            dest.writeList(entries);
         }
     }
 
@@ -103,7 +108,7 @@ public class PackageUsageInfo implements Parcelable {
                 '}';
     }
 
-    public static class Entry {
+    public static class Entry implements Parcelable {
         public final long startTime;
         public final long endTime;
 
@@ -111,6 +116,25 @@ public class PackageUsageInfo implements Parcelable {
             this.startTime = startTime;
             this.endTime = endTime;
         }
+
+        protected Entry(Parcel in) {
+            this.startTime = in.readLong();
+            this.endTime = in.readLong();
+        }
+
+        public static final Creator<Entry> CREATOR = new Creator<Entry>() {
+            @NonNull
+            @Override
+            public Entry createFromParcel(Parcel in) {
+                return new Entry(in);
+            }
+
+            @NonNull
+            @Override
+            public Entry[] newArray(int size) {
+                return new Entry[size];
+            }
+        };
 
         public long getDuration() {
             return endTime - startTime;
@@ -123,6 +147,17 @@ public class PackageUsageInfo implements Parcelable {
                     "startTime=" + DateUtils.formatDateTime(startTime) +
                     ", endTime=" + DateUtils.formatDateTime(endTime) +
                     '}';
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeLong(startTime);
+            dest.writeLong(endTime);
         }
     }
 }

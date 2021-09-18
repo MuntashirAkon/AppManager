@@ -16,19 +16,22 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-
-import java.util.List;
-import java.util.Locale;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
+import java.util.List;
+import java.util.Locale;
+
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.dialog.DialogTitleBuilder;
 
 public class AppUsageDetailsDialogFragment extends DialogFragment {
     public static final String TAG = "AppUsageDetailsDialogFragment";
@@ -50,19 +53,23 @@ public class AppUsageDetailsDialogFragment extends DialogFragment {
         listView.setAdapter(adapter);
         adapter.setDefaultList(packageUS.entries);
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(activity)
-                .setTitle(packageUS.packageName)
                 .setView(view)
                 .setNegativeButton(R.string.ok, (dialog, which) -> {
                     if (getDialog() == null) dismiss();
                 });
+        DialogTitleBuilder titleBuilder = new DialogTitleBuilder(activity);
         try {
             PackageManager packageManager = activity.getPackageManager();
             ApplicationInfo applicationInfo = packageManager.getApplicationInfo(packageUS.packageName, PackageManager.GET_META_DATA);
-            builder.setIcon(applicationInfo.loadIcon(packageManager));
-            builder.setTitle(applicationInfo.loadLabel(packageManager));
+            titleBuilder.setTitle(applicationInfo.loadLabel(packageManager))
+                    .setStartIcon(applicationInfo.loadIcon(packageManager));
         } catch (PackageManager.NameNotFoundException e) {
-            builder.setTitle(packageUS.packageName);
+            titleBuilder.setTitle(packageUS.packageName);
         }
+        if (Users.getUsersIds().length > 1) {
+            titleBuilder.setSubtitle(getString(R.string.user_with_id, packageUS.userId));
+        }
+        builder.setCustomTitle(titleBuilder.build());
         return builder.create();
     }
 

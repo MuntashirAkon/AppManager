@@ -41,9 +41,11 @@ import com.google.android.material.textview.MaterialTextView;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Set;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
@@ -51,6 +53,7 @@ import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.usage.UsageUtils.IntervalType;
+import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.BetterActivityResult;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
@@ -94,6 +97,7 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
     private SwipeRefreshLayout mSwipeRefresh;
     private AppUsageAdapter mAppUsageAdapter;
     private static long totalScreenTime;
+    private static boolean hasMultipleUsers;
     @IntervalType
     private int currentInterval = USAGE_TODAY;
     private final ImageLoader imageLoader = new ImageLoader();
@@ -143,11 +147,6 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
         checkPermissions();
     }
 
@@ -232,18 +231,26 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
         mProgressIndicator.show();
         new Thread(() -> {
             // TODO: 28/6/21 Replace with ViewModel
-            int _try = 5; // try to get usage stat 5 times
+            int[] userIds = Users.getUsersIds();
             List<PackageUsageInfo> packageUsageInfoList = new ArrayList<>();
-            do {
-                try {
-                    packageUsageInfoList.addAll(AppUsageStatsManager.getInstance(this).getUsageStats(currentInterval));
-                } catch (RemoteException e) {
-                    Log.e("AppUsage", e);
-                }
-            } while (0 != --_try && packageUsageInfoList.size() == 0);
+            for (int userId : userIds) {
+                int _try = 5; // try to get usage stats at most 5 times
+                do {
+                    try {
+                        packageUsageInfoList.addAll(AppUsageStatsManager.getInstance(this)
+                                .getUsageStats(currentInterval, userId));
+                    } catch (RemoteException e) {
+                        Log.e("AppUsage", e);
+                    }
+                } while (0 != --_try && packageUsageInfoList.size() == 0);
+            }
             totalScreenTime = 0;
-            for (PackageUsageInfo appItem : packageUsageInfoList)
+            Set<Integer> users = new HashSet<>(3);
+            for (PackageUsageInfo appItem : packageUsageInfoList) {
                 totalScreenTime += appItem.screenTime;
+                users.add(appItem.userId);
+            }
+            hasMultipleUsers = users.size() > 1;
             runOnUiThread(() -> {
                 mAppUsageAdapter.setDefaultList(packageUsageInfoList);
                 setUsageSummary();
@@ -307,7 +314,9 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
 
         private static class ViewHolder extends RecyclerView.ViewHolder {
             ImageView appIcon;
+            View iconFrame;
             MaterialTextView appLabel;
+            MaterialTextView badge;
             MaterialTextView packageName;
             MaterialTextView lastUsageDate;
             MaterialTextView mobileDataUsage;
@@ -319,6 +328,9 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
                 appIcon = itemView.findViewById(R.id.icon);
+                iconFrame = itemView.findViewById(R.id.icon_frame);
+                appIcon.setClipToOutline(true);
+                badge = itemView.findViewById(R.id.badge);
                 appLabel = itemView.findViewById(R.id.label);
                 packageName = itemView.findViewById(R.id.package_name);
                 lastUsageDate = itemView.findViewById(R.id.date);
@@ -356,7 +368,7 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
                         case SORT_BY_APP_LABEL:
                             return Collator.getInstance().compare(o1.appLabel, o2.appLabel);
                         case SORT_BY_LAST_USED:
-                            return -o1.lastUsageTime.compareTo(o2.lastUsageTime);
+                            return -Long.compare(o1.lastUsageTime, o2.lastUsageTime);
                         case SORT_BY_MOBILE_DATA:
                             Long o1MData = o1.mobileData.first + o1.mobileData.second;
                             Long o2MData = o2.mobileData.first + o2.mobileData.second;
@@ -364,9 +376,9 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
                         case SORT_BY_PACKAGE_NAME:
                             return o1.packageName.compareToIgnoreCase(o2.packageName);
                         case SORT_BY_SCREEN_TIME:
-                            return -o1.screenTime.compareTo(o2.screenTime);
+                            return -Long.compare(o1.screenTime, o2.screenTime);
                         case SORT_BY_TIMES_OPENED:
-                            return -o1.timesOpened.compareTo(o2.timesOpened);
+                            return -Integer.compare(o1.timesOpened, o2.timesOpened);
                         case SORT_BY_WIFI_DATA:
                             Long o1WData = o1.wifiData.first + o1.wifiData.second;
                             Long o2WData = o2.wifiData.first + o2.wifiData.second;
@@ -416,6 +428,15 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
                 holder.appLabel.setText(packageUS.packageName);
                 holder.appIcon.setImageDrawable(mPackageManager.getDefaultActivityIcon());
             }
+            // Set user ID
+            if (hasMultipleUsers) {
+                holder.iconFrame.setBackgroundResource(R.drawable.circle_with_padding);
+                holder.badge.setVisibility(View.VISIBLE);
+                holder.badge.setText(String.valueOf(packageUS.userId));
+            } else {
+                holder.iconFrame.setBackgroundResource(0);
+                holder.badge.setVisibility(View.GONE);
+            }
             // Set package name
             holder.packageName.setText(packageUS.packageName);
             // Set usage
@@ -450,8 +471,10 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
             // On Click Listener
             holder.itemView.setOnClickListener(v -> {
                 try {
-                    PackageUsageInfo packageUS1 = AppUsageStatsManager.getInstance(mActivity)
-                            .getUsageStatsForPackage(packageUS.packageName, mActivity.currentInterval);
+                    PackageUsageInfo packageUS1 = AppUsageStatsManager.getInstance(mActivity).getUsageStatsForPackage(
+                            packageUS.packageName,
+                            mActivity.currentInterval,
+                            packageUS.userId);
                     packageUS1.copyOthers(packageUS);
                     AppUsageDetailsDialogFragment appUsageDetailsDialogFragment = new AppUsageDetailsDialogFragment();
                     Bundle args = new Bundle();
