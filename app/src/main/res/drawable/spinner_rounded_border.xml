@@ -10,12 +10,6 @@
             <corners android:radius="15dp" />
         </shape>
     </item>
-    <item android:id="@android:id/mask">
-        <shape>
-            <solid android:color="@android:color/white" />
-            <corners android:radius="15dp" />
-        </shape>
-    </item>
     <item
         android:drawable="@drawable/ic_spinner_caret"
         android:gravity="end|center_vertical"

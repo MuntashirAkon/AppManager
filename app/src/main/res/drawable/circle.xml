@@ -1,0 +1,3 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval" />

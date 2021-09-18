@@ -4,6 +4,7 @@ package io.github.muntashirakon.AppManager.usage;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.annotation.UserIdInt;
 import android.app.usage.IUsageStatsManager;
 import android.app.usage.NetworkStats;
 import android.app.usage.NetworkStatsManager;
@@ -11,6 +12,8 @@ import android.app.usage.UsageEvents;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.os.RemoteException;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
@@ -51,10 +54,28 @@ public class AppUsageStatsManager {
     public @interface Transport {
     }
 
-    public static final class DataUsage extends Pair<Long, Long> {
+    public static final class DataUsage extends Pair<Long, Long> implements Parcelable {
         public DataUsage(long tx, long rx) {
             super(tx, rx);
         }
+
+        private DataUsage(@NonNull Parcel in) {
+            super(in.readLong(), in.readLong());
+        }
+
+        public static final Creator<DataUsage> CREATOR = new Creator<DataUsage>() {
+            @NonNull
+            @Override
+            public DataUsage createFromParcel(Parcel in) {
+                return new DataUsage(in);
+            }
+
+            @NonNull
+            @Override
+            public DataUsage[] newArray(int size) {
+                return new DataUsage[size];
+            }
+        };
 
         public long getTx() {
             return first;
@@ -62,6 +83,17 @@ public class AppUsageStatsManager {
 
         public long getRx() {
             return second;
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeLong(first);
+            dest.writeLong(second);
         }
     }
 
@@ -84,13 +116,14 @@ public class AppUsageStatsManager {
         this.mPackageManager = context.getPackageManager();
     }
 
-    public PackageUsageInfo getUsageStatsForPackage(@NonNull String packageName, @UsageUtils.IntervalType int usageInterval)
+    public PackageUsageInfo getUsageStatsForPackage(@NonNull String packageName,
+                                                    @UsageUtils.IntervalType int usageInterval,
+                                                    @UserIdInt int userId)
             throws RemoteException {
         UsageUtils.TimeInterval range = UsageUtils.getTimeInterval(usageInterval);
-        PackageUsageInfo packageUsageInfo = new PackageUsageInfo(packageName);
+        PackageUsageInfo packageUsageInfo = new PackageUsageInfo(packageName, userId);
         packageUsageInfo.appLabel = PackageUtils.getPackageLabel(mPackageManager, packageName);
-        UsageEvents events = UsageStatsManagerCompat.queryEvents(range.getStartTime(), range.getEndTime(),
-                Users.myUserId());
+        UsageEvents events = UsageStatsManagerCompat.queryEvents(range.getStartTime(), range.getEndTime(), userId);
         if (events == null) return packageUsageInfo;
         UsageEvents.Event event = new UsageEvents.Event();
         List<PackageUsageInfo.Entry> usEntries = new ArrayList<>();
@@ -126,15 +159,15 @@ public class AppUsageStatsManager {
      * @param usageInterval Usage interval
      * @return A list of package usage
      */
-    public List<PackageUsageInfo> getUsageStats(@UsageUtils.IntervalType int usageInterval) throws RemoteException {
+    public List<PackageUsageInfo> getUsageStats(@UsageUtils.IntervalType int usageInterval, @UserIdInt int userId)
+            throws RemoteException {
         List<PackageUsageInfo> screenTimeList = new ArrayList<>();
         Map<String, Long> screenTimes = new HashMap<>();
         Map<String, Long> lastUse = new HashMap<>();
         Map<String, Integer> accessCount = new HashMap<>();
         // Get events
         UsageUtils.TimeInterval interval = UsageUtils.getTimeInterval(usageInterval);
-        UsageEvents events = UsageStatsManagerCompat.queryEvents(interval.getStartTime(), interval.getEndTime(),
-                Users.myUserId());
+        UsageEvents events = UsageStatsManagerCompat.queryEvents(interval.getStartTime(), interval.getEndTime(), userId);
         if (events == null) return Collections.emptyList();
         UsageEvents.Event event = new UsageEvents.Event();
         long startTime;
@@ -177,6 +210,7 @@ public class AppUsageStatsManager {
         SparseArrayCompat<DataUsage> mobileData = new SparseArrayCompat<>();
         SparseArrayCompat<DataUsage> wifiData = new SparseArrayCompat<>();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // FIXME: 18/9/21 Get data usage for other users
             NetworkStatsManager nsm = (NetworkStatsManager) context.getSystemService(Context.NETWORK_STATS_SERVICE);
             try {
                 mobileData.putAll(getMobileData(nsm, usageInterval));
@@ -190,7 +224,7 @@ public class AppUsageStatsManager {
         for (String packageName : screenTimes.keySet()) {
             // Skip not installed packages
             if (!PackageUtils.isInstalled(mPackageManager, packageName)) continue;
-            PackageUsageInfo packageUS = new PackageUsageInfo(packageName);
+            PackageUsageInfo packageUS = new PackageUsageInfo(packageName, userId);
             packageUS.appLabel = PackageUtils.getPackageLabel(mPackageManager, packageName);
             packageUS.timesOpened = accessCount.get(packageName);
             packageUS.lastUsageTime = lastUse.get(packageName);
