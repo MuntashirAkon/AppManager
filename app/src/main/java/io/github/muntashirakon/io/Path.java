@@ -277,7 +277,6 @@ public class Path {
         if (documentFile instanceof ProxyDocumentFile) {
             try {
                 FileStatus lstat = ProxyFiles.lstat(Objects.requireNonNull(getFile()));
-                if (lstat == null) return false;
                 // https://github.com/win32ports/unistd_h/blob/master/unistd.h
                 return OsConstants.S_ISLNK(lstat.st_mode);
             } catch (ErrnoException | RemoteException e) {
