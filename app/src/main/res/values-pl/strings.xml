@@ -887,4 +887,7 @@
     <string name="filter_apps_with_splits">Z podziałami</string>
     <string name="input_keystore_pass_description">Wprowadź hasło KeyStore. Jeżeli widzisz to po raz pierwszy, proszę użyj generator hasła i zapisz je w bezpiecznym miejscu przed wpisaniem go tutaj.</string>
     <string name="copy">Kopiuj</string>
+    <string name="launch_mode_single_instance">Pojedyncza instancja</string>
+    <string name="batch_ops">Operacje masowe</string>
+    <string name="failed_to_uninstall_app">Odinstalowanie nie powiodło się</string>
 </resources>
