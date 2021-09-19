@@ -28,6 +28,7 @@ import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
@@ -44,7 +45,6 @@ public class PackageInstallerViewModel extends AndroidViewModel {
     private String packageName;
     private String appLabel;
     private Drawable appIcon;
-    private boolean closeApkFile = true;
     private boolean isSignatureDifferent = false;
     @Nullable
     private List<UserInfo> users;
@@ -59,7 +59,7 @@ public class PackageInstallerViewModel extends AndroidViewModel {
 
     @Override
     protected void onCleared() {
-        if (closeApkFile && apkFile != null) apkFile.close();
+        FileUtils.closeQuietly(apkFile);
         executor.shutdownNow();
         super.onCleared();
     }
@@ -74,7 +74,6 @@ public class PackageInstallerViewModel extends AndroidViewModel {
             try {
                 if (apkUri == null) throw new Exception("Uri is empty");
                 this.apkFileKey = ApkFile.createInstance(apkUri, mimeType);
-                closeApkFile = true;
                 getPackageInfoInternal();
             } catch (Throwable th) {
                 Log.e("PIVM", "Couldn't fetch package info", th);
@@ -89,7 +88,6 @@ public class PackageInstallerViewModel extends AndroidViewModel {
             try {
                 if (apkFileKey == -1) throw new Exception("APK file key is empty");
                 this.apkFileKey = apkFileKey;
-                closeApkFile = false;  // Internal request, don't close the ApkFile
                 getPackageInfoInternal();
             } catch (Throwable th) {
                 Log.e("PIVM", "Couldn't fetch package info", th);
@@ -132,14 +130,6 @@ public class PackageInstallerViewModel extends AndroidViewModel {
 
     public boolean isSignatureDifferent() {
         return isSignatureDifferent;
-    }
-
-    public boolean isCloseApkFile() {
-        return closeApkFile;
-    }
-
-    public void setCloseApkFile(boolean closeApkFile) {
-        this.closeApkFile = closeApkFile;
     }
 
     @Nullable

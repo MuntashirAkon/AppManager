@@ -435,7 +435,7 @@ public final class PackageInstallerCompat {
     private CountDownLatch installWatcher;
     private CountDownLatch interactionWatcher;
 
-    private boolean closeApkFile = false;
+    private boolean closeApkFile = true;
     private boolean installCompleted = false;
     @Nullable
     private ApkFile apkFile;
@@ -514,16 +514,12 @@ public final class PackageInstallerCompat {
         this.appLabel = appLabel;
     }
 
-    public void setCloseApkFile(boolean closeApkFile) {
-        this.closeApkFile = closeApkFile;
-    }
-
     public boolean install(@NonNull ApkFile apkFile) {
         try {
             this.apkFile = apkFile;
             this.packageName = apkFile.getPackageName();
             initBroadcastReceiver();
-            new Thread(() -> copyObb(apkFile)).start();
+            new Thread(this::copyObb).start();
             Log.d(TAG, "Install: opening session...");
             if (!openSession()) return false;
             List<ApkFile.Entry> selectedEntries = apkFile.getSelectedEntries();
@@ -683,10 +679,10 @@ public final class PackageInstallerCompat {
     }
 
     @WorkerThread
-    private void copyObb(@NonNull ApkFile apkFile) {
-        if (!apkFile.hasObb()) return;
+    private void copyObb() {
+        if (apkFile == null || !apkFile.hasObb()) return;
         boolean tmpCloseApkFile = closeApkFile;
-        // Disable closing apk file in case the install is finished already.
+        // Disable closing apk file in case the installation is finished already.
         closeApkFile = false;
         try {
             // Get the first writable external storage directory

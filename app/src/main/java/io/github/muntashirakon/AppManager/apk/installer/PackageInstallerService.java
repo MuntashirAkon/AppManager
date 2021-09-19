@@ -45,7 +45,6 @@ public class PackageInstallerService extends ForegroundService {
     public static final String EXTRA_APK_FILE_KEY = "EXTRA_APK_FILE_KEY";
     public static final String EXTRA_APP_LABEL = "EXTRA_APP_LABEL";
     public static final String EXTRA_USER_ID = "EXTRA_USER_ID";
-    public static final String EXTRA_CLOSE_APK_FILE = "EXTRA_CLOSE_APK_FILE";
     public static final String CHANNEL_ID = BuildConfig.APPLICATION_ID + ".channel.INSTALL";
     public static final int NOTIFICATION_ID = 3;
 
@@ -116,7 +115,6 @@ public class PackageInstallerService extends ForegroundService {
             }
         });
         pi.setAppLabel(appLabel);
-        pi.setCloseApkFile(intent.getBooleanExtra(EXTRA_CLOSE_APK_FILE, false));
         pi.install(ApkFile.getInstance(apkFileKey));
     }
 

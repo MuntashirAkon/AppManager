@@ -42,6 +42,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.splitapk.SplitApkChooser;
 import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
@@ -266,14 +267,12 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
     @UiThread
     private void launchInstaller() {
         if (model.getApkFile().isSplit()) {
-            SplitApkChooser splitApkChooser = new SplitApkChooser();
-            Bundle args = new Bundle();
-            args.putInt(SplitApkChooser.EXTRA_APK_FILE_KEY, model.getApkFileKey());
-            args.putString(SplitApkChooser.EXTRA_ACTION_NAME, getString(actionName));
-            args.putParcelable(SplitApkChooser.EXTRA_APP_INFO, model.getNewPackageInfo().applicationInfo);
-            args.putString(SplitApkChooser.EXTRA_VERSION_INFO, getVersionInfoWithTrackers(model.getNewPackageInfo()));
-            splitApkChooser.setArguments(args);
-            splitApkChooser.setCancelable(false);
+            SplitApkChooser splitApkChooser = SplitApkChooser.getNewInstance(
+                    model.getApkFileKey(),
+                    model.getNewPackageInfo().applicationInfo,
+                    getVersionInfoWithTrackers(model.getNewPackageInfo()),
+                    getString(actionName)
+            );
             splitApkChooser.setOnTriggerInstall(new SplitApkChooser.InstallInterface() {
                 @Override
                 public void triggerInstall() {
@@ -329,9 +328,11 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
         intent.putExtra(PackageInstallerService.EXTRA_APK_FILE_KEY, model.getApkFileKey());
         intent.putExtra(PackageInstallerService.EXTRA_APP_LABEL, model.getAppLabel());
         intent.putExtra(PackageInstallerService.EXTRA_USER_ID, userHandle);
-        intent.putExtra(PackageInstallerService.EXTRA_CLOSE_APK_FILE, model.isCloseApkFile());
+        // We have to get an ApkFile instance in advance because of the queue management i.e. if this activity is closed
+        // before the ApkFile in the queue is accessed, it will throw an IllegalArgumentException as the ApkFile under
+        // the key is unavailable by the time it calls it.
+        ApkFile.getInAdvance(model.getApkFileKey());
         ContextCompat.startForegroundService(this, intent);
-        model.setCloseApkFile(false);
         if (!alwaysOnBackground && service != null) {
             setInstallFinishedListener();
             installProgressDialog = getInstallationProgressDialog(canDisplayNotification);

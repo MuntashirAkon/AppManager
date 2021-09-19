@@ -9,34 +9,46 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 public class SplitApkChooser extends DialogFragment {
-    public static final String TAG = "SplitApkChooser";
-    public static final String EXTRA_APK_FILE_KEY = "EXTRA_APK_FILE_KEY";
-    public static final String EXTRA_ACTION_NAME = "EXTRA_ACTION_NAME";
-    public static final String EXTRA_APP_INFO = "EXTRA_APP_INFO";
-    public static final String EXTRA_VERSION_INFO = "EXTRA_VERSION_INFO";
+    public static final String TAG = SplitApkChooser.class.getSimpleName();
+
+    private static final String EXTRA_APK_FILE_KEY = "EXTRA_APK_FILE_KEY";
+    private static final String EXTRA_ACTION_NAME = "EXTRA_ACTION_NAME";
+    private static final String EXTRA_APP_INFO = "EXTRA_APP_INFO";
+    private static final String EXTRA_VERSION_INFO = "EXTRA_VERSION_INFO";
+
+    @NonNull
+    public static SplitApkChooser getNewInstance(int apkFileKey, @NonNull ApplicationInfo info,
+                                                 @NonNull String versionInfo, @Nullable String actionName) {
+        SplitApkChooser splitApkChooser = new SplitApkChooser();
+        Bundle args = new Bundle();
+        args.putInt(SplitApkChooser.EXTRA_APK_FILE_KEY, apkFileKey);
+        args.putString(SplitApkChooser.EXTRA_ACTION_NAME, actionName);
+        args.putParcelable(SplitApkChooser.EXTRA_APP_INFO, info);
+        args.putString(SplitApkChooser.EXTRA_VERSION_INFO, versionInfo);
+        splitApkChooser.setArguments(args);
+        splitApkChooser.setCancelable(false);
+        return splitApkChooser;
+    }
 
     public interface InstallInterface {
         void triggerInstall();
 
         void triggerCancel();
-    }
-
-    public void setOnTriggerInstall(InstallInterface installInterface) {
-        this.installInterface = installInterface;
     }
 
     InstallInterface installInterface;
@@ -78,8 +90,18 @@ public class SplitApkChooser extends DialogFragment {
     }
 
     @Override
+    public void onDestroy() {
+        apkFile.close();
+        super.onDestroy();
+    }
+
+    @Override
     public void onCancel(@NonNull DialogInterface dialog) {
         installInterface.triggerCancel();
+    }
+
+    public void setOnTriggerInstall(InstallInterface installInterface) {
+        this.installInterface = installInterface;
     }
 
     @NonNull

@@ -14,6 +14,7 @@ import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.format.Formatter;
 import android.util.SparseArray;
+import android.util.SparseIntArray;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -80,7 +81,9 @@ public final class ApkFile implements AutoCloseable {
     private static final String UN_APKM_PKG = "io.github.muntashirakon.unapkm";
 
     // There's hardly any chance of using multiple instances of ApkFile but still kept for convenience
-    private static final SparseArray<ApkFile> apkFiles = new SparseArray<>(2);
+    private static final SparseArray<ApkFile> apkFiles = new SparseArray<>(3);
+    private static final SparseIntArray instanceCount = new SparseIntArray(3);
+    private static final SparseIntArray advancedInstanceCount = new SparseIntArray(3);
 
     @NonNull
     public static ApkFile getInstance(int sparseArrayKey) {
@@ -88,7 +91,22 @@ public final class ApkFile implements AutoCloseable {
         if (apkFile == null) {
             throw new IllegalArgumentException("ApkFile not found for key " + sparseArrayKey);
         }
+        synchronized (instanceCount) {
+            if (advancedInstanceCount.get(sparseArrayKey) > 0) {
+                advancedInstanceCount.put(sparseArrayKey, advancedInstanceCount.get(sparseArrayKey) - 1);
+            } else instanceCount.put(sparseArrayKey, instanceCount.get(sparseArrayKey) + 1);
+        }
         return apkFile;
+    }
+
+    /**
+     * Get a new instance in advance, thereby preventing any attempt at closing the APK file
+     */
+    public static void getInAdvance(int sparseArrayKey) {
+        synchronized (instanceCount) {
+            instanceCount.put(sparseArrayKey, instanceCount.get(sparseArrayKey) + 1);
+            advancedInstanceCount.put(sparseArrayKey, advancedInstanceCount.get(sparseArrayKey) + 1);
+        }
     }
 
     @WorkerThread
@@ -439,6 +457,15 @@ public final class ApkFile implements AutoCloseable {
 
     @Override
     public void close() {
+        synchronized (instanceCount) {
+            if (instanceCount.get(sparseArrayKey) > 1) {
+                // This isn't the only instance, do not close yet
+                instanceCount.put(sparseArrayKey, instanceCount.get(sparseArrayKey) - 1);
+                return;
+            }
+            // Only this instance remained
+            instanceCount.delete(sparseArrayKey);
+        }
         apkFiles.delete(sparseArrayKey);
         for (Entry entry : entries) {
             entry.close();
