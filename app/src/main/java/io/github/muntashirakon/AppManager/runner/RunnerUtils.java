@@ -163,8 +163,8 @@ public final class RunnerUtils {
         } else {  // Root is available
             AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, true);
             try {
-                LocalServer.restart();
-            } catch (RemoteException | IOException e) {
+                LocalServer.launchAmService();
+            } catch (RemoteException e) {
                 Log.e("ROOT", e);
                 AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
             }

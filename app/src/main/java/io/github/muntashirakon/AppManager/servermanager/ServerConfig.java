@@ -116,12 +116,20 @@ public final class ServerConfig {
     @WorkerThread
     @NonNull
     public static String getAdbHost() {
-        return Inet4Address.getLoopbackAddress().getHostAddress();
+        return getHostIpAddress();
     }
 
     @WorkerThread
     @NonNull
     public static String getLocalServerHost() {
-        return Inet4Address.getLoopbackAddress().getHostAddress();
+        return getHostIpAddress();
+    }
+
+    @WorkerThread
+    @NonNull
+    private static String getHostIpAddress() {
+        String ipAddress = Inet4Address.getLoopbackAddress().getHostAddress();
+        if (ipAddress.equals("::1")) return "127.0.0.1";
+        return ipAddress;
     }
 }
