@@ -34,7 +34,6 @@ import androidx.transition.TransitionSet;
 
 import com.google.android.material.animation.AnimationUtils;
 import com.google.android.material.badge.BadgeDrawable;
-import com.google.android.material.internal.FlowLayout;
 import com.google.android.material.internal.TextScale;
 import com.google.android.material.shape.MaterialShapeDrawable;
 import com.google.android.material.shape.ShapeAppearanceModel;
@@ -43,9 +42,10 @@ import java.util.HashSet;
 
 import io.github.muntashirakon.ui.R;
 import io.github.muntashirakon.util.MotionUtils;
+import io.github.muntashirakon.widget.FlowLayout;
 
 /**
- * Provides a view that will be use to render a menu view inside a {@link ReflowMenuViewWrapper}.
+ * Provides a view that will be used to render a menu view inside a {@link ReflowMenuViewWrapper}.
  */
 // Copyright 2020 The Android Open Source Project
 @SuppressLint("RestrictedApi")

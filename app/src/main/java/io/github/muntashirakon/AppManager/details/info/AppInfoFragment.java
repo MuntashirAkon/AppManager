@@ -50,7 +50,6 @@ import androidx.annotation.StringRes;
 import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.collection.ArrayMap;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -63,7 +62,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.internal.util.TextUtils;
 import com.google.android.material.chip.Chip;
-import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.textfield.TextInputEditText;
@@ -157,8 +155,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private PackageInfo mInstalledPackageInfo;
     private AppDetailsActivity mActivity;
     private ApplicationInfo mApplicationInfo;
-    private LinearLayoutCompat mHorizontalLayout;
-    private ChipGroup mTagCloud;
+    private ViewGroup mHorizontalLayout;
+    private ViewGroup mTagCloud;
     private SwipeRefreshLayout mSwipeRefresh;
     private CharSequence mPackageLabel;
     private LinearProgressIndicator mProgressIndicator;
@@ -1323,7 +1321,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @NonNull
     private Chip addChip(@StringRes int resId, @ColorRes int color) {
-        Chip chip = new Chip(mActivity);
+        Chip chip = new Chip(mTagCloud.getContext());
         chip.setText(resId);
         chip.setChipBackgroundColorResource(color);
         mTagCloud.addView(chip);
@@ -1331,8 +1329,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     @NonNull
-    private Chip addChip(CharSequence text, @SuppressWarnings("SameParameterValue") @ColorRes int color) {
-        Chip chip = new Chip(mActivity);
+    private Chip addChip(CharSequence text, @ColorRes int color) {
+        Chip chip = new Chip(mTagCloud.getContext());
         chip.setText(text);
         chip.setChipBackgroundColorResource(color);
         mTagCloud.addView(chip);
@@ -1341,7 +1339,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @NonNull
     private Chip addChip(@StringRes int resId) {
-        Chip chip = new Chip(mActivity);
+        Chip chip = new Chip(mTagCloud.getContext());
         chip.setText(resId);
         mTagCloud.addView(chip);
         return chip;
@@ -1349,7 +1347,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @NonNull
     private Chip addChip(CharSequence text) {
-        Chip chip = new Chip(mActivity);
+        Chip chip = new Chip(mTagCloud.getContext());
         chip.setText(text);
         mTagCloud.addView(chip);
         return chip;

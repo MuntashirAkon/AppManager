@@ -84,13 +84,17 @@
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
-            <com.google.android.material.chip.ChipGroup
+            <io.github.muntashirakon.widget.FlowLayout
                 android:id="@+id/tag_cloud"
+                android:theme="@style/Widget.MaterialComponents.ChipGroup.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginStart="@dimen/padding_medium"
-                android:layout_marginEnd="@dimen/padding_medium"
+                android:layout_marginHorizontal="@dimen/padding_medium"
+                android:layout_marginVertical="@dimen/padding_very_small"
+                android:gravity="center"
+                app:childSpacing="@dimen/padding_very_small"
+                app:rowSpacing="@dimen/padding_very_small"
                 android:nextFocusUp="@id/version"
                 android:nextFocusDown="@id/horizontal_layout" />
 
@@ -106,11 +110,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <androidx.appcompat.widget.LinearLayoutCompat
+                    <io.github.muntashirakon.widget.FlowLayout
                         android:id="@+id/horizontal_layout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
                         android:nextFocusUp="@id/tag_cloud"
                         android:nextFocusDown="@android:id/list"
                         android:paddingStart="8dp"

@@ -126,6 +126,10 @@
         <item name="cornerSize">16dp</item>
     </style>
 
+    <style name="AppTheme.ShapeAppearance.SmallComponent" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerSize">12dp</item>
+    </style>
+
     <style name="AppTheme.FloatingActionButton" parent="@style/Widget.MaterialComponents.FloatingActionButton">
         <item name="materialThemeOverlay">@style/AppTheme.FabOverlay</item>
         <item name="tint">@color/colorPrimary</item>
@@ -177,5 +181,20 @@
         <item name="closeIcon">@drawable/ic_baseline_clear_24</item>
         <item name="searchIcon">@drawable/ic_search</item>
         <item name="queryHint">@android:string/search_go</item>
+    </style>
+
+    <style name="Widget.MaterialComponents.ChipGroup.Small" parent="Widget.MaterialComponents.ChipGroup">
+        <item name="chipStyle">@style/Widget.MaterialComponents.Chip.Action.Small</item>
+    </style>
+
+    <style name="Widget.MaterialComponents.Chip.Action.Small" parent="Widget.MaterialComponents.Chip.Action">
+        <item name="chipMinHeight">24dp</item>
+        <item name="chipMinTouchTargetSize">24dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Chip.Small</item>
+        <item name="shapeAppearanceOverlay">@style/AppTheme.ShapeAppearance.SmallComponent</item>
+    </style>
+
+    <style name="TextAppearance.MaterialComponents.Chip.Small" parent="TextAppearance.MaterialComponents.Chip">
+        <item name="android:textSize">@dimen/font_size_medium</item>
     </style>
 </resources>

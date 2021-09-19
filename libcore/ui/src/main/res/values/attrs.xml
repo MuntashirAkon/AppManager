@@ -1,5 +1,39 @@
 <!-- SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later -->
 <resources>
+    <declare-styleable name="FlowLayout">
+        <!-- Constrains items to a single horizontal line. By default, this is false and items will reflow to multiple
+             lines. If this is set to true, the view should be wrapped inside a HorizontalScrollView. -->
+        <attr name="singleLine" />
+        <!-- Horizontal spacing between two items being laid out. Either "auto", or a fixed size. Default is 0dp. -->
+        <attr name="childSpacing" format="enum|dimension">
+            <enum name="auto" value="-65536" />
+        </attr>
+        <!-- Minimum horizontal spacing between two items. Default is 0dp. -->
+        <attr name="minChildSpacing" format="dimension" />
+        <!-- Horizontal spacing between two items of the last row. Either "auto", "align" or a fixed size.
+             If not set, childSpacing will be used instead. -->
+        <attr name="childSpacingForLastRow" format="enum|dimension">
+            <enum name="auto" value="-65536" />
+            <enum name="align" value="-65537" />
+        </attr>
+        <!-- Vertical Spacing between two lines of items being laid out. Either "auto", or a fixed size.
+             Default is 0dp. -->
+        <attr name="rowSpacing" format="enum|dimension">
+            <enum name="auto" value="-65536" />
+        </attr>
+        <!-- Display items from right to left. Default is false. -->
+        <attr name="rtl" format="boolean" />
+        <!-- The maximum height of FlowLayout in terms of number of rows. -->
+        <attr name="maxRows" format="integer" />
+        <!-- Vertical gravity of each line -->
+        <attr name="rowVerticalGravity" format="enum">
+            <enum name="auto" value="-65536" />
+            <enum name="top" value="0x30" />
+            <enum name="center" value="0x10" />
+            <enum name="bottom" value="0x50" />
+        </attr>
+        <attr name="android:gravity" />
+    </declare-styleable>
     <declare-styleable name="MaxHeightScrollView">
         <attr name="maxHeight" format="dimension" />
     </declare-styleable>
