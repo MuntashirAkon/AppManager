@@ -203,7 +203,7 @@ class LocalServerManager {
             return;
         }
         if (connection == null) {
-            // ADB server not running running
+            // ADB server not running
             Log.d(TAG, "useAdbStartServer: Connecting using host=" + mConfig.adbHost + ", port=" + mConfig.adbPort);
             connection = AdbConnectionManager.connect(mConfig.adbHost, mConfig.adbPort);
         }
