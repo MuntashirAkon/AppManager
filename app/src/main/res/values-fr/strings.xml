@@ -819,4 +819,7 @@
     <string name="type_float_array_list">Liste de nombres décimaux</string>
     <string name="type_float_array">Tableau de nombres décimaux</string>
     <string name="type_long_array_list">Liste d\'entiers longs</string>
+    <string name="keystore">KeyStore</string>
+    <string name="input_key_password">Mot de passe Clé</string>
+    <string name="invalid_aes_key_size">Format de clé invalide pour un chiffrement AES. La taille de la clé doit être de 128 ou 256 bits.</string>
 </resources>
