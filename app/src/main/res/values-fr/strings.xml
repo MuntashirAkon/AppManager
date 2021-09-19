@@ -822,4 +822,5 @@
     <string name="keystore">KeyStore</string>
     <string name="input_key_password">Mot de passe Clé</string>
     <string name="invalid_aes_key_size">Format de clé invalide pour un chiffrement AES. La taille de la clé doit être de 128 ou 256 bits.</string>
+    <string name="orientation_full_user">Utilisateur complet</string>
 </resources>
