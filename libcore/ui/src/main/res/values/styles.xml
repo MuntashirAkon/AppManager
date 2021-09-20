@@ -1,5 +1,6 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorOnPrimary">?android:attr/colorAccent</item>
@@ -141,13 +142,13 @@
         <item name="android:windowExitAnimation">@anim/fullscreen_dialog_exit</item>
     </style>
 
-    <style name="AppTheme.TextInputLayout" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+    <style name="AppTheme.TextInputLayout" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
         <item name="boxStrokeColor">@drawable/outlined_stroke_color</item>
         <item name="hintTextColor">@color/colorAccent</item>
         <item name="endIconTint">@color/colorAccent</item>
     </style>
 
-    <style name="AppTheme.TextInputLayout.ExposedDropdownMenu" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+    <style name="AppTheme.TextInputLayout.ExposedDropdownMenu" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu">
         <item name="boxStrokeColor">@drawable/outlined_stroke_color</item>
         <item name="hintTextColor">@color/colorAccent</item>
         <item name="endIconTint">@color/colorAccent</item>
@@ -155,7 +156,7 @@
 
     <style name="AppTheme.TextAppearance" />
 
-    <style name="AppTheme.TextAppearance.Input" parent="@style/TextAppearance.MaterialComponents.Subtitle1" />
+    <style name="AppTheme.TextAppearance.Input" parent="TextAppearance.MaterialComponents.Subtitle1" />
 
     <style name="AppTheme.TextAppearance.Button" parent="@style/TextAppearance.MaterialComponents.Button" />
 
@@ -163,6 +164,10 @@
 
     <style name="AppTheme.TextAppearance.Body.Small" parent="AppTheme.TextAppearance.Body">
         <item name="android:textSize">@dimen/font_size_medium</item>
+    </style>
+
+    <style name="AppTheme.TextAppearance.Body.Smaller" parent="AppTheme.TextAppearance.Body">
+        <item name="android:textSize">@dimen/font_size_small</item>
     </style>
 
     <style name="AppTheme.FabOverlay">
@@ -183,8 +188,17 @@
         <item name="queryHint">@android:string/search_go</item>
     </style>
 
+    <!-- chipStyle is set via ChipGroup because the Chip's are generated dynamically -->
     <style name="Widget.MaterialComponents.ChipGroup.Small" parent="Widget.MaterialComponents.ChipGroup">
         <item name="chipStyle">@style/Widget.MaterialComponents.Chip.Action.Small</item>
+    </style>
+
+    <style name="Widget.MaterialComponents.ChipGroup.Small.Choice" parent="Widget.MaterialComponents.ChipGroup">
+        <item name="chipStyle">@style/Widget.MaterialComponents.Chip.Choice.Small</item>
+    </style>
+
+    <style name="Widget.MaterialComponents.ChipGroup.Small.Entry" parent="Widget.MaterialComponents.ChipGroup">
+        <item name="chipStyle">@style/Widget.MaterialComponents.Chip.Entry.Small</item>
     </style>
 
     <style name="Widget.MaterialComponents.Chip.Action.Small" parent="Widget.MaterialComponents.Chip.Action">
@@ -194,7 +208,56 @@
         <item name="shapeAppearanceOverlay">@style/AppTheme.ShapeAppearance.SmallComponent</item>
     </style>
 
+    <style name="Widget.MaterialComponents.Chip.Choice.Small" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="chipMinHeight">24dp</item>
+        <item name="chipMinTouchTargetSize">24dp</item>
+        <item name="chipIconSize">18dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Chip.Small</item>
+        <item name="shapeAppearanceOverlay">@style/AppTheme.ShapeAppearance.SmallComponent</item>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.AppTheme.Chip.Choice</item>
+    </style>
+
+    <style name="Widget.MaterialComponents.Chip.Entry.Small" parent="Widget.MaterialComponents.Chip.Entry">
+        <item name="chipMinHeight">24dp</item>
+        <item name="chipMinTouchTargetSize">24dp</item>
+        <item name="chipIconSize">18dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Chip.Small</item>
+        <item name="shapeAppearanceOverlay">@style/AppTheme.ShapeAppearance.SmallComponent</item>
+    </style>
+
+    <style name="ThemeOverlay.AppTheme.Chip.Choice" parent="">
+        <item name="elevationOverlayEnabled">false</item>
+        <item name="colorPrimary">@color/textColorPrimary</item>
+    </style>
+
     <style name="TextAppearance.MaterialComponents.Chip.Small" parent="TextAppearance.MaterialComponents.Chip">
         <item name="android:textSize">@dimen/font_size_medium</item>
+    </style>
+
+    <style name="Widget.MaterialComponents.CompoundButton.CheckBox.Small" parent="Widget.MaterialComponents.CompoundButton.CheckBox">
+        <item name="android:minWidth">12dp</item>
+        <item name="android:minHeight">12dp</item>
+        <item name="android:textSize">@dimen/font_size_medium</item>
+        <item name="android:background">@null</item>
+    </style>
+
+    <style name="AppTheme.TextInputLayout.ExposedDropdownMenu.Small" parent="AppTheme.TextInputLayout.ExposedDropdownMenu">
+        <item name="hintTextAppearance">@style/AppTheme.TextAppearance.Body.Smaller</item>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.AppTheme.TextInputLayout</item>
+    </style>
+
+    <style name="ThemeOverlay.AppTheme.TextInputLayout" parent="">
+        <item name="autoCompleteTextViewStyle">
+            @style/Widget.MaterialComponents.TextInputEditText.OutlinedBox.Dense.Small
+        </item>
+        <item name="editTextStyle">@style/Widget.MaterialComponents.TextInputEditText.OutlinedBox.Dense.Small</item>
+    </style>
+
+    <style name="Widget.MaterialComponents.TextInputEditText.OutlinedBox.Dense.Small" parent="Widget.MaterialComponents.TextInputEditText.OutlinedBox.Dense">
+        <item name="android:textAppearance">@style/AppTheme.TextAppearance.Body.Small</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
     </style>
 </resources>

@@ -6,22 +6,20 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.ArrayMap;
+import android.util.SparseIntArray;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridLayout;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.annotation.StringRes;
 import androidx.fragment.app.DialogFragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.checkbox.MaterialCheckBox;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.radiobutton.MaterialRadioButton;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 
 import java.lang.annotation.Retention;
@@ -32,8 +30,6 @@ import java.util.List;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.profiles.ProfileManager;
 import io.github.muntashirakon.AppManager.types.AnyFilterArrayAdapter;
-import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.widget.RadioGroupGridLayout;
 
 public class ListOptions extends DialogFragment {
     public static final String TAG = "ListOptions";
@@ -104,9 +100,24 @@ public class ListOptions extends DialogFragment {
             R.string.sort_by_package_name, R.string.sort_by_last_update, R.string.sort_by_shared_user_id,
             R.string.sort_by_target_sdk, R.string.sort_by_sha, R.string.sort_by_disabled_app,
             R.string.sort_by_blocked_components, R.string.sort_by_backup, R.string.trackers, R.string.last_actions};
+    private static final SparseIntArray FILTER_MAP = new SparseIntArray() {{
+        put(FILTER_USER_APPS, R.string.filter_user_apps);
+        put(FILTER_SYSTEM_APPS, R.string.filter_system_apps);
+        put(FILTER_DISABLED_APPS, R.string.filter_disabled_apps);
+        put(FILTER_APPS_WITH_RULES, R.string.filter_apps_with_rules);
+        put(FILTER_APPS_WITH_ACTIVITIES, R.string.filter_apps_with_activities);
+        put(FILTER_APPS_WITH_BACKUPS, R.string.filter_apps_with_backups);
+        put(FILTER_APPS_WITHOUT_BACKUPS, R.string.filter_apps_without_backups);
+        put(FILTER_RUNNING_APPS, R.string.filter_running_apps);
+        put(FILTER_APPS_WITH_SPLITS, R.string.filter_apps_with_splits);
+        put(FILTER_INSTALLED_APPS, R.string.installed_apps);
+        put(FILTER_UNINSTALLED_APPS, R.string.uninstalled_apps);
+    }};
 
     private MainViewModel model;
     private final List<String> profileNames = new ArrayList<>();
+    private ChipGroup sortGroup;
+    private ViewGroup filterView;
 
     @NonNull
     @Override
@@ -114,9 +125,8 @@ public class ListOptions extends DialogFragment {
         MainActivity activity = (MainActivity) requireActivity();
         model = activity.mModel;
         View view = activity.getLayoutInflater().inflate(R.layout.dialog_list_options, null);
-        RadioGroupGridLayout sortGroup = view.findViewById(R.id.sort_options);
+        sortGroup = view.findViewById(R.id.sort_options);
         MaterialCheckBox reverseSort = view.findViewById(R.id.reverse_sort);
-        RecyclerView filterView = view.findViewById(R.id.filter_options);
         MaterialAutoCompleteTextView profileNameInput = view.findViewById(android.R.id.input);
         profileNameInput.addTextChangedListener(new TextWatcher() {
             @Override
@@ -151,15 +161,9 @@ public class ListOptions extends DialogFragment {
                 });
             });
         }
-        // Add radio buttons
+        // Add sorting indices
         for (int i = 0; i < SORT_ITEMS_MAP.length; ++i) {
-            MaterialRadioButton button = new MaterialRadioButton(activity);
-            button.setId(i);
-            button.setText(SORT_ITEMS_MAP[i]);
-            GridLayout.LayoutParams sortGroupLayoutParam = new GridLayout.LayoutParams();
-            sortGroupLayoutParam.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, GridLayout.FILL, 1f);
-            sortGroupLayoutParam.width = 0;
-            sortGroup.addView(button, i, sortGroupLayoutParam);
+            sortGroup.addView(getRadioChip(i, SORT_ITEMS_MAP[i]), i);
         }
         sortGroup.check(model.getSortBy());
         sortGroup.setOnCheckedChangeListener((group, checkedId) -> model.setSortBy(checkedId));
@@ -167,11 +171,10 @@ public class ListOptions extends DialogFragment {
         reverseSort.setChecked(model.isSortReverse());
         reverseSort.setOnCheckedChangeListener((buttonView, isChecked) -> model.setSortReverse(isChecked));
         // Add filters
-        filterView.setHasFixedSize(true);
-        filterView.setLayoutManager(new LinearLayoutManager(activity));
-        FilterRecyclerViewAdapter adapter = new FilterRecyclerViewAdapter(activity);
-        filterView.setAdapter(adapter);
-        adapter.setDefaultList();
+        filterView = view.findViewById(R.id.filter_options);
+        for (int i = 0; i < FILTER_MAP.size(); ++i) {
+            filterView.addView(getFilterChip(FILTER_MAP.keyAt(i), FILTER_MAP.valueAt(i)));
+        }
         return new MaterialAlertDialogBuilder(activity)
                 .setTitle(R.string.list_options)
                 .setIcon(R.drawable.ic_baseline_settings_24)
@@ -180,62 +183,23 @@ public class ListOptions extends DialogFragment {
                 .create();
     }
 
-    private static class FilterRecyclerViewAdapter extends RecyclerView.Adapter<FilterRecyclerViewAdapter.ViewHolder> {
-        private final ArrayMap<Integer, Integer> flags = new ArrayMap<>();
-        private final MainActivity activity;
+    public Chip getFilterChip(@Filter int flag, @StringRes int strRes) {
+        Chip chip = new Chip(filterView.getContext());
+        chip.setCloseIconVisible(false);
+        chip.setText(strRes);
+        chip.setChecked(model.hasFilterFlag(flag));
+        chip.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) model.addFilterFlag(flag);
+            else model.removeFilterFlag(flag);
+        });
+        return chip;
+    }
 
-        public FilterRecyclerViewAdapter(MainActivity activity) {
-            this.activity = activity;
-        }
-
-        public void setDefaultList() {
-            this.flags.clear();
-            flags.put(FILTER_USER_APPS, R.string.filter_user_apps);
-            flags.put(FILTER_SYSTEM_APPS, R.string.filter_system_apps);
-            flags.put(FILTER_DISABLED_APPS, R.string.filter_disabled_apps);
-            flags.put(FILTER_APPS_WITH_RULES, R.string.filter_apps_with_rules);
-            flags.put(FILTER_APPS_WITH_ACTIVITIES, R.string.filter_apps_with_activities);
-            flags.put(FILTER_APPS_WITH_BACKUPS, R.string.filter_apps_with_backups);
-            flags.put(FILTER_APPS_WITHOUT_BACKUPS, R.string.filter_apps_without_backups);
-            flags.put(FILTER_RUNNING_APPS, R.string.filter_running_apps);
-            flags.put(FILTER_APPS_WITH_SPLITS, R.string.filter_apps_with_splits);
-            flags.put(FILTER_INSTALLED_APPS, R.string.installed_apps);
-            flags.put(FILTER_UNINSTALLED_APPS, R.string.uninstalled_apps);
-            notifyDataSetChanged();
-        }
-
-        @NonNull
-        @Override
-        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            MaterialCheckBox checkBox = new MaterialCheckBox(activity);
-            checkBox.setLayoutParams(new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT));
-            return new ViewHolder(checkBox);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            int flag = flags.keyAt(position);
-            int stringRes = flags.valueAt(position);
-            MaterialCheckBox checkBox = (MaterialCheckBox) holder.itemView;
-            checkBox.setText(stringRes);
-            checkBox.setChecked(activity.mModel.hasFilterFlag(flag));
-            checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                if (isChecked) activity.mModel.addFilterFlag(flag);
-                else activity.mModel.removeFilterFlag(flag);
-            });
-        }
-
-        @Override
-        public int getItemCount() {
-            return flags.size();
-        }
-
-        static class ViewHolder extends RecyclerView.ViewHolder {
-
-            public ViewHolder(@NonNull MaterialCheckBox itemView) {
-                super(itemView);
-            }
-        }
+    public Chip getRadioChip(@SortOrder int sortOrder, @StringRes int strRes) {
+        Chip chip = new Chip(sortGroup.getContext());
+        chip.setCloseIconVisible(false);
+        chip.setId(sortOrder);
+        chip.setText(strRes);
+        return chip;
     }
 }
