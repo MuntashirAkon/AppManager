@@ -16,8 +16,9 @@
 
         <io.github.muntashirakon.widget.CheckBox
             android:id="@+id/action_select_all"
+            style="@style/Widget.MaterialComponents.CompoundButton.CheckBox.Small"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="0"
             android:layout_gravity="start|center_vertical"
             android:focusable="true"
@@ -25,13 +26,12 @@
             android:nextFocusRight="@id/action_cancel"
             android:nextFocusDown="@id/selection_actions"
             android:text="@android:string/selectAll"
-            android:textColor="@color/textColorPrimary"
-            android:textAppearance="@style/AppTheme.TextAppearance.Body.Small" />
+            android:textColor="@color/textColorPrimary" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/selection_counter"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:layout_gravity="center"
             android:focusable="false"

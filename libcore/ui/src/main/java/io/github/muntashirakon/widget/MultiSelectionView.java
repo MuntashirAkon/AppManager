@@ -57,17 +57,20 @@ public class MultiSelectionView extends MaterialCardView {
         this(context, attrs, R.attr.materialCardViewStyle);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     public MultiSelectionView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        // Ensure we are using the correctly themed context rather than the context that was passed in.
+        context = getContext();
+
         // Inflate layout
         LayoutInflater.from(context).inflate(R.layout.view_selection_panel, this, true);
         selectionActionsView = findViewById(R.id.selection_actions);
         cancelSelectionView = findViewById(R.id.action_cancel);
         selectAllView = findViewById(R.id.action_select_all);
         selectionCounter = findViewById(R.id.selection_counter);
-
-        // Ensure we are using the correctly themed context rather than the context that was passed in.
-        context = getContext();
+        // Dummy listener to prevent “click-through”
+        selectionCounter.setOnTouchListener((v, event) -> true);
 
         // Custom attributes
         TintTypedArray attributes = ThemeEnforcement.obtainTintedStyledAttributes(context, attrs,
@@ -76,8 +79,6 @@ public class MultiSelectionView extends MaterialCardView {
         // Set styles
         @Px
         int smallSize = getResources().getDimensionPixelSize(R.dimen.padding_small);
-        setContentPadding(smallSize, 0, smallSize, smallSize);
-        setUseCompatPadding(true);
         setCardElevation(UiUtils.dpToPx(context, 2));
         setPreventCornerOverlap(false);
         setRadius(smallSize);
@@ -96,11 +97,13 @@ public class MultiSelectionView extends MaterialCardView {
         super.onAttachedToWindow();
         @Px
         int smallSize = getResources().getDimensionPixelSize(R.dimen.padding_small);
+        int smallerSize = getResources().getDimensionPixelSize(R.dimen.padding_very_small);
         // Set layout params
         ViewGroup.LayoutParams params = getLayoutParams();
         if (params instanceof MarginLayoutParams) {
             ((MarginLayoutParams) params).leftMargin = smallSize;
             ((MarginLayoutParams) params).rightMargin = smallSize;
+            ((MarginLayoutParams) params).bottomMargin = smallerSize;
         }
         try {
             Field gravity = params.getClass().getField("gravity");

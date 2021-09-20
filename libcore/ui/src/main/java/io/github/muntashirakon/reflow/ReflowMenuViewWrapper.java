@@ -117,6 +117,18 @@ public abstract class ReflowMenuViewWrapper extends LinearLayoutCompat {
     private OnItemSelectedListener selectedListener;
     private OnItemReselectedListener reselectedListener;
 
+    public ReflowMenuViewWrapper(Context context) {
+        this(context, null);
+    }
+
+    public ReflowMenuViewWrapper(Context context, AttributeSet attrs) {
+        this(context, attrs, R.attr.bottomNavigationStyle);
+    }
+
+    public ReflowMenuViewWrapper(Context context, AttributeSet attrs, @AttrRes int defStyleAttr) {
+        this(context, attrs, defStyleAttr, com.google.android.material.R.style.Widget_Design_BottomNavigationView);
+    }
+
     public ReflowMenuViewWrapper(
             @NonNull Context context,
             @Nullable AttributeSet attrs,

@@ -12,12 +12,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
-import com.google.android.material.R;
 import com.google.android.material.behavior.HideBottomViewOnScrollBehavior;
 
 import io.github.muntashirakon.reflow.ReflowMenuItemView;
 import io.github.muntashirakon.reflow.ReflowMenuView;
 import io.github.muntashirakon.reflow.ReflowMenuViewWrapper;
+import io.github.muntashirakon.ui.R;
 
 /**
  * Represents a standard bottom navigation bar for application. It is an implementation of <a
@@ -75,7 +75,7 @@ public final class SelectionActionsView extends ReflowMenuViewWrapper {
     }
 
     public SelectionActionsView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        this(context, attrs, defStyleAttr, R.style.Widget_Design_BottomNavigationView);
+        this(context, attrs, defStyleAttr, com.google.android.material.R.style.Widget_Design_BottomNavigationView);
     }
 
     public SelectionActionsView(

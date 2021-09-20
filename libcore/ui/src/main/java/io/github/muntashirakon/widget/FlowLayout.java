@@ -504,9 +504,4 @@ public class FlowLayout extends ViewGroup {
         }
         return spacing;
     }
-
-    private float dpToPx(float dp) {
-        return TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, dp, getResources().getDisplayMetrics());
-    }
 }

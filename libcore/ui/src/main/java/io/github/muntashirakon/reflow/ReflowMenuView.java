@@ -131,11 +131,12 @@ public abstract class ReflowMenuView extends FlowLayout implements MenuView {
                         getContext(),
                         R.attr.motionDurationLong1,
                         getResources().getInteger(R.integer.material_motion_duration_long_1)));
-        set.setInterpolator(
-                MotionUtils.resolveThemeInterpolator(
-                        getContext(),
-                        R.attr.motionEasingStandard,
-                        AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR));
+        if (!isInEditMode()) {
+            set.setInterpolator(MotionUtils.resolveThemeInterpolator(
+                    getContext(),
+                    R.attr.motionEasingStandard,
+                    AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR));
+        }
         set.addTransition(new TextScale());
 
         ViewCompat.setImportantForAccessibility(this, ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_YES);
@@ -827,6 +828,7 @@ public abstract class ReflowMenuView extends FlowLayout implements MenuView {
         }
     }
 
+    @NonNull
     SparseArray<BadgeDrawable> getBadgeDrawables() {
         return badgeDrawables;
     }
