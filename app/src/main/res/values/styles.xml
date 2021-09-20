@@ -1,5 +1,6 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorOnPrimary">?android:attr/colorAccent</item>
@@ -16,16 +17,19 @@
         <item name="appBarLayoutStyle">@style/AppTheme.AppBarLayout</item>
         <item name="materialAlertDialogTheme">@style/AppTheme.AlertDialog</item>
         <item name="materialCalendarTheme">@style/AppTheme.DatePicker</item>
+        <item name="searchViewStyle">@style/AppTheme.SearchView</item>
         <item name="bottomNavigationStyle">@style/AppTheme.BottomNavigationView</item>
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
     </style>
+
     <style name="Theme.MaterialComponents.DayNight.NoActionBar" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimaryDark" tools:targetApi="m">@color/colorPrimaryDark</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
         <item name="android:navigationBarColor">@color/colorAccent</item>
     </style>
+
     <style name="AppTheme.TransparentBackground" parent="@style/AppTheme">
         <item name="android:background">@null</item>
         <item name="background">@null</item>
@@ -36,16 +40,20 @@
         <item name="android:windowAnimationStyle">@null</item>
         <item name="android:windowNoTitle">true</item>
     </style>
+
     <style name="AppTheme.AppBarLayout" parent="Widget.MaterialComponents.AppBarLayout.Primary">
         <item name="android:backgroundTintMode">add</item>
         <item name="android:backgroundTint">#000</item>
     </style>
+
     <style name="AppTheme.BottomAppBar" parent="Widget.MaterialComponents.BottomAppBar.Colored">
         <item name="materialThemeOverlay">@style/AppTheme.BottomAppBarOverlay</item>
     </style>
+
     <style name="AppTheme.BottomAppBarOverlay">
         <item name="colorOnSurface">?android:colorBackground</item>
     </style>
+
     <style name="AppTheme.BottomNavigationView" parent="">
         <!-- Not Widget.MaterialComponents.BottomNavigationView.Colored because they enforce alpha for background -->
         <item name="android:background">?attr/colorPrimary</item>
@@ -55,12 +63,15 @@
         <item name="itemTextAppearanceActive">?attr/textAppearanceCaption</item>
         <item name="itemTextColor">@color/item_text_color</item>
     </style>
+
     <style name="AppTheme.ActionButton.Overflow" parent="@style/Widget.AppCompat.ActionButton.Overflow">
         <item name="android:src">@drawable/ic_more_vert_black_24dp</item>
     </style>
+
     <style name="AppTheme.PopupMenu.Overflow" parent="Widget.MaterialComponents.PopupMenu.Overflow">
         <item name="android:popupBackground">@color/colorPrimaryDark</item>
     </style>
+
     <style name="AppTheme.AlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
         <item name="colorPrimary">@color/colorAccent</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -73,69 +84,180 @@
         <item name="materialAlertDialogBodyTextStyle">@style/AppTheme.AlertDialog.Body.Text</item>
         <item name="materialAlertDialogTitlePanelStyle">@style/AppTheme.AlertDialog.Title.Panel</item>
     </style>
+
     <style name="AppTheme.FullScreenDialog" parent="AppTheme">
         <item name="android:windowIsFloating">false</item>
     </style>
+
     <style name="AppTheme.AlertDialog.Rounded" parent="MaterialAlertDialog.MaterialComponents.Title.Panel">
         <item name="cornerSize">@dimen/padding_medium</item>
     </style>
+
     <style name="AppTheme.AlertDialog.Title.Panel" parent="MaterialAlertDialog.MaterialComponents.Title.Panel">
         <item name="android:paddingTop">@dimen/padding_medium</item>
         <item name="android:paddingBottom">@dimen/padding_small</item>
         <item name="android:paddingLeft">@dimen/padding_medium</item>
         <item name="android:paddingRight">@dimen/padding_medium</item>
     </style>
+
     <style name="AppTheme.AlertDialog.Title.Text" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">@dimen/title_font</item>
+        <item name="android:textSize">@dimen/font_size_larger</item>
         <item name="android:textColor">?android:textColorPrimary</item>
     </style>
+
     <style name="AppTheme.AlertDialog.Body.Text" parent="MaterialAlertDialog.MaterialComponents.Body.Text">
-        <item name="android:textSize">@dimen/subtitle_font</item>
+        <item name="android:textSize">@dimen/font_size_large</item>
         <item name="android:textColor">?android:textColorSecondary</item>
     </style>
+
     <style name="AppTheme.AlertDialog.CheckedTextView" parent="Widget.MaterialComponents.CheckedTextView">
-        <item name="android:textSize">@dimen/title_font</item>
+        <item name="android:textSize">@dimen/font_size_larger</item>
         <item name="android:textColor">?android:textColorPrimary</item>
     </style>
+
     <style name="AppTheme.DatePicker" parent="@style/ThemeOverlay.MaterialComponents.MaterialCalendar">
         <item name="colorPrimary">@color/colorAccent</item>
         <item name="colorOnPrimary">@color/colorPrimary</item>
         <item name="shapeAppearanceMediumComponent">@style/AppTheme.ShapeAppearance.MediumComponent</item>
         <item name="textInputStyle">@style/AppTheme.TextInputLayout</item>
     </style>
+
     <style name="AppTheme.ShapeAppearance.MediumComponent" parent="ShapeAppearance.MaterialComponents.MediumComponent">
         <item name="cornerSize">16dp</item>
     </style>
+
+    <style name="AppTheme.ShapeAppearance.SmallComponent" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerSize">12dp</item>
+    </style>
+
     <style name="AppTheme.FloatingActionButton" parent="@style/Widget.MaterialComponents.FloatingActionButton">
         <item name="materialThemeOverlay">@style/AppTheme.FabOverlay</item>
         <item name="tint">@color/colorPrimary</item>
         <item name="android:tint">@color/colorPrimary</item>
     </style>
+
     <style name="AppTheme.FullScreenDialog.Animation">
         <item name="android:windowEnterAnimation">@anim/fullscreen_dialog_enter</item>
         <item name="android:windowExitAnimation">@anim/fullscreen_dialog_exit</item>
     </style>
-    <style name="AppTheme.TextInputLayout" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+    <style name="AppTheme.TextInputLayout" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
         <item name="boxStrokeColor">@drawable/outlined_stroke_color</item>
         <item name="hintTextColor">@color/colorAccent</item>
         <item name="endIconTint">@color/colorAccent</item>
     </style>
-    <style name="AppTheme.TextInputLayout.ExposedDropdownMenu" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+
+    <style name="AppTheme.TextInputLayout.ExposedDropdownMenu" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu">
         <item name="boxStrokeColor">@drawable/outlined_stroke_color</item>
         <item name="hintTextColor">@color/colorAccent</item>
         <item name="endIconTint">@color/colorAccent</item>
     </style>
+
     <style name="AppTheme.TextAppearance" />
-    <style name="AppTheme.TextAppearance.Input" parent="@style/TextAppearance.MaterialComponents.Subtitle1" />
+
+    <style name="AppTheme.TextAppearance.Input" parent="TextAppearance.MaterialComponents.Subtitle1" />
+
     <style name="AppTheme.TextAppearance.Button" parent="@style/TextAppearance.MaterialComponents.Button" />
+
+    <style name="AppTheme.TextAppearance.Body" parent="@style/TextAppearance.MaterialComponents.Body2" />
+
+    <style name="AppTheme.TextAppearance.Body.Small" parent="AppTheme.TextAppearance.Body">
+        <item name="android:textSize">@dimen/font_size_medium</item>
+    </style>
+
+    <style name="AppTheme.TextAppearance.Body.Smaller" parent="AppTheme.TextAppearance.Body">
+        <item name="android:textSize">@dimen/font_size_small</item>
+    </style>
+
     <style name="AppTheme.FabOverlay">
         <item name="colorSecondary">@color/colorAccent</item>
     </style>
+
     <style name="AppTheme.Spinner">
         <item name="android:gravity">center</item>
         <item name="android:background">@drawable/spinner_rounded_border</item>
         <item name="android:paddingStart">@dimen/padding_small</item>
         <item name="android:paddingEnd">@dimen/padding_large</item>
+    </style>
+
+    <style name="AppTheme.SearchView" parent="Widget.AppCompat.SearchView">
+        <item name="queryBackground">@null</item>
+        <item name="closeIcon">@drawable/ic_baseline_clear_24</item>
+        <item name="searchIcon">@drawable/ic_search</item>
+        <item name="queryHint">@android:string/search_go</item>
+    </style>
+
+    <!-- chipStyle is set via ChipGroup because the Chip's are generated dynamically -->
+    <style name="Widget.MaterialComponents.ChipGroup.Small" parent="Widget.MaterialComponents.ChipGroup">
+        <item name="chipStyle">@style/Widget.MaterialComponents.Chip.Action.Small</item>
+    </style>
+
+    <style name="Widget.MaterialComponents.ChipGroup.Small.Choice" parent="Widget.MaterialComponents.ChipGroup">
+        <item name="chipStyle">@style/Widget.MaterialComponents.Chip.Choice.Small</item>
+    </style>
+
+    <style name="Widget.MaterialComponents.ChipGroup.Small.Entry" parent="Widget.MaterialComponents.ChipGroup">
+        <item name="chipStyle">@style/Widget.MaterialComponents.Chip.Entry.Small</item>
+    </style>
+
+    <style name="Widget.MaterialComponents.Chip.Action.Small" parent="Widget.MaterialComponents.Chip.Action">
+        <item name="chipMinHeight">24dp</item>
+        <item name="chipMinTouchTargetSize">24dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Chip.Small</item>
+        <item name="shapeAppearanceOverlay">@style/AppTheme.ShapeAppearance.SmallComponent</item>
+    </style>
+
+    <style name="Widget.MaterialComponents.Chip.Choice.Small" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="chipMinHeight">24dp</item>
+        <item name="chipMinTouchTargetSize">24dp</item>
+        <item name="chipIconSize">18dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Chip.Small</item>
+        <item name="shapeAppearanceOverlay">@style/AppTheme.ShapeAppearance.SmallComponent</item>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.AppTheme.Chip.Choice</item>
+    </style>
+
+    <style name="Widget.MaterialComponents.Chip.Entry.Small" parent="Widget.MaterialComponents.Chip.Entry">
+        <item name="chipMinHeight">24dp</item>
+        <item name="chipMinTouchTargetSize">24dp</item>
+        <item name="chipIconSize">18dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Chip.Small</item>
+        <item name="shapeAppearanceOverlay">@style/AppTheme.ShapeAppearance.SmallComponent</item>
+    </style>
+
+    <style name="ThemeOverlay.AppTheme.Chip.Choice" parent="">
+        <item name="elevationOverlayEnabled">false</item>
+        <item name="colorPrimary">@color/textColorPrimary</item>
+    </style>
+
+    <style name="TextAppearance.MaterialComponents.Chip.Small" parent="TextAppearance.MaterialComponents.Chip">
+        <item name="android:textSize">@dimen/font_size_medium</item>
+    </style>
+
+    <style name="Widget.MaterialComponents.CompoundButton.CheckBox.Small" parent="Widget.MaterialComponents.CompoundButton.CheckBox">
+        <item name="android:minWidth">12dp</item>
+        <item name="android:minHeight">12dp</item>
+        <item name="android:textSize">@dimen/font_size_medium</item>
+        <item name="android:background">@null</item>
+    </style>
+
+    <style name="AppTheme.TextInputLayout.ExposedDropdownMenu.Small" parent="AppTheme.TextInputLayout.ExposedDropdownMenu">
+        <item name="hintTextAppearance">@style/AppTheme.TextAppearance.Body.Smaller</item>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.AppTheme.TextInputLayout</item>
+    </style>
+
+    <style name="ThemeOverlay.AppTheme.TextInputLayout" parent="">
+        <item name="autoCompleteTextViewStyle">
+            @style/Widget.MaterialComponents.TextInputEditText.OutlinedBox.Dense.Small
+        </item>
+        <item name="editTextStyle">@style/Widget.MaterialComponents.TextInputEditText.OutlinedBox.Dense.Small</item>
+    </style>
+
+    <style name="Widget.MaterialComponents.TextInputEditText.OutlinedBox.Dense.Small" parent="Widget.MaterialComponents.TextInputEditText.OutlinedBox.Dense">
+        <item name="android:textAppearance">@style/AppTheme.TextAppearance.Body.Small</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
     </style>
 </resources>
