@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
     <string name="_lang_tag" translatable="false">fr</string>
     <string name="uninstall">Désinstaller</string>
     <string name="cache_size">Cache</string>
@@ -830,4 +830,114 @@
     <string name="adb_wifi_paring_code">Code d\'association Wi-Fi</string>
     <string name="invalid_password">Mot de passe invalide, réessayez.</string>
     <string name="pref_log_viewer_msg">Configurer l\'affichage des journaux.</string>
+    <string name="files">Fichiers</string>
+    <string name="storage">Stockage</string>
+    <string name="notice">Notification</string>
+    <string name="enable_disable">Activer/désactiver</string>
+    <string name="error_with_details">Erreur : %s</string>
+    <string name="saved_filters">Filtres enregistrés</string>
+    <string name="pref_selected_users">Utilisateurs sélectionnés</string>
+    <string name="minimum_version">Version minimale : %d</string>
+    <string name="help_permissions_tab">Ces permissions sont définies par l\'application et ne peuvent être révoquées.</string>
+    <string name="fallback_to_no_root_mode">Retourner en mode non-admin \?</string>
+    <string name="unknown_net_policy">Politique réseau inconnue (%1$s - %2$X)</string>
+    <string name="port_number_invalid">Le numéro de port est incorrect.</string>
+    <string name="port_number_empty">Le numéro de port est vide.</string>
+    <string name="adb_connect_port_number_description">Le numéro de port est situé dans la section <b>adresse IP &amp; port</b>, juste en dessous de la section <b>Nom de l\'appareil</b>.</string>
+    <string name="port_number">Port</string>
+    <string name="adb_connect">Connecter</string>
+    <string name="netpolicy_disable_network_access">Désactiver les accès réseau</string>
+    <string name="netpolicy_reject_wifi_data">Rejeter les données Wi-Fi</string>
+    <string name="netpolicy_reject_vpn_data">Rejeter les données VPN</string>
+    <string name="netpolicy_reject_cellular_data">Rejeter les données cellulaires</string>
+    <string name="netpolicy_allow_background_data">Autoriser les données d\'arrière-plan quand l\'Enregistreur de Données est activé</string>
+    <string name="netpolicy_reject_background_data">Rejeter les données d\'arrière-plan</string>
+    <string name="hidden">Caché</string>
+    <plurals name="alert_failed_to_import_backups">
+        <item quantity="one">Impossible d\'importer la sauvegarde %1$d</item>
+        <item quantity="other">Impossible d\'importer les sauvegardes %1$d</item>
+    </plurals>
+    <string name="orientation_right_to_left">De droite à gauche</string>
+    <string name="orientation_left_to_right">De gauche à droite</string>
+    <string name="failed">Échoué</string>
+    <string name="confirm_import_keystore">Voulez-vous vraiment remplacer le magasin de clés existant \? Cette action ne pourra pas être annulée.</string>
+    <string name="import_keystore">Importer le magasin de clés</string>
+    <string name="pref_import_export_keystore_msg">Importer/Exporter le Bouncy Castle KeyStore (BKS) utilisé en interne par App Manager.</string>
+    <string name="pref_import_export_keystore">Importer/Exporter le magasin de clés</string>
+    <string name="latest_backup">Dernière sauvegarde</string>
+    <string name="gz_bz2_compressed">%1$s compressé</string>
+    <string name="pgp_aes_rsa_encrypted">%1$s chiffré</string>
+    <string name="no_encryption">Pas de chiffrement</string>
+    <string name="base_backup">Sauvegarde de base</string>
+    <string name="trackers_unblocked_successfully">Les pisteurs sont maintenant débloqués</string>
+    <string name="trackers_blocked_successfully">Les pisteurs sont maintenant bloqués</string>
+    <string name="failed_to_unblock_trackers">Impossible de débloquer les pisteurs</string>
+    <string name="failed_to_block_trackers">Impossible de bloquer les pisteurs</string>
+    <string name="profile_save_apk_msg">Enregistrer les fichiers APK dans <tt>AppManager/apks</tt></string>
+    <string name="save_apk">Enregistrer l\'APK</string>
+    <string name="running_services">Services en cours d\'exécution</string>
+    <string name="view_logs">Voir les journaux</string>
+    <string name="share_log">Partager</string>
+    <string name="omit_sensitive_info">Omettre les informations sensibles</string>
+    <string name="undo">Annuler</string>
+    <string name="pause_unpause">Lecture/Pause</string>
+    <string name="expand_all">Tout développer</string>
+    <string name="file">Fichier</string>
+    <string name="widget_start_recording">Enregistrer
+\nJournal</string>
+    <string name="widget_recording_in_progress">Enregistrement en cours…</string>
+    <string name="unable_to_save_log">Impossible d\'enregistrer le journal. Avez-vous entré un nom de fichier valide \?</string>
+    <plurals name="toast_log_truncated">
+        <item quantity="one">Journal trop grand, affichage des %d dernières lignes.</item>
+        <item quantity="other">Journal trop grand, affichage des %d dernières lignes.</item>
+    </plurals>
+    <string name="toast_invalid_selection">Sélection invalide. Veuillez réessayer s.v.p.</string>
+    <string name="toast_invalid_level">Nom de niveau invalide : %s</string>
+    <string name="pref_display_limit_hint" tools:ignore="PluralsCandidate">Veuillez entrer un nombre valide compris entre %1$d et %2$d.</string>
+    <string name="subject_log_report">Rapports</string>
+    <string name="start_recording_log">Enregistrer</string>
+    <string name="settings">Paramètres</string>
+    <string name="send_log_title">Envoyer le journal</string>
+    <string name="save_log">Enregistrer le journal</string>
+    <string name="save_as">Enregistrer sous…</string>
+    <string name="pref_show_timestamp_summary">Afficher l\'identifiant du process et l\'horodatage lorsque développé.</string>
+    <string name="pref_log_write_period_summary" tools:ignore="PluralsCandidate">Lors de l\'enregistrement, écrire sur la carte SD toutes les %1$d lignes.</string>
+    <string name="pref_filter_pattern_title">Filtrer les étiquettes</string>
+    <string name="pref_filter_pattern_summary">Filtrer les étiquettes sélectionnées depuis les journaux.</string>
+    <string name="pref_display_limit_title">Limite d\'affichage des journaux</string>
+    <string name="pref_default_log_level_title">Niveau de journalisation par défaut</string>
+    <string name="pref_default_log_level_summary">Niveau de journalisation au démarrage, lors de l\'ouverture de fichiers, et pendant l\'enregistrement.</string>
+    <string name="pref_buffer_title">Tampon(s) de journalisation</string>
+    <string name="open">Ouvrir</string>
+    <string name="notification_title">Enregistrement du journal en cours</string>
+    <string name="notification_ticker">L\'enregistrement du journal a démarré</string>
+    <string name="notification_subtext">Touchez pour arrêter l\'enregistrement</string>
+    <string name="menu_title_partial_select">Sauvegarde partielle</string>
+    <string name="manage_saved_logs">Gérer les journaux sauvegardés</string>
+    <string name="log_saved">Journal sauvegardé.</string>
+    <string name="log_recording_started">L’enregistrement du journal a commencé.</string>
+    <string name="log_level">Niveau de journalisation</string>
+    <string name="log_cleared">Journaux supprimés</string>
+    <string name="filter_choice_pid">PID</string>
+    <string name="filter_choice">Rechercher par</string>
+    <string name="dialog_partial_select_explanation">1. Sélectionnez la <b>première</b> ligne.
+\n2. Puis, sélectionnez la <b>dernière</b> ligne.</string>
+    <string name="copy_to_clipboard">Copier dans le presse-papier</string>
+    <string name="checkbox_never_show_partial_select_help">Ne plus afficher</string>
+    <plurals name="file_deletion_confirmation">
+        <item quantity="one">Le fichier %d sera supprimé</item>
+        <item quantity="other">Les fichiers %d seront supprimés</item>
+    </plurals>
+    <string name="add_filter_ellipsis">Ajout de filtre…</string>
+    <string name="add_filter">Ajouter un filtre</string>
+    <string name="log_level_fatal">Fatal</string>
+    <string name="log_level_info">Information</string>
+    <string name="log_level_error">Erreur</string>
+    <string name="log_level_debug">Déboguer</string>
+    <string name="log_viewer">Visualiseur de journaux</string>
+    <string name="import_from_tb">Importer depuis Titanium Backup</string>
+    <string name="import_from_oab_tb_msg">Les sauvegardes doivent se trouver dans %s.</string>
+    <string name="import_from_oab">Importer depuis OAndBackup</string>
+    <string name="pref_import_backups_msg">Importer les sauvegardes depuis OAndBackup ou Titanium Backup.</string>
+    <string name="pref_import_backups">Importer les sauvegardes</string>
 </resources>
