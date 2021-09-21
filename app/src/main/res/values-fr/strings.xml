@@ -823,4 +823,11 @@
     <string name="input_key_password">Mot de passe Clé</string>
     <string name="invalid_aes_key_size">Format de clé invalide pour un chiffrement AES. La taille de la clé doit être de 128 ou 256 bits.</string>
     <string name="orientation_full_user">Utilisateur complet</string>
+    <string name="next">Suivant(e)</string>
+    <string name="installer_app_installed">Application instalée</string>
+    <string name="paste">Coller</string>
+    <string name="paired_successfully">apparier</string>
+    <string name="adb_wifi_paring_code">Code d\'association Wi-Fi</string>
+    <string name="invalid_password">Mot de passe invalide, réessayez.</string>
+    <string name="pref_log_viewer_msg">Configurer l\'affichage des journaux.</string>
 </resources>
