@@ -4,14 +4,22 @@ package io.github.muntashirakon.AppManager.scanner;
 
 // NOTE: Some patterns here are taken from https://github.com/billthefarmer/editor
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.AppCompatEditText;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
@@ -21,11 +29,6 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.AppCompatEditText;
-import androidx.core.content.ContextCompat;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 
@@ -34,6 +37,27 @@ public class ClassViewerActivity extends BaseActivity {
     public static final String EXTRA_APP_NAME = "app_name";
     public static final String EXTRA_CLASS_NAME = "class_name";
     public static final String EXTRA_CLASS_DUMP = "class_dump";
+
+    private static final Pattern SMALI_KEYWORDS = Pattern.compile(
+            "\\b(invoke-(virtual(/range|)|direct|static|interface|super|polymorphic|custom)|" +
+                    "move(-(result(-wide|-object|)|exception)|(-wide|-object|)(/16|/from16|))|" +
+                    "new-(array|instance)|const(-(string(/jumbo|)|" +
+                    "class|wide(/16|/32|/high16|))|/4|/16|/high16|ructor|)|private|public|protected|final|static|" +
+                    "(add|sub|cmp|mul|div|rem|and|or|xor|shl|shr|ushr)-(int|float|double|long)(/2addr|/lit16|/lit8|)|" +
+                    "(neg|not)-(int|long|float|double)|(int|long|float|double|byte)(-to|)-(int|long|float|double|byte)|" +
+                    "fill-array-data|filled-new-array(/range|)|([ais](ge|pu)t|return)(-(object|boolean|byte|char|short|wide|void)|)|" +
+                    "check-cast|throw|array-length|goto|if-((ge|le|ne|eq|lt|gt)z?))|monitor-(enter|exit)\\b", Pattern.MULTILINE);
+
+    private static final Pattern SMALI_CLASS = Pattern.compile("\\b\\[?L[\\w]+/[^;]+;|\\[?[ZBCSIJFDV]\\b", Pattern.MULTILINE);
+
+    private static final Pattern SMALI_COMMENT = Pattern.compile("#.*$", Pattern.MULTILINE);
+
+    private static final Pattern SMALI_VALUE = Pattern.compile(
+            "\\b(\".*\"|-?(0x[0-9a-f]+|[0-9]+))\\b",
+            Pattern.MULTILINE);
+
+    private static final Pattern SMALI_LABELS = Pattern.compile("\\b[pv][0-9]+|:[\\w]+|->\\b|",
+            Pattern.MULTILINE);
 
     private static final Pattern KEYWORDS = Pattern.compile
             ("\\b(abstract|and|arguments|as(m|sert|sociativity)?|auto|break|" +
@@ -120,7 +144,7 @@ public class ClassViewerActivity extends BaseActivity {
         container.setVisibility(View.VISIBLE);
         container.setKeyListener(null);
         container.setTextColor(ContextCompat.getColor(this, R.color.dark_orange));
-        displayContent();
+        displaySmaliContent();
         isWrapped = !isWrapped;
     }
 
@@ -150,6 +174,53 @@ public class ClassViewerActivity extends BaseActivity {
                 matcher.usePattern(CC_COMMENT);
                 while (matcher.find()) {
                     formattedContent.setSpan(new ForegroundColorSpan(commentColor), matcher.start(),
+                            matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+            }
+            runOnUiThread(() -> {
+                container.setText(formattedContent);
+                mProgressIndicator.hide();
+            });
+        }).start();
+    }
+
+    private void displaySmaliContent() {
+        mProgressIndicator.show();
+        final int typeClassColor = ContextCompat.getColor(this, R.color.ocean_blue);
+        final int keywordsColor = ContextCompat.getColor(this, R.color.purple_y);
+        final int commentColor = ContextCompat.getColor(this, R.color.textColorSecondary);
+        final int valueColor = ContextCompat.getColor(this, R.color.redder_than_you);
+        final int labelColor = ContextCompat.getColor(this, R.color.green_mountain);
+        new Thread(() -> {
+            if (formattedContent == null) {
+                formattedContent = new SpannableString(classDump);
+                Matcher matcher = SMALI_VALUE.matcher(classDump);
+                while (matcher.find()) {
+                    formattedContent.setSpan(new ForegroundColorSpan(valueColor), matcher.start(),
+                            matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+                matcher.usePattern(SMALI_LABELS);
+                while (matcher.find()) {
+                    formattedContent.setSpan(new ForegroundColorSpan(labelColor), matcher.start(),
+                            matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+                matcher.usePattern(SMALI_CLASS);
+                while (matcher.find()) {
+                    formattedContent.setSpan(new ForegroundColorSpan(typeClassColor), matcher.start(),
+                            matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+                matcher.usePattern(SMALI_KEYWORDS);
+                while (matcher.find()) {
+                    formattedContent.setSpan(new ForegroundColorSpan(keywordsColor), matcher.start(),
+                            matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    formattedContent.setSpan(new StyleSpan(Typeface.BOLD), matcher.start(),
+                            matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+                matcher.usePattern(SMALI_COMMENT);
+                while (matcher.find()) {
+                    formattedContent.setSpan(new ForegroundColorSpan(commentColor), matcher.start(),
+                            matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    formattedContent.setSpan(new StyleSpan(Typeface.ITALIC), matcher.start(),
                             matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
             }
