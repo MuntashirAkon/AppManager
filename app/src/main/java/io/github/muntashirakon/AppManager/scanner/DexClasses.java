@@ -2,84 +2,93 @@
 
 package io.github.muntashirakon.AppManager.scanner;
 
-import android.content.Context;
-
 import androidx.annotation.NonNull;
+
+import org.jf.baksmali.Adaptors.ClassDefinition;
+import org.jf.baksmali.BaksmaliOptions;
+import org.jf.baksmali.formatter.BaksmaliFormatter;
+import org.jf.baksmali.formatter.BaksmaliWriter;
+import org.jf.dexlib2.DexFileFactory;
+import org.jf.dexlib2.analysis.InlineMethodResolver;
+import org.jf.dexlib2.dexbacked.DexBackedDexFile;
+import org.jf.dexlib2.dexbacked.DexBackedOdexFile;
+import org.jf.dexlib2.iface.ClassDef;
+import org.jf.dexlib2.iface.MultiDexContainer;
 
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Objects;
 
-import dalvik.system.DexClassLoader;
-import dalvik.system.DexFile;
-import io.github.muntashirakon.AppManager.scanner.reflector.Reflector;
-import io.github.muntashirakon.AppManager.utils.FileUtils;
+import io.github.muntashirakon.AppManager.BuildConfig;
 
 public class DexClasses implements Closeable {
-    private final ClassLoader loader;
-    private DexFile dexFile;
+    private final HashMap<String, ClassDef> classDefArraySet = new HashMap<>();
+    private final BaksmaliOptions options;
 
-    public DexClasses(@NonNull Context ctx, @NonNull File apkFile) {
-        // ClassLoader
-        final File optimizedDexFilePath = ctx.getCodeCacheDir();
-        this.loader = new DexClassLoader(apkFile.getAbsolutePath(),
-                optimizedDexFilePath.getAbsolutePath(), null,
-                ctx.getClassLoader().getParent());
-        FileUtils.deleteSilently(optimizedDexFilePath);
-        // Load dexClass
-        File optimizedFile = null;
-        try {
-            File cacheDir = ctx.getCacheDir();
-            optimizedFile = File.createTempFile("opt_", ".dex", cacheDir);
-            dexFile = DexFile.loadDex(apkFile.getPath(), optimizedFile.getPath(), 0);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            FileUtils.deleteSilently(optimizedFile);
+    public DexClasses(@NonNull File apkFile) throws IOException {
+        this.options = new BaksmaliOptions();
+        // options
+        options.deodex = false;
+        options.implicitReferences = false;
+        options.parameterRegisters = true;
+        options.localsDirective = true;
+        options.sequentialLabels = true;
+        options.debugInfo = BuildConfig.DEBUG;
+        options.codeOffsets = false;
+        options.accessorComments = false;
+        options.registerInfo = 0;
+        options.inlineResolver = null;
+        BaksmaliFormatter formatter = new BaksmaliFormatter();
+        MultiDexContainer<? extends DexBackedDexFile> container = DexFileFactory.loadDexContainer(apkFile, null);
+        List<String> dexEntryNames = container.getDexEntryNames();
+        for (String dexEntryName : dexEntryNames) {
+            MultiDexContainer.DexEntry<? extends DexBackedDexFile> dexEntry =
+                    Objects.requireNonNull(container.getEntry(dexEntryName));
+            DexBackedDexFile dexFile = dexEntry.getDexFile();
+            // Store list of classes
+            for (ClassDef classDef : dexFile.getClasses()) {
+                String name = formatter.getType(classDef.getType());
+                if (name.endsWith(";")) name = name.substring(0, name.length() - 1);
+                if (name.startsWith("L")) {
+                    name = name.substring(1).replace('/', '.');
+                }
+                classDefArraySet.put(name, classDef);
+            }
+            if (dexFile.supportsOptimizedOpcodes()) {
+                throw new IOException("ODEX isn't supported.");
+            }
+            if (dexFile instanceof DexBackedOdexFile) {
+                options.inlineResolver = InlineMethodResolver.createInlineMethodResolver(
+                        ((DexBackedOdexFile) dexFile).getOdexVersion());
+            }
         }
     }
 
     @NonNull
     public List<String> getClassNames() {
-        Set<String> classes = new HashSet<>();
-        if (dexFile != null) {
-            Enumeration<String> enumeration = dexFile.entries();
-            String className;
-            // Get imports for each class
-            while (enumeration.hasMoreElements()) {
-                className = enumeration.nextElement();
-                classes.add(className);
-                try {
-                    classes.addAll(getImports(className));
-                } catch (ClassNotFoundException | LinkageError ignore) {
-                }
-            }
-        }
-        return new ArrayList<>(classes);
+        return new ArrayList<>(classDefArraySet.keySet());
     }
 
     @NonNull
-    public Reflector getReflector(String className) throws ClassNotFoundException {
-        return new Reflector(loadClass(className));
+    public String getClassContents(@NonNull String className) throws ClassNotFoundException {
+        ClassDef classDef = classDefArraySet.get(className);
+        if (classDef == null) throw new ClassNotFoundException(className + " could not be found.");
+        StringWriter stringWriter = new StringWriter();
+        try (BaksmaliWriter baksmaliWriter = new BaksmaliFormatter().getWriter(stringWriter)) {
+            ClassDefinition classDefinition = new ClassDefinition(this.options, classDef);
+            classDefinition.writeTo(baksmaliWriter);
+        } catch (IOException e) {
+            throw new ClassNotFoundException(e.toString());
+        }
+        return stringWriter.toString();
     }
 
     @Override
     public void close() throws IOException {
-        if (dexFile != null) dexFile.close();
-    }
-
-    @NonNull
-    private Set<String> getImports(String className) throws ClassNotFoundException {
-        return new Reflector(loadClass(className)).getImports();
-    }
-
-    @NonNull
-    private Class<?> loadClass(String className) throws ClassNotFoundException {
-        return loader.loadClass(className);
     }
 }

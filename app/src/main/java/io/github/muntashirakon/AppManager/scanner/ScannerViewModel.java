@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
@@ -160,8 +161,12 @@ public class ScannerViewModel extends AndroidViewModel {
     @WorkerThread
     private void loadAllClasses() {
         waitForFile();
-        dexClasses = new DexClasses(getApplication(), apkFile);
-        classListAll = dexClasses.getClassNames();
+        try {
+            dexClasses = new DexClasses(apkFile);
+            classListAll = dexClasses.getClassNames();
+        } catch (IOException e) {
+            classListAll = Collections.emptyList();
+        }
         allClasses.postValue(classListAll);
     }
 

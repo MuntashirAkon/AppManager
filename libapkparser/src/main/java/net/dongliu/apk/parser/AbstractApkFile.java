@@ -2,6 +2,8 @@
 
 package net.dongliu.apk.parser;
 
+import androidx.annotation.NonNull;
+
 import net.dongliu.apk.parser.bean.AdaptiveIcon;
 import net.dongliu.apk.parser.bean.ApkMeta;
 import net.dongliu.apk.parser.bean.ApkSignStatus;
@@ -20,7 +22,6 @@ import net.dongliu.apk.parser.parser.BinaryXmlParser;
 import net.dongliu.apk.parser.parser.CertificateMetas;
 import net.dongliu.apk.parser.parser.CertificateParser;
 import net.dongliu.apk.parser.parser.CompositeXmlStreamer;
-import net.dongliu.apk.parser.parser.DexParser;
 import net.dongliu.apk.parser.parser.ResourceTableParser;
 import net.dongliu.apk.parser.parser.XmlStreamer;
 import net.dongliu.apk.parser.parser.XmlTranslator;
@@ -48,10 +49,6 @@ import java.util.Set;
 
 import javax.security.cert.CertificateException;
 import javax.security.cert.X509Certificate;
-
-import androidx.annotation.NonNull;
-
-import static java.lang.System.arraycopy;
 
 /**
  * Common Apk Parser methods.
@@ -357,47 +354,6 @@ public abstract class AbstractApkFile implements Closeable {
             icons.add(icon);
         }
         return icons;
-    }
-
-    /**
-     * get class infos form dex file. currently only class name
-     */
-    public DexClass[] getDexClasses() throws IOException {
-        if (this.dexClasses == null) {
-            parseDexFiles();
-        }
-        return this.dexClasses;
-    }
-
-    private DexClass[] mergeDexClasses(DexClass[] first, DexClass[] second) {
-        DexClass[] result = new DexClass[first.length + second.length];
-        arraycopy(first, 0, result, 0, first.length);
-        arraycopy(second, 0, result, first.length, second.length);
-        return result;
-    }
-
-    private DexClass[] parseDexFile(String path) throws IOException {
-        byte[] data = getFileData(path);
-        if (data == null) {
-            String msg = String.format("Dex file %s not found", path);
-            throw new ParserException(msg);
-        }
-        ByteBuffer buffer = ByteBuffer.wrap(data);
-        DexParser dexParser = new DexParser(buffer);
-        return dexParser.parse();
-    }
-
-    private void parseDexFiles() throws IOException {
-        this.dexClasses = parseDexFile(AndroidConstants.DEX_FILE);
-        for (int i = 2; i < 1000; i++) {
-            String path = String.format(Locale.ROOT, AndroidConstants.DEX_ADDITIONAL, i);
-            try {
-                DexClass[] classes = parseDexFile(path);
-                this.dexClasses = mergeDexClasses(this.dexClasses, classes);
-            } catch (ParserException e) {
-                break;
-            }
-        }
     }
 
     /**

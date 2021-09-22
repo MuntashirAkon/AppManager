@@ -34,7 +34,6 @@ import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.scanner.reflector.Reflector;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 // Copyright 2015 Google, Inc.
@@ -93,13 +92,11 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
             String className = (!trackerClassesOnly ? trackerClassList : classListAll)
                     .get((int) (parent.getAdapter()).getItemId(position));
             try {
-                Reflector reflector = dexClasses.getReflector(className);
-
-                Toast.makeText(this, reflector.generateClassData(), Toast.LENGTH_LONG).show();
+                String classContents = dexClasses.getClassContents(className);
 
                 Intent intent = new Intent(this, ClassViewerActivity.class);
                 intent.putExtra(ClassViewerActivity.EXTRA_CLASS_NAME, className);
-                intent.putExtra(ClassViewerActivity.EXTRA_CLASS_DUMP, reflector.toString());
+                intent.putExtra(ClassViewerActivity.EXTRA_CLASS_DUMP, classContents);
                 intent.putExtra(ClassViewerActivity.EXTRA_APP_NAME, mAppName);
                 startActivity(intent);
             } catch (Exception e) {

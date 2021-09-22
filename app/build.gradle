@@ -95,6 +95,8 @@ dependencies {
     implementation 'com.github.MuntashirAkon:sun-security-android:1.1'
     implementation 'com.github.MuntashirAkon:spake2-java:0.9.0'
     implementation 'org.bouncycastle:bcprov-jdk15on:1.69'
+    implementation 'org.smali:baksmali:2.5.2'
+    implementation 'org.smali:smali:2.5.2'
 
     implementation "com.google.android.material:material:${material_version}"
     implementation "androidx.appcompat:appcompat:${appcompat_version}"
