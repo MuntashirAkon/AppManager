@@ -1121,4 +1121,6 @@
     <string name="running_services_logcat_hint">Click on an item to open the log viewer with the corresponding process ID as the default filter.</string>
     <string name="import_from_sb">Import from Swift Backup 3.0 – 3.2</string>
     <string name="pref_import_backups_hint">Select a directory containing the backup files (Swift Backup/Titanium Backup) or directories (OAndBackup)</string>
+    <string name="java">Java</string>
+    <string name="smali">Smali</string>
 </resources>

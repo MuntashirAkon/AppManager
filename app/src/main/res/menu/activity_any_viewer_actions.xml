@@ -4,6 +4,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/action_java_smali_toggle"
+        android:title="@string/java"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/action_wrap"
         android:icon="@drawable/ic_wrap_text_black_24dp"
         android:title="@string/word_wrap"

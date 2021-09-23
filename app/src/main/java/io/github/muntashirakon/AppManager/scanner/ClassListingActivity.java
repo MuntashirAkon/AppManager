@@ -50,7 +50,6 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
     private List<String> classListAll;
     private List<String> trackerClassList = new ArrayList<>();
     private List<String> libClassList = new ArrayList<>();
-    private DexClasses dexClasses;
 
 
     @Override
@@ -66,8 +65,7 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
         classListAll = ScannerActivity.classListAll;
         trackerClassList = ScannerActivity.trackerClassList;
         libClassList = ScannerActivity.libClassList;
-        dexClasses = ScannerActivity.dexClasses;
-        if (classListAll == null || dexClasses == null) {
+        if (classListAll == null) {
             finish();
             return;
         }
@@ -92,11 +90,8 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
             String className = (!trackerClassesOnly ? trackerClassList : classListAll)
                     .get((int) (parent.getAdapter()).getItemId(position));
             try {
-                String classContents = dexClasses.getClassContents(className);
-
                 Intent intent = new Intent(this, ClassViewerActivity.class);
                 intent.putExtra(ClassViewerActivity.EXTRA_CLASS_NAME, className);
-                intent.putExtra(ClassViewerActivity.EXTRA_CLASS_DUMP, classContents);
                 intent.putExtra(ClassViewerActivity.EXTRA_APP_NAME, mAppName);
                 startActivity(intent);
             } catch (Exception e) {
@@ -109,12 +104,6 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
         mProgressIndicator.setVisibilityAfterHide(View.GONE);
         showProgress(true);
         setAdapterList();
-
-//        if (classList.isEmpty() && totalClassesScanned == 0) {
-//            // FIXME: Add support for odex (using root)
-//            Toast.makeText(ClassListingActivity.this, R.string.system_odex_not_supported, Toast.LENGTH_LONG).show();
-//            finish();
-//        }
     }
 
     @Override

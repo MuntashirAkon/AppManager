@@ -162,6 +162,7 @@ public class ManifestViewerActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_any_viewer_actions, menu);
+        menu.findItem(R.id.action_java_smali_toggle).setVisible(false);
         return super.onCreateOptionsMenu(menu);
     }
 

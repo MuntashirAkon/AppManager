@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.core.content.ContextCompat;
@@ -25,6 +26,7 @@ import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -36,7 +38,6 @@ import io.github.muntashirakon.AppManager.R;
 public class ClassViewerActivity extends BaseActivity {
     public static final String EXTRA_APP_NAME = "app_name";
     public static final String EXTRA_CLASS_NAME = "class_name";
-    public static final String EXTRA_CLASS_DUMP = "class_dump";
 
     private static final Pattern SMALI_KEYWORDS = Pattern.compile(
             "\\b(invoke-(virtual(/range|)|direct|static|interface|super|polymorphic|custom)|" +
@@ -46,53 +47,55 @@ public class ClassViewerActivity extends BaseActivity {
                     "(add|sub|cmp|mul|div|rem|and|or|xor|shl|shr|ushr)-(int|float|double|long)(/2addr|/lit16|/lit8|)|" +
                     "(neg|not)-(int|long|float|double)|(int|long|float|double|byte)(-to|)-(int|long|float|double|byte)|" +
                     "fill-array-data|filled-new-array(/range|)|([ais](ge|pu)t|return)(-(object|boolean|byte|char|short|wide|void)|)|" +
-                    "check-cast|throw|array-length|goto|if-((ge|le|ne|eq|lt|gt)z?))|monitor-(enter|exit)\\b", Pattern.MULTILINE);
+                    "check-cast|throw|array-length|goto|if-((ge|le|ne|eq|lt|gt)z?)|monitor-(enter|exit)|synthetic|system)\\b", Pattern.MULTILINE);
 
-    private static final Pattern SMALI_CLASS = Pattern.compile("\\b\\[?L[\\w]+/[^;]+;|\\[?[ZBCSIJFDV]\\b", Pattern.MULTILINE);
+    private static final Pattern SMALI_CLASS = Pattern.compile("\\[*(L\\w+/[^;]+;|[ZBCSIJFDV])", Pattern.MULTILINE);
 
     private static final Pattern SMALI_COMMENT = Pattern.compile("#.*$", Pattern.MULTILINE);
 
-    private static final Pattern SMALI_VALUE = Pattern.compile(
-            "\\b(\".*\"|-?(0x[0-9a-f]+|[0-9]+))\\b",
+    private static final Pattern SMALI_VALUE = Pattern.compile("((\"(?:\\\\\\\\[^\"]|\\\\\\\\\"|.)*?\")" +
+            "|\\b-?(0x[0-9a-f]+|[0-9]+)\\b)", Pattern.MULTILINE);
+
+    private static final Pattern SMALI_LABELS = Pattern.compile("\\b([pv][0-9]+|:(?!L)[\\w]+|->)\\b",
             Pattern.MULTILINE);
 
-    private static final Pattern SMALI_LABELS = Pattern.compile("\\b[pv][0-9]+|:[\\w]+|->\\b|",
-            Pattern.MULTILINE);
-
-    private static final Pattern KEYWORDS = Pattern.compile
-            ("\\b(abstract|and|arguments|as(m|sert|sociativity)?|auto|break|" +
+    private static final Pattern JAVA_KEYWORDS = Pattern.compile(
+            "\\b(abstract|and|arguments|as(sert|sociativity)?|auto|break|" +
                     "case|catch|chan|char|class|con(st|tinue|venience)|continue|" +
-                    "de(bugger|f|fault|fer|in|init|l|lete)|didset|do(ne)?|dynamic" +
+                    "de(bugger|fault|fer|in|init)|didset|do(ne)?|dynamic" +
                     "(type)?|el(if|se)|enum|esac|eval|ex(cept|ec|plicit|port|" +
-                    "tends|tension|tern)|fal(lthrough|se)|fi(nal|nally)?|for|" +
+                    "tends|tension|tern)|fallthrough|fi(nal|nally)?|for|" +
                     "friend|from|func(tion)?|get|global|go(to)?|if|" +
                     "im(plements|port)|in(fix|it|line|out|stanceof|terface|" +
-                    "ternal)?|is|lambda|lazy|left|let|local|map|mut(able|ating)|" +
-                    "namespace|native|new|nil|none|nonmutating|not|null|" +
+                    "ternal)|lazy|left|let|local|map|mut(able|ating)|" +
+                    "namespace|native|new|nonmutating|not|" +
                     "operator|optional|or|override|package|pass|postfix|" +
                     "pre(cedence|fix)|print|private|prot(ected|ocol)|public|" +
                     "raise|range|register|required|return|right|select|self|" +
                     "set|signed|sizeof|static|strictfp|struct|subscript|super|" +
-                    "switch|synchronized|template|th(en|is|rows?)|transient|" +
-                    "true|try|type(alias|def|id|name|of)?|un(ion|owned|signed)|" +
-                    "using|var|virtual|void|volatile|weak|wh(ere|ile)|willset|" +
+                    "switch|synchronized|template|th(en|rows?)|transient|" +
+                    "try|type(alias|def|id|name|of)?|un(ion|owned|signed)|" +
+                    "using|var|virtual|volatile|weak|wh(ere|ile)|willset|" +
                     "with|yield)\\b", Pattern.MULTILINE);
 
-    private static final Pattern TYPES = Pattern.compile
-            ("\\b(j?bool(ean)?|[uj]?(byte|char|double|float|int(eger)?|" +
-                    "long|short))\\b", Pattern.MULTILINE);
-    private static final Pattern CC_COMMENT = Pattern.compile
-            ("//.*$|(\"(?:\\\\[^\"]|\\\\\"|.)*?\")|(?s)/\\*.*?\\*/",
-                    Pattern.MULTILINE);
-    private static final Pattern CLASS = Pattern.compile
+    private static final Pattern JAVA_TYPES = Pattern.compile
+            ("\\b(boolean|byte|char|double|float|int|long|short|void|this)\\b|[()\\[\\]{};]", Pattern.MULTILINE);
+    private static final Pattern JAVA_COMMENT = Pattern.compile("//.*$|(?s)/\\*.*?\\*/", Pattern.MULTILINE);
+    private static final Pattern JAVA_CLASS = Pattern.compile
             ("\\b[A-Z][A-Za-z0-9_]+\\b", Pattern.MULTILINE);
+    private static final Pattern JAVA_VALUE = Pattern.compile("(\"(?:\\\\\\\\[^\"]|\\\\\\\\\"|.)*?\")" +
+            "|\\b((?!\\d)-?(0x[\\da-f]+|\\d+)\\.?0?[fl]?|true|false|null)\\b", Pattern.MULTILINE);
 
-    private String classDump;
-    private SpannableString formattedContent;
+    @Nullable
+    private SpannableString formattedSmaliContent;
+    @Nullable
+    private SpannableString formattedJavaContent;
     private boolean isWrapped = true;  // Wrap by default
     private AppCompatEditText container;
     private LinearProgressIndicator mProgressIndicator;
     private String className;
+    private DexClasses dexClasses;
+    private boolean isDisplayingSmali = true;
     private final ActivityResultLauncher<String> exportManifest = registerForActivityResult(
             new ActivityResultContracts.CreateDocument(),
             uri -> {
@@ -101,7 +104,9 @@ public class ClassViewerActivity extends BaseActivity {
                     return;
                 }
                 try (OutputStream outputStream = getContentResolver().openOutputStream(uri)) {
-                    Objects.requireNonNull(outputStream).write(classDump.getBytes());
+                    Objects.requireNonNull(outputStream).write(isDisplayingSmali ?
+                            formattedSmaliContent.toString().getBytes(StandardCharsets.UTF_8) :
+                            formattedJavaContent.toString().getBytes(StandardCharsets.UTF_8));
                     outputStream.flush();
                     Toast.makeText(this, R.string.saved_successfully, Toast.LENGTH_SHORT).show();
                 } catch (IOException e) {
@@ -132,53 +137,81 @@ public class ClassViewerActivity extends BaseActivity {
             if (appName != null) actionBar.setTitle(appName);
             else actionBar.setTitle(R.string.class_viewer);
         }
-        classDump = getIntent().getStringExtra(EXTRA_CLASS_DUMP);
-        setWrapped();
+        dexClasses = ScannerActivity.dexClasses;
+        if (dexClasses == null) {
+            finish();
+            return;
+        }
+        updateUi();
     }
 
 
-    private void setWrapped() {
+    private void updateUi() {
         if (container != null) container.setVisibility(View.GONE);
         if (isWrapped) container = findViewById(R.id.any_view_wrapped);
         else container = findViewById(R.id.any_view);
         container.setVisibility(View.VISIBLE);
         container.setKeyListener(null);
         container.setTextColor(ContextCompat.getColor(this, R.color.dark_orange));
-        displaySmaliContent();
+        if (isDisplayingSmali) {
+            displaySmaliContent();
+        } else {
+            displayJavaContent();
+        }
         isWrapped = !isWrapped;
     }
 
-    private void displayContent() {
+    private void displayJavaContent() {
         mProgressIndicator.show();
         final int typeClassColor = ContextCompat.getColor(this, R.color.ocean_blue);
-        final int keywordsColor = ContextCompat.getColor(this, R.color.dark_orange);
+        final int keywordsColor = ContextCompat.getColor(this, R.color.purple_y);
         final int commentColor = ContextCompat.getColor(this, R.color.textColorSecondary);
+        final int valueColor = ContextCompat.getColor(this, R.color.redder_than_you);
         new Thread(() -> {
-            if (formattedContent == null) {
-                formattedContent = new SpannableString(classDump);
-                Matcher matcher = TYPES.matcher(classDump);
+            if (formattedJavaContent == null) {
+                String javaContent;
+                try {
+                    javaContent = dexClasses.getJavaCode(className);
+                } catch (ClassNotFoundException e) {
+                    runOnUiThread(() -> {
+                        Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
+                        finish();
+                    });
+                    return;
+                }
+                formattedJavaContent = new SpannableString(javaContent);
+                Matcher matcher = JAVA_TYPES.matcher(javaContent);
                 while (matcher.find()) {
-                    formattedContent.setSpan(new ForegroundColorSpan(typeClassColor), matcher.start(),
+                    formattedJavaContent.setSpan(new ForegroundColorSpan(typeClassColor), matcher.start(),
                             matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
-                matcher.usePattern(CLASS);
+                matcher.usePattern(JAVA_CLASS);
                 while (matcher.find()) {
-                    formattedContent.setSpan(new ForegroundColorSpan(typeClassColor), matcher.start(),
+                    formattedJavaContent.setSpan(new ForegroundColorSpan(typeClassColor), matcher.start(),
                             matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
-                matcher.usePattern(KEYWORDS);
+                matcher.usePattern(JAVA_KEYWORDS);
                 while (matcher.find()) {
-                    formattedContent.setSpan(new ForegroundColorSpan(keywordsColor), matcher.start(),
+                    formattedJavaContent.setSpan(new ForegroundColorSpan(keywordsColor), matcher.start(),
+                            matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    formattedJavaContent.setSpan(new StyleSpan(Typeface.BOLD), matcher.start(),
                             matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
-                matcher.usePattern(CC_COMMENT);
+                matcher.usePattern(JAVA_VALUE);
                 while (matcher.find()) {
-                    formattedContent.setSpan(new ForegroundColorSpan(commentColor), matcher.start(),
+                    formattedJavaContent.setSpan(new ForegroundColorSpan(valueColor), matcher.start(),
+                            matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+                matcher.usePattern(JAVA_COMMENT);
+                while (matcher.find()) {
+                    formattedJavaContent.setSpan(new ForegroundColorSpan(commentColor), matcher.start(),
+                            matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    formattedJavaContent.setSpan(new StyleSpan(Typeface.ITALIC), matcher.start(),
                             matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
             }
             runOnUiThread(() -> {
-                container.setText(formattedContent);
+                container.setText(formattedJavaContent);
                 mProgressIndicator.hide();
             });
         }).start();
@@ -192,40 +225,50 @@ public class ClassViewerActivity extends BaseActivity {
         final int valueColor = ContextCompat.getColor(this, R.color.redder_than_you);
         final int labelColor = ContextCompat.getColor(this, R.color.green_mountain);
         new Thread(() -> {
-            if (formattedContent == null) {
-                formattedContent = new SpannableString(classDump);
-                Matcher matcher = SMALI_VALUE.matcher(classDump);
+            if (formattedSmaliContent == null) {
+                String smaliContent;
+                try {
+                    smaliContent = dexClasses.getClassContents(className);
+                } catch (ClassNotFoundException e) {
+                    runOnUiThread(() -> {
+                        Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
+                        finish();
+                    });
+                    return;
+                }
+                formattedSmaliContent = new SpannableString(smaliContent);
+                Matcher matcher = SMALI_VALUE.matcher(smaliContent);
                 while (matcher.find()) {
-                    formattedContent.setSpan(new ForegroundColorSpan(valueColor), matcher.start(),
+                    formattedSmaliContent.setSpan(new ForegroundColorSpan(valueColor), matcher.start(),
                             matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
                 matcher.usePattern(SMALI_LABELS);
                 while (matcher.find()) {
-                    formattedContent.setSpan(new ForegroundColorSpan(labelColor), matcher.start(),
+                    formattedSmaliContent.setSpan(new ForegroundColorSpan(labelColor), matcher.start(),
                             matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
                 matcher.usePattern(SMALI_CLASS);
                 while (matcher.find()) {
-                    formattedContent.setSpan(new ForegroundColorSpan(typeClassColor), matcher.start(),
+                    formattedSmaliContent.setSpan(new ForegroundColorSpan(typeClassColor), matcher.start(),
                             matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
                 matcher.usePattern(SMALI_KEYWORDS);
                 while (matcher.find()) {
-                    formattedContent.setSpan(new ForegroundColorSpan(keywordsColor), matcher.start(),
+                    formattedSmaliContent.setSpan(new ForegroundColorSpan(keywordsColor), matcher.start(),
                             matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    formattedContent.setSpan(new StyleSpan(Typeface.BOLD), matcher.start(),
+                    formattedSmaliContent.setSpan(new StyleSpan(Typeface.BOLD), matcher.start(),
                             matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
                 matcher.usePattern(SMALI_COMMENT);
                 while (matcher.find()) {
-                    formattedContent.setSpan(new ForegroundColorSpan(commentColor), matcher.start(),
+                    formattedSmaliContent.setSpan(new ForegroundColorSpan(commentColor), matcher.start(),
                             matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    formattedContent.setSpan(new StyleSpan(Typeface.ITALIC), matcher.start(),
+                    formattedSmaliContent.setSpan(new StyleSpan(Typeface.ITALIC), matcher.start(),
                             matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
             }
             runOnUiThread(() -> {
-                container.setText(formattedContent);
+                container.setText(formattedSmaliContent);
                 mProgressIndicator.hide();
             });
         }).start();
@@ -243,10 +286,14 @@ public class ClassViewerActivity extends BaseActivity {
         if (id == android.R.id.home) {
             finish();
         } else if (id == R.id.action_wrap) {
-            setWrapped();
+            updateUi();
         } else if (id == R.id.action_save) {
             String fileName = className + ".java";
             exportManifest.launch(fileName);
+        } else if (id == R.id.action_java_smali_toggle) {
+            isDisplayingSmali = !isDisplayingSmali;
+            item.setTitle(isDisplayingSmali ? R.string.java : R.string.smali);
+            updateUi();
         } else return super.onOptionsItemSelected(item);
         return true;
     }

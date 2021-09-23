@@ -8,7 +8,7 @@ import org.jf.baksmali.Adaptors.ClassDefinition;
 import org.jf.baksmali.BaksmaliOptions;
 import org.jf.baksmali.formatter.BaksmaliFormatter;
 import org.jf.baksmali.formatter.BaksmaliWriter;
-import org.jf.dexlib2.DexFileFactory;
+import org.jf.dexlib2.Opcodes;
 import org.jf.dexlib2.analysis.InlineMethodResolver;
 import org.jf.dexlib2.dexbacked.DexBackedDexFile;
 import org.jf.dexlib2.dexbacked.DexBackedOdexFile;
@@ -44,7 +44,7 @@ public class DexClasses implements Closeable {
         options.registerInfo = 0;
         options.inlineResolver = null;
         BaksmaliFormatter formatter = new BaksmaliFormatter();
-        MultiDexContainer<? extends DexBackedDexFile> container = DexFileFactory.loadDexContainer(apkFile, null);
+        MultiDexContainer<? extends DexBackedDexFile> container = ScannerUtils.loadApk(apkFile, -1);
         List<String> dexEntryNames = container.getDexEntryNames();
         for (String dexEntryName : dexEntryNames) {
             MultiDexContainer.DexEntry<? extends DexBackedDexFile> dexEntry =
@@ -75,15 +75,30 @@ public class DexClasses implements Closeable {
     }
 
     @NonNull
-    public String getClassContents(@NonNull String className) throws ClassNotFoundException {
+    public ClassDef getClassDef(@NonNull String className) throws ClassNotFoundException {
         ClassDef classDef = classDefArraySet.get(className);
         if (classDef == null) throw new ClassNotFoundException(className + " could not be found.");
+        return classDef;
+    }
+
+    @NonNull
+    public String getJavaCode(@NonNull String className) throws ClassNotFoundException {
+        try {
+            ClassDef classDef = getClassDef(className);
+            return ScannerUtils.toJavaCode(classDef, Opcodes.getDefault());
+        } catch (IOException e) {
+            throw new ClassNotFoundException(e.getMessage(), e);
+        }
+    }
+
+    @NonNull
+    public String getClassContents(@NonNull String className) throws ClassNotFoundException {
         StringWriter stringWriter = new StringWriter();
         try (BaksmaliWriter baksmaliWriter = new BaksmaliFormatter().getWriter(stringWriter)) {
-            ClassDefinition classDefinition = new ClassDefinition(this.options, classDef);
+            ClassDefinition classDefinition = new ClassDefinition(this.options, getClassDef(className));
             classDefinition.writeTo(baksmaliWriter);
         } catch (IOException e) {
-            throw new ClassNotFoundException(e.toString());
+            throw new ClassNotFoundException(e.getMessage(), e);
         }
         return stringWriter.toString();
     }
