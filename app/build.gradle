@@ -97,8 +97,8 @@ dependencies {
     implementation 'org.bouncycastle:bcprov-jdk15on:1.69'
     implementation 'org.smali:baksmali:2.5.2'
     implementation 'org.smali:smali:2.5.2'
-    implementation 'com.github.skylot.jadx:jadx-core:8e89a2e'
-    implementation 'com.github.skylot.jadx:jadx-dex-input:8e89a2e'
+    implementation 'com.github.MuntashirAkon.jadx:jadx-core:cb8c1ddc7f'
+    implementation 'com.github.MuntashirAkon.jadx:jadx-dex-input:cb8c1ddc7f'
 
     implementation "com.google.android.material:material:${material_version}"
     implementation "androidx.appcompat:appcompat:${appcompat_version}"
