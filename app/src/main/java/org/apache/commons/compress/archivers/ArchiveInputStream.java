@@ -86,7 +86,7 @@ public abstract class ArchiveInputStream extends InputStream {
      */
     protected void count(final long read) {
         if (read != -1) {
-            bytesRead = bytesRead + read;
+            bytesRead+=read;
         }
     }
 
@@ -134,7 +134,7 @@ public abstract class ArchiveInputStream extends InputStream {
      * @since 1.1
      */
     public boolean canReadEntryData(final ArchiveEntry archiveEntry) {
-        return true;
+        return archiveEntry.isDirectory();
     }
 
 }

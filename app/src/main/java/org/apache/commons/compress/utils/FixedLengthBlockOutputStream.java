@@ -230,10 +230,6 @@ public class FixedLengthBlockOutputStream extends OutputStream implements Writab
                 buffer.position(buffer.limit());
                 return len;
             } catch (final IOException e) {
-                try {
-                    close();
-                } catch (final IOException ignored) { //NOSONAR
-                }
                 throw e;
             }
         }

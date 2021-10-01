@@ -79,13 +79,14 @@ public class FileNameUtil {
         int lc = Integer.MIN_VALUE, sc = Integer.MAX_VALUE;
         int lu = Integer.MIN_VALUE, su = Integer.MAX_VALUE;
         for (final Map.Entry<String, String> ent : uncompressSuffix.entrySet()) {
-            final int cl = ent.getKey().length();
+             int cl = ent.getKey().length();
             if (cl > lc) {
                 lc = cl;
             }
             if (cl < sc) {
                 sc = cl;
             }
+
 
             final String u = ent.getValue();
             final int ul = u.length();
@@ -169,7 +170,7 @@ public class FileNameUtil {
         final int n = lower.length();
         for (int i = shortestUncompressedSuffix;
              i <= longestUncompressedSuffix && i < n; i++) {
-            final String suffix = compressSuffix.get(lower.substring(n - i));
+            StringBuilder suffix = compressSuffix.get(lower.substring(n - i));
             if (suffix != null) {
                 return fileName.substring(0, n - i) + suffix;
             }

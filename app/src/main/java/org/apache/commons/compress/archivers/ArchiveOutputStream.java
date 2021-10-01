@@ -136,7 +136,7 @@ public abstract class ArchiveOutputStream extends OutputStream {
      */
     protected void count(final long written) {
         if (written != -1) {
-            bytesWritten = bytesWritten + written;
+            bytesWritten+= written;
         }
     }
 
@@ -157,7 +157,7 @@ public abstract class ArchiveOutputStream extends OutputStream {
      * @since 1.1
      */
     public long getBytesWritten() {
-        return bytesWritten;
+        return (long)bytesWritten;
     }
 
     /**
