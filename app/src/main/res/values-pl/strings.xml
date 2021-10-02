@@ -263,16 +263,23 @@
     <string name="pref_app_theme">Motyw aplikacji</string>
     <string name="class_viewer">Przeglądarka klas</string>
     <string name="word_wrap">Przełącz zawijanie słów</string>
-    <string name="credits_message">Dla autorów:
-\n- Projektu Android Open Source
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
+    <string name="credits_message">Do autorów
+\n- Projektu Android Open Source \u0020(AOSP)
 \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
-\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
-\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
+\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
+\n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
+\n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
+\n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a>
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
-\n- <a href="https://github.com/Atrate">Atrate</a>. </string>
+\n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
+\nOriginal logo credit: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="icon_picker">Selektor ikon</string>
     <string name="create_shortcut">Utwórz skrót</string>
     <string name="error_creating_shortcut">Wystąpił błąd podczas tworzenia skrótu</string>
@@ -895,4 +902,39 @@
     <string name="activity_result">Wynik działań</string>
     <string name="matching_activities">Dopasowywanie działań</string>
     <string name="am_crashed">App Manager przestał działać</string>
+    <string name="backup_skip_signature_checks_description">Przywróć kopie zapasowe, które nie przejdą weryfikacji sumy kontrolnej lub mają inne sygnatury APK niż ich poprzednie kopie zapasowe.</string>
+    <string name="no_app_ops_permission">Brak uprawnień do wyświetlania operacji aplikacji</string>
+    <string name="input_keystore_alias_pass_msg">Dotknij, aby wprowadzić hasło dla %1$s</string>
+    <string name="view_missing_signatures">Dotknij, aby wyświetlić lub wysłać podpisy, które nie znajdują się jeszcze w bazie danych bibliotek programu App Manager.</string>
+    <string name="scanner">Skaner</string>
+    <string name="sys_config">Konfiguracja systemu</string>
+    <string name="app_signing_install_without_data_loss">Jeśli wyłączono weryfikację podpisu, można użyć opcji <b>Tylko zainstaluj</b>, aby zainstalować aplikację bez utraty danych.</string>
+    <string name="onboard">Na pokładzie</string>
+    <string name="packages">pakiety</string>
+    <string name="non_critical_exts">Rozszerzenia niekrytyczne</string>
+    <string name="critical_exts">Rozszerzenia krytyczne</string>
+    <string name="dsa_affine_y">Współrzędna afiniczna y</string>
+    <string name="dsa_affine_x">Współrzędna afiniczna x</string>
+    <string name="rsa_modulus">Moduł</string>
+    <string name="systemless_app">Aplikacja bezsystemowa</string>
+    <string name="state_waking">Wzbudzanie</string>
+    <string name="state_wake_kill">Wzbudź zabij</string>
+    <string name="state_session_leader">Lider sesji</string>
+    <string name="state_parked">Zaparkowany</string>
+    <string name="state_dead">Martwy</string>
+    <string name="state_trace_stop">Zatrzymaj ślad</string>
+    <string name="keyboard_12_keys">12 klawiszowa</string>
+    <string name="launch_mode_single_top">Pojedynczy główny</string>
+    <string name="locale_split_for_base_apk"><xliff:g id="split_name" example="English">%1$s</xliff:g> miejsce dla bazowego APK</string>
+    <string name="locale_split_for_feature"><xliff:g id="split_name" example="English">%1$s</xliff:g> miejsce dla funkcji <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <string name="density_split_for_base_apk"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) zasoby dla bazowego APK</string>
+    <string name="abi_split_for_base_apk"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> kod dla bazowego APK</string>
+    <string name="density_split_for_feature"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) zasoby dla funkcji <xliff:g id="feature_name" example="Visualizer">%3$s</xliff:g></string>
+    <plurals name="no_of_splits">
+        <item quantity="one">%1$d podział</item>
+        <item quantity="few">%1$d podziały</item>
+        <item quantity="many">%1$d podziałów</item>
+        <item quantity="other">%1$d podziałów</item>
+    </plurals>
+    <string name="second_degree_tracker_note">² prefiks wskazuje, że trackery znajdują się w <a href="https://etip.exodus-privacy.eu.org/">Lista rezerwowa ETIP </a> np. to, czy są to rzeczywiste urządzenia śledzące, jest nadal badane.</string>
 </resources>
