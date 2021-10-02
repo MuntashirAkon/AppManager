@@ -1156,4 +1156,7 @@
     <string name="has_net_policy">Reguły sieciowe</string>
     <string name="backup_volume">Wolumin kopii zapasowej</string>
     <string name="failed_to_disable_magisk_hide">Nie można wyłączyć MagiskHide</string>
+    <string name="disable_background_run_description">Ustawia tryb <i>Ignoruj</i> dla następujących operacji aplikacji: <tt>RUN_IN_BACKGROUND</tt> (z Androida 7.0) i <tt>RUN_ANY_IN_BACKGROUND</tt> (z Androida 9).</string>
+    <string name="enable_magisk_hide">Włącz MagiskHide</string>
+    <string name="density">Gęstość</string>
 </resources>
