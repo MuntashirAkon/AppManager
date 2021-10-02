@@ -863,8 +863,8 @@
     <plurals name="pref_thread_count_msg">
         <item quantity="one">Wykonaj co najwyżej %1$d operacje równolegle</item>
         <item quantity="few">Wykonaj co najwyżej %1$d operacji równolegle</item>
-        <item quantity="many"></item>
-        <item quantity="other"></item>
+        <item quantity="many"/>
+        <item quantity="other"/>
     </plurals>
     <string name="pref_thread_count_hint">Wartość musi być pomiędzy 0 a %1$d gdzie 0 znaczy &lt;i&gt; maksymalnej liczby operacji w danym czasie&lt;i&gt;.</string>
     <string name="pref_thread_count">Wykonanie równoległe</string>
@@ -890,4 +890,9 @@
     <string name="launch_mode_single_instance">Pojedyncza instancja</string>
     <string name="batch_ops">Operacje masowe</string>
     <string name="failed_to_uninstall_app">Odinstalowanie nie powiodło się</string>
+    <string name="hardware">Sprzęt komputerowy</string>
+    <string name="permissive">Dozwolony</string>
+    <string name="activity_result">Wynik działań</string>
+    <string name="matching_activities">Dopasowywanie działań</string>
+    <string name="am_crashed">App Manager przestał działać</string>
 </resources>
