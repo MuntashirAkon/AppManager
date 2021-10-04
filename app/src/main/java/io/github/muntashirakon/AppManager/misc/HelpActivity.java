@@ -55,14 +55,17 @@ public class HelpActivity extends BaseActivity {
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_WEBVIEW)
                 || FileUtils.getRawDataId(this, "index") == 0) {
             // Docs split not installed
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.website_message)));
-            startActivity(intent);
-            finish();
+            openDocsSite();
             return;
         }
         container = findViewById(R.id.container);
         // WebView has to be loaded dynamically to prevent in-app localization issue.
-        webView = new WebView(AppManager.getContext());
+        try {
+            webView = new WebView(AppManager.getContext());
+        } catch (Throwable th) {
+            openDocsSite();
+            return;
+        }
         if (firstTime) {
             // Recreate if loaded for the first time to prevent localization issue.
             recreate();
@@ -131,6 +134,7 @@ public class HelpActivity extends BaseActivity {
         return true;
     }
 
+    @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         return true;
@@ -167,6 +171,12 @@ public class HelpActivity extends BaseActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void openDocsSite() {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.website_message)));
+        startActivity(intent);
+        finish();
     }
 
     class WebViewClientImpl extends WebViewClientCompat {
