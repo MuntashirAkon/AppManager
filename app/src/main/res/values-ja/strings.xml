@@ -464,7 +464,7 @@
     <string name="reinstall">再インストール</string>
     <string name="unblock_trackers">トラッカーをブロック解除</string>
     <string name="package_installer">パッケージインストーラ</string>
-    <string name="install_in_progress">インストール中です</string>
+    <string name="install_in_progress">インストール中…</string>
     <string name="installer_error_security">APKファイルにアクセスできませんでした</string>
     <string name="installer_error_session_create">インストーラセッションを作成できませんでした</string>
     <string name="installer_error_session_write">インストーラセッションに書き込みができませんでした</string>
@@ -1027,4 +1027,29 @@
     <string name="invalid_password">無効なパスワードです、再試行してください。</string>
     <string name="keystore_pass_cannot_be_empty">キーストアのパスワードは空白にすることができません。</string>
     <string name="keystore_password_info">こちらは、App Managerのキーストアのパスワードです。キーストアのバックアップ/リストアを行う場合は、安全な場所に保管してください。<b>このメッセージは再度表示されません</b></string>
+    <string name="failed_to_uninstall_app">アンインストール失敗</string>
+    <string name="second_degree_tracker_note">接頭辞「²」はトラッカーが<a href="https://etip.exodus-privacy.eu.org/">ETIP 未承認リスト</a> にあることを示しています。つまり実際のトラッカーであるかは調査中で、Exodusの標準リストにはまだ登録されていないということです。</string>
+    <string name="backup_volume_dialog_description">接頭辞が<tt>/tree</tt>のボリュームは、Storage Access Framework（SAF）で選択されたフォルダです。これらのフォルダーを除き、App Managerのデフォルトのディレクトリは、<tt>AppManager</tt>という名前のサブフォルダーになります。</string>
+    <string name="set_package_name_first">最初にパッケージ名を指定してください！</string>
+    <string name="paste">貼り付け</string>
+    <string name="user_root">Root権限を使用</string>
+    <string name="trim_caches_in_all_apps">全アプリのキャッシュをクリア</string>
+    <string name="trim_caches_in_all_apps_description">Androidシステム自体を含む全てのキャッシュファイルを削除します</string>
+    <string name="background">バックグラウンド</string>
+    <string name="installer_app_installed">アプリはインストールされました</string>
+    <string name="next">次へ</string>
+    <string name="pref_block_trackers_msg">App Managerでアプリをインストールした後、自動的にトラッカーコンポーネントをブロックします。</string>
+    <string name="pref_always_on_background">バックグラウンドでインストールする</string>
+    <string name="pref_always_on_background_msg">常にバックグラウンドでアプリをインストールし、完了時に通知を行うようにします。</string>
+    <string name="type_uri_array">URLの配列</string>
+    <string name="type_uri_array_list">URLのリスト</string>
+    <string name="pref_thread_count">並列処理</string>
+    <string name="pref_thread_count_hint">値は0から%1$dまでで指定してください。<i>0に設定すると常に最高まで並列処理されます。</i></string>
+    <plurals name="pref_thread_count_msg">
+        <item quantity="other">最大%1$dプロセスまで並列実行します</item>
+    </plurals>
+    <string name="pid">プロセスID</string>
+    <string name="identifier">識別子</string>
+    <string name="staging_apk_files">待機中…</string>
+    <string name="running_services_logcat_hint">項目をタップすると、対応するプロセスIDをデフォルトのフィルターとしてログビューアーが開きます。</string>
 </resources>
