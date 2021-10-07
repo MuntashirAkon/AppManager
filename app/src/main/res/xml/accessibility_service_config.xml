@@ -1,0 +1,6 @@
+<accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/accessibility_service_description"
+    android:accessibilityEventTypes="typeAllMask"
+    android:accessibilityFeedbackType="feedbackGeneric"
+    android:accessibilityFlags="flagDefault"
+    android:canRetrieveWindowContent="true" />

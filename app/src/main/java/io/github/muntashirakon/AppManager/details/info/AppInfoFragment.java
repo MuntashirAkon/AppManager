@@ -84,6 +84,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.accessibility.AccessibilityMultiplexer;
+import io.github.muntashirakon.AppManager.accessibility.NoRootAccessibilityService;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity;
@@ -97,6 +99,7 @@ import io.github.muntashirakon.AppManager.details.ManifestViewerActivity;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.fm.FmProvider;
 import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
+import io.github.muntashirakon.AppManager.logcat.helper.ServiceHelper;
 import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.profiles.ProfileManager;
@@ -121,6 +124,7 @@ import io.github.muntashirakon.AppManager.utils.BetterActivityResult;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
+import io.github.muntashirakon.AppManager.utils.IntentUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.MagiskUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -349,10 +353,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             backupDialogFragment.setOnActionCompleteListener((mode, failedPackages) -> showProgressIndicator(false));
             backupDialogFragment.show(mActivity.getSupportFragmentManager(), BackupDialogFragment.TAG);
         } else if (itemId == R.id.action_view_settings) {
-            Intent infoIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-            infoIntent.addCategory(Intent.CATEGORY_DEFAULT);
-            infoIntent.setData(Uri.parse("package:" + mPackageName));
-            startActivity(infoIntent);
+            startActivity(IntentUtils.getAppDetailsSettings(mPackageName));
         } else if (itemId == R.id.action_export_blocking_rules) {
             final String fileName = "app_manager_rules_export-" + DateUtils.formatDateTime(System.currentTimeMillis()) + ".am.tsv";
             export.launch(fileName, uri -> {
@@ -938,48 +939,85 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         }
                     });
                 }
+            }
+            if (isAdbEnabled || isRootEnabled || ServiceHelper.checkIfServiceIsRunning(mActivity,
+                    NoRootAccessibilityService.class)) {
                 // Force stop
                 if ((mApplicationInfo.flags & ApplicationInfo.FLAG_STOPPED) == 0) {
                     addToHorizontalLayout(R.string.force_stop, R.drawable.ic_baseline_power_settings_new_24)
-                            .setOnClickListener(v -> executor.submit(() -> {
-                                try {
-                                    PackageManagerCompat.forceStopPackage(mPackageName, mainModel.getUserHandle());
-                                    runOnUiThread(this::refreshDetails);
-                                } catch (RemoteException | SecurityException e) {
-                                    Log.e(TAG, e);
-                                    displayLongToast(R.string.failed_to_stop, mPackageLabel);
+                            .setOnClickListener(v -> {
+                                if (isAdbEnabled || isRootEnabled) {
+                                    executor.submit(() -> {
+                                        try {
+                                            PackageManagerCompat.forceStopPackage(mPackageName, mainModel.getUserHandle());
+                                            runOnUiThread(this::refreshDetails);
+                                        } catch (RemoteException | SecurityException e) {
+                                            Log.e(TAG, e);
+                                            displayLongToast(R.string.failed_to_stop, mPackageLabel);
+                                        }
+                                    });
+                                } else {
+                                    // Use accessibility
+                                    AccessibilityMultiplexer.getInstance().enableForceStop(true);
+                                    activityLauncher.launch(IntentUtils.getAppDetailsSettings(mPackageName),
+                                            result -> {
+                                                AccessibilityMultiplexer.getInstance().enableForceStop(false);
+                                                refreshDetails();
+                                            });
                                 }
-                            }));
+                            });
                 }
                 // Clear data
                 addToHorizontalLayout(R.string.clear_data, R.drawable.ic_delete_black_24dp)
                         .setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
                                 .setTitle(mPackageLabel)
                                 .setMessage(R.string.clear_data_message)
-                                .setPositiveButton(R.string.clear, (dialog, which) ->
+                                .setPositiveButton(R.string.clear, (dialog, which) -> {
+                                    if (isAdbEnabled || isRootEnabled) {
                                         executor.submit(() -> {
                                             if (PackageManagerCompat.clearApplicationUserData(mPackageName, mainModel.getUserHandle())) {
                                                 runOnUiThread(this::refreshDetails);
                                             }
-                                        }))
+                                        });
+                                    } else {
+                                        // Use accessibility
+                                        AccessibilityMultiplexer.getInstance().enableNavigateToStorageAndCache(true);
+                                        AccessibilityMultiplexer.getInstance().enableClearData(true);
+                                        activityLauncher.launch(IntentUtils.getAppDetailsSettings(mPackageName),
+                                                result -> {
+                                                    AccessibilityMultiplexer.getInstance().enableNavigateToStorageAndCache(true);
+                                                    AccessibilityMultiplexer.getInstance().enableClearData(false);
+                                                    refreshDetails();
+                                                });
+                                    }
+                                })
                                 .setNegativeButton(R.string.cancel, null)
                                 .show());
                 // Clear cache
                 addToHorizontalLayout(R.string.clear_cache, R.drawable.ic_delete_black_24dp)
-                        .setOnClickListener(v -> executor.submit(() -> {
-                            if (PackageManagerCompat.deleteApplicationCacheFilesAsUser(mPackageName, mainModel.getUserHandle())) {
-                                runOnUiThread(this::refreshDetails);
+                        .setOnClickListener(v -> {
+                            if (isAdbEnabled || isRootEnabled) {
+                                executor.submit(() -> {
+                                    if (PackageManagerCompat.deleteApplicationCacheFilesAsUser(mPackageName, mainModel.getUserHandle())) {
+                                        runOnUiThread(this::refreshDetails);
+                                    }
+                                });
+                            } else {
+                                // Use accessibility
+                                AccessibilityMultiplexer.getInstance().enableNavigateToStorageAndCache(true);
+                                AccessibilityMultiplexer.getInstance().enableClearCache(true);
+                                activityLauncher.launch(IntentUtils.getAppDetailsSettings(mPackageName),
+                                        result -> {
+                                            AccessibilityMultiplexer.getInstance().enableNavigateToStorageAndCache(false);
+                                            AccessibilityMultiplexer.getInstance().enableClearCache(false);
+                                            refreshDetails();
+                                        });
                             }
-                        }));
+                        });
             } else {
                 // Display Android settings button
                 addToHorizontalLayout(R.string.view_in_settings, R.drawable.ic_info_outline_black_24dp)
-                        .setOnClickListener(v -> {
-                            Intent infoIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                            infoIntent.addCategory(Intent.CATEGORY_DEFAULT);
-                            infoIntent.setData(Uri.parse("package:" + mPackageName));
-                            startActivity(infoIntent);
-                        });
+                        .setOnClickListener(v -> startActivity(IntentUtils.getAppDetailsSettings(mPackageName)));
             }
         } else if (FeatureController.isInstallerEnabled()) {
             if (mInstalledPackageInfo == null) {

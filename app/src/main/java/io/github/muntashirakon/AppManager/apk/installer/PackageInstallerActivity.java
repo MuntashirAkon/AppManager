@@ -42,6 +42,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.accessibility.AccessibilityMultiplexer;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.splitapk.SplitApkChooser;
 import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
@@ -109,6 +110,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
     private PackageInstallerViewModel model;
     @Nullable
     private PackageInstallerService service;
+    private final AccessibilityMultiplexer multiplexer = AccessibilityMultiplexer.getInstance();
     private final StoragePermission storagePermission = StoragePermission.init(this);
     private final ActivityResultLauncher<Intent> uninstallIntentLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -332,6 +334,10 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
         // before the ApkFile in the queue is accessed, it will throw an IllegalArgumentException as the ApkFile under
         // the key is unavailable by the time it calls it.
         ApkFile.getInAdvance(model.getApkFileKey());
+        if (!AppPref.isRootOrAdbEnabled()) {
+            // For no-root, use accessibility service if enabled
+            multiplexer.enableInstall(true);
+        }
         ContextCompat.startForegroundService(this, intent);
         if (!alwaysOnBackground && service != null) {
             setInstallFinishedListener();
@@ -460,6 +466,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
                         false).show();
             }
         } else {
+            multiplexer.enableUninstall(true);
             // Uninstall using service, not guaranteed to work
             // since it only uninstalls for the current user
             Intent intent = new Intent(Intent.ACTION_DELETE);
@@ -472,6 +479,8 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
      * Closes the current APK and start the next
      */
     private void goToNext() {
+        multiplexer.enableInstall(false);
+        multiplexer.enableUninstall(false);
         if (hasNext()) {
             isDealingWithApk = true;
             progressDialog.show();
