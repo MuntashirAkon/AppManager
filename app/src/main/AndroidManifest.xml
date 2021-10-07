@@ -594,9 +594,6 @@
             android:name=".logcat.LogcatRecordingService"
             android:exported="false" />
         <service
-            android:name=".logcat.CrazyLoggerService"
-            android:exported="false" />
-        <service
             android:name=".accessibility.NoRootAccessibilityService"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
             android:exported="false">
