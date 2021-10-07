@@ -9,6 +9,7 @@ import android.content.Intent;
 
 import java.util.List;
 
+import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.logcat.CrazyLoggerService;
 import io.github.muntashirakon.AppManager.logcat.LogcatRecordingService;
 import io.github.muntashirakon.AppManager.logcat.reader.LogcatReaderLoader;
@@ -19,12 +20,12 @@ public class ServiceHelper {
     public static final String TAG = ServiceHelper.class.getSimpleName();
 
     public static void startOrStopCrazyLogger(Context context) {
-        boolean alreadyRunning = checkIfServiceIsRunning(context, CrazyLoggerService.class);
-        Intent intent = new Intent(context, CrazyLoggerService.class);
-        if (!alreadyRunning) {
-            context.startService(intent);
-        } else {
-            context.stopService(intent);
+        if (BuildConfig.DEBUG) {
+            Intent intent = new Intent(context, CrazyLoggerService.class);
+            if (!context.stopService(intent)) {
+                // Service wasn't running
+                context.startService(intent);
+            }
         }
     }
 

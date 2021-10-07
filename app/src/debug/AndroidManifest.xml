@@ -1,0 +1,10 @@
+<!-- SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="io.github.muntashirakon.AppManager">
+
+    <application>
+        <service
+            android:name=".logcat.CrazyLoggerService"
+            android:exported="false" />
+    </application>
+</manifest>
