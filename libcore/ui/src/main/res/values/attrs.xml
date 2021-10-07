@@ -21,7 +21,7 @@
         <attr name="rowSpacing" format="enum|dimension">
             <enum name="auto" value="-65536" />
         </attr>
-        <!-- Display items from right to left. Default is false. -->
+        <!-- Display items from right to left. Default is auto. -->
         <attr name="rtl" format="boolean" />
         <!-- The maximum height of FlowLayout in terms of number of rows. -->
         <attr name="maxRows" format="integer" />

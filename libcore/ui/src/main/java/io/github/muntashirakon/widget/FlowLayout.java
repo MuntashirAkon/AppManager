@@ -51,7 +51,7 @@ public class FlowLayout extends ViewGroup {
     private int mChildSpacingForLastRow;
     private float mRowSpacing;
     private float mAdjustedRowSpacing = 0;
-    private boolean mRtl;
+    private Boolean mRtl = null;
     private int mMaxRows;
     private int mGravity;
     private int mRowVerticalGravity;
@@ -84,7 +84,9 @@ public class FlowLayout extends ViewGroup {
             mChildSpacingForLastRow = getDimensionOrInt(array, R.styleable.FlowLayout_childSpacingForLastRow, SPACING_UNDEFINED);
             mRowSpacing = getDimensionOrInt(array, R.styleable.FlowLayout_rowSpacing, 0);
             mMaxRows = array.getInt(R.styleable.FlowLayout_maxRows, Integer.MAX_VALUE);
-            mRtl = array.getBoolean(R.styleable.FlowLayout_rtl, false);
+            if (array.hasValue(R.styleable.FlowLayout_rtl)) {
+                mRtl = array.getBoolean(R.styleable.FlowLayout_rtl, false);
+            }
             mGravity = array.getInt(R.styleable.FlowLayout_android_gravity, UNSPECIFIED_GRAVITY);
             mRowVerticalGravity = array.getInt(R.styleable.FlowLayout_rowVerticalGravity, ROW_VERTICAL_GRAVITY_AUTO);
         } finally {
@@ -240,6 +242,7 @@ public class FlowLayout extends ViewGroup {
         final int paddingLeft = getPaddingLeft(), paddingRight = getPaddingRight(),
                 paddingTop = getPaddingTop(), paddingBottom = getPaddingBottom();
 
+        if (mRtl == null) mRtl = getLayoutDirection() == LAYOUT_DIRECTION_RTL;
         int x = mRtl ? (getWidth() - paddingRight) : paddingLeft;
         int y = paddingTop;
 
