@@ -29,7 +29,7 @@ import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.io.ProxyFile;
 
-import static io.github.muntashirakon.AppManager.utils.SettingsState.SETTINGS_TYPE_SSAID;
+import static io.github.muntashirakon.AppManager.utils.SettingsState.SYSTEM_PACKAGE_NAME;
 
 @RequiresApi(Build.VERSION_CODES.O)
 public class SsaidSettings {
@@ -47,7 +47,7 @@ public class SsaidSettings {
         this.packageName = packageName;
         HandlerThread thread = new HandlerThread("SSAID", Process.THREAD_PRIORITY_BACKGROUND);
         thread.start();
-        int ssaidKey = SettingsState.makeKey(SETTINGS_TYPE_SSAID, 0);
+        int ssaidKey = SettingsStateV26.makeKey(SettingsState.SETTINGS_TYPE_SSAID, 0);
         File ssaidLocation = new ProxyFile(OsEnvironment.getUserSystemDirectory(UserHandleHidden.getUserId(uid)),
                 "settings_ssaid.xml");
         try {
@@ -58,8 +58,13 @@ public class SsaidSettings {
             throw new IOException(e);
         }
         try {
-            settingsState = new SettingsState(lock, ssaidLocation, ssaidKey,
-                    SettingsState.MAX_BYTES_PER_APP_PACKAGE_UNLIMITED, thread.getLooper());
+            if (Build.VERSION.SDK_INT > 31) {
+                settingsState = new SettingsStateV31(lock, ssaidLocation, ssaidKey,
+                        SettingsState.MAX_BYTES_PER_APP_PACKAGE_UNLIMITED, thread.getLooper());
+            } else {
+                settingsState = new SettingsStateV26(lock, ssaidLocation, ssaidKey,
+                        SettingsState.MAX_BYTES_PER_APP_PACKAGE_UNLIMITED, thread.getLooper());
+            }
         } catch (IllegalStateException e) {
             throw new IOException(e);
         }
@@ -80,12 +85,12 @@ public class SsaidSettings {
     }
 
     private String getName() {
-        return packageName.equals(SettingsState.SYSTEM_PACKAGE_NAME) ? SSAID_USER_KEY : String.valueOf(uid);
+        return packageName.equals(SYSTEM_PACKAGE_NAME) ? SSAID_USER_KEY : String.valueOf(uid);
     }
 
     @NonNull
     public static String generateSsaid(@NonNull String packageName) {
-        boolean isUserKey = packageName.equals(SettingsState.SYSTEM_PACKAGE_NAME);
+        boolean isUserKey = packageName.equals(SYSTEM_PACKAGE_NAME);
         // Generate a random key for each user used for creating a new ssaid.
         final byte[] keyBytes = new byte[isUserKey ? 32 : 8];
         final SecureRandom rand = new SecureRandom();
@@ -103,9 +108,8 @@ public class SsaidSettings {
         if (userKeySetting == null || userKeySetting.isNull()
                 || userKeySetting.getValue() == null) {
             // Lazy initialize and store the user key.
-            String userKey = generateSsaid(SettingsState.SYSTEM_PACKAGE_NAME);
-            settingsState.insertSettingLocked(SSAID_USER_KEY, userKey, null, true,
-                    SettingsState.SYSTEM_PACKAGE_NAME);
+            String userKey = generateSsaid(SYSTEM_PACKAGE_NAME);
+            settingsState.insertSettingLocked(SSAID_USER_KEY, userKey, null, true, SYSTEM_PACKAGE_NAME);
             userKeySetting = settingsState.getSettingLocked(SSAID_USER_KEY);
             if (userKeySetting == null || userKeySetting.isNull()
                     || userKeySetting.getValue() == null) {
