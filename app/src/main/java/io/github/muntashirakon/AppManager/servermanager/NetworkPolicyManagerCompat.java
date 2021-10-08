@@ -25,23 +25,38 @@ public class NetworkPolicyManagerCompat {
      * The policies below are taken from LineageOS
      * Source: https://github.com/LineageOS/android_frameworks_base/blob/lineage-18.1/core/java/android/net/NetworkPolicyManager.java
      */
-    /** Reject network usage on wifi network. {@code POLICY_REJECT_ON_WLAN} up to Lineage 17.1 (Android 10) */
+    /**
+     * Reject network usage on wifi network. {@code POLICY_REJECT_ON_WLAN} up to Lineage 17.1 (Android 10)
+     */
     public static final int POLICY_REJECT_WIFI = 1 << 15;
-    /** Reject network usage on cellular network. {@code POLICY_REJECT_ON_DATA} up to Lineage 17.1 (Android 10) */
+    /**
+     * Reject network usage on cellular network. {@code POLICY_REJECT_ON_DATA} up to Lineage 17.1 (Android 10)
+     */
     public static final int POLICY_REJECT_CELLULAR = 1 << 16;
-    /** Reject network usage on virtual private network. {@code POLICY_REJECT_ON_VPN} up to Lineage 17.1 (Android 10) */
+    /**
+     * Reject network usage on virtual private network. {@code POLICY_REJECT_ON_VPN} up to Lineage 17.1 (Android 10)
+     */
     public static final int POLICY_REJECT_VPN = 1 << 17;
-    /** Reject network usage on all networks. {@code POLICY_NETWORK_ISOLATED} up to Lineage 17.1 (Android 10) */
+    /**
+     * Reject network usage on all networks. {@code POLICY_NETWORK_ISOLATED} up to Lineage 17.1 (Android 10)
+     */
     public static final int POLICY_REJECT_ALL = 1 << 18;
+    // The following are taken from Samsung device (Android 10)
+    public static final int POLICY_ALLOW_METERED_IN_ROAMING = 1001;
+    public static final int POLICY_ALLOW_WHITELIST_IN_ROAMING = 1002;
 
     @IntDef(flag = true, value = {
             NetworkPolicyManager.POLICY_NONE,
             NetworkPolicyManager.POLICY_REJECT_METERED_BACKGROUND,
             NetworkPolicyManager.POLICY_ALLOW_METERED_BACKGROUND,
+            // Lineage OS
             POLICY_REJECT_CELLULAR,
             POLICY_REJECT_VPN,
             POLICY_REJECT_WIFI,
             POLICY_REJECT_ALL,
+            // Samsung
+            POLICY_ALLOW_METERED_IN_ROAMING,
+            POLICY_ALLOW_WHITELIST_IN_ROAMING,
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface NetPolicy {}
