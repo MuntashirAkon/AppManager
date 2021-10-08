@@ -348,6 +348,10 @@ public class AppOpsManager {
     public static final int OP_COARSE_LOCATION_SOURCE = 109;
     public static final int OP_MANAGE_MEDIA = 110;
     public static final int OP_BLUETOOTH_CONNECT = 111;
+    public static final int OP_UWB_RANGING = 112;
+    public static final int OP_ACTIVITY_RECOGNITION_SOURCE = 113;
+    public static final int OP_BLUETOOTH_ADVERTISE = 114;
+    public static final int OP_RECORD_INCOMING_PHONE_AUDIO = 115;
     public static final int _NUM_OP;  // fetched using reflection
 
     // MIUI app ops taken from framework.jar
@@ -503,6 +507,10 @@ public class AppOpsManager {
     public static final String OPSTR_COARSE_LOCATION_SOURCE = "android:coarse_location_source";
     public static final String OPSTR_MANAGE_MEDIA = "android:manage_media";
     public static final String OPSTR_BLUETOOTH_CONNECT = "android:bluetooth_connect";
+    public static final String OPSTR_UWB_RANGING = "android:uwb_ranging";
+    public static final String OPSTR_ACTIVITY_RECOGNITION_SOURCE = "android:activity_recognition_source";
+    public static final String OPSTR_BLUETOOTH_ADVERTISE = "android:bluetooth_advertise";
+    public static final String OPSTR_RECORD_INCOMING_PHONE_AUDIO = "android:record_incoming_phone_audio";
 
     private static final int[] RUNTIME_AND_APPOP_PERMISSIONS_OPS = {
             // RUNTIME PERMISSIONS
@@ -554,6 +562,11 @@ public class AppOpsManager {
             OP_WRITE_MEDIA_VIDEO,
             OP_READ_MEDIA_IMAGES,
             OP_WRITE_MEDIA_IMAGES,
+            // Nearby devices
+            OP_BLUETOOTH_SCAN,
+            OP_BLUETOOTH_CONNECT,
+            OP_BLUETOOTH_ADVERTISE,
+            OP_UWB_RANGING,
             // APPOP PERMISSIONS
             OP_ACCESS_NOTIFICATIONS,
             OP_SYSTEM_ALERT_WINDOW,
@@ -570,7 +583,6 @@ public class AppOpsManager {
             OP_USE_ICC_AUTH_WITH_DEVICE_IDENTIFIER,
             OP_SCHEDULE_EXACT_ALARM,
             OP_MANAGE_MEDIA,
-            OP_BLUETOOTH_CONNECT,  // Missing in the original file
     };
 
     /**
@@ -694,6 +706,10 @@ public class AppOpsManager {
             OP_COARSE_LOCATION,                 // COARSE_LOCATION_SOURCE
             OP_MANAGE_MEDIA,                    // MANAGE_MEDIA
             OP_BLUETOOTH_CONNECT,               // BLUETOOTH_CONNECT
+            OP_UWB_RANGING,                     // OP_UWB_RANGING
+            OP_ACTIVITY_RECOGNITION,            // OP_ACTIVITY_RECOGNITION_SOURCE
+            OP_BLUETOOTH_ADVERTISE,             // OP_BLUETOOTH_ADVERTISE
+            OP_RECORD_INCOMING_PHONE_AUDIO,     // OP_RECORD_INCOMING_PHONE_AUDIO
     };
 
     /**
@@ -854,6 +870,10 @@ public class AppOpsManager {
             OPSTR_COARSE_LOCATION_SOURCE,
             OPSTR_MANAGE_MEDIA,
             OPSTR_BLUETOOTH_CONNECT,
+            OPSTR_UWB_RANGING,
+            OPSTR_ACTIVITY_RECOGNITION_SOURCE,
+            OPSTR_BLUETOOTH_ADVERTISE,
+            OPSTR_RECORD_INCOMING_PHONE_AUDIO,
     };
 
     /**
@@ -972,7 +992,11 @@ public class AppOpsManager {
             "FINE_LOCATION_SOURCE",
             "COARSE_LOCATION_SOURCE",
             "MANAGE_MEDIA",
-            "BLUETOOTH_CONNECT"
+            "BLUETOOTH_CONNECT",
+            "UWB_RANGING",
+            "ACTIVITY_RECOGNITION_SOURCE",
+            "BLUETOOTH_ADVERTISE",
+            "RECORD_INCOMING_PHONE_AUDIO",
     };
 
     /**
@@ -1135,6 +1159,10 @@ public class AppOpsManager {
             null, // no permission for OP_COARSE_LOCATION_SOURCE
             "android.permission.MANAGE_MEDIA",
             "android.permission.BLUETOOTH_CONNECT",
+            "android.permission.UWB_RANGING",
+            null, // no permission for OP_ACTIVITY_RECOGNITION_SOURCE,
+            "android.permission.BLUETOOTH_ADVERTISE",
+            null, // no permission for OP_RECORD_INCOMING_PHONE_AUDIO,
     };
 
     /**
@@ -1255,6 +1283,10 @@ public class AppOpsManager {
             null, // COARSE_LOCATION_SOURCE
             null, // MANAGE_MEDIA
             null, // BLUETOOTH_CONNECT
+            null, // UWB_RANGING
+            null, // ACTIVITY_RECOGNITION_SOURCE
+            null, // BLUETOOTH_ADVERTISE
+            null, // RECORD_INCOMING_PHONE_AUDIO
     };
 
     /**
@@ -1373,6 +1405,10 @@ public class AppOpsManager {
             null, // COARSE_LOCATION_SOURCE
             null, // MANAGE_MEDIA
             null, // BLUETOOTH_CONNECT
+            null, // UWB_RANGING
+            null, // ACTIVITY_RECOGNITION_SOURCE
+            null, // BLUETOOTH_ADVERTISE
+            null, // RECORD_INCOMING_PHONE_AUDIO
     };
 
     /**
@@ -1491,6 +1527,10 @@ public class AppOpsManager {
             MODE_ALLOWED, // COARSE_LOCATION_SOURCE
             MODE_DEFAULT, // MANAGE_MEDIA
             MODE_ALLOWED, // BLUETOOTH_CONNECT
+            MODE_ALLOWED, // UWB_RANGING
+            MODE_ALLOWED, // ACTIVITY_RECOGNITION_SOURCE
+            MODE_ALLOWED, // BLUETOOTH_ADVERTISE
+            MODE_ALLOWED, // RECORD_INCOMING_PHONE_AUDIO
     };
 
 
@@ -1619,6 +1659,10 @@ public class AppOpsManager {
             false, // COARSE_LOCATION_SOURCE
             false, // MANAGE_MEDIA
             false, // BLUETOOTH_CONNECT
+            false, // UWB_RANGING
+            false, // ACTIVITY_RECOGNITION_SOURCE
+            false, // BLUETOOTH_ADVERTISE
+            false, // RECORD_INCOMING_PHONE_AUDIO
     };
 
     /**
