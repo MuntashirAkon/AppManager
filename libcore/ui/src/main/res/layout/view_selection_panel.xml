@@ -10,7 +10,7 @@
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:orientation="horizontal"
         android:focusable="false">
 
@@ -65,10 +65,12 @@
     <include layout="@layout/item_divider_horizontal" />
 
     <io.github.muntashirakon.widget.MaxHeightScrollView
+        android:id="@+id/selection_actions_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:focusable="false"
         android:paddingTop="@dimen/padding_very_small"
+        android:paddingBottom="@dimen/padding_very_small"
         app:maxHeight="116dp">
 
         <io.github.muntashirakon.widget.SelectionActionsView

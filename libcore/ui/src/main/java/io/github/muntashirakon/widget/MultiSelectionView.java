@@ -4,6 +4,7 @@ package io.github.muntashirakon.widget;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -41,9 +42,17 @@ public class MultiSelectionView extends MaterialCardView {
     }
 
     private final SelectionActionsView selectionActionsView;
+    private final View divider;
+    private final MaxHeightScrollView selectionActionsContainer;
     private final View cancelSelectionView;
     private final CheckBox selectAllView;
     private final TextView selectionCounter;
+    @Px
+    private final int maxHeight;
+    @Px
+    private final int titleHeight;
+    @Px
+    private int currentHeight;
     @Nullable
     private Adapter<?> adapter;
     @Nullable
@@ -66,11 +75,32 @@ public class MultiSelectionView extends MaterialCardView {
         // Inflate layout
         LayoutInflater.from(context).inflate(R.layout.view_selection_panel, this, true);
         selectionActionsView = findViewById(R.id.selection_actions);
+        selectionActionsContainer = findViewById(R.id.selection_actions_container);
         cancelSelectionView = findViewById(R.id.action_cancel);
         selectAllView = findViewById(R.id.action_select_all);
         selectionCounter = findViewById(R.id.selection_counter);
-        // Dummy listener to prevent “click-through”
-        selectionCounter.setOnTouchListener((v, event) -> true);
+        divider = findViewById(R.id.divider);
+
+        // Set heights
+        maxHeight = UiUtils.dpToPx(getContext(), 48 + 1 + 116);
+        titleHeight = UiUtils.dpToPx(getContext(), 48);
+        currentHeight = maxHeight;
+
+        // Clicking on counter maximizes/minimizes the selection actions
+        selectionCounter.setOnClickListener((v) -> {
+            Adapter.OnLayoutChangeListener listener;
+            if (adapter != null) {
+                listener = adapter.getLayoutChangeListener();
+                adapter.setOnLayoutChangeListener(null);
+            } else listener = null;
+            if (currentHeight == titleHeight) {
+                // Minimized mode
+                maximize();
+            } else minimize();
+            if (adapter != null) {
+                adapter.setOnLayoutChangeListener(listener);
+            }
+        });
 
         // Custom attributes
         TintTypedArray attributes = ThemeEnforcement.obtainTintedStyledAttributes(context, attrs,
@@ -118,8 +148,13 @@ public class MultiSelectionView extends MaterialCardView {
         super.onLayout(changed, left, top, right, bottom);
         if (adapter != null) {
             ViewGroup.MarginLayoutParams lp = (MarginLayoutParams) getLayoutParams();
-            adapter.setSelectionBottomPadding(getHeight() + lp.topMargin + lp.bottomMargin);
+            adapter.setSelectionBottomPadding(getHeight() + lp.topMargin + lp.bottomMargin + UiUtils.dpToPx(getContext(), 5));
         }
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(currentHeight, MeasureSpec.AT_MOST));
     }
 
     public Menu getMenu() {
@@ -129,6 +164,7 @@ public class MultiSelectionView extends MaterialCardView {
     public void setAdapter(@NonNull Adapter<?> adapter) {
         this.adapter = adapter;
         // Set listeners
+        adapter.setOnLayoutChangeListener((v, rect, oldRect) -> toggleSelectionActions(rect.height()));
         cancelSelectionView.setOnClickListener(v -> {
             adapter.cancelSelection();
             hide();
@@ -195,15 +231,47 @@ public class MultiSelectionView extends MaterialCardView {
         if (selectionChangeListener != null) {
             selectionChangeListener.onSelectionChange(selectionCount);
         }
+        if (!adapter.isInSelectionMode()) {
+            // Special check to avoid displaying the selection panel on resizing the view
+            hide();
+        }
     }
 
-    public abstract static class Adapter<VH extends ViewHolder> extends RecyclerView.Adapter<VH> {
+    private void toggleSelectionActions(int recyclerViewHeight) {
+        if (maxHeight * 2 > recyclerViewHeight) {
+            minimize();
+        } else {
+            maximize();
+        }
+    }
+
+    private void minimize() {
+        currentHeight = titleHeight;
+        selectionActionsContainer.setVisibility(GONE);
+        divider.setVisibility(GONE);
+        requestLayout();
+    }
+
+    private void maximize() {
+        currentHeight = maxHeight;
+        selectionActionsContainer.setVisibility(VISIBLE);
+        divider.setVisibility(VISIBLE);
+        requestLayout();
+    }
+
+    public abstract static class Adapter<VH extends ViewHolder> extends RecyclerView.Adapter<VH> implements View.OnLayoutChangeListener {
         private interface OnSelectionChangeListener {
             void onSelectionChange();
         }
 
+        private interface OnLayoutChangeListener {
+            void onLayoutChange(RecyclerView v, Rect rect, Rect oldRect);
+        }
+
         @Nullable
         private OnSelectionChangeListener selectionChangeListener;
+        @Nullable
+        private OnLayoutChangeListener layoutChangeListener;
         private boolean isInSelectionMode;
         @Nullable
         private RecyclerView recyclerView;
@@ -279,8 +347,28 @@ public class MultiSelectionView extends MaterialCardView {
             notifySelectionChange();
         }
 
+        @Override
+        public final void onLayoutChange(View v, int left, int top, int right, int bottom,
+                                         int oldLeft, int oldTop, int oldRight, int oldBottom) {
+            if (layoutChangeListener == null) return;
+            Rect rect = new Rect(left, top, right, bottom);
+            Rect oldRect = new Rect(oldLeft, oldTop, oldRight, oldBottom);
+            if (rect.width() != oldRect.width() || rect.height() != oldRect.height()) {
+                layoutChangeListener.onLayoutChange(recyclerView, rect, oldRect);
+            }
+        }
+
         private void setOnSelectionChangeListener(@Nullable OnSelectionChangeListener listener) {
             selectionChangeListener = listener;
+        }
+
+        private void setOnLayoutChangeListener(@Nullable OnLayoutChangeListener listener) {
+            layoutChangeListener = listener;
+        }
+
+        @Nullable
+        public OnLayoutChangeListener getLayoutChangeListener() {
+            return layoutChangeListener;
         }
 
         /**
@@ -302,12 +390,14 @@ public class MultiSelectionView extends MaterialCardView {
         public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
             super.onAttachedToRecyclerView(recyclerView);
             this.recyclerView = recyclerView;
+            recyclerView.addOnLayoutChangeListener(this);
         }
 
         @CallSuper
         @Override
         public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
             super.onDetachedFromRecyclerView(recyclerView);
+            recyclerView.removeOnLayoutChangeListener(this);
             this.recyclerView = null;
         }
 
