@@ -2,22 +2,19 @@
 
 package net.dongliu.apk.parser;
 
-import net.dongliu.apk.parser.bean.ApkSignStatus;
+import androidx.annotation.Nullable;
+
 import net.dongliu.apk.parser.utils.Inputs;
 
-import java.io.*;
+import java.io.Closeable;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Locale;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
-import androidx.annotation.Nullable;
 
 
 /**
@@ -43,23 +40,6 @@ public class ApkParser extends AbstractApkFile implements Closeable {
     }
 
     @Override
-    protected List<CertificateFile> getAllCertificateData() throws IOException {
-        Enumeration<? extends ZipEntry> enu = zf.entries();
-        List<CertificateFile> list = new ArrayList<>();
-        while (enu.hasMoreElements()) {
-            ZipEntry ne = enu.nextElement();
-            if (ne.isDirectory()) {
-                continue;
-            }
-            String name = ne.getName().toUpperCase(Locale.ROOT);
-            if (name.endsWith(".RSA") || name.endsWith(".DSA")) {
-                list.add(new CertificateFile(name, Inputs.readAllAndClose(zf.getInputStream(ne))));
-            }
-        }
-        return list;
-    }
-
-    @Override
     public byte[] getFileData(String path) throws IOException {
         ZipEntry entry = zf.getEntry(path);
         if (entry == null) {
@@ -77,45 +57,10 @@ public class ApkParser extends AbstractApkFile implements Closeable {
     }
 
 
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated using google official ApkVerifier of apksig lib instead.
-     */
-    @Override
-    @Deprecated
-    public ApkSignStatus verifyApk() throws IOException {
-        ZipEntry entry = zf.getEntry("META-INF/MANIFEST.MF");
-        if (entry == null) {
-            // apk is not signed;
-            return ApkSignStatus.notSigned;
-        }
-
-        try (JarFile jarFile = new JarFile(this.apkFile)) {
-            Enumeration<JarEntry> entries = jarFile.entries();
-            byte[] buffer = new byte[8192];
-
-            while (entries.hasMoreElements()) {
-                JarEntry e = entries.nextElement();
-                if (e.isDirectory()) {
-                    continue;
-                }
-                try (InputStream in = jarFile.getInputStream(e)) {
-                    // Read in each jar entry. A security exception will be thrown if a signature/digest check fails.
-                    while (in.read(buffer, 0, buffer.length) != -1) {
-                        // Don't care
-                    }
-                } catch (SecurityException se) {
-                    return ApkSignStatus.incorrect;
-                }
-            }
-        }
-        return ApkSignStatus.signed;
-    }
-
     @Override
     public void close() throws IOException {
-        try (Closeable ignored = ApkParser.super::close;
+        //noinspection EmptyTryBlock
+        try (Closeable ignore = ApkParser.super::close;
              Closeable ignored1 = zf;
              Closeable ignored2 = fileChannel) {
         }
