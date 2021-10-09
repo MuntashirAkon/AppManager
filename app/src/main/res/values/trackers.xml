@@ -231,7 +231,7 @@
         <item>com.cloudtech.</item>
         <item>com.mocoplex.adlib.</item>
         <item>com.brightcove</item>
-        <item>com.dv.</item>
+        <item>com.dv.DVSDK</item>
         <item>com.inmarket</item>
         <item>com.foursquare.pilgrim</item>
         <item>com.foursquare.pilgrimsdk.android</item>
@@ -573,7 +573,6 @@
         <item>com.adscendmedia.sdk.</item>
         <item>.AdscendFiles.AdscendOffersActivity</item>
         <item>com.advangelists.</item>
-        <item>com.adzerk.android.sdk</item>
         <item>jp.co.agoop.</item>
         <item>io.agora.rtc.</item>
         <item>io.agora.utils.</item>
@@ -702,6 +701,7 @@
         <item>io.karte.android.tracker.</item>
         <item>com.kakao.ad.</item>
         <item>com.kakao.kakaolink</item>
+        <item>com.adzerk.android.sdk</item>
         <item>com.zestadz.android.</item>
         <item>com.linecorp.line.admolin</item>
         <item>com.five_corp.ad.</item>
@@ -901,6 +901,7 @@
         <item>jp.co.yahoo.android.haas.AgoopReceiver</item>
         <item>jp.co.yahoo.android.yssens.YSSensActivityLifecycleContentProvider</item>
         <item>com.yext.locationsdk.</item>
+        <item>com.yieldlab.</item>
         <item>com.yoadx.yoadx.</item>
         <item>com.yougood.basebusiness.</item>
         <item>com.yougoodtech.</item>
@@ -1499,7 +1500,6 @@
         <item>²Adscend Media</item>
         <item>²Adscend Media</item>
         <item>²Advangelists</item>
-        <item>²Adzerk</item>
         <item>²Agoop</item>
         <item>²Agora Analytics</item>
         <item>²Agora Analytics</item>
@@ -1628,6 +1628,7 @@
         <item>²KARTE</item>
         <item>²Kakao AD SDK</item>
         <item>²KakaoTalk Link</item>
+        <item>²Kevel (formerly Adzerk)</item>
         <item>²Komli Mobile (ZestAdz)</item>
         <item>²LINE Admolin</item>
         <item>²LINE Ads Five</item>
@@ -1827,6 +1828,7 @@
         <item>²Yahoo!Japan DataShare</item>
         <item>²Yahoo!Japan DataShare</item>
         <item>²Yext</item>
+        <item>²Yieldlab</item>
         <item>²Yoadx</item>
         <item>²Yougoodtech</item>
         <item>²Yougoodtech</item>
