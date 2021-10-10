@@ -172,7 +172,16 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
         model.packageInfoLiveData().observe(this, newPackageInfo -> {
             progressDialog.dismiss();
             if (newPackageInfo == null) {
-                UIUtils.displayLongToast(R.string.failed_to_fetch_package_info);
+                new MaterialAlertDialogBuilder(this)
+                        .setTitle(R.string._undefined)
+                        .setIcon(R.drawable.ic_baseline_get_app_24)
+                        .setMessage(R.string.failed_to_fetch_package_info)
+                        .setCancelable(false)
+                        .setNegativeButton(R.string.close, (dialog, which) -> {
+                            dialog.dismiss();
+                            goToNext();
+                        })
+                        .create();
                 triggerCancel();
                 return;
             }

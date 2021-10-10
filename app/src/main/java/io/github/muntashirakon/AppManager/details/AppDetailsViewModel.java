@@ -15,6 +15,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.PermissionInfo;
 import android.content.pm.ProviderInfo;
 import android.content.pm.ServiceInfo;
+import android.content.pm.Signature;
 import android.content.pm.UserInfo;
 import android.net.Uri;
 import android.os.Build;
@@ -38,6 +39,7 @@ import com.android.apksig.apk.ApkFormatException;
 import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -77,7 +79,6 @@ import static io.github.muntashirakon.AppManager.appops.AppOpsManager.OP_NONE;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagMatchUninstalled;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfo;
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfoApk;
 
 public class AppDetailsViewModel extends AndroidViewModel {
     public static final String TAG = AppDetailsViewModel.class.getSimpleName();
@@ -842,9 +843,12 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 installedPackageInfo = null;
             }
             if (isExternalApk) {
+                // Do not get signatures via Android framework as it will simply return NULL without any clarifications.
+                // All signatures are fetched using PackageUtils where a fallback method is used in case the PackageInfo
+                // didn't load any signature. So, we should be safe from any harm.
                 packageInfo = mPackageManager.getPackageArchiveInfo(apkPath, PackageManager.GET_PERMISSIONS
                         | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
-                        | PackageManager.GET_SERVICES | flagDisabledComponents | flagSigningInfoApk
+                        | PackageManager.GET_SERVICES | flagDisabledComponents
                         | PackageManager.GET_CONFIGURATIONS | PackageManager.GET_SHARED_LIBRARY_FILES
                         | PackageManager.GET_URI_PERMISSION_PATTERNS);
                 if (packageInfo == null) {
@@ -1418,6 +1422,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         return apkVerifierResult;
     }
 
+    @SuppressWarnings("deprecation")
     @WorkerThread
     private void loadSignatures() {
         List<AppDetailsItem> appDetailsItems = new ArrayList<>();
@@ -1440,6 +1445,16 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     AppDetailsItem item = new AppDetailsItem(certificate);
                     item.name = "Signer Certificate";
                     appDetailsItems.add(item);
+                }
+                if (isExternalApk && packageInfo.signatures == null) {
+                    List<Signature> signatures = new ArrayList<>(certificates.size());
+                    for (X509Certificate certificate : certificates) {
+                        try {
+                            signatures.add(new Signature(certificate.getEncoded()));
+                        } catch (CertificateEncodingException ignore) {
+                        }
+                    }
+                    packageInfo.signatures = signatures.toArray(new Signature[0]);
                 }
             } else {
                 //noinspection ConstantConditions Null is deliberately set here to get at least one row
