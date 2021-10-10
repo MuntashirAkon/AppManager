@@ -12,7 +12,6 @@ import androidx.annotation.WorkerThread;
 import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -56,7 +55,7 @@ public class RulesStorageManager implements Closeable {
         this.userHandle = userHandle;
         this.entries = new ArrayList<>();
         try {
-            loadEntries(getDesiredFile(), false);
+            loadEntries(getDesiredFile(false), false);
         } catch (Throwable ignored) {
         }
     }
@@ -264,7 +263,7 @@ public class RulesStorageManager implements Closeable {
     @GuardedBy("entries")
     public void commit() {
         try {
-            saveEntries(getDesiredFile(), false);
+            saveEntries(getDesiredFile(true), false);
         } catch (IOException | RemoteException ex) {
             ex.printStackTrace();
         }
@@ -301,12 +300,14 @@ public class RulesStorageManager implements Closeable {
     }
 
     @NonNull
-    protected Path getDesiredFile() throws FileNotFoundException {
+    protected Path getDesiredFile(boolean create) throws IOException {
         Path confDir = getConfDir();
         if (!confDir.exists()) {
             confDir.mkdirs();
         }
+        if (create) {
+            return confDir.findOrCreateFile(packageName + ".tsv", null);
+        }
         return confDir.findFile(packageName + ".tsv");
     }
-
 }

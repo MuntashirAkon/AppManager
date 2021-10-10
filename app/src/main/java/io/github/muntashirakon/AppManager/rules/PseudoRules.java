@@ -34,7 +34,7 @@ public class PseudoRules extends RulesStorageManager {
      */
     @NonNull
     @Override
-    protected Path getDesiredFile() {
+    protected Path getDesiredFile(boolean create) {
         return new Path(AppManager.getContext(), new File("/dev/null"));
     }
 }
