@@ -26,6 +26,7 @@ import java.util.Set;
 import dev.rikka.tools.refine.Refine;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.StorageManagerCompat;
+import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.io.ProxyFile;
 import io.github.muntashirakon.io.ProxyFileReader;
@@ -42,6 +43,8 @@ public class StorageUtils {
         if (includeInternal) {
             ProxyFile internal = new ProxyFile(Environment.getDataDirectory());
             addStorage(context.getString(R.string.internal_storage), internal, storageLocations);
+            addStorage(context.getString(R.string.system_partition), new ProxyFile(OsEnvironment.getRootDirectory()),
+                    storageLocations);
         }
         @SuppressWarnings("deprecation")
         ProxyFile sdCard = new ProxyFile(Environment.getExternalStorageDirectory());
