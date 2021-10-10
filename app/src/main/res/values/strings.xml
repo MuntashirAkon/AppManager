@@ -1124,4 +1124,5 @@
     <string name="java">Java</string>
     <string name="smali">Smali</string>
     <string name="accessibility_service_description">Generic accessibility service to carry out certain operations such as clearing cache in no-root mode.</string>
+    <string name="explore">Explore</string>
 </resources>

@@ -117,6 +117,31 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".apk.explorer.AppExplorerActivity"
+            android:exported="true"
+            android:label="@string/explore">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="application/vnd.android.package-archive" />
+                <data android:mimeType="application/octet-stream" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="file" />
+                <data android:scheme="content" />
+                <data android:host="*" />
+                <data android:mimeType="application/vnd.android.package-archive" />
+                <data android:mimeType="application/octet-stream" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".main.MainActivity"
             android:exported="true"
             android:icon="@mipmap/ic_launcher"
