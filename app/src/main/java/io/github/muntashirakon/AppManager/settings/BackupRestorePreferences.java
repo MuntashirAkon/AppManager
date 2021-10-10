@@ -253,7 +253,7 @@ public class BackupRestorePreferences extends PreferenceFragmentCompat {
         DialogTitleBuilder titleBuilder = new DialogTitleBuilder(activity)
                 .setTitle(R.string.backup_volume)
                 .setSubtitle(R.string.backup_volume_dialog_description)
-                .setStartIcon(R.drawable.ic_sd_storage_24)
+                .setStartIcon(R.drawable.ic_zip_disk)
                 .setEndIcon(R.drawable.ic_baseline_add_24, v -> new MaterialAlertDialogBuilder(activity)
                         .setTitle(R.string.notice)
                         .setMessage(R.string.notice_saf)

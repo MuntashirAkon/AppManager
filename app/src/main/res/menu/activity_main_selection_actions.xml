@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/action_uninstall"
-        android:icon="@drawable/ic_delete_black_24dp"
+        android:icon="@drawable/ic_trash_can_outline"
         android:title="@string/uninstall" />
     <item
         android:id="@+id/action_enable_disable"
@@ -16,7 +16,7 @@
         android:icon="@drawable/ic_baseline_power_settings_new_24" />
     <item
         android:id="@+id/action_clear_data_cache"
-        android:icon="@drawable/ic_delete_black_24dp"
+        android:icon="@drawable/ic_trash_can_outline"
         android:title="@string/clear" />
     <item
         android:id="@+id/action_save_apk"
@@ -25,7 +25,7 @@
     <item
         android:id="@+id/action_backup"
         android:title="@string/backup_restore"
-        android:icon="@drawable/ic_baseline_save_24" />
+        android:icon="@drawable/ic_backup_restore" />
     <item
         android:id="@+id/action_disable_background"
         android:title="@string/disable_background"
@@ -33,17 +33,17 @@
     <item
         android:id="@+id/action_block_unblock_trackers"
         android:title="@string/block_unblock_trackers"
-        android:icon="@drawable/ic_block_black_24dp" />
+        android:icon="@drawable/ic_cctv_off" />
     <item
         android:id="@+id/action_net_policy"
         android:title="@string/net_policy"
-        android:icon="@drawable/ic_assignment_black_24dp" />
+        android:icon="@drawable/ic_security_network" />
     <item
         android:id="@+id/action_export_blocking_rules"
         android:title="@string/export_blocking_rules"
-        android:icon="@drawable/ic_open_in_new_black_24dp" />
+        android:icon="@drawable/ic_file_export_outline" />
     <item
         android:id="@+id/action_add_to_profile"
-        android:icon="@drawable/ic_assignment_black_24dp"
+        android:icon="@drawable/ic_file_plus_outline"
         android:title="@string/add_to_profile" />
 </menu>

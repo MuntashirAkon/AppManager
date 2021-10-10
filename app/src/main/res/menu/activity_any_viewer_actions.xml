@@ -16,7 +16,7 @@
 
     <item
         android:id="@+id/action_save"
-        android:icon="@drawable/ic_baseline_save_24"
+        android:icon="@drawable/ic_content_save_outline"
         android:title="@string/save"
         app:showAsAction="ifRoom" />
 

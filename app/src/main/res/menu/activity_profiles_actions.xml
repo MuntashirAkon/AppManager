@@ -17,7 +17,7 @@
 
     <item
         android:id="@+id/action_import"
-        android:icon="@drawable/ic_assignment_black_24dp"
+        android:icon="@drawable/ic_file_import_outline"
         android:title="@string/pref_import" />
 
 </menu>

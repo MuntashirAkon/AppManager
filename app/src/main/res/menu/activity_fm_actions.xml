@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/action_storage"
-        android:icon="@drawable/ic_sd_storage_24"
+        android:icon="@drawable/ic_zip_disk"
         android:title="@string/storage"
         app:showAsAction="always" />
 

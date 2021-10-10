@@ -142,7 +142,7 @@ public class BackupDialogFragment extends DialogFragment {
                 .getPackageManager(), targetPackages.get(0).getPackageName()) : getString(R.string.backup_options);
         DialogTitleBuilder titleBuilder = new DialogTitleBuilder(activity).setTitle(title);
         if ((customModes & MODE_DELETE) != 0 && baseBackupCount == targetPackages.size()) {
-            titleBuilder.setEndIcon(R.drawable.ic_delete_black_24dp, v -> {
+            titleBuilder.setEndIcon(R.drawable.ic_trash_can_outline, v -> {
                 mode = MODE_DELETE;
                 new Thread(this::handleCustomUsers).start();
             });

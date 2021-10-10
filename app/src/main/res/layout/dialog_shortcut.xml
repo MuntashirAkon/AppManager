@@ -98,7 +98,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="@dimen/padding_small"
                 android:layout_weight="0"
-                app:srcCompat="@drawable/ic_image_black_24dp"
+                app:srcCompat="@drawable/ic_image_outline"
                 tools:ignore="contentDescription" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>

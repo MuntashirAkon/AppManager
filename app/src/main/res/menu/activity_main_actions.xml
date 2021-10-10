@@ -4,13 +4,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_instructions"
-        android:icon="@drawable/ic_info_outline_black_24dp"
+        android:icon="@drawable/ic_information_variant"
         android:title="@string/instructions"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_list_options"
-        android:icon="@drawable/ic_view_list_black_24dp"
+        android:icon="@drawable/ic_list_status"
         android:title="@string/list_options"
         app:showAsAction="never" />
 
@@ -22,7 +22,7 @@
 
     <item
         android:id="@+id/action_one_click_ops"
-        android:icon="@drawable/ic_outline_plus_one_24"
+        android:icon="@drawable/ic_cursor_default_click_outline"
         android:title="@string/one_click_ops" />
 
     <item
@@ -32,17 +32,17 @@
 
     <item
         android:id="@+id/action_running_apps"
-        android:icon="@drawable/ic_tune_black_24dp"
+        android:icon="@drawable/ic_pulse"
         android:title="@string/running_apps" />
 
     <item
         android:id="@+id/action_sys_config"
-        android:icon="@drawable/ic_tune_black_24dp"
+        android:icon="@drawable/ic_view_list_black_24dp"
         android:title="@string/sys_config" />
 
     <item
         android:id="@+id/action_profiles"
-        android:icon="@drawable/ic_view_list_black_24dp"
+        android:icon="@drawable/ic_file_document_multiple_outline"
         android:title="@string/profiles" />
 
     <item

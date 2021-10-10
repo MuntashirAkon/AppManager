@@ -17,19 +17,19 @@
 
     <item
         android:id="@+id/action_view_settings"
-        android:icon="@drawable/ic_info_outline_black_24dp"
+        android:icon="@drawable/ic_baseline_settings_24"
         android:title="@string/view_in_settings"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_backup"
-        android:icon="@drawable/ic_baseline_save_24"
+        android:icon="@drawable/ic_backup_restore"
         android:title="@string/backup_restore"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_export_blocking_rules"
-        android:icon="@drawable/ic_open_in_new_black_24dp"
+        android:icon="@drawable/ic_file_export_outline"
         android:title="@string/export_blocking_rules"
         app:showAsAction="never" />
 
@@ -53,25 +53,25 @@
 
     <item
         android:id="@+id/action_battery_opt"
-        android:icon="@drawable/ic_block_black_24dp"
+        android:icon="@drawable/ic_battery_plus_outline"
         android:title="@string/battery_optimization"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_net_policy"
-        android:icon="@drawable/ic_assignment_black_24dp"
+        android:icon="@drawable/ic_security_network"
         android:title="@string/net_policy"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_extract_icon"
-        android:icon="@drawable/ic_open_in_new_black_24dp"
+        android:icon="@drawable/ic_image_outline"
         android:title="@string/export_icon"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_add_to_profile"
-        android:icon="@drawable/ic_assignment_black_24dp"
+        android:icon="@drawable/ic_file_plus_outline"
         android:title="@string/add_to_profile"
         app:showAsAction="never" />
 

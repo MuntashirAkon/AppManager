@@ -17,7 +17,7 @@
 
     <item
         android:id="@+id/action_block_unblock_trackers"
-        android:icon="@drawable/ic_block_black_24dp"
+        android:icon="@drawable/ic_cctv_off"
         android:title="@string/block_unblock_trackers"
         app:showAsAction="never" />
 

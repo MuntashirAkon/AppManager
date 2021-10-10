@@ -177,7 +177,7 @@ public class ListOptions extends DialogFragment {
         }
         return new MaterialAlertDialogBuilder(activity)
                 .setTitle(R.string.list_options)
-                .setIcon(R.drawable.ic_baseline_settings_24)
+                .setIcon(R.drawable.ic_list_status)
                 .setView(view)
                 .setNegativeButton(R.string.close, null)
                 .create();

@@ -49,11 +49,11 @@ public class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> 
         holder.subtitle.setText(Formatter.formatFileSize(fmActivity, item.path.length()));
         // Set icon
         if (item.type == FileType.DIRECTORY) {
-            holder.icon.setImageResource(R.drawable.ic_folder_white_24dp);
+            holder.icon.setImageResource(R.drawable.ic_folder_outline);
             holder.itemView.setOnClickListener(v -> fmActivity.loadNewFragment(
                     FmFragment.getNewInstance(item.path.getUri())));
         } else {
-            holder.icon.setImageResource(R.drawable.ic_insert_drive_file_white_24dp);
+            holder.icon.setImageResource(R.drawable.ic_file_document_outline);
             holder.itemView.setOnClickListener(v -> {
 //                if (ApkFile.SUPPORTED_EXTENSIONS.contains(item.extension)) {
 //                    Intent intent = new Intent(AppManager.getContext(), AppDetailsActivity.class);

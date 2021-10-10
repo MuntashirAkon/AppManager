@@ -48,11 +48,11 @@ public class AppExplorerAdapter extends MultiSelectionView.Adapter<AppExplorerAd
         holder.title.setText(item.name);
         // Set icon
         if (item.type == FileType.DIRECTORY) {
-            holder.icon.setImageResource(R.drawable.ic_folder_white_24dp);
+            holder.icon.setImageResource(R.drawable.ic_folder_outline);
             holder.itemView.setOnClickListener(v -> activity.loadNewFragment(
                     AppExplorerFragment.getNewInstance(item.fullName, item.depth + 1)));
         } else {
-            holder.icon.setImageResource(R.drawable.ic_insert_drive_file_white_24dp);
+            holder.icon.setImageResource(R.drawable.ic_file_document_outline);
             holder.subtitle.setText(Formatter.formatFileSize(activity, item.zipEntry.getSize()));
             holder.itemView.setOnClickListener(v -> {
                 // TODO: 9/10/21

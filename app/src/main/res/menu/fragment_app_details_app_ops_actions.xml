@@ -11,7 +11,7 @@
 
     <item
         android:id="@+id/action_reset_to_default"
-        android:icon="@drawable/ic_block_black_24dp"
+        android:icon="@drawable/ic_restore_black_24dp"
         android:title="@string/reset_to_default"
         app:showAsAction="never" />
 
@@ -29,7 +29,7 @@
 
     <item
         android:id="@+id/action_custom_app_op"
-        android:icon="@drawable/ic_outline_plus_one_24"
+        android:icon="@drawable/ic_baseline_add_24"
         android:title="@string/set_custom_app_op"
         app:showAsAction="never" />
 

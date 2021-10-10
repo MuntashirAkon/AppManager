@@ -5,14 +5,14 @@
 
     <item
         android:id="@+id/action_save"
-        android:icon="@drawable/ic_baseline_save_24"
+        android:icon="@drawable/ic_content_save_outline"
         android:title="@string/save" />
     <item
         android:id="@+id/action_discard"
-        android:icon="@drawable/ic_restore_black_24dp"
+        android:icon="@drawable/ic_file_undo_outline"
         android:title="@string/discard" />
     <item
         android:id="@+id/action_delete"
-        android:icon="@drawable/ic_delete_black_24dp"
+        android:icon="@drawable/ic_trash_can_outline"
         android:title="@string/delete" />
 </menu>

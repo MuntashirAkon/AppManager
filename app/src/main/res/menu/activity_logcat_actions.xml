@@ -24,20 +24,20 @@
 
     <item
         android:id="@+id/menu_manage_saving"
-        android:icon="@drawable/ic_insert_drive_file_white_24dp"
+        android:icon="@drawable/ic_file_document_outline"
         android:title="@string/file">
 
         <menu>
             <item
                 android:id="@+id/menu_open_log"
                 android:alphabeticShortcut="@string/open"
-                android:icon="@drawable/ic_folder_white_24dp"
+                android:icon="@drawable/ic_folder_outline"
                 android:title="@string/open" />
 
             <item
                 android:id="@+id/menu_save_log"
                 android:alphabeticShortcut="@string/save"
-                android:icon="@drawable/ic_baseline_save_24"
+                android:icon="@drawable/ic_content_save_outline"
                 android:title="@string/save" />
 
             <item
@@ -49,19 +49,19 @@
             <item
                 android:id="@+id/menu_record_log"
                 android:alphabeticShortcut="@string/start_recording_log"
-                android:icon="@drawable/ic_record_white_24dp"
+                android:icon="@drawable/ic_record_rec"
                 android:title="@string/start_recording_log" />
 
             <item
                 android:id="@+id/menu_save_as_log"
                 android:alphabeticShortcut="@string/save_as"
-                android:icon="@drawable/ic_baseline_save_24"
+                android:icon="@drawable/ic_content_save_outline"
                 android:title="@string/save_as" />
 
             <item
                 android:id="@+id/menu_delete_saved_log"
                 android:alphabeticShortcut="@string/manage_saved_logs"
-                android:icon="@drawable/ic_delete_black_24dp"
+                android:icon="@drawable/ic_trash_can_outline"
                 android:title="@string/manage_saved_logs" />
         </menu>
     </item>
@@ -87,7 +87,7 @@
     <item
         android:id="@+id/menu_save_log_zip"
         android:alphabeticShortcut="@string/save_log_zip"
-        android:icon="@drawable/ic_baseline_save_24"
+        android:icon="@drawable/ic_content_save_outline"
         android:title="@string/save_log_zip" />
 
     <item

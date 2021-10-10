@@ -21,6 +21,6 @@
         android:text="@string/uninstall"
         android:textSize="@dimen/title_font"
         android:textColor="?android:attr/colorAccent"
-        app:drawableTopCompat="@drawable/ic_delete_black_24dp" />
+        app:drawableTopCompat="@drawable/ic_trash_can_outline" />
 
 </com.google.android.material.card.MaterialCardView>

@@ -884,7 +884,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 }
             }
             // Set uninstall
-            addToHorizontalLayout(R.string.uninstall, R.drawable.ic_delete_black_24dp).setOnClickListener(v -> {
+            addToHorizontalLayout(R.string.uninstall, R.drawable.ic_trash_can_outline).setOnClickListener(v -> {
                 final boolean isSystemApp = (mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
                 if (AppPref.isRootOrAdbEnabled()) {
                     ScrollableDialogBuilder builder = new ScrollableDialogBuilder(mActivity,
@@ -968,7 +968,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                             });
                 }
                 // Clear data
-                addToHorizontalLayout(R.string.clear_data, R.drawable.ic_delete_black_24dp)
+                addToHorizontalLayout(R.string.clear_data, R.drawable.ic_trash_can_outline)
                         .setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
                                 .setTitle(mPackageLabel)
                                 .setMessage(R.string.clear_data_message)
@@ -994,7 +994,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                 .setNegativeButton(R.string.cancel, null)
                                 .show());
                 // Clear cache
-                addToHorizontalLayout(R.string.clear_cache, R.drawable.ic_delete_black_24dp)
+                addToHorizontalLayout(R.string.clear_cache, R.drawable.ic_trash_can_outline)
                         .setOnClickListener(v -> {
                             if (isAdbEnabled || isRootEnabled) {
                                 executor.submit(() -> {
@@ -1016,7 +1016,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         });
             } else {
                 // Display Android settings button
-                addToHorizontalLayout(R.string.view_in_settings, R.drawable.ic_info_outline_black_24dp)
+                addToHorizontalLayout(R.string.view_in_settings, R.drawable.ic_baseline_power_settings_new_24)
                         .setOnClickListener(v -> startActivity(IntentUtils.getAppDetailsSettings(mPackageName)));
             }
         } else if (FeatureController.isInstallerEnabled()) {
@@ -1030,7 +1030,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 long thisVersionCode = PackageInfoCompat.getLongVersionCode(mPackageInfo);
                 if (installedVersionCode < thisVersionCode) {
                     // Needs update
-                    addToHorizontalLayout(R.string.whats_new, R.drawable.ic_info_outline_black_24dp)
+                    addToHorizontalLayout(R.string.whats_new, R.drawable.ic_information_variant)
                             .setOnClickListener(v -> {
                                 Bundle args = new Bundle();
                                 args.putParcelable(WhatsNewDialogFragment.ARG_NEW_PKG_INFO, mPackageInfo);
@@ -1056,7 +1056,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         }
         // Set manifest
         if (FeatureController.isManifestEnabled()) {
-            addToHorizontalLayout(R.string.manifest, R.drawable.ic_tune_black_24dp).setOnClickListener(v -> {
+            addToHorizontalLayout(R.string.manifest, R.drawable.ic_package_variant).setOnClickListener(v -> {
                 Intent intent = new Intent(mActivity, ManifestViewerActivity.class);
                 try (ApkFile apkFile = ApkFile.getInstance(mainModel.getApkFileKey())) {
                     if (apkFile.isSplit()) {
@@ -1144,7 +1144,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 for (int i = 0; i < databases.size(); ++i) {
                     databases2[i] = databases.get(i).getName();
                 }
-                addToHorizontalLayout(R.string.databases, R.drawable.ic_assignment_black_24dp)
+                addToHorizontalLayout(R.string.databases, R.drawable.ic_database)
                         .setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
                                 .setTitle(R.string.databases)
                                 .setItems(databases2, (dialog, i) -> {
@@ -1260,7 +1260,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                             appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME, mPackageName);
                             mActivity.startActivity(appDetailsIntent);
                         });
-                listItem.actionIcon = R.drawable.ic_info_outline_black_24dp;
+                listItem.actionIcon = R.drawable.ic_information_variant;
                 mListItems.add(listItem);
             }
 

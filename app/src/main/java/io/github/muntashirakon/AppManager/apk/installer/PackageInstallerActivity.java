@@ -559,7 +559,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
                 .setSubtitle(getVersionInfoWithTrackers(model.getNewPackageInfo()))
                 .setStartIcon(model.getAppIcon());
         if (displayOpenAndAppInfo) {
-            title.setEndIcon(R.drawable.ic_info_outline_black_24dp, v -> {
+            title.setEndIcon(R.drawable.ic_information_variant, v -> {
                 Intent appDetailsIntent = new Intent(this, AppDetailsActivity.class);
                 appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME, packageName);
                 // FIXME: 9/9/21 Use the first user ID instead of the current user ID
