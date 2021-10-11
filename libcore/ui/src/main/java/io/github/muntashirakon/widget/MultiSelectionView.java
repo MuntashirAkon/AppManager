@@ -157,6 +157,7 @@ public class MultiSelectionView extends MaterialCardView {
         super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(currentHeight, MeasureSpec.AT_MOST));
     }
 
+    @NonNull
     public Menu getMenu() {
         return selectionActionsView.getMenu();
     }

@@ -331,15 +331,15 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
         MenuItem forceStop = selectionMenu.findItem(R.id.action_force_stop);
         MenuItem preventBackground = selectionMenu.findItem(R.id.action_disable_background);
         MenuItem viewLogs = selectionMenu.findItem(R.id.action_view_logs);
-        viewLogs.setEnabled(FeatureController.isLogViewerEnabled() && selectedItems.size() <= 1);
+        viewLogs.setEnabled(FeatureController.isLogViewerEnabled() && selectedItems.size() == 1);
         int appsCount = 0;
         for (Object item : selectedItems) {
             if (item instanceof AppProcessItem) {
                 ++appsCount;
             } else break;
         }
-        forceStop.setEnabled(appsCount == selectedItems.size());
-        preventBackground.setEnabled(appsCount == selectedItems.size());
+        forceStop.setEnabled(appsCount != 0 && appsCount == selectedItems.size());
+        preventBackground.setEnabled(appsCount != 0 && appsCount == selectedItems.size());
         boolean killEnabled = !isAdbMode;
         if (killEnabled && !enableKillForSystem) {
             for (ProcessItem item : selectedItems) {
@@ -349,7 +349,7 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
                 }
             }
         }
-        kill.setEnabled(killEnabled);
+        kill.setEnabled(selectedItems.size() != 0 && killEnabled);
     }
 
     private void handleBatchOp(@BatchOpsManager.OpType int op) {

@@ -80,7 +80,8 @@ import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
 public class MainActivity extends BaseActivity implements SearchView.OnQueryTextListener,
-        SwipeRefreshLayout.OnRefreshListener, ReflowMenuViewWrapper.OnItemSelectedListener {
+        SwipeRefreshLayout.OnRefreshListener, ReflowMenuViewWrapper.OnItemSelectedListener,
+        MultiSelectionView.OnSelectionChangeListener {
     private static final String PACKAGE_NAME_APK_UPDATER = "com.apkupdater";
     private static final String ACTIVITY_NAME_APK_UPDATER = "com.apkupdater.activity.MainActivity";
     private static final String PACKAGE_NAME_TERMUX = "com.termux";
@@ -93,6 +94,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
     private LinearProgressIndicator mProgressIndicator;
     private SwipeRefreshLayout mSwipeRefresh;
     private MultiSelectionView multiSelectionView;
+    private Menu selectionMenu;
     private MenuItem appUsageMenu;
     private MenuItem runningAppsMenu;
     private MenuItem logViewerMenu;
@@ -157,6 +159,8 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
         multiSelectionView.setOnItemSelectedListener(this);
         multiSelectionView.setAdapter(mAdapter);
         multiSelectionView.updateCounter(true);
+        multiSelectionView.setOnSelectionChangeListener(this);
+        selectionMenu = multiSelectionView.getMenu();
 
         if ((boolean) AppPref.get(AppPref.PrefKey.PREF_SHOW_DISCLAIMER_BOOL)) {
             @SuppressLint("InflateParams")
@@ -427,6 +431,70 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
             return false;
         }
         return true;
+    }
+
+    @Override
+    public void onSelectionChange(int selectionCount) {
+        if (selectionMenu == null || mModel == null) return;
+        // TODO: 11/10/21 There is an efficient way to handle this:
+        //  1. Declare MenuItems as field variables
+        //  2. Check for properties during selection
+        ArrayList<ApplicationItem> selectedItems = mModel.getSelectedApplicationItems();
+        MenuItem uninstallMenu = selectionMenu.findItem(R.id.action_uninstall);
+        MenuItem enableDisableMenu = selectionMenu.findItem(R.id.action_enable_disable);
+        MenuItem forceStopMenu = selectionMenu.findItem(R.id.action_force_stop);
+        MenuItem clearDataCacheMenu = selectionMenu.findItem(R.id.action_clear_data_cache);
+        MenuItem saveApkMenu = selectionMenu.findItem(R.id.action_save_apk);
+        MenuItem backupRestoreMenu = selectionMenu.findItem(R.id.action_backup);
+        MenuItem preventBackgroundMenu = selectionMenu.findItem(R.id.action_disable_background);
+        MenuItem blockUnblockTrackersMenu = selectionMenu.findItem(R.id.action_block_unblock_trackers);
+        MenuItem netPolicyMenu = selectionMenu.findItem(R.id.action_net_policy);
+        MenuItem exportRulesMenu = selectionMenu.findItem(R.id.action_export_blocking_rules);
+        MenuItem addToProfileMenu = selectionMenu.findItem(R.id.action_add_to_profile);
+        boolean nonZeroSelection = selectedItems.size() > 0;
+        // It was ensured that the algorithm is greedy
+        // Best case: O(1)
+        // Worst case: O(n)
+        boolean areAllInstalled = true;
+        boolean areAllUninstalledSystem = true;
+        boolean areAllUninstalledHasBackup = true;
+        for (ApplicationItem item : selectedItems) {
+            if (item.isInstalled) continue;
+            areAllInstalled = false;
+            if (!areAllUninstalledHasBackup && !areAllUninstalledSystem) {
+                // No need to check further
+                break;
+            }
+            if (areAllUninstalledSystem && item.isUser) areAllUninstalledSystem = false;
+            if (areAllUninstalledHasBackup && item.backup == null) areAllUninstalledHasBackup = false;
+        }
+        /* === Enable/Disable === */
+        // Enable “Uninstall” action iff all selections are installed
+        uninstallMenu.setEnabled(nonZeroSelection && areAllInstalled);
+        // Enable the following actions iff root/ADB enabled and all selections are installed
+        enableDisableMenu.setEnabled(nonZeroSelection && areAllInstalled);
+        forceStopMenu.setEnabled(nonZeroSelection && areAllInstalled);
+        clearDataCacheMenu.setEnabled(nonZeroSelection && areAllInstalled);
+        preventBackgroundMenu.setEnabled(nonZeroSelection && areAllInstalled);
+        netPolicyMenu.setEnabled(nonZeroSelection && areAllInstalled);
+        // Enable “Save APK” action iff all selections are installed or the uninstalled apps are all system apps
+        saveApkMenu.setEnabled(nonZeroSelection && (areAllInstalled || areAllUninstalledSystem));
+        // Enable “Backup/restore” action iff all selections are installed or all the uninstalled apps have backups
+        backupRestoreMenu.setEnabled(nonZeroSelection && (areAllInstalled || areAllUninstalledHasBackup));
+        // Enable “Block/unblock trackers” action iff root is enabled and all selections are installed
+        blockUnblockTrackersMenu.setEnabled(nonZeroSelection && areAllInstalled);
+        // Rests are enabled by default
+        exportRulesMenu.setEnabled(nonZeroSelection);
+        addToProfileMenu.setEnabled(nonZeroSelection);
+        /* === Visible/Invisible === */
+        boolean isRootEnabled = AppPref.isRootEnabled();
+        boolean isRootOrAdbEnabled = isRootEnabled || AppPref.isAdbEnabled();
+        enableDisableMenu.setVisible(isRootOrAdbEnabled);
+        forceStopMenu.setVisible(isRootOrAdbEnabled);
+        clearDataCacheMenu.setVisible(isRootOrAdbEnabled);
+        preventBackgroundMenu.setVisible(isRootOrAdbEnabled);
+        netPolicyMenu.setVisible(isRootOrAdbEnabled);
+        blockUnblockTrackersMenu.setVisible(isRootEnabled);
     }
 
     @Override
