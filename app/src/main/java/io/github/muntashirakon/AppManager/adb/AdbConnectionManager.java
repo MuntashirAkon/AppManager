@@ -45,11 +45,11 @@ public class AdbConnectionManager {
     }
 
     @RequiresApi(Build.VERSION_CODES.R)
-    public static boolean pair(@NonNull String host, int port, @NonNull String pairingCode) throws Exception {
+    public static void pair(@NonNull String host, int port, @NonNull String pairingCode) throws Exception {
         KeyPair keyPair = getAdbKeyPair();
         try (PairingConnectionCtx pairingClient = new PairingConnectionCtx(host, port,
                 pairingCode.getBytes(StandardCharsets.UTF_8), keyPair)) {
-            return pairingClient.start();
+            pairingClient.start();
         }
     }
 }

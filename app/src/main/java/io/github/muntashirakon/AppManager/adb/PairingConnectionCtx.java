@@ -74,9 +74,9 @@ class PairingConnectionCtx implements AutoCloseable {
         this.sslContext = AdbUtils.getSslContext(keyPair);
     }
 
-    public boolean start() throws IOException {
+    public void start() throws IOException {
         if (state != State.Ready) {
-            return false;
+            throw new IOException("Connection is not ready yet.");
         }
 
         state = State.ExchangingMsgs;
@@ -89,20 +89,20 @@ class PairingConnectionCtx implements AutoCloseable {
                 case ExchangingMsgs:
                     if (!doExchangeMsgs()) {
                         notifyResult();
-                        return false;
+                        throw new IOException("Exchanging message wasn't successful.");
                     }
                     state = State.ExchangingPeerInfo;
                     break;
                 case ExchangingPeerInfo:
                     if (!doExchangePeerInfo()) {
                         notifyResult();
-                        return false;
+                        throw new IOException("Could not exchange peer info.");
                     }
                     notifyResult();
-                    return true;
+                    return;
                 case Ready:
                 case Stopped:
-                    return false;
+                    throw new IOException("Connection closed with errors.");
             }
         }
     }
@@ -116,7 +116,7 @@ class PairingConnectionCtx implements AutoCloseable {
         if (role == Role.Server) {
             SSLServerSocket sslServerSocket = (SSLServerSocket) sslContext.getServerSocketFactory().createServerSocket(port);
             socket = sslServerSocket.accept();
-            // TODO: Write automated test scripts after removing Conscrypt dependency.s
+            // TODO: Write automated test scripts after removing Conscrypt dependency.
         } else { // role == Role.Client
             socket = new Socket(host, port);
         }
@@ -188,7 +188,7 @@ class PairingConnectionCtx implements AutoCloseable {
 
         // Read the peer's SPAKE2 msg header
         PairingPacketHeader theirHeader = readHeader();
-        if (theirHeader == null || checkHeaderType(PairingPacketHeader.SPAKE2_MSG, theirHeader.type)) return false;
+        if (theirHeader == null || !checkHeaderType(PairingPacketHeader.SPAKE2_MSG, theirHeader.type)) return false;
 
         // Read the SPAKE2 msg payload and initialize the cipher for encrypting the PeerInfo and certificate.
         byte[] theirMsg = new byte[theirHeader.payloadSize];
@@ -219,7 +219,7 @@ class PairingConnectionCtx implements AutoCloseable {
 
         // Read in the peer's packet header
         PairingPacketHeader theirHeader = readHeader();
-        if (theirHeader == null || checkHeaderType(PairingPacketHeader.PEER_INFO, theirHeader.type)) return false;
+        if (theirHeader == null || !checkHeaderType(PairingPacketHeader.PEER_INFO, theirHeader.type)) return false;
 
         // Read in the encrypted peer certificate
         byte[] theirMsg = new byte[theirHeader.payloadSize];
