@@ -55,6 +55,9 @@ public class AppExplorerAdapter extends MultiSelectionView.Adapter<AppExplorerAd
             holder.icon.setImageResource(R.drawable.ic_file_document_outline);
             holder.subtitle.setText(Formatter.formatFileSize(activity, item.zipEntry.getSize()));
             holder.itemView.setOnClickListener(v -> {
+                if (item.extension.equals("xml")) {
+                    activity.model.cacheAndOpen(item, true);
+                }
                 // TODO: 9/10/21
             });
         }

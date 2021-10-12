@@ -30,6 +30,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -45,6 +46,7 @@ import java.util.zip.ZipFile;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.StaticDataset;
+import io.github.muntashirakon.AppManager.apk.parser.AndroidBinXmlParser;
 import io.github.muntashirakon.AppManager.apk.signing.SigSchemes;
 import io.github.muntashirakon.AppManager.apk.signing.Signer;
 import io.github.muntashirakon.AppManager.fm.FmProvider;
@@ -256,13 +258,12 @@ public final class ApkFile implements AutoCloseable {
         String packageName = null;
         // Check for splits
         if (extension.equals("apk")) {
-            // Cache the apk file
-            baseEntry = new Entry(cacheFilePath);
-            entries.add(baseEntry);
             // Get manifest attributes
+            ByteBuffer manifest;
             HashMap<String, String> manifestAttrs;
             try {
-                manifestAttrs = getManifestAttributes(getManifestFromApk(cacheFilePath));
+                manifest = getManifestFromApk(cacheFilePath);
+                manifestAttrs = getManifestAttributes(manifest);
             } catch (IOException | AndroidBinXmlParser.XmlParserException e) {
                 throw new ApkFileException("Manifest not found for base APK.", e);
             }
@@ -270,6 +271,8 @@ public final class ApkFile implements AutoCloseable {
                 throw new IllegalArgumentException("Manifest doesn't contain any package name.");
             }
             packageName = manifestAttrs.get(ATTR_PACKAGE);
+            baseEntry = new Entry(cacheFilePath, manifest);
+            entries.add(baseEntry);
         } else {
             getCachePath();
             try {
@@ -285,21 +288,23 @@ public final class ApkFile implements AutoCloseable {
                 if (fileName.endsWith(".apk")) {
                     try (InputStream zipInputStream = zipFile.getInputStream(zipEntry)) {
                         // Get manifest attributes
+                        ByteBuffer manifest;
                         HashMap<String, String> manifestAttrs;
                         try {
-                            manifestAttrs = getManifestAttributes(getManifestFromApk(zipInputStream));
+                            manifest = getManifestFromApk(zipInputStream);
+                            manifestAttrs = getManifestAttributes(manifest);
                         } catch (IOException | AndroidBinXmlParser.XmlParserException e) {
                             throw new ApkFileException("Manifest not found.", e);
                         }
                         if (manifestAttrs.containsKey("split")) {
                             // TODO: check for duplicates
-                            Entry entry = new Entry(fileName, zipEntry, APK_SPLIT, manifestAttrs);
+                            Entry entry = new Entry(fileName, zipEntry, APK_SPLIT, manifest, manifestAttrs);
                             entries.add(entry);
                         } else {
                             if (baseEntry != null) {
                                 throw new RuntimeException("Duplicate base apk found.");
                             }
-                            baseEntry = new Entry(fileName, zipEntry, APK_BASE, manifestAttrs);
+                            baseEntry = new Entry(fileName, zipEntry, APK_BASE, manifest, manifestAttrs);
                             entries.add(baseEntry);
                             if (manifestAttrs.containsKey(ATTR_PACKAGE)) {
                                 packageName = manifestAttrs.get(ATTR_PACKAGE);
@@ -341,7 +346,11 @@ public final class ApkFile implements AutoCloseable {
         File sourceDir = cacheFilePath.getParentFile();
         if (sourceDir == null || "/data/app".equals(sourceDir.getAbsolutePath())) {
             // Old file structure (storing APK files at /data/app)
-            entries.add(baseEntry = new Entry(cacheFilePath));
+            try {
+                entries.add(baseEntry = new Entry(cacheFilePath, getManifestFromApk(cacheFilePath)));
+            } catch (IOException e) {
+                throw new ApkFileException("Manifest not found.", e);
+            }
         } else {
             File[] apks = sourceDir.listFiles((dir, name) -> name.endsWith(".apk"));
             if (apks == null) throw new ApkFileException("No apk files found");
@@ -349,14 +358,16 @@ public final class ApkFile implements AutoCloseable {
             for (File apk : apks) {
                 fileName = FileUtils.getLastPathComponent(apk.getAbsolutePath());
                 // Get manifest attributes
+                ByteBuffer manifest;
                 HashMap<String, String> manifestAttrs;
                 try {
-                    manifestAttrs = getManifestAttributes(getManifestFromApk(apk));
+                    manifest = getManifestFromApk(apk);
+                    manifestAttrs = getManifestAttributes(manifest);
                 } catch (IOException | AndroidBinXmlParser.XmlParserException e) {
                     throw new ApkFileException("Manifest not found.", e);
                 }
                 if (manifestAttrs.containsKey("split")) {
-                    Entry entry = new Entry(fileName, apk, APK_SPLIT, manifestAttrs);
+                    Entry entry = new Entry(fileName, apk, APK_SPLIT, manifest, manifestAttrs);
                     entries.add(entry);
                 } else {
                     // Could be a base entry, check package name
@@ -368,7 +379,7 @@ public final class ApkFile implements AutoCloseable {
                         if (baseEntry != null) {
                             throw new RuntimeException("Duplicate base apk found.");
                         }
-                        baseEntry = new Entry(fileName, apk, APK_BASE, manifestAttrs);
+                        baseEntry = new Entry(fileName, apk, APK_BASE, manifest, manifestAttrs);
                         entries.add(baseEntry);
                     } // else continue;
                 }
@@ -500,8 +511,8 @@ public final class ApkFile implements AutoCloseable {
         public final String name;
         @ApkType
         public final int type;
-        @Nullable
-        public final HashMap<String, String> manifest;
+        @NonNull
+        public final ByteBuffer manifest;
         @Nullable
         public String splitSuffix;
         @Nullable
@@ -528,26 +539,37 @@ public final class ApkFile implements AutoCloseable {
          */
         public int rank = Integer.MAX_VALUE;
 
-        Entry(@NonNull File source) {
+        Entry(@NonNull File source, @NonNull ByteBuffer manifest) {
             this.name = "Base.apk";
             this.source = source;
             this.type = APK_BASE;
             this.selected = this.required = true;
             this.isolated = false;
-            this.manifest = null;
+            this.manifest = manifest;
         }
 
-        Entry(@NonNull String name, @NonNull ZipEntry zipEntry, @ApkType int type, @NonNull HashMap<String, String> manifest) {
-            this(name, type, manifest);
+        Entry(@NonNull String name,
+              @NonNull ZipEntry zipEntry,
+              @ApkType int type,
+              @NonNull ByteBuffer manifest,
+              @NonNull HashMap<String, String> manifestAttrs) {
+            this(name, type, manifest, manifestAttrs);
             this.zipEntry = zipEntry;
         }
 
-        Entry(@NonNull String name, @NonNull File source, @ApkType int type, @NonNull HashMap<String, String> manifest) {
-            this(name, type, manifest);
+        Entry(@NonNull String name,
+              @NonNull File source,
+              @ApkType int type,
+              @NonNull ByteBuffer manifest,
+              @NonNull HashMap<String, String> manifestAttrs) {
+            this(name, type, manifest, manifestAttrs);
             this.source = source;
         }
 
-        private Entry(@NonNull String name, @ApkType int type, @NonNull HashMap<String, String> manifest) {
+        private Entry(@NonNull String name,
+                      @ApkType int type,
+                      @NonNull ByteBuffer manifest,
+                      @NonNull HashMap<String, String> manifestAttrs) {
             this.manifest = manifest;
             if (type == APK_BASE) {
                 this.name = name;
@@ -555,25 +577,25 @@ public final class ApkFile implements AutoCloseable {
                 this.isolated = false;
                 this.type = APK_BASE;
             } else if (type == APK_SPLIT) {
-                String splitName = manifest.get(ATTR_SPLIT);
+                String splitName = manifestAttrs.get(ATTR_SPLIT);
                 if (splitName == null) throw new RuntimeException("Split name is empty.");
                 this.name = splitName;
                 // Check if required
-                if (manifest.containsKey(ATTR_IS_SPLIT_REQUIRED)) {
-                    String value = manifest.get(ATTR_IS_SPLIT_REQUIRED);
+                if (manifestAttrs.containsKey(ATTR_IS_SPLIT_REQUIRED)) {
+                    String value = manifestAttrs.get(ATTR_IS_SPLIT_REQUIRED);
                     this.selected = this.required = value != null && Boolean.parseBoolean(value);
                 } else this.required = false;
                 // Check if isolated
-                if (manifest.containsKey(ATTR_ISOLATED_SPLIT)) {
-                    String value = manifest.get(ATTR_ISOLATED_SPLIT);
+                if (manifestAttrs.containsKey(ATTR_ISOLATED_SPLIT)) {
+                    String value = manifestAttrs.get(ATTR_ISOLATED_SPLIT);
                     this.isolated = value != null && Boolean.parseBoolean(value);
                 } else this.isolated = false;
                 // Infer types
-                if (manifest.containsKey(ATTR_IS_FEATURE_SPLIT)) {
+                if (manifestAttrs.containsKey(ATTR_IS_FEATURE_SPLIT)) {
                     this.type = APK_SPLIT_FEATURE;
                 } else {
-                    if (manifest.containsKey(ATTR_CONFIG_FOR_SPLIT)) {
-                        this.forFeature = manifest.get(ATTR_CONFIG_FOR_SPLIT);
+                    if (manifestAttrs.containsKey(ATTR_CONFIG_FOR_SPLIT)) {
+                        this.forFeature = manifestAttrs.get(ATTR_CONFIG_FOR_SPLIT);
                         if (TextUtils.isEmpty(this.forFeature)) this.forFeature = null;
                     }
                     int configPartIndex = this.name.lastIndexOf(CONFIG_PREFIX);

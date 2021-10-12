@@ -1,6 +1,15 @@
 // SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later
 
-package io.github.muntashirakon.AppManager.apk;
+package io.github.muntashirakon.AppManager.apk.parser;
+
+import android.util.Log;
+import android.util.TypedValue;
+
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import org.xmlpull.v1.XmlPullParser;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -12,10 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import androidx.annotation.IntDef;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 /**
  * XML pull style parser of Android binary XML resources, such as {@code AndroidManifest.xml}.
  *
@@ -25,8 +30,9 @@ import androidx.annotation.Nullable;
  * {@link #getAttributeNameResourceId(int)}.
  */
 // Copyright 2016 The Android Open Source Project
-@SuppressWarnings("unused")
 public class AndroidBinXmlParser {
+    public static final String TAG = AndroidBinXmlParser.class.getSimpleName();
+
     @IntDef({
             EVENT_START_DOCUMENT,
             EVENT_END_DOCUMENT,
@@ -40,61 +46,25 @@ public class AndroidBinXmlParser {
     /**
      * Event: start of document.
      */
-    public static final int EVENT_START_DOCUMENT = 1;
+    public static final int EVENT_START_DOCUMENT = XmlPullParser.START_DOCUMENT;
 
     /**
      * Event: end of document.
      */
-    public static final int EVENT_END_DOCUMENT = 2;
+    public static final int EVENT_END_DOCUMENT = XmlPullParser.END_DOCUMENT;
     /**
      * Event: start of an element.
      */
-    public static final int EVENT_START_ELEMENT = 3;
+    public static final int EVENT_START_ELEMENT = XmlPullParser.START_TAG;
     /**
-     * Event: end of an document.
+     * Event: end of an element.
      */
-    public static final int EVENT_END_ELEMENT = 4;
-
-    @IntDef({
-            VALUE_TYPE_UNSUPPORTED,
-            VALUE_TYPE_STRING,
-            VALUE_TYPE_INT,
-            VALUE_TYPE_REFERENCE,
-            VALUE_TYPE_BOOLEAN,
-            VALUE_TYPE_FLOAT
-    })
-    @Retention(RetentionPolicy.SOURCE)
-    public @interface ValueType {
-    }
-
-    /**
-     * Attribute value type is not supported by this parser.
-     */
-    public static final int VALUE_TYPE_UNSUPPORTED = 0;
-    /**
-     * Attribute value is a string. Use {@link #getAttributeStringValue(int)} to obtain it.
-     */
-    public static final int VALUE_TYPE_STRING = 1;
-    /**
-     * Attribute value is an integer. Use {@link #getAttributeIntValue(int)} to obtain it.
-     */
-    public static final int VALUE_TYPE_INT = 2;
-    /**
-     * Attribute value is a resource reference. Use {@link #getAttributeIntValue(int)} to obtain it.
-     */
-    public static final int VALUE_TYPE_REFERENCE = 3;
-    /**
-     * Attribute value is a boolean. Use {@link #getAttributeBooleanValue(int)} to obtain it.
-     */
-    public static final int VALUE_TYPE_BOOLEAN = 4;
-    /**
-     * Attribute value is a float. Use {@link #getAttributeFloatValue(int)} (int)} to obtain it.
-     */
-    public static final int VALUE_TYPE_FLOAT = 5;
+    public static final int EVENT_END_ELEMENT = XmlPullParser.END_TAG;
 
     private static final long NO_NAMESPACE = 0xffffffffL;
 
     private final ByteBuffer mXml;
+    private final NamespaceStack mNamespaces = new NamespaceStack();
     private StringPool mStringPool;
     private ResourceMap mResourceMap;
     private int mDepth;
@@ -102,6 +72,7 @@ public class AndroidBinXmlParser {
     private int mCurrentEvent = EVENT_START_DOCUMENT;
     private String mCurrentElementName;
     private String mCurrentElementNamespace;
+    private long mCurrentNsId;
     private int mCurrentElementAttributeCount;
     private List<Attribute> mCurrentElementAttributes;
     private ByteBuffer mCurrentElementAttributesContents;
@@ -157,6 +128,12 @@ public class AndroidBinXmlParser {
         return mCurrentElementName;
     }
 
+    public String getPrefix() throws XmlParserException {
+        if (mCurrentNsId == NO_NAMESPACE) return "";
+        long prefix = mNamespaces.findPrefix(mCurrentNsId);
+        return mStringPool.getString(prefix);
+    }
+
     /**
      * Returns the namespace of the current element or {@code null} if the current event does not
      * pertain to an element. Returns an empty string if the element is not associated with a
@@ -167,6 +144,20 @@ public class AndroidBinXmlParser {
             return null;
         }
         return mCurrentElementNamespace;
+    }
+
+    public long getNamespaceCount(int depth) {
+        return mNamespaces.getAccumulatedCount(depth);
+    }
+
+    public String getNamespacePrefix(long pos) throws XmlParserException {
+        long prefix = mNamespaces.getPrefix(pos);
+        return mStringPool.getString(prefix);
+    }
+
+    public String getNamespaceUri(long pos) throws XmlParserException {
+        long uri = mNamespaces.getUri(pos);
+        return mStringPool.getString(uri);
     }
 
     /**
@@ -203,6 +194,14 @@ public class AndroidBinXmlParser {
         return getAttribute(index).getName();
     }
 
+    public String getAttributePrefix(int index) throws XmlParserException {
+        long prefix = mNamespaces.findPrefix(getAttribute(index).mNsId);
+        if (prefix == -1) {
+            return "";
+        }
+        return mStringPool.getString(prefix);
+    }
+
     /**
      * Returns the name of the specified attribute of the current element or an empty string if
      * the attribute is not associated with a namespace.
@@ -218,29 +217,10 @@ public class AndroidBinXmlParser {
     /**
      * Returns the value type of the specified attribute of the current element. See
      * {@code VALUE_TYPE_...} constants.
-     *
-     * @throws IndexOutOfBoundsException if the index is out of range or the current event is not a
-     *                                   {@code start element} event
-     * @throws XmlParserException        if a parsing error is occurred
      */
-    @ValueType
-    public int getAttributeValueType(int index) throws XmlParserException {
-        @Attribute.Type int type = getAttribute(index).getValueType();
-        switch (type) {
-            case Attribute.TYPE_STRING:
-                return VALUE_TYPE_STRING;
-            case Attribute.TYPE_INT_DEC:
-            case Attribute.TYPE_INT_HEX:
-                return VALUE_TYPE_INT;
-            case Attribute.TYPE_REFERENCE:
-                return VALUE_TYPE_REFERENCE;
-            case Attribute.TYPE_INT_BOOLEAN:
-                return VALUE_TYPE_BOOLEAN;
-            case Attribute.TYPE_FLOAT:
-                return VALUE_TYPE_FLOAT;
-            default:
-                return VALUE_TYPE_UNSUPPORTED;
-        }
+    @Attribute.Type
+    public int getAttributeValueType(int index) {
+        return getAttribute(index).getValueType();
     }
 
     /**
@@ -313,6 +293,7 @@ public class AndroidBinXmlParser {
         // Decrement depth if the previous event was "end element".
         if (mCurrentEvent == EVENT_END_ELEMENT) {
             mDepth--;
+            mNamespaces.decreaseDepth();
         }
         // Read events from document, ignoring events that we don't report to caller. Stop at the
         // earliest event which we report to caller.
@@ -328,6 +309,17 @@ public class AndroidBinXmlParser {
                     }
                     mStringPool = new StringPool(chunk);
                     break;
+                case Chunk.RES_XML_TYPE_START_NAMESPACE: {
+                    ByteBuffer contents = chunk.getContents();
+                    long prefix = getUnsignedInt32(contents);
+                    long uri = getUnsignedInt32(contents);
+                    mNamespaces.push(prefix, uri);
+                    break;
+                }
+                case Chunk.RES_XML_TYPE_END_NAMESPACE: {
+                    mNamespaces.pop();
+                    break;
+                }
                 case Chunk.RES_XML_TYPE_START_ELEMENT: {
                     if (mStringPool == null) {
                         throw new XmlParserException(
@@ -339,7 +331,7 @@ public class AndroidBinXmlParser {
                                 "Start element chunk too short. Need at least 20 bytes. Available: "
                                         + contents.remaining() + " bytes");
                     }
-                    long nsId = getUnsignedInt32(contents);
+                    mCurrentNsId = getUnsignedInt32(contents);
                     long nameId = getUnsignedInt32(contents);
                     int attrStartOffset = getUnsignedInt16(contents);
                     int attrSizeBytes = getUnsignedInt16(contents);
@@ -357,14 +349,14 @@ public class AndroidBinXmlParser {
                                         + ", max: " + contents.remaining());
                     }
                     mCurrentElementName = mStringPool.getString(nameId);
-                    mCurrentElementNamespace =
-                            (nsId == NO_NAMESPACE) ? "" : mStringPool.getString(nsId);
+                    mCurrentElementNamespace = (mCurrentNsId == NO_NAMESPACE) ? "" : mStringPool.getString(mCurrentNsId);
                     mCurrentElementAttributeCount = attrCount;
                     mCurrentElementAttributes = null;
                     mCurrentElementAttrSizeBytes = attrSizeBytes;
                     mCurrentElementAttributesContents =
                             sliceFromTo(contents, attrStartOffset, attrEndOffset);
                     mDepth++;
+                    mNamespaces.increaseDepth();
                     mCurrentEvent = EVENT_START_ELEMENT;
                     return mCurrentEvent;
                 }
@@ -379,11 +371,10 @@ public class AndroidBinXmlParser {
                                 "End element chunk too short. Need at least 8 bytes. Available: "
                                         + contents.remaining() + " bytes");
                     }
-                    long nsId = getUnsignedInt32(contents);
+                    mCurrentNsId = getUnsignedInt32(contents);
                     long nameId = getUnsignedInt32(contents);
                     mCurrentElementName = mStringPool.getString(nameId);
-                    mCurrentElementNamespace =
-                            (nsId == NO_NAMESPACE) ? "" : mStringPool.getString(nsId);
+                    mCurrentElementNamespace = (mCurrentNsId == NO_NAMESPACE) ? "" : mStringPool.getString(mCurrentNsId);
                     mCurrentEvent = EVENT_END_ELEMENT;
                     mCurrentElementAttributes = null;
                     mCurrentElementAttributesContents = null;
@@ -397,6 +388,7 @@ public class AndroidBinXmlParser {
                     break;
                 case Chunk.TYPE_RES_XML:
                 default:
+                    Log.w(TAG, String.format("Unknown chunk type = 0x%X", chunk.getType()));
                     // Unknown/impossible chunk type -- ignore
                     break;
             }
@@ -435,23 +427,46 @@ public class AndroidBinXmlParser {
 
     public static class Attribute {
         @IntDef({
+                TYPE_NULL,
                 TYPE_REFERENCE,
+                TYPE_ATTRIBUTE,
                 TYPE_STRING,
                 TYPE_FLOAT,
+                TYPE_DIMENSION,
+                TYPE_FRACTION,
                 TYPE_INT_DEC,
                 TYPE_INT_HEX,
                 TYPE_INT_BOOLEAN,
+                TYPE_INT_COLOR_ARGB8,
+                TYPE_INT_COLOR_RGB8,
+                TYPE_INT_COLOR_ARGB4,
+                TYPE_INT_COLOR_RGB4,
         })
         @Retention(RetentionPolicy.SOURCE)
         public @interface Type {
         }
 
-        private static final int TYPE_REFERENCE = 1;
-        private static final int TYPE_STRING = 3;
-        private static final int TYPE_FLOAT = 0x4;
-        private static final int TYPE_INT_DEC = 0x10;
-        private static final int TYPE_INT_HEX = 0x11;
-        private static final int TYPE_INT_BOOLEAN = 0x12;
+        public static final int TYPE_NULL = TypedValue.TYPE_NULL;
+        public static final int TYPE_REFERENCE = TypedValue.TYPE_REFERENCE;
+        public static final int TYPE_ATTRIBUTE = TypedValue.TYPE_ATTRIBUTE;
+        public static final int TYPE_STRING = TypedValue.TYPE_STRING;
+        public static final int TYPE_FLOAT = TypedValue.TYPE_FLOAT;
+        public static final int TYPE_DIMENSION = TypedValue.TYPE_DIMENSION;
+        public static final int TYPE_FRACTION = TypedValue.TYPE_FRACTION;
+        public static final int TYPE_INT_DEC = TypedValue.TYPE_INT_DEC;
+        public static final int TYPE_INT_HEX = TypedValue.TYPE_INT_HEX;
+        public static final int TYPE_INT_BOOLEAN = TypedValue.TYPE_INT_BOOLEAN;
+        public static final int TYPE_INT_COLOR_ARGB8 = TypedValue.TYPE_INT_COLOR_ARGB8;
+        public static final int TYPE_INT_COLOR_RGB8 = TypedValue.TYPE_INT_COLOR_RGB8;
+        public static final int TYPE_INT_COLOR_ARGB4 = TypedValue.TYPE_INT_COLOR_ARGB4;
+        public static final int TYPE_INT_COLOR_RGB4 = TypedValue.TYPE_INT_COLOR_RGB4;
+
+        private static final int TYPE_FIRST_INT = TypedValue.TYPE_FIRST_INT;
+        private static final int TYPE_LAST_INT = TypedValue.TYPE_LAST_INT;
+        private static final int TYPE_FIRST_COLOR_INT = TypedValue.TYPE_FIRST_COLOR_INT;
+        private static final int TYPE_LAST_COLOR_INT = TypedValue.TYPE_LAST_COLOR_INT;
+
+        private static final int COMPLEX_UNIT_MASK = TypedValue.COMPLEX_UNIT_MASK;
 
         private final long mNsId;
         private final long mNameId;
@@ -488,22 +503,17 @@ public class AndroidBinXmlParser {
             return (mNsId != NO_NAMESPACE) ? mStringPool.getString(mNsId) : "";
         }
 
+        @Type
         public int getValueType() {
             return mValueType;
         }
 
         public int getIntValue() throws XmlParserException {
-            switch (mValueType) {
-                case TYPE_REFERENCE:
-                case TYPE_INT_DEC:
-                case TYPE_INT_HEX:
-                case TYPE_INT_BOOLEAN:
-                    return mValueData;
-                case TYPE_FLOAT:
-                case TYPE_STRING:
-                default:
-                    throw new XmlParserException("Cannot coerce to int: value type " + mValueType);
+            if (mValueType == TYPE_REFERENCE || mValueType == TYPE_ATTRIBUTE ||
+                    (mValueType >= TYPE_FIRST_INT && mValueType <= TYPE_LAST_INT)) {
+                return mValueData;
             }
+            throw new XmlParserException("Cannot coerce to int: value type " + mValueType);
         }
 
         public float getFloatValue() throws XmlParserException {
@@ -520,25 +530,59 @@ public class AndroidBinXmlParser {
             throw new XmlParserException("Cannot coerce to boolean: value type " + mValueType);
         }
 
+        /**
+         * @see TypedValue#coerceToString()
+         * @see TypedValue#coerceToString(int, int)
+         */
         public String getStringValue() throws XmlParserException {
             switch (mValueType) {
+                case TYPE_NULL:
+                    return null;
+                case TYPE_REFERENCE:
+                    return String.format("@%08X", mValueData);
+                case TYPE_ATTRIBUTE:
+                    return String.format("?%08X", mValueData);
                 case TYPE_STRING:
                     return mStringPool.getString(mValueData & 0xffffffffL);
-                case TYPE_INT_DEC:
-                    return Integer.toString(mValueData);
-                case TYPE_INT_HEX:
-                    return "0x" + Integer.toHexString(mValueData);
-                case TYPE_INT_BOOLEAN:
-                    return Boolean.toString(mValueData != 0);
-                case TYPE_REFERENCE:
-                    return "@" + Integer.toHexString(mValueData);
                 case TYPE_FLOAT:
                     return Float.toString(Float.intBitsToFloat(mValueData));
-                default:
-                    throw new XmlParserException(
-                            "Cannot coerce to string: value type " + mValueType);
+                case TYPE_DIMENSION:
+                    return complexToFloat(mValueData) + DIMENSION_UNITS[mValueData & COMPLEX_UNIT_MASK];
+                case TYPE_FRACTION:
+                    return complexToFloat(mValueData) + FRACTION_UNITS[mValueData & COMPLEX_UNIT_MASK];
+                case TYPE_INT_HEX:
+                    return String.format("0x%08X", mValueData);
+                case TYPE_INT_BOOLEAN:
+                    return mValueData != 0 ? "true" : "false";
+                case TYPE_INT_COLOR_ARGB4:
+                case TYPE_INT_COLOR_ARGB8:
+                case TYPE_INT_COLOR_RGB4:
+                case TYPE_INT_COLOR_RGB8:
+                case TYPE_INT_DEC:
+                    // Fallthrough
             }
+            if (mValueType >= TYPE_FIRST_COLOR_INT && mValueType <= TYPE_LAST_COLOR_INT) {
+                return String.format("#%08X", mValueData);
+            }
+            if (mValueType >= TYPE_FIRST_INT && mValueType <= TYPE_LAST_INT) {
+                return String.valueOf(mValueData);
+            }
+            throw new XmlParserException("Cannot coerce to string: value type " + mValueType);
         }
+
+        private static float complexToFloat(int complex) {
+            return (float) (complex & 0xFFFFFF00) * RADIX_MULTS[(complex >> 4) & 3];
+        }
+
+        private static final float[] RADIX_MULTS = {
+                0.00390625F, 3.051758E-005F, 1.192093E-007F, 4.656613E-010F
+        };
+        private static final String[] DIMENSION_UNITS = {
+                "px", "dip", "sp", "pt", "in", "mm", "", ""
+        };
+        private static final String[] FRACTION_UNITS = {
+                "%", "%p", "", "", "", "", "", ""
+        };
     }
 
     /**
@@ -549,8 +593,11 @@ public class AndroidBinXmlParser {
         @IntDef({
                 TYPE_STRING_POOL,
                 TYPE_RES_XML,
+                RES_XML_TYPE_START_NAMESPACE,
+                RES_XML_TYPE_END_NAMESPACE,
                 RES_XML_TYPE_START_ELEMENT,
                 RES_XML_TYPE_END_ELEMENT,
+                RES_XML_TYPE_XML_TEXT,
                 RES_XML_TYPE_RESOURCE_MAP,
         })
         @Retention(RetentionPolicy.SOURCE)
@@ -559,8 +606,11 @@ public class AndroidBinXmlParser {
 
         public static final int TYPE_STRING_POOL = 1;
         public static final int TYPE_RES_XML = 3;
+        public static final int RES_XML_TYPE_START_NAMESPACE = 0x0100;
+        public static final int RES_XML_TYPE_END_NAMESPACE = 0x0101;
         public static final int RES_XML_TYPE_START_ELEMENT = 0x0102;
         public static final int RES_XML_TYPE_END_ELEMENT = 0x0103;
+        public static final int RES_XML_TYPE_XML_TEXT = 0x0104; // TODO: 12/10/21 Add support for text
         public static final int RES_XML_TYPE_RESOURCE_MAP = 0x0180;
 
         static final int HEADER_MIN_SIZE_BYTES = 8;
@@ -626,11 +676,10 @@ public class AndroidBinXmlParser {
             }
             int contentStartPosition = originalPosition + headerSize;
             long chunkEndPosition = originalPosition + chunkSize;
-            Chunk chunk =
-                    new Chunk(
-                            type,
-                            sliceFromTo(input, originalPosition, contentStartPosition),
-                            sliceFromTo(input, contentStartPosition, chunkEndPosition));
+            Chunk chunk = new Chunk(
+                    type,
+                    sliceFromTo(input, originalPosition, contentStartPosition),
+                    sliceFromTo(input, contentStartPosition, chunkEndPosition));
             input.position((int) chunkEndPosition);
             return chunk;
         }
@@ -805,6 +854,163 @@ public class AndroidBinXmlParser {
     }
 
     /**
+     * Namespace stack holds namespace prefix and corresponding URI.
+     */
+    private static final class NamespaceStack {
+        private long[] mData;
+        private int mDataLength;
+        private int mDepth;
+
+        public NamespaceStack() {
+            mData = new long[32];
+        }
+
+        public long getAccumulatedCount(int depth) {
+            if (mDataLength == 0 || depth < 0) {
+                return 0;
+            }
+            if (depth > mDepth) {
+                depth = mDepth;
+            }
+            long accumulatedCount = 0;
+            long offset = 0;
+            for (; depth != 0; --depth) {
+                long count = mData[(int) offset];
+                accumulatedCount += count;
+                offset += (2 + count * 2);
+            }
+            return accumulatedCount;
+        }
+
+        public void push(long prefix, long uri) {
+            if (mDepth == 0) {
+                increaseDepth();
+            }
+            ensureDataCapacity(2);
+            int offset = mDataLength - 1;
+            long count = mData[offset];
+            // Count stored twice to allow bottom-up traversal
+            mData[(int) (offset - 1 - count * 2)] = count + 1;
+            mData[offset] = prefix;
+            mData[offset + 1] = uri;
+            mData[offset + 2] = count + 1;
+            mDataLength += 2;
+        }
+
+        public boolean pop() {
+            if (mDataLength == 0) {
+                return false;
+            }
+            int offset = mDataLength - 1;
+            long count = mData[offset];
+            if (count == 0) {
+                return false;
+            }
+            count -= 1;
+            offset -= 2;
+            mData[offset] = count;
+            offset -= (1 + count * 2);
+            mData[offset] = count;
+            mDataLength -= 2;
+            return true;
+        }
+
+        public long getPrefix(long index) {
+            return get(index, true);
+        }
+
+        public long getUri(long index) {
+            return get(index, false);
+        }
+
+        public long findPrefix(long uri) {
+            return find(uri, false);
+        }
+
+        public long findUri(long prefix) {
+            return find(prefix, true);
+        }
+
+        public void increaseDepth() {
+            ensureDataCapacity(2);
+            int offset = mDataLength;
+            mData[offset] = 0;
+            mData[offset + 1] = 0;
+            mDataLength += 2;
+            mDepth += 1;
+        }
+
+        public void decreaseDepth() {
+            if (mDataLength == 0) {
+                return;
+            }
+            int offset = mDataLength - 1;
+            long count = mData[offset];
+            if ((offset - 1 - count * 2) == 0) {
+                return;
+            }
+            mDataLength -= 2 + count * 2;
+            mDepth -= 1;
+        }
+
+        private void ensureDataCapacity(int capacity) {
+            int available = (mData.length - mDataLength);
+            if (available > capacity) {
+                return;
+            }
+            int newLength = (mData.length + available) * 2;
+            long[] newData = new long[newLength];
+            System.arraycopy(mData, 0, newData, 0, mDataLength);
+            mData = newData;
+        }
+
+        private long find(long prefixOrUri, boolean prefix) {
+            if (mDataLength == 0) {
+                return -1;
+            }
+            int offset = mDataLength - 1;
+            for (int i = mDepth; i != 0; --i) {
+                long count = mData[offset];
+                offset -= 2;
+                for (; count != 0; --count) {
+                    if (prefix) {
+                        if (mData[offset] == prefixOrUri) {
+                            return mData[offset + 1];
+                        }
+                    } else {
+                        if (mData[offset + 1] == prefixOrUri) {
+                            return mData[offset];
+                        }
+                    }
+                    offset -= 2;
+                }
+            }
+            return -1;
+        }
+
+        private long get(long index, boolean prefix) {
+            if (mDataLength == 0 || index < 0) {
+                return -1;
+            }
+            int offset = 0;
+            for (int i = mDepth; i != 0; --i) {
+                long count = mData[offset];
+                if (index >= count) {
+                    index -= count;
+                    offset += (2 + count * 2);
+                    continue;
+                }
+                offset += (1 + index * 2);
+                if (!prefix) {
+                    offset += 1;
+                }
+                return mData[offset];
+            }
+            return -1;
+        }
+    }
+
+    /**
      * Resource map of a document. Resource IDs are referenced by their {@code 0}-based index in the
      * map.
      */
@@ -814,10 +1020,8 @@ public class AndroidBinXmlParser {
 
         /**
          * Constructs a new resource map from the provided chunk.
-         *
-         * @throws XmlParserException if a parsing error occurred
          */
-        public ResourceMap(@NonNull Chunk chunk) throws XmlParserException {
+        public ResourceMap(@NonNull Chunk chunk) {
             mChunkContents = chunk.getContents().slice();
             mChunkContents.order(chunk.getContents().order());
             // Each entry of the map is four bytes long, containing the int32 resource ID.

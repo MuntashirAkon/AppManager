@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?><!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_save"
+        android:icon="@drawable/ic_content_save_outline"
+        android:title="@string/extract" />
+
+    <item
+        android:id="@+id/action_replace"
+        android:icon="@drawable/ic_file_replace_outline"
+        android:title="@string/replace" />
+
+    <item
+        android:id="@+id/action_delete"
+        android:icon="@drawable/ic_trash_can_outline"
+        android:title="@string/delete" />
+
+    <item
+        android:id="@+id/action_rename"
+        android:icon="@drawable/ic_form_textbox"
+        android:title="@string/rename" />
+
+</menu>

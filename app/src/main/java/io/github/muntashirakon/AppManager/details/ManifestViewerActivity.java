@@ -3,7 +3,6 @@
 package io.github.muntashirakon.AppManager.details;
 
 import android.annotation.SuppressLint;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -28,22 +27,21 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
-import net.dongliu.apk.parser.ApkParser;
-
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Locale;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
+import io.github.muntashirakon.AppManager.apk.parser.AndroidBinXmlDecoder;
+import io.github.muntashirakon.AppManager.apk.parser.AndroidBinXmlParser;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
-import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class ManifestViewerActivity extends BaseActivity {
     public static final String EXTRA_PACKAGE_NAME = "pkg";
@@ -61,12 +59,11 @@ public class ManifestViewerActivity extends BaseActivity {
                             "profileable)\\b|/?>)",
                     Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
 
-    private static String code;
+    private String code;
     private LinearProgressIndicator mProgressIndicator;
-    private boolean isWrapped = true;  // Wrap by default
+    private boolean isWrapped = false;  // Do not wrap by default
     private AppCompatEditText container;
     private SpannableString formattedContent;
-    private String archiveFilePath;
     private String packageName;
     private ApkFile apkFile;
     private final ActivityResultLauncher<String> exportManifest = registerForActivityResult(
@@ -102,23 +99,24 @@ public class ManifestViewerActivity extends BaseActivity {
             return;
         }
         final PackageManager pm = getApplicationContext().getPackageManager();
-        if (packageUri != null) {
-            new Thread(() -> {
-                PackageInfo packageInfo = null;
-                archiveFilePath = packageUri.getPath();
-                if (packageUri.getScheme().equals(ContentResolver.SCHEME_CONTENT) || !new File(archiveFilePath).canRead()) {
-                    try {
-                        int key = ApkFile.createInstance(packageUri, intent.getType());
-                        apkFile = ApkFile.getInstance(key);
-                        archiveFilePath = apkFile.getBaseEntry().getRealCachedFile().getAbsolutePath();
-                    } catch (IOException | ApkFile.ApkFileException | RemoteException e) {
-                        Log.e("Manifest", "Error: ", e);
-                        runOnUiThread(this::showErrorAndFinish);
-                        return;
-                    }
+        new Thread(() -> {
+            if (packageUri != null) {
+                try {
+                    int key = ApkFile.createInstance(packageUri, intent.getType());
+                    apkFile = ApkFile.getInstance(key);
+                    runOnUiThread(this::setWrapped);
+                } catch (ApkFile.ApkFileException e) {
+                    Log.e("Manifest", "Error: ", e);
+                    runOnUiThread(this::showErrorAndFinish);
+                    return;
                 }
-                if (archiveFilePath != null)
-                    packageInfo = pm.getPackageArchiveInfo(archiveFilePath, 0);
+                String archiveFilePath;
+                try {
+                    archiveFilePath = apkFile.getBaseEntry().getRealCachedFile().getAbsolutePath();
+                } catch (IOException | RemoteException e) {
+                    return;
+                }
+                PackageInfo packageInfo = pm.getPackageArchiveInfo(archiveFilePath, 0);
                 if (packageInfo != null) {
                     packageName = packageInfo.packageName;
                     final ApplicationInfo applicationInfo = packageInfo.applicationInfo;
@@ -126,19 +124,22 @@ public class ManifestViewerActivity extends BaseActivity {
                     applicationInfo.sourceDir = archiveFilePath;
                     runOnUiThread(() -> setTitle(applicationInfo.loadLabel(pm)));
                 } // else Could be a split apk
-                runOnUiThread(this::setWrapped);
-            }).start();
-        } else {
-            try {
-                ApplicationInfo applicationInfo = pm.getApplicationInfo(packageName, 0);
-                archiveFilePath = applicationInfo.publicSourceDir;
-                setTitle(applicationInfo.loadLabel(pm));
-                setWrapped();
-            } catch (PackageManager.NameNotFoundException e) {
-                Log.e("Manifest", "Error: ", e);
-                showErrorAndFinish();
+            } else {
+                try {
+                    ApplicationInfo applicationInfo = pm.getApplicationInfo(packageName, 0);
+                    int key = ApkFile.createInstance(applicationInfo);
+                    apkFile = ApkFile.getInstance(key);
+                    runOnUiThread(() -> {
+                        setTitle(applicationInfo.loadLabel(pm));
+                        setWrapped();
+                    });
+                } catch (PackageManager.NameNotFoundException | ApkFile.ApkFileException e) {
+                    Log.e("Manifest", "Error: ", e);
+                    runOnUiThread(this::showErrorAndFinish);
+                }
             }
-        }
+        }).start();
+
     }
 
     @UiThread
@@ -199,7 +200,7 @@ public class ManifestViewerActivity extends BaseActivity {
             if (formattedContent == null) {
                 try {
                     getManifest();
-                } catch (IOException e) {
+                } catch (AndroidBinXmlParser.XmlParserException e) {
                     e.printStackTrace();
                 }
                 if (code == null) {
@@ -225,12 +226,13 @@ public class ManifestViewerActivity extends BaseActivity {
         }).start();
     }
 
-    private void getManifest() throws IOException {
-        if (archiveFilePath != null) {
-            ApkParser apkParser = new ApkParser(archiveFilePath);
-            apkParser.setPreferredLocale(Locale.getDefault());
-            code = Utils.getProperXml(apkParser.getManifestXml());
+    private void getManifest() throws AndroidBinXmlParser.XmlParserException {
+        if (apkFile != null) {
+            ByteBuffer byteBuffer = apkFile.getBaseEntry().manifest;
+            // Reset properties
+            byteBuffer.position(0);
+            byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
+            code = AndroidBinXmlDecoder.decode(byteBuffer, true);
         }
     }
-
 }

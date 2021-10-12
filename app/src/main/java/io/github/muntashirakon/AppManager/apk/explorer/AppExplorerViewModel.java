@@ -13,8 +13,12 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -27,16 +31,21 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import io.github.muntashirakon.AppManager.apk.ApkFile;
+import io.github.muntashirakon.AppManager.apk.parser.AndroidBinXmlDecoder;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
+import io.github.muntashirakon.io.IoUtils;
 
 public class AppExplorerViewModel extends AndroidViewModel {
     private final ExecutorService executor = Executors.newFixedThreadPool(3);
     private final MutableLiveData<List<AdapterItem>> fmItems = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> modificationObserver = new MutableLiveData<>();
+    private final MutableLiveData<AdapterItem> openObserver = new MutableLiveData<>();
     private Uri apkUri;
     private ApkFile apkFile;
     private File cachedFile;
     private ZipFile zipFile;
     private List<? extends ZipEntry> zipEntries;
+    private boolean modified;
 
     public AppExplorerViewModel(@NonNull Application application) {
         super(application);
@@ -53,6 +62,10 @@ public class AppExplorerViewModel extends AndroidViewModel {
 
     public void setApkUri(Uri apkUri) {
         this.apkUri = apkUri;
+    }
+
+    public boolean isModified() {
+        return modified;
     }
 
     @NonNull
@@ -100,7 +113,44 @@ public class AppExplorerViewModel extends AndroidViewModel {
         });
     }
 
+    @AnyThread
+    public void cacheAndOpen(@NonNull AdapterItem item, boolean convertXml) {
+        if (item.cachedFile != null) {
+            // Already cached
+            openObserver.postValue(item);
+            return;
+        }
+        executor.submit(() -> {
+            try (InputStream is = zipFile.getInputStream(item.zipEntry)) {
+                if (convertXml) {
+                    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+                    byte[] buf = new byte[IoUtils.DEFAULT_BUFFER_SIZE];
+                    int n;
+                    while (-1 != (n = is.read(buf))) {
+                        buffer.write(buf, 0, n);
+                    }
+                    File cachedFile = FileUtils.getTempFile();
+                    try (PrintStream ps = new PrintStream(cachedFile)) {
+                        AndroidBinXmlDecoder.decode(ByteBuffer.wrap(buffer.toByteArray()), ps);
+                        item.cachedFile = cachedFile;
+                    }
+                } else item.cachedFile = FileUtils.getCachedFile(is);
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+            openObserver.postValue(item);
+        });
+    }
+
     public LiveData<List<AdapterItem>> observeFiles() {
         return fmItems;
+    }
+
+    public LiveData<Boolean> observeModification() {
+        return modificationObserver;
+    }
+
+    public LiveData<AdapterItem> observeOpen() {
+        return openObserver;
     }
 }

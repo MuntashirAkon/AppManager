@@ -57,7 +57,7 @@ public class AppExplorerFragment extends Fragment implements SearchView.OnQueryT
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_fm, container, false);
+        return inflater.inflate(R.layout.fragment_app_explorer, container, false);
     }
 
     @Override
@@ -69,7 +69,6 @@ public class AppExplorerFragment extends Fragment implements SearchView.OnQueryT
         // Set title and subtitle
         ActionBar actionBar = activity.getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setTitle(model.getName());
             actionBar.setSubtitle("/" + (name == null ? "" : name));
         }
         swipeRefresh = view.findViewById(R.id.swipe_refresh);

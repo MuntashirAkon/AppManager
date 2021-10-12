@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.apk.explorer;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -9,12 +10,17 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.fm.FmProvider;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
+import io.github.muntashirakon.io.Path;
 
 public class AppExplorerActivity extends BaseActivity {
     AppExplorerViewModel model;
@@ -31,7 +37,21 @@ public class AppExplorerActivity extends BaseActivity {
             return;
         }
         model.setApkUri(uri);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(model.getName());
+        }
         loadNewFragment(AppExplorerFragment.getNewInstance(null, 0));
+        model.observeModification().observe(this, modified -> {
+            if (actionBar != null) actionBar.setTitle("* " + model.getName());
+        });
+        model.observeOpen().observe(this, adapterItem -> {
+            if (adapterItem.cachedFile == null) return;
+            Intent intent = new Intent(Intent.ACTION_VIEW)
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    .setDataAndType(FmProvider.getContentUri(new Path(this, adapterItem.cachedFile)), adapterItem.getMime());
+            startActivity(intent);
+        });
     }
 
     @Override
@@ -48,7 +68,18 @@ public class AppExplorerActivity extends BaseActivity {
     public void onBackPressed() {
         if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
             super.onBackPressed();
-        } else this.finish();
+        } else if (model.isModified()) {
+            new MaterialAlertDialogBuilder(this)
+                    .setTitle(R.string.exit_confirmation)
+                    .setMessage(R.string.are_you_sure)
+                    .setCancelable(false)
+                    .setPositiveButton(R.string.no, null)
+                    .setPositiveButton(R.string.yes, (dialog, which) -> finish())
+//                    .setNeutralButton(R.string.save_project, (dialog, which) -> {
+//                        // TODO: 10/10/21
+//                    })
+                    .show();
+        } else finish();
     }
 
     public void loadNewFragment(Fragment fragment) {

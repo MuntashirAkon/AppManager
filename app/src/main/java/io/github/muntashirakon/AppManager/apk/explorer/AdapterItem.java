@@ -2,7 +2,10 @@
 
 package io.github.muntashirakon.AppManager.apk.explorer;
 
+import android.webkit.MimeTypeMap;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.io.File;
 import java.util.Objects;
@@ -20,6 +23,7 @@ public class AdapterItem implements Comparable<AdapterItem> {
     final String fullName;
     @NonNull
     final ZipEntry zipEntry;
+    File cachedFile;
     final int depth;
 
     public AdapterItem(@NonNull ZipEntry zipEntry, int depth) {
@@ -33,6 +37,11 @@ public class AdapterItem implements Comparable<AdapterItem> {
         extension = FileUtils.getExtension(name);
         if (zipEntry.isDirectory() || splits.length > depth + 1) type = FileType.DIRECTORY;
         else type = FileType.FILE;
+    }
+
+    @Nullable
+    public String getMime() {
+        return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
     }
 
     @Override
@@ -58,5 +67,15 @@ public class AdapterItem implements Comparable<AdapterItem> {
         if (typeComp == 0) {
             return name.compareToIgnoreCase(o.name);
         } else return typeComp;
+    }
+
+    @Override
+    public String toString() {
+        return "AdapterItem{" +
+                "name='" + name + '\'' +
+                ", extension='" + extension + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", depth=" + depth +
+                '}';
     }
 }

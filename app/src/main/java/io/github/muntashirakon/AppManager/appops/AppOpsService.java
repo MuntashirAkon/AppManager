@@ -2,7 +2,6 @@
 
 package io.github.muntashirakon.AppManager.appops;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 import android.os.Parcelable;
@@ -26,7 +25,6 @@ import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 
-@SuppressLint("DefaultLocale")
 public class AppOpsService {
     private final IAppOpsService appOpsService;
 

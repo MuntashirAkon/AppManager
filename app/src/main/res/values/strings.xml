@@ -109,10 +109,12 @@
         \n- <a href="https://github.com/nex3z/FlowLayout">FlowLayout</a> (Apache 2.0)
         \n- <a href="https://github.com/dkanada/frost">Frost</a> Icons (GPLv3.0)
         \n- <a href="https://github.com/RikkaApps/HiddenApiRefinePlugin">HiddenApiRefinePlugin</a> (MIT)
+        \n- <a href="https://github.com/skylot/jadx">JADX</a> (Apache 2.0)
         \n- <a href="https://github.com/topjohnwu/libsu">libsu</a> (Apache 2.0)
         \n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a> (MIT)
         \n- <a href="https://github.com/material-components/material-components-android">Material Components</a> (Apache 2.0)
         \n- <a href="https://github.com/google/material-design-icons">Material Design Icons</a> (Apache 2.0)
+        \n- <a href="https://github.com/JesusFreke/smali">Smali/basksmali</a> (MIT/Apache-2.0)
         \n- <a href="https://github.com/MuntashirAkon/spake2-java">SPAKE2 for Java</a> (GPLv3.0)
         \n- <a href="https://github.com/MuntashirAkon/sun-security-android">sun.security for Android</a> (GPL-2.0 \"Classpath Exception\")
         \n- <a href="https://github.com/MuntashirAkon/unapkm-android">UnAPKM Android</a> (Apache 2.0)
@@ -1126,4 +1128,8 @@
     <string name="accessibility_service_description">Generic accessibility service to carry out certain operations such as clearing cache in no-root mode.</string>
     <string name="explore">Explore</string>
     <string name="system_partition">Android root</string>
+    <string name="exit_confirmation">Exit confirmation</string>
+    <string name="extract">Extract</string>
+    <string name="replace">Replace</string>
+    <string name="rename">Rename</string>
 </resources>
