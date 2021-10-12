@@ -251,16 +251,14 @@ class RestoreOp implements Closeable {
             }
         }
         // Setup package staging directory
+        Path packageStagingDirectory;
         if (AppPref.isRootOrAdbEnabled()) {
             try {
                 PackageUtils.ensurePackageStagingDirectoryPrivileged();
+                packageStagingDirectory = new Path(context, new ProxyFile(PackageUtils.PACKAGE_STAGING_DIRECTORY));
             } catch (Exception e) {
                 throw new BackupException("Could not ensure the existence of /data/local/tmp", e);
             }
-        }
-        Path packageStagingDirectory;
-        if (new ProxyFile(PackageUtils.PACKAGE_STAGING_DIRECTORY).exists()) {
-            packageStagingDirectory = new Path(context, new ProxyFile(PackageUtils.PACKAGE_STAGING_DIRECTORY));
         } else {
             packageStagingDirectory = backupPath;
         }
