@@ -13,7 +13,6 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -123,15 +122,15 @@ public class AppExplorerViewModel extends AndroidViewModel {
         executor.submit(() -> {
             try (InputStream is = zipFile.getInputStream(item.zipEntry)) {
                 if (convertXml) {
-                    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-                    byte[] buf = new byte[IoUtils.DEFAULT_BUFFER_SIZE];
-                    int n;
-                    while (-1 != (n = is.read(buf))) {
-                        buffer.write(buf, 0, n);
-                    }
+                    byte[] fileBytes = IoUtils.readFully(is, -1, true);
+                    ByteBuffer byteBuffer = ByteBuffer.wrap(fileBytes);
                     File cachedFile = FileUtils.getTempFile();
                     try (PrintStream ps = new PrintStream(cachedFile)) {
-                        AndroidBinXmlDecoder.decode(ByteBuffer.wrap(buffer.toByteArray()), ps);
+                        if (AndroidBinXmlDecoder.isBinaryXml(byteBuffer)) {
+                            AndroidBinXmlDecoder.decode(byteBuffer, ps);
+                        } else {
+                            ps.write(fileBytes);
+                        }
                         item.cachedFile = cachedFile;
                     }
                 } else item.cachedFile = FileUtils.getCachedFile(is);

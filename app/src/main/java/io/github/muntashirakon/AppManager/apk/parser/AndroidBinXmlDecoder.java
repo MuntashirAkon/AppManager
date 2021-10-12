@@ -21,6 +21,18 @@ import java.util.Set;
 import io.github.muntashirakon.io.IoUtils;
 
 public class AndroidBinXmlDecoder {
+    public static boolean isBinaryXml(@NonNull ByteBuffer buffer) {
+        buffer.mark();
+        int version = readInt16(buffer.get(0), buffer.get(1));
+        int header = readInt16(buffer.get(2), buffer.get(3));
+        buffer.reset();
+        return version == 0x0003 && header == 0x0008;
+    }
+
+    private static int readInt16(int byte1, int byte2) {
+        return (byte2 & 0xFF) << 8 | byte1 & 0xFF;
+    }
+
     @NonNull
     public static String decode(@NonNull byte[] data) throws AndroidBinXmlParser.XmlParserException {
         return decode(ByteBuffer.wrap(data));
