@@ -13,24 +13,23 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import io.github.muntashirakon.AppManager.utils.IntegerUtils;
 import io.github.muntashirakon.io.IoUtils;
 
 public class AndroidBinXmlDecoder {
     public static boolean isBinaryXml(@NonNull ByteBuffer buffer) {
+        buffer.order(ByteOrder.LITTLE_ENDIAN);
         buffer.mark();
-        int version = readInt16(buffer.get(0), buffer.get(1));
-        int header = readInt16(buffer.get(2), buffer.get(3));
+        int version = IntegerUtils.getUInt16(buffer);
+        int header = IntegerUtils.getUInt16(buffer);
         buffer.reset();
         return version == 0x0003 && header == 0x0008;
-    }
-
-    private static int readInt16(int byte1, int byte2) {
-        return (byte2 & 0xFF) << 8 | byte1 & 0xFF;
     }
 
     @NonNull
@@ -83,16 +82,11 @@ public class AndroidBinXmlDecoder {
         AndroidBinXmlParser parser = new AndroidBinXmlParser(byteBuffer);
         StringBuilder indent = new StringBuilder(10);
         final String indentStep = "  ";
+        out.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+        XML_BUILDER:
         while (true) {
             int type = parser.next();
-            if (type == AndroidBinXmlParser.EVENT_END_DOCUMENT) {
-                break;
-            }
             switch (type) {
-                case AndroidBinXmlParser.EVENT_START_DOCUMENT: {
-                    out.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-                    break;
-                }
                 case AndroidBinXmlParser.EVENT_START_ELEMENT: {
                     out.printf("%s<%s%s", indent, getNamespacePrefix(parser.getPrefix()), parser.getName());
                     indent.append(indentStep);
@@ -118,6 +112,11 @@ public class AndroidBinXmlDecoder {
                     out.printf("%s</%s%s>%n", indent, getNamespacePrefix(parser.getPrefix()), parser.getName());
                     break;
                 }
+                case AndroidBinXmlParser.EVENT_END_DOCUMENT:
+                    break XML_BUILDER;
+                case AndroidBinXmlParser.EVENT_START_DOCUMENT:
+                    // Unreachable statement
+                    break;
             }
         }
     }

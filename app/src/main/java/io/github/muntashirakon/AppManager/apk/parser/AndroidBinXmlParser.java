@@ -289,6 +289,7 @@ public class AndroidBinXmlParser {
     /**
      * Advances to the next parsing event and returns its type. See {@code EVENT_...} constants.
      */
+    @Event
     public int next() throws XmlParserException {
         // Decrement depth if the previous event was "end element".
         if (mCurrentEvent == EVENT_END_ELEMENT) {
@@ -404,8 +405,7 @@ public class AndroidBinXmlParser {
         mCurrentElementAttributes = new ArrayList<>(mCurrentElementAttributeCount);
         for (int i = 0; i < mCurrentElementAttributeCount; i++) {
             int startPosition = i * mCurrentElementAttrSizeBytes;
-            ByteBuffer attr =
-                    sliceFromTo(
+            ByteBuffer attr = sliceFromTo(
                             mCurrentElementAttributesContents,
                             startPosition,
                             startPosition + mCurrentElementAttrSizeBytes);
@@ -590,6 +590,7 @@ public class AndroidBinXmlParser {
      * contents.
      */
     private static class Chunk {
+        // https://android.googlesource.com/platform/frameworks/base/+/master/libs/androidfw/include/androidfw/ResourceTypes.h
         @IntDef({
                 TYPE_STRING_POOL,
                 TYPE_RES_XML,
@@ -597,7 +598,7 @@ public class AndroidBinXmlParser {
                 RES_XML_TYPE_END_NAMESPACE,
                 RES_XML_TYPE_START_ELEMENT,
                 RES_XML_TYPE_END_ELEMENT,
-                RES_XML_TYPE_XML_TEXT,
+                RES_XML_TYPE_CDATA,
                 RES_XML_TYPE_RESOURCE_MAP,
         })
         @Retention(RetentionPolicy.SOURCE)
@@ -610,7 +611,7 @@ public class AndroidBinXmlParser {
         public static final int RES_XML_TYPE_END_NAMESPACE = 0x0101;
         public static final int RES_XML_TYPE_START_ELEMENT = 0x0102;
         public static final int RES_XML_TYPE_END_ELEMENT = 0x0103;
-        public static final int RES_XML_TYPE_XML_TEXT = 0x0104; // TODO: 12/10/21 Add support for text
+        public static final int RES_XML_TYPE_CDATA = 0x0104; // TODO: 12/10/21 Add support for text
         public static final int RES_XML_TYPE_RESOURCE_MAP = 0x0180;
 
         static final int HEADER_MIN_SIZE_BYTES = 8;
