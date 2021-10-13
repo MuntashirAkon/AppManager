@@ -131,6 +131,7 @@ public class AndroidBinXmlParser {
     public String getPrefix() throws XmlParserException {
         if (mCurrentNsId == NO_NAMESPACE) return "";
         long prefix = mNamespaces.findPrefix(mCurrentNsId);
+        if (prefix < 0) return "";
         return mStringPool.getString(prefix);
     }
 
@@ -152,6 +153,7 @@ public class AndroidBinXmlParser {
 
     public String getNamespacePrefix(long pos) throws XmlParserException {
         long prefix = mNamespaces.getPrefix(pos);
+        if (prefix < 0) return "";
         return mStringPool.getString(prefix);
     }
 
