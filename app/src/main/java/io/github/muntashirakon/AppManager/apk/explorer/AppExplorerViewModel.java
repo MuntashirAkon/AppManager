@@ -14,25 +14,24 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.parser.AndroidBinXmlDecoder;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.IoUtils;
+import io.github.muntashirakon.io.Path;
 
 public class AppExplorerViewModel extends AndroidViewModel {
     private final ExecutorService executor = Executors.newFixedThreadPool(3);
@@ -43,7 +42,7 @@ public class AppExplorerViewModel extends AndroidViewModel {
     private ApkFile apkFile;
     private File cachedFile;
     private ZipFile zipFile;
-    private List<? extends ZipEntry> zipEntries;
+    private Path zipFileRoot;
     private boolean modified;
 
     public AppExplorerViewModel(@NonNull Application application) {
@@ -74,12 +73,12 @@ public class AppExplorerViewModel extends AndroidViewModel {
     }
 
     @AnyThread
-    public void reload(String name, int depth) {
-        loadFiles(name, depth);
+    public void reload(Uri uri) {
+        loadFiles(uri);
     }
 
     @AnyThread
-    public void loadFiles(@Nullable String name, int depth) {
+    public void loadFiles(@Nullable Uri uri) {
         executor.submit(() -> {
             if (apkFile == null) {
                 try {
@@ -88,8 +87,7 @@ public class AppExplorerViewModel extends AndroidViewModel {
                     ApkFile.Entry baseEntry = apkFile.getBaseEntry();
                     cachedFile = baseEntry.getRealCachedFile();
                     zipFile = new ZipFile(cachedFile);
-                    Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();
-                    this.zipEntries = Collections.list(zipEntries);
+                    zipFileRoot = new Path(AppManager.getContext(), zipFile, null);
                 } catch (ApkFile.ApkFileException | IOException | RemoteException e) {
                     this.fmItems.postValue(Collections.emptyList());
                     return;
@@ -97,15 +95,13 @@ public class AppExplorerViewModel extends AndroidViewModel {
             }
             List<AdapterItem> adapterItems = new ArrayList<>();
             try {
-                Set<AdapterItem> uniqueItems = new HashSet<>();
-                for (ZipEntry zipEntry : zipEntries) {
-                    if (name != null && !zipEntry.getName().startsWith(name + File.separatorChar)) {
-                        continue;
-                    }
-                    uniqueItems.add(new AdapterItem(zipEntry, depth));
+                Path path = uri == null ? zipFileRoot : zipFileRoot.findFile(uri.getPath());
+                for (Path child : path.listFiles()) {
+                    adapterItems.add(new AdapterItem(child));
                 }
-                adapterItems.addAll(uniqueItems);
                 Collections.sort(adapterItems);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
             } finally {
                 this.fmItems.postValue(adapterItems);
             }
@@ -120,7 +116,7 @@ public class AppExplorerViewModel extends AndroidViewModel {
             return;
         }
         executor.submit(() -> {
-            try (InputStream is = zipFile.getInputStream(item.zipEntry)) {
+            try (InputStream is = item.path.openInputStream()) {
                 if (convertXml) {
                     byte[] fileBytes = IoUtils.readFully(is, -1, true);
                     ByteBuffer byteBuffer = ByteBuffer.wrap(fileBytes);

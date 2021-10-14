@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.apk.explorer;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,14 +25,12 @@ import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
 public class AppExplorerFragment extends Fragment implements SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener {
     public static final String ARG_NAME = "name";
-    public static final String ARG_DEPTH = "depth";
 
     @NonNull
-    public static AppExplorerFragment getNewInstance(String name, int depth) {
+    public static AppExplorerFragment getNewInstance(Uri uri) {
         AppExplorerFragment fragment = new AppExplorerFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_NAME, name);
-        args.putInt(ARG_DEPTH, depth);
+        args.putParcelable(ARG_NAME, uri);
         fragment.setArguments(args);
         return fragment;
     }
@@ -44,8 +43,7 @@ public class AppExplorerFragment extends Fragment implements SearchView.OnQueryT
     @Nullable
     private MultiSelectionView multiSelectionView;
     private AppExplorerActivity activity;
-    private String name;
-    private int depth;
+    private Uri uri;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,13 +61,12 @@ public class AppExplorerFragment extends Fragment implements SearchView.OnQueryT
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        name = requireArguments().getString(ARG_NAME);
-        depth = requireArguments().getInt(ARG_DEPTH);
+        uri = requireArguments().getParcelable(ARG_NAME);
         activity = (AppExplorerActivity) requireActivity();
         // Set title and subtitle
         ActionBar actionBar = activity.getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setSubtitle("/" + (name == null ? "" : name));
+            actionBar.setSubtitle(uri == null ? "" : uri.getPath());
         }
         swipeRefresh = view.findViewById(R.id.swipe_refresh);
         swipeRefresh.setOnRefreshListener(this);
@@ -89,7 +86,7 @@ public class AppExplorerFragment extends Fragment implements SearchView.OnQueryT
             if (swipeRefresh != null) swipeRefresh.setRefreshing(false);
             adapter.setFmList(fmItems);
         });
-        model.loadFiles(name, depth);
+        model.loadFiles(uri);
     }
 
     @Override
@@ -105,6 +102,6 @@ public class AppExplorerFragment extends Fragment implements SearchView.OnQueryT
 
     @Override
     public void onRefresh() {
-        if (model != null) model.reload(name, depth);
+        if (model != null) model.reload(uri);
     }
 }

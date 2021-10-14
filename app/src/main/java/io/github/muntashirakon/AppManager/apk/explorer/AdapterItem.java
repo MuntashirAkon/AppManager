@@ -9,10 +9,10 @@ import androidx.annotation.Nullable;
 
 import java.io.File;
 import java.util.Objects;
-import java.util.zip.ZipEntry;
 
 import io.github.muntashirakon.AppManager.fm.FileType;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
+import io.github.muntashirakon.io.Path;
 
 public class AdapterItem implements Comparable<AdapterItem> {
     final String extension;
@@ -22,21 +22,17 @@ public class AdapterItem implements Comparable<AdapterItem> {
     @NonNull
     final String fullName;
     @NonNull
-    final ZipEntry zipEntry;
+    final Path path;
     File cachedFile;
-    final int depth;
 
-    public AdapterItem(@NonNull ZipEntry zipEntry, int depth) {
-        this.zipEntry = zipEntry;
-        this.depth = depth;
-        String[] splits = zipEntry.getName().split(File.separator);
-        name = splits[depth];
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < depth; ++i) sb.append(splits[i]).append(File.separatorChar);
-        fullName = sb.append(name).toString();
+    public AdapterItem(@NonNull Path path) {
+        this.path = path;
+        name = path.getName();
+        fullName = path.getUri().getPath();
         extension = FileUtils.getExtension(name);
-        if (zipEntry.isDirectory() || splits.length > depth + 1) type = FileType.DIRECTORY;
-        else type = FileType.FILE;
+        if (path.isDirectory()) {
+            type = FileType.DIRECTORY;
+        } else type = FileType.FILE;
     }
 
     @Nullable
@@ -49,12 +45,12 @@ public class AdapterItem implements Comparable<AdapterItem> {
         if (this == o) return true;
         if (!(o instanceof AdapterItem)) return false;
         AdapterItem item = (AdapterItem) o;
-        return fullName.equals(item.fullName);
+        return path.equals(item.path);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(fullName);
+        return Objects.hash(path);
     }
 
     @Override
@@ -69,13 +65,13 @@ public class AdapterItem implements Comparable<AdapterItem> {
         } else return typeComp;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "AdapterItem{" +
                 "name='" + name + '\'' +
                 ", extension='" + extension + '\'' +
-                ", fullName='" + fullName + '\'' +
-                ", depth=" + depth +
+                ", uri='" + path.getUri() + '\'' +
                 '}';
     }
 }

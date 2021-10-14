@@ -41,7 +41,7 @@ public class AppExplorerActivity extends BaseActivity {
         if (actionBar != null) {
             actionBar.setTitle(model.getName());
         }
-        loadNewFragment(AppExplorerFragment.getNewInstance(null, 0));
+        loadNewFragment(AppExplorerFragment.getNewInstance(null));
         model.observeModification().observe(this, modified -> {
             if (actionBar != null) actionBar.setTitle("* " + model.getName());
         });

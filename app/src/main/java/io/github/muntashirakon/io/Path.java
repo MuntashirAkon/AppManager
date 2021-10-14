@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.documentfile.provider.DocumentFile;
 import androidx.documentfile.provider.ProxyDocumentFile;
+import androidx.documentfile.provider.ZipDocumentFile;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -26,6 +27,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.zip.ZipFile;
 
 import io.github.muntashirakon.AppManager.compat.StorageManagerCompat;
 import io.github.muntashirakon.AppManager.ipc.IPCUtils;
@@ -47,6 +49,11 @@ public class Path {
     public Path(@NonNull Context context, @NonNull File fileLocation) {
         this.context = context;
         this.documentFile = new ProxyDocumentFile(fileLocation);
+    }
+
+    public Path(@NonNull Context context, @NonNull ZipFile zipFile, @Nullable String path) {
+        this.context = context;
+        this.documentFile = new ZipDocumentFile(zipFile, path);
     }
 
     public Path(@NonNull Context context, @NonNull DocumentFile documentFile) {
@@ -224,6 +231,7 @@ public class Path {
     }
 
     public boolean hasFile(@NonNull String displayName) {
+        // TODO: 14/10/21 Investigate whether display name with `/` works
         return documentFile.findFile(normalizeFilename(displayName)) != null;
     }
 
@@ -360,7 +368,7 @@ public class Path {
         }
         if (isDirectory()) {
             if (path.isDirectory()) { // Rename (copy and delete original)
-                // Make sure that parent exists and it is a directory
+                // Make sure that parent exists, and it is a directory
                 if (dstParent == null || !dstParent.isDirectory()) return false;
                 try {
                     // Recreate path
@@ -500,7 +508,7 @@ public class Path {
             int modeBits = ParcelFileDescriptor.parseMode(mode);
             if (file instanceof ProxyFile && LocalServer.isAMServiceAlive()) {
                 try {
-                    return StorageManagerCompat.openProxyFileDescriptor(modeBits, new StorageCallback(
+                    return StorageManagerCompat.openProxyFileDescriptor(modeBits, new ProxyStorageCallback(
                             file.getAbsolutePath(), mode, callbackThread));
                 } catch (RemoteException | IOException e) {
                     Log.e(TAG, e);
@@ -508,12 +516,24 @@ public class Path {
                 }
             } else {
                 try {
-                    return StorageManagerCompat.openProxyFileDescriptor(modeBits, new StorageCallback(
+                    return StorageManagerCompat.openProxyFileDescriptor(modeBits, new ProxyStorageCallback(
                             FileDescriptorImpl.getInstance(file.getAbsolutePath(), mode), callbackThread));
                 } catch (IOException | ErrnoException e) {
                     Log.e(TAG, e);
                     throw new FileNotFoundException(e.getMessage());
                 }
+            }
+        } else if (documentFile instanceof ZipDocumentFile) {
+            if (!documentFile.isFile()) return null;
+            int modeBits = ParcelFileDescriptor.parseMode(mode);
+            if ((modeBits & ParcelFileDescriptor.MODE_READ_ONLY) == 0) {
+                throw new FileNotFoundException("Read-only file");
+            }
+            try {
+                return StorageManagerCompat.openProxyFileDescriptor(modeBits,
+                        new ZipStorageCallback((ZipDocumentFile) documentFile, callbackThread));
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
         return context.getContentResolver().openFileDescriptor(documentFile.getUri(), mode);
@@ -527,6 +547,8 @@ public class Path {
     public OutputStream openOutputStream(boolean append) throws IOException {
         if (documentFile instanceof ProxyDocumentFile) {
             return new ProxyOutputStream(Objects.requireNonNull(getFile()), append);
+        } else if (documentFile instanceof ZipDocumentFile) {
+            throw new IOException("Unsupported operation");
         }
         String mode = "w" + (append ? "a" : "t");
         OutputStream os = context.getContentResolver().openOutputStream(documentFile.getUri(), mode);
@@ -538,6 +560,8 @@ public class Path {
     public InputStream openInputStream() throws IOException {
         if (documentFile instanceof ProxyDocumentFile) {
             return new ProxyInputStream(Objects.requireNonNull(getFile()));
+        } else if (documentFile instanceof ZipDocumentFile) {
+            return ((ZipDocumentFile) documentFile).openInputStream();
         }
         InputStream is = context.getContentResolver().openInputStream(documentFile.getUri());
         if (is != null) return is;
@@ -626,10 +650,51 @@ public class Path {
         return filename.startsWith("./") ? filename.substring(2) : filename;
     }
 
-    private static class StorageCallback extends StorageManagerCompat.ProxyFileDescriptorCallbackCompat {
+    private static class ZipStorageCallback extends StorageManagerCompat.ProxyFileDescriptorCallbackCompat {
+        private final InputStream is;
+
+        public ZipStorageCallback(ZipDocumentFile document, HandlerThread callbackThread) throws IOException {
+            super(callbackThread);
+            is = document.openInputStream();
+        }
+
+        @Override
+        public long onGetSize() throws ErrnoException {
+            try {
+                return is.available();
+            } catch (IOException e) {
+                throw new ErrnoException(e.getMessage(), OsConstants.EBADF);
+            }
+        }
+
+        @Override
+        public int onRead(long offset, int size, byte[] data) throws ErrnoException {
+            try {
+                return is.read(data, (int) offset, size);
+            } catch (IOException e) {
+                throw new ErrnoException(e.getMessage(), OsConstants.EBADF);
+            }
+        }
+
+        @Override
+        protected void onRelease() {
+            try {
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        protected void finalize() throws Throwable {
+            is.close();
+        }
+    }
+
+    private static class ProxyStorageCallback extends StorageManagerCompat.ProxyFileDescriptorCallbackCompat {
         private final IFileDescriptor fd;
 
-        private StorageCallback(String path, String mode, HandlerThread thread) throws RemoteException {
+        private ProxyStorageCallback(String path, String mode, HandlerThread thread) throws RemoteException {
             super(thread);
             Log.d(TAG, "Mode: " + mode);
             try {
@@ -640,7 +705,7 @@ public class Path {
             }
         }
 
-        private StorageCallback(IFileDescriptor fd, HandlerThread thread) {
+        private ProxyStorageCallback(IFileDescriptor fd, HandlerThread thread) {
             super(thread);
             this.fd = fd;
         }

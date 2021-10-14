@@ -49,11 +49,12 @@ public class AppExplorerAdapter extends MultiSelectionView.Adapter<AppExplorerAd
         // Set icon
         if (item.type == FileType.DIRECTORY) {
             holder.icon.setImageResource(R.drawable.ic_folder_outline);
+            holder.subtitle.setText(null);
             holder.itemView.setOnClickListener(v -> activity.loadNewFragment(
-                    AppExplorerFragment.getNewInstance(item.fullName, item.depth + 1)));
+                    AppExplorerFragment.getNewInstance(item.path.getUri())));
         } else {
             holder.icon.setImageResource(R.drawable.ic_file_document_outline);
-            holder.subtitle.setText(Formatter.formatFileSize(activity, item.zipEntry.getSize()));
+            holder.subtitle.setText(Formatter.formatFileSize(activity, item.path.length()));
             holder.itemView.setOnClickListener(v -> {
                 if (item.extension.equals("xml")) {
                     activity.model.cacheAndOpen(item, true);
