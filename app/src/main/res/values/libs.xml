@@ -2768,6 +2768,8 @@
         <item>com.amazonaws.services.s3.</item>
         <item>com.alipay.mobile.framework</item>
         <item>sun.misc.Unsafe</item>
+        <item>io.vavr.</item>
+        <item>com.unity3d.player.</item>
     </array>
     <array name="lib_names">
         <item>GetJar Billing</item>
@@ -5536,6 +5538,8 @@
         <item>Amazon S3</item>
         <item>Alipay</item>
         <item>Java Unsafe</item>
+        <item>vʌvr (formerly Javaslang)</item>
+        <item>Unity3D Player</item>
     </array>
     <array name="lib_types">
         <item>Payment</item>
@@ -8304,6 +8308,8 @@
         <item>Development Aid</item>
         <item>Payment</item>
         <item>Utility</item>
+        <item>Development Framework</item>
+        <item>Game Engine</item>
     </array>
     <array name="lib_website">
         <item>http://www.getjar.com/</item>
@@ -11073,8 +11079,11 @@
         <item>https://vungle.com</item>
         <item>https://zangi.com/sip-provider</item>
         <item>https://github.com/paypal/PayPal-Android-SDK</item>
-        <item>https://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/package-summary.html</item>
+        <item>https://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/package-summary.html
+        </item>
         <item>http://www.alipay.com</item>
         <item>http://mishadoff.github.io/blog/java-magic-part-4-sun-dot-misc-dot-unsafe/</item>
+        <item>https://github.com/vavr-io/vavr</item>
+        <item>https://docs.unity3d.com/Manual/AndroidJARPlugins.html</item>
     </array>
 </resources>
