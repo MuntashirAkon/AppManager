@@ -2,12 +2,9 @@
 
 package io.github.muntashirakon.AppManager.apk.explorer;
 
-import android.webkit.MimeTypeMap;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.io.File;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.fm.FileType;
@@ -23,7 +20,8 @@ public class AdapterItem implements Comparable<AdapterItem> {
     final String fullName;
     @NonNull
     final Path path;
-    File cachedFile;
+
+    private Path cachedFile;
 
     public AdapterItem(@NonNull Path path) {
         this.path = path;
@@ -37,7 +35,15 @@ public class AdapterItem implements Comparable<AdapterItem> {
 
     @Nullable
     public String getMime() {
-        return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+        return path.getType();
+    }
+
+    public Path getCachedFile() {
+        return cachedFile;
+    }
+
+    public void setCachedFile(Path cachedFile) {
+        this.cachedFile = cachedFile;
     }
 
     @Override

@@ -15,8 +15,10 @@ import android.system.OsConstants;
 import androidx.annotation.CheckResult;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.documentfile.provider.DexDocumentFile;
 import androidx.documentfile.provider.DocumentFile;
 import androidx.documentfile.provider.ProxyDocumentFile;
+import androidx.documentfile.provider.VirtualDocumentFile;
 import androidx.documentfile.provider.ZipDocumentFile;
 
 import java.io.File;
@@ -32,6 +34,7 @@ import java.util.zip.ZipFile;
 import io.github.muntashirakon.AppManager.compat.StorageManagerCompat;
 import io.github.muntashirakon.AppManager.ipc.IPCUtils;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.scanner.DexClasses;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
@@ -54,6 +57,11 @@ public class Path {
     public Path(@NonNull Context context, @NonNull ZipFile zipFile, @Nullable String path) {
         this.context = context;
         this.documentFile = new ZipDocumentFile(zipFile, path);
+    }
+
+    public Path(@NonNull Context context, @NonNull DexClasses dexClasses, @Nullable String path) {
+        this.context = context;
+        this.documentFile = new DexDocumentFile(dexClasses, path);
     }
 
     public Path(@NonNull Context context, @NonNull DocumentFile documentFile) {
@@ -523,7 +531,7 @@ public class Path {
                     throw new FileNotFoundException(e.getMessage());
                 }
             }
-        } else if (documentFile instanceof ZipDocumentFile) {
+        } else if (documentFile instanceof VirtualDocumentFile) {
             if (!documentFile.isFile()) return null;
             int modeBits = ParcelFileDescriptor.parseMode(mode);
             if ((modeBits & ParcelFileDescriptor.MODE_READ_ONLY) == 0) {
@@ -531,7 +539,7 @@ public class Path {
             }
             try {
                 return StorageManagerCompat.openProxyFileDescriptor(modeBits,
-                        new ZipStorageCallback((ZipDocumentFile) documentFile, callbackThread));
+                        new VirtualStorageCallback((VirtualDocumentFile<?>) documentFile, callbackThread));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -547,7 +555,8 @@ public class Path {
     public OutputStream openOutputStream(boolean append) throws IOException {
         if (documentFile instanceof ProxyDocumentFile) {
             return new ProxyOutputStream(Objects.requireNonNull(getFile()), append);
-        } else if (documentFile instanceof ZipDocumentFile) {
+        } else if (documentFile instanceof VirtualDocumentFile) {
+            // For now, none of the virtual document files support writing
             throw new IOException("Unsupported operation");
         }
         String mode = "w" + (append ? "a" : "t");
@@ -560,8 +569,8 @@ public class Path {
     public InputStream openInputStream() throws IOException {
         if (documentFile instanceof ProxyDocumentFile) {
             return new ProxyInputStream(Objects.requireNonNull(getFile()));
-        } else if (documentFile instanceof ZipDocumentFile) {
-            return ((ZipDocumentFile) documentFile).openInputStream();
+        } else if (documentFile instanceof VirtualDocumentFile) {
+            return ((VirtualDocumentFile<?>) documentFile).openInputStream();
         }
         InputStream is = context.getContentResolver().openInputStream(documentFile.getUri());
         if (is != null) return is;
@@ -650,10 +659,10 @@ public class Path {
         return filename.startsWith("./") ? filename.substring(2) : filename;
     }
 
-    private static class ZipStorageCallback extends StorageManagerCompat.ProxyFileDescriptorCallbackCompat {
+    private static class VirtualStorageCallback extends StorageManagerCompat.ProxyFileDescriptorCallbackCompat {
         private final InputStream is;
 
-        public ZipStorageCallback(ZipDocumentFile document, HandlerThread callbackThread) throws IOException {
+        public VirtualStorageCallback(VirtualDocumentFile<?> document, HandlerThread callbackThread) throws IOException {
             super(callbackThread);
             is = document.openInputStream();
         }

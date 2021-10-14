@@ -3,6 +3,7 @@
 package io.github.muntashirakon.AppManager.apk.explorer;
 
 import android.app.Application;
+import android.content.ContentResolver;
 import android.net.Uri;
 import android.os.RemoteException;
 
@@ -13,8 +14,8 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
@@ -29,6 +30,7 @@ import java.util.zip.ZipFile;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.parser.AndroidBinXmlDecoder;
+import io.github.muntashirakon.AppManager.scanner.DexClasses;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
@@ -38,11 +40,13 @@ public class AppExplorerViewModel extends AndroidViewModel {
     private final MutableLiveData<List<AdapterItem>> fmItems = new MutableLiveData<>();
     private final MutableLiveData<Boolean> modificationObserver = new MutableLiveData<>();
     private final MutableLiveData<AdapterItem> openObserver = new MutableLiveData<>();
+    private final MutableLiveData<Uri> uriChangeObserver = new MutableLiveData<>();
     private Uri apkUri;
     private ApkFile apkFile;
     private File cachedFile;
     private ZipFile zipFile;
     private Path zipFileRoot;
+    private Path dexFileRoot;
     private boolean modified;
 
     public AppExplorerViewModel(@NonNull Application application) {
@@ -95,12 +99,36 @@ public class AppExplorerViewModel extends AndroidViewModel {
             }
             List<AdapterItem> adapterItems = new ArrayList<>();
             try {
-                Path path = uri == null ? zipFileRoot : zipFileRoot.findFile(uri.getPath());
+                Path path;
+                if (uri == null) {
+                    // Null URI always means root of the zip file
+                    path = zipFileRoot;
+                } else {
+                    String relativePath = uri.getPath();
+                    switch (uri.getScheme()) {
+                        default:
+                        case "zip":
+                            // Browsing the zip file
+                            path = relativePath.equals(File.separator) ? zipFileRoot : zipFileRoot.findFile(uri.getPath());
+                            break;
+                        case "dex":
+                            // Browsing a dex file
+                            path = relativePath.equals(File.separator) ? dexFileRoot : dexFileRoot.findFile(uri.getPath());
+                            break;
+                        case ContentResolver.SCHEME_FILE:
+                            // Browsing regular files
+                            path = new Path(AppManager.getContext(), new File(uri.getPath()));
+                            break;
+                        case ContentResolver.SCHEME_CONTENT:
+                            // Browsing SAF
+                            path = new Path(AppManager.getContext(), uri);
+                    }
+                }
                 for (Path child : path.listFiles()) {
                     adapterItems.add(new AdapterItem(child));
                 }
                 Collections.sort(adapterItems);
-            } catch (FileNotFoundException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             } finally {
                 this.fmItems.postValue(adapterItems);
@@ -110,7 +138,7 @@ public class AppExplorerViewModel extends AndroidViewModel {
 
     @AnyThread
     public void cacheAndOpen(@NonNull AdapterItem item, boolean convertXml) {
-        if (item.cachedFile != null) {
+        if (item.getCachedFile() != null) {
             // Already cached
             openObserver.postValue(item);
             return;
@@ -127,13 +155,37 @@ public class AppExplorerViewModel extends AndroidViewModel {
                         } else {
                             ps.write(fileBytes);
                         }
-                        item.cachedFile = cachedFile;
+                        item.setCachedFile(new Path(AppManager.getContext(), cachedFile));
                     }
-                } else item.cachedFile = FileUtils.getCachedFile(is);
+                } else {
+                    item.setCachedFile(new Path(AppManager.getContext(), FileUtils.getCachedFile(is)));
+                }
             } catch (Throwable e) {
                 e.printStackTrace();
             }
             openObserver.postValue(item);
+        });
+    }
+
+    public void browseDexOrOpenExternal(@NonNull AdapterItem item) {
+        executor.submit(() -> {
+            try (InputStream is = new BufferedInputStream(item.path.openInputStream())) {
+                dexFileRoot = new Path(AppManager.getContext(), new DexClasses(is), null);
+                uriChangeObserver.postValue(dexFileRoot.getUri());
+            } catch (Throwable th) {
+                th.printStackTrace();
+                if (item.getCachedFile() != null) {
+                    openObserver.postValue(item);
+                    return;
+                }
+                try (InputStream is = item.path.openInputStream()) {
+                    // TODO: 15/10/21 Could be a zip file
+                    item.setCachedFile(new Path(AppManager.getContext(), FileUtils.getCachedFile(is)));
+                    openObserver.postValue(item);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         });
     }
 
@@ -147,5 +199,9 @@ public class AppExplorerViewModel extends AndroidViewModel {
 
     public LiveData<AdapterItem> observeOpen() {
         return openObserver;
+    }
+
+    public LiveData<Uri> observeUriChange() {
+        return uriChangeObserver;
     }
 }

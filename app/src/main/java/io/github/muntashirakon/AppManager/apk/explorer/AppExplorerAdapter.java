@@ -14,6 +14,7 @@ import androidx.appcompat.widget.AppCompatTextView;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.R;
@@ -21,6 +22,8 @@ import io.github.muntashirakon.AppManager.fm.FileType;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
 public class AppExplorerAdapter extends MultiSelectionView.Adapter<AppExplorerAdapter.ViewHolder> {
+    private static final List<String> DEX_EXTENSIONS = Arrays.asList("dex", "jar");
+
     private final List<AdapterItem> adapterList = new ArrayList<>();
     private final AppExplorerActivity activity;
 
@@ -58,8 +61,11 @@ public class AppExplorerAdapter extends MultiSelectionView.Adapter<AppExplorerAd
             holder.itemView.setOnClickListener(v -> {
                 if (item.extension.equals("xml")) {
                     activity.model.cacheAndOpen(item, true);
+                } else if (DEX_EXTENSIONS.contains(item.extension)) {
+                    activity.model.browseDexOrOpenExternal(item);
+                } else {
+                    activity.model.cacheAndOpen(item, false);
                 }
-                // TODO: 9/10/21
             });
         }
         // Set background colors

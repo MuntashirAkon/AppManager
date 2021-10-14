@@ -2,9 +2,12 @@
 
 package io.github.muntashirakon.AppManager.scanner;
 
+import androidx.annotation.NonNull;
+
 import org.jf.dexlib2.DexFileFactory;
 import org.jf.dexlib2.Opcodes;
 import org.jf.dexlib2.dexbacked.DexBackedDexFile;
+import org.jf.dexlib2.dexbacked.DexBackedOdexFile;
 import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.MultiDexContainer;
 import org.jf.dexlib2.writer.io.FileDataStore;
@@ -12,6 +15,7 @@ import org.jf.dexlib2.writer.pool.DexPool;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 import jadx.api.JadxArgs;
@@ -42,5 +46,21 @@ public final class ScannerUtils {
         } finally {
             tmp.delete();
         }
+    }
+
+    @NonNull
+    public static DexBackedDexFile loadDexContainer(@NonNull InputStream inputStream, int api) throws IOException {
+        Opcodes opcodes = api < 0 ? null : Opcodes.forApi(api);
+        try {
+            return DexBackedDexFile.fromInputStream(opcodes, inputStream);
+        } catch (DexBackedDexFile.NotADexFile ex) {
+            // just eat it
+        }
+        try {
+            return DexBackedOdexFile.fromInputStream(opcodes, inputStream);
+        } catch (DexBackedOdexFile.NotAnOdexFile ex) {
+            // just eat it
+        }
+        throw new DexFileFactory.UnsupportedFileTypeException("InputStream is not a dex, odex file.");
     }
 }

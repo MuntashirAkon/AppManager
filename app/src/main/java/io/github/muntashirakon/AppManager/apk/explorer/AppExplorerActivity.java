@@ -20,7 +20,6 @@ import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.fm.FmProvider;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
-import io.github.muntashirakon.io.Path;
 
 public class AppExplorerActivity extends BaseActivity {
     AppExplorerViewModel model;
@@ -46,11 +45,14 @@ public class AppExplorerActivity extends BaseActivity {
             if (actionBar != null) actionBar.setTitle("* " + model.getName());
         });
         model.observeOpen().observe(this, adapterItem -> {
-            if (adapterItem.cachedFile == null) return;
+            if (adapterItem.getCachedFile() == null) return;
             Intent intent = new Intent(Intent.ACTION_VIEW)
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    .setDataAndType(FmProvider.getContentUri(new Path(this, adapterItem.cachedFile)), adapterItem.getMime());
+                    .setDataAndType(FmProvider.getContentUri(adapterItem.getCachedFile()), adapterItem.getMime());
             startActivity(intent);
+        });
+        model.observeUriChange().observe(this, newUri -> {
+            if (newUri != null) loadNewFragment(AppExplorerFragment.getNewInstance(newUri));
         });
     }
 

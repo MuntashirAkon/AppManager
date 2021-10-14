@@ -15,9 +15,11 @@ import org.jf.dexlib2.dexbacked.DexBackedOdexFile;
 import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.MultiDexContainer;
 
+import java.io.BufferedInputStream;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -69,6 +71,40 @@ public class DexClasses implements Closeable {
         }
     }
 
+    public DexClasses(@NonNull InputStream inputStream) throws IOException {
+        this.options = new BaksmaliOptions();
+        // options
+        options.deodex = false;
+        options.implicitReferences = false;
+        options.parameterRegisters = true;
+        options.localsDirective = true;
+        options.sequentialLabels = true;
+        options.debugInfo = BuildConfig.DEBUG;
+        options.codeOffsets = false;
+        options.accessorComments = false;
+        options.registerInfo = 0;
+        options.inlineResolver = null;
+        BaksmaliFormatter formatter = new BaksmaliFormatter();
+        InputStream is = new BufferedInputStream(inputStream);
+        DexBackedDexFile dexFile = ScannerUtils.loadDexContainer(is, -1);
+        // Store list of classes
+        for (ClassDef classDef : dexFile.getClasses()) {
+            String name = formatter.getType(classDef.getType());
+            if (name.endsWith(";")) name = name.substring(0, name.length() - 1);
+            if (name.startsWith("L")) {
+                name = name.substring(1).replace('/', '.');
+            }
+            classDefArraySet.put(name, classDef);
+        }
+        if (dexFile.supportsOptimizedOpcodes()) {
+            throw new IOException("ODEX isn't supported.");
+        }
+        if (dexFile instanceof DexBackedOdexFile) {
+            options.inlineResolver = InlineMethodResolver.createInlineMethodResolver(
+                    ((DexBackedOdexFile) dexFile).getOdexVersion());
+        }
+    }
+
     @NonNull
     public List<String> getClassNames() {
         return new ArrayList<>(classDefArraySet.keySet());
@@ -93,9 +129,14 @@ public class DexClasses implements Closeable {
 
     @NonNull
     public String getClassContents(@NonNull String className) throws ClassNotFoundException {
+        return getClassContents(getClassDef(className));
+    }
+
+    @NonNull
+    public String getClassContents(@NonNull ClassDef classdef) throws ClassNotFoundException {
         StringWriter stringWriter = new StringWriter();
         try (BaksmaliWriter baksmaliWriter = new BaksmaliFormatter().getWriter(stringWriter)) {
-            ClassDefinition classDefinition = new ClassDefinition(this.options, getClassDef(className));
+            ClassDefinition classDefinition = new ClassDefinition(this.options, classdef);
             classDefinition.writeTo(baksmaliWriter);
         } catch (IOException e) {
             throw new ClassNotFoundException(e.getMessage(), e);
