@@ -544,6 +544,12 @@
         <item>co.vmob.sdk</item>
         <item>com.swirl</item>
         <item>com.treasuredata</item>
+        <item>com.ibm.mce.sdk.</item>
+        <item>co.acoustic.mobile.push.sdk.</item>
+        <item>com.xtify.mce.sdk.</item>
+        <item>com.xtify.android.sdk.</item>
+        <item>com.kakao.adfit</item>
+        <item>com.ansca.corona</item>
         <item>com.geopla.</item>
         <item>com.threebitter.sdk.</item>
         <item>org.acra.</item>
@@ -678,10 +684,6 @@
         <item>com.hotmob.sdk.</item>
         <item>.houseads</item>
         <item>com.iac.notification.</item>
-        <item>com.ibm.mce.sdk.</item>
-        <item>co.acoustic.mobile.push.sdk.</item>
-        <item>com.xtify.mce.sdk.</item>
-        <item>com.xtify.android.sdk.</item>
         <item>com.igg.android.ad.</item>
         <item>com.igg.android.gamecenter.</item>
         <item>com.igg.libs.</item>
@@ -699,7 +701,6 @@
         <item>com.intrasonics.</item>
         <item>com.ad.intromi.</item>
         <item>io.karte.android.tracker.</item>
-        <item>com.kakao.ad.</item>
         <item>com.kakao.kakaolink</item>
         <item>com.adzerk.android.sdk</item>
         <item>com.zestadz.android.</item>
@@ -812,7 +813,6 @@
         <item>com.smartyads</item>
         <item>com.snap.adkit</item>
         <item>com.snap.appadskit</item>
-        <item>com.ansca.corona</item>
         <item>com.soundhound.android.adverts</item>
         <item>com.spoteer.arc.</item>
         <item>com.spotify.mobile.android.ads.</item>
@@ -886,6 +886,7 @@
         <item>com.walkme.wmads</item>
         <item>com.walkme.wmanalytics</item>
         <item>com.walkme.wmcrosspromotion</item>
+        <item>abbi.io.abbisdk.</item>
         <item>com.wannads.sdk.</item>
         <item>ru.wapstart.plus1.sdk.</item>
         <item>com.sina.deviceidjnisdk</item>
@@ -922,6 +923,7 @@
         <item>com.fineapptech.finead.</item>
         <item>com.frogermcs.activityframemetrics</item>
         <item>jp.co.imobile.sdkads.android.</item>
+        <item>jp.iridge.popinfo.</item>
         <item>com.mtraction.mtractioninapptracker.</item>
         <item>com.netmera.</item>
         <item>jp.pinable.ssbp.</item>
@@ -1471,6 +1473,12 @@
         <item>Plexure</item>
         <item>Swirl</item>
         <item>Treasure Data</item>
+        <item>IBM Mobile Marketing (Acoustic)</item>
+        <item>IBM Mobile Marketing (Acoustic)</item>
+        <item>IBM Mobile Marketing (Acoustic)</item>
+        <item>IBM Mobile Marketing (Acoustic)</item>
+        <item>Kakao AdFit</item>
+        <item>Solar2D (Corona)</item>
         <item>²39Geopla</item>
         <item>²3bitter Beacon</item>
         <item>²ACRA</item>
@@ -1605,10 +1613,6 @@
         <item>²Hotmob SDK</item>
         <item>²Houseads</item>
         <item>²IAC</item>
-        <item>²IBM Mobile Marketing (Acoustic)</item>
-        <item>²IBM Mobile Marketing (Acoustic)</item>
-        <item>²IBM Mobile Marketing (Acoustic)</item>
-        <item>²IBM Mobile Marketing (Acoustic)</item>
         <item>²IGG.com</item>
         <item>²IGG.com</item>
         <item>²IGG.com</item>
@@ -1626,7 +1630,6 @@
         <item>²Intrasonics</item>
         <item>²IntroMi</item>
         <item>²KARTE</item>
-        <item>²Kakao AD SDK</item>
         <item>²KakaoTalk Link</item>
         <item>²Kevel (formerly Adzerk)</item>
         <item>²Komli Mobile (ZestAdz)</item>
@@ -1739,7 +1742,6 @@
         <item>²SmartyAds</item>
         <item>²Snap Ad Kit</item>
         <item>²Snap Ad Kit</item>
-        <item>²Solar2D (Corona)</item>
         <item>²SoundHaund Adverts</item>
         <item>²Spoteer Arc</item>
         <item>²Spotify Advertising</item>
@@ -1813,6 +1815,7 @@
         <item>²WalkMe/Abbi.io</item>
         <item>²WalkMe/Abbi.io</item>
         <item>²WalkMe/Abbi.io</item>
+        <item>²WalkMe/Abbi.io</item>
         <item>²Wannads</item>
         <item>²WapStart.Plus1</item>
         <item>²Weibo DeviceID</item>
@@ -1849,6 +1852,7 @@
         <item>²fineapptech</item>
         <item>²froger_mcs</item>
         <item>²i-mobile</item>
+        <item>²iridge popinfo</item>
         <item>²mTraction (mFaaS)</item>
         <item>²netmera</item>
         <item>²pinable</item>
