@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 // Copyright 2015 Jared Rummler
 //           2014 Liu Dong
 public class ResourceLoader {
-
     @NonNull
     public static SparseArray<String> loadSystemAttrIds() {
         SparseArray<String> array = new SparseArray<>();

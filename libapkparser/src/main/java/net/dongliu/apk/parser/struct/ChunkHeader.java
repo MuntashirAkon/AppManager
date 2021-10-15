@@ -8,7 +8,6 @@ import net.dongliu.apk.parser.utils.Unsigned;
  * A Chunk is just a piece of memory split into two parts, a header and a body.
  * The exact structure of the header and the body of a given Chunk is determined by its type.
  * <pre>
- * chunk header struct.
  * struct ResChunk_header {
  *     uint16_t type;
  *     uint16_t headerSize;

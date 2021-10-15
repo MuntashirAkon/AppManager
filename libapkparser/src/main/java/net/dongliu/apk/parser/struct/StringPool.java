@@ -7,7 +7,7 @@ package net.dongliu.apk.parser.struct;
  */
 // Copyright 2014 Liu Dong
 public class StringPool {
-    private String[] pool;
+    private final String[] pool;
 
     public StringPool(int poolSize) {
         pool = new String[poolSize];

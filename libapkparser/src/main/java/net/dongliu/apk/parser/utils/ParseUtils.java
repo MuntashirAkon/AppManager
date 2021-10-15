@@ -1,10 +1,13 @@
-// SPDX-License-Identifier: BSD-2-Clause
+// SPDX-License-Identifier: BSD-2-Clause AND GPL-3.0-or-later
 
 package net.dongliu.apk.parser.utils;
 
-import net.dongliu.apk.parser.exception.ParserException;
+import android.util.Log;
+import android.util.TypedValue;
+
+import androidx.annotation.Nullable;
+
 import net.dongliu.apk.parser.parser.StringPoolEntry;
-import net.dongliu.apk.parser.struct.ResValue;
 import net.dongliu.apk.parser.struct.ResourceValue;
 import net.dongliu.apk.parser.struct.StringPool;
 import net.dongliu.apk.parser.struct.StringPoolHeader;
@@ -13,10 +16,9 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-import androidx.annotation.Nullable;
-
 // Copyright 2018 Liu Dong
 public class ParseUtils {
+    public static final String TAG = ParseUtils.class.getSimpleName();
 
     public static Charset charsetUTF8 = StandardCharsets.UTF_8;
 
@@ -151,48 +153,37 @@ public class ParseUtils {
      */
     @Nullable
     public static ResourceValue readResValue(ByteBuffer buffer, StringPool stringPool) {
-//        ResValue resValue = new ResValue();
         int size = Buffers.readUShort(buffer);
         short res0 = Buffers.readUByte(buffer);
         short dataType = Buffers.readUByte(buffer);
 
         switch (dataType) {
-            case ResValue.ResType.INT_DEC:
-                return ResourceValue.decimal(buffer.getInt());
-            case ResValue.ResType.INT_HEX:
-                return ResourceValue.hexadecimal(buffer.getInt());
-            case ResValue.ResType.STRING:
+            case TypedValue.TYPE_NULL:
+                return ResourceValue.nullValue();
+            case TypedValue.TYPE_STRING:
                 int strRef = buffer.getInt();
                 if (strRef >= 0) {
-                    return ResourceValue.string(strRef, stringPool);
+                    return new ResourceValue(dataType, stringPool.get(strRef));
                 } else {
+                    Log.w(TAG, "Invalid string index = " + strRef);
                     return null;
                 }
-            case ResValue.ResType.REFERENCE:
-                return ResourceValue.reference(buffer.getInt());
-            case ResValue.ResType.INT_BOOLEAN:
-                return ResourceValue.bool(buffer.getInt());
-            case ResValue.ResType.NULL:
-                return ResourceValue.nullValue();
-            case ResValue.ResType.INT_COLOR_RGB8:
-            case ResValue.ResType.INT_COLOR_RGB4:
-                return ResourceValue.rgb(buffer.getInt(), 6);
-            case ResValue.ResType.INT_COLOR_ARGB8:
-            case ResValue.ResType.INT_COLOR_ARGB4:
-                return ResourceValue.rgb(buffer.getInt(), 8);
-            case ResValue.ResType.DIMENSION:
-                return ResourceValue.dimension(buffer.getInt());
-            case ResValue.ResType.FRACTION:
-                return ResourceValue.fraction(buffer.getInt());
+            case TypedValue.TYPE_REFERENCE:
+            case TypedValue.TYPE_ATTRIBUTE:
+            case TypedValue.TYPE_FLOAT:
+            case TypedValue.TYPE_DIMENSION:
+            case TypedValue.TYPE_FRACTION:
+            case TypedValue.TYPE_INT_DEC:
+            case TypedValue.TYPE_INT_HEX:
+            case TypedValue.TYPE_INT_BOOLEAN:
+            case TypedValue.TYPE_INT_COLOR_RGB8:
+            case TypedValue.TYPE_INT_COLOR_RGB4:
+            case TypedValue.TYPE_INT_COLOR_ARGB8:
+            case TypedValue.TYPE_INT_COLOR_ARGB4:
+                return new ResourceValue(dataType, buffer.getInt());
             default:
-                return ResourceValue.raw(buffer.getInt(), dataType);
-        }
-    }
-
-    public static void checkChunkType(int expected, int real) {
-        if (expected != real) {
-            throw new ParserException("Expect chunk type:" + Integer.toHexString(expected)
-                    + ", but got:" + Integer.toHexString(real));
+                Log.w(TAG, String.format("Invalid resource, type 0x%x and data 0x%x", dataType, buffer.getInt()));
+                return null;
         }
     }
 

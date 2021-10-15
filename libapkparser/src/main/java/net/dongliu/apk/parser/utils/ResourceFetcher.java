@@ -29,8 +29,7 @@ import javax.xml.parsers.SAXParserFactory;
 public class ResourceFetcher {
 
     // from https://android.googlesource.com/platform/frameworks/base/+/master/core/res/res/values/public.xml
-    private void fetchSystemAttrIds()
-            throws IOException, SAXException, ParserConfigurationException {
+    private void fetchSystemAttrIds() throws IOException, SAXException, ParserConfigurationException {
         String url = "https://android.googlesource.com/platform/frameworks/base/+/master/core/res/res/values/public.xml";
         String html = getUrl(url);
         String xml = retrieveCode(html);

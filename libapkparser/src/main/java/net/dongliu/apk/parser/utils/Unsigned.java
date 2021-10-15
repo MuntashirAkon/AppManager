@@ -31,13 +31,6 @@ public class Unsigned {
     }
 
 
-    public static long ensureULong(long value) {
-        if (value < 0) {
-            throw new ArithmeticException("unsigned long overflow");
-        }
-        return value;
-    }
-
     public static short toShort(byte value) {
         return (short) (value & 0xff);
     }

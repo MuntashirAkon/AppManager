@@ -4,24 +4,30 @@ package net.dongliu.apk.parser.parser;
 
 import android.util.Pair;
 
+import androidx.annotation.NonNull;
+
 import net.dongliu.apk.parser.exception.ParserException;
 import net.dongliu.apk.parser.struct.ChunkHeader;
 import net.dongliu.apk.parser.struct.ChunkType;
 import net.dongliu.apk.parser.struct.StringPool;
 import net.dongliu.apk.parser.struct.StringPoolHeader;
-import net.dongliu.apk.parser.struct.resource.*;
+import net.dongliu.apk.parser.struct.resource.LibraryEntry;
+import net.dongliu.apk.parser.struct.resource.LibraryHeader;
+import net.dongliu.apk.parser.struct.resource.NullHeader;
+import net.dongliu.apk.parser.struct.resource.PackageHeader;
+import net.dongliu.apk.parser.struct.resource.ResTableConfig;
+import net.dongliu.apk.parser.struct.resource.ResourcePackage;
+import net.dongliu.apk.parser.struct.resource.ResourceTable;
+import net.dongliu.apk.parser.struct.resource.ResourceTableHeader;
+import net.dongliu.apk.parser.struct.resource.Type;
+import net.dongliu.apk.parser.struct.resource.TypeHeader;
+import net.dongliu.apk.parser.struct.resource.TypeSpec;
+import net.dongliu.apk.parser.struct.resource.TypeSpecHeader;
 import net.dongliu.apk.parser.utils.Buffers;
 import net.dongliu.apk.parser.utils.ParseUtils;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Set;
-
-import androidx.annotation.NonNull;
-
-import static net.dongliu.apk.parser.struct.ChunkType.UNKNOWN_YET;
 
 /**
  * Parse android resource table file.
@@ -33,20 +39,21 @@ import static net.dongliu.apk.parser.struct.ChunkType.UNKNOWN_YET;
 public class ResourceTableParser {
 
     /**
-     * By default the data buffer Chunks is buffer little-endian byte order both at runtime and when stored buffer files.
+     * By default, the data buffer Chunks is buffer little-endian byte order both at runtime and when stored buffer files.
      */
-    private ByteOrder byteOrder = ByteOrder.LITTLE_ENDIAN;
+    private final ByteOrder byteOrder = ByteOrder.LITTLE_ENDIAN;
     private StringPool stringPool;
-    private ByteBuffer buffer;
-    // the resource table file size
+    private final ByteBuffer buffer;
+    // The resource table file size
     private ResourceTable resourceTable;
-
-    private Set<Locale> locales;
 
     public ResourceTableParser(ByteBuffer buffer) {
         this.buffer = buffer.duplicate();
         this.buffer.order(byteOrder);
-        this.locales = new HashSet<>();
+    }
+
+    public ResourceTable getResourceTable() {
+        return resourceTable;
     }
 
     /**
@@ -136,7 +143,6 @@ public class ResourceTableParser {
                     type.setOffsets(offsets);
                     type.setStringPool(stringPool);
                     resourcePackage.addType(type);
-                    locales.add(type.getLocale());
                     Buffers.position(buffer, chunkBegin + typeHeader.getBodySize());
                     break;
                 case ChunkType.TABLE_PACKAGE:
@@ -223,7 +229,6 @@ public class ResourceTableParser {
                 libraryHeader.setCount(Buffers.readUInt(buffer));
                 Buffers.position(buffer, begin + headerSize);
                 return libraryHeader;
-            case UNKNOWN_YET:
             case ChunkType.NULL:
                 Buffers.position(buffer, begin + headerSize);
                 return new NullHeader(headerSize, chunkSize);
@@ -251,13 +256,5 @@ public class ResourceTableParser {
         long endPos = buffer.position();
         Buffers.skip(buffer, (int) (size - (endPos - beginPos)));
         return config;
-    }
-
-    public ResourceTable getResourceTable() {
-        return resourceTable;
-    }
-
-    public Set<Locale> getLocales() {
-        return this.locales;
     }
 }

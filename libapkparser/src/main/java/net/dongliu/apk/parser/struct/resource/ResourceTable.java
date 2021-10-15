@@ -4,20 +4,24 @@ package net.dongliu.apk.parser.struct.resource;
 
 import android.util.SparseArray;
 
+import androidx.annotation.NonNull;
+
 import net.dongliu.apk.parser.struct.ResourceValue;
 import net.dongliu.apk.parser.struct.StringPool;
 import net.dongliu.apk.parser.utils.ResourceLoader;
 
-import java.util.*;
-
-import androidx.annotation.NonNull;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The apk resource table
  */
 // Copyright 2014 Liu Dong
 public class ResourceTable {
-    private Map<Short, ResourcePackage> packageMap = new HashMap<>();
+    private final Map<Short, ResourcePackage> packageMap = new HashMap<>();
     private StringPool stringPool;
 
     public static SparseArray<String> sysStyle = ResourceLoader.loadSystemStyles();
@@ -38,7 +42,6 @@ public class ResourceTable {
         this.stringPool = stringPool;
     }
 
-
     /**
      * Get resources match the given resource id.
      */
@@ -48,7 +51,6 @@ public class ResourceTable {
         // an 8-bit Package id [bits 24-31]
         // an 8-bit Type id [bits 16-23]
         // a 16-bit Entry index [bits 0-15]
-
 
         short packageId = (short) (resourceId >> 24 & 0xff);
         short typeId = (short) ((resourceId >> 16) & 0xff);
@@ -92,12 +94,12 @@ public class ResourceTable {
     }
 
     /**
-     * contains all info for one resource
+     * Contains all info for one resource
      */
     public static class Resource {
-        private TypeSpec typeSpec;
-        private Type type;
-        private ResourceEntry resourceEntry;
+        private final TypeSpec typeSpec;
+        private final Type type;
+        private final ResourceEntry resourceEntry;
 
         public Resource(TypeSpec typeSpec, Type type, ResourceEntry resourceEntry) {
             this.typeSpec = typeSpec;

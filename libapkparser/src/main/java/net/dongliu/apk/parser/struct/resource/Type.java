@@ -2,6 +2,8 @@
 
 package net.dongliu.apk.parser.struct.resource;
 
+import androidx.annotation.NonNull;
+
 import net.dongliu.apk.parser.struct.StringPool;
 import net.dongliu.apk.parser.utils.Buffers;
 import net.dongliu.apk.parser.utils.ParseUtils;
@@ -23,7 +25,7 @@ public class Type {
     private StringPool stringPool;
 
     // see Densities.java for values
-    private int density;
+    private final int density;
 
     public Type(TypeHeader header) {
         this.id = header.getId();
@@ -41,7 +43,7 @@ public class Type {
             return null;
         }
 
-        // read Resource Entries
+        // Read Resource Entries
         Buffers.position(buffer, offsets[id]);
         return readResourceEntry();
     }
@@ -155,6 +157,7 @@ public class Type {
         return density;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Type{" +

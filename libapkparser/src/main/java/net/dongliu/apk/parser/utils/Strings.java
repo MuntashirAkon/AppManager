@@ -6,7 +6,6 @@ import java.util.Iterator;
 
 // Copyright 2017 hsiafan
 public class Strings {
-
     /**
      * Copied fom commons StringUtils
      * <p>Joins the elements of the provided {@code Iterable} into

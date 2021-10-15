@@ -2,9 +2,10 @@
 
 package net.dongliu.apk.parser.struct.resource;
 
+import androidx.annotation.NonNull;
+
 // Copyright 2014 Liu Dong
 public class TypeSpec {
-
     private long[] entryFlags;
     private String name;
     private short id;
@@ -41,6 +42,7 @@ public class TypeSpec {
         this.id = id;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "TypeSpec{" +

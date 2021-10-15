@@ -8,7 +8,6 @@ import java.io.InputStream;
 
 // Copyright 2017 Liu Dong
 public class Inputs {
-
     public static byte[] readAll(InputStream in) throws IOException {
         byte[] buf = new byte[1024 * 8];
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
