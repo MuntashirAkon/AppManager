@@ -673,6 +673,7 @@
         <item>com.gamesparks.sdk.</item>
         <item>com.geouniq.android.</item>
         <item>com.google.cloud.audit</item>
+        <item>com.google.mlkit</item>
         <item>com.android.billingclient</item>
         <item>com.timerazor.gravysdk.</item>
         <item>org.greenrobot.</item>
@@ -701,6 +702,7 @@
         <item>com.intrasonics.</item>
         <item>com.ad.intromi.</item>
         <item>io.karte.android.tracker.</item>
+        <item>com.kakao.ad.</item>
         <item>com.kakao.kakaolink</item>
         <item>com.adzerk.android.sdk</item>
         <item>com.zestadz.android.</item>
@@ -1602,6 +1604,7 @@
         <item>²Game Sparks</item>
         <item>²GeoUniq (Cloud4Win)</item>
         <item>²Google Cloud Audit</item>
+        <item>²Google ML Kit</item>
         <item>²Google Play Billing Library / Service</item>
         <item>²Gravy Analytics</item>
         <item>²GreenRobot</item>
@@ -1630,6 +1633,7 @@
         <item>²Intrasonics</item>
         <item>²IntroMi</item>
         <item>²KARTE</item>
+        <item>²Kakao AD SDK</item>
         <item>²KakaoTalk Link</item>
         <item>²Kevel (formerly Adzerk)</item>
         <item>²Komli Mobile (ZestAdz)</item>
