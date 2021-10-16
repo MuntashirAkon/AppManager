@@ -623,7 +623,7 @@
     <string name="sort_by_app_ops_names">Nom de l\'autorisation</string>
     <string name="sort_by_app_ops_values">Valeur de l\'autorisation</string>
     <string name="native_library_dir">Répertoire de bibliothèques natives JNI</string>
-    <string name="orientation_full_sensor">Capteur plein</string>
+    <string name="orientation_full_sensor">Capteur complet</string>
     <string name="orientation_behind">Arrière</string>
     <string name="batch_ops">Opérations par lots</string>
     <plurals name="verified_with_warning">
@@ -940,4 +940,8 @@
     <string name="import_from_oab">Importer depuis OAndBackup</string>
     <string name="pref_import_backups_msg">Importer les sauvegardes depuis OAndBackup ou Titanium Backup.</string>
     <string name="pref_import_backups">Importer les sauvegardes</string>
+    <string name="orientation_user_portrait">Portrait utilisateur</string>
+    <string name="failed_to_uninstall_app">La désinstallation a échoué</string>
+    <string name="toggle_default_app_ops">Basculer les opérations d\'application par défaut</string>
+    <string name="state_session_leader">Chef de séance</string>
 </resources>
