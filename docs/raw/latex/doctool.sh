@@ -1,103 +1,18 @@
 #!/bin/bash
 
-function func_help {
-echo -n "\
-./doctool.sh COMMAND [ARGS]
---COMMANDS--
-buildhtml
-Build HTML from TeX
-
-updatetranslation
-Extract strings and create xliff translation file
-
-mergetranslation [INPUT.xml] [OUTPUT DIR]
-Merge translation from xliff to TeX
-
-help
-Show this help and exit
-
-checkdeps
-Run dependency checker
-
---Dependencies--
-・pandoc(Tested with 2.13-1)
-https://github.com/jgm/pandoc
-https://pandoc.org/
-
-・pandoc-crossref(Tested with v0.3.10.0a)
-https://github.com/lierdakil/pandoc-crossref
-https://lierdakil.github.io/pandoc-crossref/
-
-・Python(Tested with 3.8.5)
-https://www.python.org/
-
-・GNU Sed(Tested with 4.7,May not work with Posix SED)
-https://www.gnu.org/software/sed/
-
-・Bash(Tested with 5.0.17,Not work with sh,Untested with zsh)
-https://www.gnu.org/software/bash/
-
-・Awk(Tested with 5.0.1-API2.0)
-
-・GNU grep（Tested with 3.4)
-
-・xmllint(Tested with 20910)
-
-・Perl(Tested with 5-v30)
-"
-}
-
-
 function func_checkdeps {
 
 echo Warning:This checker doesnt check version.
 
-which pandoc && echo Pass || echo -n "\
-Pandoc not found!
+which pandoc && echo Pass || echo -n "Pandoc not found!"
 
--Solution-
-Please install pandoc above v2.13.
-Download releases from here and install it.(maybe your package manager have pandoc package,but it will cause bug due to it is outdated)
-https://github.com/jgm/pandoc/releases/tag/2.13
-"
+which pandoc-crossref && echo Pass || { ls ./pandoc-crossref && echo Pass || echo -n "pandoc-crossref not found!"; }
 
-which pandoc-crossref && echo Pass || { ls ./pandoc-crossref && echo Pass || echo -n "\
-pandoc-crossref not found!
+which python && echo Pass || echo -n "Python not found!"
 
--Solution1-
-Download file from here
-https://github.com/lierdakil/pandoc-crossref/releases
-Extract it
-Put files to working directory(THIS DIRECTORY)
+which xmllint && echo Pass || echo -n "xmllint not found!"
 
--Solution2-
-Follow this guide to install pandoc-crossref in to system
-https://github.com/lierdakil/pandoc-crossref/blob/master/README.md
-"; }
-
-which python && echo Pass || echo -n "\
-Python not found!
-
--Solution-
-Just run 
-apt install python
-"
-
-which xmllint && echo Pass || echo -n "\
-xmllint not found!
-
--Solution-
-Just run 
-apt install xmllint
-"
-
-which perl && echo Pass || echo -n "\
-Perl not found!
-
--Solution-
-Just run 
-apt install perl
-"
+which perl && echo Pass || echo -n "Perl not found!"
 }
 
 function func_build-html {
@@ -127,11 +42,9 @@ done < <(grep -o "<span class=\"toc-section-number\">.*<\/span>" $OUTPUT)
 
 
 ##Icon Fixup(Need --default-image-extension=png option)
-#sed -i -e "s/\<img src\=\"images\/icon.png\" style\=\"width:2cm\"/\<img src\=\"images\/icon-.png\" style\=\"width\:16.69\%\"/g" $OUTPUT 
 sed -i -r -e "s/(<img src\=\"images\/icon\.png\" style\=\")width\:2cm(\" alt\=\"image\")/\1width:16.69%\2/g" $OUTPUT
 
 ##Hide Level5 section number
-#sed -i -e "s/<span class=\"header-section-number\">.*\..*\..*\..*\..*<\/span\>/<span class=\"header-section-number\" style=\"display\: none\;\"><\/span>/g" $OUTPUT
 sed -i -r -e "s/(<span class=\"header-section-number\")(>[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*<\/span>)/\1 style=\"display:none\;\"\2/g" $OUTPUT
 
 ##Alertbox Fixup
@@ -210,7 +123,6 @@ echo todo >/dev/null
 }
 
 case $1 in
-"help" ) func_help ;;
 "buildhtml" ) func_build-html ;;
 "updatetranslation" ) func_update-xliff ;;
 "mergetranslation" ) func_merge-translation ;;
