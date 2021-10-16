@@ -74,7 +74,6 @@ public class ScannerActivity extends BaseActivity {
     /* package */ static List<String> classListAll;
     /* package */ static List<String> trackerClassList = new ArrayList<>();
     /* package */ static List<String> libClassList = new ArrayList<>();
-    /* package */ static DexClasses dexClasses;
 
     private CharSequence mAppName;
     private ActionBar mActionBar;
@@ -91,13 +90,11 @@ public class ScannerActivity extends BaseActivity {
         FileUtils.deleteDir(new File(getCacheDir().getParent(), APP_DEX));
         FileUtils.deleteDir(getCodeCacheDir());
         FileUtils.closeQuietly(fd);
-        FileUtils.closeQuietly(dexClasses);
         // Empty static vars
         // This works because ClassListingActivity opens on top of ScannerActivity
         classListAll = null;
         trackerClassList.clear();
         libClassList.clear();
-        dexClasses = null;
         super.onDestroy();
     }
 
@@ -184,13 +181,13 @@ public class ScannerActivity extends BaseActivity {
             checksumDescription.setText(builder);
         });
         model.getAllClasses().observe(this, allClasses -> {
-            dexClasses = model.getDexClasses();
             classListAll = allClasses;
             ((TextView) findViewById(R.id.classes_title)).setText(getResources().getQuantityString(R.plurals.classes,
                     classListAll.size(), classListAll.size()));
             findViewById(R.id.classes).setOnClickListener(v -> {
                 Intent intent1 = new Intent(this, ClassListingActivity.class);
                 intent1.putExtra(ClassListingActivity.EXTRA_APP_NAME, mAppName);
+                intent1.putExtra(ClassListingActivity.EXTRA_DEX_VFS_ID, model.getDexVfsId());
                 startActivity(intent1);
             });
             // Fetch tracker info

@@ -48,7 +48,7 @@ public class AppExplorerAdapter extends MultiSelectionView.Adapter<AppExplorerAd
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         AdapterItem item = adapterList.get(position);
-        holder.title.setText(item.name);
+        holder.title.setText(item.getName());
         // Set icon
         if (item.type == FileType.DIRECTORY) {
             holder.icon.setImageResource(R.drawable.ic_folder_outline);
@@ -57,7 +57,7 @@ public class AppExplorerAdapter extends MultiSelectionView.Adapter<AppExplorerAd
                     AppExplorerFragment.getNewInstance(item.path.getUri())));
         } else {
             holder.icon.setImageResource(R.drawable.ic_file_document_outline);
-            holder.subtitle.setText(Formatter.formatFileSize(activity, item.path.length()));
+            holder.subtitle.setText(Formatter.formatFileSize(activity, item.length()));
             holder.itemView.setOnClickListener(v -> {
                 if (item.extension.equals("xml")) {
                     activity.model.cacheAndOpen(item, true);

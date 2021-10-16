@@ -5,6 +5,7 @@ package io.github.muntashirakon.AppManager.scanner;
 // NOTE: Some patterns here are taken from https://github.com/billthefarmer/editor
 
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -24,7 +25,9 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
@@ -33,11 +36,13 @@ import java.util.regex.Pattern;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
+import io.github.muntashirakon.io.Path;
 
 // Copyright 2015 Google, Inc.
 public class ClassViewerActivity extends BaseActivity {
     public static final String EXTRA_APP_NAME = "app_name";
-    public static final String EXTRA_CLASS_NAME = "class_name";
+    public static final String EXTRA_URI = "uri";
 
     private static final Pattern SMALI_KEYWORDS = Pattern.compile(
             "\\b(invoke-(virtual(/range|)|direct|static|interface|super|polymorphic|custom)|" +
@@ -93,8 +98,8 @@ public class ClassViewerActivity extends BaseActivity {
     private boolean isWrapped = true;  // Wrap by default
     private AppCompatEditText container;
     private LinearProgressIndicator mProgressIndicator;
-    private String className;
-    private DexClasses dexClasses;
+    private Uri uri;
+    private Path smaliPath;
     private boolean isDisplayingSmali = true;
     private final ActivityResultLauncher<String> exportManifest = registerForActivityResult(
             new ActivityResultContracts.CreateDocument(),
@@ -121,30 +126,28 @@ public class ClassViewerActivity extends BaseActivity {
         setSupportActionBar(findViewById(R.id.toolbar));
         mProgressIndicator = findViewById(R.id.progress_linear);
         mProgressIndicator.setVisibilityAfterHide(View.GONE);
+        uri = getIntent().getParcelableExtra(EXTRA_URI);
+        if (uri == null) {
+            finish();
+            return;
+        }
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             CharSequence appName = getIntent().getCharSequenceExtra(EXTRA_APP_NAME);
-            className = getIntent().getStringExtra(EXTRA_CLASS_NAME);
-            if (className != null) {
-                String barName;
-                try {
-                    barName = className.substring(className.lastIndexOf(".") + 1);
-                } catch (Exception e) {
-                    barName = className;
-                }
-                actionBar.setSubtitle(barName);
-            }
+            String barName = FileUtils.trimExtension(uri.getLastPathSegment());
+            actionBar.setSubtitle(barName);
             if (appName != null) actionBar.setTitle(appName);
             else actionBar.setTitle(R.string.class_viewer);
         }
-        dexClasses = ScannerActivity.dexClasses;
-        if (dexClasses == null) {
+        try {
+            smaliPath = new Path(this, uri);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
             finish();
             return;
         }
         updateUi();
     }
-
 
     private void updateUi() {
         if (container != null) container.setVisibility(View.GONE);
@@ -171,8 +174,8 @@ public class ClassViewerActivity extends BaseActivity {
             if (formattedJavaContent == null) {
                 String javaContent;
                 try {
-                    javaContent = dexClasses.getJavaCode(className);
-                } catch (ClassNotFoundException e) {
+                    javaContent = ScannerUtils.toJavaCode(Objects.requireNonNull(formattedSmaliContent).toString(), -1);
+                } catch (Throwable e) {
                     runOnUiThread(() -> {
                         Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
                         finish();
@@ -228,8 +231,10 @@ public class ClassViewerActivity extends BaseActivity {
             if (formattedSmaliContent == null) {
                 String smaliContent;
                 try {
-                    smaliContent = dexClasses.getClassContents(className);
-                } catch (ClassNotFoundException e) {
+                    try (InputStream is = smaliPath.openInputStream()) {
+                        smaliContent = FileUtils.getInputStreamContent(is);
+                    }
+                } catch (IOException e) {
                     runOnUiThread(() -> {
                         Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
                         finish();
@@ -288,7 +293,8 @@ public class ClassViewerActivity extends BaseActivity {
         } else if (id == R.id.action_wrap) {
             updateUi();
         } else if (id == R.id.action_save) {
-            String fileName = className + ".java";
+            String fileName = FileUtils.trimExtension(uri.getLastPathSegment())
+                    + (isDisplayingSmali ? ".smali" : ".java");
             exportManifest.launch(fileName);
         } else if (id == R.id.action_java_smali_toggle) {
             isDisplayingSmali = !isDisplayingSmali;

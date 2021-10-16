@@ -2,8 +2,6 @@
 
 package androidx.documentfile.provider;
 
-import android.net.Uri;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -20,8 +18,8 @@ public class ZipDocumentFile extends VirtualDocumentFile<ZipEntry> {
     @NonNull
     private final ZipFile mZipFile;
 
-    public ZipDocumentFile(@NonNull ZipFile zipFile, @Nullable String basePath) {
-        super(buildTree(Objects.requireNonNull(zipFile)), basePath);
+    public ZipDocumentFile(int vfsId, @NonNull ZipFile zipFile, @Nullable String basePath) {
+        super(vfsId, buildTree(Objects.requireNonNull(zipFile)), basePath);
         this.mZipFile = zipFile;
     }
 
@@ -47,13 +45,6 @@ public class ZipDocumentFile extends VirtualDocumentFile<ZipEntry> {
     public DocumentFile createDirectory(@NonNull String displayName) {
         // Not supported
         return null;
-    }
-
-    @NonNull
-    @Override
-    public Uri getUri() {
-        // TODO: 14/10/21 Fix URI
-        return Uri.parse("zip://" + (currentNode == null ? "" : currentNode.getFullPath()));
     }
 
     @Override

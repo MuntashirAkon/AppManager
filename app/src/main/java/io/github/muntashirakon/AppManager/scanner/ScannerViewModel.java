@@ -31,12 +31,13 @@ import java.util.concurrent.CountDownLatch;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
+import io.github.muntashirakon.io.VirtualFileSystem;
 
 public class ScannerViewModel extends AndroidViewModel {
     private File apkFile;
     private boolean cached;
     private Uri apkUri;
-    private DexClasses dexClasses;
+    private int dexVfsId;
     private List<String> classListAll;
     private List<String> trackerClassList = new ArrayList<>();
     private List<String> libClassList = new ArrayList<>();
@@ -59,6 +60,11 @@ public class ScannerViewModel extends AndroidViewModel {
         if (cached && apkFile != null) {
             // Only attempt to delete the apk file if it's cached
             FileUtils.deleteSilently(apkFile);
+        }
+        try {
+            VirtualFileSystem.unmount(dexVfsId);
+        } catch (Throwable e) {
+            e.printStackTrace();
         }
     }
 
@@ -110,12 +116,12 @@ public class ScannerViewModel extends AndroidViewModel {
         return apkFile;
     }
 
-    public DexClasses getDexClasses() {
-        return dexClasses;
-    }
-
     public List<String> getClassListAll() {
         return classListAll;
+    }
+
+    public int getDexVfsId() {
+        return dexVfsId;
     }
 
     @WorkerThread
@@ -162,9 +168,10 @@ public class ScannerViewModel extends AndroidViewModel {
     private void loadAllClasses() {
         waitForFile();
         try {
-            dexClasses = new DexClasses(apkFile);
-            classListAll = dexClasses.getClassNames();
-        } catch (IOException e) {
+            VirtualFileSystem.DexFileSystem dfs = new VirtualFileSystem.DexFileSystem(Uri.fromFile(apkFile), apkFile);
+            dexVfsId = VirtualFileSystem.mount(dfs);
+            classListAll = dfs.getDexClasses().getClassNames();
+        } catch (Throwable e) {
             classListAll = Collections.emptyList();
         }
         allClasses.postValue(classListAll);

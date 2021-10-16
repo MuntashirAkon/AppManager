@@ -38,7 +38,7 @@ public class DexDocumentFileTest {
     public void testDexFile() throws IOException {
         List<String> level1 = Arrays.asList("a", "ademar");
         DexClasses dexClasses = new DexClasses(dexFile);
-        DexDocumentFile doc = new DexDocumentFile(dexClasses, null);
+        DexDocumentFile doc = new DexDocumentFile(11, dexClasses, null);
         assertTrue(doc.isDirectory());
         assertFalse(doc.isFile());
         assertTrue(doc.exists());

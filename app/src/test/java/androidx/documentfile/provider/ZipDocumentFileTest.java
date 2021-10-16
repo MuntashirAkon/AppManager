@@ -38,7 +38,7 @@ public class ZipDocumentFileTest {
     public void testZipDocument() throws IOException {
         List<String> level1 = Arrays.asList("AndroidManifest.xml", "META-INF", "classes.dex", "res", "resources.arsc");
         ZipFile zipFile = new ZipFile(apkFile);
-        ZipDocumentFile doc = new ZipDocumentFile(zipFile, null);
+        ZipDocumentFile doc = new ZipDocumentFile(10, zipFile, null);
         assertTrue(doc.isDirectory());
         assertFalse(doc.isFile());
         assertTrue(doc.exists());

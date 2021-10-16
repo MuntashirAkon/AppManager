@@ -59,6 +59,18 @@ public final class FileUtils {
         return header == 0x504B0304 || header == 0x504B0506 || header == 0x504B0708;
     }
 
+    @AnyThread
+    public static boolean isInputFileZip(@NonNull InputStream is) throws IOException {
+        if (!is.markSupported()) throw new IOException("InputStream must support mark.");
+        int header;
+        byte[] headerBytes = new byte[4];
+        is.mark(4);
+        is.read(headerBytes);
+        is.reset();
+        header = new BigInteger(headerBytes).intValue();
+        return header == 0x504B0304 || header == 0x504B0506 || header == 0x504B0708;
+    }
+
     @WorkerThread
     public static void bytesToFile(byte[] bytes, File file) throws IOException {
         try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file))) {
@@ -334,7 +346,7 @@ public final class FileUtils {
 
     @WorkerThread
     @NonNull
-    private static String getInputStreamContent(@NonNull InputStream inputStream) throws IOException {
+    public static String getInputStreamContent(@NonNull InputStream inputStream) throws IOException {
         return new String(IoUtils.readFully(inputStream, -1, true), Charset.defaultCharset());
     }
 

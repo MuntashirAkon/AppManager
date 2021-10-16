@@ -35,21 +35,24 @@ import java.util.Locale;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.VirtualFileSystem;
 
 // Copyright 2015 Google, Inc.
 public class ClassListingActivity extends BaseActivity implements SearchView.OnQueryTextListener {
     public static final String EXTRA_APP_NAME = "EXTRA_APP_NAME";
+    public static final String EXTRA_DEX_VFS_ID = "vfs_id";
 
     private TextView mEmptyView;
     private boolean trackerClassesOnly;
     private ClassListingAdapter mClassListingAdapter;
     private CharSequence mAppName;
+    private Path dexRootPath;
     private ActionBar mActionBar;
     private LinearProgressIndicator mProgressIndicator;
 
     private List<String> classListAll;
     private List<String> trackerClassList = new ArrayList<>();
-    private List<String> libClassList = new ArrayList<>();
 
 
     @Override
@@ -64,13 +67,22 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
         mActionBar = getSupportActionBar();
         classListAll = ScannerActivity.classListAll;
         trackerClassList = ScannerActivity.trackerClassList;
-        libClassList = ScannerActivity.libClassList;
         if (classListAll == null) {
             finish();
             return;
         }
         if (trackerClassList == null) trackerClassList = Collections.emptyList();
         mAppName = getIntent().getStringExtra(EXTRA_APP_NAME);
+        int dexVfsId = getIntent().getIntExtra(EXTRA_DEX_VFS_ID, 0);
+        if (dexVfsId == 0) {
+            finish();
+            return;
+        }
+        dexRootPath = VirtualFileSystem.getRootPath(dexVfsId);
+        if (dexRootPath == null) {
+            finish();
+            return;
+        }
         if (mActionBar != null) {
             mActionBar.setTitle(mAppName);
             mActionBar.setDisplayShowCustomEnabled(true);
@@ -91,7 +103,8 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
                     .get((int) (parent.getAdapter()).getItemId(position));
             try {
                 Intent intent = new Intent(this, ClassViewerActivity.class);
-                intent.putExtra(ClassViewerActivity.EXTRA_CLASS_NAME, className);
+                intent.putExtra(ClassViewerActivity.EXTRA_URI, dexRootPath.findFile(className
+                        .replace('.', '/') + ".smali").getUri());
                 intent.putExtra(ClassViewerActivity.EXTRA_APP_NAME, mAppName);
                 startActivity(intent);
             } catch (Exception e) {

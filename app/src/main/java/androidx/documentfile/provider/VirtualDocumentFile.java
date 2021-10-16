@@ -2,10 +2,12 @@
 
 package androidx.documentfile.provider;
 
+import android.net.Uri;
 import android.webkit.MimeTypeMap;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.util.Pair;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,12 +16,24 @@ import java.util.HashMap;
 
 // Mother of all virtual documents
 public abstract class VirtualDocumentFile<T> extends DocumentFile {
+    public static final String SCHEME = "vfs";
+
+    @Nullable
+    public static Pair<Integer, String> parseUri(@NonNull Uri uri) {
+        try {
+            return new Pair<>(Integer.decode(uri.getAuthority()), uri.getPath());
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    protected final int VFS_ID;
     @NonNull
     protected final Node<T> rootNode;
     @Nullable
     protected final Node<T> currentNode;
 
-    public VirtualDocumentFile(@NonNull Node<T> rootNode, @Nullable String basePath) {
+    public VirtualDocumentFile(int vfsId, @NonNull Node<T> rootNode, @Nullable String basePath) {
         super(null);
         this.rootNode = rootNode;
         if (basePath != null) {
@@ -27,23 +41,38 @@ public abstract class VirtualDocumentFile<T> extends DocumentFile {
             if (basePath.equals("")) basePath = null;
         }
         this.currentNode = this.rootNode.getLastChild(basePath);
+        this.VFS_ID = vfsId;
     }
 
     public VirtualDocumentFile(@NonNull VirtualDocumentFile<T> parent, @NonNull String relativePath) {
         super(parent);
+        this.VFS_ID = parent.VFS_ID;
         this.rootNode = parent.rootNode;
         this.currentNode = parent.currentNode == null ? null : parent.currentNode.getLastChild(getSanitizedPath(relativePath));
     }
 
     public VirtualDocumentFile(@NonNull VirtualDocumentFile<T> parent, @NonNull Node<T> currentNode) {
         super(parent);
+        this.VFS_ID = parent.VFS_ID;
         this.rootNode = parent.rootNode;
         this.currentNode = currentNode;
+    }
+
+    @NonNull
+    protected String getScheme() {
+        return SCHEME;
     }
 
     @Override
     public final boolean isVirtual() {
         return true;
+    }
+
+    @NonNull
+    @Override
+    public Uri getUri() {
+        // Force authority by adding `//`
+        return Uri.parse(getScheme() + "://" + VFS_ID + getFullPath());
     }
 
     @Nullable

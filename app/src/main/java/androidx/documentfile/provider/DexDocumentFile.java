@@ -2,8 +2,6 @@
 
 package androidx.documentfile.provider;
 
-import android.net.Uri;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -24,8 +22,8 @@ public class DexDocumentFile extends VirtualDocumentFile<ClassDef> {
     @NonNull
     private final DexClasses dexClasses;
 
-    public DexDocumentFile(@NonNull DexClasses dexClasses, @Nullable String basePath) {
-        super(buildTree(Objects.requireNonNull(dexClasses)), basePath);
+    public DexDocumentFile(int vfsId, @NonNull DexClasses dexClasses, @Nullable String basePath) {
+        super(vfsId, buildTree(Objects.requireNonNull(dexClasses)), basePath);
         this.dexClasses = dexClasses;
     }
 
@@ -51,13 +49,6 @@ public class DexDocumentFile extends VirtualDocumentFile<ClassDef> {
     public DocumentFile createDirectory(@NonNull String displayName) {
         // Not supported
         return null;
-    }
-
-    @NonNull
-    @Override
-    public Uri getUri() {
-        // TODO: 14/10/21 Fix URI
-        return Uri.parse("dex://" + (currentNode == null ? "" : currentNode.getFullPath()));
     }
 
     @Nullable

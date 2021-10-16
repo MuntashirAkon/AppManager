@@ -3,9 +3,7 @@
 package io.github.muntashirakon.AppManager.apk.explorer;
 
 import android.app.Application;
-import android.content.ContentResolver;
 import android.net.Uri;
-import android.os.RemoteException;
 
 import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
@@ -16,7 +14,6 @@ import androidx.lifecycle.MutableLiveData;
 
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.nio.ByteBuffer;
@@ -25,15 +22,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.zip.ZipFile;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.parser.AndroidBinXmlDecoder;
-import io.github.muntashirakon.AppManager.scanner.DexClasses;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.VirtualFileSystem;
 
 public class AppExplorerViewModel extends AndroidViewModel {
     private final ExecutorService executor = Executors.newFixedThreadPool(3);
@@ -44,10 +40,9 @@ public class AppExplorerViewModel extends AndroidViewModel {
     private Uri apkUri;
     private ApkFile apkFile;
     private File cachedFile;
-    private ZipFile zipFile;
     private Path zipFileRoot;
-    private Path dexFileRoot;
     private boolean modified;
+    private final List<Integer> vfsIds = new ArrayList<>();
 
     public AppExplorerViewModel(@NonNull Application application) {
         super(application);
@@ -57,9 +52,17 @@ public class AppExplorerViewModel extends AndroidViewModel {
     protected void onCleared() {
         super.onCleared();
         executor.shutdownNow();
-        FileUtils.closeQuietly(zipFile);
-        FileUtils.closeQuietly(apkFile);
+        // Unmount file systems
+        for (int vsfId : vfsIds) {
+            try {
+                VirtualFileSystem.unmount(vsfId);
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+        }
         FileUtils.deleteSilently(cachedFile);
+        FileUtils.closeQuietly(apkFile);
+        // TODO: 16/10/21 Cleanup cached files
     }
 
     public void setApkUri(Uri apkUri) {
@@ -90,9 +93,11 @@ public class AppExplorerViewModel extends AndroidViewModel {
                     apkFile = ApkFile.getInstance(key);
                     ApkFile.Entry baseEntry = apkFile.getBaseEntry();
                     cachedFile = baseEntry.getRealCachedFile();
-                    zipFile = new ZipFile(cachedFile);
-                    zipFileRoot = new Path(AppManager.getContext(), zipFile, null);
-                } catch (ApkFile.ApkFileException | IOException | RemoteException e) {
+                    int vfsId = VirtualFileSystem.mount(new VirtualFileSystem.ZipFileSystem(apkUri, cachedFile));
+                    vfsIds.add(vfsId);
+                    zipFileRoot = VirtualFileSystem.getRootPath(vfsId);
+                } catch (Throwable e) {
+                    e.printStackTrace();
                     this.fmItems.postValue(Collections.emptyList());
                     return;
                 }
@@ -104,25 +109,7 @@ public class AppExplorerViewModel extends AndroidViewModel {
                     // Null URI always means root of the zip file
                     path = zipFileRoot;
                 } else {
-                    String relativePath = uri.getPath();
-                    switch (uri.getScheme()) {
-                        default:
-                        case "zip":
-                            // Browsing the zip file
-                            path = relativePath.equals(File.separator) ? zipFileRoot : zipFileRoot.findFile(uri.getPath());
-                            break;
-                        case "dex":
-                            // Browsing a dex file
-                            path = relativePath.equals(File.separator) ? dexFileRoot : dexFileRoot.findFile(uri.getPath());
-                            break;
-                        case ContentResolver.SCHEME_FILE:
-                            // Browsing regular files
-                            path = new Path(AppManager.getContext(), new File(uri.getPath()));
-                            break;
-                        case ContentResolver.SCHEME_CONTENT:
-                            // Browsing SAF
-                            path = new Path(AppManager.getContext(), uri);
-                    }
+                    path = new Path(AppManager.getContext(), uri);
                 }
                 for (Path child : path.listFiles()) {
                     adapterItems.add(new AdapterItem(child));
@@ -138,13 +125,13 @@ public class AppExplorerViewModel extends AndroidViewModel {
 
     @AnyThread
     public void cacheAndOpen(@NonNull AdapterItem item, boolean convertXml) {
-        if (item.getCachedFile() != null) {
+        if (item.getCachedFile() != null || item.extension.equals("smali")) {
             // Already cached
             openObserver.postValue(item);
             return;
         }
         executor.submit(() -> {
-            try (InputStream is = item.path.openInputStream()) {
+            try (InputStream is = item.openInputStream()) {
                 if (convertXml) {
                     byte[] fileBytes = IoUtils.readFully(is, -1, true);
                     ByteBuffer byteBuffer = ByteBuffer.wrap(fileBytes);
@@ -169,20 +156,36 @@ public class AppExplorerViewModel extends AndroidViewModel {
 
     public void browseDexOrOpenExternal(@NonNull AdapterItem item) {
         executor.submit(() -> {
-            try (InputStream is = new BufferedInputStream(item.path.openInputStream())) {
-                dexFileRoot = new Path(AppManager.getContext(), new DexClasses(is), null);
-                uriChangeObserver.postValue(dexFileRoot.getUri());
+            // FIXME: 16/10/21 Ideally this should've been done in the Path class but until it's ready, we have to this here.
+            VirtualFileSystem.FileSystem fs = VirtualFileSystem.getFileSystem(item.getUri());
+            if (fs != null) {
+                uriChangeObserver.postValue(fs.getRootPath().getUri());
+                return;
+            }
+            try {
+                int vfsId = VirtualFileSystem.mount(new VirtualFileSystem.DexFileSystem(item.getUri(), item.path));
+                vfsIds.add(vfsId);
+                Path fsPath = VirtualFileSystem.getRootPath(vfsId);
+                if (fsPath == null) throw new Exception("Could not mount DEX file at " + item.getUri());
+                uriChangeObserver.postValue(fsPath.getUri());
             } catch (Throwable th) {
                 th.printStackTrace();
                 if (item.getCachedFile() != null) {
                     openObserver.postValue(item);
                     return;
                 }
-                try (InputStream is = item.path.openInputStream()) {
-                    // TODO: 15/10/21 Could be a zip file
-                    item.setCachedFile(new Path(AppManager.getContext(), FileUtils.getCachedFile(is)));
-                    openObserver.postValue(item);
-                } catch (IOException e) {
+                try (InputStream is = new BufferedInputStream(item.openInputStream())) {
+                    boolean isZipFile = FileUtils.isInputFileZip(is);
+                    File cachedFile = FileUtils.getCachedFile(is);
+                    item.setCachedFile(new Path(AppManager.getContext(), cachedFile));
+                    if (isZipFile) {
+                        int vfsId = VirtualFileSystem.mount(new VirtualFileSystem.ZipFileSystem(item.getUri(), cachedFile));
+                        vfsIds.add(vfsId);
+                        Path fsPath = VirtualFileSystem.getRootPath(vfsId);
+                        if (fsPath == null) throw new Exception("Could not mount DEX file at " + item.getUri());
+                        uriChangeObserver.postValue(fsPath.getUri());
+                    } else openObserver.postValue(item);
+                } catch (Throwable e) {
                     e.printStackTrace();
                 }
             }

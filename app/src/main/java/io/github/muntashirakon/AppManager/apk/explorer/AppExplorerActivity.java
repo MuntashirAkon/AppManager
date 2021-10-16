@@ -20,6 +20,7 @@ import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.fm.FmProvider;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
+import io.github.muntashirakon.AppManager.scanner.ClassViewerActivity;
 
 public class AppExplorerActivity extends BaseActivity {
     AppExplorerViewModel model;
@@ -45,10 +46,17 @@ public class AppExplorerActivity extends BaseActivity {
             if (actionBar != null) actionBar.setTitle("* " + model.getName());
         });
         model.observeOpen().observe(this, adapterItem -> {
-            if (adapterItem.getCachedFile() == null) return;
-            Intent intent = new Intent(Intent.ACTION_VIEW)
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    .setDataAndType(FmProvider.getContentUri(adapterItem.getCachedFile()), adapterItem.getMime());
+            Intent intent;
+            if ("smali".equals(adapterItem.extension)) {
+                intent = new Intent(this, ClassViewerActivity.class);
+                intent.putExtra(ClassViewerActivity.EXTRA_APP_NAME, model.getName());
+                intent.putExtra(ClassViewerActivity.EXTRA_URI, adapterItem.getUri());
+            } else {
+                if (adapterItem.getCachedFile() == null) return;
+                intent = new Intent(Intent.ACTION_VIEW)
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        .setDataAndType(FmProvider.getContentUri(adapterItem.getCachedFile()), adapterItem.getType());
+            }
             startActivity(intent);
         });
         model.observeUriChange().observe(this, newUri -> {

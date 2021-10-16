@@ -15,6 +15,7 @@ import android.system.OsConstants;
 import androidx.annotation.CheckResult;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.util.Pair;
 import androidx.documentfile.provider.DexDocumentFile;
 import androidx.documentfile.provider.DocumentFile;
 import androidx.documentfile.provider.ProxyDocumentFile;
@@ -54,14 +55,14 @@ public class Path {
         this.documentFile = new ProxyDocumentFile(fileLocation);
     }
 
-    public Path(@NonNull Context context, @NonNull ZipFile zipFile, @Nullable String path) {
+    public Path(@NonNull Context context, int vfsId, @NonNull ZipFile zipFile, @Nullable String path) {
         this.context = context;
-        this.documentFile = new ZipDocumentFile(zipFile, path);
+        this.documentFile = new ZipDocumentFile(vfsId, zipFile, path);
     }
 
-    public Path(@NonNull Context context, @NonNull DexClasses dexClasses, @Nullable String path) {
+    public Path(@NonNull Context context, int vfsId, @NonNull DexClasses dexClasses, @Nullable String path) {
         this.context = context;
-        this.documentFile = new DexDocumentFile(dexClasses, path);
+        this.documentFile = new DexDocumentFile(vfsId, dexClasses, path);
     }
 
     public Path(@NonNull Context context, @NonNull DocumentFile documentFile) {
@@ -75,7 +76,7 @@ public class Path {
 
     public Path(@NonNull Context context, @NonNull Uri uri, boolean isTreeUri) throws FileNotFoundException {
         this.context = context;
-        DocumentFile documentFile;
+        DocumentFile documentFile = null;
         switch (uri.getScheme()) {
             case ContentResolver.SCHEME_CONTENT:
                 documentFile = isTreeUri ? DocumentFile.fromTreeUri(context, uri) : DocumentFile.fromSingleUri(context, uri);
@@ -100,6 +101,18 @@ public class Path {
             case ContentResolver.SCHEME_FILE:
                 documentFile = new ProxyDocumentFile(new ProxyFile(uri.getPath()));
                 break;
+            case VirtualDocumentFile.SCHEME: {
+                Pair<Integer, String> parsedUri = VirtualDocumentFile.parseUri(uri);
+                if (parsedUri == null) break;
+                Path rootPath = VirtualFileSystem.getRootPath(parsedUri.first);
+                if (rootPath == null) break;
+                if (parsedUri.second.equals(File.separator)) {
+                    documentFile = rootPath.documentFile;
+                } else {
+                    documentFile = rootPath.documentFile.findFile(parsedUri.second);
+                }
+                break;
+            }
             default:
                 throw new IllegalArgumentException("Unsupported uri " + uri);
         }
@@ -189,6 +202,7 @@ public class Path {
     }
 
     public Path createNewFileRecursive(@NonNull String displayName, @Nullable String mimeType) throws IOException {
+        // TODO: 15/10/21 Add support for FS
         displayName = normalizeFilename(displayName);
         String[] names = displayName.split("/");
         DocumentFile file = documentFile;
@@ -210,6 +224,7 @@ public class Path {
     @CheckResult
     @NonNull
     public Path createDirectories(@NonNull String displayName) throws IOException {
+        // TODO: 15/10/21 Add support for FS
         displayName = normalizeFilename(displayName);
         String[] dirNames = displayName.split("/");
         DocumentFile file = documentFile;
@@ -234,17 +249,20 @@ public class Path {
 
     @Nullable
     public Path getParentFile() {
+        // TODO: 15/10/21 Add support for FS
         DocumentFile file = documentFile.getParentFile();
         return file == null ? null : new Path(context, file);
     }
 
     public boolean hasFile(@NonNull String displayName) {
+        // TODO: 15/10/21 Add support for FS
         // TODO: 14/10/21 Investigate whether display name with `/` works
         return documentFile.findFile(normalizeFilename(displayName)) != null;
     }
 
     @NonNull
     public Path findFile(@NonNull String displayName) throws FileNotFoundException {
+        // TODO: 15/10/21 Add support for FS
         displayName = normalizeFilename(displayName);
         DocumentFile file = documentFile.findFile(displayName);
         if (file == null) throw new FileNotFoundException("Cannot find " + this + File.separatorChar + displayName);
@@ -252,6 +270,7 @@ public class Path {
     }
 
     public Path findOrCreateFile(@NonNull String displayName, @Nullable String mimeType) throws IOException {
+        // TODO: 15/10/21 Add support for FS
         displayName = normalizeFilename(displayName);
         DocumentFile file = documentFile.findFile(displayName);
         if (file == null) {
@@ -261,6 +280,7 @@ public class Path {
     }
 
     public Path findOrCreateDirectory(@NonNull String displayName) throws IOException {
+        // TODO: 15/10/21 Add support for FS
         displayName = normalizeFilename(displayName);
         DocumentFile file = documentFile.findFile(displayName);
         if (file == null) {
