@@ -39,10 +39,10 @@ public class AppExplorerViewModel extends AndroidViewModel {
     private final MutableLiveData<Uri> uriChangeObserver = new MutableLiveData<>();
     private Uri apkUri;
     private ApkFile apkFile;
-    private File cachedFile;
     private Path zipFileRoot;
     private boolean modified;
     private final List<Integer> vfsIds = new ArrayList<>();
+    private final List<File> cachedFiles = new ArrayList<>();
 
     public AppExplorerViewModel(@NonNull Application application) {
         super(application);
@@ -60,9 +60,10 @@ public class AppExplorerViewModel extends AndroidViewModel {
                 e.printStackTrace();
             }
         }
-        FileUtils.deleteSilently(cachedFile);
         FileUtils.closeQuietly(apkFile);
-        // TODO: 16/10/21 Cleanup cached files
+        for (File cachedFile : cachedFiles) {
+            FileUtils.deleteSilently(cachedFile);
+        }
     }
 
     public void setApkUri(Uri apkUri) {
@@ -92,7 +93,8 @@ public class AppExplorerViewModel extends AndroidViewModel {
                     int key = ApkFile.createInstance(apkUri, null);
                     apkFile = ApkFile.getInstance(key);
                     ApkFile.Entry baseEntry = apkFile.getBaseEntry();
-                    cachedFile = baseEntry.getRealCachedFile();
+                    File cachedFile = baseEntry.getRealCachedFile();
+                    cachedFiles.add(cachedFile);
                     int vfsId = VirtualFileSystem.mount(new VirtualFileSystem.ZipFileSystem(apkUri, cachedFile));
                     vfsIds.add(vfsId);
                     zipFileRoot = VirtualFileSystem.getRootPath(vfsId);
@@ -142,10 +144,10 @@ public class AppExplorerViewModel extends AndroidViewModel {
                         } else {
                             ps.write(fileBytes);
                         }
-                        item.setCachedFile(new Path(AppManager.getContext(), cachedFile));
+                        addCachedFile(item, cachedFile);
                     }
                 } else {
-                    item.setCachedFile(new Path(AppManager.getContext(), FileUtils.getCachedFile(is)));
+                    addCachedFile(item, FileUtils.getCachedFile(is));
                 }
             } catch (Throwable e) {
                 e.printStackTrace();
@@ -177,7 +179,7 @@ public class AppExplorerViewModel extends AndroidViewModel {
                 try (InputStream is = new BufferedInputStream(item.openInputStream())) {
                     boolean isZipFile = FileUtils.isInputFileZip(is);
                     File cachedFile = FileUtils.getCachedFile(is);
-                    item.setCachedFile(new Path(AppManager.getContext(), cachedFile));
+                    addCachedFile(item, cachedFile);
                     if (isZipFile) {
                         int vfsId = VirtualFileSystem.mount(new VirtualFileSystem.ZipFileSystem(item.getUri(), cachedFile));
                         vfsIds.add(vfsId);
@@ -206,5 +208,10 @@ public class AppExplorerViewModel extends AndroidViewModel {
 
     public LiveData<Uri> observeUriChange() {
         return uriChangeObserver;
+    }
+
+    private void addCachedFile(@NonNull AdapterItem item, File file) {
+        item.setCachedFile(new Path(AppManager.getContext(), file));
+        cachedFiles.add(file);
     }
 }
