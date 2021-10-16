@@ -10,6 +10,7 @@ import android.content.pm.ProviderInfo;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.ParcelFileDescriptor;
@@ -111,7 +112,9 @@ public class FmProvider extends ContentProvider {
                     break;
                 case MediaStore.MediaColumns.DATA:
                     String filePath = path.getFilePath();
-                    if (filePath == null || !new File(filePath).canRead()) {
+                    if (filePath == null
+                            || !new File(filePath).canRead()
+                            || Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                         continue;
                     }
                     columns.add(column);
