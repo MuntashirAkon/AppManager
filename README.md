@@ -105,7 +105,6 @@ Help translate [the app strings](https://hosted.weblate.org/engage/app-manager/)
 
 ## Build Instructions
 See [BUILDING.rst](BUILDING.rst)
-For documentation,see [docs/raw/latex/README](docs/raw/latex/READMEdocs/raw/latex/README)
 
 ## Contributing
 See [CONTRIBUTING.rst](CONTRIBUTING.rst)
