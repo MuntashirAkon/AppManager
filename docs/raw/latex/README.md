@@ -112,10 +112,10 @@ Please check output file to check if your translation applied correctly
 
 ## How to add new article to base docs and make it translatable
 
-1.Add article by following latex syntax
+#### 1.Add article by following latex syntax
 
 
-2.Add string keys for titles
+#### 2.Add string keys for titles
 
 Title means strings written in `section{},subsection{},subsubsection{},chapter{},caption{},paragraph{}` tex tags.
 
@@ -129,7 +129,7 @@ This will extracted as `<string name="appendices_appops-chapter==title">App Ops<
 
 Make sure that title string key names must be finished by `==title`, otherwise you will get bugs when merging translation.
 
-3.Add string keys for content
+#### 3.Add string keys for content
 
 If you added lines like bellow:
 
