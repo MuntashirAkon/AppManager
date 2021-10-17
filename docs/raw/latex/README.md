@@ -143,8 +143,7 @@ ROM. Here are some examples:
 
 Change it like this:
 
-``
-
+```
 %%!!guide_aot-enableusbdbg<<
 After \hyperref[subsubsec:location-of-developer-options]{locating the developer options}, enable \textbf{Developer
 option} (if not already). After that, scroll down a bit until you will find the option \textbf{USB debugging}. Use the
@@ -152,7 +151,6 @@ toggle button on the right hand side to enable it. At this point, you may get an
 click \textit{OK} to actually enable it. You may also have to enable some other options depending on device vendor and
 ROM. Here are some examples:
 %%!!>>
-
-``
+```
 
 This will allow extracting enclosed strings within `%%!!string_key<<` and `%%!!>>`
