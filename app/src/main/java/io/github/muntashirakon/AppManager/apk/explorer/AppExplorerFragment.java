@@ -18,6 +18,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import java.io.File;
+
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.widget.MultiSelectionView;
@@ -66,7 +68,7 @@ public class AppExplorerFragment extends Fragment implements SearchView.OnQueryT
         // Set title and subtitle
         ActionBar actionBar = activity.getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setSubtitle(uri == null ? "" : uri.getPath());
+            actionBar.setSubtitle(uri == null ? File.separator : uri.getPath());
         }
         swipeRefresh = view.findViewById(R.id.swipe_refresh);
         swipeRefresh.setOnRefreshListener(this);

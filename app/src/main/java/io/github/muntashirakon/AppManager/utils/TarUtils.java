@@ -149,7 +149,7 @@ public final class TarUtils {
                     Path file;
                     if (entry.isDirectory()) {
                         file = dest.createDirectories(entry.getName());
-                    } else file = dest.createNewFileRecursive(entry.getName(), null);
+                    } else file = dest.createNewArbitraryFile(entry.getName(), null);
                     if (!entry.isDirectory() && (!isUnderFilter(file, dest, filters)
                             || willExclude(file, dest, exclude))) {
                         // Unlike create, there's no efficient way to detect if a directory contains any filters.

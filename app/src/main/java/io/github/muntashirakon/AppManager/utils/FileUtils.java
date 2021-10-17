@@ -159,6 +159,41 @@ public final class FileUtils {
         return path.substring(lastIndexOfSeparator + 1);
     }
 
+    public static Uri addSegmentAtEnd(@NonNull Uri uri, @NonNull String lastPathSegment) {
+        return new Uri.Builder()
+                .scheme(uri.getScheme())
+                .authority(uri.getAuthority())
+                .path(uri.getPath() + File.separator + lastPathSegment)
+                .build();
+    }
+
+    public static Uri removeLastPathSegment(@NonNull Uri uri) {
+        String strValue = uri.getPath();
+        if (strValue.equals(File.separator)) return uri;
+        if (strValue.endsWith(File.separator)) {
+            strValue = strValue.substring(0, strValue.length() - 1);
+        }
+        int index = strValue.lastIndexOf('/');
+        if (index > 0) {
+            strValue = strValue.substring(0, index);
+        }
+        return new Uri.Builder()
+                .scheme(uri.getScheme())
+                .authority(uri.getAuthority())
+                .path(strValue)
+                .build();
+    }
+
+    @NonNull
+    public static String getSanitizedPath(@NonNull String name) {
+        //noinspection RegExpRedundantEscape
+        name = name.replaceAll("[\\/]+", File.separator);
+        if (name.startsWith("./")) name = name.substring(2);
+        else if (name.startsWith(File.separator) || name.startsWith(".")) name = name.substring(1);
+        if (name.endsWith(File.separator)) name = name.substring(0, name.length() - 1);
+        return name;
+    }
+
     @AnyThread
     @Nullable
     public static String getSanitizedFileName(@NonNull String fileName, boolean replaceSpace) {

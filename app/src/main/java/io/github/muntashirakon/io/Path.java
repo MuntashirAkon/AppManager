@@ -11,6 +11,7 @@ import android.os.ParcelFileDescriptor;
 import android.os.RemoteException;
 import android.system.ErrnoException;
 import android.system.OsConstants;
+import android.webkit.MimeTypeMap;
 
 import androidx.annotation.CheckResult;
 import androidx.annotation.NonNull;
@@ -28,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.zip.ZipFile;
@@ -46,6 +48,9 @@ import io.github.muntashirakon.AppManager.utils.FileUtils;
 public class Path {
     public static final String TAG = Path.class.getSimpleName();
 
+    // An invalid MIME so that it doesn't match any extension
+    private static final String DEFAULT_MIME = "application/x-invalid-mime-type";
+
     private final Context context;
     @NonNull
     private DocumentFile documentFile;
@@ -57,12 +62,12 @@ public class Path {
 
     public Path(@NonNull Context context, int vfsId, @NonNull ZipFile zipFile, @Nullable String path) {
         this.context = context;
-        this.documentFile = new ZipDocumentFile(vfsId, zipFile, path);
+        this.documentFile = new ZipDocumentFile(getParentFile(context, vfsId), vfsId, zipFile, path);
     }
 
     public Path(@NonNull Context context, int vfsId, @NonNull DexClasses dexClasses, @Nullable String path) {
         this.context = context;
-        this.documentFile = new DexDocumentFile(vfsId, dexClasses, path);
+        this.documentFile = new DexDocumentFile(getParentFile(context, vfsId), vfsId, dexClasses, path);
     }
 
     public Path(@NonNull Context context, @NonNull DocumentFile documentFile) {
@@ -70,15 +75,17 @@ public class Path {
         this.documentFile = documentFile;
     }
 
-    public Path(@NonNull Context context, @NonNull Uri treeUri) throws FileNotFoundException {
-        this(context, treeUri, true);
-    }
-
-    public Path(@NonNull Context context, @NonNull Uri uri, boolean isTreeUri) throws FileNotFoundException {
+    public Path(@NonNull Context context, @NonNull Uri uri) throws FileNotFoundException {
         this.context = context;
+        Path fsRoot = VirtualFileSystem.getFsRoot(uri);
+        if (fsRoot != null) {
+            this.documentFile = fsRoot.documentFile;
+            return;
+        }
         DocumentFile documentFile = null;
         switch (uri.getScheme()) {
             case ContentResolver.SCHEME_CONTENT:
+                boolean isTreeUri = uri.getPath().startsWith("/tree/");
                 documentFile = isTreeUri ? DocumentFile.fromTreeUri(context, uri) : DocumentFile.fromSingleUri(context, uri);
                 // For tree uri, the requested Uri is not always the same as the generated uri.
                 // So, make sure to navigate to the correct uri
@@ -104,7 +111,7 @@ public class Path {
             case VirtualDocumentFile.SCHEME: {
                 Pair<Integer, String> parsedUri = VirtualDocumentFile.parseUri(uri);
                 if (parsedUri == null) break;
-                Path rootPath = VirtualFileSystem.getRootPath(parsedUri.first);
+                Path rootPath = VirtualFileSystem.getFsRoot(parsedUri.first);
                 if (rootPath == null) break;
                 if (parsedUri.second.equals(File.separator)) {
                     documentFile = rootPath.documentFile;
@@ -128,22 +135,39 @@ public class Path {
         this.documentFile = documentFile;
     }
 
+    /**
+     * Return the last segment of this path.
+     */
     public String getName() {
         return documentFile.getName();
     }
 
+    /**
+     * Return a URI for the underlying document represented by this file. This
+     * can be used with other platform APIs to manipulate or share the
+     * underlying content. {@link DocumentFile#isDocumentUri(Context, Uri)} can
+     * be used to test if the returned Uri is backed by an
+     * {@link android.provider.DocumentsProvider}.
+     */
     public Uri getUri() {
         return documentFile.getUri();
     }
 
+    /**
+     * Return the underlying {@link File} if the path is backed by a real file,
+     * {@code null} otherwise.
+     */
     @Nullable
     public File getFile() {
         if (documentFile instanceof ProxyDocumentFile) {
-            return ((ProxyDocumentFile) documentFile).getFile();
+            return new File(documentFile.getUri().getPath());
         }
         return null;
     }
 
+    /**
+     * Same as {@link #getFile()} except it return a raw string.
+     */
     @Nullable
     public String getFilePath() {
         if (documentFile instanceof ProxyDocumentFile) {
@@ -152,6 +176,10 @@ public class Path {
         return null;
     }
 
+    /**
+     * Same as {@link #getFile()} except it returns the real path if the
+     * current path is a symbolic link.
+     */
     @Nullable
     public String getRealFilePath() throws IOException {
         if (documentFile instanceof ProxyDocumentFile) {
@@ -160,155 +188,335 @@ public class Path {
         return null;
     }
 
+    /**
+     * Return the MIME type of the path
+     */
+    @Nullable
     public String getType() {
         return documentFile.getType();
     }
 
+    /**
+     * Returns the length of this path in bytes. Returns 0 if the path does not
+     * exist, or if the length is unknown. The result for a directory is not
+     * defined.
+     */
     @CheckResult
     public long length() {
         return documentFile.length();
     }
 
+    /**
+     * Recreate this path if it denotes a file.
+     *
+     * @return {@code true} iff the path has been recreated.
+     */
     @CheckResult
-    public boolean createNewFile() {
-        if (exists()) return true;
+    public boolean recreate() {
+        if (isDirectory() || isMountPoint()) return false;
         if (documentFile instanceof ProxyDocumentFile) {
             try {
-                Objects.requireNonNull(getFile()).createNewFile();
-                return true;
-            } catch (IOException e) {
+                File f = Objects.requireNonNull(getFile());
+                if (f.exists()) f.delete();
+                return f.createNewFile();
+            } catch (IOException | SecurityException e) {
                 return false;
             }
         }
-        try (OutputStream ignore = context.getContentResolver().openOutputStream(documentFile.getUri())) {
-            return true;
+        try (OutputStream os = context.getContentResolver().openOutputStream(documentFile.getUri())) {
+            return os != null;
         } catch (IOException e) {
             return false;
         }
     }
 
+    /**
+     * Create a new file as a direct child of this directory. If the file
+     * already exists, and it is not a directory, it will try to delete it
+     * and create a new one.
+     *
+     * @param displayName Display name for the file with or without extension.
+     *                    The name must not contain any file separator.
+     * @param mimeType    Mime type for the new file. Underlying provider may
+     *                    choose to add extension based on the mime type. If
+     *                    displayName contains an extension, set it to null.
+     * @return The newly created file.
+     * @throws IOException                   If the target is a mount point, a directory,
+     *                                       or failed for any other reason.
+     * @throws IllegalArgumentException      If the display name contains file separator.
+     * @throws UnsupportedOperationException If the current file isn't a directory.
+     */
     @NonNull
     public Path createNewFile(@NonNull String displayName, @Nullable String mimeType) throws IOException {
-        return createNewFileInternal(context, documentFile, displayName, mimeType);
+        return createFileAsDirectChild(context, documentFile, FileUtils.getSanitizedPath(displayName), mimeType);
     }
 
-    @CheckResult
+    /**
+     * Create a new directory as a direct child of this directory.
+     *
+     * @param displayName Display name for the directory. The name must not
+     *                    contain any file separator.
+     * @return The newly created directory.
+     * @throws IOException                   If the target is a mount point
+     *                                       or failed for any other reason.
+     * @throws IllegalArgumentException      If the display name contains file separator.
+     * @throws UnsupportedOperationException If the current file isn't a directory.
+     */
     @NonNull
     public Path createNewDirectory(@NonNull String displayName) throws IOException {
-        displayName = normalizeFilename(displayName);
+        displayName = FileUtils.getSanitizedPath(displayName);
+        if (displayName.indexOf(File.separatorChar) != -1) {
+            throw new IllegalArgumentException("Display name contains file separator.");
+        }
+        if (!isDirectory()) {
+            throw new UnsupportedOperationException("Current file is not a directory.");
+        }
+        checkVfs(FileUtils.addSegmentAtEnd(getUri(), displayName));
+        // TODO: 17/10/21 Handle already existing file/directory
         DocumentFile file = documentFile.createDirectory(displayName);
         if (file == null) throw new IOException("Could not create directory named " + displayName);
         return new Path(context, file);
     }
 
-    public Path createNewFileRecursive(@NonNull String displayName, @Nullable String mimeType) throws IOException {
-        // TODO: 15/10/21 Add support for FS
-        displayName = normalizeFilename(displayName);
-        String[] names = displayName.split("/");
-        DocumentFile file = documentFile;
-        int dirCount = names.length - 1;
-        for (int i = 0; i < dirCount; ++i) {
-            DocumentFile t = file.findFile(names[i]);
-            if (t == null) t = file.createDirectory(names[i]);
-            else if (!t.isDirectory()) {
-                throw new IOException(names[i] + " exists and it is not a directory.");
-            }
-            if (t == null) {
-                throw new IOException("Could not create directory " + this + File.separatorChar + names[i]);
-            }
-            file = t;
+    /**
+     * Create a new file at some arbitrary level under this directory,
+     * non-existing paths are created if necessary. If the file already exists,
+     * and it isn't a directory, it will try to delete it and create a new one.
+     * If mount points encountered while iterating through the paths, it will
+     * try to create a new file under the last mount point.
+     *
+     * @param displayName Display name for the file with or without extension
+     *                    and/or file separator.
+     * @param mimeType    Mime type for the new file. Underlying provider may
+     *                    choose to add extension based on the mime type. If
+     *                    displayName contains an extension, set it to null.
+     * @return The newly created file.
+     * @throws IOException                   If the target is a mount point, a directory,
+     *                                       or failed for any other reason.
+     * @throws IllegalArgumentException      If the display name is malformed.
+     * @throws UnsupportedOperationException If the current file isn't a directory.
+     */
+    @NonNull
+    public Path createNewArbitraryFile(@NonNull String displayName, @Nullable String mimeType) throws IOException {
+        displayName = FileUtils.getSanitizedPath(displayName);
+        String[] names = displayName.split(File.separator);
+        if (names.length < 1) {
+            throw new IllegalArgumentException("Display name is empty");
         }
-        return createNewFileInternal(context, file, names[dirCount], mimeType);
+        DocumentFile file = createArbitraryDirectories(documentFile, names, names.length - 1);
+        return createFileAsDirectChild(context, file, names[names.length - 1], mimeType);
     }
 
-    @CheckResult
+    /**
+     * Create all the non-existing directories under this directory. If mount
+     * points encountered while iterating through the paths, it will try to
+     * create a new directory under the last mount point.
+     *
+     * @param displayName Relative path to the target directory.
+     * @return The newly created directory.
+     * @throws IOException If the target is a mount point or failed for any
+     *                     other reason.
+     */
     @NonNull
     public Path createDirectories(@NonNull String displayName) throws IOException {
-        // TODO: 15/10/21 Add support for FS
-        displayName = normalizeFilename(displayName);
-        String[] dirNames = displayName.split("/");
-        DocumentFile file = documentFile;
-        for (String dirName : dirNames) {
-            DocumentFile t = file.findFile(dirName);
-            if (t == null) t = file.createDirectory(dirName);
-            else if (!t.isDirectory()) {
-                throw new IOException(dirName + " exists and it is not a directory.");
-            }
-            if (t == null) {
-                throw new IOException("Could not create directory " + this + File.separatorChar + dirName);
-            }
-            file = t;
-        }
+        displayName = FileUtils.getSanitizedPath(displayName);
+        String[] dirNames = displayName.split(File.separator);
+        DocumentFile file = createArbitraryDirectories(documentFile, dirNames, dirNames.length);
         return new Path(context, file);
     }
 
+    /**
+     * Delete this file. If this is a directory, it is deleted recursively.
+     *
+     * @return {@code true} if the file was deleted, {@code false} if the file
+     * is a mount point or any other error occurred.
+     */
     public boolean delete() {
+        if (isMountPoint()) {
+            return false;
+        }
         documentFile.delete();
         return !exists();
     }
 
+    /**
+     * Return the parent file of this document. If this is a mount point,
+     * the parent is the parent of the mount point. For tree-documents,
+     * the consistency of the parent file isn't guaranteed as the underlying
+     * directory tree might be altered by another application.
+     */
     @Nullable
     public Path getParentFile() {
-        // TODO: 15/10/21 Add support for FS
         DocumentFile file = documentFile.getParentFile();
         return file == null ? null : new Path(context, file);
     }
 
+    /**
+     * Whether this file has a file denoted by this abstract name. The file
+     * isn't necessarily have to be a direct child of this file.
+     *
+     * @param displayName Display name for the file with extension and/or
+     *                    file separator if applicable.
+     * @return {@code true} if the file denoted by this abstract name exists.
+     */
     public boolean hasFile(@NonNull String displayName) {
-        // TODO: 15/10/21 Add support for FS
-        // TODO: 14/10/21 Investigate whether display name with `/` works
-        return documentFile.findFile(normalizeFilename(displayName)) != null;
+        return findFileInternal(this, displayName) != null;
     }
 
+    /**
+     * Return the file denoted by this abstract name in this file. File name
+     * can be either case-sensitive or case-insensitive depending on the file
+     * provider.
+     *
+     * @param displayName Display name for the file with extension and/or
+     *                    file separator if applicable.
+     * @return The first file that matches the name.
+     * @throws FileNotFoundException If the file was not found.
+     */
     @NonNull
     public Path findFile(@NonNull String displayName) throws FileNotFoundException {
-        // TODO: 15/10/21 Add support for FS
-        displayName = normalizeFilename(displayName);
-        DocumentFile file = documentFile.findFile(displayName);
-        if (file == null) throw new FileNotFoundException("Cannot find " + this + File.separatorChar + displayName);
-        return new Path(context, file);
+        Path nextPath = findFileInternal(this, displayName);
+        if (nextPath == null) throw new FileNotFoundException("Cannot find " + this + File.separatorChar + displayName);
+        return nextPath;
     }
 
+    /**
+     * Return a file that is a direct child of this directory, creating if necessary.
+     *
+     * @param displayName Display name for the file with or without extension.
+     *                    The name must not contain any file separator.
+     * @param mimeType    Mime type for the new file. Underlying provider may
+     *                    choose to add extension based on the mime type. If
+     *                    displayName contains an extension, set it to null.
+     * @return The existing or newly created file.
+     * @throws IOException                   If the target is a mount point, a directory,
+     *                                       or failed for any other reason.
+     * @throws IllegalArgumentException      If the display name contains file separator.
+     * @throws UnsupportedOperationException If the current file isn't a directory.
+     */
+    @NonNull
     public Path findOrCreateFile(@NonNull String displayName, @Nullable String mimeType) throws IOException {
-        // TODO: 15/10/21 Add support for FS
-        displayName = normalizeFilename(displayName);
+        displayName = FileUtils.getSanitizedPath(displayName);
+        if (displayName.indexOf(File.separatorChar) != -1) {
+            throw new IllegalArgumentException("Display name contains file separator.");
+        }
+        if (!isDirectory()) {
+            throw new UnsupportedOperationException("Current file is not a directory.");
+        }
+        String extension = null;
+        if (mimeType != null) {
+            extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
+        } else mimeType = DEFAULT_MIME;
+        checkVfs(FileUtils.addSegmentAtEnd(documentFile.getUri(), displayName + (extension != null ? "." + extension : "")));
         DocumentFile file = documentFile.findFile(displayName);
+        if (file != null) {
+            if (file.isDirectory()) {
+                throw new IOException("Directory cannot be converted to file");
+            }
+            return new Path(context, file);
+        }
+        file = documentFile.createFile(mimeType, displayName);
         if (file == null) {
-            return createNewFile(displayName, mimeType);
+            throw new IOException("Could not create " + documentFile.getUri() + File.separatorChar + displayName + " with type " + mimeType);
         }
         return new Path(context, file);
     }
 
+    /**
+     * Return a directory that is a direct child of this directory, creating
+     * if necessary.
+     *
+     * @param displayName Display name for the directory. The name must not
+     *                    contain any file separator.
+     * @return The existing or newly created directory or mount point.
+     * @throws IOException                   If the target directory could not
+     *                                       be created or the existing file is
+     *                                       not a directory.
+     * @throws IllegalArgumentException      If the display name contains file
+     *                                       separator.
+     * @throws UnsupportedOperationException If the current file is not a
+     *                                       directory.
+     */
+    @NonNull
     public Path findOrCreateDirectory(@NonNull String displayName) throws IOException {
-        // TODO: 15/10/21 Add support for FS
-        displayName = normalizeFilename(displayName);
-        DocumentFile file = documentFile.findFile(displayName);
-        if (file == null) {
-            return createNewDirectory(displayName);
+        displayName = FileUtils.getSanitizedPath(displayName);
+        if (displayName.indexOf(File.separatorChar) != -1) {
+            throw new IllegalArgumentException("Display name contains file separator.");
         }
+        if (!isDirectory()) {
+            throw new UnsupportedOperationException("Current file is not a directory.");
+        }
+        Path fsRoot = VirtualFileSystem.getFsRoot(FileUtils.addSegmentAtEnd(getUri(), displayName));
+        if (fsRoot != null) return fsRoot;
+        DocumentFile file = documentFile.findFile(displayName);
+        if (file != null) {
+            if (!file.isDirectory()) {
+                throw new IOException("Existing file is not a directory");
+            }
+            return new Path(context, file);
+        }
+        file = documentFile.createDirectory(displayName);
+        if (file == null) throw new IOException("Could not create directory named " + displayName);
         return new Path(context, file);
     }
 
+    /**
+     * Whether this file can be found. This is useful only for the paths
+     * accessed using Java File API. In other cases, the file has to exist
+     * before it can be accessed. However, in SAF, the file can be deleted
+     * by another application in which case the URI becomes non-existent.
+     *
+     * @return {@code true} if the file exists.
+     */
     @CheckResult
     public boolean exists() {
         return documentFile.exists();
     }
 
+    /**
+     * Whether this file is a directory. A mount point is also considered as a
+     * directory.
+     * <p>
+     * Note that the return value {@code false} does not necessarily mean that
+     * the path is a file.
+     *
+     * @return {@code true} if the file is a directory or a mount point.
+     */
     @CheckResult
     public boolean isDirectory() {
-        return documentFile.isDirectory();
+        return documentFile.isDirectory() || isMountPoint();
     }
 
+    /**
+     * Whether this file is a file.
+     * <p>
+     * Note that the return value {@code false} does not necessarily mean that
+     * the path is a directory.
+     *
+     * @return {@code true} if the file is a file.
+     */
     @CheckResult
     public boolean isFile() {
-        return documentFile.isFile();
+        return documentFile.isFile() && !isMountPoint();
     }
 
+    /**
+     * Whether the file is a virtual file i.e. it has no physical existence.
+     *
+     * @return {@code true} if this is a virtual file.
+     */
     @CheckResult
     public boolean isVirtual() {
         return documentFile.isVirtual();
     }
 
+    /**
+     * Whether the file is a symbolic link, only applicable for Java File API.
+     *
+     * @return {@code true} iff the file is accessed using Java File API and
+     * is a symbolic link.
+     * @throws IOException If an I/O error occurs while accessing file attributes.
+     */
     public boolean isSymbolicLink() throws IOException {
         if (documentFile instanceof ProxyDocumentFile) {
             try {
@@ -322,10 +530,37 @@ public class Path {
         return false;
     }
 
+    /**
+     * Whether the file can be read.
+     *
+     * @return {@code true} if it can be read.
+     */
+    public boolean canRead() {
+        return documentFile.canRead();
+    }
+
+    /**
+     * Whether the file can be written.
+     *
+     * @return {@code true} if it can be written.
+     */
+    public boolean canWrite() {
+        return documentFile.canWrite();
+    }
+
+    /**
+     * Whether the file is a mount point, thereby, is being overridden by another file system.
+     *
+     * @return {@code true} if this is a mount point.
+     */
+    public boolean isMountPoint() {
+        return VirtualFileSystem.getFileSystem(getUri()) != null;
+    }
+
     public boolean mkdir() {
-        if (exists()) return true;
+        if (exists() || isMountPoint()) return true;
         if (documentFile instanceof ProxyDocumentFile) {
-            return ((ProxyDocumentFile) documentFile).getFile().mkdir();
+            return Objects.requireNonNull(getFile()).mkdir();
         } else {
             DocumentFile parent = documentFile.getParentFile();
             if (parent != null) {
@@ -340,16 +575,17 @@ public class Path {
     }
 
     public boolean mkdirs() {
-        if (exists()) return true;
+        if (exists() || isMountPoint()) return true;
         if (documentFile instanceof ProxyDocumentFile) {
-            return ((ProxyDocumentFile) documentFile).getFile().mkdirs();
+            return Objects.requireNonNull(getFile()).mkdirs();
         }
         // For others, directory can't be created recursively as parent must exist
         return mkdir();
     }
 
     public boolean renameTo(@NonNull String displayName) {
-        displayName = normalizeFilename(displayName);
+        // TODO: 16/10/21 Change mount point too
+        displayName = FileUtils.getSanitizedPath(displayName);
         if (displayName.contains(File.separator)) {
             // display name must belong to the same directory.
             return false;
@@ -375,14 +611,15 @@ public class Path {
      * @return {@code true} on success and {@code false} on failure
      */
     public boolean moveTo(@NonNull Path path) {
+        // TODO: 16/10/21 Find some way to handle move in VFS
         if (path.exists() && !path.canWrite()) {
             // There's no point is attempting to move if the destination is read-only
             return false;
         }
         if (documentFile instanceof ProxyDocumentFile && path.documentFile instanceof ProxyDocumentFile) {
             // Try using the default option
-            File src = ((ProxyDocumentFile) documentFile).getFile();
-            File dst = ((ProxyDocumentFile) path.documentFile).getFile();
+            File src = Objects.requireNonNull(getFile());
+            File dst = Objects.requireNonNull(path.getFile());
             if (src.renameTo(dst)) {
                 documentFile = path.documentFile;
                 return true;
@@ -439,11 +676,15 @@ public class Path {
     }
 
     private static void copyFile(@NonNull Path src, @NonNull Path dst) throws IOException {
+        if (src.isMountPoint() || dst.isMountPoint()) {
+            throw new IOException("Either source or destination are a mount point.");
+        }
         FileUtils.copy(src, dst);
     }
 
     // Copy directory content
     private static void copyDirectory(@NonNull Path src, @NonNull Path dst) throws IOException {
+        // TODO: 16/10/21 Find some way to handle VFS
         if (!src.isDirectory() || !dst.isDirectory()) {
             throw new IOException("Both source and destination have to be directory.");
         }
@@ -462,39 +703,27 @@ public class Path {
     }
 
     @NonNull
-    public Uri[] list() {
-        DocumentFile[] children = listDocumentFiles();
-        Uri[] files = new Uri[children.length];
-        for (int i = 0; i < children.length; ++i) {
-            files[i] = children[i].getUri();
+    public Path[] listFiles() {
+        VirtualFileSystem.FileSystem[] fileSystems = VirtualFileSystem.getFileSystemsAtUri(getUri());
+        HashMap<String, Path> namePathMap = new HashMap<>(fileSystems.length);
+        for (VirtualFileSystem.FileSystem fs : fileSystems) {
+            namePathMap.put(fs.getMountPoint().getLastPathSegment(), fs.getRootPath());
         }
-        return files;
-    }
-
-    @NonNull
-    public Uri[] list(@Nullable FilenameFilter filter) {
-        Uri[] names = list();
-        if (filter == null) {
-            return names;
-        }
-        List<Uri> v = new ArrayList<>();
-        for (Uri name : names) {
-            if (filter.accept(this, name.getLastPathSegment())) {
-                v.add(name);
+        DocumentFile[] ss = documentFile.listFiles();
+        List<Path> paths = new ArrayList<>(ss.length + fileSystems.length);
+        for (DocumentFile s : ss) {
+            Path p = namePathMap.get(s.getName());
+            if (p != null) {
+                // Mount points have higher priority
+                paths.add(p);
+                namePathMap.remove(s.getName());
+            } else {
+                paths.add(new Path(context, s));
             }
         }
-        return v.toArray(new Uri[0]);
-    }
-
-    @NonNull
-    public Path[] listFiles() {
-        DocumentFile[] ss = listDocumentFiles();
-        int n = ss.length;
-        Path[] fs = new Path[n];
-        for (int i = 0; i < n; i++) {
-            fs[i] = new Path(context, ss[i]);
-        }
-        return fs;
+        // Add rests
+        paths.addAll(namePathMap.values());
+        return paths.toArray(new Path[0]);
     }
 
     @NonNull
@@ -511,21 +740,13 @@ public class Path {
 
     @NonNull
     public Path[] listFiles(@Nullable FilenameFilter filter) {
-        DocumentFile[] ss = listDocumentFiles();
+        Path[] ss = listFiles();
         ArrayList<Path> files = new ArrayList<>();
-        for (DocumentFile s : ss) {
+        for (Path s : ss) {
             if ((filter == null) || filter.accept(this, s.getName()))
-                files.add(new Path(context, s));
+                files.add(s);
         }
         return files.toArray(new Path[0]);
-    }
-
-    public boolean canRead() {
-        return documentFile.canRead();
-    }
-
-    public boolean canWrite() {
-        return documentFile.canWrite();
     }
 
     @Nullable
@@ -598,11 +819,6 @@ public class Path {
     }
 
     @NonNull
-    private DocumentFile[] listDocumentFiles() {
-        return documentFile.listFiles();
-    }
-
-    @NonNull
     @Override
     public String toString() {
         return getUri().toString();
@@ -649,22 +865,28 @@ public class Path {
     }
 
     @NonNull
-    private static Path createNewFileInternal(@NonNull Context context,
-                                              @NonNull DocumentFile documentFile,
-                                              @NonNull String displayName,
-                                              @Nullable String mimeType) throws IOException {
-        displayName = normalizeFilename(displayName);
+    private static Path createFileAsDirectChild(@NonNull Context context,
+                                                @NonNull DocumentFile documentFile,
+                                                @NonNull String displayName,
+                                                @Nullable String mimeType) throws IOException {
+        if (displayName.indexOf(File.separatorChar) != -1) {
+            throw new IllegalArgumentException("Display name contains file separator.");
+        }
+        if (!documentFile.isDirectory()) {
+            throw new UnsupportedOperationException("Current file is not a directory.");
+        }
+        String extension = null;
+        if (mimeType != null) {
+            extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
+        } else mimeType = DEFAULT_MIME;
+        checkVfs(FileUtils.addSegmentAtEnd(documentFile.getUri(), displayName + (extension != null ? "." + extension : "")));
         DocumentFile f = documentFile.findFile(displayName);
         if (f != null) {
             if (f.isDirectory()) {
                 throw new IOException("Directory cannot be converted to file");
             }
-            // Delete the file if it exists
+            // Delete the file if exists
             f.delete();
-        }
-        if (mimeType == null) {
-            // Generic binary file
-            mimeType = "application/octet-stream";
         }
         DocumentFile file = documentFile.createFile(mimeType, displayName);
         if (file == null) {
@@ -673,10 +895,63 @@ public class Path {
         return new Path(context, file);
     }
 
+    @Nullable
+    private static Path findFileInternal(@NonNull Path path, @NonNull String dirtyDisplayName) {
+        String[] parts = FileUtils.getSanitizedPath(dirtyDisplayName).split(File.separator);
+        DocumentFile documentFile = path.documentFile;
+        for (String part : parts) {
+            // Check for mount point
+            Uri newUri = FileUtils.addSegmentAtEnd(documentFile.getUri(), part);
+            Path fsRoot = VirtualFileSystem.getFsRoot(newUri);
+            if (fsRoot != null) {
+                // Mount point has the higher priority
+                documentFile = fsRoot.documentFile;
+            } else documentFile = documentFile.findFile(part);
+            if (documentFile == null) return null;
+        }
+        return new Path(path.context, documentFile);
+    }
+
+    @Nullable
+    private static DocumentFile getParentFile(Context context, int vfsId) {
+        Uri mountPoint = VirtualFileSystem.getMountPoint(vfsId);
+        DocumentFile parentFile = null;
+        if (mountPoint != null) {
+            Uri parentUri = FileUtils.removeLastPathSegment(mountPoint);
+            try {
+                parentFile = new Path(context, parentUri).documentFile;
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        return parentFile;
+    }
+
     @NonNull
-    private static String normalizeFilename(@NonNull String filename) {
-        // Filename can contain `./` prefix which has to be removed
-        return filename.startsWith("./") ? filename.substring(2) : filename;
+    private static DocumentFile createArbitraryDirectories(@NonNull DocumentFile documentFile,
+                                                           @NonNull String[] names,
+                                                           int length) throws IOException {
+        DocumentFile file = documentFile;
+        for (int i = 0; i < length; ++i) {
+            Path fsRoot = VirtualFileSystem.getFsRoot(FileUtils.addSegmentAtEnd(file.getUri(), names[i]));
+            DocumentFile t = fsRoot != null ? fsRoot.documentFile : file.findFile(names[i]);
+            if (t == null) {
+                t = file.createDirectory(names[i]);
+            } else if (!t.isDirectory()) {
+                throw new IOException(t.getUri() + " exists and it is not a directory.");
+            }
+            if (t == null) {
+                throw new IOException("Could not create directory " + file.getUri() + File.separatorChar + names[i]);
+            }
+            file = t;
+        }
+        return file;
+    }
+
+    private static void checkVfs(Uri uri) throws IOException {
+        if (VirtualFileSystem.getFileSystem(uri) != null) {
+            throw new IOException("Destination is a mount point.");
+        }
     }
 
     private static class VirtualStorageCallback extends StorageManagerCompat.ProxyFileDescriptorCallbackCompat {

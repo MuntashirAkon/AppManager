@@ -24,6 +24,7 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.scanner.DexClasses;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 
 public final class VirtualFileSystem {
     public static final String TAG = VirtualFileSystem.class.getSimpleName();
@@ -54,7 +55,7 @@ public final class VirtualFileSystem {
             uriVfsIdsMap.put(fs.getMountPoint(), vfsId);
         }
         synchronized (parentUriVfsIdsMap) {
-            Uri uri = removeLastPathSegment(fs.getMountPoint());
+            Uri uri = FileUtils.removeLastPathSegment(fs.getMountPoint());
             List<Integer> vfsIds = parentUriVfsIdsMap.get(uri);
             if (vfsIds == null) {
                 vfsIds = new ArrayList<>(1);
@@ -81,7 +82,7 @@ public final class VirtualFileSystem {
             uriVfsIdsMap.remove(fs.getMountPoint());
         }
         synchronized (parentUriVfsIdsMap) {
-            Uri uri = removeLastPathSegment(fs.getMountPoint());
+            Uri uri = FileUtils.removeLastPathSegment(fs.getMountPoint());
             List<Integer> vfsIds = parentUriVfsIdsMap.get(uri);
             if (vfsIds != null && vfsIds.contains(vfsId)) {
                 if (vfsIds.size() == 1) parentUriVfsIdsMap.remove(uri);
@@ -102,7 +103,7 @@ public final class VirtualFileSystem {
     }
 
     @Nullable
-    public static Path getRootPath(int vfsId) {
+    public static Path getFsRoot(int vfsId) {
         FileSystem fs;
         synchronized (fileSystems) {
             fs = fileSystems.get(vfsId);
@@ -124,12 +125,28 @@ public final class VirtualFileSystem {
     }
 
     @Nullable
+    public static Path getFsRoot(Uri mountPoint) {
+        Integer vfsId;
+        synchronized (uriVfsIdsMap) {
+            vfsId = uriVfsIdsMap.get(mountPoint);
+        }
+        if (vfsId == null) return null;
+        FileSystem fs;
+        synchronized (fileSystems) {
+            fs = fileSystems.get(vfsId);
+        }
+        if (fs == null) return null;
+        return fs.getRootPath();
+    }
+
+    @Nullable
     public static FileSystem getFileSystem(int vfsId) {
         synchronized (fileSystems) {
             return fileSystems.get(vfsId);
         }
     }
 
+    @NonNull
     public static FileSystem[] getFileSystemsAtUri(Uri parentUri) {
         List<Integer> vfsIds;
         synchronized (parentUriVfsIdsMap) {
@@ -143,22 +160,6 @@ public final class VirtualFileSystem {
             }
         }
         return fs;
-    }
-
-    private static Uri removeLastPathSegment(@NonNull Uri uri) {
-        String strValue = uri.getPath();
-        if (strValue.equals(File.separator)) return uri;
-        if (strValue.endsWith(File.separator)) {
-            strValue = strValue.substring(0, strValue.length() - 1);
-        }
-        int index = strValue.lastIndexOf('/');
-        if (index > 0) {
-            strValue = strValue.substring(0, index);
-        }
-        return new Uri.Builder()
-                .scheme(uri.getScheme())
-                .path(strValue)
-                .build();
     }
 
     public abstract static class FileSystem {

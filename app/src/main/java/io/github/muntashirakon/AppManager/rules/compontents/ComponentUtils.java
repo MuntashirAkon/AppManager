@@ -6,7 +6,6 @@ import android.annotation.UserIdInt;
 import android.content.ComponentName;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.RemoteException;
 import android.util.Xml;
 
@@ -189,9 +188,9 @@ public final class ComponentUtils {
     public static List<String> getAllPackagesWithRules() {
         List<String> packages = new ArrayList<>();
         Path confDir = RulesStorageManager.getConfDir();
-        Uri[] names = confDir.list((dir, name) -> name.endsWith(".tsv"));
-        for (Uri name : names) {
-            packages.add(FileUtils.trimExtension(name.getLastPathSegment()));
+        Path[] paths = confDir.listFiles((dir, name) -> name.endsWith(".tsv"));
+        for (Path path : paths) {
+            packages.add(FileUtils.trimExtension(path.getUri().getLastPathSegment()));
         }
         return packages;
     }

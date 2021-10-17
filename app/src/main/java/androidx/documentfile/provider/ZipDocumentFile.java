@@ -19,11 +19,18 @@ public class ZipDocumentFile extends VirtualDocumentFile<ZipEntry> {
     private final ZipFile mZipFile;
 
     public ZipDocumentFile(int vfsId, @NonNull ZipFile zipFile, @Nullable String basePath) {
-        super(vfsId, buildTree(Objects.requireNonNull(zipFile)), basePath);
+        this(null, vfsId, zipFile, basePath);
+    }
+
+    public ZipDocumentFile(@Nullable DocumentFile parent,
+                           int vfsId,
+                           @NonNull ZipFile zipFile,
+                           @Nullable String basePath) {
+        super(parent, vfsId, buildTree(Objects.requireNonNull(zipFile)), basePath);
         this.mZipFile = zipFile;
     }
 
-    public ZipDocumentFile(@NonNull ZipDocumentFile parent, @NonNull String relativePath) {
+    private ZipDocumentFile(@NonNull ZipDocumentFile parent, @NonNull String relativePath) {
         super(Objects.requireNonNull(parent), relativePath);
         this.mZipFile = Objects.requireNonNull(parent).mZipFile;
     }

@@ -23,16 +23,23 @@ public class DexDocumentFile extends VirtualDocumentFile<ClassDef> {
     private final DexClasses dexClasses;
 
     public DexDocumentFile(int vfsId, @NonNull DexClasses dexClasses, @Nullable String basePath) {
-        super(vfsId, buildTree(Objects.requireNonNull(dexClasses)), basePath);
+        this(null, vfsId, dexClasses, basePath);
+    }
+
+    public DexDocumentFile(@Nullable DocumentFile parent,
+                           int vfsId,
+                           @NonNull DexClasses dexClasses,
+                           @Nullable String basePath) {
+        super(parent, vfsId, buildTree(Objects.requireNonNull(dexClasses)), basePath);
         this.dexClasses = dexClasses;
     }
 
-    public DexDocumentFile(@NonNull DexDocumentFile parent, @NonNull String relativePath) {
+    private DexDocumentFile(@NonNull DexDocumentFile parent, @NonNull String relativePath) {
         super(Objects.requireNonNull(parent), relativePath);
         this.dexClasses = parent.dexClasses;
     }
 
-    public DexDocumentFile(@NonNull DexDocumentFile parent, @NonNull Node<ClassDef> currentNode) {
+    private DexDocumentFile(@NonNull DexDocumentFile parent, @NonNull Node<ClassDef> currentNode) {
         super(Objects.requireNonNull(parent), currentNode);
         this.dexClasses = parent.dexClasses;
     }

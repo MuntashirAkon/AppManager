@@ -78,7 +78,7 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
             finish();
             return;
         }
-        dexRootPath = VirtualFileSystem.getRootPath(dexVfsId);
+        dexRootPath = VirtualFileSystem.getFsRoot(dexVfsId);
         if (dexRootPath == null) {
             finish();
             return;

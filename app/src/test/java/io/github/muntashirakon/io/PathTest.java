@@ -103,7 +103,7 @@ public class PathTest {
 
     @Test
     public void createNewFileInNonExistingDir() {
-        assertThrows(IOException.class, () ->
+        assertThrows(IllegalArgumentException.class, () ->
                 tmpPath.createNewFile("non_existing_dir/am_new_file", null));
     }
 
@@ -131,14 +131,14 @@ public class PathTest {
     }
 
     public void createNewFileRecursive() throws IOException {
-        Path newFile = tmpPath.createNewFileRecursive("non_existing_dir/am_new_dir/am_new_file", null);
+        Path newFile = tmpPath.createNewArbitraryFile("non_existing_dir/am_new_dir/am_new_file", null);
         assertTrue(newFile.exists());
         assertTrue(newFile.isFile());
         tmpPath.findFile("non_existing_dir").delete();
     }
 
     public void createNewFileRecursiveNoRecursive() throws IOException {
-        Path newFile = tmpPath.createNewFileRecursive("/am_new_file", null);
+        Path newFile = tmpPath.createNewArbitraryFile("/am_new_file", null);
         assertTrue(newFile.exists());
         assertTrue(newFile.isFile());
         newFile.delete();
@@ -162,8 +162,8 @@ public class PathTest {
     }
 
     @Test
-    public void createNewDirectoryRecursive() {
-        assertThrows(IOException.class, () -> tmpPath.createNewDirectory("non_existing_dir/am_new_dir"));
+    public void createNewDirectoryWithFileSeparator() {
+        assertThrows(IllegalArgumentException.class, () -> tmpPath.createNewDirectory("non_existing_dir/am_new_dir"));
     }
 
     public void createDirectories() throws IOException {
@@ -204,7 +204,7 @@ public class PathTest {
         assertTrue(newFile.exists());
         assertTrue(newFile.isFile());
         assertTrue(newFile.delete());
-        newFile.createNewFile();
+        assertTrue(newFile.recreate());
         assertTrue(newFile.exists());
         assertTrue(newFile.isFile());
         assertTrue(newFile.delete());

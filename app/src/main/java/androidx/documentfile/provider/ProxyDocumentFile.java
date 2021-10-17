@@ -15,6 +15,9 @@ import java.util.ArrayList;
 
 import io.github.muntashirakon.io.ProxyFile;
 
+/**
+ * Same as {@link RawDocumentFile} with additional support for {@link ProxyFile}.
+ */
 public class ProxyDocumentFile extends DocumentFile {
     public static final String TAG = "DF";
 
@@ -35,8 +38,7 @@ public class ProxyDocumentFile extends DocumentFile {
     public DocumentFile createFile(@NonNull String mimeType, @NonNull String displayName) {
         // Tack on extension when valid MIME type provided
         String extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
-        if (extension != null && !mimeType.equals("application/octet-stream")) {
-            // application/octet-stream is an special mime that needs on extension
+        if (extension != null) {
             displayName += "." + extension;
         }
         final File target = new ProxyFile(mFile, displayName);
@@ -79,10 +81,6 @@ public class ProxyDocumentFile extends DocumentFile {
         } else {
             return getTypeForName(mFile.getName());
         }
-    }
-
-    public File getFile() {
-        return mFile;
     }
 
     @Override
@@ -183,7 +181,6 @@ public class ProxyDocumentFile extends DocumentFile {
                 return mime;
             }
         }
-
         return "application/octet-stream";
     }
 

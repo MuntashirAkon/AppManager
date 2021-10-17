@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 
+import io.github.muntashirakon.AppManager.utils.FileUtils;
+
 // Mother of all virtual documents
 public abstract class VirtualDocumentFile<T> extends DocumentFile {
     public static final String SCHEME = "vfs";
@@ -33,8 +35,11 @@ public abstract class VirtualDocumentFile<T> extends DocumentFile {
     @Nullable
     protected final Node<T> currentNode;
 
-    public VirtualDocumentFile(int vfsId, @NonNull Node<T> rootNode, @Nullable String basePath) {
-        super(null);
+    public VirtualDocumentFile(@Nullable DocumentFile parent,
+                               int vfsId,
+                               @NonNull Node<T> rootNode,
+                               @Nullable String basePath) {
+        super(parent);
         this.rootNode = rootNode;
         if (basePath != null) {
             basePath = getSanitizedPath(basePath);
@@ -150,11 +155,7 @@ public abstract class VirtualDocumentFile<T> extends DocumentFile {
 
     @NonNull
     protected static String getSanitizedPath(@NonNull String name) {
-        //noinspection RegExpRedundantEscape
-        name = name.replaceAll("[\\/]+", File.separator);
-        if (name.startsWith(File.separator)) name = name.substring(1);
-        if (name.endsWith(File.separator)) name = name.substring(0, name.length() - 1);
-        return name;
+        return FileUtils.getSanitizedPath(name);
     }
 
     @NonNull

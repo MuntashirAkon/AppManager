@@ -97,7 +97,7 @@ public class AppExplorerViewModel extends AndroidViewModel {
                     cachedFiles.add(cachedFile);
                     int vfsId = VirtualFileSystem.mount(new VirtualFileSystem.ZipFileSystem(apkUri, cachedFile));
                     vfsIds.add(vfsId);
-                    zipFileRoot = VirtualFileSystem.getRootPath(vfsId);
+                    zipFileRoot = VirtualFileSystem.getFsRoot(vfsId);
                 } catch (Throwable e) {
                     e.printStackTrace();
                     this.fmItems.postValue(Collections.emptyList());
@@ -158,18 +158,14 @@ public class AppExplorerViewModel extends AndroidViewModel {
 
     public void browseDexOrOpenExternal(@NonNull AdapterItem item) {
         executor.submit(() -> {
-            // FIXME: 16/10/21 Ideally this should've been done in the Path class but until it's ready, we have to this here.
-            VirtualFileSystem.FileSystem fs = VirtualFileSystem.getFileSystem(item.getUri());
-            if (fs != null) {
-                uriChangeObserver.postValue(fs.getRootPath().getUri());
+            if (VirtualFileSystem.getFileSystem(item.getUri()) != null) {
+                uriChangeObserver.postValue(item.getUri());
                 return;
             }
             try {
                 int vfsId = VirtualFileSystem.mount(new VirtualFileSystem.DexFileSystem(item.getUri(), item.path));
                 vfsIds.add(vfsId);
-                Path fsPath = VirtualFileSystem.getRootPath(vfsId);
-                if (fsPath == null) throw new Exception("Could not mount DEX file at " + item.getUri());
-                uriChangeObserver.postValue(fsPath.getUri());
+                uriChangeObserver.postValue(item.getUri());
             } catch (Throwable th) {
                 th.printStackTrace();
                 if (item.getCachedFile() != null) {
@@ -183,9 +179,7 @@ public class AppExplorerViewModel extends AndroidViewModel {
                     if (isZipFile) {
                         int vfsId = VirtualFileSystem.mount(new VirtualFileSystem.ZipFileSystem(item.getUri(), cachedFile));
                         vfsIds.add(vfsId);
-                        Path fsPath = VirtualFileSystem.getRootPath(vfsId);
-                        if (fsPath == null) throw new Exception("Could not mount DEX file at " + item.getUri());
-                        uriChangeObserver.postValue(fsPath.getUri());
+                        uriChangeObserver.postValue(item.getUri());
                     } else openObserver.postValue(item);
                 } catch (Throwable e) {
                     e.printStackTrace();
