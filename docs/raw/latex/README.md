@@ -81,3 +81,36 @@ It takes several times.
 `./doctool.sh buildhtml`
 Finally this command will build html file.
 Please check output file to check if your translation applied correctly
+
+## How to add new article to base docs and make it translatable
+
+1.Add article by following latex syntax
+
+2.Add string keys for titles
+Title means strings written in `section{},subsection{},subsubsection{},chapter{},caption{},paragraph{}` tex tags.
+Add string keys like %%##string_key==title>> at the end of title line.
+For example,
+If you added line `\chapter{App Ops}\label{ch:app-ops}`,change it to like `\chapter{App Ops}\label{ch:app-ops} %%##appendices_appops-chapter==title>>`.
+This will extracted as `<string name="appendices_appops-chapter==title">App Ops</string>` to Xliff.
+Make sure that title string key names must be finished by `==title`, otherwise you will get bugs when merging translation.
+
+3.Add string keys for content
+If you added lines like bellow:
+``
+After \hyperref[subsubsec:location-of-developer-options]{locating the developer options}, enable \textbf{Developer
+option} (if not already). After that, scroll down a bit until you will find the option \textbf{USB debugging}. Use the
+toggle button on the right hand side to enable it. At this point, you may get an alert prompt where you may have to
+click \textit{OK} to actually enable it. You may also have to enable some other options depending on device vendor and
+ROM. Here are some examples:
+``
+Change it like this:
+``
+%%!!guide_aot-enableusbdbg<<
+After \hyperref[subsubsec:location-of-developer-options]{locating the developer options}, enable \textbf{Developer
+option} (if not already). After that, scroll down a bit until you will find the option \textbf{USB debugging}. Use the
+toggle button on the right hand side to enable it. At this point, you may get an alert prompt where you may have to
+click \textit{OK} to actually enable it. You may also have to enable some other options depending on device vendor and
+ROM. Here are some examples:
+%%!!>>
+``
+This will allow extracting enclosed strings within `%%!!string_key<<` and `%%!!>>`
