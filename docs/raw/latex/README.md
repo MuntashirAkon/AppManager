@@ -133,13 +133,13 @@ Make sure that title string key names must be finished by `==title`, otherwise y
 
 If you added lines like bellow:
 
-``
+```
 After \hyperref[subsubsec:location-of-developer-options]{locating the developer options}, enable \textbf{Developer
 option} (if not already). After that, scroll down a bit until you will find the option \textbf{USB debugging}. Use the
 toggle button on the right hand side to enable it. At this point, you may get an alert prompt where you may have to
 click \textit{OK} to actually enable it. You may also have to enable some other options depending on device vendor and
 ROM. Here are some examples:
-``
+```
 
 Change it like this:
 
