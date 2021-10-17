@@ -1,5 +1,7 @@
 #!/bin/bash
 
+ [ $(uname) = Darwin ] && { alias sed="gsed" ; alias grep="ggrep" ; alias awk="gawk"; }
+
 function func_checkdeps {
 
 echo Warning:This checker doesnt check version.
