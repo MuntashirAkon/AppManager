@@ -548,7 +548,6 @@
         <item>co.acoustic.mobile.push.sdk.</item>
         <item>com.xtify.mce.sdk.</item>
         <item>com.xtify.android.sdk.</item>
-        <item>com.kakao.adfit</item>
         <item>com.ansca.corona</item>
         <item>com.geopla.</item>
         <item>com.threebitter.sdk.</item>
@@ -676,7 +675,7 @@
         <item>com.google.mlkit</item>
         <item>com.android.billingclient</item>
         <item>com.timerazor.gravysdk.</item>
-        <item>org.greenrobot.</item>
+        <item>com.greenrobot.</item>
         <item>com.groundtruth.sdk</item>
         <item>com.growingio.</item>
         <item>com.growthpush.</item>
@@ -1479,7 +1478,6 @@
         <item>IBM Mobile Marketing (Acoustic)</item>
         <item>IBM Mobile Marketing (Acoustic)</item>
         <item>IBM Mobile Marketing (Acoustic)</item>
-        <item>Kakao AdFit</item>
         <item>Solar2D (Corona)</item>
         <item>²39Geopla</item>
         <item>²3bitter Beacon</item>
