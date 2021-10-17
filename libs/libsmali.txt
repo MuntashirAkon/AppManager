@@ -31,3 +31,4 @@
 {"id":"\/sun\/misc\/Unsafe","path":"\/sun\/misc\/Unsafe","name":"Java Unsafe","type":"Utility","perms":"","url":"http:\/\/mishadoff.github.io\/blog\/java-magic-part-4-sun-dot-misc-dot-unsafe\/"}
 {"id":"\/io\/vavr\/","path":"\/io\/vavr\/","name":"v\u028cvr (formerly Javaslang)","type":"Development Framework","perms":"","url":"https:\/\/github.com\/vavr-io\/vavr"}
 {"id":"\/com\/unity3d\/player\/","path":"\/com\/unity3d\/player\/","name":"Unity3D Player","type":"Game Engine","perms":"","url":"https:\/\/docs.unity3d.com\/Manual\/AndroidJARPlugins.html"}
+{"id":"\/com\/aurora\/gplayapi\/","path":"\/com\/aurora\/gplayapi\/","name":"GPlayApi","type":"App Market","perms":"","url":"https:\/\/gitlab.com\/AuroraOSS\/gplayapi"}

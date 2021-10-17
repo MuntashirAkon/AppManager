@@ -54,8 +54,8 @@ EOF;
   }
 
   echo <<<EOF
-</string-array>
-<string-array name="tracker_names">
+    </string-array>
+    <string-array name="tracker_names">
 
 EOF;
 
