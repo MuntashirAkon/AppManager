@@ -1,4 +1,5 @@
 #!/bin/bash
+# SPDX-License-Identifier: GPL-3.0-or-later
 
  [ $(uname) = Darwin ] && { alias sed="gsed" ; alias grep="ggrep" ; alias awk="gawk"; }
 
