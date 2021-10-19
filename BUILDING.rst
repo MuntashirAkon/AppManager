@@ -7,11 +7,12 @@ Building App Manager
 Requirements
 ============
 
-* **Hardware:** Any computer with 4GB RAM (8GB recommended)
+* **Hardware:** Any computer with 4GB RAM (8GB recommended) and 20GB storage
 * **Operating system:** Linux/macOS (no support for Windows)
-* **Software:** Android Studio, Gradle
+* **Software:** Android Studio/IntelliJ IDEA, Gradle, Latex, tex4ht, JDK 11+
+  (JDK 14 recommended)
 * **Active network connection:** Depending on your development environment,
-  this may cross 10 Gigabytes of data.
+  this may cross 20 Gigabytes of data.
 
 macOS
 =====
