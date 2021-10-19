@@ -1,7 +1,8 @@
 #!/bin/bash
 # SPDX-License-Identifier: GPL-3.0-or-later
 
- [ $(uname) = Darwin ] && { alias sed="gsed" ; alias grep="ggrep" ; alias awk="gawk"; }
+ { [[ $(uname) = Darwin ]] || [[ $(uname) =~ .*BSD.* ]]; } && { alias sed="gsed" ; alias grep="ggrep" ; alias awk="gawk"; }
+cd $0
 
 function func_checkdeps {
 
