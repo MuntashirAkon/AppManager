@@ -417,7 +417,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
      * available add them to the rules, overridden if necessary.
      */
     private void retrieveDisabledComponents() {
-        if (!AppPref.isRootEnabled()) return;
+        if (!AppPref.isRootOrAdbEnabled()) return;
         Log.d(TAG, "Retrieving disabled components for package " + packageName);
         if (!rulesFile.exists() || rulesFile.getBaseFile().length() == 0) {
             // System doesn't have any rules.
