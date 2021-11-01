@@ -1035,7 +1035,6 @@
         <item quantity="other">%1$d yedek içe aktarılamadı</item>
     </plurals>
     <string name="import_from_tb">Titanium Backup\'tan içe aktar</string>
-    <string name="import_from_oab_tb_msg">Yedekler %s konumunda bulunmalıdır.</string>
     <string name="import_from_oab">OAndBackup\'tan içe aktar</string>
     <string name="pref_import_backups_msg">OAndBackup veya Titanium Backup\'tan yedekleri içe aktarın.</string>
     <string name="pref_import_backups">Yedekleri içe aktar</string>

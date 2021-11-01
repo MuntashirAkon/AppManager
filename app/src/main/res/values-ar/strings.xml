@@ -1175,7 +1175,6 @@
         <item quantity="other">تعذر استيراد %1$d نسخة احتياطية</item>
     </plurals>
     <string name="import_from_tb">الاستيراد من Titanium Backup</string>
-    <string name="import_from_oab_tb_msg">يجب أن تكون النسخ الاحتياطية موجودة في %s.</string>
     <string name="import_from_oab">الاستيراد من OAndBackup</string>
     <string name="pref_import_backups_msg">استيراد النسخ الاحتياطية من OAndBackup أو Titanium.</string>
     <string name="pref_import_backups">استيراد النسخ الاحتياطية</string>

@@ -1003,7 +1003,6 @@
         <item quantity="other">%1$d個のバックアップをインポートできませんでした</item>
     </plurals>
     <string name="import_from_tb">Titanium Backupからインポート</string>
-    <string name="import_from_oab_tb_msg">バックアップは%sに配置されている必要があります。</string>
     <string name="import_from_oab">OAndBackupからインポート</string>
     <string name="pref_import_backups_msg">OAndBackupまたはTitanium Backupからバックアップファイルをインポートします</string>
     <string name="pref_import_backups">バックアップをインポート</string>

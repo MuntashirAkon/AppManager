@@ -1000,7 +1000,6 @@
         <item quantity="other">Không thể nhập %1$d bản sao lưu</item>
     </plurals>
     <string name="import_from_tb">Nhập từ Titanium Backup</string>
-    <string name="import_from_oab_tb_msg">Bản sao lưu phải được đặt ở %s.</string>
     <string name="import_from_oab">Nhập từ OAndBackup</string>
     <string name="pref_import_backups_msg">Nhập bản sao lưu từ OAndBackup hoặc Titanium Backup.</string>
     <string name="pref_import_backups">Nhập bản sao lưu</string>

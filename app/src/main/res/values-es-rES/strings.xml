@@ -1035,7 +1035,6 @@
         <item quantity="other">No se pudieron importar %1$d copias de respaldo</item>
     </plurals>
     <string name="import_from_tb">Importar desde Titanium Backup</string>
-    <string name="import_from_oab_tb_msg">Las copias de respaldo deben ubicarse en %s.</string>
     <string name="notice_saf">A diferencia de los volúmenes, el directorio escogido se usará para almacenar todos los archivos relacionados con App Manager, incluyendo APKs y respaldos guardados. El framework de acceso al almacenamiento (SAF) es muy lento, por lo cual se recomienda usar esta opción solo cuando otras no puedan ser utilizadas.</string>
     <string name="help_uses_permissions_tab">Pulse en un elemento para <b>concederlo</b> o <b>revocarlo</b>. Solo los permisos <b>peligrosos</b> y <b>de desarrollo</b> se pueden conceder o revocar.</string>
     <string name="help_permissions_tab">Estos permisos los define esta aplicación y no pueden revocarse.</string>

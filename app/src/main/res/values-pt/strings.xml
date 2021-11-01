@@ -1032,7 +1032,6 @@
         <item quantity="other">Não foi possível importar %1$d cópias de segurança</item>
     </plurals>
     <string name="import_from_tb">Importar de Titanium Backup</string>
-    <string name="import_from_oab_tb_msg">As cópias de segurança devem estar em %s.</string>
     <string name="import_from_oab">Importar de OAndBackup</string>
     <string name="pref_import_backups_msg">Importar cópias de segurança de OAndBackup ou Titanium Backup.</string>
     <string name="pref_import_backups">Importar cópias de segurança</string>

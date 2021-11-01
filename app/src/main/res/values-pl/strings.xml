@@ -1112,7 +1112,6 @@
     <string name="pref_log_viewer_msg">Skonfiguruj sposób wyświetlania dzienników.</string>
     <string name="log_viewer">Log Viewer</string>
     <string name="import_from_tb">Importuj z Titanium Backup</string>
-    <string name="import_from_oab_tb_msg">Kopie zapasowe muszą znajdować się w %s.</string>
     <string name="import_from_oab">Importuj z OAndBackup</string>
     <string name="pref_import_backups_msg">Importuj kopie zapasowe z OAndBackup lub Titanium Backup.</string>
     <string name="pref_import_backups">Importuj kopie zapasowe</string>

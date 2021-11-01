@@ -1103,7 +1103,6 @@
         <item quantity="other">Не вдалося імпортувати %1$d резервних копій</item>
     </plurals>
     <string name="import_from_tb">Імпорт з Titanium Backup</string>
-    <string name="import_from_oab_tb_msg">Резервні копії повинні бути розташовані у %s.</string>
     <string name="import_from_oab">Імпорт із OAndBackup</string>
     <string name="pref_import_backups_msg">Імпорт резервних копій з OAndBackup абоTitanium Backup.</string>
     <string name="pref_import_backups">Імпорт резервних копій</string>

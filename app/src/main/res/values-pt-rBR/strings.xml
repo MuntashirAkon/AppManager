@@ -1035,7 +1035,6 @@
         <item quantity="one">%1$d backup não pôde ser importado</item>
         <item quantity="other">%1$d backups não puderam ser importados</item>
     </plurals>
-    <string name="import_from_oab_tb_msg">Os backups devem estar localizados em %s.</string>
     <string name="import_from_tb">Importar do Titanium Backup</string>
     <string name="import_from_oab">Importar do OAndBackup</string>
     <string name="pref_import_backups_msg">Importar backups do OAndBackup ou Titanium Backup.</string>

@@ -989,7 +989,6 @@
         <item quantity="other">無法匯入 %1$d 備份</item>
     </plurals>
     <string name="import_from_tb">從鈦備份匯入</string>
-    <string name="import_from_oab_tb_msg">備份必須位於 %s。</string>
     <string name="import_from_oab">從 OAndBackup 匯入</string>
     <string name="pref_import_backups_msg">從 OAndBackup 或 Titanium Backup 匯入備份。</string>
     <string name="pref_import_backups">匯入備份</string>

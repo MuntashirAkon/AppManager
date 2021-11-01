@@ -999,7 +999,6 @@
         <item quantity="other">Tidak dapat mengimpor %1$d cadangan</item>
     </plurals>
     <string name="import_from_tb">Impor dari Titanium Backup</string>
-    <string name="import_from_oab_tb_msg">Cadangan harus berlokasi di %s.</string>
     <string name="import_from_oab">Impor dari OAndBackup</string>
     <string name="pref_import_backups_msg">Impor cadangan dari OAndBAckup atau Titanium Backup.</string>
     <string name="pref_import_backups">Impor cadangan</string>

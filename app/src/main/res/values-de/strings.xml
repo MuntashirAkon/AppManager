@@ -1036,7 +1036,6 @@
         <item quantity="other">Konnte %1$d Sicherung en nicht importieren</item>
     </plurals>
     <string name="import_from_tb">Importieren aus Titanium Backup</string>
-    <string name="import_from_oab_tb_msg">Die Sicherungen müssen sich unter %s befinden.</string>
     <string name="import_from_oab">Importieren von OAndBackup</string>
     <string name="pref_import_backups_msg">Importieren von Sicherungen aus OAndBackup oder Titanium Backup.</string>
     <string name="pref_import_backups">Sicherungen importieren</string>

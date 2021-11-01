@@ -936,7 +936,6 @@
     <string name="log_level_debug">Déboguer</string>
     <string name="log_viewer">Visualiseur de journaux</string>
     <string name="import_from_tb">Importer depuis Titanium Backup</string>
-    <string name="import_from_oab_tb_msg">Les sauvegardes doivent se trouver dans %s.</string>
     <string name="import_from_oab">Importer depuis OAndBackup</string>
     <string name="pref_import_backups_msg">Importer les sauvegardes depuis OAndBackup ou Titanium Backup.</string>
     <string name="pref_import_backups">Importer les sauvegardes</string>

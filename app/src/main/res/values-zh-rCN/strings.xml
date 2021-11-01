@@ -1001,7 +1001,6 @@
         <item quantity="other">无法导入 %1$d 个备份</item>
     </plurals>
     <string name="import_from_tb">从 Titanium Backup 导入</string>
-    <string name="import_from_oab_tb_msg">备份必须位于 %s。</string>
     <string name="import_from_oab">从 OAndBackup 导入</string>
     <string name="pref_import_backups_msg">从 OAndBackup 或 Titanium Backup 导入备份。</string>
     <string name="pref_import_backups">导入备份</string>

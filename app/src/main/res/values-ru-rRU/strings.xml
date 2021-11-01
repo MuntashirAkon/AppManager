@@ -1106,7 +1106,6 @@
         <item quantity="other">Не удалось импортировать %1$d резервных копий</item>
     </plurals>
     <string name="import_from_tb">Импорт из Titanium Backup</string>
-    <string name="import_from_oab_tb_msg">Резервные копии должны находиться в %s.</string>
     <string name="import_from_oab">Импорт из OAndBackup</string>
     <string name="pref_import_backups_msg">Импорт резервных копий из OAndBackup или Titanium Backup.</string>
     <string name="pref_import_backups">Импорт резервных копий</string>
