@@ -1036,7 +1036,7 @@
     </plurals>
     <string name="import_from_tb">Titanium Backup\'tan içe aktar</string>
     <string name="import_from_oab">OAndBackup\'tan içe aktar</string>
-    <string name="pref_import_backups_msg">OAndBackup veya Titanium Backup\'tan yedekleri içe aktarın.</string>
+    <string name="pref_import_backups_msg">OAndBackup, Swift Backup (3.0–3.2) veya Titanium Backup\'tan yedekleri içe aktarın.</string>
     <string name="pref_import_backups">Yedekleri içe aktar</string>
     <string name="added_to_queue">Sıraya eklendi</string>
     <string name="minimum_version">En düşük sürüm: %d</string>
@@ -1086,4 +1086,15 @@
     <string name="backup_volume_dialog_description"><tt>/tree</tt> ön ekine sahip birimler, Depolama Erişim Sistemi (SAF) kullanılarak seçilen klasörlerdir. Bu klasörler dışında, App Manager için öntanımlı dizin <tt>AppManager</tt> adlı bir alt klasördür.</string>
     <string name="second_degree_tracker_note">² ön eki, izleyicilerin <a href="https://etip.exodus-privacy.eu.org/">ETIP bekleme listesinde</a> olduğunu gösterir, yani gerçek izleyiciler olup olmadıkları hala araştırılmaktadır.</string>
     <string name="failed_to_uninstall_app">Kaldırma başarısız oldu</string>
+    <string name="import_from_sb">Swift Backup 3.0 – 3.2\'den içe aktar</string>
+    <string name="java">Java</string>
+    <string name="smali">Smali</string>
+    <string name="accessibility_service_description">Root yok modunda önbelleği temizleme gibi belirli işlemleri gerçekleştirmek için genel erişilebilirlik hizmeti.</string>
+    <string name="explore">Keşfet</string>
+    <string name="system_partition">Android kökü</string>
+    <string name="exit_confirmation">Çıkış onayı</string>
+    <string name="pref_import_backups_hint">Yedekleme dosyalarını (Swift Backup/Titanium Backup) veya dizinlerini (OAndBackup) içeren bir dizin seçin</string>
+    <string name="extract">Çıkart</string>
+    <string name="replace">Değiştir</string>
+    <string name="rename">Yeniden adlandır</string>
 </resources>
