@@ -1033,7 +1033,7 @@
     </plurals>
     <string name="import_from_tb">Importar de Titanium Backup</string>
     <string name="import_from_oab">Importar de OAndBackup</string>
-    <string name="pref_import_backups_msg">Importar cópias de segurança de OAndBackup ou Titanium Backup.</string>
+    <string name="pref_import_backups_msg">Importar cópias de segurança de OAndBackup, Swift Backup (3.0–3.2) ou Titanium Backup.</string>
     <string name="pref_import_backups">Importar cópias de segurança</string>
     <string name="community_links">Telegram: https://t.me/AppManagerChannel;
 \nTwitter: https://twitter.com/AppManagerNews</string>
@@ -1086,4 +1086,15 @@
     <string name="second_degree_tracker_note">O prefixo ² indica que os rastreadores estão na <a href="https://etip.exodus-privacy.eu.org/">Lista de espera ETIP</a>, ou seja, se eles são rastreadores reais então ainda estão a ser investigados.</string>
     <string name="failed_to_uninstall_app">A desinstalação falhou</string>
     <string name="type_uri_array">Matriz de URIs</string>
+    <string name="import_from_sb">Importar de Swift Backup 3.0 – 3.2</string>
+    <string name="pref_import_backups_hint">Selecione um diretório que contém os ficheiros da cópia de segurança (Swift Backup / Titanium Backup) ou diretórios (OAndBackup)</string>
+    <string name="java">Java</string>
+    <string name="smali">Smali</string>
+    <string name="accessibility_service_description">Serviço genérico de acessibilidade para realizar determinadas operações, como a compensação de cache no modo no-root.</string>
+    <string name="explore">Explorar</string>
+    <string name="system_partition">Raiz do Android</string>
+    <string name="exit_confirmation">Confirmação de saída</string>
+    <string name="replace">Substituir</string>
+    <string name="rename">Alterar nome</string>
+    <string name="extract">Extrair</string>
 </resources>
