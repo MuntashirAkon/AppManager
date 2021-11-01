@@ -121,9 +121,32 @@ done < <(echo "$keys" | grep -P ".*(?===title)")
 }
 
 function func_detectabuse {
-echo todo >/dev/null
+baseDir=./
+compareDir=../latextranslated
+
 #Compare number of latex tags
+
 #Check URL changes
+baseFiles=$(find $baseDir | grep -e '\.tex$' | sed -e "s%$baseDir%%g" -e "s/^\///g")
+compareFiles=$(find $compareDir | grep -e '\.tex$' | sed -e "s%$compareDir%%g" -e "s/^\///g")
+
+
+while read test
+do
+
+ { echo "$compareFiles" | grep "$test" >/dev/null; } && {
+   base=$(urlextract $baseDir/$test)
+   compare=$(urlextract $compareDir/$test)
+
+   echo "$compare" | grep -vh "$base"
+   echo "--"
+   echo " "
+   echo "WARNING:$baseDir/$test(BASE) does not have these URLs,but $compareDir/$test(COMPARE) has.These links has possibility of spam!"
+   echo "--"
+   echo " "
+ }
+
+done < <(echo "$baseFiles")
 }
 
 case $1 in
