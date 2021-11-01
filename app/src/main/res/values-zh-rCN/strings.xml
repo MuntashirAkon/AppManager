@@ -424,7 +424,7 @@
     <string name="reinstall">重新安装</string>
     <string name="unblock_trackers">取消屏蔽跟踪器</string>
     <string name="package_installer">软件包安装程序</string>
-    <string name="install_in_progress">正在安装</string>
+    <string name="install_in_progress">正在安装…</string>
     <string name="installer_error_security">无法访问 APK 文件</string>
     <string name="installer_error_session_create">无法创建安装程序会话</string>
     <string name="installer_error_session_write">无法写入安装程序会话</string>
@@ -1027,4 +1027,29 @@
     <string name="invalid_password">密码无效，请重试。</string>
     <string name="keystore_pass_cannot_be_empty">KeyStore 密码不能为空。</string>
     <string name="keystore_password_info">以下是 App Manager KeyStore 密码。如果您要备份/恢复 App Manager KeyStore，请将其存储在一个安全的地方。<b>此信息将不再显示。</b></string>
+    <string name="staging_apk_files">分阶段进行中…</string>
+    <string name="running_services_logcat_hint">单击一个项目打开日志查看器，并将相应的进程 ID 作为默认筛选器。</string>
+    <string name="pid">进程 ID</string>
+    <plurals name="pref_thread_count_msg">
+        <item quantity="other">最多同时执行 %1$d 个操作</item>
+    </plurals>
+    <string name="pref_thread_count_hint">值必需在 0 到 %1$d。0 表示<i>给定时间内的最大操作数</i>。</string>
+    <string name="pref_thread_count">同时执行</string>
+    <string name="type_uri_array_list">URI 列表</string>
+    <string name="type_uri_array">URI 数组</string>
+    <string name="pref_always_on_background_msg">总是在后台安装应用程序，完成后显示通知。</string>
+    <string name="pref_always_on_background">后台安装</string>
+    <string name="pref_block_trackers_msg">安装应用程序后使用 App Manager 拦截跟踪组件。</string>
+    <string name="next">下一个</string>
+    <string name="installer_app_installed">应用已安装</string>
+    <string name="background">后台</string>
+    <string name="trim_caches_in_all_apps_description">删除所有应用程序的缓存文件，包括 android 系统</string>
+    <string name="trim_caches_in_all_apps">减少所有应用程序的缓存</string>
+    <string name="user_root">使用 root</string>
+    <string name="paste">粘贴</string>
+    <string name="set_package_name_first">先设置包名称！</string>
+    <string name="identifier">标识符</string>
+    <string name="backup_volume_dialog_description">带<tt>tree</tt>前缀的卷是使用存储访问框架 (SAF）选中的文件夹。除了这些文件夹外，App Manager 的默认目录是一个子文件夹，名为 <tt>AppMangaer</tt>。</string>
+    <string name="second_degree_tracker_note">² 前缀表明追踪器位于 <a href="https://etip.exodus-privacy.eu.org/">ETIP 备用名单</a> 中。即它们是否真是追踪器仍在调查中。</string>
+    <string name="failed_to_uninstall_app">卸载失败</string>
 </resources>

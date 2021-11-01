@@ -246,7 +246,7 @@
     <string name="installer_error_session_write">Kurucu oturumuna yazılamadı</string>
     <string name="installer_error_session_create">Kurucu oturumu oluşturulamadı</string>
     <string name="installer_error_security">APK dosyalarına erişilemedi</string>
-    <string name="install_in_progress">Kurulum devam ediyor</string>
+    <string name="install_in_progress">Kuruluyor…</string>
     <string name="package_installer">Paket Kurucu</string>
     <string name="unblock_trackers">İzleyicilerin engelini kaldır</string>
     <string name="reinstall">Yeniden kur</string>
@@ -1061,4 +1061,30 @@
     <string name="invalid_password">Geçersiz parola, tekrar deneyin.</string>
     <string name="keystore_pass_cannot_be_empty">KeyStore parolası boş olamaz.</string>
     <string name="keystore_password_info">Aşağıdaki, App Manager KeyStore parolasıdır. App Manager KeyStore\'u yedekleyecek/geri yükleyecekseniz lütfen güvenli bir yerde saklayın. <b>Bu mesaj tekrar görüntülenmeyecek.</b></string>
+    <string name="running_services_logcat_hint">Öntanımlı filtre olarak karşılık gelen işlem kimliğiyle günlük görüntüleyiciyi açmak için bir ögeye tıklayın.</string>
+    <string name="pid">İşlem kimliği</string>
+    <plurals name="pref_thread_count_msg">
+        <item quantity="one">Paralel olarak en fazla %1$d işlem çalıştır</item>
+        <item quantity="other">Paralel olarak en fazla %1$d işlem çalıştır</item>
+    </plurals>
+    <string name="pref_thread_count_hint">Değer 0 ila %1$d arasında olmalıdır; burada 0, <i>belirli bir zamandaki azami işlem sayısı</i> anlamına gelir.</string>
+    <string name="pref_thread_count">Paralel çalıştırma</string>
+    <string name="type_uri_array_list">URI\'lerin listesi</string>
+    <string name="type_uri_array">URI\'lerin dizisi</string>
+    <string name="pref_always_on_background_msg">Uygulamaları her zaman arka planda kur ve bittiğinde bir bildirim görüntüle.</string>
+    <string name="pref_always_on_background">Arka planda kur</string>
+    <string name="pref_block_trackers_msg">App Manager kullanarak bir uygulama kurduktan sonra izleme bileşenlerini engelle.</string>
+    <string name="next">İleri</string>
+    <string name="installer_app_installed">Uygulama kuruldu</string>
+    <string name="staging_apk_files">Hazırlanıyor…</string>
+    <string name="background">Arka plan</string>
+    <string name="trim_caches_in_all_apps_description">Android sistemi dahil tüm uygulamalardan önbellek dosyalarını siler</string>
+    <string name="trim_caches_in_all_apps">Tüm uygulamalarda önbellekleri kırp</string>
+    <string name="user_root">Root kullan</string>
+    <string name="paste">Yapıştır</string>
+    <string name="set_package_name_first">Önce paket adını ayarlayın!</string>
+    <string name="identifier">Tanımlayıcı</string>
+    <string name="backup_volume_dialog_description"><tt>/tree</tt> ön ekine sahip birimler, Depolama Erişim Sistemi (SAF) kullanılarak seçilen klasörlerdir. Bu klasörler dışında, App Manager için öntanımlı dizin <tt>AppManager</tt> adlı bir alt klasördür.</string>
+    <string name="second_degree_tracker_note">² ön eki, izleyicilerin <a href="https://etip.exodus-privacy.eu.org/">ETIP bekleme listesinde</a> olduğunu gösterir, yani gerçek izleyiciler olup olmadıkları hala araştırılmaktadır.</string>
+    <string name="failed_to_uninstall_app">Kaldırma başarısız oldu</string>
 </resources>

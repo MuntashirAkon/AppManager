@@ -91,4 +91,5 @@
     <string name="sort_by_package_name">Csomagnév</string>
     <string name="sort_by_app_label">App címke</string>
     <string name="loading">Betöltés…</string>
+    <string name="patterns_allowed">Engedélyezett minták</string>
 </resources>

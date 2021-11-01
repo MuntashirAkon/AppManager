@@ -410,7 +410,7 @@
     <string name="reinstall">Reinstalar</string>
     <string name="unblock_trackers">Desbloquear rastreadores</string>
     <string name="package_installer">Instalador de Pacotes</string>
-    <string name="install_in_progress">Instalação em andamento</string>
+    <string name="install_in_progress">Instalando…</string>
     <string name="installer_error_security">Não foi possível acessar os arquivos APK</string>
     <string name="installer_error_session_create">Uma sessão de instalação não pôde ser criada</string>
     <string name="installer_error_session_write">Não foi possível gravar na sessão de instalação</string>
@@ -1062,4 +1062,30 @@
     <string name="invalid_password">Senha inválida, tente novamente.</string>
     <string name="keystore_pass_cannot_be_empty">A senha do KeyStore não pode estar vazia.</string>
     <string name="keystore_password_info">Esta é a senha do KeyStore do App Manager. Guarde-a num local seguro se fizer backup/restaurar a KeyStore do App Manager. <b>Esta mensagem não voltará a exibir-se.</b></string>
+    <string name="running_services_logcat_hint">Clique em um item para abrir o visualizador de log com o ID do processo correspondente como o filtro padrão.</string>
+    <string name="pid">ID do processo</string>
+    <plurals name="pref_thread_count_msg">
+        <item quantity="one">Execute no máximo %1$d operação em paralelo</item>
+        <item quantity="other">Execute no máximo %1$d operações em paralelo</item>
+    </plurals>
+    <string name="pref_thread_count_hint">O valor deve estar entre 0 e %1$d onde 0 significa <i>número máximo de operações em determinado momento</i>.</string>
+    <string name="backup_volume_dialog_description">Volumes com o prefixo <tt>/tree</tt> são pastas selecionadas usando o Storage Access Framework (SAF). Exceto essas pastas, o diretório padrão do App Manager é uma subpasta chamada <tt>AppManager</tt>.</string>
+    <string name="second_degree_tracker_note">O prefixo ² indica que os rastreadores estão na <a href="https://etip.exodus-privacy.eu.org/">Lista de espera ETIP</a>, ou seja, se eles são rastreadores reais ainda estão sendo investigados.</string>
+    <string name="pref_thread_count">Execução paralela</string>
+    <string name="type_uri_array_list">Lista de URIs</string>
+    <string name="type_uri_array">Matriz de URIs</string>
+    <string name="pref_always_on_background_msg">Sempre instalar aplicativos em segundo plano e exibir uma notificação quando terminar.</string>
+    <string name="pref_block_trackers_msg">Bloquear os componentes de rastreamento após instalar um aplicativo usando o App Manager.</string>
+    <string name="pref_always_on_background">Instalar em segundo plano</string>
+    <string name="next">Próximo</string>
+    <string name="installer_app_installed">Aplicativo instalado</string>
+    <string name="staging_apk_files">Preparando…</string>
+    <string name="background">Segundo plano</string>
+    <string name="trim_caches_in_all_apps_description">Exclui arquivos de cache de todos os aplicativos, incluindo o sistema Android</string>
+    <string name="trim_caches_in_all_apps">Cortar caches em todos os aplicativos</string>
+    <string name="user_root">Usar root</string>
+    <string name="paste">Colar</string>
+    <string name="set_package_name_first">Defina o nome do pacote primeiro!</string>
+    <string name="identifier">Identificador</string>
+    <string name="failed_to_uninstall_app">A desinstalação falhou</string>
 </resources>

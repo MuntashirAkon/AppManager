@@ -13,7 +13,7 @@
     <string name="installer_error_session_write">Não foi possível gravar na sessão de instalação</string>
     <string name="installer_error_session_create">Uma sessão de instalação não pôde ser criada</string>
     <string name="installer_error_security">Não foi possível acessar os ficheiros APK</string>
-    <string name="install_in_progress">Instalação em andamento</string>
+    <string name="install_in_progress">A instalar…</string>
     <string name="package_installer">Instalador de pacotes</string>
     <string name="unblock_trackers">Desbloquear rastreadores</string>
     <string name="reinstall">Reinstalar</string>
@@ -1036,7 +1036,7 @@
     <string name="import_from_oab">Importar de OAndBackup</string>
     <string name="pref_import_backups_msg">Importar cópias de segurança de OAndBackup ou Titanium Backup.</string>
     <string name="pref_import_backups">Importar cópias de segurança</string>
-    <string name="community_links">Telegram: https://t.me/AppManagerChannel
+    <string name="community_links">Telegram: https://t.me/AppManagerChannel;
 \nTwitter: https://twitter.com/AppManagerNews</string>
     <string name="community">Comunidade</string>
     <string name="added_to_queue">Adicionado à fila</string>
@@ -1061,4 +1061,30 @@
     <string name="invalid_password">Palavra-passe inválida, tente novamente.</string>
     <string name="keystore_pass_cannot_be_empty">A palavra-passe da KeyStore não pode estar vazia.</string>
     <string name="keystore_password_info">Segue-se a palavra-passe da App Manager KeyStore. Por favor guarde-a num local seguro se fizer uma cópia de segurança/restaurar a App Manager KeyStore. <b>Esta mensagem não será mostrada novamente.</b></string>
+    <string name="type_uri_array_list">Lista de URLs</string>
+    <string name="pref_block_trackers_msg">Bloqueia os componentes de rastreio após instalar um Aplicativo usando o gerenciador.</string>
+    <string name="running_services_logcat_hint">Clique em um item para abrir a tela de registro com o ID de processo correspondente como filtro principal.</string>
+    <string name="pid">ID do processo</string>
+    <plurals name="pref_thread_count_msg">
+        <item quantity="one">Executar no máximo %1$d operação em paralelo</item>
+        <item quantity="other">Executar no máximo %1$d operações em paralelo</item>
+    </plurals>
+    <string name="pref_thread_count_hint">O valor deve estar entre 0 e %1$d onde 0 significa <i> que o número máximo de operações no dado momento</i>.</string>
+    <string name="pref_thread_count">Execução paralela</string>
+    <string name="pref_always_on_background_msg">Sempre instalar aplicativos em segundo plano e mostrar notificação quando concluído.</string>
+    <string name="pref_always_on_background">Instalar em segundo plano</string>
+    <string name="next">Próximo</string>
+    <string name="installer_app_installed">Aplicativo instalado</string>
+    <string name="staging_apk_files">Aguardando arquivos de aplicativo…</string>
+    <string name="background">Segundo plano</string>
+    <string name="trim_caches_in_all_apps_description">Deleta arquivos cache de todas as aplicações, incluindo sistema android</string>
+    <string name="trim_caches_in_all_apps">Ajustar caches em todas as aplicações</string>
+    <string name="user_root">Usar root</string>
+    <string name="paste">Colar</string>
+    <string name="set_package_name_first">Defina primeiro o nome do pacote!</string>
+    <string name="identifier">Identificador</string>
+    <string name="backup_volume_dialog_description">Volumes com o prefixo <tt>/tree</tt> são pastas selecionadas usando o Storage Access Framework (SAF). Excetuando estas pastas, o diretório padrão do App Manager é uma subpasta chamada <tt>AppManager</tt>.</string>
+    <string name="second_degree_tracker_note">O prefixo ² indica que os rastreadores estão na <a href="https://etip.exodus-privacy.eu.org/">Lista de espera ETIP</a>, ou seja, se eles são rastreadores reais então ainda estão a ser investigados.</string>
+    <string name="failed_to_uninstall_app">A desinstalação falhou</string>
+    <string name="type_uri_array">Matriz de URIs</string>
 </resources>

@@ -24,9 +24,9 @@
     <string name="refresh">새롭게 하기</string>
     <string name="launch">실행</string>
     <string name="activities">활동</string>
-    <string name="require_no_permission">아무 권한이 필요하지 없습니다</string>
+    <string name="require_no_permission">아무 권한이 필요하지 않습니다.</string>
     <string name="permissions">사용 권한</string>
-    <string name="uninstall">제서</string>
+    <string name="uninstall">설치제거</string>
     <string name="authority">권한</string>
     <string name="sort_by_package_name">패키지 이름</string>
     <string name="sort_by_app_label">앱 라벨</string>
