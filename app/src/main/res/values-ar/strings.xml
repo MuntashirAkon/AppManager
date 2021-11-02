@@ -1176,7 +1176,7 @@
     </plurals>
     <string name="import_from_tb">الاستيراد من Titanium Backup</string>
     <string name="import_from_oab">الاستيراد من OAndBackup</string>
-    <string name="pref_import_backups_msg">استيراد النسخ الاحتياطية من OAndBackup أو Titanium.</string>
+    <string name="pref_import_backups_msg">استيراد النسخ الاحتياطية من OAndBackup أو Swift Backup (3.0–3.2) أو Titanium Backup.</string>
     <string name="pref_import_backups">استيراد النسخ الاحتياطية</string>
     <string name="help_uses_permissions_tab">انقر على بند لمنح <b>منح</b> أو <b> رفض</b>.فقط <b> فقط خطيرة</b> و <b> تطويرية</b> أذونات يمكن أن يكون منحت أو ألغيت.</string>
     <string name="added_to_queue">إضافة إلى قائمة الانتظار</string>
@@ -1230,4 +1230,15 @@
     <string name="backup_volume_dialog_description">وحدات التخزين ذات <tt>/tree </tt> بادئة هي المجلدات المحددة باستخدام إطار الوصول التخزين (SAF). باستثناء هذه المجلدات، الدليل الافتراضي لإدارة التطبيقات هو مجلد فرعي يسمى <tt>AppManager </tt>.</string>
     <string name="second_degree_tracker_note">تشير البادئة ² إلى أن المتعقبات موجودة في <a href="https://etip.exodus-privacy.eu.org/"> قائمة ETIP الاحتياطية </a> أي ما إذا كانت متتبعات فعلية لا تزال قيد التحقيق.</string>
     <string name="failed_to_uninstall_app">فشل إلغاء التثبيت</string>
+    <string name="import_from_sb">الاستيراد من Swift Backup 3.0 - 3.2</string>
+    <string name="pref_import_backups_hint">حدد دليلاً يحتوي على ملفات النسخ الاحتياطي (Swift Backup / Titanium Backup) أو الدلائل (OAndBackup)</string>
+    <string name="explore">استكشف</string>
+    <string name="system_partition">جذر أندرويد</string>
+    <string name="exit_confirmation">تأكيد الخروج</string>
+    <string name="replace">استبدال</string>
+    <string name="rename">إعادة تسمية</string>
+    <string name="java">جافا</string>
+    <string name="smali">سمالي</string>
+    <string name="accessibility_service_description">خدمة الوصول العامة لتنفيذ عمليات معينة مثل مسح ذاكرة التخزين المؤقت في وضع عدم وجود الجذر.</string>
+    <string name="extract">استخرج</string>
 </resources>
