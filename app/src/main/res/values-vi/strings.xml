@@ -1001,7 +1001,7 @@
     </plurals>
     <string name="import_from_tb">Nhập từ Titanium Backup</string>
     <string name="import_from_oab">Nhập từ OAndBackup</string>
-    <string name="pref_import_backups_msg">Nhập bản sao lưu từ OAndBackup hoặc Titanium Backup.</string>
+    <string name="pref_import_backups_msg">Nhập bản sao lưu từ OAndBackup,Swift Backup(3.0 -3.2) hoặc Titanium Backup.</string>
     <string name="pref_import_backups">Nhập bản sao lưu</string>
     <string name="added_to_queue">Đã thêm vào hàng chờ</string>
     <string name="minimum_version">Phiên bản tối thiểu: %d</string>
@@ -1050,4 +1050,15 @@
     <string name="backup_volume_dialog_description">Các kho có tiền tố <tt>/tree</tt> là các thư mục được chọn bằng Storage Access Framework (SAF). Trừ các thư mục đó ra, thư mục mặc định của App Manager là một thư mục con có tên là <tt>AppManager</tt>.</string>
     <string name="second_degree_tracker_note">Tiền tố ² có nghĩa là trình theo dõi đang ở trong <a href="https://etip.exodus-privacy.eu.org/">danh sách chờ của ETIP</a>, vd: việc chúng có phải là trình theo dõi thật hay không vẫn đang được điều tra.</string>
     <string name="failed_to_uninstall_app">Gỡ cài đặt thất bại</string>
+    <string name="explore">Truy cập</string>
+    <string name="system_partition">Android root</string>
+    <string name="exit_confirmation">Xác nhận thoát</string>
+    <string name="extract">Giải nén</string>
+    <string name="replace">Thay thế</string>
+    <string name="rename">Đổi tên</string>
+    <string name="java">Java</string>
+    <string name="smali">Smali</string>
+    <string name="accessibility_service_description">Cho phép truy cập và sử dụng dịch vụ để thực hiện một số công việc như dọn cache trên thiết bị chưa root.</string>
+    <string name="pref_import_backups_hint">Chọn thư mục chứa bản sao từ(Swift Backup/Titanium Backup) hoặc thư mục(OAndBackup)</string>
+    <string name="import_from_sb">Nhập bản sao từ Swift Backup 3.0 - 3.2</string>
 </resources>
