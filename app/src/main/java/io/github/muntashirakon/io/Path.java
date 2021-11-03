@@ -160,7 +160,7 @@ public class Path {
     @Nullable
     public File getFile() {
         if (documentFile instanceof ProxyDocumentFile) {
-            return new File(documentFile.getUri().getPath());
+            return new ProxyFile(documentFile.getUri().getPath());
         }
         return null;
     }
