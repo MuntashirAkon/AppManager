@@ -557,7 +557,6 @@ public class ActivityInterceptor extends BaseActivity {
                         })
                         .show());
         RecyclerView categoriesRecyclerView = findViewById(R.id.intent_categories);
-        categoriesRecyclerView.setHasFixedSize(true);
         categoriesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         categoriesAdapter = new CategoriesRecyclerViewAdapter(this);
         categoriesRecyclerView.setAdapter(categoriesAdapter);
@@ -587,7 +586,6 @@ public class ActivityInterceptor extends BaseActivity {
                         })
                         .show());
         RecyclerView flagsRecyclerView = findViewById(R.id.intent_flags);
-        flagsRecyclerView.setHasFixedSize(true);
         flagsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         flagsAdapter = new FlagsRecyclerViewAdapter(this);
         flagsRecyclerView.setAdapter(flagsAdapter);
@@ -605,7 +603,6 @@ public class ActivityInterceptor extends BaseActivity {
             fragment.show(getSupportFragmentManager(), AddIntentExtraFragment.TAG);
         });
         RecyclerView extrasRecyclerView = findViewById(R.id.intent_extras);
-        extrasRecyclerView.setHasFixedSize(true);
         extrasRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         extrasAdapter = new ExtrasRecyclerViewAdapter(this);
         extrasRecyclerView.setAdapter(extrasAdapter);
@@ -617,7 +614,6 @@ public class ActivityInterceptor extends BaseActivity {
             activitiesHeader.setVisibility(View.GONE);
         }
         RecyclerView matchingActivitiesRecyclerView = findViewById(R.id.intent_matching_activities);
-        matchingActivitiesRecyclerView.setHasFixedSize(true);
         matchingActivitiesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         matchingActivitiesAdapter = new MatchingActivitiesRecyclerViewAdapter(this);
         matchingActivitiesRecyclerView.setAdapter(matchingActivitiesAdapter);

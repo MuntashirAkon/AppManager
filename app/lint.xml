@@ -3,5 +3,12 @@
     <issue id="MissingTranslation" severity="ignore" />
     <issue id="ImpliedQuantity" severity="ignore" />
 
+    <issue id="LogConditional" severity="informational" />
+    <issue id="Registered" severity="informational" />
+    <issue id="UnknownNullness" severity="informational" />
+
+    <issue id="DuplicateStrings" severity="warning" />
+    <issue id="WrongThreadInterprocedural" severity="warning" />
+
     <issue id="HardcodedText" severity="error" />
 </lint>

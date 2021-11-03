@@ -5,6 +5,8 @@ package io.github.muntashirakon.AppManager.utils;
 import android.os.Handler;
 import android.os.Looper;
 
+import androidx.annotation.AnyThread;
+
 import com.topjohnwu.superuser.ShellUtils;
 
 import java.util.concurrent.Executor;
@@ -14,6 +16,7 @@ public final class UiThreadHandler {
     public static final Handler handler = new Handler(Looper.getMainLooper());
     public static final Executor executor = UiThreadHandler::run;
 
+    @AnyThread
     public static void run(Runnable r) {
         if (ShellUtils.onMainThread()) {
             r.run();
@@ -22,6 +25,7 @@ public final class UiThreadHandler {
         }
     }
 
+    @AnyThread
     public static void runAndWait(Runnable r) {
         if (ShellUtils.onMainThread()) {
             r.run();
