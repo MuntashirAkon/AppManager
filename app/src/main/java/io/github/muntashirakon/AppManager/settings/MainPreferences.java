@@ -318,6 +318,12 @@ public class MainPreferences extends PreferenceFragmentCompat {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        requireActivity().setTitle(R.string.settings);
+    }
+
     @NonNull
     private CharSequence[] getLanguagesL(@NonNull ArrayMap<String, Locale> locales) {
         CharSequence[] localesL = new CharSequence[locales.size()];

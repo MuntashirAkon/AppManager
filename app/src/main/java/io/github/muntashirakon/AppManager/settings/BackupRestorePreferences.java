@@ -233,6 +233,12 @@ public class BackupRestorePreferences extends PreferenceFragmentCompat {
                 });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        requireActivity().setTitle(R.string.backup_restore);
+    }
+
     @UiThread
     private void startImportOperation(@ImportType int backupType, Uri uri) {
         // Start batch ops service

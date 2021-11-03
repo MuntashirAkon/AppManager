@@ -177,4 +177,10 @@ public class LogViewerPreferences extends PreferenceFragmentCompat {
             return true;
         });
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        requireActivity().setTitle(R.string.log_viewer);
+    }
 }

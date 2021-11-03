@@ -154,4 +154,10 @@ public class InstallerPreferences extends PreferenceFragmentCompat {
         backgroundPref.setVisible(Utils.canDisplayNotification(activity));
         backgroundPref.setChecked((boolean) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_ALWAYS_ON_BACKGROUND_BOOL));
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        requireActivity().setTitle(R.string.installer);
+    }
 }

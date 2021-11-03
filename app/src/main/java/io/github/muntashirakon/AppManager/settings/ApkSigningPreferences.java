@@ -75,6 +75,12 @@ public class ApkSigningPreferences extends PreferenceFragmentCompat {
         });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        requireActivity().setTitle(R.string.apk_signing);
+    }
+
     private void updateSigningPref() {
         try {
             KeyStoreManager keyStoreManager = KeyStoreManager.getInstance();
