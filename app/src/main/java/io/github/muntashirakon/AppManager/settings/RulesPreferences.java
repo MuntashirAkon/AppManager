@@ -74,4 +74,10 @@ public class RulesPreferences extends PreferenceFragmentCompat {
             return true;
         });
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        requireActivity().setTitle(R.string.rules);
+    }
 }

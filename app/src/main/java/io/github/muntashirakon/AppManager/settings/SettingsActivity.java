@@ -6,14 +6,17 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
+
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
-import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 
 public class SettingsActivity extends BaseActivity {
     public LinearProgressIndicator progressIndicator;
+    private FragmentManager fragmentManager;
 
     @Override
     protected void onAuthenticated(Bundle savedInstanceState) {
@@ -23,13 +26,24 @@ public class SettingsActivity extends BaseActivity {
         progressIndicator.setVisibilityAfterHide(View.GONE);
         progressIndicator.hide();
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, new MainPreferences()).commit();
+        fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.main_layout, new MainPreferences())
+                .addToBackStack(null).commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (fragmentManager.getBackStackEntryCount() <= 1) {
+            finish();
+        } else super.onBackPressed();
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            finish();
+            if (fragmentManager.getBackStackEntryCount() <= 1) {
+                finish();
+            } else fragmentManager.popBackStack();
             return true;
         }
         return super.onOptionsItemSelected(item);

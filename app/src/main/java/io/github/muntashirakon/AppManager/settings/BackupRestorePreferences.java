@@ -190,6 +190,12 @@ public class BackupRestorePreferences extends PreferenceFragmentCompat {
                 });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        requireActivity().setTitle(R.string.backup_restore);
+    }
+
     @CryptoUtils.Mode
     private String indexToEncMode(int index) {
         switch (index) {
