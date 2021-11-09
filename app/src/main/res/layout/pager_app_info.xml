@@ -92,8 +92,8 @@
                 android:layout_marginHorizontal="@dimen/padding_medium"
                 android:layout_marginVertical="@dimen/padding_very_small"
                 android:gravity="center_horizontal"
-                app:childSpacing="@dimen/padding_very_small"
-                app:rowSpacing="@dimen/padding_very_small"
+                app:itemSpacing="@dimen/padding_very_small"
+                app:lineSpacing="@dimen/padding_very_small"
                 android:nextFocusUp="@id/version"
                 android:nextFocusDown="@id/horizontal_layout" />
 
