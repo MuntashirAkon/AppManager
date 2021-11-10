@@ -19,6 +19,7 @@
         <item name="materialCalendarTheme">@style/AppTheme.DatePicker</item>
         <item name="searchViewStyle">@style/AppTheme.SearchView</item>
         <item name="bottomNavigationStyle">@style/AppTheme.BottomNavigationView</item>
+        <item name="bottomSheetDialogTheme">@style/AppTheme.BottomSheetDialog</item>
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
@@ -114,6 +115,18 @@
     <style name="AppTheme.AlertDialog.CheckedTextView" parent="Widget.MaterialComponents.CheckedTextView">
         <item name="android:textSize">@dimen/font_size_larger</item>
         <item name="android:textColor">?android:textColorPrimary</item>
+    </style>
+
+    <style name="AppTheme.BottomSheetDialog" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">
+        <item name="android:windowSoftInputMode">adjustResize</item>
+        <item name="bottomSheetStyle">@style/AppTheme.BottomSheetModal</item>
+    </style>
+
+    <style name="AppTheme.BottomSheetModal" parent="Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="android:paddingTop">@dimen/padding_small</item>
+        <item name="android:background">@drawable/rounded_top_with_capsule</item>
+        <item name="shapeAppearance">@null</item>
+        <item name="shapeAppearanceOverlay">@null</item>
     </style>
 
     <style name="AppTheme.DatePicker" parent="@style/ThemeOverlay.MaterialComponents.MaterialCalendar">
