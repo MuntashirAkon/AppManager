@@ -1144,7 +1144,7 @@
     <string name="pref_thread_count">Параллельное выполнение</string>
     <string name="type_uri_array_list">Список URI</string>
     <string name="type_uri_array">Массив URI</string>
-    <string name="pref_always_on_background_msg">Всегда устанавливать приложения в фоновом режиме и выводить уведомление о завершении установки.</string>
+    <string name="pref_always_on_background_msg">Всегда устанавливать приложения в фоновом режиме и выводить уведомление по завершении операции.</string>
     <string name="pref_always_on_background">Установить в фоновом режиме</string>
     <string name="pref_block_trackers_msg">Блокирование компонентов трекеров после установки приложения через App Manager.</string>
     <string name="next">Следующий</string>
