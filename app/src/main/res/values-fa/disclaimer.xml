@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<resources>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources>
     <string name="disclaimer_exit">خروج</string>
     <string name="disclaimer_agree">قبول می‌کنم</string>
     <string name="disclaimer_agree_forever">دیگر این را نشان نده</string>
-    <string name="disclaimer_footer">کپی رایت 2020 منتشر الاسلام</string>
+    <string name="disclaimer_footer">کپی رایت 2020-2021 علیرضا ام</string>
     <string name="disclaimer_body">مدیر برنامه امکانات مبتنی بر روت ارائه می‌دهد که اگر اشتباه استفاده شوند ممکن است به دستگاه شما آسیب برسانند. مدیر برنامه مسئول هیچ آسیبی که با استفاده از این برنامه وارد شود نیست. اگر شما کاملا از نحوه کار روت آگاه نیستید، تا زمانی که کاملا از ریسک ها آگاه شوید باید از استفاده از گزینه های روت دوری کنید.
 \n
 \nهر پیوندی که به برنامه ها و سایت های دیگر ارائه می‌دهم، برای منفعت کاربر است. من مسئول هیچ محتوایی که ممکن است با رفتن به پیوند های خارجی پیدا کنید نیستم.
