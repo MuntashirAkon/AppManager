@@ -1001,4 +1001,5 @@
     <string name="specify_custom_name">Personnalisé</string>
     <string name="installer_app_message">Sélectionnez <b>Choisir</b> pour choisir depuis les applications installées, ou bien <b>Personnaliser</b> pour définir le nom de paquet à utiliser.</string>
     <string name="input_key">Entrer la clé (en hexadécimal)</string>
+    <string name="failed_to_initialize_key_store">Impossible d\'initialiser le magasin de clés d\'App Manager.</string>
 </resources>
