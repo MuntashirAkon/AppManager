@@ -980,4 +980,5 @@
     <string name="backup_custom_users">Utilisateurs personnalisés</string>
     <string name="backup_custom_users_description">Exécuter les sauvegardes uniquement pour les utilisateurs mentionnés</string>
     <string name="no_volumes_found">Impossible de trouver un volume avec des droits d\'écriture.</string>
+    <string name="bootloader">Chargeur de démarrage</string>
 </resources>
