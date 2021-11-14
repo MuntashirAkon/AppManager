@@ -959,4 +959,5 @@
     <string name="pref_backup_android_keystore">Sauvegarder les applications avec le KeyStore d\'Android</string>
     <string name="set_app_op_mode">Définir le mode d\'opération d\'application</string>
     <string name="filter_apps_with_splits">Avec séparations</string>
+    <string name="matching_activities">Correspondances</string>
 </resources>
