@@ -945,8 +945,8 @@
     <string name="state_session_leader">Chef de séance</string>
     <string name="second_degree_tracker_note">Le préfixe ² indique que les trackers sont dans la <a href="https://etip.exodus-privacy.eu.org/">liste d\'attente ETIP</a>, c\'est-à-dire qu\'il s\'agit toujours de trackers réels.</string>
     <plurals name="no_of_splits">
-        <item quantity="one">division</item>
-        <item quantity="other">divisions</item>
+        <item quantity="one">%1$d division</item>
+        <item quantity="other">%1$d divisions</item>
     </plurals>
     <string name="launch_mode_single_top">Haut simple</string>
 </resources>
