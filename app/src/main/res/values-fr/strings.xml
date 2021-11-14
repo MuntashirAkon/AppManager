@@ -1085,5 +1085,5 @@
     <string name="type_uri_array">Liste d\'URL</string>
     <string name="type_uri_array_list">Liste d\'URL</string>
     <string name="pref_thread_count">Exécution en parallèle</string>
-    <string name="pref_thread_count_hint">La valeur doit être comprise entre 0 et %1$d où 0 signifie <i>nombre maximum d\'opérations à un instant donné</i>.</string>
+    <string name="pref_thread_count_hint">La valeur doit être comprise entre 0 et %1$d ; si 0, cela correspond au <i>nombre maximum d\'opérations à un instant donné</i>.</string>
 </resources>
