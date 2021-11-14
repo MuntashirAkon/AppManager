@@ -1026,6 +1026,6 @@
     <string name="extract">Extraire</string>
     <string name="replace">Remplacer</string>
     <string name="rename">Renommer</string>
-    <string name="locality_name">Localité (ville, lieu-dit) Nom (L)</string>
+    <string name="locality_name">Nom de la localité (ville) (L)</string>
     <string name="state_name">Nom de l\'état, région (ST)</string>
 </resources>
