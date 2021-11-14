@@ -966,4 +966,7 @@
     <string name="backup_multiple_description">Créez une sauvegarde <i>named</i> distincte de la sauvegarde de base.</string>
     <string name="backup_skip_signature_checks_description">Restaurez les sauvegardes qui échouent à la vérification de la somme de contrôle ou de signatures APK différentes a leurs sauvegardes précédentes.</string>
     <string name="patch_level">Niveau de correctif</string>
+    <string name="scaling_factor">Facteur d\'échelle</string>
+    <string name="set_custom_app_op">Définir une opération d\'application personnalisée</string>
+    <string name="set_mode_for_app_ops_dots">Définir le mode pour les opérations d\'application…</string>
 </resources>
