@@ -1078,5 +1078,6 @@
     <string name="set_package_name_first">Veuillez définir le nom du package d\'abord !</string>
     <string name="user_root">En tant qu\'administrateur</string>
     <string name="trim_caches_in_all_apps_description">Supprime les fichiers de cache de toutes les applications ainsi que du système Android</string>
-    <string name="background">Arrière plan</string>
+    <string name="background">Arrière-plan</string>
+    <string name="staging_apk_files">Préparation…</string>
 </resources>
