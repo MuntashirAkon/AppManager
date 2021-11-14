@@ -1060,7 +1060,7 @@
     <string name="pref_display_changes">Afficher les modifications</string>
     <string name="saf">SAF</string>
     <string name="pref_display_changes_msg">Afficher les changements de version, pisteurs, composants, permissions, signatures, SDK, etc. par version.</string>
-    <string name="no_changes">Aucune modifications</string>
+    <string name="no_changes">Aucune modification</string>
     <string name="wireless_debugging">Débogage sans fil</string>
     <string name="wireless_debugging_not_supported">Le débogage sans fil n\'est pas pris en charge sur cette plate-forme.</string>
 </resources>
