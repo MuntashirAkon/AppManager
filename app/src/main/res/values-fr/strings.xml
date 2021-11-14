@@ -997,7 +997,7 @@
     <string name="copied_to_clipboard">Copié dans le presse-papier.</string>
     <string name="restart_to_reflect_changes">Vous devez redémarrer l\'appareil immédiatement pour profiter des modifications récentes.</string>
     <string name="isolated">Confiné</string>
-    <string name="screen_lock_not_enabled">Veuillez s.v.p. choisir un écran de verrouillage dans les paramètres Android, ou effacer les données de l\'application.</string>
+    <string name="screen_lock_not_enabled">Veuillez choisir un écran de verrouillage dans les paramètres Android, ou effacer les données de cette application.</string>
     <string name="specify_custom_name">Personnalisé</string>
     <string name="installer_app_message">Sélectionnez <b>Choisir</b> pour choisir depuis les applications installées, ou bien <b>Personnaliser</b> pour spécifier un nom de paquet.</string>
 </resources>
