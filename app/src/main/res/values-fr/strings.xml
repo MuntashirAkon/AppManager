@@ -948,4 +948,5 @@
         <item quantity="one">division</item>
         <item quantity="other">divisions</item>
     </plurals>
+    <string name="launch_mode_single_top">Haut simple</string>
 </resources>
