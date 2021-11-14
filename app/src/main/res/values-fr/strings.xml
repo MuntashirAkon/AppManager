@@ -989,4 +989,5 @@
     <string name="no_battery_optimization">Pas d\'optimisation de batterie</string>
     <string name="unlock_app_manager">Déverrouiller App Manager</string>
     <string name="type_null">Aucune valeur</string>
+    <string name="restore_not_installed_msg">Restaurer la sauvegarde de base pour les applications qui ne sont pas actuellement installées.</string>
 </resources>
