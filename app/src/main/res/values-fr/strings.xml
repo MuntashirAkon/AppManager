@@ -1067,4 +1067,6 @@
     <string name="app_signing_signature_mismatch_for_data_only_app">Impossible d\'installer l\'application car la signature ne correspond pas. Elle a été désinstallée mais ses données n\'ont pas été supprimées.</string>
     <string name="help_app_ops_tab">Cliquez sur un élément pour l\'<b>autoriser</b> ou <b>l\'ignorer</b>. Cliquez longuement sur un élément pour voir les autres modes pris en charge.</string>
     <string name="failed_to_prevent_background_run">Impossible d\'empêcher %1$s de s\'exécuter en arrière-plan</string>
+    <string name="permission_flags">Indicateurs d\'autorisation</string>
+    <string name="added_to_queue">Ajouté à la file d\'attente</string>
 </resources>
