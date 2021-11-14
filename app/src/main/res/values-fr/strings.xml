@@ -1069,4 +1069,6 @@
     <string name="failed_to_prevent_background_run">Impossible d\'empêcher %1$s de s\'exécuter en arrière-plan</string>
     <string name="permission_flags">Indicateurs d\'autorisation</string>
     <string name="added_to_queue">Ajouté à la file d\'attente</string>
+    <string name="help_uses_permissions_tab">Cliquez sur un élément pour <b>l\'accorder</b> ou <b>le révoquer</b>. Seules les permissions <b>dangereuses</b> et <b>développement</b> peuvent être accordées ou révoquées.</string>
+    <string name="notice_saf">Contrairement aux volumes, le répertoire sélectionné sera utilisé pour stocker tous les fichiers en relation avec App Manager, y compris les APK enregistrés et les sauvegardes. Le Storage Access Framework (SAF) est très lent, vous ne devez donc utiliser cette option que si aucune autre ne peut être utilisée.</string>
 </resources>
