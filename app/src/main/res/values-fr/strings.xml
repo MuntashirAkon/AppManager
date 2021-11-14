@@ -1003,4 +1003,8 @@
     <string name="input_key">Clé d\'entrée (en hexadécimal)</string>
     <string name="failed_to_initialize_key_store">Impossible d\'initialiser le gestionnaire de clés de App Manager.</string>
     <string name="failed_to_save_key">La clé n\'a pu être enregistrée.</string>
+    <string name="expiry_date_cannot_be_empty">La date d\'expiration ne peut pas être vide.</string>
+    <string name="failed_to_read_keystore">Lecture du KeyStore impossible.</string>
+    <string name="enter_good_filename">Saisir un nom de fichier valide, Svp.</string>
+    <string name="pref_always_on_background">Installation en arrière-plan</string>
 </resources>
