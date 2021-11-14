@@ -949,4 +949,6 @@
         <item quantity="other">%1$d divisions</item>
     </plurals>
     <string name="launch_mode_single_top">Partie supérieure</string>
+    <string name="orientation_user_landscape">Orientation utilisateur paysage</string>
+    <string name="orientation_sensor_portrait">Capteur mode portrait</string>
 </resources>
