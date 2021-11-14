@@ -1075,5 +1075,6 @@
     <string name="keystore_password_info">Ceci est le mot de passe du KeyStore. Veillez à le stocker dans un endroit sûr si vous souhaitez sauvegarder/restaurer le KeyStore depuis App Manager. <b>Ce message ne s\'affichera plus.</b></string>
     <string name="adb_pair">Coupler</string>
     <string name="identifier">Identifiant</string>
-    <string name="set_package_name_first">Définir le nom du package en premier !</string>
+    <string name="set_package_name_first">Veuillez définir le nom du package d\'abord !</string>
+    <string name="user_root">En tant qu\'administrateur</string>
 </resources>
