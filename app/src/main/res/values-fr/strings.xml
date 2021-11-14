@@ -986,7 +986,7 @@
     <string name="backup_apps_with_changes_msg">Refaire les sauvegardes pour les applications avec des modifications depuis la dernière sauvegarde. Ceci inclus les changements de taille et de version, et la date de la dernière exécution.</string>
     <string name="restore_all_msg">Restaurer les sauvegardes de base pour toutes les applications sauvegardées.</string>
     <string name="screen_lock_msg">Verrouiller App Manager en utilisant le verrouillage d\'écran Android</string>
-    <string name="no_battery_optimization">Pas d\'optimisation de batterie</string>
+    <string name="no_battery_optimization">Pas d\'optimisation de la batterie</string>
     <string name="unlock_app_manager">Déverrouiller App Manager</string>
     <string name="type_null">Aucune valeur</string>
     <string name="restore_not_installed_msg">Restaurer la sauvegarde de base pour les applications qui ne sont pas actuellement installées.</string>
