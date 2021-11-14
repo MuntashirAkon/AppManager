@@ -1005,7 +1005,7 @@
     <string name="failed_to_save_key">La clé n\'a pu être enregistrée.</string>
     <string name="expiry_date_cannot_be_empty">La date d\'expiration ne peut pas être vide.</string>
     <string name="failed_to_read_keystore">Lecture du KeyStore impossible.</string>
-    <string name="enter_good_filename">Saisir un nom de fichier valide, Svp.</string>
+    <string name="enter_good_filename">Veuillez saisir un nom de fichier valide.</string>
     <string name="pref_always_on_background">Installation en arrière-plan</string>
     <string name="found_no_alias_in_keystore">Aucun alias trouvé dans le KeyStore!</string>
     <string name="keystore_pass_cannot_be_empty">Le mot de passe KeyStore ne peut être vide.</string>
