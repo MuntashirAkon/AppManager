@@ -1063,4 +1063,5 @@
     <string name="no_changes">Aucune modification</string>
     <string name="wireless_debugging">Débogage sans fil</string>
     <string name="wireless_debugging_not_supported">Le débogage sans fil n\'est pas supporté par cette plate-forme.</string>
+    <string name="fallback_to_no_root_mode_description">Le gestionnaire d\'applications n\'a pas pu utiliser le mode de fonctionnement actuel. Afin d\'éviter un comportement aléatoire, vous devez temporairement passer en mode non-administrateur. Pensez à signaler si le problème n\'est pas résolu après le redémarrage de l\'appareil.</string>
 </resources>
