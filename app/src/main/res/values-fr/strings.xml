@@ -971,6 +971,6 @@
     <string name="set_mode_for_app_ops_dots">Définir le mode pour les opérations d\'application…</string>
     <string name="permissive">Permissif</string>
     <string name="enable_magisk_hide">Activer MagiskHide</string>
-    <string name="failed_to_enable_magisk_hide">Activation de MagisHide impossible</string>
+    <string name="failed_to_enable_magisk_hide">Activation de MagiskHide impossible</string>
     <string name="pref_backup_restore_msg">Personnaliser sauvegarder/restauration.</string>
 </resources>
