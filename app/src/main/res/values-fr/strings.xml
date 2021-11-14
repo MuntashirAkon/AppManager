@@ -1082,5 +1082,6 @@
     <string name="staging_apk_files">Préparation…</string>
     <string name="pref_block_trackers_msg">Bloquer les pisteurs dès l\'installation d\'une application depuis App Manager.</string>
     <string name="pref_always_on_background_msg">Toujours installer les applications en arrière-plan et afficher une notification quand terminé.</string>
-    <string name="type_uri_array">Tableau des URls</string>
+    <string name="type_uri_array">Liste d\'URL</string>
+    <string name="type_uri_array_list">Liste d\'URL</string>
 </resources>
