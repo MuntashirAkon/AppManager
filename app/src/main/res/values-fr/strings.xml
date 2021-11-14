@@ -955,4 +955,5 @@
     <string name="systemless_app">Appli sans système</string>
     <string name="source_stamp_verified">Timbre source vérifié</string>
     <string name="no_app_ops_permission">Aucune autorisation d\'affichage des opérations d\'application</string>
+    <string name="app_signing_signature_schemes">Schémas de signature</string>
 </resources>
