@@ -1080,5 +1080,5 @@
     <string name="trim_caches_in_all_apps_description">Supprime les fichiers de cache de toutes les applications ainsi que du système Android</string>
     <string name="background">Arrière-plan</string>
     <string name="staging_apk_files">Préparation…</string>
-    <string name="pref_block_trackers_msg">Bloquer les composants de suivi après l\'installation d\'une application à l\'aide du gestionnaire.</string>
+    <string name="pref_block_trackers_msg">Bloquer les pisteurs dès l\'installation d\'une application depuis App Manager.</string>
 </resources>
