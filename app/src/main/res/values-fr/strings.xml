@@ -948,5 +948,5 @@
         <item quantity="one">%1$d division</item>
         <item quantity="other">%1$d divisions</item>
     </plurals>
-    <string name="launch_mode_single_top">Haut simple</string>
+    <string name="launch_mode_single_top">Partie supérieure</string>
 </resources>
