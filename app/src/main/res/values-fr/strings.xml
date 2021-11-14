@@ -1055,4 +1055,8 @@
     <string name="text_filter_ellipsis">Filtrer…</string>
     <string name="text_filter_text">Filtrer le texte</string>
     <string name="suspended">En pause</string>
+    <string name="pref_layout_orientation">Orientation de la mise en page</string>
+    <string name="orientation_follow_locale">Suivre les paramètres régionaux</string>
+    <string name="pref_display_changes">Afficher les modifications</string>
+    <string name="saf">SAF</string>
 </resources>
