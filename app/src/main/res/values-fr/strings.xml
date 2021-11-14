@@ -1011,4 +1011,5 @@
     <string name="keystore_pass_cannot_be_empty">Le mot de passe KeyStore ne peut être vide.</string>
     <string name="trim_caches_in_all_apps">Réduire le cache de toutes les applications</string>
     <string name="pref_rules_msg">Blocage instantané, importer/exporter/supprimer des règles, etc.</string>
+    <string name="pref_expanded_by_default_summary">Afficher le texte complet du journal par défaut.</string>
 </resources>
