@@ -997,4 +997,5 @@
     <string name="copied_to_clipboard">Copié dans le presse-papier.</string>
     <string name="restart_to_reflect_changes">Vous devez redémarrer l\'appareil immédiatement pour profiter des modifications récentes.</string>
     <string name="isolated">Confiné</string>
+    <string name="screen_lock_not_enabled">Veuillez s.v.p. choisir un écran de verrouillage dans les paramètres Android, ou effacer les données de l\'application.</string>
 </resources>
