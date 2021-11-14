@@ -1072,5 +1072,5 @@
     <string name="help_uses_permissions_tab">Cliquez sur un élément pour <b>l\'accorder</b> ou <b>le révoquer</b>. Seules les permissions <b>dangereuses</b> et <b>développement</b> peuvent être accordées ou révoquées.</string>
     <string name="notice_saf">Contrairement aux volumes, le répertoire sélectionné sera utilisé pour stocker tous les fichiers en relation avec App Manager, y compris les APK enregistrés et les sauvegardes. Le Storage Access Framework (SAF) étant très lent, ne l\'utilisez qu\'en dernier recours.</string>
     <string name="backup_volume_dialog_description">Les volumes avec le préfixe <tt>/tree</tt> sont des dossiers sélectionnés à l\'aide de Storage Access Framework (SAF). À l\'exception de ces dossiers, le répertoire par défaut du gestionnaire d\'applications est un sous-dossier nommé <tt>AppManager</tt>.</string>
-    <string name="keystore_password_info">Ce qui suit est le mot de passe de l\'application KeyStore. Stocker le dans un endroit sûr si vous souhaitez sauvegarder/restaurer KeyStore. <b>Ce message ne s\'affichera plus.</b></string>
+    <string name="keystore_password_info">Ceci est le mot de passe du KeyStore. Veillez à le stocker dans un endroit sûr si vous souhaitez sauvegarder/restaurer le KeyStore depuis App Manager. <b>Ce message ne s\'affichera plus.</b></string>
 </resources>
