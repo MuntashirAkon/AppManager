@@ -959,7 +959,7 @@
     <string name="pref_backup_android_keystore">Sauvegarder les applications avec le KeyStore d\'Android</string>
     <string name="set_app_op_mode">Définir le mode d\'opération d\'application</string>
     <string name="filter_apps_with_splits">Avec séparations</string>
-    <string name="matching_activities">Correspondances</string>
+    <string name="matching_activities">Activités correspondantes</string>
     <string name="screen">Écran</string>
     <string name="failed_to_disable_magisk_hide">Désactivation de MagisHide impossible</string>
     <string name="enforcing">Imposer</string>
@@ -969,4 +969,5 @@
     <string name="scaling_factor">Facteur d\'échelle</string>
     <string name="set_custom_app_op">Définir une opération d\'application personnalisée</string>
     <string name="set_mode_for_app_ops_dots">Définir le mode pour les opérations d\'application…</string>
+    <string name="permissive">Permissif</string>
 </resources>
