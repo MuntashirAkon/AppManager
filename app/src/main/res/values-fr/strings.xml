@@ -1047,8 +1047,11 @@
     <string name="pref_cat_advanced">Avancé</string>
     <string name="pref_expanded_by_default_title">Développer par défaut</string>
     <string name="pref_log_line_period_error">Saisissez un nombre entier entre 1 et 1000.</string>
-    <string name="pref_log_write_period_title">Durée d\'écriture</string>
+    <string name="pref_log_write_period_title">Fréquence d\'écriture</string>
     <string name="save_log_zip">Enregistrement au format Zip</string>
     <string name="collapse_all">Tout réduire</string>
     <string name="text_include_dmesg">Inclure le journal du noyau</string>
+    <string name="pref_show_timestamp_title">Afficher l\'identifiant du process et l\'horodatage</string>
+    <string name="text_filter_ellipsis">Filtrer…</string>
+    <string name="text_filter_text">Filtrer le texte</string>
 </resources>
