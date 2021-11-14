@@ -999,6 +999,6 @@
     <string name="isolated">Confiné</string>
     <string name="screen_lock_not_enabled">Veuillez choisir un écran de verrouillage dans les paramètres Android, ou effacer les données de cette application.</string>
     <string name="specify_custom_name">Personnalisé</string>
-    <string name="installer_app_message">Sélectionnez <b>Choisir</b> pour choisir depuis les applications installées, ou bien <b>Personnaliser</b> pour spécifier un nom de paquet.</string>
+    <string name="installer_app_message">Sélectionnez <b>Choisir</b> pour choisir depuis les applications installées, ou bien <b>Personnaliser</b> pour définir le nom de paquet à utiliser.</string>
     <string name="input_key">Entrer la clé (en hexadécimal)</string>
 </resources>
