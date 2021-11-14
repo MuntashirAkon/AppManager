@@ -1012,9 +1012,18 @@
     <string name="trim_caches_in_all_apps">Réduire le cache de toutes les applications</string>
     <string name="pref_rules_msg">Blocage instantané, importer/exporter/supprimer des règles, etc.</string>
     <string name="pref_expanded_by_default_summary">Afficher le texte complet du journal par défaut.</string>
-    <string name="pref_installer_msg">Configurez les comportements du programme d\'installation de l\'application.</string>
+    <string name="pref_installer_msg">Configurer le comportement de l\'installateur d\'applications.</string>
     <string name="port_number_pairing_code_empty">Numéro de port ou code d\'appariement vide.</string>
     <string name="common_name">Nom Commun (CN)</string>
     <string name="organization_unit">Unité d\'organisation (OU)</string>
     <string name="organization_name">Nom d\'organisation (O)</string>
+    <string name="crypto_key_size">Taille de la clé</string>
+    <string name="import_from_sb">Importer depuis Swift Backup 3.0 – 3.2</string>
+    <string name="java">Java</string>
+    <string name="smali">Smali</string>
+    <string name="explore">Explorer</string>
+    <string name="exit_confirmation">Confirmation pour quitter</string>
+    <string name="extract">Extraire</string>
+    <string name="replace">Remplacer</string>
+    <string name="rename">Renommer</string>
 </resources>
