@@ -1027,4 +1027,5 @@
     <string name="replace">Remplacer</string>
     <string name="rename">Renommer</string>
     <string name="locality_name">Localité (ville, lieu-dit) Nom (L)</string>
+    <string name="state_name">Nom de l\'état, région (ST)</string>
 </resources>
