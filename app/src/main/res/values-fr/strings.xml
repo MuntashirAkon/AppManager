@@ -981,4 +981,5 @@
     <string name="backup_custom_users_description">Exécuter les sauvegardes uniquement pour les utilisateurs mentionnés</string>
     <string name="no_volumes_found">Impossible de trouver un volume avec des droits d\'écriture.</string>
     <string name="bootloader">Chargeur de démarrage</string>
+    <string name="verify_and_redo_backups_msg">Vérifiez l\'intégrité des sauvegardes précédentes et refaites les sauvegardes pour lesquelles le contrôle d\'intégrité a échoué.</string>
 </resources>
