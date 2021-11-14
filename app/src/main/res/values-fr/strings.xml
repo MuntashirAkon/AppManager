@@ -1007,4 +1007,7 @@
     <string name="failed_to_read_keystore">Lecture du KeyStore impossible.</string>
     <string name="enter_good_filename">Saisir un nom de fichier valide, Svp.</string>
     <string name="pref_always_on_background">Installation en arrière-plan</string>
+    <string name="found_no_alias_in_keystore">Aucun alias trouvé dans le KeyStore!</string>
+    <string name="keystore_pass_cannot_be_empty">Le mot de passe KeyStore ne peut être vide.</string>
+    <string name="trim_caches_in_all_apps">Réduire le cache de toutes les applications</string>
 </resources>
