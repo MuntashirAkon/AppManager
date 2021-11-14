@@ -1086,4 +1086,10 @@
     <string name="type_uri_array_list">Liste d\'URL</string>
     <string name="pref_thread_count">Exécution en parallèle</string>
     <string name="pref_thread_count_hint">La valeur doit être comprise entre 0 et %1$d ; si 0, cela correspond au <i>nombre maximum d\'opérations à un instant donné</i>.</string>
+    <plurals name="pref_thread_count_msg">
+        <item quantity="one">Exécuter au plus %1$d opération en parallèle</item>
+        <item quantity="other">Exécuter au plus %1$d opérations en parallèle</item>
+    </plurals>
+    <string name="pid">Identifiant du processus</string>
+    <string name="running_services_logcat_hint">Cliquez sur un élément pour ouvrir la visionneuse de journaux avec l\'IDentificateur de processus correspondant comme filtre par défaut.</string>
 </resources>
