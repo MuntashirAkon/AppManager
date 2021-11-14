@@ -991,4 +991,7 @@
     <string name="type_null">Aucune valeur</string>
     <string name="restore_not_installed_msg">Restaurer la sauvegarde de base pour les applications qui ne sont pas actuellement installées.</string>
     <string name="battery_optimization">Optimisation de batterie</string>
+    <string name="has_net_policy">Politique réseau</string>
+    <string name="net_policy">politique réseau</string>
+    <string name="ssaid_info">SSAID (&lt;tt&gt;Settings.Secure.ANDROID_ID&lt;/tt&gt;) est un identifiant d\'appareil attribué à chaque application (à partir d\'Android 8 \"Oreo\") &amp; largement utilisé par les applications pour suivre les utilisateurs.</string>
 </resources>
