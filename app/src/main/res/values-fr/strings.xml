@@ -1038,4 +1038,6 @@
     <string name="delete_saved_log">Supprimer les journaux sauvegardés</string>
     <string name="log_level_warn">Avertissement</string>
     <string name="dialog_compiling_log">Compilation du journal …</string>
+    <string name="enter_filename">Entrez le nom du fichier</string>
+    <string name="filter_choice_tag">Etiquette</string>
 </resources>
