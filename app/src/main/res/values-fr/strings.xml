@@ -1016,7 +1016,7 @@
     <string name="port_number_pairing_code_empty">Numéro de port ou code d\'appariement vide.</string>
     <string name="common_name">Nom Commun (CN)</string>
     <string name="organization_unit">Unité d\'organisation (OU)</string>
-    <string name="organization_name">Nom d\'organisation (O)</string>
+    <string name="organization_name">Nom de l\'organisation (O)</string>
     <string name="crypto_key_size">Taille de la clé</string>
     <string name="import_from_sb">Importer depuis Swift Backup 3.0 – 3.2</string>
     <string name="java">Java</string>
