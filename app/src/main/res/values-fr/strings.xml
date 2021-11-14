@@ -1040,4 +1040,5 @@
     <string name="dialog_compiling_log">Compilation du journal …</string>
     <string name="enter_filename">Entrez le nom du fichier</string>
     <string name="filter_choice_tag">Etiquette</string>
+    <string name="no_saved_logs">Pas de journaux sauvegardés trouvés.</string>
 </resources>
