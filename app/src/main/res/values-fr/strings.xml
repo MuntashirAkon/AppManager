@@ -970,4 +970,5 @@
     <string name="set_custom_app_op">Définir une opération d\'application personnalisée</string>
     <string name="set_mode_for_app_ops_dots">Définir le mode pour les opérations d\'application…</string>
     <string name="permissive">Permissif</string>
+    <string name="enable_magisk_hide">Activer MagiskHide</string>
 </resources>
