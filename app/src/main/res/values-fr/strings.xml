@@ -993,7 +993,7 @@
     <string name="battery_optimization">Optimisation de batterie</string>
     <string name="has_net_policy">Politique réseau</string>
     <string name="net_policy">politique réseau</string>
-    <string name="ssaid_info">SSAID (&lt;tt&gt;Settings.Secure.ANDROID_ID&lt;/tt&gt;) est un identifiant d\'appareil attribué à chaque application (à partir d\'Android 8 \"Oreo\") &amp; largement utilisé par les applications pour suivre les utilisateurs.</string>
+    <string name="ssaid_info">SSAID (<tt>Settings.Secure.ANDROID_ID</tt>) est un identifiant d\'appareil attribué à chaque application (à partir d\'Android 8 \"Oreo\"). C\'est largement utilisé par les applications pour suivre les utilisateurs.</string>
     <string name="copied_to_clipboard">Copié dans le presse-papier.</string>
     <string name="restart_to_reflect_changes">Vous devez redémarrer l\'appareil immédiatement pour utiliser les nouveaux changements.</string>
 </resources>
