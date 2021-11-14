@@ -975,4 +975,9 @@
     <string name="pref_backup_restore_msg">Personnaliser la sauvegarder/restauration.</string>
     <string name="backup_volume">Volume de sauvegarde</string>
     <string name="pref_backup_volume_msg">Sélectionnez le volume ou le disque où déposer les sauvegardes.</string>
+    <string name="unencrypted">Non chiffré</string>
+    <string name="encrypted">Chiffré</string>
+    <string name="backup_custom_users">Utilisateurs personnalisés</string>
+    <string name="backup_custom_users_description">Exécuter les sauvegardes uniquement pour les utilisateurs mentionnés</string>
+    <string name="no_volumes_found">Impossible de trouver un volume avec des droits d\'écriture.</string>
 </resources>
