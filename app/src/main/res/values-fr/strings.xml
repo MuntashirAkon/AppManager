@@ -1041,4 +1041,6 @@
     <string name="enter_filename">Entrez le nom du fichier</string>
     <string name="filter_choice_tag">Étiquette</string>
     <string name="no_saved_logs">Pas de journaux sauvegardés trouvés.</string>
+    <string name="pref_cat_configuration">Réglages</string>
+    <string name="pref_display_limit_summary" tools:ignore="PluralsCandidate">Afficher uniquement les %1$d derniers journaux afin d\'éviter les dépassements de mémoire.</string>
 </resources>
