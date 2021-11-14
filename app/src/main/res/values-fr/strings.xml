@@ -983,4 +983,5 @@
     <string name="bootloader">Chargeur de démarrage</string>
     <string name="verify_and_redo_backups_msg">Vérifiez l\'intégrité des sauvegardes précédentes et refaites les sauvegardes pour lesquelles le contrôle d\'intégrité a échoué.</string>
     <string name="backup_apps_with_changes">Sauvegarder les applications avec les modifications</string>
+    <string name="backup_apps_with_changes_msg">Refaire les sauvegardes pour les applications avec des modifications depuis la dernière sauvegarde. Incluant les changements de taille, de version &amp; l\'heure du dernier lancement.</string>
 </resources>
