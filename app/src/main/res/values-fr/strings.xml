@@ -1065,7 +1065,7 @@
     <string name="wireless_debugging_not_supported">Le débogage sans fil n\'est pas supporté par cette plate-forme.</string>
     <string name="fallback_to_no_root_mode_description">Le gestionnaire d\'applications n\'a pas pu utiliser le mode de fonctionnement actuel. Afin d\'éviter un comportement aléatoire, vous devez temporairement passer en mode non-administrateur. Pensez à signaler si le problème n\'est pas résolu après le redémarrage de l\'appareil.</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">Impossible d\'installer l\'application car la signature ne correspond pas. Elle a été désinstallée mais ses données n\'ont pas été supprimées.</string>
-    <string name="help_app_ops_tab">Cliquez sur un élément pour l\'<b>autoriser</b> ou <b>l\'ignorer</b>. Cliquez longuement sur un élément pour voir les autres modes pris en charge.</string>
+    <string name="help_app_ops_tab">Cliquez sur un élément pour <b>l\'autoriser</b> ou pour <b>l\'ignorer</b>. Cliquez longuement sur un élément pour voir les autres modes supportés.</string>
     <string name="failed_to_prevent_background_run">Impossible d\'empêcher %1$s de s\'exécuter en arrière-plan</string>
     <string name="permission_flags">Indicateurs d\'autorisation</string>
     <string name="added_to_queue">Ajouté à la file d\'attente</string>
