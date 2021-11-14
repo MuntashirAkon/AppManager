@@ -952,7 +952,7 @@
     <string name="orientation_user_landscape">Paysage de l\'utilisateur</string>
     <string name="orientation_sensor_portrait">Capteur mode portrait</string>
     <string name="state_wake_kill">Suppression réveil</string>
-    <string name="systemless_app">Applications non système</string>
+    <string name="systemless_app">Appli sans système</string>
     <string name="source_stamp_verified">Timbre source vérifié</string>
     <string name="no_app_ops_permission">Aucune autorisation d\'affichage des opérations d\'application</string>
 </resources>
