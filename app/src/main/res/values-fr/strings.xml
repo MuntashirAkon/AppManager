@@ -956,5 +956,5 @@
     <string name="source_stamp_verified">Timbre source vérifié</string>
     <string name="no_app_ops_permission">Aucune autorisation pour l\'affichage des opérations d\'application</string>
     <string name="app_signing_signature_schemes">Schémas de signature</string>
-    <string name="pref_backup_android_keystore">Sauvegarde des applications avec Android KeyStore</string>
+    <string name="pref_backup_android_keystore">Sauvegarder les applications avec le KeyStore d\'Android</string>
 </resources>
