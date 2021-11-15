@@ -70,11 +70,11 @@
     <string name="off">Désactivé</string>
     <string name="on">Activé</string>
     <string name="profile_state_msg">État activé/désactivé personnalisé pour ce profil</string>
-    <string name="profile_block_trackers_msg">Si activé, les traqueurs des applications seront bloqués</string>
-    <string name="profile_clear_data_msg">Si activé, les données des applications seront effacées</string>
-    <string name="profile_clear_cache_msg">Si activé, le cache des applications sera effacé</string>
-    <string name="profile_force_stop_msg">Si activé, les applications seront arrêtées de force</string>
-    <string name="profile_disable_msg">Si activé, les applications seront activées/désactivées en fonctione de la valeur de leur état</string>
+    <string name="profile_block_trackers_msg">Bloque les traqueurs dans les applications</string>
+    <string name="profile_clear_data_msg">Efface les données des applications</string>
+    <string name="profile_clear_cache_msg">Efface le cache des applications</string>
+    <string name="profile_force_stop_msg">Arrêt forcé des application</string>
+    <string name="profile_disable_msg">Active/désactive en fonction de la valeur de leur état</string>
     <string name="profile_state">État du profil</string>
     <string name="adb_over_tcp">ADB via TCP</string>
     <string name="pref_mode_of_operations">Type d\'opération</string>
@@ -82,7 +82,7 @@
     <string name="rsa">RSA</string>
     <string name="aes">AES</string>
     <string name="none">Aucun</string>
-    <string name="pref_encryption_msg">Ajouter un chiffrement pour les sauvegardes.</string>
+    <string name="pref_encryption_msg">Chiffrement des sauvegardes.</string>
     <string name="encryption">Chiffrement</string>
     <string name="select_user">Sélectionner l\'utilisateur</string>
     <string name="pref_show_users_in_installer_msg">Afficher une liste des utilisateurs à sélectionner avant d\'installer une application externe. Nécessite le mode root ou ADB.</string>
@@ -98,7 +98,7 @@
     <string name="select_apk">Sélectionner le fichier APK</string>
     <string name="send_crash_report">Envoyer le rapport de plantage</string>
     <string name="tap_to_submit_crash_report">Appuyez pour envoyer le rapport de plantage.</string>
-    <string name="am_crashed">AM a planté</string>
+    <string name="am_crashed">App Manager vient de planté</string>
     <string name="filter_running_apps">Applications en cours d\'exécution</string>
     <string name="copy">Copier</string>
     <string name="view_missing_signatures">Appuyez pour visualiser ou envoyer des signatures pas encore présantes dans la base de données ou les bibliothèques de App Manager.</string>
@@ -133,12 +133,12 @@
     <string name="type">Type</string>
     <string name="expiry_date">Date d\'expiration</string>
     <string name="subject">Sujet</string>
-    <string name="filter_apps_with_backups">Applications avec sauvegarde</string>
-    <string name="sort_by_backup">Sauvegardes en premier</string>
+    <string name="filter_apps_with_backups">Avec sauvegardes</string>
+    <string name="sort_by_backup">Sauvegardé en premier</string>
     <string name="failed_to_uninstall_updates">Impossible d\'installer les mises à jour pour <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="update_uninstalled_successfully">Les mises à jour de <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> ont été installées.</string>
     <string name="uninstall_updates">Désinstaller les mises à jour</string>
-    <string name="allow_open_pgp_operation">Cliquez pour autoriser AM à utiliser OpenPGP</string>
+    <string name="allow_open_pgp_operation">Tapez pour autoriser App Manager à utiliser OpenPGP</string>
     <string name="confirm_installation">Confirmer l\'installation</string>
     <string name="pref_backup_flags_msg">Ajouter un préréglage pour les options de sauvegarde évite de devoir sélectionner les drapeaux souhaités à chaque sauvegarde/restauration.</string>
     <string name="pref_compression_method">Méthode de compression</string>
@@ -222,7 +222,7 @@
     <string name="installer_error_session_write">Impossible d\'écrire dans la session d\'installation</string>
     <string name="installer_error_session_create">Impossible de créer un session d\'installation</string>
     <string name="installer_error_security">Impossible d\'accéder aux fichiers APK</string>
-    <string name="install_in_progress">Installation en cours</string>
+    <string name="install_in_progress">Installation…</string>
     <string name="package_installer">Installateur de paquets</string>
     <string name="unblock_trackers">Débloquer les traqueurs</string>
     <string name="reinstall">Réinstaller</string>
@@ -231,7 +231,7 @@
     <string name="full_stop_tap_to_see_details">. Appuyez pour voir les détails.</string>
     <string name="operation_running">Opération en cours d\'exécution…</string>
     <string name="failed_to_fetch_package_info">Impossible de récupérer les informations du paquet</string>
-    <string name="installer_error_lidl_rom">Votre ROM n\'est pas compatible avec l\'installateur sans root.</string>
+    <string name="installer_error_lidl_rom">Votre ROM n\'est pas compatible avec Rootless Installer.</string>
     <string name="installer_error_generic">Échec de l\'installation</string>
     <string name="installer_error_storage">Pas assez d\'espace de stockage pour installer l\'application</string>
     <string name="installer_error_bad_apks">Fichiers APK sélectionnés invalides</string>
@@ -239,7 +239,7 @@
     <string name="installer_error_conflict">Impossible d\'installer l\'application car le nom du paquet est en cours d\'utilisation</string>
     <string name="installer_error_blocked">Installation bloquée par <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
     <string name="installer_error_blocked_device">appareil</string>
-    <string name="installer_error_aborted">Échec de l\'installation, soit elle a été annulée, soit la sessions s\'est fermée de manière innattendue</string>
+    <string name="installer_error_aborted">L\'installation a échoué, soit elle a été annulée, ou alors la session a été fermée de manière inattendue</string>
     <string name="filter_apps_with_activities">Avec des activités</string>
     <string name="are_you_sure">Êtes-vous sûr \?</string>
     <string name="pref_remove_all_rules">Supprimer toutes les règles</string>
@@ -554,7 +554,7 @@
     <string name="toggle_class_listing">Activer/Désactiver l\'affichage en liste des classes</string>
     <string name="class_viewer">Visualiseur de classe</string>
     <string name="word_wrap">Activer/Désactiver la coupure de mots</string>
-    <string name="credits_message">Aux auteurs du
+    <string name="credits_message">À ces auteurs
 \n- Projet Open Source Android
 \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Infos Apps_packages</a>
@@ -562,6 +562,7 @@
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
 \n- <a href="https://github.com/billthefarmer/editor">Editeur</a>
 \n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
 \n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
 \n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
 \n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
@@ -646,21 +647,21 @@
     <string name="restore_latest_msg">Restaurer les applications déjà installées dont les codes de version sont supérieurs au code de version installée.</string>
     <string name="extras">Extras</string>
     <string name="category">Catégories</string>
-    <string name="board_name">Carte mère</string>
+    <string name="board_name">Tableau</string>
     <string name="model">Modèle</string>
     <string name="brand_name">Marque</string>
-    <string name="vendor">Fournisseur</string>
+    <string name="vendor">Vendeur</string>
     <string name="support_architectures">Architectures supportées</string>
     <string name="security_providers">Fournisseur de sécurité</string>
     <string name="kernel">Kernel</string>
     <string name="manufacturer">Fabriquant</string>
-    <string name="graphics">Carte graphique</string>
+    <string name="graphics">Visuels</string>
     <string name="cpu">CPU</string>
     <string name="users">Utilisateurs</string>
     <string name="languages">Langages</string>
     <string name="battery_capacity">Capacité</string>
     <string name="memory">Mémoire</string>
-    <string name="gles_version">Version GL ES</string>
+    <string name="gles_version">Version OpenGL ES</string>
     <string name="no_of_cores">Coeurs</string>
     <string name="security">Sûreté</string>
     <string name="battery">Batterie</string>
@@ -727,7 +728,7 @@
     <string name="input_keystore_alias_pass_description">Insérer le mot de passe pour l\'alias <b>%1$s</b>. Vous pouvez laisser ce champ vide si le mot de passe est le même que celui du KeyStore.</string>
     <string name="input_keystore_alias_pass">Mot de passe pour l\'alias <b>%1$s</b></string>
     <string name="input_keystore_pass_msg">Tapez ici pour entrer le mot de passe KeyStore</string>
-    <string name="input_keystore_pass_description">Entrer le mot de passe du Keystore du gestionnaire d\'applications. Si vous voyez ceci pour la première fois, veuillez utiliser un générateur de mot de passe pour générer un mot de passe et le sauvegarder dans un endroit sûr avant de l\'insérer ici.</string>
+    <string name="input_keystore_pass_description">Entrer le mot de passe du Keystore de App Manager. Si vous voyez ceci pour la première fois, veuillez utiliser un générateur de mot de passe pour en générer un, et le garder en lieu sûr avant de l\'insérer ici.</string>
     <string name="input_keystore_pass">Entrer le mot de passe du KeyStore</string>
     <string name="not_verified">Non vérifié</string>
     <string name="verified">Vérifié</string>
@@ -823,8 +824,8 @@
     <string name="input_key_password">Mot de passe Clé</string>
     <string name="invalid_aes_key_size">Format de clé invalide pour un chiffrement AES. La taille de la clé doit être de 128 ou 256 bits.</string>
     <string name="orientation_full_user">Utilisateur complet</string>
-    <string name="next">Suivant(e)</string>
-    <string name="installer_app_installed">Application instalée</string>
+    <string name="next">Suivant</string>
+    <string name="installer_app_installed">Application installée</string>
     <string name="paste">Coller</string>
     <string name="paired_successfully">apparier</string>
     <string name="adb_wifi_paring_code">Code d\'association Wi-Fi</string>
@@ -937,7 +938,7 @@
     <string name="log_viewer">Visualiseur de journaux</string>
     <string name="import_from_tb">Importer depuis Titanium Backup</string>
     <string name="import_from_oab">Importer depuis OAndBackup</string>
-    <string name="pref_import_backups_msg">Importer les sauvegardes depuis OAndBackup ou Titanium Backup.</string>
+    <string name="pref_import_backups_msg">Importer les sauvegardes depuis OAndBackup, Swift Backup (3.0–3.2) ou Titanium Backup.</string>
     <string name="pref_import_backups">Importer les sauvegardes</string>
     <string name="orientation_user_portrait">Portrait utilisateur</string>
     <string name="failed_to_uninstall_app">La désinstallation a échoué</string>
@@ -1091,5 +1092,7 @@
         <item quantity="other">Exécuter au plus %1$d opérations en parallèle</item>
     </plurals>
     <string name="pid">Identifiant du processus</string>
-    <string name="running_services_logcat_hint">Cliquez sur un élément pour ouvrir la visionneuse de journaux avec l\'IDentificateur de processus correspondant comme filtre par défaut.</string>
+    <string name="running_services_logcat_hint">Cliquez sur un élément pour ouvrir la visionneuse de journaux avec par défaut le filtrage activé à partir de cet identifiant de processus.</string>
+    <string name="pref_import_backups_hint">Choisissez un dossier contenant les fichiers (pour Swift Backup ou Titanium Backup) ou les dossiers (pour OAndBackup) de sauvegarde</string>
+    <string name="system_partition">Administrateur d\'Android</string>
 </resources>
