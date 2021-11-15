@@ -741,7 +741,7 @@
     <string name="apk_signing">Signature de l\'APK</string>
     <string name="pref_sign_apk_msg">Signer les fichiers APK avant de les installer.</string>
     <string name="pref_sign_apk">Signer l\'APK</string>
-    <string name="allow_routine_ops_msg">Permettre l\'utilisation du profil dans les opérations de routine</string>
+    <string name="allow_routine_ops_msg">Autoriser le profil à être utilisé dans les opérations de routine</string>
     <string name="send_selected">Envoyer la sélection</string>
     <string name="issued_date">Date d\'émission</string>
     <string name="issuer">Émetteur</string>
