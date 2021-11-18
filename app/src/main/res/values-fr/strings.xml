@@ -652,7 +652,7 @@
     <string name="brand_name">Marque</string>
     <string name="vendor">Vendeur</string>
     <string name="support_architectures">Architectures supportées</string>
-    <string name="security_providers">Fournisseur de sécurité</string>
+    <string name="security_providers">Prestataires de sécurité</string>
     <string name="kernel">Kernel</string>
     <string name="manufacturer">Fabriquant</string>
     <string name="graphics">Visuels</string>
@@ -718,7 +718,7 @@
     <string name="backup_obb_media_description">Sauvegarder les dossiers OBB et média.</string>
     <string name="backup_external_data_description">Sauvegarder les dossiers de données externes.</string>
     <string name="backup_internal_data_description">Sauvegarder les dossiers de données internes.</string>
-    <string name="backup_apk_files_description">Sauvegarde des fichiers APK depuis le répertoire source, y compris les fragments.</string>
+    <string name="backup_apk_files_description">Sauvegarder les fichiers APK depuis le répertoire source, y compris les fragments.</string>
     <string name="pref_about_device_msg">Informations de base sur l\'appareil, notamment le système Android, le processeur, le processeur graphique, la mémoire vive, la batterie, etc.</string>
     <string name="magisk_hide_enabled">MagiskHide</string>
     <string name="pref_backup_android_keystore_msg">Toutes les applications ne fonctionnent pas après avoir été restaurées. La restauration du KeyStore ne fonctionne pas sur la plupart des appareils.</string>
@@ -1095,4 +1095,5 @@
     <string name="running_services_logcat_hint">Cliquez sur un élément pour ouvrir la visionneuse de journaux avec par défaut le filtrage activé à partir de cet identifiant de processus.</string>
     <string name="pref_import_backups_hint">Choisissez un dossier contenant les fichiers (pour Swift Backup ou Titanium Backup) ou les dossiers (pour OAndBackup) de sauvegarde</string>
     <string name="system_partition">Administrateur d\'Android</string>
+    <string name="send_edited_intent">Envoyer l\'intention modifiée</string>
 </resources>
