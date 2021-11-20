@@ -10,7 +10,7 @@ echo Warning:This checker doesnt check version.
 
 which pandoc && echo Pass || echo -n "Pandoc not found!"
 
-which pandoc-crossref && echo Pass || { ls ./pandoc-crossref && echo Pass || echo -n "pandoc-crossref not found!"; }
+{ which pandoc-crossref  ||  ls ./pandoc-crossref; } && echo Pass || echo -n "pandoc-crossref not found!"
 
 which python && echo Pass || echo -n "Python not found!"
 
@@ -69,7 +69,7 @@ do
 
         stringkey_title=$(echo ${line_title} | grep -oP "(?<=\%\%##).*(?=>>)")
         string_title=$(echo ${line_title} | grep -oP "((?<=section{)|(?<=subsection{)|(?<=subsubsection{)|(?<=chapter{)|(?<=caption{)|(?<=paragraph{)).*?(?=})")
-        echo "<string name=\"${stringkey_title}\">${string_title}</string>" >>${OUTPUT}
+        echo "<string name=\"${stringkey_title}\"><![CDATA[${string_title}]]></string>" >>${OUTPUT}
         echo -e "--\n$stringkey_title\n$string_title\n--\n"
 
     done < <(grep -P "(?<=\%\%##).*(?=>>)" ${file})
@@ -78,7 +78,7 @@ do
     do
 
         string_content=$(sed '1,/%%!!'${stringkey_content}'<</d;/%%!!>>/,$d' ${file})
-        echo "<string name=\"${stringkey_content}\">${string_content}</string>" >>${OUTPUT}
+        echo "<string name=\"${stringkey_content}\"><![CDATA[${string_content}]]></string>" >>${OUTPUT}
         echo -e "--\n$stringkey_content\n$string_content\n--\n"
 
     done < <(grep -oP "(?<=\%\%!!).*(?=<<)" ${file})
@@ -99,7 +99,7 @@ find . | grep -e '\.tex$' -e '\.png$' -e '.png$' -e '.css$' -e main.cfg -e docto
 while read key_content
 do
 
-    string_content=$(echo 'cat resources/string[@name="'${key_content}'"]/text()' | xmllint --shell ${INPUT} | sed -e '$d' -e '1d'|sed 's/\\/\\\\/g')
+    string_content=$(echo 'cat resources/string[@name="'${key_content}'"]/text()' | xmllint --nocdata --shell "${INPUT}" | sed -e '$d' -e '1d'|sed 's/\\/\\\\/g')
     file=$(grep -rl --include="*.tex" "\%\%!!${key_content}<<" ${OUTPUTDIR})
     source=$(cat ${file})
 
@@ -111,7 +111,7 @@ done < <(echo "$keys" | grep -Pv ".*(?===title)")
 while read key_title
 do
 
-    string_title=$(echo 'cat resources/string[@name="'${key_title}'"]/text()' | xmllint --shell ${INPUT} | sed -e '$d' -e '1d'|sed 's/\\/\\\\/g')
+    string_title=$(echo 'cat resources/string[@name="'${key_title}'"]/text()' | xmllint --nocdata --shell "${INPUT}" | sed -e '$d' -e '1d'|sed 's/\\/\\\\/g')
     file=$(grep -rl --include="*.tex" "\%\%##${key_title}>>" ${OUTPUTDIR})
 
     perl -pi -e "s/(section\{|subsection\{|subsubsection\{|chapter\{|caption\{|paragraph\{).*?(\}.*\%\%\#\#${key_title}>>)/\1${string_title}\2/" ${file}
