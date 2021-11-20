@@ -1,21 +1,21 @@
 ## Usage
 
-`./doctool.sh COMMAND ARGS`
+`./doctool.sh COMMAND [ARGS]`
 
 buildhtml
 Build HTML from TeX
 
-updatetranslation
+updatetranslation [OUTPUT.xml]
 Extract strings and create xliff translation file
 
-mergetranslation
+mergetranslation  [INPUT.xml] [OUTPUT DIR]
 Merge translation from xliff to TeX
-
-help
-Show this help and exit
 
 checkdeps
 Run dependency checker
+
+checkabuse
+(BETA!)checking abuse to detect spamming or mistranslations
 
 
 
@@ -91,6 +91,19 @@ If not,run "apt install xmllint"
 
 Run "apt install perl"
 
+・urlextract
+
+https://github.com/lipoja/URLExtract/
+It is used for abuse checker(currently beta!).
+Just run "pip install urlextract"
+
+・find
+
+・rsync
+
+Tested on latest KDE Neon(based on Ubuntu focal).Install instruction for dependencies is only debian based distro.Because I don't use others.
+Probably it also works on WSL,Mac,BSDs(I didn't tested!)
+
 
 
 ## Instruction
@@ -154,3 +167,4 @@ ROM. Here are some examples:
 ```
 
 This will allow extracting enclosed strings within `%%!!string_key<<` and `%%!!>>`
+You can use any identificator for content stringkey,but you should follow the form to unify style.
