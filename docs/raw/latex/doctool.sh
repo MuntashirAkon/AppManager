@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
  { [[ $(uname) = Darwin ]] || [[ $(uname) =~ .*BSD.* ]]; } && { alias sed="gsed" ; alias grep="ggrep" ; alias awk="gawk"; }
-cd $0
+#cd $0
 
 function func_checkdeps {
 
@@ -70,16 +70,16 @@ do
         stringkey_title=$(echo ${line_title} | grep -oP "(?<=\%\%##).*(?=>>)")
         string_title=$(echo ${line_title} | grep -oP "((?<=section{)|(?<=subsection{)|(?<=subsubsection{)|(?<=chapter{)|(?<=caption{)|(?<=paragraph{)).*?(?=})")
         echo "<string name=\"${stringkey_title}\"><![CDATA[${string_title}]]></string>" >>${OUTPUT}
-        echo -e "--\n$stringkey_title\n$string_title\n--\n"
+        #echo -e "--\n$stringkey_title\n$string_title\n--\n"
 
-    done < <(grep -P "(?<=\%\%##).*(?=>>)" ${file})
+    done < <(grep -P "(?<=\%\%##).*(?=>>)" ${file} | sed -e 's/\\/\\\\/g')
 
     while read stringkey_content
     do
 
         string_content=$(sed '1,/%%!!'${stringkey_content}'<</d;/%%!!>>/,$d' ${file})
         echo "<string name=\"${stringkey_content}\"><![CDATA[${string_content}]]></string>" >>${OUTPUT}
-        echo -e "--\n$stringkey_content\n$string_content\n--\n"
+        #echo -e "--\n$stringkey_content\n$string_content\n--\n"
 
     done < <(grep -oP "(?<=\%\%!!).*(?=<<)" ${file})
 
