@@ -99,7 +99,7 @@ find . | grep -e '\.tex$' -e '\.png$' -e '.png$' -e '.css$' -e main.cfg -e docto
 while read key_content
 do
 
-    string_content=$(echo 'cat resources/string[@name="'${key_content}'"]/text()' | xmllint --nocdata --shell "${INPUT}" | sed -e '$d' -e '1d'|sed 's/\\/\\\\/g')
+    string_content=$(echo 'cat resources/string[@name="'${key_content}'"]/text()' | xmllint --shell "${INPUT}" | sed -e '$d' -e '1d' | sed -e 's/\\/\\\\/g' -e '1s/^<!\[CDATA\[//g' -e '$s/]]>$//g')
     file=$(grep -rl --include="*.tex" "\%\%!!${key_content}<<" ${OUTPUTDIR})
     source=$(cat ${file})
 
@@ -111,7 +111,7 @@ done < <(echo "$keys" | grep -Pv ".*(?===title)")
 while read key_title
 do
 
-    string_title=$(echo 'cat resources/string[@name="'${key_title}'"]/text()' | xmllint --nocdata --shell "${INPUT}" | sed -e '$d' -e '1d' | sed -e 's/\\/\\\\/g' -e 's/\//\\\//g')
+    string_title=$(echo 'cat resources/string[@name="'${key_title}'"]/text()' | xmllint  --shell "${INPUT}" | sed -e '$d' -e '1d' | sed -e 's/\\/\\\\/g' -e 's/\//\\\//g' -e '1s/^<!\[CDATA\[//g' -e '$s/]]>$//g' )
     file=$(grep -rl --include="*.tex" "\%\%##${key_title}>>" ${OUTPUTDIR})
 
     perl -pi -e "s/(section\{|subsection\{|subsubsection\{|chapter\{|caption\{|paragraph\{).*?(\}.*\%\%\#\#${key_title}>>)/\1${string_title}\2/" ${file}
