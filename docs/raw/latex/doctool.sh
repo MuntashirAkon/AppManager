@@ -111,10 +111,10 @@ done < <(echo "$keys" | grep -Pv ".*(?===title)")
 while read key_title
 do
 
-    string_title=$(echo 'cat resources/string[@name="'${key_title}'"]/text()' | xmllint  --shell "${INPUT}" | sed -e '$d' -e '1d' | sed -e 's/\\/\\\\/g' -e 's/\//\\\//g' -e '1s/^<!\[CDATA\[//g' -e '$s/]]>$//g' )
+    string_title=$(echo 'cat resources/string[@name="'${key_title}'"]/text()' | xmllint  --shell "${INPUT}" | sed -e '$d' -e '1d' | sed -e 's/\\/\\\\/g' -e 's/\//\\\//g' -e '1s/^<!\[CDATA\[//g' -e '$s/]]>$//g')
     file=$(grep -rl --include="*.tex" "\%\%##${key_title}>>" ${OUTPUTDIR})
 
-    perl -pi -e "s/(section\{|subsection\{|subsubsection\{|chapter\{|caption\{|paragraph\{).*?(\}.*\%\%\#\#${key_title}>>)/\1${string_title}\2/" ${file}
+    perl -i -e "s/(section\{|subsection\{|subsubsection\{|chapter\{|caption\{|paragraph\{).*?(\}.*\%\%\#\#${key_title}>>)/\1${string_title}\2/" ${file}
 
 done < <(echo "$keys" | grep -P ".*(?===title)")
 
