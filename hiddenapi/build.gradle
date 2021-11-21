@@ -8,6 +8,8 @@ java {
 }
 
 dependencies {
-    implementation fileTree(dir: "libs", include: ["*.jar"])
+    annotationProcessor "dev.rikka.tools.refine:annotation-processor:${refine_version}"
+    compileOnly "dev.rikka.tools.refine:annotation:${refine_version}"
+
     implementation "androidx.annotation:annotation:${annotation_version}"
 }

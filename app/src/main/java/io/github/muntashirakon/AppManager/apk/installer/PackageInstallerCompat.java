@@ -17,6 +17,7 @@ import android.content.pm.IPackageInstaller;
 import android.content.pm.IPackageInstallerSession;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageInstaller;
+import android.content.pm.PackageInstallerHidden;
 import android.content.pm.PackageManager;
 import android.content.pm.VersionedPackage;
 import android.os.Build;
@@ -36,12 +37,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+import dev.rikka.tools.refine.Refine;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
@@ -632,6 +633,7 @@ public final class PackageInstallerCompat {
         return finalStatus == PackageInstaller.STATUS_SUCCESS;
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private boolean openSession() {
         try {
             packageInstaller = PackageManagerCompat.getPackageInstaller(AppManager.getIPackageManager());
@@ -644,25 +646,27 @@ public final class PackageInstallerCompat {
         cleanOldSessions();
         // Create install session
         PackageInstaller.SessionParams sessionParams = new PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL);
-        try {
-            int flags = PackageInstallerUtils.getInstallFlags(sessionParams);
-            flags |= (INSTALL_ALLOW_TEST | INSTALL_REPLACE_EXISTING | INSTALL_ALLOW_DOWNGRADE);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                flags |= INSTALL_ALLOW_DOWNGRADE_API29;
-            }
-            if (allUsers) {
-                flags |= INSTALL_ALL_USERS;
-            }
-            PackageInstallerUtils.setInstallFlags(sessionParams, flags);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
+        // Set flags
+        int flags = Refine.<PackageInstallerHidden.SessionParams>unsafeCast(sessionParams).installFlags
+                | INSTALL_ALLOW_TEST | INSTALL_REPLACE_EXISTING | INSTALL_ALLOW_DOWNGRADE;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            flags |= INSTALL_ALLOW_DOWNGRADE_API29;
         }
+        if (allUsers) flags |= INSTALL_ALL_USERS;
+        Refine.<PackageInstallerHidden.SessionParams>unsafeCast(sessionParams).installFlags = flags;
+        // Set installation location
         sessionParams.setInstallLocation((Integer) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_INSTALL_LOCATION_INT));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             sessionParams.setInstallReason(PackageManager.INSTALL_REASON_USER);
         }
         try {
-            sessionId = packageInstaller.createSession(sessionParams, installerPackageName, userHandle);
+            if (Build.VERSION.SDK_INT >= 31) {
+                sessionId = packageInstaller.createSession(sessionParams, installerPackageName,
+                        context.getAttributionTag(), userHandle);
+            } else {
+                //noinspection deprecation
+                sessionId = packageInstaller.createSession(sessionParams, installerPackageName, userHandle);
+            }
             Log.d(TAG, "OpenSession: session id " + sessionId);
         } catch (RemoteException e) {
             callFinish(STATUS_FAILURE_SESSION_CREATE);
@@ -670,9 +674,10 @@ public final class PackageInstallerCompat {
             return false;
         }
         try {
-            session = PackageInstallerUtils.createSession(IPackageInstallerSession.Stub.asInterface(new ProxyBinder(packageInstaller.openSession(sessionId).asBinder())));
+            session = Refine.unsafeCast(new PackageInstallerHidden.Session(IPackageInstallerSession.Stub.asInterface(
+                    new ProxyBinder(packageInstaller.openSession(sessionId).asBinder()))));
             Log.d(TAG, "OpenSession: session opened.");
-        } catch (RemoteException | InstantiationException | InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
+        } catch (RemoteException e) {
             callFinish(STATUS_FAILURE_SESSION_CREATE);
             Log.e(TAG, "OpenSession: Failed to open install session.", e);
             return false;
