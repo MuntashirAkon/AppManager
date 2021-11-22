@@ -68,7 +68,20 @@ do
     do
 
         stringkey_title=$(echo ${line_title} | grep -oP "(?<=\%\%##).*(?=>>)")
-        string_title=$(echo ${line_title} | grep -oP "((?<=section{)|(?<=subsection{)|(?<=subsubsection{)|(?<=chapter{)|(?<=caption{)|(?<=paragraph{)).*?(?=})")
+        nests=0
+        while true
+        do
+        string_title=$(echo ${line_title} | grep -oP '((?<=section{)|(?<=subsection{)|(?<=subsubsection{)|(?<=chapter{)|(?<=caption{)|(?<=paragraph{))([^}]*}){'$nests'}[^}]*(?=})')
+
+        open=$(echo "$string_title" | grep -o "{" | wc -l)
+        close=$(echo "$string_title" | grep -o "}" | wc -l)
+        [[ $open = $close ]] && break
+        [[ $open -gt $close ]] && { nests=$((nests+1)) ; echo "DEBUG!"; }
+        done
+        #[[ $string_title =~ \{ ]] && {
+        #num=$(echo "$string_title" | grep -o "{" | wc -l)
+
+        #}
         echo "<string name=\"${stringkey_title}\"><![CDATA[${string_title}]]></string>" >>${OUTPUT}
         #echo -e "--\n$stringkey_title\n$string_title\n--\n"
 
