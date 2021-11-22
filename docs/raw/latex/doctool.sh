@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
  { [[ $(uname) = Darwin ]] || [[ $(uname) =~ .*BSD.* ]]; } && { alias sed="gsed" ; alias grep="ggrep" ; alias awk="gawk"; }
-#cd $0
 
 function func_checkdeps {
 
@@ -71,19 +70,14 @@ do
         nests=0
         while true
         do
-        string_title=$(echo ${line_title} | grep -oP '((?<=section{)|(?<=subsection{)|(?<=subsubsection{)|(?<=chapter{)|(?<=caption{)|(?<=paragraph{))([^}]*}){'$nests'}[^}]*(?=})')
-
-        open=$(echo "$string_title" | grep -o "{" | wc -l)
-        close=$(echo "$string_title" | grep -o "}" | wc -l)
-        [[ $open = $close ]] && break
-        [[ $open -gt $close ]] && { nests=$((nests+1)) ; echo "DEBUG!"; }
+            string_title=$(echo ${line_title} | grep -oP '((?<=section{)|(?<=subsection{)|(?<=subsubsection{)|(?<=chapter{)|(?<=caption{)|(?<=paragraph{))([^}]*}){'$nests'}[^}]*(?=})')
+            open=$(echo "$string_title" | grep -o "{" | wc -l)
+            close=$(echo "$string_title" | grep -o "}" | wc -l)
+            [[ $open = $close ]] && break
+            [[ $open -gt $close ]] && nests=$((nests+1))
         done
-        #[[ $string_title =~ \{ ]] && {
-        #num=$(echo "$string_title" | grep -o "{" | wc -l)
 
-        #}
         echo "<string name=\"${stringkey_title}\"><![CDATA[${string_title}]]></string>" >>${OUTPUT}
-        #echo -e "--\n$stringkey_title\n$string_title\n--\n"
 
     done < <(grep -P "(?<=\%\%##).*(?=>>)" ${file} | sed -e 's/\\/\\\\/g')
 
@@ -92,7 +86,6 @@ do
 
         string_content=$(sed '1,/%%!!'${stringkey_content}'<</d;/%%!!>>/,$d' ${file})
         echo "<string name=\"${stringkey_content}\"><![CDATA[${string_content}]]></string>" >>${OUTPUT}
-        #echo -e "--\n$stringkey_content\n$string_content\n--\n"
 
     done < <(grep -oP "(?<=\%\%!!).*(?=<<)" ${file})
 
@@ -127,7 +120,19 @@ do
     string_title=$(echo 'cat resources/string[@name="'${key_title}'"]/text()' | xmllint  --shell "${INPUT}" | sed -e '$d' -e '1d' | sed -e 's/\\/\\\\/g' -e 's/\//\\\//g' -e '1s/^<!\[CDATA\[//g' -e '$s/]]>$//g')
     file=$(grep -rl --include="*.tex" "\%\%##${key_title}>>" ${OUTPUTDIR})
 
-    perl -i -e "s/(section\{|subsection\{|subsubsection\{|chapter\{|caption\{|paragraph\{).*?(\}.*\%\%\#\#${key_title}>>)/\1${string_title}\2/" ${file}
+    nests=0
+    while true
+    do
+
+        chknests=$(grep -oP '((?<=section{)|(?<=subsection{)|(?<=subsubsection{)|(?<=chapter{)|(?<=caption{)|(?<=paragraph{))([^}]*}){'$nests'}[^}]*(?=}.*\%\%\#\#${key_title}>>)')
+        open=$(echo "$chknests" | grep -o "{" | wc -l)
+        close=$(echo "$chknests" | grep -o "}" | wc -l)
+        [[ $open = $close ]] && break
+        [[ $open -gt $close ]] && nests=$((nests+1))
+
+    done
+
+    perl -i -e "s/(section\{|subsection\{|subsubsection\{|chapter\{|caption\{|paragraph\{)$chknests(\}.*\%\%\#\#${key_title}>>)/\1${string_title}\2/" ${file}
 
 done < <(echo "$keys" | grep -P ".*(?===title)")
 
