@@ -43,6 +43,7 @@
     padding: 0 0 0 1em;
     color: unset !important;
     background: unset !important;
+    margin-bottom: 1em;
 }
 
 .amalert p:nth-child(1), .amalert p:nth-child(2) {
