@@ -21,7 +21,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -37,7 +36,9 @@ import java.io.FileNotFoundException;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -248,13 +249,45 @@ public class ScannerActivity extends BaseActivity {
         }
     }
 
+    @NonNull
+    private Map<String, SpannableStringBuilder> getNativeLibraryInfo(boolean trackerOnly) {
+        Collection<String> nativeLibsInApk = model.getNativeLibsAll();
+        if (nativeLibsInApk.size() == 0) return new HashMap<>();
+        String[] libNames = getResources().getStringArray(R.array.lib_native_names);
+        String[] libSignatures = getResources().getStringArray(R.array.lib_native_signatures);
+        int[] isTracker = getResources().getIntArray(R.array.lib_native_is_tracker);
+        // The following array is directly mapped to the arrays above
+        @SuppressWarnings("unchecked")
+        List<String>[] matchedLibs = new List[libSignatures.length];
+        Map<String, SpannableStringBuilder> foundNativeLibInfoMap = new ArrayMap<>();
+        for (int i = 0; i < libSignatures.length; ++i) {
+            if (trackerOnly && isTracker[i] == 0) continue;
+            for (String lib : nativeLibsInApk) {
+                if (lib.matches(libSignatures[i])) {
+                    if (matchedLibs[i] == null) {
+                        matchedLibs[i] = new ArrayList<>();
+                    }
+                    matchedLibs[i].add(lib);
+                }
+            }
+            if (matchedLibs[i] == null) continue;
+            SpannableStringBuilder builder = foundNativeLibInfoMap.get(libNames[i]);
+            if (builder == null) {
+                builder = new SpannableStringBuilder(getPrimaryText(this, libNames[i]));
+                foundNativeLibInfoMap.put(libNames[i], builder);
+            }
+            for (String lib : matchedLibs[i]) {
+                builder.append("\n").append(getMonospacedText(lib));
+            }
+        }
+        return foundNativeLibInfoMap;
+    }
+
     private void setTrackerInfo() {
         String[] trackerNames = StaticDataset.getTrackerNames();
         String[] trackerSignatures = StaticDataset.getTrackerCodeSignatures();
         int[] signatureCount = new int[trackerSignatures.length];
-        boolean[] signaturesFound = new boolean[trackerSignatures.length];
         int totalIteration = 0;
-        int totalTrackersFound = 0;
         long t_start, t_end;
         t_start = System.currentTimeMillis();
         // Iterate over all classes
@@ -267,7 +300,6 @@ public class ScannerActivity extends BaseActivity {
                     if (className.contains(trackerSignatures[i])) {
                         trackerClassList.add(className);
                         signatureCount[i]++;
-                        signaturesFound[i] = true;
                         break;
                     }
                 }
@@ -276,28 +308,29 @@ public class ScannerActivity extends BaseActivity {
         t_end = System.currentTimeMillis();
         long totalTimeTaken = t_end - t_start;
         Map<String, SpannableStringBuilder> foundTrackerInfoMap = new ArrayMap<>();
+        foundTrackerInfoMap.putAll(getNativeLibraryInfo(true));
         final boolean[] hasSecondDegree = new boolean[]{false};
         // Iterate over signatures again but this time list only the found ones.
         for (int i = 0; i < trackerSignatures.length; i++) {
-            if (signaturesFound[i]) {
-                if (foundTrackerInfoMap.get(trackerNames[i]) == null) {
-                    ++totalTrackersFound;
-                    foundTrackerInfoMap.put(trackerNames[i], new SpannableStringBuilder()
-                            .append(getPrimaryText(this, trackerNames[i])));
-                }
-                //noinspection ConstantConditions Never null here
-                foundTrackerInfoMap.get(trackerNames[i]).append("\n")
-                        .append(getMonospacedText(trackerSignatures[i]))
-                        .append(getSmallerText(" (" + signatureCount[i] + ")"));
-                if (!hasSecondDegree[0]) {
-                    hasSecondDegree[0] = trackerNames[i].startsWith("²");
-                }
+            if (signatureCount[i] == 0) continue;
+            if (foundTrackerInfoMap.get(trackerNames[i]) == null) {
+                foundTrackerInfoMap.put(trackerNames[i], new SpannableStringBuilder()
+                        .append(getPrimaryText(this, trackerNames[i])));
+            }
+            //noinspection ConstantConditions Never null here
+            foundTrackerInfoMap.get(trackerNames[i])
+                    .append("\n")
+                    .append(getMonospacedText(trackerSignatures[i]))
+                    .append(getSmallerText(" (" + signatureCount[i] + ")"));
+            if (!hasSecondDegree[0]) {
+                hasSecondDegree[0] = trackerNames[i].startsWith("²");
             }
         }
         Set<String> foundTrackerNames = foundTrackerInfoMap.keySet();
         List<Spannable> foundTrackerInfo = new ArrayList<>(foundTrackerInfoMap.values());
         Collections.sort(foundTrackerInfo, (o1, o2) -> o1.toString().compareToIgnoreCase(o2.toString()));
         SpannableStringBuilder foundTrackerList = new SpannableStringBuilder();
+        int totalTrackersFound = foundTrackerInfoMap.size();
         if (totalTrackersFound > 0) {
             foundTrackerList.append(getString(R.string.found_trackers)).append(" ").append(
                     TextUtils.joinSpannable(", ", foundTrackerNames));
@@ -327,11 +360,10 @@ public class ScannerActivity extends BaseActivity {
             coloredSummary = UIUtils.getColoredText(summary, ContextCompat.getColor(this, R.color.electric_red));
         }
 
-        int finalTotalTrackersFound = totalTrackersFound;
         runOnUiThread(() -> {
             ((TextView) findViewById(R.id.tracker_title)).setText(coloredSummary);
             ((TextView) findViewById(R.id.tracker_description)).setText(builder);
-            if (finalTotalTrackersFound == 0) return;
+            if (totalTrackersFound == 0) return;
             findViewById(R.id.tracker).setOnClickListener(v -> {
                 DialogTitleBuilder titleBuilder = new DialogTitleBuilder(this)
                         .setTitle(R.string.tracker_details)
@@ -371,11 +403,8 @@ public class ScannerActivity extends BaseActivity {
         String[] libNames = getResources().getStringArray(R.array.lib_names);
         String[] libSignatures = getResources().getStringArray(R.array.lib_signatures);
         String[] libTypes = getResources().getStringArray(R.array.lib_types);
-        // The following two arrays are directly mapped to the arrays above
+        // The following array is directly mapped to the arrays above
         int[] signatureCount = new int[libSignatures.length];
-        boolean[] signaturesFound = new boolean[libSignatures.length];
-        @IntRange(from = 0)
-        int totalLibsFound = 0;
         // Iterate over all classes
         for (String className : model.getClassListAll()) {
             if (className.length() > 8 && className.contains(".")) {
@@ -389,8 +418,6 @@ public class ScannerActivity extends BaseActivity {
                         libClassList.add(className);
                         // Increment this signature match count
                         signatureCount[i]++;
-                        // Set this signature as matched
-                        signaturesFound[i] = true;
                         break;
                     }
                 }
@@ -403,24 +430,25 @@ public class ScannerActivity extends BaseActivity {
             }
         }
         Map<String, SpannableStringBuilder> foundLibInfoMap = new ArrayMap<>();
+        foundLibInfoMap.putAll(getNativeLibraryInfo(false));
         // Iterate over signatures again but this time list only the found ones.
         for (int i = 0; i < libSignatures.length; i++) {
-            if (signaturesFound[i]) {
-                if (foundLibInfoMap.get(libNames[i]) == null) {
-                    // Add the lib info since it isn't added already
-                    ++totalLibsFound;
-                    foundLibInfoMap.put(libNames[i], new SpannableStringBuilder()
-                            .append(getPrimaryText(this, libNames[i]))
-                            .append(getSmallerText(" (" + libTypes[i] + ")")));
-                }
-                //noinspection ConstantConditions Never null here
-                foundLibInfoMap.get(libNames[i]).append("\n")
-                        .append(getMonospacedText(libSignatures[i]))
-                        .append(getSmallerText(" (" + signatureCount[i] + ")"));
+            if (signatureCount[i] == 0) continue;
+            if (foundLibInfoMap.get(libNames[i]) == null) {
+                // Add the lib info since it isn't added already
+                foundLibInfoMap.put(libNames[i], new SpannableStringBuilder()
+                        .append(getPrimaryText(this, libNames[i]))
+                        .append(getSmallerText(" (" + libTypes[i] + ")")));
             }
+            //noinspection ConstantConditions Never null here
+            foundLibInfoMap.get(libNames[i])
+                    .append("\n")
+                    .append(getMonospacedText(libSignatures[i]))
+                    .append(getSmallerText(" (" + signatureCount[i] + ")"));
         }
         Set<String> foundLibNames = foundLibInfoMap.keySet();
         List<Spannable> foundLibInfo = new ArrayList<>(foundLibInfoMap.values());
+        int totalLibsFound = foundLibInfo.size();
         Collections.sort(foundLibInfo, (o1, o2) -> o1.toString().compareToIgnoreCase(o2.toString()));
         String summary;
         if (totalLibsFound == 0) {
@@ -429,11 +457,10 @@ public class ScannerActivity extends BaseActivity {
             summary = getResources().getQuantityString(R.plurals.libraries, totalLibsFound, totalLibsFound);
         }
 
-        int finalTotalLibsFound = totalLibsFound;
         runOnUiThread(() -> {
             ((TextView) findViewById(R.id.libs_title)).setText(summary);
             ((TextView) findViewById(R.id.libs_description)).setText(TextUtils.join(", ", foundLibNames));
-            if (finalTotalLibsFound == 0) return;
+            if (totalLibsFound == 0) return;
             findViewById(R.id.libs).setOnClickListener(v ->
                     new ScrollableDialogBuilder(this, getOrderedList(foundLibInfo))
                             .setTitle(new DialogTitleBuilder(this)

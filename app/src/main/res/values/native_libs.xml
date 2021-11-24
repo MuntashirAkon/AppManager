@@ -1,0 +1,618 @@
+<?xml version="1.0" encoding="utf-8"?><!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<resources>
+    <array name="lib_native_signatures">
+        <item>lib39285EFA\.so|libA3AEECD8\.so|libsecsdk\.so</item>
+        <item>libAVProLocal\.so</item>
+        <item>libBaiduSpeechSDK\.so|libImgRecognition\.so|libbdEASRAndroid\.so|libbdSpilWakeup\.so|libvad\.dnn\.so
+        </item>
+        <item>libBeacon\.so</item>
+        <item>libBugly-rqd\.so|libBugly\.so</item>
+        <item>libBurstLinker\.so</item>
+        <item>libCtaApiLib\.so</item>
+        <item>libDexHelper-x86\.so|libDexHelper\.so|libSecShell-x86\.so|libSecShell\.so|libdexjni\.so|libsecexe\.so
+        </item>
+        <item>libFirebaseCppMessaging\.so|libFirebaseCppApp-.*\.so</item>
+        <item>libImSDK\.so|libqalcodecwrapper\.so|libqalmsfboot\.so|libwtcrypto\.so</item>
+        <item>
+            libJavaScriptCore\.so|libfolly_futures\.so|libfolly_json\.so|libglog_init\.so|libjsc\.so|libjscexecutor\.so|libjsinspector\.so|libreactnative\.so|libreactnativeblob\.so|libreactnativejni\.so|libreactnativejnifb\.so|libhermes-executor-release\.so|libhermes-executor-debug\.so|libhermes-inspector\.so|libhermes\.so|libjsijniprofiler\.so|libfbjni\.so
+        </item>
+        <item>libJni_wgs2gcj\.so</item>
+        <item>libLive2DCubismCore\.so</item>
+        <item>libMMANDKSignature\.so</item>
+        <item>libMNN\.so|libMNN_CL\.so|libMNN_Express\.so</item>
+        <item>libMtaNativeCrash\.so|libmtanativecrash_v2\.so</item>
+        <item>libQPlayer\.so</item>
+        <item>libRSSupport\.so|librsjni\.so|librsjni_androidx\.so</item>
+        <item>libRongIMLib\.so</item>
+        <item>libSDL2\.so|libSDL2_ttf\.so</item>
+        <item>libShanYCore\.so</item>
+        <item>libUE4\.so</item>
+        <item>libWXVoice\.so</item>
+        <item>libadcolony\.so</item>
+        <item>libagora-rtc-sdk-jni\.so|libjingle_peerconnection_so\.so</item>
+        <item>libandfix\.so|libandfix_x86\.so</item>
+        <item>
+            libaot-mscorlib\.dll\.so|libmono-btls-shared\.so|libmono-native\.so|libmonodroid\.so|libmonodroid_bundle_app\.so|libmonosgen-2\.0\.so|libxamarin-app\.so
+        </item>
+        <item>libapmart\.so|libapmcrash\.so|libapmdalvik\.so|libapmioFake\.so</item>
+        <item>libapng-drawable\.so</item>
+        <item>libapp\.so|libflutter\.so</item>
+        <item>libapssdk\.so</item>
+        <item>libarcore_sdk_c\.so</item>
+        <item>libarcore_sdk_jni\.so</item>
+        <item>libaria2c\.so</item>
+        <item>
+            libavcodec\.so|libavdevice\.so|libavfilter\.so|libavformat\.so|libavutil\.so|libswresample\.so|libswscale\.so
+        </item>
+        <item>
+            libbitmaps\.so|libgifimage\.so|libimagepipeline\.so|libmemchunk\.so|libnative-filters\.so|libnative-imagetranscoder\.so|libstatic-webp\.so|libwebp\.so|libwebpimage\.so
+        </item>
+        <item>libbmob\.so</item>
+        <item>libboost_multidex\.so</item>
+        <item>libbuffer_pg\.so|libfile_lock_pg\.so|libmetasec_ml\.so|libnms\.so|libtobEmbedEncrypt\.so</item>
+        <item>libbugrpt\.so</item>
+        <item>libbugsnag-ndk\.so|libbugsnag-plugin-android-anr\.so</item>
+        <item>libc++_shared\.so|libgnustl_shared\.so</item>
+        <item>libchrome\.so</item>
+        <item>libchrome_android_linker\.so</item>
+        <item>libcocos2dcpp\.so</item>
+        <item>libconnectionbase\.so|libmilinkconnection\.so</item>
+        <item>libconscrypt_jni\.so</item>
+        <item>
+            libcrashlytics-common\.so|libcrashlytics-handler\.so|libcrashlytics-trampoline\.so|libcrashlytics\.so|libFirebaseCppCrashlytics\.so|libunwind-crashlytics\.so|libcrashlytics-envelope\.so
+        </item>
+        <item>libcrashsdk\.so</item>
+        <item>libcri_mana_vpx\.so</item>
+        <item>libcri_ware_unity\.so</item>
+        <item>libcrypto\.so|libopenssl\.so|libssl\.so</item>
+        <item>libcurl\.so</item>
+        <item>libed25519\.so|libhpplayae\.so</item>
+        <item>libentryexpro\.so|libuptsmaddon\.so|libuptsmaddonmi\.so|libuptsmservice\.so</item>
+        <item>libepic\.so</item>
+        <item>libfb\.so</item>
+        <item>libfire\.so</item>
+        <item>libflexbox\.so|libhippybridge\.so</item>
+        <item>libframesequence\.so</item>
+        <item>libfreetype\.so</item>
+        <item>libgcanvas\.so</item>
+        <item>libgdx-box2d\.so|libgdx-freetype\.so|libgdx\.so</item>
+        <item>libgetuiext3\.so</item>
+        <item>libglide-webp\.so</item>
+        <item>libglog\.so</item>
+        <item>libgocryptfs\.so|libgocryptfs_jni\.so</item>
+        <item>libgojni\.so</item>
+        <item>libgpuimage-library\.so</item>
+        <item>libgvr\.so</item>
+        <item>libhardcoder\.so</item>
+        <item>libhttpdns\.so</item>
+        <item>libhuawei_arengine_impl\.so|libhuawei_arengine_jni\.so|libhuawei_arengine_ndk\.so</item>
+        <item>libhyphenate\.so</item>
+        <item>libiconv\.so</item>
+        <item>libijkffmpeg\.so|libijkplayer\.so|libijksdl\.so</item>
+        <item>libil2cpp\.so|libmain\.so|libmono\.so|libunity\.so</item>
+        <item>libindoor\.so</item>
+        <item>libizuko\.so</item>
+        <item>libjiagu\.so|libjiagu_a64\.so|libjiagu_x64\.so|libjiagu_x86\.so</item>
+        <item>libkoom-java\.so|libkwai-linker\.so</item>
+        <item>liblib_fb_fbjni\.so|libyoga\.so|libyouga\.so</item>
+        <item>libliteavsdk\.so|libtxffmpeg\.so|libtxplayer\.so|libtxsdl\.so</item>
+        <item>liblog4cpp\.so</item>
+        <item>libluajava\.so</item>
+        <item>libmarsxlog\.so</item>
+        <item>libmediainfo\.so</item>
+        <item>libmegazord\.so</item>
+        <item>libmibraindec\.so|libmibrainjni\.so|libmibrainsdk\.so|libmibrainvad2\.so</item>
+        <item>libmla\.so|libvlc\.so|libvlcjni\.so</item>
+        <item>libmmkv\.so</item>
+        <item>libmp3lame\.so</item>
+        <item>libmsc\.so</item>
+        <item>libndkbitmap\.so</item>
+        <item>libopencc\.so</item>
+        <item>libopencv_core\.so|libopencv_imgproc\.so|libopencv_java3\.so|libopencv_java4\.so</item>
+        <item>libopus\.so|libopusJNI\.so</item>
+        <item>libpingpp\.so</item>
+        <item>libpl_droidsonroids_gif\.so</item>
+        <item>libraw\.so</item>
+        <item>librclone\.so</item>
+        <item>librealm-jni\.so</item>
+        <item>librenpython\.so</item>
+        <item>libsaturn\.so</item>
+        <item>libsdk_patcher_jni\.so</item>
+        <item>libsentry-android\.so|libsentry\.so</item>
+        <item>libsgavmp\.so|libsgmain\.so|libsgsecuritybody\.so|libsgsgmiddletier\.so</item>
+        <item>libsmsdk\.so</item>
+        <item>libsodium\.so</item>
+        <item>libsqlcipher\.so|libstlport_shared\.so</item>
+        <item>libsqlite\.so|libsqlite3\.so</item>
+        <item>libtdjni\.so</item>
+        <item>libtencentloc\.so|libtxmapengine\.so</item>
+        <item>libtensorflowlite_jni\.so|libtensorflowlite_gpu_jni\.so</item>
+        <item>libtersafe2\.so</item>
+        <item>libtiff\.so</item>
+        <item>libtorrent4j\.so</item>
+        <item>libtpnsSecurity\.so|libxguardian\.so</item>
+        <item>libtraeimp-rtmp\.so</item>
+        <item>libucrop\.so</item>
+        <item>libumeng-spy\.so</item>
+        <item>libutility\.so|libweibosdkcore\.so|libwind\.so</item>
+        <item>libwcdb\.so</item>
+        <item>libweexcore\.so|libweexjsb\.so|libweexjss\.so|libweexjssr\.so|libweexjst\.so|libWeexEagle\.so|libWTF\.so
+        </item>
+        <item>libwtecdh\.so</item>
+        <item>libxcrash\.so|libxcrash_dumper\.so</item>
+        <item>libxgVipSecurity\.so</item>
+        <item>libxhook_lib\.so</item>
+        <item>libxlua\.so</item>
+        <item>libyuv\.so</item>
+        <item>libzbar\.so|libzbarjni\.so</item>
+        <item>libartemis\.so</item>
+        <item>libclash\.so</item>
+        <item>libkraken_jsc\.so</item>
+        <item>libmapbox-gl\.so</item>
+        <item>libFirebaseCppAnalytics\.so</item>
+        <item>libjnidispatch\.so</item>
+        <item>libnss3\.so|libnssckbi\.so|libsoftokn3\.so|libfreebl3\.so</item>
+        <item>libpl_droidsonroids_gif\.so</item>
+        <item>libxul\.so</item>
+        <item>libgpg\.so</item>
+        <item>libSmartBeatNdk\.so</item>
+        <item>libstub\.so|libcompatible\.so|libcompatible_x86\.so</item>
+        <item>libtool-checker\.so</item>
+        <item>libgrpc_csharp_ext\.so</item>
+        <item>lib_burst_generated\.so</item>
+        <item>libglean_ffi\.so</item>
+        <item>libvpx\.so|libvpxV2JNI\.so</item>
+    </array>
+    <array name="lib_native_names">
+        <item>MSA SDK</item>
+        <item>AVPro Video</item>
+        <item>DuMix</item>
+        <item>Tencent Beacon</item>
+        <item>Bugly</item>
+        <item>BurstLinker</item>
+        <item>URORA SDK</item>
+        <item>Bangcle</item>
+        <item>Firebase Cloud Messaging</item>
+        <item>Tencent CloudIM SDK</item>
+        <item>React Native</item>
+        <item>wgs2gcj</item>
+        <item>Live2D Cubism SDK</item>
+        <item>MMA China SDK</item>
+        <item>MNN</item>
+        <item>Tencent MTA</item>
+        <item>PLDroidPlayer</item>
+        <item>RenderScript</item>
+        <item>RongCloud IM SDK</item>
+        <item>libSDL</item>
+        <item>Shanyan SDK</item>
+        <item>Unreal Engine</item>
+        <item>Tencent Cloud ASR</item>
+        <item>AdColony</item>
+        <item>WebRTC</item>
+        <item>AndFix</item>
+        <item>Xamarin</item>
+        <item>Tencent Cloud QAPM</item>
+        <item>ApngDrawable</item>
+        <item>Flutter</item>
+        <item>AMAP SDK</item>
+        <item>Virocore</item>
+        <item>ARCore</item>
+        <item>libaria2</item>
+        <item>FFmpeg</item>
+        <item>Fresco</item>
+        <item>Bmob</item>
+        <item>BoostMultiDex</item>
+        <item>Pangle SDK</item>
+        <item>163 Crash</item>
+        <item>Bugsnag</item>
+        <item>C++ Shared Library</item>
+        <item>libchrome</item>
+        <item>Android Crazy Linker</item>
+        <item>cocos2d-cpp</item>
+        <item>Xiaomi Game SDK</item>
+        <item>Conscrypt</item>
+        <item>Crashlytics</item>
+        <item>Yueying</item>
+        <item>CRI Sofdec2 Unity</item>
+        <item>CRI ADX2 Unity</item>
+        <item>OpenSSL</item>
+        <item>LibCurl</item>
+        <item>Hppplay SDK</item>
+        <item>UnionPay SDK</item>
+        <item>Epic</item>
+        <item>Facebook SDK</item>
+        <item>Sofire</item>
+        <item>Hippy</item>
+        <item>FrameSequence</item>
+        <item>FreeType</item>
+        <item>GCanvas</item>
+        <item>libGDX</item>
+        <item>Getui</item>
+        <item>GlideWebpDecoder</item>
+        <item>glog</item>
+        <item>gocryptsfs</item>
+        <item>Golang</item>
+        <item>GPUImage</item>
+        <item>Google VR SDK</item>
+        <item>HardCoder</item>
+        <item>Tencent Cloud HTTPDNS</item>
+        <item>AR Engine</item>
+        <item>Easemob IM</item>
+        <item>iconv</item>
+        <item>IJKPlayer</item>
+        <item>Unity</item>
+        <item>Baidu LBS</item>
+        <item>Izuko</item>
+        <item>360 Security</item>
+        <item>KOOM</item>
+        <item>Yoga</item>
+        <item>Tencent Cloud UGSV SDK</item>
+        <item>Log for C++</item>
+        <item>AndroLua</item>
+        <item>Mars</item>
+        <item>MediaInfoLib</item>
+        <item>Megazord</item>
+        <item>Xiaoai SDK</item>
+        <item>LibVLC</item>
+        <item>MMKV</item>
+        <item>LAME</item>
+        <item>iFlytek SDK</item>
+        <item>DanmakuFlameMaster</item>
+        <item>OpenCC</item>
+        <item>OpenCV</item>
+        <item>Opus</item>
+        <item>Ping++ SDK</item>
+        <item>android-gif-drawable</item>
+        <item>LibRaw</item>
+        <item>Rclone</item>
+        <item>Realm</item>
+        <item>Ren\'Py</item>
+        <item>Tencent Cloud CSS SDK</item>
+        <item>Xiaomi Update SDK</item>
+        <item>Sentry</item>
+        <item>Alibaba security</item>
+        <item>Shumei SDK</item>
+        <item>Sodium</item>
+        <item>SQLCipher</item>
+        <item>SQLite</item>
+        <item>TDLib</item>
+        <item>Tencent Location SDK</item>
+        <item>TensorFlow Lite</item>
+        <item>Tencent MTP</item>
+        <item>Android-TiffBitmapFactory</item>
+        <item>Torrent library for java</item>
+        <item>Tencent TPNS</item>
+        <item>Tencent TRTC</item>
+        <item>uCrop</item>
+        <item>Umeng</item>
+        <item>Weibo SDK</item>
+        <item>WCDB</item>
+        <item>Weex</item>
+        <item>Midas</item>
+        <item>xCrash</item>
+        <item>Tencent TPNS</item>
+        <item>xHook</item>
+        <item>xLua</item>
+        <item>libYUV</item>
+        <item>ZBar</item>
+        <item>Artemis Engine</item>
+        <item>Clash Core</item>
+        <item>Kraken</item>
+        <item>Mapbox GL Native</item>
+        <item>Google Analytics</item>
+        <item>Java Native Access</item>
+        <item>libnss</item>
+        <item>android-gif-drawable</item>
+        <item>libxul</item>
+        <item>Google Play Games plugin for Unity</item>
+        <item>SmartBeat</item>
+        <item>INCA nProtect AppGuard</item>
+        <item>RootBeer</item>
+        <item>gRPC</item>
+        <item>Unity Burst</item>
+        <item>Glean</item>
+        <item>libvpx</item>
+    </array>
+    <integer-array name="lib_native_is_tracker">
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>1</item>
+        <item>0</item>
+        <item>1</item>
+        <item>1</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>1</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>1</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>1</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>1</item>
+        <item>1</item>
+        <item>1</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>1</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+    </integer-array>
+    <array name="lib_native_website">
+        <item>http://msa-alliance.cn</item>
+        <item>https://renderheads.com/products/avpro-video/</item>
+        <item>https://github.com/baidu/ar-sdk/</item>
+        <item>https://wiki.open.qq.com/wiki/</item>
+        <item>https://bugly.qq.com/</item>
+        <item>https://github.com/bilibili/BurstLinker</item>
+        <item>https://docs.jiguang.cn/jverification/client/android_guide/</item>
+        <item>https://www.bangcle.com/products/productindex/</item>
+        <item>https://firebase.google.com/docs/cloud-messaging</item>
+        <item>https://cloud.tencent.com/product/im/getting-started/</item>
+        <item>https://reactnative.dev/</item>
+        <item></item>
+        <item>https://docs.live2d.com/cubism-sdk-manual/top/</item>
+        <item>http://www.mmachina.cn/assets/mma_doc/index.html</item>
+        <item>https://github.com/alibaba/MNN</item>
+        <item>https://mta.qq.com/docs/</item>
+        <item>https://github.com/pili-engineering/PLDroidPlayer</item>
+        <item>https://developer.android.com/guide/topics/renderscript/compute/</item>
+        <item>https://github.com/sealtalk/sealtalk-android</item>
+        <item>https://www.libsdl.org</item>
+        <item>https://shanyan.253.com/</item>
+        <item>https://docs.unrealengine.com/en-US/index.html</item>
+        <item>https://cloud.tencent.com/document/product/1093/52554</item>
+        <item>https://github.com/AdColony/AdColony-Android-SDK</item>
+        <item>https://webrtc.org/</item>
+        <item>https://github.com/alibaba/AndFix</item>
+        <item>https://dotnet.microsoft.com/apps/xamarin/</item>
+        <item>https://cloud.tencent.com/document/product/683</item>
+        <item>https://github.com/line/apng-drawable</item>
+        <item>https://flutter.dev/</item>
+        <item>https://lbs.amap.com/api/android-sdk/summary/</item>
+        <item>https://developer.android.com/ndk/guides/cpp-support/</item>
+        <item>https://developers.google.com/ar/discover/</item>
+        <item>https://aria2.github.io/manual/en/html/libaria2.html</item>
+        <item>http://www.ffmpeg.org/libavcodec.html</item>
+        <item>https://github.com/facebook/fresco/</item>
+        <item>http://doc.bmob.cn/</item>
+        <item>https://github.com/bytedance/BoostMultiDex</item>
+        <item>https://partner.oceanengine.com/</item>
+        <item>http://crash.163.com/index.do</item>
+        <item>https://github.com/bugsnag/bugsnag-android</item>
+        <item>https://developer.android.com/ndk/guides/cpp-support/</item>
+        <item>https://chromium.googlesource.com/chromiumos/docs/+/master/packages/libchrome.md</item>
+        <item>https://chromium.googlesource.com/chromium/src.git/+/refs/heads/main/third_party/android_crazy_linker
+        </item>
+        <item>https://github.com/cocos2d-cpp/cocos2d-cpp</item>
+        <item>https://dev.mi.com/console/app/gamecenter.html</item>
+        <item>https://github.com/google/conscrypt</item>
+        <item>https://firebase.google.com/docs/crashlytics/</item>
+        <item>https://yueying-docs.effirst.com/</item>
+        <item>https://game.criware.jp/manual/unity_plugin/latest/contents/group__CRIMANA__UNITY__COMPONENT.html</item>
+        <item>https://assetstore.unity.com/packages/tools/audio/cri-adx2-unity-plugin-assetstore-100086</item>
+        <item>https://github.com/openssl/openssl</item>
+        <item>https://github.com/curl/curl</item>
+        <item>https://cloud.hpplay.cn/</item>
+        <item>https://open.unionpay.com/</item>
+        <item>https://github.com/tiann/epic/</item>
+        <item>https://developers.facebook.com/docs/android/getting-started/</item>
+        <item>https://cloud.baidu.com/doc/AFD/s/Ijwvy4s7b</item>
+        <item>https://github.com/Tencent/Hippy/</item>
+        <item>https://android.googlesource.com/platform/frameworks/ex/</item>
+        <item>https://www.freetype.org/</item>
+        <item>https://alibaba.github.io/GCanvas/</item>
+        <item>https://github.com/libgdx/libgdx</item>
+        <item>http://docs.getui.com/getui/start/product/</item>
+        <item>https://github.com/zjupure/GlideWebpDecoder</item>
+        <item>https://github.com/google/glog/</item>
+        <item>https://github.com/rfjakob/gocryptfs</item>
+        <item>https://github.com/golang/mobile</item>
+        <item>https://github.com/cats-oss/android-gpuimage</item>
+        <item>https://github.com/googlevr/gvr-android-sdk</item>
+        <item>https://github.com/Tencent/Hardcoder</item>
+        <item>https://github.com/tencentyun/httpdns-android-sdk</item>
+        <item>https://developer.huawei.com/consumer/cn/doc/development/HMSCore-Guides/introduction-0000001050130900
+        </item>
+        <item>http://docs-im.easemob.com/im/android/sdk/import</item>
+        <item>https://www.gnu.org/software/libiconv/</item>
+        <item>https://github.com/bilibili/ijkplayer/</item>
+        <item>https://docs.unity3d.com/Manual/IL2CPP.html</item>
+        <item>https://lbsyun.baidu.com/</item>
+        <item>https://zhaobozhen.github.io/Anywhere-Docs</item>
+        <item>https://jiagu.360.cn/</item>
+        <item>https://github.com/KwaiAppTeam/KOOM</item>
+        <item>https://github.com/facebook/yoga/</item>
+        <item>https://cloud.tencent.com/document/product/584/9453</item>
+        <item>https://sourceforge.net/projects/log4cpp/</item>
+        <item>https://github.com/mkottman/AndroLua/</item>
+        <item>https://github.com/Tencent/Mars/</item>
+        <item>https://github.com/MediaArea/MediaInfoLib</item>
+        <item>https://github.com/mozilla/application-services/blob/main/docs/design/megazords.md</item>
+        <item>https://xiaoai.mi.com/documents/Home\?type=/api/doc/render_markdown/Home/</item>
+        <item>https://github.com/videolan/vlc-android</item>
+        <item>https://github.com/Tencent/MMKV</item>
+        <item>https://lame\.sourceforge.io/</item>
+        <item>https://www.xfyun.cn/doc/</item>
+        <item>https://github.com/bilibili/DanmakuFlameMaster/</item>
+        <item>https://github.com/BYVoid/OpenCC</item>
+        <item>https://github.com/opencv/opencv/</item>
+        <item>https://gitlab.xiph.org/xiph/opus</item>
+        <item>https://github.com/PingPlusPlus/pingpp-android</item>
+        <item>https://github.com/koral--/android-gif-drawable/</item>
+        <item>https://github.com/LibRaw/LibRaw</item>
+        <item>https://github.com/rclone/rclone</item>
+        <item>https://github.com/realm/</item>
+        <item>https://github.com/renpy/renpy</item>
+        <item>https://cloud.tencent.com/document/product/267/</item>
+        <item>https://dev.mi.com/console/doc/detail\?pId=4/</item>
+        <item>https://sentry.io/for/android/</item>
+        <item>https://jaq-doc.alibaba.com/docs/doc.htm\?treeId=243&amp;articleId=106477&amp;docType=1</item>
+        <item>https://help.ishumei.com/docs/tw/sdk/overview</item>
+        <item>https://github.com/jedisct1/libsodium</item>
+        <item>https://github.com/sqlcipher/sqlcipher/</item>
+        <item>https://www.sqlite.org/docs.html</item>
+        <item>https://core.telegram.org/tdlib/docs/index.html</item>
+        <item>https://lbs.qq.com/mobile/androidLocationSDK/androidGeoGuide/androidGeoOverview/</item>
+        <item>https://www.tensorflow.org/lite</item>
+        <item>https://cloud.tencent.com/document/product/654/30316</item>
+        <item>https://github.com/Beyka/Android-TiffBitmapFactory</item>
+        <item>https://github.com/aldenml/libtorrent4j</item>
+        <item>https://xg.qq.com/docs/</item>
+        <item>https://cloud.tencent.com/document/product/647/16788</item>
+        <item>https://github.com/Yalantis/uCrop/</item>
+        <item>https://developer.umeng.com/docs/119267/detail/126061</item>
+        <item>https://github.com/sinaweibosdk/weibo_android_sdk</item>
+        <item>https://github.com/Tencent/wcdb/</item>
+        <item>https://weex.apache.org/</item>
+        <item>https://wiki.midas.qq.com/index/index/1/</item>
+        <item>https://github.com/iqiyi/xCrash/</item>
+        <item>https://cloud.tencent.com/product/tpns</item>
+        <item>https://github.com/iqiyi/xHook</item>
+        <item>https://github.com/Tencent/xLua</item>
+        <item>https://chromium.googlesource.com/libyuv/libyuv/</item>
+        <item>http://zbar\.sourceforge.net/</item>
+        <item>http://www.ies-net.com/</item>
+        <item>https://github.com/Dreamacro/clash</item>
+        <item>https://openkraken.com/</item>
+        <item>https://github.com/mapbox/mapbox-gl-native</item>
+        <item>https://firebase.google.com/docs/analytics/</item>
+        <item>https://github.com/java-native-access/jna</item>
+        <item>https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS</item>
+        <item>https://github.com/koral--/android-gif-drawable</item>
+        <item>https://wiki.mozilla.org/XUL:Lib_XUL</item>
+        <item>https://github.com/playgameservices/play-games-plugin-for-unity</item>
+        <item>https://smrtbeat.com/</item>
+        <item>https://appguard.nprotect.com/en/index.html</item>
+        <item>https://github.com/scottyab/rootbeer</item>
+        <item>https://github.com/grpc/grpc</item>
+        <item>https://docs.unity3d.com/Manual/com.unity.burst.html</item>
+        <item>https://github.com/mozilla/glean</item>
+        <item>https://github.com/webmproject/libvpx/</item>
+    </array>
+</resources>
