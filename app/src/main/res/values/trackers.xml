@@ -554,6 +554,7 @@
         <item>org.acra.</item>
         <item>ch.acra.</item>
         <item>com.adop.sdk.</item>
+        <item>com.admanmedia.</item>
         <item>com.ljoy.chatbot.</item>
         <item>com.aihelp.alice.</item>
         <item>com.apicloud.</item>
@@ -570,7 +571,9 @@
         <item>com.adtheorent.</item>
         <item>com.aiming.mdt.</item>
         <item>com.adtiming.</item>
+        <item>com.openmediation.sdk.</item>
         <item>com.adtrial.sdk.</item>
+        <item>com.kuaiyou.loader.</item>
         <item>com.adwhirl.</item>
         <item>com.adchina.android</item>
         <item>com.adflake</item>
@@ -710,6 +713,7 @@
         <item>com.apptracker.android.</item>
         <item>com.pad.android.xappad.</item>
         <item>com.Leadbolt.</item>
+        <item>io.liftoff.liftoffads.</item>
         <item>com.lotadata.moments.</item>
         <item>com.madhouse.android.ads</item>
         <item>com.deflocculent.fecklessness.</item>
@@ -740,6 +744,8 @@
         <item>com.cs.statistic.</item>
         <item>com.cpcphone.abtestcenter.</item>
         <item>com.fungame.advertisingsdk</item>
+        <item>com.hz.keep.</item>
+        <item>cn.rs.keepalive.</item>
         <item>com.marketo</item>
         <item>com.mapps.android.</item>
         <item>com.mz.common.</item>
@@ -763,6 +769,7 @@
         <item>com.ogury.cm.</item>
         <item>com.ogury.analytics.</item>
         <item>com.ogury.consent.</item>
+        <item>com.ogury.sdk.</item>
         <item>com.onetrust.</item>
         <item>org.openudid.</item>
         <item>org.OpenUDID.</item>
@@ -770,6 +777,7 @@
         <item>com.huawei.hms.aaid.</item>
         <item>com.huawei.hianalytics.</item>
         <item>net.opentracker.android</item>
+        <item>outbid.com.outbidsdk.</item>
         <item>com.peanutlabs.plsdk.</item>
         <item>com.papaya.offer.</item>
         <item>com.appflood</item>
@@ -806,6 +814,7 @@
         <item>com.sayso.utils.</item>
         <item>io.sentry.</item>
         <item>com.joshdholtz.sentry</item>
+        <item>seventynine.sdk.</item>
         <item>com.sina.weibo.sdk</item>
         <item>es.situm.sdk.</item>
         <item>com.skillz.Skillz</item>
@@ -894,6 +903,7 @@
         <item>com.wonderpush</item>
         <item>com.woopra.tracking.</item>
         <item>com.woorlds.woorldssdk.</item>
+        <item>com.wortise.</item>
         <item>com.xiaomi.push</item>
         <item>com.xiaomi.mipush.</item>
         <item>jp.co.yahoo.android.yssens.YSSensDataShareService</item>
@@ -911,6 +921,7 @@
         <item>zendesk.</item>
         <item>com.zenjoy.ads</item>
         <item>net.zucks.</item>
+        <item>com.adxcorp.</item>
         <item>.com.ew.sdk.adboost</item>
         <item>de.appplant.</item>
         <item>com.apptv.android.</item>
@@ -1484,6 +1495,7 @@
         <item>²ACRA</item>
         <item>²ACRA</item>
         <item>²ADOP</item>
+        <item>²ADman Media</item>
         <item>²AIHelp</item>
         <item>²AIHelp</item>
         <item>²APICloud</item>
@@ -1500,7 +1512,9 @@
         <item>²AdTheorent</item>
         <item>²AdTiming</item>
         <item>²AdTiming</item>
+        <item>²AdTiming</item>
         <item>²AdTrial</item>
+        <item>²AdView</item>
         <item>²AdWhirl (AdMob)</item>
         <item>²Adchina</item>
         <item>²Adflake</item>
@@ -1640,6 +1654,7 @@
         <item>²LeadBolt</item>
         <item>²LeadBolt</item>
         <item>²LeadBolt</item>
+        <item>²Liftoff</item>
         <item>²LotaData</item>
         <item>²Madhouse</item>
         <item>²Malverting/Adfrauds</item>
@@ -1660,6 +1675,8 @@
         <item>²Malverting/Adfrauds</item>
         <item>²Malverting/Adfrauds</item>
         <item>²Malverting/Adfrauds</item>
+        <item>²Malverting/Adfrauds#2</item>
+        <item>²Malverting/Adfrauds#2</item>
         <item>²Malverting/Adfrauds#2</item>
         <item>²Malverting/Adfrauds#2</item>
         <item>²Malverting/Adfrauds#2</item>
@@ -1693,6 +1710,7 @@
         <item>²Ogury</item>
         <item>²Ogury</item>
         <item>²Ogury</item>
+        <item>²Ogury</item>
         <item>²Onetrust</item>
         <item>²OpenUDID</item>
         <item>²OpenUDID</item>
@@ -1700,6 +1718,7 @@
         <item>²Openalliance (Huawei ads kit)</item>
         <item>²Openalliance (Huawei ads kit)</item>
         <item>²Opentracker</item>
+        <item>²Outbid</item>
         <item>²PEANUT LABS</item>
         <item>²Papaya</item>
         <item>²Papaya</item>
@@ -1736,6 +1755,7 @@
         <item>²SaySo Rewards</item>
         <item>²Sentry</item>
         <item>²Sentry</item>
+        <item>²Seventynine</item>
         <item>²Sino Weibo SDK</item>
         <item>²Situm SDK</item>
         <item>²Skillz Android Unity</item>
@@ -1824,6 +1844,7 @@
         <item>²WonderPush</item>
         <item>²Woopra</item>
         <item>²Woorlds</item>
+        <item>²Wortise</item>
         <item>²Xiaomi Push Service</item>
         <item>²Xiaomi Push Service</item>
         <item>²Yahoo!Japan DataShare</item>
@@ -1841,6 +1862,7 @@
         <item>²Zendesk</item>
         <item>²Zenjoy</item>
         <item>²Zucks</item>
+        <item>²ad(x)</item>
         <item>²adboost</item>
         <item>²appPlant</item>
         <item>²appTV</item>
