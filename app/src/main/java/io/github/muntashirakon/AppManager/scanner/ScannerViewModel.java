@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
@@ -35,6 +37,7 @@ public class ScannerViewModel extends AndroidViewModel {
     private boolean cached;
     private Uri apkUri;
     private DexClasses dexClasses;
+    private Collection<String> nativeLibsAll;
     private List<String> classListAll;
     private List<String> trackerClassList = new ArrayList<>();
     private List<String> libClassList = new ArrayList<>();
@@ -116,6 +119,10 @@ public class ScannerViewModel extends AndroidViewModel {
         return classListAll;
     }
 
+    public Collection<String> getNativeLibsAll() {
+        return nativeLibsAll;
+    }
+
     @WorkerThread
     private void cacheFileIfRequired() {
         // Test if this path is readable
@@ -159,6 +166,12 @@ public class ScannerViewModel extends AndroidViewModel {
     @WorkerThread
     private void loadAllClasses() {
         waitForFile();
+        try {
+            NativeLibraries nativeLibraries = new NativeLibraries(apkFile);
+            nativeLibsAll = nativeLibraries.getLibs();
+        } catch (Throwable e) {
+            nativeLibsAll = Collections.emptyList();
+        }
         dexClasses = new DexClasses(getApplication(), apkFile);
         classListAll = dexClasses.getClassNames();
         allClasses.postValue(classListAll);
