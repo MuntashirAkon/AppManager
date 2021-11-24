@@ -104,7 +104,7 @@ public class BackupManager {
             }
             for (int i = 0; i < backupNames.length; ++i) {
                 // Replace illegal characters
-                backupNames[i] = backupNames[i].trim().replaceAll("[\\\\/?\"<>|\\s]+", "_");  // [\\/:?"<>|\s]
+                backupNames[i] = backupNames[i].trim().replaceAll("[\\\\/:?\"<>|\\s]+", "_");  // [\\/:?"<>|\s]
             }
             Log.e(TAG, "Backup names: " + Arrays.toString(backupNames));
             return backupNames;
