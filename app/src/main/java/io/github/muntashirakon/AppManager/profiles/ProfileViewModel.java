@@ -82,7 +82,8 @@ public class ProfileViewModel extends AndroidViewModel {
             try {
                 ArrayList<Pair<CharSequence, ApplicationInfo>> itemPairs;
                 List<PackageInfo> packageInfoList = PackageManagerCompat.getInstalledPackages(
-                        PackageManager.GET_META_DATA, UserHandleHidden.myUserId());
+                        PackageManager.GET_META_DATA | PackageUtils.flagMatchUninstalled,
+                        UserHandleHidden.myUserId());
                 itemPairs = new ArrayList<>(packageInfoList.size());
                 for (PackageInfo info : packageInfoList) {
                     itemPairs.add(new Pair<>(pm.getApplicationLabel(info.applicationInfo), info.applicationInfo));
