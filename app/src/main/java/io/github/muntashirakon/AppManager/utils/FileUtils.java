@@ -189,7 +189,7 @@ public final class FileUtils {
         //noinspection RegExpRedundantEscape
         name = name.replaceAll("[\\/]+", File.separator);
         if (name.startsWith("./")) name = name.substring(2);
-        else if (name.startsWith(File.separator) || name.startsWith(".")) name = name.substring(1);
+        else if (name.startsWith(File.separator)) name = name.substring(1);
         if (name.endsWith(File.separator)) name = name.substring(0, name.length() - 1);
         return name;
     }
@@ -489,6 +489,18 @@ public final class FileUtils {
     @NonNull
     public static File getTempFile() throws IOException {
         return File.createTempFile("file_" + System.currentTimeMillis(), ".cached", getCachePath());
+    }
+
+    @AnyThread
+    @NonNull
+    public static File getTempFolder(String folderNamePrefix) throws IOException {
+        File newDir = new File(getCachePath() + File.separator + folderNamePrefix);
+        int i = 1;
+        while (newDir.exists()) {
+            newDir = new File(getCachePath() + File.separator + (folderNamePrefix + "_" + i));
+        }
+        newDir.mkdirs();
+        return newDir;
     }
 
     @AnyThread
