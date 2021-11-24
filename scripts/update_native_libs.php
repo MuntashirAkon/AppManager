@@ -48,7 +48,7 @@ EOF;
 
     echo <<<EOF
     </integer-array>
-    <array name="lib_website">
+    <array name="lib_native_website">
 
 EOF;
 
