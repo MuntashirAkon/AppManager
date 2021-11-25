@@ -23,7 +23,7 @@ function printf_AM()
 EOF;
 
     foreach ($libs_info as $info) {
-        echo "        <item>${info["signature"]}</item>\n";
+        echo "        <item>" . android_escape_slash($info["signature"]) . "</item>\n";
     }
 
     echo <<<EOF
@@ -67,3 +67,9 @@ function android_escape($string)
 {
     return strtr($string, array('@' => '\@', '?' => '\?', '<' => '&lt;', '>' => '&gt;', '"' => '\"', "'" => "\'", '&' => '&amp;'));
 }
+
+function android_escape_slash($string)
+{
+    return strtr($string, array('@' => '\@', '?' => '\?', '<' => '&lt;', '>' => '&gt;', '"' => '\"', "'" => "\'", '&' => '&amp;', '\\' => '\\\\'));
+}
+
