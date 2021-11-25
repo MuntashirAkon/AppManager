@@ -42,6 +42,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
@@ -262,8 +263,9 @@ public class ScannerActivity extends BaseActivity {
         Map<String, SpannableStringBuilder> foundNativeLibInfoMap = new ArrayMap<>();
         for (int i = 0; i < libSignatures.length; ++i) {
             if (trackerOnly && isTracker[i] == 0) continue;
+            Pattern pattern = Pattern.compile(libSignatures[i]);
             for (String lib : nativeLibsInApk) {
-                if (lib.matches(libSignatures[i])) {
+                if (pattern.matcher(lib).find()) {
                     if (matchedLibs[i] == null) {
                         matchedLibs[i] = new ArrayList<>();
                     }
