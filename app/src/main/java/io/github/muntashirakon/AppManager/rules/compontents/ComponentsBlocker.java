@@ -219,21 +219,23 @@ public final class ComponentsBlocker extends RulesStorageManager {
     }
 
     /**
-     * Add the given component to the rules list, does nothing if the instance is immutable.
+     * Add the given component to the rules list with user preferred component status, does nothing if the instance is
+     * immutable.
      *
      * @param componentName The component to add
      * @param componentType Component type
      * @see #addEntry(RuleEntry)
      */
     public void addComponent(String componentName, RuleType componentType) {
-        if (!readOnly) setComponent(componentName, componentType, ComponentRule.COMPONENT_TO_BE_BLOCKED_IFW_DISABLE);
+        if (!readOnly) setComponent(componentName, componentType, AppPref.getDefaultComponentStatus());
     }
 
     /**
      * Add the given component to the rules list, does nothing if the instance is immutable.
      *
-     * @param componentName The component to add
-     * @param componentType Component type
+     * @param componentName   The component to add
+     * @param componentType   Component type
+     * @param componentStatus Component status
      * @see #addEntry(RuleEntry)
      */
     public void addComponent(String componentName,

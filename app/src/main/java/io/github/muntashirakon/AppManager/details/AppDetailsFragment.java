@@ -926,7 +926,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             holder.blockBtn.setOnClickListener(v -> {
                 String componentStatus = item.isBlocked()
                         ? ComponentRule.COMPONENT_TO_BE_DEFAULTED
-                        : ComponentRule.COMPONENT_TO_BE_BLOCKED_IFW_DISABLE;
+                        : AppPref.getDefaultComponentStatus();
                 applyRules(item.name, ruleType, componentStatus);
             });
             holder.blockBtn.setOnLongClickListener(v -> {
