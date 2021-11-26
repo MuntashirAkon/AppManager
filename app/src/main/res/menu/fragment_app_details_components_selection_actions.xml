@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?><!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_ifw_and_disable"
+        android:title="@string/intent_firewall_and_disable" />
+
+    <item
+        android:id="@+id/action_ifw"
+        android:title="@string/intent_firewall" />
+
+    <item
+        android:id="@+id/action_disable"
+        android:title="@string/disable" />
+
+    <item
+        android:id="@+id/action_enable"
+        android:title="@string/enable" />
+
+    <item
+        android:id="@+id/action_default"
+        android:title="@string/use_default" />
+
+</menu>

@@ -138,7 +138,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
     private final AtomicProxyFile rulesFile;
     private Set<String> components;
 
-    protected ComponentsBlocker(String packageName, int userHandle) {
+    private ComponentsBlocker(String packageName, int userHandle) {
         super(packageName, userHandle);
         this.rulesFile = new AtomicProxyFile(new ProxyFile(SYSTEM_RULES_PATH, packageName + ".xml"));
         this.components = PackageUtils.collectComponentClassNames(packageName, userHandle).keySet();
@@ -180,7 +180,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
      */
     public boolean isComponentBlocked(String componentName) {
         ComponentRule cr = getComponent(componentName);
-        return cr != null && ComponentRule.COMPONENT_BLOCKED.equals(cr.getComponentStatus());
+        return cr != null && cr.isBlocked();
     }
 
     /**
@@ -205,14 +205,13 @@ public final class ComponentsBlocker extends RulesStorageManager {
     public int componentCount() {
         int count = 0;
         for (ComponentRule entry : getAllComponents()) {
-            if (!ComponentRule.COMPONENT_TO_BE_UNBLOCKED.equals(entry.getComponentStatus()))
-                ++count;
+            if (!entry.toBeRemoved()) ++count;
         }
         return count;
     }
 
     @Nullable
-    protected ComponentRule getComponent(String componentName) {
+    public ComponentRule getComponent(String componentName) {
         for (ComponentRule rule : getAllComponents()) {
             if (rule.name.equals(componentName)) return rule;
         }
@@ -227,7 +226,20 @@ public final class ComponentsBlocker extends RulesStorageManager {
      * @see #addEntry(RuleEntry)
      */
     public void addComponent(String componentName, RuleType componentType) {
-        if (!readOnly) setComponent(componentName, componentType, ComponentRule.COMPONENT_TO_BE_BLOCKED);
+        if (!readOnly) setComponent(componentName, componentType, ComponentRule.COMPONENT_TO_BE_BLOCKED_IFW_DISABLE);
+    }
+
+    /**
+     * Add the given component to the rules list, does nothing if the instance is immutable.
+     *
+     * @param componentName The component to add
+     * @param componentType Component type
+     * @see #addEntry(RuleEntry)
+     */
+    public void addComponent(String componentName,
+                             RuleType componentType,
+                             @ComponentRule.ComponentStatus String componentStatus) {
+        if (!readOnly) setComponent(componentName, componentType, componentStatus);
     }
 
     /**
@@ -243,7 +255,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
         if (readOnly) return;
         ComponentRule cr = getComponent(componentName);
         if (cr != null) {
-            setComponent(componentName, cr.type, ComponentRule.COMPONENT_TO_BE_UNBLOCKED);
+            setComponent(componentName, cr.type, ComponentRule.COMPONENT_TO_BE_DEFAULTED);
         }
     }
 
@@ -269,9 +281,9 @@ public final class ComponentsBlocker extends RulesStorageManager {
      *
      * @throws IOException If it fails to write to the destination file
      */
-    private void saveDisabledComponents() throws IOException, RemoteException {
+    private void saveDisabledComponents(boolean apply) throws IOException, RemoteException {
         if (readOnly) throw new IOException("Saving disabled components in read only mode.");
-        if (componentCount() == 0) {
+        if (!apply || componentCount() == 0) {
             // No components set, delete if already exists
             rulesFile.delete();
             return;
@@ -281,9 +293,8 @@ public final class ComponentsBlocker extends RulesStorageManager {
         StringBuilder receivers = new StringBuilder();
         for (ComponentRule component : getAllComponents()) {
             // Ignore components that needs unblocking
-            if (ComponentRule.COMPONENT_TO_BE_UNBLOCKED.equals(component.getComponentStatus())) continue;
+            if (!component.isIfw()) continue;
             String componentFilter = "  <component-filter name=\"" + packageName + "/" + component.name + "\"/>\n";
-            RuleType componentType = component.type;
             switch (component.type) {
                 case ACTIVITY:
                     activities.append(componentFilter);
@@ -295,9 +306,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
                     services.append(componentFilter);
                     break;
                 case PROVIDER:
-                    continue;
             }
-            setComponent(component.name, componentType, ComponentRule.COMPONENT_BLOCKED);
         }
 
         String rules = "<rules>\n" +
@@ -331,7 +340,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
     public boolean isRulesApplied() {
         List<ComponentRule> entries = getAllComponents();
         for (ComponentRule entry : entries)
-            if (ComponentRule.COMPONENT_TO_BE_BLOCKED.equals(entry.getComponentStatus())) return false;
+            if (!entry.isApplied()) return false;
         return true;
     }
 
@@ -349,32 +358,50 @@ public final class ComponentsBlocker extends RulesStorageManager {
         try {
             // Validate components
             validateComponents();
-            // Save blocked IFW components
-            if (apply) saveDisabledComponents();
+            // Save blocked IFW components or remove them based on the value of apply
+            saveDisabledComponents(apply);
             // Enable/disable components
             List<ComponentRule> allEntries = getAllComponents();
             Log.d(TAG, "All: " + allEntries.toString());
             if (apply) {
-                // Enable the components that need removal and disable requested components
                 for (ComponentRule entry : allEntries) {
-                    if (ComponentRule.COMPONENT_TO_BE_UNBLOCKED.equals(entry.getComponentStatus())) {
-                        // Enable components that are removed
-                        try {
-                            PackageManagerCompat.setComponentEnabledSetting(new ComponentName(packageName, entry.name),
-                                    PackageManager.COMPONENT_ENABLED_STATE_DEFAULT, 0, userHandle);
-                            removeEntry(entry);
-                        } catch (RemoteException e) {
-                            Log.e(TAG, "Could not enable component: " + packageName + "/" + entry.name);
-                        }
-                    } else {
-                        // Disable components
-                        try {
-                            PackageManagerCompat.setComponentEnabledSetting(new ComponentName(packageName, entry.name),
-                                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED, 0, userHandle);
-                            setComponent(entry.name, entry.type, ComponentRule.COMPONENT_BLOCKED);
-                        } catch (RemoteException e) {
-                            Log.e(TAG, "Could not disable component: " + packageName + "/" + entry.name);
-                        }
+                    switch (entry.getComponentStatus()) {
+                        case ComponentRule.COMPONENT_TO_BE_DEFAULTED:
+                            // Set component state to default and remove it
+                            try {
+                                PackageManagerCompat.setComponentEnabledSetting(new ComponentName(packageName, entry.name),
+                                        PackageManager.COMPONENT_ENABLED_STATE_DEFAULT, 0, userHandle);
+                                removeEntry(entry);
+                            } catch (RemoteException e) {
+                                Log.e(TAG, "Could not enable component: " + packageName + "/" + entry.name);
+                            }
+                            break;
+                        case ComponentRule.COMPONENT_TO_BE_ENABLED:
+                            // Enable components
+                            try {
+                                PackageManagerCompat.setComponentEnabledSetting(new ComponentName(packageName, entry.name),
+                                        PackageManager.COMPONENT_ENABLED_STATE_ENABLED, 0, userHandle);
+                                setComponent(entry.name, entry.type, ComponentRule.COMPONENT_ENABLED);
+                            } catch (RemoteException e) {
+                                Log.e(TAG, "Could not disable component: " + packageName + "/" + entry.name);
+                            }
+                            break;
+                        case ComponentRule.COMPONENT_TO_BE_BLOCKED_IFW:
+                            setComponent(entry.name, entry.type, ComponentRule.COMPONENT_BLOCKED_IFW);
+                            break;
+                        case ComponentRule.COMPONENT_TO_BE_BLOCKED_IFW_DISABLE:
+                        case ComponentRule.COMPONENT_TO_BE_DISABLED:
+                            // Disable components
+                            try {
+                                PackageManagerCompat.setComponentEnabledSetting(new ComponentName(packageName, entry.name),
+                                        PackageManager.COMPONENT_ENABLED_STATE_DISABLED, 0, userHandle);
+                                setComponent(entry.name, entry.type, entry.getCounterpartOfToBe());
+                            } catch (RemoteException e) {
+                                Log.e(TAG, "Could not disable component: " + packageName + "/" + entry.name);
+                            }
+                            break;
+                        default:
+                            setComponent(entry.name, entry.type, entry.getCounterpartOfToBe());
                     }
                 }
             } else {
@@ -385,9 +412,9 @@ public final class ComponentsBlocker extends RulesStorageManager {
                     try {
                         PackageManagerCompat.setComponentEnabledSetting(new ComponentName(packageName, entry.name),
                                 PackageManager.COMPONENT_ENABLED_STATE_DEFAULT, 0, userHandle);
-                        if (ComponentRule.COMPONENT_TO_BE_UNBLOCKED.equals(entry.getComponentStatus())) {
+                        if (entry.toBeRemoved()) {
                             removeEntry(entry);
-                        } else setComponent(entry.name, entry.type, ComponentRule.COMPONENT_TO_BE_BLOCKED);
+                        } else setComponent(entry.name, entry.type, entry.getToBe());
                     } catch (RemoteException e) {
                         Log.e(TAG, "Could not enable component: " + packageName + "/" + entry.name);
                     }
@@ -423,7 +450,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
             // System doesn't have any rules.
             // Load the rules saved inside App Manager
             for (ComponentRule entry : getAllComponents()) {
-                setComponent(entry.name, entry.type, ComponentRule.COMPONENT_TO_BE_BLOCKED);
+                setComponent(entry.name, entry.type, entry.getToBe());
             }
             return;
         }
@@ -432,7 +459,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
                 HashMap<String, RuleType> components = ComponentUtils.readIFWRules(rulesStream, packageName);
                 for (String componentName : components.keySet()) {
                     // Override existing rule for the component if it exists
-                    setComponent(componentName, components.get(componentName), ComponentRule.COMPONENT_BLOCKED);
+                    setComponent(componentName, components.get(componentName), ComponentRule.COMPONENT_BLOCKED_IFW_DISABLE);
                 }
                 Log.d(TAG, "Retrieved components for package " + packageName);
             }

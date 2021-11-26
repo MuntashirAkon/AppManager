@@ -6,14 +6,36 @@ import android.content.pm.ComponentInfo;
 
 import androidx.annotation.NonNull;
 
+import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
+
 /**
  * Stores individual app details component item
  */
 public class AppDetailsComponentItem extends AppDetailsItem {
-    public boolean isTracker = false;
-    public boolean isBlocked = false;
+    private boolean isTracker = false;
+    private ComponentRule rule;
 
     public AppDetailsComponentItem(@NonNull ComponentInfo componentInfo) {
         super(componentInfo);
+    }
+
+    public boolean isTracker() {
+        return isTracker;
+    }
+
+    public void setTracker(boolean tracker) {
+        isTracker = tracker;
+    }
+
+    public boolean isBlocked() {
+        return rule != null && rule.isBlocked();
+    }
+
+    public ComponentRule getRule() {
+        return rule;
+    }
+
+    public void setRule(ComponentRule rule) {
+        this.rule = rule;
     }
 }
