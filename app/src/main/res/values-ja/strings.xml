@@ -250,7 +250,7 @@
     <string name="clear_data">データを消去</string>
     <string name="backup_restore">バックアップ/復元</string>
     <string name="disable_background">バックグラウンド実行を防止</string>
-    <string name="export_blocking_rules">ﾌﾞﾛｯｷﾝｸﾞﾙｰﾙをｴｸｽﾎﾟｰﾄ</string>
+    <string name="export_blocking_rules">ﾙｰﾙをｴｸｽﾎﾟｰﾄ</string>
     <plurals name="alert_failed_to_clear_data">
         <item quantity="other">%1$d 個のアプリからデータを消去できませんでした</item>
     </plurals>
@@ -1051,4 +1051,13 @@
     <string name="identifier">識別子</string>
     <string name="staging_apk_files">待機中…</string>
     <string name="running_services_logcat_hint">項目をタップすると、対応するプロセスIDをデフォルトのフィルターとしてログビューアーが開きます。</string>
+    <string name="pref_import_backups_hint">バックアップファイル（Swift Backup/Titanium Backup）またはディレクトリ（OAndBackup）を選択します</string>
+    <string name="import_from_sb">Swift Backup(3.0〜3.2) からインポート</string>
+    <string name="rename">名前を変更</string>
+    <string name="java">Java</string>
+    <string name="smali">Smali</string>
+    <string name="accessibility_service_description">非ルートモードでキャッシュをクリアするなどの操作を行うためのアクセシビリティサービスです。</string>
+    <string name="explore">エクスプローラ</string>
+    <string name="extract">展開</string>
+    <string name="replace">置き換え</string>
 </resources>
