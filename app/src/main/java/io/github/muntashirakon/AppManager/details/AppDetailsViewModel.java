@@ -66,6 +66,7 @@ import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.rules.struct.AppOpRule;
+import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
 import io.github.muntashirakon.AppManager.rules.struct.RuleEntry;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
@@ -318,24 +319,19 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     @WorkerThread
     @GuardedBy("blockerLocker")
-    public void updateRulesForComponent(String componentName, RuleType type) {
+    public void updateRulesForComponent(String componentName,
+                                        RuleType type,
+                                        @ComponentRule.ComponentStatus String componentStatus) {
         if (isExternalApk) return;
         synchronized (blockerLocker) {
             waitForBlockerOrExit();
             blocker.setMutable();
             if (blocker.hasComponentName(componentName)) {
-                // Component is in the list
-                if (blocker.isComponentBlocked(componentName)) {
-                    // Remove from the list
-                    blocker.removeComponent(componentName);
-                } else {
-                    // The component isn't being blocked, simply delete it
-                    blocker.deleteComponent(componentName);
-                }
-            } else {
-                // Add to the list
-                blocker.addComponent(componentName, type);
+                // Simply delete it
+                blocker.deleteComponent(componentName);
             }
+            // Add to the list
+            blocker.addComponent(componentName, type, componentStatus);
             // Apply rules if global blocking enable or already applied
             if ((Boolean) AppPref.get(AppPref.PrefKey.PREF_GLOBAL_BLOCKING_ENABLED_BOOL)
                     || (ruleApplicationStatus.getValue() != null && RULE_APPLIED == ruleApplicationStatus.getValue())) {
@@ -967,10 +963,10 @@ public class AppDetailsViewModel extends AndroidViewModel {
             appDetailsItem.name = activityInfo.targetActivity == null ? activityInfo.name : activityInfo.targetActivity;
             synchronized (blockerLocker) {
                 if (!isExternalApk) {
-                    appDetailsItem.isBlocked = blocker.hasComponentName(activityInfo.name);
+                    appDetailsItem.setRule(blocker.getComponent(activityInfo.name));
                 }
             }
-            appDetailsItem.isTracker = ComponentUtils.isTracker(activityInfo.name);
+            appDetailsItem.setTracker(ComponentUtils.isTracker(activityInfo.name));
             if (TextUtils.isEmpty(searchQuery) || appDetailsItem.name.toLowerCase(Locale.ROOT).contains(searchQuery))
                 appDetailsItems.add(appDetailsItem);
         }
@@ -1003,10 +999,10 @@ public class AppDetailsViewModel extends AndroidViewModel {
             appDetailsItem.name = serviceInfo.name;
             synchronized (blockerLocker) {
                 if (!isExternalApk) {
-                    appDetailsItem.isBlocked = blocker.hasComponentName(serviceInfo.name);
+                    appDetailsItem.setRule(blocker.getComponent(serviceInfo.name));
                 }
             }
-            appDetailsItem.isTracker = ComponentUtils.isTracker(serviceInfo.name);
+            appDetailsItem.setTracker(ComponentUtils.isTracker(serviceInfo.name));
             if (TextUtils.isEmpty(searchQuery)
                     || appDetailsItem.name.toLowerCase(Locale.ROOT).contains(searchQuery))
                 appDetailsItems.add(appDetailsItem);
@@ -1040,10 +1036,10 @@ public class AppDetailsViewModel extends AndroidViewModel {
             appDetailsItem.name = activityInfo.name;
             synchronized (blockerLocker) {
                 if (!isExternalApk) {
-                    appDetailsItem.isBlocked = blocker.hasComponentName(activityInfo.name);
+                    appDetailsItem.setRule(blocker.getComponent(activityInfo.name));
                 }
             }
-            appDetailsItem.isTracker = ComponentUtils.isTracker(activityInfo.name);
+            appDetailsItem.setTracker(ComponentUtils.isTracker(activityInfo.name));
             if (TextUtils.isEmpty(searchQuery)
                     || appDetailsItem.name.toLowerCase(Locale.ROOT).contains(searchQuery))
                 appDetailsItems.add(appDetailsItem);
@@ -1077,10 +1073,10 @@ public class AppDetailsViewModel extends AndroidViewModel {
             appDetailsItem.name = providerInfo.name;
             synchronized (blockerLocker) {
                 if (!isExternalApk) {
-                    appDetailsItem.isBlocked = blocker.hasComponentName(providerInfo.name);
+                    appDetailsItem.setRule(blocker.getComponent(providerInfo.name));
                 }
             }
-            appDetailsItem.isTracker = ComponentUtils.isTracker(providerInfo.name);
+            appDetailsItem.setTracker(ComponentUtils.isTracker(providerInfo.name));
             if (TextUtils.isEmpty(searchQuery)
                     || appDetailsItem.name.toLowerCase(Locale.ROOT).contains(searchQuery))
                 appDetailsItems.add(appDetailsItem);
@@ -1099,9 +1095,13 @@ public class AppDetailsViewModel extends AndroidViewModel {
             switch (sortOrderComponents) {
                 // No need to sort by name since we've already done it
                 case AppDetailsFragment.SORT_BY_BLOCKED:
-                    return -Boolean.compare(((AppDetailsComponentItem) o1).isBlocked, ((AppDetailsComponentItem) o2).isBlocked);
+                    return -Boolean.compare(
+                            ((AppDetailsComponentItem) o1).isBlocked(),
+                            ((AppDetailsComponentItem) o2).isBlocked());
                 case AppDetailsFragment.SORT_BY_TRACKERS:
-                    return -Boolean.compare(((AppDetailsComponentItem) o1).isTracker, ((AppDetailsComponentItem) o2).isTracker);
+                    return -Boolean.compare(
+                            ((AppDetailsComponentItem) o1).isTracker(),
+                            ((AppDetailsComponentItem) o2).isTracker());
             }
             return 0;
         });

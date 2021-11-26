@@ -1132,4 +1132,6 @@
     <string name="extract">Extract</string>
     <string name="replace">Replace</string>
     <string name="rename">Rename</string>
+    <string name="intent_firewall_and_disable">IFW + disable</string>
+    <string name="intent_firewall">IFW</string>
 </resources>

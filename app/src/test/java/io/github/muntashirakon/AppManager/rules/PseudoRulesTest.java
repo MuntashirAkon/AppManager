@@ -33,46 +33,46 @@ public class PseudoRulesTest {
 
     @Test
     public void uniquenessOfActivitiesTest() {
-        rules.setComponent(".activity", RuleType.ACTIVITY, ComponentRule.COMPONENT_BLOCKED);
-        rules.setComponent(".activity", RuleType.ACTIVITY, ComponentRule.COMPONENT_TO_BE_UNBLOCKED);
+        rules.setComponent(".activity", RuleType.ACTIVITY, ComponentRule.COMPONENT_BLOCKED_IFW_DISABLE);
+        rules.setComponent(".activity", RuleType.ACTIVITY, ComponentRule.COMPONENT_TO_BE_DEFAULTED);
         assertEquals(1, rules.getAll().size());
         assertNotEquals(new ComponentRule(PACKAGE_NAME, ".activity", RuleType.ACTIVITY,
-                ComponentRule.COMPONENT_BLOCKED), rules.getAll().get(0));
+                ComponentRule.COMPONENT_BLOCKED_IFW_DISABLE), rules.getAll().get(0));
         assertEquals(new ComponentRule(PACKAGE_NAME, ".activity", RuleType.ACTIVITY,
-                ComponentRule.COMPONENT_TO_BE_UNBLOCKED), rules.getAll().get(0));
+                ComponentRule.COMPONENT_TO_BE_DEFAULTED), rules.getAll().get(0));
     }
 
     @Test
     public void uniquenessOfProvidersTest() {
-        rules.setComponent(".activity", RuleType.PROVIDER, ComponentRule.COMPONENT_BLOCKED);
-        rules.setComponent(".activity", RuleType.PROVIDER, ComponentRule.COMPONENT_TO_BE_UNBLOCKED);
+        rules.setComponent(".activity", RuleType.PROVIDER, ComponentRule.COMPONENT_BLOCKED_IFW_DISABLE);
+        rules.setComponent(".activity", RuleType.PROVIDER, ComponentRule.COMPONENT_TO_BE_DEFAULTED);
         assertEquals(1, rules.getAll().size());
         assertNotEquals(new ComponentRule(PACKAGE_NAME, ".activity", RuleType.PROVIDER,
-                ComponentRule.COMPONENT_BLOCKED), rules.getAll().get(0));
+                ComponentRule.COMPONENT_BLOCKED_IFW_DISABLE), rules.getAll().get(0));
         assertEquals(new ComponentRule(PACKAGE_NAME, ".activity", RuleType.PROVIDER,
-                ComponentRule.COMPONENT_TO_BE_UNBLOCKED), rules.getAll().get(0));
+                ComponentRule.COMPONENT_TO_BE_DEFAULTED), rules.getAll().get(0));
     }
 
     @Test
     public void uniquenessOfServicesTest() {
-        rules.setComponent(".activity", RuleType.SERVICE, ComponentRule.COMPONENT_BLOCKED);
-        rules.setComponent(".activity", RuleType.SERVICE, ComponentRule.COMPONENT_TO_BE_UNBLOCKED);
+        rules.setComponent(".activity", RuleType.SERVICE, ComponentRule.COMPONENT_BLOCKED_IFW_DISABLE);
+        rules.setComponent(".activity", RuleType.SERVICE, ComponentRule.COMPONENT_TO_BE_DEFAULTED);
         assertEquals(1, rules.getAll().size());
         assertNotEquals(new ComponentRule(PACKAGE_NAME, ".activity", RuleType.SERVICE,
-                ComponentRule.COMPONENT_BLOCKED), rules.getAll().get(0));
+                ComponentRule.COMPONENT_BLOCKED_IFW_DISABLE), rules.getAll().get(0));
         assertEquals(new ComponentRule(PACKAGE_NAME, ".activity", RuleType.SERVICE,
-                ComponentRule.COMPONENT_TO_BE_UNBLOCKED), rules.getAll().get(0));
+                ComponentRule.COMPONENT_TO_BE_DEFAULTED), rules.getAll().get(0));
     }
 
     @Test
     public void uniquenessOfReceiversTest() {
-        rules.setComponent(".activity", RuleType.RECEIVER, ComponentRule.COMPONENT_BLOCKED);
-        rules.setComponent(".activity", RuleType.RECEIVER, ComponentRule.COMPONENT_TO_BE_UNBLOCKED);
+        rules.setComponent(".activity", RuleType.RECEIVER, ComponentRule.COMPONENT_BLOCKED_IFW_DISABLE);
+        rules.setComponent(".activity", RuleType.RECEIVER, ComponentRule.COMPONENT_TO_BE_DEFAULTED);
         assertEquals(1, rules.getAll().size());
         assertNotEquals(new ComponentRule(PACKAGE_NAME, ".activity", RuleType.RECEIVER,
-                ComponentRule.COMPONENT_BLOCKED), rules.getAll().get(0));
+                ComponentRule.COMPONENT_BLOCKED_IFW_DISABLE), rules.getAll().get(0));
         assertEquals(new ComponentRule(PACKAGE_NAME, ".activity", RuleType.RECEIVER,
-                ComponentRule.COMPONENT_TO_BE_UNBLOCKED), rules.getAll().get(0));
+                ComponentRule.COMPONENT_TO_BE_DEFAULTED), rules.getAll().get(0));
     }
 
     @Test
@@ -140,32 +140,32 @@ public class PseudoRulesTest {
 
     @Test
     public void interUniquenessTest() {
-        rules.setComponent(".component", RuleType.ACTIVITY, ComponentRule.COMPONENT_BLOCKED);
-        rules.setComponent(".component", RuleType.PROVIDER, ComponentRule.COMPONENT_BLOCKED);
-        rules.setComponent(".component", RuleType.SERVICE, ComponentRule.COMPONENT_BLOCKED);
-        rules.setComponent(".component", RuleType.RECEIVER, ComponentRule.COMPONENT_BLOCKED);
+        rules.setComponent(".component", RuleType.ACTIVITY, ComponentRule.COMPONENT_BLOCKED_IFW_DISABLE);
+        rules.setComponent(".component", RuleType.PROVIDER, ComponentRule.COMPONENT_BLOCKED_IFW_DISABLE);
+        rules.setComponent(".component", RuleType.SERVICE, ComponentRule.COMPONENT_BLOCKED_IFW_DISABLE);
+        rules.setComponent(".component", RuleType.RECEIVER, ComponentRule.COMPONENT_BLOCKED_IFW_DISABLE);
         rules.setPermission(".component", true, 4);
         rules.setNotificationListener(".component", true);
         List<RuleEntry> ruleEntries = rules.getAll();
         assertEquals(6, ruleEntries.size());
         assertEquals(new ComponentRule(PACKAGE_NAME, ".component", RuleType.ACTIVITY,
-                ComponentRule.COMPONENT_BLOCKED), ruleEntries.get(0));
+                ComponentRule.COMPONENT_BLOCKED_IFW_DISABLE), ruleEntries.get(0));
         assertEquals(new ComponentRule(PACKAGE_NAME, ".component", RuleType.PROVIDER,
-                ComponentRule.COMPONENT_BLOCKED), ruleEntries.get(1));
+                ComponentRule.COMPONENT_BLOCKED_IFW_DISABLE), ruleEntries.get(1));
         assertEquals(new ComponentRule(PACKAGE_NAME, ".component", RuleType.SERVICE,
-                ComponentRule.COMPONENT_BLOCKED), ruleEntries.get(2));
+                ComponentRule.COMPONENT_BLOCKED_IFW_DISABLE), ruleEntries.get(2));
         assertEquals(new ComponentRule(PACKAGE_NAME, ".component", RuleType.RECEIVER,
-                ComponentRule.COMPONENT_BLOCKED), ruleEntries.get(3));
+                ComponentRule.COMPONENT_BLOCKED_IFW_DISABLE), ruleEntries.get(3));
         assertEquals(new PermissionRule(PACKAGE_NAME, ".component", true, 4), ruleEntries.get(4));
         assertEquals(new NotificationListenerRule(PACKAGE_NAME, ".component", true), ruleEntries.get(5));
     }
 
     @Test
     public void interUniquenessStubTest() {
-        rules.setComponent(RuleEntry.STUB, RuleType.ACTIVITY, ComponentRule.COMPONENT_BLOCKED);
-        rules.setComponent(RuleEntry.STUB, RuleType.PROVIDER, ComponentRule.COMPONENT_BLOCKED);
-        rules.setComponent(RuleEntry.STUB, RuleType.SERVICE, ComponentRule.COMPONENT_BLOCKED);
-        rules.setComponent(RuleEntry.STUB, RuleType.RECEIVER, ComponentRule.COMPONENT_BLOCKED);
+        rules.setComponent(RuleEntry.STUB, RuleType.ACTIVITY, ComponentRule.COMPONENT_BLOCKED_IFW_DISABLE);
+        rules.setComponent(RuleEntry.STUB, RuleType.PROVIDER, ComponentRule.COMPONENT_BLOCKED_IFW_DISABLE);
+        rules.setComponent(RuleEntry.STUB, RuleType.SERVICE, ComponentRule.COMPONENT_BLOCKED_IFW_DISABLE);
+        rules.setComponent(RuleEntry.STUB, RuleType.RECEIVER, ComponentRule.COMPONENT_BLOCKED_IFW_DISABLE);
         rules.setPermission(RuleEntry.STUB, true, 4);
         rules.setNotificationListener(RuleEntry.STUB, true);
         rules.setNetPolicy(4);
@@ -175,13 +175,13 @@ public class PseudoRulesTest {
         List<RuleEntry> ruleEntries = rules.getAll();
         assertEquals(10, ruleEntries.size());
         assertEquals(new ComponentRule(PACKAGE_NAME, RuleEntry.STUB, RuleType.ACTIVITY,
-                ComponentRule.COMPONENT_BLOCKED), ruleEntries.get(0));
+                ComponentRule.COMPONENT_BLOCKED_IFW_DISABLE), ruleEntries.get(0));
         assertEquals(new ComponentRule(PACKAGE_NAME, RuleEntry.STUB, RuleType.PROVIDER,
-                ComponentRule.COMPONENT_BLOCKED), ruleEntries.get(1));
+                ComponentRule.COMPONENT_BLOCKED_IFW_DISABLE), ruleEntries.get(1));
         assertEquals(new ComponentRule(PACKAGE_NAME, RuleEntry.STUB, RuleType.SERVICE,
-                ComponentRule.COMPONENT_BLOCKED), ruleEntries.get(2));
+                ComponentRule.COMPONENT_BLOCKED_IFW_DISABLE), ruleEntries.get(2));
         assertEquals(new ComponentRule(PACKAGE_NAME, RuleEntry.STUB, RuleType.RECEIVER,
-                ComponentRule.COMPONENT_BLOCKED), ruleEntries.get(3));
+                ComponentRule.COMPONENT_BLOCKED_IFW_DISABLE), ruleEntries.get(3));
         assertEquals(new PermissionRule(PACKAGE_NAME, RuleEntry.STUB, true, 4), ruleEntries.get(4));
         assertEquals(new NotificationListenerRule(PACKAGE_NAME, RuleEntry.STUB, true), ruleEntries.get(5));
         assertEquals(new NetPolicyRule(PACKAGE_NAME, 4), ruleEntries.get(6));

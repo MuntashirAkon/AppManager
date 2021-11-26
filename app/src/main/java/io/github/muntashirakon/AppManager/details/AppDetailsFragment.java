@@ -39,6 +39,7 @@ import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
@@ -76,6 +77,7 @@ import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.intercept.ActivityInterceptor;
 import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
+import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
 import io.github.muntashirakon.AppManager.servermanager.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
@@ -523,9 +525,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         mainModel.load(neededProperty);
     }
 
-    synchronized private void applyRules(String componentName, RuleType type) {
+    synchronized private void applyRules(String componentName,
+                                         RuleType type,
+                                         @ComponentRule.ComponentStatus String componentStatus) {
         if (mainModel != null) {
-            executor.submit(() -> mainModel.updateRulesForComponent(componentName, type));
+            executor.submit(() -> mainModel.updateRulesForComponent(componentName, type, componentStatus));
         }
     }
 
@@ -910,6 +914,48 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             return mAdapterList.size();
         }
 
+        private void handleBlock(@NonNull ViewHolder holder, @NonNull AppDetailsComponentItem item, RuleType ruleType) {
+            if (item.isBlocked()) {
+                holder.blockBtn.setIconResource(R.drawable.ic_restore_black_24dp);
+                holder.blockBtn.setContentDescription(getString(R.string.unblock));
+            } else {
+                holder.blockBtn.setIconResource(R.drawable.ic_block_black_24dp);
+                holder.blockBtn.setContentDescription(getString(R.string.block));
+            }
+            holder.blockBtn.setVisibility(View.VISIBLE);
+            holder.blockBtn.setOnClickListener(v -> {
+                String componentStatus = item.isBlocked()
+                        ? ComponentRule.COMPONENT_TO_BE_DEFAULTED
+                        : ComponentRule.COMPONENT_TO_BE_BLOCKED_IFW_DISABLE;
+                applyRules(item.name, ruleType, componentStatus);
+            });
+            holder.blockBtn.setOnLongClickListener(v -> {
+                PopupMenu popupMenu = new PopupMenu(mActivity, holder.blockBtn);
+                popupMenu.inflate(R.menu.fragment_app_details_components_selection_actions);
+                popupMenu.setOnMenuItemClickListener(item1 -> {
+                    int id = item1.getItemId();
+                    String componentStatus;
+                    if (id == R.id.action_ifw_and_disable) {
+                        componentStatus = ComponentRule.COMPONENT_TO_BE_BLOCKED_IFW_DISABLE;
+                    } else if (id == R.id.action_ifw) {
+                        componentStatus = ComponentRule.COMPONENT_TO_BE_BLOCKED_IFW;
+                    } else if (id == R.id.action_disable) {
+                        componentStatus = ComponentRule.COMPONENT_TO_BE_DISABLED;
+                    } else if (id == R.id.action_enable) {
+                        componentStatus = ComponentRule.COMPONENT_TO_BE_ENABLED;
+                    } else if (id == R.id.action_default) {
+                        componentStatus = ComponentRule.COMPONENT_TO_BE_DEFAULTED;
+                    } else {
+                        componentStatus = ComponentRule.COMPONENT_TO_BE_BLOCKED_IFW_DISABLE;
+                    }
+                    applyRules(item.name, ruleType, componentStatus);
+                    return true;
+                });
+                popupMenu.show();
+                return true;
+            });
+        }
+
         private void getActivityView(@NonNull ViewHolder holder, int index) {
             final View view = holder.itemView;
             final AppDetailsComponentItem appDetailsItem = (AppDetailsComponentItem) mAdapterList.get(index);
@@ -917,10 +963,13 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             final String activityName = appDetailsItem.name;
             final boolean isDisabled = !isExternalApk && isComponentDisabled(mPackageManager, activityInfo);
             // Background color: regular < tracker < disabled < blocked
-            if (!isExternalApk && appDetailsItem.isBlocked) view.setBackgroundResource(R.drawable.item_red);
-            else if (isDisabled) view.setBackgroundResource(R.drawable.item_disabled);
-            else if (appDetailsItem.isTracker) view.setBackgroundResource(R.drawable.item_tracker);
-            else {
+            if (!isExternalApk && appDetailsItem.isBlocked()) {
+                view.setBackgroundResource(R.drawable.item_red);
+            } else if (isDisabled) {
+                view.setBackgroundResource(R.drawable.item_disabled);
+            } else if (appDetailsItem.isTracker()) {
+                view.setBackgroundResource(R.drawable.item_tracker);
+            } else {
                 view.setBackgroundResource(index % 2 == 0 ? R.drawable.item_semi_transparent : R.drawable.item_transparent);
             }
             // Name
@@ -966,7 +1015,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             // 1) Not from an external APK
             // 2) Root enabled or the activity is exportable
             // 3) App or the activity is not disabled and/or blocked
-            boolean canLaunch = !isExternalApk && (isRootEnabled || isExported) && !isDisabled && !appDetailsItem.isBlocked;
+            boolean canLaunch = !isExternalApk && (isRootEnabled || isExported)
+                    && !isDisabled
+                    && !appDetailsItem.isBlocked();
             launch.setEnabled(canLaunch);
             if (canLaunch) {
                 launch.setOnClickListener(v -> {
@@ -1012,17 +1063,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             }
             // Blocking
             if (isRootEnabled && !isExternalApk) {
-                if (appDetailsItem.isBlocked) {
-                    holder.blockBtn.setIconResource(R.drawable.ic_restore_black_24dp);
-                } else {
-                    holder.blockBtn.setIconResource(R.drawable.ic_block_black_24dp);
-                }
-                holder.blockBtn.setVisibility(View.VISIBLE);
-                holder.blockBtn.setOnClickListener(v -> {
-                    applyRules(activityName, RuleType.ACTIVITY);
-                    appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
-                    set(index, appDetailsItem);
-                });
+                handleBlock(holder, appDetailsItem, RuleType.ACTIVITY);
             } else holder.blockBtn.setVisibility(View.GONE);
         }
 
@@ -1038,11 +1079,15 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 }
             }
             // Background color: regular < tracker < disabled < blocked < running
-            if (isRunning) view.setBackgroundResource(R.drawable.item_running);
-            else if (!isExternalApk && appDetailsItem.isBlocked) view.setBackgroundResource(R.drawable.item_red);
-            else if (isDisabled) view.setBackgroundResource(R.drawable.item_disabled);
-            else if (appDetailsItem.isTracker) view.setBackgroundResource(R.drawable.item_tracker);
-            else {
+            if (isRunning) {
+                view.setBackgroundResource(R.drawable.item_running);
+            } else if (!isExternalApk && appDetailsItem.isBlocked()) {
+                view.setBackgroundResource(R.drawable.item_red);
+            } else if (isDisabled) {
+                view.setBackgroundResource(R.drawable.item_disabled);
+            } else if (appDetailsItem.isTracker()) {
+                view.setBackgroundResource(R.drawable.item_tracker);
+            } else {
                 view.setBackgroundResource(index % 2 == 0 ? R.drawable.item_semi_transparent : R.drawable.item_transparent);
             }
             // Label
@@ -1072,7 +1117,10 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             // 1) Not from an external APK
             // 2) Root enabled or the service is exportable without any permission
             // 3) App or the service is not disabled and/or blocked
-            boolean canLaunch = !isExternalApk && (isRootEnabled || (serviceInfo.exported && serviceInfo.permission == null)) && !isDisabled && !appDetailsItem.isBlocked;
+            boolean canLaunch = !isExternalApk
+                    && (isRootEnabled || (serviceInfo.exported && serviceInfo.permission == null))
+                    && !isDisabled
+                    && !appDetailsItem.isBlocked();
             holder.launchBtn.setEnabled(canLaunch);
             if (canLaunch) {
                 holder.launchBtn.setOnClickListener(v -> {
@@ -1088,17 +1136,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             }
             // Blocking
             if (isRootEnabled && !isExternalApk) {
-                if (appDetailsItem.isBlocked) {
-                    holder.blockBtn.setIconResource(R.drawable.ic_restore_black_24dp);
-                } else {
-                    holder.blockBtn.setIconResource(R.drawable.ic_block_black_24dp);
-                }
-                holder.blockBtn.setVisibility(View.VISIBLE);
-                holder.blockBtn.setOnClickListener(v -> {
-                    applyRules(serviceInfo.name, RuleType.SERVICE);
-                    appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
-                    set(index, appDetailsItem);
-                });
+                handleBlock(holder, appDetailsItem, RuleType.SERVICE);
             } else holder.blockBtn.setVisibility(View.GONE);
         }
 
@@ -1107,11 +1145,12 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             final AppDetailsComponentItem appDetailsItem = (AppDetailsComponentItem) mAdapterList.get(index);
             final ActivityInfo activityInfo = (ActivityInfo) appDetailsItem.vanillaItem;
             // Background color: regular < tracker < disabled < blocked
-            if (!isExternalApk && appDetailsItem.isBlocked) view.setBackgroundResource(R.drawable.item_red);
-            else if (!isExternalApk && isComponentDisabled(mPackageManager, activityInfo))
+            if (!isExternalApk && appDetailsItem.isBlocked()) view.setBackgroundResource(R.drawable.item_red);
+            else if (!isExternalApk && isComponentDisabled(mPackageManager, activityInfo)) {
                 view.setBackgroundResource(R.drawable.item_disabled);
-            else if (appDetailsItem.isTracker) view.setBackgroundResource(R.drawable.item_tracker);
-            else {
+            } else if (appDetailsItem.isTracker()) {
+                view.setBackgroundResource(R.drawable.item_tracker);
+            } else {
                 view.setBackgroundResource(index % 2 == 0 ? R.drawable.item_semi_transparent : R.drawable.item_transparent);
             }
             // Label
@@ -1148,17 +1187,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             } else holder.textView7.setVisibility(View.GONE);
             // Blocking
             if (isRootEnabled && !isExternalApk) {
-                if (appDetailsItem.isBlocked) {
-                    holder.blockBtn.setIconResource(R.drawable.ic_restore_black_24dp);
-                } else {
-                    holder.blockBtn.setIconResource(R.drawable.ic_block_black_24dp);
-                }
-                holder.blockBtn.setVisibility(View.VISIBLE);
-                holder.blockBtn.setOnClickListener(v -> {
-                    applyRules(activityInfo.name, RuleType.RECEIVER);
-                    appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
-                    set(index, appDetailsItem);
-                });
+                handleBlock(holder, appDetailsItem, RuleType.RECEIVER);
             } else holder.blockBtn.setVisibility(View.GONE);
         }
 
@@ -1168,11 +1197,12 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             final ProviderInfo providerInfo = (ProviderInfo) appDetailsItem.vanillaItem;
             final String providerName = providerInfo.name;
             // Background color: regular < tracker < disabled < blocked
-            if (!isExternalApk && appDetailsItem.isBlocked) view.setBackgroundResource(R.drawable.item_red);
+            if (!isExternalApk && appDetailsItem.isBlocked()) view.setBackgroundResource(R.drawable.item_red);
             else if (!isExternalApk && isComponentDisabled(mPackageManager, providerInfo))
                 view.setBackgroundResource(R.drawable.item_disabled);
-            else if (appDetailsItem.isTracker) view.setBackgroundResource(R.drawable.item_tracker);
-            else {
+            else if (appDetailsItem.isTracker()) {
+                view.setBackgroundResource(R.drawable.item_tracker);
+            } else {
                 view.setBackgroundResource(index % 2 == 0 ? R.drawable.item_semi_transparent : R.drawable.item_transparent);
             }
             // Label
@@ -1231,18 +1261,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             } else holder.textView7.setVisibility(View.GONE);
             // Blocking
             if (isRootEnabled && !isExternalApk) {
-                if (appDetailsItem.isBlocked) {
-                    holder.blockBtn.setIconResource(R.drawable.ic_restore_black_24dp);
-                } else {
-                    holder.blockBtn.setIconResource(R.drawable.ic_block_black_24dp);
-                }
-                holder.blockBtn.setVisibility(View.VISIBLE);
-                holder.blockBtn.setOnClickListener(v -> {
-                    applyRules(providerName, RuleType.PROVIDER);
-                    appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
-                    set(index, appDetailsItem);
-                    notifyItemChanged(index);
-                });
+                handleBlock(holder, appDetailsItem, RuleType.PROVIDER);
             } else holder.blockBtn.setVisibility(View.GONE);
         }
 
