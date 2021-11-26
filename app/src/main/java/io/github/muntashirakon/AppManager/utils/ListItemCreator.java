@@ -12,7 +12,9 @@ import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.LinearLayoutCompat;
+
 import com.google.android.material.button.MaterialButton;
+
 import io.github.muntashirakon.AppManager.R;
 
 public class ListItemCreator {
@@ -21,11 +23,11 @@ public class ListItemCreator {
     private final LinearLayoutCompat mListContainer;
     private final LayoutInflater mLayoutInflater;
 
-    public View list_item;
-    public TextView item_title;
-    public TextView item_subtitle;
-    public ImageView item_icon;
-    public MaterialButton item_open;
+    public View listItem;
+    public TextView itemTitle;
+    public TextView itemSubtitle;
+    public ImageView itemIcon;
+    public MaterialButton itemOpen;
 
     public ListItemCreator(@NonNull Activity activity, @IdRes int resIdMenuContainer) {
         mListContainer = activity.findViewById(resIdMenuContainer);
@@ -51,22 +53,23 @@ public class ListItemCreator {
      */
     private View addItemWithIconTitleSubtitle(@NonNull CharSequence title,
                                               @Nullable CharSequence subtitle, int resIdIcon) {
-        list_item = mLayoutInflater.inflate(R.layout.item_icon_title_subtitle, mListContainer, false);
+        listItem = mLayoutInflater.inflate(R.layout.item_icon_title_subtitle, mListContainer, false);
         // Item title
-        item_title = list_item.findViewById(R.id.item_title);
-        item_title.setText(title);
+        itemTitle = listItem.findViewById(R.id.item_title);
+        itemTitle.setText(title);
         // Item subtitle
-        item_subtitle = list_item.findViewById(R.id.item_subtitle);
-        if (subtitle != null) item_subtitle.setText(subtitle);
-        else item_subtitle.setVisibility(View.GONE);
+        itemSubtitle = listItem.findViewById(R.id.item_subtitle);
+        if (subtitle != null) itemSubtitle.setText(subtitle);
+        else itemSubtitle.setVisibility(View.GONE);
         // Item icon
-        item_icon = list_item.findViewById(R.id.item_icon);
-        if (resIdIcon != EMPTY) item_icon.setImageResource(resIdIcon);
+        itemIcon = listItem.findViewById(R.id.item_icon);
+        if (resIdIcon != EMPTY) itemIcon.setImageResource(resIdIcon);
+        else itemIcon.setVisibility(View.GONE);
         // Remove open with button if not requested
-        item_open = list_item.findViewById(R.id.item_open);
-        item_open.setVisibility(View.GONE);
+        itemOpen = listItem.findViewById(R.id.item_open);
+        itemOpen.setVisibility(View.GONE);
         // Add new menu to the container
-        mListContainer.addView(list_item);
-        return list_item;
+        mListContainer.addView(listItem);
+        return listItem;
     }
 }
