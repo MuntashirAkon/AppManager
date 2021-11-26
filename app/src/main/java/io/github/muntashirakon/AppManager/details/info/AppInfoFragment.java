@@ -1012,37 +1012,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         if (FeatureController.isManifestEnabled()) {
             addToHorizontalLayout(R.string.manifest, R.drawable.ic_tune_black_24dp).setOnClickListener(v -> {
                 Intent intent = new Intent(mActivity, ManifestViewerActivity.class);
-                ApkFile apkFile = ApkFile.getInstance(mainModel.getApkFileKey());
-                if (apkFile.isSplit()) {
-                    // Display a list of apks
-                    List<ApkFile.Entry> apkEntries = apkFile.getEntries();
-                    CharSequence[] entryNames = new CharSequence[apkEntries.size()];
-                    for (int i = 0; i < apkEntries.size(); ++i) {
-                        entryNames[i] = apkEntries.get(i).toShortLocalizedString(requireActivity());
-                    }
-                    new MaterialAlertDialogBuilder(mActivity)
-                            .setTitle(R.string.select_apk)
-                            .setItems(entryNames, (dialog, which) -> executor.submit(() -> {
-                                try {
-                                    File file = apkEntries.get(which).getRealCachedFile();
-                                    intent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
-                                    runOnUiThread(() -> startActivity(intent));
-                                } catch (IOException | RemoteException e) {
-                                    e.printStackTrace();
-                                }
-                            }))
-                            .setNegativeButton(R.string.cancel, null)
-                            .show();
-                } else {
-                    // Open directly
-                    if (mainModel.getIsExternalApk()) {
-                        File file = new File(mApplicationInfo.publicSourceDir);
-                        intent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
-                    } else {
-                        intent.putExtra(ManifestViewerActivity.EXTRA_PACKAGE_NAME, mPackageName);
-                    }
-                    startActivity(intent);
-                }
+                startActivityForSplit(intent);
             });
         }
         // Set scanner
@@ -1050,9 +1020,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             addToHorizontalLayout(R.string.scanner, R.drawable.ic_baseline_security_24).setOnClickListener(v -> {
                 Intent intent = new Intent(mActivity, ScannerActivity.class);
                 intent.putExtra(ScannerActivity.EXTRA_IS_EXTERNAL, isExternalApk);
-                File file = new File(mApplicationInfo.publicSourceDir);
-                intent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
-                startActivity(intent);
+                startActivityForSplit(intent);
             });
         }
         // Root only features
@@ -1140,6 +1108,44 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         }
         View v = mHorizontalLayout.getChildAt(0);
         if (v != null) v.requestFocus();
+    }
+
+    private void startActivityForSplit(Intent intent) {
+        if (mainModel == null) return;
+        try (ApkFile apkFile = ApkFile.getInstance(mainModel.getApkFileKey())) {
+            if (apkFile.isSplit()) {
+                // Display a list of apks
+                List<ApkFile.Entry> apkEntries = apkFile.getEntries();
+                CharSequence[] entryNames = new CharSequence[apkEntries.size()];
+                for (int i = 0; i < apkEntries.size(); ++i) {
+                    entryNames[i] = apkEntries.get(i).toShortLocalizedString(requireActivity());
+                }
+                new MaterialAlertDialogBuilder(mActivity)
+                        .setTitle(R.string.select_apk)
+                        .setItems(entryNames, (dialog, which) -> executor.submit(() -> {
+                            try {
+                                File file = apkEntries.get(which).getRealCachedFile();
+                                intent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton()
+                                        .getMimeTypeFromExtension("apk"));
+                                UiThreadHandler.run(() -> startActivity(intent));
+                            } catch (IOException | RemoteException e) {
+                                e.printStackTrace();
+                            }
+                        }))
+                        .setNegativeButton(R.string.cancel, null)
+                        .show();
+            } else {
+                // Open directly
+                if (mainModel.getIsExternalApk()) {
+                    File file = new File(mApplicationInfo.publicSourceDir);
+                    intent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton()
+                            .getMimeTypeFromExtension("apk"));
+                } else {
+                    intent.putExtra(ManifestViewerActivity.EXTRA_PACKAGE_NAME, mPackageName);
+                }
+                startActivity(intent);
+            }
+        }
     }
 
     @GuardedBy("mListItems")
@@ -1419,6 +1425,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @MainThread
     private void disable() {
+        if (mainModel == null) return;
         try {
             PackageManagerCompat.setApplicationEnabledSetting(mPackageName,
                     PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER,
