@@ -22,6 +22,7 @@ import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.details.AppDetailsFragment;
 import io.github.muntashirakon.AppManager.logcat.helper.LogcatHelper;
 import io.github.muntashirakon.AppManager.main.ListOptions;
+import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runningapps.RunningAppsActivity;
 import io.github.muntashirakon.io.ProxyFile;
@@ -65,7 +66,9 @@ public class AppPref {
         PREF_ENABLE_SCREEN_LOCK_BOOL,
         PREF_ENABLED_FEATURES_INT,
         PREF_ENCRYPTION_STR,
+
         PREF_GLOBAL_BLOCKING_ENABLED_BOOL,
+        PREF_DEFAULT_BLOCKING_METHOD_STR,
 
         PREF_INSTALLER_BLOCK_TRACKERS_BOOL,
         PREF_INSTALLER_ALWAYS_ON_BACKGROUND_BOOL,
@@ -236,11 +239,25 @@ public class AppPref {
         return new ProxyFile((String) get(AppPref.PrefKey.PREF_BACKUP_VOLUME_STR), "AppManager");
     }
 
+    @NonNull
     public static String getLanguage(Context context) {
         AppPref appPref = getNewInstance(context);
         PrefKey key = PrefKey.PREF_CUSTOM_LOCALE_STR;
         return Objects.requireNonNull(appPref.preferences.getString(PrefKey.keys[PrefKey.indexOf(key)],
                 (String) appPref.getDefaultValue(key)));
+    }
+
+    @ComponentRule.ComponentStatus
+    public static String getDefaultComponentStatus() {
+        String selectedStatus = getString(PrefKey.PREF_DEFAULT_BLOCKING_METHOD_STR);
+        if (isAdbEnabled()) {
+            if (selectedStatus.equals(ComponentRule.COMPONENT_TO_BE_BLOCKED_IFW_DISABLE)
+                    || selectedStatus.equals(ComponentRule.COMPONENT_TO_BE_BLOCKED_IFW)) {
+                // Lower the status
+                return ComponentRule.COMPONENT_TO_BE_DISABLED;
+            }
+        }
+        return selectedStatus;
     }
 
     public static void set(PrefKey key, Object value) {
@@ -414,6 +431,9 @@ public class AppPref {
                 return LogcatHelper.LOG_ID_MAIN | LogcatHelper.LOG_ID_SYSTEM | LogcatHelper.LOG_ID_CRASH;
             case PREF_LAYOUT_ORIENTATION_INT:
                 return View.LAYOUT_DIRECTION_LTR;
+            case PREF_DEFAULT_BLOCKING_METHOD_STR:
+                // This is default for root
+                return ComponentRule.COMPONENT_TO_BE_BLOCKED_IFW_DISABLE;
         }
         throw new IllegalArgumentException("Pref key not found.");
     }

@@ -1101,4 +1101,9 @@
     <string name="running_services_logcat_hint">Click on an item to open the log viewer with the corresponding process ID as the default filter.</string>
     <string name="intent_firewall_and_disable">IFW + disable</string>
     <string name="intent_firewall">IFW</string>
+    <string name="pref_default_blocking_method">Default blocking method</string>
+    <string name="pref_default_blocking_method_description">Method to use by default in places where there is no option to select a blocking method.</string>
+    <string name="pref_intent_firewall_and_disable_description">Block components using Intent Firewall as well as disable them. Recommended method for root users.</string>
+    <string name="pref_intent_firewall_description">Block components using Intent Firewall only. Not recommended as some system apps can bypass firewalls.</string>
+    <string name="pref_disable_description">Disable components only. Not recommended for root users since the apps can bypass this. In ADB modes, the test-only apps can be disabled with this method.</string>
 </resources>
