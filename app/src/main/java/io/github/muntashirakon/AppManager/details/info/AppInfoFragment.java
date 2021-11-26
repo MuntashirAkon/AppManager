@@ -1136,13 +1136,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         .show();
             } else {
                 // Open directly
-                if (mainModel.getIsExternalApk()) {
-                    File file = new File(mApplicationInfo.publicSourceDir);
-                    intent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton()
-                            .getMimeTypeFromExtension("apk"));
-                } else {
-                    intent.putExtra(ManifestViewerActivity.EXTRA_PACKAGE_NAME, mPackageName);
-                }
+                File file = new File(mApplicationInfo.publicSourceDir);
+                intent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
                 startActivity(intent);
             }
         }
