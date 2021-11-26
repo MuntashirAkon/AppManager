@@ -160,6 +160,7 @@ public class ScannerActivity extends BaseActivity {
             ((TextView) findViewById(R.id.apk_title)).setText(R.string.source_dir);
             ((TextView) findViewById(R.id.apk_description)).setText(sb);
         });
+        File finalApkFile = apkFile;
         model.getPackageInfo().observe(this, packageInfo -> {
             if (packageInfo != null) {
                 String archiveFilePath = model.getApkFile().getAbsolutePath();
@@ -173,8 +174,11 @@ public class ScannerActivity extends BaseActivity {
                     mActionBar.setSubtitle(R.string.scanner);
                 }
             } else {
-                Toast.makeText(this, R.string.failed_to_fetch_package_info, Toast.LENGTH_SHORT).show();
-                finish();
+                mAppName = finalApkFile != null ? finalApkFile.getName() : apkUri.getLastPathSegment();
+                if (mActionBar != null) {
+                    mActionBar.setTitle(mAppName);
+                    mActionBar.setSubtitle(R.string.scanner);
+                }
             }
         });
         model.getApkVerifierResult().observe(this, result -> {
