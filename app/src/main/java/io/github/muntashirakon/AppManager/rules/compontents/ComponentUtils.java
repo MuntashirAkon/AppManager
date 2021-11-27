@@ -5,7 +5,6 @@ package io.github.muntashirakon.AppManager.rules.compontents;
 import android.annotation.UserIdInt;
 import android.content.ComponentName;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.RemoteException;
 import android.util.Xml;
 
@@ -24,12 +23,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.oneclickops.ItemCount;
 import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.struct.AppOpRule;
@@ -165,16 +162,6 @@ public final class ComponentUtils {
             }
         }
         return failedPkgList;
-    }
-
-    @NonNull
-    public static ItemCount getTrackerCountForApp(@NonNull PackageInfo packageInfo) {
-        PackageManager pm = AppManager.getContext().getPackageManager();
-        ItemCount trackerCount = new ItemCount();
-        trackerCount.packageName = packageInfo.packageName;
-        trackerCount.packageLabel = packageInfo.applicationInfo.loadLabel(pm).toString();
-        trackerCount.count = getTrackerComponentsForPackage(packageInfo).size();
-        return trackerCount;
     }
 
     public static void storeRules(@NonNull OutputStream os, @NonNull List<RuleEntry> rules, boolean isExternal)
