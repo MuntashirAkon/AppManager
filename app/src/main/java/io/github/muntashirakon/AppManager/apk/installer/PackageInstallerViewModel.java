@@ -9,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.UserInfo;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.RemoteException;
 
 import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
@@ -147,7 +146,7 @@ public class PackageInstallerViewModel extends AndroidViewModel {
         return users;
     }
 
-    private void getPackageInfoInternal() throws PackageManager.NameNotFoundException, IOException, RemoteException {
+    private void getPackageInfoInternal() throws PackageManager.NameNotFoundException, IOException {
         apkFile = ApkFile.getInstance(this.apkFileKey);
         newPackageInfo = loadNewPackageInfo();
         packageName = newPackageInfo.packageName;
@@ -167,7 +166,7 @@ public class PackageInstallerViewModel extends AndroidViewModel {
 
     @WorkerThread
     @NonNull
-    private PackageInfo loadNewPackageInfo() throws PackageManager.NameNotFoundException, IOException, RemoteException {
+    private PackageInfo loadNewPackageInfo() throws PackageManager.NameNotFoundException, IOException {
         String apkPath = apkFile.getBaseEntry().getSignedFile(getApplication()).getAbsolutePath();
         @SuppressLint("WrongConstant")
         PackageInfo packageInfo = packageManager.getPackageArchiveInfo(apkPath, PackageManager.GET_PERMISSIONS

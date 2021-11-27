@@ -10,7 +10,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.RemoteException;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -18,6 +17,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.UiThread;
+import androidx.appcompat.widget.AppCompatEditText;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
@@ -30,12 +36,6 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.annotation.UiThread;
-import androidx.appcompat.widget.AppCompatEditText;
-import androidx.core.content.ContextCompat;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
@@ -103,21 +103,25 @@ public class ManifestViewerActivity extends BaseActivity {
         final PackageManager pm = getApplicationContext().getPackageManager();
         if (packageUri != null) {
             new Thread(() -> {
-                PackageInfo packageInfo = null;
                 archiveFilePath = packageUri.getPath();
                 if (packageUri.getScheme().equals(ContentResolver.SCHEME_CONTENT) || !new File(archiveFilePath).canRead()) {
                     try {
                         int key = ApkFile.createInstance(packageUri, intent.getType());
                         apkFile = ApkFile.getInstance(key);
                         archiveFilePath = apkFile.getBaseEntry().getRealCachedFile().getAbsolutePath();
-                    } catch (IOException | ApkFile.ApkFileException | RemoteException e) {
+                    } catch (IOException | ApkFile.ApkFileException e) {
                         Log.e("Manifest", "Error: ", e);
                         runOnUiThread(this::showErrorAndFinish);
                         return;
                     }
                 }
-                if (archiveFilePath != null)
-                    packageInfo = pm.getPackageArchiveInfo(archiveFilePath, 0);
+                String archiveFilePath;
+                try {
+                    archiveFilePath = apkFile.getBaseEntry().getRealCachedFile().getAbsolutePath();
+                } catch (IOException e) {
+                    return;
+                }
+                PackageInfo packageInfo = pm.getPackageArchiveInfo(archiveFilePath, 0);
                 if (packageInfo != null) {
                     packageName = packageInfo.packageName;
                     final ApplicationInfo applicationInfo = packageInfo.applicationInfo;

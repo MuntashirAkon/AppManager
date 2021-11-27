@@ -535,7 +535,7 @@ public final class PackageInstallerCompat {
                     IOUtils.copy(apkInputStream, apkOutputStream);
                     session.fsync(apkOutputStream);
                     Log.d(TAG, "Install: copied entry " + entry.name);
-                } catch (IOException | RemoteException e) {
+                } catch (IOException e) {
                     callFinish(STATUS_FAILURE_SESSION_WRITE);
                     Log.e(TAG, "Install: Cannot copy files to session.", e);
                     return abandon();
