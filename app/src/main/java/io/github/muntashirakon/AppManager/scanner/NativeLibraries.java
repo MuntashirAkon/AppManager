@@ -8,6 +8,7 @@ import androidx.annotation.WorkerThread;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 
 public class NativeLibraries {
     private final List<String> libPaths = new ArrayList<>();
@@ -27,6 +29,19 @@ public class NativeLibraries {
             Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();
             while (zipEntries.hasMoreElements()) {
                 ZipEntry zipEntry = zipEntries.nextElement();
+                if (zipEntry.getName().endsWith(".so")) {
+                    libPaths.add(zipEntry.getName());
+                    libs.add(new File(zipEntry.getName()).getName());
+                }
+            }
+        }
+    }
+
+    @WorkerThread
+    public NativeLibraries(@NonNull InputStream apkInputStream) throws IOException {
+        try (ZipInputStream zipInputStream = new ZipInputStream(apkInputStream)) {
+            ZipEntry zipEntry;
+            while ((zipEntry = zipInputStream.getNextEntry()) != null) {
                 if (zipEntry.getName().endsWith(".so")) {
                     libPaths.add(zipEntry.getName());
                     libs.add(new File(zipEntry.getName()).getName());

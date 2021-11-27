@@ -696,7 +696,7 @@ public final class ApkFile implements AutoCloseable {
          * @throws IOException If I/O error occurs.
          */
         @NonNull
-        private InputStream getRealInputStream() throws IOException {
+        public InputStream getRealInputStream() throws IOException {
             if (cachedFile != null && cachedFile.exists()) return new FileInputStream(cachedFile);
             if (zipEntry != null) return Objects.requireNonNull(zipFile).getInputStream(zipEntry);
             if (source != null && source.exists()) return new FileInputStream(source);

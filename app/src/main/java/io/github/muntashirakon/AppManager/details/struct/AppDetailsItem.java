@@ -11,7 +11,7 @@ public class AppDetailsItem {
     public @NonNull Object vanillaItem;
     public @NonNull String name = "";
 
-    public AppDetailsItem(@NonNull Object object) {
+    public <T> AppDetailsItem(@NonNull T object) {
         vanillaItem = object;
     }
 }

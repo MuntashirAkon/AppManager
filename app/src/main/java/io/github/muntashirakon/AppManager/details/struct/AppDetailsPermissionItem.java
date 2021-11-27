@@ -20,8 +20,8 @@ public class AppDetailsPermissionItem extends AppDetailsItem {
     @PermissionCompat.PermissionFlags
     public int permissionFlags = 0;
 
-    public AppDetailsPermissionItem(@NonNull PermissionInfo object) {
-        super(object);
+    public AppDetailsPermissionItem(@NonNull PermissionInfo permissionInfo) {
+        super(permissionInfo);
     }
 
     public AppDetailsPermissionItem(@NonNull AppDetailsPermissionItem object) {
