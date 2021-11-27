@@ -13,6 +13,7 @@ import android.os.RemoteException;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.format.Formatter;
+import android.util.DisplayMetrics;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
 
@@ -51,6 +52,7 @@ import io.github.muntashirakon.AppManager.apk.signing.SigSchemes;
 import io.github.muntashirakon.AppManager.apk.signing.Signer;
 import io.github.muntashirakon.AppManager.fm.FmProvider;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.misc.VMRuntime;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
@@ -146,6 +148,9 @@ public final class ApkFile implements AutoCloseable {
     public static final int APK_SPLIT_DENSITY = 3;
     public static final int APK_SPLIT_LOCALE = 4;
     public static final int APK_SPLIT_UNKNOWN = 5;
+    /**
+     * Generic split type. For internal uses only, never returned by {@link Entry#type}.
+     */
     public static final int APK_SPLIT = 6;
 
     public static List<String> SUPPORTED_EXTENSIONS = new ArrayList<>();
@@ -318,7 +323,7 @@ public final class ApkFile implements AutoCloseable {
                 } else if (fileName.endsWith(".idsig")) {
                     try {
                         idsigFile = FileUtils.saveZipFile(zipFile.getInputStream(zipEntry), getCachePath(), IDSIG_FILE);
-                    } catch (IOException | RemoteException e) {
+                    } catch (IOException e) {
                         throw new ApkFileException(e);
                     }
                 }
@@ -438,7 +443,7 @@ public final class ApkFile implements AutoCloseable {
     }
 
     @WorkerThread
-    public void extractObb(ProxyFile writableObbDir) throws IOException, RemoteException {
+    public void extractObb(ProxyFile writableObbDir) throws IOException {
         if (!hasObb() || zipFile == null) return;
         for (ZipEntry obbEntry : obbFiles) {
             String fileName = FileUtils.getFileNameFromZipEntry(obbEntry);
@@ -509,15 +514,22 @@ public final class ApkFile implements AutoCloseable {
          */
         @NonNull
         public final String name;
+        /**
+         * Type of the APK (base or split). One of {@link #APK_BASE}, {@link #APK_SPLIT_FEATURE},
+         * {@link #APK_SPLIT_ABI}, {@link #APK_SPLIT_DENSITY}, {@link #APK_SPLIT_LOCALE},  {@link #APK_SPLIT_UNKNOWN}.
+         */
         @ApkType
         public final int type;
+        /**
+         * The entire manifest file as {@link ByteBuffer}.
+         */
         @NonNull
         public final ByteBuffer manifest;
-        @Nullable
-        public String splitSuffix;
-        @Nullable
-        public String forFeature = null;
 
+        @Nullable
+        private String splitSuffix;
+        @Nullable
+        private String forFeature = null;
         @Nullable
         private File cachedFile;
         @Nullable
@@ -541,11 +553,11 @@ public final class ApkFile implements AutoCloseable {
 
         Entry(@NonNull File source, @NonNull ByteBuffer manifest) {
             this.name = "Base.apk";
-            this.source = source;
+            this.source = Objects.requireNonNull(source);
             this.type = APK_BASE;
             this.selected = this.required = true;
             this.isolated = false;
-            this.manifest = manifest;
+            this.manifest = Objects.requireNonNull(manifest);
         }
 
         Entry(@NonNull String name,
@@ -554,7 +566,7 @@ public final class ApkFile implements AutoCloseable {
               @NonNull ByteBuffer manifest,
               @NonNull HashMap<String, String> manifestAttrs) {
             this(name, type, manifest, manifestAttrs);
-            this.zipEntry = zipEntry;
+            this.zipEntry = Objects.requireNonNull(zipEntry);
         }
 
         Entry(@NonNull String name,
@@ -563,13 +575,16 @@ public final class ApkFile implements AutoCloseable {
               @NonNull ByteBuffer manifest,
               @NonNull HashMap<String, String> manifestAttrs) {
             this(name, type, manifest, manifestAttrs);
-            this.source = source;
+            this.source = Objects.requireNonNull(source);
         }
 
         private Entry(@NonNull String name,
                       @ApkType int type,
                       @NonNull ByteBuffer manifest,
                       @NonNull HashMap<String, String> manifestAttrs) {
+            Objects.requireNonNull(name);
+            Objects.requireNonNull(manifest);
+            Objects.requireNonNull(manifestAttrs);
             this.manifest = manifest;
             if (type == APK_BASE) {
                 this.name = name;
@@ -643,6 +658,9 @@ public final class ApkFile implements AutoCloseable {
             }
         }
 
+        /**
+         * Get filename of the entry. This does not necessarily exist as a real file.
+         */
         @NonNull
         public String getFileName() {
             if (cachedFile != null && cachedFile.exists()) return cachedFile.getName();
@@ -651,6 +669,9 @@ public final class ApkFile implements AutoCloseable {
             else throw new RuntimeException("Neither zipEntry nor source is defined.");
         }
 
+        /**
+         * Get size of the entry.
+         */
         public long getFileSize() {
             if (cachedFile != null && cachedFile.exists()) return cachedFile.length();
             if (zipEntry != null) return zipEntry.getSize();
@@ -658,7 +679,12 @@ public final class ApkFile implements AutoCloseable {
             else throw new RuntimeException("Neither zipEntry nor source is defined.");
         }
 
-        public File getSignedFile(Context context) throws IOException, RemoteException {
+        /**
+         * Get signed APK file if required based on user preferences.
+         *
+         * @throws IOException If the APK cannot be signed or cached.
+         */
+        public File getSignedFile(@NonNull Context context) throws IOException {
             if (signedFile != null) return signedFile;
             File realFile = getRealCachedFile();
             if (!needSigning()) {
@@ -668,7 +694,7 @@ public final class ApkFile implements AutoCloseable {
             signedFile = FileUtils.getTempFile();
             SigSchemes sigSchemes = SigSchemes.fromPref();
             try {
-                Signer signer = Signer.getInstance(sigSchemes, context);
+                Signer signer = Signer.getInstance(sigSchemes, Objects.requireNonNull(context));
                 if (signer.isV4SchemeEnabled()) {
                     idsigFile = FileUtils.getTempFile();
                     signer.setIdsigFile(idsigFile);
@@ -684,7 +710,12 @@ public final class ApkFile implements AutoCloseable {
             }
         }
 
-        public InputStream getSignedInputStream(Context context) throws IOException, RemoteException {
+        /**
+         * Same as {@link #getSignedFile(Context)} except that it returns an {@link InputStream}.
+         *
+         * @throws IOException If the APK cannot be signed or cached.
+         */
+        public InputStream getSignedInputStream(@NonNull Context context) throws IOException {
             if (!needSigning()) {
                 // Return original/real input stream if signing is not requested
                 return getRealInputStream();
@@ -692,11 +723,19 @@ public final class ApkFile implements AutoCloseable {
             return new FileInputStream(getSignedFile(context));
         }
 
+        /**
+         * Get the APK file source if it has a physical location.
+         *
+         * @return Absolute path to the APK file.
+         */
         @Nullable
         public String getApkSource() {
             return source == null ? null : source.getAbsolutePath();
         }
 
+        /**
+         * Close this entry i.e. delete the cached files. Called automatically if {@link ApkFile#close()} is called.
+         */
         @Override
         public void close() {
             FileUtils.deleteSilently(cachedFile);
@@ -708,6 +747,12 @@ public final class ApkFile implements AutoCloseable {
             }
         }
 
+        /**
+         * Get input stream of the entry. It does not sign the APK based on user preferences. It also does not cache
+         * the APK file, but tries to reuse existing cache file.
+         *
+         * @throws IOException If I/O error occurs.
+         */
         @NonNull
         private InputStream getRealInputStream() throws IOException {
             if (cachedFile != null && cachedFile.exists()) return new FileInputStream(cachedFile);
@@ -716,8 +761,13 @@ public final class ApkFile implements AutoCloseable {
             else throw new IOException("Neither zipEntry nor source is defined.");
         }
 
+        /**
+         * Get a readable file of the entry, cached if necessary. It does not sign the APK based on user preferences.
+         *
+         * @throws IOException If an I/O error occurs while caching the APK.
+         */
         @WorkerThread
-        public File getRealCachedFile() throws IOException, RemoteException {
+        public File getRealCachedFile() throws IOException {
             if (source != null && source.canRead() && !source.getAbsolutePath().startsWith("/proc/self")) return source;
             if (cachedFile != null) {
                 if (cachedFile.canRead()) return cachedFile;
@@ -728,26 +778,51 @@ public final class ApkFile implements AutoCloseable {
             }
         }
 
+        /**
+         * Whether the entry has been selected. Selected entries can be retrieved using {@link #getSelectedEntries()}.
+         */
         public boolean isSelected() {
             return selected;
         }
 
+        /**
+         * Whether the entry is a required entry i.e. it must be installed along with the base APK.
+         */
         public boolean isRequired() {
             return required;
         }
 
+        /**
+         * Whether the entry is an isolated entry.
+         */
         public boolean isIsolated() {
             return isolated;
         }
 
+        /**
+         * Get ABI if the split is an ABI split.
+         *
+         * @return One of {@link VMRuntime#ABI_ARMEABI_V7A}, {@link VMRuntime#ABI_ARM64_V8A}, {@link VMRuntime#ABI_X86},
+         * {@link VMRuntime#ABI_X86_64}.
+         * @throws RuntimeException     If split is not an ABI split.
+         * @throws NullPointerException If the ABI is not valid.
+         */
         @NonNull
         public String getAbi() {
             if (type == APK_SPLIT_ABI) {
-                return Objects.requireNonNull(splitSuffix);
+                return Objects.requireNonNull(StaticDataset.ALL_ABIS.get(splitSuffix));
             }
             throw new RuntimeException("Attempt to fetch ABI for invalid apk");
         }
 
+        /**
+         * Get density if the split is a density split.
+         *
+         * @return One of {@link DisplayMetrics#DENSITY_LOW}, {@link DisplayMetrics#DENSITY_MEDIUM},
+         * {@link DisplayMetrics#DENSITY_TV}, {@link DisplayMetrics#DENSITY_HIGH}, {@link DisplayMetrics#DENSITY_XHIGH},
+         * {@link DisplayMetrics#DENSITY_XXHIGH}, {@link DisplayMetrics#DENSITY_XXXHIGH}.
+         * @throws RuntimeException If split is not a density split, or the density is not valid.
+         */
         public int getDensity() {
             if (type == APK_SPLIT_DENSITY) {
                 return getDensityFromName(splitSuffix);
@@ -755,6 +830,12 @@ public final class ApkFile implements AutoCloseable {
             throw new RuntimeException("Attempt to fetch Density for invalid apk");
         }
 
+        /**
+         * Get locale if the split is a locale split. Each locale can belong to multiple regions.
+         *
+         * @throws RuntimeException     If the split is not a locale split.
+         * @throws NullPointerException If the locale is not valid.
+         */
         @NonNull
         public Locale getLocale() {
             if (type == APK_SPLIT_LOCALE) {
@@ -805,7 +886,6 @@ public final class ApkFile implements AutoCloseable {
                 case ApkFile.APK_SPLIT_FEATURE:
                     return context.getString(R.string.split_feature_name, name);
                 case ApkFile.APK_SPLIT_UNKNOWN:
-                    return name;
                 case ApkFile.APK_SPLIT:
                     if (forFeature != null) {
                         return context.getString(R.string.unknown_split_for_feature, name, forFeature);

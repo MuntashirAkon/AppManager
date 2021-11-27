@@ -9,7 +9,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.RemoteException;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -113,7 +112,7 @@ public class ManifestViewerActivity extends BaseActivity {
                 String archiveFilePath;
                 try {
                     archiveFilePath = apkFile.getBaseEntry().getRealCachedFile().getAbsolutePath();
-                } catch (IOException | RemoteException e) {
+                } catch (IOException e) {
                     return;
                 }
                 PackageInfo packageInfo = pm.getPackageArchiveInfo(archiveFilePath, 0);

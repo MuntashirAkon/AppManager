@@ -13,7 +13,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
-import android.os.RemoteException;
 import android.provider.OpenableColumns;
 import android.system.ErrnoException;
 import android.system.Os;
@@ -94,7 +93,7 @@ public final class FileUtils {
     public static File saveZipFile(@NonNull InputStream zipInputStream,
                                    @NonNull File destinationDirectory,
                                    @NonNull String fileName)
-            throws IOException, RemoteException {
+            throws IOException {
         return saveZipFile(zipInputStream, new ProxyFile(destinationDirectory, fileName));
     }
 

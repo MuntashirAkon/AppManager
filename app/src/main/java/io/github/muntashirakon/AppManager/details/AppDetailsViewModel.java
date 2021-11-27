@@ -1470,7 +1470,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     appDetailsItems.add(item);
                 }
             }
-        } catch (IOException | ApkFormatException | NoSuchAlgorithmException | RemoteException e) {
+        } catch (IOException | ApkFormatException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
         signatures.postValue(appDetailsItems);
