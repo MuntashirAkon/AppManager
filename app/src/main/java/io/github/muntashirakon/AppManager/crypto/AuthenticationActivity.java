@@ -105,6 +105,7 @@ public class AuthenticationActivity extends AppCompatActivity {
             }
         } else {
             // No security enabled
+            AppManager.setIsAuthenticated(true);
             handleModeOfOps();
         }
     }
