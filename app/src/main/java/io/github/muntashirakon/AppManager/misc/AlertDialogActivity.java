@@ -6,13 +6,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
@@ -20,6 +21,11 @@ import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 public class AlertDialogActivity extends BaseActivity {
+    @Override
+    protected boolean displaySplashScreen() {
+        return false;
+    }
+
     @Override
     protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
         if (getIntent() == null) {

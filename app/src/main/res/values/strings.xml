@@ -1139,4 +1139,5 @@
     <string name="pref_intent_firewall_and_disable_description">Block components using Intent Firewall as well as disable them. Recommended method for root users.</string>
     <string name="pref_intent_firewall_description">Block components using Intent Firewall only. Not recommended as some system apps can bypass firewalls.</string>
     <string name="pref_disable_description">Disable components only. Not recommended for root users since the apps can bypass this. In ADB modes, the test-only apps can be disabled with this method.</string>
+    <string name="authenticating">Authenticating…</string>
 </resources>

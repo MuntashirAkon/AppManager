@@ -32,13 +32,15 @@ public abstract class BaseActivity extends AppCompatActivity {
         getWindow().getDecorView().setLayoutDirection(AppPref.getInt(AppPref.PrefKey.PREF_LAYOUT_ORIENTATION_INT));
         if (!AppManager.isAuthenticated()) {
             try {
-                authActivity.launch(new Intent(this, AuthenticationActivity.class), result -> {
-                    if (result.getResultCode() == RESULT_OK) {
-                        onAuthenticated(savedInstanceState);
-                    } else {
-                        finishAndRemoveTask();
-                    }
-                });
+                authActivity.launch(new Intent(this, AuthenticationActivity.class)
+                                .putExtra(AuthenticationActivity.EXTRA_DISPLAY_SPLASH, displaySplashScreen()),
+                        result -> {
+                            if (result.getResultCode() == RESULT_OK) {
+                                onAuthenticated(savedInstanceState);
+                            } else {
+                                finishAndRemoveTask();
+                            }
+                        });
             } catch (Throwable th) {
                 Log.e("BaseActivity", th);
                 finishAndRemoveTask();
@@ -47,6 +49,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected abstract void onAuthenticated(@Nullable Bundle savedInstanceState);
+
+    protected boolean displaySplashScreen() {
+        return true;
+    }
 
     @CallSuper
     @SuppressLint("RestrictedApi")

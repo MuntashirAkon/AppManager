@@ -11,6 +11,11 @@ public class RecordLogDialogActivity extends BaseActivity {
     public static final String EXTRA_QUERY_SUGGESTIONS = "suggestions";
 
     @Override
+    protected boolean displaySplashScreen() {
+        return false;
+    }
+
+    @Override
     protected void onAuthenticated(Bundle savedInstanceState) {
         final String[] suggestions = (getIntent() != null && getIntent().hasExtra(EXTRA_QUERY_SUGGESTIONS))
                 ? getIntent().getStringArrayExtra(EXTRA_QUERY_SUGGESTIONS) : new String[]{};

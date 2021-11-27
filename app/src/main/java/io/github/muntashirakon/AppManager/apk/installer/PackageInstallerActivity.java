@@ -137,6 +137,11 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
     };
 
     @Override
+    protected boolean displaySplashScreen() {
+        return false;
+    }
+
+    @Override
     protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
         final Intent intent = getIntent();
         if (intent == null) {
