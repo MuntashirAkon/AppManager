@@ -38,6 +38,7 @@ import com.android.apksig.apk.ApkFormatException;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
@@ -68,6 +69,7 @@ import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.rules.struct.AppOpRule;
 import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
 import io.github.muntashirakon.AppManager.rules.struct.RuleEntry;
+import io.github.muntashirakon.AppManager.scanner.NativeLibraries;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
 import io.github.muntashirakon.AppManager.types.PackageChangeReceiver;
@@ -1504,13 +1506,42 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 appDetailsItems.add(appDetailsItem);
             }
         }
+        List<String> nativeLibs = new ArrayList<>();
         if (jniDir.isDirectory()) {
             File[] libs = jniDir.listFiles();
             if (libs != null) {
                 for (File lib : libs) {
+                    nativeLibs.add(lib.getName());
                     AppDetailsItem appDetailsItem = new AppDetailsItem(lib);
                     appDetailsItem.name = lib.getName();
                     appDetailsItems.add(appDetailsItem);
+                }
+            }
+        }
+        List<ApkFile.Entry> entries = apkFile.getEntries();
+        for (ApkFile.Entry entry : entries) {
+            if (entry.type == ApkFile.APK_BASE
+                    || entry.type == ApkFile.APK_SPLIT_FEATURE
+                    || entry.type == ApkFile.APK_SPLIT_ABI
+                    || entry.type == ApkFile.APK_SPLIT_UNKNOWN) {
+                // Scan for .so files
+                NativeLibraries nativeLibraries;
+                try (InputStream is = entry.getRealInputStream()) {
+                    try {
+                        nativeLibraries = new NativeLibraries(is);
+                    } catch (IOException e) {
+                        // Maybe zip error, Try without InputStream
+                        nativeLibraries = new NativeLibraries(entry.getRealCachedFile());
+                    }
+                    for (String nativeLib : nativeLibraries.getLibs()) {
+                        if (!nativeLibs.contains(nativeLib)) {
+                            AppDetailsItem appDetailsItem = new AppDetailsItem(nativeLib);
+                            appDetailsItem.name = nativeLib;
+                            appDetailsItems.add(appDetailsItem);
+                        }
+                    }
+                } catch (Throwable th) {
+                    Log.e(TAG, th);
                 }
             }
         }

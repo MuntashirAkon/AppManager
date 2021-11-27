@@ -1499,11 +1499,14 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
 
         private void getSharedLibsView(@NonNull ViewHolder holder, int index) {
             AppDetailsItem item = mAdapterList.get(index);
-            File libFile = (File) item.vanillaItem;
             TextView textView = holder.textView1;
             textView.setTextIsSelectable(true);
             textView.setText(item.name);
-            holder.launchBtn.setOnClickListener(openAsFolderInFM(mActivity, libFile.getParent()));
+            if (item.vanillaItem instanceof File) {
+                File libFile = (File) item.vanillaItem;
+                holder.launchBtn.setVisibility(View.VISIBLE);
+                holder.launchBtn.setOnClickListener(openAsFolderInFM(mActivity, libFile.getParent()));
+            } else holder.launchBtn.setVisibility(View.GONE);
             holder.itemView.setBackgroundResource(index % 2 == 0 ? R.drawable.item_semi_transparent : R.drawable.item_transparent);
         }
 
