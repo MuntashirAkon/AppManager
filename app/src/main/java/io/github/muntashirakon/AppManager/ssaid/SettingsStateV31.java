@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-package io.github.muntashirakon.AppManager.utils;
+package io.github.muntashirakon.AppManager.ssaid;
 
-import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -10,8 +9,12 @@ import android.os.RemoteException;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.ArrayMap;
+import android.util.AtomicFile;
 import android.util.Base64;
-import android.util.Xml;
+import android.util.Log;
+import android.util.TypedXmlPullParser;
+import android.util.TypedXmlSerializer;
+import android.util.XmlHidden;
 
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
@@ -19,24 +22,24 @@ import androidx.annotation.RequiresApi;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlSerializer;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
-import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.io.AtomicProxyFile;
 import io.github.muntashirakon.io.ProxyFile;
-import io.github.muntashirakon.io.ProxyInputStream;
 import io.github.muntashirakon.io.ProxyOutputStream;
 
 /**
@@ -50,13 +53,12 @@ import io.github.muntashirakon.io.ProxyOutputStream;
  * the same lock to grab the current state to write to disk.
  * </p>
  */
-@RequiresApi(Build.VERSION_CODES.O)
-// Copyright 2015 The Android Open Source Project
-public final class SettingsStateV26 implements SettingsState {
+@RequiresApi(31)
+public final class SettingsStateV31 implements SettingsState {
     private static final boolean DEBUG = false;
     private static final boolean DEBUG_PERSISTENCE = false;
 
-    private static final String LOG_TAG = "SettingsStateV26";
+    private static final String LOG_TAG = "SettingsStateV31";
 
     static final int SETTINGS_VERSION_NEW_ENCODING = 121;
 
@@ -178,7 +180,6 @@ public final class SettingsStateV26 implements SettingsState {
         return key & ~SETTINGS_TYPE_MASK;
     }
 
-    @NonNull
     public static String settingTypeToString(int type) {
         switch (type) {
             case SETTINGS_TYPE_CONFIG: {
@@ -202,13 +203,12 @@ public final class SettingsStateV26 implements SettingsState {
         }
     }
 
-    @NonNull
     public static String keyToString(int key) {
         return "Key[user=" + getUserIdFromKey(key) + ";type="
                 + settingTypeToString(getTypeFromKey(key)) + "]";
     }
 
-    public SettingsStateV26(Object lock, File file, int key, int maxBytesPerAppPackage, Looper looper)
+    public SettingsStateV31(Object lock, File file, int key, int maxBytesPerAppPackage, Looper looper)
             throws IllegalStateException {
         // It is important that we use the same lock as the settings provider
         // to ensure multiple mutations on this state are atomically persisted
@@ -273,7 +273,6 @@ public final class SettingsStateV26 implements SettingsState {
     }
 
     // The settings provider must hold its lock when calling here.
-    @NonNull
     @GuardedBy("mLock")
     public List<String> getSettingNamesLocked() {
         ArrayList<String> names = new ArrayList<>();
@@ -430,11 +429,14 @@ public final class SettingsStateV26 implements SettingsState {
     public List<String> setSettingsLocked(String prefix, Map<String, String> keyValues,
                                           String packageName) {
         List<String> changedKeys = new ArrayList<>();
+        final Iterator<Map.Entry<String, Setting>> iterator = mSettings.entrySet().iterator();
         // Delete old keys with the prefix that are not part of the new set.
-        for (int i = 0; i < mSettings.keySet().size(); ++i) {
-            String key = mSettings.keyAt(i);
-            if (key.startsWith(prefix) && !keyValues.containsKey(key)) {
-                Setting oldState = mSettings.remove(key);
+        while (iterator.hasNext()) {
+            Map.Entry<String, Setting> entry = iterator.next();
+            final String key = entry.getKey();
+            final Setting oldState = entry.getValue();
+            if (key != null && key.startsWith(prefix) && !keyValues.containsKey(key)) {
+                iterator.remove();
 
                 addHistoricalOperationLocked(HISTORICAL_OPERATION_DELETE, oldState);
                 changedKeys.add(key); // key was removed
@@ -450,7 +452,7 @@ public final class SettingsStateV26 implements SettingsState {
                 state = new Setting(key, value, false, packageName, null);
                 mSettings.put(key, state);
                 changedKeys.add(key); // key was added
-            } else if (!state.value.equals(value)) {
+            } else if (state.value != value) {
                 oldValue = state.value;
                 state.update(value, false, packageName, null, true,
                         /* overrideableByRestore */ false);
@@ -663,33 +665,23 @@ public final class SettingsStateV26 implements SettingsState {
             try {
                 out = destination.startWrite();
 
-                XmlSerializer serializer = Xml.newSerializer();
-                serializer.setOutput(out, StandardCharsets.UTF_8.name());
-                serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output",
-                        true);
+                TypedXmlSerializer serializer = XmlHidden.resolveSerializer(out);
                 serializer.startDocument(null, true);
                 serializer.startTag(null, TAG_SETTINGS);
-                serializer.attribute(null, ATTR_VERSION, String.valueOf(version));
+                serializer.attributeInt(null, ATTR_VERSION, version);
 
                 final int settingCount = settings.size();
                 for (int i = 0; i < settingCount; i++) {
                     Setting setting = settings.valueAt(i);
 
-                    if (setting.isTransient()) {
-                        if (DEBUG_PERSISTENCE) {
-                            Log.i(LOG_TAG, "[SKIPPED PERSISTING]" + setting.getName());
-                        }
-                        continue;
-                    }
-
-                    writeSingleSetting(mVersion, serializer, setting.getId(), setting.getName(),
+                    if (writeSingleSetting(mVersion, serializer, setting.getId(), setting.getName(),
                             setting.getValue(), setting.getDefaultValue(), setting.getPackageName(),
                             setting.getTag(), setting.isDefaultFromSystem(),
-                            setting.isValuePreservedInRestore());
-
-                    if (DEBUG_PERSISTENCE) {
-                        Log.i(LOG_TAG, "[PERSISTED]" + setting.getName() + "="
-                                + setting.getValue());
+                            setting.isValuePreservedInRestore())) {
+                        if (DEBUG_PERSISTENCE) {
+                            Log.i(LOG_TAG, "[PERSISTED]" + setting.getName() + "="
+                                    + setting.getValue());
+                        }
                     }
                 }
                 serializer.endTag(null, TAG_SETTINGS);
@@ -698,10 +690,11 @@ public final class SettingsStateV26 implements SettingsState {
                 for (int i = 0; i < namespaceBannedHashes.size(); i++) {
                     String namespace = namespaceBannedHashes.keyAt(i);
                     String bannedHash = namespaceBannedHashes.get(namespace);
-                    writeSingleNamespaceHash(serializer, namespace, bannedHash);
-                    if (DEBUG_PERSISTENCE) {
-                        Log.i(LOG_TAG, "[PERSISTED] namespace=" + namespace
-                                + ", bannedHash=" + bannedHash);
+                    if (writeSingleNamespaceHash(serializer, namespace, bannedHash)) {
+                        if (DEBUG_PERSISTENCE) {
+                            Log.i(LOG_TAG, "[PERSISTED] namespace=" + namespace
+                                    + ", bannedHash=" + bannedHash);
+                        }
                     }
                 }
                 serializer.endTag(null, TAG_NAMESPACE_HASHES);
@@ -714,7 +707,7 @@ public final class SettingsStateV26 implements SettingsState {
                     Log.i(LOG_TAG, "[PERSIST END]");
                 }
             } catch (Throwable t) {
-                Log.e(LOG_TAG, "Failed to write settings, restoring backup", t);
+                Log.wtf(LOG_TAG, "Failed to write settings, restoring backup", t);
                 if (t instanceof IOException) {
                     // we failed to create a directory, so log the permissions and existence
                     // state for the settings file and directory
@@ -722,11 +715,13 @@ public final class SettingsStateV26 implements SettingsState {
                     if (t.getMessage().contains("Couldn't create directory")) {
                         // attempt to create the directory with Files.createDirectories, which
                         // throws more informative errors than File.mkdirs.
-                        ProxyFile parentPath = destination.getBaseFile().getParentFile();
-                        if (parentPath.mkdirs()) {
+                        Path parentPath = destination.getBaseFile().getParentFile().toPath();
+                        try {
+                            Files.createDirectories(parentPath);
                             Log.i(LOG_TAG, "Successfully created " + parentPath);
-                        } else {
-                            Log.e(LOG_TAG, "Failed to write " + parentPath + " with Files.writeDirectories");
+                        } catch (Throwable t2) {
+                            Log.e(LOG_TAG, "Failed to write " + parentPath
+                                    + " with Files.writeDirectories", t2);
                         }
                     }
                 }
@@ -743,11 +738,11 @@ public final class SettingsStateV26 implements SettingsState {
         }
     }
 
-    private static void logSettingsDirectoryInformation(ProxyFile settingsFile) {
-        ProxyFile parent = settingsFile.getParentFile();
+    private static void logSettingsDirectoryInformation(File settingsFile) {
+        File parent = settingsFile.getParentFile();
         Log.i(LOG_TAG, "directory info for directory/file " + settingsFile
                 + " with stacktrace ", new Exception());
-        ProxyFile ancestorDir = parent;
+        File ancestorDir = parent;
         while (ancestorDir != null) {
             if (!ancestorDir.exists()) {
                 Log.i(LOG_TAG, "ancestor directory " + ancestorDir
@@ -759,7 +754,7 @@ public final class SettingsStateV26 implements SettingsState {
                 Log.i(LOG_TAG, "ancestor directory " + ancestorDir
                         + " permissions: r: " + ancestorDir.canRead() + " w: "
                         + ancestorDir.canWrite() + " x: " + ancestorDir.canExecute());
-                ProxyFile ancestorParent = ancestorDir.getParentFile();
+                File ancestorParent = ancestorDir.getParentFile();
                 if (ancestorParent != null) {
                     Log.i(LOG_TAG, "ancestor's parent directory " + ancestorParent
                             + " permissions: r: " + ancestorParent.canRead() + " w: "
@@ -770,14 +765,20 @@ public final class SettingsStateV26 implements SettingsState {
         }
     }
 
-    static void writeSingleSetting(int version, XmlSerializer serializer, String id,
-                                   String name, String value, String defaultValue, String packageName,
-                                   String tag, boolean defaultSysSet, boolean isValuePreservedInRestore)
+    static boolean writeSingleSetting(int version, TypedXmlSerializer serializer, String id,
+                                      String name, String value, String defaultValue, String packageName,
+                                      String tag, boolean defaultSysSet, boolean isValuePreservedInRestore)
             throws IOException {
         if (id == null || isBinary(id) || name == null || isBinary(name)
                 || packageName == null || isBinary(packageName)) {
-            // This shouldn't happen.
-            return;
+            if (DEBUG_PERSISTENCE) {
+                Log.w(LOG_TAG, "Invalid arguments for writeSingleSetting: version=" + version
+                        + ", id=" + id + ", name=" + name + ", value=" + value
+                        + ", defaultValue=" + defaultValue + ", packageName=" + packageName
+                        + ", tag=" + tag + ", defaultSysSet=" + defaultSysSet
+                        + ", isValuePreservedInRestore=" + isValuePreservedInRestore);
+            }
+            return false;
         }
         serializer.startTag(null, TAG_SETTING);
         serializer.attribute(null, ATTR_ID, id);
@@ -788,18 +789,19 @@ public final class SettingsStateV26 implements SettingsState {
         if (defaultValue != null) {
             setValueAttribute(ATTR_DEFAULT_VALUE, ATTR_DEFAULT_VALUE_BASE64,
                     version, serializer, defaultValue);
-            serializer.attribute(null, ATTR_DEFAULT_SYS_SET, Boolean.toString(defaultSysSet));
+            serializer.attributeBoolean(null, ATTR_DEFAULT_SYS_SET, defaultSysSet);
             setValueAttribute(ATTR_TAG, ATTR_TAG_BASE64,
                     version, serializer, tag);
         }
         if (isValuePreservedInRestore) {
-            serializer.attribute(null, ATTR_PRESERVE_IN_RESTORE, Boolean.toString(true));
+            serializer.attributeBoolean(null, ATTR_PRESERVE_IN_RESTORE, true);
         }
         serializer.endTag(null, TAG_SETTING);
+        return true;
     }
 
     static void setValueAttribute(String attr, String attrBase64, int version,
-                                  XmlSerializer serializer, String value) throws IOException {
+                                  TypedXmlSerializer serializer, String value) throws IOException {
         if (version >= SETTINGS_VERSION_NEW_ENCODING) {
             if (value == null) {
                 // Null value -> No ATTR_VALUE nor ATTR_VALUE_BASE64.
@@ -818,22 +820,27 @@ public final class SettingsStateV26 implements SettingsState {
         }
     }
 
-    private static void writeSingleNamespaceHash(XmlSerializer serializer, String namespace,
-                                                 String bannedHashCode) throws IOException {
+    private static boolean writeSingleNamespaceHash(TypedXmlSerializer serializer, String namespace,
+                                                    String bannedHashCode) throws IOException {
         if (namespace == null || bannedHashCode == null) {
-            return;
+            if (DEBUG_PERSISTENCE) {
+                Log.w(LOG_TAG, "Invalid arguments for writeSingleNamespaceHash: namespace="
+                        + namespace + ", bannedHashCode=" + bannedHashCode);
+            }
+            return false;
         }
         serializer.startTag(null, TAG_NAMESPACE_HASH);
         serializer.attribute(null, ATTR_NAMESPACE, namespace);
         serializer.attribute(null, ATTR_BANNED_HASH, bannedHashCode);
         serializer.endTag(null, TAG_NAMESPACE_HASH);
+        return true;
     }
 
     private static String hashCode(Map<String, String> keyValues) {
         return Integer.toString(keyValues.hashCode());
     }
 
-    private String getValueAttribute(XmlPullParser parser, String attr, String base64Attr) {
+    private String getValueAttribute(TypedXmlPullParser parser, String attr, String base64Attr) {
         if (mVersion >= SETTINGS_VERSION_NEW_ENCODING) {
             final String value = parser.getAttributeValue(null, attr);
             if (value != null) {
@@ -858,11 +865,11 @@ public final class SettingsStateV26 implements SettingsState {
 
     @GuardedBy("mLock")
     private void readStateSyncLocked() throws IllegalStateException {
-        ProxyInputStream in;
-        AtomicProxyFile file = new AtomicProxyFile(mStatePersistFile);
+        FileInputStream in;
+        AtomicFile file = new AtomicFile(mStatePersistFile);
         try {
             in = file.openRead();
-        } catch (IOException | RemoteException fnfe) {
+        } catch (FileNotFoundException fnfe) {
             Log.w(LOG_TAG, "No settings state " + mStatePersistFile);
             logSettingsDirectoryInformation(mStatePersistFile);
             addHistoricalOperationLocked(HISTORICAL_OPERATION_INITIALIZE, null);
@@ -873,14 +880,15 @@ public final class SettingsStateV26 implements SettingsState {
         }
 
         // Settings file exists but is corrupted. Retry with the fallback file
-        final ProxyFile statePersistFallbackFile = new ProxyFile(mStatePersistFile.getAbsolutePath() + FALLBACK_FILE_SUFFIX);
+        final File statePersistFallbackFile = new File(
+                mStatePersistFile.getAbsolutePath() + FALLBACK_FILE_SUFFIX);
         Log.i(LOG_TAG, "Failed parsing settings file: " + mStatePersistFile
                 + ", retrying with fallback file: " + statePersistFallbackFile);
         try {
-            in = new AtomicProxyFile(statePersistFallbackFile).openRead();
-        } catch (IOException | RemoteException fnfe) {
+            in = new AtomicFile(statePersistFallbackFile).openRead();
+        } catch (FileNotFoundException fnfe) {
             final String message = "No fallback file found for: " + mStatePersistFile;
-            Log.e(LOG_TAG, message);
+            Log.wtf(LOG_TAG, message);
             throw new IllegalStateException(message);
         }
         if (parseStateFromXmlStreamLocked(in)) {
@@ -892,16 +900,15 @@ public final class SettingsStateV26 implements SettingsState {
             }
         } else {
             final String message = "Failed parsing settings file: " + mStatePersistFile;
-            Log.e(LOG_TAG, message);
+            Log.wtf(LOG_TAG, message);
             throw new IllegalStateException(message);
         }
     }
 
     @GuardedBy("mLock")
-    private boolean parseStateFromXmlStreamLocked(InputStream in) {
+    private boolean parseStateFromXmlStreamLocked(FileInputStream in) {
         try {
-            XmlPullParser parser = Xml.newPullParser();
-            parser.setInput(in, StandardCharsets.UTF_8.name());
+            TypedXmlPullParser parser = XmlHidden.resolvePullParser(in);
             parseStateLocked(parser);
             return true;
         } catch (XmlPullParserException | IOException e) {
@@ -922,7 +929,7 @@ public final class SettingsStateV26 implements SettingsState {
         return stateFile.exists();
     }
 
-    private void parseStateLocked(@NonNull XmlPullParser parser)
+    private void parseStateLocked(@NonNull TypedXmlPullParser parser)
             throws IOException, XmlPullParserException {
         final int outerDepth = parser.getDepth();
         int type;
@@ -942,9 +949,10 @@ public final class SettingsStateV26 implements SettingsState {
     }
 
     @GuardedBy("mLock")
-    private void parseSettingsLocked(@NonNull XmlPullParser parser) throws IOException, XmlPullParserException {
+    private void parseSettingsLocked(TypedXmlPullParser parser)
+            throws IOException, XmlPullParserException {
 
-        mVersion = Integer.parseInt(parser.getAttributeValue(null, ATTR_VERSION));
+        mVersion = parser.getAttributeInt(null, ATTR_VERSION);
 
         final int outerDepth = parser.getDepth();
         int type;
@@ -962,15 +970,12 @@ public final class SettingsStateV26 implements SettingsState {
                 String packageName = parser.getAttributeValue(null, ATTR_PACKAGE);
                 String defaultValue = getValueAttribute(parser, ATTR_DEFAULT_VALUE,
                         ATTR_DEFAULT_VALUE_BASE64);
-                String isPreservedInRestoreString = parser.getAttributeValue(null,
-                        ATTR_PRESERVE_IN_RESTORE);
-                boolean isPreservedInRestore = isPreservedInRestoreString != null
-                        && Boolean.parseBoolean(isPreservedInRestoreString);
+                boolean isPreservedInRestore = parser.getAttributeBoolean(null,
+                        ATTR_PRESERVE_IN_RESTORE, false);
                 String tag = null;
                 boolean fromSystem = false;
                 if (defaultValue != null) {
-                    fromSystem = Boolean.parseBoolean(parser.getAttributeValue(
-                            null, ATTR_DEFAULT_SYS_SET));
+                    fromSystem = parser.getAttributeBoolean(null, ATTR_DEFAULT_SYS_SET, false);
                     tag = getValueAttribute(parser, ATTR_TAG, ATTR_TAG_BASE64);
                 }
                 mSettings.put(name, new Setting(name, value, defaultValue, packageName, tag,
@@ -984,7 +989,7 @@ public final class SettingsStateV26 implements SettingsState {
     }
 
     @GuardedBy("mLock")
-    private void parseNamespaceHash(XmlPullParser parser)
+    private void parseNamespaceHash(TypedXmlPullParser parser)
             throws IOException, XmlPullParserException {
 
         final int outerDepth = parser.getDepth();
@@ -1003,7 +1008,7 @@ public final class SettingsStateV26 implements SettingsState {
         }
     }
 
-    private static Map<String, String> removeNullValueOldStyle(@NonNull Map<String, String> keyValues) {
+    private static Map<String, String> removeNullValueOldStyle(Map<String, String> keyValues) {
         for (Map.Entry<String, String> keyValueEntry : keyValues.entrySet()) {
             if (NULL_VALUE_OLD_STYLE.equals(keyValueEntry.getValue())) {
                 keyValueEntry.setValue(null);
@@ -1056,7 +1061,7 @@ public final class SettingsStateV26 implements SettingsState {
         // Whether the value of this setting will be preserved when restore happens.
         private boolean isValuePreservedInRestore;
 
-        public Setting(@NonNull Setting other) {
+        public Setting(Setting other) {
             name = other.name;
             value = other.value;
             defaultValue = other.defaultValue;
@@ -1160,13 +1165,6 @@ public final class SettingsStateV26 implements SettingsState {
                     /* resetToDefault */ true);
         }
 
-        public boolean isTransient() {
-//            if (getTypeFromKey(getKey()) == SETTINGS_TYPE_GLOBAL) {
-//                return ArrayUtils.contains(Global.TRANSIENT_SETTINGS, getName());
-//            }
-            return false;
-        }
-
         public boolean update(String value, boolean setDefault, String packageName, String tag,
                               boolean forceNonSystemPackage, boolean overrideableByRestore) {
             return update(value, setDefault, packageName, tag, forceNonSystemPackage,
@@ -1218,7 +1216,6 @@ public final class SettingsStateV26 implements SettingsState {
             return true;
         }
 
-        @NonNull
         public String toString() {
             return "Setting{name=" + name + " value=" + value
                     + (defaultValue != null ? " default=" + defaultValue : "")
@@ -1266,7 +1263,6 @@ public final class SettingsStateV26 implements SettingsState {
         return Base64.encodeToString(toBytes(s), Base64.NO_WRAP);
     }
 
-    @NonNull
     private static String base64Decode(String s) {
         return fromBytes(Base64.decode(s, Base64.DEFAULT));
     }
@@ -1275,8 +1271,7 @@ public final class SettingsStateV26 implements SettingsState {
     // contents as-is, even if it contains broken surrogate pairs, we do it by ourselves,
     // since I don't know how Charset would treat them.
 
-    @NonNull
-    private static byte[] toBytes(@NonNull String s) {
+    private static byte[] toBytes(String s) {
         final byte[] result = new byte[s.length() * 2];
         int resultIndex = 0;
         for (int i = 0; i < s.length(); ++i) {
@@ -1287,8 +1282,7 @@ public final class SettingsStateV26 implements SettingsState {
         return result;
     }
 
-    @NonNull
-    private static String fromBytes(@NonNull byte[] bytes) {
+    private static String fromBytes(byte[] bytes) {
         final StringBuilder sb = new StringBuilder(bytes.length / 2);
 
         final int last = bytes.length - 1;

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-package io.github.muntashirakon.AppManager.utils;
+package io.github.muntashirakon.AppManager.ssaid;
 
 public interface SettingsState {
     String SYSTEM_PACKAGE_NAME = "android";

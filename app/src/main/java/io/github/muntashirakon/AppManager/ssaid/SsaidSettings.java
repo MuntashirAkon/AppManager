@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later
 
-package io.github.muntashirakon.AppManager.utils;
+package io.github.muntashirakon.AppManager.ssaid;
 
 import android.content.pm.PackageInfo;
 import android.content.pm.Signature;
@@ -27,9 +27,10 @@ import aosp.libcore.util.HexEncoding;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.io.ProxyFile;
 
-import static io.github.muntashirakon.AppManager.utils.SettingsState.SYSTEM_PACKAGE_NAME;
+import static io.github.muntashirakon.AppManager.ssaid.SettingsState.SYSTEM_PACKAGE_NAME;
 
 @RequiresApi(Build.VERSION_CODES.O)
 public class SsaidSettings {
