@@ -3,11 +3,17 @@
 package io.github.muntashirakon.AppManager.servermanager;
 
 import android.content.pm.ApplicationInfo;
+import android.content.pm.ApplicationInfoHidden;
+import android.os.Build;
 
 import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+
+import dev.rikka.tools.refine.Refine;
 
 public class ApplicationInfoCompat {
     /**
@@ -25,19 +31,19 @@ public class ApplicationInfoCompat {
      * android.R.styleable#AndroidManifestApplication_cantSaveState
      * attribute of the &lt;application&gt; tag.
      */
-    public static final int PRIVATE_FLAG_CANT_SAVE_STATE = 1<<1;
+    public static final int PRIVATE_FLAG_CANT_SAVE_STATE = 1 << 1;
 
     /**
      * Value for {@code #privateFlags}: set to {@code true} if the application
      * is permitted to hold privileged permissions.
      */
-    public static final int PRIVATE_FLAG_PRIVILEGED = 1<<3;
+    public static final int PRIVATE_FLAG_PRIVILEGED = 1 << 3;
 
     /**
      * Value for {@code #privateFlags}: {@code true} if the application has any IntentFiler
      * with some data URI using HTTP or HTTPS with an associated VIEW action.
      */
-    public static final int PRIVATE_FLAG_HAS_DOMAIN_URLS = 1<<4;
+    public static final int PRIVATE_FLAG_HAS_DOMAIN_URLS = 1 << 4;
 
     /**
      * When set, the default data storage directory for this app is pointed at
@@ -88,7 +94,7 @@ public class ApplicationInfoCompat {
      * non-resizeable by default. So, we are making it activities resizeable by default based on the
      * target SDK version of the app.
      * {@code android.R.styleable#AndroidManifestActivity_resizeableActivity}
-     *
+     * <p>
      * NOTE: This only affects apps with target SDK >= N where the resizeableActivity attribute was
      * introduced. It shouldn't be confused with {@code ActivityInfo#RESIZE_MODE_FORCE_RESIZEABLE}
      * where certain pre-N apps are forced to the resizeable.
@@ -192,7 +198,7 @@ public class ApplicationInfoCompat {
      * Value for {@code #privateFlags}: true if the application allows its audio playback
      * to be captured by other apps.
      */
-    public static final int PRIVATE_FLAG_ALLOW_AUDIO_PLAYBACK_CAPTURE  = 1 << 27;
+    public static final int PRIVATE_FLAG_ALLOW_AUDIO_PLAYBACK_CAPTURE = 1 << 27;
 
     /**
      * Indicates whether this package is in fact a runtime resource overlay.
@@ -251,15 +257,44 @@ public class ApplicationInfoCompat {
             PRIVATE_FLAG_ALLOW_NATIVE_HEAP_POINTER_TAGGING,
     })
     @Retention(RetentionPolicy.SOURCE)
-    public @interface ApplicationInfoPrivateFlags {}
+    public @interface ApplicationInfoPrivateFlags {
+    }
+
+    /**
+     * Represents the default policy. The actual policy used will depend on other properties of
+     * the application, e.g. the target SDK version.
+     */
+    @RequiresApi(Build.VERSION_CODES.P)
+    public static final int HIDDEN_API_ENFORCEMENT_DEFAULT = -1;
+    /**
+     * No API enforcement; the app can access the entire internal private API. Only for use by
+     * system apps.
+     */
+    @RequiresApi(Build.VERSION_CODES.P)
+    public static final int HIDDEN_API_ENFORCEMENT_DISABLED = 0;
+    /**
+     * No API enforcement, but enable the detection logic and warnings. Observed behaviour is the
+     * same as {@link #HIDDEN_API_ENFORCEMENT_DISABLED} but you may see warnings in the log when
+     * APIs are accessed.
+     */
+    @RequiresApi(Build.VERSION_CODES.P)
+    public static final int HIDDEN_API_ENFORCEMENT_JUST_WARN = 1;
+    /**
+     * Dark grey list enforcement. Enforces the dark grey and black lists
+     */
+    @RequiresApi(Build.VERSION_CODES.P)
+    public static final int HIDDEN_API_ENFORCEMENT_ENABLED = 2;
+    /**
+     * Blacklist enforcement only.
+     */
+    @RequiresApi(Build.VERSION_CODES.P)
+    public static final int HIDDEN_API_ENFORCEMENT_BLACK = 3;
 
     @ApplicationInfoPrivateFlags
-    public static int getPrivateFlags(ApplicationInfo info) {
-        try {
-            //noinspection JavaReflectionMemberAccess
-            return ApplicationInfo.class.getField("privateFlags").getInt(info);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            return 0;
+    public static int getPrivateFlags(@NonNull ApplicationInfo info) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return Refine.<ApplicationInfoHidden>unsafeCast(info).privateFlags;
         }
+        return 0;
     }
 }
