@@ -2,11 +2,11 @@
 
 package io.github.muntashirakon.AppManager.main;
 
-import android.app.Dialog;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.SparseIntArray;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -14,12 +14,11 @@ import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
-import androidx.fragment.app.DialogFragment;
 
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 
 import java.lang.annotation.Retention;
@@ -31,8 +30,8 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.profiles.ProfileManager;
 import io.github.muntashirakon.AppManager.types.AnyFilterArrayAdapter;
 
-public class ListOptions extends DialogFragment {
-    public static final String TAG = "ListOptions";
+public class ListOptions extends BottomSheetDialogFragment {
+    public static final String TAG = ListOptions.class.getSimpleName();
 
     @IntDef(value = {
             SORT_BY_DOMAIN,
@@ -119,12 +118,16 @@ public class ListOptions extends DialogFragment {
     private ChipGroup sortGroup;
     private ViewGroup filterView;
 
-    @NonNull
+    @Nullable
     @Override
-    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.dialog_list_options, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         MainActivity activity = (MainActivity) requireActivity();
         model = activity.mModel;
-        View view = activity.getLayoutInflater().inflate(R.layout.dialog_list_options, null);
         sortGroup = view.findViewById(R.id.sort_options);
         MaterialCheckBox reverseSort = view.findViewById(R.id.reverse_sort);
         MaterialAutoCompleteTextView profileNameInput = view.findViewById(android.R.id.input);
@@ -175,12 +178,6 @@ public class ListOptions extends DialogFragment {
         for (int i = 0; i < FILTER_MAP.size(); ++i) {
             filterView.addView(getFilterChip(FILTER_MAP.keyAt(i), FILTER_MAP.valueAt(i)));
         }
-        return new MaterialAlertDialogBuilder(activity)
-                .setTitle(R.string.list_options)
-                .setIcon(R.drawable.ic_list_status)
-                .setView(view)
-                .setNegativeButton(R.string.close, null)
-                .create();
     }
 
     public Chip getFilterChip(@Filter int flag, @StringRes int strRes) {
