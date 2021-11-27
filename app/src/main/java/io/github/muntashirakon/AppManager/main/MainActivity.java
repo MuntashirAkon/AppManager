@@ -14,9 +14,11 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -39,7 +41,6 @@ import com.google.android.material.progressindicator.LinearProgressIndicator;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
@@ -49,6 +50,7 @@ import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
+import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.misc.HelpActivity;
 import io.github.muntashirakon.AppManager.oneclickops.OneClickOpsActivity;
 import io.github.muntashirakon.AppManager.profiles.ProfileManager;
@@ -79,7 +81,7 @@ import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
-public class MainActivity extends BaseActivity implements SearchView.OnQueryTextListener,
+public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQueryTextListener,
         SwipeRefreshLayout.OnRefreshListener, ReflowMenuViewWrapper.OnItemSelectedListener,
         MultiSelectionView.OnSelectionChangeListener {
     private static final String PACKAGE_NAME_APK_UPDATER = "com.apkupdater";
@@ -135,8 +137,16 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowCustomEnabled(true);
-            actionBar.setTitle(getString(R.string.loading));
-            mSearchView = UIUtils.setupSearchView(actionBar, this);
+            actionBar.setDisplayOptions(0, ActionBar.DISPLAY_SHOW_TITLE);
+            AdvancedSearchView searchView = new AdvancedSearchView(actionBar.getThemedContext());
+            searchView.setOnQueryTextListener(this);
+            // Set layout params
+            ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT);
+            layoutParams.gravity = Gravity.CENTER;
+            actionBar.setCustomView(searchView, layoutParams);
+            mSearchView = searchView;
+            mSearchView.setIconifiedByDefault(false);
         }
 
         mProgressIndicator = findViewById(R.id.progress_linear);
@@ -186,11 +196,6 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
         mModel.getApplicationItems().observe(this, applicationItems -> {
             if (mAdapter != null) mAdapter.setDefaultList(applicationItems);
             showProgressIndicator(false);
-            // Set title and subtitle
-            if (actionBar != null) {
-                actionBar.setTitle(R.string.onboard);
-                actionBar.setSubtitle(R.string.packages);
-            }
         });
     }
 
@@ -606,13 +611,13 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
     }
 
     @Override
-    public boolean onQueryTextChange(String searchQuery) {
-        if (mModel != null) mModel.setSearchQuery(searchQuery.toLowerCase(Locale.ROOT));
+    public boolean onQueryTextChange(String searchQuery, @AdvancedSearchView.SearchType int type) {
+        if (mModel != null) mModel.setSearchQuery(searchQuery, type);
         return true;
     }
 
     @Override
-    public boolean onQueryTextSubmit(String s) {
+    public boolean onQueryTextSubmit(String query, int type) {
         return false;
     }
 }

@@ -665,8 +665,6 @@
     <string name="critical_exts">Critical Extensions</string>
     <string name="non_critical_exts">Non-critical Extensions</string>
     <string name="usage_access_not_supported">Could not request usage access, as the corresponding settings page does not exist.</string>
-    <string name="packages">packages</string>
-    <string name="onboard">Onboard</string>
     <string name="do_you_want_to_uninstall_and_install">Do you want to uninstall and install the app again?</string>
     <string name="app_signing_signature_mismatch_for_system_apps">Could not install app because a system app with a different signature has this package name.</string>
     <string name="app_data_will_be_lost">The existing data will be lost.</string>
@@ -1140,4 +1138,8 @@
     <string name="pref_intent_firewall_description">Block components using Intent Firewall only. Not recommended as some system apps can bypass firewalls.</string>
     <string name="pref_disable_description">Disable components only. Not recommended for root users since the apps can bypass this. In ADB modes, the test-only apps can be disabled with this method.</string>
     <string name="authenticating">Authenticating…</string>
+    <string name="search_type_contains">Contains</string>
+    <string name="search_type_prefix">Prefix</string>
+    <string name="search_type_suffix">Suffix</string>
+    <string name="search_type_regular_expressions">Regex</string>
 </resources>

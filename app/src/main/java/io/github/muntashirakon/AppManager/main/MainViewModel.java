@@ -35,12 +35,15 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.backup.BackupUtils;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.db.entity.App;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.profiles.ProfileMetaManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.servermanager.ActivityManagerCompat;
@@ -71,6 +74,8 @@ public class MainViewModel extends AndroidViewModel {
     @Nullable
     private String mFilterProfileName;
     private String searchQuery;
+    @AdvancedSearchView.SearchType
+    private int searchType;
     private final Map<String, int[]> selectedPackages = new HashMap<>();
     private final ArrayList<ApplicationItem> selectedApplicationItems = new ArrayList<>();
     final MultithreadedExecutor executor = MultithreadedExecutor.getNewInstance();
@@ -88,8 +93,8 @@ public class MainViewModel extends AndroidViewModel {
         if ("".equals(mFilterProfileName)) mFilterProfileName = null;
     }
 
-    @Nullable
-    private MutableLiveData<List<ApplicationItem>> applicationItemsLiveData;
+    @NonNull
+    private final MutableLiveData<List<ApplicationItem>> applicationItemsLiveData = new MutableLiveData<>();
     final private List<ApplicationItem> applicationItems = new ArrayList<>();
 
     public int getApplicationItemCount() {
@@ -98,8 +103,7 @@ public class MainViewModel extends AndroidViewModel {
 
     @NonNull
     public LiveData<List<ApplicationItem>> getApplicationItems() {
-        if (applicationItemsLiveData == null) {
-            applicationItemsLiveData = new MutableLiveData<>();
+        if (applicationItemsLiveData.getValue() == null) {
             loadApplicationItems();
         }
         return applicationItemsLiveData;
@@ -191,8 +195,9 @@ public class MainViewModel extends AndroidViewModel {
         return searchQuery;
     }
 
-    public void setSearchQuery(String searchQuery) {
-        this.searchQuery = searchQuery;
+    public void setSearchQuery(String searchQuery, @AdvancedSearchView.SearchType int searchType) {
+        this.searchQuery = searchType != AdvancedSearchView.SEARCH_TYPE_REGEX ? searchQuery.toLowerCase(Locale.ROOT) : searchQuery;
+        this.searchType = searchType;
         executor.submit(this::filterItemsByFlags);
     }
 
@@ -281,15 +286,33 @@ public class MainViewModel extends AndroidViewModel {
 
     private void filterItemsByQuery(@NonNull List<ApplicationItem> applicationItems) {
         List<ApplicationItem> filteredApplicationItems = new ArrayList<>();
-        for (ApplicationItem item : applicationItems) {
-            if (item.packageName.toLowerCase(Locale.ROOT).contains(searchQuery)) {
-                filteredApplicationItems.add(item);
-            } else if (Utils.containsOrHasInitials(searchQuery, item.label))
-                filteredApplicationItems.add(item);
+        if (searchType == AdvancedSearchView.SEARCH_TYPE_REGEX) {
+            Pattern p;
+            try {
+                p = Pattern.compile(searchQuery);
+            } catch (PatternSyntaxException e) {
+                mHandler.post(() -> applicationItemsLiveData.postValue(filteredApplicationItems));
+                return;
+            }
+            for (ApplicationItem item : applicationItems) {
+                if (p.matcher(item.packageName).find() || p.matcher(item.label).find()) {
+                    filteredApplicationItems.add(item);
+                }
+            }
+        } else {
+            for (ApplicationItem item : applicationItems) {
+                if (AdvancedSearchView.matches(searchQuery, item.packageName.toLowerCase(Locale.ROOT), searchType)) {
+                    filteredApplicationItems.add(item);
+                } else if (searchType == AdvancedSearchView.SEARCH_TYPE_CONTAINS) {
+                    if (Utils.containsOrHasInitials(searchQuery, item.label)) {
+                        filteredApplicationItems.add(item);
+                    }
+                } else if (AdvancedSearchView.matches(searchQuery, item.label.toLowerCase(Locale.ROOT), searchType)) {
+                    filteredApplicationItems.add(item);
+                }
+            }
         }
-        mHandler.post(() -> {
-            if (applicationItemsLiveData != null) applicationItemsLiveData.postValue(filteredApplicationItems);
-        });
+        mHandler.post(() -> applicationItemsLiveData.postValue(filteredApplicationItems));
     }
 
     @WorkerThread
@@ -315,11 +338,7 @@ public class MainViewModel extends AndroidViewModel {
                 if (!TextUtils.isEmpty(searchQuery)) {
                     filterItemsByQuery(candidateApplicationItems);
                 } else {
-                    mHandler.post(() -> {
-                        if (applicationItemsLiveData != null) {
-                            applicationItemsLiveData.postValue(candidateApplicationItems);
-                        }
-                    });
+                    mHandler.post(() -> applicationItemsLiveData.postValue(candidateApplicationItems));
                 }
             } else {
                 List<ApplicationItem> filteredApplicationItems = new ArrayList<>();
@@ -362,11 +381,7 @@ public class MainViewModel extends AndroidViewModel {
                 if (!TextUtils.isEmpty(searchQuery)) {
                     filterItemsByQuery(filteredApplicationItems);
                 } else {
-                    mHandler.post(() -> {
-                        if (applicationItemsLiveData != null) {
-                            applicationItemsLiveData.postValue(filteredApplicationItems);
-                        }
-                    });
+                    mHandler.post(() -> applicationItemsLiveData.postValue(filteredApplicationItems));
                 }
             }
         }
