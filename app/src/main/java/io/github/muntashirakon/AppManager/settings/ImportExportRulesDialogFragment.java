@@ -2,24 +2,21 @@
 
 package io.github.muntashirakon.AppManager.settings;
 
-import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.os.UserHandleHidden;
 import android.text.SpannableStringBuilder;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
 
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
@@ -37,8 +34,9 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 
-public class ImportExportRulesDialogFragment extends DialogFragment {
+public class ImportExportRulesDialogFragment extends BottomSheetDialogFragment {
     public static final String TAG = "ImportExportRulesDialogFragment";
 
     private static final String MIME_JSON = "application/json";
@@ -132,15 +130,15 @@ public class ImportExportRulesDialogFragment extends DialogFragment {
                 requireDialog().dismiss();
             });
 
-    @SuppressLint("SimpleDateFormat")
-    @NonNull
+    @Nullable
     @Override
-    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.dialog_settings_import_export, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         activity = (SettingsActivity) requireActivity();
-        LayoutInflater inflater = LayoutInflater.from(activity);
-        if (inflater == null) return super.onCreateDialog(savedInstanceState);
-        @SuppressLint("InflateParams")
-        View view = inflater.inflate(R.layout.dialog_settings_import_export, null);
         view.findViewById(R.id.export_internal).setOnClickListener(v -> {
             final String fileName = "app_manager_rules_export-" + DateUtils.formatDateTime(System.currentTimeMillis()) + ".am.tsv";
             exportRules.launch(fileName);
@@ -155,11 +153,6 @@ public class ImportExportRulesDialogFragment extends DialogFragment {
                         .show());
         view.findViewById(R.id.import_watt).setOnClickListener(v -> importFromWatt.launch(MIME_XML));
         view.findViewById(R.id.import_blocker).setOnClickListener(v -> importFromBlocker.launch(MIME_JSON));
-        return new MaterialAlertDialogBuilder(activity)
-                .setView(view)
-                .setTitle(R.string.pref_import_export_blocking_rules)
-                .setNegativeButton(R.string.cancel, null)
-                .create();
     }
 
     private void importExistingRules(final boolean systemApps) {
@@ -168,7 +161,6 @@ public class ImportExportRulesDialogFragment extends DialogFragment {
             return;
         }
         activity.progressIndicator.show();
-        final Handler handler = new Handler(Looper.getMainLooper());
         new Thread(() -> {
             final List<ItemCount> itemCounts = new ArrayList<>();
             ItemCount trackerCount;
@@ -194,7 +186,7 @@ public class ImportExportRulesDialogFragment extends DialogFragment {
                                     .getQuantityString(R.plurals.no_of_components, trackerCount.count,
                                             trackerCount.count))));
                 }
-                handler.post(() -> {
+                UiThreadHandler.run(() -> {
                     if (isDetached()) return;
                     activity.progressIndicator.hide();
                     new SearchableMultiChoiceDialogBuilder<>(activity, packages, packagesWithItemCounts)
@@ -205,15 +197,15 @@ public class ImportExportRulesDialogFragment extends DialogFragment {
                                     List<String> failedPackages = ExternalComponentsImporter
                                             .applyFromExistingBlockList(selectedPackages, userHandle);
                                     if (!failedPackages.isEmpty()) {
-                                        handler.post(() -> {
+                                        UiThreadHandler.run(() -> {
                                             new MaterialAlertDialogBuilder(activity)
                                                     .setTitle(R.string.failed_packages)
-                                                    .setItems((CharSequence[]) failedPackages.toArray(), null)
+                                                    .setItems(failedPackages.toArray(new String[0]), null)
                                                     .setNegativeButton(R.string.ok, null)
                                                     .show();
                                             activity.progressIndicator.hide();
                                         });
-                                    } else handler.post(() -> {
+                                    } else UiThreadHandler.run(() -> {
                                         Toast.makeText(activity, R.string.the_import_was_successful, Toast.LENGTH_SHORT).show();
                                         activity.progressIndicator.hide();
                                     });
@@ -224,7 +216,7 @@ public class ImportExportRulesDialogFragment extends DialogFragment {
                             .show();
                 });
             } else {
-                handler.post(() -> {
+                UiThreadHandler.run(() -> {
                     Toast.makeText(activity, R.string.no_matching_package_found, Toast.LENGTH_SHORT).show();
                     activity.progressIndicator.hide();
                 });
