@@ -828,7 +828,7 @@
     <string name="installer_app_installed">Application installée</string>
     <string name="paste">Coller</string>
     <string name="paired_successfully">apparier</string>
-    <string name="adb_wifi_paring_code">Code d\'association Wi-Fi</string>
+    <string name="adb_wifi_paring_code">Code d\'appairage Wi-Fi</string>
     <string name="invalid_password">Mot de passe invalide, réessayez.</string>
     <string name="pref_log_viewer_msg">Configurer l\'affichage des journaux.</string>
     <string name="files">Fichiers</string>
@@ -1096,4 +1096,5 @@
     <string name="pref_import_backups_hint">Choisissez un dossier contenant les fichiers (pour Swift Backup ou Titanium Backup) ou les dossiers (pour OAndBackup) de sauvegarde</string>
     <string name="system_partition">Administrateur d\'Android</string>
     <string name="send_edited_intent">Envoyer l\'intention modifiée</string>
+    <string name="accessibility_service_description">Le service d\'accessibilité générique pour gérer certaines opérations comme le vidage du cache en mode non administrateur.</string>
 </resources>
