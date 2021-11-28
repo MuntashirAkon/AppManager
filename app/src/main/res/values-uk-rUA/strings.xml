@@ -1104,7 +1104,7 @@
     </plurals>
     <string name="import_from_tb">Імпорт з Titanium Backup</string>
     <string name="import_from_oab">Імпорт із OAndBackup</string>
-    <string name="pref_import_backups_msg">Імпорт резервних копій з OAndBackup абоTitanium Backup.</string>
+    <string name="pref_import_backups_msg">Імпорт резервних копій з OAndBackup, Swift Backup (3.0–3.2) абоTitanium Backup.</string>
     <string name="pref_import_backups">Імпорт резервних копій</string>
     <string name="added_to_queue">Додано в чергу</string>
     <string name="minimum_version">Мінімальна версія: %d</string>
