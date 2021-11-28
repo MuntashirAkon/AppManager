@@ -56,6 +56,7 @@ import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.rapidfuzz.RapidFuzzCached;
 
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfo;
@@ -298,6 +299,14 @@ public class MainViewModel extends AndroidViewModel {
                 if (p.matcher(item.packageName).find() || p.matcher(item.label).find()) {
                     filteredApplicationItems.add(item);
                 }
+            }
+        } else if (searchType == AdvancedSearchView.SEARCH_TYPE_FUZZY) {
+            List<RapidFuzzCached.Result<ApplicationItem>> results;
+            results = RapidFuzzCached.extractAll(searchQuery, applicationItems,
+                    item -> item.label.toLowerCase(Locale.ROOT), 50.0);
+            Collections.sort(results, (o1, o2) -> -Double.compare(o1.getScore(), o2.getScore()));
+            for (RapidFuzzCached.Result<ApplicationItem> result : results) {
+                filteredApplicationItems.add(result.getObject());
             }
         } else {
             for (ApplicationItem item : applicationItems) {

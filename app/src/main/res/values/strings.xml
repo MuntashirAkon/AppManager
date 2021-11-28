@@ -1142,4 +1142,5 @@
     <string name="search_type_prefix">Prefix</string>
     <string name="search_type_suffix">Suffix</string>
     <string name="search_type_regular_expressions">Regex</string>
+    <string name="search_type_fuzzy">Fuzzy</string>
 </resources>

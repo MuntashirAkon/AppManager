@@ -19,9 +19,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.rapidfuzz.RapidFuzz;
 
 public class AdvancedSearchView extends SearchView {
-    @IntDef({SEARCH_TYPE_CONTAINS, SEARCH_TYPE_PREFIX, SEARCH_TYPE_SUFFIX, SEARCH_TYPE_REGEX})
+    @IntDef({SEARCH_TYPE_CONTAINS, SEARCH_TYPE_PREFIX, SEARCH_TYPE_SUFFIX, SEARCH_TYPE_REGEX, SEARCH_TYPE_FUZZY})
     @Retention(RetentionPolicy.SOURCE)
     public @interface SearchType {
     }
@@ -42,6 +43,10 @@ public class AdvancedSearchView extends SearchView {
      * Search using {@link String#matches(String)} or {@link java.util.regex.Pattern}.
      */
     public static final int SEARCH_TYPE_REGEX = 4;
+    /**
+     * Perform fuzzy search.
+     */
+    public static final int SEARCH_TYPE_FUZZY = 5;
 
     @SearchType
     private int mType = SEARCH_TYPE_CONTAINS;
@@ -78,6 +83,8 @@ public class AdvancedSearchView extends SearchView {
                 mType = SEARCH_TYPE_SUFFIX;
             } else if (id == R.id.action_search_type_regex) {
                 mType = SEARCH_TYPE_REGEX;
+            } else if (id == R.id.action_search_type_fuzzy) {
+                mType = SEARCH_TYPE_FUZZY;
             }
             if (mOnQueryTextListener != null) {
                 mOnQueryTextListener.onQueryTextChange(getQuery().toString(), mType);
@@ -127,6 +134,8 @@ public class AdvancedSearchView extends SearchView {
         switch (type) {
             case SEARCH_TYPE_CONTAINS:
                 return text.contains(query);
+            case SEARCH_TYPE_FUZZY:
+                return RapidFuzz.weightedRatio(query, text, 50.0) > 0;
             case SEARCH_TYPE_PREFIX:
                 return text.startsWith(query);
             case SEARCH_TYPE_SUFFIX:
@@ -147,6 +156,8 @@ public class AdvancedSearchView extends SearchView {
             default:
             case SEARCH_TYPE_CONTAINS:
                 return getContext().getString(R.string.search_type_contains);
+            case SEARCH_TYPE_FUZZY:
+                return getContext().getString(R.string.search_type_fuzzy);
             case SEARCH_TYPE_PREFIX:
                 return getContext().getString(R.string.search_type_prefix);
             case SEARCH_TYPE_REGEX:

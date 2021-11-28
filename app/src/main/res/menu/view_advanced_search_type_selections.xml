@@ -17,4 +17,8 @@
         android:id="@+id/action_search_type_regex"
         android:title="@string/search_type_regular_expressions" />
 
+    <item
+        android:id="@+id/action_search_type_fuzzy"
+        android:title="@string/search_type_fuzzy" />
+
 </menu>
