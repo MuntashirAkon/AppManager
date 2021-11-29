@@ -103,6 +103,7 @@ public class ManifestViewerActivity extends BaseActivity {
         final PackageManager pm = getApplicationContext().getPackageManager();
         if (packageUri != null) {
             new Thread(() -> {
+                PackageInfo packageInfo = null;
                 archiveFilePath = packageUri.getPath();
                 if (packageUri.getScheme().equals(ContentResolver.SCHEME_CONTENT) || !new File(archiveFilePath).canRead()) {
                     try {
@@ -115,13 +116,9 @@ public class ManifestViewerActivity extends BaseActivity {
                         return;
                     }
                 }
-                String archiveFilePath;
-                try {
-                    archiveFilePath = apkFile.getBaseEntry().getRealCachedFile().getAbsolutePath();
-                } catch (IOException e) {
-                    return;
+                if (archiveFilePath != null) {
+                    packageInfo = pm.getPackageArchiveInfo(archiveFilePath, 0);
                 }
-                PackageInfo packageInfo = pm.getPackageArchiveInfo(archiveFilePath, 0);
                 if (packageInfo != null) {
                     packageName = packageInfo.packageName;
                     final ApplicationInfo applicationInfo = packageInfo.applicationInfo;

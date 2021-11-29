@@ -1112,34 +1112,33 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     private void startActivityForSplit(Intent intent) {
         if (mainModel == null) return;
-        try (ApkFile apkFile = ApkFile.getInstance(mainModel.getApkFileKey())) {
-            if (apkFile.isSplit()) {
-                // Display a list of apks
-                List<ApkFile.Entry> apkEntries = apkFile.getEntries();
-                CharSequence[] entryNames = new CharSequence[apkEntries.size()];
-                for (int i = 0; i < apkEntries.size(); ++i) {
-                    entryNames[i] = apkEntries.get(i).toShortLocalizedString(requireActivity());
-                }
-                new MaterialAlertDialogBuilder(mActivity)
-                        .setTitle(R.string.select_apk)
-                        .setItems(entryNames, (dialog, which) -> executor.submit(() -> {
-                            try {
-                                File file = apkEntries.get(which).getRealCachedFile();
-                                intent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton()
-                                        .getMimeTypeFromExtension("apk"));
-                                UiThreadHandler.run(() -> startActivity(intent));
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }))
-                        .setNegativeButton(R.string.cancel, null)
-                        .show();
-            } else {
-                // Open directly
-                File file = new File(mApplicationInfo.publicSourceDir);
-                intent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
-                startActivity(intent);
+        ApkFile apkFile = ApkFile.getInstance(mainModel.getApkFileKey());
+        if (apkFile.isSplit()) {
+            // Display a list of apks
+            List<ApkFile.Entry> apkEntries = apkFile.getEntries();
+            CharSequence[] entryNames = new CharSequence[apkEntries.size()];
+            for (int i = 0; i < apkEntries.size(); ++i) {
+                entryNames[i] = apkEntries.get(i).toShortLocalizedString(requireActivity());
             }
+            new MaterialAlertDialogBuilder(mActivity)
+                    .setTitle(R.string.select_apk)
+                    .setItems(entryNames, (dialog, which) -> executor.submit(() -> {
+                        try {
+                            File file = apkEntries.get(which).getRealCachedFile();
+                            intent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton()
+                                    .getMimeTypeFromExtension("apk"));
+                            UiThreadHandler.run(() -> startActivity(intent));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }))
+                    .setNegativeButton(R.string.cancel, null)
+                    .show();
+        } else {
+            // Open directly
+            File file = new File(mApplicationInfo.publicSourceDir);
+            intent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
+            startActivity(intent);
         }
     }
 
