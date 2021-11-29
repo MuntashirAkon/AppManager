@@ -21,7 +21,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.UiThread;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 
 import com.android.internal.util.TextUtils;
@@ -34,12 +33,16 @@ import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
+import io.github.muntashirakon.AppManager.misc.AdvancedSearchView.ChoiceGenerator;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.VirtualFileSystem;
 
+import static io.github.muntashirakon.AppManager.misc.AdvancedSearchView.SEARCH_TYPE_REGEX;
+
 // Copyright 2015 Google, Inc.
-public class ClassListingActivity extends BaseActivity implements SearchView.OnQueryTextListener {
+public class ClassListingActivity extends BaseActivity implements AdvancedSearchView.OnQueryTextListener {
     public static final String EXTRA_APP_NAME = "EXTRA_APP_NAME";
     public static final String EXTRA_DEX_VFS_ID = "vfs_id";
 
@@ -86,7 +89,8 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
         if (mActionBar != null) {
             mActionBar.setTitle(mAppName);
             mActionBar.setDisplayShowCustomEnabled(true);
-            UIUtils.setupSearchView(mActionBar, this);
+            AdvancedSearchView searchView = UIUtils.setupAdvancedSearchView(mActionBar, this);
+            searchView.removeEnabledTypes(AdvancedSearchView.SEARCH_TYPE_FUZZY);
         }
 
         trackerClassesOnly = false;
@@ -123,7 +127,7 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
     protected void onResume() {
         super.onResume();
         if (mClassListingAdapter != null && !TextUtils.isEmpty(mClassListingAdapter.mConstraint)) {
-            mClassListingAdapter.getFilter().filter(mClassListingAdapter.mConstraint);
+            mClassListingAdapter.filter();
         }
     }
 
@@ -140,15 +144,16 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
     }
 
     @Override
-    public boolean onQueryTextSubmit(String query) {
-        return false;
+    public boolean onQueryTextChange(String newText, @AdvancedSearchView.SearchType int type) {
+        if (mClassListingAdapter != null) {
+            mClassListingAdapter.filter(newText, type);
+        }
+        return true;
     }
 
     @Override
-    public boolean onQueryTextChange(String newText) {
-        if (mClassListingAdapter != null)
-            mClassListingAdapter.getFilter().filter(newText.toLowerCase(Locale.ROOT));
-        return true;
+    public boolean onQueryTextSubmit(String query, int type) {
+        return false;
     }
 
     @Override
@@ -162,7 +167,7 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
         int id = item.getItemId();
         if (id == android.R.id.home) {
             finish();
-        } else if(id == R.id.action_toggle_class_listing) {
+        } else if (id == R.id.action_toggle_class_listing) {
             trackerClassesOnly = !trackerClassesOnly;
             setAdapterList();
         } else return super.onOptionsItemSelected(item);
@@ -183,6 +188,8 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
         private final LayoutInflater mLayoutInflater;
         private Filter mFilter;
         private String mConstraint;
+        @AdvancedSearchView.SearchType
+        private int mFilterType = AdvancedSearchView.SEARCH_TYPE_CONTAINS;
         private List<String> mDefaultList;
         @NonNull
         private final List<String> mAdapterList = new ArrayList<>();
@@ -204,10 +211,20 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
             mAdapterList.clear();
             mAdapterList.addAll(list);
             mDefaultList = list;
-            if (!TextUtils.isEmpty(mConstraint)) {
-                getFilter().filter(mConstraint);
-            }
+            filter();
             notifyDataSetChanged();
+        }
+
+        void filter() {
+            if (!TextUtils.isEmpty(mConstraint)) {
+                filter(mConstraint, mFilterType);
+            }
+        }
+
+        void filter(String query, @AdvancedSearchView.SearchType int filterType) {
+            mConstraint = query;
+            mFilterType = filterType;
+            getFilter().filter(mConstraint);
         }
 
         @Override
@@ -248,8 +265,8 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
                 mFilter = new Filter() {
                     @Override
                     protected FilterResults performFiltering(CharSequence charSequence) {
-                        String constraint = charSequence.toString().toLowerCase(Locale.ROOT);
-                        mConstraint = constraint;
+                        String constraint = mFilterType == SEARCH_TYPE_REGEX ? charSequence.toString()
+                                : charSequence.toString().toLowerCase(Locale.ROOT);
                         FilterResults filterResults = new FilterResults();
                         if (constraint.length() == 0) {
                             filterResults.count = 0;
@@ -257,11 +274,12 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
                             return filterResults;
                         }
 
-                        List<String> list = new ArrayList<>(mDefaultList.size());
-                        for (String item : mDefaultList) {
-                            if (item.toLowerCase(Locale.ROOT).contains(constraint))
-                                list.add(item);
-                        }
+                        List<String> list = AdvancedSearchView.matches(
+                                constraint,
+                                mDefaultList,
+                                (ChoiceGenerator<String>) object -> mFilterType == SEARCH_TYPE_REGEX ? object
+                                        : object.toLowerCase(Locale.ROOT),
+                                mFilterType);
 
                         filterResults.count = list.size();
                         filterResults.values = list;

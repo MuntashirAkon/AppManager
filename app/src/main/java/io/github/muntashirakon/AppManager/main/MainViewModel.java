@@ -35,8 +35,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.backup.BackupUtils;
@@ -56,7 +54,6 @@ import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
-import io.github.muntashirakon.rapidfuzz.RapidFuzzCached;
 
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfo;
@@ -286,39 +283,34 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     private void filterItemsByQuery(@NonNull List<ApplicationItem> applicationItems) {
-        List<ApplicationItem> filteredApplicationItems = new ArrayList<>();
+        List<ApplicationItem> filteredApplicationItems;
         if (searchType == AdvancedSearchView.SEARCH_TYPE_REGEX) {
-            Pattern p;
-            try {
-                p = Pattern.compile(searchQuery);
-            } catch (PatternSyntaxException e) {
-                mHandler.post(() -> applicationItemsLiveData.postValue(filteredApplicationItems));
-                return;
-            }
-            for (ApplicationItem item : applicationItems) {
-                if (p.matcher(item.packageName).find() || p.matcher(item.label).find()) {
+            filteredApplicationItems = AdvancedSearchView.matches(searchQuery, applicationItems,
+                    (AdvancedSearchView.ChoicesGenerator<ApplicationItem>) item -> new ArrayList<String>() {{
+                        add(item.packageName);
+                        add(item.label);
+                    }}, AdvancedSearchView.SEARCH_TYPE_REGEX);
+            mHandler.post(() -> applicationItemsLiveData.postValue(filteredApplicationItems));
+            return;
+        }
+        if (searchType == AdvancedSearchView.SEARCH_TYPE_FUZZY) {
+            filteredApplicationItems = AdvancedSearchView.matches(searchQuery, applicationItems,
+                    (AdvancedSearchView.ChoiceGenerator<ApplicationItem>) item -> item.label,
+                    AdvancedSearchView.SEARCH_TYPE_FUZZY);
+            mHandler.post(() -> applicationItemsLiveData.postValue(filteredApplicationItems));
+            return;
+        }
+        // Others
+        filteredApplicationItems = new ArrayList<>();
+        for (ApplicationItem item : applicationItems) {
+            if (AdvancedSearchView.matches(searchQuery, item.packageName.toLowerCase(Locale.ROOT), searchType)) {
+                filteredApplicationItems.add(item);
+            } else if (searchType == AdvancedSearchView.SEARCH_TYPE_CONTAINS) {
+                if (Utils.containsOrHasInitials(searchQuery, item.label)) {
                     filteredApplicationItems.add(item);
                 }
-            }
-        } else if (searchType == AdvancedSearchView.SEARCH_TYPE_FUZZY) {
-            List<RapidFuzzCached.Result<ApplicationItem>> results;
-            results = RapidFuzzCached.extractAll(searchQuery, applicationItems,
-                    item -> item.label.toLowerCase(Locale.ROOT), 50.0);
-            Collections.sort(results, (o1, o2) -> -Double.compare(o1.getScore(), o2.getScore()));
-            for (RapidFuzzCached.Result<ApplicationItem> result : results) {
-                filteredApplicationItems.add(result.getObject());
-            }
-        } else {
-            for (ApplicationItem item : applicationItems) {
-                if (AdvancedSearchView.matches(searchQuery, item.packageName.toLowerCase(Locale.ROOT), searchType)) {
-                    filteredApplicationItems.add(item);
-                } else if (searchType == AdvancedSearchView.SEARCH_TYPE_CONTAINS) {
-                    if (Utils.containsOrHasInitials(searchQuery, item.label)) {
-                        filteredApplicationItems.add(item);
-                    }
-                } else if (AdvancedSearchView.matches(searchQuery, item.label.toLowerCase(Locale.ROOT), searchType)) {
-                    filteredApplicationItems.add(item);
-                }
+            } else if (AdvancedSearchView.matches(searchQuery, item.label.toLowerCase(Locale.ROOT), searchType)) {
+                filteredApplicationItems.add(item);
             }
         }
         mHandler.post(() -> applicationItemsLiveData.postValue(filteredApplicationItems));

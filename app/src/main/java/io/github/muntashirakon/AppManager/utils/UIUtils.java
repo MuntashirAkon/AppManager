@@ -43,6 +43,7 @@ import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
 
 public class UIUtils {
@@ -254,6 +255,19 @@ public class UIUtils {
     public static SearchView setupSearchView(@NonNull ActionBar actionBar,
                                              @Nullable SearchView.OnQueryTextListener queryTextListener) {
         SearchView searchView = new SearchView(actionBar.getThemedContext());
+        searchView.setOnQueryTextListener(queryTextListener);
+        // Set layout params
+        ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutParams.gravity = Gravity.END;
+        actionBar.setCustomView(searchView, layoutParams);
+        return searchView;
+    }
+
+    @NonNull
+    public static AdvancedSearchView setupAdvancedSearchView(@NonNull ActionBar actionBar,
+                                                             @Nullable AdvancedSearchView.OnQueryTextListener queryTextListener) {
+        AdvancedSearchView searchView = new AdvancedSearchView(actionBar.getThemedContext());
         searchView.setOnQueryTextListener(queryTextListener);
         // Set layout params
         ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
