@@ -1,5 +1,32 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 
+<h5>v2.6.5 (396) stable release:</h5>
+This patch release contains new features as well as several bug fixes for Android 12.
+<br/>
+&#x2022; <b>[1-Click Ops]</b> Fixed displaying apps from other users.<br/>
+&#x2022; <b>[App
+    Details]</b> Enabled advanced options for disabling components in the components tabs. The options will be displayed if you long click on the block/unblock button.
+<br/>
+&#x2022; <b>[App Details]</b> Fixed displaying the details of an app without a valid signature.<br/>
+&#x2022; <b>[App Usage]</b> Display usage for all the configured apps.<br/>
+&#x2022; <b>[Android 12]</b>Fixed crash while installing apps.<br/>
+&#x2022; <b>[Android 12]</b>Fixed displaying SSAID, app ops.<br/>
+&#x2022; <b>[Backup]</b> Fixed crash if the backup filename contains colons.<br/>
+&#x2022; <b>[Device Info]</b> Display user ID alongside user name.<br/>
+&#x2022; <b>[Help Page]</b> Fixed crash if no WebView is available.<br/>
+&#x2022; <b>[Main]</b> Replaced check boxes and radio buttons with chips in the list options.<br/>
+&#x2022; <b>[Profile]</b> Fixed displaying apps from other users.<br/>
+&#x2022; <b>[Remote Server]</b> Fixed crash if IPv6 addresses are disabled.<br/>
+&#x2022; <b>[Scanner]</b> Detect native libraries and trackers.<br/>
+&#x2022; <b>[Scanner]</b> Fixed scanning split APK files.<br/>
+&#x2022;
+<b>[Settings]</b> Added an option to select default blocking method. Located at Settings > Rules > Default blocking method.
+<br/>
+<br/>
+See full list of changes: https://github.com/MuntashirAkon/AppManager/compare/v2.6.4...v2.6.5
+<br/>
+<br/>
+
 <h5>v2.6.4 (394) stable release:</h5>
 This patch release contains bug fixes and feature improvements for the app installer and activity interceptor. This also fixes the caching issues where the files were erroneously cached in the “files” directory instead of the “cache” directory.
 <br/>
@@ -188,115 +215,3 @@ All the changes introduced in v2.5.21 and onwards.<br />
     Currently, the users are not notified if a restart is necessary after restoring a backup.
     If you are in confusion, make sure to restart your device after restoring a backup.
 </p><br />
-
-<h5>v2.5.24 (383) pre-release:</h5>
-&#x2022; <font color="#09868B">[Feature]</font> New language: Tradition Chinese<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added filter by uninstalled apps, apps without backups in the main page<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added wildcard support for app ops and permissions for profiles. <tt>*</tt> can be used instead of specifying app ops or permissions to revoke all configured/dangerous permissions/app ops<br />
-&#x2022; <font color="#09868B">[Feature]</font> Allow specifying custom installer package which may or may not be installed<br />
-&#x2022; <font color="#09868B">[Feature]</font> App icons are cached to improve load time<br />
-&#x2022; <font color="#09868B">[Feature]</font> Complete rewrite of running apps internals in Java<br />
-&#x2022; <font color="#09868B">[Feature]</font> Copy package name on clicking on the package name in the app info tab<br />
-&#x2022; <font color="#09868B">[Feature]</font> Display file size, requirement, etc. for split APKs in the APK selection dialog<br />
-&#x2022; <font color="#09868B">[Feature]</font> Display version and tracker info in the install confirmation dialog<br />
-&#x2022; <font color="#09868B">[Feature]</font> Display uninstalled system apps and display installation prompt on clicking them<br />
-&#x2022; <font color="#09868B">[Feature]</font> Improved ADB detection and persistence of such detection<br />
-&#x2022; <font color="#09868B">[Feature]</font> Removed toybox along with its dependencies<br />
-&#x2022; <font color="#09868B">[Feature]</font> Updated trackers and libraries<br />
-&#x2022; <font color="#09868B">[Feature]</font> Updated credits<br />
-&#x2022; <font color="#09868B">[Feature]</font> Utilise multiple CPUs for back up/restore<br />
-&#x2022; <font color="#09868B">[Feature]</font> Verify copied checksum with the checksum of the signing certificate of the app on clicking on the app icon in the app info page<br />
-&#x2022; <font color="red">[Fix]</font> Added additional verifications to ensure that screen lock is not bypassed<br />
-&#x2022; <font color="red">[Fix]</font> Fixed back up/restore failure on some Android devices<br />
-&#x2022; <font color="red">[Fix]</font> Fixed crashes in the app details page when system configuration changes<br />
-&#x2022; <font color="red">[Fix]</font> Fixed crash on creating shortcuts on devices that do not support pin shortcut<br />
-&#x2022; <font color="red">[Fix]</font> Fixed generating wrong checksum for certificates in the signatures tab<br />
-&#x2022; <font color="red">[Fix]</font> Fixed uninstalling app for multiple users<br />
-&#x2022; <font color="red">[Fix]</font> Fixed various crashes on opening APK files from external apps<br />
-&#x2022; <font color="red">[Fix]</font> Hide backup option if one of the selected apps is not installed<br />
-&#x2022; <font color="red">[Fix]</font> Verify KeyStore backups during restoring a backup<br />
-
-<h5>v2.5.23 (381) pre-release:</h5>
-&#x2022; <font color="#09868B">[Feature]</font> Added screen lock<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added <b>Add to profile</b> in the batch ops and app info tab<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added enable/disable features in settings (replacing interceptor setting)<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added leanback launcher support with banner (Android TV)<br />
-&#x2022; <font color="#09868B">[Feature]</font> Backup/restore SSAID (requires immediate restart)<br />
-&#x2022; <font color="#09868B">[Feature]</font> Backup APK in external SD card<br />
-&#x2022; <font color="#09868B">[Feature]</font> AppInfo: Added options to configure battery optimization, net policy, SSAID. For each of them, tag clouds will be displayed if the values are not default.<br />
-&#x2022; <font color="#09868B">[Feature]</font> AppInfo: Added options to select tracker components to block/unblock<br />
-&#x2022; <font color="#09868B">[Feature]</font> Improved backup volume selection<br />
-&#x2022; <font color="#09868B">[Feature]</font> Interceptor: add/remove extras<br />
-&#x2022; <font color="#09868B">[Feature]</font> Made settings page accessible from Android Settings<br />
-&#x2022; <font color="#09868B">[Feature]</font> Main: Added filter by installed app, sort by number of trackers and last actions (the latter is not stable yet)<br />
-&#x2022; <font color="#09868B">[Feature]</font> Main: Batch selection on long click after the selection mode is turned on (i.e. selection mode is turned on if you click on any app icon or long click on any app)<br />
-&#x2022; <font color="#09868B">[Feature]</font> Main: Replaced sort and filter with list options<br />
-&#x2022; <font color="#09868B">[Feature]</font> Main: Set <b>backup</b> to red if the app is not installed<br />
-&#x2022; <font color="#09868B">[Feature]</font> New language: Japanese<br />
-&#x2022; <font color="#09868B">[Feature]</font> Removed F-Droid, Aurora Droid in favour of F-Droid links (to support user preferred clients)<br />
-&#x2022; <font color="#09868B">[Feature]</font> Search using app initials in the main page (e.g. TS will list TrebleShot in the search results)<br />
-&#x2022; <font color="#09868B">[Feature]</font> Updated trackers, libraries, profile presets<br />
-&#x2022; <font color="#09868B">[Feature]</font> Use of database as a middle man to improve load time<br />
-&#x2022; <font color="red">[Fix]</font> Fixed app icon (it now matches app theme)<br />
-&#x2022; <font color="red">[Fix]</font> Fixed crash while blocking app components of a recently updated app<br />
-&#x2022; <font color="red">[Fix]</font> Fixed various crashes in the app info tab<br />
-&#x2022; <font color="red">[Fix]</font> Properly sanitize profile names and exported APK(S) file names<br />
-&#x2022; <font color="red">[Fix]</font> Remove rules for all users (rather than the current user) in settings<br />
-&#x2022; <font color="red">[Fix]</font> Replaced AppManager/tmp with AppManager/.tmp<br />
-&#x2022; <font color="red">[Fix]</font> Replaced image buttons with material buttons (fixes crash when using Substratum themes)<br />
-<p>Don't set folders inside <tt>/mnt/media_rw/</tt> as the backup volume. It doesn't work for backup/restore.</p><br />
-
-<h5>v2.5.22 (379) pre-release:</h5>
-&#x2022; <font color="#09868B">[Feature]</font> 1-Click Ops: add backup/restore options<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added encryption info in about device<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added the ability to freeze backup (by creating <tt>.freeze</tt> in the corresponding backup)<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added option to enable/disable MagiskHide in the App Info tab (enable option in the overflow menu)<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added option to enable/disable interceptor (in settings)<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added option to launch services<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added option to select backup volume<br />
-&#x2022; <font color="#09868B">[Feature]</font> Backup/restore app installer, netpolicy, deviceidle, magiskhide and notification access<br />
-&#x2022; <font color="#09868B">[Feature]</font> Backup/restore URI grants (need immediate reboot after the restore)<br />
-&#x2022; <font color="#09868B">[Feature]</font> Block and disable components using IFW and PackageManager respectively for maximum protection<br />
-&#x2022; <font color="#09868B">[Feature]</font> Grant/revoke permissions in profile<br />
-&#x2022; <font color="#09868B">[Feature]</font> Improved instructions in the 1-Click Ops page<br />
-&#x2022; <font color="#09868B">[Feature]</font> Integrated docs within AM as a dynamic feature<br />
-&#x2022; <font color="#09868B">[Feature]</font> New attribute in backup/restore: size<br />
-&#x2022; <font color="#09868B">[Feature]</font> New attribute in profile: users<br />
-&#x2022; <font color="#09868B">[Feature]</font> New tag in App Info: backups<br />
-&#x2022; <font color="#09868B">[Feature]</font> Open DRM-free APKM files without conversion<br />
-&#x2022; <font color="#09868B">[Feature]</font> Sort apps by labels, display user/system tag in the profile page<br />
-&#x2022; <font color="#09868B">[Feature]</font> Replace backup all users with custom users<br />
-&#x2022; <font color="#09868B">[Feature]</font> Updated trackers and libraries<br />
-&#x2022; <font color="#09868B">[Feature]</font> Remove <tt>FLAG_ACTIVITY_FORWARD_RESULT</tt> from list of flags (if present) in the interceptor<br />
-&#x2022; <font color="red">[Fix]</font> Add <tt>.nomedia</tt> file in the backup folder<br />
-&#x2022; <font color="red">[Fix]</font> Fixed crash on clicking the about device item in Settings<br />
-&#x2022; <font color="red">[Fix]</font> Fixed crash in the profile page<br />
-&#x2022; <font color="red">[Fix]</font> Fixed compatibility issue of IFW in Android M or prior versions<br />
-&#x2022; <font color="red">[Fix]</font> Get correct user ID before performing uninstall<br />
-&#x2022; <font color="red">[Fix]</font> Migrate to PackageManager API instead of using unreliable pm command<br />
-&#x2022; <font color="red">[Fix]</font> Update theme name on changing app theme<br />
-&#x2022; <font color="red">[Fix]</font> Use package name from metadata instead of directory name for backups<br />
-<p>Backup/restore feature is now beta. From now on, backward compatibility for backup/restorer will be provided.</p><br />
-
-<h5>v2.5.21 (377) pre-release:</h5>
-&#x2022; New language: Farsi<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added about device in the settings page<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added an install button in the scanner page for the external APK files<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added the option to set custom app ops and modes in the three-dots menu<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added shortcut support for Android N_MR1 or less<br />
-&#x2022; <font color="#09868B">[Feature]</font> Display app ops associated with the declared permissions in the app ops tab<br />
-&#x2022; <font color="#09868B">[Feature]</font> Display feature availability and version number in the uses features tab<br />
-&#x2022; <font color="#09868B">[Feature]</font> Display icon for uninstalled but backed up apps in the main page<br />
-&#x2022; <font color="#09868B">[Feature]</font> Display tracker count in a new line instead of under brackets in the 1-click ops page<br />
-&#x2022; <font color="#09868B">[Feature]</font> Improved app install time for ADB users<br />
-&#x2022; <font color="#09868B">[Feature]</font> Migrate to Binder (incomplete)<br />
-&#x2022; <font color="#09868B">[Feature]</font> Renamed “deny app ops” to “set mode for app ops”, added the option to specify modes in 1-click ops page<br />
-&#x2022; <font color="#09868B">[Feature]</font> Reordered backup options along with description for each items<br />
-&#x2022; <font color="#09868B">[Feature]</font> Updated ADBLib<br />
-&#x2022; <font color="#09868B">[Feature]</font> Updated trackers and libraries<br />
-&#x2022; <font color="red">[Fix]</font> Fixed crashes of the app ops tab in Android 11<br />
-&#x2022; <font color="red">[Fix]</font> Fixed crashes of the app ops tab in MIUI<br />
-&#x2022; <font color="red">[Fix]</font> Fixed prompting users for ADB permission repeatedly when auto is the mode of operation<br />
-&#x2022; <font color="red">[Fix]</font> Hide launch and shortcut buttons from the activities tab for external APK<br />
-&#x2022; <font color="red">[Fix]</font> Use both package mode and UID mode for app ops from Android 6<br />
-&#x2022; <font color="red">[Fix]</font> Use data folder to store server/IPC related files<br />

@@ -1,0 +1,5 @@
+F-Droid doesn't support extended changelog. View in-app changelog for a more helpful changelog.
+- App Details: Added advanced options for disabling app components
+- App Usage: Display usage from other users
+- Android 12: Fixed crashes while installing apps or viewing permissions tabs
+- Scanner: Detect native libraries and trackers, and so on.
