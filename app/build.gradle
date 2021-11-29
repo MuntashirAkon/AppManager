@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later
 
 apply plugin: 'com.android.application'
+apply plugin: 'dev.rikka.tools.refine.gradle-plugin'
 
 android {
     compileSdkVersion rootProject.ext.compileSdk
