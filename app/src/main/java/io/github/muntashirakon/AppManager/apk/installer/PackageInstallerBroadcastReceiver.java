@@ -91,12 +91,13 @@ class PackageInstallerBroadcastReceiver extends BroadcastReceiver {
                 break;
             default:
                 Intent broadcastError = new Intent(PackageInstallerCompat.ACTION_INSTALL_COMPLETED);
+                broadcastError.putExtra(PackageInstaller.EXTRA_STATUS_MESSAGE, intent.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE));
                 broadcastError.putExtra(PackageInstaller.EXTRA_PACKAGE_NAME, packageName);
                 broadcastError.putExtra(PackageInstaller.EXTRA_OTHER_PACKAGE_NAME, intent.getStringExtra(PackageInstaller.EXTRA_OTHER_PACKAGE_NAME));
                 broadcastError.putExtra(PackageInstaller.EXTRA_STATUS, status);
                 broadcastError.putExtra(PackageInstaller.EXTRA_SESSION_ID, sessionId);
                 mContext.sendBroadcast(broadcastError);
-                Log.e(TAG, "Install failed! " + intent.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE));
+                Log.d(TAG, "Install failed! " + intent.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE));
                 break;
         }
     }
