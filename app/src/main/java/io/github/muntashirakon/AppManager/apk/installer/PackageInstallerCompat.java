@@ -414,7 +414,8 @@ public final class PackageInstallerCompat {
         void onStartInstall(int sessionId, String packageName);
 
         @WorkerThread
-        void onFinishedInstall(int sessionId, String packageName, int result, @Nullable String blockingPackage);
+        void onFinishedInstall(int sessionId, String packageName, int result, @Nullable String blockingPackage,
+                               @Nullable String statusMessage);
     }
 
     @NonNull
@@ -445,6 +446,7 @@ public final class PackageInstallerCompat {
     private final int userHandle;
     @Status
     private int finalStatus = STATUS_FAILURE_INVALID;
+    private String statusMessage;
     private PackageInstallerBroadcastReceiver piReceiver;
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -477,9 +479,10 @@ public final class PackageInstallerCompat {
                     // regardless of the status: success or failure
                     finalStatus = intent.getIntExtra(PackageInstaller.EXTRA_STATUS, STATUS_FAILURE_INVALID);
                     String blockingPackage = intent.getStringExtra(PackageInstaller.EXTRA_OTHER_PACKAGE_NAME);
+                    statusMessage = intent.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE);
                     // Run install completed
                     installCompleted = true;
-                    installCompleted(sessionId, finalStatus, blockingPackage);
+                    installCompleted(sessionId, finalStatus, blockingPackage, statusMessage);
                     break;
             }
         }
@@ -623,12 +626,13 @@ public final class PackageInstallerCompat {
         } else {
             Intent resultIntent = intentReceiver.getResult();
             finalStatus = resultIntent.getIntExtra(PackageInstaller.EXTRA_STATUS, 0);
+            statusMessage = resultIntent.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE);
         }
         Log.d(TAG, "Commit: Finishing...");
         // We might want to use {@code callFinish(finalStatus);} here, but it doesn't always work
         // since the object is garbage collected almost immediately.
         if (!installCompleted) {
-            installCompleted(sessionId, finalStatus, null);
+            installCompleted(sessionId, finalStatus, null, statusMessage);
         }
         return finalStatus == PackageInstaller.STATUS_SUCCESS;
     }
@@ -766,12 +770,15 @@ public final class PackageInstallerCompat {
         sendCompletedBroadcast(packageName, result, sessionId);
     }
 
-    private void installCompleted(int sessionId, int finalStatus,
-                                  @Nullable String blockingPackage) {
+    private void installCompleted(int sessionId,
+                                  int finalStatus,
+                                  @Nullable String blockingPackage,
+                                  @Nullable String statusMessage) {
         // No need to check package name since it's been checked before
         if (finalStatus == STATUS_FAILURE_SESSION_CREATE || (sessionId != -1 && this.sessionId == sessionId)) {
             if (onInstallListener != null) {
-                onInstallListener.onFinishedInstall(sessionId, packageName, finalStatus, blockingPackage);
+                onInstallListener.onFinishedInstall(sessionId, packageName, finalStatus,
+                        blockingPackage, statusMessage);
             }
             if (closeApkFile && apkFile != null) {
                 apkFile.close();

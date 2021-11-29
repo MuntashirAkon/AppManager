@@ -115,7 +115,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
                     // No need for user handle since it is only applicable for the current user (no-root)
                     getPackageManager().getPackageInfo(model.getPackageName(), 0);
                     // The package is still installed meaning that the app uninstall wasn't successful
-                    getInstallationFinishedDialog(model.getPackageName(), STATUS_FAILURE_CONFLICT, null).show();
+                    getInstallationFinishedDialog(model.getPackageName(), STATUS_FAILURE_CONFLICT, null, null).show();
                 } catch (PackageManager.NameNotFoundException e) {
                     install();
                 }
@@ -411,18 +411,14 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
         ApplicationInfo info = model.getInstalledPackageInfo().applicationInfo;  // Installed package info is never null here.
         if ((info.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
             // Cannot reinstall a system app with a different signature
-            getInstallationFinishedDialog(
-                    model.getPackageName(),
-                    getString(R.string.app_signing_signature_mismatch_for_system_apps),
-                    false).show();
+            getInstallationFinishedDialog(model.getPackageName(),
+                    getString(R.string.app_signing_signature_mismatch_for_system_apps), null, false).show();
             return;
         }
         if (info.publicSourceDir == null || !new File(info.publicSourceDir).exists()) {
             // Cannot reinstall an uninstalled app
-            getInstallationFinishedDialog(
-                    model.getPackageName(),
-                    getString(R.string.app_signing_signature_mismatch_for_data_only_app),
-                    false).show();
+            getInstallationFinishedDialog(model.getPackageName(),
+                    getString(R.string.app_signing_signature_mismatch_for_data_only_app), null, false).show();
             return;
         }
         // Offer user to uninstall and then install the app again
@@ -460,11 +456,8 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
                 PackageInstallerCompat.uninstall(model.getPackageName(), Users.USER_ALL, false);
                 install();
             } catch (Exception e) {
-                e.printStackTrace();
-                getInstallationFinishedDialog(
-                        model.getPackageName(),
-                        getString(R.string.failed_to_uninstall_app),
-                        false).show();
+                getInstallationFinishedDialog(model.getPackageName(), getString(R.string.failed_to_uninstall_app),
+                        e.getMessage(), false).show();
             }
         } else {
             // Uninstall using service, not guaranteed to work
@@ -527,21 +520,23 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
     }
 
     @NonNull
-    public AlertDialog getInstallationFinishedDialog(String packageName, int result, @Nullable String blockingPackage) {
-        return getInstallationFinishedDialog(
-                packageName,
-                getStringFromStatus(result, blockingPackage),
+    public AlertDialog getInstallationFinishedDialog(String packageName, int result, @Nullable String blockingPackage,
+                                                     @Nullable String statusMessage) {
+        return getInstallationFinishedDialog(packageName, getStringFromStatus(result, blockingPackage), statusMessage,
                 result == STATUS_SUCCESS);
     }
 
     @NonNull
-    public AlertDialog getInstallationFinishedDialog(String packageName,
-                                                     CharSequence message,
-                                                     boolean displayOpenAndAppInfo) {
+    public AlertDialog getInstallationFinishedDialog(String packageName, CharSequence message,
+                                                     @Nullable String statusMessage, boolean displayOpenAndAppInfo) {
         View view = getLayoutInflater().inflate(R.layout.dialog_scrollable_text_view, null);
         view.findViewById(android.R.id.checkbox).setVisibility(View.GONE);
         TextView tv = view.findViewById(android.R.id.content);
-        tv.setText(message);
+        SpannableStringBuilder ssb = new SpannableStringBuilder(message);
+        if (statusMessage != null) {
+            ssb.append("\n\n").append(UIUtils.getItalicString(statusMessage));
+        }
+        tv.setText(ssb);
         DialogTitleBuilder title = new DialogTitleBuilder(this)
                 .setTitle(model.getAppLabel())
                 .setSubtitle(getVersionInfoWithTrackers(model.getNewPackageInfo()))
@@ -635,12 +630,12 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
 
     public void setInstallFinishedListener() {
         if (service != null) {
-            service.setOnInstallFinished((packageName, status, blockingPackage) -> {
+            service.setOnInstallFinished((packageName, status, blockingPackage, statusMessage) -> {
                 if (isFinishing()) return;
                 if (installProgressDialog != null) {
                     installProgressDialog.hide();
                 }
-                getInstallationFinishedDialog(packageName, status, blockingPackage).show();
+                getInstallationFinishedDialog(packageName, status, blockingPackage, statusMessage).show();
             });
         }
     }

@@ -50,7 +50,8 @@ public class PackageInstallerService extends ForegroundService {
 
     public interface OnInstallFinished {
         @UiThread
-        void onFinished(String packageName, int status, @Nullable String blockingPackage);
+        void onFinished(String packageName, int status, @Nullable String blockingPackage,
+                        @Nullable String statusMessage);
     }
 
     public PackageInstallerService() {
@@ -104,7 +105,8 @@ public class PackageInstallerService extends ForegroundService {
                 }
 
                 @Override
-                public void onFinishedInstall(int sessionId, String packageName, int result, @Nullable String blockingPackage) {
+                public void onFinishedInstall(int sessionId, String packageName, int result,
+                                              @Nullable String blockingPackage, @Nullable String statusMessage) {
                     // Block trackers if requested
                     if (result == STATUS_SUCCESS
                             && AppPref.isRootEnabled()
@@ -113,8 +115,9 @@ public class PackageInstallerService extends ForegroundService {
                                 new UserPackagePair(packageName, userHandle)));
                     }
                     if (onInstallFinished != null) {
-                        UiThreadHandler.run(() -> onInstallFinished.onFinished(packageName, result, blockingPackage));
-                    } else sendNotification(result, appLabel, blockingPackage);
+                        UiThreadHandler.run(() -> onInstallFinished.onFinished(packageName, result, blockingPackage,
+                                statusMessage));
+                    } else sendNotification(result, appLabel, blockingPackage, statusMessage);
                 }
             });
             pi.setAppLabel(appLabel);
@@ -148,9 +151,11 @@ public class PackageInstallerService extends ForegroundService {
 
     private void sendNotification(@PackageInstallerCompat.Status int status,
                                   @Nullable String appLabel,
-                                  @Nullable String blockingPackage) {
+                                  @Nullable String blockingPackage,
+                                  @Nullable String statusMessage) {
         Intent intent = getPackageManager().getLaunchIntentForPackage(packageName);
         NotificationCompat.Builder builder = NotificationUtils.getHighPriorityNotificationBuilder(this);
+        String subject = getStringFromStatus(status, appLabel, blockingPackage);
         builder.setAutoCancel(true)
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
                 .setWhen(System.currentTimeMillis())
@@ -158,7 +163,10 @@ public class PackageInstallerService extends ForegroundService {
                 .setTicker(appLabel)
                 .setContentTitle(appLabel)
                 .setSubText(getText(R.string.package_installer))
-                .setContentText(getStringFromStatus(status, appLabel, blockingPackage));
+                .setContentText(subject);
+        if (statusMessage != null) {
+            builder.setStyle(new NotificationCompat.BigTextStyle().bigText(subject + "\n\n" + statusMessage));
+        }
         if (intent != null) {
             builder.setContentIntent(PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT));
         }
