@@ -232,6 +232,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
         if (service != null) {
             unbindService(serviceConnection);
         }
+        unsetInstallFinishedListener();
         super.onDestroy();
     }
 
