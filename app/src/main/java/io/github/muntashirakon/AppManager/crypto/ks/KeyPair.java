@@ -28,6 +28,9 @@ public class KeyPair extends Pair<PrivateKey, Certificate> {
     }
 
     public void destroy() throws DestroyFailedException {
-        first.destroy();
+        try {
+            first.destroy();
+        } catch (NoSuchMethodError ignore) {
+        }
     }
 }
