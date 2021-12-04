@@ -38,6 +38,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
+import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.io.AtomicProxyFile;
 import io.github.muntashirakon.io.ProxyFile;
 import io.github.muntashirakon.io.ProxyOutputStream;

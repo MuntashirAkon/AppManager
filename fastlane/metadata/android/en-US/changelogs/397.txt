@@ -1,0 +1,4 @@
+This update provides fixes for a few critical errors or crashes happened due to porting issues in v2.6.5.
+Always keep App Manager up to date to ensure safety of your device.
+- Fix crashes on scanner, manifest and installer pages
+- Display detailed error or status message after trying to install an app
