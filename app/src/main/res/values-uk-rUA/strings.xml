@@ -1164,4 +1164,5 @@
     <string name="accessibility_service_description">Загальна служба спеціальних можливостей для виконання певних операцій, таких як очищення кеша в режимі без-root.</string>
     <string name="explore">Аналіз</string>
     <string name="system_partition">Корінь системного розділу</string>
+    <string name="java">Java</string>
 </resources>
