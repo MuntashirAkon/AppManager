@@ -42,7 +42,7 @@ if [[ $? -ne 0 ]]; then
     exit 1
 else
     # Start success
-    echo "Success! Local server has started."
+    echo "Local server has started."
     echo "Use Ctrl+C to exit."
 fi
 # Print pid

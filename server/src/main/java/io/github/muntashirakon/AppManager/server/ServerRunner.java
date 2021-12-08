@@ -8,6 +8,8 @@ import android.os.Process;
 import android.os.SystemClock;
 import android.system.Os;
 
+import androidx.annotation.NonNull;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -15,7 +17,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.server.common.ConfigParam;
 import io.github.muntashirakon.AppManager.server.common.Constants;
 import io.github.muntashirakon.AppManager.server.common.FLog;
@@ -190,7 +191,7 @@ public final class ServerRunner {
         try (ServerHandler serverHandler = new ServerHandler(configParams)) {
             // Set params
             LifecycleAgent.sConfigParams = new HashMap<>(configParams);
-            System.out.println("Server has started.");
+            System.out.println("Success! Server has started.");
             int pid = Process.myPid();
             System.out.println("Process: " + getProcessName(pid) + ", PID: " + pid);
             // Send broadcast message to the system that the server has started
@@ -198,6 +199,7 @@ public final class ServerRunner {
             // Start server
             serverHandler.start();
         } catch (IOException | RuntimeException e) {
+            System.out.println("Error! Could not start server. " + e.getMessage());
             FLog.log(e);
         } finally {
             // Send broadcast message to the system that the server has stopped

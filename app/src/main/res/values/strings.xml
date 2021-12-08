@@ -98,8 +98,7 @@
     <string name="copyright_message" translatable="false">© 2020–2021 <a href="https://github.com/MuntashirAkon">Muntashir Al-Islam</a></string>
     <string name="third_party">Third-party Libraries and Icons</string>
     <string name="third_party_message" translatable="false">-
-        <a href="https://github.com/tananaev/adblib">ADB Library</a> (BSD-3-Clause)
-        \n- <a href="https://github.com/zhanghai/AndroidFastScroll">AndroidFastScroll</a> (Apache 2.0)
+        <a href="https://github.com/zhanghai/AndroidFastScroll">AndroidFastScroll</a> (Apache 2.0)
         \n- <a href="https://github.com/LSPosed/AndroidHiddenApiBypass">AndroidHiddenApiBypass</a> (Apache 2.0)
         \n- <a href="https://github.com/MuntashirAkon/apk-parser">APK-parser</a> (BSD-2-Clause)
         \n- <a href="https://github.com/MuntashirAkon/apksig-android">apksig for android</a> (Apache 2.0)
@@ -110,6 +109,7 @@
         \n- <a href="https://github.com/dkanada/frost">Frost</a> Icons (GPLv3.0)
         \n- <a href="https://github.com/RikkaApps/HiddenApiRefinePlugin">HiddenApiRefinePlugin</a> (MIT)
         \n- <a href="https://github.com/skylot/jadx">JADX</a> (Apache 2.0)
+        \n- <a href="https://github.com/MuntashirAkon/libadb-android">LibADB</a> (GPLv3.0)
         \n- <a href="https://github.com/topjohnwu/libsu">libsu</a> (Apache 2.0)
         \n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a> (MIT)
         \n- <a href="https://github.com/material-components/material-components-android">Material Components</a> (Apache 2.0)

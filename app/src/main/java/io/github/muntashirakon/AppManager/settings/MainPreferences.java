@@ -367,7 +367,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
                                 }
                                 new Thread(() -> {
                                     try {
-                                        AdbConnectionManager.pair(ServerConfig.getAdbHost(), port, pairingCode.toString().trim());
+                                        AdbConnectionManager.getInstance().pair(ServerConfig.getAdbHost(), port, pairingCode.toString().trim());
                                         UiThreadHandler.run(() -> {
                                             UIUtils.displayShortToast(R.string.paired_successfully);
                                             if (!activity.isDestroyed()) displayAdbConnect(activity, waitForConfig);

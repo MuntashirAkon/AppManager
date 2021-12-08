@@ -207,7 +207,6 @@ public class LocalServer {
     }
 
     public static class Config {
-        public boolean printLog = false;
         public boolean allowBgRunning;
         public String adbHost;
         public int adbPort;

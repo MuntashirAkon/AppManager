@@ -10,15 +10,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.Objects;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
-import io.github.muntashirakon.AppManager.adb.AdbConnection;
 import io.github.muntashirakon.AppManager.adb.AdbConnectionManager;
-import io.github.muntashirakon.AppManager.adb.AdbStream;
-import io.github.muntashirakon.AppManager.adb.LineReader;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
@@ -29,6 +31,7 @@ import io.github.muntashirakon.AppManager.server.common.DataTransmission;
 import io.github.muntashirakon.AppManager.server.common.ParcelableUtil;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
+import io.github.muntashirakon.adb.AdbStream;
 
 // Copyright 2016 Zheng Li
 class LocalServerManager {
@@ -184,65 +187,63 @@ class LocalServerManager {
     }
 
     @Nullable
-    private AdbConnection connection;
-    @Nullable
-    private AdbStream adbStream;
+    private volatile AdbStream adbStream;
+    private volatile CountDownLatch adbConnectionWatcher = new CountDownLatch(1);
+    private volatile boolean adbServerStarted;
+    private final Runnable adbOutputThread = () -> {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(adbStream).openInputStream()))) {
+            String s;
+            while ((s = reader.readLine()) != null) {
+                Log.d(TAG, "RESPONSE: " + s);
+                if (s.startsWith("Success!")) {
+                    adbServerStarted = true;
+                    adbConnectionWatcher.countDown();
+                } else if (s.startsWith("Error!")) {
+                    adbServerStarted = false;
+                    adbConnectionWatcher.countDown();
+                }
+            }
+        } catch (Throwable e) {
+            Log.e(TAG, "useAdbStartServer: unable to read from shell.", e);
+        }
+    };
 
     void tryAdb() throws Exception {
-        if (connection != null) {
-            // Connection still present
-            return;
+        AdbConnectionManager adbConnectionManager = AdbConnectionManager.getInstance();
+        if (!adbConnectionManager.isConnected() || !adbConnectionManager.connect(mConfig.adbHost, mConfig.adbPort)) {
+            throw new Exception("Could not connect to ADB.");
         }
-        connection = AdbConnectionManager.connect(mConfig.adbHost, mConfig.adbPort);
     }
 
     @WorkerThread
     private void useAdbStartServer() throws Exception {
-        if (adbStream != null && !adbStream.isClosed()) {
-            // ADB shell running
-            return;
-        }
-        if (connection == null) {
-            // ADB server not running
-            Log.d(TAG, "useAdbStartServer: Connecting using host=" + mConfig.adbHost + ", port=" + mConfig.adbPort);
-            connection = AdbConnectionManager.connect(mConfig.adbHost, mConfig.adbPort);
-        }
-
-        Log.d(TAG, "useAdbStartServer: opening shell...");
-        adbStream = connection.open("shell:");
-
-        // Logging thread
-        new Thread(() -> {
-            if (adbStream == null) return;
-            LineReader reader;
-            StringBuilder sb = new StringBuilder();
-            try {
-                reader = new LineReader(adbStream);
-                int line = 0;
-                String s;
-                while (!adbStream.isClosed()) {
-                    s = reader.readLine();
-                    if (s != null) sb.append(s);
-                    line++;
-                    if (!mConfig.printLog && (line >= 50 || (s != null && s.startsWith("runGet")))) {
-                        break;
-                    }
-                }
-            } catch (IOException | InterruptedException e) {
-                Log.e(TAG, "useAdbStartServer: unable to read from shell.", e);
+        if (adbStream == null || Objects.requireNonNull(adbStream).isClosed()) {
+            // ADB shell not running
+            AdbConnectionManager manager = AdbConnectionManager.getInstance();
+            if (!manager.isConnected() && !manager.connect(mConfig.adbHost, mConfig.adbPort)) {
+                throw new IOException("Could not connect to ADB.");
             }
-            Log.e(TAG, "useAdbStartServer: " + sb);
-        }).start();
+            Log.d(TAG, "useAdbStartServer: Connected using host=" + mConfig.adbHost + ", port=" + mConfig.adbPort);
 
-        adbStream.write("\n\n".getBytes());
-        SystemClock.sleep(100);
-        adbStream.write("id\n".getBytes());
-        SystemClock.sleep(100);
-        String command = getExecCommand();
-        Log.d(TAG, "useAdbStartServer: " + command);
-        adbStream.write((command + "\n").getBytes());
-        SystemClock.sleep(3000);
+            Log.d(TAG, "useAdbStartServer: Opening shell...");
+            adbStream = manager.openStream("shell:");
+            adbConnectionWatcher = new CountDownLatch(1);
+            adbServerStarted = false;
+            new Thread(adbOutputThread).start();
+        }
+        Log.d(TAG, "useAdbStartServer: Shell opened.");
 
+        try (OutputStream os = Objects.requireNonNull(adbStream).openOutputStream()) {
+            os.write("id\n".getBytes());
+            String command = getExecCommand();
+            Log.d(TAG, "useAdbStartServer: " + command);
+            os.write((command + "\n").getBytes());
+        }
+
+        adbConnectionWatcher.await(1, TimeUnit.MINUTES);
+        if (adbConnectionWatcher.getCount() == 1 || !adbServerStarted) {
+            throw new Exception("Server wasn't started.");
+        }
         Log.d(TAG, "useAdbStartServer: Server has started.");
     }
 
