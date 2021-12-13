@@ -11,7 +11,6 @@ import io.github.muntashirakon.AppManager.crypto.ks.KeyPair;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreUtils;
 import io.github.muntashirakon.adb.AbsAdbConnectionManager;
-import io.github.muntashirakon.adb.AdbCrypto;
 
 public class AdbConnectionManager extends AbsAdbConnectionManager {
     public static final String TAG = AdbConnectionManager.class.getSimpleName();
@@ -35,8 +34,7 @@ public class AdbConnectionManager extends AbsAdbConnectionManager {
         KeyPair keyPair = keyStoreManager.getKeyPairNoThrow(ADB_KEY_ALIAS);
         if (keyPair == null) {
             String subject = "CN=App Manager";
-            keyPair = KeyStoreUtils.generateRSAKeyPair(subject, AdbCrypto.KEY_LENGTH_BITS,
-                    System.currentTimeMillis() + 86400000);
+            keyPair = KeyStoreUtils.generateRSAKeyPair(subject, 2048, System.currentTimeMillis() + 86400000);
             keyStoreManager.addKeyPair(ADB_KEY_ALIAS, keyPair, true);
         }
         mKeyPair = keyPair;
