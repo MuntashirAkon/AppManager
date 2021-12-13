@@ -29,15 +29,15 @@ allprojects {
 }
 
 project.ext {
-    compileSdk = 30
+    compileSdk = 31
     buildTools = "30.0.3"
     minSdk = 21
-    targetSdk = 30
+    targetSdk = 31
 
     libsu_version = "3.1.2"
     room_version = "2.3.0"
-    annotation_version = "1.2.0"
-    appcompat_version = "1.3.1"
+    annotation_version = "1.3.0"
+    appcompat_version = "1.4.0"
     material_version = "1.4.0"
     refine_version = "3.0.3"
 }

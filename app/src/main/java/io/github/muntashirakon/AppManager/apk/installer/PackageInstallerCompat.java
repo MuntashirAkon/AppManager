@@ -660,8 +660,11 @@ public final class PackageInstallerCompat {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             sessionParams.setInstallReason(PackageManager.INSTALL_REASON_USER);
         }
+        if (!isPrivileged && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            sessionParams.setRequireUserAction(PackageInstaller.SessionParams.USER_ACTION_NOT_REQUIRED);
+        }
         try {
-            if (Build.VERSION.SDK_INT >= 31) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 sessionId = packageInstaller.createSession(sessionParams, installerPackageName,
                         context.getAttributionTag(), userHandle);
             } else {
