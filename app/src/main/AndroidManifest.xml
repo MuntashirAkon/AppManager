@@ -143,17 +143,7 @@
         </activity>
         <activity
             android:name=".main.MainActivity"
-            android:exported="true"
-            android:icon="@mipmap/ic_launcher"
-            android:roundIcon="@mipmap/ic_launcher_round">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.LAUNCHER" />
-                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="false" />
         <activity
             android:name=".details.AppDetailsActivity"
             android:exported="true"
@@ -575,9 +565,18 @@
             android:launchMode="singleTop"
             android:taskAffinity="" />
         <activity
-            android:name=".crypto.AuthenticationActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme.TransparentBackground" />
+            android:name=".main.SplashActivity"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:roundIcon="@mipmap/ic_launcher_round">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".logcat.LogViewerActivity"
             android:configChanges="screenSize|orientation"
