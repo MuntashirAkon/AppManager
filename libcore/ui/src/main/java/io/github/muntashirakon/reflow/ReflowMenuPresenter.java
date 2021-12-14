@@ -92,7 +92,7 @@ public class ReflowMenuPresenter implements MenuPresenter {
         return id;
     }
 
-    @SuppressLint("UnsafeExperimentalUsageError")
+    @SuppressLint("UnsafeOptInUsageError")
     @NonNull
     @Override
     public Parcelable onSaveInstanceState() {
@@ -103,7 +103,7 @@ public class ReflowMenuPresenter implements MenuPresenter {
         return savedState;
     }
 
-    @SuppressLint("UnsafeExperimentalUsageError")
+    @SuppressLint("UnsafeOptInUsageError")
     @Override
     public void onRestoreInstanceState(@NonNull Parcelable state) {
         if (state instanceof SavedState) {

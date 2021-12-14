@@ -738,7 +738,7 @@ public final class ReflowMenuItemView extends MaterialCardView implements MenuVi
         return badgeDrawable != null;
     }
 
-    @SuppressLint("UnsafeExperimentalUsageError")
+    @SuppressLint("UnsafeOptInUsageError")
     private void tryUpdateBadgeBounds(View anchorView) {
         if (!hasBadge()) {
             return;
@@ -746,7 +746,7 @@ public final class ReflowMenuItemView extends MaterialCardView implements MenuVi
         BadgeUtils.setBadgeDrawableBounds(badgeDrawable, anchorView, getCustomParentForBadge(anchorView));
     }
 
-    @SuppressLint("UnsafeExperimentalUsageError")
+    @SuppressLint("UnsafeOptInUsageError")
     private void tryAttachBadgeToAnchor(@Nullable View anchorView) {
         if (!hasBadge()) {
             return;
@@ -760,7 +760,7 @@ public final class ReflowMenuItemView extends MaterialCardView implements MenuVi
         }
     }
 
-    @SuppressLint("UnsafeExperimentalUsageError")
+    @SuppressLint("UnsafeOptInUsageError")
     private void tryRemoveBadgeFromAnchor(@Nullable View anchorView) {
         if (!hasBadge()) {
             return;
