@@ -23,7 +23,7 @@ import static io.github.muntashirakon.AppManager.backup.BackupManager.SOURCE_PRE
 
 @WorkerThread
 class VerifyOp implements Closeable {
-    static final String TAG = "RestoreOp";
+    static final String TAG = VerifyOp.class.getSimpleName();
 
     @NonNull
     private final BackupFlags backupFlags;

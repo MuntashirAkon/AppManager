@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.ParcelFileDescriptor;
+import android.os.UserHandleHidden;
 import android.os.storage.StorageManager;
 import android.os.storage.StorageManagerHidden;
 import android.os.storage.StorageVolume;
@@ -22,6 +23,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 import dev.rikka.tools.refine.Refine;
+import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 
 // Copyright 2018 Fung Gwo (fythonx@gmail.com)
 // Modified from https://gist.github.com/fython/924f8d9019bca75d22de116bb69a54a1
@@ -61,13 +63,18 @@ public final class StorageManagerCompat {
     @NonNull
     public static StorageVolume[] getVolumeList(@NonNull Context context, int userId, int flags)
             throws SecurityException {
+        if (userId != UserHandleHidden.myUserId() && !PermissionUtils.hasAccessToUsers()) {
+            return new StorageVolume[0];
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             return StorageManagerHidden.getVolumeList(userId, flags);
         } else {
             StorageVolume[] volumes = Refine.<StorageManagerHidden>unsafeCast(from(context)).getVolumeList();
-            if (volumes == null) return new StorageVolume[0];
-            return volumes;
+            if (volumes != null) {
+                return volumes;
+            }
         }
+        return new StorageVolume[0];
     }
 
     @NonNull

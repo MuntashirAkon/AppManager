@@ -71,7 +71,7 @@ import static io.github.muntashirakon.AppManager.backup.BackupManager.getExt;
 
 @WorkerThread
 class BackupOp implements Closeable {
-    static final String TAG = "BackupOp";
+    static final String TAG = BackupOp.class.getSimpleName();
 
     @NonNull
     private final Context context = AppManager.getContext();

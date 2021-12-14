@@ -22,20 +22,41 @@ import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
 public final class PermissionUtils {
     public static final String TERMUX_PERM_RUN_COMMAND = "com.termux.permission.RUN_COMMAND";
     public static final String PERMISSION_GET_APP_OPS_STATS = "android.permission.GET_APP_OPS_STATS";
+    public static final String PERMISSION_INTERACT_ACROSS_USERS = "android.permission.INTERACT_ACROSS_USERS";
+    public static final String PERMISSION_MANAGE_USERS = "android.permission.MANAGE_USERS";
 
     public static boolean hasDumpPermission() {
         Context context = AppManager.getContext();
-        if (!hasPermission(context, Manifest.permission.DUMP)) {
-            if (LocalServer.isAMServiceAlive()) {
-                try {
-                    PermissionCompat.grantPermission(context.getPackageName(), Manifest.permission.DUMP,
-                            UserHandleHidden.myUserId());
-                    return true;
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
+        if (hasPermission(context, Manifest.permission.DUMP)) {
+            return true;
+        }
+        if (LocalServer.isAMServiceAlive()) {
+            try {
+                PermissionCompat.grantPermission(context.getPackageName(), Manifest.permission.DUMP,
+                        UserHandleHidden.myUserId());
+                return true;
+            } catch (RemoteException e) {
+                e.printStackTrace();
             }
-        } else return true;
+        }
+        return false;
+    }
+
+    public static boolean hasAccessToUsers() {
+        Context context = AppManager.getContext();
+        if (hasPermission(context, PERMISSION_INTERACT_ACROSS_USERS)
+                || hasPermission(context, PERMISSION_MANAGE_USERS)) {
+            return true;
+        }
+        if (LocalServer.isAMServiceAlive()) {
+            try {
+                PermissionCompat.grantPermission(context.getPackageName(), PERMISSION_INTERACT_ACROSS_USERS,
+                        UserHandleHidden.myUserId());
+                return true;
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
         return false;
     }
 
