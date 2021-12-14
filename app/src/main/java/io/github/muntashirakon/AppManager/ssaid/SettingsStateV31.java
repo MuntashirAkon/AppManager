@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.ssaid;
 
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -54,7 +55,7 @@ import io.github.muntashirakon.io.ProxyOutputStream;
  * the same lock to grab the current state to write to disk.
  * </p>
  */
-@RequiresApi(31)
+@RequiresApi(Build.VERSION_CODES.S)
 public final class SettingsStateV31 implements SettingsState {
     private static final boolean DEBUG = false;
     private static final boolean DEBUG_PERSISTENCE = false;
