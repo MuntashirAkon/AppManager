@@ -48,6 +48,7 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
+import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
@@ -598,7 +599,9 @@ public final class PackageInstallerCompat {
             Log.d(TAG, "Commit: Calling activity to request permission...");
             intentReceiver = null;
             Intent callbackIntent = new Intent(PackageInstallerBroadcastReceiver.ACTION_PI_RECEIVER);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, callbackIntent, 0);
+            @SuppressLint("WrongConstant")
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, callbackIntent,
+                    PendingIntentCompat.FLAG_IMMUTABLE);
             sender = pendingIntent.getIntentSender();
         }
         Log.d(TAG, "Commit: Committing...");

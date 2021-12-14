@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.profiles;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -15,6 +16,7 @@ import java.io.FileNotFoundException;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.types.ForegroundService;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
@@ -93,8 +95,9 @@ public class ProfileApplierService extends ForegroundService {
         profileName = intent.getStringExtra(EXTRA_PROFILE_NAME);
         Intent notificationIntent = new Intent(this, AppsProfileActivity.class);
         notificationIntent.putExtra(AppsProfileActivity.EXTRA_PROFILE_NAME, profileName);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,
-                0, notificationIntent, 0);
+        @SuppressLint("WrongConstant")
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent,
+                PendingIntentCompat.FLAG_IMMUTABLE);
         // Set app name in the ongoing notification
         builder.setContentTitle(profileName)
                 .setContentIntent(pendingIntent);

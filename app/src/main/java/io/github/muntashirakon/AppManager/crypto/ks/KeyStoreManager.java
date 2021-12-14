@@ -57,6 +57,7 @@ import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.adb.AdbConnectionManager;
 import io.github.muntashirakon.AppManager.apk.signing.Signer;
+import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.crypto.AESCrypto;
 import io.github.muntashirakon.AppManager.crypto.RSACrypto;
 import io.github.muntashirakon.AppManager.crypto.RandomChar;
@@ -488,6 +489,7 @@ public class KeyStoreManager {
      * @return Password for the given alias. {@link Utils#clearChars(char[])} must be called when done.
      * @deprecated Kept for migratory purposes only, deprecated since v2.6.3. To be removed in v3.0.0.
      */
+    @SuppressLint("WrongConstant")
     @Deprecated
     @CheckResult
     @NonNull
@@ -525,7 +527,9 @@ public class KeyStoreManager {
                     .setContentTitle(ks)
                     .setSubText(ks)
                     .setContentText(context.getString(R.string.input_keystore_alias_pass_msg, alias));
-            builder.setContentIntent(PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_UPDATE_CURRENT));
+            builder.setContentIntent(PendingIntent.getActivity(context, 0, intent,
+                    PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_UPDATE_CURRENT
+                            | PendingIntentCompat.FLAG_IMMUTABLE));
             NotificationUtils.displayHighPriorityNotification(context, builder.build());
             acquireLock();
             context.unregisterReceiver(receiver);

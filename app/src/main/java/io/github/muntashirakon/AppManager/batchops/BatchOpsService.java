@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.batchops;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.main.MainActivity;
 import io.github.muntashirakon.AppManager.misc.AlertDialogActivity;
 import io.github.muntashirakon.AppManager.types.ForegroundService;
@@ -151,8 +153,9 @@ public class BatchOpsService extends ForegroundService {
         notificationManager = NotificationUtils.getNewNotificationManager(this, CHANNEL_ID,
                 "Batch Ops Progress", NotificationManagerCompat.IMPORTANCE_LOW);
         Intent notificationIntent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,
-                0, notificationIntent, 0);
+        @SuppressLint("WrongConstant")
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent,
+                PendingIntentCompat.FLAG_IMMUTABLE);
         builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentText(getString(R.string.operation_running))
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
@@ -282,8 +285,9 @@ public class BatchOpsService extends ForegroundService {
                 intent.putExtra(EXTRA_FAILURE_MESSAGE, message);
                 intent.putStringArrayListExtra(EXTRA_FAILED_PKG, opResult.getFailedPackages());
                 intent.putIntegerArrayListExtra(EXTRA_OP_USERS, opResult.getAssociatedUserHandles());
-                PendingIntent pendingIntent = PendingIntent.getActivity(this,
-                        0, intent, PendingIntent.FLAG_ONE_SHOT);
+                @SuppressLint("WrongConstant")
+                PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
+                        PendingIntent.FLAG_ONE_SHOT | PendingIntentCompat.FLAG_IMMUTABLE);
                 builder.setContentIntent(pendingIntent);
                 builder.setContentText(message + detailsMessage);
         }

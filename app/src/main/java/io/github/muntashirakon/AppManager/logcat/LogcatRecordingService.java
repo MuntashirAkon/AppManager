@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.logcat;
 
+import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -20,6 +21,7 @@ import java.util.Random;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.logcat.helper.SaveLogHelper;
 import io.github.muntashirakon.AppManager.logcat.helper.ServiceHelper;
 import io.github.muntashirakon.AppManager.logcat.helper.WidgetHelper;
@@ -109,8 +111,9 @@ public class LogcatRecordingService extends ForegroundService {
         // Have to make this unique for God knows what reason
         stopRecordingIntent.setData(Uri.withAppendedPath(Uri.parse(URI_SCHEME + "://stop/"),
                 Long.toHexString(new Random().nextLong())));
+        @SuppressLint("WrongConstant")
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0 /* no requestCode */,
-                stopRecordingIntent, PendingIntent.FLAG_ONE_SHOT);
+                stopRecordingIntent, PendingIntent.FLAG_ONE_SHOT | PendingIntentCompat.FLAG_IMMUTABLE);
 
         final String CHANNEL_ID = "matlog_logging_channel";
         // Set the icon, scrolling text and timestamp

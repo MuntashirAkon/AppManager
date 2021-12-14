@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.apk.installer;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -15,6 +16,7 @@ import androidx.core.app.NotificationCompat;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -71,6 +73,7 @@ class PackageInstallerBroadcastReceiver extends BroadcastReceiver {
                     broadcastCancel.putExtra(PackageInstaller.EXTRA_STATUS, PackageInstallerCompat.STATUS_FAILURE_ABORTED);
                     broadcastCancel.putExtra(PackageInstaller.EXTRA_SESSION_ID, sessionId);
                     // Ask user for permission
+                    @SuppressLint("WrongConstant")
                     NotificationCompat.Builder builder = NotificationUtils.getHighPriorityNotificationBuilder(context)
                             .setAutoCancel(true)
                             .setDefaults(Notification.DEFAULT_ALL)
@@ -80,8 +83,11 @@ class PackageInstallerBroadcastReceiver extends BroadcastReceiver {
                             .setContentTitle(appLabel)
                             .setSubText(context.getString(R.string.package_installer))
                             .setContentText(context.getString(R.string.confirm_installation))
-                            .setContentIntent(PendingIntent.getActivity(context, 0, intent2, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_UPDATE_CURRENT))
-                            .setDeleteIntent(PendingIntent.getBroadcast(context, 0, broadcastCancel, PendingIntent.FLAG_UPDATE_CURRENT));
+                            .setContentIntent(PendingIntent.getActivity(context, 0, intent2,
+                                    PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_UPDATE_CURRENT
+                                            | PendingIntentCompat.FLAG_IMMUTABLE))
+                            .setDeleteIntent(PendingIntent.getBroadcast(context, 0, broadcastCancel,
+                                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntentCompat.FLAG_IMMUTABLE));
                     NotificationUtils.displayHighPriorityNotification(context, builder.build());
                 }
                 break;

@@ -2,15 +2,18 @@
 
 package io.github.muntashirakon.AppManager.misc;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-
 import android.os.Build;
+
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
+
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 
 public class AMExceptionHandler implements Thread.UncaughtExceptionHandler {
@@ -57,8 +60,10 @@ public class AMExceptionHandler implements Thread.UncaughtExceptionHandler {
                 .setTicker(context.getText(R.string.app_name))
                 .setContentTitle(context.getText(R.string.am_crashed))
                 .setContentText(context.getText(R.string.tap_to_submit_crash_report));
+        @SuppressLint("WrongConstant")
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
-                Intent.createChooser(i, context.getText(R.string.send_crash_report)), PendingIntent.FLAG_ONE_SHOT);
+                Intent.createChooser(i, context.getText(R.string.send_crash_report)),
+                PendingIntent.FLAG_ONE_SHOT | PendingIntentCompat.FLAG_IMMUTABLE);
         builder.setContentIntent(pendingIntent);
         NotificationUtils.displayHighPriorityNotification(context, builder.build());
         //

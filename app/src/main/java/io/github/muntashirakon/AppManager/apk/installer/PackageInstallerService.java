@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.apk.installer;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -18,6 +19,7 @@ import java.util.Collections;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
+import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.main.MainActivity;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.types.ForegroundService;
@@ -71,8 +73,9 @@ public class PackageInstallerService extends ForegroundService {
         notificationManager = NotificationUtils.getNewNotificationManager(this, CHANNEL_ID,
                 "Install Progress", NotificationManagerCompat.IMPORTANCE_LOW);
         Intent notificationIntent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,
-                0, notificationIntent, 0);
+        @SuppressLint("WrongConstant")
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent,
+                PendingIntentCompat.FLAG_IMMUTABLE);
         builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle(null)
                 .setContentText(getString(R.string.install_in_progress))
@@ -174,6 +177,7 @@ public class PackageInstallerService extends ForegroundService {
         return packageName;
     }
 
+    @SuppressLint("WrongConstant")
     private void sendNotification(@PackageInstallerCompat.Status int status,
                                   @Nullable String appLabel,
                                   @Nullable String blockingPackage,
@@ -193,7 +197,8 @@ public class PackageInstallerService extends ForegroundService {
             builder.setStyle(new NotificationCompat.BigTextStyle().bigText(subject + "\n\n" + statusMessage));
         }
         if (intent != null) {
-            builder.setContentIntent(PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT));
+            builder.setContentIntent(PendingIntent.getActivity(this, 0, intent,
+                    PendingIntent.FLAG_ONE_SHOT | PendingIntentCompat.FLAG_IMMUTABLE));
         }
         NotificationUtils.displayHighPriorityNotification(this, builder.build());
     }

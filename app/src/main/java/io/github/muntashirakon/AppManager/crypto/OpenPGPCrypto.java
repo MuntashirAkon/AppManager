@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.crypto;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -35,6 +36,7 @@ import javax.crypto.Cipher;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
@@ -275,6 +277,7 @@ public class OpenPGPCrypto implements Crypto {
         }
     }
 
+    @SuppressLint("WrongConstant")
     @UiThread
     private void handleResult(@NonNull Intent result) {
         successFlag = false;
@@ -302,7 +305,9 @@ public class OpenPGPCrypto implements Crypto {
                         .setContentTitle(openPGP)
                         .setSubText(openPGP)
                         .setContentText(context.getString(R.string.allow_open_pgp_operation));
-                builder.setContentIntent(PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_UPDATE_CURRENT));
+                builder.setContentIntent(PendingIntent.getActivity(context, 0, intent,
+                        PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_UPDATE_CURRENT
+                                | PendingIntentCompat.FLAG_IMMUTABLE));
                 NotificationUtils.displayHighPriorityNotification(context, builder.build());
                 break;
             case OpenPgpApi.RESULT_CODE_ERROR:
