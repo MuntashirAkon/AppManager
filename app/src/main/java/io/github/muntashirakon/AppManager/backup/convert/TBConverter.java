@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.backup.convert;
 
+import android.annotation.UserIdInt;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,6 +10,7 @@ import android.os.UserHandleHidden;
 import android.util.Base64;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
@@ -64,19 +66,21 @@ public class TBConverter extends Converter {
     private static final String EXTERNAL_PREFIX = "data/data/.external.";
 
     @NonNull
-    private final Context context = AppManager.getContext();
-    private final Path backupLocation;
-    private final int userHandle;
-    private final Path propFile;
-    private final String packageName;
-    private final long backupTime;
+    private final Context mContext = AppManager.getContext();
+    private final Path mBackupLocation;
+    @UserIdInt
+    private final int mUserId;
+    private final Path mPropFile;
+    private final String mPackageName;
+    private final long mBackupTime;
 
-    private Crypto crypto;
-    private BackupFiles.Checksum checksum;
-    private MetadataManager.Metadata sourceMetadata;
-    private MetadataManager.Metadata destMetadata;
-    private Path tmpBackupPath;
-    private Bitmap icon;
+    private Crypto mCrypto;
+    private BackupFiles.Checksum mChecksum;
+    private MetadataManager.Metadata mSourceMetadata;
+    private MetadataManager.Metadata mDestMetadata;
+    private Path mTempBackupPath;
+    @Nullable
+    private Bitmap mIcon;
 
     /**
      * A documentation about Titanium Backup is located at
@@ -85,77 +89,103 @@ public class TBConverter extends Converter {
      * @param propFile Location to the properties file e.g. {@code /sdcard/TitaniumBackup/package.name-YYYYMMDD-HHMMSS.properties}
      */
     public TBConverter(@NonNull Path propFile) {
-        this.propFile = propFile;
-        this.backupLocation = propFile.getParentFile();
-        this.userHandle = UserHandleHidden.myUserId();
+        this.mPropFile = propFile;
+        this.mBackupLocation = propFile.getParentFile();
+        this.mUserId = UserHandleHidden.myUserId();
         String dirtyName = propFile.getName();
         int idx = dirtyName.indexOf('-');
-        if (idx == -1) this.packageName = null;
-        else this.packageName = dirtyName.substring(0, idx);
-        this.backupTime = propFile.lastModified();  // TODO: Grab from the file name
+        if (idx == -1) this.mPackageName = null;
+        else this.mPackageName = dirtyName.substring(0, idx);
+        this.mBackupTime = propFile.lastModified();  // TODO: Grab from the file name
     }
 
     @Override
     public void convert() throws BackupException {
-        if (this.packageName == null) {
+        if (this.mPackageName == null) {
             throw new BackupException("Could not read package name.");
         }
         // Source metadata
-        sourceMetadata = new MetadataManager.Metadata();
+        mSourceMetadata = new MetadataManager.Metadata();
         readPropFile();
         // Destination metadata
-        destMetadata = new MetadataManager.Metadata(sourceMetadata);
+        mDestMetadata = new MetadataManager.Metadata(mSourceMetadata);
         // Destination files will be encrypted by the default encryption method
-        destMetadata.crypto = CryptoUtils.getMode();
+        mDestMetadata.crypto = CryptoUtils.getMode();
         // Destination APK will be renamed
-        destMetadata.apkName = "base.apk";
+        mDestMetadata.apkName = "base.apk";
         // Destination compression type will be the default compression method
-        destMetadata.tarType = ConvertUtils.getTarTypeFromPref();
+        mDestMetadata.tarType = ConvertUtils.getTarTypeFromPref();
         MetadataManager metadataManager = MetadataManager.getNewInstance();
-        metadataManager.setMetadata(destMetadata);
+        metadataManager.setMetadata(mDestMetadata);
         // Simulate a backup creation
         BackupFiles backupFiles;
         BackupFiles.BackupFile[] backupFileList;
         try {
-            backupFiles = new BackupFiles(packageName, userHandle, new String[]{"TB"});
+            backupFiles = new BackupFiles(mPackageName, mUserId, new String[]{"TB"});
             backupFileList = backupFiles.getBackupPaths(true);
         } catch (IOException e) {
             throw new BackupException("Could not get backup files", e);
         }
         for (BackupFiles.BackupFile backupFile : backupFileList) {
             // We're iterating over a singleton list
+            boolean backupSuccess = false;
             try {
-                tmpBackupPath = backupFile.getBackupPath();
-                crypto = ConvertUtils.setupCrypto(destMetadata);
-                checksum = new BackupFiles.Checksum(backupFile.getChecksumFile(CryptoUtils.MODE_NO_ENCRYPTION), "w");
+                mTempBackupPath = backupFile.getBackupPath();
+                mCrypto = ConvertUtils.setupCrypto(mDestMetadata);
+                try {
+                    mChecksum = new BackupFiles.Checksum(backupFile.getChecksumFile(CryptoUtils.MODE_NO_ENCRYPTION), "w");
+                } catch (IOException e) {
+                    throw new BackupException("Failed to create checksum file.", e);
+                }
                 // Backup icon
                 backupIcon();
-                if (destMetadata.flags.backupApkFiles()) {
+                if (mDestMetadata.flags.backupApkFiles()) {
                     backupApkFile();
                 }
-                if (destMetadata.flags.backupData()) {
+                if (mDestMetadata.flags.backupData()) {
                     backupData();
                 }
                 // Write modified metadata
-                metadataManager.setMetadata(destMetadata);
-                metadataManager.writeMetadata(backupFile);
+                metadataManager.setMetadata(mDestMetadata);
+                try {
+                    metadataManager.writeMetadata(backupFile);
+                } catch (IOException e) {
+                    throw new BackupException("Failed to write metadata.", e);
+                }
                 // Store checksum for metadata
-                checksum.add(MetadataManager.META_FILE, DigestUtils.getHexDigest(destMetadata.checksumAlgo, backupFile.getMetadataFile()));
-                checksum.close();
+                try {
+                    mChecksum.add(MetadataManager.META_FILE, DigestUtils.getHexDigest(mDestMetadata.checksumAlgo,
+                            backupFile.getMetadataFile()));
+                } catch (IOException e) {
+                    throw new BackupException("Failed to generate checksum for meta.json", e);
+                }
+                mChecksum.close();
                 // Encrypt checksum
-                Path checksumFile = backupFile.getChecksumFile(CryptoUtils.MODE_NO_ENCRYPTION);
-                if (!crypto.encrypt(new Path[]{checksumFile})) {
-                    throw new BackupException("Failed to encrypt " + checksumFile.getName());
+                try {
+                    Path checksumFile = backupFile.getChecksumFile(CryptoUtils.MODE_NO_ENCRYPTION);
+                    encrypt(new Path[]{checksumFile});
+                } catch (IOException e) {
+                    throw new BackupException("Failed to encrypt checksums.txt");
                 }
                 // Replace current backup:
                 // There's hardly any chance of getting a false here but checks are done anyway.
-                if (!backupFile.commit()) {
-                    throw new Exception("Unknown error occurred. This message should never be printed.");
+                try {
+                    backupFile.commit();
+                } catch (Exception e) {
+                    throw new BackupException("Could not finalise backup.", e);
                 }
+                backupSuccess = true;
+            } catch (BackupException e) {
+                throw e;
             } catch (Throwable th) {
-                backupFile.cleanup();
-                crypto.close();
-                throw new BackupException(th.getClass().getName(), th);
+                throw new BackupException("Unknown error occurred.", th);
+            } finally {
+                if (!backupSuccess) {
+                    backupFile.cleanup();
+                }
+                if (mCrypto != null) {
+                    mCrypto.close();
+                }
             }
             return;
         }
@@ -163,27 +193,27 @@ public class TBConverter extends Converter {
 
     @Override
     public String getPackageName() {
-        return packageName;
+        return mPackageName;
     }
 
     private void backupApkFile() throws BackupException {
         // Decompress APK file
         Path baseApkFile;
         try {
-            baseApkFile = FileUtils.getTempPath(context, packageName, destMetadata.apkName);
+            baseApkFile = FileUtils.getTempPath(mContext, mPackageName, mDestMetadata.apkName);
         } catch (IOException e) {
             throw new BackupException("Couldn't create temporary file to decompress APK file", e);
         }
-        try (InputStream pis = getApkFile(sourceMetadata.apkName, sourceMetadata.tarType).openInputStream();
+        try (InputStream pis = getApkFile(mSourceMetadata.apkName, mSourceMetadata.tarType).openInputStream();
              BufferedInputStream bis = new BufferedInputStream(pis)) {
             CompressorInputStream is;
-            if (TAR_GZIP.equals(sourceMetadata.tarType)) {
+            if (TAR_GZIP.equals(mSourceMetadata.tarType)) {
                 is = new GzipCompressorInputStream(bis, true);
-            } else if (TAR_BZIP2.equals(sourceMetadata.tarType)) {
+            } else if (TAR_BZIP2.equals(mSourceMetadata.tarType)) {
                 is = new BZip2CompressorInputStream(bis, true);
             } else {
                 Objects.requireNonNull(baseApkFile.getParentFile()).delete();
-                throw new BackupException("Invalid source compression type: " + sourceMetadata.tarType);
+                throw new BackupException("Invalid source compression type: " + mSourceMetadata.tarType);
             }
             try (OutputStream fos = baseApkFile.openOutputStream()) {
                 // The whole file is the APK
@@ -193,91 +223,92 @@ public class TBConverter extends Converter {
             }
         } catch (IOException e) {
             Objects.requireNonNull(baseApkFile.getParentFile()).delete();
-            throw new BackupException("Couldn't decompress " + sourceMetadata.apkName, e);
+            throw new BackupException("Couldn't decompress " + mSourceMetadata.apkName, e);
         }
         // Get certificate checksums
         try {
-            String[] checksums = ConvertUtils.getChecksumsFromApk(baseApkFile, destMetadata.checksumAlgo);
+            String[] checksums = ConvertUtils.getChecksumsFromApk(baseApkFile, mDestMetadata.checksumAlgo);
             for (int i = 0; i < checksums.length; ++i) {
-                checksum.add(CERT_PREFIX + i, checksums[i]);
+                mChecksum.add(CERT_PREFIX + i, checksums[i]);
             }
         } catch (Exception ignore) {
         }
         // Backup APK file
-        String sourceBackupFilePrefix = SOURCE_PREFIX + getExt(destMetadata.tarType);
+        String sourceBackupFilePrefix = SOURCE_PREFIX + getExt(mDestMetadata.tarType);
         Path[] sourceFiles;
         try {
-            sourceFiles = TarUtils.create(destMetadata.tarType, baseApkFile, tmpBackupPath, sourceBackupFilePrefix,
-                    /* language=regexp */new String[]{".*\\.apk"}, null, null, false)
+            sourceFiles = TarUtils.create(mDestMetadata.tarType, baseApkFile, mTempBackupPath, sourceBackupFilePrefix,
+                            /* language=regexp */new String[]{".*\\.apk"}, null, null, false)
                     .toArray(new Path[0]);
         } catch (Throwable th) {
             throw new BackupException("APK files backup is requested but no APK files have been backed up.", th);
         } finally {
             Objects.requireNonNull(baseApkFile.getParentFile()).delete();
         }
-        if (!crypto.encrypt(sourceFiles)) {
+        // Overwrite with the new files
+        try {
+            sourceFiles = encrypt(sourceFiles);
+        } catch (IOException e) {
             throw new BackupException("Failed to encrypt " + Arrays.toString(sourceFiles));
         }
-        // Overwrite with the new files
-        sourceFiles = crypto.getNewFiles();
         for (Path file : sourceFiles) {
-            checksum.add(file.getName(), DigestUtils.getHexDigest(destMetadata.checksumAlgo, file));
+            mChecksum.add(file.getName(), DigestUtils.getHexDigest(mDestMetadata.checksumAlgo, file));
         }
     }
 
     private void backupData() throws BackupException {
         Path dataFile;
         try {
-            dataFile = getDataFile(FileUtils.trimExtension(this.propFile.getName()), sourceMetadata.tarType);
+            dataFile = getDataFile(FileUtils.trimExtension(this.mPropFile.getName()), mSourceMetadata.tarType);
         } catch (FileNotFoundException e) {
             throw new BackupException("Could not get data file", e);
         }
         int i = 0;
         String intBackupFilePrefix = null;
         String extBackupFilePrefix = null;
-        if (destMetadata.flags.backupInternalData()) {
-            intBackupFilePrefix = DATA_PREFIX + (i++) + getExt(destMetadata.tarType);
+        if (mDestMetadata.flags.backupInternalData()) {
+            intBackupFilePrefix = DATA_PREFIX + (i++) + getExt(mDestMetadata.tarType);
         }
-        if (destMetadata.flags.backupExternalData()) {
-            extBackupFilePrefix = DATA_PREFIX + i + getExt(destMetadata.tarType);
+        if (mDestMetadata.flags.backupExternalData()) {
+            extBackupFilePrefix = DATA_PREFIX + i + getExt(mDestMetadata.tarType);
         }
         try (BufferedInputStream bis = new BufferedInputStream(dataFile.openInputStream())) {
             CompressorInputStream cis;
-            if (TAR_GZIP.equals(sourceMetadata.tarType)) {
+            if (TAR_GZIP.equals(mSourceMetadata.tarType)) {
                 cis = new GzipCompressorInputStream(bis);
-            } else if (TAR_BZIP2.equals(sourceMetadata.tarType)) {
+            } else if (TAR_BZIP2.equals(mSourceMetadata.tarType)) {
                 cis = new BZip2CompressorInputStream(bis);
             } else {
-                throw new BackupException("Invalid compression type: " + destMetadata.tarType);
+                throw new BackupException("Invalid compression type: " + mDestMetadata.tarType);
             }
             TarArchiveInputStream tis = new TarArchiveInputStream(cis);
             SplitOutputStream intSos = null, extSos = null;
             TarArchiveOutputStream intTos = null, extTos = null;
             if (intBackupFilePrefix != null) {
-                intSos = new SplitOutputStream(tmpBackupPath, intBackupFilePrefix, DEFAULT_SPLIT_SIZE);
+                intSos = new SplitOutputStream(mTempBackupPath, intBackupFilePrefix, DEFAULT_SPLIT_SIZE);
                 BufferedOutputStream bos = new BufferedOutputStream(intSos);
                 CompressorOutputStream cos;
-                if (TAR_GZIP.equals(destMetadata.tarType)) {
+                if (TAR_GZIP.equals(mDestMetadata.tarType)) {
                     cos = new GzipCompressorOutputStream(bos);
-                } else if (TAR_BZIP2.equals(destMetadata.tarType)) {
+                } else if (TAR_BZIP2.equals(mDestMetadata.tarType)) {
                     cos = new BZip2CompressorOutputStream(bos);
                 } else {
-                    throw new BackupException("Invalid compression type: " + destMetadata.tarType);
+                    throw new BackupException("Invalid compression type: " + mDestMetadata.tarType);
                 }
                 intTos = new TarArchiveOutputStream(cos);
                 intTos.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
                 intTos.setBigNumberMode(TarArchiveOutputStream.BIGNUMBER_POSIX);
             }
             if (extBackupFilePrefix != null) {
-                extSos = new SplitOutputStream(tmpBackupPath, extBackupFilePrefix, DEFAULT_SPLIT_SIZE);
+                extSos = new SplitOutputStream(mTempBackupPath, extBackupFilePrefix, DEFAULT_SPLIT_SIZE);
                 BufferedOutputStream bos = new BufferedOutputStream(extSos);
                 CompressorOutputStream cos;
-                if (TAR_GZIP.equals(destMetadata.tarType)) {
+                if (TAR_GZIP.equals(mDestMetadata.tarType)) {
                     cos = new GzipCompressorOutputStream(bos);
-                } else if (TAR_BZIP2.equals(destMetadata.tarType)) {
+                } else if (TAR_BZIP2.equals(mDestMetadata.tarType)) {
                     cos = new BZip2CompressorOutputStream(bos);
                 } else {
-                    throw new BackupException("Invalid compression type: " + destMetadata.tarType);
+                    throw new BackupException("Invalid compression type: " + mDestMetadata.tarType);
                 }
                 extTos = new TarArchiveOutputStream(cos);
                 extTos.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
@@ -290,7 +321,7 @@ public class TBConverter extends Converter {
                 String fileName = inTarEntry.getName();
                 boolean isExternal = fileName.startsWith(EXTERNAL_PREFIX);
                 // Get new file name
-                fileName = fileName.replaceFirst((isExternal ? EXTERNAL_PREFIX : INTERNAL_PREFIX) + packageName + "/\\./", "");
+                fileName = fileName.replaceFirst((isExternal ? EXTERNAL_PREFIX : INTERNAL_PREFIX) + mPackageName + "/\\./", "");
                 if (fileName.equals("")) continue;
                 // New tar entry
                 TarArchiveEntry outTarEntry = new TarArchiveEntry(fileName);
@@ -351,26 +382,16 @@ public class TBConverter extends Converter {
             // Encrypt created backups and generate checksum
             if (intSos != null) {
                 // Encrypt backups
-                Path[] newBackupFiles = intSos.getFiles().toArray(new Path[0]);
-                if (!crypto.encrypt(newBackupFiles)) {
-                    throw new BackupException("Failed to encrypt " + Arrays.toString(newBackupFiles));
-                }
-                // Overwrite with the new files
-                newBackupFiles = crypto.getNewFiles();
+                Path[] newBackupFiles = encrypt(intSos.getFiles().toArray(new Path[0]));
                 for (Path file : newBackupFiles) {
-                    checksum.add(file.getName(), DigestUtils.getHexDigest(destMetadata.checksumAlgo, file));
+                    mChecksum.add(file.getName(), DigestUtils.getHexDigest(mDestMetadata.checksumAlgo, file));
                 }
             }
             if (extSos != null) {
                 // Encrypt backups
-                Path[] newBackupFiles = extSos.getFiles().toArray(new Path[0]);
-                if (!crypto.encrypt(newBackupFiles)) {
-                    throw new BackupException("Failed to encrypt " + Arrays.toString(newBackupFiles));
-                }
-                // Overwrite with the new files
-                newBackupFiles = crypto.getNewFiles();
+                Path[] newBackupFiles = encrypt(extSos.getFiles().toArray(new Path[0]));
                 for (Path file : newBackupFiles) {
-                    checksum.add(file.getName(), DigestUtils.getHexDigest(destMetadata.checksumAlgo, file));
+                    mChecksum.add(file.getName(), DigestUtils.getHexDigest(mDestMetadata.checksumAlgo, file));
                 }
             }
         } catch (IOException e) {
@@ -379,54 +400,54 @@ public class TBConverter extends Converter {
     }
 
     private void readPropFile() throws BackupException {
-        try (InputStream is = this.propFile.openInputStream()) {
+        try (InputStream is = this.mPropFile.openInputStream()) {
             Properties prop = new Properties();
             prop.load(is);
-            sourceMetadata.label = prop.getProperty("app_label");
-            sourceMetadata.packageName = this.packageName;
-            sourceMetadata.versionName = prop.getProperty("app_version_name");
-            sourceMetadata.versionCode = Integer.parseInt(prop.getProperty("app_version_code"));
-            sourceMetadata.isSystem = "1".equals(prop.getProperty("app_is_system"));
-            sourceMetadata.isSplitApk = false;
-            sourceMetadata.splitConfigs = ArrayUtils.emptyArray(String.class);
-            sourceMetadata.hasRules = false;
-            sourceMetadata.backupTime = this.backupTime;
-            sourceMetadata.crypto = CryptoUtils.MODE_NO_ENCRYPTION;  // We only support no encryption mode for TB backups
-            sourceMetadata.apkName = this.packageName + "-" + prop.getProperty("app_apk_md5") + ".apk";
-            sourceMetadata.userHandle = UserHandleHidden.myUserId();
+            mSourceMetadata.label = prop.getProperty("app_label");
+            mSourceMetadata.packageName = this.mPackageName;
+            mSourceMetadata.versionName = prop.getProperty("app_version_name");
+            mSourceMetadata.versionCode = Integer.parseInt(prop.getProperty("app_version_code"));
+            mSourceMetadata.isSystem = "1".equals(prop.getProperty("app_is_system"));
+            mSourceMetadata.isSplitApk = false;
+            mSourceMetadata.splitConfigs = ArrayUtils.emptyArray(String.class);
+            mSourceMetadata.hasRules = false;
+            mSourceMetadata.backupTime = this.mBackupTime;
+            mSourceMetadata.crypto = CryptoUtils.MODE_NO_ENCRYPTION;  // We only support no encryption mode for TB backups
+            mSourceMetadata.apkName = this.mPackageName + "-" + prop.getProperty("app_apk_md5") + ".apk";
+            mSourceMetadata.userHandle = UserHandleHidden.myUserId();
             // Compression type
             String compressionType = prop.getProperty("app_apk_codec");
             if ("GZIP".equals(compressionType)) {
-                sourceMetadata.tarType = TAR_GZIP;
+                mSourceMetadata.tarType = TAR_GZIP;
             } else if ("BZIP2".equals(compressionType)) {
-                sourceMetadata.tarType = TAR_BZIP2;
+                mSourceMetadata.tarType = TAR_BZIP2;
             } else throw new BackupException("Unsupported compression type: " + compressionType);
             // Flags
-            sourceMetadata.flags = new BackupFlags(BackupFlags.BACKUP_MULTIPLE);
+            mSourceMetadata.flags = new BackupFlags(BackupFlags.BACKUP_MULTIPLE);
             try {
-                getDataFile(FileUtils.trimExtension(this.propFile.getName()), sourceMetadata.tarType);
+                getDataFile(FileUtils.trimExtension(this.mPropFile.getName()), mSourceMetadata.tarType);
                 // No error = data file exists
-                sourceMetadata.flags.addFlag(BackupFlags.BACKUP_INT_DATA);
+                mSourceMetadata.flags.addFlag(BackupFlags.BACKUP_INT_DATA);
                 if ("1".equals(prop.getProperty("has_external_data"))) {
-                    sourceMetadata.flags.addFlag(BackupFlags.BACKUP_EXT_DATA);
+                    mSourceMetadata.flags.addFlag(BackupFlags.BACKUP_EXT_DATA);
                 }
-                sourceMetadata.flags.addFlag(BackupFlags.BACKUP_CACHE);
+                mSourceMetadata.flags.addFlag(BackupFlags.BACKUP_CACHE);
             } catch (FileNotFoundException ignore) {
             }
             try {
-                getApkFile(sourceMetadata.apkName, sourceMetadata.tarType);
+                getApkFile(mSourceMetadata.apkName, mSourceMetadata.tarType);
                 // No error = APK file exists
-                sourceMetadata.flags.addFlag(BackupFlags.BACKUP_APK_FILES);
+                mSourceMetadata.flags.addFlag(BackupFlags.BACKUP_APK_FILES);
             } catch (FileNotFoundException ignore) {
             }
-            sourceMetadata.dataDirs = ConvertUtils.getDataDirs(this.packageName, this.userHandle, sourceMetadata.flags
-                    .backupInternalData(), sourceMetadata.flags.backupExternalData(), false);
-            sourceMetadata.keyStore = false;
-            sourceMetadata.installer = AppPref.getString(AppPref.PrefKey.PREF_INSTALLER_INSTALLER_APP_STR);
+            mSourceMetadata.dataDirs = ConvertUtils.getDataDirs(this.mPackageName, this.mUserId, mSourceMetadata.flags
+                    .backupInternalData(), mSourceMetadata.flags.backupExternalData(), false);
+            mSourceMetadata.keyStore = false;
+            mSourceMetadata.installer = AppPref.getString(AppPref.PrefKey.PREF_INSTALLER_INSTALLER_APP_STR);
             String base64Icon = prop.getProperty("app_gui_icon");
             if (base64Icon != null) {
                 byte[] decodedBytes = Base64.decode(base64Icon, 0);
-                icon = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+                mIcon = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
             }
         } catch (IOException e) {
             throw new BackupException("Could not read the prop file", e);
@@ -438,23 +459,23 @@ public class TBConverter extends Converter {
         String filename = filePrefix + ".tar";
         if (TAR_BZIP2.equals(tarType)) filename += ".bz2";
         else filename += ".gz";
-        return this.backupLocation.findFile(filename);
+        return this.mBackupLocation.findFile(filename);
     }
 
     @NonNull
     private Path getApkFile(String apkName, @TarUtils.TarType String tarType) throws FileNotFoundException {
         if (TAR_BZIP2.equals(tarType)) apkName += ".bz2";
         else apkName += ".gz";
-        return this.backupLocation.findFile(apkName);
+        return this.mBackupLocation.findFile(apkName);
     }
 
     private void backupIcon() {
-        if (icon == null) return;
-        if (!tmpBackupPath.hasFile(ICON_FILE)) return;
+        if (mIcon == null) return;
+        if (!mTempBackupPath.hasFile(ICON_FILE)) return;
         try {
-            Path iconFile = tmpBackupPath.findFile(ICON_FILE);
+            Path iconFile = mTempBackupPath.findFile(ICON_FILE);
             try (OutputStream outputStream = iconFile.openOutputStream()) {
-                icon.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+                mIcon.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
                 outputStream.flush();
             }
         } catch (IOException e) {
@@ -462,4 +483,11 @@ public class TBConverter extends Converter {
         }
     }
 
+    @NonNull
+    private Path[] encrypt(@NonNull Path[] files) throws IOException {
+        synchronized (Class.class) {
+            mCrypto.encrypt(files);
+            return mCrypto.getNewFiles();
+        }
+    }
 }

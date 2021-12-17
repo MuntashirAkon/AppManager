@@ -67,6 +67,7 @@ import static io.github.muntashirakon.AppManager.backup.BackupManager.SOURCE_PRE
 @WorkerThread
 class RestoreOp implements Closeable {
     static final String TAG = RestoreOp.class.getSimpleName();
+    private static final Object sLock = new Object();
 
     @NonNull
     private final Context context = AppManager.getContext();
@@ -123,13 +124,14 @@ class RestoreOp implements Closeable {
             throw new BackupException("Could not get encrypted checksum.txt file.", e);
         }
         // Decrypt checksum
-        if (!crypto.decrypt(new Path[]{checksumFile})) {
-            throw new BackupException("Failed to decrypt " + checksumFile.getName());
+        try {
+            decrypt(new Path[]{checksumFile});
+        } catch (IOException e) {
+            throw new BackupException("Failed to decrypt " + checksumFile.getName(), e);
         }
         // Get checksums
         try {
             checksumFile = this.backupFile.getChecksumFile(CryptoUtils.MODE_NO_ENCRYPTION);
-            decryptedFiles.addAll(Arrays.asList(crypto.getNewFiles()));
             this.checksum = new BackupFiles.Checksum(checksumFile, "r");
         } catch (Throwable e) {
             this.backupFile.cleanup();
@@ -175,17 +177,29 @@ class RestoreOp implements Closeable {
     }
 
     void runRestore() throws BackupException {
-        if (requestedFlags.backupData() && metadata.keyStore && !requestedFlags.skipSignatureCheck()) {
-            // Check checksum of master key first
-            checkMasterKey();
+        try {
+            if (requestedFlags.backupData() && metadata.keyStore && !requestedFlags.skipSignatureCheck()) {
+                // Check checksum of master key first
+                checkMasterKey();
+            }
+            if (requestedFlags.backupApkFiles()) {
+                restoreApkFiles();
+            }
+            if (requestedFlags.backupData()) {
+                restoreData();
+                if (metadata.keyStore) restoreKeyStore();
+            }
+            if (requestedFlags.backupExtras()) {
+                restoreExtras();
+            }
+            if (requestedFlags.backupRules()) {
+                restoreRules();
+            }
+        } catch (BackupException e) {
+            throw e;
+        } catch (Throwable th) {
+            throw new BackupException("Unknown error occurred", th);
         }
-        if (requestedFlags.backupApkFiles()) restoreApkFiles();
-        if (requestedFlags.backupData()) {
-            restoreData();
-            if (metadata.keyStore) restoreKeyStore();
-        }
-        if (requestedFlags.backupExtras()) restoreExtras();
-        if (requestedFlags.backupRules()) restoreRules();
     }
 
     private void checkMasterKey() throws BackupException {
@@ -245,7 +259,9 @@ class RestoreOp implements Closeable {
             // Signature verification failed but still here because signature check is disabled.
             // The only way to restore is to reinstall the app
             try {
-                PackageInstallerCompat.uninstall(packageName, userHandle, false);
+                synchronized (sLock) {
+                    PackageInstallerCompat.uninstall(packageName, userHandle, false);
+                }
             } catch (Exception e) {
                 throw new BackupException("An uninstall was necessary but couldn't perform it.", e);
             }
@@ -254,7 +270,9 @@ class RestoreOp implements Closeable {
         Path packageStagingDirectory;
         if (AppPref.isRootOrAdbEnabled()) {
             try {
-                PackageUtils.ensurePackageStagingDirectoryPrivileged();
+                synchronized (sLock) {
+                    PackageUtils.ensurePackageStagingDirectoryPrivileged();
+                }
                 packageStagingDirectory = new Path(context, new ProxyFile(PackageUtils.PACKAGE_STAGING_DIRECTORY));
             } catch (Exception e) {
                 throw new BackupException("Could not ensure the existence of /data/local/tmp", e);
@@ -262,51 +280,50 @@ class RestoreOp implements Closeable {
         } else {
             packageStagingDirectory = backupPath;
         }
-        // Setup apk files, including split apk
-        final int splitCount = metadata.splitConfigs.length;
-        String[] allApkNames = new String[splitCount + 1];
-        Path[] allApks = new Path[splitCount + 1];
-        try {
-            Path baseApk = packageStagingDirectory.createNewFile(metadata.apkName, null);
-            allApks[0] = baseApk;
-            allApkNames[0] = metadata.apkName;
-            for (int i = 1; i < allApkNames.length; ++i) {
-                allApkNames[i] = metadata.splitConfigs[i - 1];
-                allApks[i] = packageStagingDirectory.createNewFile(allApkNames[i], null);
+        synchronized (sLock) {
+            // Setup apk files, including split apk
+            final int splitCount = metadata.splitConfigs.length;
+            String[] allApkNames = new String[splitCount + 1];
+            Path[] allApks = new Path[splitCount + 1];
+            try {
+                Path baseApk = packageStagingDirectory.createNewFile(metadata.apkName, null);
+                allApks[0] = baseApk;
+                allApkNames[0] = metadata.apkName;
+                for (int i = 1; i < allApkNames.length; ++i) {
+                    allApkNames[i] = metadata.splitConfigs[i - 1];
+                    allApks[i] = packageStagingDirectory.createNewFile(allApkNames[i], null);
+                }
+            } catch (IOException e) {
+                throw new BackupException("Could not create staging files", e);
             }
-        } catch (IOException e) {
-            throw new BackupException("Could not create staging files", e);
-        }
-        // Decrypt sources
-        if (!crypto.decrypt(backupSourceFiles)) {
-            throw new BackupException("Failed to decrypt " + Arrays.toString(backupSourceFiles));
-        }
-        // Get decrypted file
-        if (crypto.getNewFiles().length > 0) {
-            backupSourceFiles = crypto.getNewFiles();
-            decryptedFiles.addAll(Arrays.asList(backupSourceFiles));
-        }
-        // Extract apk files to the package staging directory
-        try {
-            TarUtils.extract(metadata.tarType, backupSourceFiles, packageStagingDirectory, allApkNames, null);
-        } catch (Throwable th) {
-            throw new BackupException("Failed to extract the apk file(s).", th);
-        }
-        // A normal update will do it now
-        PackageInstallerCompat packageInstaller = PackageInstallerCompat.getNewInstance(userHandle, metadata.installer);
-        try {
-            if (!packageInstaller.install(allApks, packageName)) {
-                throw new BackupException("A (re)install was necessary but couldn't perform it.");
+            // Decrypt sources
+            try {
+                backupSourceFiles = decrypt(backupSourceFiles);
+            } catch (IOException e) {
+                throw new BackupException("Failed to decrypt " + Arrays.toString(backupSourceFiles), e);
             }
-        } finally {
-            deleteFiles(allApks);  // Clean up apk files
-        }
-        // Get package info, again
-        try {
-            packageInfo = PackageManagerCompat.getPackageInfo(packageName, PackageUtils.flagSigningInfo, userHandle);
-            isInstalled = true;
-        } catch (Exception e) {
-            throw new BackupException("Apparently the install wasn't complete in the previous section.", e);
+            // Extract apk files to the package staging directory
+            try {
+                TarUtils.extract(metadata.tarType, backupSourceFiles, packageStagingDirectory, allApkNames, null);
+            } catch (Throwable th) {
+                throw new BackupException("Failed to extract the apk file(s).", th);
+            }
+            // A normal update will do it now
+            PackageInstallerCompat packageInstaller = PackageInstallerCompat.getNewInstance(userHandle, metadata.installer);
+            try {
+                if (!packageInstaller.install(allApks, packageName)) {
+                    throw new BackupException("A (re)install was necessary but couldn't perform it.");
+                }
+            } finally {
+                deleteFiles(allApks);  // Clean up apk files
+            }
+            // Get package info, again
+            try {
+                packageInfo = PackageManagerCompat.getPackageInfo(packageName, PackageUtils.flagSigningInfo, userHandle);
+                isInstalled = true;
+            } catch (Exception e) {
+                throw new BackupException("Apparently the install wasn't complete in the previous section.", e);
+            }
         }
     }
 
@@ -331,13 +348,10 @@ class RestoreOp implements Closeable {
             }
         }
         // Decrypt sources
-        if (!crypto.decrypt(keyStoreFiles)) {
-            throw new BackupException("Failed to decrypt " + Arrays.toString(keyStoreFiles));
-        }
-        // Get decrypted file
-        if (crypto.getNewFiles().length > 0) {
-            keyStoreFiles = crypto.getNewFiles();
-            decryptedFiles.addAll(Arrays.asList(keyStoreFiles));
+        try {
+            keyStoreFiles = decrypt(keyStoreFiles);
+        } catch (IOException e) {
+            throw new BackupException("Failed to decrypt " + Arrays.toString(keyStoreFiles), e);
         }
         // Restore KeyStore files
         Path keyStorePath = new Path(context, KeyStoreUtils.getKeyStorePath(userHandle));
@@ -432,13 +446,10 @@ class RestoreOp implements Closeable {
                 dataSourceFile.mkdirs();
             }
             // Decrypt data
-            if (!crypto.decrypt(dataFiles)) {
-                throw new BackupException("Failed to decrypt " + Arrays.toString(dataFiles));
-            }
-            // Get decrypted files
-            if (crypto.getNewFiles().length > 0) {
-                dataFiles = crypto.getNewFiles();
-                decryptedFiles.addAll(Arrays.asList(dataFiles));
+            try {
+                dataFiles = decrypt(dataFiles);
+            } catch (IOException e) {
+                throw new BackupException("Failed to decrypt " + Arrays.toString(dataFiles), e);
             }
             // Extract data to the data directory
             try {
@@ -518,7 +529,7 @@ class RestoreOp implements Closeable {
                 // There are several reason restoring these things go wrong, especially when
                 // downgrading from an Android to another. It's better to simply suppress these
                 // exceptions instead of causing a failure or worse, a crash
-                e.printStackTrace();
+                Log.e(TAG, e);
             }
         }
     }
@@ -541,8 +552,10 @@ class RestoreOp implements Closeable {
             }
         }
         // Decrypt permission file
-        if (!crypto.decrypt(new Path[]{miscFile})) {
-            throw new BackupException("Failed to decrypt " + miscFile.getName());
+        try {
+            decrypt(new Path[]{miscFile});
+        } catch (IOException e) {
+            throw new BackupException("Failed to decrypt " + miscFile.getName(), e);
         }
         // Get decrypted file
         try {
@@ -550,7 +563,6 @@ class RestoreOp implements Closeable {
         } catch (IOException e) {
             throw new BackupException("Could not get decrypted misc file", e);
         }
-        decryptedFiles.addAll(Arrays.asList(crypto.getNewFiles()));
         try {
             rules.loadExternalEntries(miscFile);
         } catch (Throwable e) {
@@ -584,8 +596,10 @@ class RestoreOp implements Closeable {
             }
         }
         // Decrypt rules file
-        if (!crypto.decrypt(new Path[]{rulesFile})) {
-            throw new BackupException("Failed to decrypt " + rulesFile.getName());
+        try {
+            decrypt(new Path[]{rulesFile});
+        } catch (IOException e) {
+            throw new BackupException("Failed to decrypt " + rulesFile.getName(), e);
         }
         // Get decrypted file
         try {
@@ -593,7 +607,6 @@ class RestoreOp implements Closeable {
         } catch (IOException e) {
             throw new BackupException("Could not get decrypted rules file", e);
         }
-        decryptedFiles.addAll(Arrays.asList(crypto.getNewFiles()));
         try (RulesImporter importer = new RulesImporter(Arrays.asList(RuleType.values()), new int[]{userHandle})) {
             importer.addRulesFromPath(rulesFile);
             importer.setPackagesToImport(Collections.singletonList(packageName));
@@ -626,5 +639,16 @@ class RestoreOp implements Closeable {
         String mode = CryptoUtils.getExtension(metadata.crypto);
         final String dataPrefix = DATA_PREFIX + index;
         return backupPath.listFiles((dir, name) -> name.startsWith(dataPrefix) && name.endsWith(mode));
+    }
+
+    @NonNull
+    private Path[] decrypt(@NonNull Path[] files) throws IOException {
+        Path[] newFiles;
+        synchronized (Crypto.class) {
+            crypto.decrypt(files);
+            newFiles = crypto.getNewFiles();
+        }
+        decryptedFiles.addAll(Arrays.asList(newFiles));
+        return newFiles.length > 0 ? newFiles : files;
     }
 }

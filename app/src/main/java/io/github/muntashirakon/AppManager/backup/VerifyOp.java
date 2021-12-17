@@ -66,13 +66,17 @@ class VerifyOp implements Closeable {
             throw new BackupException("Could not get encrypted checksum.txt file.", e);
         }
         // Decrypt checksum
-        if (!crypto.decrypt(new Path[]{checksumFile})) {
-            throw new BackupException("Could not decrypt " + checksumFile.getName());
+        try {
+            synchronized (Crypto.class) {
+                crypto.decrypt(new Path[]{checksumFile});
+                decryptedFiles.addAll(Arrays.asList(crypto.getNewFiles()));
+            }
+        } catch (IOException e) {
+            throw new BackupException("Could not decrypt " + checksumFile.getName(), e);
         }
         // Get checksums
         try {
             checksumFile = this.backupFile.getChecksumFile(CryptoUtils.MODE_NO_ENCRYPTION);
-            decryptedFiles.addAll(Arrays.asList(crypto.getNewFiles()));
             this.checksum = new BackupFiles.Checksum(checksumFile, "r");
         } catch (Throwable e) {
             this.backupFile.cleanup();
@@ -105,15 +109,29 @@ class VerifyOp implements Closeable {
     }
 
     void verify() throws BackupException {
-        // No need to check master key as it varies from device to device and APK signing key checksum as it would
-        // remain intact if the APK files are not modified.
-        if (backupFlags.backupApkFiles()) verifyApkFiles();
-        if (backupFlags.backupData()) {
-            verifyData();
-            if (metadata.keyStore) verifyKeyStore();
+        try {
+            // No need to check master key as it varies from device to device and APK signing key checksum as it would
+            // remain intact if the APK files are not modified.
+            if (backupFlags.backupApkFiles()) {
+                verifyApkFiles();
+            }
+            if (backupFlags.backupData()) {
+                verifyData();
+                if (metadata.keyStore) {
+                    verifyKeyStore();
+                }
+            }
+            if (backupFlags.backupExtras()) {
+                verifyExtras();
+            }
+            if (backupFlags.backupRules()) {
+                verifyRules();
+            }
+        } catch (BackupException e) {
+            throw e;
+        } catch (Throwable th) {
+            throw new BackupException("Unknown error occurred", th);
         }
-        if (backupFlags.backupExtras()) verifyExtras();
-        if (backupFlags.backupRules()) verifyRules();
     }
 
     private void verifyApkFiles() throws BackupException {

@@ -93,8 +93,8 @@ public class AESCrypto implements Crypto {
 
     @WorkerThread
     @Override
-    public boolean encrypt(@NonNull Path[] files) {
-        return handleFiles(true, files);
+    public void encrypt(@NonNull Path[] files) throws IOException {
+        handleFiles(true, files);
     }
 
     @Override
@@ -111,8 +111,8 @@ public class AESCrypto implements Crypto {
 
     @WorkerThread
     @Override
-    public boolean decrypt(@NonNull Path[] files) {
-        return handleFiles(false, files);
+    public void decrypt(@NonNull Path[] files) throws IOException {
+        handleFiles(false, files);
     }
 
     @Override
@@ -128,58 +128,51 @@ public class AESCrypto implements Crypto {
     }
 
     @WorkerThread
-    private boolean handleFiles(boolean forEncryption, @NonNull Path[] files) {
+    private void handleFiles(boolean forEncryption, @NonNull Path[] files) throws IOException {
         newFiles.clear();
-        if (files.length > 0) {  // files is never null here
-            // Init cipher
-            GCMBlockCipher cipher = new GCMBlockCipher(new AESEngine());
-            cipher.init(forEncryption, spec);
-            // Get desired extension
-            String ext = CryptoUtils.getExtension(parentMode);
-            // Encrypt/decrypt files
-            for (Path inputPath : files) {
-                Path parent = inputPath.getParentFile();
-                if (parent == null) {
-                    Log.e(TAG, "Parent file cannot be null.");
-                    return false;
-                }
-                String outputFilename;
-                if (!forEncryption) {
-                    outputFilename = inputPath.getName().substring(0, inputPath.getName().lastIndexOf(ext));
-                } else outputFilename = inputPath.getName() + ext;
-                try {
-                    Path outputPath = parent.createNewFile(outputFilename, null);
-                    newFiles.add(outputPath);
-                    Log.i(TAG, "Input: " + inputPath + "\nOutput: " + outputPath);
-                    try (InputStream is = inputPath.openInputStream();
-                         OutputStream os = outputPath.openOutputStream()) {
-                        if (forEncryption) {
-                            try (OutputStream cipherOS = new CipherOutputStream(os, cipher)) {
-                                FileUtils.copy(is, cipherOS);
-                            }
-                        } else {  // Cipher.DECRYPT_MODE
-                            try (InputStream cipherIS = new CipherInputStream(is, cipher)) {
-                                FileUtils.copy(cipherIS, os);
-                            }
-                        }
-                    }
-                } catch (IOException e) {
-                    Log.e(TAG, "Error: " + e.getMessage(), e);
-                    return false;
-                }
-                // Delete unencrypted file
+        // `files` is never null here
+        if (files.length == 0) {
+            Log.d(TAG, "No files to de/encrypt");
+            return;
+        }
+        // Init cipher
+        GCMBlockCipher cipher = new GCMBlockCipher(new AESEngine());
+        cipher.init(forEncryption, spec);
+        // Get desired extension
+        String ext = CryptoUtils.getExtension(parentMode);
+        // Encrypt/decrypt files
+        for (Path inputPath : files) {
+            Path parent = inputPath.getParentFile();
+            if (parent == null) {
+                throw new IOException("Parent of " + inputPath + " cannot be null.");
+            }
+            String outputFilename;
+            if (!forEncryption) {
+                outputFilename = inputPath.getName().substring(0, inputPath.getName().lastIndexOf(ext));
+            } else outputFilename = inputPath.getName() + ext;
+            Path outputPath = parent.createNewFile(outputFilename, null);
+            newFiles.add(outputPath);
+            Log.i(TAG, "Input: " + inputPath + "\nOutput: " + outputPath);
+            try (InputStream is = inputPath.openInputStream();
+                 OutputStream os = outputPath.openOutputStream()) {
                 if (forEncryption) {
-                    if (!inputPath.delete()) {
-                        Log.e(TAG, "Couldn't delete old file " + inputPath);
-                        return false;
+                    try (OutputStream cipherOS = new CipherOutputStream(os, cipher)) {
+                        FileUtils.copy(is, cipherOS);
+                    }
+                } else {  // Cipher.DECRYPT_MODE
+                    try (InputStream cipherIS = new CipherInputStream(is, cipher)) {
+                        FileUtils.copy(cipherIS, os);
                     }
                 }
             }
-            // Total success
-        } else {
-            Log.d(TAG, "No files to de/encrypt");
+            // Delete unencrypted file
+            if (forEncryption) {
+                if (!inputPath.delete()) {
+                    throw new IOException("Couldn't delete old file " + inputPath);
+                }
+            }
         }
-        return true;
+        // Total success
     }
 
     @AnyThread

@@ -15,14 +15,14 @@ import io.github.muntashirakon.io.Path;
 
 public interface Crypto extends Closeable {
     @WorkerThread
-    boolean encrypt(@NonNull Path[] files);
+    void encrypt(@NonNull Path[] files) throws IOException;
 
     @WorkerThread
     void encrypt(@NonNull InputStream unencryptedStream, @NonNull OutputStream encryptedStream)
             throws IOException, GeneralSecurityException;
 
     @WorkerThread
-    boolean decrypt(@NonNull Path[] files);
+    void decrypt(@NonNull Path[] files) throws IOException;
 
     @WorkerThread
     void decrypt(@NonNull InputStream encryptedStream, @NonNull OutputStream unencryptedStream)

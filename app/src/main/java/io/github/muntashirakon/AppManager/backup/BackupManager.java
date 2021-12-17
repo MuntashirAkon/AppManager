@@ -226,7 +226,7 @@ public class BackupManager {
         // Only verify the first backup though we shouldn't have more than one backup.
         if (backupFileList.length > 0) {
             if (backupFileList.length > 1) {
-                Log.w(RestoreOp.TAG, "More than one backups found! Verifying only the first backup.");
+                Log.w(VerifyOp.TAG, "More than one backups found! Verifying only the first backup.");
             }
             try (VerifyOp restoreOp = new VerifyOp(metadataManager, backupFileList[0])) {
                 restoreOp.verify();

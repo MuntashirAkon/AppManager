@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.backup.convert;
 
+import android.annotation.UserIdInt;
 import android.os.UserHandleHidden;
 import android.text.TextUtils;
 
@@ -79,86 +80,112 @@ public class OABConverter extends Converter {
 
     private static final String EXTERNAL_FILES = "external_files";
 
-    private final Path backupLocation;
-    private final String packageName;
-    private final int userHandle;
-    private final List<Path> decryptedFiles = new ArrayList<>();
+    private final Path mBackupLocation;
+    private final String mPackageName;
+    @UserIdInt
+    private final int mUserId;
+    private final List<Path> mDecryptedFiles = new ArrayList<>();
 
-    private Crypto crypto;
-    private BackupFiles.Checksum checksum;
-    private MetadataManager.Metadata sourceMetadata;
-    private MetadataManager.Metadata destMetadata;
-    private Path tmpBackupPath;
+    private Crypto mCrypto;
+    private BackupFiles.Checksum mChecksum;
+    private MetadataManager.Metadata mSourceMetadata;
+    private MetadataManager.Metadata mDestMetadata;
+    private Path mTempBackupPath;
 
     /**
      * @param backupLocation E.g. {@code /sdcard/oandbackups/package.name}
      */
     public OABConverter(@NonNull Path backupLocation) {
-        this.backupLocation = backupLocation;
+        this.mBackupLocation = backupLocation;
         // Last path component is the package name
-        this.packageName = backupLocation.getName();
-        this.userHandle = UserHandleHidden.myUserId();
+        this.mPackageName = backupLocation.getName();
+        this.mUserId = UserHandleHidden.myUserId();
     }
 
     @Override
     public void convert() throws BackupException {
-        if (SPECIAL_BACKUPS.contains(packageName)) {
-            throw new BackupException("Cannot convert special backup " + packageName);
+        if (SPECIAL_BACKUPS.contains(mPackageName)) {
+            throw new BackupException("Cannot convert special backup " + mPackageName);
         }
         // Source metadata
-        sourceMetadata = new MetadataManager.Metadata();
+        mSourceMetadata = new MetadataManager.Metadata();
         readLogFile();
         // Destination metadata
-        destMetadata = new MetadataManager.Metadata(sourceMetadata);
+        mDestMetadata = new MetadataManager.Metadata(mSourceMetadata);
         // Destination files will be encrypted by the default encryption method
-        destMetadata.crypto = CryptoUtils.getMode();
+        mDestMetadata.crypto = CryptoUtils.getMode();
         MetadataManager metadataManager = MetadataManager.getNewInstance();
-        metadataManager.setMetadata(destMetadata);
+        metadataManager.setMetadata(mDestMetadata);
         // Simulate a backup creation
         BackupFiles backupFiles;
         BackupFiles.BackupFile[] backupFileList;
         try {
-            backupFiles = new BackupFiles(packageName, userHandle, new String[]{"OAndBackup"});
+            backupFiles = new BackupFiles(mPackageName, mUserId, new String[]{"OAndBackup"});
             backupFileList = backupFiles.getBackupPaths(true);
         } catch (IOException e) {
             throw new BackupException("Could not get backup files.", e);
         }
         for (BackupFiles.BackupFile backupFile : backupFileList) {
             // We're iterating over a singleton list
+            boolean backupSuccess = false;
             try {
-                tmpBackupPath = backupFile.getBackupPath();
-                crypto = ConvertUtils.setupCrypto(destMetadata);
-                checksum = new BackupFiles.Checksum(backupFile.getChecksumFile(CryptoUtils.MODE_NO_ENCRYPTION), "w");
-                if (destMetadata.flags.backupApkFiles()) {
+                mTempBackupPath = backupFile.getBackupPath();
+                mCrypto = ConvertUtils.setupCrypto(mDestMetadata);
+                try {
+                    mChecksum = new BackupFiles.Checksum(backupFile.getChecksumFile(CryptoUtils.MODE_NO_ENCRYPTION), "w");
+                } catch (IOException e) {
+                    throw new BackupException("Failed to create checksum file.", e);
+                }
+                if (mDestMetadata.flags.backupApkFiles()) {
                     backupApkFile();
                 }
-                if (destMetadata.flags.backupData()) {
+                if (mDestMetadata.flags.backupData()) {
                     backupData();
                 }
                 // Write modified metadata
-                metadataManager.setMetadata(destMetadata);
-                metadataManager.writeMetadata(backupFile);
+                metadataManager.setMetadata(mDestMetadata);
+                try {
+                    metadataManager.writeMetadata(backupFile);
+                } catch (IOException e) {
+                    throw new BackupException("Failed to write metadata.", e);
+                }
                 // Store checksum for metadata
-                checksum.add(MetadataManager.META_FILE, DigestUtils.getHexDigest(destMetadata.checksumAlgo, backupFile.getMetadataFile()));
-                checksum.close();
+                try {
+                    mChecksum.add(MetadataManager.META_FILE, DigestUtils.getHexDigest(mDestMetadata.checksumAlgo,
+                            backupFile.getMetadataFile()));
+                } catch (IOException e) {
+                    throw new BackupException("Failed to generate checksum for meta.json", e);
+                }
+                mChecksum.close();
                 // Encrypt checksum
-                Path checksumFile = backupFile.getChecksumFile(CryptoUtils.MODE_NO_ENCRYPTION);
-                if (!crypto.encrypt(new Path[]{checksumFile})) {
-                    throw new BackupException("Failed to encrypt " + checksumFile.getName());
+                try {
+                    Path checksumFile = backupFile.getChecksumFile(CryptoUtils.MODE_NO_ENCRYPTION);
+                    encrypt(new Path[]{checksumFile});
+                } catch (IOException e) {
+                    throw new BackupException("Failed to encrypt checksums.txt", e);
                 }
-                // Replace current backup:
-                // There's hardly any chance of getting a false here but checks are done anyway.
-                if (!backupFile.commit()) {
-                    throw new Exception("Unknown error occurred. This message should never be printed.");
+                // Replace current backup
+                try {
+                    backupFile.commit();
+                } catch (IOException e) {
+                    throw new BackupException("Could not finalise backup.", e);
                 }
+                backupSuccess = true;
+            } catch (BackupException e) {
+                throw e;
             } catch (Throwable th) {
-                backupFile.cleanup();
-                crypto.close();
-                for (Path file : decryptedFiles) {
+                throw new BackupException("Unknown error occurred.", th);
+            } finally {
+                if (!backupSuccess) {
+                    backupFile.cleanup();
+                }
+                if (mCrypto != null) {
+                    mCrypto.close();
+                }
+                for (Path file : mDecryptedFiles) {
                     Log.d(TAG, "Deleting " + file);
                     file.delete();
                 }
-                throw new BackupException(th.getClass().getName(), th);
             }
             return;
         }
@@ -166,64 +193,64 @@ public class OABConverter extends Converter {
 
     @Override
     public String getPackageName() {
-        return packageName;
+        return mPackageName;
     }
 
     private void readLogFile() throws BackupException {
         try {
-            Path logFile = backupLocation.findFile(packageName + ".log");
+            Path logFile = mBackupLocation.findFile(mPackageName + ".log");
             String jsonString = FileUtils.getFileContent(logFile);
             if (TextUtils.isEmpty(jsonString)) throw new JSONException("Empty JSON string.");
             JSONObject jsonObject = new JSONObject(jsonString);
-            sourceMetadata.label = jsonObject.getString("label");
-            sourceMetadata.packageName = jsonObject.getString("packageName");
-            sourceMetadata.versionName = jsonObject.getString("versionName");
-            sourceMetadata.versionCode = jsonObject.getInt("versionCode");
-            sourceMetadata.isSystem = jsonObject.optBoolean("isSystem");
-            sourceMetadata.isSplitApk = false;
-            sourceMetadata.splitConfigs = ArrayUtils.emptyArray(String.class);
-            sourceMetadata.hasRules = false;
-            sourceMetadata.backupTime = jsonObject.getLong("lastBackupMillis");
-            sourceMetadata.crypto = jsonObject.optBoolean("isEncrypted") ? CryptoUtils.MODE_OPEN_PGP : CryptoUtils.MODE_NO_ENCRYPTION;
-            sourceMetadata.apkName = new File(jsonObject.getString("sourceDir")).getName();
+            mSourceMetadata.label = jsonObject.getString("label");
+            mSourceMetadata.packageName = jsonObject.getString("packageName");
+            mSourceMetadata.versionName = jsonObject.getString("versionName");
+            mSourceMetadata.versionCode = jsonObject.getInt("versionCode");
+            mSourceMetadata.isSystem = jsonObject.optBoolean("isSystem");
+            mSourceMetadata.isSplitApk = false;
+            mSourceMetadata.splitConfigs = ArrayUtils.emptyArray(String.class);
+            mSourceMetadata.hasRules = false;
+            mSourceMetadata.backupTime = jsonObject.getLong("lastBackupMillis");
+            mSourceMetadata.crypto = jsonObject.optBoolean("isEncrypted") ? CryptoUtils.MODE_OPEN_PGP : CryptoUtils.MODE_NO_ENCRYPTION;
+            mSourceMetadata.apkName = new File(jsonObject.getString("sourceDir")).getName();
             // Flags
-            sourceMetadata.flags = new BackupFlags(BackupFlags.BACKUP_MULTIPLE);
+            mSourceMetadata.flags = new BackupFlags(BackupFlags.BACKUP_MULTIPLE);
             int backupMode = jsonObject.optInt("backupMode", MODE_UNSET);
             if (backupMode == MODE_UNSET) {
                 throw new BackupException("Destination doesn't contain any backup.");
             }
             if (backupMode == MODE_APK || backupMode == MODE_BOTH) {
-                if (backupLocation.hasFile(CryptoUtils.getAppropriateFilename(sourceMetadata.apkName,
-                        sourceMetadata.crypto))) {
-                    sourceMetadata.flags.addFlag(BackupFlags.BACKUP_APK_FILES);
+                if (mBackupLocation.hasFile(CryptoUtils.getAppropriateFilename(mSourceMetadata.apkName,
+                        mSourceMetadata.crypto))) {
+                    mSourceMetadata.flags.addFlag(BackupFlags.BACKUP_APK_FILES);
                 } else {
                     throw new BackupException("Destination doesn't contain any APK files.");
                 }
             }
             if (backupMode == MODE_DATA || backupMode == MODE_BOTH) {
                 boolean hasBackup = false;
-                if (backupLocation.hasFile(CryptoUtils.getAppropriateFilename(packageName + ".zip",
-                        sourceMetadata.crypto))) {
-                    sourceMetadata.flags.addFlag(BackupFlags.BACKUP_INT_DATA);
+                if (mBackupLocation.hasFile(CryptoUtils.getAppropriateFilename(mPackageName + ".zip",
+                        mSourceMetadata.crypto))) {
+                    mSourceMetadata.flags.addFlag(BackupFlags.BACKUP_INT_DATA);
                     hasBackup = true;
                 }
-                if (backupLocation.hasFile(EXTERNAL_FILES) && backupLocation.findFile(EXTERNAL_FILES).hasFile(
-                        CryptoUtils.getAppropriateFilename(packageName + ".zip", sourceMetadata.crypto))) {
-                    sourceMetadata.flags.addFlag(BackupFlags.BACKUP_EXT_DATA);
+                if (mBackupLocation.hasFile(EXTERNAL_FILES) && mBackupLocation.findFile(EXTERNAL_FILES).hasFile(
+                        CryptoUtils.getAppropriateFilename(mPackageName + ".zip", mSourceMetadata.crypto))) {
+                    mSourceMetadata.flags.addFlag(BackupFlags.BACKUP_EXT_DATA);
                     hasBackup = true;
                 }
                 if (!hasBackup) {
                     throw new BackupException("Destination doesn't contain any data files.");
                 }
-                sourceMetadata.flags.addFlag(BackupFlags.BACKUP_CACHE);
+                mSourceMetadata.flags.addFlag(BackupFlags.BACKUP_CACHE);
             }
-            sourceMetadata.userHandle = UserHandleHidden.myUserId();
-            sourceMetadata.dataDirs = ConvertUtils.getDataDirs(this.packageName, this.userHandle, sourceMetadata.flags
-                    .backupInternalData(), sourceMetadata.flags.backupExternalData(), false);
-            sourceMetadata.tarType = ConvertUtils.getTarTypeFromPref();
-            sourceMetadata.keyStore = false;
-            sourceMetadata.installer = (String) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_INSTALLER_APP_STR);
-            sourceMetadata.version = 2;  // Old version is used so that we know that it needs permission fixes
+            mSourceMetadata.userHandle = UserHandleHidden.myUserId();
+            mSourceMetadata.dataDirs = ConvertUtils.getDataDirs(this.mPackageName, this.mUserId, mSourceMetadata.flags
+                    .backupInternalData(), mSourceMetadata.flags.backupExternalData(), false);
+            mSourceMetadata.tarType = ConvertUtils.getTarTypeFromPref();
+            mSourceMetadata.keyStore = false;
+            mSourceMetadata.installer = (String) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_INSTALLER_APP_STR);
+            mSourceMetadata.version = 2;  // Old version is used so that we know that it needs permission fixes
         } catch (JSONException | IOException e) {
             ExUtils.rethrowAsBackupException("Could not parse JSON file.", e);
         }
@@ -232,19 +259,16 @@ public class OABConverter extends Converter {
     private void backupApkFile() throws BackupException {
         Path[] baseApkFiles;
         try {
-            baseApkFiles = new Path[]{backupLocation.findFile(CryptoUtils.getAppropriateFilename(
-                    sourceMetadata.apkName, sourceMetadata.crypto))};
+            baseApkFiles = new Path[]{mBackupLocation.findFile(CryptoUtils.getAppropriateFilename(
+                    mSourceMetadata.apkName, mSourceMetadata.crypto))};
         } catch (FileNotFoundException e) {
             throw new BackupException("Could not get base.apk file.", e);
         }
         // Decrypt APK file if needed
-        if (!crypto.decrypt(baseApkFiles)) {
-            throw new BackupException("Failed to decrypt " + Arrays.toString(baseApkFiles));
-        }
-        // Get decrypted file
-        if (crypto.getNewFiles().length > 0) {
-            baseApkFiles = crypto.getNewFiles();
-            decryptedFiles.addAll(Arrays.asList(baseApkFiles));
+        try {
+            baseApkFiles = decrypt(baseApkFiles);
+        } catch (IOException e) {
+            throw new BackupException("Failed to decrypt " + Arrays.toString(baseApkFiles), e);
         }
         // baseApkFiles should be a singleton array
         if (baseApkFiles.length != 1) {
@@ -253,46 +277,47 @@ public class OABConverter extends Converter {
         Path baseApkFile = baseApkFiles[0];
         // Get certificate checksums
         try {
-            String[] checksums = ConvertUtils.getChecksumsFromApk(baseApkFile, destMetadata.checksumAlgo);
+            String[] checksums = ConvertUtils.getChecksumsFromApk(baseApkFile, mDestMetadata.checksumAlgo);
             for (int i = 0; i < checksums.length; ++i) {
-                checksum.add(CERT_PREFIX + i, checksums[i]);
+                mChecksum.add(CERT_PREFIX + i, checksums[i]);
             }
         } catch (Exception ignore) {
         }
         // Backup APK file
-        String sourceBackupFilePrefix = SOURCE_PREFIX + getExt(destMetadata.tarType);
+        String sourceBackupFilePrefix = SOURCE_PREFIX + getExt(mDestMetadata.tarType);
         Path[] sourceFiles;
         try {
-            sourceFiles = TarUtils.create(destMetadata.tarType, baseApkFile, tmpBackupPath, sourceBackupFilePrefix,
-                    /* language=regexp */ new String[]{".*\\.apk"}, null, null, false)
+            sourceFiles = TarUtils.create(mDestMetadata.tarType, baseApkFile, mTempBackupPath, sourceBackupFilePrefix,
+                            /* language=regexp */ new String[]{".*\\.apk"}, null, null, false)
                     .toArray(new Path[0]);
         } catch (Throwable th) {
             throw new BackupException("APK files backup is requested but no APK files have been backed up.", th);
         }
-        if (!crypto.encrypt(sourceFiles)) {
-            throw new BackupException("Failed to encrypt " + Arrays.toString(sourceFiles));
-        }
         // Overwrite with the new files
-        sourceFiles = crypto.getNewFiles();
+        try {
+            sourceFiles = encrypt(sourceFiles);
+        } catch (IOException e) {
+            throw new BackupException("Failed to encrypt " + Arrays.toString(sourceFiles), e);
+        }
         for (Path file : sourceFiles) {
-            checksum.add(file.getName(), DigestUtils.getHexDigest(destMetadata.checksumAlgo, file));
+            mChecksum.add(file.getName(), DigestUtils.getHexDigest(mDestMetadata.checksumAlgo, file));
         }
     }
 
     private void backupData() throws BackupException {
         List<Path> dataFiles = new ArrayList<>(2);
-        if (destMetadata.flags.backupInternalData()) {
+        if (mDestMetadata.flags.backupInternalData()) {
             try {
-                dataFiles.add(backupLocation.findFile(CryptoUtils.getAppropriateFilename(packageName + ".zip",
-                        sourceMetadata.crypto)));
+                dataFiles.add(mBackupLocation.findFile(CryptoUtils.getAppropriateFilename(mPackageName + ".zip",
+                        mSourceMetadata.crypto)));
             } catch (FileNotFoundException e) {
                 throw new BackupException("Could not get internal data backup.", e);
             }
         }
-        if (destMetadata.flags.backupExternalData()) {
+        if (mDestMetadata.flags.backupExternalData()) {
             try {
-                dataFiles.add(backupLocation.findFile(EXTERNAL_FILES).findFile(CryptoUtils.getAppropriateFilename(
-                        packageName + ".zip", sourceMetadata.crypto)));
+                dataFiles.add(mBackupLocation.findFile(EXTERNAL_FILES).findFile(CryptoUtils.getAppropriateFilename(
+                        mPackageName + ".zip", mSourceMetadata.crypto)));
             } catch (FileNotFoundException e) {
                 throw new BackupException("Could not get external data backup.", e);
             }
@@ -302,29 +327,26 @@ public class OABConverter extends Converter {
         for (Path dataFile : dataFiles) {
             files = new Path[]{dataFile};
             // Decrypt APK file if needed
-            if (!crypto.decrypt(files)) {
-                throw new BackupException("Failed to decrypt " + Arrays.toString(files));
-            }
-            // Get decrypted file
-            if (crypto.getNewFiles().length > 0) {
-                files = crypto.getNewFiles();
-                decryptedFiles.addAll(Arrays.asList(files));
+            try {
+                files = decrypt(files);
+            } catch (IOException e) {
+                throw new BackupException("Failed to decrypt " + Arrays.toString(files), e);
             }
             // baseApkFiles should be a singleton array
             if (files.length != 1) {
                 throw new BackupException("Incorrect number of APK files: " + files.length);
             }
-            String dataBackupFilePrefix = DATA_PREFIX + (i++) + getExt(destMetadata.tarType);
+            String dataBackupFilePrefix = DATA_PREFIX + (i++) + getExt(mDestMetadata.tarType);
             try (ZipInputStream zis = new ZipInputStream(new BufferedInputStream(files[0].openInputStream()));
-                 SplitOutputStream sos = new SplitOutputStream(tmpBackupPath, dataBackupFilePrefix, DEFAULT_SPLIT_SIZE);
+                 SplitOutputStream sos = new SplitOutputStream(mTempBackupPath, dataBackupFilePrefix, DEFAULT_SPLIT_SIZE);
                  BufferedOutputStream bos = new BufferedOutputStream(sos)) {
                 OutputStream os;
-                if (TAR_GZIP.equals(destMetadata.tarType)) {
+                if (TAR_GZIP.equals(mDestMetadata.tarType)) {
                     os = new GzipCompressorOutputStream(bos);
-                } else if (TAR_BZIP2.equals(destMetadata.tarType)) {
+                } else if (TAR_BZIP2.equals(mDestMetadata.tarType)) {
                     os = new BZip2CompressorOutputStream(bos);
                 } else {
-                    throw new BackupException("Invalid compression type: " + destMetadata.tarType);
+                    throw new BackupException("Invalid compression type: " + mDestMetadata.tarType);
                 }
                 try (TarArchiveOutputStream tos = new TarArchiveOutputStream(os)) {
                     tos.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
@@ -342,7 +364,7 @@ public class OABConverter extends Converter {
                                 throw th;
                             }
                         }
-                        String fileName = zipEntry.getName().replaceFirst(packageName + "/", "");
+                        String fileName = zipEntry.getName().replaceFirst(mPackageName + "/", "");
                         if (fileName.equals("")) continue;
                         // New tar entry
                         TarArchiveEntry tarArchiveEntry = new TarArchiveEntry(fileName);
@@ -363,18 +385,32 @@ public class OABConverter extends Converter {
                     tos.finish();
                 }
                 // Encrypt backups
-                Path[] newBackupFiles = sos.getFiles().toArray(new Path[0]);
-                if (!crypto.encrypt(newBackupFiles)) {
-                    throw new BackupException("Failed to encrypt " + Arrays.toString(newBackupFiles));
-                }
-                // Overwrite with the new files
-                newBackupFiles = crypto.getNewFiles();
+                Path[] newBackupFiles = encrypt(sos.getFiles().toArray(new Path[0]));
                 for (Path file : newBackupFiles) {
-                    checksum.add(file.getName(), DigestUtils.getHexDigest(destMetadata.checksumAlgo, file));
+                    mChecksum.add(file.getName(), DigestUtils.getHexDigest(mDestMetadata.checksumAlgo, file));
                 }
             } catch (IOException e) {
                 throw new BackupException("Backup failed for " + dataFile, e);
             }
         }
+    }
+
+    @NonNull
+    private Path[] encrypt(@NonNull Path[] files) throws IOException {
+        synchronized (Crypto.class) {
+            mCrypto.encrypt(files);
+            return mCrypto.getNewFiles();
+        }
+    }
+
+    @NonNull
+    private Path[] decrypt(@NonNull Path[] files) throws IOException {
+        Path[] newFiles;
+        synchronized (Crypto.class) {
+            mCrypto.decrypt(files);
+            newFiles = mCrypto.getNewFiles();
+        }
+        mDecryptedFiles.addAll(Arrays.asList(newFiles));
+        return newFiles.length > 0 ? newFiles : files;
     }
 }

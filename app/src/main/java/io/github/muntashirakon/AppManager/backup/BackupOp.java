@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.backup;
 
+import android.annotation.UserIdInt;
 import android.app.INotificationManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -74,170 +75,155 @@ class BackupOp implements Closeable {
     static final String TAG = BackupOp.class.getSimpleName();
 
     @NonNull
-    private final Context context = AppManager.getContext();
+    private final Context mContext = AppManager.getContext();
     @NonNull
-    private final String packageName;
+    private final String mPackageName;
     @NonNull
-    private final BackupFiles.BackupFile backupFile;
+    private final BackupFiles.BackupFile mBackupFile;
     @NonNull
-    private final MetadataManager metadataManager;
+    private final MetadataManager mMetadataManager;
     @NonNull
-    private final BackupFlags backupFlags;
+    private final BackupFlags mBackupFlags;
     @NonNull
-    private final MetadataManager.Metadata metadata;
+    private final MetadataManager.Metadata mMetadata;
     @NonNull
-    private final PackageInfo packageInfo;
+    private final PackageInfo mPackageInfo;
     @NonNull
-    private final ApplicationInfo applicationInfo;
+    private final ApplicationInfo mApplicationInfo;
     @NonNull
-    private final Path tmpBackupPath;
-    private final int userHandle;
+    private final Path mTempBackupPath;
+    @UserIdInt
+    private final int mUserId;
     @NonNull
-    private final Crypto crypto;
+    private final Crypto mCrypto;
     @NonNull
-    private final BackupFiles.Checksum checksum;
+    private final BackupFiles.Checksum mChecksum;
     // We don't need privileged package manager here
     @NonNull
-    private final PackageManager pm = context.getPackageManager();
+    private final PackageManager mPm = mContext.getPackageManager();
 
-    BackupOp(@NonNull String packageName, @NonNull MetadataManager metadataManager,
-             @NonNull BackupFlags backupFlags, @NonNull BackupFiles.BackupFile backupFile,
-             int userHandle) throws BackupException {
-        this.packageName = packageName;
-        this.backupFile = backupFile;
-        this.userHandle = userHandle;
-        this.metadataManager = metadataManager;
-        this.backupFlags = backupFlags;
-        this.tmpBackupPath = this.backupFile.getBackupPath();
+    BackupOp(@NonNull String packageName, @NonNull MetadataManager metadataManager, @NonNull BackupFlags backupFlags,
+             @NonNull BackupFiles.BackupFile backupFile, @UserIdInt int userId) throws BackupException {
+        this.mPackageName = packageName;
+        this.mBackupFile = backupFile;
+        this.mUserId = userId;
+        this.mMetadataManager = metadataManager;
+        this.mBackupFlags = backupFlags;
+        this.mTempBackupPath = this.mBackupFile.getBackupPath();
         try {
-            packageInfo = PackageManagerCompat.getPackageInfo(this.packageName,
+            mPackageInfo = PackageManagerCompat.getPackageInfo(this.mPackageName,
                     PackageManager.GET_META_DATA | PackageUtils.flagSigningInfo
-                            | PackageManager.GET_PERMISSIONS, userHandle);
-            this.applicationInfo = packageInfo.applicationInfo;
+                            | PackageManager.GET_PERMISSIONS, userId);
+            this.mApplicationInfo = mPackageInfo.applicationInfo;
             // Override existing metadata
-            this.metadata = this.metadataManager.setupMetadata(packageInfo, userHandle, backupFlags);
+            this.mMetadata = this.mMetadataManager.setupMetadata(mPackageInfo, userId, backupFlags);
         } catch (Exception e) {
-            this.backupFile.cleanup();
+            this.mBackupFile.cleanup();
             throw new BackupException("Failed to setup metadata.", e);
         }
         try {
             // Setup crypto
-            CryptoUtils.setupCrypto(this.metadata);
-            this.crypto = CryptoUtils.getCrypto(metadata);
+            CryptoUtils.setupCrypto(this.mMetadata);
+            this.mCrypto = CryptoUtils.getCrypto(mMetadata);
         } catch (CryptoException e) {
-            this.backupFile.cleanup();
-            throw new BackupException("Failed to get crypto " + metadata.crypto, e);
+            this.mBackupFile.cleanup();
+            throw new BackupException("Failed to get crypto " + mMetadata.crypto, e);
         }
         try {
-            this.checksum = new BackupFiles.Checksum(
-                    this.backupFile.getChecksumFile(CryptoUtils.MODE_NO_ENCRYPTION),
+            this.mChecksum = new BackupFiles.Checksum(
+                    this.mBackupFile.getChecksumFile(CryptoUtils.MODE_NO_ENCRYPTION),
                     "w");
-            String[] certChecksums = PackageUtils.getSigningCertChecksums(metadata.checksumAlgo, packageInfo, false);
+            String[] certChecksums = PackageUtils.getSigningCertChecksums(mMetadata.checksumAlgo, mPackageInfo, false);
             for (int i = 0; i < certChecksums.length; ++i) {
-                checksum.add(CERT_PREFIX + i, certChecksums[i]);
+                mChecksum.add(CERT_PREFIX + i, certChecksums[i]);
             }
         } catch (Throwable e) {
-            this.backupFile.cleanup();
+            this.mBackupFile.cleanup();
             throw new BackupException("Failed to create checksum file.", e);
         }
     }
 
     @Override
     public void close() {
-        crypto.close();
+        mCrypto.close();
     }
 
     void runBackup() throws BackupException {
-        // Fail backup if the app has items in Android KeyStore and backup isn't enabled
-        if (backupFlags.backupData() && metadata.keyStore) {
-            if (!(boolean) AppPref.get(AppPref.PrefKey.PREF_BACKUP_ANDROID_KEYSTORE_BOOL)) {
-                try {
-                    throw new BackupException("The app has keystore items and KeyStore backup isn't enabled.");
-                } finally {
-                    backupFile.cleanup();
-                }
-            }
-        }
+        boolean backupSuccess = false;
         try {
+            // Fail backup if the app has items in Android KeyStore and backup isn't enabled
+            if (mBackupFlags.backupData()
+                    && mMetadata.keyStore
+                    && !AppPref.getBoolean(AppPref.PrefKey.PREF_BACKUP_ANDROID_KEYSTORE_BOOL)) {
+                throw new BackupException("The app has keystore items and KeyStore backup isn't enabled.");
+            }
             // Backup icon
             backupIcon();
             // Backup source
-            if (backupFlags.backupApkFiles()) backupApkFiles();
+            if (mBackupFlags.backupApkFiles()) {
+                backupApkFiles();
+            }
             // Backup data
-            if (backupFlags.backupData()) {
+            if (mBackupFlags.backupData()) {
                 backupData();
                 // Backup KeyStore
-                if (metadata.keyStore) backupKeyStore();
+                if (mMetadata.keyStore) backupKeyStore();
             }
-            // Backup permissions
-            if (backupFlags.backupExtras()) backupExtras();
+            // Backup extras
+            if (mBackupFlags.backupExtras()) {
+                backupExtras();
+            }
             // Export rules
-            if (metadata.hasRules) backupRules();
-        } catch (BackupException e) {
-            try {
-                throw e;
-            } finally {
-                backupFile.cleanup();
+            if (mMetadata.hasRules) {
+                backupRules();
             }
-        }
-        // Set backup time
-        metadata.backupTime = System.currentTimeMillis();
-        // Write modified metadata
-        metadataManager.setMetadata(metadata);
-        try {
-            metadataManager.writeMetadata(backupFile);
-        } catch (IOException e) {
+            // Set backup time
+            mMetadata.backupTime = System.currentTimeMillis();
+            // Write modified metadata
+            mMetadataManager.setMetadata(mMetadata);
             try {
+                mMetadataManager.writeMetadata(mBackupFile);
+            } catch (IOException e) {
                 throw new BackupException("Failed to write metadata.", e);
-            } finally {
-                backupFile.cleanup();
             }
-        }
-        // Store checksum for metadata
-        try {
-            checksum.add(MetadataManager.META_FILE, DigestUtils.getHexDigest(metadata.checksumAlgo,
-                    backupFile.getMetadataFile()));
-        } catch (IOException e) {
+            // Store checksum for metadata
             try {
-                throw new BackupException("Failed to get meta.json");
-            } finally {
-                backupFile.cleanup();
+                mChecksum.add(MetadataManager.META_FILE, DigestUtils.getHexDigest(mMetadata.checksumAlgo,
+                        mBackupFile.getMetadataFile()));
+            } catch (IOException e) {
+                throw new BackupException("Failed to generate checksum for meta.json", e);
             }
-        }
-        checksum.close();
-        // Encrypt checksum
-        try {
-            Path checksumFile = backupFile.getChecksumFile(CryptoUtils.MODE_NO_ENCRYPTION);
-            if (!crypto.encrypt(new Path[]{checksumFile})) {
-                try {
-                    throw new BackupException("Failed to encrypt " + checksumFile.getName());
-                } finally {
-                    backupFile.cleanup();
-                }
-            }
-        } catch (IOException e) {
+            mChecksum.close();
+            // Encrypt checksum
             try {
-                throw new BackupException("Failed to get checksum.txt");
-            } finally {
-                backupFile.cleanup();
+                Path checksumFile = mBackupFile.getChecksumFile(CryptoUtils.MODE_NO_ENCRYPTION);
+                encrypt(new Path[]{checksumFile});
+            } catch (IOException e) {
+                throw new BackupException("Failed to write checksums.txt", e);
             }
-        }
-        // Replace current backup:
-        // There's hardly any chance of getting a false here but checks are done anyway.
-        if (!backupFile.commit()) {
+            // Replace current backup
             try {
-                throw new BackupException("Unknown error occurred. This message should never be printed.");
-            } finally {
-                backupFile.cleanup();
+                mBackupFile.commit();
+            } catch (IOException e) {
+                throw new BackupException("Could not finalise backup.", e);
+            }
+            backupSuccess = true;
+        } catch (BackupException e) {
+            throw e;
+        } catch (Throwable th) {
+            throw new BackupException("Unknown error occurred.", th);
+        } finally {
+            if (!backupSuccess) {
+                mBackupFile.cleanup();
             }
         }
     }
 
     private void backupIcon() {
         try {
-            Path iconFile = tmpBackupPath.createNewFile(ICON_FILE, null);
+            Path iconFile = mTempBackupPath.createNewFile(ICON_FILE, null);
             try (OutputStream outputStream = iconFile.openOutputStream()) {
-                Bitmap bitmap = FileUtils.getBitmapFromDrawable(applicationInfo.loadIcon(pm));
+                Bitmap bitmap = FileUtils.getBitmapFromDrawable(mApplicationInfo.loadIcon(mPm));
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
                 outputStream.flush();
             }
@@ -248,27 +234,27 @@ class BackupOp implements Closeable {
 
     private void backupApkFiles() throws BackupException {
         final File dataAppPath = OsEnvironment.getDataAppDirectory();
-        final String sourceBackupFilePrefix = SOURCE_PREFIX + getExt(metadata.tarType);
-        String sourceDir = PackageUtils.getSourceDir(applicationInfo);
+        final String sourceBackupFilePrefix = SOURCE_PREFIX + getExt(mMetadata.tarType);
+        String sourceDir = PackageUtils.getSourceDir(mApplicationInfo);
         if (dataAppPath.getAbsolutePath().equals(sourceDir)) {
             // Backup only the apk file (no split apk support for this type of apk)
-            sourceDir = new File(sourceDir, metadata.apkName).getAbsolutePath();
+            sourceDir = new File(sourceDir, mMetadata.apkName).getAbsolutePath();
         }
         Path[] sourceFiles;
         try {
-            sourceFiles = TarUtils.create(metadata.tarType, new Path(context, new File(sourceDir)), tmpBackupPath,
+            sourceFiles = TarUtils.create(mMetadata.tarType, new Path(mContext, new File(sourceDir)), mTempBackupPath,
                     sourceBackupFilePrefix, /* language=regexp */ new String[]{".*\\.apk"}, null, null,
                     false).toArray(new Path[0]);
         } catch (Throwable th) {
             throw new BackupException("APK files backup is requested but no source directory has been backed up.", th);
         }
-        if (!crypto.encrypt(sourceFiles)) {
-            throw new BackupException("Failed to encrypt " + Arrays.toString(sourceFiles));
+        try {
+            sourceFiles = encrypt(sourceFiles);
+        } catch (IOException e) {
+            throw new BackupException("Failed to encrypt " + Arrays.toString(sourceFiles), e);
         }
-        // Overwrite with the new files
-        sourceFiles = crypto.getNewFiles();
         for (Path file : sourceFiles) {
-            checksum.add(file.getName(), DigestUtils.getHexDigest(metadata.checksumAlgo, file));
+            mChecksum.add(file.getName(), DigestUtils.getHexDigest(mMetadata.checksumAlgo, file));
         }
     }
 
@@ -277,54 +263,54 @@ class BackupOp implements Closeable {
         Path[] dataFiles;
         // Store file hash in a separate thread
         new Thread(() -> {
-            for (String dir : metadata.dataDirs) {
+            for (String dir : mMetadata.dataDirs) {
                 FileHash fileHash = new FileHash();
                 fileHash.path = dir;
                 fileHash.hash = DigestUtils.getHexDigest(DigestUtils.SHA_256, new ProxyFile(dir));
                 AppManager.getDb().fileHashDao().insert(fileHash);
             }
         }).start();
-        for (int i = 0; i < metadata.dataDirs.length; ++i) {
-            sourceBackupFilePrefix = DATA_PREFIX + i + getExt(metadata.tarType);
+        for (int i = 0; i < mMetadata.dataDirs.length; ++i) {
+            sourceBackupFilePrefix = DATA_PREFIX + i + getExt(mMetadata.tarType);
             try {
-                dataFiles = TarUtils.create(metadata.tarType, new Path(context, new ProxyFile(metadata.dataDirs[i])),
-                        tmpBackupPath, sourceBackupFilePrefix, null, null,
-                        BackupUtils.getExcludeDirs(!backupFlags.backupCache(), null), false)
+                dataFiles = TarUtils.create(mMetadata.tarType, new Path(mContext, new ProxyFile(mMetadata.dataDirs[i])),
+                                mTempBackupPath, sourceBackupFilePrefix, null, null,
+                                BackupUtils.getExcludeDirs(!mBackupFlags.backupCache(), null), false)
                         .toArray(new Path[0]);
             } catch (Throwable th) {
-                throw new BackupException("Failed to backup data directory at " + metadata.dataDirs[i], th);
+                throw new BackupException("Failed to backup data directory at " + mMetadata.dataDirs[i], th);
             }
-            if (!crypto.encrypt(dataFiles)) {
+            try {
+                dataFiles = encrypt(dataFiles);
+            } catch (IOException e) {
                 throw new BackupException("Failed to encrypt " + Arrays.toString(dataFiles));
             }
-            // Overwrite with the new files
-            dataFiles = crypto.getNewFiles();
             for (Path file : dataFiles) {
-                checksum.add(file.getName(), DigestUtils.getHexDigest(metadata.checksumAlgo, file));
+                mChecksum.add(file.getName(), DigestUtils.getHexDigest(mMetadata.checksumAlgo, file));
             }
         }
     }
 
     private void backupKeyStore() throws BackupException {  // Called only when the app has an keystore item
-        Path keyStorePath = new Path(context, KeyStoreUtils.getKeyStorePath(userHandle));
-        ProxyFile masterKeyFile = KeyStoreUtils.getMasterKey(userHandle);
+        Path keyStorePath = new Path(mContext, KeyStoreUtils.getKeyStorePath(mUserId));
+        ProxyFile masterKeyFile = KeyStoreUtils.getMasterKey(mUserId);
         if (masterKeyFile.exists()) {
             // Master key exists, so take it's checksum to verify it during the restore
-            checksum.add(MASTER_KEY, DigestUtils.getHexDigest(metadata.checksumAlgo,
+            mChecksum.add(MASTER_KEY, DigestUtils.getHexDigest(mMetadata.checksumAlgo,
                     FileUtils.getFileContent(masterKeyFile).getBytes()));
         }
         // Store the KeyStore files
         Path cachePath;
         try {
-            cachePath = new Path(context, FileUtils.getCachePath());
+            cachePath = new Path(mContext, FileUtils.getCachePath());
         } catch (IOException e) {
             throw new BackupException("Could not get cache path", e);
         }
         List<String> cachedKeyStoreFileNames = new ArrayList<>();
         List<String> keyStoreFilters = new ArrayList<>();
-        for (String keyStoreFileName : KeyStoreUtils.getKeyStoreFiles(applicationInfo.uid, userHandle)) {
+        for (String keyStoreFileName : KeyStoreUtils.getKeyStoreFiles(mApplicationInfo.uid, mUserId)) {
             try {
-                String newFileName = Utils.replaceOnce(keyStoreFileName, String.valueOf(applicationInfo.uid),
+                String newFileName = Utils.replaceOnce(keyStoreFileName, String.valueOf(mApplicationInfo.uid),
                         String.valueOf(KEYSTORE_PLACEHOLDER));
                 FileUtils.copy(keyStorePath.findFile(keyStoreFileName), cachePath.findOrCreateFile(newFileName, null));
                 cachedKeyStoreFileNames.add(newFileName);
@@ -336,11 +322,11 @@ class BackupOp implements Closeable {
         if (cachedKeyStoreFileNames.size() == 0) {
             throw new BackupException("There were some KeyStore items but they couldn't be cached before taking a backup.");
         }
-        String keyStorePrefix = KEYSTORE_PREFIX + getExt(metadata.tarType);
+        String keyStorePrefix = KEYSTORE_PREFIX + getExt(mMetadata.tarType);
         Path[] backedUpKeyStoreFiles;
         try {
-            backedUpKeyStoreFiles = TarUtils.create(metadata.tarType, cachePath, tmpBackupPath, keyStorePrefix,
-                    keyStoreFilters.toArray(new String[0]), null, null, false)
+            backedUpKeyStoreFiles = TarUtils.create(mMetadata.tarType, cachePath, mTempBackupPath, keyStorePrefix,
+                            keyStoreFilters.toArray(new String[0]), null, null, false)
                     .toArray(new Path[0]);
         } catch (Throwable th) {
             throw new BackupException("Could not backup KeyStore item.", th);
@@ -352,30 +338,30 @@ class BackupOp implements Closeable {
             } catch (FileNotFoundException ignore) {
             }
         }
-        if (!crypto.encrypt(backedUpKeyStoreFiles)) {
-            throw new BackupException("Failed to encrypt " + Arrays.toString(backedUpKeyStoreFiles));
+        try {
+            backedUpKeyStoreFiles = encrypt(backedUpKeyStoreFiles);
+        } catch (IOException e) {
+            throw new BackupException("Failed to encrypt " + Arrays.toString(backedUpKeyStoreFiles), e);
         }
-        // Overwrite with the new files
-        backedUpKeyStoreFiles = crypto.getNewFiles();
         for (Path file : backedUpKeyStoreFiles) {
-            checksum.add(file.getName(), DigestUtils.getHexDigest(metadata.checksumAlgo, file));
+            mChecksum.add(file.getName(), DigestUtils.getHexDigest(mMetadata.checksumAlgo, file));
         }
     }
 
     private void backupExtras() throws BackupException {
-        PseudoRules rules = new PseudoRules(packageName, userHandle);
+        PseudoRules rules = new PseudoRules(mPackageName, mUserId);
         Path miscFile;
         try {
-            miscFile = backupFile.getMiscFile(CryptoUtils.MODE_NO_ENCRYPTION);
+            miscFile = mBackupFile.getMiscFile(CryptoUtils.MODE_NO_ENCRYPTION);
         } catch (IOException e) {
             throw new BackupException("Couldn't get misc.am.tsv", e);
         }
         // Backup permissions
-        @NonNull String[] permissions = ArrayUtils.defeatNullable(packageInfo.requestedPermissions);
-        int[] permissionFlags = packageInfo.requestedPermissionsFlags;
+        @NonNull String[] permissions = ArrayUtils.defeatNullable(mPackageInfo.requestedPermissions);
+        int[] permissionFlags = mPackageInfo.requestedPermissionsFlags;
         List<OpEntry> opEntries = new ArrayList<>();
         try {
-            List<PackageOps> packageOpsList = new AppOpsService().getOpsForPackage(packageInfo.applicationInfo.uid, packageName, null);
+            List<PackageOps> packageOpsList = new AppOpsService().getOpsForPackage(mPackageInfo.applicationInfo.uid, mPackageName, null);
             if (packageOpsList.size() == 1) opEntries.addAll(packageOpsList.get(0).getOps());
         } catch (Exception ignore) {
         }
@@ -384,7 +370,7 @@ class BackupOp implements Closeable {
         int protectionLevels;
         for (int i = 0; i < permissions.length; ++i) {
             try {
-                info = pm.getPermissionInfo(permissions[i], 0);
+                info = mPm.getPermissionInfo(permissions[i], 0);
                 basePermissionType = PermissionInfoCompat.getProtection(info);
                 protectionLevels = PermissionInfoCompat.getProtectionFlags(info);
                 if (basePermissionType != PermissionInfo.PROTECTION_DANGEROUS
@@ -393,7 +379,7 @@ class BackupOp implements Closeable {
                     continue;
                 }
                 boolean isGranted = (permissionFlags[i] & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0;
-                int permFlags = PermissionCompat.getPermissionFlags(info.name, packageName, userHandle);
+                int permFlags = PermissionCompat.getPermissionFlags(info.name, mPackageName, mUserId);
                 rules.setPermission(permissions[i], isGranted, permFlags);
             } catch (PackageManager.NameNotFoundException | RemoteException ignore) {
             }
@@ -403,7 +389,7 @@ class BackupOp implements Closeable {
             rules.setAppOp(entry.getOp(), entry.getMode());
         }
         // Backup Magisk status
-        if (MagiskUtils.isHidden(packageName)) {
+        if (MagiskUtils.isHidden(mPackageName)) {
             rules.setMagiskHide(true);
         }
         // Backup allowed notification listeners aka BIND_NOTIFICATION_LISTENER_SERVICE
@@ -412,11 +398,11 @@ class BackupOp implements Closeable {
             try {
                 List<ComponentName> notificationComponents;
                 if (LocalServer.isAMServiceAlive()) {
-                    notificationComponents = notificationManager.getEnabledNotificationListeners(userHandle);
+                    notificationComponents = notificationManager.getEnabledNotificationListeners(mUserId);
                 } else notificationComponents = Collections.emptyList();
                 List<String> componentsForThisPkg = new ArrayList<>();
                 for (ComponentName componentName : notificationComponents) {
-                    if (packageName.equals(componentName.getPackageName())) {
+                    if (mPackageName.equals(componentName.getPackageName())) {
                         componentsForThisPkg.add(componentName.getClassName());
                     }
                 }
@@ -427,22 +413,22 @@ class BackupOp implements Closeable {
             }
         }
         // Backup battery optimization
-        String targetString = "user," + packageName + "," + applicationInfo.uid;
+        String targetString = "user," + mPackageName + "," + mApplicationInfo.uid;
         Runner.Result result = Runner.runCommand(new String[]{"dumpsys", "deviceidle", "whitelist"});
         if (result.isSuccessful() && result.getOutput().contains(targetString)) {
             rules.setBatteryOptimization(false);
         }
         // Backup net policy
-        int policies = NetworkPolicyManagerCompat.getUidPolicy(applicationInfo.uid);
+        int policies = NetworkPolicyManagerCompat.getUidPolicy(mApplicationInfo.uid);
         if (policies > 0) {
             // Store only if there is a policy
             rules.setNetPolicy(policies);
         }
         // Backup URI grants
-        List<UriManager.UriGrant> uriGrants = new UriManager().getGrantedUris(packageName);
+        List<UriManager.UriGrant> uriGrants = new UriManager().getGrantedUris(mPackageName);
         if (uriGrants != null) {
             for (UriManager.UriGrant uriGrant : uriGrants) {
-                if (uriGrant.targetUserId == userHandle) {
+                if (uriGrant.targetUserId == mUserId) {
                     rules.setUriGrant(uriGrant);
                 }
             }
@@ -450,7 +436,7 @@ class BackupOp implements Closeable {
         // Backup SSAID
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             try {
-                String ssaid = new SsaidSettings(packageName, applicationInfo.uid).getSsaid();
+                String ssaid = new SsaidSettings(mPackageName, mApplicationInfo.uid).getSsaid();
                 if (ssaid != null) rules.setSsaid(ssaid);
             } catch (IOException e) {
                 // Ignore exception
@@ -459,14 +445,12 @@ class BackupOp implements Closeable {
         }
         rules.commitExternal(miscFile);
         if (!miscFile.exists()) return;
-        if (!crypto.encrypt(new Path[]{miscFile})) {
-            throw new BackupException("Failed to encrypt " + miscFile.getName());
-        }
         try {
+            encrypt(new Path[]{miscFile});
             // Overwrite with the new file
-            miscFile = backupFile.getMiscFile(metadata.crypto);
+            miscFile = mBackupFile.getMiscFile(mMetadata.crypto);
             // Store checksum
-            checksum.add(miscFile.getName(), DigestUtils.getHexDigest(metadata.checksumAlgo, miscFile));
+            mChecksum.add(miscFile.getName(), DigestUtils.getHexDigest(mMetadata.checksumAlgo, miscFile));
         } catch (IOException e) {
             throw new BackupException("Couldn't get misc.am.tsv for generating checksum", e);
         }
@@ -474,21 +458,27 @@ class BackupOp implements Closeable {
 
     private void backupRules() throws BackupException {
         try {
-            Path rulesFile = backupFile.getRulesFile(CryptoUtils.MODE_NO_ENCRYPTION);
+            Path rulesFile = mBackupFile.getRulesFile(CryptoUtils.MODE_NO_ENCRYPTION);
             try (OutputStream outputStream = rulesFile.openOutputStream();
-                 ComponentsBlocker cb = ComponentsBlocker.getInstance(packageName, userHandle)) {
+                 ComponentsBlocker cb = ComponentsBlocker.getInstance(mPackageName, mUserId)) {
                 ComponentUtils.storeRules(outputStream, cb.getAll(), true);
             }
             if (!rulesFile.exists()) return;
-            if (!crypto.encrypt(new Path[]{rulesFile})) {
-                throw new BackupException("Failed to encrypt " + rulesFile.getName());
-            }
+            encrypt(new Path[]{rulesFile});
             // Overwrite with the new file
-            rulesFile = backupFile.getRulesFile(metadata.crypto);
+            rulesFile = mBackupFile.getRulesFile(mMetadata.crypto);
             // Store checksum
-            checksum.add(rulesFile.getName(), DigestUtils.getHexDigest(metadata.checksumAlgo, rulesFile));
+            mChecksum.add(rulesFile.getName(), DigestUtils.getHexDigest(mMetadata.checksumAlgo, rulesFile));
         } catch (IOException e) {
             throw new BackupException("Rules backup is requested but encountered an error during fetching rules.", e);
+        }
+    }
+
+    @NonNull
+    private Path[] encrypt(@NonNull Path[] files) throws IOException {
+        synchronized (Crypto.class) {
+            mCrypto.encrypt(files);
+            return mCrypto.getNewFiles();
         }
     }
 }
