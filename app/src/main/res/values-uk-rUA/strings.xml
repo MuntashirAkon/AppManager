@@ -1165,4 +1165,8 @@
     <string name="explore">Аналіз</string>
     <string name="system_partition">Корінь системного розділу</string>
     <string name="java">Java</string>
+    <string name="smali">smali</string>
+    <string name="extract">Розпакувати</string>
+    <string name="replace">Замінити</string>
+    <string name="rename">Переіменувати</string>
 </resources>
