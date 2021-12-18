@@ -5,6 +5,8 @@ package io.github.muntashirakon.widget;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Rect;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -19,6 +21,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.Px;
 import androidx.annotation.UiThread;
 import androidx.appcompat.widget.TintTypedArray;
+import androidx.customview.view.AbsSavedState;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.transition.Transition;
 import androidx.transition.TransitionManager;
@@ -31,6 +34,7 @@ import java.lang.reflect.Field;
 
 import io.github.muntashirakon.reflow.ReflowMenuViewWrapper;
 import io.github.muntashirakon.ui.R;
+import io.github.muntashirakon.util.ParcelUtils;
 import io.github.muntashirakon.util.UiUtils;
 
 import static com.google.android.material.R.style.Widget_MaterialComponents_CardView;
@@ -48,11 +52,21 @@ public class MultiSelectionView extends MaterialCardView {
     private final CheckBox selectAllView;
     private final TextView selectionCounter;
     @Px
+    private final int horizontalMargin;
+    @Px
+    private final int bottomMargin;
+    @Px
     private final int maxHeight;
     @Px
     private final int titleHeight;
+
     @Px
     private int currentHeight;
+    @Px
+    private int selectionBottomPadding;
+    @Px
+    private int selectionBottomPaddingMinimum;
+    private boolean inSelectionMode = false;
     @Nullable
     private Adapter<?> adapter;
     @Nullable
@@ -113,6 +127,9 @@ public class MultiSelectionView extends MaterialCardView {
         setPreventCornerOverlap(false);
         setRadius(smallSize);
 
+        horizontalMargin = smallSize;
+        bottomMargin = getResources().getDimensionPixelSize(R.dimen.padding_very_small);
+
         if (attributes.hasValue(R.styleable.MultiSelectionView_menu)) {
             selectionActionsView.inflateMenu(attributes.getResourceId(R.styleable.MultiSelectionView_menu, 0));
         }
@@ -122,18 +139,101 @@ public class MultiSelectionView extends MaterialCardView {
         attributes.recycle();
     }
 
+    static class SavedState extends AbsSavedState {
+        int currentHeight;
+        int selectionBottomPadding;
+        int selectionBottomPaddingMinimum;
+        boolean inSelectionMode;
+
+        SavedState(@NonNull Parcelable superState) {
+            super(superState);
+        }
+
+        public SavedState(@NonNull Parcel source, @Nullable ClassLoader loader) {
+            super(source, loader);
+            currentHeight = source.readInt();
+            selectionBottomPadding = source.readInt();
+            selectionBottomPaddingMinimum = source.readInt();
+            inSelectionMode = ParcelUtils.readBoolean(source);
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            super.writeToParcel(dest, flags);
+            dest.writeInt(currentHeight);
+            dest.writeInt(selectionBottomPadding);
+            dest.writeInt(selectionBottomPaddingMinimum);
+            ParcelUtils.writeBoolean(inSelectionMode, dest);
+        }
+
+        @NonNull
+        @Override
+        public String toString() {
+            return "SavedState{"
+                    + Integer.toHexString(System.identityHashCode(this))
+                    + "currentHeight=" + currentHeight
+                    + " selectionBottomPadding=" + selectionBottomPadding
+                    + " selectionBottomPaddingMinimum=" + selectionBottomPaddingMinimum +
+                    '}';
+        }
+
+        public static final Creator<SavedState> CREATOR = new ClassLoaderCreator<SavedState>() {
+            @Override
+            public SavedState createFromParcel(Parcel in, ClassLoader loader) {
+                return new SavedState(in, loader);
+            }
+
+            @Override
+            public SavedState createFromParcel(Parcel in) {
+                return new SavedState(in, null);
+            }
+
+            @Override
+            public SavedState[] newArray(int size) {
+                return new SavedState[size];
+            }
+        };
+    }
+
+    @Nullable
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        Parcelable superState = super.onSaveInstanceState();
+        SavedState ss = new SavedState(superState);
+        ss.currentHeight = currentHeight;
+        ss.selectionBottomPadding = selectionBottomPadding;
+        ss.selectionBottomPaddingMinimum = selectionBottomPaddingMinimum;
+        ss.inSelectionMode = inSelectionMode;
+        return ss;
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        if (state instanceof SavedState) {
+            SavedState ss = (SavedState) state;
+            super.onRestoreInstanceState(ss.getSuperState());
+            currentHeight = ss.currentHeight;
+            selectionBottomPadding = ss.selectionBottomPadding;
+            selectionBottomPaddingMinimum = ss.selectionBottomPaddingMinimum;
+            inSelectionMode = ss.inSelectionMode;
+        } else super.onRestoreInstanceState(state);
+        if (inSelectionMode) {
+            show();
+            updateCounter(false);
+        } else {
+            updateCounter(true);
+        }
+    }
+
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        @Px
-        int smallSize = getResources().getDimensionPixelSize(R.dimen.padding_small);
-        int smallerSize = getResources().getDimensionPixelSize(R.dimen.padding_very_small);
         // Set layout params
         ViewGroup.LayoutParams params = getLayoutParams();
         if (params instanceof MarginLayoutParams) {
-            ((MarginLayoutParams) params).leftMargin = smallSize;
-            ((MarginLayoutParams) params).rightMargin = smallSize;
-            ((MarginLayoutParams) params).bottomMargin = smallerSize;
+            ((MarginLayoutParams) params).leftMargin = horizontalMargin;
+            ((MarginLayoutParams) params).rightMargin = horizontalMargin;
+            ((MarginLayoutParams) params).bottomMargin = bottomMargin;
         }
         try {
             Field gravity = params.getClass().getField("gravity");
@@ -146,9 +246,10 @@ public class MultiSelectionView extends MaterialCardView {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
+        ViewGroup.MarginLayoutParams lp = (MarginLayoutParams) getLayoutParams();
+        selectionBottomPadding = getHeight() + lp.topMargin + lp.bottomMargin + UiUtils.dpToPx(getContext(), 5);
         if (adapter != null) {
-            ViewGroup.MarginLayoutParams lp = (MarginLayoutParams) getLayoutParams();
-            adapter.setSelectionBottomPadding(getHeight() + lp.topMargin + lp.bottomMargin + UiUtils.dpToPx(getContext(), 5));
+            adapter.setSelectionBottomPadding(selectionBottomPadding);
         }
     }
 
@@ -160,6 +261,31 @@ public class MultiSelectionView extends MaterialCardView {
     @NonNull
     public Menu getMenu() {
         return selectionActionsView.getMenu();
+    }
+
+    @Px
+    public int getHorizontalMargin() {
+        return horizontalMargin;
+    }
+
+    @Px
+    public int getBottomMargin() {
+        return bottomMargin;
+    }
+
+    @Px
+    public int getSelectionBottomPadding() {
+        return selectionBottomPadding;
+    }
+
+    public void setSelectionBottomPaddingMinimum(@Px int padding) {
+        selectionBottomPaddingMinimum = padding;
+        if (selectionBottomPadding == 0) {
+            selectionBottomPadding = selectionBottomPaddingMinimum;
+            if (adapter != null) {
+                adapter.setSelectionBottomPadding(selectionBottomPadding);
+            }
+        }
     }
 
     public void setAdapter(@NonNull Adapter<?> adapter) {
@@ -182,10 +308,12 @@ public class MultiSelectionView extends MaterialCardView {
         Transition sharedAxis = new MaterialSharedAxis(MaterialSharedAxis.Y, true);
         TransitionManager.beginDelayedTransition(this, sharedAxis);
         setVisibility(VISIBLE);
+        ViewGroup.MarginLayoutParams lp = (MarginLayoutParams) getLayoutParams();
+        selectionBottomPadding = getHeight() + lp.topMargin + lp.bottomMargin;
+        inSelectionMode = true;
         if (adapter != null) {
             adapter.setInSelectionMode(true);
-            ViewGroup.MarginLayoutParams lp = (MarginLayoutParams) getLayoutParams();
-            adapter.setSelectionBottomPadding(getHeight() + lp.topMargin + lp.bottomMargin);
+            adapter.setSelectionBottomPadding(selectionBottomPadding);
         }
     }
 
@@ -198,9 +326,11 @@ public class MultiSelectionView extends MaterialCardView {
         Transition sharedAxis = new MaterialSharedAxis(MaterialSharedAxis.Y, false);
         TransitionManager.beginDelayedTransition(this, sharedAxis);
         setVisibility(GONE);
+        selectionBottomPadding = selectionBottomPaddingMinimum;
+        inSelectionMode = false;
         if (adapter != null) {
             adapter.setInSelectionMode(false);
-            adapter.setSelectionBottomPadding(0);
+            adapter.setSelectionBottomPadding(selectionBottomPadding);
         }
     }
 
