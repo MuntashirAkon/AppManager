@@ -7,6 +7,7 @@ import android.app.SearchableInfo;
 import android.content.Context;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -22,6 +23,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.TintTypedArray;
+import androidx.customview.view.AbsSavedState;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -189,10 +191,74 @@ public class AdvancedSearchView extends SearchView {
         super.setOnSearchClickListener(mOnSearchIconClickListenerSuper);
     }
 
+    static class SavedState extends AbsSavedState {
+        int type;
+        int enabledTypes;
+
+        SavedState(Parcelable superState) {
+            super(superState);
+        }
+
+        public SavedState(Parcel source, ClassLoader loader) {
+            super(source, loader);
+            type = source.readInt();
+            enabledTypes = source.readInt();
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            super.writeToParcel(dest, flags);
+            dest.writeValue(type);
+            dest.writeValue(enabledTypes);
+        }
+
+        @NonNull
+        @Override
+        public String toString() {
+            return "AdvancedSearchView.SavedState{"
+                    + Integer.toHexString(System.identityHashCode(this))
+                    + " type=" + type
+                    + " enabledTypes=" + enabledTypes + "}";
+        }
+
+        public static final Creator<SavedState> CREATOR = new ClassLoaderCreator<SavedState>() {
+            @Override
+            public SavedState createFromParcel(Parcel in, ClassLoader loader) {
+                return new SavedState(in, loader);
+            }
+
+            @Override
+            public SavedState createFromParcel(Parcel in) {
+                return new SavedState(in, null);
+            }
+
+            @Override
+            public SavedState[] newArray(int size) {
+                return new SavedState[size];
+            }
+        };
+    }
+
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        Parcelable superState = super.onSaveInstanceState();
+        SavedState ss = new SavedState(superState);
+        ss.type = mType;
+        ss.enabledTypes = mEnabledTypes;
+        return ss;
+    }
+
     @Override
     protected void onRestoreInstanceState(Parcelable state) {
-        super.onRestoreInstanceState(state);
+        if (state instanceof SavedState) {
+            SavedState ss = (SavedState) state;
+            super.onRestoreInstanceState(ss.getSuperState());
+            mType = ss.type;
+            mEnabledTypes = ss.enabledTypes;
+        } else super.onRestoreInstanceState(state);
         if (!isIconified()) mSearchTypeSelectionButton.setVisibility(VISIBLE);
+        updateQueryHint();
+        requestLayout();
     }
 
     @Override

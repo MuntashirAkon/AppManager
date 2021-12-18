@@ -139,6 +139,7 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
             actionBar.setDisplayShowCustomEnabled(true);
             actionBar.setDisplayOptions(0, ActionBar.DISPLAY_SHOW_TITLE);
             AdvancedSearchView searchView = new AdvancedSearchView(actionBar.getThemedContext());
+            searchView.setId(R.id.action_search);
             searchView.setOnQueryTextListener(this);
             // Set layout params
             ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
