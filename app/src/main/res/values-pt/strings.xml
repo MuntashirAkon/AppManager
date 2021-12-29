@@ -1095,4 +1095,17 @@
     <string name="replace">Substituir</string>
     <string name="rename">Alterar nome</string>
     <string name="extract">Extrair</string>
+    <string name="intent_firewall_and_disable">IFW + desativar</string>
+    <string name="intent_firewall">IFW</string>
+    <string name="pref_default_blocking_method">Método de bloqueio padrão</string>
+    <string name="pref_default_blocking_method_description">Método a ser usado por padrão em locais onde não há opção de selecionar um método de bloqueio.</string>
+    <string name="pref_intent_firewall_and_disable_description">Bloquear componentes usando o Firewall Intent, assim como desativá-os. Método recomendado para utilizadores root.</string>
+    <string name="pref_intent_firewall_description">Bloquear componentes usando apenas Firewall Intent. Não recomendado, pois, algumas apps do sistema podem contornar firewalls.</string>
+    <string name="authenticating">A autenticar…</string>
+    <string name="search_type_contains">Contém</string>
+    <string name="search_type_prefix">Prefixo</string>
+    <string name="search_type_suffix">Sufixo</string>
+    <string name="search_type_fuzzy">Difuso</string>
+    <string name="search_type_regular_expressions">Regex</string>
+    <string name="pref_disable_description">Desativar apenas componentes. Não recomendado para utilizadores root, pois as apps podem contorná-lo. Nos modos ADB, as aps somente de teste podem ser desativados com este método.</string>
 </resources>
