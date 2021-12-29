@@ -729,7 +729,7 @@
     <string name="screen">屏幕</string>
     <string name="hardware">硬件</string>
     <string name="permissive">被动</string>
-    <string name="enforcing">Enforcing</string>
+    <string name="enforcing">强制</string>
     <string name="failed_to_enable_magisk_hide">无法启用 MagiskHide</string>
     <string name="enable_magisk_hide">启用 MagiskHide</string>
     <string name="failed_to_disable_magisk_hide">无法禁用 MagiskHide</string>
@@ -1060,4 +1060,17 @@
     <string name="replace">替换</string>
     <string name="rename">重命名</string>
     <string name="import_from_sb">从 Swift Backup 3.0 – 3.2 导入</string>
+    <string name="pref_default_blocking_method">默认拦截方式</string>
+    <string name="intent_firewall_and_disable">IFW + 禁用</string>
+    <string name="intent_firewall">IFW</string>
+    <string name="pref_default_blocking_method_description">在没有拦截选项可选的情况下默认使用的方法。</string>
+    <string name="pref_intent_firewall_and_disable_description">使用 Intent Firewall 阻断组件并禁用它们。推荐 root 用户使用该方法。</string>
+    <string name="pref_intent_firewall_description">仅使用 Intent Firewall 阻断组件。不推荐，因为有些系统程序可以绕过防火墙。</string>
+    <string name="pref_disable_description">禁用组件。不推荐 root 用户使用，因为程序可以绕过这个。在 ADB 模式下，可以使用此方法禁用仅测试应用程序。</string>
+    <string name="authenticating">正在验证…</string>
+    <string name="search_type_contains">包含</string>
+    <string name="search_type_prefix">前缀</string>
+    <string name="search_type_suffix">后缀</string>
+    <string name="search_type_regular_expressions">正则表达式</string>
+    <string name="search_type_fuzzy">模糊</string>
 </resources>
