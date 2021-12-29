@@ -909,7 +909,6 @@
     <string name="scanner">Skaner</string>
     <string name="sys_config">Konfiguracja systemu</string>
     <string name="app_signing_install_without_data_loss">Jeśli wyłączono weryfikację podpisu, można użyć opcji <b>Tylko zainstaluj</b>, aby zainstalować aplikację bez utraty danych.</string>
-    <string name="onboard">Na pokładzie</string>
     <string name="packages">pakiety</string>
     <string name="non_critical_exts">Rozszerzenia niekrytyczne</string>
     <string name="critical_exts">Rozszerzenia krytyczne</string>

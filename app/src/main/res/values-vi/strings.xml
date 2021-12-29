@@ -911,7 +911,6 @@
     <string name="app_data_will_be_lost">Dữ liệu hiện có sẽ bị mất.</string>
     <string name="app_signing_signature_mismatch_for_system_apps">Không thể cài đặt ứng dụng vì một ứng dụng hệ thống có chữ ký khác cũng có tên gói này.</string>
     <string name="do_you_want_to_uninstall_and_install">Bạn có muốn gỡ cài đặt và cài đặt ứng dụng lại không\?</string>
-    <string name="onboard">Có mặt</string>
     <string name="packages">gói</string>
     <string name="usage_access_not_supported">Không thể yêu cầu truy cập dữ liệu sử dụng, vì trang cài đặt tương ứng không tồn tại.</string>
     <string name="subject">Đối tượng</string>

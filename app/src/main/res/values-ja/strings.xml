@@ -593,7 +593,6 @@
     <string name="critical_exts">重要な拡張</string>
     <string name="non_critical_exts">非重要な拡張</string>
     <string name="usage_access_not_supported">該当する設定ページが存在しないため使用状況へのアクセスを要求できませんでした。</string>
-    <string name="packages">パッケージ</string>
     <string name="onboard">Onboard</string>
     <string name="do_you_want_to_uninstall_and_install">アンインストール後再度インストールしますか？</string>
     <string name="app_signing_signature_mismatch_for_system_apps">異なるアプリ署名のシステムアプリが同じパッケージ名のため、アプリをインストールできませんでした。</string>

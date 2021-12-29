@@ -296,7 +296,6 @@
     <string name="app_data_will_be_lost">現有資料將遺失。</string>
     <string name="app_signing_signature_mismatch_for_system_apps">無法安裝應用程式，因為具有不同簽名的系統應用程式具有此套件名稱。</string>
     <string name="do_you_want_to_uninstall_and_install">您是否要再次解除安裝並安裝該應用程式？</string>
-    <string name="onboard">本機</string>
     <string name="packages">套件</string>
     <string name="usage_access_not_supported">由於相應的設定頁面不存在，因此無法要求使用權限。</string>
     <string name="non_critical_exts">非關鍵擴展</string>

@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="_lang_tag" translatable="false">it</string>
     <string name="uninstall">Disinstalla</string>
     <string name="require_no_permission">Nessun permesso richiesto</string>
@@ -374,7 +374,6 @@
     <string name="share">Condividi</string>
     <string name="app_signing_signature_mismatch_for_system_apps">Impossibile installare l\'app perché un\'app di sistema con una firma diversa ha questo nome di pacchetto.</string>
     <string name="do_you_want_to_uninstall_and_install">Vuoi disinstallare e poi reinstallare nuovamente l\' app\?</string>
-    <string name="packages">pacchetti</string>
     <string name="usage_access_not_supported">Impossibile richiedere il permesso per l\' accesso di utilizzo, siccome la corrispondente pagina delle impostazioni non esiste.</string>
     <string name="serial_no">Numero Seriale</string>
     <string name="uninstall_updates">Disinstalla Aggiornamenti</string>

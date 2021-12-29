@@ -599,7 +599,6 @@
     <string name="app_data_will_be_lost">Data yang ada akan hilang.</string>
     <string name="app_signing_signature_mismatch_for_system_apps">Tidak dapat menginstal aplikasi karena aplikasi sistem dengan tanda tangan yang berbeda memiliki nama paket ini.</string>
     <string name="do_you_want_to_uninstall_and_install">Apakah Anda ingin menghapus dan menginstal aplikasi lagi\?</string>
-    <string name="onboard">Di atas kapal</string>
     <string name="packages">Paket</string>
     <string name="usage_access_not_supported">Tidak dapat meminta akses penggunaan, karena halaman pengaturan yang sesuai tidak ada.</string>
     <string name="non_critical_exts">Ekstensi non-kritis</string>

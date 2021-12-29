@@ -617,7 +617,6 @@
     <string name="only_install">Только установка</string>
     <string name="app_signing_install_without_data_loss">Если у вас отключена проверка подписи, вы можете использовать параметр <b>«Только установка»</b>, чтобы установить приложение без потери данных.</string>
     <string name="sort_by_backup">Сначала резервные копии</string>
-    <string name="onboard">Доступные</string>
     <string name="packages">пакеты</string>
     <string name="state_session_leader">Лидер сессии</string>
     <string name="sys_config">Конфигурация системы</string>

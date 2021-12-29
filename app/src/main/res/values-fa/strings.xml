@@ -588,7 +588,6 @@
     <string name="critical_exts">پسوندهای بحرانی</string>
     <string name="non_critical_exts">برنامه های افزودنی غیر بحرانی</string>
     <string name="usage_access_not_supported">نمی‌توان دسترسی به دادها را درخواست کرد، زیرا صفحه تنظیمات مربوط به آن پیدا نمی‌شود.</string>
-    <string name="onboard">سوار</string>
     <string name="packages">بسته ها</string>
     <string name="do_you_want_to_uninstall_and_install">آیا می خواهید دوباره برنامه را حذف و نصب کنید؟</string>
     <string name="app_data_will_be_lost">داده های موجود از بین خواهند رفت.</string>

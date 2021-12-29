@@ -60,7 +60,6 @@
     <string name="app_data_will_be_lost">Існуючі дані будуть втрачені.</string>
     <string name="app_signing_signature_mismatch_for_system_apps">Не вдалося встановити додаток, оскільки встановлений додаток є системним, з іншим підписом.</string>
     <string name="do_you_want_to_uninstall_and_install">Ви хочете видалити і знову встановити додаток \?</string>
-    <string name="packages">пакети</string>
     <string name="onboard">Доступні</string>
     <string name="usage_access_not_supported">Не вдалося запросити доступ до використання, оскільки відповідна сторінка налаштувань не існує.</string>
     <string name="non_critical_exts">Некритичні розширення</string>

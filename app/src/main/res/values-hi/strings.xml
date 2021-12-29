@@ -386,7 +386,6 @@
     <string name="app_data_will_be_lost">मौजूदा डाटा खत्म हो जाएगा।</string>
     <string name="app_signing_signature_mismatch_for_system_apps">ऐप इंस्टॉल नहीं कर सके क्योंकि इंस्टॉल किया गया ऐप अलग हस्ताक्षर वाला एक सिस्टम ऐप है।</string>
     <string name="do_you_want_to_uninstall_and_install">क्या आप ऐप को फिर से अनइंस्टॉल और इंस्टॉल करना चाहते हैं\?</string>
-    <string name="onboard">ऑनबोर्ड</string>
     <string name="packages">पैकेजेस</string>
     <string name="usage_access_not_supported">इस्तेमाल का एक्सेस का उपयोग करने का अनुरोध नहीं कर सकता क्योंकि संबंधित सेटिंग्स पेज मौजूद नहीं है।</string>
     <string name="non_critical_exts">नॉन-क्रिटिकल एक्सटेंशन्स</string>

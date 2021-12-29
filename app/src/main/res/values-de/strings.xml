@@ -585,7 +585,6 @@
     <string name="app_data_will_be_lost">Die vorhandenen Daten gehen dabei verloren.</string>
     <string name="app_signing_signature_mismatch_for_system_apps">Konnte die Anwendung nicht installieren, weil eine Systemanwendung mit einer anderen Signatur diesen Paketnamen hat.</string>
     <string name="do_you_want_to_uninstall_and_install">Möchten Sie die Anwendung deinstallieren und erneut installieren\?</string>
-    <string name="onboard">An Bord</string>
     <string name="packages">Pakete</string>
     <string name="usage_access_not_supported">Konnte keinen Nutzungszugriff anfordern, da die entsprechende Einstellungsseite nicht existiert.</string>
     <string name="sys_config">Systemkonfiguration</string>

@@ -514,7 +514,6 @@
     <string name="app_data_will_be_lost">Se perderán los datos existentes.</string>
     <string name="app_signing_signature_mismatch_for_system_apps">No se pudo instalar la aplicación porque una aplicación del sistema con una firma diferente tiene este nombre de paquete.</string>
     <string name="do_you_want_to_uninstall_and_install">¿Quiere desinstalar e instalar la aplicación de nuevo\?</string>
-    <string name="onboard">A bordo</string>
     <string name="packages">paquetes</string>
     <string name="usage_access_not_supported">No se pudo solicitar el acceso al uso, ya que la página de configuración correspondiente no existe.</string>
     <string name="non_critical_exts">Extensiones no cruciales</string>

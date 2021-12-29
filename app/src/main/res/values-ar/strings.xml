@@ -497,7 +497,6 @@
     <string name="app_data_will_be_lost">سيتم فقدان البيانات الموجودة.</string>
     <string name="app_signing_signature_mismatch_for_system_apps">تعذر تثبيت التطبيق لأن تطبيق نظام يحمل توقيعا مختلفا له اسم الحزمة هذا.</string>
     <string name="do_you_want_to_uninstall_and_install">هل تريد إلغاء تثبيت التطبيق وتثبيته مرة أخرى؟</string>
-    <string name="packages">الحزم</string>
     <string name="usage_access_not_supported">تعذر طلب الوصول إلى الاستخدام، حيث أن صفحة الإعدادات المقابلة غير موجودة.</string>
     <string name="non_critical_exts">ملحقات غير حرجة</string>
     <string name="critical_exts">الملحقات الحرجة</string>
@@ -642,7 +641,6 @@
     <string name="pref_rules_msg">حظر فوري، استيراد / تصدير / إزالة القواعد، الخ.</string>
     <string name="saf">SAF</string>
     <string name="java_keystore">مخزن مفاتيح الجافا (JKS)</string>
-    <string name="onboard">عملية الاعداد</string>
     <string name="update_uninstalled_successfully">التحديثات الخاصة ب <xliff:g id="app_name" example="App Manager"> %1$s </xliff:g>تم إلغاء تثبيتها.</string>
     <plurals name="alert_failed_to_set_app_ops">
         <item quantity="zero">تعذر تعيين عمليات التطبيق لتطبيق %1$d</item>

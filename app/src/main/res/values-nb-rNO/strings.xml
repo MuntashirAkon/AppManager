@@ -492,7 +492,6 @@
     <string name="ecc">Elliptisk kurve-kryptografi</string>
     <string name="un_apkm">UnApkm</string>
     <string name="in_progress">Underveis</string>
-    <string name="packages">pakker</string>
     <string name="subject">Emne</string>
     <string name="confirm_installation">Bekreft installasjon</string>
     <string name="rules">Regler</string>

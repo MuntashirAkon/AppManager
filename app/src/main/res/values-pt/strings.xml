@@ -499,7 +499,6 @@
     <string name="app_data_will_be_lost">Os dados existentes serão perdidos.</string>
     <string name="app_signing_signature_mismatch_for_system_apps">Não foi possível instalar uma aplicação porque uma aplicação de sistema com uma assinatura diferente tem este nome de pacote.</string>
     <string name="do_you_want_to_uninstall_and_install">Quer desinstalar e instalar novamente o aplicativo\?</string>
-    <string name="packages">pacotes</string>
     <string name="usage_access_not_supported">Não foi possível solicitar o acesso de utilização, uma vez que a página de definições correspondente não existe.</string>
     <string name="non_critical_exts">Extensões não críticas</string>
     <string name="critical_exts">Extensões Críticas</string>
@@ -902,7 +901,6 @@
     <string name="scanner">Scanner</string>
     <string name="sys_config">Configurações do Sistema</string>
     <string name="app_signing_install_without_data_loss">Se desligou a verificação de assinatura, pode usar a opção <b>Apenas instalar</b> para instalar a app sem perder dados.</string>
-    <string name="onboard">Todos os</string>
     <string name="dsa_affine_y">Atribuir coordenada y</string>
     <string name="dsa_affine_x">Atribuir coordenada x</string>
     <string name="rsa_modulus">Módulo</string>

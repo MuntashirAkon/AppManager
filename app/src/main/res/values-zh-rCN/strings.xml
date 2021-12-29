@@ -552,9 +552,7 @@
     <string name="app_data_will_be_lost">现有数据将丢失。</string>
     <string name="app_signing_signature_mismatch_for_system_apps">无法安装应用程序，因为一个具有不同签名的系统应用程序的包名和它一样。</string>
     <string name="do_you_want_to_uninstall_and_install">您想要卸载并重新安装该应用程序吗\?</string>
-    <string name="packages">软件包</string>
     <string name="usage_access_not_supported">无法请求使用情况访问权限，因为相应的设置页不存在。</string>
-    <string name="onboard">机载</string>
     <string name="navigation_trackball">轨迹球</string>
     <string name="sys_config">系统配置</string>
     <string name="tap_to_see_details">点击查看详情</string>
