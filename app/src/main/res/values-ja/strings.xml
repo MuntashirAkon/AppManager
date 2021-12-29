@@ -197,8 +197,8 @@
     <string name="uninstalled_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g>はアンインストールされました。</string>
     <string name="uninstall_system_app_message">このアプリはシステムアプリです。本当にアンインストールしますか？</string>
     <string name="stopped">停止</string>
-    <string name="disable">無効にする</string>
-    <string name="enable">有効にする</string>
+    <string name="disable">無効化</string>
+    <string name="enable">有効化</string>
     <string name="failed_to_disable"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g>を無効にできませんでした。</string>
     <string name="failed_to_enable"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g>を有効にできませんでした。</string>
     <string name="force_stop">強制終了</string>
@@ -593,7 +593,6 @@
     <string name="critical_exts">重要な拡張</string>
     <string name="non_critical_exts">非重要な拡張</string>
     <string name="usage_access_not_supported">該当する設定ページが存在しないため使用状況へのアクセスを要求できませんでした。</string>
-    <string name="onboard">Onboard</string>
     <string name="do_you_want_to_uninstall_and_install">アンインストール後再度インストールしますか？</string>
     <string name="app_signing_signature_mismatch_for_system_apps">異なるアプリ署名のシステムアプリが同じパッケージ名のため、アプリをインストールできませんでした。</string>
     <string name="app_data_will_be_lost">既存のデータは失われます。</string>
@@ -845,7 +844,7 @@
     <string name="failed_to_load_key">キー情報の読み込みに失敗しました。</string>
     <string name="default_key_used">標準のキーが使用されます。</string>
     <string name="key_not_set">設定されていません</string>
-    <string name="use_default">標準を使用</string>
+    <string name="use_default">規定</string>
     <string name="expiry_date_cannot_be_empty">失効日は空白にできません。</string>
     <string name="signing_key">署名鍵</string>
     <string name="failed_to_read_keystore">キーストアの読み込みに失敗しました。</string>
@@ -1059,4 +1058,19 @@
     <string name="explore">エクスプローラ</string>
     <string name="extract">展開</string>
     <string name="replace">置き換え</string>
+    <string name="system_partition">Androidルート</string>
+    <string name="intent_firewall_and_disable">IFW + 無効化</string>
+    <string name="intent_firewall">IFW</string>
+    <string name="pref_intent_firewall_and_disable_description">コンポーネントをインテントファイアウォールを使用してブロックすると同時に、無効化します。Rootユーザーにお勧めの方法です。</string>
+    <string name="pref_intent_firewall_description">インテントファイアウォールのみを使用してコンポーネントをブロックします。システムアプリの中にはこれを回避するものがあるため、推奨しません。</string>
+    <string name="pref_disable_description">コンポーネントを無効化のみ行います。アプリはこれを回避できるため、Rootユーザーにはお勧めしません。ADBモードでは、テスト用アプリをこの方式で無効にすることができます。</string>
+    <string name="authenticating">認証中…</string>
+    <string name="search_type_prefix">接頭辞</string>
+    <string name="search_type_suffix">接尾辞</string>
+    <string name="search_type_regular_expressions">正規表現</string>
+    <string name="search_type_contains">通常</string>
+    <string name="search_type_fuzzy">曖昧</string>
+    <string name="exit_confirmation">終了の確認</string>
+    <string name="pref_default_blocking_method">規定のブロッキング方法</string>
+    <string name="pref_default_blocking_method_description">コンポーネントのブロッキングに規定で利用される方法を指定します。</string>
 </resources>
