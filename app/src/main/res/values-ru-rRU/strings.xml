@@ -617,7 +617,6 @@
     <string name="only_install">Только установка</string>
     <string name="app_signing_install_without_data_loss">Если у вас отключена проверка подписи, вы можете использовать параметр <b>«Только установка»</b>, чтобы установить приложение без потери данных.</string>
     <string name="sort_by_backup">Сначала резервные копии</string>
-    <string name="packages">пакеты</string>
     <string name="state_session_leader">Лидер сессии</string>
     <string name="sys_config">Конфигурация системы</string>
     <string name="rsa_modulus">Модуль</string>
@@ -1169,4 +1168,16 @@
     <string name="rename">Переименовать</string>
     <string name="pref_import_backups_hint">Выберите каталог, содержащий файлы (Swift Backup/Titanium Backup) или каталоги (OAndBackup) резервных копий</string>
     <string name="accessibility_service_description">Общая служба специальных возможностей для выполнения определенных операций, таких как очистка кеша в режиме без-root.</string>
+    <string name="pref_default_blocking_method">Метод блокировки по умолчанию</string>
+    <string name="pref_intent_firewall_and_disable_description">Блокируйте компоненты с помощью Intent Firewall, а также отключайте их. Рекомендуемый метод для пользователей с root.</string>
+    <string name="authenticating">Аутентификация…</string>
+    <string name="search_type_contains">Содержание</string>
+    <string name="search_type_prefix">Приставка</string>
+    <string name="search_type_suffix">Суффикс</string>
+    <string name="intent_firewall_and_disable">IFW + отключить</string>
+    <string name="search_type_regular_expressions">Регулярные выражения</string>
+    <string name="search_type_fuzzy">Неточно</string>
+    <string name="pref_disable_description">Отключить только компоненты. Не рекомендуется для пользователей с root, так как приложения могут обходить это. В режимах ADB приложения только для тестов могут быть отключены с помощью этого метода.</string>
+    <string name="pref_default_blocking_method_description">Метод, используемый по умолчанию в местах, где нет возможности выбрать метод блокировки.</string>
+    <string name="pref_intent_firewall_description">Блокируйте компоненты только с помощью брандмауэра Intent Firewall. Не рекомендуется, так как некоторые системные приложения могут обходить брандмауэры.</string>
 </resources>
