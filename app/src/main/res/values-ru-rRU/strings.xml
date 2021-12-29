@@ -1169,15 +1169,15 @@
     <string name="pref_import_backups_hint">Выберите каталог, содержащий файлы (Swift Backup/Titanium Backup) или каталоги (OAndBackup) резервных копий</string>
     <string name="accessibility_service_description">Общая служба специальных возможностей для выполнения определенных операций, таких как очистка кеша в режиме без-root.</string>
     <string name="pref_default_blocking_method">Метод блокировки по умолчанию</string>
-    <string name="pref_intent_firewall_and_disable_description">Блокируйте компоненты с помощью Intent Firewall, а также отключайте их. Рекомендуемый метод для пользователей с root.</string>
+    <string name="pref_intent_firewall_and_disable_description">Блокировка компонентов с помощью Intent Firewall и также отключения. Рекомендуемый метод для root пользователей.</string>
     <string name="authenticating">Аутентификация…</string>
-    <string name="search_type_contains">Содержание</string>
-    <string name="search_type_prefix">Приставка</string>
-    <string name="search_type_suffix">Суффикс</string>
-    <string name="intent_firewall_and_disable">IFW + отключить</string>
-    <string name="search_type_regular_expressions">Регулярные выражения</string>
-    <string name="search_type_fuzzy">Неточно</string>
-    <string name="pref_disable_description">Отключить только компоненты. Не рекомендуется для пользователей с root, так как приложения могут обходить это. В режимах ADB приложения только для тестов могут быть отключены с помощью этого метода.</string>
-    <string name="pref_default_blocking_method_description">Метод, используемый по умолчанию в местах, где нет возможности выбрать метод блокировки.</string>
-    <string name="pref_intent_firewall_description">Блокируйте компоненты только с помощью брандмауэра Intent Firewall. Не рекомендуется, так как некоторые системные приложения могут обходить брандмауэры.</string>
+    <string name="search_type_contains">cодержит</string>
+    <string name="search_type_prefix">префикс</string>
+    <string name="search_type_suffix">суффикс</string>
+    <string name="intent_firewall_and_disable">IFW + отключение</string>
+    <string name="search_type_regular_expressions">регулярные выражения</string>
+    <string name="search_type_fuzzy">нечеткий</string>
+    <string name="pref_disable_description">Только отключение компонентов. Не рекомендуется для root пользователей, поскольку приложения могут обходить этот метод блокировки. С помощью этого метода можно отключить только тестовые приложения в режиме ADB.</string>
+    <string name="pref_default_blocking_method_description">Метод, используемый по умолчанию там, где нет возможности выбора метода блокировки.</string>
+    <string name="pref_intent_firewall_description">Блокировка компонентов с использованием только Intent Firewall. Не рекомендуется, поскольку некоторые системные приложения могут обходить этот метод блокировки.</string>
 </resources>
