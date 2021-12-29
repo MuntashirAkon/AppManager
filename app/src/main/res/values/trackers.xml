@@ -196,6 +196,7 @@
         <item>com.rfm.sdk</item>
         <item>com.ironsource.</item>
         <item>com.heyzap.sdk.ads.</item>
+        <item>com.heyzap.mediation.</item>
         <item>com.gigya.</item>
         <item>com.foresee.sdk.ForeSee</item>
         <item>com.fiksu.asotracking</item>
@@ -282,6 +283,7 @@
         <item>org.mozilla.telemetry</item>
         <item>org.mozilla.gecko.telemetry</item>
         <item>mozilla.telemetry.glean.</item>
+        <item>org.mozilla.fenix.GleanMetrics</item>
         <item>net.nend.android</item>
         <item>net.nend.unity.</item>
         <item>com.pusher.client.</item>
@@ -431,6 +433,7 @@
         <item>com.huawei.updatesdk.</item>
         <item>com.huawei.agconnect.</item>
         <item>com.huawei.hms.support.api.push.</item>
+        <item>com.huawei.hms.flutter.analytics.</item>
         <item>com.akamai.android.sdk.AkaMap</item>
         <item>ru.mail.mrgservice.advertising</item>
         <item>ru.mail.mrgservice.analytics</item>
@@ -641,6 +644,7 @@
         <item>com.locationvalue.</item>
         <item>io.palaima.debugdrawer.</item>
         <item>cn.shuzilm.core.</item>
+        <item>com.discord.analytics</item>
         <item>com.evrythng</item>
         <item>com.hawk</item>
         <item>io.embrace.android.embracesdk.</item>
@@ -653,6 +657,7 @@
         <item>com.pontiflex.mobile.</item>
         <item>io.flowup</item>
         <item>jp.fluct.fluctsdk.</item>
+        <item>com.giphy.sdk.tracking</item>
         <item>com.reach.ActionMonitor</item>
         <item>com.reach.ActionService</item>
         <item>com.reach.AdServiceManager</item>
@@ -803,8 +808,10 @@
         <item>com.quantumgraph.</item>
         <item>com.appier.</item>
         <item>com.rakuten.tech.mobile.analytics.</item>
+        <item>co.jp.rakuten.sdtd.analytics</item>
         <item>com.rakuten.android.ads</item>
         <item>com.rakuten.gap.ads</item>
+        <item>com.revenuecat.</item>
         <item>com.rollbar.android.</item>
         <item>com.rumble.sdk</item>
         <item>com.sas.mkt.mobile.sdk.</item>
@@ -918,6 +925,8 @@
         <item>com.yougood.basebusiness.</item>
         <item>com.yougoodtech.</item>
         <item>net.youmi</item>
+        <item>com.uc.crashsdk</item>
+        <item>com.uc2.crashsdk</item>
         <item>zendesk.</item>
         <item>com.zenjoy.ads</item>
         <item>net.zucks.</item>
@@ -1137,6 +1146,7 @@
         <item>Rubicon Project</item>
         <item>ironSource</item>
         <item>Heyzap (bought by Fyber)</item>
+        <item>Heyzap (bought by Fyber)</item>
         <item>Gigya</item>
         <item>Foresee</item>
         <item>Fiksu</item>
@@ -1220,6 +1230,7 @@
         <item>AltBeacon</item>
         <item>AltBeacon</item>
         <item>Salesforce Marketing Cloud</item>
+        <item>Mozilla Telemetry</item>
         <item>Mozilla Telemetry</item>
         <item>Mozilla Telemetry</item>
         <item>Mozilla Telemetry</item>
@@ -1365,6 +1376,7 @@
         <item>IAB Open Measurement</item>
         <item>IAB Open Measurement</item>
         <item>IAB Open Measurement</item>
+        <item>Huawei Mobile Services (HMS) Core</item>
         <item>Huawei Mobile Services (HMS) Core</item>
         <item>Huawei Mobile Services (HMS) Core</item>
         <item>Huawei Mobile Services (HMS) Core</item>
@@ -1582,6 +1594,7 @@
         <item>²DearOne(LocationValue)</item>
         <item>²DebugDrawer</item>
         <item>²Digital Union (shuzilm)</item>
+        <item>²Discord Telemetry</item>
         <item>²EVRYTHNG</item>
         <item>²Ehawk</item>
         <item>²Embrace</item>
@@ -1594,6 +1607,7 @@
         <item>²Flatiron Media</item>
         <item>²FlowUp</item>
         <item>²FluctSDK</item>
+        <item>²GIPHY</item>
         <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
         <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
         <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
@@ -1744,8 +1758,10 @@
         <item>²Quantumgraph(QGraph)/Appier</item>
         <item>²Quantumgraph(QGraph)/Appier</item>
         <item>²Rakuten Analytics SDK</item>
+        <item>²Rakuten Analytics SDK</item>
         <item>²Rakuten Unified Ads</item>
         <item>²Rakuten Unified Ads</item>
+        <item>²RevenueCat</item>
         <item>²Rollbar</item>
         <item>²Rumble</item>
         <item>²SAS</item>
@@ -1859,6 +1875,8 @@
         <item>²Yougoodtech</item>
         <item>²Yougoodtech</item>
         <item>²Youmi</item>
+        <item>²Yueying Crash SDK</item>
+        <item>²Yueying Crash SDK</item>
         <item>²Zendesk</item>
         <item>²Zenjoy</item>
         <item>²Zucks</item>
