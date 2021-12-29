@@ -514,7 +514,6 @@
     <string name="app_data_will_be_lost">Se perderán los datos existentes.</string>
     <string name="app_signing_signature_mismatch_for_system_apps">No se pudo instalar la aplicación porque una aplicación del sistema con una firma diferente tiene este nombre de paquete.</string>
     <string name="do_you_want_to_uninstall_and_install">¿Quiere desinstalar e instalar la aplicación de nuevo\?</string>
-    <string name="packages">paquetes</string>
     <string name="usage_access_not_supported">No se pudo solicitar el acceso al uso, ya que la página de configuración correspondiente no existe.</string>
     <string name="non_critical_exts">Extensiones no cruciales</string>
     <string name="critical_exts">Extensiones cruciales</string>
@@ -1097,4 +1096,17 @@
     <string name="rename">Renombrar</string>
     <string name="import_from_sb">Importar desde Swift Backup 3.0 – 3.2</string>
     <string name="pref_import_backups_hint">Seleccione un directorio que contenga los archivos de copia de seguridad (Swift Backup/Titanium Backup) o directorios (OAndBackup)</string>
+    <string name="pref_default_blocking_method">Método de bloqueo por defecto</string>
+    <string name="intent_firewall_and_disable">IFW + deshabilitar</string>
+    <string name="authenticating">Autenticando…</string>
+    <string name="search_type_contains">Incluye</string>
+    <string name="search_type_prefix">Prefijo</string>
+    <string name="search_type_suffix">Sufijo</string>
+    <string name="search_type_regular_expressions">Regex</string>
+    <string name="search_type_fuzzy">Fuzzy</string>
+    <string name="pref_default_blocking_method_description">Método a usar por defecto en lugares donde no hay opción para escoger un método de bloqueo.</string>
+    <string name="pref_intent_firewall_and_disable_description">Bloquea componentes usando Intent Firewall así como también los deshabilita. Método recomendado para usuarios root.</string>
+    <string name="pref_intent_firewall_description">Bloquea componentes usando sólo Intent Firewall. No se recomienda ya que algunas apps del sistema pueden eludir firewalls.</string>
+    <string name="pref_disable_description">Deshabilita sólo los componentes. No se recomienda a usuarios root ya que las apps pueden eludir esto. En modo ADB, las aplicaciones de prueba se pueden deshabilitar con este método.</string>
+    <string name="intent_firewall">IFW</string>
 </resources>
