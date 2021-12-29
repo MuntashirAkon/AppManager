@@ -60,7 +60,6 @@
     <string name="app_data_will_be_lost">Існуючі дані будуть втрачені.</string>
     <string name="app_signing_signature_mismatch_for_system_apps">Не вдалося встановити додаток, оскільки встановлений додаток є системним, з іншим підписом.</string>
     <string name="do_you_want_to_uninstall_and_install">Ви хочете видалити і знову встановити додаток \?</string>
-    <string name="onboard">Доступні</string>
     <string name="usage_access_not_supported">Не вдалося запросити доступ до використання, оскільки відповідна сторінка налаштувань не існує.</string>
     <string name="non_critical_exts">Некритичні розширення</string>
     <string name="critical_exts">Критичні розширення</string>
@@ -1168,4 +1167,15 @@
     <string name="extract">Розпакувати</string>
     <string name="replace">Замінити</string>
     <string name="rename">Переіменувати</string>
+    <string name="pref_default_blocking_method">Метод блокування за замовчуванням</string>
+    <string name="pref_intent_firewall_and_disable_description">Блокування компонентів за допомогою Intent Firewall і також вимкнення. Рекомендований метод для root користувачів .</string>
+    <string name="pref_disable_description">Лише вимкнення компонентів. Не рекомендується root користувачам, оскільки програми можуть обійти це блокування. У режимі ADB за допомогою цього методу можна вимкнути програми лише для тестування.</string>
+    <string name="search_type_contains">містить</string>
+    <string name="search_type_suffix">суфікс</string>
+    <string name="search_type_regular_expressions">регулярний вираз</string>
+    <string name="search_type_fuzzy">нечіткий запит</string>
+    <string name="intent_firewall_and_disable">IFW + вимкнення</string>
+    <string name="pref_default_blocking_method_description">Метод, який використовується за замовчуванням там, де немає можливості вибрати метод блокування.</string>
+    <string name="search_type_prefix">префікс</string>
+    <string name="pref_intent_firewall_description">Блокування компонентів лише за допомогою Intent Firewall. Не рекомендується, оскільки деякі системні програми можуть обходити цей метод блокування.</string>
 </resources>
