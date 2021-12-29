@@ -440,7 +440,7 @@
     <string name="reinstall">Erneut installieren</string>
     <string name="unblock_trackers">Tracker blockieren</string>
     <string name="package_installer">Paket-Installer</string>
-    <string name="install_in_progress">Installation wird durchgeführt</string>
+    <string name="install_in_progress">Installation wird durchgeführt …</string>
     <string name="installer_error_security">Konnte nicht auf APK-Dateien zugreifen</string>
     <string name="installer_error_session_create">Die Installation konnte nicht gestartet werden</string>
     <string name="installer_error_session_write">Der Schreib-Zugriff für die Installation wurde verweigert</string>
@@ -1037,7 +1037,7 @@
     </plurals>
     <string name="import_from_tb">Importieren aus Titanium Backup</string>
     <string name="import_from_oab">Importieren von OAndBackup</string>
-    <string name="pref_import_backups_msg">Importieren von Sicherungen aus OAndBackup oder Titanium Backup.</string>
+    <string name="pref_import_backups_msg">Importieren von Sicherungen aus OAndBackup, Swift Backup (3.0–3.2) oder Titanium Backup.</string>
     <string name="pref_import_backups">Sicherungen importieren</string>
     <string name="added_to_queue">Zur Warteschlange hinzugefügt</string>
     <string name="minimum_version">Minimale Version: %d</string>
@@ -1087,4 +1087,15 @@
     <string name="backup_volume_dialog_description">Laufwerke mit dem Präfix <tt>/Baum</tt> sind Ordner, die mit dem Storage Access Framework (SAF) ausgewählt werden. Außer diesen Ordnern ist das Standardverzeichnis für App Manager ein Unterordner namens <tt>AppManager</tt>.</string>
     <string name="second_degree_tracker_note">² Das Präfix zeigt an, dass die Tracker in der <a href="https://etip.exodus-privacy.eu.org/">ETIP-Bereitschaftsliste</a> stehen, d. h. es wird noch untersucht, ob es sich tatsächlich um Tracker handelt.</string>
     <string name="failed_to_uninstall_app">Deinstallation fehlgeschlagen</string>
+    <string name="java">Java</string>
+    <string name="smali">Smali</string>
+    <string name="accessibility_service_description">Allgemeiner Zugriffsdienst zur Durchführung bestimmter Vorgänge wie dem Löschen des Cache im No-Root-Modus.</string>
+    <string name="explore">Erkunden Sie</string>
+    <string name="system_partition">Android root</string>
+    <string name="exit_confirmation">Bestätigung der Beendigung</string>
+    <string name="extract">Auszug</string>
+    <string name="replace">Ersetzen</string>
+    <string name="rename">Umbenennen</string>
+    <string name="import_from_sb">Importieren aus Swift Backup 3.0 - 3.2</string>
+    <string name="pref_import_backups_hint">Wählen Sie ein Verzeichnis, das die Sicherungsdateien (Swift Backup/Titanium Backup) oder Verzeichnisse (OAndBackup) enthält</string>
 </resources>

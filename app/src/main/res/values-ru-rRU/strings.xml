@@ -1107,7 +1107,7 @@
     </plurals>
     <string name="import_from_tb">Импорт из Titanium Backup</string>
     <string name="import_from_oab">Импорт из OAndBackup</string>
-    <string name="pref_import_backups_msg">Импорт резервных копий из OAndBackup или Titanium Backup.</string>
+    <string name="pref_import_backups_msg">Импорт резервных копий из OAndBackup, Swift Backup (3.0–3.2) или Titanium Backup.</string>
     <string name="pref_import_backups">Импорт резервных копий</string>
     <string name="help_permissions_tab">Эти разрешения определяются этим приложением и не могут быть отозваны.</string>
     <string name="added_to_queue">Добавлено в очередь</string>
@@ -1144,7 +1144,7 @@
     <string name="pref_thread_count">Параллельное выполнение</string>
     <string name="type_uri_array_list">Список URI</string>
     <string name="type_uri_array">Массив URI</string>
-    <string name="pref_always_on_background_msg">Всегда устанавливать приложения в фоновом режиме и выводить уведомление по завершении установки.</string>
+    <string name="pref_always_on_background_msg">Всегда устанавливать приложения в фоновом режиме и выводить уведомление по завершении операции.</string>
     <string name="pref_always_on_background">Установить в фоновом режиме</string>
     <string name="pref_block_trackers_msg">Блокирование компонентов трекеров после установки приложения через App Manager.</string>
     <string name="next">Следующий</string>
@@ -1159,4 +1159,15 @@
     <string name="backup_volume_dialog_description">Тома с префиксом <tt>/tree</tt> это папки, выбранные с помощью Storage Access Framework (SAF). Кроме этих папок, каталог по умолчанию для App Manager это подпапка с именем <tt>AppManager</tt>.</string>
     <string name="second_degree_tracker_note">² префикс указывает на то, что трекеры находятся в списке ожидания <a href="https://etip.exodus-privacy.eu.org/"> ETIP</a>, т. е. являются ли они настоящими трекерами, все еще исследуется.</string>
     <string name="failed_to_uninstall_app">Не получилось удалить</string>
+    <string name="import_from_sb">Импорт из Swift Backup 3.0 – 3.2</string>
+    <string name="java">Java</string>
+    <string name="smali">Smali</string>
+    <string name="explore">Анализировать</string>
+    <string name="system_partition">Корень системного раздела</string>
+    <string name="exit_confirmation">Подтверждение выхода</string>
+    <string name="extract">Извлечь</string>
+    <string name="replace">Заменить</string>
+    <string name="rename">Переименовать</string>
+    <string name="pref_import_backups_hint">Выберите каталог, содержащий файлы (Swift Backup/Titanium Backup) или каталоги (OAndBackup) резервных копий</string>
+    <string name="accessibility_service_description">Общая служба специальных возможностей для выполнения определенных операций, таких как очистка кеша в режиме без-root.</string>
 </resources>

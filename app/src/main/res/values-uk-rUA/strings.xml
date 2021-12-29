@@ -1104,7 +1104,7 @@
     </plurals>
     <string name="import_from_tb">Імпорт з Titanium Backup</string>
     <string name="import_from_oab">Імпорт із OAndBackup</string>
-    <string name="pref_import_backups_msg">Імпорт резервних копій з OAndBackup абоTitanium Backup.</string>
+    <string name="pref_import_backups_msg">Імпорт резервних копій з OAndBackup, Swift Backup (3.0–3.2) абоTitanium Backup.</string>
     <string name="pref_import_backups">Імпорт резервних копій</string>
     <string name="added_to_queue">Додано в чергу</string>
     <string name="minimum_version">Мінімальна версія: %d</string>
@@ -1158,4 +1158,15 @@
     <string name="backup_volume_dialog_description">Томи з префіксом <tt>/tree</tt> є папками, вибраними за допомогою Storage Access Framework (SAF). За винятком цих папок, каталог за замовчуванням для App Manager є підпапкою з назвою <tt>AppManager</tt>.</string>
     <string name="second_degree_tracker_note">Префікс ² вказує на те, що трекери знаходяться в списку очікування <a href="https://etip.exodus-privacy.eu.org/">ETIP</a>, тобто чи є вони фактичними трекерами, все ще досліджується.</string>
     <string name="failed_to_uninstall_app">Не вдалося видалити</string>
+    <string name="exit_confirmation">Підтвердження виходу</string>
+    <string name="import_from_sb">Імпорт із Swift Backup 3.0 – 3.2</string>
+    <string name="pref_import_backups_hint">Виберіть каталог, що містить файли (Swift Backup/Titanium Backup) або каталоги (OAndBackup) резервних копій</string>
+    <string name="accessibility_service_description">Загальна служба спеціальних можливостей для виконання певних операцій, таких як очищення кеша в режимі без-root.</string>
+    <string name="explore">Аналіз</string>
+    <string name="system_partition">Корінь системного розділу</string>
+    <string name="java">Java</string>
+    <string name="smali">smali</string>
+    <string name="extract">Розпакувати</string>
+    <string name="replace">Замінити</string>
+    <string name="rename">Переіменувати</string>
 </resources>

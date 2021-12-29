@@ -430,7 +430,7 @@
     <string name="sdk_flags">Flags</string>
     <string name="obb_size">Obb</string>
     <string name="sort_by_target_sdk">SDK alvo</string>
-    <string name="manifest">Manifest</string>
+    <string name="manifest">Manifesto</string>
     <string name="input_features">Inserir funções</string>
     <string name="shared_user_id">ID de Usuário Compartilhado</string>
     <string name="sort_by_shared_user_id">ID de Usuário compartilhado</string>
@@ -462,7 +462,7 @@
     <string name="deny_app_ops_description">Defina um modo para as operações de aplicativo identificadas pelos valores das constantes, ou seja, <tt>63</tt> ou <tt>RUN_IN_BACKGROUND</tt></string>
     <string name="changelog">Histórico de Atualizações</string>
     <string name="one_click_ops">Operações em 1 Clique</string>
-    <string name="touchscreen">Touchscreen</string>
+    <string name="touchscreen">Tela sensível ao toque</string>
     <string name="no_libs">Nenhuma biblioteca</string>
     <string name="no_apps">Nenhum aplicativo</string>
     <string name="state_unknown">Desconhecido</string>
@@ -1037,7 +1037,7 @@
     </plurals>
     <string name="import_from_tb">Importar do Titanium Backup</string>
     <string name="import_from_oab">Importar do OAndBackup</string>
-    <string name="pref_import_backups_msg">Importar backups do OAndBackup ou Titanium Backup.</string>
+    <string name="pref_import_backups_msg">Importar backups do OAndBackup, Swift Backup (3.0–3.2) ou Titanium Backup.</string>
     <string name="pref_import_backups">Importar backups</string>
     <string name="help_app_ops_tab">Clique num item para o <b>permitir</b> ou <b>ignorar</b>. Aperte e segure num item para ver outros modos oferecidos.</string>
     <string name="help_permissions_tab">Essas permissões são definidas por este aplicativo e não podem ser revogadas.</string>
@@ -1087,4 +1087,15 @@
     <string name="set_package_name_first">Defina o nome do pacote primeiro!</string>
     <string name="identifier">Identificador</string>
     <string name="failed_to_uninstall_app">A desinstalação falhou</string>
+    <string name="java">Java</string>
+    <string name="explore">Explorar</string>
+    <string name="exit_confirmation">Confirmação de saída</string>
+    <string name="extract">Extrair</string>
+    <string name="replace">Substituir</string>
+    <string name="rename">Renomear</string>
+    <string name="import_from_sb">Importar de Swift Backup 3.0 – 3.2</string>
+    <string name="pref_import_backups_hint">Selecione um diretório contendo os arquivos de backup (Swift Backup / Titanium Backup) ou diretórios (OAndBackup)</string>
+    <string name="smali">Smali</string>
+    <string name="system_partition">Root Android</string>
+    <string name="accessibility_service_description">Serviço de acessibilidade genérico para realizar certas operações, como limpar o cache no modo.</string>
 </resources>

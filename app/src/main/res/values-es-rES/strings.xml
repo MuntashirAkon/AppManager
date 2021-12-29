@@ -830,7 +830,7 @@
     <string name="type_int_array">Matriz de enteros</string>
     <string name="type_component_name">Nombre del componente</string>
     <string name="type_null">Sin valor</string>
-    <string name="screen_lock_msg">Bloquear App Manager usando el bloqueo de pantalla de Android</string>
+    <string name="screen_lock_msg">Bloquee App Manager usando el bloqueo de pantalla de Android</string>
     <string name="screen_lock">Bloqueo de pantalla</string>
     <string name="unlock_app_manager">Desbloquear gestor de aplicaciones</string>
     <string name="sd_card">Tarjeta SD</string>
@@ -1025,7 +1025,7 @@
     <string name="pref_default_log_level_summary">Nivel de registro al inicio, al abrir archivos y al grabar.</string>
     <string name="open">Abierto</string>
     <string name="import_from_oab">Importar desde OAndBackup</string>
-    <string name="pref_import_backups_msg">Importe copias de respaldo desde OAndBackup o Titanium Backup.</string>
+    <string name="pref_import_backups_msg">Importe copias de respaldo desde OAndBackup, Swift Backup (3.0–3.2) o Titanium Backup.</string>
     <string name="pref_import_backups">Importar copias de respaldo</string>
     <string name="community_links">Telegram: https://t.me/AppManagerChannel
 \nTwitter: https://twitter.com/AppManagerNews</string>
@@ -1087,4 +1087,15 @@
     <string name="second_degree_tracker_note">² prefijo indica que los rastreadores están en la <a href="https://etip.exodus-privacy.eu.org/">lista de espera de ETIP</a> p. ej. todavía se está investigando si son en realidad rastreadores.</string>
     <string name="failed_to_uninstall_app">Desinstalación fallida</string>
     <string name="backup_volume_dialog_description">Volúmenes con prefijo <tt>tree</tt> son carpetas seleccionadas mediante el framework de acceso al almacenamiento (SAF). Exceptuando estas carpetas, el directorio por defecto para App Manager es una subcarpeta llamada <tt>AppManager</tt>.</string>
+    <string name="java">Java</string>
+    <string name="smali">Smali</string>
+    <string name="accessibility_service_description">Servicio genérico de accesibilidad para realizar ciertas operaciones como limpiar caché en modo no-root.</string>
+    <string name="explore">Explorar</string>
+    <string name="system_partition">Root Android</string>
+    <string name="exit_confirmation">Confirmación de salida</string>
+    <string name="extract">Extraer</string>
+    <string name="replace">Reemplazar</string>
+    <string name="rename">Renombrar</string>
+    <string name="import_from_sb">Importar desde Swift Backup 3.0 – 3.2</string>
+    <string name="pref_import_backups_hint">Seleccione un directorio que contenga los archivos de copia de seguridad (Swift Backup/Titanium Backup) o directorios (OAndBackup)</string>
 </resources>

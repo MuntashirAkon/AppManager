@@ -250,7 +250,7 @@
     <string name="clear_data">データを消去</string>
     <string name="backup_restore">バックアップ/復元</string>
     <string name="disable_background">バックグラウンド実行を防止</string>
-    <string name="export_blocking_rules">ﾌﾞﾛｯｷﾝｸﾞﾙｰﾙをｴｸｽﾎﾟｰﾄ</string>
+    <string name="export_blocking_rules">ﾙｰﾙをｴｸｽﾎﾟｰﾄ</string>
     <plurals name="alert_failed_to_clear_data">
         <item quantity="other">%1$d 個のアプリからデータを消去できませんでした</item>
     </plurals>
@@ -485,10 +485,10 @@
     <string name="unknown_split_for_base_apk"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> for base APK</string>
     <string name="density_split_for_feature"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) resources for feature <xliff:g id="feature_name" example="Visualizer">%3$s</xliff:g></string>
     <string name="density_split_for_base_apk"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) resources for base APK</string>
-    <string name="abi_split_for_feature"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> code for <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
-    <string name="abi_split_for_base_apk"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> code for base APK</string>
-    <string name="locale_split_for_feature"><xliff:g id="split_name" example="English">%1$s</xliff:g> locale for feature <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
-    <string name="locale_split_for_base_apk"><xliff:g id="split_name" example="English">%1$s</xliff:g> locale for base APK</string>
+    <string name="abi_split_for_feature"><xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g>の <xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> ネイティブコード</string>
+    <string name="abi_split_for_base_apk">ベースAPKの<xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> ネイティブコード</string>
+    <string name="locale_split_for_feature">機能 &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt; の &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"English\"&gt;%1$s&lt;/xliff:g&gt; 言語データ</string>
+    <string name="locale_split_for_base_apk">ベースAPKの<xliff:g id="split_name" example="English">%1$s</xliff:g>言語データ</string>
     <string name="launch_mode_multiple">複数</string>
     <string name="launch_mode_single_instance">単一インスタンス</string>
     <string name="launch_mode_single_task">単一タスク</string>
@@ -1004,7 +1004,7 @@
     </plurals>
     <string name="import_from_tb">Titanium Backupからインポート</string>
     <string name="import_from_oab">OAndBackupからインポート</string>
-    <string name="pref_import_backups_msg">OAndBackupまたはTitanium Backupからバックアップファイルをインポートします</string>
+    <string name="pref_import_backups_msg">OAndBackup、Swift Backup (v3.0〜3.2)またはTitanium Backupからバックアップファイルをインポートします</string>
     <string name="pref_import_backups">バックアップをインポート</string>
     <string name="community_links">Telegram: https://t.me/AppManagerChannel
 \nTwitter: https://twitter.com/AppManagerNews</string>
@@ -1051,4 +1051,13 @@
     <string name="identifier">識別子</string>
     <string name="staging_apk_files">待機中…</string>
     <string name="running_services_logcat_hint">項目をタップすると、対応するプロセスIDをデフォルトのフィルターとしてログビューアーが開きます。</string>
+    <string name="pref_import_backups_hint">バックアップファイル（Swift Backup/Titanium Backup）またはディレクトリ（OAndBackup）を選択します</string>
+    <string name="import_from_sb">Swift Backup(v3.0〜3.2) からインポート</string>
+    <string name="rename">名前を変更</string>
+    <string name="java">Java</string>
+    <string name="smali">Smali</string>
+    <string name="accessibility_service_description">非ルートモードでキャッシュをクリアするなどの操作を行うためのアクセシビリティサービスです。</string>
+    <string name="explore">エクスプローラ</string>
+    <string name="extract">展開</string>
+    <string name="replace">置き換え</string>
 </resources>

@@ -817,7 +817,7 @@
     <string name="no_receivers">無接收器</string>
     <string name="receivers">接收器</string>
     <string name="no_activities">無活動</string>
-    <string name="refresh">刷新</string>
+    <string name="refresh">重新整理</string>
     <string name="activities">活動</string>
     <string name="require_no_permission">無權限需要</string>
     <string name="pref_log_viewer_msg">配置日誌顯示方式。</string>
@@ -990,7 +990,7 @@
     </plurals>
     <string name="import_from_tb">從鈦備份匯入</string>
     <string name="import_from_oab">從 OAndBackup 匯入</string>
-    <string name="pref_import_backups_msg">從 OAndBackup 或 Titanium Backup 匯入備份。</string>
+    <string name="pref_import_backups_msg">從 OAndBackup、Swift Backup (3.0–3.2) 或 Titanium Backup 匯入備份。</string>
     <string name="pref_import_backups">匯入備份</string>
     <string name="help_app_ops_tab">單擊項目以 <b> 允許 </b> 或 <b> 忽略 </b>。長按一個項目以查看其他支援的模式。</string>
     <string name="help_permissions_tab">這些權限由該應用程式定義且無法撤銷。</string>
@@ -1051,4 +1051,12 @@
 \nGitLab: https://gitlab.com/muntashir/AppManager
 \nRiseup: https://0xacab.org/muntashir/AppManager
 \nCodeberg: https://codeberg.org/muntashir/AppManager</string>
+    <string name="accessibility_service_description">通用無障礙服務，用於執行某些操作，例如在非 root 模式下清除緩存。</string>
+    <string name="exit_confirmation">退出確認</string>
+    <string name="extract">提取</string>
+    <string name="replace">取代</string>
+    <string name="explore">瀏覽</string>
+    <string name="import_from_sb">從 Swift Backup 3.0 – 3.2 匯入</string>
+    <string name="pref_import_backups_hint">選擇包含備份文件的目錄 (Swift Backup/Titanium Backup) 或目錄 (OAndBackup)</string>
+    <string name="rename">重新命名</string>
 </resources>
