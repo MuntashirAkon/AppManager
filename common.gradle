@@ -11,11 +11,6 @@ android {
         targetSdkVersion rootProject.ext.targetSdk
     }
 
-    buildTypes {
-        preRelease {
-        }
-    }
-
     compileOptions {
         encoding "UTF-8"
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -24,6 +19,5 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "androidx.annotation:annotation:${annotation_version}"
 }

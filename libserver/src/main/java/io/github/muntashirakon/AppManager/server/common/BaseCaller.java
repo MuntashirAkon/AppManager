@@ -9,28 +9,27 @@ import androidx.annotation.NonNull;
 
 // Copyright 2017 Zheng Li
 public class BaseCaller implements Parcelable {
-
     public static final int TYPE_CLOSE = -10;
     public static final int TYPE_SHELL = 5;
 
-    private final int type;
-    private byte[] rawBytes;
+    private final int mType;
+    private byte[] mRawBytes;
 
     public BaseCaller(@NonNull Caller method) {
-        this.type = method.getType();
-        this.rawBytes = ParcelableUtil.marshall(method);
+        mType = method.getType();
+        mRawBytes = ParcelableUtil.marshall(method);
     }
 
     public BaseCaller(int type) {
-        this.type = type;
+        this.mType = type;
     }
 
     public int getType() {
-        return type;
+        return mType;
     }
 
     public byte[] getRawBytes() {
-        return rawBytes;
+        return mRawBytes;
     }
 
     @Override
@@ -40,14 +39,14 @@ public class BaseCaller implements Parcelable {
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeInt(this.type);
-        dest.writeByteArray(this.rawBytes);
+        dest.writeInt(this.mType);
+        dest.writeByteArray(this.mRawBytes);
     }
 
 
     protected BaseCaller(@NonNull Parcel in) {
-        this.type = in.readInt();
-        this.rawBytes = in.createByteArray();
+        this.mType = in.readInt();
+        this.mRawBytes = in.createByteArray();
     }
 
     public static final Parcelable.Creator<BaseCaller> CREATOR = new Parcelable.Creator<BaseCaller>() {

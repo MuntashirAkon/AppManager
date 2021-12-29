@@ -12,5 +12,5 @@ dependencies {
     compileOnly "dev.rikka.tools.refine:annotation:${refine_version}"
 
     implementation "androidx.annotation:annotation:${annotation_version}"
-    implementation 'org.jetbrains:annotations:20.1.0'
+    implementation 'org.jetbrains:annotations:22.0.0'
 }

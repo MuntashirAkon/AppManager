@@ -4,47 +4,52 @@ package io.github.muntashirakon.AppManager.server;
 
 import android.content.Intent;
 
-import java.util.Map;
-
 import androidx.annotation.NonNull;
-import io.github.muntashirakon.AppManager.server.common.Actions;
-import io.github.muntashirakon.AppManager.server.common.ServerRunInfo;
 
-import static io.github.muntashirakon.AppManager.server.common.ConfigParam.PARAM_TOKEN;
-import static io.github.muntashirakon.AppManager.server.common.ConfigParam.PARAM_TYPE;
+import io.github.muntashirakon.AppManager.server.common.ConfigParams;
+import io.github.muntashirakon.AppManager.server.common.ServerActions;
+import io.github.muntashirakon.AppManager.server.common.ServerInfo;
+
+import static io.github.muntashirakon.AppManager.server.common.ConfigParams.PARAM_TOKEN;
+import static io.github.muntashirakon.AppManager.server.common.ConfigParams.PARAM_TYPE;
 
 // Copyright 2017 Zheng Li
-class LifecycleAgent {
-    static volatile Map<String, String> sConfigParams;
-    static ServerRunInfo serverRunInfo = new ServerRunInfo();
+final class LifecycleAgent {
+    static final ServerInfo sServerInfo = new ServerInfo();
 
-    static void onStarted() {
-        Intent intent = makeIntent(Actions.ACTION_SERVER_STARTED);
-        BroadcastSender.sendBroadcast(intent);
-    }
+    @NonNull
+    private final ConfigParams mConfigParams;
 
-    static void onConnected() {
-        Intent intent = makeIntent(Actions.ACTION_SERVER_CONNECTED);
-        BroadcastSender.sendBroadcast(intent);
-    }
-
-    static void onDisconnected() {
-        Intent intent = makeIntent(Actions.ACTION_SERVER_DISCONNECTED);
-        BroadcastSender.sendBroadcast(intent);
-    }
-
-    static void onStopped() {
-        Intent intent = makeIntent(Actions.ACTION_SERVER_STOPPED);
-        BroadcastSender.sendBroadcast(intent);
+    public LifecycleAgent(@NonNull ConfigParams configParams) {
+        mConfigParams = configParams;
     }
 
     @NonNull
-    private static Intent makeIntent(String action) {
-        Intent intent = new Intent(action);
-        if (sConfigParams != null) {
-            intent.putExtra(PARAM_TOKEN, sConfigParams.get(PARAM_TOKEN));
-            intent.putExtra(PARAM_TYPE, sConfigParams.get(PARAM_TYPE));
-        }
-        return intent;
+    public ConfigParams getConfigParams() {
+        return mConfigParams;
+    }
+
+    void onStarted() {
+        BroadcastSender.sendBroadcast(makeIntent(ServerActions.ACTION_SERVER_STARTED));
+    }
+
+    void onConnected() {
+        BroadcastSender.sendBroadcast(makeIntent(ServerActions.ACTION_SERVER_CONNECTED));
+    }
+
+    void onDisconnected() {
+        BroadcastSender.sendBroadcast(makeIntent(ServerActions.ACTION_SERVER_DISCONNECTED));
+    }
+
+    void onStopped() {
+        BroadcastSender.sendBroadcast(makeIntent(ServerActions.ACTION_SERVER_STOPPED));
+    }
+
+    @NonNull
+    private Intent makeIntent(String action) {
+        return new Intent(action)
+                .setClassName(mConfigParams.getAppName(), ServerActions.PACKAGE_NAME + ".servermanager.ServerStatusChangeReceiver")
+                .putExtra(PARAM_TOKEN, mConfigParams.getToken())
+                .putExtra(PARAM_TYPE, mConfigParams.getType());
     }
 }

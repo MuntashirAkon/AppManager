@@ -2,47 +2,49 @@
 
 apply from: "$gradle.ext.appManagerRoot/common.gradle"
 
+android.libraryVariants.all { variant ->
+    variant.assembleProvider.get().doLast {
+        makeJars(variant.buildType.name)
+    }
+}
+
 dependencies {
     compileOnly project(path: ':hiddenapi')
     api project(path: ':libserver')
 }
 
-static def toPath(String s) {
-    if (isWin()) {
-        return s.replace('/', '\\')
-    } else {
-        return s
+android.libraryVariants.all { variant ->
+    variant.assembleProvider.configure() {
+        it.doLast {
+            makeJars(variant.buildType.name)
+        }
     }
 }
 
-static def isWin() {
-    return org.gradle.internal.os.OperatingSystem.current().isWindows()
-}
+def makeJars(String buildType) {
+    println("Build type ${buildType}")
 
-String.metaClass.toPath = { -> toPath(delegate) }
-
-ext {
-    debugClassDir = project.rootDir.absolutePath + '/server/build/intermediates/javac/debug/classes'.toPath()
-    libserverClassDir = project.rootDir.absolutePath + '/libserver/build/intermediates/javac/debug/classes'.toPath()
-    hiddenApiClassDir = project.rootDir.absolutePath + '/hiddenapi/build/classes/java/main'.toPath()
-    amJar = project.rootDir.absolutePath + '/app/src/main/assets/am.jar'.toPath()
-    mainJar = project.rootDir.absolutePath + '/app/src/main/assets/main.jar'.toPath()
-}
-
-build.doLast {
     if (!isModified()) {
         println("Files aren't modified, skip creating jar files.")
         return
     }
+
+    String debugClassDir = project.rootDir.absolutePath + '/server/build/intermediates/javac/' + buildType + '/classes'
+    String libserverClassDir = project.rootDir.absolutePath + '/libserver/build/intermediates/javac/' + buildType + '/classes'
+    def hiddenApiClassDir = project.rootDir.absolutePath + '/hiddenapi/build/classes/java/main'
+    def amJar = project.rootDir.absolutePath + '/app/src/main/assets/am.jar'
+    def mainJar = project.rootDir.absolutePath + '/app/src/main/assets/main.jar'
+
     println("Build success, creating am.jar...")
     def buildArgs = ['--release', '--output', amJar]
-    buildArgs.addAll(get_args(libserverClassDir, ["io/github/muntashirakon/AppManager/server/common/"]))
-    buildArgs.addAll(get_args(debugClassDir,  ["io/github/muntashirakon/AppManager/server/"]))
-    buildArgs.addAll(hiddenApiClassDir +  "/android/app/ActivityThread.class")
+    buildArgs.addAll(getClassFiles(libserverClassDir, ["io/github/muntashirakon/AppManager/server/common/"]))
+    buildArgs.addAll(getClassFiles(debugClassDir, ["io/github/muntashirakon/AppManager/server/"]))
+    buildArgs.add(hiddenApiClassDir + "/android/app/ActivityThread.class")
     buildArgs.addAll(['--lib', "${android.sdkDirectory.path}/platforms/android-${rootProject.ext.targetSdk}/android.jar"])
+    println(buildArgs.toString())
     exec {
         workingDir = project.rootDir
-        executable = file("${android.sdkDirectory.path}/build-tools/${android.buildToolsVersion}/d8${isWin() ? '.bat' : ''}".toPath())
+        executable = file("${android.sdkDirectory.path}/build-tools/${android.buildToolsVersion}/d8")
         args = buildArgs
     }
     println("Created ${amJar}")
@@ -53,7 +55,7 @@ build.doLast {
     buildArgs.addAll(['--lib', "${android.sdkDirectory.path}/platforms/android-${rootProject.ext.targetSdk}/android.jar"])
     exec {
         workingDir = project.rootDir
-        executable = file("${android.sdkDirectory.path}/build-tools/${android.buildToolsVersion}/d8${isWin() ? '.bat' : ''}".toPath())
+        executable = file("${android.sdkDirectory.path}/build-tools/${android.buildToolsVersion}/d8")
         args = buildArgs
     }
     println("Created ${mainJar}")
@@ -69,11 +71,11 @@ def isModified() {
     return stdout.toString().trim() == "M"
 }
 
-def get_args(String path, List pkgPath) {
+def getClassFiles(String path, List<String> pkgPath) {
     def ret = []
     pkgPath.forEach {
         it ->
-            def file = new File(path, it.toPath())
+            def file = new File(path, it)
             loadClsFiles(file, ret)
     }
     return ret

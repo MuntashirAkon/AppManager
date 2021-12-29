@@ -8,14 +8,14 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 public class ShellCaller extends Caller {
-    private final String command;
+    private final String mCommand;
 
     public ShellCaller(String command) {
-        this.command = command;
+        mCommand = command;
     }
 
     public String getCommand() {
-        return command;
+        return mCommand;
     }
 
     @Override
@@ -30,11 +30,11 @@ public class ShellCaller extends Caller {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(command);
+        dest.writeString(mCommand);
     }
 
     protected ShellCaller(@NonNull Parcel in) {
-        command = in.readString();
+        mCommand = in.readString();
     }
 
     public static final Parcelable.Creator<ShellCaller> CREATOR = new Parcelable.Creator<ShellCaller>() {

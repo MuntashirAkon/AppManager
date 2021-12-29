@@ -5,25 +5,19 @@ package io.github.muntashirakon.AppManager.server.common;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.util.UUID;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import androidx.annotation.NonNull;
-
 // Copyright 2017 Zheng Li
 public final class Shell {
-    private static final String TOKEN = "ZL@LOVE^TYS"; //U+1F430 U+2764 U+1F431
-
-    private final Process proc;
-    private final BufferedReader in;
-    private final OutputStream out;
-    private final LinkedBlockingQueue<Command> commandQueue = new LinkedBlockingQueue<>();
-    private final AtomicInteger mNextCmdID = new AtomicInteger(0);
-    private volatile boolean close = false;
+    private static final String TOKEN = UUID.randomUUID().toString();
 
     private static Shell sShell;
 
@@ -40,16 +34,24 @@ public final class Shell {
         return sShell;
     }
 
+    private final Process mProcess;
+    private final BufferedReader mIn;
+    private final OutputStream mOut;
+    private final LinkedBlockingQueue<Command> mCommandQueue = new LinkedBlockingQueue<>();
+    private final AtomicInteger mNextCmdID = new AtomicInteger(0);
+
+    private volatile boolean mClosed = false;
+
     private Shell(String cmd) throws IOException {
-        proc = new ProcessBuilder(cmd).redirectErrorStream(true).start();
-        in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-        out = proc.getOutputStream();
+        mProcess = new ProcessBuilder(cmd).redirectErrorStream(true).start();
+        mIn = new BufferedReader(new InputStreamReader(mProcess.getInputStream()));
+        mOut = mProcess.getOutputStream();
 
         Runnable shellRunnable = () -> {
-            while (!close) {
+            while (!mClosed) {
                 try {
-                    Command command = commandQueue.take();
-                    if (command != null && !close) {
+                    Command command = mCommandQueue.take();
+                    if (command != null && !mClosed) {
                         Shell.this.writeCommand(command);
                         Shell.this.readCommand(command);
                     }
@@ -57,7 +59,7 @@ public final class Shell {
                     e.printStackTrace();
                 }
             }
-            if (close) {
+            if (mClosed) {
                 Shell.this.destroyShell();
             }
         };
@@ -66,7 +68,7 @@ public final class Shell {
     }
 
     private void writeCommand(@NonNull Command command) throws IOException {
-        OutputStream out = this.out;
+        OutputStream out = this.mOut;
         command.writeCommand(out);
         String line = "\necho " + TOKEN + " " + command.getID() + " $?\n";
         out.write(line.getBytes());
@@ -75,9 +77,9 @@ public final class Shell {
 
     private void readCommand(Command command) throws IOException {
         if (command != null) {
-            while (!close) {
-                String line = in.readLine();
-                if (line == null || close) {
+            while (!mClosed) {
+                String line = mIn.readLine();
+                if (line == null || mClosed) {
                     break;
                 }
                 int pos = line.indexOf(TOKEN);
@@ -127,45 +129,45 @@ public final class Shell {
             e.printStackTrace();
         }
         try {
-            if (in != null) {
-                in.close();
+            if (mIn != null) {
+                mIn.close();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         try {
-            if (out != null) {
-                out.close();
+            if (mOut != null) {
+                mOut.close();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        if (!commandQueue.isEmpty()) {
+        if (!mCommandQueue.isEmpty()) {
             Command command;
-            while ((command = commandQueue.poll()) != null) {
+            while ((command = mCommandQueue.poll()) != null) {
                 command.terminate("Unexpected Termination.");
                 command = null;
             }
         }
 
-        proc.destroy();
+        mProcess.destroy();
     }
 
-    public boolean isClose() {
-        return close;
+    public boolean isClosed() {
+        return mClosed;
     }
 
     public void close() {
-        this.close = true;
+        this.mClosed = true;
     }
 
     /**
      * Whether all commands are executed (ie. queue is cleared)
      */
     public boolean allCommandsOver() {
-        return commandQueue.isEmpty();
+        return mCommandQueue.isEmpty();
     }
 
 
@@ -180,11 +182,11 @@ public final class Shell {
 
     @NonNull
     private Command add(Command command) {
-        if (close) {
+        if (mClosed) {
             throw new IllegalStateException("Unable to add commands to a closed shell.");
         }
         command.setId(generateCommandID());
-        commandQueue.offer(command);
+        mCommandQueue.offer(command);
         return command;
     }
 
@@ -194,7 +196,7 @@ public final class Shell {
         FLog.log("Command:  " + cmd);
         final StringBuilder outLine = new StringBuilder();
         try {
-            result.statusCode = add(new Command(cmd) {
+            result.mStatusCode = add(new Command(cmd) {
                 @Override
                 public void onUpdate(int id, String message) {
                     outLine.append(message).append('\n');
@@ -207,10 +209,10 @@ public final class Shell {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        if (result.statusCode == -1) {
+        if (result.mStatusCode == -1) {
             try {
                 outLine.setLength(0);
-                result.statusCode = add(new Command(cmd) {
+                result.mStatusCode = add(new Command(cmd) {
                     @Override
                     public void onUpdate(int id, String message) {
                         outLine.append(message).append('\n');
@@ -224,21 +226,22 @@ public final class Shell {
                 e.printStackTrace();
             }
         }
-        result.message = outLine.toString();
+        result.mMessage = outLine.toString();
         return result;
     }
 
     public int countCommands() {
-        return commandQueue.size();
+        return mCommandQueue.size();
     }
 
 
     abstract class Command {
-        private final String[] commands;
-        private boolean isFinished;
-        private int exitCode;
-        private final long timeout;
-        private int id;
+        private final String[] mCommands;
+        private final long mTimeout;
+
+        private boolean mIsFinished;
+        private int mExitCode;
+        private int mId;
 
         public abstract void onUpdate(int id, String message);
 
@@ -249,30 +252,30 @@ public final class Shell {
         }
 
         public Command(int timeout, String... commands) {
-            this.timeout = timeout;
-            this.commands = commands;
+            mTimeout = timeout;
+            mCommands = commands;
         }
 
         void setId(int id) {
-            this.id = id;
+            mId = id;
         }
 
         public int getID() {
-            return id;
+            return mId;
         }
 
         public void setExitCode(int code) {
             synchronized (this) {
-                exitCode = code;
-                isFinished = true;
-                onFinished(id);
+                mExitCode = code;
+                mIsFinished = true;
+                onFinished(mId);
                 this.notifyAll();
             }
         }
 
         public boolean isFinished() {
             synchronized (this) {
-                return isFinished;
+                return mIsFinished;
             }
         }
 
@@ -283,31 +286,31 @@ public final class Shell {
 
         public int waitForFinish(long timeout) throws InterruptedException {
             synchronized (this) {
-                while (!isFinished) {
+                while (!mIsFinished) {
                     this.wait(timeout);
-                    if (!isFinished) {
-                        isFinished = true;
+                    if (!mIsFinished) {
+                        mIsFinished = true;
                         terminate("Timeout Exception");
                     }
                 }
             }
-            return exitCode;
+            return mExitCode;
         }
 
         public int waitForFinish() throws InterruptedException {
             synchronized (this) {
-                waitForFinish(timeout);
+                waitForFinish(mTimeout);
             }
-            return exitCode;
+            return mExitCode;
         }
 
         public String getCommand() {
-            if (commands == null || commands.length == 0) {
+            if (mCommands == null || mCommands.length == 0) {
                 return "";
             }
 
             StringBuilder sb = new StringBuilder();
-            for (String s : commands) {
+            for (String s : mCommands) {
                 sb.append(s);
                 sb.append('\n');
             }
@@ -322,14 +325,15 @@ public final class Shell {
     }
 
     public static class Result implements Parcelable {
-        private String message;
-        private int statusCode = -1;
+        private String mMessage;
+        private int mStatusCode = -1;
 
-        Result() {}
+        Result() {
+        }
 
         protected Result(@NonNull Parcel in) {
-            message = in.readString();
-            statusCode = in.readInt();
+            mMessage = in.readString();
+            mStatusCode = in.readInt();
         }
 
         public static final Creator<Result> CREATOR = new Creator<Result>() {
@@ -347,11 +351,11 @@ public final class Shell {
         };
 
         public String getMessage() {
-            return message;
+            return mMessage;
         }
 
         public int getStatusCode() {
-            return statusCode;
+            return mStatusCode;
         }
 
         @Override
@@ -361,8 +365,8 @@ public final class Shell {
 
         @Override
         public void writeToParcel(@NonNull Parcel dest, int flags) {
-            dest.writeString(message);
-            dest.writeInt(statusCode);
+            dest.writeString(mMessage);
+            dest.writeInt(mStatusCode);
         }
     }
 }

@@ -13,16 +13,15 @@ import android.os.UserHandle;
 import android.os.WorkSource;
 import android.util.LruCache;
 
+import androidx.annotation.Nullable;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import androidx.annotation.Nullable;
-
 // Copyright 2017 Zheng Li
-@SuppressWarnings("rawtypes")
 public class ClassUtils {
-    private static final Map<String, Class> sDefaultClassMap = new HashMap<>();
-    private static final LruCache<String, Class> sClassCache = new LruCache<>(128);
+    private static final Map<String, Class<?>> sDefaultClassMap = new HashMap<>();
+    private static final LruCache<String, Class<?>> sClassCache = new LruCache<>(128);
 
     static {
         // Primitive types
@@ -52,14 +51,14 @@ public class ClassUtils {
         defCacheClass(Intent[].class);
     }
 
-    private static void defCacheClass(Class clazz) {
+    private static void defCacheClass(Class<?> clazz) {
         sDefaultClassMap.put(clazz.getName(), clazz);
     }
 
     @Nullable
-    public static Class[] string2Class(String... names) {
+    public static Class<?>[] string2Class(String... names) {
         if (names != null) {
-            Class[] ret = new Class[names.length];
+            Class<?>[] ret = new Class[names.length];
             for (int i = 0; i < names.length; i++) {
                 ret[i] = string2Class(names[i]);
             }
@@ -69,9 +68,9 @@ public class ClassUtils {
     }
 
     @Nullable
-    public static Class string2Class(String name) {
+    public static Class<?> string2Class(String name) {
         try {
-            Class clazz = sDefaultClassMap.get(name);
+            Class<?> clazz = sDefaultClassMap.get(name);
             if (clazz == null) {
                 clazz = sClassCache.get(name);
             }

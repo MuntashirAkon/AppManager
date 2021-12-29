@@ -23,6 +23,8 @@ import io.github.muntashirakon.AppManager.ipc.IPCUtils;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.server.common.Caller;
 import io.github.muntashirakon.AppManager.server.common.CallerResult;
+import io.github.muntashirakon.AppManager.server.common.Shell;
+import io.github.muntashirakon.AppManager.server.common.ShellCaller;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 
@@ -138,8 +140,18 @@ public class LocalServer {
         }
     }
 
+    public Shell.Result runCommand(String command) throws IOException, RemoteException {
+        ShellCaller shellCaller = new ShellCaller(command);
+        CallerResult callerResult = exec(shellCaller);
+        Throwable th = callerResult.getThrowable();
+        if (th != null) {
+            throw new IOException(th);
+        }
+        return (Shell.Result) callerResult.getReplyObj();
+    }
+
     @WorkerThread
-    public CallerResult exec(Caller caller) throws Exception {
+    public CallerResult exec(Caller caller) throws IOException {
         try {
             checkConnect();
             return mLocalServerManager.execNew(caller);

@@ -3,7 +3,6 @@
 package io.github.muntashirakon.AppManager.servermanager;
 
 import android.os.SystemClock;
-import android.text.TextUtils;
 
 import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
@@ -52,7 +51,7 @@ class LocalServerManager {
     }
 
     @Nullable
-    private ClientSession mSession = null;
+    private ClientSession mSession;
     private LocalServer.Config mConfig;
 
     @WorkerThread
@@ -85,6 +84,7 @@ class LocalServerManager {
      * @throws IOException When creating session fails or server couldn't be started
      */
     @WorkerThread
+    @NonNull
     private ClientSession getSession() throws IOException {
         if (mSession == null || !mSession.isRunning()) {
             try {
@@ -134,35 +134,26 @@ class LocalServerManager {
 
     @WorkerThread
     @NonNull
-    private DataTransmission getSessionTransmission() throws Exception {
-        ClientSession session = getSession();
-        if (session == null) {
-            throw new RuntimeException("create session error ------");
-        }
-        DataTransmission transfer = session.getTransmission();
-        if (transfer == null) {
-            throw new RuntimeException("get transfer error -----");
-        }
-        return transfer;
+    private DataTransmission getSessionDataTransmission() throws IOException {
+        return getSession().getDataTransmission();
     }
 
     @WorkerThread
-    private byte[] execPre(byte[] params) throws Exception {
+    private byte[] execPre(byte[] params) throws IOException {
         try {
-            return getSessionTransmission().sendAndReceiveMessage(params);
+            return getSessionDataTransmission().sendAndReceiveMessage(params);
         } catch (IOException e) {
-            e.printStackTrace();
             if (e.getMessage() != null && e.getMessage().contains("pipe")) {
                 closeSession();
-                return getSessionTransmission().sendAndReceiveMessage(params);
+                return getSessionDataTransmission().sendAndReceiveMessage(params);
             }
             throw e;
         }
     }
 
     @WorkerThread
-    CallerResult execNew(@NonNull Caller caller) throws Exception {
-        byte[] result = execPre(ParcelableUtil.marshall(new BaseCaller(caller.wrapParams())));
+    CallerResult execNew(@NonNull Caller caller) throws IOException {
+        byte[] result = execPre(ParcelableUtil.marshall(new BaseCaller(caller.wrapParameters())));
         return ParcelableUtil.unmarshall(result, CallerResult.CREATOR);
     }
 
@@ -170,7 +161,7 @@ class LocalServerManager {
     void closeBgServer() {
         try {
             BaseCaller baseCaller = new BaseCaller(BaseCaller.TYPE_CLOSE);
-            createSession().getTransmission().sendAndReceiveMessage(ParcelableUtil.marshall(baseCaller));
+            createSession().getDataTransmission().sendAndReceiveMessage(ParcelableUtil.marshall(baseCaller));
         } catch (Exception e) {
             // Since the server is closed abruptly, this should always produce error
             Log.w(TAG, "closeBgServer: " + e.getCause() + "  " + e.getMessage());
@@ -211,7 +202,7 @@ class LocalServerManager {
     void tryAdb() throws Exception {
         AdbConnectionManager adbConnectionManager = AdbConnectionManager.getInstance();
         if (!adbConnectionManager.isConnected() || !adbConnectionManager.connect(mConfig.adbHost, mConfig.adbPort)) {
-            throw new Exception("Could not connect to ADB.");
+            throw new IOException("Could not connect to ADB.");
         }
     }
 
@@ -281,12 +272,13 @@ class LocalServerManager {
      *
      * @return New session if not running, running session otherwise
      * @throws IOException      If session creation failed
-     * @throws RuntimeException If supplied token is empty
      */
     @WorkerThread
+    @NonNull
     private ClientSession createSession() throws IOException {
         if (isRunning()) {
-            return mSession;
+            // Non-null check has already been done
+            return Objects.requireNonNull(mSession);
         }
         if (!AppPref.isRootOrAdbEnabled()) {
             throw new IOException("Root/ADB not enabled.");
@@ -295,12 +287,8 @@ class LocalServerManager {
         socket.setSoTimeout(1000 * 30);
         OutputStream os = socket.getOutputStream();
         InputStream is = socket.getInputStream();
-        String token = ServerConfig.getLocalToken();
-        if (TextUtils.isEmpty(token)) {
-            throw new RuntimeException("No token supplied.");
-        }
         DataTransmission transfer = new DataTransmission(os, is, false);
-        transfer.shakeHands(token, false);
+        transfer.shakeHands(ServerConfig.getLocalToken(), DataTransmission.Role.Client);
         return new ClientSession(transfer);
     }
 
@@ -308,13 +296,14 @@ class LocalServerManager {
      * The client session handler
      */
     private static class ClientSession implements AutoCloseable {
-        private volatile boolean isRunning;
-        private DataTransmission transmission;
+        private volatile boolean mIsRunning;
+        @NonNull
+        private final DataTransmission mDataTransmission;
 
         @AnyThread
-        ClientSession(DataTransmission transmission) {
-            this.transmission = transmission;
-            this.isRunning = true;
+        ClientSession(@NonNull DataTransmission dataTransmission) {
+            this.mDataTransmission = dataTransmission;
+            this.mIsRunning = true;
         }
 
         /**
@@ -323,11 +312,10 @@ class LocalServerManager {
         @AnyThread
         @Override
         public void close() {
-            isRunning = false;
-            if (transmission != null) {
-                transmission.stop();
+            if (mIsRunning) {
+                mIsRunning = false;
+                mDataTransmission.close();
             }
-            transmission = null;
         }
 
         /**
@@ -335,12 +323,13 @@ class LocalServerManager {
          */
         @AnyThread
         boolean isRunning() {
-            return isRunning && transmission != null;
+            return mIsRunning;
         }
 
         @AnyThread
-        DataTransmission getTransmission() {
-            return transmission;
+        @NonNull
+        DataTransmission getDataTransmission() {
+            return mDataTransmission;
         }
     }
 }

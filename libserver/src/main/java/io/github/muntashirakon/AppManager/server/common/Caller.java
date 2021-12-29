@@ -5,49 +5,48 @@ package io.github.muntashirakon.AppManager.server.common;
 import android.os.Parcelable;
 
 // Copyright 2017 Zheng Li
-@SuppressWarnings("rawtypes")
 public abstract class Caller implements Parcelable {
-    protected Class[] cParamsType;
-    protected String[] sParamsType;
-    protected Object[] params;
+    protected Class<?>[] mParameterTypes;
+    protected String[] mParameterTypesAsString;
+    protected Object[] mParameters;
 
-    protected void initParams(Class[] paramsType, Object[] params) {
-        setParamsType(paramsType);
-        this.params = params;
+    protected void initParameters(Class<?>[] parameterTypes, Object[] parameters) {
+        setParameterTypes(parameterTypes);
+        this.mParameters = parameters;
     }
 
-    public void setParamsType(Class[] paramsType) {
-        if (paramsType != null) {
-            sParamsType = new String[paramsType.length];
-            for (int i = 0; i < paramsType.length; i++) {
-                sParamsType[i] = paramsType[i].getName();
+    public void setParameterTypes(Class<?>[] parameterTypes) {
+        if (parameterTypes != null) {
+            mParameterTypesAsString = new String[parameterTypes.length];
+            for (int i = 0; i < parameterTypes.length; i++) {
+                mParameterTypesAsString[i] = parameterTypes[i].getName();
             }
         }
     }
 
-    public void setParamsType(String[] paramsType) {
-        this.sParamsType = paramsType;
+    public void setParameterTypes(String[] parameterTypes) {
+        this.mParameterTypesAsString = parameterTypes;
     }
 
-    public Class[] getParamsType() {
-        if (sParamsType != null) {
-            if (cParamsType == null) {
-                cParamsType = ClassUtils.string2Class(sParamsType);
+    public Class<?>[] getParameterTypes() {
+        if (mParameterTypesAsString != null) {
+            if (mParameterTypes == null) {
+                mParameterTypes = ClassUtils.string2Class(mParameterTypesAsString);
             }
-            return cParamsType;
+            return mParameterTypes;
         }
         return null;
     }
 
-    public Object[] getParams() {
-        return params;
+    public Object[] getParameters() {
+        return mParameters;
     }
 
-    public Caller wrapParams() {
+    public Caller wrapParameters() {
         return ParamsFixer.wrap(this);
     }
 
-    public Caller unwrapParams() {
+    public Caller unwrapParameters() {
         return ParamsFixer.unwrap(this);
     }
 

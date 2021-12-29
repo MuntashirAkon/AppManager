@@ -3,11 +3,12 @@
 package io.github.muntashirakon.AppManager.server.common;
 
 import android.os.Parcel;
+import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
 // Copyright 2017 Zheng Li
-public class ServerRunInfo implements android.os.Parcelable {
+public class ServerInfo implements Parcelable {
     public String protocolVersion = DataTransmission.PROTOCOL_VERSION;
 
     public String startArgs;
@@ -36,10 +37,10 @@ public class ServerRunInfo implements android.os.Parcelable {
         dest.writeLong(this.errorCount);
     }
 
-    public ServerRunInfo() {
+    public ServerInfo() {
     }
 
-    protected ServerRunInfo(@NonNull Parcel in) {
+    protected ServerInfo(@NonNull Parcel in) {
         this.protocolVersion = in.readString();
         this.startArgs = in.readString();
         this.startTime = in.readLong();
@@ -50,24 +51,24 @@ public class ServerRunInfo implements android.os.Parcelable {
         this.errorCount = in.readLong();
     }
 
-    public static final Creator<ServerRunInfo> CREATOR = new Creator<ServerRunInfo>() {
+    public static final Creator<ServerInfo> CREATOR = new Creator<ServerInfo>() {
         @NonNull
         @Override
-        public ServerRunInfo createFromParcel(Parcel source) {
-            return new ServerRunInfo(source);
+        public ServerInfo createFromParcel(Parcel source) {
+            return new ServerInfo(source);
         }
 
         @NonNull
         @Override
-        public ServerRunInfo[] newArray(int size) {
-            return new ServerRunInfo[size];
+        public ServerInfo[] newArray(int size) {
+            return new ServerInfo[size];
         }
     };
 
     @NonNull
     @Override
     public String toString() {
-        return "ServerRunInfo{" +
+        return "ServerInfo{" +
                 "protocolVersion='" + protocolVersion + '\'' +
                 ", startArgs='" + startArgs + '\'' +
                 ", startTime=" + startTime +

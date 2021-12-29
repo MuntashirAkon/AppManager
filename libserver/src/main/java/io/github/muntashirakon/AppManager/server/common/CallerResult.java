@@ -9,31 +9,31 @@ import androidx.annotation.NonNull;
 
 // Copyright 2017 Zheng Li
 public class CallerResult implements Parcelable {
-    private byte[] reply;
-    private Throwable throwable;
-    private Object replyObj;
+    private byte[] mReply;
+    private Throwable mThrowable;
+    private Object mReplyObj;
 
     public byte[] getReply() {
-        return reply;
+        return mReply;
     }
 
     public Throwable getThrowable() {
-        return throwable;
+        return mThrowable;
     }
 
     public Object getReplyObj() {
-        if (replyObj == null && reply != null) {
-            replyObj = ParcelableUtil.readValue(reply);
+        if (mReplyObj == null && mReply != null) {
+            mReplyObj = ParcelableUtil.readValue(mReply);
         }
-        return replyObj;
+        return mReplyObj;
     }
 
     public void setReply(byte[] reply) {
-        this.reply = reply;
+        this.mReply = reply;
     }
 
     public void setThrowable(Throwable throwable) {
-        this.throwable = throwable;
+        this.mThrowable = throwable;
     }
 
     @Override
@@ -43,15 +43,15 @@ public class CallerResult implements Parcelable {
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeByteArray(this.reply);
-        dest.writeSerializable(this.throwable);
+        dest.writeByteArray(this.mReply);
+        dest.writeSerializable(this.mThrowable);
     }
 
     public CallerResult() {}
 
     protected CallerResult(@NonNull Parcel in) {
-        this.reply = in.createByteArray();
-        this.throwable = (Throwable) in.readSerializable();
+        this.mReply = in.createByteArray();
+        this.mThrowable = (Throwable) in.readSerializable();
     }
 
     public static final Creator<CallerResult> CREATOR = new Creator<CallerResult>() {
@@ -73,7 +73,7 @@ public class CallerResult implements Parcelable {
     public String toString() {
         return "CallerResult{" +
                 "reply=" + getReplyObj() +
-                ", throwable=" + throwable +
+                ", throwable=" + mThrowable +
                 '}';
     }
 }

@@ -143,7 +143,7 @@ public final class StorageManagerCompat {
          * Returns size of bytes provided by the file descriptor.
          *
          * @return Size of bytes.
-         * @throws ErrnoException ErrnoException containing E constants in OsConstants.
+         * @throws ErrnoException Containing E constants in OsConstants.
          */
         public long onGetSize() throws ErrnoException {
             throw new ErrnoException("onGetSize", OsConstants.EBADF);
@@ -159,7 +159,7 @@ public final class StorageManagerCompat {
          * @param size   Size for read bytes.
          * @param data   Byte array to store read bytes.
          * @return Size of bytes returned by the function.
-         * @throws ErrnoException ErrnoException containing E constants in OsConstants.
+         * @throws ErrnoException Containing E constants in OsConstants.
          */
         public int onRead(long offset, int size, byte[] data) throws ErrnoException {
             throw new ErrnoException("onRead", OsConstants.EBADF);
@@ -174,7 +174,7 @@ public final class StorageManagerCompat {
          * @param size   Size for write bytes.
          * @param data   Byte array to be written to somewhere.
          * @return Size of bytes processed by the function.
-         * @throws ErrnoException ErrnoException containing E constants in OsConstants.
+         * @throws ErrnoException Containing E constants in OsConstants.
          */
         public int onWrite(long offset, int size, byte[] data) throws ErrnoException {
             throw new ErrnoException("onWrite", OsConstants.EBADF);
@@ -185,7 +185,7 @@ public final class StorageManagerCompat {
          * For example, if it has data stored in on memory cache, it needs to flush data to storage
          * device.
          *
-         * @throws ErrnoException ErrnoException containing E constants in OsConstants.
+         * @throws ErrnoException Containing E constants in OsConstants.
          */
         public void onFsync() throws ErrnoException {
             throw new ErrnoException("onFsync", OsConstants.EINVAL);

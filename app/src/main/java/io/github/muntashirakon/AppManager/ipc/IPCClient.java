@@ -29,10 +29,10 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 
 import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.adb.AdbShell;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.server.common.IRootIPC;
+import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
@@ -79,10 +79,13 @@ class IPCClient implements IBinder.DeathRecipient, Closeable {
         return mainJar;
     }
 
-    static void stopRootServer(ComponentName name) throws IOException {
+    static void stopRootServer(ComponentName name) throws IOException, RemoteException {
         String cmd = getRunnerScript(AppManager.getContext(), name, CMDLINE_STOP_SERVER, "");
-        if (AppPref.isRootEnabled()) Runner.runCommand(Runner.getRootInstance(), cmd);
-        else if (AppPref.isAdbEnabled()) AdbShell.run(cmd);
+        if (AppPref.isRootEnabled()) {
+            Runner.runCommand(Runner.getRootInstance(), cmd);
+        } else if (AppPref.isAdbEnabled()) {
+            LocalServer.getInstance().runCommand(cmd);
+        }
     }
 
     @NonNull
@@ -126,7 +129,7 @@ class IPCClient implements IBinder.DeathRecipient, Closeable {
                 return;
             }
         } else if (AppPref.isAdbEnabled()) {
-            if (!AdbShell.run(cmd).isSuccessful()) {
+            if (LocalServer.getInstance().runCommand(cmd).getStatusCode() != 0) {
                 Log.e(TAG, "Couldn't start service.");
                 return;
             }

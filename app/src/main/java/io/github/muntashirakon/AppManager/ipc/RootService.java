@@ -10,6 +10,9 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.Messenger;
+import android.os.RemoteException;
+
+import androidx.annotation.NonNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,7 +21,6 @@ import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 
-import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
@@ -162,7 +164,7 @@ public abstract class RootService extends ContextWrapper {
             // make sure all daemon is killed
             try {
                 IPCClient.stopRootServer(intent.getComponent());
-            } catch (IOException e) {
+            } catch (IOException | RemoteException e) {
                 Log.e(TAG, e);
             }
         });

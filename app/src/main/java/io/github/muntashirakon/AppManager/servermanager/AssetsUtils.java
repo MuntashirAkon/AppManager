@@ -20,7 +20,7 @@ import java.io.InputStreamReader;
 import java.security.SecureRandom;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
-import io.github.muntashirakon.AppManager.server.common.ConfigParam;
+import io.github.muntashirakon.AppManager.server.common.ConfigParams;
 import io.github.muntashirakon.AppManager.server.common.Constants;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -70,11 +70,13 @@ class AssetsUtils {
                 destFile.delete();
             }
             StringBuilder sb = new StringBuilder();
+            sb.append(',').append(ConfigParams.PARAM_APP).append(':').append(BuildConfig.APPLICATION_ID);
+
             if (config.allowBgRunning) {
-                sb.append(',').append(ConfigParam.PARAM_RUN_IN_BACKGROUND).append(':').append(1);
+                sb.append(',').append(ConfigParams.PARAM_RUN_IN_BACKGROUND).append(':').append(1);
             }
             if (BuildConfig.DEBUG) {
-                sb.append(',').append(ConfigParam.PARAM_DEBUG).append(':').append(1);
+                sb.append(',').append(ConfigParams.PARAM_DEBUG).append(':').append(1);
             }
 
             String classpath = ServerConfig.getClassPath();

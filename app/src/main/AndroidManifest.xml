@@ -634,6 +634,10 @@
         </service>
 
         <receiver
+            android:name=".servermanager.ServerStatusChangeReceiver"
+            android:exported="true"
+            tools:ignore="ExportedReceiver" />
+        <receiver
             android:name=".logcat.RecordingWidgetProvider"
             android:exported="true">
             <intent-filter>

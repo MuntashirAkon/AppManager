@@ -4,19 +4,19 @@ package io.github.muntashirakon.AppManager.server.common;
 
 import android.os.ParcelFileDescriptor;
 
+import androidx.annotation.NonNull;
+
 import java.io.FileDescriptor;
 import java.io.IOException;
-
-import androidx.annotation.NonNull;
 
 // Copyright 2017 Zheng Li
 @SuppressWarnings("rawtypes")
 public class ParamsFixer {
     @NonNull
     public static Caller wrap(@NonNull Caller caller) {
-        Object[] params = caller.getParams();
-        if (caller.getParamsType() != null && params != null) {
-            Class[] paramsType = caller.getParamsType();
+        Object[] params = caller.getParameters();
+        if (caller.getParameterTypes() != null && params != null) {
+            Class[] paramsType = caller.getParameterTypes();
             for (int i = 0; i < params.length; i++) {
                 params[i] = marshall(paramsType[i], params[i]);
             }
@@ -26,9 +26,9 @@ public class ParamsFixer {
 
     @NonNull
     public static Caller unwrap(@NonNull Caller caller) {
-        Object[] params = caller.getParams();
-        if (caller.getParamsType() != null && params != null) {
-            Class[] paramsType = caller.getParamsType();
+        Object[] params = caller.getParameters();
+        if (caller.getParameterTypes() != null && params != null) {
+            Class[] paramsType = caller.getParameterTypes();
             for (int i = 0; i < params.length; i++) {
                 params[i] = unmarshall(paramsType[i], params[i]);
             }

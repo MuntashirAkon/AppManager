@@ -2,52 +2,69 @@
 
 package io.github.muntashirakon.AppManager.server.common;
 
-import android.text.TextUtils;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import java.io.Closeable;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import java.util.Objects;
 
 /**
  * <code>DataTransmission</code> class handles the data sent and received by server or client.
  */
 // Copyright 2017 Zheng Li
-public final class DataTransmission {
+public final class DataTransmission implements Closeable {
     /**
      * Protocol version. Specification: <code>protocol-version,token</code>
      */
     public static final String PROTOCOL_VERSION = "1.2.4";
 
-    private final DataOutputStream outputStream;
-    private final DataInputStream inputStream;
-    private OnReceiveCallback callback;
+    public enum Role {
+        Server,
+        Client
+    }
 
-    private boolean running = true;
-    private boolean async = true;
+    @NonNull
+    private final DataOutputStream mOutputStream;
+    @NonNull
+    private final DataInputStream mInputStream;
+    private final boolean mAsync;
+
+    @Nullable
+    private OnReceiveCallback mOnReceiveCallback;
+    private boolean mRunning = true;
+
+    public DataTransmission(@NonNull OutputStream outputStream, @NonNull InputStream inputStream,
+                            @Nullable OnReceiveCallback onReceiveCallback, boolean async) {
+        mOutputStream = new DataOutputStream(outputStream);
+        mInputStream = new DataInputStream(inputStream);
+        mOnReceiveCallback = onReceiveCallback;
+        mAsync = async;
+    }
 
     /**
      * Create a new asynchronous data transfer object with receiver callback
-     * @param outputStream Stream where new messages will be written
-     * @param inputStream Stream where new messages will be read from
-     * @param callback The callback object whose method is called after receiving new messages
+     *
+     * @param outputStream      Stream where new messages will be written
+     * @param inputStream       Stream where new messages will be read from
+     * @param onReceiveCallback The callback object whose method is called after receiving new messages
      */
     public DataTransmission(@NonNull OutputStream outputStream, @NonNull InputStream inputStream,
-                            @Nullable OnReceiveCallback callback) {
-        this.outputStream = new DataOutputStream(outputStream);
-        this.inputStream = new DataInputStream(inputStream);
-        this.callback = callback;
+                            @Nullable OnReceiveCallback onReceiveCallback) {
+        this(outputStream, inputStream, onReceiveCallback, true);
     }
 
     /**
      * Create a new asynchronous data transfer object
+     *
      * @param outputStream Stream where new messages will be written
-     * @param inputStream Stream where new messages will be read from
+     * @param inputStream  Stream where new messages will be read from
      */
     public DataTransmission(@NonNull OutputStream outputStream, @NonNull InputStream inputStream) {
         this(outputStream, inputStream, true);
@@ -55,22 +72,22 @@ public final class DataTransmission {
 
     /**
      * Create a new data transfer object
+     *
      * @param outputStream Stream where new messages will be written
-     * @param inputStream Stream where new messages will be read from
-     * @param async Whether the transfer should be asynchronous or synchronous
+     * @param inputStream  Stream where new messages will be read from
+     * @param async        Whether the transfer should be asynchronous or synchronous
      */
     public DataTransmission(@NonNull OutputStream outputStream, @NonNull InputStream inputStream, boolean async) {
-        this(outputStream, inputStream, null);
-        this.async = async;
+        this(outputStream, inputStream, null, async);
     }
 
     /**
      * Set custom callback for receiving message.
      *
-     * @param callback Callback that wants to receive message.
+     * @param onReceiveCallback Callback that wants to receive message.
      */
-    public void setCallback(OnReceiveCallback callback) {
-        this.callback = callback;
+    public void setOnReceiveCallback(@Nullable OnReceiveCallback onReceiveCallback) {
+        mOnReceiveCallback = onReceiveCallback;
     }
 
     /**
@@ -81,25 +98,25 @@ public final class DataTransmission {
      * @see #sendMessage(byte[])
      * @see #sendAndReceiveMessage(byte[])
      */
-    public void sendMessage(String text) throws IOException {
+    public void sendMessage(@Nullable String text) throws IOException {
         if (text != null) {
             sendMessage(text.getBytes());
         }
     }
 
     /**
-     * Send message as as bytes
+     * Send message as bytes
      *
      * @param messageBytes Bytes to be sent
      * @throws IOException When it fails to send the message
      * @see #sendMessage(String)
      * @see #sendAndReceiveMessage(byte[])
      */
-    public void sendMessage(byte[] messageBytes) throws IOException {
+    public void sendMessage(@Nullable byte[] messageBytes) throws IOException {
         if (messageBytes != null) {
-            outputStream.writeInt(messageBytes.length);
-            outputStream.write(messageBytes);
-            outputStream.flush();
+            mOutputStream.writeInt(messageBytes.length);
+            mOutputStream.write(messageBytes);
+            mOutputStream.flush();
         }
     }
 
@@ -111,9 +128,9 @@ public final class DataTransmission {
      */
     @NonNull
     private byte[] readMessage() throws IOException {
-        int len = inputStream.readInt();
+        int len = mInputStream.readInt();
         byte[] bytes = new byte[len];
-        inputStream.readFully(bytes, 0, len);
+        mInputStream.readFully(bytes, 0, len);
         return bytes;
     }
 
@@ -138,36 +155,34 @@ public final class DataTransmission {
     /**
      * Handshake: verify tokens
      *
-     * @param token    Token supplied by server or client based
-     * @param isServer Whether the supplied token is from server (<code>true</code>) or client (<code>false</code>)
+     * @param token Token supplied by server or client based
+     * @param role  Whether the supplied token is from server or client
      * @throws IOException              When it fails to verify the token
      * @throws ProtocolVersionException When the {@link #PROTOCOL_VERSION} mismatch occurs
      */
-    public void shakeHands(String token, boolean isServer) throws IOException {
-        if (token == null) {
-            return;
-        }
-        if (isServer) {
+    public void shakeHands(@NonNull String token, Role role) throws IOException {
+        Objects.requireNonNull(token);
+        if (role == Role.Server) {
             FLog.log("DataTransmission#shakeHands: Token: " + token + ", Server protocol: " + PROTOCOL_VERSION);
             String auth = new String(readMessage());  // <protocol-version>,<token>
             FLog.log("Received authentication: " + auth);
             String[] split = auth.split(",");
             String clientToken = split[1];
             // Match tokens
-            if (TextUtils.equals(token, clientToken)) {
+            if (token.equals(clientToken)) {
                 // Connection is authorised
                 FLog.log("DataTransmission#shakeHands: Authentication successful.");
             } else {
                 FLog.log("DataTransmission#shakeHands: Authentication failed.");
-                throw new RuntimeException("Unauthorized client, token: " + token);
+                throw new IOException("Unauthorized client, token: " + token);
             }
             // Check protocol version
             String protocolVersion = split[0];
-            if (!TextUtils.equals(protocolVersion, PROTOCOL_VERSION)) {
+            if (!PROTOCOL_VERSION.equals(protocolVersion)) {
                 throw new ProtocolVersionException("Client protocol version: " + protocolVersion + ", " +
                         "Server protocol version: " + PROTOCOL_VERSION);
             }
-        } else {  // Client
+        } else if (role == Role.Client) {
             Log.e("DataTransmission", "shakeHands: Token: " + token + ", Client protocol: " + PROTOCOL_VERSION);
             sendMessage(PROTOCOL_VERSION + "," + token);
         }
@@ -176,39 +191,40 @@ public final class DataTransmission {
     /**
      * Handle for messages received. For asynchronous operations or when the socket is not active,
      * nothing is done. But when server is running {@link #onReceiveMessage(byte[])} is called.
+     *
      * @throws IOException When it fails to read the message received
      */
     public void handleReceive() throws IOException {
-        if (!async) return;
-        while (running) onReceiveMessage(readMessage());
+        if (!mAsync) return;
+        while (mRunning) {
+            onReceiveMessage(readMessage());
+        }
     }
 
     /**
      * Calls the callback function {@link OnReceiveCallback#onMessage(byte[])}.
+     *
      * @param bytes Bytes that was received earlier
      */
-    private void onReceiveMessage(byte[] bytes) {
-        if (callback != null) {
-            callback.onMessage(bytes);
+    private void onReceiveMessage(@NonNull byte[] bytes) {
+        if (mOnReceiveCallback != null) {
+            mOnReceiveCallback.onMessage(bytes);
         }
     }
 
     /**
      * Stop data transmission, called when socket connection is being closed
      */
-    public void stop() {
-        running = false;
+    @Override
+    public void close() {
+        mRunning = false;
         try {
-            if (outputStream != null) {
-                outputStream.close();
-            }
+            mOutputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
         try {
-            if (inputStream != null) {
-                inputStream.close();
-            }
+            mInputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -220,9 +236,10 @@ public final class DataTransmission {
     public interface OnReceiveCallback {
         /**
          * Implement this method to handle the received message
+         *
          * @param bytes The message that was received
          */
-        void onMessage(byte[] bytes);
+        void onMessage(@NonNull byte[] bytes);
     }
 
     /**

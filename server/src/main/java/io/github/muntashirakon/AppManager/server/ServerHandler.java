@@ -7,59 +7,61 @@ import android.os.HandlerThread;
 import android.os.Message;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.text.TextUtils;
-
-import java.io.IOException;
-import java.util.Map;
 
 import androidx.annotation.NonNull;
+
+import java.io.Closeable;
+import java.io.IOException;
+
 import io.github.muntashirakon.AppManager.server.common.BaseCaller;
 import io.github.muntashirakon.AppManager.server.common.CallerResult;
+import io.github.muntashirakon.AppManager.server.common.ConfigParams;
 import io.github.muntashirakon.AppManager.server.common.DataTransmission;
 import io.github.muntashirakon.AppManager.server.common.FLog;
 import io.github.muntashirakon.AppManager.server.common.ParcelableUtil;
 import io.github.muntashirakon.AppManager.server.common.Shell;
 import io.github.muntashirakon.AppManager.server.common.ShellCaller;
 
-import static io.github.muntashirakon.AppManager.server.common.ConfigParam.PARAM_PATH;
-import static io.github.muntashirakon.AppManager.server.common.ConfigParam.PARAM_RUN_IN_BACKGROUND;
-import static io.github.muntashirakon.AppManager.server.common.ConfigParam.PARAM_TOKEN;
-
 // Copyright 2017 Zheng Li
-class ServerHandler implements DataTransmission.OnReceiveCallback, AutoCloseable {
+class ServerHandler implements DataTransmission.OnReceiveCallback, Closeable {
     private static final int MSG_TIMEOUT = 1;
     private static final int DEFAULT_TIMEOUT = 1000 * 60; // 1 min
     private static final int BG_TIMEOUT = DEFAULT_TIMEOUT * 10; // 10 min
 
-    private final Server server;
-    private Handler handler;
-    private volatile boolean isDead = false;
-    private final boolean runInBackground;
+    private final LifecycleAgent mLifecycleAgent;
+    private final ConfigParams mConfigParams;
+    private final Server mServer;
+    private final boolean mRunInBackground;
 
-    ServerHandler(@NonNull Map<String, String> configParams) throws IOException {
+    private Handler mHandler;
+    private volatile boolean mIsDead = false;
+
+    ServerHandler(@NonNull LifecycleAgent lifecycleAgent) throws IOException {
+        mLifecycleAgent = lifecycleAgent;
+        mConfigParams = mLifecycleAgent.getConfigParams();
         // Set params
-        System.out.println("Config params: " + configParams);
-        String path = configParams.get(PARAM_PATH);
+        System.out.println("Config params: " + mConfigParams);
+        String path = mConfigParams.getPath();
         int port = -1;
         try {
             if (path != null) port = Integer.parseInt(path);
         } catch (Exception ignore) {
         }
-        String token = configParams.get(PARAM_TOKEN);
+        String token = mConfigParams.getToken();
         if (token == null) throw new IOException("Token is not found.");
-        runInBackground = TextUtils.equals(configParams.get(PARAM_RUN_IN_BACKGROUND), "1");
+        mRunInBackground = mConfigParams.isRunInBackground();
         // Set server
         if (port == -1) {
-            server = new Server(path, token, this);
+            mServer = new Server(path, token, mLifecycleAgent, this);
         } else {
-            server = new Server(port, token, this);
+            mServer = new Server(port, token, mLifecycleAgent, this);
         }
-        server.runInBackground = runInBackground;
-        // If run in background not requested, stop server on time out
-        if (!runInBackground) {
-            HandlerThread handlerThread = new HandlerThread("watcher-ups");
+        mServer.mRunInBackground = mRunInBackground;
+        // If run in background not requested, stop server on timeout
+        if (!mRunInBackground) {
+            HandlerThread handlerThread = new HandlerThread("am_server_watcher");
             handlerThread.start();
-            handler = new Handler(handlerThread.getLooper()) {
+            mHandler = new Handler(handlerThread.getLooper()) {
                 @Override
                 public void handleMessage(@NonNull Message message) {
                     super.handleMessage(message);
@@ -68,30 +70,30 @@ class ServerHandler implements DataTransmission.OnReceiveCallback, AutoCloseable
                     }
                 }
             };
-            handler.sendEmptyMessageDelayed(MSG_TIMEOUT, DEFAULT_TIMEOUT);
+            mHandler.sendEmptyMessageDelayed(MSG_TIMEOUT, DEFAULT_TIMEOUT);
         }
     }
 
     void start() throws IOException, RuntimeException {
-        server.run();
+        mServer.run();
     }
 
     @Override
     public void close() {
         FLog.log("ServerHandler: Destroying...");
         try {
-            if (!runInBackground && handler != null) {
-                handler.removeCallbacksAndMessages(null);
-                handler.removeMessages(MSG_TIMEOUT);
-                handler.getLooper().quit();
+            if (!mRunInBackground && mHandler != null) {
+                mHandler.removeCallbacksAndMessages(null);
+                mHandler.removeMessages(MSG_TIMEOUT);
+                mHandler.getLooper().quit();
             }
         } catch (Exception e) {
             e.printStackTrace();
             FLog.log(e);
         }
         try {
-            isDead = true;
-            server.setStop();
+            mIsDead = true;
+            mServer.close();
         } catch (Exception e) {
             e.printStackTrace();
             FLog.log(e);
@@ -100,24 +102,24 @@ class ServerHandler implements DataTransmission.OnReceiveCallback, AutoCloseable
 
     private void sendOpResult(Parcelable result) {
         try {
-            server.sendResult(ParcelableUtil.marshall(result));
+            mServer.sendResult(ParcelableUtil.marshall(result));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void onMessage(byte[] bytes) {
-        if (handler != null) {
-            handler.removeCallbacksAndMessages(null);
-            handler.removeMessages(MSG_TIMEOUT);
+    public void onMessage(@NonNull byte[] bytes) {
+        if (mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
+            mHandler.removeMessages(MSG_TIMEOUT);
         }
 
-        if (!isDead) {
-            if (!runInBackground && handler != null) {
-                handler.sendEmptyMessageDelayed(MSG_TIMEOUT, BG_TIMEOUT);
+        if (!mIsDead) {
+            if (!mRunInBackground && mHandler != null) {
+                mHandler.sendEmptyMessageDelayed(MSG_TIMEOUT, BG_TIMEOUT);
             }
-            LifecycleAgent.serverRunInfo.rxBytes += bytes.length;
+            LifecycleAgent.sServerInfo.rxBytes += bytes.length;
             CallerResult result = null;
             try {
                 BaseCaller baseCaller = ParcelableUtil.unmarshall(bytes, BaseCaller.CREATOR);
@@ -136,12 +138,12 @@ class ServerHandler implements DataTransmission.OnReceiveCallback, AutoCloseable
                         result.setReply(parcel.marshall());
                         parcel.recycle();
                 }
-                LifecycleAgent.serverRunInfo.successCount++;
+                LifecycleAgent.sServerInfo.successCount++;
             } catch (Throwable e) {
                 FLog.log(e);
                 result = new CallerResult();
                 result.setThrowable(e);
-                LifecycleAgent.serverRunInfo.errorCount++;
+                LifecycleAgent.sServerInfo.errorCount++;
             } finally {
                 if (result == null) {
                     result = new CallerResult();
