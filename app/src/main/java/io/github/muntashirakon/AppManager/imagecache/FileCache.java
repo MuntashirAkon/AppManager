@@ -20,17 +20,17 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 
 public class FileCache {
-    private static final long lastModifiedDate = System.currentTimeMillis() - 604_800_000;
+    private static final long sLastModifiedDate = System.currentTimeMillis() - 604_800_000;
 
-    private final File cacheDir;
+    private final File mCacheDir;
 
     public FileCache() {
         if (AppManager.getContext().getExternalCacheDir() != null) {
-            cacheDir = new File(AppManager.getContext().getExternalCacheDir(), "images");
+            mCacheDir = new File(AppManager.getContext().getExternalCacheDir(), "images");
         } else {
-            cacheDir = new File(AppManager.getContext().getCacheDir(), "images");
+            mCacheDir = new File(AppManager.getContext().getCacheDir(), "images");
         }
-        if (!cacheDir.exists()) cacheDir.mkdirs();
+        if (!mCacheDir.exists()) mCacheDir.mkdirs();
     }
 
     public void putImage(String name, InputStream inputStream) throws IOException {
@@ -52,7 +52,7 @@ public class FileCache {
     @NonNull
     public Drawable getImage(@NonNull String name) throws FileNotFoundException {
         File iconFile = getImageFile(name);
-        if (iconFile.exists() && iconFile.lastModified() >= lastModifiedDate) {
+        if (iconFile.exists() && iconFile.lastModified() >= sLastModifiedDate) {
             return Drawable.createFromStream(new FileInputStream(iconFile), name);
         } else {
             throw new FileNotFoundException("Icon for " + name + " doesn't exist.");
@@ -61,15 +61,15 @@ public class FileCache {
 
     @NonNull
     private File getImageFile(@NonNull String name) {
-        return new File(cacheDir, name + ".png");
+        return new File(mCacheDir, name + ".png");
     }
 
     public void clear() {
-        File[] files = cacheDir.listFiles();
+        File[] files = mCacheDir.listFiles();
         if (files == null) return;
         int count = 0;
         for (File f : files) {
-            if (f.lastModified() < lastModifiedDate) {
+            if (f.lastModified() < sLastModifiedDate) {
                 if (f.delete()) ++count;
             }
         }

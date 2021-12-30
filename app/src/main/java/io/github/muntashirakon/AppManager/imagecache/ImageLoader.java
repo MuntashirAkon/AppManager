@@ -4,11 +4,18 @@ package io.github.muntashirakon.AppManager.imagecache;
 
 import android.content.pm.PackageItemInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.view.View;
 import android.widget.ImageView;
 
+import androidx.annotation.AnyThread;
+import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.UiThread;
+import androidx.annotation.WorkerThread;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -22,47 +29,51 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 
 public class ImageLoader implements AutoCloseable {
-    private final MemoryCache memoryCache = new MemoryCache();
-    private final FileCache fileCache = new FileCache();
-    private final Map<ImageView, String> imageViews = Collections.synchronizedMap(new WeakHashMap<>());
-    private final ExecutorService executor;
-    private final boolean shutdownExecutor;
-    private boolean isClosed = false;
+    private final MemoryCache mMemoryCache = new MemoryCache();
+    private final FileCache mFileCache = new FileCache();
+    private final Map<ImageView, String> mImageViews = Collections.synchronizedMap(new WeakHashMap<>());
+    private final ExecutorService mExecutor;
+    private final boolean mShutdownExecutor;
+    private boolean mIsClosed = false;
 
     public ImageLoader() {
-        executor = Executors.newFixedThreadPool(5);
-        shutdownExecutor = true;
+        mExecutor = Executors.newFixedThreadPool(5);
+        mShutdownExecutor = true;
     }
 
     public ImageLoader(@NonNull ExecutorService executor) {
-        this.executor = executor;
-        shutdownExecutor = false;
+        this.mExecutor = executor;
+        mShutdownExecutor = false;
     }
 
+    @UiThread
     public void displayImage(@NonNull String name, @Nullable PackageItemInfo info, @NonNull ImageView imageView) {
-        imageViews.put(imageView, name);
-        Drawable image = memoryCache.get(name);
-        if (image != null) imageView.setImageDrawable(image);
-        else {
+        mImageViews.put(imageView, name);
+        Drawable image = mMemoryCache.get(name);
+        if (image != null) {
+            imageView.setImageDrawable(image);
+        } else {
             queueImage(name, info, imageView);
         }
     }
 
+    @AnyThread
     private void queueImage(@NonNull String name, @Nullable PackageItemInfo info, @NonNull ImageView imageView) {
         ImageLoaderQueueItem queueItem = new ImageLoaderQueueItem(name, info, imageView);
-        executor.submit(new LoadQueueItem(queueItem));
+        mExecutor.submit(new LoadQueueItem(queueItem));
     }
 
     @Override
     public void close() {
-        isClosed = true;
-        if (shutdownExecutor) {
-            executor.shutdownNow();
+        mIsClosed = true;
+        if (mShutdownExecutor) {
+            mExecutor.shutdownNow();
         }
-        memoryCache.clear();
-        fileCache.clear();
+        mMemoryCache.clear();
+        mFileCache.clear();
     }
 
+    @AnyThread
     private static class ImageLoaderQueueItem {
         public final String name;
         public final ImageView imageView;
@@ -77,54 +88,89 @@ public class ImageLoader implements AutoCloseable {
         }
     }
 
+    @WorkerThread
     private class LoadQueueItem implements Runnable {
-        ImageLoaderQueueItem queueItem;
+        private final ImageLoaderQueueItem mQueueItem;
 
         LoadQueueItem(ImageLoaderQueueItem queueItem) {
-            this.queueItem = queueItem;
+            this.mQueueItem = queueItem;
         }
 
         public void run() {
-            if (imageViewReusedOrClosed(queueItem)) return;
+            if (imageViewReusedOrClosed(mQueueItem)) return;
             Drawable image = null;
             try {
-                image = fileCache.getImage(queueItem.name);
+                image = mFileCache.getImage(mQueueItem.name);
             } catch (FileNotFoundException ignore) {
             }
             if (image == null) { // Cache miss
-                if (queueItem.info != null) {
-                    image = queueItem.info.loadIcon(queueItem.pm);
+                if (mQueueItem.info != null) {
+                    image = mQueueItem.info.loadIcon(mQueueItem.pm);
                     try {
-                        fileCache.putImage(queueItem.name, image);
+                        mFileCache.putImage(mQueueItem.name, image);
                     } catch (IOException ignore) {
                     }
-                } else image = queueItem.pm.getDefaultActivityIcon();
+                } else image = mQueueItem.pm.getDefaultActivityIcon();
             }
-            memoryCache.put(queueItem.name, image);
-            if (imageViewReusedOrClosed(queueItem)) return;
-            UiThreadHandler.run(new LoadImageInImageView(image, queueItem));
+            mMemoryCache.put(mQueueItem.name, image);
+            if (imageViewReusedOrClosed(mQueueItem)) return;
+            UiThreadHandler.run(new LoadImageInImageView(getScaledBitmap(mQueueItem.imageView, image, 1.0f), mQueueItem));
         }
     }
 
-    //Used to display bitmap in the UI thread
+    // Used to display bitmap in the UI thread
+    @UiThread
     private class LoadImageInImageView implements Runnable {
-        private final Drawable image;
-        private final ImageLoaderQueueItem queueItem;
+        private final Bitmap mImage;
+        private final ImageLoaderQueueItem mQueueItem;
 
-        public LoadImageInImageView(@NonNull Drawable image, ImageLoaderQueueItem queueItem) {
-            this.image = image;
-            this.queueItem = queueItem;
+        public LoadImageInImageView(@NonNull Bitmap image, ImageLoaderQueueItem queueItem) {
+            this.mImage = image;
+            this.mQueueItem = queueItem;
         }
 
         public void run() {
-            if (imageViewReusedOrClosed(queueItem)) return;
-            queueItem.imageView.setImageDrawable(image);
+            if (imageViewReusedOrClosed(mQueueItem)) return;
+            mQueueItem.imageView.setImageBitmap(mImage);
         }
     }
 
+    @AnyThread
     private boolean imageViewReusedOrClosed(@NonNull ImageLoaderQueueItem imageLoaderQueueItem) {
-        String tag = imageViews.get(imageLoaderQueueItem.imageView);
-        return isClosed || tag == null || !tag.equals(imageLoaderQueueItem.name);
+        String tag = mImageViews.get(imageLoaderQueueItem.imageView);
+        return mIsClosed || tag == null || !tag.equals(imageLoaderQueueItem.name);
     }
 
+    /**
+     * Get a scaled {@link Bitmap} from the given {@link Drawable} that fits the frame.
+     *
+     * @param frame         The frame to scale. The frame must be initialised beforehand.
+     * @param drawable      The drawable to resize
+     * @param scalingFactor A number between 0 and 1. E.g. 1.0 fits the frame and 0.1 only fits 10% of the frame.
+     */
+    @WorkerThread
+    public static Bitmap getScaledBitmap(@NonNull View frame, @NonNull Drawable drawable,
+                                         @FloatRange(from = 0.0, to = 1.0) float scalingFactor) {
+        int imgWidth = drawable.getIntrinsicWidth();
+        int imgHeight = drawable.getIntrinsicHeight();
+        int frameHeight = frame.getHeight();
+        int frameWidth = frame.getWidth();
+        double scale;
+        if (imgHeight <= 0 || imgWidth <= 0) {
+            scale = 1;
+        } else if (frameHeight == 0 && frameWidth == 0) {
+            // The view isn't initialised
+            scale = 1;
+        } else {
+            scale = Math.min(Math.min(frameHeight, frameWidth) * scalingFactor / (float) Math.max(imgHeight, imgWidth), 1);
+        }
+        int newWidth = (int) (imgWidth * scale);
+        int newHeight = (int) (imgHeight * scale);
+        drawable.setBounds(0, 0, newWidth, newHeight);
+        Bitmap bitmap = Bitmap.createBitmap(newWidth, newHeight, Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas();
+        c.setBitmap(bitmap);
+        drawable.draw(c);
+        return bitmap;
+    }
 }

@@ -10,19 +10,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MemoryCache {
-    private final Map<String, SoftReference<Drawable>> cache = Collections.synchronizedMap(new HashMap<>());
+    private final Map<String, SoftReference<Drawable>> mCache = Collections.synchronizedMap(new HashMap<>());
 
     public Drawable get(String id) {
-        SoftReference<Drawable> ref = cache.get(id);
+        SoftReference<Drawable> ref = mCache.get(id);
         if (ref == null) return null;
         return ref.get();
     }
 
     public void put(String id, Drawable image) {
-        cache.put(id, new SoftReference<>(image));
+        mCache.put(id, new SoftReference<>(image));
     }
 
     public void clear() {
-        cache.clear();
+        mCache.clear();
     }
 }
