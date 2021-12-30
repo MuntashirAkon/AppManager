@@ -2,7 +2,7 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
     <string name="_lang_tag" translatable="false">zh-CN</string>
     <string name="uninstall">卸载</string>
-    <string name="permissions">系统预定义权限</string>
+    <string name="permissions">权限</string>
     <string name="require_no_permission">无需权限</string>
     <string name="activities">活动</string>
     <string name="launch">打开</string>
@@ -26,7 +26,7 @@
     <string name="read">读取</string>
     <string name="write">写入</string>
     <string name="patterns_allowed">允许的模式</string>
-    <string name="declared_permission">权限</string>
+    <string name="declared_permission">自定义权限</string>
     <string name="shared_libs">共享程序库</string>
     <string name="group">群组</string>
     <string name="uses_feature">属性</string>
@@ -198,7 +198,7 @@
     <string name="storage_and_cache">存储和缓存</string>
     <string name="total_size">总计</string>
     <string name="app_size">应用程序</string>
-    <string name="app_ops">AppOps 权限</string>
+    <string name="app_ops">AppOps</string>
     <string name="no_app_ops">无 AppOps 权限</string>
     <string name="failed_to_enable_op">无法启用请求的 AppOps 权限</string>
     <string name="failed_to_disable_op">无法禁用请求的 AppOps</string>
@@ -671,7 +671,7 @@
     <string name="magisk_hide_enabled">MagiskHide</string>
     <string name="filter_apps_with_splits">带分包的应用程序</string>
     <string name="value">值</string>
-    <string name="interceptor">拦截器</string>
+    <string name="interceptor">意图拦截器</string>
     <string name="resend_intent">重新发送意图</string>
     <string name="share">分享</string>
     <string name="extras">附加</string>
