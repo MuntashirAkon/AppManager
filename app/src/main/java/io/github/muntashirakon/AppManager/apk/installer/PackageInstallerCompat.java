@@ -601,7 +601,7 @@ public final class PackageInstallerCompat {
             Intent callbackIntent = new Intent(PackageInstallerBroadcastReceiver.ACTION_PI_RECEIVER);
             @SuppressLint("WrongConstant")
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, callbackIntent,
-                    PendingIntentCompat.FLAG_IMMUTABLE);
+                    PendingIntentCompat.FLAG_MUTABLE);
             sender = pendingIntent.getIntentSender();
         }
         Log.d(TAG, "Commit: Committing...");

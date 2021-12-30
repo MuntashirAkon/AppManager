@@ -43,8 +43,8 @@ class PackageInstallerBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, @NonNull Intent intent) {
-        int status = intent.getIntExtra(PackageInstaller.EXTRA_STATUS, 0);
-        int sessionId = intent.getIntExtra(PackageInstaller.EXTRA_SESSION_ID, 0);
+        int status = intent.getIntExtra(PackageInstaller.EXTRA_STATUS, -1);
+        int sessionId = intent.getIntExtra(PackageInstaller.EXTRA_SESSION_ID, -1);
         Log.d(TAG, "Session ID: " + sessionId);
         switch (status) {
             case PackageInstaller.STATUS_PENDING_USER_ACTION:
