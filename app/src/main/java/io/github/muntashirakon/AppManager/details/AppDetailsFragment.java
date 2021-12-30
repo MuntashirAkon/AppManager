@@ -40,7 +40,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.appcompat.widget.PopupMenu;
-import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -75,6 +74,7 @@ import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsPermissionItem;
 import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.intercept.ActivityInterceptor;
+import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
@@ -98,7 +98,7 @@ import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpName
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOps;
 import static io.github.muntashirakon.AppManager.utils.Utils.openAsFolderInFM;
 
-public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTextListener,
+public class AppDetailsFragment extends Fragment implements AdvancedSearchView.OnQueryTextListener,
         SwipeRefreshLayout.OnRefreshListener {
     @IntDef(value = {
             NONE,
@@ -165,45 +165,38 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     private AppDetailsActivity mActivity;
     private AppDetailsRecyclerAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefresh;
-    private MenuItem blockingToggler;
+    private MenuItem mBlockingToggler;
     private LinearProgressIndicator mProgressIndicator;
     private TextView mAlertText;
-    private boolean isExternalApk;
+    private boolean mIsExternalApk;
     @Property
-    private int neededProperty;
-    AppDetailsFragmentViewModel model;
+    private int mNeededProperty;
     @Nullable
-    AppDetailsViewModel mainModel;
+    private AppDetailsViewModel mMainModel;
 
-    private final ExecutorService executor = Executors.newFixedThreadPool(3);
-    private final ImageLoader imageLoader = new ImageLoader(executor);
+    private final ExecutorService mExecutor = Executors.newFixedThreadPool(3);
+    private final ImageLoader mImageLoader = new ImageLoader(mExecutor);
 
     private int mColorRed;
-    // Load from saved instance if empty constructor is called.
-    private boolean isEmptyFragmentConstructCalled = false;
 
     public AppDetailsFragment() {
-        isEmptyFragmentConstructCalled = true;
     }
 
     public AppDetailsFragment(@Property int neededProperty) {
-        this.neededProperty = neededProperty;
+        this.mNeededProperty = neededProperty;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        model = new ViewModelProvider(this).get(AppDetailsFragmentViewModel.class);
         mActivity = (AppDetailsActivity) requireActivity();
-        if (isEmptyFragmentConstructCalled) {
-            neededProperty = model.getNeededProperty();
-        } else model.setNeededProperty(neededProperty);
-        mainModel = mActivity.model;
-        mPackageManager = mActivity.getPackageManager();
-        if (mActivity != null) {
-            mColorRed = ContextCompat.getColor(mActivity, R.color.red);
+        if (savedInstanceState != null) {
+            mNeededProperty = savedInstanceState.getInt("property");
         }
+        mMainModel = new ViewModelProvider(mActivity).get(AppDetailsViewModel.class);
+        mPackageManager = mActivity.getPackageManager();
+        mColorRed = ContextCompat.getColor(mActivity, R.color.red);
     }
 
     @Nullable
@@ -214,14 +207,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        if (model == null) model = new ViewModelProvider(this).get(AppDetailsFragmentViewModel.class);
-        if (mActivity == null) mActivity = (AppDetailsActivity) requireActivity();
-        if (isEmptyFragmentConstructCalled) {
-            neededProperty = model.getNeededProperty();
-        } else model.setNeededProperty(neededProperty);
-        if (mainModel == null) mainModel = mActivity.model;
-        if (mPackageManager == null) mPackageManager = mActivity.getPackageManager();
         // Swipe refresh
         mSwipeRefresh = view.findViewById(R.id.swipe_refresh);
         mSwipeRefresh.setColorSchemeColors(UIUtils.getAccentColor(mActivity));
@@ -232,7 +217,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         recyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         new FastScrollerBuilder(recyclerView).useMd2Style().build();
         final TextView emptyView = view.findViewById(android.R.id.empty);
-        emptyView.setText(getNotFoundString(neededProperty));
+        emptyView.setText(getNotFoundString(mNeededProperty));
         recyclerView.setEmptyView(emptyView);
         mAdapter = new AppDetailsRecyclerAdapter();
         recyclerView.setAdapter(mAdapter);
@@ -240,25 +225,25 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         mProgressIndicator.setVisibilityAfterHide(View.GONE);
         showProgressIndicator(true);
         mAlertText = view.findViewById(R.id.alert_text);
-        int helpStringRes = getHelpString(neededProperty);
+        int helpStringRes = getHelpString(mNeededProperty);
         if (helpStringRes != 0) mAlertText.setText(helpStringRes);
-        if (helpStringRes == 0 || neededProperty >= ACTIVITIES && neededProperty <= PROVIDERS) {
+        if (helpStringRes == 0 || mNeededProperty >= ACTIVITIES && mNeededProperty <= PROVIDERS) {
             mAlertText.setVisibility(View.GONE);
         } else {
             mAlertText.postDelayed(() -> mAlertText.setVisibility(View.GONE), 30_000);
         }
         mSwipeRefresh.setOnChildScrollUpCallback((parent, child) -> recyclerView.canScrollVertically(-1));
-        if (mainModel == null) return;
-        if (mPackageName == null) mPackageName = mainModel.getPackageName();
-        mainModel.get(neededProperty).observe(getViewLifecycleOwner(), appDetailsItems -> {
-            if (appDetailsItems != null && mAdapter != null && mainModel.isPackageExist()) {
-                mPackageName = mainModel.getPackageName();
-                isExternalApk = mainModel.getIsExternalApk();
+        if (mMainModel == null) return;
+        mPackageName = mMainModel.getPackageName();
+        mMainModel.get(mNeededProperty).observe(getViewLifecycleOwner(), appDetailsItems -> {
+            if (appDetailsItems != null && mAdapter != null && mMainModel.isPackageExist()) {
+                mPackageName = mMainModel.getPackageName();
+                mIsExternalApk = mMainModel.getIsExternalApk();
                 mAdapter.setDefaultList(appDetailsItems);
             } else showProgressIndicator(false);
         });
-        mainModel.getRuleApplicationStatus().observe(getViewLifecycleOwner(), status -> {
-            if (neededProperty >= ACTIVITIES && neededProperty <= PROVIDERS) {
+        mMainModel.getRuleApplicationStatus().observe(getViewLifecycleOwner(), status -> {
+            if (mNeededProperty >= ACTIVITIES && mNeededProperty <= PROVIDERS) {
                 mAlertText.setVisibility(status != AppDetailsViewModel.RULE_NOT_APPLIED ?
                         View.GONE : View.VISIBLE);
             }
@@ -266,9 +251,15 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     }
 
     @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putInt("property", mNeededProperty);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public void onDetach() {
-        imageLoader.close();
-        executor.shutdownNow();
+        mImageLoader.close();
+        mExecutor.shutdownNow();
         super.onDetach();
     }
 
@@ -280,26 +271,26 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        switch (neededProperty) {
+        switch (mNeededProperty) {
             case ACTIVITIES:
             case PROVIDERS:
             case RECEIVERS:
             case SERVICES:
-                if (mainModel != null && !mainModel.getIsExternalApk() && AppPref.isRootEnabled()) {
+                if (mMainModel != null && !mMainModel.getIsExternalApk() && AppPref.isRootEnabled()) {
                     inflater.inflate(R.menu.fragment_app_details_components_actions, menu);
-                    blockingToggler = menu.findItem(R.id.action_toggle_blocking);
-                    mainModel.getRuleApplicationStatus().observe(mActivity, status -> {
+                    mBlockingToggler = menu.findItem(R.id.action_toggle_blocking);
+                    mMainModel.getRuleApplicationStatus().observe(mActivity, status -> {
                         switch (status) {
                             case AppDetailsViewModel.RULE_APPLIED:
-                                blockingToggler.setVisible(!AppPref.isGlobalBlockingEnabled());
-                                blockingToggler.setTitle(R.string.menu_remove_rules);
+                                mBlockingToggler.setVisible(!AppPref.isGlobalBlockingEnabled());
+                                mBlockingToggler.setTitle(R.string.menu_remove_rules);
                                 break;
                             case AppDetailsViewModel.RULE_NOT_APPLIED:
-                                blockingToggler.setVisible(!AppPref.isGlobalBlockingEnabled());
-                                blockingToggler.setTitle(R.string.menu_apply_rules);
+                                mBlockingToggler.setVisible(!AppPref.isGlobalBlockingEnabled());
+                                mBlockingToggler.setTitle(R.string.menu_apply_rules);
                                 break;
                             case AppDetailsViewModel.RULE_NO_RULE:
-                                blockingToggler.setVisible(false);
+                                mBlockingToggler.setVisible(false);
                         }
                     });
                 } else inflater.inflate(R.menu.fragment_app_details_refresh_actions, menu);
@@ -308,7 +299,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 inflater.inflate(R.menu.fragment_app_details_app_ops_actions, menu);
                 break;
             case USES_PERMISSIONS:
-                if (mainModel != null && !mainModel.getIsExternalApk()) {
+                if (mMainModel != null && !mMainModel.getIsExternalApk()) {
                     inflater.inflate(R.menu.fragment_app_details_permissions_actions, menu);
                     break;
                 }
@@ -328,15 +319,15 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
 
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
-        if (mainModel == null || mainModel.getIsExternalApk()) {
+        if (mMainModel == null || mMainModel.getIsExternalApk()) {
             return;
         }
-        if (neededProperty == APP_INFO) super.onPrepareOptionsMenu(menu);
-        else if (neededProperty <= PROVIDERS) {
+        if (mNeededProperty == APP_INFO) super.onPrepareOptionsMenu(menu);
+        else if (mNeededProperty <= PROVIDERS) {
             if (AppPref.isRootEnabled())
-                menu.findItem(sSortMenuItemIdsMap[mainModel.getSortOrder(neededProperty)]).setChecked(true);
-        } else if (neededProperty <= USES_PERMISSIONS) {
-            menu.findItem(sSortMenuItemIdsMap[mainModel.getSortOrder(neededProperty)]).setChecked(true);
+                menu.findItem(sSortMenuItemIdsMap[mMainModel.getSortOrder(mNeededProperty)]).setChecked(true);
+        } else if (mNeededProperty <= USES_PERMISSIONS) {
+            menu.findItem(sSortMenuItemIdsMap[mMainModel.getSortOrder(mNeededProperty)]).setChecked(true);
         }
     }
 
@@ -346,8 +337,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         if (id == R.id.action_refresh_details) {
             refreshDetails();
         } else if (id == R.id.action_toggle_blocking) {  // Components
-            if (mainModel != null) {
-                executor.submit(() -> mainModel.applyRules());
+            if (mMainModel != null) {
+                mExecutor.submit(() -> mMainModel.applyRules());
             }
         } else if (id == R.id.action_block_unblock_trackers) {  // Components
             new MaterialAlertDialogBuilder(mActivity)
@@ -358,17 +349,17 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     .setNeutralButton(R.string.unblock, (dialog, which) -> blockUnblockTrackers(false))
                     .show();
         } else if (id == R.id.action_reset_to_default) {  // App ops
-            executor.submit(() -> {
-                if (mainModel == null || !mainModel.resetAppOps()) {
+            mExecutor.submit(() -> {
+                if (mMainModel == null || !mMainModel.resetAppOps()) {
                     runOnUiThread(() -> UIUtils.displayShortToast(R.string.failed_to_reset_app_ops));
                 } else runOnUiThread(() -> showProgressIndicator(true));
             });
         } else if (id == R.id.action_deny_dangerous_app_ops) {  // App ops
             showProgressIndicator(true);
-            executor.submit(() -> {
+            mExecutor.submit(() -> {
                 boolean isSuccessful = true;
                 try {
-                    if (mainModel == null || !mainModel.ignoreDangerousAppOps()) {
+                    if (mMainModel == null || !mMainModel.ignoreDangerousAppOps()) {
                         isSuccessful = false;
                     }
                 } catch (RuntimeException e) {
@@ -410,8 +401,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         } catch (IllegalArgumentException e) {
                             return;
                         }
-                        executor.submit(() -> {
-                            if (mainModel != null && mainModel.setAppOp(op, mode)) {
+                        mExecutor.submit(() -> {
+                            if (mMainModel != null && mMainModel.setAppOp(op, mode)) {
                                 runOnUiThread(this::refreshDetails);
                             } else {
                                 runOnUiThread(() -> Toast.makeText(mActivity,
@@ -423,8 +414,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     .show();
         } else if (id == R.id.action_deny_dangerous_permissions) {  // permissions
             showProgressIndicator(true);
-            executor.submit(() -> {
-                if (mainModel == null || !mainModel.revokeDangerousPermissions()) {
+            mExecutor.submit(() -> {
+                if (mMainModel == null || !mMainModel.revokeDangerousPermissions()) {
                     runOnUiThread(() -> Toast.makeText(mActivity, R.string.failed_to_deny_dangerous_perms, Toast.LENGTH_SHORT).show());
                 }
                 runOnUiThread(this::refreshDetails);
@@ -460,9 +451,12 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         super.onResume();
         mSwipeRefresh.setEnabled(true);
         if (mActivity.searchView != null) {
-            if (neededProperty > APP_INFO && neededProperty <= PERMISSIONS) {
+            if (mNeededProperty > APP_INFO && mNeededProperty <= PERMISSIONS) {
                 mActivity.searchView.setVisibility(View.VISIBLE);
                 mActivity.searchView.setOnQueryTextListener(this);
+                if (mMainModel != null) {
+                    mMainModel.filterAndSortItems(mNeededProperty);
+                }
             } else mActivity.searchView.setVisibility(View.GONE);
         }
     }
@@ -481,23 +475,22 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     }
 
     @Override
-    public boolean onQueryTextChange(String searchQuery) {
-        if (mainModel != null) {
-            mainModel.setSearchQuery(searchQuery.toLowerCase(Locale.ROOT));
-            mainModel.load(neededProperty);
+    public boolean onQueryTextChange(String searchQuery, int type) {
+        if (mMainModel != null) {
+            mMainModel.setSearchQuery(searchQuery, type, mNeededProperty);
         }
         return true;
     }
 
     @Override
-    public boolean onQueryTextSubmit(String query) {
+    public boolean onQueryTextSubmit(String query, int type) {
         return false;
     }
 
     public void blockUnblockTrackers(boolean block) {
-        if (mainModel == null) return;
+        if (mMainModel == null) return;
         List<UserPackagePair> userPackagePairs = Collections.singletonList(new UserPackagePair(mPackageName, UserHandleHidden.myUserId()));
-        executor.submit(() -> {
+        mExecutor.submit(() -> {
             List<UserPackagePair> failedPkgList = block ? ComponentUtils.blockTrackingComponents(userPackagePairs)
                     : ComponentUtils.unblockTrackingComponents(userPackagePairs);
             if (failedPkgList.size() > 0) {
@@ -510,7 +503,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     refreshDetails();
                 });
             }
-            mainModel.setRuleApplicationStatus();
+            mMainModel.setRuleApplicationStatus();
         });
     }
 
@@ -520,25 +513,24 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
 
     private void setSortBy(@SortOrder int sortBy) {
         showProgressIndicator(true);
-        if (mainModel == null) return;
-        mainModel.setSortOrder(sortBy, neededProperty);
-        mainModel.load(neededProperty);
+        if (mMainModel == null) return;
+        mMainModel.setSortOrder(sortBy, mNeededProperty);
     }
 
     synchronized private void applyRules(String componentName,
                                          RuleType type,
                                          @ComponentRule.ComponentStatus String componentStatus) {
-        if (mainModel != null) {
-            executor.submit(() -> mainModel.updateRulesForComponent(componentName, type, componentStatus));
+        if (mMainModel != null) {
+            mExecutor.submit(() -> mMainModel.updateRulesForComponent(componentName, type, componentStatus));
         }
     }
 
     private void refreshDetails() {
-        if (mainModel == null || isExternalApk) return;
+        if (mMainModel == null || mIsExternalApk) return;
         showProgressIndicator(true);
-        executor.submit(() -> {
-            if (mainModel != null) {
-                mainModel.setIsPackageChanged();
+        mExecutor.submit(() -> {
+            if (mMainModel != null) {
+                mMainModel.setIsPackageChanged();
             }
         });
     }
@@ -555,7 +547,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             case PROVIDERS:
                 return R.string.no_providers;
             case APP_OPS:
-                if (isExternalApk) {
+                if (mIsExternalApk) {
                     return R.string.external_apk_no_app_op;
                 } else if (AppPref.isRootOrAdbEnabled() || PermissionUtils.hasAppOpsPermission(mActivity)) {
                     return R.string.no_app_ops;
@@ -650,13 +642,13 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         @NonNull
         private List<AppDetailsItem> mAdapterList;
         @Property
-        private int requestedProperty;
+        private int mRequestedProperty;
         @Nullable
         private String mConstraint;
-        private Boolean isRootEnabled = true;
-        private Boolean isADBEnabled = true;
+        private Boolean mIsRootEnabled = true;
+        private Boolean mIsADBEnabled = true;
         @NonNull
-        private final List<ActivityManager.RunningServiceInfo> runningServices = new ArrayList<>();
+        private final List<ActivityManager.RunningServiceInfo> mRunningServices = new ArrayList<>();
 
         AppDetailsRecyclerAdapter() {
             mAdapterList = new ArrayList<>();
@@ -664,28 +656,28 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
 
         @UiThread
         void setDefaultList(@NonNull List<AppDetailsItem> list) {
-            isRootEnabled = AppPref.isRootEnabled();
-            isADBEnabled = AppPref.isAdbEnabled();
-            requestedProperty = neededProperty;
-            mConstraint = mainModel == null ? null : mainModel.getSearchQuery();
+            mIsRootEnabled = AppPref.isRootEnabled();
+            mIsADBEnabled = AppPref.isAdbEnabled();
+            mRequestedProperty = mNeededProperty;
+            mConstraint = mMainModel == null ? null : mMainModel.getSearchQuery();
             mAdapterList = list;
             showProgressIndicator(false);
             notifyDataSetChanged();
-            executor.submit(() -> {
-                if (requestedProperty == SERVICES && (isRootEnabled || isADBEnabled) && !isExternalApk) {
-                    runningServices.clear();
-                    runningServices.addAll(ActivityManagerCompat.getRunningServices(mPackageName, mainModel.getUserHandle()));
+            mExecutor.submit(() -> {
+                if (mRequestedProperty == SERVICES && (mIsRootEnabled || mIsADBEnabled) && !mIsExternalApk) {
+                    mRunningServices.clear();
+                    mRunningServices.addAll(ActivityManagerCompat.getRunningServices(mPackageName, mMainModel.getUserHandle()));
                 }
             });
         }
 
         void set(int currentIndex, AppDetailsItem appDetailsItem) {
-            if (mainModel == null) return;
+            if (mMainModel == null) return;
             mAdapterList.set(currentIndex, appDetailsItem);
             notifyItemChanged(currentIndex);
             // Update the value in the app ops list in view model
-            if (neededProperty == APP_OPS) {
-                executor.submit(() -> mainModel.setAppOp(appDetailsItem));
+            if (mNeededProperty == APP_OPS) {
+                mExecutor.submit(() -> mMainModel.setAppOp(appDetailsItem));
             }
         }
 
@@ -711,7 +703,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
 
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
-                switch (requestedProperty) {
+                switch (mRequestedProperty) {
                     case ACTIVITIES:
                         imageView = itemView.findViewById(R.id.icon);
                         textView2 = itemView.findViewById(R.id.name);
@@ -829,7 +821,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             @SuppressLint("InflateParams") final View view;
-            switch (requestedProperty) {
+            switch (mRequestedProperty) {
                 case ACTIVITIES:
                 case SERVICES:
                 case RECEIVERS:
@@ -864,7 +856,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            switch (requestedProperty) {
+            switch (mRequestedProperty) {
                 case SERVICES:
                     getServicesView(holder, position);
                     break;
@@ -961,9 +953,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             final AppDetailsComponentItem appDetailsItem = (AppDetailsComponentItem) mAdapterList.get(index);
             final ActivityInfo activityInfo = (ActivityInfo) appDetailsItem.vanillaItem;
             final String activityName = appDetailsItem.name;
-            final boolean isDisabled = !isExternalApk && isComponentDisabled(mPackageManager, activityInfo);
+            final boolean isDisabled = !mIsExternalApk && isComponentDisabled(mPackageManager, activityInfo);
             // Background color: regular < tracker < disabled < blocked
-            if (!isExternalApk && appDetailsItem.isBlocked()) {
+            if (!mIsExternalApk && appDetailsItem.isBlocked()) {
                 view.setBackgroundResource(R.drawable.item_red);
             } else if (isDisabled) {
                 view.setBackgroundResource(R.drawable.item_disabled);
@@ -981,7 +973,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         activityName.replaceFirst(mPackageName, "") : activityName);
             }
             // Icon
-            imageLoader.displayImage(mPackageName + "_" + activityInfo.name, activityInfo, holder.imageView);
+            mImageLoader.displayImage(mPackageName + "_" + activityInfo.name, activityInfo, holder.imageView);
             // TaskAffinity
             holder.textView3.setText(String.format(Locale.ROOT, "%s: %s",
                     getString(R.string.task_affinity), activityInfo.taskAffinity));
@@ -1015,7 +1007,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             // 1) Not from an external APK
             // 2) Root enabled or the activity is exportable
             // 3) App or the activity is not disabled and/or blocked
-            boolean canLaunch = !isExternalApk && (isRootEnabled || isExported)
+            boolean canLaunch = !mIsExternalApk && (mIsRootEnabled || isExported)
                     && !isDisabled
                     && !appDetailsItem.isBlocked();
             launch.setEnabled(canLaunch);
@@ -1025,20 +1017,20 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     intent.setClassName(mPackageName, activityName);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     try {
-                        ActivityManagerCompat.startActivity(mActivity, intent, mainModel.getUserHandle());
+                        ActivityManagerCompat.startActivity(mActivity, intent, mMainModel.getUserHandle());
                     } catch (Throwable e) {
                         UIUtils.displayLongToast(e.getLocalizedMessage());
                     }
                 });
                 if (FeatureController.isInterceptorEnabled()) {
-                    boolean needRoot = isRootEnabled && (!isExported || (activityInfo.permission != null
+                    boolean needRoot = mIsRootEnabled && (!isExported || (activityInfo.permission != null
                             && ContextCompat.checkSelfPermission(mActivity, activityInfo.permission)
                             != PackageManager.PERMISSION_GRANTED));
                     launch.setOnLongClickListener(v -> {
                         Intent intent = new Intent(mActivity, ActivityInterceptor.class);
                         intent.putExtra(ActivityInterceptor.EXTRA_PACKAGE_NAME, mPackageName);
                         intent.putExtra(ActivityInterceptor.EXTRA_CLASS_NAME, activityName);
-                        intent.putExtra(ActivityInterceptor.EXTRA_USER_HANDLE, mainModel.getUserHandle());
+                        intent.putExtra(ActivityInterceptor.EXTRA_USER_HANDLE, mMainModel.getUserHandle());
                         intent.putExtra(ActivityInterceptor.EXTRA_ROOT, needRoot);
                         startActivity(intent);
                         return true;
@@ -1062,7 +1054,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 holder.editBtn.setVisibility(View.GONE);
             }
             // Blocking
-            if (isRootEnabled && !isExternalApk) {
+            if (mIsRootEnabled && !mIsExternalApk) {
                 handleBlock(holder, appDetailsItem, RuleType.ACTIVITY);
             } else holder.blockBtn.setVisibility(View.GONE);
         }
@@ -1071,9 +1063,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             View view = holder.itemView;
             final AppDetailsComponentItem appDetailsItem = (AppDetailsComponentItem) mAdapterList.get(index);
             final ServiceInfo serviceInfo = (ServiceInfo) appDetailsItem.vanillaItem;
-            final boolean isDisabled = !isExternalApk && isComponentDisabled(mPackageManager, serviceInfo);
+            final boolean isDisabled = !mIsExternalApk && isComponentDisabled(mPackageManager, serviceInfo);
             boolean isRunning = false;
-            for (ActivityManager.RunningServiceInfo info : runningServices) {
+            for (ActivityManager.RunningServiceInfo info : mRunningServices) {
                 if (info.service.getClassName().equals(serviceInfo.name)) {
                     isRunning = true;
                 }
@@ -1081,7 +1073,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             // Background color: regular < tracker < disabled < blocked < running
             if (isRunning) {
                 view.setBackgroundResource(R.drawable.item_running);
-            } else if (!isExternalApk && appDetailsItem.isBlocked()) {
+            } else if (!mIsExternalApk && appDetailsItem.isBlocked()) {
                 view.setBackgroundResource(R.drawable.item_red);
             } else if (isDisabled) {
                 view.setBackgroundResource(R.drawable.item_disabled);
@@ -1101,7 +1093,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         serviceInfo.name.replaceFirst(mPackageName, "") : serviceInfo.name);
             }
             // Icon
-            imageLoader.displayImage(mPackageName + "_" + serviceInfo.name, serviceInfo, holder.imageView);
+            mImageLoader.displayImage(mPackageName + "_" + serviceInfo.name, serviceInfo, holder.imageView);
             // Flags and Permission
             holder.textView3.setText(String.format(Locale.ROOT, "%s\n%s",
                     Utils.getServiceFlagsString(serviceInfo.flags),
@@ -1117,8 +1109,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             // 1) Not from an external APK
             // 2) Root enabled or the service is exportable without any permission
             // 3) App or the service is not disabled and/or blocked
-            boolean canLaunch = !isExternalApk
-                    && (isRootEnabled || (serviceInfo.exported && serviceInfo.permission == null))
+            boolean canLaunch = !mIsExternalApk
+                    && (mIsRootEnabled || (serviceInfo.exported && serviceInfo.permission == null))
                     && !isDisabled
                     && !appDetailsItem.isBlocked();
             holder.launchBtn.setEnabled(canLaunch);
@@ -1127,7 +1119,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     Intent intent = new Intent();
                     intent.setClassName(mPackageName, serviceInfo.name);
                     try {
-                        ActivityManagerCompat.startService(mActivity, intent, mainModel.getUserHandle(), true);
+                        ActivityManagerCompat.startService(mActivity, intent, mMainModel.getUserHandle(), true);
                     } catch (RemoteException e) {
                         e.printStackTrace();
                         Toast.makeText(mActivity, e.toString(), Toast.LENGTH_LONG).show();
@@ -1135,7 +1127,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 });
             }
             // Blocking
-            if (isRootEnabled && !isExternalApk) {
+            if (mIsRootEnabled && !mIsExternalApk) {
                 handleBlock(holder, appDetailsItem, RuleType.SERVICE);
             } else holder.blockBtn.setVisibility(View.GONE);
         }
@@ -1145,8 +1137,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             final AppDetailsComponentItem appDetailsItem = (AppDetailsComponentItem) mAdapterList.get(index);
             final ActivityInfo activityInfo = (ActivityInfo) appDetailsItem.vanillaItem;
             // Background color: regular < tracker < disabled < blocked
-            if (!isExternalApk && appDetailsItem.isBlocked()) view.setBackgroundResource(R.drawable.item_red);
-            else if (!isExternalApk && isComponentDisabled(mPackageManager, activityInfo)) {
+            if (!mIsExternalApk && appDetailsItem.isBlocked()) view.setBackgroundResource(R.drawable.item_red);
+            else if (!mIsExternalApk && isComponentDisabled(mPackageManager, activityInfo)) {
                 view.setBackgroundResource(R.drawable.item_disabled);
             } else if (appDetailsItem.isTracker()) {
                 view.setBackgroundResource(R.drawable.item_tracker);
@@ -1165,7 +1157,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         : activityInfo.name);
             }
             // Icon
-            imageLoader.displayImage(mPackageName + "_" + activityInfo.name, activityInfo, holder.imageView);
+            mImageLoader.displayImage(mPackageName + "_" + activityInfo.name, activityInfo, holder.imageView);
             // TaskAffinity
             holder.textView3.setText(String.format(Locale.ROOT, "%s: %s",
                     getString(R.string.task_affinity), activityInfo.taskAffinity));
@@ -1186,7 +1178,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         getString(R.string.process_name), processName));
             } else holder.textView7.setVisibility(View.GONE);
             // Blocking
-            if (isRootEnabled && !isExternalApk) {
+            if (mIsRootEnabled && !mIsExternalApk) {
                 handleBlock(holder, appDetailsItem, RuleType.RECEIVER);
             } else holder.blockBtn.setVisibility(View.GONE);
         }
@@ -1197,8 +1189,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             final ProviderInfo providerInfo = (ProviderInfo) appDetailsItem.vanillaItem;
             final String providerName = providerInfo.name;
             // Background color: regular < tracker < disabled < blocked
-            if (!isExternalApk && appDetailsItem.isBlocked()) view.setBackgroundResource(R.drawable.item_red);
-            else if (!isExternalApk && isComponentDisabled(mPackageManager, providerInfo))
+            if (!mIsExternalApk && appDetailsItem.isBlocked()) view.setBackgroundResource(R.drawable.item_red);
+            else if (!mIsExternalApk && isComponentDisabled(mPackageManager, providerInfo))
                 view.setBackgroundResource(R.drawable.item_disabled);
             else if (appDetailsItem.isTracker()) {
                 view.setBackgroundResource(R.drawable.item_tracker);
@@ -1208,7 +1200,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             // Label
             holder.textView1.setText(Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(providerName)));
             // Icon
-            imageLoader.displayImage(mPackageName + "_" + providerName, providerInfo, holder.imageView);
+            mImageLoader.displayImage(mPackageName + "_" + providerName, providerInfo, holder.imageView);
             // Uri permission
             holder.textView3.setText(String.format(Locale.ROOT, "%s: %s", getString(R.string.grant_uri_permission), providerInfo.grantUriPermissions));
             // Path permissions
@@ -1260,7 +1252,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         getString(R.string.process_name), processName));
             } else holder.textView7.setVisibility(View.GONE);
             // Blocking
-            if (isRootEnabled && !isExternalApk) {
+            if (mIsRootEnabled && !mIsExternalApk) {
                 handleBlock(holder, appDetailsItem, RuleType.PROVIDER);
             } else holder.blockBtn.setVisibility(View.GONE);
         }
@@ -1357,7 +1349,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             } else {
                 view.setBackgroundResource(index % 2 == 0 ? R.drawable.item_semi_transparent : R.drawable.item_transparent);
             }
-            if (!isRootEnabled && !isADBEnabled) {
+            if (!mIsRootEnabled && !mIsADBEnabled) {
                 // No root or ADB, hide toggle buttons
                 holder.toggleSwitch.setVisibility(View.GONE);
                 return;
@@ -1371,9 +1363,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             }
             holder.itemView.setOnClickListener(v -> {
                 boolean isChecked = !holder.toggleSwitch.isChecked();
-                executor.submit(() -> {
+                mExecutor.submit(() -> {
                     int opMode = isChecked ? AppOpsManager.MODE_ALLOWED : AppOpsManager.MODE_IGNORED;
-                    if (mainModel != null && mainModel.setAppOp(opEntry.getOp(), opMode)) {
+                    if (mMainModel != null && mMainModel.setAppOp(opEntry.getOp(), opMode)) {
                         OpEntry opEntry1 = new OpEntry(opEntry.getOp(), opMode, opEntry.getTime(),
                                 opEntry.getRejectTime(), opEntry.getDuration(),
                                 opEntry.getProxyUid(), opEntry.getProxyPackageName());
@@ -1394,8 +1386,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         .setTitle(R.string.set_app_op_mode)
                         .setSingleChoiceItems(getAppOpModeNames(modes), modes.indexOf(opEntry.getMode()), (dialog, which) -> {
                             int opMode = modes.get(which);
-                            executor.submit(() -> {
-                                if (mainModel.setAppOp(opEntry.getOp(), opMode)) {
+                            mExecutor.submit(() -> {
+                                if (mMainModel.setAppOp(opEntry.getOp(), opMode)) {
                                     OpEntry opEntry1 = new OpEntry(opEntry.getOp(), opMode, opEntry.getTime(),
                                             opEntry.getRejectTime(), opEntry.getDuration(),
                                             opEntry.getProxyUid(), opEntry.getProxyPackageName());
@@ -1459,18 +1451,18 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         mActivity.getString(R.string.group), permissionInfo.group));
             } else holder.textView5.setVisibility(View.GONE);
             // Permission Switch
-            int sdkVersion = mainModel != null && mainModel.getPackageInfo() != null ?
-                    mainModel.getPackageInfo().applicationInfo.targetSdkVersion : 23;
-            if ((isRootEnabled || isADBEnabled) && !isExternalApk && ((permissionItem.isDangerous
+            int sdkVersion = mMainModel != null && mMainModel.getPackageInfo() != null ?
+                    mMainModel.getPackageInfo().applicationInfo.targetSdkVersion : 23;
+            if ((mIsRootEnabled || mIsADBEnabled) && !mIsExternalApk && ((permissionItem.isDangerous
                     && sdkVersion >= Build.VERSION_CODES.M) || protectionLevel.contains("development")
                     || permissionItem.appOp != AppOpsManager.OP_NONE)) {
                 holder.toggleSwitch.setVisibility(View.VISIBLE);
                 holder.toggleSwitch.setChecked(permissionItem.isGranted);
-                holder.itemView.setOnClickListener(v -> executor.submit(() -> {
+                holder.itemView.setOnClickListener(v -> mExecutor.submit(() -> {
                     boolean isGranted = !permissionItem.isGranted;
-                    if (mainModel.togglePermission(permissionItem)) {
+                    if (mMainModel.togglePermission(permissionItem)) {
                         runOnUiThread(() -> set(index, permissionItem));
-                        mainModel.setUsesPermission(permissionItem);
+                        mMainModel.setUsesPermission(permissionItem);
                     } else {
                         runOnUiThread(() -> {
                             UIUtils.displayShortToast(isGranted ? R.string.failed_to_grant_permission
@@ -1524,7 +1516,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         permissionInfo.name.replaceFirst(mPackageName, "") : permissionInfo.name);
             }
             // Icon
-            imageLoader.displayImage(mPackageName + "_" + permissionInfo.name, permissionInfo, holder.imageView);
+            mImageLoader.displayImage(mPackageName + "_" + permissionInfo.name, permissionInfo, holder.imageView);
             // Description
             holder.textView3.setText(permissionInfo.loadDescription(mPackageManager));
             // LaunchMode
@@ -1611,7 +1603,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             final SpannableStringBuilder builder = new SpannableStringBuilder();
             if (index == 0) {
                 // Display verifier info
-                builder.append(PackageUtils.getApkVerifierInfo(mainModel.getApkVerifierResult(), mActivity));
+                builder.append(PackageUtils.getApkVerifierInfo(mMainModel.getApkVerifierResult(), mActivity));
             }
             if (!TextUtils.isEmpty(item.name)) {
                 builder.append(UIUtils.getTitleText(mActivity, item.name)).append("\n");

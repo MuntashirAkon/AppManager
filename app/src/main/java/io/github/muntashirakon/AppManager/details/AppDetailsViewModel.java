@@ -63,6 +63,8 @@ import io.github.muntashirakon.AppManager.details.struct.AppDetailsComponentItem
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsPermissionItem;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
+import io.github.muntashirakon.AppManager.misc.AdvancedSearchView.ChoiceGenerator;
 import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
@@ -87,81 +89,83 @@ public class AppDetailsViewModel extends AndroidViewModel {
     public static final String TAG = AppDetailsViewModel.class.getSimpleName();
 
     private final PackageManager mPackageManager;
-    private PackageInfo packageInfo;
-    private PackageInfo installedPackageInfo;
-    private String packageName;
-    private final Object blockerLocker = new Object();
+    private PackageInfo mPackageInfo;
+    private PackageInfo mInstalledPackageInfo;
+    private String mPackageName;
+    private final Object mBlockerLocker = new Object();
     @GuardedBy("blockerLocker")
-    private ComponentsBlocker blocker;
-    private PackageIntentReceiver receiver;
-    private String apkPath;
-    private ApkFile apkFile;
-    private int apkFileKey;
-    private int userHandle;
-    private final ExecutorService executor = Executors.newFixedThreadPool(4);
+    private ComponentsBlocker mBlocker;
+    private PackageIntentReceiver mReceiver;
+    private String mApkPath;
+    private ApkFile mApkFile;
+    private int mApkFileKey;
+    private int mUserHandle;
+    private final ExecutorService mExecutor = Executors.newFixedThreadPool(4);
 
     @AppDetailsFragment.SortOrder
-    private int sortOrderComponents = (int) AppPref.get(AppPref.PrefKey.PREF_COMPONENTS_SORT_ORDER_INT);
+    private int mSortOrderComponents = (int) AppPref.get(AppPref.PrefKey.PREF_COMPONENTS_SORT_ORDER_INT);
     @AppDetailsFragment.SortOrder
-    private int sortOrderAppOps = (int) AppPref.get(AppPref.PrefKey.PREF_APP_OP_SORT_ORDER_INT);
+    private int mSortOrderAppOps = (int) AppPref.get(AppPref.PrefKey.PREF_APP_OP_SORT_ORDER_INT);
     @AppDetailsFragment.SortOrder
-    private int sortOrderPermissions = (int) AppPref.get(AppPref.PrefKey.PREF_PERMISSIONS_SORT_ORDER_INT);
+    private int mSortOrderPermissions = (int) AppPref.get(AppPref.PrefKey.PREF_PERMISSIONS_SORT_ORDER_INT);
 
-    private String searchQuery;
-    private boolean waitForBlocker;
-    private boolean isExternalApk = false;
-    private final CountDownLatch packageInfoWatcher = new CountDownLatch(1);
+    private String mSearchQuery;
+    @AdvancedSearchView.SearchType
+    private int mSearchType;
+    private boolean mWaitForBlocker;
+    private boolean mIsExternalApk = false;
+    private final CountDownLatch mPackageInfoWatcher = new CountDownLatch(1);
 
     public AppDetailsViewModel(@NonNull Application application) {
         super(application);
         Log.d("ADVM", "New constructor called.");
         mPackageManager = application.getPackageManager();
-        receiver = new PackageIntentReceiver(this);
-        waitForBlocker = true;
+        mReceiver = new PackageIntentReceiver(this);
+        mWaitForBlocker = true;
     }
 
     @GuardedBy("blockerLocker")
     @Override
     public void onCleared() {
-        Log.d("ADVM", "On Clear called for " + packageName);
+        Log.d("ADVM", "On Clear called for " + mPackageName);
         super.onCleared();
-        executor.submit(() -> {
-            synchronized (blockerLocker) {
-                if (blocker != null) {
+        mExecutor.submit(() -> {
+            synchronized (mBlockerLocker) {
+                if (mBlocker != null) {
                     // To prevent commit if a mutable instance was created in the middle,
                     // set the instance read only again
-                    blocker.setReadOnly();
-                    blocker.close();
+                    mBlocker.setReadOnly();
+                    mBlocker.close();
                 }
             }
         });
-        if (receiver != null) getApplication().unregisterReceiver(receiver);
-        receiver = null;
-        FileUtils.closeQuietly(apkFile);
-        executor.shutdownNow();
+        if (mReceiver != null) getApplication().unregisterReceiver(mReceiver);
+        mReceiver = null;
+        FileUtils.closeQuietly(mApkFile);
+        mExecutor.shutdownNow();
     }
 
     @UiThread
     @NonNull
     public LiveData<PackageInfo> setPackage(@NonNull Uri packageUri, @Nullable String type) {
         MutableLiveData<PackageInfo> packageInfoLiveData = new MutableLiveData<>();
-        executor.submit(() -> {
+        mExecutor.submit(() -> {
             try {
                 Log.d("ADVM", "Package Uri is being set");
-                isExternalApk = true;
-                apkFileKey = ApkFile.createInstance(packageUri, type);
-                apkFile = ApkFile.getInstance(apkFileKey);
-                setPackageName(apkFile.getPackageName());
-                File cachedApkFile = apkFile.getBaseEntry().getRealCachedFile();
+                mIsExternalApk = true;
+                mApkFileKey = ApkFile.createInstance(packageUri, type);
+                mApkFile = ApkFile.getInstance(mApkFileKey);
+                setPackageName(mApkFile.getPackageName());
+                File cachedApkFile = mApkFile.getBaseEntry().getRealCachedFile();
                 if (!cachedApkFile.canRead()) throw new Exception("Cannot read " + cachedApkFile);
-                apkPath = cachedApkFile.getAbsolutePath();
+                mApkPath = cachedApkFile.getAbsolutePath();
                 setPackageInfo(false);
                 packageInfoLiveData.postValue(getPackageInfo());
             } catch (Throwable th) {
                 Log.e("ADVM", "Could not fetch package info.", th);
                 packageInfoLiveData.postValue(null);
             } finally {
-                packageInfoWatcher.countDown();
+                mPackageInfoWatcher.countDown();
             }
         });
         return packageInfoLiveData;
@@ -171,23 +175,23 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @NonNull
     public LiveData<PackageInfo> setPackage(@NonNull String packageName) {
         MutableLiveData<PackageInfo> packageInfoLiveData = new MutableLiveData<>();
-        executor.submit(() -> {
+        mExecutor.submit(() -> {
             try {
                 Log.d("ADVM", "Package name is being set");
-                isExternalApk = false;
+                mIsExternalApk = false;
                 setPackageName(packageName);
                 // TODO: 23/5/21 The app could be “data only”
                 setPackageInfo(false);
                 PackageInfo pi = getPackageInfo();
                 if (pi == null) throw new ApkFile.ApkFileException("Package not installed.");
-                apkFileKey = ApkFile.createInstance(pi.applicationInfo);
-                apkFile = ApkFile.getInstance(apkFileKey);
+                mApkFileKey = ApkFile.createInstance(pi.applicationInfo);
+                mApkFile = ApkFile.getInstance(mApkFileKey);
                 packageInfoLiveData.postValue(pi);
             } catch (Throwable th) {
                 Log.e("ADVM", "Could not fetch package info.", th);
                 packageInfoLiveData.postValue(null);
             } finally {
-                packageInfoWatcher.countDown();
+                mPackageInfoWatcher.countDown();
             }
         });
         return packageInfoLiveData;
@@ -195,35 +199,35 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     @AnyThread
     public void setUserHandle(@UserIdInt int userHandle) {
-        this.userHandle = userHandle;
+        this.mUserHandle = userHandle;
     }
 
     @AnyThread
     public int getUserHandle() {
-        return userHandle;
+        return mUserHandle;
     }
 
     @AnyThread
     @GuardedBy("blockerLocker")
     private void setPackageName(String packageName) {
-        if (this.packageName != null) return;
+        if (this.mPackageName != null) return;
         Log.d("ADVM", "Package name is being set for " + packageName);
-        this.packageName = packageName;
-        if (isExternalApk) return;
-        executor.submit(() -> {
-            synchronized (blockerLocker) {
+        this.mPackageName = packageName;
+        if (mIsExternalApk) return;
+        mExecutor.submit(() -> {
+            synchronized (mBlockerLocker) {
                 try {
-                    waitForBlocker = true;
-                    if (blocker != null) {
+                    mWaitForBlocker = true;
+                    if (mBlocker != null) {
                         // To prevent commit if a mutable instance was created in the middle,
                         // set the instance read only again
-                        blocker.setReadOnly();
-                        blocker.close();
+                        mBlocker.setReadOnly();
+                        mBlocker.close();
                     }
-                    blocker = ComponentsBlocker.getInstance(packageName, userHandle);
+                    mBlocker = ComponentsBlocker.getInstance(packageName, mUserHandle);
                 } finally {
-                    waitForBlocker = false;
-                    blockerLocker.notifyAll();
+                    mWaitForBlocker = false;
+                    mBlockerLocker.notifyAll();
                 }
             }
         });
@@ -231,12 +235,12 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     @AnyThread
     public String getPackageName() {
-        return packageName;
+        return mPackageName;
     }
 
     @AnyThread
     public int getApkFileKey() {
-        return apkFileKey;
+        return mApkFileKey;
     }
 
     @AnyThread
@@ -247,18 +251,19 @@ public class AppDetailsViewModel extends AndroidViewModel {
             case AppDetailsFragment.SERVICES:
             case AppDetailsFragment.RECEIVERS:
             case AppDetailsFragment.PROVIDERS:
-                sortOrderComponents = sortOrder;
+                mSortOrderComponents = sortOrder;
                 AppPref.set(AppPref.PrefKey.PREF_COMPONENTS_SORT_ORDER_INT, sortOrder);
                 break;
             case AppDetailsFragment.APP_OPS:
-                sortOrderAppOps = sortOrder;
+                mSortOrderAppOps = sortOrder;
                 AppPref.set(AppPref.PrefKey.PREF_APP_OP_SORT_ORDER_INT, sortOrder);
                 break;
             case AppDetailsFragment.USES_PERMISSIONS:
-                sortOrderPermissions = sortOrder;
+                mSortOrderPermissions = sortOrder;
                 AppPref.set(AppPref.PrefKey.PREF_PERMISSIONS_SORT_ORDER_INT, sortOrder);
                 break;
         }
+        mExecutor.submit(() -> filterAndSortItemsInternal(property));
     }
 
     @AnyThread
@@ -270,52 +275,171 @@ public class AppDetailsViewModel extends AndroidViewModel {
             case AppDetailsFragment.SERVICES:
             case AppDetailsFragment.RECEIVERS:
             case AppDetailsFragment.PROVIDERS:
-                return sortOrderComponents;
+                return mSortOrderComponents;
             case AppDetailsFragment.APP_OPS:
-                return sortOrderAppOps;
+                return mSortOrderAppOps;
             case AppDetailsFragment.USES_PERMISSIONS:
-                return sortOrderPermissions;
+                return mSortOrderPermissions;
         }
         return AppDetailsFragment.SORT_BY_NAME;
     }
 
     @AnyThread
-    public void setSearchQuery(String searchQuery) {
-        this.searchQuery = searchQuery;
+    public void setSearchQuery(String searchQuery, int searchType, @AppDetailsFragment.Property int property) {
+        this.mSearchQuery = searchType == AdvancedSearchView.SEARCH_TYPE_REGEX ? searchQuery
+                : searchQuery.toLowerCase(Locale.ROOT);
+        this.mSearchType = searchType;
+        mExecutor.submit(() -> filterAndSortItemsInternal(property));
     }
 
     @AnyThread
     public String getSearchQuery() {
-        return searchQuery;
+        return mSearchQuery;
     }
 
-    @NonNull
-    private final MutableLiveData<Integer> ruleApplicationStatus = new MutableLiveData<>();
+    public void filterAndSortItems(@AppDetailsFragment.Property int property) {
+        mExecutor.submit(() -> filterAndSortItemsInternal(property));
+    }
+
+    @SuppressLint("SwitchIntDef")
+    @WorkerThread
+    private void filterAndSortItemsInternal(@AppDetailsFragment.Property int property) {
+        switch (property) {
+            case AppDetailsFragment.ACTIVITIES:
+                mActivities.postValue(filterAndSortComponents(mActivityItems));
+                break;
+            case AppDetailsFragment.PROVIDERS:
+                mProviders.postValue(filterAndSortComponents(mProviderItems));
+                break;
+            case AppDetailsFragment.RECEIVERS:
+                mReceivers.postValue(filterAndSortComponents(mReceiverItems));
+                break;
+            case AppDetailsFragment.SERVICES:
+                mServices.postValue(filterAndSortComponents(mServiceItems));
+                break;
+            case AppDetailsFragment.APP_OPS: {
+                List<AppDetailsItem> appDetailsItems;
+                synchronized (mAppOpItems) {
+                    if (!TextUtils.isEmpty(mSearchQuery)) {
+                        appDetailsItems = AdvancedSearchView.matches(mSearchQuery, mAppOpItems,
+                                (ChoiceGenerator<AppDetailsItem>) item -> lowercaseIfNotRegex(item.name, mSearchType),
+                                mSearchType);
+                    } else appDetailsItems = mAppOpItems;
+                }
+                Collections.sort(appDetailsItems, (o1, o2) -> {
+                    switch (mSortOrderAppOps) {
+                        case AppDetailsFragment.SORT_BY_NAME:
+                            return o1.name.compareToIgnoreCase(o2.name);
+                        case AppDetailsFragment.SORT_BY_APP_OP_VALUES:
+                            Integer o1Op = ((OpEntry) o1.vanillaItem).getOp();
+                            Integer o2Op = ((OpEntry) o2.vanillaItem).getOp();
+                            return o1Op.compareTo(o2Op);
+                        case AppDetailsFragment.SORT_BY_DENIED_APP_OPS:
+                            // A slight hack to sort it this way: ignore > foreground > deny > default[ > ask] > allow
+                            Integer o1Mode = ((OpEntry) o1.vanillaItem).getMode();
+                            Integer o2Mode = ((OpEntry) o2.vanillaItem).getMode();
+                            return -o1Mode.compareTo(o2Mode);
+                    }
+                    return 0;
+                });
+                mAppOps.postValue(appDetailsItems);
+                break;
+            }
+            case AppDetailsFragment.USES_PERMISSIONS: {
+                List<AppDetailsPermissionItem> appDetailsItems;
+                synchronized (mUsesPermissionItems) {
+                    if (!TextUtils.isEmpty(mSearchQuery)) {
+                        appDetailsItems = AdvancedSearchView.matches(mSearchQuery, mUsesPermissionItems,
+                                (ChoiceGenerator<AppDetailsPermissionItem>) item -> lowercaseIfNotRegex(item.name,
+                                        mSearchType), mSearchType);
+                    } else appDetailsItems = mUsesPermissionItems;
+                }
+                Collections.sort(appDetailsItems, (o1, o2) -> {
+                    switch (mSortOrderPermissions) {
+                        case AppDetailsFragment.SORT_BY_NAME:
+                            return o1.name.compareToIgnoreCase(o2.name);
+                        case AppDetailsFragment.SORT_BY_DANGEROUS_PERMS:
+                            return -Boolean.compare(o1.isDangerous, o2.isDangerous);
+                        case AppDetailsFragment.SORT_BY_DENIED_PERMS:
+                            return Boolean.compare(o1.isGranted, o2.isGranted);
+                    }
+                    return 0;
+                });
+                mUsesPermissions.postValue(new ArrayList<>(appDetailsItems));
+                break;
+            }
+            case AppDetailsFragment.PERMISSIONS:
+                mPermissions.postValue(filterAndSortPermissions(mPermissions.getValue()));
+                break;
+            case AppDetailsFragment.APP_INFO:
+            case AppDetailsFragment.CONFIGURATIONS:
+            case AppDetailsFragment.FEATURES:
+            case AppDetailsFragment.NONE:
+            case AppDetailsFragment.SHARED_LIBRARIES:
+            case AppDetailsFragment.SIGNATURES:
+                // do nothing
+                break;
+        }
+    }
+
+    @Nullable
+    private List<AppDetailsItem> filterAndSortComponents(@Nullable List<AppDetailsItem> appDetailsItems) {
+        if (appDetailsItems == null) return null;
+        if (TextUtils.isEmpty(mSearchQuery)) {
+            sortComponents(appDetailsItems);
+            return appDetailsItems;
+        }
+        List<AppDetailsItem> appDetailsItemsInt = AdvancedSearchView.matches(mSearchQuery, appDetailsItems,
+                (ChoiceGenerator<AppDetailsItem>) item -> lowercaseIfNotRegex(item.name, mSearchType), mSearchType);
+        sortComponents(appDetailsItemsInt);
+        return appDetailsItemsInt;
+    }
+
+    @Nullable
+    private List<AppDetailsItem> filterAndSortPermissions(@Nullable List<AppDetailsItem> appDetailsItems) {
+        if (appDetailsItems == null) return null;
+        if (TextUtils.isEmpty(mSearchQuery)) {
+            sortComponents(appDetailsItems);
+            return appDetailsItems;
+        }
+        List<AppDetailsItem> appDetailsItemsInt = AdvancedSearchView.matches(mSearchQuery, appDetailsItems,
+                (ChoiceGenerator<AppDetailsItem>) item -> lowercaseIfNotRegex(item.name, mSearchType), mSearchType);
+        Collections.sort(appDetailsItemsInt, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
+        return appDetailsItemsInt;
+    }
+
+    private String lowercaseIfNotRegex(String s, int filterType) {
+        return filterType == AdvancedSearchView.SEARCH_TYPE_REGEX ? s : s.toLowerCase(Locale.ROOT);
+    }
+
     public static final int RULE_APPLIED = 0;
     public static final int RULE_NOT_APPLIED = 1;
     public static final int RULE_NO_RULE = 2;
 
+    @NonNull
+    private final MutableLiveData<Integer> mRuleApplicationStatus = new MutableLiveData<>();
+
     @UiThread
     public LiveData<Integer> getRuleApplicationStatus() {
-        if (ruleApplicationStatus.getValue() == null) {
-            executor.submit(this::setRuleApplicationStatus);
+        if (mRuleApplicationStatus.getValue() == null) {
+            mExecutor.submit(this::setRuleApplicationStatus);
         }
-        return ruleApplicationStatus;
+        return mRuleApplicationStatus;
     }
 
     @WorkerThread
     @GuardedBy("blockerLocker")
     public void setRuleApplicationStatus() {
-        if (packageName == null || isExternalApk) {
-            ruleApplicationStatus.postValue(RULE_NO_RULE);
+        if (mPackageName == null || mIsExternalApk) {
+            mRuleApplicationStatus.postValue(RULE_NO_RULE);
             return;
         }
-        synchronized (blockerLocker) {
+        synchronized (mBlockerLocker) {
             waitForBlockerOrExit();
             final AtomicInteger newRuleApplicationStatus = new AtomicInteger();
-            newRuleApplicationStatus.set(blocker.isRulesApplied() ? RULE_APPLIED : RULE_NOT_APPLIED);
-            if (blocker.componentCount() == 0) newRuleApplicationStatus.set(RULE_NO_RULE);
-            ruleApplicationStatus.postValue(newRuleApplicationStatus.get());
+            newRuleApplicationStatus.set(mBlocker.isRulesApplied() ? RULE_APPLIED : RULE_NOT_APPLIED);
+            if (mBlocker.componentCount() == 0) newRuleApplicationStatus.set(RULE_NO_RULE);
+            mRuleApplicationStatus.postValue(newRuleApplicationStatus.get());
         }
     }
 
@@ -324,26 +448,26 @@ public class AppDetailsViewModel extends AndroidViewModel {
     public void updateRulesForComponent(String componentName,
                                         RuleType type,
                                         @ComponentRule.ComponentStatus String componentStatus) {
-        if (isExternalApk) return;
-        synchronized (blockerLocker) {
+        if (mIsExternalApk) return;
+        synchronized (mBlockerLocker) {
             waitForBlockerOrExit();
-            blocker.setMutable();
-            if (blocker.hasComponentName(componentName)) {
+            mBlocker.setMutable();
+            if (mBlocker.hasComponentName(componentName)) {
                 // Simply delete it
-                blocker.deleteComponent(componentName);
+                mBlocker.deleteComponent(componentName);
             }
             // Add to the list
-            blocker.addComponent(componentName, type, componentStatus);
+            mBlocker.addComponent(componentName, type, componentStatus);
             // Apply rules if global blocking enable or already applied
             if ((Boolean) AppPref.get(AppPref.PrefKey.PREF_GLOBAL_BLOCKING_ENABLED_BOOL)
-                    || (ruleApplicationStatus.getValue() != null && RULE_APPLIED == ruleApplicationStatus.getValue())) {
-                blocker.applyRules(true);
+                    || (mRuleApplicationStatus.getValue() != null && RULE_APPLIED == mRuleApplicationStatus.getValue())) {
+                mBlocker.applyRules(true);
             }
             // Set new status
             setRuleApplicationStatus();
             // Commit changes
-            blocker.commit();
-            blocker.setReadOnly();
+            mBlocker.commit();
+            mBlocker.setReadOnly();
             // Update UI
             reloadComponents();
         }
@@ -352,29 +476,29 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @WorkerThread
     @GuardedBy("blockerLocker")
     public void addRules(List<? extends RuleEntry> entries, boolean forceApply) {
-        if (isExternalApk) return;
-        synchronized (blockerLocker) {
+        if (mIsExternalApk) return;
+        synchronized (mBlockerLocker) {
             waitForBlockerOrExit();
-            blocker.setMutable();
+            mBlocker.setMutable();
             for (RuleEntry entry : entries) {
                 String componentName = entry.name;
-                if (blocker.hasComponentName(componentName)) {
+                if (mBlocker.hasComponentName(componentName)) {
                     // Remove from the list
-                    blocker.removeComponent(componentName);
+                    mBlocker.removeComponent(componentName);
                 }
                 // Add to the list (again)
-                blocker.addComponent(componentName, entry.type);
+                mBlocker.addComponent(componentName, entry.type);
             }
             // Apply rules if global blocking enable or already applied
             if (forceApply || (Boolean) AppPref.get(AppPref.PrefKey.PREF_GLOBAL_BLOCKING_ENABLED_BOOL)
-                    || (ruleApplicationStatus.getValue() != null && RULE_APPLIED == ruleApplicationStatus.getValue())) {
-                blocker.applyRules(true);
+                    || (mRuleApplicationStatus.getValue() != null && RULE_APPLIED == mRuleApplicationStatus.getValue())) {
+                mBlocker.applyRules(true);
             }
             // Set new status
             setRuleApplicationStatus();
             // Commit changes
-            blocker.commit();
-            blocker.setReadOnly();
+            mBlocker.commit();
+            mBlocker.setReadOnly();
             // Update UI
             reloadComponents();
         }
@@ -383,27 +507,27 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @WorkerThread
     @GuardedBy("blockerLocker")
     public void removeRules(List<? extends RuleEntry> entries, boolean forceApply) {
-        if (isExternalApk) return;
-        synchronized (blockerLocker) {
+        if (mIsExternalApk) return;
+        synchronized (mBlockerLocker) {
             waitForBlockerOrExit();
-            blocker.setMutable();
+            mBlocker.setMutable();
             for (RuleEntry entry : entries) {
                 String componentName = entry.name;
-                if (blocker.hasComponentName(componentName)) {
+                if (mBlocker.hasComponentName(componentName)) {
                     // Remove from the list
-                    blocker.removeComponent(componentName);
+                    mBlocker.removeComponent(componentName);
                 }
             }
             // Apply rules if global blocking enable or already applied
             if (forceApply || (Boolean) AppPref.get(AppPref.PrefKey.PREF_GLOBAL_BLOCKING_ENABLED_BOOL)
-                    || (ruleApplicationStatus.getValue() != null && RULE_APPLIED == ruleApplicationStatus.getValue())) {
-                blocker.applyRules(true);
+                    || (mRuleApplicationStatus.getValue() != null && RULE_APPLIED == mRuleApplicationStatus.getValue())) {
+                mBlocker.applyRules(true);
             }
             // Set new status
             setRuleApplicationStatus();
             // Commit changes
-            blocker.commit();
-            blocker.setReadOnly();
+            mBlocker.commit();
+            mBlocker.setReadOnly();
             // Update UI
             reloadComponents();
         }
@@ -412,35 +536,35 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @WorkerThread
     @GuardedBy("blockerLocker")
     public boolean togglePermission(final AppDetailsPermissionItem permissionItem) {
-        if (isExternalApk) return false;
+        if (mIsExternalApk) return false;
         int appOp = permissionItem.appOp;
-        int uid = packageInfo.applicationInfo.uid;
+        int uid = mPackageInfo.applicationInfo.uid;
         if (!permissionItem.isGranted) {
             // If not granted, grant permission
             if (appOp != OP_NONE) {
                 try {
-                    mAppOpsService.setMode(permissionItem.appOp, uid, packageName, AppOpsManager.MODE_ALLOWED);
+                    mAppOpsService.setMode(permissionItem.appOp, uid, mPackageName, AppOpsManager.MODE_ALLOWED);
                 } catch (Exception ignore) {
                     return false;
                 }
             }
             // Grant permission too
             try {
-                PermissionCompat.grantPermission(packageName, permissionItem.name, userHandle);
+                PermissionCompat.grantPermission(mPackageName, permissionItem.name, mUserHandle);
             } catch (RemoteException ignore) {
                 return false;
             }
         } else {
             if (appOp != OP_NONE) {
                 try {
-                    mAppOpsService.setMode(appOp, uid, packageName, AppOpsManager.MODE_IGNORED);
+                    mAppOpsService.setMode(appOp, uid, mPackageName, AppOpsManager.MODE_IGNORED);
                 } catch (Exception e) {
                     return false;
                 }
             }
             // Revoke permission too
             try {
-                PermissionCompat.revokePermission(packageName, permissionItem.name, userHandle);
+                PermissionCompat.revokePermission(mPackageName, permissionItem.name, mUserHandle);
             } catch (RemoteException e) {
                 e.printStackTrace();
                 return false;
@@ -450,9 +574,9 @@ public class AppDetailsViewModel extends AndroidViewModel {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && (permissionItem.permissionFlags
                 & PermissionCompat.FLAG_PERMISSION_REVIEW_REQUIRED) != 0) {
             try {
-                PermissionCompat.updatePermissionFlags(permissionItem.name, packageName,
+                PermissionCompat.updatePermissionFlags(permissionItem.name, mPackageName,
                         PermissionCompat.FLAG_PERMISSION_REVIEW_REQUIRED, 0, PermissionCompat
-                                .getCheckAdjustPolicyFlagPermission(packageInfo.applicationInfo), userHandle);
+                                .getCheckAdjustPolicyFlagPermission(mPackageInfo.applicationInfo), mUserHandle);
             } catch (RemoteException ignore) {
                 return false;
             }
@@ -460,22 +584,22 @@ public class AppDetailsViewModel extends AndroidViewModel {
         permissionItem.isGranted = !permissionItem.isGranted;
         try {
             // Get new flags
-            permissionItem.permissionFlags = PermissionCompat.getPermissionFlags(permissionItem.name, packageName,
-                    userHandle);
+            permissionItem.permissionFlags = PermissionCompat.getPermissionFlags(permissionItem.name, mPackageName,
+                    mUserHandle);
         } catch (RemoteException ignore) {
         }
-        executor.submit(() -> {
-            synchronized (blockerLocker) {
+        mExecutor.submit(() -> {
+            synchronized (mBlockerLocker) {
                 waitForBlockerOrExit();
-                blocker.setMutable();
+                mBlocker.setMutable();
                 if (appOp != OP_NONE) {
-                    blocker.setAppOp(appOp, permissionItem.isGranted ? AppOpsManager.MODE_ALLOWED : AppOpsManager.MODE_IGNORED);
+                    mBlocker.setAppOp(appOp, permissionItem.isGranted ? AppOpsManager.MODE_ALLOWED : AppOpsManager.MODE_IGNORED);
                 } else {
-                    blocker.setPermission(permissionItem.name, permissionItem.isGranted, permissionItem.permissionFlags);
+                    mBlocker.setPermission(permissionItem.name, permissionItem.isGranted, permissionItem.permissionFlags);
                 }
-                blocker.commit();
-                blocker.setReadOnly();
-                blockerLocker.notifyAll();
+                mBlocker.commit();
+                mBlocker.setReadOnly();
+                mBlockerLocker.notifyAll();
             }
         });
         return true;
@@ -484,34 +608,34 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @WorkerThread
     @GuardedBy("blockerLocker")
     public boolean revokeDangerousPermissions() {
-        if (isExternalApk) return false;
+        if (mIsExternalApk) return false;
         AppDetailsPermissionItem permissionItem;
         List<AppDetailsPermissionItem> revokedPermissions = new ArrayList<>();
         boolean isSuccessful = true;
-        synchronized (usesPermissionItems) {
-            for (int i = 0; i < usesPermissionItems.size(); ++i) {
-                permissionItem = usesPermissionItems.get(i);
+        synchronized (mUsesPermissionItems) {
+            for (int i = 0; i < mUsesPermissionItems.size(); ++i) {
+                permissionItem = mUsesPermissionItems.get(i);
                 if (permissionItem.isDangerous && permissionItem.isGranted) {
                     try {
-                        PermissionCompat.revokePermission(packageName, permissionItem.name, userHandle);
+                        PermissionCompat.revokePermission(mPackageName, permissionItem.name, mUserHandle);
                         // Check if review is required and disable it
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && (permissionItem.permissionFlags
                                 & PermissionCompat.FLAG_PERMISSION_REVIEW_REQUIRED) != 0) {
                             try {
-                                PermissionCompat.updatePermissionFlags(permissionItem.name, packageName,
+                                PermissionCompat.updatePermissionFlags(permissionItem.name, mPackageName,
                                         PermissionCompat.FLAG_PERMISSION_REVIEW_REQUIRED, 0, PermissionCompat
-                                                .getCheckAdjustPolicyFlagPermission(packageInfo.applicationInfo),
-                                        userHandle);
+                                                .getCheckAdjustPolicyFlagPermission(mPackageInfo.applicationInfo),
+                                        mUserHandle);
                             } catch (RemoteException ignore) {
                             }
                         }
                         permissionItem.isGranted = false;
                         try {
                             permissionItem.permissionFlags = PermissionCompat.getPermissionFlags(permissionItem.name,
-                                    packageName, userHandle);
+                                    mPackageName, mUserHandle);
                         } catch (RemoteException ignore) {
                         }
-                        usesPermissionItems.set(i, permissionItem);
+                        mUsesPermissionItems.set(i, permissionItem);
                         revokedPermissions.add(permissionItem);
                     } catch (RemoteException e) {
                         e.printStackTrace();
@@ -522,16 +646,16 @@ public class AppDetailsViewModel extends AndroidViewModel {
             }
         }
         // Save values to the blocking rules
-        executor.submit(() -> {
-            synchronized (blockerLocker) {
+        mExecutor.submit(() -> {
+            synchronized (mBlockerLocker) {
                 waitForBlockerOrExit();
-                blocker.setMutable();
+                mBlocker.setMutable();
                 for (AppDetailsPermissionItem permItem : revokedPermissions) {
-                    blocker.setPermission(permItem.name, permItem.isGranted, permItem.permissionFlags);
+                    mBlocker.setPermission(permItem.name, permItem.isGranted, permItem.permissionFlags);
                 }
-                blocker.commit();
-                blocker.setReadOnly();
-                blockerLocker.notifyAll();
+                mBlocker.commit();
+                mBlocker.setReadOnly();
+                mBlockerLocker.notifyAll();
             }
         });
         return isSuccessful;
@@ -543,18 +667,18 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @WorkerThread
     @GuardedBy("blockerLocker")
     public boolean setAppOp(int op, int mode) {
-        if (isExternalApk) return false;
+        if (mIsExternalApk) return false;
         try {
             // Set mode
-            mAppOpsService.setMode(op, packageInfo.applicationInfo.uid, packageName, mode);
-            executor.submit(() -> {
-                synchronized (blockerLocker) {
+            mAppOpsService.setMode(op, mPackageInfo.applicationInfo.uid, mPackageName, mode);
+            mExecutor.submit(() -> {
+                synchronized (mBlockerLocker) {
                     waitForBlockerOrExit();
-                    blocker.setMutable();
-                    blocker.setAppOp(op, mode);
-                    blocker.commit();
-                    blocker.setReadOnly();
-                    blockerLocker.notifyAll();
+                    mBlocker.setMutable();
+                    mBlocker.setAppOp(op, mode);
+                    mBlocker.commit();
+                    mBlocker.setReadOnly();
+                    mBlockerLocker.notifyAll();
                 }
             });
         } catch (Exception e) {
@@ -567,21 +691,21 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @WorkerThread
     @GuardedBy("blockerLocker")
     public boolean resetAppOps() {
-        if (isExternalApk) return false;
+        if (mIsExternalApk) return false;
         try {
-            mAppOpsService.resetAllModes(userHandle, packageName);
-            executor.submit(this::loadAppOps);
+            mAppOpsService.resetAllModes(mUserHandle, mPackageName);
+            mExecutor.submit(this::loadAppOps);
             // Save values to the blocking rules
-            executor.submit(() -> {
-                synchronized (blockerLocker) {
+            mExecutor.submit(() -> {
+                synchronized (mBlockerLocker) {
                     waitForBlockerOrExit();
-                    List<AppOpRule> appOpEntries = blocker.getAll(AppOpRule.class);
-                    blocker.setMutable();
+                    List<AppOpRule> appOpEntries = mBlocker.getAll(AppOpRule.class);
+                    mBlocker.setMutable();
                     for (AppOpRule entry : appOpEntries)
-                        blocker.removeEntry(entry);
-                    blocker.commit();
-                    blocker.setReadOnly();
-                    blockerLocker.notifyAll();
+                        mBlocker.removeEntry(entry);
+                    mBlocker.commit();
+                    mBlocker.setReadOnly();
+                    mBlockerLocker.notifyAll();
                 }
             });
             return true;
@@ -594,51 +718,54 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @WorkerThread
     @GuardedBy("blockerLocker")
     public boolean ignoreDangerousAppOps() {
-        if (isExternalApk) return false;
+        if (mIsExternalApk) return false;
         AppDetailsItem appDetailsItem;
         OpEntry opEntry;
         String permName;
         final List<Integer> opItems = new ArrayList<>();
         boolean isSuccessful = true;
-        for (int i = 0; i < appOpItems.size(); ++i) {
-            appDetailsItem = appOpItems.get(i);
-            opEntry = (OpEntry) appDetailsItem.vanillaItem;
-            try {
-                permName = AppOpsManager.opToPermission(opEntry.getOp());
-                if (permName != null) {
-                    PermissionInfo permissionInfo = mPackageManager.getPermissionInfo(permName, PackageManager.GET_META_DATA);
-                    int basePermissionType = PermissionInfoCompat.getProtection(permissionInfo);
-                    if (basePermissionType == PermissionInfo.PROTECTION_DANGEROUS) {
-                        // Set mode
-                        try {
-                            mAppOpsService.setMode(opEntry.getOp(), packageInfo.applicationInfo.uid,
-                                    packageName, AppOpsManager.MODE_IGNORED);
-                            opItems.add(opEntry.getOp());
-                            appDetailsItem.vanillaItem = new OpEntry(opEntry.getOp(),
-                                    AppOpsManager.MODE_IGNORED, opEntry.getTime(),
-                                    opEntry.getRejectTime(), opEntry.getDuration(),
-                                    opEntry.getProxyUid(), opEntry.getProxyPackageName());
-                            appOpItems.set(i, appDetailsItem);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            isSuccessful = false;
-                            break;
+        synchronized (mAppOpItems) {
+            for (int i = 0; i < mAppOpItems.size(); ++i) {
+                appDetailsItem = mAppOpItems.get(i);
+                opEntry = (OpEntry) appDetailsItem.vanillaItem;
+                try {
+                    permName = AppOpsManager.opToPermission(opEntry.getOp());
+                    if (permName != null) {
+                        PermissionInfo permissionInfo = mPackageManager.getPermissionInfo(permName,
+                                PackageManager.GET_META_DATA);
+                        int basePermissionType = PermissionInfoCompat.getProtection(permissionInfo);
+                        if (basePermissionType == PermissionInfo.PROTECTION_DANGEROUS) {
+                            // Set mode
+                            try {
+                                mAppOpsService.setMode(opEntry.getOp(), mPackageInfo.applicationInfo.uid,
+                                        mPackageName, AppOpsManager.MODE_IGNORED);
+                                opItems.add(opEntry.getOp());
+                                appDetailsItem.vanillaItem = new OpEntry(opEntry.getOp(),
+                                        AppOpsManager.MODE_IGNORED, opEntry.getTime(),
+                                        opEntry.getRejectTime(), opEntry.getDuration(),
+                                        opEntry.getProxyUid(), opEntry.getProxyPackageName());
+                                mAppOpItems.set(i, appDetailsItem);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                isSuccessful = false;
+                                break;
+                            }
                         }
                     }
+                } catch (PackageManager.NameNotFoundException | IllegalArgumentException | IndexOutOfBoundsException ignore) {
                 }
-            } catch (PackageManager.NameNotFoundException | IllegalArgumentException | IndexOutOfBoundsException ignore) {
             }
         }
         // Save values to the blocking rules
-        executor.submit(() -> {
-            synchronized (blockerLocker) {
+        mExecutor.submit(() -> {
+            synchronized (mBlockerLocker) {
                 waitForBlockerOrExit();
-                blocker.setMutable();
+                mBlocker.setMutable();
                 for (int op : opItems)
-                    blocker.setAppOp(op, AppOpsManager.MODE_IGNORED);
-                blocker.commit();
-                blocker.setReadOnly();
-                blockerLocker.notifyAll();
+                    mBlocker.setAppOp(op, AppOpsManager.MODE_IGNORED);
+                mBlocker.commit();
+                mBlocker.setReadOnly();
+                mBlockerLocker.notifyAll();
             }
         });
         return isSuccessful;
@@ -647,17 +774,17 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @WorkerThread
     @GuardedBy("blockerLocker")
     public void applyRules() {
-        if (isExternalApk) return;
-        synchronized (blockerLocker) {
+        if (mIsExternalApk) return;
+        synchronized (mBlockerLocker) {
             waitForBlockerOrExit();
-            boolean oldIsRulesApplied = blocker.isRulesApplied();
-            blocker.setMutable();
-            blocker.applyRules(!oldIsRulesApplied);
-            blocker.commit();
-            blocker.setReadOnly();
+            boolean oldIsRulesApplied = mBlocker.isRulesApplied();
+            mBlocker.setMutable();
+            mBlocker.applyRules(!oldIsRulesApplied);
+            mBlocker.commit();
+            mBlocker.setReadOnly();
             reloadComponents();
             setRuleApplicationStatus();
-            blockerLocker.notifyAll();
+            mBlockerLocker.notifyAll();
         }
     }
 
@@ -665,37 +792,45 @@ public class AppDetailsViewModel extends AndroidViewModel {
     public LiveData<List<AppDetailsItem>> get(@AppDetailsFragment.Property int property) {
         switch (property) {
             case AppDetailsFragment.ACTIVITIES:
-                return getActivities();
+                return getInternal(mActivities, this::loadActivities);
             case AppDetailsFragment.SERVICES:
-                return getServices();
+                return getInternal(mServices, this::loadServices);
             case AppDetailsFragment.RECEIVERS:
-                return getReceivers();
+                return getInternal(mReceivers, this::loadReceivers);
             case AppDetailsFragment.PROVIDERS:
-                return getProviders();
+                return getInternal(mProviders, this::loadProviders);
             case AppDetailsFragment.APP_OPS:
-                return getAppOps();
+                return getInternal(mAppOps, this::loadAppOps);
             case AppDetailsFragment.USES_PERMISSIONS:
-                return getUsesPermissions();
+                return getInternal(mUsesPermissions, this::loadUsesPermissions);
             case AppDetailsFragment.PERMISSIONS:
-                return getPermissions();
+                return getInternal(mPermissions, this::loadPermissions);
             case AppDetailsFragment.FEATURES:
-                return getFeatures();
+                return getInternal(mFeatures, this::loadFeatures);
             case AppDetailsFragment.CONFIGURATIONS:
-                return getConfigurations();
+                return getInternal(mConfigurations, this::loadConfigurations);
             case AppDetailsFragment.SIGNATURES:
-                return getSignatures();
+                return getInternal(mSignatures, this::loadSignatures);
             case AppDetailsFragment.SHARED_LIBRARIES:
-                return getSharedLibraries();
+                return getInternal(mSharedLibraries, this::loadSharedLibraries);
             case AppDetailsFragment.APP_INFO:
-                return getAppInfo();
+                return getInternal(appInfo, this::loadAppInfo);
             case AppDetailsFragment.NONE:
         }
         return null;
     }
 
+    @NonNull
+    private LiveData<List<AppDetailsItem>> getInternal(@NonNull LiveData<List<AppDetailsItem>> liveData, Runnable loader) {
+        if (liveData.getValue() == null) {
+            mExecutor.submit(loader);
+        }
+        return liveData;
+    }
+
     @AnyThread
     public void load(@AppDetailsFragment.Property int property) {
-        executor.submit(() -> {
+        mExecutor.submit(() -> {
             switch (property) {
                 case AppDetailsFragment.ACTIVITIES:
                     loadActivities();
@@ -738,45 +873,45 @@ public class AppDetailsViewModel extends AndroidViewModel {
         });
     }
 
-    private final MutableLiveData<Boolean> isPackageExistLiveData = new MutableLiveData<>();
-    private boolean isPackageExist = true;
+    private final MutableLiveData<Boolean> mIsPackageExistLiveData = new MutableLiveData<>();
+    private boolean mIsPackageExist = true;
 
     @UiThread
     public LiveData<Boolean> getIsPackageExistLiveData() {
-        if (isPackageExistLiveData.getValue() == null)
-            isPackageExistLiveData.setValue(isPackageExist);
-        return isPackageExistLiveData;
+        if (mIsPackageExistLiveData.getValue() == null)
+            mIsPackageExistLiveData.setValue(mIsPackageExist);
+        return mIsPackageExistLiveData;
     }
 
     @AnyThread
     public boolean isPackageExist() {
-        return isPackageExist;
+        return mIsPackageExist;
     }
 
     @NonNull
-    private final MutableLiveData<Boolean> isPackageChanged = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> mIsPackageChanged = new MutableLiveData<>();
 
     @UiThread
     public LiveData<Boolean> getIsPackageChanged() {
-        if (isPackageChanged.getValue() == null) {
-            isPackageChanged.setValue(false);
+        if (mIsPackageChanged.getValue() == null) {
+            mIsPackageChanged.setValue(false);
         }
-        return isPackageChanged;
+        return mIsPackageChanged;
     }
 
     @WorkerThread
     @GuardedBy("blockerLocker")
     public void setIsPackageChanged() {
         setPackageInfo(true);
-        if (isExternalApk || executor.isShutdown() || executor.isTerminated()) return;
-        executor.submit(() -> {
-            synchronized (blockerLocker) {
+        if (mIsExternalApk || mExecutor.isShutdown() || mExecutor.isTerminated()) return;
+        mExecutor.submit(() -> {
+            synchronized (mBlockerLocker) {
                 try {
                     waitForBlockerOrExit();
                     // Reload app components
-                    blocker.reloadComponents();
+                    mBlocker.reloadComponents();
                 } finally {
-                    blockerLocker.notifyAll();
+                    mBlockerLocker.notifyAll();
                 }
             }
         });
@@ -784,22 +919,22 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     @AnyThread
     public boolean getIsExternalApk() {
-        return isExternalApk;
+        return mIsExternalApk;
     }
 
     @AnyThread
     public int getSplitCount() {
-        if (apkFile.isSplit()) return apkFile.getEntries().size() - 1;
+        if (mApkFile.isSplit()) return mApkFile.getEntries().size() - 1;
         return 0;
     }
 
     @WorkerThread
     @GuardedBy("blockerLocker")
     private void waitForBlockerOrExit() {
-        if (isExternalApk) return;
-        if (blocker == null) {
+        if (mIsExternalApk) return;
+        if (mBlocker == null) {
             try {
-                while (waitForBlocker) blockerLocker.wait();
+                while (mWaitForBlocker) mBlockerLocker.wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 Thread.currentThread().interrupt();
@@ -809,68 +944,68 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     @WorkerThread
     private void reloadComponents() {
-        executor.submit(this::loadActivities);
-        executor.submit(this::loadServices);
-        executor.submit(this::loadReceivers);
-        executor.submit(this::loadProviders);
+        mExecutor.submit(this::loadActivities);
+        mExecutor.submit(this::loadServices);
+        mExecutor.submit(this::loadReceivers);
+        mExecutor.submit(this::loadProviders);
     }
 
     @SuppressLint("WrongConstant")
     @WorkerThread
     public void setPackageInfo(boolean reload) {
         // Package name cannot be null
-        if (packageName == null) return;
+        if (mPackageName == null) return;
         // Wait for component blocker to appear
-        synchronized (blockerLocker) {
+        synchronized (mBlockerLocker) {
             waitForBlockerOrExit();
         }
-        if (!reload && packageInfo != null) return;
+        if (!reload && mPackageInfo != null) return;
         try {
             try {
-                installedPackageInfo = PackageManagerCompat.getPackageInfo(packageName,
+                mInstalledPackageInfo = PackageManagerCompat.getPackageInfo(mPackageName,
                         PackageManager.GET_PERMISSIONS | PackageManager.GET_ACTIVITIES | flagDisabledComponents
                                 | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS | flagMatchUninstalled
                                 | PackageManager.GET_SERVICES | PackageManager.GET_CONFIGURATIONS | flagSigningInfo
                                 | PackageManager.GET_SHARED_LIBRARY_FILES | PackageManager.GET_URI_PERMISSION_PATTERNS,
-                        userHandle);
-                if (!new File(installedPackageInfo.applicationInfo.publicSourceDir).exists()) {
+                        mUserHandle);
+                if (!new File(mInstalledPackageInfo.applicationInfo.publicSourceDir).exists()) {
                     throw new ApkFile.ApkFileException("App not installed. It only has data.");
                 }
             } catch (Throwable e) {
                 Log.e(TAG, e);
-                installedPackageInfo = null;
+                mInstalledPackageInfo = null;
             }
-            if (isExternalApk) {
+            if (mIsExternalApk) {
                 // Do not get signatures via Android framework as it will simply return NULL without any clarifications.
                 // All signatures are fetched using PackageUtils where a fallback method is used in case the PackageInfo
                 // didn't load any signature. So, we should be safe from any harm.
-                packageInfo = mPackageManager.getPackageArchiveInfo(apkPath, PackageManager.GET_PERMISSIONS
+                mPackageInfo = mPackageManager.getPackageArchiveInfo(mApkPath, PackageManager.GET_PERMISSIONS
                         | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
                         | PackageManager.GET_SERVICES | flagDisabledComponents
                         | PackageManager.GET_CONFIGURATIONS | PackageManager.GET_SHARED_LIBRARY_FILES
                         | PackageManager.GET_URI_PERMISSION_PATTERNS);
-                if (packageInfo == null) {
+                if (mPackageInfo == null) {
                     throw new PackageManager.NameNotFoundException("Package cannot be parsed");
                 }
-                if (installedPackageInfo == null) {
-                    Log.d("ADVM", packageName + " not installed for user " + userHandle);
+                if (mInstalledPackageInfo == null) {
+                    Log.d("ADVM", mPackageName + " not installed for user " + mUserHandle);
                 }
-                packageInfo.applicationInfo.sourceDir = apkPath;
-                packageInfo.applicationInfo.publicSourceDir = apkPath;
+                mPackageInfo.applicationInfo.sourceDir = mApkPath;
+                mPackageInfo.applicationInfo.publicSourceDir = mApkPath;
             } else {
-                packageInfo = installedPackageInfo;
-                if (packageInfo == null) {
+                mPackageInfo = mInstalledPackageInfo;
+                if (mPackageInfo == null) {
                     throw new PackageManager.NameNotFoundException("Package not installed");
                 }
             }
-            isPackageExistLiveData.postValue(isPackageExist = true);
+            mIsPackageExistLiveData.postValue(mIsPackageExist = true);
         } catch (PackageManager.NameNotFoundException e) {
             Log.e(TAG, e);
-            isPackageExistLiveData.postValue(isPackageExist = false);
+            mIsPackageExistLiveData.postValue(mIsPackageExist = false);
         } catch (Throwable e) {
             Log.e(TAG, e);
         } finally {
-            isPackageChanged.postValue(true);
+            mIsPackageChanged.postValue(true);
         }
     }
 
@@ -878,36 +1013,36 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @Nullable
     private PackageInfo getPackageInfoInternal() {
         try {
-            packageInfoWatcher.await();
+            mPackageInfoWatcher.await();
         } catch (InterruptedException e) {
             return null;
         }
-        return packageInfo;
+        return mPackageInfo;
     }
 
     @AnyThread
     @Nullable
     public PackageInfo getPackageInfo() {
-        return packageInfo;
+        return mPackageInfo;
     }
 
     @AnyThread
     @Nullable
     public PackageInfo getInstalledPackageInfo() {
-        return installedPackageInfo;
+        return mInstalledPackageInfo;
     }
 
     @NonNull
     public LiveData<UserInfo> getUserInfo() {
         MutableLiveData<UserInfo> userInfoMutableLiveData = new MutableLiveData<>();
-        executor.submit(() -> {
+        mExecutor.submit(() -> {
             final List<UserInfo> userInfoList;
-            if (!isExternalApk && AppPref.isRootOrAdbEnabled()) {
+            if (!mIsExternalApk && AppPref.isRootOrAdbEnabled()) {
                 userInfoList = Users.getUsers();
             } else userInfoList = null;
             if (userInfoList != null && userInfoList.size() > 1) {
                 for (UserInfo userInfo : userInfoList) {
-                    if (userInfo.id == userHandle) {
+                    if (userInfo.id == mUserHandle) {
                         userInfoMutableLiveData.postValue(userInfo);
                         break;
                     }
@@ -920,171 +1055,128 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @NonNull
     private final MutableLiveData<List<AppDetailsItem>> appInfo = new MutableLiveData<>();
 
-    @UiThread
-    private LiveData<List<AppDetailsItem>> getAppInfo() {
-        if (appInfo.getValue() == null) {
-            executor.submit(this::loadAppInfo);
-        }
-        return appInfo;
-    }
-
     @WorkerThread
     private void loadAppInfo() {
         getPackageInfoInternal();
-        if (packageInfo == null) {
+        if (mPackageInfo == null) {
             appInfo.postValue(null);
             return;
         }
-        AppDetailsItem appDetailsItem = new AppDetailsItem(packageInfo);
-        appDetailsItem.name = packageName;
+        AppDetailsItem appDetailsItem = new AppDetailsItem(mPackageInfo);
+        appDetailsItem.name = mPackageName;
         List<AppDetailsItem> appDetailsItems = Collections.singletonList(appDetailsItem);
         appInfo.postValue(appDetailsItems);
     }
 
     @NonNull
-    private final MutableLiveData<List<AppDetailsItem>> activities = new MutableLiveData<>();
-
-    @UiThread
-    private LiveData<List<AppDetailsItem>> getActivities() {
-        if (activities.getValue() == null) {
-            executor.submit(this::loadActivities);
-        }
-        return activities;
-    }
+    private final MutableLiveData<List<AppDetailsItem>> mActivities = new MutableLiveData<>();
+    @NonNull
+    private final List<AppDetailsItem> mActivityItems = new ArrayList<>();
 
     @WorkerThread
     @GuardedBy("blockerLocker")
     private void loadActivities() {
-        List<AppDetailsItem> appDetailsItems = new ArrayList<>();
-        if (getPackageInfoInternal() == null || packageInfo.activities == null) {
-            activities.postValue(appDetailsItems);
+        mActivityItems.clear();
+        if (getPackageInfoInternal() == null || mPackageInfo.activities == null) {
+            mActivities.postValue(mActivityItems);
             return;
         }
-        for (ActivityInfo activityInfo : packageInfo.activities) {
+        for (ActivityInfo activityInfo : mPackageInfo.activities) {
             AppDetailsComponentItem appDetailsItem = new AppDetailsComponentItem(activityInfo);
             appDetailsItem.name = activityInfo.targetActivity == null ? activityInfo.name : activityInfo.targetActivity;
-            synchronized (blockerLocker) {
-                if (!isExternalApk) {
-                    appDetailsItem.setRule(blocker.getComponent(activityInfo.name));
+            synchronized (mBlockerLocker) {
+                if (!mIsExternalApk) {
+                    appDetailsItem.setRule(mBlocker.getComponent(activityInfo.name));
                 }
             }
             appDetailsItem.setTracker(ComponentUtils.isTracker(activityInfo.name));
-            if (TextUtils.isEmpty(searchQuery) || appDetailsItem.name.toLowerCase(Locale.ROOT).contains(searchQuery))
-                appDetailsItems.add(appDetailsItem);
+            mActivityItems.add(appDetailsItem);
         }
-        sortComponents(appDetailsItems);
-        activities.postValue(appDetailsItems);
+        mActivities.postValue(filterAndSortComponents(mActivityItems));
     }
 
     @NonNull
-    private final MutableLiveData<List<AppDetailsItem>> services = new MutableLiveData<>();
-
-    @UiThread
-    private LiveData<List<AppDetailsItem>> getServices() {
-        if (services.getValue() == null) {
-            executor.submit(this::loadServices);
-        }
-        return services;
-    }
+    private final MutableLiveData<List<AppDetailsItem>> mServices = new MutableLiveData<>();
+    @NonNull
+    private final List<AppDetailsItem> mServiceItems = new ArrayList<>();
 
     @WorkerThread
     @GuardedBy("blockerLocker")
     private void loadServices() {
-        List<AppDetailsItem> appDetailsItems = new ArrayList<>();
-        if (getPackageInfoInternal() == null || packageInfo.services == null) {
+        mServiceItems.clear();
+        if (getPackageInfoInternal() == null || mPackageInfo.services == null) {
             // There are no services
-            services.postValue(appDetailsItems);
+            mServices.postValue(mServiceItems);
             return;
         }
-        for (ServiceInfo serviceInfo : packageInfo.services) {
+        for (ServiceInfo serviceInfo : mPackageInfo.services) {
             AppDetailsComponentItem appDetailsItem = new AppDetailsComponentItem(serviceInfo);
             appDetailsItem.name = serviceInfo.name;
-            synchronized (blockerLocker) {
-                if (!isExternalApk) {
-                    appDetailsItem.setRule(blocker.getComponent(serviceInfo.name));
+            synchronized (mBlockerLocker) {
+                if (!mIsExternalApk) {
+                    appDetailsItem.setRule(mBlocker.getComponent(serviceInfo.name));
                 }
             }
             appDetailsItem.setTracker(ComponentUtils.isTracker(serviceInfo.name));
-            if (TextUtils.isEmpty(searchQuery)
-                    || appDetailsItem.name.toLowerCase(Locale.ROOT).contains(searchQuery))
-                appDetailsItems.add(appDetailsItem);
+            mServiceItems.add(appDetailsItem);
         }
-        sortComponents(appDetailsItems);
-        services.postValue(appDetailsItems);
+        mServices.postValue(filterAndSortComponents(mServiceItems));
     }
 
     @NonNull
-    private final MutableLiveData<List<AppDetailsItem>> receivers = new MutableLiveData<>();
-
-    @UiThread
-    private LiveData<List<AppDetailsItem>> getReceivers() {
-        if (receivers.getValue() == null) {
-            executor.submit(this::loadReceivers);
-        }
-        return receivers;
-    }
+    private final MutableLiveData<List<AppDetailsItem>> mReceivers = new MutableLiveData<>();
+    @NonNull
+    private final List<AppDetailsItem> mReceiverItems = new ArrayList<>();
 
     @WorkerThread
     @GuardedBy("blockerLocker")
     private void loadReceivers() {
-        List<AppDetailsItem> appDetailsItems = new ArrayList<>();
-        if (getPackageInfoInternal() == null || packageInfo.receivers == null) {
+        mReceiverItems.clear();
+        if (getPackageInfoInternal() == null || mPackageInfo.receivers == null) {
             // There are no receivers
-            receivers.postValue(appDetailsItems);
+            mReceivers.postValue(mReceiverItems);
             return;
         }
-        for (ActivityInfo activityInfo : packageInfo.receivers) {
+        for (ActivityInfo activityInfo : mPackageInfo.receivers) {
             AppDetailsComponentItem appDetailsItem = new AppDetailsComponentItem(activityInfo);
             appDetailsItem.name = activityInfo.name;
-            synchronized (blockerLocker) {
-                if (!isExternalApk) {
-                    appDetailsItem.setRule(blocker.getComponent(activityInfo.name));
+            synchronized (mBlockerLocker) {
+                if (!mIsExternalApk) {
+                    appDetailsItem.setRule(mBlocker.getComponent(activityInfo.name));
                 }
             }
             appDetailsItem.setTracker(ComponentUtils.isTracker(activityInfo.name));
-            if (TextUtils.isEmpty(searchQuery)
-                    || appDetailsItem.name.toLowerCase(Locale.ROOT).contains(searchQuery))
-                appDetailsItems.add(appDetailsItem);
+            mReceiverItems.add(appDetailsItem);
         }
-        sortComponents(appDetailsItems);
-        receivers.postValue(appDetailsItems);
+        mReceivers.postValue(filterAndSortComponents(mReceiverItems));
     }
 
     @NonNull
-    private final MutableLiveData<List<AppDetailsItem>> providers = new MutableLiveData<>();
-
-    @UiThread
-    private LiveData<List<AppDetailsItem>> getProviders() {
-        if (providers.getValue() == null) {
-            executor.submit(this::loadProviders);
-        }
-        return providers;
-    }
+    private final MutableLiveData<List<AppDetailsItem>> mProviders = new MutableLiveData<>();
+    @NonNull
+    private final List<AppDetailsItem> mProviderItems = new ArrayList<>();
 
     @WorkerThread
     @GuardedBy("blockerLocker")
     private void loadProviders() {
-        List<AppDetailsItem> appDetailsItems = new ArrayList<>();
-        if (getPackageInfoInternal() == null || packageInfo.providers == null) {
+        mProviderItems.clear();
+        if (getPackageInfoInternal() == null || mPackageInfo.providers == null) {
             // There are no providers
-            providers.postValue(appDetailsItems);
+            mProviders.postValue(mProviderItems);
             return;
         }
-        for (ProviderInfo providerInfo : packageInfo.providers) {
+        for (ProviderInfo providerInfo : mPackageInfo.providers) {
             AppDetailsComponentItem appDetailsItem = new AppDetailsComponentItem(providerInfo);
             appDetailsItem.name = providerInfo.name;
-            synchronized (blockerLocker) {
-                if (!isExternalApk) {
-                    appDetailsItem.setRule(blocker.getComponent(providerInfo.name));
+            synchronized (mBlockerLocker) {
+                if (!mIsExternalApk) {
+                    appDetailsItem.setRule(mBlocker.getComponent(providerInfo.name));
                 }
             }
             appDetailsItem.setTracker(ComponentUtils.isTracker(providerInfo.name));
-            if (TextUtils.isEmpty(searchQuery)
-                    || appDetailsItem.name.toLowerCase(Locale.ROOT).contains(searchQuery))
-                appDetailsItems.add(appDetailsItem);
+            mProviderItems.add(appDetailsItem);
         }
-        sortComponents(appDetailsItems);
-        providers.postValue(appDetailsItems);
+        mProviders.postValue(filterAndSortComponents(mProviderItems));
     }
 
     @SuppressLint("SwitchIntDef")
@@ -1092,9 +1184,9 @@ public class AppDetailsViewModel extends AndroidViewModel {
     private void sortComponents(List<AppDetailsItem> appDetailsItems) {
         // First sort by name
         Collections.sort(appDetailsItems, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
-        if (sortOrderComponents == AppDetailsFragment.SORT_BY_NAME) return;
+        if (mSortOrderComponents == AppDetailsFragment.SORT_BY_NAME) return;
         Collections.sort(appDetailsItems, (o1, o2) -> {
-            switch (sortOrderComponents) {
+            switch (mSortOrderComponents) {
                 // No need to sort by name since we've already done it
                 case AppDetailsFragment.SORT_BY_BLOCKED:
                     return -Boolean.compare(
@@ -1110,23 +1202,18 @@ public class AppDetailsViewModel extends AndroidViewModel {
     }
 
     @NonNull
-    private final MutableLiveData<List<AppDetailsItem>> appOps = new MutableLiveData<>();
-    private List<AppDetailsItem> appOpItems;
-
-    @UiThread
-    private LiveData<List<AppDetailsItem>> getAppOps() {
-        if (appOps.getValue() == null) {
-            executor.submit(this::loadAppOps);
-        }
-        return appOps;
-    }
+    private final MutableLiveData<List<AppDetailsItem>> mAppOps = new MutableLiveData<>();
+    @NonNull
+    private final List<AppDetailsItem> mAppOpItems = new ArrayList<>();
 
     @WorkerThread
     public void setAppOp(AppDetailsItem appDetailsItem) {
-        for (int i = 0; i < appOpItems.size(); ++i) {
-            if (appOpItems.get(i).name.equals(appDetailsItem.name)) {
-                appOpItems.set(i, appDetailsItem);
-                break;
+        synchronized (mAppOpItems) {
+            for (int i = 0; i < mAppOpItems.size(); ++i) {
+                if (mAppOpItems.get(i).name.equals(appDetailsItem.name)) {
+                    mAppOpItems.set(i, appDetailsItem);
+                    break;
+                }
             }
         }
     }
@@ -1134,104 +1221,73 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @SuppressLint("SwitchIntDef")
     @WorkerThread
     private void loadAppOps() {
-        List<AppDetailsItem> appDetailsItems = new ArrayList<>();
-        if (packageName == null) {
-            appOps.postValue(appDetailsItems);
+        if (mPackageName == null || mIsExternalApk || !(AppPref.isRootOrAdbEnabled()
+                || PermissionUtils.hasAppOpsPermission(getApplication()))) {
+            mAppOps.postValue(Collections.emptyList());
             return;
         }
-        if (!isExternalApk && (AppPref.isRootOrAdbEnabled()
-                || PermissionUtils.hasAppOpsPermission(getApplication()))) {
-            try {
-                int uid = packageInfo.applicationInfo.uid;
-                List<OpEntry> opEntries = new ArrayList<>(AppOpsUtils.getChangedAppOps(mAppOpsService, packageName, uid));
-                OpEntry opEntry;
-                // Include from permissions
-                List<String> permissions = getRawPermissions();
-                for (String permission : permissions) {
-                    int op = AppOpsManager.permissionToOpCode(permission);
-                    if (op == OP_NONE || op >= AppOpsManager._NUM_OP) {
-                        // Invalid/unsupported app operation
+        synchronized (mAppOpItems) {
+            mAppOpItems.clear();
+        }
+        try {
+            int uid = mPackageInfo.applicationInfo.uid;
+            List<OpEntry> opEntries = new ArrayList<>(AppOpsUtils.getChangedAppOps(mAppOpsService, mPackageName, uid));
+            OpEntry opEntry;
+            // Include from permissions
+            List<String> permissions = getRawPermissions();
+            for (String permission : permissions) {
+                int op = AppOpsManager.permissionToOpCode(permission);
+                if (op == OP_NONE || op >= AppOpsManager._NUM_OP) {
+                    // Invalid/unsupported app operation
+                    continue;
+                }
+                opEntry = new OpEntry(op, mAppOpsService.checkOperation(op, uid, mPackageName), 0,
+                        0, 0, 0, null);
+                if (!opEntries.contains(opEntry)) opEntries.add(opEntry);
+            }
+            // Include defaults ie. app ops without any associated permissions if requested
+            if ((boolean) AppPref.get(AppPref.PrefKey.PREF_APP_OP_SHOW_DEFAULT_BOOL)) {
+                for (int op : AppOpsManager.sOpsWithNoPerm) {
+                    if (op >= AppOpsManager._NUM_OP) {
+                        // Unsupported app operation
                         continue;
                     }
-                    opEntry = new OpEntry(op, mAppOpsService.checkOperation(op, uid, packageName), 0,
+                    opEntry = new OpEntry(op, AppOpsManager.opToDefaultMode(op), 0,
                             0, 0, 0, null);
                     if (!opEntries.contains(opEntry)) opEntries.add(opEntry);
                 }
-                // Include defaults ie. app ops without any associated permissions if requested
-                if ((boolean) AppPref.get(AppPref.PrefKey.PREF_APP_OP_SHOW_DEFAULT_BOOL)) {
-                    for (int op : AppOpsManager.sOpsWithNoPerm) {
-                        if (op >= AppOpsManager._NUM_OP) {
-                            // Unsupported app operation
-                            continue;
-                        }
-                        opEntry = new OpEntry(op, AppOpsManager.opToDefaultMode(op), 0,
-                                0, 0, 0, null);
-                        if (!opEntries.contains(opEntry)) opEntries.add(opEntry);
-                    }
-                }
-                // TODO(24/12/20): App op with MODE_DEFAULT are determined by their associated permissions.
-                //  Therefore, mode for such app ops should be determined from the permission.
-                Set<String> uniqueSet = new HashSet<>();
-                appOpItems = new ArrayList<>(opEntries.size());
-                for (OpEntry entry : opEntries) {
-                    String opName = AppOpsManager.opToName(entry.getOp());
-                    if (uniqueSet.contains(opName)) continue;
-                    AppDetailsItem appDetailsItem = new AppDetailsItem(entry);
-                    appDetailsItem.name = opName;
-                    uniqueSet.add(opName);
-                    appOpItems.add(appDetailsItem);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
+            // TODO(24/12/20): App op with MODE_DEFAULT are determined by their associated permissions.
+            //  Therefore, mode for such app ops should be determined from the permission.
+            Set<String> uniqueSet = new HashSet<>();
+            for (OpEntry entry : opEntries) {
+                String opName = AppOpsManager.opToName(entry.getOp());
+                if (uniqueSet.contains(opName)) continue;
+                AppDetailsItem appDetailsItem = new AppDetailsItem(entry);
+                appDetailsItem.name = opName;
+                uniqueSet.add(opName);
+                synchronized (mAppOpItems) {
+                    mAppOpItems.add(appDetailsItem);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        if (appOpItems == null) appOpItems = new ArrayList<>(0);
-        if (!TextUtils.isEmpty(searchQuery)) {
-            for (AppDetailsItem appDetailsItem : appOpItems) {
-                if (appDetailsItem.name.toLowerCase(Locale.ROOT).contains(searchQuery)) {
-                    appDetailsItems.add(appDetailsItem);
-                }
-            }
-        } else appDetailsItems.addAll(appOpItems);
-        Collections.sort(appDetailsItems, (o1, o2) -> {
-            switch (sortOrderAppOps) {
-                case AppDetailsFragment.SORT_BY_NAME:
-                    return o1.name.compareToIgnoreCase(o2.name);
-                case AppDetailsFragment.SORT_BY_APP_OP_VALUES:
-                    Integer o1Op = ((OpEntry) o1.vanillaItem).getOp();
-                    Integer o2Op = ((OpEntry) o2.vanillaItem).getOp();
-                    return o1Op.compareTo(o2Op);
-                case AppDetailsFragment.SORT_BY_DENIED_APP_OPS:
-                    // A slight hack to sort it this way: ignore > foreground > deny > default[ > ask] > allow
-                    Integer o1Mode = ((OpEntry) o1.vanillaItem).getMode();
-                    Integer o2Mode = ((OpEntry) o2.vanillaItem).getMode();
-                    return -o1Mode.compareTo(o2Mode);
-            }
-            return 0;
-        });
-        appOps.postValue(appDetailsItems);
+        filterAndSortItemsInternal(AppDetailsFragment.APP_OPS);
     }
 
     @NonNull
-    private final MutableLiveData<List<AppDetailsItem>> usesPermissions = new MutableLiveData<>();
-    private final ArrayList<AppDetailsPermissionItem> usesPermissionItems = new ArrayList<>();
-
-    @UiThread
-    private LiveData<List<AppDetailsItem>> getUsesPermissions() {
-        if (usesPermissions.getValue() == null) {
-            executor.submit(this::loadUsesPermissions);
-        }
-        return usesPermissions;
-    }
+    private final MutableLiveData<List<AppDetailsItem>> mUsesPermissions = new MutableLiveData<>();
+    private final List<AppDetailsPermissionItem> mUsesPermissionItems = new ArrayList<>();
 
     @WorkerThread
     public void setUsesPermission(AppDetailsPermissionItem appDetailsPermissionItem) {
         AppDetailsPermissionItem permissionItem;
-        synchronized (usesPermissionItems) {
-            for (int i = 0; i < usesPermissionItems.size(); ++i) {
-                permissionItem = usesPermissionItems.get(i);
+        synchronized (mUsesPermissionItems) {
+            for (int i = 0; i < mUsesPermissionItems.size(); ++i) {
+                permissionItem = mUsesPermissionItems.get(i);
                 if (permissionItem.name.equals(appDetailsPermissionItem.name)) {
-                    usesPermissionItems.set(i, appDetailsPermissionItem);
+                    mUsesPermissionItems.set(i, appDetailsPermissionItem);
                     break;
                 }
             }
@@ -1241,30 +1297,29 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @SuppressLint("SwitchIntDef")
     @WorkerThread
     private void loadUsesPermissions() {
-        List<AppDetailsItem> appDetailsItems = new ArrayList<>();
-        synchronized (usesPermissionItems) {
-            usesPermissionItems.clear();
+        synchronized (mUsesPermissionItems) {
+            mUsesPermissionItems.clear();
         }
-        if (getPackageInfoInternal() == null || packageInfo.requestedPermissions == null) {
+        if (getPackageInfoInternal() == null || mPackageInfo.requestedPermissions == null) {
             // No requested permissions
-            usesPermissions.postValue(appDetailsItems);
+            mUsesPermissions.postValue(Collections.emptyList());
             return;
         }
         boolean isRootOrAdbEnabled = AppPref.isRootOrAdbEnabled();
-        for (int i = 0; i < packageInfo.requestedPermissions.length; ++i) {
+        for (int i = 0; i < mPackageInfo.requestedPermissions.length; ++i) {
             try {
-                PermissionInfo permissionInfo = mPackageManager.getPermissionInfo(packageInfo.requestedPermissions[i],
+                PermissionInfo permissionInfo = mPackageManager.getPermissionInfo(mPackageInfo.requestedPermissions[i],
                         PackageManager.GET_META_DATA);
                 AppDetailsPermissionItem appDetailsItem = new AppDetailsPermissionItem(permissionInfo);
-                appDetailsItem.name = packageInfo.requestedPermissions[i];
-                appDetailsItem.flags = packageInfo.requestedPermissionsFlags[i];
+                appDetailsItem.name = mPackageInfo.requestedPermissions[i];
+                appDetailsItem.flags = mPackageInfo.requestedPermissionsFlags[i];
                 appDetailsItem.isDangerous = PermissionInfoCompat.getProtection(permissionInfo) == PermissionInfo.PROTECTION_DANGEROUS;
                 appDetailsItem.isGranted = (appDetailsItem.flags & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0;
                 appDetailsItem.appOp = AppOpsManager.permissionToOpCode(appDetailsItem.name);
                 if (isRootOrAdbEnabled) {
                     try {
                         appDetailsItem.permissionFlags = PermissionCompat.getPermissionFlags(appDetailsItem.name,
-                                packageName, userHandle);
+                                mPackageName, mUserHandle);
                         // Check if review required is set (for apps targeting API 23 or less)
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && (appDetailsItem.permissionFlags
                                 & PermissionCompat.FLAG_PERMISSION_REVIEW_REQUIRED) != 0) {
@@ -1275,180 +1330,126 @@ public class AppDetailsViewModel extends AndroidViewModel {
                         e.printStackTrace();
                     }
                 }
-                if (!isExternalApk && !appDetailsItem.isGranted && appDetailsItem.appOp != OP_NONE) {
+                if (!mIsExternalApk && !appDetailsItem.isGranted && appDetailsItem.appOp != OP_NONE) {
                     // Override isGranted only if the original permission isn't granted
                     try {
                         appDetailsItem.isGranted = mAppOpsService.checkOperation(appDetailsItem.appOp,
-                                packageInfo.applicationInfo.uid, packageName) == AppOpsManager.MODE_ALLOWED;
+                                mPackageInfo.applicationInfo.uid, mPackageName) == AppOpsManager.MODE_ALLOWED;
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
-                synchronized (usesPermissionItems) {
-                    usesPermissionItems.add(appDetailsItem);
+                synchronized (mUsesPermissionItems) {
+                    mUsesPermissionItems.add(appDetailsItem);
                 }
             } catch (PackageManager.NameNotFoundException ignore) {
             }
         }
-        // Filter items
-        synchronized (usesPermissionItems) {
-            if (!TextUtils.isEmpty(searchQuery)) {
-                for (AppDetailsPermissionItem appDetailsItem : usesPermissionItems)
-                    if (appDetailsItem.name.toLowerCase(Locale.ROOT).contains(searchQuery))
-                        appDetailsItems.add(appDetailsItem);
-            } else appDetailsItems.addAll(usesPermissionItems);
-        }
-        Collections.sort(appDetailsItems, (o1, o2) -> {
-            switch (sortOrderPermissions) {
-                case AppDetailsFragment.SORT_BY_NAME:
-                    return o1.name.compareToIgnoreCase(o2.name);
-                case AppDetailsFragment.SORT_BY_DANGEROUS_PERMS:
-                    return -Boolean.compare(((AppDetailsPermissionItem) o1).isDangerous, ((AppDetailsPermissionItem) o2).isDangerous);
-                case AppDetailsFragment.SORT_BY_DENIED_PERMS:
-                    return Boolean.compare(((AppDetailsPermissionItem) o1).isGranted, ((AppDetailsPermissionItem) o2).isGranted);
-            }
-            return 0;
-        });
-        usesPermissions.postValue(appDetailsItems);
+        filterAndSortItemsInternal(AppDetailsFragment.USES_PERMISSIONS);
     }
 
     @WorkerThread
     public List<String> getRawPermissions() {
         List<String> rawPermissions = new ArrayList<>();
-        if (getPackageInfoInternal() != null && packageInfo.requestedPermissions != null) {
-            rawPermissions.addAll(Arrays.asList(packageInfo.requestedPermissions));
+        if (getPackageInfoInternal() != null && mPackageInfo.requestedPermissions != null) {
+            rawPermissions.addAll(Arrays.asList(mPackageInfo.requestedPermissions));
         }
         return rawPermissions;
     }
 
     @NonNull
-    private final MutableLiveData<List<AppDetailsItem>> permissions = new MutableLiveData<>();
-
-    @UiThread
-    private LiveData<List<AppDetailsItem>> getPermissions() {
-        if (permissions.getValue() == null) {
-            executor.submit(this::loadPermissions);
-        }
-        return permissions;
-    }
+    private final MutableLiveData<List<AppDetailsItem>> mPermissions = new MutableLiveData<>();
 
     @WorkerThread
     private void loadPermissions() {
         List<AppDetailsItem> appDetailsItems = new ArrayList<>();
-        if (getPackageInfoInternal() == null || packageInfo.permissions == null) {
+        if (getPackageInfoInternal() == null || mPackageInfo.permissions == null) {
             // No custom permissions
-            permissions.postValue(appDetailsItems);
+            mPermissions.postValue(appDetailsItems);
             return;
         }
-        for (PermissionInfo permissionInfo : packageInfo.permissions) {
+        for (PermissionInfo permissionInfo : mPackageInfo.permissions) {
             AppDetailsItem appDetailsItem = new AppDetailsItem(permissionInfo);
             appDetailsItem.name = permissionInfo.name;
-            if (TextUtils.isEmpty(searchQuery)
-                    || appDetailsItem.name.toLowerCase(Locale.ROOT).contains(searchQuery))
-                appDetailsItems.add(appDetailsItem);
+            appDetailsItems.add(appDetailsItem);
         }
-        Collections.sort(appDetailsItems, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
-        permissions.postValue(appDetailsItems);
+        mPermissions.postValue(filterAndSortPermissions(appDetailsItems));
     }
 
     @NonNull
-    private final MutableLiveData<List<AppDetailsItem>> features = new MutableLiveData<>();
-
-    @UiThread
-    private LiveData<List<AppDetailsItem>> getFeatures() {
-        if (features.getValue() == null) {
-            executor.submit(this::loadFeatures);
-        }
-        return features;
-    }
+    private final MutableLiveData<List<AppDetailsItem>> mFeatures = new MutableLiveData<>();
 
     public static final String OPEN_GL_ES = "OpenGL ES";
 
     @WorkerThread
     private void loadFeatures() {
         List<AppDetailsItem> appDetailsItems = new ArrayList<>();
-        if (getPackageInfoInternal() == null || packageInfo.reqFeatures == null) {
+        if (getPackageInfoInternal() == null || mPackageInfo.reqFeatures == null) {
             // No required features
-            features.postValue(appDetailsItems);
+            mFeatures.postValue(appDetailsItems);
             return;
         }
-        for (FeatureInfo fi : packageInfo.reqFeatures) {
+        for (FeatureInfo fi : mPackageInfo.reqFeatures) {
             if (fi.name == null) fi.name = OPEN_GL_ES;
         }
-        Arrays.sort(packageInfo.reqFeatures, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
-        for (FeatureInfo featureInfo : packageInfo.reqFeatures) {
+        Arrays.sort(mPackageInfo.reqFeatures, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
+        for (FeatureInfo featureInfo : mPackageInfo.reqFeatures) {
             AppDetailsItem appDetailsItem = new AppDetailsItem(featureInfo);
             appDetailsItem.name = featureInfo.name;
             appDetailsItems.add(appDetailsItem);
         }
-        features.postValue(appDetailsItems);
+        mFeatures.postValue(appDetailsItems);
     }
 
     @NonNull
-    private final MutableLiveData<List<AppDetailsItem>> configurations = new MutableLiveData<>();
-
-    @UiThread
-    private LiveData<List<AppDetailsItem>> getConfigurations() {
-        if (configurations.getValue() == null) {
-            executor.submit(this::loadConfigurations);
-        }
-        return configurations;
-    }
+    private final MutableLiveData<List<AppDetailsItem>> mConfigurations = new MutableLiveData<>();
 
     @WorkerThread
     private void loadConfigurations() {
         List<AppDetailsItem> appDetailsItems = new ArrayList<>();
-        if (getPackageInfoInternal() == null || packageInfo.configPreferences != null) {
-            for (ConfigurationInfo configurationInfo : packageInfo.configPreferences) {
+        if (getPackageInfoInternal() == null || mPackageInfo.configPreferences != null) {
+            for (ConfigurationInfo configurationInfo : mPackageInfo.configPreferences) {
                 AppDetailsItem appDetailsItem = new AppDetailsItem(configurationInfo);
                 appDetailsItems.add(appDetailsItem);
             }
         }
-        configurations.postValue(appDetailsItems);
+        mConfigurations.postValue(appDetailsItems);
     }
 
     @NonNull
-    private final MutableLiveData<List<AppDetailsItem>> signatures = new MutableLiveData<>();
-    private ApkVerifier.Result apkVerifierResult;
-
-    @UiThread
-    private LiveData<List<AppDetailsItem>> getSignatures() {
-        if (signatures.getValue() == null) {
-            executor.submit(this::loadSignatures);
-        }
-        return signatures;
-    }
+    private final MutableLiveData<List<AppDetailsItem>> mSignatures = new MutableLiveData<>();
+    private ApkVerifier.Result mApkVerifierResult;
 
     @AnyThread
     public ApkVerifier.Result getApkVerifierResult() {
-        return apkVerifierResult;
+        return mApkVerifierResult;
     }
 
     @SuppressWarnings("deprecation")
     @WorkerThread
     private void loadSignatures() {
         List<AppDetailsItem> appDetailsItems = new ArrayList<>();
-        if (apkFile == null) {
-            signatures.postValue(appDetailsItems);
+        if (mApkFile == null) {
+            mSignatures.postValue(appDetailsItems);
             return;
         }
         try {
-            File idsigFile = apkFile.getIdsigFile();
-            ApkVerifier.Builder builder = new ApkVerifier.Builder(apkFile.getBaseEntry().getRealCachedFile());
+            File idsigFile = mApkFile.getIdsigFile();
+            ApkVerifier.Builder builder = new ApkVerifier.Builder(mApkFile.getBaseEntry().getRealCachedFile());
             if (idsigFile != null) {
                 builder.setV4SignatureFile(idsigFile);
             }
             ApkVerifier apkVerifier = builder.build();
-            apkVerifierResult = apkVerifier.verify();
+            mApkVerifierResult = apkVerifier.verify();
             // Get signer certificates
-            List<X509Certificate> certificates = apkVerifierResult.getSignerCertificates();
+            List<X509Certificate> certificates = mApkVerifierResult.getSignerCertificates();
             if (certificates != null && certificates.size() > 0) {
                 for (X509Certificate certificate : certificates) {
                     AppDetailsItem item = new AppDetailsItem(certificate);
                     item.name = "Signer Certificate";
                     appDetailsItems.add(item);
                 }
-                if (isExternalApk && packageInfo.signatures == null) {
+                if (mIsExternalApk && mPackageInfo.signatures == null) {
                     List<Signature> signatures = new ArrayList<>(certificates.size());
                     for (X509Certificate certificate : certificates) {
                         try {
@@ -1456,15 +1457,15 @@ public class AppDetailsViewModel extends AndroidViewModel {
                         } catch (CertificateEncodingException ignore) {
                         }
                     }
-                    packageInfo.signatures = signatures.toArray(new Signature[0]);
+                    mPackageInfo.signatures = signatures.toArray(new Signature[0]);
                 }
             } else {
                 //noinspection ConstantConditions Null is deliberately set here to get at least one row
                 appDetailsItems.add(new AppDetailsItem(null));
             }
             // Get source stamp certificate
-            if (apkVerifierResult.isSourceStampVerified()) {
-                ApkVerifier.Result.SourceStampInfo sourceStampInfo = apkVerifierResult.getSourceStampInfo();
+            if (mApkVerifierResult.isSourceStampVerified()) {
+                ApkVerifier.Result.SourceStampInfo sourceStampInfo = mApkVerifierResult.getSourceStampInfo();
                 X509Certificate certificate = sourceStampInfo.getCertificate();
                 if (certificate != null) {
                     AppDetailsItem item = new AppDetailsItem(certificate);
@@ -1475,28 +1476,20 @@ public class AppDetailsViewModel extends AndroidViewModel {
         } catch (IOException | ApkFormatException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-        signatures.postValue(appDetailsItems);
+        mSignatures.postValue(appDetailsItems);
     }
 
     @NonNull
-    private final MutableLiveData<List<AppDetailsItem>> sharedLibraries = new MutableLiveData<>();
-
-    @UiThread
-    private LiveData<List<AppDetailsItem>> getSharedLibraries() {
-        if (sharedLibraries.getValue() == null) {
-            executor.submit(this::loadSharedLibraries);
-        }
-        return sharedLibraries;
-    }
+    private final MutableLiveData<List<AppDetailsItem>> mSharedLibraries = new MutableLiveData<>();
 
     @WorkerThread
     private void loadSharedLibraries() {
         List<AppDetailsItem> appDetailsItems = new ArrayList<>();
         if (getPackageInfoInternal() == null) {
-            sharedLibraries.postValue(appDetailsItems);
+            mSharedLibraries.postValue(appDetailsItems);
             return;
         }
-        ApplicationInfo info = packageInfo.applicationInfo;
+        ApplicationInfo info = mPackageInfo.applicationInfo;
         File jniDir = new File(info.nativeLibraryDir);
         if (info.sharedLibraryFiles != null) {
             for (String sharedLibrary : info.sharedLibraryFiles) {
@@ -1518,7 +1511,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 }
             }
         }
-        List<ApkFile.Entry> entries = apkFile.getEntries();
+        List<ApkFile.Entry> entries = mApkFile.getEntries();
         for (ApkFile.Entry entry : entries) {
             if (entry.type == ApkFile.APK_BASE
                     || entry.type == ApkFile.APK_SPLIT_FEATURE
@@ -1545,7 +1538,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 }
             }
         }
-        sharedLibraries.postValue(appDetailsItems);
+        mSharedLibraries.postValue(appDetailsItems);
     }
 
     /**
@@ -1553,29 +1546,29 @@ public class AppDetailsViewModel extends AndroidViewModel {
      * so that the loader can be updated.
      */
     public static class PackageIntentReceiver extends PackageChangeReceiver {
-        final AppDetailsViewModel model;
+        final AppDetailsViewModel mModel;
 
         public PackageIntentReceiver(@NonNull AppDetailsViewModel model) {
             super(model.getApplication());
-            this.model = model;
+            this.mModel = model;
         }
 
         @Override
         @WorkerThread
         protected void onPackageChanged(Intent intent, @Nullable Integer uid, @Nullable String[] packages) {
-            if (uid != null && (model.packageInfo == null || model.packageInfo.applicationInfo.uid == uid)) {
+            if (uid != null && (mModel.mPackageInfo == null || mModel.mPackageInfo.applicationInfo.uid == uid)) {
                 Log.d("ADVM", "Package is changed.");
-                model.setIsPackageChanged();
+                mModel.setIsPackageChanged();
             } else if (packages != null) {
                 for (String packageName : packages) {
-                    if (packageName.equals(model.packageName)) {
+                    if (packageName.equals(mModel.mPackageName)) {
                         Log.d("ADVM", "Package availability changed.");
-                        model.setIsPackageChanged();
+                        mModel.setIsPackageChanged();
                     }
                 }
             } else {
                 Log.d("ADVM", "Locale changed.");
-                model.setIsPackageChanged();
+                mModel.setIsPackageChanged();
             }
         }
     }
