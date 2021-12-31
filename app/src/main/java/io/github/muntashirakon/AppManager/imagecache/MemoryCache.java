@@ -2,23 +2,23 @@
 
 package io.github.muntashirakon.AppManager.imagecache;
 
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
 
 import java.lang.ref.SoftReference;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MemoryCache {
-    private final Map<String, SoftReference<Drawable>> mCache = Collections.synchronizedMap(new HashMap<>());
+class MemoryCache {
+    private final Map<String, SoftReference<Bitmap>> mCache = Collections.synchronizedMap(new HashMap<>());
 
-    public Drawable get(String id) {
-        SoftReference<Drawable> ref = mCache.get(id);
+    public Bitmap get(String id) {
+        SoftReference<Bitmap> ref = mCache.get(id);
         if (ref == null) return null;
         return ref.get();
     }
 
-    public void put(String id, Drawable image) {
+    public void put(String id, Bitmap image) {
         mCache.put(id, new SoftReference<>(image));
     }
 

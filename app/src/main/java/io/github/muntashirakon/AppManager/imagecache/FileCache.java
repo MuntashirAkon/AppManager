@@ -3,13 +3,14 @@
 package io.github.muntashirakon.AppManager.imagecache;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,7 +20,7 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 
-public class FileCache {
+class FileCache {
     private static final long sLastModifiedDate = System.currentTimeMillis() - 604_800_000;
 
     private final File mCacheDir;
@@ -41,22 +42,41 @@ public class FileCache {
     }
 
     public void putImage(String name, Drawable drawable) throws IOException {
+        putImage(name, FileUtils.getBitmapFromDrawable(drawable));
+    }
+
+    public void putImage(String name, Bitmap bitmap) throws IOException {
         File iconFile = getImageFile(name);
         try (OutputStream os = new FileOutputStream(iconFile)) {
-            Bitmap bitmap = FileUtils.getBitmapFromDrawable(drawable);
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, os);
             os.flush();
         }
     }
 
-    @NonNull
-    public Drawable getImage(@NonNull String name) throws FileNotFoundException {
+    @Nullable
+    public Bitmap getImage(@NonNull String name) {
         File iconFile = getImageFile(name);
-        if (iconFile.exists() && iconFile.lastModified() >= sLastModifiedDate) {
-            return Drawable.createFromStream(new FileInputStream(iconFile), name);
-        } else {
-            throw new FileNotFoundException("Icon for " + name + " doesn't exist.");
+        if (iconFile.lastModified() >= sLastModifiedDate) {
+            try (FileInputStream fis = new FileInputStream(iconFile)) {
+                return BitmapFactory.decodeStream(fis);
+            } catch (IOException e) {
+                return null;
+            }
         }
+        return null;
+    }
+
+    @Nullable
+    public Drawable getImageDrawable(@NonNull String name) {
+        File iconFile = getImageFile(name);
+        if (iconFile.lastModified() >= sLastModifiedDate) {
+            try (FileInputStream fis = new FileInputStream(iconFile)) {
+                return Drawable.createFromStream(fis, name);
+            } catch (IOException e) {
+                return null;
+            }
+        }
+        return null;
     }
 
     @NonNull

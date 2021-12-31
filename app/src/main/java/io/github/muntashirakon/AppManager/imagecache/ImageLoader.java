@@ -17,7 +17,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
@@ -42,16 +41,16 @@ public class ImageLoader implements AutoCloseable {
     }
 
     public ImageLoader(@NonNull ExecutorService executor) {
-        this.mExecutor = executor;
+        mExecutor = executor;
         mShutdownExecutor = false;
     }
 
     @UiThread
     public void displayImage(@NonNull String name, @Nullable PackageItemInfo info, @NonNull ImageView imageView) {
         mImageViews.put(imageView, name);
-        Drawable image = mMemoryCache.get(name);
+        Bitmap image = mMemoryCache.get(name);
         if (image != null) {
-            imageView.setImageDrawable(image);
+            imageView.setImageBitmap(image);
         } else {
             queueImage(name, info, imageView);
         }
@@ -98,23 +97,24 @@ public class ImageLoader implements AutoCloseable {
 
         public void run() {
             if (imageViewReusedOrClosed(mQueueItem)) return;
-            Drawable image = null;
-            try {
-                image = mFileCache.getImage(mQueueItem.name);
-            } catch (FileNotFoundException ignore) {
-            }
+            Bitmap image = mFileCache.getImage(mQueueItem.name);
             if (image == null) { // Cache miss
+                Drawable drawable;
                 if (mQueueItem.info != null) {
-                    image = mQueueItem.info.loadIcon(mQueueItem.pm);
+                    drawable = mQueueItem.info.loadIcon(mQueueItem.pm);
+                    image = getScaledBitmap(mQueueItem.imageView, drawable, 1.0f);
                     try {
                         mFileCache.putImage(mQueueItem.name, image);
                     } catch (IOException ignore) {
                     }
-                } else image = mQueueItem.pm.getDefaultActivityIcon();
+                } else {
+                    drawable = mQueueItem.pm.getDefaultActivityIcon();
+                    image = getScaledBitmap(mQueueItem.imageView, drawable, 1.0f);
+                }
             }
             mMemoryCache.put(mQueueItem.name, image);
             if (imageViewReusedOrClosed(mQueueItem)) return;
-            UiThreadHandler.run(new LoadImageInImageView(getScaledBitmap(mQueueItem.imageView, image, 1.0f), mQueueItem));
+            UiThreadHandler.run(new LoadImageInImageView(image, mQueueItem));
         }
     }
 
@@ -171,6 +171,6 @@ public class ImageLoader implements AutoCloseable {
         Canvas c = new Canvas();
         c.setBitmap(bitmap);
         drawable.draw(c);
-        return bitmap;
+        return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
     }
 }
