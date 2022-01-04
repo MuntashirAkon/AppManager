@@ -20,34 +20,34 @@ import io.github.muntashirakon.AppManager.ipc.IPCUtils;
 
 public class ProxyFile extends File {
     @Nullable
-    private final IRemoteFile file;
+    private final IRemoteFile mFile;
 
     public ProxyFile(@NonNull String pathname) {
         super(pathname);
-        this.file = getRemoteFile();
+        this.mFile = getRemoteFile();
     }
 
     public ProxyFile(@NonNull File file) {
         super(file.getAbsolutePath());
-        this.file = getRemoteFile();
+        this.mFile = getRemoteFile();
     }
 
     public ProxyFile(@Nullable String parent, @NonNull String child) {
         super(parent, child);
-        this.file = getRemoteFile();
+        this.mFile = getRemoteFile();
     }
 
     public ProxyFile(@Nullable File parent, @NonNull String child) {
         super(parent, child);
-        this.file = getRemoteFile();
+        this.mFile = getRemoteFile();
     }
 
     @Override
     public long length() {
-        if (isRemoteAlive()) {
+        if (isRemote()) {
             try {
                 //noinspection ConstantConditions
-                return file.length();
+                return mFile.length();
             } catch (RemoteException ignore) {
             }
         }
@@ -56,10 +56,10 @@ public class ProxyFile extends File {
 
     @Override
     public boolean createNewFile() throws IOException {
-        if (isRemoteAlive()) {
+        if (isRemote()) {
             try {
                 //noinspection ConstantConditions
-                return file.createNewFile();
+                return mFile.createNewFile();
             } catch (RemoteException ignore) {
             }
         }
@@ -68,10 +68,10 @@ public class ProxyFile extends File {
 
     @Override
     public boolean delete() {
-        if (isRemoteAlive()) {
+        if (isRemote()) {
             try {
                 //noinspection ConstantConditions
-                return file.delete();
+                return mFile.delete();
             } catch (RemoteException ignore) {
             }
         }
@@ -99,10 +99,10 @@ public class ProxyFile extends File {
 
     @Override
     public boolean exists() {
-        if (isRemoteAlive()) {
+        if (isRemote()) {
             try {
                 //noinspection ConstantConditions
-                return file.exists();
+                return mFile.exists();
             } catch (RemoteException ignore) {
             }
         }
@@ -111,10 +111,10 @@ public class ProxyFile extends File {
 
     @Override
     public boolean isDirectory() {
-        if (isRemoteAlive()) {
+        if (isRemote()) {
             try {
                 //noinspection ConstantConditions
-                return file.isDirectory();
+                return mFile.isDirectory();
             } catch (RemoteException ignore) {
             }
         }
@@ -123,10 +123,10 @@ public class ProxyFile extends File {
 
     @Override
     public boolean isFile() {
-        if (isRemoteAlive()) {
+        if (isRemote()) {
             try {
                 //noinspection ConstantConditions
-                return file.isFile();
+                return mFile.isFile();
             } catch (RemoteException ignore) {
             }
         }
@@ -135,10 +135,10 @@ public class ProxyFile extends File {
 
     @Override
     public long lastModified() {
-        if (isRemoteAlive()) {
+        if (isRemote()) {
             try {
                 //noinspection ConstantConditions
-                return file.lastModified();
+                return mFile.lastModified();
             } catch (RemoteException ignore) {
             }
         }
@@ -147,10 +147,10 @@ public class ProxyFile extends File {
 
     @Override
     public boolean mkdir() {
-        if (isRemoteAlive()) {
+        if (isRemote()) {
             try {
                 //noinspection ConstantConditions
-                return file.mkdir();
+                return mFile.mkdir();
             } catch (RemoteException ignore) {
             }
         }
@@ -159,10 +159,10 @@ public class ProxyFile extends File {
 
     @Override
     public boolean mkdirs() {
-        if (isRemoteAlive()) {
+        if (isRemote()) {
             try {
                 //noinspection ConstantConditions
-                return file.mkdirs();
+                return mFile.mkdirs();
             } catch (RemoteException ignore) {
             }
         }
@@ -171,10 +171,10 @@ public class ProxyFile extends File {
 
     @Override
     public boolean renameTo(@NonNull File dest) {
-        if (isRemoteAlive()) {
+        if (isRemote()) {
             try {
                 //noinspection ConstantConditions
-                return file.renameTo(dest.getAbsolutePath());
+                return mFile.renameTo(dest.getAbsolutePath());
             } catch (RemoteException ignore) {
             }
         }
@@ -184,10 +184,10 @@ public class ProxyFile extends File {
     @Nullable
     @Override
     public String[] list() {
-        if (isRemoteAlive()) {
+        if (isRemote()) {
             try {
                 //noinspection ConstantConditions
-                return file.list();
+                return mFile.list();
             } catch (RemoteException ignore) {
             }
         }
@@ -252,10 +252,10 @@ public class ProxyFile extends File {
     @NonNull
     @Override
     public String getCanonicalPath() throws IOException {
-        if (isRemoteAlive()) {
+        if (isRemote()) {
             try {
                 //noinspection ConstantConditions
-                return file.getCanonicalPath();
+                return mFile.getCanonicalPath();
             } catch (RemoteException ignore) {
             }
         }
@@ -265,7 +265,7 @@ public class ProxyFile extends File {
     @NonNull
     @Override
     public ProxyFile getCanonicalFile() throws IOException {
-        if (isRemoteAlive()) {
+        if (isRemote()) {
             return new ProxyFile(getCanonicalPath());
         }
         return new ProxyFile(super.getCanonicalFile());
@@ -273,10 +273,10 @@ public class ProxyFile extends File {
 
     @Override
     public boolean canRead() {
-        if (isRemoteAlive()) {
+        if (isRemote()) {
             try {
                 //noinspection ConstantConditions
-                return file.canRead();
+                return mFile.canRead();
             } catch (RemoteException ignore) {
             }
         }
@@ -285,10 +285,10 @@ public class ProxyFile extends File {
 
     @Override
     public boolean canWrite() {
-        if (isRemoteAlive()) {
+        if (isRemote()) {
             try {
                 //noinspection ConstantConditions
-                return file.canWrite();
+                return mFile.canWrite();
             } catch (RemoteException ignore) {
             }
         }
@@ -297,10 +297,10 @@ public class ProxyFile extends File {
 
     @Override
     public boolean canExecute() {
-        if (isRemoteAlive()) {
+        if (isRemote()) {
             try {
                 //noinspection ConstantConditions
-                return file.canExecute();
+                return mFile.canExecute();
             } catch (RemoteException ignore) {
             }
         }
@@ -309,6 +309,10 @@ public class ProxyFile extends File {
 
     @Nullable
     private IRemoteFile getRemoteFile() {
+        if (canRead() && canWrite()) {
+            // No need to use remote service
+            return null;
+        }
         IAMService amService = IPCUtils.getService();
         if (amService != null) {
             try {
@@ -320,8 +324,8 @@ public class ProxyFile extends File {
         return null;
     }
 
-    private boolean isRemoteAlive() {
-        return file != null && file.asBinder().pingBinder();
+    public boolean isRemote() {
+        return mFile != null && mFile.asBinder().pingBinder();
     }
 
     private static boolean deleteDir(ProxyFile dir) {

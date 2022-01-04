@@ -13,15 +13,14 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import io.github.muntashirakon.AppManager.ipc.IPCUtils;
-import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
 
 import static io.github.muntashirakon.AppManager.utils.ExUtils.rethrowAsIOException;
 
 public class ProxyInputStream extends InputStream {
-    private final IFileDescriptor fd;
-    private final byte[] scratch = new byte[1];
+    private final IFileDescriptor mFd;
+    private final byte[] mScratch = new byte[1];
 
     @WorkerThread
     public ProxyInputStream(File file) throws IOException {
@@ -30,13 +29,13 @@ public class ProxyInputStream extends InputStream {
             if (file == null || (file.exists() && !file.canRead())) {
                 throw new FileNotFoundException("The file cannot be opened for reading.");
             }
-            if (file instanceof ProxyFile && LocalServer.isAMServiceAlive()) {
-                fd = IPCUtils.getAmService().getFD(file.getAbsolutePath(), mode);
-                if (fd == null) {
+            if (file instanceof ProxyFile && ((ProxyFile) file).isRemote()) {
+                mFd = IPCUtils.getAmService().getFD(file.getAbsolutePath(), mode);
+                if (mFd == null) {
                     throw new IOException("Returned no file descriptor from the remote service");
                 }
             } else {
-                fd = FileDescriptorImpl.getInstance(file.getAbsolutePath(), mode);
+                mFd = FileDescriptorImpl.getInstance(file.getAbsolutePath(), mode);
             }
         } catch (ErrnoException | RemoteException | SecurityException e) {
             throw ExUtils.<IOException>rethrowAsIOException(e);
@@ -50,7 +49,7 @@ public class ProxyInputStream extends InputStream {
 
     @Override
     public int read() throws IOException {
-        return (read(scratch, 0, 1) != -1) ? scratch[0] & 0xff : -1;
+        return (read(mScratch, 0, 1) != -1) ? mScratch[0] & 0xff : -1;
     }
 
     @Override
@@ -65,7 +64,7 @@ public class ProxyInputStream extends InputStream {
             return 0;
         }
         try {
-            int readCount = fd.read(b, off, len);
+            int readCount = mFd.read(b, off, len);
             if (readCount == 0) {
                 return -1;
             }
@@ -81,13 +80,13 @@ public class ProxyInputStream extends InputStream {
             return 0;
         }
         try {
-            long pos = fd.getFilePointer();
-            long len = fd.length();
+            long pos = mFd.getFilePointer();
+            long len = mFd.length();
             long newpos = pos + n;
             if (newpos > len) {
                 newpos = len;
             }
-            fd.seek(newpos);
+            mFd.seek(newpos);
             // return the actual number of bytes skipped
             return (int) (newpos - pos);
         } catch (RemoteException e) {
@@ -98,7 +97,7 @@ public class ProxyInputStream extends InputStream {
     @Override
     public int available() throws IOException {
         try {
-            return fd.available();
+            return mFd.available();
         } catch (RemoteException e) {
             return rethrowAsIOException(e);
         }
@@ -107,7 +106,7 @@ public class ProxyInputStream extends InputStream {
     @Override
     public void close() throws IOException {
         try {
-            fd.close();
+            mFd.close();
         } catch (RemoteException e) {
             rethrowAsIOException(e);
         }
@@ -116,7 +115,7 @@ public class ProxyInputStream extends InputStream {
     @Override
     public synchronized void reset() throws IOException {
         try {
-            fd.seek(0);
+            mFd.seek(0);
         } catch (RemoteException e) {
             rethrowAsIOException(e);
         }
@@ -124,6 +123,6 @@ public class ProxyInputStream extends InputStream {
 
     @Override
     protected void finalize() throws Throwable {
-        if (fd != null) fd.close();
+        if (mFd != null) mFd.close();
     }
 }

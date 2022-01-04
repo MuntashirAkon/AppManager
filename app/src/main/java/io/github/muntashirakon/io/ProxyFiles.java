@@ -12,7 +12,6 @@ import androidx.annotation.WorkerThread;
 import java.io.File;
 
 import io.github.muntashirakon.AppManager.ipc.IPCUtils;
-import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 
 @WorkerThread
 public final class ProxyFiles {
@@ -20,7 +19,7 @@ public final class ProxyFiles {
 
     @NonNull
     public static FileStatus stat(@NonNull File path) throws ErrnoException, RemoteException {
-        if (path instanceof ProxyFile && LocalServer.isAMServiceAlive()) {
+        if (path instanceof ProxyFile && ((ProxyFile) path).isRemote()) {
             return IPCUtils.getAmService().stat(path.getAbsolutePath());
         }
         return new FileStatus(Os.stat(path.getAbsolutePath()));
@@ -28,20 +27,20 @@ public final class ProxyFiles {
 
     @NonNull
     public static FileStatus lstat(@NonNull File path) throws ErrnoException, RemoteException {
-        if (path instanceof ProxyFile && LocalServer.isAMServiceAlive()) {
+        if (path instanceof ProxyFile && ((ProxyFile) path).isRemote()) {
             return IPCUtils.getAmService().lstat(path.getAbsolutePath());
         }
         return new FileStatus(Os.lstat(path.getAbsolutePath()));
     }
 
     public static void chmod(@NonNull File path, int mode) throws ErrnoException, RemoteException {
-        if (path instanceof ProxyFile && LocalServer.isAMServiceAlive()) {
+        if (path instanceof ProxyFile && ((ProxyFile) path).isRemote()) {
             IPCUtils.getAmService().chmod(path.getAbsolutePath(), mode);
         } else Os.chmod(path.getAbsolutePath(), mode);
     }
 
     public static void chown(@NonNull File path, int uid, int gid) throws ErrnoException, RemoteException {
-        if (path instanceof ProxyFile && LocalServer.isAMServiceAlive()) {
+        if (path instanceof ProxyFile && ((ProxyFile) path).isRemote()) {
             IPCUtils.getAmService().chown(path.getAbsolutePath(), uid, gid);
         } else Os.chown(path.getAbsolutePath(), uid, gid);
     }

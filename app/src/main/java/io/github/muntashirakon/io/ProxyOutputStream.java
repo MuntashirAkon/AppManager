@@ -12,14 +12,13 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import io.github.muntashirakon.AppManager.ipc.IPCUtils;
-import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
 
 import static io.github.muntashirakon.AppManager.utils.ExUtils.rethrowAsIOException;
 
 public class ProxyOutputStream extends OutputStream {
-    private final IFileDescriptor fd;
+    private final IFileDescriptor mFd;
 
     public ProxyOutputStream(String file) throws IOException {
         this(new ProxyFile(file), false);
@@ -40,13 +39,13 @@ public class ProxyOutputStream extends OutputStream {
             if (file == null || (file.exists() && !file.canWrite())) {
                 throw new IOException("The file cannot be opened for writing.");
             }
-            if (file instanceof ProxyFile && LocalServer.isAMServiceAlive()) {
-                fd = IPCUtils.getAmService().getFD(file.getAbsolutePath(), mode);
-                if (fd == null) {
+            if (file instanceof ProxyFile && ((ProxyFile) file).isRemote()) {
+                mFd = IPCUtils.getAmService().getFD(file.getAbsolutePath(), mode);
+                if (mFd == null) {
                     throw new IOException("Returned no file descriptor from the remote service.");
                 }
             } else {
-                fd = FileDescriptorImpl.getInstance(file.getAbsolutePath(), mode);
+                mFd = FileDescriptorImpl.getInstance(file.getAbsolutePath(), mode);
             }
         } catch (ErrnoException | RemoteException | SecurityException e) {
             throw ExUtils.<IOException>rethrowAsIOException(e);
@@ -71,7 +70,7 @@ public class ProxyOutputStream extends OutputStream {
         }
         try {
             while (len > 0) {
-                int bytesWritten = fd.write(b, off, len);
+                int bytesWritten = mFd.write(b, off, len);
                 len -= bytesWritten;
                 off += bytesWritten;
             }
@@ -85,7 +84,7 @@ public class ProxyOutputStream extends OutputStream {
      */
     public void sync() throws IOException {
         try {
-            fd.sync();
+            mFd.sync();
         } catch (RemoteException e) {
             rethrowAsIOException(e);
         }
@@ -94,7 +93,7 @@ public class ProxyOutputStream extends OutputStream {
     @Override
     public void close() throws IOException {
         try {
-            fd.close();
+            mFd.close();
         } catch (RemoteException e) {
             rethrowAsIOException(e);
         }
@@ -102,8 +101,8 @@ public class ProxyOutputStream extends OutputStream {
 
     @Override
     protected void finalize() throws Throwable {
-        if (fd != null) {
-            fd.close();
+        if (mFd != null) {
+            mFd.close();
         }
     }
 }
