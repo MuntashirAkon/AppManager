@@ -2820,6 +2820,7 @@
         <item>io.vavr.</item>
         <item>com.unity3d.player.</item>
         <item>com.aurora.gplayapi.</item>
+        <item>com.connectsdk</item>
     </array>
     <array name="lib_names">
         <item>GetJar Billing</item>
@@ -5640,6 +5641,7 @@
         <item>vʌvr (formerly Javaslang)</item>
         <item>Unity3D Player</item>
         <item>GPlayApi</item>
+        <item>Connect SDK Android</item>
     </array>
     <array name="lib_types">
         <item>Payment</item>
@@ -8460,6 +8462,7 @@
         <item>Development Framework</item>
         <item>Game Engine</item>
         <item>App Market</item>
+        <item>Development Framework</item>
     </array>
     <array name="lib_website">
         <item>http://www.getjar.com/</item>
@@ -11285,5 +11288,6 @@
         <item>https://github.com/vavr-io/vavr</item>
         <item>https://docs.unity3d.com/Manual/AndroidJARPlugins.html</item>
         <item>https://gitlab.com/AuroraOSS/gplayapi</item>
+        <item>https://github.com/ConnectSDK/Connect-SDK-Android</item>
     </array>
 </resources>
