@@ -6,6 +6,7 @@ import android.app.Application;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.SystemClock;
 import android.util.Pair;
 
 import androidx.annotation.AnyThread;
@@ -29,6 +30,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
+import io.github.muntashirakon.AppManager.scanner.vt.VirusTotal;
+import io.github.muntashirakon.AppManager.scanner.vt.VtFileReport;
+import io.github.muntashirakon.AppManager.scanner.vt.VtFileScanMeta;
+import io.github.muntashirakon.AppManager.settings.FeatureController;
+import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
@@ -40,6 +46,8 @@ public class ScannerViewModel extends AndroidViewModel {
     private Uri apkUri;
     private int dexVfsId;
     private Collection<String> nativeLibsAll;
+    @Nullable
+    private final VirusTotal vt;
     private List<String> classListAll;
     private List<String> trackerClassList = new ArrayList<>();
     private List<String> libClassList = new ArrayList<>();
@@ -50,9 +58,16 @@ public class ScannerViewModel extends AndroidViewModel {
     private final MutableLiveData<ApkVerifier.Result> apkVerifierResult = new MutableLiveData<>();
     private final MutableLiveData<PackageInfo> packageInfo = new MutableLiveData<>();
     private final MutableLiveData<List<String>> allClasses = new MutableLiveData<>();
+    // Null = Uploading, NonNull = Queued
+    private final MutableLiveData<VtFileScanMeta> vtFileScanMeta = new MutableLiveData<>();
+    // Null = Failed, NonNull = Result generated
+    private final MutableLiveData<VtFileReport> vtFileReport = new MutableLiveData<>();
 
     public ScannerViewModel(@NonNull Application application) {
         super(application);
+        if (FeatureController.isInternetEnabled() && AppPref.getVtApiKey() != null) {
+            vt = new VirusTotal(AppPref.getVtApiKey());
+        } else vt = null;
     }
 
     @Override
@@ -86,7 +101,7 @@ public class ScannerViewModel extends AndroidViewModel {
             }
         });
         // Generate APK checksums
-        executor.submit(this::generateApkChecksums);
+        executor.submit(this::generateApkChecksumsAndScanInVirusTotal);
         // Verify APK
         executor.submit(this::loadApkVerifierResult);
         // Load package info
@@ -112,6 +127,14 @@ public class ScannerViewModel extends AndroidViewModel {
 
     public LiveData<List<String>> getAllClasses() {
         return allClasses;
+    }
+
+    public LiveData<VtFileReport> getVtFileReport() {
+        return vtFileReport;
+    }
+
+    public LiveData<VtFileScanMeta> getVtFileScanMeta() {
+        return vtFileScanMeta;
     }
 
     public File getApkFile() {
@@ -145,9 +168,52 @@ public class ScannerViewModel extends AndroidViewModel {
     }
 
     @WorkerThread
-    private void generateApkChecksums() {
+    private void generateApkChecksumsAndScanInVirusTotal() {
         waitForFile();
-        apkChecksums.postValue(DigestUtils.getDigests(apkFile));
+        Pair<String, String>[] digests = DigestUtils.getDigests(apkFile);
+        apkChecksums.postValue(digests);
+        if (vt == null) return;
+        String md5 = digests[0].second;
+        try {
+            List<VtFileReport> reports = vt.fetchReports(new String[]{md5});
+            if (reports.size() == 0) throw new IOException("No report returned.");
+            VtFileReport report = reports.get(0);
+            int responseCode = report.getResponseCode();
+            if (responseCode == VirusTotal.RESPONSE_FOUND) {
+                vtFileReport.postValue(report);
+                return;
+            }
+            // Report not found: request scan or wait
+            if (responseCode == VirusTotal.RESPONSE_NOT_FOUND) {
+                if (apkFile.length() > 32 * 1024 * 1024) {
+                    throw new IOException("APK is larger than 32 MB.");
+                }
+                vtFileScanMeta.postValue(null);
+                VtFileScanMeta scanMeta = vt.scan(apkFile.getName(), apkFile);
+                vtFileScanMeta.postValue(scanMeta);
+                responseCode = VirusTotal.RESPONSE_QUEUED;
+            } else {
+                // Item is queued
+                vtFileReport.postValue(report);
+            }
+            int waitDuration = 60_000;
+            while (responseCode == VirusTotal.RESPONSE_QUEUED) {
+                reports = vt.fetchReports(new String[]{md5});
+                if (reports.size() == 0) throw new IOException("No report returned.");
+                report = reports.get(0);
+                responseCode = report.getResponseCode();
+                // Wait for result: First wait for 1 minute, then for 30 seconds
+                // We won't do it less than 30 seconds since the API has a limit of 4 request/minute
+                SystemClock.sleep(waitDuration);
+                waitDuration = 30_000;
+            }
+            if (responseCode == VirusTotal.RESPONSE_FOUND) {
+                vtFileReport.postValue(report);
+            } else throw new IOException("Could not generate scan report");
+        } catch (IOException e) {
+            e.printStackTrace();
+            vtFileReport.postValue(null);
+        }
     }
 
     private void loadApkVerifierResult() {

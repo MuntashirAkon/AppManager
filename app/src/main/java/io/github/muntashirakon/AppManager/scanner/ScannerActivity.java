@@ -21,6 +21,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -29,6 +31,7 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.android.internal.util.TextUtils;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import java.io.File;
@@ -41,6 +44,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -50,18 +54,20 @@ import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity;
 import io.github.muntashirakon.AppManager.fm.FmProvider;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
+import io.github.muntashirakon.AppManager.scanner.vt.VtFileReportScanItem;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.types.EmptySpan;
 import io.github.muntashirakon.AppManager.types.NumericSpan;
 import io.github.muntashirakon.AppManager.types.ScrollableDialogBuilder;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
+import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
-import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
 
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getColoredText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getMonospacedText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getPrimaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
@@ -217,6 +223,90 @@ public class ScannerActivity extends BaseActivity {
                 }
             }).start();
         });
+        // VirusTotal
+        View vtView = findViewById(R.id.vt);
+        if (!FeatureController.isInternetEnabled() || AppPref.getVtApiKey() == null) {
+            vtView.setVisibility(View.GONE);
+            findViewById(R.id.vt_disclaimer).setVisibility(View.GONE);
+        }
+        TextView vtTitle = findViewById(R.id.vt_title);
+        TextView vtDescription = findViewById(R.id.vt_description);
+        model.getVtFileScanMeta().observe(this, vtFileScanMeta -> {
+            if (vtFileScanMeta == null) {
+                // Uploading
+                vtTitle.setText(R.string.vt_uploading);
+            } else {
+                // Upload completed and queued
+                vtTitle.setText(R.string.vt_queued);
+                vtDescription.setText(vtFileScanMeta.getPermalink());
+            }
+        });
+        model.getVtFileReport().observe(this, vtFileReport -> {
+            if (vtFileReport == null) {
+                // Failed
+                vtTitle.setText(R.string.vt_failed);
+                vtDescription.setText(null);
+                vtView.setOnClickListener(null);
+            } else {
+                // Successful or still queued
+                int positives = vtFileReport.getPositives() == null ? -1 : vtFileReport.getPositives();
+                if (positives < 0) {
+                    // Still checking
+                    vtTitle.setText(R.string.vt_queued);
+                    vtDescription.setText(vtFileReport.getPermalink());
+                    return;
+                }
+                CharSequence resultSummary = getString(R.string.vt_success, positives, vtFileReport.getTotal());
+                @ColorRes
+                int color;
+                if (positives == 0) {
+                    color = R.color.stopped;
+                } else if (positives <= 5) {
+                    color = R.color.tracker;
+                } else color = R.color.electric_red;
+                DialogTitleBuilder titleBuilder = new DialogTitleBuilder(this)
+                        .setTitle(getString(R.string.vt_success, positives, vtFileReport.getTotal()))
+                        .setSubtitle(getString(R.string.vt_scan_date, vtFileReport.getScanDate()))
+                        .setEndIcon(R.drawable.ic_vt, v -> {
+                            Uri vtPermalink = Uri.parse(vtFileReport.getPermalink());
+                            Intent linkIntent = new Intent(Intent.ACTION_VIEW, vtPermalink);
+                            if (linkIntent.resolveActivity(getPackageManager()) != null) {
+                                startActivity(linkIntent);
+                            }
+                        })
+                        .setEndIconContentDescription(R.string.vt_permalink);
+                Spanned result;
+                Map<String, VtFileReportScanItem> vtFileReportScanItems = vtFileReport.getScans();
+                if (vtFileReportScanItems != null) {
+                    @ColorInt int colorRed = ContextCompat.getColor(this, R.color.electric_red);
+                    @ColorInt int colorGreen = ContextCompat.getColor(this, R.color.stopped);
+                    ArrayList<Spannable> detectedList = new ArrayList<>();
+                    ArrayList<Spannable> undetectedList = new ArrayList<>();
+                    for (String avName : vtFileReportScanItems.keySet()) {
+                        VtFileReportScanItem item = Objects.requireNonNull(vtFileReportScanItems.get(avName));
+                        if (item.isDetected()) {
+                            detectedList.add(new SpannableStringBuilder(getColoredText(getPrimaryText(this, avName),
+                                    colorRed)).append(getSmallerText(" (" + item.getVersion() + ")"))
+                                    .append("\n").append(item.getMalware()));
+                        } else {
+                            undetectedList.add(new SpannableStringBuilder(getColoredText(getPrimaryText(this, avName),
+                                    colorGreen)).append(getSmallerText(" (" + item.getVersion() + ")")));
+                        }
+                    }
+                    detectedList.addAll(undetectedList);
+                    result = getOrderedList(detectedList);
+                } else result = null;
+                vtTitle.setText(getColoredText(resultSummary, ContextCompat.getColor(this, color)));
+                if (result != null) {
+                    vtDescription.setText(R.string.tap_to_see_details);
+                    vtView.setOnClickListener(v -> new MaterialAlertDialogBuilder(this)
+                            .setCustomTitle(titleBuilder.build())
+                            .setMessage(result)
+                            .setNegativeButton(R.string.close, null)
+                            .show());
+                }
+            }
+        });
     }
 
     @Override
@@ -361,9 +451,9 @@ public class ScannerActivity extends BaseActivity {
         // Add colours
         CharSequence coloredSummary;
         if (totalTrackersFound == 0) {
-            coloredSummary = UIUtils.getColoredText(summary, ContextCompat.getColor(this, R.color.stopped));
+            coloredSummary = getColoredText(summary, ContextCompat.getColor(this, R.color.stopped));
         } else {
-            coloredSummary = UIUtils.getColoredText(summary, ContextCompat.getColor(this, R.color.electric_red));
+            coloredSummary = getColoredText(summary, ContextCompat.getColor(this, R.color.electric_red));
         }
 
         runOnUiThread(() -> {

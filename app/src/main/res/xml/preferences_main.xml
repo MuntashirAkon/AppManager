@@ -86,6 +86,12 @@
         tools:summary="Execute at most 5 operations in parallel"
         app:iconSpaceReserved="false" />
 
+    <Preference
+        app:key="vt_apikey"
+        app:title="@string/pref_vt_apikey"
+        app:summary="@string/pref_vt_apikey_summary"
+        app:iconSpaceReserved="false" />
+
     <PreferenceCategory
         app:key="other_category"
         app:title="@string/other"

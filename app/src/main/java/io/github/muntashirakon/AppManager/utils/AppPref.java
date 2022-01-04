@@ -113,6 +113,8 @@ public class AppPref {
         PREF_SELECTED_USERS_STR,
         PREF_SIGNATURE_SCHEMES_INT,
         PREF_SHOW_DISCLAIMER_BOOL,
+
+        PREF_VIRUS_TOTAL_API_KEY_STR,
         ;
 
         public static final String[] keys = new String[values().length];
@@ -239,6 +241,15 @@ public class AppPref {
 
     public static boolean isRootOrAdbEnabled() {
         return isRootEnabled() || isAdbEnabled();
+    }
+
+    @Nullable
+    public static String getVtApiKey() {
+        String apiKey = getString(PrefKey.PREF_VIRUS_TOTAL_API_KEY_STR);
+        if (TextUtils.isEmpty(apiKey)) {
+            return null;
+        }
+        return apiKey;
     }
 
     @NonNull
@@ -461,6 +472,7 @@ public class AppPref {
             case PREF_OPEN_PGP_USER_ID_STR:
             case PREF_MAIN_WINDOW_FILTER_PROFILE_STR:
             case PREF_SELECTED_USERS_STR:
+            case PREF_VIRUS_TOTAL_API_KEY_STR:
                 return "";
             case PREF_MODE_OF_OPS_STR:
                 return Runner.MODE_AUTO;

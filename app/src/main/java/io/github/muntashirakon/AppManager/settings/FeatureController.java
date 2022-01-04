@@ -5,11 +5,19 @@ package io.github.muntashirakon.AppManager.settings;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.PackageManager;
+
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.collection.SparseArrayCompat;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Objects;
+
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity;
@@ -19,8 +27,6 @@ import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
 import io.github.muntashirakon.AppManager.scanner.ScannerActivity;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 
-import java.util.*;
-
 public class FeatureController {
     @IntDef(flag = true, value = {
             FEAT_INTERCEPTOR,
@@ -29,6 +35,7 @@ public class FeatureController {
             FEAT_INSTALLER,
             FEAT_USAGE_ACCESS,
             FEAT_LOG_VIEWER,
+            FEAT_INTERNET,
     })
     public @interface FeatureFlags {
     }
@@ -39,6 +46,7 @@ public class FeatureController {
     public static final int FEAT_INSTALLER = 1 << 3;
     public static final int FEAT_USAGE_ACCESS = 1 << 4;
     public static final int FEAT_LOG_VIEWER = 1 << 5;
+    public static final int FEAT_INTERNET = 1 << 6;
 
     @NonNull
     public static FeatureController getInstance() {
@@ -62,6 +70,8 @@ public class FeatureController {
             put(FEAT_USAGE_ACCESS, R.string.usage_access);
             featureFlags.add(FEAT_LOG_VIEWER);
             put(FEAT_LOG_VIEWER, R.string.log_viewer);
+            featureFlags.add(FEAT_INTERNET);
+            put(FEAT_INTERNET, R.string.toggle_internet);
         }
     };
 
@@ -109,6 +119,10 @@ public class FeatureController {
         return getInstance().isEnabled(FEAT_LOG_VIEWER);
     }
 
+    public static boolean isInternetEnabled() {
+        return getInstance().isEnabled(FEAT_INTERNET);
+    }
+
     public boolean isEnabled(@FeatureFlags int key) {
         ComponentName cn;
         switch (key) {
@@ -125,6 +139,7 @@ public class FeatureController {
                 cn = getComponentName(key, ScannerActivity.class);
                 break;
             case FEAT_USAGE_ACCESS:
+            case FEAT_INTERNET:
                 // Only depends on flag
                 return (flags & key) != 0;
             case FEAT_LOG_VIEWER:
@@ -161,6 +176,7 @@ public class FeatureController {
                 modifyState(key, ScannerActivity.class, enabled);
                 break;
             case FEAT_USAGE_ACCESS:
+            case FEAT_INTERNET:
                 // Only depends on flag
                 break;
             case FEAT_LOG_VIEWER:

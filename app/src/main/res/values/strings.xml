@@ -1143,4 +1143,17 @@
     <string name="search_type_suffix">Suffix</string>
     <string name="search_type_regular_expressions">Regex</string>
     <string name="search_type_fuzzy">Fuzzy</string>
+    <string name="toggle_internet">Use the Internet</string>
+    <string name="vt_checking">VirusTotal: Checking…</string>
+    <string name="vt_uploading">VirusTotal: Uploading…</string>
+    <string name="vt_queued">VirusTotal: Queued</string>
+    <string name="vt_failed">VirusTotal: Failed</string>
+    <string name="vt_success">VirusTotal: %1$d/%2$d</string>
+    <string name="vt_scan_date">Scan date: %1$s</string>
+    <string name="vt_permalink">Permanent link to VirusTotal</string>
+    <string name="vt_slowness_warning">Depending on the Internet speed and load on the server, this may take a while.</string>
+    <string name="vt_disclaimer">VirusTotal and its logos are a trademark of Chronicle LLC. Neither App Manager—the API client—nor its authors are responsible for any data you may send to VirusTotal.</string>
+    <string name="pref_vt_apikey">VirusTotal API Key</string>
+    <string name="pref_vt_apikey_description">An API key enables App Manager to upload APK files to VirusTotal as well as fetch reports. Sign up at https://virustotal.com to get an API key for free.</string>
+    <string name="pref_vt_apikey_summary">Enable scanning APK files via VirusTotal.</string>
 </resources>

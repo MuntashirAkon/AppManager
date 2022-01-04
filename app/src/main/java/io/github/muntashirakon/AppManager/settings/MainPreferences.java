@@ -209,6 +209,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
                             .show();
                     return true;
                 });
+        // Thread count
         Preference threadCountPref = Objects.requireNonNull(findPreference("thread_count"));
         threadCount = MultithreadedExecutor.getThreadCount();
         threadCountPref.setSummary(getResources().getQuantityString(R.plurals.pref_thread_count_msg, threadCount, threadCount));
@@ -224,6 +225,21 @@ public class MainPreferences extends PreferenceFragmentCompat {
                             AppPref.set(AppPref.PrefKey.PREF_CONCURRENCY_THREAD_COUNT_INT, c);
                             threadCount = MultithreadedExecutor.getThreadCount();
                             threadCountPref.setSummary(getResources().getQuantityString(R.plurals.pref_thread_count_msg, threadCount, threadCount));
+                        }
+                    })
+                    .show();
+            return true;
+        });
+        // VT APK key
+        ((Preference) Objects.requireNonNull(findPreference("vt_apikey"))).setOnPreferenceClickListener(preference -> {
+            new TextInputDialogBuilder(activity, null)
+                    .setTitle(R.string.pref_vt_apikey)
+                    .setHelperText(getString(R.string.pref_vt_apikey_description) + "\n\n" + getString(R.string.vt_disclaimer))
+                    .setInputText(AppPref.getVtApiKey())
+                    .setNegativeButton(R.string.cancel, null)
+                    .setPositiveButton(R.string.save, (dialog, which, inputText, isChecked) -> {
+                        if (inputText != null) {
+                            AppPref.set(AppPref.PrefKey.PREF_VIRUS_TOTAL_API_KEY_STR, inputText.toString());
                         }
                     })
                     .show();
