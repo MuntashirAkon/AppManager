@@ -671,6 +671,18 @@ public final class PackageUtils {
         return appOpNames;
     }
 
+    /**
+     * Whether the app may be using Play App Signing i.e. letting Google manage the app's signing keys.
+     *
+     * @param applicationInfo {@link PackageManager#GET_META_DATA} must be used while fetching application info.
+     * @see <a href="https://support.google.com/googleplay/android-developer/answer/9842756#zippy=%2Capp-signing-process">Use Play App Signing</a>
+     */
+    public static boolean usesPlayAppSigning(@NonNull ApplicationInfo applicationInfo) {
+        return "STAMP_TYPE_DISTRIBUTION_APK".equals(applicationInfo.metaData.getString("com.android.stamp.type"))
+                && "https://play.google.com/store".equals(applicationInfo.metaData
+                .getString("com.android.stamp.source"));
+    }
+
     @SuppressWarnings("deprecation")
     @Nullable
     public static Signature[] getSigningInfo(@NonNull PackageInfo packageInfo, boolean isExternal) {

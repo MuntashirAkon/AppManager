@@ -1156,4 +1156,6 @@
     <string name="pref_vt_apikey">VirusTotal API Key</string>
     <string name="pref_vt_apikey_description">An API key enables App Manager to upload APK files to VirusTotal as well as fetch reports. Sign up at https://virustotal.com to get an API key for free.</string>
     <string name="pref_vt_apikey_summary">Enable scanning APK files via VirusTotal.</string>
+    <string name="uses_play_app_signing">Play App Signing</string>
+    <string name="uses_play_app_signing_description">This app contains certain markers that indicate that it <i>might</i> be using <a href="https://support.google.com/googleplay/android-developer/answer/9842756">Play App Signing</a>. With this scheme, the signing keys are stored in Google\'s servers, and Google is responsible for signing the app. Note that matching signing information is the only way to verify that the app has not been modified by any person other than the developer (and in this case, Google too).</string>
 </resources>

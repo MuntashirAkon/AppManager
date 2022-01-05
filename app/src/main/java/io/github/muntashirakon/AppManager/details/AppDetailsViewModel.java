@@ -962,8 +962,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
         if (!reload && mPackageInfo != null) return;
         try {
             try {
-                mInstalledPackageInfo = PackageManagerCompat.getPackageInfo(mPackageName,
-                        PackageManager.GET_PERMISSIONS | PackageManager.GET_ACTIVITIES | flagDisabledComponents
+                mInstalledPackageInfo = PackageManagerCompat.getPackageInfo(mPackageName, PackageManager.GET_META_DATA
+                                | PackageManager.GET_PERMISSIONS | PackageManager.GET_ACTIVITIES | flagDisabledComponents
                                 | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS | flagMatchUninstalled
                                 | PackageManager.GET_SERVICES | PackageManager.GET_CONFIGURATIONS | flagSigningInfo
                                 | PackageManager.GET_SHARED_LIBRARY_FILES | PackageManager.GET_URI_PERMISSION_PATTERNS,
@@ -981,9 +981,9 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 // didn't load any signature. So, we should be safe from any harm.
                 mPackageInfo = mPackageManager.getPackageArchiveInfo(mApkPath, PackageManager.GET_PERMISSIONS
                         | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
-                        | PackageManager.GET_SERVICES | flagDisabledComponents
-                        | PackageManager.GET_CONFIGURATIONS | PackageManager.GET_SHARED_LIBRARY_FILES
-                        | PackageManager.GET_URI_PERMISSION_PATTERNS);
+                        | PackageManager.GET_SERVICES | flagDisabledComponents | PackageManager.GET_CONFIGURATIONS
+                        | PackageManager.GET_SHARED_LIBRARY_FILES | PackageManager.GET_URI_PERMISSION_PATTERNS
+                        | PackageManager.GET_META_DATA);
                 if (mPackageInfo == null) {
                     throw new PackageManager.NameNotFoundException("Package cannot be parsed");
                 }

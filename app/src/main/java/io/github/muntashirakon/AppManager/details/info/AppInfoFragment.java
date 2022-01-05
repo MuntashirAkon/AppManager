@@ -753,7 +753,6 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         .setNegativeButton(R.string.close, null)
                         .show());
             }
-            if (isDetached()) return;
             if (!tagCloud.isBatteryOptimized) {
                 addChip(R.string.no_battery_optimization, R.color.red_orange).setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
                         .setTitle(R.string.battery_optimization)
@@ -850,6 +849,14 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                             .setNegativeButton(R.string.close, null)
                             .show();
                 });
+            }
+            if (tagCloud.usesPlayAppSigning) {
+                addChip(R.string.uses_play_app_signing, R.color.disabled_user).setOnClickListener(v ->
+                        new MaterialAlertDialogBuilder(mActivity)
+                                .setTitle(R.string.uses_play_app_signing)
+                                .setMessage(R.string.uses_play_app_signing_description)
+                                .setNegativeButton(R.string.close, null)
+                                .show());
             }
         });
     }

@@ -133,6 +133,7 @@ public class AppInfoViewModel extends AndroidViewModel {
         tagCloud.isMagiskHideEnabled = !mainModel.getIsExternalApk() && AppPref.isRootEnabled() && MagiskUtils.isHidden(packageName);
         tagCloud.hasKeyStoreItems = KeyStoreUtils.hasKeyStore(applicationInfo.uid);
         tagCloud.hasMasterKeyInKeyStore = KeyStoreUtils.hasMasterKey(applicationInfo.uid);
+        tagCloud.usesPlayAppSigning = PackageUtils.usesPlayAppSigning(applicationInfo);
         try {
             tagCloud.backups = MetadataManager.getMetadata(packageName);
         } catch (IOException e) {
@@ -316,6 +317,7 @@ public class AppInfoViewModel extends AndroidViewModel {
         public boolean isMagiskHideEnabled;
         public boolean hasKeyStoreItems;
         public boolean hasMasterKeyInKeyStore;
+        public boolean usesPlayAppSigning;
         public MetadataManager.Metadata[] backups;
         public boolean isBatteryOptimized;
         public int netPolicies;
