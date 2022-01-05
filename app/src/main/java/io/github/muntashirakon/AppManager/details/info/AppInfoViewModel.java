@@ -31,6 +31,7 @@ import java.util.concurrent.Executors;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.details.AppDetailsViewModel;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
@@ -106,73 +107,81 @@ public class AppInfoViewModel extends AndroidViewModel {
         String packageName = packageInfo.packageName;
         ApplicationInfo applicationInfo = packageInfo.applicationInfo;
         TagCloud tagCloud = new TagCloud();
-        HashMap<String, RuleType> trackerComponents = ComponentUtils.getTrackerComponentsForPackageInfo(packageInfo);
-        tagCloud.trackerComponents = new ArrayList<>(trackerComponents.size());
-        for (String component : trackerComponents.keySet()) {
-            tagCloud.trackerComponents.add(new ComponentRule(packageName, component, trackerComponents.get(component),
-                    AppPref.getDefaultComponentStatus()));
-        }
-        tagCloud.isSystemApp = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
-        tagCloud.isSystemlessPath = !mainModel.getIsExternalApk() && AppPref.isRootEnabled()
-                && MagiskUtils.isSystemlessPath(PackageUtils.getHiddenCodePathOrDefault(packageName,
-                applicationInfo.publicSourceDir));
-        tagCloud.isUpdatedSystemApp = (applicationInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0;
-        tagCloud.splitCount = mainModel.getSplitCount();
-        tagCloud.isDebuggable = (applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
-        tagCloud.isTestOnly = (applicationInfo.flags & ApplicationInfo.FLAG_TEST_ONLY) != 0;
-        tagCloud.hasCode = (applicationInfo.flags & ApplicationInfo.FLAG_HAS_CODE) != 0;
-        tagCloud.hasRequestedLargeHeap = (applicationInfo.flags & ApplicationInfo.FLAG_LARGE_HEAP) != 0;
-        tagCloud.runningServices = ActivityManagerCompat.getRunningServices(packageName, mainModel.getUserHandle());
-        tagCloud.isForceStopped = (applicationInfo.flags & ApplicationInfo.FLAG_STOPPED) != 0;
-        tagCloud.isAppEnabled = applicationInfo.enabled;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            tagCloud.isAppSuspended = (applicationInfo.flags & ApplicationInfo.FLAG_SUSPENDED) != 0;
-        }
-        int privateFlags = ApplicationInfoCompat.getPrivateFlags(applicationInfo);
-        tagCloud.isAppHidden = (privateFlags & ApplicationInfoCompat.PRIVATE_FLAG_HIDDEN) != 0;
-        tagCloud.isMagiskHideEnabled = !mainModel.getIsExternalApk() && AppPref.isRootEnabled() && MagiskUtils.isHidden(packageName);
-        tagCloud.hasKeyStoreItems = KeyStoreUtils.hasKeyStore(applicationInfo.uid);
-        tagCloud.hasMasterKeyInKeyStore = KeyStoreUtils.hasMasterKey(applicationInfo.uid);
-        tagCloud.usesPlayAppSigning = PackageUtils.usesPlayAppSigning(applicationInfo);
         try {
-            tagCloud.backups = MetadataManager.getMetadata(packageName);
-        } catch (IOException e) {
-            tagCloud.backups = ArrayUtils.emptyArray(MetadataManager.Metadata.class);
-        }
-        if (!mainModel.getIsExternalApk() && PermissionUtils.hasDumpPermission()) {
-            String targetString = "user," + packageName + "," + applicationInfo.uid;
-            Runner.Result result = Runner.runCommand(new String[]{"dumpsys", "deviceidle", "whitelist"});
-            tagCloud.isBatteryOptimized = !result.isSuccessful() || !result.getOutput().contains(targetString);
-        } else {
-            tagCloud.isBatteryOptimized = true;
-        }
-        if (!mainModel.getIsExternalApk() && LocalServer.isAMServiceAlive()) {
-            tagCloud.netPolicies = NetworkPolicyManagerCompat.getUidPolicy(applicationInfo.uid);
-        } else {
-            tagCloud.netPolicies = 0;
-        }
-        if (AppPref.isRootEnabled() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            HashMap<String, RuleType> trackerComponents = ComponentUtils
+                    .getTrackerComponentsForPackageInfo(packageInfo);
+            tagCloud.trackerComponents = new ArrayList<>(trackerComponents.size());
+            for (String component : trackerComponents.keySet()) {
+                tagCloud.trackerComponents.add(new ComponentRule(packageName, component,
+                        trackerComponents.get(component), AppPref.getDefaultComponentStatus()));
+            }
+            tagCloud.isSystemApp = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
+            tagCloud.isSystemlessPath = !mainModel.getIsExternalApk() && AppPref.isRootEnabled()
+                    && MagiskUtils.isSystemlessPath(PackageUtils.getHiddenCodePathOrDefault(packageName,
+                    applicationInfo.publicSourceDir));
+            tagCloud.isUpdatedSystemApp = (applicationInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0;
+            tagCloud.splitCount = mainModel.getSplitCount();
+            tagCloud.isDebuggable = (applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+            tagCloud.isTestOnly = (applicationInfo.flags & ApplicationInfo.FLAG_TEST_ONLY) != 0;
+            tagCloud.hasCode = (applicationInfo.flags & ApplicationInfo.FLAG_HAS_CODE) != 0;
+            tagCloud.hasRequestedLargeHeap = (applicationInfo.flags & ApplicationInfo.FLAG_LARGE_HEAP) != 0;
+            tagCloud.runningServices = ActivityManagerCompat.getRunningServices(packageName, mainModel.getUserHandle());
+            tagCloud.isForceStopped = (applicationInfo.flags & ApplicationInfo.FLAG_STOPPED) != 0;
+            tagCloud.isAppEnabled = applicationInfo.enabled;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                tagCloud.isAppSuspended = (applicationInfo.flags & ApplicationInfo.FLAG_SUSPENDED) != 0;
+            }
+            int privateFlags = ApplicationInfoCompat.getPrivateFlags(applicationInfo);
+            tagCloud.isAppHidden = (privateFlags & ApplicationInfoCompat.PRIVATE_FLAG_HIDDEN) != 0;
+            tagCloud.isMagiskHideEnabled = !mainModel.getIsExternalApk()
+                    && AppPref.isRootEnabled()
+                    && MagiskUtils.isHidden(packageName);
+            tagCloud.hasKeyStoreItems = KeyStoreUtils.hasKeyStore(applicationInfo.uid);
+            tagCloud.hasMasterKeyInKeyStore = KeyStoreUtils.hasMasterKey(applicationInfo.uid);
+            tagCloud.usesPlayAppSigning = PackageUtils.usesPlayAppSigning(applicationInfo);
             try {
-                tagCloud.ssaid = new SsaidSettings(packageName, applicationInfo.uid).getSsaid();
-                if (TextUtils.isEmpty(tagCloud.ssaid)) tagCloud.ssaid = null;
-            } catch (IOException ignore) {
+                tagCloud.backups = MetadataManager.getMetadata(packageName);
+            } catch (IOException e) {
+                tagCloud.backups = ArrayUtils.emptyArray(MetadataManager.Metadata.class);
             }
-        }
-        if (AppPref.isRootEnabled()) {
-            List<UriManager.UriGrant> uriGrants = new UriManager().getGrantedUris(packageName);
-            if (uriGrants != null) {
-                Iterator<UriManager.UriGrant> uriGrantIterator = uriGrants.listIterator();
-                UriManager.UriGrant uriGrant;
-                while (uriGrantIterator.hasNext()) {
-                    uriGrant = uriGrantIterator.next();
-                    if (uriGrant.targetUserId != mainModel.getUserHandle()) {
-                        uriGrantIterator.remove();
-                    }
+            if (!mainModel.getIsExternalApk() && PermissionUtils.hasDumpPermission()) {
+                String targetString = "user," + packageName + "," + applicationInfo.uid;
+                Runner.Result result = Runner.runCommand(new String[]{"dumpsys", "deviceidle", "whitelist"});
+                tagCloud.isBatteryOptimized = !result.isSuccessful() || !result.getOutput().contains(targetString);
+            } else {
+                tagCloud.isBatteryOptimized = true;
+            }
+            if (!mainModel.getIsExternalApk() && LocalServer.isAMServiceAlive()) {
+                tagCloud.netPolicies = NetworkPolicyManagerCompat.getUidPolicy(applicationInfo.uid);
+            } else {
+                tagCloud.netPolicies = 0;
+            }
+            if (AppPref.isRootEnabled() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                try {
+                    tagCloud.ssaid = new SsaidSettings(packageName, applicationInfo.uid).getSsaid();
+                    if (TextUtils.isEmpty(tagCloud.ssaid)) tagCloud.ssaid = null;
+                } catch (IOException ignore) {
                 }
-                tagCloud.uriGrants = uriGrants;
             }
+            if (AppPref.isRootEnabled()) {
+                List<UriManager.UriGrant> uriGrants = new UriManager().getGrantedUris(packageName);
+                if (uriGrants != null) {
+                    Iterator<UriManager.UriGrant> uriGrantIterator = uriGrants.listIterator();
+                    UriManager.UriGrant uriGrant;
+                    while (uriGrantIterator.hasNext()) {
+                        uriGrant = uriGrantIterator.next();
+                        if (uriGrant.targetUserId != mainModel.getUserHandle()) {
+                            uriGrantIterator.remove();
+                        }
+                    }
+                    tagCloud.uriGrants = uriGrants;
+                }
+            }
+        } catch (Throwable th) {
+            Log.e("AIVM", th);
+        } finally {
+            this.tagCloud.postValue(tagCloud);
         }
-        this.tagCloud.postValue(tagCloud);
     }
 
     @WorkerThread

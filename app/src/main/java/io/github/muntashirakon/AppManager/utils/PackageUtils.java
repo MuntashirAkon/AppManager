@@ -678,7 +678,9 @@ public final class PackageUtils {
      * @see <a href="https://support.google.com/googleplay/android-developer/answer/9842756#zippy=%2Capp-signing-process">Use Play App Signing</a>
      */
     public static boolean usesPlayAppSigning(@NonNull ApplicationInfo applicationInfo) {
-        return "STAMP_TYPE_DISTRIBUTION_APK".equals(applicationInfo.metaData.getString("com.android.stamp.type"))
+        return applicationInfo.metaData != null
+                && "STAMP_TYPE_DISTRIBUTION_APK".equals(applicationInfo.metaData
+                .getString("com.android.stamp.type"))
                 && "https://play.google.com/store".equals(applicationInfo.metaData
                 .getString("com.android.stamp.source"));
     }
