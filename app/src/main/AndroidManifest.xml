@@ -70,7 +70,7 @@
             android:label="@string/one_click_ops" />
         <activity
             android:name=".runningapps.RunningAppsActivity"
-            android:exported="false"
+            android:exported="true"
             android:label="@string/running_apps" />
         <activity
             android:name=".settings.SettingsActivity"
@@ -88,7 +88,7 @@
             android:exported="false" />
         <activity
             android:name=".usage.AppUsageActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".scanner.ClassViewerActivity"
             android:exported="false" />
