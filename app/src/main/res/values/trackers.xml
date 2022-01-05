@@ -284,6 +284,7 @@
         <item>org.mozilla.gecko.telemetry</item>
         <item>mozilla.telemetry.glean.</item>
         <item>org.mozilla.fenix.GleanMetrics</item>
+        <item>org.mozilla.fenix.components.metrics</item>
         <item>net.nend.android</item>
         <item>net.nend.unity.</item>
         <item>com.pusher.client.</item>
@@ -715,6 +716,9 @@
         <item>com.zestadz.android.</item>
         <item>com.linecorp.line.admolin</item>
         <item>com.five_corp.ad.</item>
+        <item>jp.naver.line.android.analytics.</item>
+        <item>jp.naver.line.android.beacon.</item>
+        <item>com.linecorp.line.analytics.tracking</item>
         <item>com.apptracker.android.</item>
         <item>com.pad.android.xappad.</item>
         <item>com.Leadbolt.</item>
@@ -815,8 +819,11 @@
         <item>com.rollbar.android.</item>
         <item>com.rumble.sdk</item>
         <item>com.sas.mkt.mobile.sdk.</item>
+        <item>com.sdkbox.</item>
         <item>com.ss.android.</item>
         <item>com.sailthru</item>
+        <item>com.samsung.context.sdk.samsunganalytics.</item>
+        <item>com.sec.android.diagmonagent.</item>
         <item>com.sayso.ui.</item>
         <item>com.sayso.utils.</item>
         <item>io.sentry.</item>
@@ -919,6 +926,8 @@
         <item>jp.co.yahoo.yconnect.sso.ShowPromotionViewActivity</item>
         <item>jp.co.yahoo.android.haas.AgoopReceiver</item>
         <item>jp.co.yahoo.android.yssens.YSSensActivityLifecycleContentProvider</item>
+        <item>jp.co.yahoo.android.yssens.YSSensBeaconer</item>
+        <item>jp.co.yahoo.android.yssens.YSSensAnalytics</item>
         <item>com.yext.locationsdk.</item>
         <item>com.yieldlab.</item>
         <item>com.yoadx.yoadx.</item>
@@ -1230,6 +1239,7 @@
         <item>AltBeacon</item>
         <item>AltBeacon</item>
         <item>Salesforce Marketing Cloud</item>
+        <item>Mozilla Telemetry</item>
         <item>Mozilla Telemetry</item>
         <item>Mozilla Telemetry</item>
         <item>Mozilla Telemetry</item>
@@ -1665,6 +1675,9 @@
         <item>²Komli Mobile (ZestAdz)</item>
         <item>²LINE Admolin</item>
         <item>²LINE Ads Five</item>
+        <item>²LINE Telemetry</item>
+        <item>²LINE Telemetry</item>
+        <item>²LINE Telemetry</item>
         <item>²LeadBolt</item>
         <item>²LeadBolt</item>
         <item>²LeadBolt</item>
@@ -1765,8 +1778,11 @@
         <item>²Rollbar</item>
         <item>²Rumble</item>
         <item>²SAS</item>
+        <item>²SDKBOX</item>
         <item>²SNS SDK(bytedance)</item>
         <item>²Sailthru</item>
+        <item>²Samsung Telemetry</item>
+        <item>²Samsung Telemetry</item>
         <item>²SaySo Rewards</item>
         <item>²SaySo Rewards</item>
         <item>²Sentry</item>
@@ -1863,6 +1879,8 @@
         <item>²Wortise</item>
         <item>²Xiaomi Push Service</item>
         <item>²Xiaomi Push Service</item>
+        <item>²Yahoo!Japan DataShare</item>
+        <item>²Yahoo!Japan DataShare</item>
         <item>²Yahoo!Japan DataShare</item>
         <item>²Yahoo!Japan DataShare</item>
         <item>²Yahoo!Japan DataShare</item>
