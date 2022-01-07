@@ -155,8 +155,18 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<RunningAppsAd
         holder.itemView.setBackgroundResource(position % 2 == 0 ? R.drawable.item_semi_transparent : R.drawable.item_transparent);
         // Set selections
         holder.icon.setOnClickListener(v -> toggleSelection(position));
+        holder.itemView.setOnLongClickListener(v -> {
+            toggleSelection(position);
+            return true;
+        });
         // Open process details
-        holder.itemView.setOnClickListener(v -> mModel.requestDisplayProcessDetails(processItem));
+        holder.itemView.setOnClickListener(v -> {
+            if (isInSelectionMode()) {
+                toggleSelection(position);
+            } else {
+                mModel.requestDisplayProcessDetails(processItem);
+            }
+        });
         super.onBindViewHolder(holder, position);
     }
 
