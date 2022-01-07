@@ -125,6 +125,16 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<RunningAppsAd
                     return true;
                 });
             } else viewLogsItem.setVisible(false);
+            // Scan using VT
+            MenuItem scanVtIem = menu.findItem(R.id.action_scan_vt);
+            String firstCliArg = processItem.getCommandlineArgs()[0];
+            if (mModel.isVirusTotalAvailable() && (applicationInfo != null || new ProxyFile(firstCliArg).canRead())) {
+                // TODO: 7/1/22 Check other arguments for files, too?
+                scanVtIem.setVisible(true).setOnMenuItemClickListener(item -> {
+                    mModel.scanWithVt(processItem);
+                    return true;
+                });
+            } else scanVtIem.setVisible(false);
             // Set others
             MenuItem forceStopItem = menu.findItem(R.id.action_force_stop);
             MenuItem bgItem = menu.findItem(R.id.action_disable_background);

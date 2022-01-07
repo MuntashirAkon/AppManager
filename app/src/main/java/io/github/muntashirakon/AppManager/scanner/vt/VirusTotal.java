@@ -2,6 +2,7 @@
 package io.github.muntashirakon.AppManager.scanner.vt;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
 import com.android.internal.util.TextUtils;
@@ -22,6 +23,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import io.github.muntashirakon.AppManager.settings.FeatureController;
+import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.io.IoUtils;
 
 public class VirusTotal {
@@ -34,6 +37,15 @@ public class VirusTotal {
     protected static final String URL_FILE_SCAN = API_PREFIX + "/file/scan";
     protected static final String URL_FILE_RESCAN = API_PREFIX + "/file/rescan";
     protected static final String URL_FILE_REPORT = API_PREFIX + "/file/report";
+
+    @Nullable
+    public static VirusTotal getInstance() {
+        String apiKey = AppPref.getVtApiKey();
+        if (FeatureController.isInternetEnabled() && apiKey != null) {
+            return new VirusTotal(apiKey);
+        }
+        return null;
+    }
 
     private final String mApiKey;
     private final Gson mGson;

@@ -22,4 +22,9 @@
         android:icon="@drawable/ic_view_list_black_24dp"
         android:title="@string/view_logs" />
 
+    <item
+        android:id="@+id/action_scan_vt"
+        android:icon="@drawable/ic_vt"
+        android:title="@string/scan_in_vt" />
+
 </menu>

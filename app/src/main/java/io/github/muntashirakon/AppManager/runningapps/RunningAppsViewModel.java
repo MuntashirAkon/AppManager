@@ -6,6 +6,7 @@ import android.app.Application;
 import android.content.pm.ApplicationInfo;
 import android.os.Build;
 import android.os.RemoteException;
+import android.os.SystemClock;
 import android.os.UserHandleHidden;
 import android.text.TextUtils;
 
@@ -18,6 +19,8 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -29,10 +32,16 @@ import java.util.Set;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.runner.Runner;
+import io.github.muntashirakon.AppManager.scanner.vt.VirusTotal;
+import io.github.muntashirakon.AppManager.scanner.vt.VtFileReport;
+import io.github.muntashirakon.AppManager.scanner.vt.VtFileScanMeta;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
+import io.github.muntashirakon.io.ProxyFile;
+import io.github.muntashirakon.io.ProxyInputStream;
 
 public class RunningAppsViewModel extends AndroidViewModel {
     @RunningAppsActivity.SortOrder
@@ -40,17 +49,100 @@ public class RunningAppsViewModel extends AndroidViewModel {
     @RunningAppsActivity.Filter
     private int filter;
     private final MultithreadedExecutor executor = MultithreadedExecutor.getNewInstance();
+    @Nullable
+    private final VirusTotal vt;
 
     public RunningAppsViewModel(@NonNull Application application) {
         super(application);
         sortOrder = (int) AppPref.get(AppPref.PrefKey.PREF_RUNNING_APPS_SORT_ORDER_INT);
         filter = (int) AppPref.get(AppPref.PrefKey.PREF_RUNNING_APPS_FILTER_FLAGS_INT);
+        vt = VirusTotal.getInstance();
     }
 
     @Override
     protected void onCleared() {
         executor.shutdownNow();
         super.onCleared();
+    }
+
+    public boolean isVirusTotalAvailable() {
+        return vt != null;
+    }
+
+    // Null = Uploading, NonNull = Queued
+    private final MutableLiveData<Pair<ProcessItem, VtFileScanMeta>> vtFileScanMeta = new MutableLiveData<>();
+    // Null = Failed, NonNull = Result generated
+    private final MutableLiveData<Pair<ProcessItem, VtFileReport>> vtFileReport = new MutableLiveData<>();
+
+    public MutableLiveData<Pair<ProcessItem, VtFileReport>> getVtFileReport() {
+        return vtFileReport;
+    }
+
+    public MutableLiveData<Pair<ProcessItem, VtFileScanMeta>> getVtFileScanMeta() {
+        return vtFileScanMeta;
+    }
+
+    @AnyThread
+    public void scanWithVt(@NonNull ProcessItem processItem) {
+        String file;
+        if (processItem instanceof AppProcessItem) {
+            file = ((AppProcessItem) processItem).packageInfo.applicationInfo.publicSourceDir;
+        } else file = processItem.getCommandlineArgs()[0];
+        if (vt == null || file == null) {
+            vtFileReport.postValue(new Pair<>(processItem, null));
+            return;
+        }
+        executor.submit(() -> {
+            ProxyFile proxyFile = new ProxyFile(file);
+            if (!proxyFile.canRead()) {
+                vtFileReport.postValue(new Pair<>(processItem, null));
+                return;
+            }
+            String sha256 = DigestUtils.getHexDigest(DigestUtils.SHA_256, proxyFile);
+            try {
+                List<VtFileReport> reports = vt.fetchReports(new String[]{sha256});
+                if (reports.size() == 0) throw new IOException("No report returned.");
+                VtFileReport report = reports.get(0);
+                int responseCode = report.getResponseCode();
+                if (responseCode == VirusTotal.RESPONSE_FOUND) {
+                    vtFileReport.postValue(new Pair<>(processItem, report));
+                    return;
+                }
+                // Report not found: request scan or wait
+                if (responseCode == VirusTotal.RESPONSE_NOT_FOUND) {
+                    if (proxyFile.length() > 32 * 1024 * 1024) {
+                        throw new IOException("APK is larger than 32 MB.");
+                    }
+                    vtFileScanMeta.postValue(new Pair<>(processItem, null));
+                    VtFileScanMeta scanMeta;
+                    try (InputStream is = new ProxyInputStream(proxyFile)) {
+                        scanMeta = vt.scan(proxyFile.getName(), is);
+                    }
+                    vtFileScanMeta.postValue(new Pair<>(processItem, scanMeta));
+                    responseCode = VirusTotal.RESPONSE_QUEUED;
+                } else {
+                    // Item is queued
+                    vtFileReport.postValue(new Pair<>(processItem, report));
+                }
+                int waitDuration = 60_000;
+                while (responseCode == VirusTotal.RESPONSE_QUEUED) {
+                    reports = vt.fetchReports(new String[]{sha256});
+                    if (reports.size() == 0) throw new IOException("No report returned.");
+                    report = reports.get(0);
+                    responseCode = report.getResponseCode();
+                    // Wait for result: First wait for 1 minute, then for 30 seconds
+                    // We won't do it less than 30 seconds since the API has a limit of 4 request/minute
+                    SystemClock.sleep(waitDuration);
+                    waitDuration = 30_000;
+                }
+                if (responseCode == VirusTotal.RESPONSE_FOUND) {
+                    vtFileReport.postValue(new Pair<>(processItem, report));
+                } else throw new IOException("Could not generate scan report");
+            } catch (IOException e) {
+                e.printStackTrace();
+                vtFileReport.postValue(new Pair<>(processItem, null));
+            }
+        });
     }
 
     private MutableLiveData<List<ProcessItem>> processLiveData;
@@ -63,12 +155,13 @@ public class RunningAppsViewModel extends AndroidViewModel {
     }
 
 
-    private MutableLiveData<ProcessItem> processItemLiveData = new MutableLiveData<>();
+    private final MutableLiveData<ProcessItem> processItemLiveData = new MutableLiveData<>();
 
     public LiveData<ProcessItem> observeProcessDetails() {
         return processItemLiveData;
     }
 
+    @AnyThread
     public void requestDisplayProcessDetails(@NonNull ProcessItem processItem) {
         processItemLiveData.postValue(processItem);
     }

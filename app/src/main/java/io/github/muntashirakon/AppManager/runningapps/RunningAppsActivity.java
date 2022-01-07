@@ -38,6 +38,8 @@ import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
 import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
+import io.github.muntashirakon.AppManager.scanner.vt.VtFileReport;
+import io.github.muntashirakon.AppManager.scanner.vt.VtFileScanMeta;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
@@ -135,6 +137,7 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
         multiSelectionView.setAdapter(mAdapter);
         multiSelectionView.updateCounter(true);
         selectionMenu = multiSelectionView.getMenu();
+        selectionMenu.findItem(R.id.action_scan_vt).setVisible(false);
         enableKillForSystem = (boolean) AppPref.get(AppPref.PrefKey.PREF_ENABLE_KILL_FOR_SYSTEM_BOOL);
 
         // Set observers
@@ -173,6 +176,27 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
         mModel.observeProcessDetails().observe(this, processItem -> {
             RunningAppDetails fragment = RunningAppDetails.getInstance(processItem);
             fragment.show(getSupportFragmentManager(), RunningAppDetails.TAG);
+        });
+        mModel.getVtFileScanMeta().observe(this, processItemVtFileScanMetaPair -> {
+            ProcessItem processItem = processItemVtFileScanMetaPair.first;
+            VtFileScanMeta vtFileScanMeta = processItemVtFileScanMetaPair.second;
+            if (vtFileScanMeta == null) {
+                // Started uploading
+                UIUtils.displayShortToast(R.string.vt_uploading);
+            } else {
+                UIUtils.displayShortToast(R.string.vt_queued);
+            }
+            // TODO: 7/1/22 Use a separate fragment
+        });
+        mModel.getVtFileReport().observe(this, processItemVtFileReportPair -> {
+            ProcessItem processItem = processItemVtFileReportPair.first;
+            VtFileReport vtFileReport = processItemVtFileReportPair.second;
+            if (vtFileReport == null) {
+                UIUtils.displayShortToast(R.string.vt_failed);
+            } else {
+                UIUtils.displayLongToast(getString(R.string.vt_success, vtFileReport.getPositives(), vtFileReport.getTotal()));
+            }
+            // TODO: 7/1/22 Use a separate fragment
         });
     }
 

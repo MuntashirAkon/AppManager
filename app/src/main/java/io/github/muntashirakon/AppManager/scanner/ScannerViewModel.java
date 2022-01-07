@@ -33,8 +33,6 @@ import java.util.concurrent.CountDownLatch;
 import io.github.muntashirakon.AppManager.scanner.vt.VirusTotal;
 import io.github.muntashirakon.AppManager.scanner.vt.VtFileReport;
 import io.github.muntashirakon.AppManager.scanner.vt.VtFileScanMeta;
-import io.github.muntashirakon.AppManager.settings.FeatureController;
-import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
@@ -65,9 +63,7 @@ public class ScannerViewModel extends AndroidViewModel {
 
     public ScannerViewModel(@NonNull Application application) {
         super(application);
-        if (FeatureController.isInternetEnabled() && AppPref.getVtApiKey() != null) {
-            vt = new VirusTotal(AppPref.getVtApiKey());
-        } else vt = null;
+        vt = VirusTotal.getInstance();
     }
 
     @Override
