@@ -111,7 +111,6 @@
     <string name="app_data_will_be_lost">Les données existantes seront perdues.</string>
     <string name="app_signing_signature_mismatch_for_system_apps">Impossible d\'installer l\'application car une application système avec une signature différente possède déjà ce nom de paquet.</string>
     <string name="do_you_want_to_uninstall_and_install">Voulez-vous désinstaller et installer à nouveau l\'application \?</string>
-    <string name="packages">paquets</string>
     <string name="usage_access_not_supported">Impossible de demander l\'accès aux données d\'utilisation, puisque la page correspondante des paramètres n\'existe pas.</string>
     <string name="non_critical_exts">Extensions non critiques</string>
     <string name="critical_exts">Extensions critiques</string>
@@ -1096,4 +1095,10 @@
     <string name="system_partition">Administrateur d\'Android</string>
     <string name="send_edited_intent">Envoyer l\'intention modifiée</string>
     <string name="accessibility_service_description">Le service d\'accessibilité générique pour gérer certaines opérations comme le vidage du cache en mode non administrateur.</string>
+    <string name="search_type_regular_expressions">Expression régulière</string>
+    <string name="pref_default_blocking_method">Méthode de blocage par défaut</string>
+    <string name="search_type_contains">Contient</string>
+    <string name="search_type_suffix">Suffixe</string>
+    <string name="search_type_prefix">Préfixe</string>
+    <string name="authenticating">Authentification…</string>
 </resources>
