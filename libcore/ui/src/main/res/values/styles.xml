@@ -254,6 +254,11 @@
         <item name="android:background">@null</item>
     </style>
 
+    <style name="AppTheme.TextInputLayout.Small" parent="AppTheme.TextInputLayout">
+        <item name="hintTextAppearance">@style/AppTheme.TextAppearance.Body.Smaller</item>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.AppTheme.TextInputLayout</item>
+    </style>
+
     <style name="AppTheme.TextInputLayout.ExposedDropdownMenu.Small" parent="AppTheme.TextInputLayout.ExposedDropdownMenu">
         <item name="hintTextAppearance">@style/AppTheme.TextAppearance.Body.Smaller</item>
         <item name="materialThemeOverlay">@style/ThemeOverlay.AppTheme.TextInputLayout</item>
@@ -270,7 +275,8 @@
         <item name="android:textAppearance">@style/AppTheme.TextAppearance.Body.Small</item>
         <item name="android:paddingStart">12dp</item>
         <item name="android:paddingEnd">12dp</item>
-        <item name="android:paddingTop">0dp</item>
-        <item name="android:paddingBottom">0dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:minHeight">34dp</item>
     </style>
 </resources>

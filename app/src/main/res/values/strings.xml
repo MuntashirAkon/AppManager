@@ -180,7 +180,14 @@
         <item quantity="one">%1$d hr</item>
         <item quantity="other">%1$d hrs</item>
     </plurals>
-    <string name="usage_min">%1$d min</string>
+    <plurals name="usage_minutes">
+        <item quantity="one">%1$d min</item>
+        <item quantity="other">%1$d mins</item>
+    </plurals>
+    <plurals name="usage_seconds">
+        <item quantity="one">%1$d sec</item>
+        <item quantity="other">%1$d secs</item>
+    </plurals>
     <string name="usage_less_than_a_minute">Less than a minute</string>
     <string name="go_back">Go back</string>
     <string name="go">Go</string>
@@ -1158,4 +1165,14 @@
     <string name="pref_vt_apikey_summary">Enable scanning APK files via VirusTotal.</string>
     <string name="uses_play_app_signing">Play App Signing</string>
     <string name="uses_play_app_signing_description">This app contains certain markers that indicate that it <i>might</i> be using <a href="https://support.google.com/googleplay/android-developer/answer/9842756">Play App Signing</a>. With this scheme, the signing keys are stored in Google\'s servers, and Google is responsible for signing the app. Note that matching signing information is the only way to verify that the app has not been modified by any person other than the developer (and in this case, Google too).</string>
+    <string name="scan_in_vt">Scan in VirusTotal</string>
+    <string name="process_id">Process ID</string>
+    <string name="parent_process_id">Parent Process ID</string>
+    <string name="virtual_memory">Virtual Memory</string>
+    <string name="cpu_percent">% CPU</string>
+    <string name="cpu_time">CPU Time</string>
+    <string name="priority">Priority</string>
+    <string name="threads">Thread Count</string>
+    <string name="state">Process State</string>
+    <string name="commandline_args">Commandline arguments</string>
 </resources>

@@ -16,7 +16,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import io.github.muntashirakon.AppManager.utils.CpuUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
+import io.github.muntashirakon.AppManager.utils.Utils;
 
 /**
  * This is a generic Java-way of parsing processes from /proc. This is a work in progress and by no means perfect. To
@@ -169,11 +171,14 @@ public class Ps {
     private static final String MEM_STAT = "statm";
     private static final String SEPOL = "attr/current";
     private static final String NAME = "cmdline";
+    private static final String UPTIME = "uptime";
     private static final String WCHAN = "wchan";
 
     private final File procFile;
-    @GuardedBy("processes")
+    @GuardedBy("processEntries")
     private final ArrayList<ProcessEntry> processEntries = new ArrayList<>(256);
+    private long uptime;
+    private long clockTicks;
 
     public Ps() {
         this(new File("/proc"));
@@ -185,7 +190,7 @@ public class Ps {
     }
 
     @AnyThread
-    @GuardedBy("processes")
+    @GuardedBy("processEntries")
     @NonNull
     public ArrayList<ProcessEntry> getProcesses() {
         synchronized (processEntries) {
@@ -194,7 +199,7 @@ public class Ps {
     }
 
     @WorkerThread
-    @GuardedBy("processes")
+    @GuardedBy("processEntries")
     public void loadProcesses() {
         synchronized (processEntries) {
             ArrayList<File> procPidFiles = new ArrayList<>(256);
@@ -204,6 +209,10 @@ public class Ps {
             if (procFileArr != null) {
                 procPidFiles.addAll(Arrays.asList(procFileArr));
             }
+            uptime = Double.valueOf(FileUtils.getFileContent(new File(procFile, UPTIME)).split("\\s")[0]).longValue();
+            if (!Utils.isRoboUnitTest()) {
+                clockTicks = CpuUtils.getClockTicksPerSecond();
+            } else clockTicks = 100; // To prevent error due to native library
             // Get process info for each PID
             for (File pidFile : procPidFiles) {
                 ProcItem procItem = new ProcItem();
@@ -232,7 +241,7 @@ public class Ps {
     }
 
     @NonNull
-    private static ProcessEntry newProcess(@NonNull ProcItem procItem) {
+    private ProcessEntry newProcess(@NonNull ProcItem procItem) {
         ProcessEntry processEntry = new ProcessEntry();
         processEntry.pid = Integer.decode(procItem.stat[STAT_PID]);
         processEntry.ppid = Integer.decode(procItem.stat[STAT_PPID]);
@@ -241,6 +250,7 @@ public class Ps {
         processEntry.instructionPointer = Long.decode(procItem.stat[STAT_EIP]);
         processEntry.virtualMemorySize = Long.decode(procItem.stat[STAT_VSIZE]);
         processEntry.residentSetSize = Long.decode(procItem.stat[STAT_RSS]);
+        processEntry.sharedMemory = Long.decode(procItem.memStat[MEM_STAT_SHARED]);
         processEntry.processGroupId = Integer.decode(procItem.stat[STAT_PGRP]);
         processEntry.majorPageFaults = Integer.decode(procItem.stat[STAT_MAJ_FLT]);
         processEntry.minorPageFaults = Integer.decode(procItem.stat[STAT_MIN_FLT]);
@@ -252,8 +262,11 @@ public class Ps {
         processEntry.seLinuxPolicy = procItem.sepol;
         processEntry.name = procItem.name.equals("") ? procItem.status.get(STATUS_NAME) : procItem.name;
         processEntry.users = new ProcessUsers(procItem.status.get(STATUS_UID), procItem.status.get(STATUS_GID));
-        processEntry.cpuTimeConsumed = Integer.decode(procItem.stat[STAT_UTIME]);
-        processEntry.elapsedTime = Integer.decode(procItem.stat[STAT_START_TIME]);
+        processEntry.cpuTimeConsumed = (Integer.decode(procItem.stat[STAT_UTIME])
+                + Integer.decode(procItem.stat[STAT_STIME])) / clockTicks;
+        processEntry.cCpuTimeConsumed = (Integer.decode(procItem.stat[STAT_CUTIME])
+                + Integer.decode(procItem.stat[STAT_CSTIME])) / clockTicks;
+        processEntry.elapsedTime = uptime - (Integer.decode(procItem.stat[STAT_START_TIME]) / clockTicks);
         String state = procItem.status.get(STATUS_STATE);
         if (state == null) {
             throw new RuntimeException("Process state cannot be empty!");
@@ -262,7 +275,7 @@ public class Ps {
         StringBuilder stateExtra = new StringBuilder();
         if (Integer.decode(procItem.stat[STAT_NICE]) < 0) {
             stateExtra.append("<");
-        } else if (Integer.decode(procItem.stat[STAT_NICE])>0) {
+        } else if (Integer.decode(procItem.stat[STAT_NICE]) > 0) {
             stateExtra.append("N");
         }
         if (procItem.stat[STAT_SID].equals(procItem.stat[STAT_PID])) {

@@ -34,7 +34,6 @@
             android:layout_gravity="center_vertical"
             android:gravity="center"
             android:singleLine="true"
-            android:textIsSelectable="true"
             android:textStyle="bold"
             android:textColor="?android:attr/textColorPrimary"
             tools:text="@tools:sample/lorem" />
@@ -43,7 +42,6 @@
             android:id="@+id/package_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textIsSelectable="true"
             android:textStyle="italic"
             android:textSize="12sp"
             tools:text="@tools:sample/lorem" />
@@ -53,7 +51,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:textIsSelectable="true"
             android:textSize="10sp"
             tools:text="@tools:sample/lorem"
             tools:ignore="SmallSp" />
@@ -62,7 +59,6 @@
             android:id="@+id/memory_usage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textIsSelectable="true"
             android:textSize="10sp"
             tools:text="@tools:sample/lorem"
             tools:ignore="SmallSp" />
@@ -71,7 +67,6 @@
             android:id="@+id/user_state_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textIsSelectable="true"
             android:textSize="10sp"
             tools:text="@tools:sample/lorem"
             tools:ignore="SmallSp" />
@@ -80,7 +75,6 @@
             android:id="@+id/selinux_context"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textIsSelectable="true"
             android:textSize="10sp"
             tools:text="@tools:sample/lorem"
             tools:ignore="SmallSp" />

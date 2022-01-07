@@ -62,6 +62,17 @@ public class RunningAppsViewModel extends AndroidViewModel {
         return processLiveData;
     }
 
+
+    private MutableLiveData<ProcessItem> processItemLiveData = new MutableLiveData<>();
+
+    public LiveData<ProcessItem> observeProcessDetails() {
+        return processItemLiveData;
+    }
+
+    public void requestDisplayProcessDetails(@NonNull ProcessItem processItem) {
+        processItemLiveData.postValue(processItem);
+    }
+
     @NonNull
     private final List<ProcessItem> processList = new ArrayList<>();
     @NonNull

@@ -30,6 +30,7 @@ import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.io.ProxyFile;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
 public class RunningAppsAdapter extends MultiSelectionView.Adapter<RunningAppsAdapter.ViewHolder> {
@@ -86,7 +87,9 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<RunningAppsAd
         // Set process IDs
         holder.processIds.setText(mActivity.getString(R.string.pid_and_ppid, processItem.pid, processItem.ppid));
         // Set memory usage
-        holder.memoryUsage.setText(mActivity.getString(R.string.memory_virtual_memory, Formatter.formatFileSize(mActivity, processItem.rss << 12), Formatter.formatFileSize(mActivity, processItem.vsz)));
+        holder.memoryUsage.setText(mActivity.getString(R.string.memory_virtual_memory,
+                Formatter.formatFileSize(mActivity, processItem.getMemory()),
+                Formatter.formatFileSize(mActivity, processItem.getVirtualMemory())));
         // Set user info
         String userInfo = mActivity.getString(R.string.user_and_uid, processItem.user, processItem.uid);
         String stateInfo;
@@ -152,6 +155,8 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<RunningAppsAd
         holder.itemView.setBackgroundResource(position % 2 == 0 ? R.drawable.item_semi_transparent : R.drawable.item_transparent);
         // Set selections
         holder.icon.setOnClickListener(v -> toggleSelection(position));
+        // Open process details
+        holder.itemView.setOnClickListener(v -> mModel.requestDisplayProcessDetails(processItem));
         super.onBindViewHolder(holder, position);
     }
 

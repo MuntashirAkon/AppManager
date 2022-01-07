@@ -170,6 +170,10 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
                         .loadLabel(getPackageManager()));
             }
         });
+        mModel.observeProcessDetails().observe(this, processItem -> {
+            RunningAppDetails fragment = RunningAppDetails.getInstance(processItem);
+            fragment.show(getSupportFragmentManager(), RunningAppDetails.TAG);
+        });
     }
 
     @Override

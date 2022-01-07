@@ -578,43 +578,14 @@ public class Utils {
         }
     }
 
-    public static String getFormattedDuration(Context context, long time) {
-        return getFormattedDuration(context, time, false);
+    @Deprecated
+    public static String getFormattedDuration(Context context, long millis) {
+        return DateUtils.getFormattedDuration(context, millis);
     }
 
-    public static String getFormattedDuration(Context context, long time, boolean addSign) {
-        String fTime = "";
-        if (time < 0) {
-            time = -time;
-            if (addSign) fTime = "- ";
-        }
-        time /= 60000; // minutes
-        long month, day, hour, min;
-        month = time / 43200;
-        time %= 43200;
-        day = time / 1440;
-        time %= 1440;
-        hour = time / 60;
-        min = time % 60;
-        int count = 0;
-        if (month != 0) {
-            fTime += context.getResources().getQuantityString(R.plurals.usage_months, (int) month, month);
-            ++count;
-        }
-        if (day != 0) {
-            fTime += (count > 0 ? " " : "") + context.getResources().getQuantityString(R.plurals.usage_days, (int) day, day);
-            ++count;
-        }
-        if (hour != 0) {
-            fTime += (count > 0 ? " " : "") + context.getResources().getQuantityString(R.plurals.usage_hours, (int) hour, hour);
-            ++count;
-        }
-        if (min != 0) {
-            fTime += (count > 0 ? " " : "") + context.getString(R.string.usage_min, min);
-        } else {
-            if (count == 0) fTime = context.getString(R.string.usage_less_than_a_minute);
-        }
-        return fTime;
+    @Deprecated
+    public static String getFormattedDuration(Context context, long millis, boolean addSign) {
+        return DateUtils.getFormattedDuration(context, millis, addSign);
     }
 
     public static boolean isAppUpdated() {
@@ -709,5 +680,9 @@ public class Utils {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         activity.startActivity(intent);
         activity.finish();
+    }
+
+    public static boolean isRoboUnitTest() {
+        return "robolectric".equals(Build.FINGERPRINT);
     }
 }

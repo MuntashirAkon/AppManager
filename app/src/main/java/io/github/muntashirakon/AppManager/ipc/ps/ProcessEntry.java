@@ -4,6 +4,7 @@ package io.github.muntashirakon.AppManager.ipc.ps;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 
 public class ProcessEntry implements Parcelable {
@@ -14,6 +15,7 @@ public class ProcessEntry implements Parcelable {
     public long instructionPointer;
     public long virtualMemorySize;
     public long residentSetSize;
+    public long sharedMemory;
     public int processGroupId;
     public int majorPageFaults;
     public int minorPageFaults;
@@ -26,6 +28,7 @@ public class ProcessEntry implements Parcelable {
     public String name;
     public ProcessUsers users;
     public long cpuTimeConsumed;
+    public long cCpuTimeConsumed;
     public long elapsedTime;
     public String processState;
     public String processStatePlus;
@@ -41,6 +44,7 @@ public class ProcessEntry implements Parcelable {
         instructionPointer = in.readLong();
         virtualMemorySize = in.readLong();
         residentSetSize = in.readLong();
+        sharedMemory = in.readLong();
         processGroupId = in.readInt();
         majorPageFaults = in.readInt();
         minorPageFaults = in.readInt();
@@ -53,6 +57,7 @@ public class ProcessEntry implements Parcelable {
         name = in.readString();
         users = in.readParcelable(ProcessUsers.class.getClassLoader());
         cpuTimeConsumed = in.readLong();
+        cCpuTimeConsumed = in.readLong();
         elapsedTime = in.readLong();
         processState = in.readString();
         processStatePlus = in.readString();
@@ -86,6 +91,7 @@ public class ProcessEntry implements Parcelable {
         dest.writeLong(instructionPointer);
         dest.writeLong(virtualMemorySize);
         dest.writeLong(residentSetSize);
+        dest.writeLong(sharedMemory);
         dest.writeInt(processGroupId);
         dest.writeInt(majorPageFaults);
         dest.writeInt(minorPageFaults);
@@ -98,6 +104,7 @@ public class ProcessEntry implements Parcelable {
         dest.writeString(name);
         dest.writeParcelable(users, flags);
         dest.writeLong(cpuTimeConsumed);
+        dest.writeLong(cCpuTimeConsumed);
         dest.writeLong(elapsedTime);
         dest.writeString(processState);
         dest.writeString(processStatePlus);
