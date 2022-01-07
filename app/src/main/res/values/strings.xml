@@ -1175,4 +1175,6 @@
     <string name="threads">Thread Count</string>
     <string name="state">Process State</string>
     <string name="commandline_args">Commandline arguments</string>
+    <string name="memory_info">Memory: %1$s total, %2$s used, %3$s free, %4$s buffers</string>
+    <string name="swap_info">Swap: %1$s total, %2$s used, %3$s free, %4$s cached</string>
 </resources>

@@ -8,9 +8,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.text.format.Formatter;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -36,6 +38,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
+import io.github.muntashirakon.AppManager.ipc.ps.DeviceMemoryInfo;
 import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
 import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
 import io.github.muntashirakon.AppManager.scanner.vt.VtFileReport;
@@ -45,7 +48,6 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.reflow.ReflowMenuViewWrapper;
 import io.github.muntashirakon.widget.MultiSelectionView;
-import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
 public class RunningAppsActivity extends BaseActivity implements MultiSelectionView.OnSelectionChangeListener,
         ReflowMenuViewWrapper.OnItemSelectedListener, SearchView.OnQueryTextListener,
@@ -97,6 +99,9 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
     private MultiSelectionView multiSelectionView;
     @Nullable
     private Menu selectionMenu;
+    private TextView memoryInfoView;
+    private TextView swapInfoView;
+    private DeviceMemoryInfo deviceMemoryInfo; // TODO: Move to ViewModel
     private boolean isAdbMode;
 
     @Nullable
@@ -126,7 +131,6 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
         RecyclerView recyclerView = findViewById(R.id.list_item);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        new FastScrollerBuilder(recyclerView).useMd2Style().build();
         mAdapter = new RunningAppsAdapter(this);
         recyclerView.setAdapter(mAdapter);
         // Recycler view is focused by default
@@ -139,6 +143,10 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
         selectionMenu = multiSelectionView.getMenu();
         selectionMenu.findItem(R.id.action_scan_vt).setVisible(false);
         enableKillForSystem = (boolean) AppPref.get(AppPref.PrefKey.PREF_ENABLE_KILL_FOR_SYSTEM_BOOL);
+        // Memory
+        memoryInfoView = findViewById(R.id.memory_usage);
+        swapInfoView = findViewById(R.id.swap_usage);
+        deviceMemoryInfo = new DeviceMemoryInfo();
 
         // Set observers
         mModel.observeKillProcess().observe(this, processInfo -> {
@@ -409,5 +417,17 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
         if (mProgressIndicator == null || mModel == null) return;
         mProgressIndicator.show();
         mModel.loadProcesses();
+        // Load memory
+        deviceMemoryInfo.reload();
+        memoryInfoView.setText(getString(R.string.memory_info,
+                Formatter.formatShortFileSize(this, deviceMemoryInfo.getTotalMemory()),
+                Formatter.formatShortFileSize(this, deviceMemoryInfo.getUsedMemory()),
+                Formatter.formatShortFileSize(this, deviceMemoryInfo.getFreeMemory()),
+                Formatter.formatShortFileSize(this, deviceMemoryInfo.getBuffers())));
+        swapInfoView.setText(getString(R.string.swap_info,
+                Formatter.formatShortFileSize(this, deviceMemoryInfo.getTotalSwap()),
+                Formatter.formatShortFileSize(this, deviceMemoryInfo.getUsedSwap()),
+                Formatter.formatShortFileSize(this, deviceMemoryInfo.getFreeSwap()),
+                Formatter.formatShortFileSize(this, deviceMemoryInfo.getCached())));
     }
 }

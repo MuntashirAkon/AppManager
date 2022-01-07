@@ -17,14 +17,46 @@
         android:focusable="false"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/list_item"
+        <me.zhanghai.android.fastscroll.FastScrollNestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="none"
-            android:focusable="false"
-            android:clipToPadding="false"
-            tools:listitem="@layout/item_running_app" />
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/memory_usage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="@dimen/padding_small"
+                    android:paddingHorizontal="@dimen/padding_medium"
+                    android:textIsSelectable="true"
+                    tools:text="Memory: 2.8 GB total, 2.1 GB used, 700 MB free, 120 MB buffers" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/swap_usage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="@dimen/padding_small"
+                    android:paddingHorizontal="@dimen/padding_medium"
+                    android:textIsSelectable="true"
+                    tools:text="Swap: 2.8 GB total, 2.1 GB used, 700 MB free, 700 MB cached" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/list_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scrollbars="none"
+                    android:overScrollMode="never"
+                    android:focusable="false"
+                    android:clipToPadding="false"
+                    tools:listitem="@layout/item_running_app" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </me.zhanghai.android.fastscroll.FastScrollNestedScrollView>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
