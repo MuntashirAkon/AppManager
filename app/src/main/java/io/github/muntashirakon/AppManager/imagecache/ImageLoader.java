@@ -87,7 +87,6 @@ public class ImageLoader implements AutoCloseable {
         }
     }
 
-    @WorkerThread
     private class LoadQueueItem implements Runnable {
         private final ImageLoaderQueueItem mQueueItem;
 
@@ -95,6 +94,7 @@ public class ImageLoader implements AutoCloseable {
             this.mQueueItem = queueItem;
         }
 
+        @WorkerThread
         public void run() {
             if (imageViewReusedOrClosed(mQueueItem)) return;
             Bitmap image = mFileCache.getImage(mQueueItem.name);
