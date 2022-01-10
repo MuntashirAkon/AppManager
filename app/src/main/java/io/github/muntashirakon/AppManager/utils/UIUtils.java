@@ -313,7 +313,7 @@ public class UIUtils {
     }
 
     @NonNull
-    private static Spannable charSequenceToSpannable(@NonNull CharSequence text) {
+    public static Spannable charSequenceToSpannable(@NonNull CharSequence text) {
         if (text instanceof Spannable) {
             return (Spannable) text;
         } else return sSpannableFactory.newSpannable(text);

@@ -16,12 +16,10 @@ public class DeviceMemoryInfo {
 
     private long mTotalMemory;
     private long mFreeMemory;
-    private long mUsedMemory;
     private long mBuffers;
 
     private long mTotalSwap;
     private long mFreeSwap;
-    private long mUsedSwap;
     private long mCached;
 
     private final File mMeminfoFile;
@@ -61,8 +59,6 @@ public class DeviceMemoryInfo {
                         break;
                 }
             }
-            mUsedMemory = mTotalMemory - mFreeMemory;
-            mUsedSwap = mTotalSwap - mFreeSwap;
         } catch (IOException ignore) {
         }
     }
@@ -76,11 +72,19 @@ public class DeviceMemoryInfo {
     }
 
     public long getUsedMemory() {
-        return mUsedMemory;
+        return mTotalMemory - mFreeMemory;
     }
 
     public long getBuffers() {
         return mBuffers;
+    }
+
+    public long getCachedMemory() {
+        return mCached;
+    }
+
+    public long getApplicationMemory() {
+        return getUsedMemory() - getBuffers() - getCachedMemory();
     }
 
     public long getTotalSwap() {
@@ -92,10 +96,7 @@ public class DeviceMemoryInfo {
     }
 
     public long getUsedSwap() {
-        return mUsedSwap;
+        return mTotalSwap - mFreeSwap;
     }
 
-    public long getCached() {
-        return mCached;
-    }
 }

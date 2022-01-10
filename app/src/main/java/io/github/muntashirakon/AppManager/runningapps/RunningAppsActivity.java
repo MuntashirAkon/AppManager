@@ -7,17 +7,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.text.Spannable;
 import android.text.TextUtils;
 import android.text.format.Formatter;
+import android.text.style.ForegroundColorSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.ColorRes;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
@@ -99,8 +104,14 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
     private MultiSelectionView multiSelectionView;
     @Nullable
     private Menu selectionMenu;
+    private TextView memoryShortInfoView;
     private TextView memoryInfoView;
+    private View[] memoryInfoChartChildren;
+    private LinearLayoutCompat memoryInfoChart;
+    private TextView swapShortInfoView;
     private TextView swapInfoView;
+    private View[] swapInfoChartChildren;
+    private LinearLayoutCompat swapInfoChart;
     private DeviceMemoryInfo deviceMemoryInfo; // TODO: Move to ViewModel
     private boolean isAdbMode;
 
@@ -144,8 +155,22 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
         selectionMenu.findItem(R.id.action_scan_vt).setVisible(false);
         enableKillForSystem = (boolean) AppPref.get(AppPref.PrefKey.PREF_ENABLE_KILL_FOR_SYSTEM_BOOL);
         // Memory
-        memoryInfoView = findViewById(R.id.memory_usage);
-        swapInfoView = findViewById(R.id.swap_usage);
+        memoryShortInfoView = findViewById(R.id.memory_usage);
+        memoryInfoView = findViewById(R.id.memory_usage_info);
+        memoryInfoChart = findViewById(R.id.memory_usage_chart);
+        int childCount = memoryInfoChart.getChildCount();
+        memoryInfoChartChildren = new View[childCount];
+        for (int i = 0; i < childCount; ++i) {
+            memoryInfoChartChildren[i] = memoryInfoChart.getChildAt(i);
+        }
+        swapShortInfoView = findViewById(R.id.swap_usage);
+        swapInfoView = findViewById(R.id.swap_usage_info);
+        swapInfoChart = findViewById(R.id.swap_usage_chart);
+        childCount = swapInfoChart.getChildCount();
+        swapInfoChartChildren = new View[childCount];
+        for (int i = 0; i < childCount; ++i) {
+            swapInfoChartChildren[i] = swapInfoChart.getChildAt(i);
+        }
         deviceMemoryInfo = new DeviceMemoryInfo();
 
         // Set observers
@@ -417,17 +442,67 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
         if (mProgressIndicator == null || mModel == null) return;
         mProgressIndicator.show();
         mModel.loadProcesses();
-        // Load memory
+        updateMemoryInfo();
+    }
+
+    private void updateMemoryInfo() {
         deviceMemoryInfo.reload();
-        memoryInfoView.setText(getString(R.string.memory_info,
-                Formatter.formatShortFileSize(this, deviceMemoryInfo.getTotalMemory()),
-                Formatter.formatShortFileSize(this, deviceMemoryInfo.getUsedMemory()),
-                Formatter.formatShortFileSize(this, deviceMemoryInfo.getFreeMemory()),
-                Formatter.formatShortFileSize(this, deviceMemoryInfo.getBuffers())));
-        swapInfoView.setText(getString(R.string.swap_info,
-                Formatter.formatShortFileSize(this, deviceMemoryInfo.getTotalSwap()),
-                Formatter.formatShortFileSize(this, deviceMemoryInfo.getUsedSwap()),
-                Formatter.formatShortFileSize(this, deviceMemoryInfo.getFreeSwap()),
-                Formatter.formatShortFileSize(this, deviceMemoryInfo.getCached())));
+        // Memory
+        long appMemory = deviceMemoryInfo.getApplicationMemory();
+        long cachedMemory = deviceMemoryInfo.getCachedMemory();
+        long buffers = deviceMemoryInfo.getBuffers();
+        long freeMemory = deviceMemoryInfo.getFreeMemory();
+        double total = appMemory + cachedMemory + buffers + freeMemory;
+        memoryInfoChart.post(() -> {
+            int width = memoryInfoChart.getWidth();
+            setLayoutWidth(memoryInfoChartChildren[0], (int) (width * appMemory / total));
+            setLayoutWidth(memoryInfoChartChildren[1], (int) (width * cachedMemory / total));
+            setLayoutWidth(memoryInfoChartChildren[2], (int) (width * buffers / total));
+        });
+        memoryShortInfoView.setText(UIUtils.getStyledKeyValue(this, R.string.memory, Formatter
+                .formatFileSize(this, deviceMemoryInfo.getUsedMemory()) + "/" + Formatter
+                .formatFileSize(this, deviceMemoryInfo.getTotalMemory())));
+        // Set color info
+        Spannable memInfo = UIUtils.charSequenceToSpannable(getString(R.string.memory_chart_info, Formatter
+                        .formatShortFileSize(this, appMemory), Formatter.formatShortFileSize(this, cachedMemory),
+                Formatter.formatShortFileSize(this, buffers), Formatter.formatShortFileSize(this, freeMemory)));
+        int i = memInfo.toString().indexOf('●');
+        if (i != -1) setColor(memInfo, R.color.purple_shadow, i, i + 1);
+        i = memInfo.toString().indexOf('●', i + 1);
+        if (i != -1) setColor(memInfo, R.color.android_theme_tag_color_02, i, i + 1);
+        i = memInfo.toString().indexOf('●', i + 1);
+        if (i != -1) setColor(memInfo, R.color.green_mountain, i, i + 1);
+        i = memInfo.toString().indexOf('●', i + 1);
+        if (i != -1) setColor(memInfo, R.color.ragin_beige, i, i + 1);
+        memoryInfoView.setText(memInfo);
+
+        // Swap
+        long usedSwap = deviceMemoryInfo.getUsedSwap();
+        long totalSwap = deviceMemoryInfo.getTotalSwap();
+        swapInfoChart.post(() -> {
+            int width = swapInfoChart.getWidth();
+            setLayoutWidth(swapInfoChartChildren[0], (int) (width * usedSwap / totalSwap));
+        });
+        swapShortInfoView.setText(UIUtils.getStyledKeyValue(this, R.string.swap, Formatter
+                .formatFileSize(this, usedSwap) + "/" + Formatter.formatFileSize(this, totalSwap)));
+        // Set color and size info
+        Spannable swapInfo = UIUtils.charSequenceToSpannable(getString(R.string.swap_chart_info, Formatter
+                .formatShortFileSize(this, usedSwap), Formatter.formatShortFileSize(this, totalSwap - usedSwap)));
+        i = swapInfo.toString().indexOf('●');
+        if (i != -1) setColor(swapInfo, R.color.purple_shadow, i, i + 1);
+        i = swapInfo.toString().indexOf('●', i + 1);
+        if (i != -1) setColor(swapInfo, R.color.ragin_beige, i, i + 1);
+        swapInfoView.setText(swapInfo);
+    }
+
+    private void setColor(@NonNull Spannable text, @ColorRes int color, int start, int end) {
+        text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this, color)), start, end,
+                Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+    }
+
+    private static void setLayoutWidth(@NonNull View view, int width) {
+        ViewGroup.LayoutParams lp = view.getLayoutParams();
+        lp.width = width;
+        view.setLayoutParams(lp);
     }
 }
