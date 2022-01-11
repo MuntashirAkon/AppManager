@@ -56,6 +56,10 @@ public class RunningAppDetails extends BottomSheetDialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         ProcessItem processItem = requireArguments().getParcelable(ARG_PS_ITEM);
+        if (processItem == null) {
+            dismiss();
+            return;
+        }
         LinearLayoutCompat appContainer = view.findViewById(R.id.app_container);
         ImageView appIcon = view.findViewById(R.id.icon);
         MaterialButton openAppInfoButton = view.findViewById(R.id.info);
@@ -82,8 +86,8 @@ public class RunningAppDetails extends BottomSheetDialogFragment {
         vsz.setText(Formatter.formatFileSize(requireContext(), processItem.getVirtualMemory()));
         cpuPercent.setText(String.format(Locale.ROOT, "%.2f", processItem.getCpuTimeInPercent()));
         cpuTime.setText(DateUtils.getFormattedDuration(requireContext(), processItem.getCpuTimeInMillis(), false, true));
-        priority.setText(String.valueOf(processItem.processEntry.priority));
-        threads.setText(String.valueOf(processItem.processEntry.threadCount));
+        priority.setText(String.valueOf(processItem.getPriority()));
+        threads.setText(String.valueOf(processItem.getThreadCount()));
         user.setText(processItem.user + " (" + processItem.uid + ")");
         CharSequence stateInfo;
         if (TextUtils.isEmpty(processItem.state_extra)) {

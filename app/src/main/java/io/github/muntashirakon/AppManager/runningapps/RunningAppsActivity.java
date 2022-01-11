@@ -86,7 +86,6 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
     public static final int FILTER_APPS = 1;
     public static final int FILTER_USER_APPS = 1 << 1;
 
-    boolean enableKillForSystem = false;
     private static final int[] sortOrderIds = new int[]{
             R.id.action_sort_by_pid,
             R.id.action_sort_by_process_name,
@@ -95,29 +94,31 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
     };
 
     @Nullable
+    RunningAppsViewModel mModel;
+    boolean enableKillForSystem = false;
+    final ImageLoader imageLoader = new ImageLoader();
+
+    @Nullable
     private RunningAppsAdapter mAdapter;
     @Nullable
     private LinearProgressIndicator mProgressIndicator;
     @Nullable
     private SwipeRefreshLayout mSwipeRefresh;
     @Nullable
-    private MultiSelectionView multiSelectionView;
+    private MultiSelectionView mMultiSelectionView;
     @Nullable
-    private Menu selectionMenu;
-    private TextView memoryShortInfoView;
-    private TextView memoryInfoView;
-    private View[] memoryInfoChartChildren;
-    private LinearLayoutCompat memoryInfoChart;
-    private TextView swapShortInfoView;
-    private TextView swapInfoView;
-    private View[] swapInfoChartChildren;
-    private LinearLayoutCompat swapInfoChart;
-    private DeviceMemoryInfo deviceMemoryInfo; // TODO: Move to ViewModel
-    private boolean isAdbMode;
+    private Menu mSelectionMenu;
+    private TextView mMemoryShortInfoView;
+    private TextView mMemoryInfoView;
+    private View[] mMemoryInfoChartChildren;
+    private LinearLayoutCompat mMemoryInfoChart;
+    private TextView mSwapShortInfoView;
+    private TextView mSwapInfoView;
+    private View[] mSwapInfoChartChildren;
+    private LinearLayoutCompat mSwapInfoChart;
+    private DeviceMemoryInfo mDeviceMemoryInfo; // TODO: Move to ViewModel
+    private boolean mIsAdbMode;
 
-    @Nullable
-    RunningAppsViewModel mModel;
-    final ImageLoader imageLoader = new ImageLoader();
     private final BroadcastReceiver mBatchOpsBroadCastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -146,32 +147,32 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
         recyclerView.setAdapter(mAdapter);
         // Recycler view is focused by default
         recyclerView.requestFocus();
-        multiSelectionView = findViewById(R.id.selection_view);
-        multiSelectionView.setOnItemSelectedListener(this);
-        multiSelectionView.setOnSelectionChangeListener(this);
-        multiSelectionView.setAdapter(mAdapter);
-        multiSelectionView.updateCounter(true);
-        selectionMenu = multiSelectionView.getMenu();
-        selectionMenu.findItem(R.id.action_scan_vt).setVisible(false);
-        enableKillForSystem = (boolean) AppPref.get(AppPref.PrefKey.PREF_ENABLE_KILL_FOR_SYSTEM_BOOL);
+        mMultiSelectionView = findViewById(R.id.selection_view);
+        mMultiSelectionView.setOnItemSelectedListener(this);
+        mMultiSelectionView.setOnSelectionChangeListener(this);
+        mMultiSelectionView.setAdapter(mAdapter);
+        mMultiSelectionView.updateCounter(true);
+        mSelectionMenu = mMultiSelectionView.getMenu();
+        mSelectionMenu.findItem(R.id.action_scan_vt).setVisible(false);
+        enableKillForSystem = AppPref.getBoolean(AppPref.PrefKey.PREF_ENABLE_KILL_FOR_SYSTEM_BOOL);
         // Memory
-        memoryShortInfoView = findViewById(R.id.memory_usage);
-        memoryInfoView = findViewById(R.id.memory_usage_info);
-        memoryInfoChart = findViewById(R.id.memory_usage_chart);
-        int childCount = memoryInfoChart.getChildCount();
-        memoryInfoChartChildren = new View[childCount];
+        mMemoryShortInfoView = findViewById(R.id.memory_usage);
+        mMemoryInfoView = findViewById(R.id.memory_usage_info);
+        mMemoryInfoChart = findViewById(R.id.memory_usage_chart);
+        int childCount = mMemoryInfoChart.getChildCount();
+        mMemoryInfoChartChildren = new View[childCount];
         for (int i = 0; i < childCount; ++i) {
-            memoryInfoChartChildren[i] = memoryInfoChart.getChildAt(i);
+            mMemoryInfoChartChildren[i] = mMemoryInfoChart.getChildAt(i);
         }
-        swapShortInfoView = findViewById(R.id.swap_usage);
-        swapInfoView = findViewById(R.id.swap_usage_info);
-        swapInfoChart = findViewById(R.id.swap_usage_chart);
-        childCount = swapInfoChart.getChildCount();
-        swapInfoChartChildren = new View[childCount];
+        mSwapShortInfoView = findViewById(R.id.swap_usage);
+        mSwapInfoView = findViewById(R.id.swap_usage_info);
+        mSwapInfoChart = findViewById(R.id.swap_usage_chart);
+        childCount = mSwapInfoChart.getChildCount();
+        mSwapInfoChartChildren = new View[childCount];
         for (int i = 0; i < childCount; ++i) {
-            swapInfoChartChildren[i] = swapInfoChart.getChildAt(i);
+            mSwapInfoChartChildren[i] = mSwapInfoChart.getChildAt(i);
         }
-        deviceMemoryInfo = new DeviceMemoryInfo();
+        mDeviceMemoryInfo = new DeviceMemoryInfo();
 
         // Set observers
         mModel.observeKillProcess().observe(this, processInfo -> {
@@ -235,8 +236,8 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
 
     @Override
     public void onBackPressed() {
-        if (mAdapter != null && multiSelectionView != null && mAdapter.isInSelectionMode()) {
-            multiSelectionView.cancel();
+        if (mAdapter != null && mMultiSelectionView != null && mAdapter.isInSelectionMode()) {
+            mMultiSelectionView.cancel();
             return;
         }
         super.onBackPressed();
@@ -316,7 +317,7 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
                 }
             });
         }
-        isAdbMode = AppPref.isAdbEnabled();
+        mIsAdbMode = AppPref.isAdbEnabled();
     }
 
     @Override
@@ -386,12 +387,12 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
 
     @Override
     public void onSelectionChange(int selectionCount) {
-        if (selectionMenu == null || mAdapter == null) return;
+        if (mSelectionMenu == null || mAdapter == null) return;
         ArrayList<ProcessItem> selectedItems = mAdapter.getSelectedItems();
-        MenuItem kill = selectionMenu.findItem(R.id.action_kill);
-        MenuItem forceStop = selectionMenu.findItem(R.id.action_force_stop);
-        MenuItem preventBackground = selectionMenu.findItem(R.id.action_disable_background);
-        MenuItem viewLogs = selectionMenu.findItem(R.id.action_view_logs);
+        MenuItem kill = mSelectionMenu.findItem(R.id.action_kill);
+        MenuItem forceStop = mSelectionMenu.findItem(R.id.action_force_stop);
+        MenuItem preventBackground = mSelectionMenu.findItem(R.id.action_disable_background);
+        MenuItem viewLogs = mSelectionMenu.findItem(R.id.action_view_logs);
         viewLogs.setEnabled(FeatureController.isLogViewerEnabled() && selectedItems.size() == 1);
         int appsCount = 0;
         for (Object item : selectedItems) {
@@ -401,7 +402,7 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
         }
         forceStop.setEnabled(appsCount != 0 && appsCount == selectedItems.size());
         preventBackground.setEnabled(appsCount != 0 && appsCount == selectedItems.size());
-        boolean killEnabled = !isAdbMode;
+        boolean killEnabled = !mIsAdbMode;
         if (killEnabled && !enableKillForSystem) {
             for (ProcessItem item : selectedItems) {
                 if (item.uid < 10_000) {
@@ -424,8 +425,8 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
         intent.putIntegerArrayListExtra(BatchOpsService.EXTRA_OP_USERS, input.getAssociatedUserHandles());
         intent.putExtra(BatchOpsService.EXTRA_OP, op);
         ContextCompat.startForegroundService(this, intent);
-        if (multiSelectionView != null) {
-            multiSelectionView.cancel();
+        if (mMultiSelectionView != null) {
+            mMultiSelectionView.cancel();
         }
     }
 
@@ -446,58 +447,58 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
     }
 
     private void updateMemoryInfo() {
-        deviceMemoryInfo.reload();
+        mDeviceMemoryInfo.reload();
         // Memory
-        long appMemory = deviceMemoryInfo.getApplicationMemory();
-        long cachedMemory = deviceMemoryInfo.getCachedMemory();
-        long buffers = deviceMemoryInfo.getBuffers();
-        long freeMemory = deviceMemoryInfo.getFreeMemory();
+        long appMemory = mDeviceMemoryInfo.getApplicationMemory();
+        long cachedMemory = mDeviceMemoryInfo.getCachedMemory();
+        long buffers = mDeviceMemoryInfo.getBuffers();
+        long freeMemory = mDeviceMemoryInfo.getFreeMemory();
         double total = appMemory + cachedMemory + buffers + freeMemory;
         if (total == 0) {
             // Error due to parsing failure, etc.
             return;
         }
-        memoryInfoChart.post(() -> {
-            int width = memoryInfoChart.getWidth();
-            setLayoutWidth(memoryInfoChartChildren[0], (int) (width * appMemory / total));
-            setLayoutWidth(memoryInfoChartChildren[1], (int) (width * cachedMemory / total));
-            setLayoutWidth(memoryInfoChartChildren[2], (int) (width * buffers / total));
+        mMemoryInfoChart.post(() -> {
+            int width = mMemoryInfoChart.getWidth();
+            setLayoutWidth(mMemoryInfoChartChildren[0], (int) (width * appMemory / total));
+            setLayoutWidth(mMemoryInfoChartChildren[1], (int) (width * cachedMemory / total));
+            setLayoutWidth(mMemoryInfoChartChildren[2], (int) (width * buffers / total));
         });
-        memoryShortInfoView.setText(UIUtils.getStyledKeyValue(this, R.string.memory, Formatter
-                .formatFileSize(this, deviceMemoryInfo.getUsedMemory()) + "/" + Formatter
-                .formatFileSize(this, deviceMemoryInfo.getTotalMemory())));
+        mMemoryShortInfoView.setText(UIUtils.getStyledKeyValue(this, R.string.memory, Formatter
+                .formatFileSize(this, mDeviceMemoryInfo.getUsedMemory()) + "/" + Formatter
+                .formatFileSize(this, mDeviceMemoryInfo.getTotalMemory())));
         // Set color info
         Spannable memInfo = UIUtils.charSequenceToSpannable(getString(R.string.memory_chart_info, Formatter
                         .formatShortFileSize(this, appMemory), Formatter.formatShortFileSize(this, cachedMemory),
                 Formatter.formatShortFileSize(this, buffers), Formatter.formatShortFileSize(this, freeMemory)));
         setColors(memInfo, new int[]{R.color.purple_shadow, R.color.android_theme_tag_color_02, R.color.green_mountain,
-                R.color.ragin_beige}, '●');
-        memoryInfoView.setText(memInfo);
+                R.color.ragin_beige});
+        mMemoryInfoView.setText(memInfo);
 
         // Swap
-        long usedSwap = deviceMemoryInfo.getUsedSwap();
-        long totalSwap = deviceMemoryInfo.getTotalSwap();
+        long usedSwap = mDeviceMemoryInfo.getUsedSwap();
+        long totalSwap = mDeviceMemoryInfo.getTotalSwap();
         if (totalSwap == 0) {
             // No swap
             return;
         }
-        swapInfoChart.post(() -> {
-            int width = swapInfoChart.getWidth();
-            setLayoutWidth(swapInfoChartChildren[0], (int) (width * usedSwap / totalSwap));
+        mSwapInfoChart.post(() -> {
+            int width = mSwapInfoChart.getWidth();
+            setLayoutWidth(mSwapInfoChartChildren[0], (int) (width * usedSwap / totalSwap));
         });
-        swapShortInfoView.setText(UIUtils.getStyledKeyValue(this, R.string.swap, Formatter
+        mSwapShortInfoView.setText(UIUtils.getStyledKeyValue(this, R.string.swap, Formatter
                 .formatFileSize(this, usedSwap) + "/" + Formatter.formatFileSize(this, totalSwap)));
         // Set color and size info
         Spannable swapInfo = UIUtils.charSequenceToSpannable(getString(R.string.swap_chart_info, Formatter
                 .formatShortFileSize(this, usedSwap), Formatter.formatShortFileSize(this, totalSwap - usedSwap)));
-        setColors(swapInfo, new int[]{R.color.purple_shadow, R.color.ragin_beige}, '●');
-        swapInfoView.setText(swapInfo);
+        setColors(swapInfo, new int[]{R.color.purple_shadow, R.color.ragin_beige});
+        mSwapInfoView.setText(swapInfo);
     }
 
-    private void setColors(@NonNull Spannable text, @ColorRes int[] colors, char ch) {
+    private void setColors(@NonNull Spannable text, @ColorRes int[] colors) {
         int idx = 0;
         for (int color : colors) {
-            idx = text.toString().indexOf(ch, idx);
+            idx = text.toString().indexOf('●', idx);
             if (idx == -1) break;
             text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this, color)), idx, idx + 1,
                     Spannable.SPAN_INCLUSIVE_EXCLUSIVE);

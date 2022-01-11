@@ -29,6 +29,7 @@ import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
 import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.io.ProxyFile;
 import io.github.muntashirakon.widget.MultiSelectionView;
@@ -37,8 +38,8 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<RunningAppsAd
     private final RunningAppsActivity mActivity;
     private final RunningAppsViewModel mModel;
     private final int mColorRed;
-    private final ArrayList<ProcessItem> processItems = new ArrayList<>();
-    private boolean isAdbMode = false;
+    private final ArrayList<ProcessItem> mProcessItems = new ArrayList<>();
+    private boolean mIsAdbMode = false;
 
     RunningAppsAdapter(@NonNull RunningAppsActivity activity) {
         super();
@@ -48,9 +49,9 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<RunningAppsAd
     }
 
     void setDefaultList(List<ProcessItem> processItems) {
-        isAdbMode = AppPref.isAdbEnabled();
-        this.processItems.clear();
-        this.processItems.addAll(processItems);
+        mIsAdbMode = AppPref.isAdbEnabled();
+        this.mProcessItems.clear();
+        this.mProcessItems.addAll(processItems);
         notifyDataSetChanged();
         notifySelectionChange();
     }
@@ -64,7 +65,7 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<RunningAppsAd
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        ProcessItem processItem = processItems.get(position);
+        ProcessItem processItem = mProcessItems.get(position);
         ApplicationInfo applicationInfo;
         if (processItem instanceof AppProcessItem) {
             applicationInfo = ((AppProcessItem) processItem).packageInfo.applicationInfo;
@@ -99,7 +100,8 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<RunningAppsAd
             stateInfo = mActivity.getString(R.string.process_state_with_extra, processItem.state, processItem.state_extra);
         }
         holder.userAndStateInfo.setText(String.format("%s, %s", userInfo, stateInfo));
-        holder.selinuxContext.setText(String.format("SELinux: %s", processItem.context));
+        holder.selinuxContext.setText(String.format("SELinux%s %s", LangUtils.getSeparatorString(),
+                processItem.context));
         // Set more
         holder.more.setOnClickListener(v -> {
             PopupMenu popupMenu = new PopupMenu(mActivity, holder.more);
@@ -107,7 +109,7 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<RunningAppsAd
             Menu menu = popupMenu.getMenu();
             // Set kill
             MenuItem killItem = menu.findItem(R.id.action_kill);
-            if ((processItem.uid >= 10000 || mActivity.enableKillForSystem) && !isAdbMode) {
+            if ((processItem.uid >= 10000 || mActivity.enableKillForSystem) && !mIsAdbMode) {
                 killItem.setVisible(true).setOnMenuItemClickListener(item -> {
                     mModel.killProcess(processItem);
                     return true;
@@ -182,22 +184,22 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<RunningAppsAd
 
     @Override
     public long getItemId(int position) {
-        return processItems.get(position).hashCode();
+        return mProcessItems.get(position).hashCode();
     }
 
     @Override
     protected void select(int position) {
-        mModel.select(processItems.get(position));
+        mModel.select(mProcessItems.get(position));
     }
 
     @Override
     protected void deselect(int position) {
-        mModel.deselect(processItems.get(position));
+        mModel.deselect(mProcessItems.get(position));
     }
 
     @Override
     protected boolean isSelected(int position) {
-        return mModel.isSelected(processItems.get(position));
+        return mModel.isSelected(mProcessItems.get(position));
     }
 
     @Override
@@ -230,7 +232,7 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<RunningAppsAd
 
     @Override
     public int getItemCount() {
-        return processItems.size();
+        return mProcessItems.size();
     }
 
     static class ViewHolder extends MultiSelectionView.ViewHolder {

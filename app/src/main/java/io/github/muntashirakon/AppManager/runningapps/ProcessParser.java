@@ -33,28 +33,21 @@ import io.github.muntashirakon.AppManager.utils.Utils;
 
 @WorkerThread
 public final class ProcessParser {
-    private final Context context;
-    private final PackageManager pm;
-    private HashMap<String, PackageInfo> installedPackages;
-    private HashMap<Integer, PackageInfo> installedUids;
-    private final HashMap<Integer, ActivityManager.RunningAppProcessInfo> runningAppProcesses = new HashMap<>(50);
+    private final Context mContext;
+    private final PackageManager mPm;
+    private HashMap<String, PackageInfo> mInstalledPackages;
+    private HashMap<Integer, PackageInfo> mInstalledUidList;
+    private final HashMap<Integer, ActivityManager.RunningAppProcessInfo> mRunningAppProcesses = new HashMap<>(50);
 
     ProcessParser() {
-        context = AppManager.getContext();
-        pm = AppManager.getContext().getPackageManager();
-        getInstalledPackages();
-    }
-
-    @VisibleForTesting
-    ProcessParser(boolean isUnitTest) {
-        if (isUnitTest) {
-            installedPackages = new HashMap<>();
-            installedUids = new HashMap<>();
-            pm = null;
-            context = null;
+        if (Utils.isRoboUnitTest()) {
+            mInstalledPackages = new HashMap<>();
+            mInstalledUidList = new HashMap<>();
+            mPm = null;
+            mContext = null;
         } else {
-            context = AppManager.getContext();
-            pm = AppManager.getContext().getPackageManager();
+            mContext = AppManager.getContext();
+            mPm = AppManager.getContext().getPackageManager();
             getInstalledPackages();
         }
     }
@@ -64,7 +57,8 @@ public final class ProcessParser {
     List<ProcessItem> parse() {
         List<ProcessItem> processItems = new ArrayList<>();
         try {
-            List<ProcessEntry> processEntries = (List<ProcessEntry>) IPCUtils.getServiceSafe().getRunningProcesses().getList();
+            List<ProcessEntry> processEntries = (List<ProcessEntry>) IPCUtils.getServiceSafe().getRunningProcesses()
+                    .getList();
             for (ProcessEntry processEntry : processEntries) {
                 if (processEntry.seLinuxPolicy.contains(":kernel:")) continue;
                 try {
@@ -99,14 +93,13 @@ public final class ProcessParser {
     private List<ProcessItem> parseProcess(@NonNull ProcessEntry processEntry) {
         String packageName = getSupposedPackageName(processEntry.name);
         List<ProcessItem> processItems = new ArrayList<>(1);
-        if (runningAppProcesses.containsKey(processEntry.pid)) {
-            //noinspection ConstantConditions
-            String[] pkgList = runningAppProcesses.get(processEntry.pid).pkgList;
+        if (mRunningAppProcesses.containsKey(processEntry.pid)) {
+            String[] pkgList = Objects.requireNonNull(mRunningAppProcesses.get(processEntry.pid)).pkgList;
             if (pkgList != null && pkgList.length > 0) {
                 for (String pkgName : pkgList) {
-                    @NonNull PackageInfo packageInfo = Objects.requireNonNull(installedPackages.get(pkgName));
+                    @NonNull PackageInfo packageInfo = Objects.requireNonNull(mInstalledPackages.get(pkgName));
                     ProcessItem processItem = new AppProcessItem(processEntry, packageInfo);
-                    processItem.name = pm.getApplicationLabel(packageInfo.applicationInfo)
+                    processItem.name = mPm.getApplicationLabel(packageInfo.applicationInfo)
                             + getProcessNameFilteringPackageName(processEntry.name, packageInfo.packageName);
                     processItems.add(processItem);
                 }
@@ -115,16 +108,16 @@ public final class ProcessParser {
                 processItem.name = getProcessName(processEntry.name);
                 processItems.add(processItem);
             }
-        } else if (installedPackages.containsKey(packageName)) {
-            @NonNull PackageInfo packageInfo = Objects.requireNonNull(installedPackages.get(packageName));
+        } else if (mInstalledPackages.containsKey(packageName)) {
+            @NonNull PackageInfo packageInfo = Objects.requireNonNull(mInstalledPackages.get(packageName));
             ProcessItem processItem = new AppProcessItem(processEntry, packageInfo);
-            processItem.name = pm.getApplicationLabel(packageInfo.applicationInfo)
+            processItem.name = mPm.getApplicationLabel(packageInfo.applicationInfo)
                     + getProcessNameFilteringPackageName(processEntry.name, packageInfo.packageName);
             processItems.add(processItem);
-        } else if (installedUids.containsKey(processEntry.users.fsUid)) {
-            @NonNull PackageInfo packageInfo = Objects.requireNonNull(installedUids.get(processEntry.users.fsUid));
+        } else if (mInstalledUidList.containsKey(processEntry.users.fsUid)) {
+            @NonNull PackageInfo packageInfo = Objects.requireNonNull(mInstalledUidList.get(processEntry.users.fsUid));
             ProcessItem processItem = new AppProcessItem(processEntry, packageInfo);
-            processItem.name = pm.getApplicationLabel(packageInfo.applicationInfo)
+            processItem.name = mPm.getApplicationLabel(packageInfo.applicationInfo)
                     + getProcessNameFilteringPackageName(processEntry.name, packageInfo.packageName);
             processItems.add(processItem);
         } else {
@@ -133,14 +126,13 @@ public final class ProcessParser {
             processItems.add(processItem);
         }
         for (ProcessItem processItem : processItems) {
-            processItem.context = processEntry.seLinuxPolicy;
-            processItem.user = getNameForUid(processEntry.users.fsUid);
-            if (context == null) {
+            if (mContext == null) {
                 processItem.state = processEntry.processState;
                 processItem.state_extra = processEntry.processStatePlus;
             } else {
-                processItem.state = context.getString(Utils.getProcessStateName(processEntry.processState));
-                processItem.state_extra = context.getString(Utils.getProcessStateExtraName(processEntry.processStatePlus));
+                processItem.state = mContext.getString(Utils.getProcessStateName(processEntry.processState));
+                processItem.state_extra = mContext.getString(Utils.getProcessStateExtraName(
+                        processEntry.processStatePlus));
             }
         }
         return processItems;
@@ -155,32 +147,32 @@ public final class ProcessParser {
                 e.printStackTrace();
             }
         }
-        installedPackages = new HashMap<>(packageInfoList.size());
+        mInstalledPackages = new HashMap<>(packageInfoList.size());
         for (PackageInfo info : packageInfoList) {
-            installedPackages.put(info.packageName, info);
+            mInstalledPackages.put(info.packageName, info);
         }
-        installedUids = new HashMap<>(packageInfoList.size());
+        mInstalledUidList = new HashMap<>(packageInfoList.size());
         List<Integer> duplicateUids = new ArrayList<>();
         for (PackageInfo info : packageInfoList) {
             int uid = info.applicationInfo.uid;
-            if (installedUids.containsKey(uid)) {
+            if (mInstalledUidList.containsKey(uid)) {
                 // A shared user ID (other way to check user ID will not work since we're only interested in
                 // duplicate values)
                 duplicateUids.add(uid);
-            } else installedUids.put(uid, info);
+            } else mInstalledUidList.put(uid, info);
         }
         // Remove duplicate UIDs as they might create collisions
-        for (int uid : duplicateUids) installedUids.remove(uid);
+        for (int uid : duplicateUids) mInstalledUidList.remove(uid);
         List<ActivityManager.RunningAppProcessInfo> runningAppProcesses = ActivityManagerCompat.getRunningAppProcesses();
         for (ActivityManager.RunningAppProcessInfo info : runningAppProcesses) {
-            this.runningAppProcesses.put(info.pid, info);
+            this.mRunningAppProcesses.put(info.pid, info);
         }
     }
 
     private static final SparseArrayCompat<String> uidNameCache = new SparseArrayCompat<>(150);
 
     @NonNull
-    private static String getNameForUid(int uid) {
+    static String getNameForUid(int uid) {
         String username = uidNameCache.get(uid);
         if (username != null) return username;
         try {

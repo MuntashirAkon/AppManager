@@ -20,7 +20,7 @@ public class ProcessParserTest {
     public void parse() {
         assert classLoader != null;
         File procDir = new File(classLoader.getResource("proc").getFile());
-        ProcessParser pp = new ProcessParser(true);
+        ProcessParser pp = new ProcessParser();
         HashMap<Integer, String> processStrings = new HashMap<Integer, String>(5) {
             {
                 put(1129, "ProcessItem{pid=1129, ppid=1, rss=380, user='1000', uid=1000, state='S', state_extra=''," +

@@ -17,7 +17,8 @@
 
         <me.zhanghai.android.fastscroll.FastScrollNestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:clipToPadding="false">
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
@@ -125,6 +126,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scrollbars="none"
+                    android:isScrollContainer="false"
                     android:overScrollMode="never"
                     android:focusable="false"
                     android:clipToPadding="false"

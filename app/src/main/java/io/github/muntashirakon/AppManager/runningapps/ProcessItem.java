@@ -12,22 +12,19 @@ import java.util.Objects;
 import io.github.muntashirakon.AppManager.ipc.ps.ProcessEntry;
 
 public class ProcessItem implements Parcelable {
-    @NonNull
-    public final ProcessEntry processEntry;
     public final int pid;
     public final int ppid;
     public final long rss;
     public final int uid;
+    public final String user;
+    public final String context;
 
-    public String user;
     public String state;
     public String state_extra;
     public String name;
-    /**
-     * SELinux context
-     * TODO(25/9/20): Improve this by parsing the string
-     */
-    public String context;
+
+    @NonNull
+    private final ProcessEntry processEntry;
 
     public ProcessItem(@NonNull ProcessEntry processEntry) {
         this.processEntry = processEntry;
@@ -35,6 +32,8 @@ public class ProcessItem implements Parcelable {
         ppid = processEntry.ppid;
         rss = processEntry.residentSetSize;
         uid = processEntry.users.fsUid;
+        context = processEntry.seLinuxPolicy;
+        user = ProcessParser.getNameForUid(processEntry.users.fsUid);
     }
 
     /**
@@ -68,12 +67,21 @@ public class ProcessItem implements Parcelable {
         return processEntry.sharedMemory << 12;
     }
 
+    public int getPriority() {
+        return processEntry.priority;
+    }
+
+    public int getThreadCount() {
+        return processEntry.threadCount;
+    }
+
     protected ProcessItem(@NonNull Parcel in) {
         processEntry = in.readParcelable(ProcessEntry.class.getClassLoader());
         pid = processEntry.pid;
         ppid = processEntry.ppid;
         rss = processEntry.residentSetSize;
         uid = processEntry.users.fsUid;
+        context = processEntry.seLinuxPolicy;
 
         user = in.readString();
         state = in.readString();
