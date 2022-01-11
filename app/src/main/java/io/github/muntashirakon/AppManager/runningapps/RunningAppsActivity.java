@@ -290,7 +290,7 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
         } else if (id == R.id.action_sort_by_memory_usage) {
             mModel.setSortOrder(SORT_BY_MEMORY_USAGE);
             item.setChecked(true);
-        // Filter
+            // Filter
         } else if (id == R.id.action_filter_apps) {
             if (!item.isChecked()) mModel.addFilter(FILTER_APPS);
             else mModel.removeFilter(FILTER_APPS);
@@ -453,6 +453,10 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
         long buffers = deviceMemoryInfo.getBuffers();
         long freeMemory = deviceMemoryInfo.getFreeMemory();
         double total = appMemory + cachedMemory + buffers + freeMemory;
+        if (total == 0) {
+            // Error due to parsing failure, etc.
+            return;
+        }
         memoryInfoChart.post(() -> {
             int width = memoryInfoChart.getWidth();
             setLayoutWidth(memoryInfoChartChildren[0], (int) (width * appMemory / total));
@@ -466,19 +470,17 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
         Spannable memInfo = UIUtils.charSequenceToSpannable(getString(R.string.memory_chart_info, Formatter
                         .formatShortFileSize(this, appMemory), Formatter.formatShortFileSize(this, cachedMemory),
                 Formatter.formatShortFileSize(this, buffers), Formatter.formatShortFileSize(this, freeMemory)));
-        int i = memInfo.toString().indexOf('●');
-        if (i != -1) setColor(memInfo, R.color.purple_shadow, i, i + 1);
-        i = memInfo.toString().indexOf('●', i + 1);
-        if (i != -1) setColor(memInfo, R.color.android_theme_tag_color_02, i, i + 1);
-        i = memInfo.toString().indexOf('●', i + 1);
-        if (i != -1) setColor(memInfo, R.color.green_mountain, i, i + 1);
-        i = memInfo.toString().indexOf('●', i + 1);
-        if (i != -1) setColor(memInfo, R.color.ragin_beige, i, i + 1);
+        setColors(memInfo, new int[]{R.color.purple_shadow, R.color.android_theme_tag_color_02, R.color.green_mountain,
+                R.color.ragin_beige}, '●');
         memoryInfoView.setText(memInfo);
 
         // Swap
         long usedSwap = deviceMemoryInfo.getUsedSwap();
         long totalSwap = deviceMemoryInfo.getTotalSwap();
+        if (totalSwap == 0) {
+            // No swap
+            return;
+        }
         swapInfoChart.post(() -> {
             int width = swapInfoChart.getWidth();
             setLayoutWidth(swapInfoChartChildren[0], (int) (width * usedSwap / totalSwap));
@@ -488,16 +490,19 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
         // Set color and size info
         Spannable swapInfo = UIUtils.charSequenceToSpannable(getString(R.string.swap_chart_info, Formatter
                 .formatShortFileSize(this, usedSwap), Formatter.formatShortFileSize(this, totalSwap - usedSwap)));
-        i = swapInfo.toString().indexOf('●');
-        if (i != -1) setColor(swapInfo, R.color.purple_shadow, i, i + 1);
-        i = swapInfo.toString().indexOf('●', i + 1);
-        if (i != -1) setColor(swapInfo, R.color.ragin_beige, i, i + 1);
+        setColors(swapInfo, new int[]{R.color.purple_shadow, R.color.ragin_beige}, '●');
         swapInfoView.setText(swapInfo);
     }
 
-    private void setColor(@NonNull Spannable text, @ColorRes int color, int start, int end) {
-        text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this, color)), start, end,
-                Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+    private void setColors(@NonNull Spannable text, @ColorRes int[] colors, char ch) {
+        int idx = 0;
+        for (int color : colors) {
+            idx = text.toString().indexOf(ch, idx);
+            if (idx == -1) break;
+            text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this, color)), idx, idx + 1,
+                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+            ++idx;
+        }
     }
 
     private static void setLayoutWidth(@NonNull View view, int width) {
