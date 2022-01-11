@@ -34,6 +34,7 @@ public class DeviceMemoryInfo {
     }
 
     public void reload() {
+        mCached = 0;
         try (BufferedReader reader = new BufferedReader(new FileReader(mMeminfoFile))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -55,7 +56,8 @@ public class DeviceMemoryInfo {
                         mFreeSwap = Long.decode(splits[1]) << 10;
                         break;
                     case "Cached:":
-                        mCached = Long.decode(splits[1]) << 10;
+                    case "Slab:":
+                        mCached += Long.decode(splits[1]) << 10;
                         break;
                 }
             }
