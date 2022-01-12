@@ -238,7 +238,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         // Set observer
         mainModel.get(AppDetailsFragment.APP_INFO).observe(getViewLifecycleOwner(), appDetailsItems -> {
             if (appDetailsItems != null && !appDetailsItems.isEmpty() && mainModel.isPackageExist()) {
-                AppDetailsItem appDetailsItem = appDetailsItems.get(0);
+                AppDetailsItem<?> appDetailsItem = appDetailsItems.get(0);
                 mPackageInfo = (PackageInfo) appDetailsItem.vanillaItem;
                 mPackageName = appDetailsItem.name;
                 mInstalledPackageInfo = mainModel.getInstalledPackageInfo();

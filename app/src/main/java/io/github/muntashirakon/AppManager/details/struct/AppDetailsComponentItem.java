@@ -11,7 +11,7 @@ import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
 /**
  * Stores individual app details component item
  */
-public class AppDetailsComponentItem extends AppDetailsItem {
+public class AppDetailsComponentItem extends AppDetailsItem<ComponentInfo> {
     private boolean isTracker = false;
     private ComponentRule rule;
 

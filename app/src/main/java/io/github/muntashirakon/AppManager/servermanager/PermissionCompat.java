@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.annotation.UserIdInt;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageManager;
+import android.content.pm.ParceledListSlice;
 import android.content.pm.PermissionGroupInfo;
 import android.content.pm.PermissionInfo;
 import android.content.pm.permission.SplitPermissionInfoParcelable;
@@ -341,7 +342,21 @@ public class PermissionCompat {
     }
 
     @SuppressWarnings("deprecation")
-    @NonNull
+    public static int checkPermission(@NonNull String permissionName,
+                                      @NonNull String packageName,
+                                      @UserIdInt int userId) throws RemoteException {
+        IPackageManager pm = AppManager.getIPackageManager();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            return getPermissionManager().checkPermission(permissionName, packageName, userId);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return pm.checkPermission(permissionName, packageName, userId);
+        } else {
+            return pm.checkPermission(permissionName, packageName);
+        }
+    }
+
+    @SuppressWarnings({"deprecation", "ConstantConditions"})
+    @Nullable
     public static PermissionInfo getPermissionInfo(String permissionName, String packageName, int flags)
             throws RemoteException {
         IPackageManager pm = AppManager.getIPackageManager();
@@ -355,10 +370,21 @@ public class PermissionCompat {
     @SuppressWarnings("deprecation")
     @NonNull
     public static PermissionGroupInfo getPermissionGroupInfo(String groupName, int flags) throws RemoteException {
-        IPackageManager pm = AppManager.getIPackageManager();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             return getPermissionManager().getPermissionGroupInfo(groupName, flags);
-        } else return pm.getPermissionGroupInfo(groupName, flags);
+        } else return AppManager.getIPackageManager().getPermissionGroupInfo(groupName, flags);
+    }
+
+    @SuppressWarnings({"unchecked", "deprecation"})
+    public static List<PermissionInfo> queryPermissionsByGroup(String groupName, int flags) throws RemoteException {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            return getPermissionManager().queryPermissionsByGroup(groupName, flags).getList();
+        } else {
+            Object permissions = AppManager.getIPackageManager().queryPermissionsByGroup(groupName, flags);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                return ((ParceledListSlice<PermissionInfo>) permissions).getList();
+            } else return (List<PermissionInfo>) permissions;
+        }
     }
 
     public static List<SplitPermissionInfoParcelable> getSplitPermissions() throws RemoteException {

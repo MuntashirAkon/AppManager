@@ -150,6 +150,10 @@ public final class ActivityManagerCompat {
         }
     }
 
+    public static void killUid(int uid, String reason) throws RemoteException {
+        getActivityManager().killUid(UserHandleHidden.getAppId(uid), UserHandleHidden.getUserId(uid), reason);
+    }
+
     @SuppressWarnings("deprecation")
     public static IActivityManager getActivityManager() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {

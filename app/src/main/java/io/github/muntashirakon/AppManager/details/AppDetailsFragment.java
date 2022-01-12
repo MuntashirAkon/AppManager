@@ -11,6 +11,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.ComponentInfo;
 import android.content.pm.ConfigurationInfo;
 import android.content.pm.FeatureInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PathPermission;
 import android.content.pm.PermissionInfo;
@@ -63,6 +64,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -75,6 +77,7 @@ import io.github.muntashirakon.AppManager.details.struct.AppDetailsPermissionIte
 import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.intercept.ActivityInterceptor;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
+import io.github.muntashirakon.AppManager.permission.PermUtils;
 import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
@@ -84,6 +87,7 @@ import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.types.TextInputDropdownDialogBuilder;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
@@ -489,7 +493,8 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
 
     public void blockUnblockTrackers(boolean block) {
         if (mMainModel == null) return;
-        List<UserPackagePair> userPackagePairs = Collections.singletonList(new UserPackagePair(mPackageName, UserHandleHidden.myUserId()));
+        List<UserPackagePair> userPackagePairs = Collections.singletonList(new UserPackagePair(mPackageName,
+                UserHandleHidden.myUserId()));
         mExecutor.submit(() -> {
             List<UserPackagePair> failedPkgList = block ? ComponentUtils.blockTrackingComponents(userPackagePairs)
                     : ComponentUtils.unblockTrackingComponents(userPackagePairs);
@@ -640,7 +645,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
     @UiThread
     private class AppDetailsRecyclerAdapter extends RecyclerView.Adapter<AppDetailsRecyclerAdapter.ViewHolder> {
         @NonNull
-        private List<AppDetailsItem> mAdapterList;
+        private List<AppDetailsItem<?>> mAdapterList;
         @Property
         private int mRequestedProperty;
         @Nullable
@@ -655,7 +660,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
         }
 
         @UiThread
-        void setDefaultList(@NonNull List<AppDetailsItem> list) {
+        void setDefaultList(@NonNull List<AppDetailsItem<?>> list) {
             mIsRootEnabled = AppPref.isRootEnabled();
             mIsADBEnabled = AppPref.isAdbEnabled();
             mRequestedProperty = mNeededProperty;
@@ -671,13 +676,13 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             });
         }
 
-        void set(int currentIndex, AppDetailsItem appDetailsItem) {
+        void set(int currentIndex, AppDetailsItem<?> appDetailsItem) {
             if (mMainModel == null) return;
             mAdapterList.set(currentIndex, appDetailsItem);
             notifyItemChanged(currentIndex);
             // Update the value in the app ops list in view model
             if (mNeededProperty == APP_OPS) {
-                mExecutor.submit(() -> mMainModel.setAppOp(appDetailsItem));
+                mExecutor.submit(() -> mMainModel.setAppOp((AppDetailsItem<OpEntry>) appDetailsItem));
             }
         }
 
@@ -1259,7 +1264,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
 
         private void getAppOpsView(@NonNull ViewHolder holder, int index) {
             View view = holder.itemView;
-            AppDetailsItem item = mAdapterList.get(index);
+            AppDetailsItem<?> item = mAdapterList.get(index);
             OpEntry opEntry = (OpEntry) item.vanillaItem;
             final String opStr = mAdapterList.get(index).name;
             boolean isDangerousOp = false;
@@ -1289,7 +1294,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                 opRunningInfo += ", " + mActivity.getString(R.string.duration) + ": " +
                         Utils.getFormattedDuration(mActivity, opEntry.getDuration(), true);
             holder.textView7.setText(opRunningInfo);
-            // Set accept time and/or reject time
+            // Set accept-time and/or reject-time
             long currentTime = System.currentTimeMillis();
             boolean hasAcceptTime = opEntry.getTime() != 0 && opEntry.getTime() != -1;
             boolean hasRejectTime = opEntry.getRejectTime() != 0 && opEntry.getRejectTime() != -1;
@@ -1369,7 +1374,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                         OpEntry opEntry1 = new OpEntry(opEntry.getOp(), opMode, opEntry.getTime(),
                                 opEntry.getRejectTime(), opEntry.getDuration(),
                                 opEntry.getProxyUid(), opEntry.getProxyPackageName());
-                        AppDetailsItem appDetailsItem = new AppDetailsItem(opEntry1);
+                        AppDetailsItem<?> appDetailsItem = new AppDetailsItem<>(opEntry1);
                         appDetailsItem.name = item.name;
                         runOnUiThread(() -> set(index, appDetailsItem));
                     } else {
@@ -1391,7 +1396,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                                     OpEntry opEntry1 = new OpEntry(opEntry.getOp(), opMode, opEntry.getTime(),
                                             opEntry.getRejectTime(), opEntry.getDuration(),
                                             opEntry.getProxyUid(), opEntry.getProxyPackageName());
-                                    AppDetailsItem appDetailsItem = new AppDetailsItem(opEntry1);
+                                    AppDetailsItem<?> appDetailsItem = new AppDetailsItem<>(opEntry1);
                                     appDetailsItem.name = item.name;
                                     runOnUiThread(() -> set(index, appDetailsItem));
                                 } else {
@@ -1408,13 +1413,10 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             });
         }
 
-        /**
-         * We do not need complex views, Use recycled view if possible
-         */
         private void getUsesPermissionsView(@NonNull ViewHolder holder, int index) {
             View view = holder.itemView;
             AppDetailsPermissionItem permissionItem = (AppDetailsPermissionItem) mAdapterList.get(index);
-            @NonNull PermissionInfo permissionInfo = (PermissionInfo) permissionItem.vanillaItem;
+            @NonNull PermissionInfo permissionInfo = permissionItem.vanillaItem;
             final String permName = permissionInfo.name;
             // Set permission name
             if (mConstraint != null && permName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
@@ -1430,7 +1432,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             } else holder.textView2.setVisibility(View.GONE);
             // Protection level
             String protectionLevel = Utils.getProtectionLevelString(permissionInfo);
-            protectionLevel += '|' + (permissionItem.isGranted ? "granted" : "revoked");
+            protectionLevel += '|' + (permissionItem.isGranted() ? "granted" : "revoked");
             holder.textView3.setText(String.format(Locale.ROOT, "\u2691 %s", protectionLevel));
             // Set background color
             if (permissionItem.isDangerous) {
@@ -1441,56 +1443,63 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             // Set package name
             if (permissionInfo.packageName != null) {
                 holder.textView4.setVisibility(View.VISIBLE);
-                holder.textView4.setText(String.format("%s: %s",
-                        mActivity.getString(R.string.package_name), permissionInfo.packageName));
+                holder.textView4.setText(String.format("%s%s %s", mActivity.getString(R.string.package_name),
+                        LangUtils.getSeparatorString(), permissionInfo.packageName));
             } else holder.textView4.setVisibility(View.GONE);
             // Set group name
             if (permissionInfo.group != null) {
                 holder.textView5.setVisibility(View.VISIBLE);
-                holder.textView5.setText(String.format("%s: %s",
-                        mActivity.getString(R.string.group), permissionInfo.group));
+                holder.textView5.setText(String.format("%s%s %s", mActivity.getString(R.string.group),
+                        LangUtils.getSeparatorString(), permissionInfo.group));
             } else holder.textView5.setVisibility(View.GONE);
             // Permission Switch
-            int sdkVersion = mMainModel != null && mMainModel.getPackageInfo() != null ?
-                    mMainModel.getPackageInfo().applicationInfo.targetSdkVersion : 23;
-            if ((mIsRootEnabled || mIsADBEnabled) && !mIsExternalApk && ((permissionItem.isDangerous
-                    && sdkVersion >= Build.VERSION_CODES.M) || protectionLevel.contains("development")
-                    || permissionItem.appOp != AppOpsManager.OP_NONE)) {
+            PackageInfo packageInfo = Objects.requireNonNull(mMainModel).getPackageInfo();
+            boolean canGrantOrRevokePermission = permissionItem.modifiable
+                    && (mIsRootEnabled || mIsADBEnabled)
+                    && !mIsExternalApk
+                    && PermUtils.supportsRuntimePermissions(Objects.requireNonNull(packageInfo));
+            if (canGrantOrRevokePermission) {
                 holder.toggleSwitch.setVisibility(View.VISIBLE);
-                holder.toggleSwitch.setChecked(permissionItem.isGranted);
+                holder.toggleSwitch.setChecked(permissionItem.isGranted());
                 holder.itemView.setOnClickListener(v -> mExecutor.submit(() -> {
-                    boolean isGranted = !permissionItem.isGranted;
-                    if (mMainModel.togglePermission(permissionItem)) {
-                        runOnUiThread(() -> set(index, permissionItem));
-                        mMainModel.setUsesPermission(permissionItem);
-                    } else {
-                        runOnUiThread(() -> {
-                            UIUtils.displayShortToast(isGranted ? R.string.failed_to_grant_permission
-                                    : R.string.failed_to_revoke_permission);
-                            notifyItemChanged(index);
-                        });
+                    try {
+                        if (mMainModel.togglePermission(permissionItem)) {
+                            runOnUiThread(() -> {
+                                notifyItemChanged(index);
+                            });
+                        } else throw new Exception("Couldn't grant permission: " + permName);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        runOnUiThread(() -> UIUtils.displayShortToast(permissionItem.permission.isGranted()
+                                ? R.string.failed_to_grant_permission
+                                : R.string.failed_to_revoke_permission));
                     }
                 }));
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    holder.itemView.setOnLongClickListener(v -> {
-                        SparseArray<String> permissionFlags = PermissionCompat.getPermissionFlagsWithString(
-                                permissionItem.permissionFlags);
-                        String[] flags = new String[permissionFlags.size()];
-                        for (int i = 0; i < flags.length; ++i)
-                            flags[i] = permissionFlags.valueAt(i);
-                        new MaterialAlertDialogBuilder(mActivity)
-                                .setTitle(R.string.permission_flags)
-                                .setItems(flags, null)
-                                .setNegativeButton(R.string.close, null)
-                                .show();
-                        return true;
-                    });
+            } else {
+                holder.toggleSwitch.setVisibility(View.GONE);
+                holder.itemView.setOnClickListener(null);
+                holder.itemView.setClickable(false);
+            }
+            int flags = permissionItem.permission.getFlags();
+            holder.itemView.setOnLongClickListener(flags == 0 ? null : v -> {
+                // TODO: 12/1/22 Use ViewModel
+                SparseArray<String> permissionFlags = PermissionCompat.getPermissionFlagsWithString(flags);
+                String[] flagStrings = new String[permissionFlags.size()];
+                for (int i = 0; i < flagStrings.length; ++i) {
+                    flagStrings[i] = permissionFlags.valueAt(i);
                 }
-            } else holder.toggleSwitch.setVisibility(View.GONE);
+                new MaterialAlertDialogBuilder(mActivity)
+                        .setTitle(R.string.permission_flags)
+                        .setItems(flagStrings, null)
+                        .setNegativeButton(R.string.close, null)
+                        .show();
+                return true;
+            });
+            holder.itemView.setLongClickable(flags != 0);
         }
 
         private void getSharedLibsView(@NonNull ViewHolder holder, int index) {
-            AppDetailsItem item = mAdapterList.get(index);
+            AppDetailsItem<?> item = mAdapterList.get(index);
             TextView textView = holder.textView1;
             textView.setTextIsSelectable(true);
             textView.setText(item.name);
@@ -1598,7 +1607,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
 
         private void getSignatureView(@NonNull ViewHolder holder, int index) {
             TextView textView = (TextView) holder.itemView;
-            AppDetailsItem item = mAdapterList.get(index);
+            AppDetailsItem<?> item = mAdapterList.get(index);
             final X509Certificate signature = (X509Certificate) mAdapterList.get(index).vanillaItem;
             final SpannableStringBuilder builder = new SpannableStringBuilder();
             if (index == 0) {
