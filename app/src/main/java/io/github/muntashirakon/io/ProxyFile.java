@@ -24,22 +24,30 @@ public class ProxyFile extends File {
 
     public ProxyFile(@NonNull String pathname) {
         super(pathname);
-        this.mFile = getRemoteFile();
+        mFile = getRemoteFile();
     }
 
     public ProxyFile(@NonNull File file) {
         super(file.getAbsolutePath());
-        this.mFile = getRemoteFile();
+        if (file instanceof ProxyFile) {
+            // Reuse old remote file
+            mFile = ((ProxyFile) file).mFile;
+        } else mFile = getRemoteFile();
     }
 
     public ProxyFile(@Nullable String parent, @NonNull String child) {
         super(parent, child);
-        this.mFile = getRemoteFile();
+        mFile = getRemoteFile();
     }
 
     public ProxyFile(@Nullable File parent, @NonNull String child) {
         super(parent, child);
-        this.mFile = getRemoteFile();
+        if (parent instanceof ProxyFile) {
+            IRemoteFile remoteFile = ((ProxyFile) parent).mFile;
+            if (remoteFile != null) {
+                mFile = getRemoteFile();
+            } else mFile = null;
+        } else mFile = null;
     }
 
     @Override
