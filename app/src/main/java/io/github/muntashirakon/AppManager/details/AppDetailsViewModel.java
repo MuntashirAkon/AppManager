@@ -59,6 +59,7 @@ import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.appops.AppOpsUtils;
 import io.github.muntashirakon.AppManager.appops.OpEntry;
+import io.github.muntashirakon.AppManager.details.struct.AppDetailsAppOpItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsComponentItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsPermissionItem;
@@ -321,11 +322,11 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 mServices.postValue(filterAndSortComponents(mServiceItems));
                 break;
             case AppDetailsFragment.APP_OPS: {
-                List<AppDetailsItem<OpEntry>> appDetailsItems;
+                List<AppDetailsAppOpItem> appDetailsItems;
                 synchronized (mAppOpItems) {
                     if (!TextUtils.isEmpty(mSearchQuery)) {
                         appDetailsItems = AdvancedSearchView.matches(mSearchQuery, mAppOpItems,
-                                (ChoiceGenerator<AppDetailsItem<OpEntry>>) item ->
+                                (ChoiceGenerator<AppDetailsAppOpItem>) item ->
                                         lowercaseIfNotRegex(item.name, mSearchType),
                                 mSearchType);
                     } else appDetailsItems = mAppOpItems;
@@ -552,10 +553,10 @@ public class AppDetailsViewModel extends AndroidViewModel {
         try {
             if (!permissionItem.permission.isGranted()) {
                 Log.d(TAG, "Granting permission: " + permissionItem.name);
-                isSuccessful = permissionItem.grantPermission(mPackageInfo, true, true);
+                isSuccessful = permissionItem.grantPermission(mPackageInfo, mAppOpsService);
             } else {
                 Log.d(TAG, "Revoking permission: " + permissionItem.name);
-                isSuccessful = permissionItem.revokePermission(mPackageInfo, true);
+                isSuccessful = permissionItem.revokePermission(mPackageInfo, mAppOpsService);
             }
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -586,7 +587,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
             for (AppDetailsPermissionItem permissionItem : mUsesPermissionItems) {
                 if (!permissionItem.isDangerous || !permissionItem.permission.isGranted()) continue;
                 try {
-                    if (permissionItem.revokePermission(mPackageInfo, true)) {
+                    if (permissionItem.revokePermission(mPackageInfo, mAppOpsService)) {
                         revokedPermissions.add(permissionItem);
                     }
                 } catch (RemoteException e) {
@@ -640,6 +641,58 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     @WorkerThread
     @GuardedBy("blockerLocker")
+    public boolean setAppOpMode(AppDetailsAppOpItem appOpItem) {
+        if (mIsExternalApk) return false;
+        boolean isSuccessful = false;
+        try {
+            if (appOpItem.isAllowed()) {
+                isSuccessful = appOpItem.disallowAppOp(mPackageInfo, mAppOpsService);
+            } else {
+                isSuccessful = appOpItem.allowAppOp(mPackageInfo, mAppOpsService);
+            }
+            setAppOp(appOpItem);
+            mExecutor.submit(() -> {
+                synchronized (mBlockerLocker) {
+                    waitForBlockerOrExit();
+                    mBlocker.setMutable();
+                    mBlocker.setAppOp(appOpItem.vanillaItem.getOp(), appOpItem.vanillaItem.getMode());
+                    mBlocker.commit();
+                    mBlocker.setReadOnly();
+                    mBlockerLocker.notifyAll();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return isSuccessful;
+    }
+
+    @WorkerThread
+    @GuardedBy("blockerLocker")
+    public boolean setAppOpMode(AppDetailsAppOpItem appOpItem, @AppOpsManager.Mode int mode) {
+        if (mIsExternalApk) return false;
+        boolean isSuccessful = false;
+        try {
+            isSuccessful = appOpItem.setAppOp(mPackageInfo, mAppOpsService, mode);
+            setAppOp(appOpItem);
+            mExecutor.submit(() -> {
+                synchronized (mBlockerLocker) {
+                    waitForBlockerOrExit();
+                    mBlocker.setMutable();
+                    mBlocker.setAppOp(appOpItem.vanillaItem.getOp(), appOpItem.vanillaItem.getMode());
+                    mBlocker.commit();
+                    mBlocker.setReadOnly();
+                    mBlockerLocker.notifyAll();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return isSuccessful;
+    }
+
+    @WorkerThread
+    @GuardedBy("blockerLocker")
     public boolean resetAppOps() {
         if (mIsExternalApk) return false;
         try {
@@ -669,7 +722,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @GuardedBy("blockerLocker")
     public boolean ignoreDangerousAppOps() {
         if (mIsExternalApk) return false;
-        AppDetailsItem<OpEntry> appDetailsItem;
+        AppDetailsAppOpItem appDetailsItem;
         OpEntry opEntry;
         String permName;
         final List<Integer> opItems = new ArrayList<>();
@@ -1178,12 +1231,12 @@ public class AppDetailsViewModel extends AndroidViewModel {
     }
 
     @NonNull
-    private final MutableLiveData<List<AppDetailsItem<OpEntry>>> mAppOps = new MutableLiveData<>();
+    private final MutableLiveData<List<AppDetailsAppOpItem>> mAppOps = new MutableLiveData<>();
     @NonNull
-    private final List<AppDetailsItem<OpEntry>> mAppOpItems = new ArrayList<>();
+    private final List<AppDetailsAppOpItem> mAppOpItems = new ArrayList<>();
 
     @WorkerThread
-    public void setAppOp(AppDetailsItem<OpEntry> appDetailsItem) {
+    public void setAppOp(AppDetailsAppOpItem appDetailsItem) {
         synchronized (mAppOpItems) {
             for (int i = 0; i < mAppOpItems.size(); ++i) {
                 if (mAppOpItems.get(i).name.equals(appDetailsItem.name)) {
@@ -1220,8 +1273,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
                         0, 0, 0, null);
                 if (!opEntries.contains(opEntry)) opEntries.add(opEntry);
             }
-            // Include defaults ie. app ops without any associated permissions if requested
-            if ((boolean) AppPref.get(AppPref.PrefKey.PREF_APP_OP_SHOW_DEFAULT_BOOL)) {
+            // Include defaults i.e. app ops without any associated permissions if requested
+            if (AppPref.getBoolean(AppPref.PrefKey.PREF_APP_OP_SHOW_DEFAULT_BOOL)) {
                 for (int op : AppOpsManager.sOpsWithNoPerm) {
                     if (op >= AppOpsManager._NUM_OP) {
                         // Unsupported app operation
@@ -1238,7 +1291,21 @@ public class AppDetailsViewModel extends AndroidViewModel {
             for (OpEntry entry : opEntries) {
                 String opName = AppOpsManager.opToName(entry.getOp());
                 if (uniqueSet.contains(opName)) continue;
-                AppDetailsItem<OpEntry> appDetailsItem = new AppDetailsItem<>(entry);
+                AppDetailsAppOpItem appDetailsItem;
+                String permissionName = AppOpsManager.opToPermission(entry.getOp());
+                if (permissionName != null) {
+                    boolean isGranted = PermissionCompat.checkPermission(permissionName, mPackageName, mUserHandle)
+                            == PackageManager.PERMISSION_GRANTED;
+                    int permissionFlags = PermissionCompat.getPermissionFlags(permissionName, mPackageName, mUserHandle);
+                    PermissionInfo permissionInfo = PermissionCompat.getPermissionInfo(permissionName, mPackageName, 0);
+                    if (permissionInfo == null) {
+                        permissionInfo = new PermissionInfo();
+                        permissionInfo.name = permissionName;
+                    }
+                    appDetailsItem = new AppDetailsAppOpItem(entry, permissionInfo, isGranted, permissionFlags);
+                } else {
+                    appDetailsItem = new AppDetailsAppOpItem(entry);
+                }
                 appDetailsItem.name = opName;
                 uniqueSet.add(opName);
                 synchronized (mAppOpItems) {

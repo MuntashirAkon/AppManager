@@ -12,13 +12,14 @@ import java.util.Objects;
 // FIXME: 3/9/21 Merge with OpEntryCompat
 public class OpEntry implements Parcelable {
     private final int mOp;
-    private final int mMode;
     private final long mTimes;
     private final long mRejectTimes;
     private final long mDuration;
     private final int mProxyUid;
     private final boolean mRunning;
     private final String mProxyPackageName;
+
+    private int mMode;
 
     public OpEntry(int op, int mode, long time, long rejectTime, long duration, int proxyUid, String proxyPackage) {
         mOp = op;
@@ -38,6 +39,10 @@ public class OpEntry implements Parcelable {
 
     public int getMode() {
         return mMode;
+    }
+
+    public void setMode(int mode) {
+        this.mMode = mode;
     }
 
     public long getTime() {

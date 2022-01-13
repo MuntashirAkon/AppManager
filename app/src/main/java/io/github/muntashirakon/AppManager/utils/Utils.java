@@ -583,11 +583,6 @@ public class Utils {
         return DateUtils.getFormattedDuration(context, millis);
     }
 
-    @Deprecated
-    public static String getFormattedDuration(Context context, long millis, boolean addSign) {
-        return DateUtils.getFormattedDuration(context, millis, addSign);
-    }
-
     public static boolean isAppUpdated() {
         long newVersionCode = BuildConfig.VERSION_CODE;
         long oldVersionCode = (long) AppPref.get(AppPref.PrefKey.PREF_LAST_VERSION_CODE_LONG);

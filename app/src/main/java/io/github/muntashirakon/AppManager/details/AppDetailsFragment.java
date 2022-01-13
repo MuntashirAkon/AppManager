@@ -71,6 +71,7 @@ import java.util.concurrent.Executors;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.OpEntry;
+import io.github.muntashirakon.AppManager.details.struct.AppDetailsAppOpItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsComponentItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsPermissionItem;
@@ -87,6 +88,7 @@ import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.types.TextInputDropdownDialogBuilder;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
@@ -676,16 +678,6 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             });
         }
 
-        void set(int currentIndex, AppDetailsItem<?> appDetailsItem) {
-            if (mMainModel == null) return;
-            mAdapterList.set(currentIndex, appDetailsItem);
-            notifyItemChanged(currentIndex);
-            // Update the value in the app ops list in view model
-            if (mNeededProperty == APP_OPS) {
-                mExecutor.submit(() -> mMainModel.setAppOp((AppDetailsItem<OpEntry>) appDetailsItem));
-            }
-        }
-
         /**
          * ViewHolder to use recycled views efficiently. Fields names are not expressive because we use
          * the same holder for any kind of view, and view are not all sames.
@@ -1264,18 +1256,10 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
 
         private void getAppOpsView(@NonNull ViewHolder holder, int index) {
             View view = holder.itemView;
-            AppDetailsItem<?> item = mAdapterList.get(index);
-            OpEntry opEntry = (OpEntry) item.vanillaItem;
+            AppDetailsAppOpItem item = (AppDetailsAppOpItem) mAdapterList.get(index);
+            OpEntry opEntry = item.vanillaItem;
             final String opStr = mAdapterList.get(index).name;
-            boolean isDangerousOp = false;
-            PermissionInfo permissionInfo = null;
-            try {
-                String permName = AppOpsManager.opToPermission(opEntry.getOp());
-                if (permName != null) {
-                    permissionInfo = mPackageManager.getPermissionInfo(permName, PackageManager.GET_META_DATA);
-                }
-            } catch (PackageManager.NameNotFoundException | IllegalArgumentException | IndexOutOfBoundsException ignore) {
-            }
+            PermissionInfo permissionInfo = item.permissionInfo;
             // Set op name
             SpannableStringBuilder opName = new SpannableStringBuilder(opEntry.getOp() + " - ");
             if (item.name.equals(String.valueOf(opEntry.getOp()))) {
@@ -1288,27 +1272,37 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             }
             holder.textView1.setText(opName);
             // Set op mode, running and duration
-            String opRunningInfo = mActivity.getString(R.string.mode) + ": " + AppOpsManager.modeToName(opEntry.getMode());
-            if (opEntry.isRunning()) opRunningInfo += ", " + mActivity.getString(R.string.running);
-            if (opEntry.getDuration() != 0)
-                opRunningInfo += ", " + mActivity.getString(R.string.duration) + ": " +
-                        Utils.getFormattedDuration(mActivity, opEntry.getDuration(), true);
+            StringBuilder opRunningInfo = new StringBuilder()
+                    .append(mActivity.getString(R.string.mode))
+                    .append(LangUtils.getSeparatorString())
+                    .append(AppOpsManager.modeToName(opEntry.getMode()));
+            if (opEntry.isRunning()) {
+                opRunningInfo.append(", ").append(mActivity.getString(R.string.running));
+            }
+            if (opEntry.getDuration() != 0) {
+                opRunningInfo.append(", ").append(mActivity.getString(R.string.duration))
+                        .append(LangUtils.getSeparatorString())
+                        .append(DateUtils.getFormattedDuration(mActivity, opEntry.getDuration(), true));
+            }
             holder.textView7.setText(opRunningInfo);
             // Set accept-time and/or reject-time
             long currentTime = System.currentTimeMillis();
             boolean hasAcceptTime = opEntry.getTime() != 0 && opEntry.getTime() != -1;
             boolean hasRejectTime = opEntry.getRejectTime() != 0 && opEntry.getRejectTime() != -1;
             if (hasAcceptTime || hasRejectTime) {
-                String opTime = "";
+                StringBuilder opTime = new StringBuilder();
                 if (hasAcceptTime) {
-                    opTime = mActivity.getString(R.string.accept_time) + ": " +
-                            Utils.getFormattedDuration(mActivity, currentTime - opEntry.getTime())
-                            + " " + mActivity.getString(R.string.ago);
+                    opTime.append(mActivity.getString(R.string.accept_time))
+                            .append(LangUtils.getSeparatorString())
+                            .append(DateUtils.getFormattedDuration(mActivity, currentTime - opEntry.getTime()))
+                            .append(" ").append(mActivity.getString(R.string.ago));
                 }
                 if (hasRejectTime) {
-                    opTime += (opTime.equals("") ? "" : "\n") + mActivity.getString(R.string.reject_time)
-                            + ": " + Utils.getFormattedDuration(mActivity, currentTime - opEntry.getRejectTime())
-                            + " " + mActivity.getString(R.string.ago);
+                    opTime.append(opTime.length() == 0 ? "" : "\n")
+                            .append(mActivity.getString(R.string.reject_time))
+                            .append(LangUtils.getSeparatorString())
+                            .append(DateUtils.getFormattedDuration(mActivity, currentTime - opEntry.getRejectTime()))
+                            .append(" ").append(mActivity.getString(R.string.ago));
                 }
                 holder.textView8.setVisibility(View.VISIBLE);
                 holder.textView8.setText(opTime);
@@ -1317,7 +1311,10 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             if (permissionInfo != null) {
                 // Set permission name
                 holder.textView6.setVisibility(View.VISIBLE);
-                holder.textView6.setText(String.format(Locale.ROOT, "%s: %s", mActivity.getString(R.string.permission_name), permissionInfo.name));
+                holder.textView6.setText(String.format(Locale.ROOT, "%s%s%s",
+                        mActivity.getString(R.string.permission_name),
+                        LangUtils.getSeparatorString(),
+                        permissionInfo.name));
                 // Description
                 CharSequence description = permissionInfo.loadDescription(mPackageManager);
                 if (description != null) {
@@ -1328,19 +1325,21 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                 String protectionLevel = Utils.getProtectionLevelString(permissionInfo);
                 holder.textView3.setVisibility(View.VISIBLE);
                 holder.textView3.setText(String.format(Locale.ROOT, "\u2691 %s", protectionLevel));
-                if (protectionLevel.contains("dangerous")) isDangerousOp = true;
                 // Set package name
                 if (permissionInfo.packageName != null) {
                     holder.textView4.setVisibility(View.VISIBLE);
-                    holder.textView4.setText(String.format(Locale.ROOT, "%s: %s",
-                            mActivity.getString(R.string.package_name), permissionInfo.packageName));
+                    holder.textView4.setText(String.format(Locale.ROOT, "%s%s%s",
+                            mActivity.getString(R.string.package_name), LangUtils.getSeparatorString(),
+                            permissionInfo.packageName));
                 } else holder.textView4.setVisibility(View.GONE);
                 // Set group name
                 if (permissionInfo.group != null) {
                     holder.textView5.setVisibility(View.VISIBLE);
-                    holder.textView5.setText(String.format(Locale.ROOT, "%s: %s",
-                            mActivity.getString(R.string.group), permissionInfo.group));
-                } else holder.textView5.setVisibility(View.GONE);
+                    holder.textView5.setText(String.format(Locale.ROOT, "%s%s%s",
+                            mActivity.getString(R.string.group), LangUtils.getSeparatorString(), permissionInfo.group));
+                } else {
+                    holder.textView5.setVisibility(View.GONE);
+                }
             } else {
                 holder.textView2.setVisibility(View.GONE);
                 holder.textView3.setVisibility(View.GONE);
@@ -1349,7 +1348,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                 holder.textView6.setVisibility(View.GONE);
             }
             // Set background
-            if (isDangerousOp) {
+            if (item.isDangerous) {
                 view.setBackgroundResource(R.drawable.item_red);
             } else {
                 view.setBackgroundResource(index % 2 == 0 ? R.drawable.item_semi_transparent : R.drawable.item_transparent);
@@ -1362,26 +1361,15 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             // Op Switch
             holder.toggleSwitch.setVisibility(View.VISIBLE);
             // op granted
-            holder.toggleSwitch.setChecked(opEntry.getMode() == AppOpsManager.MODE_ALLOWED);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                holder.toggleSwitch.setChecked(holder.toggleSwitch.isChecked() || opEntry.getMode() == AppOpsManager.MODE_FOREGROUND);
-            }
+            holder.toggleSwitch.setChecked(item.isAllowed());
             holder.itemView.setOnClickListener(v -> {
-                boolean isChecked = !holder.toggleSwitch.isChecked();
+                boolean isAllowed = !item.isAllowed();
                 mExecutor.submit(() -> {
-                    int opMode = isChecked ? AppOpsManager.MODE_ALLOWED : AppOpsManager.MODE_IGNORED;
-                    if (mMainModel != null && mMainModel.setAppOp(opEntry.getOp(), opMode)) {
-                        OpEntry opEntry1 = new OpEntry(opEntry.getOp(), opMode, opEntry.getTime(),
-                                opEntry.getRejectTime(), opEntry.getDuration(),
-                                opEntry.getProxyUid(), opEntry.getProxyPackageName());
-                        AppDetailsItem<?> appDetailsItem = new AppDetailsItem<>(opEntry1);
-                        appDetailsItem.name = item.name;
-                        runOnUiThread(() -> set(index, appDetailsItem));
+                    if (mMainModel != null && mMainModel.setAppOpMode(item)) {
+                        runOnUiThread(() -> notifyItemChanged(index));
                     } else {
-                        runOnUiThread(() -> {
-                            UIUtils.displayLongToast(isChecked ? R.string.failed_to_enable_op : R.string.app_op_cannot_be_disabled);
-                            notifyItemChanged(index);
-                        });
+                        runOnUiThread(() -> UIUtils.displayLongToast(isAllowed
+                                ? R.string.failed_to_enable_op : R.string.app_op_cannot_be_disabled));
                     }
                 });
             });
@@ -1392,18 +1380,10 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                         .setSingleChoiceItems(getAppOpModeNames(modes), modes.indexOf(opEntry.getMode()), (dialog, which) -> {
                             int opMode = modes.get(which);
                             mExecutor.submit(() -> {
-                                if (mMainModel.setAppOp(opEntry.getOp(), opMode)) {
-                                    OpEntry opEntry1 = new OpEntry(opEntry.getOp(), opMode, opEntry.getTime(),
-                                            opEntry.getRejectTime(), opEntry.getDuration(),
-                                            opEntry.getProxyUid(), opEntry.getProxyPackageName());
-                                    AppDetailsItem<?> appDetailsItem = new AppDetailsItem<>(opEntry1);
-                                    appDetailsItem.name = item.name;
-                                    runOnUiThread(() -> set(index, appDetailsItem));
+                                if (mMainModel != null && mMainModel.setAppOpMode(item, opMode)) {
+                                    runOnUiThread(() -> notifyItemChanged(index));
                                 } else {
-                                    runOnUiThread(() -> {
-                                        Toast.makeText(mActivity, R.string.failed_to_enable_op, Toast.LENGTH_LONG).show();
-                                        notifyItemChanged(index);
-                                    });
+                                    runOnUiThread(() -> UIUtils.displayLongToast(R.string.failed_to_enable_op));
                                 }
                             });
                             dialog.dismiss();
@@ -1443,13 +1423,13 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             // Set package name
             if (permissionInfo.packageName != null) {
                 holder.textView4.setVisibility(View.VISIBLE);
-                holder.textView4.setText(String.format("%s%s %s", mActivity.getString(R.string.package_name),
+                holder.textView4.setText(String.format("%s%s%s", mActivity.getString(R.string.package_name),
                         LangUtils.getSeparatorString(), permissionInfo.packageName));
             } else holder.textView4.setVisibility(View.GONE);
             // Set group name
             if (permissionInfo.group != null) {
                 holder.textView5.setVisibility(View.VISIBLE);
-                holder.textView5.setText(String.format("%s%s %s", mActivity.getString(R.string.group),
+                holder.textView5.setText(String.format("%s%s%s", mActivity.getString(R.string.group),
                         LangUtils.getSeparatorString(), permissionInfo.group));
             } else holder.textView5.setVisibility(View.GONE);
             // Permission Switch

@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 import androidx.core.content.pm.PermissionInfoCompat;
 
+import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.permission.PermUtils;
 import io.github.muntashirakon.AppManager.permission.Permission;
 
@@ -45,14 +46,12 @@ public class AppDetailsPermissionItem extends AppDetailsItem<PermissionInfo> {
      *
      * <p>This also automatically grants app op if it has app op.
      *
-     * @param setByTheUser   If the user has made the decision. This does not unset the flag
-     * @param fixedByTheUser If the user requested that she/he does not want to be asked again
      * @return {@code true} iff the permission could be granted.
      */
     @WorkerThread
-    public boolean grantPermission(@NonNull PackageInfo packageInfo, boolean setByTheUser, boolean fixedByTheUser)
+    public boolean grantPermission(@NonNull PackageInfo packageInfo, @NonNull AppOpsService appOpsService)
             throws RemoteException {
-        return PermUtils.grantPermission(packageInfo, permission, setByTheUser, fixedByTheUser);
+        return PermUtils.grantPermission(packageInfo, permission, appOpsService, true, true);
     }
 
     /**
@@ -60,12 +59,11 @@ public class AppDetailsPermissionItem extends AppDetailsItem<PermissionInfo> {
      *
      * <p>This also disallows the app op for the permission if it has app op.
      *
-     * @param fixedByTheUser If the user requested that she/he does not want to be asked again
      * @return {@code true} iff the permission could be revoked.
      */
     @WorkerThread
-    public boolean revokePermission(@NonNull PackageInfo packageInfo, boolean fixedByTheUser)
+    public boolean revokePermission(@NonNull PackageInfo packageInfo, AppOpsService appOpsService)
             throws RemoteException {
-        return PermUtils.revokePermission(packageInfo, permission, fixedByTheUser);
+        return PermUtils.revokePermission(packageInfo, permission, appOpsService, true);
     }
 }

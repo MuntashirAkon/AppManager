@@ -40,25 +40,6 @@ public class PermUtils {
     @WorkerThread
     public static boolean grantPermission(@NonNull PackageInfo packageInfo,
                                           @NonNull Permission permission,
-                                          boolean setByTheUser,
-                                          boolean fixedByTheUser)
-            throws RemoteException {
-        AppOpsService appOpsService = new AppOpsService();
-        return grantPermission(packageInfo, permission, appOpsService, setByTheUser, fixedByTheUser);
-    }
-
-    /**
-     * Grant the permission.
-     *
-     * <p>This also automatically grants app op if it has app op.
-     *
-     * @param setByTheUser   If the user has made the decision. This does not unset the flag
-     * @param fixedByTheUser If the user requested that she/he does not want to be asked again
-     * @return {@code true} iff the permission could be granted.
-     */
-    @WorkerThread
-    public static boolean grantPermission(@NonNull PackageInfo packageInfo,
-                                          @NonNull Permission permission,
                                           @NonNull AppOpsService appOpsService,
                                           boolean setByTheUser,
                                           boolean fixedByTheUser)
@@ -143,23 +124,6 @@ public class PermUtils {
         }
 
         return true;
-    }
-
-    /**
-     * Revoke the permission.
-     *
-     * <p>This also disallows the app op for the permission if it has app op.
-     *
-     * @param fixedByTheUser If the user requested that she/he does not want to be asked again
-     * @return {@code true} iff the permission could be revoked.
-     */
-    @WorkerThread
-    public static boolean revokePermission(@NonNull PackageInfo packageInfo,
-                                           @NonNull Permission permission,
-                                           boolean fixedByTheUser)
-            throws RemoteException {
-        AppOpsService appOpsService = new AppOpsService();
-        return revokePermission(packageInfo, permission, appOpsService, fixedByTheUser);
     }
 
     /**
@@ -315,12 +279,12 @@ public class PermUtils {
         }
     }
 
-    private static boolean allowAppOp(AppOpsService appOpsService, int appOp, String packageName, int uid)
+    public static boolean allowAppOp(AppOpsService appOpsService, int appOp, String packageName, int uid)
             throws RemoteException {
         return setAppOpMode(appOpsService, appOp, packageName, uid, AppOpsManager.MODE_ALLOWED);
     }
 
-    private static boolean disallowAppOp(AppOpsService appOpsService, int appOp, String packageName, int uid)
+    public static boolean disallowAppOp(AppOpsService appOpsService, int appOp, String packageName, int uid)
             throws RemoteException {
         return setAppOpMode(appOpsService, appOp, packageName, uid, AppOpsManager.MODE_IGNORED);
     }
@@ -340,7 +304,7 @@ public class PermUtils {
         if (currentMode == mode) {
             return false;
         }
-        appOpsService.setMode(appOp, uid, packageName, AppOpsManager.MODE_ALLOWED);
+        appOpsService.setMode(appOp, uid, packageName, mode);
         return true;
     }
 
