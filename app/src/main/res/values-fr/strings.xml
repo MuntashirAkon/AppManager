@@ -708,7 +708,7 @@
     <string name="community_links">Telegram : https://t.me/AppManagerChannel
 \nTwitter : https://twitter.com/AppManagerNews</string>
     <string name="community">Communauté</string>
-    <string name="pref_selected_users_msg">Restreindre l\'utilisation d\'App Manager aux seuls utilisateurs sélectionnés</string>
+    <string name="pref_selected_users_msg">Restreindre l\'utilisation d\'App Manager aux seuls utilisateurs sélectionnés.</string>
     <string name="toast_started_select_partial">Sélection Partielle activés</string>
     <string name="backup_extras_description">Sauvegarder les autorisations des applications, les options d\'économie de batterie et d\'utilisation des données, l\'état de MagiskHide, SSAID, etc.</string>
     <string name="backup_extras">Extras</string>
@@ -818,14 +818,14 @@
     <string name="type_float_array_list">Liste de nombres décimaux</string>
     <string name="type_float_array">Tableau de nombres décimaux</string>
     <string name="type_long_array_list">Liste d\'entiers longs</string>
-    <string name="keystore">KeyStore</string>
+    <string name="keystore">Gestionnaire de clé</string>
     <string name="input_key_password">Mot de passe Clé</string>
     <string name="invalid_aes_key_size">Format de clé invalide pour un chiffrement AES. La taille de la clé doit être de 128 ou 256 bits.</string>
     <string name="orientation_full_user">Utilisateur complet</string>
     <string name="next">Suivant</string>
     <string name="installer_app_installed">Application installée</string>
     <string name="paste">Coller</string>
-    <string name="paired_successfully">apparier</string>
+    <string name="paired_successfully">Apparier.</string>
     <string name="adb_wifi_paring_code">Code d\'appairage Wi-Fi</string>
     <string name="invalid_password">Mot de passe invalide, réessayez.</string>
     <string name="pref_log_viewer_msg">Configurer l\'affichage des journaux.</string>
@@ -887,7 +887,7 @@
     <string name="widget_recording_in_progress">Enregistrement en cours…</string>
     <string name="unable_to_save_log">Impossible d\'enregistrer le journal. Avez-vous entré un nom de fichier valide \?</string>
     <plurals name="toast_log_truncated">
-        <item quantity="one">Journal trop grand, affichage des %d dernières lignes.</item>
+        <item quantity="one">Journal trop grand, affichage de la %d dernière ligne.</item>
         <item quantity="other">Journal trop grand, affichage des %d dernières lignes.</item>
     </plurals>
     <string name="toast_invalid_selection">Sélection invalide. Veuillez réessayer s.v.p.</string>
@@ -952,7 +952,7 @@
     <string name="orientation_sensor_portrait">Capteur mode portrait</string>
     <string name="state_wake_kill">Suppression réveil</string>
     <string name="systemless_app">Appli sans système</string>
-    <string name="source_stamp_verified">Timbre source vérifié</string>
+    <string name="source_stamp_verified">Timbre source vérifié.</string>
     <string name="no_app_ops_permission">Aucune autorisation pour l\'affichage des opérations d\'application</string>
     <string name="app_signing_signature_schemes">Schémas de signature</string>
     <string name="pref_backup_android_keystore">Sauvegarder les applications avec le KeyStore d\'Android</string>
@@ -1101,4 +1101,5 @@
     <string name="search_type_suffix">Suffixe</string>
     <string name="search_type_prefix">Préfixe</string>
     <string name="authenticating">Authentification…</string>
+    <string name="pref_default_blocking_method_description">Méthode à utiliser par défaut dans les endroits où il n\'y a pas d\'option pour sélectionner une méthode de blocage.</string>
 </resources>
