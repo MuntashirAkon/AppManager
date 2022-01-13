@@ -413,8 +413,9 @@ public final class PackageUtils {
     }
 
     @NonNull
-    public static HashMap<String, RuleType> collectComponentClassNames(@NonNull PackageInfo packageInfo) {
+    public static HashMap<String, RuleType> collectComponentClassNames(@Nullable PackageInfo packageInfo) {
         HashMap<String, RuleType> componentClasses = new HashMap<>();
+        if (packageInfo == null) return componentClasses;
         // Add activities
         if (packageInfo.activities != null) {
             for (ActivityInfo activityInfo : packageInfo.activities) {

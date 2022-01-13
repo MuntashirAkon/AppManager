@@ -5,6 +5,7 @@ package io.github.muntashirakon.AppManager.rules.compontents;
 import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.RemoteException;
@@ -21,10 +22,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import io.github.muntashirakon.AppManager.appops.AppOpsManager;
+import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.permission.PermUtils;
+import io.github.muntashirakon.AppManager.permission.Permission;
 import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
+import io.github.muntashirakon.AppManager.rules.struct.AppOpRule;
 import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
+import io.github.muntashirakon.AppManager.rules.struct.PermissionRule;
 import io.github.muntashirakon.AppManager.rules.struct.RuleEntry;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
@@ -34,6 +41,10 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.io.AtomicProxyFile;
 import io.github.muntashirakon.io.ProxyFile;
 import io.github.muntashirakon.io.ProxyOutputStream;
+
+import static io.github.muntashirakon.AppManager.appops.AppOpsManager.OP_NONE;
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagMatchUninstalled;
 
 /**
  * Block application components: activities, broadcasts, services and providers.
@@ -63,7 +74,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
     }
 
     @SuppressLint("StaticFieldLeak")
-    private static ComponentsBlocker INSTANCE;
+    private static ComponentsBlocker sInstance;
 
     /**
      * Get a new or existing IMMUTABLE instance of {@link ComponentsBlocker}. The existing instance
@@ -122,33 +133,44 @@ public final class ComponentsBlocker extends RulesStorageManager {
      */
     @NonNull
     public static ComponentsBlocker getInstance(@NonNull String packageName, int userHandle, boolean noReloadFromDisk) {
-        if (INSTANCE == null) {
-            INSTANCE = new ComponentsBlocker(packageName, userHandle);
-        } else if (!noReloadFromDisk || !INSTANCE.packageName.equals(packageName)) {
-            INSTANCE.close();
-            INSTANCE = new ComponentsBlocker(packageName, userHandle);
+        if (sInstance == null) {
+            sInstance = new ComponentsBlocker(packageName, userHandle);
+        } else if (!noReloadFromDisk || !sInstance.packageName.equals(packageName)) {
+            sInstance.close();
+            sInstance = new ComponentsBlocker(packageName, userHandle);
         }
         if (!noReloadFromDisk && AppPref.isRootEnabled()) {
-            INSTANCE.retrieveDisabledComponents();
+            sInstance.retrieveDisabledComponents();
         }
-        INSTANCE.readOnly = true;
-        return INSTANCE;
+        sInstance.readOnly = true;
+        return sInstance;
     }
 
-    private final AtomicProxyFile rulesFile;
-    private Set<String> components;
+    @NonNull
+    private final AtomicProxyFile mRulesFile;
+    @NonNull
+    private Set<String> mComponents;
+    @Nullable
+    private PackageInfo mPackageInfo;
 
     private ComponentsBlocker(String packageName, int userHandle) {
         super(packageName, userHandle);
-        this.rulesFile = new AtomicProxyFile(new ProxyFile(SYSTEM_RULES_PATH, packageName + ".xml"));
-        this.components = PackageUtils.collectComponentClassNames(packageName, userHandle).keySet();
+        mRulesFile = new AtomicProxyFile(new ProxyFile(SYSTEM_RULES_PATH, packageName + ".xml"));
+        try {
+            mPackageInfo = PackageManagerCompat.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES
+                    | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS | flagDisabledComponents
+                    | flagMatchUninstalled | PackageManager.GET_SERVICES, userHandle);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+        mComponents = PackageUtils.collectComponentClassNames(mPackageInfo).keySet();
     }
 
     /**
      * Reload package components
      */
     public void reloadComponents() {
-        this.components = PackageUtils.collectComponentClassNames(packageName, userHandle).keySet();
+        mComponents = PackageUtils.collectComponentClassNames(mPackageInfo).keySet();
     }
 
     /**
@@ -287,7 +309,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
         if (readOnly) throw new IOException("Saving disabled components in read only mode.");
         if (!apply || componentCount() == 0) {
             // No components set, delete if already exists
-            rulesFile.delete();
+            mRulesFile.delete();
             return;
         }
         StringBuilder activities = new StringBuilder();
@@ -319,14 +341,14 @@ public final class ComponentsBlocker extends RulesStorageManager {
         // Save rules
         ProxyOutputStream rulesStream = null;
         try {
-            rulesStream = rulesFile.startWrite();
+            rulesStream = mRulesFile.startWrite();
             Log.d(TAG, "Rules: " + rules);
             rulesStream.write(rules.getBytes());
-            rulesFile.finishWrite(rulesStream);
-            Runner.runCommand(new String[]{"chmod", "0666", rulesFile.getBaseFile().getAbsolutePath()});
+            mRulesFile.finishWrite(rulesStream);
+            Runner.runCommand(new String[]{"chmod", "0666", mRulesFile.getBaseFile().getAbsolutePath()});
         } catch (IOException e) {
             Log.e(TAG, "Failed to write rules for package " + packageName, e);
-            rulesFile.failWrite(rulesStream);
+            mRulesFile.failWrite(rulesStream);
         }
     }
 
@@ -347,7 +369,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
     }
 
     /**
-     * Apply the currently modified rules if the the argument apply is true. Since IFW is used, when
+     * Apply the currently modified rules if the argument apply is true. Since IFW is used, when
      * apply is true, the IFW rules are saved to {@link #SYSTEM_RULES_PATH} and components that are
      * set to be removed or unblocked will be removed. If apply is set to false, all rules will be
      * removed but before that all components will be set to their default state (ie., the state
@@ -427,6 +449,57 @@ public final class ComponentsBlocker extends RulesStorageManager {
         }
     }
 
+    public void applyAppOpsAndPerms(boolean apply) {
+        if (mPackageInfo == null) {
+            return;
+        }
+        int uid = mPackageInfo.applicationInfo.uid;
+        AppOpsService appOpsService = new AppOpsService();
+        if (apply) {
+            // Apply all app ops
+            for (AppOpRule appOp : getAll(AppOpRule.class)) {
+                try {
+                    appOpsService.setMode(appOp.getOp(), uid, packageName, appOp.getMode());
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+            // Apply all permissions
+            for (PermissionRule permissionRule : getAll(PermissionRule.class)) {
+                Permission permission = permissionRule.getPermission(true);
+                try {
+                    permission.setAppOpAllowed(permission.getAppOp() != OP_NONE && appOpsService
+                            .checkOperation(permission.getAppOp(), uid, packageName) == AppOpsManager.MODE_ALLOWED);
+                    if (permissionRule.isGranted()) {
+                        PermUtils.grantPermission(mPackageInfo, permission, appOpsService, true, true);
+                    } else {
+                        PermUtils.revokePermission(mPackageInfo, permission, appOpsService, true);
+                    }
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            // Reset all app ops
+            try {
+                appOpsService.resetAllModes(userHandle, packageName);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+            // Revoke all permissions
+            for (PermissionRule permissionRule : getAll(PermissionRule.class)) {
+                Permission permission = permissionRule.getPermission(true);
+                try {
+                    permission.setAppOpAllowed(permission.getAppOp() != OP_NONE && appOpsService
+                            .checkOperation(permission.getAppOp(), uid, packageName) == AppOpsManager.MODE_ALLOWED);
+                    PermUtils.revokePermission(mPackageInfo, permission, appOpsService, true);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
     /**
      * Check if the components are up-to-date and remove the ones that are not up-to-date.
      */
@@ -434,7 +507,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
         // Validate components
         List<ComponentRule> allEntries = getAllComponents();
         for (ComponentRule entry : allEntries) {
-            if (!components.contains(entry.name)) {
+            if (!mComponents.contains(entry.name)) {
                 // Remove non-existent components
                 removeEntry(entry);
             }
@@ -448,7 +521,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
     private void retrieveDisabledComponents() {
         if (!AppPref.isRootEnabled()) return;
         Log.d(TAG, "Retrieving disabled components for package " + packageName);
-        if (!rulesFile.exists() || rulesFile.getBaseFile().length() == 0) {
+        if (!mRulesFile.exists() || mRulesFile.getBaseFile().length() == 0) {
             // System doesn't have any rules.
             // Load the rules saved inside App Manager
             for (ComponentRule entry : getAllComponents()) {
@@ -457,7 +530,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
             return;
         }
         try {
-            try (InputStream rulesStream = rulesFile.openRead()) {
+            try (InputStream rulesStream = mRulesFile.openRead()) {
                 HashMap<String, RuleType> components = ComponentUtils.readIFWRules(rulesStream, packageName);
                 for (String componentName : components.keySet()) {
                     // Override existing rule for the component if it exists

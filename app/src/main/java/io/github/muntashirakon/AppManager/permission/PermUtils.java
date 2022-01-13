@@ -43,8 +43,27 @@ public class PermUtils {
                                           boolean setByTheUser,
                                           boolean fixedByTheUser)
             throws RemoteException {
-        boolean killApp = false;
         AppOpsService appOpsService = new AppOpsService();
+        return grantPermission(packageInfo, permission, appOpsService, setByTheUser, fixedByTheUser);
+    }
+
+    /**
+     * Grant the permission.
+     *
+     * <p>This also automatically grants app op if it has app op.
+     *
+     * @param setByTheUser   If the user has made the decision. This does not unset the flag
+     * @param fixedByTheUser If the user requested that she/he does not want to be asked again
+     * @return {@code true} iff the permission could be granted.
+     */
+    @WorkerThread
+    public static boolean grantPermission(@NonNull PackageInfo packageInfo,
+                                          @NonNull Permission permission,
+                                          @NonNull AppOpsService appOpsService,
+                                          boolean setByTheUser,
+                                          boolean fixedByTheUser)
+            throws RemoteException {
+        boolean killApp = false;
         boolean wasGranted = permission.isGrantedIncludingAppOp();
 
         // We toggle permission only to apps that support runtime
@@ -139,8 +158,25 @@ public class PermUtils {
                                            @NonNull Permission permission,
                                            boolean fixedByTheUser)
             throws RemoteException {
-        boolean killApp = false;
         AppOpsService appOpsService = new AppOpsService();
+        return revokePermission(packageInfo, permission, appOpsService, fixedByTheUser);
+    }
+
+    /**
+     * Revoke the permission.
+     *
+     * <p>This also disallows the app op for the permission if it has app op.
+     *
+     * @param fixedByTheUser If the user requested that she/he does not want to be asked again
+     * @return {@code true} iff the permission could be revoked.
+     */
+    @WorkerThread
+    public static boolean revokePermission(@NonNull PackageInfo packageInfo,
+                                           @NonNull Permission permission,
+                                           @NonNull AppOpsService appOpsService,
+                                           boolean fixedByTheUser)
+            throws RemoteException {
+        boolean killApp = false;
 
         // We toggle permissions only to apps that support runtime
         // permissions, otherwise we toggle the app op corresponding

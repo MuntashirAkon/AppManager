@@ -46,7 +46,7 @@ public class ProxyDocumentFile extends DocumentFile {
             target.createNewFile();
             return new ProxyDocumentFile(this, target);
         } catch (IOException e) {
-            Log.w(TAG, "Failed to createFile: " + e);
+            Log.w(TAG, "Failed to create " + target, e);
             return null;
         }
     }

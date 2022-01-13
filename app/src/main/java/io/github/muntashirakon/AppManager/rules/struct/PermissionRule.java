@@ -7,50 +7,64 @@ import androidx.annotation.NonNull;
 import java.util.Objects;
 import java.util.StringTokenizer;
 
+import io.github.muntashirakon.AppManager.appops.AppOpsManager;
+import io.github.muntashirakon.AppManager.permission.Permission;
 import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
 
 public class PermissionRule extends RuleEntry {
-    private boolean isGranted;
+    private final int mAppOp;
+
+    private boolean mIsGranted;
     @PermissionCompat.PermissionFlags
-    private int flags;
+    private int mFlags;
 
     public PermissionRule(@NonNull String packageName, @NonNull String permName, boolean isGranted,
                           @PermissionCompat.PermissionFlags int flags) {
         super(packageName, permName, RuleType.PERMISSION);
-        this.isGranted = isGranted;
-        this.flags = flags;
+        mIsGranted = isGranted;
+        mFlags = flags;
+        mAppOp = AppOpsManager.permissionToOpCode(name);
     }
 
     public PermissionRule(@NonNull String packageName, @NonNull String permName, @NonNull StringTokenizer tokenizer)
             throws IllegalArgumentException {
         super(packageName, permName, RuleType.PERMISSION);
         if (tokenizer.hasMoreElements()) {
-            isGranted = Boolean.parseBoolean(tokenizer.nextElement().toString());
+            mIsGranted = Boolean.parseBoolean(tokenizer.nextElement().toString());
         } else throw new IllegalArgumentException("Invalid format: isGranted not found");
         if (tokenizer.hasMoreElements()) {
-            flags = Integer.parseInt(tokenizer.nextElement().toString());
+            mFlags = Integer.parseInt(tokenizer.nextElement().toString());
         } else {
             // Don't throw exception in order to provide backward compatibility
-            flags = 0;
+            mFlags = 0;
         }
+        mAppOp = AppOpsManager.permissionToOpCode(name);
     }
 
     public boolean isGranted() {
-        return isGranted;
+        return mIsGranted;
     }
 
     public void setGranted(boolean granted) {
-        isGranted = granted;
+        mIsGranted = granted;
     }
 
     @PermissionCompat.PermissionFlags
     public int getFlags() {
-        return flags;
+        return mFlags;
     }
 
     public void setFlags(@PermissionCompat.PermissionFlags int flags) {
-        this.flags = flags;
+        mFlags = flags;
+    }
+
+    public int getAppOp() {
+        return mAppOp;
+    }
+
+    public Permission getPermission(boolean appOpAllowed) {
+        return new Permission(name, mIsGranted, mAppOp, appOpAllowed, mFlags);
     }
 
     @NonNull
@@ -59,15 +73,15 @@ public class PermissionRule extends RuleEntry {
         return "PermissionRule{" +
                 "packageName='" + packageName + '\'' +
                 ", name='" + name + '\'' +
-                ", isGranted=" + isGranted +
-                ", flags=" + flags +
+                ", isGranted=" + mIsGranted +
+                ", flags=" + mFlags +
                 '}';
     }
 
     @NonNull
     @Override
     public String flattenToString(boolean isExternal) {
-        return addPackageWithTab(isExternal) + name + "\t" + type.name() + "\t" + isGranted + "\t" + flags;
+        return addPackageWithTab(isExternal) + name + "\t" + type.name() + "\t" + mIsGranted + "\t" + mFlags;
     }
 
     @Override

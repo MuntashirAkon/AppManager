@@ -24,11 +24,14 @@ import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
+import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.crypto.Crypto;
 import io.github.muntashirakon.AppManager.crypto.CryptoException;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.permission.PermUtils;
+import io.github.muntashirakon.AppManager.permission.Permission;
 import io.github.muntashirakon.AppManager.rules.PseudoRules;
 import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.RulesImporter;
@@ -41,7 +44,6 @@ import io.github.muntashirakon.AppManager.rules.struct.UriGrantRule;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.servermanager.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
-import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
 import io.github.muntashirakon.AppManager.ssaid.SsaidSettings;
 import io.github.muntashirakon.AppManager.uri.UriManager;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -55,6 +57,7 @@ import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.ProxyFile;
 
+import static io.github.muntashirakon.AppManager.appops.AppOpsManager.OP_NONE;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.DATA_PREFIX;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.EXT_DATA;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.EXT_MEDIA;
@@ -489,13 +492,19 @@ class RestoreOp implements Closeable {
                         NetworkPolicyManagerCompat.setUidPolicy(packageInfo.applicationInfo.uid,
                                 ((NetPolicyRule) entry).getPolicies());
                         break;
-                    case PERMISSION:
-                        if (((PermissionRule) entry).isGranted()) {
-                            PermissionCompat.grantPermission(packageName, entry.name, userHandle);
+                    case PERMISSION: {
+                        PermissionRule permissionRule = (PermissionRule) entry;
+                        Permission permission = permissionRule.getPermission(true);
+                        permission.setAppOpAllowed(permission.getAppOp() != OP_NONE && appOpsService
+                                .checkOperation(permission.getAppOp(), packageInfo.applicationInfo.uid,
+                                        packageName) == AppOpsManager.MODE_ALLOWED);
+                        if (permissionRule.isGranted()) {
+                            PermUtils.grantPermission(packageInfo, permission, appOpsService, true, true);
                         } else {
-                            PermissionCompat.revokePermission(packageName, entry.name, userHandle);
+                            PermUtils.revokePermission(packageInfo, permission, appOpsService, true);
                         }
                         break;
+                    }
                     case BATTERY_OPT:
                         Runner.runCommand(new String[]{"dumpsys", "deviceidle", "whitelist", "+" + packageName});
                         break;
