@@ -34,6 +34,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.android.apksig.ApkVerifier;
+import com.android.apksig.SigningCertificateLineage;
 import com.android.apksig.apk.ApkFormatException;
 
 import java.io.File;
@@ -1514,6 +1515,27 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     AppDetailsItem<X509Certificate> item = new AppDetailsItem<>(certificate);
                     item.name = "SourceStamp Certificate";
                     appDetailsItems.add(item);
+                }
+            }
+            SigningCertificateLineage lineage = mApkVerifierResult.getSigningCertificateLineage();
+            if (lineage != null) {
+                certificates = lineage.getCertificatesInLineage();
+                if (certificates != null && certificates.size() > 0) {
+                    for (X509Certificate certificate : certificates) {
+                        AppDetailsItem<X509Certificate> item = new AppDetailsItem<>(certificate);
+                        item.name = "Certificate for Lineage";
+                        appDetailsItems.add(item);
+                    }
+                    if (mIsExternalApk && mPackageInfo.signatures == null) {
+                        List<Signature> signatures = new ArrayList<>(certificates.size());
+                        for (X509Certificate certificate : certificates) {
+                            try {
+                                signatures.add(new Signature(certificate.getEncoded()));
+                            } catch (CertificateEncodingException ignore) {
+                            }
+                        }
+                        mPackageInfo.signatures = signatures.toArray(new Signature[0]);
+                    }
                 }
             }
         } catch (IOException | ApkFormatException | NoSuchAlgorithmException e) {
