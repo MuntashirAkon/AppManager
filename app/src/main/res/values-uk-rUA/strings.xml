@@ -1178,4 +1178,6 @@
     <string name="pref_default_blocking_method_description">Метод, який використовується за замовчуванням там, де немає можливості вибрати метод блокування.</string>
     <string name="search_type_prefix">префікс</string>
     <string name="pref_intent_firewall_description">Блокування компонентів лише за допомогою Intent Firewall. Не рекомендується, оскільки деякі системні програми можуть обходити цей метод блокування.</string>
+    <string name="intent_firewall">IFW</string>
+    <string name="authenticating">Автентифікація…</string>
 </resources>
