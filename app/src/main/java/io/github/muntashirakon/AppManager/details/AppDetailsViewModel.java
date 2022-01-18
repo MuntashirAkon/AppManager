@@ -5,6 +5,7 @@ package io.github.muntashirakon.AppManager.details;
 import android.annotation.SuppressLint;
 import android.annotation.UserIdInt;
 import android.app.Application;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
@@ -459,9 +460,10 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     @WorkerThread
     @GuardedBy("blockerLocker")
-    public void updateRulesForComponent(String componentName, RuleType type,
+    public void updateRulesForComponent(@NonNull AppDetailsComponentItem componentItem, @NonNull RuleType type,
                                         @ComponentRule.ComponentStatus String componentStatus) {
         if (mIsExternalApk) return;
+        String componentName = componentItem.name;
         synchronized (mBlockerLocker) {
             waitForBlockerOrExit();
             mBlocker.setMutable();
@@ -472,7 +474,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
             // Add to the list
             mBlocker.addComponent(componentName, type, componentStatus);
             // Apply rules if global blocking enable or already applied
-            if ((Boolean) AppPref.get(AppPref.PrefKey.PREF_GLOBAL_BLOCKING_ENABLED_BOOL)
+            if (AppPref.getBoolean(AppPref.PrefKey.PREF_GLOBAL_BLOCKING_ENABLED_BOOL)
                     || (mRuleApplicationStatus.getValue() != null && RULE_APPLIED == mRuleApplicationStatus.getValue())) {
                 mBlocker.applyRules(true);
             }
@@ -481,6 +483,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
             // Commit changes
             mBlocker.commit();
             mBlocker.setReadOnly();
+            // FIXME: 18/1/22 Do not reload all components, only reload this component
             // Update UI
             reloadComponents();
         }
@@ -1090,16 +1093,17 @@ public class AppDetailsViewModel extends AndroidViewModel {
             return;
         }
         for (ActivityInfo activityInfo : mPackageInfo.activities) {
-            AppDetailsComponentItem appDetailsItem = new AppDetailsComponentItem(activityInfo);
-            appDetailsItem.name = activityInfo.targetActivity == null ? activityInfo.name : activityInfo.targetActivity;
+            AppDetailsComponentItem componentItem = new AppDetailsComponentItem(activityInfo);
+            componentItem.name = activityInfo.targetActivity == null ? activityInfo.name : activityInfo.targetActivity;
             synchronized (mBlockerLocker) {
                 if (!mIsExternalApk) {
-                    appDetailsItem.setRule(mBlocker.getComponent(activityInfo.name));
+                    componentItem.setRule(mBlocker.getComponent(activityInfo.name));
                 }
             }
-            appDetailsItem.setTracker(ComponentUtils.isTracker(activityInfo.name));
+            componentItem.setTracker(ComponentUtils.isTracker(activityInfo.name));
+            componentItem.setDisabled(isComponentDisabled(activityInfo));
             synchronized (mActivityItems) {
-                mActivityItems.add(appDetailsItem);
+                mActivityItems.add(componentItem);
             }
         }
         synchronized (mActivityItems) {
@@ -1124,16 +1128,17 @@ public class AppDetailsViewModel extends AndroidViewModel {
             return;
         }
         for (ServiceInfo serviceInfo : mPackageInfo.services) {
-            AppDetailsComponentItem appDetailsItem = new AppDetailsComponentItem(serviceInfo);
-            appDetailsItem.name = serviceInfo.name;
+            AppDetailsComponentItem componentItem = new AppDetailsComponentItem(serviceInfo);
+            componentItem.name = serviceInfo.name;
             synchronized (mBlockerLocker) {
                 if (!mIsExternalApk) {
-                    appDetailsItem.setRule(mBlocker.getComponent(serviceInfo.name));
+                    componentItem.setRule(mBlocker.getComponent(serviceInfo.name));
                 }
             }
-            appDetailsItem.setTracker(ComponentUtils.isTracker(serviceInfo.name));
+            componentItem.setTracker(ComponentUtils.isTracker(serviceInfo.name));
+            componentItem.setDisabled(isComponentDisabled(serviceInfo));
             synchronized (mServiceItems) {
-                mServiceItems.add(appDetailsItem);
+                mServiceItems.add(componentItem);
             }
         }
         synchronized (mServiceItems) {
@@ -1158,16 +1163,17 @@ public class AppDetailsViewModel extends AndroidViewModel {
             return;
         }
         for (ActivityInfo activityInfo : mPackageInfo.receivers) {
-            AppDetailsComponentItem appDetailsItem = new AppDetailsComponentItem(activityInfo);
-            appDetailsItem.name = activityInfo.name;
+            AppDetailsComponentItem componentItem = new AppDetailsComponentItem(activityInfo);
+            componentItem.name = activityInfo.name;
             synchronized (mBlockerLocker) {
                 if (!mIsExternalApk) {
-                    appDetailsItem.setRule(mBlocker.getComponent(activityInfo.name));
+                    componentItem.setRule(mBlocker.getComponent(activityInfo.name));
                 }
             }
-            appDetailsItem.setTracker(ComponentUtils.isTracker(activityInfo.name));
+            componentItem.setTracker(ComponentUtils.isTracker(activityInfo.name));
+            componentItem.setDisabled(isComponentDisabled(activityInfo));
             synchronized (mReceiverItems) {
-                mReceiverItems.add(appDetailsItem);
+                mReceiverItems.add(componentItem);
             }
         }
         synchronized (mReceiverItems) {
@@ -1192,16 +1198,17 @@ public class AppDetailsViewModel extends AndroidViewModel {
             return;
         }
         for (ProviderInfo providerInfo : mPackageInfo.providers) {
-            AppDetailsComponentItem appDetailsItem = new AppDetailsComponentItem(providerInfo);
-            appDetailsItem.name = providerInfo.name;
+            AppDetailsComponentItem componentItem = new AppDetailsComponentItem(providerInfo);
+            componentItem.name = providerInfo.name;
             synchronized (mBlockerLocker) {
                 if (!mIsExternalApk) {
-                    appDetailsItem.setRule(mBlocker.getComponent(providerInfo.name));
+                    componentItem.setRule(mBlocker.getComponent(providerInfo.name));
                 }
             }
-            appDetailsItem.setTracker(ComponentUtils.isTracker(providerInfo.name));
+            componentItem.setTracker(ComponentUtils.isTracker(providerInfo.name));
+            componentItem.setDisabled(isComponentDisabled(providerInfo));
             synchronized (mProviderItems) {
-                mProviderItems.add(appDetailsItem);
+                mProviderItems.add(componentItem);
             }
         }
         synchronized (mProviderItems) {
@@ -1229,6 +1236,30 @@ public class AppDetailsViewModel extends AndroidViewModel {
             }
             return 0;
         });
+    }
+
+    public boolean isComponentDisabled(@NonNull ComponentInfo componentInfo) {
+        String className = componentInfo.name;
+        if (componentInfo instanceof ActivityInfo && ((ActivityInfo) componentInfo).targetActivity != null) {
+            className = ((ActivityInfo) componentInfo).targetActivity;
+        }
+        ComponentName componentName = new ComponentName(componentInfo.packageName, className);
+        try {
+            int componentEnabledSetting = PackageManagerCompat.getComponentEnabledSetting(componentName, mUserHandle);
+            switch (componentEnabledSetting) {
+                case PackageManager.COMPONENT_ENABLED_STATE_DISABLED:
+                case PackageManager.COMPONENT_ENABLED_STATE_DISABLED_UNTIL_USED:
+                case PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER:
+                    return true;
+                case PackageManager.COMPONENT_ENABLED_STATE_ENABLED:
+                    return false;
+                case PackageManager.COMPONENT_ENABLED_STATE_DEFAULT:
+                default:
+            }
+        } catch (Throwable ignore) {
+            // May throw illegal exception
+        }
+        return !componentInfo.isEnabled();
     }
 
     @NonNull

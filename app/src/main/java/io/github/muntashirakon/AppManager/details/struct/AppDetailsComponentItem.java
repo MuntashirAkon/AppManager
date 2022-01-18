@@ -14,9 +14,11 @@ import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
 public class AppDetailsComponentItem extends AppDetailsItem<ComponentInfo> {
     private boolean isTracker = false;
     private ComponentRule rule;
+    private boolean isDisabled;
 
     public AppDetailsComponentItem(@NonNull ComponentInfo componentInfo) {
         super(componentInfo);
+        isDisabled = !componentInfo.isEnabled();
     }
 
     public boolean isTracker() {
@@ -37,5 +39,13 @@ public class AppDetailsComponentItem extends AppDetailsItem<ComponentInfo> {
 
     public void setRule(ComponentRule rule) {
         this.rule = rule;
+    }
+
+    public boolean isDisabled() {
+        return isDisabled;
+    }
+
+    public void setDisabled(boolean disabled) {
+        isDisabled = disabled;
     }
 }

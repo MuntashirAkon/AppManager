@@ -4,11 +4,9 @@ package io.github.muntashirakon.AppManager.details;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.pm.ComponentInfo;
 import android.content.pm.ConfigurationInfo;
 import android.content.pm.FeatureInfo;
 import android.content.pm.PackageInfo;
@@ -524,11 +522,10 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
         mMainModel.setSortOrder(sortBy, mNeededProperty);
     }
 
-    synchronized private void applyRules(String componentName,
-                                         RuleType type,
-                                         @ComponentRule.ComponentStatus String componentStatus) {
+    private void applyRules(@NonNull AppDetailsComponentItem componentItem, @NonNull RuleType type,
+                            @NonNull @ComponentRule.ComponentStatus String componentStatus) {
         if (mMainModel != null) {
-            mExecutor.submit(() -> mMainModel.updateRulesForComponent(componentName, type, componentStatus));
+            mExecutor.submit(() -> mMainModel.updateRulesForComponent(componentItem, type, componentStatus));
         }
     }
 
@@ -613,29 +610,6 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
         if (mProgressIndicator == null) return;
         if (show) mProgressIndicator.show();
         else mProgressIndicator.hide();
-    }
-
-    @SuppressLint("SwitchIntDef") // False negative
-    public static boolean isComponentDisabled(@NonNull PackageManager pm, @NonNull ComponentInfo componentInfo) {
-        String className = componentInfo.name;
-        if (componentInfo instanceof ActivityInfo
-                && ((ActivityInfo) componentInfo).targetActivity != null) {
-            className = ((ActivityInfo) componentInfo).targetActivity;
-        }
-        ComponentName componentName = new ComponentName(componentInfo.packageName, className);
-        int componentEnabledSetting = pm.getComponentEnabledSetting(componentName);
-
-        switch (componentEnabledSetting) {
-            case PackageManager.COMPONENT_ENABLED_STATE_DISABLED:
-            case PackageManager.COMPONENT_ENABLED_STATE_DISABLED_UNTIL_USED:
-            case PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER:
-                return true;
-            case PackageManager.COMPONENT_ENABLED_STATE_ENABLED:
-                return false;
-            case PackageManager.COMPONENT_ENABLED_STATE_DEFAULT:
-            default:
-                return !componentInfo.isEnabled();
-        }
     }
 
     @NonNull
@@ -916,7 +890,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                 String componentStatus = item.isBlocked()
                         ? ComponentRule.COMPONENT_TO_BE_DEFAULTED
                         : AppPref.getDefaultComponentStatus();
-                applyRules(item.name, ruleType, componentStatus);
+                applyRules(item, ruleType, componentStatus);
             });
             holder.blockBtn.setOnLongClickListener(v -> {
                 PopupMenu popupMenu = new PopupMenu(mActivity, holder.blockBtn);
@@ -937,7 +911,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                     } else {
                         componentStatus = ComponentRule.COMPONENT_TO_BE_BLOCKED_IFW_DISABLE;
                     }
-                    applyRules(item.name, ruleType, componentStatus);
+                    applyRules(item, ruleType, componentStatus);
                     return true;
                 });
                 popupMenu.show();
@@ -947,16 +921,16 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
 
         private void getActivityView(@NonNull ViewHolder holder, int index) {
             final View view = holder.itemView;
-            final AppDetailsComponentItem appDetailsItem = (AppDetailsComponentItem) mAdapterList.get(index);
-            final ActivityInfo activityInfo = (ActivityInfo) appDetailsItem.vanillaItem;
-            final String activityName = appDetailsItem.name;
-            final boolean isDisabled = !mIsExternalApk && isComponentDisabled(mPackageManager, activityInfo);
+            final AppDetailsComponentItem componentItem = (AppDetailsComponentItem) mAdapterList.get(index);
+            final ActivityInfo activityInfo = (ActivityInfo) componentItem.vanillaItem;
+            final String activityName = componentItem.name;
+            final boolean isDisabled = !mIsExternalApk && componentItem.isDisabled();
             // Background color: regular < tracker < disabled < blocked
-            if (!mIsExternalApk && appDetailsItem.isBlocked()) {
+            if (!mIsExternalApk && componentItem.isBlocked()) {
                 view.setBackgroundResource(R.drawable.item_red);
             } else if (isDisabled) {
                 view.setBackgroundResource(R.drawable.item_disabled);
-            } else if (appDetailsItem.isTracker()) {
+            } else if (componentItem.isTracker()) {
                 view.setBackgroundResource(R.drawable.item_tracker);
             } else {
                 view.setBackgroundResource(index % 2 == 0 ? R.drawable.item_semi_transparent : R.drawable.item_transparent);
@@ -970,7 +944,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                         activityName.replaceFirst(mPackageName, "") : activityName);
             }
             // Icon
-            mImageLoader.displayImage(mPackageName + "_" + activityInfo.name, activityInfo, holder.imageView);
+            mImageLoader.displayImage(mPackageName + "_" + activityName, activityInfo, holder.imageView);
             // TaskAffinity
             holder.textView3.setText(String.format(Locale.ROOT, "%s: %s",
                     getString(R.string.task_affinity), activityInfo.taskAffinity));
@@ -988,8 +962,8 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             Button launch = holder.launchBtn;
             String appLabel = activityInfo.applicationInfo.loadLabel(mPackageManager).toString();
             String activityLabel = activityInfo.loadLabel(mPackageManager).toString();
-            String label = activityLabel.equals(appLabel) || TextUtils.isEmpty(activityLabel) ?
-                    Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(activityInfo.name))
+            String label = (activityLabel.equals(appLabel) || TextUtils.isEmpty(activityLabel))
+                    ? Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(activityName))
                     : activityLabel;
             launch.setText(label);
             // Process name
@@ -1006,7 +980,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             // 3) App or the activity is not disabled and/or blocked
             boolean canLaunch = !mIsExternalApk && (mIsRootEnabled || isExported)
                     && !isDisabled
-                    && !appDetailsItem.isBlocked();
+                    && !componentItem.isBlocked();
             launch.setEnabled(canLaunch);
             if (canLaunch) {
                 launch.setOnClickListener(v -> {
@@ -1052,15 +1026,15 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             }
             // Blocking
             if (mIsRootEnabled && !mIsExternalApk) {
-                handleBlock(holder, appDetailsItem, RuleType.ACTIVITY);
+                handleBlock(holder, componentItem, RuleType.ACTIVITY);
             } else holder.blockBtn.setVisibility(View.GONE);
         }
 
         private void getServicesView(@NonNull ViewHolder holder, int index) {
             View view = holder.itemView;
-            final AppDetailsComponentItem appDetailsItem = (AppDetailsComponentItem) mAdapterList.get(index);
-            final ServiceInfo serviceInfo = (ServiceInfo) appDetailsItem.vanillaItem;
-            final boolean isDisabled = !mIsExternalApk && isComponentDisabled(mPackageManager, serviceInfo);
+            final AppDetailsComponentItem componentItem = (AppDetailsComponentItem) mAdapterList.get(index);
+            final ServiceInfo serviceInfo = (ServiceInfo) componentItem.vanillaItem;
+            final boolean isDisabled = !mIsExternalApk && componentItem.isDisabled();
             boolean isRunning = false;
             for (ActivityManager.RunningServiceInfo info : mRunningServices) {
                 if (info.service.getClassName().equals(serviceInfo.name)) {
@@ -1070,11 +1044,11 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             // Background color: regular < tracker < disabled < blocked < running
             if (isRunning) {
                 view.setBackgroundResource(R.drawable.item_running);
-            } else if (!mIsExternalApk && appDetailsItem.isBlocked()) {
+            } else if (!mIsExternalApk && componentItem.isBlocked()) {
                 view.setBackgroundResource(R.drawable.item_red);
             } else if (isDisabled) {
                 view.setBackgroundResource(R.drawable.item_disabled);
-            } else if (appDetailsItem.isTracker()) {
+            } else if (componentItem.isTracker()) {
                 view.setBackgroundResource(R.drawable.item_tracker);
             } else {
                 view.setBackgroundResource(index % 2 == 0 ? R.drawable.item_semi_transparent : R.drawable.item_transparent);
@@ -1109,7 +1083,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             boolean canLaunch = !mIsExternalApk
                     && (mIsRootEnabled || (serviceInfo.exported && serviceInfo.permission == null))
                     && !isDisabled
-                    && !appDetailsItem.isBlocked();
+                    && !componentItem.isBlocked();
             holder.launchBtn.setEnabled(canLaunch);
             if (canLaunch) {
                 holder.launchBtn.setOnClickListener(v -> {
@@ -1125,19 +1099,20 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             }
             // Blocking
             if (mIsRootEnabled && !mIsExternalApk) {
-                handleBlock(holder, appDetailsItem, RuleType.SERVICE);
+                handleBlock(holder, componentItem, RuleType.SERVICE);
             } else holder.blockBtn.setVisibility(View.GONE);
         }
 
         private void getReceiverView(@NonNull ViewHolder holder, int index) {
             View view = holder.itemView;
-            final AppDetailsComponentItem appDetailsItem = (AppDetailsComponentItem) mAdapterList.get(index);
-            final ActivityInfo activityInfo = (ActivityInfo) appDetailsItem.vanillaItem;
+            final AppDetailsComponentItem componentItem = (AppDetailsComponentItem) mAdapterList.get(index);
+            final ActivityInfo activityInfo = (ActivityInfo) componentItem.vanillaItem;
             // Background color: regular < tracker < disabled < blocked
-            if (!mIsExternalApk && appDetailsItem.isBlocked()) view.setBackgroundResource(R.drawable.item_red);
-            else if (!mIsExternalApk && isComponentDisabled(mPackageManager, activityInfo)) {
+            if (!mIsExternalApk && componentItem.isBlocked()) {
+                view.setBackgroundResource(R.drawable.item_red);
+            } else if (!mIsExternalApk && componentItem.isDisabled()) {
                 view.setBackgroundResource(R.drawable.item_disabled);
-            } else if (appDetailsItem.isTracker()) {
+            } else if (componentItem.isTracker()) {
                 view.setBackgroundResource(R.drawable.item_tracker);
             } else {
                 view.setBackgroundResource(index % 2 == 0 ? R.drawable.item_semi_transparent : R.drawable.item_transparent);
@@ -1176,20 +1151,21 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             } else holder.textView7.setVisibility(View.GONE);
             // Blocking
             if (mIsRootEnabled && !mIsExternalApk) {
-                handleBlock(holder, appDetailsItem, RuleType.RECEIVER);
+                handleBlock(holder, componentItem, RuleType.RECEIVER);
             } else holder.blockBtn.setVisibility(View.GONE);
         }
 
         private void getProviderView(@NonNull ViewHolder holder, int index) {
             View view = holder.itemView;
-            final AppDetailsComponentItem appDetailsItem = (AppDetailsComponentItem) mAdapterList.get(index);
-            final ProviderInfo providerInfo = (ProviderInfo) appDetailsItem.vanillaItem;
+            final AppDetailsComponentItem componentItem = (AppDetailsComponentItem) mAdapterList.get(index);
+            final ProviderInfo providerInfo = (ProviderInfo) componentItem.vanillaItem;
             final String providerName = providerInfo.name;
             // Background color: regular < tracker < disabled < blocked
-            if (!mIsExternalApk && appDetailsItem.isBlocked()) view.setBackgroundResource(R.drawable.item_red);
-            else if (!mIsExternalApk && isComponentDisabled(mPackageManager, providerInfo))
+            if (!mIsExternalApk && componentItem.isBlocked()) {
+                view.setBackgroundResource(R.drawable.item_red);
+            } else if (!mIsExternalApk && componentItem.isDisabled()) {
                 view.setBackgroundResource(R.drawable.item_disabled);
-            else if (appDetailsItem.isTracker()) {
+            } else if (componentItem.isTracker()) {
                 view.setBackgroundResource(R.drawable.item_tracker);
             } else {
                 view.setBackgroundResource(index % 2 == 0 ? R.drawable.item_semi_transparent : R.drawable.item_transparent);
@@ -1250,7 +1226,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             } else holder.textView7.setVisibility(View.GONE);
             // Blocking
             if (mIsRootEnabled && !mIsExternalApk) {
-                handleBlock(holder, appDetailsItem, RuleType.PROVIDER);
+                handleBlock(holder, componentItem, RuleType.PROVIDER);
             } else holder.blockBtn.setVisibility(View.GONE);
         }
 
@@ -1444,9 +1420,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                 holder.itemView.setOnClickListener(v -> mExecutor.submit(() -> {
                     try {
                         if (mMainModel.togglePermission(permissionItem)) {
-                            runOnUiThread(() -> {
-                                notifyItemChanged(index);
-                            });
+                            runOnUiThread(() -> notifyItemChanged(index));
                         } else throw new Exception("Couldn't grant permission: " + permName);
                     } catch (Exception e) {
                         e.printStackTrace();

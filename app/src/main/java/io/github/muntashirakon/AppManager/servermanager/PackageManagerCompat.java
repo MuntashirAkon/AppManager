@@ -169,6 +169,13 @@ public final class PackageManagerCompat {
         return AppManager.getIPackageManager().getApplicationInfo(packageName, flags, userHandle);
     }
 
+    @EnabledState
+    public static int getComponentEnabledSetting(ComponentName componentName,
+                                                 @UserIdInt int userId)
+            throws RemoteException {
+        return AppManager.getIPackageManager().getComponentEnabledSetting(componentName, userId);
+    }
+
     public static void setComponentEnabledSetting(ComponentName componentName,
                                                   @EnabledState int newState,
                                                   @EnabledFlags int flags,
