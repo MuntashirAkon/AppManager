@@ -779,11 +779,11 @@ public final class PackageUtils {
             // One of them is signed, other doesn't
             return true;
         }
-        // Check if the user is downgrading
+        // Check if the user is downgrading or reinstalling
         long oldVersionCode = PackageInfoCompat.getLongVersionCode(oldPkgInfo);
         long newVersionCode = PackageInfoCompat.getLongVersionCode(newPkgInfo);
-        if (oldVersionCode > newVersionCode) {
-            // Downgrading to an older version. Match only the first signature
+        if (oldVersionCode >= newVersionCode) {
+            // Downgrading to an older version or reinstalling. Match only the first signature
             return !newChecksums[0].equals(oldChecksums.get(0));
         }
         // Updating or reinstalling. Match only one signature
