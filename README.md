@@ -77,9 +77,6 @@
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
 alt="Get it on F-Droid"
 height="80" />](https://f-droid.org/packages/io.github.muntashirakon.AppManager)
-[<img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png"
-alt="Get it on IzzyOnDroid"
-height="80" />](https://apt.izzysoft.de/fdroid/index/apk/io.github.muntashirakon.AppManager)
 
 ## Translations
 
@@ -107,20 +104,35 @@ Help translate [the app strings](https://hosted.weblate.org/engage/app-manager/)
 See [BUILDING.rst](BUILDING.rst)
 
 ## Contributing
+
 See [CONTRIBUTING.rst](CONTRIBUTING.rst)
 
 ## Donation and Funding
-**App Manager doesn't support any donations directly.** However, if you like my projects (App Manager being one of them), you can buy me a coffee by sending an anonymous donation to one of the following **Bitcoin** addresses:
+
+**App Manager doesn't support any donations directly.** However, if you like my projects (App Manager being one of them)
+, you can buy me a coffee by sending an anonymous donation to one of the following **Bitcoin** addresses:
+
 ```
 33TDkWVv5EgwfKGJk7YaS2Ev1CBzBP9Sav
 38bzvWDD99dJhXg9tC4yQEnGdnAKPtwSXG
 3FHTxPoYa92dNJK6pkhwyVkMG8Vv3VpGpg
 ```
-By sending me BTC, you agree that you will not share the transaction info in public i.e. the transaction will remain anonymous, nor will you use it as a leverage to prioritise your requested features. I accept feature requests without any donations, and they are prioritised according to my preferences.
+
+Or, in the following **Ethereum** address:
+
+```
+0xa048a882301d9503d8c27Da8044c4E72dF14C817
+```
+
+By sending me BTC/ETH, you agree that you will not share the transaction info in public i.e. the transaction will remain
+anonymous, nor will you use it as a leverage to prioritise your requested features. I accept feature requests without
+any donations, and they are prioritised according to my preferences.
 
 You can also donate me using Open Collective: https://opencollective.com/muntashir
 
-**App Manager is open for funding/grants.** If you are an organisation interested in funding it you can contact me directly at muntashirakon [at] riseup [dot] net (FINGERPRINT: `7bad37c2981e41f8f6abea7f58f0b4f26c346fce`).
+**App Manager is open for funding/grants.** If you are an organisation interested in funding it you can contact me
+directly at muntashirakon [at] riseup [dot] net (FINGERPRINT: `7bad37c2981e41f8f6abea7f58f0b4f26c346fce`).
 
 ## Credits and Libraries
+
 A list of credits and libraries are available in the **About** section of the app.
