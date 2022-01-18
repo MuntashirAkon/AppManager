@@ -73,6 +73,7 @@ import io.github.muntashirakon.AppManager.details.struct.AppDetailsAppOpItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsComponentItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsPermissionItem;
+import io.github.muntashirakon.AppManager.details.struct.AppDetailsServiceItem;
 import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.intercept.ActivityInterceptor;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
@@ -628,8 +629,6 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
         private String mConstraint;
         private Boolean mIsRootEnabled = true;
         private Boolean mIsADBEnabled = true;
-        @NonNull
-        private final List<ActivityManager.RunningServiceInfo> mRunningServices = new ArrayList<>();
 
         AppDetailsRecyclerAdapter() {
             mAdapterList = new ArrayList<>();
@@ -644,12 +643,6 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             mAdapterList = list;
             showProgressIndicator(false);
             notifyDataSetChanged();
-            mExecutor.submit(() -> {
-                if (mRequestedProperty == SERVICES && (mIsRootEnabled || mIsADBEnabled) && !mIsExternalApk) {
-                    mRunningServices.clear();
-                    mRunningServices.addAll(ActivityManagerCompat.getRunningServices(mPackageName, mMainModel.getUserHandle()));
-                }
-            });
         }
 
         /**
@@ -1032,23 +1025,17 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
 
         private void getServicesView(@NonNull ViewHolder holder, int index) {
             View view = holder.itemView;
-            final AppDetailsComponentItem componentItem = (AppDetailsComponentItem) mAdapterList.get(index);
-            final ServiceInfo serviceInfo = (ServiceInfo) componentItem.vanillaItem;
-            final boolean isDisabled = !mIsExternalApk && componentItem.isDisabled();
-            boolean isRunning = false;
-            for (ActivityManager.RunningServiceInfo info : mRunningServices) {
-                if (info.service.getClassName().equals(serviceInfo.name)) {
-                    isRunning = true;
-                }
-            }
+            final AppDetailsServiceItem serviceItem = (AppDetailsServiceItem) mAdapterList.get(index);
+            final ServiceInfo serviceInfo = (ServiceInfo) serviceItem.vanillaItem;
+            final boolean isDisabled = !mIsExternalApk && serviceItem.isDisabled();
             // Background color: regular < tracker < disabled < blocked < running
-            if (isRunning) {
+            if (serviceItem.isRunning()) {
                 view.setBackgroundResource(R.drawable.item_running);
-            } else if (!mIsExternalApk && componentItem.isBlocked()) {
+            } else if (!mIsExternalApk && serviceItem.isBlocked()) {
                 view.setBackgroundResource(R.drawable.item_red);
             } else if (isDisabled) {
                 view.setBackgroundResource(R.drawable.item_disabled);
-            } else if (componentItem.isTracker()) {
+            } else if (serviceItem.isTracker()) {
                 view.setBackgroundResource(R.drawable.item_tracker);
             } else {
                 view.setBackgroundResource(index % 2 == 0 ? R.drawable.item_semi_transparent : R.drawable.item_transparent);
@@ -1083,7 +1070,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             boolean canLaunch = !mIsExternalApk
                     && (mIsRootEnabled || (serviceInfo.exported && serviceInfo.permission == null))
                     && !isDisabled
-                    && !componentItem.isBlocked();
+                    && !serviceItem.isBlocked();
             holder.launchBtn.setEnabled(canLaunch);
             if (canLaunch) {
                 holder.launchBtn.setOnClickListener(v -> {
@@ -1099,7 +1086,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             }
             // Blocking
             if (mIsRootEnabled && !mIsExternalApk) {
-                handleBlock(holder, componentItem, RuleType.SERVICE);
+                handleBlock(holder, serviceItem, RuleType.SERVICE);
             } else holder.blockBtn.setVisibility(View.GONE);
         }
 

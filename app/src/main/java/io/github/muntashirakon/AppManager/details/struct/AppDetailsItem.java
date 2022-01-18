@@ -4,16 +4,31 @@ package io.github.muntashirakon.AppManager.details.struct;
 
 import androidx.annotation.NonNull;
 
+import java.util.Objects;
+
 /**
  * Stores individual app details item
  */
 public class AppDetailsItem<T> {
-    public @NonNull
-    T vanillaItem;
-    public @NonNull
-    String name = "";
+    @NonNull
+    public T vanillaItem;
+    @NonNull
+    public String name = "";
 
     public AppDetailsItem(@NonNull T object) {
         vanillaItem = object;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AppDetailsItem)) return false;
+        AppDetailsItem<?> that = (AppDetailsItem<?>) o;
+        return name.equals(that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }
