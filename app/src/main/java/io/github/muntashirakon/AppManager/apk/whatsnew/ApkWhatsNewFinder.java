@@ -28,6 +28,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
@@ -161,11 +162,15 @@ public class ApkWhatsNewFinder {
         featureChanges.addAll(findChanges(newFeatures, oldFeatures));
         changes[FEATURE_INFO] = featureChanges.size() == 1 ? ArrayUtils.emptyArray(Change.class) : featureChanges.toArray(new Change[0]);
         // SDK
-        final StringBuilder newSdk = new StringBuilder(context.getString(R.string.sdk_max)).append(": ").append(newAppInfo.targetSdkVersion);
-        final StringBuilder oldSdk = new StringBuilder(context.getString(R.string.sdk_max)).append(": ").append(oldAppInfo.targetSdkVersion);
+        final StringBuilder newSdk = new StringBuilder(context.getString(R.string.sdk_max))
+                .append(LangUtils.getSeparatorString()).append(newAppInfo.targetSdkVersion);
+        final StringBuilder oldSdk = new StringBuilder(context.getString(R.string.sdk_max))
+                .append(LangUtils.getSeparatorString()).append(oldAppInfo.targetSdkVersion);
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-            newSdk.append(", ").append(context.getString(R.string.sdk_min)).append(": ").append(newAppInfo.minSdkVersion);
-            oldSdk.append(", ").append(context.getString(R.string.sdk_min)).append(": ").append(oldAppInfo.minSdkVersion);
+            newSdk.append(", ").append(context.getString(R.string.sdk_min))
+                    .append(LangUtils.getSeparatorString()).append(newAppInfo.minSdkVersion);
+            oldSdk.append(", ").append(context.getString(R.string.sdk_min))
+                    .append(LangUtils.getSeparatorString()).append(oldAppInfo.minSdkVersion);
         }
         if (!newSdk.toString().equals(oldSdk.toString())) {
             changes[SDK_INFO] = new Change[]{

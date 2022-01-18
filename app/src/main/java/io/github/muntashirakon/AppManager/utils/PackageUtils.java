@@ -31,6 +31,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.pm.PackageInfoCompat;
 
 import com.android.apksig.ApkVerifier;
 import com.android.apksig.apk.ApkFormatException;
@@ -63,6 +64,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.apk.signing.SignerInfo;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.backup.BackupUtils;
@@ -686,9 +688,16 @@ public final class PackageUtils {
                 .getString("com.android.stamp.source"));
     }
 
-    @SuppressWarnings("deprecation")
     @Nullable
     public static Signature[] getSigningInfo(@NonNull PackageInfo packageInfo, boolean isExternal) {
+        SignerInfo signerInfo = getSignerInfo(packageInfo, isExternal);
+        if (signerInfo == null) return null;
+        return signerInfo.getAllSignatures();
+    }
+
+    @SuppressWarnings("deprecation")
+    @Nullable
+    public static SignerInfo getSignerInfo(@NonNull PackageInfo packageInfo, boolean isExternal) {
         if (!isExternal || Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 SigningInfo signingInfo = packageInfo.signingInfo;
@@ -696,45 +705,37 @@ public final class PackageUtils {
                     if (!isExternal) {
                         return null;
                     } // else Could be a false-negative
-                } else return signingInfo.hasMultipleSigners() ? signingInfo.getApkContentsSigners()
-                        : signingInfo.getSigningCertificateHistory();
+                } else {
+                    return new SignerInfo(signingInfo);
+                }
             }
         }
         // Is an external app
-        if (packageInfo.signatures == null) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P || packageInfo.signatures == null) {
             // Could be a false-negative, try with apksig library
             String apkPath = packageInfo.applicationInfo.publicSourceDir;
             if (apkPath != null) {
                 Log.w(TAG, "getSigningInfo: Using fallback method");
-                return packageInfo.signatures = getSigningInfo(new File(apkPath));
+                SignerInfo signerInfo = getSignerInfo(new File(apkPath));
+                if (signerInfo != null) {
+                    packageInfo.signatures = signerInfo.getCurrentSignatures();
+                }
+                return signerInfo;
             }
         }
-        return packageInfo.signatures;
+        return new SignerInfo(packageInfo.signatures);
     }
 
     @Nullable
-    public static Signature[] getSigningInfo(@NonNull File apkFile) {
+    private static SignerInfo getSignerInfo(@NonNull File apkFile) {
         ApkVerifier.Builder builder = new ApkVerifier.Builder(apkFile);
         ApkVerifier apkVerifier = builder.build();
-        ApkVerifier.Result apkVerifierResult;
         try {
-            apkVerifierResult = apkVerifier.verify();
-        } catch (IOException | ApkFormatException | NoSuchAlgorithmException e) {
-            Log.e(TAG, e);
+            return new SignerInfo(apkVerifier.verify());
+        } catch (CertificateEncodingException | IOException | ApkFormatException | NoSuchAlgorithmException e) {
+            e.printStackTrace();
             return null;
         }
-        // Get signer certificates
-        List<X509Certificate> certificates = apkVerifierResult.getSignerCertificates();
-        if (certificates == null || certificates.size() == 0) return null;
-        List<Signature> signatures = new ArrayList<>(certificates.size());
-        for (X509Certificate certificate : certificates) {
-            try {
-                signatures.add(new Signature(certificate.getEncoded()));
-            } catch (CertificateEncodingException e) {
-                return signatures.toArray(new Signature[0]);
-            }
-        }
-        return signatures.toArray(new Signature[0]);
     }
 
     @NonNull
@@ -743,15 +744,55 @@ public final class PackageUtils {
     }
 
     public static boolean isSignatureDifferent(@NonNull PackageInfo newPkgInfo, @NonNull PackageInfo oldPkgInfo) {
-        String[] newChecksums = getSigningCertSha256Checksum(newPkgInfo, true);
-        List<String> oldChecksums = new ArrayList<>(Arrays.asList(getSigningCertSha256Checksum(oldPkgInfo)));
-        // Signature is different if the number of signatures don't match
-        if (newChecksums.length != oldChecksums.size()) return true;
-        for (String newChecksum : newChecksums) {
-            oldChecksums.remove(newChecksum);
+        SignerInfo newSignerInfo = getSignerInfo(newPkgInfo, true);
+        SignerInfo oldSignerInfo = getSignerInfo(oldPkgInfo, false);
+        if (newSignerInfo == null && oldSignerInfo == null) {
+            // No signers
+            return false;
         }
-        // Old checksums should contain no values if the checksums are the same
-        return oldChecksums.size() != 0;
+        if (newSignerInfo == null || oldSignerInfo == null) {
+            // One of them is signed, other doesn't
+            return true;
+        }
+        String[] newChecksums;
+        List<String> oldChecksums;
+        newChecksums = getSigningCertChecksums(DigestUtils.SHA_256, newSignerInfo);
+        oldChecksums = Arrays.asList(getSigningCertChecksums(DigestUtils.SHA_256, oldSignerInfo));
+        if (newSignerInfo.hasMultipleSigners()) {
+            // For multiple signers, all signatures must match.
+            if (newChecksums.length != oldChecksums.size()) {
+                // Signature is different if the number of signatures don't match
+                return true;
+            }
+            for (String newChecksum : newChecksums) {
+                oldChecksums.remove(newChecksum);
+            }
+            // Old checksums should contain no values if the checksums are the same
+            return oldChecksums.size() != 0;
+        }
+        // For single signer, there could be one or more extra certificates for rotation.
+        if (newChecksums.length == 0 && oldChecksums.size() == 0) {
+            // No signers
+            return false;
+        }
+        if (newChecksums.length == 0 || oldChecksums.size() == 0) {
+            // One of them is signed, other doesn't
+            return true;
+        }
+        // Check if the user is downgrading
+        long oldVersionCode = PackageInfoCompat.getLongVersionCode(oldPkgInfo);
+        long newVersionCode = PackageInfoCompat.getLongVersionCode(newPkgInfo);
+        if (oldVersionCode > newVersionCode) {
+            // Downgrading to an older version. Match only the first signature
+            return !newChecksums[0].equals(oldChecksums.get(0));
+        }
+        // Updating or reinstalling. Match only one signature
+        for (String newChecksum : newChecksums) {
+            if (oldChecksums.contains(newChecksum)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @NonNull
@@ -762,7 +803,14 @@ public final class PackageUtils {
     @NonNull
     public static String[] getSigningCertChecksums(@DigestUtils.Algorithm String algo,
                                                    PackageInfo packageInfo, boolean isExternal) {
-        Signature[] signatureArray = getSigningInfo(packageInfo, isExternal);
+        SignerInfo signerInfo = getSignerInfo(packageInfo, isExternal);
+        return getSigningCertChecksums(algo, signerInfo);
+    }
+
+    @NonNull
+    public static String[] getSigningCertChecksums(@DigestUtils.Algorithm String algo,
+                                                   @Nullable SignerInfo signerInfo) {
+        Signature[] signatureArray = signerInfo == null ? null : signerInfo.getAllSignatures();
         ArrayList<String> checksums = new ArrayList<>();
         if (signatureArray != null) {
             for (Signature signature : signatureArray) {
