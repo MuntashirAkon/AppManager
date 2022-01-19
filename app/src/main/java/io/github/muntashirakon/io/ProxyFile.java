@@ -43,10 +43,7 @@ public class ProxyFile extends File {
     public ProxyFile(@Nullable File parent, @NonNull String child) {
         super(parent, child);
         if (parent instanceof ProxyFile) {
-            IRemoteFile remoteFile = ((ProxyFile) parent).mFile;
-            if (remoteFile != null) {
-                mFile = getRemoteFile();
-            } else mFile = null;
+            mFile = getRemoteFile();
         } else mFile = null;
     }
 

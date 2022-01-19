@@ -127,7 +127,7 @@ public class RulesImporter implements Closeable {
                 // Apply component blocking rules
                 cb.applyRules(true);
                 // Apply app op and permissions
-                cb.applyAppOpsAndPerms(true);
+                cb.applyAppOpsAndPerms();
                 // Store the changes or discard them
                 if (commitChanges) {
                     // Commit changes

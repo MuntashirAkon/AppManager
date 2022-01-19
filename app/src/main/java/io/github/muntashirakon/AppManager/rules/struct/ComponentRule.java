@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.rules.struct;
 
+import android.content.ComponentName;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.StringDef;
 
@@ -84,6 +86,10 @@ public class ComponentRule extends RuleEntry {
         if (tokenizer.hasMoreElements()) {
             componentStatus = tokenizer.nextElement().toString();
         } else throw new IllegalArgumentException("Invalid format: componentStatus not found");
+    }
+
+    public ComponentName getComponentName() {
+        return new ComponentName(packageName, name);
     }
 
     @NonNull
