@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -389,11 +390,9 @@ class BackupOp implements Closeable {
             rules.setAppOp(entry.getOp(), entry.getMode());
         }
         // Backup MagiskHide data
-        List<String> magiskHiddenProcesses = MagiskUtils.getMagiskHiddenProcesses(mPackageName);
-        if (magiskHiddenProcesses != null) {
-            for (String processName : magiskHiddenProcesses) {
-                rules.setMagiskHide(processName, true);
-            }
+        Collection<String> magiskHiddenProcesses = MagiskUtils.getMagiskHiddenProcesses(mPackageName);
+        for (String processName : magiskHiddenProcesses) {
+            rules.setMagiskHide(processName, true);
         }
         // Backup allowed notification listeners aka BIND_NOTIFICATION_LISTENER_SERVICE
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {

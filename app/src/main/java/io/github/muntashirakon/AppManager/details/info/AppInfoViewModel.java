@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -134,10 +133,15 @@ public class AppInfoViewModel extends AndroidViewModel {
             }
             int privateFlags = ApplicationInfoCompat.getPrivateFlags(applicationInfo);
             tagCloud.isAppHidden = (privateFlags & ApplicationInfoCompat.PRIVATE_FLAG_HIDDEN) != 0;
-            tagCloud.magiskHiddenProcesses = MagiskUtils.getMagiskHiddenProcesses(packageInfo);
+            tagCloud.magiskHiddenProcesses = new ArrayList<>(MagiskUtils.getMagiskHiddenProcesses(packageInfo));
             boolean magiskHideEnabled = false;
-            for (boolean magiskHideEnabledForProcess : tagCloud.magiskHiddenProcesses.values()) {
-                magiskHideEnabled |= magiskHideEnabledForProcess;
+            for (MagiskUtils.MagiskProcess magiskProcess : tagCloud.magiskHiddenProcesses) {
+                magiskHideEnabled |= magiskProcess.isEnabled();
+                for (ActivityManager.RunningServiceInfo info : tagCloud.runningServices) {
+                    if (info.process.startsWith(magiskProcess.name)) {
+                        magiskProcess.setRunning(true);
+                    }
+                }
             }
             tagCloud.isMagiskHideEnabled = !mainModel.getIsExternalApk() && magiskHideEnabled;
             tagCloud.hasKeyStoreItems = KeyStoreUtils.hasKeyStore(applicationInfo.uid);
@@ -323,7 +327,7 @@ public class AppInfoViewModel extends AndroidViewModel {
         public boolean hasCode;
         public boolean hasRequestedLargeHeap;
         public List<ActivityManager.RunningServiceInfo> runningServices;
-        public Map<String, Boolean> magiskHiddenProcesses;
+        public List<MagiskUtils.MagiskProcess> magiskHiddenProcesses;
         public boolean isForceStopped;
         public boolean isAppEnabled;
         public boolean isAppHidden;

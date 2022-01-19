@@ -4,6 +4,7 @@ package io.github.muntashirakon.AppManager.utils;
 
 import android.content.pm.ComponentInfo;
 import android.content.pm.PackageInfo;
+import android.content.pm.ServiceInfo;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,10 +12,13 @@ import androidx.collection.ArraySet;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import io.github.muntashirakon.AppManager.runner.Runner;
@@ -89,56 +93,122 @@ public class MagiskUtils {
         return packages;
     }
 
-    @NonNull
-    public static Map<String, Boolean> getMagiskHiddenProcesses(@NonNull PackageInfo packageInfo) {
-        String packageName = packageInfo.packageName;
-        List<String> magiskHiddenProcesses = getMagiskHiddenProcesses(packageName);
-        Map<String, Boolean> magiskHiddenProcessEnableMap = new HashMap<>();
-        if (magiskHiddenProcesses == null) {
-            // Add default process
-            magiskHiddenProcessEnableMap.put(packageName, false);
-            return magiskHiddenProcessEnableMap;
+    public static class MagiskProcess {
+        @NonNull
+        public final String packageName;
+        @NonNull
+        public final String name;
+
+        private boolean mIsolatedProcess;
+        private boolean mIsRunning;
+        private boolean mIsEnabled;
+
+        public MagiskProcess(@NonNull String packageName, @NonNull String name) {
+            this.packageName = packageName;
+            this.name = name;
         }
-        // Add default process
-        magiskHiddenProcessEnableMap.put(packageName, magiskHiddenProcesses.contains(packageName));
-        // Add other processes
-        if (packageInfo.activities != null) {
-            for (ComponentInfo info : packageInfo.activities) {
+
+        public MagiskProcess(@NonNull String packageName) {
+            this.packageName = packageName;
+            this.name = packageName;
+        }
+
+        public void setEnabled(boolean enabled) {
+            mIsEnabled = enabled;
+        }
+
+        public boolean isEnabled() {
+            return mIsEnabled;
+        }
+
+        public void setIsolatedProcess(boolean isolatedProcess) {
+            mIsolatedProcess = isolatedProcess;
+        }
+
+        public void setRunning(boolean running) {
+            mIsRunning = running;
+        }
+
+        public boolean isIsolatedProcess() {
+            return mIsolatedProcess;
+        }
+
+        public boolean isRunning() {
+            return mIsRunning;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof MagiskProcess)) return false;
+            MagiskProcess that = (MagiskProcess) o;
+            return name.equals(that.name);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(name);
+        }
+    }
+
+    @NonNull
+    public static Collection<MagiskProcess> getMagiskHiddenProcesses(@NonNull PackageInfo packageInfo) {
+        String packageName = packageInfo.packageName;
+        Collection<String> magiskHiddenProcesses = getMagiskHiddenProcesses(packageName);
+        Map<String, MagiskProcess> magiskHiddenProcessEnableMap = new HashMap<>();
+        {
+            // Add default process
+            MagiskProcess mp = new MagiskProcess(packageName);
+            mp.setEnabled(magiskHiddenProcesses.contains(packageName));
+            magiskHiddenProcessEnableMap.put(packageName, mp);
+        }
+        // Add other processes: order must be preserved
+        if (packageInfo.services != null) {
+            for (ServiceInfo info : packageInfo.services) {
                 if (!packageName.equals(info.processName) && magiskHiddenProcessEnableMap.get(info.processName) == null) {
-                    magiskHiddenProcessEnableMap.put(info.processName, magiskHiddenProcesses.contains(info.processName));
+                    MagiskProcess mp = new MagiskProcess(packageName, info.processName);
+                    mp.setEnabled(magiskHiddenProcesses.contains(info.processName));
+                    mp.setIsolatedProcess((info.flags & ServiceInfo.FLAG_ISOLATED_PROCESS) != 0);
+                    magiskHiddenProcessEnableMap.put(info.processName, mp);
                 }
             }
         }
-        if (packageInfo.services != null) {
-            for (ComponentInfo info : packageInfo.services) {
+        if (packageInfo.activities != null) {
+            for (ComponentInfo info : packageInfo.activities) {
                 if (!packageName.equals(info.processName) && magiskHiddenProcessEnableMap.get(info.processName) == null) {
-                    magiskHiddenProcessEnableMap.put(info.processName, magiskHiddenProcesses.contains(info.processName));
+                    MagiskProcess mp = new MagiskProcess(packageName, info.processName);
+                    mp.setEnabled(magiskHiddenProcesses.contains(info.processName));
+                    magiskHiddenProcessEnableMap.put(info.processName, mp);
                 }
             }
         }
         if (packageInfo.providers != null) {
             for (ComponentInfo info : packageInfo.providers) {
                 if (!packageName.equals(info.processName) && magiskHiddenProcessEnableMap.get(info.processName) == null) {
-                    magiskHiddenProcessEnableMap.put(info.processName, magiskHiddenProcesses.contains(info.processName));
+                    MagiskProcess mp = new MagiskProcess(packageName, info.processName);
+                    mp.setEnabled(magiskHiddenProcesses.contains(info.processName));
+                    magiskHiddenProcessEnableMap.put(info.processName, mp);
                 }
             }
         }
         if (packageInfo.receivers != null) {
             for (ComponentInfo info : packageInfo.receivers) {
                 if (!packageName.equals(info.processName) && magiskHiddenProcessEnableMap.get(info.processName) == null) {
-                    magiskHiddenProcessEnableMap.put(info.processName, magiskHiddenProcesses.contains(info.processName));
+                    MagiskProcess mp = new MagiskProcess(packageName, info.processName);
+                    mp.setEnabled(magiskHiddenProcesses.contains(info.processName));
+                    magiskHiddenProcessEnableMap.put(info.processName, mp);
                 }
             }
         }
-        return magiskHiddenProcessEnableMap;
+        return magiskHiddenProcessEnableMap.values();
     }
 
-    @Nullable
-    public static ArrayList<String> getMagiskHiddenProcesses(@NonNull String packageName) {
+    @NonNull
+    public static Collection<String> getMagiskHiddenProcesses(@NonNull String packageName) {
         Runner.Result result = Runner.runCommand(Runner.getRootInstance(), "magiskhide ls | grep " + packageName);
         if (!result.isSuccessful()) {
             // No matches
-            return null;
+            return Collections.emptyList();
         }
         Set<String> processes = new HashSet<>();
         for (String line : result.getOutputAsList()) {
@@ -155,11 +225,14 @@ public class MagiskUtils {
                 } // else mismatch due to greedy algorithm
             } // else unknown match
         }
-        if (processes.size() == 0) {
-            // No matches
-            return null;
+        return processes;
+    }
+
+    public static boolean apply(@NonNull MagiskProcess magiskProcess) {
+        if (magiskProcess.isEnabled()) {
+            return hide(magiskProcess.packageName, magiskProcess.name);
         }
-        return new ArrayList<>(processes);
+        return unhide(magiskProcess.packageName, magiskProcess.name);
     }
 
     public static boolean hide(String packageName, String processName) {

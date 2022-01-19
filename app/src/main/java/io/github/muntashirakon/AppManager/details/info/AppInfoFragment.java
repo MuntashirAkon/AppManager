@@ -76,7 +76,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -174,7 +173,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private TextView packageNameView;
     private TextView versionView;
     private ImageView iconView;
-    private Map<String, Boolean> magiskHiddenProcesses;
+    private List<MagiskUtils.MagiskProcess> magiskHiddenProcesses;
 
     private final ExecutorService executor = Executors.newFixedThreadPool(3);
 
@@ -847,24 +846,35 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             return;
         }
         boolean[] choices = new boolean[magiskHiddenProcesses.size()];
-        String[] processes = new String[magiskHiddenProcesses.size()];
+        CharSequence[] processes = new CharSequence[magiskHiddenProcesses.size()];
         int i = 0;
-        for (String processName : magiskHiddenProcesses.keySet()) {
-            processes[i] = processName;
-            choices[i] = Boolean.TRUE.equals(magiskHiddenProcesses.get(processName));
+        for (MagiskUtils.MagiskProcess mp : magiskHiddenProcesses) {
+            SpannableStringBuilder sb = new SpannableStringBuilder(UIUtils.getPrimaryText(mActivity, mp.name));
+            if (mp.isIsolatedProcess()) {
+                sb.append("\n").append(UIUtils.getSecondaryText(mActivity, getString(R.string.isolated)));
+                if (mp.isRunning()) {
+                    sb.append(", ").append(UIUtils.getSecondaryText(mActivity, getString(R.string.running)));
+                }
+            } else if (mp.isRunning()) {
+                sb.append("\n").append(UIUtils.getSecondaryText(mActivity, getString(R.string.running)));
+            }
+            processes[i] = UIUtils.getSmallerText(sb);
+            choices[i] = mp.isEnabled();
             i++;
         }
         new MaterialAlertDialogBuilder(mActivity)
                 .setTitle(R.string.magisk_hide_enabled)
                 .setMultiChoiceItems(processes, choices, (dialog, which, isChecked) -> executor.submit(() -> {
-                    if ((isChecked && MagiskUtils.hide(mPackageName, processes[which]))
-                            || MagiskUtils.unhide(mPackageName, processes[which])) {
+                    MagiskUtils.MagiskProcess mp = magiskHiddenProcesses.get(which);
+                    mp.setEnabled(isChecked);
+                    if (MagiskUtils.apply(mp)) {
                         choices[which] = isChecked;
                         try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mPackageName, mainModel.getUserHandle())) {
-                            cb.setMagiskHide(processes[which], isChecked);
+                            cb.setMagiskHide(mp.name, isChecked);
                             runOnUiThread(this::refreshDetails);
                         }
                     } else {
+                        mp.setEnabled(!isChecked);
                         runOnUiThread(() -> displayLongToast(isChecked ? R.string.failed_to_enable_magisk_hide
                                 : R.string.failed_to_disable_magisk_hide));
                     }
