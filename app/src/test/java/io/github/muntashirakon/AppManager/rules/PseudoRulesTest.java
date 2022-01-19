@@ -95,11 +95,11 @@ public class PseudoRulesTest {
 
     @Test
     public void uniquenessOfMagiskHideTest() {
-        rules.setMagiskHide(false);
-        rules.setMagiskHide(true);
+        rules.setMagiskHide(PACKAGE_NAME, false);
+        rules.setMagiskHide(PACKAGE_NAME, true);
         assertEquals(1, rules.getAll().size());
-        assertNotEquals(new MagiskHideRule(PACKAGE_NAME, false), rules.getAll().get(0));
-        assertEquals(new MagiskHideRule(PACKAGE_NAME, true), rules.getAll().get(0));
+        assertNotEquals(new MagiskHideRule(PACKAGE_NAME, PACKAGE_NAME, false), rules.getAll().get(0));
+        assertEquals(new MagiskHideRule(PACKAGE_NAME, PACKAGE_NAME, true), rules.getAll().get(0));
     }
 
     @Test
@@ -170,7 +170,7 @@ public class PseudoRulesTest {
         rules.setNotificationListener(RuleEntry.STUB, true);
         rules.setNetPolicy(4);
         rules.setBatteryOptimization(true);
-        rules.setMagiskHide(true);
+        rules.setMagiskHide(PACKAGE_NAME, true);
         rules.setSsaid("bc9948c6");
         List<RuleEntry> ruleEntries = rules.getAll();
         assertEquals(10, ruleEntries.size());
@@ -186,7 +186,7 @@ public class PseudoRulesTest {
         assertEquals(new NotificationListenerRule(PACKAGE_NAME, RuleEntry.STUB, true), ruleEntries.get(5));
         assertEquals(new NetPolicyRule(PACKAGE_NAME, 4), ruleEntries.get(6));
         assertEquals(new BatteryOptimizationRule(PACKAGE_NAME, true), ruleEntries.get(7));
-        assertEquals(new MagiskHideRule(PACKAGE_NAME, true), ruleEntries.get(8));
+        assertEquals(new MagiskHideRule(PACKAGE_NAME, PACKAGE_NAME, true), ruleEntries.get(8));
         assertEquals(new SsaidRule(PACKAGE_NAME, "bc9948c6"), ruleEntries.get(9));
     }
 

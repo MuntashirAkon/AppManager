@@ -76,6 +76,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -173,6 +174,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private TextView packageNameView;
     private TextView versionView;
     private ImageView iconView;
+    private Map<String, Boolean> magiskHiddenProcesses;
 
     private final ExecutorService executor = Executors.newFixedThreadPool(3);
 
@@ -290,8 +292,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 }
             });
         });
-        setupTagCloud();
-        setupVerticalView();
+        model.getTagCloud().observe(getViewLifecycleOwner(), this::setupTagCloud);
+        model.getAppInfo().observe(getViewLifecycleOwner(), this::setupVerticalView);
     }
 
     @Override
@@ -386,14 +388,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             });
         } else if (itemId == R.id.action_enable_magisk_hide) {
             if (mainModel == null) return true;
-            if (MagiskUtils.hide(mPackageName)) {
-                try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mPackageName, mainModel.getUserHandle())) {
-                    cb.setMagiskHide(true);
-                    refreshDetails();
-                }
-            } else {
-                displayLongToast(R.string.failed_to_enable_magisk_hide);
-            }
+            displayMagiskHideDialog();
         } else if (itemId == R.id.action_battery_opt) {
             if (hasDumpPermission()) {
                 new MaterialAlertDialogBuilder(mActivity)
@@ -567,298 +562,315 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     @UiThread
-    private void setupTagCloud() {
-        model.getTagCloud().observe(getViewLifecycleOwner(), tagCloud -> {
-            mTagCloud.removeAllViews();
-            if (mainModel == null) return;
-            // Add tracker chip
-            if (!tagCloud.trackerComponents.isEmpty()) {
-                CharSequence[] trackerComponentNames = new CharSequence[tagCloud.trackerComponents.size()];
-                for (int i = 0; i < trackerComponentNames.length; ++i) {
-                    trackerComponentNames[i] = tagCloud.trackerComponents.get(i).name;
-                }
-                addChip(getResources().getQuantityString(R.plurals.no_of_trackers, tagCloud.trackerComponents.size(),
-                        tagCloud.trackerComponents.size()), R.color.tracker).setOnClickListener(v -> {
-                    if (!isExternalApk && isRootEnabled) {
-                        new SearchableMultiChoiceDialogBuilder<>(mActivity, tagCloud.trackerComponents, trackerComponentNames)
-                                .setTitle(R.string.trackers)
-                                .setSelections(tagCloud.trackerComponents)
-                                .setNegativeButton(R.string.cancel, null)
-                                .setPositiveButton(R.string.block, (dialog, which, selectedItems) -> {
-                                    showProgressIndicator(true);
-                                    executor.submit(() -> {
-                                        mainModel.addRules(selectedItems, true);
-                                        runOnUiThread(() -> {
-                                            if (isDetached()) return;
-                                            showProgressIndicator(false);
-                                            displayShortToast(R.string.done);
-                                        });
+    private void setupTagCloud(AppInfoViewModel.TagCloud tagCloud) {
+        mTagCloud.removeAllViews();
+        if (mainModel == null) return;
+        // Add tracker chip
+        if (!tagCloud.trackerComponents.isEmpty()) {
+            CharSequence[] trackerComponentNames = new CharSequence[tagCloud.trackerComponents.size()];
+            for (int i = 0; i < trackerComponentNames.length; ++i) {
+                trackerComponentNames[i] = tagCloud.trackerComponents.get(i).name;
+            }
+            addChip(getResources().getQuantityString(R.plurals.no_of_trackers, tagCloud.trackerComponents.size(),
+                    tagCloud.trackerComponents.size()), R.color.tracker).setOnClickListener(v -> {
+                if (!isExternalApk && isRootEnabled) {
+                    new SearchableMultiChoiceDialogBuilder<>(mActivity, tagCloud.trackerComponents, trackerComponentNames)
+                            .setTitle(R.string.trackers)
+                            .setSelections(tagCloud.trackerComponents)
+                            .setNegativeButton(R.string.cancel, null)
+                            .setPositiveButton(R.string.block, (dialog, which, selectedItems) -> {
+                                showProgressIndicator(true);
+                                executor.submit(() -> {
+                                    mainModel.addRules(selectedItems, true);
+                                    runOnUiThread(() -> {
+                                        if (isDetached()) return;
+                                        showProgressIndicator(false);
+                                        displayShortToast(R.string.done);
                                     });
-                                })
-                                .setNeutralButton(R.string.unblock, (dialog, which, selectedItems) -> {
-                                    showProgressIndicator(true);
-                                    executor.submit(() -> {
-                                        mainModel.removeRules(selectedItems, true);
-                                        runOnUiThread(() -> {
-                                            if (isDetached()) return;
-                                            showProgressIndicator(false);
-                                            displayShortToast(R.string.done);
-                                        });
+                                });
+                            })
+                            .setNeutralButton(R.string.unblock, (dialog, which, selectedItems) -> {
+                                showProgressIndicator(true);
+                                executor.submit(() -> {
+                                    mainModel.removeRules(selectedItems, true);
+                                    runOnUiThread(() -> {
+                                        if (isDetached()) return;
+                                        showProgressIndicator(false);
+                                        displayShortToast(R.string.done);
                                     });
-                                })
-                                .show();
-                    } else {
-                        new MaterialAlertDialogBuilder(mActivity)
-                                .setTitle(R.string.trackers)
-                                .setItems(trackerComponentNames, null)
-                                .setNegativeButton(R.string.close, null)
-                                .show();
-                    }
-                });
-            }
-            if (tagCloud.isSystemApp) {
-                if (tagCloud.isSystemlessPath) {
-                    addChip(R.string.systemless_app);
-                } else addChip(R.string.system_app);
-                if (tagCloud.isUpdatedSystemApp) {
-                    addChip(R.string.updated_app);
-                }
-            } else if (!mainModel.getIsExternalApk()) addChip(R.string.user_app);
-            if (tagCloud.splitCount > 0) {
-                addChip(getResources().getQuantityString(R.plurals.no_of_splits, tagCloud.splitCount,
-                        tagCloud.splitCount)).setOnClickListener(v -> {
-                    try (ApkFile apkFile = ApkFile.getInstance(mainModel.getApkFileKey())) {
-                        // Display a list of apks
-                        List<ApkFile.Entry> apkEntries = apkFile.getEntries();
-                        CharSequence[] entryNames = new CharSequence[tagCloud.splitCount];
-                        for (int i = 0; i < tagCloud.splitCount; ++i) {
-                            entryNames[i] = apkEntries.get(i + 1).toLocalizedString(mActivity);
-                        }
-                        new MaterialAlertDialogBuilder(mActivity)
-                                .setTitle(R.string.splits)
-                                .setItems(entryNames, null)
-                                .setNegativeButton(R.string.close, null)
-                                .show();
-                    }
-                });
-            }
-            if (tagCloud.isDebuggable) {
-                addChip(R.string.debuggable);
-            }
-            if (tagCloud.isTestOnly) {
-                addChip(R.string.test_only);
-            }
-            if (!tagCloud.hasCode) {
-                addChip(R.string.no_code);
-            }
-            if (tagCloud.hasRequestedLargeHeap) {
-                addChip(R.string.requested_large_heap, R.color.tracker);
-            }
-            if (tagCloud.runningServices.size() > 0) {
-                addChip(R.string.running, R.color.running).setOnClickListener(v -> {
-                    mProgressIndicator.show();
-                    executor.submit(() -> {
-                        CharSequence[] runningServices = new CharSequence[tagCloud.runningServices.size()];
-                        for (int i = 0; i < runningServices.length; ++i) {
-                            runningServices[i] = new SpannableStringBuilder()
-                                    .append(getBoldString(tagCloud.runningServices.get(i).service.getShortClassName()))
-                                    .append("\n")
-                                    .append(getSmallerText(new SpannableStringBuilder()
-                                            .append(getStyledKeyValue(mActivity, R.string.process_name,
-                                                    tagCloud.runningServices.get(i).process)).append("\n")
-                                            .append(getStyledKeyValue(mActivity, R.string.pid,
-                                                    String.valueOf(tagCloud.runningServices.get(i).pid)))));
-                        }
-                        DialogTitleBuilder titleBuilder = new DialogTitleBuilder(mActivity)
-                                .setTitle(R.string.running_services);
-                        if (PermissionUtils.hasDumpPermission() && FeatureController.isLogViewerEnabled()) {
-                            titleBuilder.setSubtitle(R.string.running_services_logcat_hint);
-                        }
-                        runOnUiThread(() -> {
-                            mProgressIndicator.hide();
-                            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(mActivity)
-                                    .setCustomTitle(titleBuilder.build())
-                                    .setItems(runningServices, (dialog, which) -> {
-                                        if (!FeatureController.isLogViewerEnabled()) return;
-                                        Intent logViewerIntent = new Intent(mActivity.getApplicationContext(), LogViewerActivity.class)
-                                                .setAction(LogViewerActivity.ACTION_LAUNCH)
-                                                .putExtra(LogViewerActivity.EXTRA_FILTER, SearchCriteria.PID_KEYWORD + tagCloud.runningServices.get(which).pid)
-                                                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        mActivity.startActivity(logViewerIntent);
-                                    })
-                                    .setNeutralButton(R.string.force_stop, (dialog, which) -> executor.submit(() -> {
-                                        try {
-                                            PackageManagerCompat.forceStopPackage(mPackageName, mainModel.getUserHandle());
-                                            runOnUiThread(this::refreshDetails);
-                                        } catch (RemoteException | SecurityException e) {
-                                            Log.e(TAG, e);
-                                            displayLongToast(R.string.failed_to_stop, mPackageLabel);
-                                        }
-                                    }))
-                                    .setNegativeButton(R.string.close, null);
-                            builder.show();
-                        });
-                    });
-                });
-            }
-            if (tagCloud.isForceStopped) {
-                addChip(R.string.stopped, R.color.stopped);
-            }
-            if (!tagCloud.isAppEnabled) {
-                addChip(R.string.disabled_app, R.color.disabled_user);
-            }
-            if (tagCloud.isAppSuspended) {
-                addChip(R.string.suspended, R.color.stopped);
-            }
-            if (tagCloud.isAppHidden) {
-                addChip(R.string.hidden, R.color.disabled_user);
-            }
-            if (tagCloud.isMagiskHideEnabled) {
-                addChip(R.string.magisk_hide_enabled).setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
-                        .setTitle(R.string.magisk_hide_enabled)
-                        .setMessage(R.string.disable_magisk_hide)
-                        .setPositiveButton(R.string.disable, (dialog, which) -> {
-                            if (MagiskUtils.unhide(mPackageName)) {
-                                try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mPackageName, mainModel.getUserHandle())) {
-                                    cb.setMagiskHide(false);
-                                    refreshDetails();
-                                }
-                            } else {
-                                displayLongToast(R.string.failed_to_disable_magisk_hide);
-                            }
-                        })
-                        .setNegativeButton(R.string.cancel, null)
-                        .show());
-            }
-            if (tagCloud.hasKeyStoreItems) {
-                Chip chip;
-                if (tagCloud.hasMasterKeyInKeyStore) {
-                    chip = addChip(R.string.keystore, R.color.tracker);
-                } else chip = addChip(R.string.keystore);
-                chip.setOnClickListener(view -> new MaterialAlertDialogBuilder(mActivity)
-                        .setTitle(R.string.keystore)
-                        .setItems(KeyStoreUtils.getKeyStoreFiles(mApplicationInfo.uid,
-                                mainModel.getUserHandle()).toArray(new String[0]), null)
-                        .setNegativeButton(R.string.close, null)
-                        .show());
-            }
-            if (tagCloud.backups.length > 0) {
-                CharSequence[] backupNames = new CharSequence[tagCloud.backups.length];
-                for (int i = 0; i < tagCloud.backups.length; ++i) {
-                    backupNames[i] = tagCloud.backups[i].toLocalizedString(mActivity);
-                }
-                addChip(R.string.backup).setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
-                        .setTitle(R.string.backup)
-                        .setItems(backupNames, null)
-                        .setNegativeButton(R.string.close, null)
-                        .show());
-            }
-            if (!tagCloud.isBatteryOptimized) {
-                addChip(R.string.no_battery_optimization, R.color.red_orange).setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
-                        .setTitle(R.string.battery_optimization)
-                        .setMessage(R.string.enable_battery_optimization)
-                        .setNegativeButton(R.string.no, null)
-                        .setPositiveButton(R.string.yes, (dialog, which) -> {
-                            Runner.runCommand(new String[]{"dumpsys", "deviceidle", "whitelist", "-" + mPackageName});
-                            refreshDetails();
-                        })
-                        .show());
-            }
-            if (tagCloud.netPolicies > 0) {
-                String[] readablePolicies = NetworkPolicyManagerCompat.getReadablePolicies(mActivity, tagCloud.netPolicies)
-                        .values().toArray(new String[0]);
-                addChip(R.string.has_net_policy).setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
-                        .setTitle(R.string.net_policy)
-                        .setItems(readablePolicies, null)
-                        .setNegativeButton(R.string.ok, null)
-                        .show());
-            }
-            if (tagCloud.ssaid != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                addChip(R.string.ssaid, R.color.red_orange).setOnClickListener(v -> {
-                    View view = getLayoutInflater().inflate(R.layout.dialog_ssaid_info, null);
-                    AlertDialog alertDialog = new MaterialAlertDialogBuilder(mActivity)
-                            .setTitle(R.string.ssaid)
-                            .setView(view)
-                            .setPositiveButton(R.string.apply, null)
-                            .setNegativeButton(R.string.close, null)
-                            .setNeutralButton(R.string.reset_to_default, null)
-                            .create();
-                    TextInputEditText ssaidHolder = view.findViewById(R.id.ssaid);
-                    TextInputLayout ssaidInputLayout = view.findViewById(android.R.id.text1);
-                    AtomicReference<Button> applyButton = new AtomicReference<>();
-                    AtomicReference<Button> resetButton = new AtomicReference<>();
-                    AtomicReference<String> ssaid = new AtomicReference<>(tagCloud.ssaid);
-
-                    alertDialog.setOnShowListener(dialog -> {
-                        applyButton.set(alertDialog.getButton(AlertDialog.BUTTON_POSITIVE));
-                        resetButton.set(alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL));
-                        applyButton.get().setVisibility(View.GONE);
-                        applyButton.get().setOnClickListener(v2 -> executor.submit(() -> {
-                            try {
-                                SsaidSettings ssaidSettings = new SsaidSettings(mPackageName, mApplicationInfo.uid);
-                                if (ssaidSettings.setSsaid(ssaid.get())) {
-                                    model.loadTagCloud();
-                                    runOnUiThread(() -> displayLongToast(R.string.restart_to_reflect_changes));
-                                } else {
-                                    runOnUiThread(() -> displayLongToast(R.string.failed_to_change_ssaid));
-                                }
-                                alertDialog.dismiss();
-                            } catch (IOException ignore) {
-                            }
-                        }));
-                        resetButton.get().setVisibility(View.GONE);
-                        resetButton.get().setOnClickListener(v2 -> {
-                            ssaid.set(tagCloud.ssaid);
-                            ssaidHolder.setText(ssaid.get());
-                            resetButton.get().setVisibility(View.GONE);
-                            applyButton.get().setVisibility(View.GONE);
-                        });
-                    });
-                    ssaidHolder.setText(tagCloud.ssaid);
-                    ssaidHolder.setTypeface(Typeface.MONOSPACE);
-                    ssaidHolder.setOnClickListener(v2 -> {
-                        ClipboardManager clipboard = (ClipboardManager) mActivity.getSystemService(Context.CLIPBOARD_SERVICE);
-                        ClipData clip = ClipData.newPlainText("SSAID", ssaid.get());
-                        clipboard.setPrimaryClip(clip);
-                        displayShortToast(R.string.copied_to_clipboard);
-                    });
-                    ssaidInputLayout.setEndIconOnClickListener(v2 -> {
-                        ssaid.set(SsaidSettings.generateSsaid(mPackageName));
-                        ssaidHolder.setText(ssaid.get());
-                        if (!tagCloud.ssaid.equals(ssaid.get())) {
-                            if (resetButton.get() != null) {
-                                resetButton.get().setVisibility(View.VISIBLE);
-                            }
-                            if (applyButton.get() != null) {
-                                applyButton.get().setVisibility(View.VISIBLE);
-                            }
-                        }
-                    });
-                    alertDialog.show();
-                });
-            }
-            if (tagCloud.uriGrants != null) {
-                addChip(R.string.saf).setOnClickListener(v -> {
-                    CharSequence[] uriGrants = new CharSequence[tagCloud.uriGrants.size()];
-                    for (int i = 0; i < tagCloud.uriGrants.size(); ++i) {
-                        uriGrants[i] = tagCloud.uriGrants.get(i).uri.toString();
-                    }
+                                });
+                            })
+                            .show();
+                } else {
                     new MaterialAlertDialogBuilder(mActivity)
-                            .setTitle(R.string.saf)
-                            .setItems(uriGrants, null)
+                            .setTitle(R.string.trackers)
+                            .setItems(trackerComponentNames, null)
                             .setNegativeButton(R.string.close, null)
                             .show();
+                }
+            });
+        }
+        if (tagCloud.isSystemApp) {
+            if (tagCloud.isSystemlessPath) {
+                addChip(R.string.systemless_app);
+            } else addChip(R.string.system_app);
+            if (tagCloud.isUpdatedSystemApp) {
+                addChip(R.string.updated_app);
+            }
+        } else if (!mainModel.getIsExternalApk()) addChip(R.string.user_app);
+        if (tagCloud.splitCount > 0) {
+            addChip(getResources().getQuantityString(R.plurals.no_of_splits, tagCloud.splitCount,
+                    tagCloud.splitCount)).setOnClickListener(v -> {
+                try (ApkFile apkFile = ApkFile.getInstance(mainModel.getApkFileKey())) {
+                    // Display a list of apks
+                    List<ApkFile.Entry> apkEntries = apkFile.getEntries();
+                    CharSequence[] entryNames = new CharSequence[tagCloud.splitCount];
+                    for (int i = 0; i < tagCloud.splitCount; ++i) {
+                        entryNames[i] = apkEntries.get(i + 1).toLocalizedString(mActivity);
+                    }
+                    new MaterialAlertDialogBuilder(mActivity)
+                            .setTitle(R.string.splits)
+                            .setItems(entryNames, null)
+                            .setNegativeButton(R.string.close, null)
+                            .show();
+                }
+            });
+        }
+        if (tagCloud.isDebuggable) {
+            addChip(R.string.debuggable);
+        }
+        if (tagCloud.isTestOnly) {
+            addChip(R.string.test_only);
+        }
+        if (!tagCloud.hasCode) {
+            addChip(R.string.no_code);
+        }
+        if (tagCloud.hasRequestedLargeHeap) {
+            addChip(R.string.requested_large_heap, R.color.tracker);
+        }
+        if (tagCloud.runningServices.size() > 0) {
+            addChip(R.string.running, R.color.running).setOnClickListener(v -> {
+                mProgressIndicator.show();
+                executor.submit(() -> {
+                    CharSequence[] runningServices = new CharSequence[tagCloud.runningServices.size()];
+                    for (int i = 0; i < runningServices.length; ++i) {
+                        runningServices[i] = new SpannableStringBuilder()
+                                .append(getBoldString(tagCloud.runningServices.get(i).service.getShortClassName()))
+                                .append("\n")
+                                .append(getSmallerText(new SpannableStringBuilder()
+                                        .append(getStyledKeyValue(mActivity, R.string.process_name,
+                                                tagCloud.runningServices.get(i).process)).append("\n")
+                                        .append(getStyledKeyValue(mActivity, R.string.pid,
+                                                String.valueOf(tagCloud.runningServices.get(i).pid)))));
+                    }
+                    DialogTitleBuilder titleBuilder = new DialogTitleBuilder(mActivity)
+                            .setTitle(R.string.running_services);
+                    if (PermissionUtils.hasDumpPermission() && FeatureController.isLogViewerEnabled()) {
+                        titleBuilder.setSubtitle(R.string.running_services_logcat_hint);
+                    }
+                    runOnUiThread(() -> {
+                        mProgressIndicator.hide();
+                        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(mActivity)
+                                .setCustomTitle(titleBuilder.build())
+                                .setItems(runningServices, (dialog, which) -> {
+                                    if (!FeatureController.isLogViewerEnabled()) return;
+                                    Intent logViewerIntent = new Intent(mActivity.getApplicationContext(), LogViewerActivity.class)
+                                            .setAction(LogViewerActivity.ACTION_LAUNCH)
+                                            .putExtra(LogViewerActivity.EXTRA_FILTER, SearchCriteria.PID_KEYWORD + tagCloud.runningServices.get(which).pid)
+                                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    mActivity.startActivity(logViewerIntent);
+                                })
+                                .setNeutralButton(R.string.force_stop, (dialog, which) -> executor.submit(() -> {
+                                    try {
+                                        PackageManagerCompat.forceStopPackage(mPackageName, mainModel.getUserHandle());
+                                        runOnUiThread(this::refreshDetails);
+                                    } catch (RemoteException | SecurityException e) {
+                                        Log.e(TAG, e);
+                                        displayLongToast(R.string.failed_to_stop, mPackageLabel);
+                                    }
+                                }))
+                                .setNegativeButton(R.string.close, null);
+                        builder.show();
+                    });
                 });
+            });
+        }
+        if (tagCloud.isForceStopped) {
+            addChip(R.string.stopped, R.color.stopped);
+        }
+        if (!tagCloud.isAppEnabled) {
+            addChip(R.string.disabled_app, R.color.disabled_user);
+        }
+        if (tagCloud.isAppSuspended) {
+            addChip(R.string.suspended, R.color.stopped);
+        }
+        if (tagCloud.isAppHidden) {
+            addChip(R.string.hidden, R.color.disabled_user);
+        }
+        magiskHiddenProcesses = tagCloud.magiskHiddenProcesses;
+        if (tagCloud.isMagiskHideEnabled) {
+            addChip(R.string.magisk_hide_enabled).setOnClickListener(v -> displayMagiskHideDialog());
+        }
+        if (tagCloud.hasKeyStoreItems) {
+            Chip chip;
+            if (tagCloud.hasMasterKeyInKeyStore) {
+                chip = addChip(R.string.keystore, R.color.tracker);
+            } else chip = addChip(R.string.keystore);
+            chip.setOnClickListener(view -> new MaterialAlertDialogBuilder(mActivity)
+                    .setTitle(R.string.keystore)
+                    .setItems(KeyStoreUtils.getKeyStoreFiles(mApplicationInfo.uid,
+                            mainModel.getUserHandle()).toArray(new String[0]), null)
+                    .setNegativeButton(R.string.close, null)
+                    .show());
+        }
+        if (tagCloud.backups.length > 0) {
+            CharSequence[] backupNames = new CharSequence[tagCloud.backups.length];
+            for (int i = 0; i < tagCloud.backups.length; ++i) {
+                backupNames[i] = tagCloud.backups[i].toLocalizedString(mActivity);
             }
-            if (tagCloud.usesPlayAppSigning) {
-                addChip(R.string.uses_play_app_signing, R.color.disabled_user).setOnClickListener(v ->
-                        new MaterialAlertDialogBuilder(mActivity)
-                                .setTitle(R.string.uses_play_app_signing)
-                                .setMessage(R.string.uses_play_app_signing_description)
-                                .setNegativeButton(R.string.close, null)
-                                .show());
-            }
-        });
+            addChip(R.string.backup).setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
+                    .setTitle(R.string.backup)
+                    .setItems(backupNames, null)
+                    .setNegativeButton(R.string.close, null)
+                    .show());
+        }
+        if (!tagCloud.isBatteryOptimized) {
+            addChip(R.string.no_battery_optimization, R.color.red_orange).setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
+                    .setTitle(R.string.battery_optimization)
+                    .setMessage(R.string.enable_battery_optimization)
+                    .setNegativeButton(R.string.no, null)
+                    .setPositiveButton(R.string.yes, (dialog, which) -> {
+                        Runner.runCommand(new String[]{"dumpsys", "deviceidle", "whitelist", "-" + mPackageName});
+                        refreshDetails();
+                    })
+                    .show());
+        }
+        if (tagCloud.netPolicies > 0) {
+            String[] readablePolicies = NetworkPolicyManagerCompat.getReadablePolicies(mActivity, tagCloud.netPolicies)
+                    .values().toArray(new String[0]);
+            addChip(R.string.has_net_policy).setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
+                    .setTitle(R.string.net_policy)
+                    .setItems(readablePolicies, null)
+                    .setNegativeButton(R.string.ok, null)
+                    .show());
+        }
+        if (tagCloud.ssaid != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            addChip(R.string.ssaid, R.color.red_orange).setOnClickListener(v -> {
+                View view = getLayoutInflater().inflate(R.layout.dialog_ssaid_info, null);
+                AlertDialog alertDialog = new MaterialAlertDialogBuilder(mActivity)
+                        .setTitle(R.string.ssaid)
+                        .setView(view)
+                        .setPositiveButton(R.string.apply, null)
+                        .setNegativeButton(R.string.close, null)
+                        .setNeutralButton(R.string.reset_to_default, null)
+                        .create();
+                TextInputEditText ssaidHolder = view.findViewById(R.id.ssaid);
+                TextInputLayout ssaidInputLayout = view.findViewById(android.R.id.text1);
+                AtomicReference<Button> applyButton = new AtomicReference<>();
+                AtomicReference<Button> resetButton = new AtomicReference<>();
+                AtomicReference<String> ssaid = new AtomicReference<>(tagCloud.ssaid);
+
+                alertDialog.setOnShowListener(dialog -> {
+                    applyButton.set(alertDialog.getButton(AlertDialog.BUTTON_POSITIVE));
+                    resetButton.set(alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL));
+                    applyButton.get().setVisibility(View.GONE);
+                    applyButton.get().setOnClickListener(v2 -> executor.submit(() -> {
+                        try {
+                            SsaidSettings ssaidSettings = new SsaidSettings(mPackageName, mApplicationInfo.uid);
+                            if (ssaidSettings.setSsaid(ssaid.get())) {
+                                model.loadTagCloud();
+                                runOnUiThread(() -> displayLongToast(R.string.restart_to_reflect_changes));
+                            } else {
+                                runOnUiThread(() -> displayLongToast(R.string.failed_to_change_ssaid));
+                            }
+                            alertDialog.dismiss();
+                        } catch (IOException ignore) {
+                        }
+                    }));
+                    resetButton.get().setVisibility(View.GONE);
+                    resetButton.get().setOnClickListener(v2 -> {
+                        ssaid.set(tagCloud.ssaid);
+                        ssaidHolder.setText(ssaid.get());
+                        resetButton.get().setVisibility(View.GONE);
+                        applyButton.get().setVisibility(View.GONE);
+                    });
+                });
+                ssaidHolder.setText(tagCloud.ssaid);
+                ssaidHolder.setTypeface(Typeface.MONOSPACE);
+                ssaidHolder.setOnClickListener(v2 -> {
+                    ClipboardManager clipboard = (ClipboardManager) mActivity.getSystemService(Context.CLIPBOARD_SERVICE);
+                    ClipData clip = ClipData.newPlainText("SSAID", ssaid.get());
+                    clipboard.setPrimaryClip(clip);
+                    displayShortToast(R.string.copied_to_clipboard);
+                });
+                ssaidInputLayout.setEndIconOnClickListener(v2 -> {
+                    ssaid.set(SsaidSettings.generateSsaid(mPackageName));
+                    ssaidHolder.setText(ssaid.get());
+                    if (!tagCloud.ssaid.equals(ssaid.get())) {
+                        if (resetButton.get() != null) {
+                            resetButton.get().setVisibility(View.VISIBLE);
+                        }
+                        if (applyButton.get() != null) {
+                            applyButton.get().setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
+                alertDialog.show();
+            });
+        }
+        if (tagCloud.uriGrants != null) {
+            addChip(R.string.saf).setOnClickListener(v -> {
+                CharSequence[] uriGrants = new CharSequence[tagCloud.uriGrants.size()];
+                for (int i = 0; i < tagCloud.uriGrants.size(); ++i) {
+                    uriGrants[i] = tagCloud.uriGrants.get(i).uri.toString();
+                }
+                new MaterialAlertDialogBuilder(mActivity)
+                        .setTitle(R.string.saf)
+                        .setItems(uriGrants, null)
+                        .setNegativeButton(R.string.close, null)
+                        .show();
+            });
+        }
+        if (tagCloud.usesPlayAppSigning) {
+            addChip(R.string.uses_play_app_signing, R.color.disabled_user).setOnClickListener(v ->
+                    new MaterialAlertDialogBuilder(mActivity)
+                            .setTitle(R.string.uses_play_app_signing)
+                            .setMessage(R.string.uses_play_app_signing_description)
+                            .setNegativeButton(R.string.close, null)
+                            .show());
+        }
+    }
+
+    @UiThread
+    private void displayMagiskHideDialog() {
+        if (magiskHiddenProcesses == null || magiskHiddenProcesses.isEmpty()) {
+            return;
+        }
+        boolean[] choices = new boolean[magiskHiddenProcesses.size()];
+        String[] processes = new String[magiskHiddenProcesses.size()];
+        int i = 0;
+        for (String processName : magiskHiddenProcesses.keySet()) {
+            processes[i] = processName;
+            choices[i] = Boolean.TRUE.equals(magiskHiddenProcesses.get(processName));
+            i++;
+        }
+        new MaterialAlertDialogBuilder(mActivity)
+                .setTitle(R.string.magisk_hide_enabled)
+                .setMultiChoiceItems(processes, choices, (dialog, which, isChecked) -> executor.submit(() -> {
+                    if ((isChecked && MagiskUtils.hide(mPackageName, processes[which]))
+                            || MagiskUtils.unhide(mPackageName, processes[which])) {
+                        choices[which] = isChecked;
+                        try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mPackageName, mainModel.getUserHandle())) {
+                            cb.setMagiskHide(processes[which], isChecked);
+                            runOnUiThread(this::refreshDetails);
+                        }
+                    } else {
+                        runOnUiThread(() -> displayLongToast(isChecked ? R.string.failed_to_enable_magisk_hide
+                                : R.string.failed_to_disable_magisk_hide));
+                    }
+                }))
+                .setNegativeButton(R.string.close, null)
+                .show();
     }
 
     private void setHorizontalActions() {
@@ -1332,22 +1344,20 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @UiThread
     @GuardedBy("mListItems")
-    private void setupVerticalView() {
-        model.getAppInfo().observe(getViewLifecycleOwner(), appInfo -> {
-            synchronized (mListItems) {
-                mListItems.clear();
-                if (!isExternalApk) {
-                    setPathsAndDirectories(appInfo);
-                    setDataUsage(appInfo);
-                    // Storage and Cache
-                    if (FeatureController.isUsageAccessEnabled()) {
-                        setStorageAndCache(appInfo);
-                    }
+    private void setupVerticalView(AppInfoViewModel.AppInfo appInfo) {
+        synchronized (mListItems) {
+            mListItems.clear();
+            if (!isExternalApk) {
+                setPathsAndDirectories(appInfo);
+                setDataUsage(appInfo);
+                // Storage and Cache
+                if (FeatureController.isUsageAccessEnabled()) {
+                    setStorageAndCache(appInfo);
                 }
-                setMoreInfo(appInfo);
-                adapter.setAdapterList(mListItems);
             }
-        });
+            setMoreInfo(appInfo);
+            adapter.setAdapterList(mListItems);
+        }
     }
 
     @Nullable

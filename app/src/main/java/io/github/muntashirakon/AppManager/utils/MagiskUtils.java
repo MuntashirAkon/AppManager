@@ -2,14 +2,21 @@
 
 package io.github.muntashirakon.AppManager.utils;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import android.content.pm.ComponentInfo;
+import android.content.pm.PackageInfo;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.collection.ArraySet;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.io.ProxyFile;
 
@@ -82,21 +89,89 @@ public class MagiskUtils {
         return packages;
     }
 
-    public static boolean isHidden(String packageName) {
-        // FIXME: 6/2/21 This implementation is greedy and can match multiple packages
-        return Runner.runCommand(Runner.getRootInstance(), "magiskhide ls | grep " + packageName).isSuccessful();
+    @NonNull
+    public static Map<String, Boolean> getMagiskHiddenProcesses(@NonNull PackageInfo packageInfo) {
+        String packageName = packageInfo.packageName;
+        List<String> magiskHiddenProcesses = getMagiskHiddenProcesses(packageName);
+        Map<String, Boolean> magiskHiddenProcessEnableMap = new HashMap<>();
+        if (magiskHiddenProcesses == null) {
+            // Add default process
+            magiskHiddenProcessEnableMap.put(packageName, false);
+            return magiskHiddenProcessEnableMap;
+        }
+        // Add default process
+        magiskHiddenProcessEnableMap.put(packageName, magiskHiddenProcesses.contains(packageName));
+        // Add other processes
+        if (packageInfo.activities != null) {
+            for (ComponentInfo info : packageInfo.activities) {
+                if (!packageName.equals(info.processName) && magiskHiddenProcessEnableMap.get(info.processName) == null) {
+                    magiskHiddenProcessEnableMap.put(info.processName, magiskHiddenProcesses.contains(info.processName));
+                }
+            }
+        }
+        if (packageInfo.services != null) {
+            for (ComponentInfo info : packageInfo.services) {
+                if (!packageName.equals(info.processName) && magiskHiddenProcessEnableMap.get(info.processName) == null) {
+                    magiskHiddenProcessEnableMap.put(info.processName, magiskHiddenProcesses.contains(info.processName));
+                }
+            }
+        }
+        if (packageInfo.providers != null) {
+            for (ComponentInfo info : packageInfo.providers) {
+                if (!packageName.equals(info.processName) && magiskHiddenProcessEnableMap.get(info.processName) == null) {
+                    magiskHiddenProcessEnableMap.put(info.processName, magiskHiddenProcesses.contains(info.processName));
+                }
+            }
+        }
+        if (packageInfo.receivers != null) {
+            for (ComponentInfo info : packageInfo.receivers) {
+                if (!packageName.equals(info.processName) && magiskHiddenProcessEnableMap.get(info.processName) == null) {
+                    magiskHiddenProcessEnableMap.put(info.processName, magiskHiddenProcesses.contains(info.processName));
+                }
+            }
+        }
+        return magiskHiddenProcessEnableMap;
     }
 
-    public static boolean hide(String packageName) {
+    @Nullable
+    public static ArrayList<String> getMagiskHiddenProcesses(@NonNull String packageName) {
+        Runner.Result result = Runner.runCommand(Runner.getRootInstance(), "magiskhide ls | grep " + packageName);
+        if (!result.isSuccessful()) {
+            // No matches
+            return null;
+        }
+        Set<String> processes = new HashSet<>();
+        for (String line : result.getOutputAsList()) {
+            String[] splits = line.split("\\|", 2);
+            if (splits.length == 1) {
+                // Old style outputs
+                if (splits[0].equals(packageName)) {
+                    processes.add(packageName);
+                } // else mismatch due to greedy algorithm
+            } else if (splits.length == 2) {
+                // New-style output
+                if (splits[0].equals(packageName)) {
+                    processes.add(splits[1]);
+                } // else mismatch due to greedy algorithm
+            } // else unknown match
+        }
+        if (processes.size() == 0) {
+            // No matches
+            return null;
+        }
+        return new ArrayList<>(processes);
+    }
+
+    public static boolean hide(String packageName, String processName) {
         // Check MagiskHide status
         if (!isMagiskHideEnabled(true)) return false;
         // MagiskHide is enabled, enable hide for the package
-        return Runner.runCommand(Runner.getRootInstance(), new String[]{"magiskhide", "add", packageName}).isSuccessful();
+        return Runner.runCommand(Runner.getRootInstance(), new String[]{"magiskhide", "add", packageName, processName}).isSuccessful();
     }
 
-    public static boolean unhide(String packageName) {
+    public static boolean unhide(String packageName, String processName) {
         // Disable hide for the package (don't need to check for status)
-        return Runner.runCommand(Runner.getRootInstance(), new String[]{"magiskhide", "rm", packageName}).isSuccessful();
+        return Runner.runCommand(Runner.getRootInstance(), new String[]{"magiskhide", "rm", packageName, processName}).isSuccessful();
     }
 
     public static boolean isMagiskHideEnabled(boolean forceEnable) {

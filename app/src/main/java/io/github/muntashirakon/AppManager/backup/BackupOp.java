@@ -388,9 +388,12 @@ class BackupOp implements Closeable {
         for (OpEntry entry : opEntries) {
             rules.setAppOp(entry.getOp(), entry.getMode());
         }
-        // Backup Magisk status
-        if (MagiskUtils.isHidden(mPackageName)) {
-            rules.setMagiskHide(true);
+        // Backup MagiskHide data
+        List<String> magiskHiddenProcesses = MagiskUtils.getMagiskHiddenProcesses(mPackageName);
+        if (magiskHiddenProcesses != null) {
+            for (String processName : magiskHiddenProcesses) {
+                rules.setMagiskHide(processName, true);
+            }
         }
         // Backup allowed notification listeners aka BIND_NOTIFICATION_LISTENER_SERVICE
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {

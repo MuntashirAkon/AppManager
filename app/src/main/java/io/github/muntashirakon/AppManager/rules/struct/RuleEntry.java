@@ -102,7 +102,7 @@ public abstract class RuleEntry {
             case PERMISSION:
                 return new PermissionRule(packageName, name, tokenizer);
             case MAGISK_HIDE:
-                return new MagiskHideRule(packageName, tokenizer);
+                return new MagiskHideRule(packageName, name, tokenizer);
             case BATTERY_OPT:
                 return new BatteryOptimizationRule(packageName, tokenizer);
             case NET_POLICY:

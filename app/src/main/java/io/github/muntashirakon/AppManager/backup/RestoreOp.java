@@ -36,6 +36,7 @@ import io.github.muntashirakon.AppManager.rules.PseudoRules;
 import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.RulesImporter;
 import io.github.muntashirakon.AppManager.rules.struct.AppOpRule;
+import io.github.muntashirakon.AppManager.rules.struct.MagiskHideRule;
 import io.github.muntashirakon.AppManager.rules.struct.NetPolicyRule;
 import io.github.muntashirakon.AppManager.rules.struct.PermissionRule;
 import io.github.muntashirakon.AppManager.rules.struct.RuleEntry;
@@ -508,9 +509,15 @@ class RestoreOp implements Closeable {
                     case BATTERY_OPT:
                         Runner.runCommand(new String[]{"dumpsys", "deviceidle", "whitelist", "+" + packageName});
                         break;
-                    case MAGISK_HIDE:
-                        MagiskUtils.hide(packageName);
+                    case MAGISK_HIDE: {
+                        MagiskHideRule magiskHideRule = (MagiskHideRule) entry;
+                        if (magiskHideRule.isHidden()) {
+                            MagiskUtils.hide(packageName, magiskHideRule.getProcessName());
+                        } else {
+                            MagiskUtils.unhide(packageName, magiskHideRule.getProcessName());
+                        }
                         break;
+                    }
                     case NOTIFICATION:
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
                             notificationManager.setNotificationListenerAccessGrantedForUser(

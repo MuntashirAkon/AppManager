@@ -145,8 +145,8 @@ public class RulesStorageManager implements Closeable {
         addUniqueEntry(new NotificationListenerRule(packageName, name, isGranted));
     }
 
-    public void setMagiskHide(boolean isHide) {
-        addUniqueEntry(new MagiskHideRule(packageName, isHide));
+    public void setMagiskHide(String processName, boolean isHide) {
+        addUniqueEntry(new MagiskHideRule(packageName, processName, isHide));
     }
 
     public void setBatteryOptimization(boolean willOptimize) {

@@ -12,14 +12,14 @@ import io.github.muntashirakon.AppManager.rules.RuleType;
 public class MagiskHideRule extends RuleEntry {
     private boolean isHidden;
 
-    public MagiskHideRule(@NonNull String packageName, boolean isHidden) {
-        super(packageName, STUB, RuleType.MAGISK_HIDE);
+    public MagiskHideRule(@NonNull String packageName, @NonNull String processName, boolean isHidden) {
+        super(packageName, processName, RuleType.MAGISK_HIDE);
         this.isHidden = isHidden;
     }
 
-    public MagiskHideRule(@NonNull String packageName, @NonNull StringTokenizer tokenizer)
+    public MagiskHideRule(@NonNull String packageName, @NonNull String processName, @NonNull StringTokenizer tokenizer)
             throws IllegalArgumentException {
-        super(packageName, STUB, RuleType.MAGISK_HIDE);
+        super(packageName, processName.equals(STUB) ? packageName : processName, RuleType.MAGISK_HIDE);
         if (tokenizer.hasMoreElements()) {
             isHidden = Boolean.parseBoolean(tokenizer.nextElement().toString());
         } else throw new IllegalArgumentException("Invalid format: isHidden not found");
@@ -33,11 +33,16 @@ public class MagiskHideRule extends RuleEntry {
         isHidden = hidden;
     }
 
+    public String getProcessName() {
+        return name.equals(STUB) ? packageName : name;
+    }
+
     @NonNull
     @Override
     public String toString() {
         return "MagiskHideRule{" +
                 "packageName='" + packageName + '\'' +
+                "processName='" + getProcessName() + '\'' +
                 ", isHidden=" + isHidden +
                 '}';
     }
