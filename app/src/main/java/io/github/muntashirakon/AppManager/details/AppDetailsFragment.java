@@ -1327,12 +1327,14 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             holder.toggleSwitch.setChecked(item.isAllowed());
             holder.itemView.setOnClickListener(v -> {
                 boolean isAllowed = !item.isAllowed();
+                int lastOpMode = opEntry.getMode();
                 mExecutor.submit(() -> {
                     if (mMainModel != null && mMainModel.setAppOpMode(item)) {
                         runOnUiThread(() -> notifyItemChanged(index));
                     } else {
+                        opEntry.setMode(lastOpMode);
                         runOnUiThread(() -> UIUtils.displayLongToast(isAllowed
-                                ? R.string.failed_to_enable_op : R.string.app_op_cannot_be_disabled));
+                                ? R.string.failed_to_enable_op : R.string.failed_to_disable_op));
                     }
                 });
             });
@@ -1342,11 +1344,13 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                         .setTitle(R.string.set_app_op_mode)
                         .setSingleChoiceItems(getAppOpModeNames(modes), modes.indexOf(opEntry.getMode()), (dialog, which) -> {
                             int opMode = modes.get(which);
+                            int lastOpMode = opEntry.getMode();
                             mExecutor.submit(() -> {
                                 if (mMainModel != null && mMainModel.setAppOpMode(item, opMode)) {
                                     runOnUiThread(() -> notifyItemChanged(index));
                                 } else {
-                                    runOnUiThread(() -> UIUtils.displayLongToast(R.string.failed_to_enable_op));
+                                    opEntry.setMode(lastOpMode);
+                                    runOnUiThread(() -> UIUtils.displayLongToast(R.string.failed_to_change_app_op_mode));
                                 }
                             });
                             dialog.dismiss();

@@ -47,9 +47,7 @@ import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -1206,7 +1204,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 mProviders.postValue(Collections.emptyList());
                 return;
             }
-            for (ProviderInfo providerInfo : uniqueComponents(mPackageInfo.providers)) {
+            for (ProviderInfo providerInfo : mPackageInfo.providers) {
                 AppDetailsComponentItem componentItem = new AppDetailsComponentItem(providerInfo);
                 componentItem.name = providerInfo.name;
                 synchronized (mBlockerLocker) {
@@ -1220,15 +1218,6 @@ public class AppDetailsViewModel extends AndroidViewModel {
             }
             mProviders.postValue(filterAndSortComponents(mProviderItems));
         }
-    }
-
-    @NonNull
-    private <T extends ComponentInfo> Collection<T> uniqueComponents(@NonNull T[] values) {
-        HashMap<String, T> uniqueValues = new HashMap<>(values.length);
-        for (T v : values) {
-            uniqueValues.put(v.name, v);
-        }
-        return uniqueValues.values();
     }
 
     @SuppressLint("SwitchIntDef")
@@ -1331,8 +1320,6 @@ public class AppDetailsViewModel extends AndroidViewModel {
                         if (!opEntries.contains(opEntry)) opEntries.add(opEntry);
                     }
                 }
-                // TODO(24/12/20): App op with MODE_DEFAULT are determined by their associated permissions.
-                //  Therefore, mode for such app ops should be determined from the permission.
                 Set<String> uniqueSet = new HashSet<>();
                 for (OpEntry entry : opEntries) {
                     String opName = AppOpsManager.opToName(entry.getOp());
@@ -1348,7 +1335,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
                             permissionInfo = new PermissionInfo();
                             permissionInfo.name = permissionName;
                         }
-                        appDetailsItem = new AppDetailsAppOpItem(entry, permissionInfo, isGranted, permissionFlags);
+                        appDetailsItem = new AppDetailsAppOpItem(entry, permissionInfo, isGranted, permissionFlags,
+                                permissions.contains(permissionName));
                     } else {
                         appDetailsItem = new AppDetailsAppOpItem(entry);
                     }

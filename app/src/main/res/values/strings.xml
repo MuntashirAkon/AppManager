@@ -321,7 +321,6 @@
         <item quantity="other">Could not force-stop %1$d apps</item>
     </plurals>
     <string name="toggle_kill_for_system_apps">Toggle kill system apps</string>
-    <string name="app_op_cannot_be_disabled">This app op cannot be disabled. (Possibly a read-only app op depended on another.)</string>
     <string name="permission_name">Permission Name</string>
     <string name="mode">Mode</string>
     <string name="running">Running</string>
@@ -1176,4 +1175,5 @@
     <string name="swap">Swap</string>
     <string name="memory_chart_info">● %1$s Applications ● %2$s Cached ● %3$s Buffers ● %4$s Free</string>
     <string name="swap_chart_info">● %1$s Used ● %2$s Free</string>
+    <string name="failed_to_change_app_op_mode">Could not change the app op mode.</string>
 </resources>

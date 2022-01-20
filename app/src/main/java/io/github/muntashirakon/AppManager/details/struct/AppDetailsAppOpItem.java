@@ -24,21 +24,31 @@ public class AppDetailsAppOpItem extends AppDetailsItem<OpEntry> {
     @Nullable
     public final PermissionInfo permissionInfo;
     public final boolean isDangerous;
+    public final boolean hasModifiablePermission;
+    /**
+     * Whether the permission is part of the app.
+     */
+    public final boolean appContainsPermission;
 
     public AppDetailsAppOpItem(@NonNull OpEntry opEntry) {
         super(opEntry);
         permissionInfo = null;
         permission = null;
         isDangerous = false;
+        hasModifiablePermission = false;
+        appContainsPermission = false;
     }
 
     public AppDetailsAppOpItem(@NonNull OpEntry opEntry, @NonNull PermissionInfo permissionInfo, boolean isGranted,
-                               int permissionFlags) {
+                               int permissionFlags, boolean appContainsPermission) {
         super(opEntry);
         this.permissionInfo = permissionInfo;
+        this.appContainsPermission = appContainsPermission;
         permission = new Permission(permissionInfo.name, isGranted, opEntry.getOp(),
                 opEntry.getMode() == AppOpsManager.MODE_ALLOWED, permissionFlags);
         isDangerous = PermissionInfoCompat.getProtection(permissionInfo) == PermissionInfo.PROTECTION_DANGEROUS;
+        hasModifiablePermission = !permission.isSystemFixed() && appContainsPermission && (isDangerous
+                || (PermissionInfoCompat.getProtectionFlags(permissionInfo) & PermissionInfo.PROTECTION_FLAG_DEVELOPMENT) != 0);
     }
 
     public boolean isAllowed() {
@@ -47,6 +57,10 @@ public class AppDetailsAppOpItem extends AppDetailsItem<OpEntry> {
             isAllowed = vanillaItem.getMode() == AppOpsManager.MODE_FOREGROUND;
         }
         isAllowed |= vanillaItem.getMode() == AppOpsManager.MODE_ALLOWED;
+        // Special case for default
+        if (vanillaItem.getMode() == AppOpsManager.MODE_DEFAULT) {
+            isAllowed |= (permission != null && permission.isGranted());
+        }
         return isAllowed;
     }
 
@@ -61,7 +75,7 @@ public class AppDetailsAppOpItem extends AppDetailsItem<OpEntry> {
     public boolean allowAppOp(@NonNull PackageInfo packageInfo, @NonNull AppOpsService appOpsService)
             throws RemoteException {
         boolean isSuccessful;
-        if (permission != null) {
+        if (hasModifiablePermission && permission != null) {
             isSuccessful = PermUtils.grantPermission(packageInfo, permission, appOpsService, true, true);
         } else {
             isSuccessful = PermUtils.allowAppOp(appOpsService, vanillaItem.getOp(), packageInfo.packageName,
@@ -83,7 +97,7 @@ public class AppDetailsAppOpItem extends AppDetailsItem<OpEntry> {
     public boolean disallowAppOp(@NonNull PackageInfo packageInfo, AppOpsService appOpsService)
             throws RemoteException {
         boolean isSuccessful;
-        if (permission != null) {
+        if (hasModifiablePermission && permission != null) {
             isSuccessful = PermUtils.revokePermission(packageInfo, permission, appOpsService, true);
         } else {
             isSuccessful = PermUtils.disallowAppOp(appOpsService, vanillaItem.getOp(), packageInfo.packageName,
@@ -104,7 +118,7 @@ public class AppDetailsAppOpItem extends AppDetailsItem<OpEntry> {
     @WorkerThread
     public boolean setAppOp(@NonNull PackageInfo packageInfo, AppOpsService appOpsService, @AppOpsManager.Mode int mode)
             throws RemoteException {
-        if (permission != null) {
+        if (hasModifiablePermission && permission != null) {
             boolean isAllowed = false;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 isAllowed = vanillaItem.getMode() == AppOpsManager.MODE_FOREGROUND;
