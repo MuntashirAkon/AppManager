@@ -21,6 +21,7 @@ import android.content.pm.ServiceInfo;
 import android.content.pm.Signature;
 import android.content.pm.UserInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.RemoteException;
 import android.text.TextUtils;
 
@@ -1342,11 +1343,9 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     }
                     appDetailsItem.name = opName;
                     uniqueSet.add(opName);
-                    synchronized (mAppOpItems) {
-                        mAppOpItems.add(appDetailsItem);
-                    }
+                    mAppOpItems.add(appDetailsItem);
                 }
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 e.printStackTrace();
             }
         }
@@ -1403,12 +1402,16 @@ public class AppDetailsViewModel extends AndroidViewModel {
                             e.printStackTrace();
                         }
                     }
-                    boolean appOpAllowed;
+                    boolean appOpAllowed = false;
                     try {
-                        appOpAllowed = !mIsExternalApk && appOp != OP_NONE && mAppOpsService.checkOperation(appOp,
-                                mPackageInfo.applicationInfo.uid, mPackageName) == AppOpsManager.MODE_ALLOWED;
-                    } catch (RemoteException e) {
-                        appOpAllowed = false;
+                        if (!mIsExternalApk && appOp != OP_NONE) {
+                            int mode = mAppOpsService.checkOperation(appOp, mPackageInfo.applicationInfo.uid, mPackageName);
+                            appOpAllowed = mode == AppOpsManager.MODE_ALLOWED;
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                                appOpAllowed |= mode == AppOpsManager.MODE_FOREGROUND;
+                            }
+                        }
+                    } catch (RemoteException ignore) {
                     }
                     int flags = mPackageInfo.requestedPermissionsFlags[i];
                     Permission permission = new Permission(permissionName, isGranted, appOp, appOpAllowed, permissionFlags);

@@ -44,8 +44,7 @@ public class AppDetailsAppOpItem extends AppDetailsItem<OpEntry> {
         super(opEntry);
         this.permissionInfo = permissionInfo;
         this.appContainsPermission = appContainsPermission;
-        permission = new Permission(permissionInfo.name, isGranted, opEntry.getOp(),
-                opEntry.getMode() == AppOpsManager.MODE_ALLOWED, permissionFlags);
+        permission = new Permission(permissionInfo.name, isGranted, opEntry.getOp(), isAllowed(), permissionFlags);
         isDangerous = PermissionInfoCompat.getProtection(permissionInfo) == PermissionInfo.PROTECTION_DANGEROUS;
         hasModifiablePermission = !permission.isSystemFixed() && appContainsPermission && (isDangerous
                 || (PermissionInfoCompat.getProtectionFlags(permissionInfo) & PermissionInfo.PROTECTION_FLAG_DEVELOPMENT) != 0);
