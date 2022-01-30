@@ -98,7 +98,6 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
     private MultiSelectionView multiSelectionView;
     private Menu selectionMenu;
     private MenuItem appUsageMenu;
-    private MenuItem runningAppsMenu;
     private MenuItem logViewerMenu;
 
     private final StoragePermission storagePermission = StoragePermission.init(this);
@@ -218,7 +217,6 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_main_actions, menu);
         appUsageMenu = menu.findItem(R.id.action_app_usage);
-        runningAppsMenu = menu.findItem(R.id.action_running_apps);
         logViewerMenu = menu.findItem(R.id.action_log_viewer);
         MenuItem apkUpdaterMenu = menu.findItem(R.id.action_apk_updater);
         try {
@@ -526,13 +524,10 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
         }
         // Set sort by
         if (mModel != null) {
-            if (AppPref.isRootOrAdbEnabled()) {
-                if (runningAppsMenu != null) runningAppsMenu.setVisible(true);
-            } else {
+            if (!AppPref.isRootOrAdbEnabled()) {
                 if (mModel.getSortBy() == ListOptions.SORT_BY_BLOCKED_COMPONENTS) {
                     mModel.setSortBy(ListOptions.SORT_BY_APP_LABEL);
                 }
-                if (runningAppsMenu != null) runningAppsMenu.setVisible(false);
             }
         }
     }

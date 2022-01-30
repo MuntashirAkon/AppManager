@@ -1045,7 +1045,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         });
             } else {
                 // Display Android settings button
-                addToHorizontalLayout(R.string.view_in_settings, R.drawable.ic_baseline_power_settings_new_24)
+                addToHorizontalLayout(R.string.view_in_settings, R.drawable.ic_baseline_settings_24)
                         .setOnClickListener(v -> startActivity(IntentUtils.getAppDetailsSettings(mPackageName)));
             }
         } else if (FeatureController.isInstallerEnabled()) {

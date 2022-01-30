@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.ipc.ps;
 
+import android.os.SystemClock;
+
 import androidx.annotation.AnyThread;
 import androidx.annotation.GuardedBy;
 import androidx.annotation.IntDef;
@@ -209,7 +211,8 @@ public class Ps {
             if (procFileArr != null) {
                 procPidFiles.addAll(Arrays.asList(procFileArr));
             }
-            uptime = Double.valueOf(FileUtils.getFileContent(new File(procFile, UPTIME)).split("\\s")[0]).longValue();
+            uptime = Double.valueOf(FileUtils.getFileContent(new File(procFile, UPTIME),
+                    "" + (SystemClock.elapsedRealtime() / 1000.)).split("\\s")[0]).longValue();
             if (!Utils.isRoboUnitTest()) {
                 clockTicks = CpuUtils.getClockTicksPerSecond();
             } else clockTicks = 100; // To prevent error due to native library

@@ -13,6 +13,7 @@ import android.content.pm.UserInfo;
 import android.os.Build;
 import android.os.UserHandleHidden;
 import android.text.SpannableStringBuilder;
+import android.text.format.DateFormat;
 import android.text.format.Formatter;
 import android.util.DisplayMetrics;
 import android.view.Display;
@@ -32,7 +33,10 @@ import com.android.internal.util.TextUtils;
 import java.io.BufferedReader;
 import java.security.Provider;
 import java.security.Security;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -65,8 +69,7 @@ public class DeviceInfo2 implements LocalizedString {
     public boolean hasRoot;
     public int SELinux;
     public String encryptionStatus;
-    @RequiresApi(Build.VERSION_CODES.M)
-    public final String patchLevel = Build.VERSION.SECURITY_PATCH;
+    public final String patchLevel;
     public final Provider[] securityProviders = Security.getProviders();
     // CPU Info
     @Nullable
@@ -108,6 +111,9 @@ public class DeviceInfo2 implements LocalizedString {
         activityManager = (ActivityManager) activity.getSystemService(Context.ACTIVITY_SERVICE);
         pm = activity.getPackageManager();
         display = getDisplay();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            patchLevel = getSecurityPatch();
+        } else patchLevel = null;
     }
 
     @WorkerThread
@@ -173,7 +179,7 @@ public class DeviceInfo2 implements LocalizedString {
                     R.string.enforcing : R.string.permissive))).append("\n");
         }
         builder.append(getStyledKeyValue(ctx, R.string.encryption, encryptionStatus)).append("\n");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (patchLevel != null) {
             builder.append(getStyledKeyValue(ctx, R.string.patch_level, patchLevel)).append("\n");
         }
         List<CharSequence> securityProviders = new ArrayList<>();
@@ -310,6 +316,25 @@ public class DeviceInfo2 implements LocalizedString {
         String kernel = System.getProperty("os.version");
         if (kernel == null) return "";
         else return kernel;
+    }
+
+    @Nullable
+    @RequiresApi(Build.VERSION_CODES.M)
+    public static String getSecurityPatch() {
+        String patch = Build.VERSION.SECURITY_PATCH;
+        if (!"".equals(patch)) {
+            try {
+                SimpleDateFormat template = new SimpleDateFormat("yyyy-MM-dd", Locale.ROOT);
+                Date patchDate = template.parse(patch);
+                String format = DateFormat.getBestDateTimePattern(Locale.getDefault(), "dMMMMyyyy");
+                patch = DateFormat.format(format, patchDate).toString();
+            } catch (ParseException e) {
+                // broken parse; fall through and use the raw string
+            }
+            return patch;
+        } else {
+            return null;
+        }
     }
 
     @WorkerThread

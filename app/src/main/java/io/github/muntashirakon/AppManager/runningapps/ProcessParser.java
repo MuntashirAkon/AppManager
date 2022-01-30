@@ -27,6 +27,7 @@ import io.github.muntashirakon.AppManager.ipc.ps.ProcessEntry;
 import io.github.muntashirakon.AppManager.ipc.ps.Ps;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.servermanager.ActivityManagerCompat;
+import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -57,8 +58,14 @@ public final class ProcessParser {
     List<ProcessItem> parse() {
         List<ProcessItem> processItems = new ArrayList<>();
         try {
-            List<ProcessEntry> processEntries = (List<ProcessEntry>) IPCUtils.getServiceSafe().getRunningProcesses()
-                    .getList();
+            List<ProcessEntry> processEntries;
+            if (LocalServer.isAMServiceAlive()) {
+                processEntries = (List<ProcessEntry>) IPCUtils.getServiceSafe().getRunningProcesses().getList();
+            } else {
+                Ps ps = new Ps();
+                ps.loadProcesses();
+                processEntries = ps.getProcesses();
+            }
             for (ProcessEntry processEntry : processEntries) {
                 if (processEntry.seLinuxPolicy.contains(":kernel:")) continue;
                 try {

@@ -458,6 +458,9 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
         double total = appMemory + cachedMemory + buffers + freeMemory;
         if (total == 0) {
             // Error due to parsing failure, etc.
+            mMemoryInfoChart.setVisibility(View.GONE);
+            mMemoryShortInfoView.setVisibility(View.GONE);
+            mMemoryInfoView.setVisibility(View.GONE);
             return;
         }
         mMemoryInfoChart.post(() -> {
@@ -481,6 +484,9 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
         long usedSwap = mDeviceMemoryInfo.getUsedSwap();
         long totalSwap = mDeviceMemoryInfo.getTotalSwap();
         if (totalSwap == 0) {
+            mSwapInfoChart.setVisibility(View.GONE);
+            mSwapShortInfoView.setVisibility(View.GONE);
+            mSwapInfoView.setVisibility(View.GONE);
             // No swap
             return;
         }

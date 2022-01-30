@@ -22,3 +22,5 @@
 # Don't minify server-related classes
 -keep public class io.github.muntashirakon.AppManager.servermanager.** { *; }
 -keep public class io.github.muntashirakon.AppManager.server.** { *; }
+# Don't minify debug-sepcific resource file
+-keep class io.github.muntashirakon.AppManager.debug.R$raw {*;}
