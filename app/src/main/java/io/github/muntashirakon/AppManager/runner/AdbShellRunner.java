@@ -21,7 +21,7 @@ class AdbShellRunner extends Runner {
     @WorkerThread
     @NonNull
     @Override
-    synchronized public Result runCommand() {
+    protected synchronized Result runCommand() {
         try {
             IAMService amService = IPCUtils.getServiceSafe();
             IRemoteShell shell = amService.getShell(commands.toArray(new String[0]));
@@ -29,7 +29,6 @@ class AdbShellRunner extends Runner {
                 shell.addInputStream(ParcelFileDescriptorUtil.pipeFrom(is));
             }
             IShellResult result = shell.exec();
-            clear();
             return new Result(result.getStdout().getList(), result.getStderr().getList(), result.getExitCode());
         } catch (RemoteException | IOException e) {
             Log.e("AdbShellRunner", e);

@@ -6,9 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringDef;
 import androidx.annotation.WorkerThread;
+
 import com.android.internal.util.TextUtils;
-import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.utils.AppPref;
 
 import java.io.InputStream;
 import java.lang.annotation.Retention;
@@ -16,6 +15,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.utils.AppPref;
 
 public abstract class Runner {
     public static final String TAG = "Runner";
@@ -41,7 +43,9 @@ public abstract class Runner {
             this.stderr = stderr;
             this.exitCode = exitCode;
             // Print stderr
-            if (stderr.size() > 0) Log.e("Runner", android.text.TextUtils.join("\n", stderr));
+            if (stderr.size() > 0) {
+                Log.e("Runner", TextUtils.join("\n", stderr));
+            }
         }
 
         public Result(int exitCode) {
@@ -195,13 +199,19 @@ public abstract class Runner {
 
     @WorkerThread
     @NonNull
-    public abstract Result runCommand();
+    protected abstract Result runCommand();
 
     @NonNull
     private Result run(@NonNull String command, @Nullable InputStream inputStream) {
-        clear();
-        addCommand(command);
-        if (inputStream != null) add(inputStream);
-        return runCommand();
+        try {
+            clear();
+            addCommand(command);
+            if (inputStream != null) {
+                add(inputStream);
+            }
+            return runCommand();
+        } finally {
+            clear();
+        }
     }
 }
