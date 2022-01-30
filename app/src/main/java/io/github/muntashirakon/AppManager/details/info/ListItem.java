@@ -7,6 +7,8 @@ import android.view.View;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 
 class ListItem {
     @IntDef(value = {
@@ -23,78 +25,145 @@ class ListItem {
     static final int LIST_ITEM_REGULAR = 2;
     static final int LIST_ITEM_INLINE = 3;
 
-    @IntDef(flag = true, value = {
-            LIST_ITEM_FLAG_SELECTABLE,
-            LIST_ITEM_FLAG_MONOSPACE
-    })
-    @interface ListItemFlag {
-    }
-
-    static final int LIST_ITEM_FLAG_SELECTABLE = 1;
-    static final int LIST_ITEM_FLAG_MONOSPACE = 1 << 1;
-
     @ListItemType
-    int type;
-    @ListItemFlag
-    int flags = 0;
-    CharSequence title;
-    CharSequence subtitle;
+    public final int type;
+
+    @Nullable
+    private CharSequence mTitle;
+    @Nullable
+    private CharSequence mSubtitle;
     @DrawableRes
-    int actionIcon = 0;
-    View.OnClickListener actionListener;
+    private int mActionIconRes;
+    @StringRes
+    private int mActionContentDescriptionRes;
+    @Nullable
+    private CharSequence mActionContentDescription;
+    @Nullable
+    private View.OnClickListener mOnActionClickListener;
+    private boolean mIsSelectable;
+    private boolean mIsMonospace;
 
     @NonNull
-    static ListItem getGroupHeader(CharSequence title) {
-        ListItem listItem = new ListItem();
-        listItem.type = LIST_ITEM_GROUP_BEGIN;
-        listItem.title = title;
+    public static ListItem newGroupStart(@Nullable CharSequence header) {
+        ListItem listItem = new ListItem(LIST_ITEM_GROUP_BEGIN);
+        listItem.mTitle = header;
         return listItem;
     }
 
     @NonNull
-    static ListItem getGroupDivider() {
-        ListItem listItem = new ListItem();
-        listItem.type = LIST_ITEM_GROUP_END;
+    public static ListItem newGroupEnd() {
+        return new ListItem(LIST_ITEM_GROUP_END);
+    }
+
+    @NonNull
+    public static ListItem newInlineItem(@Nullable CharSequence title, @Nullable CharSequence subtitle) {
+        ListItem listItem = new ListItem(LIST_ITEM_INLINE);
+        listItem.mTitle = title;
+        listItem.mSubtitle = subtitle;
         return listItem;
     }
 
     @NonNull
-    static ListItem getInlineItem(CharSequence title, CharSequence subtitle) {
-        ListItem listItem = new ListItem();
-        listItem.type = LIST_ITEM_INLINE;
-        listItem.title = title;
-        listItem.subtitle = subtitle;
+    public static ListItem newRegularItem(@Nullable CharSequence title, @Nullable CharSequence subtitle) {
+        ListItem listItem = new ListItem(LIST_ITEM_REGULAR);
+        listItem.mTitle = title;
+        listItem.mSubtitle = subtitle;
         return listItem;
     }
 
     @NonNull
-    static ListItem getRegularItem(CharSequence title, CharSequence subtitle) {
-        ListItem listItem = new ListItem();
-        listItem.type = LIST_ITEM_REGULAR;
-        listItem.title = title;
-        listItem.subtitle = subtitle;
+    public static ListItem newSelectableRegularItem(@Nullable CharSequence title, @Nullable CharSequence subtitle) {
+        ListItem listItem = new ListItem(LIST_ITEM_REGULAR);
+        listItem.mIsSelectable = true;
+        listItem.mTitle = title;
+        listItem.mSubtitle = subtitle;
         return listItem;
     }
 
     @NonNull
-    static ListItem getSelectableRegularItem(CharSequence title, CharSequence subtitle) {
-        ListItem listItem = new ListItem();
-        listItem.type = LIST_ITEM_REGULAR;
-        listItem.flags |= LIST_ITEM_FLAG_SELECTABLE;
-        listItem.title = title;
-        listItem.subtitle = subtitle;
+    public static ListItem newSelectableRegularItem(@Nullable CharSequence title,
+                                                    @Nullable CharSequence subtitle,
+                                                    @Nullable View.OnClickListener actionListener) {
+        ListItem listItem = new ListItem(LIST_ITEM_REGULAR);
+        listItem.mIsSelectable = true;
+        listItem.mTitle = title;
+        listItem.mSubtitle = subtitle;
+        listItem.mOnActionClickListener = actionListener;
         return listItem;
     }
 
-    @NonNull
-    static ListItem getSelectableRegularItem(CharSequence title, CharSequence subtitle, View.OnClickListener actionListener) {
-        ListItem listItem = new ListItem();
-        listItem.type = LIST_ITEM_REGULAR;
-        listItem.flags |= LIST_ITEM_FLAG_SELECTABLE;
-        listItem.title = title;
-        listItem.subtitle = subtitle;
-        listItem.actionListener = actionListener;
-        return listItem;
+    public ListItem(int listType) {
+        this.type = listType;
+    }
+
+    @Nullable
+    public CharSequence getTitle() {
+        return mTitle;
+    }
+
+    public void setTitle(@Nullable CharSequence title) {
+        this.mTitle = title;
+    }
+
+    @Nullable
+    public CharSequence getSubtitle() {
+        return mSubtitle;
+    }
+
+    public void setSubtitle(@Nullable CharSequence subtitle) {
+        this.mSubtitle = subtitle;
+    }
+
+    @DrawableRes
+    public int getActionIconRes() {
+        return mActionIconRes;
+    }
+
+    public void setActionIcon(@DrawableRes int actionIcon) {
+        this.mActionIconRes = actionIcon;
+    }
+
+    @Nullable
+    public View.OnClickListener getOnActionClickListener() {
+        return mOnActionClickListener;
+    }
+
+    public void setOnActionClickListener(@Nullable View.OnClickListener onActionClickListener) {
+        this.mOnActionClickListener = onActionClickListener;
+    }
+
+    @StringRes
+    public int getActionContentDescriptionRes() {
+        return mActionContentDescriptionRes;
+    }
+
+    @Nullable
+    public CharSequence getActionContentDescription() {
+        return mActionContentDescription;
+    }
+
+    public void setActionContentDescription(@StringRes int contentDescriptionRes) {
+        this.mActionContentDescriptionRes = contentDescriptionRes;
+    }
+
+    public void setActionContentDescription(@Nullable CharSequence contentDescription) {
+        this.mActionContentDescription = contentDescription;
+    }
+
+    public boolean isMonospace() {
+        return mIsMonospace;
+    }
+
+    public void setMonospace(boolean monospace) {
+        mIsMonospace = monospace;
+    }
+
+    public boolean isSelectable() {
+        return mIsSelectable;
+    }
+
+    public void setSelectable(boolean selectable) {
+        mIsSelectable = selectable;
     }
 
     @NonNull
@@ -102,9 +171,8 @@ class ListItem {
     public String toString() {
         return "ListItem{" +
                 "type=" + type +
-                ", flags=" + flags +
-                ", title='" + title + '\'' +
-                ", subtitle='" + subtitle + '\'' +
+                ", title='" + mTitle + '\'' +
+                ", subtitle='" + mSubtitle + '\'' +
                 '}';
     }
 }

@@ -297,17 +297,19 @@ public final class ReflowMenuItemView extends MaterialCardView implements MenuVi
             float progress = (float) animation.getAnimatedValue();
             setActiveIndicatorProgress(progress, newProgress);
         });
-        activeIndicatorAnimator.setInterpolator(
-                MotionUtils.resolveThemeInterpolator(
-                        getContext(),
-                        R.attr.motionEasingStandard,
-                        AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR));
-        activeIndicatorAnimator.setDuration(
-                MotionUtils.resolveThemeDuration(
-                        getContext(),
-                        R.attr.motionDurationLong1,
-                        getResources().getInteger(R.integer.material_motion_duration_long_1)));
-        activeIndicatorAnimator.start();
+        if (!isInEditMode()) {
+            activeIndicatorAnimator.setInterpolator(
+                    MotionUtils.resolveThemeInterpolator(
+                            getContext(),
+                            R.attr.motionEasingStandard,
+                            AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR));
+            activeIndicatorAnimator.setDuration(
+                    MotionUtils.resolveThemeDuration(
+                            getContext(),
+                            R.attr.motionDurationLong1,
+                            getResources().getInteger(R.integer.material_motion_duration_long_1)));
+            activeIndicatorAnimator.start();
+        }
     }
 
     /**

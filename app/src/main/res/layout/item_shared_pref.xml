@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -16,9 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:singleLine="true"
-        android:textColor="?android:attr/textColorPrimary"
-        android:textSize="@dimen/title_font"
-        android:textStyle="bold"
+        android:textAppearance="?android:attr/textAppearanceListItem"
         tools:text="@tools:sample/lorem" />
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -28,7 +25,7 @@
         android:maxLines="2"
         android:minLines="1"
         android:ellipsize="end"
-        android:textSize="@dimen/subtitle_font"
+        android:textColor="?android:attr/textColorSecondary"
         tools:text="@tools:sample/lorem[9]" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: ISC AND GPL-3.0-or-later -->
 <GridView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"

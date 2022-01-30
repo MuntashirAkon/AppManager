@@ -11,23 +11,23 @@ import androidx.annotation.Px;
 
 public class UiUtils {
     @Px
-    public static int dpToPx(@NonNull Context context, int dp) {
+    public static int dpToPx(@NonNull Context context, @Dimension int dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
                 context.getResources().getDisplayMetrics());
     }
 
     @Px
-    public static int dpToPx(@NonNull Context context, float dp) {
+    public static int dpToPx(@NonNull Context context, @Dimension float dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
     }
 
     @Px
-    public static int spToPx(@NonNull Context context, float sp) {
+    public static int spToPx(@NonNull Context context, @Dimension float sp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, context.getResources().getDisplayMetrics());
     }
 
     @Dimension
-    public static int pxToDp(@NonNull Context context, int pixel) {
+    public static int pxToDp(@NonNull Context context, @Px int pixel) {
         return (int) ((float) pixel / context.getResources().getDisplayMetrics().density);
     }
 }

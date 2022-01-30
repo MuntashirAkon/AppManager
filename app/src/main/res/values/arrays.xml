@@ -223,4 +223,9 @@
         <item>@string/orientation_left_to_right</item>
         <item>@string/orientation_right_to_left</item>
     </string-array>
+    <string-array name="import_backup_options">
+        <item>@string/import_from_oab</item>
+        <item>@string/import_from_tb</item>
+        <item>@string/import_from_sb</item>
+    </string-array>
 </resources>

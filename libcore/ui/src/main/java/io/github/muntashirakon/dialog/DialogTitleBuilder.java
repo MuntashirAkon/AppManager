@@ -15,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 
+import com.google.android.material.button.MaterialButton;
+
 import io.github.muntashirakon.ui.R;
 
 public class DialogTitleBuilder {
@@ -106,7 +108,7 @@ public class DialogTitleBuilder {
         TextView title = v.findViewById(R.id.title);
         TextView subtitle = v.findViewById(R.id.subtitle);
         ImageView startIcon = v.findViewById(R.id.icon);
-        ImageView endIcon = v.findViewById(R.id.icon_2);
+        MaterialButton endIcon = v.findViewById(R.id.action);
         // Set title
         if (this.title != null) title.setText(this.title);
         else if (this.titleRes != 0) title.setText(this.titleRes);
@@ -120,8 +122,8 @@ public class DialogTitleBuilder {
         else startIcon.setImageResource(this.startIconRes);
         // Set end icon or hide
         if (this.endIcon == null && this.endIconRes == 0) endIcon.setVisibility(View.GONE);
-        else if (this.endIcon != null) endIcon.setImageDrawable(this.endIcon);
-        else endIcon.setImageResource(this.endIconRes);
+        else if (this.endIcon != null) endIcon.setIcon(this.endIcon);
+        else endIcon.setIconResource(this.endIconRes);
         if (this.endIconClickListener != null) {
             endIcon.setOnClickListener(this.endIconClickListener);
         }

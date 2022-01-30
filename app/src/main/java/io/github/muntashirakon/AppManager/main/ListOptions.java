@@ -28,7 +28,7 @@ import java.util.List;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.profiles.ProfileManager;
-import io.github.muntashirakon.AppManager.types.AnyFilterArrayAdapter;
+import io.github.muntashirakon.widget.AnyFilterArrayAdapter;
 
 public class ListOptions extends BottomSheetDialogFragment {
     public static final String TAG = ListOptions.class.getSimpleName();

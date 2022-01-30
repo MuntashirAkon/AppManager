@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-package io.github.muntashirakon.AppManager.types;
+package io.github.muntashirakon.dialog;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
@@ -18,8 +18,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
-import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.ui.R;
 
+@SuppressWarnings("unused")
 public class TextInputDialogBuilder {
     @NonNull
     private final FragmentActivity activity;

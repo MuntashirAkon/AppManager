@@ -1,7 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<io.github.muntashirakon.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/swipe_refresh"
@@ -15,7 +13,7 @@
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/progress_linear"
-            style="@style/Widget.MaterialComponents.LinearProgressIndicator"
+            style="@style/Widget.AppTheme.LinearProgressIndicator"
             android:indeterminate="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -56,4 +54,4 @@
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</io.github.muntashirakon.widget.SwipeRefreshLayout>

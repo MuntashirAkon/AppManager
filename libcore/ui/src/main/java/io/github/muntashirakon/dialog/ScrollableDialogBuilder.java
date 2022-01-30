@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-package io.github.muntashirakon.AppManager.types;
+package io.github.muntashirakon.dialog;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
@@ -16,39 +16,45 @@ import androidx.core.text.util.LinkifyCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.material.checkbox.MaterialCheckBox;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textview.MaterialTextView;
 
-import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.ui.R;
 
+@SuppressWarnings("unused")
 public class ScrollableDialogBuilder {
     @NonNull
     private final MaterialTextView message;
     @NonNull
     private final MaterialCheckBox checkBox;
     @NonNull
-    private final MaterialAlertDialogBuilder builder;
+    private final AlertDialogBuilder builder;
 
     public interface OnClickListener {
         void onClick(DialogInterface dialog, int which, boolean isChecked);
     }
 
     @SuppressLint("InflateParams")
-    public ScrollableDialogBuilder(@NonNull FragmentActivity activity, @Nullable CharSequence message) {
+    public ScrollableDialogBuilder(@NonNull FragmentActivity activity, @Nullable CharSequence message, boolean fullScreen) {
         View view = activity.getLayoutInflater().inflate(R.layout.dialog_scrollable_text_view, null);
         this.message = view.findViewById(android.R.id.content);
         this.message.setText(message);
         this.checkBox = view.findViewById(android.R.id.checkbox);
         this.checkBox.setVisibility(View.GONE);
-        this.builder = new MaterialAlertDialogBuilder(activity).setView(view);
+        this.builder = new AlertDialogBuilder(activity, fullScreen).setView(view);
     }
 
-    @SuppressLint("InflateParams")
+    public ScrollableDialogBuilder(@NonNull FragmentActivity activity, @Nullable CharSequence message) {
+        this(activity, message, false);
+    }
+
+    public ScrollableDialogBuilder(@NonNull FragmentActivity activity, boolean fullScreen) {
+        this(activity, null, fullScreen);
+    }
+
     public ScrollableDialogBuilder(@NonNull FragmentActivity activity) {
         this(activity, null);
     }
 
-    @SuppressLint("InflateParams")
     public ScrollableDialogBuilder(@NonNull FragmentActivity activity, @StringRes int inputTextLabel) {
         this(activity, activity.getText(inputTextLabel));
     }

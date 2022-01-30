@@ -96,4 +96,10 @@
         <!--The desired width of the navigation items' active indicator. -->
         <attr name="marginHorizontal" format="dimension" />
     </declare-styleable>
+    <declare-styleable name="SwipeRefreshLayout">
+        <!-- The background color of the progress spinner disc. Default is colorSurface.  -->
+        <attr name="progressBackgroundColor" format="color" />
+        <!-- The colors used in the progress animation. The first color will also be the color of the bar that grows in response to a user swipe gesture. -->
+        <attr name="indicatorColor" />
+    </declare-styleable>
 </resources>

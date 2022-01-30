@@ -1,4 +1,3 @@
-<?xml version='1.0' encoding='utf-8'?>
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
@@ -25,7 +24,7 @@
                 android:layout_weight="1"
                 android:text="@string/crypto_key_size"
                 android:textAllCaps="true"
-                android:labelFor="@id/type_selector_spinner" />
+                android:labelFor="@id/key_size_selector_spinner" />
 
             <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/key_size_selector_spinner"
@@ -36,7 +35,6 @@
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/AppTheme.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/expiry_date"
@@ -46,7 +44,6 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/expiry_date"
-                style="@style/TextAppearance.MaterialComponents.Subtitle1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
@@ -57,7 +54,6 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/AppTheme.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/common_name"
@@ -67,7 +63,6 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/common_name"
-                style="@style/TextAppearance.MaterialComponents.Subtitle1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
@@ -78,7 +73,6 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/AppTheme.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/organization_unit"
@@ -88,7 +82,6 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/organization_unit"
-                style="@style/TextAppearance.MaterialComponents.Subtitle1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
@@ -99,7 +92,6 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/AppTheme.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/organization_name"
@@ -109,7 +101,6 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/organization_name"
-                style="@style/TextAppearance.MaterialComponents.Subtitle1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
@@ -120,7 +111,6 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/AppTheme.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/locality_name"
@@ -130,7 +120,6 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/locality_name"
-                style="@style/TextAppearance.MaterialComponents.Subtitle1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
@@ -141,7 +130,6 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/AppTheme.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/state_name"
@@ -151,7 +139,6 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/state_name"
-                style="@style/TextAppearance.MaterialComponents.Subtitle1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
@@ -162,7 +149,6 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/AppTheme.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/country_name"
@@ -172,7 +158,6 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/country_name"
-                style="@style/TextAppearance.MaterialComponents.Subtitle1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"

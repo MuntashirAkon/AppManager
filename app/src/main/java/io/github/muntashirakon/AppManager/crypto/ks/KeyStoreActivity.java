@@ -17,9 +17,9 @@ import com.android.internal.util.TextUtils;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.AMExceptionHandler;
-import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 
 /**
  * @deprecated Kept for migratory purposes only, deprecated since v2.6.3. To be removed in v3.0.0.

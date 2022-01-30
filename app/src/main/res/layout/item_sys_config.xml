@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -6,10 +5,8 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:focusable="true"
-    android:paddingStart="@dimen/padding_medium"
-    android:paddingTop="@dimen/padding_very_small"
-    android:paddingEnd="@dimen/padding_medium"
-    android:paddingBottom="@dimen/padding_very_small">
+    android:paddingHorizontal="@dimen/padding_medium"
+    android:paddingVertical="@dimen/padding_very_small">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/item_icon"
@@ -17,7 +14,7 @@
         android:layout_height="match_parent"
         android:layout_marginEnd="@dimen/padding_small"
         android:layout_weight="0"
-        android:contentDescription="@string/app_name" />
+        android:contentDescription="@string/str_logo" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="0dp"
@@ -33,8 +30,7 @@
             android:gravity="center"
             android:singleLine="true"
             android:textIsSelectable="true"
-            android:textStyle="bold"
-            android:textColor="?android:attr/textColorPrimary"
+            android:textAppearance="?android:attr/textAppearanceListItem"
             tools:text="@tools:sample/lorem" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -42,6 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textIsSelectable="true"
+            android:textAppearance="?attr/textAppearanceBodySmall"
             android:textSize="11sp"
             tools:text="@tools:sample/lorem"
             tools:ignore="SmallSp" />
@@ -52,7 +49,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:textIsSelectable="true"
-            android:textSize="12sp"
+            android:textAppearance="?attr/textAppearanceBodySmall"
             tools:text="@tools:sample/lorem" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>

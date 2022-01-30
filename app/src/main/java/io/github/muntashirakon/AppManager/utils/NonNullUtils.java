@@ -9,7 +9,7 @@ public final class NonNullUtils {
         return longValue == null ? 0 : longValue;
     }
 
-    public static int defeatNullable(@Nullable Integer longValue) {
-        return longValue == null ? 0 : longValue;
+    public static int defeatNullable(@Nullable Integer integerValue) {
+        return integerValue == null ? 0 : integerValue;
     }
 }

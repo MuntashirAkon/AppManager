@@ -1,74 +1,46 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: WTFPL AND GPL-3.0-or-later -->
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:baselineAligned="false"
-    android:orientation="horizontal"
-    android:paddingStart="@dimen/padding_medium"
-    android:paddingEnd="@dimen/padding_medium">
+    android:orientation="vertical"
+    android:paddingVertical="@dimen/padding_small"
+    android:paddingHorizontal="@dimen/padding_medium">
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/dialog_searchby_tag_linear"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:background="?selectableItemBackground"
-        android:orientation="vertical"
-        android:padding="@dimen/padding_small">
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/search_by_tag"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/filter_choice_tag"
+        app:hintEnabled="true"
+        app:endIconMode="custom"
+        app:endIconDrawable="@drawable/ic_search">
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <io.github.muntashirakon.widget.TextInputTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ellipsize="marquee"
-            android:paddingBottom="8dp"
-            android:text="@string/filter_choice_tag"
-            android:textSize="16sp"
-            android:singleLine="true" />
+            android:textIsSelectable="true"
+            tools:text="@tools:sample/full_names" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/dialog_searchby_tag_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="marquee"
-            android:padding="8dp"
-            android:textSize="12sp"
-            android:typeface="monospace"
-            tools:text="text"
-            android:singleLine="true" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-    </androidx.appcompat.widget.LinearLayoutCompat>
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/search_by_pid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/filter_choice_pid"
+        app:hintEnabled="true"
+        app:endIconMode="custom"
+        app:endIconDrawable="@drawable/ic_search">
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/dialog_searchby_pid_linear"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:background="?selectableItemBackground"
-        android:orientation="vertical"
-        android:padding="8dp">
-
-        <androidx.appcompat.widget.AppCompatTextView
+        <io.github.muntashirakon.widget.TextInputTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ellipsize="marquee"
-            android:paddingBottom="8dp"
-            android:text="@string/filter_choice_pid"
-            android:textSize="16sp"
-            android:singleLine="true" />
+            android:textIsSelectable="true"
+            tools:text="@tools:sample/us_zipcodes" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/dialog_searchby_pid_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="marquee"
-            android:padding="8dp"
-            android:textSize="12sp"
-            android:typeface="monospace"
-            tools:text="text"
-            android:singleLine="true" />
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
+    </com.google.android.material.textfield.TextInputLayout>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

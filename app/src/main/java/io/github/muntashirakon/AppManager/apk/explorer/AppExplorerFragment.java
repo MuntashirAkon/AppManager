@@ -16,13 +16,12 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.io.File;
 
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.widget.MultiSelectionView;
+import io.github.muntashirakon.widget.SwipeRefreshLayout;
 import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
 public class AppExplorerFragment extends Fragment implements SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener {
@@ -72,8 +71,6 @@ public class AppExplorerFragment extends Fragment implements SearchView.OnQueryT
         }
         swipeRefresh = view.findViewById(R.id.swipe_refresh);
         swipeRefresh.setOnRefreshListener(this);
-        swipeRefresh.setColorSchemeColors(UIUtils.getAccentColor(activity));
-        swipeRefresh.setProgressBackgroundColorSchemeColor(UIUtils.getPrimaryColor(activity));
         swipeRefresh.post(() -> swipeRefresh.setRefreshing(true));
         RecyclerView recyclerView = view.findViewById(R.id.list_item);
         recyclerView.setHasFixedSize(true);

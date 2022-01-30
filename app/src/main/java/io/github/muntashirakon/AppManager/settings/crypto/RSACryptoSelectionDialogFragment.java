@@ -30,9 +30,9 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyPair;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.types.ScrollableDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.dialog.ScrollableDialogBuilder;
 
 public class RSACryptoSelectionDialogFragment extends DialogFragment {
     public static final String TAG = "RSACryptoSelectionDialogFragment";

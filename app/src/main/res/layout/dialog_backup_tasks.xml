@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -14,25 +13,22 @@
             android:id="@+id/backup_all"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="@dimen/padding_medium"
-            android:paddingTop="@dimen/padding_small"
-            android:paddingEnd="@dimen/padding_medium"
-            android:paddingBottom="@dimen/padding_small"
+            android:paddingHorizontal="@dimen/padding_medium"
+            android:paddingVertical="@dimen/padding_small"
             android:background="?selectableItemBackground"
             android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="?android:attr/textColorPrimary"
-                android:text="@string/backup_all_apps"
-                android:textSize="@dimen/title_font" />
+                android:textAppearance="?android:attr/textAppearanceListItem"
+                android:text="@string/backup_all_apps" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/backup_all_apps_msg"
-                android:textSize="@dimen/subtitle_font" />
+                android:textColor="?android:attr/textColorSecondary"
+                android:text="@string/backup_all_apps_msg" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -45,25 +41,22 @@
             android:id="@+id/redo_existing_backups"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="@dimen/padding_medium"
-            android:paddingTop="@dimen/padding_small"
-            android:paddingEnd="@dimen/padding_medium"
-            android:paddingBottom="@dimen/padding_small"
+            android:paddingHorizontal="@dimen/padding_medium"
+            android:paddingVertical="@dimen/padding_small"
             android:background="?selectableItemBackground"
             android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="?android:attr/textColorPrimary"
-                android:text="@string/redo_existing_backups"
-                android:textSize="@dimen/title_font" />
+                android:textAppearance="?android:attr/textAppearanceListItem"
+                android:text="@string/redo_existing_backups" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/redo_existing_backups_msg"
-                android:textSize="@dimen/subtitle_font" />
+                android:textColor="?android:attr/textColorSecondary"
+                android:text="@string/redo_existing_backups_msg" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -76,25 +69,22 @@
             android:id="@+id/backup_apps_without_backup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="@dimen/padding_medium"
-            android:paddingTop="@dimen/padding_small"
-            android:paddingEnd="@dimen/padding_medium"
-            android:paddingBottom="@dimen/padding_small"
+            android:paddingHorizontal="@dimen/padding_medium"
+            android:paddingVertical="@dimen/padding_small"
             android:background="?selectableItemBackground"
             android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="?android:attr/textColorPrimary"
-                android:text="@string/backup_apps_without_backups"
-                android:textSize="@dimen/title_font" />
+                android:textAppearance="?android:attr/textAppearanceListItem"
+                android:text="@string/backup_apps_without_backups" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/backup_apps_without_backups_msg"
-                android:textSize="@dimen/subtitle_font" />
+                android:textColor="?android:attr/textColorSecondary"
+                android:text="@string/backup_apps_without_backups_msg" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -107,25 +97,22 @@
             android:id="@+id/verify_and_redo_backups"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="@dimen/padding_medium"
-            android:paddingTop="@dimen/padding_small"
-            android:paddingEnd="@dimen/padding_medium"
-            android:paddingBottom="@dimen/padding_small"
+            android:paddingHorizontal="@dimen/padding_medium"
+            android:paddingVertical="@dimen/padding_small"
             android:background="?selectableItemBackground"
             android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="?android:attr/textColorPrimary"
-                android:text="@string/verify_and_redo_backups"
-                android:textSize="@dimen/title_font" />
+                android:textAppearance="?android:attr/textAppearanceListItem"
+                android:text="@string/verify_and_redo_backups" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/verify_and_redo_backups_msg"
-                android:textSize="@dimen/subtitle_font" />
+                android:textColor="?android:attr/textColorSecondary"
+                android:text="@string/verify_and_redo_backups_msg" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -138,25 +125,22 @@
             android:id="@+id/backup_apps_with_changes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="@dimen/padding_medium"
-            android:paddingTop="@dimen/padding_small"
-            android:paddingEnd="@dimen/padding_medium"
-            android:paddingBottom="@dimen/padding_small"
+            android:paddingHorizontal="@dimen/padding_medium"
+            android:paddingVertical="@dimen/padding_small"
             android:background="?selectableItemBackground"
             android:orientation="vertical">
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="?android:attr/textColorPrimary"
-                android:text="@string/backup_apps_with_changes"
-                android:textSize="@dimen/title_font" />
+                android:textAppearance="?android:attr/textAppearanceListItem"
+                android:text="@string/backup_apps_with_changes" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/backup_apps_with_changes_msg"
-                android:textSize="@dimen/subtitle_font" />
+                android:textColor="?android:attr/textColorSecondary"
+                android:text="@string/backup_apps_with_changes_msg" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

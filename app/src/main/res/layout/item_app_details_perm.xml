@@ -6,10 +6,8 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:focusable="true"
-    android:paddingStart="@dimen/padding_medium"
-    android:paddingTop="@dimen/padding_very_small"
-    android:paddingEnd="@dimen/padding_medium"
-    android:paddingBottom="@dimen/padding_very_small">
+    android:paddingHorizontal="@dimen/padding_medium"
+    android:paddingVertical="@dimen/padding_very_small">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="0dp"
@@ -22,21 +20,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textIsSelectable="true"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textStyle="bold"
+            android:textAppearance="?android:attr/textAppearanceListItem"
             tools:text="android.permission.PERMISSION_NAME" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/perm_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
+            android:textAppearance="?attr/textAppearanceBodySmall"
             tools:text="@tools:sample/lorem[10]" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/perm_protection_level"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceBodySmall"
             android:textSize="10sp"
             tools:text="⚑ dangerous|instant"
             tools:ignore="SmallSp" />
@@ -46,7 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textIsSelectable="true"
-            android:textSize="12sp"
+            android:textAppearance="?attr/textAppearanceBodySmall"
             tools:text="Package Name: android" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -54,7 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textIsSelectable="true"
-            android:textSize="12sp"
+            android:textAppearance="?attr/textAppearanceBodySmall"
             tools:text="Group: android.permission-group.UNDEFINED" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
@@ -63,7 +61,7 @@
         android:id="@+id/perm_toggle_btn"
         android:layout_width="56dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center|center_horizontal|center_vertical"
+        android:layout_gravity="center"
         android:layout_weight="0"
         android:clickable="false"
         android:focusable="false" />

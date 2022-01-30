@@ -29,10 +29,10 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyPair;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.types.TextInputDropdownDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.BetterActivityResult;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.dialog.TextInputDropdownDialogBuilder;
 
 public class KeyPairImporterDialogFragment extends DialogFragment {
     public static final String TAG = "KeyPairImporterDialogFragment";
@@ -170,7 +170,7 @@ public class KeyPairImporterDialogFragment extends DialogFragment {
                                 }
                                 TextInputDropdownDialogBuilder builder;
                                 builder = new TextInputDropdownDialogBuilder(activity, R.string.choose_an_alias)
-                                        .setDropdownItems(aliases, true)
+                                        .setDropdownItems(aliases, -1, true)
                                         .setAuxiliaryInputLabel(R.string.alias_pass)
                                         .setTitle(R.string.choose_an_alias)
                                         .setNegativeButton(R.string.cancel, null);

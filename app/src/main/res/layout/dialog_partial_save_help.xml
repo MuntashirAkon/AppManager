@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: WTFPL AND GPL-3.0-or-later -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -11,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/dialog_partial_select_explanation"
-        android:textSize="16sp" />
+        android:textAppearance="@style/TextAppearance.AppTheme.BodyLarge" />
 
     <androidx.appcompat.widget.AppCompatCheckBox
         android:id="@android:id/checkbox"

@@ -1,4 +1,3 @@
-<?xml version='1.0' encoding='utf-8'?>
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
@@ -37,7 +36,6 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/hint"
-            style="@style/AppTheme.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/keystore_pass"
@@ -47,7 +45,6 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/text"
-                style="@style/TextAppearance.MaterialComponents.Subtitle1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:importantForAutofill="no"
@@ -58,7 +55,6 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/hint2"
-            style="@style/AppTheme.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/keystore_file"
@@ -68,7 +64,6 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/text2"
-                style="@style/TextAppearance.MaterialComponents.Subtitle1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:importantForAutofill="no"

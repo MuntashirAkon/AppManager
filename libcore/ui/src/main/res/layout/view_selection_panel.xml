@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
     android:layout_weight="0"
     android:orientation="vertical"
-    android:focusable="false">
+    android:focusable="false"
+    tools:theme="@style/AppTheme">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -16,7 +17,6 @@
 
         <io.github.muntashirakon.widget.CheckBox
             android:id="@+id/action_select_all"
-            style="@style/Widget.MaterialComponents.CompoundButton.CheckBox.Small"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="0"
@@ -25,8 +25,8 @@
             android:clickable="true"
             android:nextFocusRight="@id/action_cancel"
             android:nextFocusDown="@id/selection_actions"
-            android:text="@android:string/selectAll"
-            android:textColor="@color/textColorPrimary" />
+            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:text="@android:string/selectAll" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/selection_counter"
@@ -36,13 +36,12 @@
             android:layout_gravity="center"
             android:focusable="false"
             android:gravity="center"
-            android:textColor="@color/textColorPrimary"
-            android:textAppearance="@style/AppTheme.TextAppearance.Body.Small"
+            android:textAppearance="?attr/textAppearanceBodySmall"
             tools:text="10/11" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/action_cancel"
-            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+            style="@style/Widget.AppTheme.Button.TextButton.Icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0"
@@ -52,17 +51,17 @@
             android:nextFocusLeft="@id/action_select_all"
             android:nextFocusDown="@id/selection_actions"
             android:text="@android:string/cancel"
-            android:textColor="@color/textColorPrimary"
-            android:textAppearance="@style/AppTheme.TextAppearance.Body.Small"
-            app:rippleColor="@color/semi_transparent"
+            android:textAppearance="?attr/textAppearanceBodySmall"
             app:icon="@drawable/ic_baseline_clear_24"
             app:iconSize="@dimen/padding_medium"
-            app:iconTint="@color/textColorPrimary"
             app:iconPadding="0dp" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-    <include layout="@layout/item_divider_horizontal" />
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <io.github.muntashirakon.widget.MaxHeightScrollView
         android:id="@+id/selection_actions_container"
@@ -80,8 +79,11 @@
             android:layout_gravity="center_horizontal"
             android:focusable="false"
             android:nextFocusUp="@id/action_select_all"
+            app:elevation="0dp"
             app:itemIconTint="@color/text_color_primary_stateful"
-            app:itemTextColor="@color/text_color_primary_stateful" />
+            app:itemTextColor="@color/text_color_primary_stateful"
+            app:itemTextAppearanceActive="?attr/textAppearanceBodySmall"
+            app:itemTextAppearanceInactive="?attr/textAppearanceBodySmall" />
 
     </io.github.muntashirakon.widget.MaxHeightScrollView>
 

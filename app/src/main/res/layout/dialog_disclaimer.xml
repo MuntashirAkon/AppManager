@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -22,30 +21,26 @@
             android:paddingTop="@dimen/padding_small"
             android:paddingBottom="@dimen/padding_small"
             android:gravity="center_horizontal"
-            android:text="@string/disclaimer_header"
-            android:textStyle="bold"
-            android:textSize="@dimen/title_font"
-            android:textColor="?android:attr/textColorPrimary" />
+            android:textAppearance="?attr/textAppearanceTitleMedium"
+            android:textAllCaps="true"
+            android:text="@string/disclaimer_header" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/disclaimer_body"
-            android:textSize="@dimen/subtitle_font" />
+            android:text="@string/disclaimer_body" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/padding_medium"
-            android:text="@string/disclaimer_footer"
-            android:textSize="@dimen/subtitle_font" />
+            android:layout_marginTop="@dimen/padding_medium"
+            android:text="@string/disclaimer_footer" />
 
         <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/agree_forever"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/disclaimer_agree_forever"
-            android:textColor="?android:attr/textColorSecondary" />
+            android:text="@string/disclaimer_agree_forever" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

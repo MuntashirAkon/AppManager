@@ -3,6 +3,8 @@
 package io.github.muntashirakon.AppManager.usage;
 
 import android.annotation.UserIdInt;
+import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -20,23 +22,35 @@ public class PackageUsageInfo implements Parcelable {
     public final String packageName;
     @UserIdInt
     public final int userId;
-    public String appLabel;
-    public long screenTime = 0L;
-    public long lastUsageTime = 0L;
-    public int timesOpened = 0;
+    @Nullable
+    public final ApplicationInfo applicationInfo;
+    @NonNull
+    public final String appLabel;
+
+    public long screenTime;
+    public long lastUsageTime;
+    public int timesOpened;
+    @Nullable
     public AppUsageStatsManager.DataUsage mobileData;
+    @Nullable
     public AppUsageStatsManager.DataUsage wifiData;
     @Nullable
     public List<Entry> entries;
 
-    public PackageUsageInfo(@NonNull String packageName, @UserIdInt int userId) {
+    public PackageUsageInfo(@NonNull Context context, @NonNull String packageName, @UserIdInt int userId,
+                            @Nullable ApplicationInfo applicationInfo) {
         this.packageName = packageName;
         this.userId = userId;
+        this.applicationInfo = applicationInfo;
+        if (applicationInfo != null) {
+            appLabel = applicationInfo.loadLabel(context.getPackageManager()).toString();
+        } else appLabel = packageName;
     }
 
     protected PackageUsageInfo(@NonNull Parcel in) {
         packageName = Objects.requireNonNull(in.readString());
         userId = in.readInt();
+        applicationInfo = in.readParcelable(ApplicationInfo.class.getClassLoader());
         appLabel = in.readString();
         screenTime = in.readLong();
         lastUsageTime = in.readLong();
@@ -54,6 +68,7 @@ public class PackageUsageInfo implements Parcelable {
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeString(packageName);
         dest.writeInt(userId);
+        dest.writeParcelable(applicationInfo, flags);
         dest.writeString(appLabel);
         dest.writeLong(screenTime);
         dest.writeLong(lastUsageTime);

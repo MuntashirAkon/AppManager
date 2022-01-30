@@ -21,14 +21,13 @@ import java.util.List;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
-import static io.github.muntashirakon.AppManager.details.info.ListItem.LIST_ITEM_FLAG_MONOSPACE;
-import static io.github.muntashirakon.AppManager.details.info.ListItem.LIST_ITEM_FLAG_SELECTABLE;
 import static io.github.muntashirakon.AppManager.details.info.ListItem.LIST_ITEM_GROUP_BEGIN;
 import static io.github.muntashirakon.AppManager.details.info.ListItem.LIST_ITEM_GROUP_END;
 import static io.github.muntashirakon.AppManager.details.info.ListItem.LIST_ITEM_INLINE;
 import static io.github.muntashirakon.AppManager.details.info.ListItem.LIST_ITEM_REGULAR;
 
 class AppInfoRecyclerAdapter extends RecyclerView.Adapter<AppInfoRecyclerAdapter.ViewHolder> {
+    private final Context context;
     private final List<ListItem> adapterList;
     private final int accentColor;
     private final int paddingMedium;
@@ -36,6 +35,7 @@ class AppInfoRecyclerAdapter extends RecyclerView.Adapter<AppInfoRecyclerAdapter
     private final int paddingVerySmall;
 
     AppInfoRecyclerAdapter(Context context) {
+        this.context = context;
         adapterList = new ArrayList<>();
         accentColor = UIUtils.getAccentColor(context);
         paddingVerySmall = context.getResources().getDimensionPixelOffset(R.dimen.padding_very_small);
@@ -82,7 +82,7 @@ class AppInfoRecyclerAdapter extends RecyclerView.Adapter<AppInfoRecyclerAdapter
             return;
         }
         // Set title
-        holder.title.setText(listItem.title);
+        holder.title.setText(listItem.getTitle());
         if (listItem.type == LIST_ITEM_GROUP_BEGIN) {
             holder.itemView.setFocusable(false);
             holder.title.setTextColor(accentColor);
@@ -91,28 +91,32 @@ class AppInfoRecyclerAdapter extends RecyclerView.Adapter<AppInfoRecyclerAdapter
             return;
         }
         // Set common properties
-        holder.subtitle.setText(listItem.subtitle);
-        boolean isSelectable = (listItem.flags & LIST_ITEM_FLAG_SELECTABLE) != 0;
-        holder.subtitle.setFocusable(isSelectable);
-        holder.subtitle.setTextIsSelectable(isSelectable);
-        holder.subtitle.setBackgroundResource(isSelectable ? R.drawable.item_transparent : 0);
-        if ((listItem.flags & LIST_ITEM_FLAG_MONOSPACE) != 0) {
+        holder.subtitle.setText(listItem.getSubtitle());
+        holder.subtitle.setFocusable(listItem.isSelectable());
+        holder.subtitle.setTextIsSelectable(listItem.isSelectable());
+        holder.subtitle.setBackgroundResource(listItem.isSelectable() ? R.drawable.item_transparent : 0);
+        if (listItem.isMonospace()) {
             holder.subtitle.setTypeface(Typeface.MONOSPACE);
         } else holder.subtitle.setTypeface(Typeface.DEFAULT);
         if (listItem.type == LIST_ITEM_INLINE) {
             // Inline items aren't focusable if text selection mode is on
-            holder.itemView.setFocusable(!isSelectable);
+            holder.itemView.setFocusable(!listItem.isSelectable());
             return;
         }
         if (listItem.type == LIST_ITEM_REGULAR) {
             // Having an action listener makes focusing the whole item redundant
-            holder.itemView.setFocusable(listItem.actionListener == null);
-            if (listItem.actionIcon != 0) {
-                holder.actionIcon.setIconResource(listItem.actionIcon);
+            holder.itemView.setFocusable(listItem.getOnActionClickListener() == null);
+            if (listItem.getActionIconRes() != 0) {
+                holder.actionIcon.setIconResource(listItem.getActionIconRes());
             }
-            if (listItem.actionListener != null) {
+            if (listItem.getActionContentDescription() != null) {
+                holder.actionIcon.setContentDescription(listItem.getActionContentDescription());
+            } else if (listItem.getActionContentDescriptionRes() != 0) {
+                holder.actionIcon.setContentDescription(context.getString(listItem.getActionContentDescriptionRes()));
+            }
+            if (listItem.getOnActionClickListener() != null) {
                 holder.actionIcon.setVisibility(View.VISIBLE);
-                holder.actionIcon.setOnClickListener(listItem.actionListener);
+                holder.actionIcon.setOnClickListener(listItem.getOnActionClickListener());
             } else holder.actionIcon.setVisibility(View.GONE);
         }
     }

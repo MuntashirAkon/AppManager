@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -24,15 +23,14 @@
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="?android:attr/textColorPrimary"
-                android:text="@string/pref_export"
-                android:textSize="@dimen/title_font" />
+                android:textAppearance="?android:attr/textAppearanceListItem"
+                android:text="@string/pref_export" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/pref_export_msg"
-                android:textSize="@dimen/subtitle_font" />
+                android:textColor="?android:attr/textColorSecondary"
+                android:text="@string/pref_export_msg" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -55,15 +53,14 @@
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="?android:attr/textColorPrimary"
-                android:text="@string/pref_import"
-                android:textSize="@dimen/title_font" />
+                android:textAppearance="?android:attr/textAppearanceListItem"
+                android:text="@string/pref_import" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/pref_import_msg"
-                android:textSize="@dimen/subtitle_font" />
+                android:textColor="?android:attr/textColorSecondary"
+                android:text="@string/pref_import_msg" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -86,15 +83,14 @@
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="?android:attr/textColorPrimary"
-                android:text="@string/pref_import_existing"
-                android:textSize="@dimen/title_font" />
+                android:textAppearance="?android:attr/textAppearanceListItem"
+                android:text="@string/pref_import_existing" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/pref_import_existing_msg"
-                android:textSize="@dimen/subtitle_font" />
+                android:textColor="?android:attr/textColorSecondary"
+                android:text="@string/pref_import_existing_msg" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -117,15 +113,14 @@
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="?android:attr/textColorPrimary"
-                android:text="@string/pref_import_watt"
-                android:textSize="@dimen/title_font" />
+                android:textAppearance="?android:attr/textAppearanceListItem"
+                android:text="@string/pref_import_watt" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/pref_import_watt_msg"
-                android:textSize="@dimen/subtitle_font" />
+                android:textColor="?android:attr/textColorSecondary"
+                android:text="@string/pref_import_watt_msg" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -148,15 +143,14 @@
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="?android:attr/textColorPrimary"
-                android:text="@string/pref_import_blocker"
-                android:textSize="@dimen/title_font" />
+                android:textAppearance="?android:attr/textAppearanceListItem"
+                android:text="@string/pref_import_blocker" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/pref_import_blocker_msg"
-                android:textSize="@dimen/subtitle_font" />
+                android:textColor="?android:attr/textColorSecondary"
+                android:text="@string/pref_import_blocker_msg" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

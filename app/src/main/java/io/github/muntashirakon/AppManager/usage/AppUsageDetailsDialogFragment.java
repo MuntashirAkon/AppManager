@@ -12,8 +12,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,6 +19,8 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -30,51 +30,62 @@ import java.util.Locale;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
-import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
+import io.github.muntashirakon.widget.RecyclerViewWithEmptyView;
+import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
 public class AppUsageDetailsDialogFragment extends DialogFragment {
-    public static final String TAG = "AppUsageDetailsDialogFragment";
-    public static final String ARG_PACKAGE_US = "ARG_PACKAGE_US";
+    public static final String TAG = AppUsageDetailsDialogFragment.class.getSimpleName();
+    public static final String ARG_PACKAGE_USAGE_INFO = "pkg_usg_info";
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         FragmentActivity activity = requireActivity();
-        PackageUsageInfo packageUS = requireArguments().getParcelable(ARG_PACKAGE_US);
+        PackageUsageInfo packageUsageInfo = requireArguments().getParcelable(ARG_PACKAGE_USAGE_INFO);
         LayoutInflater inflater = LayoutInflater.from(activity);
-        if (packageUS == null || inflater == null) return super.onCreateDialog(savedInstanceState);
+        if (packageUsageInfo == null || inflater == null) {
+            return super.onCreateDialog(savedInstanceState);
+        }
         View view = inflater.inflate(R.layout.dialog_app_usage_details, null);
-        ListView listView = view.findViewById(android.R.id.list);
-        listView.setDividerHeight(0);
-        TextView emptyView = view.findViewById(android.R.id.empty);
-        listView.setEmptyView(emptyView);
+        RecyclerViewWithEmptyView recyclerView = view.findViewById(android.R.id.list);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(activity));
+        new FastScrollerBuilder(recyclerView).useMd2Style().build();
+        recyclerView.setEmptyView(view.findViewById(android.R.id.empty));
         AppUsageDetailsAdapter adapter = new AppUsageDetailsAdapter(activity);
-        listView.setAdapter(adapter);
-        adapter.setDefaultList(packageUS.entries);
+        recyclerView.setAdapter(adapter);
+        adapter.setDefaultList(packageUsageInfo.entries);
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(activity)
                 .setView(view)
                 .setNegativeButton(R.string.ok, (dialog, which) -> {
                     if (getDialog() == null) dismiss();
                 });
         DialogTitleBuilder titleBuilder = new DialogTitleBuilder(activity);
-        try {
-            PackageManager packageManager = activity.getPackageManager();
-            ApplicationInfo applicationInfo = packageManager.getApplicationInfo(packageUS.packageName, PackageManager.GET_META_DATA);
-            titleBuilder.setTitle(applicationInfo.loadLabel(packageManager))
-                    .setStartIcon(applicationInfo.loadIcon(packageManager));
-        } catch (PackageManager.NameNotFoundException e) {
-            titleBuilder.setTitle(packageUS.packageName);
-        }
+        ApplicationInfo applicationInfo = packageUsageInfo.applicationInfo;
+        if (applicationInfo != null) {
+            PackageManager pm = activity.getPackageManager();
+            titleBuilder.setTitle(applicationInfo.loadLabel(pm)).setStartIcon(applicationInfo.loadIcon(pm));
+        } else titleBuilder.setTitle(packageUsageInfo.packageName);
         if (Users.getUsersIds().length > 1) {
-            titleBuilder.setSubtitle(getString(R.string.user_with_id, packageUS.userId));
+            titleBuilder.setSubtitle(getString(R.string.user_with_id, packageUsageInfo.userId));
         }
         builder.setCustomTitle(titleBuilder.build());
         return builder.create();
     }
 
-    static class AppUsageDetailsAdapter extends BaseAdapter {
-        private final LayoutInflater mLayoutInflater;
+    static class AppUsageDetailsAdapter extends RecyclerView.Adapter<AppUsageDetailsAdapter.ViewHolder> {
+        static class ViewHolder extends RecyclerView.ViewHolder {
+            TextView title;
+            TextView subtitle;
+
+            public ViewHolder(@NonNull View itemView) {
+                super(itemView);
+                title = itemView.findViewById(R.id.item_title);
+                subtitle = itemView.findViewById(R.id.item_subtitle);
+            }
+        }
+
         private List<PackageUsageInfo.Entry> mDefaultList;
         private List<PackageUsageInfo.Entry> mAdapterList;
         private final Context context;
@@ -84,9 +95,9 @@ public class AppUsageDetailsDialogFragment extends DialogFragment {
 
         AppUsageDetailsAdapter(@NonNull Activity activity) {
             context = activity;
-            mLayoutInflater = activity.getLayoutInflater();
             mColorTransparent = Color.TRANSPARENT;
             mColorSemiTransparent = ContextCompat.getColor(activity, R.color.semi_transparent);
+            setHasStableIds(true);
         }
 
         void setDefaultList(List<PackageUsageInfo.Entry> list) {
@@ -96,13 +107,15 @@ public class AppUsageDetailsDialogFragment extends DialogFragment {
         }
 
         @Override
-        public int getCount() {
+        public int getItemCount() {
             return mAdapterList == null ? 0 : mAdapterList.size();
         }
 
+        @NonNull
         @Override
-        public PackageUsageInfo.Entry getItem(int position) {
-            return mAdapterList.get(position);
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_app_usage_details, parent, false);
+            return new ViewHolder(view);
         }
 
         @Override
@@ -110,26 +123,13 @@ public class AppUsageDetailsDialogFragment extends DialogFragment {
             return mDefaultList.indexOf(mAdapterList.get(position));
         }
 
-        static class ViewHolder {
-            TextView title;
-            TextView subtitle;
-        }
-
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder holder;
-            if (convertView == null) {
-                convertView = mLayoutInflater.inflate(R.layout.item_app_usage_details, parent, false);
-                holder = new ViewHolder();
-                holder.title = convertView.findViewById(R.id.item_title);
-                holder.subtitle = convertView.findViewById(R.id.item_subtitle);
-                convertView.setTag(holder);
-            } else holder = (ViewHolder) convertView.getTag();
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             PackageUsageInfo.Entry entry = mAdapterList.get(position);
-            holder.title.setText(String.format(Locale.ROOT, "%s - %s", DateUtils.formatDateTime(entry.startTime), DateUtils.formatDateTime(entry.endTime)));
-            holder.subtitle.setText(Utils.getFormattedDuration(context, entry.getDuration()));
-            convertView.setBackgroundColor(position % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
-            return convertView;
+            holder.title.setText(String.format(Locale.ROOT, "%s - %s", DateUtils.formatDateTime(entry.startTime),
+                    DateUtils.formatDateTime(entry.endTime)));
+            holder.subtitle.setText(DateUtils.getFormattedDuration(context, entry.getDuration()));
+            holder.itemView.setBackgroundColor(position % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
         }
     }
 }

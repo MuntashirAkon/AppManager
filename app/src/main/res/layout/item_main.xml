@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later -->
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -32,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="11sp"
+            android:textAppearance="?attr/textAppearanceLabelSmall"
             android:text="@string/backup"
             tools:ignore="SmallSp" />
 
@@ -61,7 +60,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
-                android:textStyle="bold"
+                android:textAppearance="?attr/textAppearanceTitleSmall"
                 tools:text="@string/app_name" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -69,6 +68,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
                 android:textStyle="italic"
                 tools:text="io.github.muntashirakon.AppManager" />
 
@@ -82,7 +82,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
-                    android:textSize="12sp"
+                    android:textAppearance="?attr/textAppearanceBodySmall"
                     tools:text="@tools:sample/date/mmddyy" />
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -92,6 +92,7 @@
                     android:gravity="end"
                     android:paddingEnd="25sp"
                     android:singleLine="true"
+                    android:textAppearance="?attr/textAppearanceBodySmall"
                     android:textSize="10sp"
                     tools:text="@tools:sample/us_zipcodes"
                     tools:ignore="RtlSymmetry,SmallSp" />
@@ -103,6 +104,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
+                android:textAppearance="?attr/textAppearanceBodySmall"
                 android:textSize="9sp"
                 tools:text="CN=Android,OU=Android"
                 tools:ignore="SmallSp" />
@@ -112,6 +114,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
+                android:textAppearance="?attr/textAppearanceBodySmall"
                 android:textSize="10sp"
                 tools:text="@tools:sample/lorem[6]"
                 tools:ignore="SmallSp" />
@@ -132,7 +135,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            android:textSize="12sp"
+            android:textAppearance="?attr/textAppearanceBodySmall"
             tools:text="@tools:sample/us_zipcodes" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -140,6 +143,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:singleLine="true"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
             tools:text="User" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -147,6 +151,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:singleLine="true"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
             tools:text="SDK 30" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -154,6 +159,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:singleLine="true"
+            android:textAppearance="?attr/textAppearanceBodySmall"
             android:textSize="9sp"
             tools:text="SHA256withRSA"
             tools:ignore="SmallSp" />
@@ -163,6 +169,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:singleLine="true"
+            android:textAppearance="?attr/textAppearanceBodySmall"
             android:textSize="10sp"
             tools:text="APK+Data"
             tools:ignore="SmallSp" />

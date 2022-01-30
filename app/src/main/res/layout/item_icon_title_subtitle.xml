@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -9,10 +8,8 @@
     android:orientation="horizontal"
     android:focusable="true"
     android:background="@drawable/item_transparent"
-    android:paddingStart="@dimen/padding_medium"
-    android:paddingTop="@dimen/padding_small"
-    android:paddingEnd="@dimen/padding_small"
-    android:paddingBottom="@dimen/padding_medium">
+    android:paddingHorizontal="@dimen/padding_medium"
+    android:paddingVertical="@dimen/padding_medium">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/item_icon"
@@ -34,8 +31,7 @@
             android:id="@+id/item_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textSize="@dimen/title_font"
+            android:textAppearance="?android:attr/textAppearanceListItem"
             android:focusable="false"
             tools:text="@tools:sample/lorem" />
 
@@ -43,7 +39,7 @@
             android:id="@+id/item_subtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/subtitle_font"
+            android:textColor="?android:attr/textColorSecondary"
             android:focusable="false"
             android:nextFocusRight="@id/item_open"
             tools:text="@tools:sample/lorem" />
@@ -52,7 +48,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/item_open"
-        style="@android:style/Widget.Material.ImageButton"
+        style="@style/Widget.AppTheme.Button.IconButton"
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_gravity="center"
@@ -62,7 +58,6 @@
         android:focusable="true"
         android:nextFocusLeft="@id/item_subtitle"
         app:icon="@drawable/ic_open_in_new_black_24dp"
-        app:iconGravity="textTop"
-        app:iconPadding="0dp" />
+        app:iconSize="24dp" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

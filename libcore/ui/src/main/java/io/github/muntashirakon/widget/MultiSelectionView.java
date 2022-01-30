@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.AttrRes;
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -81,7 +82,7 @@ public class MultiSelectionView extends MaterialCardView {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    public MultiSelectionView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public MultiSelectionView(Context context, AttributeSet attrs, @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         // Ensure we are using the correctly themed context rather than the context that was passed in.
         context = getContext();
@@ -123,7 +124,6 @@ public class MultiSelectionView extends MaterialCardView {
         // Set styles
         @Px
         int smallSize = getResources().getDimensionPixelSize(R.dimen.padding_small);
-        setCardElevation(UiUtils.dpToPx(context, 2));
         setPreventCornerOverlap(false);
         setRadius(smallSize);
 

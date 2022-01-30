@@ -14,6 +14,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.style.LeadingMarginSpan;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,8 +32,10 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.android.internal.util.TextUtils;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -56,9 +59,6 @@ import io.github.muntashirakon.AppManager.fm.FmProvider;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.scanner.vt.VtFileReportScanItem;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
-import io.github.muntashirakon.AppManager.types.EmptySpan;
-import io.github.muntashirakon.AppManager.types.NumericSpan;
-import io.github.muntashirakon.AppManager.types.ScrollableDialogBuilder;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
@@ -66,6 +66,8 @@ import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
+import io.github.muntashirakon.dialog.ScrollableDialogBuilder;
+import io.github.muntashirakon.text.style.ListSpan;
 
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getColoredText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getMonospacedText;
@@ -170,16 +172,12 @@ public class ScannerActivity extends BaseActivity {
                 applicationInfo.publicSourceDir = archiveFilePath;
                 applicationInfo.sourceDir = archiveFilePath;
                 mAppName = applicationInfo.loadLabel(getPackageManager());
-                if (mActionBar != null) {
-                    mActionBar.setTitle(mAppName);
-                    mActionBar.setSubtitle(R.string.scanner);
-                }
             } else {
                 mAppName = finalApkFile != null ? finalApkFile.getName() : apkUri.getLastPathSegment();
-                if (mActionBar != null) {
-                    mActionBar.setTitle(mAppName);
-                    mActionBar.setSubtitle(R.string.scanner);
-                }
+            }
+            if (mActionBar != null) {
+                mActionBar.setTitle(mAppName);
+                mActionBar.setSubtitle(R.string.scanner);
             }
         });
         model.getApkVerifierResult().observe(this, result -> {
@@ -302,7 +300,13 @@ public class ScannerActivity extends BaseActivity {
                     vtView.setOnClickListener(v -> new MaterialAlertDialogBuilder(this)
                             .setCustomTitle(titleBuilder.build())
                             .setMessage(result)
-                            .setNegativeButton(R.string.close, null)
+                            .setPositiveButton(R.string.ok, null)
+                            .setNeutralButton(R.string.copy, (dialog, which) -> {
+                                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                                ClipData clip = ClipData.newPlainText(getString(R.string.scan_in_vt), result);
+                                clipboard.setPrimaryClip(clip);
+                                Snackbar.make(vtView, R.string.copied_to_clipboard, Snackbar.LENGTH_SHORT).show();
+                            })
                             .show());
                 }
             }
@@ -425,6 +429,7 @@ public class ScannerActivity extends BaseActivity {
         Set<String> foundTrackerNames = foundTrackerInfoMap.keySet();
         List<Spannable> foundTrackerInfo = new ArrayList<>(foundTrackerInfoMap.values());
         Collections.sort(foundTrackerInfo, (o1, o2) -> o1.toString().compareToIgnoreCase(o2.toString()));
+        Spanned trackerList = getOrderedList(foundTrackerInfo);
         SpannableStringBuilder foundTrackerList = new SpannableStringBuilder();
         int totalTrackersFound = foundTrackerInfoMap.size();
         if (totalTrackersFound > 0) {
@@ -437,7 +442,7 @@ public class ScannerActivity extends BaseActivity {
         if (foundTrackerList.length() > 0) {
             builder.append("\n").append(foundTrackerList);
         }
-
+        // Get summary
         CharSequence summary;
         if (totalTrackersFound == 0) {
             summary = getString(R.string.no_tracker_found);
@@ -460,7 +465,8 @@ public class ScannerActivity extends BaseActivity {
             ((TextView) findViewById(R.id.tracker_title)).setText(coloredSummary);
             ((TextView) findViewById(R.id.tracker_description)).setText(builder);
             if (totalTrackersFound == 0) return;
-            findViewById(R.id.tracker).setOnClickListener(v -> {
+            MaterialCardView trackersView = findViewById(R.id.tracker);
+            trackersView.setOnClickListener(v -> {
                 DialogTitleBuilder titleBuilder = new DialogTitleBuilder(this)
                         .setTitle(R.string.tracker_details)
                         .setSubtitle(summary);
@@ -475,7 +481,6 @@ public class ScannerActivity extends BaseActivity {
                             })
                             .setEndIconContentDescription(R.string.exodus_link);
                 }
-                Spanned trackerList = getOrderedList(foundTrackerInfo);
                 new ScrollableDialogBuilder(this, hasSecondDegree[0] ?
                         new SpannableStringBuilder(trackerList)
                                 .append("\n\n")
@@ -486,8 +491,9 @@ public class ScannerActivity extends BaseActivity {
                         .setPositiveButton(R.string.ok, null)
                         .setNeutralButton(R.string.copy, (dialog, which, isChecked) -> {
                             ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                            ClipData clip = ClipData.newPlainText(getString(R.string.signatures), TextUtils.join("\n", foundTrackerInfo));
+                            ClipData clip = ClipData.newPlainText(getString(R.string.signatures), trackerList);
                             clipboard.setPrimaryClip(clip);
+                            Snackbar.make(trackersView, R.string.copied_to_clipboard, Snackbar.LENGTH_SHORT).show();
                         })
                         .show();
             });
@@ -543,9 +549,10 @@ public class ScannerActivity extends BaseActivity {
                     .append(getSmallerText(" (" + signatureCount[i] + ")"));
         }
         Set<String> foundLibNames = foundLibInfoMap.keySet();
-        List<Spannable> foundLibInfo = new ArrayList<>(foundLibInfoMap.values());
-        int totalLibsFound = foundLibInfo.size();
-        Collections.sort(foundLibInfo, (o1, o2) -> o1.toString().compareToIgnoreCase(o2.toString()));
+        List<Spannable> foundLibInfoList = new ArrayList<>(foundLibInfoMap.values());
+        int totalLibsFound = foundLibInfoList.size();
+        Collections.sort(foundLibInfoList, (o1, o2) -> o1.toString().compareToIgnoreCase(o2.toString()));
+        Spanned foundLibsInfo = getOrderedList(foundLibInfoList);
         String summary;
         if (totalLibsFound == 0) {
             summary = getString(R.string.no_libs);
@@ -557,8 +564,9 @@ public class ScannerActivity extends BaseActivity {
             ((TextView) findViewById(R.id.libs_title)).setText(summary);
             ((TextView) findViewById(R.id.libs_description)).setText(TextUtils.join(", ", foundLibNames));
             if (totalLibsFound == 0) return;
-            findViewById(R.id.libs).setOnClickListener(v ->
-                    new ScrollableDialogBuilder(this, getOrderedList(foundLibInfo))
+            MaterialCardView libsView = findViewById(R.id.libs);
+            libsView.setOnClickListener(v ->
+                    new ScrollableDialogBuilder(this, foundLibsInfo)
                             .setTitle(new DialogTitleBuilder(this)
                                     .setTitle(R.string.lib_details)
                                     .setSubtitle(summary)
@@ -566,8 +574,9 @@ public class ScannerActivity extends BaseActivity {
                             .setNegativeButton(R.string.ok, null)
                             .setNeutralButton(R.string.copy, (dialog, which, isChecked) -> {
                                 ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                                ClipData clip = ClipData.newPlainText(getString(R.string.signatures), TextUtils.join("\n", foundLibInfo));
+                                ClipData clip = ClipData.newPlainText(getString(R.string.signatures), foundLibsInfo);
                                 clipboard.setPrimaryClip(clip);
+                                Snackbar.make(libsView, R.string.copied_to_clipboard, Snackbar.LENGTH_SHORT).show();
                             })
                             .show());
             // Missing libs
@@ -624,13 +633,14 @@ public class ScannerActivity extends BaseActivity {
         Spannable tmpSpannable;
         int j = 0;
         for (Spannable spannable : spannableList) {
+            int len = spannable.length();
             tmpSpannable = new SpannableString(spannable);
             int finish = tmpSpannable.toString().indexOf("\n");
-            tmpSpannable.setSpan(new NumericSpan(40, 30, ++j), 0,
-                    (finish == -1 ? tmpSpannable.length() : finish), 0);
+            tmpSpannable.setSpan(new ListSpan(40, 30, ++j), 0, (finish == -1 ? len : finish),
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             if (finish != -1) {
-                tmpSpannable.setSpan(new EmptySpan(40, 30), finish + 1,
-                        tmpSpannable.length(), 0);
+                tmpSpannable.setSpan(new LeadingMarginSpan.Standard(40 + 30), finish + 1, len,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
             spannableStringBuilder.append(tmpSpannable).append("\n");
         }

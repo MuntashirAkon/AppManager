@@ -42,13 +42,13 @@ import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.db.entity.App;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
-import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.StoragePermission;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
+import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 
 public class BackupDialogFragment extends DialogFragment {
     public static final String TAG = "BackupDialogFragment";

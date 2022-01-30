@@ -6,12 +6,12 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.textview.MaterialTextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -107,8 +108,18 @@ public class WhatsNewDialogFragment extends DialogFragment {
 
     class WhatsNewRecyclerAdapter extends RecyclerView.Adapter<WhatsNewRecyclerAdapter.ViewHolder> {
         private final List<ApkWhatsNewFinder.Change> mAdapterList = new ArrayList<>();
+        private final int colorAdd;
+        private final int colorRemove;
+        private final int colorNeutral;
+        private final Typeface typefaceNormal;
+        private final Typeface typefaceMedium;
 
         WhatsNewRecyclerAdapter() {
+            colorAdd = ContextCompat.getColor(activity, R.color.stopped);
+            colorRemove = ContextCompat.getColor(activity, R.color.electric_red);
+            colorNeutral = UIUtils.getTextColorPrimary(activity);
+            typefaceNormal = Typeface.create("sans-serif", Typeface.NORMAL);
+            typefaceMedium = Typeface.create("sans-serif-medium", Typeface.NORMAL);
         }
 
         void setAdapterList(List<ApkWhatsNewFinder.Change> list) {
@@ -128,23 +139,27 @@ public class WhatsNewDialogFragment extends DialogFragment {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             ApkWhatsNewFinder.Change change = mAdapterList.get(position);
-            if (change.value.startsWith(newPkgInfo.packageName))
+            if (change.value.startsWith(newPkgInfo.packageName)) {
                 change.value = change.value.replaceFirst(newPkgInfo.packageName, "");
+            }
             switch (change.changeType) {
                 case ApkWhatsNewFinder.CHANGE_ADD:
                     holder.textView.setText("+ " + change.value);
-                    holder.textView.setTextColor(ContextCompat.getColor(activity, R.color.stopped));
-                    holder.textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, activity.getResources().getDimension(R.dimen.subtitle_font));
+                    holder.textView.setTextColor(colorAdd);
+                    holder.textView.setTypeface(typefaceNormal);
+                    holder.textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                     break;
                 case ApkWhatsNewFinder.CHANGE_INFO:
                     holder.textView.setText(change.value);
-                    holder.textView.setTextColor(ContextCompat.getColor(activity, R.color.textColorSecondary));
-                    holder.textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, activity.getResources().getDimension(R.dimen.title_font));
+                    holder.textView.setTextColor(colorNeutral);
+                    holder.textView.setTypeface(typefaceMedium);
+                    holder.textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
                     break;
                 case ApkWhatsNewFinder.CHANGE_REMOVED:
                     holder.textView.setText("- " + change.value);
-                    holder.textView.setTextColor(ContextCompat.getColor(activity, R.color.electric_red));
-                    holder.textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, activity.getResources().getDimension(R.dimen.subtitle_font));
+                    holder.textView.setTextColor(colorRemove);
+                    holder.textView.setTypeface(typefaceNormal);
+                    holder.textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                     break;
             }
         }
@@ -155,11 +170,11 @@ public class WhatsNewDialogFragment extends DialogFragment {
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
-            TextView textView;
+            MaterialTextView textView;
 
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
-                textView = (TextView) itemView;
+                textView = (MaterialTextView) itemView;
             }
         }
     }

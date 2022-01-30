@@ -2,36 +2,36 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context="io.github.muntashirakon.AppManager.main.MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <androidx.appcompat.widget.Toolbar
+        <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?android:colorBackground"
-            app:navigationIcon="@null" />
+            app:navigationIcon="@null"
+            tools:menu="@menu/activity_main_actions" />
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/progress_linear"
-            style="@style/Widget.MaterialComponents.LinearProgressIndicator"
+            style="@style/Widget.AppTheme.LinearProgressIndicator"
             android:indeterminate="true"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:indicatorColor="?colorAccent" />
+            android:layout_height="wrap_content" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    <io.github.muntashirakon.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
         android:focusable="false"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
@@ -44,7 +44,7 @@
             android:clipToPadding="false"
             tools:listitem="@layout/item_main" />
 
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </io.github.muntashirakon.widget.SwipeRefreshLayout>
 
     <io.github.muntashirakon.widget.MultiSelectionView
         android:id="@+id/selection_view"

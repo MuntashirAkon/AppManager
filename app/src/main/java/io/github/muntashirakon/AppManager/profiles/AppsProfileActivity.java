@@ -37,8 +37,11 @@ import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.details.LauncherIconCreator;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
-import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.dialog.TextInputDialogBuilder;
+
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getPrimaryText;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
 public class AppsProfileActivity extends BaseActivity implements NavigationBarView.OnItemSelectedListener,
         ViewPager.OnPageChangeListener {
@@ -148,10 +151,8 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
             for (Pair<CharSequence, ApplicationInfo> itemPair : itemPairs) {
                 items.add(itemPair.second.packageName);
                 boolean isSystem = (itemPair.second.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
-                itemNames.add(new SpannableStringBuilder(itemPair.first).append("\n")
-                        .append(UIUtils.getSmallerText(UIUtils.getSecondaryText(
-                                this, getString(isSystem ? R.string.system
-                                        : R.string.user)))));
+                itemNames.add(new SpannableStringBuilder(getPrimaryText(this, itemPair.first)).append("\n")
+                        .append(getSmallerText(getString(isSystem ? R.string.system : R.string.user))));
             }
             progressIndicator.hide();
             new SearchableMultiChoiceDialogBuilder<>(this, items, itemNames)

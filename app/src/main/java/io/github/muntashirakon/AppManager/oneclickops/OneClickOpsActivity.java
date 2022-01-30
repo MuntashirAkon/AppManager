@@ -36,19 +36,19 @@ import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
-import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
-import io.github.muntashirakon.AppManager.types.TextInputDropdownDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.ListItemCreator;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.dialog.TextInputDialogBuilder;
+import io.github.muntashirakon.dialog.TextInputDropdownDialogBuilder;
 
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpModeNames;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpModes;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpNames;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOps;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getPrimaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
 public class OneClickOpsActivity extends BaseActivity {
@@ -189,12 +189,11 @@ public class OneClickOpsActivity extends BaseActivity {
         }
         final ArrayList<String> trackerPackages = new ArrayList<>();
         final List<CharSequence> trackerPackagesWithTrackerCount = new ArrayList<>(trackerCounts.size());
-        for (ItemCount count : trackerCounts) {
-            trackerPackages.add(count.packageName);
-            trackerPackagesWithTrackerCount.add(new SpannableStringBuilder(count.packageLabel)
-                    .append("\n").append(getSecondaryText(this, getSmallerText(getResources()
-                            .getQuantityString(R.plurals.no_of_trackers, count.count,
-                                    count.count)))));
+        for (ItemCount tracker : trackerCounts) {
+            trackerPackages.add(tracker.packageName);
+            trackerPackagesWithTrackerCount.add(new SpannableStringBuilder(getPrimaryText(this, tracker.packageLabel))
+                    .append("\n").append(getSmallerText(getResources().getQuantityString(R.plurals.no_of_trackers,
+                            tracker.count, tracker.count))));
         }
         new SearchableMultiChoiceDialogBuilder<>(this, trackerPackages, trackerPackagesWithTrackerCount)
                 .setSelections(trackerPackages)
@@ -229,18 +228,14 @@ public class OneClickOpsActivity extends BaseActivity {
             UIUtils.displayShortToast(R.string.no_matching_package_found);
             return;
         }
-        ItemCount componentCount;
         SpannableStringBuilder builder;
         final ArrayList<String> selectedPackages = new ArrayList<>();
         List<CharSequence> packageNamesWithComponentCount = new ArrayList<>();
-        for (ItemCount count : componentCounts) {
-            componentCount = count;
-            builder = new SpannableStringBuilder(componentCount.packageLabel)
-                    .append("\n").append(getSecondaryText(this,
-                            getSmallerText(getResources().getQuantityString(
-                                    R.plurals.no_of_components, componentCount.count,
-                                    componentCount.count))));
-            selectedPackages.add(componentCount.packageName);
+        for (ItemCount component : componentCounts) {
+            builder = new SpannableStringBuilder(getPrimaryText(this, component.packageLabel))
+                    .append("\n").append(getSmallerText(getResources().getQuantityString(R.plurals.no_of_components,
+                            component.count, component.count)));
+            selectedPackages.add(component.packageName);
             packageNamesWithComponentCount.add(builder);
         }
         new SearchableMultiChoiceDialogBuilder<>(this, selectedPackages, packageNamesWithComponentCount)
@@ -311,18 +306,14 @@ public class OneClickOpsActivity extends BaseActivity {
             UIUtils.displayShortToast(R.string.no_matching_package_found);
             return;
         }
-        AppOpCount appOpCount;
         SpannableStringBuilder builder1;
         final ArrayList<String> selectedPackages = new ArrayList<>();
         List<CharSequence> packagesWithAppOpCount = new ArrayList<>();
-        for (AppOpCount opCount : appOpCounts) {
-            appOpCount = opCount;
-            builder1 = new SpannableStringBuilder(appOpCount.packageLabel)
-                    .append("\n").append(getSecondaryText(this,
-                            getSmallerText("(" + appOpCount.count + ") "
-                                    + TextUtils.joinSpannable(", ",
-                                    appOpToNames(appOpCount.appOps)))));
-            selectedPackages.add(appOpCount.packageName);
+        for (AppOpCount appOp : appOpCounts) {
+            builder1 = new SpannableStringBuilder(getPrimaryText(this, appOp.packageLabel))
+                    .append("\n").append(getSmallerText("(" + appOp.count + ") " + TextUtils.joinSpannable(", ",
+                            appOpToNames(appOp.appOps))));
+            selectedPackages.add(appOp.packageName);
             packagesWithAppOpCount.add(builder1);
         }
         new SearchableMultiChoiceDialogBuilder<>(this, selectedPackages, packagesWithAppOpCount)

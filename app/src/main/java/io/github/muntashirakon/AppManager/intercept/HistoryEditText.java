@@ -4,10 +4,10 @@ package io.github.muntashirakon.AppManager.intercept;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
-import androidx.preference.PreferenceManager;
 import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
+import androidx.preference.PreferenceManager;
 
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 
@@ -16,7 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.types.NoFilterArrayAdapter;
+import io.github.muntashirakon.widget.NoFilterArrayAdapter;
 
 public class HistoryEditText {
     private static final String DELIMITER = "';'";

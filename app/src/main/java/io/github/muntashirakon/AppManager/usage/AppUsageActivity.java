@@ -6,8 +6,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.RemoteException;
@@ -30,9 +29,9 @@ import androidx.annotation.GuardedBy;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
@@ -58,8 +57,9 @@ import io.github.muntashirakon.AppManager.utils.BetterActivityResult;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
-import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.widget.RecyclerViewWithEmptyView;
+import io.github.muntashirakon.widget.SwipeRefreshLayout;
+import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
 import static io.github.muntashirakon.AppManager.usage.UsageUtils.USAGE_LAST_BOOT;
 import static io.github.muntashirakon.AppManager.usage.UsageUtils.USAGE_TODAY;
@@ -125,8 +125,6 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
         recyclerView.setAdapter(mAppUsageAdapter);
 
         mSwipeRefresh = findViewById(R.id.swipe_refresh);
-        mSwipeRefresh.setColorSchemeColors(UIUtils.getAccentColor(this));
-        mSwipeRefresh.setProgressBackgroundColorSchemeColor(UIUtils.getPrimaryColor(this));
         mSwipeRefresh.setOnRefreshListener(this);
         mSwipeRefresh.setOnChildScrollUpCallback((parent, child) -> recyclerView.canScrollVertically(-1));
 
@@ -147,6 +145,7 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+        new FastScrollerBuilder(findViewById(R.id.scrollView)).useMd2Style().build();
         checkPermissions();
     }
 
@@ -222,7 +221,7 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
     private void setSortBy(@SortOrder int sort) {
         if (mAppUsageAdapter != null) {
             mAppUsageAdapter.setSortBy(sort);
-            mAppUsageAdapter.sortPackageUSList();
+            mAppUsageAdapter.sortPackageUsageInfoList();
             mAppUsageAdapter.notifyDataSetChanged();
         }
     }
@@ -288,7 +287,7 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
     private void setUsageSummary() {
         TextView timeUsed = findViewById(R.id.time_used);
         TextView timeRange = findViewById(R.id.time_range);
-        timeUsed.setText(Utils.getFormattedDuration(this, totalScreenTime));
+        timeUsed.setText(DateUtils.getFormattedDuration(this, totalScreenTime));
         switch (currentInterval) {
             case USAGE_TODAY:
                 timeRange.setText(R.string.usage_today);
@@ -308,7 +307,6 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
         @GuardedBy("mAdapterList")
         private final List<PackageUsageInfo> mAdapterList = new ArrayList<>();
         private final AppUsageActivity mActivity;
-        private final PackageManager mPackageManager;
         @SortOrder
         private int mSortBy;
 
@@ -344,7 +342,6 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
 
         AppUsageAdapter(@NonNull AppUsageActivity activity) {
             mActivity = activity;
-            mPackageManager = mActivity.getPackageManager();
             mSortBy = SORT_BY_SCREEN_TIME;
         }
 
@@ -353,7 +350,7 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
                 mAdapterList.clear();
                 mAdapterList.addAll(list);
             }
-            sortPackageUSList();
+            sortPackageUsageInfoList();
             notifyDataSetChanged();
         }
 
@@ -361,7 +358,7 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
             this.mSortBy = sortBy;
         }
 
-        private void sortPackageUSList() {
+        private void sortPackageUsageInfoList() {
             synchronized (mAdapterList) {
                 Collections.sort(mAdapterList, ((o1, o2) -> {
                     switch (mSortBy) {
@@ -370,9 +367,8 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
                         case SORT_BY_LAST_USED:
                             return -Long.compare(o1.lastUsageTime, o2.lastUsageTime);
                         case SORT_BY_MOBILE_DATA:
-                            Long o1MData = o1.mobileData.first + o1.mobileData.second;
-                            Long o2MData = o2.mobileData.first + o2.mobileData.second;
-                            return -o1MData.compareTo(o2MData);
+                            if (o1.mobileData == null) return o2.mobileData == null ? 0 : -1;
+                            return -o1.mobileData.compareTo(o2.mobileData);
                         case SORT_BY_PACKAGE_NAME:
                             return o1.packageName.compareToIgnoreCase(o2.packageName);
                         case SORT_BY_SCREEN_TIME:
@@ -380,9 +376,8 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
                         case SORT_BY_TIMES_OPENED:
                             return -Integer.compare(o1.timesOpened, o2.timesOpened);
                         case SORT_BY_WIFI_DATA:
-                            Long o1WData = o1.wifiData.first + o1.wifiData.second;
-                            Long o2WData = o2.wifiData.first + o2.wifiData.second;
-                            return -o1WData.compareTo(o2WData);
+                            if (o1.wifiData == null) return o2.wifiData == null ? 0 : -1;
+                            return -o1.wifiData.compareTo(o2.wifiData);
                     }
                     return 0;
                 }));
@@ -413,57 +408,54 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
         @SuppressLint("SetTextI18n")
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            final PackageUsageInfo packageUS;
+            final PackageUsageInfo usageInfo;
             synchronized (mAdapterList) {
-                packageUS = mAdapterList.get(position);
+                usageInfo = mAdapterList.get(position);
             }
-            final int percentUsage = (int) (packageUS.screenTime * 100f / totalScreenTime);
+            final int percentUsage = (int) (usageInfo.screenTime * 100f / totalScreenTime);
             // Set label (or package name on failure)
-            try {
-                ApplicationInfo applicationInfo = mPackageManager.getApplicationInfo(packageUS.packageName, 0);
-                holder.appLabel.setText(mPackageManager.getApplicationLabel(applicationInfo));
-                // Set icon
-                mActivity.imageLoader.displayImage(applicationInfo.packageName, applicationInfo, holder.appIcon);
-            } catch (PackageManager.NameNotFoundException e) {
-                holder.appLabel.setText(packageUS.packageName);
-                holder.appIcon.setImageDrawable(mPackageManager.getDefaultActivityIcon());
-            }
+            holder.appLabel.setText(usageInfo.appLabel);
+            // Set icon
+            mActivity.imageLoader.displayImage(usageInfo.packageName, usageInfo.applicationInfo, holder.appIcon);
             // Set user ID
             if (hasMultipleUsers) {
                 holder.iconFrame.setBackgroundResource(R.drawable.circle_with_padding);
                 holder.badge.setVisibility(View.VISIBLE);
-                holder.badge.setText(String.valueOf(packageUS.userId));
+                holder.badge.setText(String.valueOf(usageInfo.userId));
             } else {
                 holder.iconFrame.setBackgroundResource(0);
                 holder.badge.setVisibility(View.GONE);
             }
             // Set package name
-            holder.packageName.setText(packageUS.packageName);
+            holder.packageName.setText(usageInfo.packageName);
             // Set usage
-            long lastTimeUsed = packageUS.lastUsageTime;
+            long lastTimeUsed = usageInfo.lastUsageTime;
             if (lastTimeUsed > 1) {
                 holder.lastUsageDate.setText(DateUtils.formatDateTime(lastTimeUsed));
             }
             String screenTimesWithTimesOpened;
             // Set times opened
-            screenTimesWithTimesOpened = mActivity.getResources().getQuantityString(R.plurals.no_of_times_opened, packageUS.timesOpened, packageUS.timesOpened);
+            screenTimesWithTimesOpened = mActivity.getResources().getQuantityString(R.plurals.no_of_times_opened, usageInfo.timesOpened, usageInfo.timesOpened);
             // Set screen time
-            screenTimesWithTimesOpened += ", " + Utils.getFormattedDuration(mActivity, packageUS.screenTime);
+            screenTimesWithTimesOpened += ", " + DateUtils.getFormattedDuration(mActivity, usageInfo.screenTime);
             holder.screenTime.setText(screenTimesWithTimesOpened);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                // Set data usage
-                final AppUsageStatsManager.DataUsage mobileData = packageUS.mobileData;
-                if (mobileData.first != 0 || mobileData.second != 0) {
-                    holder.mobileDataUsage.setText("M: \u2191 " + Formatter.formatFileSize(mActivity, mobileData.first)
-                            + " \u2193 " + Formatter.formatFileSize(mActivity, mobileData.second));
-                } else holder.mobileDataUsage.setText("");
-                final AppUsageStatsManager.DataUsage wifiData = packageUS.wifiData;
-                if (wifiData.first != 0 || wifiData.second != 0) {
-                    holder.wifiDataUsage.setText("W: \u2191 " + Formatter.formatFileSize(mActivity, wifiData.first)
-                            + " \u2193 " + Formatter.formatFileSize(mActivity, wifiData.second));
-                } else holder.wifiDataUsage.setText("");
-
-            }
+            // Set data usage
+            AppUsageStatsManager.DataUsage mobileData = usageInfo.mobileData;
+            if (mobileData != null && (mobileData.first != 0 || mobileData.second != 0)) {
+                Drawable phoneIcon = ContextCompat.getDrawable(mActivity, R.drawable.ic_phone_android);
+                String dataUsage = String.format("  \u2191 %1$s \u2193 %2$s",
+                        Formatter.formatFileSize(mActivity, mobileData.first),
+                        Formatter.formatFileSize(mActivity, mobileData.second));
+                holder.mobileDataUsage.setText(UIUtils.setImageSpan(dataUsage, phoneIcon, holder.mobileDataUsage));
+            } else holder.mobileDataUsage.setText("");
+            AppUsageStatsManager.DataUsage wifiData = usageInfo.wifiData;
+            if (wifiData != null && (wifiData.first != 0 || wifiData.second != 0)) {
+                Drawable wifiIcon = ContextCompat.getDrawable(mActivity, R.drawable.ic_wifi);
+                String dataUsage = String.format("  \u2191 %1$s \u2193 %2$s",
+                        Formatter.formatFileSize(mActivity, wifiData.first),
+                        Formatter.formatFileSize(mActivity, wifiData.second));
+                holder.wifiDataUsage.setText(UIUtils.setImageSpan(dataUsage, wifiIcon, holder.wifiDataUsage));
+            } else holder.wifiDataUsage.setText("");
             // Set usage percentage
             holder.percentUsage.setText(String.format(Locale.ROOT, "%d%%", percentUsage));
             holder.usageIndicator.show();
@@ -472,13 +464,13 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
             holder.itemView.setOnClickListener(v -> {
                 try {
                     PackageUsageInfo packageUS1 = AppUsageStatsManager.getInstance(mActivity).getUsageStatsForPackage(
-                            packageUS.packageName,
+                            usageInfo.packageName,
                             mActivity.currentInterval,
-                            packageUS.userId);
-                    packageUS1.copyOthers(packageUS);
+                            usageInfo.userId);
+                    packageUS1.copyOthers(usageInfo);
                     AppUsageDetailsDialogFragment appUsageDetailsDialogFragment = new AppUsageDetailsDialogFragment();
                     Bundle args = new Bundle();
-                    args.putParcelable(AppUsageDetailsDialogFragment.ARG_PACKAGE_US, packageUS1);
+                    args.putParcelable(AppUsageDetailsDialogFragment.ARG_PACKAGE_USAGE_INFO, packageUS1);
                     appUsageDetailsDialogFragment.setArguments(args);
                     appUsageDetailsDialogFragment.show(mActivity.getSupportFragmentManager(), AppUsageDetailsDialogFragment.TAG);
                 } catch (RemoteException e) {

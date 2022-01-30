@@ -12,6 +12,7 @@ import android.widget.Filterable;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
 import androidx.collection.SparseArrayCompat;
@@ -61,15 +62,17 @@ public class LogViewerRecyclerAdapter extends RecyclerView.Adapter<LogViewerRecy
 
     private static int[] tagColors;
 
+    @ColorInt
     private static int getBackgroundColorForLogLevel(Context context, int logLevel) {
         Integer result = BACKGROUND_COLORS.get(logLevel);
-        if (result == null) result = UIUtils.getPrimaryColor(context);
+        if (result == null) return UIUtils.getPrimaryColor(context);
         return ContextCompat.getColor(context, result);
     }
 
+    @ColorInt
     private static int getForegroundColorForLogLevel(Context context, int logLevel) {
         Integer result = FOREGROUND_COLORS.get(logLevel);
-        if (result == null) result = UIUtils.getTextColorPrimary(context);
+        if (result == null) return UIUtils.getAccentColor(context);
         return ContextCompat.getColor(context, result);
     }
 

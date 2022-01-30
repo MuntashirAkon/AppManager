@@ -7,28 +7,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:focusable="true"
-    android:paddingStart="@dimen/padding_medium"
-    android:paddingTop="@dimen/padding_very_small"
-    android:paddingEnd="@dimen/padding_medium"
-    android:paddingBottom="@dimen/padding_very_small">
+    android:paddingHorizontal="@dimen/padding_medium"
+    android:paddingVertical="@dimen/padding_very_small">
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/launch"
+        style="@style/Widget.AppTheme.Button.ElevatedButton.Dense"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_gravity="center_vertical"
         android:layout_weight="1"
         android:gravity="center"
-        android:minWidth="0dp"
-        android:minHeight="0dp"
         android:singleLine="true"
-        android:layout_marginStart="@dimen/padding_small"
-        android:layout_marginEnd="@dimen/padding_small"
-        android:layout_marginTop="@dimen/padding_very_small"
-        android:layout_marginBottom="@dimen/padding_very_small"
-        android:text="@string/launch"
-        style="@style/AppTheme.TextAppearance.Button"
-        android:textStyle="bold" />
+        android:ellipsize="marquee"
+        android:layout_marginHorizontal="@dimen/padding_small"
+        android:layout_marginVertical="@dimen/padding_very_small"
+        android:text="@string/launch" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -41,14 +35,13 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="@dimen/padding_small"
             android:layout_weight="0"
-            android:contentDescription="@string/app_name" />
+            android:contentDescription="@string/str_logo" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical">
-
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/label"
@@ -58,8 +51,7 @@
                 android:gravity="center"
                 android:singleLine="true"
                 android:textIsSelectable="true"
-                android:textStyle="bold"
-                android:textColor="?android:attr/textColorPrimary"
+                android:textAppearance="?android:attr/textAppearanceListItem"
                 tools:text="@tools:sample/lorem" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -67,6 +59,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textIsSelectable="true"
+                android:textAppearance="?attr/textAppearanceBodySmall"
                 android:textSize="11sp"
                 tools:text="@tools:sample/lorem"
                 tools:ignore="SmallSp" />
@@ -77,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:textIsSelectable="true"
-                android:textSize="12sp"
+                android:textAppearance="?attr/textAppearanceBodySmall"
                 tools:text="@tools:sample/lorem" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -85,6 +78,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textIsSelectable="true"
+                android:textAppearance="?attr/textAppearanceBodySmall"
                 android:textSize="10sp"
                 tools:text="@tools:sample/lorem"
                 tools:ignore="SmallSp" />
@@ -94,6 +88,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textIsSelectable="true"
+                android:textAppearance="?attr/textAppearanceBodySmall"
                 android:textSize="9sp"
                 tools:text="@tools:sample/lorem"
                 tools:ignore="SmallSp" />
@@ -103,6 +98,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textIsSelectable="true"
+                android:textAppearance="?attr/textAppearanceBodySmall"
                 android:textSize="9sp"
                 android:visibility="gone"
                 tools:text="@tools:sample/lorem"
@@ -112,14 +108,11 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/block_component"
-            style="@android:style/Widget.Material.ImageButton"
-            android:background="?android:selectableItemBackgroundBorderless"
+            style="@style/Widget.AppTheme.Button.IconButton"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="center"
             android:layout_weight="0"
-            app:iconPadding="0dp"
-            app:iconGravity="textTop"
             app:iconSize="30dp"
             tools:icon="@drawable/ic_block_black_24dp" />
 
@@ -131,8 +124,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="monospace"
         android:textIsSelectable="true"
-        android:textSize="12sp"
-        android:textStyle="normal"
+        android:textAppearance="?attr/textAppearanceBodySmall"
         tools:text="@tools:sample/lorem" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -142,33 +134,29 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/create_shortcut_btn"
+            style="@style/Widget.AppTheme.Button.OutlinedButton.Dense"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/padding_small"
-            android:layout_marginEnd="@dimen/padding_small"
-            android:layout_marginTop="@dimen/padding_very_small"
-            android:layout_marginBottom="@dimen/padding_very_small"
+            android:layout_marginHorizontal="@dimen/padding_small"
+            android:layout_marginVertical="@dimen/padding_very_small"
             android:layout_weight="1"
-            android:minWidth="0dp"
-            android:minHeight="0dp"
             android:singleLine="true"
-            style="@style/AppTheme.TextAppearance.Button"
-            android:text="@string/create_shortcut" />
+            android:textSize="11sp"
+            android:text="@string/create_shortcut"
+            tools:ignore="SmallSp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/edit_shortcut_btn"
+            style="@style/Widget.AppTheme.Button.OutlinedButton.Dense"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/padding_small"
-            android:layout_marginEnd="@dimen/padding_small"
-            android:layout_marginTop="@dimen/padding_very_small"
-            android:layout_marginBottom="@dimen/padding_very_small"
+            android:layout_marginHorizontal="@dimen/padding_small"
+            android:layout_marginVertical="@dimen/padding_very_small"
             android:layout_weight="1"
-            android:minWidth="0dp"
-            android:minHeight="0dp"
             android:singleLine="true"
-            style="@style/AppTheme.TextAppearance.Button"
-            android:text="@string/edit_shortcut" />
+            android:textSize="11sp"
+            android:text="@string/edit_shortcut"
+            tools:ignore="SmallSp" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

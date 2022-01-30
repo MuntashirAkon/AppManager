@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -7,10 +6,8 @@
     android:orientation="horizontal"
     android:focusable="true"
     android:background="@drawable/item_transparent"
-    android:paddingStart="@dimen/padding_medium"
-    android:paddingTop="@dimen/padding_small"
-    android:paddingEnd="@dimen/padding_medium"
-    android:paddingBottom="@dimen/padding_medium">
+    android:paddingHorizontal="@dimen/padding_medium"
+    android:paddingVertical="@dimen/padding_medium">
 
     <View
         android:id="@+id/item_icon"
@@ -24,8 +21,7 @@
         android:layout_height="wrap_content"
         android:gravity="start"
         android:layout_weight="1"
-        android:textColor="?android:attr/textColorPrimary"
-        android:textSize="@dimen/title_font"
+        android:textAppearance="?android:attr/textAppearanceListItem"
         tools:text="@tools:sample/lorem[5]" />
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -34,7 +30,7 @@
         android:layout_height="wrap_content"
         android:gravity="end"
         android:layout_weight="1"
-        android:textSize="@dimen/subtitle_font"
+        android:textColor="?android:attr/textColorSecondary"
         android:textIsSelectable="true"
         tools:text="@tools:sample/lorem[5]" />
 

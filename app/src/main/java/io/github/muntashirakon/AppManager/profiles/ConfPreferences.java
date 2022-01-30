@@ -5,27 +5,30 @@ package io.github.muntashirakon.AppManager.profiles;
 import android.content.pm.UserInfo;
 import android.os.Bundle;
 import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceDataStore;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
+
 import com.android.internal.util.TextUtils;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
-import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.backup.BackupFlags;
-import io.github.muntashirakon.AppManager.users.Users;
-import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
-import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
-import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
-import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.backup.BackupFlags;
+import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
+import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
+import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 
 public class ConfPreferences extends PreferenceFragmentCompat {
     AppsProfileActivity activity;

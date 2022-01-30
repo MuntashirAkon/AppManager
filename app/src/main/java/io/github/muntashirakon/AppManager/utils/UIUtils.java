@@ -4,14 +4,17 @@ package io.github.muntashirakon.AppManager.utils;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.BackgroundColorSpan;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.ImageSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.text.style.TypefaceSpan;
@@ -24,19 +27,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Dimension;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.PluralsRes;
-import androidx.annotation.Px;
 import androidx.annotation.StringRes;
 import androidx.annotation.UiThread;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import com.google.android.material.color.MaterialColors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.Locale;
@@ -65,21 +66,26 @@ public class UIUtils {
     public static Spannable getColoredText(@NonNull CharSequence text, int color) {
         Spannable spannable = charSequenceToSpannable(text);
         spannable.setSpan(new ForegroundColorSpan(color), 0, spannable.length(),
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return spannable;
+    }
+
+    @NonNull
+    public static Spannable setTypefaceSpan(@NonNull CharSequence text, @NonNull String family) {
+        Spannable spannable = charSequenceToSpannable(text);
+        spannable.setSpan(new TypefaceSpan(family), 0, spannable.length(),
                 Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
         return spannable;
     }
 
     @NonNull
     public static Spannable getMonospacedText(@NonNull CharSequence text) {
-        Spannable spannable = charSequenceToSpannable(text);
-        spannable.setSpan(new TypefaceSpan("monospace"), 0, spannable.length(),
-                Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
-        return spannable;
+        return setTypefaceSpan(text, "monospace");
     }
 
     @NonNull
     public static Spannable getPrimaryText(@NonNull Context context, @NonNull CharSequence text) {
-        return getColoredText(text, getTextColorPrimary(context));
+        return getColoredText(setTypefaceSpan(text, "sans-serif-medium"), getTextColorPrimary(context));
     }
 
     @NonNull
@@ -115,8 +121,8 @@ public class UIUtils {
     public static Spannable getTitleText(Context context, @NonNull CharSequence text) {
         Spannable spannable = charSequenceToSpannable(text);
         spannable.setSpan(new AbsoluteSizeSpan(getTitleSize(context)), 0, spannable.length(),
-                Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-        return getColoredText(spannable, getTextColorPrimary(context));
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return getPrimaryText(context, spannable);
     }
 
     @NonNull
@@ -148,14 +154,36 @@ public class UIUtils {
 
     @NonNull
     public static Spannable getItalicString(@NonNull CharSequence text) {
-        Spannable ss = sSpannableFactory.newSpannable(text);
+        Spannable ss = charSequenceToSpannable(text);
         ss.setSpan(new StyleSpan(Typeface.ITALIC), 0, ss.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         return ss;
     }
 
-    @TargetApi(29)
+    @NonNull
+    public static Spannable setImageSpan(@NonNull CharSequence text, @Nullable Drawable image, @NonNull TextView tv) {
+        return setImageSpan(text, image, tv, 0, 1);
+    }
+
+    @NonNull
+    public static Spannable setImageSpan(@NonNull CharSequence text, @Nullable Drawable image, @NonNull TextView tv, int start) {
+        return setImageSpan(text, image, tv, start, start + 1);
+    }
+
+    @NonNull
+    public static Spannable setImageSpan(@NonNull CharSequence text, @Nullable Drawable image, @NonNull TextView tv, int start, int end) {
+        Spannable spannable = charSequenceToSpannable(text);
+        if (image == null) {
+            return spannable;
+        }
+        Paint textPaint = tv.getPaint();
+        Paint.FontMetricsInt fontMetrics = textPaint.getFontMetricsInt();
+        image.setBounds(0, fontMetrics.ascent, fontMetrics.bottom - fontMetrics.ascent, fontMetrics.bottom);
+        spannable.setSpan(new ImageSpan(image), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return spannable;
+    }
+
+    @TargetApi(Build.VERSION_CODES.Q)
     public static int getSystemColor(@NonNull Context context, int resAttrColor) { // Ex. android.R.attr.colorPrimary
-        // Get accent color
         TypedValue typedValue = new TypedValue();
         ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(context,
                 android.R.style.Theme_DeviceDefault_DayNight);
@@ -163,27 +191,20 @@ public class UIUtils {
         return typedValue.data;
     }
 
-    public static int getThemeColor(@NonNull Context context, int resAttrColor) { // Ex. android.R.attr.colorPrimary
-        // Get accent color
-        TypedValue typedValue = new TypedValue();
-        context.getTheme().resolveAttribute(resAttrColor, typedValue, true);
-        return typedValue.data;
-    }
-
     public static int getAccentColor(@NonNull Context context) {
-        return ContextCompat.getColor(context, R.color.colorAccent);
+        return MaterialColors.getColor(context, R.attr.colorAccent, -1);
     }
 
     public static int getPrimaryColor(@NonNull Context context) {
-        return ContextCompat.getColor(context, R.color.colorPrimary);
+        return MaterialColors.getColor(context, R.attr.colorPrimary, -1);
     }
 
     public static int getTextColorPrimary(@NonNull Context context) {
-        return ContextCompat.getColor(context, R.color.textColorPrimary);
+        return MaterialColors.getColor(context, R.attr.colorOnBackground, -1);
     }
 
     public static int getTextColorSecondary(@NonNull Context context) {
-        return ContextCompat.getColor(context, R.color.textColorSecondary);
+        return MaterialColors.getColor(context, R.attr.colorOnSurface, -1);
     }
 
     public static int getTitleSize(@NonNull Context context) {
@@ -192,27 +213,6 @@ public class UIUtils {
 
     public static int getSubtitleSize(@NonNull Context context) {
         return context.getResources().getDimensionPixelSize(R.dimen.subtitle_font);
-    }
-
-    @Px
-    public static int dpToPx(@NonNull Context context, int dp) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
-                context.getResources().getDisplayMetrics());
-    }
-
-    @Px
-    public static int dpToPx(@NonNull Context context, float dp) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
-    }
-
-    @Px
-    public static int spToPx(@NonNull Context context, float sp) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, context.getResources().getDisplayMetrics());
-    }
-
-    @Dimension
-    public static int pxToDp(@NonNull Context context, int pixel) {
-        return (int) ((float) pixel / context.getResources().getDisplayMetrics().density);
     }
 
     @UiThread
@@ -229,7 +229,7 @@ public class UIUtils {
 
     @NonNull
     public static AlertDialog getProgressDialog(@NonNull FragmentActivity activity, @Nullable CharSequence text) {
-        View view = activity.getLayoutInflater().inflate(R.layout.dialog_progress, null);
+        View view = activity.getLayoutInflater().inflate(R.layout.dialog_progress2, null);
         if (text != null) {
             TextView tv = view.findViewById(android.R.id.text1);
             tv.setText(text);
@@ -242,7 +242,7 @@ public class UIUtils {
 
     @NonNull
     public static AlertDialog getProgressDialog(@NonNull FragmentActivity activity, @StringRes int text) {
-        View view = activity.getLayoutInflater().inflate(R.layout.dialog_progress, null);
+        View view = activity.getLayoutInflater().inflate(R.layout.dialog_progress2, null);
         TextView tv = view.findViewById(android.R.id.text1);
         tv.setText(text);
         return new MaterialAlertDialogBuilder(activity)

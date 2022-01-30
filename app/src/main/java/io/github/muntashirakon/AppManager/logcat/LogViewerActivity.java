@@ -36,9 +36,7 @@ import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.SearchView;
-import androidx.core.content.ContextCompat;
 import androidx.cursoradapter.widget.CursorAdapter;
 import androidx.cursoradapter.widget.SimpleCursorAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -48,6 +46,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -56,6 +55,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Set;
 
 import io.github.muntashirakon.AppManager.AppManager;
@@ -82,8 +82,6 @@ import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
 import io.github.muntashirakon.AppManager.settings.LogViewerPreferences;
 import io.github.muntashirakon.AppManager.settings.SettingsActivity;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
-import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
-import io.github.muntashirakon.AppManager.types.TextInputDropdownDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.BetterActivityResult;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
@@ -91,6 +89,8 @@ import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.StoragePermission;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
+import io.github.muntashirakon.dialog.TextInputDialogBuilder;
+import io.github.muntashirakon.dialog.TextInputDropdownDialogBuilder;
 import io.github.muntashirakon.io.Path;
 import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
@@ -474,9 +474,8 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
             if (mLogListAdapter != null) {
                 mLogListAdapter.clear();
             }
-            Snackbar.make(findViewById(android.R.id.content), R.string.log_cleared, Snackbar.LENGTH_LONG)
-                    .setAction(getString(R.string.undo), v -> startMainLog())
-                    .setActionTextColor(ContextCompat.getColor(this, R.color.colorAccent))
+            Snackbar.make(recyclerView, R.string.log_cleared, Snackbar.LENGTH_LONG)
+                    .setAction(R.string.undo, v -> startMainLog())
                     .show();
             return true;
         } else if (itemId == R.id.menu_log_level) {
@@ -601,18 +600,19 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
                 .setTitle(R.string.filter_choice)
                 .setIcon(R.drawable.ic_search)
                 .setView(view)
+                .setNegativeButton(R.string.close, null)
                 .show();
 
-        LinearLayoutCompat tag = view.findViewById(R.id.dialog_searchby_tag_linear);
-        LinearLayoutCompat pid = view.findViewById(R.id.dialog_searchby_pid_linear);
+        TextInputLayout tag = view.findViewById(R.id.search_by_tag);
+        TextInputLayout pid = view.findViewById(R.id.search_by_pid);
 
-        TextView tagText = view.findViewById(R.id.dialog_searchby_tag_text);
-        TextView pidText = view.findViewById(R.id.dialog_searchby_pid_text);
+        TextView tagText = tag.getEditText();
+        TextView pidText = pid.getEditText();
 
-        tagText.setText(logLine.getTag());
-        pidText.setText(String.valueOf(logLine.getProcessId()));
+        Objects.requireNonNull(tagText).setText(logLine.getTag());
+        Objects.requireNonNull(pidText).setText(String.valueOf(logLine.getProcessId()));
 
-        tag.setOnClickListener(v -> {
+        tag.setEndIconOnClickListener(v -> {
             String tagQuery = (logLine.getTag().contains(" ")) ? ('"' + logLine.getTag() + '"') : logLine.getTag();
             setSearchText(SearchCriteria.TAG_KEYWORD + tagQuery);
             dialog.dismiss();
@@ -620,7 +620,7 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
             /*searchEditText.setSelection(searchEditText.length());*/
         });
 
-        pid.setOnClickListener(v -> {
+        pid.setEndIconOnClickListener(v -> {
             setSearchText(SearchCriteria.PID_KEYWORD + logLine.getProcessId());
             dialog.dismiss();
             //TODO: put the cursor at the end
@@ -653,7 +653,7 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
 
                 footer.setOnClickListener(v -> new TextInputDropdownDialogBuilder(this, R.string.text_filter_text)
                         .setTitle(R.string.add_filter)
-                        .setDropdownItems(new ArrayList<>(mSearchSuggestionsSet), true)
+                        .setDropdownItems(new ArrayList<>(mSearchSuggestionsSet), -1, true)
                         .setPositiveButton(android.R.string.ok, (dialog1, which, inputText, isChecked) ->
                                 handleNewFilterText(inputText == null ? "" : inputText.toString(), logFilterAdapter))
                         .setNegativeButton(R.string.cancel, null)

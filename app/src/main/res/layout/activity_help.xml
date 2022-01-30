@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -23,7 +22,8 @@
             android:layout_height="wrap_content"
             android:paddingHorizontal="@dimen/padding_medium"
             android:orientation="horizontal"
-            android:visibility="gone">
+            android:visibility="gone"
+            tools:visibility="visible">
 
             <androidx.appcompat.widget.SearchView
                 android:id="@+id/search_bar"
@@ -34,24 +34,20 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/previous_button"
-                style="@android:style/Widget.Material.ImageButton"
+                style="@style/Widget.AppTheme.Button.IconButton"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center_vertical"
                 app:icon="@drawable/ic_expand_less_white_24dp"
-                app:iconPadding="0dp"
-                app:iconGravity="textTop"
                 app:iconSize="30dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/next_button"
-                style="@android:style/Widget.Material.ImageButton"
+                style="@style/Widget.AppTheme.Button.IconButton"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center_vertical"
                 app:icon="@drawable/ic_expand_more_white_24dp"
-                app:iconPadding="0dp"
-                app:iconGravity="textTop"
                 app:iconSize="30dp" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>

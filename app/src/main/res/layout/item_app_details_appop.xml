@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later -->
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -6,10 +5,8 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:focusable="true"
-    android:paddingStart="@dimen/padding_medium"
-    android:paddingTop="@dimen/padding_very_small"
-    android:paddingEnd="@dimen/padding_medium"
-    android:paddingBottom="@dimen/padding_very_small">
+    android:paddingHorizontal="@dimen/padding_medium"
+    android:paddingVertical="@dimen/padding_very_small">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="0dp"
@@ -21,36 +18,36 @@
             android:id="@+id/op_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="?android:attr/textColorPrimary"
+            android:textAppearance="?android:attr/textAppearanceListItem"
             android:textIsSelectable="true"
-            android:textStyle="bold"
             tools:text="@tools:sample/lorem" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/op_mode_running_duration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
+            android:textAppearance="?attr/textAppearanceBodySmall"
             tools:text="@tools:sample/lorem" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/op_accept_reject_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
+            android:textAppearance="?attr/textAppearanceBodySmall"
             tools:text="@tools:sample/lorem" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/perm_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
+            android:textAppearance="?attr/textAppearanceBodySmall"
             tools:text="@tools:sample/lorem" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/perm_protection_level"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceBodySmall"
             android:textSize="10sp"
             tools:ignore="SmallSp"
             tools:text="@tools:sample/lorem" />
@@ -60,7 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textIsSelectable="true"
-            android:textSize="12sp"
+            android:textAppearance="?attr/textAppearanceBodySmall"
             tools:text="@tools:sample/lorem" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -68,7 +65,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textIsSelectable="true"
-            android:textSize="12sp"
+            android:textAppearance="?attr/textAppearanceBodySmall"
             tools:text="@tools:sample/lorem" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -76,7 +73,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textIsSelectable="true"
-            android:textSize="12sp"
+            android:textAppearance="?attr/textAppearanceBodySmall"
             tools:text="@tools:sample/lorem" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
@@ -85,7 +82,7 @@
         android:id="@+id/perm_toggle_btn"
         android:layout_width="56dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center|center_horizontal|center_vertical"
+        android:layout_gravity="center"
         android:layout_weight="0"
         android:clickable="false"
         android:focusable="false" />

@@ -7,9 +7,9 @@
         android:layout_width="@dimen/design_bottom_navigation_item_max_width"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/design_bottom_navigation_margin"
-        android:layout_marginBottom="@dimen/design_bottom_navigation_margin"
-        android:duplicateParentState="true">
+        android:layout_marginVertical="@dimen/design_bottom_navigation_margin"
+        android:duplicateParentState="true"
+        tools:theme="@style/AppTheme">
 
         <View
             android:id="@+id/item_active_indicator_view"
@@ -17,10 +17,10 @@
             android:layout_height="0dp"
             android:layout_gravity="center" />
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/item_icon"
             android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:contentDescription="@null"
             android:duplicateParentState="true"
@@ -35,9 +35,10 @@
         android:paddingBottom="@dimen/design_bottom_navigation_label_padding"
         android:clipChildren="false"
         android:clipToPadding="false"
-        android:duplicateParentState="true">
+        android:duplicateParentState="true"
+        tools:theme="@style/AppTheme">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/item_small_label_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -48,7 +49,7 @@
             android:textSize="@dimen/design_bottom_navigation_text_size"
             tools:text="@android:string/cancel" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/item_large_label_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

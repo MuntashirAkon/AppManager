@@ -502,10 +502,19 @@ public final class PackageUtils {
     }
 
     @Nullable
-    public static String[] getPermissionsForPackage(String packageName, @UserIdInt int userHandle)
+    public static String[] getPermissionsForPackage(String packageName, @UserIdInt int userId)
             throws PackageManager.NameNotFoundException, RemoteException {
-        PackageInfo info = PackageManagerCompat.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS, userHandle);
+        PackageInfo info = PackageManagerCompat.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS, userId);
         return info.requestedPermissions;
+    }
+
+    @Nullable
+    public static ApplicationInfo getApplicationInfo(@NonNull String packageName, @UserIdInt int userId) {
+        try {
+            return AppManager.getIPackageManager().getApplicationInfo(packageName, flagMatchUninstalled, userId);
+        } catch (Throwable ignore) {
+        }
+        return null;
     }
 
     @NonNull
@@ -541,23 +550,8 @@ public final class PackageUtils {
         return appLabels;
     }
 
-    public static boolean isInstalled(@NonNull PackageManager packageManager, String packageName) {
-        ApplicationInfo applicationInfo = null;
-        try {
-            applicationInfo = packageManager.getApplicationInfo(packageName, 0);
-        } catch (PackageManager.NameNotFoundException ignore) {
-        }
-        return applicationInfo != null;
-    }
-
-    public static int getAppUid(@NonNull PackageManager packageManager, String packageName) {
-        ApplicationInfo applicationInfo;
-        try {
-            applicationInfo = packageManager.getApplicationInfo(packageName, 0);
-            return applicationInfo.uid;
-        } catch (PackageManager.NameNotFoundException ignore) {
-        }
-        return 0;
+    public static int getAppUid(@Nullable ApplicationInfo applicationInfo) {
+        return applicationInfo != null ? applicationInfo.uid : 0;
     }
 
     public static int getAppUid(@NonNull UserPackagePair pair) {

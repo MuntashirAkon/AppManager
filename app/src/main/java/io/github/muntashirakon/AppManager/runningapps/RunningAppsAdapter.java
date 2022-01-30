@@ -18,6 +18,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.material.button.MaterialButton;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -237,7 +239,7 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<RunningAppsAd
 
     static class ViewHolder extends MultiSelectionView.ViewHolder {
         ImageView icon;
-        ImageView more;
+        MaterialButton more;
         TextView processName;
         TextView packageName;
         TextView processIds;

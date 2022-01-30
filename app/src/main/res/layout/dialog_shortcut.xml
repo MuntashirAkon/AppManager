@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: ISC AND GPL-3.0-or-later -->
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -11,11 +10,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingStart="@dimen/padding_medium"
-        android:paddingEnd="@dimen/padding_medium">
+        android:paddingVertical="@dimen/padding_small"
+        android:paddingHorizontal="@dimen/padding_medium">
 
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/AppTheme.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/shortcut_name"
@@ -24,7 +22,6 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/shortcut_name"
-                style="@style/AppTheme.TextAppearance.Input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
@@ -33,7 +30,6 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/AppTheme.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/package_name"
@@ -42,7 +38,6 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/package_name"
-                style="@style/AppTheme.TextAppearance.Input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
@@ -51,7 +46,6 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/AppTheme.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/class_name"
@@ -60,7 +54,6 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/class_name"
-                style="@style/AppTheme.TextAppearance.Input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
@@ -74,7 +67,6 @@
             android:orientation="horizontal">
 
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/AppTheme.TextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -84,7 +76,6 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/insert_icon"
-                    style="@style/AppTheme.TextAppearance.Input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
@@ -94,12 +85,13 @@
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/insert_icon_btn"
-                android:layout_width="50dp"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/icon_size"
                 android:layout_marginStart="@dimen/padding_small"
                 android:layout_weight="0"
+                android:layout_gravity="center"
                 app:srcCompat="@drawable/ic_image_outline"
-                tools:ignore="contentDescription" />
+                android:contentDescription="@string/icon_picker" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.appcompat.widget.LinearLayoutCompat>

@@ -1,26 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<com.google.android.material.card.MaterialCardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.button.MaterialButton xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Widget.AppTheme.Button.TextButton"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:focusable="true"
-    android:background="@drawable/item_transparent"
-    app:cardBackgroundColor="@android:color/transparent"
-    app:cardCornerRadius="@dimen/padding_medium"
-    app:cardElevation="0dp">
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/item_text"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:focusable="false"
-        android:gravity="center"
-        android:padding="16dp"
-        android:text="@string/uninstall"
-        android:textSize="@dimen/title_font"
-        android:textColor="?android:attr/colorAccent"
-        app:drawableTopCompat="@drawable/ic_trash_can_outline" />
-
-</com.google.android.material.card.MaterialCardView>
+    android:focusable="false"
+    android:gravity="center"
+    android:padding="16dp"
+    app:shapeAppearanceOverlay="@style/ShapeAppearance.AppTheme.SmallComponent"
+    android:textAppearance="?android:attr/textAppearanceListItem"
+    tools:text="@string/uninstall"
+    tools:drawableTopCompat="@drawable/ic_trash_can_outline" />

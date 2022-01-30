@@ -28,7 +28,6 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
@@ -53,6 +52,8 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.reflow.ReflowMenuViewWrapper;
 import io.github.muntashirakon.widget.MultiSelectionView;
+import io.github.muntashirakon.widget.SwipeRefreshLayout;
+import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
 public class RunningAppsActivity extends BaseActivity implements MultiSelectionView.OnSelectionChangeListener,
         ReflowMenuViewWrapper.OnItemSelectedListener, SearchView.OnQueryTextListener,
@@ -173,6 +174,7 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
             mSwapInfoChartChildren[i] = mSwapInfoChart.getChildAt(i);
         }
         mDeviceMemoryInfo = new DeviceMemoryInfo();
+        new FastScrollerBuilder(findViewById(R.id.scrollView)).useMd2Style().build();
 
         // Set observers
         mModel.observeKillProcess().observe(this, processInfo -> {

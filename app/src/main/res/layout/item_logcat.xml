@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: WTFPL AND GPL-3.0-or-later -->
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -13,14 +12,12 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="0"
-        android:paddingStart="3dp"
-        android:paddingEnd="3dp"
-        android:paddingTop="4dp"
-        android:paddingBottom="4dp"
+        android:paddingHorizontal="3dp"
+        android:paddingVertical="4dp"
         tools:background="#FFFFCC99"
         android:gravity="center_vertical"
         android:maxLines="1"
-        android:textSize="12sp"
+        android:textAppearance="?attr/textAppearanceLabelMedium"
         android:typeface="monospace"
         tools:text="D" />
 
@@ -29,10 +26,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:paddingStart="3dp"
-        android:paddingEnd="3dp"
-        android:paddingTop="4dp"
-        android:paddingBottom="4dp"
+        android:paddingHorizontal="3dp"
+        android:paddingVertical="4dp"
         android:orientation="vertical">
 
         <androidx.appcompat.widget.LinearLayoutCompat
@@ -45,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:maxLines="1"
                 android:paddingEnd="5dp"
-                android:textSize="10sp"
+                android:textAppearance="@style/TextAppearance.AppTheme.LabelSmaller"
                 android:typeface="monospace"
                 tools:text="@tools:sample/date/ddmmyy"
                 tools:ignore="RtlSymmetry,SmallSp" />
@@ -56,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:maxLines="1"
                 android:paddingEnd="5dp"
-                android:textSize="10sp"
+                android:textAppearance="@style/TextAppearance.AppTheme.LabelSmaller"
                 android:typeface="monospace"
                 tools:ignore="RtlSymmetry,SmallSp"
                 tools:text="6177" />
@@ -69,7 +64,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textSize="14sp"
+            android:textAppearance="?attr/textAppearanceTitleSmall"
             android:typeface="monospace"
             tools:text="SomeActivity" />
 
@@ -79,9 +74,8 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:singleLine="true"
-            android:textSize="12sp"
+            android:textAppearance="?attr/textAppearanceBodySmall"
             android:typeface="monospace"
-            android:textColor="?android:attr/textColorPrimary"
             tools:text="@tools:sample/lorem/random" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>

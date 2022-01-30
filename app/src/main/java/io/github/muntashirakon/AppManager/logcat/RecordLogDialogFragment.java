@@ -12,18 +12,17 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
-import io.github.muntashirakon.AppManager.logcat.helper.SaveLogHelper;
-import io.github.muntashirakon.AppManager.logcat.helper.ServiceHelper;
-import io.github.muntashirakon.AppManager.logcat.helper.WidgetHelper;
-
 import java.util.Arrays;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.logcat.helper.SaveLogHelper;
+import io.github.muntashirakon.AppManager.logcat.helper.ServiceHelper;
+import io.github.muntashirakon.AppManager.logcat.helper.WidgetHelper;
 import io.github.muntashirakon.AppManager.settings.LogViewerPreferences;
-import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
-import io.github.muntashirakon.AppManager.types.TextInputDropdownDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.dialog.TextInputDialogBuilder;
+import io.github.muntashirakon.dialog.TextInputDropdownDialogBuilder;
 
 // Copyright 2012 Nolan Lawson
 public class RecordLogDialogFragment extends DialogFragment {
@@ -89,7 +88,7 @@ public class RecordLogDialogFragment extends DialogFragment {
         TextInputDropdownDialogBuilder builder = new TextInputDropdownDialogBuilder(activity, R.string.text_filter_text)
                 .setTitle(R.string.filter)
                 .setInputText(filterQuery)
-                .setDropdownItems(filterQuerySuggestions, true)
+                .setDropdownItems(filterQuerySuggestions, -1, true)
                 .setAuxiliaryInput(getText(R.string.log_level), null, logLevelsLocalised.get(idx),
                         logLevelsLocalised, true)
                 .setNegativeButton(R.string.cancel, null);

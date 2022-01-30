@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?><!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <resources>
-    <color name="colorPrimary">@android:color/white</color>
-    <color name="colorPrimaryDark">@android:color/white</color>
-    <color name="colorAccent">#6200EE</color>
+    <color name="colorAccent">#FF6200EE</color>
+    <color name="colorSurface">@android:color/white</color>
+    <color name="colorPrimary">@color/colorAccent</color>
+    <color name="colorSecondary">#FF742EFF</color>
+    <color name="colorTertiary">#FF7436D6</color>
+
     <color name="textColorPrimary">#DE000000</color>
     <color name="textColorSecondary">#99000000</color>
+
+    <color name="color_primary_96">#F4FFFFFF</color>
 
     <color name="disabled_user">#FF8A80</color>
     <color name="highlight">@color/background_tan</color>

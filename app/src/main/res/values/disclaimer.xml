@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <resources>
-    <string name="disclaimer_header">DISCLAIMER</string>
+    <string name="disclaimer_header">Disclaimer</string>
     <string name="disclaimer_body">App Manager offers root functions that could possibly harm
         your device if used incorrectly. App Manager is not responsible for any damages made by
         using this application. If you are not fully aware of how root works then you should avoid
@@ -16,7 +16,7 @@
         \n\nBy using this application, you accept all responsibility using it and agree that I am
         not responsible for any actions you make that has an adverse affect on your device.
     </string>
-    <string name="disclaimer_footer">© 2020–2021 Muntashir Al-Islam</string>
+    <string name="disclaimer_footer">© 2020–2022 Muntashir Al-Islam</string>
     <string name="disclaimer_agree_forever">Never show this again</string>
     <string name="disclaimer_agree">I Agree</string>
     <string name="disclaimer_exit">Exit</string>

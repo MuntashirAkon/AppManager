@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.CheckedTextView;
 
 import androidx.annotation.ArrayRes;
+import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -22,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.resources.MaterialAttributes;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
@@ -86,7 +88,10 @@ public class SearchableMultiChoiceDialogBuilder<T> {
         // Don't display search bar if items are less than 6
         if (items.size() < 6) searchBar.setVisibility(View.GONE);
         builder = new MaterialAlertDialogBuilder(activity).setView(view);
-        adapter = new SearchableRecyclerViewAdapter(itemNames, items);
+        @SuppressLint("RestrictedApi")
+        int layoutId = MaterialAttributes.resolveInteger(activity, R.attr.multiChoiceItemLayout,
+                R.layout.mtrl_alert_select_dialog_multichoice);
+        adapter = new SearchableRecyclerViewAdapter(itemNames, items, layoutId);
         recyclerView.setAdapter(adapter);
         selectAll.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
@@ -193,10 +198,13 @@ public class SearchableMultiChoiceDialogBuilder<T> {
         private final ArrayList<Integer> filteredItems = new ArrayList<>();
         @NonNull
         private final Set<Integer> selectedItems = new ArraySet<>();
+        @LayoutRes
+        private final int layoutId;
 
-        SearchableRecyclerViewAdapter(@NonNull List<CharSequence> itemNames, @NonNull List<T> items) {
+        SearchableRecyclerViewAdapter(@NonNull List<CharSequence> itemNames, @NonNull List<T> items, int layoutId) {
             this.itemNames = itemNames;
             this.items = items;
+            this.layoutId = layoutId;
             new Thread(() -> {
                 synchronized (filteredItems) {
                     for (int i = 0; i < items.size(); ++i) {
@@ -277,7 +285,7 @@ public class SearchableMultiChoiceDialogBuilder<T> {
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             @SuppressLint("PrivateResource")
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.mtrl_alert_select_dialog_multichoice, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false);
             return new ViewHolder(view);
         }
 

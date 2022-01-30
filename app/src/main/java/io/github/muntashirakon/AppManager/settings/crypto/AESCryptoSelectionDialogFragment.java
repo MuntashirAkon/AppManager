@@ -29,11 +29,11 @@ import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager;
 import io.github.muntashirakon.AppManager.crypto.ks.SecretKeyCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
-import io.github.muntashirakon.AppManager.types.TextInputDropdownDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.dialog.TextInputDialogBuilder;
+import io.github.muntashirakon.dialog.TextInputDropdownDialogBuilder;
 
 import static io.github.muntashirakon.AppManager.crypto.AESCrypto.AES_KEY_ALIAS;
 
@@ -100,8 +100,7 @@ public class AESCryptoSelectionDialogFragment extends DialogFragment {
             });
             // Key generator
             neutralButton.setOnClickListener(v -> new TextInputDropdownDialogBuilder(activity, R.string.crypto_key_size)
-                    .setDropdownItems(Arrays.asList(128, 256), false)
-                    .setInputText(String.valueOf(128))
+                    .setDropdownItems(Arrays.asList(128, 256), 0, false)
                     .setTitle(R.string.generate_key)
                     .setNegativeButton(R.string.cancel, null)
                     .setPositiveButton(R.string.generate_key, (dialog2, which, inputText, isChecked) -> {

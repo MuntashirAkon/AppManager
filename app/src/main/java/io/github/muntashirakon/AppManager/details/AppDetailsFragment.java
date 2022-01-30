@@ -45,7 +45,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -84,7 +83,6 @@ import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
 import io.github.muntashirakon.AppManager.servermanager.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
-import io.github.muntashirakon.AppManager.types.TextInputDropdownDialogBuilder;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
@@ -93,7 +91,9 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.dialog.TextInputDropdownDialogBuilder;
 import io.github.muntashirakon.widget.RecyclerViewWithEmptyView;
+import io.github.muntashirakon.widget.SwipeRefreshLayout;
 import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
 import static io.github.muntashirakon.AppManager.details.AppDetailsViewModel.OPEN_GL_ES;
@@ -214,8 +214,6 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         // Swipe refresh
         mSwipeRefresh = view.findViewById(R.id.swipe_refresh);
-        mSwipeRefresh.setColorSchemeColors(UIUtils.getAccentColor(mActivity));
-        mSwipeRefresh.setProgressBackgroundColorSchemeColor(UIUtils.getPrimaryColor(mActivity));
         mSwipeRefresh.setOnRefreshListener(this);
         RecyclerViewWithEmptyView recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -389,7 +387,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             List<CharSequence> appOpNames = Arrays.asList(getAppOpNames(appOps));
             TextInputDropdownDialogBuilder builder = new TextInputDropdownDialogBuilder(mActivity, R.string.set_custom_app_op);
             builder.setTitle(R.string.set_custom_app_op)
-                    .setDropdownItems(appOpNames, true)
+                    .setDropdownItems(appOpNames, -1, true)
                     .setAuxiliaryInput(R.string.mode, null, null, modeNames, true)
                     .setPositiveButton(R.string.apply, (dialog, which, inputText, isChecked) -> {
                         // Get mode

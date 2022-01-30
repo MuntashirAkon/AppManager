@@ -1,25 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-
-<com.google.android.material.appbar.AppBarLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<com.google.android.material.appbar.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/appbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <androidx.appcompat.widget.Toolbar
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?android:colorBackground" />
+        tools:menu="@menu/activity_any_viewer_actions" />
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/progress_linear"
-        style="@style/Widget.MaterialComponents.LinearProgressIndicator"
+        style="@style/Widget.AppTheme.LinearProgressIndicator"
         android:indeterminate="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:indicatorColor="?colorAccent" />
+        android:layout_height="wrap_content" />
 
 </com.google.android.material.appbar.AppBarLayout>

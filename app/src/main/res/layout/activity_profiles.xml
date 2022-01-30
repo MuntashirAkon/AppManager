@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -37,7 +36,6 @@
         android:clickable="true"
         android:focusable="true"
         android:src="@drawable/ic_baseline_add_24"
-        style="@style/AppTheme.FloatingActionButton"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/padding_medium"
         android:contentDescription="@string/new_profile" />

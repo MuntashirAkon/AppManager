@@ -22,9 +22,9 @@ import io.github.muntashirakon.AppManager.logcat.helper.LogcatHelper;
 import io.github.muntashirakon.AppManager.logcat.helper.PreferenceHelper;
 import io.github.muntashirakon.AppManager.logcat.struct.LogLine;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
-import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 
 public class LogViewerPreferences extends PreferenceFragmentCompat {
     public static final List<Integer> LOG_LEVEL_VALUES = Arrays.asList(Log.VERBOSE, Log.DEBUG, Log.INFO, Log.WARN,

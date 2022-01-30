@@ -56,10 +56,10 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.servermanager.ActivityManagerCompat;
-import io.github.muntashirakon.AppManager.types.TextInputDropdownDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.dialog.TextInputDropdownDialogBuilder;
 
 // Copyright 2012 Intrications
 public class ActivityInterceptor extends BaseActivity {
@@ -545,7 +545,7 @@ public class ActivityInterceptor extends BaseActivity {
         findViewById(R.id.intent_categories_add_btn).setOnClickListener(v ->
                 new TextInputDropdownDialogBuilder(this, R.string.category)
                         .setTitle(R.string.category)
-                        .setDropdownItems(INTENT_CATEGORIES, true)
+                        .setDropdownItems(INTENT_CATEGORIES, -1, true)
                         .setNegativeButton(R.string.cancel, null)
                         .setPositiveButton(R.string.ok, (dialog, which, inputText, isChecked) -> {
                             if (!TextUtils.isEmpty(inputText)) {
@@ -565,7 +565,7 @@ public class ActivityInterceptor extends BaseActivity {
         findViewById(R.id.intent_flags_add_btn).setOnClickListener(v ->
                 new TextInputDropdownDialogBuilder(this, R.string.flags)
                         .setTitle(R.string.flags)
-                        .setDropdownItems(getAllFlags(), true)
+                        .setDropdownItems(getAllFlags(), -1, true)
                         .setNegativeButton(R.string.cancel, null)
                         .setPositiveButton(R.string.ok, (dialog, which, inputText, isChecked) -> {
                             if (!TextUtils.isEmpty(inputText)) {

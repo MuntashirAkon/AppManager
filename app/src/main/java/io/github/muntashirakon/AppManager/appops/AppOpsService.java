@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.appops;
 
+import android.annotation.UserIdInt;
 import android.content.Context;
 import android.os.Build;
 import android.os.Parcelable;
@@ -52,6 +53,7 @@ public class AppOpsService {
      * @param packageName Name of the package
      * @return One of the MODE_*
      */
+    @AppOpsManager.Mode
     public int checkOperation(int op, int uid, String packageName) throws RemoteException {
         return appOpsService.checkOperation(op, uid, packageName);
     }
@@ -84,7 +86,7 @@ public class AppOpsService {
         return packageOpsList;
     }
 
-    public void setMode(int op, int uid, String packageName, int mode) throws RemoteException {
+    public void setMode(int op, int uid, String packageName, @AppOpsManager.Mode int mode) throws RemoteException {
         if (AppOpsManager.isMiuiOp(op) || Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             // Only package mode works in MIUI-only app ops and before Android M
             appOpsService.setMode(op, uid, packageName, mode);
@@ -94,7 +96,7 @@ public class AppOpsService {
         }
     }
 
-    public void resetAllModes(int reqUserId, @NonNull String reqPackageName) throws RemoteException {
+    public void resetAllModes(@UserIdInt int reqUserId, @NonNull String reqPackageName) throws RemoteException {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
             appOpsService.resetAllModes(reqUserId, reqPackageName);
         }

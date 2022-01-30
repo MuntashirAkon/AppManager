@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -17,28 +16,21 @@
         android:layout_marginStart="@dimen/padding_medium"
         android:layout_marginEnd="@dimen/padding_very_small"
         android:layout_weight="1"
-        android:paddingTop="@dimen/padding_small"
-        android:paddingBottom="@dimen/padding_small"
-        android:textColor="?android:attr/textColorPrimary"
-        android:textSize="@dimen/title_font"
-        tools:text="@tools:sample/lorem[5]" />
+        android:paddingVertical="@dimen/padding_small"
+        android:textColor="?android:attr/textColorSecondary"
+        tools:text="@tools:sample/lorem[15]" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/item_action"
-        style="@android:style/Widget.Material.ImageButton"
+        style="@style/Widget.AppTheme.Button.IconButton"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_gravity="center"
         android:layout_weight="0"
-        android:paddingTop="@dimen/padding_small"
-        android:paddingBottom="@dimen/padding_small"
+        android:paddingVertical="@dimen/padding_small"
         android:layout_marginEnd="@dimen/padding_small"
-        android:background="?attr/selectableItemBackgroundBorderless"
         android:focusable="true"
         app:icon="@drawable/ic_baseline_clear_24"
-        app:iconGravity="textTop"
-        app:iconPadding="0dp"
-        app:iconSize="20dp"
-        tools:ignore="UnusedAttribute" />
+        app:iconSize="20dp" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

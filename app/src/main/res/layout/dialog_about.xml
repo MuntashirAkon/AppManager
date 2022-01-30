@@ -1,9 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:scrollIndicators="top|bottom"
+    tools:ignore="UnusedAttribute">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -17,118 +18,110 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/app_name"
-            android:textSize="@dimen/title_font"
-            android:textColor="?android:attr/textColorPrimary" />
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:text="@string/app_name" />
 
         <io.github.muntashirakon.widget.HyperlinkTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/copyright_message"
-            android:textSize="@dimen/subtitle_font" />
+            android:textColor="?android:attr/textColorSecondary"
+            android:text="@string/copyright_message" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding_medium"
-            android:text="@string/version"
-            android:textSize="@dimen/title_font"
-            android:textColor="?android:attr/textColorPrimary" />
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:text="@string/version" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/version"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/subtitle_font"
+            android:textColor="?android:attr/textColorSecondary"
             android:textIsSelectable="true"
-            tools:text="@tools:sample/lorem[2]" />
+            tools:text="v10.2.0 (1001)" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding_medium"
-            android:text="@string/license"
-            android:textSize="@dimen/title_font"
-            android:textColor="?android:attr/textColorPrimary" />
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:text="@string/license" />
 
         <io.github.muntashirakon.widget.HyperlinkTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/license_message"
-            android:textSize="@dimen/subtitle_font" />
+            android:textColor="?android:attr/textColorSecondary"
+            android:text="@string/license_message" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding_medium"
-            android:text="@string/website"
-            android:textSize="@dimen/title_font"
-            android:textColor="?android:attr/textColorPrimary" />
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:text="@string/website" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="?android:attr/textColorSecondary"
             android:text="@string/website_message"
-            android:autoLink="web"
-            android:textSize="@dimen/subtitle_font" />
+            android:autoLink="web" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding_medium"
-            android:text="@string/source_code"
-            android:textSize="@dimen/title_font"
-            android:textColor="?android:attr/textColorPrimary" />
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:text="@string/source_code" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="?android:attr/textColorSecondary"
             android:text="@string/source_code_links"
-            android:textSize="@dimen/subtitle_font"
             android:autoLink="web" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding_medium"
-            android:text="@string/community"
-            android:textSize="@dimen/title_font"
-            android:textColor="?android:attr/textColorPrimary" />
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:text="@string/community" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="?android:attr/textColorSecondary"
             android:text="@string/community_links"
-            android:textSize="@dimen/subtitle_font"
             android:autoLink="web" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding_medium"
-            android:text="@string/third_party"
-            android:textSize="@dimen/title_font"
-            android:textColor="?android:attr/textColorPrimary" />
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:text="@string/third_party" />
 
         <io.github.muntashirakon.widget.HyperlinkTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/third_party_message"
-            android:textSize="@dimen/subtitle_font" />
+            android:textColor="?android:attr/textColorSecondary"
+            android:text="@string/third_party_message" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding_medium"
-            android:text="@string/credits"
-            android:textSize="@dimen/title_font"
-            android:textColor="?android:attr/textColorPrimary" />
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:text="@string/credits" />
 
         <io.github.muntashirakon.widget.HyperlinkTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/credits_message"
-            android:textSize="@dimen/subtitle_font" />
+            android:textColor="?android:attr/textColorSecondary"
+            android:text="@string/credits_message" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

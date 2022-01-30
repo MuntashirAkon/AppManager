@@ -6,17 +6,15 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:focusable="true"
-    android:paddingStart="@dimen/padding_medium"
-    android:paddingTop="@dimen/padding_very_small"
-    android:paddingEnd="@dimen/padding_medium"
-    android:paddingBottom="@dimen/padding_very_small">
+    android:paddingHorizontal="@dimen/padding_medium"
+    android:paddingVertical="@dimen/padding_very_small">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/reqgles"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textIsSelectable="true"
-        android:textColor="?android:attr/textColorPrimary"
+        android:textAppearance="?android:attr/textAppearanceListItem"
         tools:text="@tools:sample/lorem" />
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -25,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:textIsSelectable="true"
-        android:textSize="12sp"
+        android:textAppearance="?attr/textAppearanceBodySmall"
         tools:text="@tools:sample/lorem" />
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -34,7 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:textIsSelectable="true"
-        android:textSize="12sp"
+        android:textAppearance="?attr/textAppearanceBodySmall"
         tools:text="@tools:sample/lorem" />
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -43,7 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:textIsSelectable="true"
-        android:textSize="12sp"
+        android:textAppearance="?attr/textAppearanceBodySmall"
         tools:text="@tools:sample/lorem" />
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -52,7 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:textIsSelectable="true"
-        android:textSize="12sp"
+        android:textAppearance="?attr/textAppearanceBodySmall"
         tools:text="@tools:sample/lorem" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

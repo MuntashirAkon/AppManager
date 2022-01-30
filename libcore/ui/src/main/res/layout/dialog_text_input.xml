@@ -1,35 +1,35 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_marginTop="@dimen/padding_medium"
+    android:scrollIndicators="top|bottom"
+    tools:theme="@style/AppTheme"
+    tools:ignore="UnusedAttribute">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingStart="@dimen/padding_medium"
-        android:paddingEnd="@dimen/padding_medium">
+        android:paddingVertical="@dimen/padding_small"
+        android:paddingHorizontal="@dimen/padding_medium">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@android:id/text1"
-            style="@style/AppTheme.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:hint="@string/input_app_ops"
-            tools:helperText="@string/input_app_ops_description"
+            tools:hint="Primary Input"
+            tools:helperText="Primary input helper text"
             app:hintAnimationEnabled="true"
             app:hintEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@android:id/input"
-                style="@style/AppTheme.TextAppearance.Input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:text="@tools:sample/lorem/random" />
+                tools:text="@tools:sample/lorem[4]" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -37,7 +37,7 @@
             android:id="@android:id/checkbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="@string/apply_to_system_apps" />
+            tools:text="Apply to all" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 </ScrollView>

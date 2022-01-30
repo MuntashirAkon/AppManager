@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-package io.github.muntashirakon.AppManager.types;
+package io.github.muntashirakon.dialog;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
@@ -22,8 +22,11 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.List;
 
-import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.ui.R;
+import io.github.muntashirakon.widget.AnyFilterArrayAdapter;
+import io.github.muntashirakon.widget.NoFilterArrayAdapter;
 
+@SuppressWarnings("unused")
 public class TextInputDropdownDialogBuilder {
     @NonNull
     private final FragmentActivity activity;
@@ -68,6 +71,11 @@ public class TextInputDropdownDialogBuilder {
         this(activity, activity.getText(inputTextLabel));
     }
 
+    public TextInputDropdownDialogBuilder setTitle(@Nullable View title) {
+        builder.setCustomTitle(title);
+        return this;
+    }
+
     public TextInputDropdownDialogBuilder setTitle(@Nullable CharSequence title) {
         builder.setTitle(title);
         return this;
@@ -78,7 +86,7 @@ public class TextInputDropdownDialogBuilder {
         return this;
     }
 
-    public <T> TextInputDropdownDialogBuilder setDropdownItems(List<T> items, boolean filterable) {
+    public <T> TextInputDropdownDialogBuilder setDropdownItems(List<T> items, int choice, boolean filterable) {
         ArrayAdapter<T> adapter;
         if (filterable) {
             adapter = new AnyFilterArrayAdapter<>(activity, R.layout.item_checked_text_view, items);
@@ -86,6 +94,10 @@ public class TextInputDropdownDialogBuilder {
             adapter = new NoFilterArrayAdapter<>(activity, R.layout.item_checked_text_view, items);
         }
         mainInput.setAdapter(adapter);
+        if (choice >= 0) {
+            T selectedItem = adapter.getItem(choice);
+            mainInput.setText(selectedItem == null ? "" : selectedItem.toString());
+        }
         mainInputLayout.setEndIconMode(TextInputLayout.END_ICON_DROPDOWN_MENU);
         return this;
     }
@@ -106,7 +118,8 @@ public class TextInputDropdownDialogBuilder {
         } else {
             auxiliaryInputLayout.setEndIconMode(TextInputLayout.END_ICON_NONE);
         }
-        if (isEnabled) auxiliaryInput.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        if (isEnabled)
+            auxiliaryInput.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         else auxiliaryInput.setInputType(InputType.TYPE_NULL);
         return this;
     }
@@ -165,7 +178,8 @@ public class TextInputDropdownDialogBuilder {
     }
 
     public TextInputDropdownDialogBuilder setEnable(boolean enable) {
-        if (enable) mainInput.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        if (enable)
+            mainInput.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         else mainInput.setInputType(InputType.TYPE_NULL);
         return this;
     }

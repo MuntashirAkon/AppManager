@@ -32,7 +32,6 @@ import androidx.core.text.HtmlCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -63,7 +62,6 @@ import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.SettingsActivity;
 import io.github.muntashirakon.AppManager.sysconfig.SysConfigActivity;
-import io.github.muntashirakon.AppManager.types.ScrollableDialogBuilder;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.usage.AppUsageActivity;
 import io.github.muntashirakon.AppManager.users.Users;
@@ -74,8 +72,10 @@ import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.StoragePermission;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.dialog.ScrollableDialogBuilder;
 import io.github.muntashirakon.reflow.ReflowMenuViewWrapper;
 import io.github.muntashirakon.widget.MultiSelectionView;
+import io.github.muntashirakon.widget.SwipeRefreshLayout;
 import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
@@ -154,9 +154,6 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
         mProgressIndicator.setVisibilityAfterHide(View.GONE);
         RecyclerView recyclerView = findViewById(R.id.item_list);
         mSwipeRefresh = findViewById(R.id.swipe_refresh);
-
-        mSwipeRefresh.setColorSchemeColors(UIUtils.getAccentColor(this));
-        mSwipeRefresh.setProgressBackgroundColorSchemeColor(UIUtils.getPrimaryColor(this));
         mSwipeRefresh.setOnRefreshListener(this);
 
         mAdapter = new MainRecyclerAdapter(MainActivity.this);
@@ -566,15 +563,14 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
             FileUtils.deleteSilently(ServerConfig.getDestJarFile());
             mModel.executor.submit(() -> {
                 final Spanned spannedChangelog = HtmlCompat.fromHtml(FileUtils.getContentFromAssets(this, "changelog.html"), HtmlCompat.FROM_HTML_MODE_COMPACT);
-                runOnUiThread(() ->
-                        new ScrollableDialogBuilder(this, spannedChangelog)
-                                .linkifyAll()
-                                .setTitle(R.string.changelog)
-                                .setNegativeButton(R.string.ok, null)
-                                .setNeutralButton(R.string.instructions, (dialog, which, isChecked) -> {
-                                    Intent helpIntent = new Intent(this, HelpActivity.class);
-                                    startActivity(helpIntent);
-                                }).show());
+                runOnUiThread(() -> new ScrollableDialogBuilder(this, spannedChangelog)
+                        .linkifyAll()
+                        .setTitle(R.string.changelog)
+                        .setNegativeButton(R.string.ok, null)
+                        .setNeutralButton(R.string.instructions, (dialog, which, isChecked) -> {
+                            Intent helpIntent = new Intent(this, HelpActivity.class);
+                            startActivity(helpIntent);
+                        }).show());
             });
             AppPref.set(AppPref.PrefKey.PREF_LAST_VERSION_CODE_LONG, (long) BuildConfig.VERSION_CODE);
         }

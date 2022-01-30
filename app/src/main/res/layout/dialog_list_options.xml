@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -27,11 +26,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textAppearance="@style/TextAppearance.AppTheme.TitleSmall"
                 android:text="@string/sort" />
 
             <com.google.android.material.checkbox.MaterialCheckBox
                 android:id="@+id/reverse_sort"
-                style="@style/Widget.MaterialComponents.CompoundButton.CheckBox.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
@@ -42,7 +41,7 @@
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/sort_options"
-            android:theme="@style/Widget.MaterialComponents.ChipGroup.Small.Choice"
+            android:theme="@style/Widget.AppTheme.ChipGroup.Filter"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingVertical="@dimen/padding_very_small"
@@ -53,11 +52,12 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppTheme.TitleSmall"
             android:text="@string/filter" />
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/filter_options"
-            android:theme="@style/Widget.MaterialComponents.ChipGroup.Small.Entry"
+            android:theme="@style/Widget.AppTheme.ChipGroup.Filter"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingVertical="@dimen/padding_very_small"
@@ -66,7 +66,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@android:id/text1"
-            style="@style/AppTheme.TextInputLayout.ExposedDropdownMenu.Small"
+            style="@style/Widget.AppTheme.TextInputLayout.ExposedDropdownMenu.Small"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/input_profile_name"

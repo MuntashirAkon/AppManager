@@ -58,9 +58,9 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.internal.util.TextUtils;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
@@ -115,7 +115,6 @@ import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.sharedpref.SharedPrefsActivity;
 import io.github.muntashirakon.AppManager.ssaid.SsaidSettings;
 import io.github.muntashirakon.AppManager.types.PackageSizeInfo;
-import io.github.muntashirakon.AppManager.types.ScrollableDialogBuilder;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
@@ -134,18 +133,20 @@ import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
+import io.github.muntashirakon.dialog.ScrollableDialogBuilder;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.ProxyFile;
+import io.github.muntashirakon.widget.SwipeRefreshLayout;
+import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
-import static io.github.muntashirakon.AppManager.details.info.ListItem.LIST_ITEM_FLAG_MONOSPACE;
 import static io.github.muntashirakon.AppManager.utils.PermissionUtils.TERMUX_PERM_RUN_COMMAND;
 import static io.github.muntashirakon.AppManager.utils.PermissionUtils.hasDumpPermission;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.displayLongToast;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.displayShortToast;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getBoldString;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getStyledKeyValue;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getTitleText;
 import static io.github.muntashirakon.AppManager.utils.Utils.openAsFolderInFM;
 
 public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
@@ -215,8 +216,6 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         mPackageManager = mActivity.getPackageManager();
         // Swipe refresh
         mSwipeRefresh = view.findViewById(R.id.swipe_refresh);
-        mSwipeRefresh.setColorSchemeColors(UIUtils.getAccentColor(mActivity));
-        mSwipeRefresh.setProgressBackgroundColorSchemeColor(UIUtils.getPrimaryColor(mActivity));
         mSwipeRefresh.setOnRefreshListener(this);
         // Recycler view
         RecyclerView recyclerView = view.findViewById(android.R.id.list);
@@ -236,6 +235,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         versionView = view.findViewById(R.id.version);
         adapter = new AppInfoRecyclerAdapter(mActivity);
         recyclerView.setAdapter(adapter);
+        new FastScrollerBuilder(view.findViewById(R.id.scrollView)).useMd2Style().build();
         // Set observer
         mainModel.get(AppDetailsFragment.APP_INFO).observe(getViewLifecycleOwner(), appDetailsItems -> {
             if (appDetailsItems != null && !appDetailsItems.isEmpty() && mainModel.isPackageExist()) {
@@ -654,7 +654,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     CharSequence[] runningServices = new CharSequence[tagCloud.runningServices.size()];
                     for (int i = 0; i < runningServices.length; ++i) {
                         runningServices[i] = new SpannableStringBuilder()
-                                .append(getBoldString(tagCloud.runningServices.get(i).service.getShortClassName()))
+                                .append(getTitleText(mActivity, tagCloud.runningServices.get(i).service.getShortClassName()))
                                 .append("\n")
                                 .append(getSmallerText(new SpannableStringBuilder()
                                         .append(getStyledKeyValue(mActivity, R.string.process_name,
@@ -1230,45 +1230,45 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private void setPathsAndDirectories(@NonNull AppInfoViewModel.AppInfo appInfo) {
         synchronized (mListItems) {
             // Paths and directories
-            mListItems.add(ListItem.getGroupHeader(getString(R.string.paths_and_directories)));
+            mListItems.add(ListItem.newGroupStart(getString(R.string.paths_and_directories)));
             // Source directory (apk path)
             if (appInfo.sourceDir != null) {
-                mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.source_dir), appInfo.sourceDir,
+                mListItems.add(ListItem.newSelectableRegularItem(getString(R.string.source_dir), appInfo.sourceDir,
                         openAsFolderInFM(requireContext(), appInfo.sourceDir)));
             }
             // Split source directories
             if (appInfo.splitEntries.size() > 0) {
                 for (ApkFile.Entry entry : appInfo.splitEntries) {
-                    mListItems.add(ListItem.getSelectableRegularItem(entry.toShortLocalizedString(mActivity),
+                    mListItems.add(ListItem.newSelectableRegularItem(entry.toShortLocalizedString(mActivity),
                             entry.getApkSource(), openAsFolderInFM(requireContext(), entry.getApkSource())));
                 }
             }
             // Data dir
             if (appInfo.dataDir != null) {
-                mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.data_dir), appInfo.dataDir,
+                mListItems.add(ListItem.newSelectableRegularItem(getString(R.string.data_dir), appInfo.dataDir,
                         openAsFolderInFM(requireContext(), appInfo.dataDir)));
             }
             // Device-protected data dir
             if (appInfo.dataDeDir != null) {
-                mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.dev_protected_data_dir), appInfo.dataDeDir,
+                mListItems.add(ListItem.newSelectableRegularItem(getString(R.string.dev_protected_data_dir), appInfo.dataDeDir,
                         openAsFolderInFM(requireContext(), appInfo.dataDeDir)));
             }
             // External data dirs
             if (appInfo.extDataDirs.size() == 1) {
-                mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.external_data_dir), appInfo.extDataDirs.get(0),
+                mListItems.add(ListItem.newSelectableRegularItem(getString(R.string.external_data_dir), appInfo.extDataDirs.get(0),
                         openAsFolderInFM(requireContext(), appInfo.extDataDirs.get(0))));
             } else {
                 for (int i = 0; i < appInfo.extDataDirs.size(); ++i) {
-                    mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.external_multiple_data_dir, i),
+                    mListItems.add(ListItem.newSelectableRegularItem(getString(R.string.external_multiple_data_dir, i),
                             appInfo.extDataDirs.get(i), openAsFolderInFM(requireContext(), appInfo.extDataDirs.get(i))));
                 }
             }
             // Native JNI library dir
             if (appInfo.jniDir != null) {
-                mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.native_library_dir), appInfo.jniDir,
+                mListItems.add(ListItem.newSelectableRegularItem(getString(R.string.native_library_dir), appInfo.jniDir,
                         openAsFolderInFM(requireContext(), appInfo.jniDir)));
             }
-            mListItems.add(ListItem.getGroupDivider());
+            mListItems.add(ListItem.newGroupEnd());
         }
     }
 
@@ -1276,18 +1276,18 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private void setMoreInfo(AppInfoViewModel.AppInfo appInfo) {
         synchronized (mListItems) {
             // Set more info
-            mListItems.add(ListItem.getGroupHeader(getString(R.string.more_info)));
+            mListItems.add(ListItem.newGroupStart(getString(R.string.more_info)));
 
             // Set installer version info
             if (isExternalApk && mInstalledPackageInfo != null) {
-                ListItem listItem = ListItem.getSelectableRegularItem(getString(R.string.installed_version),
+                ListItem listItem = ListItem.newSelectableRegularItem(getString(R.string.installed_version),
                         getString(R.string.version_name_with_code, mInstalledPackageInfo.versionName,
                                 PackageInfoCompat.getLongVersionCode(mInstalledPackageInfo)), v -> {
                             Intent appDetailsIntent = new Intent(mActivity, AppDetailsActivity.class);
                             appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME, mPackageName);
                             mActivity.startActivity(appDetailsIntent);
                         });
-                listItem.actionIcon = R.drawable.ic_information_variant;
+                listItem.setActionIcon(R.drawable.ic_information_variant);
                 mListItems.add(listItem);
             }
 
@@ -1296,7 +1296,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             sdk.append(getString(R.string.sdk_max)).append(": ").append(mApplicationInfo.targetSdkVersion);
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M)
                 sdk.append(", ").append(getString(R.string.sdk_min)).append(": ").append(mApplicationInfo.minSdkVersion);
-            mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.sdk), sdk.toString()));
+            mListItems.add(ListItem.newSelectableRegularItem(getString(R.string.sdk), sdk.toString()));
 
             // Set Flags
             final StringBuilder flags = new StringBuilder();
@@ -1310,33 +1310,33 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 flags.append(flags.length() == 0 ? "" : "|").append("FLAG_HARDWARE_ACCELERATED");
 
             if (flags.length() != 0) {
-                ListItem flagsItem = ListItem.getSelectableRegularItem(getString(R.string.sdk_flags), flags.toString());
-                flagsItem.flags |= LIST_ITEM_FLAG_MONOSPACE;
+                ListItem flagsItem = ListItem.newSelectableRegularItem(getString(R.string.sdk_flags), flags.toString());
+                flagsItem.setMonospace(true);
                 mListItems.add(flagsItem);
             }
             if (isExternalApk) return;
 
-            mListItems.add(ListItem.getRegularItem(getString(R.string.date_installed), getTime(mPackageInfo.firstInstallTime)));
-            mListItems.add(ListItem.getRegularItem(getString(R.string.date_updated), getTime(mPackageInfo.lastUpdateTime)));
+            mListItems.add(ListItem.newRegularItem(getString(R.string.date_installed), getTime(mPackageInfo.firstInstallTime)));
+            mListItems.add(ListItem.newRegularItem(getString(R.string.date_updated), getTime(mPackageInfo.lastUpdateTime)));
             if (!mPackageName.equals(mApplicationInfo.processName)) {
-                mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.process_name), mApplicationInfo.processName));
+                mListItems.add(ListItem.newSelectableRegularItem(getString(R.string.process_name), mApplicationInfo.processName));
             }
             if (appInfo.installerApp != null) {
-                mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.installer_app), appInfo.installerApp));
+                mListItems.add(ListItem.newSelectableRegularItem(getString(R.string.installer_app), appInfo.installerApp));
             }
-            mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.user_id), Integer.toString(mApplicationInfo.uid)));
+            mListItems.add(ListItem.newSelectableRegularItem(getString(R.string.user_id), Integer.toString(mApplicationInfo.uid)));
             if (mPackageInfo.sharedUserId != null)
-                mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.shared_user_id), mPackageInfo.sharedUserId));
+                mListItems.add(ListItem.newSelectableRegularItem(getString(R.string.shared_user_id), mPackageInfo.sharedUserId));
             // Main activity
             if (appInfo.mainActivity != null) {
                 final ComponentName launchComponentName = appInfo.mainActivity.getComponent();
                 if (launchComponentName != null) {
                     final String mainActivity = launchComponentName.getClassName();
-                    mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.main_activity), mainActivity,
+                    mListItems.add(ListItem.newSelectableRegularItem(getString(R.string.main_activity), mainActivity,
                             view -> startActivity(appInfo.mainActivity)));
                 }
             }
-            mListItems.add(ListItem.getGroupDivider());
+            mListItems.add(ListItem.newGroupEnd());
         }
     }
 
@@ -1345,10 +1345,10 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         if (dataUsage == null) return;
         synchronized (mListItems) {
             if (isDetached()) return;
-            mListItems.add(ListItem.getGroupHeader(getString(R.string.data_usage_msg)));
-            mListItems.add(ListItem.getInlineItem(getString(R.string.data_transmitted), getReadableSize(dataUsage.getTx())));
-            mListItems.add(ListItem.getInlineItem(getString(R.string.data_received), getReadableSize(dataUsage.getRx())));
-            mListItems.add(ListItem.getGroupDivider());
+            mListItems.add(ListItem.newGroupStart(getString(R.string.data_usage_msg)));
+            mListItems.add(ListItem.newInlineItem(getString(R.string.data_transmitted), getReadableSize(dataUsage.getTx())));
+            mListItems.add(ListItem.newInlineItem(getString(R.string.data_received), getReadableSize(dataUsage.getRx())));
+            mListItems.add(ListItem.newGroupEnd());
         }
     }
 
@@ -1417,13 +1417,12 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     @NonNull
-    private View addToHorizontalLayout(@StringRes int stringResId, @DrawableRes int iconResId) {
-        View view = getLayoutInflater().inflate(R.layout.item_app_info_actions, mHorizontalLayout, false);
-        TextView textView = view.findViewById(R.id.item_text);
-        textView.setText(stringResId);
-        textView.setCompoundDrawablesWithIntrinsicBounds(null, ContextCompat.getDrawable(mActivity, iconResId), null, null);
-        mHorizontalLayout.addView(view);
-        return view;
+    private MaterialButton addToHorizontalLayout(@StringRes int stringResId, @DrawableRes int iconResId) {
+        MaterialButton button = (MaterialButton) getLayoutInflater().inflate(R.layout.item_app_info_actions, mHorizontalLayout, false);
+        button.setText(stringResId);
+        button.setCompoundDrawablesWithIntrinsicBounds(null, ContextCompat.getDrawable(mActivity, iconResId), null, null);
+        mHorizontalLayout.addView(button);
+        return button;
     }
 
     @GuardedBy("mListItems")
@@ -1464,18 +1463,18 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         PackageSizeInfo sizeInfo = appInfo.sizeInfo;
         if (sizeInfo == null) return;
         synchronized (mListItems) {
-            mListItems.add(ListItem.getGroupHeader(getString(R.string.storage_and_cache)));
-            mListItems.add(ListItem.getInlineItem(getString(R.string.app_size), getReadableSize(sizeInfo.codeSize)));
-            mListItems.add(ListItem.getInlineItem(getString(R.string.data_size), getReadableSize(sizeInfo.dataSize)));
-            mListItems.add(ListItem.getInlineItem(getString(R.string.cache_size), getReadableSize(sizeInfo.cacheSize)));
+            mListItems.add(ListItem.newGroupStart(getString(R.string.storage_and_cache)));
+            mListItems.add(ListItem.newInlineItem(getString(R.string.app_size), getReadableSize(sizeInfo.codeSize)));
+            mListItems.add(ListItem.newInlineItem(getString(R.string.data_size), getReadableSize(sizeInfo.dataSize)));
+            mListItems.add(ListItem.newInlineItem(getString(R.string.cache_size), getReadableSize(sizeInfo.cacheSize)));
             if (sizeInfo.obbSize != 0) {
-                mListItems.add(ListItem.getInlineItem(getString(R.string.obb_size), getReadableSize(sizeInfo.obbSize)));
+                mListItems.add(ListItem.newInlineItem(getString(R.string.obb_size), getReadableSize(sizeInfo.obbSize)));
             }
             if (sizeInfo.mediaSize != 0) {
-                mListItems.add(ListItem.getInlineItem(getString(R.string.media_size), getReadableSize(sizeInfo.mediaSize)));
+                mListItems.add(ListItem.newInlineItem(getString(R.string.media_size), getReadableSize(sizeInfo.mediaSize)));
             }
-            mListItems.add(ListItem.getInlineItem(getString(R.string.total_size), getReadableSize(sizeInfo.getTotalSize())));
-            mListItems.add(ListItem.getGroupDivider());
+            mListItems.add(ListItem.newInlineItem(getString(R.string.total_size), getReadableSize(sizeInfo.getTotalSize())));
+            mListItems.add(ListItem.newGroupEnd());
         }
     }
 

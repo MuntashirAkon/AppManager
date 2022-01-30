@@ -17,7 +17,6 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.textview.MaterialTextView;
@@ -27,8 +26,8 @@ import java.util.List;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
-import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.widget.RecyclerViewWithEmptyView;
+import io.github.muntashirakon.widget.SwipeRefreshLayout;
 import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
 public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
@@ -56,8 +55,6 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         super.onViewCreated(view, savedInstanceState);
         // Swipe refresh
         swipeRefresh = view.findViewById(R.id.swipe_refresh);
-        swipeRefresh.setColorSchemeColors(UIUtils.getAccentColor(activity));
-        swipeRefresh.setProgressBackgroundColorSchemeColor(UIUtils.getPrimaryColor(activity));
         swipeRefresh.setOnRefreshListener(this);
         RecyclerViewWithEmptyView recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);

@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -204,31 +203,17 @@ public class BackupRestorePreferences extends PreferenceFragmentCompat {
         // Import backups
         ((Preference) Objects.requireNonNull(findPreference("import_backups")))
                 .setOnPreferenceClickListener(preference -> {
-                    View view = getLayoutInflater().inflate(R.layout.dialog_import_external_backups, null);
-                    AlertDialog alertDialog = new MaterialAlertDialogBuilder(activity)
+                    new MaterialAlertDialogBuilder(activity)
                             .setCustomTitle(new DialogTitleBuilder(activity)
                                     .setTitle(R.string.pref_import_backups)
                                     .setSubtitle(R.string.pref_import_backups_hint)
                                     .build())
-                            .setView(view)
+                            .setItems(R.array.import_backup_options, (dialog, which) -> {
+                                importType = which;
+                                safSelectImportDirectory.launch(safIntent);
+                            })
                             .setNegativeButton(R.string.close, null)
                             .show();
-                    // Set listeners
-                    view.findViewById(R.id.import_from_oab).setOnClickListener(v -> {
-                        importType = ImportType.OAndBackup;
-                        safSelectImportDirectory.launch(safIntent);
-                        alertDialog.dismiss();
-                    });
-                    view.findViewById(R.id.import_from_tb).setOnClickListener(v -> {
-                        importType = ImportType.TitaniumBackup;
-                        safSelectImportDirectory.launch(safIntent);
-                        alertDialog.dismiss();
-                    });
-                    view.findViewById(R.id.import_from_sb).setOnClickListener(v -> {
-                        importType = ImportType.SwiftBackup;
-                        safSelectImportDirectory.launch(safIntent);
-                        alertDialog.dismiss();
-                    });
                     return true;
                 });
     }

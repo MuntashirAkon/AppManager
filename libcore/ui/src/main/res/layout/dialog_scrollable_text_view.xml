@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/padding_medium"
     android:scrollIndicators="top|bottom"
     tools:ignore="UnusedAttribute">
 
@@ -11,10 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingTop="@dimen/padding_small"
-        android:paddingBottom="@dimen/padding_small"
-        android:paddingStart="@dimen/padding_medium"
-        android:paddingEnd="@dimen/padding_medium">
+        android:paddingVertical="@dimen/padding_small"
+        android:paddingHorizontal="@dimen/padding_medium">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@android:id/content"
@@ -27,8 +25,7 @@
             android:id="@android:id/checkbox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="@string/disclaimer_agree_forever"
-            android:textColor="?android:attr/textColorSecondary" />
+            tools:text="Never show this again" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

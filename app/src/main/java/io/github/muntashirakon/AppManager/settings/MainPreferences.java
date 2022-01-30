@@ -53,10 +53,6 @@ import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.AppManager.settings.crypto.ImportExportKeyStoreDialogFragment;
-import io.github.muntashirakon.AppManager.types.FullscreenDialog;
-import io.github.muntashirakon.AppManager.types.ScrollableDialogBuilder;
-import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
-import io.github.muntashirakon.AppManager.types.TextInputDropdownDialogBuilder;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
@@ -66,6 +62,10 @@ import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.dialog.AlertDialogBuilder;
+import io.github.muntashirakon.dialog.ScrollableDialogBuilder;
+import io.github.muntashirakon.dialog.TextInputDialogBuilder;
+import io.github.muntashirakon.dialog.TextInputDropdownDialogBuilder;
 
 public class MainPreferences extends PreferenceFragmentCompat {
     private static final List<Integer> THEME_CONST = Arrays.asList(
@@ -264,7 +264,10 @@ public class MainPreferences extends PreferenceFragmentCompat {
             View view = getLayoutInflater().inflate(R.layout.dialog_about, null);
             ((TextView) view.findViewById(R.id.version)).setText(String.format(Locale.ROOT,
                     "%s (%d)", BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE));
-            new FullscreenDialog(activity).setTitle(R.string.about).setView(view).show();
+            new AlertDialogBuilder(activity, true)
+                    .setTitle(R.string.about)
+                    .setView(view)
+                    .show();
             return true;
         });
         // Changelog
@@ -312,10 +315,9 @@ public class MainPreferences extends PreferenceFragmentCompat {
                     .show();
         });
         // Changelog
-        model.getChangeLog().observe(this, changeLog -> new ScrollableDialogBuilder(activity, changeLog)
+        model.getChangeLog().observe(this, changeLog -> new ScrollableDialogBuilder(activity, changeLog, true)
                 .linkifyAll()
                 .setTitle(R.string.changelog)
-                .setNegativeButton(R.string.ok, null)
                 .show());
         // Device info
         model.getDeviceInfo().observe(this, deviceInfo -> {
@@ -323,7 +325,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
             View view = getLayoutInflater().inflate(R.layout.dialog_scrollable_text_view, null);
             ((TextView) view.findViewById(android.R.id.content)).setText(deviceInfo.toLocalizedString(activity));
             view.findViewById(android.R.id.checkbox).setVisibility(View.GONE);
-            new FullscreenDialog(activity).setTitle(R.string.about_device).setView(view).show();
+            new AlertDialogBuilder(activity, true).setTitle(R.string.about_device).setView(view).show();
         });
         // Hide preferences for disabled features
         if (!FeatureController.isInstallerEnabled()) {

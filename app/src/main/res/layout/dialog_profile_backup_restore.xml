@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -24,7 +23,7 @@
                 android:layout_weight="1"
                 android:text="@string/backup_options"
                 android:textAllCaps="true"
-                android:labelFor="@id/type_selector_spinner" />
+                android:labelFor="@id/dialog_button" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/dialog_button"
@@ -41,7 +40,6 @@
             android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/AppTheme.TextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/input_backup_name"
@@ -51,7 +49,6 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@android:id/input"
-                    style="@style/AppTheme.TextAppearance.Input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:singleLine="true"

@@ -21,7 +21,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -29,8 +28,8 @@ import java.io.FileNotFoundException;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.StorageUtils;
-import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.widget.MultiSelectionView;
+import io.github.muntashirakon.widget.SwipeRefreshLayout;
 import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
@@ -85,8 +84,6 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
         }
         swipeRefresh = view.findViewById(R.id.swipe_refresh);
         swipeRefresh.setOnRefreshListener(this);
-        swipeRefresh.setColorSchemeColors(UIUtils.getAccentColor(activity));
-        swipeRefresh.setProgressBackgroundColorSchemeColor(UIUtils.getPrimaryColor(activity));
         swipeRefresh.post(() -> swipeRefresh.setRefreshing(true));
         RecyclerView recyclerView = view.findViewById(R.id.list_item);
         recyclerView.setHasFixedSize(true);
