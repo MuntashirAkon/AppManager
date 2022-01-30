@@ -346,9 +346,7 @@ public class PermissionCompat {
                                       @NonNull String packageName,
                                       @UserIdInt int userId) throws RemoteException {
         IPackageManager pm = AppManager.getIPackageManager();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            return getPermissionManager().checkPermission(permissionName, packageName, userId);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             return pm.checkPermission(permissionName, packageName, userId);
         } else {
             return pm.checkPermission(permissionName, packageName);

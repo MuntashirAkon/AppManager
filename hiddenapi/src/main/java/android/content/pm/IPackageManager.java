@@ -120,17 +120,9 @@ public interface IPackageManager extends IInterface {
     @Deprecated
     int checkPermission(String permName, String pkgName) throws RemoteException;
 
-    /**
-     * @deprecated Deprecated since API 30 (Android R)
-     */
-    @Deprecated
     @RequiresApi(Build.VERSION_CODES.M)
     int checkPermission(String permName, String pkgName, int userId) throws RemoteException;
 
-    /**
-     * @deprecated Deprecated since API 30 (Android R)
-     */
-    @Deprecated
     int checkUidPermission(String permName, int uid) throws RemoteException;
 
     /**
@@ -261,10 +253,6 @@ public interface IPackageManager extends IInterface {
 
     boolean isUidPrivileged(int uid) throws RemoteException;
 
-    /**
-     * @deprecated Deprecated since API 30 (Android R)
-     */
-    @Deprecated
     String[] getAppOpPermissionPackages(String permissionName) throws RemoteException;
 
     ResolveInfo resolveIntent(Intent intent, String resolvedType, int flags, int userId) throws RemoteException;

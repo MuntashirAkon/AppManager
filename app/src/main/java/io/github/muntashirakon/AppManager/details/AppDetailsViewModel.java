@@ -1286,7 +1286,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     @WorkerThread
     private void loadAppOps() {
-        if (mPackageName == null || mIsExternalApk || !(AppPref.isRootOrAdbEnabled()
+        boolean isRootOrAdbEnabled = AppPref.isRootOrAdbEnabled();
+        if (mPackageName == null || mIsExternalApk || !(isRootOrAdbEnabled
                 || PermissionUtils.hasAppOpsPermission(getApplication()))) {
             mAppOps.postValue(Collections.emptyList());
             return;
@@ -1328,9 +1329,10 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     AppDetailsAppOpItem appDetailsItem;
                     String permissionName = AppOpsManager.opToPermission(entry.getOp());
                     if (permissionName != null) {
-                        boolean isGranted = PermissionCompat.checkPermission(permissionName, mPackageName, mUserHandle)
-                                == PackageManager.PERMISSION_GRANTED;
-                        int permissionFlags = PermissionCompat.getPermissionFlags(permissionName, mPackageName, mUserHandle);
+                        boolean isGranted = isRootOrAdbEnabled && PermissionCompat.checkPermission(permissionName,
+                                mPackageName, mUserHandle) == PackageManager.PERMISSION_GRANTED;
+                        int permissionFlags = isRootOrAdbEnabled ? PermissionCompat.getPermissionFlags(permissionName,
+                                mPackageName, mUserHandle) : 0;
                         PermissionInfo permissionInfo = PermissionCompat.getPermissionInfo(permissionName, mPackageName, 0);
                         if (permissionInfo == null) {
                             permissionInfo = new PermissionInfo();
