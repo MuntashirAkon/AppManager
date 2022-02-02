@@ -1810,7 +1810,11 @@ public class AppOpsManager {
      */
     public static int permissionToOpCode(String permission) {
         Integer boxedOpCode = sPermToOp.get(permission);
-        return boxedOpCode != null ? boxedOpCode : OP_NONE;
+        if (boxedOpCode == null || boxedOpCode >= _NUM_OP) {
+            // This works because we don't have permissions associated with MIUI ops
+            return OP_NONE;
+        }
+        return boxedOpCode;
     }
 
     /**
