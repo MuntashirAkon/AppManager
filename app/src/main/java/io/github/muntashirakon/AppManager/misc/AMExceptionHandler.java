@@ -17,31 +17,31 @@ import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 
 public class AMExceptionHandler implements Thread.UncaughtExceptionHandler {
-    private final Thread.UncaughtExceptionHandler defaultUEH;
+    private final Thread.UncaughtExceptionHandler defaultExceptionHandler;
     private final Context context;
 
     public AMExceptionHandler(Context context) {
-        this.defaultUEH = Thread.getDefaultUncaughtExceptionHandler();
+        this.defaultExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
         this.context = context;
     }
 
     public void uncaughtException(@NonNull Thread t, @NonNull Throwable e) {
         // Collect info
         StackTraceElement[] arr = e.getStackTrace();
-        StringBuilder report = new StringBuilder(e.toString() + "\n");
+        StringBuilder report = new StringBuilder(e + "\n");
         for (StackTraceElement traceElement : arr) {
             report.append("    at ").append(traceElement.toString()).append("\n");
         }
         Throwable cause = e.getCause();
         if (cause != null) {
-            report.append(" Caused by: ").append(cause.toString()).append("\n");
+            report.append(" Caused by: ").append(cause).append("\n");
             arr = cause.getStackTrace();
             for (StackTraceElement stackTraceElement : arr) {
                 report.append("   at ").append(stackTraceElement.toString()).append("\n");
             }
         }
         report.append("\nDevice Info:\n");
-        report.append(new DeviceInfo(context).toString());
+        report.append(new DeviceInfo(context));
         // Send notification
         Intent i = new Intent(Intent.ACTION_SEND);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -52,21 +52,21 @@ public class AMExceptionHandler implements Thread.UncaughtExceptionHandler {
         i.putExtra(Intent.EXTRA_SUBJECT, "App Manager: Crash report");
         String body = report.toString();
         i.putExtra(Intent.EXTRA_TEXT, body);
-        NotificationCompat.Builder builder = NotificationUtils.getHighPriorityNotificationBuilder(context);
-        builder.setAutoCancel(true)
+        @SuppressLint("WrongConstant")
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
+                Intent.createChooser(i, context.getText(R.string.send_crash_report)),
+                PendingIntent.FLAG_ONE_SHOT | PendingIntentCompat.FLAG_MUTABLE);
+        NotificationCompat.Builder builder = NotificationUtils.getHighPriorityNotificationBuilder(context)
+                .setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setWhen(System.currentTimeMillis())
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setTicker(context.getText(R.string.app_name))
                 .setContentTitle(context.getText(R.string.am_crashed))
-                .setContentText(context.getText(R.string.tap_to_submit_crash_report));
-        @SuppressLint("WrongConstant")
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
-                Intent.createChooser(i, context.getText(R.string.send_crash_report)),
-                PendingIntent.FLAG_ONE_SHOT | PendingIntentCompat.FLAG_IMMUTABLE);
-        builder.setContentIntent(pendingIntent);
+                .setContentText(context.getText(R.string.tap_to_submit_crash_report))
+                .setContentIntent(pendingIntent);
         NotificationUtils.displayHighPriorityNotification(context, builder.build());
-        //
-        defaultUEH.uncaughtException(t, e);
+        // Manage the rests via the default handler
+        defaultExceptionHandler.uncaughtException(t, e);
     }
 }
