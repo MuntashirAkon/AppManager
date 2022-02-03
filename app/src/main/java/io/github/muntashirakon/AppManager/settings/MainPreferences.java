@@ -154,7 +154,8 @@ public class MainPreferences extends PreferenceFragmentCompat {
         currentMode = AppPref.getString(AppPref.PrefKey.PREF_MODE_OF_OPS_STR);
         // Backward compatibility for v2.6.0
         if (currentMode.equals("adb")) currentMode = Ops.MODE_ADB_OVER_TCP;
-        mode.setSummary(modes[MODE_NAMES.indexOf(currentMode)]);
+        mode.setSummary(getString(R.string.mode_of_op_with_inferred_mode_of_op, modes[MODE_NAMES.indexOf(currentMode)],
+                getInferredMode()));
         mode.setOnPreferenceClickListener(preference -> {
             new MaterialAlertDialogBuilder(activity)
                     .setTitle(R.string.pref_mode_of_operations)
@@ -173,7 +174,13 @@ public class MainPreferences extends PreferenceFragmentCompat {
                     .setPositiveButton(R.string.apply, (dialog, which) -> {
                         AppPref.set(AppPref.PrefKey.PREF_MODE_OF_OPS_STR, currentMode);
                         mode.setSummary(modes[MODE_NAMES.indexOf(currentMode)]);
-                        executor.submit(() -> Ops.init(activity, true));
+                        executor.submit(() -> {
+                            Ops.init(activity, true);
+                            if (isVisible()) {
+                                mode.setSummary(getString(R.string.mode_of_op_with_inferred_mode_of_op,
+                                        modes[MODE_NAMES.indexOf(currentMode)], getInferredMode()));
+                            }
+                        });
                     })
                     .setNegativeButton(R.string.cancel, null)
                     .show();
@@ -340,6 +347,17 @@ public class MainPreferences extends PreferenceFragmentCompat {
             } else localesL[i] = locale.getDisplayName(locale);
         }
         return localesL;
+    }
+
+    @NonNull
+    private CharSequence getInferredMode() {
+        if (Ops.isRoot()) {
+            return getString(R.string.root);
+        }
+        if (Ops.isAdb()) {
+            return "ADB";
+        }
+        return getString(R.string.no_root);
     }
 
     public static class MainPreferencesViewModel extends AndroidViewModel {

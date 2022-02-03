@@ -1179,4 +1179,5 @@
     <string name="magisk_denylist">Magisk DenyList</string>
     <string name="failed_to_enable_magisk_deny_list">Could not enable Magisk DenyList</string>
     <string name="failed_to_disable_magisk_deny_list">Could not disable Magisk DenyList</string>
+    <string name="mode_of_op_with_inferred_mode_of_op">%1$s (Inferred mode: %2$s)</string>
 </resources>
