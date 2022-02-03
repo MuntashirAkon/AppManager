@@ -11,6 +11,7 @@ import java.util.List;
 import io.github.muntashirakon.AppManager.rules.struct.AppOpRule;
 import io.github.muntashirakon.AppManager.rules.struct.BatteryOptimizationRule;
 import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
+import io.github.muntashirakon.AppManager.rules.struct.MagiskDenyListRule;
 import io.github.muntashirakon.AppManager.rules.struct.MagiskHideRule;
 import io.github.muntashirakon.AppManager.rules.struct.NetPolicyRule;
 import io.github.muntashirakon.AppManager.rules.struct.NotificationListenerRule;
@@ -95,11 +96,20 @@ public class PseudoRulesTest {
 
     @Test
     public void uniquenessOfMagiskHideTest() {
-        rules.setMagiskHide(PACKAGE_NAME, false);
-        rules.setMagiskHide(PACKAGE_NAME, true);
+        rules.setMagiskHide("pkg:process", false);
+        rules.setMagiskHide("pkg:process", true);
         assertEquals(1, rules.getAll().size());
-        assertNotEquals(new MagiskHideRule(PACKAGE_NAME, PACKAGE_NAME, false), rules.getAll().get(0));
-        assertEquals(new MagiskHideRule(PACKAGE_NAME, PACKAGE_NAME, true), rules.getAll().get(0));
+        assertNotEquals(new MagiskHideRule(PACKAGE_NAME, "pkg:process", false), rules.getAll().get(0));
+        assertEquals(new MagiskHideRule(PACKAGE_NAME, "pkg:process", true), rules.getAll().get(0));
+    }
+
+    @Test
+    public void uniquenessOfMagiskDenyListTest() {
+        rules.setMagiskDenyList("pkg:process", false);
+        rules.setMagiskDenyList("pkg:process", true);
+        assertEquals(1, rules.getAll().size());
+        assertNotEquals(new MagiskDenyListRule(PACKAGE_NAME, "pkg:process", false), rules.getAll().get(0));
+        assertEquals(new MagiskDenyListRule(PACKAGE_NAME, "pkg:process", true), rules.getAll().get(0));
     }
 
     @Test
@@ -170,10 +180,11 @@ public class PseudoRulesTest {
         rules.setNotificationListener(RuleEntry.STUB, true);
         rules.setNetPolicy(4);
         rules.setBatteryOptimization(true);
-        rules.setMagiskHide(PACKAGE_NAME, true);
+        rules.setMagiskHide(RuleEntry.STUB, true);
+        rules.setMagiskDenyList(RuleEntry.STUB, true); // "STUB" is the name of the process (although impossible but tested anyway
         rules.setSsaid("bc9948c6");
         List<RuleEntry> ruleEntries = rules.getAll();
-        assertEquals(10, ruleEntries.size());
+        assertEquals(11, ruleEntries.size());
         assertEquals(new ComponentRule(PACKAGE_NAME, RuleEntry.STUB, RuleType.ACTIVITY,
                 ComponentRule.COMPONENT_BLOCKED_IFW_DISABLE), ruleEntries.get(0));
         assertEquals(new ComponentRule(PACKAGE_NAME, RuleEntry.STUB, RuleType.PROVIDER,
@@ -186,8 +197,9 @@ public class PseudoRulesTest {
         assertEquals(new NotificationListenerRule(PACKAGE_NAME, RuleEntry.STUB, true), ruleEntries.get(5));
         assertEquals(new NetPolicyRule(PACKAGE_NAME, 4), ruleEntries.get(6));
         assertEquals(new BatteryOptimizationRule(PACKAGE_NAME, true), ruleEntries.get(7));
-        assertEquals(new MagiskHideRule(PACKAGE_NAME, PACKAGE_NAME, true), ruleEntries.get(8));
-        assertEquals(new SsaidRule(PACKAGE_NAME, "bc9948c6"), ruleEntries.get(9));
+        assertEquals(new MagiskHideRule(PACKAGE_NAME, RuleEntry.STUB, true), ruleEntries.get(8));
+        assertEquals(new MagiskDenyListRule(PACKAGE_NAME, RuleEntry.STUB, true), ruleEntries.get(9));
+        assertEquals(new SsaidRule(PACKAGE_NAME, "bc9948c6"), ruleEntries.get(10));
     }
 
     @After

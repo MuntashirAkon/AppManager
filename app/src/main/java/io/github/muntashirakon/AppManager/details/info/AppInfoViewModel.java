@@ -32,6 +32,10 @@ import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.details.AppDetailsViewModel;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.magisk.MagiskDenyList;
+import io.github.muntashirakon.AppManager.magisk.MagiskHide;
+import io.github.muntashirakon.AppManager.magisk.MagiskProcess;
+import io.github.muntashirakon.AppManager.magisk.MagiskUtils;
 import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
@@ -51,7 +55,6 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
-import io.github.muntashirakon.AppManager.utils.MagiskUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.io.ProxyFile;
@@ -134,9 +137,9 @@ public class AppInfoViewModel extends AndroidViewModel {
             }
             int privateFlags = ApplicationInfoCompat.getPrivateFlags(applicationInfo);
             tagCloud.isAppHidden = (privateFlags & ApplicationInfoCompat.PRIVATE_FLAG_HIDDEN) != 0;
-            tagCloud.magiskHiddenProcesses = new ArrayList<>(MagiskUtils.getMagiskHiddenProcesses(packageInfo));
+            tagCloud.magiskHiddenProcesses = new ArrayList<>(MagiskHide.getProcesses(packageInfo));
             boolean magiskHideEnabled = false;
-            for (MagiskUtils.MagiskProcess magiskProcess : tagCloud.magiskHiddenProcesses) {
+            for (MagiskProcess magiskProcess : tagCloud.magiskHiddenProcesses) {
                 magiskHideEnabled |= magiskProcess.isEnabled();
                 for (ActivityManager.RunningServiceInfo info : tagCloud.runningServices) {
                     if (info.process.startsWith(magiskProcess.name)) {
@@ -145,6 +148,17 @@ public class AppInfoViewModel extends AndroidViewModel {
                 }
             }
             tagCloud.isMagiskHideEnabled = !mainModel.getIsExternalApk() && magiskHideEnabled;
+            tagCloud.magiskDeniedProcesses = new ArrayList<>(MagiskDenyList.getProcesses(packageInfo));
+            boolean magiskDenyListEnabled = false;
+            for (MagiskProcess magiskProcess : tagCloud.magiskDeniedProcesses) {
+                magiskDenyListEnabled |= magiskProcess.isEnabled();
+                for (ActivityManager.RunningServiceInfo info : tagCloud.runningServices) {
+                    if (info.process.startsWith(magiskProcess.name)) {
+                        magiskProcess.setRunning(true);
+                    }
+                }
+            }
+            tagCloud.isMagiskDenyListEnabled = !mainModel.getIsExternalApk() && magiskDenyListEnabled;
             tagCloud.hasKeyStoreItems = KeyStoreUtils.hasKeyStore(applicationInfo.uid);
             tagCloud.hasMasterKeyInKeyStore = KeyStoreUtils.hasMasterKey(applicationInfo.uid);
             tagCloud.usesPlayAppSigning = PackageUtils.usesPlayAppSigning(applicationInfo);
@@ -328,12 +342,14 @@ public class AppInfoViewModel extends AndroidViewModel {
         public boolean hasCode;
         public boolean hasRequestedLargeHeap;
         public List<ActivityManager.RunningServiceInfo> runningServices;
-        public List<MagiskUtils.MagiskProcess> magiskHiddenProcesses;
+        public List<MagiskProcess> magiskHiddenProcesses;
+        public List<MagiskProcess> magiskDeniedProcesses;
         public boolean isForceStopped;
         public boolean isAppEnabled;
         public boolean isAppHidden;
         public boolean isAppSuspended;
         public boolean isMagiskHideEnabled;
+        public boolean isMagiskDenyListEnabled;
         public boolean hasKeyStoreItems;
         public boolean hasMasterKeyInKeyStore;
         public boolean usesPlayAppSigning;

@@ -102,6 +102,9 @@ import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
 import io.github.muntashirakon.AppManager.logcat.helper.ServiceHelper;
 import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.magisk.MagiskDenyList;
+import io.github.muntashirakon.AppManager.magisk.MagiskHide;
+import io.github.muntashirakon.AppManager.magisk.MagiskProcess;
 import io.github.muntashirakon.AppManager.profiles.ProfileManager;
 import io.github.muntashirakon.AppManager.profiles.ProfileMetaManager;
 import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
@@ -126,7 +129,6 @@ import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.IntentUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
-import io.github.muntashirakon.AppManager.utils.MagiskUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
@@ -174,7 +176,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private TextView packageNameView;
     private TextView versionView;
     private ImageView iconView;
-    private List<MagiskUtils.MagiskProcess> magiskHiddenProcesses;
+    private List<MagiskProcess> magiskHiddenProcesses;
+    private List<MagiskProcess> magiskDeniedProcesses;
 
     private final ExecutorService executor = Executors.newFixedThreadPool(3);
 
@@ -299,25 +302,22 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         if (mainModel != null && !mainModel.getIsExternalApk()) {
             inflater.inflate(R.menu.fragment_app_info_actions, menu);
+            menu.findItem(R.id.action_magisk_hide).setVisible(MagiskHide.available());
+            menu.findItem(R.id.action_magisk_denylist).setVisible(MagiskDenyList.available());
+            menu.findItem(R.id.action_open_in_termux).setVisible(Ops.isRoot());
+            menu.findItem(R.id.action_battery_opt).setVisible(Ops.isPrivileged());
+            menu.findItem(R.id.action_net_policy).setVisible(Ops.isPrivileged());
         }
     }
 
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         if (isExternalApk) return;
-        try {
-            menu.findItem(R.id.action_open_in_termux).setVisible(isRootEnabled);
-            menu.findItem(R.id.action_enable_magisk_hide).setVisible(isRootEnabled);
-            boolean isDebuggable = false;
-            if (mApplicationInfo != null) {
-                isDebuggable = (mApplicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
-            }
-            menu.findItem(R.id.action_run_in_termux).setVisible(isDebuggable);
-            menu.findItem(R.id.action_battery_opt).setVisible(isRootEnabled || isAdbEnabled);
-            menu.findItem(R.id.action_net_policy).setVisible(isRootEnabled || isAdbEnabled);
-        } catch (NullPointerException ignore) {
-            // Options menu is uninitialised for some reason, just suppress the exception
-        }
+        boolean isDebuggable;
+        if (mApplicationInfo != null) {
+            isDebuggable = (mApplicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+        } else isDebuggable = false;
+        menu.findItem(R.id.action_run_in_termux).setVisible(isDebuggable);
     }
 
     @Override
@@ -385,9 +385,12 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             } else requestPerm.launch(TERMUX_PERM_RUN_COMMAND, granted -> {
                 if (granted) runInTermux();
             });
-        } else if (itemId == R.id.action_enable_magisk_hide) {
+        } else if (itemId == R.id.action_magisk_hide) {
             if (mainModel == null) return true;
             displayMagiskHideDialog();
+        } else if (itemId == R.id.action_magisk_denylist) {
+            if (mainModel == null) return true;
+            displayMagiskDenyListDialog();
         } else if (itemId == R.id.action_battery_opt) {
             if (hasDumpPermission()) {
                 new MaterialAlertDialogBuilder(mActivity)
@@ -710,6 +713,10 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         if (tagCloud.isMagiskHideEnabled) {
             addChip(R.string.magisk_hide_enabled).setOnClickListener(v -> displayMagiskHideDialog());
         }
+        magiskDeniedProcesses = tagCloud.magiskDeniedProcesses;
+        if (tagCloud.isMagiskDenyListEnabled) {
+            addChip(R.string.magisk_denylist).setOnClickListener(v -> displayMagiskDenyListDialog());
+        }
         if (tagCloud.hasKeyStoreItems) {
             Chip chip;
             if (tagCloud.hasMasterKeyInKeyStore) {
@@ -848,7 +855,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         boolean[] choices = new boolean[magiskHiddenProcesses.size()];
         CharSequence[] processes = new CharSequence[magiskHiddenProcesses.size()];
         int i = 0;
-        for (MagiskUtils.MagiskProcess mp : magiskHiddenProcesses) {
+        for (MagiskProcess mp : magiskHiddenProcesses) {
             SpannableStringBuilder sb = new SpannableStringBuilder(UIUtils.getPrimaryText(mActivity, mp.name));
             if (mp.isIsolatedProcess()) {
                 sb.append("\n").append(UIUtils.getSecondaryText(mActivity, getString(R.string.isolated)));
@@ -865,9 +872,9 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         new MaterialAlertDialogBuilder(mActivity)
                 .setTitle(R.string.magisk_hide_enabled)
                 .setMultiChoiceItems(processes, choices, (dialog, which, isChecked) -> executor.submit(() -> {
-                    MagiskUtils.MagiskProcess mp = magiskHiddenProcesses.get(which);
+                    MagiskProcess mp = magiskHiddenProcesses.get(which);
                     mp.setEnabled(isChecked);
-                    if (MagiskUtils.apply(mp)) {
+                    if (MagiskHide.apply(mp)) {
                         choices[which] = isChecked;
                         try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mPackageName, mainModel.getUserHandle())) {
                             cb.setMagiskHide(mp.name, isChecked);
@@ -877,6 +884,49 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         mp.setEnabled(!isChecked);
                         runOnUiThread(() -> displayLongToast(isChecked ? R.string.failed_to_enable_magisk_hide
                                 : R.string.failed_to_disable_magisk_hide));
+                    }
+                }))
+                .setNegativeButton(R.string.close, null)
+                .show();
+    }
+
+    @UiThread
+    private void displayMagiskDenyListDialog() {
+        if (magiskDeniedProcesses == null || magiskDeniedProcesses.isEmpty()) {
+            return;
+        }
+        boolean[] choices = new boolean[magiskDeniedProcesses.size()];
+        CharSequence[] processes = new CharSequence[magiskDeniedProcesses.size()];
+        int i = 0;
+        for (MagiskProcess mp : magiskDeniedProcesses) {
+            SpannableStringBuilder sb = new SpannableStringBuilder(UIUtils.getPrimaryText(mActivity, mp.name));
+            if (mp.isIsolatedProcess()) {
+                sb.append("\n").append(UIUtils.getSecondaryText(mActivity, getString(R.string.isolated)));
+                if (mp.isRunning()) {
+                    sb.append(", ").append(UIUtils.getSecondaryText(mActivity, getString(R.string.running)));
+                }
+            } else if (mp.isRunning()) {
+                sb.append("\n").append(UIUtils.getSecondaryText(mActivity, getString(R.string.running)));
+            }
+            processes[i] = UIUtils.getSmallerText(sb);
+            choices[i] = mp.isEnabled();
+            i++;
+        }
+        new MaterialAlertDialogBuilder(mActivity)
+                .setTitle(R.string.magisk_denylist)
+                .setMultiChoiceItems(processes, choices, (dialog, which, isChecked) -> executor.submit(() -> {
+                    MagiskProcess mp = magiskDeniedProcesses.get(which);
+                    mp.setEnabled(isChecked);
+                    if (MagiskDenyList.apply(mp)) {
+                        choices[which] = isChecked;
+                        try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mPackageName, mainModel.getUserHandle())) {
+                            cb.setMagiskDenyList(mp.name, isChecked);
+                            runOnUiThread(this::refreshDetails);
+                        }
+                    } else {
+                        mp.setEnabled(!isChecked);
+                        runOnUiThread(() -> displayLongToast(isChecked ? R.string.failed_to_enable_magisk_deny_list
+                                : R.string.failed_to_disable_magisk_deny_list));
                     }
                 }))
                 .setNegativeButton(R.string.close, null)

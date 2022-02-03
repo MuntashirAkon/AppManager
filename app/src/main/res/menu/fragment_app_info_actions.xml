@@ -46,9 +46,15 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/action_enable_magisk_hide"
+        android:id="@+id/action_magisk_hide"
         android:icon="@drawable/ic_baseline_security_24"
         android:title="@string/magisk_hide_enabled"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_magisk_denylist"
+        android:icon="@drawable/ic_baseline_security_24"
+        android:title="@string/magisk_denylist"
         app:showAsAction="never" />
 
     <item

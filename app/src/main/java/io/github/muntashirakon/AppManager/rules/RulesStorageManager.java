@@ -24,6 +24,7 @@ import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.struct.AppOpRule;
 import io.github.muntashirakon.AppManager.rules.struct.BatteryOptimizationRule;
 import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
+import io.github.muntashirakon.AppManager.rules.struct.MagiskDenyListRule;
 import io.github.muntashirakon.AppManager.rules.struct.MagiskHideRule;
 import io.github.muntashirakon.AppManager.rules.struct.NetPolicyRule;
 import io.github.muntashirakon.AppManager.rules.struct.NotificationListenerRule;
@@ -145,8 +146,12 @@ public class RulesStorageManager implements Closeable {
         addUniqueEntry(new NotificationListenerRule(packageName, name, isGranted));
     }
 
-    public void setMagiskHide(String processName, boolean isHide) {
-        addUniqueEntry(new MagiskHideRule(packageName, processName, isHide));
+    public void setMagiskHide(String processName, boolean hidden) {
+        addUniqueEntry(new MagiskHideRule(packageName, processName, hidden));
+    }
+
+    public void setMagiskDenyList(String processName, boolean denied) {
+        addUniqueEntry(new MagiskDenyListRule(packageName, processName, denied));
     }
 
     public void setBatteryOptimization(boolean willOptimize) {

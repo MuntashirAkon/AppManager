@@ -60,9 +60,16 @@ public class RuleEntryTest {
 
     @Test
     public void flattenMagiskHideToString() {
-        RuleEntry rule = new MagiskHideRule(PACKAGE_NAME, PACKAGE_NAME, true);
-        assertEquals(PACKAGE_NAME + "\t" + PACKAGE_NAME + "\tMAGISK_HIDE\ttrue", rule.flattenToString(true));
-        assertEquals(PACKAGE_NAME + "\tMAGISK_HIDE\ttrue", rule.flattenToString(false));
+        RuleEntry rule = new MagiskHideRule(PACKAGE_NAME, "pkg:process", true);
+        assertEquals(PACKAGE_NAME + "\tpkg:process\tMAGISK_HIDE\ttrue", rule.flattenToString(true));
+        assertEquals("pkg:process\tMAGISK_HIDE\ttrue", rule.flattenToString(false));
+    }
+
+    @Test
+    public void flattenMagiskDenyListToString() {
+        RuleEntry rule = new MagiskDenyListRule(PACKAGE_NAME, "pkg:process", true);
+        assertEquals(PACKAGE_NAME + "\tpkg:process\tMAGISK_DENY_LIST\ttrue", rule.flattenToString(true));
+        assertEquals("pkg:process\tMAGISK_DENY_LIST\ttrue", rule.flattenToString(false));
     }
 
     @Test
@@ -162,16 +169,28 @@ public class RuleEntryTest {
     }
 
     @Test
-    public void unflattenMagiskHideFromString() {
+    public void unflattenMagiskHideFromStringOld() {
         RuleEntry rule = new MagiskHideRule(PACKAGE_NAME, PACKAGE_NAME, true);
         // Old
         assertEquals(RuleEntry.unflattenFromString(null, PACKAGE_NAME + "\tSTUB\tMAGISK_HIDE\ttrue", true), rule);
         assertEquals(RuleEntry.unflattenFromString(PACKAGE_NAME, PACKAGE_NAME + "\tSTUB\tMAGISK_HIDE\ttrue", true), rule);
         assertEquals(RuleEntry.unflattenFromString(PACKAGE_NAME, "STUB\tMAGISK_HIDE\ttrue", false), rule);
-        // New
-        assertEquals(RuleEntry.unflattenFromString(null, PACKAGE_NAME + "\t" + PACKAGE_NAME + "\tMAGISK_HIDE\ttrue", true), rule);
-        assertEquals(RuleEntry.unflattenFromString(PACKAGE_NAME, PACKAGE_NAME + "\t" + PACKAGE_NAME + "\tMAGISK_HIDE\ttrue", true), rule);
-        assertEquals(RuleEntry.unflattenFromString(PACKAGE_NAME, PACKAGE_NAME + "\tMAGISK_HIDE\ttrue", false), rule);
+    }
+
+    @Test
+    public void unflattenMagiskHideFromStringNew() {
+        RuleEntry rule = new MagiskHideRule(PACKAGE_NAME, "pkg:process", true);
+        assertEquals(RuleEntry.unflattenFromString(null, PACKAGE_NAME + "\tpkg:process\tMAGISK_HIDE\ttrue", true), rule);
+        assertEquals(RuleEntry.unflattenFromString(PACKAGE_NAME, PACKAGE_NAME + "\tpkg:process\tMAGISK_HIDE\ttrue", true), rule);
+        assertEquals(RuleEntry.unflattenFromString(PACKAGE_NAME, "pkg:process\tMAGISK_HIDE\ttrue", false), rule);
+    }
+
+    @Test
+    public void unflattenMagiskDenyListFromString() {
+        RuleEntry rule = new MagiskDenyListRule(PACKAGE_NAME, "pkg:process", true);
+        assertEquals(RuleEntry.unflattenFromString(null, PACKAGE_NAME + "\tpkg:process\tMAGISK_DENY_LIST\ttrue", true), rule);
+        assertEquals(RuleEntry.unflattenFromString(PACKAGE_NAME, PACKAGE_NAME + "\tpkg:process\tMAGISK_DENY_LIST\ttrue", true), rule);
+        assertEquals(RuleEntry.unflattenFromString(PACKAGE_NAME, "pkg:process\tMAGISK_DENY_LIST\ttrue", false), rule);
     }
 
     @Test

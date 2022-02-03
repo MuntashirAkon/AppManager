@@ -10,6 +10,7 @@ public enum RuleType {
     APP_OP,
     PERMISSION,
     MAGISK_HIDE,
+    MAGISK_DENY_LIST,
     BATTERY_OPT,
     NET_POLICY,
     NOTIFICATION,

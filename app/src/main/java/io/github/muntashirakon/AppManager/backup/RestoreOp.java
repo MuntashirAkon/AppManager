@@ -30,12 +30,15 @@ import io.github.muntashirakon.AppManager.crypto.Crypto;
 import io.github.muntashirakon.AppManager.crypto.CryptoException;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.magisk.MagiskDenyList;
+import io.github.muntashirakon.AppManager.magisk.MagiskHide;
 import io.github.muntashirakon.AppManager.permission.PermUtils;
 import io.github.muntashirakon.AppManager.permission.Permission;
 import io.github.muntashirakon.AppManager.rules.PseudoRules;
 import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.RulesImporter;
 import io.github.muntashirakon.AppManager.rules.struct.AppOpRule;
+import io.github.muntashirakon.AppManager.rules.struct.MagiskDenyListRule;
 import io.github.muntashirakon.AppManager.rules.struct.MagiskHideRule;
 import io.github.muntashirakon.AppManager.rules.struct.NetPolicyRule;
 import io.github.muntashirakon.AppManager.rules.struct.PermissionRule;
@@ -51,7 +54,6 @@ import io.github.muntashirakon.AppManager.uri.UriManager;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
-import io.github.muntashirakon.AppManager.utils.MagiskUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.TarUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -482,6 +484,7 @@ class RestoreOp implements Closeable {
         List<RuleEntry> entries = rules.getAll();
         AppOpsService appOpsService = new AppOpsService();
         INotificationManager notificationManager = INotificationManager.Stub.asInterface(ProxyBinder.getService(Context.NOTIFICATION_SERVICE));
+        boolean magiskHideAvailable = MagiskHide.available();
         for (RuleEntry entry : entries) {
             try {
                 switch (entry.type) {
@@ -511,10 +514,28 @@ class RestoreOp implements Closeable {
                         break;
                     case MAGISK_HIDE: {
                         MagiskHideRule magiskHideRule = (MagiskHideRule) entry;
-                        if (magiskHideRule.isHidden()) {
-                            MagiskUtils.hide(packageName, magiskHideRule.getProcessName());
+                        if (magiskHideAvailable) {
+                            if (magiskHideRule.isHidden()) {
+                                MagiskHide.add(packageName, magiskHideRule.getProcessName());
+                            } else {
+                                MagiskHide.remove(packageName, magiskHideRule.getProcessName());
+                            }
                         } else {
-                            MagiskUtils.unhide(packageName, magiskHideRule.getProcessName());
+                            // Fall-back to Magisk DenyList
+                            if (magiskHideRule.isHidden()) {
+                                MagiskDenyList.add(packageName, magiskHideRule.getProcessName());
+                            } else {
+                                MagiskDenyList.remove(packageName, magiskHideRule.getProcessName());
+                            }
+                        }
+                        break;
+                    }
+                    case MAGISK_DENY_LIST: {
+                        MagiskDenyListRule magiskDenyListRule = (MagiskDenyListRule) entry;
+                        if (magiskDenyListRule.isDenied()) {
+                            MagiskDenyList.add(packageName, magiskDenyListRule.getProcessName());
+                        } else {
+                            MagiskDenyList.remove(packageName, magiskDenyListRule.getProcessName());
                         }
                         break;
                     }

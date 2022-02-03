@@ -1176,4 +1176,7 @@
     <string name="failed_to_change_app_op_mode">Could not change the app op mode.</string>
     <string name="failed_to_use_the_current_mode_of_operation">Unable to use the current mode of operation. Falling back to no-root mode for this session.</string>
     <string name="warning_working_on_root_mode">Warning: Working on root instead of ADB mode.</string>
+    <string name="magisk_denylist">Magisk DenyList</string>
+    <string name="failed_to_enable_magisk_deny_list">Could not enable Magisk DenyList</string>
+    <string name="failed_to_disable_magisk_deny_list">Could not disable Magisk DenyList</string>
 </resources>
