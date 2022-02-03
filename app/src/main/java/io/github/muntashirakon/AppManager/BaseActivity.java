@@ -147,7 +147,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             ensureSecurityAndModeOfOp();
             return;
         }
-        Intent keyStoreIntent = new Intent(this, KeyStoreManager.class)
+        Intent keyStoreIntent = new Intent(this, KeyStoreActivity.class)
                 .putExtra(KeyStoreActivity.EXTRA_KS, true);
         mKeyStoreActivity.launch(keyStoreIntent);
     }
