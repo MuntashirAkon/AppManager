@@ -30,7 +30,6 @@ import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment
 import io.github.muntashirakon.AppManager.rules.compontents.ExternalComponentsImporter;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.users.Users;
-import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
@@ -156,7 +155,7 @@ public class ImportExportRulesDialogFragment extends BottomSheetDialogFragment {
     }
 
     private void importExistingRules(final boolean systemApps) {
-        if (!AppPref.isRootEnabled()) {
+        if (!Ops.isRoot()) {
             Toast.makeText(activity, R.string.only_works_in_root_mode, Toast.LENGTH_SHORT).show();
             return;
         }

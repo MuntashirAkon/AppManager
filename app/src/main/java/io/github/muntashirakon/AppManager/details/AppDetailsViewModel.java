@@ -82,6 +82,7 @@ import io.github.muntashirakon.AppManager.scanner.NativeLibraries;
 import io.github.muntashirakon.AppManager.servermanager.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
+import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.types.PackageChangeReceiver;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -1060,7 +1061,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         MutableLiveData<UserInfo> userInfoMutableLiveData = new MutableLiveData<>();
         mExecutor.submit(() -> {
             final List<UserInfo> userInfoList;
-            if (!mIsExternalApk && AppPref.isRootOrAdbEnabled()) {
+            if (!mIsExternalApk && Ops.isPrivileged()) {
                 userInfoList = Users.getUsers();
             } else userInfoList = null;
             if (userInfoList != null && userInfoList.size() > 1) {
@@ -1286,7 +1287,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     @WorkerThread
     private void loadAppOps() {
-        boolean isRootOrAdbEnabled = AppPref.isRootOrAdbEnabled();
+        boolean isRootOrAdbEnabled = Ops.isPrivileged();
         if (mPackageName == null || mIsExternalApk || !(isRootOrAdbEnabled
                 || PermissionUtils.hasAppOpsPermission(getApplication()))) {
             mAppOps.postValue(Collections.emptyList());
@@ -1382,7 +1383,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 mUsesPermissions.postValue(Collections.emptyList());
                 return;
             }
-            boolean isRootOrAdbEnabled = AppPref.isRootOrAdbEnabled();
+            boolean isRootOrAdbEnabled = Ops.isPrivileged();
             for (int i = 0; i < mPackageInfo.requestedPermissions.length; ++i) {
                 try {
                     String permissionName = mPackageInfo.requestedPermissions[i];

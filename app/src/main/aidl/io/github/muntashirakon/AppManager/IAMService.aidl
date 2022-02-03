@@ -20,4 +20,5 @@ interface IAMService {
     FileStatus stat(in String path) = 9;
     FileStatus lstat(in String path) = 10;
     IFileDescriptor getFD(in String path, in String mode) = 11;
+    int getUid() = 12;
 }

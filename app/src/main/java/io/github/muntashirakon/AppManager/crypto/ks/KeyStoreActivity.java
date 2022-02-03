@@ -21,12 +21,9 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 
-/**
- * @deprecated Kept for migratory purposes only, deprecated since v2.6.3. To be removed in v3.0.0.
- */
-@Deprecated
 public class KeyStoreActivity extends AppCompatActivity {
     public static final String EXTRA_ALIAS = "key";
+    public static final String EXTRA_KS = "ks";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,18 +31,39 @@ public class KeyStoreActivity extends AppCompatActivity {
         Thread.setDefaultUncaughtExceptionHandler(new AMExceptionHandler(this));
         AppCompatDelegate.setDefaultNightMode(AppPref.getInt(AppPref.PrefKey.PREF_APP_THEME_INT));
         getWindow().getDecorView().setLayoutDirection(AppPref.getInt(AppPref.PrefKey.PREF_LAYOUT_ORIENTATION_INT));
-        if (getIntent() != null) onNewIntent(getIntent());
-        else finish();
+        if (getIntent() != null) {
+            onNewIntent(getIntent());
+        } else finish();
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         String alias = intent.getStringExtra(EXTRA_ALIAS);
-        if (alias == null) {
-            finish();
+        if (alias != null) {
+            displayInputKeyStoreAliasPassword(alias);
             return;
         }
+        if (intent.hasExtra(EXTRA_KS)) {
+            AlertDialog ksDialog;
+            if (KeyStoreManager.hasKeyStore()) {
+                // We have a keystore but not a working password, input a password (probably due to system restore)
+                ksDialog = KeyStoreManager.inputKeyStorePassword(this, this::finish);
+            } else {
+                // We neither have a KeyStore nor a password. Create a password (not necessarily a keystore)
+                ksDialog = KeyStoreManager.generateAndDisplayKeyStorePassword(this, this::finish);
+            }
+            ksDialog.show();
+            return;
+        }
+        finish();
+    }
+
+    /**
+     * @deprecated Kept for migratory purposes only, deprecated since v2.6.3. To be removed in v3.0.0.
+     */
+    @Deprecated
+    private void displayInputKeyStoreAliasPassword(@NonNull String alias) {
         AlertDialog ksDialog = new TextInputDialogBuilder(this, getString(R.string.input_keystore_alias_pass, alias))
                 .setTitle(getString(R.string.input_keystore_alias_pass, alias))
                 .setHelperText(getString(R.string.input_keystore_alias_pass_description, alias))

@@ -36,8 +36,8 @@ import io.github.muntashirakon.AppManager.details.AppDetailsFragment;
 import io.github.muntashirakon.AppManager.logcat.helper.LogcatHelper;
 import io.github.muntashirakon.AppManager.main.ListOptions;
 import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
-import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runningapps.RunningAppsActivity;
+import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.io.Path;
 
 public class AppPref {
@@ -52,7 +52,6 @@ public class AppPref {
      * Keep these in sync with {@link #getDefaultValue(PrefKey)}.
      */
     public enum PrefKey {
-        PREF_ADB_MODE_ENABLED_BOOL,
         PREF_APP_OP_SHOW_DEFAULT_BOOL,
         PREF_APP_OP_SORT_ORDER_INT,
         PREF_APP_THEME_INT,
@@ -105,7 +104,6 @@ public class AppPref {
         PREF_OPEN_PGP_PACKAGE_STR,
         PREF_OPEN_PGP_USER_ID_STR,
         PREF_PERMISSIONS_SORT_ORDER_INT,
-        PREF_ROOT_MODE_ENABLED_BOOL,
 
         PREF_RUNNING_APPS_FILTER_FLAGS_INT,
         PREF_RUNNING_APPS_SORT_ORDER_INT,
@@ -227,20 +225,8 @@ public class AppPref {
         return (String) get(key);
     }
 
-    public static boolean isAdbEnabled() {
-        return getBoolean(PrefKey.PREF_ADB_MODE_ENABLED_BOOL);
-    }
-
     public static boolean isGlobalBlockingEnabled() {
         return getBoolean(PrefKey.PREF_GLOBAL_BLOCKING_ENABLED_BOOL);
-    }
-
-    public static boolean isRootEnabled() {
-        return getBoolean(PrefKey.PREF_ROOT_MODE_ENABLED_BOOL);
-    }
-
-    public static boolean isRootOrAdbEnabled() {
-        return isRootEnabled() || isAdbEnabled();
     }
 
     @Nullable
@@ -279,7 +265,7 @@ public class AppPref {
 
     @Nullable
     public static int[] getSelectedUsers() {
-        if (!isRootOrAdbEnabled()) return null;
+        if (!Ops.isPrivileged()) return null;
         String usersStr = getString(PrefKey.PREF_SELECTED_USERS_STR);
         if ("".equals(usersStr)) return null;
         String[] usersSplitStr = usersStr.split(",");
@@ -291,7 +277,7 @@ public class AppPref {
     }
 
     public static void setSelectedUsers(@Nullable int[] users) {
-        if (users == null || !isRootOrAdbEnabled()) {
+        if (users == null || !Ops.isPrivileged()) {
             set(PrefKey.PREF_SELECTED_USERS_STR, "");
             return;
         }
@@ -313,7 +299,7 @@ public class AppPref {
     @ComponentRule.ComponentStatus
     public static String getDefaultComponentStatus() {
         String selectedStatus = getString(PrefKey.PREF_DEFAULT_BLOCKING_METHOD_STR);
-        if (isAdbEnabled()) {
+        if (Ops.isAdb()) {
             if (selectedStatus.equals(ComponentRule.COMPONENT_TO_BE_BLOCKED_IFW_DISABLE)
                     || selectedStatus.equals(ComponentRule.COMPONENT_TO_BE_BLOCKED_IFW)) {
                 // Lower the status
@@ -425,8 +411,6 @@ public class AppPref {
                         | BackupFlags.BACKUP_APK_FILES | BackupFlags.BACKUP_EXTRAS;
             case PREF_BACKUP_COMPRESSION_METHOD_STR:
                 return TarUtils.TAR_GZIP;
-            case PREF_ROOT_MODE_ENABLED_BOOL:
-            case PREF_ADB_MODE_ENABLED_BOOL:
             case PREF_ENABLE_KILL_FOR_SYSTEM_BOOL:
             case PREF_GLOBAL_BLOCKING_ENABLED_BOOL:
             case PREF_INSTALLER_ALWAYS_ON_BACKGROUND_BOOL:
@@ -475,7 +459,7 @@ public class AppPref {
             case PREF_VIRUS_TOTAL_API_KEY_STR:
                 return "";
             case PREF_MODE_OF_OPS_STR:
-                return Runner.MODE_AUTO;
+                return Ops.MODE_AUTO;
             case PREF_INSTALLER_INSTALL_LOCATION_INT:
                 return PackageInfo.INSTALL_LOCATION_AUTO;
             case PREF_INSTALLER_INSTALLER_APP_STR:

@@ -19,6 +19,10 @@
     java.lang.Object writeReplace();
     java.lang.Object readResolve();
 }
+# Keep all class members that implement the percelable interface
+-keepclassmembers class * implements android.os.Parcelable {
+    static ** CREATOR;
+}
 # Don't minify server-related classes
 -keep public class io.github.muntashirakon.AppManager.servermanager.** { *; }
 -keep public class io.github.muntashirakon.AppManager.server.** { *; }

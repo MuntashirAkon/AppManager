@@ -85,7 +85,7 @@ public class RulesPreferences extends PreferenceFragmentCompat {
         final SwitchPreferenceCompat gcb = Objects.requireNonNull(findPreference("global_blocking_enabled"));
         gcb.setChecked(AppPref.isGlobalBlockingEnabled());
         gcb.setOnPreferenceChangeListener((preference, isEnabled) -> {
-            if (AppPref.isRootEnabled() && (boolean) isEnabled) {
+            if (Ops.isRoot() && (boolean) isEnabled) {
                 new Thread(() -> {
                     // Apply all rules immediately if GCB is true
                     synchronized (gcb) {

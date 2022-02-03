@@ -60,6 +60,7 @@ import io.github.muntashirakon.AppManager.runningapps.RunningAppsActivity;
 import io.github.muntashirakon.AppManager.servermanager.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
+import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.settings.SettingsActivity;
 import io.github.muntashirakon.AppManager.sysconfig.SysConfigActivity;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
@@ -240,7 +241,7 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
     @Override
     public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        menu.findItem(R.id.action_sys_config).setVisible(AppPref.isRootEnabled());
+        menu.findItem(R.id.action_sys_config).setVisible(Ops.isRoot());
         appUsageMenu.setVisible(FeatureController.isUsageAccessEnabled());
         logViewerMenu.setVisible(FeatureController.isLogViewerEnabled());
         return true;
@@ -488,8 +489,8 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
         exportRulesMenu.setEnabled(nonZeroSelection);
         addToProfileMenu.setEnabled(nonZeroSelection);
         /* === Visible/Invisible === */
-        boolean isRootEnabled = AppPref.isRootEnabled();
-        boolean isRootOrAdbEnabled = isRootEnabled || AppPref.isAdbEnabled();
+        boolean isRootEnabled = Ops.isRoot();
+        boolean isRootOrAdbEnabled = Ops.isPrivileged();
         enableDisableMenu.setVisible(isRootOrAdbEnabled);
         forceStopMenu.setVisible(isRootOrAdbEnabled);
         clearDataCacheMenu.setVisible(isRootOrAdbEnabled);
@@ -524,7 +525,7 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
         }
         // Set sort by
         if (mModel != null) {
-            if (!AppPref.isRootOrAdbEnabled()) {
+            if (!Ops.isPrivileged()) {
                 if (mModel.getSortBy() == ListOptions.SORT_BY_BLOCKED_COMPONENTS) {
                     mModel.setSortBy(ListOptions.SORT_BY_APP_LABEL);
                 }

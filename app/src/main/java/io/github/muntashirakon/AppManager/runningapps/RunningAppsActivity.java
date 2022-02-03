@@ -48,6 +48,7 @@ import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
 import io.github.muntashirakon.AppManager.scanner.vt.VtFileReport;
 import io.github.muntashirakon.AppManager.scanner.vt.VtFileScanMeta;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
+import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.reflow.ReflowMenuViewWrapper;
@@ -319,7 +320,7 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
                 }
             });
         }
-        mIsAdbMode = AppPref.isAdbEnabled();
+        mIsAdbMode = Ops.isAdb();
     }
 
     @Override

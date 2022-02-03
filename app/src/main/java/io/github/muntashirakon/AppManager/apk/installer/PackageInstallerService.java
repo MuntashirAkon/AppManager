@@ -22,6 +22,7 @@ import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.main.MainActivity;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
+import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.types.ForegroundService;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -109,7 +110,7 @@ public class PackageInstallerService extends ForegroundService {
                                           @Nullable String blockingPackage, @Nullable String statusMessage) {
                 // Block trackers if requested
                 if (result == STATUS_SUCCESS
-                        && AppPref.isRootEnabled()
+                        && Ops.isRoot()
                         && AppPref.getBoolean(AppPref.PrefKey.PREF_INSTALLER_BLOCK_TRACKERS_BOOL)) {
                     ComponentUtils.blockTrackingComponents(Collections.singletonList(
                             new UserPackagePair(packageName, userHandle)));

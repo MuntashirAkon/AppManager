@@ -8,11 +8,9 @@ import android.content.Intent;
 
 import androidx.annotation.NonNull;
 
-import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.server.common.ConfigParams;
 import io.github.muntashirakon.AppManager.server.common.ServerActions;
-import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 // Copyright 2016 Zheng Li
 public class ServerStatusChangeReceiver extends BroadcastReceiver {
@@ -36,9 +34,6 @@ public class ServerStatusChangeReceiver extends BroadcastReceiver {
                 case ServerActions.ACTION_SERVER_STOPPED:
                     break;
                 case ServerActions.ACTION_SERVER_CONNECTED:
-                    if (type.equals(ConfigParams.PARAM_TYPE_ADB)) {
-                        UIUtils.displayShortToast(R.string.working_on_adb_mode);
-                    }
                     break;
                 case ServerActions.ACTION_SERVER_DISCONNECTED:
                     break;

@@ -908,7 +908,7 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
 
         if (includeDmesg) {
             Path tempDmsgFile = SaveLogHelper.saveTemporaryFile(SaveLogHelper.TEMP_DMESG_FILENAME, null,
-                    Runner.runCommand(Runner.getRootInstance(), "dmesg").getOutputAsList());
+                    Runner.runCommand("dmesg").getOutputAsList());
             files.add(tempDmsgFile);
         }
         return files;

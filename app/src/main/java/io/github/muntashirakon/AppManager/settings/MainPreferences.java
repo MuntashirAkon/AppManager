@@ -7,22 +7,17 @@ import android.app.Application;
 import android.content.pm.UserInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.Spanned;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.collection.ArrayMap;
 import androidx.core.app.ActivityCompat;
 import androidx.core.text.HtmlCompat;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -40,17 +35,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.adb.AdbConnectionManager;
 import io.github.muntashirakon.AppManager.misc.DeviceInfo2;
-import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.runner.RunnerUtils;
-import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.AppManager.settings.crypto.ImportExportKeyStoreDialogFragment;
 import io.github.muntashirakon.AppManager.users.Users;
@@ -60,12 +50,10 @@ import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
-import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.dialog.AlertDialogBuilder;
 import io.github.muntashirakon.dialog.ScrollableDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
-import io.github.muntashirakon.dialog.TextInputDropdownDialogBuilder;
 
 public class MainPreferences extends PreferenceFragmentCompat {
     private static final List<Integer> THEME_CONST = Arrays.asList(
@@ -78,17 +66,17 @@ public class MainPreferences extends PreferenceFragmentCompat {
             View.LAYOUT_DIRECTION_LTR,
             View.LAYOUT_DIRECTION_RTL);
     private static final List<String> MODE_NAMES = Arrays.asList(
-            Runner.MODE_AUTO,
-            Runner.MODE_ROOT,
-            Runner.MODE_ADB_OVER_TCP,
-            Runner.MODE_ADB_WIFI,
-            Runner.MODE_NO_ROOT);
+            Ops.MODE_AUTO,
+            Ops.MODE_ROOT,
+            Ops.MODE_ADB_OVER_TCP,
+            Ops.MODE_ADB_WIFI,
+            Ops.MODE_NO_ROOT);
 
     SettingsActivity activity;
     private int currentTheme;
     private int currentLayoutOrientation;
     private String currentLang;
-    @Runner.Mode
+    @Ops.Mode
     private String currentMode;
     private MainPreferencesViewModel model;
     private int threadCount;
@@ -165,28 +153,27 @@ public class MainPreferences extends PreferenceFragmentCompat {
         final String[] modes = getResources().getStringArray(R.array.modes);
         currentMode = AppPref.getString(AppPref.PrefKey.PREF_MODE_OF_OPS_STR);
         // Backward compatibility for v2.6.0
-        if (currentMode.equals("adb")) currentMode = Runner.MODE_ADB_OVER_TCP;
+        if (currentMode.equals("adb")) currentMode = Ops.MODE_ADB_OVER_TCP;
         mode.setSummary(modes[MODE_NAMES.indexOf(currentMode)]);
         mode.setOnPreferenceClickListener(preference -> {
             new MaterialAlertDialogBuilder(activity)
                     .setTitle(R.string.pref_mode_of_operations)
                     .setSingleChoiceItems(modes, MODE_NAMES.indexOf(currentMode), (dialog, which) -> {
                         String modeName = MODE_NAMES.get(which);
-                        if (Runner.MODE_ADB_WIFI.equals(modeName)) {
+                        if (Ops.MODE_ADB_WIFI.equals(modeName)) {
                             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
                                 UIUtils.displayShortToast(R.string.wireless_debugging_not_supported);
                                 return;
                             }
                         } else {
                             ServerConfig.setAdbPort(ServerConfig.DEFAULT_ADB_PORT);
-                            LocalServer.updateConfig();
                         }
                         currentMode = modeName;
                     })
                     .setPositiveButton(R.string.apply, (dialog, which) -> {
                         AppPref.set(AppPref.PrefKey.PREF_MODE_OF_OPS_STR, currentMode);
                         mode.setSummary(modes[MODE_NAMES.indexOf(currentMode)]);
-                        executor.submit(() -> RunnerUtils.setModeOfOps(activity, true));
+                        executor.submit(() -> Ops.init(activity, true));
                     })
                     .setNegativeButton(R.string.cancel, null)
                     .show();
@@ -353,88 +340,6 @@ public class MainPreferences extends PreferenceFragmentCompat {
             } else localesL[i] = locale.getDisplayName(locale);
         }
         return localesL;
-    }
-
-    @RequiresApi(Build.VERSION_CODES.R)
-    @UiThread
-    public static void configureWirelessDebugging(FragmentActivity activity, CountDownLatch waitForConfig) {
-        new MaterialAlertDialogBuilder(activity)
-                .setTitle(R.string.wireless_debugging)
-                .setMessage(R.string.choose_what_to_do)
-                .setCancelable(false)
-                .setPositiveButton(R.string.adb_connect, (dialog1, which1) -> displayAdbConnect(activity, waitForConfig))
-                .setNeutralButton(R.string.adb_pair, (dialog1, which1) -> {
-                    TextInputDropdownDialogBuilder builder = new TextInputDropdownDialogBuilder(activity,
-                            R.string.adb_wifi_paring_code);
-                    builder.setTitle(R.string.wireless_debugging)
-                            .setAuxiliaryInput(R.string.port_number, null, null, null, true)
-                            .setPositiveButton(R.string.ok, (dialog, which, pairingCode, isChecked) -> {
-                                Editable portString = builder.getAuxiliaryInput();
-                                if (TextUtils.isEmpty(pairingCode) || TextUtils.isEmpty(portString)) {
-                                    UIUtils.displayShortToast(R.string.port_number_pairing_code_empty);
-                                    waitForConfig.countDown();
-                                    return;
-                                }
-                                int port;
-                                try {
-                                    port = Integer.decode(portString.toString().trim());
-                                } catch (NumberFormatException e) {
-                                    UIUtils.displayShortToast(R.string.port_number_invalid);
-                                    waitForConfig.countDown();
-                                    return;
-                                }
-                                new Thread(() -> {
-                                    try {
-                                        AdbConnectionManager.getInstance().pair(ServerConfig.getAdbHost(), port, pairingCode.toString().trim());
-                                        UiThreadHandler.run(() -> {
-                                            UIUtils.displayShortToast(R.string.paired_successfully);
-                                            if (!activity.isDestroyed()) displayAdbConnect(activity, waitForConfig);
-                                            else waitForConfig.countDown();
-                                        });
-                                    } catch (Exception e) {
-                                        UiThreadHandler.run(() -> UIUtils.displayShortToast(R.string.failed));
-                                        waitForConfig.countDown();
-                                        e.printStackTrace();
-                                    }
-                                }).start();
-                            })
-                            .setNegativeButton(R.string.cancel, (dialog, which, inputText, isChecked) -> waitForConfig.countDown());
-                    AlertDialog dialog = builder.create();
-                    dialog.setCancelable(false);
-                    dialog.show();
-                })
-                .setNegativeButton(R.string.cancel, (dialog, which) -> waitForConfig.countDown())
-                .show();
-    }
-
-    @UiThread
-    public static void displayAdbConnect(FragmentActivity activity, CountDownLatch waitForConfig) {
-        AlertDialog alertDialog = new TextInputDialogBuilder(activity, R.string.port_number)
-                .setTitle(R.string.wireless_debugging)
-                .setInputText(String.valueOf(ServerConfig.getAdbPort()))
-                .setHelperText(R.string.adb_connect_port_number_description)
-                .setPositiveButton(R.string.ok, (dialog2, which2, inputText, isChecked) -> {
-                    if (TextUtils.isEmpty(inputText)) {
-                        UIUtils.displayShortToast(R.string.port_number_empty);
-                        waitForConfig.countDown();
-                        return;
-                    }
-                    int port;
-                    try {
-                        port = Integer.decode(inputText.toString().trim());
-                    } catch (NumberFormatException e) {
-                        UIUtils.displayShortToast(R.string.port_number_invalid);
-                        waitForConfig.countDown();
-                        return;
-                    }
-                    ServerConfig.setAdbPort(port);
-                    LocalServer.updateConfig();
-                    waitForConfig.countDown();
-                })
-                .setNegativeButton(R.string.cancel, (dialog, which, inputText, isChecked) -> waitForConfig.countDown())
-                .create();
-        alertDialog.setCancelable(false);
-        alertDialog.show();
     }
 
     public static class MainPreferencesViewModel extends AndroidViewModel {

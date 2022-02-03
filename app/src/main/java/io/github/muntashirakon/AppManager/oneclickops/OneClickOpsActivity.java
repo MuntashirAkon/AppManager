@@ -35,8 +35,8 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
+import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
-import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.ListItemCreator;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
@@ -88,7 +88,7 @@ public class OneClickOpsActivity extends BaseActivity {
         mItemCreator.addItemWithTitleSubtitle(getString(R.string.block_unblock_trackers),
                         getString(R.string.block_unblock_trackers_description))
                 .setOnClickListener(v -> {
-                    if (!AppPref.isRootEnabled()) {
+                    if (!Ops.isRoot()) {
                         UIUtils.displayShortToast(R.string.only_works_in_root_mode);
                         return;
                     }
@@ -108,7 +108,7 @@ public class OneClickOpsActivity extends BaseActivity {
         mItemCreator.addItemWithTitleSubtitle(getString(R.string.block_components_dots),
                         getString(R.string.block_components_description))
                 .setOnClickListener(v -> {
-                    if (!AppPref.isRootEnabled()) {
+                    if (!Ops.isRoot()) {
                         UIUtils.displayShortToast(R.string.only_works_in_root_mode);
                         return;
                     }
@@ -147,7 +147,7 @@ public class OneClickOpsActivity extends BaseActivity {
         mItemCreator.addItemWithTitleSubtitle(getString(R.string.trim_caches_in_all_apps),
                         getString(R.string.trim_caches_in_all_apps_description))
                 .setOnClickListener(v -> {
-                    if (!AppPref.isRootOrAdbEnabled()) {
+                    if (!Ops.isPrivileged()) {
                         UIUtils.displayShortToast(R.string.only_works_in_root_or_adb_mode);
                         return;
                     }
@@ -257,7 +257,7 @@ public class OneClickOpsActivity extends BaseActivity {
     }
 
     private void showAppOpsSelectionDialog() {
-        if (!AppPref.isRootOrAdbEnabled()) {
+        if (!Ops.isPrivileged()) {
             UIUtils.displayShortToast(R.string.only_works_in_root_or_adb_mode);
             return;
         }

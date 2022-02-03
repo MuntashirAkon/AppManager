@@ -56,7 +56,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.servermanager.ActivityManagerCompat;
-import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.TextInputDropdownDialogBuilder;
@@ -530,10 +530,10 @@ public class ActivityInterceptor extends BaseActivity {
             public void afterTextChanged(Editable s) {
             }
         });
-        userIdEdit.setEnabled(AppPref.isRootOrAdbEnabled());
+        userIdEdit.setEnabled(Ops.isPrivileged());
         // Setup root
         useRootCheckBox.setChecked(isRoot);
-        useRootCheckBox.setVisibility(AppPref.isRootEnabled() ? View.VISIBLE : View.GONE);
+        useRootCheckBox.setVisibility(Ops.isRoot() ? View.VISIBLE : View.GONE);
         useRootCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> isRoot = isChecked);
         // Setup identifier
         TextInputLayout idLayout = findViewById(R.id.type_id_layout);
@@ -629,7 +629,7 @@ public class ActivityInterceptor extends BaseActivity {
                 } else {
                     if (isRoot) { // launch with root
                         ActivityManagerCompat.startActivity(this, mutableIntent, userHandle);
-                    } else if (userHandle != UserHandleHidden.myUserId() && AppPref.isRootOrAdbEnabled()) {
+                    } else if (userHandle != UserHandleHidden.myUserId() && Ops.isPrivileged()) {
                         ActivityManagerCompat.startActivity(this, mutableIntent, userHandle);
                     } else {
                         mutableIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -746,11 +746,11 @@ public class ActivityInterceptor extends BaseActivity {
                 StringTokenizer tokenizer = new StringTokenizer(line, "\t");
                 switch (tokenizer.nextToken()) {
                     case "ROOT":
-                        isRoot = AppPref.isRootEnabled() && Boolean.parseBoolean(tokenizer.nextToken());
+                        isRoot = Ops.isRoot() && Boolean.parseBoolean(tokenizer.nextToken());
                         ++parseCount;
                         break;
                     case "USER":
-                        if (AppPref.isRootOrAdbEnabled()) {
+                        if (Ops.isPrivileged()) {
                             userHandle = Integer.decode(tokenizer.nextToken());
                         }
                         ++parseCount;

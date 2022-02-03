@@ -17,6 +17,7 @@ import android.util.DisplayMetrics;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
 
+import androidx.annotation.AnyThread;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -89,6 +90,7 @@ public final class ApkFile implements AutoCloseable {
     private static final SparseIntArray instanceCount = new SparseIntArray(3);
     private static final SparseIntArray advancedInstanceCount = new SparseIntArray(3);
 
+    @AnyThread
     @NonNull
     public static ApkFile getInstance(int sparseArrayKey) {
         ApkFile apkFile = apkFiles.get(sparseArrayKey);
@@ -106,6 +108,7 @@ public final class ApkFile implements AutoCloseable {
     /**
      * Get a new instance in advance, thereby preventing any attempt at closing the APK file
      */
+    @AnyThread
     public static void getInAdvance(int sparseArrayKey) {
         synchronized (instanceCount) {
             instanceCount.put(sparseArrayKey, instanceCount.get(sparseArrayKey) + 1);

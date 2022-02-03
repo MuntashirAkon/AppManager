@@ -46,6 +46,7 @@ import io.github.muntashirakon.AppManager.profiles.ProfileMetaManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.servermanager.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.types.PackageChangeReceiver;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.Users;
@@ -413,7 +414,7 @@ public class MainViewModel extends AndroidViewModel {
     @GuardedBy("applicationItems")
     private void sortApplicationList(@ListOptions.SortOrder int sortBy, boolean reverse) {
         synchronized (applicationItems) {
-            final boolean isRootEnabled = AppPref.isRootEnabled();
+            final boolean isRootEnabled = Ops.isRoot();
             if (sortBy != ListOptions.SORT_BY_APP_LABEL) {
                 sortApplicationList(ListOptions.SORT_BY_APP_LABEL, false);
             }

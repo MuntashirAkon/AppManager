@@ -4,34 +4,20 @@ package io.github.muntashirakon.AppManager.runner;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.StringDef;
 import androidx.annotation.WorkerThread;
 
 import com.android.internal.util.TextUtils;
 
 import java.io.InputStream;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.settings.Ops;
 
 public abstract class Runner {
     public static final String TAG = "Runner";
-
-    @StringDef({MODE_AUTO, MODE_ROOT, MODE_ADB_OVER_TCP, MODE_ADB_WIFI, MODE_NO_ROOT})
-    @Retention(RetentionPolicy.SOURCE)
-    public @interface Mode {
-    }
-
-    public static final String MODE_AUTO = "auto";
-    public static final String MODE_ROOT = "root";
-    public static final String MODE_ADB_OVER_TCP = "adb_tcp";
-    public static final String MODE_ADB_WIFI = "adb_wifi";
-    public static final String MODE_NO_ROOT = "no-root";
 
     public static class Result {
         private final List<String> stdout;
@@ -87,15 +73,15 @@ public abstract class Runner {
         }
     }
 
-    private static RootShellRunner rootShellRunner;
-    private static AdbShellRunner adbShellRunner;
-    private static UserShellRunner userShellRunner;
+    private static RootShell rootShell;
+    private static AdbShell adbShell;
+    private static LocalShell localShell;
 
     @NonNull
     public static Runner getInstance() {
-        if (AppPref.isRootEnabled()) {
+        if (Ops.isRoot()) {
             return getRootInstance();
-        } else if (AppPref.isAdbEnabled()) {
+        } else if (Ops.isAdb()) {
             return getAdbInstance();
         } else {
             return getUserInstance();
@@ -104,28 +90,28 @@ public abstract class Runner {
 
     @NonNull
     public static Runner getRootInstance() {
-        if (rootShellRunner == null) {
-            rootShellRunner = new RootShellRunner();
-            Log.d(TAG, "RootShellRunner");
+        if (rootShell == null) {
+            rootShell = new RootShell();
+            Log.d(TAG, "RootShell");
         }
-        return rootShellRunner;
+        return rootShell;
     }
 
     @NonNull
-    public static Runner getAdbInstance() {
-        if (adbShellRunner == null) {
-            adbShellRunner = new AdbShellRunner();
-            Log.d(TAG, "AdbShellRunner");
+    private static Runner getAdbInstance() {
+        if (adbShell == null) {
+            adbShell = new AdbShell();
+            Log.d(TAG, "AdbShell");
         }
-        return adbShellRunner;
+        return adbShell;
     }
 
-    public static Runner getUserInstance() {
-        if (userShellRunner == null) {
-            userShellRunner = new UserShellRunner();
-            Log.d(TAG, "UserShellRunner");
+    private static Runner getUserInstance() {
+        if (localShell == null) {
+            localShell = new LocalShell();
+            Log.d(TAG, "LocalShell");
         }
-        return userShellRunner;
+        return localShell;
     }
 
     @NonNull

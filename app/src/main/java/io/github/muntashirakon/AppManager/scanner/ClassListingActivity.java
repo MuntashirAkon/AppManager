@@ -57,12 +57,6 @@ public class ClassListingActivity extends BaseActivity implements AdvancedSearch
     private List<String> classListAll;
     private List<String> trackerClassList = new ArrayList<>();
 
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
-
     @Override
     protected void onAuthenticated(Bundle savedInstanceState) {
         setContentView(R.layout.activity_class_listing);

@@ -147,7 +147,7 @@ public class InstallerPreferences extends PreferenceFragmentCompat {
                 .setChecked((boolean) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_DISPLAY_CHANGES_BOOL));
         // Block trackers
         SwitchPreferenceCompat blockTrackersPref = Objects.requireNonNull(findPreference("installer_block_trackers"));
-        blockTrackersPref.setVisible(AppPref.isRootEnabled());
+        blockTrackersPref.setVisible(Ops.isRoot());
         blockTrackersPref.setChecked((boolean) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_BLOCK_TRACKERS_BOOL));
         // Running installer in the background
         SwitchPreferenceCompat backgroundPref = Objects.requireNonNull(findPreference("installer_always_on_background"));

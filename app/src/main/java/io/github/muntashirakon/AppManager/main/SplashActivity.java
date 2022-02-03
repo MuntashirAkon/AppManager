@@ -5,6 +5,7 @@ package io.github.muntashirakon.AppManager.main;
 import android.annotation.SuppressLint;
 import android.app.KeyguardManager;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.widget.TextView;
@@ -12,29 +13,38 @@ import android.widget.TextView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.CallSuper;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.core.splashscreen.SplashScreen;
+import androidx.lifecycle.ViewModelProvider;
 
 import java.util.Locale;
-import java.util.concurrent.CountDownLatch;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreActivity;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.AMExceptionHandler;
-import io.github.muntashirakon.AppManager.runner.RunnerUtils;
+import io.github.muntashirakon.AppManager.settings.Ops;
+import io.github.muntashirakon.AppManager.settings.SecurityAndOpsViewModel;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
-import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class SplashActivity extends AppCompatActivity {
-    private static final String IS_AUTHENTICATING = "is_authenticating";
+    public static final String TAG = SplashActivity.class.getSimpleName();
 
+    @Nullable
+    private TextView mStateNameView;
+    private SecurityAndOpsViewModel mViewModel;
+
+    private final ActivityResultLauncher<Intent> mKeyStoreActivity = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                // Need authentication and/or verify mode of operation
+                ensureSecurityAndModeOfOp();
+            });
     private final ActivityResultLauncher<Intent> mAuthActivity = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == RESULT_OK) {
@@ -45,17 +55,11 @@ public class SplashActivity extends AppCompatActivity {
                     finishAndRemoveTask();
                 }
             });
-    private final CountDownLatch mWaitForKS = new CountDownLatch(1);
-    @Nullable
-    private TextView mStateNameView;
-    private boolean mIsAuthenticating = false;
 
     @Override
     protected final void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState != null) {
-            mIsAuthenticating = savedInstanceState.getBoolean(IS_AUTHENTICATING, false);
-        }
+        SplashScreen.installSplashScreen(this);
         Thread.setDefaultUncaughtExceptionHandler(new AMExceptionHandler(this));
         AppCompatDelegate.setDefaultNightMode(AppPref.getInt(AppPref.PrefKey.PREF_APP_THEME_INT));
         getWindow().getDecorView().setLayoutDirection(AppPref.getInt(AppPref.PrefKey.PREF_LAYOUT_ORIENTATION_INT));
@@ -63,30 +67,46 @@ public class SplashActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.version)).setText(String.format(Locale.ROOT, "%s (%d)",
                 BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE));
         mStateNameView = findViewById(R.id.state_name);
-        if (AppManager.isAuthenticated()) {
-            // Already authenticated
+        if (Ops.isAuthenticated()) {
+            Log.d(TAG, "Already authenticated.");
             startActivity(new Intent(this, MainActivity.class));
             finish();
             return;
         }
-        // We would still have to ensure if KeyStore has been initialised
-        ensureKeyStore();
-        if (mIsAuthenticating) {
-            // Authentication is currently running, do nothing
-            return;
+        // Run authentication
+        mViewModel = new ViewModelProvider(this).get(SecurityAndOpsViewModel.class);
+        Log.d(TAG, "Waiting to be authenticated.");
+        mViewModel.authenticationStatus().observe(this, status -> {
+            switch (status) {
+                case Ops.STATUS_SUCCESS:
+                case Ops.STATUS_FAILED:
+                    Log.d(TAG, "Authentication completed.");
+                    mViewModel.setAuthenticating(false);
+                    Ops.setAuthenticated(true);
+                    startActivity(new Intent(this, MainActivity.class));
+                    finish();
+                    return;
+                case Ops.STATUS_DISPLAY_WIRELESS_DEBUGGING:
+                    Log.d(TAG, "Request wireless debugging.");
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        mViewModel.autoConnectAdb(Ops.STATUS_DISPLAY_PAIRING);
+                        return;
+                    } // fall-through
+                case Ops.STATUS_DISPLAY_PAIRING:
+                    Log.d(TAG, "Display pairing dialog.");
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        Ops.connectWirelessDebugging(this, mViewModel);
+                        return;
+                    } // fall-through
+                case Ops.STATUS_DISPLAY_CONNECT:
+                    Log.d(TAG, "Display connect dialog.");
+                    Ops.connectAdbInput(this, mViewModel);
+            }
+        });
+        if (!mViewModel.isAuthenticating()) {
+            mViewModel.setAuthenticating(true);
+            authenticate();
         }
-        // Need authentication and/or verify mode of operation
-        mIsAuthenticating = true;
-        ensureSecurityAndModeOfOp();
-    }
-
-    @CallSuper
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        if (mIsAuthenticating) {
-            outState.putBoolean(IS_AUTHENTICATING, true);
-        }
-        super.onSaveInstanceState(outState);
     }
 
     @CallSuper
@@ -99,31 +119,17 @@ public class SplashActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-
-    private void ensureKeyStore() {
-        AlertDialog ksDialog;
-        // Handle KeyStore
+    private void authenticate() {
+        // Check KeyStore
         if (KeyStoreManager.hasKeyStorePassword()) {
-            if (Utils.isAppInstalled() || Utils.isAppUpdated()) {
-                // We already have a working keystore password
-                try {
-                    char[] password = KeyStoreManager.getInstance().getAmKeyStorePassword();
-                    ksDialog = KeyStoreManager.displayKeyStorePassword(this, password, mWaitForKS::countDown);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    ksDialog = null;
-                }
-            } else ksDialog = null;
-        } else if (KeyStoreManager.hasKeyStore()) {
-            // We have a keystore but not a working password, input a password (probably due to system restore)
-            ksDialog = KeyStoreManager.inputKeyStorePassword(this, mWaitForKS::countDown);
-        } else {
-            // We neither have a KeyStore nor a password. Create a password (not necessarily a keystore)
-            ksDialog = KeyStoreManager.generateAndDisplayKeyStorePassword(this, mWaitForKS::countDown);
+            // We already have a working keystore password.
+            // Only need authentication and/or verify mode of operation.
+            ensureSecurityAndModeOfOp();
+            return;
         }
-        if (ksDialog != null) {
-            ksDialog.show();
-        } else mWaitForKS.countDown();
+        Intent keyStoreIntent = new Intent(this, KeyStoreManager.class)
+                .putExtra(KeyStoreActivity.EXTRA_KS, true);
+        mKeyStoreActivity.launch(keyStoreIntent);
     }
 
     private void ensureSecurityAndModeOfOp() {
@@ -132,6 +138,7 @@ public class SplashActivity extends AppCompatActivity {
             handleSecurityAndModeOfOp();
             return;
         }
+        Log.d(TAG, "Security enabled.");
         KeyguardManager keyguardManager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
         if (keyguardManager.isKeyguardSecure()) {
             // Screen lock enabled
@@ -146,37 +153,11 @@ public class SplashActivity extends AppCompatActivity {
 
     private void handleSecurityAndModeOfOp() {
         // Authentication was successful
-        AppManager.setIsAuthenticated(true);
+        Log.d(TAG, "Authenticated");
+        if (mStateNameView != null) {
+            mStateNameView.setText(R.string.initializing);
+        }
         // Set mode of operation
-        new Thread(() -> {
-            try {
-                try {
-                    mWaitForKS.await();
-                } catch (InterruptedException ignore) {
-                }
-                runOnUiThread(() -> {
-                    if (mStateNameView != null) {
-                        mStateNameView.setText(R.string.initializing);
-                    }
-                });
-                if (Utils.isAppInstalled() || Utils.isAppUpdated()) {
-                    // This works because this could be the first activity the user can see
-                    try {
-                        KeyStoreManager.migrateKeyStore();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                RunnerUtils.setModeOfOps(this, false);
-            } finally {
-                // We're authenticated and mode of operation is chosen
-                runOnUiThread(() -> {
-                    mIsAuthenticating = false;
-                    // No saved instance state is passed here
-                    startActivity(new Intent(this, MainActivity.class));
-                    finish();
-                });
-            }
-        }).start();
+        mViewModel.setModeOfOps();
     }
 }

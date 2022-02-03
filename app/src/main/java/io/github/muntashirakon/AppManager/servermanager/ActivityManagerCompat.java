@@ -34,7 +34,7 @@ import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 
 public final class ActivityManagerCompat {
@@ -111,7 +111,7 @@ public final class ActivityManagerCompat {
     public static List<ActivityManager.RunningServiceInfo> getRunningServices(String packageName, @UserIdInt int userId) {
         List<ActivityManager.RunningServiceInfo> runningServices;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                && !AppPref.isRootOrAdbEnabled()
+                && !Ops.isPrivileged()
                 && PermissionUtils.hasDumpPermission()) {
             // Fetch running services by parsing dumpsys output if root/ADB is disabled
             // and android.permission.DUMP is granted
@@ -135,7 +135,7 @@ public final class ActivityManagerCompat {
 
     public static List<ActivityManager.RunningAppProcessInfo> getRunningAppProcesses() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                && !AppPref.isRootOrAdbEnabled()
+                && !Ops.isPrivileged()
                 && PermissionUtils.hasDumpPermission()) {
             // Fetch running app processes by parsing dumpsys output if root/ADB is disabled
             // and android.permission.DUMP is granted

@@ -81,8 +81,8 @@ public class ExternalComponentsImporter {
                     cb.addComponent(componentName, components.get(componentName));
                 }
                 // Remove IFW blocking rules if exists
-                Runner.runCommand(Runner.getRootInstance(), String.format("rm %s/%s*.xml",
-                        ComponentsBlocker.SYSTEM_RULES_PATH, packageName));
+                String ifwRuleFile = String.format("%s/%s*.xml", ComponentsBlocker.SYSTEM_RULES_PATH, packageName);
+                Runner.runCommand(new String[]{"rm", ifwRuleFile});
                 cb.applyRules(true);
             } catch (Exception e) {
                 e.printStackTrace();

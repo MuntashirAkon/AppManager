@@ -83,6 +83,7 @@ import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
 import io.github.muntashirakon.AppManager.servermanager.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
+import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
@@ -279,7 +280,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             case PROVIDERS:
             case RECEIVERS:
             case SERVICES:
-                if (mMainModel != null && !mMainModel.getIsExternalApk() && AppPref.isRootEnabled()) {
+                if (mMainModel != null && !mMainModel.getIsExternalApk() && Ops.isRoot()) {
                     inflater.inflate(R.menu.fragment_app_details_components_actions, menu);
                     mBlockingToggler = menu.findItem(R.id.action_toggle_blocking);
                     mMainModel.getRuleApplicationStatus().observe(mActivity, status -> {
@@ -327,7 +328,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
         }
         if (mNeededProperty == APP_INFO) super.onPrepareOptionsMenu(menu);
         else if (mNeededProperty <= PROVIDERS) {
-            if (AppPref.isRootEnabled())
+            if (Ops.isRoot())
                 menu.findItem(sSortMenuItemIdsMap[mMainModel.getSortOrder(mNeededProperty)]).setChecked(true);
         } else if (mNeededProperty <= USES_PERMISSIONS) {
             menu.findItem(sSortMenuItemIdsMap[mMainModel.getSortOrder(mNeededProperty)]).setChecked(true);
@@ -552,7 +553,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             case APP_OPS:
                 if (mIsExternalApk) {
                     return R.string.external_apk_no_app_op;
-                } else if (AppPref.isRootOrAdbEnabled() || PermissionUtils.hasAppOpsPermission(mActivity)) {
+                } else if (Ops.isPrivileged() || PermissionUtils.hasAppOpsPermission(mActivity)) {
                     return R.string.no_app_ops;
                 } else return R.string.no_app_ops_permission;
             case USES_PERMISSIONS:
@@ -593,11 +594,11 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             default:
                 return 0;
             case APP_OPS:
-                if (AppPref.isRootOrAdbEnabled() || PermissionUtils.hasAppOpsPermission(mActivity)) {
+                if (Ops.isPrivileged() || PermissionUtils.hasAppOpsPermission(mActivity)) {
                     return R.string.help_app_ops_tab;
                 } else return 0;
             case USES_PERMISSIONS:
-                if (AppPref.isRootOrAdbEnabled() || PermissionUtils.hasAppOpsPermission(mActivity)) {
+                if (Ops.isPrivileged() || PermissionUtils.hasAppOpsPermission(mActivity)) {
                     return R.string.help_uses_permissions_tab;
                 } else return 0;
             case PERMISSIONS:
@@ -634,8 +635,8 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
 
         @UiThread
         void setDefaultList(@NonNull List<AppDetailsItem<?>> list) {
-            mIsRootEnabled = AppPref.isRootEnabled();
-            mIsADBEnabled = AppPref.isAdbEnabled();
+            mIsRootEnabled = Ops.isRoot();
+            mIsADBEnabled = Ops.isAdb();
             mRequestedProperty = mNeededProperty;
             mConstraint = mMainModel == null ? null : mMainModel.getSearchQuery();
             mAdapterList = list;

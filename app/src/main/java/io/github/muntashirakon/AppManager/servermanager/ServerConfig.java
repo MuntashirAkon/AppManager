@@ -2,11 +2,15 @@
 
 package io.github.muntashirakon.AppManager.servermanager;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
+import android.provider.Settings;
 import android.text.TextUtils;
 
 import androidx.annotation.AnyThread;
+import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 
@@ -16,6 +20,7 @@ import java.io.IOException;
 import java.net.Inet4Address;
 
 import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.misc.NoOps;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 
 // Copyright 2016 Zheng Li
@@ -35,6 +40,7 @@ public final class ServerConfig {
     private static volatile boolean sInitialised = false;
 
     @AnyThread
+    @NoOps
     static void init(Context context, int userHandle) throws IOException {
         if (sInitialised) {
             return;
@@ -99,12 +105,15 @@ public final class ServerConfig {
     }
 
     @AnyThread
+    @IntRange(from = 0, to = 65535)
+    @NoOps
     public static int getAdbPort() {
         return sPreferences.getInt("adb_port", DEFAULT_ADB_PORT);
     }
 
     @AnyThread
-    public static void setAdbPort(int port) {
+    @NoOps
+    public static void setAdbPort(@IntRange(from = 0, to = 65535) int port) {
         sPreferences.edit().putInt("adb_port", port).apply();
     }
 
@@ -115,13 +124,13 @@ public final class ServerConfig {
 
     @WorkerThread
     @NonNull
-    public static String getAdbHost() {
-        return getHostIpAddress();
+    public static String getAdbHost(Context context) {
+        return getHostIpAddress(context);
     }
 
     @WorkerThread
     @NonNull
-    public static String getLocalServerHost() {
+    public static String getLocalServerHost(Context context) {
         return getHostIpAddress();
     }
 
@@ -129,7 +138,30 @@ public final class ServerConfig {
     @NonNull
     private static String getHostIpAddress() {
         String ipAddress = Inet4Address.getLoopbackAddress().getHostAddress();
-        if (ipAddress.equals("::1")) return "127.0.0.1";
+        if (ipAddress == null || ipAddress.equals("::1")) return "127.0.0.1";
         return ipAddress;
+    }
+
+    @WorkerThread
+    @NonNull
+    private static String getHostIpAddress(@NonNull Context context) {
+        if (isEmulator(context)) return "10.0.2.2";
+        String ipAddress = Inet4Address.getLoopbackAddress().getHostAddress();
+        if (ipAddress == null || ipAddress.equals("::1")) return "127.0.0.1";
+        return ipAddress;
+    }
+
+    // https://github.com/firebase/firebase-android-sdk/blob/7d86138304a6573cbe2c61b66b247e930fa05767/firebase-crashlytics/src/main/java/com/google/firebase/crashlytics/internal/common/CommonUtils.java#L402
+    private static final String GOLDFISH = "goldfish";
+    private static final String RANCHU = "ranchu";
+    private static final String SDK = "sdk";
+
+    private static boolean isEmulator(@NonNull Context context) {
+        @SuppressLint("HardwareIds")
+        String androidId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+        return Build.PRODUCT.contains(SDK)
+                || Build.HARDWARE.contains(GOLDFISH)
+                || Build.HARDWARE.contains(RANCHU)
+                || androidId == null;
     }
 }

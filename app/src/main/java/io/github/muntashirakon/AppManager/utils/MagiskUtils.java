@@ -78,7 +78,7 @@ public class MagiskUtils {
 
     @NonNull
     public static Set<String> listHiddenPackages() {
-        Runner.Result result = Runner.runCommand(Runner.getRootInstance(), new String[]{"magiskhide", "ls"});
+        Runner.Result result = Runner.runCommand(new String[]{"magiskhide", "ls"});
         Set<String> packages = new ArraySet<>();
         if (result.isSuccessful()) {
             for (String hideInfo : result.getOutputAsList()) {
@@ -205,7 +205,7 @@ public class MagiskUtils {
 
     @NonNull
     public static Collection<String> getMagiskHiddenProcesses(@NonNull String packageName) {
-        Runner.Result result = Runner.runCommand(Runner.getRootInstance(), "magiskhide ls | grep " + packageName);
+        Runner.Result result = Runner.runCommand("magiskhide ls | grep " + packageName);
         if (!result.isSuccessful()) {
             // No matches
             return Collections.emptyList();
@@ -239,20 +239,20 @@ public class MagiskUtils {
         // Check MagiskHide status
         if (!isMagiskHideEnabled(true)) return false;
         // MagiskHide is enabled, enable hide for the package
-        return Runner.runCommand(Runner.getRootInstance(), new String[]{"magiskhide", "add", packageName, processName}).isSuccessful();
+        return Runner.runCommand(new String[]{"magiskhide", "add", packageName, processName}).isSuccessful();
     }
 
     public static boolean unhide(String packageName, String processName) {
         // Disable hide for the package (don't need to check for status)
-        return Runner.runCommand(Runner.getRootInstance(), new String[]{"magiskhide", "rm", packageName, processName}).isSuccessful();
+        return Runner.runCommand(new String[]{"magiskhide", "rm", packageName, processName}).isSuccessful();
     }
 
     public static boolean isMagiskHideEnabled(boolean forceEnable) {
         // Check MagiskHide status
-        if (!Runner.runCommand(Runner.getRootInstance(), new String[]{"magiskhide", "status"}).isSuccessful()) {
+        if (!Runner.runCommand(new String[]{"magiskhide", "status"}).isSuccessful()) {
             // Enable MagiskHide first
             if (forceEnable) {
-                return Runner.runCommand(Runner.getRootInstance(), new String[]{"magiskhide", "enable"}).isSuccessful();
+                return Runner.runCommand(new String[]{"magiskhide", "enable"}).isSuccessful();
             } else return false;
         } else return true;
     }

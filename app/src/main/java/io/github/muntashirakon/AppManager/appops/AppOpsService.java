@@ -23,7 +23,7 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
-import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 
 public class AppOpsService {
@@ -31,7 +31,7 @@ public class AppOpsService {
 
     public AppOpsService() {
         Context context = AppManager.getContext();
-        if (!PermissionUtils.hasAppOpsPermission(context) && AppPref.isRootOrAdbEnabled()) {
+        if (!PermissionUtils.hasAppOpsPermission(context) && Ops.isPrivileged()) {
             try {
                 PermissionCompat.grantPermission(
                         context.getPackageName(),

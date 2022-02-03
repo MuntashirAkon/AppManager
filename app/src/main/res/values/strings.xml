@@ -1073,8 +1073,6 @@
     <string name="port_number_empty">Port number is empty.</string>
     <string name="port_number_invalid">Invalid port number.</string>
     <string name="unknown_net_policy">Unknown netpolicy (%1$s - %2$X)</string>
-    <string name="fallback_to_no_root_mode">Fallback to no-root mode?</string>
-    <string name="fallback_to_no_root_mode_description">App Manager was unable to use the current mode of operation. In order to avoid random behaviour, you should temporarily switch to no-root mode. Consider reporting it if the issue is not fixed after restarting the device.</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">Could not install app due to signature mismatch. The app was uninstalled without clearing its data.</string>
     <string name="failed_to_prevent_background_run">Could not prevent %1$s from running in the background</string>
     <string name="help_app_ops_tab">Click on an item to <b>allow</b> or <b>ignore</b> it. Long click on an item to see other supported modes.</string>
@@ -1166,7 +1164,7 @@
     <string name="process_id">Process ID</string>
     <string name="parent_process_id">Parent Process ID</string>
     <string name="virtual_memory">Virtual Memory</string>
-    <string name="cpu_percent">% CPU</string>
+    <string name="cpu_percent">%% CPU</string>
     <string name="cpu_time">CPU Time</string>
     <string name="priority">Priority</string>
     <string name="threads">Thread Count</string>
@@ -1176,4 +1174,6 @@
     <string name="memory_chart_info">● %1$s Applications ● %2$s Cached ● %3$s Buffers ● %4$s Free</string>
     <string name="swap_chart_info">● %1$s Used ● %2$s Free</string>
     <string name="failed_to_change_app_op_mode">Could not change the app op mode.</string>
+    <string name="failed_to_use_the_current_mode_of_operation">Unable to use the current mode of operation. Falling back to no-root mode for this session.</string>
+    <string name="warning_working_on_root_mode">Warning: Working on root instead of ADB mode.</string>
 </resources>

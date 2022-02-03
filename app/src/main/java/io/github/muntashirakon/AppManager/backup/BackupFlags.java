@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 
@@ -82,7 +83,7 @@ public final class BackupFlags {
 
     @NonNull
     public static BackupFlags fromPref() {
-        int flags = (Integer) AppPref.get(AppPref.PrefKey.PREF_BACKUP_FLAGS_INT);
+        int flags = AppPref.getInt(AppPref.PrefKey.PREF_BACKUP_FLAGS_INT);
         return new BackupFlags(getSanitizedFlags(flags));
     }
 
@@ -203,7 +204,7 @@ public final class BackupFlags {
             {
                 backupFlags.add(BACKUP_APK_FILES);
                 put(BACKUP_APK_FILES, new Pair<>(R.string.backup_apk_files, R.string.backup_apk_files_description));
-                if (AppPref.isRootEnabled()) {
+                if (Ops.isRoot()) {
                     backupFlags.add(BACKUP_INT_DATA);
                     put(BACKUP_INT_DATA, new Pair<>(R.string.internal_data, R.string.backup_internal_data_description));
                 }
@@ -213,7 +214,7 @@ public final class BackupFlags {
                 put(BACKUP_EXT_OBB_MEDIA, new Pair<>(R.string.backup_obb_media, R.string.backup_obb_media_description));
                 backupFlags.add(BACKUP_CACHE);
                 put(BACKUP_CACHE, new Pair<>(R.string.cache, R.string.backup_cache_description));
-                if (AppPref.isRootEnabled()) {
+                if (Ops.isRoot()) {
                     // Display extra backups only in root mode
                     backupFlags.add(BACKUP_EXTRAS);
                     put(BACKUP_EXTRAS, new Pair<>(R.string.backup_extras, R.string.backup_extras_description));
@@ -237,7 +238,7 @@ public final class BackupFlags {
      * Remove unsupported flags from the given list of flags
      */
     private static int getSanitizedFlags(int flags) {
-        if (!AppPref.isRootEnabled()) {
+        if (!Ops.isRoot()) {
             flags &= ~BACKUP_INT_DATA;
             flags &= ~BACKUP_EXTRAS;
             flags &= ~BACKUP_RULES;

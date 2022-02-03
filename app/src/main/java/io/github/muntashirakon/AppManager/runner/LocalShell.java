@@ -9,12 +9,12 @@ import com.topjohnwu.superuser.Shell;
 
 import java.io.InputStream;
 
-class RootShellRunner extends Runner {
-    @WorkerThread
+class LocalShell extends Runner {
     @NonNull
+    @WorkerThread
     @Override
     protected synchronized Result runCommand() {
-        Shell.Job shell = Shell.su(commands.toArray(new String[0]));
+        Shell.Job shell = Shell.sh(commands.toArray(new String[0]));
         for (InputStream is : inputStreams) {
             shell.add(is);
         }

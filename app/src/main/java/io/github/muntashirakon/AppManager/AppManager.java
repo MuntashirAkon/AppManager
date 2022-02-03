@@ -25,7 +25,6 @@ import io.github.muntashirakon.AppManager.utils.LangUtils;
 public class AppManager extends Application {
     private static AppManager instance;
     private static AMDatabase db;
-    private static boolean isAuthenticated = false;
 
     static {
         Shell.enableVerboseLogging = BuildConfig.DEBUG;
@@ -57,14 +56,6 @@ public class AppManager extends Application {
                     .build();
         }
         return db;
-    }
-
-    public static boolean isAuthenticated() {
-        return isAuthenticated;
-    }
-
-    public static void setIsAuthenticated(boolean isAuthenticated) {
-        AppManager.isAuthenticated = isAuthenticated;
     }
 
     @Override

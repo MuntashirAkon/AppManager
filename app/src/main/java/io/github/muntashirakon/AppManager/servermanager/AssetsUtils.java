@@ -60,8 +60,8 @@ class AssetsUtils {
     }
 
     @WorkerThread
-    static void writeScript(@NonNull LocalServer.Config config) throws IOException {
-        try (AssetFileDescriptor openFd = config.context.getAssets().openFd(ServerConfig.EXECUTABLE_FILE_NAME);
+    static void writeScript(@NonNull Context context) throws IOException {
+        try (AssetFileDescriptor openFd = context.getAssets().openFd(ServerConfig.EXECUTABLE_FILE_NAME);
              FileInputStream fdInputStream = openFd.createInputStream();
              InputStreamReader inputStreamReader = new InputStreamReader(fdInputStream);
              BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
@@ -72,7 +72,7 @@ class AssetsUtils {
             StringBuilder sb = new StringBuilder();
             sb.append(',').append(ConfigParams.PARAM_APP).append(':').append(BuildConfig.APPLICATION_ID);
 
-            if (config.allowBgRunning) {
+            if (ServerConfig.getAllowBgRunning()) {
                 sb.append(',').append(ConfigParams.PARAM_RUN_IN_BACKGROUND).append(':').append(1);
             }
             if (BuildConfig.DEBUG) {

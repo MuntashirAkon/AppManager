@@ -49,6 +49,7 @@ import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.types.ForegroundService;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -193,7 +194,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
             if (model.getInstalledPackageInfo() == null) {
                 // App not installed or data not cleared
                 actionName = R.string.install;
-                if (model.getApkFile().isSplit() || !AppPref.isRootOrAdbEnabled()) {
+                if (model.getApkFile().isSplit() || !Ops.isPrivileged()) {
                     install();
                 } else {
                     new MaterialAlertDialogBuilder(this)
@@ -239,7 +240,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
     @UiThread
     private void displayWhatsNewDialog() {
         if (!AppPref.getBoolean(AppPref.PrefKey.PREF_INSTALLER_DISPLAY_CHANGES_BOOL)) {
-            if (!AppPref.isRootOrAdbEnabled()) {
+            if (!Ops.isPrivileged()) {
                 triggerInstall();
                 return;
             }
@@ -273,7 +274,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
 
     @UiThread
     private void install() {
-        if (model.getApkFile().hasObb() && !AppPref.isRootOrAdbEnabled()) {
+        if (model.getApkFile().hasObb() && !Ops.isPrivileged()) {
             // Need to request permissions if not given
             storagePermission.request(granted -> {
                 if (granted) launchInstaller();
@@ -309,7 +310,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
 
     private void launchInstallService() {
         // Select user
-        if (AppPref.isRootOrAdbEnabled() && AppPref.getBoolean(AppPref.PrefKey.PREF_INSTALLER_DISPLAY_USERS_BOOL)) {
+        if (Ops.isPrivileged() && AppPref.getBoolean(AppPref.PrefKey.PREF_INSTALLER_DISPLAY_USERS_BOOL)) {
             List<UserInfo> users = model.getUsers();
             if (users != null && users.size() > 1) {
                 String[] userNames = new String[users.size() + 1];
@@ -349,7 +350,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
         // before the ApkFile in the queue is accessed, it will throw an IllegalArgumentException as the ApkFile under
         // the key is unavailable by the time it calls it.
         ApkFile.getInAdvance(model.getApkFileKey());
-        if (!AppPref.isRootOrAdbEnabled()) {
+        if (!Ops.isPrivileged()) {
             // For no-root, use accessibility service if enabled
             multiplexer.enableInstall(true);
         }
@@ -395,7 +396,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
     public void triggerInstall() {
         long installedVersionCode = PackageInfoCompat.getLongVersionCode(model.getInstalledPackageInfo());
         long thisVersionCode = PackageInfoCompat.getLongVersionCode(model.getNewPackageInfo());
-        if (installedVersionCode > thisVersionCode && !AppPref.isRootOrAdbEnabled()) {
+        if (installedVersionCode > thisVersionCode && !Ops.isPrivileged()) {
             // Need to uninstall and install again
             SpannableStringBuilder builder = new SpannableStringBuilder()
                     .append(getString(R.string.do_you_want_to_uninstall_and_install)).append(" ")
@@ -463,7 +464,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
     }
 
     private void reinstall() {
-        if (AppPref.isRootOrAdbEnabled()) {
+        if (Ops.isPrivileged()) {
             // User must be all
             try {
                 PackageInstallerCompat.uninstall(model.getPackageName(),

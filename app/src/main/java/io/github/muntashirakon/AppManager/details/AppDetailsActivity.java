@@ -105,25 +105,27 @@ public class AppDetailsActivity extends BaseActivity {
         }
         // Set tabs
         mViewPager.setAdapter(new AppDetailsFragmentPagerAdapter(fragmentManager));
-        // Get package info
-        (mPackageName != null ? model.setPackage(mPackageName) : model.setPackage(Objects.requireNonNull(mApkUri), mApkType))
-                .observe(this, packageInfo -> {
-                    progressDialog.dismiss();
-                    if (packageInfo == null) {
-                        UIUtils.displayShortToast(R.string.failed_to_fetch_package_info);
-                        if (!isDestroyed()) {
-                            finish();
-                        }
-                        return;
-                    }
-                    // Set title
-                    ApplicationInfo applicationInfo = packageInfo.applicationInfo;
-                    // Set title as the package label
-                    setTitle(applicationInfo.loadLabel(getPackageManager()));
-                    // Set subtitle as the username if more than one user exists
-                    model.getUserInfo().observe(this, userInfo -> getSupportActionBar()
-                            .setSubtitle(getString(R.string.user_profile_with_id, userInfo.name, userInfo.id)));
-                });
+        // Load package info
+        (mPackageName != null
+                ? model.setPackage(mPackageName)
+                : model.setPackage(Objects.requireNonNull(mApkUri), mApkType)
+        ).observe(this, packageInfo -> {
+            progressDialog.dismiss();
+            if (packageInfo == null) {
+                UIUtils.displayShortToast(R.string.failed_to_fetch_package_info);
+                if (!isDestroyed()) {
+                    finish();
+                }
+                return;
+            }
+            // Set title
+            ApplicationInfo applicationInfo = packageInfo.applicationInfo;
+            // Set title as the package label
+            setTitle(applicationInfo.loadLabel(getPackageManager()));
+            // Set subtitle as the username if more than one user exists
+            model.getUserInfo().observe(this, userInfo -> getSupportActionBar()
+                    .setSubtitle(getString(R.string.user_profile_with_id, userInfo.name, userInfo.id)));
+        });
         // Check for the existence of package
         model.getIsPackageExistLiveData().observe(this, isPackageExist -> {
             if (!isPackageExist) {
@@ -196,13 +198,15 @@ public class AppDetailsActivity extends BaseActivity {
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
-        SavedState ss = new SavedState();
-        ss.backToMainPage = mBackToMainPage;
-        ss.packageName = mPackageName;
-        ss.apkUri = mApkUri;
-        ss.apkType = mApkType;
-        ss.userHandle = mUserHandle;
-        outState.putParcelable("ss", ss);
+        if (mApkUri != null || mPackageName != null) {
+            SavedState ss = new SavedState();
+            ss.backToMainPage = mBackToMainPage;
+            ss.packageName = mPackageName;
+            ss.apkUri = mApkUri;
+            ss.apkType = mApkType;
+            ss.userHandle = mUserHandle;
+            outState.putParcelable("ss", ss);
+        }
         super.onSaveInstanceState(outState);
     }
 

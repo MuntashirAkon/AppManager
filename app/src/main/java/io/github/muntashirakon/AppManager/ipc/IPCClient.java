@@ -33,7 +33,7 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.server.common.IRootIPC;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
-import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -81,9 +81,9 @@ class IPCClient implements IBinder.DeathRecipient, Closeable {
 
     static void stopRootServer(ComponentName name) throws IOException, RemoteException {
         String cmd = getRunnerScript(AppManager.getContext(), name, CMDLINE_STOP_SERVER, "");
-        if (AppPref.isRootEnabled()) {
+        if (Ops.isRoot()) {
             Runner.runCommand(Runner.getRootInstance(), cmd);
-        } else if (AppPref.isAdbEnabled()) {
+        } else if (Ops.isAdb()) {
             LocalServer.getInstance().runCommand(cmd);
         }
     }
@@ -123,12 +123,12 @@ class IPCClient implements IBinder.DeathRecipient, Closeable {
         Log.e(TAG, "Running service starter script...");
         broadcastWatcher = new CountDownLatch(1);
         String cmd = getRunnerScript(context, name, IPCServer.class.getName(), debugParams);
-        if (AppPref.isRootEnabled()) {
+        if (Ops.isRoot()) {
             if (!Runner.runCommand(Runner.getRootInstance(), cmd).isSuccessful()) {
                 Log.e(TAG, "Couldn't start service.");
                 return;
             }
-        } else if (AppPref.isAdbEnabled()) {
+        } else if (Ops.isAdb()) {
             if (LocalServer.getInstance().runCommand(cmd).getStatusCode() != 0) {
                 Log.e(TAG, "Couldn't start service.");
                 return;

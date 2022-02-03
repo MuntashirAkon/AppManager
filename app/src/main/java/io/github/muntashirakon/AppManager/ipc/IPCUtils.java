@@ -7,16 +7,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.os.RemoteException;
+
+import androidx.annotation.AnyThread;
+import androidx.annotation.GuardedBy;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import android.os.RemoteException;
-import androidx.annotation.*;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.IAMService;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.misc.NoOps;
+import io.github.muntashirakon.AppManager.settings.Ops;
 
 public final class IPCUtils {
     private static final String TAG = "IPCUtils";
@@ -38,6 +44,7 @@ public final class IPCUtils {
     @GuardedBy("connectionWrapper")
     @WorkerThread
     @NonNull
+    @NoOps(used = true)
     public static IAMService getAmService() throws RemoteException {
         synchronized (connectionWrapper) {
             try {
@@ -74,6 +81,7 @@ public final class IPCUtils {
 
     @AnyThread
     @NonNull
+    @NoOps
     public static IAMService getServiceSafe() throws RemoteException {
         if (amService == null || !amService.asBinder().pingBinder()) {
             throw new RemoteException("AMService not running.");
@@ -163,9 +171,10 @@ public final class IPCUtils {
 
         @WorkerThread
         @NonNull
-        public IAMService getAmService() throws RemoteException {
+        @NoOps(used = true)
+        private IAMService getAmService() throws RemoteException {
             synchronized (conn) {
-                if (amService == null && AppPref.isRootOrAdbEnabled()) {
+                if (amService == null && Ops.isPrivileged()) {
                     startDaemon();
                 }
                 return getServiceSafe();

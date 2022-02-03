@@ -22,7 +22,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 
 /**
@@ -84,7 +84,7 @@ public abstract class RootService extends ContextWrapper {
             @NonNull ServiceConnection conn) {
         serialExecutor.execute(() -> {
             // If no root/ADB access, don't even bother
-            if (!AppPref.isRootOrAdbEnabled())
+            if (!Ops.isPrivileged())
                 return;
 
             Log.d(TAG, "Total bound services: " + bound.size());
@@ -158,7 +158,7 @@ public abstract class RootService extends ContextWrapper {
                     return;
                 }
             }
-            if (!AppPref.isRootOrAdbEnabled())
+            if (!Ops.isPrivileged())
                 return;
             // No bound service of the same component, go through another root process to
             // make sure all daemon is killed

@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.servermanager;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.SystemClock;
 
 import androidx.annotation.AnyThread;
@@ -21,14 +23,14 @@ import java.util.concurrent.TimeUnit;
 
 import io.github.muntashirakon.AppManager.adb.AdbConnectionManager;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.misc.NoOps;
 import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.server.common.BaseCaller;
 import io.github.muntashirakon.AppManager.server.common.Caller;
 import io.github.muntashirakon.AppManager.server.common.CallerResult;
 import io.github.muntashirakon.AppManager.server.common.DataTransmission;
 import io.github.muntashirakon.AppManager.server.common.ParcelableUtil;
-import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.adb.AdbStream;
 
@@ -36,44 +38,31 @@ import io.github.muntashirakon.adb.AdbStream;
 class LocalServerManager {
     private static final String TAG = "LocalServerManager";
 
+    @SuppressLint("StaticFieldLeak")
     private static LocalServerManager sLocalServerManager;
 
     @WorkerThread
-    static LocalServerManager getInstance() {
+    @NoOps
+    @NonNull
+    static LocalServerManager getInstance(@NonNull Context context) {
         if (sLocalServerManager == null) {
             synchronized (LocalServerManager.class) {
                 if (sLocalServerManager == null) {
-                    sLocalServerManager = new LocalServerManager();
+                    sLocalServerManager = new LocalServerManager(context);
                 }
             }
         }
         return sLocalServerManager;
     }
 
+    @NonNull
+    private final Context mContext;
     @Nullable
     private ClientSession mSession;
-    private LocalServer.Config mConfig;
 
     @WorkerThread
-    private LocalServerManager() {
-        mConfig = new LocalServer.Config();
-    }
-
-    /**
-     * Update preferences
-     *
-     * @param config The new preferences
-     */
-    @AnyThread
-    void updateConfig(LocalServer.Config config) {
-        if (config != null) {
-            mConfig = config;
-        }
-    }
-
-    @AnyThread
-    LocalServer.Config getConfig() {
-        return mConfig;
+    private LocalServerManager(@NonNull Context context) {
+        mContext = context;
     }
 
     /**
@@ -85,6 +74,7 @@ class LocalServerManager {
      */
     @WorkerThread
     @NonNull
+    @NoOps(used = true)
     private ClientSession getSession() throws IOException {
         if (mSession == null || !mSession.isRunning()) {
             try {
@@ -128,6 +118,7 @@ class LocalServerManager {
     }
 
     @WorkerThread
+    @NoOps(used = true)
     void start() throws IOException {
         getSession();
     }
@@ -171,7 +162,7 @@ class LocalServerManager {
     @WorkerThread
     @NonNull
     private String getExecCommand() throws IOException {
-        AssetsUtils.writeScript(mConfig);
+        AssetsUtils.writeScript(mContext);
         Log.e(TAG, "classpath --> " + ServerConfig.getClassPath());
         Log.e(TAG, "exec path --> " + ServerConfig.getExecPath());
         return "sh " + ServerConfig.getExecPath() + " " + ServerConfig.getLocalServerPort() + " " + ServerConfig.getLocalToken();
@@ -199,22 +190,17 @@ class LocalServerManager {
         }
     };
 
-    void tryAdb() throws Exception {
-        AdbConnectionManager adbConnectionManager = AdbConnectionManager.getInstance();
-        if (!adbConnectionManager.isConnected() || !adbConnectionManager.connect(mConfig.adbHost, mConfig.adbPort)) {
-            throw new IOException("Could not connect to ADB.");
-        }
-    }
-
     @WorkerThread
     private void useAdbStartServer() throws Exception {
         if (adbStream == null || Objects.requireNonNull(adbStream).isClosed()) {
             // ADB shell not running
+            String adbHost = ServerConfig.getAdbHost(mContext);
+            int adbPort = ServerConfig.getAdbPort();
             AdbConnectionManager manager = AdbConnectionManager.getInstance();
-            if (!manager.isConnected() && !manager.connect(mConfig.adbHost, mConfig.adbPort)) {
+            Log.d(TAG, "useAdbStartServer: Connecting using host=" + adbHost + ", port=" + adbPort);
+            if (!manager.isConnected() && !manager.connect(adbHost, adbPort)) {
                 throw new IOException("Could not connect to ADB.");
             }
-            Log.d(TAG, "useAdbStartServer: Connected using host=" + mConfig.adbHost + ", port=" + mConfig.adbPort);
 
             Log.d(TAG, "useAdbStartServer: Opening shell...");
             adbStream = manager.openStream("shell:");
@@ -231,8 +217,7 @@ class LocalServerManager {
             os.write((command + "\n").getBytes());
         }
 
-        adbConnectionWatcher.await(1, TimeUnit.MINUTES);
-        if (adbConnectionWatcher.getCount() == 1 || !adbServerStarted) {
+        if (!adbConnectionWatcher.await(1, TimeUnit.MINUTES) || !adbServerStarted) {
             throw new Exception("Server wasn't started.");
         }
         Log.d(TAG, "useAdbStartServer: Server has started.");
@@ -240,7 +225,7 @@ class LocalServerManager {
 
     @WorkerThread
     private void useRootStartServer() throws Exception {
-        if (!RunnerUtils.isRootGiven()) {
+        if (!Ops.hasRoot()) {
             throw new Exception("Root access denied");
         }
         String command = getExecCommand(); // + "\n" + "supolicy --live 'allow qti_init_shell zygote_exec file execute'";
@@ -259,10 +244,11 @@ class LocalServerManager {
      * Start root or ADB server based on config
      */
     @WorkerThread
+    @NoOps(used = true)
     private void startServer() throws Exception {
-        if (AppPref.isAdbEnabled()) {
+        if (Ops.isAdb()) {
             useAdbStartServer();
-        } else if (AppPref.isRootEnabled()) {
+        } else if (Ops.isRoot()) {
             useRootStartServer();
         } else throw new Exception("Neither root nor ADB mode is enabled.");
     }
@@ -275,15 +261,16 @@ class LocalServerManager {
      */
     @WorkerThread
     @NonNull
+    @NoOps(used = true)
     private ClientSession createSession() throws IOException {
         if (isRunning()) {
             // Non-null check has already been done
             return Objects.requireNonNull(mSession);
         }
-        if (!AppPref.isRootOrAdbEnabled()) {
+        if (!Ops.isPrivileged()) {
             throw new IOException("Root/ADB not enabled.");
         }
-        Socket socket = new Socket(ServerConfig.getLocalServerHost(), ServerConfig.getLocalServerPort());
+        Socket socket = new Socket(ServerConfig.getLocalServerHost(mContext), ServerConfig.getLocalServerPort());
         socket.setSoTimeout(1000 * 30);
         OutputStream os = socket.getOutputStream();
         InputStream is = socket.getInputStream();

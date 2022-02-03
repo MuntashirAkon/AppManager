@@ -45,9 +45,9 @@ import io.github.muntashirakon.AppManager.rules.struct.UriGrantRule;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.servermanager.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.ssaid.SsaidSettings;
 import io.github.muntashirakon.AppManager.uri.UriManager;
-import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
@@ -272,7 +272,7 @@ class RestoreOp implements Closeable {
         }
         // Setup package staging directory
         Path packageStagingDirectory;
-        if (AppPref.isRootOrAdbEnabled()) {
+        if (Ops.isPrivileged()) {
             try {
                 synchronized (sLock) {
                     PackageUtils.ensurePackageStagingDirectoryPrivileged();

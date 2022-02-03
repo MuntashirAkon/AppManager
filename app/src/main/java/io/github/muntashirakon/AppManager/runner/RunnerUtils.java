@@ -3,15 +3,9 @@
 package io.github.muntashirakon.AppManager.runner;
 
 import android.os.Build;
-import android.os.RemoteException;
 import android.os.UserHandleHidden;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.WorkerThread;
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.FragmentActivity;
-
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,20 +16,9 @@ import java.util.BitSet;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
 
-import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.servermanager.LocalServer;
-import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
-import io.github.muntashirakon.AppManager.settings.MainPreferences;
-import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.AppManager.utils.UIUtils;
-import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
+import io.github.muntashirakon.AppManager.misc.NoOps;
 
-@SuppressWarnings("UnusedReturnValue")
 public final class RunnerUtils {
     public static final String CMD_PM = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ? "cmd package" : "pm";
 
@@ -116,6 +99,7 @@ public final class RunnerUtils {
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    @NoOps
     public static boolean isRootGiven() {
         if (isRootAvailable()) {
             String output = Runner.runCommand(Runner.getRootInstance(), "echo AMRootTest").getOutput();
@@ -124,147 +108,19 @@ public final class RunnerUtils {
         return false;
     }
 
+    @NoOps
     public static boolean isRootAvailable() {
-        String pathEnv = System.getenv("PATH");
-        if (pathEnv != null) {
+        try {
+            String pathEnv = System.getenv("PATH");
+            if (pathEnv == null) return false;
             for (String pathDir : pathEnv.split(":")) {
-                try {
-                    if (new File(pathDir, "su").exists()) {
-                        return true;
-                    }
-                } catch (NullPointerException ignore) {
+                if (pathDir != null && new File(pathDir, "su").exists()) {
+                    return true;
                 }
             }
+        } catch (Throwable ignore) {
         }
         return false;
-    }
-
-    @WorkerThread
-    private static void autoDetectRootOrAdb() {
-        // Update config
-        LocalServer.updateConfig();
-        // Check root, ADB and load am_local_server
-        if (!RunnerUtils.isRootGiven()) {
-            AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
-            // Check for adb
-            if (LocalServer.isAdbAvailable()) {
-                Log.e("ADB", "ADB available");
-                AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, true);
-            }
-            try {
-                LocalServer.restart();
-                if (!LocalServer.isAMServiceAlive()) {
-                    throw new IOException("ADB not available");
-                }
-                UiThreadHandler.run(() -> UIUtils.displayShortToast(R.string.working_on_adb_mode));
-            } catch (IOException | RemoteException e) {
-                Log.e("ADB", e);
-                AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
-            }
-        } else {  // Root is available
-            AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, true);
-            try {
-                LocalServer.launchAmService();
-            } catch (RemoteException e) {
-                Log.e("ROOT", e);
-                AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
-            }
-        }
-    }
-
-    @WorkerThread
-    public static void setModeOfOps(FragmentActivity activity, boolean force) {
-        String mode = AppPref.getString(AppPref.PrefKey.PREF_MODE_OF_OPS_STR);
-        try {
-            if (!force) {
-                if (LocalServer.isAMServiceAlive()) {
-                    // Don't bother detecting root/ADB
-                    return;
-                } else if (!Runner.MODE_NO_ROOT.equals(mode) && LocalServer.isLocalServerAlive()) {
-                    try {
-                        // Remote server is running
-                        LocalServer.getInstance();
-                        return;
-                    } catch (Exception ignore) {
-                    }
-                }
-            }
-            switch (mode) {
-                case Runner.MODE_AUTO:
-                    RunnerUtils.autoDetectRootOrAdb();
-                    return;
-                case Runner.MODE_ROOT:
-                    if (!isRootAvailable()) {
-                        throw new Exception("Root not available.");
-                    }
-                    AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, true);
-                    AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
-                    LocalServer.launchAmService();
-                    return;
-                case Runner.MODE_ADB_WIFI:
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                        AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
-                        AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, true);
-                        CountDownLatch waitForConfig = new CountDownLatch(1);
-                        UiThreadHandler.run(() -> MainPreferences.configureWirelessDebugging(activity, waitForConfig));
-                        waitForConfig.await(2, TimeUnit.MINUTES);
-                        LocalServer.restart();
-                        return;
-                    } // else fallback to ADB over TCP
-                case "adb":
-                    if (mode.equals("adb")) {
-                        // Backward compatibility for v2.6.0
-                        AppPref.set(AppPref.PrefKey.PREF_MODE_OF_OPS_STR, Runner.MODE_ADB_OVER_TCP);
-                    }
-                    // fallback to ADB over TCP
-                case Runner.MODE_ADB_OVER_TCP:
-                    // Port is always 5555
-                    AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
-                    AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, true);
-                    ServerConfig.setAdbPort(ServerConfig.DEFAULT_ADB_PORT);
-                    LocalServer.updateConfig();
-                    LocalServer.restart();
-                    return;
-                case Runner.MODE_NO_ROOT:
-                    AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
-                    AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
-            }
-        } catch (Exception e) {
-            Log.e("ModeOfOps", e);
-            CountDownLatch waitForInteraction = new CountDownLatch(1);
-            AtomicReference<AlertDialog> alertDialog = new AtomicReference<>();
-            UiThreadHandler.run(() -> {
-                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(activity)
-                        .setTitle(R.string.fallback_to_no_root_mode)
-                        .setMessage(R.string.fallback_to_no_root_mode_description)
-                        .setPositiveButton(R.string.yes, (dialog, which) -> {
-                            AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
-                            AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
-                            waitForInteraction.countDown();
-                        })
-                        .setNegativeButton(R.string.no, (dialog, which) -> waitForInteraction.countDown())
-                        .setCancelable(false);
-                try {
-                    alertDialog.set(builder.show());
-                } catch (Throwable ignore) {
-                }
-            });
-            try {
-                waitForInteraction.await(2, TimeUnit.MINUTES);
-                if (waitForInteraction.getCount() == 1) {
-                    // Closed due to timeout: fallback to no-root by default
-                    AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
-                    AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
-                    UiThreadHandler.run(() -> {
-                        try {
-                            if (alertDialog.get() != null) alertDialog.get().dismiss();
-                        } catch (Throwable ignore) {
-                        }
-                    });
-                }
-            } catch (InterruptedException ignore) {
-            }
-        }
     }
 
     /**

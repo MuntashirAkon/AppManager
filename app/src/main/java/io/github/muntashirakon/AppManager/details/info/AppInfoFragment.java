@@ -112,13 +112,13 @@ import io.github.muntashirakon.AppManager.scanner.ScannerActivity;
 import io.github.muntashirakon.AppManager.servermanager.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
+import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.sharedpref.SharedPrefsActivity;
 import io.github.muntashirakon.AppManager.ssaid.SsaidSettings;
 import io.github.muntashirakon.AppManager.types.PackageSizeInfo;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
-import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.BetterActivityResult;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
@@ -211,8 +211,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         mainModel = mActivity.model;
         if (mainModel == null) return;
         model.setMainModel(mainModel);
-        isRootEnabled = AppPref.isRootEnabled();
-        isAdbEnabled = AppPref.isAdbEnabled();
+        isRootEnabled = Ops.isRoot();
+        isAdbEnabled = Ops.isAdb();
         mPackageManager = mActivity.getPackageManager();
         // Swipe refresh
         mSwipeRefresh = view.findViewById(R.id.swipe_refresh);
@@ -915,7 +915,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             // Set uninstall
             addToHorizontalLayout(R.string.uninstall, R.drawable.ic_trash_can_outline).setOnClickListener(v -> {
                 final boolean isSystemApp = (mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
-                if (AppPref.isRootOrAdbEnabled()) {
+                if (Ops.isPrivileged()) {
                     ScrollableDialogBuilder builder = new ScrollableDialogBuilder(mActivity,
                             isSystemApp ? R.string.uninstall_system_app_message : R.string.uninstall_app_message)
                             .setCheckboxLabel(R.string.keep_data_and_app_signing_signatures)
@@ -1076,7 +1076,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                             .setOnClickListener(v -> install());
                 } else {
                     // Needs downgrade
-                    if (AppPref.isRootOrAdbEnabled()) {
+                    if (Ops.isPrivileged()) {
                         addToHorizontalLayout(R.string.downgrade, R.drawable.ic_baseline_get_app_24)
                                 .setOnClickListener(v -> install());
                     }

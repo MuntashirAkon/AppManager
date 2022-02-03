@@ -35,6 +35,7 @@ import io.github.muntashirakon.AppManager.rules.struct.PermissionRule;
 import io.github.muntashirakon.AppManager.rules.struct.RuleEntry;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -139,7 +140,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
             sInstance.close();
             sInstance = new ComponentsBlocker(packageName, userHandle);
         }
-        if (!noReloadFromDisk && AppPref.isRootEnabled()) {
+        if (!noReloadFromDisk && Ops.isRoot()) {
             sInstance.retrieveDisabledComponents();
         }
         sInstance.readOnly = true;
@@ -521,7 +522,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
      * available add them to the rules, overridden if necessary.
      */
     private void retrieveDisabledComponents() {
-        if (!AppPref.isRootEnabled()) return;
+        if (!Ops.isRoot()) return;
         Log.d(TAG, "Retrieving disabled components for package " + packageName);
         if (!mRulesFile.exists() || mRulesFile.getBaseFile().length() == 0) {
             // System doesn't have any rules.

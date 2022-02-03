@@ -112,6 +112,11 @@ public class AMService extends RootService {
         }
 
         @Override
+        public int getUid() {
+            return android.os.Process.myUid();
+        }
+
+        @Override
         public boolean onTransact(int code, @NonNull Parcel data, Parcel reply, int flags) throws RemoteException {
             if (code == ProxyBinder.PROXY_BINDER_TRANSACT_CODE) {
                 data.enforceInterface(IRootIPC.class.getName());

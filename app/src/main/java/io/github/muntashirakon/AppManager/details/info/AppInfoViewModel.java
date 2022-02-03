@@ -41,6 +41,7 @@ import io.github.muntashirakon.AppManager.servermanager.ApplicationInfoCompat;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
+import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.ssaid.SsaidSettings;
 import io.github.muntashirakon.AppManager.types.PackageSizeInfo;
 import io.github.muntashirakon.AppManager.uri.UriManager;
@@ -116,7 +117,7 @@ public class AppInfoViewModel extends AndroidViewModel {
                         trackerComponents.get(component), AppPref.getDefaultComponentStatus()));
             }
             tagCloud.isSystemApp = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
-            tagCloud.isSystemlessPath = !mainModel.getIsExternalApk() && AppPref.isRootEnabled()
+            tagCloud.isSystemlessPath = !mainModel.getIsExternalApk() && Ops.isRoot()
                     && MagiskUtils.isSystemlessPath(PackageUtils.getHiddenCodePathOrDefault(packageName,
                     applicationInfo.publicSourceDir));
             tagCloud.isUpdatedSystemApp = (applicationInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0;
@@ -164,14 +165,14 @@ public class AppInfoViewModel extends AndroidViewModel {
             } else {
                 tagCloud.netPolicies = 0;
             }
-            if (AppPref.isRootEnabled() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (Ops.isRoot() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 try {
                     tagCloud.ssaid = new SsaidSettings(packageName, applicationInfo.uid).getSsaid();
                     if (TextUtils.isEmpty(tagCloud.ssaid)) tagCloud.ssaid = null;
                 } catch (IOException ignore) {
                 }
             }
-            if (AppPref.isRootEnabled()) {
+            if (Ops.isRoot()) {
                 List<UriManager.UriGrant> uriGrants = new UriManager().getGrantedUris(packageName);
                 if (uriGrants != null) {
                     Iterator<UriManager.UriGrant> uriGrantIterator = uriGrants.listIterator();

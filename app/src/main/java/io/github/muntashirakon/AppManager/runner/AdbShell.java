@@ -17,7 +17,7 @@ import io.github.muntashirakon.AppManager.ipc.IPCUtils;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.ParcelFileDescriptorUtil;
 
-class AdbShellRunner extends Runner {
+class AdbShell extends Runner {
     @WorkerThread
     @NonNull
     @Override

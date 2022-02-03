@@ -203,6 +203,7 @@ public class KeyStoreManager {
         }
     }
 
+    @Deprecated // To be removed in v3.0.0
     @WorkerThread
     public static void migrateKeyStore() throws Exception {
         // Reset all alias password
