@@ -4,17 +4,13 @@ package io.github.muntashirakon.text.style;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.os.Parcel;
 import android.text.Layout;
-import android.text.ParcelableSpan;
 import android.text.style.LeadingMarginSpan;
-
-import androidx.annotation.NonNull;
 
 /**
  * Create numeric or bulleted list by aligning all the lines in a paragraph.
  */
-public class ListSpan implements LeadingMarginSpan, ParcelableSpan {
+public class ListSpan implements LeadingMarginSpan {
     private final int mLeadingGapWidth;
     private final int mTrailingGapWidth;
     private final String mText;
@@ -41,12 +37,6 @@ public class ListSpan implements LeadingMarginSpan, ParcelableSpan {
         this.mText = String.valueOf(ch);
     }
 
-    public ListSpan(@NonNull Parcel src) {
-        mLeadingGapWidth = src.readInt();
-        mTrailingGapWidth = src.readInt();
-        mText = src.readString();
-    }
-
     @Override
     public int getLeadingMargin(boolean first) {
         return mLeadingGapWidth + mTrailingGapWidth;
@@ -61,22 +51,5 @@ public class ListSpan implements LeadingMarginSpan, ParcelableSpan {
             c.drawText(this.mText, (mLeadingGapWidth + x - width / 2) * dir, bottom - p.descent(), p);
             p.setStyle(lastStyle);
         }
-    }
-
-    @Override
-    public int getSpanTypeId() {
-        return 999;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeInt(mLeadingGapWidth);
-        dest.writeInt(mTrailingGapWidth);
-        dest.writeString(mText);
     }
 }
