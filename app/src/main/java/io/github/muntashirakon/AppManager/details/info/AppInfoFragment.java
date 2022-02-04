@@ -317,7 +317,10 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         if (mApplicationInfo != null) {
             isDebuggable = (mApplicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
         } else isDebuggable = false;
-        menu.findItem(R.id.action_run_in_termux).setVisible(isDebuggable);
+        MenuItem runInTermuxMenu = menu.findItem(R.id.action_run_in_termux);
+        if (runInTermuxMenu != null) {
+            runInTermuxMenu.setVisible(isDebuggable);
+        }
     }
 
     @Override
