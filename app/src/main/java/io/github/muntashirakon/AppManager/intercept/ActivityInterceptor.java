@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.BadParcelableException;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.os.UserHandleHidden;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -57,6 +58,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.servermanager.ActivityManagerCompat;
+import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
@@ -210,8 +212,7 @@ public class ActivityInterceptor extends BaseActivity {
         }
 
         @Override
-        public void onTextChanged(CharSequence s, int start, int before,
-                                  int count) {
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
             if (mAreTextWatchersActive) {
                 try {
                     String modifiedContent = textView.getText().toString();
@@ -230,8 +231,7 @@ public class ActivityInterceptor extends BaseActivity {
         abstract protected void onUpdateIntent(String modifiedContent);
 
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count,
-                                      int after) {
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
         }
 
         @Override
@@ -246,6 +246,7 @@ public class ActivityInterceptor extends BaseActivity {
     private MaterialAutoCompleteTextView mPackageNameView;
     private MaterialAutoCompleteTextView mClassNameView;
     private TextInputEditText mIdView;
+    private TextInputEditText mUserIdEdit;
 
     @Nullable
     private HistoryEditText mHistory;
@@ -501,8 +502,7 @@ public class ActivityInterceptor extends BaseActivity {
 
     private void checkAndShowMatchingActivities() {
         if (mMutableIntent == null) return;
-        PackageManager pm = getPackageManager();
-        List<ResolveInfo> resolveInfo = pm.queryIntentActivities(mMutableIntent, 0);
+        List<ResolveInfo> resolveInfo = getMatchingActivities();
         if (resolveInfo.size() < 1) {
             mResendIntentButton.setEnabled(false);
             mActivitiesHeader.setVisibility(View.GONE);
@@ -514,6 +514,21 @@ public class ActivityInterceptor extends BaseActivity {
         mMatchingActivitiesAdapter.setDefaultList(resolveInfo);
     }
 
+    @NonNull
+    private List<ResolveInfo> getMatchingActivities() {
+        if (mMutableIntent == null) {
+            return Collections.emptyList();
+        }
+        if (mUseRoot || (mUserHandle != UserHandleHidden.myUserId() && Ops.isPrivileged())) {
+            try {
+                return PackageManagerCompat.queryIntentActivities(this, mMutableIntent, 0, mUserHandle);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+        return getPackageManager().queryIntentActivities(mMutableIntent, 0);
+    }
+
     private void setupVariables() {
         mActionView = findViewById(R.id.action_edit);
         mDataView = findViewById(R.id.data_edit);
@@ -523,37 +538,22 @@ public class ActivityInterceptor extends BaseActivity {
         mClassNameView = findViewById(R.id.class_edit);
         mIdView = findViewById(R.id.type_id);
 
-        // Others
-        TextInputEditText userIdEdit = findViewById(R.id.user_id_edit);
-        MaterialCheckBox useRootCheckBox = findViewById(R.id.use_root);
-
         mHistory = new HistoryEditText(this, mActionView, mDataView, mTypeView, mUriView, mPackageNameView, mClassNameView);
 
         // Setup user ID edit
-        userIdEdit.setText(String.valueOf(mUserHandle));
-        userIdEdit.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s == null) return;
-                try {
-                    mUserHandle = Integer.decode(s.toString());
-                } catch (NumberFormatException ignore) {
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
-        userIdEdit.setEnabled(Ops.isPrivileged());
+        mUserIdEdit = findViewById(R.id.user_id_edit);
+        mUserIdEdit.setText(String.valueOf(mUserHandle));
+        mUserIdEdit.setEnabled(Ops.isPrivileged());
         // Setup root
+        MaterialCheckBox useRootCheckBox = findViewById(R.id.use_root);
         useRootCheckBox.setChecked(mUseRoot);
         useRootCheckBox.setVisibility(Ops.isRoot() ? View.VISIBLE : View.GONE);
-        useRootCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> mUseRoot = isChecked);
+        useRootCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (mUseRoot != isChecked) {
+                mUseRoot = isChecked;
+                refreshUI();
+            }
+        });
         // Setup identifier
         TextInputLayout idLayout = findViewById(R.id.type_id_layout);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -647,7 +647,12 @@ public class ActivityInterceptor extends BaseActivity {
             if (mMutableIntent == null) return;
             try {
                 if (mRequestedComponent == null) {
-                    mIntentLauncher.launch(Intent.createChooser(mMutableIntent, mResendIntentButton.getText()));
+                    Intent chooserIntent = Intent.createChooser(mMutableIntent, mResendIntentButton.getText());
+                    if (mUseRoot || (mUserHandle != UserHandleHidden.myUserId() && Ops.isPrivileged())) {
+                        ActivityManagerCompat.startActivity(this, chooserIntent, mUserHandle);
+                    } else {
+                        mIntentLauncher.launch(chooserIntent);
+                    }
                 } else { // Launch a fixed component
                     if (mUseRoot || (mUserHandle != UserHandleHidden.myUserId() && Ops.isPrivileged())) {
                         // TODO: 4/2/22 Support sending activity result back to the original app
@@ -747,6 +752,25 @@ public class ActivityInterceptor extends BaseActivity {
                 }
             }
         });
+        mUserIdEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s == null) return;
+                try {
+                    mUserHandle = Integer.decode(s.toString());
+                    refreshUI();
+                } catch (NumberFormatException ignore) {
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
     }
 
     private void showResetIntentButton(boolean visible) {
@@ -828,8 +852,11 @@ public class ActivityInterceptor extends BaseActivity {
 
     @NonNull
     private String getIntentDetailsString() {
+        if (mMutableIntent == null) {
+            return "";
+        }
         PackageManager pm = getPackageManager();
-        List<ResolveInfo> resolveInfo = pm.queryIntentActivities(mMutableIntent, 0);
+        List<ResolveInfo> resolveInfo = getMatchingActivities();
         int numberOfMatchingActivities = resolveInfo.size();
 
         StringBuilder result = new StringBuilder();

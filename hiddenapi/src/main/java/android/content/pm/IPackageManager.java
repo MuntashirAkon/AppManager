@@ -80,12 +80,10 @@ public interface IPackageManager extends IInterface {
     PermissionInfo getPermissionInfo(String name, String packageName, int flags) throws RemoteException;
 
     /**
-     * @return It used to return {@link List<PermissionInfo>} but from Android N (API 24), it
-     * returns {@link ParceledListSlice<PermissionInfo>}.
-     * @deprecated Removed in API 30 (Android R)
+     * @deprecated Use {@link IPackageManagerN#queryPermissionsByGroup(String, int)} instead.
      */
     @Deprecated
-    Object queryPermissionsByGroup(String group, int flags) throws RemoteException;
+    List<PermissionInfo> queryPermissionsByGroup(String group, int flags) throws RemoteException;
 
     /**
      * @deprecated Deprecated since API 30 (Android R)
@@ -94,12 +92,10 @@ public interface IPackageManager extends IInterface {
     PermissionGroupInfo getPermissionGroupInfo(String name, int flags) throws RemoteException;
 
     /**
-     * @return It used to return {@link List<PermissionGroupInfo>} but from Android N (API 24), it
-     * returns {@link ParceledListSlice<PermissionGroupInfo>}.
-     * @deprecated Removed in API 30 (Android R)
+     * @deprecated Use {@link IPackageManagerN#getAllPermissionGroups(int)} instead.
      */
     @Deprecated
-    Object getAllPermissionGroups(int flags) throws RemoteException;
+    List<PermissionGroupInfo> getAllPermissionGroups(int flags) throws RemoteException;
 
     ApplicationInfo getApplicationInfo(String packageName, int flags, int userId) throws RemoteException;
 
@@ -263,38 +259,41 @@ public interface IPackageManager extends IInterface {
     boolean canForwardTo(Intent intent, String resolvedType, int sourceUserId, int targetUserId) throws RemoteException;
 
     /**
-     * @return It used to return {@link List<ResolveInfo>} but from Android N (API 24), it
-     * returns {@link ParceledListSlice<ResolveInfo>}.
+     * @deprecated Use {@link IPackageManagerN#queryIntentActivities(Intent, String, int, int)} instead.
      */
-    Object queryIntentActivities(Intent intent, String resolvedType, int flags, int userId) throws RemoteException;
+    @Deprecated
+    List<ResolveInfo> queryIntentActivities(Intent intent, String resolvedType, int flags, int userId) throws RemoteException;
 
     /**
-     * @return It used to return {@link List<ResolveInfo>} but from Android N (API 24), it
-     * returns {@link ParceledListSlice<ResolveInfo>}.
+     * @deprecated Use {@link IPackageManagerN#queryIntentActivityOptions(ComponentName, Intent[], String[], Intent, String, int, int)} instead.
      */
-    Object queryIntentActivityOptions(ComponentName caller, Intent[] specifics,
-                                      String[] specificTypes, Intent intent,
-                                      String resolvedType, int flags, int userId) throws RemoteException;
+    @Deprecated
+    List<ResolveInfo> queryIntentActivityOptions(ComponentName caller, Intent[] specifics,
+                                                 String[] specificTypes, Intent intent,
+                                                 String resolvedType, int flags, int userId) throws RemoteException;
 
     /**
-     * @return It used to return {@link List<ResolveInfo>} but from Android N (API 24), it
-     * returns {@link ParceledListSlice<ResolveInfo>}.
+     * @deprecated Use {@link IPackageManagerN#queryIntentReceivers(Intent, String, int, int)} instead.
      */
-    Object queryIntentReceivers(Intent intent, String resolvedType, int flags, int userId) throws RemoteException;
+    @Deprecated
+    List<ResolveInfo> queryIntentReceivers(Intent intent, String resolvedType, int flags, int userId)
+            throws RemoteException;
 
     ResolveInfo resolveService(Intent intent, String resolvedType, int flags, int userId) throws RemoteException;
 
     /**
-     * @return It used to return {@link List<ResolveInfo>} but from Android N (API 24), it
-     * returns {@link ParceledListSlice<ResolveInfo>}.
+     * @deprecated Use {@link IPackageManagerN#queryIntentServices(Intent, String, int, int)} instead.
      */
-    Object queryIntentServices(Intent intent, String resolvedType, int flags, int userId) throws RemoteException;
+    @Deprecated
+    List<ResolveInfo> queryIntentServices(Intent intent, String resolvedType, int flags, int userId)
+            throws RemoteException;
 
     /**
-     * @return It used to return {@link List<ResolveInfo>} but from Android N (API 24), it
-     * returns {@link ParceledListSlice<ResolveInfo>}.
+     * @deprecated Use {@link IPackageManagerN#queryIntentContentProviders(Intent, String, int, int)} instead.
      */
-    Object queryIntentContentProviders(Intent intent, String resolvedType, int flags, int userId) throws RemoteException;
+    @Deprecated
+    List<ResolveInfo> queryIntentContentProviders(Intent intent, String resolvedType, int flags, int userId)
+            throws RemoteException;
 
     @RequiresApi(Build.VERSION_CODES.O)
     ParceledListSlice<ResolveInfo> queryContentProviders(String processName, int uid, int flags, String metaDataKey) throws RemoteException;
@@ -307,10 +306,10 @@ public interface IPackageManager extends IInterface {
     ParceledListSlice<ApplicationInfo> getInstalledApplications(int flags, int userId) throws RemoteException;
 
     /**
-     * @return It used to return {@link List<ApplicationInfo>} but from Android N (API 24), it
-     * returns {@link ParceledListSlice<ApplicationInfo>}.
+     * @deprecated Use {@link IPackageManagerN#getPersistentApplications(int)} instead.
      */
-    Object getPersistentApplications(int flags) throws RemoteException;
+    @Deprecated
+    List<ApplicationInfo> getPersistentApplications(int flags) throws RemoteException;
 
     ProviderInfo resolveContentProvider(String name, int flags, int userId) throws RemoteException;
 
@@ -325,18 +324,18 @@ public interface IPackageManager extends IInterface {
     void querySyncProviders(List<String> outNames, List<ProviderInfo> outInfo) throws RemoteException;
 
     /**
-     * @return It used to return {@link List<ProviderInfo>} but from Android M (API 23), it returns
-     * {@link ParceledListSlice<ProviderInfo>}.
+     * @deprecated Use {@link IPackageManagerN#queryContentProviders(String, int, int)} instead.
      */
-    Object queryContentProviders(String processName, int uid, int flags) throws RemoteException;
+    @Deprecated
+    List<ProviderInfo> queryContentProviders(String processName, int uid, int flags) throws RemoteException;
 
     InstrumentationInfo getInstrumentationInfo(ComponentName className, int flags) throws RemoteException;
 
     /**
-     * @return It used to return {@link List<InstrumentationInfo>} but from Android N (API 24), it
-     * returns {@link ParceledListSlice<InstrumentationInfo>}.
+     * @deprecated Use {@link IPackageManagerN#queryInstrumentation(String, int)} instead.
      */
-    Object queryInstrumentation(String targetPackage, int flags) throws RemoteException;
+    @Deprecated
+    List<InstrumentationInfo> queryInstrumentation(String targetPackage, int flags) throws RemoteException;
 
     @RequiresApi(Build.VERSION_CODES.O)
     void setApplicationCategoryHint(String packageName, int categoryHint, String callerPackageName) throws RemoteException;
@@ -936,11 +935,11 @@ public interface IPackageManager extends IInterface {
     Object getIntentFilterVerifications(String packageName) throws RemoteException;
 
     /**
-     * @return In Android M (API 23), it returned {@link List<IntentFilter>} but from Android N, it
-     * returns {@link ParceledListSlice<IntentFilter>}.
+     * @deprecated Use {@link IPackageManagerN#getAllIntentFilters(String)} instead.
      */
     @RequiresApi(Build.VERSION_CODES.M)
-    Object getAllIntentFilters(String packageName) throws RemoteException;
+    @Deprecated
+    List<IntentFilter> getAllIntentFilters(String packageName) throws RemoteException;
 
     /**
      * @deprecated Removed in API 30 (Android R)

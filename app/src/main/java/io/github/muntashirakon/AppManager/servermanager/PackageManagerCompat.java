@@ -4,15 +4,20 @@ package io.github.muntashirakon.AppManager.servermanager;
 
 import android.annotation.UserIdInt;
 import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageDataObserver;
 import android.content.pm.IPackageInstaller;
 import android.content.pm.IPackageManager;
+import android.content.pm.IPackageManagerN;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ParceledListSlice;
 import android.content.pm.PermissionInfo;
 import android.content.pm.ProviderInfo;
+import android.content.pm.ResolveInfo;
 import android.content.pm.ServiceInfo;
 import android.os.Build;
 import android.os.DeadObjectException;
@@ -32,6 +37,7 @@ import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import dev.rikka.tools.refine.Refine;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.compat.StorageManagerCompat;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
@@ -167,6 +173,23 @@ public final class PackageManagerCompat {
     public static ApplicationInfo getApplicationInfo(String packageName, int flags, @UserIdInt int userHandle)
             throws RemoteException {
         return AppManager.getIPackageManager().getApplicationInfo(packageName, flags, userHandle);
+    }
+
+    @SuppressWarnings("deprecation")
+    @NonNull
+    public static List<ResolveInfo> queryIntentActivities(@NonNull Context context, @NonNull Intent intent, int flags,
+                                                          @UserIdInt int userId)
+            throws RemoteException {
+        IPackageManager pm = AppManager.getIPackageManager();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            IPackageManagerN pmN = Refine.unsafeCast(pm);
+            ParceledListSlice<ResolveInfo> resolveInfoList = pmN.queryIntentActivities(intent,
+                    intent.resolveTypeIfNeeded(context.getContentResolver()), flags, userId);
+            return resolveInfoList.getList();
+        } else {
+            return pm.queryIntentActivities(intent, intent.resolveTypeIfNeeded(context.getContentResolver()), flags,
+                    userId);
+        }
     }
 
     @EnabledState

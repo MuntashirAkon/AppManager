@@ -6,7 +6,7 @@ import android.annotation.SuppressLint;
 import android.annotation.UserIdInt;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageManager;
-import android.content.pm.ParceledListSlice;
+import android.content.pm.IPackageManagerN;
 import android.content.pm.PermissionGroupInfo;
 import android.content.pm.PermissionInfo;
 import android.content.pm.permission.SplitPermissionInfoParcelable;
@@ -25,6 +25,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.Collections;
 import java.util.List;
 
+import dev.rikka.tools.refine.Refine;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 
@@ -373,15 +374,16 @@ public class PermissionCompat {
         } else return AppManager.getIPackageManager().getPermissionGroupInfo(groupName, flags);
     }
 
-    @SuppressWarnings({"unchecked", "deprecation"})
+    @SuppressWarnings("deprecation")
     public static List<PermissionInfo> queryPermissionsByGroup(String groupName, int flags) throws RemoteException {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             return getPermissionManager().queryPermissionsByGroup(groupName, flags).getList();
         } else {
-            Object permissions = AppManager.getIPackageManager().queryPermissionsByGroup(groupName, flags);
+            IPackageManager pm = AppManager.getIPackageManager();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                return ((ParceledListSlice<PermissionInfo>) permissions).getList();
-            } else return (List<PermissionInfo>) permissions;
+                IPackageManagerN pmN = Refine.unsafeCast(pm);
+                return pmN.queryPermissionsByGroup(groupName, flags).getList();
+            } else return pm.queryPermissionsByGroup(groupName, flags);
         }
     }
 
