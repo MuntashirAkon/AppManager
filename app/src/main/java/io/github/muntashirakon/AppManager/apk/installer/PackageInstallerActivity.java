@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.apk.installer;
 
+import android.annotation.UserIdInt;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -104,6 +105,8 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
     @Nullable
     private String mimeType;
     private int actionName;
+    @UserIdInt
+    private int lastUserId;
     private FragmentManager fm;
     private AlertDialog progressDialog;
     @Nullable
@@ -338,14 +341,15 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
         doLaunchInstallerService(UserHandleHidden.myUserId());
     }
 
-    private void doLaunchInstallerService(int userHandle) {
+    private void doLaunchInstallerService(@UserIdInt int userId) {
+        lastUserId = userId == UserHandleHidden.USER_ALL ? UserHandleHidden.myUserId() : userId;
         boolean canDisplayNotification = Utils.canDisplayNotification(this);
         boolean alwaysOnBackground = canDisplayNotification &&
                 AppPref.getBoolean(AppPref.PrefKey.PREF_INSTALLER_ALWAYS_ON_BACKGROUND_BOOL);
         Intent intent = new Intent(this, PackageInstallerService.class);
         intent.putExtra(PackageInstallerService.EXTRA_APK_FILE_KEY, model.getApkFileKey());
         intent.putExtra(PackageInstallerService.EXTRA_APP_LABEL, model.getAppLabel());
-        intent.putExtra(PackageInstallerService.EXTRA_USER_ID, userHandle);
+        intent.putExtra(PackageInstallerService.EXTRA_USER_ID, userId);
         // We have to get an ApkFile instance in advance because of the queue management i.e. if this activity is closed
         // before the ApkFile in the queue is accessed, it will throw an IllegalArgumentException as the ApkFile under
         // the key is unavailable by the time it calls it.
@@ -564,8 +568,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
             title.setEndIcon(R.drawable.ic_information_variant, v -> {
                 Intent appDetailsIntent = new Intent(this, AppDetailsActivity.class);
                 appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME, packageName);
-                // FIXME: 9/9/21 Use the first user ID instead of the current user ID
-                appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_USER_HANDLE, UserHandleHidden.myUserId());
+                appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_USER_HANDLE, lastUserId);
                 appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_BACK_TO_MAIN, true);
                 appDetailsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(appDetailsIntent);
