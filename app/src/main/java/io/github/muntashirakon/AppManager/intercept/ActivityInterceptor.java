@@ -645,27 +645,7 @@ public class ActivityInterceptor extends BaseActivity {
         // Send Intent on clicking the resend intent button
         mResendIntentButton.setOnClickListener(v -> {
             if (mMutableIntent == null) return;
-            try {
-                if (mRequestedComponent == null) {
-                    Intent chooserIntent = Intent.createChooser(mMutableIntent, mResendIntentButton.getText());
-                    if (mUseRoot || (mUserHandle != UserHandleHidden.myUserId() && Ops.isPrivileged())) {
-                        ActivityManagerCompat.startActivity(this, chooserIntent, mUserHandle);
-                    } else {
-                        mIntentLauncher.launch(chooserIntent);
-                    }
-                } else { // Launch a fixed component
-                    if (mUseRoot || (mUserHandle != UserHandleHidden.myUserId() && Ops.isPrivileged())) {
-                        // TODO: 4/2/22 Support sending activity result back to the original app
-                        ActivityManagerCompat.startActivity(this, mMutableIntent, mUserHandle);
-                    } else {
-                        mMutableIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        mIntentLauncher.launch(mMutableIntent);
-                    }
-                }
-            } catch (Throwable th) {
-                Log.e(TAG, th);
-                UIUtils.displayLongToast(R.string.error_with_details, th.getClass().getName() + ": " + th.getMessage());
-            }
+            launchIntent(mMutableIntent, mRequestedComponent == null);
         });
         // Reset Intent data on clicking the reset intent button
         mResetIntentButton.setOnClickListener(v -> {
@@ -898,6 +878,32 @@ public class ActivityInterceptor extends BaseActivity {
             }
         }
         return result.toString();
+    }
+
+    public void launchIntent(@NonNull Intent intent, boolean createChooser) {
+        boolean isPrivileged = mUseRoot || (mUserHandle != UserHandleHidden.myUserId() && Ops.isPrivileged());
+        try {
+            if (createChooser) {
+                Intent chooserIntent = Intent.createChooser(intent, mResendIntentButton.getText());
+                if (isPrivileged) {
+                    // TODO: 4/2/22 Support sending activity result back to the original app
+                    ActivityManagerCompat.startActivity(this, chooserIntent, mUserHandle);
+                } else {
+                    mIntentLauncher.launch(chooserIntent);
+                }
+            } else { // Launch a fixed component
+                if (isPrivileged) {
+                    // TODO: 4/2/22 Support sending activity result back to the original app
+                    ActivityManagerCompat.startActivity(this, intent, mUserHandle);
+                } else {
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    mIntentLauncher.launch(intent);
+                }
+            }
+        } catch (Throwable th) {
+            Log.e(TAG, th);
+            UIUtils.displayLongToast(R.string.error_with_details, th.getClass().getName() + ": " + th.getMessage());
+        }
     }
 
     @Override
@@ -1201,12 +1207,7 @@ public class ActivityInterceptor extends BaseActivity {
                 Intent intent = new Intent(activity.mMutableIntent);
                 intent.setClassName(info.packageName, activityName);
                 IntentCompat.removeFlags(intent, Intent.FLAG_ACTIVITY_FORWARD_RESULT);
-                try {
-                    activity.mIntentLauncher.launch(intent);
-                } catch (Throwable th) {
-                    Log.e(TAG, th);
-                    UIUtils.displayLongToast(R.string.error_with_details, th.getClass().getName() + ": " + th.getMessage());
-                }
+                activity.launchIntent(intent, false);
             });
         }
 
