@@ -9,7 +9,8 @@ import androidx.annotation.NonNull;
 
 import java.util.Objects;
 
-// FIXME: 3/9/21 Merge with OpEntryCompat
+import io.github.muntashirakon.util.ParcelUtils;
+
 public class OpEntry implements Parcelable {
     private final int mOp;
     private final long mTimes;
@@ -42,7 +43,7 @@ public class OpEntry implements Parcelable {
     }
 
     public void setMode(int mode) {
-        this.mMode = mode;
+        mMode = mode;
     }
 
     public long getTime() {
@@ -90,25 +91,25 @@ public class OpEntry implements Parcelable {
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeInt(this.mOp);
-        dest.writeInt(this.mMode);
-        dest.writeLong(this.mTimes);
-        dest.writeLong(this.mRejectTimes);
-        dest.writeLong(this.mDuration);
-        dest.writeByte((byte) (this.mRunning ? 1 : 0));
-        dest.writeInt(this.mProxyUid);
-        dest.writeString(this.mProxyPackageName);
+        dest.writeInt(mOp);
+        dest.writeInt(mMode);
+        dest.writeLong(mTimes);
+        dest.writeLong(mRejectTimes);
+        dest.writeLong(mDuration);
+        ParcelUtils.writeBoolean(mRunning, dest);
+        dest.writeInt(mProxyUid);
+        dest.writeString(mProxyPackageName);
     }
 
     protected OpEntry(@NonNull Parcel in) {
-        this.mOp = in.readInt();
-        this.mMode = in.readInt();
-        this.mTimes = in.readLong();
-        this.mRejectTimes = in.readLong();
-        this.mDuration = in.readLong();
-        this.mRunning = in.readByte() != 0;
-        this.mProxyUid = in.readInt();
-        this.mProxyPackageName = in.readString();
+        mOp = in.readInt();
+        mMode = in.readInt();
+        mTimes = in.readLong();
+        mRejectTimes = in.readLong();
+        mDuration = in.readLong();
+        mRunning = ParcelUtils.readBoolean(in);
+        mProxyUid = in.readInt();
+        mProxyPackageName = in.readString();
     }
 
     public static final Creator<OpEntry> CREATOR = new Creator<OpEntry>() {
