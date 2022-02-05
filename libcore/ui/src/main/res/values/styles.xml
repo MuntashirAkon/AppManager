@@ -96,15 +96,13 @@
         <item name="chipMinTouchTargetSize">24dp</item>
         <item name="chipIconSize">18dp</item>
         <item name="android:textAppearance">@style/TextAppearance.AppTheme.BodySmall</item>
-        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.AppTheme.SmallComponent</item>
     </style>
 
-    <style name="Widget.AppTheme.Chip.Filter" parent="Widget.Material3.Chip.Filter.Elevated">
+    <style name="Widget.AppTheme.Chip.Filter" parent="Widget.Material3.Chip.Filter">
         <item name="chipMinHeight">24dp</item>
         <item name="chipMinTouchTargetSize">24dp</item>
         <item name="chipIconSize">18dp</item>
         <item name="android:textAppearance">@style/TextAppearance.AppTheme.BodySmall</item>
-        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.AppTheme.SmallComponent</item>
     </style>
 
     <style name="Widget.AppTheme.Chip.Input" parent="Widget.Material3.Chip.Input.Elevated">
@@ -112,7 +110,6 @@
         <item name="chipMinTouchTargetSize">24dp</item>
         <item name="chipIconSize">18dp</item>
         <item name="android:textAppearance">@style/TextAppearance.AppTheme.BodySmall</item>
-        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.AppTheme.SmallComponent</item>
     </style>
 
     <style name="Widget.AppTheme.Chip.Suggestion" parent="Widget.Material3.Chip.Suggestion.Elevated">
@@ -120,7 +117,6 @@
         <item name="chipMinTouchTargetSize">24dp</item>
         <item name="chipIconSize">18dp</item>
         <item name="android:textAppearance">@style/TextAppearance.AppTheme.BodySmall</item>
-        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.AppTheme.SmallComponent</item>
     </style>
 
     <!-- ChipGroup -->
@@ -268,6 +264,10 @@
 
     <style name="ShapeAppearance.AppTheme.LargeComponent" parent="ShapeAppearance.Material3.LargeComponent">
         <item name="cornerSize">24dp</item>
+    </style>
+
+    <style name="ShapeAppearance.AppTheme.CircleComponent" parent="">
+        <item name="cornerSize">50%</item>
     </style>
 
     <!-- TextAppearance attributes: We do not use Material* or AppCompat because they change over time -->

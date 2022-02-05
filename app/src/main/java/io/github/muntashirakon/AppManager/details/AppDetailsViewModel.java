@@ -127,10 +127,13 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     public AppDetailsViewModel(@NonNull Application application) {
         super(application);
-        Log.d("ADVM", "New constructor called.");
-        mPackageManager = application.getPackageManager();
-        mReceiver = new PackageIntentReceiver(this);
-        mWaitForBlocker = true;
+        try {
+            mPackageManager = application.getPackageManager();
+            mReceiver = new PackageIntentReceiver(this);
+            mWaitForBlocker = true;
+        } catch (Throwable th) {
+            throw new RuntimeException("Could not instantiate AppDetailsViewModel", th);
+        }
     }
 
     @GuardedBy("blockerLocker")

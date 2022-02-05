@@ -202,8 +202,10 @@ public class ClassListingActivity extends BaseActivity implements AdvancedSearch
 
         @UiThread
         void setDefaultList(@NonNull List<String> list) {
-            mAdapterList.clear();
-            mAdapterList.addAll(list);
+            synchronized (mAdapterList) {
+                mAdapterList.clear();
+                mAdapterList.addAll(list);
+            }
             mDefaultList = list;
             filter();
             notifyDataSetChanged();
@@ -223,17 +225,23 @@ public class ClassListingActivity extends BaseActivity implements AdvancedSearch
 
         @Override
         public int getCount() {
-            return mAdapterList.size();
+            synchronized (mAdapterList) {
+                return mAdapterList.size();
+            }
         }
 
         @Override
         public String getItem(int position) {
-            return mAdapterList.get(position);
+            synchronized (mAdapterList) {
+                return mAdapterList.get(position);
+            }
         }
 
         @Override
         public long getItemId(int position) {
-            return mDefaultList.indexOf(mAdapterList.get(position));
+            synchronized (mAdapterList) {
+                return mDefaultList.indexOf(mAdapterList.get(position));
+            }
         }
 
         @Override
@@ -241,7 +249,10 @@ public class ClassListingActivity extends BaseActivity implements AdvancedSearch
             if (convertView == null) {
                 convertView = mLayoutInflater.inflate(android.R.layout.simple_list_item_1, parent, false);
             }
-            String className = mAdapterList.get(position);
+            String className;
+            synchronized (mAdapterList) {
+                className = mAdapterList.get(position);
+            }
             TextView textView = (TextView) convertView;
             if (mConstraint != null && className.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
@@ -282,14 +293,16 @@ public class ClassListingActivity extends BaseActivity implements AdvancedSearch
 
                     @Override
                     protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                        mAdapterList.clear();
-                        if (filterResults.values == null) {
-                            mAdapterList.addAll(mDefaultList);
-                        } else {
-                            //noinspection unchecked
-                            mAdapterList.addAll((List<String>) filterResults.values);
+                        synchronized (mAdapterList) {
+                            mAdapterList.clear();
+                            if (filterResults.values == null) {
+                                mAdapterList.addAll(mDefaultList);
+                            } else {
+                                //noinspection unchecked
+                                mAdapterList.addAll((List<String>) filterResults.values);
+                            }
+                            notifyDataSetChanged();
                         }
-                        notifyDataSetChanged();
                     }
                 };
             return mFilter;

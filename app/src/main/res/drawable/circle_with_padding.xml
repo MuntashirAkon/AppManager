@@ -3,5 +3,5 @@
     android:shape="oval">
     <stroke
         android:width="2dp"
-        android:color="?android:attr/colorAccent" />
+        android:color="?attr/colorSurfaceVariant" />
 </shape>

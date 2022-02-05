@@ -41,7 +41,6 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<RunningAppsAd
     private final RunningAppsViewModel mModel;
     private final int mColorRed;
     private final ArrayList<ProcessItem> mProcessItems = new ArrayList<>();
-    private boolean mIsAdbMode = false;
 
     RunningAppsAdapter(@NonNull RunningAppsActivity activity) {
         super();
@@ -51,9 +50,10 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<RunningAppsAd
     }
 
     void setDefaultList(List<ProcessItem> processItems) {
-        mIsAdbMode = Ops.isAdb();
-        this.mProcessItems.clear();
-        this.mProcessItems.addAll(processItems);
+        synchronized (mProcessItems) {
+            this.mProcessItems.clear(); // We do not clear any selections
+            this.mProcessItems.addAll(processItems);
+        }
         notifyDataSetChanged();
         notifySelectionChange();
     }
@@ -67,7 +67,10 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<RunningAppsAd
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        ProcessItem processItem = mProcessItems.get(position);
+        ProcessItem processItem;
+        synchronized (mProcessItems) {
+            processItem = mProcessItems.get(position);
+        }
         ApplicationInfo applicationInfo;
         if (processItem instanceof AppProcessItem) {
             applicationInfo = ((AppProcessItem) processItem).packageInfo.applicationInfo;
@@ -111,7 +114,7 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<RunningAppsAd
             Menu menu = popupMenu.getMenu();
             // Set kill
             MenuItem killItem = menu.findItem(R.id.action_kill);
-            if ((processItem.uid >= 10000 || mActivity.enableKillForSystem) && !mIsAdbMode) {
+            if ((processItem.uid >= 10000 || mActivity.enableKillForSystem) && !Ops.isAdb()) {
                 killItem.setVisible(true).setOnMenuItemClickListener(item -> {
                     mModel.killProcess(processItem);
                     return true;
@@ -186,35 +189,36 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<RunningAppsAd
 
     @Override
     public long getItemId(int position) {
-        return mProcessItems.get(position).hashCode();
+        synchronized (mProcessItems) {
+            return mProcessItems.get(position).hashCode();
+        }
     }
 
     @Override
     protected void select(int position) {
-        mModel.select(mProcessItems.get(position));
+        synchronized (mProcessItems) {
+            mModel.select(mProcessItems.get(position));
+        }
     }
 
     @Override
     protected void deselect(int position) {
-        mModel.deselect(mProcessItems.get(position));
+        synchronized (mProcessItems) {
+            mModel.deselect(mProcessItems.get(position));
+        }
     }
 
     @Override
     protected boolean isSelected(int position) {
-        return mModel.isSelected(mProcessItems.get(position));
+        synchronized (mProcessItems) {
+            return mModel.isSelected(mProcessItems.get(position));
+        }
     }
 
     @Override
     protected void cancelSelection() {
         mModel.clearSelections();
         notifyDataSetChanged();
-    }
-
-    @Override
-    public void clearSelections() {
-        mModel.clearSelections();
-        notifyDataSetChanged();
-        super.clearSelections();
     }
 
     @NonNull
@@ -234,7 +238,9 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<RunningAppsAd
 
     @Override
     public int getItemCount() {
-        return mProcessItems.size();
+        synchronized (mProcessItems) {
+            return mProcessItems.size();
+        }
     }
 
     static class ViewHolder extends MultiSelectionView.ViewHolder {

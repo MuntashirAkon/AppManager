@@ -31,7 +31,6 @@ import java.util.concurrent.Executors;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.details.AppDetailsViewModel;
-import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.magisk.MagiskDenyList;
 import io.github.muntashirakon.AppManager.magisk.MagiskHide;
 import io.github.muntashirakon.AppManager.magisk.MagiskProcess;
@@ -201,7 +200,8 @@ public class AppInfoViewModel extends AndroidViewModel {
                 }
             }
         } catch (Throwable th) {
-            Log.e("AIVM", th);
+            // Unknown behaviour
+            throw new RuntimeException(th);
         } finally {
             this.tagCloud.postValue(tagCloud);
         }

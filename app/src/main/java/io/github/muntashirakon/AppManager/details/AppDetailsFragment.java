@@ -621,7 +621,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
     @UiThread
     private class AppDetailsRecyclerAdapter extends RecyclerView.Adapter<AppDetailsRecyclerAdapter.ViewHolder> {
         @NonNull
-        private List<AppDetailsItem<?>> mAdapterList;
+        private final List<AppDetailsItem<?>> mAdapterList;
         @Property
         private int mRequestedProperty;
         @Nullable
@@ -639,9 +639,12 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             mIsADBEnabled = Ops.isAdb();
             mRequestedProperty = mNeededProperty;
             mConstraint = mMainModel == null ? null : mMainModel.getSearchQuery();
-            mAdapterList = list;
             showProgressIndicator(false);
-            notifyDataSetChanged();
+            synchronized (mAdapterList) {
+                mAdapterList.clear();
+                mAdapterList.addAll(list);
+                notifyDataSetChanged();
+            }
         }
 
         /**
@@ -866,7 +869,9 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
 
         @Override
         public int getItemCount() {
-            return mAdapterList.size();
+            synchronized (mAdapterList) {
+                return mAdapterList.size();
+            }
         }
 
         private void handleBlock(@NonNull ViewHolder holder, @NonNull AppDetailsComponentItem item, RuleType ruleType) {
@@ -913,7 +918,10 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
 
         private void getActivityView(@NonNull ViewHolder holder, int index) {
             final View view = holder.itemView;
-            final AppDetailsComponentItem componentItem = (AppDetailsComponentItem) mAdapterList.get(index);
+            final AppDetailsComponentItem componentItem;
+            synchronized (mAdapterList) {
+                componentItem = (AppDetailsComponentItem) mAdapterList.get(index);
+            }
             final ActivityInfo activityInfo = (ActivityInfo) componentItem.vanillaItem;
             final String activityName = componentItem.name;
             final boolean isDisabled = !mIsExternalApk && componentItem.isDisabled();
@@ -980,7 +988,8 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                     intent.setClassName(mPackageName, activityName);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     try {
-                        ActivityManagerCompat.startActivity(mActivity, intent, mMainModel.getUserHandle());
+                        ActivityManagerCompat.startActivity(mActivity, intent,
+                                Objects.requireNonNull(mMainModel).getUserHandle());
                     } catch (Throwable e) {
                         UIUtils.displayLongToast(e.getLocalizedMessage());
                     }
@@ -993,7 +1002,8 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                         Intent intent = new Intent(mActivity, ActivityInterceptor.class);
                         intent.putExtra(ActivityInterceptor.EXTRA_PACKAGE_NAME, mPackageName);
                         intent.putExtra(ActivityInterceptor.EXTRA_CLASS_NAME, activityName);
-                        intent.putExtra(ActivityInterceptor.EXTRA_USER_HANDLE, mMainModel.getUserHandle());
+                        intent.putExtra(ActivityInterceptor.EXTRA_USER_HANDLE,
+                                Objects.requireNonNull(mMainModel).getUserHandle());
                         intent.putExtra(ActivityInterceptor.EXTRA_ROOT, needRoot);
                         startActivity(intent);
                         return true;
@@ -1024,7 +1034,10 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
 
         private void getServicesView(@NonNull ViewHolder holder, int index) {
             View view = holder.itemView;
-            final AppDetailsServiceItem serviceItem = (AppDetailsServiceItem) mAdapterList.get(index);
+            final AppDetailsServiceItem serviceItem;
+            synchronized (mAdapterList) {
+                serviceItem = (AppDetailsServiceItem) mAdapterList.get(index);
+            }
             final ServiceInfo serviceInfo = (ServiceInfo) serviceItem.vanillaItem;
             final boolean isDisabled = !mIsExternalApk && serviceItem.isDisabled();
             // Background color: regular < tracker < disabled < blocked < running
@@ -1076,7 +1089,8 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                     Intent intent = new Intent();
                     intent.setClassName(mPackageName, serviceInfo.name);
                     try {
-                        ActivityManagerCompat.startService(mActivity, intent, mMainModel.getUserHandle(), true);
+                        ActivityManagerCompat.startService(mActivity, intent,
+                                Objects.requireNonNull(mMainModel).getUserHandle(), true);
                     } catch (RemoteException e) {
                         e.printStackTrace();
                         Toast.makeText(mActivity, e.toString(), Toast.LENGTH_LONG).show();
@@ -1091,7 +1105,10 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
 
         private void getReceiverView(@NonNull ViewHolder holder, int index) {
             View view = holder.itemView;
-            final AppDetailsComponentItem componentItem = (AppDetailsComponentItem) mAdapterList.get(index);
+            final AppDetailsComponentItem componentItem;
+            synchronized (mAdapterList) {
+                componentItem = (AppDetailsComponentItem) mAdapterList.get(index);
+            }
             final ActivityInfo activityInfo = (ActivityInfo) componentItem.vanillaItem;
             // Background color: regular < tracker < disabled < blocked
             if (!mIsExternalApk && componentItem.isBlocked()) {
@@ -1143,7 +1160,10 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
 
         private void getProviderView(@NonNull ViewHolder holder, int index) {
             View view = holder.itemView;
-            final AppDetailsComponentItem componentItem = (AppDetailsComponentItem) mAdapterList.get(index);
+            final AppDetailsComponentItem componentItem;
+            synchronized (mAdapterList) {
+                componentItem = (AppDetailsComponentItem) mAdapterList.get(index);
+            }
             final ProviderInfo providerInfo = (ProviderInfo) componentItem.vanillaItem;
             final String providerName = providerInfo.name;
             // Background color: regular < tracker < disabled < blocked
@@ -1218,20 +1238,21 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
 
         private void getAppOpsView(@NonNull ViewHolder holder, int index) {
             View view = holder.itemView;
-            AppDetailsAppOpItem item = (AppDetailsAppOpItem) mAdapterList.get(index);
+            AppDetailsAppOpItem item;
+            synchronized (mAdapterList) {
+                item = (AppDetailsAppOpItem) mAdapterList.get(index);
+            }
             OpEntry opEntry = item.vanillaItem;
-            final String opStr = mAdapterList.get(index).name;
+            final String opStr = item.name;
             PermissionInfo permissionInfo = item.permissionInfo;
             // Set op name
             SpannableStringBuilder opName = new SpannableStringBuilder(opEntry.getOp() + " - ");
             if (item.name.equals(String.valueOf(opEntry.getOp()))) {
                 opName.append(getString(R.string.unknown_op));
-            } else {
-                if (mConstraint != null && opStr.toLowerCase(Locale.ROOT).contains(mConstraint)) {
-                    // Highlight searched query
-                    opName.append(UIUtils.getHighlightedText(opStr, mConstraint, mColorRed));
-                } else opName.append(opStr);
-            }
+            } else if (mConstraint != null && opStr.toLowerCase(Locale.ROOT).contains(mConstraint)) {
+                // Highlight searched query
+                opName.append(UIUtils.getHighlightedText(opStr, mConstraint, mColorRed));
+            } else opName.append(opStr);
             holder.textView1.setText(opName);
             // Set op mode, running and duration
             StringBuilder opRunningInfo = new StringBuilder()
@@ -1361,7 +1382,10 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
 
         private void getUsesPermissionsView(@NonNull ViewHolder holder, int index) {
             View view = holder.itemView;
-            AppDetailsPermissionItem permissionItem = (AppDetailsPermissionItem) mAdapterList.get(index);
+            AppDetailsPermissionItem permissionItem;
+            synchronized (mAdapterList) {
+                permissionItem = (AppDetailsPermissionItem) mAdapterList.get(index);
+            }
             @NonNull PermissionInfo permissionInfo = permissionItem.vanillaItem;
             final String permName = permissionInfo.name;
             // Set permission name
@@ -1401,7 +1425,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             // Permission Switch
             PackageInfo packageInfo = Objects.requireNonNull(mMainModel).getPackageInfo();
             boolean canGrantOrRevokePermission = permissionItem.modifiable
-                    && (mIsRootEnabled || mIsADBEnabled)
+                    && Ops.isPrivileged()
                     && !mIsExternalApk
                     && PermUtils.supportsRuntimePermissions(Objects.requireNonNull(packageInfo));
             if (canGrantOrRevokePermission) {
@@ -1443,7 +1467,10 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
         }
 
         private void getSharedLibsView(@NonNull ViewHolder holder, int index) {
-            AppDetailsItem<?> item = mAdapterList.get(index);
+            AppDetailsItem<?> item;
+            synchronized (mAdapterList) {
+                item = mAdapterList.get(index);
+            }
             TextView textView = holder.textView1;
             textView.setTextIsSelectable(true);
             textView.setText(item.name);
@@ -1457,7 +1484,10 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
 
         private void getPermissionsView(@NonNull ViewHolder holder, int index) {
             View view = holder.itemView;
-            final PermissionInfo permissionInfo = (PermissionInfo) mAdapterList.get(index).vanillaItem;
+            final PermissionInfo permissionInfo;
+            synchronized (mAdapterList) {
+                permissionInfo = (PermissionInfo) mAdapterList.get(index).vanillaItem;
+            }
             // Label
             holder.textView1.setText(permissionInfo.loadLabel(mPackageManager));
             // Name
@@ -1489,7 +1519,10 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
         @SuppressLint("SetTextI18n")
         private void getFeaturesView(@NonNull ViewHolder holder, int index) {
             View view = holder.itemView;
-            final FeatureInfo featureInfo = (FeatureInfo) mAdapterList.get(index).vanillaItem;
+            final FeatureInfo featureInfo;
+            synchronized (mAdapterList) {
+                featureInfo = (FeatureInfo) mAdapterList.get(index).vanillaItem;
+            }
             // Currently, feature only has a single flag, which specifies whether the feature is required.
             boolean isRequired = (featureInfo.flags & FeatureInfo.FLAG_REQUIRED) != 0;
             boolean isAvailable;
@@ -1533,7 +1566,10 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
 
         private void getConfigurationView(@NonNull ViewHolder holder, int index) {
             View view = holder.itemView;
-            final ConfigurationInfo configurationInfo = (ConfigurationInfo) mAdapterList.get(index).vanillaItem;
+            final ConfigurationInfo configurationInfo;
+            synchronized (mAdapterList) {
+                configurationInfo = (ConfigurationInfo) mAdapterList.get(index).vanillaItem;
+            }
             view.setBackgroundResource(index % 2 == 0 ? R.drawable.item_semi_transparent : R.drawable.item_transparent);
             // GL ES version
             holder.textView1.setText(String.format(Locale.ROOT, "%s %s",
@@ -1551,12 +1587,15 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
 
         private void getSignatureView(@NonNull ViewHolder holder, int index) {
             TextView textView = (TextView) holder.itemView;
-            AppDetailsItem<?> item = mAdapterList.get(index);
-            final X509Certificate signature = (X509Certificate) mAdapterList.get(index).vanillaItem;
+            AppDetailsItem<?> item;
+            synchronized (mAdapterList) {
+                item = mAdapterList.get(index);
+            }
+            final X509Certificate signature = (X509Certificate) item.vanillaItem;
             final SpannableStringBuilder builder = new SpannableStringBuilder();
             if (index == 0) {
                 // Display verifier info
-                builder.append(PackageUtils.getApkVerifierInfo(mMainModel.getApkVerifierResult(), mActivity));
+                builder.append(PackageUtils.getApkVerifierInfo(Objects.requireNonNull(mMainModel).getApkVerifierResult(), mActivity));
             }
             if (!TextUtils.isEmpty(item.name)) {
                 builder.append(UIUtils.getTitleText(mActivity, item.name)).append("\n");

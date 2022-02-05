@@ -273,7 +273,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             executor.submit(() -> {
                 ClipData clipData = clipboard.getPrimaryClip();
                 if (clipData != null && clipData.getItemCount() > 0) {
-                    String data = clipData.getItemAt(0).getText().toString().trim().toLowerCase(Locale.ROOT);
+                    String data = clipData.getItemAt(0).coerceToText(mActivity).toString().trim()
+                            .toLowerCase(Locale.ROOT);
                     if (data.matches("[0-9a-f: \n]+")) {
                         data = data.replaceAll("[: \n]+", "");
                         Signature[] signatures = PackageUtils.getSigningInfo(mPackageInfo, isExternalApk);
@@ -1246,6 +1247,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         if (v != null) v.requestFocus();
     }
 
+    @UiThread
     private void startActivityForSplit(Intent intent) {
         if (mainModel == null) return;
         try (ApkFile apkFile = ApkFile.getInstance(mainModel.getApkFileKey())) {

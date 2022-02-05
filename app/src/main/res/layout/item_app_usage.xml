@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:background="@drawable/item_transparent"
     android:focusable="true"
@@ -32,12 +33,14 @@
                 android:orientation="vertical"
                 android:padding="2dp">
 
-                <androidx.appcompat.widget.AppCompatImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/icon"
                     android:layout_width="@dimen/icon_size"
                     android:layout_height="@dimen/icon_size"
                     android:layout_gravity="center"
-                    android:background="@drawable/circle"
+                    android:scaleType="centerCrop"
+                    android:adjustViewBounds="true"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearance.AppTheme.CircleComponent"
                     tools:srcCompat="@mipmap/ic_launcher"
                     android:contentDescription="@string/str_logo" />
 
@@ -47,13 +50,11 @@
                 android:id="@+id/badge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom|end"
-                android:layout_marginEnd="8dp"
+                android:layout_gravity="bottom|center_horizontal"
                 android:paddingHorizontal="3dp"
                 android:background="@drawable/badge_background"
                 android:textAppearance="?attr/textAppearanceLabelSmall"
                 android:textSize="9sp"
-                android:textColor="?attr/colorSurface"
                 tools:text="1000"
                 tools:ignore="SmallSp" />
 

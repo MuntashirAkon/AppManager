@@ -174,7 +174,9 @@ public class OneClickOpsActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         unregisterReceiver(mBatchOpsBroadCastReceiver);
-        mProgressIndicator.hide();
+        if (mProgressIndicator != null) {
+            mProgressIndicator.hide();
+        }
     }
 
     private void blockTrackers(@Nullable List<ItemCount> trackerCounts) {

@@ -27,7 +27,7 @@ import android.widget.Toast;
 
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
-import androidx.annotation.WorkerThread;
+import androidx.annotation.UiThread;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -82,52 +82,22 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
     }
 
     @GuardedBy("mAdapterList")
+    @UiThread
     void setDefaultList(List<ApplicationItem> list) {
         if (mActivity.mModel == null) return;
-        mActivity.mModel.executor.submit(() -> {
-            synchronized (mAdapterList) {
-                mAdapterList.clear();
-                mAdapterList.addAll(list);
-                mSearchQuery = mActivity.mModel.getSearchQuery();
-                mActivity.runOnUiThread(() -> {
-                    synchronized (mAdapterList) {
-                        notifyDataSetChanged();
-                        notifySelectionChange();
-                    }
-                });
-            }
-        });
-    }
-
-    @GuardedBy("mAdapterList")
-    @WorkerThread
-    @Override
-    public void clearSelections() {
-        if (mActivity.mModel == null) return;
         synchronized (mAdapterList) {
-            final List<Integer> itemIds = new ArrayList<>();
-            int itemId;
-            for (ApplicationItem applicationItem : mActivity.mModel.getSelectedApplicationItems()) {
-                itemId = mAdapterList.indexOf(applicationItem);
-                if (itemId == -1) continue;
-                applicationItem.isSelected = false;
-                mAdapterList.set(itemId, applicationItem);
-                itemIds.add(itemId);
-            }
-            mActivity.runOnUiThread(() -> {
-                synchronized (mAdapterList) {
-                    for (int id : itemIds) notifyItemChanged(id);
-                }
-            });
-            mActivity.mModel.clearSelection();
-            super.clearSelections();
+            mAdapterList.clear();
+            mAdapterList.addAll(list);
+            mSearchQuery = mActivity.mModel.getSearchQuery();
+            notifyDataSetChanged();
+            notifySelectionChange();
         }
     }
 
     @GuardedBy("mAdapterList")
     @Override
     public void cancelSelection() {
-        clearSelections();
+        deselectAll();
     }
 
     @Override
@@ -146,7 +116,7 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
     @Override
     protected boolean isSelected(int position) {
         synchronized (mAdapterList) {
-            return mActivity.mModel.getSelectedPackages().containsKey(mAdapterList.get(position).packageName);
+            return mAdapterList.get(position).isSelected;
         }
     }
 

@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.AnyThread;
 import androidx.annotation.AttrRes;
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
@@ -298,7 +299,7 @@ public class MultiSelectionView extends MaterialCardView {
         });
         selectAllView.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) adapter.selectAll();
-            else adapter.clearSelections();
+            else adapter.deselectAll();
         });
         adapter.setOnSelectionChangeListener(() -> updateCounter(false));
     }
@@ -392,10 +393,12 @@ public class MultiSelectionView extends MaterialCardView {
 
     public abstract static class Adapter<VH extends ViewHolder> extends RecyclerView.Adapter<VH> implements View.OnLayoutChangeListener {
         private interface OnSelectionChangeListener {
+            @UiThread
             void onSelectionChange();
         }
 
         private interface OnLayoutChangeListener {
+            @UiThread
             void onLayoutChange(RecyclerView v, Rect rect, Rect oldRect);
         }
 
@@ -411,24 +414,33 @@ public class MultiSelectionView extends MaterialCardView {
             setHasStableIds(true);
         }
 
+        @AnyThread
         public abstract long getItemId(int position);
 
+        @UiThread
         protected abstract void select(int position);
 
+        @UiThread
         protected abstract void deselect(int position);
 
+        @AnyThread
         protected abstract boolean isSelected(int position);
 
+        @UiThread
         protected abstract void cancelSelection();
 
+        @AnyThread
         protected abstract int getSelectedItemCount();
 
+        @AnyThread
         protected abstract int getTotalItemCount();
 
+        @AnyThread
         public final boolean isInSelectionMode() {
             return isInSelectionMode;
         }
 
+        @AnyThread
         public final boolean areAllSelected() {
             for (int position = 0; position < getItemCount(); ++position) {
                 if (!isSelected(position)) return false;
@@ -436,14 +448,17 @@ public class MultiSelectionView extends MaterialCardView {
             return true;
         }
 
+        @UiThread
         public final void notifySelectionChange() {
             if (selectionChangeListener != null) selectionChangeListener.onSelectionChange();
         }
 
+        @AnyThread
         public final void setInSelectionMode(boolean inSelectionMode) {
             isInSelectionMode = inSelectionMode;
         }
 
+        @UiThread
         @CallSuper
         public void toggleSelection(int position) {
             if (isSelected(position)) {
@@ -453,11 +468,7 @@ public class MultiSelectionView extends MaterialCardView {
             notifySelectionChange();
         }
 
-        @CallSuper
-        public void clearSelections() {
-            notifySelectionChange();
-        }
-
+        @UiThread
         @CallSuper
         public void selectAll() {
             for (int position = 0; position < getItemCount(); ++position) {
@@ -467,6 +478,19 @@ public class MultiSelectionView extends MaterialCardView {
             notifySelectionChange();
         }
 
+        @UiThread
+        @CallSuper
+        public void deselectAll() {
+            for (int position = 0; position < getItemCount(); ++position) {
+                if (isSelected(position)) {
+                    deselect(position);
+                    notifyItemChanged(position);
+                }
+            }
+            notifySelectionChange();
+        }
+
+        @UiThread
         @CallSuper
         public void selectRange(int firstPosition, int secondPosition) {
             int beginPosition = Math.min(firstPosition, secondPosition);
@@ -489,14 +513,17 @@ public class MultiSelectionView extends MaterialCardView {
             }
         }
 
+        @AnyThread
         private void setOnSelectionChangeListener(@Nullable OnSelectionChangeListener listener) {
             selectionChangeListener = listener;
         }
 
+        @AnyThread
         private void setOnLayoutChangeListener(@Nullable OnLayoutChangeListener listener) {
             layoutChangeListener = listener;
         }
 
+        @AnyThread
         @Nullable
         public OnLayoutChangeListener getLayoutChangeListener() {
             return layoutChangeListener;
@@ -535,7 +562,7 @@ public class MultiSelectionView extends MaterialCardView {
         @CallSuper
         @Override
         public void onBindViewHolder(@NonNull VH holder, int position) {
-            // Set focus
+            // Set focus right to select all
             holder.itemView.setNextFocusRightId(R.id.action_select_all);
             // Set selection background
             if (isSelected(position)) {
