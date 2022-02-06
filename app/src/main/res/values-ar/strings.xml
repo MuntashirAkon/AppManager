@@ -1239,4 +1239,17 @@
     <string name="smali">سمالي</string>
     <string name="accessibility_service_description">خدمة الوصول العامة لتنفيذ عمليات معينة مثل مسح ذاكرة التخزين المؤقت في وضع عدم وجود الجذر.</string>
     <string name="extract">استخرج</string>
+    <string name="intent_firewall_and_disable">IFW + تعطيل</string>
+    <string name="pref_default_blocking_method">أسلوب الحظر الافتراضي</string>
+    <string name="pref_intent_firewall_and_disable_description">حظر المكونات باستخدام Intent Firewall وكذلك تعطيلها. الطريقة الموصى بها لمستخدمي الجذر.</string>
+    <string name="pref_disable_description">تعطيل المكونات فقط. لا يوصى به لمستخدمي الجذر لأن التطبيقات يمكنها تجاوز ذلك. في أوضاع ADB ، يمكن تعطيل تطبيقات الاختبار فقط بهذه الطريقة.</string>
+    <string name="search_type_contains">يحتوي</string>
+    <string name="search_type_prefix">بادئه</string>
+    <string name="search_type_suffix">لاحقة</string>
+    <string name="search_type_fuzzy">غير دقيق</string>
+    <string name="pref_default_blocking_method_description">طريقة للاستخدام افتراضيًا في الأماكن التي لا يوجد فيها خيار لتحديد طريقة الحظر.</string>
+    <string name="intent_firewall">IFW</string>
+    <string name="pref_intent_firewall_description">منع المكونات باستخدام Intent Firewall فقط. لا يوصى به لأن بعض تطبيقات النظام يمكنها تجاوز جدران الحماية.</string>
+    <string name="search_type_regular_expressions">ريجيس</string>
+    <string name="authenticating">مصادقة …</string>
 </resources>

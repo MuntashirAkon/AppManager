@@ -585,7 +585,6 @@
     <string name="app_data_will_be_lost">Die vorhandenen Daten gehen dabei verloren.</string>
     <string name="app_signing_signature_mismatch_for_system_apps">Konnte die Anwendung nicht installieren, weil eine Systemanwendung mit einer anderen Signatur diesen Paketnamen hat.</string>
     <string name="do_you_want_to_uninstall_and_install">Möchten Sie die Anwendung deinstallieren und erneut installieren\?</string>
-    <string name="packages">Pakete</string>
     <string name="usage_access_not_supported">Konnte keinen Nutzungszugriff anfordern, da die entsprechende Einstellungsseite nicht existiert.</string>
     <string name="sys_config">Systemkonfiguration</string>
     <string name="tap_to_see_details">Tippen Sie , um Details zu sehen</string>
@@ -1097,4 +1096,17 @@
     <string name="rename">Umbenennen</string>
     <string name="import_from_sb">Importieren aus Swift Backup 3.0 - 3.2</string>
     <string name="pref_import_backups_hint">Wählen Sie ein Verzeichnis, das die Sicherungsdateien (Swift Backup/Titanium Backup) oder Verzeichnisse (OAndBackup) enthält</string>
+    <string name="intent_firewall_and_disable">IFW + deaktivieren</string>
+    <string name="intent_firewall">IFW</string>
+    <string name="pref_default_blocking_method_description">Methode, die standardmäßig verwendet wird, wenn es keine Möglichkeit gibt, eine Blockierungsmethode auszuwählen.</string>
+    <string name="pref_default_blocking_method">Standard-Blockierungsmethode</string>
+    <string name="pref_disable_description">Nur Komponenten deaktivieren. Nicht empfohlen für Root-Benutzer, da die Apps dies umgehen können. In ADB-Modi können die reinen Testanwendungen mit dieser Methode deaktiviert werden.</string>
+    <string name="authenticating">Authentifizierung…</string>
+    <string name="search_type_contains">Enthält</string>
+    <string name="search_type_suffix">Suffix</string>
+    <string name="search_type_prefix">Prefix</string>
+    <string name="search_type_regular_expressions">Regex</string>
+    <string name="search_type_fuzzy">Fuzzy</string>
+    <string name="pref_intent_firewall_and_disable_description">Blockieren Sie Komponenten mit der Intent Firewall und deaktivieren Sie sie. Empfohlene Methode für Root-Benutzer.</string>
+    <string name="pref_intent_firewall_description">Komponenten nur mit Intent Firewall blockieren. Nicht empfohlen, da einige Systemanwendungen Firewalls umgehen können.</string>
 </resources>

@@ -104,7 +104,7 @@
     <string name="backup_all_users">Wszyscy użytkownicy</string>
     <string name="backup_multiple">Utwórz kopię zapasową wielu</string>
     <string name="backup_obb_media">OBB i Media</string>
-    <string name="backup_apk_files">Tylko plik APK</string>
+    <string name="backup_apk_files">Pliki APK</string>
     <string name="installer_error_session_commit">Nie udało się zatwierdzić plików APK</string>
     <string name="installer_error_session_write">Nie można zapisać do sesji instalatora</string>
     <string name="installer_error_session_create">Nie można utworzyć sesji instalatora</string>
@@ -307,11 +307,11 @@
     <string name="serial_no">Numer seryjny</string>
     <string name="validity">Ważność</string>
     <string name="type">Typ</string>
-    <string name="filter_apps_with_backups">Aplikacje z kopiami zapasowymi</string>
+    <string name="filter_apps_with_backups">Z kopiami zapasowymi</string>
     <string name="failed_to_uninstall_updates">Nie można odinstalować aktualizacji dla <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="update_uninstalled_successfully">Aktualizacje dla <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> zostały odinstalowane.</string>
     <string name="uninstall_updates">Odinstaluj aktualizacje</string>
-    <string name="allow_open_pgp_operation">Kliknij, aby zezwolić AM na używanie OpenPGP</string>
+    <string name="allow_open_pgp_operation">Kliknij, aby zezwolić AppManager na używanie OpenPGP</string>
     <string name="confirm_installation">Potwierdź instalację</string>
     <string name="error_evaluating_input">Nie można ewaluować danych wejściowych</string>
     <string name="type_string">Znaki</string>
@@ -448,7 +448,7 @@
     <string name="options">Opcje</string>
     <string name="on">Wł.</string>
     <string name="off">Wył.</string>
-    <string name="profile_block_trackers_msg">Jeśli ta opcja jest włączona, komponenty śledzące będą blokowane</string>
+    <string name="profile_block_trackers_msg">Komponenty śledzące będą blokowane</string>
     <string name="allow_routine_ops_msg">Pozwól, aby profil był używany w rutynowych operacjach</string>
     <string name="adb_over_tcp">ADB przez TCP</string>
     <string name="pref_mode_of_operations">Tryb pracy</string>
@@ -580,7 +580,7 @@
     <string name="enable_battery_optimization">Włączyć optymalizację baterii\?</string>
     <string name="type_uri">URI</string>
     <string name="receivers">Odbiorniki</string>
-    <string name="backup_extras_description">Utwórz kopię zapasową uprawnień aplikacji, oszczędzania baterii, opcji wykorzystania danych, statusu MagiskHide itp.</string>
+    <string name="backup_extras_description">Utwórz kopię zapasową uprawnień aplikacji, oszczędzania baterii, opcji wykorzystania danych, statusu MagiskHide, SSAID itp.</string>
     <string name="backup_internal_data_description">Utwórz kopię zapasową folderów danych. Jeśli ta opcja jest wybrana, kopie zapasowe wewnętrznych folderów danych zostaną utworzone.</string>
     <string name="disable_magisk_hide">Wyłączyć MagiskHide\?</string>
     <string name="window_size">Rozmiar okna</string>
@@ -620,10 +620,10 @@
     <string name="input_permissions_description">Wprowadź uprawnienia ze spacjami, np. <tt>com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION</tt> itd. Użyj <tt>*</tt> aby zastosować dla wszystkich uprawnień.</string>
     <string name="input_permissions">Wprowadź uprawnienia</string>
     <string name="profile_state_msg">Stan włączenia/wyłączenia dla tego profilu</string>
-    <string name="profile_clear_data_msg">Jeśli ta opcja jest włączona, dane aplikacji zostaną wyczyszczone</string>
-    <string name="profile_clear_cache_msg">Jeśli ta opcja jest włączona, pamięć podręczna aplikacji zostanie wyczyszczona</string>
-    <string name="profile_force_stop_msg">Jeśli ta opcja jest włączona, aplikacje zostaną zatrzymane</string>
-    <string name="profile_disable_msg">Jeśli ta opcja jest włączona, aplikacje zostaną wyłączone/włączone na podstawie wybranego stanu</string>
+    <string name="profile_clear_data_msg">Dane aplikacji zostaną wyczyszczone</string>
+    <string name="profile_clear_cache_msg">Czyści pamięć podręczną aplikacji</string>
+    <string name="profile_force_stop_msg">Wymuś zatrzymanie aplikacji</string>
+    <string name="profile_disable_msg">Wyłączone lub włączone aplikacje na podstawie stanu</string>
     <string name="profile_state">Stan profilu</string>
     <string name="not_verified">Nie zweryfikowane</string>
     <string name="verified">Zweryfikowane</string>
@@ -909,7 +909,6 @@
     <string name="scanner">Skaner</string>
     <string name="sys_config">Konfiguracja systemu</string>
     <string name="app_signing_install_without_data_loss">Jeśli wyłączono weryfikację podpisu, można użyć opcji <b>Tylko zainstaluj</b>, aby zainstalować aplikację bez utraty danych.</string>
-    <string name="packages">pakiety</string>
     <string name="non_critical_exts">Rozszerzenia niekrytyczne</string>
     <string name="critical_exts">Rozszerzenia krytyczne</string>
     <string name="dsa_affine_y">Współrzędna afiniczna y</string>

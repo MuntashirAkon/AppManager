@@ -911,7 +911,6 @@
     <string name="app_data_will_be_lost">Dữ liệu hiện có sẽ bị mất.</string>
     <string name="app_signing_signature_mismatch_for_system_apps">Không thể cài đặt ứng dụng vì một ứng dụng hệ thống có chữ ký khác cũng có tên gói này.</string>
     <string name="do_you_want_to_uninstall_and_install">Bạn có muốn gỡ cài đặt và cài đặt ứng dụng lại không\?</string>
-    <string name="packages">gói</string>
     <string name="usage_access_not_supported">Không thể yêu cầu truy cập dữ liệu sử dụng, vì trang cài đặt tương ứng không tồn tại.</string>
     <string name="subject">Đối tượng</string>
     <string name="other">Khác</string>
@@ -1060,4 +1059,17 @@
     <string name="accessibility_service_description">Cho phép truy cập và sử dụng dịch vụ để thực hiện một số công việc như dọn cache trên thiết bị chưa root.</string>
     <string name="pref_import_backups_hint">Chọn thư mục chứa bản sao từ(Swift Backup/Titanium Backup) hoặc thư mục(OAndBackup)</string>
     <string name="import_from_sb">Nhập bản sao từ Swift Backup 3.0 - 3.2</string>
+    <string name="intent_firewall_and_disable">IFW + tắt</string>
+    <string name="pref_default_blocking_method">Phương pháp chặn mặc định</string>
+    <string name="pref_default_blocking_method_description">Phương pháp sẽ được sử dụng theo mặc định ở những nơi không có tùy chọn phương pháp chặn.</string>
+    <string name="pref_disable_description">Chỉ tắt các thành phần. Không được khuyên dùng cho người dùng root vì các ứng dụng có thể vượt qua việc này. Ở chế độ ADB, các ứng dụng chỉ thử có thể được tắt bằng phương pháp này.</string>
+    <string name="intent_firewall">IFW</string>
+    <string name="pref_intent_firewall_and_disable_description">Chặn các thành phần bằng Intent Firewall và tắt chúng. Phương pháp này được khuyên dùng cho người dùng root.</string>
+    <string name="pref_intent_firewall_description">Chặn các thành phần chỉ bằng Intent Firewall. Không được khuyên dùng vì một số ứng dụng hệ thống có thể vượt qua tường lửa.</string>
+    <string name="authenticating">Đang xác thực…</string>
+    <string name="search_type_contains">Chứa</string>
+    <string name="search_type_prefix">Tiền tố</string>
+    <string name="search_type_suffix">Hậu tố</string>
+    <string name="search_type_regular_expressions">Biểu thức thường</string>
+    <string name="search_type_fuzzy">Không rõ</string>
 </resources>

@@ -148,7 +148,7 @@
         <item quantity="many">%1$d часов</item>
         <item quantity="other">%1$d часов</item>
     </plurals>
-    <string name="usage_min">%1$d мин.</string>
+    <string name="usage_min">%1$d мин</string>
     <string name="usage_less_than_a_minute">Меньше минуты</string>
     <string name="go_back">Вернуться</string>
     <string name="go">Разрешить</string>
@@ -617,7 +617,6 @@
     <string name="only_install">Только установка</string>
     <string name="app_signing_install_without_data_loss">Если у вас отключена проверка подписи, вы можете использовать параметр <b>«Только установка»</b>, чтобы установить приложение без потери данных.</string>
     <string name="sort_by_backup">Сначала резервные копии</string>
-    <string name="packages">пакеты</string>
     <string name="state_session_leader">Лидер сессии</string>
     <string name="sys_config">Конфигурация системы</string>
     <string name="rsa_modulus">Модуль</string>
@@ -1169,4 +1168,17 @@
     <string name="rename">Переименовать</string>
     <string name="pref_import_backups_hint">Выберите каталог, содержащий файлы (Swift Backup/Titanium Backup) или каталоги (OAndBackup) резервных копий</string>
     <string name="accessibility_service_description">Общая служба специальных возможностей для выполнения определенных операций, таких как очистка кеша в режиме без-root.</string>
+    <string name="pref_default_blocking_method">Метод блокировки по умолчанию</string>
+    <string name="pref_intent_firewall_and_disable_description">Блокировка компонентов с помощью Intent Firewall и также отключения. Рекомендуемый метод для root пользователей.</string>
+    <string name="authenticating">Аутентификация…</string>
+    <string name="search_type_contains">cодержит</string>
+    <string name="search_type_prefix">префикс</string>
+    <string name="search_type_suffix">суффикс</string>
+    <string name="intent_firewall_and_disable">IFW + отключение</string>
+    <string name="search_type_regular_expressions">регулярные выражения</string>
+    <string name="search_type_fuzzy">нечеткий</string>
+    <string name="pref_disable_description">Только отключение компонентов. Не рекомендуется для root пользователей, поскольку приложения могут обходить этот метод блокировки. С помощью этого метода можно отключить только тестовые приложения в режиме ADB.</string>
+    <string name="pref_default_blocking_method_description">Метод, используемый по умолчанию там, где нет возможности выбора метода блокировки.</string>
+    <string name="pref_intent_firewall_description">Блокировка компонентов с использованием только Intent Firewall. Не рекомендуется, поскольку некоторые системные приложения могут обходить этот метод блокировки.</string>
+    <string name="intent_firewall">IFW</string>
 </resources>

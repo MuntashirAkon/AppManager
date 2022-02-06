@@ -584,7 +584,6 @@
     <string name="app_data_will_be_lost">Mevcut veriler kaybolacak.</string>
     <string name="app_signing_signature_mismatch_for_system_apps">Farklı imzaya sahip bir sistem uygulaması bu paket adına sahip olduğu için uygulama kurulamadı.</string>
     <string name="do_you_want_to_uninstall_and_install">Uygulamayı kaldırıp tekrar kurmak istiyor musunuz\?</string>
-    <string name="packages">paketler</string>
     <string name="usage_access_not_supported">İlgili ayarlar sayfası olmadığı için kullanım erişimi istenemedi.</string>
     <string name="sys_config">Sistem Yapılandırması</string>
     <string name="copy">Kopyala</string>
@@ -1096,4 +1095,17 @@
     <string name="extract">Çıkart</string>
     <string name="replace">Değiştir</string>
     <string name="rename">Yeniden adlandır</string>
+    <string name="intent_firewall_and_disable">IFW + devre dışı bırak</string>
+    <string name="intent_firewall">IFW</string>
+    <string name="pref_default_blocking_method">Öntanımlı engelleme yöntemi</string>
+    <string name="pref_default_blocking_method_description">Engelleme yöntemi seçme seçeneğinin olmadığı yerlerde öntanımlı olarak kullanılacak yöntem.</string>
+    <string name="pref_intent_firewall_description">Bileşenleri yalnızca Intent Firewall kullanarak engelle. Bazı sistem uygulamaları güvenlik duvarlarını atlayabildiğinden tavsiye edilmez.</string>
+    <string name="authenticating">Kimlik doğrulanıyor…</string>
+    <string name="search_type_contains">İçerir</string>
+    <string name="search_type_prefix">Ön ek</string>
+    <string name="search_type_suffix">Son ek</string>
+    <string name="search_type_fuzzy">Bulanık</string>
+    <string name="search_type_regular_expressions">Düzenli ifade</string>
+    <string name="pref_intent_firewall_and_disable_description">Intent Firewall kullanarak bileşenleri engelle ve devre dışı bırak. Root kullanıcıları için tavsiye edilen yöntemdir.</string>
+    <string name="pref_disable_description">Yalnızca bileşenleri devre dışı bırak. Uygulamalar bunu atlayabildiğinden root kullanıcıları için tavsiye edilmez. ADB modlarında, yalnızca test amaçlı uygulamalar bu yöntemle devre dışı bırakılabilir.</string>
 </resources>

@@ -607,7 +607,6 @@
     <string name="routine_ops">Operações de rotina</string>
     <string name="input_app_ops_description">Insira nomes e/ou constantes de operações de aplicativo com espaços, por exemplo <tt>WAKE_LOCK 63 72 CAMERA</tt> etc.</string>
     <string name="input_app_ops">Inserir operações de aplicativo</string>
-    <string name="onboard">Todos os</string>
     <string name="state_waking">Acordando</string>
     <string name="state_parked">Estacionado</string>
     <string name="state_wake_kill">Encerrado ao acordar</string>
@@ -1097,4 +1096,17 @@
     <string name="smali">Smali</string>
     <string name="system_partition">Root Android</string>
     <string name="accessibility_service_description">Serviço de acessibilidade genérico para realizar certas operações, como limpar o cache no modo.</string>
+    <string name="authenticating">Autenticando …</string>
+    <string name="pref_intent_firewall_and_disable_description">Bloqueie componentes usando o Intent Firewall e também desative-os. Método recomendado para usuários root.</string>
+    <string name="pref_intent_firewall_description">Bloqueie componentes usando apenas o Intent Firewall. Não recomendado, pois alguns aplicativos do sistema podem contornar firewalls.</string>
+    <string name="search_type_fuzzy">Difuso</string>
+    <string name="search_type_regular_expressions">Expressões regulares</string>
+    <string name="pref_default_blocking_method">Método de bloqueio padrão</string>
+    <string name="search_type_contains">Contém</string>
+    <string name="search_type_suffix">Sufixo</string>
+    <string name="search_type_prefix">Prefixo</string>
+    <string name="pref_default_blocking_method_description">Método a ser usado por padrão em locais onde não há opção de selecionar um método de bloqueio.</string>
+    <string name="intent_firewall_and_disable">IFW + desativar</string>
+    <string name="intent_firewall">IFW</string>
+    <string name="pref_disable_description">Desative apenas componentes. Não recomendado para usuários root, pois os aplicativos podem contornar isso. Nos modos ADB, os aplicativos somente de teste podem ser desabilitados com este método.</string>
 </resources>

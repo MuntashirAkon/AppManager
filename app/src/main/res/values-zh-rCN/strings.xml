@@ -2,7 +2,7 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
     <string name="_lang_tag" translatable="false">zh-CN</string>
     <string name="uninstall">卸载</string>
-    <string name="permissions">系统预定义权限</string>
+    <string name="permissions">权限</string>
     <string name="require_no_permission">无需权限</string>
     <string name="activities">活动</string>
     <string name="launch">打开</string>
@@ -26,7 +26,7 @@
     <string name="read">读取</string>
     <string name="write">写入</string>
     <string name="patterns_allowed">允许的模式</string>
-    <string name="declared_permission">权限</string>
+    <string name="declared_permission">自定义权限</string>
     <string name="shared_libs">共享程序库</string>
     <string name="group">群组</string>
     <string name="uses_feature">属性</string>
@@ -198,7 +198,7 @@
     <string name="storage_and_cache">存储和缓存</string>
     <string name="total_size">总计</string>
     <string name="app_size">应用程序</string>
-    <string name="app_ops">AppOps 权限</string>
+    <string name="app_ops">AppOps</string>
     <string name="no_app_ops">无 AppOps 权限</string>
     <string name="failed_to_enable_op">无法启用请求的 AppOps 权限</string>
     <string name="failed_to_disable_op">无法禁用请求的 AppOps</string>
@@ -671,7 +671,7 @@
     <string name="magisk_hide_enabled">MagiskHide</string>
     <string name="filter_apps_with_splits">带分包的应用程序</string>
     <string name="value">值</string>
-    <string name="interceptor">拦截器</string>
+    <string name="interceptor">意图拦截器</string>
     <string name="resend_intent">重新发送意图</string>
     <string name="share">分享</string>
     <string name="extras">附加</string>
@@ -729,7 +729,7 @@
     <string name="screen">屏幕</string>
     <string name="hardware">硬件</string>
     <string name="permissive">被动</string>
-    <string name="enforcing">Enforcing</string>
+    <string name="enforcing">强制</string>
     <string name="failed_to_enable_magisk_hide">无法启用 MagiskHide</string>
     <string name="enable_magisk_hide">启用 MagiskHide</string>
     <string name="failed_to_disable_magisk_hide">无法禁用 MagiskHide</string>
@@ -1060,4 +1060,17 @@
     <string name="replace">替换</string>
     <string name="rename">重命名</string>
     <string name="import_from_sb">从 Swift Backup 3.0 – 3.2 导入</string>
+    <string name="pref_default_blocking_method">默认拦截方式</string>
+    <string name="intent_firewall_and_disable">IFW + 禁用</string>
+    <string name="intent_firewall">IFW</string>
+    <string name="pref_default_blocking_method_description">在没有拦截选项可选的情况下默认使用的方法。</string>
+    <string name="pref_intent_firewall_and_disable_description">使用 Intent Firewall 阻断组件并禁用它们。推荐 root 用户使用该方法。</string>
+    <string name="pref_intent_firewall_description">仅使用 Intent Firewall 阻断组件。不推荐，因为有些系统程序可以绕过IFW。</string>
+    <string name="pref_disable_description">禁用组件。不推荐 root 用户使用，因为程序可以绕过这个。在 ADB 模式下，可以使用此方法禁用仅测试应用程序。</string>
+    <string name="authenticating">正在验证…</string>
+    <string name="search_type_contains">包含</string>
+    <string name="search_type_prefix">前缀</string>
+    <string name="search_type_suffix">后缀</string>
+    <string name="search_type_regular_expressions">正则表达式</string>
+    <string name="search_type_fuzzy">模糊</string>
 </resources>

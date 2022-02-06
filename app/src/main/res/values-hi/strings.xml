@@ -232,16 +232,23 @@
     <string name="toggle_class_listing">टॉगल वर्ग सूचीकरण</string>
     <string name="class_viewer">क्लास दर्शक</string>
     <string name="word_wrap">वर्ड व्रैप चालू/बंद करें</string>
-    <string name="credits_message">के लेखकों को
-\n- एंड्रॉइड ओपन सोर्स प्रोजेक्ट
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
+    <string name="credits_message">निम्न प्रोजेक्ट के लेखकों के लिए
+\n- एंड्रॉएड ओपन सोर्स प्रोजेक्ट
 \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
-\n- <a href="https://github.com/billthefarmer/editor">AppsMonitor</a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
-\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
+\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
+\n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
+\n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
+\n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a>
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
-\nलोगो का श्रेय: <a href="https://github.com/Atrate">Atrate</a>।</string>
+\n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
+\nमूल लोगो रचयिता: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="credits">श्रेय</string>
     <string name="third_party">थर्ड पार्टी लाइब्रेरी और आइकन्स</string>
     <string name="license">लाइसेंस</string>
@@ -386,7 +393,6 @@
     <string name="app_data_will_be_lost">मौजूदा डाटा खत्म हो जाएगा।</string>
     <string name="app_signing_signature_mismatch_for_system_apps">ऐप इंस्टॉल नहीं कर सके क्योंकि इंस्टॉल किया गया ऐप अलग हस्ताक्षर वाला एक सिस्टम ऐप है।</string>
     <string name="do_you_want_to_uninstall_and_install">क्या आप ऐप को फिर से अनइंस्टॉल और इंस्टॉल करना चाहते हैं\?</string>
-    <string name="packages">पैकेजेस</string>
     <string name="usage_access_not_supported">इस्तेमाल का एक्सेस का उपयोग करने का अनुरोध नहीं कर सकता क्योंकि संबंधित सेटिंग्स पेज मौजूद नहीं है।</string>
     <string name="non_critical_exts">नॉन-क्रिटिकल एक्सटेंशन्स</string>
     <string name="critical_exts">क्रिटिकल एक्सटेंशन</string>
