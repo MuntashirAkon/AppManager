@@ -20,7 +20,6 @@ import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,8 +27,11 @@ import android.widget.Toast;
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
 import androidx.annotation.UiThread;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.color.MaterialColors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.File;
@@ -62,6 +64,8 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
     private final List<ApplicationItem> mAdapterList = new ArrayList<>();
     final ImageLoader imageLoader;
 
+    private final int mColorSurface;
+    private final int mColorSurfaceDisabled;
     private final int mColorStopped;
     private final int mColorOrange;
     private final int mColorPrimary;
@@ -73,6 +77,9 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
         mActivity = activity;
         mPackageManager = activity.getPackageManager();
         imageLoader = new ImageLoader(mActivity.mModel.executor);
+
+        mColorSurface = MaterialColors.getColor(mActivity, R.attr.colorSurface, MainRecyclerAdapter.class.getCanonicalName());
+        mColorSurfaceDisabled = ContextCompat.getColor(mActivity, R.color.disabled_user);
 
         mColorStopped = ContextCompat.getColor(mActivity, R.color.stopped);
         mColorOrange = ContextCompat.getColor(mActivity, R.color.orange);
@@ -252,13 +259,14 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
             return true;
         });
         holder.icon.setOnClickListener(v -> toggleSelection(position));
-        // Alternate background colors: disabled > regular
-        if (item.isDisabled) holder.itemView.setBackgroundResource(R.drawable.item_disabled);
-        else {
-            holder.itemView.setBackgroundResource(position % 2 == 0 ? R.drawable.item_semi_transparent : R.drawable.item_transparent);
+        // Background colors: selected > disabled > regular
+        if (item.isDisabled) {
+            holder.itemView.setCardBackgroundColor(mColorSurfaceDisabled);
+        } else {
+            holder.itemView.setCardBackgroundColor(mColorSurface);
         }
         // Add yellow star if the app is in debug mode
-        holder.favorite_icon.setVisibility(item.debuggable ? View.VISIBLE : View.INVISIBLE);
+        holder.debugIcon.setVisibility(item.debuggable ? View.VISIBLE : View.INVISIBLE);
         // Set version name
         holder.version.setText(item.versionName);
         // Set date and (if available,) days between first install and last update
@@ -310,9 +318,9 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
             holder.label.setText(UIUtils.getHighlightedText(item.label, mSearchQuery, mColorRed));
         } else holder.label.setText(item.label);
         // Set app label color to red if clearing user data not allowed
-        if (item.isInstalled && (item.flags & ApplicationInfo.FLAG_ALLOW_CLEAR_USER_DATA) == 0)
+        if (item.isInstalled && (item.flags & ApplicationInfo.FLAG_ALLOW_CLEAR_USER_DATA) == 0) {
             holder.label.setTextColor(Color.RED);
-        else holder.label.setTextColor(mColorPrimary);
+        } else holder.label.setTextColor(mColorPrimary);
         // Set package name
         if (!TextUtils.isEmpty(mSearchQuery) && item.packageName.toLowerCase(Locale.ROOT).contains(mSearchQuery)) {
             // Highlight searched query
@@ -393,17 +401,17 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
                     mActivity.getString(R.string.latest_backup), mActivity.getResources()
                             .getQuantityString(R.plurals.usage_days, (int) days, days),
                     mActivity.getString(R.string.version), backup.versionName));
-            StringBuilder extBulder = new StringBuilder();
-            if (backup.getFlags().backupApkFiles()) extBulder.append("apk");
+            StringBuilder extBuilder = new StringBuilder();
+            if (backup.getFlags().backupApkFiles()) extBuilder.append("apk");
             if (backup.getFlags().backupData()) {
-                if (extBulder.length() > 0) extBulder.append("+");
-                extBulder.append("data");
+                if (extBuilder.length() > 0) extBuilder.append("+");
+                extBuilder.append("data");
             }
             if (backup.hasRules) {
-                if (extBulder.length() > 0) extBulder.append("+");
-                extBulder.append("rules");
+                if (extBuilder.length() > 0) extBuilder.append("+");
+                extBuilder.append("rules");
             }
-            holder.backupInfoExt.setText(extBulder.toString());
+            holder.backupInfoExt.setText(extBuilder.toString());
         } else {
             holder.backupIndicator.setVisibility(View.GONE);
             holder.backupInfo.setVisibility(View.GONE);
@@ -458,8 +466,9 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
     }
 
     static class ViewHolder extends MultiSelectionView.ViewHolder {
-        ImageView icon;
-        ImageView favorite_icon;
+        MaterialCardView itemView;
+        AppCompatImageView icon;
+        AppCompatImageView debugIcon;
         TextView label;
         TextView packageName;
         TextView version;
@@ -475,8 +484,9 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            this.itemView = (MaterialCardView) itemView;
             icon = itemView.findViewById(R.id.icon);
-            favorite_icon = itemView.findViewById(R.id.favorite_icon);
+            debugIcon = itemView.findViewById(R.id.favorite_icon);
             label = itemView.findViewById(R.id.label);
             packageName = itemView.findViewById(R.id.packageName);
             version = itemView.findViewById(R.id.version);

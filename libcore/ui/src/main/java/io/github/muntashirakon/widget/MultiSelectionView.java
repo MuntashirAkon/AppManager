@@ -18,11 +18,13 @@ import android.widget.TextView;
 import androidx.annotation.AnyThread;
 import androidx.annotation.AttrRes;
 import androidx.annotation.CallSuper;
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.Px;
 import androidx.annotation.UiThread;
 import androidx.appcompat.widget.TintTypedArray;
+import androidx.core.content.ContextCompat;
 import androidx.customview.view.AbsSavedState;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.transition.Transition;
@@ -98,8 +100,8 @@ public class MultiSelectionView extends MaterialCardView {
         divider = findViewById(R.id.divider);
 
         // Set heights
-        maxHeight = UiUtils.dpToPx(getContext(), 48 + 1 + 116);
-        titleHeight = UiUtils.dpToPx(getContext(), 48);
+        maxHeight = UiUtils.dpToPx(context, 48 + 1 + 116);
+        titleHeight = UiUtils.dpToPx(context, 48);
         currentHeight = maxHeight;
 
         // Clicking on counter maximizes/minimizes the selection actions
@@ -126,7 +128,7 @@ public class MultiSelectionView extends MaterialCardView {
         @Px
         int smallSize = getResources().getDimensionPixelSize(R.dimen.padding_small);
         setPreventCornerOverlap(false);
-        setRadius(smallSize);
+        setCardElevation(UiUtils.dpToPx(context, 4));
 
         horizontalMargin = smallSize;
         bottomMargin = getResources().getDimensionPixelSize(R.dimen.padding_very_small);
@@ -409,6 +411,8 @@ public class MultiSelectionView extends MaterialCardView {
         private boolean isInSelectionMode;
         @Nullable
         private RecyclerView recyclerView;
+        @ColorInt
+        private int highlightColor;
 
         public Adapter() {
             setHasStableIds(true);
@@ -548,6 +552,7 @@ public class MultiSelectionView extends MaterialCardView {
         public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
             super.onAttachedToRecyclerView(recyclerView);
             this.recyclerView = recyclerView;
+            this.highlightColor = ContextCompat.getColor(recyclerView.getContext(), R.color.highlight);
             recyclerView.addOnLayoutChangeListener(this);
         }
 
@@ -566,7 +571,11 @@ public class MultiSelectionView extends MaterialCardView {
             holder.itemView.setNextFocusRightId(R.id.action_select_all);
             // Set selection background
             if (isSelected(position)) {
-                holder.itemView.setBackgroundResource(R.drawable.item_highlight);
+                if (holder.itemView instanceof MaterialCardView) {
+                    ((MaterialCardView) holder.itemView).setCardBackgroundColor(highlightColor);
+                } else {
+                    holder.itemView.setBackgroundResource(R.drawable.item_highlight);
+                }
             }
         }
     }
