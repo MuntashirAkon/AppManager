@@ -69,6 +69,7 @@
         <item>com.google.firebase.firebase_analytics</item>
         <item>com.eulerian.android.sdk</item>
         <item>com.adjust.sdk.</item>
+        <item>com.adjust.android.sdk.</item>
         <item>com.chartboost.sdk.</item>
         <item>com.backelite.android.</item>
         <item>com.backelite.bkdroid.</item>
@@ -223,7 +224,8 @@
         <item>com.vungle.publisher.</item>
         <item>com.vungle.warren.</item>
         <item>com.criteo.</item>
-        <item>com.mapbox.mapboxsdk.</item>
+        <item>com.mapbox.mapboxsdk.module.telemetry</item>
+        <item>com.mapbox.mapboxsdk.maps.TelemetryDefinition</item>
         <item>com.mapbox.android.telemetry.</item>
         <item>com.optimizely.</item>
         <item>com.taboola.</item>
@@ -380,6 +382,7 @@
         <item>co.enhance.Enhance</item>
         <item>com.esri.arcgisruntime.</item>
         <item>com.giphy.sdk.analytics</item>
+        <item>com.giphy.sdk.tracking</item>
         <item>com.heapanalytics</item>
         <item>com.inneractive.api.ads</item>
         <item>com.mdotm.android</item>
@@ -389,6 +392,7 @@
         <item>com.qualtrics.digital.</item>
         <item>com.tamoco.sdk</item>
         <item>com.vpon.ads</item>
+        <item>com.vpadn.</item>
         <item>com.yume.android</item>
         <item>com.redbricklane.zapr</item>
         <item>com.mediba.jp</item>
@@ -553,10 +557,13 @@
         <item>com.xtify.mce.sdk.</item>
         <item>com.xtify.android.sdk.</item>
         <item>com.ansca.corona</item>
+        <item>com.amplifyframework.analytics.</item>
         <item>com.geopla.</item>
         <item>com.threebitter.sdk.</item>
         <item>org.acra.</item>
         <item>ch.acra.</item>
+        <item>com.adxcorp.ads</item>
+        <item>com.adxcorp.nativead</item>
         <item>com.adop.sdk.</item>
         <item>com.admanmedia.</item>
         <item>com.ljoy.chatbot.</item>
@@ -576,6 +583,7 @@
         <item>com.aiming.mdt.</item>
         <item>com.adtiming.</item>
         <item>com.openmediation.sdk.</item>
+        <item>com.crosspromotion.sdk</item>
         <item>com.adtrial.sdk.</item>
         <item>com.kuaiyou.loader.</item>
         <item>com.adwhirl.</item>
@@ -658,7 +666,6 @@
         <item>com.pontiflex.mobile.</item>
         <item>io.flowup</item>
         <item>jp.fluct.fluctsdk.</item>
-        <item>com.giphy.sdk.tracking</item>
         <item>com.reach.ActionMonitor</item>
         <item>com.reach.ActionService</item>
         <item>com.reach.AdServiceManager</item>
@@ -689,7 +696,7 @@
         <item>com.growingio.</item>
         <item>com.growthpush.</item>
         <item>com.growthbeat.</item>
-        <item>com.heytap.</item>
+        <item>com.heytap.nearx.track</item>
         <item>com.hotmob.sdk.</item>
         <item>.houseads</item>
         <item>com.iac.notification.</item>
@@ -700,6 +707,7 @@
         <item>com.android.skyunion.statistics.</item>
         <item>com.skyunion.android.</item>
         <item>com.iqv.</item>
+        <item>com.igexin.sdk.</item>
         <item>com.inbrain.sdk.</item>
         <item>com.instal.mobileads.</item>
         <item>com.instal.common</item>
@@ -724,6 +732,7 @@
         <item>com.Leadbolt.</item>
         <item>io.liftoff.liftoffads.</item>
         <item>com.lotadata.moments.</item>
+        <item>com.megvii.zhimasdk.</item>
         <item>com.madhouse.android.ads</item>
         <item>com.deflocculent.fecklessness.</item>
         <item>.BxcActivity</item>
@@ -755,12 +764,13 @@
         <item>com.fungame.advertisingsdk</item>
         <item>com.hz.keep.</item>
         <item>cn.rs.keepalive.</item>
-        <item>com.marketo</item>
+        <item>com.marketo.</item>
         <item>com.mapps.android.</item>
         <item>com.mz.common.</item>
         <item>com.mmc.common</item>
         <item>com.mezzomedia.</item>
         <item>com.mobclick.android</item>
+        <item>com.mobimento.caponate.ad.</item>
         <item>com.mobiquitynetworks.</item>
         <item>com.moblin.pxl.</item>
         <item>com.mobon.sdk.</item>
@@ -800,6 +810,7 @@
         <item>com.playtestcloud.Analytics</item>
         <item>com.plleti.offerwall.</item>
         <item>com/pontiflex/mobile</item>
+        <item>com.posthog.android</item>
         <item>jp.profilepassport.android.</item>
         <item>.ppSDK.</item>
         <item>com.pubnub.api.</item>
@@ -829,6 +840,7 @@
         <item>io.sentry.</item>
         <item>com.joshdholtz.sentry</item>
         <item>seventynine.sdk.</item>
+        <item>com.shuwei.location.</item>
         <item>com.sina.weibo.sdk</item>
         <item>es.situm.sdk.</item>
         <item>com.skillz.Skillz</item>
@@ -842,6 +854,9 @@
         <item>com.spotify.mobile.android.ads.</item>
         <item>com.spotify.music.features.ads.</item>
         <item>com.spotify.music.ads.</item>
+        <item>com.spotify.ads.</item>
+        <item>com.spotify.music.libs.adbasedondemand.</item>
+        <item>com.spotify.nativeads.</item>
         <item>jp.supership.vamp.</item>
         <item>com.synerise.sdk</item>
         <item>net.taparound.</item>
@@ -939,7 +954,6 @@
         <item>zendesk.</item>
         <item>com.zenjoy.ads</item>
         <item>net.zucks.</item>
-        <item>com.adxcorp.</item>
         <item>.com.ew.sdk.adboost</item>
         <item>de.appplant.</item>
         <item>com.apptv.android.</item>
@@ -957,6 +971,7 @@
         <item>com.mtraction.mtractioninapptracker.</item>
         <item>com.netmera.</item>
         <item>jp.pinable.ssbp.</item>
+        <item>com.smixx.fabric.</item>
         <item>com.tabtale</item>
     </string-array>
     <string-array name="tracker_names">
@@ -1027,6 +1042,7 @@
         <item>Google Firebase Analytics</item>
         <item>Google Firebase Analytics</item>
         <item>Eulerian</item>
+        <item>Adjust</item>
         <item>Adjust</item>
         <item>ChartBoost</item>
         <item>Backelite</item>
@@ -1184,6 +1200,7 @@
         <item>Criteo</item>
         <item>Mapbox</item>
         <item>Mapbox</item>
+        <item>Mapbox</item>
         <item>Optimizely</item>
         <item>Taboola</item>
         <item>CleverTap</item>
@@ -1339,6 +1356,7 @@
         <item>Enhance</item>
         <item>Esri ArcGIS</item>
         <item>GIPHY Analytics</item>
+        <item>GIPHY Analytics</item>
         <item>Heap</item>
         <item>Inneractive</item>
         <item>MDOTM</item>
@@ -1347,6 +1365,7 @@
         <item>Pollfish</item>
         <item>Qualtrics</item>
         <item>Tamoco</item>
+        <item>Vpon</item>
         <item>Vpon</item>
         <item>YuMe</item>
         <item>Zapr</item>
@@ -1512,10 +1531,13 @@
         <item>IBM Mobile Marketing (Acoustic)</item>
         <item>IBM Mobile Marketing (Acoustic)</item>
         <item>Solar2D (Corona)</item>
+        <item>Amazon Mobile Analytics (Amplify)</item>
         <item>²39Geopla</item>
         <item>²3bitter Beacon</item>
         <item>²ACRA</item>
         <item>²ACRA</item>
+        <item>²AD(X)</item>
+        <item>²AD(X)</item>
         <item>²ADOP</item>
         <item>²ADman Media</item>
         <item>²AIHelp</item>
@@ -1532,6 +1554,7 @@
         <item>²AdMarvel</item>
         <item>²AdTech</item>
         <item>²AdTheorent</item>
+        <item>²AdTiming</item>
         <item>²AdTiming</item>
         <item>²AdTiming</item>
         <item>²AdTiming</item>
@@ -1617,7 +1640,6 @@
         <item>²Flatiron Media</item>
         <item>²FlowUp</item>
         <item>²FluctSDK</item>
-        <item>²GIPHY</item>
         <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
         <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
         <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
@@ -1659,6 +1681,7 @@
         <item>²IGG.com</item>
         <item>²IGG.com</item>
         <item>²IQV</item>
+        <item>²Igexin</item>
         <item>²InBrainSurveys SDK</item>
         <item>²Instal</item>
         <item>²Instal</item>
@@ -1683,6 +1706,7 @@
         <item>²LeadBolt</item>
         <item>²Liftoff</item>
         <item>²LotaData</item>
+        <item>²MEGVII</item>
         <item>²Madhouse</item>
         <item>²Malverting/Adfrauds</item>
         <item>²Malverting/Adfrauds</item>
@@ -1720,6 +1744,7 @@
         <item>²Mezzomedia AD Platform</item>
         <item>²Mezzomedia AD Platform</item>
         <item>²Mobclick</item>
+        <item>²Mobincube</item>
         <item>²Mobiquity Networks</item>
         <item>²Moblin</item>
         <item>²Mobon SDK</item>
@@ -1756,9 +1781,10 @@
         <item>²Pincrux</item>
         <item>²Pinterest</item>
         <item>²PlayFab java</item>
-        <item>²Playtestcloud</item>
+        <item>²PlaytestCloud Event Tracking</item>
         <item>²Plleti</item>
         <item>²Pontiflex</item>
+        <item>²Posthog</item>
         <item>²Profile Passport</item>
         <item>²Profile Passport</item>
         <item>²PubNub</item>
@@ -1788,6 +1814,7 @@
         <item>²Sentry</item>
         <item>²Sentry</item>
         <item>²Seventynine</item>
+        <item>²Shuwei</item>
         <item>²Sino Weibo SDK</item>
         <item>²Situm SDK</item>
         <item>²Skillz Android Unity</item>
@@ -1798,6 +1825,9 @@
         <item>²Snap Ad Kit</item>
         <item>²SoundHaund Adverts</item>
         <item>²Spoteer Arc</item>
+        <item>²Spotify Advertising</item>
+        <item>²Spotify Advertising</item>
+        <item>²Spotify Advertising</item>
         <item>²Spotify Advertising</item>
         <item>²Spotify Advertising</item>
         <item>²Spotify Advertising</item>
@@ -1898,7 +1928,6 @@
         <item>²Zendesk</item>
         <item>²Zenjoy</item>
         <item>²Zucks</item>
-        <item>²ad(x)</item>
         <item>²adboost</item>
         <item>²appPlant</item>
         <item>²appTV</item>
@@ -1916,6 +1945,7 @@
         <item>²mTraction (mFaaS)</item>
         <item>²netmera</item>
         <item>²pinable</item>
+        <item>²react-native-fabric</item>
         <item>²tabtale</item>
     </string-array>
 </resources>
