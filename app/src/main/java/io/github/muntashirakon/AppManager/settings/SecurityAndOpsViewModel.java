@@ -27,6 +27,12 @@ public class SecurityAndOpsViewModel extends AndroidViewModel {
         super(application);
     }
 
+    @Override
+    protected void onCleared() {
+        executor.shutdown();
+        super.onCleared();
+    }
+
     public boolean isAuthenticating() {
         return mIsAuthenticating;
     }

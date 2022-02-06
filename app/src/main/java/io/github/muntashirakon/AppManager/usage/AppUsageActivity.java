@@ -4,6 +4,7 @@ package io.github.muntashirakon.AppManager.usage;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Application;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -25,11 +26,16 @@ import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.AnyThread;
 import androidx.annotation.GuardedBy;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -55,6 +61,7 @@ import io.github.muntashirakon.AppManager.usage.UsageUtils.IntervalType;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.BetterActivityResult;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
+import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.widget.RecyclerViewWithEmptyView;
@@ -93,14 +100,11 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
             R.id.action_sort_by_screen_time, R.id.action_sort_by_times_opened,
             R.id.action_sort_by_wifi_data};
 
+    private AppUsageViewModel mViewModel;
     private LinearProgressIndicator mProgressIndicator;
     private SwipeRefreshLayout mSwipeRefresh;
     private AppUsageAdapter mAppUsageAdapter;
-    private static long totalScreenTime;
-    private static boolean hasMultipleUsers;
-    @IntervalType
-    private int currentInterval = USAGE_TODAY;
-    private final ImageLoader imageLoader = new ImageLoader();
+    private final ImageLoader mImageLoader = new ImageLoader();
     private final BetterActivityResult<String, Boolean> requestPerm = BetterActivityResult
             .registerForActivityResult(this, new ActivityResultContracts.RequestPermission());
 
@@ -109,12 +113,14 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
     protected void onAuthenticated(Bundle savedInstanceState) {
         setContentView(R.layout.activity_app_usage);
         setSupportActionBar(findViewById(R.id.toolbar));
+        mViewModel = new ViewModelProvider(this).get(AppUsageViewModel.class);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle(getString(R.string.app_usage));
         }
 
         mProgressIndicator = findViewById(R.id.progress_linear);
+        mProgressIndicator.setVisibilityAfterHide(View.GONE);
 
         // Get usage stats
         mAppUsageAdapter = new AppUsageAdapter(this);
@@ -137,7 +143,7 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
         intervalSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                currentInterval = position;
+                mViewModel.setCurrentInterval(position);
                 getAppUsage();
             }
 
@@ -146,12 +152,21 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
             }
         });
         new FastScrollerBuilder(findViewById(R.id.scrollView)).useMd2Style().build();
+        mViewModel.getPackageUsageInfoList().observe(this, packageUsageInfoList -> {
+            mAppUsageAdapter.setDefaultList(packageUsageInfoList);
+            setUsageSummary();
+            mProgressIndicator.hide();
+        });
+        mViewModel.getPackageUsageInfo().observe(this, packageUsageInfo -> {
+            AppUsageDetailsDialogFragment fragment = AppUsageDetailsDialogFragment.getInstance(packageUsageInfo);
+            fragment.show(getSupportFragmentManager(), AppUsageDetailsDialogFragment.TAG);
+        });
         checkPermissions();
     }
 
     @Override
     protected void onDestroy() {
-        imageLoader.close();
+        mImageLoader.close();
         super.onDestroy();
     }
 
@@ -228,34 +243,7 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
 
     private void getAppUsage() {
         mProgressIndicator.show();
-        new Thread(() -> {
-            // TODO: 28/6/21 Replace with ViewModel
-            int[] userIds = Users.getUsersIds();
-            List<PackageUsageInfo> packageUsageInfoList = new ArrayList<>();
-            for (int userId : userIds) {
-                int _try = 5; // try to get usage stats at most 5 times
-                do {
-                    try {
-                        packageUsageInfoList.addAll(AppUsageStatsManager.getInstance(this)
-                                .getUsageStats(currentInterval, userId));
-                    } catch (RemoteException e) {
-                        Log.e("AppUsage", e);
-                    }
-                } while (0 != --_try && packageUsageInfoList.size() == 0);
-            }
-            totalScreenTime = 0;
-            Set<Integer> users = new HashSet<>(3);
-            for (PackageUsageInfo appItem : packageUsageInfoList) {
-                totalScreenTime += appItem.screenTime;
-                users.add(appItem.userId);
-            }
-            hasMultipleUsers = users.size() > 1;
-            runOnUiThread(() -> {
-                mAppUsageAdapter.setDefaultList(packageUsageInfoList);
-                setUsageSummary();
-                mProgressIndicator.hide();
-            });
-        }).start();
+        mViewModel.loadPackageUsageInfoList();
     }
 
     private void promptForUsageStatsPermission() {
@@ -287,8 +275,8 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
     private void setUsageSummary() {
         TextView timeUsed = findViewById(R.id.time_used);
         TextView timeRange = findViewById(R.id.time_range);
-        timeUsed.setText(DateUtils.getFormattedDuration(this, totalScreenTime));
-        switch (currentInterval) {
+        timeUsed.setText(DateUtils.getFormattedDuration(this, mViewModel.getTotalScreenTime()));
+        switch (mViewModel.getCurrentInterval()) {
             case USAGE_TODAY:
                 timeRange.setText(R.string.usage_today);
                 break;
@@ -300,6 +288,96 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
                 break;
             case USAGE_LAST_BOOT:
                 break;
+        }
+    }
+
+    private int getUsagePercent(long screenTime) {
+        return (int) (screenTime * 100. / mViewModel.getTotalScreenTime());
+    }
+
+    public static class AppUsageViewModel extends AndroidViewModel {
+        private final MutableLiveData<List<PackageUsageInfo>> mPackageUsageInfoListLiveData = new MutableLiveData<>();
+        private final MutableLiveData<PackageUsageInfo> mPackageUsageInfoLiveData = new MutableLiveData<>();
+        private final MultithreadedExecutor mExecutor = MultithreadedExecutor.getNewInstance();
+
+        private long mTotalScreenTime;
+        private boolean mHasMultipleUsers;
+        @IntervalType
+        private int mCurrentInterval = USAGE_TODAY;
+
+        public AppUsageViewModel(@NonNull Application application) {
+            super(application);
+        }
+
+        @Override
+        protected void onCleared() {
+            mExecutor.shutdownNow();
+            super.onCleared();
+        }
+
+        public LiveData<List<PackageUsageInfo>> getPackageUsageInfoList() {
+            return mPackageUsageInfoListLiveData;
+        }
+
+        public LiveData<PackageUsageInfo> getPackageUsageInfo() {
+            return mPackageUsageInfoLiveData;
+        }
+
+        public void setCurrentInterval(@IntervalType int currentInterval) {
+            this.mCurrentInterval = currentInterval;
+        }
+
+        @IntervalType
+        public int getCurrentInterval() {
+            return mCurrentInterval;
+        }
+
+        public long getTotalScreenTime() {
+            return mTotalScreenTime;
+        }
+
+        public boolean hasMultipleUsers() {
+            return mHasMultipleUsers;
+        }
+
+        public void loadPackageUsageInfo(PackageUsageInfo usageInfo) {
+            mExecutor.submit(() -> {
+                try {
+                    PackageUsageInfo packageUsageInfo = AppUsageStatsManager.getInstance(getApplication())
+                            .getUsageStatsForPackage(usageInfo.packageName, mCurrentInterval, usageInfo.userId);
+                    packageUsageInfo.copyOthers(usageInfo);
+                    mPackageUsageInfoLiveData.postValue(packageUsageInfo);
+                } catch (RemoteException e) {
+                    Log.e("AppUsage", e);
+                }
+            });
+        }
+
+        @AnyThread
+        public void loadPackageUsageInfoList() {
+            mExecutor.submit(() -> {
+                int[] userIds = Users.getUsersIds();
+                List<PackageUsageInfo> packageUsageInfoList = new ArrayList<>();
+                for (int userId : userIds) {
+                    int _try = 5; // try to get usage stats at most 5 times
+                    do {
+                        try {
+                            packageUsageInfoList.addAll(AppUsageStatsManager.getInstance(getApplication())
+                                    .getUsageStats(mCurrentInterval, userId));
+                        } catch (RemoteException e) {
+                            Log.e("AppUsage", e);
+                        }
+                    } while (0 != --_try && packageUsageInfoList.size() == 0);
+                }
+                mTotalScreenTime = 0;
+                Set<Integer> users = new HashSet<>(3);
+                for (PackageUsageInfo appItem : packageUsageInfoList) {
+                    mTotalScreenTime += appItem.screenTime;
+                    users.add(appItem.userId);
+                }
+                mHasMultipleUsers = users.size() > 1;
+                mPackageUsageInfoListLiveData.postValue(packageUsageInfoList);
+            });
         }
     }
 
@@ -412,13 +490,13 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
             synchronized (mAdapterList) {
                 usageInfo = mAdapterList.get(position);
             }
-            final int percentUsage = (int) (usageInfo.screenTime * 100f / totalScreenTime);
+            final int percentUsage = mActivity.getUsagePercent(usageInfo.screenTime);
             // Set label (or package name on failure)
             holder.appLabel.setText(usageInfo.appLabel);
             // Set icon
-            mActivity.imageLoader.displayImage(usageInfo.packageName, usageInfo.applicationInfo, holder.appIcon);
+            mActivity.mImageLoader.displayImage(usageInfo.packageName, usageInfo.applicationInfo, holder.appIcon);
             // Set user ID
-            if (hasMultipleUsers) {
+            if (mActivity.mViewModel.hasMultipleUsers()) {
                 holder.iconFrame.setBackgroundResource(R.drawable.circle_with_padding);
                 holder.badge.setVisibility(View.VISIBLE);
                 holder.badge.setText(String.valueOf(usageInfo.userId));
@@ -461,22 +539,7 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
             holder.usageIndicator.show();
             holder.usageIndicator.setProgress(percentUsage);
             // On Click Listener
-            holder.itemView.setOnClickListener(v -> {
-                try {
-                    PackageUsageInfo packageUS1 = AppUsageStatsManager.getInstance(mActivity).getUsageStatsForPackage(
-                            usageInfo.packageName,
-                            mActivity.currentInterval,
-                            usageInfo.userId);
-                    packageUS1.copyOthers(usageInfo);
-                    AppUsageDetailsDialogFragment appUsageDetailsDialogFragment = new AppUsageDetailsDialogFragment();
-                    Bundle args = new Bundle();
-                    args.putParcelable(AppUsageDetailsDialogFragment.ARG_PACKAGE_USAGE_INFO, packageUS1);
-                    appUsageDetailsDialogFragment.setArguments(args);
-                    appUsageDetailsDialogFragment.show(mActivity.getSupportFragmentManager(), AppUsageDetailsDialogFragment.TAG);
-                } catch (RemoteException e) {
-                    Log.e("AppUsage", e);
-                }
-            });
+            holder.itemView.setOnClickListener(v -> mActivity.mViewModel.loadPackageUsageInfo(usageInfo));
         }
     }
 }

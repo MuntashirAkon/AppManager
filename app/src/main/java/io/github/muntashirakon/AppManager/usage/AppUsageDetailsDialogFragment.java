@@ -39,6 +39,15 @@ public class AppUsageDetailsDialogFragment extends DialogFragment {
     public static final String ARG_PACKAGE_USAGE_INFO = "pkg_usg_info";
 
     @NonNull
+    public static AppUsageDetailsDialogFragment getInstance(@Nullable PackageUsageInfo usageInfo) {
+        AppUsageDetailsDialogFragment fragment = new AppUsageDetailsDialogFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(AppUsageDetailsDialogFragment.ARG_PACKAGE_USAGE_INFO, usageInfo);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         FragmentActivity activity = requireActivity();
