@@ -1018,7 +1018,6 @@
     <string name="wireless_debugging_not_supported">A depuração sem fio não é suportada nesta plataforma.</string>
     <string name="wireless_debugging">Depuração sem fio</string>
     <string name="unknown_net_policy">Política de rede desconhecida (%1$s - %2$X)</string>
-    <string name="fallback_to_no_root_mode">Recuar ao modo sem root\?</string>
     <string name="failed_to_prevent_background_run">Inapto de deter %1$s de executar em segundo plano</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">Não foi possível instalar o aplicativo devido ao descompasso de assinatura. O aplicativo foi desinstalado sem limpar seus dados.</string>
     <string name="community_links">Telegram: https://t.me/AppManagerChannel
@@ -1104,4 +1103,47 @@
     <string name="intent_firewall_and_disable">IFW + desativar</string>
     <string name="intent_firewall">IFW</string>
     <string name="pref_disable_description">Desative apenas componentes. Não recomendado para usuários root, pois os aplicativos podem contornar isso. Nos modos ADB, os aplicativos somente de teste podem ser desabilitados com este método.</string>
+    <plurals name="usage_minutes">
+        <item quantity="one">%1$d min</item>
+        <item quantity="other">%1$d mins</item>
+    </plurals>
+    <string name="vt_checking">VirusTotal: Verificando…</string>
+    <string name="vt_queued">VirusTotal: Enfileirado</string>
+    <string name="vt_success">VirusTotal: %1$d/%2$d</string>
+    <string name="vt_permalink">Link permanente para VirusTotal</string>
+    <string name="pref_vt_apikey_summary">Ative a verificação de arquivos APK via VirusTotal.</string>
+    <string name="uses_play_app_signing">Assinatura de Aplicativos do Google Play</string>
+    <string name="scan_in_vt">Verificar no VirusTotal</string>
+    <string name="cpu_percent">%% CPU</string>
+    <string name="state">Estado do Processo</string>
+    <string name="swap">Swap</string>
+    <string name="swap_chart_info">● %1$s Usado ● %2$s Livre</string>
+    <string name="warning_working_on_root_mode">Aviso: Trabalhando com root em vez do modo ADB.</string>
+    <string name="magisk_denylist">Lista de Negações do Magisk</string>
+    <string name="mode_of_op_with_inferred_mode_of_op">%1$s (Modo inferido: %2$s)</string>
+    <string name="vt_slowness_warning">Dependendo da velocidade da Internet e da carga no servidor, isso pode demorar um pouco.</string>
+    <string name="process_id">ID do Processo</string>
+    <plurals name="usage_seconds">
+        <item quantity="one">%1$d seg</item>
+        <item quantity="other">%1$d segs</item>
+    </plurals>
+    <string name="toggle_internet">Usar a internet</string>
+    <string name="vt_uploading">VirusTotal: Enviando…</string>
+    <string name="vt_failed">VirusTotal: Falhou</string>
+    <string name="vt_scan_date">Data da verificação: %1$s</string>
+    <string name="pref_vt_apikey">Chave de API do VirusTotal</string>
+    <string name="parent_process_id">ID do Processo Pai</string>
+    <string name="virtual_memory">Memória Virtual</string>
+    <string name="cpu_time">Tempo de CPU</string>
+    <string name="vt_disclaimer">VirusTotal e seus logotipos são uma marca registrada da Chronicle LLC. Nem o App Manager—o cliente da API—nem seus autores são responsáveis por quaisquer dados que você possa enviar ao VirusTotal.</string>
+    <string name="priority">Prioridade</string>
+    <string name="pref_vt_apikey_description">Uma chave de API permite que o App Manager carregue arquivos APK para o VirusTotal, além de buscar relatórios. Inscreva-se em https://virustotal.com para obter uma chave de API gratuitamente.</string>
+    <string name="commandline_args">Argumentos da linha de comando</string>
+    <string name="failed_to_change_app_op_mode">Não foi possível alterar o modo operacional do aplicativo.</string>
+    <string name="uses_play_app_signing_description">Este aplicativo contém certos marcadores que indicam que ele <i>poderia</i> estar usando a <a href="https://support.google.com/googleplay/android-developer/answer/9842756">Assinatura de Aplicativos do Google Play</a>. Com esse esquema, as chaves de assinatura são armazenadas nos servidores do Google, e o Google é responsável por assinar o aplicativo. Observe que as informações de assinatura correspondentes são a única maneira de verificar se o aplicativo não foi modificado por outra pessoa que não seja o desenvolvedor (e, neste caso, o Google também).</string>
+    <string name="threads">Contagem de Threads</string>
+    <string name="memory_chart_info">● %1$s Aplicativos ● %2$s Em Cache ● %3$s Buffers ● %4$s Livre</string>
+    <string name="failed_to_use_the_current_mode_of_operation">Não é possível usar o modo de operação atual. Voltando ao modo sem root para esta sessão.</string>
+    <string name="failed_to_enable_magisk_deny_list">Não foi possível ativar a Lista de Negações do Magisk</string>
+    <string name="failed_to_disable_magisk_deny_list">Não foi possível desativar a Lista de Negações do Magisk</string>
 </resources>
