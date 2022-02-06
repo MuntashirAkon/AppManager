@@ -1,21 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<resources>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources>
     <string name="disclaimer_header">免責事項</string>
-    <string name="disclaimer_body">App Managerは、誤って使用するとデバイスに害を及ぼす可能性のあるルート機能を提供します。
-        App Managerは、このアプリケーションを使用して生じたいかなる損害についても責任を負いません。
-        リスクを完全に理解できない場合はRootオプションの使用をお控えください
-
-        \n\n提供されている他のアプリやウェブサイトへのリンクはユーザーの利益のために提供していますが、 
-         私はその内容について責任を負いません
-
-        \n\nApp Managerを使用することによって、一切の損害の責任は利用者に存在し、
-        一切の保証や賠償請求は受け付けないことに同意します。
-
-        \n\nこのアプリケーションを使用することによって あなた自身の操作によって生じる
-        一切の悪影響について保証が行われないことに同意します。
-    </string>
-    <string name="disclaimer_footer">© 2020–2021 Muntashir Al-Islam</string>
+    <string name="disclaimer_body">App Managerは、誤って使用するとデバイスに害を及ぼす可能性のあるルート機能を提供します。 App Managerは、このアプリケーションを使用して生じたいかなる損害についても責任を負いません。 リスクを完全に理解できない場合はRootオプションの使用をお控えください
+\n
+\n提供されている他のアプリやウェブサイトへのリンクはユーザーの利益のために提供していますが、 私はその内容について責任を負いません
+\n
+\nApp Managerを使用することによって、一切の損害の責任は利用者に存在し、 一切の保証や賠償請求は受け付けないことに同意します。
+\n
+\nこのアプリケーションを使用することによって あなた自身の操作によって生じる 一切の悪影響について保証が行われないことに同意します。</string>
+    <string name="disclaimer_footer">© 2020–2022 Muntashir Al-Islam</string>
     <string name="disclaimer_agree_forever">二度と表示しない</string>
     <string name="disclaimer_agree">同意する</string>
     <string name="disclaimer_exit">終了</string>
