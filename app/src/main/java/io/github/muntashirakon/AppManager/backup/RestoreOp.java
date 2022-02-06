@@ -8,6 +8,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.os.Build;
+import android.os.RemoteException;
+import android.system.ErrnoException;
 import android.util.Pair;
 
 import androidx.annotation.NonNull;
@@ -15,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
 import java.io.Closeable;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,8 +60,10 @@ import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.TarUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.io.FileStatus;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.ProxyFile;
+import io.github.muntashirakon.io.ProxyFiles;
 
 import static io.github.muntashirakon.AppManager.appops.AppOpsManager.OP_NONE;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.DATA_PREFIX;
@@ -209,6 +214,10 @@ class RestoreOp implements Closeable {
     }
 
     private void checkMasterKey() throws BackupException {
+        if (true) {
+            // TODO: 6/2/22 MasterKey may not actually be necessary.
+            return;
+        }
         String oldChecksum = checksum.get(MASTER_KEY);
         Path masterKey = new Path(context, KeyStoreUtils.getMasterKey(userHandle));
         if (!masterKey.exists()) {
@@ -360,9 +369,21 @@ class RestoreOp implements Closeable {
             throw new BackupException("Failed to decrypt " + Arrays.toString(keyStoreFiles), e);
         }
         // Restore KeyStore files
-        Path keyStorePath = new Path(context, KeyStoreUtils.getKeyStorePath(userHandle));
+        File keyStoreFolder = KeyStoreUtils.getKeyStorePath(userHandle);
+        // Note-down UID/GID
+        FileStatus ksFileStatus;
+        try {
+            ksFileStatus = ProxyFiles.stat(keyStoreFolder);
+        } catch (ErrnoException | RemoteException e) {
+            throw new BackupException("Failed to access properties of the KeyStore folder.", e);
+        }
+        Path keyStorePath = new Path(context, keyStoreFolder);
         try {
             TarUtils.extract(metadata.tarType, keyStoreFiles, keyStorePath, null, null);
+            // Restore folder permission
+            ProxyFiles.chown(keyStoreFolder, ksFileStatus.st_uid, ksFileStatus.st_gid);
+            //noinspection OctalInteger
+            ProxyFiles.chmod(keyStoreFolder, ksFileStatus.st_mode & 0777);
         } catch (Throwable th) {
             throw new BackupException("Failed to restore the KeyStore files.", th);
         }
@@ -371,13 +392,17 @@ class RestoreOp implements Closeable {
         List<String> keyStoreFileNames = KeyStoreUtils.getKeyStoreFiles(KEYSTORE_PLACEHOLDER, userHandle);
         for (String keyStoreFileName : keyStoreFileNames) {
             try {
-                keyStorePath.findFile(keyStoreFileName).moveTo(keyStorePath.findOrCreateFile(Utils.replaceOnce(
-                        keyStoreFileName, String.valueOf(KEYSTORE_PLACEHOLDER), String.valueOf(uid)), null));
-            } catch (IOException e) {
+                File targetFile = new ProxyFile(keyStoreFolder, Utils.replaceOnce(keyStoreFileName,
+                        String.valueOf(KEYSTORE_PLACEHOLDER), String.valueOf(uid)));
+                keyStorePath.findFile(keyStoreFileName).moveTo(keyStorePath.findOrCreateFile(targetFile.getName(), null));
+                // Restore file permission
+                ProxyFiles.chown(targetFile, ksFileStatus.st_uid, ksFileStatus.st_gid);
+                //noinspection OctalInteger
+                ProxyFiles.chmod(targetFile, 0600);
+            } catch (IOException | ErrnoException | RemoteException e) {
                 throw new BackupException("Failed to rename KeyStore files", e);
             }
         }
-        // TODO Restore permissions
         Runner.runCommand(new String[]{"restorecon", "-R", keyStorePath.getFilePath()});
     }
 
