@@ -57,7 +57,7 @@
     <string name="media_size">Медиа</string>
     <string name="app_not_installed">Приложение не установлено</string>
     <string name="system">Системные</string>
-    <string name="user">Пользовательские</string>
+    <string name="user">Пользователь</string>
     <string name="sort">Сортировка</string>
     <string name="version_name_with_code">Версия <xliff:g id="version_name" example="2.5.17">%1$s</xliff:g> (<xliff:g id="version_code" example="365">%2$d</xliff:g>)</string>
     <string name="app_info">О приложении</string>
@@ -1086,7 +1086,6 @@
     <string name="wireless_debugging_not_supported">Беспроводная отладка не поддерживается на этой платформе.</string>
     <string name="wireless_debugging">Беспроводная отладка</string>
     <string name="unknown_net_policy">Неизвестная сетевая политика (%1$s - %2$X)</string>
-    <string name="fallback_to_no_root_mode">Откат к режиму без-root\?</string>
     <string name="failed_to_prevent_background_run">Не удалось предотвратить работу в фоне для приложения %1$s</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">Не удалось установить приложение из-за несоответствия подписи. Приложение было удалено без очистки данных.</string>
     <string name="community">Сообщество</string>
@@ -1109,7 +1108,7 @@
     <string name="help_app_ops_tab">Нажмите на элемент, чтобы установить режим <b>allow/разрешить</b> или <b>ignore/игнорировать</b>. Долгое нажатие позволяет увидеть другие поддерживаемые режимы.</string>
     <string name="saved_filters">Сохраненные фильтры</string>
     <string name="permission_flags">Флаги разрешений</string>
-    <string name="pref_selected_users_msg">Разрешить диспетчеру приложений работать только с выбранными пользователями.</string>
+    <string name="pref_selected_users_msg">Разрешить App Manager работу только с выбранными пользователями.</string>
     <string name="pref_selected_users">Выбранные пользователи</string>
     <string name="enable_disable">Включение/отключение</string>
     <string name="error_with_details">Ошибка: %s</string>
@@ -1176,4 +1175,50 @@
     <string name="pref_default_blocking_method_description">Метод, используемый по умолчанию там, где нет возможности выбора метода блокировки.</string>
     <string name="pref_intent_firewall_description">Блокировка компонентов с использованием только Intent Firewall. Не рекомендуется, поскольку некоторые системные приложения могут обходить этот метод блокировки.</string>
     <string name="intent_firewall">IFW</string>
+    <string name="failed_to_change_app_op_mode">Не удалось изменить режим работы приложения.</string>
+    <string name="toggle_internet">Использовать интернет</string>
+    <string name="vt_success">VirusTotal: %1$d/%2$d</string>
+    <string name="vt_scan_date">Дата сканирования: %1$s</string>
+    <string name="vt_permalink">Постоянная ссылка на VirusTotal</string>
+    <string name="vt_queued">VirusTotal: в очереди</string>
+    <string name="vt_failed">VirusTotal: сбой</string>
+    <string name="pref_vt_apikey">VirusTotal API-ключ</string>
+    <string name="pref_vt_apikey_summary">Включить сканирование файлов APK через VirusTotal.</string>
+    <string name="scan_in_vt">Сканирование в VirusTotal</string>
+    <string name="process_id">Идентификатор процесса</string>
+    <string name="parent_process_id">Идентификатор родительского процесса</string>
+    <string name="virtual_memory">Виртуальная память</string>
+    <string name="cpu_percent">%% ЦП</string>
+    <string name="cpu_time">Процессорное время</string>
+    <string name="priority">Приоритет</string>
+    <string name="state">Состояние процесса</string>
+    <string name="commandline_args">Аргументы командной строки</string>
+    <string name="swap">Своп</string>
+    <string name="memory_chart_info">● %1$s Приложения ● %2$s Кэшированные ● %3$s Буфер ● %4$s Свободно</string>
+    <string name="swap_chart_info">● %1$s Используется ● %2$s Свободно</string>
+    <string name="failed_to_use_the_current_mode_of_operation">Невозможно использовать текущий режим работы. Возврат к режиму без-root для этого сеанса.</string>
+    <string name="warning_working_on_root_mode">Предупреждение: работа в режиме root вместо режима ADB.</string>
+    <string name="magisk_denylist">Magisk DenyList</string>
+    <string name="failed_to_enable_magisk_deny_list">Не удалось включить Magisk DenyList</string>
+    <plurals name="usage_seconds">
+        <item quantity="one">%1$d с.</item>
+        <item quantity="few">%1$d с.</item>
+        <item quantity="many">%1$d с.</item>
+        <item quantity="other">%1$d с.</item>
+    </plurals>
+    <plurals name="usage_minutes">
+        <item quantity="one">%1$d мин.</item>
+        <item quantity="few">%1$d мин.</item>
+        <item quantity="many">%1$d мин.</item>
+        <item quantity="other">%1$d мин.</item>
+    </plurals>
+    <string name="vt_checking">VirusTotal: проверка…</string>
+    <string name="vt_uploading">VirusTotal: загрузка…</string>
+    <string name="vt_slowness_warning">В зависимости от скорости интернета и нагрузки на сервер, это может занять некоторое время.</string>
+    <string name="pref_vt_apikey_description">API-ключ позволяет App Manager загружать APK-файлы на VirusTotal, а также получать отчеты. Зарегистрируйтесь на сайте https://virustotal.com, чтобы получить API-ключ бесплатно.</string>
+    <string name="vt_disclaimer">VirusTotal и его логотипы являются торговой маркой компании Chronicle LLC. Ни App Manager - клиент API, ни его авторы не несут ответственности за любые данные, которые вы можете отправить в VirusTotal.</string>
+    <string name="uses_play_app_signing_description">Это приложение содержит определенные маркеры, указывающие на то, что оно <i>возможно</i> использует <a href="https://support.google.com/googleplay/android-developer/answer/9842756">Play App Signing</a>. В этой схеме ключи подписи хранятся на серверах Google, и Google несет ответственность за подписание приложения. Обратите внимание, что соответствие информации о подписи — это единственный способ убедиться, что приложение не было изменено кем-либо, кроме разработчика (и в данном случае также Google).</string>
+    <string name="threads">Количество потоков</string>
+    <string name="mode_of_op_with_inferred_mode_of_op">%1$s (предполагаемый режим: %2$s)</string>
+    <string name="failed_to_disable_magisk_deny_list">Не удалось отключить Magisk DenyList</string>
 </resources>
