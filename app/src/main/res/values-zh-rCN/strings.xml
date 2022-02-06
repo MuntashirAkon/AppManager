@@ -136,7 +136,6 @@
     <plurals name="usage_hours">
         <item quantity="other">%1$d 小时</item>
     </plurals>
-    <string name="usage_min">%1$d 分钟</string>
     <string name="usage_less_than_a_minute">不足一分钟</string>
     <string name="go_back">返回</string>
     <string name="go">前往</string>
@@ -260,7 +259,6 @@
         <item quantity="other">无法强制停止%1$d个应用</item>
     </plurals>
     <string name="toggle_kill_for_system_apps">切换杀死系统应用程序</string>
-    <string name="app_op_cannot_be_disabled">此应用操作无法禁用（可能是一个依赖其他应用操作的只读应用操作）</string>
     <string name="permission_name">权限名称</string>
     <string name="mode">模式</string>
     <string name="running">运行中</string>
@@ -731,9 +729,7 @@
     <string name="permissive">被动</string>
     <string name="enforcing">强制</string>
     <string name="failed_to_enable_magisk_hide">无法启用 MagiskHide</string>
-    <string name="enable_magisk_hide">启用 MagiskHide</string>
     <string name="failed_to_disable_magisk_hide">无法禁用 MagiskHide</string>
-    <string name="disable_magisk_hide">禁用 MagiskHide？</string>
     <string name="disable_background_run_description">将<i>忽略</i>模式设置到下列应用操作：<tt>RUN_IN_BACKGROUND</tt>（从 Android 7.0 起）和 <tt>RUN_ANY_IN_BACKGROUND</tt>（从 Android 9 起）。</string>
     <plurals name="no_of_components">
         <item quantity="other">%1$d 个组件</item>
@@ -988,7 +984,6 @@
     <string name="wireless_debugging_not_supported">此平台不支持无线调试。</string>
     <string name="wireless_debugging">无线调试</string>
     <string name="unknown_net_policy">未知的 netpolicy (%1$s - %2$X)</string>
-    <string name="fallback_to_no_root_mode_description">App Manager 无法使用当前的操作模式。 为了避免出现随机行为，你应该暂时切换到非 root 模式。 重新启动设备后，如果问题仍未解决，请考虑报告此问题。</string>
     <string name="fallback_to_no_root_mode">退回到非 root 模式吗？</string>
     <string name="failed_to_prevent_background_run">无法防止 %1$s 在后台运行</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">由于签名不匹配，无法安装应用程序。该应用程序已被卸载，但没有清除数据。</string>

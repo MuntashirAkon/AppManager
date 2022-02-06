@@ -405,7 +405,6 @@
     <string name="running">Çalışıyor</string>
     <string name="mode">Mod</string>
     <string name="permission_name">İzin Adı</string>
-    <string name="app_op_cannot_be_disabled">Bu uygulama işlemi devre dışı bırakılamıyor. (Muhtemelen salt okunur bir uygulama işlemi diğerine bağımlı.)</string>
     <string name="toggle_kill_for_system_apps">Sistem uygulamalarını sonlandırmayı etkinleştir/devre dışı bırak</string>
     <plurals name="alert_failed_to_force_stop">
         <item quantity="one">%1$d uygulama durmaya zorlanamadı</item>
@@ -527,7 +526,6 @@
     <string name="grant_usage_access">Kullanım Erişimi Ver</string>
     <string name="go_back">Geri git</string>
     <string name="usage_less_than_a_minute">Bir dakikadan az</string>
-    <string name="usage_min">%1$d dak</string>
     <plurals name="usage_hours">
         <item quantity="one">%1$d sa</item>
         <item quantity="other">%1$d sa</item>
@@ -764,9 +762,7 @@
     <string name="enforcing">Zorunlu</string>
     <string name="selinux">SELinux</string>
     <string name="failed_to_enable_magisk_hide">MagiskHide etkinleştirilemedi</string>
-    <string name="enable_magisk_hide">MagiskHide\'ı etkinleştir</string>
     <string name="failed_to_disable_magisk_hide">MagiskHide devre dışı bırakılamadı</string>
-    <string name="disable_magisk_hide">MagiskHide devre dışı bırakılsın mı\?</string>
     <string name="disable_background_run_description">Şu uygulama işlemleri için <i>Yok say</i> modunu ayarlar: <tt>RUN_IN_BACKGROUND</tt> (Android 7.0\'dan) ve <tt>RUN_ANY_IN_BACKGROUND</tt> (Android 9\'dan).</string>
     <plurals name="no_of_components">
         <item quantity="one">%1$d bileşen</item>
@@ -1021,7 +1017,6 @@
     <string name="wireless_debugging_not_supported">Kablosuz hata ayıklama bu platformda desteklenmiyor.</string>
     <string name="wireless_debugging">Kablosuz hata ayıklama</string>
     <string name="unknown_net_policy">Bilinmeyen ağ politikası (%1$s - %2$X)</string>
-    <string name="fallback_to_no_root_mode_description">App Manager geçerli çalışma modunu kullanamadı. Rastgele davranıştan kaçınmak için, geçici olarak root yok moduna geçmelisiniz. Aygıtı yeniden başlattıktan sonra sorun çözülmezse bildirmeyi düşünün.</string>
     <string name="fallback_to_no_root_mode">Root yok moduna geçilsin mi\?</string>
     <string name="failed_to_prevent_background_run">%1$s arka planda çalışması engellenemedi</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">İmza uyuşmazlığı nedeniyle uygulama kurulamadı. Uygulama, verileri temizlenmeden kaldırıldı.</string>

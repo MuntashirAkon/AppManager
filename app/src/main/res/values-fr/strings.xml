@@ -510,7 +510,6 @@
     <string name="go">Aller</string>
     <string name="go_back">Retour</string>
     <string name="usage_less_than_a_minute">Il y a moins d\'une minute</string>
-    <string name="usage_min">%1$d min</string>
     <plurals name="usage_hours">
         <item quantity="one">%1$d heure</item>
         <item quantity="other">%1$d heures</item>
@@ -604,7 +603,6 @@
     <string name="system">Système</string>
     <string name="app_not_installed">Application non installée</string>
     <string name="media_size">Média</string>
-    <string name="app_op_cannot_be_disabled">Cette application ne peut pas être désactivée. (Il est possible qu\'une application en lecture seule dépende d\'une autre.)</string>
     <string name="external_data_dir">Répertoire de données externes</string>
     <string name="dev_protected_data_dir">Répertoire de données protégé par l\'appareil</string>
     <string name="pref_global_blocking_enabled_msg">Permet de bloquer tout composant d\'une application sans la bloquer directement.</string>
@@ -777,7 +775,6 @@
     <string name="backup_apps_without_backups">Sauvegarder les applications sans sauvegardes</string>
     <string name="backup_all_apps_msg">Sauvegarder toutes les applications installées.</string>
     <string name="backup_all_apps">Sauvegarder toutes les applications</string>
-    <string name="disable_magisk_hide">Désactiver MagiskHide \?</string>
     <string name="window_size">Taille de la fenêtre</string>
     <string name="refresh_rate">Fréquence de rafraîchissement</string>
     <string name="size">Taille</string>
@@ -838,7 +835,6 @@
     <string name="pref_selected_users">Utilisateurs sélectionnés</string>
     <string name="minimum_version">Version minimale : %d</string>
     <string name="help_permissions_tab">Ces permissions sont définies par l\'application et ne peuvent être révoquées.</string>
-    <string name="fallback_to_no_root_mode">Retourner en mode non-admin \?</string>
     <string name="unknown_net_policy">Politique réseau inconnue (%1$s - %2$X)</string>
     <string name="port_number_invalid">Le numéro de port est incorrect.</string>
     <string name="port_number_empty">Le numéro de port est vide.</string>
@@ -969,7 +965,6 @@
     <string name="set_custom_app_op">Définir une opération d\'application personnalisée</string>
     <string name="set_mode_for_app_ops_dots">Définir le mode pour les opérations d\'application…</string>
     <string name="permissive">Permissif</string>
-    <string name="enable_magisk_hide">Activer MagiskHide</string>
     <string name="failed_to_enable_magisk_hide">Activation de MagiskHide impossible</string>
     <string name="pref_backup_restore_msg">Personnaliser la sauvegarder/restauration.</string>
     <string name="backup_volume">Volume de sauvegarde</string>
@@ -1062,7 +1057,6 @@
     <string name="no_changes">Aucune modification</string>
     <string name="wireless_debugging">Débogage sans fil</string>
     <string name="wireless_debugging_not_supported">Le débogage sans fil n\'est pas supporté par cette plate-forme.</string>
-    <string name="fallback_to_no_root_mode_description">Le gestionnaire d\'applications n\'a pas pu utiliser le mode de fonctionnement actuel. Afin d\'éviter un comportement aléatoire, vous devez temporairement passer en mode non-administrateur. Pensez à signaler si le problème n\'est pas résolu après le redémarrage de l\'appareil.</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">Impossible d\'installer l\'application car la signature ne correspond pas. Elle a été désinstallée mais ses données n\'ont pas été supprimées.</string>
     <string name="help_app_ops_tab">Cliquez sur un élément pour <b>l\'autoriser</b> ou pour <b>l\'ignorer</b>. Cliquez longuement sur un élément pour voir les autres modes supportés.</string>
     <string name="failed_to_prevent_background_run">Impossible d\'empêcher %1$s de s\'exécuter en arrière-plan</string>

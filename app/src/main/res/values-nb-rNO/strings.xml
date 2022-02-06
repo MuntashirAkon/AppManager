@@ -255,7 +255,6 @@
     <string name="grant_usage_access">Innvilg brukstilgang</string>
     <string name="go_back">Gå tilbake</string>
     <string name="usage_less_than_a_minute">Mindre enn ett minutt</string>
-    <string name="usage_min">%1$d min</string>
     <plurals name="usage_hours">
         <item quantity="one">%1$d t</item>
         <item quantity="other">%1$d t</item>
@@ -616,7 +615,6 @@
     <string name="pref_export_msg">Eksporter blokkerings-regler innstilt innen App-manager til ekstern lagring.</string>
     <string name="reject_time">Avvis tid</string>
     <string name="accept_time">Godkjenn tid</string>
-    <string name="app_op_cannot_be_disabled">Denne app-operasjonen kan ikke skrus av. (Antagelig avhenger én skrivebeskyttet app-op av en annen.)</string>
     <string name="toggle_kill_for_system_apps">Aktiver eller deaktiver tvungen avslutning av system-apper</string>
     <plurals name="alert_failed_to_disable_background">
         <item quantity="one">Kufnne ikke hindre ett program fra å kjøre i bakgrunnen</item>
@@ -738,9 +736,7 @@
     <string name="restore_not_installed">Gjenopprett ikke-installerte programmer</string>
     <string name="backup_custom_users">Egendefinerte brukere</string>
     <string name="failed_to_enable_magisk_hide">Kunne ikke skru på MagiskHide</string>
-    <string name="enable_magisk_hide">Skru på MagiskHide</string>
     <string name="failed_to_disable_magisk_hide">Kunne ikke skru av MagiskHide</string>
-    <string name="disable_magisk_hide">Skru av MagiskHide\?</string>
     <string name="window_size">Vindusstørrelse</string>
     <string name="refresh_rate">Oppfriskningsrate</string>
     <string name="scaling_factor">Skaleringsfaktor</string>
@@ -977,7 +973,6 @@
     <string name="notification_subtext">Trykk for å stoppe opptak</string>
     <string name="port_number_empty">Portnummeret er tomt.</string>
     <string name="adb_connect_port_number_description">Portnummer er å finne under <b>IP-adresse og port</b>-delen, rett nedenfor <b>Enhetsnavn</b>.</string>
-    <string name="fallback_to_no_root_mode">Tilbakefall til rotløst modus\?</string>
     <string name="help_app_ops_tab">Klikk på et element for å <b>tillate</b> eller <b>ignorere</b> det. Lang-trykk på et element for å se dets andre støttede modi.</string>
     <string name="help_permissions_tab">Disse tilgangene defineres av dette programmet og kan ikke tilbakekalles.</string>
     <string name="failed_to_prevent_background_run">Kunne ikke forhindre %1$s fra å kjøre i bakgrunnen</string>

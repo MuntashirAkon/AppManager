@@ -164,7 +164,6 @@
     <string name="go">Pindah ke layar Pengaturan</string>
     <string name="go_back">Kembali</string>
     <string name="usage_less_than_a_minute">Kurang dari semenit</string>
-    <string name="usage_min">%1$d menit</string>
     <plurals name="usage_hours">
         <item quantity="other">%1$d jam</item>
     </plurals>
@@ -280,7 +279,6 @@
     <string name="exodus_link">Link εxodus</string>
     <string name="usage_yesterday">Kemarin</string>
     <string name="pref_global_blocking_enabled">Pemblokiran komponen secara instan</string>
-    <string name="app_op_cannot_be_disabled">Aplikasi ini tidak dapat dinonaktifkan. (Kemungkinan sebuah operasi aplikasi hanya-baca atau bergantung pada aplikasi lain.)</string>
     <string name="toggle_kill_for_system_apps">Hidupkan Penghentikan aplikasi sistem</string>
     <plurals name="alert_failed_to_force_stop">
         <item quantity="other">Tak dapat memaksa penghentikan aplikasi %1$d</item>
@@ -454,9 +452,7 @@
     <string name="pref_backup_restore_msg">Kustomisasi cadangan/pemulihan.</string>
     <string name="disable_background_run_description">Mengatur mode <i> Abaikan </i> untuk operasi aplikasi berikut: <tt>RUN_IN_BACKGROUND</tt> (dari Android 7.0) dan <tt>RUN_ANY_IN_BACKGROUD</tt> (dari Android 9).</string>
     <string name="failed_to_enable_magisk_hide">Tidak dapat mengaktifkan Magiskhide</string>
-    <string name="enable_magisk_hide">Aktifkan Magiskhide</string>
     <string name="failed_to_disable_magisk_hide">Tidak dapat menonaktifkan Magiskhide</string>
-    <string name="disable_magisk_hide">Nonaktifkan Magiskhide\?</string>
     <string name="window_size">Ukuran jendela</string>
     <string name="refresh_rate">Refresh Rate</string>
     <string name="scaling_factor">Faktor Penskalaan</string>
@@ -599,7 +595,6 @@
     <string name="app_data_will_be_lost">Data yang ada akan hilang.</string>
     <string name="app_signing_signature_mismatch_for_system_apps">Tidak dapat menginstal aplikasi karena aplikasi sistem dengan tanda tangan yang berbeda memiliki nama paket ini.</string>
     <string name="do_you_want_to_uninstall_and_install">Apakah Anda ingin menghapus dan menginstal aplikasi lagi\?</string>
-    <string name="packages">Paket</string>
     <string name="usage_access_not_supported">Tidak dapat meminta akses penggunaan, karena halaman pengaturan yang sesuai tidak ada.</string>
     <string name="non_critical_exts">Ekstensi non-kritis</string>
     <string name="critical_exts">Ekstensi Kritis</string>
@@ -987,7 +982,6 @@
     <string name="port_number">Port</string>
     <string name="adb_connect">Hbungkan</string>
     <string name="unknown_net_policy">Netpolicy yang tidak dikenal (%1$s - %2$X)</string>
-    <string name="fallback_to_no_root_mode_description">App Manager tidak dapat menggunakan mode operasi saat ini. Untuk menghindari perilaku acak, Anda harus beralih sementara ke mode no-root. Pertimbangkan untuk melaporkannya jika masalah tidak selesai/diperbaiki setelah memulai ulang perangkat.</string>
     <string name="fallback_to_no_root_mode">Kembalikan ke mode no-root\?</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">Tidak dapat memasang aplikasi dikarenakan ketidakcocokan tanda tangan. Aplikasi dicopot tanpa membersihkan datanya.</string>
     <string name="failed_to_prevent_background_run">Tidak dapat mencegah %1$s untuk berjalan di latar belakang</string>

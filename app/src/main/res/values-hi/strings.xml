@@ -69,7 +69,6 @@
     <string name="running">चल रहे</string>
     <string name="mode">मोड</string>
     <string name="permission_name">अनुमति नाम</string>
-    <string name="app_op_cannot_be_disabled">इस ऐप ऑप को बंद नहीं किया जा सकता, संभव हैं कि रीड-ओनली ऐप ऑप है जो अन्य ऐप ऑप पर निर्भर है।</string>
     <string name="toggle_kill_for_system_apps">टॉगल किल सिस्टम एप्स</string>
     <plurals name="alert_failed_to_force_stop">
         <item quantity="one">%1$d ऐप को जबरदस्ती बंद नहीं किया जा सका</item>
@@ -200,7 +199,6 @@
     <string name="go">जाएँ</string>
     <string name="go_back">पीछे जाएँ</string>
     <string name="usage_less_than_a_minute">एक मिनट से भी कम</string>
-    <string name="usage_min">%1$d मिनट</string>
     <plurals name="usage_hours">
         <item quantity="one">%1$d घंटा</item>
         <item quantity="other">%1$d घंटे</item>
@@ -746,9 +744,7 @@
         <item quantity="other">%1$d</item>
     </plurals>
     <string name="failed_to_enable_magisk_hide">MagiskHide चालू नहीं हो सका</string>
-    <string name="enable_magisk_hide">MagiskHide चालू</string>
     <string name="failed_to_disable_magisk_hide">MagiskHide बंद नहीं हो</string>
-    <string name="disable_magisk_hide">MagiskHide बंद करें \?</string>
     <string name="window_size">विंडो साइज</string>
     <string name="refresh_rate">रिफ्रेश रेट</string>
     <string name="scaling_factor">स्केलिंग फैक्टर</string>

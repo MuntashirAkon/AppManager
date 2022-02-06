@@ -119,7 +119,6 @@
     <string name="running">Executando</string>
     <string name="mode">Modo</string>
     <string name="permission_name">Nome de Permissão</string>
-    <string name="app_op_cannot_be_disabled">Esta operação de app não pode ser desativada. (É provável que seja somente uma operação de app de leitura que depende de outra.)</string>
     <string name="toggle_kill_for_system_apps">Alternar encerramento de apps de sistema</string>
     <plurals name="alert_failed_to_force_stop">
         <item quantity="one">Não foi possível forçar parada de %1$d app</item>
@@ -250,7 +249,6 @@
     <string name="go">Ir</string>
     <string name="go_back">Voltar</string>
     <string name="usage_less_than_a_minute">Menos de um minuto</string>
-    <string name="usage_min">%1$d minutos</string>
     <plurals name="usage_hours">
         <item quantity="one">%1$d hora</item>
         <item quantity="other">%1$d horas</item>
@@ -800,9 +798,7 @@
     <string name="pref_backup_restore_msg">Personalizar backup/restauração.</string>
     <string name="disable_background_run_description">Define o modo <i>ignore</i> para as seguintes operações de app: <tt>RUN_IN_BACKGROUND</tt> (do Android 7.0) e <tt>RUN_ANY_IN_BACKGROUND</tt> (do Android 9).</string>
     <string name="failed_to_enable_magisk_hide">O MagiskHide não pôde ser ativado</string>
-    <string name="enable_magisk_hide">Ativar MagiskHide</string>
     <string name="failed_to_disable_magisk_hide">O MagiskHide não pôde ser desativado</string>
-    <string name="disable_magisk_hide">Desativar MagiskHide\?</string>
     <string name="window_size">Tamanho da janela</string>
     <string name="refresh_rate">Taxa de atualização</string>
     <string name="scaling_factor">Fator de dimensionamento</string>
@@ -1009,7 +1005,6 @@
     <string name="pref_display_changes">Mostrar alterações</string>
     <string name="failed_to_prevent_background_run">Não foi possível evitar que %1$s fosse executado em segundo plano</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">Não foi possível instalar a aplicação devido à incompatibilidade da assinatura. A aplicação foi desinstalada sem limpar os seus dados.</string>
-    <string name="fallback_to_no_root_mode_description">O App Manager não conseguiu usar o modo de operação atual. Para evitar um comportamento aleatório, deve alternar temporariamente para o modo sem root. Considere relatar o problema se este não for corrigido após reiniciar o dispositivo.</string>
     <string name="fallback_to_no_root_mode">Voltar para o modo sem root\?</string>
     <string name="unknown_net_policy">Política de rede desconhecida (%1$s - %2$X)</string>
     <string name="port_number_invalid">Número de porta inválido.</string>

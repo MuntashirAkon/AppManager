@@ -140,7 +140,6 @@
         <item quantity="one">%1$d Std</item>
         <item quantity="other">%1$d Stde</item>
     </plurals>
-    <string name="usage_min">%1$d min</string>
     <string name="usage_less_than_a_minute">Weniger als eine Minute</string>
     <string name="go_back">Zurück</string>
     <string name="go">Weiter</string>
@@ -271,7 +270,6 @@
         <item quantity="other">Forciertes Beenden von %1$d Anwendungen nicht möglich</item>
     </plurals>
     <string name="toggle_kill_for_system_apps">„Beenden erzwingen“ für System-Anwendungen ein- oder ausschalten</string>
-    <string name="app_op_cannot_be_disabled">Dieser App-Op kann nicht deaktiviert werden. (Möglicherweise hängt eine schreibgeschützte App-Op von einer anderen ab.)</string>
     <string name="permission_name">Name der Berechtigung</string>
     <string name="mode">Modus</string>
     <string name="running">Laufend</string>
@@ -765,9 +763,7 @@
     <string name="pref_backup_restore_msg">Anpassen von Sicherung/ Wiederherstellung.</string>
     <string name="disable_background_run_description">Setzt den <i>Ignore</i>-Modus für die folgenden App-Ops: <tt>RUN_IN_BACKGROUND</tt> (ab Android 7.0) und <tt>RUN_ANY_IN_BACKGROUND</tt> (ab Android 9).</string>
     <string name="failed_to_enable_magisk_hide">Konnte MagiskHide nicht aktivieren</string>
-    <string name="enable_magisk_hide">MagiskHide einschalten</string>
     <string name="failed_to_disable_magisk_hide">Konnte MagiskHide nicht deaktivieren</string>
-    <string name="disable_magisk_hide">MagiskHide deaktivieren\?</string>
     <string name="window_size">Fenstergröße</string>
     <string name="refresh_rate">Skalierungsfaktor</string>
     <string name="scaling_factor">Skalierungsfaktor</string>
@@ -1022,7 +1018,6 @@
     <string name="wireless_debugging_not_supported">Fehlersucher über Funk wird auf dieser Plattform nicht unterstützt.</string>
     <string name="wireless_debugging">Fehlersuche über WLAN</string>
     <string name="unknown_net_policy">Unbekannte Netz-Richtlinie (%1$s - %2$X)</string>
-    <string name="fallback_to_no_root_mode_description">Der App Manager konnte die aktuelle Betriebsart nicht verwenden. Um zufälliges Verhalten zu vermeiden, sollten Sie vorübergehend in den No-Root-Modus wechseln. Ziehen Sie eine Fehlermeldung in Betracht, wenn das Problem nach einem Neustart des Geräts nicht behoben ist.</string>
     <string name="fallback_to_no_root_mode">Fallback zum No-Root-Modus\?</string>
     <string name="failed_to_prevent_background_run">Konnte nicht verhindern, dass %1$s im Hintergrund läuft</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">Konnte die App aufgrund von Signaturfehlern nicht installieren. Die App wurde deinstalliert, ohne ihre Daten zu löschen.</string>

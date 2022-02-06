@@ -79,7 +79,6 @@
     <string name="go">برو</string>
     <string name="go_back">برگرد عقب</string>
     <string name="usage_less_than_a_minute">کمتر از یک دقیقه</string>
-    <string name="usage_min">%1$d دقیقه</string>
     <plurals name="usage_hours">
         <item quantity="one">%1$d ساعت</item>
         <item quantity="other">%1$d ساعت</item>
@@ -351,7 +350,6 @@
     <string name="running">درحال اجرا</string>
     <string name="mode">حالت</string>
     <string name="permission_name">نام مجوز</string>
-    <string name="app_op_cannot_be_disabled">نمی‌توان این برنامه را غیرفعال کرد، احتمالاً برنامه‌ای فقط خواندنی است که برای یک برنامه عملیاتی دیگر تکیه می‌کند. این عملیات برنامه را نمی‌توان غیرفعال کرد. (احتمالاً یک برنامه ای است فقط خواندنی، که به یک برنامه وابستگی دارد</string>
     <string name="backup_options">گزینه های پشتیبان‌گیری</string>
     <string name="delete_backup">حذف پشتیبان</string>
     <string name="restore">بازیابی</string>
@@ -588,7 +586,6 @@
     <string name="critical_exts">پسوندهای بحرانی</string>
     <string name="non_critical_exts">برنامه های افزودنی غیر بحرانی</string>
     <string name="usage_access_not_supported">نمی‌توان دسترسی به دادها را درخواست کرد، زیرا صفحه تنظیمات مربوط به آن پیدا نمی‌شود.</string>
-    <string name="packages">بسته ها</string>
     <string name="do_you_want_to_uninstall_and_install">آیا می خواهید دوباره برنامه را حذف و نصب کنید؟</string>
     <string name="app_data_will_be_lost">داده های موجود از بین خواهند رفت.</string>
     <string name="app_signing_install_without_data_loss">اگر تأیید امضا را خاموش کرده‌اید، می‌توانید از <b>فقط نصب </b> گزینه ای برای نصب برنامه بدون از دست دادن اطلاعات استفاده کنید.</string>
@@ -850,7 +847,6 @@
     <string name="organization_unit">واحد سازمانی</string>
     <string name="netpolicy_reject_vpn_data">رد داده های فیلترشکن</string>
     <string name="netpolicy_reject_wifi_data">رد دادهای وای فای</string>
-    <string name="fallback_to_no_root_mode_description">مدیر برنامه نتوانست از حالت فعلی استفاده کند. برای جلوگیری از رفتار تصادفی، باید به طور موقت به حالت بدون روت تغییر دهید. در صورت عدم رفع مشکل، آن را گزارش دهید.</string>
     <string name="fallback_to_no_root_mode">بازگشت به حالت بدون روت؟</string>
     <string name="notice">توجه</string>
     <string name="failed_to_prevent_background_run">نمی‌توان از اجرای %1$s در پس‌زمینه جلوگیری کرد</string>
@@ -1045,10 +1041,8 @@
     <string name="interceptor">رهگیر</string>
     <string name="languages">زبان ها</string>
     <string name="battery">باتری</string>
-    <string name="enable_magisk_hide">مخفی کردن مجیسک</string>
     <string name="restore_not_installed">بازیابی برنامه های نصب نشده</string>
     <string name="restore_latest">بازگردانی آخرین پشتیبان گیری</string>
-    <string name="disable_magisk_hide">مخفی کردن مجیسک غیر فعال شود؟</string>
     <string name="failed_to_disable_magisk_hide">نمی‌توان مخفی کردن مجیسک را غیر فعال کرد</string>
     <string name="selinux">لینوکس</string>
     <string name="failed_to_enable_magisk_hide">نمی‌توان مجیسک را مخفی کرد</string>

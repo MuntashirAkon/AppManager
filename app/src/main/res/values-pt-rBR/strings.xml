@@ -127,7 +127,6 @@
         <item quantity="one">%1$d hora</item>
         <item quantity="other">%1$d horas</item>
     </plurals>
-    <string name="usage_min">%1$d minuto(s)</string>
     <string name="usage_less_than_a_minute">Menos de um minuto</string>
     <string name="go_back">Voltar</string>
     <string name="go">Ir</string>
@@ -247,7 +246,6 @@
         <item quantity="other">%1$d aplicativos não puderam ser forçados a parar</item>
     </plurals>
     <string name="toggle_kill_for_system_apps">Alternar encerramento de aplicativos de sistema</string>
-    <string name="app_op_cannot_be_disabled">Esta operação de aplicativo não pode ser desativada. (É provável que seja somente uma operação de aplicativo de leitura que depende de outra.)</string>
     <string name="permission_name">Nome da Permissão</string>
     <string name="mode">Modo</string>
     <string name="running">Executando</string>
@@ -765,9 +763,7 @@
     <string name="hardware">Hardware</string>
     <string name="selinux">SELinux</string>
     <string name="failed_to_enable_magisk_hide">O MagiskHide não pôde ser ativado</string>
-    <string name="enable_magisk_hide">Ativar MagiskHide</string>
     <string name="failed_to_disable_magisk_hide">O MagiskHide não pôde ser desativado</string>
-    <string name="disable_magisk_hide">Desativar MagiskHide\?</string>
     <string name="disable_background_run_description">Define o modo <i>ignore</i> para as seguintes operações de aplicativo: <tt>RUN_IN_BACKGROUND</tt> (do Android 7.0) e <tt>RUN_ANY_IN_BACKGROUND</tt> (do Android 9).</string>
     <plurals name="no_of_components">
         <item quantity="one">%1$d componente</item>
@@ -1022,7 +1018,6 @@
     <string name="wireless_debugging_not_supported">A depuração sem fio não é suportada nesta plataforma.</string>
     <string name="wireless_debugging">Depuração sem fio</string>
     <string name="unknown_net_policy">Política de rede desconhecida (%1$s - %2$X)</string>
-    <string name="fallback_to_no_root_mode_description">O App Manager não pôde usar o modo de operação atual. Para evitar comportamentos aleatórios, você deve mudar temporariamente para o modo sem root. Considere reportá-lo se o problema não for corrigido após a reinicialização do dispositivo.</string>
     <string name="fallback_to_no_root_mode">Recuar ao modo sem root\?</string>
     <string name="failed_to_prevent_background_run">Inapto de deter %1$s de executar em segundo plano</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">Não foi possível instalar o aplicativo devido ao descompasso de assinatura. O aplicativo foi desinstalado sem limpar seus dados.</string>

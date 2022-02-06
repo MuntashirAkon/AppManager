@@ -31,7 +31,6 @@
     <string name="go">اذهب</string>
     <string name="go_back">عودة</string>
     <string name="usage_less_than_a_minute">أقل من دقيقة</string>
-    <string name="usage_min">%1$d دقيقة</string>
     <string name="usage_7_days">آخر ٧ أيام</string>
     <string name="usage_today">اليوم</string>
     <string name="usage_weekly">اسبوعي</string>
@@ -371,7 +370,6 @@
     <string name="running">يعمل</string>
     <string name="mode">الوضع</string>
     <string name="permission_name">اسم الصلاحية</string>
-    <string name="app_op_cannot_be_disabled">لا يمكن تعطيل هذا التطبيق. (من المحتمل أن يعتمد التطبيق للقراءة فقط على تطبيق آخر.)</string>
     <string name="toggle_kill_for_system_apps">تفعيل قتل تطبيقات النظام</string>
     <string name="the_operation_was_successful">إنتهى</string>
     <string name="export_blocking_rules">تصدير قواعد الحظر</string>
@@ -953,9 +951,7 @@
     <string name="scaling_factor">عامل التحجيم</string>
     <string name="refresh_rate">معدل التحديث</string>
     <string name="window_size">حجم النافذة</string>
-    <string name="disable_magisk_hide">تعطيل MagiskHide؟</string>
     <string name="failed_to_disable_magisk_hide">تعذر تعطيل MagiskHide</string>
-    <string name="enable_magisk_hide">قم بتمكين MagiskHide</string>
     <string name="failed_to_enable_magisk_hide">تعذر تمكين MagiskHide</string>
     <string name="disable_background_run_description">يضبط وضع <i> تجاهل </i> لعمليات التطبيق التالية: <tt> RUN_IN_BACKGROUND </tt> (من Android 7.0) و <tt> RUN_ANY_IN_BACKGROUND </tt> (من Android 9).</string>
     <string name="pref_backup_restore_msg">تخصيص النسخ الاحتياطي / الاستعادة.</string>
@@ -1157,7 +1153,6 @@
     <string name="wireless_debugging_not_supported">التصحيح اللاسلكي غير مدعوم في هذا النظام الأساسي.</string>
     <string name="wireless_debugging">التصحيح اللاسلكي</string>
     <string name="unknown_net_policy">سياسة شبكة غير معروفة (%1$s - %2$X)</string>
-    <string name="fallback_to_no_root_mode_description">مدير التطبيق لا يمكن استخدام طريقة التشغيل الحالية .لتجنب السلوك العشوائي ، يجب التبديل إلى وضع الجذر مؤقتا .إذا كانت المشكلة لم تحل بعد إعادة تشغيل الجهاز ، الرجاء ارفاق تقرير بالمشكلة.</string>
     <string name="fallback_to_no_root_mode">العودة إلى الوضع بدون صلاحية الجذر ؟</string>
     <string name="failed_to_prevent_background_run">تعذر منع %1$s من العمل في الخلفية</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">تعذر تثبيت التطبيق بسبب عدم تطابق التوقيع. تم إلغاء تثبيت التطبيق دون مسح بياناته.</string>

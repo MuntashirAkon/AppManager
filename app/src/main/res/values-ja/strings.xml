@@ -144,7 +144,6 @@
     <plurals name="usage_hours">
         <item quantity="other">%1$d 時間</item>
     </plurals>
-    <string name="usage_min">%1$d 分</string>
     <string name="usage_less_than_a_minute">１分以下</string>
     <string name="go_back">戻る</string>
     <string name="go">設定画面に移動</string>
@@ -268,7 +267,6 @@
         <item quantity="other">%1$d 個のアプリを強制終了できませんでした</item>
     </plurals>
     <string name="toggle_kill_for_system_apps">ｼｽﾃﾑｱﾌﾟﾘをｷﾙするか切り替え</string>
-    <string name="app_op_cannot_be_disabled">このAppOpsは無効にできません。恐らく他に依存する読み取り専用のAppOpsです</string>
     <string name="permission_name">パーミッション名</string>
     <string name="mode">モード</string>
     <string name="running">実行中</string>
@@ -740,9 +738,7 @@
     <string name="scaling_factor">倍率</string>
     <string name="refresh_rate">リフレッシュレート</string>
     <string name="window_size">ウィンドウサイズ</string>
-    <string name="disable_magisk_hide">MagiskHideを無効にしますか?</string>
     <string name="failed_to_disable_magisk_hide">MagiskHideを無効にできませんでした</string>
-    <string name="enable_magisk_hide">MagiskHideを有効化</string>
     <string name="failed_to_enable_magisk_hide">MagiskHideを有効化できませんでした</string>
     <string name="disable_background_run_description">次のAppOpsに <i>Ignore</i> モードを設定します: <tt>RUN_IN_BACKGROUND</tt> (Android 7.0〜) and <tt>RUN_ANY_IN_BACKGROUND</tt> (Android 9〜).</string>
     <string name="pref_backup_restore_msg">バックアップ/復元に関する設定</string>
@@ -990,7 +986,6 @@
     <string name="help_uses_permissions_tab">項目をタップして<b>許可</b>または<b>拒否</b>できます。<b>dangerous</b>及び<b>development</b>パーミッションのみ許可/拒否できます。</string>
     <string name="help_permissions_tab">これらの権限はアプリ内部で定義されており、許可を取り消すことはできません。</string>
     <string name="failed_to_prevent_background_run">%1$sのバックグラウンド実行を防止できませんでした</string>
-    <string name="fallback_to_no_root_mode_description">App Managerは、現在の動作モードを使用できませんでした。予期せぬ動作を避けるため、一時的に非Rootモードに切り替える必要があります。端末を再起動しても問題が解決しない場合は、この問題の報告を検討してください。</string>
     <string name="fallback_to_no_root_mode">非Rootモードに切り替えますか？</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">署名が一致していないため、アプリをインストールできませんでした。このアプリはデータを保持したままアンインストールされています。</string>
     <string name="added_to_queue">キューに追加されました</string>

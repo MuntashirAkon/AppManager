@@ -345,7 +345,6 @@
     <string name="share_apk">Udostępnij plik APK</string>
     <string name="go_back">Wróć</string>
     <string name="usage_less_than_a_minute">Mniej niż minuta</string>
-    <string name="usage_min">%1$d min</string>
     <plurals name="usage_hours">
         <item quantity="one">%1$d h</item>
         <item quantity="few">%1$d h</item>
@@ -582,7 +581,6 @@
     <string name="receivers">Odbiorniki</string>
     <string name="backup_extras_description">Utwórz kopię zapasową uprawnień aplikacji, oszczędzania baterii, opcji wykorzystania danych, statusu MagiskHide, SSAID itp.</string>
     <string name="backup_internal_data_description">Utwórz kopię zapasową folderów danych. Jeśli ta opcja jest wybrana, kopie zapasowe wewnętrznych folderów danych zostaną utworzone.</string>
-    <string name="disable_magisk_hide">Wyłączyć MagiskHide\?</string>
     <string name="window_size">Rozmiar okna</string>
     <string name="refresh_rate">Częstotliwość odświeżania</string>
     <string name="scaling_factor">Współczynnik skalowania</string>
@@ -776,7 +774,6 @@
     <string name="failed_to_deny_dangerous_app_ops">Nie udało się cofnąć wszystkich niebezpiecznych operacji tej aplikacji</string>
     <string name="failed_to_reset_app_ops">Nie udało się zresetować operacji tej aplikacji</string>
     <string name="pref_import_blocker_msg">Importuj reguły filtrowania z Blockera, z których każdy zawiera reguły dla pojedynczego modułu.</string>
-    <string name="app_op_cannot_be_disabled">Operacja tej aplikacji nie może zostać wyłączona. (Zapewne operacja tylko do odczytu zależy od operacji innej aplikacji.)</string>
     <string name="pref_import_watt_msg">Importuj reguły blokowania z Watt, każdy plik zawierający reguły dla pojedyńczego pakietu o nazwie <tt>packagename.xml</tt> itp.</string>
     <string name="pref_import_msg">Importuj wcześniej wyeksportowane reguły blokowania z menedżera aplikacji.</string>
     <string name="pref_export_msg">Eksportuj reguły blokowania skonfigurowane w Menedżerze aplikacji do pamięci zewnętrznej.</string>
@@ -967,7 +964,6 @@
     <string name="help_app_ops_tab">Dotknij elementu, aby <b>zezwolić</b> lub <b>zignorować</b> go. Długo przytrzymaj element, aby zobaczyć inne obsługiwane tryby.</string>
     <string name="failed_to_prevent_background_run">Nie można zapobiec %1$s działania w tle</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">Nie można zainstalować aplikacji z powodu niezgodności podpisów. Aplikacja została odinstalowana bez czyszczenia jej danych.</string>
-    <string name="fallback_to_no_root_mode_description">Menedżer aplikacji nie mógł użyć bieżącego trybu działania. Aby uniknąć losowego zachowania, należy tymczasowo przełączyć się w tryb bez no-root. Rozważ zgłoszenie tego, jeśli problem nie został rozwiązany po ponownym uruchomieniu urządzenia.</string>
     <string name="fallback_to_no_root_mode">Powrót do trybu no-root\?</string>
     <string name="unknown_net_policy">Nieznane reguły sieciowe (%1$s - %2$X)</string>
     <string name="port_number_invalid">Nieprawidłowy numer portu.</string>
@@ -1154,6 +1150,5 @@
     <string name="backup_volume">Wolumin kopii zapasowej</string>
     <string name="failed_to_disable_magisk_hide">Nie można wyłączyć MagiskHide</string>
     <string name="disable_background_run_description">Ustawia tryb <i>Ignoruj</i> dla następujących operacji aplikacji: <tt>RUN_IN_BACKGROUND</tt> (z Androida 7.0) i <tt>RUN_ANY_IN_BACKGROUND</tt> (z Androida 9).</string>
-    <string name="enable_magisk_hide">Włącz MagiskHide</string>
     <string name="density">Gęstość</string>
 </resources>

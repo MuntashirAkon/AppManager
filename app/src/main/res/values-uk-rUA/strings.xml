@@ -50,7 +50,6 @@
     <string name="sort_by_app_ops_values">Значення app ops</string>
     <string name="sort_by_app_ops_names">Назва app ops</string>
     <string name="deny_dangerous_app_ops">Заборонити небезпечні app ops</string>
-    <string name="app_op_cannot_be_disabled">Цей дозвіл неможливо вимкнути. (Можливо він лише для читання, або залежить від іншого дозволу.)</string>
     <string name="failed_to_enable_op">Сталася помилка під час спроби надати дозвіл</string>
     <string name="no_app_ops">Немає операцій з дозволами</string>
     <string name="app_ops">App Ops</string>
@@ -531,7 +530,6 @@
     <string name="go">Далі</string>
     <string name="go_back">← Назад</string>
     <string name="usage_less_than_a_minute">Менше хвилини</string>
-    <string name="usage_min">%1$d хв.</string>
     <plurals name="usage_hours">
         <item quantity="one">%1$d година</item>
         <item quantity="few">%1$d години</item>
@@ -753,9 +751,7 @@
     <string name="battery">Акумулятор</string>
     <string name="value">Значення</string>
     <string name="failed_to_enable_magisk_hide">Не вдалося увімкнути MagiskHide</string>
-    <string name="enable_magisk_hide">Увімкнути MagiskHide</string>
     <string name="failed_to_disable_magisk_hide">Не вдалося вимкнути MagiskHide</string>
-    <string name="disable_magisk_hide">Вимкнути MagiskHide\?</string>
     <string name="refresh_rate">Частота оновлення</string>
     <string name="scaling_factor">Коефіцієнт масштабування</string>
     <string name="size">Розмір</string>
@@ -1088,7 +1084,6 @@
     <string name="adb_connect">З\'єднання</string>
     <string name="wireless_debugging_not_supported">Бездротове налагодження не підтримується в цій платформі.</string>
     <string name="wireless_debugging">Бездротове налагодження</string>
-    <string name="fallback_to_no_root_mode_description">App Manager не вдалося використати поточний режим роботи. Щоб уникнути непередбачуваної поведінки, вам слід тимчасово перейти до режиму без-root. Якщо проблема не вирішиться після перезавантаження пристрою, повідомте розробника.</string>
     <string name="fallback_to_no_root_mode">Повернутись до режиму без root\?</string>
     <string name="unknown_net_policy">Невідома мережна політика (%1$s - %2$X)</string>
     <string name="failed_to_prevent_background_run">Не вдалося запобігти роботу в фоновому режимі додатку %1$s</string>

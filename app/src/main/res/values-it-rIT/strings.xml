@@ -114,7 +114,6 @@
     <string name="go">Vai</string>
     <string name="go_back">Indietro</string>
     <string name="usage_less_than_a_minute">Meno di un minuto</string>
-    <string name="usage_min">%1$d minuti</string>
     <plurals name="usage_hours">
         <item quantity="one">%1$d ora</item>
         <item quantity="other">%1$d ore</item>
@@ -215,7 +214,6 @@
     <string name="running">In funzione</string>
     <string name="mode">Modalità</string>
     <string name="permission_name">Nome permesso</string>
-    <string name="app_op_cannot_be_disabled">Questa app operativa non può essere disabilitata, probabilmente è di solo lettura o dipende da un\'altra app.</string>
     <plurals name="alert_failed_to_force_stop">
         <item quantity="one">Impossibile forzare arresto dell\'app %1$d</item>
         <item quantity="other">Impossibile forzare arresto delle app %1$d</item>

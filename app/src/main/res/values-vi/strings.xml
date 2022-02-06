@@ -189,7 +189,6 @@
     <string name="grant_usage_access">Cấp quyền truy cập dữ liệu sử dụng</string>
     <string name="go_back">Quay lại</string>
     <string name="usage_less_than_a_minute">Ít hơn một phút</string>
-    <string name="usage_min">%1$d phút</string>
     <plurals name="usage_hours">
         <item quantity="other">%1$d tiếng</item>
     </plurals>
@@ -361,7 +360,6 @@
     <string name="touchscreen_finger">Ngón tay</string>
     <string name="orientation_sensor">Cảm biến</string>
     <string name="manifest">Manifest</string>
-    <string name="app_op_cannot_be_disabled">Hoạt động ứng dụng này không thể được tắt. (Có thể là một hoạt động ứng dụng chỉ đọc phụ thuộc vào một hoạt động ứng dụng khác.)</string>
     <string name="reject_time">Thời gian từ chối</string>
     <string name="accept_time">Thời gian chấp nhận</string>
     <string name="pref_import_export_blocking_rules_msg">Nhập/xuất các quy tắc, nhập các quy tắc ngoài từ Watt hoặc Blocker.</string>
@@ -832,9 +830,7 @@
     <string name="pref_backup_restore_msg">Tuỳ biến sao lưu/khôi phục.</string>
     <string name="disable_background_run_description">Đặt chế độ <i>Bỏ qua</i> cho các hoạt động ứng dụng sau: <tt>RUN_IN_BACKGROUND</tt> (từ Android 7.0) và <tt>RUN_ANY_IN_BACKGROUND</tt> (từ Android 9).</string>
     <string name="failed_to_enable_magisk_hide">Không thể bật MagiskHide</string>
-    <string name="enable_magisk_hide">Bật MagiskHide</string>
     <string name="failed_to_disable_magisk_hide">Không thể tắt MagiskHide</string>
-    <string name="disable_magisk_hide">Tắt MagiskHide\?</string>
     <string name="window_size">Kích thước cửa sổ</string>
     <string name="refresh_rate">Tốc độ làm mới</string>
     <string name="scaling_factor">Yếu tố chia tỉ lệ</string>
@@ -943,7 +939,6 @@
     <string name="state_idle">Không hoạt động</string>
     <string name="failed_to_prevent_background_run">Không thể ngăn chặn %1$s chạy trong nền</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">Không thể cài đặt ứng dụng do chữ ký không khớp. Ứng dụng đã bị gỡ cài đặt mà không xoá dữ liệu của nó.</string>
-    <string name="fallback_to_no_root_mode_description">App Manager đã không thể sử dụng chế độ hoạt động hiện tại. Để tránh các hành vi ngẫu nhiên, bạn nên tạm thời chuyển sang chế độ không root. Hãy cân nhắc việc báo cáo điều này nếu vấn đề không được sửa sau khi khởi động lại thiết bị.</string>
     <string name="state_parked">Đã đỗ lại</string>
     <string name="state_zombie">Zombie</string>
     <string name="state_trace_stop">Dừng dấu vết</string>
@@ -961,7 +956,6 @@
     <string name="native_library_dir">Thư mục thư viện JNI gốc</string>
     <string name="tested_signatures_on_classes_and_time_taken" tools:ignore="PluralsCandidate">Đã thử nghiệm <xliff:g id="signature_no" example="342">%1$d</xliff:g> chữ ký trên <xliff:g id="class_no" example="6000">%2$d</xliff:g> class.
 \nĐã mất khoảng thời gian <xliff:g id="time" example="10000">%3$d</xliff:g> mili giây (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> lần lặp lại).</string>
-    <string name="fallback_to_no_root_mode">Quay lại chế độ không root\?</string>
     <string name="input_key">Nhập mã (ở hệ thập lục phân)</string>
     <string name="installer_app_message">Chọn <b>Chọn</b> để chọn từ các ứng dụng đã cài đặt hoặc chọn <b>Tuỳ chỉnh</b> để chỉ định một tên gói tuỳ chỉnh.</string>
     <string name="verified_using_unreliable_hash">Đã xác minh bằng hash không đáng tin cậy</string>

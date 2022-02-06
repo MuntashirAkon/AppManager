@@ -75,7 +75,6 @@
         <item quantity="one">%1$d ঘন্টা</item>
         <item quantity="other">%1$d ঘন্টা</item>
     </plurals>
-    <string name="usage_min">%1$d মিনিট</string>
     <string name="usage_less_than_a_minute">এক মিনিটেরও কম</string>
     <string name="go_back">পিছনে যান</string>
     <string name="go">এগিয়ে যান</string>
@@ -320,7 +319,6 @@
     <string name="export_failed">এক্সপোর্ট করতে ব্যর্থ!</string>
     <string name="reject_time">প্রত্যাখ্যানের সময়</string>
     <string name="accept_time">গ্রহণের সময়</string>
-    <string name="app_op_cannot_be_disabled">এই অ্যাপ অপটি নিষ্ক্রিয় করা যাবে না, সম্ভবত এটি একটি রিড-ওনলি অ্যাপ অপ যা অন্য অ্যাপ অপের উপর নির্ভর করে।</string>
     <plurals name="failed_to_import_files">
         <item quantity="one">%1$d ফাইলটি ইম্পোর্ট করতে ব্যর্থ।</item>
         <item quantity="other">%1$d ফাইলগুলো ইম্পোর্ট করতে ব্যর্থ।</item>

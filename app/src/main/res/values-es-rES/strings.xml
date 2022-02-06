@@ -149,7 +149,6 @@
     <string name="go">Ir</string>
     <string name="go_back">Volver</string>
     <string name="usage_less_than_a_minute">Menos de un minuto</string>
-    <string name="usage_min">%1$d min</string>
     <plurals name="usage_hours">
         <item quantity="one">%1$d hora</item>
         <item quantity="other">%1$d horas</item>
@@ -399,7 +398,6 @@
     <string name="pref_import_msg">Importar reglas de bloqueo previamente exportadas desde el Gestor de aplicaciones.</string>
     <string name="pref_export_msg">Exportar reglas de bloqueo configuradas en el Gestor de aplicaciones al almacenamiento externo.</string>
     <string name="keyboard_type">Tipo de teclado</string>
-    <string name="app_op_cannot_be_disabled">No se puede desactivar esta operación de aplicación. (Posiblemente una operación de solo lectura dependa de otra.)</string>
     <string name="the_operation_was_successful">Hecho</string>
     <plurals name="alert_failed_to_clear_data">
         <item quantity="one">No se pudo limpiar datos desde %1$d app</item>
@@ -751,9 +749,7 @@
     <string name="pref_backup_restore_msg">Personalizar copia de respaldo/restauración.</string>
     <string name="disable_background_run_description">Establece el modo <i>ignorar</i> para las siguientes aplicaciones: <tt>RUN_IN_BACKGROUND</tt> (del Androide 7.0) y <tt>RUN_ANY_IN_BACKGROUND</tt> (desde Android 9).</string>
     <string name="failed_to_enable_magisk_hide">No se pudo activar MagiskHide</string>
-    <string name="enable_magisk_hide">Activar MagiskHide</string>
     <string name="failed_to_disable_magisk_hide">No se pudo desactivar MagiskHide</string>
-    <string name="disable_magisk_hide">¿Quiere desactivar MagiskHide\?</string>
     <string name="window_size">Tamaño de ventana</string>
     <string name="refresh_rate">Tasa de actualización</string>
     <string name="scaling_factor">Factor de escalada</string>
@@ -1037,7 +1033,6 @@
     <string name="help_uses_permissions_tab">Pulse en un elemento para <b>concederlo</b> o <b>revocarlo</b>. Solo los permisos <b>peligrosos</b> y <b>de desarrollo</b> se pueden conceder o revocar.</string>
     <string name="help_permissions_tab">Estos permisos los define esta aplicación y no pueden revocarse.</string>
     <string name="help_app_ops_tab">Pulse en un elemento para <b>permitirlo</b> o <b>ignorarlo</b>. Mantenga pulsado el elemento para ver otros modos admitidos.</string>
-    <string name="fallback_to_no_root_mode_description">App Manager no ha podido utilizar el modo de operación actual. Para evitar comportamientos indeseados, se recomienda cambiar temporalmente al modo no-root. Considere la posibilidad de reportar el problema si no se soluciona tras reiniciar el dispositivo.</string>
     <string name="fallback_to_no_root_mode">¿Regresar a modo no-root\?</string>
     <string name="minimum_version">Versión mín.: %d</string>
     <string name="added_to_queue">Se añadió a la cola</string>
