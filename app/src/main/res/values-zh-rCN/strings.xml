@@ -726,7 +726,7 @@
     <string name="density">密度</string>
     <string name="screen">屏幕</string>
     <string name="hardware">硬件</string>
-    <string name="permissive">被动</string>
+    <string name="permissive">宽容</string>
     <string name="enforcing">强制</string>
     <string name="failed_to_enable_magisk_hide">无法启用 MagiskHide</string>
     <string name="failed_to_disable_magisk_hide">无法禁用 MagiskHide</string>
@@ -984,7 +984,6 @@
     <string name="wireless_debugging_not_supported">此平台不支持无线调试。</string>
     <string name="wireless_debugging">无线调试</string>
     <string name="unknown_net_policy">未知的 netpolicy (%1$s - %2$X)</string>
-    <string name="fallback_to_no_root_mode">退回到非 root 模式吗？</string>
     <string name="failed_to_prevent_background_run">无法防止 %1$s 在后台运行</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">由于签名不匹配，无法安装应用程序。该应用程序已被卸载，但没有清除数据。</string>
     <string name="community_links">Telegram 群: https://t.me/AppManagerChannel
