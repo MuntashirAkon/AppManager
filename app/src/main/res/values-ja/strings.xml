@@ -986,7 +986,6 @@
     <string name="help_uses_permissions_tab">項目をタップして<b>許可</b>または<b>拒否</b>できます。<b>dangerous</b>及び<b>development</b>パーミッションのみ許可/拒否できます。</string>
     <string name="help_permissions_tab">これらの権限はアプリ内部で定義されており、許可を取り消すことはできません。</string>
     <string name="failed_to_prevent_background_run">%1$sのバックグラウンド実行を防止できませんでした</string>
-    <string name="fallback_to_no_root_mode">非Rootモードに切り替えますか？</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">署名が一致していないため、アプリをインストールできませんでした。このアプリはデータを保持したままアンインストールされています。</string>
     <string name="added_to_queue">キューに追加されました</string>
     <string name="minimum_version">最小バージョン:%d</string>
@@ -1068,4 +1067,45 @@
     <string name="exit_confirmation">終了の確認</string>
     <string name="pref_default_blocking_method">規定のブロッキング方法</string>
     <string name="pref_default_blocking_method_description">コンポーネントのブロッキングに規定で利用される方法を指定します。</string>
+    <string name="vt_uploading">VirusTotal: アップロード中…</string>
+    <string name="vt_queued">VirusTotal: キューに追加済み</string>
+    <string name="vt_success">VirusTotal: %1$d/%2$d</string>
+    <string name="vt_scan_date">スキャン日時: %1$s</string>
+    <string name="vt_permalink">VirusTotalへのリンク</string>
+    <string name="pref_vt_apikey_summary">VirusTotalによるAPKのスキャンを有効にします。</string>
+    <string name="uses_play_app_signing">Playアプリ署名</string>
+    <string name="parent_process_id">親プロセスID</string>
+    <string name="swap">スワップ</string>
+    <string name="swap_chart_info">● %1$s 使用済み ● %2$s 利用可能</string>
+    <string name="failed_to_change_app_op_mode">AppOpsモードを変更できませんでした。</string>
+    <string name="failed_to_disable_magisk_deny_list">Magisk DenyListを無効化できませんでした</string>
+    <string name="mode_of_op_with_inferred_mode_of_op">%1$s (現在のモード: %2$s)</string>
+    <plurals name="usage_seconds">
+        <item quantity="other">%1$d 秒</item>
+    </plurals>
+    <string name="vt_failed">VirusTotal: 失敗</string>
+    <string name="vt_slowness_warning">インターネットの速度やサーバーの処理に速度は依存します。これには少し時間がかかります。</string>
+    <plurals name="usage_minutes">
+        <item quantity="other">%1$d 分</item>
+    </plurals>
+    <string name="toggle_internet">インターネット接続の使用</string>
+    <string name="vt_checking">VirusTotal: スキャン中…</string>
+    <string name="pref_vt_apikey">VirusTotal APIキー</string>
+    <string name="scan_in_vt">VirusTotalでスキャン</string>
+    <string name="process_id">プロセスID</string>
+    <string name="virtual_memory">仮想メモリ</string>
+    <string name="cpu_percent">%% CPU</string>
+    <string name="cpu_time">CPU時間</string>
+    <string name="priority">優先度</string>
+    <string name="state">プロセスの状態</string>
+    <string name="threads">スレッド数</string>
+    <string name="commandline_args">コマンド引数</string>
+    <string name="memory_chart_info">● %1$s アプリケーション ● %2$s キャッシュ ● %3$s バッファ ● %4$s 利用可能</string>
+    <string name="magisk_denylist">Magisk DenyList</string>
+    <string name="failed_to_enable_magisk_deny_list">Magisk DenyListを有効化できませんでした</string>
+    <string name="vt_disclaimer">VirusTotalおよびそのロゴは、Chronicle LLCの商標です。APIクライアントであるApp Managerおよびその作成者は、あなたがVirusTotalに送信するいかなるデータについても責任を負いません。</string>
+    <string name="warning_working_on_root_mode">警告: ADBモードではなくRootモードにて動作しています。</string>
+    <string name="pref_vt_apikey_description">APIキーは、App ManagerがAPKファイルをVirusTotalにアップロードし、レポートを取得するために必要です。https://virustotal.com にサインアップして、無料でAPI キーを取得できます。</string>
+    <string name="uses_play_app_signing_description">このアプリには<a href="https://support.google.com/googleplay/android-developer/answer/9842756">Playアプリ署名</a>を使用している<i>可能性</i>のある識別子があります。この方式では、署名鍵はGoogleのサーバーに保管され、Googleがアプリへの署名に責任を持ちます。なお、署名情報の照合は、アプリが開発者以外（この場合はGoogleも）によって変更されていないことを確認する唯一の方法です。</string>
+    <string name="failed_to_use_the_current_mode_of_operation">現在の動作モードを使用できません。このセッションでは非Rootモードに切り替えられます。</string>
 </resources>
