@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<resources>
-    <string name="disclaimer_footer">© 2020–2021 Muntashir Al-Islam</string>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources>
+    <string name="disclaimer_footer">© 2020–2022 Muntashir Al-Islam</string>
     <string name="disclaimer_body">Trình quản lý ứng dụng cung cấp các chức năng root có thể gây hại cho thiết bị của bạn nếu sử dụng không đúng cách. Trình quản lý ứng dụng không chịu trách nhiệm về bất kỳ thiệt hại nào do sử dụng ứng dụng này. Nếu bạn không nhận thức đầy đủ về cách thức hoạt động của root thì bạn nên tránh sử dụng các tùy chọn root cho đến khi bạn nhận thức đầy đủ về các rủi ro.
 \n
 \nBất kỳ liên kết nào tôi cung cấp cho các ứng dụng và trang web khác đều vì lợi ích của người dùng. Tôi không chịu trách nhiệm về bất kỳ nội dung nào bạn có thể tìm thấy bằng cách truy cập vào các liên kết bên ngoài.
@@ -12,5 +11,5 @@
     <string name="disclaimer_exit">Thoát</string>
     <string name="disclaimer_agree">Tôi đồng ý</string>
     <string name="disclaimer_agree_forever">Không bao giờ hiển thị cái này nữa</string>
-    <string name="disclaimer_header">TỪ CHỐI TRÁCH NHIỆM</string>
+    <string name="disclaimer_header">Từ chối trách nhiệm</string>
 </resources>
