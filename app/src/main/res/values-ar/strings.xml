@@ -1153,7 +1153,6 @@
     <string name="wireless_debugging_not_supported">التصحيح اللاسلكي غير مدعوم في هذا النظام الأساسي.</string>
     <string name="wireless_debugging">التصحيح اللاسلكي</string>
     <string name="unknown_net_policy">سياسة شبكة غير معروفة (%1$s - %2$X)</string>
-    <string name="fallback_to_no_root_mode">العودة إلى الوضع بدون صلاحية الجذر ؟</string>
     <string name="failed_to_prevent_background_run">تعذر منع %1$s من العمل في الخلفية</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">تعذر تثبيت التطبيق بسبب عدم تطابق التوقيع. تم إلغاء تثبيت التطبيق دون مسح بياناته.</string>
     <string name="community_links">تيلجرام: https://t.me/AppManagerChannel
@@ -1238,7 +1237,7 @@
     <string name="pref_default_blocking_method">أسلوب الحظر الافتراضي</string>
     <string name="pref_intent_firewall_and_disable_description">حظر المكونات باستخدام Intent Firewall وكذلك تعطيلها. الطريقة الموصى بها لمستخدمي الجذر.</string>
     <string name="pref_disable_description">تعطيل المكونات فقط. لا يوصى به لمستخدمي الجذر لأن التطبيقات يمكنها تجاوز ذلك. في أوضاع ADB ، يمكن تعطيل تطبيقات الاختبار فقط بهذه الطريقة.</string>
-    <string name="search_type_contains">يحتوي</string>
+    <string name="search_type_contains">يحتوي على</string>
     <string name="search_type_prefix">بادئه</string>
     <string name="search_type_suffix">لاحقة</string>
     <string name="search_type_fuzzy">غير دقيق</string>
@@ -1247,4 +1246,55 @@
     <string name="pref_intent_firewall_description">منع المكونات باستخدام Intent Firewall فقط. لا يوصى به لأن بعض تطبيقات النظام يمكنها تجاوز جدران الحماية.</string>
     <string name="search_type_regular_expressions">ريجيس</string>
     <string name="authenticating">مصادقة …</string>
+    <string name="toggle_internet">استخدام الإنترنت</string>
+    <string name="vt_failed">VirusTotal: فشل</string>
+    <string name="vt_success">VirusTotal: %1$d / %2$d</string>
+    <string name="vt_scan_date">تاريخ الفحص: %1$s</string>
+    <string name="vt_permalink">رابط دائم إلى VirusTotal</string>
+    <string name="pref_vt_apikey">مفتاح واجهة برمجة تطبيقات VirusTotal</string>
+    <string name="pref_vt_apikey_summary">تفعيل فحص ملفات APK عبر VirusTotal.</string>
+    <string name="scan_in_vt">فحص في VirusTotal</string>
+    <string name="cpu_percent">٪٪ وحدة المعالجة المركزية</string>
+    <string name="cpu_time">توقيت وحدة المعالجة المركزية</string>
+    <string name="priority">الأولوية</string>
+    <string name="threads">عدد الصفحات</string>
+    <string name="state">حالة العملية</string>
+    <string name="commandline_args">وسيطات سطر الأوامر</string>
+    <string name="swap">مبادله</string>
+    <string name="memory_chart_info">● %1$s التطبيقات ● %2$s المخزنة مؤقتا ● %3$s مخازن مؤقتة ● %4$s فارغة</string>
+    <string name="swap_chart_info">● %1$s المستخدمة ● %2$s الفارغة</string>
+    <string name="failed_to_change_app_op_mode">تعذر تغيير وضع تشغيل التطبيق.</string>
+    <string name="failed_to_use_the_current_mode_of_operation">غير قادر على استخدام الوضع الحالي للعملية. الرجوع إلى وضع عدم وجود جذر لهذه الجلسة.</string>
+    <string name="failed_to_enable_magisk_deny_list">تعذر تمكين قائمة رفض ماجيسك</string>
+    <string name="failed_to_disable_magisk_deny_list">تعذر تعطيل قائمة رفض ماجيسك</string>
+    <string name="mode_of_op_with_inferred_mode_of_op">%1$s (الطريقة المُشار إليها: %2$s)</string>
+    <string name="warning_working_on_root_mode">تحذير: يعمل بصلاحية الجذر بدلا من وضع ADB.</string>
+    <string name="process_id">معرف العملية</string>
+    <string name="parent_process_id">معرف العملية الأصل</string>
+    <string name="vt_checking">VirusTotal: جارٍ الفحص…</string>
+    <string name="vt_uploading">VirusTotal: جارٍ الرفع …</string>
+    <string name="vt_queued">VirusTotal: في قائمة الانتظار</string>
+    <string name="vt_slowness_warning">اعتمادا على سرعة الإنترنت وتحميل على الملقم، قد يستغرق ذلك بعض الوقت.</string>
+    <string name="vt_disclaimer">تعد VirusTotal وشعاراتها علامة تجارية مملوكة لشركة Chronicle LLC. لا يتحمل مدير التطبيقات - عميل واجهة برمجة التطبيقات - ولا مؤلفوه مسؤولية أي بيانات قد ترسلها إلى VirusTotal.</string>
+    <string name="pref_vt_apikey_description">يمكّن مفتاح واجهة برمجة التطبيقات مدير التطبيقات من تحميل ملفات APK إلى VirusTotal بالإضافة إلى جلب التقارير. اشترك في https://virustotal.com للحصول على مفتاح API مجانًا.</string>
+    <string name="uses_play_app_signing">تشغيل توقيع التطبيق</string>
+    <string name="uses_play_app_signing_description">يحتوي هذا التطبيق على علامات معينة تشير إلى أنه <i> قد </i> يستخدم <a href="https://support.google.com/googleplay/android-developer/answer/9842756">Play App Signing </a>. مع هذا النظام، يتم تخزين مفاتيح التوقيع في خوادم Google، وجوجل مسؤولة عن توقيع التطبيق. لاحظ أن مطابقة معلومات التوقيع هي الطريقة الوحيدة للتحقق من أن التطبيق لم يتم تعديله من قبل أي شخص آخر غير المطور (وفي هذه الحالة، Google أيضا).</string>
+    <string name="virtual_memory">الذاكرة الظاهرية</string>
+    <string name="magisk_denylist">ماجيسك قائمة الرفض</string>
+    <plurals name="usage_minutes">
+        <item quantity="zero">%1$d دقيقة</item>
+        <item quantity="one">%1$d دقائق</item>
+        <item quantity="two">%1$d دقائق</item>
+        <item quantity="few">%1$d دقائق</item>
+        <item quantity="many">%1$d دقائق</item>
+        <item quantity="other">%1$d دقائق</item>
+    </plurals>
+    <plurals name="usage_seconds">
+        <item quantity="zero">%1$d ثانية</item>
+        <item quantity="one">%1$d ثانية</item>
+        <item quantity="two">%1$d ثانيتان</item>
+        <item quantity="few">%1$d ثوان</item>
+        <item quantity="many">%1$d ثوان</item>
+        <item quantity="other">%1$d ثانية</item>
+    </plurals>
 </resources>
