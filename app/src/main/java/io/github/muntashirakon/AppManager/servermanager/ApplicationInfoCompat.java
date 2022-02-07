@@ -8,7 +8,7 @@ import android.os.Build;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
+import androidx.annotation.Nullable;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -264,30 +264,25 @@ public class ApplicationInfoCompat {
      * Represents the default policy. The actual policy used will depend on other properties of
      * the application, e.g. the target SDK version.
      */
-    @RequiresApi(Build.VERSION_CODES.P)
     public static final int HIDDEN_API_ENFORCEMENT_DEFAULT = -1;
     /**
      * No API enforcement; the app can access the entire internal private API. Only for use by
      * system apps.
      */
-    @RequiresApi(Build.VERSION_CODES.P)
     public static final int HIDDEN_API_ENFORCEMENT_DISABLED = 0;
     /**
      * No API enforcement, but enable the detection logic and warnings. Observed behaviour is the
      * same as {@link #HIDDEN_API_ENFORCEMENT_DISABLED} but you may see warnings in the log when
      * APIs are accessed.
      */
-    @RequiresApi(Build.VERSION_CODES.P)
     public static final int HIDDEN_API_ENFORCEMENT_JUST_WARN = 1;
     /**
      * Dark grey list enforcement. Enforces the dark grey and black lists
      */
-    @RequiresApi(Build.VERSION_CODES.P)
     public static final int HIDDEN_API_ENFORCEMENT_ENABLED = 2;
     /**
      * Blacklist enforcement only.
      */
-    @RequiresApi(Build.VERSION_CODES.P)
     public static final int HIDDEN_API_ENFORCEMENT_BLACK = 3;
 
     @ApplicationInfoPrivateFlags
@@ -296,5 +291,32 @@ public class ApplicationInfoCompat {
             return Refine.<ApplicationInfoHidden>unsafeCast(info).privateFlags;
         }
         return 0;
+    }
+
+    @SuppressWarnings("deprecation")
+    public static String getSeInfo(@NonNull ApplicationInfo info) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            return Refine.<ApplicationInfoHidden>unsafeCast(info).seInfo + Refine.<ApplicationInfoHidden>unsafeCast(info).seInfoUser;
+        } else return Refine.<ApplicationInfoHidden>unsafeCast(info).seinfo;
+    }
+
+    @Nullable
+    public static String getPrimaryCpuAbi(@NonNull ApplicationInfo info) {
+        return Refine.<ApplicationInfoHidden>unsafeCast(info).primaryCpuAbi;
+    }
+
+    @Nullable
+    public static String getZygotePreloadName(@NonNull ApplicationInfo info) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            return Refine.<ApplicationInfoHidden>unsafeCast(info).zygotePreloadName;
+        }
+        return null;
+    }
+
+    public static int getHiddenApiEnforcementPolicy(@NonNull ApplicationInfo info) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            return Refine.<ApplicationInfoHidden>unsafeCast(info).getHiddenApiEnforcementPolicy();
+        }
+        return HIDDEN_API_ENFORCEMENT_DISABLED;
     }
 }

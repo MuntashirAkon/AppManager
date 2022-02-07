@@ -141,6 +141,11 @@ import io.github.muntashirakon.io.ProxyFile;
 import io.github.muntashirakon.widget.SwipeRefreshLayout;
 import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
+import static io.github.muntashirakon.AppManager.servermanager.ApplicationInfoCompat.HIDDEN_API_ENFORCEMENT_BLACK;
+import static io.github.muntashirakon.AppManager.servermanager.ApplicationInfoCompat.HIDDEN_API_ENFORCEMENT_DEFAULT;
+import static io.github.muntashirakon.AppManager.servermanager.ApplicationInfoCompat.HIDDEN_API_ENFORCEMENT_DISABLED;
+import static io.github.muntashirakon.AppManager.servermanager.ApplicationInfoCompat.HIDDEN_API_ENFORCEMENT_ENABLED;
+import static io.github.muntashirakon.AppManager.servermanager.ApplicationInfoCompat.HIDDEN_API_ENFORCEMENT_JUST_WARN;
 import static io.github.muntashirakon.AppManager.utils.PermissionUtils.TERMUX_PERM_RUN_COMMAND;
 import static io.github.muntashirakon.AppManager.utils.PermissionUtils.hasDumpPermission;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.displayLongToast;
@@ -1382,6 +1387,21 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             mListItems.add(ListItem.newSelectableRegularItem(getString(R.string.user_id), Integer.toString(mApplicationInfo.uid)));
             if (mPackageInfo.sharedUserId != null)
                 mListItems.add(ListItem.newSelectableRegularItem(getString(R.string.shared_user_id), mPackageInfo.sharedUserId));
+            if (appInfo.primaryCpuAbi != null) {
+                mListItems.add(ListItem.newSelectableRegularItem(getString(R.string.primary_abi),
+                        appInfo.primaryCpuAbi));
+            }
+            if (appInfo.zygotePreloadName != null) {
+                mListItems.add(ListItem.newSelectableRegularItem(getString(R.string.zygote_preload_name),
+                        appInfo.zygotePreloadName));
+            }
+            if (!isExternalApk) {
+                mListItems.add(ListItem.newRegularItem(getString(R.string.hidden_api_enforcement_policy),
+                        getHiddenApiEnforcementPolicy(appInfo.hiddenApiEnforcementPolicy)));
+            }
+            if (appInfo.seInfo != null) {
+                mListItems.add(ListItem.newSelectableRegularItem(getString(R.string.selinux), appInfo.seInfo));
+            }
             // Main activity
             if (appInfo.mainActivity != null) {
                 final ComponentName launchComponentName = appInfo.mainActivity.getComponent();
@@ -1392,6 +1412,23 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 }
             }
             mListItems.add(ListItem.newGroupEnd());
+        }
+    }
+
+    @NonNull
+    private String getHiddenApiEnforcementPolicy(int policy) {
+        switch (policy) {
+            case HIDDEN_API_ENFORCEMENT_DEFAULT:
+                return getString(R.string.hidden_api_enf_default_policy);
+            default:
+            case HIDDEN_API_ENFORCEMENT_DISABLED:
+                return getString(R.string.hidden_api_enf_policy_none);
+            case HIDDEN_API_ENFORCEMENT_JUST_WARN:
+                return getString(R.string.hidden_api_enf_policy_warn);
+            case HIDDEN_API_ENFORCEMENT_ENABLED:
+                return getString(R.string.hidden_api_enf_policy_dark_grey_and_black);
+            case HIDDEN_API_ENFORCEMENT_BLACK:
+                return getString(R.string.hidden_api_enf_policy_black);
         }
     }
 

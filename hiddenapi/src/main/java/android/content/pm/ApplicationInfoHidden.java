@@ -3,6 +3,7 @@ package android.content.pm;
 
 import android.os.Build;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import dev.rikka.tools.refine.RefineAs;
@@ -56,9 +57,11 @@ public class ApplicationInfoHidden {
      * <p>
      * If non-null, the application will always be launched with this ABI.
      */
+    @Nullable
     public String primaryCpuAbi;
 
     @RequiresApi(Build.VERSION_CODES.Q)
+    @Nullable
     public String zygotePreloadName;
 
     @RequiresApi(Build.VERSION_CODES.P)

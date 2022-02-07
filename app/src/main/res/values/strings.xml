@@ -1178,4 +1178,12 @@
     <string name="failed_to_enable_magisk_deny_list">Could not enable Magisk DenyList</string>
     <string name="failed_to_disable_magisk_deny_list">Could not disable Magisk DenyList</string>
     <string name="mode_of_op_with_inferred_mode_of_op">%1$s (Inferred mode: %2$s)</string>
+    <string name="primary_abi">Primary ABI</string>
+    <string name="zygote_preload_name">Zygote preload name</string>
+    <string name="hidden_api_enforcement_policy">Hidden API enforcement policy</string>
+    <string name="hidden_api_enf_default_policy">Default (based on application type)</string>
+    <string name="hidden_api_enf_policy_none">None (full-access to the hidden API)</string>
+    <string name="hidden_api_enf_policy_warn">Warn (full-access to the hidden API but issues warnings)</string>
+    <string name="hidden_api_enf_policy_dark_grey_and_black">Enforce (dark-grey and black lists)</string>
+    <string name="hidden_api_enf_policy_black">Enforce (blacklists only)</string>
 </resources>

@@ -298,6 +298,14 @@ public class AppInfoViewModel extends AndroidViewModel {
             }
             // Set main activity
             appInfo.mainActivity = pm.getLaunchIntentForPackage(packageName);
+            // SELinux
+            appInfo.seInfo = ApplicationInfoCompat.getSeInfo(applicationInfo);
+            // Primary ABI
+            appInfo.primaryCpuAbi = ApplicationInfoCompat.getPrimaryCpuAbi(applicationInfo);
+            // zygotePreloadName
+            appInfo.zygotePreloadName = ApplicationInfoCompat.getZygotePreloadName(applicationInfo);
+            // hiddenApiEnforcementPolicy
+            appInfo.hiddenApiEnforcementPolicy = ApplicationInfoCompat.getHiddenApiEnforcementPolicy(applicationInfo);
         }
         this.appInfo.postValue(appInfo);
     }
@@ -374,6 +382,7 @@ public class AppInfoViewModel extends AndroidViewModel {
         public List<String> extDataDirs;
         @Nullable
         public String jniDir;
+        // Data usage
         @Nullable
         public AppUsageStatsManager.DataUsage dataUsage;
         @Nullable
@@ -383,5 +392,12 @@ public class AppInfoViewModel extends AndroidViewModel {
         public String installerApp;
         @Nullable
         public Intent mainActivity;
+        @Nullable
+        public String seInfo;
+        @Nullable
+        public String primaryCpuAbi;
+        @Nullable
+        public String zygotePreloadName;
+        public int hiddenApiEnforcementPolicy;
     }
 }
