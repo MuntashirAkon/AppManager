@@ -1018,7 +1018,6 @@
     <string name="wireless_debugging_not_supported">Fehlersucher über Funk wird auf dieser Plattform nicht unterstützt.</string>
     <string name="wireless_debugging">Fehlersuche über WLAN</string>
     <string name="unknown_net_policy">Unbekannte Netz-Richtlinie (%1$s - %2$X)</string>
-    <string name="fallback_to_no_root_mode">Fallback zum No-Root-Modus\?</string>
     <string name="failed_to_prevent_background_run">Konnte nicht verhindern, dass %1$s im Hintergrund läuft</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">Konnte die App aufgrund von Signaturfehlern nicht installieren. Die App wurde deinstalliert, ohne ihre Daten zu löschen.</string>
     <string name="community">Gemeinschaft</string>
@@ -1100,8 +1099,51 @@
     <string name="search_type_contains">Enthält</string>
     <string name="search_type_suffix">Suffix</string>
     <string name="search_type_prefix">Prefix</string>
-    <string name="search_type_regular_expressions">Regex</string>
+    <string name="search_type_regular_expressions">Regulärer Ausdruck</string>
     <string name="search_type_fuzzy">Fuzzy</string>
     <string name="pref_intent_firewall_and_disable_description">Blockieren Sie Komponenten mit der Intent Firewall und deaktivieren Sie sie. Empfohlene Methode für Root-Benutzer.</string>
     <string name="pref_intent_firewall_description">Komponenten nur mit Intent Firewall blockieren. Nicht empfohlen, da einige Systemanwendungen Firewalls umgehen können.</string>
+    <plurals name="usage_seconds">
+        <item quantity="one">%1$d Sekunde</item>
+        <item quantity="other">%1$d Sekunden</item>
+    </plurals>
+    <string name="vt_checking">VirusTotal: Überprüft…</string>
+    <string name="vt_uploading">VirusTotal: Hochladen…</string>
+    <string name="vt_failed">VirusTotal: Fehlgeschlagen</string>
+    <string name="vt_success">VirusTotal: %1$d/%2$d</string>
+    <string name="vt_scan_date">Datum des Scans: %1$s</string>
+    <string name="vt_slowness_warning">Je nach Internetgeschwindigkeit und Auslastung des Servers kann dies eine Weile dauern.</string>
+    <string name="pref_vt_apikey_summary">Aktivieren Sie das Scannen von APK-Dateien über VirusTotal.</string>
+    <string name="uses_play_app_signing">Play App signieren</string>
+    <string name="scan_in_vt">In VirusTotal scannen</string>
+    <string name="parent_process_id">Übergeordnete Prozess ID</string>
+    <string name="priority">Priorität</string>
+    <string name="threads">Thread Count</string>
+    <string name="state">Prozess-Status</string>
+    <string name="swap_chart_info">● %1$s benutzt ● %2$s frei</string>
+    <string name="memory_chart_info">● %1$s Anwendungen ● %2$s Cached ● %3$s Puffer ● %4$s frei</string>
+    <string name="magisk_denylist">Magisk DenyList</string>
+    <string name="vt_permalink">Dauerhafter Link zu VirusTotal</string>
+    <plurals name="usage_minutes">
+        <item quantity="one">%1$d Minute</item>
+        <item quantity="other">%1$d Minuten</item>
+    </plurals>
+    <string name="vt_queued">VirusTotal: Eingereiht</string>
+    <string name="pref_vt_apikey_description">Mit einem API-Schlüssel kann App Manager APK-Dateien zu VirusTotal hochladen und Berichte abrufen. Melden Sie sich unter https://virustotal.com an, um einen kostenlosen API-Schlüssel zu erhalten.</string>
+    <string name="toggle_internet">Nutze das Internet</string>
+    <string name="vt_disclaimer">VirusTotal und seine Logos sind eine Marke von Chronicle LLC. Weder App Manager - der API-Client - noch seine Autoren sind für Daten verantwortlich, die Sie an VirusTotal senden.</string>
+    <string name="pref_vt_apikey">VirusTotal API-Schlüssel</string>
+    <string name="uses_play_app_signing_description">Diese App enthält bestimmte Markierungen, die darauf hinweisen, dass sie <i>möglicherweise</i> die <a href="https://support.google.com/googleplay/android-developer/answer/9842756">Play-App-Signatur</a> verwendet. Bei diesem Schema werden die Signierschlüssel auf den Servern von Google gespeichert und Google ist für das Signieren der App verantwortlich. Beachten Sie, dass übereinstimmende Signaturinformationen die einzige Möglichkeit sind, um zu überprüfen, ob die App von einer anderen Person als dem Entwickler (und in diesem Fall auch von Google) geändert wurde.</string>
+    <string name="process_id">Prozess ID</string>
+    <string name="virtual_memory">Virtueller Speicher</string>
+    <string name="cpu_percent">%% CPU</string>
+    <string name="swap">Swap</string>
+    <string name="cpu_time">CPU-Zeit</string>
+    <string name="commandline_args">Kommandozeilen-Argumente</string>
+    <string name="failed_to_change_app_op_mode">Der Betriebsmodus der App konnte nicht geändert werden.</string>
+    <string name="failed_to_use_the_current_mode_of_operation">Der aktuelle Betriebsmodus kann nicht verwendet werden. Rückkehr zum no-root Modus für diese Sitzung.</string>
+    <string name="warning_working_on_root_mode">Warnung: Arbeiten im Root- statt im ADB-Modus.</string>
+    <string name="failed_to_enable_magisk_deny_list">Magisk DenyList konnte nicht aktiviert werden</string>
+    <string name="failed_to_disable_magisk_deny_list">Magisk DenyList konnte nicht deaktiviert werden</string>
+    <string name="mode_of_op_with_inferred_mode_of_op">%1$s (Abgeleiteter Modus: %2$s)</string>
 </resources>
