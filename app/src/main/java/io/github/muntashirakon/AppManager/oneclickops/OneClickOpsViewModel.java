@@ -25,6 +25,7 @@ import io.github.muntashirakon.AppManager.compat.StorageManagerCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
@@ -80,6 +81,8 @@ public class OneClickOpsViewModel extends AndroidViewModel {
                         UserHandleHidden.myUserId())) {
                     if (Thread.currentThread().isInterrupted()) return;
                     ApplicationInfo applicationInfo = packageInfo.applicationInfo;
+                    if (!Ops.isRoot() && !PackageUtils.isTestOnlyApp(applicationInfo))
+                        continue;
                     if (!systemApps && (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0)
                         continue;
                     trackerCount = getTrackerCountForApp(packageInfo);
@@ -103,6 +106,8 @@ public class OneClickOpsViewModel extends AndroidViewModel {
                         flagMatchUninstalled,
                         UserHandleHidden.myUserId())) {
                     if (Thread.currentThread().isInterrupted()) return;
+                    if (!Ops.isRoot() && !PackageUtils.isTestOnlyApp(applicationInfo))
+                        continue;
                     if (!systemApps && (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0)
                         continue;
                     ItemCount componentCount = new ItemCount();

@@ -562,6 +562,10 @@ public final class PackageUtils {
         return -1;
     }
 
+    public static boolean isTestOnlyApp(@NonNull ApplicationInfo applicationInfo) {
+        return (applicationInfo.flags & ApplicationInfo.FLAG_TEST_ONLY) != 0;
+    }
+
     @NonNull
     public static String getSourceDir(@NonNull ApplicationInfo applicationInfo) {
         String sourceDir = new File(applicationInfo.publicSourceDir).getParent(); // or applicationInfo.sourceDir

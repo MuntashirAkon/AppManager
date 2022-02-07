@@ -88,8 +88,13 @@ public class OneClickOpsActivity extends BaseActivity {
         mItemCreator.addItemWithTitleSubtitle(getString(R.string.block_unblock_trackers),
                         getString(R.string.block_unblock_trackers_description))
                 .setOnClickListener(v -> {
-                    if (!Ops.isRoot()) {
-                        UIUtils.displayShortToast(R.string.only_works_in_root_mode);
+                    if (!Ops.isPrivileged()) {
+                        UIUtils.displayShortToast(R.string.only_works_in_root_or_adb_mode);
+                        return;
+                    }
+                    if (Ops.isAdb() && !Ops.isRoot()) {
+                        mProgressIndicator.show();
+                        mViewModel.blockTrackers(true);
                         return;
                     }
                     new MaterialAlertDialogBuilder(this)
@@ -108,8 +113,8 @@ public class OneClickOpsActivity extends BaseActivity {
         mItemCreator.addItemWithTitleSubtitle(getString(R.string.block_components_dots),
                         getString(R.string.block_components_description))
                 .setOnClickListener(v -> {
-                    if (!Ops.isRoot()) {
-                        UIUtils.displayShortToast(R.string.only_works_in_root_mode);
+                    if (!Ops.isPrivileged()) {
+                        UIUtils.displayShortToast(R.string.only_works_in_root_or_adb_mode);
                         return;
                     }
                     new TextInputDialogBuilder(this, R.string.input_signatures)

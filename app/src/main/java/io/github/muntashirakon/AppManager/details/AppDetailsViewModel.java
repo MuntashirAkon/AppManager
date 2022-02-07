@@ -92,6 +92,7 @@ import io.github.muntashirakon.AppManager.types.PackageChangeReceiver;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 
 import static io.github.muntashirakon.AppManager.appops.AppOpsManager.OP_NONE;
@@ -260,6 +261,10 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @AnyThread
     public int getApkFileKey() {
         return mApkFileKey;
+    }
+
+    public boolean isTestOnlyApp() {
+        return mPackageInfo != null && PackageUtils.isTestOnlyApp(mPackageInfo.applicationInfo);
     }
 
     @AnyThread

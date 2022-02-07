@@ -155,8 +155,8 @@ public class ImportExportRulesDialogFragment extends BottomSheetDialogFragment {
     }
 
     private void importExistingRules(final boolean systemApps) {
-        if (!Ops.isRoot()) {
-            Toast.makeText(activity, R.string.only_works_in_root_mode, Toast.LENGTH_SHORT).show();
+        if (!Ops.isPrivileged()) {
+            Toast.makeText(activity, R.string.only_works_in_root_or_adb_mode, Toast.LENGTH_SHORT).show();
             return;
         }
         activity.progressIndicator.show();

@@ -324,10 +324,12 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
         if (mMainModel == null || mMainModel.getIsExternalApk()) {
             return;
         }
-        if (mNeededProperty == APP_INFO) super.onPrepareOptionsMenu(menu);
-        else if (mNeededProperty <= PROVIDERS) {
-            if (Ops.isRoot())
+        if (mNeededProperty == APP_INFO) {
+            super.onPrepareOptionsMenu(menu);
+        } else if (mNeededProperty <= PROVIDERS) {
+            if (Ops.isRoot()) {
                 menu.findItem(sSortMenuItemIdsMap[mMainModel.getSortOrder(mNeededProperty)]).setChecked(true);
+            }
         } else if (mNeededProperty <= USES_PERMISSIONS) {
             menu.findItem(sSortMenuItemIdsMap[mMainModel.getSortOrder(mNeededProperty)]).setChecked(true);
         }
@@ -376,7 +378,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
         } else if (id == R.id.action_toggle_default_app_ops) {  // App ops
             showProgressIndicator(true);
             // Turn filter on/off
-            boolean curr = (boolean) AppPref.get(AppPref.PrefKey.PREF_APP_OP_SHOW_DEFAULT_BOOL);
+            boolean curr = AppPref.getBoolean(AppPref.PrefKey.PREF_APP_OP_SHOW_DEFAULT_BOOL);
             AppPref.set(AppPref.PrefKey.PREF_APP_OP_SHOW_DEFAULT_BOOL, !curr);
             refreshDetails();
         } else if (id == R.id.action_custom_app_op) {
@@ -624,8 +626,9 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
         private int mRequestedProperty;
         @Nullable
         private String mConstraint;
-        private Boolean mIsRootEnabled = true;
-        private Boolean mIsADBEnabled = true;
+        private boolean mIsRootEnabled = true;
+        private boolean mIsADBEnabled = true;
+        private boolean mTestOnlyApp;
 
         AppDetailsRecyclerAdapter() {
             mAdapterList = new ArrayList<>();
@@ -637,6 +640,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             mIsADBEnabled = Ops.isAdb();
             mRequestedProperty = mNeededProperty;
             mConstraint = mMainModel == null ? null : mMainModel.getSearchQuery();
+            mTestOnlyApp = mMainModel != null && mMainModel.isTestOnlyApp();
             showProgressIndicator(false);
             synchronized (mAdapterList) {
                 mAdapterList.clear();
@@ -1025,7 +1029,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                 holder.editBtn.setVisibility(View.GONE);
             }
             // Blocking
-            if (mIsRootEnabled && !mIsExternalApk) {
+            if (!mIsExternalApk && (Ops.isRoot() || (Ops.isPrivileged() && mTestOnlyApp))) {
                 handleBlock(holder, componentItem, RuleType.ACTIVITY);
             } else holder.blockBtn.setVisibility(View.GONE);
         }
@@ -1096,7 +1100,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                 });
             }
             // Blocking
-            if (mIsRootEnabled && !mIsExternalApk) {
+            if (!mIsExternalApk && (Ops.isRoot() || (Ops.isPrivileged() && mTestOnlyApp))) {
                 handleBlock(holder, serviceItem, RuleType.SERVICE);
             } else holder.blockBtn.setVisibility(View.GONE);
         }
@@ -1151,7 +1155,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                         getString(R.string.process_name), processName));
             } else holder.textView7.setVisibility(View.GONE);
             // Blocking
-            if (mIsRootEnabled && !mIsExternalApk) {
+            if (!mIsExternalApk && (Ops.isRoot() || (Ops.isPrivileged() && mTestOnlyApp))) {
                 handleBlock(holder, componentItem, RuleType.RECEIVER);
             } else holder.blockBtn.setVisibility(View.GONE);
         }
@@ -1229,7 +1233,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                         getString(R.string.process_name), processName));
             } else holder.textView7.setVisibility(View.GONE);
             // Blocking
-            if (mIsRootEnabled && !mIsExternalApk) {
+            if (!mIsExternalApk && (Ops.isRoot() || (Ops.isPrivileged() && mTestOnlyApp))) {
                 handleBlock(holder, componentItem, RuleType.PROVIDER);
             } else holder.blockBtn.setVisibility(View.GONE);
         }

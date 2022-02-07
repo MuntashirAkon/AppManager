@@ -179,20 +179,23 @@ public final class ComponentsBlocker extends RulesStorageManager {
      *
      * @param context    Application Context
      * @param userHandle The user to apply rules
+     * @return {@code true} iff all rules are applied correctly.
      */
     @WorkerThread
-    public static void applyAllRules(@NonNull Context context, int userHandle) {
+    public static boolean applyAllRules(@NonNull Context context, int userHandle) {
         // Apply all rules from conf folder
         File confPath = new File(context.getFilesDir(), "conf");
         String[] packageNamesWithTSVExt = confPath.list((dir, name) -> name.endsWith(".tsv"));
+        boolean isSuccessful = true;
         if (packageNamesWithTSVExt != null) {
             // Apply rules
             for (String packageNameWithTSVExt : packageNamesWithTSVExt) {
                 try (ComponentsBlocker cb = getMutableInstance(FileUtils.trimExtension(packageNameWithTSVExt), userHandle)) {
-                    cb.applyRules(true);
+                    isSuccessful &= cb.applyRules(true);
                 }
             }
         }
+        return isSuccessful;
     }
 
     /**
@@ -389,10 +392,15 @@ public final class ComponentsBlocker extends RulesStorageManager {
      */
     @WorkerThread
     public boolean applyRules(boolean apply) {
+        // Check root. If no root is present, check if the app is test-only.
+        if (!Ops.isRoot() && !(Ops.isPrivileged() && mPackageInfo != null
+                && PackageUtils.isTestOnlyApp(mPackageInfo.applicationInfo))) {
+            return false;
+        }
         // Validate components
         validateComponents();
         // Save blocked IFW components or remove them based on the value of apply
-        if (!saveDisabledComponents(apply)) {
+        if (Ops.isRoot() && !saveDisabledComponents(apply)) {
             return false;
         }
         // Enable/disable components
