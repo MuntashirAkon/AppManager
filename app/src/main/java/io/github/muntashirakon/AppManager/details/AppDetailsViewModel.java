@@ -71,7 +71,12 @@ import io.github.muntashirakon.AppManager.details.struct.AppDetailsServiceItem;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView.ChoiceGenerator;
+import io.github.muntashirakon.AppManager.permission.DevelopmentPermission;
+import io.github.muntashirakon.AppManager.permission.PermUtils;
 import io.github.muntashirakon.AppManager.permission.Permission;
+import io.github.muntashirakon.AppManager.permission.PermissionException;
+import io.github.muntashirakon.AppManager.permission.ReadOnlyPermission;
+import io.github.muntashirakon.AppManager.permission.RuntimePermission;
 import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
@@ -573,14 +578,16 @@ public class AppDetailsViewModel extends AndroidViewModel {
         if (mIsExternalApk) return false;
         boolean isSuccessful;
         try {
-            if (!permissionItem.permission.isGranted()) {
+            if (!permissionItem.isGranted()) {
                 Log.d(TAG, "Granting permission: " + permissionItem.name);
-                isSuccessful = permissionItem.grantPermission(mPackageInfo, mAppOpsService);
+                permissionItem.grantPermission(mPackageInfo, mAppOpsService);
+                isSuccessful = true;
             } else {
                 Log.d(TAG, "Revoking permission: " + permissionItem.name);
-                isSuccessful = permissionItem.revokePermission(mPackageInfo, mAppOpsService);
+                permissionItem.revokePermission(mPackageInfo, mAppOpsService);
+                isSuccessful = true;
             }
-        } catch (RemoteException e) {
+        } catch (RemoteException | PermissionException e) {
             e.printStackTrace();
             return false;
         }
@@ -609,10 +616,9 @@ public class AppDetailsViewModel extends AndroidViewModel {
             for (AppDetailsPermissionItem permissionItem : mUsesPermissionItems) {
                 if (!permissionItem.isDangerous || !permissionItem.permission.isGranted()) continue;
                 try {
-                    if (permissionItem.revokePermission(mPackageInfo, mAppOpsService)) {
-                        revokedPermissions.add(permissionItem);
-                    }
-                } catch (RemoteException e) {
+                    permissionItem.revokePermission(mPackageInfo, mAppOpsService);
+                    revokedPermissions.add(permissionItem);
+                } catch (RemoteException | PermissionException e) {
                     e.printStackTrace();
                     isSuccessful = false;
                 }
@@ -1420,7 +1426,16 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     } catch (RemoteException ignore) {
                     }
                     int flags = mPackageInfo.requestedPermissionsFlags[i];
-                    Permission permission = new Permission(permissionName, isGranted, appOp, appOpAllowed, permissionFlags);
+                    int protection = PermissionInfoCompat.getProtection(permissionInfo);
+                    int protectionFlags = PermissionInfoCompat.getProtectionFlags(permissionInfo);
+                    Permission permission;
+                    if (protection == PermissionInfo.PROTECTION_DANGEROUS && PermUtils.systemSupportsRuntimePermissions()) {
+                        permission = new RuntimePermission(permissionName, isGranted, appOp, appOpAllowed, permissionFlags);
+                    } else if ((protectionFlags & PermissionInfo.PROTECTION_FLAG_DEVELOPMENT) != 0) {
+                        permission = new DevelopmentPermission(permissionName, isGranted, appOp, appOpAllowed, permissionFlags);
+                    } else {
+                        permission = new ReadOnlyPermission(permissionName, isGranted, appOp, appOpAllowed, permissionFlags);
+                    }
                     AppDetailsPermissionItem appDetailsItem = new AppDetailsPermissionItem(permissionInfo, permission, flags);
                     appDetailsItem.name = permissionName;
                     mUsesPermissionItems.add(appDetailsItem);

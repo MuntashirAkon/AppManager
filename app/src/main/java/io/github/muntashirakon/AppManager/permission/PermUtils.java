@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.permission;
 
+import android.annotation.UserIdInt;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.os.Build;
 import android.os.RemoteException;
@@ -16,6 +18,7 @@ import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.servermanager.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
+import io.github.muntashirakon.AppManager.settings.Ops;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static io.github.muntashirakon.AppManager.servermanager.PermissionCompat.FLAG_PERMISSION_AUTO_REVOKED;
@@ -35,27 +38,25 @@ public class PermUtils {
      *
      * @param setByTheUser   If the user has made the decision. This does not unset the flag
      * @param fixedByTheUser If the user requested that she/he does not want to be asked again
-     * @return {@code true} iff the permission could be granted.
      */
     @WorkerThread
-    public static boolean grantPermission(@NonNull PackageInfo packageInfo,
-                                          @NonNull Permission permission,
-                                          @NonNull AppOpsService appOpsService,
-                                          boolean setByTheUser,
-                                          boolean fixedByTheUser)
-            throws RemoteException {
+    public static void grantPermission(@NonNull PackageInfo packageInfo,
+                                       @NonNull Permission permission,
+                                       @NonNull AppOpsService appOpsService,
+                                       boolean setByTheUser,
+                                       boolean fixedByTheUser)
+            throws RemoteException, PermissionException {
         boolean killApp = false;
         boolean wasGranted = permission.isGrantedIncludingAppOp();
 
-        // We toggle permission only to apps that support runtime
-        // permissions, otherwise we toggle the app op corresponding
-        // to the permission if the permission is granted to the app.
-        // Do not touch permissions fixed by the system.
-        if (permission.isSystemFixed()) {
-            return false;
+        if (!isModifiable(permission)) {
+            // Unmodifiable permission, do nothing
+            throw new PermissionException("Unmodifiable permission " + permission.getName());
         }
 
-        if (supportsRuntimePermissions(packageInfo)) {
+        if (!permission.isReadOnly() && (!permission.isRuntime() || supportsRuntimePermissions(packageInfo.applicationInfo))) {
+            // Runtime/development permissions. In case of runtime, it is not a pre23 app.
+
             // Ensure the permission app op is enabled before the permission grant.
             if (permission.affectsAppOp() && !permission.isAppOpAllowed()) {
                 permission.setAppOpAllowed(true);
@@ -86,10 +87,10 @@ public class PermUtils {
                     permission.setUserSet(false);
                 }
             }
-        } else {
-            // Legacy apps cannot have a not granted permission but just in case.
-            if (!permission.isGranted()) {
-                return false;
+        } else { // Read-only or legacy permissions
+            // Legacy apps cannot have a not granted runtime permission but just in case.
+            if (permission.isRuntime() && !permission.isGranted()) {
+                throw new PermissionException("Legacy app cannot have not-granted runtime permission " + permission.getName());
             }
 
             // If the permissions has no corresponding app op, then it is a
@@ -118,12 +119,11 @@ public class PermUtils {
             }
         }
 
-        persistChanges(packageInfo, permission, appOpsService, false, null);
+        persistChanges(packageInfo.applicationInfo, permission, appOpsService, false, null);
+
         if (killApp) {
             ActivityManagerCompat.killUid(packageInfo.applicationInfo.uid, KILL_REASON_APP_OP_CHANGE);
         }
-
-        return true;
     }
 
     /**
@@ -132,25 +132,23 @@ public class PermUtils {
      * <p>This also disallows the app op for the permission if it has app op.
      *
      * @param fixedByTheUser If the user requested that she/he does not want to be asked again
-     * @return {@code true} iff the permission could be revoked.
      */
     @WorkerThread
-    public static boolean revokePermission(@NonNull PackageInfo packageInfo,
-                                           @NonNull Permission permission,
-                                           @NonNull AppOpsService appOpsService,
-                                           boolean fixedByTheUser)
-            throws RemoteException {
+    public static void revokePermission(@NonNull PackageInfo packageInfo,
+                                        @NonNull Permission permission,
+                                        @NonNull AppOpsService appOpsService,
+                                        boolean fixedByTheUser)
+            throws RemoteException, PermissionException {
         boolean killApp = false;
 
-        // We toggle permissions only to apps that support runtime
-        // permissions, otherwise we toggle the app op corresponding
-        // to the permission if the permission is granted to the app.
-        // Do not touch permissions fixed by the system.
-        if (permission.isSystemFixed()) {
-            return false;
+        if (!isModifiable(permission)) {
+            // Unmodifiable permission, do nothing
+            throw new PermissionException("Unmodifiable permission " + permission.getName());
         }
 
-        if (supportsRuntimePermissions(packageInfo)) {
+        if (!permission.isReadOnly() && (!permission.isRuntime() || supportsRuntimePermissions(packageInfo.applicationInfo))) {
+            // Runtime/development permissions. In case of runtime, it is not a pre23 app.
+
             // Revoke the permission if needed.
             if (permission.isGranted()) {
                 permission.setGranted(false);
@@ -173,10 +171,10 @@ public class PermUtils {
             if (permission.affectsAppOp()) {
                 permission.setAppOpAllowed(false);
             }
-        } else {
+        } else { // Read-only or legacy permissions
             // Legacy apps cannot have a non-granted permission but just in case.
-            if (!permission.isGranted()) {
-                return false;
+            if (permission.isRuntime() && !permission.isGranted()) {
+                throw new PermissionException("Legacy app cannot have not-granted runtime permission " + permission.getName());
             }
 
             // If the permission has no corresponding app op, then it is a
@@ -198,46 +196,71 @@ public class PermUtils {
             }
         }
 
-        persistChanges(packageInfo, permission, appOpsService, false, null);
+        persistChanges(packageInfo.applicationInfo, permission, appOpsService, false, null);
 
         if (killApp) {
             ActivityManagerCompat.killUid(packageInfo.applicationInfo.uid, KILL_REASON_APP_OP_CHANGE);
         }
-
-        return true;
     }
 
     @WorkerThread
-    private static void persistChanges(@NonNull PackageInfo packageInfo,
+    private static void persistChanges(@NonNull ApplicationInfo applicationInfo,
                                        @NonNull Permission permission,
                                        @NonNull AppOpsService appOpsService,
                                        boolean mayKillBecauseOfAppOpsChange,
                                        @Nullable String revokeReason)
             throws RemoteException {
-        int uid = packageInfo.applicationInfo.uid;
+        int uid = applicationInfo.uid;
         int userId = UserHandleHidden.getUserId(uid);
 
         boolean shouldKillApp = false;
 
-        if (!permission.isSystemFixed()) {
+        if (!permission.isReadOnly()) {
             if (permission.isGranted()) {
-                PermissionCompat.grantPermission(packageInfo.packageName, permission.getName(), userId);
+                PermissionCompat.grantPermission(applicationInfo.packageName, permission.getName(), userId);
                 Log.d("PERM", "Granted " + permission.getName());
             } else {
                 boolean isCurrentlyGranted = PermissionCompat.checkPermission(permission.getName(),
-                        packageInfo.packageName, userId) == PERMISSION_GRANTED;
+                        applicationInfo.packageName, userId) == PERMISSION_GRANTED;
 
                 if (isCurrentlyGranted) {
                     if (revokeReason == null) {
-                        PermissionCompat.revokePermission(packageInfo.packageName, permission.getName(), userId);
+                        PermissionCompat.revokePermission(applicationInfo.packageName, permission.getName(), userId);
                     } else {
-                        PermissionCompat.revokePermission(packageInfo.packageName, permission.getName(), userId, revokeReason);
+                        PermissionCompat.revokePermission(applicationInfo.packageName, permission.getName(), userId, revokeReason);
                     }
                     Log.d("PERM", "Revoked " + permission.getName());
                 }
             }
         }
 
+        if (!permission.readOnly) {
+            // Flags of the system fixed permissions may also be updated
+            updateFlags(applicationInfo, permission, userId);
+        }
+
+        if (permission.affectsAppOp()) {
+            if (!permission.isSystemFixed()) {
+                // FIXME: 7/2/22 Disable system fixed check?
+                // Enabling/Disabling an app op may put the app in a situation in which it has
+                // a handle to state it shouldn't have, so we have to kill the app. This matches
+                // the revoke runtime permission behavior.
+                if (permission.isAppOpAllowed()) {
+                    boolean wasChanged = allowAppOp(appOpsService, permission.getAppOp(), applicationInfo.packageName, uid);
+                    shouldKillApp = wasChanged && !supportsRuntimePermissions(applicationInfo);
+                } else {
+                    shouldKillApp = disallowAppOp(appOpsService, permission.getAppOp(), applicationInfo.packageName, uid);
+                }
+            }
+        }
+
+        if (mayKillBecauseOfAppOpsChange && shouldKillApp) {
+            ActivityManagerCompat.killUid(uid, KILL_REASON_APP_OP_CHANGE);
+        }
+    }
+
+    private static void updateFlags(@NonNull ApplicationInfo applicationInfo, @NonNull Permission permission,
+                                    @UserIdInt int userId) throws RemoteException {
         int flags = (permission.isUserSet() ? FLAG_PERMISSION_USER_SET : 0)
                 | (permission.isUserFixed() ? FLAG_PERMISSION_USER_FIXED : 0)
                 | (permission.isRevokedCompat()
@@ -246,10 +269,10 @@ public class PermUtils {
                 | (permission.isReviewRequired()
                 ? FLAG_PERMISSION_REVIEW_REQUIRED : 0);
 
-        boolean checkAdjustPolicy = PermissionCompat.getCheckAdjustPolicyFlagPermission(packageInfo.applicationInfo);
+        boolean checkAdjustPolicy = PermissionCompat.getCheckAdjustPolicyFlagPermission(applicationInfo);
 
         PermissionCompat.updatePermissionFlags(permission.getName(),
-                packageInfo.packageName,
+                applicationInfo.packageName,
                 FLAG_PERMISSION_USER_SET
                         | FLAG_PERMISSION_USER_FIXED
                         | FLAG_PERMISSION_REVOKED_COMPAT
@@ -259,24 +282,6 @@ public class PermUtils {
                         | FLAG_PERMISSION_ONE_TIME
                         | FLAG_PERMISSION_AUTO_REVOKED, // clear auto revoke
                 flags, checkAdjustPolicy, userId);
-
-        if (permission.affectsAppOp()) {
-            if (!permission.isSystemFixed()) {
-                // Enabling/Disabling an app op may put the app in a situation in which it has
-                // a handle to state it shouldn't have, so we have to kill the app. This matches
-                // the revoke runtime permission behavior.
-                if (permission.isAppOpAllowed()) {
-                    boolean wasChanged = allowAppOp(appOpsService, permission.getAppOp(), packageInfo.packageName, uid);
-                    shouldKillApp = wasChanged && !supportsRuntimePermissions(packageInfo);
-                } else {
-                    shouldKillApp = disallowAppOp(appOpsService, permission.getAppOp(), packageInfo.packageName, uid);
-                }
-            }
-        }
-
-        if (mayKillBecauseOfAppOpsChange && shouldKillApp) {
-            ActivityManagerCompat.killUid(uid, KILL_REASON_APP_OP_CHANGE);
-        }
     }
 
     public static boolean allowAppOp(AppOpsService appOpsService, int appOp, String packageName, int uid)
@@ -308,7 +313,16 @@ public class PermUtils {
         return true;
     }
 
-    public static boolean supportsRuntimePermissions(@NonNull PackageInfo packageInfo) {
-        return packageInfo.applicationInfo.targetSdkVersion > Build.VERSION_CODES.LOLLIPOP_MR1;
+    private static boolean supportsRuntimePermissions(@NonNull ApplicationInfo applicationInfo) {
+        return applicationInfo.targetSdkVersion > Build.VERSION_CODES.LOLLIPOP_MR1;
+    }
+
+    public static boolean systemSupportsRuntimePermissions() {
+        return Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1;
+    }
+
+    public static boolean isModifiable(@NonNull Permission permission) {
+        // Non-readonly permissions or permissions with app ops are modifiable
+        return Ops.isPrivileged() && (!permission.isReadOnly() || permission.affectsAppOp());
     }
 }

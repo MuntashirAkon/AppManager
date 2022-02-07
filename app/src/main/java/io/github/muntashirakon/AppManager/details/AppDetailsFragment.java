@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ConfigurationInfo;
 import android.content.pm.FeatureInfo;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PathPermission;
 import android.content.pm.PermissionInfo;
@@ -76,7 +75,6 @@ import io.github.muntashirakon.AppManager.details.struct.AppDetailsServiceItem;
 import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.intercept.ActivityInterceptor;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
-import io.github.muntashirakon.AppManager.permission.PermUtils;
 import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
@@ -1306,6 +1304,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                 } else holder.textView2.setVisibility(View.GONE);
                 // Protection level
                 String protectionLevel = Utils.getProtectionLevelString(permissionInfo);
+                protectionLevel += '|' + (Objects.requireNonNull(item.permission).isGranted() ? "granted" : "revoked");
                 holder.textView3.setVisibility(View.VISIBLE);
                 holder.textView3.setText(String.format(Locale.ROOT, "\u2691 %s", protectionLevel));
                 // Set package name
@@ -1402,7 +1401,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             } else holder.textView2.setVisibility(View.GONE);
             // Protection level
             String protectionLevel = Utils.getProtectionLevelString(permissionInfo);
-            protectionLevel += '|' + (permissionItem.isGranted() ? "granted" : "revoked");
+            protectionLevel += '|' + (permissionItem.permission.isGranted() ? "granted" : "revoked");
             holder.textView3.setText(String.format(Locale.ROOT, "\u2691 %s", protectionLevel));
             // Set background color
             if (permissionItem.isDangerous) {
@@ -1423,22 +1422,18 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                         LangUtils.getSeparatorString(), permissionInfo.group));
             } else holder.textView5.setVisibility(View.GONE);
             // Permission Switch
-            PackageInfo packageInfo = Objects.requireNonNull(mMainModel).getPackageInfo();
-            boolean canGrantOrRevokePermission = permissionItem.modifiable
-                    && Ops.isPrivileged()
-                    && !mIsExternalApk
-                    && PermUtils.supportsRuntimePermissions(Objects.requireNonNull(packageInfo));
+            boolean canGrantOrRevokePermission = permissionItem.modifiable && !mIsExternalApk;
             if (canGrantOrRevokePermission) {
                 holder.toggleSwitch.setVisibility(View.VISIBLE);
                 holder.toggleSwitch.setChecked(permissionItem.isGranted());
                 holder.itemView.setOnClickListener(v -> mExecutor.submit(() -> {
                     try {
-                        if (mMainModel.togglePermission(permissionItem)) {
+                        if (Objects.requireNonNull(mMainModel).togglePermission(permissionItem)) {
                             runOnUiThread(() -> notifyItemChanged(index));
                         } else throw new Exception("Couldn't grant permission: " + permName);
                     } catch (Exception e) {
                         e.printStackTrace();
-                        runOnUiThread(() -> UIUtils.displayShortToast(permissionItem.permission.isGranted()
+                        runOnUiThread(() -> UIUtils.displayShortToast(permissionItem.isGranted()
                                 ? R.string.failed_to_grant_permission
                                 : R.string.failed_to_revoke_permission));
                     }

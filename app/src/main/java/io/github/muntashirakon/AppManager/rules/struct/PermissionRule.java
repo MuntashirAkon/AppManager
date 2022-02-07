@@ -2,13 +2,21 @@
 
 package io.github.muntashirakon.AppManager.rules.struct;
 
+import android.content.pm.PermissionInfo;
+import android.os.RemoteException;
+
 import androidx.annotation.NonNull;
+import androidx.core.content.pm.PermissionInfoCompat;
 
 import java.util.Objects;
 import java.util.StringTokenizer;
 
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
+import io.github.muntashirakon.AppManager.permission.DevelopmentPermission;
+import io.github.muntashirakon.AppManager.permission.PermUtils;
 import io.github.muntashirakon.AppManager.permission.Permission;
+import io.github.muntashirakon.AppManager.permission.ReadOnlyPermission;
+import io.github.muntashirakon.AppManager.permission.RuntimePermission;
 import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
 
@@ -64,7 +72,24 @@ public class PermissionRule extends RuleEntry {
     }
 
     public Permission getPermission(boolean appOpAllowed) {
-        return new Permission(name, mIsGranted, mAppOp, appOpAllowed, mFlags);
+        PermissionInfo permissionInfo = null;
+        try {
+            permissionInfo = PermissionCompat.getPermissionInfo(name, packageName, 0);
+        } catch (RemoteException ignore) {
+        }
+        if (permissionInfo == null) {
+            permissionInfo = new PermissionInfo();
+            permissionInfo.name = name;
+        }
+        int protection = PermissionInfoCompat.getProtection(permissionInfo);
+        int protectionFlags = PermissionInfoCompat.getProtectionFlags(permissionInfo);
+        if (protection == PermissionInfo.PROTECTION_DANGEROUS && PermUtils.systemSupportsRuntimePermissions()) {
+            return new RuntimePermission(name, mIsGranted, mAppOp, appOpAllowed, mFlags);
+        } else if ((protectionFlags & PermissionInfo.PROTECTION_FLAG_DEVELOPMENT) != 0) {
+            return new DevelopmentPermission(name, mIsGranted, mAppOp, appOpAllowed, mFlags);
+        } else {
+            return new ReadOnlyPermission(name, mIsGranted, mAppOp, appOpAllowed, mFlags);
+        }
     }
 
     @NonNull

@@ -17,7 +17,10 @@ import static io.github.muntashirakon.AppManager.servermanager.PermissionCompat.
 import static io.github.muntashirakon.AppManager.servermanager.PermissionCompat.FLAG_PERMISSION_USER_SET;
 
 // Copyright (C) 2015 The Android Open Source Project
-public final class Permission {
+public class Permission {
+    boolean runtime;
+    boolean readOnly;
+
     private final String mName;
     private final int mAppOp;
 
@@ -32,6 +35,16 @@ public final class Permission {
         mAppOp = appOp;
         mAppOpAllowed = appOpAllowed;
         mFlags = flags;
+        runtime = true;
+        readOnly = false;
+    }
+
+    public boolean isRuntime() {
+        return runtime;
+    }
+
+    public boolean isReadOnly() {
+        return readOnly || isSystemFixed();
     }
 
     public String getName() {
@@ -67,7 +80,7 @@ public final class Permission {
     }
 
     public boolean isGrantedIncludingAppOp() {
-        return mGranted && (!affectsAppOp() || isAppOpAllowed()) && !isReviewRequired();
+        return mGranted && !isReviewRequired() && (!affectsAppOp() || isAppOpAllowed());
     }
 
     public boolean isReviewRequired() {
@@ -112,7 +125,7 @@ public final class Permission {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             return (mFlags & FLAG_PERMISSION_SYSTEM_FIXED) != 0;
         }
-        return true;
+        return false;
     }
 
     public boolean isPolicyFixed() {

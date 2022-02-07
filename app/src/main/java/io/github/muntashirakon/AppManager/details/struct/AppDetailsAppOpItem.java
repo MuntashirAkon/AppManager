@@ -15,8 +15,12 @@ import androidx.core.content.pm.PermissionInfoCompat;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.appops.OpEntry;
+import io.github.muntashirakon.AppManager.permission.DevelopmentPermission;
 import io.github.muntashirakon.AppManager.permission.PermUtils;
 import io.github.muntashirakon.AppManager.permission.Permission;
+import io.github.muntashirakon.AppManager.permission.PermissionException;
+import io.github.muntashirakon.AppManager.permission.ReadOnlyPermission;
+import io.github.muntashirakon.AppManager.permission.RuntimePermission;
 
 public class AppDetailsAppOpItem extends AppDetailsItem<OpEntry> {
     @Nullable
@@ -44,10 +48,16 @@ public class AppDetailsAppOpItem extends AppDetailsItem<OpEntry> {
         super(opEntry);
         this.permissionInfo = permissionInfo;
         this.appContainsPermission = appContainsPermission;
-        permission = new Permission(permissionInfo.name, isGranted, opEntry.getOp(), isAllowed(), permissionFlags);
         isDangerous = PermissionInfoCompat.getProtection(permissionInfo) == PermissionInfo.PROTECTION_DANGEROUS;
-        hasModifiablePermission = !permission.isSystemFixed() && appContainsPermission && (isDangerous
-                || (PermissionInfoCompat.getProtectionFlags(permissionInfo) & PermissionInfo.PROTECTION_FLAG_DEVELOPMENT) != 0);
+        int protectionFlags = PermissionInfoCompat.getProtectionFlags(permissionInfo);
+        if (isDangerous && PermUtils.systemSupportsRuntimePermissions()) {
+            permission = new RuntimePermission(permissionInfo.name, isGranted, opEntry.getOp(), isAllowed(), permissionFlags);
+        } else if ((protectionFlags & PermissionInfo.PROTECTION_FLAG_DEVELOPMENT) != 0) {
+            permission = new DevelopmentPermission(permissionInfo.name, isGranted, opEntry.getOp(), isAllowed(), permissionFlags);
+        } else {
+            permission = new ReadOnlyPermission(permissionInfo.name, isGranted, opEntry.getOp(), isAllowed(), permissionFlags);
+        }
+        hasModifiablePermission = PermUtils.isModifiable(permission);
     }
 
     public boolean isAllowed() {
@@ -72,10 +82,11 @@ public class AppDetailsAppOpItem extends AppDetailsItem<OpEntry> {
      */
     @WorkerThread
     public boolean allowAppOp(@NonNull PackageInfo packageInfo, @NonNull AppOpsService appOpsService)
-            throws RemoteException {
+            throws RemoteException, PermissionException {
         boolean isSuccessful;
         if (hasModifiablePermission && permission != null) {
-            isSuccessful = PermUtils.grantPermission(packageInfo, permission, appOpsService, true, true);
+            PermUtils.grantPermission(packageInfo, permission, appOpsService, true, true);
+            isSuccessful = true;
         } else {
             isSuccessful = PermUtils.allowAppOp(appOpsService, vanillaItem.getOp(), packageInfo.packageName,
                     packageInfo.applicationInfo.uid);
@@ -94,10 +105,11 @@ public class AppDetailsAppOpItem extends AppDetailsItem<OpEntry> {
      */
     @WorkerThread
     public boolean disallowAppOp(@NonNull PackageInfo packageInfo, AppOpsService appOpsService)
-            throws RemoteException {
+            throws RemoteException, PermissionException {
         boolean isSuccessful;
         if (hasModifiablePermission && permission != null) {
-            isSuccessful = PermUtils.revokePermission(packageInfo, permission, appOpsService, true);
+            PermUtils.revokePermission(packageInfo, permission, appOpsService, true);
+            isSuccessful = true;
         } else {
             isSuccessful = PermUtils.disallowAppOp(appOpsService, vanillaItem.getOp(), packageInfo.packageName,
                     packageInfo.applicationInfo.uid);
@@ -116,7 +128,7 @@ public class AppDetailsAppOpItem extends AppDetailsItem<OpEntry> {
      */
     @WorkerThread
     public boolean setAppOp(@NonNull PackageInfo packageInfo, AppOpsService appOpsService, @AppOpsManager.Mode int mode)
-            throws RemoteException {
+            throws RemoteException, PermissionException {
         if (hasModifiablePermission && permission != null) {
             boolean isAllowed = false;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {

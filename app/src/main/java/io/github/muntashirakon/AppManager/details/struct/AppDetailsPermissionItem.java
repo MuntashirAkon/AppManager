@@ -13,6 +13,7 @@ import androidx.core.content.pm.PermissionInfoCompat;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.permission.PermUtils;
 import io.github.muntashirakon.AppManager.permission.Permission;
+import io.github.muntashirakon.AppManager.permission.PermissionException;
 
 /**
  * Stores individual app details item
@@ -20,7 +21,7 @@ import io.github.muntashirakon.AppManager.permission.Permission;
 public class AppDetailsPermissionItem extends AppDetailsItem<PermissionInfo> {
     @NonNull
     public final Permission permission;
-    public final boolean isDangerous;
+    public final boolean isDangerous; // AKA Runtime
     public final boolean modifiable;
     public final int flags;
     public final int protectionFlags;
@@ -30,40 +31,39 @@ public class AppDetailsPermissionItem extends AppDetailsItem<PermissionInfo> {
         this.permission = permission;
         this.isDangerous = PermissionInfoCompat.getProtection(permissionInfo) == PermissionInfo.PROTECTION_DANGEROUS;
         this.protectionFlags = PermissionInfoCompat.getProtectionFlags(permissionInfo);
-        this.modifiable = !permission.isSystemFixed() && (isDangerous
-                || (protectionFlags & PermissionInfo.PROTECTION_FLAG_DEVELOPMENT) != 0);
+        this.modifiable = PermUtils.isModifiable(permission);
         this.flags = flags;
     }
 
     public boolean isGranted() {
-        // FIXME: 12/1/22 Fix by background permissions
-        return permission.isGranted() || ((protectionFlags & PermissionInfo.PROTECTION_FLAG_APPOP) != 0
-                && permission.affectsAppOp() && permission.isAppOpAllowed());
+        if (!permission.isReadOnly()) {
+            return permission.isGrantedIncludingAppOp();
+        }
+        if (permission.affectsAppOp()) {
+            return permission.isAppOpAllowed();
+        }
+        return permission.isGranted();
     }
 
     /**
      * Grant the permission.
      *
      * <p>This also automatically grants app op if it has app op.
-     *
-     * @return {@code true} iff the permission could be granted.
      */
     @WorkerThread
-    public boolean grantPermission(@NonNull PackageInfo packageInfo, @NonNull AppOpsService appOpsService)
-            throws RemoteException {
-        return PermUtils.grantPermission(packageInfo, permission, appOpsService, true, true);
+    public void grantPermission(@NonNull PackageInfo packageInfo, @NonNull AppOpsService appOpsService)
+            throws RemoteException, PermissionException {
+        PermUtils.grantPermission(packageInfo, permission, appOpsService, true, true);
     }
 
     /**
      * Revoke the permission.
      *
      * <p>This also disallows the app op for the permission if it has app op.
-     *
-     * @return {@code true} iff the permission could be revoked.
      */
     @WorkerThread
-    public boolean revokePermission(@NonNull PackageInfo packageInfo, AppOpsService appOpsService)
-            throws RemoteException {
-        return PermUtils.revokePermission(packageInfo, permission, appOpsService, true);
+    public void revokePermission(@NonNull PackageInfo packageInfo, AppOpsService appOpsService)
+            throws RemoteException, PermissionException {
+        PermUtils.revokePermission(packageInfo, permission, appOpsService, true);
     }
 }
