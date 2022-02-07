@@ -35,16 +35,13 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.rapidfuzz.RapidFuzz;
-import io.github.muntashirakon.rapidfuzz.RapidFuzzCached;
 
 public class AdvancedSearchView extends SearchView {
     @IntDef(flag = true, value = {
             SEARCH_TYPE_CONTAINS,
             SEARCH_TYPE_PREFIX,
             SEARCH_TYPE_SUFFIX,
-            SEARCH_TYPE_REGEX,
-            SEARCH_TYPE_FUZZY})
+            SEARCH_TYPE_REGEX})
     @Retention(RetentionPolicy.SOURCE)
     public @interface SearchType {
     }
@@ -73,7 +70,7 @@ public class AdvancedSearchView extends SearchView {
     @SearchType
     private int mType = SEARCH_TYPE_CONTAINS;
     @SearchType
-    private int mEnabledTypes = SEARCH_TYPE_CONTAINS | SEARCH_TYPE_PREFIX | SEARCH_TYPE_SUFFIX | SEARCH_TYPE_REGEX | SEARCH_TYPE_FUZZY;
+    private int mEnabledTypes = SEARCH_TYPE_CONTAINS | SEARCH_TYPE_PREFIX | SEARCH_TYPE_SUFFIX | SEARCH_TYPE_REGEX;
     private CharSequence mQueryHint;
     private final ImageView mSearchTypeSelectionButton;
     private final SearchAutoComplete mSearchSrcTextView;
@@ -116,8 +113,6 @@ public class AdvancedSearchView extends SearchView {
                 mType = SEARCH_TYPE_SUFFIX;
             } else if (id == R.id.action_search_type_regex) {
                 mType = SEARCH_TYPE_REGEX;
-            } else if (id == R.id.action_search_type_fuzzy) {
-                mType = SEARCH_TYPE_FUZZY;
             }
             if (mOnQueryTextListener != null) {
                 mOnQueryTextListener.onQueryTextChange(getQuery().toString(), mType);
@@ -137,9 +132,6 @@ public class AdvancedSearchView extends SearchView {
         }
         if ((mEnabledTypes & SEARCH_TYPE_REGEX) == 0) {
             menu.findItem(R.id.action_search_type_regex).setVisible(false);
-        }
-        if ((mEnabledTypes & SEARCH_TYPE_FUZZY) == 0) {
-            menu.findItem(R.id.action_search_type_fuzzy).setVisible(false);
         }
         popupMenu.show();
     };
@@ -344,8 +336,6 @@ public class AdvancedSearchView extends SearchView {
                 return text.endsWith(query);
             case SEARCH_TYPE_REGEX:
                 return text.matches(query);
-            case SEARCH_TYPE_FUZZY:
-                return RapidFuzz.weightedRatio(query, text, 50.0) > 0;
         }
         return false;
     }
@@ -363,14 +353,6 @@ public class AdvancedSearchView extends SearchView {
         if (choices == null) return null;
         if (choices.size() == 0) return Collections.emptyList();
         List<T> results = new ArrayList<>(choices.size());
-        if (type == SEARCH_TYPE_FUZZY) {
-            List<RapidFuzzCached.Result<T>> fuzzyResults = RapidFuzzCached.extractAll(query, choices, generator::getChoice, 50.);
-            Collections.sort(fuzzyResults, (o1, o2) -> -Double.compare(o1.getScore(), o2.getScore()));
-            for (RapidFuzzCached.Result<T> fuzzyResult : fuzzyResults) {
-                results.add(fuzzyResult.getObject());
-            }
-            return results;
-        }
         if (type == SEARCH_TYPE_REGEX) {
             Pattern p;
             try {
@@ -401,14 +383,6 @@ public class AdvancedSearchView extends SearchView {
         if (choices == null) return null;
         if (choices.size() == 0) return Collections.emptyList();
         List<T> results = new ArrayList<>(choices.size());
-        if (type == SEARCH_TYPE_FUZZY) {
-            List<RapidFuzzCached.Result<T>> fuzzyResults = RapidFuzzCached.extractAll(query, choices, generator::getChoices, 50.);
-            Collections.sort(fuzzyResults, (o1, o2) -> -Double.compare(o1.getScore(), o2.getScore()));
-            for (RapidFuzzCached.Result<T> fuzzyResult : fuzzyResults) {
-                results.add(fuzzyResult.getObject());
-            }
-            return results;
-        }
         if (type == SEARCH_TYPE_REGEX) {
             Pattern p;
             try {
@@ -463,8 +437,6 @@ public class AdvancedSearchView extends SearchView {
             default:
             case SEARCH_TYPE_CONTAINS:
                 return getContext().getString(R.string.search_type_contains);
-            case SEARCH_TYPE_FUZZY:
-                return getContext().getString(R.string.search_type_fuzzy);
             case SEARCH_TYPE_PREFIX:
                 return getContext().getString(R.string.search_type_prefix);
             case SEARCH_TYPE_REGEX:

@@ -90,7 +90,6 @@ dependencies {
     implementation 'com.github.MuntashirAkon:apksig-android:178a05e4c9'
     implementation 'com.github.MuntashirAkon:unapkm-android:1.2'
     implementation 'com.github.MuntashirAkon:sun-security-android:1.1'
-    implementation 'com.github.MuntashirAkon:rapidfuzz-android:a7813e5f73'
     implementation 'com.github.MuntashirAkon:libadb-android:2.1.0'
     implementation 'org.bouncycastle:bcprov-jdk15on:1.69'
     implementation 'org.smali:baksmali:2.5.2'

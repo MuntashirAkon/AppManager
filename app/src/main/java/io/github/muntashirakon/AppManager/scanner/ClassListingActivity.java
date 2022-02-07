@@ -83,8 +83,7 @@ public class ClassListingActivity extends BaseActivity implements AdvancedSearch
         if (mActionBar != null) {
             mActionBar.setTitle(mAppName);
             mActionBar.setDisplayShowCustomEnabled(true);
-            AdvancedSearchView searchView = UIUtils.setupAdvancedSearchView(mActionBar, this);
-            searchView.removeEnabledTypes(AdvancedSearchView.SEARCH_TYPE_FUZZY);
+            UIUtils.setupAdvancedSearchView(mActionBar, this);
         }
 
         trackerClassesOnly = false;

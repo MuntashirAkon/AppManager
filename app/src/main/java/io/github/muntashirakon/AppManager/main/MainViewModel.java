@@ -279,13 +279,6 @@ public class MainViewModel extends AndroidViewModel {
             mHandler.post(() -> applicationItemsLiveData.postValue(filteredApplicationItems));
             return;
         }
-        if (searchType == AdvancedSearchView.SEARCH_TYPE_FUZZY) {
-            filteredApplicationItems = AdvancedSearchView.matches(searchQuery, applicationItems,
-                    (AdvancedSearchView.ChoiceGenerator<ApplicationItem>) item -> item.label,
-                    AdvancedSearchView.SEARCH_TYPE_FUZZY);
-            mHandler.post(() -> applicationItemsLiveData.postValue(filteredApplicationItems));
-            return;
-        }
         // Others
         filteredApplicationItems = new ArrayList<>();
         for (ApplicationItem item : applicationItems) {

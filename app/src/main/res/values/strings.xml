@@ -1143,7 +1143,6 @@
     <string name="search_type_prefix">Prefix</string>
     <string name="search_type_suffix">Suffix</string>
     <string name="search_type_regular_expressions">Regex</string>
-    <string name="search_type_fuzzy">Fuzzy</string>
     <string name="toggle_internet">Use the Internet</string>
     <string name="vt_checking">VirusTotal: Checking…</string>
     <string name="vt_uploading">VirusTotal: Uploading…</string>
