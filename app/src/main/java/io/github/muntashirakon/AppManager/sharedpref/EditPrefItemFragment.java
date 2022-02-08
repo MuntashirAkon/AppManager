@@ -26,10 +26,13 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 import io.github.muntashirakon.AppManager.R;
 
 public class EditPrefItemFragment extends DialogFragment {
-    public static final String TAG = "EditPrefItemDialogFragment";
+    public static final String TAG = EditPrefItemFragment.class.getSimpleName();
     public static final String ARG_PREF_ITEM = "ARG_PREF_ITEM";
     public static final String ARG_MODE = "ARG_MODE";
 
@@ -38,6 +41,7 @@ public class EditPrefItemFragment extends DialogFragment {
             MODE_CREATE,
             MODE_DELETE
     })
+    @Retention(RetentionPolicy.SOURCE)
     public @interface Mode {}
     public static final int MODE_EDIT = 1;  // Key name is disabled
     public static final int MODE_CREATE = 2;  // Key name is not disabled
@@ -50,6 +54,7 @@ public class EditPrefItemFragment extends DialogFragment {
             TYPE_LONG,
             TYPE_STRING
     })
+    @Retention(RetentionPolicy.SOURCE)
     public @interface Type {}
     private static final int TYPE_BOOLEAN = 0;
     private static final int TYPE_FLOAT   = 1;
@@ -57,7 +62,7 @@ public class EditPrefItemFragment extends DialogFragment {
     private static final int TYPE_LONG    = 3;
     private static final int TYPE_STRING  = 4;
 
-    public InterfaceCommunicator interfaceCommunicator;
+    private InterfaceCommunicator mInterfaceCommunicator;
 
     public interface InterfaceCommunicator {
         void sendInfo(@Mode int mode, PrefItem prefItem);
@@ -175,7 +180,7 @@ public class EditPrefItemFragment extends DialogFragment {
                 spinner.setSelection(TYPE_STRING);
             }
         }
-        interfaceCommunicator = (InterfaceCommunicator) activity;
+        mInterfaceCommunicator = (InterfaceCommunicator) activity;
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(activity);
         builder.setView(view)
                 .setPositiveButton(mode == MODE_CREATE ? R.string.add_item : R.string.done, (dialog, which) -> {
@@ -213,13 +218,13 @@ public class EditPrefItemFragment extends DialogFragment {
                         Toast.makeText(getActivity(), R.string.error_evaluating_input, Toast.LENGTH_LONG).show();
                         return;
                     }
-                    interfaceCommunicator.sendInfo(mode, newPrefItem);
+                    mInterfaceCommunicator.sendInfo(mode, newPrefItem);
                 })
                 .setNegativeButton(R.string.cancel,  (dialog, which) -> {
                     if (getDialog() != null) getDialog().cancel();
                 });
         if (mode == MODE_EDIT) builder.setNeutralButton(R.string.delete,
-                (dialog, which) -> interfaceCommunicator.sendInfo(MODE_DELETE, prefItem));
+                (dialog, which) -> mInterfaceCommunicator.sendInfo(MODE_DELETE, prefItem));
         return builder.create();
     }
 }

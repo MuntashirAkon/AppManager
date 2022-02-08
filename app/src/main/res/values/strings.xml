@@ -1192,4 +1192,6 @@
     <string name="endianness_big_endian">Big endian</string>
     <string name="so_type_shared_library">Shared library</string>
     <string name="so_type_executable">Executable</string>
+    <string name="file_modified_are_you_sure">The file was modified. Discard all your changes and exit?</string>
+    <string name="save_and_exit">Save and exit</string>
 </resources>
