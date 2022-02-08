@@ -1,63 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?><!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <resources>
     <array name="lib_native_signatures">
-        <item>lib39285EFA\\.so|libA3AEECD8\\.so|libsecsdk\\.so</item>
+        <item>lib39285EFA\\.so|libA3AEECD8\\.so|libsecsdk\\.so|libmsaoaid(auth|sec)\?\\.so</item>
         <item>
             libBaiduSpeechSDK\\.so|libImgRecognition\\.so|libbdEASRAndroid\\.so|libbdSpilWakeup\\.so|libvad\\.dnn\\.so
         </item>
         <item>libBeacon\\.so</item>
-        <item>libBugly-rqd\\.so|libBugly\\.so</item>
+        <item>libBugly(-rqd)\?\\.so</item>
         <item>libBurstLinker\\.so</item>
         <item>libCtaApiLib\\.so</item>
-        <item>
-            libDexHelper-x86\\.so|libDexHelper\\.so|libSecShell-x86\\.so|libSecShell\\.so|libdexjni\\.so|libsecexe\\.so
-        </item>
+        <item>libDexHelper(-x86)\?\\.so|libSecShell(-x86)\?\\.so|libdexjni\\.so|libsecexe\\.so</item>
         <item>
             libFirebaseCppMessaging\\.so|libFirebaseCppApp-.*\\.so|libFirebaseCppRemoteConfig\\.so|libFirebaseCppDynamicLinks\\.so
         </item>
         <item>libImSDK\\.so|libqalcodecwrapper\\.so|libqalmsfboot\\.so|libwtcrypto\\.so</item>
         <item>
-            libJavaScriptCore\\.so|libfolly_futures\\.so|libfolly_json\\.so|libglog_init\\.so|libjsc\\.so|libjscexecutor\\.so|libjsinspector\\.so|libreactnative\\.so|libreactnativeblob\\.so|libreactnativejni\\.so|libreactnativejnifb\\.so|libhermes-executor-.*\\.so|libhermes-inspector\\.so|libhermes\\.so|libjsijniprofiler\\.so|libfbjni\\.so|libreact_codegen_reactandroidspec\\.so|libreact_nativemodule_core\\.so|libreactnativeutilsjni\\.so|libreactperfloggerjni\\.so
+            libJavaScriptCore\\.so|libfolly_(futures|json)\?\\.so|libglog_init\\.so|libjsc(executor)\?\\.so|libjsinspector\\.so|libjsijniprofiler\\.so|libreactnative(blob|jni|jnifb|utilsjni)\?\\.so|libfb(jni)\?\\.so|libreact_(codegen_reactandroidspec|codegen_rncore|nativemodule_core|debug|utils)\?\\.so|libreactperfloggerjni\\.so|libreact_render_.*\\.so|libreactconfig\\.so|librrc_(image|modal|progressbar|root|scrollview|slider|switch|text|textinput|unimplementedview|view)\?\\.so
         </item>
         <item>libJni_wgs2gcj\\.so</item>
         <item>libLive2DCubismCore\\.so</item>
         <item>libMMANDKSignature\\.so</item>
-        <item>libMNN\\.so|libMNN_CL\\.so|libMNN_Express\\.so|libmnnkitcore\\.so|libmnnpybridge\\.so|libmnnface\\.so
-        </item>
+        <item>libMNN(_CL|_Express)\?\\.so|libmnn(kitcore|pybridge|face)+\\.so</item>
         <item>libMtaNativeCrash\\.so|libmtanativecrash_v2\\.so</item>
         <item>libQPlayer\\.so</item>
-        <item>libRSSupport\\.so|librsjni\\.so|librsjni_androidx\\.so|librs\\.analyze\\.so|librs\\.rotate\\.so</item>
+        <item>libRSSupport\\.so|librsjni(_androidx)\?\\.so|librs\\.(analyze|rotate)\?\\.so</item>
         <item>libRongIMLib\\.so</item>
-        <item>libSDL2\\.so|libSDL2_ttf\\.so|libSDL2_mixer\\.so|libSDL2_image\\.so</item>
+        <item>libSDL2(_ttf|_mixer|_image)\?\\.so</item>
         <item>libShanYCore\\.so</item>
         <item>libUE4\\.so</item>
         <item>libWXVoice\\.so</item>
         <item>libadcolony\\.so</item>
         <item>libjingle_peerconnection_so\\.so</item>
-        <item>libandfix\\.so|libandfix_x86\\.so</item>
+        <item>libandfix(_x86)\?\\.so</item>
         <item>
-            libxa-internal-api\\.so|libmono-btls-shared\\.so|libmono-native\\.so|libmonodroid\\.so|libmonodroid_bundle_app\\.so|libmonosgen-.*\\.so|libxamarin-app\\.so|libaot-.*\\.dll\\.so
+            libxa-internal-api\\.so|libmono-(native|btls-shared)\?\\.so|libmonodroid(_bundle_app)\?\\.so|libmonosgen-.*\\.so|libxamarin-app\\.so|libaot-.*\\.dll\\.so
         </item>
-        <item>libapmart\\.so|libapmcrash\\.so|libapmdalvik\\.so|libapmioFake\\.so</item>
+        <item>libapm(art|crash|dalvik|ioFake)+\\.so</item>
         <item>libapng-drawable\\.so</item>
         <item>libapp\\.so|libflutter\\.so</item>
-        <item>libapssdk\\.so</item>
+        <item>libapssdk\\.so|libAMapSDK_NAVI_.*\\.so</item>
         <item>libarcore_sdk_c\\.so</item>
         <item>libarcore_sdk_jni\\.so</item>
         <item>libaria2c\\.so</item>
         <item>
-            libavcodec\\.so|libavdevice\\.so|libavfilter\\.so|libavformat\\.so|libavutil\\.so|libswresample\\.so|libswscale\\.so|libffmpeg\\.so|libffmpeg-android\\.so|lib\\.\\.ffmpeg\\.\\.so
+            libav(codec|device|filter|format|util)+\\.so|libsw(resample|scale)+\\.so|libffmpeg\\.so|libffmpeg-android\\.so|lib\\.\\.ffmpeg\\.\\.so
         </item>
         <item>
-            libbitmaps\\.so|libgifimage\\.so|libimagepipeline\\.so|libmemchunk\\.so|libnative-filters\\.so|libnative-imagetranscoder\\.so|libstatic-webp\\.so|libwebp\\.so|libwebpimage\\.so|libnative-file-access\\.so
+            libbitmaps\\.so|libgifimage\\.so|libimagepipeline\\.so|libmemchunk\\.so|libnative-(filters|imagetranscoder|file-access)\\.so|libstatic-webp\\.so|libwebp(image)\?\\.so
         </item>
         <item>libbmob\\.so</item>
         <item>libboost_multidex\\.so</item>
-        <item>libbuffer_pg\\.so|libfile_lock_pg\\.so|libmetasec_ml\\.so|libnms\\.so|libtobEmbedEncrypt\\.so</item>
-        <item>libbugrpt\\.so</item>
         <item>
-            libbugsnag-ndk\\.so|libbugsnag-plugin-android-anr\\.so|libbugsnag-root-detection\\.so|libbugsnag-unity\\.so
+            libbuffer_pg\\.so|libfile_lock_pg\\.so|libmetasec_ml\\.so|libnms\\.so|libtobEmbedEncrypt\\.so|libpangleflipped\\.so
         </item>
+        <item>libbugrpt\\.so</item>
+        <item>libbugsnag-(ndk|plugin-android-anr|root-detection|unity)\?\\.so</item>
         <item>libc\\+\\+_shared\\.so|libgnustl_shared\\.so|libCXXCommonKit\\.so</item>
         <item>libchrome\\.so|libchrome_crashpad_handler\\.so|libchromium_android_linker\\.so</item>
         <item>libchrome_android_linker\\.so</item>
@@ -65,39 +62,38 @@
         <item>libconnectionbase\\.so|libmilinkconnection\\.so</item>
         <item>libconscrypt_jni\\.so</item>
         <item>
-            libcrashlytics-common\\.so|libcrashlytics-handler\\.so|libcrashlytics-trampoline\\.so|libcrashlytics\\.so|libFirebaseCppCrashlytics\\.so|libunwind-crashlytics\\.so|libcrashlytics-envelope\\.so
+            libcrashlytics(-common|-handler|-trampoline|-envelope)\?\\.so|libFirebaseCppCrashlytics\\.so|libunwind-crashlytics\\.so
         </item>
-        <item>libcrashsdk\\.so|libcrashsdk2\\.so</item>
+        <item>libcrashsdk(2)\?\\.so</item>
         <item>libcri_ware_unity\\.so|libcri_mana_vpx\\.so|libcriafx_roll\\.so</item>
-        <item>libcrypto\\.so|libopenssl\\.so|libssl\\.so|libssl.*\\.so</item>
+        <item>libcrypto\\.so|libopenssl\\.so|libssl.*\\.so</item>
         <item>libcurl\\.so</item>
         <item>libed25519\\.so|libhpplayae\\.so</item>
-        <item>libentryexpro\\.so|libuptsmaddon\\.so|libuptsmaddonmi\\.so|libuptsmservice\\.so</item>
+        <item>libentryexpro\\.so|libuptsm(addon|addonmi|service)+\\.so</item>
         <item>libepic\\.so</item>
-        <item>libfb\\.so</item>
         <item>libfire\\.so</item>
         <item>libflexbox\\.so|libhippybridge\\.so</item>
         <item>libframesequence\\.so</item>
         <item>libfreetype\\.so</item>
-        <item>libgcanvas\\.so|libgcanvas_view\\.so</item>
-        <item>libgdx-box2d\\.so|libgdx-freetype\\.so|libgdx\\.so</item>
+        <item>libgcanvas(_view)\?\\.so</item>
+        <item>libgdx(-box2d|-freetype)\?\\.so</item>
         <item>libgetuiext3\\.so</item>
         <item>libglide-webp\\.so</item>
         <item>libglog\\.so</item>
-        <item>libgocryptfs\\.so|libgocryptfs_jni\\.so</item>
+        <item>libgocryptfs(_jni)\?\\.so</item>
         <item>libgojni\\.so</item>
         <item>libgpuimage-library\\.so</item>
-        <item>libgvr\\.so|libgvr_audio\\.so|libpanorenderer\\.so|libpano_video_renderer\\.so</item>
+        <item>libgvr(_audio)\?\\.so|libpanorenderer\\.so|libpano_video_renderer\\.so</item>
         <item>libhardcoder\\.so</item>
         <item>libhttpdns\\.so</item>
-        <item>libhuawei_arengine_impl\\.so|libhuawei_arengine_jni\\.so|libhuawei_arengine_ndk\\.so</item>
+        <item>libhuawei_arengine(_impl|_jni|_ndk)\?\\.so</item>
         <item>libhyphenate\\.so</item>
         <item>libiconv\\.so</item>
         <item>libijkffmpeg\\.so|libijkplayer\\.so|libijksdl\\.so</item>
         <item>libil2cpp\\.so|libmain\\.so|libmono\\.so|libunity\\.so</item>
-        <item>libindoor\\.so</item>
+        <item>libindoor\\.so|liblocSDK.*[0-9](a|b)\?\\.so|libBaiduMapSDK(_base|_map)\?_.*\\.so</item>
         <item>libizuko\\.so</item>
-        <item>libjiagu\\.so|libjiagu_a64\\.so|libjiagu_x64\\.so|libjiagu_x86\\.so|libX86Bridge\\.so</item>
+        <item>libjiagu(_a64)\?\\.so|libjiagu(_x64|_x86)\?\\.so|libX86Bridge\\.so</item>
         <item>libkoom-java\\.so|libkwai-linker\\.so</item>
         <item>liblib_fb_fbjni\\.so|libyoga\\.so|libyouga\\.so</item>
         <item>libliteavsdk\\.so|libtxffmpeg\\.so|libtxplayer\\.so|libtxsdl\\.so</item>
@@ -116,8 +112,7 @@
         <item>
             libopencv_core\\.so|libopencv_imgproc\\.so|libopencv_java3\\.so|libopencv_java4\\.so|libopencv_highgui\\.so
         </item>
-        <item>
-            libopus\\.so|libopusJNI\\.so|libogg\\.so|libogg_opus_encoder\\.so|libogg_opus_encoder_translate\\.so|libopusV2JNI\\.so|libopusfile\\.so|libopusvadjava\\.so
+        <item>libopus(JNI)\?\\.so|libogg\\.so|libogg_opus_encoder(_translate)\?\\.so|libopus(V2JNI|file|vadjava)+\\.so
         </item>
         <item>libpingpp\\.so</item>
         <item>libpl_droidsonroids_gif\\.so</item>
@@ -127,20 +122,20 @@
         <item>librenpython\\.so</item>
         <item>libsaturn\\.so</item>
         <item>libsdk_patcher_jni\\.so</item>
-        <item>libsentry-android\\.so|libsentry\\.so</item>
+        <item>libsentry(-android)\?\\.so</item>
         <item>
-            libsgavmp\\.so|libsgmain\\.so|libsgsecuritybody\\.so|libsgsgmiddletier\\.so|libsgmainso-.*\\.so|libsgmiscso-.*\\.so|libsgmiddletierso-.*\\.so|libsgnocaptchaso-.*\\.so|libsgmiddletier\\.so|libsgmisc\\.so|libsgnocaptcha\\.so|libsgsecuritybodyso-.*\\.so|libAPSE_.*\\.so
+            libsgavmp\\.so|libsgmain\\.so|libsgsecuritybody\\.so|libsgsgmiddletier\\.so|libsgmainso-.*\\.so|libsgmiscso-.*\\.so|libsgmiddletierso-.*\\.so|libsgnocaptchaso-.*\\.so|libsgmiddletier\\.so|libsgmisc\\.so|libsgnocaptcha\\.so|libsgsecuritybodyso-.*\\.so|libAPSE_.*\\.so|libsgavmpso-.*\\.so
         </item>
         <item>libsmsdk\\.so</item>
-        <item>libsodium\\.so|libsodium-jni\\.so</item>
+        <item>libsodium(-jni)\?\\.so</item>
         <item>libsqlcipher\\.so|libstlport_shared\\.so|libe_sqlcipher\\.so</item>
         <item>libsqlite\\.so|libsqlite3\\.so|libsqlite3x\\.so|libsqliteX\\.so</item>
         <item>libtdjni\\.so</item>
         <item>libtencentloc\\.so|libtxmapengine\\.so</item>
-        <item>libtensorflowlite_jni\\.so|libtensorflowlite_gpu_jni\\.so|libtensorflow_jni\\.so</item>
+        <item>libtensorflowlite(_gpu)\?_jni\\.so|libtensorflow_jni\\.so</item>
         <item>libtersafe2\\.so</item>
         <item>libtiff\\.so</item>
-        <item>libtorrent4j\\.so</item>
+        <item>libtorrent4j(-.*)\?\\.so</item>
         <item>libtpnsSecurity\\.so|libxguardian\\.so</item>
         <item>libtraeimp-rtmp\\.so</item>
         <item>libucrop\\.so</item>
@@ -151,12 +146,12 @@
             libweexcore\\.so|libweexjsb\\.so|libweexjss\\.so|libweexjssr\\.so|libweexjst\\.so|libWeexEagle\\.so|libWTF\\.so
         </item>
         <item>libwtecdh\\.so</item>
-        <item>libxcrash\\.so|libxcrash_dumper\\.so</item>
+        <item>libxcrash(_dumper)\?\\.so</item>
         <item>libxgVipSecurity\\.so</item>
         <item>libxhook_lib\\.so</item>
         <item>libxlua\\.so</item>
-        <item>libyuv\\.so|libyuv_to_rgb_jni\\.so|libyuv-decoder\\.so</item>
-        <item>libzbar\\.so|libzbarjni\\.so</item>
+        <item>libyuv(_to_rgb_jni|-decoder)\?\\.so</item>
+        <item>libzbar(jni)\?\\.so</item>
         <item>libartemis\\.so</item>
         <item>libclash\\.so</item>
         <item>libkraken_jsc\\.so</item>
@@ -173,26 +168,28 @@
         <item>libgrpc_csharp_ext\\.so</item>
         <item>lib_burst_generated\\.so</item>
         <item>libglean_ffi\\.so</item>
-        <item>libvpx\\.so|libvpxV2JNI\\.so|libvpxYTJNI\\.so</item>
-        <item>libCGE\\.so|libCGEExt\\.so</item>
-        <item>libobjectbox\\.so|libobjectbox-jni\\.so</item>
+        <item>libvpx(V2JNI|YTJNI)\?\\.so</item>
+        <item>libCGE(Ext)\?\\.so</item>
+        <item>libobjectbox(-jni)\?\\.so</item>
         <item>libzstd-jni\\.so</item>
         <item>libyoume_voice_engine\\.so</item>
-        <item>libagoraSdkCWrapper\\.so|libagora-rtc-sdk-jni\\.so</item>
+        <item>
+            libagoraSdkCWrapper\\.so|libagora-(rtc-sdk|rtc-sdk-jni|core|ffmpeg|soundtouch)\?\\.so|libagora_(ai_denoise|ci|dav1d|fd|jnd|segmentation|super_resolution|video_process)\?_extension\\.so|libagora_(fdkaac|mpg123)\?\\.so
+        </item>
         <item>libspake2\\.so</item>
         <item>libduktape\\.so</item>
         <item>libquickjs\\.so</item>
         <item>libEOSSDK\\.so</item>
-        <item>libbass\\.so|libbass_aac\\.so|libbass_fx\\.so|libbassopus\\.so|libbass_ssl\\.so</item>
+        <item>libbass(_aac|_fx|_ssl)\?\\.so|libbassopus\\.so</item>
         <item>libffi\\.so</item>
         <item>
             chaquopy\\.so|libcrypto_chaquopy\\.so|libssl_chaquopy\\.so|libchaquopy_java\\.so|chaquopy_android\\.so|libsqlite3_chaquopy\\.so
         </item>
         <item>libpython.*\\.so</item>
         <item>libopenvpn\\.so|libopvpnutil\\.so|libovpnexec\\.so|libjbcrypto\\.so</item>
-        <item>libnspr4.so|libplc4\\.so|libplds4\\.so</item>
+        <item>libnspr4\\.so|libplc4\\.so|libplds4\\.so</item>
         <item>libsecp256k1\\.so</item>
-        <item>libffmpegkit\\.so|libffmpegkit_abidetect\\.so</item>
+        <item>libffmpegkit(_abidetect)\?\\.so</item>
         <item>libolm\\.so</item>
         <item>libavresample\\.so</item>
         <item>libjuce_jni\\.so</item>
@@ -203,32 +200,45 @@
         <item>libcpuinfo\\.so</item>
         <item>libtesseract\\.so</item>
         <item>libleptonica\\.so</item>
-        <item>libAVProLocal\\.so|libAVProVideo2Native\\.so|libAudio360-JNI\\.so|libAudio360\\.so</item>
+        <item>libAVPro(Local|Video2Native)\?\\.so|libAudio360(-JNI)\?\\.so</item>
         <item>libcardboard_xr_unity\\.so|libCardboardXrProvider\\.so</item>
-        <item>libmobileffmpeg\\.so|libmobileffmpeg_abidetect\\.so</item>
+        <item>libmobileffmpeg(_abidetect)\?\\.so</item>
         <item>
             libcardboard_api\\.so|libcardboard_api_only_gles2\\.so|libcardboard_sdk_jni\\.so|libcardboard_unity_jni\\.so
         </item>
-        <item>libcardioDecider\\.so|libcardioRecognizer\\.so|libcardioRecognizer_tegra2\\.so</item>
+        <item>libcardioDecider\\.so|libcardioRecognizer(_tegra2)\?\\.so</item>
         <item>libcronet.*\\.so</item>
         <item>libhsp3dish\\.so</item>
         <item>
-            libjsengine-api\\.so|libjsengine-loadso\\.so|libjsengine-platform\\.so|libv8\\.cr\\.so|libv8_libbase\\.cr\\.so|libv8_libplatform\\.cr\\.so
+            libjsengine(-api|-loadso|-platform)\?\\.so|libv8\\.cr\\.so|libv8_libbase\\.cr\\.so|libv8_libplatform\\.cr\\.so
         </item>
         <item>libfmod\\.so</item>
         <item>libvorbis\\.so</item>
         <item>libeasymobile\\.so</item>
         <item>libtwilio_video_android_so\\.so</item>
         <item>librapidfuzz\\.so</item>
-        <item>libst_mobile\\.so|libstmobile_jni\\.so</item>
+        <item>libst_mobile\\.so|libstmobile_jni\\.so|libyuki-(camera-effect|content|effect|filter)\?\\.so</item>
         <item>libALBiometricsJni\\.so</item>
         <item>liblspd\\.so</item>
-        <item>librime\\.so|librime_jni\\.so</item>
+        <item>librime(_jni)\?\\.so</item>
         <item>libtrojan-go\\.so</item>
         <item>libSpeex\\.so</item>
         <item>lib[Tt]or\\.so</item>
-        <item>libboost_filesystem\\.so|libboost_system\\.so</item>
+        <item>libboost(_filesystem|_system)\?\\.so</item>
         <item>libzstd-jni-.*\\.so</item>
+        <item>libfilament(-utils)\?-jni\\.so|libgltfio-jni\\.so</item>
+        <item>libhermes(-executor-.*|-inspector)\?\\.so</item>
+        <item>libcocklogic-.*\\.so</item>
+        <item>libbdpush_.*\\.so</item>
+        <item>libDXRisk.*\\.so</item>
+        <item>libjlibtorrent-.*\\.so</item>
+        <item>libjcore.*\\.so</item>
+        <item>libQt[1-9].*\\.so|libplugins_.*\\.so|libqml_Qt(3D)\?.*\\.so</item>
+        <item>libtmessages.*\\.so</item>
+        <item>libshell-super.*\\.so|libshella-.*\\.so</item>
+        <item>libYandexSpeechKitJni.*\\.so</item>
+        <item>libcomScore\\.so</item>
+        <item>libstrongswan\\.so</item>
     </array>
     <array name="lib_native_names">
         <item>MSA SDK</item>
@@ -285,7 +295,6 @@
         <item>Hppplay SDK</item>
         <item>UnionPay SDK</item>
         <item>Epic</item>
-        <item>Facebook SDK</item>
         <item>Sofire</item>
         <item>Hippy</item>
         <item>FrameSequence</item>
@@ -345,7 +354,7 @@
         <item>TensorFlow Lite</item>
         <item>Tencent MTP</item>
         <item>Android-TiffBitmapFactory</item>
-        <item>Torrent library for java</item>
+        <item>libtorrent4j</item>
         <item>Tencent TPNS</item>
         <item>Tencent TRTC</item>
         <item>uCrop</item>
@@ -426,6 +435,19 @@
         <item>Tor Android</item>
         <item>Boost</item>
         <item>Zstd-jni</item>
+        <item>Filament</item>
+        <item>Hermes JS Engine</item>
+        <item>Baichuan SDK</item>
+        <item>Baidu Push</item>
+        <item>Top icon inductible verification SDK</item>
+        <item>frostwire-jlibtorrent</item>
+        <item>JPush</item>
+        <item>Qt</item>
+        <item>Telegram APIs</item>
+        <item>Tencent Le Gu</item>
+        <item>Yandex SpeechKit</item>
+        <item>ComScore</item>
+        <item>strongSwan</item>
     </array>
     <integer-array name="lib_native_is_tracker">
         <item>1</item>
@@ -457,32 +479,6 @@
         <item>1</item>
         <item>0</item>
         <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>1</item>
-        <item>0</item>
-        <item>1</item>
-        <item>1</item>
-        <item>1</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>1</item>
-        <item>0</item>
-        <item>1</item>
-        <item>1</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>1</item>
         <item>1</item>
         <item>0</item>
         <item>0</item>
@@ -491,27 +487,17 @@
         <item>0</item>
         <item>1</item>
         <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
         <item>1</item>
         <item>1</item>
         <item>1</item>
         <item>0</item>
         <item>0</item>
         <item>0</item>
-        <item>1</item>
         <item>0</item>
         <item>1</item>
         <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
+        <item>1</item>
+        <item>1</item>
         <item>0</item>
         <item>0</item>
         <item>0</item>
@@ -524,60 +510,6 @@
         <item>0</item>
         <item>0</item>
         <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>1</item>
-        <item>1</item>
-        <item>1</item>
-        <item>1</item>
-        <item>1</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>1</item>
-        <item>0</item>
-        <item>1</item>
-        <item>0</item>
-        <item>0</item>
-        <item>1</item>
-        <item>0</item>
-        <item>0</item>
-        <item>1</item>
-        <item>1</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>1</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>1</item>
-        <item>1</item>
-        <item>0</item>
-        <item>1</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>1</item>
-        <item>1</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>1</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>1</item>
         <item>1</item>
         <item>0</item>
         <item>0</item>
@@ -586,19 +518,15 @@
         <item>0</item>
         <item>0</item>
         <item>0</item>
+        <item>1</item>
+        <item>1</item>
+        <item>1</item>
         <item>0</item>
         <item>0</item>
         <item>0</item>
+        <item>1</item>
         <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
+        <item>1</item>
         <item>0</item>
         <item>0</item>
         <item>0</item>
@@ -614,6 +542,62 @@
         <item>1</item>
         <item>0</item>
         <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>1</item>
+        <item>1</item>
+        <item>1</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>1</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
         <item>1</item>
         <item>1</item>
         <item>0</item>
@@ -623,6 +607,56 @@
         <item>0</item>
         <item>0</item>
         <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>1</item>
+        <item>1</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>1</item>
+        <item>1</item>
     </integer-array>
     <array name="lib_native_website">
         <item>http://msa-alliance.cn</item>
@@ -680,7 +714,6 @@
         <item>https://cloud.hpplay.cn/</item>
         <item>https://open.unionpay.com/</item>
         <item>https://github.com/tiann/epic/</item>
-        <item>https://developers.facebook.com/docs/android/getting-started/</item>
         <item>https://cloud.baidu.com/doc/AFD/s/Ijwvy4s7b</item>
         <item>https://github.com/Tencent/Hippy/</item>
         <item>https://android.googlesource.com/platform/frameworks/ex/</item>
@@ -822,5 +855,18 @@
         <item>https://github.com/guardianproject/tor-android</item>
         <item>https://www.boost.org/</item>
         <item>https://github.com/luben/zstd-jni</item>
+        <item>https://github.com/google/filament</item>
+        <item>https://github.com/facebook/hermes</item>
+        <item>https://open.alitrip.com/docs/doc.htm\?treeId=29&amp;articleId=102362&amp;docType=1</item>
+        <item>http://push.baidu.com/doc/android/api</item>
+        <item>https://www.dingxiang-inc.com/docs/detail/captcha#doc-h3-41</item>
+        <item>https://github.com/frostwire/frostwire-jlibtorrent</item>
+        <item>https://docs.jiguang.cn/jpush/guideline/intro/</item>
+        <item>https://www.qt.io</item>
+        <item>https://core.telegram.org/api</item>
+        <item>https://cloud.tencent.com/document/product/283</item>
+        <item>https://cloud.yandex.com/en-ru/docs/speechkit/</item>
+        <item>https://www.comscore.com</item>
+        <item>https://github.com/strongswan/strongswan</item>
     </array>
 </resources>
