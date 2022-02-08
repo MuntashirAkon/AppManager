@@ -237,7 +237,7 @@ public class ScannerViewModel extends AndroidViewModel {
         waitForFile();
         try {
             NativeLibraries nativeLibraries = new NativeLibraries(apkFile);
-            nativeLibsAll = nativeLibraries.getLibs();
+            nativeLibsAll = nativeLibraries.getUniqueLibs();
         } catch (Throwable e) {
             nativeLibsAll = Collections.emptyList();
         }

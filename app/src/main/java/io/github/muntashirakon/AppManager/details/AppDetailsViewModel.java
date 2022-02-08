@@ -1608,25 +1608,12 @@ public class AppDetailsViewModel extends AndroidViewModel {
             return;
         }
         ApplicationInfo info = mPackageInfo.applicationInfo;
-        File jniDir = new File(info.nativeLibraryDir);
         if (info.sharedLibraryFiles != null) {
             for (String sharedLibrary : info.sharedLibraryFiles) {
                 File sharedLib = new File(sharedLibrary);
                 AppDetailsItem<?> appDetailsItem = new AppDetailsItem<>(sharedLib);
                 appDetailsItem.name = sharedLib.getName();
                 appDetailsItems.add(appDetailsItem);
-            }
-        }
-        List<String> nativeLibs = new ArrayList<>();
-        if (jniDir.isDirectory()) {
-            File[] libs = jniDir.listFiles();
-            if (libs != null) {
-                for (File lib : libs) {
-                    nativeLibs.add(lib.getName());
-                    AppDetailsItem<?> appDetailsItem = new AppDetailsItem<>(lib);
-                    appDetailsItem.name = lib.getName();
-                    appDetailsItems.add(appDetailsItem);
-                }
             }
         }
         List<ApkFile.Entry> entries = mApkFile.getEntries();
@@ -1644,18 +1631,17 @@ public class AppDetailsViewModel extends AndroidViewModel {
                         // Maybe zip error, Try without InputStream
                         nativeLibraries = new NativeLibraries(entry.getRealCachedFile());
                     }
-                    for (String nativeLib : nativeLibraries.getLibs()) {
-                        if (!nativeLibs.contains(nativeLib)) {
-                            AppDetailsItem<?> appDetailsItem = new AppDetailsItem<>(nativeLib);
-                            appDetailsItem.name = nativeLib;
-                            appDetailsItems.add(appDetailsItem);
-                        }
+                    for (NativeLibraries.NativeLib nativeLib : nativeLibraries.getLibs()) {
+                        AppDetailsItem<?> appDetailsItem = new AppDetailsItem<>(nativeLib);
+                        appDetailsItem.name = nativeLib.getName();
+                        appDetailsItems.add(appDetailsItem);
                     }
                 } catch (Throwable th) {
                     Log.e(TAG, th);
                 }
             }
         }
+        Collections.sort(appDetailsItems, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
         mSharedLibraries.postValue(appDetailsItems);
     }
 

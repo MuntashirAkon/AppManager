@@ -32,7 +32,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceListItem"
-            android:focusable="false"
             tools:text="@tools:sample/lorem" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -40,7 +39,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="?android:attr/textColorSecondary"
-            android:focusable="false"
             android:nextFocusRight="@id/item_open"
             tools:text="@tools:sample/lorem" />
 

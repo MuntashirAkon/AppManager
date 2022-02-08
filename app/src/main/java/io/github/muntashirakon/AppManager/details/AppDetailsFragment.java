@@ -21,6 +21,7 @@ import android.os.RemoteException;
 import android.os.UserHandleHidden;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.format.Formatter;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -78,6 +79,7 @@ import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
+import io.github.muntashirakon.AppManager.scanner.NativeLibraries;
 import io.github.muntashirakon.AppManager.servermanager.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
@@ -91,6 +93,7 @@ import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.dialog.TextInputDropdownDialogBuilder;
+import io.github.muntashirakon.util.LocalizedString;
 import io.github.muntashirakon.widget.RecyclerViewWithEmptyView;
 import io.github.muntashirakon.widget.SwipeRefreshLayout;
 import me.zhanghai.android.fastscroll.FastScrollerBuilder;
@@ -773,8 +776,11 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                         break;
                     case SHARED_LIBRARIES:
                         textView1 = itemView.findViewById(R.id.item_title);
-                        launchBtn = itemView.findViewById(R.id.item_action);
-                        ((MaterialButton) launchBtn).setIconResource(R.drawable.ic_open_in_new_black_24dp);
+                        textView2 = itemView.findViewById(R.id.item_subtitle);
+                        launchBtn = itemView.findViewById(R.id.item_open);
+                        itemView.findViewById(R.id.item_icon).setVisibility(View.GONE);
+                        textView1.setTextIsSelectable(true);
+                        textView2.setTextIsSelectable(true);
                         break;
                     case SIGNATURES:
                     case NONE:
@@ -816,7 +822,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                     view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_text_view, parent, false);
                     break;
                 case SHARED_LIBRARIES:
-                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_title_action, parent, false);
+                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_icon_title_subtitle, parent, false);
                     break;
             }
             return new ViewHolder(view);
@@ -1470,14 +1476,20 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             synchronized (mAdapterList) {
                 item = mAdapterList.get(index);
             }
-            TextView textView = holder.textView1;
-            textView.setTextIsSelectable(true);
-            textView.setText(item.name);
+            holder.textView1.setText(item.name);
             if (item.vanillaItem instanceof File) {
                 File libFile = (File) item.vanillaItem;
+                StringBuilder sb = new StringBuilder(Formatter.formatFileSize(mActivity, libFile.length()))
+                        .append("\n").append(libFile.getAbsolutePath());
+                holder.textView2.setText(sb);
                 holder.launchBtn.setVisibility(View.VISIBLE);
                 holder.launchBtn.setOnClickListener(openAsFolderInFM(mActivity, libFile.getParent()));
-            } else holder.launchBtn.setVisibility(View.GONE);
+            } else {
+                holder.launchBtn.setVisibility(View.GONE);
+            }
+            if (item.vanillaItem instanceof NativeLibraries.NativeLib) {
+                holder.textView2.setText(((LocalizedString) item.vanillaItem).toLocalizedString(mActivity));
+            }
             holder.itemView.setBackgroundResource(index % 2 == 0 ? R.drawable.item_semi_transparent : R.drawable.item_transparent);
         }
 
