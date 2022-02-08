@@ -1084,7 +1084,6 @@
     <string name="adb_connect">З\'єднання</string>
     <string name="wireless_debugging_not_supported">Бездротове налагодження не підтримується в цій платформі.</string>
     <string name="wireless_debugging">Бездротове налагодження</string>
-    <string name="fallback_to_no_root_mode">Повернутись до режиму без root\?</string>
     <string name="unknown_net_policy">Невідома мережна політика (%1$s - %2$X)</string>
     <string name="failed_to_prevent_background_run">Не вдалося запобігти роботу в фоновому режимі додатку %1$s</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">Не вдалося встановити додаток через невідповідність підпису. Додаток було видалено без очищення даних.</string>
@@ -1175,4 +1174,48 @@
     <string name="pref_intent_firewall_description">Блокування компонентів лише за допомогою Intent Firewall. Не рекомендується, оскільки деякі системні програми можуть обходити цей метод блокування.</string>
     <string name="intent_firewall">IFW</string>
     <string name="authenticating">Автентифікація…</string>
+    <plurals name="usage_seconds">
+        <item quantity="one">%1$d с</item>
+        <item quantity="few">%1$d с</item>
+        <item quantity="many">%1$d с</item>
+        <item quantity="other">%1$d с</item>
+    </plurals>
+    <string name="toggle_internet">Використовувати інтернет</string>
+    <string name="vt_checking">VirusTotal: перевірка…</string>
+    <string name="vt_queued">VirusTotal: у черзі</string>
+    <string name="vt_failed">VirusTotal: збій</string>
+    <string name="vt_success">VirusTotal: %1$d/%2$d</string>
+    <string name="vt_scan_date">Дата сканування: %1$s</string>
+    <string name="pref_vt_apikey">Ключ API VirusTotal</string>
+    <string name="pref_vt_apikey_description">Ключ API дозволяє App Manager завантажувати файли APK до VirusTotal, а також отримувати звіти. Зареєструйтеся в https://virustotal.com, щоб отримати ключ API безкоштовно.</string>
+    <string name="pref_vt_apikey_summary">Увімкнути сканування файлів APK через VirusTotal.</string>
+    <string name="process_id">Ідентифікатор процесу</string>
+    <string name="parent_process_id">Ідентифікатор батьківського процесу</string>
+    <string name="virtual_memory">Віртуальна пам\'ять</string>
+    <string name="cpu_percent">%% ЦП</string>
+    <string name="cpu_time">Час ЦП</string>
+    <string name="priority">Пріоритет</string>
+    <string name="threads">Кількість потоків</string>
+    <string name="state">Стан процесу</string>
+    <string name="commandline_args">Аргументи командного рядка</string>
+    <string name="memory_chart_info">● Програми %1$s ● %2$s Кешовано ● %3$s Буфер ● %4$s Вільно</string>
+    <string name="swap_chart_info">● %1$s Використовується ● %2$s Вільно</string>
+    <string name="failed_to_change_app_op_mode">Не вдалося змінити режим app op.</string>
+    <string name="warning_working_on_root_mode">Попередження: робота в root-режимі замість режиму ADB.</string>
+    <string name="failed_to_disable_magisk_deny_list">Не вдалося ввімкнути Magisk DenyList</string>
+    <string name="mode_of_op_with_inferred_mode_of_op">%1$s (імовірний режим: %2$s)</string>
+    <string name="scan_in_vt">Сканування в VirusTotal</string>
+    <plurals name="usage_minutes">
+        <item quantity="one">%1$d хв.</item>
+        <item quantity="few">%1$d хв.</item>
+        <item quantity="many">%1$d хв.</item>
+        <item quantity="other">%1$d хв.</item>
+    </plurals>
+    <string name="vt_uploading">VirusTotal: завантаження…</string>
+    <string name="vt_permalink">Постійне посилання на VirusTotal</string>
+    <string name="vt_slowness_warning">Залежно від швидкості Інтернету та навантаження на сервер, це може зайняти деякий час.</string>
+    <string name="vt_disclaimer">VirusTotal та його логотипи є торговою маркою Chronicle LLC. Ні App Manager — клієнт API, ні його автори не несуть відповідальності за будь-які дані, які ви можете надіслати до VirusTotal.</string>
+    <string name="uses_play_app_signing_description">Ця програма містить певні маркери, які вказують на те, що вона <i>можливо </i> використовує <a href="https://support.google.com/googleplay/android-developer/answer/9842756">Play App Signing</a>. За цією схемою ключі підпису зберігаються на серверах Google, і Google відповідає за підписання програми. Зауважте, що відповідність інформації підпису — це єдиний спосіб переконатися, що додаток не був змінений кимось іншим, окрім розробника (а в цьому випадку також Google).</string>
+    <string name="failed_to_use_the_current_mode_of_operation">Не вдалося використати поточний режим роботи. Повернення до режиму без-root для цього сеансу.</string>
+    <string name="failed_to_enable_magisk_deny_list">Не вдалося ввімкнути Magisk DenyList</string>
 </resources>
