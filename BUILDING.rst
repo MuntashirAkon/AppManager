@@ -89,3 +89,8 @@ requirements.  It will ask for KeyStore credentials interactively.
 The script above will also generate a universal APK.
 
 .. _bundletool-all.jar: https://github.com/google/bundletool
+
+
+Build documentation
+===================
+See  `docs/raw/latex/README.md <docs/raw/latex/README.md>`_

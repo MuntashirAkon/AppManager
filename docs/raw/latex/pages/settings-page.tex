@@ -1,18 +1,27 @@
 % SPDX-License-Identifier: GPL-3.0-or-later OR CC-BY-SA-4.0
-\section{Settings Page}\label{sec:settings-page}
+\section{Settings Page}\label{sec:settings-page} %%##pages_settingspage-section==title>>
+%%!!pages_settingspage-section<<
 Settings can be used to customise the behaviour of the app.
+%%!!>>
 
-\subsection{Language}\label{subsec:language}
+\subsection{Language}\label{subsec:language} %%##pages_settingspage-language==title>>
+%%!!pages_settingspage-language<<
 Configure in-app language.
 App Manager currently supports 19 (nineteen) languages.
+%%!!>>
 
-\subsection{App Theme}\label{subsec:app-theme}
+\subsection{App Theme}\label{subsec:app-theme} %%##pages_settingspage-app-theme==title>>
+%%!!pages_settingspage-app-theme<<
 Configure in-app theme.
+%%!!>>
 
-\subsection{Screen Lock}\label{subsec:screen-lock}
+\subsection{Screen Lock}\label{subsec:screen-lock} %%##pages_settingspage-screen-lock==title>>
+%%!!pages_settingspage-screen-lock<<
 Lock App Manager using Android screen lock provided a screen lock is configured.
+%%!!>>
 
-\subsection{Mode of Operation}\label{subsec:mode-of-operation}
+\subsection{Mode of Operation}\label{subsec:mode-of-operation} %%##pages_settingspage-mode-of-operation==title>>
+%%!!pages_settingspage-mode-of-operation<<
 You can select one of the four options:
 \begin{itemize}
     \item \textbf{Auto.} Let AM decide the suitable option for you.
@@ -29,8 +38,10 @@ You can select one of the four options:
     \item \textbf{No-root.} AM runs in no-root mode.
     AM performs better if this is enabled but all the root/ADB features will be disabled.
 \end{itemize}
+%%!!>>
 
-\subsection{Enable/Disable Features}\label{subsec:enable/disable-features}
+\subsection{Enable/Disable Features}\label{subsec:enable/disable-features} %%##pages_settingspage-enabledisable-features==title>>
+%%!!pages_settingspage-enabledisable-features<<
 Enable or disable certain features in App Manager, such as
 \begin{itemize}
     \item Interceptor
@@ -40,16 +51,20 @@ Enable or disable certain features in App Manager, such as
     \item Usage access: With this option turned off, App Manager will never ask for the \textit{Usage Access} permission.
     \item Log viewer
 \end{itemize}
+%%!!>>
 
 
-\subsection{APK Signing}\label{subsec:apk-signing}
+\subsection{APK Signing}\label{subsec:apk-signing} %%##pages_settingspage-apk-signing==title>>
 
-\subsubsection{Signature Schemes}
+\subsubsection{Signature Schemes} %%##pages_settingspage-signatureschemes==title>>
+%%!!pages_settingspage-signatureschemes<<
 Select the \href{https://source.android.com/security/apksigning}{signature schemes} to use.
 It is recommended that you use at least v1 and v2 signature schemes.
 Use the \textit{Reset to Default} button in case you're confused.
+%%!!>>
 
-\subsubsection{Signing Key}
+\subsubsection{Signing Key} %%##pages_settingspage-signingkey==title>>
+%%!!pages_settingspage-signingkey<<
 Configure custom signing key for signing APK files.
 Keys from an existing KeyStore can be imported to App Manager, or a new key can be generated.
 
@@ -58,53 +73,73 @@ Keys from an existing KeyStore can be imported to App Manager, or a new key can 
     The password for the keystore will be asked when necessary.
     Be sure to store the password in a safe place, otherwise the KeyStore cannot be recovered when necessary.
 \end{warning}
+%%!!>>
 
 
-\subsection{Installer}\label{subsec:installer}
+\subsection{Installer}\label{subsec:installer} %%##pages_settingspage-installer==title>>
 
-\subsubsection{Show users in installer}
+\subsubsection{Show users in installer} %%##pages_settingspage-showuserininstaller==title>>
+%%!!pages_settingspage-showuserininstaller<<
 For root/ADB users, a list of users will be displayed before installing the app.
 The app will be installed only for the specified user (or all users if selected).
+%%!!>>
 
-\subsubsection{Sign APK}
+\subsubsection{Sign APK} %%##pages_settingspage-signapk==title>>
+%%!!pages_settingspage-signapk<<
 Whether to sign the APK files before installing the app.
 Visit \hyperref[subsec:apk-signing]{APK signing} section to configure signing.
+%%!!>>
 
-\subsubsection{Install location}
+\subsubsection{Install location} %%##pages_settingspage-installlocation==title>>
+%%!!pages_settingspage-installlocation<<
 Choose APK install location.
 This can be one of \textit{auto}, \textit{internal only} and \textit{prefer external}.
 In newer Android versions, the last option may not always install the app in the external storage.
+%%!!>>
 
-\subsubsection{Installer App}
+\subsubsection{Installer App} %%##pages_settingspage-installerapp==title>>
+%%!!pages_settingspage-installerapp<<
 Select the installer app, useful for some apps which explicitly checks for their installer.
 This only works for root/ADB users.
+%%!!>>
 
 
-\subsection{Back up/Restore}\label{subsec:backup/restore}
+\subsection{Back up/Restore}\label{subsec:backup/restore} %%##pages_settingspage-backuprestore==title>>
+%%!!pages_settingspage-backuprestore<<
 Settings related to \hyperref[sec:backup-restore]{back up/restore}.
+%%!!>>
 
-\subsubsection{Compression method}
+\subsubsection{Compression method} %%##pages_settingspage-compressionmethod==title>>
+%%!!pages_settingspage-compressionmethod<<
 Set which compression method to be used during backups.
 App Manager supports GZip and BZip2 compression methods, GZip being the default compression method.
 It doesn't affect the restore of an existing backup.
+%%!!>>
 
-\subsubsection{Backup Options}\label{subsubsec:settings-backup-options}
+\subsubsection{Backup Options}\label{subsubsec:settings-backup-options} %%##pages_settingspage-settings-backup-options==title>>
+%%!!pages_settingspage-settings-backup-options<<
 Customise the back up/restore dialog.
+%%!!>>
 
-\subsubsection{Backup apps with Android KeyStore}
+\subsubsection{Backup apps with Android KeyStore} %%##pages_settingspage-backupappswithkeystore==title>>
+%%!!pages_settingspage-backupappswithkeystore<<
 Allow backup of apps that has entries in the Android KeyStore (disabled by default).
 Some apps (such as Signal) may crash if restored.
 KeyStore backup also doesn't work from Android 9 but still kept as many apps having KeyStore can be restored without problem.
+%%!!>>
 
-\subsubsection{Encryption}\label{subsubsec:settings-encryption}
+\subsubsection{Encryption}\label{subsubsec:settings-encryption} %%##pages_settingspage-settings-encryption==title>>
+%%!!pages_settingspage-settings-encryption<<
 Set an encryption method for the backups.
 App Manager currently supports OpenPGP (via
 \href{https://f-droid.org/packages/org.sufficientlysecure.keychain/}{OpenKeyChain}), AES and RSA (hybrid encryption with
 AES).
 Like \hyperref[subsec:apk-signing]{APK signing}, The AES and RSA keys are stored in the KeyStore and can be imported
 from other KeyStores.
+%%!!>>
 
-\subsubsection{Backup Volume}\label{subsubsec:backup-volume}
+\subsubsection{Backup Volume}\label{subsubsec:backup-volume} %%##pages_settingspage-backup-volume==title>>
+%%!!pages_settingspage-backup-volume<<
 Lets you select the storage where the backups will be stored.
 
 \begin{tip}{Notice}
@@ -112,10 +147,12 @@ Lets you select the storage where the backups will be stored.
     Backups are stored in \texttt{AppManager} folder inside the storage path.
     This is also where logs and exported APK files are saved.
 \end{tip}
+%%!!>>
 
-\subsection{Rules}\label{subsec:rules}
+\subsection{Rules}\label{subsec:rules} %%##pages_settingspage-rules==title>>
 
-\subsubsection{Instant Component Blocking}\label{subsubsec:instant-component-blocking}
+\subsubsection{Instant Component Blocking}\label{subsubsec:instant-component-blocking} %%##pages_settingspage-instant-component-blocking==title>>
+%%!!pages_settingspage-instant-component-blocking=<<
 By default, blocking rules are not applied unless they are applied explicitly in \hyperref[sec:app-details-page]{the App
 Details page} for any package.
 Upon enabling this option, all (old and new) rules are applied immediately for all apps without explicitly enabling
@@ -129,8 +166,10 @@ blocking for an app.
 \end{warning}
 
 \seealsoinline{\hyperref[subsec:faq:what-is-instant-component-blocking]{FAQ: What is instant component blocking?}}
+%%!!>>
 
-\subsubsection{Import/Export Blocking Rules}
+\subsubsection{Import/Export Blocking Rules} %%##pages_settingspage-importexportblockingrules==title>>
+%%!!pages_settingspage-importexportblockingrules<<
 It is possible to import or export blocking rules within App Manager for all apps.
 There is a choice to export or import only certain rules (components, app ops or permissions) instead of all of them.
 It is also possible to import blocking rules from \href{https://github.com/lihenggui/blocker}{Blocker} and
@@ -148,9 +187,8 @@ options selected in the multi-choice options.
 Similar to export, this may include \hyperref[subsec:faq:what-are-app-components]{app components}, app ops and
 permissions based on the options selected in the multi-choice options.
 
-\paragraph{Import Existing Rules}
+\paragraph{Import Existing Rules}\label{par:import-existing-rules}
 \phantomsection
-\label{par:import-existing-rules}
 Add components disabled by other apps to App Manager.
 App Manager only keeps track of component disabled within App Manager.
 If you use other tools to block app components, you can use this tools to import these disabled components.
@@ -173,17 +211,24 @@ containing rules for a single package and file name being the name of the packag
 \paragraph{Import from Blocker} Import blocking rules from \href{https://github.com/lihenggui/blocker}{Blocker}, each
 file containing rules for a single package.
 These files have a \texttt{.json} extension.
+%%!!>>
 
-\subsubsection{Remove all rules}
+\subsubsection{Remove all rules} %%##pages_settingspage-removeallrules==title>>
+%%!!pages_settingspage-removeallrules<<
 One-click option to remove all rules configured within App Manager.
 This will enable all blocked components, app ops will be set to their default values and permissions will be granted.
+%%!!>>
 
 
-\subsection{Import/Export Keystore}\label{subsec:import/export-keystore}
+\subsection{Import/Export Keystore}\label{subsec:import/export-keystore} %%##pages_settingspage-importexport-keystore==title>>
+%%!!pages_settingspage-importexport-keystore<<
 Import or export the KeyStore used by App Manager.
 This is a Bouncy Castle KeyStore with \texttt{bks} extension.
 Therefore, other KeyStore such as Java KeyStore (JKS) or PKCS \#12 are not supported.
 If you need to import a key from these KeyStores, use the relevant options outlined above.
+%%!!>>
 
-\subsection{About the device}\label{subsec:device-info}
+\subsection{About the device}\label{subsec:device-info} %%##pages_settingspage-device-info==title>>
+%%!!pages_settingspage-device-info<<
 Display Android version, security, CPU, GPU, battery, memory, screen, languages, user info, etc.
+%%!!>>

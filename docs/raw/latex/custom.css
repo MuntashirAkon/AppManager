@@ -36,13 +36,26 @@
     .main, .footnotes {max-width: 42em;}
 }
 
-.mdframed {
+.amalert {
     border-top: 0 !important;
     border-bottom: 0 !important;
     border-right: 0 !important;
     padding: 0 0 0 1em;
     color: unset !important;
     background: unset !important;
+    margin-bottom: 1em;
+}
+
+.amalert p:nth-child(1), .amalert p:nth-child(2) {
+    display: inline;
+}
+
+.amseealsodiv {
+    font-style: oblique; 
+}
+
+.amseealsoinlinediv {
+    font-style: oblique; 
 }
 
 .itemize .colorbox {
@@ -52,6 +65,10 @@
 
 figcaption.caption span.id:after {
     content: ' ';
+}
+
+figure {
+    text-align: center;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -186,7 +203,6 @@ hr {
 }
 
 pre, code, kbd, samp {
-    color: #000;
     font-family: monospace, monospace;
     _font-family: 'courier new', monospace;
     font-size: 0.98em;
