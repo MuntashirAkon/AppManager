@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<resources>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources>
     <string name="disclaimer_header">免责声明</string>
-    <string name="disclaimer_body">App Manager 提供的与 root 权限相关的操作可能会对设备造成损害，App Manager 不对任何因使用不当而造成的损害负责。 
+    <string name="disclaimer_body">App Manager 提供的与 root 权限相关的操作可能会对设备造成损害，App Manager 不对任何因使用不当而造成的损害负责。
 \n
-\n如果你不清楚 root 相关知识和风险，请勿使用该应用内与 root 有关的选项和（或）操作。 
+\n如果你不清楚 root 相关知识和风险，请勿使用该应用内与 root 有关的选项和（或）操作。
 \n
-\n我提供的所有其他应用和网站链接仅为方便用户浏览，不对这些链接所指向的内容负责。 
+\n我提供的所有其他应用和网站链接仅为方便用户浏览，不对这些链接所指向的内容负责。
 \n
-\n使用 App Manager 则表示你已同意该免责声明并自己承担相应责任，且知晓我不会因你对设备进行的任操作所带来的任何影响负责。</string>
-    <string name="disclaimer_footer">© 2020–2021 Muntashir Al-Islam</string>
+\n使用 App Manager 则表示你已同意该免责声明并自己承担相应责任，且知晓我不会因你对设备进行的任操作所带来的任何负面影响负责。</string>
+    <string name="disclaimer_footer">© 2020–2022 Muntashir Al-Islam</string>
     <string name="disclaimer_agree_forever">不再显示</string>
     <string name="disclaimer_agree">我已阅读并同意免责声明</string>
     <string name="disclaimer_exit">退出</string>
