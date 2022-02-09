@@ -7,122 +7,134 @@
   alias awk="gawk"
 }
 
-function checkdeps() {
-  echo Warning:This checker doesnt check version.
-  which pandoc && echo Pass || echo -n "Pandoc not found!"
-  { which pandoc-crossref || ls ./pandoc-crossref; } && echo Pass || echo -n "pandoc-crossref not found!"
-  which python && echo Pass || echo -n "Python not found!"
-  which xmllint && echo Pass || echo -n "xmllint not found!"
-  which perl && echo Pass || echo -n "Perl not found!"
+function check_deps() {
+  echo -n "Pandoc: " && ( command -v pandoc || echo "Not found." )
+  echo -n "pandoc-crossref: " && ( { command -v pandoc-crossref || ls ./pandoc-crossref; } || echo "Not found." )
+  echo -n "Python: " && ( command -v python || echo "Not found." )
+  echo -n "xmllint: " && ( command -v xmllint || echo "Not found." )
+  echo -n "Perl: " && ( command -v perl || echo "Not found." )
+  { [[ $(uname) == Darwin ]] || [[ $(uname) =~ .*BSD.* ]]; } && {
+    echo -n "GNU awk: " && ( command -v gawk || echo "Not found." )
+    echo -n "GNU grep: " && ( command -v ggrep || echo "Not found." )
+    echo -n "GNU sed: " && ( command -v gsed || echo "Not found." )
+  }
+  echo -n "urlextract: " && ( command -v urlextract || echo "Not found." )
 }
 
-function buildhtml() {
-  OUTPUT=main.pandoc.html
-  pandoc main.tex -c main.css -c custom.css -o $OUTPUT -t html5 -f latex -s --toc -N --section-divs --default-image-extension=png -i -F pandoc-crossref --citeproc --verbose
+function build_html() {
+  OUTPUT="$2"
+  if [[ "$OUTPUT" == "" ]]; then
+    exit 1
+  fi
+  MAIN_TEX="main.tex"
+  MAIN_CSS="main.css"
+  CUSTOM_CSS="custom.css"
+  pandoc $MAIN_TEX -c $MAIN_CSS -c $CUSTOM_CSS -o "$OUTPUT" -t html5 -f latex -s --toc -N --section-divs \
+    --default-image-extension=png -i -F pandoc-crossref --citeproc --highlight-style=monochrome --verbose
 
   # Fix custom colors
   while read -r line; do
     colorset=$(echo "$line" | sed -e "s/\\definecolor{//" -e "s/}{HTML}{/ /" -e "s/}//")
     colorname=$(echo "$colorset" | awk '{print $1}')
     colorcode=$(echo "$colorset" | awk '{print $2}' | sed -e "s/^/#/")
-    sed -i -e "s/style\=\"background-color\: ${colorname}\"/style\=\"background-color\: ${colorcode}\"/g" \
-      -e "s/style\=\"color\: ${colorname}\"/style\=\"color\: ${colorcode}\"/g" $OUTPUT
+    sed -i -e "s/style\=\"background-color\: ${colorname}\"/class=\"colorbox\" style\=\"background-color\: ${colorcode}\"/g" \
+      -e "s/style\=\"color\: ${colorname}\"/style\=\"color\: ${colorcode}\"/g" "$OUTPUT"
   done < <(grep "\definecolor" main.tex)
 
   # Add hyperlinks in the section titles
   while read -r line; do
     sectionid=$(echo "$line" | grep -oP "(?<=\<span class\=\"toc-section-number\"\>).*(?=<\/span\>)")
-    tocsectionid=toc:${sectionid}
-    sed -i -r "s/<span class=\"toc-section-number\">${sectionid}<\/span>/<span class\=\"toc-section-number\" id\=\"${tocsectionid}\"\>${sectionid}<\/span\>/g" $OUTPUT
-    sed -i -r "s/(<(.*) data-number=\"${sectionid}\"><span class=\"header-section-number\">${sectionid}<\/span>.*<\/\2>)/<a href=\"#${tocsectionid}\">\1<\/a>/" $OUTPUT
-  done < <(grep -o "<span class=\"toc-section-number\">.*<\/span>" $OUTPUT)
+    tocsectionid="toc:${sectionid}"
+    sed -i -r "s/<span class=\"toc-section-number\">${sectionid}<\/span>/<span class\=\"toc-section-number\" id\=\"${tocsectionid}\"\>${sectionid}<\/span\>/g" "$OUTPUT"
+    sed -i -r "s/(<(.*) data-number=\"${sectionid}\"><span class=\"header-section-number\">${sectionid}<\/span>.*<\/\2>)/<a href=\"#${tocsectionid}\">\1<\/a>/" "$OUTPUT"
+  done < <(grep -o "<span class=\"toc-section-number\">.*<\/span>" "$OUTPUT")
 
   # Fix icons (need --default-image-extension=png option)
-  sed -i -r -e "s/(<img src\=\"images\/icon\.png\" style\=\")width\:2cm(\" alt\=\"image\")/\1width:16.69%\2/g" $OUTPUT
-
-  # Hide Level5 section numbering
-  sed -i -r -e "s/(<span class=\"header-section-number\")(>[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*<\/span>)/\1 style=\"display:none\;\"\2/g" $OUTPUT
+  sed -i -r -e "s/(<img src\=\"images\/icon\.png\" style\=\")width\:2cm(\" alt\=\"image\")/\1width:16.69%\2/g" "$OUTPUT"
 
   # Fix alerts
-  sed -i -r "s/<div class\=\"amalert--(.*)\">/<div class\=\"amalert\" style\=\"border\: 3.0pt solid #\1\;\">/g" $OUTPUT
+  sed -i -r "s/<div class\=\"amalert--(.*)\">/<div class\=\"amalert \1\">/g" "$OUTPUT"
 }
 
 function update_xliff() {
-  OUTPUT=strings.xml
-  rm $OUTPUT
-
+  OUTPUT="$2"
+  rm "$OUTPUT" 2> /dev/null
+  # Read all tex files
   while read -r file; do
+    # Title
     while read -r line_title; do
-      stringkey_title=$(echo "${line_title}" | grep -oP "(?<=\%\%##).*(?=>>)")
+      title_key=$(echo "${line_title}" | grep -oP "(?<=\%\%##).*(?=>>)")
       nests=0
       while true; do
-        string_title=$(echo "${line_title}" | grep -oP '((?<=section{)|(?<=subsection{)|(?<=subsubsection{)|(?<=chapter{)|(?<=caption{)|(?<=paragraph{))([^}]*}){'$nests'}[^}]*(?=})')
-        open=$(echo "$string_title" | grep -o "{" | wc -l)
-        close=$(echo "$string_title" | grep -o "}" | wc -l)
-        [[ $open == $close ]] && break
+        title_value=$(echo "${line_title}" | grep -oP '((?<=section{)|(?<=subsection{)|(?<=subsubsection{)|(?<=chapter{)|(?<=caption{)|(?<=paragraph{))([^}]*}){'$nests'}[^}]*(?=})')
+        open=$(echo "$title_value" | grep -o "{" | wc -l)
+        close=$(echo "$title_value" | grep -o "}" | wc -l)
+        [[ $open == "$close" ]] && break
         [[ $open -gt $close ]] && nests=$((nests + 1))
       done
-      echo "<string name=\"${stringkey_title}\"><![CDATA[${string_title}]]></string>" >>${OUTPUT}
-    done < <(grep -P "(?<=\%\%##).*(?=>>)" ${file} | sed -e 's/\\/\\\\/g')
-
-    while read -r stringkey_content; do
-      string_content=$(sed '1,/%%!!'"${stringkey_content}"'<</d;/%%!!>>/,$d' ${file})
-      echo "<string name=\"${stringkey_content}\"><![CDATA[${string_content}]]></string>" >>${OUTPUT}
+      echo "<string name=\"${title_key}\"><![CDATA[${title_value}]]></string>" >> "${OUTPUT}"
+    done < <(grep -P "(?<=\%\%##).*(?=>>)" "${file}" | sed -e 's/\\/\\\\/g')
+    # Content
+    while read -r content_key; do
+      content_value=$(sed '1,/%%!!'"${content_key}"'<</d;/%%!!>>/,$d' "${file}")
+      echo "<string name=\"${content_key}\"><![CDATA[${content_value}]]></string>" >> "${OUTPUT}"
     done < <(grep -oP "(?<=\%\%!!).*(?=<<)" "${file}")
   done < <(find ./ -type f -name "*.tex")
+  # Write header
   sed -i -e '1i <?xml version="1.0" encoding="utf-8"?>' \
+    -e '1i <!-- Generated by doctool.sh. DO NOT EDIT THIS FILE. -->' \
     -e '1i <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">' \
-    -e '$a </resources>' ${OUTPUT}
+    -e '$a </resources>' "${OUTPUT}"
 }
 
 function merge_translation() {
-  INPUT=strings.xml
-  OUTPUTDIR=../latextranslated
-  keys=$(grep -oP "(?<=<string name=\").*?(?=\">)" ${INPUT})
+  INPUT="$2"
+  OUTPUT_DIR="$3"
+  keys=$(grep -oP "(?<=<string name=\").*?(?=\">)" "${INPUT}")
 
-  find . | grep -e '\.tex$' -e '\.png$' -e '.png$' -e '.css$' -e main.cfg -e doctool.sh -e Makefile | rsync -R $(cat) ${OUTPUTDIR}
+  find . | grep -e '\.tex$' -e '\.png$' -e '.png$' -e '.css$' -e main.cfg -e doctool.sh -e Makefile | rsync -R $(cat) "${OUTPUT_DIR}"
 
   while read -r key_content; do
-    string_content=$(echo 'cat resources/string[@name="'${key_content}'"]/text()' | xmllint --shell "${INPUT}" | sed -e '$d' -e '1d' | sed -e 's/\\/\\\\/g' -e '1s/^<!\[CDATA\[//g' -e '$s/]]>$//g')
-    file=$(grep -rl --include="*.tex" "\%\%!!${key_content}<<" ${OUTPUTDIR})
-    source=$(cat ${file})
-    echo "import re;import sys;print(re.sub(r'(?<=%%!!"${key_content}"<<\n)[^%%!!>>]*(?=%%!!>>)', sys.argv[2]+'\n', sys.argv[1], flags=re.M))" | python - "${source}" "${string_content}" >"${file}"
+    content_value=$(echo 'cat resources/string[@name="'${key_content}'"]/text()' | xmllint --shell "${INPUT}" | sed -e '$d' -e '1d' | sed -e 's/\\/\\\\/g' -e '1s/^<!\[CDATA\[//g' -e '$s/]]>$//g')
+    file=$(grep -rl --include="*.tex" "\%\%!!${key_content}<<" "${OUTPUT_DIR}")
+    source=$(cat "${file}")
+    echo "import re;import sys;print(re.sub(r'(?<=%%!!"${key_content}"<<\n)[^%%!!>>]*(?=%%!!>>)', sys.argv[2]+'\n', sys.argv[1], flags=re.M))" | python - "${source}" "${content_value}" >"${file}"
   done < <(echo "$keys" | grep -Pv ".*(?===title)")
 
   while read -r key_title; do
-    string_title=$(echo 'cat resources/string[@name="'${key_title}'"]/text()' | xmllint --shell "${INPUT}" | sed -e '$d' -e '1d' | sed -e 's/\\/\\\\/g' -e 's/\//\\\//g' -e '1s/^<!\[CDATA\[//g' -e '$s/]]>$//g')
-    file=$(grep -rl --include="*.tex" "\%\%##${key_title}>>" ${OUTPUTDIR})
+    title_value=$(echo 'cat resources/string[@name="'${key_title}'"]/text()' | xmllint --shell "${INPUT}" | sed -e '$d' -e '1d' | sed -e 's/\\/\\\\/g' -e 's/\//\\\//g' -e '1s/^<!\[CDATA\[//g' -e '$s/]]>$//g')
+    file=$(grep -rl --include="*.tex" "\%\%##${key_title}>>" "${OUTPUT_DIR}")
     nests=0
     while true; do
       chknests=$(grep -oP '((?<=section{)|(?<=subsection{)|(?<=subsubsection{)|(?<=chapter{)|(?<=caption{)|(?<=paragraph{))([^}]*}){'$nests'}[^}]*(?=}.*\%\%\#\#${key_title}>>)')
       open=$(echo "$chknests" | grep -o "{" | wc -l)
       close=$(echo "$chknests" | grep -o "}" | wc -l)
-      [[ $open == $close ]] && break
+      [[ $open == "$close" ]] && break
       [[ $open -gt $close ]] && nests=$((nests + 1))
     done
-    perl -i -e "s/(section\{|subsection\{|subsubsection\{|chapter\{|caption\{|paragraph\{)$chknests(\}.*\%\%\#\#${key_title}>>)/\1${string_title}\2/" ${file}
+    perl -i -e "s/(section\{|subsection\{|subsubsection\{|chapter\{|caption\{|paragraph\{)$chknests(\}.*\%\%\#\#${key_title}>>)/\1${title_value}\2/" ${file}
   done < <(echo "$keys" | grep -P ".*(?===title)")
 }
 
-function detectabuse() {
-  baseDir=./
-  compareDir=../latextranslated
+function detect_abuse() {
+  baseDir=$2
+  compareDir=$3
 
   # Compare number of latex tags
 
   # Check URL changes
-  baseFiles=$(find $baseDir | grep -e '\.tex$' | sed -e "s%$baseDir%%g" -e "s/^\///g")
-  compareFiles=$(find $compareDir | grep -e '\.tex$' | sed -e "s%$compareDir%%g" -e "s/^\///g")
+  baseFiles=$(find "$baseDir" | grep -e '\.tex$' | sed -e "s%$baseDir%%g" -e "s/^\///g")
+  compareFiles=$(find "$compareDir" | grep -e '\.tex$' | sed -e "s%$compareDir%%g" -e "s/^\///g")
 
   while read -r test; do
     { echo "$compareFiles" | grep "$test" >/dev/null; } && {
-      base=$(urlextract $baseDir/"$test")
-      compare=$(urlextract $compareDir/"$test")
+      base=$(urlextract "$baseDir/$test")
+      compare=$(urlextract "$compareDir/$test")
 
       echo "$compare" | grep -vh "$base"
       echo "--"
       echo " "
-      echo "WARNING:$baseDir/$test(BASE) does not have these URLs,but $compareDir/$test(COMPARE) has.These links has possibility of spam!"
+      echo "WARNING: $baseDir/$test(BASE) does not have these URLs, but $compareDir/$test(COMPARE) has. These links has possibility of spam!"
       echo "--"
       echo " "
     }
@@ -130,9 +142,9 @@ function detectabuse() {
 }
 
 case $1 in
-"build") buildhtml ;;
-"update") update_xliff ;;
-"merge") merge_translation ;;
-"check") checkdeps ;;
-"checkabuse") detectabuse ;;
+"build") build_html "$@" ;;
+"update") update_xliff "$@" ;;
+"merge") merge_translation "$@" ;;
+"check") check_deps ;;
+"checkabuse") detect_abuse "$@" ;;
 esac

@@ -4,11 +4,11 @@
 ```
 ./doctool.sh VERB [ARGS]
 Where:
-build                   Build HTML from TeX using pandoc.
-update [<output.xml>]   Extract strings and create xliff translation file.
-merge  [<input.xml>] [<output-dir>] Merge translation from xliff to TeX.
+build <output.html>     Build HTML from TeX using pandoc.
+update <output.xml>     Extract strings and create xliff translation file.
+merge <input.xml> <output-dir>  Merge translation from xliff to TeX.
 check                   Run dependency checker.
-checkabuse              Detect spams or mistranslations.
+checkabuse <base-dir> <target-dir>  Detect spams or mistranslations.
 ```
 
 ## Requirements
@@ -16,10 +16,10 @@ checkabuse              Detect spams or mistranslations.
 * [pandoc](https://github.com/jgm/pandoc) (v2.13 or later) (for macOS, run `brew install pandoc`)
 * [pandoc-crossref](https://github.com/lierdakil/pandoc-crossref) (for macOS, run `brew install pandoc-crossref`)
 * Python
-* GNU Sed (for macOS, run `brew install gsed`)
 * Bash
-* Awk
+* GNU awk (for macOS, run `brew install gawk`)
 * GNU grep (for macOS, run `brew install ggrep`)
+* GNU Sed (for macOS, run `brew install gsed`)
 * xmllint
 * Perl
 * urlextract (`pip install urlextract`)

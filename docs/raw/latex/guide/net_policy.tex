@@ -12,30 +12,30 @@ Net policy allows a user to configure certain networking behaviour of an app wit
 However, the features it offers largely depend on Android version and ROM. A list of known net policies are listed below:
 
 \begin{enumerate}
-    \item \textbf{None} or \texttt{POLICY\_NONE}: (AOSP) No specific network policy is set.
+    \item \textbf{None} or \textbf{\texttt{POLICY\_NONE}}: (AOSP) No specific network policy is set.
     System can still assign rules depending on the nature of the app.
 
-    \item \textbf{Reject background data} or \texttt{POLICY\_REJECT\_METERED\_BACKGROUND}: (AOSP) Reject network usage on metered networks when the application is in background.
+    \item \textbf{Reject background data} or \textbf{\texttt{POLICY\_REJECT\_METERED\_BACKGROUND}}: (AOSP) Reject network usage on metered networks when the application is in background.
 
-    \item \textbf{Allow background data when Data Saver is on} or \texttt{POLICY\_ALLOW\_METERED\_BACKGROUND}: (AOSP) Allow metered network use in the background even when data saving mode is enabled.
+    \item \textbf{Allow background data when Data Saver is on} or \textbf{\texttt{POLICY\_ALLOW\_METERED\_BACKGROUND}}: (AOSP) Allow metered network use in the background even when data saving mode is enabled.
 
-    \item \textbf{Reject cellular data} or \texttt{POLICY\_REJECT\_CELLULAR} (Android 11+) or \texttt{POLICY\_REJECT\_ON\_DATA} (up to Android 10): (Lineage OS) Reject mobile/cellular data.
+    \item \textbf{Reject cellular data} or \textbf{\texttt{POLICY\_REJECT\_CELLULAR}} (Android 11+) or \textbf{\texttt{POLICY\_REJECT\_ON\_DATA}} (up to Android 10): (Lineage OS) Reject mobile/cellular data.
     Signals network unavailable to the configured app as if the mobile data is inactive.
 
-    \item \textbf{Reject VPN data} or \texttt{POLICY\_REJECT\_VPN} (Android 11+) or \texttt{POLICY\_REJECT\_ON\_VPN} (up to Android 10): (Lineage OS) Reject VPN data.
+    \item \textbf{Reject VPN data} or \textbf{\texttt{POLICY\_REJECT\_VPN}} (Android 11+) or \textbf{\texttt{POLICY\_REJECT\_ON\_VPN}} (up to Android 10): (Lineage OS) Reject VPN data.
     Signals network unavailable to the configured app as if the VPN is inactive.
 
-    \item \textbf{Reject Wi-Fi data} or \texttt{POLICY\_REJECT\_WIFI} (Android 11+) or \texttt{POLICY\_REJECT\_ON\_WLAN} (up to Android 10): (Lineage OS) Reject Wi-Fi data.
+    \item \textbf{Reject Wi-Fi data} or \textbf{\texttt{POLICY\_REJECT\_WIFI}} (Android 11+) or \textbf{\texttt{POLICY\_REJECT\_ON\_WLAN}} (up to Android 10): (Lineage OS) Reject Wi-Fi data.
     Signals network unavailable to the configured app as if the device is not connected to a Wi-Fi network.
 
-    \item \textbf{Disable network access} or \texttt{POLICY\_REJECT\_ALL} (Android 11+) or \texttt{POLICY\_NETWORK\_ISOLATED} (up to Android 10): (Lineage OS) Reject network access in all circumstances.
+    \item \textbf{Disable network access} or \textbf{\texttt{POLICY\_REJECT\_ALL}} (Android 11+) or \textbf{\texttt{POLICY\_NETWORK\_ISOLATED}} (up to Android 10): (Lineage OS) Reject network access in all circumstances.
     This is not the same as enforcing the other three policies above, and is the recommended policy for dodgy apps.
     If this policy is enforced, there is no need to enforce the other policies.
 
-    \item \texttt{POLICY\_ALLOW\_METERED\_IN\_ROAMING}: (Samsung) Possibly allow metered network use during roaming.
+    \item \textbf{\texttt{POLICY\_ALLOW\_METERED\_IN\_ROAMING}}: (Samsung) Possibly allow metered network use during roaming.
     Exact meaning is currently unknown.
 
-    \item \texttt{POLICY\_ALLOW\_WHITELIST\_IN\_ROAMING}: (Samsung) Possibly allow network use during roaming.
+    \item \textbf{\texttt{POLICY\_ALLOW\_WHITELIST\_IN\_ROAMING}}: (Samsung) Possibly allow network use during roaming.
     Exact meaning is currently unknown.
 \end{enumerate}
 

@@ -51,34 +51,34 @@
 % po4a: environment tip [_]
 \newenvironment{tip}[1]
 {%
-    \begin{amalert--000000}
+    \begin{amalert--tip}
     \noindent
     \textbf{\textit{#1.}}
     }%
     {
-    \end{amalert--000000}
+    \end{amalert--tip}
 }
 
 % po4a: environment warning [_]
 \newenvironment{warning}[1]
 {
-    \begin{amalert--FFB529}
+    \begin{amalert--warning}
     \noindent
     \textbf{\textit{#1.}}
     }%
     {
-    \end{amalert--FFB529}
+    \end{amalert--warning}
 }
 
 % po4a: environment danger [_]
 \newenvironment{danger}[1]
 {
-    \begin{amalert--B80000}
+    \begin{amalert--danger}
     \noindent
     \textbf{\textit{#1.}}
     }%
     {
-    \end{amalert--B80000}
+    \end{amalert--danger}
 }
 
 % --------------------
@@ -93,35 +93,46 @@
 % ----------------------
 % po4a: command amseealsoinline {_}
 \newcommand{\seealsoinline}[1]{
-\begin{amseealsoinlinediv}
+\begin{seealso-inline}
 \noindent\textit{See also: {#1}}
-\end{amseealsoinlinediv}
+\end{seealso-inline}
 }
 % po4a: environment amseealso
 \newenvironment{amseealso}{
-\begin{amseealsodiv}
-\itshape See also: 
-\itemize
-}
-{
-\enditemize
-\end{amseealsodiv}
+    \begin{seealso}
+        \itshape See also:
+        \begin{enumerate}
+        }
+        {
+        \end{enumerate}
+    \end{seealso}
 }
 
 % -------------------
 % Colours used in AM
 % -------------------
+% The format used here is parsed by Regex and should not be altered.
+\definecolor{AMRed}{HTML}{FF0000}
 \definecolor{AMDarkRed}{HTML}{790D0D}
 \definecolor{AMLightRed}{HTML}{FF8A80}
 \definecolor{AMVeryDarkRed}{HTML}{4F1C14}
 \definecolor{AMVividOrange}{HTML}{FF8017}
-\definecolor{AMVeryDarkOrange}{HTML}{FF8017}
+\definecolor{AMVeryDarkOrange}{HTML}{FF801780}
 \definecolor{AMSoftMagenta}{HTML}{EA80FC}
 \definecolor{AMVeryDarkViolet}{HTML}{431C5D}
 \definecolor{AMLightGreyishOrange}{HTML}{FCEED1}
 \definecolor{AMDarkBlue}{HTML}{091F36}
 \definecolor{AMOrange}{HTML}{E05915}
 \definecolor{AMDarkCyan}{HTML}{09868B}
+\definecolor{AMYellow}{HTML}{FFFF00}
+\definecolor{SunTan}{HTML}{F6D5A8}
+
+% ------------------
+% colorbox override
+% ------------------
+\newcommand{\backgroundcolor}[2]{
+
+}
 
 % META
 \title{App Manager}
@@ -130,7 +141,7 @@
 \begin{document}
     \input{titlepage.tex}
     \ifdefined\HCode
-        % Don't display table of contents for tex4ht
+    % Don't display table of contents for tex4ht
     \else
         \tableofcontents
     \fi

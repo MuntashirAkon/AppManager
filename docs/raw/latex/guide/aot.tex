@@ -114,8 +114,8 @@ In order to enable ADB over TCP, you have to set up ADB in your PC or Mac. \text
 \begin{tip}{Tip}
     If you are not afraid to use command line, here's a one liner:
     \begin{minted}[frame=lines]{bash}
-cd ~/Downloads && curl -o platform-tools.zip -L
-https://dl.google.com/android/repository/platform-tools-latest-darwin.zip &&
+cd ~/Downloads && curl -o platform-tools.zip -L \
+https://dl.google.com/android/repository/platform-tools-latest-darwin.zip && \
 unzip platform-tools.zip && rm platform-tools.zip && cd platform-tools
     \end{minted}
     After that, you can simply type \texttt{./adb} in the in same \textit{Terminal} window to access ADB\@.
@@ -129,9 +129,9 @@ unzip platform-tools.zip && rm platform-tools.zip && cd platform-tools
     \texttt{Alter} and \texttt{T} at the same time
     \item Run the following command:
     \begin{minted}[frame=lines,autogobble]{bash}
-    cd ~/Downloads && curl -o platform-tools.zip -L
-    https://dl.google.com/android/repository/platform-tools-latest-linux.zip &&
-    unzip platform-tools.zip && rm platform-tools.zip && cd platform-tools
+cd ~/Downloads && curl -o platform-tools.zip -L \
+https://dl.google.com/android/repository/platform-tools-latest-linux.zip && \
+unzip platform-tools.zip && rm platform-tools.zip && cd platform-tools
     \end{minted}
     \item If it is successful, you can simply type \texttt{./adb} in the in \textit{same} terminal emulator window or
     type \texttt{\textasciitilde/Downloads/platform-tools/adb} in any terminal emulator to access ADB\@.
@@ -158,8 +158,8 @@ command that you needed to use based on your platform and software in the previo
     \item To confirm that everything is working as expected, type \texttt{adb devices} in your terminal. If your device
     is connected successfully, you will see something like this:
     \begin{Verbatim}
-    List of devices attached
-    xxxxxxxx  device
+List of devices attached
+xxxxxxxx  device
     \end{Verbatim}
     \begin{tip}{Notice}
         In some Android phones, an alert prompt will be appeared with a message \textbf{Allow USB Debugging}
@@ -167,7 +167,7 @@ command that you needed to use based on your platform and software in the previo
     \end{tip}
     \item Finally, run the following command to enable ADB over TCP:
     \begin{minted}[frame=lines,autogobble]{bash}
-        adb tcpip 5555
+adb tcpip 5555
     \end{minted}
 \end{enumerate}
 
@@ -179,8 +179,7 @@ command that you needed to use based on your platform and software in the previo
 \subsubsection{Enable ADB mode on App Manager}\label{subsubsec:adb-mode-on-app-manager} %%##guide_aot-adbmodeam==title>>
 %%!!guide_aot-adbmodeam<<
 After enabling ADB over TCP (in the previous subsections), open App Manager (AM). You should see \textbf{working on ADB
-mode} toast message at the bottom. If not, remove AM from the recents and open AM again from the launcher. If you see
-the toast message, you can safely \hyperref[subsubsec:stop-adb-over-tcp]{stop ADB over TCP}.
+mode} toast message at the bottom. If not, remove AM from the recents and open AM again from the launcher.
 
 \begin{tip}{Notice}
     In some Android phones, the USB cable is needed to be disconnected from the PC in order for it to work.
@@ -191,14 +190,6 @@ the toast message, you can safely \hyperref[subsubsec:stop-adb-over-tcp]{stop AD
     §\cref{subsubsec:enable-adb-over-tcp-via-pc-or-mac} again.
 \end{warning}
 %%!!>>
-
-\subsubsection{Stop ADB over TCP}\label{subsubsec:stop-adb-over-tcp} %%##guide_aot-stopaot==title>>
-%%!!guide_aot-stopaot<<
-In order to ensure device security, you should stop ADB over TCP right after AM detects it. To do that, connect your device to your PC or Mac and run the following command:
-\begin{minted}[frame=lines,autogobble]{bash}
-adb kill-server
-\end{minted}
-Replace \texttt{adb} with \texttt{./adb} or any other command that you had to use in previous steps.
 
 \begin{warning}{Lineage OS users}
     You can turn off \textbf{ADB over Network} in developer options, but turning off this option will also stop App
