@@ -1134,4 +1134,5 @@
     <string name="uses_play_app_signing">Assinatura de apps do Google Play</string>
     <string name="priority">Prioridade</string>
     <string name="virtual_memory">Memória virtual</string>
+    <string name="toggle_internet">Usar a Internet</string>
 </resources>
