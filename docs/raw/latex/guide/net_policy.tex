@@ -1,0 +1,49 @@
+% SPDX-License-Identifier: GPL-3.0-or-later OR CC-BY-SA-4.0
+\section{Net Policy}\label{sec:net-policy} %%##guide_netpolicy-section==title>>
+%%!!guide_netpolicy-section<<
+Short for \textbf{Network policy} or network policies.
+It is usually located in the Android settings under \textbf{Mobile data \& Wifi} section in the app info page of an app.
+Not all policies are guaranteed to be included in this page (e.g.\ Samsung), and not all settings are well-understood due to lack of documentation.
+App Manager can display all the net policies declared in the \href{https://android.googlesource.com/platform/frameworks/base/+/master/core/java/android/net/NetworkPolicyManager.java}{NetworkPolicyManager}.
+Policies unknown to App Manager will have a \textit{Unknown} prefix along with the policy constant name and number in the hexadecimal format.
+Unknown policies should be reported to App Manager for inclusion.
+
+Net policy allows a user to configure certain networking behaviour of an app without modifying the ip tables directly and/or running a firewall app.
+However, the features it offers largely depend on Android version and ROM. A list of known net policies are listed below:
+
+\begin{enumerate}
+    \item \textbf{None} or \texttt{POLICY\_NONE}: (AOSP) No specific network policy is set.
+    System can still assign rules depending on the nature of the app.
+
+    \item \textbf{Reject background data} or \texttt{POLICY\_REJECT\_METERED\_BACKGROUND}: (AOSP) Reject network usage on metered networks when the application is in background.
+
+    \item \textbf{Allow background data when Data Saver is on} or \texttt{POLICY\_ALLOW\_METERED\_BACKGROUND}: (AOSP) Allow metered network use in the background even when data saving mode is enabled.
+
+    \item \textbf{Reject cellular data} or \texttt{POLICY\_REJECT\_CELLULAR} (Android 11+) or \texttt{POLICY\_REJECT\_ON\_DATA} (up to Android 10): (Lineage OS) Reject mobile/cellular data.
+    Signals network unavailable to the configured app as if the mobile data is inactive.
+
+    \item \textbf{Reject VPN data} or \texttt{POLICY\_REJECT\_VPN} (Android 11+) or \texttt{POLICY\_REJECT\_ON\_VPN} (up to Android 10): (Lineage OS) Reject VPN data.
+    Signals network unavailable to the configured app as if the VPN is inactive.
+
+    \item \textbf{Reject Wi-Fi data} or \texttt{POLICY\_REJECT\_WIFI} (Android 11+) or \texttt{POLICY\_REJECT\_ON\_WLAN} (up to Android 10): (Lineage OS) Reject Wi-Fi data.
+    Signals network unavailable to the configured app as if the device is not connected to a Wi-Fi network.
+
+    \item \textbf{Disable network access} or \texttt{POLICY\_REJECT\_ALL} (Android 11+) or \texttt{POLICY\_NETWORK\_ISOLATED} (up to Android 10): (Lineage OS) Reject network access in all circumstances.
+    This is not the same as enforcing the other three policies above, and is the recommended policy for dodgy apps.
+    If this policy is enforced, there is no need to enforce the other policies.
+
+    \item \texttt{POLICY\_ALLOW\_METERED\_IN\_ROAMING}: (Samsung) Possibly allow metered network use during roaming.
+    Exact meaning is currently unknown.
+
+    \item \texttt{POLICY\_ALLOW\_WHITELIST\_IN\_ROAMING}: (Samsung) Possibly allow network use during roaming.
+    Exact meaning is currently unknown.
+\end{enumerate}
+
+\begin{tip}{Note}
+    Corresponding Lineage OS patches are as follows:
+    \begin{enumerate}
+        \item \href{https://github.com/LineageOS/android\_frameworks\_base/commit/a04932bafbbf7d99efd18276152cc2c9c9b2073e}{fw/b: Squash of app fw restriction commits}
+        \item \href{https://github.com/LineageOS/android\_frameworks\_base/commit/02c8c82854348f52afe2199f310f44b5f578b5b8}{fw/b: Add support for per app network isolation}
+    \end{enumerate}
+\end{tip}
+%%!!>>
