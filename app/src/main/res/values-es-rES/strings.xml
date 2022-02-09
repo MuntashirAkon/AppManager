@@ -1139,4 +1139,8 @@
     <string name="vt_disclaimer">VirusTotal y sus logotipos son una marca registrada de Chronicle LLC. Ni App Manager -el cliente de la API- ni sus autores son responsables de los datos que puedas enviar a VirusTotal.</string>
     <string name="failed_to_change_app_op_mode">No se pudo cambiar el modo de operación de la aplicación.</string>
     <string name="failed_to_disable_magisk_deny_list">No se pudo deshabilitar Magisk DenyList</string>
+    <plurals name="usage_minutes">
+        <item quantity="one">Hola</item>
+        <item quantity="other">Holas</item>
+    </plurals>
 </resources>
