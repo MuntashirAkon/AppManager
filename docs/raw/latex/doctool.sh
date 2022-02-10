@@ -27,10 +27,17 @@ function build_html() {
     exit 1
   fi
   MAIN_TEX="main.tex"
-  MAIN_CSS="main.css"
   CUSTOM_CSS="custom.css"
-  pandoc $MAIN_TEX -c $MAIN_CSS -c $CUSTOM_CSS -o "$OUTPUT" -t html5 -f latex -s --toc -N --section-divs \
+  pandoc $MAIN_TEX -c $CUSTOM_CSS -o "$OUTPUT" -t html5 -f latex -s --toc -N --section-divs \
     --default-image-extension=png -i -F pandoc-crossref --citeproc --highlight-style=monochrome --verbose
+
+  # Add App Manager version
+  am_version=$(grep -m1 versionName ../../../app/build.gradle | awk -F \" '{print $2}')
+  sed -i -e "s/\$ABC\$APP-MANAGER-VERSION\$XYZ\\$/${am_version}/" "$OUTPUT"
+
+  # Replace date with current date
+  today=$(date "+%d %B %Y")
+  sed -i -e "s/\$ABC\$USER-MANUAL-DATE\$XYZ\\$/${today}/" "$OUTPUT"
 
   # Fix custom colors
   while read -r line; do
@@ -49,11 +56,10 @@ function build_html() {
     sed -i -r "s/(<(.*) data-number=\"${sectionid}\"><span class=\"header-section-number\">${sectionid}<\/span>.*<\/\2>)/<a href=\"#${tocsectionid}\">\1<\/a>/" "$OUTPUT"
   done < <(grep -o "<span class=\"toc-section-number\">.*<\/span>" "$OUTPUT")
 
-  # Fix icons (need --default-image-extension=png option)
-  sed -i -r -e "s/(<img src\=\"images\/icon\.png\" style\=\")width\:2cm(\" alt\=\"image\")/\1width:16.69%\2/g" "$OUTPUT"
-
   # Fix alerts
   sed -i -r "s/<div class\=\"amalert--(.*)\">/<div class\=\"amalert \1\">/g" "$OUTPUT"
+
+
 }
 
 function update_xliff() {

@@ -1,9 +1,9 @@
 % SPDX-License-Identifier: GPL-3.0-or-later OR CC-BY-SA-4.0
 \section{App Details Page}\label{sec:app-details-page} %%##pages_appdetails-section==title>>
 %%!!pages_appdetails-section<<
-\textbf{App Details} page consists of 11 (eleven) tabs. It basically describes almost every bit of information an app
-can have including all attributes from app manifest, permissions, \hyperref[ch:app-ops]{app operations}, signing info,
-etc.
+\textbf{App Details} page consists of 11 (eleven) tabs. It describes almost every bit of information an app
+can have, including all attributes from its manifest, \hyperref[ch:app-ops]{application operations}, signing
+information, libraries, and so on.
 %%!!>>
 
 \subsection{Colour Codes}\label{subsec:app-details-colour-codes} %%##pages_appdetails-colour-codes==title>>
@@ -11,27 +11,29 @@ etc.
 List of background colours used in this page, and their meaning:
 \begin{itemize}
     \item \colorbox{AMRed}{\textcolor{black}{Red (day)}} / \colorbox{AMDarkRed}{\textcolor{white}{dark red (night)}}
-    -- Any app op or permission that has the dangerous flag is marked as red. Components that are blocked within App
-    Manager are also marked as red
+    -- Denotes any app ops or permissions having the dangerous flag, or any components blocked within App Manager
 
     \item \colorbox{AMLightRed}{\textcolor{black}{Light red (day)}} / \colorbox{AMVeryDarkRed}{\textcolor{white}{very
-    dark red (night)}} -- Components that are disabled outside App Manager have these colors. It should be noted that a
-    component that is marked as disabled does not always mean that it is disabled by the user: It could be disabled by
-    the system as well or marked as disabled in the app manifest. Also, all components of a disabled app are considered
-    disabled by the system (and by App Manager as well)
+    dark red (night)}} -- Denotes the components disabled outside of App Manager
+
+    \begin{tip}{Note}
+        A component marked as disabled does not always mean that it is disabled by the user: It could also be disabled
+        by the system or marked as disabled in its manifest. The components of a disabled application are also
+        considered disabled by the system (and App Manager).
+    \end{tip}
 
     \item \colorbox{AMVividOrange}{\textcolor{black}{Vivid orange (day)}} / \colorbox{AMVeryDarkOrange}{
-        \textcolor{white}{very dark orange (night)}} -- Ad or tracker components
+        \textcolor{white}{very dark orange (night)}} -- Denotes the tracker components
 
     \item \colorbox{AMSoftMagenta}{\textcolor{black}{Soft magenta (day)}} / \colorbox{AMVeryDarkViolet}{
-        \textcolor{white}{very dark violet (night)}} -- Currently running services
+        \textcolor{white}{very dark violet (night)}} -- Denotes the running services.
 \end{itemize}
 %%!!>>
 
 \subsection{App Info Tab}\label{subsec:app-info-tab} %%##pages_appdetails-app-info-tab==title>>
 %%!!pages_appdetails-app-info-tab<<
-\textbf{App Info} tab contains general information about an app. It also lists many actions that can be performed within
-this tab. A complete description is given below:
+\textbf{App Info} tab contains general information about an application. It also lists many actions that can be
+performed within this tab.
 %%!!>>
 
 \subsubsection{General Information}\label{subsubsec:app-info-general-information} %%##pages_appdetails-app-info-general-information==title>>
