@@ -215,7 +215,7 @@
     <string name="usage_today">आज</string>
     <string name="usage_weekly">साप्ताहिक</string>
     <string name="app_usage">ऐप उपयोग</string>
-    <string name="no_tracker_class">कोई ट्रैकर क्लास नहीं</string>
+    <string name="no_tracker_class">कोई ढूँढ़ने वाला क्लास नहीं मिला</string>
     <string name="no_shared_libs">कोई साझा लाइब्रेरी नहीं</string>
     <plurals name="main_list_date_days">
         <item quantity="one"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> दिन</item>
@@ -293,7 +293,7 @@
     <string name="data_transmitted">प्रेषित डेटा</string>
     <string name="data_received">प्राप्त डेटा</string>
     <string name="sort_by_target_sdk">टार्गेट एसडीके</string>
-    <string name="sort_by_domain">सबसे पहले यूजर ऐप</string>
+    <string name="sort_by_domain">सबसे पहला यूजर</string>
     <string name="sort_by_package_name">पैकेज नाम</string>
     <string name="sort_by_app_label">ऐप लेबल</string>
     <string name="loading">लोड हो रहा है…</string>
@@ -768,4 +768,19 @@
     <string name="pref_default_log_level_summary">लॉग स्तर स्टार्टअप पर, फाइलें खोलते समय और रिकॉर्डिंग करते समय</string>
     <string name="pref_cat_configuration">व्यवस्था का प्रारूप</string>
     <string name="pref_cat_appearance">दिखावट</string>
+    <plurals name="usage_seconds">
+        <item quantity="one">सेकंड</item>
+        <item quantity="other">सेकंड</item>
+    </plurals>
+    <string name="text_filter_text">फिल्टर मूलपाठ</string>
+    <string name="send_log_title">इस्तेमाल की जानकारी भेजो</string>
+    <string name="start_recording_log">अभिलेख</string>
+    <string name="text_filter_ellipsis">फिल्टर…</string>
+    <string name="swap">विनिमय</string>
+    <string name="settings">समायोजन</string>
+    <plurals name="usage_minutes">
+        <item quantity="one">मिनट</item>
+        <item quantity="other">मिनट</item>
+    </plurals>
+    <string name="subject_log_report">इस्तेमाल का विवरण</string>
 </resources>
