@@ -23,10 +23,10 @@ raw_folder="${res_folder}/raw"
 cp -a "${docs_folder}/css/"* "${raw_folder}"
 cp -a "${docs_folder}/images/"* "${raw_folder}"
 cp -a "${docs_folder}/en/"* "${raw_folder}/"
-sed -i -e 's|href=\"\(\.\./css/\)|href=\"|' \
- -e 's|href=\(\.\./css/\)|href=|' \
- -e 's|src=\"\(\.\./images/\)|src=\"|' \
- -e 's|src=\(\.\./images/\)|src=|' "${raw_folder}/index.html"
+sed -i -e 's|src=\"\./images/|src=\"|' \
+ -e 's|data=\"\./images/|data=\"|' \
+ -e 's|data=\"images/|data=\"|' \
+ -e 's|src=\"images/|src=\"|' "${raw_folder}/index.html"
 
 # Copy index html and css files
 for lang in "${SUPPORTED_LANGUAGES[@]}"; do

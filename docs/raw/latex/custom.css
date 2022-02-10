@@ -199,6 +199,19 @@ a:hover, a:active {
     outline: 0;
 }
 
+.anchor {
+    opacity: 0.2;
+}
+
+.anchor:after {
+    content: "¶︎";
+}
+
+.anchor:hover {
+    opacity: 1.0;
+    text-decoration: none;
+}
+
 ::-moz-selection {
     background: #E7E0EC; /* ?attr/colorSurfaceVariant */
     color: #49454F; /* ?attr/colorOnSurfaceVariant */
@@ -223,7 +236,7 @@ p {
     margin: 1em 0;
 }
 
-img {
+img, object[type='image/svg+xml'] {
     max-width: 100%;
 }
 
@@ -340,7 +353,7 @@ dd {
     margin: 0 0 0 2em;
 }
 
-img {
+img, object[type='image/svg+xml'] {
     border: 0;
     -ms-interpolation-mode: bicubic;
     vertical-align: middle;
@@ -478,11 +491,11 @@ td {
         page-break-inside: avoid;
     }
 
-    tr, img {
+    tr, img, object[type='image/svg+xml'] {
         page-break-inside: avoid;
     }
 
-    img {
+    img, object[type='image/svg+xml'] {
         max-width: 100% !important;
     }
 

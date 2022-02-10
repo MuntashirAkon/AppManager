@@ -183,7 +183,7 @@ public class HelpActivity extends BaseActivity {
         @Override
         public boolean shouldOverrideUrlLoading(@NonNull WebView view, @NonNull WebResourceRequest request) {
             Uri uri = request.getUrl();
-            if (uri.toString().startsWith("file://android_res")) {
+            if (uri.toString().startsWith("file:///android_res")) {
                 return false;
             }
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);

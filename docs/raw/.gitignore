@@ -8,5 +8,7 @@
 !*.png
 !*.pdf
 !*.cfg
+!*.svg
+!*.xml
+!*.lua
 !changelog_old.md
-*/main-epub3

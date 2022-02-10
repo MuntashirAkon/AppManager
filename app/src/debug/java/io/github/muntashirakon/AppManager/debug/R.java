@@ -8,6 +8,6 @@ public final class R {
         public static final int custom = io.github.muntashirakon.AppManager.R.raw.custom;
         public static final int icon = io.github.muntashirakon.AppManager.R.raw.icon;
         public static final int index = io.github.muntashirakon.AppManager.R.raw.index;
-        public static final int main = io.github.muntashirakon.AppManager.R.raw.main;
+        public static final int main_page_entry_info_labeled = io.github.muntashirakon.AppManager.R.raw.main_page_entry_info_labeled;
     }
 }

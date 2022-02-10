@@ -29,7 +29,9 @@ function build_html() {
   MAIN_TEX="main.tex"
   CUSTOM_CSS="custom.css"
   pandoc $MAIN_TEX -c $CUSTOM_CSS -o "$OUTPUT" -t html5 -f latex -s --toc -N --section-divs \
-    --default-image-extension=png -i -F pandoc-crossref --citeproc --highlight-style=monochrome --verbose
+    --default-image-extension=png -i -F pandoc-crossref --citeproc --highlight-style=monochrome --verbose \
+    --lua-filter=lua/toc_generator.lua --lua-filter=lua/img_to_object.lua --lua-filter=lua/header_with_hyperlinks.lua \
+    --lua-filter=lua/alert_fix.lua
 
   # Add App Manager version
   am_version=$(grep -m1 versionName ../../../app/build.gradle | awk -F \" '{print $2}')
@@ -47,19 +49,6 @@ function build_html() {
     sed -i -e "s/style\=\"background-color\: ${colorname}\"/class=\"colorbox\" style\=\"background-color\: ${colorcode}\"/g" \
       -e "s/style\=\"color\: ${colorname}\"/style\=\"color\: ${colorcode}\"/g" "$OUTPUT"
   done < <(grep "\definecolor" main.tex)
-
-  # Add hyperlinks in the section titles
-  while read -r line; do
-    sectionid=$(echo "$line" | grep -oP "(?<=\<span class\=\"toc-section-number\"\>).*(?=<\/span\>)")
-    tocsectionid="toc:${sectionid}"
-    sed -i -r "s/<span class=\"toc-section-number\">${sectionid}<\/span>/<span class\=\"toc-section-number\" id\=\"${tocsectionid}\"\>${sectionid}<\/span\>/g" "$OUTPUT"
-    sed -i -r "s/(<(.*) data-number=\"${sectionid}\"><span class=\"header-section-number\">${sectionid}<\/span>.*<\/\2>)/<a href=\"#${tocsectionid}\">\1<\/a>/" "$OUTPUT"
-  done < <(grep -o "<span class=\"toc-section-number\">.*<\/span>" "$OUTPUT")
-
-  # Fix alerts
-  sed -i -r "s/<div class\=\"amalert--(.*)\">/<div class\=\"amalert \1\">/g" "$OUTPUT"
-
-
 }
 
 function update_xliff() {
