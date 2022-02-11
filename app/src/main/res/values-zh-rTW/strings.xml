@@ -966,7 +966,6 @@
     <string name="netpolicy_reject_background_data">拒絕背景資料</string>
     <string name="netpolicy_disable_network_access">停用網路存取</string>
     <string name="netpolicy_reject_cellular_data">拒絕行動網路</string>
-    <string name="fallback_to_no_root_mode">返回至無 Root 模式？</string>
     <string name="unknown_net_policy">未知的網路政策 （%1$s - %2$X）</string>
     <string name="port_number_invalid">無效埠編號。</string>
     <string name="port_number_empty">埠編號為空。</string>
