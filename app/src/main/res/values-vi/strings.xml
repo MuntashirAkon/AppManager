@@ -272,7 +272,6 @@
     <string name="sort_by_disabled_app">Đã tắt trước</string>
     <string name="exodus_link">Liên kết εxodus</string>
     <string name="usage_yesterday">Hôm qua</string>
-    <string name="only_works_in_root_mode">Chỉ hoạt động trong chế độ root</string>
     <string name="app_settings">Cài đặt</string>
     <string name="usage_access">Truy cập dữ liệu sử dụng</string>
     <string name="pref_global_blocking_enabled_msg">Để cho bạn chặn bất kỳ thành phần nào của bất kỳ ứng dụng nào mà không bật việc chặn cho ứng dụng một cách rõ ràng.</string>
@@ -1065,7 +1064,6 @@
     <string name="search_type_prefix">Tiền tố</string>
     <string name="search_type_suffix">Hậu tố</string>
     <string name="search_type_regular_expressions">Biểu thức thường</string>
-    <string name="search_type_fuzzy">Không rõ</string>
     <string name="state">Trạng thái quá trình</string>
     <string name="vt_checking">VirusTotal: Đang kiểm tra…</string>
     <string name="vt_uploading">VirusTotal: Đang tải lên…</string>

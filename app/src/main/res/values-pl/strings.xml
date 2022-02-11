@@ -87,7 +87,6 @@
     <string name="disable_background_run">Wyłącz działanie w tle</string>
     <string name="running_apps">Uruchomione aplikacje</string>
     <string name="permissions">Użycie uprawnień</string>
-    <string name="only_works_in_root_mode">Działa tylko w trybie root</string>
     <string name="app_settings">Ustawienia</string>
     <string name="pref_global_blocking_enabled">Globalne blokowanie komponentów</string>
     <string name="str_logo">Logo</string>
@@ -964,7 +963,6 @@
     <string name="help_app_ops_tab">Dotknij elementu, aby <b>zezwolić</b> lub <b>zignorować</b> go. Długo przytrzymaj element, aby zobaczyć inne obsługiwane tryby.</string>
     <string name="failed_to_prevent_background_run">Nie można zapobiec %1$s działania w tle</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">Nie można zainstalować aplikacji z powodu niezgodności podpisów. Aplikacja została odinstalowana bez czyszczenia jej danych.</string>
-    <string name="fallback_to_no_root_mode">Powrót do trybu no-root\?</string>
     <string name="unknown_net_policy">Nieznane reguły sieciowe (%1$s - %2$X)</string>
     <string name="port_number_invalid">Nieprawidłowy numer portu.</string>
     <string name="port_number_empty">Numer portu jest pusty.</string>

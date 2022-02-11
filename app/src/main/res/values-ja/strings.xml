@@ -215,7 +215,6 @@
     <string name="pref_global_blocking_enabled_msg">手動でアプリごとにブロックを有効にしなくても自動的に全てのアプリでコンポーネントブロッキングを有効化します。</string>
     <string name="usage_access">使用状況へのアクセス</string>
     <string name="app_settings">設定</string>
-    <string name="only_works_in_root_mode">Rootモードのみの機能です</string>
     <string name="usage_yesterday">昨日</string>
     <string name="exodus_link">\u03b5xodusのリンク</string>
     <string name="sort_by_disabled_app">無効のものを優先</string>
@@ -1063,7 +1062,6 @@
     <string name="search_type_suffix">接尾辞</string>
     <string name="search_type_regular_expressions">正規表現</string>
     <string name="search_type_contains">通常</string>
-    <string name="search_type_fuzzy">曖昧</string>
     <string name="exit_confirmation">終了の確認</string>
     <string name="pref_default_blocking_method">規定のブロッキング方法</string>
     <string name="pref_default_blocking_method_description">コンポーネントのブロッキングに規定で利用される方法を指定します。</string>

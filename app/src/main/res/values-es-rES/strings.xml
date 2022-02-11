@@ -92,7 +92,6 @@
     <string name="sort_by_disabled_app">Desactivadas primero</string>
     <string name="exodus_link">Enlace de εxodus</string>
     <string name="usage_yesterday">Ayer</string>
-    <string name="only_works_in_root_mode">Sólo funciona en modo root</string>
     <string name="app_settings">Configuración</string>
     <string name="usage_access">Acceso al uso</string>
     <string name="pref_global_blocking_enabled_msg">Le permite bloquear cualquier componente de cualquier aplicación sin bloquear esta explícitamente.</string>
@@ -1097,7 +1096,6 @@
     <string name="search_type_prefix">Prefijo</string>
     <string name="search_type_suffix">Sufijo</string>
     <string name="search_type_regular_expressions">Regex</string>
-    <string name="search_type_fuzzy">Fuzzy</string>
     <string name="pref_default_blocking_method_description">Método a usar por defecto en lugares donde no hay opción para escoger un método de bloqueo.</string>
     <string name="pref_intent_firewall_and_disable_description">Bloquea componentes usando Intent Firewall así como también los deshabilita. Método recomendado para usuarios root.</string>
     <string name="pref_intent_firewall_description">Bloquea componentes usando sólo Intent Firewall. No se recomienda ya que algunas apps del sistema pueden eludir firewalls.</string>

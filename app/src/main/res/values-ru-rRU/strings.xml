@@ -219,7 +219,6 @@
     <string name="pref_global_blocking_enabled_msg">Позволяет вам блокировать любой компонент любого приложения без явного включения блокировки для приложения.</string>
     <string name="usage_access">Доступ к истории использования</string>
     <string name="app_settings">Настройки</string>
-    <string name="only_works_in_root_mode">Доступно только в режиме root</string>
     <string name="usage_yesterday">Вчера</string>
     <string name="exodus_link">Ссылка на \u03b5xodus</string>
     <string name="sort_by_disabled_app">Сначала отключенные</string>
@@ -1170,7 +1169,6 @@
     <string name="search_type_suffix">суффикс</string>
     <string name="intent_firewall_and_disable">IFW + отключение</string>
     <string name="search_type_regular_expressions">регулярные выражения</string>
-    <string name="search_type_fuzzy">нечеткий</string>
     <string name="pref_disable_description">Только отключение компонентов. Не рекомендуется для root пользователей, поскольку приложения могут обходить этот метод блокировки. С помощью этого метода можно отключить только тестовые приложения в режиме ADB.</string>
     <string name="pref_default_blocking_method_description">Метод, используемый по умолчанию там, где нет возможности выбора метода блокировки.</string>
     <string name="pref_intent_firewall_description">Блокировка компонентов с использованием только Intent Firewall. Не рекомендуется, поскольку некоторые системные приложения могут обходить этот метод блокировки.</string>

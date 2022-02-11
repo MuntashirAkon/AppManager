@@ -643,7 +643,6 @@
     <string name="pref_apk_signing_msg">設定簽名方案，自訂簽名密鑰等。</string>
     <string name="apk_signing">APK 簽名</string>
     <string name="app_signing_signature_schemes">簽名方案</string>
-    <string name="only_works_in_root_mode">僅在root模式下可用</string>
     <string name="app_settings">設定</string>
     <string name="usage_access">使用權限</string>
     <string name="str_logo">標識</string>

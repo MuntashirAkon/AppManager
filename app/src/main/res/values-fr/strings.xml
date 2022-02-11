@@ -444,7 +444,6 @@
     <string name="sort_by_disabled_app">Désactivées en premier</string>
     <string name="exodus_link">Lien εxodus</string>
     <string name="usage_yesterday">Hier</string>
-    <string name="only_works_in_root_mode">Fonctionne uniquement en mode root</string>
     <string name="app_settings">Paramètres</string>
     <string name="usage_access">Accès aux données d\'utilisation</string>
     <string name="str_logo">Logo</string>

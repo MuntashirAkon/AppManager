@@ -430,7 +430,6 @@
     <string name="sort_by_disabled_app">Спочатку вимкнені</string>
     <string name="exodus_link">εxodus посилання</string>
     <string name="usage_yesterday">Вчора</string>
-    <string name="only_works_in_root_mode">Працює тільки в ROOT режимі</string>
     <string name="app_settings">Налаштування</string>
     <string name="usage_access">Доступ до статистики використання</string>
     <string name="pref_global_blocking_enabled">Миттєве блокування компонентів</string>
@@ -1167,7 +1166,6 @@
     <string name="search_type_contains">містить</string>
     <string name="search_type_suffix">суфікс</string>
     <string name="search_type_regular_expressions">регулярний вираз</string>
-    <string name="search_type_fuzzy">нечіткий запит</string>
     <string name="intent_firewall_and_disable">IFW + вимкнення</string>
     <string name="pref_default_blocking_method_description">Метод, який використовується за замовчуванням там, де немає можливості вибрати метод блокування.</string>
     <string name="search_type_prefix">префікс</string>

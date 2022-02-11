@@ -401,7 +401,6 @@
     <string name="sort_by_disabled_app">المعطلة أولا</string>
     <string name="exodus_link">رابط εxodus</string>
     <string name="usage_yesterday">في الامس</string>
-    <string name="only_works_in_root_mode">يعمل فقط في وضع الجذر</string>
     <string name="app_settings">اﻹعدادات</string>
     <string name="usage_access">الوصول إلى الاستخدام</string>
     <string name="pref_global_blocking_enabled_msg">يتيح لك حظر أي مكون من أي تطبيق دون تشغيل الحظر بشكل صريح للتطبيق.</string>
@@ -1240,7 +1239,6 @@
     <string name="search_type_contains">يحتوي على</string>
     <string name="search_type_prefix">بادئه</string>
     <string name="search_type_suffix">لاحقة</string>
-    <string name="search_type_fuzzy">غير دقيق</string>
     <string name="pref_default_blocking_method_description">طريقة للاستخدام افتراضيًا في الأماكن التي لا يوجد فيها خيار لتحديد طريقة الحظر.</string>
     <string name="intent_firewall">IFW</string>
     <string name="pref_intent_firewall_description">منع المكونات باستخدام Intent Firewall فقط. لا يوصى به لأن بعض تطبيقات النظام يمكنها تجاوز جدران الحماية.</string>

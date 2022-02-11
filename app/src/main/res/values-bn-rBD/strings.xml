@@ -131,7 +131,6 @@
     <string name="no_app_ops">কোনো অ্যাপ অপারেশন নেই</string>
     <string name="usage_access">ইউসেজ অ্যাক্সেস</string>
     <string name="app_settings">সেটিংস</string>
-    <string name="only_works_in_root_mode">শুধুমাত্র রুট মোডে ব্যবহারযোগ্য</string>
     <string name="usage_yesterday">গতকাল</string>
     <string name="exodus_link">\\u03b5xodus লিঙ্ক</string>
     <string name="sort_by_disabled_app">নিষ্ক্রিয় গুলো প্রথমে</string>

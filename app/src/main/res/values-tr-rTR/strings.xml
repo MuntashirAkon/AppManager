@@ -471,7 +471,6 @@
     <string name="external_data_dir">Harici Veri Dizini</string>
     <string name="exodus_link">εxodus Bağlantısı</string>
     <string name="usage_yesterday">Dün</string>
-    <string name="only_works_in_root_mode">Yalnızca root modunda çalışır</string>
     <string name="app_settings">Ayarlar</string>
     <string name="usage_access">Kullanım erişimi</string>
     <string name="pref_global_blocking_enabled_msg">Uygulama için açıkça engellemeyi açmadan herhangi bir uygulamanın herhangi bir bileşenini engellemenize izin verir.</string>
@@ -1098,7 +1097,6 @@
     <string name="search_type_contains">İçerir</string>
     <string name="search_type_prefix">Ön ek</string>
     <string name="search_type_suffix">Son ek</string>
-    <string name="search_type_fuzzy">Bulanık</string>
     <string name="search_type_regular_expressions">Düzenli ifade</string>
     <string name="pref_intent_firewall_and_disable_description">Intent Firewall kullanarak bileşenleri engelle ve devre dışı bırak. Root kullanıcıları için tavsiye edilen yöntemdir.</string>
     <string name="pref_disable_description">Yalnızca bileşenleri devre dışı bırak. Uygulamalar bunu atlayabildiğinden root kullanıcıları için tavsiye edilmez. ADB modlarında, yalnızca test amaçlı uygulamalar bu yöntemle devre dışı bırakılabilir.</string>

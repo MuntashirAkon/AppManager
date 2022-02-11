@@ -177,7 +177,6 @@
     <string name="sort_by_disabled_app">Desativado primeiro</string>
     <string name="exodus_link">Ligação do εxodus</string>
     <string name="usage_yesterday">Ontem</string>
-    <string name="only_works_in_root_mode">Funciona apenas no modo Root</string>
     <string name="app_settings">Configurações</string>
     <string name="usage_access">Acesso ao uso</string>
     <string name="pref_global_blocking_enabled_msg">Permite bloquear qualquer componente de qualquer app sem ligar explicitamente o bloqueio para a app.</string>
@@ -1099,7 +1098,6 @@
     <string name="search_type_contains">Contém</string>
     <string name="search_type_prefix">Prefixo</string>
     <string name="search_type_suffix">Sufixo</string>
-    <string name="search_type_fuzzy">Difuso</string>
     <string name="search_type_regular_expressions">Regex</string>
     <string name="pref_disable_description">Desativar apenas componentes. Não recomendado para utilizadores root, pois as apps podem contorná-lo. Nos modos ADB, as aps somente de teste podem ser desativados com este método.</string>
     <plurals name="usage_minutes">

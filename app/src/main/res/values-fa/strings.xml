@@ -7,7 +7,6 @@
     <string name="sort_by_disabled_app">اول غیرفعال</string>
     <string name="exodus_link">پیوند εxodus</string>
     <string name="usage_yesterday">دیروز</string>
-    <string name="only_works_in_root_mode">فقط در حالت روت کار می کند</string>
     <string name="app_settings">تنظیمات</string>
     <string name="usage_access">دسترسی به استفاده</string>
     <string name="pref_global_blocking_enabled_msg">به شما اجازه می دهد تا هر جزء از هر برنامه ای را مسدود کنید بدون اینکه به صراحت مسدود کردن برنامه را روشن کنید.</string>
@@ -847,7 +846,6 @@
     <string name="organization_unit">واحد سازمانی</string>
     <string name="netpolicy_reject_vpn_data">رد داده های فیلترشکن</string>
     <string name="netpolicy_reject_wifi_data">رد دادهای وای فای</string>
-    <string name="fallback_to_no_root_mode">بازگشت به حالت بدون روت؟</string>
     <string name="notice">توجه</string>
     <string name="failed_to_prevent_background_run">نمی‌توان از اجرای %1$s در پس‌زمینه جلوگیری کرد</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">به دلیل عدم تطابق امضا، برنامه نصب نشد. برنامه بدون پاک کردن داده های آن حذف نصب شد.</string>
