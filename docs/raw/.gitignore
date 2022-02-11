@@ -1,14 +1,13 @@
 *.*
 !.gitignore
 !*.tex
-!en/Makefile
 !*.css
 !*.html
 !*.drawio
 !*.png
 !*.pdf
-!*.cfg
 !*.svg
 !*.xml
 !*.lua
-!changelog_old.md
+!*.md
+!*.sh

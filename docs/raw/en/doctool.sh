@@ -21,36 +21,6 @@ function check_deps() {
   echo -n "urlextract: " && ( command -v urlextract || echo "Not found." )
 }
 
-function build_html() {
-  OUTPUT="$2"
-  if [[ "$OUTPUT" == "" ]]; then
-    exit 1
-  fi
-  MAIN_TEX="main.tex"
-  CUSTOM_CSS="custom.css"
-  pandoc $MAIN_TEX -c $CUSTOM_CSS -o "$OUTPUT" -t html5 -f latex -s --toc -N --section-divs \
-    --default-image-extension=png -i -F pandoc-crossref --citeproc --highlight-style=monochrome --verbose \
-    --lua-filter=lua/toc_generator.lua --lua-filter=lua/img_to_object.lua --lua-filter=lua/header_with_hyperlinks.lua \
-    --lua-filter=lua/alert_fix.lua
-
-  # Add App Manager version
-  am_version=$(grep -m1 versionName ../../../app/build.gradle | awk -F \" '{print $2}')
-  sed -i -e "s/\$ABC\$APP-MANAGER-VERSION\$XYZ\\$/${am_version}/" "$OUTPUT"
-
-  # Replace date with current date
-  today=$(date "+%d %B %Y")
-  sed -i -e "s/\$ABC\$USER-MANUAL-DATE\$XYZ\\$/${today}/" "$OUTPUT"
-
-  # Fix custom colors
-  while read -r line; do
-    colorset=$(echo "$line" | sed -e "s/\\definecolor{//" -e "s/}{HTML}{/ /" -e "s/}//")
-    colorname=$(echo "$colorset" | awk '{print $1}')
-    colorcode=$(echo "$colorset" | awk '{print $2}' | sed -e "s/^/#/")
-    sed -i -e "s/style\=\"background-color\: ${colorname}\"/class=\"colorbox\" style\=\"background-color\: ${colorcode}\"/g" \
-      -e "s/style\=\"color\: ${colorname}\"/style\=\"color\: ${colorcode}\"/g" "$OUTPUT"
-  done < <(grep "\definecolor" main.tex)
-}
-
 function update_xliff() {
   OUTPUT="$2"
   rm "$OUTPUT" 2> /dev/null
@@ -87,7 +57,7 @@ function merge_translation() {
   OUTPUT_DIR="$3"
   keys=$(grep -oP "(?<=<string name=\").*?(?=\">)" "${INPUT}")
 
-  find . | grep -e '\.tex$' -e '\.png$' -e '.png$' -e '.css$' -e main.cfg -e doctool.sh -e Makefile | rsync -R $(cat) "${OUTPUT_DIR}"
+  find . | grep -e '\.tex$' -e '.png$' -e '.svg$' -e doctool.sh | rsync -R $(cat) "${OUTPUT_DIR}"
 
   while read -r key_content; do
     content_value=$(echo 'cat resources/string[@name="'${key_content}'"]/text()' | xmllint --shell "${INPUT}" | sed -e '$d' -e '1d' | sed -e 's/\\/\\\\/g' -e '1s/^<!\[CDATA\[//g' -e '$s/]]>$//g')
@@ -137,7 +107,6 @@ function detect_abuse() {
 }
 
 case $1 in
-"build") build_html "$@" ;;
 "update") update_xliff "$@" ;;
 "merge") merge_translation "$@" ;;
 "check") check_deps ;;

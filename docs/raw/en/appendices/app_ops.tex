@@ -1,5 +1,7 @@
 % SPDX-License-Identifier: GPL-3.0-or-later OR CC-BY-SA-4.0
 \chapter{App Ops}\label{ch:app-ops} %%##appendices_appops-chapter==title>>
+
+
 \section{Background}\label{sec:app-ops-background} %%##appendices_appops-background==title>>
 %%!!appendices_appops-background<<
 \textbf{App Ops} (short hand for \textbf{Application Operations}) are used by Android system (since Android 4.3) to
@@ -19,6 +21,7 @@ support disabling permissions via app ops. The best one to my knowledge is
 app is that the latter also provides you the ability to revoke internet permissions (by writing ip tables). One crucial
 problem that I faced during the development of the app ops API is the lack of documentation in English language.
 %%!!>>
+
 
 \section{Introduction to App Ops}\label{sec:introduction-to-app-ops} %%##appendices_appops-introduction==title>>
 
@@ -50,6 +53,7 @@ System services calls \textbf{AppOpsService} to find out what an application is 
 and \textbf{AppOpsService} determines these permissions by parsing \texttt{/data/system/appops.xml}. If no custom values
 are present in \textit{appops.xml}, it returns the default mode available in \textbf{AppOpsManager}.
 %%!!>>
+
 
 \section{AppOpsManager}\label{sec:appopsmanager} %%##appendices_appops-appopsmanager==title>>
 %%!!appendices_appops-appopsmanager<<
@@ -114,7 +118,8 @@ such as \textbf{allow} for \texttt{MODE\_ALLOWED}, \textbf{ignore} for \texttt{M
 \texttt{MODE\_ERRORED} (a rather misnomer), \textbf{default} for \texttt{MODE\_DEFAULT} and \textbf{foreground}
 for \texttt{MODE\_FOREGROUND}.
 
-\begin{enumerate}\addtocounter{enumi}{-1}
+\begin{enumerate}
+    \addtocounter{enumi}{-1}
     \item \textbf{\texttt{MODE\_ALLOWED}.} The app is allowed to perform the given operation
     \item \textbf{\texttt{MODE\_IGNORED}.} The app is not allowed to perform the given operation, and any attempt to
     perform the operation should \emph{silently fail}, i.e.\ it should not cause the app to crash
@@ -192,8 +197,10 @@ Here:
 \subsection{Usage}\label{subsec:usage} %%##appendices_appops-usage==title>>
 TODO
 
+
 \section{AppOpsService}\label{sec:appopsservice} %%##appendices_appops-appopsservice==title>>
 TODO
+
 
 \section{appops.xml}\label{sec:appops-xml} %%##appendices_appops-appopsxml==title>>
 %%!!appendices_appops-appopsxml_1<<
@@ -277,6 +284,7 @@ The instruction below follows the exact order given above:
 This definition can be found at
 \href{https://android.googlesource.com/platform/frameworks/base/+/master/services/core/java/com/android/server/appop/AppOpsService.java}{AppOpsService}.
 %%!!>>
+
 
 \section{Command Line Interface}\label{sec:appops-cli}%%##appendices_appops-appopscli==title>>
 %%!!appendices_appops-appopscli<<

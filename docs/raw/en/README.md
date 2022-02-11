@@ -4,7 +4,6 @@
 ```
 ./doctool.sh VERB [ARGS]
 Where:
-build <output.html>     Build HTML from TeX using pandoc.
 update <output.xml>     Extract strings and create xliff translation file.
 merge <input.xml> <output-dir>  Merge translation from xliff to TeX.
 check                   Run dependency checker.
@@ -34,7 +33,6 @@ checkabuse <base-dir> <target-dir>  Detect spams or mistranslations.
   `\hyperref[]`, `\textbf`, `\cref`.
 - `./doctool.sh merge`: Updates TeX from `strings.xml`. If the syntax of
   `strings.xml` is invalid, errors will be thrown. Depending on the processing speed, it may take several minutes.
-- `./doctool.sh build`: Builds HTML file.
 
 ### Adding a new article
 
