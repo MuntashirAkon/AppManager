@@ -1096,4 +1096,43 @@
     <string name="search_type_prefix">Préfixe</string>
     <string name="authenticating">Authentification…</string>
     <string name="pref_default_blocking_method_description">Méthode à utiliser par défaut dans les endroits où il n\'y a pas d\'option pour sélectionner une méthode de blocage.</string>
+    <string name="toggle_internet">Utiliser Internet</string>
+    <string name="vt_checking">VirusTotal : Vérification…</string>
+    <string name="vt_uploading">VirusTotal : Envoi en cours…</string>
+    <string name="vt_queued">VirusTotal : En attente</string>
+    <string name="vt_failed">VirusTotal : Échec</string>
+    <string name="vt_success">VirusTotal : %1$d/%2$d</string>
+    <string name="vt_scan_date">Date d\'analyse : %1$s</string>
+    <string name="vt_permalink">Lien permanent vers VirusTotal</string>
+    <string name="vt_disclaimer">VirusTotal et ses logos sont une marque déposée de Chronicle LLC. Ni App Manager, le client de l\'API, ni ses auteurs ne sont responsables des données que vous pouvez envoyer à VirusTotal.</string>
+    <string name="pref_vt_apikey">Clé d\'API de VirusTotal</string>
+    <string name="pref_vt_apikey_description">Une clé d\'API permet à App Manager de télécharger des fichiers APK vers VirusTotal et de récupérer des rapports. Inscrivez-vous sur https://virustotal.com pour obtenir une clé d\'API gratuitement.</string>
+    <string name="pref_vt_apikey_summary">Activer l\'analyse des fichiers APK via VirusTotal.</string>
+    <string name="uses_play_app_signing">Connexion à Google Play</string>
+    <string name="scan_in_vt">Analyser sur VirusTotal</string>
+    <string name="process_id">Identifiant du processus</string>
+    <string name="virtual_memory">Mémoire virtuelle</string>
+    <string name="cpu_percent">%% CPU</string>
+    <string name="priority">Priorité</string>
+    <string name="memory_chart_info">● %1$s Applications ● %2$s Cache ● %3$s Mémoire tampon ● %4$s Libre</string>
+    <string name="swap_chart_info">● %1$s Utilisé ● %2$s Libre</string>
+    <string name="magisk_denylist">Magisk DenyList</string>
+    <string name="failed_to_enable_magisk_deny_list">Impossible d\'activer Magisk DenyList</string>
+    <string name="swap">Échange</string>
+    <plurals name="usage_minutes">
+        <item quantity="one">%1$d min</item>
+        <item quantity="other">%1$d min</item>
+    </plurals>
+    <plurals name="usage_seconds">
+        <item quantity="one">%1$d sec</item>
+        <item quantity="other">%1$d sec</item>
+    </plurals>
+    <string name="vt_slowness_warning">En fonction de la vitesse de connexion Internet et de la charge du serveur, ceci peut prendre un moment.</string>
+    <string name="uses_play_app_signing_description">Cette application contient certains marqueurs qui indiquent qu\'elle <i>pourrait</i> utiliser le système de <a href="https://support.google.com/googleplay/android-developer/answer/9842756">connexion à Google Play</a>. Avec ce système, les clés de signature sont stockées sur les serveurs de Google, qui est responsable de la signature de l\'application. Notez que la correspondance des informations de signature est le seul moyen de vérifier que l\'application n\'a pas été modifiée par une tierce personne à l\'exception du développeur (et dans ce cas, de Google également).</string>
+    <string name="cpu_time">Heure du CPU</string>
+    <string name="parent_process_id">Identifiant du processus parent</string>
+    <string name="threads">Nombre de fils</string>
+    <string name="state">État du processus</string>
+    <string name="commandline_args">Arguments en ligne de commande</string>
+    <string name="failed_to_disable_magisk_deny_list">Impossible de désactiver Magisk DenyList</string>
 </resources>
