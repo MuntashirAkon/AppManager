@@ -1033,7 +1033,6 @@
     <string name="help_uses_permissions_tab">Pulse en un elemento para <b>concederlo</b> o <b>revocarlo</b>. Solo los permisos <b>peligrosos</b> y <b>de desarrollo</b> se pueden conceder o revocar.</string>
     <string name="help_permissions_tab">Estos permisos los define esta aplicación y no pueden revocarse.</string>
     <string name="help_app_ops_tab">Pulse en un elemento para <b>permitirlo</b> o <b>ignorarlo</b>. Mantenga pulsado el elemento para ver otros modos admitidos.</string>
-    <string name="fallback_to_no_root_mode">¿Regresar a modo no-root\?</string>
     <string name="minimum_version">Versión mín.: %d</string>
     <string name="added_to_queue">Se añadió a la cola</string>
     <string name="pref_selected_users">Usuarios seleccionados</string>
@@ -1104,4 +1103,44 @@
     <string name="pref_intent_firewall_description">Bloquea componentes usando sólo Intent Firewall. No se recomienda ya que algunas apps del sistema pueden eludir firewalls.</string>
     <string name="pref_disable_description">Deshabilita sólo los componentes. No se recomienda a usuarios root ya que las apps pueden eludir esto. En modo ADB, las aplicaciones de prueba se pueden deshabilitar con este método.</string>
     <string name="intent_firewall">IFW</string>
+    <plurals name="usage_seconds">
+        <item quantity="one">%1$d seg</item>
+        <item quantity="other">%1$d segs</item>
+    </plurals>
+    <string name="toggle_internet">Usar el Internet</string>
+    <string name="vt_checking">VirusTotal: Verificando…</string>
+    <string name="vt_uploading">VirusTotal: Enviando…</string>
+    <string name="vt_success">VirusTotal: %1$d/%2$d</string>
+    <string name="vt_scan_date">Fecha de escaneo: %1$s</string>
+    <string name="vt_slowness_warning">Dependiendo de la velocidad de Internet y de la carga en el servidor, esto podría tardar un poco.</string>
+    <string name="pref_vt_apikey">Clave API de VirusTotal</string>
+    <string name="pref_vt_apikey_description">Una clave API permite a App Manager subir archivos APK a VirusTotal, así como también obtener informes de este. Regístrese en https://virustotal.com para obtener una clave API de forma gratuita.</string>
+    <string name="uses_play_app_signing">Firma de Aplicaciones Play</string>
+    <string name="scan_in_vt">Escanear en VirusTotal</string>
+    <string name="process_id">ID de proceso</string>
+    <string name="virtual_memory">Memoria virtual</string>
+    <string name="cpu_percent">%% CPU</string>
+    <string name="cpu_time">Tiempo de CPU</string>
+    <string name="priority">Prioridad</string>
+    <string name="state">Estado de proceso</string>
+    <string name="commandline_args">Argumentos de línea de comandos</string>
+    <string name="swap">Swap</string>
+    <string name="memory_chart_info">● %1$s Aplicaciones ● %2$s En caché ● %3$s Buffers ● %4$s Libre</string>
+    <string name="swap_chart_info">● %1$s Usado ● %2$s Libre</string>
+    <string name="failed_to_use_the_current_mode_of_operation">No es posible usar el modo de operación actual. Volviendo a modo no-root para esta sesión.</string>
+    <string name="warning_working_on_root_mode">Advertencia: Se está trabajando en root en lugar de modo ADB.</string>
+    <string name="magisk_denylist">Magisk DenyList</string>
+    <string name="failed_to_enable_magisk_deny_list">No se pudo habilitar Magisk DenyList</string>
+    <string name="mode_of_op_with_inferred_mode_of_op">%1$s (Modo inferido: %2$s)</string>
+    <string name="vt_permalink">Enlace permanente a VirusTotal</string>
+    <string name="vt_queued">VirusTotal: En cola</string>
+    <string name="vt_failed">VirusTotal: Fallido</string>
+    <string name="pref_vt_apikey_summary">Habilitar escaneo de archivos APK vía VirusTotal.</string>
+    <string name="vt_disclaimer">VirusTotal y sus logotipos son una marca registrada de Chronicle LLC. Ni App Manager -el cliente de la API- ni sus autores son responsables de los datos que puedas enviar a VirusTotal.</string>
+    <string name="failed_to_change_app_op_mode">No se pudo cambiar el modo de operación de la aplicación.</string>
+    <string name="failed_to_disable_magisk_deny_list">No se pudo deshabilitar Magisk DenyList</string>
+    <plurals name="usage_minutes">
+        <item quantity="one">Hola</item>
+        <item quantity="other">Holas</item>
+    </plurals>
 </resources>

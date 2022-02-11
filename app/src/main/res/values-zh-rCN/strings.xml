@@ -726,7 +726,7 @@
     <string name="density">密度</string>
     <string name="screen">屏幕</string>
     <string name="hardware">硬件</string>
-    <string name="permissive">被动</string>
+    <string name="permissive">宽容</string>
     <string name="enforcing">强制</string>
     <string name="failed_to_enable_magisk_hide">无法启用 MagiskHide</string>
     <string name="failed_to_disable_magisk_hide">无法禁用 MagiskHide</string>
@@ -984,7 +984,6 @@
     <string name="wireless_debugging_not_supported">此平台不支持无线调试。</string>
     <string name="wireless_debugging">无线调试</string>
     <string name="unknown_net_policy">未知的 netpolicy (%1$s - %2$X)</string>
-    <string name="fallback_to_no_root_mode">退回到非 root 模式吗？</string>
     <string name="failed_to_prevent_background_run">无法防止 %1$s 在后台运行</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">由于签名不匹配，无法安装应用程序。该应用程序已被卸载，但没有清除数据。</string>
     <string name="community_links">Telegram 群: https://t.me/AppManagerChannel
@@ -1068,4 +1067,45 @@
     <string name="search_type_suffix">后缀</string>
     <string name="search_type_regular_expressions">正则表达式</string>
     <string name="search_type_fuzzy">模糊</string>
+    <plurals name="usage_minutes">
+        <item quantity="other">%1$d 分钟</item>
+    </plurals>
+    <plurals name="usage_seconds">
+        <item quantity="other">%1$d 秒</item>
+    </plurals>
+    <string name="toggle_internet">使用互联网</string>
+    <string name="vt_uploading">VirusTotal: 上传中…</string>
+    <string name="vt_queued">VirusTotal: 已排队</string>
+    <string name="vt_failed">VirusTotal: 失败</string>
+    <string name="vt_success">VirusTotal: %1$d/%2$d</string>
+    <string name="vt_scan_date">扫描日期: %1$s</string>
+    <string name="vt_slowness_warning">根据网速和服务器负载，这可能需要一段时间。</string>
+    <string name="pref_vt_apikey_summary">启用 VirusTotal 扫描 APK 文件。</string>
+    <string name="uses_play_app_signing">Play 应用签名</string>
+    <string name="scan_in_vt">在 VirusTotal 中扫描</string>
+    <string name="process_id">进程 ID</string>
+    <string name="parent_process_id">父进程 ID</string>
+    <string name="virtual_memory">虚拟内存</string>
+    <string name="cpu_percent">%% CPU</string>
+    <string name="cpu_time">CPU 时间</string>
+    <string name="priority">优先级</string>
+    <string name="threads">线程数</string>
+    <string name="state">进程状态</string>
+    <string name="commandline_args">命令行参数</string>
+    <string name="swap">Swap</string>
+    <string name="memory_chart_info">● %1$s 个应用 ● %2$s 已缓存 ● %3$s 缓冲器 ● %4$s 可用</string>
+    <string name="warning_working_on_root_mode">警告：工作于 root 而非 ADB 模式下。</string>
+    <string name="magisk_denylist">Magisk 黑名单</string>
+    <string name="failed_to_enable_magisk_deny_list">无法启用 Magisk 黑名单</string>
+    <string name="failed_to_disable_magisk_deny_list">无法禁用 Magisk 黑名单</string>
+    <string name="vt_checking">VirusTotal: 检查中…</string>
+    <string name="pref_vt_apikey">VirusTotal API 密钥</string>
+    <string name="vt_permalink">VirusTotal 永久链接</string>
+    <string name="pref_vt_apikey_description">API 密钥使 App Manager 可以上传 APK 文件到 VirusTotal 以及获取报告。在 https://virustotal.com 注册，免费获得一个 API 密钥。</string>
+    <string name="vt_disclaimer">VirusTotal 及其标识是 Chronicle LLC 的注册商标。App Manager- API 客户端及其作者都不对您可能发送给 VirusTotal 的任何数据负责。</string>
+    <string name="uses_play_app_signing_description">此应用包含表明其<i>可能</i>使用<a href="https://support.google.com/googleplay/android-developer/answer/9842756">Play 应用签名</a>的特定标记。在这个方案中，签名密钥存储在谷歌的服务器中，谷歌负责对应用程序进行签名。请注意，匹配签名信息是验证应用是否未被作者以外的任何人修改过的唯一方法（在这种情况下，也包括谷歌）。</string>
+    <string name="swap_chart_info">● %1$s 已用 ● %2$s 可用</string>
+    <string name="failed_to_change_app_op_mode">无法更改应用操作模式。</string>
+    <string name="failed_to_use_the_current_mode_of_operation">无法使用当前操作模式。此会话退回到无 root 模式。</string>
+    <string name="mode_of_op_with_inferred_mode_of_op">%1$s (推断模式: %2$s)</string>
 </resources>

@@ -1017,7 +1017,6 @@
     <string name="wireless_debugging_not_supported">Kablosuz hata ayıklama bu platformda desteklenmiyor.</string>
     <string name="wireless_debugging">Kablosuz hata ayıklama</string>
     <string name="unknown_net_policy">Bilinmeyen ağ politikası (%1$s - %2$X)</string>
-    <string name="fallback_to_no_root_mode">Root yok moduna geçilsin mi\?</string>
     <string name="failed_to_prevent_background_run">%1$s arka planda çalışması engellenemedi</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">İmza uyuşmazlığı nedeniyle uygulama kurulamadı. Uygulama, verileri temizlenmeden kaldırıldı.</string>
     <string name="community_links">Telegram: https://t.me/AppManagerChannel
@@ -1103,4 +1102,47 @@
     <string name="search_type_regular_expressions">Düzenli ifade</string>
     <string name="pref_intent_firewall_and_disable_description">Intent Firewall kullanarak bileşenleri engelle ve devre dışı bırak. Root kullanıcıları için tavsiye edilen yöntemdir.</string>
     <string name="pref_disable_description">Yalnızca bileşenleri devre dışı bırak. Uygulamalar bunu atlayabildiğinden root kullanıcıları için tavsiye edilmez. ADB modlarında, yalnızca test amaçlı uygulamalar bu yöntemle devre dışı bırakılabilir.</string>
+    <plurals name="usage_minutes">
+        <item quantity="one">%1$d dak</item>
+        <item quantity="other">%1$d dak</item>
+    </plurals>
+    <string name="vt_failed">VirusTotal: Başarısız oldu</string>
+    <string name="toggle_internet">İnterneti kullan</string>
+    <string name="vt_uploading">VirusTotal: Karşıya yükleniyor…</string>
+    <string name="vt_queued">VirusTotal: Sıraya alındı</string>
+    <string name="vt_success">VirusTotal: %1$d/%2$d</string>
+    <string name="pref_vt_apikey">VirusTotal API Anahtarı</string>
+    <string name="pref_vt_apikey_description">Bir API anahtarı, App Manager\'in APK dosyalarını VirusTotal\'a yüklemesini ve raporları almasını sağlar. Ücretsiz bir API anahtarı almak için https://virustotal.com adresinde kaydolun.</string>
+    <string name="pref_vt_apikey_summary">APK dosyalarını VirusTotal ile taramayı etkinleştirin.</string>
+    <string name="uses_play_app_signing">Play Uygulama İmzalama</string>
+    <string name="scan_in_vt">VirusTotal\'da Tara</string>
+    <string name="process_id">İşlem Kimliği</string>
+    <string name="parent_process_id">Üst İşlem Kimliği</string>
+    <string name="virtual_memory">Sanal Bellek</string>
+    <string name="cpu_percent">%% CPU</string>
+    <string name="cpu_time">CPU Süresi</string>
+    <string name="priority">Öncelik</string>
+    <string name="threads">İş Parcacığı Sayısı</string>
+    <string name="state">İşlem Durumu</string>
+    <string name="commandline_args">Komut satırı argümanları</string>
+    <string name="swap">Takas</string>
+    <string name="memory_chart_info">● %1$s Uygulama ● %2$s Önbellek ● %3$s Arabellekler ● %4$s Boş</string>
+    <string name="swap_chart_info">● %1$s Kullanılan ● %2$s Boş</string>
+    <string name="failed_to_change_app_op_mode">Uygulama çalışma modu değiştirilemedi.</string>
+    <string name="failed_to_use_the_current_mode_of_operation">Geçerli çalışma modu kullanılamıyor. Bu oturum için root olmayan moda geri dönülüyor.</string>
+    <string name="warning_working_on_root_mode">Uyarı: ADB modu yerine root ile çalışılıyor.</string>
+    <string name="magisk_denylist">Magisk Reddetme Listesi</string>
+    <string name="failed_to_disable_magisk_deny_list">Magisk Reddetme Listesi devre dışı bırakılamadı</string>
+    <string name="mode_of_op_with_inferred_mode_of_op">%1$s (Çıkarılan mod: %2$s)</string>
+    <plurals name="usage_seconds">
+        <item quantity="one">%1$d sn</item>
+        <item quantity="other">%1$d sn</item>
+    </plurals>
+    <string name="vt_checking">VirusTotal: Denetleniyor…</string>
+    <string name="vt_permalink">VirusTotal için kalıcı bağlantı</string>
+    <string name="vt_slowness_warning">İnternet hızına ve sunucudaki yüke bağlı olarak bu biraz zaman alabilir.</string>
+    <string name="vt_disclaimer">VirusTotal ve logoları Chronicle LLC\'nin ticari markasıdır. Ne App Manager (API istemcisi) ne de yazarları VirusTotal\'a gönderebileceğiniz hiçbir veriden sorumlu değildir.</string>
+    <string name="uses_play_app_signing_description">Bu uygulama, <a href="https://support.google.com/googleplay/android-developer/answer/9842756">Play Uygulama İmzalama</a> kullanıyor <i>olabileceğini</i> gösteren belirli işaretler içeriyor. Bu şemayla, imzalama anahtarları Google\'ın sunucularında saklanır ve uygulamanın imzalanmasından Google sorumludur. İmzalama bilgilerinin eşleşmesinin, uygulamanın geliştiricisi (ve bu durumda Google) dışında herhangi bir kişi tarafından değiştirilmediğini doğrulamanın tek yolu olduğunu unutmayın.</string>
+    <string name="vt_scan_date">Tarama tarihi: %1$s</string>
+    <string name="failed_to_enable_magisk_deny_list">Magisk Reddetme Listesi etkinleştirilemedi</string>
 </resources>

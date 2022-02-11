@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<resources>
-    <string name="disclaimer_header">HAFTUNGSAUSSCHLUSS</string>
-    <string name="disclaimer_body">App Manager bietet Root-Funktionen, die Ihr Gerät unbrauchbar machen können, wenn sie falsch angewendet werden. App Manager ist nicht verantwortlich zu machen für jedwede Art von Schaden, der durch die Nutzung der Applikation entsteht. Wenn Sie sich nicht vollkommen klar darüber sind, wie Root-Funktionen verwendet werden, dann vermeiden Sie eine Anwendung bis Sie das Risiko einschätzen können.
-
-\n\nJeder Link, den ich zu anderen Anwendungen und Websites anbiete, ist als Hilfestellung für die Benutzer gemeint. Ich bin nicht verantwortlich für Inhalte, die Sie über externe Links finden.
-
-\n\nWenn Sie den App Manager verwenden, übernehmen Sie die volle Verantwortung für Ihren eigenen Gebrauch und akzeptieren, dass der falsche Gebrauch keine Schadensersatzforderungen rechtfertigt.    
-
-\n\nDurch die Verwendung dieser Anwendung übernehmen Sie die gesamte Verantwortung für die Verwendung und erklären sich damit einverstanden, dass ich nicht für Ihre Handlungen verantwortlich bin, die sich nachteilig auf Ihr Gerät auswirken.    </string>
-    <string name="disclaimer_footer">© 2020–2021 Muntashir Al-Islam</string>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources>
+    <string name="disclaimer_header">Haftungsausschluss</string>
+    <string name="disclaimer_body">App Manager bietet Root-Funktionen, die Ihr Gerät bei unsachgemäßer Verwendung möglicherweise beschädigen können. App Manager ist nicht verantwortlich für Schäden, die durch die Verwendung dieser Anwendung entstehen. Wenn Sie nicht genau wissen, wie Root funktioniert, sollten Sie es vermeiden, Root-Optionen zu verwenden, bis Sie sich der Risiken bewusst sind.
+\n
+\nJeder Link, den ich zu anderen Anwendungen und Websites anbiete, dient dem Nutzen des Benutzers. Ich bin nicht verantwortlich für Inhalte, die Sie über externe Links finden können.
+\n
+\nDurch die Nutzung von App Manager übernehmen Sie die volle Verantwortung für Ihre eigene Nutzung und akzeptieren, dass keine Schäden, Ansprüche oder Geldwerte aufgrund von Missbrauch gewährt werden.
+\n
+\nMit der Nutzung dieser Anwendung übernehmen Sie die volle Verantwortung für die Nutzung und erklären sich damit einverstanden, dass ich keine Verantwortung für Handlungen übernehme, die sich nachteilig auf Ihr Gerät auswirken.</string>
+    <string name="disclaimer_footer">© 2020–2022 Muntashir Al-Islam</string>
     <string name="disclaimer_agree_forever">Nicht erneut anzeigen</string>
     <string name="disclaimer_agree">Ich bin einverstanden</string>
     <string name="disclaimer_exit">Beenden</string>

@@ -1005,7 +1005,6 @@
     <string name="pref_display_changes">Mostrar alterações</string>
     <string name="failed_to_prevent_background_run">Não foi possível evitar que %1$s fosse executado em segundo plano</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">Não foi possível instalar a aplicação devido à incompatibilidade da assinatura. A aplicação foi desinstalada sem limpar os seus dados.</string>
-    <string name="fallback_to_no_root_mode">Voltar para o modo sem root\?</string>
     <string name="unknown_net_policy">Política de rede desconhecida (%1$s - %2$X)</string>
     <string name="port_number_invalid">Número de porta inválido.</string>
     <string name="port_number_empty">O número da porta está vazio.</string>
@@ -1103,4 +1102,47 @@
     <string name="search_type_fuzzy">Difuso</string>
     <string name="search_type_regular_expressions">Regex</string>
     <string name="pref_disable_description">Desativar apenas componentes. Não recomendado para utilizadores root, pois as apps podem contorná-lo. Nos modos ADB, as aps somente de teste podem ser desativados com este método.</string>
+    <plurals name="usage_minutes">
+        <item quantity="one">%1$d min</item>
+        <item quantity="other">%1$d mins</item>
+    </plurals>
+    <plurals name="usage_seconds">
+        <item quantity="one">%1$d seg</item>
+        <item quantity="other">%1$d segs</item>
+    </plurals>
+    <string name="vt_checking">VirusTotal: a verificar…</string>
+    <string name="vt_queued">VirusTotal: na fila</string>
+    <string name="vt_failed">VirusTotal: falhou</string>
+    <string name="vt_success">VirusTotal: %1$d/%2$d</string>
+    <string name="vt_scan_date">Data da análise: %1$s</string>
+    <string name="pref_vt_apikey">Chave de API do VirusTotal</string>
+    <string name="pref_vt_apikey_description">Uma chave de API permite que o App Manager envie ficheiros de APK para o VirusTotal e possa receber relatórios. Crie uma conta em https://virustotal.com para obter uma chave de API gratuita.</string>
+    <string name="pref_vt_apikey_summary">Ativar a análise de ficheiros APK no VirusTotal.</string>
+    <string name="scan_in_vt">Analisar no VirusTotal</string>
+    <string name="process_id">ID do processo</string>
+    <string name="cpu_time">Tempo de CPU</string>
+    <string name="state">Estado do processo</string>
+    <string name="commandline_args">Argumentos de linha de comando</string>
+    <string name="memory_chart_info">● %1$s aplicações ● %2$s em cache ● %3$s buffers ● %4$s livre</string>
+    <string name="swap_chart_info">● %1$s usado ● %2$s livre</string>
+    <string name="vt_uploading">VirusTotal: a enviar…</string>
+    <string name="vt_permalink">Hiperligação permanente para o VirusTotal</string>
+    <string name="vt_slowness_warning">Dependendo da velocidade da Internet e da carga no servidor, isto pode demorar.</string>
+    <string name="vt_disclaimer">VirusTotal e os logotipos dele são uma marca registada da Chronicle LLC. Nem o App Manager - o cliente da API - nem os seus autores são responsáveis por quaisquer dados que possa enviar para a VirusTotal.</string>
+    <string name="parent_process_id">ID do processo pai</string>
+    <string name="cpu_percent">%% CPU</string>
+    <string name="uses_play_app_signing">Assinatura Play App</string>
+    <string name="priority">Prioridade</string>
+    <string name="virtual_memory">Memória virtual</string>
+    <string name="toggle_internet">Usar a Internet</string>
+    <string name="threads">Número de threads</string>
+    <string name="swap">Swap</string>
+    <string name="failed_to_change_app_op_mode">Não foi possível alterar o modo de operação da aplicação.</string>
+    <string name="failed_to_use_the_current_mode_of_operation">Não é possível usar o modo de operação atual. A voltar ao modo sem root para esta sessão.</string>
+    <string name="warning_working_on_root_mode">Aviso: a executar com root em vez do modo ADB.</string>
+    <string name="magisk_denylist">Magisk DenyList</string>
+    <string name="failed_to_enable_magisk_deny_list">Não foi possível ativar a Magisk DenyList</string>
+    <string name="uses_play_app_signing_description">Esta aplicação contém certos marcadores que indicam que <i>pode</i> estar a usar <a href="https://support.google.com/googleplay/android-developer/answer/9842756">Play App Signing</a>. Com esse esquema, as chaves de assinatura são armazenadas nos servidores do Google, e o Google é responsável por assinar a aplicação. Note que as informações de assinatura correspondentes são a única forma de verificar se a aplicação não foi alterada por outra pessoa que não o programador (e neste caso o Google também).</string>
+    <string name="failed_to_disable_magisk_deny_list">Não foi possível desativar a Magisk DenyList</string>
+    <string name="mode_of_op_with_inferred_mode_of_op">%1$s (modo inferido: %2$s)</string>
 </resources>

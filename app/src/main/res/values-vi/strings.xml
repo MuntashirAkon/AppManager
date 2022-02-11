@@ -1066,4 +1066,45 @@
     <string name="search_type_suffix">Hậu tố</string>
     <string name="search_type_regular_expressions">Biểu thức thường</string>
     <string name="search_type_fuzzy">Không rõ</string>
+    <string name="state">Trạng thái quá trình</string>
+    <string name="vt_checking">VirusTotal: Đang kiểm tra…</string>
+    <string name="vt_uploading">VirusTotal: Đang tải lên…</string>
+    <plurals name="usage_seconds">
+        <item quantity="other">%1$d giây</item>
+    </plurals>
+    <string name="vt_queued">VirusTotal: Đã thêm vào hàng đợi</string>
+    <string name="vt_failed">VirusTotal: Thất bại</string>
+    <string name="vt_success">VirusTotal: %1$d/%2$d</string>
+    <string name="vt_scan_date">Ngày quét: %1$s</string>
+    <string name="vt_permalink">Liên kết vĩnh viễn cho VirusTotal</string>
+    <string name="vt_slowness_warning">Sẽ tốn một khoảng thời gian phụ thuộc vào tốc độ Internet và khả năng xử lý của máy chủ.</string>
+    <string name="pref_vt_apikey">Khoá API VirusTotal</string>
+    <string name="pref_vt_apikey_summary">Bật quét virus bằng VirusTotal.</string>
+    <string name="uses_play_app_signing">Chữ ký Google Play</string>
+    <string name="scan_in_vt">Quét bằng VirusTotal</string>
+    <string name="process_id">ID quá trình</string>
+    <string name="parent_process_id">ID quá trình chính</string>
+    <string name="virtual_memory">Bộ nhớ ảo</string>
+    <string name="cpu_percent">%% CPU</string>
+    <string name="cpu_time">Thời gian CPU</string>
+    <string name="priority">Ưu tiên</string>
+    <string name="threads">Số đề</string>
+    <string name="commandline_args">Đối số dòng lệnh</string>
+    <string name="swap">Tráo đổi</string>
+    <string name="swap_chart_info">● %1$s đã sử dụng ● %2$s còn trống</string>
+    <string name="warning_working_on_root_mode">Cảnh báo: Hoạt động bằng root thay vì ADB.</string>
+    <string name="magisk_denylist">Magisk DenyList</string>
+    <string name="failed_to_enable_magisk_deny_list">Không thể bật Magisk DenyList</string>
+    <string name="failed_to_disable_magisk_deny_list">Không thể tắt Magisk DenyList</string>
+    <string name="mode_of_op_with_inferred_mode_of_op">%1$s (Chế độ xử lý: %2$s)</string>
+    <string name="toggle_internet">Sử dụng Internet</string>
+    <plurals name="usage_minutes">
+        <item quantity="other">%1$d phút</item>
+    </plurals>
+    <string name="vt_disclaimer">VirusTotal và logo của nó là một thương hiệu của Chronicle LLC. App Manager — API client — cũng như nhà phát triển đều không chịu trách nhiệm về bất kỳ dữ liệu nào bạn đã có thể gửi tới VirusTotal.</string>
+    <string name="pref_vt_apikey_description">Khóa API cho phép App Manager tải tệp APK lên VirusTotal cũng như tạo báo cáo. Đăng ký tại https://virustotal.com để nhận khóa API miễn phí.</string>
+    <string name="memory_chart_info">● %1$s Quá trình ● %2$s đã sử dụng ● %3$s Buffers ● %4$s còn trống</string>
+    <string name="uses_play_app_signing_description">Ứng dụng này chứa một số đánh dấu cho thấy rằng <i>nó có thể</i> đang sử dụng <a href="https://support.google.com/googleplay/android-developer/answer/9842756">Chữ ký Google Play</a>. Với cơ chế này, các khóa ký được lưu trữ trong máy chủ của Google và Google chịu trách nhiệm ký ứng dụng. Lưu ý rằng thông tin chữ ký hợp lệ là cách duy nhất để xác minh rằng ứng dụng chưa bị sửa đổi bởi bất kỳ người nào khác ngoài nhà phát triển (và trong trường hợp này, Google cũng vậy).</string>
+    <string name="failed_to_change_app_op_mode">Không thể thay đổi chế độ ủy quyền ứng dụng.</string>
+    <string name="failed_to_use_the_current_mode_of_operation">Không thể sử dụng chế độ hoạt động hiện tại. Quay lại chế độ không root cho phiên này.</string>
 </resources>
