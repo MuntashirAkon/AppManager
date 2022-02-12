@@ -106,22 +106,22 @@ function build_html($lang) {
 /**
  * Recursively parse all the \input command and gather all the included tex files from main.tex.
  *
- * @param $tex_files Gathered files
+ * @param $tex_files Relative links to the TeX files
  */
 function collect_tex_files(&$tex_files, $base_dir = null, $tex_file = null) {
     if ($tex_file == null) {
         $base_dir = getcwd() . '/' . BASE_DIR;
-        $tex_file = $base_dir . '/' . MAIN_TEX;
+        $tex_file = MAIN_TEX;
     }
-    if (!file_exists($tex_file)) {
+    if (!file_exists($base_dir . '/' . $tex_file)) {
         echo "File ${tex_file} does not exist!";
         return;
     }
     array_push($tex_files, $tex_file);
-    $contents = file_get_contents($tex_file);
+    $contents = file_get_contents($base_dir . '/' . $tex_file);
     preg_match_all('/\\\input\{(?<tex_file>[^\}]+)\}/', $contents, $matches);
     foreach ($matches['tex_file'] as $t) {
-        collect_tex_files($tex_files, $base_dir, $base_dir . '/' . $t);
+        collect_tex_files($tex_files, $base_dir, $t);
     }
 }
 
@@ -157,6 +157,19 @@ function get_tex_contents_assoc($tex_file) {
             }
         }
     }
+    // Check keys for verification testing
+    foreach ($matches['key'] as $key) {
+        if (strlen($key) == 0) {
+            echo "Warning: Empty raw title for key ${key}\n";
+            continue;
+        }
+        if ($key[0] != '$') {
+            echo "Warning: First letter of the title is not `$` (key: ${key})\n";
+        }
+        if (!preg_match('/^\$[a-zA-Z0-9-_\.]+$/', $key)) {
+            echo "Warning: Key (${key}) didn't match the required Regex\n";
+        }
+    }
     // Convert to key => value pair
     $titles = array_combine($matches['key'], $title_values);
 
@@ -170,6 +183,15 @@ function get_tex_contents_assoc($tex_file) {
         $end_pos = strpos($tex_file_contents, "\n%%!!>>", $offset);
         $offset = $end_pos + 7;
         array_push($content_values, substr($tex_file_contents, $start_pos, $end_pos - $start_pos));
+    }
+    foreach ($matches['key'] as $key) {
+        if (strlen($key) == 0) {
+            echo "Warning: Empty raw title for key ${key}\n";
+            continue;
+        }
+        if (!preg_match('/^[a-zA-Z0-9-_\.]+$/', $key)) {
+            echo "Warning: Key (${key}) didn't match the required Regex\n";
+        }
     }
     $contents = array_combine($matches['key'], $content_values);
 
@@ -194,10 +216,12 @@ function update_strings() {
     $xml->startElement('resources');
     $xml->writeAttribute('xmlns:xliff', 'urn:oasis:names:tc:xliff:document:1.2');
     foreach ($tex_files as $tex_file) {
-        $contents = get_tex_contents_assoc($tex_file);
+        $contents = get_tex_contents_assoc($base_dir . '/' . $tex_file);
+        // Replace `/` and `.tex` with `$`
+        $key_prefix = preg_replace(['/\//', '/\.tex$/'], '$', $tex_file);
         foreach ($contents as $key => $val) {
             $xml->startElement('string');
-            $xml->writeAttribute('name', $key);
+            $xml->writeAttribute('name', $key_prefix . $key);
             $xml->writeRaw(android_escape_slash_newline($val));
             $xml->endElement(); // string
         }

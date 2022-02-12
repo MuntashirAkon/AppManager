@@ -1,6 +1,6 @@
 % SPDX-License-Identifier: GPL-3.0-or-later OR CC-BY-SA-4.0
-\section{Main Page}\label{sec:main-page} %%##pages_mainpage-section==title>>
-%%!!pages_mainpage-section<<
+\section{Main Page}\label{sec:main-page} %%##$section-title>>
+%%!!intro<<
 Main page lists all the installed, uninstalled and backed up applications. A single click on any installed app item
 opens the respective \hyperref[sec:app-details-page]{App Details page}. For the uninstalled system apps, it displays a
 dialog prompt which can be used to reinstall the app. Using the \hyperlink{par:main-page-sort}{sort} option from the
@@ -12,12 +12,12 @@ bar with additional support for the regular expressions.
 \begin{figure}[ht]
     \centering
     \includegraphics{../images/main_page_entry_info_labeled.svg}
-    \caption{An application list item in the main page} %%##pages_mainpage-howappopswork==title>>
+    \caption{An application list item in the main page} %%##$how-app-ops-work-title>>
     \label{fig:main_page_entry_info_labeled}
 \end{figure}
 
-\subsection{Batch Operations}\label{subsec:batch-operations} %%##pages_mainpage-batch-operations==title>>
-%%!!pages_mainpage-batch-operations<<
+\subsection{Batch Operations}\label{subsec:batch-operations} %%##$batch-operations-title>>
+%%!!batch-operations<<
 Batch operations or operation on multiple applications are also available within this page. Multiple selection mode can
 be activated by clicking on any app icon or by long-clicking on any items in the list. Once activated, a single click on
 a list item selects it instead of opening the App Details page. In this mode, the batch operations are located in the
@@ -40,8 +40,8 @@ multiple selection menu at the bottom of the page. The operations include:
 \end{tip}
 %%!!>>
 
-\subsection{Colour Codes}\label{subsec:main-colour-codes} %%##pages_mainpage-colour-codes==title>>
-%%!!pages_mainpage-colour-codes<<
+\subsection{Colour Codes}\label{subsec:main-colour-codes} %%##$colour-codes-title>>
+%%!!colour-codes<<
 \begin{itemize}
     \item \colorbox{AMLightGreyishOrange}{\textcolor{black}{Light greyish orange (day)}} / \colorbox{AMDarkBlue}{
         \textcolor{white}{dark blue (night)}} -- The application is selected for batch operation
@@ -64,8 +64,8 @@ multiple selection menu at the bottom of the page. The operations include:
 \end{itemize}
 %%!!>>
 
-\subsection{Application Types}\label{subsec:main-page-application-types} %%##pages_mainpage-application-types==title>>
-%%!!pages_mainpage-application-types<<
+\subsection{Application Types}\label{subsec:main-page-application-types} %%##$application-types-title>>
+%%!!application-types<<
 An application can be either a \textbf{User} or a \textbf{System} application along with the following suffixes:
 \begin{itemize}
     \item \texttt{X} -- Supports multiple architectures
@@ -76,8 +76,8 @@ An application can be either a \textbf{User} or a \textbf{System} application al
 \end{itemize}
 %%!!>>
 
-\subsection{Version Info}\label{subsec:main-page-version-info} %%##pages_mainpage-version-info==title>>
-%%!!pages_mainpage-version-info<<
+\subsection{Version Info}\label{subsec:main-page-version-info} %%##$version-info-title>>
+%%!!version-info<<
 Version name is followed by the prefixes below:
 \begin{itemize}
     \item \texttt{\_} -- No hardware acceleration (breaking the in-app animations or transparencies)
@@ -86,26 +86,26 @@ Version name is followed by the prefixes below:
 \end{itemize}
 %%!!>>
 
-\subsection{Options Menu}\label{subsec:main-page-options-menu} %%##pages_mainpage-options-menu==title>>
-%%!!pages_mainpage-options-menu<<
+\subsection{Options Menu}\label{subsec:main-page-options-menu} %%##$options-menu-title>>
+%%!!options-menu<<
 Options menu offers several options that can be used to sort and filter the listed applications as well as to navigate
 to different pages within or outside App Manager.
 %%!!>>
 
-\subsubsection{Instructions} %%##pages_mainpage-instructions==title>>
-%%!!pages_mainpage-instructions<<
+\subsubsection{Instructions} %%##$instructions-title>>
+%%!!instructions<<
 Clicking on the \textbf{Instructions} opens the offline version of the App Manager user manual. It may also open the
 online version if the corresponding feature split i.e.\ \texttt{feat\_docs} is not installed, or if an WebView is not
 present in the system to load the manual.
 %%!!>>
 
-\subsubsection{List Options}\label{subsubsec:main-list-options} %%##pages_mainpage-list-options==title>>
-%%!!pages_mainpage-list-options<<
+\subsubsection{List Options}\label{subsubsec:main-list-options} %%##$list-options-title>>
+%%!!list-options<<
 \textbf{List options} contain the options to sort and filter the list in the main page.
 %%!!>>
 
-\paragraph{Sort}\hypertarget{par:main-page-sort}{} %%##pages_mainpage-sort==title>>
-%%!!pages_mainpage-sort<<
+\paragraph{Sort}\hypertarget{par:main-page-sort}{} %%##$sort-title>>
+%%!!sort<<
 The applications listed in the main page can be sorted in the following ways:
 \begin{itemize}
     \item \textbf{User apps first.} The user applications are listed on the top
@@ -131,8 +131,8 @@ the sorting preferences, the applications are sorted alphabetically at first in 
 sorting results.
 %%!!>>
 
-\paragraph{Filter}\hypertarget{par:main-page-filter}{} %%##pages_mainpage-filter==title>>
-%%!!pages_mainpage-filter<<
+\paragraph{Filter}\hypertarget{par:main-page-filter}{} %%##$filter-title>>
+%%!!filter<<
 The applications listed in the main page can be filtered in the following ways:
 \begin{itemize}
     \item \textbf{User apps.} List only the user applications
@@ -154,37 +154,37 @@ useful for \hyperref[subsec:batch-operations]{batch operations} where filtering 
 to carry out certain operations safely.
 %%!!>>
 
-\paragraph{Profile Name}%%##pages_mainpage-profile_name==title>>
-%%!!pages_mainpage-profile_name<<
+\paragraph{Profile Name}%%##$profile_name-title>>
+%%!!profile_name<<
 It is also possible to list the applications that are only present in a \hyperref[sec:profiles-page]{profile}. This can
 be useful for carrying out certain operations on a profile (e.g., uninstalling all the applications in a profile) that
 cannot be done via the \hyperref[sec:profiles-page]{Profiles page}.
 %%!!>>
 
-\subsubsection{1-Click Ops}\label{subsubsec:main:1-click-ops} %%##pages_mainpage-1-click-ops==title>>
-%%!!pages_mainpage-1-click-ops<<
+\subsubsection{1-Click Ops}\label{subsubsec:main:1-click-ops} %%##$1-click-ops-title>>
+%%!!1-click-ops<<
 \textbf{1-Click Ops} stands for the single-click operations. It opens the \hyperref[sec:1-click-ops-page]{corresponding
 page} in a new activity.
 %%!!>>
 
-\subsubsection{App Usage} %%##pages_mainpage-appusage==title>>
-%%!!pages_mainpage-appusage<<
+\subsubsection{App Usage} %%##$app-usage-title>>
+%%!!app-usage<<
 App usage statistics such as \textit{screen time}, \textit{data usage} (both mobile and Wi-Fi), \textit{the number of
 times an app was opened} can be accessed by clicking on the \textbf{App Usage} option in the menu. However, it requires
 the \textit{Usage Access} permission. This menu item will not be listed if the usage access feature is disabled in
 \hyperref[subsec:enable/disable-features]{settings}.
 %%!!>>
 
-\subsubsection{System Config} %%##pages_mainpage-systemconfig==title>>
-%%!!pages_mainpage-systemconfig<<
+\subsubsection{System Config} %%##$system-config-title>>
+%%!!system-config<<
 This menu item opens a new page where various system configurations, blacklists/whitelists included in Android by the
 OEM, the vendor, the AOSP or the Magisk modules are displayed. It requires root. Therefore, this menu item will not be
 listed if root permission is unavailable to App Manager.
 %%!!>>
 
-\subsubsection{Running Apps}\label{subsubsec:main:running-apps} %%##pages_mainpage-running-apps==title>>
+\subsubsection{Running Apps}\label{subsubsec:main:running-apps} %%##$running-apps-title>>
 % TODO: Create a new page for the running apps
-%%!!pages_mainpage-running-apps<<
+%%!!running-apps<<
 This menu item opens a new page where a list of running applications or processes are displayed. It also displays the
 current memory and cache (if available) usage. If root or ADB is not available to App Manager, it only displays itself
 in the recent versions of Android. The running applications or processes can also be force-stopped or killed within the
@@ -193,35 +193,35 @@ In addition, it is also possible to carry out batch operations either by clickin
 item. Normal click on any items opens a dialog where a more detailed information is displayed.
 %%!!>>
 
-\subsubsection{Profiles} %%##pages_mainpage-profiles==title>>
-%%!!pages_mainpage-profiles<<
+\subsubsection{Profiles} %%##$profiles-title>>
+%%!!profiles<<
 This menu item opens the \hyperref[sec:profiles-page]{profiles page}. Profiles are a way to configure regularly used
 tasks. They can also be invoked via shortcuts.
 %%!!>>
 
-\subsubsection{Log Viewer}\label{subsubsec:log-viewer} %%##pages_mainpage-log-viewer==title>>
+\subsubsection{Log Viewer}\label{subsubsec:log-viewer} %%##$log-viewer-title>>
 % TODO: Create a new page for the log viewer
-%%!!pages_mainpage-log-viewer<<
+%%!!log-viewer<<
 This menu item opens the log viewer page which can display and manage logs using the \texttt{logcat} command. By
 default, this page can only display the activities of App Manager. However, it can display logs from all the
 processes if \texttt{android.permission.READ\_LOGS} is granted. This permission granted automatically if the current
 \hyperref[subsec:mode-of-operation]{mode of operation} is either root or ADB.
 %%!!>>
 
-\subsubsection{APK Updater} %%##pages_mainpage-apkupdater==title>>
-%%!!pages_mainpage-apkupdater<<
+\subsubsection{APK Updater} %%##$apk-updater-title>>
+%%!!apk-updater<<
 If the app \href{https://github.com/rumboalla/apkupdater}{APK Updater} is installed in the system, it can be opened
 directly via this menu item. The option remains hidden if the app is not present in the system.
 %%!!>>
 
-\subsubsection{Termux} %%##pages_mainpage-termux==title>>
-%%!!pages_mainpage-termux<<
+\subsubsection{Termux} %%##$termux-title>>
+%%!!termux<<
 If the app \href{https://github.com/termux/termux-app}{Termux} is installed in the system, the running session (or a
 new session) can be opened directly via this menu item. The option remains hidden if the app is not present in the
 system.
 %%!!>>
 
-\subsubsection{Settings} %%##pages_mainpage-settings==title>>
-%%!!pages_mainpage-settings<<
+\subsubsection{Settings} %%##$settings-title>>
+%%!!settings<<
 This menu item opens the in-app \hyperref[sec:settings-page]{Settings page}.
 %%!!>>

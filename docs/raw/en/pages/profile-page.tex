@@ -1,6 +1,6 @@
 % SPDX-License-Identifier: GPL-3.0-or-later OR CC-BY-SA-4.0
-\section{Profile Page}\label{sec:profile-page} %%##pages_profilepage-section==title>>
-%%!!pages_profilepage-section<<
+\section{Profile Page}\label{sec:profile-page} %%##$section-title>>
+%%!!intro<<
 Profile page displays the configurations for a profile. It also offers editing them.
 
 \begin{tip}{Notice}
@@ -8,8 +8,8 @@ Profile page displays the configurations for a profile. It also offers editing t
 \end{tip}
 %%!!>>
 
-\subsection{Options Menu}\label{subsec:profile-options-menu} %%##pages_profilepage-profile-options-menu==title>>
-%%!!pages_profilepage-profile-options-menu<<
+\subsection{Options Menu}\label{subsec:profile-options-menu} %%##$options-menu-title>>
+%%!!options-menu<<
 The three dots menu on the top-right corner opens the options-menu. It contains several options such as--
 \begin{itemize}
     \item \textbf{Apply.} This option can be used to apply the profile. When clicked, a dialog will be displayed where
@@ -30,38 +30,38 @@ The three dots menu on the top-right corner opens the options-menu. It contains 
 \end{itemize}
 %%!!>>
 
-\subsection{Apps Tab}\label{subsec:profile-apps-tab} %%##pages_profilepage-profile-apps-tab==title>>
-%%!!pages_profilepage-profile-apps-tab<<
+\subsection{Apps Tab}\label{subsec:profile-apps-tab} %%##$apps-tab-title>>
+%%!!apps-tab<<
 Apps tab lists the packages configured under this profile. Packages can be added or removed using the \textit{plus}
 button located near the bottom of the screen. Packages can also be removed by long clicking on them (in which case, a
 popup will be displayed with the only option \textit{delete}).
 %%!!>>
 
-\subsection{Configurations Tab}\label{subsec:profile-configurations-tab} %%##pages_profilepage-profile-configurations-tab==title>>
-%%!!pages_profilepage-profile-configurations-tab<<
+\subsection{Configurations Tab}\label{subsec:profile-configurations-tab} %%##$configurations-tab-title>>
+%%!!configurations-tab<<
 Configurations tab can be used to configure the selected packages. Description of each item is given below:
 %%!!>>
 
-\subsubsection{Comment} %%##pages_profilepage-comment==title>>
-%%!!pages_profilepage-comment<<
+\subsubsection{Comment} %%##$comment-title>>
+%%!!comment<<
 This is the text that will be displayed in the \hyperref[sec:profiles-page]{profiles page}. If not set, the current
 configurations will be displayed instead.
 %%!!>>
 
-\subsubsection{State}\label{subsubsec:profile-state} %%##pages_profilepage-profile-state==title>>
-%%!!pages_profilepage-profile-state<<
+\subsubsection{State}\label{subsubsec:profile-state} %%##$state-title>>
+%%!!state<<
 Denotes how certain configured options will behave. For instance, if \textit{disable} option is turned on, the apps will
 be disabled if the state is \textit{on} and will be enabled if the state is \textit{off}. Currently state only support
 \textit{on} and \textit{off} values.
 %%!!>>
 
-\subsubsection{Users} %%##pages_profilepage-users==title>>
-%%!!pages_profilepage-users<<
+\subsubsection{Users} %%##$users-title>>
+%%!!users<<
 Select users for which is the profile will be applied. All users are selected by default.
 %%!!>>
 
-\subsubsection{Components} %%##pages_profilepage-components==title>>
-%%!!pages_profilepage-components<<
+\subsubsection{Components} %%##$components-title>>
+%%!!components<<
 This behaves the same way as the \hyperref[subsec:block-components-dots]{Block Components\dots} option does in the
 1-Click Ops page. However, this only applies for the selected packages. If the \hyperref[subsubsec:profile-state]{state}
 is \textit{on}, the components will be blocked, and if the state is \textit{off}, the components will be unblocked.
@@ -71,8 +71,8 @@ dialog.
 \seealsoinline{\hyperref[subsec:faq:what-are-app-components]{What are the app components?}}
 %%!!>>
 
-\subsubsection{App Ops} %%##pages_profilepage-appops==title>>
-%%!!pages_profilepage-appops<<
+\subsubsection{App Ops} %%##$app-ops-title>>
+%%!!app-ops<<
 This behaves the same way as the \hyperref[subsec:set-mode-for-app-ops-dots]{Set Mode for App Ops\dots} option does in
 the 1-Click Ops page. However, this only applies for the selected packages. If the
 \hyperref[subsubsec:profile-state]{state} is \textit{on}, the app ops will be denied (ie. ignored), and if the state is
@@ -80,16 +80,16 @@ the 1-Click Ops page. However, this only applies for the selected packages. If t
 on the \textit{disabled} button on the input dialog.
 %%!!>>
 
-\subsubsection{Permissions} %%##pages_profilepage-permission==title>>
-%%!!pages_profilepage-permission<<
+\subsubsection{Permissions} %%##$permissions-title>>
+%%!!permissions<<
 This option can be used to grant or revoke certain permissions from the selected packages. Like others above,
 permissions must be separated by spaces. If the \hyperref[subsubsec:profile-state]{state} is \textit{on}, the
 permissions will be revoked, and if the state is \textit{off}, the permissions will be allowed. The option can be
 disabled (regardless of the inserted values) by clicking on the \textit{disabled} button on the input dialog.
 %%!!>>
 
-\subsubsection{Backup/Restore} %%##pages_profilepage-backuprestore==title>>
-%%!!pages_profilepage-backuprestore<<
+\subsubsection{Backup/Restore} %%##$backup-restore-title>>
+%%!!backup-restore<<
 This option can be used to take a backup of the selected apps and its data or restore them. There two options available
 there: \textit{Backup options} and \textit{backup name}.
 \begin{itemize}
@@ -106,8 +106,8 @@ If the \hyperref[subsubsec:profile-state]{state} is \textit{on}, the packages wi
 the input dialog.
 %%!!>>
 
-\subsubsection{Export Blocking Rules} %%##pages_profilepage-exportblockingrules==title>>
-%%!!pages_profilepage-exportblockingrules<<
+\subsubsection{Export Blocking Rules} %%##$export-blocking-rules-title>>
+%%!!export-blocking-rules<<
 This option allows you to export blocking rules.
 
 \begin{danger}{Danger}
@@ -115,35 +115,35 @@ This option allows you to export blocking rules.
 \end{danger}
 %%!!>>
 
-\subsubsection{Disable} %%##pages_profilepage-disable==title>>
-%%!!pages_profilepage-disable<<
+\subsubsection{Disable} %%##$disable-title>>
+%%!!disable<<
 Enables/disables the selected packages depending on the \hyperref[subsubsec:profile-state]{state}. If the state is
 \textit{on}, the packages will be disabled, and if the state is \textit{off}, the packages will be enabled.
 %%!!>>
 
-\subsubsection{Force-stop} %%##pages_profilepage-forcestop==title>>
-%%!!pages_profilepage-forcestop<<
+\subsubsection{Force-stop} %%##$force-stop-title>>
+%%!!force-stop<<
 Allows the selected packages to be force-stopped.
 %%!!>>
 
-\subsubsection{Clear Cache} %%##pages_profilepage-clearcache==title>>
-%%!!pages_profilepage-clearcache<<
+\subsubsection{Clear Cache} %%##$clear-cache-title>>
+%%!!clear-cache<<
 Enables clearing cache for the selected packages.
 %%!!>>
 
-\subsubsection{Clear Data} %%##pages_profilepage-cleardata==title>>
-%%!!pages_profilepage-cleardata<<
+\subsubsection{Clear Data} %%##$clear-data-title>>
+%%!!clear-data<<
 Enables clearing data for the selected packages.
 %%!!>>
 
-\subsubsection{Block Trackers} %%##pages_profilepage-blocktrackers==title>>
-%%!!pages_profilepage-blocktrackers<<
+\subsubsection{Block Trackers} %%##$block-trackers-title>>
+%%!!block-trackers<<
 Enables blocking/unblocking of the tracker components from the selected packages depending on the
 \hyperref[subsubsec:profile-state]{state}. If the state is \textit{on}, the trackers will be blocked, and if the state
 is \textit{off}, the trackers will be unblocked.
 %%!!>>
 
-\subsubsection{Save APK} %%##pages_profilepage-saveapk==title>>
-%%!!pages_profilepage-saveapk<<
+\subsubsection{Save APK} %%##$save-apk-title>>
+%%!!save-apk<<
 Enables saving APK files at \texttt{AppManager/apks} for the selected packages.
 %%!!>>

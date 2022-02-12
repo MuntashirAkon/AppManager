@@ -1,8 +1,8 @@
 % SPDX-License-Identifier: GPL-3.0-or-later OR CC-BY-SA-4.0
-\section{ADB over TCP}\label{sec:faq:adb-over-tcp} %%##faq_aot-section==title>>
+\section{ADB over TCP}\label{sec:faq:adb-over-tcp} %%##$section-title>>
 
-\subsection{Do I have to enable ADB over TCP everytime I restart?} %%##faq_aot-restart==title>>
-%%!!faq_aot-restart<<
+\subsection{Do I have to enable ADB over TCP everytime I restart?} %%##$restart-title>>
+%%!!restart<<
 Unfortunately, yes. However, as of v2.5.13, you don't need to keep AoT enabled all the time as it now uses a
 server-client mechanism to interact with the system, but you do have to keep the \textbf{Developer options} as well as
 \textbf{USB debugging} enabled. To do that, enable \hyperref[sec:adb-over-tcp]{ADB over TCP} and open App Manager. You
@@ -11,19 +11,19 @@ Lineage OS or its derivative OS, you can toggle AoT without any PC or Mac by sim
 network} option located just below the \textbf{USB debugging}, but the server can't be stopped for the latter case.
 %%!!>>
 
-\subsection{Cannot enable USB debugging. What to do?} %%##faq_aot-usbdebugging==title>>
-%%!!faq_aot-usbdebugging<<
+\subsection{Cannot enable USB debugging. What to do?} %%##$usb-debugging-title>>
+%%!!usb-debugging<<
 See §\cref{subsec:enable-usb-debugging} in Chapter \cref{ch:guides}.
 %%!!>>
 
-\subsection{Can I block tracker or any other application components using ADB over TCP?} %%##faq_aot-blocktracker==title>>
-%%!!faq_aot-blocktracker<<
+\subsection{Can I block tracker or any other application components using ADB over TCP?} %%##$block-tracker-title>>
+%%!!block-tracker<<
 Sadly, no. ADB has limited \href{https://github.com/aosp-mirror/platform_frameworks_base/blob/master/packages/Shell/AndroidManifest.xml}{permissions}
 and controlling application components is not one of them.
 %%!!>>
 
-\subsection{Which features can be used in ADB mode?} %%##faq_aot-featureadb==title>>
-%%!!faq_aot-featureadb<<
+\subsection{Which features can be used in ADB mode?} %%##$feature-adb-title>>
+%%!!feature-adb<<
 Most of the features supported by ADB mode are enabled by default once ADB support is detected by AM. These include
 disable, force-stop, clear data, grant/revoke app ops and permissions. You can also install applications without any
 prompt and view \hyperref[subsubsec:main:running-apps]{running apps/processes}.

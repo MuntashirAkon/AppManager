@@ -37,26 +37,34 @@ checkabuse <target-dir>         Detect spams or mistranslations.
    `subsection{}`, `subsubsection{}`, `chapter{}`, `caption{}` and
    `paragraph{}` at the end of the title line.
 
-   Key format: `%%##string_key==title>>` where `title` is a keyword.
+   **Key format:** `%%##$key>>` where `key` is an arbitrary key for the title
+   unique to the file and must match this regex: `[a-zA-Z0-9-_\.]+`.
 
-   Example: Consider the following line in Latex:
+   **Example:** Consider the following line in Latex in a file located at 
+   `appendices/app-ops.tex`:
    ```latex
    \chapter{App Ops}\label{ch:app-ops}
    ```
 
    This has to be altered as follows:
    ```latex
-   \chapter{App Ops}\label{ch:app-ops} %%##appendices_appops-chapter==title>>
+   \chapter{App Ops}\label{ch:app-ops} %%##$chapter-title>>
    ```
-
-   On issuing an `update`, the line will be extracted as follows in xliff:
+   
+   On issuing an `update`, the line will be extracted as follows in strings.xml:
    ```xml
-   <string name="appendices_appops-chapter==title">App Ops</string>
+   <string name="appendices$app-ops$$chapter-title">App Ops</string>
    ```
+   
+   Finally, the full title must be within a single line.
 
 3. Add custom translation keys for the contents.
 
-   Example: Consider the following paragraph in Latex:
+   **Format:** Start of the content is denoted by `%%!!key<<` where key is an
+   arbitrary key for the content unique to the file and must match this regex:
+   `[a-zA-Z0-9-_\.]+`. End of the content is denoted by `%%!!>>`.
+
+   **Example:** Consider the following paragraph in Latex:
    ```latex
    After \hyperref[subsubsec:location-of-developer-options]{locating the developer options}, enable \textbf{Developer option} (if not already).
    After that, scroll down a bit until you will find the option \textbf{USB debugging}.
@@ -67,13 +75,16 @@ checkabuse <target-dir>         Detect spams or mistranslations.
 
    This has to be altered as follows:
    ```latex
-   %%!!guide_aot-enableusbdbg<<
+   %%!!enable-usb-debug<<
    After \hyperref[subsubsec:location-of-developer-options]{locating the developer options}, enable \textbf{Developer option} (if not already). After that, scroll down a bit until you will find the option \textbf{USB debugging}.
    Use the toggle button on the right-hand side to enable it.
    At this point, you may get an alert prompt where you may have to click \textit{OK} to actually enable it.
-   You may also have to enable some other options depending on device vendor and ROM.
+   You may also have to enable some other options depending on device vendor and ROM\@.
    %%!!>>
    ```
 
-   On issuing an `update`, strings within `%%!!string_key<<` and `%%!!>>` will be extracte under the
-   key `guide_aot-enableusbdbg`.
+   On issuing an `update`, strings within `%%!!enable-usb-debug<<` and `%%!!>>`
+   will be extracted under the key `guide$aot$enable-usb-debug`.
+
+   Note that the start and end markers must be located in a separate line with
+   no additional spaces, similar to EOF markers.
