@@ -5,9 +5,8 @@
 ./doctool.sh VERB [ARGS]
 Where:
 check       Run dependency checker.
-update      Extract strings and create base translation file.
-merge <input.xml> <output-dir>      Merge translation from xliff to TeX.
-checkabuse <base-dir> <target-dir>  Detect spams or mistranslations.
+merge <input.xml> <output-dir>  Merge translation from xliff to TeX.
+checkabuse <target-dir>         Detect spams or mistranslations.
 ```
 
 ## Requirements
@@ -27,10 +26,6 @@ checkabuse <base-dir> <target-dir>  Detect spams or mistranslations.
 
 ## Manual
 
-- `./doctool.sh update`: Extracts strings from TeX and create `strings.xml`.
-  This should only be invoked for the base locale. All line breaks are ignored.
-  Attention should be given while translating Latex tags e.g., `\hyperref[]`,
-  `\textbf`, `\cref`.
 - `./doctool.sh merge`: Updates TeX from `strings.xml`. If the syntax of
   `strings.xml` is invalid, errors will be thrown. Depending on the processing
   speed, it may take several minutes.

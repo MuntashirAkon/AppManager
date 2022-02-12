@@ -4,6 +4,8 @@
 
 // Example usage: php ./scripts/update_libs.php > ./app/src/main/res/values/libs.xml
 
+require_once __DIR__ . "/utils.php";
+
 const LIB_RADAR = 'https://gitlab.com/IzzyOnDroid/repo/-/raw/master/lib/libradar.txt';
 const LIB_RADAR_WILD = 'https://gitlab.com/IzzyOnDroid/repo/-/raw/master/lib/libradar_wild.txt';
 const LIB_SMALI = 'https://gitlab.com/IzzyOnDroid/repo/-/raw/master/lib/libsmali.txt';
@@ -149,9 +151,4 @@ function addLibRadar($filename = 'libradar.txt') {
             ];
         }
     }
-}
-
-// https://developer.android.com/guide/topics/resources/string-resource.html#FormattingAndStyling
-function android_escape($string) {
-    return strtr($string, array('@' => '\@', '?' => '\?', '<' => '&lt;', '>' => '&gt;', '"' => '\"', "'" => "\'", '&' => '&amp;'));
 }

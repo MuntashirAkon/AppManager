@@ -4,6 +4,8 @@
 
 // Example usage: php ./scripts/update_native_libs.php > ./app/src/main/res/values/native_libs.xml
 
+require_once __DIR__ . "/utils.php";
+
 const LIB_NATIVE = 'https://raw.githubusercontent.com/gnuhead-chieb/solibs/main/solibs.json';
 
 $libs_info = json_decode(file_get_contents(LIB_NATIVE), true);
@@ -61,15 +63,3 @@ EOF;
 </resources>
 EOF;
 }
-
-// https://developer.android.com/guide/topics/resources/string-resource.html#FormattingAndStyling
-function android_escape($string)
-{
-    return strtr($string, array('@' => '\@', '?' => '\?', '<' => '&lt;', '>' => '&gt;', '"' => '\"', "'" => "\'", '&' => '&amp;'));
-}
-
-function android_escape_slash($string)
-{
-    return strtr($string, array('@' => '\@', '?' => '\?', '<' => '&lt;', '>' => '&gt;', '"' => '\"', "'" => "\'", '&' => '&amp;', '\\' => '\\\\'));
-}
-
