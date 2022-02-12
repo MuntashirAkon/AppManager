@@ -10,10 +10,14 @@ function android_escape($string) {
     return strtr($string, array('@' => '\@', '?' => '\?', '<' => '&lt;', '>' => '&gt;', '"' => '\"', "'" => "\'", '&' => '&amp;'));
 }
 
-function android_escape_reverse($string) {
-    return strtr($string, array('\@' => '@', '\?' => '?', '&lt;' => '<', '&gt;' => '>', '\"' => '"', "\'" => "'", '&amp;' => '&'));
-}
-
 function android_escape_slash($string) {
     return strtr($string, array('@' => '\@', '?' => '\?', '<' => '&lt;', '>' => '&gt;', '"' => '\"', "'" => "\'", '&' => '&amp;', '\\' => '\\\\'));
+}
+
+function android_escape_slash_newline($string) {
+    return strtr($string, array('@' => '\@', '?' => '\?', '<' => '&lt;', '>' => '&gt;', '"' => '\"', "'" => "\'", '&' => '&amp;', '\\' => '\\\\', "\n" => '\n'));
+}
+
+function android_escape_slash_newline_reverse($string) {
+    return strtr($string, array('\@' => '@', '\?' => '?', '&lt;' => '<', '&gt;' => '>', '\"' => '"', "\'" => "'", '&amp;' => '&', '\\\\' => '\\', '\n' => "\n"));
 }

@@ -10,6 +10,8 @@ date_default_timezone_set('UTC');
 // update           Extract strings from the TeX files and create base translation file.
 // debug            Do experiments
 
+// External requirements: Pandoc, pandoc-crossref, minify
+
 require_once __DIR__ . "/utils.php";
 
 const MAIN_TEX = 'main.tex';
@@ -196,7 +198,7 @@ function update_strings() {
         foreach ($contents as $key => $val) {
             $xml->startElement('string');
             $xml->writeAttribute('name', $key);
-            $xml->writeRaw(android_escape_slash($val));
+            $xml->writeRaw(android_escape_slash_newline($val));
             $xml->endElement(); // string
         }
     }
