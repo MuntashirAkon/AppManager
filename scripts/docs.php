@@ -196,7 +196,7 @@ function update_strings() {
         foreach ($contents as $key => $val) {
             $xml->startElement('string');
             $xml->writeAttribute('name', $key);
-            $xml->writeRaw(android_escape($val));
+            $xml->writeRaw(android_escape_slash($val));
             $xml->endElement(); // string
         }
     }
