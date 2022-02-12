@@ -1105,4 +1105,20 @@
     <string name="uses_play_app_signing_description">Ứng dụng này chứa một số đánh dấu cho thấy rằng <i>nó có thể</i> đang sử dụng <a href="https://support.google.com/googleplay/android-developer/answer/9842756">Chữ ký Google Play</a>. Với cơ chế này, các khóa ký được lưu trữ trong máy chủ của Google và Google chịu trách nhiệm ký ứng dụng. Lưu ý rằng thông tin chữ ký hợp lệ là cách duy nhất để xác minh rằng ứng dụng chưa bị sửa đổi bởi bất kỳ người nào khác ngoài nhà phát triển (và trong trường hợp này, Google cũng vậy).</string>
     <string name="failed_to_change_app_op_mode">Không thể thay đổi chế độ ủy quyền ứng dụng.</string>
     <string name="failed_to_use_the_current_mode_of_operation">Không thể sử dụng chế độ hoạt động hiện tại. Quay lại chế độ không root cho phiên này.</string>
+    <string name="primary_abi">ABI chính</string>
+    <string name="zygote_preload_name">Tên tải trước Zygote</string>
+    <string name="hidden_api_enforcement_policy">Chính sách thực thi API ẩn</string>
+    <string name="binary_32_bit">32 Bit</string>
+    <string name="endianness_little_endian">Little endian</string>
+    <string name="so_type_shared_library">Thư viện dùng chung</string>
+    <string name="save_and_exit">Lưu và thoát</string>
+    <string name="hidden_api_enf_policy_none">Không có (truy cập đầy đủ API ẩn)</string>
+    <string name="hidden_api_enf_policy_dark_grey_and_black">Thực thi (danh sách cấm và gần cấm)</string>
+    <string name="hidden_api_enf_policy_warn">Cảnh báo (truy cập đầy đủ API ẩn nhưng đưa ra cảnh báo)</string>
+    <string name="so_type_executable">Thực thi</string>
+    <string name="file_modified_are_you_sure">Tệp đã được sửa đổi. Bỏ tất cả thay đổi và thoát\?</string>
+    <string name="hidden_api_enf_default_policy">Mặc định (dựa trên loại ứng dụng)</string>
+    <string name="hidden_api_enf_policy_black">Thực thi (chỉ danh sách cấm)</string>
+    <string name="binary_64_bit">64 Bit</string>
+    <string name="endianness_big_endian">Big endian</string>
 </resources>
