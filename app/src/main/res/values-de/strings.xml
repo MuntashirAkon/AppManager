@@ -1116,7 +1116,7 @@
     <string name="scan_in_vt">In VirusTotal scannen</string>
     <string name="parent_process_id">Übergeordnete Prozess ID</string>
     <string name="priority">Priorität</string>
-    <string name="threads">Thread Count</string>
+    <string name="threads">Thread Zähler</string>
     <string name="state">Prozess-Status</string>
     <string name="swap_chart_info">● %1$s benutzt ● %2$s frei</string>
     <string name="memory_chart_info">● %1$s Anwendungen ● %2$s Cached ● %3$s Puffer ● %4$s frei</string>
@@ -1144,4 +1144,20 @@
     <string name="failed_to_enable_magisk_deny_list">Magisk DenyList konnte nicht aktiviert werden</string>
     <string name="failed_to_disable_magisk_deny_list">Magisk DenyList konnte nicht deaktiviert werden</string>
     <string name="mode_of_op_with_inferred_mode_of_op">%1$s (Abgeleiteter Modus: %2$s)</string>
+    <string name="hidden_api_enf_policy_none">Kein (Vollzugriff auf die versteckte API)</string>
+    <string name="primary_abi">Primäre ABI</string>
+    <string name="zygote_preload_name">Name der Zygote vor dem Laden</string>
+    <string name="hidden_api_enforcement_policy">Versteckte API-Durchsetzungsrichtlinie</string>
+    <string name="hidden_api_enf_policy_black">Erzwingen (nur schwarze Listen)</string>
+    <string name="binary_32_bit">32 Bit</string>
+    <string name="binary_64_bit">64 Bit</string>
+    <string name="endianness_big_endian">Big endian</string>
+    <string name="so_type_shared_library">Gemeinsam genutzte Bibliothek</string>
+    <string name="so_type_executable">Ausführbar</string>
+    <string name="save_and_exit">Speichern und schließen</string>
+    <string name="hidden_api_enf_default_policy">Standard (je nach Anwendungstyp)</string>
+    <string name="hidden_api_enf_policy_dark_grey_and_black">Erzwingen (dunkelgraue und schwarze Listen)</string>
+    <string name="endianness_little_endian">Little endian</string>
+    <string name="file_modified_are_you_sure">Die Datei wurde geändert. Verwerfen Sie alle Ihre Änderungen und beenden Sie\?</string>
+    <string name="hidden_api_enf_policy_warn">Warnen (voller Zugriff auf die versteckte API, gibt aber Warnungen aus)</string>
 </resources>
