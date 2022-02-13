@@ -1,7 +1,0 @@
-F-Droid doesn't support extended changelog. In-app changelog offers a more detailed changelog.
-- New features: Profiles and multiple users.
-- New language: French
-- New settings: mode of operations, app installer selection and app install location chooser
-- Updated trackers and libs
-- Fixed locales
-Known issue: The components tabs in the app details page is empty for users other than the current user.

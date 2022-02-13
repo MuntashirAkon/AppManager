@@ -1,0 +1,3 @@
+Full list of changes: https://github.com/MuntashirAkon/AppManager/compare/c504b30...9821bc24
+
+We're running a funding campaign</b> for App Manager for a limited period. Visit https://opencollective.com/app-manager to learn more.
