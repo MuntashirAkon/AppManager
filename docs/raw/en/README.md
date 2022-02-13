@@ -5,7 +5,6 @@
 ./doctool.sh VERB [ARGS]
 Where:
 check       Run dependency checker.
-merge <input.xml> <output-dir>  Merge translation from xliff to TeX.
 checkabuse <target-dir>         Detect spams or mistranslations.
 ```
 
@@ -13,22 +12,12 @@ checkabuse <target-dir>         Detect spams or mistranslations.
 
 * [pandoc](https://github.com/jgm/pandoc) (v2.13 or later) (for macOS, run `brew install pandoc`)
 * [pandoc-crossref](https://github.com/lierdakil/pandoc-crossref) (for macOS, run `brew install pandoc-crossref`)
-* Python
 * Bash
-* GNU awk (for macOS, run `brew install gawk`)
 * GNU grep (for macOS, run `brew install ggrep`)
 * GNU Sed (for macOS, run `brew install gsed`)
-* xmllint
-* Perl
+* minify (for macOS, run `brew install minify`)
 * urlextract (`pip install urlextract`)
 * find
-* rsync
-
-## Manual
-
-- `./doctool.sh merge`: Updates TeX from `strings.xml`. If the syntax of
-  `strings.xml` is invalid, errors will be thrown. Depending on the processing
-  speed, it may take several minutes.
 
 ### Adding a new article
 
@@ -51,7 +40,7 @@ checkabuse <target-dir>         Detect spams or mistranslations.
    \chapter{App Ops}\label{ch:app-ops} %%##$chapter-title>>
    ```
    
-   On issuing an `update`, the line will be extracted as follows in strings.xml:
+   On issuing an `rebase`, the line will be extracted as follows in strings.xml:
    ```xml
    <string name="appendices$app-ops$$chapter-title">App Ops</string>
    ```
@@ -83,7 +72,7 @@ checkabuse <target-dir>         Detect spams or mistranslations.
    %%!!>>
    ```
 
-   On issuing an `update`, strings within `%%!!enable-usb-debug<<` and `%%!!>>`
+   On issuing an `rebase`, strings within `%%!!enable-usb-debug<<` and `%%!!>>`
    will be extracted under the key `guide$aot$enable-usb-debug`.
 
    Note that the start and end markers must be located in a separate line with

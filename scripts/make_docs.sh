@@ -22,6 +22,7 @@ cp -a "${docs_folder}/css/"* "${raw_folder}"
 cp -a "${docs_folder}/images/"* "${raw_folder}"
 cp -a "${docs_folder}/en/index.html" "${raw_folder}/"
 sed -i -e 's|src=\.\./images/|src=|' \
+ -e 's|href=\.\./css/|href=|' \
  -e 's|data=\.\./images/|data=|'  "${raw_folder}/index.html"
 
 # Copy index html and css files
@@ -30,5 +31,6 @@ for lang in "${SUPPORTED_LANGUAGES[@]}"; do
   [[ -d "${raw_folder}" ]] || mkdir -p "${raw_folder}"
   cp -a "${docs_folder}/${lang}/index.html" "${raw_folder}/"
   sed -i -e 's|src=\.\./images/|src=|' \
+   -e 's|href=\.\./css/|href=|' \
    -e 's|data=\.\./images/|data=|' "${raw_folder}/index.html"
 done
