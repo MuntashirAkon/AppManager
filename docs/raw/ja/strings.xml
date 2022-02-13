@@ -1,12 +1,225 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-<string name="faq$aot$$section-title">TCP経由のADB</string>
-<string name="faq$aot$$restart-title">再起動するたびにTCP経由のADBを再度有効にしなければなりませんか？</string>
-<string name="faq$aot$$usb-debugging-title">USBデバッグを有効にできません。どうすればよいですか？</string>
-<string name="faq$aot$$block-tracker-title">ADBモードでもトラッカーやその他のアプリコンポーネントをブロックすることができますか？</string>
-<string name="faq$aot$$feature-adb-title">ADBモードではどのような機能が利用できますか？</string>
-<string name="faq$aot$restart">残念ながらそうです。しかしv2.5.13以降では、サーバー・クライアント方式によりシステムと対話的に動作するため、\n TCP経由のADBを常に有効にしておく必要はありません。但し\\textbf{開発者向けオプション}の\n \\textbf{USBデバッグ}を有効にしておく必要があります。そのためには、\\hyperref[sec:adb-over-tcp]{TCP経由のADB}を有効にした状態でApp Manager\n を起動してください。そうすると、\textit{ADBモードで動作中}とトースト通知が画面下部に表示されます。その後はTCPサーバーを停止させて構いません。\n Lineageやその派生システムではTCP経由のADBをPCなしでも切り替えできます。\n \\textbf{ネットワーク経由のADB} オプションが\\textbf{USBデバッグ}オプションの下部に存在します。但しこの場合ではTCPサーバーを停止できません。</string>
-<string name="faq$aot$usb-debugging">チャプター \cref{ch:guides}の§\cref{subsec:enable-usb-debugging}をご確認ください。</string>
-<string name="faq$aot$block-tracker">残念ながらできません。ADBでは限られた \\href{https://github.com/aosp-mirror/platform_frameworks_base/blob/master/packages/Shell/AndroidManifest.xml}{権限}\n 歯科利用できず、アプリのコンポーネント制御はこの中に含まれません。</string>
-<string name="faq$aot$feature-adb">ADBモードではAppManagerの殆どの機能が利用でき、ADBモードが検出された際、自動的に有効になります。 アプリを無効化、強制停止、データーを消去、AppOpsやアプリ権限を拒否/許可などの機能も含まれます。またアプリを確認画面無しでインストールしたり、 \\hyperref[subsubsec:main:running-apps]{実行中のアプリ/プロセス}の確認も可能です。</string>
+    <string name="faq$aot$$section-title">TCP経由のADB</string>
+    <string name="faq$aot$$restart-title">再起動するたびにTCP経由のADBを再度有効にしなければなりませんか？</string>
+    <string name="faq$aot$$usb-debugging-title">USBデバッグを有効にできません。どうすればよいですか？</string>
+    <string name="faq$aot$$block-tracker-title">ADBモードでもトラッカーやその他のアプリコンポーネントをブロックすることができますか？</string>
+    <string name="faq$aot$$feature-adb-title">ADBモードではどのような機能が利用できますか？</string>
+    <string name="faq$aot$restart">残念ながらそうです。しかしv2.5.13以降では、サーバー・クライアント方式によりシステムと対話的に動作するため、
+\nTCP経由のADBを常に有効にしておく必要はありません。但し\\textbf{開発者向けオプション}の
+\n\\textbf{USBデバッグ}を有効にしておく必要があります。そのためには、\\hyperref[sec:adb-over-tcp]{TCP経由のADB}を有効にした状態でApp Manager
+\nを起動してください。そうすると、\\textit{ADBモードで動作中}とトースト通知が画面下部に表示されます。その後はTCPサーバーを停止させて構いません。
+\nLineageやその派生システムではTCP経由のADBをPCなしでも切り替えできます。
+\n\\textbf{ネットワーク経由のADB} オプションが\\textbf{USBデバッグ}オプションの下部に存在します。但し後者の場合ではTCPサーバーを停止できません。</string>
+    <string name="faq$aot$usb-debugging">チャプター \\cref{ch:guides}の§\\cref{subsec:enable-usb-debugging}をご確認ください。</string>
+    <string name="faq$aot$block-tracker">残念ながらできません。ADBでは限られた \\href{https://github.com/aosp-mirror/platform_frameworks_base/blob/master/packages/Shell/AndroidManifest.xml}{権限}
+\nしか利用できず、アプリのコンポーネント制御はこの中に含まれません。</string>
+    <string name="faq$aot$feature-adb">ADBモードではAppManagerの殆どの機能が利用でき、ADBモードが検出された際、自動的に有効になります。
+\nアプリを無効化、強制停止、データーを消去、AppOpsやアプリ権限を拒否/許可などの機能も含まれます。
+\nまたアプリを確認画面無しでインストールしたり、 \\hyperref[subsubsec:main:running-apps]{実行中のアプリ/プロセス}の確認も可能です。</string>
+    <string name="intro$main$$introduction-chapter-title">はじめに</string>
+    <string name="intro$main$$terminologies-title">用語の定義</string>
+    <string name="intro$main$$supported-versions-title">対応バージョン</string>
+    <string name="intro$main$$official-sources-title">公式ソース</string>
+    <string name="intro$main$$bin-sources-title">バイナリ配布ソース</string>
+    <string name="intro$main$$source-code-links-title">ソースコードへのリンク</string>
+    <string name="intro$main$$translations-title">翻訳</string>
+    <string name="intro$main$$contributing-title">貢献する</string>
+    <string name="intro$main$$buiding-title">ビルド手順</string>
+    <string name="intro$main$$submit-patches-title">パッチを提出する</string>
+    <string name="intro$main$$donation-title">寄付、出資</string>
+    <string name="intro$main$$contact-title">連絡先</string>
+    <string name="intro$main$supported-versions">現在、サポートされているバージョンは、v2.6.0 (安定版)、 v3.0.0 (alpha と デバッグビルド)です。
+\nApp Managerの旧バージョンは、セキュリティ上の脆弱性が含まれている可能性があるため、使用しないでください。</string>
+    <string name="intro$main$translations">App Managerは、プル/マージリクエストによる翻訳を直接受け付けていません。翻訳は、Weblate を介して自動的に管理されます。
+\n翻訳チームに参加するには、\\url{https://hosted.weblate.org/engage/app-manager/}をご覧ください。</string>
+    <string name="intro$main$buiding">ビルド手順は、ソースコードのルートディレクトリにあるBUILDINGファイルに記載されています。</string>
+    <string name="pages$main$$pages-chapter-title">ページ</string>
+    <string name="pages$main-page$$section-title">メインページ</string>
+    <string name="pages$main-page$$how-app-ops-work-title">メインページのアプリケーションリスト内の表示項目</string>
+    <string name="pages$main-page$$batch-operations-title">バッチ処理</string>
+    <string name="pages$main-page$$colour-codes-title">カラーコード</string>
+    <string name="pages$main-page$$application-types-title">アプリケーションタイプ</string>
+    <string name="pages$main-page$$version-info-title">バージョン情報</string>
+    <string name="pages$main-page$$instructions-title">手順</string>
+    <string name="pages$main-page$$sort-title">並び替え</string>
+    <string name="pages$main-page$$filter-title">フィルタ</string>
+    <string name="pages$main-page$$profile_name-title">プロファイル名</string>
+    <string name="pages$main-page$$1-click-ops-title">ワンタップ一括処理</string>
+    <string name="pages$main-page$$system-config-title">システムコンフィグ</string>
+    <string name="pages$main-page$$running-apps-title">実行中のアプリ</string>
+    <string name="pages$main-page$$profiles-title">プロファイル</string>
+    <string name="pages$main-page$$log-viewer-title">ログビューワ</string>
+    <string name="pages$main-page$$apk-updater-title">APK Updater</string>
+    <string name="pages$main-page$$settings-title">設定</string>
+    <string name="pages$main-page$instructions">\\textbf{ヘルプ}をタップすると、オフライン版のApp Managerユーザーマニュアルが開きます。
+\n対応する機能スプリット\\texttt{feat\\_docs}がインストールされていない場合や、
+\nマニュアルを読み込むためのWebViewがシステムに存在しない場合、オンライン版が開かれることもあります。</string>
+    <string name="pages$main-page$list-options">\\textbf{表示オプション}には、メインページのリストの並び替えやフィルタリングのためのオプションが含まれています。</string>
+    <string name="pages$main-page$1-click-ops">\\textbf{ワンタップ一括処理} では様々な操作をワンタップで行うことができます。
+\n\\hyperref[sec:1-click-ops-page]{対応するページ}を新しいアクティビティで開きます。</string>
+    <string name="titlepage$quotation">\\begin{quotation}
+\n ``賢明に、そして、ゆっくりと。速く走る者たちは、つまずきますからな\'\'
+\n %\\sourceatright
+\n {--- 修道士ロレンス, \\textit{ロメオとジュリエット}}
+\n \\end{quotation}</string>
+    <string name="titlepage$user_manual">{\\huge\\bfseries ユーザーマニュアル\\par}</string>
+    <string name="intro$main$intro">App Manager は、Android 用の高度なパッケージマネージャです。
+\n数え切れないほどの機能を備えているため、ユーザーを支援するためのユーザーマニュアルが必要です。
+\nこのドキュメントは、App Manager が提供するすべての機能を説明することを目的としており、App Manager のユーザーマニュアルとして機能します。
+\nまた、このドキュメントは、App Managerの「公式」ガイドラインと考えることもでき、App Managerに期待される動作を表しています。
+\n翻訳によって、このドキュメント（英語で書かれている）が誤解される可能性があります。
+\nしたがって、すべての有能なユーザは、App Managerを最大限に活用するために、英語版のドキュメントを読む必要があります。
+\nブログ記事、ビデオ、チャットグループなど、他の非公式またはサードパーティのリソースも同様に存在するかもしれません。
+\nこれらのリソースは多くの人にとって有用かもしれませんが、App Managerの最新バージョンに対応していない可能性があります。App Managerでこのドキュメントからの逸脱が検出された場合、App Managerの\\href{https://github.com/MuntashirAkon/AppManager/issues}{イシュートラッカー}からご報告ください。</string>
+    <string name="intro$main$terminologies">\\begin{itemize}
+\n \\item \\textbf{AM} --- App Managerの略称です。
+\n \\item \\textbf{ブロック/ブロック解除} --- コンポーネントのブロックまたはブロック解除に使用されます。コンポーネントをどのようにブロックするかは、ユーザーの設定に依存します。
+\n \\item \\textbf{IFW} --- インテントファイアウォールの略称です。
+\n \\item \\textbf{Ops} --- Operations（操作)の略称です。例：AppOps、バッチ操作
+\n \\item \\textbf{SSAID} --- \\texttt{Settings.Secure.ANDROID\\_ID}の略称です。各アプリに割り当てられる端末識別子（Android Oreo以降）で、
+\nアプリの署名証明書とパッケージ\\texttt{android}に設定されたSSAIDの組み合わせから生成されます。
+\nそのため、ユーザーが端末のフォーマットを選択しない限り、
+\nアプリに対して同一であることが保証されます。ユーザーの追跡に広く利用されています。
+\n \\item \\textbf{トラッカー} --- \\hyperref[sec:scanner-page]{スキャナーページ}を除き、このドキュメント全体およびApp Managerでトラッカーコンポーネントのことを表します。トラッカーには、クラッシュレポーター、アナリティクス、プロファイリング、識別、広告、位置情報などのライブラリが含まれます。したがって、これらの機能は同等ではありません。また、トラッキングを促進するライブラリにはオープンソース、クローズドソースの区別や偏りはありません。
+\n\\end{itemize}</string>
+    <string name="pages$main-page$$list-options-title">表示オプション</string>
+    <string name="pages$main-page$$termux-title">Termux</string>
+    <string name="pages$main-page$intro">メインページには、インストールされているアプリケーション、アンインストールされているアプリケーション、バックアップされているアプリケーションがすべて表示されます。
+\nインストールされているアプリケーションの項目をタップすると、それぞれのアプリケーションの\\hyperref[sec:app-details-page]{詳細ページ}が表示されます。
+\nアンインストールされたシステムアプリの場合は、アプリの再インストールを行うことができるプロンプトが表示されます。
+\n表示オプションの\\hyperlink{par:main-page-sort}{並び替え} を使用して、アプリの項目をさまざまな方法でソートし、終了時に保存することができます。
+\nまた、\\hyperlink{par:main-page-filter}{フィルタ}を使用して、項目を絞り込むことも可能です。
+\n検索バーを使ったフィルタリングも可能で、正規表現もサポートされています。</string>
+    <string name="pages$main-page$batch-operations">このページでは、一括操作や複数のアプリケーションに対する操作も可能です。
+\n複数選択モードは、アプリのアイコンをタップするか、リスト内の任意の項目を長押しすることで有効になります。
+\n一度アクティブにすると、アプリの詳細ページを開く代わりに、リストの項目をシングルクリックすることでそのアプリが選択されます。
+\nこのモードで、一括操作はページ下部の複数選択メニューに表示されます。次のような操作が含まれます:
+\n\\begin{itemize}
+\n \\item 選択したアプリケーションを\\hyperref[sec:profiles-page]{プロファイル}に追加する
+\n \\item アプリケーションの\\hyperref[sec:backup-restore]{バックアップ、リストア、削除}
+\n \\item アプリケーションからのトラッカーをブロックする
+\n \\item アプリケーションのデータまたはキャッシュを消去する
+\n \\item アプリケーションの有効化/無効化/強制停止/アンインストール
+\n \\item App Managerに保存したブロッキングルールをエクスポート
+\n \\item アプリケーションのバックグラウンド動作を禁止する（Android 7以降）
+\n \\item APKファイルを \\texttt{AppManager/apks} に保存する
+\n \\item \\hyperref[sec:net-policy]{ネット接続ポリシー}を適用する
+\n\\end{itemize}
+\n
+\n\\begin{tip}{Accessibility}
+\n複数選択モードを有効にした後、キーボードまたはリモコンの左右キーで複数選択メニューにナビゲートすることが可能です。
+\n\\end{tip}</string>
+    <string name="pages$main-page$colour-codes">\\begin{itemize}
+\n \\item \\colorbox{AMLightGreyishOrange}{\\textcolor{black}{ライトグレーオレンジ(ライトモード)}} / \\colorbox{AMDarkBlue}{
+\n \\textcolor{white}{紺色 (ナイトモード)}} -- バッチ処理で選択したアプリ
+\n \\item \\colorbox{AMLightRed}{\\textcolor{black}{薄い赤色(ライトモード)}} / \\colorbox{AMVeryDarkRed}{\\textcolor{white}
+\n {茶色(ナイトモード)}} -- 無効化されたアプリ
+\n \\item \\colorbox{AMYellow}{\\textcolor{black}{黄色}} -- デバッグ可能なアプリ
+\n \\item \\textcolor{AMOrange}{オレンジ色の \\textit{日付}} -- アプリはシステムログにアクセス可能
+\n \\item \\textcolor{AMOrange}{オレンジ色の \\textit{UID}} -- 複数のアプリでユーザーIDを共有している
+\n \\item \\textcolor{AMOrange}{オレンジ色の \\textit{SDK}} -- アプリケーションが平文（HTTPなど）のトラフィックを使用している可能性がある
+\n \\item \\textcolor{red}{赤色の \\textit{パッケージ名}} -- データの消去を許可していないアプリ
+\n \\item \\textcolor{red}{赤色の \\textit{バックアップ}} -- AppManager に 1 つ以上のバックアップが存在するアンインストールされたアプリケーション
+\n \\item \\textcolor{AMOrange}{オレンジ色の \\textit{バックアップ}} -- 古いバックアップ,つまり、ベースバックアップにインストールされたアプリケーションの古いバージョンが含まれています
+\n \\item \\textcolor{AMDarkCyan}{シアン色の \\textit{バックアップ}} -- 最新のバックアップ, つまり、ベースバックアップには、インストールされたアプリケーションと同じかそれ以上のバージョンが含まれています
+\n \\item \\textcolor{AMDarkCyan}{シアン色の \\textit{パッケージ名}} -- 強制停止されたアプリ
+\n \\item \\textcolor{AMDarkCyan}{シアン色の \\textit{バージョン}} -- 非アクティブなアプリ
+\n \\item \\textcolor{magenta}{マゼンダ} -- 永続的なアプリケーション、つまり、常に実行状態のままです
+\n\\end{itemize}</string>
+    <string name="pages$main-page$application-types">アプリには、\\textbf{ユーザー}アプリと\\textbf{システム}アプリがあり、次の接尾辞が付きます:
+\n\\begin{itemize}
+\n \\item \\texttt{X} -- マルチアーキテクチャをサポートしています
+\n \\item \\texttt{0} -- アプリにDEXファイルが存在しません
+\n \\item \\texttt{\\textdegree°} -- 休止したアプリ
+\n \\item \\texttt{\\#} -- アプリはシステムに大きなヒープ、すなわち大きな実行時メモリを割り当てるよう要求しています
+\n \\item \\texttt{\?} -- アプリは仮想マシンをセーフモードにするよう要求しています
+\n\\end{itemize}</string>
+    <string name="pages$main-page$version-info">バージョン名の後には、次の接頭辞が付きます:
+\n\\begin{itemize}
+\n \\item \\texttt{\\_} -- ハードウェアアクセラレーションを使用していません（アプリ内のアニメーションや透明度が壊れる）
+\n \\item \\texttt{\\textasciitilde} -- テストビルドのアプリ
+\n \\item \\texttt{debug} -- デバッグ可能なアプリ
+\n\\end{itemize}</string>
+    <string name="pages$main-page$options-menu">オプションメニューには、表示されたアプリの並べ替えやフィルタリング、App Manager内外のさまざまなページへの移動に使用できるオプションが
+\nいくつか用意されています。</string>
+    <string name="intro$main$bin-sources">App Managerは、以下のソースを使用して配布されています。非公式なソースは、App Managerの修正されたバージョンを配布する可能性があり、
+\nそのようなバージョンを使用した結果について、一切の責任を負わないものとします。
+\n\\begin{enumerate}
+\n \\item Official F-Droid repository.\\footnote{安定版リリースのみ}\\\\
+\n \\textit{リンク:} \\url{https://f-droid.org/packages/io.github.muntashirakon.AppManager}
+\n \\item GitHub repository.\\\\
+\n \\textit{安定版:} \\url{https://github.com/MuntashirAkon/AppManager/releases}\\\\
+\n \\textit{デバッグビルド:} \\url{https://github.com/MuntashirAkon/AppManager/actions}
+\n \\item Telegram.\\\\
+\n \\textit{安定版:} \\url{https://t.me/AppManagerChannel}\\\\
+\n \\textit{デバッグビルド:} \\url{https://t.me/AppManagerDebug}
+\n\\end{enumerate}</string>
+    <string name="intro$main$contributing">ユーザーは、役に立つ課題の作成、議論への参加、ドキュメントや翻訳の改善、未認識のライブラリやトラッカーの追加、
+\nソースコードのレビュー、セキュリティ脆弱性の報告など、さまざまな方法でAppManagerの開発に貢献することができます。</string>
+    <string name="intro$main$donation">\\emph{App Managerを使用するのに、寄付や購入は必須ではありません。}App Managerは購入をサポートしていませんが、
+\nOpen Source Collectiveを通じてApp Managerの開発者に寄付を送ることができます。
+\n
+\nOpen Source Collectiveは、オープンソースプロジェクトの財政管理を支援するOpen Collectiveプラットフォーム内の財政ホストです。
+\n現在は銀行振り込み、PayPal、クレジットカード、デビットカード、暗号通貨による寄付に対応しています。
+\n
+\n\\textit{リンク:} \\url{https://opencollective.com/muntashir}.
+\n
+\n寄付を送ることにより、あなたは寄付を利用して要求された機能を優先させないことに同意するものとします。
+\n機能リクエストは、賞金や寄付を必要とせず、開発者の好みに応じて優先順位がつけられます。
+\n
+\n\\emph{App Managerは、資金提供や助成金の申し出を受け付けています。}利害関係のある組織の代表者は、§\\cref{sec:contact}に記載されている連絡先を使用して開発者に直接連絡することができます。</string>
+    <string name="intro$main$source-code-links">GitHub以外はそのミラーです。タグは常に最新であるべきですが、masterブランチが最新であることは保証されていません。
+\nmasterブランチのクローンを作成することが目的であれば、他のリンクではなくGitHubのリンクを使用してください。</string>
+    <string name="pages$main-page$$options-menu-title">オプションメニュー</string>
+    <string name="pages$main-page$$app-usage-title">アプリの使用状況</string>
+    <string name="intro$main$submit-patches">現在、GitHub以外のリポジトリはそのミラーであり、これらのサイトで提出されたプル/マージリクエストは受け付けていません。\\footnote{GitHubのプルリクエストは、対応するパッチを使用して手動でマージされます。そのため、GitHub は誤ってそれらをマージせずにクローズしたとして認識してしまいます。}
+\nその代わり、パッチ（\\texttt{.patch}ファイル）を電子メールに添付して提出することができます。コミットに\\textit{サインオフを行う}必要があります。
+\n詳細は、ソースのルートディレクトリにあるCONTRIBUTINGファイルをご参照してください。
+\n
+\n\\begin{warning}{Notice}
+\n電子メールでパッチを提出する場合、将来的に会話全体が公にアクセス可能となる可能性があります。
+\nそのため、名前とメールアドレス以外の個人を特定できる情報（PII）は記載しないでください。
+\n\\end{warning}</string>
+    <string name="intro$main$contact">Muntashir Al-Islam\\footnote{``Muntashir Akon\'\'と呼ぶこともできます。}\\\\
+\nEメール: \\href{mailto:muntashirakon@riseup.net}{muntashirakon [at] riseup [dot] net}\\\\
+\nGPG鍵フィンガープリント: \\texttt{7bad37c2981e41f8f6abea7f58f0b4f26c346fce}\\\\
+\nGitHub: \\url{https://github.com/MuntashirAkon}\\\\
+\nTwitter: \\url{https://twitter.com/Muntashir}</string>
+    <string name="pages$main-page$sort">メインページに表示されるアプリケーションは、次の方法で並び替えることができます:
+\n\\begin{itemize}
+\n \\item \\textbf{ユーザーアプリを優先} ユーザーアプリが上位に表示します
+\n \\item \\textbf{アプリ名} アプリ名で昇順にリストを並べ替えます。これはデフォルトの並べ替え設定です
+\n \\item \\textbf{パッケージ名} パッケージ名で昇順に並び替えます
+\n \\item \\textbf{最後の更新} 最終更新日を基準に降順で並べ替えます
+\n \\item \\textbf{共有UID} カーネルユーザーIDを基準に降順で並べ替えます
+\n \\item \\textbf{ターゲットSDK} ターゲットSDKに基づいてリストを昇順で並べ替えます
+\n \\item \\textbf{署名} 署名情報をもとに昇順に並べ替えます
+\n \\item \\textbf{無効のものを優先} 無効にされたアプリを上位に表示します
+\n \\item \\textbf{ブロック済みのものを優先} 各アプリケーションが持つブロックされたコンポーネントの数に基づいて、リストを降順に並べ替えます
+\n \\item \\textbf{バックアップ済みを優先} バックアップをとっているアプリケーションを上位に表示します
+\n \\item \\textbf{トラッカー} 各アプリケーションが持つトラッカーコンポーネントの数に基づいて、リストを降順に並べ替えます
+\n \\item \\textbf{最終アクション} App Manager内でアプリケーションに行われたアクションの最新日時に基づいて、リストを降順に並べ替えます。
+\n\\end{itemize}
+\n
+\nさらに、リストを反転させる\\textit{リバース}オプションもあります。ソートの設定にかかわらず、ランダムなソート結果を生成しないようにするために、アプリは最初にアルファベット順にソートされます。</string>
+    <string name="pages$main-page$profile_name">また、\\hyperref[sec:profiles-page]{プロファイル}に存在するアプリケーションのみを表示することも可能です。
+\nこれは、\\hyperref[sec:profiles-page]{プロファイルページ}では行えない特定の操作（プロファイル内のすべてのアプリケーションのアンインストールなど）
+\nをプロファイルに対して行う場合に便利です。</string>
+    <string name="pages$main-page$filter">メインページに表示されるアプリケーションは、次の方法でフィルタリングすることができます:
+\n\\begin{itemize}
+\n \\item \\textbf{ユーザーアプリ} ユーザーアプリのみを表示します
+\n \\item \\textbf{システムアプリ} システムアプリのみを表示します
+\n \\item \\textbf{無効になっているアプリ} 無効になっているアプリを表示します
+\n \\item \\textbf{ルールを適用済みのアプリ} 1つ以上のブロッキングルールがあるアプリを表示します
+\n \\item \\textbf{アクティビティが存在するアプリ} 1つ以上のアクティビティを持つアプリを表示します
+\n \\item \\textbf{バックアップ済みのアプリ} バックアップが1つ以上あるアプリを表示します
+\n \\item \\textbf{起動中のアプリ} 現在実行されているアプリを表示します
+\n \\item \\textbf{分割データを含むアプリ} 1つ以上の分割APKファイルを持つアプリを表示します
+\n \\item \\textbf{インストール済みのアプリ} インストールされているアプリのみを表示します
+\n \\item \\textbf{未インストールのアプリ} インストールされていないアプリのみを表示します
+\n \\item \\textbf{バックアップされたいないアプリ}バックアップが存在しないアプリを表示します
+\n\\end{itemize}
+\n
+\n並べ替えとは異なり、複数のフィルタリングを同時に適用することが可能です。たとえば、「\\textit{ユーザーアプリ}」と「\\textit{無効のアプリ}」の両方を選択して無効になっているユーザーアプリを一覧表示することができます。この機能は、特定の操作を安全に実行するためにユーザーアプリのフィルタリングが必要な\\hyperref[subsec:batch-operations]{バッチ処理}に特に役立ちます。</string>
 </resources>
