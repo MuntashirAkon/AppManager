@@ -11,7 +11,7 @@ android {
         applicationId 'io.github.muntashirakon.AppManager'
         minSdkVersion rootProject.ext.minSdk
         targetSdkVersion rootProject.ext.targetSdk
-        versionCode 397
+        versionCode 400
         versionName "3.0.0-alpha01"
         javaCompileOptions {
             annotationProcessorOptions {
