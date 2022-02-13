@@ -219,7 +219,7 @@ function rebase_strings() {
         foreach ($contents as $key => $val) {
             $xml->startElement('string');
             $xml->writeAttribute('name', $key_prefix . $key);
-            $xml->writeRaw(android_escape_slash_newline($val));
+            $xml->writeRaw(android_escape_slash_newline(ltrim($val)));
             $xml->endElement(); // string
         }
     }
