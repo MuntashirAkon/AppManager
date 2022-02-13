@@ -1106,4 +1106,21 @@
     <string name="pref_vt_apikey_description">APIキーは、App ManagerがAPKファイルをVirusTotalにアップロードし、レポートを取得するために必要です。https://virustotal.com にサインアップして、無料でAPI キーを取得できます。</string>
     <string name="uses_play_app_signing_description">このアプリには<a href="https://support.google.com/googleplay/android-developer/answer/9842756">Playアプリ署名</a>を使用している<i>可能性</i>のある識別子があります。この方式では、署名鍵はGoogleのサーバーに保管され、Googleがアプリへの署名に責任を持ちます。なお、署名情報の照合は、アプリが開発者以外（この場合はGoogleも）によって変更されていないことを確認する唯一の方法です。</string>
     <string name="failed_to_use_the_current_mode_of_operation">現在の動作モードを使用できません。このセッションでは非Rootモードに切り替えられます。</string>
+    <string name="hidden_api_enf_default_policy">規定（アプリケーションタイプに基づく）</string>
+    <string name="hidden_api_enf_policy_warn">警告 (Hidden APIにフルアクセスできるが、警告を発します)</string>
+    <string name="binary_32_bit">32 Bit</string>
+    <string name="binary_64_bit">64 Bit</string>
+    <string name="endianness_little_endian">リトルエンディアン</string>
+    <string name="so_type_shared_library">共有ライブラリ</string>
+    <string name="save_and_exit">保存して終了</string>
+    <string name="zygote_preload_name">Zygoteプリロード名</string>
+    <string name="hidden_api_enforcement_policy">Hidden API 適用ポリシー</string>
+    <string name="so_type_executable">実行可能</string>
+    <string name="hidden_api_enf_policy_none">なし（Hidden APIにフルアクセス可能）</string>
+    <string name="hidden_api_enf_policy_black">Enforce (ブラックリストのみ)</string>
+    <string name="file_modified_are_you_sure">このファイルは編集されています。すべての変更を破棄して終了しますか？</string>
+    <string name="primary_abi">プライマリABI</string>
+    <string name="donation_campaign_text">App Managerの<b>ファンディングキャンペーン</b>を期間限定で実施しています。<a href="https://opencollective.com/app-manager#category-ABOUT">詳細を見る…</a></string>
+    <string name="hidden_api_enf_policy_dark_grey_and_black">Enforce (ダークグレー/ブラックリスト)</string>
+    <string name="endianness_big_endian">ビッグエンディアン</string>
 </resources>
