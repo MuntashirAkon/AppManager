@@ -1143,4 +1143,21 @@
     <string name="uses_play_app_signing_description">Bu uygulama, <a href="https://support.google.com/googleplay/android-developer/answer/9842756">Play Uygulama İmzalama</a> kullanıyor <i>olabileceğini</i> gösteren belirli işaretler içeriyor. Bu şemayla, imzalama anahtarları Google\'ın sunucularında saklanır ve uygulamanın imzalanmasından Google sorumludur. İmzalama bilgilerinin eşleşmesinin, uygulamanın geliştiricisi (ve bu durumda Google) dışında herhangi bir kişi tarafından değiştirilmediğini doğrulamanın tek yolu olduğunu unutmayın.</string>
     <string name="vt_scan_date">Tarama tarihi: %1$s</string>
     <string name="failed_to_enable_magisk_deny_list">Magisk Reddetme Listesi etkinleştirilemedi</string>
+    <string name="hidden_api_enforcement_policy">Gizli API zorunluluk politikası</string>
+    <string name="hidden_api_enf_policy_none">Yok (gizli API\'ye tam erişim)</string>
+    <string name="hidden_api_enf_policy_dark_grey_and_black">Zorunlu (koyu gri ve kara listeler)</string>
+    <string name="binary_32_bit">32 Bit</string>
+    <string name="endianness_little_endian">Little endian</string>
+    <string name="endianness_big_endian">Big endian</string>
+    <string name="so_type_shared_library">Paylaşılan kütüphane</string>
+    <string name="save_and_exit">Kaydet ve çık</string>
+    <string name="hidden_api_enf_policy_warn">Uyar (gizli API\'ye tam erişim ancak uyarı verir)</string>
+    <string name="donation_campaign_text">Sınırlı bir süre boyunca App Manager için bir <b>fonlama kampanyası</b> yapıyoruz. <a href="https://opencollective.com/app-manager#category-ABOUT">Daha fazla bilgi edinin…</a></string>
+    <string name="zygote_preload_name">Zygote ön yükleme adı</string>
+    <string name="so_type_executable">Çalıştırılabilir dosya</string>
+    <string name="file_modified_are_you_sure">Dosya değiştirildi. Tüm değişikliklerinizi iptal edip çıkılsın mı\?</string>
+    <string name="hidden_api_enf_policy_black">Zorunlu (yalnızca kara listeler)</string>
+    <string name="primary_abi">Birincil ABI</string>
+    <string name="hidden_api_enf_default_policy">Öntanımlı (uygulama türüne göre)</string>
+    <string name="binary_64_bit">64 Bit</string>
 </resources>
