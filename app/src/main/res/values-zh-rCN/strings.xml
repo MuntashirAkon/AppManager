@@ -1106,4 +1106,20 @@
     <string name="failed_to_change_app_op_mode">无法更改应用操作模式。</string>
     <string name="failed_to_use_the_current_mode_of_operation">无法使用当前操作模式。此会话退回到无 root 模式。</string>
     <string name="mode_of_op_with_inferred_mode_of_op">%1$s (推断模式: %2$s)</string>
+    <string name="hidden_api_enforcement_policy">隐藏 API 强制策略</string>
+    <string name="hidden_api_enf_policy_none">无（完整访问隐藏的 API）</string>
+    <string name="hidden_api_enf_policy_warn">警告（完整地访问隐藏的 API，但发出警告）</string>
+    <string name="hidden_api_enf_policy_dark_grey_and_black">强制（深灰和黑名单）</string>
+    <string name="hidden_api_enf_policy_black">强制（仅黑名单）</string>
+    <string name="binary_32_bit">32 位</string>
+    <string name="so_type_shared_library">共享库</string>
+    <string name="file_modified_are_you_sure">文件被修改。放弃所有更改并退出？</string>
+    <string name="save_and_exit">保存并退出</string>
+    <string name="zygote_preload_name">Zygote 预加载名</string>
+    <string name="binary_64_bit">64 位</string>
+    <string name="primary_abi">主 ABI</string>
+    <string name="hidden_api_enf_default_policy">默认（基于应用类型）</string>
+    <string name="endianness_big_endian">Big endian</string>
+    <string name="endianness_little_endian">Little endian</string>
+    <string name="so_type_executable">可执行</string>
 </resources>
