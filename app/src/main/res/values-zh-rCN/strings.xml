@@ -1119,7 +1119,8 @@
     <string name="binary_64_bit">64 位</string>
     <string name="primary_abi">主 ABI</string>
     <string name="hidden_api_enf_default_policy">默认（基于应用类型）</string>
-    <string name="endianness_big_endian">Big endian</string>
-    <string name="endianness_little_endian">Little endian</string>
+    <string name="endianness_big_endian">Big endian 编码</string>
+    <string name="endianness_little_endian">Little endian 编码</string>
     <string name="so_type_executable">可执行</string>
+    <string name="donation_campaign_text">我们正为 App Manager 举办一个限时的<b>筹款活动</b>。<a href="https://opencollective.com/app-manager#category-ABOUT">了解更多……</a></string>
 </resources>
