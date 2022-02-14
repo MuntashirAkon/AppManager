@@ -222,4 +222,50 @@
 \n\\end{itemize}
 \n
 \n並べ替えとは異なり、複数のフィルタリングを同時に適用することが可能です。たとえば、「\\textit{ユーザーアプリ}」と「\\textit{無効のアプリ}」の両方を選択して無効になっているユーザーアプリを一覧表示することができます。この機能は、特定の操作を安全に実行するためにユーザーアプリのフィルタリングが必要な\\hyperref[subsec:batch-operations]{バッチ処理}に特に役立ちます。</string>
+    <string name="pages$app-details-page$$section-title">アプリ詳細画面</string>
+    <string name="pages$app-details-page$$colour-codes-title">カラーコード</string>
+    <string name="pages$app-details-page$$app-info-tab-title">アプリ情報タブ</string>
+    <string name="pages$app-details-page$$app-info-general-information-title">基本情報</string>
+    <string name="pages$app-details-page$$horizontal-action-panel-title">横長アクションパネル</string>
+    <string name="pages$app-details-page$$activities-title">アクティビティ</string>
+    <string name="pages$app-details-page$$servcies-title">サービス</string>
+    <string name="pages$app-details-page$$providers-title">プロバイダ</string>
+    <string name="pages$app-details-page$$additional-features-for-rooted-phones-title">Root化された端末向けの追加機能</string>
+    <string name="pages$app-details-page$$blocking-trackers-title">トラッカーをブロックする</string>
+    <string name="pages$app-details-page$$permission-tabs-title">権限タブ</string>
+    <string name="pages$app-details-page$$uses-permissions-title">使用する権限</string>
+    <string name="pages$app-details-page$$signatures-tab-title">署名情報タブ</string>
+    <string name="pages$app-details-page$$other-tabs-title">その他のタブ</string>
+    <string name="pages$main-page$app-usage">\\textit{画面の使用時間}、\\textit{データ使用量}（モバイルとWi-Fiの両方）、\\textit{アプリを開いた回数}などのアプリ使用統計は、
+\nメニューの\\textbf{アプリ使用状況}オプションをクリックすることでアクセス可能です。
+\nただし、これには\\textit{使用状況へのアクセス権限}が必要です。
+\n\\hyperref[subsec:enable/disable-features]{設定}で使用状況アクセス機能を無効にしている場合、このメニュー項目は表示されません。</string>
+    <string name="pages$main-page$system-config">このメニュー項目は、様々なシステム設定、OEM、ベンダー、AOSP、またはMagiskモジュールによってAndroidに含まれる
+\nブラックリスト/ホワイトリストが表示される新しいページを開くものです。
+\nこれにはRoot権限が必要です。そのため、App Managerにroot権限が付与されていない場合、このメニュー項目は表示されません。</string>
+    <string name="pages$main-page$log-viewer">\\texttt{Logcat}コマンドを使用してログを表示・管理できるログビューアページを開くメニューです。
+\nデフォルトでは、このページはApp Managerのアクティビティのみを表示できます。
+\nただし、\\texttt{android.permission.READ\\_LOGS}が付与されている場合は、すべてのプロセスからのログを表示することができます。
+\nこの権限は、現在の\\hyperref[subsec:mode-of-operation]{動作モード}がRootまたはADBである場合に自動的に付与されます。</string>
+    <string name="pages$main-page$running-apps">このメニューでは、実行中のアプリケーションまたはプロセスの一覧を表示する新しいページを開きます。
+\nまた、現在のメモリとキャッシュ（利用可能な場合）の使用量も表示されます。
+\nルートまたはADBがApp Managerで利用できない場合、Androidの最近のバージョンでのみ表示されます。
+\n実行中のアプリケーションまたはプロセスは、結果ページ内で強制停止またはキルすることもできます。
+\n\\hyperref[subsubsec:log-viewer]{ログビューア}でプロセスID（PID）ごとのログを確認することもできます。
+\nまた、アイコンをタップするか、項目を長押しすることで、バッチ処理を行うことができます。各項目をタップすると、より詳細な情報が表示されるダイアログが開きます。</string>
+    <string name="pages$main-page$profiles">このメニュー項目は、\\hyperref[sec:profiles-page]{プロファイルページ}を開きます。プロファイルは、定期的に実行するタスクを設定するための方法です。
+\nまた、ショートカットで呼び出すこともできます。</string>
+    <string name="pages$main-page$apk-updater">\\href{https://github.com/rumboalla/apkupdater}{APK Updater}というアプリがシステムにインストールされている場合、
+\nこのメニュー項目から直接開くことができます。アプリがシステムにインストールされていない場合、このオプションは表示されません。</string>
+    <string name="pages$app-details-page$$permissions-title">権限</string>
+    <string name="pages$main-page$termux">\\href{https://github.com/termux/termux-app}{Termux}アプリがシステムにインストールされている場合、
+\nこのメニュー項目から実行中のセッション(または新しいセッション)を直接開くことができます。
+\nアプリがシステムにインストールされていない場合、このオプションは表示されません。</string>
+    <string name="pages$app-details-page$$app-info-options-menu-title">オプションメニュー</string>
+    <string name="pages$app-details-page$$config-termux-title">Termux</string>
+    <string name="pages$app-details-page$$component-tabs-title">コンポーネントタブ</string>
+    <string name="pages$app-details-page$$receivers-title">レシーバ</string>
+    <string name="pages$app-details-page$$blocking-components-title">コンポーネントをブロックする</string>
+    <string name="pages$app-details-page$$app-ops-title">App Ops</string>
+    <string name="pages$main-page$settings">アプリ内の\\hyperref[sec:settings-page]{設定画面}を表示するメニューです。</string>
 </resources>
