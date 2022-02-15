@@ -1,2 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="intro$main$$introduction-chapter-title">简介</string>
+    <string name="intro$main$$supported-versions-title">受支持的版本</string>
+    <string name="intro$main$$source-code-links-title">源码链接</string>
+    <string name="intro$main$$contributing-title">贡献</string>
+    <string name="intro$main$buiding">在位于源码根目录下的BUILDING文件中可以获得编译指导。</string>
+    <string name="titlepage$user_manual">{\\huge\\bfseries 用户手册\\par}</string>
+    <string name="intro$main$translations">App Manager 不接受直接通过PR/MR进行的翻译。翻译仅通过 Weblate 进行自动化管理。
+\n要加入翻译团队，请访问 \\url{https://hosted.weblate.org/engage/app-manager/}。</string>
+    <string name="intro$main$supported-versions">当前，支持的版本是v2.6.0（稳定版），v3.0.0（alpha和debug版）。先前版本的 App
+\nManager 可能包含安全漏洞，不应继续使用。</string>
+    <string name="intro$main$intro">App Manager 是一个提供大量功能的高级的 Android 软件包管理器，因此，需要用户手册来帮助用户正确使用。本文作为 App Manager 的用户手册，旨在描述 App Manager 所提供的每一个功能。
+\n本文也可以被认为是 App Manager 的 ``官方\'\' 指南，并指明 App Manager 的预期行为。翻译可能有误 (原文为英文)。因此，每个有能力的用户应该阅读该文件的英文版本，以获得最佳的体验。
+\n此外还可能有其他非官方的或第三方的资源，如博客文章、视频、聊天群组等。虽然这些资源可能对许多人有用，但它们可能不是针对最新版本。
+\n如果在App Manager中发现任何偏离本文档的情况，应在
+\n\\href{https://github.com/MuntashirAkon/AppManager/issues}{App Manager 问题追踪}内反映。</string>
+    <string name="intro$main$bin-sources">App Manager 通过以下渠道发布。
+\n非官方来源可能分发 App Manager 的修改版本，后果自负。
+\n\\begin{enumerate}
+\n \\item F-Droid \\footnote{For distributing normal releases only}\\\\
+\n \\textit{Link:} \\url{https://f-droid.org/packages/io.github.muntashirakon.AppManager}
+\n \\item GitHub repository.\\\\
+\n \\textit{Normal releases:} \\url{https://github.com/MuntashirAkon/AppManager/releases}\\\\
+\n \\textit{Debug releases:} \\url{https://github.com/MuntashirAkon/AppManager/actions}
+\n \\item Telegram.\\\\
+\n \\textit{Normal releases:} \\url{https://t.me/AppManagerChannel}\\\\
+\n \\textit{Debug releases:} \\url{https://t.me/AppManagerDebug}
+\n\\end{enumerate}</string>
+    <string name="intro$main$source-code-links">除了GitHub外其他都是镜像链接。tags 应当始终是最新的，但 master 分支不保证是
+\n最新的。如果计划 clone master 分支，请使用 GitHub 链接而不是其他链接。</string>
+    <string name="intro$main$terminologies">\\begin{itemize}
+\n \\item \\textbf{AM} --- App Manager
+\n \\item \\textbf{Block/Unblock} --- Used for component blocking or unblocking. How components are blocked depends on
+\n the user preferences.
+\n \\item \\textbf{IFW} --- Intent Firewall (意图防火墙)
+\n \\item \\textbf{Ops} --- operations (操作), e.g.\\ app ops, batch ops, 1-click ops
+\n \\item \\textbf{SSAID} --- \\texttt{Settings.Secure.ANDROID\\_ID} - 分配给每个应用的设备标识符 (Android Oreo及以上版本)，由应用签名与包\\texttt{android}的SSAID组合生成的。因此，除非用户选择格式化设备，否则它保证对每个应用来说都是独一无二的。它被广泛用于跟踪用户。
+\n \\item \\textbf{Tracker} --- Denotes tracker components throughout the document and in App Manager except in the
+\n \\hyperref[sec:scanner-page]{scanner page}. Trackers include libraries such as crash reporters, analytics,
+\n profiling, identification, ad, location, etc. Thus, they are not equal in functions. There is no distinction or bias
+\n between open source and closed source libraries that promote tracking.
+\n\\end{itemize}</string>
+    <string name="intro$main$$terminologies-title">术语</string>
+    <string name="intro$main$$bin-sources-title">二进制(可执行)分发来源</string>
+    <string name="intro$main$$buiding-title">构建说明</string>
+    <string name="intro$main$$submit-patches-title">提交补丁</string>
+    <string name="intro$main$$translations-title">翻译</string>
+    <string name="intro$main$$official-sources-title">官方来源</string>
+    <string name="intro$main$$donation-title">捐赠 \\&amp; 资助</string>
+    <string name="intro$main$$contact-title">联系我们</string>
+</resources>
