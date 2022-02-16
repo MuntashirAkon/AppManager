@@ -347,11 +347,11 @@
     <string name="termux">Termux 终端模拟器</string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> 已安装</string>
     <string name="filter">筛选器</string>
-    <string name="filter_user_apps">用户应用</string>
-    <string name="filter_system_apps">系统应用</string>
-    <string name="filter_apps_with_rules">带有规则的应用</string>
+    <string name="filter_user_apps">用户</string>
+    <string name="filter_system_apps">系统</string>
+    <string name="filter_apps_with_rules">被阻止</string>
     <string name="select_all">全选</string>
-    <string name="filter_disabled_apps">已停用的应用</string>
+    <string name="filter_disabled_apps">已停用</string>
     <string name="installed_version">已安装版本</string>
     <string name="trackers">跟踪器</string>
     <string name="components">组件</string>
@@ -401,7 +401,7 @@
     <string name="pref_remove_all_rules">删除所有规则</string>
     <string name="pref_remove_all_rules_msg">权限已被授予，app ops 和组件将回到它们的默认值。</string>
     <string name="are_you_sure">您确定吗？</string>
-    <string name="filter_apps_with_activities">有活动的应用程序</string>
+    <string name="filter_apps_with_activities">可打开</string>
     <string name="toggle_default_app_ops">切换默认应用</string>
     <string name="installer_error_aborted">安装失败，要么因为它被取消，要么因为会话被意外关闭</string>
     <string name="installer_error_blocked_device">设备</string>
@@ -506,7 +506,7 @@
     <string name="sort_by_apps_first">应用程序优先</string>
     <string name="sort_by_process_name">进程名</string>
     <string name="sort_by_process_id">进程 ID</string>
-    <string name="filter_apps">应用程序</string>
+    <string name="filter_apps">应用</string>
     <string name="no_apps">没有应用</string>
     <string name="apps">应用程序</string>
     <string name="pref_backup_flags_msg">为备份选项添加一个预设消除了每次备份/恢复时选择 flags 的负担。</string>
@@ -538,7 +538,7 @@
     <string name="issued_date">发布日期</string>
     <string name="issuer">发行商</string>
     <string name="subject">名称</string>
-    <string name="filter_apps_with_backups">有备份的应用程序</string>
+    <string name="filter_apps_with_backups">有备份</string>
     <string name="sort_by_backup">先备份</string>
     <string name="failed_to_uninstall_updates">无法卸载更新,它属于 <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="update_uninstalled_successfully">用于 <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>更新已被卸载.</string>
@@ -577,7 +577,7 @@
         <item quantity="other">%1$d 个签名缺失</item>
     </plurals>
     <string name="orientation_behind">与在活动堆栈下的活动相同方向</string>
-    <string name="filter_running_apps">运行中的应用</string>
+    <string name="filter_running_apps">运行中</string>
     <string name="select_apk">选择 APK</string>
     <string name="send_crash_report">发送崩溃报告</string>
     <string name="tap_to_submit_crash_report">点击提交崩溃报告。</string>
@@ -666,7 +666,7 @@
     <string name="orientation_full_user">全部用户</string>
     <string name="set_app_op_mode">设置应用程序操作模式</string>
     <string name="magisk_hide_enabled">MagiskHide</string>
-    <string name="filter_apps_with_splits">带分包的应用程序</string>
+    <string name="filter_apps_with_splits">有分包</string>
     <string name="value">值</string>
     <string name="interceptor">意图拦截器</string>
     <string name="resend_intent">重新发送意图</string>
@@ -766,7 +766,7 @@
     <string name="backup_all_apps">备份所有应用</string>
     <string name="back_up">备份</string>
     <string name="list_options">列表选项</string>
-    <string name="reverse">撤销</string>
+    <string name="reverse">反转</string>
     <string name="os_version">操作系统版本</string>
     <string name="add">添加</string>
     <string name="add_to_profile">添加到配置</string>
@@ -811,7 +811,7 @@
     <string name="verified_using_unreliable_hash">使用不可靠哈希进行了验证</string>
     <string name="installer_app_message">选中 <b>挑选</b>从已安装应用中进行选择或选中<b>自定义</b>指定自定义包名。</string>
     <string name="specify_custom_name">自定义</string>
-    <string name="filter_apps_without_backups">无备份的应用</string>
+    <string name="filter_apps_without_backups">无备份</string>
     <string name="uninstalled_apps">已卸载应用</string>
     <string name="internal_data">内部数据</string>
     <string name="expiry_date_cannot_be_empty">到期日不能为空。</string>
