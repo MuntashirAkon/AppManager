@@ -268,4 +268,29 @@
     <string name="pages$app-details-page$$blocking-components-title">コンポーネントをブロックする</string>
     <string name="pages$app-details-page$$app-ops-title">App Ops</string>
     <string name="pages$main-page$settings">アプリ内の\\hyperref[sec:settings-page]{設定画面}を表示するメニューです。</string>
+    <string name="pages$app-details-page$colour-codes">このページで使用している背景色とその意味の一覧です:
+\n\\begin{itemize}
+\n \\item \\colorbox{AMRed}{\\textcolor{black}{赤 (ライト)}} / \\colorbox{AMDarkRed}{\\textcolor{white}{紅赤 (ナイト)}}
+\n -- Dangerousフラグを持つAppOpsや権限、またはApp Manager内でブロックされたコンポーネントを表します。
+\n
+\n \\item \\colorbox{AMLightRed}{\\textcolor{black}{うすだいだい (ライト)}} / \\colorbox{AMVeryDarkRed}{\\textcolor{white}{茶色 
+\n(ナイト)}} -- App Managerの外部で無効化されているコンポーネントを表します。
+\n
+\n \\begin{tip}{Note}
+\n無効とマークされたコンポーネントは、必ずしもユーザーによって無効化されたことを意味するものではありません。
+\nシステムによって無効にされているか、マニフェストで無効とマークされている可能性もあります。
+\n無効なアプリケーションのコンポーネントは、システム (および App Manager) によっても無効とみなされます。
+\n \\end{tip}
+\n
+\n \\item \\colorbox{AMVividOrange}{\\textcolor{black}{オレンジ (ライト)}} / \\colorbox{AMVeryDarkOrange}{
+\n \\textcolor{white}{うすいオレンジ (night)}} -- トラッカーコンポーネントを表します。
+\n
+\n \\item \\colorbox{AMSoftMagenta}{\\textcolor{black}{Soft magenta (day)}} / \\colorbox{AMVeryDarkViolet}{
+\n \\textcolor{white}{very dark violet (night)}} -- 実行中のサービスを表します。
+\n\\end{itemize}</string>
+    <string name="pages$app-details-page$intro">\\textbf{アプリ詳細}ページは、11個のタブで構成されています。
+\nマニフェストのすべての属性、\\hyperref[ch:app-ops]{AppOps}、署名情報、ライブラリなど、
+\nアプリが持ちうるほぼすべての情報が記述されています。</string>
+    <string name="pages$app-details-page$app-info-tab">\\textbf{アプリ情報}タブには、アプリケーションに関する一般的な情報が含まれています。
+\nまた、このタブ内で実行可能な多くのアクションが表示されます。</string>
 </resources>
