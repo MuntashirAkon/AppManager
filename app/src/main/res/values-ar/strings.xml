@@ -1295,4 +1295,21 @@
         <item quantity="many">%1$d ثوان</item>
         <item quantity="other">%1$d ثانية</item>
     </plurals>
+    <string name="hidden_api_enf_default_policy">الافتراضي (استنادا إلى نوع التطبيق)</string>
+    <string name="hidden_api_enf_policy_none">لا شيء (الوصول الكامل إلى واجهة برمجة التطبيقات المخفية)</string>
+    <string name="hidden_api_enf_policy_dark_grey_and_black">فرض (قوائم رمادية داكنة وسوداء)</string>
+    <string name="hidden_api_enf_policy_black">فرض (القوائم السوداء فقط)</string>
+    <string name="binary_32_bit">32 بت</string>
+    <string name="binary_64_bit">64 بت</string>
+    <string name="endianness_little_endian">القليل من Endian</string>
+    <string name="endianness_big_endian">Endian كبير</string>
+    <string name="so_type_shared_library">المكتبة المشتركة</string>
+    <string name="so_type_executable">تنفيذي</string>
+    <string name="file_modified_are_you_sure">تم تعديل الملف. تجاهل كل التغييرات الخاصة بك والخروج؟</string>
+    <string name="save_and_exit">حفظ والخروج</string>
+    <string name="primary_abi">ABI الأساسي</string>
+    <string name="zygote_preload_name">اسم التحميل المسبق ل Zygote</string>
+    <string name="hidden_api_enforcement_policy">سياسة فرض واجهة برمجة التطبيقات المخفية</string>
+    <string name="hidden_api_enf_policy_warn">تحذير (الوصول الكامل إلى API المخفية ولكن يصدر تحذيرات)</string>
+    <string name="donation_campaign_text">نحن ندير حملة تمويل <b> </b> لمدير التطبيقات لفترة محدودة. <a href="https://opencollective.com/app-manager#category-ABOUT">معرفة المزيد... </a></string>
 </resources>

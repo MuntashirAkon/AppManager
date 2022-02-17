@@ -628,7 +628,7 @@
     <string name="no_libs">Немає бібліотек</string>
     <string name="scanner">Сканер</string>
     <plurals name="missing_signatures">
-        <item quantity="one">%1$d підис відсутній</item>
+        <item quantity="one">%1$d підпис відсутній</item>
         <item quantity="few">%1$d підписи відсутні</item>
         <item quantity="many">%1$d підписів відсутньо</item>
         <item quantity="other">%1$d підписів відсутньо</item>

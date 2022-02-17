@@ -1160,4 +1160,5 @@
     <string name="endianness_little_endian">Little endian</string>
     <string name="file_modified_are_you_sure">Die Datei wurde geändert. Verwerfen Sie alle Ihre Änderungen und beenden Sie\?</string>
     <string name="hidden_api_enf_policy_warn">Warnen (voller Zugriff auf die versteckte API, gibt aber Warnungen aus)</string>
+    <string name="donation_campaign_text">Wir führen für einen begrenzten Zeitraum eine <b>Finanzierungskampagne</b> für App Manager durch. <a href="https://opencollective.com/app-manager#category-ABOUT">Erfahren mehr ...</a></string>
 </resources>

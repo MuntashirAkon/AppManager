@@ -1,2 +1,251 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="intro$main$$introduction-chapter-title">简介</string>
+    <string name="intro$main$$supported-versions-title">受支持的版本</string>
+    <string name="intro$main$$source-code-links-title">源码链接</string>
+    <string name="intro$main$$contributing-title">贡献</string>
+    <string name="intro$main$buiding">在位于源码根目录下的BUILDING文件中可以获得编译指导。</string>
+    <string name="titlepage$user_manual">{\\huge\\bfseries 用户手册\\par}</string>
+    <string name="intro$main$translations">App Manager 不接受直接通过PR/MR进行的翻译。翻译仅通过 Weblate 进行自动化管理。
+\n要加入翻译团队，请访问 \\url{https://hosted.weblate.org/engage/app-manager/}。</string>
+    <string name="intro$main$supported-versions">当前，支持的版本是v2.6.0（稳定版），v3.0.0（alpha和debug版）。先前版本的 App
+\nManager 可能包含安全漏洞，不应继续使用。</string>
+    <string name="intro$main$intro">App Manager 是一个提供大量功能的高级的 Android 软件包管理器，因此，需要用户手册来帮助用户正确使用。本文作为 App Manager 的用户手册，旨在描述 App Manager 所提供的每一个功能。
+\n本文也可以被认为是 App Manager 的 ``官方\'\' 指南，并指明 App Manager 的预期行为。翻译可能有误 (原文为英文)。因此，每个有能力的用户应该阅读该文件的英文版本，以获得最佳的体验。
+\n此外还可能有其他非官方的或第三方的资源，如博客文章、视频、聊天群组等。虽然这些资源可能对许多人有用，但它们可能不是针对最新版本。
+\n如果在App Manager中发现任何偏离本文档的情况，应在
+\n\\href{https://github.com/MuntashirAkon/AppManager/issues}{App Manager 问题追踪}内反映。</string>
+    <string name="intro$main$bin-sources">App Manager 通过以下渠道发布。
+\n非官方来源可能分发 App Manager 的修改版本，后果自负。
+\n\\begin{enumerate}
+\n \\item F-Droid \\footnote{For distributing normal releases only}\\\\
+\n \\textit{Link:} \\url{https://f-droid.org/packages/io.github.muntashirakon.AppManager}
+\n \\item GitHub repository.\\\\
+\n \\textit{Normal releases:} \\url{https://github.com/MuntashirAkon/AppManager/releases}\\\\
+\n \\textit{Debug releases:} \\url{https://github.com/MuntashirAkon/AppManager/actions}
+\n \\item Telegram.\\\\
+\n \\textit{Normal releases:} \\url{https://t.me/AppManagerChannel}\\\\
+\n \\textit{Debug releases:} \\url{https://t.me/AppManagerDebug}
+\n\\end{enumerate}</string>
+    <string name="intro$main$source-code-links">除了GitHub外其他都是镜像链接。tags 应当始终是最新的，但 master 分支不保证是
+\n最新的。如果计划 clone master 分支，请使用 GitHub 链接而不是其他链接。</string>
+    <string name="intro$main$terminologies">\\begin{itemize}
+\n \\item \\textbf{AM} --- App Manager
+\n \\item \\textbf{Block/Unblock} --- Used for component blocking or unblocking. How components are blocked depends on
+\n the user preferences.
+\n \\item \\textbf{IFW} --- Intent Firewall (意图防火墙)
+\n \\item \\textbf{Ops} --- operations (操作), e.g.\\ app ops, batch ops, 1-click ops
+\n \\item \\textbf{SSAID} --- \\texttt{Settings.Secure.ANDROID\\_ID} - 分配给每个应用的设备标识符 (Android Oreo及以上版本)，由应用签名与包\\texttt{android}的SSAID组合生成的。因此，除非用户选择格式化设备，否则它保证对每个应用来说都是独一无二的。它被广泛用于跟踪用户。
+\n \\item \\textbf{Tracker} --- Denotes tracker components throughout the document and in App Manager except in the
+\n \\hyperref[sec:scanner-page]{scanner page}. Trackers include libraries such as crash reporters, analytics,
+\n profiling, identification, ad, location, etc. Thus, they are not equal in functions. There is no distinction or bias
+\n between open source and closed source libraries that promote tracking.
+\n\\end{itemize}</string>
+    <string name="intro$main$$terminologies-title">术语</string>
+    <string name="intro$main$$bin-sources-title">二进制(可执行)分发来源</string>
+    <string name="intro$main$$buiding-title">构建说明</string>
+    <string name="intro$main$$submit-patches-title">提交补丁</string>
+    <string name="intro$main$$translations-title">翻译</string>
+    <string name="intro$main$$official-sources-title">官方来源</string>
+    <string name="intro$main$$donation-title">捐赠 \\&amp; 资助</string>
+    <string name="intro$main$$contact-title">联系我们</string>
+    <string name="intro$main$contributing">用户可有通过多种方式做出贡献，如创建有用 issues 、参加讨论、
+\n改进文档和翻译，添加未被认可的库或跟踪器，
+\n审查源代码以及报告安全漏洞。</string>
+    <string name="pages$main$$pages-chapter-title">页面</string>
+    <string name="pages$main-page$$section-title">主页</string>
+    <string name="pages$main-page$$how-app-ops-work-title">主页面中的一个应用程序列表项</string>
+    <string name="pages$main-page$$application-types-title">应用类型</string>
+    <string name="pages$main-page$$instructions-title">说明</string>
+    <string name="pages$main-page$$sort-title">排序</string>
+    <string name="pages$main-page$$filter-title">筛选</string>
+    <string name="pages$main-page$$profile_name-title">配置文件名称</string>
+    <string name="pages$main-page$$1-click-ops-title">一键操作</string>
+    <string name="pages$main-page$$app-usage-title">应用使用情况</string>
+    <string name="pages$main-page$$system-config-title">系统配置</string>
+    <string name="pages$main-page$$running-apps-title">正在运行的应用</string>
+    <string name="pages$main-page$$profiles-title">配置文件</string>
+    <string name="pages$main-page$$log-viewer-title">日志查看器</string>
+    <string name="pages$main-page$$termux-title">Termux 终端模拟器</string>
+    <string name="pages$main-page$$settings-title">设置</string>
+    <string name="pages$main-page$options-menu">选项菜单提供了几个选项，可用以对列出的应用程序进行排序和过滤，
+\n以及转到 App Manager 内或外的不同页面。</string>
+    <string name="pages$main-page$settings">此菜单项将打开本应用的 \\hyperref[sec:settings-page]{设置}.</string>
+    <string name="pages$app-details-page$$section-title">应用程序详情页</string>
+    <string name="pages$app-details-page$$colour-codes-title">颜色代码含义</string>
+    <string name="pages$app-details-page$$app-info-tab-title">应用信息</string>
+    <string name="pages$app-details-page$$app-info-general-information-title">基本信息</string>
+    <string name="pages$app-details-page$$horizontal-action-panel-title">水平操作面板</string>
+    <string name="pages$app-details-page$$app-info-options-menu-title">选项菜单</string>
+    <string name="pages$app-details-page$$config-termux-title">Termux</string>
+    <string name="pages$app-details-page$$component-tabs-title">组件选项卡</string>
+    <string name="pages$app-details-page$$receivers-title">(广播)接收器 ((Broadcast)Receiver)</string>
+    <string name="pages$app-details-page$$providers-title">(内容)提供者 ((Content)Providers)</string>
+    <string name="pages$app-details-page$$blocking-components-title">阻止组件</string>
+    <string name="pages$app-details-page$$other-tabs-title">其他选项卡</string>
+    <string name="pages$app-details-page$intro">\\textbf{应用详情页}由11个标签页组成.几乎描述了一个应用程序的所有信息,
+\n包括清单中的所有属性, \\hyperref[ch:app-ops]{AppOps},签名,原生库等</string>
+    <string name="pages$app-details-page$app-info-tab">\\textbf{应用信息} 选项卡包含关于一个应用程序的基本信息,
+\n许多操作可以在此标签中执行.</string>
+    <string name="pages$one-click-ops-page$$section-title">一键操作页</string>
+    <string name="pages$main-page$$colour-codes-title">颜色代码含义</string>
+    <string name="intro$main$submit-patches">除GitHub之外的仓库目前被视为镜像，在这些网站提交的 PR/MR 将不被接受.
+\n\\footnote{GitHub 的 PR 将使用 git patch 进行手动合并, 因此, GitHub 可能会错误地将它们标记为closed而不是merged.}
+\n相反，patches (\\texttt{.patch} 文件) 可以通过电子邮件附件提交。\\textit{请务必对Commits签名(Signing-off)} 
+\n更多信息请参见位于源码根目录下的CONTRIBUTING文件.
+\n
+\n\\begin{warning}{注意}
+\n在通过电子邮件提交补丁是，整个邮件对话在将来可能会被公开访问.
+\n所以，请不要除了您的姓名和电子邮件地址之外，不要包含任何个人身份信息（PII）.
+\n\\end{warning}</string>
+    <string name="pages$main-page$colour-codes">\\begin{itemize}
+\n \\item \\colorbox{AMLightGreyishOrange}{\\textcolor{black}{浅灰橙(日间模式下)}} / \\colorbox{AMDarkBlue}{
+\n \\textcolor{white}{深蓝(夜间模式下)}} -- 多选模式下被选中的应用
+\n \\item \\colorbox{AMLightRed}{\\textcolor{black}{浅红(日间模式下)}} / \\colorbox{AMVeryDarkRed}{\\textcolor{white}
+\n {深红 (夜间模式下)}} -- 停用的应用
+\n \\item \\colorbox{AMYellow}{\\textcolor{black}{黄色星标}} -- 可调试的应用
+\n \\item \\textcolor{AMOrange}{橙色 \\textit{日期}} -- 应用可读取日志
+\n \\item \\textcolor{AMOrange}{橙色 \\textit{UID}} -- 用户 ID 在应用间被共享
+\n \\item \\textcolor{AMOrange}{橙色 \\textit{SDK}} -- 使用明文网络通信(如 HTTP)
+\n \\item \\textcolor{red}{红色 \\textit{包名}} -- 应用禁止清除数据
+\n \\item \\textcolor{red}{红色\\textit{备份标识}} -- 已卸载的应用存在一个或多个备份
+\n \\item \\textcolor{AMOrange}{橙色\\textit{备份标识}} -- 备份过期,
+\n 如基本备份中包含已安装的应用的旧版本
+\n \\item \\textcolor{AMDarkCyan}{深蓝绿色 \\textit{备份标识}} -- 备份在期,
+\n 如基本备份中包含已安装应用的相同或更高版本
+\n \\item \\textcolor{AMDarkCyan}{深蓝绿色 \\textit{包名}} -- 已强行停止运行的应用
+\n \\item \\textcolor{AMDarkCyan}{深蓝绿色 \\textit{版本}} -- 不活跃的应用
+\n \\item \\textcolor{magenta}{紫红} -- 常驻应用(一直运行的应用)
+\n\\end{itemize}</string>
+    <string name="pages$main-page$instructions">点击 \\textbf{指南} 打开离线版的App Manager用户手册. 
+\n它也可能打开在线版本如果如果相应的功能拆分\\texttt{feat\\_docs}未安装, 
+\n或系统 WebView不存在.</string>
+    <string name="pages$main-page$$list-options-title">列表选项</string>
+    <string name="pages$main-page$$apk-updater-title">APK更新器</string>
+    <string name="intro$main$donation">\\emph{捐赠或购买并不是使用App Manager的必要条件.} 虽然 App Manager 不支持任何任何内购,
+\n但可以通过 Open Source Collective 向 App Manager 的所有者发送捐赠.
+\n
+\nOpen Source Collective 是 Open Collective 平台上的一个财政托管机构，以帮助开源项目管理他们的财务状况。
+\n目前，它支持通过银行账户、PayPal、信用卡或借记卡和加密货币发起捐赠.
+\n
+\n\\textit{Link:} \\url{https://opencollective.com/muntashir}.
+\n
+\n通过发送捐款，发送者同意他们不应使用捐款作为筹码来使作者优先考虑其所请求的功能.
+\n请求新功能不需要任何捐赠，且它们的优先级是按作者倾向排序.
+\n
+\n\\emph{App Manager 接受任何资助的提议}
+\n有兴趣的组织的代表可以通过以下方式直接联系联系所有者: §\\cref{sec:contact}.</string>
+    <string name="intro$main$contact">Muntashir Al-Islam\\footnote{可称``Muntashir Akon\'\'}\\\\
+\n邮箱: \\href{mailto:muntashirakon@riseup.net}{muntashirakon [at] riseup [dot] net}\\\\
+\nKey Fingerprint: \\texttt{7bad37c2981e41f8f6abea7f58f0b4f26c346fce}\\\\
+\nGitHub: \\url{https://github.com/MuntashirAkon}\\\\
+\nTwitter: \\url{https://twitter.com/Muntashir}</string>
+    <string name="pages$main-page$$batch-operations-title">批处理</string>
+    <string name="pages$main-page$$version-info-title">版本信息</string>
+    <string name="pages$main-page$$options-menu-title">选项菜单</string>
+    <string name="pages$main-page$intro">主页面列出所有已安装、已卸载和已备份的应用。
+\n单独点击任何已安装的应用项目可打开相应的 \\hyperref[sec:app-details-page]{应用详情页}。
+\n对于未安装的系统应用，它会显示一个 对话框提示，可以用来重新安装该应用。
+\n使用列表选项中的 \\hyperlink{par:main-page-sort}{排序} ，可以选择应用列表的排序方式，退出应用后仍会保留排序方式。
+\n使用列表选项中的 \\hyperlink{par:main-page-filter}{过滤}，可以过滤列表选项。
+\n筛选也可以通过搜索栏进行过滤，并支持正则表达式。</string>
+    <string name="pages$main-page$batch-operations">批处理也可以在这个页面内进行。
+\n多选模式可以由点击任何应用图标或长按列表中的任何一项进入。
+\n进入后，仅需单击列表中的任何一项便可选中，而不是打开应用程序详情页。
+\n该模式下，批处理操作位于位于页面底部的多选菜单，包括包括：
+\n\\begin{itemize}
+\n \\item 将选中应用添加到 \\hyperref[sec:profiles-page]{配置}
+\n \\item \\hyperref[sec:backup-restore]{备份、恢复或删除}应用程序
+\n \\item 阻止应用中的追踪器
+\n \\item 清除应用数据或缓存
+\n \\item 启用/停用/强制停止/卸载应用程序
+\n \\item 导出屏蔽规则
+\n \\item 阻止应用的后台操作 (Android 7 及更高版本)
+\n \\item 导出APK文件到 \\texttt{AppManager/apks}
+\n \\item 设置\\hyperref[sec:net-policy]{联网规则}
+\n\\end{itemize}
+\n
+\n\\begin{tip}{无障碍}
+\n 进入多选模式后，键盘或遥控器的左右键呼出多选菜单。
+\n\\end{tip}</string>
+    <string name="pages$main-page$application-types">一个应用程序可以是 \\textbf{用户} 或 \\textbf{系统} 应用，同时存在以下后缀:
+\n\\begin{itemize}
+\n \\item \\texttt{X} -- 支持多种架构(AArch32位/AArch64位)
+\n \\item \\texttt{0} -- 不含dex文件(包含ART/Davilk虚拟机字节码, 即可直接运行的代码)
+\n \\item \\texttt{\\textdegree°} -- 处于休眠状态
+\n \\item \\texttt{\\#} -- 已请求大量堆(Heap Memory)内存
+\n \\item \\texttt{\?} -- 已请求处于安全模式下的虚拟机
+\n\\end{itemize}</string>
+    <string name="pages$main-page$version-info">版本名称有以下前缀:
+\n\\begin{itemize}
+\n \\item \\texttt{\\_} -- 没有硬件加速（减慢应用中的过渡动画）
+\n \\item \\texttt{\\textasciitilde} -- 仅测试模式
+\n \\item \\texttt{debug} -- 可调试应用
+\n\\end{itemize}</string>
+    <string name="pages$main-page$list-options">\\textbf{列表选项} 包含了对主页面中的列表进行排序和过滤的选项。</string>
+    <string name="pages$main-page$sort">主页面中列出的应用程序可以按照以下方式进行排序:
+\n\\begin{itemize}
+\n \\item \\textbf{用户应用优先} 用户应用将优先展示
+\n \\item \\textbf{应用标签} 根据应用标签（也称为 \\textit{应用程序名称}）升序排序。(默认选项)
+\n \\item \\textbf{包名} 根据包名升序排序
+\n \\item \\textbf{最后更新} 根据更新时间降序排序
+\n \\item \\textbf{共享 user ID} 根据共享 user ID升序排序
+\n \\item \\textbf{目标 SDK} 根据目标SDK升序排序
+\n \\item \\textbf{签名} 根据签名信息升序排序
+\n \\item \\textbf{已停用优先} 已停用将优先展示
+\n \\item \\textbf{已阻止优先} 根据已阻止的应用组件数目降序排序
+\n \\item \\textbf{已备份优先} 已备份将优先展示
+\n \\item \\textbf{追踪器} 根据追踪器数目降序排序S
+\n \\item \\textbf{最后操作} 根据被App Manager操作的应用时间降序排序
+\n\\end{itemize}
+\n
+\n此外，还有 \\textit{反转} 选项，可以用来对列表进行反向排序。
+\n无论怎样排序偏好，应用程序都是先按字母顺序排序，以防止产生任何随机排序结果.</string>
+    <string name="pages$main-page$filter">主页面中列出的应用可以通过以下方式进行过滤:
+\n\\begin{itemize}
+\n \\item \\textbf{用户} 仅用户应用
+\n \\item \\textbf{系统} 仅系统应用
+\n \\item \\textbf{停用} 仅停用应用
+\n \\item \\textbf{被阻止} 仅被阻止组件的应用
+\n \\item \\textbf{可打开} 仅至少有一个Aactivity的应用
+\n \\item \\textbf{有备份} 仅有备份的应用
+\n \\item \\textbf{无备份} 仅没有备份的应用
+\n \\item \\textbf{运行中} 仅正在运行的应用
+\n \\item \\textbf{有分包} 仅有分包(多Apk)应用
+\n \\item \\textbf{已安装} 仅已安装应用
+\n \\item \\textbf{已卸载} 仅已卸载应用
+\n\\end{itemize}
+\n
+\n与排序不同，它可以同时应用多个过滤选项，
+\n如，停用的用户应用可以通过选择 \\textit{用户}和 \\textit{停用}列出，这对\\hyperref[subsec:batch-operations]{批处理}特别有用，在这种情况下过滤用户应用可能是必要的，以便安全地进行某些操作。
+\nUnlike sorting, it is possible to apply more than one filtering options at the same time. For example, the disabled user
+\napplications can be listed by selecting both \\textit{User apps} and \\textit{Disabled apps}. This can be particularly
+\nuseful for \\hyperref[subsec:batch-operations]{batch operations} where filtering the user applications may be necessary
+\nto carry out certain operations safely.</string>
+    <string name="pages$app-details-page$$activities-title">活动 (Activity)</string>
+    <string name="pages$app-details-page$$servcies-title">服务 (Services)</string>
+    <string name="pages$app-details-page$$additional-features-for-rooted-phones-title">针对已root的手机的额外功能</string>
+    <string name="pages$app-details-page$$permission-tabs-title">权限选项卡</string>
+    <string name="pages$app-details-page$$uses-permissions-title">使用权限</string>
+    <string name="pages$app-details-page$$permissions-title">权限</string>
+    <string name="pages$app-details-page$$signatures-tab-title">签名选项卡</string>
+    <string name="pages$app-details-page$$blocking-trackers-title">阻止跟踪器</string>
+    <string name="pages$app-details-page$$app-ops-title">App Ops</string>
+    <string name="pages$app-details-page$colour-codes">本页中使用的背景颜色列表:
+\n\\begin{itemize}
+\n \\item \\colorbox{AMRed}{\\textcolor{black}{正红 (日间)}} / \\colorbox{AMDarkRed}{\\textcolor{white}{深红 (夜间)}}
+\n -- 危险权限或, 被阻止的组件(使用App Manager操作)
+\n
+\n \\item \\colorbox{AMLightRed}{\\textcolor{black}{亮红 (日间)}} / \\colorbox{AMVeryDarkRed}{\\textcolor{white}{绯红 (夜间)}} -- 被阻止的组件(其他应用操作)
+\n
+\n \\begin{tip}{注意}
+\n表示在 App Manager 之外禁用(阻止)的组件, 标记为禁用(阻止)的组件并不意味着它被用户禁用,它也可能是被系统禁用的, 或者在其清单(Android-Manifest.xml)中被标记为禁用(阻止)。被停用的应用程序也会被系统（和App Manager）视为禁用(阻止)。
+\n \\end{tip}
+\n
+\n \\item \\colorbox{AMVividOrange}{\\textcolor{black}{鲜橙 (日间)}} / \\colorbox{AMVeryDarkOrange}{
+\n \\textcolor{white}{深橙 (夜间)}} -- 追踪器组件
+\n
+\n \\item \\colorbox{AMSoftMagenta}{\\textcolor{black}{亮紫 (日间)}} / \\colorbox{AMVeryDarkViolet}{
+\n \\textcolor{white}{深紫 (夜间)}} -- 正在运行的组件
+\n\\end{itemize}</string>
+</resources>

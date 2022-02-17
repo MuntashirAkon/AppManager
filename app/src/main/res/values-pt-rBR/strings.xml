@@ -1144,4 +1144,21 @@
     <string name="failed_to_use_the_current_mode_of_operation">Não é possível usar o modo de operação atual. Voltando ao modo sem root para esta sessão.</string>
     <string name="failed_to_enable_magisk_deny_list">Não foi possível ativar a Lista de Negações do Magisk</string>
     <string name="failed_to_disable_magisk_deny_list">Não foi possível desativar a Lista de Negações do Magisk</string>
+    <string name="hidden_api_enforcement_policy">Política de aplicação de API oculta</string>
+    <string name="binary_64_bit">64 Bit</string>
+    <string name="endianness_big_endian">Big endian</string>
+    <string name="so_type_shared_library">Biblioteca compartilhada</string>
+    <string name="so_type_executable">Executável</string>
+    <string name="file_modified_are_you_sure">O arquivo foi modificado. Descartar todas as suas alterações e sair\?</string>
+    <string name="save_and_exit">Salvar e sair</string>
+    <string name="hidden_api_enf_policy_black">Enforce (somente listas negras)</string>
+    <string name="hidden_api_enf_policy_dark_grey_and_black">Enforce (listas cinza-escuro e negras)</string>
+    <string name="hidden_api_enf_default_policy">Padrão (com base no tipo de aplicativo)</string>
+    <string name="hidden_api_enf_policy_none">None (acesso total à API oculta)</string>
+    <string name="binary_32_bit">32 Bit</string>
+    <string name="primary_abi">ABI primária</string>
+    <string name="zygote_preload_name">Nome de pré-carregamento do Zygote</string>
+    <string name="endianness_little_endian">Little endian</string>
+    <string name="hidden_api_enf_policy_warn">Warn (acesso total à API oculta, mas emite avisos)</string>
+    <string name="donation_campaign_text">Estamos realizando uma <b>campanha de financiamento</b> para o App Manager por um período limitado. <a href="https://opencollective.com/app-manager#category-ABOUT">saiba mais…</a></string>
 </resources>
