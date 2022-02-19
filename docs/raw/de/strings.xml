@@ -1,2 +1,189 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="intro$main$$supported-versions-title">Unterstützte Versionen</string>
+    <string name="titlepage$user_manual">{\\huge\\bfseries Nutzerhandbuch\\par}</string>
+    <string name="intro$main$$terminologies-title">Fachbegriffe</string>
+    <string name="intro$main$terminologies">\\begin{itemize}
+\n \\item \\textbf{AM} --- Kurzbezeichnung für App Manager.
+\n \\item \\textbf{Blockieren/Entsperren} --- Dient zum Sperren oder Entsperren von Komponenten. Wie Komponenten blockiert werden, hängt von 
+\n den Benutzereinstellungen ab.
+\n \\item \\textbf{IFW} --- Kurzform für Intent Firewall.
+\n \\item \\textbf{Ops} --- Kurzbezeichnung für Maßnahmen, e.g.\\ app ops, batch ops, 1-click ops
+\n \\item \\textbf{SSAID} --- Kurzbezeichnung von \\texttt{Settings.Secure.Android\\_ID}. Es ist eine Gerätekennung, die
+\n jeder App zugewiesen wird (ab Android Oreo). Sie wird aus der Kombination des Signierzertifikats der App und der 
+\n SSAID, die für das Paket \\texttt{Android} festgelegt wurde. Daher ist sie für eine App garantiert gleich, so lange
+\n der Benutzer das Gerät nicht formatiert. Sie wird häufig für die Nachverfolgung verwendet.
+\n \\item \\textbf{Tracker} --- Bezeichnet Tracker-Komponenten im gesamten Dokument und im App Manager, außer in der
+\n \\hyperref[sec:scanner-page]{Scanner-Seite}. Tracker umfassen Bibliotheken wie Crash Reporter, Analytik,
+\n Profilerstellung, Identifizierung, Anzeige, Standort usw. Daher sind sie in ihren Funktionen nicht gleich. Es gibt keine Unterscheidung oder Voreingenommenheit
+\n zwischen Open-Source- und Closed-Source-Bibliotheken, die Tracking fördern.
+\n\\end{itemize}</string>
+    <string name="intro$main$bin-sources">App Manager wird über die folgenden Quellen verbreitet. Inoffizielle Quellen können modifizierte Versionen von App
+\nManager vertreiben, und niemand außer Ihnen ist für die Folgen der Verwendung solcher Distributionen verantwortlich.
+\n\\begin{enumerate}
+\n \\item Offizielles F-Droid-Repository.\\footnote{Nur für die Verteilung normaler Versionen}\\\\
+\n \\textit{Link:} \\url{https://f-droid.org/packages/io.github.muntashirakon.AppManager}
+\n \\item GitHub Repository.\\\\
+\n \\textit{Normale Veröffentlichungen:} \\url{https://github.com/MuntashirAkon/AppManager/releases}\\\\
+\n \\textit{Debug-Versionen:} \\url{https://github.com/MuntashirAkon/AppManager/actions}
+\n \\item Telegram.\\\\
+\n \\textit{Normale Veröffentlichungen:} \\url{https://t.me/AppManagerChannel}\\\\
+\n \\textit{Debug-Versionen:} \\url{https://t.me/AppManagerDebug}
+\n\\end{enumerate}</string>
+    <string name="intro$main$donation">\\emph{Eine Spende oder ein Kauf ist keine Voraussetzung für die Nutzung von App Manager.} App Manager unterstützt zwar keine
+\nKäufe, es können aber Spenden über Open Source Collective an den Entwickler von App Manager gesendet werden.
+\n
+\nOpen Source Collective ist ein Finanzdienstleister auf der Open Collective-Plattform, der Open-Source-Projekten bei der Verwaltung
+\nihre Finanzen. Derzeit werden Zahlungen per Bankkonten, PayPal, Kredit- oder Debitkarten und
+\nKryptowährungen unterstützt.
+\n
+\n\\textit{Link:} \\url{https://opencollective.com/muntashir}.
+\n
+\nMit der Überweisung von Spenden stimmen die Absender zu, dass sie die Spenden nicht als Druckmittel verwenden, um die von ihnen gewünschten 
+\nFunktionen zu priorisieren. Für Feature-Anfragen sind keine Belohnungen oder Spenden erforderlich, und sie werden nach den
+\nPräferenzen des ENtwicklers priorisiert.
+\n
+\n\\emph{App-Manager nimmt alle Angebote für Finanzierungen oder Zuschüsse an. Vertreter der interessierten Organisation können 
+\ndirekt den Entwickler über die in §\\cref{sec:Ansprechpartner} angegebenen Optionen kontaktieren.</string>
+    <string name="intro$main$intro">App Manager ist ein fortschrittlicher Paketmanager für Android. Er bietet zahllose Funktionen und benötigt daher ein Benutzer-
+\nhandbuch, um seine Benutzer zu unterstützen. Dieses Dokument fungiert als Benutzerhandbuch für App Manager in dem Sinne,
+\ndass es darauf abzielt, jede Funktion zu beschreiben, die App Manager zu bieten hat. Dieses Dokument kann auch als ``offizieller\'\' Leitfaden für App Manager betrachtet
+\nwerden und stellt das erwartete Verhalten von App Manager dar. Übersetzungen können dieses Dokument (das in 
+\nEnglisch verfasst ist) falsch interpretieren. Daher sollte jeder befähigte Benutzer die englische Version des Dokuments lesen, um das Beste
+\naus dem App Manager herauszuholen. Es kann auch andere inoffizielle oder Drittanbieter-Ressourcen wie Blog-Artikel, Videos, Chat-
+\nGruppen usw. geben. Diese Ressourcen können zwar für viele Menschen nützlich sein, sind aber möglicherweise nicht auf dem neuesten 
+\nStand der aktuellen Version von App Manager. Wenn in App Manager Abweichungen von diesem Dokument festgestellt werden, sollten diese im 
+\n\\href{https://github.com/MuntashirAkon/AppManager/issues}{App Manager Problembehandlung} gemeldet werden.</string>
+    <string name="intro$main$submit-patches">Repositories, die sich an anderen Orten als GitHub befinden, werden derzeit als Spiegel betrachtet. Pull-/Merge-Anfragen, die
+\nan diesen Orten eingereicht werden, werden nicht akzeptiert.\\footnote{GitHub Pull Anträge werden manuell mit den entsprechenden Patches zusammengeführt.
+\nDaher kann es sein, dass GitHub sie fälschlicherweise als geschlossen markiert, anstatt sie zusammenzuführen.} Stattdessen können Patches (als \\texttt{.patch-} Dateien)
+\nüber E-Mail-Anhänge eingereicht werden. \\textit{Die Signierung ist eine Voraussetzung.} Weitere Informationen finden Sie in der Datei CONTRIBUTING, die sich im Stammverzeichnis
+\ndes Quellcodes befindet.
+\n
+\n\\begin{warning}{Hinweis}
+\n Wenn Sie Patches per E-Mail einreichen, kann die gesamte Konversation in Zukunft öffentlich zugänglich sein. Daher sollten Sie keine
+\n persönlich identifizierbaren Informationen (PII) außer Ihrem Namen oder Ihrer E-Mail-Adresse aufführen.
+\n\\end{warning}</string>
+    <string name="pages$main-page$intro">Die Hauptseite listet alle installierten, deinstallierten und gesicherten Anwendungen auf. Ein einfacher Klick auf ein installiertes Anwendungselement
+\nöffnet die entsprechende Seite \\hyperref[sec:app-details-page]{App-Detailseite}. Für die deinstallierten Systemanwendungen wird ein
+\nDialogfeld angezeigt, das zur Neuinstallation der Anwendung verwendet werden kann. Mit der Option \\hyperlink{par:main-page-sort}{Sortierung} aus den
+\nListenoptionen können die App-Elemente auf verschiedene Weise sortiert und beim Beenden beibehalten werden. Es ist auch möglich, Elemente zu filtern
+\nmit Hilfe der \\hyperlink{par:main-page-filter}{Filter} Option in den Listenoptionen. Die Filterung ist auch über die 
+\nSuchleiste mit zusätzlicher Unterstützung für reguläre Ausdrücke möglich..</string>
+    <string name="intro$main$$introduction-chapter-title">Einleitung</string>
+    <string name="intro$main$$official-sources-title">Offizielle Quellen</string>
+    <string name="intro$main$$source-code-links-title">Links zum Quellcode</string>
+    <string name="intro$main$$translations-title">Übersetzungen</string>
+    <string name="intro$main$$contributing-title">Mitwirkende</string>
+    <string name="intro$main$$buiding-title">Hinweise zur Erstellung</string>
+    <string name="intro$main$$submit-patches-title">Einreichen von Patches</string>
+    <string name="titlepage$quotation">\\begin{quotation}
+\n ``Weise und langsam. Wer schnell läuft, der stolpert.\'\'
+\n %\\sourceatright
+\n {--- Bruder Lorenz, \\textit{Romeo und Julia}}
+\n \\end{quotation}</string>
+    <string name="intro$main$$bin-sources-title">Quellen der binären Verteilung</string>
+    <string name="intro$main$$donation-title">Spende \\&amp; Förderung</string>
+    <string name="intro$main$$contact-title">Ansprechpartner</string>
+    <string name="intro$main$supported-versions">Derzeit werden die Versionen v2.6.0 (stable) und v3.0.0 (alpha und Debug Versionen) unterstützt. Frühere Versionen von App
+\nManager können Sicherheitslücken enthalten und sollten nicht verwendet werden.</string>
+    <string name="intro$main$source-code-links">Alle außer GitHub sind die Spiegel-Links. Die Tags sollten immer auf dem neuesten Stand sein, aber beim Master-Zweig ist nicht garantiert, dass er
+\naktuell zu sein. Wenn das Ziel ist, den Master-Zweig zu klonen, verwenden Sie den GitHub-Link statt der anderen.</string>
+    <string name="intro$main$translations">App Manager akzeptiert keine Übersetzungen direkt über Pull-/Merge-Anfragen. Übersetzungen werden automatisiert über
+\nWeblate realisiert. Um dem Übersetzungsteam beizutreten, besuchen Sie \\url{https://hosted.weblate.org/engage/app-manager/}.</string>
+    <string name="intro$main$contributing">Es gibt mehrere Möglichkeiten, wie ein Benutzer einen Beitrag leisten kann, z. B. durch das Erstellen hilfreicher Fragen, die Teilnahme an Diskussionen, die Verbesserung von
+\nDokumentationen und Übersetzungen, das Hinzufügen unbekannter Bibliotheken oder Tracker, die Überprüfung des Quellcodes sowie die
+\nMeldung von Sicherheitslücken.</string>
+    <string name="intro$main$buiding">Bauanleitungen finden Sie in der Datei BUILDING, die sich im Stammverzeichnis des Quellcodes befindet.</string>
+    <string name="pages$main$$pages-chapter-title">Seiten</string>
+    <string name="pages$main-page$$section-title">Hauptseite</string>
+    <string name="pages$main-page$$how-app-ops-work-title">Ein Menüpunkt der Anwendungsliste auf der Hauptseite</string>
+    <string name="pages$main-page$$batch-operations-title">Stapelverarbeitung</string>
+    <string name="pages$main-page$$colour-codes-title">Farbcodes</string>
+    <string name="intro$main$contact">Muntashir Al-Islam\\footnote{Sie können mich auch als ``Muntashir Akon\'\' ansprechen}\\\\
+\nEmail: \\href{mailto:muntashirakon@riseup.net}{muntashirakon [at] riseup [dot] net}\\\\
+\nKey Fingerprint: \\texttt{7bad37c2981e41f8f6abea7f58f0b4f26c346fce}\\\\
+\nGitHub: \\url{https://github.com/MuntashirAkon}\\\\
+\nTwitter: \\url{https://twitter.com/Muntashir}</string>
+    <string name="pages$main-page$$application-types-title">Anwendungstypen</string>
+    <string name="pages$main-page$$version-info-title">Infos zur Version</string>
+    <string name="pages$main-page$$options-menu-title">Menü Optionen</string>
+    <string name="pages$main-page$$instructions-title">Anleitungen</string>
+    <string name="pages$main-page$$list-options-title">Liste der Optionen</string>
+    <string name="pages$main-page$$sort-title">Sortierung</string>
+    <string name="pages$main-page$$filter-title">Filter</string>
+    <string name="pages$main-page$$profile_name-title">Profilname</string>
+    <string name="pages$main-page$$1-click-ops-title">1-Klick-Operationen</string>
+    <string name="pages$main-page$$app-usage-title">App Nutzung</string>
+    <string name="pages$main-page$$system-config-title">System-Konfiguration</string>
+    <string name="pages$main-page$$running-apps-title">Laufende Apps</string>
+    <string name="pages$main-page$$profiles-title">Profile</string>
+    <string name="pages$main-page$$log-viewer-title">Log-Anzeige</string>
+    <string name="pages$main-page$$apk-updater-title">APK-Updater</string>
+    <string name="pages$main-page$$termux-title">Termux</string>
+    <string name="pages$main-page$$settings-title">Einstellungen</string>
+    <string name="guide$backup-restore$options">Mit den Backup-Optionen (intern als Backup-Flags bezeichnet) können Sie die Backups im Handumdrehen anpassen.
+\nDie Anpassungen werden jedoch nicht für zukünftige Sicherungen gespeichert.
+\nWenn Sie diesen Dialog anpassen möchten, verwenden Sie \\hyperref[subsubsec:settings-backup-options]{Backup-Optionen} in der \\hyperref[sec:settings-page]{Einstellungen-Seite}.
+\n
+\nEine vollständige Beschreibung der Sicherungsoptionen finden Sie weiter unten:
+\n\\begin{itemize}
+\n \\item \\textbf{APK-Dateien.} Whether to back up the APK files.
+\n This includes the \\textit{base APK} file along with the \\texttt{split APK} files if they exist.
+\n
+\n \\item \\textbf{Internal data.} Ob die APK-Dateien gesichert werden sollen.
+\n Dies umfasst die Datei \\textit{Basis-APK} sowie die Dateien \\texttt{Split-APK}, falls vorhanden.
+\n
+\n \\item \\textbf{External data.} Whether to back up data directories located in the internal memory as well as SD Card (if exists).
+\n External data directories often contain non-essential app data or media files (instead of using the dedicated media folder) and may increase the backup size.
+\n However, it might be essential for some apps.
+\n Although it isn\'t checked by default (as it might dramatically increase the size of the backups), you may have to check it in order to ensure a smooth restore of your backups.
+\n \\begin{warning}{Caution}
+\n Internal data folders should always be backed up if you are going to back up the external data folders.
+\n However, it could be useful to back up only the external folders if the app in question downloads a lot of assets from the Internet.
+\n \\end{warning}
+\n
+\n \\item \\textbf{OBB and media.} Whether to back up or restore the OBB and the media directories located in the
+\n external storage or the SD Card.
+\n This is useful for games and the graphical software which actually use these folders.
+\n
+\n \\item \\textbf{Cache.} Android apps have multiple cache directories located at every data directories (both internal and external).
+\n There are two types of cache: \\textbf{cache} and \\textbf{code cache}.
+\n Enabling this option excludes both cache directories from all the data directories.
+\n It is generally advised to exclude cache directories since most apps do not clear the cache regularly (for some
+\n reason, the only way an app can clear its cache is by deleting the entire cache directory) and usually handled by the OS itself.
+\n Apps such as Telegram may use a very large cache (depending on the storage space) which may dramatically increase the backup size.
+\n When it is disabled, AM also ignores the \\textbf{no\\_backup} directories.
+\n
+\n \\item \\textbf{Extras.} Backup/restore app permissions, net policy, battery optimization, SSAID, etc., enabled by default.
+\n Note that, blocking rules are applied \\textit{after} applying the extras.
+\n So, if an item is present in both places, it will be overwritten (i.e., the one from the blocking rules will be used).
+\n
+\n \\item \\textbf{Rules.} This option lets you back up blocking rules configured within App Manager.
+\n This might come in handy if you have customised permissions or block some components using App Manager as they will
+\n also be backed up or restored when you enable this option.
+\n
+\n \\item \\textbf{Backup Multiple.} Whether this is a multiple backup.
+\n By default, backups are saved using their user ID\\@.
+\n Enabling this option allows you to create additional backups.
+\n These backups use the current date-time as the default backup name, but you can also specify custom backup name
+\n using the input field displayed when you click on the \\textbf{Backup} button.
+\n
+\n \\item \\textbf{Ausgewählte Anwender.} Sicherung oder Wiederherstellung für die ausgewählten Benutzer statt nur für den aktuellen Benutzer.
+\n Diese Option wird nur angezeigt, wenn das System mehr als einen Benutzer hat.
+\n
+\n \\item \\textbf{Signaturprüfungen überspringen.} Beim Erstellen eines Backups werden die Prüfsummen jeder Datei (sowie die Signier-
+\n Zertifikat(e) der APK-Basisdatei) generiert und in der Datei \\texttt{checksums.txt} gespeichert.
+\n Wenn Sie die Sicherung wiederherstellen, werden die Prüfsummen erneut generiert und mit den in der genannten Datei gespeicherten Prüfsummen abgeglichen.
+\n Wenn Sie diese Option aktivieren, werden die Signaturprüfungen ausgeschaltet.
+\n Diese Option wird nur bei der Wiederherstellung eines Backups angewendet.
+\n Während der Sicherung werden die Prüfsummen unabhängig von dieser Option generiert.
+\n \\begin{warning}{Caution}
+\n Sie sollten diese Option immer deaktivieren, um sicherzustellen, dass Ihre Sicherungen nicht von Anwendungen Dritter verändert werden.
+\n Dies würde jedoch nur funktionieren, wenn Sie die Verschlüsselung aktiviert haben.
+\n \\end{warning}
+\n\\end{itemize}
+\n
+\n\\seealsoinline{\\hyperref[subsubsec:settings-encryption]{Einstellungen: Verschlüsselung}}</string>
+    <string name="appendices$changelogs$$chapter-title">Änderungsprotokolle</string>
+</resources>
