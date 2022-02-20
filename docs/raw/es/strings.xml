@@ -1,2 +1,231 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="intro$main$$introduction-chapter-title">Introducción</string>
+    <string name="intro$main$$terminologies-title">Terminología</string>
+    <string name="intro$main$$supported-versions-title">Versiones soportadas</string>
+    <string name="intro$main$$official-sources-title">Fuentes oficiales</string>
+    <string name="intro$main$$bin-sources-title">Fuentes de distribución binaria</string>
+    <string name="intro$main$$source-code-links-title">Enlaces al código fuente</string>
+    <string name="intro$main$$translations-title">Traducciones</string>
+    <string name="intro$main$$contributing-title">Contribuyendo</string>
+    <string name="intro$main$$buiding-title">Instrucciones de construcción</string>
+    <string name="intro$main$$submit-patches-title">Envío de parches</string>
+    <string name="intro$main$$donation-title">Donación y Financiamiento</string>
+    <string name="intro$main$$contact-title">Contacto</string>
+    <string name="intro$main$supported-versions">"Actualmente, las versiones soportadas son v2.6.0 (estable), v3.0.0 (versiones alfa y de depuración).  Versiones anteriores de App
+\nManager puede contener vulnerabilidades de seguridad y no debe utilizarse."</string>
+    <string name="intro$main$source-code-links">"Todos menos GitHub son los enlaces espejo.  Las etiquetas siempre deben estar actualizadas, pero no se garantiza que la rama principal lo esté.  
+\nSi el objetivo es clonar la rama maestra, use el enlace de GitHub en lugar de los demás."</string>
+    <string name="intro$main$translations">"App Manager no acepta traducciones directamente a través de solicitudes pull/merge.  Las traducciones se gestionan automáticamente a través de
+\n Weblate.  Para unirse al equipo de traducción, visite \\url{https://hosted.weblate.org/engage/app-manager/}."</string>
+    <string name="intro$main$buiding">Las instrucciones de compilación están disponibles en el archivo BUILDING ubicado en el directorio raíz de la fuente.</string>
+    <string name="pages$main-page$$section-title">Página principal</string>
+    <string name="pages$main-page$$batch-operations-title">Operaciones por lotes</string>
+    <string name="pages$main-page$$colour-codes-title">Códigos de color</string>
+    <string name="pages$main-page$$application-types-title">Tipos de aplicación</string>
+    <string name="pages$main-page$$version-info-title">Información sobre la versión</string>
+    <string name="pages$main-page$$instructions-title">Instrucciones</string>
+    <string name="pages$main-page$$list-options-title">Lista de opciones</string>
+    <string name="pages$main-page$$sort-title">Clasificar</string>
+    <string name="pages$main-page$$filter-title">Filtro</string>
+    <string name="pages$main-page$$profile_name-title">Nombre del perfil</string>
+    <string name="pages$main-page$$1-click-ops-title">Operaciones con 1 clic</string>
+    <string name="pages$main-page$$app-usage-title">Uso de la aplicación</string>
+    <string name="pages$main-page$$system-config-title">Configuración del sistema</string>
+    <string name="pages$main-page$$running-apps-title">Aplicaciones en ejecución</string>
+    <string name="pages$main-page$$profiles-title">Perfiles</string>
+    <string name="pages$main-page$$apk-updater-title">Actualizador de APK</string>
+    <string name="pages$main-page$$settings-title">Configuraciones</string>
+    <string name="pages$main-page$options-menu">El menú de opciones ofrece varias opciones que se pueden usar para ordenar y filtrar las aplicaciones enumeradas, así como para navegar
+\n a diferentes páginas dentro o fuera de App Manager.</string>
+    <string name="pages$main-page$list-options">\\textbf{List options} contiene las opciones para clasificar y filtrar la lista en la página principal.</string>
+    <string name="pages$main-page$settings">Este elemento del menú abre la \\hyperref[sec:settings-page]{Settings page} de la aplicación.</string>
+    <string name="pages$app-details-page$$section-title">Página de detalles de la aplicación</string>
+    <string name="pages$app-details-page$$colour-codes-title">Código de color</string>
+    <string name="pages$app-details-page$$app-info-tab-title">Pestañas de información de la aplicación</string>
+    <string name="pages$app-details-page$$app-info-general-information-title">Información general</string>
+    <string name="pages$app-details-page$$horizontal-action-panel-title">Panel de acción horizontal</string>
+    <string name="pages$app-details-page$$app-info-options-menu-title">Opciones de menú</string>
+    <string name="pages$app-details-page$$config-termux-title">Termux</string>
+    <string name="pages$app-details-page$$component-tabs-title">Pestañas de componentes</string>
+    <string name="pages$app-details-page$$receivers-title">Receptores</string>
+    <string name="pages$app-details-page$$providers-title">Proveedores</string>
+    <string name="pages$app-details-page$$additional-features-for-rooted-phones-title">Características adicionales para dispositivos con acceso raíz</string>
+    <string name="pages$app-details-page$$blocking-trackers-title">Bloqueo de rastreadores</string>
+    <string name="pages$app-details-page$$blocking-components-title">Bloqueo de componentes</string>
+    <string name="pages$app-details-page$$permission-tabs-title">Pestañas de permisos</string>
+    <string name="pages$app-details-page$$uses-permissions-title">Permisos de uso</string>
+    <string name="pages$app-details-page$$permissions-title">Permisos</string>
+    <string name="pages$app-details-page$$other-tabs-title">Otras pestañas</string>
+    <string name="pages$one-click-ops-page$$section-title">Página de operaciones con 1 clic</string>
+    <string name="pages$profile-page$$apps-tab-title">Pestaña de aplicaciones</string>
+    <string name="pages$profile-page$$configurations-tab-title">Pestaña de configuraciones</string>
+    <string name="pages$profile-page$$comment-title">Comentario</string>
+    <string name="pages$profile-page$$components-title">Componentes</string>
+    <string name="pages$profile-page$$app-ops-title">Operaciones de aplicación</string>
+    <string name="pages$profile-page$$permissions-title">Permisos</string>
+    <string name="pages$profile-page$$backup-restore-title">Copia de seguridad/restauracion</string>
+    <string name="pages$profile-page$$export-blocking-rules-title">Exportar reglas de bloqueo</string>
+    <string name="pages$profile-page$$disable-title">Deshabilitar</string>
+    <string name="pages$profile-page$$force-stop-title">Parada forzosa</string>
+    <string name="pages$profile-page$$clear-cache-title">Limpiar caché</string>
+    <string name="pages$profile-page$$clear-data-title">Limpiar datos</string>
+    <string name="pages$profile-page$$block-trackers-title">Bloquear rastreadores</string>
+    <string name="pages$profile-page$$save-apk-title">Guardar APK</string>
+    <string name="pages$profile-page$users">"Seleccione los usuarios para los que se aplicará el perfil.  Todos los usuarios se seleccionan de forma predeterminada."</string>
+    <string name="pages$profile-page$clear-cache">Habilita la limpieza de caché para los paquetes seleccionados.</string>
+    <string name="pages$settings-page$$section-title">Página de configuraciones</string>
+    <string name="pages$settings-page$$language-title">Idioma</string>
+    <string name="pages$settings-page$$app-theme-title">Tema de la aplicación</string>
+    <string name="pages$settings-page$$screen-lock-title">Bloqueo de pantalla</string>
+    <string name="pages$settings-page$$mode-of-operation-title">Modo de operación</string>
+    <string name="pages$settings-page$$apk-signing-title">Firma de APK</string>
+    <string name="pages$settings-page$$signing-key-title">Clave de firma</string>
+    <string name="pages$settings-page$$installer-title">Instalador</string>
+    <string name="pages$settings-page$$sign-apk-title">Firmar APK</string>
+    <string name="pages$settings-page$$install-location-title">Ubicación de instalación</string>
+    <string name="pages$settings-page$$installer-app-title">Aplicación de instalación</string>
+    <string name="pages$settings-page$$backup-restore-title">Copia de seguridad/restaurar</string>
+    <string name="pages$settings-page$$encryption-title">Encriptación</string>
+    <string name="pages$settings-page$$backup-volume-title">Volumen de copia de seguridad</string>
+    <string name="pages$settings-page$$rules-title">Reglas</string>
+    <string name="pages$settings-page$$import-export-blocking-rules-title">Importar/exportar reglas de bloqueo</string>
+    <string name="pages$settings-page$$remove-all-rules-title">Remover todas las reglas</string>
+    <string name="pages$settings-page$$import-export-keystore-title">Importar/exportar Keystore</string>
+    <string name="pages$settings-page$$device-info-title">Sobre este dispositivo</string>
+    <string name="pages$settings-page$language">Configurar el idioma de la aplicación.
+\n App Manager actualmente admite 19 (diecinueve) idiomas.</string>
+    <string name="pages$settings-page$app-theme">Configurar el tema de la aplicación.</string>
+    <string name="pages$settings-page$show-users-in-installer">Para usuarios raíz/ADB, se mostrará una lista de usuarios antes de instalar la aplicación.
+\n La aplicación se instalará solo para el usuario especificado (o para todos los usuarios si se selecciona).</string>
+    <string name="pages$settings-page$backup-restore">Configuración relacionada con \\hyperref[sec:backup-restore]{back up/restore}.</string>
+    <string name="pages$settings-page$backup-options">Personalice el cuadro de diálogo de copia de seguridad/restauración.</string>
+    <string name="pages$scanner-page$$section-title">Página del escáner</string>
+    <string name="pages$scanner-page$$missing-signatures-title">Firmas faltantes</string>
+    <string name="pages$interceptor-page$$categories-title">Categorías</string>
+    <string name="pages$interceptor-page$$flags-title">Banderas</string>
+    <string name="pages$interceptor-page$$uri-title">URI</string>
+    <string name="pages$interceptor-page$$send-edited-intent-title">Enviar intención editada</string>
+    <string name="pages$interceptor-page$matching-activities">"Enumere todos los componentes de la actividad que coincidan con la intención.  Esto lo determina internamente el sistema (en lugar de AM).
+\n El botón de lanzamiento al lado de cada componente se puede usar para lanzarlos directamente desde AM\\@."</string>
+    <string name="pages$interceptor-page$reset-to-default">"Restablece el Intent a su estado inicial.  Es posible que esto no siempre funcione como se esperaba."</string>
+    <string name="guide$main$$guides-chapter-title">Guías</string>
+    <string name="guide$aot$$section-title">ABD sobre TCP</string>
+    <string name="guide$aot$$enable-dev-options-title">Habilitar opciones de desarrollador</string>
+    <string name="guide$aot$$location-dev-options-title">Ubicación de las opciones de desarrollador</string>
+    <string name="guide$aot$$how-to-enable-dev-options-title">¿Cómo habilitar las opciones de desarrollador\?</string>
+    <string name="guide$aot$$enable-usb-debugging-title">Habilitar depuración USB</string>
+    <string name="guide$aot$$miui-usb-debug-title">Xiaomi (MIUI)</string>
+    <string name="guide$aot$$emui-usb-debug-title">Huawei (EMUI)</string>
+    <string name="guide$aot$$troubleshooting-usb-debug-title">Solución de problemas</string>
+    <string name="guide$aot$$setup-adb-on-pc-title">Configurar ADB en PC o Mac</string>
+    <string name="guide$aot$$setup-adb-win-title">Windows</string>
+    <string name="guide$aot$$setup-adb-mac-title">macOS</string>
+    <string name="guide$aot$$configure-aot-title">Configurar ADB sobre TCP</string>
+    <string name="guide$aot$$adb-mode-am-title">Habilitar modo ADB en App Manager</string>
+    <string name="guide$aot$miui-usb-debug">Habilitar \\textbf{USB debugging (security settings)} también.</string>
+    <string name="guide$aot$lg-usb-debug">Aseguraré de tener \\textbf{USB tethering} habilitado.</string>
+    <string name="pages$main$$pages-chapter-title">Páginas</string>
+    <string name="intro$main$intro">"App Manager es un administrador de paquetes avanzado para Android.  Ofrece innumerables funciones y, en consecuencia, requiere un manual de
+\n usuario para ayudar a sus usuarios.  Este documento actúa como un manual de usuario para App Manager en el sentido de que pretende describir
+\n todas las características que App Manager tiene para ofrecer.  Este documento también puede considerarse como las directrices \"oficiales\" para App Manager y representa el comportamiento esperado de App Manager.  Las traducciones pueden malinterpretar el contenido de este documento (que está
+\nescrito en inglés).  Por lo tanto, todo usuario capacitado debe leer la versión en inglés del documento para sacar el máximo provecho del App Manager.  También podría haber otros recursos no oficiales o de terceros, como artículos de blog, videos, chat, 
+\ngrupos, etc. Si bien estos recursos pueden ser útiles para muchas personas, es posible que no estén actualizados con la versión actual.
+\n de App Manager.  Si se detectan desviaciones en App Manager de este documento, deben informarse en el
+\n \\href{https://github.com/MuntashirAkon/AppManager/issues}{Rastreador de problemas de App Manager}."</string>
+    <string name="intro$main$contributing">Hay varias formas en que un usuario puede contribuir, como crear problemas útiles, asistir a debates, mejorar documentaciones y traducciones, agregar bibliotecas o rastreadores no reconocidos, revisar el código fuente y reportar vulnerabilidades de seguridad.</string>
+    <string name="pages$main-page$$how-app-ops-work-title">Un elemento de la lista de aplicaciones en la página principal</string>
+    <string name="pages$main-page$$termux-title">Termux</string>
+    <string name="pages$main-page$$options-menu-title">Opciones de menú</string>
+    <string name="pages$main-page$$log-viewer-title">Visor de registro</string>
+    <string name="pages$main-page$intro">"La página principal enumera todas las aplicaciones instaladas, desinstaladas y respaldadas.  Un solo clic en cualquier elemento de la aplicación instalada
+\nabre la respectiva \\hyperref[sec:app-details-page]{página de detalles de la aplicación}.  Para las aplicaciones del sistema desinstaladas, muestra un
+\n mensaje de diálogo que se puede utilizar para reinstalar la aplicación.  Usando la opción \\hyperlink{par:main-page-sort}{sort} del
+\n opciones de lista, los elementos de la aplicación se pueden ordenar de varias maneras y conservar al salir.  También es posible filtrar elementos
+\n usando la opción \\hyperlink{par:main-page-filter}{filter} en la lista de opciones.  El filtrado es posible también a través de la búsqueda.
+\n barra con soporte adicional para las expresiones regulares."</string>
+    <string name="pages$main-page$version-info">"El nombre de la versión va seguido de los siguientes prefijos:
+\n \\begin{itemize}
+\n  \\item \\texttt{\\_} -- Sin aceleración de hardware (rompiendo las animaciones o transparencias dentro de la aplicación)
+\n  \\item \\texttt{\\textasciitilde} -- Aplicación solo de prueba
+\n  \\item \\texttt{debug} -- Aplicación depurable
+\n \\end{itemize}"</string>
+    <string name="pages$main-page$instructions">"Al hacer clic en \\textbf{Instructions} se abre la versión sin conexión del manual del usuario de App Manager.  También puede abrir la
+\n versión en línea si la división de funciones correspondiente, es decir, \\\\texttt{feat\\_docs} no está instalada, o si no está instalado WebView
+\n en el sistema para cargar el manual."</string>
+    <string name="pages$main-page$system-config">"Este elemento del menú abre una nueva página donde se muestran varias configuraciones del sistema, listas negras/listas blancas incluidas en Android por el
+\n OEM, proveedor, AOSP o los módulos Magisk.  Requiere acceso raíz.  Por lo tanto, este elemento del menú no se
+\n aparece si el permiso de root no está disponible para App Manager."</string>
+    <string name="pages$app-details-page$additional-features-for-rooted-phones">A diferencia de los usuarios no root que en su mayoría son espectadores en estas pestañas, los usuarios root pueden realizar varias operaciones.</string>
+    <string name="pages$app-details-page$$app-ops-title">Operaciones de aplicaciones</string>
+    <string name="pages$app-details-page$$signatures-tab-title">Pestañas de firmas</string>
+    <string name="pages$main-page$termux">"Si la aplicación \\href{https://github.com/termux/termux-app}{Termux} está instalada en el sistema, la sesión en ejecución (o una
+\n nueva sesión) se puede abrir directamente a través de este elemento de menú.  La opción permanece oculta si la aplicación no está presente en la
+\n sistema."</string>
+    <string name="pages$main-page$apk-updater">Si la aplicación \\href{https://github.com/rumboalla/apkupdater}{APK Updater} está instalada en el sistema, ésta puede ser abierta
+\ndirectamente desde este elemento del menú. La opción permanece oculta si la aplicación no está presente en el sistema.</string>
+    <string name="pages$app-details-page$$activities-title">Actividades</string>
+    <string name="pages$one-click-ops-page$$block-unblock-trackers-title">Bloquear/desbloquear rastreadores</string>
+    <string name="pages$one-click-ops-page$$1-click-restore-title">Restaurar</string>
+    <string name="pages$interceptor-page$$intent-filters-title">Filtros de intención</string>
+    <string name="pages$app-details-page$$servcies-title">Servicios</string>
+    <string name="pages$one-click-ops-page$$1-click-back-up-title">Apoyar</string>
+    <string name="pages$profile-page$force-stop">Permite forzar la detención de los paquetes seleccionados.</string>
+    <string name="pages$profile-page$clear-data">Permite borrar los datos de los paquetes seleccionados.</string>
+    <string name="pages$settings-page$$enable-disable-features-title">Habilitar/deshabilitar características</string>
+    <string name="pages$app-details-page$other-tabs">"Otras pestañas enumeran los componentes del manifiesto de Android, como características, configuraciones, bibliotecas compartidas y firmas.  Una
+\n completa descripción de estas pestañas estará disponible pronto."</string>
+    <string name="pages$one-click-ops-page$$block-components-dots-title">Componentes de bloque\\puntos</string>
+    <string name="pages$profiles-page$$section-title">Página de perfiles</string>
+    <string name="pages$profiles-page$$options-menu-title">Opciones de menú</string>
+    <string name="pages$profile-page$$options-menu-title">Opciones de menú</string>
+    <string name="pages$profile-page$$users-title">Usuarios</string>
+    <string name="pages$profile-page$configurations-tab">"La pestaña Configuraciones se puede utilizar para configurar los paquetes seleccionados.  La descripción de cada artículo se da a continuación:"</string>
+    <string name="pages$profile-page$$section-title">Página de perfil</string>
+    <string name="pages$profile-page$$state-title">Estado</string>
+    <string name="pages$settings-page$$backup-apps-with-keystore-title">Aplicaciones de copia de seguridad con Android KeyStore</string>
+    <string name="pages$settings-page$screen-lock">Bloquee el Administrador de aplicaciones usando el bloqueo de pantalla de Android, siempre que se haya configurado un bloqueo de pantalla.</string>
+    <string name="pages$settings-page$$signature-schemes-title">Esquemas de firma</string>
+    <string name="pages$settings-page$$show-users-in-installer-title">Mostrar usuarios en el instalador</string>
+    <string name="pages$settings-page$$compression-method-title">Método de compresión</string>
+    <string name="pages$settings-page$$backup-options-title">Opciones de copia de seguridad</string>
+    <string name="pages$settings-page$$instant-component-blocking-title">Bloqueo instantáneo de componentes</string>
+    <string name="pages$settings-page$intro">La configuración se puede utilizar para personalizar el comportamiento de la aplicación.</string>
+    <string name="pages$settings-page$installer-app">Seleccione la aplicación de instalación, útil para algunas aplicaciones que verifican explícitamente su instalador.
+\n Esto solo funciona para usuarios root/ADB.</string>
+    <string name="pages$settings-page$compression-method">Establezca qué método de compresión se utilizará durante las copias de seguridad.
+\n App Manager admite los métodos de compresión GZip y BZip2, siendo GZip el método de compresión predeterminado.
+\n No afecta la restauración de una copia de seguridad existente.</string>
+    <string name="pages$settings-page$backup-apps-with-keystore">Permitir la copia de seguridad de las aplicaciones que tienen entradas en Android KeyStore (deshabilitado por defecto).
+\n Algunas aplicaciones (como Signal) pueden bloquearse si se restauran.
+\n La copia de seguridad de KeyStore tampoco funciona desde Android 9, pero aún se conservan tantas aplicaciones que tienen KeyStore que se pueden restaurar sin problemas.</string>
+    <string name="pages$settings-page$device-info">Muestra la versión de Android, la seguridad, la CPU, la GPU, la batería, la memoria, la pantalla, los idiomas, la información del usuario, etc.</string>
+    <string name="pages$interceptor-page$extras">"Los extras son los pares clave-valor utilizados para proporcionar información adicional al componente de destino.  Puedes añadir
+\n extras usando el botón \\textit{plus} al lado del título."</string>
+    <string name="pages$interceptor-page$$section-title">Página del interceptor</string>
+    <string name="pages$interceptor-page$$action-title">Acción</string>
+    <string name="pages$settings-page$remove-all-rules">Opción de un clic para eliminar todas las reglas configuradas dentro de App Manager.
+\n Esto habilitará todos los componentes bloqueados, las operaciones de la aplicación se establecerán en sus valores predeterminados y se restablecerán los permisos.</string>
+    <string name="pages$interceptor-page$$data-title">Datos</string>
+    <string name="pages$interceptor-page$$extras-title">Extras</string>
+    <string name="pages$interceptor-page$$reset-to-default-title">Resetear a valores por defecto</string>
+    <string name="pages$interceptor-page$flags">"Los indicadores son útiles para determinar cómo debe comportarse el sistema durante el lanzamiento o después del lanzamiento de una actividad.  Un
+\n el usuario promedio debe evitar esto, ya que requiere algunos conocimientos técnicos.  El botón \\textit{plus} al lado del título puede
+\n utilizarse para agregar una o más banderas."</string>
+    <string name="pages$interceptor-page$send-edited-intent">"Vuelva a enviar el Intent editado a la aplicación de destino.  Esto puede abrir una lista de aplicaciones donde debe seleccionar la aplicación deseada.
+\n El resultado recibido de la aplicación de destino se enviará a la aplicación de origen.  Como resultado, la aplicación de origen no sabrá si
+\n había un hombre en el medio."</string>
+    <string name="pages$shared-prefs-editor-page$$section_title">Página del editor de preferencias compartidas</string>
+    <string name="guide$aot$$enable-aot-via-pc-title">Habilitar ADB sobre TCP a través de PC o Mac</string>
+    <string name="guide$aot$$references-title">Referencias</string>
+    <string name="pages$interceptor-page$$matching-activities-title">Actividades de emparejamiento</string>
+    <string name="pages$shared-prefs-editor-page$intro">"Las preferencias compartidas se pueden editar en esta página.  Al hacer clic en cualquier elemento de la lista, se abre el cuadro de diálogo de edición donde el elemento puede ser
+\n editado  El botón de acción flotante en la esquina inferior derecha se puede usar para agregar un nuevo elemento.  Para guardar o eliminar el archivo,
+\n o para descartar los cambios actuales, se pueden utilizar las respectivas opciones del menú."</string>
+    <string name="guide$aot$$lg-usb-debug-title">LG</string>
+    <string name="guide$aot$$aot-lineage-os-title">Lineage OS</string>
+    <string name="guide$aot$$setup-adb-linux-title">Linux</string>
+    <string name="guide$aot$aot-lineage-os">"Los usuarios de Lineage OS (o sus derivados) pueden habilitar directamente ADB sobre TCP usando las opciones de desarrollador.  Para habilitar eso,
+\n vaya a \\textbf{Developer options}, desplácese hacia abajo hasta que encuentre \\textbf{ADB over Network}.  Ahora, use el botón de alternar
+\n en el lado derecho para habilitarlo y vaya a §\\cref{subsubsec:adb-mode-on-app-manager}."</string>
+</resources>
