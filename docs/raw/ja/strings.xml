@@ -293,4 +293,109 @@
 \nアプリが持ちうるほぼすべての情報が記述されています。</string>
     <string name="pages$app-details-page$app-info-tab">\\textbf{アプリ情報}タブには、アプリケーションに関する一般的な情報が含まれています。
 \nまた、このタブ内で実行可能な多くのアクションが表示されます。</string>
+    <string name="pages$app-details-page$other-tabs">その他のタブは、機能、設定、共有ライブラリ、署名などのアンドロイドマニフェストのコンポーネントを一覧表示します。
+\nこれらのタブに関する完全な説明は、近日中に公開される予定です。</string>
+    <string name="pages$app-details-page$app-info-general-information">以下のリストは、アプリ情報タブに記載されている順番と同じです。
+\n\\begin{itemize}
+\n \\item \\textbf{アプリ名} アプリのアイコンです。アプリにアイコンがない場合は、システムデフォルトのアイコンが表示されます。
+\n
+\n \\item \\textbf{アプリ名} アプリの名称です。
+\n
+\n \\item \\textbf{バージョン} アプリケーションのバージョンは、2つの部分に分かれています。最初の部分は\\textit{バージョン名}と呼ばれ、この部分のフォーマットは様々ですが、多くの場合ドットで区切られた複数の整数から構成されています。2つ目の部分は\\textit{バージョンコード}と呼ばれ、バージョン名の横の括弧内に記載されています。バージョンコードは整数で、通常はアプリのバージョンを区別するために使用されます。（バージョン名は機械では読めないことが多いため）一般に、新しいバージョンのアプリは、古いバージョンのアプリよりもバージョンコードが高くなります。たとえば、あるアプリのバージョンコードが\\texttt{123}と\\texttt{125}の場合、後者のバージョンコードの方が高いので、後者は前者よりも更新されていると言えます。プラットフォーム（モバイル、タブ、デスクトップなど）に依存するアプリケーションの場合、これらのバージョン名は、プラットフォームごとに接頭辞を使用しているため、誤解を招く可能性があります。
+\n
+\n \\item \\textbf{タグ} タグには、アプリの基本的で簡潔な、有用な情報が含まれています。例えば、\\textit{トラッカー情報}（トラッカーコンポーネントの数など）、\\textit{アプリの種類}（ユーザーアプリかシステムアプリか、アプリがシステムアプリの更新版かMagiskを使ってシステムレスでインストールされたか）、\\textit{実行中}（アプリのサービスがバックグラウンドで実行されているか）、\\textit{分割APK情報}（例. split APK info（分割数）、\\textit{debuggable}（アプリはデバッグバージョン）、\\textit{test only}（アプリはテスト専用アプリ）、\\textit{ラージヒープ}（アプリは大きなヒープサイズを要求）、\\textit{停止}（アプリは強制停止）、\\textit{無効}（アプリは無効）、\\textit{キーストア}（アプリはAndroid KeyStoreにアイテムがある）、\\textit{no code}（アプリにはコードが関連付けられていない）、\\hyperref[sec:terminologies]{\\textit{SSAID}}、\\textit{netpolicy}（バックグラウンドデータ使用などネットワークポリシー）、\\textit{バッテリー最適化}が表示されます。\\textit{test only}と\\textit{debuggable}を含めることの重要性は、これらのプロパティを持つアプリが追加のタスクを実行できること、またはこれらのアプリが個人情報を保存する場合、セキュリティ上の問題を引き起こす可能性のあるルートなしで実行できることにあります。\\textit{ラージヒープ}は、アプリが必要に応じてより多くのメモリ（RAM）を割り当てられることを意味します。ほとんどの場合、これは有害ではないかもしれませんが、大きなヒープを要求する不審なアプリは慎重に考慮する必要があります。
+\n
+\n \\item \\textbf{アクションパネル} アプリに関する様々なアクションを含むアクションパネルです。ここで利用できるアクションの一覧は、\\cref{subsubsec:horizontal-action-panel}節を参照してください。
+\n
+\n \\item \\textbf{パスとディレクトリ} \\textit{アプリディレクトリ}（APK ファイルが格納される場所）、\\textit{データディレクトリ}（内部、デバイス保護、外部）、\\textit{分割 APK ディレクトリ}（分割名と共に）、\\textit{ネイティブ JNI ライブラリ}（存在する場合）を含むアプリケーションパスに関するさまざまな情報が含まれています。JNI ライブラリは、通常 C/C++ で記述されたネイティブコードを呼び出すために使用されます。ネイティブライブラリを使用すると、アプリの実行速度が向上したり、ほとんどのゲームのようにJava以外の言語で書かれたサードパーティライブラリをアプリが使用できるようになります。これらのディレクトリは、各項目の右側にある起動アイコンをクリックして、お気に入りのファイルマネージャ（サポートしており、必要なパーミッションがある場合）を使用して開くこともできます。
+\n
+\n \\item \\textbf{最終起動時からのデータ使用量} 説明不要のオプションです。しかし、いくつかの問題のために、結果はしばしば誤解を招き、単に間違っている可能性があることに注意してください。この部分は、新しいデバイスで\\textit{使用状況}へのアクセス許可が与えられていない場合、隠されたままになります。
+\n
+\n \\item \\textbf{ストレージとキャッシュ} アプリ（APKファイル）、データ、キャッシュのサイズに関する情報を表示します。古い端末では、外部データ、キャッシュ、メディア、OBBフォルダのサイズも表示されます。この部分は、新しいデバイスで \\textit{使用状況}へのアクセス許可が与えられていない場合、隠されたままになります。
+\n
+\n \\item \\textbf{詳細情報} 次のような情報を表示します。
+\n \\begin{itemize}
+\n \\item \\textbf{SDK} Android SDKに関連する情報を表示します。値は2つ（古い端末では1つ）あります。\\textit{最大}はターゲットSDK、\\textit{最小}は最小SDKを表します（後者はそれ以上古い端末では利用できません）。現在プラットフォームがサポートしている最大のSDKを持つアプリを使用するのが好ましいです。SDKは、\\textbf{APIレベル}とも呼ばれます。
+\n \\seealsoinline{\\href{https://ja.wikipedia.org/wiki/Android%E3%81%AE%E3%83%90%E3%83%BC%E3%82%B8%E3%83%A7%E3%83%B3%E5%B1%A5%E6%AD%B4}{Androidのバージョン履歴}}
+\n
+\n \\item \\textbf{フラグ} The application flags used at the time of building the app. For a complete list of flags
+\n and what they do, visit the
+\n \\href{https://developer.android.com/reference/android/content/pm/ApplicationInfo\\#flags}{official documentation}.
+\nアプリのビルド時に使用するアプリケーションフラグです。フラグの完全なリストとその役割については、\\href{https://developer.android.com/reference/android/content/pm/ApplicationInfo\\#flags}{公式ドキュメント}を参照してください。
+\n
+\n \\item \\textbf{インストール日時} アプリが最初にインストールされた日時です。
+\n
+\n \\item \\textbf{アップデート日時} アプリが最後に更新された日時です。アプリが更新されていない場合は、\\textit{インストール日時}と同じになります。
+\n
+\n \\item \\textbf{インストール日時} このアプリをインストールしたアプリです。すべてのアプリが、インストーラアプリを登録するためにパッケージマネージャに使用する情報を提供するわけではありません。そのため、この値を鵜呑みにするべきではありません。
+\n
+\n \\item \\textbf{ユーザーID} Androidシステムがアプリに設定した固有のユーザーIDです。共有アプリケーションの場合、同じ\\textit{共有ユーザーID}を持つ複数のアプリケーションに同じユーザーIDが割り当てられます。
+\n
+\n \\item \\textbf{共有UID} 一緒に共有するアプリケーションに適用されます。IDとありますが、実際は文字列の値です。共有するアプリケーションは、同じ\\hyperref[subsec:signatures-tab]{署名}を持つ必要があります。
+\n
+\n \\item \\textbf{メインアクティビティ} アプリ起動時の\\hyperref[subsubsec:activities]{アクティビティ}です。アプリにアクティビティがあり、そのいずれかがランチャーから開くことができる場合にのみ表示されます。また、右側には起動ボタンがあり、このアクティビティを起動するために使用することができます。
+\n \\end{itemize}
+\n\\end{itemize}</string>
+    <string name="pages$app-details-page$horizontal-action-panel">前項のアクションパネルは、次のようなアプリに関連するさまざまなアクションで構成されています。
+\n\\begin{itemize}
+\n \\item \\textbf{Launch.} Application that has a launcher \\hyperref[subsubsec:activities]{activities} can be launched
+\n using this button.
+\n
+\n \\item \\textbf{Disable.} Disable an app. This button is not displayed for already disabled apps or to users who do
+\n not have root or \\hyperref[sec:adb-over-tcp]{ADB}. If you disable an app, the app will not be displayed in your
+\n Launcher app. Shortcuts for the app will also be removed. If you disable a user app, you can only enable them via
+\n App Manager or any other tool that supports it. There isn\'t any option in Android Settings to enable a disabled user
+\n app.
+\n
+\n \\item \\textbf{Uninstall.} Uninstall an app.
+\n
+\n \\item \\textbf{Enable.} Enable an app. This button is not displayed for already enabled apps or to users who do not
+\n have root or ADB\\@.
+\n
+\n \\item \\textbf{Force Stop.} Force-stop an app. When you force stop an app, the app will not be able to run in
+\n background unless you explicitly open it first. However, this is not always true.
+\n
+\n \\item \\textbf{Clear Data.} Clear data from an app. This includes any information stored in the internal and often
+\n the external directories, including accounts (if set by the app), cache, etc. Clearing data from App Manager, for
+\n example, removes all the rules (the blocking is not removed though) saved within the app. Which is why you should
+\n always take backups of your rules. This button is not displayed to users who do not have root or ADB\\@.
+\n
+\n \\item \\textbf{Clear Cache.} Clear app cache only. There is not any Android-way to clear app cache. Therefore, it
+\n needs root permission to clear cache from the app\'s internal storage.
+\n
+\n \\item \\textbf{Install.} Install an APK opened using any third-party app. This button is only displayed for an
+\n external APK that hasn\'t been installed.
+\n
+\n \\item \\textbf{What\'s New.} This button is displayed for an APK that has higher version code than the installed one.
+\n Clicking on this button displays a dialog consisting of differences in a version control manner. The information it
+\n displays include \\textit{version}, \\textit{trackers}, \\textit{permissions}, \\textit{components}, \\textit{signatures}
+\n (checksum changes), \\textit{features}, \\textit{shared libraries} and \\textit{SDK}.
+\n
+\n \\item \\textbf{Update.} Displayed for an app that has a higher version code than the installed app.
+\n
+\n \\item \\textbf{Reinstall.} Displayed for an app that has the same version code as the installed app.
+\n
+\n \\item \\textbf{Downgrade.} Displayed for an app that has a lower version code than the installed app.
+\n
+\n \\item \\textbf{Manifest.} Clicking on this button displays the app\'s manifest file in a separate page. The manifest
+\n file can be wrapped or unwrapped using the corresponding toggle button (on the top-right side) or can be saved to
+\n you shared storage using the save button.
+\n
+\n \\item \\textbf{Scanner.} Clicking on this button displays the app\'s tracker and library information. At first, it
+\n scans the app to extract a list of classes. Then the class list is matched with a number of signatures. After that,
+\n a scan summary is displayed.\\\\
+\n \\seealsoinline{\\hyperref[sec:scanner-page]{Scanner page}}
+\n
+\n \\item \\textbf{Shared Prefs.} Clicking on this button displays a list of shared preferences used by the app. Clicking
+\n on a preference item in the list opens the \\hyperref[sec:shared-preferences-editor-page]{Shared Preferences Editor
+\n page}. This option is only visible to the root users.
+\n
+\n \\item \\textbf{Databases.} Clicking on this button displays a list of databases used by the app. This needs more
+\n improvements, and a database editor which might be added in the future. This option is only visible to the root users.
+\n
+\n \\item \\textbf{F-Droid.} Opens the app in your favourite \\textit{F-Droid} client.
+\n
+\n \\item \\textbf{Store.} Opens the app in \\textit{Aurora Store}. The option is only visible if \\textit{Aurora Store} is
+\n installed.
+\n\\end{itemize}</string>
 </resources>
