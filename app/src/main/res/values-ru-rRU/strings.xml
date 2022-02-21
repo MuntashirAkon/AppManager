@@ -1219,4 +1219,10 @@
     <string name="threads">Количество потоков</string>
     <string name="mode_of_op_with_inferred_mode_of_op">%1$s (предполагаемый режим: %2$s)</string>
     <string name="failed_to_disable_magisk_deny_list">Не удалось отключить Magisk DenyList</string>
+    <string name="primary_abi">Основная архитектура</string>
+    <string name="hidden_api_enforcement_policy">Политика применения скрытых API</string>
+    <string name="hidden_api_enf_default_policy">По умолчанию (основано на типе приложения)</string>
+    <string name="hidden_api_enf_policy_none">Ничего (полный доступ к скрытым API)</string>
+    <string name="hidden_api_enf_policy_warn">Предупреждать (полный доступ к скрытым API, но выдаёт предупреждения)</string>
+    <string name="binary_32_bit">32 бит</string>
 </resources>
