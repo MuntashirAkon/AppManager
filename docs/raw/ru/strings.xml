@@ -1,2 +1,191 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="intro$main$translations">App Manager не поддерживает переводы напрямую через pull/merge запросы. Переводы управляются автоматически через
+\nWeblate. Чтобы присоединиться к команде перевода, посетите \\url{https://hosted.weblate.org/engage/app-manager/}.</string>
+    <string name="intro$main$contributing">Есть несколько способов, которыми пользователь может внести свой вклад, такие как создание полезных вопросов, посещение дискуссий, улучшение
+\nдокументаций и переводов, добавление библиотек или трекеров, просмотр исходного кода, а так же
+\nсообщение об уязвимостях безопасности.</string>
+    <string name="titlepage$quotation">\\begin{quotation}
+\n ``Мудро и медленно; они спотыкаются, что бегают быстро.\'\'
+\n %\\sourceatright
+\n {--- Брат Лоуренс, \\textit{Ромео и Джульетта}}
+\n \\end{quotation}</string>
+    <string name="intro$main$submit-patches">Репозитории, расположенные на сайтах, отличных от GitHub, в настоящее время считаются зеркалами, и pull/merge запросы, отправленные на
+\nэтих сайтах не будут приняты.\\footnote{GitHub pull запросы будут объединены вручную с помощью соответствующих патчей.
+\nВ результате GitHub может ошибочно пометить их как закрытые вместо объединенных.} Вместо этого патчи (\\texttt{.patch} файлы) могут
+\nбыть отправлены через вложения электронной почты. \\textit{Требуется подпись.} Прочитайте файл CONTRIBUTING расположенный в корне
+\nдиректории с исходным кодом чтобы получить больше информации.
+\n
+\n\\begin{warning}{Внимание}
+\n В случае отправки исправлений по электронной почте вся беседа может стать общедоступной в будущем. Поэтому не надо
+\nвключать любую личную информацию, кроме вашего имени или адреса электронной почты.
+\n\\end{warning}</string>
+    <string name="intro$main$intro">App Manager это продвинутый менеджер приложений для Android. Оно предоставляет несчётное количество возможностей, следовательно, требует руководство потльзователя чтобы помочь пользователям. Этот документ действует как ркуоводство пользователя для App Manager в том смысле, что оно направлено на описание
+\nкаждой возможности которую App Manager предоставляет. Этот документ так же действует как ``официальные\'\' методические рекомендации для
+\nApp Manager, и представляет ожидаемое поведение App Manager. Переводы могут неверно истолковывать этот документ (который написан на английском языке). Поэтому каждый понимающий андгийский язык пользователь должен прочитать версию на андгийском языке для лучшего понимания
+\nApp Manager. Здесь так же могут быть другие неофициальные или сторонние ресурсы тикое как сообщения блога, видео, чаты и т.п. 
+\nХотя эти ресурсы могут быть полезны для многих людей, они могут быть устаревшими для текущей
+\nверсии App Manager. Если замечены какие-либо отличия между App Manager и этом документом, о них следует сообщать в
+\n\\href{https://github.com/MuntashirAkon/AppManager/issues}{App Manager issue tracker}.</string>
+    <string name="intro$main$bin-sources">App Manager распостранятся используя следующий источники. Неофициальные источники могут распостранять модифицированную версию App
+\nManager, и никто, кроме вас, не несет ответственности за последствия использования таких дистрибутивов.
+\n\\begin{enumerate}
+\n \\item Офисиальный репозиторий F-Droid.\\footnote{Только для распостранения стабильных релизов}\\\\
+\n \\textit{Ссылка:} \\url{https://f-droid.org/packages/io.github.muntashirakon.AppManager}
+\n \\item GitHub репозиторий.\\\\
+\n \\textit{Стабильные релизы:} \\url{https://github.com/MuntashirAkon/AppManager/releases}\\\\
+\n \\textit{Бета релизы:} \\url{https://github.com/MuntashirAkon/AppManager/actions}
+\n \\item Телеграм.\\\\
+\n \\textit{Стабильные релизы:} \\url{https://t.me/AppManagerChannel}\\\\
+\n \\textit{Бета релизы:} \\url{https://t.me/AppManagerDebug}
+\n\\end{enumerate}</string>
+    <string name="pages$main-page$intro">На главной странице перечислены все установленные, удаленные и резервные копии приложений. Один клик по любому установленному элементу приложения
+\nоткрывает \\hyperref[sec:app-details-page]{Страницу сведений о приложении}. Для удаленных системных приложений отображается
+\nдиалоговое окно, которое можно использовать для переустановки приложения. Используя \\hyperlink{par:main-page-sort}{сортировку} из
+\nсписка настроек, приложения можно сортировать различными способами. Также есть возможность фильтровать приложения
+\nиспользуя \\hyperlink{par:main-page-filter}{фильтр}. Возможна фильтрация также через
+\nстроку поиска с поддержкой регулярных выражений.</string>
+    <string name="pages$main-page$application-types">Приложение может быть либо \\textbf{пользовательским}, либо \\textbf{системным} приложением вместе со следующими суффиксами:
+\n\\begin{itemize}
+\n \\item \\texttt{X} -- Поддерживает несколько архитектур
+\n \\item \\texttt{0} -- В приложении нет файлов dex
+\n \\item \\texttt{\\textdegree°} -- Приложение приостановлено
+\n \\item \\texttt{\\#} -- Приложение запросило у системы выделение большого количества оперативной памяти
+\n \\item \\texttt{\?} -- Приложение запросило, чтобы виртуальная машина находилась в безопасном режиме
+\n\\end{itemize}</string>
+    <string name="pages$main-page$colour-codes">\\begin{itemize}
+\n \\item \\colorbox{AMLightGreyishOrange}{\\textcolor{black}{Светло-серовато-оранжевый (день)}} / \\colorbox{AMDarkBlue}{
+\n \\textcolor{white}{Тёмно-синий (ночь)}} -- Приложение выбрано для множественной обработки
+\n \\item \\colorbox{AMLightRed}{\\textcolor{black}{Светло-красный (день)}} / \\colorbox{AMVeryDarkRed}{\\textcolor{white}
+\n {Тёмно-красный (ночь)}} -- Приложение отключено
+\n \\item \\colorbox{AMYellow}{\\textcolor{black}{Жёлтый}} -- Отлаживаемое приложение
+\n \\item \\textcolor{AMOrange}{Оранжевая \\textit{дата}} -- Приложение имеет доступ к системным логам
+\n \\item \\textcolor{AMOrange}{Оранжевый \\textit{UID}} -- Идентификатор пользователя используется несколькими приложениями
+\n \\item \\textcolor{AMOrange}{Оранжевый \\textit{SDK}} -- Возможно, приложение использует трафик в открытом виде (напр. HTTP)
+\n \\item \\textcolor{red}{Красное \\textit{имя пакета}} -- Приложение не позволяет очистить свои данные
+\n \\item \\textcolor{red}{Красный \\textit{бекап}} -- Удаленное приложение с одной или несколькими резервными копиями, присутствующими в App
+\n Manager
+\n \\item \\textcolor{AMOrange}{Оранжевый\\textit{бекап}} -- Устаревшая резервная копия, т.е. резервная копия содержит более старую
+\n версия установленного приложения
+\n \\item \\textcolor{AMDarkCyan}{Темно-голубой \\textit{бекап}} -- Актуальная резервная копия, т.е. резервная копия содержит
+\n такую же или более позднюю версию установленного приложения
+\n \\item \\textcolor{AMDarkCyan}{Темно-голубое \\textit{имя пакета}} -- Принудительно остановленное приложение
+\n \\item \\textcolor{AMDarkCyan}{Темно-голубая \\textit{версия}} -- Неактивное приложение
+\n \\item \\textcolor{magenta}{Пурпурный} -- Постоянное приложение, т. е. оно остается запущенным все время.
+\n\\end{itemize}</string>
+    <string name="pages$main-page$instructions">Нажатие на инструкции открывает оффлайн версию документации App Manager. Она открывает
+\nонлайн версию, если не установлен соответствующий раздел функций. feat_docs или WebView не
+\nприсутствует в системе для загрузки документации.</string>
+    <string name="pages$main-page$sort">Приложения, перечисленные на главной странице, можно отсортировать несколькими способами:
+\n\\begin{itemize}
+\n \\item \\textbf{Сначала пользовательские.} Пользовательские приложения будут отображаться первыми
+\n \\item \\textbf{Название приложения.} Сортировка по возрастанию на основе названий (также известны как 
+\n \\textit{ярлыки приложений}). Это значение сортировки по умолчанию
+\n \\item \\textbf{Имя пакета.} Сортировка по возрастанию по именам пакетов
+\n \\item \\textbf{Последнее обновление.} Сортировка в порядке убывания по дате обновления пакета
+\n \\item \\textbf{Общий идентификатор пользователя.} Сортировка по убыванию на основе идентификатора пользователя ядра
+\n \\item \\textbf{Целевая версия SDK.} Сортировка по возрастанию в зависимости от целевой SDK
+\n \\item \\textbf{Подпись.} Сортировка в порядке возрастания на основе информации о подписи приложения
+\n \\item \\textbf{Сначала отключенные.} Отключенные приложения будут отображаться первыми
+\n \\item \\textbf{Сначала заблокированные.} Сортировка по убыванию в зависимости от количества заблокированных компонентов
+\nв приложении
+\n \\item \\textbf{Сначала резервные копии.} Отображать приложения с резервными копиями сверху
+\n \\item \\textbf{Трекеры.} Сортировка по убыванию в зависимости от количества трекеров
+\nв приложении
+\n \\item \\textbf{Последние действия.} Сортировка по убыванию в зависимости от последнего времени любый действий,
+\n сделанных с помощью App Manager.
+\n\\end{itemize}
+\n
+\nВ дополнение, существует опция \\textit{Обратный порядок} для сортировки приложений в обратном порядке. Не считая
+\nнастроек сортировки, приложения сначала сортируются в алфавитном порядке, чтобы предотвратить создание случайных
+\nрезультатов сортировки.</string>
+    <string name="intro$main$$introduction-chapter-title">Введение</string>
+    <string name="intro$main$$terminologies-title">Терминология</string>
+    <string name="intro$main$$supported-versions-title">Поддерживаемые версии</string>
+    <string name="intro$main$$official-sources-title">Официальные источники</string>
+    <string name="intro$main$$source-code-links-title">Ссылки на исходный код</string>
+    <string name="intro$main$$translations-title">Переводы</string>
+    <string name="intro$main$$buiding-title">Инструкции по сборке</string>
+    <string name="intro$main$$submit-patches-title">Отправка исправлений</string>
+    <string name="intro$main$supported-versions">Сейчас поддерживаемые версии это v2.6.0 (стабильная), v3.0.0 (альфа релизы). Предыдущие версии App
+\nManager могут содержать уязвимости безопасности и не должны быть использованы.</string>
+    <string name="intro$main$source-code-links">Все, кроме GitHub, являются зеркальными ссылками. Теги всегда должны быть актуальными, но не гарантируется, что master-ветка будет
+\nактуальной. Если цель состоит в том, чтобы клонировать master-ветку, используйте ссылку GitHub вместо других.</string>
+    <string name="intro$main$terminologies">\\begin{itemize}
+\n \\item \\textbf{AM} --- Краткое название App Manager.
+\n \\item \\textbf{Block/Unblock} --- Используется для блокировки/разблокировки компонентов. Способ блокировки компонентов зависит от
+\nпользовательских настроек.
+\n \\item \\textbf{IFW} --- Краткая форма Intent Firewall.
+\n \\item \\textbf{Ops} --- Краткое название для операций, таких как операции приложения, пакетные операции, операции в 1 клик
+\n \\item \\textbf{SSAID} --- Краткая форма \\texttt{Settings.Secure.ANDROID\\_ID}. Это идентификатор устройства, привязанный к
+\n каждому приложению (Android Oreo и выше). Он сгенерирован из комбинации сертификата подписи приложения
+\n и SSAID установленного для пакета \\texttt{android}. Как результат, он гарантированно будет одинаковым пока
+\n пользователь не решит отформатировать устройство. Он широко используется для слежки.
+\n \\item \\textbf{Трекер} --- Обозначает компоненты трекера во всем документе и в App Manager за исключением
+\n \\hyperref[sec:scanner-page]{scanner page}. Трекеры включают в себя библиотеки для отправки краш-репортов, аналитики,
+\n профилирования, идентификации, рекламы, местоположения и т.п.. Таким образом, они не одинаковые по функциям. Здесь нет различия
+\n между библиотек с открытым и закрытым исходным кодом, которые продвикают трекинг.
+\n\\end{itemize}</string>
+    <string name="intro$main$$contributing-title">Вклад</string>
+    <string name="intro$main$$bin-sources-title">Источники распостранения</string>
+    <string name="intro$main$$donation-title">Пожертвование \\&amp; Финансирование</string>
+    <string name="intro$main$$contact-title">Связь</string>
+    <string name="intro$main$buiding">Инструкции по сборке доступны в файле BUILDING, расположенном в корне директории исходного кода.</string>
+    <string name="intro$main$contact">Muntashir Al-Islam\\footnote{Вы также можете обращаться ко мне как ``Muntashir Akon\'\'}\\\\
+\nEmail: \\href{mailto:muntashirakon@riseup.net}{muntashirakon [at] riseup [dot] net}\\\\
+\nKey Fingerprint: \\texttt{7bad37c2981e41f8f6abea7f58f0b4f26c346fce}\\\\
+\nGitHub: \\url{https://github.com/MuntashirAkon}\\\\
+\nTwitter: \\url{https://twitter.com/Muntashir}</string>
+    <string name="pages$main$$pages-chapter-title">Страницы</string>
+    <string name="pages$main-page$$section-title">Главная страница</string>
+    <string name="pages$main-page$$how-app-ops-work-title">Элемент списка приложений на главной странице</string>
+    <string name="pages$main-page$$batch-operations-title">Пакетные операции</string>
+    <string name="pages$main-page$$colour-codes-title">Цветовые коды</string>
+    <string name="pages$main-page$$application-types-title">Типы приложений</string>
+    <string name="pages$main-page$$version-info-title">Информация о версии</string>
+    <string name="pages$main-page$$options-menu-title">Меню настроек</string>
+    <string name="pages$main-page$$instructions-title">Инструкции</string>
+    <string name="pages$main-page$$list-options-title">Список настроек</string>
+    <string name="pages$main-page$$sort-title">Сортировка</string>
+    <string name="pages$main-page$$filter-title">Фильтр</string>
+    <string name="pages$main-page$$profile_name-title">Имя профиля</string>
+    <string name="pages$main-page$$1-click-ops-title">Операции в 1 клик</string>
+    <string name="pages$main-page$$app-usage-title">Использование приложения</string>
+    <string name="pages$main-page$$system-config-title">Конфигурация системы</string>
+    <string name="pages$main-page$$running-apps-title">Запущеные приложения</string>
+    <string name="pages$main-page$$profiles-title">Профили</string>
+    <string name="pages$main-page$$log-viewer-title">Просмотр лога</string>
+    <string name="pages$main-page$$apk-updater-title">Программа обновления APK</string>
+    <string name="pages$main-page$$termux-title">Termux</string>
+    <string name="pages$main-page$$settings-title">Настройки</string>
+    <string name="pages$main-page$batch-operations">На этой странице также доступны пакетные операции или операции с несколькими приложениями. Режим множественного выбора
+\nможет быть активирован кликом на любое приложение или нажав и удерживая любой элемент в списке. После активации одним нажатием на
+\nэлемент списка выбирает его вместо открытия страницы сведений о приложении. В этом режиме пакетные операции расположены в
+\nменю множественного выбора внизу страницы. Операции включают:
+\n\\begin{itemize}
+\n \\item Добавление выбранных приложений в \\hyperref[sec:profiles-page]{профиль}
+\n \\item \\hyperref[sec:backup-restore]{Резервное копирование, восстановление или удаление} приложений
+\n \\item Блокировка трекеров в приложениях
+\n \\item Очистка данных или кэша приложений
+\n \\item Включение/отключение/принудительная остановка/удаление приложений
+\n \\item Экспорт правил блокировки, сохранённых в App Manager
+\n \\item Предотвращение фоновой работы приложений (Android 7 и выше)
+\n \\item Сохранение файлов APK в \\texttt{AppManager/apks}
+\n \\item Установка \\hyperref[sec:net-policy]{политик}
+\n\\end{itemize}
+\n
+\n\\begin{tip}{Доступность}
+\n После активации режима множественного выбора можно входить или выходить из
+\n меню с помощью правой или левой клавиши клавиатуры.
+\n\\end{tip}</string>
+    <string name="pages$main-page$version-info">После названия версии следуют следующие префиксы:
+\n\\begin{itemize}
+\n \\item \\texttt{\\_} -- Нет аппаратного ускорения
+\n \\item \\texttt{\\textasciitilde} -- Только тестовый режим
+\n \\item \\texttt{debug} -- Отлаживаемое приложение
+\n\\end{itemize}</string>
+    <string name="pages$main-page$options-menu">В меню опций есть несколько опций, которые можно использовать для сортировки, фильтрации перечисленных приложений, а также для перехода
+\n к различным страницам.</string>
+    <string name="pages$main-page$list-options">\\textbf{Параметры списка} содержат параметры для сортировки или фильтрации списка приложений.</string>
+    <string name="titlepage$user_manual">{\\huge\\bfseries Руководство пользователя\\par}</string>
+</resources>
