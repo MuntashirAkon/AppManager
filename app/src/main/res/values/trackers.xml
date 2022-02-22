@@ -394,6 +394,9 @@
         <item>com.qualtrics.digital.</item>
         <item>com.tamoco.sdk</item>
         <item>com.vpon.ads</item>
+        <item>com.vpadn.analytics</item>
+        <item>com.vpadn.ads.</item>
+        <item>com.vpadn.widget.</item>
         <item>com.yume.android</item>
         <item>com.redbricklane.zapr</item>
         <item>com.mediba.jp</item>
@@ -678,7 +681,24 @@
         <item>com.pontiflex.mobile.</item>
         <item>io.flowup</item>
         <item>jp.fluct.fluctsdk.</item>
-        <item>com.reach.</item>
+        <item>com.reach.ActionMonitor</item>
+        <item>com.reach.ActionService</item>
+        <item>com.reach.AdServiceManager</item>
+        <item>com.reach.IActivity</item>
+        <item>com.reach.IBackgroundManager</item>
+        <item>com.reach.IBackgroundService</item>
+        <item>com.reach.IBannerAd</item>
+        <item>com.reach.IConfigService</item>
+        <item>com.reach.IInterstitialAd</item>
+        <item>com.reach.INativeAd</item>
+        <item>com.reach.INativeReceiverProxy</item>
+        <item>com.reach.INativeServiceProxy</item>
+        <item>com.reach.IPushService</item>
+        <item>com.reach.IService</item>
+        <item>com.reach.ITrackService</item>
+        <item>com.reach.OverlayActivity</item>
+        <item>com.reach.PeerActivity</item>
+        <item>com.reach.widget</item>
         <item>com.gamania.beanfunsdk.</item>
         <item>com.gamesparks.sdk.</item>
         <item>com.geouniq.android.</item>
@@ -783,6 +803,8 @@
         <item>com.ogury.consent.</item>
         <item>com.ogury.sdk.</item>
         <item>com.onetrust.</item>
+        <item>com.openmediation.sdk.</item>
+        <item>com.crosspromotion.sdk</item>
         <item>org.openudid.</item>
         <item>org.OpenUDID.</item>
         <item>com.huawei.openalliance.ad.</item>
@@ -1352,6 +1374,9 @@
         <item>Qualtrics</item>
         <item>Tamoco</item>
         <item>Vpon</item>
+        <item>Vpon</item>
+        <item>Vpon</item>
+        <item>Vpon</item>
         <item>YuMe</item>
         <item>Zapr</item>
         <item>mediba</item>
@@ -1637,6 +1662,23 @@
         <item>²FlowUp</item>
         <item>²FluctSDK</item>
         <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
+        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
+        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
+        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
+        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
+        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
+        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
+        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
+        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
+        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
+        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
+        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
+        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
+        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
+        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
+        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
+        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
+        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
         <item>²Gamania Beanfun</item>
         <item>²Game Sparks</item>
         <item>²GeoUniq (Cloud4Win)</item>
@@ -1741,6 +1783,8 @@
         <item>²Ogury</item>
         <item>²Ogury</item>
         <item>²Onetrust</item>
+        <item>²OpenMeditation</item>
+        <item>²OpenMeditation</item>
         <item>²OpenUDID</item>
         <item>²OpenUDID</item>
         <item>²Openalliance (Huawei ads kit)</item>
