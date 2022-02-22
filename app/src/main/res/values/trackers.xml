@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <resources>
     <string-array name="tracker_signatures">
         <item>com.databerries.</item>
@@ -260,6 +261,7 @@
         <item>com.my.target.</item>
         <item>com.tapjoy.</item>
         <item>com.mintegral.</item>
+        <item>com.mbridge.msdk.</item>
         <item>com.gimbal.android</item>
         <item>com.conviva.</item>
         <item>com.auditude.ads</item>
@@ -392,7 +394,6 @@
         <item>com.qualtrics.digital.</item>
         <item>com.tamoco.sdk</item>
         <item>com.vpon.ads</item>
-        <item>com.vpadn.</item>
         <item>com.yume.android</item>
         <item>com.redbricklane.zapr</item>
         <item>com.mediba.jp</item>
@@ -558,12 +559,27 @@
         <item>com.xtify.android.sdk.</item>
         <item>com.ansca.corona</item>
         <item>com.amplifyframework.analytics.</item>
+        <item>com.adxcorp.ads</item>
+        <item>com.adxcorp.nativead</item>
+        <item>com.adgatemedia.</item>
+        <item>com.admarvel.</item>
+        <item>com.aiming.mdt.</item>
+        <item>com.adtiming.</item>
+        <item>com.unbotify.mobile.sdk.</item>
+        <item>com.lotadata.moments.</item>
+        <item>com.marketo.</item>
+        <item>com.playtestcloud.Analytics</item>
+        <item>com.rollbar.android.</item>
+        <item>com.snap.adkit</item>
+        <item>com.snap.appadskit</item>
+        <item>com.synerise.sdk</item>
+        <item>com.userexperior</item>
+        <item>com.vdopia.client.android.</item>
+        <item>com.vdopia.ads.</item>
         <item>com.geopla.</item>
         <item>com.threebitter.sdk.</item>
         <item>org.acra.</item>
         <item>ch.acra.</item>
-        <item>com.adxcorp.ads</item>
-        <item>com.adxcorp.nativead</item>
         <item>com.adop.sdk.</item>
         <item>com.admanmedia.</item>
         <item>com.ljoy.chatbot.</item>
@@ -575,21 +591,14 @@
         <item>com.ad2iction.</item>
         <item>com.a4gpublisher.</item>
         <item>mobi.mclick.ad.</item>
-        <item>com.adgatemedia.</item>
         <item>com.adgem.android.</item>
-        <item>com.admarvel.</item>
         <item>com.adtech.adtechmobile</item>
         <item>com.adtheorent.</item>
-        <item>com.aiming.mdt.</item>
-        <item>com.adtiming.</item>
-        <item>com.openmediation.sdk.</item>
-        <item>com.crosspromotion.sdk</item>
         <item>com.adtrial.sdk.</item>
         <item>com.kuaiyou.loader.</item>
         <item>com.adwhirl.</item>
         <item>com.adchina.android</item>
         <item>com.adflake</item>
-        <item>com.unbotify.mobile.sdk.</item>
         <item>com.adscendmedia.sdk.</item>
         <item>.AdscendFiles.AdscendOffersActivity</item>
         <item>com.advangelists.</item>
@@ -601,6 +610,9 @@
         <item>com.bear.data</item>
         <item>com.mb.num</item>
         <item>io.airbridge.</item>
+        <item>com.anythink.</item>
+        <item>com.alxad.</item>
+        <item>anythink.</item>
         <item>com.alibaba.sdk.android.mns</item>
         <item>com.alibaba.sdk.android.httpdns</item>
         <item>com.ta.utdid2</item>
@@ -666,24 +678,7 @@
         <item>com.pontiflex.mobile.</item>
         <item>io.flowup</item>
         <item>jp.fluct.fluctsdk.</item>
-        <item>com.reach.ActionMonitor</item>
-        <item>com.reach.ActionService</item>
-        <item>com.reach.AdServiceManager</item>
-        <item>com.reach.IActivity</item>
-        <item>com.reach.IBackgroundManager</item>
-        <item>com.reach.IBackgroundService</item>
-        <item>com.reach.IBannerAd</item>
-        <item>com.reach.IConfigService</item>
-        <item>com.reach.IInterstitialAd</item>
-        <item>com.reach.INativeAd</item>
-        <item>com.reach.INativeReceiverProxy</item>
-        <item>com.reach.INativeServiceProxy</item>
-        <item>com.reach.IPushService</item>
-        <item>com.reach.IService</item>
-        <item>com.reach.ITrackService</item>
-        <item>com.reach.OverlayActivity</item>
-        <item>com.reach.PeerActivity</item>
-        <item>com.reach.widget.</item>
+        <item>com.reach.</item>
         <item>com.gamania.beanfunsdk.</item>
         <item>com.gamesparks.sdk.</item>
         <item>com.geouniq.android.</item>
@@ -731,7 +726,6 @@
         <item>com.pad.android.xappad.</item>
         <item>com.Leadbolt.</item>
         <item>io.liftoff.liftoffads.</item>
-        <item>com.lotadata.moments.</item>
         <item>com.megvii.zhimasdk.</item>
         <item>com.madhouse.android.ads</item>
         <item>com.deflocculent.fecklessness.</item>
@@ -764,7 +758,6 @@
         <item>com.fungame.advertisingsdk</item>
         <item>com.hz.keep.</item>
         <item>cn.rs.keepalive.</item>
-        <item>com.marketo.</item>
         <item>com.mapps.android.</item>
         <item>com.mz.common.</item>
         <item>com.mmc.common</item>
@@ -807,7 +800,6 @@
         <item>com.pincrux.</item>
         <item>com.pinterest.android.pdk.</item>
         <item>com.playfab.PlayFab</item>
-        <item>com.playtestcloud.Analytics</item>
         <item>com.plleti.offerwall.</item>
         <item>com/pontiflex/mobile</item>
         <item>com.posthog.android</item>
@@ -827,7 +819,6 @@
         <item>com.rakuten.android.ads</item>
         <item>com.rakuten.gap.ads</item>
         <item>com.revenuecat.</item>
-        <item>com.rollbar.android.</item>
         <item>com.rumble.sdk</item>
         <item>com.sas.mkt.mobile.sdk.</item>
         <item>com.sdkbox.</item>
@@ -847,8 +838,6 @@
         <item>com.skyhook.context.Accelerator</item>
         <item>com.smrtbeat.</item>
         <item>com.smartyads</item>
-        <item>com.snap.adkit</item>
-        <item>com.snap.appadskit</item>
         <item>com.soundhound.android.adverts</item>
         <item>com.spoteer.arc.</item>
         <item>com.spotify.mobile.android.ads.</item>
@@ -858,7 +847,6 @@
         <item>com.spotify.music.libs.adbasedondemand.</item>
         <item>com.spotify.nativeads.</item>
         <item>jp.supership.vamp.</item>
-        <item>com.synerise.sdk</item>
         <item>net.taparound.</item>
         <item>com.taiwanmobile.pt.adp.</item>
         <item>com.tjhello.ab.</item>
@@ -915,10 +903,7 @@
         <item>com.yt.promolib.</item>
         <item>com.growstarry.</item>
         <item>com.usabilla.sdk.</item>
-        <item>com.userexperior</item>
         <item>mobi.vserv.android.adengine.</item>
-        <item>com.vdopia.client.android.</item>
-        <item>com.vdopia.ads.</item>
         <item>net.veloxity.</item>
         <item>com.vivo.push.sdk.</item>
         <item>com.vodafone.netperform.runtime.</item>
@@ -1234,6 +1219,7 @@
         <item>myTarget</item>
         <item>Tapjoy</item>
         <item>Mintegral</item>
+        <item>Mintegral</item>
         <item>Gimbal</item>
         <item>Conviva</item>
         <item>Auditude</item>
@@ -1365,7 +1351,6 @@
         <item>Pollfish</item>
         <item>Qualtrics</item>
         <item>Tamoco</item>
-        <item>Vpon</item>
         <item>Vpon</item>
         <item>YuMe</item>
         <item>Zapr</item>
@@ -1532,12 +1517,27 @@
         <item>IBM Mobile Marketing (Acoustic)</item>
         <item>Solar2D (Corona)</item>
         <item>Amazon Mobile Analytics (Amplify)</item>
+        <item>AD(X)</item>
+        <item>AD(X)</item>
+        <item>AdGateMedia</item>
+        <item>AdMarvel</item>
+        <item>AdTiming</item>
+        <item>AdTiming</item>
+        <item>Adjust Unbotify</item>
+        <item>LotaData</item>
+        <item>Marketo (an Adobe Company)</item>
+        <item>PlaytestCloud Event Tracking</item>
+        <item>Rollbar</item>
+        <item>Snap Ad Kit</item>
+        <item>Snap Ad Kit</item>
+        <item>Synerise</item>
+        <item>UserExperior</item>
+        <item>Vdopia</item>
+        <item>Vdopia</item>
         <item>²39Geopla</item>
         <item>²3bitter Beacon</item>
         <item>²ACRA</item>
         <item>²ACRA</item>
-        <item>²AD(X)</item>
-        <item>²AD(X)</item>
         <item>²ADOP</item>
         <item>²ADman Media</item>
         <item>²AIHelp</item>
@@ -1549,21 +1549,14 @@
         <item>²Ad2</item>
         <item>²Ad4Game</item>
         <item>²AdFlex</item>
-        <item>²AdGateMedia</item>
         <item>²AdGem</item>
-        <item>²AdMarvel</item>
         <item>²AdTech</item>
         <item>²AdTheorent</item>
-        <item>²AdTiming</item>
-        <item>²AdTiming</item>
-        <item>²AdTiming</item>
-        <item>²AdTiming</item>
         <item>²AdTrial</item>
         <item>²AdView</item>
         <item>²AdWhirl (AdMob)</item>
         <item>²Adchina</item>
         <item>²Adflake</item>
-        <item>²Adjust Unbotify</item>
         <item>²Adscend Media</item>
         <item>²Adscend Media</item>
         <item>²Advangelists</item>
@@ -1575,6 +1568,9 @@
         <item>²Ai.type *Malverting related</item>
         <item>²Ai.type *Malverting related</item>
         <item>²Airbridge</item>
+        <item>²Algorix</item>
+        <item>²Algorix</item>
+        <item>²Algorix</item>
         <item>²Alibaba Cloud Messaging</item>
         <item>²Alibaba HTTPDNS</item>
         <item>²Alibaba UserTrack Device IDentity (UTDID)</item>
@@ -1641,23 +1637,6 @@
         <item>²FlowUp</item>
         <item>²FluctSDK</item>
         <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
-        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
-        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
-        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
-        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
-        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
-        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
-        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
-        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
-        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
-        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
-        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
-        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
-        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
-        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
-        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
-        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
-        <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
         <item>²Gamania Beanfun</item>
         <item>²Game Sparks</item>
         <item>²GeoUniq (Cloud4Win)</item>
@@ -1705,7 +1684,6 @@
         <item>²LeadBolt</item>
         <item>²LeadBolt</item>
         <item>²Liftoff</item>
-        <item>²LotaData</item>
         <item>²MEGVII</item>
         <item>²Madhouse</item>
         <item>²Malverting/Adfrauds</item>
@@ -1738,7 +1716,6 @@
         <item>²Malverting/Adfrauds#2</item>
         <item>²Malverting/Adfrauds#2</item>
         <item>²Malverting/Adfrauds#2</item>
-        <item>²Marketo (an Adobe Company)</item>
         <item>²Mezzomedia AD Platform</item>
         <item>²Mezzomedia AD Platform</item>
         <item>²Mezzomedia AD Platform</item>
@@ -1781,7 +1758,6 @@
         <item>²Pincrux</item>
         <item>²Pinterest</item>
         <item>²PlayFab java</item>
-        <item>²PlaytestCloud Event Tracking</item>
         <item>²Plleti</item>
         <item>²Pontiflex</item>
         <item>²Posthog</item>
@@ -1801,7 +1777,6 @@
         <item>²Rakuten Unified Ads</item>
         <item>²Rakuten Unified Ads</item>
         <item>²RevenueCat</item>
-        <item>²Rollbar</item>
         <item>²Rumble</item>
         <item>²SAS</item>
         <item>²SDKBOX</item>
@@ -1821,8 +1796,6 @@
         <item>²Skyhook</item>
         <item>²SmartBeat</item>
         <item>²SmartyAds</item>
-        <item>²Snap Ad Kit</item>
-        <item>²Snap Ad Kit</item>
         <item>²SoundHaund Adverts</item>
         <item>²Spoteer Arc</item>
         <item>²Spotify Advertising</item>
@@ -1832,7 +1805,6 @@
         <item>²Spotify Advertising</item>
         <item>²Spotify Advertising</item>
         <item>²Supership</item>
-        <item>²Synerise</item>
         <item>²TAPTrack</item>
         <item>²TAmedia</item>
         <item>²TJHello ADEasy</item>
@@ -1889,10 +1861,7 @@
         <item>²Unknown Trackers</item>
         <item>²Unknown Trackers</item>
         <item>²Usabilla by Salesforce</item>
-        <item>²UserExperior</item>
         <item>²VServ</item>
-        <item>²Vdopia</item>
-        <item>²Vdopia</item>
         <item>²Veloxity</item>
         <item>²Vivo Push SDK</item>
         <item>²Vodafone NetPerform</item>

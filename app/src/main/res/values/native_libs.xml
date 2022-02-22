@@ -1,22 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?><!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <resources>
     <array name="lib_native_signatures">
         <item>lib39285EFA\\.so|libA3AEECD8\\.so|libsecsdk\\.so|libmsaoaid(auth|sec)\?\\.so</item>
-        <item>
-            libBaiduSpeechSDK\\.so|libImgRecognition\\.so|libbdEASRAndroid\\.so|libbdSpilWakeup\\.so|libvad\\.dnn\\.so
-        </item>
+        <item>libBaiduSpeechSDK\\.so|libImgRecognition\\.so|libbdEASRAndroid\\.so|libbdSpilWakeup\\.so|libvad\\.dnn\\.so</item>
         <item>libBeacon\\.so</item>
         <item>libBugly(-rqd)\?\\.so</item>
         <item>libBurstLinker\\.so</item>
         <item>libCtaApiLib\\.so</item>
         <item>libDexHelper(-x86)\?\\.so|libSecShell(-x86)\?\\.so|libdexjni\\.so|libsecexe\\.so</item>
-        <item>
-            libFirebaseCppMessaging\\.so|libFirebaseCppApp-.*\\.so|libFirebaseCppRemoteConfig\\.so|libFirebaseCppDynamicLinks\\.so
-        </item>
+        <item>libFirebaseCppMessaging\\.so|libFirebaseCppApp-.*\\.so|libFirebaseCppRemoteConfig\\.so|libFirebaseCppDynamicLinks\\.so</item>
         <item>libImSDK\\.so|libqalcodecwrapper\\.so|libqalmsfboot\\.so|libwtcrypto\\.so</item>
-        <item>
-            libJavaScriptCore\\.so|libfolly_(futures|json)\?\\.so|libglog_init\\.so|libjsc(executor)\?\\.so|libjsinspector\\.so|libjsijniprofiler\\.so|libreactnative(blob|jni|jnifb|utilsjni)\?\\.so|libfb(jni)\?\\.so|libreact_(codegen_reactandroidspec|codegen_rncore|nativemodule_core|debug|utils)\?\\.so|libreactperfloggerjni\\.so|libreact_render_.*\\.so|libreactconfig\\.so|librrc_(image|modal|progressbar|root|scrollview|slider|switch|text|textinput|unimplementedview|view)\?\\.so
-        </item>
+        <item>libJavaScriptCore\\.so|libfolly_(futures|json)\?\\.so|libglog_init\\.so|libjsc(executor)\?\\.so|libjsinspector\\.so|libjsijniprofiler\\.so|libreactnative(blob|jni|jnifb|utilsjni)\?\\.so|libfb(jni)\?\\.so|libreact_(codegen_reactandroidspec|codegen_rncore|nativemodule_core|debug|utils)\?\\.so|libreactperfloggerjni\\.so|libreact_render_.*\\.so|libreactconfig\\.so|librrc_(image|modal|progressbar|root|scrollview|slider|switch|text|textinput|unimplementedview|view)\?\\.so</item>
         <item>libJni_wgs2gcj\\.so</item>
         <item>libLive2DCubismCore\\.so</item>
         <item>libMMANDKSignature\\.so</item>
@@ -32,9 +27,7 @@
         <item>libadcolony\\.so</item>
         <item>libjingle_peerconnection_so\\.so</item>
         <item>libandfix(_x86)\?\\.so</item>
-        <item>
-            libxa-internal-api\\.so|libmono-(native|btls-shared)\?\\.so|libmonodroid(_bundle_app)\?\\.so|libmonosgen-.*\\.so|libxamarin-app\\.so|libaot-.*\\.dll\\.so
-        </item>
+        <item>libxa-internal-api\\.so|libmono-(native|btls-shared)\?\\.so|libmonodroid(_bundle_app)\?\\.so|libmonosgen-.*\\.so|libxamarin-app\\.so|libaot-.*\\.dll\\.so</item>
         <item>libapm(art|crash|dalvik|ioFake)+\\.so</item>
         <item>libapng-drawable\\.so</item>
         <item>libapp\\.so|libflutter\\.so</item>
@@ -42,17 +35,11 @@
         <item>libarcore_sdk_c\\.so</item>
         <item>libarcore_sdk_jni\\.so</item>
         <item>libaria2c\\.so</item>
-        <item>
-            libav(codec|device|filter|format|util)+\\.so|libsw(resample|scale)+\\.so|libffmpeg\\.so|libffmpeg-android\\.so|lib\\.\\.ffmpeg\\.\\.so
-        </item>
-        <item>
-            libbitmaps\\.so|libgifimage\\.so|libimagepipeline\\.so|libmemchunk\\.so|libnative-(filters|imagetranscoder|file-access)\\.so|libstatic-webp\\.so|libwebp(image)\?\\.so
-        </item>
+        <item>libav(codec|device|filter|format|util)+\\.so|libsw(resample|scale)+\\.so|libffmpeg\\.so|libffmpeg-android\\.so|lib\\.\\.ffmpeg\\.\\.so</item>
+        <item>libbitmaps\\.so|libgifimage\\.so|libimagepipeline\\.so|libmemchunk\\.so|libnative-(filters|imagetranscoder|file-access)\\.so|libstatic-webp\\.so|libwebp(image)\?\\.so</item>
         <item>libbmob\\.so</item>
         <item>libboost_multidex\\.so</item>
-        <item>
-            libbuffer_pg\\.so|libfile_lock_pg\\.so|libmetasec_ml\\.so|libnms\\.so|libtobEmbedEncrypt\\.so|libpangleflipped\\.so
-        </item>
+        <item>libbuffer_pg\\.so|libfile_lock_pg\\.so|libmetasec_ml\\.so|libnms\\.so|libtobEmbedEncrypt\\.so|libpangleflipped\\.so</item>
         <item>libbugrpt\\.so</item>
         <item>libbugsnag-(ndk|plugin-android-anr|root-detection|unity)\?\\.so</item>
         <item>libc\\+\\+_shared\\.so|libgnustl_shared\\.so|libCXXCommonKit\\.so</item>
@@ -61,9 +48,7 @@
         <item>libcocos2dcpp\\.so</item>
         <item>libconnectionbase\\.so|libmilinkconnection\\.so</item>
         <item>libconscrypt_jni\\.so</item>
-        <item>
-            libcrashlytics(-common|-handler|-trampoline|-envelope)\?\\.so|libFirebaseCppCrashlytics\\.so|libunwind-crashlytics\\.so
-        </item>
+        <item>libcrashlytics(-common|-handler|-trampoline|-envelope)\?\\.so|libFirebaseCppCrashlytics\\.so|libunwind-crashlytics\\.so</item>
         <item>libcrashsdk(2)\?\\.so</item>
         <item>libcri_ware_unity\\.so|libcri_mana_vpx\\.so|libcriafx_roll\\.so</item>
         <item>libcrypto\\.so|libopenssl\\.so|libssl.*\\.so</item>
@@ -109,11 +94,8 @@
         <item>libmsc\\.so</item>
         <item>libndkbitmap\\.so</item>
         <item>libopencc\\.so</item>
-        <item>
-            libopencv_core\\.so|libopencv_imgproc\\.so|libopencv_java3\\.so|libopencv_java4\\.so|libopencv_highgui\\.so
-        </item>
-        <item>libopus(JNI)\?\\.so|libogg\\.so|libogg_opus_encoder(_translate)\?\\.so|libopus(V2JNI|file|vadjava)+\\.so
-        </item>
+        <item>libopencv_core\\.so|libopencv_imgproc\\.so|libopencv_java3\\.so|libopencv_java4\\.so|libopencv_highgui\\.so</item>
+        <item>libopus(JNI)\?\\.so|libogg\\.so|libogg_opus_encoder(_translate)\?\\.so|libopus(V2JNI|file|vadjava)+\\.so</item>
         <item>libpingpp\\.so</item>
         <item>libpl_droidsonroids_gif\\.so</item>
         <item>libraw\\.so</item>
@@ -123,9 +105,7 @@
         <item>libsaturn\\.so</item>
         <item>libsdk_patcher_jni\\.so</item>
         <item>libsentry(-android)\?\\.so</item>
-        <item>
-            libsgavmp\\.so|libsgmain\\.so|libsgsecuritybody\\.so|libsgsgmiddletier\\.so|libsgmainso-.*\\.so|libsgmiscso-.*\\.so|libsgmiddletierso-.*\\.so|libsgnocaptchaso-.*\\.so|libsgmiddletier\\.so|libsgmisc\\.so|libsgnocaptcha\\.so|libsgsecuritybodyso-.*\\.so|libAPSE_.*\\.so|libsgavmpso-.*\\.so
-        </item>
+        <item>libsgavmp\\.so|libsgmain\\.so|libsgsecuritybody\\.so|libsgsgmiddletier\\.so|libsgmainso-.*\\.so|libsgmiscso-.*\\.so|libsgmiddletierso-.*\\.so|libsgnocaptchaso-.*\\.so|libsgmiddletier\\.so|libsgmisc\\.so|libsgnocaptcha\\.so|libsgsecuritybodyso-.*\\.so|libAPSE_.*\\.so|libsgavmpso-.*\\.so</item>
         <item>libsmsdk\\.so</item>
         <item>libsodium(-jni)\?\\.so</item>
         <item>libsqlcipher\\.so|libstlport_shared\\.so|libe_sqlcipher\\.so</item>
@@ -142,9 +122,7 @@
         <item>libumeng-spy\\.so</item>
         <item>libutility\\.so|libweibosdkcore\\.so|libwind\\.so|libsharewind\\.so</item>
         <item>libwcdb\\.so</item>
-        <item>
-            libweexcore\\.so|libweexjsb\\.so|libweexjss\\.so|libweexjssr\\.so|libweexjst\\.so|libWeexEagle\\.so|libWTF\\.so
-        </item>
+        <item>libweexcore\\.so|libweexjsb\\.so|libweexjss\\.so|libweexjssr\\.so|libweexjst\\.so|libWeexEagle\\.so|libWTF\\.so</item>
         <item>libwtecdh\\.so</item>
         <item>libxcrash(_dumper)\?\\.so</item>
         <item>libxgVipSecurity\\.so</item>
@@ -173,18 +151,14 @@
         <item>libobjectbox(-jni)\?\\.so</item>
         <item>libzstd-jni\\.so</item>
         <item>libyoume_voice_engine\\.so</item>
-        <item>
-            libagoraSdkCWrapper\\.so|libagora-(rtc-sdk|rtc-sdk-jni|core|ffmpeg|soundtouch)\?\\.so|libagora_(ai_denoise|ci|dav1d|fd|jnd|segmentation|super_resolution|video_process)\?_extension\\.so|libagora_(fdkaac|mpg123)\?\\.so
-        </item>
+        <item>libagoraSdkCWrapper\\.so|libagora-(rtc-sdk|rtc-sdk-jni|core|ffmpeg|soundtouch)\?\\.so|libagora_(ai_denoise|ci|dav1d|fd|jnd|segmentation|super_resolution|video_process)\?_extension\\.so|libagora_(fdkaac|mpg123)\?\\.so</item>
         <item>libspake2\\.so</item>
         <item>libduktape\\.so</item>
         <item>libquickjs\\.so</item>
         <item>libEOSSDK\\.so</item>
         <item>libbass(_aac|_fx|_ssl)\?\\.so|libbassopus\\.so</item>
         <item>libffi\\.so</item>
-        <item>
-            chaquopy\\.so|libcrypto_chaquopy\\.so|libssl_chaquopy\\.so|libchaquopy_java\\.so|chaquopy_android\\.so|libsqlite3_chaquopy\\.so
-        </item>
+        <item>chaquopy\\.so|libcrypto_chaquopy\\.so|libssl_chaquopy\\.so|libchaquopy_java\\.so|chaquopy_android\\.so|libsqlite3_chaquopy\\.so</item>
         <item>libpython.*\\.so</item>
         <item>libopenvpn\\.so|libopvpnutil\\.so|libovpnexec\\.so|libjbcrypto\\.so</item>
         <item>libnspr4\\.so|libplc4\\.so|libplds4\\.so</item>
@@ -203,15 +177,11 @@
         <item>libAVPro(Local|Video2Native)\?\\.so|libAudio360(-JNI)\?\\.so</item>
         <item>libcardboard_xr_unity\\.so|libCardboardXrProvider\\.so</item>
         <item>libmobileffmpeg(_abidetect)\?\\.so</item>
-        <item>
-            libcardboard_api\\.so|libcardboard_api_only_gles2\\.so|libcardboard_sdk_jni\\.so|libcardboard_unity_jni\\.so
-        </item>
+        <item>libcardboard_api\\.so|libcardboard_api_only_gles2\\.so|libcardboard_sdk_jni\\.so|libcardboard_unity_jni\\.so</item>
         <item>libcardioDecider\\.so|libcardioRecognizer(_tegra2)\?\\.so</item>
         <item>libcronet.*\\.so</item>
         <item>libhsp3dish\\.so</item>
-        <item>
-            libjsengine(-api|-loadso|-platform)\?\\.so|libv8\\.cr\\.so|libv8_libbase\\.cr\\.so|libv8_libplatform\\.cr\\.so
-        </item>
+        <item>libjsengine(-api|-loadso|-platform)\?\\.so|libv8\\.cr\\.so|libv8_libbase\\.cr\\.so|libv8_libplatform\\.cr\\.so</item>
         <item>libfmod\\.so</item>
         <item>libvorbis\\.so</item>
         <item>libeasymobile\\.so</item>
@@ -439,7 +409,7 @@
         <item>Hermes JS Engine</item>
         <item>Baichuan SDK</item>
         <item>Baidu Push</item>
-        <item>Top icon inductible verification SDK</item>
+        <item>Top icon inductible verification SDK </item>
         <item>frostwire-jlibtorrent</item>
         <item>JPush</item>
         <item>Qt</item>
@@ -701,8 +671,7 @@
         <item>https://github.com/bugsnag/bugsnag-android</item>
         <item>https://developer.android.com/ndk/guides/cpp-support/</item>
         <item>https://chromium.googlesource.com/chromiumos/docs/+/master/packages/libchrome.md</item>
-        <item>https://chromium.googlesource.com/chromium/src.git/+/refs/heads/main/third_party/android_crazy_linker
-        </item>
+        <item>https://chromium.googlesource.com/chromium/src.git/+/refs/heads/main/third_party/android_crazy_linker</item>
         <item>https://github.com/cocos2d-cpp/cocos2d-cpp</item>
         <item>https://dev.mi.com/console/app/gamecenter.html</item>
         <item>https://github.com/google/conscrypt</item>
@@ -729,8 +698,7 @@
         <item>https://github.com/googlevr/gvr-android-sdk</item>
         <item>https://github.com/Tencent/Hardcoder</item>
         <item>https://github.com/tencentyun/httpdns-android-sdk</item>
-        <item>https://developer.huawei.com/consumer/cn/doc/development/HMSCore-Guides/introduction-0000001050130900
-        </item>
+        <item>https://developer.huawei.com/consumer/cn/doc/development/HMSCore-Guides/introduction-0000001050130900</item>
         <item>http://docs-im.easemob.com/im/android/sdk/import</item>
         <item>https://www.gnu.org/software/libiconv/</item>
         <item>https://github.com/bilibili/ijkplayer/</item>
