@@ -338,64 +338,66 @@
 \n\\end{itemize}</string>
     <string name="pages$app-details-page$horizontal-action-panel">前項のアクションパネルは、次のようなアプリに関連するさまざまなアクションで構成されています。
 \n\\begin{itemize}
-\n \\item \\textbf{起動} Application that has a launcher \\hyperref[subsubsec:activities]{activities} can be launched
-\n using this button.
+\n \\item \\textbf{起動} ランチャー\\hyperref[subsubsec:activities]{アクティビティ}を持つアプリケーションは、このボタンから起動することができます。
 \n
-\n \\item \\textbf{無効化} Disable an app. This button is not displayed for already disabled apps or to users who do
-\n not have root or \\hyperref[sec:adb-over-tcp]{ADB}. If you disable an app, the app will not be displayed in your
-\n Launcher app. Shortcuts for the app will also be removed. If you disable a user app, you can only enable them via
-\n App Manager or any other tool that supports it. There isn\'t any option in Android Settings to enable a disabled user
-\n app.
+\n \\item \\textbf{無効化} アプリを無効化します。アプリがすでに無効になっている場合や、Rootアクセスや\\hyperref[sec:adb-over-tcp]{ADB}を持っていないユーザーには、このボタンは表示されません。アプリを無効にすると、そのアプリはランチャーアプリに表示されなくなります。また、そのアプリのショートカットも削除されます。ユーザーアプリを無効にした場合、App Managerまたはそれに対応する他のツールからのみ有効にすることができます。Androidの設定には、無効にしたユーザーアプリを有効にするオプションはありません。
 \n
-\n \\item \\textbf{アンインストール} Uninstall an app.
+\n \\item \\textbf{アンインストール} アプリをアンインストールします。
 \n
-\n \\item \\textbf{有効化} Enable an app. This button is not displayed for already enabled apps or to users who do not
-\n have root or ADB\\@.
+\n \\item \\textbf{有効化} アプリを有効化します。アプリがすでに有効化されている場合や、RootアクセスやADBを持っていないユーザーには、このボタンは表示されません。
 \n
-\n \\item \\textbf{強制終了} Force-stop an app. When you force stop an app, the app will not be able to run in
-\n background unless you explicitly open it first. However, this is not always true.
+\n \\item \\textbf{強制終了} アプリを強制停止します。 アプリを強制停止すると、明示的にアプリを開いてからでないと、そのアプリはバックグラウンドで実行できなくなります。しかし、これは必ずしも正しいとは限りません。
 \n
-\n \\item \\textbf{データを消去} Clear data from an app. This includes any information stored in the internal and often
-\n the external directories, including accounts (if set by the app), cache, etc. Clearing data from App Manager, for
-\n example, removes all the rules (the blocking is not removed though) saved within the app. Which is why you should
-\n always take backups of your rules. This button is not displayed to users who do not have root or ADB\\@.
+\n \\item \\textbf{データを消去} アプリのデータを消去します。これには、アカウント（アプリによって設定されている場合）、キャッシュなど、内部および多くの場合外部のディレクトリに保存されているすべての情報が含まれます。例えば、App Managerからデータを消去すると、アプリ内に保存されているすべてのルールが削除されます（ただし、ブロックは削除されません）。そのため、ルールのバックアップを常に取っておく必要があります。このボタンは、RootアクセスまたはADBを持っていないユーザーには表示されません。
 \n
-\n \\item \\textbf{キャッシュを消去} Clear app cache only. There is not any Android-way to clear app cache. Therefore, it
-\n needs root permission to clear cache from the app\'s internal storage.
+\n \\item \\textbf{キャッシュを消去} アプリのキャッシュのみをクリアします。アプリのキャッシュをクリアする方法は、Android自体にはありません。そのため、アプリの内部ストレージからキャッシュをクリアするには、Root権限が必要です。
 \n
-\n \\item \\textbf{インストール} Install an APK opened using any third-party app. This button is only displayed for an
-\n external APK that hasn\'t been installed.
+\n \\item \\textbf{インストール} サードパーティのアプリで開いたAPKをインストールします。このボタンは、インストールされていない外部APKの場合のみ表示されます。
 \n
-\n \\item \\textbf{最新情報} This button is displayed for an APK that has higher version code than the installed one.
-\n Clicking on this button displays a dialog consisting of differences in a version control manner. The information it
-\n displays include \\textit{version}, \\textit{trackers}, \\textit{permissions}, \\textit{components}, \\textit{signatures}
-\n (checksum changes), \\textit{features}, \\textit{shared libraries} and \\textit{SDK}.
+\n \\item \\textbf{最新情報} インストールされているAPKよりもバージョンコードの高いAPKに対して表示されるボタンです。このボタンをクリックすると、バージョン間の差分がダイアログで表示されます。表示される情報は、\\textit{バージョン}、\\textit{トラッカー}、\\textit{パーミッション}、\\textit{コンポーネント}、\\textit{署名情報}（チェックサムの変更）、\\textit{機能}、\\textit{共有ライブラリ}、\\textit{SDK}などです。
 \n
-\n \\item \\textbf{アップデート} Displayed for an app that has a higher version code than the installed app.
+\n \\item \\textbf{アップデート} インストールされているアプリよりバージョンコードが高いアプリに対して表示されます。
 \n
-\n \\item \\textbf{再インストール} Displayed for an app that has the same version code as the installed app.
+\n \\item \\textbf{再インストール} インストールされているアプリと同じバージョンコードを持つアプリに対して表示されます。
 \n
-\n \\item \\textbf{ダウングレード} Displayed for an app that has a lower version code than the installed app.
+\n \\item \\textbf{ダウングレード} インストールされているアプリよりバージョンコードが低いアプリに対して表示されます。
 \n
-\n \\item \\textbf{マニフェスト} Clicking on this button displays the app\'s manifest file in a separate page. The manifest
-\n file can be wrapped or unwrapped using the corresponding toggle button (on the top-right side) or can be saved to
-\n you shared storage using the save button.
+\n \\item \\textbf{マニフェスト} このボタンをクリックすると、アプリのマニフェストファイルが別ページで表示されます。マニフェストファイルは、対応するトグルボタン (右上) を使用してラップまたはアンラップすることができ、保存ボタンを使用して共有ストレージに保存することができます。
 \n
-\n \\item \\textbf{スキャナー} Clicking on this button displays the app\'s tracker and library information. At first, it
-\n scans the app to extract a list of classes. Then the class list is matched with a number of signatures. After that,
-\n a scan summary is displayed.\\\\
-\n \\seealsoinline{\\hyperref[sec:scanner-page]{Scanner page}}
+\n \\item \\textbf{スキャナー} このボタンをクリックすると、アプリのトラッカーとライブラリの情報が表示されます。まず、アプリをスキャンして、クラスのリストを抽出し、クラス一覧と複数のシグネチャをマッチングさせます。その後、スキャン結果が表示されます。\\\\
+\n \\seealsoinline{\\hyperref[sec:scanner-page]{スキャナーページ}}
 \n
 \n \\item \\textbf{共有設定} Clicking on this button displays a list of shared preferences used by the app. Clicking
 \n on a preference item in the list opens the \\hyperref[sec:shared-preferences-editor-page]{Shared Preferences Editor
 \n page}. This option is only visible to the root users.
+\nこのボタンをクリックすると、アプリで使用されている共有環境設定の一覧が表示されます。リスト内の設定項目をクリックすると、\\hyperref[sec:shared-preferences-editor-page]{共有設定エディター}が表示されます。このオプションは、Rootユーザーのみに表示されます。
 \n
-\n \\item \\textbf{データベース} Clicking on this button displays a list of databases used by the app. This needs more
-\n improvements, and a database editor which might be added in the future. This option is only visible to the root users.
+\n \\item \\textbf{データベース} このボタンをクリックすると、アプリが使用しているデータベースの一覧が表示されます。これはもっと改良が必要で、将来的にはデータベース・エディターが追加されるかもしれません。このオプションは、Rootユーザーのみに表示されます。
 \n
-\n \\item \\textbf{F-Droid} Opens the app in your favourite \\textit{F-Droid} client.
+\n \\item \\textbf{F-Droid} 任意の\\textit{F-Droid}クライアントでアプリのページを開きます。
 \n
-\n \\item \\textbf{ストア} Opens the app in \\textit{Aurora Store}. The option is only visible if \\textit{Aurora Store} is
-\n installed.
+\n \\item \\textbf{ストア} \\textit{Aurora Store}でアプリのページを開きます。このオプションは、\\textit{Aurora Store}がインストールされている場合のみ表示されます。
+\n\\end{itemize}</string>
+    <string name="pages$app-details-page$app-info-options-menu">ページの右上にあるのが、オプションメニューです。そこにあるオプションの完全な説明は以下の通りです:
+\n\\begin{itemize}
+\n \\item \\textbf{共有} Share button can be used to share the APK file or \\textit{APKS} file (if the app is has
+\n multiple splits) can be imported into \\href{https://github.com/Aefyr/SAI}{SAI}. You can share it with your favourite
+\n file manager to save the file in your shared storage.
+\n
+\n \\item \\textbf{更新} Refreshes the App Info tab.
+\n \\item \\textbf{設定画面で開く} Opens the app in Android Settings.
+\n \\item \\textbf{バックアップ/復元} Opens the backup/restore dialog.
+\n \\item \\textbf{ブロッキングルールをエクスポート} Export rules configured for this app within App Manager.
+\n
+\n \\item \\textbf{Termuxで開く} Opens the app in Termux. This actually runs \\texttt{su - user\\_id} where
+\n \\texttt{user\\_id} denotes the app\'s kernel user ID (described in the
+\n \\hyperref[subsubsec:app-info-general-information]{General Information section}). This option is only visible to the
+\n root users. See §\\cref{subsubsec:config-termux} to learn how to configure Termux to run commands from third-party applications.
+\n
+\n \\item \\textbf{Termuxで実行} Open the app using \\texttt{run-as package\\_name} in Termux. This is only applicable
+\n for the debuggable apps and works for both root and ADB users. See §\\cref{subsubsec:config-termux} to learn how to
+\n configure Termux to run commands from third-party applications.
+\n
+\n \\item \\textbf{アイコンを抽出} Extract and save the app\'s icon in your desired location.
 \n\\end{itemize}</string>
 </resources>
