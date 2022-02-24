@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="uninstall">Odinstalovat</string>
     <string name="require_no_permission">Nejsou vyžadována žádná oprávnění</string>
     <string name="activities">Aktivity</string>
@@ -41,4 +41,40 @@
     <string name="no_service">Žádné služby</string>
     <string name="authority">Autorita</string>
     <string name="sort_by_last_update">Poslední update</string>
+    <string name="paths_and_directories">Cesty a Adresáře</string>
+    <string name="data_dir">Adresář Dat</string>
+    <string name="date_updated">Datum Aktualizace</string>
+    <string name="user_app">Uživatelská aplikace</string>
+    <string name="sdk_max">Cíl</string>
+    <string name="starting_activity">Spouštění aktivity: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
+    <string name="error_invalid_icon_resource">Neplatný zdroj ikony</string>
+    <string name="data_usage_msg">Využití dat</string>
+    <string name="app_not_installed">Aplikace není nainstalována</string>
+    <string name="word_wrap">Přepnutí zabalení textu</string>
+    <string name="create_shortcut">Vytvořit Zástupce</string>
+    <string name="class_name">Název Třídy</string>
+    <string name="insert_icon">Vložit Ikonu</string>
+    <string name="date_installed">Datum Instalace</string>
+    <string name="user_id">ID Uživatele</string>
+    <string name="instructions">Instrukce</string>
+    <string name="error_creating_shortcut">Chyba vytváření zástupce</string>
+    <string name="app_info">Informace o aplikaci</string>
+    <string name="system_app">Systémová aplikace</string>
+    <string name="source_dir">Adresář Zdroje</string>
+    <string name="about">O aplikaci</string>
+    <string name="data_size">Data</string>
+    <string name="cache_size">Mezipaměť</string>
+    <string name="sort_by_package_name">Název balíčku</string>
+    <string name="user">Uživatel</string>
+    <string name="system">Systém</string>
+    <string name="sort">Setřídit</string>
+    <string name="version_name_with_code">Verze <xliff:g id="version_name" example="2.5.17">%1$s</xliff:g> (<xliff:g id="version_code" example="365">%2$d</xliff:g>)</string>
+    <string name="more_info">Více Info</string>
+    <string name="empty_package_name">Název prázdného balíčku</string>
+    <string name="error_verbose_pin_shortcut">Aktuální spouštěč nepodporuje PinShortcut. Nelze vytvořit zástupce.</string>
+    <string name="package_name">Název Balíčku</string>
+    <string name="shortcut_name">Nazev Zástupce</string>
+    <string name="edit_shortcut">Upravit Zástupce</string>
+    <string name="error_invalid_icon_format">Neplatný formát ikony</string>
+    <string name="third_party">Ikony a Knihovny třetích stran</string>
 </resources>
