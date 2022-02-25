@@ -716,7 +716,7 @@
     <string name="lib_details">Szczegóły biblioteki</string>
     <string name="no_libs">Brak bibliotek</string>
     <string name="failed_to_fetch_package_info">Nie można uzyskać informacji o module</string>
-    <string name="filter_apps_with_activities">Aplikacje z aktywnościami</string>
+    <string name="filter_apps_with_activities">z aktywnościami</string>
     <string name="export_icon">Wyodrębnij ikonę</string>
     <string name="no">Nie</string>
     <plurals name="no_of_components">
@@ -900,7 +900,7 @@
     <string name="am_crashed">App Manager przestał działać</string>
     <string name="backup_skip_signature_checks_description">Przywróć kopie zapasowe, które albo nie przejdą weryfikacji sumy kontrolnej, albo mają inne podpisy APK niż ich poprzednie kopie zapasowe.</string>
     <string name="no_app_ops_permission">Brak uprawnień do wyświetlania operacji aplikacji</string>
-    <string name="input_keystore_alias_pass_msg">Kliknij tutaj aby dostarczyć hasło dla %1$s</string>
+    <string name="input_keystore_alias_pass_msg">Kliknij tutaj aby wprowadzić hasło dla %1$s</string>
     <string name="view_missing_signatures">Dotknij, aby wyświetlić lub wysłać podpisy, które nie znajdują się jeszcze w bazie danych bibliotek programu App Manager.</string>
     <string name="scanner">Skaner</string>
     <string name="sys_config">Konfiguracja systemu</string>
