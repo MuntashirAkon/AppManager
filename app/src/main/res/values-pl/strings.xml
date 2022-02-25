@@ -739,10 +739,10 @@
         <item quantity="other">Schematy podpisów</item>
     </plurals>
     <plurals name="missing_signatures">
-        <item quantity="one">%1$d brak sygnatury</item>
-        <item quantity="few">%1$d brak sygnatur</item>
-        <item quantity="many">%1$d brak sygnatur</item>
-        <item quantity="other">%1$d brak sygnatur</item>
+        <item quantity="one">%1$d brak podpisu</item>
+        <item quantity="few">%1$d brak podpisów</item>
+        <item quantity="many">%1$d brak podpisów</item>
+        <item quantity="other">%1$d brak podpisów</item>
     </plurals>
     <plurals name="libraries">
         <item quantity="one">%1$d biblioteka</item>
@@ -771,7 +771,7 @@
     <string name="deny_app_ops_description">Określ sposób działania aplikacji określony przez stałe wartości, np. <tt>63</tt> lub <tt>RUN_IN_BACKGROUND</tt></string>
     <string name="external_apk_no_app_op">Zewnętrzny APK nie wykonuje żadnych operacji na aplikacjach</string>
     <string name="failed_to_deny_dangerous_app_ops">Nie udało się cofnąć wszystkich niebezpiecznych operacji tej aplikacji</string>
-    <string name="failed_to_reset_app_ops">Nie udało się zresetować operacji tej aplikacji</string>
+    <string name="failed_to_reset_app_ops">Nie udało się zresetować ustawień aplikacji</string>
     <string name="pref_import_blocker_msg">Importuj reguły filtrowania z Blockera, z których każdy zawiera reguły dla pojedynczego modułu.</string>
     <string name="pref_import_watt_msg">Importuj reguły blokowania z Watt, każdy plik zawierający reguły dla pojedyńczego pakietu o nazwie <tt>packagename.xml</tt> itp.</string>
     <string name="pref_import_msg">Importuj wcześniej wyeksportowane reguły blokowania z menedżera aplikacji.</string>
@@ -835,7 +835,7 @@
     <string name="failed_to_parse_some_numbers">Nie można przetworzyć niektórych liczb</string>
     <string name="input_app_ops_description_profile">Wprowadź nazwy operacji aplikacji i/lub stałe ze spacjami, np. <tt>WAKE_LOCK 63 72 CAMERA</tt> itp. Użyj <tt>*</tt>, aby zastosować zmiany wszystkich skonfigurowanych operacji aplikacji.</string>
     <string name="input_app_ops_description">Wprowadź nazwy operacji aplikacji i/lub stałe ze spacjami, np. <tt>WAKE_LOCK 63 72 CAMERA</tt> itp.</string>
-    <string name="battery_mode">Tryb oszczędzania baterii</string>
+    <string name="battery_mode">Tryb wykorzystania baterii</string>
     <string name="app_signing_signatures">Sygnatury</string>
     <string name="soft_input">Tryb delikatnego wprowadzenia</string>
     <string name="authority">Autoryzacja</string>
@@ -926,9 +926,9 @@
     <string name="density_split_for_feature"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) zasoby dla funkcji <xliff:g id="feature_name" example="Visualizer">%3$s</xliff:g></string>
     <plurals name="no_of_splits">
         <item quantity="one">%1$d podział</item>
-        <item quantity="few">%1$d podziały</item>
-        <item quantity="many">%1$d podziałów</item>
-        <item quantity="other">%1$d podziałów</item>
+        <item quantity="few">%1$d podziałów</item>
+        <item quantity="many"></item>
+        <item quantity="other"></item>
     </plurals>
     <string name="second_degree_tracker_note">² prefiks wskazuje, że trackery znajdują się w <a href="https://etip.exodus-privacy.eu.org/">Lista rezerwowa ETIP </a> np. to, czy są to rzeczywiste urządzenia śledzące, jest nadal badane.</string>
     <string name="orientation_behind">Za</string>
