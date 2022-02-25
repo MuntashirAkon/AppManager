@@ -618,9 +618,9 @@
     <string name="input_permissions">Wprowadź uprawnienia</string>
     <string name="profile_state_msg">Stan włączenia/wyłączenia dla tego profilu</string>
     <string name="profile_clear_data_msg">Dane aplikacji zostaną wyczyszczone</string>
-    <string name="profile_clear_cache_msg">Czyści pamięć podręczną aplikacji</string>
-    <string name="profile_force_stop_msg">Wymuś zatrzymanie aplikacji</string>
-    <string name="profile_disable_msg">Wyłączone lub włączone aplikacje na podstawie stanu</string>
+    <string name="profile_clear_cache_msg">Pamięć podręczna aplikacji zostanie wyczyszczona</string>
+    <string name="profile_force_stop_msg">Jeśli ta opcja jest włączona, aplikacje zostaną zatrzymane</string>
+    <string name="profile_disable_msg">Aplikacje zostaną wyłączone/włączone na podstawie wybranego stanu</string>
     <string name="profile_state">Stan profilu</string>
     <string name="not_verified">Nie zweryfikowane</string>
     <string name="verified">Zweryfikowane</string>
@@ -900,7 +900,7 @@
     <string name="am_crashed">App Manager przestał działać</string>
     <string name="backup_skip_signature_checks_description">Przywróć kopie zapasowe, które nie przejdą weryfikacji sumy kontrolnej lub mają inne sygnatury APK niż ich poprzednie kopie zapasowe.</string>
     <string name="no_app_ops_permission">Brak uprawnień do wyświetlania operacji aplikacji</string>
-    <string name="input_keystore_alias_pass_msg">Dotknij, aby wprowadzić hasło dla %1$s</string>
+    <string name="input_keystore_alias_pass_msg">Kliknij tutaj aby dostarczyć hasło dla %1$s</string>
     <string name="view_missing_signatures">Dotknij, aby wyświetlić lub wysłać podpisy, które nie znajdują się jeszcze w bazie danych bibliotek programu App Manager.</string>
     <string name="scanner">Skaner</string>
     <string name="sys_config">Konfiguracja systemu</string>
