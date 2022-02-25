@@ -824,7 +824,7 @@
     <string name="send_crash_report">Wyślij raport o awarii</string>
     <string name="tap_to_submit_crash_report">Dotknij, aby przesłać raport o awarii.</string>
     <string name="filter_running_apps">Uruchomione aplikacje</string>
-    <string name="no_matching_package_found">Nie znaleziono takiej applikacji</string>
+    <string name="no_matching_package_found">Nie znaleziono takiej aplikacji</string>
     <plurals name="alert_failed_to_set_app_ops">
         <item quantity="one">Błąd w ustawieniu operacji dla %1$d aplikacji</item>
         <item quantity="few">Błąd w ustawieniu operacji dla %1$d aplikacji</item>
