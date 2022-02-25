@@ -520,7 +520,7 @@
     <string name="memory">Pamięć</string>
     <string name="gles_version">Wersja OpenGL ES</string>
     <string name="no_of_cores">Rdzenie</string>
-    <string name="support_architectures">Obsługiwane architektury</string>
+    <string name="support_architectures">Wspomagane architektury</string>
     <string name="security_providers">Dostawcy zabezpieczeń</string>
     <string name="kernel">Kernel</string>
     <string name="manufacturer">Producent</string>
@@ -549,7 +549,7 @@
     <string name="backup_all_apps">Utwórz kopię zapasową wszystkich aplikacji</string>
     <string name="backup_custom_users_description">Wykonuj kopie zapasowe tylko dla określonych użytkowników</string>
     <string name="backup_custom_users">Użytkownicy niestandardowi</string>
-    <string name="bootloader">Bootloader</string>
+    <string name="bootloader">Program rozruchowy</string>
     <string name="encrypted">Zaszyfrowane</string>
     <string name="unencrypted">Niezaszyfrowane</string>
     <string name="no_volumes_found">Nie można odnaleźć żadnych woluminów z uprawnieniami do zapisu.</string>
@@ -898,7 +898,7 @@
     <string name="activity_result">Wynik działań</string>
     <string name="matching_activities">Dopasowywanie działań</string>
     <string name="am_crashed">App Manager przestał działać</string>
-    <string name="backup_skip_signature_checks_description">Przywróć kopie zapasowe, które nie przejdą weryfikacji sumy kontrolnej lub mają inne sygnatury APK niż ich poprzednie kopie zapasowe.</string>
+    <string name="backup_skip_signature_checks_description">Przywróć kopie zapasowe, które albo nie przejdą weryfikacji sumy kontrolnej, albo mają inne podpisy APK niż ich poprzednie kopie zapasowe.</string>
     <string name="no_app_ops_permission">Brak uprawnień do wyświetlania operacji aplikacji</string>
     <string name="input_keystore_alias_pass_msg">Kliknij tutaj aby dostarczyć hasło dla %1$s</string>
     <string name="view_missing_signatures">Dotknij, aby wyświetlić lub wysłać podpisy, które nie znajdują się jeszcze w bazie danych bibliotek programu App Manager.</string>
@@ -1144,8 +1144,8 @@
     <string name="input_key">Klucz wejściowy (w systemie szesnastkowym)</string>
     <string name="installer_app_message">Zaznacz <b>Wybierz</b>, aby wybrać spośród zainstalowanych aplikacji lub zaznacz <b>Własny</b>, aby określić własną nazwę pakietu.</string>
     <string name="net_policy">Reguły sieciowe</string>
-    <string name="has_net_policy">Reguły sieciowe</string>
-    <string name="backup_volume">Wolumin kopii zapasowej</string>
+    <string name="has_net_policy">Polityka netto</string>
+    <string name="backup_volume">Ilość kopii zapasowych</string>
     <string name="failed_to_disable_magisk_hide">Nie można wyłączyć MagiskHide</string>
     <string name="disable_background_run_description">Ustawia tryb <i>Ignoruj</i> dla następujących operacji aplikacji: <tt>RUN_IN_BACKGROUND</tt> (z Androida 7.0) i <tt>RUN_ANY_IN_BACKGROUND</tt> (z Androida 9).</string>
     <string name="density">Gęstość</string>
