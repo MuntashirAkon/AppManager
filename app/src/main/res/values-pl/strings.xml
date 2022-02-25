@@ -860,7 +860,7 @@
     <string name="orientation_full_user">Pełny dostęp</string>
     <string name="orientation_full_sensor">Wszystkie czujniki</string>
     <string name="launch_mode_multiple">Wiele</string>
-    <string name="package_installer">Pakiet instalacyjny</string>
+    <string name="package_installer">Instalator pakietów</string>
     <string name="paired_successfully">Sparowany.</string>
     <string name="pid">Identyfikator procesu</string>
     <plurals name="pref_thread_count_msg">
