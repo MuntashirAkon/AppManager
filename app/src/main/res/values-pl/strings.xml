@@ -881,11 +881,11 @@
     <string name="staging_apk_files">Inscenizacja…</string>
     <string name="background">Tło</string>
     <string name="type_int_array">Tablica liczb całkowitych</string>
-    <string name="back_up">Kopia zapasowa</string>
+    <string name="back_up">Wykonaj kopię zapasową</string>
     <string name="restore_latest_msg">Przywróć już zainstalowane aplikacje których kody wersji są wyższe niż zainstalowany kod wersji.</string>
     <string name="enforcing">Wymuszanie</string>
     <string name="backup_extras">Dodatki</string>
-    <string name="board_name">Tablica</string>
+    <string name="board_name">Płyta główna</string>
     <string name="extras">Dodatki</string>
     <string name="filter_apps_with_splits">Z podziałami</string>
     <string name="input_keystore_pass_description">Wprowadź hasło KeyStore. Jeżeli widzisz to po raz pierwszy, proszę użyj generator hasła i zapisz je w bezpiecznym miejscu przed wpisaniem go tutaj.</string>
