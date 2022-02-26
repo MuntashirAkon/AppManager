@@ -1134,4 +1134,6 @@
     <string name="state">État du processus</string>
     <string name="commandline_args">Arguments en ligne de commande</string>
     <string name="failed_to_disable_magisk_deny_list">Impossible de désactiver Magisk DenyList</string>
+    <string name="intent_firewall">IFW</string>
+    <string name="intent_firewall_and_disable">IFW + désactiver</string>
 </resources>
