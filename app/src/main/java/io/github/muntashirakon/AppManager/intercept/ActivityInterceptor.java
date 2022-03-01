@@ -65,7 +65,7 @@ import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.TextInputDropdownDialogBuilder;
 
 // inspired by https://github.com/k3b/intent-intercept
-// Copyright 2012 Intrications, 2017 k3b
+// Copyright 2012 Intrications, 2017 k3b, 2021 Muntashir Al-Islam
 public class ActivityInterceptor extends BaseActivity {
     public static final String TAG = ActivityInterceptor.class.getSimpleName();
 
