@@ -6,15 +6,11 @@
 
 require_once __DIR__ . "/utils.php";
 
-const LIB_RADAR = 'https://gitlab.com/IzzyOnDroid/repo/-/raw/master/lib/libradar.txt';
-const LIB_RADAR_WILD = 'https://gitlab.com/IzzyOnDroid/repo/-/raw/master/lib/libradar_wild.txt';
 const LIB_SMALI = 'https://gitlab.com/IzzyOnDroid/repo/-/raw/master/lib/libsmali.txt';
 const AM_LIB_SMALI = './libs/libsmali.txt';
 
 $libs_info = array();
 
-addLibRadar(LIB_RADAR);
-addLibRadar(LIB_RADAR_WILD);
 addLibSmali(LIB_SMALI);
 addLibSmali(AM_LIB_SMALI);
 

@@ -9,7 +9,6 @@ fi
 checksum=
 checksum2=
 os=$(uname -s)
-# shellcheck disable=SC2012
 if [[ "${os}" == "Darwin" ]]; then
   checksum=$(ls -alR ./server/src | shasum -a 256 | awk '{print $1}')
   checksum2=$(ls -alR ./libserver/src | shasum -a 256 | awk '{print $1}')

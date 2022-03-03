@@ -31,7 +31,7 @@ APKS_PATH="${RELEASE_PATH}/${DEFAULT_NAME}.apks"
 APK_PATH="${RELEASE_PATH}/${DEFAULT_NAME}-universal.apks"
 APK_FILE_PATH="${RELEASE_PATH}/${DEFAULT_NAME}.apk"
 
-SUPPORTED_LANGUAGES=(ar bn de en es fa fr hi in it ja nb pl pt ru tr uk vi zh)
+SUPPORTED_LANGUAGES=(ar bn de en es fa fr hi id it ja nb pl pt ru tr uk vi zh)
 SUPPORTED_DPIS=(ldpi mdpi tvdpi hdpi xhdpi xxhdpi xxxhdpi)
 SUPPORTED_ARCHS=(armeabi_v7a arm64_v8a x86 x86_64)
 
@@ -57,12 +57,12 @@ if [[ "$BUILD_AAB" == true ]]; then
   if [[ -f "${AAB_PATH}" ]]; then
     rm "${AAB_PATH}"
   fi
-  ./gradlew "app:bundle$(tr '[:lower:]' '[:upper:]' <<<${RELEASE_TYPE:0:1})${RELEASE_TYPE:1}"
+  ./gradlew "app:bundle$(tr '[:lower:]' '[:upper:]' <<<"${RELEASE_TYPE:0:1}")${RELEASE_TYPE:1}"
 fi
 
 if [[ -f ${AAB_PATH} ]]; then
-  bundletool build-apks --overwrite --mode=universal --bundle=${AAB_PATH} --output=${APK_PATH} --ks="${KEYSTORE}" --ks-pass=pass:"${KEYSTORE_PASS}" --ks-key-alias="${KEY_ALIAS}" --key-pass=pass:"${KEY_ALIAS_PASS}"
-  bundletool build-apks --overwrite --mode=default --bundle=${AAB_PATH} --output=${APKS_PATH} --ks="${KEYSTORE}" --ks-pass=pass:"${KEYSTORE_PASS}" --ks-key-alias="${KEY_ALIAS}" --key-pass=pass:"${KEY_ALIAS_PASS}"
+  bundletool build-apks --overwrite --mode=universal --bundle="${AAB_PATH}" --output="${APK_PATH}" --ks="${KEYSTORE}" --ks-pass=pass:"${KEYSTORE_PASS}" --ks-key-alias="${KEY_ALIAS}" --key-pass=pass:"${KEY_ALIAS_PASS}"
+  bundletool build-apks --overwrite --mode=default --bundle="${AAB_PATH}" --output="${APKS_PATH}" --ks="${KEYSTORE}" --ks-pass=pass:"${KEYSTORE_PASS}" --ks-key-alias="${KEY_ALIAS}" --key-pass=pass:"${KEY_ALIAS_PASS}"
 else
   echo "$AAB_PATH doesn't exist"
   exit 1
@@ -70,15 +70,15 @@ fi
 
 # Unzip output APKS file
 if [[ -f ${APKS_PATH} ]]; then
-  unzip ${APKS_PATH} -d ${RELEASE_PATH}/${TMP_PATH}
-  rm ${APKS_PATH}
+  unzip "${APKS_PATH}" -d "${RELEASE_PATH}"/${TMP_PATH}
+  rm "${APKS_PATH}"
 else
   echo "$APKS_PATH doesn't exist"
   exit 1
 fi
 
 lastPWD=$(pwd)
-cd ${RELEASE_PATH}/${TMP_PATH}/splits
+cd "${RELEASE_PATH}"/${TMP_PATH}/splits
 # Move required files
 mv base-master.apk base.apk
 for lang in "${SUPPORTED_LANGUAGES[@]}"; do
@@ -103,8 +103,8 @@ rm -rf "${RELEASE_PATH:?}/${TMP_PATH}"
 
 # Unzip universal APKS file
 if [[ -f ${APK_PATH} ]]; then
-  unzip ${APK_PATH} -d ${RELEASE_PATH}/${TMP_PATH}
-  rm ${APK_PATH}
+  unzip "${APK_PATH}" -d "${RELEASE_PATH}"/${TMP_PATH}
+  rm "${APK_PATH}"
 else
   echo "$APKS_PATH doesn't exist"
   exit 1
