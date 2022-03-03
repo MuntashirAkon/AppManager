@@ -64,6 +64,8 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.TextInputDropdownDialogBuilder;
 
+// Copyright 2020 Muntashir Al-Islam
+// Copyright 2017 k3b
 // Copyright 2012 Intrications
 public class ActivityInterceptor extends BaseActivity {
     public static final String TAG = ActivityInterceptor.class.getSimpleName();
