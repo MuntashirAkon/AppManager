@@ -1,4 +1,4 @@
-<!doctype html><html xmlns=http://www.w3.org/1999/xhtml lang xml:lang><meta charset=utf-8><meta name=generator content="pandoc"><meta name=viewport content="width=device-width,initial-scale=1,user-scalable=yes"><meta name=author content="Muntashir Al-Islam"><title>App Manager</title><style>code{white-space:pre-wrap}span.smallcaps{font-variant:small-caps}span.underline{text-decoration:underline}div.column{display:inline-block;vertical-align:top;width:50%}div.hanging-indent{margin-left:1.5em;text-indent:-1.5em}ul.task-list{list-style:none}pre>code.sourceCode{white-space:pre;position:relative}pre>code.sourceCode>span{display:inline-block;line-height:1.25}pre>code.sourceCode>span:empty{height:1.2em}.sourceCode{overflow:visible}code.sourceCode>span{color:inherit;text-decoration:inherit}div.sourceCode{margin:1em 0}pre.sourceCode{margin:0}@media screen{div.sourceCode{overflow:auto}}@media print{pre>code.sourceCode{white-space:pre-wrap}pre>code.sourceCode>span{text-indent:-5em;padding-left:5em}}pre.numberSource code{counter-reset:source-line 0}pre.numberSource code>span{position:relative;left:-4em;counter-increment:source-line}pre.numberSource code>span>a:first-child::before{content:counter(source-line);position:relative;left:-1em;text-align:right;vertical-align:baseline;border:none;display:inline-block;-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;padding:0 4px;width:4em}pre.numberSource{margin-left:3em;padding-left:4px}div.sourceCode{}@media screen{pre>code.sourceCode>span>a:first-child::before{text-decoration:underline}}code span.al{font-weight:700}code span.an{font-style:italic}code span.cf{font-weight:700}code span.co{font-style:italic}code span.cv{font-style:italic}code span.do{font-style:italic}code span.dt{text-decoration:underline}code span.er{font-weight:700}code span.in{font-style:italic}code span.kw{font-weight:700}code span.pp{font-weight:700}code span.wa{font-style:italic}.display.math{display:block;text-align:center;margin:.5rem auto}</style><link rel=stylesheet href=../css/custom.css><header id=title-block-header><h1 class=title>App Manager</h1><p class=author>Muntashir Al-Islam</header><nav id=TOC role=doc-toc><ul class=incremental><li><span><span class=toc-section-number>1</span> <a href=#ch:introduction id=toc:ch:introduction>简介</a></span><ul class=incremental><li><span><span class=toc-section-number>1.1</span> <a href=#sec:terminologies id=toc:sec:terminologies>术语</a></span><li><span><span class=toc-section-number>1.2</span> <a href=#sec:supported-versions id=toc:sec:supported-versions>受支持的版本</a></span><li><span><span class=toc-section-number>1.3</span> <a href=#sec:official-sources id=toc:sec:official-sources>官方来源</a></span><ul class=incremental><li><span><span class=toc-section-number>1.3.1</span> <a href=#subsec:binary-distribution-sources id=toc:subsec:binary-distribution-sources>二进制(可执行)分发来源</a></span><li><span><span class=toc-section-number>1.3.2</span> <a href=#subsec:links-to-source-code id=toc:subsec:links-to-source-code>源码链接</a></span><li><span><span class=toc-section-number>1.3.3</span> <a href=#subsec:translations id=toc:subsec:translations>翻译</a></span></ul><li><span><span class=toc-section-number>1.4</span> <a href=#sec:contributing id=toc:sec:contributing>贡献</a></span><ul class=incremental><li><span><span class=toc-section-number>1.4.1</span> <a href=#subsec:build-instructions id=toc:subsec:build-instructions>构建说明</a></span><li><span><span class=toc-section-number>1.4.2</span> <a href=#subsec:submitting-patches id=toc:subsec:submitting-patches>提交补丁</a></span></ul><li><span><span class=toc-section-number>1.5</span> <a href=#sec:donation-&-funding id=toc:sec:donation-&-funding>捐赠 & 资助</a></span><li><span><span class=toc-section-number>1.6</span> <a href=#sec:contact id=toc:sec:contact>联系我们</a></span></ul><li><span><span class=toc-section-number>2</span> <a href=#ch:pages id=toc:ch:pages>页面</a></span><ul class=incremental><li><span><span class=toc-section-number>2.1</span> <a href=#sec:main-page id=toc:sec:main-page>主页</a></span><ul class=incremental><li><span><span class=toc-section-number>2.1.1</span> <a href=#subsec:batch-operations id=toc:subsec:batch-operations>批处理</a></span><li><span><span class=toc-section-number>2.1.2</span> <a href=#subsec:main-colour-codes id=toc:subsec:main-colour-codes>颜色代码含义</a></span><li><span><span class=toc-section-number>2.1.3</span> <a href=#subsec:main-page-application-types id=toc:subsec:main-page-application-types>应用类型</a></span><li><span><span class=toc-section-number>2.1.4</span> <a href=#subsec:main-page-version-info id=toc:subsec:main-page-version-info>版本信息</a></span><li><span><span class=toc-section-number>2.1.5</span> <a href=#subsec:main-page-options-menu id=toc:subsec:main-page-options-menu>选项菜单</a></span></ul><li><span><span class=toc-section-number>2.2</span> <a href=#sec:app-details-page id=toc:sec:app-details-page>应用程序详情页</a></span><ul class=incremental><li><span><span class=toc-section-number>2.2.1</span> <a href=#subsec:app-details-colour-codes id=toc:subsec:app-details-colour-codes>颜色代码含义</a></span><li><span><span class=toc-section-number>2.2.2</span> <a href=#subsec:app-info-tab id=toc:subsec:app-info-tab>应用信息</a></span><li><span><span class=toc-section-number>2.2.3</span> <a href=#subsec:component-tabs id=toc:subsec:component-tabs>组件选项卡</a></span><li><span><span class=toc-section-number>2.2.4</span> <a href=#subsec:permission-tabs id=toc:subsec:permission-tabs>权限选项卡</a></span><li><span><span class=toc-section-number>2.2.5</span> <a href=#subsec:signatures-tab id=toc:subsec:signatures-tab>签名选项卡</a></span><li><span><span class=toc-section-number>2.2.6</span> <a href=#subsec:other-tabs id=toc:subsec:other-tabs>其他选项卡</a></span></ul><li><span><span class=toc-section-number>2.3</span> <a href=#sec:1-click-ops-page id=toc:sec:1-click-ops-page>一键操作页</a></span><ul class=incremental><li><span><span class=toc-section-number>2.3.1</span> <a href=#subsec:block-unblock-trackers id=toc:subsec:block-unblock-trackers>Block/Unblock
+<!doctype html><html xmlns=http://www.w3.org/1999/xhtml lang=zh-hans xml:lang=zh-Hans><meta charset=utf-8><meta name=generator content="pandoc"><meta name=viewport content="width=device-width,initial-scale=1,user-scalable=yes"><meta name=author content="Muntashir Al-Islam"><title>App Manager</title><style>code{white-space:pre-wrap}span.smallcaps{font-variant:small-caps}span.underline{text-decoration:underline}div.column{display:inline-block;vertical-align:top;width:50%}div.hanging-indent{margin-left:1.5em;text-indent:-1.5em}ul.task-list{list-style:none}pre>code.sourceCode{white-space:pre;position:relative}pre>code.sourceCode>span{display:inline-block;line-height:1.25}pre>code.sourceCode>span:empty{height:1.2em}.sourceCode{overflow:visible}code.sourceCode>span{color:inherit;text-decoration:inherit}div.sourceCode{margin:1em 0}pre.sourceCode{margin:0}@media screen{div.sourceCode{overflow:auto}}@media print{pre>code.sourceCode{white-space:pre-wrap}pre>code.sourceCode>span{text-indent:-5em;padding-left:5em}}pre.numberSource code{counter-reset:source-line 0}pre.numberSource code>span{position:relative;left:-4em;counter-increment:source-line}pre.numberSource code>span>a:first-child::before{content:counter(source-line);position:relative;left:-1em;text-align:right;vertical-align:baseline;border:none;display:inline-block;-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;padding:0 4px;width:4em}pre.numberSource{margin-left:3em;padding-left:4px}div.sourceCode{}@media screen{pre>code.sourceCode>span>a:first-child::before{text-decoration:underline}}code span.al{font-weight:700}code span.an{font-style:italic}code span.cf{font-weight:700}code span.co{font-style:italic}code span.cv{font-style:italic}code span.do{font-style:italic}code span.dt{text-decoration:underline}code span.er{font-weight:700}code span.in{font-style:italic}code span.kw{font-weight:700}code span.pp{font-weight:700}code span.wa{font-style:italic}.display.math{display:block;text-align:center;margin:.5rem auto}</style><link rel=stylesheet href=../css/custom.css><header id=title-block-header><h1 class=title>App Manager</h1><p class=author>Muntashir Al-Islam</header><nav id=TOC role=doc-toc><ul class=incremental><li><span><span class=toc-section-number>1</span> <a href=#ch:introduction id=toc:ch:introduction>简介</a></span><ul class=incremental><li><span><span class=toc-section-number>1.1</span> <a href=#sec:terminologies id=toc:sec:terminologies>术语</a></span><li><span><span class=toc-section-number>1.2</span> <a href=#sec:supported-versions id=toc:sec:supported-versions>受支持的版本</a></span><li><span><span class=toc-section-number>1.3</span> <a href=#sec:official-sources id=toc:sec:official-sources>官方来源</a></span><ul class=incremental><li><span><span class=toc-section-number>1.3.1</span> <a href=#subsec:binary-distribution-sources id=toc:subsec:binary-distribution-sources>二进制(可执行)分发来源</a></span><li><span><span class=toc-section-number>1.3.2</span> <a href=#subsec:links-to-source-code id=toc:subsec:links-to-source-code>源码链接</a></span><li><span><span class=toc-section-number>1.3.3</span> <a href=#subsec:translations id=toc:subsec:translations>翻译</a></span></ul><li><span><span class=toc-section-number>1.4</span> <a href=#sec:contributing id=toc:sec:contributing>贡献</a></span><ul class=incremental><li><span><span class=toc-section-number>1.4.1</span> <a href=#subsec:build-instructions id=toc:subsec:build-instructions>构建说明</a></span><li><span><span class=toc-section-number>1.4.2</span> <a href=#subsec:submitting-patches id=toc:subsec:submitting-patches>提交补丁</a></span></ul><li><span><span class=toc-section-number>1.5</span> <a href=#sec:donation-&-funding id=toc:sec:donation-&-funding>捐赠 & 资助</a></span><li><span><span class=toc-section-number>1.6</span> <a href=#sec:contact id=toc:sec:contact>联系我们</a></span></ul><li><span><span class=toc-section-number>2</span> <a href=#ch:pages id=toc:ch:pages>页面</a></span><ul class=incremental><li><span><span class=toc-section-number>2.1</span> <a href=#sec:main-page id=toc:sec:main-page>主页</a></span><ul class=incremental><li><span><span class=toc-section-number>2.1.1</span> <a href=#subsec:batch-operations id=toc:subsec:batch-operations>批处理</a></span><li><span><span class=toc-section-number>2.1.2</span> <a href=#subsec:main-colour-codes id=toc:subsec:main-colour-codes>颜色代码含义</a></span><li><span><span class=toc-section-number>2.1.3</span> <a href=#subsec:main-page-application-types id=toc:subsec:main-page-application-types>应用类型</a></span><li><span><span class=toc-section-number>2.1.4</span> <a href=#subsec:main-page-version-info id=toc:subsec:main-page-version-info>版本信息</a></span><li><span><span class=toc-section-number>2.1.5</span> <a href=#subsec:main-page-options-menu id=toc:subsec:main-page-options-menu>选项菜单</a></span></ul><li><span><span class=toc-section-number>2.2</span> <a href=#sec:app-details-page id=toc:sec:app-details-page>应用程序详情页</a></span><ul class=incremental><li><span><span class=toc-section-number>2.2.1</span> <a href=#subsec:app-details-colour-codes id=toc:subsec:app-details-colour-codes>颜色代码含义</a></span><li><span><span class=toc-section-number>2.2.2</span> <a href=#subsec:app-info-tab id=toc:subsec:app-info-tab>应用信息</a></span><li><span><span class=toc-section-number>2.2.3</span> <a href=#subsec:component-tabs id=toc:subsec:component-tabs>组件选项卡</a></span><li><span><span class=toc-section-number>2.2.4</span> <a href=#subsec:permission-tabs id=toc:subsec:permission-tabs>权限选项卡</a></span><li><span><span class=toc-section-number>2.2.5</span> <a href=#subsec:signatures-tab id=toc:subsec:signatures-tab>签名选项卡</a></span><li><span><span class=toc-section-number>2.2.6</span> <a href=#subsec:other-tabs id=toc:subsec:other-tabs>其他选项卡</a></span></ul><li><span><span class=toc-section-number>2.3</span> <a href=#sec:1-click-ops-page id=toc:sec:1-click-ops-page>一键操作页</a></span><ul class=incremental><li><span><span class=toc-section-number>2.3.1</span> <a href=#subsec:block-unblock-trackers id=toc:subsec:block-unblock-trackers>Block/Unblock
 Trackers</a></span><li><span><span class=toc-section-number>2.3.2</span> <a href=#subsec:block-components-dots id=toc:subsec:block-components-dots>Block Components…</a></span><li><span><span class=toc-section-number>2.3.3</span> <a href=#subsec:set-mode-for-app-ops-dots id=toc:subsec:set-mode-for-app-ops-dots>Set Mode for App
 Ops…</a></span><li><span><span class=toc-section-number>2.3.4</span> <a href=#subsec:1-click-back-up id=toc:subsec:1-click-back-up>Back
 up</a></span><li><span><span class=toc-section-number>2.3.5</span> <a href=#subsec:1-click-restore id=toc:subsec:1-click-restore>Restore</a></span></ul><li><span><span class=toc-section-number>2.4</span> <a href=#sec:profiles-page id=toc:sec:profiles-page>Profiles
@@ -95,49 +95,70 @@ Ops</a></span><li><span><span class=toc-section-number>7.3</span> <a href=#sec:a
 Constants</a></span><li><span><span class=toc-section-number>7.3.3</span> <a href=#subsec:package-ops id=toc:subsec:package-ops>PackageOps</a></span><li><span><span class=toc-section-number>7.3.4</span> <a href=#subsec:opentry id=toc:subsec:opentry>OpEntry</a></span><li><span><span class=toc-section-number>7.3.5</span> <a href=#subsec:usage id=toc:subsec:usage>Usage</a></span></ul><li><span><span class=toc-section-number>7.4</span> <a href=#sec:appopsservice id=toc:sec:appopsservice>AppOpsService</a></span><li><span><span class=toc-section-number>7.5</span> <a href=#sec:appops-xml id=toc:sec:appops-xml>appops.xml</a></span><li><span><span class=toc-section-number>7.6</span> <a href=#sec:appops-cli id=toc:sec:appops-cli>Command Line
 Interface</a></span></ul></ul></nav><div class=titlingpage><div class=center><div class=announcement><p>We’re running a <strong>funding campaign</strong> for App Manager for
 a limited period. <a href=https://opencollective.com/app-manager#category-ABOUT>learn
-more...</a></div><p><img src=../images/icon.png style=width:1in alt=image><p><strong><span class=smallcaps>App Manager</span></strong><p><strong>用户手册</strong><p><em>v3.0.0-alpha01</em><p>17 February 2022<p>Copyright © 2020–2022 Muntashir Al-Islam<blockquote><p>“Wisely and slow. They stumble that run fast.” <span>— Friar
+more...</a></div><p><img src=../images/icon.png style=width:1in alt=image><p><strong><span class=smallcaps>App Manager</span></strong><p><strong>用户手册</strong><p><em>v3.0.0-alpha01</em><p>3 March 2022<p>Copyright © 2020–2022 Muntashir Al-Islam<blockquote><p>“Wisely and slow. They stumble that run fast.” <span>— Friar
 Laurence, <em>Romeo and Juliet</em></span></blockquote></div></div><section id=ch:introduction class=level1 data-number=1><h1 data-number=1><span class=header-section-number>1</span> <a href=#toc:ch:introduction>简介</a><a href=#ch:introduction class=anchor aria-hidden=true></a></h1><p>App Manager 是一个提供大量功能的高级的 Android
 软件包管理器，因此，需要用户手册来帮助用户正确使用。本文作为 App Manager
-的用户手册，旨在描述 App Manager 所提供的每一个功能。<p>本文也可以被认为是 App Manager 的 “官方” 指南，并指明 App Manager
-的预期行为。翻译可能有误
-(原文为英文)。因此，每个有能力的用户应该阅读该文件的英文版本，以获得最佳的体验。<p>此外还可能有其他非官方的或第三方的资源，如博客文章、视频、聊天群组等。虽然这些资源可能对许多人有用，但它们可能不是针对最新版本。<p>如果在App Manager中发现任何偏离本文档的情况，应在<p><a href=https://github.com/MuntashirAkon/AppManager/issues>App
-Manager 问题追踪</a>内反映。<section id=sec:terminologies class=level2 data-number=1.1><h2 data-number=1.1><span class=header-section-number>1.1</span> <a href=#toc:sec:terminologies>术语</a><a href=#sec:terminologies class=anchor aria-hidden=true></a></h2><ul class=incremental><li><p><strong>AM</strong> — App Manager<li><p><strong>Block/Unblock</strong> — Used for component blocking or
-unblocking. How components are blocked depends on<p>the user preferences.<li><p><strong>IFW</strong> — Intent Firewall (意图防火墙)<li><p><strong>Ops</strong> — operations (操作), e.g. app ops, batch
+的用户手册，旨在描述 App Manager 所提供的每一个功能。 本文也可以被认为是
+App Manager 的 “官方” 指南，并指明 App Manager 的预期行为。翻译可能有误
+(原文为英文)。因此，每个有能力的用户应该阅读该文件的英文版本，以获得最佳的体验。
+此外还可能有其他非官方的或第三方的资源，如博客文章、视频、聊天群组等。虽然这些资源可能对许多人有用，但它们可能不是针对最新版本。
+如果在App Manager中发现任何偏离本文档的情况，应在 <a href=https://github.com/MuntashirAkon/AppManager/issues>App Manager
+问题追踪</a>内反映。<section id=sec:terminologies class=level2 data-number=1.1><h2 data-number=1.1><span class=header-section-number>1.1</span> <a href=#toc:sec:terminologies>术语</a><a href=#sec:terminologies class=anchor aria-hidden=true></a></h2><ul class=incremental><li><p><strong>AM</strong> — App Manager<li><p><strong>Block/Unblock</strong> — Used for component blocking or
+unblocking. How components are blocked depends on the user
+preferences.<li><p><strong>IFW</strong> — Intent Firewall (意图防火墙)<li><p><strong>Ops</strong> — operations (操作), e.g. app ops, batch
 ops, 1-click ops<li><p><strong>SSAID</strong> — <code>Settings.Secure.ANDROID_ID</code>
 - 分配给每个应用的设备标识符 (Android
 Oreo及以上版本)，由应用签名与包<code>android</code>的SSAID组合生成的。因此，除非用户选择格式化设备，否则它保证对每个应用来说都是独一无二的。它被广泛用于跟踪用户。<li><p><strong>Tracker</strong> — Denotes tracker components throughout
-the document and in App Manager except in the<p><a href=#sec:scanner-page>scanner page</a>. Trackers include
-libraries such as crash reporters, analytics,<p>profiling, identification, ad, location, etc. Thus, they are not
-equal in functions. There is no distinction or bias<p>between open source and closed source libraries that promote
-tracking.</ul></section><section id=sec:supported-versions class=level2 data-number=1.2><h2 data-number=1.2><span class=header-section-number>1.2</span> <a href=#toc:sec:supported-versions>受支持的版本</a><a href=#sec:supported-versions class=anchor aria-hidden=true></a></h2><p>当前，支持的版本是v2.6.0（稳定版），v3.0.0（alpha和debug版）。先前版本的
-App<p>Manager 可能包含安全漏洞，不应继续使用。</section><section id=sec:official-sources class=level2 data-number=1.3><h2 data-number=1.3><span class=header-section-number>1.3</span> <a href=#toc:sec:official-sources>官方来源</a><a href=#sec:official-sources class=anchor aria-hidden=true></a></h2><section id=subsec:binary-distribution-sources class=level3 data-number=1.3.1><h3 data-number=1.3.1><span class=header-section-number>1.3.1</span>
-<a href=#toc:subsec:binary-distribution-sources>二进制(可执行)分发来源</a><a href=#subsec:binary-distribution-sources class=anchor aria-hidden=true></a></h3><p>App Manager 通过以下渠道发布。<p>非官方来源可能分发 App Manager 的修改版本，后果自负。<ol class=incremental><li><p>F-Droid <a href=#fn1 class=footnote-ref id=fnref1 role=doc-noteref><sup>1</sup></a><br><em>Link:</em> <a href=https://f-droid.org/packages/io.github.muntashirakon.AppManager class=uri>https://f-droid.org/packages/io.github.muntashirakon.AppManager</a><li><p>GitHub repository.<br><em>Normal releases:</em> <a href=https://github.com/MuntashirAkon/AppManager/releases class=uri>https://github.com/MuntashirAkon/AppManager/releases</a><br><em>Debug releases:</em> <a href=https://github.com/MuntashirAkon/AppManager/actions class=uri>https://github.com/MuntashirAkon/AppManager/actions</a><li><p>Telegram.<br><em>Normal releases:</em> <a href=https://t.me/AppManagerChannel class=uri>https://t.me/AppManagerChannel</a><br><em>Debug releases:</em> <a href=https://t.me/AppManagerDebug class=uri>https://t.me/AppManagerDebug</a></ol></section><section id=subsec:links-to-source-code class=level3 data-number=1.3.2><h3 data-number=1.3.2><span class=header-section-number>1.3.2</span>
+the document and in App Manager except in the <a href=#sec:scanner-page>scanner page</a>. Trackers include libraries
+such as crash reporters, analytics, profiling, identification, ad,
+location, etc. Thus, they are not equal in functions. There is no
+distinction or bias between open source and closed source libraries that
+promote tracking.</ul></section><section id=sec:supported-versions class=level2 data-number=1.2><h2 data-number=1.2><span class=header-section-number>1.2</span> <a href=#toc:sec:supported-versions>受支持的版本</a><a href=#sec:supported-versions class=anchor aria-hidden=true></a></h2><p>当前，支持的版本是v2.6.0（稳定版），v3.0.0（alpha和debug版）。先前版本的
+App Manager 可能包含安全漏洞，不应继续使用。</section><section id=sec:official-sources class=level2 data-number=1.3><h2 data-number=1.3><span class=header-section-number>1.3</span> <a href=#toc:sec:official-sources>官方来源</a><a href=#sec:official-sources class=anchor aria-hidden=true></a></h2><section id=subsec:binary-distribution-sources class=level3 data-number=1.3.1><h3 data-number=1.3.1><span class=header-section-number>1.3.1</span>
+<a href=#toc:subsec:binary-distribution-sources>二进制(可执行)分发来源</a><a href=#subsec:binary-distribution-sources class=anchor aria-hidden=true></a></h3><p>App Manager 通过以下渠道发布。 非官方来源可能分发 App Manager
+的修改版本，后果自负。<ol class=incremental><li><p>F-Droid <a href=#fn1 class=footnote-ref id=fnref1 role=doc-noteref><sup>1</sup></a><br><em>Link:</em> <a href=https://f-droid.org/packages/io.github.muntashirakon.AppManager class=uri>https://f-droid.org/packages/io.github.muntashirakon.AppManager</a><li><p>GitHub repository.<br><em>Normal releases:</em> <a href=https://github.com/MuntashirAkon/AppManager/releases class=uri>https://github.com/MuntashirAkon/AppManager/releases</a><br><em>Debug releases:</em> <a href=https://github.com/MuntashirAkon/AppManager/actions class=uri>https://github.com/MuntashirAkon/AppManager/actions</a><li><p>Telegram.<br><em>Normal releases:</em> <a href=https://t.me/AppManagerChannel class=uri>https://t.me/AppManagerChannel</a><br><em>Debug releases:</em> <a href=https://t.me/AppManagerDebug class=uri>https://t.me/AppManagerDebug</a></ol></section><section id=subsec:links-to-source-code class=level3 data-number=1.3.2><h3 data-number=1.3.2><span class=header-section-number>1.3.2</span>
 <a href=#toc:subsec:links-to-source-code>源码链接</a><a href=#subsec:links-to-source-code class=anchor aria-hidden=true></a></h3><p>除了GitHub外其他都是镜像链接。tags 应当始终是最新的，但 master
-分支不保证是<p>最新的。如果计划 clone master 分支，请使用 GitHub
+分支不保证是 最新的。如果计划 clone master 分支，请使用 GitHub
 链接而不是其他链接。<ol class=incremental><li><p>GitHub: <a href=https://github.com/MuntashirAkon/AppManager class=uri>https://github.com/MuntashirAkon/AppManager</a><li><p>GitLab: <a href=https://gitlab.com/muntashir/AppManager class=uri>https://gitlab.com/muntashir/AppManager</a><li><p>Codeberg: <a href=https://codeberg.org/muntashir/AppManager class=uri>https://codeberg.org/muntashir/AppManager</a><li><p>Riseup: <a href=https://0xacab.org/muntashir/AppManager class=uri>https://0xacab.org/muntashir/AppManager</a></ol></section><section id=subsec:translations class=level3 data-number=1.3.3><h3 data-number=1.3.3><span class=header-section-number>1.3.3</span>
 <a href=#toc:subsec:translations>翻译</a><a href=#subsec:translations class=anchor aria-hidden=true></a></h3><p>App Manager 不接受直接通过PR/MR进行的翻译。翻译仅通过 Weblate
-进行自动化管理。<p>要加入翻译团队，请访问 <a href=https://hosted.weblate.org/engage/app-manager/ class=uri>https://hosted.weblate.org/engage/app-manager/</a>。</section></section><section id=sec:contributing class=level2 data-number=1.4><h2 data-number=1.4><span class=header-section-number>1.4</span> <a href=#toc:sec:contributing>贡献</a><a href=#sec:contributing class=anchor aria-hidden=true></a></h2><p>用户可有通过多种方式做出贡献，如创建有用 issues 、参加讨论、<p>改进文档和翻译，添加未被认可的库或跟踪器，<p>审查源代码以及报告安全漏洞。<section id=subsec:build-instructions class=level3 data-number=1.4.1><h3 data-number=1.4.1><span class=header-section-number>1.4.1</span>
+进行自动化管理。 要加入翻译团队，请访问 <a href=https://hosted.weblate.org/engage/app-manager/ class=uri>https://hosted.weblate.org/engage/app-manager/</a>。</section></section><section id=sec:contributing class=level2 data-number=1.4><h2 data-number=1.4><span class=header-section-number>1.4</span> <a href=#toc:sec:contributing>贡献</a><a href=#sec:contributing class=anchor aria-hidden=true></a></h2><p>用户可有通过多种方式做出贡献，如创建有用 issues 、参加讨论、
+改进文档和翻译，添加未被认可的库或跟踪器，
+审查源代码以及报告安全漏洞。<section id=subsec:build-instructions class=level3 data-number=1.4.1><h3 data-number=1.4.1><span class=header-section-number>1.4.1</span>
 <a href=#toc:subsec:build-instructions>构建说明</a><a href=#subsec:build-instructions class=anchor aria-hidden=true></a></h3><p>在位于源码根目录下的BUILDING文件中可以获得编译指导。</section><section id=subsec:submitting-patches class=level3 data-number=1.4.2><h3 data-number=1.4.2><span class=header-section-number>1.4.2</span>
-<a href=#toc:subsec:submitting-patches>提交补丁</a><a href=#subsec:submitting-patches class=anchor aria-hidden=true></a></h3><p>除GitHub之外的仓库目前被视为镜像，在这些网站提交的 PR/MR
-将不被接受.<p><a href=#fn2 class=footnote-ref id=fnref2 role=doc-noteref><sup>2</sup></a><p>相反，patches (<code>.patch</code> 文件)
-可以通过电子邮件附件提交。<em>请务必对Commits签名(Signing-off)</em><p>更多信息请参见位于源码根目录下的CONTRIBUTING文件.<div class="amalert warning"><p><strong><em>注意.</em></strong><p>在通过电子邮件提交补丁是，整个邮件对话在将来可能会被公开访问.<p>所以，请不要除了您的姓名和电子邮件地址之外，不要包含任何个人身份信息（PII）.</div></section></section><section id=sec:donation-&-funding class=level2 data-number=1.5><h2 data-number=1.5><span class=header-section-number>1.5</span> <a href=#toc:sec:donation-&-funding>捐赠 & 资助</a><a href=#sec:donation-&-funding class=anchor aria-hidden=true></a></h2><p><em>捐赠或购买并不是使用App Manager的必要条件.</em> 虽然 App Manager
-不支持任何任何内购,<p>但可以通过 Open Source Collective 向 App Manager
+<a href=#toc:subsec:submitting-patches>提交补丁</a><a href=#subsec:submitting-patches class=anchor aria-hidden=true></a></h3><p>除GitHub之外的仓库目前被视为镜像，在这些网站提交的 PR/MR 将不被接受.
+<a href=#fn2 class=footnote-ref id=fnref2 role=doc-noteref><sup>2</sup></a> 相反，patches (<code>.patch</code>
+文件)
+可以通过电子邮件附件提交。<em>请务必对Commits签名(Signing-off)</em>
+更多信息请参见位于源码根目录下的CONTRIBUTING文件.<div class="amalert warning"><p><strong><em>注意.</em></strong><p>在通过电子邮件提交补丁是，整个邮件对话在将来可能会被公开访问.
+所以，请不要除了您的姓名和电子邮件地址之外，不要包含任何个人身份信息（PII）.</div></section></section><section id=sec:donation-&-funding class=level2 data-number=1.5><h2 data-number=1.5><span class=header-section-number>1.5</span> <a href=#toc:sec:donation-&-funding>捐赠 & 资助</a><a href=#sec:donation-&-funding class=anchor aria-hidden=true></a></h2><p><em>捐赠或购买并不是使用App Manager的必要条件.</em> 虽然 App Manager
+不支持任何任何内购, 但可以通过 Open Source Collective 向 App Manager
 的所有者发送捐赠.<p>Open Source Collective 是 Open Collective
-平台上的一个财政托管机构，以帮助开源项目管理他们的财务状况。<p>目前，它支持通过银行账户、PayPal、信用卡或借记卡和加密货币发起捐赠.<p><em>Link:</em> <a href=https://opencollective.com/muntashir class=uri>https://opencollective.com/muntashir</a>.<p>通过发送捐款，发送者同意他们不应使用捐款作为筹码来使作者优先考虑其所请求的功能.<p>请求新功能不需要任何捐赠，且它们的优先级是按作者倾向排序.<p><em>App Manager 接受任何资助的提议</em><p>有兴趣的组织的代表可以通过以下方式直接联系联系所有者: §<a href=#sec:contact data-reference-type=ref data-reference=sec:contact>1.6</a>.</section><section id=sec:contact class=level2 data-number=1.6><h2 data-number=1.6><span class=header-section-number>1.6</span> <a href=#toc:sec:contact>联系我们</a><a href=#sec:contact class=anchor aria-hidden=true></a></h2><p>Muntashir Al-Islam<a href=#fn3 class=footnote-ref id=fnref3 role=doc-noteref><sup>3</sup></a><br>邮箱: <a href=mailto:muntashirakon@riseup.net>muntashirakon [at]
+平台上的一个财政托管机构，以帮助开源项目管理他们的财务状况。
+目前，它支持通过银行账户、PayPal、信用卡或借记卡和加密货币发起捐赠.<p><em>Link:</em> <a href=https://opencollective.com/muntashir class=uri>https://opencollective.com/muntashir</a>.<p>通过发送捐款，发送者同意他们不应使用捐款作为筹码来使作者优先考虑其所请求的功能.
+请求新功能不需要任何捐赠，且它们的优先级是按作者倾向排序.<p><em>App Manager 接受任何资助的提议</em>
+有兴趣的组织的代表可以通过以下方式直接联系联系所有者: §<a href=#sec:contact data-reference-type=ref data-reference=sec:contact>1.6</a>.</section><section id=sec:contact class=level2 data-number=1.6><h2 data-number=1.6><span class=header-section-number>1.6</span> <a href=#toc:sec:contact>联系我们</a><a href=#sec:contact class=anchor aria-hidden=true></a></h2><p>Muntashir Al-Islam<a href=#fn3 class=footnote-ref id=fnref3 role=doc-noteref><sup>3</sup></a><br>邮箱: <a href=mailto:muntashirakon@riseup.net>muntashirakon [at]
 riseup [dot] net</a><br>Key Fingerprint:
-<code>7bad37c2981e41f8f6abea7f58f0b4f26c346fce</code><br>GitHub: <a href=https://github.com/MuntashirAkon class=uri>https://github.com/MuntashirAkon</a><br>Twitter: <a href=https://twitter.com/Muntashir class=uri>https://twitter.com/Muntashir</a></section></section><section id=ch:pages class=level1 data-number=2><h1 data-number=2><span class=header-section-number>2</span> <a href=#toc:ch:pages>页面</a><a href=#ch:pages class=anchor aria-hidden=true></a></h1><section id=sec:main-page class=level2 data-number=2.1><h2 data-number=2.1><span class=header-section-number>2.1</span> <a href=#toc:sec:main-page>主页</a><a href=#sec:main-page class=anchor aria-hidden=true></a></h2><p>主页面列出所有已安装、已卸载和已备份的应用。<p>单独点击任何已安装的应用项目可打开相应的 <a href=#sec:app-details-page>应用详情页</a>。<p>对于未安装的系统应用，它会显示一个
-对话框提示，可以用来重新安装该应用。<p>使用列表选项中的 <a href=#par:main-page-sort>排序</a>
-，可以选择应用列表的排序方式，退出应用后仍会保留排序方式。<p>使用列表选项中的 <a href=#par:main-page-filter>过滤</a>，可以过滤列表选项。<p>筛选也可以通过搜索栏进行过滤，并支持正则表达式。<p><figure><object data=../images/main_page_entry_info_labeled.svg type=image/svg+xml id=fig:main_page_entry_info_labeled></object></figure><section id=subsec:batch-operations class=level3 data-number=2.1.1><h3 data-number=2.1.1><span class=header-section-number>2.1.1</span>
-<a href=#toc:subsec:batch-operations>批处理</a><a href=#subsec:batch-operations class=anchor aria-hidden=true></a></h3><p>批处理也可以在这个页面内进行。<p>多选模式可以由点击任何应用图标或长按列表中的任何一项进入。<p>进入后，仅需单击列表中的任何一项便可选中，而不是打开应用程序详情页。<p>该模式下，批处理操作位于位于页面底部的多选菜单，包括包括：<ul class=incremental><li><p>将选中应用添加到 <a href=#sec:profiles-page>配置</a><li><p><a href=#sec:backup-restore>备份、恢复或删除</a>应用程序<li><p>阻止应用中的追踪器<li><p>清除应用数据或缓存<li><p>启用/停用/强制停止/卸载应用程序<li><p>导出屏蔽规则<li><p>阻止应用的后台操作 (Android 7 及更高版本)<li><p>导出APK文件到 <code>AppManager/apks</code><li><p>设置<a href=#sec:net-policy>联网规则</a></ul><div class="amalert tip"><p><strong><em>无障碍.</em></strong><p>进入多选模式后，键盘或遥控器的左右键呼出多选菜单。</div></section><section id=subsec:main-colour-codes class=level3 data-number=2.1.2><h3 data-number=2.1.2><span class=header-section-number>2.1.2</span>
-<a href=#toc:subsec:main-colour-codes>颜色代码含义</a><a href=#subsec:main-colour-codes class=anchor aria-hidden=true></a></h3><ul class=incremental><li><p><span class=colorbox style=background-color:#fceed1><span style=color:#000>浅灰橙(日间模式下)</span></span> /<div class=colorbox style=background-color:#091f36><p><span style=color:#fff>深蓝(夜间模式下)</span></div><p>– 多选模式下被选中的应用<li><p><span class=colorbox style=background-color:#ff8a80><span style=color:#000>浅红(日间模式下)</span></span> / <span class=colorbox style=background-color:#4f1c14><span style=color:#fff>深红
+<code>7bad37c2981e41f8f6abea7f58f0b4f26c346fce</code><br>GitHub: <a href=https://github.com/MuntashirAkon class=uri>https://github.com/MuntashirAkon</a><br>Twitter: <a href=https://twitter.com/Muntashir class=uri>https://twitter.com/Muntashir</a></section></section><section id=ch:pages class=level1 data-number=2><h1 data-number=2><span class=header-section-number>2</span> <a href=#toc:ch:pages>页面</a><a href=#ch:pages class=anchor aria-hidden=true></a></h1><section id=sec:main-page class=level2 data-number=2.1><h2 data-number=2.1><span class=header-section-number>2.1</span> <a href=#toc:sec:main-page>主页</a><a href=#sec:main-page class=anchor aria-hidden=true></a></h2><p>主页面列出所有已安装、已卸载和已备份的应用。
+单独点击任何已安装的应用项目可打开相应的 <a href=#sec:app-details-page>应用详情页</a>。
+对于未安装的系统应用，它会显示一个 对话框提示，可以用来重新安装该应用。
+使用列表选项中的 <a href=#par:main-page-sort>排序</a>
+，可以选择应用列表的排序方式，退出应用后仍会保留排序方式。
+使用列表选项中的 <a href=#par:main-page-filter>过滤</a>，可以过滤列表选项。
+筛选也可以通过搜索栏进行过滤，并支持正则表达式。<p><figure><object data=../images/main_page_entry_info_labeled.svg type=image/svg+xml id=fig:main_page_entry_info_labeled></object></figure><section id=subsec:batch-operations class=level3 data-number=2.1.1><h3 data-number=2.1.1><span class=header-section-number>2.1.1</span>
+<a href=#toc:subsec:batch-operations>批处理</a><a href=#subsec:batch-operations class=anchor aria-hidden=true></a></h3><p>批处理也可以在这个页面内进行。
+多选模式可以由点击任何应用图标或长按列表中的任何一项进入。
+进入后，仅需单击列表中的任何一项便可选中，而不是打开应用程序详情页。
+该模式下，批处理操作位于位于页面底部的多选菜单，包括包括：<ul class=incremental><li><p>将选中应用添加到 <a href=#sec:profiles-page>配置</a><li><p><a href=#sec:backup-restore>备份、恢复或删除</a>应用程序<li><p>阻止应用中的追踪器<li><p>清除应用数据或缓存<li><p>启用/停用/强制停止/卸载应用程序<li><p>导出屏蔽规则<li><p>阻止应用的后台操作 (Android 7 及更高版本)<li><p>导出APK文件到 <code>AppManager/apks</code><li><p>设置<a href=#sec:net-policy>联网规则</a></ul><div class="amalert tip"><p><strong><em>无障碍.</em></strong><p>进入多选模式后，键盘或遥控器的左右键呼出多选菜单。</div></section><section id=subsec:main-colour-codes class=level3 data-number=2.1.2><h3 data-number=2.1.2><span class=header-section-number>2.1.2</span>
+<a href=#toc:subsec:main-colour-codes>颜色代码含义</a><a href=#subsec:main-colour-codes class=anchor aria-hidden=true></a></h3><ul class=incremental><li><p><span class=colorbox style=background-color:#fceed1><span style=color:#000>浅灰橙(日间模式下)</span></span> / <span class=colorbox style=background-color:#091f36><span style=color:#fff>深蓝(夜间模式下)</span></span> –
+多选模式下被选中的应用<li><p><span class=colorbox style=background-color:#ff8a80><span style=color:#000>浅红(日间模式下)</span></span> / <span class=colorbox style=background-color:#4f1c14><span style=color:#fff>深红
 (夜间模式下)</span></span> – 停用的应用<li><p><span class=colorbox style=background-color:#ff0><span style=color:#000>黄色星标</span></span> – 可调试的应用<li><p><span style=color:#e05915>橙色 <em>日期</em></span> –
 应用可读取日志<li><p><span style=color:#e05915>橙色 <em>UID</em></span> – 用户 ID
 在应用间被共享<li><p><span style=color:#e05915>橙色 <em>SDK</em></span> –
 使用明文网络通信(如 HTTP)<li><p><span style=color:red>红色 <em>包名</em></span> –
 应用禁止清除数据<li><p><span style=color:red>红色<em>备份标识</em></span> –
 已卸载的应用存在一个或多个备份<li><p><span style=color:#e05915>橙色<em>备份标识</em></span> –
-备份过期,<p>如基本备份中包含已安装的应用的旧版本<li><p><span style=color:#09868b>深蓝绿色 <em>备份标识</em></span>
-– 备份在期,<p>如基本备份中包含已安装应用的相同或更高版本<li><p><span style=color:#09868b>深蓝绿色 <em>包名</em></span> –
+备份过期, 如基本备份中包含已安装的应用的旧版本<li><p><span style=color:#09868b>深蓝绿色 <em>备份标识</em></span>
+– 备份在期, 如基本备份中包含已安装应用的相同或更高版本<li><p><span style=color:#09868b>深蓝绿色 <em>包名</em></span> –
 已强行停止运行的应用<li><p><span style=color:#09868b>深蓝绿色 <em>版本</em></span> –
 不活跃的应用<li><p><span style=color:#f0f>紫红</span> –
 常驻应用(一直运行的应用)</ul></section><section id=subsec:main-page-application-types class=level3 data-number=2.1.3><h3 data-number=2.1.3><span class=header-section-number>2.1.3</span>
@@ -145,15 +166,22 @@ riseup [dot] net</a><br>Key Fingerprint:
 应用，同时存在以下后缀:<ul class=incremental><li><p><code>X</code> – 支持多种架构(AArch32位/AArch64位)<li><p><code>0</code> – 不含dex文件(包含ART/Davilk虚拟机字节码,
 即可直接运行的代码)<li><p><code>°</code> – 处于休眠状态<li><p><code>#</code> – 已请求大量堆(Heap Memory)内存<li><p><code>?</code> – 已请求处于安全模式下的虚拟机</ul></section><section id=subsec:main-page-version-info class=level3 data-number=2.1.4><h3 data-number=2.1.4><span class=header-section-number>2.1.4</span>
 <a href=#toc:subsec:main-page-version-info>版本信息</a><a href=#subsec:main-page-version-info class=anchor aria-hidden=true></a></h3><p>版本名称有以下前缀:<ul class=incremental><li><p><code>_</code> – 没有硬件加速（减慢应用中的过渡动画）<li><p><code>~</code> – 仅测试模式<li><p><code>debug</code> – 可调试应用</ul></section><section id=subsec:main-page-options-menu class=level3 data-number=2.1.5><h3 data-number=2.1.5><span class=header-section-number>2.1.5</span>
-<a href=#toc:subsec:main-page-options-menu>选项菜单</a><a href=#subsec:main-page-options-menu class=anchor aria-hidden=true></a></h3><p>选项菜单提供了几个选项，可用以对列出的应用程序进行排序和过滤，<p>以及转到 App Manager 内或外的不同页面。<section id=说明 class=level4 data-number=2.1.5.1><h4 data-number=2.1.5.1><span class=header-section-number>2.1.5.1</span> 说明<a href=#说明 class=anchor aria-hidden=true></a></h4><p>点击 <strong>指南</strong> 打开离线版的App Manager用户手册.<p>它也可能打开在线版本如果如果相应的功能拆分<code>feat_docs</code>未安装,<p>或系统 WebView不存在.</section><section id=subsubsec:main-list-options class=level4 data-number=2.1.5.2><h4 data-number=2.1.5.2><span class=header-section-number>2.1.5.2</span> 列表选项<a href=#subsubsec:main-list-options class=anchor aria-hidden=true></a></h4><p><strong>列表选项</strong>
+<a href=#toc:subsec:main-page-options-menu>选项菜单</a><a href=#subsec:main-page-options-menu class=anchor aria-hidden=true></a></h3><p>选项菜单提供了几个选项，可用以对列出的应用程序进行排序和过滤，
+以及转到 App Manager 内或外的不同页面。<section id=说明 class=level4 data-number=2.1.5.1><h4 data-number=2.1.5.1><span class=header-section-number>2.1.5.1</span> 说明<a href=#说明 class=anchor aria-hidden=true></a></h4><p>点击 <strong>指南</strong> 打开离线版的App Manager用户手册.
+它也可能打开在线版本如果如果相应的功能拆分<code>feat_docs</code>未安装,
+或系统 WebView不存在.</section><section id=subsubsec:main-list-options class=level4 data-number=2.1.5.2><h4 data-number=2.1.5.2><span class=header-section-number>2.1.5.2</span> 列表选项<a href=#subsubsec:main-list-options class=anchor aria-hidden=true></a></h4><p><strong>列表选项</strong>
 包含了对主页面中的列表进行排序和过滤的选项。<section id=排序 class=level5 data-number=2.1.5.2.1><h5 data-number=2.1.5.2.1><span class=header-section-number>2.1.5.2.1</span> 排序<a href=#排序 class=anchor aria-hidden=true></a></h5><div id=par:main-page-sort></div><p>主页面中列出的应用程序可以按照以下方式进行排序:<ul class=incremental><li><p><strong>用户应用优先</strong> 用户应用将优先展示<li><p><strong>应用标签</strong> 根据应用标签（也称为
 <em>应用程序名称</em>）升序排序。(默认选项)<li><p><strong>包名</strong> 根据包名升序排序<li><p><strong>最后更新</strong> 根据更新时间降序排序<li><p><strong>共享 user ID</strong> 根据共享 user ID升序排序<li><p><strong>目标 SDK</strong> 根据目标SDK升序排序<li><p><strong>签名</strong> 根据签名信息升序排序<li><p><strong>已停用优先</strong> 已停用将优先展示<li><p><strong>已阻止优先</strong>
 根据已阻止的应用组件数目降序排序<li><p><strong>已备份优先</strong> 已备份将优先展示<li><p><strong>追踪器</strong> 根据追踪器数目降序排序S<li><p><strong>最后操作</strong> 根据被App
-Manager操作的应用时间降序排序</ul><p>此外，还有 <em>反转</em> 选项，可以用来对列表进行反向排序。<p>无论怎样排序偏好，应用程序都是先按字母顺序排序，以防止产生任何随机排序结果.</section><section id=筛选 class=level5 data-number=2.1.5.2.2><h5 data-number=2.1.5.2.2><span class=header-section-number>2.1.5.2.2</span> 筛选<a href=#筛选 class=anchor aria-hidden=true></a></h5><div id=par:main-page-filter></div><p>主页面中列出的应用可以通过以下方式进行过滤:<ul class=incremental><li><p><strong>用户</strong> 仅用户应用<li><p><strong>系统</strong> 仅系统应用<li><p><strong>停用</strong> 仅停用应用<li><p><strong>被阻止</strong> 仅被阻止组件的应用<li><p><strong>可打开</strong> 仅至少有一个Aactivity的应用<li><p><strong>有备份</strong> 仅有备份的应用<li><p><strong>无备份</strong> 仅没有备份的应用<li><p><strong>运行中</strong> 仅正在运行的应用<li><p><strong>有分包</strong> 仅有分包(多Apk)应用<li><p><strong>已安装</strong> 仅已安装应用<li><p><strong>已卸载</strong> 仅已卸载应用</ul><p>与排序不同，它可以同时应用多个过滤选项，<p>如，停用的用户应用可以通过选择 <em>用户</em>和
-<em>停用</em>列出，这对<a href=#subsec:batch-operations>批处理</a>特别有用，在这种情况下过滤用户应用可能是必要的，以便安全地进行某些操作。<p>Unlike sorting, it is possible to apply more than one filtering
-options at the same time. For example, the disabled user<p>applications can be listed by selecting both <em>User apps</em> and
-<em>Disabled apps</em>. This can be particularly<p>useful for <a href=#subsec:batch-operations>batch operations</a>
-where filtering the user applications may be necessary<p>to carry out certain operations safely.</section><section id=配置文件名称 class=level5 data-number=2.1.5.2.3><h5 data-number=2.1.5.2.3><span class=header-section-number>2.1.5.2.3</span> 配置文件名称<a href=#配置文件名称 class=anchor aria-hidden=true></a></h5><p>It is also possible to list the applications that are only present in
+Manager操作的应用时间降序排序</ul><p>此外，还有 <em>反转</em> 选项，可以用来对列表进行反向排序。
+无论怎样排序偏好，应用程序都是先按字母顺序排序，以防止产生任何随机排序结果.</section><section id=筛选 class=level5 data-number=2.1.5.2.2><h5 data-number=2.1.5.2.2><span class=header-section-number>2.1.5.2.2</span> 筛选<a href=#筛选 class=anchor aria-hidden=true></a></h5><div id=par:main-page-filter></div><p>主页面中列出的应用可以通过以下方式进行过滤:<ul class=incremental><li><p><strong>用户</strong> 仅用户应用<li><p><strong>系统</strong> 仅系统应用<li><p><strong>停用</strong> 仅停用应用<li><p><strong>被阻止</strong> 仅被阻止组件的应用<li><p><strong>可打开</strong> 仅至少有一个Aactivity的应用<li><p><strong>有备份</strong> 仅有备份的应用<li><p><strong>无备份</strong> 仅没有备份的应用<li><p><strong>运行中</strong> 仅正在运行的应用<li><p><strong>有分包</strong> 仅有分包(多Apk)应用<li><p><strong>已安装</strong> 仅已安装应用<li><p><strong>已卸载</strong> 仅已卸载应用</ul><p>与排序不同，它可以同时应用多个过滤选项，
+如，停用的用户应用可以通过选择 <em>用户</em>和 <em>停用</em>列出，这对<a href=#subsec:batch-operations>批处理</a>特别有用，在这种情况下过滤用户应用可能是必要的，以便安全地进行某些操作。
+Unlike sorting, it is possible to apply more than one filtering options
+at the same time. For example, the disabled user applications can be
+listed by selecting both <em>User apps</em> and <em>Disabled apps</em>.
+This can be particularly useful for <a href=#subsec:batch-operations>batch operations</a> where filtering the
+user applications may be necessary to carry out certain operations
+safely.</section><section id=配置文件名称 class=level5 data-number=2.1.5.2.3><h5 data-number=2.1.5.2.3><span class=header-section-number>2.1.5.2.3</span> 配置文件名称<a href=#配置文件名称 class=anchor aria-hidden=true></a></h5><p>It is also possible to list the applications that are only present in
 a <a href=#sec:profiles-page>profile</a>. This can be useful for
 carrying out certain operations on a profile (e.g., uninstalling all the
 applications in a profile) that cannot be done via the <a href=#sec:profiles-page>Profiles page</a>.</section></section><section id=subsubsec:main:1-click-ops class=level4 data-number=2.1.5.3><h4 data-number=2.1.5.3><span class=header-section-number>2.1.5.3</span> 一键操作<a href=#subsubsec:main:1-click-ops class=anchor aria-hidden=true></a></h4><p><strong>1-Click Ops</strong> stands for the single-click operations.
@@ -189,71 +217,84 @@ this menu item. The option remains hidden if the app is not present in
 the system.</section><section id=termux-终端模拟器 class=level4 data-number=2.1.5.10><h4 data-number=2.1.5.10><span class=header-section-number>2.1.5.10</span> Termux 终端模拟器<a href=#termux-终端模拟器 class=anchor aria-hidden=true></a></h4><p>If the app <a href=https://github.com/termux/termux-app>Termux</a>
 is installed in the system, the running session (or a new session) can
 be opened directly via this menu item. The option remains hidden if the
-app is not present in the system.</section><section id=设置 class=level4 data-number=2.1.5.11><h4 data-number=2.1.5.11><span class=header-section-number>2.1.5.11</span> 设置<a href=#设置 class=anchor aria-hidden=true></a></h4><p>此菜单项将打开本应用的 <a href=#sec:settings-page>设置</a>.</section></section></section><section id=sec:app-details-page class=level2 data-number=2.2><h2 data-number=2.2><span class=header-section-number>2.2</span> <a href=#toc:sec:app-details-page>应用程序详情页</a><a href=#sec:app-details-page class=anchor aria-hidden=true></a></h2><p><strong>应用详情页</strong>由11个标签页组成.几乎描述了一个应用程序的所有信息,<p>包括清单中的所有属性, <a href=#ch:app-ops>AppOps</a>,签名,原生库等<section id=subsec:app-details-colour-codes class=level3 data-number=2.2.1><h3 data-number=2.2.1><span class=header-section-number>2.2.1</span>
+app is not present in the system.</section><section id=设置 class=level4 data-number=2.1.5.11><h4 data-number=2.1.5.11><span class=header-section-number>2.1.5.11</span> 设置<a href=#设置 class=anchor aria-hidden=true></a></h4><p>此菜单项将打开本应用的 <a href=#sec:settings-page>设置</a>.</section></section></section><section id=sec:app-details-page class=level2 data-number=2.2><h2 data-number=2.2><span class=header-section-number>2.2</span> <a href=#toc:sec:app-details-page>应用程序详情页</a><a href=#sec:app-details-page class=anchor aria-hidden=true></a></h2><p><strong>应用详情页</strong>由11个标签页组成.几乎描述了一个应用程序的所有信息,
+包括清单中的所有属性, <a href=#ch:app-ops>AppOps</a>,签名,原生库等<section id=subsec:app-details-colour-codes class=level3 data-number=2.2.1><h3 data-number=2.2.1><span class=header-section-number>2.2.1</span>
 <a href=#toc:subsec:app-details-colour-codes>颜色代码含义</a><a href=#subsec:app-details-colour-codes class=anchor aria-hidden=true></a></h3><p>本页中使用的背景颜色列表:<ul class=incremental><li><p><span class=colorbox style=background-color:red><span style=color:#000>正红 (日间)</span></span> / <span class=colorbox style=background-color:#790d0d><span style=color:#fff>深红
-(夜间)</span></span><p>– 危险权限或, 被阻止的组件(使用App Manager操作)<li><p><span class=colorbox style=background-color:#ff8a80><span style=color:#000>亮红 (日间)</span></span> / <span class=colorbox style=background-color:#4f1c14><span style=color:#fff>绯红
+(夜间)</span></span> – 危险权限或, 被阻止的组件(使用App
+Manager操作)<li><p><span class=colorbox style=background-color:#ff8a80><span style=color:#000>亮红 (日间)</span></span> / <span class=colorbox style=background-color:#4f1c14><span style=color:#fff>绯红
 (夜间)</span></span> – 被阻止的组件(其他应用操作)<div class="amalert tip"><p><strong><em>注意.</em></strong><p>表示在 App Manager 之外禁用(阻止)的组件,
 标记为禁用(阻止)的组件并不意味着它被用户禁用,它也可能是被系统禁用的,
 或者在其清单(Android-Manifest.xml)中被标记为禁用(阻止)。被停用的应用程序也会被系统（和App
-Manager）视为禁用(阻止)。</div><li><p><span class=colorbox style=background-color:#ff8017><span style=color:#000>鲜橙 (日间)</span></span> /<div class=colorbox style=background-color:#ff801780><p><span style=color:#fff>深橙 (夜间)</span></div><p>– 追踪器组件<li><p><span class=colorbox style=background-color:#ea80fc><span style=color:#000>亮紫 (日间)</span></span> /<div class=colorbox style=background-color:#431c5d><p><span style=color:#fff>深紫 (夜间)</span></div><p>– 正在运行的组件</ul></section><section id=subsec:app-info-tab class=level3 data-number=2.2.2><h3 data-number=2.2.2><span class=header-section-number>2.2.2</span>
-<a href=#toc:subsec:app-info-tab>应用信息</a><a href=#subsec:app-info-tab class=anchor aria-hidden=true></a></h3><p><strong>应用信息</strong> 选项卡包含关于一个应用程序的基本信息,<p>许多操作可以在此标签中执行.<section id=subsubsec:app-info-general-information class=level4 data-number=2.2.2.1><h4 data-number=2.2.2.1><span class=header-section-number>2.2.2.1</span> 基本信息<a href=#subsubsec:app-info-general-information class=anchor aria-hidden=true></a></h4><p>The list below is in the same order as listed in the App Info
-tab.<ul class=incremental><li><p><strong>App Icon.</strong> The application icon. If an app
-doesn’t have an icon, the system default icon is displayed.<li><p><strong>App Label.</strong> The application label or application
-name.<li><p><strong>Version.</strong> Application version is divided into two
-parts. The first part is called <em>version name</em>, the format of
-this part varies but it often consists of multiple integers separated by
-dots. The second part is called <em>version code</em> and it is closed
-under first brackets. Version code is an integer which is usually used
-to differentiate between app versions (as version name can often be
-unreadable by a machine). In general, new version of an app has higher
-version code than the old ones. For instance, if <code>123</code> and
-<code>125</code> are two version codes of an app, we can say that the
-latter is more updated than the former because the version code of the
-latter is higher. For applications that depend on platforms (mobile,
-tabs, desktops, etc.), these version numbers can be misleading as they
-use prefixes for each platform.<li><p><strong>Tags.</strong> (Also known as tag clouds) Tags include
-the basic, concise and most useful info of an app. Tags contain
-<em>tracker info</em> (i.e. number of tracker components), <em>app
-type</em> (user app or system app and whether the app is an updated
-version of the system app or if the app is installed systemless-ly using
-Magisk), <em>running</em> (i.e. one or more services of the app is
-running in the background), <em>split APK info</em> (i.e.  number of
-splits), <em>debuggable</em> (the app is a debug version), <em>test
-only</em> (the app is a test only app), <em>large heap</em> (the app has
-requested a large heap size), <em>stopped</em> (the app is force
-stopped), <em>disabled</em> (the app is disabled), <em>KeyStore</em>
-(the app has items in the Android KeyStore), <em>no code</em> (the app
-doesn’t have any code associated with it), <a href=#sec:terminologies><em>SSAID</em></a>, <em>netpolicy</em>
+Manager）视为禁用(阻止)。</div><li><p><span class=colorbox style=background-color:#ff8017><span style=color:#000>鲜橙 (日间)</span></span> / <span class=colorbox style=background-color:#ff801780><span style=color:#fff>深橙 (夜间)</span></span> – 追踪器组件<li><p><span class=colorbox style=background-color:#ea80fc><span style=color:#000>亮紫 (日间)</span></span> / <span class=colorbox style=background-color:#431c5d><span style=color:#fff>深紫 (夜间)</span></span> – 正在运行的组件</ul></section><section id=subsec:app-info-tab class=level3 data-number=2.2.2><h3 data-number=2.2.2><span class=header-section-number>2.2.2</span>
+<a href=#toc:subsec:app-info-tab>应用信息</a><a href=#subsec:app-info-tab class=anchor aria-hidden=true></a></h3><p><strong>应用信息</strong> 选项卡包含关于一个应用程序的基本信息,
+许多操作可以在此标签中执行.<section id=subsubsec:app-info-general-information class=level4 data-number=2.2.2.1><h4 data-number=2.2.2.1><span class=header-section-number>2.2.2.1</span> 基本信息<a href=#subsubsec:app-info-general-information class=anchor aria-hidden=true></a></h4><p>The list below is in the same order as listed in the App Info
+tab.<ul class=incremental><li><p><strong>Application Icon.</strong> The application icon. If the
+application does not have an icon, the system default icon will be
+displayed. It is also possible to verify the APK signature via SHA or
+MD5 sums stored in the clipboard by simply clicking on it.<li><p><strong>Application Label.</strong> The application label or the
+name of the application.<li><p><strong>Package Name.</strong> The name of the application
+package. Clicking on the name stores it in the clipboard.<li><p><strong>Version.</strong> The application version is divided into
+two parts. The first part is called <em>version name</em>. The format of
+this part varies but often consists of multiple integers separated by
+dots. The second part is called <em>version code</em>. It is enclosed by
+the first brackets. The version code is an integer used to differentiate
+between application versions (since a version name can be unreadable to
+a machine). In general, a new version of an application has higher
+version code than the old ones. For example, if <code>123</code> and
+<code>125</code> are two version codes of an application, we can say
+that the latter is more updated than the former because the version code
+of the latter is higher. Applications that serve different APK files for
+the same version on different platforms (mobile, tabs, desktops, etc.)
+or architectures (32/64 bits, ARM or Intel), the version numbers can be
+misleading as they often add prefixes for each platform.<li><p><strong>Tags.</strong> (Also known as tag clouds) Tags include
+the most basic, concise and useful information of an application, such
+as—<ul class=incremental><li><p><strong>Tracker info.</strong> Number of tracker components in
+the application (e.g., <em>5 trackers</em>).<li><p><em>application type</em> User application or system application
+and whether the application is an updated version of the system
+application or if the application is installed systemless-ly using
+Magisk</ul><p>Tags contain <em>tracker info</em> (i.e. number of tracker
+components), <em>application type</em> (user application or system
+application and whether the application is an updated version of the
+system application or if the application is installed systemless-ly
+using Magisk), <em>running</em> (i.e. one or more services of the
+application is running in the background), <em>split APK info</em> (i.e.
+ number of splits), <em>debuggable</em> (the application is a debug
+version), <em>test only</em> (the application is a test only
+application), <em>large heap</em> (the application has requested a large
+heap size), <em>stopped</em> (the application is force stopped),
+<em>disabled</em> (the application is disabled), <em>KeyStore</em> (the
+application has items in the Android KeyStore), <em>no code</em> (the
+application doesn’t have any code associated with it), <a href=#sec:terminologies><em>SSAID</em></a>, <em>netpolicy</em>
 (network policy such as background data usage), and <em>battery
 optimization</em>. The importance of including <em>test only</em> and
-<em>debuggable</em> is that app with these properties can do additional
-tasks or these apps can be <code>run-as</code> without root which can
-cause potential security problems if these apps store any private
-information. <em>Large heap</em> denotes that the app will be allocated
-a higher amount of memory (RAM) if needed. While this may not be harmful
-for most cases, any suspicious apps requesting large heap should be
-taken seriously.<li><p><strong>Horizontal Action Panel.</strong> This is an action panel
-containing various actions regarding the app. See §<a href=#subsubsec:horizontal-action-panel data-reference-type=ref data-reference=subsubsec:horizontal-action-panel>2.2.2.2</a> for a
+<em>debuggable</em> is that application with these properties can do
+additional tasks or these apps can be <code>run-as</code> without root
+which can cause potential security problems if these apps store any
+private information. <em>Large heap</em> denotes that the application
+will be allocated a higher amount of memory (RAM) if needed. While this
+may not be harmful for most cases, any suspicious apps requesting large
+heap should be taken seriously.<li><p><strong>Horizontal Action Panel.</strong> This is an action panel
+containing various actions regarding the application. See §<a href=#subsubsec:horizontal-action-panel data-reference-type=ref data-reference=subsubsec:horizontal-action-panel>2.2.2.2</a> for a
 complete list of actions available here.<li><p><strong>Paths & Directories.</strong> Contains various
 information regarding application paths including <em>app directory</em>
 (where the APK files are stored), <em>data directories</em> (internal,
 device protected and externals), <em>split APK directories</em> (along
 with the split names), and <em>native JNI library</em> (if present). JNI
 libraries are used to invoke native codes usually written in C/C++. Use
-of native library can make the app run faster or help an app use
-third-party libraries written using languages other than Java like in
-most games. You can also open these directories using your favourite
-file managers (provided they support it and have necessary permissions)
-by clicking on the launch icon on the right-hand side of each
-item.<li><p><strong>Data Usage Since Last Boot.</strong> A rather self
+of native library can make the application run faster or help an
+application use third-party libraries written using languages other than
+Java like in most games. You can also open these directories using your
+favourite file managers (provided they support it and have necessary
+permissions) by clicking on the launch icon on the right-hand side of
+each item.<li><p><strong>Data Usage Since Last Boot.</strong> A rather self
 explanatory option. But beware that due to some issues, the results
 might often be misleading and simply wrong. This part remains hidden if
 <em>Usage Access</em> permission is not granted in newer
 devices.<li><p><strong>Storage & Cache.</strong> Displays information
-regarding the size of the app (APK files), data and cache. In older
-devices, size of external data, cache, media and OBB folders are also
-displayed. This part remains hidden if <em>Usage Access</em> permission
-is not granted in newer devices.<li><p><strong>More Info.</strong> Displays other information such
+regarding the size of the application (APK files), data and cache. In
+older devices, size of external data, cache, media and OBB folders are
+also displayed. This part remains hidden if <em>Usage Access</em>
+permission is not granted in newer devices.<li><p><strong>More Info.</strong> Displays other information such
 as–<ul class=incremental><li><p><strong>SDK.</strong> Displays information related to the Android
 SDK. There are two (one in old devices) values: <em>Max</em> denotes the
 target SDK and <em>Min</em> denotes the minimum SDK (the latter is not
@@ -261,87 +302,91 @@ available in old devices). It is best practice to use apps with maximum
 SDK that the platform currently supports. SDK is also known as
 <strong>API Level</strong>.<div class=seealso-inline><p><em>See also: <span><a href=https://en.wikipedia.org/wiki/Android_version_history#Overview>Android
 Version History</a></span></em></div><li><p><strong>Flags.</strong> The application flags used at the time of
-building the app. For a complete list of flags and what they do, visit
-the <a href=https://developer.android.com/reference/android/content/pm/ApplicationInfo#flags>official
-documentation</a>.<li><p><strong>Date Installed.</strong> The date when the app was first
-installed.<li><p><strong>Date Updated.</strong> The date when the app was last
-updated. This is the same as <em>Date Installed</em> if the app hasn’t
-been updated.<li><p><strong>Installer App.</strong> The app that installed this app.
-Not all app supply the information used by the package manager to
-register the installer app. Therefore, this value should not be taken
-for granted.<li><p><strong>User ID.</strong> The unique user ID set by the Android
-system to the app. For shared applications, same user ID is assigned to
-multiple applications that have the same <em>Shared User
+building the application. For a complete list of flags and what they do,
+visit the <a href=https://developer.android.com/reference/android/content/pm/ApplicationInfo#flags>official
+documentation</a>.<li><p><strong>Date Installed.</strong> The date when the application
+was first installed.<li><p><strong>Date Updated.</strong> The date when the application was
+last updated. This is the same as <em>Date Installed</em> if the
+application hasn’t been updated.<li><p><strong>Installer App.</strong> The application that installed
+this application. Not all application supply the information used by the
+package manager to register the installer application. Therefore, this
+value should not be taken for granted.<li><p><strong>User ID.</strong> The unique user ID set by the Android
+system to the application. For shared applications, same user ID is
+assigned to multiple applications that have the same <em>Shared User
 ID</em>.<li><p><strong>Shared User ID.</strong> Applicable for applications that
 are shared together. Although it says ID, this is actually a string
-value. The shared application must have the same <a href=#subsec:signatures-tab>signatures</a>.<li><p><strong>Main Activity.</strong> The main entry point to the app.
-This is only visible if the app has <a href=#subsubsec:activities>activities</a> and any of those are
+value. The shared application must have the same <a href=#subsec:signatures-tab>signatures</a>.<li><p><strong>Main Activity.</strong> The main entry point to the
+application. This is only visible if the application has <a href=#subsubsec:activities>activities</a> and any of those are
 openable from the Launcher. There’s also a launch button on the
 right-hand side which can be used to launch this activity.</ul></ul></section><section id=subsubsec:horizontal-action-panel class=level4 data-number=2.2.2.2><h4 data-number=2.2.2.2><span class=header-section-number>2.2.2.2</span> 水平操作面板<a href=#subsubsec:horizontal-action-panel class=anchor aria-hidden=true></a></h4><p>Horizontal Action Panel, as described in the previous section,
-consists of various app-related actions, such as–<ul class=incremental><li><p><strong>Launch.</strong> Application that has a launcher <a href=#subsubsec:activities>activities</a> can be launched using this
-button.<li><p><strong>Disable.</strong> Disable an app. This button is not
-displayed for already disabled apps or to users who do not have root or
-<a href=#sec:adb-over-tcp>ADB</a>. If you disable an app, the app will
-not be displayed in your Launcher app. Shortcuts for the app will also
-be removed. If you disable a user app, you can only enable them via App
-Manager or any other tool that supports it. There isn’t any option in
-Android Settings to enable a disabled user app.<li><p><strong>Uninstall.</strong> Uninstall an app.<li><p><strong>Enable.</strong> Enable an app. This button is not
-displayed for already enabled apps or to users who do not have root or
-ADB.<li><p><strong>Force Stop.</strong> Force-stop an app. When you force
-stop an app, the app will not be able to run in background unless you
-explicitly open it first. However, this is not always true.<li><p><strong>Clear Data.</strong> Clear data from an app. This
+consists of various application-related actions, such as–<ul class=incremental><li><p><strong>Launch.</strong> Application that has a launcher <a href=#subsubsec:activities>activities</a> can be launched using this
+button.<li><p><strong>Disable.</strong> Disable an application. This button is
+not displayed for already disabled apps or to users who do not have root
+or <a href=#sec:adb-over-tcp>ADB</a>. If you disable an application,
+the application will not be displayed in your Launcher application.
+Shortcuts for the application will also be removed. If you disable a
+user application, you can only enable them via App Manager or any other
+tool that supports it. There isn’t any option in Android Settings to
+enable a disabled user application.<li><p><strong>Uninstall.</strong> Uninstall an application.<li><p><strong>Enable.</strong> Enable an application. This button is
+not displayed for already enabled apps or to users who do not have root
+or ADB.<li><p><strong>Force Stop.</strong> Force-stop an application. When you
+force stop an application, the application will not be able to run in
+background unless you explicitly open it first. However, this is not
+always true.<li><p><strong>Clear Data.</strong> Clear data from an application. This
 includes any information stored in the internal and often the external
-directories, including accounts (if set by the app), cache, etc.
+directories, including accounts (if set by the application), cache, etc.
 Clearing data from App Manager, for example, removes all the rules (the
-blocking is not removed though) saved within the app. Which is why you
-should always take backups of your rules. This button is not displayed
-to users who do not have root or ADB.<li><p><strong>Clear Cache.</strong> Clear app cache only. There is not
-any Android-way to clear app cache. Therefore, it needs root permission
-to clear cache from the app’s internal storage.<li><p><strong>Install.</strong> Install an APK opened using any
-third-party app. This button is only displayed for an external APK that
-hasn’t been installed.<li><p><strong>What’s New.</strong> This button is displayed for an APK
+blocking is not removed though) saved within the application. Which is
+why you should always take backups of your rules. This button is not
+displayed to users who do not have root or ADB.<li><p><strong>Clear Cache.</strong> Clear application cache only. There
+is not any Android-way to clear application cache. Therefore, it needs
+root permission to clear cache from the application’s internal
+storage.<li><p><strong>Install.</strong> Install an APK opened using any
+third-party application. This button is only displayed for an external
+APK that hasn’t been installed.<li><p><strong>What’s New.</strong> This button is displayed for an APK
 that has higher version code than the installed one. Clicking on this
 button displays a dialog consisting of differences in a version control
 manner. The information it displays include <em>version</em>,
 <em>trackers</em>, <em>permissions</em>, <em>components</em>,
 <em>signatures</em> (checksum changes), <em>features</em>, <em>shared
-libraries</em> and <em>SDK</em>.<li><p><strong>Update.</strong> Displayed for an app that has a higher
-version code than the installed app.<li><p><strong>Reinstall.</strong> Displayed for an app that has the
-same version code as the installed app.<li><p><strong>Downgrade.</strong> Displayed for an app that has a lower
-version code than the installed app.<li><p><strong>Manifest.</strong> Clicking on this button displays the
-app’s manifest file in a separate page. The manifest file can be wrapped
-or unwrapped using the corresponding toggle button (on the top-right
-side) or can be saved to you shared storage using the save
+libraries</em> and <em>SDK</em>.<li><p><strong>Update.</strong> Displayed for an application that has a
+higher version code than the installed application.<li><p><strong>Reinstall.</strong> Displayed for an application that has
+the same version code as the installed application.<li><p><strong>Downgrade.</strong> Displayed for an application that has
+a lower version code than the installed application.<li><p><strong>Manifest.</strong> Clicking on this button displays the
+application’s manifest file in a separate page. The manifest file can be
+wrapped or unwrapped using the corresponding toggle button (on the
+top-right side) or can be saved to you shared storage using the save
 button.<li><p><strong>Scanner.</strong> Clicking on this button displays the
-app’s tracker and library information. At first, it scans the app to
-extract a list of classes. Then the class list is matched with a number
-of signatures. After that, a scan summary is displayed.<br><div class=seealso-inline><p><em>See also: <span><a href=#sec:scanner-page>Scanner
+application’s tracker and library information. At first, it scans the
+application to extract a list of classes. Then the class list is matched
+with a number of signatures. After that, a scan summary is
+displayed.<br><div class=seealso-inline><p><em>See also: <span><a href=#sec:scanner-page>Scanner
 page</a></span></em></div><li><p><strong>Shared Prefs.</strong> Clicking on this button displays a
-list of shared preferences used by the app. Clicking on a preference
-item in the list opens the <a href=#sec:shared-preferences-editor-page>Shared Preferences Editor
+list of shared preferences used by the application. Clicking on a
+preference item in the list opens the <a href=#sec:shared-preferences-editor-page>Shared Preferences Editor
 page</a>. This option is only visible to the root users.<li><p><strong>Databases.</strong> Clicking on this button displays a
-list of databases used by the app. This needs more improvements, and a
-database editor which might be added in the future. This option is only
-visible to the root users.<li><p><strong>F-Droid.</strong> Opens the app in your favourite
-<em>F-Droid</em> client.<li><p><strong>Store.</strong> Opens the app in <em>Aurora Store</em>.
-The option is only visible if <em>Aurora Store</em> is
+list of databases used by the application. This needs more improvements,
+and a database editor which might be added in the future. This option is
+only visible to the root users.<li><p><strong>F-Droid.</strong> Opens the application in your favourite
+<em>F-Droid</em> client.<li><p><strong>Store.</strong> Opens the application in <em>Aurora
+Store</em>. The option is only visible if <em>Aurora Store</em> is
 installed.</ul></section><section id=subsubsec:app-info-options-menu class=level4 data-number=2.2.2.3><h4 data-number=2.2.2.3><span class=header-section-number>2.2.2.3</span> 选项菜单<a href=#subsubsec:app-info-options-menu class=anchor aria-hidden=true></a></h4><p>Options-menu is located in the top-right corner of the page. A
 complete description of the options present there are given below:<ul class=incremental><li><p><strong>Share.</strong> Share button can be used to share the APK
-file or <em>APKS</em> file (if the app is has multiple splits) can be
-imported into <a href=https://github.com/Aefyr/SAI>SAI</a>. You can
-share it with your favourite file manager to save the file in your
-shared storage.<li><p><strong>Refresh.</strong> Refreshes the App Info tab.<li><p><strong>View in Settings.</strong> Opens the app in Android
-Settings.<li><p><strong>Backup/Restore.</strong> Opens the backup/restore
+file or <em>APKS</em> file (if the application is has multiple splits)
+can be imported into <a href=https://github.com/Aefyr/SAI>SAI</a>. You
+can share it with your favourite file manager to save the file in your
+shared storage.<li><p><strong>Refresh.</strong> Refreshes the App Info tab.<li><p><strong>View in Settings.</strong> Opens the application in
+Android Settings.<li><p><strong>Backup/Restore.</strong> Opens the backup/restore
 dialog.<li><p><strong>Export Blocking Rules.</strong> Export rules configured
-for this app within App Manager.<li><p><strong>Open in Termux.</strong> Opens the app in Termux. This
-actually runs <code>su - user_id</code> where <code>user_id</code>
-denotes the app’s kernel user ID (described in the <a href=#subsubsec:app-info-general-information>General Information
+for this application within App Manager.<li><p><strong>Open in Termux.</strong> Opens the application in Termux.
+This actually runs <code>su - user_id</code> where <code>user_id</code>
+denotes the application’s kernel user ID (described in the <a href=#subsubsec:app-info-general-information>General Information
 section</a>). This option is only visible to the root users. See §<a href=#subsubsec:config-termux data-reference-type=ref data-reference=subsubsec:config-termux>2.2.2.4</a> to learn how to
-configure Termux to run commands from third-party applications.<li><p><strong>Run in Termux.</strong> Open the app using
+configure Termux to run commands from third-party applications.<li><p><strong>Run in Termux.</strong> Open the application using
 <code>run-as package_name</code> in Termux. This is only applicable for
 the debuggable apps and works for both root and ADB users. See §<a href=#subsubsec:config-termux data-reference-type=ref data-reference=subsubsec:config-termux>2.2.2.4</a> to learn how to
-configure Termux to run commands from third-party applications.<li><p><strong>Extract Icon.</strong> Extract and save the app’s icon in
-your desired location.</ul></section><section id=subsubsec:config-termux class=level4 data-number=2.2.2.4><h4 data-number=2.2.2.4><span class=header-section-number>2.2.2.4</span> Termux<a href=#subsubsec:config-termux class=anchor aria-hidden=true></a></h4><p>By default, Termux does not allow running commands from third-party
+configure Termux to run commands from third-party applications.<li><p><strong>Extract Icon.</strong> Extract and save the application’s
+icon in your desired location.</ul></section><section id=subsubsec:config-termux class=level4 data-number=2.2.2.4><h4 data-number=2.2.2.4><span class=header-section-number>2.2.2.4</span> Termux<a href=#subsubsec:config-termux class=anchor aria-hidden=true></a></h4><p>By default, Termux does not allow running commands from third-party
 applications. To enable this option, you have to add
 <code>allow-external-apps=true</code> in
 <code>~/.termux/termux.properties</code>, and make sure that you are
@@ -357,8 +402,8 @@ similar features in many ways. For example, they all have a
 building blocks of any application, and most of these have to declared
 in the application manifest. Application manifest is a file where
 application specific metadata are stored. The Android operating system
-learns what to do with an app by reading the metadata. Colours used in
-these tabs are explained in §<a href=#subsec:app-details-colour-codes data-reference-type=ref data-reference=subsec:app-details-colour-codes>2.2.1</a>. You also
+learns what to do with an application by reading the metadata. Colours
+used in these tabs are explained in §<a href=#subsec:app-details-colour-codes data-reference-type=ref data-reference=subsec:app-details-colour-codes>2.2.1</a>. You also
 have the ability to sort the list of components to display blocked or
 tracker components on top of the list using the <strong>Sort</strong>
 option in the overflow menu.<section id=subsubsec:activities class=level4 data-number=2.2.3.1><h4 data-number=2.2.3.1><span class=header-section-number>2.2.3.1</span> 活动 (Activity)<a href=#subsubsec:activities class=anchor aria-hidden=true></a></h4><p><strong>Activities</strong> are windows or pages that you can browse
@@ -376,14 +421,14 @@ which activities can open that particular file and offers you to open
 the file with these activities (therefore, it is nothing to do with the
 application itself). There are other intent filters as well.<p>Activities which are <em>exportable</em> can be usually opened by any
 third-party apps (some activities require permissions, if that is the
-case, only an app having those permissions can open them). In the
-<em>Activities</em> tab, the name of the activity (on top of each list
-item) is actually a button. It is enabled for the <em>exportable</em>
-activities and disabled for others (root users can open any activities).
-You can click on the button to open the activity directly in App
-Manager. You can also open the Interceptor page by long clicking on an
-activity. Currently, it only works for <em>exportable</em>
-activities.<div class="amalert warning"><p><strong><em>Notice.</em></strong><p>If you are not able to open any activity, chances are it has certain
+case, only an application having those permissions can open them). In
+the <em>Activities</em> tab, the name of the activity (on top of each
+list item) is actually a button. It is enabled for the
+<em>exportable</em> activities and disabled for others (root users can
+open any activities). You can click on the button to open the activity
+directly in App Manager. You can also open the Interceptor page by long
+clicking on an activity. Currently, it only works for
+<em>exportable</em> activities.<div class="amalert warning"><p><strong><em>Notice.</em></strong><p>If you are not able to open any activity, chances are it has certain
 dependencies which are not met, e.g. you cannot open <em>App Details
 Activity</em> because it requires that you at least supply a package
 name. These dependencies cannot always be inferred programmatically.
@@ -413,19 +458,19 @@ messages are sent using a method called intent. Intent is a special
 feature for Android which can be used to open applications, activities,
 services and send broadcast messages. Therefore, like <a href=#subsubsec:activities>activities</a>, broadcast receivers use
 intent filters to receive only the desired broadcast message(s).
-Broadcast messages can be sent by either system or the app itself. When
-a broadcast message is sent, the corresponding receivers are awakened by
-the system so that they can execute tasks. For example, if you have low
-memory, your phone may freeze or experience lags for a moment after you
-enable mobile data or connect to the Wifi. Ever wondered why? This is
-because broadcast receivers that can receive
+Broadcast messages can be sent by either system or the application
+itself. When a broadcast message is sent, the corresponding receivers
+are awakened by the system so that they can execute tasks. For example,
+if you have low memory, your phone may freeze or experience lags for a
+moment after you enable mobile data or connect to the Wifi. Ever
+wondered why? This is because broadcast receivers that can receive
 ‘android.net.conn.CONNECTIVITY_CHANGE‘ are awakened by the system as
 soon as you enable data connection. Since many apps use this intent
 filter, all of these apps are awakened almost immediately by the system
 which causes the freeze or lags. That being said, receivers can be used
 for inter-process communication (IPC), i.e., it helps you communicate
 between different apps (provided you have the necessary permissions) or
-even different components of a single app.</section><section id=appdetails:providers class=level4 data-number=2.2.3.4><h4 data-number=2.2.3.4><span class=header-section-number>2.2.3.4</span> (内容)提供者
+even different components of a single application.</section><section id=appdetails:providers class=level4 data-number=2.2.3.4><h4 data-number=2.2.3.4><span class=header-section-number>2.2.3.4</span> (内容)提供者
 ((Content)Providers)<a href=#appdetails:providers class=anchor aria-hidden=true></a></h4><p><strong>Providers</strong> (also called <em>content providers</em>)
 are used for data management. For example, when you save an apk file or
 export rules in App Manager, it uses a content provider called
@@ -433,22 +478,22 @@ export rules in App Manager, it uses a content provider called
 rules. There are other content providers or even custom ones to manage
 various content-related tasks such as database management, tracking,
 searching, etc. Each content provider has a field called
-<em>Authority</em> which is unique to that particular app in the entire
-Android eco-system just like the package name.</section><section id=针对已root的手机的额外功能 class=level4 data-number=2.2.3.5><h4 data-number=2.2.3.5><span class=header-section-number>2.2.3.5</span>
+<em>Authority</em> which is unique to that particular application in the
+entire Android eco-system just like the package name.</section><section id=针对已root的手机的额外功能 class=level4 data-number=2.2.3.5><h4 data-number=2.2.3.5><span class=header-section-number>2.2.3.5</span>
 针对已root的手机的额外功能<a href=#针对已root的手机的额外功能 class=anchor aria-hidden=true></a></h4><p>Unlike non-root users who are mostly spectators in these tabs, root
 users can perform various operations.<section id=阻止组件 class=level5 data-number=2.2.3.5.1><h5 data-number=2.2.3.5.1><span class=header-section-number>2.2.3.5.1</span> 阻止组件<a href=#阻止组件 class=anchor aria-hidden=true></a></h5><p>On the right-most side of each component item, there is a “block”
 icon (which becomes a “unblock/restore” icon when the component is being
 blocked). This icon (actually, a button) can be used to toggle the
 blocking status of that particular component. If you do not have <a href=#subsubsec:instant-component-blocking>Instant Component
-Blocking</a> enabled or haven’t applied blocking for the app before, you
-have to apply the changes using the <strong>Apply rules</strong> option
-in three-dots menu. You can also remove already applied rules using the
-same option (which would be read as <strong>Remove rules</strong> this
-time).<div class=seealso-inline><p><em>See also: <span><a href=#sec:faq:app-components>FAQ: App
+Blocking</a> enabled or haven’t applied blocking for the application
+before, you have to apply the changes using the <strong>Apply
+rules</strong> option in three-dots menu. You can also remove already
+applied rules using the same option (which would be read as
+<strong>Remove rules</strong> this time).<div class=seealso-inline><p><em>See also: <span><a href=#sec:faq:app-components>FAQ: App
 Components</a></span></em></div></section><section id=par:appdetails:blocking-trackers class=level5 data-number=2.2.3.5.2><h5 data-number=2.2.3.5.2><span class=header-section-number>2.2.3.5.2</span> 阻止跟踪器<a href=#par:appdetails:blocking-trackers class=anchor aria-hidden=true></a></h5><p>You can disable tracker components using the <strong>Block
 tracker</strong> option in the three-dots menu. All tracker components
-will be blocked regardless of the tab you’re currently in.<div class="amalert tip"><p><strong><em>Info.</em></strong><p>Tracker components are a subset of app components. Therefore, they
-are blocked using the same method used for blocking any other
+will be blocked regardless of the tab you’re currently in.<div class="amalert tip"><p><strong><em>Info.</em></strong><p>Tracker components are a subset of application components. Therefore,
+they are blocked using the same method used for blocking any other
 components.</div><div class=seealso><p><em>See also:</em><ul class=incremental><li><p><a href=#subsec:tracker-classes-versus-tracker-components>FAQ:
 Tracker classes versus tracker components</a><li><p><a href=#sec:scanner-page>Scanner Page</a><li><p><a href=#subsec:block-unblock-trackers>1-Click Ops Page:
 Block/Unblock Trackers</a></ul></div></section></section></section><section id=subsec:permission-tabs class=level3 data-number=2.2.4><h3 data-number=2.2.4><span class=header-section-number>2.2.4</span>
@@ -463,39 +508,42 @@ automatically if they appear in the application manifest, but
 confirmation from the user. Colours used in these tabs are explained in
 §<a href=#subsec:app-details-colour-codes data-reference-type=ref data-reference=subsec:app-details-colour-codes>2.2.1</a>.<section id=subsubsec:app-ops class=level4 data-number=2.2.4.1><h4 data-number=2.2.4.1><span class=header-section-number>2.2.4.1</span> App Ops<a href=#subsubsec:app-ops class=anchor aria-hidden=true></a></h4><p><strong>App Ops</strong> stands for <strong>Application
 Operations</strong>. Since Android 4.3, <em>App Ops</em> are used by
-Android system to control most of the application permissions. Each app
-op has a unique number associated with them which are closed inside
-first brackets in the App Ops tab. They also have a private and
-optionally, a public name. Some app ops are also associated with
-<em>permissions</em>. The dangerousness of an app op is decided based on
-the associated permission, and other information such as <em>flags</em>,
-<em>permission name</em>, <em>permission description</em>, <em>package
-name</em>, <em>group</em> are taken from the associated <a href=#subsubsec:permissions>permission</a>. Other information may
-include the following:<ul class=incremental><li><p><strong>Mode.</strong> It describes the current authorisation
+Android system to control most of the application permissions. Each
+application op has a unique number associated with them which are closed
+inside first brackets in the App Ops tab. They also have a private and
+optionally, a public name. Some application ops are also associated with
+<em>permissions</em>. The dangerousness of an application op is decided
+based on the associated permission, and other information such as
+<em>flags</em>, <em>permission name</em>, <em>permission
+description</em>, <em>package name</em>, <em>group</em> are taken from
+the associated <a href=#subsubsec:permissions>permission</a>. Other
+information may include the following:<ul class=incremental><li><p><strong>Mode.</strong> It describes the current authorisation
 status which can be <em>allow</em>, <em>deny</em> (a rather misnomer, it
 simply means error), <em>ignore</em> (it actually means deny),
 <em>default</em> (inferred from a list of defaults set internally by the
-vendor), <em>foreground</em> (in newer Androids, it means the app op can
-only be used when the app is running in foreground), and some custom
-modes set by the vendors (MIUI uses <em>ask</em>, for
-instance).<li><p><strong>Duration.</strong> The amount of time this app op has
-been used (there can be negative durations whose use cases are currently
-unknown to me).<li><p><strong>Accept Time.</strong> Last time the app op was
-accepted.<li><p><strong>Reject Time.</strong> Last time the app op was
+vendor), <em>foreground</em> (in newer Androids, it means the
+application op can only be used when the application is running in
+foreground), and some custom modes set by the vendors (MIUI uses
+<em>ask</em>, for instance).<li><p><strong>Duration.</strong> The amount of time this application op
+has been used (there can be negative durations whose use cases are
+currently unknown to me).<li><p><strong>Accept Time.</strong> Last time the application op was
+accepted.<li><p><strong>Reject Time.</strong> Last time the application op was
 rejected.</ul><div class="amalert tip"><p><strong><em>Info.</em></strong><p>Contents of this tab are visible to no-root users if
 <code>android.permission.GET_APP_OPS_STATS</code> is granted via
-ADB.</div><p>There is a toggle button next to each app op item which can be used
-to allow or deny (ignore) the app op. If you need to set other modes
-available to your device, simply long click on an item. If you need to
-set additional app ops that are not listed in the tab, use the <em>Set
-custom app op</em> option in the menu. You can also reset your changes
-using the <em>Reset to default</em> option or deny all dangerous app ops
-using the corresponding option in the menu. You can also sort them in
-ascending order by app op names and the associated unique numbers (or
-values). You can also list the denied app ops first using the
-corresponding sorting option.<div class="amalert warning"><p><strong><em>Warning.</em></strong><p>Denying an app op may cause the app to misbehave. Use the <em>reset
-to default</em> option if that is the case. Due to the nature how app
-ops work, the system may take some time to apply them.</div><div class=seealso-inline><p><em>See also: <span><a href=#ch:app-ops>Appendix: App
+ADB.</div><p>There is a toggle button next to each application op item which can
+be used to allow or deny (ignore) the application op. If you need to set
+other modes available to your device, simply long click on an item. If
+you need to set additional application ops that are not listed in the
+tab, use the <em>Set custom application op</em> option in the menu. You
+can also reset your changes using the <em>Reset to default</em> option
+or deny all dangerous application ops using the corresponding option in
+the menu. You can also sort them in ascending order by application op
+names and the associated unique numbers (or values). You can also list
+the denied application ops first using the corresponding sorting
+option.<div class="amalert warning"><p><strong><em>Warning.</em></strong><p>Denying an application op may cause the application to misbehave. Use
+the <em>reset to default</em> option if that is the case. Due to the
+nature how application ops work, the system may take some time to apply
+them.</div><div class=seealso-inline><p><em>See also: <span><a href=#ch:app-ops>Appendix: App
 Ops</a></span></em></div></section><section id=使用权限 class=level4 data-number=2.2.4.2><h4 data-number=2.2.4.2><span class=header-section-number>2.2.4.2</span> 使用权限<a href=#使用权限 class=anchor aria-hidden=true></a></h4><p><strong>Uses Permissions</strong> are the permissions used by the
 application. This is named so because they are declared in the manifest
 using <code>uses-permission</code> tags. Information such as
@@ -507,20 +555,20 @@ button on the right side of each permission item. They can also revoke
 dangerous permissions all at once using the corresponding option in the
 menu. Only these two types of permissions can be revoked because Android
 doesn’t allow modifying <em>normal</em> permissions (which most of them
-are). The only alternative is to edit the app manifest and remove these
-permissions from there.<div class="amalert tip"><p><strong><em>Info.</em></strong><p>Since dangerous permissions are revoked by default by the system,
+are). The only alternative is to edit the application manifest and
+remove these permissions from there.<div class="amalert tip"><p><strong><em>Info.</em></strong><p>Since dangerous permissions are revoked by default by the system,
 revoking all dangerous permissions is the same as resetting all
 permissions.</div><div class="amalert tip"><p><strong><em>Notice.</em></strong><p>Permissions cannot be changed for apps targeting API 23 or earlier.
 Therefore, permission toggles are disabled for such apps.</div><p>Users can sort the permissions by permission name (in ascending
 order) or choose to display denied or dangerous permissions at first
 using the corresponding options in the menu.</section><section id=subsubsec:permissions class=level4 data-number=2.2.4.3><h4 data-number=2.2.4.3><span class=header-section-number>2.2.4.3</span> 权限<a href=#subsubsec:permissions class=anchor aria-hidden=true></a></h4><p><strong>Permissions</strong> are usually custom permissions defined
-by the app itself. It could contain regular permissions as well, mostly
-in old applications. Here’s a complete description of each item that is
-displayed there:<ul class=incremental><li><p><strong>Name.</strong> Each permission has a unique name like
-<code>android.permission.INTERNET</code> but multiple app can request
-the permission.<li><p><strong>Icon.</strong> Each permission can have a custom icon.
+by the application itself. It could contain regular permissions as well,
+mostly in old applications. Here’s a complete description of each item
+that is displayed there:<ul class=incremental><li><p><strong>Name.</strong> Each permission has a unique name like
+<code>android.permission.INTERNET</code> but multiple application can
+request the permission.<li><p><strong>Icon.</strong> Each permission can have a custom icon.
 The other permission tabs do not have any icon because they do not
-contain any icon in the app manifest.<li><p><strong>Description.</strong> This optional field describes the
+contain any icon in the application manifest.<li><p><strong>Description.</strong> This optional field describes the
 permission. If there isn’t any description associated with the
 permission, the field is not displayed.<li><p><strong>Flags.</strong> (Uses the flag symbol or
 <strong>Protection Level</strong> name) This describes various
@@ -536,19 +584,19 @@ all.</ul></section></section><section id=subsec:signatures-tab class=level3 data
 <a href=#toc:subsec:signatures-tab>签名选项卡</a><a href=#subsec:signatures-tab class=anchor aria-hidden=true></a></h3><p><strong>Signatures</strong> are actually called signing info. An
 application is signed by one or more singing certificates by the
 application developers before publishing it. The integrity of an
-application (whether the app is from the actual developer and isn’t
-modified by other people) can be checked using the signing info; because
-when an app is modified by a third-party unauthorised person, the app
-cannot be signed using the original certificate(s) again because the
-signing info are kept private by the actual developer. <em>How do you
-verify these signatures?</em> Using checksums. Checksums are generated
-from the certificates themselves. If the developer supplies the
-checksums, you can match the checksums using the different checksums
-generated in the <strong>Signatures</strong> tab. For example, if you
-have downloaded App Manager from Github, Telegram Channel or
-IzzyOnDroid’s repo, you can verify whether the app is actually released
-by me by simply matching the following <em>SHA256</em> checksum with the
-one displayed in this tab:<pre><code>320c0c0fe8cef873f2b554cb88c837f1512589dcced50c5b25c43c04596760ab</code></pre><p>There are three types of checksums displayed there: <em>MD5</em>,
+application (whether the application is from the actual developer and
+isn’t modified by other people) can be checked using the signing info;
+because when an application is modified by a third-party unauthorised
+person, the application cannot be signed using the original
+certificate(s) again because the signing info are kept private by the
+actual developer. <em>How do you verify these signatures?</em> Using
+checksums. Checksums are generated from the certificates themselves. If
+the developer supplies the checksums, you can match the checksums using
+the different checksums generated in the <strong>Signatures</strong>
+tab. For example, if you have downloaded App Manager from Github,
+Telegram Channel or IzzyOnDroid’s repo, you can verify whether the
+application is actually released by me by simply matching the following
+<em>SHA256</em> checksum with the one displayed in this tab:<pre><code>320c0c0fe8cef873f2b554cb88c837f1512589dcced50c5b25c43c04596760ab</code></pre><p>There are three types of checksums displayed there: <em>MD5</em>,
 <em>SHA1</em> and <em>SHA256</em>.<div class="amalert danger"><p><strong><em>Caution.</em></strong><p>It is recommended that you verify signing info using only
 <em>SHA256</em> checksums or all three of them. DO NOT rely on
 <em>MD5</em> or <em>SHA1</em> checksums only as they are known to

@@ -5,7 +5,7 @@
 set -e
 
 # Contains all supported languages except English
-SUPPORTED_LANGUAGES=(ja zh-rCN)
+SUPPORTED_LANGUAGES=(de es ja ru zh-rCN)
 
 res_folder="docs/src/main/res"
 assets_folder="docs/src/main/assets"

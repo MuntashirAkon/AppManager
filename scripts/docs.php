@@ -44,7 +44,7 @@ function build_html($lang) {
     ];
     $cmd = 'cd "' .$pwd. '" && pandoc "' . MAIN_TEX . '" -c "' . CUSTOM_CSS .'" -o "' . OUTPUT_FILENAME . '" -t html5'
         . ' -f latex -s --toc -N --section-divs --default-image-extension=png -i -F pandoc-crossref --citeproc'
-        . ' --highlight-style=monochrome --verbose';
+        . ' --highlight-style=monochrome -M lang=' . get_IETF_language_tag($lang);
     foreach ($lua_files as $lua_script) {
         $cmd .= ' --lua-filter="' . $lua_dir . '/' . $lua_script . '"';
     }
@@ -252,7 +252,7 @@ function update_translations($lang) {
             exit(1);
         }
         if (!isset($strings[$tex_file])) $strings[$tex_file] = array();
-        $strings[$tex_file][$key] = android_escape_slash_newline_reverse($node->textContent);
+        $strings[$tex_file][$key] = get_trimmed_content($node->textContent);
     }
     // Gather all the tex files
     $tex_files = array();
@@ -343,6 +343,28 @@ function update_translations($lang) {
             else unlink($full_path);
         }
     }
+}
+
+function get_trimmed_content(string $content) : string {
+    $len = strlen($content);
+    if ($len > 0 && $content[0] == '"' && $content[$len - 1] == '"') {
+        // Remove starting and ending quotations
+        $content = substr($content, 1, strlen($content) - 2);
+    }
+    // Remove all newline literals
+    return android_escape_slash_newline_reverse(str_replace("\n", '', $content));
+}
+
+function get_IETF_language_tag($lang) {
+    if (strpos($lang, '-') === false) return $lang;
+    $lang_parts = explode('-', $lang);
+    if ($lang_parts[1][0] == 'r') {
+        // Skip r
+        $lang_parts[1] = substr($lang_parts[1], 1, strlen($lang_parts[1]) - 1);
+    }
+    if ($lang_parts[1] == 'CN') $lang_parts[1] = 'Hans';
+    else if ($lang_parts[1] == 'TW') $lang_parts[1] = 'Hant';
+    return implode('-', $lang_parts);
 }
 
 // MAIN //

@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<!-- SPDX-License-Identifier: GPL-3.0-or-later OR CC-BY-SA-4.0 -->
+<!DOCTYPE html><!-- SPDX-License-Identifier: GPL-3.0-or-later OR CC-BY-SA-4.0 -->
 <html lang="en">
   <head>
     <title>App Manager Docs</title>
@@ -7,18 +6,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8" />
     <meta name="Description" content="User manual for App Manager" />
+    <link rel="stylesheet" href="css/custom.css">
     <style>
         body {
-            background: #dcaf74;
-            color: #212121;
-            font-family: Helvetica Nueue, Helvetica, sans-serif;
+            max-width: 1080px;
+            margin: 0 auto;
         }
 
         #middle {
             display: flex;
             align-items: center;
             justify-content: center;
-            min-width: 340px;
+            min-height: 100vh;
         }
 
         #flex {
@@ -45,35 +44,47 @@
             flex: 2 0 0;
             padding: 10px;
             text-align: start;
+            line-height: normal;
+            word-break: keep-all;
         }
 
         #app {
             font-size: 500%;
             text-shadow: 0 0 2px #212121;
+            font-family: Helvetica Nueue, Helvetica, sans-serif;
         }
 
         #manager {
             font-size: 500%;
             font-weight: bold;
             text-shadow: 0 0 2px #212121;
-        }
-
-        #language {
-            appearance: none;
-            border: 1px solid #cb9e63;
-            border-radius: 4px;
-            padding: 4px 8px;
-            margin: 4px;
-            width: 100%;
-            outline: none;
-            font-size: 20px;
-            background-image: linear-gradient(to bottom, #dcaf74, #cb9e63);
-            background-color: #cb9e63;
+            font-family: Helvetica Nueue, Helvetica, sans-serif;
         }
     </style>
     <script>
-        function onLoadLanguage(e) {
-            let lang = e.selectedOptions[0].value;
+        function setLanguage(language) {
+            const date = new Date();
+            date.setTime(date.getTime() + (365 * 24 * 60 * 60 * 1000));
+            let expires = "expires=" + date.toUTCString();
+            document.cookie = "lang=" + language + ";" + expires + ";path=/";
+            return true
+        }
+
+        function getLanguage() {
+            const name = "lang=";
+            let cookies = decodeURIComponent(document.cookie).split(';');
+            for(let cookie of cookies) {
+                while (cookie.charAt(0) === ' ') {
+                    cookie = cookie.substring(1);
+                }
+                if (cookie.indexOf(name) === 0) {
+                    return cookie.substring(name.length, cookie.length);
+                }
+            }
+            return null;
+        }
+
+        function loadLanguage(lang) {
             let url = document.location.href;
             if (url.endsWith("index.html")) {
                 url = url.replace("index.html", "")
@@ -83,22 +94,44 @@
             }
             document.location.assign(url + lang + '/');
         }
+
+        const supportedLanguages = ['en', 'es', 'ja', 'ru', 'zh-rCN'];
+
+        function onLoadDocument() {
+            const lang = getLanguage();
+            if (lang != null) {
+                if (supportedLanguages.includes(lang)) {
+                    loadLanguage(lang);
+                    return;
+                }
+                // Try without region
+                if (lang.includes('-')) {
+                    loadLanguage(lang.split('-')[0]);
+                    return;
+                }
+            }
+        }
     </script>
   </head>
-  <body onLoad="document.getElementById('middle').style['min-height']=window.innerHeight + 'px';">
+  <body onLoad="onLoadDocument()">
     <div id="middle">
       <div id="flex">
         <div id="logo-holder">
-          <img src="./images/icon.png" id="logo" />
+          <img src="./images/icon.png" id="logo" alt="App Manager logo" />
         </div>
         <div id="content">
           <div id="app">App</div>
           <div id="manager">Manager</div>
-          <div>
-            <select id="language" name="language" onChange="onLoadLanguage(this);">
-              <option value="" selected disabled>Select Language</option>
-              <option value="en">English</option>
-            </select>
+          <div id="combobox">
+            <span>
+              <a href="en/" onclick="setLanguage('en')">English</a> &#x2022;
+              <a href="es/" onclick="setLanguage('es')">español</a> &#x2022;
+              <a href="ja/" onclick="setLanguage('ja')">日本語</a> &#x2022;
+              <a href="ru/" onclick="setLanguage('ru')">русский</a> &#x2022;
+              <a href="zh-rCN/" onclick="setLanguage('zh-rCN')">中文 (中国)</a>
+            </span>
+            <hr />
+            <small style="font-style: oblique;">This site uses a cookie to remember your language preference in this browser. Disable JavaScript if you do not wish to use this feature.</small>
           </div>
         </div>
       </div>
