@@ -111,6 +111,10 @@
     margin-bottom: 1em;
 }
 
+.amalert > p:first-child {
+    padding-right: 5px;
+}
+
 .amalert.tip {
     border-color: #625B71 !important; /* ?attr/colorSecondary */
     color: #1D192B !important; /* ?attr/colorOnSecondaryContainer */
