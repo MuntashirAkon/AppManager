@@ -41,7 +41,7 @@
 \n
 \nMit der Überweisung von Spenden stimmen die Absender zu, dass sie die Spenden nicht als Druckmittel verwenden, um die von ihnen gewünschten 
 \nFunktionen zu priorisieren. Für Feature-Anfragen sind keine Belohnungen oder Spenden erforderlich, und sie werden nach den
-\nPräferenzen des ENtwicklers priorisiert.
+\nPräferenzen des Entwicklers priorisiert.
 \n
 \n\\emph{App-Manager nimmt alle Angebote für Finanzierungen oder Zuschüsse an.} Vertreter der interessierten Organisation können 
 \ndirekt den Entwickler über die in §\\cref{sec:Ansprechpartner} angegebenen Optionen kontaktieren.</string>
@@ -55,7 +55,7 @@
 \nStand der aktuellen Version von App Manager. Wenn in App Manager Abweichungen von diesem Dokument festgestellt werden, sollten diese im 
 \n\\href{https://github.com/MuntashirAkon/AppManager/issues}{App Manager Problembehandlung} gemeldet werden.</string>
     <string name="intro$main$submit-patches">Repositories, die sich an anderen Orten als GitHub befinden, werden derzeit als Spiegel betrachtet. Pull-/Merge-Anfragen, die
-\nan diesen Orten eingereicht werden, werden nicht akzeptiert.\\footnote{GitHub Pull Anträge werden manuell mit den entsprechenden Patches zusammengeführt.
+\nan diesen Orten eingereicht wurden, werden nicht akzeptiert.\\footnote{GitHub Pull Anträge werden manuell mit den entsprechenden Patches zusammengeführt.
 \nDaher kann es sein, dass GitHub sie fälschlicherweise als geschlossen markiert, anstatt sie zusammenzuführen.} Stattdessen können Patches (als \\texttt{.patch-} Dateien)
 \nüber E-Mail-Anhänge eingereicht werden. \\textit{Die Signierung ist eine Voraussetzung.} Weitere Informationen finden Sie in der Datei CONTRIBUTING, die sich im Stammverzeichnis
 \ndes Quellcodes befindet.
@@ -99,7 +99,7 @@
     <string name="pages$main-page$$section-title">Hauptseite</string>
     <string name="pages$main-page$$how-app-ops-work-title">Ein Menüpunkt der Anwendungsliste auf der Hauptseite</string>
     <string name="pages$main-page$$batch-operations-title">Stapelverarbeitung</string>
-    <string name="pages$main-page$$colour-codes-title">Farbcodes</string>
+    <string name="pages$main-page$$colour-codes-title">Farbcode</string>
     <string name="intro$main$contact">Muntashir Al-Islam\\footnote{Sie können mich auch als ``Muntashir Akon\'\' ansprechen}\\\\
 \nEmail: \\href{mailto:muntashirakon@riseup.net}{muntashirakon [at] riseup [dot] net}\\\\
 \nKey Fingerprint: \\texttt{7bad37c2981e41f8f6abea7f58f0b4f26c346fce}\\\\
@@ -186,4 +186,28 @@
 \n
 \n\\seealsoinline{\\hyperref[subsubsec:settings-encryption]{Einstellungen: Verschlüsselung}}</string>
     <string name="appendices$changelogs$$chapter-title">Änderungsprotokolle</string>
+    <string name="guide$backup-restore$$delete-title">Sicherung löschen</string>
+    <string name="guide$backup-restore$intro">App Manager verfügt über ein modernes, fortschrittliches und einfach zu bedienendes Sicherungs-/Wiederherstellungssystem, das von Grund auf neu implementiert wurde.
+\nDies ist wahrscheinlich die einzige App, die nicht nur die App oder ihre Daten wiederherstellen kann, sondern auch die Berechtigungen und
+\nRegeln, die Sie im App Manager konfiguriert haben.
+\nSie können auch wählen, ob Sie eine App mehrfach (mit benutzerdefinierten Namen) oder für alle Benutzer sichern möchten.
+\n
+\n\\begin{amseealso}
+\n \\item \\hyperref[subsec:1-click-back-up]{1-Click Ops: Sicherung}
+\n \\item \\hyperref[subsec:1-click-restore]{1-Click Ops: Wiederherstellung}
+\n\\end{amseealso}</string>
+    <string name="guide$backup-restore$location">Sichern/Wiederherstellen ist ein Teil von\\hyperref[subsec:batch-operations]{Batch-Operationen}.
+\nEs befindet sich auch im \\hyperref[subsubsec:app-info-options-menu]{Optionsmenü} in der
+\n\\hyperref[subsec:app-info-tab]{Registerkarte Anwendungsinfo}.
+\nClicking on \\textbf{Backup/Restore} opens the \\textbf{Backup Options}.
+\nBackups are located at \\texttt{/storage/emulated/0/AppManager} by default.
+\nYou can configure custom backup location in the \\hyperref[subsubsec:backup-volume]{settings page} in which case the backups
+\nwill be located at the \\texttt{AppManager} folder in the selected volume.
+\n
+\n\\begin{tip}{Hinweis}
+\n Wenn eine oder mehrere ausgewählte Anwendungen keine Sicherung haben, werden die Optionen \\textbf{Wiederherstellen} and \\textbf{Sicherung löschen} 
+\n nicht angezeigt.
+\n\\end{tip}</string>
+    <string name="guide$backup-restore$$backup-title">Sicherung</string>
+    <string name="guide$backup-restore$$restore-title">Wiederherstellung</string>
 </resources>
