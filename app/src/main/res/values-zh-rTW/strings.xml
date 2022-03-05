@@ -1081,7 +1081,7 @@
     <string name="vt_permalink">VirusTotal 的永久連結</string>
     <string name="pref_vt_apikey">VirusTotal API 金鑰</string>
     <string name="uses_play_app_signing">Play 應用簽名</string>
-    <string name="pref_vt_apikey_description">API 金鑰使應用程式管理員能夠將 APK 檔案上傳到 VirusTotal 以及獲取報告。在 https://virustotal.com 註冊，即可免費獲取 API 金鑰。</string>
+    <string name="pref_vt_apikey_description">API 金鑰使應用程式管理員能夠將 APK 檔案上傳到 VirusTotal 以及取得報告。在 https://virustotal.com 註冊，即可免費取得 API 金鑰。</string>
     <string name="virtual_memory">虛擬記憶體</string>
     <string name="scan_in_vt">在 VirusTotal 中掃描</string>
     <string name="parent_process_id">父進程 ID</string>
