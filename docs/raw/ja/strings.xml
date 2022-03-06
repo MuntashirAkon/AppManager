@@ -367,10 +367,7 @@
 \n \\item \\textbf{スキャナー} このボタンをクリックすると、アプリのトラッカーとライブラリの情報が表示されます。まず、アプリをスキャンして、クラスのリストを抽出し、クラス一覧と複数のシグネチャをマッチングさせます。その後、スキャン結果が表示されます。\\\\
 \n \\seealsoinline{\\hyperref[sec:scanner-page]{スキャナーページ}}
 \n
-\n \\item \\textbf{共有設定} Clicking on this button displays a list of shared preferences used by the app. Clicking
-\n on a preference item in the list opens the \\hyperref[sec:shared-preferences-editor-page]{Shared Preferences Editor
-\n page}. This option is only visible to the root users.
-\nこのボタンをクリックすると、アプリで使用されている共有環境設定の一覧が表示されます。リスト内の設定項目をクリックすると、\\hyperref[sec:shared-preferences-editor-page]{共有設定エディター}が表示されます。このオプションは、Rootユーザーのみに表示されます。
+\n \\item \\textbf{共有設定} このボタンをクリックすると、アプリで使用されている共有環境設定の一覧が表示されます。リスト内の設定項目をクリックすると、\\hyperref[sec:shared-preferences-editor-page]{共有設定エディター}が表示されます。このオプションは、Rootユーザーのみに表示されます。
 \n
 \n \\item \\textbf{データベース} このボタンをクリックすると、アプリが使用しているデータベースの一覧が表示されます。これはもっと改良が必要で、将来的にはデータベース・エディターが追加されるかもしれません。このオプションは、Rootユーザーのみに表示されます。
 \n
@@ -378,26 +375,43 @@
 \n
 \n \\item \\textbf{ストア} \\textit{Aurora Store}でアプリのページを開きます。このオプションは、\\textit{Aurora Store}がインストールされている場合のみ表示されます。
 \n\\end{itemize}</string>
-    <string name="pages$app-details-page$app-info-options-menu">ページの右上にあるのが、オプションメニューです。そこにあるオプションの完全な説明は以下の通りです:
+    <string name="pages$app-details-page$app-info-options-menu">ページの右上にあるのが、オプションメニューです。そこにあるオプションとその説明は以下の通りです:
 \n\\begin{itemize}
-\n \\item \\textbf{共有} Share button can be used to share the APK file or \\textit{APKS} file (if the app is has
-\n multiple splits) can be imported into \\href{https://github.com/Aefyr/SAI}{SAI}. You can share it with your favourite
-\n file manager to save the file in your shared storage.
+\n \\item \\textbf{共有} 共有ボタンでAPKファイルを共有したり、\\textit{APKSファイル}（アプリが複数分割されている場合）を\\href{https://github.com/Aefyr/SAI}{SAI}にインポートすることができます。任意のファイルマネージャーから共有し、ストレージにファイルを保存することができます。
 \n
-\n \\item \\textbf{更新} Refreshes the App Info tab.
-\n \\item \\textbf{設定画面で開く} Opens the app in Android Settings.
-\n \\item \\textbf{バックアップ/復元} Opens the backup/restore dialog.
-\n \\item \\textbf{ブロッキングルールをエクスポート} Export rules configured for this app within App Manager.
+\n \\item \\textbf{更新} アプリ情報タブの内容を更新します。
+\n \\item \\textbf{設定画面で開く} Android設定画面でアプリの詳細画面を開きます。
+\n \\item \\textbf{バックアップ/復元} バックアップ・復元を行うダイアログを開きます。
+\n \\item \\textbf{ブロッキングルールをエクスポート} App Managerでこのアプリに対して設定されたルールをエクスポートします。
 \n
-\n \\item \\textbf{Termuxで開く} Opens the app in Termux. This actually runs \\texttt{su - user\\_id} where
-\n \\texttt{user\\_id} denotes the app\'s kernel user ID (described in the
-\n \\hyperref[subsubsec:app-info-general-information]{General Information section}). This option is only visible to the
-\n root users. See §\\cref{subsubsec:config-termux} to learn how to configure Termux to run commands from third-party applications.
+\n \\item \\textbf{Termuxで開く} Termuxでアプリを開きます。これは実際には \\texttt{su - user\\_id} を実行します。ここで \\texttt{user\\_id} はアプリのカーネルユーザーID（\\hyperref[subsubsec:app-info-general-information]{基本情報セクション}で説明されています）を表します。このオプションはRootユーザーにのみ表示されます。サードパーティアプリケーションからコマンドを実行するように Termux を設定する方法については §\\cref{subsubsec:config-termux} を参照してください。
 \n
-\n \\item \\textbf{Termuxで実行} Open the app using \\texttt{run-as package\\_name} in Termux. This is only applicable
-\n for the debuggable apps and works for both root and ADB users. See §\\cref{subsubsec:config-termux} to learn how to
-\n configure Termux to run commands from third-party applications.
+\n \\item \\textbf{Termuxで実行} Termuxで\\texttt{run-as package\\_name}を使用してアプリを開きます。これはデバッグ可能アプリにのみ適用され、Root及びADBの両方で動作します。サードパーティアプリケーションからコマンドを実行するように Termux を設定する方法については §\\cref{subsubsec:config-termux} を参照してください。
 \n
-\n \\item \\textbf{アイコンを抽出} Extract and save the app\'s icon in your desired location.
+\n \\item \\textbf{アイコンを抽出} アプリのアイコンを抽出して任意の場所に保存します。
 \n\\end{itemize}</string>
+    <string name="pages$app-details-page$servcies">ユーザーが閲覧することができる\\hyperref[subsubsec:activities]{アクティビティ}とは異なり、\\textbf{サービス}はバックグラウンドタスクを処理します。
+\n例えば、スマートフォンのブラウザを使ってインターネットからファイルをダウンロードする場合、ブラウザはコンテンツをダウンロードするためにバックグラウンドサービスを使用しています。
+\n
+\nアクティビティを終了すると、通常はすぐにメモリ上から破棄されます（端末の空きメモリの量など、多くの要因に依存します）。しかしサービスは、必要に応じて無期限に実行することができます。より多くのサービスがバックグラウンドで実行されている場合、メモリや処理能力が不足するため、携帯電話の動作が遅くなり、携帯電話のバッテリーがより速く消耗する可能性があります。新しいAndroidのバージョンでは、すべてのアプリでバッテリーの最適化機能がデフォルトで有効になっています。この機能を有効にすると、システムは任意のサービスをランダムに終了させることができます。
+\n
+\nところで、アクティビティもサービスもメイン\\href{https://stackoverflow.com/questions/7597742}{ルーパー}と呼ばれる同じルーパーで実行されるため、サービスが本当にバックグラウンドで実行されているとは限りません。それを保証するのは、アプリケーションの開発者の仕事です。アプリケーションとサービスは\\hyperref[subsubsec:app-details-receivers]{ブロードキャストレシーバー}を使って通信しています。</string>
+    <string name="pages$app-details-page$receivers">\\textbf{レシーバー}（\\textit{ブロードキャストレシーバー}とも呼ばれる）は、特定のイベントに対して特定のタスクの実行を呼び出すために使用することができます。これらのコンポーネントは、ブロードキャストメッセージを受信するとすぐに実行されるため、ブロードキャストレシーバーと呼ばれます。これらのブロードキャストメッセージは、インテントと呼ばれるメソッドを使用して送信されます。インテントはAndroidの特別な機能で、アプリケーションやアクティビティ、サービスを開いたり、ブロードキャストメッセージを送信したりするために使われます。そのため、\\hyperref[subsubsec:activities]{アクティビティ}と同様に、ブロードキャストレシーバもインテントフィルターを用いて、必要なブロードキャストメッセージのみを受信することができます。ブロードキャストメッセージは、システムまたはアプリケーション自体のいずれかによって送信することができます。ブロードキャストメッセージが送信されると、対応するレシーバーはシステムによって起動され、タスクを実行できるようになります。例えば、メモリが少ない場合、モバイルデータを有効にしたり、Wifiに接続した後に、端末がフリーズしたり、一瞬ラグが発生することがあります。なぜだか不思議に思ったことはありませんか？これは、\'android.net.conn.CONNECTIVITY_CHANGE\'を受信できるブロードキャストレシーバーが、データ接続を有効にすると同時に、システムによって起こされるからです。多くのアプリがこのインテントフィルタを使っているため、これらのアプリはすべて、システムによってほとんどすぐに起こされ、フリーズや遅延の原因になっています。要するに、レシーバはプロセス間通信（IPC）、つまり異なるアプリ間（必要な権限がある場合）、あるいは単一アプリケーションの異なるコンポーネント間の通信に使用できます。</string>
+    <string name="pages$app-details-page$providers">\\textbf{プロバイダ}（\\textit{コンテンツプロバイダ}ともいう）は、アプリ内のデータ管理に使用されます。例えば、App ManagerでAPKファイルの保存やルールのエクスポートを行う場合、「androidx.core.content.FileProvider」というコンテンツプロバイダを使用します。データベース管理、トラッキング、検索など、様々なコンテンツ関連のタスクを管理するために、他のコンテンツプロバイダや、カスタムプロバイダーもあります。各コンテンツプロバイダは、パッケージ名と同様に、Androidエコシステム全体でその特定のアプリケーションに固有のAuthorityと呼ばれるフィールドを持っています。</string>
+    <string name="pages$app-details-page$config-termux">デフォルトでは、Termuxはサードパーティアプリケーションからのコマンドの実行が許可されていません。
+\nこのオプションを有効にするには、\\texttt{\\textasciitilde/.termux/termux.properties} に \\texttt{allow-external-apps=true} を追加し、
+\nTermux v0.96 以降を実行していることを確認する必要があります。
+\n
+\n\\begin{tip}{Info}
+\nこのオプションを有効にしても、Termuxのセキュリティは低下しません。
+\nサードパーティアプリは、他の権限と同様に、Termuxで任意のコマンドを実行できるようにユーザーに要求する必要があります。
+\n\\end{tip}</string>
+    <string name="pages$app-details-page$component-tabs">\\textbf{アクティビティ}、\\textbf{サービス}、\\textbf{レシーバ}（\\textit{ブロードキャストレシーバ}）、\\textbf{プロバイダ}（\\textit{コンテンツプロバイダ}）を合わせてアプリケーションコンポーネントと呼びます。
+\nそれらは多くの点で同様の機能を共有しているからです。例えば、それらはすべて\\textit{名前}と\\textit{ラベル}を持っています。
+\nコンポーネントは、あらゆるアプリケーションの構成要素であり、そのほとんどはアプリケーションマニフェストで宣言されなければなりません。
+\nアプリケーションマニフェストは、アプリケーション固有のメタデータが格納されるファイルです。
+\nAndroidシステムは、メタデータを読み取ることで、アプリケーションで何を行うかを学習します。
+\nこれらのタブで使用される色については、§\\cref{subsec:app-details-colour-codes}で説明しています。
+\nまた、オーバーフローメニューのソートオプションを使用して、ブロックされたコンポーネントやトラッカーコンポーネントをリストの上位に表示するよう、
+\nコンポーネントのリストを\\textbf{並び替え}る機能があります。</string>
 </resources>
