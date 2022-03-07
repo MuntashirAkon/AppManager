@@ -1141,4 +1141,5 @@
         <item quantity="one">Hola</item>
         <item quantity="other">Holas</item>
     </plurals>
+    <string name="uses_play_app_signing_description">Está aplicación contiene algunos marcadores que indican que <i>posiblemente</i> sean usados <a href="https://support.google.com/googleplay/android-developer/answer/9842756">Play App Signing</a>. Con esta programación, las claves de inicio son guardadas en los servidores de Google, y Google es responsable por el inicio de sesión en la app. Tenga en cuenta que emparejar la información de inicio es la única forma de verificar que \u0020la aplicación no fue modificada por una persona diferente al desarrollador (y en este caso, también Google).</string>
 </resources>
