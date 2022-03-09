@@ -355,6 +355,18 @@ public final class PackageUtils {
     }
 
     @NonNull
+    public static List<ApplicationInfo> getAllApplications(int flags) {
+        List<ApplicationInfo> applicationInfoList = new ArrayList<>();
+        for (int userId : Users.getUsersIds()) {
+            try {
+                applicationInfoList.addAll(PackageManagerCompat.getInstalledApplications(flags, userId));
+            } catch (RemoteException ignore) {
+            }
+        }
+        return applicationInfoList;
+    }
+
+    @NonNull
     private static String[] getPackageNamesFromApps(@NonNull List<App> apps) {
         HashSet<String> packages = new HashSet<>(apps.size());
         for (App app : apps) {

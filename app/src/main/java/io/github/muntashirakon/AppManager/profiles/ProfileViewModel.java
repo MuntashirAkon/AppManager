@@ -4,10 +4,8 @@ package io.github.muntashirakon.AppManager.profiles;
 
 import android.app.Application;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.RemoteException;
-import android.os.UserHandleHidden;
 
 import androidx.annotation.AnyThread;
 import androidx.annotation.GuardedBy;
@@ -35,7 +33,6 @@ import java.util.concurrent.Executors;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -81,12 +78,16 @@ public class ProfileViewModel extends AndroidViewModel {
             PackageManager pm = getApplication().getPackageManager();
             try {
                 ArrayList<Pair<CharSequence, ApplicationInfo>> itemPairs;
-                List<PackageInfo> packageInfoList = PackageManagerCompat.getInstalledPackages(
-                        PackageManager.GET_META_DATA | PackageUtils.flagMatchUninstalled,
-                        UserHandleHidden.myUserId());
-                itemPairs = new ArrayList<>(packageInfoList.size());
-                for (PackageInfo info : packageInfoList) {
-                    itemPairs.add(new Pair<>(pm.getApplicationLabel(info.applicationInfo), info.applicationInfo));
+                List<ApplicationInfo> applicationInfoList;
+                applicationInfoList = PackageUtils.getAllApplications(PackageUtils.flagMatchUninstalled);
+                HashSet<String> applicationInfoHashMap = new HashSet<>();
+                itemPairs = new ArrayList<>();
+                for (ApplicationInfo info : applicationInfoList) {
+                    if (applicationInfoHashMap.contains(info.packageName)) {
+                        continue;
+                    }
+                    applicationInfoHashMap.add(info.packageName);
+                    itemPairs.add(new Pair<>(pm.getApplicationLabel(info), info));
                 }
                 Collections.sort(itemPairs, (o1, o2) -> o1.first.toString().compareToIgnoreCase(o2.first.toString()));
                 installedApps.postValue(itemPairs);
