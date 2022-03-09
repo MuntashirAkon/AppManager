@@ -123,7 +123,6 @@ public class AMService extends RootService {
                 transactRemote(data, reply, flags);
                 return true;
             }
-            Log.d(TAG, String.format("transact: uid=%d, code=%d", Binder.getCallingUid(), code));
             return super.onTransact(code, data, reply, flags);
         }
 
@@ -136,13 +135,11 @@ public class AMService extends RootService {
             IBinder targetBinder = data.readStrongBinder();
             int targetCode = data.readInt();
 
-            Log.d(TAG, String.format("transact: uid=%d, descriptor=%s, code=%d", Binder.getCallingUid(), targetBinder.getInterfaceDescriptor(), targetCode));
             Parcel newData = Parcel.obtain();
             try {
                 newData.appendFrom(data, data.dataPosition(), data.dataAvail());
-            } catch (Throwable tr) {
-                Log.e(TAG, tr.getMessage(), tr);
-                return;
+            } catch (Throwable th) {
+                throw (RemoteException) new RemoteException(th.getMessage()).initCause(th);
             }
             try {
                 long id = Binder.clearCallingIdentity();
