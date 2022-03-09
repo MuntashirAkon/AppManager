@@ -29,6 +29,8 @@ import java.io.OutputStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.AppManager;
@@ -231,10 +233,10 @@ public final class TarUtils {
                                       @Nullable String[] exclude) {
         if (source.isDirectory()) {
             // Check if the contents of the directory matches the filters
-            Path[] children = source.listFiles(pathname -> pathname.isDirectory()
-                    || (isUnderFilter(pathname, basePath, filters) && !willExclude(pathname, basePath, exclude)));
-            if (children.length == 0) {
-                // No child has matched, delete this directory
+            HashSet<Path> children = new HashSet<>(Arrays.asList(source.listFiles(pathname -> pathname.isDirectory()
+                    || (isUnderFilter(pathname, basePath, filters) && !willExclude(pathname, basePath, exclude)))));
+            if (children.isEmpty()) {
+                // No children have matched, delete this directory
                 if (!basePath.equals(source)) {
                     // Only delete if the source is not the base path
                     source.delete();
@@ -246,7 +248,7 @@ public final class TarUtils {
                 return;
             }
             // Check for unmatched children
-            Path[] unmatchedChildren = source.listFiles(pathname -> !ArrayUtils.contains(children, pathname));
+            Path[] unmatchedChildren = source.listFiles(pathname -> !children.contains(pathname));
             // Delete unmatched children
             for (Path child : unmatchedChildren) {
                 child.delete();

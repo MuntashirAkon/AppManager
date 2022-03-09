@@ -834,7 +834,7 @@ public class Path {
 
     @Override
     public int hashCode() {
-        return Objects.hash(mDocumentFile.getUri());
+        return mDocumentFile.getUri().hashCode();
     }
 
     @FunctionalInterface

@@ -34,6 +34,7 @@ public abstract class VirtualDocumentFile<T> extends DocumentFile {
     protected final Node<T> rootNode;
     @Nullable
     protected final Node<T> currentNode;
+    protected final Uri mUri;
 
     public VirtualDocumentFile(@Nullable DocumentFile parent,
                                int vfsId,
@@ -47,6 +48,7 @@ public abstract class VirtualDocumentFile<T> extends DocumentFile {
         }
         this.currentNode = this.rootNode.getLastChild(basePath);
         this.VFS_ID = vfsId;
+        this.mUri = generateUri();
     }
 
     public VirtualDocumentFile(@NonNull VirtualDocumentFile<T> parent, @NonNull String relativePath) {
@@ -54,6 +56,7 @@ public abstract class VirtualDocumentFile<T> extends DocumentFile {
         this.VFS_ID = parent.VFS_ID;
         this.rootNode = parent.rootNode;
         this.currentNode = parent.currentNode == null ? null : parent.currentNode.getLastChild(getSanitizedPath(relativePath));
+        this.mUri = generateUri();
     }
 
     public VirtualDocumentFile(@NonNull VirtualDocumentFile<T> parent, @NonNull Node<T> currentNode) {
@@ -61,6 +64,7 @@ public abstract class VirtualDocumentFile<T> extends DocumentFile {
         this.VFS_ID = parent.VFS_ID;
         this.rootNode = parent.rootNode;
         this.currentNode = currentNode;
+        this.mUri = generateUri();
     }
 
     @NonNull
@@ -76,8 +80,7 @@ public abstract class VirtualDocumentFile<T> extends DocumentFile {
     @NonNull
     @Override
     public Uri getUri() {
-        // Force authority by adding `//`
-        return Uri.parse(getScheme() + "://" + VFS_ID + getFullPath());
+        return mUri;
     }
 
     @Nullable
@@ -137,6 +140,11 @@ public abstract class VirtualDocumentFile<T> extends DocumentFile {
 
     @NonNull
     public abstract InputStream openInputStream() throws IOException;
+
+    private Uri generateUri() {
+        // Since VFS_ID is unique per virtual FS, the paths are guaranteed to be unique.
+        return Uri.parse(getScheme() + "://" + VFS_ID + getFullPath()); // Force authority by adding `//`
+    }
 
     @Nullable
     private static <T> Node<T> getLastNode(@NonNull Node<T> baseNode, @Nullable String dirtyPath) {
