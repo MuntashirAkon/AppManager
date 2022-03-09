@@ -583,7 +583,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 trackerComponentNames[i] = tagCloud.trackerComponents.get(i).name;
             }
             addChip(getResources().getQuantityString(R.plurals.no_of_trackers, tagCloud.trackerComponents.size(),
-                    tagCloud.trackerComponents.size()), R.color.tracker).setOnClickListener(v -> {
+                    tagCloud.trackerComponents.size()), tagCloud.areAllTrackersBlocked ? R.color.stopped
+                    : R.color.tracker).setOnClickListener(v -> {
                 if (!isExternalApk && isRootEnabled) {
                     new SearchableMultiChoiceDialogBuilder<>(mActivity, tagCloud.trackerComponents, trackerComponentNames)
                             .setTitle(R.string.trackers)

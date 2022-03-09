@@ -117,6 +117,7 @@ public class AppInfoViewModel extends AndroidViewModel {
             for (String component : trackerComponents.keySet()) {
                 tagCloud.trackerComponents.add(new ComponentRule(packageName, component,
                         trackerComponents.get(component), AppPref.getDefaultComponentStatus()));
+                tagCloud.areAllTrackersBlocked &= mainModel.isComponentBlocked(component);
             }
             tagCloud.isSystemApp = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
             tagCloud.isSystemlessPath = !mainModel.getIsExternalApk() && Ops.isRoot()
@@ -341,6 +342,7 @@ public class AppInfoViewModel extends AndroidViewModel {
 
     public static class TagCloud {
         public List<ComponentRule> trackerComponents;
+        public boolean areAllTrackersBlocked = true;
         public boolean isSystemApp;
         public boolean isSystemlessPath;
         public boolean isUpdatedSystemApp;

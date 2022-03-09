@@ -517,6 +517,12 @@ public class AppDetailsViewModel extends AndroidViewModel {
         }
     }
 
+    public boolean isComponentBlocked(String componentName) {
+        synchronized (mBlockerLocker) {
+            return mBlocker.isComponentBlocked(componentName);
+        }
+    }
+
     @WorkerThread
     @GuardedBy("blockerLocker")
     public void addRules(List<? extends RuleEntry> entries, boolean forceApply) {
