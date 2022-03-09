@@ -28,8 +28,7 @@ import io.github.muntashirakon.AppManager.ipc.ps.Ps;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.servermanager.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
-import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
-import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 @WorkerThread
@@ -146,14 +145,7 @@ public final class ProcessParser {
     }
 
     private void getInstalledPackages() {
-        List<PackageInfo> packageInfoList = new ArrayList<>();
-        for (int userHandle : Users.getUsersIds()) {
-            try {
-                packageInfoList.addAll(PackageManagerCompat.getInstalledPackages(0, userHandle));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        List<PackageInfo> packageInfoList = PackageUtils.getAllPackages(0);
         mInstalledPackages = new HashMap<>(packageInfoList.size());
         for (PackageInfo info : packageInfoList) {
             mInstalledPackages.put(info.packageName, info);

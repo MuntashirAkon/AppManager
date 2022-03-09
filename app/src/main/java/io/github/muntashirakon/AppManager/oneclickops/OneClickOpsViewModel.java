@@ -17,12 +17,12 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import io.github.muntashirakon.AppManager.compat.StorageManagerCompat;
-import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.settings.Ops;
@@ -72,27 +72,26 @@ public class OneClickOpsViewModel extends AndroidViewModel {
     @AnyThread
     public void blockTrackers(boolean systemApps) {
         executor.submit(() -> {
-            try {
-                List<ItemCount> trackerCounts = new ArrayList<>();
-                ItemCount trackerCount;
-                for (PackageInfo packageInfo : PackageManagerCompat.getInstalledPackages(
-                        PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | flagDisabledComponents
-                                | flagMatchUninstalled | PackageManager.GET_PROVIDERS | PackageManager.GET_SERVICES,
-                        UserHandleHidden.myUserId())) {
-                    if (Thread.currentThread().isInterrupted()) return;
-                    ApplicationInfo applicationInfo = packageInfo.applicationInfo;
-                    if (!Ops.isRoot() && !PackageUtils.isTestOnlyApp(applicationInfo))
-                        continue;
-                    if (!systemApps && (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0)
-                        continue;
-                    trackerCount = getTrackerCountForApp(packageInfo);
-                    if (trackerCount.count > 0) trackerCounts.add(trackerCount);
+            List<ItemCount> trackerCounts = new ArrayList<>();
+            HashSet<String> packageNames = new HashSet<>();
+            ItemCount trackerCount;
+            for (PackageInfo packageInfo : PackageUtils.getAllPackages(PackageManager.GET_ACTIVITIES
+                    | PackageManager.GET_RECEIVERS | flagDisabledComponents | flagMatchUninstalled
+                    | PackageManager.GET_PROVIDERS | PackageManager.GET_SERVICES)) {
+                if (packageNames.contains(packageInfo.packageName)) {
+                    continue;
                 }
-                this.trackerCount.postValue(trackerCounts);
-            } catch (RemoteException e) {
-                Log.e(TAG, e);
-                this.trackerCount.postValue(null);
+                packageNames.add(packageInfo.packageName);
+                if (Thread.currentThread().isInterrupted()) return;
+                ApplicationInfo applicationInfo = packageInfo.applicationInfo;
+                if (!Ops.isRoot() && !PackageUtils.isTestOnlyApp(applicationInfo))
+                    continue;
+                if (!systemApps && (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0)
+                    continue;
+                trackerCount = getTrackerCountForApp(packageInfo);
+                if (trackerCount.count > 0) trackerCounts.add(trackerCount);
             }
+            this.trackerCount.postValue(trackerCounts);
         });
     }
 
@@ -100,28 +99,26 @@ public class OneClickOpsViewModel extends AndroidViewModel {
     public void blockComponents(boolean systemApps, @NonNull String[] signatures) {
         if (signatures.length == 0) return;
         executor.submit(() -> {
-            try {
-                List<ItemCount> componentCounts = new ArrayList<>();
-                for (ApplicationInfo applicationInfo : PackageManagerCompat.getInstalledApplications(
-                        flagMatchUninstalled,
-                        UserHandleHidden.myUserId())) {
-                    if (Thread.currentThread().isInterrupted()) return;
-                    if (!Ops.isRoot() && !PackageUtils.isTestOnlyApp(applicationInfo))
-                        continue;
-                    if (!systemApps && (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0)
-                        continue;
-                    ItemCount componentCount = new ItemCount();
-                    componentCount.packageName = applicationInfo.packageName;
-                    componentCount.packageLabel = applicationInfo.loadLabel(pm).toString();
-                    componentCount.count = PackageUtils.getFilteredComponents(applicationInfo.packageName,
-                            UserHandleHidden.myUserId(), signatures).size();
-                    if (componentCount.count > 0) componentCounts.add(componentCount);
+            List<ItemCount> componentCounts = new ArrayList<>();
+            HashSet<String> packageNames = new HashSet<>();
+            for (ApplicationInfo applicationInfo : PackageUtils.getAllApplications(flagMatchUninstalled)) {
+                if (packageNames.contains(applicationInfo.packageName)) {
+                    continue;
                 }
-                this.componentCount.postValue(new Pair<>(componentCounts, signatures));
-            } catch (RemoteException e) {
-                Log.e(TAG, e);
-                this.componentCount.postValue(new Pair<>(null, signatures));
+                packageNames.add(applicationInfo.packageName);
+                if (Thread.currentThread().isInterrupted()) return;
+                if (!Ops.isRoot() && !PackageUtils.isTestOnlyApp(applicationInfo))
+                    continue;
+                if (!systemApps && (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0)
+                    continue;
+                ItemCount componentCount = new ItemCount();
+                componentCount.packageName = applicationInfo.packageName;
+                componentCount.packageLabel = applicationInfo.loadLabel(pm).toString();
+                componentCount.count = PackageUtils.getFilteredComponents(applicationInfo.packageName,
+                        UserHandleHidden.myUserId(), signatures).size();
+                if (componentCount.count > 0) componentCounts.add(componentCount);
             }
+            this.componentCount.postValue(new Pair<>(componentCounts, signatures));
         });
     }
 
@@ -129,27 +126,25 @@ public class OneClickOpsViewModel extends AndroidViewModel {
     public void setAppOps(int[] appOpList, int mode, boolean systemApps) {
         executor.submit(() -> {
             Pair<int[], Integer> appOpsModePair = new Pair<>(appOpList, mode);
-            try {
-                List<AppOpCount> appOpCounts = new ArrayList<>();
-                for (ApplicationInfo applicationInfo : PackageManagerCompat.getInstalledApplications(
-                        flagMatchUninstalled,
-                        UserHandleHidden.myUserId())) {
-                    if (Thread.currentThread().isInterrupted()) return;
-                    if (!systemApps && (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0)
-                        continue;
-                    AppOpCount appOpCount = new AppOpCount();
-                    appOpCount.packageName = applicationInfo.packageName;
-                    appOpCount.packageLabel = applicationInfo.loadLabel(pm).toString();
-                    appOpCount.appOps = PackageUtils.getFilteredAppOps(applicationInfo.packageName,
-                            UserHandleHidden.myUserId(), appOpList, mode);
-                    appOpCount.count = appOpCount.appOps.size();
-                    if (appOpCount.count > 0) appOpCounts.add(appOpCount);
+            List<AppOpCount> appOpCounts = new ArrayList<>();
+            HashSet<String> packageNames = new HashSet<>();
+            for (ApplicationInfo applicationInfo : PackageUtils.getAllApplications(flagMatchUninstalled)) {
+                if (packageNames.contains(applicationInfo.packageName)) {
+                    continue;
                 }
-                this.appOpsCount.postValue(new Pair<>(appOpCounts, appOpsModePair));
-            } catch (RemoteException e) {
-                Log.e(TAG, e);
-                this.appOpsCount.postValue(new Pair<>(null, appOpsModePair));
+                packageNames.add(applicationInfo.packageName);
+                if (Thread.currentThread().isInterrupted()) return;
+                if (!systemApps && (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0)
+                    continue;
+                AppOpCount appOpCount = new AppOpCount();
+                appOpCount.packageName = applicationInfo.packageName;
+                appOpCount.packageLabel = applicationInfo.loadLabel(pm).toString();
+                appOpCount.appOps = PackageUtils.getFilteredAppOps(applicationInfo.packageName,
+                        UserHandleHidden.myUserId(), appOpList, mode);
+                appOpCount.count = appOpCount.appOps.size();
+                if (appOpCount.count > 0) appOpCounts.add(appOpCount);
             }
+            this.appOpsCount.postValue(new Pair<>(appOpCounts, appOpsModePair));
         });
     }
 
