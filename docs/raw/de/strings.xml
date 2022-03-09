@@ -210,4 +210,453 @@
 \n\\end{tip}</string>
     <string name="guide$backup-restore$$backup-title">Sicherung</string>
     <string name="guide$backup-restore$$restore-title">Wiederherstellung</string>
+    <string name="pages$app-details-page$$colour-codes-title">Farbcodes</string>
+    <string name="pages$main-page$running-apps">Dieser Menüpunkt öffnet eine neue Seite, auf der eine Liste der laufenden Anwendungen oder Prozesse angezeigt wird. Er zeigt auch die
+\naktuelle Speicher- und Cache-Nutzung (falls verfügbar) an. Wenn Root oder ADB für den App Manager nicht verfügbar ist, zeigt er sich nur
+\nin den neueren Versionen von Android. Die laufenden Anwendungen oder Prozesse können auf der Ergebnisseite auch zwangsgestoppt oder beendet werden.
+\nErgebnisseite beendet werden. Die Protokolle für die einzelnen Prozess-IDs (PIDs) können auch im \\hyperref[subsubsec:log-viewer]{Log-Betrachter} eingesehen werden.
+\nDarüber hinaus ist es möglich, Stapelverarbeitungsvorgänge auszuführen, indem Sie auf das Symbol klicken oder einen Langklick auf ein
+\nElement. Ein normaler Klick auf ein Element öffnet einen Dialog, in dem detailliertere Informationen angezeigt werden.</string>
+    <string name="pages$main-page$profiles">Dieser Menüpunkt öffnet die Seite \\hyperref[sec:profiles-page]{Profile-Seite}. Profile sind eine Möglichkeit zur Konfiguration regelmäßig verwendeter
+\nAufgaben. Sie können auch über Tastenkombinationen aufgerufen werden.</string>
+    <string name="pages$main-page$log-viewer">Dieser Menüpunkt öffnet die Log-Betrachter Seite, die Protokolle mit dem Befehl \\texttt{logcat} anzeigen und verwalten kann. Unter
+\nStandardmäßig kann diese Seite nur die Aktivitäten des App Managers anzeigen. Sie kann jedoch Protokolle von allen Prozessen anzeigen
+\nProzesse anzeigen, wenn \\texttt{android.permission.READ\\_LOGS} gewährt wird. Diese Berechtigung wird automatisch erteilt, wenn die aktuelle
+\n\\hyperref[subsec:mode-of-operation]{Betriebsmodus} entweder root oder ADB ist.</string>
+    <string name="pages$app-details-page$$section-title">App-Detailseite</string>
+    <string name="pages$main-page$apk-updater">Wenn die App \\href{https://github.com/rumboalla/apkupdater}{APK Updater} im System installiert ist, kann sie
+\ndirekt über diesen Menüpunkt geöffnet werden. Die Option bleibt ausgeblendet, wenn die App nicht im System vorhanden ist.</string>
+    <string name="pages$main-page$termux">Wenn die App \\href{https://github.com/termux/termux-app}{Termux} im System installiert ist, kann die laufende Sitzung (oder eine
+\nneue Sitzung) direkt über diesen Menüpunkt geöffnet werden. Die Option bleibt ausgeblendet, wenn die App nicht im System
+\n vorhanden ist.</string>
+    <string name="pages$main-page$settings">Dieser Menüpunkt öffnet die In-App-Hyperref[sec:settings-page]{Einstellungsseite}.</string>
+    <string name="pages$app-details-page$$app-info-tab-title">Registerkarte App-Info</string>
+    <string name="pages$app-details-page$$app-info-general-information-title">Allgemeine Informationen</string>
+    <string name="pages$app-details-page$$horizontal-action-panel-title">Waagerechte Aktionsfläche</string>
+    <string name="pages$app-details-page$$component-tabs-title">Registerkarten der Komponenten</string>
+    <string name="pages$app-details-page$$app-info-options-menu-title">Menü Optionen</string>
+    <string name="pages$app-details-page$$activities-title">Aktivitäten</string>
+    <string name="pages$app-details-page$$receivers-title">Empfänger</string>
+    <string name="pages$app-details-page$$servcies-title">Dienste</string>
+    <string name="pages$app-details-page$$providers-title">Anbieter</string>
+    <string name="pages$app-details-page$$additional-features-for-rooted-phones-title">Zusätzliche Funktionen für gerootete Handys</string>
+    <string name="pages$app-details-page$$blocking-trackers-title">Tracker blockieren</string>
+    <string name="pages$app-details-page$$permission-tabs-title">Registerkarten Berechtigungen</string>
+    <string name="pages$app-details-page$$uses-permissions-title">Verwendete Berechtigungen</string>
+    <string name="pages$app-details-page$$permissions-title">Berechtigungen</string>
+    <string name="pages$app-details-page$$other-tabs-title">Sonstige Registerkarten</string>
+    <string name="pages$app-details-page$$signatures-tab-title">Registerkarte Signaturen</string>
+    <string name="pages$app-details-page$intro">Die Seite \\textbf{App-Details} besteht aus 11 (elf) Registerkarten. Sie beschreibt fast alle Informationen, die eine App
+\nhaben kann, einschließlich aller Attribute aus dem Manifest, \\hyperref[ch:app-ops]{Anwendungsoperationen}, Signier-
+\nInformationen, Bibliotheken, und so weiter.</string>
+    <string name="pages$app-details-page$$app-ops-title">Anwendungsoperationen</string>
+    <string name="pages$app-details-page$app-info-tab">\\textbf{App Info} enthält allgemeine Informationen über eine Anwendung. Außerdem werden hier viele Aktionen aufgelistet, die
+\nauf dieser Registerkarte durchgeführt werden können.</string>
+    <string name="pages$app-details-page$colour-codes">Liste der Hintergrundfarben, die auf dieser Seite verwendet werden, und ihre Bedeutung:
+\n\\begin{itemize}
+\n \\item \\colorbox{AMRed}{\\textcolor{black}{Rot (Tag)}} / \\colorbox{AMDarkRed}{\\textcolor{white}{Dunkelrot (Nacht)}}
+\n -- Kennzeichnet alle App-OPs oder Berechtigungen mit dem Flag \"Gefährlich\" oder alle im App Manager blockierten Komponenten
+\n
+\n \\item \\colorbox{AMLightRed}{\\textcolor{black}{Hellrot (Tag)}} / \\colorbox{AMVeryDarkRed}{\\textcolor{white}{sehr
+\n Dunkelrot (Nacht)}} -- Bezeichnet die außerhalb des App Managers deaktivierten Komponenten
+\n
+\n \\begin{tip}{Hinweis}
+\n Eine Komponente, die als deaktiviert gekennzeichnet ist, bedeutet nicht immer, dass sie vom Benutzer deaktiviert wurde: Sie kann auch vom System deaktiviert werden
+\n oder in ihrem Manifest als deaktiviert gekennzeichnet sein. Die Komponenten einer deaktivierten Anwendung werden auch
+\n vom System (und App Manager) als deaktiviert betrachtet.
+\n \\end{tip}
+\n
+\n \\item \\colorbox{AMVividOrange}{\\textcolor{black}{Kräftiges Orange (Tag)}} / \\colorbox{AMVeryDarkOrange}{
+\n \\textcolor{white}{sehr dunkles Orange (Nacht)}} -- Bezeichnet die Tracker-Komponenten
+\n
+\n \\item \\colorbox{AMSoftMagenta}{\\textcolor{black}{Zartes Magenta (Tag)}} / \\colorbox{AMVeryDarkViolet}{
+\n \\textcolor{white}{sehr dunkles Violett (Nacht)}} -- Bezeichnet die laufenden Dienste.
+\n\\end{itemize}</string>
+    <string name="pages$app-details-page$app-info-general-information">Die folgende Liste ist in der gleichen Reihenfolge wie auf der Registerkarte \"App-Info\" aufgeführt.
+\n\\begin{itemize}
+\n \\item \\textbf{Anwendungssymbol} Das Anwendungssymbol. Wenn eine App kein Symbol hat, wird das Standardsymbol des Systems angezeigt.
+\n
+\n \\item \\textbf{App Label.} Das Anwendungslabel oder der Anwendungsname.
+\n
+\n \\item \\textbf{Version.} Die Anwendungsversion ist in zwei Teile unterteilt. Der erste Teil heißt \\textit{Version name}. Das Format dieses Teils variiert, besteht aber häufig aus mehreren durch Punkte getrennten Ganzzahlen. Der zweite Teil
+\n wird \\textit{Versionscode} genannt und ist unter der ersten Klammer geschlossen. Der Versionscode ist eine ganze Zahl, die normalerweise
+\n verwendet wird, um zwischen den Versionen einer Anwendung zu unterscheiden (da der Versionsname oft von einer Maschine nicht gelesen werden kann). Im Allgemeinen hat eine neue
+\n Version einer Anwendung einen höheren Versionscode als die alte. Wenn zum Beispiel \\texttt{123} und \\texttt{125} zwei
+\n einer App sind, kann man sagen, dass die letztere aktueller ist als die erste, weil der Versionscode der
+\n letztere höher ist. Bei Anwendungen, die von Plattformen abhängen (Mobilgeräte, Tabs, Desktops usw.), können diese Versions-
+\nnummern
+\n irreführend sein, da sie Präfixe für jede Plattform verwenden.
+\n
+\n \\item \\textbf{Tags.} (Auch bekannt als Tag-Clouds) Tags enthalten die grundlegenden, prägnanten und nützlichsten Informationen zu einer App.
+\n Tags enthalten \\textit{tracker info} (d. h. die Anzahl der Tracker-Komponenten), \\textit{app type} (Benutzer-App oder System-App
+\n und ob es sich bei der App um eine aktualisierte Version der System-App handelt oder ob die App systemlos unter Verwendung von Magisk installiert wurde),
+\n \\textit{running} (d. h. ein oder mehrere Dienste der App laufen im Hintergrund), \\textit{split APK info} (d. h.
+\n \\Anzahl der Splits), \\textit{debuggable} (die App ist eine Debug-Version), \\textit{test only} (die App ist eine reine Test
+\n App), \\textit{large heap} (die App hat eine große Heapgröße angefordert), \\textit{stopped} (die App wurde zwangsweise gestoppt),
+\n \\textit{disabled} (die App ist deaktiviert), \\textit{KeyStore} (die App hat Elemente im Android KeyStore),
+\n \\textit{no code} (die App hat keinen mit ihr verbundenen Code), \\hyperref[sec:terminologies]{\\textit{SSAID}},
+\n \\textit{netpolicy} (Netzpolitik, z. B. Nutzung von Hintergrunddaten) und \\textit{Batterieoptimierung}.
+\n Die Bedeutung von \\textit{test only} und \\textit{debuggable} liegt darin, dass Apps mit diesen Eigenschaften zusätzliche Aufgaben übernehmen können
+\n zusätzliche Aufgaben ausführen können oder diese Apps ohne Root \\texttt{run-as} sein können, was potenzielle Sicherheitsprobleme verursachen kann
+\n wenn diese Anwendungen private Informationen speichern.
+\n \\textit{Large heap} bedeutet, dass der App bei Bedarf eine größere Menge an Speicher (RAM) zugewiesen wird.
+\n Auch wenn dies in den meisten Fällen nicht schädlich ist, sollten verdächtige Anwendungen, die einen großen Heap anfordern, ernst genommen werden.
+\n
+\n \\item \\textbf {Horizontales Aktionsfeld} Dies ist ein Aktionsfeld, das verschiedene Aktionen für die App enthält. Siehe .
+\n §\\cref{subsubsec:horizontal-action-panel} für eine vollständige Liste der hier verfügbaren Aktionen.
+\n
+\n \\item \\textbf{Pfade \\&amp; Verzeichnisse.} Enthält verschiedene Informationen zu Anwendungspfaden, einschließlich \\textit{app
+\n Verzeichnis} (wo die APK-Dateien gespeichert sind), \\textit{Datenverzeichnisse} (intern, gerätegeschützt und extern),
+\n \\textit{gesplittete APK-Verzeichnisse} (zusammen mit den Split-Namen), und \\textit{native JNI-Bibliothek} (falls vorhanden). JNI
+\n Bibliotheken werden verwendet, um native Codes aufzurufen, die normalerweise in C/C++ geschrieben sind. Die Verwendung einer nativen Bibliothek kann die Anwendung
+\n oder die Verwendung von Bibliotheken von Drittanbietern, die in anderen Sprachen als Java geschrieben wurden, wie bei den meisten Spielen. Sie können
+\n Sie können diese Verzeichnisse auch mit Ihrem bevorzugten Dateimanager öffnen (vorausgesetzt, er unterstützt dies und hat die notwendigen
+\n Sie können diese Verzeichnisse auch mit Ihren bevorzugten Dateimanagern öffnen (vorausgesetzt, diese unterstützen sie und verfügen über die erforderlichen Berechtigungen), indem Sie auf das Startsymbol auf der rechten Seite jedes Elements klicken.
+\n
+\n \\item \\textbf{Datenverwendung seit dem letzten Start} Eine ziemlich selbsterklärende Option. Beachten Sie aber, dass aufgrund einiger Probleme die
+\n Ergebnisse oft irreführend und schlichtweg falsch sein können. Dieser Teil bleibt ausgeblendet, wenn die Berechtigung \\textit{Usage Access}
+\n bei neueren Geräten nicht gewährt wird.
+\n
+\n \\item \\textbf{Storage \\&amp; Cache.} Zeigt Informationen über die Größe der App (APK-Dateien), der Daten und des Cache an. Auf
+\n älteren Geräten wird auch die Größe von externen Daten, Cache, Medien und OBB-Ordnern angezeigt. Dieser Teil bleibt ausgeblendet, wenn
+\n \\textit{Nutzungszugriff} auf neueren Geräten nicht gewährt wird.
+\n
+\n \\item \\textbf{Weitere Informationen} Zeigt weitere Informationen an, wie z. B..
+\n \\begin{itemize}
+\n \\item \\textbf{SDK.} Zeigt Informationen im Zusammenhang mit dem Android SDK an. Es gibt zwei (bei alten Geräten einen) Werte:
+\n \\textit{Max} bezeichnet das Ziel-SDK und \\textit{Min} bezeichnet das Mindest-SDK (letzteres ist in alten Geräten nicht verfügbar
+\n Geräten nicht verfügbar). Es ist empfehlenswert, Anwendungen mit dem maximalen SDK zu verwenden, das die Plattform derzeit unterstützt. SDK ist auch
+\n auch als textbf{API Level} bekannt.
+\n \\seealsoinline{\\href{https://en.wikipedia.org/wiki/Android_version_history\\#Overview}{Android Versionsgeschichte}}
+\n
+\n \\item \\textbf{Flags.} Die Anwendungsflags, die zum Zeitpunkt der Erstellung der Anwendung verwendet werden. Für eine vollständige Liste der Flags
+\n und deren Funktion finden Sie auf der Seite
+\n \\href{https://developer.android.com/reference/android/content/pm/ApplicationInfo\\#flags}{offizielle Dokumentation}.
+\n
+\n \\item \\textbf{Date Installed.} Das Datum, an dem die Anwendung zum ersten Mal installiert wurde.
+\n
+\n \\item \\textbf{Date Updated.} Das Datum, an dem die App zuletzt aktualisiert wurde. Dies ist dasselbe wie \\textit{Date Installed}
+\n wenn die App noch nicht aktualisiert wurde.
+\n
+\n \\item \\textbf{Installer App.} Die App, die diese App installiert hat. Nicht alle Apps liefern die Informationen, die der
+\n Paketmanager verwendet werden, um die Installer-App zu registrieren. Daher sollte dieser Wert nicht als selbstverständlich angesehen werden.
+\n
+\n \\item \\textbf{Benutzer-ID.} Die eindeutige Benutzer-ID, die der App vom Android-System zugewiesen wurde. Bei gemeinsam genutzten Anwendungen wird dieselbe
+\n Benutzer-ID mehreren Anwendungen zugewiesen, die die gleiche \\textit{Shared User ID} haben.
+\n
+\n \\item \\textbf{Gemeinsame Benutzer-ID.} Gilt für Anwendungen, die gemeinsam genutzt werden. Obwohl hier ID steht, ist dies
+\n ist dies eigentlich ein String-Wert. Die gemeinsam genutzte Anwendung muss die gleiche
+\n \\hyperref[subsec:signatures-tab]{signatures}.
+\n
+\n \\item \\textbf{Hauptaktivität} Der Haupteinstiegspunkt in die Anwendung. Dies ist nur sichtbar, wenn die App über
+\n \\hyperref[subsubsec:activities]{activities} hat und eine dieser Aktivitäten vom Launcher aus geöffnet werden kann. Außerdem gibt es eine
+\n Start-Schaltfläche auf der rechten Seite, die verwendet werden kann, um diese Aktivität zu starten.
+\n \\end{itemize}
+\n\\end{itemize}</string>
+    <string name="pages$app-details-page$horizontal-action-panel">Das horizontale Aktionsfeld, wie im vorherigen Abschnitt beschrieben, besteht aus verschiedenen app-bezogenen Aktionen, wie z. B..
+\n\\begin{itemize}
+\n \\item \\textbf{Launch.} Anwendungen, die einen Launcher \\hyperref[subsubsec:activities]{activities} haben, können
+\n diese Schaltfläche verwenden.
+\n
+\n \\item \\textbf{Deaktivieren.} Deaktivieren Sie eine Anwendung. Diese Schaltfläche wird nicht für bereits deaktivierte Anwendungen oder für Benutzer angezeigt, die
+\n nicht über root oder \\hyperref[sec:adb-over-tcp]{ADB} verfügen. Wenn Sie eine App deaktivieren, wird die App nicht in Ihrer
+\n Launcher-App angezeigt. Verknüpfungen für die App werden ebenfalls entfernt. Wenn Sie eine Benutzer-App deaktivieren, können Sie sie nur über den
+\n App Manager oder ein anderes Tool, das dies unterstützt, aktivieren. In den Android-Einstellungen gibt es keine Option zum Aktivieren einer deaktivierten Benutzer
+\n app.
+\n
+\n \\item \\textbf{Deinstallieren} Deinstallieren Sie eine App.
+\n
+\n \\item \\textbf{Enable.} Aktivieren Sie eine App. Diese Schaltfläche wird nicht für bereits aktivierte Anwendungen oder für Benutzer angezeigt, die nicht
+\n root oder ADB\\@ haben.
+\n
+\n \\item \\textbf{Force Stop.} Erzwingt das Anhalten einer Anwendung. Wenn Sie das Anhalten einer App erzwingen, kann die App nicht mehr im
+\n Hintergrund ausgeführt werden, es sei denn, Sie öffnen sie vorher explizit. Dies ist jedoch nicht immer der Fall.
+\n
+\n \\item \\textbf{Daten löschen.} Löscht Daten aus einer App. Dazu gehören alle Informationen, die in den internen und oft auch
+\n externen Verzeichnissen gespeichert sind, einschließlich Konten (falls von der App festgelegt), Cache usw. Das Löschen von Daten aus dem App Manager, zum Beispiel
+\n werden z. B. alle in der App gespeicherten Regeln entfernt (die Sperrung wird jedoch nicht entfernt). Aus diesem Grund sollten Sie
+\n immer eine Sicherungskopie Ihrer Regeln erstellen. Diese Schaltfläche wird Benutzern, die nicht über Root oder ADB\\@ verfügen, nicht angezeigt.
+\n
+\n \\item \\textbf{Cache leeren.} Nur den App-Cache löschen. Es gibt keine Android-Möglichkeit, den App-Cache zu löschen. Daher braucht es
+\n Root-Berechtigung erforderlich, um den Cache aus dem internen Speicher der App zu löschen.
+\n
+\n \\item \\textbf{Install.} Installieren Sie eine APK, die mit einer beliebigen Drittanbieter-App geöffnet wurde. Diese Schaltfläche wird nur angezeigt für eine
+\n externen APK angezeigt, die noch nicht installiert wurde.
+\n
+\n \\item \\textbf{Was gibt\'s Neues.} Diese Schaltfläche wird für eine APK angezeigt, die einen höheren Versionscode hat als die installierte.
+\n Wenn Sie auf diese Schaltfläche klicken, wird ein Dialog angezeigt, der die Unterschiede in einer Art Versionskontrolle darstellt. Die angezeigten Informationen
+\n Die angezeigten Informationen umfassen \\textit{Version}, \\textit{Tracker}, \\textit{Zulassungen}, \\textit{Komponenten}, \\textit{Signaturen}
+\n (Prüfsummenänderungen), \\textit{features}, \\textit{shared libraries} und \\textit{SDK}.
+\n
+\n \\item \\textbf{Update.} Wird für eine Anwendung angezeigt, die einen höheren Versionscode hat als die installierte Anwendung.
+\n
+\n \\item \\textbf{Neuinstallation.} Wird für eine Anwendung angezeigt, die denselben Versionscode hat wie die installierte Anwendung.
+\n
+\n \\item \\textbf{Downgrade.} Wird für eine Anwendung angezeigt, die einen niedrigeren Versionscode als die installierte Anwendung hat.
+\n
+\n \\item \\textbf{Manifest.} Wenn Sie auf diese Schaltfläche klicken, wird die Manifestdatei der App auf einer separaten Seite angezeigt. Die Manifest-
+\n Datei kann mit der entsprechenden Schaltfläche (oben rechts) ein- oder ausgepackt werden oder mit der Schaltfläche save im
+\n gemeinsamen Speicherplatz gespeichert werden, indem Sie die Schaltfläche \"Speichern\" verwenden.
+\n
+\n \\item \\textbf{Scanner.} Wenn Sie auf diese Schaltfläche klicken, werden die Tracker- und Bibliotheksinformationen der App angezeigt. Zunächst wird die
+\n App gescannt, um eine Liste von Klassen zu extrahieren. Dann wird die Klassenliste mit einer Reihe von Signaturen abgeglichen. Danach wird
+\n eine Scan-Zusammenfassung angezeigt.\\\\
+\n \\seealsoinline{\\hyperref[sec:scanner-page]{Scannerseite}}
+\n
+\n \\item \\textbf{Gemeinsame Voreinstellungen} Wenn Sie auf diese Schaltfläche klicken, wird eine Liste der von der Anwendung verwendeten gemeinsamen Einstellungen angezeigt. Ein Klick auf
+\n auf ein Einstellungselement in der Liste öffnet die \\hyperref[sec:shared-preferences-editor-page]{Shared Preferences Editor
+\n Seite}. Diese Option ist nur für die Root-Benutzer sichtbar.
+\n
+\n \\item \\textbf {Datenbanken.} Wenn Sie auf diese Schaltfläche klicken, wird eine Liste der von der Anwendung verwendeten Datenbanken angezeigt. Hier sind weitere
+\n Verbesserungen und einen Datenbank-Editor, der in Zukunft hinzugefügt werden könnte. Diese Option ist nur für die Root-Benutzer sichtbar.
+\n
+\n \\item \\textbf {F-Droid.} Öffnet die App in Ihrem bevorzugten \\textit{F-Droid}-Client.
+\n
+\n \\item \\textbf{Store.} Öffnet die App in \\textit{Aurora Store}. Die Option ist nur sichtbar, wenn \\textit{Aurora Store}
+\n installiert ist.
+\n\\end{itemize}</string>
+    <string name="pages$app-details-page$additional-features-for-rooted-phones">Anders als Benutzer ohne Root-Rechte, die hier zumeist nur Zuschauer sind, können Benutzer mit Root-Rechten hier verschiedene Dinge tun.</string>
+    <string name="pages$app-details-page$app-info-options-menu">Das Menü \"Optionen\" befindet sich in der oberen rechten Ecke der Seite. Eine vollständige Beschreibung der dort vorhandenen Optionen finden Sie
+\nunten angegeben:
+\n\\begin{itemize}
+\n \\item \\textbf{Teilen.} Die Schaltfläche Teilen kann verwendet werden, um die APK-Datei zu teilen, oder die \\textit{APKS}-Datei (wenn die App
+\n mehrere Splits hat) kann in \\href{https://github.com/Aefyr/SAI}{SAI} importiert werden. Sie können sie mit Ihrem bevorzugten
+\n Dateimanager freigeben, um die Datei in Ihrem gemeinsamen Speicher zu speichern.
+\n
+\n \\item \\textbf{Auffrischen.} Aktualisiert die Registerkarte App-Info.
+\n \\item \\textbf{In Einstellungen anzeigen.} Öffnet die App in den Android-Einstellungen.
+\n \\item \\textbf{Sichern/Wiederherstellen.} Öffnet den Sicherungs-/Wiederherstellungsdialog.
+\n \\item \\textbf{Blockierungsregeln exportieren.} Exportiert Regeln, die für diese App im App Manager konfiguriert wurden.
+\n
+\n \\item \\textbf{Öffnen in Termux.} Öffnet die App in Termux. Dabei wird \\texttt{su - user\\_id} ausgeführt, wobei
+\n \\texttt{user\\_id} die Kernel-Benutzer-ID der Anwendung bezeichnet (beschrieben in der
+\n \\hyperref[subsubsec:app-info-general-information]{Abschnitt Allgemeine Informationen}). Diese Option ist nur sichtbar für den
+\n root-Benutzer. Unter §\\cref{subsubsec:config-termux} erfahren Sie, wie Sie Termux so konfigurieren, dass Befehle von Drittanbieteranwendungen ausgeführt werden.
+\n
+\n \\item \\textbf{Ausführen in Termux.} Öffnen Sie die Anwendung unter Verwendung von \\texttt{run-as package\\_name} in Termux. Dies ist nur anwendbar
+\n für die debuggbaren Anwendungen und funktioniert sowohl für Root- als auch für ADB-Benutzer. Siehe §\\cref{subsubsec:config-termux} um zu erfahren, wie man
+\n Termux so zu konfigurieren, dass Befehle von Drittanbieter-Anwendungen ausgeführt werden.
+\n
+\n \\item \\textbf{Symbol extrahieren.} Extrahieren und speichern Sie das Symbol der Anwendung an dem von Ihnen gewünschten Ort.
+\n\\end{itemize}</string>
+    <string name="pages$app-details-page$config-termux">Standardmäßig lässt Termux die Ausführung von Befehlen aus Drittanbieter-Anwendungen nicht zu. Um diese Option zu aktivieren, müssen Sie Folgendes hinzufügen
+\n\\texttt{allow-external-apps=true} in \\texttt{\\textasciitilde/.termux/termux.properties} hinzufügen, und sicherstellen, dass Sie
+\nTermux v0.96 oder höher verwenden.
+\n
+\n\\begin{tip}{Info}
+\n Die Aktivierung dieser Option schwächt nicht die Sicherheit Ihres Termux. Die Anwendungen von Drittanbietern müssen den Benutzer immer noch dazu auffordern
+\n die Ausführung beliebiger Befehle in Termux erlauben, wie jede andere gefährliche Berechtigung.
+\n\\end{tip}</string>
+    <string name="pages$app-details-page$component-tabs">\\textbf{Aktivitäten}, \\textbf{Dienste}, \\textbf{Empfänger} (ursprünglich \\textit{Broadcast-Empfänger}) und
+\n\\textbf{Provider} (ursprünglich \\textit{Content Providers}) werden zusammen als Anwendungskomponenten bezeichnet. Dies deshalb,
+\nweil sie in vielerlei Hinsicht ähnliche Merkmale aufweisen. Zum Beispiel haben sie alle einen \\textit{Namen} und ein \\textit{Label}.
+\nAnwendungskomponenten sind die Bausteine einer jeden Anwendung, und die meisten von ihnen müssen im Anwendungs
+\nmanifestiert werden. Das Anwendungsmanifest ist eine Datei, in der anwendungsspezifische Metadaten gespeichert werden. Das Android-Betriebssystem
+\nlernt durch das Lesen der Metadaten, was es mit einer Anwendung tun soll. Die in diesen Registerkarten verwendeten Farben werden in
+\n§cref{subsec:app-details-colour-codes}. Sie haben auch die Möglichkeit, die Liste der Komponenten so zu sortieren, dass blockierte oder
+\nTracker-Komponenten am Anfang der Liste anzuzeigen, indem Sie die Option \\textbf{Sortieren} im Überlaufmenü verwenden.</string>
+    <string name="pages$app-details-page$activities">\\textbf{Aktivitäten} sind Fenster oder Seiten, die Sie durchsuchen können (z. B. \\textit{Hauptseite} und \\textit{App-Detail-
+\nSeite} sind zwei separate Aktivitäten). Mit anderen Worten, eine Aktivität ist eine Komponente der Benutzeroberfläche (UI). Jede Aktivität kann
+\nmehrere UI-Komponenten haben, die als \\textit{Widgets} oder \\textit{Fragmente} bekannt sind, und ebenso kann jede der letztgenannten
+\nKomponenten können mehrere von ihnen verschachtelt oder übereinander angeordnet sein. Eine Aktivität ist jedoch die Komponente \\textit{Master}:
+\nEs kann nicht zwei verschachtelte Aktivitäten geben. Ein Anwendungsautor kann sich auch dafür entscheiden, externe Dateien innerhalb einer Aktivität zu öffnen
+\nund dabei eine Methode namens \\textit{Intent Filter} verwenden. Wenn Sie versuchen, eine Datei mit Ihrem Dateimanager zu öffnen, sucht entweder Ihr Dateimanager
+\n oder das System nach Absichtsfiltern, um zu entscheiden, welche Aktivitäten diese bestimmte Datei öffnen können, und bietet Ihnen an
+\ndie Datei mit diesen Aktivitäten zu öffnen (es hat also nichts mit der Anwendung selbst zu tun). Es gibt auch andere Intent-
+\nFilter.
+\n
+\nAktivitäten, die \\textit{exportable} sind, können in der Regel von jeder Drittanbieter-Anwendung geöffnet werden (einige Aktivitäten erfordern
+\nWenn dies der Fall ist, kann nur eine Anwendung, die über diese Berechtigungen verfügt, sie öffnen). Auf der Registerkarte \\textit{Aktivitäten},
+\nist der Name der Aktivität (oben in jedem Listenelement) eigentlich eine Schaltfläche. Sie ist aktiviert für die \\textit{exportable}
+\nAktivitäten aktiviert und für andere deaktiviert (Root-Benutzer können alle Aktivitäten öffnen). Sie können auf die Schaltfläche klicken, um die
+\nAktivität direkt im App Manager zu öffnen. Sie können die Interceptor-Seite auch öffnen, indem Sie lange auf eine Aktivität klicken. Derzeit
+\nfunktioniert dies nur für \\textit{exportierbare} Aktivitäten.
+\n
+\n\\begin{warning}{Hinweis}
+\n Wenn Sie eine Aktivität nicht öffnen können, besteht die Möglichkeit, dass sie bestimmte Abhängigkeiten nicht erfüllt, z. B. können Sie
+\n \\textit{App-Details-Aktivität} nicht öffnen, weil dafür mindestens ein Paketname angegeben werden muss. Diese
+\n Abhängigkeiten können nicht immer programmatisch abgeleitet werden. Daher können Sie sie nicht mit dem App Manager öffnen.
+\n\\end{warning}
+\n
+\nSie können auch eine Verknüpfung für diese \\textit{ausführbare} Aktivitäten erstellen (über die entsprechende Schaltfläche), und wenn Sie möchten, können Sie
+\ndie Verknüpfung auch bearbeiten, indem Sie die Schaltfläche \\textit{Verknüpfung bearbeiten} verwenden.
+\n
+\n\\begin{danger}{Vorsicht}
+\n Wenn Sie App Manager deinstallieren, gehen alle von App Manager erstellten Verknüpfungen verloren.
+\n\\end{danger}</string>
+    <string name="pages$app-details-page$servcies">Im Gegensatz zu \\hyperref[subsubsec:activities]{Aktivitäten}, die für die Benutzer sichtbar sind, werden mit \\textbf{Diensten} Hintergrundaufgaben erledigt. Wenn
+\nSie z. B. ein Video aus dem Internet herunterladen und dabei den Internetbrowser Ihres Telefons verwenden, verwendet der Internetbrowser
+\neinen Dienst im Vordergrund verwendet, um den Inhalt herunterzuladen.
+\n
+\nWenn Sie eine Aktivität beenden, wird sie in der Regel sofort gelöscht (dies hängt von vielen Faktoren ab, z. B. davon, wie viel freier
+\nSpeicher Ihres Telefons hat). Dienste können jedoch auf Wunsch für unbestimmte Zeit laufen. Wenn mehr Dienste im Hintergrund ausgeführt werden
+\nHintergrund laufen, wird Ihr Handy langsamer, weil der Speicher und/oder die Verarbeitungsleistung knapp wird, und der Akku des Handys kann
+\nschneller entladen werden. Bei neueren Android-Versionen ist die Funktion zur Akkuoptimierung standardmäßig für alle Apps aktiviert.
+\nWenn diese Funktion aktiviert ist, kann das System willkürlich jeden Dienst beenden.
+\n
+\nÜbrigens werden sowohl Aktivitäten als auch Dienste im gleichen \\href{https://stackoverflow.com/questions/7597742}{looper}
+\nHauptlooper genannt, was bedeutet, dass die Dienste nicht wirklich im Hintergrund ausgeführt werden. Es ist die Aufgabe der Anwendungsautoren
+\ndies sicherzustellen. Wie kommunizieren die Anwendungen mit den Diensten\? Sie verwenden den
+\n\\hyperref[subsubsec:app-details-receivers]{Broadcast-Empfänger}.</string>
+    <string name="pages$app-details-page$receivers">\\textbf{Empfänger} (auch \\textit{Broadcast Empfänger} genannt) können für die Ausführung bestimmter Aufgaben für
+\nbestimmten Ereignissen verwendet werden. Diese Komponenten werden als Broadcast-Empfänger bezeichnet, da sie ausgeführt werden, sobald eine Broadcast-Nachricht
+\nempfangen wird. Diese Broadcast-Nachrichten werden mit einer Methode namens Intent gesendet. Intent ist eine spezielle Funktion für Android
+\ndie verwendet werden kann, um Anwendungen, Aktivitäten und Dienste zu öffnen und Broadcast-Nachrichten zu senden. Daher verwenden, wie bei den
+\n\\hyperref[subsubsec:activities]{Aktivitäten}, Broadcast-Empfänger Intent-Filter, um nur die gewünschten
+\nBroadcast-Nachricht(en) zu empfangen. Broadcast-Nachrichten können entweder vom System oder von der App selbst gesendet werden. Wenn eine Broadcast-Nachricht
+\ngesendet wird, werden die entsprechenden Empfänger vom System geweckt, damit sie Aufgaben ausführen können. Zum Beispiel, wenn Sie
+\nwenig Speicherplatz haben, kann es sein, dass Ihr Telefon nach dem Aktivieren der mobilen Daten oder dem Herstellen einer Wifi-Verbindung für einen Moment einfriert oder verzögert wird.
+\nHaben Sie sich schon einmal gefragt, warum\? Das liegt daran, dass Broadcast-Empfänger, die `android.net.conn.CONNECTIVITY\\_CHANGE` empfangen können
+\nvom System geweckt werden, sobald Sie die Datenverbindung aktivieren. Da viele Apps diesen Absichtsfilter verwenden, werden alle diese Apps
+\nfast sofort vom System geweckt, was das Einfrieren oder die Verzögerungen verursacht. Abgesehen davon können Empfänger verwendet werden
+\nfür die Interprozesskommunikation (IPC) verwendet werden, d. h. sie helfen Ihnen bei der Kommunikation zwischen verschiedenen Anwendungen (vorausgesetzt, Sie haben die
+\nerforderlichen Berechtigungen) oder sogar zwischen verschiedenen Komponenten einer einzigen Anwendung.</string>
+    <string name="pages$app-details-page$providers">\\textbf{Provider} (auch \\textit{Content Provider} genannt) werden für die Datenverwaltung verwendet. Wenn Sie zum Beispiel eine
+\napk-Datei speichern oder Regeln in App Manager exportieren, wird ein Inhaltsanbieter namens `androidx.core.content.FileProvider` verwendet, um die
+\ndie APK zu speichern oder die Regeln zu exportieren. Es gibt weitere oder sogar eigene Content Provider, um verschiedene inhaltsbezogene Aufgaben zu verwalten,
+\nwie z.B. Datenbankmanagement, Tracking, Suche, etc. Jeder Content-Provider hat ein Feld namens \\textit{Authority}
+\ndas für diese bestimmte App im gesamten Android-Ökosystem ebenso eindeutig ist wie der Paketname.</string>
+    <string name="pages$app-details-page$blocking-components">Auf der rechten Seite jeder Komponente befindet sich ein Symbol für ``Blockieren\'\' (das zu einem Symbol für ``Entblocken/Wiederherstellen\'\' wird, wenn
+\ndie Komponente blockiert ist). Dieses Symbol (eigentlich eine Schaltfläche) kann verwendet werden, um den Blockierstatus der
+\nbestimmten Komponente zu ändern. Wenn Sie \\hyperref[subsubsec:instant-component-blocking]{Instant Komponenten blockieren}
+\nnicht aktiviert haben oder die Blockierung noch nicht für die Anwendung angewendet haben, müssen Sie die Änderungen mit der Option \\textbf{Regeln anwenden}
+\nOption im Drei-Punkte-Menü anwenden. Sie können auch bereits angewendete Regeln entfernen, indem Sie die gleiche Option verwenden (die wie folgt lauten würde
+\n\\textbf{Regeln entfernen}).
+\n
+\n\\seealsoinline{\\hyperref[sec:faq:app-components]{FAQ: App-Komponenten}}</string>
+    <string name="pages$app-details-page$blocking-trackers">Sie können Tracker-Komponenten deaktivieren, indem Sie die Option textbf{Tracker blockieren} im Menü mit den drei Punkten verwenden. Alle Tracker
+\nKomponenten werden blockiert, unabhängig davon, auf welcher Registerkarte Sie sich gerade befinden.
+\n
+\n\\begin{tip}{Info}
+\n Tracker-Komponenten sind eine Untermenge der App-Komponenten. Daher werden sie mit der gleichen Methode blockiert, die für das
+\n Blockierung aller anderen Komponenten verwendet.
+\n\\end{tip}
+\n
+\n\\begin{amseealso}
+\n \\item \\hyperref[subsec:tracker-classes-versus-tracker-components]{FAQ: Tracker-Klassen versus Tracker-Komponenten}
+\n \\item \\hyperref[sec:scanner-page]{Scanner-Seite}
+\n \\item \\hyperref[subsec:block-unblock-trackers]{1-Click Ops Page: Tracker blockieren/entblocken}
+\n\\end{amseealso}</string>
+    <string name="pages$app-details-page$permission-tabs">\\Die Registerkarten \\textbf{App Ops}, \\textbf{Verwendete Berechtigungen} und \\textbf{Berechtigungen} beziehen sich auf Berechtigungen. In Android
+\nerfordert die Kommunikation zwischen Apps oder Prozessen, die nicht dieselbe Identität haben (bekannt als \\textit{Shared ID}), oft
+\nBerechtigung(en). Diese Berechtigungen werden von der Berechtigungssteuerung verwaltet. Einige Berechtigungen werden als
+\n\\textit{normale} Berechtigungen, die automatisch gewährt werden, wenn sie im Anwendungsmanifest erscheinen, aber
+\n\\textit{gefährlich} und \\textit{Entwicklung} Berechtigungen erfordern eine Bestätigung durch den Benutzer. Die in diesen Registerkarten verwendeten Farben
+\nwerden in §\\cref{subsec:app-details-colour-codes} erläutert.</string>
+    <string name="pages$app-details-page$$config-termux-title">Termux</string>
+    <string name="pages$app-details-page$$blocking-components-title">Komponenten blockieren</string>
+    <string name="pages$main-page$batch-operations">Auf dieser Seite sind auch Stapeloperationen oder Operationen mit mehreren Anwendungen möglich. Der Mehrfachauswahlmodus kann
+\naktiviert werden, indem man auf ein beliebiges Anwendungssymbol klickt oder indem man auf ein beliebiges Element in der Liste lange klickt. Einmal aktiviert, wählt ein einfacher Klick auf
+\nein Listenelement ausgewählt, anstatt die Seite mit den Anwendungsdetails zu öffnen. In diesem Modus befinden sich die Stapeloperationen im
+\nMehrfachauswahlmenü unten auf der Seite. Zu den Operationen gehören:
+\n\\begin{itemize}
+\n \\item Hinzufügen der ausgewählten Anwendungen zu einem \\hyperref[sec:profiles-page]{Profil}
+\n \\item \\hyperref[sec:backup-restore]{Sicherung, Wiederherstellung oder Löschung} der Anwendungen
+\n \\item Blockieren der Tracker für die Anwendungen
+\n \\item Löschen von Daten oder Cache aus den Anwendungen
+\n \\item Aktivieren/Deaktivieren/Zwangsstoppen/Deinstallieren der Anwendungen
+\n \\item Exportieren der im App Manager gespeicherten Blockierungsregeln
+\n \\item Verhindern von Hintergrundoperationen der Anwendungen (Android 7 und höher)
+\n \\item peichern der APK-Dateien in \\texttt{App Manager/apks}
+\n \\item Einstellen von \\hyperref[sec:net-policy]{Netzrichtlinien}
+\n\\end{itemize}
+\n
+\n\\begin{tip}{Barrierefreiheit}
+\nNachdem der Mehrfachauswahlmodus aktiviert wurde, ist es möglich, mit der rechten oder linken Taste der Tastatur in das
+\n Menü mit der rechten oder linken Taste der Tastatur oder der Fernbedienung zu navigieren.
+\n\\end{tip}</string>
+    <string name="pages$main-page$colour-codes">\\begin{itemize}
+\n \\item \\colorbox{AMLightGreyishOrange}{\\textcolor{black}{helles gräuliches Orange (Tag)}} / \\colorbox{AMDarkBlue}{
+\n \\textcolor{white}{Dunkelblau (Nacht)}} -- Die Anwendung ist für den Batchbetrieb ausgewählt
+\n \\item \\colorbox{AMLightRed}{\\textcolor{black}{Hellrot (Tag)}} / \\colorbox{AMVeryDarkRed}{\\textcolor{white}
+\n {Dunkelrot (Nacht)}} -- Deaktivierte Anwendung
+\n \\item \\colorbox{AMYellow}{\\textcolor{black}{Yellow Star}} -- Debuggingfähige Anwendung
+\n \\item \\textcolor{AMOrange}{Orange \\textit{Datum}} -- Die Anwendung hat Zugriff auf die Systemprotokolle
+\n \\item \\textcolor{AMOrange}{Orange \\textit{UID}} -- Die Benutzer-ID wird von mehreren Anwendungen gemeinsam genutzt
+\n \\item \\textcolor{AMOrange}{Orange \\textit{SDK}} -- Die Anwendung verwendet möglicherweise Klartextverkehr (z. B. HTTP)
+\n \\item \\textcolor{red}{Rot \\textit{Paketname}} -- Die Anwendung erlaubt keine Löschung ihrer Daten
+\n \\item \\textcolor{red}{Red \\textit{backup}} -- Die deinstallierte Anwendung mit einem oder mehreren Backups, die im App
+\n Manager
+\n \\item \\textcolor{AMOrange}{Orange \\textit{backup}} -- Veraltetes Backup, d.h. das Basis-Backup enthält eine ältere
+\n Version der installierten Anwendung
+\n \\item \\textcolor{AMDarkCyan}{Dunkles Cyan \\textit{backup}} -- aktuelles Backup, d.h. \\das Basis-Backup enthält die
+\n gleiche oder höhere Version der installierten Anwendung
+\n \\item \\textcolor{AMDarkCyan}{Dark cyan \\textit{package name}} -- Erzwungener Anwendungsstopp
+\n \\item \\textcolor{AMDarkCyan}{Dark cyan \\textit{version}} -- Inaktive Anwendung
+\n \\item \\textcolor{magenta}{Magenta} -- Persistente Anwendung, d.h. sie bleibt die ganze Zeit über aktiv.
+\n\\end{itemize}</string>
+    <string name="pages$main-page$application-types">Eine Anwendung kann entweder eine \\textbf{Benutzer}- oder eine \\textbf{System}-Anwendung mit den folgenden Suffixen sein:
+\n\\begin{itemize}
+\n \\item \\texttt{X} -- Unterstützt mehrere Architekturen
+\n \\item \\texttt{0} -- Keine Dex-Dateien in der Anwendung vorhanden
+\n \\item \\texttt{\\textdegree°} -- Unterbrochene Anwendung
+\n \\item \\texttt{\\#} -- Die Anwendung hat das System aufgefordert, einen großen Heap, d. h. großen Laufzeitspeicher, zuzuweisen
+\n \\item \\texttt{\?} -- Die Anwendung forderte die virtuelle Maschine auf, in den sicheren Modus zu wechseln.
+\n\\end{itemize}</string>
+    <string name="pages$main-page$version-info">Auf den Versionsnamen folgen die nachstehenden Präfixe:
+\n\\begin{itemize}
+\n \\item \\texttt{\\_} -- Keine Hardware-Beschleunigung (was die In-App-Animationen oder Transparenzen beeinträchtigt)
+\n \\item \\texttt{\\textasciitilde} -- Reine Testanwendung
+\n \\item \\texttt{debug} -- Debuggingfähige Anwendung
+\n\\end{itemize}</string>
+    <string name="pages$main-page$options-menu">Das Menü Optionen bietet verschiedene Optionen zum Sortieren und Filtern der aufgelisteten Anwendungen sowie zum Navigieren
+\nzu verschiedenen Seiten innerhalb oder außerhalb des App Managers.</string>
+    <string name="pages$main-page$instructions">Durch Klicken auf den \\textbf{Anleitung} wird die Offline-Version des App Manager Benutzerhandbuchs geöffnet. Es kann auch die
+\nOnline-Version öffnen, wenn die entsprechende Funktionsaufteilung, d. h. \\texttt{feat\\_docs}, nicht installiert ist oder wenn kein WebView
+\nim System vorhanden ist, um das Handbuch zu laden.</string>
+    <string name="pages$main-page$list-options">\\textbf{Listenoptionen} enthalten die Optionen zum Sortieren und Filtern der Liste auf der Hauptseite.</string>
+    <string name="pages$main-page$profile_name">Es ist auch möglich, die Anwendungen aufzulisten, die nur in einem \\hyperref[sec:profiles-page]{Profil} vorhanden sind. Dies kann
+\nnützlich sein, um bestimmte Vorgänge in einem Profil auszuführen (z. B. die Deinstallation aller Anwendungen in einem Profil), die
+\nnicht über die Seite \\hyperref[sec:profiles-page]{Profile} durchgeführt werden können.</string>
+    <string name="pages$main-page$1-click-ops">\\textbf{1-Click Ops} steht für die Ein-Klick-Operationen. Es öffnet die \\hyperref[sec:1-click-ops-page]{entsprechende
+\nSeite} in einer neuen Aktivität.</string>
+    <string name="pages$main-page$sort">Die auf der Hauptseite aufgeführten Anwendungen können auf folgende Weise sortiert werden:
+\n\\begin{itemize}
+\n \\item \\textbf{Benutzeranwendungen zuerst.} Die Benutzeranwendungen werden oben aufgelistet
+\n \\item \\textbf{App Label.} Sortieren Sie die Liste in aufsteigender Reihenfolge nach ihren Anwendungsbezeichnungen (auch bekannt als
+\n \\textit{Anwendungsnamen}). Dies ist die Standardsortierpräferenz
+\n \\item \\textbf{Paketname.} Sortiert die Liste in aufsteigender Reihenfolge nach den Paketnamen
+\n \\item \\textbf{Letzte Aktualisierung.} Sortieren der Liste in absteigender Reihenfolge nach dem Datum der letzten Aktualisierung
+\n \\item \\textbf{Gemeinsame Benutzer-ID.} Sortiert die Liste in absteigender Reihenfolge nach der Kernel-Benutzer-ID
+\n \\item \\textbf{Ziel-SDK.} Sortieren der Liste in aufsteigender Reihenfolge nach dem Ziel-SDK
+\n \\item \\textbf{Signatur.} Sortieren der Liste in aufsteigender Reihenfolge auf der Grundlage der Signierinformationen
+\n \\item \\textbf{Disabled first.} Die deaktivierten Anwendungen werden zuoberst aufgeführt
+\n \\item \\textbf{Blocked first.} Sortieren Sie die Liste in absteigender Reihenfolge nach der Anzahl der blockierten Komponenten jeder
+\n Anwendung hat
+\n \\item \\textbf{Backed up first.} Die Anwendungen mit Sicherungskopien ganz oben anzeigen
+\n \\item \\textbf{Tracker.} Sortieren Sie die Liste in absteigender Reihenfolge nach der Anzahl der Tracker-Komponenten jeder
+\n Anwendung hat
+\n \\item \\textbf{Last actions.} Sortieren Sie die Liste in absteigender Reihenfolge nach der letzten Zeit und dem Datum der Aktionen, die
+\n an den Anwendungen im App Manager vorgenommen wurden.
+\n\\end{itemize}
+\n
+\nDarüber hinaus gibt es die Option \\textit{umgekehrt}, die verwendet werden kann, um die Liste in umgekehrter Reihenfolge zu sortieren. Unabhängig von
+\nder Sortiereinstellungen werden die Anwendungen zunächst alphabetisch sortiert, um zufällige Sortierergebnisse
+\nzu vermeiden.</string>
+    <string name="pages$main-page$filter">Die auf der Hauptseite aufgeführten Anwendungen können auf folgende Weise gefiltert werden:
+\n\\begin{itemize}
+\n \\item \\textbf{Benutzeranwendungen.} Nur die Benutzeranwendungen auflisten
+\n \\item \\textbf{Systemanwendungen.} Nur die Systemanwendungen auflisten
+\n \\item \\textbf{Deaktivierte Anwendungen.} Nur die deaktivierten Anwendungen auflisten
+\n \\item \\textbf{Anwendungen mit Regeln.} Auflisten der Anwendungen mit einer oder mehreren Sperrregeln
+\n \\item \\textbf{Anwendungen mit Aktivitäten.} Auflistung der Anwendungen mit einer oder mehreren Aktivitäten
+\n \\item \\textbf{Anwendungen mit Backups.} Liste der Anwendungen mit einem oder mehreren Backups
+\n \\item \\textbf{Laufende Anwendungen.} Auflisten der Anwendungen, die derzeit ausgeführt werden
+\n \\item \\textbf{Anwendungen mit Splits.} Auflisten der Anwendungen mit einer oder mehreren geteilten APK-Dateien
+\n \\item \\textbf{Installierte Anwendungen.} Nur die installierten Anwendungen auflisten
+\n \\item \\textbf{Deinstallierte Anwendungen.} Nur die deinstallierten Anwendungen auflisten
+\n \\item \\textbf{Anwendungen ohne Backups.} Listet die Anwendungen auf, von denen keine Backups vorhanden sind.
+\n\\end{itemize}
+\n
+\nAnders als bei der Sortierung ist es möglich, mehr als eine Filteroption gleichzeitig anzuwenden. Zum Beispiel können die deaktivierten Benutzer-
+\nanwendungen aufgelistet werden, indem sowohl \\textit{Benutzeranwendungen} als auch \\textit{Inaktivierte Anwendungen} ausgewählt werden. Dies kann besonders nützlich sein
+\n für \\hyperref[subsec:batch-operations]{Batch-Operationen}, bei denen das Filtern der Benutzeranwendungen notwendig sein kann,
+\n um bestimmte Operationen sicher auszuführen.</string>
+    <string name="pages$main-page$system-config">Dieser Menüpunkt öffnet eine neue Seite, auf der verschiedene Systemkonfigurationen, Blacklists/Whitelists, die in Android durch den
+\nOEM, dem Hersteller, dem AOSP oder den Magisk-Modulen enthalten sind, angezeigt werden. Dazu ist Root erforderlich. Daher wird dieser Menüpunkt nicht angezeigt,
+\nwenn keine Root-Berechtigung für App Manager verfügbar ist.</string>
+    <string name="pages$main-page$app-usage">App-Nutzungsstatistiken wie z. B. Bildschirmzeit, Datennutzung (sowohl mobil als auch Wi-Fi), \\textit{die Haufigkeit, die
+\n eine App geöffnet wurde}, können durch Klicken auf die Option \\textbf{App-Nutzung} im Menü aufgerufen werden. Es erfordert jedoch
+\ndie Berechtigung \\textit{Nutzungszugriff}. Dieser Menüpunkt wird nicht aufgeführt, wenn die Nutzungszugriffsfunktion in
+\n\\hyperref[subsec:enable/disable-features]{Einstellungen} ausgeschaltet ist.</string>
 </resources>
