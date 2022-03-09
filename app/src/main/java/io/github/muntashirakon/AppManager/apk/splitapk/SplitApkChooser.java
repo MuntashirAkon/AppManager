@@ -18,6 +18,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
@@ -33,7 +34,8 @@ public class SplitApkChooser extends DialogFragment {
 
     @NonNull
     public static SplitApkChooser getNewInstance(int apkFileKey, @NonNull ApplicationInfo info,
-                                                 @NonNull String versionInfo, @Nullable String actionName) {
+                                                 @NonNull String versionInfo, @Nullable String actionName,
+                                                 @NonNull OnTriggerInstallInterface installInterface) {
         SplitApkChooser splitApkChooser = new SplitApkChooser();
         Bundle args = new Bundle();
         args.putInt(SplitApkChooser.EXTRA_APK_FILE_KEY, apkFileKey);
@@ -42,16 +44,18 @@ public class SplitApkChooser extends DialogFragment {
         args.putString(SplitApkChooser.EXTRA_VERSION_INFO, versionInfo);
         splitApkChooser.setArguments(args);
         splitApkChooser.setCancelable(false);
+        splitApkChooser.setOnTriggerInstall(installInterface);
         return splitApkChooser;
     }
 
-    public interface InstallInterface {
+    public interface OnTriggerInstallInterface {
         void triggerInstall();
 
         void triggerCancel();
     }
 
-    InstallInterface installInterface;
+    @Nullable
+    private OnTriggerInstallInterface installInterface;
     private ApkFile apkFile;
     private PackageManager pm;
 
@@ -97,10 +101,10 @@ public class SplitApkChooser extends DialogFragment {
 
     @Override
     public void onCancel(@NonNull DialogInterface dialog) {
-        installInterface.triggerCancel();
+        Objects.requireNonNull(installInterface).triggerCancel();
     }
 
-    public void setOnTriggerInstall(InstallInterface installInterface) {
+    public void setOnTriggerInstall(@Nullable OnTriggerInstallInterface installInterface) {
         this.installInterface = installInterface;
     }
 

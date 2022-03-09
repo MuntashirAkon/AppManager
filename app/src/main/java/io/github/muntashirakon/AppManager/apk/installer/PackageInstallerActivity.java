@@ -288,24 +288,23 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
     @UiThread
     private void launchInstaller() {
         if (model.getApkFile().isSplit()) {
-            SplitApkChooser splitApkChooser = SplitApkChooser.getNewInstance(
+            SplitApkChooser.getNewInstance(
                     model.getApkFileKey(),
                     model.getNewPackageInfo().applicationInfo,
                     getVersionInfoWithTrackers(model.getNewPackageInfo()),
-                    getString(actionName)
-            );
-            splitApkChooser.setOnTriggerInstall(new SplitApkChooser.InstallInterface() {
-                @Override
-                public void triggerInstall() {
-                    launchInstallService();
-                }
+                    getString(actionName),
+                    new SplitApkChooser.OnTriggerInstallInterface() {
+                        @Override
+                        public void triggerInstall() {
+                            launchInstallService();
+                        }
 
-                @Override
-                public void triggerCancel() {
-                    PackageInstallerActivity.this.triggerCancel();
-                }
-            });
-            splitApkChooser.show(fm, SplitApkChooser.TAG);
+                        @Override
+                        public void triggerCancel() {
+                            PackageInstallerActivity.this.triggerCancel();
+                        }
+                    }
+            ).show(fm, SplitApkChooser.TAG);
         } else {
             launchInstallService();
         }
