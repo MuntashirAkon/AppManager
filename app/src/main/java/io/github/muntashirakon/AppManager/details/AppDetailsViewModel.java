@@ -517,9 +517,9 @@ public class AppDetailsViewModel extends AndroidViewModel {
         }
     }
 
-    public boolean isComponentBlocked(String componentName) {
+    public ComponentRule getComponentRule(String componentName) {
         synchronized (mBlockerLocker) {
-            return mBlocker.isComponentBlocked(componentName);
+            return mBlocker.getComponent(componentName);
         }
     }
 

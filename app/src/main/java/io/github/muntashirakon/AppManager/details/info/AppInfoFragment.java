@@ -109,6 +109,7 @@ import io.github.muntashirakon.AppManager.profiles.ProfileManager;
 import io.github.muntashirakon.AppManager.profiles.ProfileMetaManager;
 import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
+import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.scanner.ScannerActivity;
@@ -150,6 +151,7 @@ import static io.github.muntashirakon.AppManager.utils.PermissionUtils.TERMUX_PE
 import static io.github.muntashirakon.AppManager.utils.PermissionUtils.hasDumpPermission;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.displayLongToast;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.displayShortToast;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getColoredText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getStyledKeyValue;
@@ -580,7 +582,9 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         if (!tagCloud.trackerComponents.isEmpty()) {
             CharSequence[] trackerComponentNames = new CharSequence[tagCloud.trackerComponents.size()];
             for (int i = 0; i < trackerComponentNames.length; ++i) {
-                trackerComponentNames[i] = tagCloud.trackerComponents.get(i).name;
+                ComponentRule rule = tagCloud.trackerComponents.get(i);
+                trackerComponentNames[i] = rule.isBlocked() ? getColoredText(rule.name,
+                        ContextCompat.getColor(mActivity, R.color.stopped)) : rule.name;
             }
             addChip(getResources().getQuantityString(R.plurals.no_of_trackers, tagCloud.trackerComponents.size(),
                     tagCloud.trackerComponents.size()), tagCloud.areAllTrackersBlocked ? R.color.stopped

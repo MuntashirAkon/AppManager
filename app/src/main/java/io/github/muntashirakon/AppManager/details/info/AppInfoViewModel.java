@@ -115,9 +115,13 @@ public class AppInfoViewModel extends AndroidViewModel {
                     .getTrackerComponentsForPackageInfo(packageInfo);
             tagCloud.trackerComponents = new ArrayList<>(trackerComponents.size());
             for (String component : trackerComponents.keySet()) {
-                tagCloud.trackerComponents.add(new ComponentRule(packageName, component,
-                        trackerComponents.get(component), AppPref.getDefaultComponentStatus()));
-                tagCloud.areAllTrackersBlocked &= mainModel.isComponentBlocked(component);
+                ComponentRule componentRule = mainModel.getComponentRule(component);
+                if (componentRule == null) {
+                    componentRule = new ComponentRule(packageName, component, trackerComponents.get(component),
+                            AppPref.getDefaultComponentStatus());
+                }
+                tagCloud.trackerComponents.add(componentRule);
+                tagCloud.areAllTrackersBlocked &= componentRule.isBlocked();
             }
             tagCloud.isSystemApp = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
             tagCloud.isSystemlessPath = !mainModel.getIsExternalApk() && Ops.isRoot()
