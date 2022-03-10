@@ -19,11 +19,11 @@ import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
-import androidx.core.content.pm.PackageInfoCompat;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import java.io.IOException;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -572,48 +572,57 @@ public class MainViewModel extends AndroidViewModel {
     @WorkerThread
     @Nullable
     private ApplicationItem getNewApplicationItem(String packageName) {
-        int[] userHandles = Users.getUsersIds();
         ApplicationItem oldItem = null;
-        for (int userHandle : userHandles) {
+        int thisUser = UserHandleHidden.myUserId();
+        for (int userId : Users.getUsersIds()) {
             try {
                 @SuppressLint("WrongConstant")
                 PackageInfo packageInfo = PackageManagerCompat.getPackageInfo(packageName,
                         PackageManager.GET_META_DATA | flagSigningInfo | PackageManager.GET_ACTIVITIES
                                 | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
-                                | PackageManager.GET_SERVICES | flagDisabledComponents, userHandle);
+                                | PackageManager.GET_SERVICES | flagDisabledComponents, userId);
                 App app = App.fromPackageInfo(getApplication(), packageInfo);
                 try (ComponentsBlocker cb = ComponentsBlocker.getInstance(app.packageName, app.userId, true)) {
                     app.rulesCount = cb.entryCount();
                 }
-                ApplicationInfo applicationInfo = packageInfo.applicationInfo;
-                ApplicationItem item = new ApplicationItem(applicationInfo);
+                ApplicationItem item = new ApplicationItem(packageInfo.applicationInfo);
                 if (app.isInstalled && item.equals(oldItem)) {
-                    oldItem.userHandles = ArrayUtils.appendInt(oldItem.userHandles, userHandle);
-                    continue;
+                    oldItem.userHandles = ArrayUtils.appendInt(oldItem.userHandles, userId);
+                    if (userId != thisUser) {
+                        // This user has the highest priority
+                        continue;
+                    }
+                    item = oldItem;
                 }
-                item.versionName = packageInfo.versionName;
-                item.versionCode = PackageInfoCompat.getLongVersionCode(packageInfo);
-                item.backup = BackupUtils.storeAllAndGetLatestBackupMetadata(packageName);
-                item.flags = applicationInfo.flags;
-                item.uid = applicationInfo.uid;
-                item.sharedUserId = packageInfo.sharedUserId;
-                item.label = applicationInfo.loadLabel(mPackageManager).toString();
-                item.debuggable = (applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
-                item.isUser = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0;
-                item.isDisabled = !applicationInfo.enabled;
-                item.hasActivities = packageInfo.activities != null;
-                item.hasSplits = applicationInfo.splitSourceDirs != null;
-                item.firstInstallTime = packageInfo.firstInstallTime;
-                item.lastUpdateTime = packageInfo.lastUpdateTime;
-                item.sha = Utils.getIssuerAndAlg(packageInfo);
-                item.sdk = applicationInfo.targetSdkVersion;
-                item.userHandles = ArrayUtils.appendInt(item.userHandles, userHandle);
+                item.versionName = app.versionName;
+                item.versionCode = app.versionCode;
+                try {
+                    if (item.backup == null) {
+                        item.backup = BackupUtils.storeAllAndGetLatestBackupMetadata(packageName);
+                    }
+                } catch (IOException ignore) {
+                }
+                item.flags = app.flags;
+                item.uid = app.uid;
+                item.sharedUserId = app.sharedUserId;
+                item.label = app.packageLabel;
+                item.debuggable = (app.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+                item.isUser = (app.flags & ApplicationInfo.FLAG_SYSTEM) == 0;
+                item.isDisabled = !app.isEnabled;
+                item.hasActivities = app.hasActivities;
+                item.hasSplits = app.hasSplits;
+                item.firstInstallTime = app.firstInstallTime;
+                item.lastUpdateTime = app.lastUpdateTime;
+                item.sha = new Pair<>(app.certName, app.certAlgo);
+                item.sdk = app.sdk;
+                item.userHandles = ArrayUtils.appendInt(item.userHandles, userId);
                 item.blockedCount = app.rulesCount;
                 item.trackerCount = app.trackerCount;
                 item.lastActionTime = app.lastActionTime;
                 oldItem = item;
                 AppManager.getDb().appDao().insert(app);
-            } catch (Exception ignore) {
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         return oldItem;
@@ -623,6 +632,7 @@ public class MainViewModel extends AndroidViewModel {
     @Nullable
     private ApplicationItem getNewApplicationItem(String packageName, @NonNull List<App> apps) {
         ApplicationItem oldItem = null;
+        int thisUser = UserHandleHidden.myUserId();
         for (App app : apps) {
             try {
                 ApplicationItem item = new ApplicationItem();
@@ -632,7 +642,11 @@ public class MainViewModel extends AndroidViewModel {
                         // Item already exists, add the user handle and continue
                         oldItem.userHandles = ArrayUtils.appendInt(oldItem.userHandles, app.userId);
                         oldItem.isInstalled = true;
-                        continue;
+                        if (app.userId != thisUser) {
+                            // This user has the highest priority
+                            continue;
+                        }
+                        item = oldItem;
                     } else {
                         // Item doesn't exist, add the user handle
                         item.userHandles = ArrayUtils.appendInt(item.userHandles, app.userId);
@@ -651,7 +665,12 @@ public class MainViewModel extends AndroidViewModel {
                 item.packageName = app.packageName;
                 item.versionName = app.versionName;
                 item.versionCode = app.versionCode;
-                item.backup = BackupUtils.storeAllAndGetLatestBackupMetadata(packageName);
+                try {
+                    if (item.backup == null) {
+                        item.backup = BackupUtils.storeAllAndGetLatestBackupMetadata(packageName);
+                    }
+                } catch (IOException ignore) {
+                }
                 item.flags = app.flags;
                 item.uid = app.uid;
                 item.sharedUserId = app.sharedUserId;

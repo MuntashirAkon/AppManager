@@ -38,12 +38,12 @@ import io.github.muntashirakon.AppManager.backup.convert.ImportType;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.crypto.RSACrypto;
+import io.github.muntashirakon.AppManager.db.utils.AppDb;
 import io.github.muntashirakon.AppManager.settings.crypto.AESCryptoSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.settings.crypto.OpenPgpKeySelectionDialogFragment;
 import io.github.muntashirakon.AppManager.settings.crypto.RSACryptoSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
-import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.StorageUtils;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
 
@@ -288,8 +288,7 @@ public class BackupRestorePreferences extends PreferenceFragmentCompat {
                             .setNegativeButton(R.string.cancel, null)
                             .setPositiveButton(R.string.save, (dialog, which) -> {
                                 AppPref.set(AppPref.PrefKey.PREF_BACKUP_VOLUME_STR, this.backupVolume.toString());
-                                new Thread(() -> PackageUtils.updateInstalledOrBackedUpApplications(
-                                        AppManager.getContext(), true)).start();
+                                new Thread(() -> new AppDb().updateBackups(AppManager.getContext())).start();
                             })
                             .show());
                 });

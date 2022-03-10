@@ -8,7 +8,6 @@ import android.app.usage.IStorageStatsManager;
 import android.app.usage.StorageStats;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.ComponentInfo;
@@ -51,10 +50,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
@@ -70,17 +67,16 @@ import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.backup.BackupUtils;
 import io.github.muntashirakon.AppManager.db.entity.App;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
+import io.github.muntashirakon.AppManager.db.utils.AppDb;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.main.ApplicationItem;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
-import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
-import io.github.muntashirakon.AppManager.types.PackageChangeReceiver;
 import io.github.muntashirakon.AppManager.types.PackageSizeInfo;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.Users;
@@ -158,44 +154,56 @@ public final class PackageUtils {
     public static List<ApplicationItem> getInstalledOrBackedUpApplicationsFromDb(@NonNull Context context,
                                                                                  @Nullable ExecutorService executor,
                                                                                  boolean loadBackups) {
-        List<ApplicationItem> applicationItems = new ArrayList<>();
-        List<App> apps = AppManager.getDb().appDao().getAll();
+        HashMap<String, ApplicationItem> applicationItems = new HashMap<>();
+        AppDb appDb = new AppDb();
+        List<App> apps = appDb.getAllApplications();
         if (apps.size() == 0 || executor == null) {
             // Load app list for the first time
             Log.d(TAG, "Loading apps for the first time.");
-            updateInstalledOrBackedUpApplications(context, loadBackups);
-            apps = AppManager.getDb().appDao().getAll();
+            appDb.loadInstalledOrBackedUpApplications(context);
+            apps = appDb.getAllApplications();
         } else {
             // Update list of apps safely in the background
-            executor.submit(() -> updateInstalledOrBackedUpApplications(context, loadBackups));
+            executor.submit(() -> {
+                appDb.updateApplications(context);
+                if (loadBackups) {
+                    appDb.updateBackups(context);
+                }
+            });
         }
         HashMap<String, Backup> backups = BackupUtils.getAllLatestBackupMetadataFromDb();
+        int thisUser = UserHandleHidden.myUserId();
         // Get application items from apps
         for (App app : apps) {
             ApplicationItem item = new ApplicationItem();
             item.packageName = app.packageName;
-            int i;
             if (app.isInstalled) {
-                if ((i = applicationItems.indexOf(item)) != -1) {
+                ApplicationItem oldItem = applicationItems.get(app.packageName);
+                if (oldItem != null) {
                     // Item already exists, add the user handle and continue
-                    ApplicationItem oldItem = applicationItems.get(i);
                     oldItem.userHandles = ArrayUtils.appendInt(oldItem.userHandles, app.userId);
                     oldItem.isInstalled = true;
-                    continue;
+                    if (app.userId != thisUser) {
+                        // This user has the highest priority
+                        continue;
+                    }
+                    item = oldItem;
                 } else {
                     // Item doesn't exist, add the user handle
                     item.userHandles = ArrayUtils.appendInt(item.userHandles, app.userId);
                     item.isInstalled = true;
+                    applicationItems.put(app.packageName, item);
                 }
             } else {
                 // App not installed but may be installed in other profiles
-                if (applicationItems.contains(item)) {
+                if (applicationItems.containsKey(app.packageName)) {
                     // Item exists, use the previous status
                     continue;
                 } else {
                     // Item doesn't exist, don't add user handle
                     item.isInstalled = false;
                 }
+                applicationItems.put(app.packageName, item);
             }
             if (backups.containsKey(item.packageName)) {
                 item.backup = backups.get(item.packageName);
@@ -219,7 +227,6 @@ public final class PackageUtils {
             item.blockedCount = app.rulesCount;
             item.trackerCount = app.trackerCount;
             item.lastActionTime = app.lastActionTime;
-            applicationItems.add(item);
         }
         // Add rest of the backups
         for (String packageName : backups.keySet()) {
@@ -237,121 +244,9 @@ public final class PackageUtils {
             item.isDisabled = false;
             item.isInstalled = false;
             item.hasSplits = backup.hasSplits;
-            applicationItems.add(item);
+            applicationItems.put(backup.packageName, item);
         }
-        return applicationItems;
-    }
-
-    @WorkerThread
-    public static void updateInstalledOrBackedUpApplications(@NonNull Context context, boolean loadBackups) {
-        HashMap<String, Backup> backups;
-        if (loadBackups) {
-            try {
-                backups = BackupUtils.storeAllAndGetLatestBackupMetadata();
-            } catch (IOException e) {
-                e.printStackTrace();
-                // Backups variable should always be non-null
-                backups = new HashMap<>(0);
-            }
-        } else {
-            backups = BackupUtils.getAllLatestBackupMetadataFromDb();
-        }
-        // Interrupt thread on request
-        if (Thread.currentThread().isInterrupted()) return;
-
-        List<App> newApps = new ArrayList<>();
-        List<Integer> newAppHashes = new ArrayList<>();
-        int[] userHandles = Users.getUsersIds();
-        for (int userHandle : userHandles) {
-            // Interrupt thread on request
-            if (Thread.currentThread().isInterrupted()) return;
-
-            List<PackageInfo> packageInfoList;
-            try {
-                packageInfoList = PackageManagerCompat.getInstalledPackages(flagSigningInfo
-                        | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
-                        | PackageManager.GET_SERVICES | flagDisabledComponents | flagMatchUninstalled, userHandle);
-            } catch (Exception e) {
-                Log.e(TAG, "Could not retrieve package info list for user " + userHandle, e);
-                continue;
-            }
-            ApplicationInfo applicationInfo;
-            Backup backup;
-
-            for (PackageInfo packageInfo : packageInfoList) {
-                // Interrupt thread on request
-                if (Thread.currentThread().isInterrupted()) return;
-
-                applicationInfo = packageInfo.applicationInfo;
-                App app = App.fromPackageInfo(context, packageInfo);
-                backup = backups.get(applicationInfo.packageName);
-                if (backup != null) {
-                    backups.remove(applicationInfo.packageName);
-                }
-                try (ComponentsBlocker cb = ComponentsBlocker.getInstance(app.packageName, app.userId, true)) {
-                    app.rulesCount = cb.entryCount();
-                }
-                newApps.add(app);
-                newAppHashes.add(app.getHashCode());
-            }
-        }
-        // Add rest of the backup items, i.e., items that aren't installed
-        for (Backup backup : backups.values()) {
-            // Interrupt thread on request
-            if (Thread.currentThread().isInterrupted()) return;
-
-            if (backup == null) continue;
-            App app = App.fromBackup(backup);
-            try (ComponentsBlocker cb = ComponentsBlocker.getInstance(app.packageName, app.userId, true)) {
-                app.rulesCount = cb.entryCount();
-            }
-            newApps.add(app);
-            newAppHashes.add(app.getHashCode());
-        }
-        // Add new and delete old items
-        List<App> oldApps = AppManager.getDb().appDao().getAll();
-        List<App> updatedApps = new ArrayList<>();
-        ListIterator<App> iterator = oldApps.listIterator();
-        while (iterator.hasNext()) {
-            // Interrupt thread on request
-            if (Thread.currentThread().isInterrupted()) return;
-
-            App oldApp = iterator.next();
-            int index = newApps.indexOf(oldApp);
-            if (index != -1) {
-                // DB already has this app
-                if (!newAppHashes.contains(oldApp.getHashCode())) {
-                    // Change detected, replace old with new
-                    updatedApps.add(newApps.get(index));
-                } // else no change between two versions, the app don't have to be updated or deleted
-                iterator.remove();
-                newApps.remove(index);
-            } // else the app is new
-        }
-        AppManager.getDb().appDao().delete(oldApps);
-        AppManager.getDb().appDao().insert(newApps);
-        AppManager.getDb().appDao().insert(updatedApps);
-        if (oldApps.size() > 0) {
-            // Delete broadcast
-            Intent intent = new Intent(PackageChangeReceiver.ACTION_PACKAGE_REMOVED);
-            intent.setPackage(context.getPackageName());
-            intent.putExtra(Intent.EXTRA_CHANGED_PACKAGE_LIST, getPackageNamesFromApps(oldApps));
-            context.sendBroadcast(intent);
-        }
-        if (newApps.size() > 0) {
-            // New apps
-            Intent intent = new Intent(PackageChangeReceiver.ACTION_PACKAGE_ADDED);
-            intent.setPackage(context.getPackageName());
-            intent.putExtra(Intent.EXTRA_CHANGED_PACKAGE_LIST, getPackageNamesFromApps(newApps));
-            context.sendBroadcast(intent);
-        }
-        if (updatedApps.size() > 0) {
-            // Altered apps
-            Intent intent = new Intent(PackageChangeReceiver.ACTION_PACKAGE_ALTERED);
-            intent.setPackage(context.getPackageName());
-            intent.putExtra(Intent.EXTRA_CHANGED_PACKAGE_LIST, getPackageNamesFromApps(updatedApps));
-            context.sendBroadcast(intent);
-        }
+        return new ArrayList<>(applicationItems.values());
     }
 
     @NonNull
@@ -376,15 +271,6 @@ public final class PackageUtils {
             }
         }
         return applicationInfoList;
-    }
-
-    @NonNull
-    private static String[] getPackageNamesFromApps(@NonNull List<App> apps) {
-        HashSet<String> packages = new HashSet<>(apps.size());
-        for (App app : apps) {
-            packages.add(app.packageName);
-        }
-        return packages.toArray(new String[0]);
     }
 
     @WorkerThread

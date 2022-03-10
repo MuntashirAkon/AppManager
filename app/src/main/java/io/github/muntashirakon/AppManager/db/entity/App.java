@@ -211,7 +211,25 @@ public class App implements Serializable {
         return Objects.hash(packageName, userId);
     }
 
-    public int getHashCode() {
-        return Objects.hash(packageName, userId, packageLabel, versionName, versionCode, flags, uid, sharedUserId, firstInstallTime, lastUpdateTime, sdk, certName, certAlgo, isInstalled, isEnabled, hasActivities, hasSplits, rulesCount, lastActionTime);
+    public boolean isDifferentFrom(@NonNull App app) {
+        return !packageName.equalsIgnoreCase(app.packageName)
+                || userId != app.userId
+                || !Objects.equals(packageLabel, app.packageLabel)
+                || !Objects.equals(versionName, app.versionName)
+                || versionCode != app.versionCode
+                || flags != app.flags
+                || uid != app.uid
+                || !Objects.equals(sharedUserId, app.sharedUserId)
+                || firstInstallTime != app.firstInstallTime
+                || lastUpdateTime != app.lastUpdateTime
+                || sdk != app.sdk
+                || !Objects.equals(certName, app.certName)
+                || !Objects.equals(certAlgo, app.certAlgo)
+                || isInstalled != app.isInstalled
+                || isEnabled != app.isEnabled
+                || hasActivities != app.hasActivities
+                || hasSplits != app.hasSplits
+                || rulesCount != app.rulesCount
+                || lastActionTime != app.lastActionTime;
     }
 }

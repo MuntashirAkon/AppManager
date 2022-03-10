@@ -162,7 +162,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
                     | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS | flagDisabledComponents
                     | flagMatchUninstalled | PackageManager.GET_SERVICES, userHandle);
         } catch (Throwable e) {
-            e.printStackTrace();
+            Log.e(TAG, "" + e.getMessage());
         }
         mComponents = PackageUtils.collectComponentClassNames(mPackageInfo).keySet();
     }
