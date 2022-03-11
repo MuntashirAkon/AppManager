@@ -499,7 +499,7 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
             if (mActivity.mViewModel.hasMultipleUsers()) {
                 holder.iconFrame.setBackgroundResource(R.drawable.circle_with_padding);
                 holder.badge.setVisibility(View.VISIBLE);
-                holder.badge.setText(String.valueOf(usageInfo.userId));
+                holder.badge.setText(String.format(Locale.getDefault(), "%d", usageInfo.userId));
             } else {
                 holder.iconFrame.setBackgroundResource(0);
                 holder.badge.setVisibility(View.GONE);

@@ -2,7 +2,6 @@
 
 package io.github.muntashirakon.AppManager.runningapps;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.os.Bundle;
@@ -52,7 +51,6 @@ public class RunningAppDetails extends BottomSheetDialogFragment {
         return inflater.inflate(R.layout.dialog_running_app_details, container, false);
     }
 
-    @SuppressLint("SetTextI18n")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         ProcessItem processItem = requireArguments().getParcelable(ARG_PS_ITEM);
@@ -80,15 +78,15 @@ public class RunningAppDetails extends BottomSheetDialogFragment {
         TextView cliArgs = view.findViewById(R.id.cli_args);
 
         processName.setText(processItem.name);
-        pid.setText(String.valueOf(processItem.pid));
-        ppid.setText(String.valueOf(processItem.ppid));
+        pid.setText(String.format(Locale.getDefault(), "%d", processItem.pid));
+        ppid.setText(String.format(Locale.getDefault(), "%d", processItem.ppid));
         rss.setText(Formatter.formatFileSize(requireContext(), processItem.getMemory()));
         vsz.setText(Formatter.formatFileSize(requireContext(), processItem.getVirtualMemory()));
-        cpuPercent.setText(String.format(Locale.ROOT, "%.2f", processItem.getCpuTimeInPercent()));
+        cpuPercent.setText(String.format(Locale.getDefault(), "%.2f", processItem.getCpuTimeInPercent()));
         cpuTime.setText(DateUtils.getFormattedDuration(requireContext(), processItem.getCpuTimeInMillis(), false, true));
-        priority.setText(String.valueOf(processItem.getPriority()));
-        threads.setText(String.valueOf(processItem.getThreadCount()));
-        user.setText(processItem.user + " (" + processItem.uid + ")");
+        priority.setText(String.format(Locale.getDefault(), "%d", processItem.getPriority()));
+        threads.setText(String.format(Locale.getDefault(), "%d", processItem.getThreadCount()));
+        user.setText(String.format(Locale.getDefault(), "%s (%d)", processItem.user, processItem.uid));
         CharSequence stateInfo;
         if (TextUtils.isEmpty(processItem.state_extra)) {
             stateInfo = processItem.state;

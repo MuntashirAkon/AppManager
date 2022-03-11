@@ -256,7 +256,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
         ((Preference) Objects.requireNonNull(findPreference("about"))).setOnPreferenceClickListener(preference -> {
             @SuppressLint("InflateParams")
             View view = getLayoutInflater().inflate(R.layout.dialog_about, null);
-            ((TextView) view.findViewById(R.id.version)).setText(String.format(Locale.ROOT,
+            ((TextView) view.findViewById(R.id.version)).setText(String.format(Locale.getDefault(),
                     "%s (%d)", BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE));
             new AlertDialogBuilder(activity, true)
                     .setTitle(R.string.about)

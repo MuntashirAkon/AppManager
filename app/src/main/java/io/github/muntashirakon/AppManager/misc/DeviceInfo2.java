@@ -166,9 +166,9 @@ public class DeviceInfo2 implements LocalizedString {
                 .append(getStyledKeyValue(ctx, R.string.manufacturer, manufacturer)).append("\n");
         // SDK
         builder.append("\n").append(getTitleText(ctx, R.string.sdk)).append("\n")
-                .append(getStyledKeyValue(ctx, R.string.sdk_max, String.valueOf(maxSdk)));
+                .append(getStyledKeyValue(ctx, R.string.sdk_max, String.format(Locale.getDefault(), "%d", maxSdk)));
         if (minSdk != 0) {
-            builder.append(", ").append(getStyledKeyValue(ctx, R.string.sdk_min, String.valueOf(minSdk)));
+            builder.append(", ").append(getStyledKeyValue(ctx, R.string.sdk_min, String.format(Locale.getDefault(), "%d", minSdk)));
         }
         builder.append("\n");
         // Security
@@ -195,7 +195,8 @@ public class DeviceInfo2 implements LocalizedString {
         }
         builder.append(getStyledKeyValue(ctx, R.string.support_architectures,
                 TextUtils.join(", ", supportedAbis))).append("\n")
-                .append(getStyledKeyValue(ctx, R.string.no_of_cores, String.valueOf(availableProcessors))).append("\n");
+                .append(getStyledKeyValue(ctx, R.string.no_of_cores, String.format(Locale.getDefault(), "%d",
+                        availableProcessors))).append("\n");
         // GPU info
         builder.append("\n").append(getTitleText(ctx, R.string.graphics)).append("\n");
         builder.append(getStyledKeyValue(ctx, R.string.gles_version, glEsVersion)).append("\n");
@@ -208,8 +209,8 @@ public class DeviceInfo2 implements LocalizedString {
                 .append("mAh").append("\n");
         // Screen resolution
         builder.append("\n").append(getTitleText(ctx, R.string.screen)).append("\n")
-                .append(getStyledKeyValue(ctx, R.string.density, displayDensity + " (" + displayDensityDpi
-                        + " DPI)")).append("\n");
+                .append(getStyledKeyValue(ctx, R.string.density, String.format(Locale.getDefault(), "%s (%d DPI)",
+                        displayDensity, displayDensityDpi))).append("\n");
         // Actual size
         builder.append(getStyledKeyValue(ctx, R.string.scaling_factor, String.valueOf(scalingFactor))).append("\n")
                 .append(getStyledKeyValue(ctx, R.string.size, actualWidthPx + "px × " + actualHeightPx + "px\n"));
@@ -217,7 +218,7 @@ public class DeviceInfo2 implements LocalizedString {
         builder.append(getStyledKeyValue(ctx, R.string.window_size, windowWidthPx + "px × " + windowHeightPx
                 + "px\n"));
         // Refresh rate
-        builder.append(getStyledKeyValue(ctx, R.string.refresh_rate, String.format(Locale.ROOT, "%.1f Hz",
+        builder.append(getStyledKeyValue(ctx, R.string.refresh_rate, String.format(Locale.getDefault(), "%.1f Hz",
                 refreshRate))).append("\n");
         // List system locales
         List<String> localeStrings = new ArrayList<>(systemLocales.size());
@@ -235,7 +236,7 @@ public class DeviceInfo2 implements LocalizedString {
             for (UserInfo user : users) {
                 userNames.add(user.name);
             }
-            builder.append(String.valueOf(users.size())).append(" (")
+            builder.append(String.format(Locale.getDefault(), "%d", users.size())).append(" (")
                     .append(TextUtils.joinSpannable(", ", userNames))
                     .append(")\n");
             // App stats per user
@@ -245,20 +246,24 @@ public class DeviceInfo2 implements LocalizedString {
                 if (packageSizes == null) continue;
                 if (packageSizes.first + packageSizes.second == 0) continue;
                 builder.append(getStyledKeyValue(ctx, R.string.user, user.name + " (" + user.id + ")")).append("\n   ")
-                        .append(getStyledKeyValue(ctx, R.string.total_size,
-                                String.valueOf(packageSizes.first + packageSizes.second))).append(", ")
-                        .append(getStyledKeyValue(ctx, R.string.user, String.valueOf(packageSizes.first))).append(", ")
-                        .append(getStyledKeyValue(ctx, R.string.system, String.valueOf(packageSizes.second)))
+                        .append(getStyledKeyValue(ctx, R.string.total_size, String.format(Locale.getDefault(), "%d",
+                                packageSizes.first + packageSizes.second))).append(", ")
+                        .append(getStyledKeyValue(ctx, R.string.user, String.format(Locale.getDefault(), "%d",
+                                packageSizes.first))).append(", ")
+                        .append(getStyledKeyValue(ctx, R.string.system, String.format(Locale.getDefault(), "%d",
+                                packageSizes.second)))
                         .append("\n");
             }
         } else {
             builder.append("\n").append(getTitleText(ctx, R.string.apps)).append("\n");
             Pair<Integer, Integer> packageSizes = userPackages.get(UserHandleHidden.myUserId());
             if (packageSizes != null) {
-                builder.append(getStyledKeyValue(ctx, R.string.total_size,
-                        String.valueOf(packageSizes.first + packageSizes.second))).append(", ")
-                        .append(getStyledKeyValue(ctx, R.string.user, String.valueOf(packageSizes.first))).append(", ")
-                        .append(getStyledKeyValue(ctx, R.string.system, String.valueOf(packageSizes.second)))
+                builder.append(getStyledKeyValue(ctx, R.string.total_size, String.format(Locale.getDefault(), "%d",
+                                packageSizes.first + packageSizes.second))).append(", ")
+                        .append(getStyledKeyValue(ctx, R.string.user, String.format(Locale.getDefault(), "%d",
+                                packageSizes.first))).append(", ")
+                        .append(getStyledKeyValue(ctx, R.string.system, String.format(Locale.getDefault(), "%d",
+                                packageSizes.second)))
                         .append("\n");
             }
         }

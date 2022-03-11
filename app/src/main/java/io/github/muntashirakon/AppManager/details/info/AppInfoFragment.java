@@ -130,6 +130,7 @@ import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.IntentUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
+import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
@@ -1358,9 +1359,12 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
             // SDK
             final StringBuilder sdk = new StringBuilder();
-            sdk.append(getString(R.string.sdk_max)).append(": ").append(mApplicationInfo.targetSdkVersion);
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M)
-                sdk.append(", ").append(getString(R.string.sdk_min)).append(": ").append(mApplicationInfo.minSdkVersion);
+            sdk.append(getString(R.string.sdk_max)).append(LangUtils.getSeparatorString()).append(String.format(Locale.getDefault(), "%d",
+                    mApplicationInfo.targetSdkVersion));
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                sdk.append(", ").append(getString(R.string.sdk_min)).append(LangUtils.getSeparatorString())
+                        .append(String.format(Locale.getDefault(), "%d", mApplicationInfo.minSdkVersion));
+            }
             mListItems.add(ListItem.newSelectableRegularItem(getString(R.string.sdk), sdk.toString()));
 
             // Set Flags
@@ -1389,7 +1393,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             if (appInfo.installerApp != null) {
                 mListItems.add(ListItem.newSelectableRegularItem(getString(R.string.installer_app), appInfo.installerApp));
             }
-            mListItems.add(ListItem.newSelectableRegularItem(getString(R.string.user_id), Integer.toString(mApplicationInfo.uid)));
+            mListItems.add(ListItem.newSelectableRegularItem(getString(R.string.user_id), String.format(Locale.getDefault(), "%d",
+                    mApplicationInfo.uid)));
             if (mPackageInfo.sharedUserId != null)
                 mListItems.add(ListItem.newSelectableRegularItem(getString(R.string.shared_user_id), mPackageInfo.sharedUserId));
             if (appInfo.primaryCpuAbi != null) {

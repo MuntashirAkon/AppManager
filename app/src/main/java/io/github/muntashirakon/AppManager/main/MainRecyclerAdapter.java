@@ -288,7 +288,7 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
         } else holder.date.setTextColor(mColorSecondary);
         if (item.isInstalled) {
             // Set kernel user ID
-            holder.sharedId.setText(String.valueOf(item.uid));
+            holder.sharedId.setText(String.format(Locale.getDefault(), "%d", item.uid));
             // Set kernel user ID text color to orange if the package is shared
             if (item.sharedUserId != null) holder.sharedId.setTextColor(mColorOrange);
             else holder.sharedId.setTextColor(mColorSecondary);
