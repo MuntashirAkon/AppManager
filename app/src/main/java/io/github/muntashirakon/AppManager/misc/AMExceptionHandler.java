@@ -17,6 +17,8 @@ import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 
 public class AMExceptionHandler implements Thread.UncaughtExceptionHandler {
+    private static final String E = "muntashirakon@riseup.net";
+
     private final Thread.UncaughtExceptionHandler defaultExceptionHandler;
     private final Context context;
 
@@ -47,8 +49,8 @@ public class AMExceptionHandler implements Thread.UncaughtExceptionHandler {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             i.setIdentifier(String.valueOf(System.currentTimeMillis()));
         }
-        i.setType("message/rfc822");
-        i.putExtra(Intent.EXTRA_EMAIL, new String[]{"muntashirakon@riseup.net"});
+        i.setType("text/plain");
+        i.putExtra(Intent.EXTRA_EMAIL, new String[]{E});
         i.putExtra(Intent.EXTRA_SUBJECT, "App Manager: Crash report");
         String body = report.toString();
         i.putExtra(Intent.EXTRA_TEXT, body);
