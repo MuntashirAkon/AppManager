@@ -1219,10 +1219,19 @@
     <string name="threads">Количество потоков</string>
     <string name="mode_of_op_with_inferred_mode_of_op">%1$s (предполагаемый режим: %2$s)</string>
     <string name="failed_to_disable_magisk_deny_list">Не удалось отключить Magisk DenyList</string>
-    <string name="primary_abi">Основная архитектура</string>
+    <string name="primary_abi">Главный ABI</string>
     <string name="hidden_api_enforcement_policy">Политика применения скрытых API</string>
     <string name="hidden_api_enf_default_policy">По умолчанию (основано на типе приложения)</string>
     <string name="hidden_api_enf_policy_none">Ничего (полный доступ к скрытым API)</string>
     <string name="hidden_api_enf_policy_warn">Предупреждать (полный доступ к скрытым API, но выдаёт предупреждения)</string>
     <string name="binary_32_bit">32 бит</string>
+    <string name="uses_play_app_signing">Запуск подписи приложения</string>
+    <string name="zygote_preload_name">Название предварительной загрузки Zygot</string>
+    <string name="binary_64_bit">64 бит</string>
+    <string name="so_type_shared_library">Общая библиотека</string>
+    <string name="so_type_executable">Исполняемый файл</string>
+    <string name="save_and_exit">Сохранить и выйти</string>
+    <string name="file_modified_are_you_sure">Файл был изменен. Сбросить все изменения и выйти\?</string>
+    <string name="hidden_api_enf_policy_dark_grey_and_black">Обеспечить исполнение (темно-серый и черный списки)</string>
+    <string name="hidden_api_enf_policy_black">Обеспечить (только черные списки)</string>
 </resources>
