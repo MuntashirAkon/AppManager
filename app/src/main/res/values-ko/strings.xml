@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
     <string name="uses_feature">기능 사용</string>
     <string name="group">그룹</string>
     <string name="shared_libs">공유된 라이브러리</string>
@@ -9,7 +9,7 @@
     <string name="read">읽기</string>
     <string name="path_permissions">경로 권한</string>
     <string name="grant_uri_permission">URI 권한 부여</string>
-    <string name="flags">깃발</string>
+    <string name="flags">플래그</string>
     <string name="soft_input">소프트 입력 모드</string>
     <string name="orientation">취향</string>
     <string name="no_service">서비스 없음</string>
@@ -54,8 +54,112 @@
     <string name="cache_size">캐시</string>
     <string name="system">시스템</string>
     <string name="user">사용자</string>
-    <string name="sort">분류</string>
+    <string name="sort">정렬</string>
     <string name="media_size">미디어</string>
     <string name="app_not_installed">앱 설치되지 않음</string>
     <string name="obb_size">Obb</string>
+    <plurals name="usage_minutes">
+        <item quantity="other">%1$d분</item>
+    </plurals>
+    <plurals name="usage_seconds">
+        <item quantity="other">%1$d초</item>
+    </plurals>
+    <string name="no_usage_in_this_time_range">이 시간 범위 내 사용량 없음</string>
+    <string name="error_verbose_pin_shortcut">현재 실행도구는 핀바로가기를 지원하지 않습니다. 바로가기를 만들 수 없습니다.</string>
+    <string name="create_shortcut">바로가기 만들기</string>
+    <string name="edit_shortcut">바로가기 편집</string>
+    <string name="shortcut_name">바로가기 이름</string>
+    <string name="word_wrap">단어 줄 바꿈 전환</string>
+    <string name="toggle_class_listing">클래스 목록 전환</string>
+    <string name="no_shared_libs">공유된 라이브러리 없음</string>
+    <string name="usage_yesterday">어제</string>
+    <string name="version_name_with_code">버전 <xliff:g id="version_name" example="2.5.17">%1$s</xliff:g> (<xliff:g id="version_code" example="365">%2$d</xliff:g>)</string>
+    <string name="system_app">시스템 앱</string>
+    <string name="user_app">사용자 앱</string>
+    <string name="paths_and_directories">경로 및 디렉터리</string>
+    <string name="source_dir">원본 디렉터리</string>
+    <string name="data_dir">데이터 디렉터리</string>
+    <string name="sdk_max">대상</string>
+    <string name="more_info">더 많은 정보</string>
+    <string name="date_installed">설치된 날짜</string>
+    <string name="date_updated">업데이트된 날짜</string>
+    <string name="installer_app">설치 프로그램</string>
+    <string name="user_id">사용자 ID</string>
+    <string name="main_activity">주요 활동</string>
+    <string name="sdk_flags">플래그</string>
+    <string name="empty_package_name">빈 패키지 이름</string>
+    <string name="instructions">지침</string>
+    <string name="error_creating_shortcut">바로가기 생성 중 오류</string>
+    <string name="package_name">패키지 이름</string>
+    <string name="class_name">클래스 이름</string>
+    <string name="insert_icon">아이콘 삽입</string>
+    <string name="error_invalid_icon_resource">잘못된 아이콘 리소스</string>
+    <string name="error_invalid_icon_format">잘못된 아이콘 형식</string>
+    <string name="icon_picker">아이콘 선택기</string>
+    <string name="license">라이선스</string>
+    <string name="tracker_details">추적기 세부정보</string>
+    <string name="tracker_classes">추적기 클래스</string>
+    <string name="all_classes">모든 클래스</string>
+    <plurals name="main_list_date_days">
+        <item quantity="other"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g>일</item>
+    </plurals>
+    <string name="go">이동</string>
+    <string name="no_tracker_class">추적기 클래스 없음</string>
+    <string name="app_usage">앱 사용량</string>
+    <string name="usage_today">오늘</string>
+    <string name="usage_7_days">최근 7일</string>
+    <plurals name="usage_months">
+        <item quantity="other">%1$d개월</item>
+    </plurals>
+    <plurals name="usage_days">
+        <item quantity="other">%1$d일</item>
+    </plurals>
+    <plurals name="usage_hours">
+        <item quantity="other">%1$d시간</item>
+    </plurals>
+    <string name="usage_less_than_a_minute">1분 미만</string>
+    <string name="go_back">뒤로 이동</string>
+    <string name="grant_usage_access">사용량 접근권한 부여</string>
+    <string name="sort_by_memory_usage">메모리 사용량</string>
+    <string name="pref_backup_flags_msg">백업 옵션에 대한 프리셋을 추가하면 백업/복원할 때마다 플래그를 선택해야 하는 부담이 제거됩니다.</string>
+    <string name="credits">크레딧</string>
+    <string name="found_trackers">발견된 추적기:</string>
+    <string name="backup_extras_description">앱 권한 백업, 배터리 절약 및 데이터 사용량 옵션, MagiskHide 상태, SSAID 등.</string>
+    <string name="permission_flags">권한 플래그</string>
+    <string name="clear_data_from_uninstalled_apps_description"><tt>DONT_DELETE_DATA</tt> 플래그로 제거된 앱에서 데이터 삭제</string>
+    <string name="usage_access_not_supported">해당 설정 페이지가 존재하지 않아 사용량 접근권한을 요청할 수 없습니다.</string>
+    <string name="starting_activity">활동 시작: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
+    <string name="third_party">서드 파티 라이브러리 및 아이콘</string>
+    <plurals name="tracker_and_classes">
+        <item quantity="other"><xliff:g id="class_no" example="50">%1$d</xliff:g> 클래스가 있는 추적기 1개</item>
+    </plurals>
+    <string name="credits_message">다음의 작성자들에게
+\n- 안드로이드 오픈 소스 프로젝트
+\n- <a href="https://github.com/butzist/ActivityLauncher">활동 실행도구</a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">앱_패키지 정보</a>
+\n- <a href="https://github.com/zhaobao/AppsMonitor">앱모니터</a>
+\n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://github.com/billthefarmer/editor">편집기</a>
+\n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/zhanghai/MaterialFiles">재료 파일</a>
+\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
+\n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
+\n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
+\n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a>
+\n- <a href="https://github.com/Aefyr/SAI">SAI</a>
+\n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
+\nOriginal logo credit: <a href="https://github.com/Atrate">Atrate</a>. </string>
+    <string name="class_viewer">클래스 뷰어</string>
+    <plurals name="two_trackers_and_classes">
+        <item quantity="other"><xliff:g id="class_no" example="50">%1$d</xliff:g> 클래스가 있는 추적기 2개</item>
+    </plurals>
+    <plurals name="other_trackers_and_classes">
+        <item quantity="other"><xliff:g id="class_no" example="50">%2$d</xliff:g> 클래스가 있는 <xliff:g id="tracker_no" example="8">%1$d</xliff:g>개 추적기</item>
+    </plurals>
+    <string name="tested_signatures_on_classes_and_time_taken" tools:ignore="PluralsCandidate"><xliff:g id="class_no" example="6000">%2$d</xliff:g> 클래스에서 <xliff:g id="signature_no" example="342">%1$d</xliff:g>개 서명을 테스트했습니다.
+\n<xliff:g id="time" example="10000">%3$d</xliff:g> ms가 소요되었습니다(<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> 반복).</string>
+    <string name="grant_usage_acess_message">앱 사용량 정보를 표시하는 데 사용됩니다.</string>
+    <string name="usage_weekly">매주</string>
+    <string name="usage_access">사용량 접근권한</string>
 </resources>
