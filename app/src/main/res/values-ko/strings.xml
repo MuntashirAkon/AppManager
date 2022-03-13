@@ -51,10 +51,11 @@
     <string name="data_received">수신된 데이터</string>
     <string name="data_transmitted">전송된 데이터</string>
     <string name="data_size">데이터</string>
-    <string name="cache_size">캐쉬</string>
+    <string name="cache_size">캐시</string>
     <string name="system">시스템</string>
     <string name="user">사용자</string>
     <string name="sort">분류</string>
     <string name="media_size">미디어</string>
     <string name="app_not_installed">앱 설치되지 않음</string>
+    <string name="obb_size">Obb</string>
 </resources>
