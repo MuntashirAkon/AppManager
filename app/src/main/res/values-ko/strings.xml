@@ -37,7 +37,7 @@
     <string name="configurations">설정</string>
     <string name="no_feature">기능 없음</string>
     <string name="shared_user_id">공유된 사용자 ID</string>
-    <string name="sort_by_shared_user_id">정렬 공유 된 사용자 ID</string>
+    <string name="sort_by_shared_user_id">공유된 사용자 ID</string>
     <string name="task_affinity">작업 선호도</string>
     <string name="no_configurations">설정 없음</string>
     <string name="app_signing_no_signatures">유효한 서명 없음</string>
