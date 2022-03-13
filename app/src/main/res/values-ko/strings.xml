@@ -162,4 +162,5 @@
     <string name="grant_usage_acess_message">앱 사용량 정보를 표시하는 데 사용됩니다.</string>
     <string name="usage_weekly">매주</string>
     <string name="usage_access">사용량 접근권한</string>
+    <string name="app_info">앱 정보</string>
 </resources>
