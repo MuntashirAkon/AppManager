@@ -34,12 +34,12 @@
     <string name="error">오류</string>
     <string name="manifest">나타내기</string>
     <string name="input_features">기능 입력</string>
-    <string name="configurations">설정</string>
+    <string name="configurations">구성</string>
     <string name="no_feature">기능 없음</string>
     <string name="shared_user_id">공유된 사용자 ID</string>
     <string name="sort_by_shared_user_id">공유된 사용자 ID</string>
     <string name="task_affinity">작업 선호도</string>
-    <string name="no_configurations">설정 없음</string>
+    <string name="no_configurations">구성 없음</string>
     <string name="app_signing_no_signatures">유효한 서명 없음</string>
     <string name="app_signing_signatures">서명</string>
     <string name="signatures">서명</string>
@@ -50,4 +50,6 @@
     <string name="sort_by_target_sdk">대상 SDK</string>
     <string name="data_received">수신된 데이터</string>
     <string name="data_transmitted">전송된 데이터</string>
+    <string name="data_size">데이터</string>
+    <string name="cache_size">캐쉬</string>
 </resources>
